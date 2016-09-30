@@ -33,6 +33,7 @@ package sonia.scm.repository.api;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 
@@ -45,18 +46,24 @@ import sonia.scm.repository.GitUtil;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
- *
+ * Collects created, modified and deleted git branches during a hook.
+ * 
  * @author Sebastian Sdorra
  */
 public class GitHookBranchProvider implements HookBranchProvider
 {
+    
+  private static final Logger logger = LoggerFactory.getLogger(GitHookBranchProvider.class);
 
   /**
-   * Constructs ...
+   * Constructs a new instance.
    *
    *
-   * @param commands
+   * @param commands received git commands
    */
   public GitHookBranchProvider(List<ReceiveCommand> commands)
   {
@@ -66,10 +73,14 @@ public class GitHookBranchProvider implements HookBranchProvider
     for (ReceiveCommand command : commands)
     {
       Type type = command.getType();
-      String branch = GitUtil.getBranch(command.getRefName());
+      String ref = command.getRefName();
+      String branch = GitUtil.getBranch(ref);
 
-      if ((type == Type.CREATE) || (type == Type.UPDATE)
-        || (type == Type.UPDATE_NONFASTFORWARD))
+      if (Strings.isNullOrEmpty(branch))
+      {
+        logger.debug("ref {} is not a branch", ref);
+      }
+      else if (isCreateOrUpdate(type))
       {
         createdOrModifiedBuilder.add(branch);
       }
@@ -82,27 +93,19 @@ public class GitHookBranchProvider implements HookBranchProvider
     createdOrModified = createdOrModifiedBuilder.build();
     deletedOrClosed = deletedOrClosedBuilder.build();
   }
+  
+  private boolean isCreateOrUpdate(Type type){
+    return type == Type.CREATE || type == Type.UPDATE || type == Type.UPDATE_NONFASTFORWARD;
+  }
 
   //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
   public List<String> getCreatedOrModified()
   {
     return createdOrModified;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
   public List<String> getDeletedOrClosed()
   {
@@ -111,9 +114,7 @@ public class GitHookBranchProvider implements HookBranchProvider
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
   private final List<String> createdOrModified;
 
-  /** Field description */
   private final List<String> deletedOrClosed;
 }
