@@ -1,10 +1,10 @@
 /**
- * Copyright (c) 2010, Sebastian Sdorra
+ * Copyright (c) 2014, Sebastian Sdorra
  * All rights reserved.
- *
+ * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * 
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
@@ -13,7 +13,7 @@
  * 3. Neither the name of SCM-Manager; nor the names of its
  *    contributors may be used to endorse or promote products derived from this
  *    software without specific prior written permission.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,60 +24,65 @@
  * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * 
  * http://bitbucket.org/sdorra/scm-manager
- *
+ * 
  */
-
-
 
 package sonia.scm.web;
 
-//~--- non-JDK imports --------------------------------------------------------
+import javax.servlet.http.HttpServletRequest;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
-import com.google.common.collect.ImmutableSet;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import static org.mockito.Mockito.*;
+import org.mockito.runners.MockitoJUnitRunner;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.RepositoryProvider;
-import sonia.scm.web.filter.ProviderPermissionFilter;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
- * Permission filter for mercurial repositories.
+ * Unit tests for {@link HgPermissionFilter}.
  * 
  * @author Sebastian Sdorra
  */
-@Singleton
-public class HgPermissionFilter extends ProviderPermissionFilter
-{
-  
-  private static final Set<String> READ_METHODS = ImmutableSet.of("GET", "HEAD", "OPTIONS", "TRACE");
+@RunWith(MockitoJUnitRunner.class)
+public class HgPermissionFilterTest {
 
+  @Mock
+  private HttpServletRequest request;
+
+  @Mock
+  private ScmConfiguration configuration;
+  
+  @Mock
+  private RepositoryProvider repositoryProvider;
+  
+  @InjectMocks
+  private HgPermissionFilter filter;
+  
   /**
-   * Constructs a new instance.
-   *
-   * @param configuration scm configuration
-   * @param repositoryProvider repository provider
+   * Tests {@link HgPermissionFilter#isWriteRequest(HttpServletRequest)}.
    */
-  @Inject
-  public HgPermissionFilter(ScmConfiguration configuration,
-    RepositoryProvider repositoryProvider)
-  {
-    super(configuration, repositoryProvider);
+  @Test
+  public void testIsWriteRequest() {
+    // read methods
+    assertFalse(isWriteRequest("GET"));
+    assertFalse(isWriteRequest("HEAD"));
+    assertFalse(isWriteRequest("TRACE"));
+    assertFalse(isWriteRequest("OPTIONS"));
+    
+    // write methods
+    assertTrue(isWriteRequest("POST"));
+    assertTrue(isWriteRequest("PUT"));
+    assertTrue(isWriteRequest("DELETE"));
+    assertTrue(isWriteRequest("KA"));
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  @Override
-  protected boolean isWriteRequest(HttpServletRequest request)
-  {
-    return !READ_METHODS.contains(request.getMethod());
+  private boolean isWriteRequest(String method) {
+    when(request.getMethod()).thenReturn(method);
+    return filter.isWriteRequest(request);
   }
 }
