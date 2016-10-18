@@ -35,26 +35,19 @@ package sonia.scm.web;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import org.eclipse.jgit.http.server.GitSmartHttpTools;
-
-import sonia.scm.ClientMessages;
 import sonia.scm.config.ScmConfiguration;
-import sonia.scm.repository.GitUtil;
 import sonia.scm.web.filter.AutoLoginModule;
 import sonia.scm.web.filter.BasicAuthenticationFilter;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.IOException;
 
 import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
- *
+ * Handles git specific basic authentication.
+ * 
  * @author Sebastian Sdorra
  */
 @Singleton
@@ -62,45 +55,17 @@ public class GitBasicAuthenticationFilter extends BasicAuthenticationFilter
 {
 
   /**
-   * Constructs ...
+   * Constructs a new instance.
    *
    *
-   * @param configuration
-   * @param autoLoginModules
-   * @param userAgentParser
+   * @param configuration scm-manager main configuration
+   * @param autoLoginModules auto login modules
+   * @param userAgentParser user agent parser
    */
   @Inject
   public GitBasicAuthenticationFilter(ScmConfiguration configuration,
     Set<AutoLoginModule> autoLoginModules, UserAgentParser userAgentParser)
   {
     super(configuration, autoLoginModules, userAgentParser);
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param response
-   *
-   * @throws IOException
-   */
-  @Override
-  protected void sendFailedAuthenticationError(HttpServletRequest request,
-    HttpServletResponse response)
-    throws IOException
-  {
-    if (GitUtil.isGitClient(request))
-    {
-      GitSmartHttpTools.sendError(request, response,
-        HttpServletResponse.SC_FORBIDDEN,
-        ClientMessages.get(request).failedAuthentication());
-    }
-    else
-    {
-      super.sendFailedAuthenticationError(request, response);
-    }
   }
 }
