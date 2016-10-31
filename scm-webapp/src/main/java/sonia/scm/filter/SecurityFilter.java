@@ -64,6 +64,9 @@ import javax.servlet.http.HttpServletResponse;
 public class SecurityFilter extends HttpFilter
 {
 
+  /** name of request attribute for the primary principal */
+  private static final String ATTRIBUTE_REMOTE_USER = "principal";
+
   /** Field description */
   public static final String URL_AUTHENTICATION = "/api/rest/authentication";
 
@@ -108,8 +111,14 @@ public class SecurityFilter extends HttpFilter
     {
       if (hasPermission(subject))
       {
+        // add primary principal as request attribute
+        // see https://goo.gl/JRjNmf
+        User user = getUser(subject);
+        request.setAttribute(ATTRIBUTE_REMOTE_USER, user.getId());
+
+        // wrap servlet request to provide authentication informations
         chain.doFilter(new SecurityHttpServletRequestWrapper(request,
-          getUser(subject)), response);
+          user), response);
       }
       else if (subject.isAuthenticated() || subject.isRemembered())
       {
