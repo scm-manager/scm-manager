@@ -35,6 +35,7 @@ package sonia.scm.filter;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -65,7 +66,8 @@ public class SecurityFilter extends HttpFilter
 {
 
   /** name of request attribute for the primary principal */
-  private static final String ATTRIBUTE_REMOTE_USER = "principal";
+  @VisibleForTesting
+  static final String ATTRIBUTE_REMOTE_USER = "principal";
 
   /** Field description */
   public static final String URL_AUTHENTICATION = "/api/rest/authentication";
@@ -102,13 +104,12 @@ public class SecurityFilter extends HttpFilter
     HttpServletResponse response, FilterChain chain)
     throws IOException, ServletException
   {
-    Subject subject = SecurityUtils.getSubject();
-
     String uri =
       request.getRequestURI().substring(request.getContextPath().length());
 
     if (!uri.startsWith(URL_AUTHENTICATION))
     {
+      Subject subject = SecurityUtils.getSubject();
       if (hasPermission(subject))
       {
         // add primary principal as request attribute
@@ -164,7 +165,7 @@ public class SecurityFilter extends HttpFilter
    */
   private User getUser(Subject subject)
   {
-    User user = null;
+    User user;
 
     if (subject.isAuthenticated() || subject.isRemembered())
     {
@@ -181,5 +182,5 @@ public class SecurityFilter extends HttpFilter
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private ScmConfiguration configuration;
+  private final ScmConfiguration configuration;
 }
