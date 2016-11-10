@@ -33,6 +33,7 @@
 Sonia.repository.BranchComboBox = Ext.extend(Ext.form.ComboBox, {
   
   repositoryId: null,
+  useNameAsValue: false,
 
   initComponent: function(){
     var branchStore = new Sonia.rest.JsonStore({
@@ -47,8 +48,8 @@ Sonia.repository.BranchComboBox = Ext.extend(Ext.form.ComboBox, {
     });
 
     var config = {
-      valueField: 'revision',
       displayField: 'name',
+      valueField: this.useNameAsValue ? 'name' : 'revision',
       typeAhead: false,
       editable: false,
       triggerAction: 'all',

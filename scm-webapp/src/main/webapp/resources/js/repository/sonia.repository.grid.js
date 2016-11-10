@@ -432,21 +432,22 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
     var infoPanel = main.getInfoPanel(item.type);
     infoPanel.item = item;
     
+    var settingsForm = main.getSettingsForm(item.type);
+    settingsForm.item = item;
+    settingsForm.onUpdate = {
+      fn: this.reload,
+      scope: this
+    };
+    settingsForm.onCreate = {
+      fn: this.reload,
+      scope: this
+    };
+    
     var panels = [infoPanel];
     
     if ( owner ){
-      panels.push({
-        item: item,
-        xtype: 'repositorySettingsForm',
-        onUpdate: {
-          fn: this.reload,
-          scope: this
-        },
-        onCreate: {
-          fn: this.reload,
-          scope: this
-        }
-      },{
+      panels.push(
+        settingsForm, {
         item: item,
         xtype: 'repositoryPermissionsForm',
         listeners: {

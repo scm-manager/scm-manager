@@ -90,6 +90,93 @@ Sonia.git.ConfigPanel = Ext.extend(Sonia.config.SimpleConfigForm, {
 
 Ext.reg("gitConfigPanel", Sonia.git.ConfigPanel);
 
+// add default branch chooser to settings panel
+Sonia.git.GitSettingsFormPanel = Ext.extend(Sonia.repository.SettingsFormPanel, {
+  
+  defaultBranchText: 'Default Branch',
+  defaultBranchHelpText: 'The default branch which is show first on source or commit view.',
+  
+  modifyDefaultConfig: function(config){
+    if (this.item) {
+      var position = -1;
+      for ( var i=0; i<config.items.length; i++ ) {
+        var field = config.items[i];
+        if (field.name === 'public') {
+          position = i;
+          break;
+        }
+      }
+      
+      var defaultBranchComboxBox = {
+        fieldLabel: this.defaultBranchText,
+        name: 'defaultBranch',
+        repositoryId: this.item.id,
+        value: this.getDefaultBranch(this.item),
+        useNameAsValue: true,
+        xtype: 'repositoryBranchComboBox',
+        helpText: this.defaultBranchHelpText
+      };
+      
+      if (position >= 0) {
+        config.items.splice(position, 0, defaultBranchComboxBox);
+      } else {
+        config.items.push(defaultBranchComboxBox);
+      }
+    }
+  },
+  
+  getDefaultBranch: function(item){
+    if (item.properties) {
+      for ( var i=0; i<item.properties.length; i++ ) {
+        var prop = item.properties[i];
+        if (prop.key === 'git.default-branch') {
+          return prop.value;
+        }
+      }
+    }
+    return undefined;
+  },
+  
+  setDefaultBranch: function(item, defaultBranch){
+    if (!item.properties) {
+      item.properties = [{
+          key: 'git.default-branch',
+          value: defaultBranch
+      }];
+    } else {
+      
+      var found = false;
+      for ( var i=0; i<item.properties.length; i++ ) {
+        var prop = item.properties[i];
+        if (prop.key === 'git.default-branch') {
+          prop.value = defaultBranch;
+          found = true;
+          break;
+        }
+      }
+      
+      if (!found) {
+        item.properties.push({
+          key: 'git.default-branch',
+          value: defaultBranch
+        });
+      }
+    }
+  },
+  
+  prepareUpdate: function(item) {
+    if (item.defaultBranch) {
+      var defaultBranch = item.defaultBranch;
+      delete item.defaultBranch;
+      this.setDefaultBranch(item, defaultBranch);
+    }
+  }
+  
+});
+
+Ext.reg("gitSettingsForm", Sonia.git.GitSettingsFormPanel);
+
+
 // i18n
 
 if ( i18n && i18n.country === 'de' ){
@@ -107,8 +194,20 @@ if ( i18n && i18n.country === 'de' ){
       Die Seite muss neu geladen werden wenn dieser Wert geändert wird.'
     
   });
+  
+  Ext.override(Sonia.git.GitSettingsFormPanel, {
+    
+    // labels
+    defaultBranchText: 'Standard Branch',
+    
+    // helpTexts
+    defaultBranchHelpText: 'Der Standard Branch wird für die Source und Commit Ansicht verwendet, \n\
+                            wenn kein anderer Branch eingestellt wurde.'
+    
+  });
 
 }
+
 
 // register information panel
 
@@ -116,6 +215,9 @@ initCallbacks.push(function(main){
   main.registerInfoPanel('git', {
     checkoutTemplate: 'git clone <a href="{0}" target="_blank">{0}</a>',
     xtype: 'repositoryExtendedInfoPanel'
+  });
+  main.registerSettingsForm('git', {
+    xtype: 'gitSettingsForm'
   });
 });
 

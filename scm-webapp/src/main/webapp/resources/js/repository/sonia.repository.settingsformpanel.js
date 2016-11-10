@@ -78,9 +78,15 @@ Sonia.repository.SettingsFormPanel = Ext.extend(Sonia.repository.FormPanel, {
         helpText: this.publicHelpText
       }]
     };
+    
+    this.modifyDefaultConfig(config);
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.repository.SettingsFormPanel.superclass.initComponent.apply(this, arguments);
+  },
+  
+  modifyDefaultConfig: function(config){
+    
   }
 
 });
