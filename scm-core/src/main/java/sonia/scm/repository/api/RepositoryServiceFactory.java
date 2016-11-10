@@ -37,6 +37,7 @@ package sonia.scm.repository.api;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.google.common.collect.Sets;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -316,51 +317,60 @@ public final class RepositoryServiceFactory
   //~--- inner classes --------------------------------------------------------
 
   /**
-   * TODO find a more elegant way
-   *
-   *
-   * @version        Enter version here..., 12/06/16
-   * @author         Enter your name here...
+   * Hook and listener to clear all relevant repository caches.
    */
   private static class CacheClearHook extends PostReceiveRepositoryHook
     implements RepositoryListener
   {
+    
+    private final Set<Cache<?, ?>> caches = Sets.newHashSet();
 
     /**
-     * Constructs ...
+     * Constructs a new instance and collect all repository relevant
+     * caches from the {@link CacheManager}.
      *
-     *
-     * @param cacheManager
+     * @param cacheManager cache manager
      */
     public CacheClearHook(CacheManager cacheManager)
     {
-      this.blameCache =
-        cacheManager.getCache(BlameCommandBuilder.CacheKey.class,
-          BlameResult.class, BlameCommandBuilder.CACHE_NAME);
-      this.browseCache =
-        cacheManager.getCache(BrowseCommandBuilder.CacheKey.class,
-          BrowserResult.class, BrowseCommandBuilder.CACHE_NAME);
-      this.logCache = cacheManager.getCache(LogCommandBuilder.CacheKey.class,
-        ChangesetPagingResult.class, LogCommandBuilder.CACHE_NAME);
-      this.tagsCache = cacheManager.getCache(TagsCommandBuilder.CacheKey.class,
-        Tags.class, TagsCommandBuilder.CACHE_NAME);
-      this.branchesCache =
-        cacheManager.getCache(BranchesCommandBuilder.CacheKey.class,
-          Branches.class, BranchesCommandBuilder.CACHE_NAME);
+      this.caches.add(cacheManager.getCache(
+        BlameCommandBuilder.CacheKey.class,
+        BlameResult.class, BlameCommandBuilder.CACHE_NAME)
+      );
+      this.caches.add(cacheManager.getCache(
+        BrowseCommandBuilder.CacheKey.class,
+        BrowserResult.class, BrowseCommandBuilder.CACHE_NAME)
+      );
+      this.caches.add(cacheManager.getCache(
+        LogCommandBuilder.CacheKey.class,
+        ChangesetPagingResult.class, LogCommandBuilder.CACHE_NAME)
+      );
+      this.caches.add(cacheManager.getCache(
+        TagsCommandBuilder.CacheKey.class,
+        Tags.class, TagsCommandBuilder.CACHE_NAME)
+      );
+      this.caches.add(cacheManager.getCache(
+        BranchesCommandBuilder.CacheKey.class,
+        Branches.class, BranchesCommandBuilder.CACHE_NAME)
+      );
     }
 
     //~--- methods ------------------------------------------------------------
 
+    /**
+     * Clear caches on explicit repository cache clear event.
+     * 
+     * @param event clear event
+     */
     @Subscribe
     public void onEvent(ClearRepositoryCacheEvent event) {
       clearCaches(event.getRepository().getId());
     }
     
     /**
-     * Method description
+     * Clear caches on repository push.
      *
-     *
-     * @param event
+     * @param event hook event
      */
     @Override
     public void onEvent(RepositoryHookEvent event)
@@ -376,11 +386,10 @@ public final class RepositoryServiceFactory
     }
 
     /**
-     * Method description
+     * Clear caches on repository delete event.
      *
-     *
-     * @param repository
-     * @param event
+     * @param repository changed repository
+     * @param event repository event
      */
     @Override
     public void onEvent(Repository repository, HandlerEvent event)
@@ -390,13 +399,7 @@ public final class RepositoryServiceFactory
         clearCaches(repository.getId());
       }
     }
-
-    /**
-     * Method description
-     *
-     *
-     * @param repositoryId
-     */
+    
     @SuppressWarnings("unchecked")
     private void clearCaches(final String repositoryId)
     {
@@ -405,32 +408,11 @@ public final class RepositoryServiceFactory
         logger.debug("clear caches for repository id {}", repositoryId);
       }
 
-      RepositoryCacheKeyFilter filter =
-        new RepositoryCacheKeyFilter(repositoryId);
-
-      blameCache.removeAll(filter);
-      browseCache.removeAll(filter);
-      logCache.removeAll(filter);
-      tagsCache.removeAll(filter);
-      branchesCache.removeAll(filter);
+      RepositoryCacheKeyFilter filter = new RepositoryCacheKeyFilter(repositoryId);
+      for (Cache<?,?> cache : caches) {
+        cache.removeAll(filter);
+      }
     }
-
-    //~--- fields -------------------------------------------------------------
-
-    /** Field description */
-    private Cache<BlameCommandBuilder.CacheKey, BlameResult> blameCache;
-
-    /** Field description */
-    private Cache<BranchesCommandBuilder.CacheKey, Branches> branchesCache;
-
-    /** Field description */
-    private Cache<BrowseCommandBuilder.CacheKey, BrowserResult> browseCache;
-
-    /** Field description */
-    private Cache<LogCommandBuilder.CacheKey, ChangesetPagingResult> logCache;
-
-    /** Field description */
-    private Cache<TagsCommandBuilder.CacheKey, Tags> tagsCache;
   }
 
 
