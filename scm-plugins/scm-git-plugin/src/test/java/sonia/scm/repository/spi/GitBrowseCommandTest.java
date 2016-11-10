@@ -48,6 +48,7 @@ import static org.junit.Assert.*;
 import java.io.IOException;
 
 import java.util.List;
+import sonia.scm.repository.GitConstants;
 
 /**
  * Unit tests for {@link GitBrowseCommand}.
@@ -80,7 +81,7 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase
     assertEquals("f.txt", foList.get(3).getName());
     
     // set default branch and fetch again
-    repository.setProperty(AbstractGitCommand.PROPERTY_DEFAULT_BRANCH, "test-branch");
+    repository.setProperty(GitConstants.PROPERTY_DEFAULT_BRANCH, "test-branch");
     result = createCommand().getBrowserResult(new BrowseCommandRequest());
     assertNotNull(result);
 

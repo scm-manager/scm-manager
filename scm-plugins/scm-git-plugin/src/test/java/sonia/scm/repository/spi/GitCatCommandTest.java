@@ -44,6 +44,7 @@ import static org.junit.Assert.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import sonia.scm.repository.GitConstants;
 
 /**
  * Unit tests for {@link GitCatCommand}.
@@ -70,7 +71,7 @@ public class GitCatCommandTest extends AbstractGitCommandTestBase
     assertEquals("a\nline for blame", execute(request));
     
     // set default branch for repository and check again
-    repository.setProperty(AbstractGitCommand.PROPERTY_DEFAULT_BRANCH, "test-branch");
+    repository.setProperty(GitConstants.PROPERTY_DEFAULT_BRANCH, "test-branch");
     assertEquals("a and b", execute(request));
   }
 

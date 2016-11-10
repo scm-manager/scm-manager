@@ -50,6 +50,7 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import sonia.scm.repository.GitConstants;
 
 /**
  * Unit tests for {@link GitLogCommand}.
@@ -79,7 +80,7 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
     assertEquals("435df2f061add3589cb326cc64be9b9c3897ceca", result.getChangesets().get(3).getId());
     
     // set default branch and fetch again
-    repository.setProperty(AbstractGitCommand.PROPERTY_DEFAULT_BRANCH, "test-branch");
+    repository.setProperty(GitConstants.PROPERTY_DEFAULT_BRANCH, "test-branch");
     
     result = createCommand().getChangesets(new LogCommandRequest());
 

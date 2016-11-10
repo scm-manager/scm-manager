@@ -44,6 +44,7 @@ import java.io.IOException;
 import org.eclipse.jgit.lib.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.repository.GitConstants;
 import sonia.scm.repository.GitUtil;
 
 /**
@@ -57,9 +58,6 @@ public class AbstractGitCommand
    * the logger for AbstractGitCommand
    */
   private static final Logger logger = LoggerFactory.getLogger(AbstractGitCommand.class);
-  
-  @VisibleForTesting
-  static final String PROPERTY_DEFAULT_BRANCH = "git.default-branch";
 
   /**
    * Constructs ...
@@ -113,7 +111,7 @@ public class AbstractGitCommand
   
   protected ObjectId getDefaultBranch(Repository gitRepository) throws IOException {
     ObjectId head;
-    String defaultBranchName = repository.getProperty(PROPERTY_DEFAULT_BRANCH);
+    String defaultBranchName = repository.getProperty(GitConstants.PROPERTY_DEFAULT_BRANCH);
     if (!Strings.isNullOrEmpty(defaultBranchName)) {
       head = GitUtil.getBranchId(gitRepository, defaultBranchName);
     } else {

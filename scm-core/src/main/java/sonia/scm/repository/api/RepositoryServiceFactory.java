@@ -37,6 +37,7 @@ package sonia.scm.repository.api;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -69,6 +70,8 @@ import sonia.scm.security.ScmSecurityException;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.Set;
+import sonia.scm.event.ScmEventBus;
+import sonia.scm.repository.ClearRepositoryCacheEvent;
 
 /**
  * The {@link RepositoryServiceFactory} is the entrypoint of the repository api.
@@ -172,6 +175,9 @@ public final class RepositoryServiceFactory
 
     repositoryManager.addHook(cch);
     repositoryManager.addListener(cch);
+    
+    // register cache clear hook for incoming events
+    ScmEventBus.getInstance().register(cch);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -345,6 +351,11 @@ public final class RepositoryServiceFactory
 
     //~--- methods ------------------------------------------------------------
 
+    @Subscribe
+    public void onEvent(ClearRepositoryCacheEvent event) {
+      clearCaches(event.getRepository().getId());
+    }
+    
     /**
      * Method description
      *

@@ -45,6 +45,7 @@ import static org.junit.Assert.*;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
+import sonia.scm.repository.GitConstants;
 
 /**
  * Unit tests for {@link GitBlameCommand}.
@@ -73,7 +74,7 @@ public class GitBlameCommandTest extends AbstractGitCommandTestBase
     assertEquals("fcd0ef1831e4002ac43ea539f4094334c79ea9ec", result.getLine(1).getRevision());
     
     // set default branch and test again
-    repository.setProperty(AbstractGitCommand.PROPERTY_DEFAULT_BRANCH, "test-branch");
+    repository.setProperty(GitConstants.PROPERTY_DEFAULT_BRANCH, "test-branch");
     result = createCommand().getBlameResult(request);
     assertNotNull(result);
     assertEquals(1, result.getTotal()); 
