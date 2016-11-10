@@ -34,6 +34,7 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Strings;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectLoader;
@@ -78,7 +79,6 @@ public class GitCatCommand extends AbstractGitCommand implements CatCommand
    *
    * @param context
    * @param repository
-   * @param repositoryDirectory
    */
   public GitCatCommand(GitContext context,
                        sonia.scm.repository.Repository repository)
@@ -102,17 +102,11 @@ public class GitCatCommand extends AbstractGitCommand implements CatCommand
   public void getCatResult(CatCommandRequest request, OutputStream output)
           throws IOException, RepositoryException
   {
-    if (logger.isDebugEnabled())
-    {
-      logger.debug("try to read content for {}", request);
-    }
+    logger.debug("try to read content for {}", request);
 
-    org.eclipse.jgit.lib.Repository repo = null;
-
-    repo = open();
-
-    ObjectId revId = GitUtil.getRevisionId(repo, request.getRevision());
-
+    org.eclipse.jgit.lib.Repository repo = open();
+    
+    ObjectId revId = getCommitOrDefault(repo, request.getRevision());
     getContent(repo, revId, request.getPath(), output);
   }
 

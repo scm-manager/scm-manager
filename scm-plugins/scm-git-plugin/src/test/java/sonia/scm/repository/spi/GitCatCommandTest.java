@@ -46,12 +46,33 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 /**
+ * Unit tests for {@link GitCatCommand}.
+ * 
  * TODO add not found test
  *
  * @author Sebastian Sdorra
  */
 public class GitCatCommandTest extends AbstractGitCommandTestBase
 {
+  
+  /**
+   * Tests cat command with default branch.
+   * 
+   * @throws IOException
+   * @throws RepositoryException 
+   */
+  @Test
+  public void testDefaultBranch() throws IOException, RepositoryException {
+    // without default branch, the repository head should be used
+    CatCommandRequest request = new CatCommandRequest();
+    request.setPath("a.txt");
+    
+    assertEquals("a\nline for blame", execute(request));
+    
+    // set default branch for repository and check again
+    repository.setProperty(AbstractGitCommand.PROPERTY_DEFAULT_BRANCH, "test-branch");
+    assertEquals("a and b", execute(request));
+  }
 
   /**
    * Method description

@@ -47,12 +47,39 @@ import static org.junit.Assert.*;
 import java.io.IOException;
 
 /**
- *
+ * Unit tests for {@link GitBlameCommand}.
+ * 
  * @author Sebastian Sdorra
  */
 public class GitBlameCommandTest extends AbstractGitCommandTestBase
 {
 
+  /**
+   * Tests blame command with default branch.
+   * 
+   * @throws IOException
+   * @throws RepositoryException 
+   */
+  @Test
+  public void testDefaultBranch() throws IOException, RepositoryException {
+    // without default branch, the repository head should be used
+    BlameCommandRequest request = new BlameCommandRequest();
+    request.setPath("a.txt");
+
+    BlameResult result = createCommand().getBlameResult(request);
+    assertNotNull(result);
+    assertEquals(2, result.getTotal()); 
+    assertEquals("435df2f061add3589cb326cc64be9b9c3897ceca", result.getLine(0).getRevision());
+    assertEquals("fcd0ef1831e4002ac43ea539f4094334c79ea9ec", result.getLine(1).getRevision());
+    
+    // set default branch and test again
+    repository.setProperty(AbstractGitCommand.PROPERTY_DEFAULT_BRANCH, "test-branch");
+    result = createCommand().getBlameResult(request);
+    assertNotNull(result);
+    assertEquals(1, result.getTotal()); 
+    assertEquals("3f76a12f08a6ba0dc988c68b7f0b2cd190efc3c4", result.getLine(0).getRevision());
+  }
+  
   /**
    * Method description
    *

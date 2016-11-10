@@ -138,7 +138,7 @@ public abstract class AbstractGitIncomingOutgoingCommand
 
     GitUtil.fetch(git, handler.getDirectory(remoteRepository), remoteRepository);
 
-    ObjectId localId = GitUtil.getRepositoryHead(git.getRepository());
+    ObjectId localId = getDefaultBranch(git.getRepository());
     ObjectId remoteId = null;
 
     Ref remoteBranch = getRemoteBranch(git.getRepository(), localId,

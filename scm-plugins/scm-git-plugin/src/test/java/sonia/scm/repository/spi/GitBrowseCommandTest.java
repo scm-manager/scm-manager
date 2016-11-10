@@ -50,11 +50,48 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- *
+ * Unit tests for {@link GitBrowseCommand}.
+ * 
  * @author Sebastian Sdorra
  */
 public class GitBrowseCommandTest extends AbstractGitCommandTestBase
 {
+  
+  /**
+   * Test browse command with default branch.
+   * 
+   * @throws IOException
+   * @throws RepositoryException 
+   */
+  @Test
+  public void testDefaultBranch() throws IOException, RepositoryException {
+    // without default branch, the repository head should be used
+    BrowserResult result = createCommand().getBrowserResult(new BrowseCommandRequest());
+    assertNotNull(result);
+
+    List<FileObject> foList = result.getFiles(); 
+    assertNotNull(foList);
+    assertFalse(foList.isEmpty());
+    assertEquals(4, foList.size());
+    
+    assertEquals("a.txt", foList.get(0).getName());
+    assertEquals("b.txt", foList.get(1).getName());
+    assertEquals("c", foList.get(2).getName());
+    assertEquals("f.txt", foList.get(3).getName());
+    
+    // set default branch and fetch again
+    repository.setProperty(AbstractGitCommand.PROPERTY_DEFAULT_BRANCH, "test-branch");
+    result = createCommand().getBrowserResult(new BrowseCommandRequest());
+    assertNotNull(result);
+
+    foList = result.getFiles(); 
+    assertNotNull(foList);
+    assertFalse(foList.isEmpty());
+    assertEquals(2, foList.size());
+    
+    assertEquals("a.txt", foList.get(0).getName());
+    assertEquals("c", foList.get(1).getName());
+  }
 
   /**
    * Method description

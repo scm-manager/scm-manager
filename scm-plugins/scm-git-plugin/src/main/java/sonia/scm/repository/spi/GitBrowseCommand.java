@@ -45,7 +45,6 @@ import org.eclipse.jgit.lib.ObjectLoader;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
-import org.eclipse.jgit.submodule.SubmoduleWalk;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.treewalk.filter.AndTreeFilter;
 import org.eclipse.jgit.treewalk.filter.PathFilter;
@@ -72,7 +71,6 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 /**
  *
@@ -96,11 +94,8 @@ public class GitBrowseCommand extends AbstractGitCommand
   /**
    * Constructs ...
    *
-   *
-   *
    * @param context
    * @param repository
-   * @param repositoryDirectory
    */
   public GitBrowseCommand(GitContext context, Repository repository)
   {
@@ -124,18 +119,15 @@ public class GitBrowseCommand extends AbstractGitCommand
   public BrowserResult getBrowserResult(BrowseCommandRequest request)
     throws IOException, RepositoryException
   {
-    if (logger.isDebugEnabled())
-    {
-      logger.debug("try to create browse result for {}", request);
-    }
+    logger.debug("try to create browse result for {}", request);
 
-    BrowserResult result = null;
+    BrowserResult result;
     org.eclipse.jgit.lib.Repository repo = open();
-    ObjectId revId = null;
+    ObjectId revId;
 
     if (Util.isEmpty(request.getRevision()))
     {
-      revId = GitUtil.getRepositoryHead(repo);
+      revId = getDefaultBranch(repo);
     }
     else
     {

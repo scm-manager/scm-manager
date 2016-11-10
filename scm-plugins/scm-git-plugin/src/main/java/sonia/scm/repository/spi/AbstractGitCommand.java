@@ -34,11 +34,17 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Strings;
 import org.eclipse.jgit.lib.Repository;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
+import org.eclipse.jgit.lib.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sonia.scm.repository.GitUtil;
 
 /**
  *
@@ -46,6 +52,14 @@ import java.io.IOException;
  */
 public class AbstractGitCommand
 {
+  
+  /**
+   * the logger for AbstractGitCommand
+   */
+  private static final Logger logger = LoggerFactory.getLogger(AbstractGitCommand.class);
+  
+  @VisibleForTesting
+  static final String PROPERTY_DEFAULT_BRANCH = "git.default-branch";
 
   /**
    * Constructs ...
@@ -54,7 +68,6 @@ public class AbstractGitCommand
    *
    * @param context
    * @param repository
-   * @param repositoryDirectory
    */
   protected AbstractGitCommand(GitContext context,
                                sonia.scm.repository.Repository repository)
@@ -76,6 +89,38 @@ public class AbstractGitCommand
   protected Repository open() throws IOException
   {
     return context.open();
+  }
+  
+  protected ObjectId getCommitOrDefault(Repository gitRepository, String requestedCommit) throws IOException {
+    ObjectId commit;
+    if ( Strings.isNullOrEmpty(requestedCommit) ) {
+      commit = getDefaultBranch(gitRepository);
+    } else {
+      commit = gitRepository.resolve(requestedCommit);
+    }
+    return commit;
+  }
+  
+  protected ObjectId getBranchOrDefault(Repository gitRepository, String requestedBranch) throws IOException {
+    ObjectId head;
+    if ( Strings.isNullOrEmpty(requestedBranch) ) {
+      head = getDefaultBranch(gitRepository);
+    } else {
+      head = GitUtil.getBranchId(gitRepository, requestedBranch);
+    }
+    return head;
+  }
+  
+  protected ObjectId getDefaultBranch(Repository gitRepository) throws IOException {
+    ObjectId head;
+    String defaultBranchName = repository.getProperty(PROPERTY_DEFAULT_BRANCH);
+    if (!Strings.isNullOrEmpty(defaultBranchName)) {
+      head = GitUtil.getBranchId(gitRepository, defaultBranchName);
+    } else {
+      logger.trace("no default branch configured, use repository head as default");
+      head = GitUtil.getRepositoryHead(gitRepository);
+    }
+    return head;
   }
 
   //~--- fields ---------------------------------------------------------------
