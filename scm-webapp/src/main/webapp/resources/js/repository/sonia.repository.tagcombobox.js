@@ -52,7 +52,7 @@ Sonia.repository.TagComboBox = Ext.extend(Ext.form.ComboBox, {
       typeAhead: false,
       editable: false,
       triggerAction: 'all',
-      store: tagStore,
+      store: tagStore
     };
       
     Ext.apply(this, Ext.apply(this.initialConfig, config));
