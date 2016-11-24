@@ -71,6 +71,8 @@ Ext.override(Ext.form.Field, {
 
     switch ( this.getXType() ){
       case 'combo':
+      case 'repositoryBranchComboBox':
+      case 'repositoryTagComboBox':
         if ( this.readOnly ){
           cls = 'scm-form-help-button';
         } else {
