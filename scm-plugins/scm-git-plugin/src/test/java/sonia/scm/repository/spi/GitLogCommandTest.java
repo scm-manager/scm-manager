@@ -49,14 +49,48 @@ import static org.junit.Assert.*;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import sonia.scm.repository.GitConstants;
 
 /**
- *
+ * Unit tests for {@link GitLogCommand}.
+ * 
  * @author Sebastian Sdorra
  */
 public class GitLogCommandTest extends AbstractGitCommandTestBase
 {
 
+  /**
+   * Tests log command with the usage of a default branch.
+   * 
+   * @throws IOException
+   * @throws GitAPIException
+   * @throws RepositoryException 
+   */
+  @Test
+  public void testGetDefaultBranch() throws IOException, GitAPIException, RepositoryException {
+    // without default branch, the repository head should be used
+    ChangesetPagingResult result = createCommand().getChangesets(new LogCommandRequest());
+
+    assertNotNull(result);
+    assertEquals(4, result.getTotal());
+    assertEquals("fcd0ef1831e4002ac43ea539f4094334c79ea9ec", result.getChangesets().get(0).getId());
+    assertEquals("86a6645eceefe8b9a247db5eb16e3d89a7e6e6d1", result.getChangesets().get(1).getId());
+    assertEquals("592d797cd36432e591416e8b2b98154f4f163411", result.getChangesets().get(2).getId());
+    assertEquals("435df2f061add3589cb326cc64be9b9c3897ceca", result.getChangesets().get(3).getId());
+    
+    // set default branch and fetch again
+    repository.setProperty(GitConstants.PROPERTY_DEFAULT_BRANCH, "test-branch");
+    
+    result = createCommand().getChangesets(new LogCommandRequest());
+
+    assertNotNull(result);
+    assertEquals(3, result.getTotal());
+    assertEquals("3f76a12f08a6ba0dc988c68b7f0b2cd190efc3c4", result.getChangesets().get(0).getId());
+    assertEquals("592d797cd36432e591416e8b2b98154f4f163411", result.getChangesets().get(1).getId());
+    assertEquals("435df2f061add3589cb326cc64be9b9c3897ceca", result.getChangesets().get(2).getId());
+  }
+  
   /**
    * Method description
    *

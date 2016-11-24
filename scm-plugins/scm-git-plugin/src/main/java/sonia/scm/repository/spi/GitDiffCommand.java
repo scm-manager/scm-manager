@@ -79,7 +79,6 @@ public class GitDiffCommand extends AbstractGitCommand implements DiffCommand
    *
    * @param context
    * @param repository
-   * @param repositoryDirectory
    */
   public GitDiffCommand(GitContext context, Repository repository)
   {

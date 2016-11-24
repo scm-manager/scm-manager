@@ -78,6 +78,7 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
   mainTabPanel: null,
   
   infoPanels: [],
+  settingsForm: [],
   scripts: [],
   stylesheets: [],
 
@@ -94,6 +95,23 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
   
   registerInfoPanel: function(type, panel){
     this.infoPanels[type] = panel;
+  },
+  
+  registerSettingsForm: function(type, form){
+    this.settingsForm[type] = form;
+  },
+  
+  getSettingsForm: function(type){
+    var rp = null;
+    var panel = this.settingsForm[type];
+    if ( ! panel ){
+      rp = {
+        xtype: 'repositorySettingsForm'
+      };
+    } else {
+      rp = Sonia.util.clone( panel );
+    }
+    return rp;
   },
   
   getInfoPanel: function(type){

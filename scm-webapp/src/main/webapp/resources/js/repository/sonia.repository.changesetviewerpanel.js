@@ -120,33 +120,14 @@ Sonia.repository.ChangesetViewerPanel = Ext.extend(Ext.Panel, {
   },
   
   createTopToolbar: function(){
-    var branchStore = new Sonia.rest.JsonStore({
-      proxy: new Ext.data.HttpProxy({
-        url: restUrl + 'repositories/' + this.repository.id + '/branches.json',
-        method: 'GET',
-        disableCaching: false
-      }),
-      root: 'branch',
-      idProperty: 'name',
-      fields: [ 'name' ],
-      sortInfo: {
-        field: 'name'
-      }
-    });
-    
     return {
       xtype: 'toolbar',
       items: [
         this.repository.name,
         '->',
         'Branches:', ' ',{
-        xtype: 'combo',
-        valueField: 'name',
-        displayField: 'name',
-        typeAhead: false,
-        editable: false,
-        triggerAction: 'all',
-        store: branchStore,
+        xtype: 'repositoryBranchComboBox',
+        repositoryId: this.repository.id,
         listeners: {
           select: {
             fn: this.selectBranch,

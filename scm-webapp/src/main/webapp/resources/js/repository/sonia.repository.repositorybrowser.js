@@ -159,26 +159,10 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
       
       branches = true;
       
-      var branchStore = new Sonia.rest.JsonStore({
-        proxy: new Ext.data.HttpProxy({
-          url: restUrl + 'repositories/' + this.repository.id + '/branches.json',
-          method: 'GET',
-          disableCaching: false
-        }),
-        root: 'branch',
-        idProperty: 'name',
-        fields: [ 'name', 'revision' ]
-      });
-
       items.push('->','Branches:', ' ',{
         id: 'branchComboBox',
-        xtype: 'combo',
-        valueField: 'revision',
-        displayField: 'name',
-        typeAhead: false,
-        editable: false,
-        triggerAction: 'all',
-        store: branchStore,
+        xtype: 'repositoryBranchComboBox',
+        repositoryId: this.repository.id,
         listeners: {
           select: {
             fn: this.selectBranch,
@@ -191,17 +175,6 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
    
     if ( type && type.supportedCommands && type.supportedCommands.indexOf('TAGS') >= 0){
     
-      var tagStore = new Sonia.rest.JsonStore({
-        proxy: new Ext.data.HttpProxy({
-          url: restUrl + 'repositories/' + this.repository.id + '/tags.json',
-          method: 'GET',
-          disableCaching: false
-        }),
-        root: 'tag',
-        idProperty: 'name',
-        fields: [ 'name', 'revision' ]
-      });
-
       if (branches){
         items.push(' ');
       } else {
@@ -210,13 +183,8 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
 
       items.push('Tags:', ' ',{
         id: 'tagComboBox',
-        xtype: 'combo',
-        valueField: 'revision',
-        displayField: 'name',
-        typeAhead: false,
-        editable: false,
-        triggerAction: 'all',
-        store: tagStore,
+        xtype: 'repositoryTagComboBox',
+        repositoryId: this.repository.id,
         listeners: {
           select: {
             fn: this.selectTag,
