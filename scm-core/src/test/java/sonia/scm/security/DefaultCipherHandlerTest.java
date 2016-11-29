@@ -31,15 +31,62 @@
 
 package sonia.scm.security;
 
+import java.io.File;
+import java.io.IOException;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Rule;
+import org.junit.rules.TemporaryFolder;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import static org.mockito.Mockito.*;
+import org.mockito.runners.MockitoJUnitRunner;
+import sonia.scm.SCMContextProvider;
 
 /**
  * Unit tests for {@link DefaultCipherHandler}.
  * 
  * @author Sebastian Sdorra
  */
+@RunWith(MockitoJUnitRunner.class)
 public class DefaultCipherHandlerTest {
+  
+  @Mock
+  private SCMContextProvider context;
+  
+  @Mock
+  private KeyGenerator keyGenerator;
+  
+  @Rule
+  public TemporaryFolder tempFolder = new TemporaryFolder();
+  
+  /**
+   * Tests loading and storing default key.
+   * 
+   * @throws IOException 
+   */
+  @Test
+  public void testLoadingAndStoringDefaultKey() throws IOException {
+    File baseDirectory = tempFolder.newFolder();
+    when(context.getBaseDirectory()).thenReturn(baseDirectory);
+    when(keyGenerator.createKey()).thenReturn("secret");
+    
+    DefaultCipherHandler cipher = new DefaultCipherHandler(context, keyGenerator);
+    File configDirectory = new File(baseDirectory, "config");
+    assertTrue(new File(configDirectory, DefaultCipherHandler.CIPHERKEY_FILENAME).exists());
+    
+    // plain text for assertion
+    String plain = "hallo123";
+    
+    // encrypt value with new generated key
+    String encrypted = cipher.encode(plain);
+    
+    // load key from disk
+    cipher = new DefaultCipherHandler(context, keyGenerator);
+    
+    // decrypt with loaded key
+    assertEquals(plain, cipher.decode(encrypted));
+  }
 
   /**
    * Test encode and decode method with a separate key.
