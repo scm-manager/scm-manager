@@ -251,7 +251,7 @@ public class DefaultCipherHandler implements CipherHandler
       random.nextBytes(salt);
 
       IvParameterSpec iv = new IvParameterSpec(salt);
-      SecretKey secretKey = buildSecretKey(key);
+      SecretKey secretKey = buildSecretKey(plainKey);
       javax.crypto.Cipher cipher = javax.crypto.Cipher.getInstance(CIPHER_TYPE);
 
       cipher.init(javax.crypto.Cipher.ENCRYPT_MODE, secretKey, iv);
