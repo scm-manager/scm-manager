@@ -35,6 +35,8 @@ package sonia.scm.user;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.github.sdorra.ssp.PermissionObject;
+import com.github.sdorra.ssp.StaticPermissions;
 import com.google.common.base.Objects;
 
 import sonia.scm.BasicPropertiesAware;
@@ -54,9 +56,10 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author Sebastian Sdorra
  */
+@StaticPermissions("user")
 @XmlRootElement(name = "users")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class User extends BasicPropertiesAware implements Principal, ModelObject
+public class User extends BasicPropertiesAware implements Principal, ModelObject, PermissionObject
 {
 
   /** Field description */

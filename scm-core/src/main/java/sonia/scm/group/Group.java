@@ -35,6 +35,8 @@ package sonia.scm.group;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.github.sdorra.ssp.PermissionObject;
+import com.github.sdorra.ssp.StaticPermissions;
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 
@@ -60,10 +62,11 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author Sebastian Sdorra
  */
+@StaticPermissions("group")
 @XmlRootElement(name = "groups")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Group extends BasicPropertiesAware
-  implements ModelObject, Iterable<String>
+  implements ModelObject, Iterable<String>, PermissionObject
 {
 
   /** Field description */

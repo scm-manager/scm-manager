@@ -114,6 +114,19 @@
       <scope>provided</scope>
     </dependency>
     
+    <dependency>
+      <groupId>com.github.sdorra</groupId>
+      <artifactId>ssp-lib</artifactId>
+      <version>${ssp.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.github.sdorra</groupId>
+      <artifactId>ssp-processor</artifactId>
+      <version>${ssp.version}</version>
+      <optional>true</optional>
+    </dependency>
+    
     <!-- test -->
     
     <dependency>

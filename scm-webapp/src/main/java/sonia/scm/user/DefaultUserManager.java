@@ -35,11 +35,9 @@ package sonia.scm.user;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.github.sdorra.ssp.PermissionActionCheck;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,12 +47,9 @@ import sonia.scm.SCMContextProvider;
 import sonia.scm.TransformFilter;
 import sonia.scm.search.SearchRequest;
 import sonia.scm.search.SearchUtil;
-import sonia.scm.security.Role;
-import sonia.scm.security.ScmSecurityException;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.CollectionAppender;
 import sonia.scm.util.IOUtil;
-import sonia.scm.util.SecurityUtil;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -99,10 +94,6 @@ public class DefaultUserManager extends AbstractUserManager
   /**
    * Constructs ...
    *
-<<<<<<< mine
-=======
-   *
->>>>>>> theirs
    * @param userDAO
    */
   @Inject
@@ -164,17 +155,7 @@ public class DefaultUserManager extends AbstractUserManager
       logger.info("create user {} of type {}", user.getName(), user.getType());
     }
 
-    Subject subject = SecurityUtils.getSubject();
-
-    if (!subject.hasRole(Role.USER))
-    {
-      throw new ScmSecurityException("user is not authenticated");
-    }
-
-    if (!subject.hasRole(Role.ADMIN))
-    {
-      throw new ScmSecurityException("admin account is required");
-    }
+    UserPermissions.create().check();
 
     if (userDAO.contains(user.getName()))
     {
@@ -205,9 +186,8 @@ public class DefaultUserManager extends AbstractUserManager
       logger.info("delete user {} of type {}", user.getName(), user.getType());
     }
 
-    SecurityUtil.assertIsAdmin();
-
     String name = user.getName();
+    UserPermissions.delete(name).check();
 
     if (userDAO.contains(name))
     {
@@ -250,28 +230,13 @@ public class DefaultUserManager extends AbstractUserManager
   @Override
   public void modify(User user) throws UserException, IOException
   {
+    String name = user.getName();
     if (logger.isInfoEnabled())
     {
       logger.info("modify user {} of type {}", user.getName(), user.getType());
     }
-
-    Subject subject = SecurityUtils.getSubject();
-
-    if (!subject.isAuthenticated())
-    {
-      throw new ScmSecurityException("user is not authenticated");
-    }
-
-    User currentUser = subject.getPrincipals().oneByType(User.class);
-
-    if (!user.getName().equals(currentUser.getName())
-      &&!subject.hasRole(Role.ADMIN))
-    {
-      throw new ScmSecurityException("admin account is required");
-    }
-
-    String name = user.getName();
     
+    UserPermissions.modify(user).check();
     User oldUser = userDAO.get(name);
 
     if (oldUser != null)
@@ -305,8 +270,7 @@ public class DefaultUserManager extends AbstractUserManager
       logger.info("refresh user {} of type {}", user.getName(), user.getType());
     }
 
-    SecurityUtil.assertIsAdmin();
-
+    UserPermissions.read(user).check();
     User fresh = userDAO.get(user.getName());
 
     if (fresh == null)
@@ -333,23 +297,22 @@ public class DefaultUserManager extends AbstractUserManager
       logger.debug("search user with query {}", searchRequest.getQuery());
     }
 
-    return SearchUtil.search(searchRequest, userDAO.getAll(),
-      new TransformFilter<User>()
-    {
+    final PermissionActionCheck<User> check = UserPermissions.read();
+    return SearchUtil.search(searchRequest, userDAO.getAll(), new TransformFilter<User>() {
       @Override
       public User accept(User user)
       {
         User result = null;
-
-        if (SearchUtil.matchesOne(searchRequest, user.getName(),
-          user.getDisplayName(), user.getMail()))
-        {
+        if (check.isPermitted(user) && matches(searchRequest, user)) {
           result = user.clone();
         }
-
         return result;
       }
     });
+  }
+  
+  private boolean matches(SearchRequest searchRequest, User user) {
+    return SearchUtil.matchesOne(searchRequest, user.getName(), user.getDisplayName(), user.getMail());
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -365,8 +328,8 @@ public class DefaultUserManager extends AbstractUserManager
   @Override
   public User get(String id)
   {
-
-    // SecurityUtil.assertIsAdmin(scurityContextProvider);
+    UserPermissions.read().check(id);
+    
     User user = userDAO.get(id);
 
     if (user != null)
@@ -400,17 +363,16 @@ public class DefaultUserManager extends AbstractUserManager
   @Override
   public Collection<User> getAll(Comparator<User> comparator)
   {
-    SecurityUtil.assertIsAdmin();
+    List<User> users = new ArrayList<>();
 
-    List<User> users = new ArrayList<User>();
-
-    for (User user : userDAO.getAll())
-    {
-      users.add(user.clone());
+    PermissionActionCheck<User> check = UserPermissions.read();
+    for (User user : userDAO.getAll()) {
+      if (check.isPermitted(user)) {
+        users.add(user.clone());
+      }
     }
 
-    if (comparator != null)
-    {
+    if (comparator != null) {
       Collections.sort(users, comparator);
     }
 
@@ -429,18 +391,17 @@ public class DefaultUserManager extends AbstractUserManager
    * @return
    */
   @Override
-  public Collection<User> getAll(Comparator<User> comaparator, int start,
-    int limit)
-  {
-    SecurityUtil.assertIsAdmin();
-
+  public Collection<User> getAll(Comparator<User> comaparator, int start, int limit) {
+    final PermissionActionCheck<User> check = UserPermissions.read();
     return Util.createSubCollection(userDAO.getAll(), comaparator,
       new CollectionAppender<User>()
     {
       @Override
       public void append(Collection<User> collection, User item)
       {
-        collection.add(item.clone());
+        if (check.isPermitted(item)) {
+          collection.add(item.clone());
+        }
       }
     }, start, limit);
   }

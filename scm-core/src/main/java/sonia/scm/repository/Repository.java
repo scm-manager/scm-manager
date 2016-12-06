@@ -35,6 +35,8 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.github.sdorra.ssp.PermissionObject;
+import com.github.sdorra.ssp.StaticPermissions;
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 
@@ -61,9 +63,13 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author Sebastian Sdorra
  */
+@StaticPermissions(
+  value = "repository", 
+  permissions = {"read", "write", "modify", "delete", "healthCheck"}
+)
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "repositories")
-public class Repository extends BasicPropertiesAware implements ModelObject
+public class Repository extends BasicPropertiesAware implements ModelObject, PermissionObject
 {
 
   /** Field description */
