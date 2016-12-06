@@ -35,7 +35,8 @@ package sonia.scm.security;
 
 
 /**
- *
+ * Encrypts and decrypts string values.
+ * 
  * @author Sebastian Sdorra
  * @since 1.7
  */
@@ -43,22 +44,20 @@ public interface CipherHandler
 {
 
   /**
-   * Method description
+   * Decrypts the given value.
    *
+   * @param value encrypted value
    *
-   * @param value
-   *
-   * @return
+   * @return decrypted value
    */
   public String decode(String value);
 
   /**
-   * Method description
+   * Encrypts the given value.
    *
+   * @param value plain text value to encrypt.
    *
-   * @param value
-   *
-   * @return
+   * @return encrypted value
    */
   public String encode(String value);
 }
