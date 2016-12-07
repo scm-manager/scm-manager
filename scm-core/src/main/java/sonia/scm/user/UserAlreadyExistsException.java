@@ -31,26 +31,40 @@
 
 
 
-package sonia.scm.group;
+package sonia.scm.user;
+
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.util.Util;
 
 /**
- * This {@link Exception} is thrown when trying to create a group 
- * that already exists.
  *
  * @author Sebastian Sdorra
  */
-public class GroupAllreadyExistExeption extends GroupException
+public class UserAlreadyExistsException extends UserException
 {
 
   /** Field description */
-  private static final long serialVersionUID = 4042878550219750430L;
-  
+  private static final long serialVersionUID = 9182294539718090814L;
+
+  //~--- constructors ---------------------------------------------------------
+
   /**
-   * Constructs a new instance.
-   * 
-   * @param message exception message
+   * Constructs ...
+   *
    */
-  public GroupAllreadyExistExeption(String message) {
-    super(message);
+  public UserAlreadyExistsException() {}
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param username
+   * @since 1.5
+   */
+  public UserAlreadyExistsException(String username)
+  {
+    super("user \"".concat(Util.nonNull(username)).concat(
+      "\" allready exists"));
   }
 }

@@ -96,7 +96,7 @@ public abstract class SimpleRepositoryHandlerTestBase extends AbstractTestBase
    * @throws IOException
    * @throws RepositoryException
    */
-  @Test(expected = RepositoryAllreadyExistExeption.class)
+  @Test(expected = RepositoryAlreadyExistsException.class)
   public void testCreateExisitingRepository()
           throws RepositoryException, IOException
   {

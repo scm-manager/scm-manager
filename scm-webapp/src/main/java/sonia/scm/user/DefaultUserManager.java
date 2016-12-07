@@ -159,7 +159,7 @@ public class DefaultUserManager extends AbstractUserManager
 
     if (userDAO.contains(user.getName()))
     {
-      throw new UserAllreadyExistException(user.getName());
+      throw new UserAlreadyExistsException(user.getName());
     }
 
     AssertUtil.assertIsValid(user);

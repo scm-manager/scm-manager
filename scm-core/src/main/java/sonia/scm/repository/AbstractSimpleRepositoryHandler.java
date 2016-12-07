@@ -115,7 +115,7 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
 
     if (directory.exists())
     {
-      throw new RepositoryAllreadyExistExeption();
+      throw new RepositoryAlreadyExistsException();
     }
 
     checkPath(directory);
@@ -411,9 +411,9 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
    *
    * @param directory repository target directory
    *
-   * @throws RepositoryAllreadyExistExeption
+   * @throws RepositoryAlreadyExistsException
    */
-  private void checkPath(File directory) throws RepositoryAllreadyExistExeption
+  private void checkPath(File directory) throws RepositoryAlreadyExistsException
   {
     File repositoryDirectory = config.getRepositoryDirectory();
     File parent = directory.getParentFile();
@@ -432,7 +432,7 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
           logger.error("parent path {} is a repository", parent);
         }
 
-        throw new RepositoryAllreadyExistExeption();
+        throw new RepositoryAlreadyExistsException();
       }
 
       parent = parent.getParentFile();

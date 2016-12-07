@@ -56,7 +56,7 @@ import sonia.scm.repository.AdvancedImportHandler;
 import sonia.scm.repository.ImportHandler;
 import sonia.scm.repository.ImportResult;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryAllreadyExistExeption;
+import sonia.scm.repository.RepositoryAlreadyExistsException;
 import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryManager;
@@ -551,7 +551,7 @@ public class RepositoryImportResource
       repository = new Repository(null, type, name);
       manager.create(repository);
     }
-    catch (RepositoryAllreadyExistExeption ex)
+    catch (RepositoryAlreadyExistsException ex)
     {
       logger.warn("a {} repository with the name {} already exists", ex);
 

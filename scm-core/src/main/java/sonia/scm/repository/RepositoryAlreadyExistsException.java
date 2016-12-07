@@ -31,40 +31,15 @@
 
 
 
-package sonia.scm.user;
-
-//~--- non-JDK imports --------------------------------------------------------
-
-import sonia.scm.util.Util;
+package sonia.scm.repository;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class UserAllreadyExistException extends UserException
+public class RepositoryAlreadyExistsException extends RepositoryException
 {
 
   /** Field description */
-  private static final long serialVersionUID = 9182294539718090814L;
-
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   */
-  public UserAllreadyExistException() {}
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param username
-   * @since 1.5
-   */
-  public UserAllreadyExistException(String username)
-  {
-    super("user \"".concat(Util.nonNull(username)).concat(
-      "\" allready exists"));
-  }
+  private static final long serialVersionUID = -774929917214137675L;
 }

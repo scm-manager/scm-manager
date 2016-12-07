@@ -171,7 +171,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
 
     if (repositoryDAO.contains(repository))
     {
-      throw new RepositoryAllreadyExistExeption();
+      throw new RepositoryAlreadyExistsException();
     }
 
     repository.setId(keyGenerator.createKey());

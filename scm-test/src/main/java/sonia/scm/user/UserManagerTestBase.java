@@ -94,7 +94,7 @@ public abstract class UserManagerTestBase
    * @throws IOException
    * @throws UserException
    */
-  @Test(expected = UserAllreadyExistException.class)
+  @Test(expected = UserAlreadyExistsException.class)
   public void testCreateExisting() throws UserException, IOException
   {
     User zaphod = UserTestData.createZaphod();

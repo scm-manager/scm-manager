@@ -31,15 +31,26 @@
 
 
 
-package sonia.scm.repository;
+package sonia.scm.group;
 
 /**
+ * This {@link Exception} is thrown when trying to create a group 
+ * that already exists.
  *
  * @author Sebastian Sdorra
  */
-public class RepositoryAllreadyExistExeption extends RepositoryException
+public class GroupAlreadyExistsException extends GroupException
 {
 
   /** Field description */
-  private static final long serialVersionUID = -774929917214137675L;
+  private static final long serialVersionUID = 4042878550219750430L;
+  
+  /**
+   * Constructs a new instance.
+   * 
+   * @param message exception message
+   */
+  public GroupAlreadyExistsException(String message) {
+    super(message);
+  }
 }

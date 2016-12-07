@@ -110,7 +110,7 @@ public abstract class RepositoryManagerTestBase
    * @throws IOException
    * @throws RepositoryException
    */
-  @Test(expected = RepositoryAllreadyExistExeption.class)
+  @Test(expected = RepositoryAlreadyExistsException.class)
   public void testCreateExisting() throws RepositoryException, IOException
   {
     createTestRepository();
