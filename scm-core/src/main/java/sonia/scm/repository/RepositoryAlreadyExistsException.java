@@ -34,12 +34,35 @@
 package sonia.scm.repository;
 
 /**
- *
+ * This {@link Exception} is thrown when trying to create a repository with 
+ * the same name and type already exists.
+ * 
  * @author Sebastian Sdorra
  */
 public class RepositoryAlreadyExistsException extends RepositoryException
 {
-
-  /** Field description */
   private static final long serialVersionUID = -774929917214137675L;
+
+  /**
+   * Creates a new instance.
+   * 
+   * @param message exception message
+   */
+  public RepositoryAlreadyExistsException(String message) {
+    super(message);
+  }
+  
+  /**
+   * Creates a new {@link RepositoryAlreadyExistsException} with an appropriate message.
+   * 
+   * @param repository repository that already exists
+   * 
+   * @return new exception with appropriate message
+   */
+  public static RepositoryAlreadyExistsException create(Repository repository){
+      StringBuilder buffer = new StringBuilder("repository with name ");
+      buffer.append(repository.getName()).append(" of type ");
+      buffer.append(repository.getType()).append("already exists");
+      return new RepositoryAlreadyExistsException(buffer.toString()); 
+  }
 }

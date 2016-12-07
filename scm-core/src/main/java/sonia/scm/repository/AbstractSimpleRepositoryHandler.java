@@ -115,7 +115,7 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
 
     if (directory.exists())
     {
-      throw new RepositoryAlreadyExistsException();
+      throw RepositoryAlreadyExistsException.create(repository);
     }
 
     checkPath(directory);
@@ -381,7 +381,7 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
         content = Resources.toString(url, Charsets.UTF_8);
       }
     }
-    catch (Exception ex)
+    catch (IOException ex)
     {
       logger.error("could not read resource", ex);
     }
@@ -432,7 +432,9 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
           logger.error("parent path {} is a repository", parent);
         }
 
-        throw new RepositoryAlreadyExistsException();
+        StringBuilder buffer = new StringBuilder("repository with name ");
+        buffer.append(directory.getName()).append(" already exists");
+        throw new RepositoryAlreadyExistsException(buffer.toString());
       }
 
       parent = parent.getParentFile();

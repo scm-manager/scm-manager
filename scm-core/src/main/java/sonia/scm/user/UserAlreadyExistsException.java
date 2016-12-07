@@ -33,12 +33,9 @@
 
 package sonia.scm.user;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import sonia.scm.util.Util;
-
 /**
- *
+ * This {@link Exception} is thrown when trying to create a user that already exists.
+ * 
  * @author Sebastian Sdorra
  */
 public class UserAlreadyExistsException extends UserException
@@ -50,21 +47,13 @@ public class UserAlreadyExistsException extends UserException
   //~--- constructors ---------------------------------------------------------
 
   /**
-   * Constructs ...
+   * Constructs a new instance.
    *
-   */
-  public UserAlreadyExistsException() {}
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param username
+   * @param message message of exception
    * @since 1.5
    */
-  public UserAlreadyExistsException(String username)
+  public UserAlreadyExistsException(String message)
   {
-    super("user \"".concat(Util.nonNull(username)).concat(
-      "\" allready exists"));
+    super(message);
   }
 }
