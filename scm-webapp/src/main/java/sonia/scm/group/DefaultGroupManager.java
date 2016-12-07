@@ -135,7 +135,7 @@ public class DefaultGroupManager extends AbstractGroupManager
     
     if (groupDAO.contains(name))
     {
-      throw new GroupAllreadyExistExeption();
+      throw new GroupAllreadyExistExeption(name.concat(" group already exists"));
     }
 
     removeDuplicateMembers(group);

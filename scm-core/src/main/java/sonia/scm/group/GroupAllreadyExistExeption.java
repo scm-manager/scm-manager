@@ -44,4 +44,13 @@ public class GroupAllreadyExistExeption extends GroupException
 
   /** Field description */
   private static final long serialVersionUID = 4042878550219750430L;
+  
+  /**
+   * Constructs a new instance.
+   * 
+   * @param message exception message
+   */
+  public GroupAllreadyExistExeption(String message) {
+    super(message);
+  }
 }
