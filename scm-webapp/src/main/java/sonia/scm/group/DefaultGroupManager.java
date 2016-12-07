@@ -35,6 +35,7 @@ package sonia.scm.group;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.github.sdorra.ssp.PermissionActionCheck;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
@@ -49,7 +50,6 @@ import sonia.scm.TransformFilter;
 import sonia.scm.search.SearchRequest;
 import sonia.scm.search.SearchUtil;
 import sonia.scm.util.CollectionAppender;
-import sonia.scm.util.SecurityUtil;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -123,15 +123,17 @@ public class DefaultGroupManager extends AbstractGroupManager
       group.setType(groupDAO.getType());
     }
 
+    String name = group.getName();
+    
     if (logger.isInfoEnabled())
     {
-      logger.info("create group {} of type {}", group.getName(),
+      logger.info("create group {} of type {}", name,
         group.getType());
     }
 
-    SecurityUtil.assertIsAdmin();
-
-    if (groupDAO.contains(group.getName()))
+    GroupPermissions.create().check();
+    
+    if (groupDAO.contains(name))
     {
       throw new GroupAllreadyExistExeption();
     }
@@ -161,9 +163,8 @@ public class DefaultGroupManager extends AbstractGroupManager
         group.getType());
     }
 
-    SecurityUtil.assertIsAdmin();
-
     String name = group.getName();
+    GroupPermissions.delete().check(name);
 
     if (groupDAO.contains(name))
     {
@@ -204,9 +205,8 @@ public class DefaultGroupManager extends AbstractGroupManager
         group.getType());
     }
 
-    SecurityUtil.assertIsAdmin();
-
     String name = group.getName();
+    GroupPermissions.modify().check(name);
 
     Group oldGroup = groupDAO.get(name);
 
@@ -236,15 +236,14 @@ public class DefaultGroupManager extends AbstractGroupManager
   @Override
   public void refresh(Group group) throws GroupException, IOException
   {
+    String name = group.getName();
     if (logger.isInfoEnabled())
     {
-      logger.info("refresh group {} of type {}", group.getName(),
-        group.getType());
+      logger.info("refresh group {} of type {}", name, group.getType());
     }
 
-    SecurityUtil.assertIsAdmin();
-
-    Group fresh = groupDAO.get(group.getName());
+    GroupPermissions.read(name).check();
+    Group fresh = groupDAO.get(name);
 
     if (fresh == null)
     {
@@ -270,6 +269,7 @@ public class DefaultGroupManager extends AbstractGroupManager
       logger.debug("search group with query {}", searchRequest.getQuery());
     }
 
+    final PermissionActionCheck<Group> check = GroupPermissions.read();
     return SearchUtil.search(searchRequest, groupDAO.getAll(),
       new TransformFilter<Group>()
     {
@@ -278,8 +278,7 @@ public class DefaultGroupManager extends AbstractGroupManager
       {
         Group result = null;
 
-        if (SearchUtil.matchesOne(searchRequest, group.getName(),
-          group.getDescription()))
+        if (check.isPermitted(group) && matches(searchRequest, group))
         {
           result = group.clone();
         }
@@ -287,6 +286,10 @@ public class DefaultGroupManager extends AbstractGroupManager
         return result;
       }
     });
+  }
+  
+  private boolean matches(SearchRequest searchRequest, Group group) {
+    return SearchUtil.matchesOne(searchRequest, group.getName(), group.getDescription());
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -302,6 +305,8 @@ public class DefaultGroupManager extends AbstractGroupManager
   @Override
   public Group get(String id)
   {
+    GroupPermissions.read(id).check();
+    
     Group group = groupDAO.get(id);
 
     if (group != null)
@@ -335,13 +340,14 @@ public class DefaultGroupManager extends AbstractGroupManager
   @Override
   public Collection<Group> getAll(Comparator<Group> comparator)
   {
-    SecurityUtil.assertIsAdmin();
+    List<Group> groups = new ArrayList<>();
 
-    List<Group> groups = new ArrayList<Group>();
-
+    PermissionActionCheck<Group> check = GroupPermissions.read();
     for (Group group : groupDAO.getAll())
     {
-      groups.add(group.clone());
+      if (check.isPermitted(group)) {
+        groups.add(group.clone());
+      }
     }
 
     if (comparator != null)
@@ -367,15 +373,17 @@ public class DefaultGroupManager extends AbstractGroupManager
   public Collection<Group> getAll(Comparator<Group> comparator, int start,
     int limit)
   {
-    SecurityUtil.assertIsAdmin();
+    final PermissionActionCheck<Group> check = GroupPermissions.read();
 
     return Util.createSubCollection(groupDAO.getAll(), comparator,
       new CollectionAppender<Group>()
     {
       @Override
-      public void append(Collection<Group> collection, Group item)
+      public void append(Collection<Group> collection, Group group)
       {
-        collection.add(item.clone());
+        if (check.isPermitted(group)) {
+          collection.add(group.clone());
+        }
       }
     }, start, limit);
   }
@@ -406,7 +414,7 @@ public class DefaultGroupManager extends AbstractGroupManager
   @Override
   public Collection<Group> getGroupsForMember(String member)
   {
-    LinkedList<Group> groups = new LinkedList<Group>();
+    LinkedList<Group> groups = new LinkedList<>();
 
     for (Group group : groupDAO.getAll())
     {
