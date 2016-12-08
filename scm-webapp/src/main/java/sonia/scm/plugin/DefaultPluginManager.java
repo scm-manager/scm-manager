@@ -56,7 +56,6 @@ import sonia.scm.io.ZipUnArchiver;
 import sonia.scm.net.HttpClient;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.IOUtil;
-import sonia.scm.util.SecurityUtil;
 import sonia.scm.util.SystemUtil;
 import sonia.scm.util.Util;
 import sonia.scm.version.Version;
@@ -191,8 +190,8 @@ public class DefaultPluginManager implements PluginManager
   @Override
   public void install(String id)
   {
-    SecurityUtil.assertIsAdmin();
-
+    PluginPermissions.manage().check();
+    
     PluginCenter center = getPluginCenter();
 
     // pluginHandler.install(id);
@@ -226,7 +225,7 @@ public class DefaultPluginManager implements PluginManager
   @Override
   public void installPackage(InputStream packageStream) throws IOException
   {
-    SecurityUtil.assertIsAdmin();
+    PluginPermissions.manage().check();
 
     File tempDirectory = Files.createTempDir();
 
@@ -274,7 +273,7 @@ public class DefaultPluginManager implements PluginManager
   @Override
   public void uninstall(String id)
   {
-    SecurityUtil.assertIsAdmin();
+    PluginPermissions.manage().check();
 
     Plugin plugin = installedPlugins.get(id);
 
@@ -320,7 +319,7 @@ public class DefaultPluginManager implements PluginManager
   @Override
   public void update(String id)
   {
-    SecurityUtil.assertIsAdmin();
+    PluginPermissions.manage().check();
 
     String[] idParts = id.split(":");
     String groupId = idParts[0];
@@ -364,7 +363,7 @@ public class DefaultPluginManager implements PluginManager
   @Override
   public PluginInformation get(String id)
   {
-    SecurityUtil.assertIsAdmin();
+    PluginPermissions.read().check();
 
     PluginInformation result = null;
 
@@ -393,7 +392,7 @@ public class DefaultPluginManager implements PluginManager
   public Set<PluginInformation> get(Predicate<PluginInformation> predicate)
   {
     AssertUtil.assertIsNotNull(predicate);
-    SecurityUtil.assertIsAdmin();
+    PluginPermissions.read().check();
 
     Set<PluginInformation> infoSet = new HashSet<>();
 
@@ -412,7 +411,7 @@ public class DefaultPluginManager implements PluginManager
   @Override
   public Collection<PluginInformation> getAll()
   {
-    SecurityUtil.assertIsAdmin();
+    PluginPermissions.read().check();
 
     Set<PluginInformation> infoSet = getInstalled();
 
@@ -430,7 +429,7 @@ public class DefaultPluginManager implements PluginManager
   @Override
   public Collection<PluginInformation> getAvailable()
   {
-    SecurityUtil.assertIsAdmin();
+    PluginPermissions.read().check();
 
     Set<PluginInformation> availablePlugins = new HashSet<>();
     Set<PluginInformation> centerPlugins = getPluginCenter().getPlugins();
@@ -455,7 +454,7 @@ public class DefaultPluginManager implements PluginManager
   @Override
   public Set<PluginInformation> getAvailableUpdates()
   {
-    SecurityUtil.assertIsAdmin();
+    PluginPermissions.read().check();
 
     return get(FILTER_UPDATES);
   }
@@ -469,7 +468,7 @@ public class DefaultPluginManager implements PluginManager
   @Override
   public Set<PluginInformation> getInstalled()
   {
-    SecurityUtil.assertIsAdmin();
+    PluginPermissions.read().check();
 
     Set<PluginInformation> infoSet = new LinkedHashSet<>();
 

@@ -35,6 +35,9 @@ package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.github.sdorra.ssp.PermissionObject;
+import com.github.sdorra.ssp.StaticPermissions;
+
 import com.google.common.base.Objects;
 
 import sonia.scm.Validateable;
@@ -57,9 +60,16 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author Sebastian Sdorra
  */
+@StaticPermissions(
+  value = "plugin", 
+  generatedClass = "PluginPermissions", 
+  permissions = {},
+  globalPermissions = { "read", "manage" }
+)
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "plugin-information")
-public class PluginInformation implements Validateable, Cloneable, Serializable
+public class PluginInformation 
+       implements PermissionObject, Validateable, Cloneable, Serializable
 {
 
   /** Field description */
@@ -262,6 +272,7 @@ public class PluginInformation implements Validateable, Cloneable, Serializable
    *
    * @return
    */
+  @Override
   public String getId()
   {
     return getId(true);
