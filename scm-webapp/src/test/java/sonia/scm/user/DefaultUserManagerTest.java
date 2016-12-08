@@ -35,6 +35,8 @@ package sonia.scm.user;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.github.sdorra.shiro.ShiroRule;
+import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.collect.Lists;
 
 import org.junit.Before;
@@ -51,13 +53,22 @@ import static org.mockito.Mockito.*;
 
 import java.util.Collections;
 import java.util.List;
+import org.junit.Rule;
 
 /**
  *
  * @author Sebastian Sdorra
  */
+@SubjectAware(
+    username = "trillian",
+    password = "secret",
+    configuration = "classpath:sonia/scm/repository/shiro.ini"
+)
 public class DefaultUserManagerTest extends UserManagerTestBase
 {
+  
+  @Rule
+  public ShiroRule shiro = new ShiroRule();
 
   /**
    * Method description
@@ -105,18 +116,6 @@ public class DefaultUserManagerTest extends UserManagerTestBase
 
     userManager.init(contextProvider);
     verify(userDAO, times(2)).add(any(User.class));
-  }
-
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   */
-  @Before
-  public void setAdminSubject()
-  {
-    setSubject(MockUtil.createAdminSubject());
   }
 
   //~--- methods --------------------------------------------------------------

@@ -33,6 +33,12 @@
       <artifactId>junit</artifactId>
       <version>${junit.version}</version>
     </dependency>
+    
+    <dependency>
+      <groupId>com.github.sdorra</groupId>
+      <artifactId>shiro-unit</artifactId>
+      <version>1.0.0</version>
+    </dependency>
 
     <dependency>
       <groupId>org.mockito</groupId>

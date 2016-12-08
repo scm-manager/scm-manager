@@ -36,6 +36,7 @@ package sonia.scm.repository;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.github.legman.Subscribe;
+import com.github.sdorra.shiro.SubjectAware;
 
 import org.apache.shiro.subject.Subject;
 
@@ -47,7 +48,6 @@ import sonia.scm.Manager;
 import sonia.scm.ManagerTestBase;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.api.HookContext;
-import sonia.scm.util.MockUtil;
 
 import static org.junit.Assert.*;
 
@@ -61,8 +61,7 @@ import java.util.Collection;
  *
  * @author Sebastian Sdorra
  */
-public abstract class RepositoryManagerTestBase
-  extends ManagerTestBase<Repository, RepositoryException>
+public abstract class RepositoryManagerTestBase extends ManagerTestBase<Repository, RepositoryException>
 {
 
   /**
@@ -378,19 +377,6 @@ public abstract class RepositoryManagerTestBase
     assertEquals(2, hook.eventsReceived);
   }
 
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   */
-  @Before
-  public void setAdminSubject()
-  {
-    Subject admin = MockUtil.createAdminSubject();
-
-    setSubject(admin);
-  }
 
   //~--- methods --------------------------------------------------------------
 

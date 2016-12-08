@@ -35,6 +35,8 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.github.sdorra.shiro.ShiroRule;
+import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.collect.ImmutableSet;
 
 import org.junit.Test;
@@ -60,14 +62,23 @@ import java.io.IOException;
 
 import java.util.HashSet;
 import java.util.Set;
+import org.junit.Rule;
 
 /**
  *
  * @author Sebastian Sdorra
  */
+@SubjectAware(
+    username = "trillian",
+    password = "secret",
+    configuration = "classpath:sonia/scm/repository/shiro.ini"
+)
 public class DefaultRepositoryManagerTest extends RepositoryManagerTestBase
 {
 
+  @Rule
+  public ShiroRule shiro = new ShiroRule();
+  
   /**
    * Method description
    *

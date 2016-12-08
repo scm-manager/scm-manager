@@ -33,6 +33,13 @@
 
 package sonia.scm;
 
+import java.io.IOException;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.rules.TemporaryFolder;
+import sonia.scm.util.MockUtil;
+
 /**
  *
  * @author Sebastian Sdorra
@@ -40,10 +47,28 @@ package sonia.scm;
  * @param <T>
  * @param <E>
  */
-public abstract class ManagerTestBase<T extends ModelObject,
-        E extends Exception> extends AbstractTestBase
+public abstract class ManagerTestBase<T extends ModelObject, E extends Exception>
 {
 
+  @Rule
+  public TemporaryFolder tempFolder = new TemporaryFolder();
+  
+  protected SCMContextProvider contextProvider;
+  
+  protected Manager<T, E> manager;
+  
+  @Before
+  public void setUp() throws IOException {
+    contextProvider = MockUtil.getSCMContextProvider(tempFolder.newFolder());
+    manager = createManager();
+    manager.init(contextProvider);
+  }
+  
+  @After
+  public void tearDown() throws IOException {
+    manager.close();
+  }
+  
   /**
    * Method description
    *
@@ -52,33 +77,4 @@ public abstract class ManagerTestBase<T extends ModelObject,
    */
   protected abstract Manager<T, E> createManager();
 
-  /**
-   * Method description
-   *
-   *
-   * @throws Exception
-   */
-  @Override
-  protected void postSetUp() throws Exception
-  {
-    manager = createManager();
-    manager.init(contextProvider);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @throws Exception
-   */
-  @Override
-  protected void preTearDown() throws Exception
-  {
-    manager.close();
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  protected Manager<T, E> manager;
 }
