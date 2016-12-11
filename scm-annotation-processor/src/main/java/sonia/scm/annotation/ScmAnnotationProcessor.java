@@ -61,7 +61,6 @@ import java.io.InputStream;
 import java.io.Writer;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Array;
 
 import java.util.Iterator;
 import java.util.List;
@@ -109,7 +108,7 @@ import javax.xml.transform.stream.StreamResult;
 @SupportedAnnotationTypes("*")
 @MetaInfServices(Processor.class)
 @SuppressWarnings({ "Since16", "Since15" })
-@SupportedSourceVersion(SourceVersion.RELEASE_7)
+@SupportedSourceVersion(SourceVersion.RELEASE_8)
 public final class ScmAnnotationProcessor extends AbstractProcessor
 {
 
