@@ -42,7 +42,7 @@ import java.util.Collection;
 
 /**
  * A ConfigurationEntryStore can be used to store multiple entries of structured 
- * configuration data. <b>Note:<b> the default implementation use JAXB to 
+ * configuration data. <b>Note:</b> the default implementation use JAXB to 
  * marshall the items.
  *
  * @author Sebastian Sdorra
