@@ -184,7 +184,7 @@
         <configuration>
           <signature>
             <groupId>org.codehaus.mojo.signature</groupId>
-            <artifactId>java17</artifactId>
+            <artifactId>java18</artifactId>
             <version>1.0</version>
           </signature>
         </configuration>
@@ -513,7 +513,7 @@
     <guava.version>16.0.1</guava.version>
 
     <!-- build properties -->
-    <project.build.javaLevel>1.7</project.build.javaLevel>
+    <project.build.javaLevel>1.8</project.build.javaLevel>
     <project.test.javaLevel>1.8</project.test.javaLevel>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <netbeans.hint.license>SCM-BSD</netbeans.hint.license>
