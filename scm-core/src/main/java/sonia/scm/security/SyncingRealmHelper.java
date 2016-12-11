@@ -26,12 +26,7 @@
  * http://bitbucket.org/sdorra/scm-manager
  *
  */
-
-
-
 package sonia.scm.security;
-
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
@@ -50,25 +45,28 @@ import sonia.scm.user.User;
 import sonia.scm.user.UserException;
 import sonia.scm.user.UserManager;
 import sonia.scm.web.security.AdministrationContext;
-import sonia.scm.web.security.PrivilegedAction;
 
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
 
 import java.util.Collection;
 
 /**
- * Helper class for syncing realms. The class should simplify the creation of
- * realms, which are syncing authenticated users with the local database.
+ * Helper class for syncing realms. The class should simplify the creation of realms, which are syncing authenticated
+ * users with the local database.
  *
  * @author Sebastian Sdorra
  * @since 2.0.0
  */
 @Extension
-public final class SyncingRealmHelper
-{
+public final class SyncingRealmHelper {
 
+  private final AdministrationContext ctx;
+  
+  private final GroupManager groupManager;
+
+  private final UserManager userManager;
+  
   /**
    * Constructs a new SyncingRealmHelper.
    *
@@ -78,16 +76,13 @@ public final class SyncingRealmHelper
    * @param groupManager group manager
    */
   @Inject
-  public SyncingRealmHelper(AdministrationContext ctx, UserManager userManager,
-    GroupManager groupManager)
-  {
+  public SyncingRealmHelper(AdministrationContext ctx, UserManager userManager, GroupManager groupManager) {
     this.ctx = ctx;
     this.userManager = userManager;
     this.groupManager = groupManager;
   }
 
   //~--- methods --------------------------------------------------------------
-
   /**
    * Create {@link AuthenticationInfo} from user and groups.
    *
@@ -99,8 +94,7 @@ public final class SyncingRealmHelper
    * @return authentication info
    */
   public AuthenticationInfo createAuthenticationInfo(String realm, User user,
-    String... groups)
-  {
+    String... groups) {
     return createAuthenticationInfo(realm, user, ImmutableList.copyOf(groups));
   }
 
@@ -115,8 +109,7 @@ public final class SyncingRealmHelper
    * @return authentication info
    */
   public AuthenticationInfo createAuthenticationInfo(String realm, User user,
-    Collection<String> groups)
-  {
+    Collection<String> groups) {
     SimplePrincipalCollection collection = new SimplePrincipalCollection();
 
     collection.add(user.getId(), realm);
@@ -129,32 +122,20 @@ public final class SyncingRealmHelper
   /**
    * Stores the group in local database of scm-manager.
    *
-   *
    * @param group group to store
    */
-  public void store(final Group group)
-  {
-    ctx.runAsAdmin(new PrivilegedAction()
-    {
-
-      @Override
-      public void run()
-      {
-        try
-        {
-          if (groupManager.get(group.getId()) != null)
-          {
-            groupManager.modify(group);
-          }
-          else
-          {
-            groupManager.create(group);
-          }
+  public void store(final Group group) {
+    ctx.runAsAdmin(() -> {
+      try {
+        if (groupManager.get(group.getId()) != null) {
+          groupManager.modify(group);
         }
-        catch (GroupException | IOException ex)
-        {
-          throw new AuthenticationException("could not store group", ex);
+        else {
+          groupManager.create(group);
         }
+      }
+      catch (GroupException | IOException ex) {
+        throw new AuthenticationException("could not store group", ex);
       }
     });
   }
@@ -162,44 +143,21 @@ public final class SyncingRealmHelper
   /**
    * Stores the user in local database of scm-manager.
    *
-   *
    * @param user user to store
    */
-  public void store(final User user)
-  {
-    ctx.runAsAdmin(new PrivilegedAction()
-    {
-
-      @Override
-      public void run()
-      {
-        try
-        {
-          if (userManager.contains(user.getName()))
-          {
-            userManager.modify(user);
-          }
-          else
-          {
-            userManager.create(user);
-          }
+  public void store(final User user) {
+    ctx.runAsAdmin(() -> {
+      try {
+        if (userManager.contains(user.getName())) {
+          userManager.modify(user);
         }
-        catch (UserException | IOException ex)
-        {
-          throw new AuthenticationException("could not store user", ex);
+        else {
+          userManager.create(user);
         }
+      }
+      catch (UserException | IOException ex) {
+        throw new AuthenticationException("could not store user", ex);
       }
     });
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** administration context */
-  private final AdministrationContext ctx;
-
-  /** group manager */
-  private final GroupManager groupManager;
-
-  /** user manager */
-  private final UserManager userManager;
 }

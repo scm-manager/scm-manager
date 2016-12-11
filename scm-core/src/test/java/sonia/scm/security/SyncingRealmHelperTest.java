@@ -68,23 +68,55 @@ import static org.mockito.Mockito.*;
 import java.io.IOException;
 
 /**
+ * Unit tests for {@link SyncingRealmHelper}.
  *
  * @author Sebastian Sdorra
  */
 @RunWith(MockitoJUnitRunner.class)
-public class SyncingRealmHelperTest
-{
+public class SyncingRealmHelperTest {
+
+  @Mock
+  private GroupManager groupManager;
+
+  @Mock
+  private UserManager userManager;
+
+  private SyncingRealmHelper helper;
 
   /**
-   * Method description
-   *
+   * Mock {@link AdministrationContext} and create object under test.
+   */
+  @Before
+  public void setUp() {
+    AdministrationContext ctx = new AdministrationContext() {
+
+      @Override
+      public void runAsAdmin(PrivilegedAction action) {
+        action.run();
+      }
+
+      @Override
+      public void runAsAdmin(Class<? extends PrivilegedAction> actionClass) {
+        try {
+          runAsAdmin(actionClass.newInstance());
+        }
+        catch (IllegalAccessException | InstantiationException ex) {
+          throw Throwables.propagate(ex);
+        }
+      }
+    };
+
+    helper = new SyncingRealmHelper(ctx, userManager, groupManager);
+  }
+
+  /**
+   * Tests {@link SyncingRealmHelper#createAuthenticationInfo(String, User, String...)}.
    */
   @Test
-  public void testCreateAuthenticationInfo()
-  {
+  public void testCreateAuthenticationInfo() {
     User user = new User("tricia");
     AuthenticationInfo authInfo = helper.createAuthenticationInfo("unit-test",
-                                    user, "heartOfGold");
+      user, "heartOfGold");
 
     assertNotNull(authInfo);
     assertEquals("tricia", authInfo.getPrincipals().getPrimaryPrincipal());
@@ -97,14 +129,13 @@ public class SyncingRealmHelperTest
   }
 
   /**
-   * Method description
+   * Tests {@link SyncingRealmHelper#store(Group)}.
    *
    * @throws GroupException
    * @throws IOException
    */
   @Test
-  public void testStoreGroupCreate() throws GroupException, IOException
-  {
+  public void testStoreGroupCreate() throws GroupException, IOException {
     Group group = new Group("unit-test", "heartOfGold");
 
     helper.store(group);
@@ -112,15 +143,13 @@ public class SyncingRealmHelperTest
   }
 
   /**
-   * Method description
-   *
+   * Tests {@link SyncingRealmHelper#store(Group)} with thrown {@link GroupException}.
    *
    * @throws GroupException
    * @throws IOException
    */
   @Test(expected = AuthenticationException.class)
-  public void testStoreGroupFailure() throws GroupException, IOException
-  {
+  public void testStoreGroupFailure() throws GroupException, IOException {
     Group group = new Group("unit-test", "heartOfGold");
 
     doThrow(GroupException.class).when(groupManager).create(group);
@@ -128,14 +157,13 @@ public class SyncingRealmHelperTest
   }
 
   /**
-   * Method description
+   * Tests {@link SyncingRealmHelper#store(Group)} with an existing group.
    *
    * @throws GroupException
    * @throws IOException
    */
   @Test
-  public void testStoreGroupModify() throws GroupException, IOException
-  {
+  public void testStoreGroupModify() throws GroupException, IOException {
     Group group = new Group("unit-test", "heartOfGold");
 
     when(groupManager.get("heartOfGold")).thenReturn(group);
@@ -145,14 +173,13 @@ public class SyncingRealmHelperTest
   }
 
   /**
-   * Method description
+   * Tests {@link SyncingRealmHelper#store(User)}.
    *
    * @throws UserException
    * @throws IOException
    */
   @Test
-  public void testStoreUserCreate() throws UserException, IOException
-  {
+  public void testStoreUserCreate() throws UserException, IOException {
     User user = new User("tricia");
 
     helper.store(user);
@@ -160,15 +187,13 @@ public class SyncingRealmHelperTest
   }
 
   /**
-   * Method description
+   * Tests {@link SyncingRealmHelper#store(User)} with a thrown {@link UserException}.
    *
-   *
-   * @throws IOException
    * @throws UserException
+   * @throws IOException
    */
   @Test(expected = AuthenticationException.class)
-  public void testStoreUserFailure() throws UserException, IOException
-  {
+  public void testStoreUserFailure() throws UserException, IOException {
     User user = new User("tricia");
 
     doThrow(UserException.class).when(userManager).create(user);
@@ -176,14 +201,13 @@ public class SyncingRealmHelperTest
   }
 
   /**
-   * Method description
+   * Tests {@link SyncingRealmHelper#store(User)} with an existing user.
    *
    * @throws UserException
    * @throws IOException
    */
   @Test
-  public void testStoreUserModify() throws UserException, IOException
-  {
+  public void testStoreUserModify() throws UserException, IOException {
     when(userManager.contains("tricia")).thenReturn(Boolean.TRUE);
 
     User user = new User("tricia");
@@ -191,52 +215,4 @@ public class SyncingRealmHelperTest
     helper.store(user);
     verify(userManager, times(1)).modify(user);
   }
-
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   */
-  @Before
-  public void setUp()
-  {
-    AdministrationContext ctx = new AdministrationContext()
-    {
-
-      @Override
-      public void runAsAdmin(PrivilegedAction action)
-      {
-        action.run();
-      }
-
-      @Override
-      public void runAsAdmin(Class<? extends PrivilegedAction> actionClass)
-      {
-        try
-        {
-          runAsAdmin(actionClass.newInstance());
-        }
-        catch (IllegalAccessException | InstantiationException ex)
-        {
-          throw Throwables.propagate(ex);
-        }
-      }
-    };
-
-    helper = new SyncingRealmHelper(ctx, userManager, groupManager);
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  @Mock
-  private GroupManager groupManager;
-
-  /** Field description */
-  private SyncingRealmHelper helper;
-
-  /** Field description */
-  @Mock
-  private UserManager userManager;
 }
