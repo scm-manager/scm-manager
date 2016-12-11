@@ -28,12 +28,9 @@
  * http://bitbucket.org/sdorra/scm-manager
  *
  */
-
-
 package sonia.scm.store;
 
 //~--- non-JDK imports --------------------------------------------------------
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,75 +38,52 @@ import sonia.scm.SCMContextProvider;
 import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
-
 import java.io.File;
 
 /**
- *
+ * Abstract store factory for file based stores.
+ * 
  * @author Sebastian Sdorra
  */
-public class FileBasedStoreFactory
-{
-
-  /** Field description */
-  private static final String BASE_DIRECTORY = "var";
+public abstract class FileBasedStoreFactory {
 
   /**
    * the logger for FileBasedStoreFactory
    */
-  private static final Logger logger =
-    LoggerFactory.getLogger(FileBasedStoreFactory.class);
+  private static final Logger LOG = LoggerFactory.getLogger(FileBasedStoreFactory.class);
 
-  //~--- constructors ---------------------------------------------------------
+  private static final String BASE_DIRECTORY = "var";
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param context
-   * @param dataDirectoryName
-   */
-  public FileBasedStoreFactory(SCMContextProvider context,
-    String dataDirectoryName)
-  {
+  private final SCMContextProvider context;
+
+  private final String dataDirectoryName;
+
+  private File dataDirectory;
+
+  protected FileBasedStoreFactory(SCMContextProvider context,
+    String dataDirectoryName) {
     this.context = context;
     this.dataDirectoryName = dataDirectoryName;
   }
 
   //~--- get methods ----------------------------------------------------------
-
   /**
-   * Method description
+   * Returns data directory for given name.
    *
+   * @param name name of data directory
    *
-   * @param name
-   *
-   * @return
+   * @return data directory
    */
-  protected File getDirectory(String name)
-  {
-    if (dataDirectory == null)
-    {
+  protected File getDirectory(String name) {
+    if (dataDirectory == null) {
       dataDirectory = new File(context.getBaseDirectory(),
         BASE_DIRECTORY.concat(File.separator).concat(dataDirectoryName));
-      logger.debug("create data directory {}", dataDirectory);
+      LOG.debug("create data directory {}", dataDirectory);
     }
 
     File storeDirectory = new File(dataDirectory, name);
-
     IOUtil.mkdirs(storeDirectory);
-
     return storeDirectory;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final SCMContextProvider context;
-
-  /** Field description */
-  private File dataDirectory;
-
-  /** Field description */
-  private final String dataDirectoryName;
 }

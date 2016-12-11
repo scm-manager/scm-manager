@@ -38,8 +38,7 @@ package sonia.scm.repository;
 import org.junit.Test;
 
 import sonia.scm.AbstractTestBase;
-import sonia.scm.store.MemoryStoreFactory;
-import sonia.scm.store.StoreFactory;
+import sonia.scm.store.InMemoryConfigurationStoreFactory;
 import sonia.scm.util.IOUtil;
 
 import static org.junit.Assert.*;
@@ -48,6 +47,7 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.IOException;
+import sonia.scm.store.ConfigurationStoreFactory;
 
 /**
  *
@@ -74,7 +74,7 @@ public abstract class SimpleRepositoryHandlerTestBase extends AbstractTestBase
    * @return
    */
   protected abstract RepositoryHandler createRepositoryHandler(
-          StoreFactory factory, File directory);
+          ConfigurationStoreFactory factory, File directory);
 
   /**
    * Method description
@@ -150,11 +150,8 @@ public abstract class SimpleRepositoryHandlerTestBase extends AbstractTestBase
   @Override
   protected void postSetUp() throws Exception
   {
-    MemoryStoreFactory storeFactory = new MemoryStoreFactory();
-
-    storeFactory.init(contextProvider);
-    baseDirectory = new File(contextProvider.getBaseDirectory(),
-                             "repositories");
+    InMemoryConfigurationStoreFactory storeFactory = new InMemoryConfigurationStoreFactory();
+    baseDirectory = new File(contextProvider.getBaseDirectory(), "repositories");
     IOUtil.mkdirs(baseDirectory);
     handler = createRepositoryHandler(storeFactory, baseDirectory);
   }

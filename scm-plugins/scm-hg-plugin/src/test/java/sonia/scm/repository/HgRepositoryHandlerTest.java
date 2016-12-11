@@ -37,13 +37,13 @@ package sonia.scm.repository;
 
 
 import sonia.scm.io.DefaultFileSystem;
-import sonia.scm.store.StoreFactory;
 
 import static org.junit.Assert.*;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
+import sonia.scm.store.ConfigurationStoreFactory;
 
 /**
  *
@@ -83,7 +83,7 @@ public class HgRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase
    * @return
    */
   @Override
-  protected RepositoryHandler createRepositoryHandler(StoreFactory factory,
+  protected RepositoryHandler createRepositoryHandler(ConfigurationStoreFactory factory,
           File directory)
   {
     HgRepositoryHandler handler = new HgRepositoryHandler(factory,
@@ -98,3 +98,4 @@ public class HgRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase
     return handler;
   }
 }
+//~--- non-JDK imports --------------------------------------------------------

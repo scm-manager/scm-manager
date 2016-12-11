@@ -37,10 +37,10 @@ package sonia.scm.user.xml;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import sonia.scm.store.StoreFactory;
 import sonia.scm.user.User;
 import sonia.scm.user.UserDAO;
 import sonia.scm.xml.AbstractXmlDAO;
+import sonia.scm.store.ConfigurationStoreFactory;
 
 /**
  *
@@ -63,7 +63,7 @@ public class XmlUserDAO extends AbstractXmlDAO<User, XmlUserDatabase>
    * @param storeFactory
    */
   @Inject
-  public XmlUserDAO(StoreFactory storeFactory)
+  public XmlUserDAO(ConfigurationStoreFactory storeFactory)
   {
     super(storeFactory.getStore(XmlUserDatabase.class, STORE_NAME));
   }

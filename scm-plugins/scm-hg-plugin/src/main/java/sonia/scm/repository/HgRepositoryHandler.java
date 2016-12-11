@@ -56,7 +56,6 @@ import sonia.scm.io.INIConfigurationWriter;
 import sonia.scm.io.INISection;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.spi.HgRepositoryServiceProvider;
-import sonia.scm.store.StoreFactory;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.SystemUtil;
 import sonia.scm.util.Util;
@@ -73,6 +72,7 @@ import java.text.MessageFormat;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
+import sonia.scm.store.ConfigurationStoreFactory;
 
 /**
  *
@@ -122,7 +122,7 @@ public class HgRepositoryHandler
    * @param hgContextProvider
    */
   @Inject
-  public HgRepositoryHandler(StoreFactory storeFactory, FileSystem fileSystem,
+  public HgRepositoryHandler(ConfigurationStoreFactory storeFactory, FileSystem fileSystem,
     Provider<HgContext> hgContextProvider)
   {
     super(storeFactory, fileSystem);

@@ -54,7 +54,6 @@ import sonia.scm.io.FileSystem;
 import sonia.scm.logging.SVNKitLogger;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.spi.SvnRepositoryServiceProvider;
-import sonia.scm.store.StoreFactory;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -62,6 +61,7 @@ import sonia.scm.util.Util;
 import java.io.File;
 import java.io.IOException;
 import sonia.scm.repository.spi.HookEventFacade;
+import sonia.scm.store.ConfigurationStoreFactory;
 
 /**
  *
@@ -106,7 +106,7 @@ public class SvnRepositoryHandler
    * @param repositoryManager
    */
   @Inject
-  public SvnRepositoryHandler(StoreFactory storeFactory, FileSystem fileSystem,
+  public SvnRepositoryHandler(ConfigurationStoreFactory storeFactory, FileSystem fileSystem,
     HookEventFacade eventFacade)
   {
     super(storeFactory, fileSystem);

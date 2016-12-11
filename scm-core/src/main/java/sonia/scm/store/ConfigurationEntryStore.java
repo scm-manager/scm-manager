@@ -50,8 +50,7 @@ import java.util.Collection;
  * @param <V> store value type
  * @since 1.31
  */
-public interface ConfigurationEntryStore<V> extends DataStore<V>
-{
+public interface ConfigurationEntryStore<V> extends DataStore<V> {
 
   /**
    * Return all values matching the given {@link Predicate}.

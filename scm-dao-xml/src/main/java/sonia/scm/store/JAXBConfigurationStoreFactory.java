@@ -28,44 +28,59 @@
  * http://bitbucket.org/sdorra/scm-manager
  *
  */
-
-
 package sonia.scm.store;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import sonia.scm.SCMContextProvider;
+import sonia.scm.util.IOUtil;
+
+import java.io.File;
+
 /**
- * Base class for {@link BlobStore} and {@link DataStore}.
+ * JAXB implementation of {@link JAXBConfigurationStoreFactory}.
  *
  * @author Sebastian Sdorra
- * @since 1.23
- *
- * @param <T> Type of the stored objects
  */
-public interface StoreBase<T>
-{
+@Singleton
+public class JAXBConfigurationStoreFactory implements ConfigurationStoreFactory {
 
   /**
-   * Remove all items from the store.
-   *
+   * the logger for JAXBConfigurationStoreFactory
    */
-  public void clear();
+  private static final Logger LOG = LoggerFactory.getLogger(JAXBConfigurationStoreFactory.class);
+
+  private final File configDirectory;
 
   /**
-   * Remove the item with the given id.
+   * Constructs a new instance.
    *
-   *
-   * @param id id of the item to remove
+   * @param context scm context
    */
-  public void remove(String id);
+  @Inject
+  public JAXBConfigurationStoreFactory(SCMContextProvider context) {
+    configDirectory = new File(context.getBaseDirectory(), StoreConstants.CONFIGDIRECTORY_NAME);
+    IOUtil.mkdirs(configDirectory);
+  }
 
-  //~--- get methods ----------------------------------------------------------
+  @Override
+  public <T> JAXBConfigurationStore<T> getStore(Class<T> type, String name) {
+    if (configDirectory == null) {
+      throw new IllegalStateException("store factory is not initialized");
+    }
 
-  /**
-   * Returns the item with the given id from the store.
-   *
-   *
-   * @param id id of the item to return
-   *
-   * @return item with the given id
-   */
-  public T get(String id);
+    File configFile = new File(configDirectory, name.concat(StoreConstants.FILE_EXTENSION));
+
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("create store for {} at {}", type.getName(),
+        configFile.getPath());
+    }
+
+    return new JAXBConfigurationStore<>(type, configFile);
+  }
+
 }

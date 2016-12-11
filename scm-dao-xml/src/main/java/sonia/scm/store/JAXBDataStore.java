@@ -28,12 +28,9 @@
  * http://bitbucket.org/sdorra/scm-manager
  *
  */
-
-
 package sonia.scm.store;
 
 //~--- non-JDK imports --------------------------------------------------------
-
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 
@@ -43,7 +40,6 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.security.KeyGenerator;
 
 //~--- JDK imports ------------------------------------------------------------
-
 import java.io.File;
 
 import java.util.Map;
@@ -53,87 +49,57 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 /**
+ * Jaxb implementation of {@link DataStore}.
  *
  * @author Sebastian Sdorra
  *
- * @param <T>
+ * @param <T> type of stored data.
  */
-public class JAXBDataStore<T> extends FileBasedStore<T> implements DataStore<T>
-{
+public class JAXBDataStore<T> extends FileBasedStore<T> implements DataStore<T> {
 
   /**
    * the logger for JAXBDataStore
    */
-  private static final Logger logger =
-    LoggerFactory.getLogger(JAXBDataStore.class);
+  private static final Logger LOG
+    = LoggerFactory.getLogger(JAXBDataStore.class);
 
-  //~--- constructors ---------------------------------------------------------
+  private final JAXBContext context;
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param type
-   * @param keyGenerator
-   * @param directory
-   */
-  public JAXBDataStore(KeyGenerator keyGenerator, Class<T> type, File directory)
-  {
+  private final KeyGenerator keyGenerator;
+
+  JAXBDataStore(KeyGenerator keyGenerator, Class<T> type, File directory) {
     super(directory, StoreConstants.FILE_EXTENSION);
     this.keyGenerator = keyGenerator;
 
-    try
-    {
+    try {
       context = JAXBContext.newInstance(type);
       this.directory = directory;
     }
-    catch (JAXBException ex)
-    {
-      throw new StoreException(ex);
+    catch (JAXBException ex) {
+      throw new StoreException("failed to create jaxb context", ex);
     }
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   * @param item
-   */
   @Override
-  public void put(String id, T item)
-  {
-    logger.debug("put item {} to store", id);
+  public void put(String id, T item) {
+    LOG.debug("put item {} to store", id);
 
     File file = getFile(id);
 
-    try
-    {
+    try {
       Marshaller marshaller = context.createMarshaller();
 
       marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
       marshaller.marshal(item, file);
     }
-    catch (JAXBException ex)
-    {
+    catch (JAXBException ex) {
       throw new StoreException("could not write object with id ".concat(id),
         ex);
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param item
-   *
-   * @return
-   */
   @Override
-  public String put(T item)
-  {
+  public String put(T item) {
     String key = keyGenerator.createKey();
 
     put(key, item);
@@ -141,55 +107,31 @@ public class JAXBDataStore<T> extends FileBasedStore<T> implements DataStore<T>
     return key;
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public Map<String, T> getAll()
-  {
-    logger.trace("get all items from data store");
+  public Map<String, T> getAll() {
+    LOG.trace("get all items from data store");
 
     Builder<String, T> builder = ImmutableMap.builder();
 
-    for (File file : directory.listFiles())
-    {
+    for (File file : directory.listFiles()) {
       builder.put(getId(file), read(file));
     }
 
     return builder.build();
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param file
-   *
-   * @return
-   */
   @Override
   @SuppressWarnings("unchecked")
-  protected T read(File file)
-  {
+  protected T read(File file) {
     T item = null;
 
-    if (file.exists())
-    {
-      logger.trace("try to read {}", file);
+    if (file.exists()) {
+      LOG.trace("try to read {}", file);
 
-      try
-      {
+      try {
         item = (T) context.createUnmarshaller().unmarshal(file);
       }
-      catch (JAXBException ex)
-      {
+      catch (JAXBException ex) {
         throw new StoreException(
           "could not read object ".concat(file.getPath()), ex);
       }
@@ -197,12 +139,4 @@ public class JAXBDataStore<T> extends FileBasedStore<T> implements DataStore<T>
 
     return item;
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private JAXBContext context;
-
-  /** Field description */
-  private final KeyGenerator keyGenerator;
 }

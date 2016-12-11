@@ -39,10 +39,8 @@ package sonia.scm.store;
  * @author Sebastian Sdorra
  * @since 1.23
  */
-public class EntryAlreadyExistsStoreException extends StoreException
-{
+public class EntryAlreadyExistsStoreException extends StoreException {
 
-  /** Field description */
   private static final long serialVersionUID = 7016781091599951287L;
 
   //~--- constructors ---------------------------------------------------------
@@ -50,11 +48,9 @@ public class EntryAlreadyExistsStoreException extends StoreException
   /**
    * Constructs new EntryAllreadyExistsStoreException.
    *
-   *
    * @param message message for the exception
    */
-  public EntryAlreadyExistsStoreException(String message)
-  {
+  public EntryAlreadyExistsStoreException(String message) {
     super(message);
   }
 }

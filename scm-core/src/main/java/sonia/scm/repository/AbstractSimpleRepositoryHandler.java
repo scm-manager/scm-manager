@@ -46,7 +46,6 @@ import sonia.scm.ConfigurationException;
 import sonia.scm.io.CommandResult;
 import sonia.scm.io.ExtendedCommand;
 import sonia.scm.io.FileSystem;
-import sonia.scm.store.StoreFactory;
 import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -55,6 +54,7 @@ import java.io.File;
 import java.io.IOException;
 
 import java.net.URL;
+import sonia.scm.store.ConfigurationStoreFactory;
 
 /**
  *
@@ -89,7 +89,7 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
    * @param storeFactory
    * @param fileSystem
    */
-  public AbstractSimpleRepositoryHandler(StoreFactory storeFactory,
+  public AbstractSimpleRepositoryHandler(ConfigurationStoreFactory storeFactory,
           FileSystem fileSystem)
   {
     super(storeFactory);

@@ -28,12 +28,9 @@
  * http://bitbucket.org/sdorra/scm-manager
  *
  */
-
-
 package sonia.scm.store;
 
 //~--- non-JDK imports --------------------------------------------------------
-
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
@@ -45,147 +42,86 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.security.KeyGenerator;
 
 //~--- JDK imports ------------------------------------------------------------
-
 import java.io.File;
 import java.io.IOException;
 
 import java.util.List;
 
 /**
+ * File based implementation of {@link BlobStore}.
  *
  * @author Sebastian Sdorra
  */
-public class FileBlobStore extends FileBasedStore<Blob> implements BlobStore
-{
-
-  /** Field description */
-  private static final String SUFFIX = ".blob";
+public class FileBlobStore extends FileBasedStore<Blob> implements BlobStore {
 
   /**
    * the logger for FileBlobStore
    */
-  private static final Logger logger =
-    LoggerFactory.getLogger(FileBlobStore.class);
+  private static final Logger LOG
+    = LoggerFactory.getLogger(FileBlobStore.class);
 
-  //~--- constructors ---------------------------------------------------------
+  private static final String SUFFIX = ".blob";
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param keyGenerator
-   * @param directory
-   */
-  public FileBlobStore(KeyGenerator keyGenerator, File directory)
-  {
+  private final KeyGenerator keyGenerator;
+
+  FileBlobStore(KeyGenerator keyGenerator, File directory) {
     super(directory, SUFFIX);
     this.keyGenerator = keyGenerator;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public Blob create()
-  {
+  public Blob create() {
     return create(keyGenerator.createKey());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   *
-   * @return
-   */
   @Override
-  public Blob create(String id)
-  {
+  public Blob create(String id) {
     Preconditions.checkArgument(!Strings.isNullOrEmpty(id),
       "id argument is required");
-    logger.debug("create new blob with id {}", id);
+    LOG.debug("create new blob with id {}", id);
 
     File file = getFile(id);
 
-    try
-    {
-      if (file.exists())
-      {
+    try {
+      if (file.exists()) {
         throw new EntryAlreadyExistsStoreException(
           "blob with id ".concat(id).concat(" allready exists"));
       }
-      else if (!file.createNewFile())
-      {
+      else if (!file.createNewFile()) {
         throw new StoreException("could not create blob for id ".concat(id));
       }
     }
-    catch (IOException ex)
-    {
+    catch (IOException ex) {
       throw new StoreException("could not create blob for id ".concat(id), ex);
     }
 
     return new FileBlob(id, file);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param blob
-   */
   @Override
-  public void remove(Blob blob)
-  {
+  public void remove(Blob blob) {
     Preconditions.checkNotNull(blob, "blob argument is required");
     remove(blob.getId());
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public List<Blob> getAll()
-  {
-    logger.trace("get all items from data store");
+  public List<Blob> getAll() {
+    LOG.trace("get all items from data store");
 
     Builder<Blob> builder = ImmutableList.builder();
 
-    for (File file : directory.listFiles())
-    {
+    for (File file : directory.listFiles()) {
       builder.add(read(file));
     }
 
     return builder.build();
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param file
-   *
-   * @return
-   */
   @Override
-  protected FileBlob read(File file)
-  {
+  protected FileBlob read(File file) {
     FileBlob blob = null;
 
-    if (file.exists())
-    {
+    if (file.exists()) {
       String id = getId(file);
 
       blob = new FileBlob(id, file);
@@ -194,8 +130,4 @@ public class FileBlobStore extends FileBasedStore<Blob> implements BlobStore
     return blob;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** key generator */
-  private final KeyGenerator keyGenerator;
 }

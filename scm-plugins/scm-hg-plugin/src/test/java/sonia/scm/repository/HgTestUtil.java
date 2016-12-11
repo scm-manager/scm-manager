@@ -39,7 +39,7 @@ import org.junit.Assume;
 
 import sonia.scm.SCMContext;
 import sonia.scm.io.FileSystem;
-import sonia.scm.store.MemoryStoreFactory;
+import sonia.scm.store.InMemoryConfigurationStoreFactory;
 
 import static org.mockito.Mockito.*;
 
@@ -105,7 +105,7 @@ public final class HgTestUtil
     FileSystem fileSystem = mock(FileSystem.class);
 
     HgRepositoryHandler handler =
-      new HgRepositoryHandler(new MemoryStoreFactory(), fileSystem,
+      new HgRepositoryHandler(new InMemoryConfigurationStoreFactory(), fileSystem,
         new HgContextProvider());
 
     handler.init(context);

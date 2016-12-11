@@ -50,7 +50,7 @@ import java.io.File;
  *
  * @param <T>
  */
-public abstract class FileBasedStore<T> implements StoreBase<T>
+public abstract class FileBasedStore<T> implements MultiEntryStore<T>
 {
 
   /**

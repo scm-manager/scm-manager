@@ -30,28 +30,35 @@
  */
 
 
+
 package sonia.scm.store;
 
 /**
+ * ConfigurationStore for configuration objects. <strong>Note:</strong> the default
+ * implementation use JAXB to marshall the configuration objects.
  *
  * @author Sebastian Sdorra
+ *
+ * @param <T> type of the configuration objects
  */
-public class JAXBStoreTest extends StoreTestBase
+public interface ConfigurationStore<T>
 {
 
   /**
-   * Method description
+   * Returns the configuration object from store.
    *
    *
-   * @return
+   * @return configuration object from store
    */
-  @Override
-  protected StoreFactory createStoreFactory()
-  {
-    JAXBStoreFactory factory = new JAXBStoreFactory();
+  public T get();
 
-    factory.init(contextProvider);
+  //~--- set methods ----------------------------------------------------------
 
-    return factory;
-  }
+  /**
+   * Stores the given configuration object to the store.
+   *
+   *
+   * @param obejct configuration object to store
+   */
+  public void set(T obejct);
 }

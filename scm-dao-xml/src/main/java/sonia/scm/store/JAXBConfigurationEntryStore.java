@@ -80,8 +80,7 @@ import javax.xml.stream.XMLStreamWriter;
  *
  * @param <V>
  */
-public class JAXBConfigurationEntryStore<V>
-  implements ConfigurationEntryStore<V>
+public class JAXBConfigurationEntryStore<V> implements ConfigurationEntryStore<V>
 {
 
   /** Field description */

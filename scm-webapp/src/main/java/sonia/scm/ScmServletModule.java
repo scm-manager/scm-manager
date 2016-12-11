@@ -91,8 +91,7 @@ import sonia.scm.store.DataStoreFactory;
 import sonia.scm.store.FileBlobStoreFactory;
 import sonia.scm.store.JAXBConfigurationEntryStoreFactory;
 import sonia.scm.store.JAXBDataStoreFactory;
-import sonia.scm.store.JAXBStoreFactory;
-import sonia.scm.store.StoreFactory;
+import sonia.scm.store.JAXBConfigurationStoreFactory;
 import sonia.scm.template.MustacheTemplateEngine;
 import sonia.scm.template.TemplateEngine;
 import sonia.scm.template.TemplateEngineFactory;
@@ -127,6 +126,7 @@ import com.sun.jersey.spi.container.servlet.ServletContainer;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
+import sonia.scm.store.ConfigurationStoreFactory;
 
 /**
  *
@@ -227,7 +227,7 @@ public class ScmServletModule extends JerseyServletModule
 
     ScmConfiguration config = getScmConfiguration();
     CipherUtil cu = CipherUtil.getInstance();
-
+    
     // bind repository provider
     ThrowingProviderBinder.create(binder()).bind(
       RepositoryProvider.class, Repository.class).to(
@@ -241,9 +241,8 @@ public class ScmServletModule extends JerseyServletModule
     bind(ScmEventBus.class).toInstance(ScmEventBus.getInstance());
 
     // bind core
-    bind(StoreFactory.class, JAXBStoreFactory.class);
-    bind(ConfigurationEntryStoreFactory.class,
-      JAXBConfigurationEntryStoreFactory.class);
+    bind(ConfigurationStoreFactory.class, JAXBConfigurationStoreFactory.class);
+    bind(ConfigurationEntryStoreFactory.class, JAXBConfigurationEntryStoreFactory.class);
     bind(DataStoreFactory.class, JAXBDataStoreFactory.class);
     bind(BlobStoreFactory.class, FileBlobStoreFactory.class);
     bind(ScmConfiguration.class).toInstance(config);

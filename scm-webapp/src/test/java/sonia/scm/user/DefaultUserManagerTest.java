@@ -42,8 +42,7 @@ import com.google.common.collect.Lists;
 import org.junit.Before;
 import org.junit.Test;
 
-import sonia.scm.store.JAXBStoreFactory;
-import sonia.scm.store.StoreFactory;
+import sonia.scm.store.JAXBConfigurationStoreFactory;
 import sonia.scm.user.xml.XmlUserDAO;
 import sonia.scm.util.MockUtil;
 
@@ -54,6 +53,7 @@ import static org.mockito.Mockito.*;
 import java.util.Collections;
 import java.util.List;
 import org.junit.Rule;
+import sonia.scm.store.ConfigurationStoreFactory;
 
 /**
  *
@@ -120,18 +120,7 @@ public class DefaultUserManagerTest extends UserManagerTestBase
 
   //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  private XmlUserDAO createXmlUserDAO()
-  {
-    StoreFactory factory = new JAXBStoreFactory();
-
-    factory.init(contextProvider);
-
-    return new XmlUserDAO(factory);
+  private XmlUserDAO createXmlUserDAO() {
+    return new XmlUserDAO(new JAXBConfigurationStoreFactory(contextProvider));
   }
 }

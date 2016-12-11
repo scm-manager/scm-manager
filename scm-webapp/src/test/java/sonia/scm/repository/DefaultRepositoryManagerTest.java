@@ -46,8 +46,7 @@ import sonia.scm.repository.api.HookFeature;
 import sonia.scm.repository.spi.HookContextProvider;
 import sonia.scm.repository.xml.XmlRepositoryDAO;
 import sonia.scm.security.DefaultKeyGenerator;
-import sonia.scm.store.JAXBStoreFactory;
-import sonia.scm.store.StoreFactory;
+import sonia.scm.store.JAXBConfigurationStoreFactory;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -61,6 +60,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
 import org.apache.shiro.authz.UnauthorizedException;
+import org.hamcrest.Matchers;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
 import org.mockito.invocation.InvocationOnMock;
@@ -69,6 +69,7 @@ import sonia.scm.Manager;
 import sonia.scm.ManagerTestBase;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.security.KeyGenerator;
+import sonia.scm.store.ConfigurationStoreFactory;
 
 /**
  * Unit tests for {@link DefaultRepositoryManager}.
@@ -282,6 +283,7 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
    * @throws RepositoryException
    */
   @Test
+  @SuppressWarnings("unchecked")
   @SubjectAware(username = "dent")
   public void testGetAllWithPermissions() throws RepositoryException, IOException {
     // mock key generator
@@ -316,8 +318,7 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
     // assert returned repositories
     Collection<Repository> repositories = repositoryManager.getAll();
     assertEquals(2, repositories.size());
-    assertThat(repositories,
-      containsInAnyOrder(
+    assertThat(repositories, containsInAnyOrder(
         hasProperty("id", is("p42")),
         hasProperty("id", is("hof"))
       )
@@ -520,9 +521,7 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
 
   private DefaultRepositoryManager createRepositoryManager(boolean archiveEnabled, KeyGenerator keyGenerator) {
     Set<RepositoryHandler> handlerSet = new HashSet<>();
-    StoreFactory factory = new JAXBStoreFactory();
-
-    factory.init(contextProvider);
+    ConfigurationStoreFactory factory = new JAXBConfigurationStoreFactory(contextProvider);
     handlerSet.add(new DummyRepositoryHandler(factory));
     handlerSet.add(new DummyRepositoryHandler(factory) {
       @Override

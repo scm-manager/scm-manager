@@ -44,7 +44,7 @@ import java.util.List;
  *
  * @apiviz.uses sonia.scm.store.Blob
  */
-public interface BlobStore extends StoreBase<Blob>
+public interface BlobStore extends MultiEntryStore<Blob>
 {
 
   /**

@@ -41,13 +41,13 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.NotSupportedFeatuerException;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.event.ScmEventBus;
-import sonia.scm.store.Store;
-import sonia.scm.store.StoreFactory;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
 import java.io.IOException;
+import sonia.scm.store.ConfigurationStore;
+import sonia.scm.store.ConfigurationStoreFactory;
 
 
 /**
@@ -72,7 +72,7 @@ public abstract class AbstractRepositoryHandler<C extends SimpleRepositoryConfig
    *
    * @param storeFactory
    */
-  protected AbstractRepositoryHandler(StoreFactory storeFactory)
+  protected AbstractRepositoryHandler(ConfigurationStoreFactory storeFactory)
   {
     this.store = storeFactory.getStore(getConfigClass(), getType().getName());
   }
@@ -221,5 +221,5 @@ public abstract class AbstractRepositoryHandler<C extends SimpleRepositoryConfig
   protected C config;
 
   /** Field description */
-  protected Store<C> store;
+  protected ConfigurationStore<C> store;
 }

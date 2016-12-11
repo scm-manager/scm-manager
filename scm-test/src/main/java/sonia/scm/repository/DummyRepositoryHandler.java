@@ -37,12 +37,12 @@ package sonia.scm.repository;
 
 import sonia.scm.Type;
 import sonia.scm.io.DefaultFileSystem;
-import sonia.scm.store.StoreFactory;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
 import java.io.IOException;
+import sonia.scm.store.ConfigurationStoreFactory;
 
 /**
  *
@@ -69,7 +69,7 @@ public class DummyRepositoryHandler
    *
    * @param storeFactory
    */
-  public DummyRepositoryHandler(StoreFactory storeFactory)
+  public DummyRepositoryHandler(ConfigurationStoreFactory storeFactory)
   {
     super(storeFactory, new DefaultFileSystem());
   }

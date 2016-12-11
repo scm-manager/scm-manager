@@ -39,8 +39,8 @@ import com.google.inject.Singleton;
 
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryDAO;
-import sonia.scm.store.StoreFactory;
 import sonia.scm.xml.AbstractXmlDAO;
+import sonia.scm.store.ConfigurationStoreFactory;
 
 /**
  *
@@ -64,7 +64,7 @@ public class XmlRepositoryDAO
    * @param storeFactory
    */
   @Inject
-  public XmlRepositoryDAO(StoreFactory storeFactory)
+  public XmlRepositoryDAO(ConfigurationStoreFactory storeFactory)
   {
     super(storeFactory.getStore(XmlRepositoryDatabase.class, STORE_NAME));
   }

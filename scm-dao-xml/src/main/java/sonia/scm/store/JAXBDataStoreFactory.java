@@ -95,7 +95,7 @@ public class JAXBDataStoreFactory extends FileBasedStoreFactory
   {
     logger.debug("create new store for type {} with name {}", type, name);
 
-    return new JAXBDataStore<T>(keyGenerator, type, getDirectory(name));
+    return new JAXBDataStore<>(keyGenerator, type, getDirectory(name));
   }
 
   //~--- fields ---------------------------------------------------------------

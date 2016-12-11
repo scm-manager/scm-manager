@@ -28,40 +28,27 @@
  * http://bitbucket.org/sdorra/scm-manager
  *
  */
-
-
-
 package sonia.scm.store;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import sonia.scm.Initable;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.Closeable;
-
 /**
- * The StoreFactory can be used to create new or get existing
- * {@link Store}s.
- *
- * @author Sebastian Sdorra
+ * In memory store implementation of {@link ConfigurationStore}.
  * 
- * @apiviz.landmark
- * @apiviz.uses sonia.scm.store.Store
+ * @author Sebastian Sdorra
+ *
+ * @param <T> type of stored object
  */
-public interface StoreFactory extends Initable, Closeable
-{
+public class InMemoryConfigurationStore<T> implements ConfigurationStore<T> {
 
-  /**
-   * Get an existing {@link Store} or create a new one.
-   *
-   *
-   * @param type type of the store objects
-   * @param name name of the store
-   * @param <T> type of the store objects
-   *
-   * @return {@link Store} of the given type and name
-   */
-  public <T> Store<T> getStore(Class<T> type, String name);
+  private T object;
+
+  @Override
+  public T get() {
+    return object;
+  }
+
+  @Override
+  public void set(T obejct) {
+    this.object = obejct;
+  }
+
 }

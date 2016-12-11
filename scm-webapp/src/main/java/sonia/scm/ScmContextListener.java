@@ -54,7 +54,6 @@ import sonia.scm.plugin.DefaultPluginLoader;
 import sonia.scm.plugin.ExtensionProcessor;
 import sonia.scm.plugin.PluginWrapper;
 import sonia.scm.repository.RepositoryManager;
-import sonia.scm.store.StoreFactory;
 import sonia.scm.upgrade.UpgradeManager;
 import sonia.scm.user.UserManager;
 import sonia.scm.util.IOUtil;
@@ -118,9 +117,6 @@ public class ScmContextListener extends GuiceServletContextListener
 
       // close UserManager
       IOUtil.close(globalInjector.getInstance(UserManager.class));
-
-      // close StoreFactory
-      IOUtil.close(globalInjector.getInstance(StoreFactory.class));
 
       // close CacheManager
       IOUtil.close(globalInjector.getInstance(CacheManager.class));

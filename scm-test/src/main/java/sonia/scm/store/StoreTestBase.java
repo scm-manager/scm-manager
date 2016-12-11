@@ -56,7 +56,7 @@ public abstract class StoreTestBase extends AbstractTestBase
    *
    * @return
    */
-  protected abstract StoreFactory createStoreFactory();
+  protected abstract ConfigurationStoreFactory createStoreFactory();
 
   /**
    * Method description
@@ -65,7 +65,7 @@ public abstract class StoreTestBase extends AbstractTestBase
   @Test
   public void testGet()
   {
-    Store<StoreObject> store = createStoreFactory().getStore(StoreObject.class,
+    ConfigurationStore<StoreObject> store = createStoreFactory().getStore(StoreObject.class,
                                  "test");
 
     assertNotNull(store);
@@ -82,7 +82,7 @@ public abstract class StoreTestBase extends AbstractTestBase
   @Test
   public void testSet()
   {
-    Store<StoreObject> store = createStoreFactory().getStore(StoreObject.class,
+    ConfigurationStore<StoreObject> store = createStoreFactory().getStore(StoreObject.class,
                                  "test");
 
     assertNotNull(store);

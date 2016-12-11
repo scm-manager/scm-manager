@@ -42,8 +42,7 @@ package sonia.scm.store;
  * @apiviz.landmark
  * @apiviz.uses sonia.scm.store.BlobStore
  */
-public interface BlobStoreFactory
-{
+public interface BlobStoreFactory {
 
   /**
    * Returns a {@link BlobStore} with the given name, if the {@link BlobStore}

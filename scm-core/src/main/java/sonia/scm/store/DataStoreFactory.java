@@ -42,8 +42,7 @@ package sonia.scm.store;
  * @apiviz.landmark
  * @apiviz.uses sonia.scm.store.DataStore
  */
-public interface DataStoreFactory
-{
+public interface DataStoreFactory {
 
   /**
    * Get an existing {@link DataStore} or create a new one.

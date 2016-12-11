@@ -28,12 +28,9 @@
  * http://bitbucket.org/sdorra/scm-manager
  *
  */
-
-
 package sonia.scm.store;
 
 //~--- non-JDK imports --------------------------------------------------------
-
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -44,60 +41,40 @@ import sonia.scm.SCMContextProvider;
 import sonia.scm.security.KeyGenerator;
 
 /**
+ * File based store factory.
  *
  * @author Sebastian Sdorra
  */
 @Singleton
-public class FileBlobStoreFactory extends FileBasedStoreFactory
-  implements BlobStoreFactory
-{
+public class FileBlobStoreFactory extends FileBasedStoreFactory implements BlobStoreFactory {
 
-  /** Field description */
   private static final String DIRECTORY_NAME = "blob";
 
   /**
    * the logger for FileBlobStoreFactory
    */
-  private static final Logger logger =
-    LoggerFactory.getLogger(FileBlobStoreFactory.class);
+  private static final Logger LOG = LoggerFactory.getLogger(FileBlobStoreFactory.class);
 
-  //~--- constructors ---------------------------------------------------------
+  private final KeyGenerator keyGenerator;
 
   /**
-   * Constructs ...
+   * Constructs a new instance.
    *
-   *
-   * @param context
-   * @param keyGenerator
+   * @param context scm context
+   * @param keyGenerator key generator
    */
   @Inject
   public FileBlobStoreFactory(SCMContextProvider context,
-    KeyGenerator keyGenerator)
-  {
+    KeyGenerator keyGenerator) {
     super(context, DIRECTORY_NAME);
     this.keyGenerator = keyGenerator;
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param name
-   *
-   * @return
-   */
   @Override
-  public BlobStore getBlobStore(String name)
-  {
-    logger.debug("create new blob with name {}", name);
+  public BlobStore getBlobStore(String name) {
+    LOG.debug("create new blob with name {}", name);
 
     return new FileBlobStore(keyGenerator, getDirectory(name));
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** key generator */
-  private final KeyGenerator keyGenerator;
 }

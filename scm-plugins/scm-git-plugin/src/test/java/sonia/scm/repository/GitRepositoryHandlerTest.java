@@ -36,13 +36,13 @@ package sonia.scm.repository;
 //~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.io.DefaultFileSystem;
-import sonia.scm.store.StoreFactory;
 
 import static org.junit.Assert.*;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
+import sonia.scm.store.ConfigurationStoreFactory;
 
 /**
  *
@@ -86,7 +86,7 @@ public class GitRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase
    * @return
    */
   @Override
-  protected RepositoryHandler createRepositoryHandler(StoreFactory factory,
+  protected RepositoryHandler createRepositoryHandler(ConfigurationStoreFactory factory,
           File directory)
   {
     GitRepositoryHandler repositoryHandler = new GitRepositoryHandler(factory,

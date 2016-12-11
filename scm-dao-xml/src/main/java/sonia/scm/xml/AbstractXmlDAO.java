@@ -41,11 +41,11 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.GenericDAO;
 import sonia.scm.ModelObject;
 import sonia.scm.group.xml.XmlGroupDAO;
-import sonia.scm.store.Store;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.Collection;
+import sonia.scm.store.ConfigurationStore;
 
 /**
  *
@@ -76,7 +76,7 @@ public abstract class AbstractXmlDAO<I extends ModelObject,
    *
    * @param store
    */
-  public AbstractXmlDAO(Store<T> store)
+  public AbstractXmlDAO(ConfigurationStore<T> store)
   {
     this.store = store;
     db = store.get();
@@ -290,7 +290,7 @@ public abstract class AbstractXmlDAO<I extends ModelObject,
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private final Store<T> store;
+  private final ConfigurationStore<T> store;
 
   /** Field description */
   protected T db;

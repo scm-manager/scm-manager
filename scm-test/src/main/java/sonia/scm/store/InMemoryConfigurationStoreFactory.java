@@ -33,43 +33,18 @@
 
 package sonia.scm.store;
 
+//~--- non-JDK imports --------------------------------------------------------
+
 /**
- *
+ * In memory configuration store factory for testing purposes.
+ * 
  * @author Sebastian Sdorra
- *
- * @param <T>
  */
-public class MemoryStore<T> implements Store<T>
-{
+public class InMemoryConfigurationStoreFactory implements ConfigurationStoreFactory {
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public T get()
+  public <T> ConfigurationStore<T> getStore(Class<T> type, String name)
   {
-    return object;
+    return new InMemoryConfigurationStore<>();
   }
-
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param obejct
-   */
-  @Override
-  public void set(T obejct)
-  {
-    this.object = obejct;
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private T object;
 }

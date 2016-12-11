@@ -30,37 +30,18 @@
  */
 
 
-
 package sonia.scm.store;
 
 /**
- * Store for configuration objects. <strong>Note:</strong> the default
- * implementation use JAXB to marshall the configuration objects.
+ * Unit tests for {@link JAXBConfigurationStore}.
  * 
- * TODO for 2.0 rename to ConfigurationStore
- *
  * @author Sebastian Sdorra
- *
- * @param <T> type of the configuration objects
  */
-public interface Store<T>
-{
+public class JAXBConfigurationStoreTest extends StoreTestBase {
 
-  /**
-   * Returns the configuration object from store.
-   *
-   *
-   * @return configuration object from store
-   */
-  public T get();
-
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Stores the given configuration object to the store.
-   *
-   *
-   * @param obejct configuration object to store
-   */
-  public void set(T obejct);
+  @Override
+  protected ConfigurationStoreFactory createStoreFactory()
+  {
+    return new JAXBConfigurationStoreFactory(contextProvider);
+  }
 }

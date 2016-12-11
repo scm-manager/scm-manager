@@ -30,99 +30,41 @@
  */
 
 
-
 package sonia.scm.store;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import com.google.inject.Singleton;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import sonia.scm.SCMContextProvider;
-import sonia.scm.util.IOUtil;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.File;
-import java.io.IOException;
-
 /**
+ * Base class for {@link BlobStore} and {@link DataStore}.
  *
  * @author Sebastian Sdorra
+ * @since 1.23
+ *
+ * @param <T> Type of the stored objects
  */
-@Singleton
-public class JAXBStoreFactory implements StoreFactory
-{
-
-  /** the logger for JAXBStoreFactory */
-  private static final Logger logger =
-    LoggerFactory.getLogger(JAXBStoreFactory.class);
-
-  //~--- methods --------------------------------------------------------------
+public interface MultiEntryStore<T> {
 
   /**
-   * Method description
+   * Remove all items from the store.
    *
-   *
-   * @throws IOException
    */
-  @Override
-  public void close() throws IOException
-  {
-
-    // do nothing
-  }
+  public void clear();
 
   /**
-   * Method description
+   * Remove the item with the given id.
    *
    *
-   * @param context
+   * @param id id of the item to remove
    */
-  @Override
-  public void init(SCMContextProvider context)
-  {
-    configDirectory = new File(context.getBaseDirectory(),
-      StoreConstants.CONFIGDIRECTORY_NAME);
-    IOUtil.mkdirs(configDirectory);
-  }
+  public void remove(String id);
 
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns the item with the given id from the store.
    *
    *
-   * @param type
-   * @param name
-   * @param <T>
+   * @param id id of the item to return
    *
-   * @return
+   * @return item with the given id
    */
-  @Override
-  public <T> JAXBStore<T> getStore(Class<T> type, String name)
-  {
-    if (configDirectory == null)
-    {
-      throw new IllegalStateException("store factory is not initialized");
-    }
-
-    File configFile = new File(configDirectory,
-                        name.concat(StoreConstants.FILE_EXTENSION));
-
-    if (logger.isDebugEnabled())
-    {
-      logger.debug("create store for {} at {}", type.getName(),
-        configFile.getPath());
-    }
-
-    return new JAXBStore<T>(type, configFile);
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private File configDirectory;
+  public T get(String id);
 }

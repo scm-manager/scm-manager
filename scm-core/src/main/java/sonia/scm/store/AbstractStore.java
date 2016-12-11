@@ -33,18 +33,35 @@
 
 package sonia.scm.store;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 /**
- * Base class for {@link Store}.
+ * Base class for {@link ConfigurationStore}.
  *
  * @author Sebastian Sdorra
  * @since 1.16
  *
  * @param <T> type of store objects
  */
-public abstract class AbstractStore<T> implements Store<T>
-{
+public abstract class AbstractStore<T> implements ConfigurationStore<T> {
+
+  /**
+   * stored object
+   */
+  protected T storeObject;
+
+  @Override
+  public T get() {
+    if (storeObject == null) {
+      storeObject = readObject();
+    }
+
+    return storeObject;
+  }
+
+  @Override
+  public void set(T obejct) {
+    writeObject(obejct);
+    this.storeObject = obejct;
+  }
 
   /**
    * Read the stored object.
@@ -61,43 +78,4 @@ public abstract class AbstractStore<T> implements Store<T>
    * @param object object to write
    */
   protected abstract void writeObject(T object);
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @return
-   */
-  @Override
-  public T get()
-  {
-    if (storeObject == null)
-    {
-      storeObject = readObject();
-    }
-
-    return storeObject;
-  }
-
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @param obejct
-   */
-  @Override
-  public void set(T obejct)
-  {
-    writeObject(obejct);
-    this.storeObject = obejct;
-  }
-  
-  //~--- fields ---------------------------------------------------------------
-
-  /** stored object */
-  protected T storeObject;
 }

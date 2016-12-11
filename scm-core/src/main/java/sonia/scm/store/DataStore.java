@@ -45,8 +45,7 @@ import java.util.Map;
  *
  * @param <T> type of store items
  */
-public interface DataStore<T> extends StoreBase<T>
-{
+public interface DataStore<T> extends MultiEntryStore<T> {
 
   /**
    * Put a item with automatically generated id to the store.

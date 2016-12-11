@@ -44,12 +44,12 @@ import sonia.scm.Type;
 import sonia.scm.io.FileSystem;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.spi.GitRepositoryServiceProvider;
-import sonia.scm.store.StoreFactory;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
 import java.io.IOException;
+import sonia.scm.store.ConfigurationStoreFactory;
 
 /**
  *
@@ -89,7 +89,7 @@ public class GitRepositoryHandler
    * @param fileSystem
    */
   @Inject
-  public GitRepositoryHandler(StoreFactory storeFactory, FileSystem fileSystem)
+  public GitRepositoryHandler(ConfigurationStoreFactory storeFactory, FileSystem fileSystem)
   {
     super(storeFactory, fileSystem);
   }

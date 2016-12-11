@@ -28,12 +28,9 @@
  * http://bitbucket.org/sdorra/scm-manager
  *
  */
-
-
 package sonia.scm.store;
 
 //~--- JDK imports ------------------------------------------------------------
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -43,87 +40,39 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
+ * File base implementation of {@link Blob}.
  *
  * @author Sebastian Sdorra
  */
-public final class FileBlob implements Blob
-{
+public final class FileBlob implements Blob {
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param id
-   * @param file
-   */
-  public FileBlob(String id, File file)
-  {
+  private final String id;
+  private final File file;
+
+  FileBlob(String id, File file) {
     this.id = id;
     this.file = file;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
   @Override
-  public void commit() throws IOException
-  {
+  public void commit() throws IOException {
 
     // nothing todo
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public String getId()
-  {
+  public String getId() {
     return id;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   *
-   * @throws FileNotFoundException
-   */
   @Override
-  public InputStream getInputStream() throws FileNotFoundException
-  {
+  public InputStream getInputStream() throws FileNotFoundException {
     return new FileInputStream(file);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   *
-   * @throws IOException
-   */
   @Override
-  public OutputStream getOutputStream() throws IOException
-  {
+  public OutputStream getOutputStream() throws IOException {
     return new FileOutputStream(file);
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final File file;
-
-  /** Field description */
-  private final String id;
 }

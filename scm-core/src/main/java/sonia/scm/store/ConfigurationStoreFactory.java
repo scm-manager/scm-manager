@@ -32,17 +32,28 @@
 
 package sonia.scm.store;
 
+
 /**
- * Store constants for xml implementations.
- * 
+ * The ConfigurationStoreFactory can be used to create new or get existing 
+ * {@link ConfigurationStore} objects.
+ *
  * @author Sebastian Sdorra
+ * 
+ * @apiviz.landmark
+ * @apiviz.uses sonia.scm.store.ConfigurationStore
  */
-public interface StoreConstants
+public interface ConfigurationStoreFactory
 {
 
-  /** Field description */
-  public static final String CONFIGDIRECTORY_NAME = "config";
-
-  /** Field description */
-  public static final String FILE_EXTENSION = ".xml";
+  /**
+   * Get an existing {@link ConfigurationStore} or create a new one.
+   *
+   *
+   * @param type type of the store objects
+   * @param name name of the store
+   * @param <T> type of the store objects
+   *
+   * @return {@link ConfigurationStore} of the given type and name
+   */
+  public <T> ConfigurationStore<T> getStore(Class<T> type, String name);
 }

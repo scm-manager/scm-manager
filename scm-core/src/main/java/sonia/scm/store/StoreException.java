@@ -34,11 +34,11 @@
 package sonia.scm.store;
 
 /**
- *
+ * The store exception can be used by a store implementation.
+ * 
  * @author Sebastian Sdorra
  */
-public class StoreException extends RuntimeException
-{
+public class StoreException extends RuntimeException {
 
   /** Field description */
   private static final long serialVersionUID = 6974469896007155294L;
@@ -46,45 +46,21 @@ public class StoreException extends RuntimeException
   //~--- constructors ---------------------------------------------------------
 
   /**
-   * Constructs ...
+   * Constructs a new instance.
    *
+   * @param message exception message
    */
-  public StoreException()
-  {
-    super();
-  }
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param message
-   */
-  public StoreException(String message)
-  {
+  public StoreException(String message) {
     super(message);
   }
 
   /**
-   * Constructs ...
+   * Constructs a new instance.
    *
-   *
-   * @param cause
+   * @param message exception message
+   * @param cause exception cause
    */
-  public StoreException(Throwable cause)
-  {
-    super(cause);
-  }
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param message
-   * @param cause
-   */
-  public StoreException(String message, Throwable cause)
-  {
+  public StoreException(String message, Throwable cause) {
     super(message, cause);
   }
 }

@@ -53,7 +53,6 @@ import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.security.Role;
 import sonia.scm.security.ScmSecurityException;
-import sonia.scm.store.StoreFactory;
 import sonia.scm.util.SystemUtil;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -73,6 +72,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import sonia.scm.store.ConfigurationStoreFactory;
 
 /**
  *
@@ -105,7 +105,7 @@ public class SupportResource
   @Inject
   public SupportResource(SCMContextProvider context,
     ScmConfiguration configuration, PluginManager pluginManager,
-    StoreFactory storeFactory, RepositoryManager repositoryManager,
+    ConfigurationStoreFactory storeFactory, RepositoryManager repositoryManager,
     HttpServletRequest request)
   {
     this.context = context;
