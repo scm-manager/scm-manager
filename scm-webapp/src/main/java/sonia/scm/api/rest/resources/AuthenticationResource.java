@@ -184,7 +184,10 @@ public class AuthenticationResource
 
         // TODO: should be configureable
         c.setMaxAge((int) TimeUnit.SECONDS.convert(10, TimeUnit.HOURS));
-        c.setHttpOnly(true);
+        
+        // set http only flag only xsrf protection is disabled,
+        // because we have to extract the xsrf key with javascript in the wui
+        c.setHttpOnly(!configuration.isEnabledXsrfProtection());
         response.addCookie(c);
         state = stateFactory.createState(subject);
       }

@@ -39,7 +39,8 @@ Ext.Ajax.defaultHeaders = {
 
 // XSRF protection
 Ext.Ajax.on('beforerequest', function(conn, options){
-  var token = Ext.util.Cookies.get('X-XSRF-Token');
+  // TODO check for support
+  var token = localStorage.getItem('X-XSRF-Token');
   if (token){
     if (!options.headers){
       options.headers = {};

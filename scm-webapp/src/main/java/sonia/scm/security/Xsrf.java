@@ -30,58 +30,16 @@
  */
 package sonia.scm.security;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 /**
- * Util methods to handle XsrfCookies.
- *
+ * Shared constants for Xsrf related classes.
+ * 
  * @author Sebastian Sdorra
- * @version 1.47
+ * @since 2.0.0
  */
-public final class XsrfCookies
-{
-
-  private XsrfCookies()
-  {
-  }
+public final class Xsrf {
   
-  /**
-   * Creates a new xsrf protection cookie and add it to the response.
-   * 
-   * @param request http servlet request
-   * @param response http servlet response
-   * @param token xsrf token
-   */
-  public static void create(HttpServletRequest request, HttpServletResponse response, String token){
-    applyCookie(request, response, new Cookie(XsrfProtectionFilter.KEY, token));
-
-  }
+  static final String HEADER_KEY = "X-XSRF-Token";
   
-  /**
-   * Removes the current xsrf protection cookie from response.
-   * 
-   * @param request http servlet request
-   * @param response http servlet response
-   */
-  public static void remove(HttpServletRequest request, HttpServletResponse response)
-  {
-    Cookie[] cookies = request.getCookies();
-    if ( cookies != null ){
-      for ( Cookie c : cookies ){
-        if ( XsrfProtectionFilter.KEY.equals(c.getName()) ){
-          c.setMaxAge(0);
-          c.setValue(null);
-          applyCookie(request, response, c);
-        }
-      }
-    }
-  }
-  
-  private static void applyCookie(HttpServletRequest request, HttpServletResponse response, Cookie cookie){
-    cookie.setPath(request.getContextPath());
-    response.addCookie(cookie);
-  }
+  static final String CLAIMS_KEY = "scm-manager.org/xsrf";
   
 }
