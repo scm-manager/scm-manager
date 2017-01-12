@@ -208,15 +208,14 @@ public class DefaultGroupManager extends AbstractGroupManager
     String name = group.getName();
     GroupPermissions.modify().check(name);
 
-    Group oldGroup = groupDAO.get(name);
-
-    if (oldGroup != null)
+    Group notModified = groupDAO.get(name);
+    if (notModified != null)
     {
       removeDuplicateMembers(group);
+      fireEvent(HandlerEventType.BEFORE_MODIFY, group, notModified);
       group.setLastModified(System.currentTimeMillis());
-      fireEvent(HandlerEventType.BEFORE_MODIFY, group, oldGroup);
       groupDAO.modify(group);
-      fireEvent(HandlerEventType.MODIFY, group, oldGroup);
+      fireEvent(HandlerEventType.MODIFY, group, notModified);
     }
     else
     {

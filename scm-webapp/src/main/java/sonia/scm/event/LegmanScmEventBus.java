@@ -92,8 +92,9 @@ public class LegmanScmEventBus extends ScmEventBus
   @Override
   public void register(Object object)
   {
-    logger.debug("register {} to event bus", object);
+    logger.trace("register {} to event bus", object);
     eventBus.register(object);
+
   }
 
   /**
@@ -105,8 +106,8 @@ public class LegmanScmEventBus extends ScmEventBus
   @Override
   public void unregister(Object object)
   {
-    logger.debug("unregister {} from event bus", object);
-
+    logger.trace("unregister {} from event bus", object);
+    
     try
     {
       eventBus.unregister(object);

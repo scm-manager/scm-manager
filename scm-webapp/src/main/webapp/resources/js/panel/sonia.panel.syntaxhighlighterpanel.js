@@ -41,6 +41,7 @@ Sonia.panel.SyntaxHighlighterPanel = Ext.extend(Ext.Panel, {
     fileName: 'shBrushAppleScript.js'
   },{
     name: 'Bash/shell',
+    brush: 'shell',
     aliases: ['sh', 'bash', 'shell'],
     fileName: 'shBrushBash.js'
   },{
@@ -49,6 +50,7 @@ Sonia.panel.SyntaxHighlighterPanel = Ext.extend(Ext.Panel, {
     fileName: 'shBrushColdFusion.js'
   },{
     name: 'C#',
+    brush: 'csharp',
     aliases: ['cs', 'c-sharp', 'csharp'],
     fileName: 'shBrushCSharp.js'
   },{
@@ -97,6 +99,7 @@ Sonia.panel.SyntaxHighlighterPanel = Ext.extend(Ext.Panel, {
     fileName: 'shBrushPhp.js'
   },{
     name: 'Plain Text',
+    brush: 'plain',
     aliases: ['plain', 'text', 'txt', 'log'],
     fileName: 'shBrushPlain.js'
   },{
@@ -160,6 +163,9 @@ Sonia.panel.SyntaxHighlighterPanel = Ext.extend(Ext.Panel, {
         for ( var j=0;j<s.aliases.length; j++ ){
           if ( this.syntax === s.aliases[j] ){
             found = true;
+            if (s.brush){
+              this.syntax = s.brush;
+            }
             this.brushUrl = s.fileName;
             if (debug){
               console.debug( "found brush " + this.syntax + " at " + this.brushUrl );

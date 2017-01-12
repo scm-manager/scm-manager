@@ -286,7 +286,7 @@ public class AnonymousAccessITCase
     File directory = temporaryFolder.newFolder();
     RepositoryClient client = null;
 
-    String url = repository.createUrl(URL);
+    String url = repository.createUrl(BASE_URL);
 
     if ((username != null) && (password != null))
     {

@@ -74,13 +74,18 @@ Sonia.repository.isOwner = function(repository){
   return admin || repository.permissions;
 };
 
-Sonia.repository.setEditPanel = function(panels){
+Sonia.repository.setEditPanel = function(panels, activeTab){
   var editPanel = Ext.getCmp('repositoryEditPanel');
   editPanel.removeAll();
   Ext.each(panels, function(panel){
     editPanel.add(panel);
   });
-  editPanel.setActiveTab(0);
+  
+  if (!activeTab){
+    activeTab = 0;
+  }
+  
+  editPanel.setActiveTab(activeTab);
   editPanel.doLayout();
 };
 
@@ -189,4 +194,27 @@ Sonia.repository.get = function(id, callback){
       }
     }); 
   }
+};
+
+/** open file */
+Sonia.repository.openFile = function(repository, path, revision){
+  if ( debug ){
+    console.debug( 'open file: ' + path );
+  }
+
+  var id = Sonia.repository.createContentId(
+    repository, 
+    path, 
+    revision
+  );
+
+  main.addTab({
+    id: id,
+    path: path,
+    revision: revision,
+    repository: repository,
+    xtype: 'contentPanel',
+    closable: true,
+    autoScroll: true
+  });
 };

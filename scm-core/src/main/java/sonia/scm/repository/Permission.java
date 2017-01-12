@@ -136,8 +136,9 @@ public class Permission implements PermissionObject, Serializable
 
     final Permission other = (Permission) obj;
 
-    return Objects.equal(name, other.name) && Objects.equal(type, other.type)
-      && Objects.equal(groupPermission, groupPermission);
+    return Objects.equal(name, other.name) 
+      && Objects.equal(type, other.type)
+      && Objects.equal(groupPermission, other.groupPermission);
   }
 
   /**

@@ -124,7 +124,7 @@ public class GitBlameCommand extends AbstractGitCommand implements BlameCommand
 
       blame.setFilePath(request.getPath());
 
-      ObjectId revId = GitUtil.getRevisionId(gr, request.getRevision());
+      ObjectId revId = getCommitOrDefault(gr, request.getRevision());
 
       blame.setStartCommit(revId);
 

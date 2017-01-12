@@ -35,6 +35,7 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Strings;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -50,6 +51,11 @@ import sonia.scm.repository.spi.GitRepositoryServiceProvider;
 import java.io.File;
 import java.io.IOException;
 import sonia.scm.store.ConfigurationStoreFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sonia.scm.SCMContextProvider;
+import sonia.scm.schedule.Scheduler;
+import sonia.scm.schedule.Task;
 
 /**
  *
@@ -66,19 +72,27 @@ public class GitRepositoryHandler
 
   /** Field description */
   public static final String RESOURCE_VERSION =
-    "/sonia/scm/version/scm-git-plugin";
+    "sonia/scm/version/scm-git-plugin";
 
   /** Field description */
   public static final String TYPE_DISPLAYNAME = "Git";
 
   /** Field description */
   public static final String TYPE_NAME = "git";
+  
+  private static final Logger logger = LoggerFactory.getLogger(GitRepositoryHandler.class);
 
   /** Field description */
   public static final Type TYPE = new RepositoryType(TYPE_NAME,
                                     TYPE_DISPLAYNAME,
                                     GitRepositoryServiceProvider.COMMANDS);
 
+  private static final Object LOCK = new Object();
+  
+  private final Scheduler scheduler;
+  
+  private Task task;
+  
   //~--- constructors ---------------------------------------------------------
 
   /**
@@ -87,15 +101,48 @@ public class GitRepositoryHandler
    *
    * @param storeFactory
    * @param fileSystem
+   * @param scheduler
    */
   @Inject
-  public GitRepositoryHandler(ConfigurationStoreFactory storeFactory, FileSystem fileSystem)
+  public GitRepositoryHandler(ConfigurationStoreFactory storeFactory, FileSystem fileSystem, Scheduler scheduler)
   {
     super(storeFactory, fileSystem);
+    this.scheduler = scheduler;
   }
 
   //~--- get methods ----------------------------------------------------------
 
+  @Override
+  public void init(SCMContextProvider context)
+  {
+    super.init(context);
+    scheduleGc();
+  }
+
+  @Override
+  public void setConfig(GitConfig config)
+  {
+    super.setConfig(config);
+    scheduleGc();
+  }
+  
+  private void scheduleGc()
+  {
+    synchronized (LOCK){
+      if ( task != null ){
+        logger.debug("cancel existing git gc task");
+        task.cancel();
+        task = null;
+      }
+      String exp = getConfig().getGcExpression();
+      if (!Strings.isNullOrEmpty(exp))
+      {
+        logger.info("schedule git gc task with expression {}", exp);
+        task = scheduler.schedule(exp, GitGcTask.class);
+      }
+    }
+  }
+  
   /**
    * Method description
    *

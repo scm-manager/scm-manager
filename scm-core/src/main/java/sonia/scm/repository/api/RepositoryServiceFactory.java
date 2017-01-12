@@ -40,6 +40,7 @@ import com.github.legman.Subscribe;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -50,11 +51,6 @@ import sonia.scm.HandlerEventType;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.config.ScmConfiguration;
-import sonia.scm.event.ScmEventBus;
-import sonia.scm.repository.BlameResult;
-import sonia.scm.repository.Branches;
-import sonia.scm.repository.BrowserResult;
-import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.PostReceiveRepositoryHookEvent;
 import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.Repository;
@@ -63,7 +59,6 @@ import sonia.scm.repository.RepositoryEvent;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.repository.RepositoryPermissions;
-import sonia.scm.repository.Tags;
 import sonia.scm.repository.spi.RepositoryServiceProvider;
 import sonia.scm.repository.spi.RepositoryServiceResolver;
 import sonia.scm.security.ScmSecurityException;
@@ -71,6 +66,8 @@ import sonia.scm.security.ScmSecurityException;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.Set;
+import sonia.scm.event.ScmEventBus;
+import sonia.scm.repository.ClearRepositoryCacheEvent;
 
 /**
  * The {@link RepositoryServiceFactory} is the entrypoint of the repository api.
@@ -285,38 +282,44 @@ public final class RepositoryServiceFactory
   //~--- inner classes --------------------------------------------------------
 
   /**
-   * TODO find a more elegant way
-   *
-   *
-   * @version        Enter version here..., 12/06/16
-   * @author         Enter your name here...
+   * Hook and listener to clear all relevant repository caches.
    */
   private static class CacheClearHook
   {
+    
+    private final Set<Cache<?, ?>> caches = Sets.newHashSet();
 
     /**
-     * Constructs ...
+     * Constructs a new instance and collect all repository relevant
+     * caches from the {@link CacheManager}.
      *
-     *
-     * @param cacheManager
+     * @param cacheManager cache manager
      */
     public CacheClearHook(CacheManager cacheManager)
     {
-      this.blameCache = cacheManager.getCache(BlameCommandBuilder.CACHE_NAME);
-      this.browseCache = cacheManager.getCache(BrowseCommandBuilder.CACHE_NAME);
-      this.logCache = cacheManager.getCache(LogCommandBuilder.CACHE_NAME);
-      this.tagsCache = cacheManager.getCache(TagsCommandBuilder.CACHE_NAME);
-      this.branchesCache =
-        cacheManager.getCache(BranchesCommandBuilder.CACHE_NAME);
+      this.caches.add(cacheManager.getCache(BlameCommandBuilder.CACHE_NAME));
+      this.caches.add(cacheManager.getCache(BrowseCommandBuilder.CACHE_NAME));
+      this.caches.add(cacheManager.getCache(LogCommandBuilder.CACHE_NAME));
+      this.caches.add(cacheManager.getCache(TagsCommandBuilder.CACHE_NAME));
+      this.caches.add(cacheManager.getCache(BranchesCommandBuilder.CACHE_NAME));
     }
 
     //~--- methods ------------------------------------------------------------
 
     /**
-     * Method description
+     * Clear caches on explicit repository cache clear event.
+     * 
+     * @param event clear event
+     */
+    @Subscribe
+    public void onEvent(ClearRepositoryCacheEvent event) {
+      clearCaches(event.getRepository().getId());
+    }
+    
+    /**
+     * Clear caches on repository push.
      *
-     *
-     * @param event
+     * @param event hook event
      */
     @Subscribe(referenceType = ReferenceType.STRONG)
     public void onEvent(PostReceiveRepositoryHookEvent event)
@@ -332,11 +335,10 @@ public final class RepositoryServiceFactory
     }
 
     /**
-     * Method description
+     * Clear caches on repository delete event.
      *
-     *
-     * @param repository
-     * @param event
+     * @param repository changed repository
+     * @param event repository event
      */
     @Subscribe(referenceType = ReferenceType.STRONG)
     public void onEvent(RepositoryEvent event)
@@ -346,13 +348,7 @@ public final class RepositoryServiceFactory
         clearCaches(event.getItem().getId());
       }
     }
-
-    /**
-     * Method description
-     *
-     *
-     * @param repositoryId
-     */
+    
     @SuppressWarnings("unchecked")
     private void clearCaches(final String repositoryId)
     {
@@ -361,32 +357,11 @@ public final class RepositoryServiceFactory
         logger.debug("clear caches for repository id {}", repositoryId);
       }
 
-      RepositoryCacheKeyPredicate filter =
-        new RepositoryCacheKeyPredicate(repositoryId);
-
-      blameCache.removeAll(filter);
-      browseCache.removeAll(filter);
-      logCache.removeAll(filter);
-      tagsCache.removeAll(filter);
-      branchesCache.removeAll(filter);
+      RepositoryCacheKeyPredicate predicate = new RepositoryCacheKeyPredicate(repositoryId);
+      caches.forEach((cache) -> {
+        cache.removeAll(predicate);
+      });
     }
-
-    //~--- fields -------------------------------------------------------------
-
-    /** blame cache */
-    private final Cache<BlameCommandBuilder.CacheKey, BlameResult> blameCache;
-
-    /** branches cache */
-    private final Cache<BranchesCommandBuilder.CacheKey, Branches> branchesCache;
-
-    /** browse cache */
-    private final Cache<BrowseCommandBuilder.CacheKey, BrowserResult> browseCache;
-
-    /** log cache */
-    private final Cache<LogCommandBuilder.CacheKey, ChangesetPagingResult> logCache;
-
-    /** tags cache */
-    private final Cache<TagsCommandBuilder.CacheKey, Tags> tagsCache;
   }
 
 

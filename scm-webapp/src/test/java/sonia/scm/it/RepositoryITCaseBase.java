@@ -142,7 +142,7 @@ public class RepositoryITCaseBase
     {
       RepositoryClient rc =
         RepositoryClientFactory.createClient(repository.getType(), directory,
-          repository.createUrl(URL), username, password);
+          repository.createUrl(BASE_URL), username, password);
 
       rc.init();
       addTestFiles(rc);
@@ -343,7 +343,7 @@ public class RepositoryITCaseBase
           throws RepositoryClientException
   {
     return RepositoryClientFactory.createClient(repository.getType(),
-            directory, repository.createUrl(URL), user.getName(), password);
+            directory, repository.createUrl(BASE_URL), user.getName(), password);
   }
 
   //~--- fields ---------------------------------------------------------------

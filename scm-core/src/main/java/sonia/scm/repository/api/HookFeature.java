@@ -37,4 +37,30 @@ package sonia.scm.repository.api;
  * @author Sebastian Sdorra
  * @since 1.33
  */
-public enum HookFeature { MESSAGE_PROVIDER, CHANGESET_PROVIDER; }
+public enum HookFeature
+{
+
+  /**
+   * Hook message provider
+   */
+  MESSAGE_PROVIDER,
+
+  /**
+   * Hook changeset provider
+   */
+  CHANGESET_PROVIDER,
+
+  /**
+   * Hook branch provider
+   *
+   * @since 1.45
+   */
+  BRANCH_PROVIDER,
+  
+  /**
+   * Hook tag provider
+   * 
+   * @since 1.50
+   */
+  TAG_PROVIDER;
+}

@@ -173,6 +173,136 @@ public class HttpUtilTest
    *
    */
   @Test
+  public void testCreateBaseUrl()
+  {
+    HttpServletRequest request = mock(HttpServletRequest.class);
+    String url = "https://www.scm-manager.org/test/as/db";
+
+    when(request.getRequestURL()).thenReturn(new StringBuffer(url));
+    when(request.getRequestURI()).thenReturn("/test/as/db");
+    when(request.getContextPath()).thenReturn("/scm");
+    assertEquals("https://www.scm-manager.org/scm",
+      HttpUtil.createBaseUrl(request));
+  }
+
+  /**
+   * Method description
+   *
+   */
+  @Test
+  public void testCreateForwardedUrl()
+  {
+    HttpServletRequest request = mock(HttpServletRequest.class);
+
+    when(request.getHeader(HttpUtil.HEADER_X_FORWARDED_HOST)).thenReturn(
+      "www.scm-manager.org");
+    when(request.getHeader(HttpUtil.HEADER_X_FORWARDED_PROTO)).thenReturn(
+      "https");
+    when(request.getHeader(HttpUtil.HEADER_X_FORWARDED_PORT)).thenReturn("443");
+    when(request.getContextPath()).thenReturn("/scm");
+    assertEquals("https://www.scm-manager.org:443/scm",
+      HttpUtil.createForwardedBaseUrl(request));
+  }
+
+  /**
+   * Method description
+   *
+   */
+  @Test
+  public void testCreateForwardedUrlWithPortAndProtoFromRequest()
+  {
+    HttpServletRequest request = mock(HttpServletRequest.class);
+
+    when(request.getHeader(HttpUtil.HEADER_X_FORWARDED_HOST)).thenReturn(
+      "www.scm-manager.org");
+    when(request.getScheme()).thenReturn("https");
+    when(request.getServerPort()).thenReturn(443);
+    when(request.getContextPath()).thenReturn("/scm");
+    assertEquals("https://www.scm-manager.org:443/scm",
+      HttpUtil.createForwardedBaseUrl(request));
+  }
+
+  /**
+   * Method description
+   *
+   */
+  @Test
+  public void testCreateForwardedUrlWithPortInHost()
+  {
+    HttpServletRequest request = mock(HttpServletRequest.class);
+
+    when(request.getHeader(HttpUtil.HEADER_X_FORWARDED_HOST)).thenReturn(
+      "www.scm-manager.org:443");
+    when(request.getHeader(HttpUtil.HEADER_X_FORWARDED_PROTO)).thenReturn(
+      "https");
+    when(request.getContextPath()).thenReturn("/scm");
+    assertEquals("https://www.scm-manager.org:443/scm",
+      HttpUtil.createForwardedBaseUrl(request));
+  }
+
+  /**
+   * Method description
+   *
+   */
+  @Test
+  public void testCreateForwardedUrlWithPortInHostAndPortHeader()
+  {
+    HttpServletRequest request = mock(HttpServletRequest.class);
+
+    when(request.getHeader(HttpUtil.HEADER_X_FORWARDED_HOST)).thenReturn(
+      "www.scm-manager.org:80");
+    when(request.getHeader(HttpUtil.HEADER_X_FORWARDED_PROTO)).thenReturn(
+      "https");
+    when(request.getHeader(HttpUtil.HEADER_X_FORWARDED_PORT)).thenReturn("443");
+    when(request.getContextPath()).thenReturn("/scm");
+    assertEquals("https://www.scm-manager.org:443/scm",
+      HttpUtil.createForwardedBaseUrl(request));
+  }
+
+  /**
+   * Method description
+   *
+   */
+  @Test
+  public void testGetCompleteUrl()
+  {
+    HttpServletRequest request = mock(HttpServletRequest.class);
+    String url = "https://www.scm-manager.org/test/as/db";
+
+    when(request.getRequestURL()).thenReturn(new StringBuffer(url));
+    when(request.getRequestURI()).thenReturn("/test/as/db");
+    when(request.getScheme()).thenReturn("https");
+    when(request.getServerPort()).thenReturn(443);
+    when(request.getContextPath()).thenReturn("/scm");
+    assertEquals("https://www.scm-manager.org/scm",
+      HttpUtil.getCompleteUrl(request));
+    when(request.getHeader(HttpUtil.HEADER_X_FORWARDED_HOST)).thenReturn(
+      "scm.scm-manager.org");
+    assertEquals("https://scm.scm-manager.org:443/scm",
+      HttpUtil.getCompleteUrl(request));
+  }
+
+  /**
+   * Method description
+   *
+   */
+  @Test
+  public void testIsForwarded()
+  {
+    HttpServletRequest request = mock(HttpServletRequest.class);
+
+    assertFalse(HttpUtil.isForwarded(request));
+    when(request.getHeader(HttpUtil.HEADER_X_FORWARDED_HOST)).thenReturn("");
+    assertFalse(HttpUtil.isForwarded(request));
+    when(request.getHeader(HttpUtil.HEADER_X_FORWARDED_HOST)).thenReturn("ser");
+    assertTrue(HttpUtil.isForwarded(request));
+  }
+
+  /**
+   * Method description
+   *
+   */
+  @Test
   public void testRemoveCRLFInjectionChars()
   {
     assertEquals("any0D0A", HttpUtil.removeCRLFInjectionChars("any%0D%0A"));

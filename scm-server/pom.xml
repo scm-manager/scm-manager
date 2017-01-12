@@ -69,7 +69,7 @@
                 <daemon>
 
                   <id>scm-server</id>
-                  <version>${commons.daemon.version}</version>
+                  <version>${commons.daemon.native.version}</version>
                   <mainClass>sonia.scm.server.ScmServerDaemon</mainClass>
                   <platforms>
                     <platform>commons-daemon</platform>
@@ -172,7 +172,7 @@
           <plugin>
             <groupId>com.github.sdorra</groupId>
             <artifactId>nativepkg-maven-plugin</artifactId>
-            <version>1.1.0</version>
+            <version>1.1.3</version>
             <executions>
               <execution>
                 <goals>
@@ -243,13 +243,13 @@
                   <file>
                     <path>/etc/default/scm-server</path>
                     <source>${project.basedir}/src/main/nativepkg/default</source>
-                    <mode>0744</mode>
+                    <mode>0644</mode>
                     <config>true</config>
                   </file>
                   <file>
                     <path>/etc/init.d/scm-server</path>
                     <source>${project.basedir}/src/main/nativepkg/init-script</source>
-                    <mode>0744</mode>
+                    <mode>0755</mode>
                   </file>
                 </files>
                 <links>
@@ -307,6 +307,7 @@
 
   <properties>
     <commons.daemon.version>1.0.15</commons.daemon.version>
+    <commons.daemon.native.version>1.0.15.1</commons.daemon.native.version>
     <exploded.directory>${project.build.directory}/appassembler/commons-daemon/scm-server</exploded.directory>
   </properties>
 

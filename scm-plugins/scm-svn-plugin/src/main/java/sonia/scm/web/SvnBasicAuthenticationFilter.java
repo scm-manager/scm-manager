@@ -69,9 +69,7 @@ public class SvnBasicAuthenticationFilter extends AuthenticationFilter
    * @param webTokenGenerators
    */
   @Inject
-  public SvnBasicAuthenticationFilter(ScmConfiguration configuration,
-    Set<WebTokenGenerator> webTokenGenerators)
-  {
+  public SvnBasicAuthenticationFilter(ScmConfiguration configuration, Set<WebTokenGenerator> webTokenGenerators) {
     super(configuration, webTokenGenerators);
   }
 

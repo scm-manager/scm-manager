@@ -43,14 +43,22 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 import sonia.scm.store.ConfigurationStoreFactory;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+import sonia.scm.schedule.Scheduler;
 
 /**
  *
  * @author Sebastian Sdorra
  */
+@RunWith(MockitoJUnitRunner.class)
 public class GitRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase
 {
 
+  @Mock
+  private Scheduler scheduler;
+  
   /**
    * Method description
    *
@@ -90,7 +98,7 @@ public class GitRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase
           File directory)
   {
     GitRepositoryHandler repositoryHandler = new GitRepositoryHandler(factory,
-                                               new DefaultFileSystem());
+                                               new DefaultFileSystem(), scheduler);
 
     repositoryHandler.init(contextProvider);
 

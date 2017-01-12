@@ -45,7 +45,7 @@ import javax.servlet.http.HttpServletRequestWrapper;
 public class SecurityHttpServletRequestWrapper extends HttpServletRequestWrapper
 {
 
-  /**
+ /**
    * Constructs ...
    *
    *
@@ -61,9 +61,6 @@ public class SecurityHttpServletRequestWrapper extends HttpServletRequestWrapper
 
   //~--- get methods ----------------------------------------------------------
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public String getRemoteUser()
   {

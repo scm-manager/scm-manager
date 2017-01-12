@@ -61,8 +61,15 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
     Sonia.repository.FormPanel.superclass.initComponent.apply(this, arguments);
   },
 
+  prepareUpdate: function(item) {
+    
+  },
+
   update: function(item){
     item = Ext.apply( this.item, item );
+    // allow plugins to modify item
+    this.prepareUpdate(item);
+    
     if ( debug ){
       console.debug( 'update repository: ' + item.name );
     }

@@ -36,6 +36,7 @@ package sonia.scm.repository;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Strings;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
@@ -262,7 +263,7 @@ public final class GitUtil
   {
     if (formatter != null)
     {
-      formatter.release();
+      formatter.close();
     }
   }
 
@@ -276,7 +277,7 @@ public final class GitUtil
   {
     if (walk != null)
     {
-      walk.release();
+      walk.close();
     }
   }
 
@@ -290,7 +291,7 @@ public final class GitUtil
   {
     if (walk != null)
     {
-      walk.release();
+      walk.close();;
     }
   }
 
@@ -334,6 +335,20 @@ public final class GitUtil
     }
 
     return branch;
+  }
+  
+  /**
+   * Returns {@code true} if the provided reference name is a branch name.
+   * 
+   * @param refName reference name
+   * 
+   * @return {@code true} if the name is a branch name
+   * 
+   * @since 1.50
+   */
+  public static boolean isBranch(String refName)
+  {
+    return Strings.nullToEmpty(refName).startsWith(PREFIX_HEADS);
   }
 
   /**
@@ -631,6 +646,26 @@ public final class GitUtil
     return String.format(REMOTE_REF, repository.getId(), branch);
   }
 
+  /**
+   * Returns the name of the tag or {@code null} if the the ref is not a tag.
+   * 
+   * @param refName ref name
+   * 
+   * @return name of tag or {@link null}
+   * 
+   * @since 1.50
+   */
+  public static String getTagName(String refName)
+  {
+    String tagName = null;
+    if (refName.startsWith(PREFIX_TAG))
+    {
+      tagName = refName.substring(PREFIX_TAG.length());
+    }
+
+    return tagName;
+  }
+  
   /**
    * Method description
    *

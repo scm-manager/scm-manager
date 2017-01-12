@@ -33,16 +33,20 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.repository.api.HookBranchProvider;
 import sonia.scm.repository.api.HookException;
 import sonia.scm.repository.api.HookFeature;
 import sonia.scm.repository.api.HookFeatureIsNotSupportedException;
 import sonia.scm.repository.api.HookMessageProvider;
+import sonia.scm.repository.api.HookContext;
+import sonia.scm.repository.api.HookTagProvider;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.Set;
 
 /**
+ * Repository type specific provider for {@link HookContext}.
  *
  * @author Sebastian Sdorra
  * @since 1.33
@@ -51,10 +55,10 @@ public abstract class HookContextProvider
 {
 
   /**
-   * Method description
-   *
-   *
-   * @return
+   * Return the provider specific {@link HookMessageProvider} or throws a {@link HookFeatureIsNotSupportedException}.
+   * The method will throw a {@link HookException} if the client is already disconnected.
+   * 
+   * @return provider specific {@link HookMessageProvider}
    */
   public final HookMessageProvider getMessageProvider()
   {
@@ -70,7 +74,7 @@ public abstract class HookContextProvider
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * Mark client connection as disconnected.
    *
    */
   final void handleClientDisconnect()
@@ -81,32 +85,52 @@ public abstract class HookContextProvider
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns a set of supported hook features of the client.
    *
-   *
-   * @return
+   * @return supported features
    */
   public abstract Set<HookFeature> getSupportedFeatures();
 
   /**
-   * Method description
-   *
-   *
-   * @return
+   * Return the provider specific {@link HookBranchProvider} or throws a {@link HookFeatureIsNotSupportedException}.
+   * 
+   * @return provider specific {@link HookBranchProvider}
+   * 
+   * @since 1.45
+   */
+  public HookBranchProvider getBranchProvider()
+  {
+    throw new HookFeatureIsNotSupportedException(HookFeature.BRANCH_PROVIDER);
+  }
+  
+  /**
+   * Return the provider specific {@link HookTagProvider} or throws a {@link HookFeatureIsNotSupportedException}.
+   * 
+   * @return provider specific {@link HookTagProvider}
+   * 
+   * @since 1.50
+   */
+  public HookTagProvider getTagProvider() 
+  {
+    throw new HookFeatureIsNotSupportedException(HookFeature.TAG_PROVIDER);
+  }
+
+  /**
+   * Return the provider specific {@link HookChangesetProvider} or throws a {@link HookFeatureIsNotSupportedException}.
+   * 
+   * @return provider specific {@link HookChangesetProvider}
    */
   public HookChangesetProvider getChangesetProvider()
   {
-    throw new HookFeatureIsNotSupportedException(
-      HookFeature.CHANGESET_PROVIDER);
+    throw new HookFeatureIsNotSupportedException(HookFeature.CHANGESET_PROVIDER);
   }
 
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
-   *
-   *
-   * @return
+   * Creates a new provider specific {@link HookMessageProvider} or throws a {@link HookFeatureIsNotSupportedException}.
+   * 
+   * @return provider specific {@link HookChangesetProvider}
    */
   protected HookMessageProvider createMessageProvider()
   {
@@ -115,6 +139,5 @@ public abstract class HookContextProvider
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
   private boolean clientDisconnected = false;
 }

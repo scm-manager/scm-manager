@@ -54,6 +54,7 @@ import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import sonia.scm.repository.RepositoryException;
 
 /**
  *
@@ -170,7 +171,11 @@ public class ScmGitServlet extends GitServlet
       {
         repositoryViewer.handleRequest(request, response, scmRepository);
       }
-      catch (Exception ex)
+      catch (RepositoryException ex)
+      {
+        throw new ServletException("could not create repository view", ex);
+      }
+      catch (IOException ex)
       {
         throw new ServletException("could not create repository view", ex);
       }
@@ -184,11 +189,11 @@ public class ScmGitServlet extends GitServlet
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private RepositoryProvider repositoryProvider;
+  private final RepositoryProvider repositoryProvider;
 
   /** Field description */
-  private RepositoryRequestListenerUtil repositoryRequestListenerUtil;
+  private final RepositoryRequestListenerUtil repositoryRequestListenerUtil;
 
   /** Field description */
-  private GitRepositoryViewer repositoryViewer;
+  private final GitRepositoryViewer repositoryViewer;
 }

@@ -46,7 +46,7 @@ import sonia.scm.event.Event;
  * @since 1.23
  */
 @Event
-public final class UserEvent extends AbstractHandlerEvent<User>
+public class UserEvent extends AbstractHandlerEvent<User>
 {
 
   /**

@@ -1111,7 +1111,7 @@ public class RepositoryResource
    */
   private String getContentDispositionName(String name)
   {
-    return "attachment; filename=\"".concat(name).concat("\"");
+    return HttpUtil.createContentDispositionAttachmentHeader(name);
   }
 
   /**

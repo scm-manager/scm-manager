@@ -71,7 +71,6 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import sonia.scm.util.IOUtil;
 
 /**
@@ -95,8 +94,6 @@ public class GitBrowseCommand extends AbstractGitCommand
 
   /**
    * Constructs ...
-   *
-   *
    *
    * @param context
    * @param repository
@@ -124,18 +121,15 @@ public class GitBrowseCommand extends AbstractGitCommand
   public BrowserResult getBrowserResult(BrowseCommandRequest request)
     throws IOException, RepositoryException
   {
-    if (logger.isDebugEnabled())
-    {
-      logger.debug("try to create browse result for {}", request);
-    }
+    logger.debug("try to create browse result for {}", request);
 
-    BrowserResult result = null;
+    BrowserResult result;
     org.eclipse.jgit.lib.Repository repo = open();
-    ObjectId revId = null;
+    ObjectId revId;
 
     if (Util.isEmpty(request.getRevision()))
     {
-      revId = GitUtil.getRepositoryHead(repo);
+      revId = getDefaultBranch(repo);
     }
     else
     {
@@ -169,70 +163,6 @@ public class GitBrowseCommand extends AbstractGitCommand
   /**
    * Method description
    *
-   *
-   * @param files
-   * @param repo
-   * @param revId
-   * @param path
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
-  private void appendSubModules(List<FileObject> files,
-    org.eclipse.jgit.lib.Repository repo, ObjectId revId, String path)
-    throws IOException, RepositoryException
-  {
-    path = Util.nonNull(path);
-
-    Map<String, SubRepository> subRepositories = subrepositoryCache.get(revId);
-
-    if (subRepositories == null)
-    {
-      subRepositories = getSubRepositories(repo, revId);
-      subrepositoryCache.put(revId, subRepositories);
-    }
-
-    if (subRepositories != null)
-    {
-      for (Entry<String, SubRepository> e : subRepositories.entrySet())
-      {
-        String p = e.getKey();
-
-        if (p.startsWith(path))
-        {
-          p = p.substring(path.length());
-
-          if (p.startsWith("/"))
-          {
-            p = p.substring(1);
-          }
-
-          if (p.endsWith("/"))
-          {
-            p = p.substring(0, p.length() - 1);
-          }
-
-          if (!p.contains("/"))
-          {
-            FileObject fo = new FileObject();
-
-            fo.setDirectory(true);
-            fo.setPath(path);
-            fo.setName(p);
-            fo.setSubRepository(e.getValue());
-            files.add(fo);
-          }
-        }
-      }
-    }
-  }
-
-  /**
-   * Method description
-   *
-   *
-   *
-   *
    * @param repo
    * @param request
    * @param revId
@@ -244,9 +174,9 @@ public class GitBrowseCommand extends AbstractGitCommand
    */
   private FileObject createFileObject(org.eclipse.jgit.lib.Repository repo,
     BrowseCommandRequest request, ObjectId revId, TreeWalk treeWalk)
-    throws IOException
+    throws IOException, RepositoryException
   {
-    FileObject file = null;
+    FileObject file;
 
     try
     {
@@ -257,26 +187,43 @@ public class GitBrowseCommand extends AbstractGitCommand
       file.setName(treeWalk.getNameString());
       file.setPath(path);
 
-      ObjectLoader loader = repo.open(treeWalk.getObjectId(0));
+      SubRepository sub = null;
 
-      file.setDirectory(loader.getType() == Constants.OBJ_TREE);
-      file.setLength(loader.getSize());
-
-      // don't show message and date for directories to improve performance
-      if (!file.isDirectory() &&!request.isDisableLastCommit())
+      if (!request.isDisableSubRepositoryDetection())
       {
-        logger.trace("fetch last commit for {} at {}", path, revId.getName());
+        sub = getSubRepository(repo, revId, path);
+      }
 
-        RevCommit commit = getLatestCommit(repo, revId, path);
+      if (sub != null)
+      {
+        logger.trace("{} seems to be a sub repository", path);
+        file.setDirectory(true);
+        file.setSubRepository(sub);
+      }
+      else
+      {
+        ObjectLoader loader = repo.open(treeWalk.getObjectId(0));
 
-        if (commit != null)
+        file.setDirectory(loader.getType() == Constants.OBJ_TREE);
+        file.setLength(loader.getSize());
+
+        // don't show message and date for directories to improve performance
+        if (!file.isDirectory() &&!request.isDisableLastCommit())
         {
-          file.setLastModified(GitUtil.getCommitTime(commit));
-          file.setDescription(commit.getShortMessage());
-        }
-        else if (logger.isWarnEnabled())
-        {
-          logger.warn("could not find latest commit for {} on {}", path, revId);
+          logger.trace("fetch last commit for {} at {}", path, revId.getName());
+
+          RevCommit commit = getLatestCommit(repo, revId, path);
+
+          if (commit != null)
+          {
+            file.setLastModified(GitUtil.getCommitTime(commit));
+            file.setDescription(commit.getShortMessage());
+          }
+          else if (logger.isWarnEnabled())
+          {
+            logger.warn("could not find latest commit for {} on {}", path,
+              revId);
+          }
         }
       }
     }
@@ -386,11 +333,6 @@ public class GitBrowseCommand extends AbstractGitCommand
 
       String path = request.getPath();
 
-      if (!request.isDisableSubRepositoryDetection())
-      {
-        appendSubModules(files, repo, revId, path);
-      }
-
       if (Util.isEmpty(path))
       {
         while (treeWalk.next())
@@ -494,6 +436,28 @@ public class GitBrowseCommand extends AbstractGitCommand
     }
 
     return subRepositories;
+  }
+
+  private SubRepository getSubRepository(org.eclipse.jgit.lib.Repository repo,
+    ObjectId revId, String path)
+    throws IOException, RepositoryException
+  {
+    Map<String, SubRepository> subRepositories = subrepositoryCache.get(revId);
+
+    if (subRepositories == null)
+    {
+      subRepositories = getSubRepositories(repo, revId);
+      subrepositoryCache.put(revId, subRepositories);
+    }
+
+    SubRepository sub = null;
+
+    if (subRepositories != null)
+    {
+      sub = subRepositories.get(path);
+    }
+
+    return sub;
   }
 
   //~--- fields ---------------------------------------------------------------

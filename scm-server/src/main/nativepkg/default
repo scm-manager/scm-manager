@@ -29,6 +29,9 @@
 # http://bitbucket.org/sdorra/scm-manager
 #
 
+# scm-server host interface
+HOST=0.0.0.0
+
 # scm-server port
 PORT=8080
 
@@ -51,4 +54,4 @@ LOGDIR=/var/log/scm
 # EXTRA_JVM_ARGUMENTS="$EXTRA_JVM_ARGUMENTS -Xms1g -Xmx1g"
 
 # pass extra jvm arguments
-EXTRA_JVM_ARGUMENTS="$EXTRA_JVM_ARGUMENTS -Djetty.port=$PORT"
+EXTRA_JVM_ARGUMENTS="$EXTRA_JVM_ARGUMENTS -Djetty.host=$HOST -Djetty.port=$PORT"

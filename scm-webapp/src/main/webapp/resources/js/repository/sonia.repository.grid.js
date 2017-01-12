@@ -82,7 +82,8 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
           name: 'group',
           convert: this.convertToGroup
         },{
-          name: 'name'
+          name: 'name',
+          sortType:'asUCString'
         },{
           name: 'type'
         },{
@@ -431,21 +432,22 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
     var infoPanel = main.getInfoPanel(item.type);
     infoPanel.item = item;
     
+    var settingsForm = main.getSettingsForm(item.type);
+    settingsForm.item = item;
+    settingsForm.onUpdate = {
+      fn: this.reload,
+      scope: this
+    };
+    settingsForm.onCreate = {
+      fn: this.reload,
+      scope: this
+    };
+    
     var panels = [infoPanel];
     
     if ( owner ){
-      panels.push({
-        item: item,
-        xtype: 'repositorySettingsForm',
-        onUpdate: {
-          fn: this.reload,
-          scope: this
-        },
-        onCreate: {
-          fn: this.reload,
-          scope: this
-        }
-      },{
+      panels.push(
+        settingsForm, {
         item: item,
         xtype: 'repositoryPermissionsForm',
         listeners: {
@@ -481,8 +483,34 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
         listener.call(listener.scope, item, panels);
       }
     });
+  
+    // get the xtype of the currently opened tab
+    // search for the tab with the same xtype and activate it
+    // see issue https://goo.gl/3RGnA3
+    var activeTab = 0;
+    var activeXtype = this.getActiveTabXtype();
+    if (activeXtype){
+      for (var i=0; i<panels.length; i++){
+        if (panels[i].xtype === activeXtype){
+          activeTab = i;
+          break;
+        }
+      }
+    }
 
-    Sonia.repository.setEditPanel(panels);
+    Sonia.repository.setEditPanel(panels, activeTab);
+  },
+  
+  getActiveTabXtype: function(){
+    var type = null;
+    var rep = Ext.getCmp('repositoryEditPanel');
+    if (rep){
+      var at = rep.getActiveTab();
+      if (at && at.xtype){
+        type = at.xtype;
+      }
+    }
+    return type;
   },
 
   renderRepositoryType: function(repositoryType){

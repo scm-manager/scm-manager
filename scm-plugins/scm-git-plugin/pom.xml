@@ -37,12 +37,6 @@
       <artifactId>org.eclipse.jgit.http.server</artifactId>
       <version>${jgit.version}</version>
     </dependency>
-    
-    <dependency>
-      <groupId>sonia.jgit</groupId>
-      <artifactId>org.eclipse.jgit.java7</artifactId>
-      <version>${jgit.version}</version>
-    </dependency>
 
     <dependency>
       <groupId>commons-lang</groupId>

@@ -40,10 +40,10 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.SCMContext;
 import sonia.scm.io.ZipUnArchiver;
-import sonia.scm.net.HttpClient;
-import sonia.scm.repository.HgWindowsPackageFix;
+import sonia.scm.net.ahc.AdvancedHttpClient;
 import sonia.scm.repository.HgConfig;
 import sonia.scm.repository.HgRepositoryHandler;
+import sonia.scm.repository.HgWindowsPackageFix;
 import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -80,8 +80,8 @@ public class HgPackageInstaller implements Runnable
    * @param baseDirectory
    * @param pkg
    */
-  public HgPackageInstaller(HttpClient client, HgRepositoryHandler handler,
-    File baseDirectory, HgPackage pkg)
+  public HgPackageInstaller(AdvancedHttpClient client,
+    HgRepositoryHandler handler, File baseDirectory, HgPackage pkg)
   {
     this.client = client;
     this.handler = handler;
@@ -155,7 +155,7 @@ public class HgPackageInstaller implements Runnable
       }
 
       // TODO error handling
-      input = client.get(pkg.getUrl()).getContent();
+      input = client.get(pkg.getUrl()).request().contentAsStream();
       output = new FileOutputStream(file);
       IOUtil.copy(input, output);
     }
@@ -265,7 +265,7 @@ public class HgPackageInstaller implements Runnable
   private File baseDirectory;
 
   /** Field description */
-  private HttpClient client;
+  private AdvancedHttpClient client;
 
   /** Field description */
   private HgRepositoryHandler handler;

@@ -35,9 +35,14 @@ package sonia.scm.web.cgi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
+
 import sonia.scm.config.ScmConfiguration;
 
 //~--- JDK imports ------------------------------------------------------------
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -49,6 +54,21 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class DefaultCGIExecutorFactory implements CGIExecutorFactory
 {
+
+  /**
+   * Constructs ...
+   *
+   */
+  public DefaultCGIExecutorFactory()
+  {
+    //J-
+    this.executor = Executors.newCachedThreadPool(
+      new ThreadFactoryBuilder().setNameFormat("cgi-pool-%d").build()
+    );
+    //J+
+  }
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
@@ -63,10 +83,15 @@ public class DefaultCGIExecutorFactory implements CGIExecutorFactory
    */
   @Override
   public CGIExecutor createExecutor(ScmConfiguration configuration,
-                                    ServletContext context,
-                                    HttpServletRequest request,
-                                    HttpServletResponse response)
+    ServletContext context, HttpServletRequest request,
+    HttpServletResponse response)
   {
-    return new DefaultCGIExecutor(configuration, context, request, response);
+    return new DefaultCGIExecutor(executor, configuration, context, request,
+      response);
   }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private final ExecutorService executor;
 }

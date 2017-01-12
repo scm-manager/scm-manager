@@ -48,18 +48,18 @@ public abstract class AbstractGroupManager implements GroupManager
 {
 
   /**
-   * Send a {@link GroupEvent} to the {@link ScmEventBus}.
+   * Creates a {@link GroupEvent} and send it to the {@link ScmEventBus}.
    *
    * @param event type of change event
    * @param group group that has changed
    */
   protected void fireEvent(HandlerEventType event, Group group)
   {
-    ScmEventBus.getInstance().post(new GroupEvent(event, group));
+    fireEvent(new GroupEvent(event, group));
   }
 
   /**
-   * Send a {@link GroupEvent} to the {@link ScmEventBus}.
+   * Creates a {@link GroupModificationEvent} and send it to the {@link ScmEventBus}.
    *
    * @param event type of change event
    * @param group group that has changed
@@ -67,6 +67,16 @@ public abstract class AbstractGroupManager implements GroupManager
    */
   protected void fireEvent(HandlerEventType event, Group group, Group oldGroup)
   {
-    ScmEventBus.getInstance().post(new GroupEvent(event, group, oldGroup));
+    fireEvent(new GroupModificationEvent(event, group, oldGroup));
+  }
+  
+  /**
+   * Sends a {@link GroupEvent} to the {@link ScmEventBus}.
+   *
+   * @param event group event
+   */
+  protected void fireEvent(GroupEvent event)
+  {
+    ScmEventBus.getInstance().post(event);
   }
 }

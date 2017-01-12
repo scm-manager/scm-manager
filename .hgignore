@@ -1,6 +1,7 @@
 # netbeans temp & private files
 /?target/
 nbactions.*\.xml
+/?nbproject/
 nb-configuration\.xml
 # MacOS X Files
 \.DS_Store$
@@ -25,3 +26,5 @@ Desktop DF$
 # idea files
 \.iml
 \.idea$
+# jrebel
+rebel.xml

@@ -34,25 +34,27 @@ package sonia.scm.selenium;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.selenium.page.Pages;
+import sonia.scm.selenium.page.MainPage;
+import sonia.scm.selenium.page.LoginPage;
+import static org.junit.Assert.*;
 import org.junit.Test;
 
 /**
- *
+ * Authentication related selenium integration tests.
+ * 
  * @author Sebastian Sdorra
  */
-public class AuthenticationITCase extends SeleniumTestBase
-{
+public class AuthenticationITCase extends SeleniumITCaseBase {
 
   /**
-   * Method description
-   *
-   *
-   * @throws Exception
+   * Authenticates an user and call logout function.
    */
   @Test
-  public void testAuthentication() throws Exception
-  {
-    login("scmadmin", "scmadmin");
-    logout();
+  public void testAuthentication() {
+    MainPage main = Pages.get(driver, LoginPage.class).login("scmadmin", "scmadmin");
+    assertEquals("scmadmin", main.getUserInfo());
+    main.logout();
   }
+  
 }

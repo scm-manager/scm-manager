@@ -52,12 +52,19 @@
   
   <logger name="sonia.scm" level="TRACE" />
   
+  <logger name="sonia.scm.security.AuthorizationCollector" level="DEBUG" />
+  <logger name="sonia.scm.web.filter.AutoLoginFilter" level="DEBUG" />
+  <logger name="sonia.scm.security.XsrfProtectionFilter" level="DEBUG" />
+  
   <!-- suppress massive gzip logging -->
   <logger name="sonia.scm.filter.GZipFilter" level="WARN" />
   <logger name="sonia.scm.filter.GZipResponseStream" level="WARN" />
   
   <logger name="sonia.scm.util.ServiceUtil" level="WARN" />
+  <logger name="sonia.scm.ScmEventBusModule" level="DEBUG" />
+  <logger name="sonia.scm.event.LegmanScmEventBus" level="DEBUG" />
   <logger name="sonia.scm.plugin.ext.DefaultAnnotationScanner" level="INFO" />
+  <logger name="sonia.scm.security.ConfigurableLoginAttemptHandler" level="DEBUG" />
   
   <!-- event bus -->
   <logger name="sonia.scm.event.LegmanScmEventBus" level="INFO" />

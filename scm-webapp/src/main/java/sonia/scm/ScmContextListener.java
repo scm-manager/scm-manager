@@ -65,7 +65,9 @@ import java.util.Set;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
+import sonia.scm.debug.DebugModule;
 import sonia.scm.filter.WebElementModule;
+import sonia.scm.schedule.Scheduler;
 
 /**
  *
@@ -108,6 +110,8 @@ public class ScmContextListener extends GuiceServletContextListener
   {
     if ((globalInjector != null) &&!startupError)
     {
+      // close Scheduler
+      IOUtil.close(globalInjector.getInstance(Scheduler.class));
 
       // close RepositoryManager
       IOUtil.close(globalInjector.getInstance(RepositoryManager.class));
@@ -259,6 +263,10 @@ public class ScmContextListener extends GuiceServletContextListener
     );
     appendModules(pluginLoader.getExtensionProcessor(), moduleList);
     moduleList.addAll(overrides.getModules());
+    
+    if (SCMContext.getContext().getStage() == Stage.DEVELOPMENT){
+      moduleList.add(new DebugModule());
+    }
 
     SCMContextProvider ctx = SCMContext.getContext();
 

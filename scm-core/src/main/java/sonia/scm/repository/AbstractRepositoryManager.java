@@ -80,7 +80,7 @@ public abstract class AbstractRepositoryManager implements RepositoryManager
   protected void fireEvent(HandlerEventType event, Repository repository,
     Repository oldRepository)
   {
-    ScmEventBus.getInstance().post(new RepositoryEvent(event, repository,
+    ScmEventBus.getInstance().post(new RepositoryModificationEvent(event, repository,
       oldRepository));
   }
 

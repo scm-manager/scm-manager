@@ -35,7 +35,8 @@ package sonia.scm.it;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.junit.After;
+import com.google.common.collect.Lists;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -45,23 +46,23 @@ import sonia.scm.repository.Permission;
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryTestData;
-import sonia.scm.util.IOUtil;
 
 import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.*;
 
 import static sonia.scm.it.IntegrationTestUtil.*;
 import static sonia.scm.it.RepositoryITUtil.*;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.api.client.WebResource;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import org.junit.After;
+import sonia.scm.util.IOUtil;
 
 /**
  *
@@ -90,34 +91,9 @@ public class RepositoryITCase extends AbstractAdminITCaseBase
    *
    * @return
    */
-  @Parameters
-  public static Collection<String[]> createParameters()
-  {
-    Collection<String[]> params = new ArrayList<String[]>();
-
-    params.add(new String[] { "git" });
-
-    params.add(new String[] { "svn" });
-
-    if (IOUtil.search("hg") != null)
-    {
-      params.add(new String[] { "hg" });
-    }
-
-    return params;
-  }
-
-  /**
-   * Method description
-   *
-   */
   @After
   public void cleanup()
   {
-    Client client = createClient();
-
-    authenticateAdmin(client);
-
     Collection<Repository> repositories =
       createResource(client,
         "repositories").get(new GenericType<Collection<Repository>>() {}
@@ -137,6 +113,29 @@ public class RepositoryITCase extends AbstractAdminITCaseBase
   /**
    * Method description
    *
+   *
+   * @return
+   */
+  @Parameters
+  public static Collection<String[]> createParameters()
+  {
+    Collection<String[]> params = Lists.newArrayList();
+
+    params.add(new String[] { "git" });
+    params.add(new String[] { "svn" });
+    
+    if (IOUtil.search("hg") != null)
+    {
+      params.add(new String[] { "hg" });
+    }
+
+    return params;
+  }
+
+  /**
+   * Method description
+   *
+>>>>>>> merge rev
    */
   @Test
   public void create()
@@ -165,21 +164,18 @@ public class RepositoryITCase extends AbstractAdminITCaseBase
    * Method description
    *
    */
-
   @Test
   public void doubleCreate()
   {
     Repository repository = RepositoryTestData.create42Puzzle(repositoryType);
 
     repository = createRepository(client, repository);
-
+    
     WebResource wr = createResource(client, "repositories");
     ClientResponse response = wr.post(ClientResponse.class, repository);
-
+    
     assertNotNull(response);
-
-    // TODO should be 409?
-    assertEquals(500, response.getStatus());
+    assertThat(response.getStatus(), not(lessThanOrEqualTo(400)));
   }
 
   /**

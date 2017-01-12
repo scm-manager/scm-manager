@@ -37,7 +37,6 @@ package sonia.scm.it;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -264,7 +263,7 @@ public class ChangesetViewerITCase extends AbstractAdminITCaseBase
     throws RepositoryClientException
   {
     return RepositoryClientFactory.createClient(repositoryType, localDirectory,
-      repository.createUrl(URL), IntegrationTestUtil.ADMIN_USERNAME,
+      repository.createUrl(BASE_URL), IntegrationTestUtil.ADMIN_USERNAME,
       IntegrationTestUtil.ADMIN_PASSWORD);
   }
 

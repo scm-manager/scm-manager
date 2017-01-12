@@ -35,12 +35,10 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.base.Objects;
 
 import sonia.scm.HandlerEventType;
 import sonia.scm.event.AbstractHandlerEvent;
 import sonia.scm.event.Event;
-import sonia.scm.event.HandlerEvent;
 
 /**
  * The RepositoryEvent is fired if a {@link Repository} object changes.
@@ -49,7 +47,7 @@ import sonia.scm.event.HandlerEvent;
  * @since 1.23
  */
 @Event
-public final class RepositoryEvent extends AbstractHandlerEvent<Repository>
+public class RepositoryEvent extends AbstractHandlerEvent<Repository>
 {
 
   /**

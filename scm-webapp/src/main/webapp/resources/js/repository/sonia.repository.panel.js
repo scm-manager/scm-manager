@@ -48,7 +48,8 @@ Sonia.repository.Panel = Ext.extend(Sonia.rest.Panel, {
   displayArchivedRepositoriesText: 'Archive',
 
   removeTitleText: 'Remove Repository',
-  removeMsgText: 'Remove Repository "{0}"?',
+  removeMsgText: 'This action will permanently remove the data of the repository \n\
+    "{0}" from your disk.<br />Do you want to proceed?',
   errorTitleText: 'Error',
   errorMsgText: 'Repository deletion failed',
   
@@ -255,12 +256,12 @@ Sonia.repository.Panel = Ext.extend(Sonia.rest.Panel, {
     return repository;
   },
   
-  executeRemoteCall: function(title, message, method, url, data, failureCallback){
+  executeRemoteCall: function(title, message, method, url, data, failureCallback, icon){
     Ext.MessageBox.show({
       title: title,
       msg: message,
       buttons: Ext.MessageBox.OKCANCEL,
-      icon: Ext.MessageBox.QUESTION,
+      icon: icon ? icon : Ext.MessageBox.QUESTION,
       fn: function(result){
         if ( result === 'ok' ){
 
@@ -339,7 +340,8 @@ Sonia.repository.Panel = Ext.extend(Sonia.rest.Panel, {
             this.errorTitleText, 
             this.errorMsgText
           );
-        }
+        },
+        Ext.MessageBox.WARNING
       );
     }
   },

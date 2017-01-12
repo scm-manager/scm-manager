@@ -62,20 +62,33 @@ appname=ScmServerDaemon
 
 # See how we were called.
 start() {
-    /opt/scm-server/bin/scm-server start
+    if [ $(ps aux | grep java | grep ${appname} | wc -l) = 0 ]
+    then
+    	  echo "SCM-Server will now be started"
+    	  /opt/scm-server/bin/scm-server start
+    else
+	  echo "SCM-Server already running"
+	  status
+    fi
 }
 
 stop() {
-    if [ ! status = 0 ]
+    if [ ! $(ps aux | grep java | grep ${appname} | wc -l) = 0 ]
     then
+	  echo "SCM-Server will now be stopped"
           /opt/scm-server/bin/scm-server stop
     else
-      echo "SCM-Server is not running"
+          echo "SCM-Server is not running"
     fi
 }
 
 status() {
-    ps auxwww | grep java | grep ${appname} || echo "SCM-Server is not running"
+    if [ "$(ps auxwww | grep java | grep ${appname} | awk '{ print $1 " PID:" $2 }')" ]; then 
+	  echo "SCM-Server is running" 
+	  ps auxwww | grep java | grep ${appname} | awk '{ print " PID: " $2 }'
+    else 
+	  echo "SCM-Server is not running"
+    fi
 }
 
 restart() {
@@ -84,6 +97,7 @@ restart() {
     STAT=$( ps auxwww | grep  java | grep ${appname} |  wc -l )
     while [ $STAT -ne 0 ]
     do
+      echo -n .
       sleep 3
         if [ $SECONDS -gt 300 ]
         then
@@ -92,7 +106,9 @@ restart() {
         fi
       STAT=$( ps auxwww | grep  java | grep ${appname} |  wc -l )
     done
+    status
     start
+    status
 }
 
 # See how we were called.

@@ -37,6 +37,17 @@ Ext.Ajax.defaultHeaders = {
   'X-SCM-Client': 'WUI'
 };
 
+// XSRF protection
+Ext.Ajax.on('beforerequest', function(conn, options){
+  var token = Ext.util.Cookies.get('X-XSRF-Token');
+  if (token){
+    if (!options.headers){
+      options.headers = {};
+    }
+    options.headers['X-XSRF-Token'] = token;
+  }
+});
+
 var state = null;
 var admin = false;
 

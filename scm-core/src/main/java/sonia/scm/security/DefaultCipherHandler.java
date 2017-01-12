@@ -53,7 +53,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -66,32 +66,32 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 /**
- *
+ * Default implementation of the {@link CipherHandler}, which uses AES for 
+ * encryption and decryption.
+ * 
  * @author Sebastian Sdorra
  * @since 1.7
  */
-public class DefaultCipherHandler implements CipherHandler
-{
+public class DefaultCipherHandler implements CipherHandler {
 
-  /** Field description */
+  /** used cipher type */
   public static final String CIPHER_TYPE = "AES/CTR/PKCS5PADDING";
 
-  /** Field description */
+  /** digest type for key generation */
   public static final String DIGEST_TYPE = "SHA-512";
 
-  /** Field description */
+  /** string encoding */
   public static final String ENCODING = "UTF-8";
 
-  /** Field description */
+  /** default key length */
   public static final int KEY_LENGTH = 16;
 
-  /** Field description */
+  /** default salt length */
   public static final int SALT_LENGTH = 16;
 
-  /** Field description */
-  private static final String CIPHERKEY_FILENAME = ".cipherkey";
+  @VisibleForTesting
+  static final String CIPHERKEY_FILENAME = ".cipherkey";
 
-  /** Field description */
   private static final char[] KEY_BASE = new char[]
   {
     '1', '4', '7', '3', 'F', '2', '1', 'E', '-', 'C', '4', 'C', '4', '-', '4',
@@ -99,96 +99,72 @@ public class DefaultCipherHandler implements CipherHandler
     'E', 'C', '7', '7', '2', 'E'
   };
 
-  /** Field description */
   private static final String KEY_TYPE = "AES";
 
   /** the logger for DefaultCipherHandler */
-  private static final Logger logger =
-    LoggerFactory.getLogger(DefaultCipherHandler.class);
-
-  //~--- constructors ---------------------------------------------------------
-
+  private static final Logger logger = LoggerFactory.getLogger(DefaultCipherHandler.class);
+  
+  private final SecureRandom random = new SecureRandom();
+  
+  private final char[] key;
+  
   /**
    * Constructs a new DefaultCipherHandler. Note this constructor is only for
    * unit tests.
    *
-   *
-   * @param key
+   * @param key default encryption key
    *
    * @since 1.38
    */
   @VisibleForTesting
-  protected DefaultCipherHandler(String key)
-  {
+  protected DefaultCipherHandler(String key) {
     this.key = key.toCharArray();
   }
 
   /**
-   * Constructs ...
+   * Constructs a new instance and reads the default key from the scm home directory, 
+   * if the key file does not exists it will be generated with the {@link KeyGenerator}.
    *
-   *
-   * @param context
-   * @param keyGenerator
-   *
-   *
+   * @param context SCM-Manager context provider
+   * @param keyGenerator key generator for default key generation
    */
-  public DefaultCipherHandler(SCMContextProvider context,
-    KeyGenerator keyGenerator)
-  {
+  public DefaultCipherHandler(SCMContextProvider context, KeyGenerator keyGenerator) {
     File configDirectory = new File(context.getBaseDirectory(), "config");
 
     IOUtil.mkdirs(configDirectory);
-    cipherKeyFile = new File(configDirectory, CIPHERKEY_FILENAME);
+    File cipherKeyFile = new File(configDirectory, CIPHERKEY_FILENAME);
 
-    try
-    {
-      if (cipherKeyFile.exists())
-      {
-        loadKey();
-      }
-      else
-      {
+    try {
+      if (cipherKeyFile.exists()) {
+        key = loadKey(cipherKeyFile);
+      } else {
         key = keyGenerator.createKey().toCharArray();
-        storeKey();
+        storeKey(cipherKeyFile);
       }
-    }
-    catch (IOException ex)
-    {
+    } catch (IOException ex) {
       throw new CipherException("could not create CipherHandler", ex);
     }
   }
 
   //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param value
-   *
-   * @return
-   */
   @Override
-  public String decode(String value)
-  {
+  public String decode(String value) {
     return decode(key, value);
   }
 
   /**
-   * Method description
+   * Decodes the given value with the provided key.
    *
+   * @param plainKey key which is used for decoding
+   * @param value encrypted value
    *
-   * @param plainKey
-   * @param value
-   *
-   * @return
+   * @return decrypted value
    */
-  public String decode(char[] plainKey, String value)
-  {
+  public String decode(char[] plainKey, String value) {
     String result = null;
 
-    try
-    {
+    try {
       byte[] encodedInput = Base64.decode(value);
       byte[] salt = new byte[SALT_LENGTH];
       byte[] encoded = new byte[encodedInput.length - SALT_LENGTH];
@@ -206,52 +182,35 @@ public class DefaultCipherHandler implements CipherHandler
       byte[] decoded = cipher.doFinal(encoded);
 
       result = new String(decoded, ENCODING);
-    }
-    catch (Exception ex)
-    {
-      logger.error("could not decode string", ex);
-
-      throw new CipherException(ex);
+    } catch (IOException | GeneralSecurityException ex) {
+      throw new CipherException("could not decode string", ex);
     }
 
     return result;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param value
-   *
-   * @return
-   */
   @Override
-  public String encode(String value)
-  {
+  public String encode(String value) {
     return encode(key, value);
   }
 
   /**
-   * Method description
+   * Encrypts the given value with the provided key.
    *
+   * @param plainKey key which is used for encoding
+   * @param value plain text value to encrypt
    *
-   * @param plainKey
-   * @param value
-   *
-   * @return
+   * @return encrypted value
    */
-  public String encode(char[] plainKey, String value)
-  {
+  public String encode(char[] plainKey, String value) {
     String res = null;
-
-    try
-    {
+    try {
       byte[] salt = new byte[SALT_LENGTH];
 
       random.nextBytes(salt);
 
       IvParameterSpec iv = new IvParameterSpec(salt);
-      SecretKey secretKey = buildSecretKey(key);
+      SecretKey secretKey = buildSecretKey(plainKey);
       javax.crypto.Cipher cipher = javax.crypto.Cipher.getInstance(CIPHER_TYPE);
 
       cipher.init(javax.crypto.Cipher.ENCRYPT_MODE, secretKey, iv);
@@ -264,31 +223,14 @@ public class DefaultCipherHandler implements CipherHandler
       System.arraycopy(encodedInput, 0, result, SALT_LENGTH,
         result.length - SALT_LENGTH);
       res = new String(Base64.encode(result), ENCODING);
-    }
-    catch (Exception ex)
-    {
-      logger.error("could not encode string", ex);
-
-      throw new CipherException(ex);
+    } catch (IOException | GeneralSecurityException ex) {
+      throw new CipherException("could not encode string", ex);
     }
 
     return res;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param plainKey
-   *
-   * @return
-   *
-   * @throws NoSuchAlgorithmException
-   * @throws UnsupportedEncodingException
-   */
-  private SecretKey buildSecretKey(char[] plainKey)
-    throws UnsupportedEncodingException, NoSuchAlgorithmException
-  {
+  private SecretKey buildSecretKey(char[] plainKey) throws IOException, NoSuchAlgorithmException {
     byte[] raw = new String(plainKey).getBytes(ENCODING);
     MessageDigest digest = MessageDigest.getInstance(DIGEST_TYPE);
 
@@ -298,60 +240,18 @@ public class DefaultCipherHandler implements CipherHandler
     return new SecretKeySpec(raw, KEY_TYPE);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
-  private void loadKey() throws IOException
-  {
-    BufferedReader reader = null;
-
-    try
-    {
-      reader = new BufferedReader(new FileReader(cipherKeyFile));
-
+  private char[] loadKey(File cipherKeyFile) throws IOException {
+    try (BufferedReader reader =  new BufferedReader(new FileReader(cipherKeyFile))) {
       String line = reader.readLine();
 
-      key = decode(KEY_BASE, line).toCharArray();
-    }
-    finally
-    {
-      IOUtil.close(reader);
+      return decode(KEY_BASE, line).toCharArray();
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws FileNotFoundException
-   */
-  private void storeKey() throws FileNotFoundException
-  {
+  private void storeKey(File cipherKeyFile) throws FileNotFoundException {
     String storeKey = encode(KEY_BASE, new String(key));
-    PrintWriter output = null;
-
-    try
-    {
-      output = new PrintWriter(cipherKeyFile);
+    try (PrintWriter output = new PrintWriter(cipherKeyFile)) {
       output.write(storeKey);
     }
-    finally
-    {
-      IOUtil.close(output);
-    }
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private File cipherKeyFile;
-
-  /** Field description */
-  private char[] key = null;
-
-  /** Field description */
-  private SecureRandom random = new SecureRandom();
 }

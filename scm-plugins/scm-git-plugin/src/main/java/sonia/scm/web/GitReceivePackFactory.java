@@ -96,7 +96,9 @@ public class GitReceivePackFactory
 
     rpack.setPreReceiveHook(hook);
     rpack.setPostReceiveHook(hook);
-
+    // apply collecting listener, to be able to check which commits are new
+    CollectingPackParserListener.set(rpack);
+    
     return rpack;
   }
 

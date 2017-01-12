@@ -128,6 +128,18 @@ import java.util.Map;
 import javax.servlet.ServletContext;
 import sonia.scm.store.ConfigurationStoreFactory;
 
+import javax.net.ssl.SSLContext;
+import sonia.scm.net.SSLContextProvider;
+import sonia.scm.net.ahc.AdvancedHttpClient;
+import sonia.scm.net.ahc.ContentTransformer;
+import sonia.scm.net.ahc.DefaultAdvancedHttpClient;
+import sonia.scm.net.ahc.JsonContentTransformer;
+import sonia.scm.net.ahc.XmlContentTransformer;
+import sonia.scm.schedule.QuartzScheduler;
+import sonia.scm.schedule.Scheduler;
+import sonia.scm.security.XsrfProtectionFilter;
+import sonia.scm.web.UserAgentParser;
+
 /**
  *
  * @author Sebastian Sdorra
@@ -249,6 +261,9 @@ public class ScmServletModule extends JerseyServletModule
     bind(PluginLoader.class).toInstance(pluginLoader);
     bind(PluginManager.class, DefaultPluginManager.class);
 
+    // bind scheduler
+    bind(Scheduler.class).to(QuartzScheduler.class);
+    
     // note CipherUtil uses an other generator
     bind(KeyGenerator.class).to(DefaultKeyGenerator.class);
     bind(CipherHandler.class).toInstance(cu.getCipherHandler());
@@ -280,8 +295,18 @@ public class ScmServletModule extends JerseyServletModule
       GroupManagerProvider.class);
     bind(CGIExecutorFactory.class, DefaultCGIExecutorFactory.class);
 
+    // bind sslcontext provider
+    bind(SSLContext.class).toProvider(SSLContextProvider.class);
+    
     // bind httpclient
     bind(HttpClient.class, URLHttpClient.class);
+    
+    // bind ahc
+    Multibinder<ContentTransformer> transformers =
+      Multibinder.newSetBinder(binder(), ContentTransformer.class);
+    transformers.addBinding().to(XmlContentTransformer.class);
+    transformers.addBinding().to(JsonContentTransformer.class);
+    bind(AdvancedHttpClient.class).to(DefaultAdvancedHttpClient.class);
 
     // bind resourcemanager
     if (context.getStage() == Stage.DEVELOPMENT)
@@ -310,13 +335,16 @@ public class ScmServletModule extends JerseyServletModule
     // bind new hook api
     bind(HookContextFactory.class);
     bind(HookEventFacade.class);
+    
+    // bind user-agent parser
+    bind(UserAgentParser.class);
 
     // bind debug logging filter
     if ("true".equalsIgnoreCase(System.getProperty(SYSTEM_PROPERTY_DEBUG_HTTP)))
     {
       filter(PATTERN_ALL).through(LoggingFilter.class);
     }
-
+    
     // debug servlet
     serve(PATTERN_DEBUG).with(DebugServlet.class);
 

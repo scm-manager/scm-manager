@@ -35,6 +35,7 @@ package sonia.scm.util;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import com.google.common.net.UrlEscapers;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -138,8 +139,11 @@ public class UrlBuilder
   {
     if (Util.isNotEmpty(name) && Util.isNotEmpty(value))
     {
-      url = new StringBuilder(url).append(separator).append(name).append(
-        HttpUtil.SEPARATOR_PARAMETER_VALUE).append(value).toString();
+      url = new StringBuilder(url)
+        .append(separator).append(name)
+        .append(HttpUtil.SEPARATOR_PARAMETER_VALUE)
+        .append(UrlEscapers.urlFragmentEscaper().escape(value))
+        .toString();
       separator = HttpUtil.SEPARATOR_PARAMETER;
       parameterAdded = true;
     }

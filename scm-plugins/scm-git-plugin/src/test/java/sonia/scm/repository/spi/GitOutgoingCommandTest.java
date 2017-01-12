@@ -51,7 +51,8 @@ import static org.junit.Assert.assertNotNull;
 import java.io.IOException;
 
 /**
- *
+ * Unit tests for {@link OutgoingCommand}.
+ * 
  * @author Sebastian Sdorra
  */
 public class GitOutgoingCommandTest extends AbstractRemoteCommandTestBase

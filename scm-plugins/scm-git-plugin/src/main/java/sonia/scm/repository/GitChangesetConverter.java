@@ -164,6 +164,23 @@ public class GitChangesetConverter implements Closeable
    * Method description
    *
    *
+   * @param commit
+   * @param branch
+   *
+   * @return
+   *
+   * @throws IOException
+   */
+  public Changeset createChangeset(RevCommit commit, String branch)
+    throws IOException
+  {
+    return createChangeset(commit, Lists.newArrayList(branch));
+  }
+
+  /**
+   * Method description
+   *
+   *
    *
    * @param commit
    * @param branches

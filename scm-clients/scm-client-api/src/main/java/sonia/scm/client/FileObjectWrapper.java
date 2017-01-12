@@ -66,6 +66,7 @@ public class FileObjectWrapper
                            String revision, FileObject file)
   {
     this.repositoryBrowser = repositoryBrowser;
+    this.revision = revision;
     this.file = file;
   }
 

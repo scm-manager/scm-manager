@@ -180,17 +180,23 @@
       <artifactId>commons-codec</artifactId>
       <version>1.9</version>
     </dependency>
-    
-    <dependency>
-      <groupId>asm</groupId>
-      <artifactId>asm</artifactId>
-      <version>3.3.1</version>
-    </dependency>
-    
+   
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
       <version>${guava.version}</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.quartz-scheduler</groupId>
+      <artifactId>quartz</artifactId>
+      <version>${quartz.version}</version>
+      <exclusions>
+        <exclusion>
+          <artifactId>c3p0</artifactId>
+          <groupId>c3p0</groupId>
+        </exclusion>
+      </exclusions>
     </dependency>
     
     <!-- fix version conflict -->
@@ -244,6 +250,44 @@
     </dependency>
     
     <dependency>
+      <groupId>org.seleniumhq.selenium</groupId>
+      <artifactId>selenium-java</artifactId>
+      <version>${selenium.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.seleniumhq.selenium</groupId>
+      <artifactId>selenium-firefox-driver</artifactId>
+      <version>${selenium.version}</version>
+      <scope>test</scope>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.seleniumhq.selenium</groupId>
+      <artifactId>htmlunit-driver</artifactId>
+      <version>2.21</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.sun.jersey</groupId>
+      <artifactId>jersey-client</artifactId>
+      <version>${jersey.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.sun.jersey.contribs</groupId>
+      <artifactId>jersey-apache-client</artifactId>
+      <version>${jersey.version}</version>
+      <scope>test</scope>
+    </dependency>
+    
+    <!-- core plugins -->
+    
+    
+    <dependency>
       <groupId>com.github.sdorra</groupId>
       <artifactId>shiro-unit</artifactId>
       <version>1.0.0</version>
@@ -260,9 +304,23 @@
     
     <dependency>
       <groupId>sonia.scm.plugins</groupId>
+      <artifactId>scm-git-plugin</artifactId>
+      <version>2.0.0-SNAPSHOT</version>
+      <scope>test</scope>
+    </dependency>
+    
+    <dependency>
+      <groupId>sonia.scm.plugins</groupId>
       <artifactId>scm-hg-plugin</artifactId>
       <version>2.0.0-SNAPSHOT</version>
       <classifier>tests</classifier>
+      <scope>test</scope>
+    </dependency>
+    
+    <dependency>
+      <groupId>sonia.scm.plugins</groupId>
+      <artifactId>scm-hg-plugin</artifactId>
+      <version>2.0.0-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
     
@@ -275,30 +333,9 @@
     </dependency>
     
     <dependency>
-      <groupId>org.seleniumhq.selenium</groupId>
-      <artifactId>selenium-java</artifactId>
-      <version>${selenium.version}</version>
-      <scope>test</scope>
-    </dependency>
-    
-    <dependency>
-      <groupId>org.seleniumhq.selenium</groupId>
-      <artifactId>selenium-firefox-driver</artifactId>
-      <version>${selenium.version}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>com.sun.jersey</groupId>
-      <artifactId>jersey-client</artifactId>
-      <version>${jersey.version}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>com.sun.jersey.contribs</groupId>
-      <artifactId>jersey-apache-client</artifactId>
-      <version>${jersey.version}</version>
+      <groupId>sonia.scm.plugins</groupId>
+      <artifactId>scm-svn-plugin</artifactId>
+      <version>2.0.0-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
     
@@ -472,7 +509,7 @@
       <plugin>
         <groupId>org.eclipse.jetty</groupId>
         <artifactId>jetty-maven-plugin</artifactId>
-        <version>${jetty.version}</version>
+        <version>${jetty.maven.version}</version>
         <configuration>
           <stopPort>8005</stopPort>
           <stopKey>STOP</stopKey>
@@ -507,14 +544,15 @@
     <scm.stage>DEVELOPMENT</scm.stage>
     <scm.home>target/scm-it</scm.home>
     <environment.profile>default</environment.profile>
-    <selenium.version>2.28.0</selenium.version>
-    <enunciate.version>1.28</enunciate.version>
+    <selenium.version>2.53.1</selenium.version>
+    <enunciate.version>1.31</enunciate.version>
     <wagon.version>1.0</wagon.version>
     <mustache.version>0.8.17</mustache.version>
     <netbeans.hint.deploy.server>Tomcat</netbeans.hint.deploy.server>
   </properties>
 
   <profiles>
+  
     <profile>
       <id>release</id>
 
@@ -597,7 +635,7 @@
           <plugin>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-maven-plugin</artifactId>
-            <version>${jetty.version}</version>
+            <version>${jetty.maven.version}</version>
             <configuration>
               <stopPort>8085</stopPort>
               <stopKey>STOP</stopKey>
@@ -605,6 +643,10 @@
                 <systemProperty>
                   <name>scm.home</name>
                   <value>target/scm-it</value>
+                </systemProperty>
+                <systemProperty>
+                  <name>scm.stage</name>
+                  <value>${scm.stage}</value>
                 </systemProperty>
               </systemProperties>
               <jettyXml>${project.basedir}/src/main/conf/jetty.xml</jettyXml>
@@ -637,6 +679,17 @@
     <profile>
       <id>selenium</id>
           
+      <dependencies>
+        
+        <dependency>
+          <groupId>org.apache.httpcomponents</groupId>
+          <artifactId>httpclient</artifactId>
+          <version>4.3.2</version>
+          <scope>test</scope>
+        </dependency>
+        
+      </dependencies>
+          
       <build>
         <plugins>
           
@@ -668,7 +721,7 @@
           <plugin>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-maven-plugin</artifactId>
-            <version>${jetty.version}</version>
+            <version>${jetty.maven.version}</version>
             <configuration>
               <httpConnector>
                 <port>8082</port>

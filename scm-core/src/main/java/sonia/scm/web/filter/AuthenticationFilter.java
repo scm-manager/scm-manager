@@ -93,9 +93,7 @@ public class AuthenticationFilter extends HttpFilter
    * @param tokenGenerators web token generators
    */
   @Inject
-  public AuthenticationFilter(ScmConfiguration configuration,
-    Set<WebTokenGenerator> tokenGenerators)
-  {
+  public AuthenticationFilter(ScmConfiguration configuration, Set<WebTokenGenerator> tokenGenerators) {
     this.configuration = configuration;
     this.tokenGenerators = tokenGenerators;
   }
@@ -105,7 +103,6 @@ public class AuthenticationFilter extends HttpFilter
   /**
    * Handles authentication, if a one of the {@link WebTokenGenerator} returns
    * an {@link AuthenticationToken}.
-   *
    *
    * @param request servlet request
    * @param response servlet response
@@ -222,7 +219,6 @@ public class AuthenticationFilter extends HttpFilter
   private AuthenticationToken createToken(HttpServletRequest request)
   {
     AuthenticationToken token = null;
-
     for (WebTokenGenerator generator : tokenGenerators)
     {
       token = generator.createToken(request);

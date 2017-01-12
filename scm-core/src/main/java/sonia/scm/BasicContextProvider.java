@@ -96,7 +96,7 @@ public class BasicContextProvider implements SCMContextProvider
       version = loadVersion();
       stage = loadProjectStage();
     }
-    catch (Throwable ex)
+    catch (Exception ex)
     {
       this.startupError = ex;
 

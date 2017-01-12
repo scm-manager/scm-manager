@@ -39,7 +39,6 @@ import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
 import com.google.common.collect.Iterables;
-import com.google.inject.Module;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

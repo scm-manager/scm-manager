@@ -33,6 +33,12 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Charsets;
+import com.google.inject.Inject;
+
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.codec.Base64;
 
@@ -59,15 +65,28 @@ public class BasicWebTokenGenerator extends SchemeBasedWebTokenGenerator
 {
 
   /** credential separator for basic authentication */
-  public static final String CREDENTIAL_SEPARATOR = ":";
+  private static final String CREDENTIAL_SEPARATOR = ":";
 
+  /** default encoding to decode basic authentication header */
+  private static final Charset DEFAULT_ENCODING = Charsets.ISO_8859_1;
+  
   /**
    * the logger for BasicWebTokenGenerator
    */
   private static final Logger logger =
     LoggerFactory.getLogger(BasicWebTokenGenerator.class);
 
-  //~--- methods --------------------------------------------------------------
+  private final UserAgentParser userAgentParser;
+
+  /**
+   * Constructs a new BasicWebTokenGenerator.
+   *
+   * @param userAgentParser parser for user-agent header
+   */
+  @Inject
+  public BasicWebTokenGenerator(UserAgentParser userAgentParser) {
+    this.userAgentParser = userAgentParser;
+  }
 
   /**
    * Creates a {@link UsernamePasswordToken} from an authorization header with
@@ -88,7 +107,7 @@ public class BasicWebTokenGenerator extends SchemeBasedWebTokenGenerator
 
     if (HttpUtil.AUTHORIZATION_SCHEME_BASIC.equalsIgnoreCase(scheme))
     {
-      String token = new String(Base64.decode(authorization.getBytes()));
+      String token = decodeAuthenticationHeader(request, authorization);
 
       int index = token.indexOf(CREDENTIAL_SEPARATOR);
 
@@ -114,5 +133,33 @@ public class BasicWebTokenGenerator extends SchemeBasedWebTokenGenerator
     }
 
     return authToken;
+  }
+  
+/**
+   * Decode base64 of the basic authentication header. The method will use
+   * the charset provided by the {@link UserAgent}, if the 
+   * {@link UserAgentParser} is not available the method will be fall back to 
+   * ISO-8859-1.
+   *
+   * @param request http request
+   * @param authentication base64 encoded basic authentication string
+   *
+   * @return decoded basic authentication header
+   *
+   * @see <a href="http://goo.gl/tZEBS3">issue 627</a>
+   * @see <a href="http://goo.gl/NhbZ2F">Stackoverflow Basic Authentication</a>
+   *
+   * @throws UnsupportedEncodingException
+   */
+  private String decodeAuthenticationHeader(HttpServletRequest request, String authentication)
+  {
+    Charset encoding = DEFAULT_ENCODING;
+
+    if (userAgentParser != null)
+    {
+      encoding = userAgentParser.parse(request).getBasicAuthenticationCharset();
+    }
+
+    return new String(Base64.decode(authentication), encoding);
   }
 }

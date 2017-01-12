@@ -48,8 +48,10 @@ import sonia.scm.util.Util;
 //~--- JDK imports ------------------------------------------------------------
 
 import com.sun.jersey.core.util.Base64;
+import java.io.ByteArrayOutputStream;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
 import java.net.HttpURLConnection;
@@ -67,11 +69,14 @@ import java.util.Map;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
+import sonia.scm.util.HttpUtil;
 
 /**
  *
  * @author Sebastian Sdorra
+ * @deprecated use {@link sonia.scm.net.ahc.AdvancedHttpClient}
  */
+@Deprecated
 public class URLHttpClient implements HttpClient
 {
 
@@ -152,6 +157,9 @@ public class URLHttpClient implements HttpClient
                                      url);
 
     connection.setRequestMethod(METHOD_POST);
+    // send empty content-length
+    // see issue #701 http://goo.gl/oyTdrA
+    setContentLength(connection, 0);
 
     return new URLHttpResponse(connection);
   }
@@ -347,41 +355,85 @@ public class URLHttpClient implements HttpClient
   {
     if (Util.isNotEmpty(parameters))
     {
+      // use a ByteArrayOutputStream in order to get the final content-length
+      // see issue #701 http://goo.gl/oyTdrA
       connection.setDoOutput(true);
 
       OutputStreamWriter writer = null;
+      ByteArrayOutputStream baos = null;
 
       try
       {
-        writer = new OutputStreamWriter(connection.getOutputStream());
+        baos = new ByteArrayOutputStream();
+        writer = new OutputStreamWriter(baos);
 
-        Iterator<Map.Entry<String, List<String>>> it =
-          parameters.entrySet().iterator();
-
-        while (it.hasNext())
-        {
-          Map.Entry<String, List<String>> p = it.next();
-          List<String> values = p.getValue();
-
-          if (Util.isNotEmpty(values))
-          {
-            String key = encode(p.getKey());
-
-            for (String value : values)
-            {
-              writer.append(key).append("=").append(encode(value));
-            }
-
-            if (it.hasNext())
-            {
-              writer.write("&");
-            }
-          }
-        }
+        appendPostParameters(writer, parameters);
       }
       finally
       {
         IOUtil.close(writer);
+        IOUtil.close(baos);
+      }
+      
+      if ( baos != null ){
+        byte[] data = baos.toByteArray();
+        appendBody(connection, data);
+      }
+    } 
+    else 
+    {
+      setContentLength(connection, 0);
+    }
+  }
+  
+  private void appendBody(HttpURLConnection connection, byte[] body) throws IOException
+  {
+    int length = body.length;
+    logger.trace("write {} bytes to output", length);
+    setContentLength(connection, length);
+    connection.setFixedLengthStreamingMode(length);
+    OutputStream os = null;
+    try {
+      os = connection.getOutputStream();
+      os.write(body);
+    } finally {
+      IOUtil.close(os);
+    }
+  }
+  
+  private void setContentLength(HttpURLConnection connection, int length)
+  {
+    connection.setRequestProperty(HttpUtil.HEADER_CONTENT_LENGTH, String.valueOf(length));
+  }
+  
+  private void appendPostParameters(OutputStreamWriter writer, Map<String, List<String>> parameters) throws IOException
+  {
+    Iterator<Map.Entry<String, List<String>>> it = parameters.entrySet().iterator();
+
+    while (it.hasNext())
+    {
+      Map.Entry<String, List<String>> p = it.next();
+      List<String> values = p.getValue();
+
+      if (Util.isNotEmpty(values))
+      {
+        String key = encode(p.getKey());
+
+        Iterator<String> valueIt = values.iterator();
+        
+        while(valueIt.hasNext())
+        {
+          String value = valueIt.next();
+          writer.append(key).append("=").append(encode(value));
+          if ( valueIt.hasNext() ){
+            writer.write("&");
+          }
+        }
+
+        if (it.hasNext())
+        {
+          writer.write("&");
+        }
       }
     }
   }

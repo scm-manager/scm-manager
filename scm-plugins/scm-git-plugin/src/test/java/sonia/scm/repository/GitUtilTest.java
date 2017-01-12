@@ -53,16 +53,18 @@ import static org.mockito.Mockito.*;
 import java.io.File;
 import java.io.IOException;
 
+import static org.junit.Assert.*;
+
 /**
- *
+ * Unit tests for {@link GitUtil}.
+ * 
  * @author Sebastian Sdorra
  */
 public class GitUtilTest
 {
 
   /**
-   * Method description
-   *
+   * Tests {@link GitUtil#checkBranchName(org.eclipse.jgit.lib.Repository, java.lang.String)} with invalid name.
    *
    * @throws IOException
    */
@@ -76,8 +78,7 @@ public class GitUtilTest
   }
 
   /**
-   * Method description
-   *
+   * Tests {@link GitUtil#checkBranchName(org.eclipse.jgit.lib.Repository, java.lang.String)}.
    *
    * @throws IOException
    */
@@ -92,32 +93,28 @@ public class GitUtilTest
   }
 
   /**
-   * Method description
-   *
-   *
-   * @throws GitAPIException
-   * @throws IOException
+   * Tests {@link GitUtil#getTagName(java.lang.String)}.
    */
   @Test
-  public void testOpenJava7() throws GitAPIException, IOException
-  {
-    File dir = temp.newFolder();
-
-    Git.init().setDirectory(dir).setBare(true).call();
-
-    org.eclipse.jgit.lib.Repository repo = GitUtil.open(dir);
-
-    assertThat(repo.getFS().getClass().getName(), containsString("Java7"));
+  public void testGetTagName(){
+    assertNull(GitUtil.getTagName("refs/head/master"));
+    assertEquals("1.0.0", GitUtil.getTagName("refs/tags/1.0.0"));
+    assertEquals("super/1.0.0", GitUtil.getTagName("refs/tags/super/1.0.0"));
+  }
+  
+  /**
+   * Tests {@link GitUtil#isBranch(java.lang.String)}.
+   */
+  @Test
+  public void testIsBranchName(){
+    assertTrue(GitUtil.isBranch("refs/heads/master"));
+    assertTrue(GitUtil.isBranch("refs/heads/feature/super"));
+    assertFalse(GitUtil.isBranch(""));
+    assertFalse(GitUtil.isBranch(null));
+    assertFalse(GitUtil.isBranch("refs/tags/1.0.0"));
+    assertFalse(GitUtil.isBranch("refs/heads"));
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param directory
-   *
-   * @return
-   */
   private org.eclipse.jgit.lib.Repository mockRepo(File directory)
   {
     org.eclipse.jgit.lib.Repository repo =

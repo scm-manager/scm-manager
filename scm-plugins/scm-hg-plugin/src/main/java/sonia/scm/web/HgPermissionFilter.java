@@ -35,6 +35,7 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
 
 import sonia.scm.Priority;
@@ -46,22 +47,27 @@ import sonia.scm.web.filter.ProviderPermissionFilter;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.util.Set;
+
 import javax.servlet.http.HttpServletRequest;
 
 /**
- *
+ * Permission filter for mercurial repositories.
+ * 
  * @author Sebastian Sdorra
  */
 @Priority(Filters.PRIORITY_AUTHORIZATION)
 @WebElement(value = HgServletModule.MAPPING_HG)
 public class HgPermissionFilter extends ProviderPermissionFilter
 {
+  
+  private static final Set<String> READ_METHODS = ImmutableSet.of("GET", "HEAD", "OPTIONS", "TRACE");
 
   /**
-   * Constructs ...
+   * Constructs a new instance.
    *
-   * @param configuration
-   * @param repositoryProvider
+   * @param configuration scm configuration
+   * @param repositoryProvider repository provider
    */
   @Inject
   public HgPermissionFilter(ScmConfiguration configuration,
@@ -72,17 +78,9 @@ public class HgPermissionFilter extends ProviderPermissionFilter
 
   //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   */
   @Override
   protected boolean isWriteRequest(HttpServletRequest request)
   {
-    return !request.getMethod().equalsIgnoreCase("GET");
+    return !READ_METHODS.contains(request.getMethod());
   }
 }

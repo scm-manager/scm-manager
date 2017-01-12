@@ -48,10 +48,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.config.ScmConfiguration;
-import sonia.scm.config.ScmConfigurationChangedEvent;
-import sonia.scm.net.HttpClient;
-import sonia.scm.net.HttpRequest;
-import sonia.scm.net.HttpResponse;
+
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 
@@ -62,6 +59,8 @@ import java.io.IOException;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
+import sonia.scm.config.ScmConfigurationChangedEvent;
+import sonia.scm.net.ahc.AdvancedHttpClient;
 
 /**
  *
@@ -88,16 +87,16 @@ public class HgHookManager
    *
    * @param configuration
    * @param httpServletRequestProvider
-   * @param httpClientProvider
+   * @param httpClient
    */
   @Inject
   public HgHookManager(ScmConfiguration configuration,
     Provider<HttpServletRequest> httpServletRequestProvider,
-    Provider<HttpClient> httpClientProvider)
+    AdvancedHttpClient httpClient)
   {
     this.configuration = configuration;
     this.httpServletRequestProvider = httpServletRequestProvider;
-    this.httpClientProvider = httpClientProvider;
+    this.httpClient = httpClient;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -360,20 +359,16 @@ public class HgHookManager
     {
       url = url.concat("?ping=true");
 
-      if (logger.isTraceEnabled())
-      {
-        logger.trace("check hook url {}", url);
-      }
-
-      HttpRequest request = new HttpRequest(url);
-
-      request.setDisableCertificateValidation(true);
-      request.setDisableHostnameValidation(true);
-      request.setIgnoreProxySettings(true);
-
-      HttpResponse response = httpClientProvider.get().get(request);
-
-      result = response.getStatusCode() == 204;
+      logger.trace("check hook url {}", url);
+      //J-
+      int sc = httpClient.get(url)
+                         .disableHostnameValidation(true)
+                         .disableCertificateValidation(true)
+                         .ignoreProxySettings(true)
+                         .request()
+                         .getStatus();
+      //J+
+      result = sc == 204;
     }
     catch (IOException ex)
     {
@@ -398,7 +393,7 @@ public class HgHookManager
   private volatile String hookUrl;
 
   /** Field description */
-  private Provider<HttpClient> httpClientProvider;
+  private AdvancedHttpClient httpClient;
 
   /** Field description */
   private Provider<HttpServletRequest> httpServletRequestProvider;

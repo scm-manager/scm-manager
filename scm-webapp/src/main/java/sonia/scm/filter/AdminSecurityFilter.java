@@ -44,7 +44,9 @@ import sonia.scm.config.ScmConfiguration;
 import sonia.scm.security.Role;
 
 /**
- *
+ * Security filter which allow only administrators to access the underlying
+ * resources.
+ * 
  * @author Sebastian Sdorra
  */
 @WebElement(
@@ -60,10 +62,9 @@ public class AdminSecurityFilter extends SecurityFilter
 {
 
   /**
-   * Constructs ...
+   * Constructs a new instance.
    *
-   *
-   * @param configuration
+   * @param configuration scm-manager main configuration
    */
   @Inject
   public AdminSecurityFilter(ScmConfiguration configuration)
@@ -74,12 +75,17 @@ public class AdminSecurityFilter extends SecurityFilter
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns {@code true} if the subject has the admin role.
    *
-   *
+<<<<<<< working copy
    * @param subject
    *
    * @return
+=======
+   * @param subject subject
+   *
+   * @return {@code true} if the subject has the admin role
+>>>>>>> merge rev
    */
   @Override
   protected boolean hasPermission(Subject subject)

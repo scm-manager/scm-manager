@@ -553,7 +553,8 @@ public class RepositoryImportResource
     }
     catch (RepositoryAlreadyExistsException ex)
     {
-      logger.warn("a {} repository with the name {} already exists", ex);
+      logger.warn("a {} repository with the name {} already exists", type,
+        name);
 
       throw new WebApplicationException(Response.Status.CONFLICT);
     }
@@ -692,7 +693,7 @@ public class RepositoryImportResource
   private void handleGenericCreationFailure(Exception ex, String type,
     String name)
   {
-    logger.error(String.format("could not create repository {} with type {}",
+    logger.error(String.format("could not create repository %s with type %s",
       type, name), ex);
 
     throw new WebApplicationException(ex);

@@ -146,6 +146,9 @@ public abstract class AbstractResourceManager implements ResourceManager
         processPlugin(resources, plugin.getPlugin());
       }
     }
+    
+    // fix order of script resources, see https://goo.gl/ok03l4
+    Collections.sort(resources);
 
     return resources;
   }

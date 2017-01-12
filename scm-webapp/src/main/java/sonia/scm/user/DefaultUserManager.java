@@ -237,15 +237,14 @@ public class DefaultUserManager extends AbstractUserManager
     }
     
     UserPermissions.modify(user).check();
-    User oldUser = userDAO.get(name);
-
-    if (oldUser != null)
+    User notModified = userDAO.get(name);
+    if (notModified != null)
     {
       AssertUtil.assertIsValid(user);
+      fireEvent(HandlerEventType.BEFORE_MODIFY, user, notModified);
       user.setLastModified(System.currentTimeMillis());
-      fireEvent(HandlerEventType.BEFORE_MODIFY, user, oldUser);
       userDAO.modify(user);
-      fireEvent(HandlerEventType.MODIFY, user, oldUser);
+      fireEvent(HandlerEventType.MODIFY, user, notModified);
     }
     else
     {

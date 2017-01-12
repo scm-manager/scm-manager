@@ -35,27 +35,18 @@ package sonia.scm.web;
 
 import com.google.inject.Inject;
 
-import org.eclipse.jgit.http.server.GitSmartHttpTools;
-
-import sonia.scm.ClientMessages;
 import sonia.scm.Priority;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.filter.Filters;
 import sonia.scm.filter.WebElement;
-import sonia.scm.repository.GitUtil;
 import sonia.scm.web.filter.AuthenticationFilter;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
 
 import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
- *
+ * Handles git specific basic authentication.
+ * 
  * @author Sebastian Sdorra
  */
 @Priority(Filters.PRIORITY_AUTHENTICATION)
@@ -64,44 +55,15 @@ public class GitBasicAuthenticationFilter extends AuthenticationFilter
 {
 
   /**
-   * Constructs ...
+   * Constructs a new instance.
    *
-   *
-   * @param configuration
-   * @param webTokenGenerators
+   * @param configuration scm-manager main configuration
+   * @param webTokenGenerators web token generators
    */
   @Inject
   public GitBasicAuthenticationFilter(ScmConfiguration configuration,
     Set<WebTokenGenerator> webTokenGenerators)
   {
     super(configuration, webTokenGenerators);
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param response
-   *
-   * @throws IOException
-   */
-  @Override
-  protected void sendFailedAuthenticationError(HttpServletRequest request,
-    HttpServletResponse response)
-    throws IOException
-  {
-    if (GitUtil.isGitClient(request))
-    {
-      GitSmartHttpTools.sendError(request, response,
-        HttpServletResponse.SC_FORBIDDEN,
-        ClientMessages.get(request).failedAuthentication());
-    }
-    else
-    {
-      super.sendFailedAuthenticationError(request, response);
-    }
   }
 }

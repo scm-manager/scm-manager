@@ -284,21 +284,21 @@ public class SvnDAVServlet extends DAVServlet
     //~--- fields -------------------------------------------------------------
 
     /** Field description */
-    private RepositoryProvider repositoryProvider;
+    private final RepositoryProvider repositoryProvider;
   }
 
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private SvnCollectionRenderer collectionRenderer;
+  private final SvnCollectionRenderer collectionRenderer;
 
   /** Field description */
-  private SvnRepositoryHandler handler;
+  private final SvnRepositoryHandler handler;
 
   /** Field description */
-  private RepositoryProvider repositoryProvider;
+  private final RepositoryProvider repositoryProvider;
 
   /** Field description */
-  private RepositoryRequestListenerUtil repositoryRequestListenerUtil;
+  private final RepositoryRequestListenerUtil repositoryRequestListenerUtil;
 }

@@ -55,13 +55,25 @@ import static org.mockito.Mockito.*;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.junit.Before;
+
 /**
- *
+ * TODO add test with {@link UserAgentParser}.
+ * 
  * @author Sebastian Sdorra
  */
 @RunWith(MockitoJUnitRunner.class)
 public class BasicWebTokenGeneratorTest
 {
+  
+  /**
+   * Set up object under test. 
+   * Use {@code null} as {@link UserAgentParser}.
+   */
+  @Before
+  public void setUpObjectUnderTest() {
+    generator = new BasicWebTokenGenerator(null);
+  }
 
   /**
    * Method description
@@ -132,10 +144,9 @@ public class BasicWebTokenGeneratorTest
   }
 
   //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final BasicWebTokenGenerator generator = new BasicWebTokenGenerator();
-
+  
+  private BasicWebTokenGenerator generator;
+  
   /** Field description */
   @Mock
   private HttpServletRequest request;

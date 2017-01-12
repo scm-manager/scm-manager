@@ -35,8 +35,8 @@ package sonia.scm.filter;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -44,7 +44,6 @@ import org.apache.shiro.subject.Subject;
 import sonia.scm.Priority;
 import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
-import sonia.scm.user.User;
 import sonia.scm.web.filter.HttpFilter;
 import sonia.scm.web.filter.SecurityHttpServletRequestWrapper;
 
@@ -62,10 +61,13 @@ import javax.servlet.http.HttpServletResponse;
  * @author Sebastian Sdorra
  */
 @Priority(Filters.PRIORITY_AUTHORIZATION)
-@WebElement(value = Filters.PATTERN_RESTAPI,
-  morePatterns = { Filters.PATTERN_DEBUG })
+@WebElement(value = Filters.PATTERN_RESTAPI, morePatterns = { Filters.PATTERN_DEBUG })
 public class SecurityFilter extends HttpFilter
 {
+
+  /** name of request attribute for the primary principal */
+  @VisibleForTesting
+  static final String ATTRIBUTE_REMOTE_USER = "principal";
 
   /** Field description */
   public static final String URL_AUTHENTICATION = "/api/rest/authentication";
@@ -102,17 +104,21 @@ public class SecurityFilter extends HttpFilter
     HttpServletResponse response, FilterChain chain)
     throws IOException, ServletException
   {
-    Subject subject = SecurityUtils.getSubject();
-
     String uri =
       request.getRequestURI().substring(request.getContextPath().length());
 
     if (!uri.startsWith(URL_AUTHENTICATION))
     {
+      Subject subject = SecurityUtils.getSubject();
       if (hasPermission(subject))
       {
-        chain.doFilter(new SecurityHttpServletRequestWrapper(request,
-          getUsername(subject)), response);
+        // add primary principal as request attribute
+        // see https://goo.gl/JRjNmf
+        String username = getUsername(subject);
+        request.setAttribute(ATTRIBUTE_REMOTE_USER, username);
+
+        // wrap servlet request to provide authentication informations
+        chain.doFilter(new SecurityHttpServletRequestWrapper(request, username), response);
       }
       else if (subject.isAuthenticated() || subject.isRemembered())
       {
@@ -150,14 +156,6 @@ public class SecurityFilter extends HttpFilter
         || subject.isRemembered();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param subject
-   *
-   * @return
-   */
   private String getUsername(Subject subject)
   {
     String username = SCMContext.USER_ANONYMOUS;

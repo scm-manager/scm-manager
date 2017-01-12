@@ -154,27 +154,37 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
     var items = [this.repository.name];
     
     var type = Sonia.repository.getTypeByName( this.repository.type );
+    var branches = false;
+    if (type && type.supportedCommands && type.supportedCommands.indexOf('BRANCHES') >= 0){
+      
+      branches = true;
+      
+      items.push('->','Branches:', ' ',{
+        id: 'branchComboBox',
+        xtype: 'repositoryBranchComboBox',
+        repositoryId: this.repository.id,
+        listeners: {
+          select: {
+            fn: this.selectBranch,
+            scope: this
+          }
+        }
+      });
+      
+    }
+   
     if ( type && type.supportedCommands && type.supportedCommands.indexOf('TAGS') >= 0){
     
-      var tagStore = new Sonia.rest.JsonStore({
-        proxy: new Ext.data.HttpProxy({
-          url: restUrl + 'repositories/' + this.repository.id + '/tags.json',
-          method: 'GET',
-          disableCaching: false
-        }),
-        root: 'tag',
-        idProperty: 'name',
-        fields: [ 'name', 'revision' ]
-      });
+      if (branches){
+        items.push(' ');
+      } else {
+        items.push('->');
+      }
 
-      items.push('->','Tags:', ' ',{
-        xtype: 'combo',
-        valueField: 'revision',
-        displayField: 'name',
-        typeAhead: false,
-        editable: false,
-        triggerAction: 'all',
-        store: tagStore,
+      items.push('Tags:', ' ',{
+        id: 'tagComboBox',
+        xtype: 'repositoryTagComboBox',
+        repositoryId: this.repository.id,
         listeners: {
           select: {
             fn: this.selectTag,
@@ -193,10 +203,18 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
     return tbar;
   },
   
+  selectBranch: function(combo, rec){
+    this.selectRev(rec, Ext.getCmp('tagComboBox'));
+  },
+  
   selectTag: function(combo, rec){
+    this.selectRev(rec, Ext.getCmp('branchComboBox'));
+  },
+  
+  selectRev: function(rec, comboToClear){
     var tag = rec.get('name');
     if (debug){
-      console.debug('select tag ' + tag);
+      console.debug('select rev ' + tag);
     }
     this.revision = rec.get('revision');
     this.getStore().load({
@@ -208,6 +226,11 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
     
     this.reRenderBottomBar(this.path);
     this.updateHistory();
+    
+    // clear other combobox
+    if (comboToClear){
+      comboToClear.clearValue();
+    }
   },
   
   loadStore: function(store, records, extra){
@@ -299,25 +322,7 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
   },
   
   openFile: function(path){
-    if ( debug ){
-      console.debug( 'open file: ' + path );
-    }
-    
-    var id = Sonia.repository.createContentId(
-      this.repository, 
-      path, 
-      this.revision
-    );
-    
-    main.addTab({
-      id: id,
-      path: path,
-      revision: this.revision,
-      repository: this.repository,
-      xtype: 'contentPanel',
-      closable: true,
-      autoScroll: true
-    });
+    Sonia.repository.openFile(this.repository, path, this.revision);
   },
   
   changeDirectory: function(path){
@@ -374,7 +379,12 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
     var bbar = this.getBottomToolbar();
     bbar.removeAll();
     
-    var parts = path.split('/');
+    var parts;
+    if (path){
+      parts = path.split('/');
+    } else {
+      parts = [];
+    }
     var currentPath = '';
     var items = [this.createFolderButton(currentPath, '')];
           
