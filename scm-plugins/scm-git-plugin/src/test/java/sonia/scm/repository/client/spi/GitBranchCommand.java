@@ -43,6 +43,8 @@ import sonia.scm.repository.client.api.RepositoryClientException;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
+import org.eclipse.jgit.lib.Ref;
+import sonia.scm.repository.GitUtil;
 
 /**
  *
@@ -64,29 +66,18 @@ public class GitBranchCommand implements BranchCommand
 
   //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param name
-   *
-   * @return
-   *
-   * @throws IOException
-   */
   @Override
   public Branch branch(String name) throws IOException
   {
     try
     {
-      git.branchCreate().setName(name).call();
+      Ref ref = git.branchCreate().setName(name).call();
+      return new Branch(name, GitUtil.getId(ref.getObjectId()));
     }
     catch (GitAPIException ex)
     {
       throw new RepositoryClientException("could not create branch", ex);
     }
-
-    return new Branch(name);
   }
 
   //~--- fields ---------------------------------------------------------------

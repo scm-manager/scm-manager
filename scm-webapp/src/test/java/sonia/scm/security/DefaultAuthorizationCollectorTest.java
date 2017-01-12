@@ -36,10 +36,7 @@ import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 import org.apache.shiro.authz.AuthorizationInfo;
-import org.apache.shiro.authz.Permission;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
-import org.apache.shiro.authz.permission.PermissionResolver;
-import org.apache.shiro.authz.permission.WildcardPermission;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.hamcrest.Matchers;
@@ -76,6 +73,7 @@ import sonia.scm.user.UserTestData;
  * 
  * @author Sebastian Sdorra
  */
+@SuppressWarnings("unchecked")
 @RunWith(MockitoJUnitRunner.class)
 public class DefaultAuthorizationCollectorTest {
 

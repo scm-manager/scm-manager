@@ -78,7 +78,8 @@ public class QuartzTaskTest {
   /**
    * Tests {@link QuartzTask#cancel()} when the scheduler throws an exception.
    * @throws org.quartz.SchedulerException
-   */  
+   */
+  @SuppressWarnings("unchecked")
   @Test(expected = RuntimeException.class)
   public void testCancelWithException() throws SchedulerException
   {

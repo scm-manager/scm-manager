@@ -103,6 +103,7 @@ public class DefaultAdvancedHttpResponseTest
    * @throws IOException
    */
   @Test
+  @SuppressWarnings("unchecked")
   public void testContentAsByteSourceWithFailedRequest() throws IOException
   {
     ByteArrayInputStream bais =

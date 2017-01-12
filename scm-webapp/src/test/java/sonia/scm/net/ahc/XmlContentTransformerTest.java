@@ -63,6 +63,7 @@ public class XmlContentTransformerTest {
     assertEquals("test", to.value);
   }
   
+  @SuppressWarnings("unchecked")
   @Test(expected = ContentTransformerException.class)
   public void testUnmarshallIOException() throws IOException{
     ByteSource bs = mock(ByteSource.class);

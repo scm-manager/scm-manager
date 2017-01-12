@@ -216,13 +216,13 @@ public abstract class AbstractGitIncomingOutgoingCommand
 
       if (localBranch != null)
       {
-        ref = repository.getRef(GitUtil.getScmRemoteRefName(remoteRepository,
+        ref = repository.findRef(GitUtil.getScmRemoteRefName(remoteRepository,
           localBranch));
       }
     }
     else
     {
-      ref = repository.getRef(GitUtil.getScmRemoteRefName(remoteRepository,
+      ref = repository.findRef(GitUtil.getScmRemoteRefName(remoteRepository,
         "master"));
 
       if (ref == null)

@@ -73,20 +73,6 @@ public final class Branch implements Serializable
    *
    *
    * @param name name of the branch
-   *
-   * @deprecated use {@link Branch#Branch(String, String)} instead
-   */
-  @Deprecated
-  public Branch(String name)
-  {
-    this.name = name;
-  }
-
-  /**
-   * Constructs a new branch.
-   *
-   *
-   * @param name name of the branch
    * @param revision latest revision of the branch
    */
   public Branch(String name, String revision)

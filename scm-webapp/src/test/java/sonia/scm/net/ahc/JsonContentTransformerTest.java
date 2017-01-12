@@ -103,6 +103,7 @@ public class JsonContentTransformerTest
    *
    * @throws IOException
    */
+  @SuppressWarnings("unchecked")
   @Test(expected = ContentTransformerException.class)
   public void testUnmarshallIOException() throws IOException
   {

@@ -57,8 +57,6 @@ import sonia.scm.group.GroupManagerProvider;
 import sonia.scm.group.xml.XmlGroupDAO;
 import sonia.scm.io.DefaultFileSystem;
 import sonia.scm.io.FileSystem;
-import sonia.scm.net.HttpClient;
-import sonia.scm.net.URLHttpClient;
 import sonia.scm.plugin.DefaultPluginLoader;
 import sonia.scm.plugin.DefaultPluginManager;
 import sonia.scm.plugin.PluginLoader;
@@ -137,7 +135,6 @@ import sonia.scm.net.ahc.JsonContentTransformer;
 import sonia.scm.net.ahc.XmlContentTransformer;
 import sonia.scm.schedule.QuartzScheduler;
 import sonia.scm.schedule.Scheduler;
-import sonia.scm.security.XsrfProtectionFilter;
 import sonia.scm.web.UserAgentParser;
 
 /**
@@ -298,8 +295,6 @@ public class ScmServletModule extends JerseyServletModule
     // bind sslcontext provider
     bind(SSLContext.class).toProvider(SSLContextProvider.class);
     
-    // bind httpclient
-    bind(HttpClient.class, URLHttpClient.class);
     
     // bind ahc
     Multibinder<ContentTransformer> transformers =

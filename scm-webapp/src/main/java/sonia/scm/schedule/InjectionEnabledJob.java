@@ -42,7 +42,6 @@ import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.web.security.AdministrationContext;
-import sonia.scm.web.security.PrivilegedAction;
 
 /**
  * InjectionEnabledJob allows the execution of quartz jobs and enable injection on them.
@@ -55,6 +54,7 @@ public class InjectionEnabledJob implements Job {
     private static final Logger logger = LoggerFactory.getLogger(InjectionEnabledJob.class);
   
     @Override
+    @SuppressWarnings("unchecked")
     public void execute(JobExecutionContext jec) throws JobExecutionException {
         Preconditions.checkNotNull(jec, "execution context is null");
       
@@ -73,16 +73,11 @@ public class InjectionEnabledJob implements Job {
         }
 
         AdministrationContext ctx = injector.getInstance(AdministrationContext.class);
-        ctx.runAsAdmin(new PrivilegedAction()
-        {
-          @Override
-          public void run()
-          {
-            logger.trace("create runnable from provider");
-            Runnable runnable = runnableProvider.get();
-            logger.debug("execute injection enabled job {}", runnable.getClass());
-            runnable.run();
-          }
+        ctx.runAsAdmin(() -> {
+          logger.trace("create runnable from provider");
+          Runnable runnable = runnableProvider.get();
+          logger.debug("execute injection enabled job {}", runnable.getClass());
+          runnable.run();
         });
     }
 

@@ -41,7 +41,6 @@ import static org.hamcrest.Matchers.*;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.quartz.CronTrigger;
@@ -77,6 +76,7 @@ public class QuartzSchedulerTest {
    * @throws SchedulerException 
    */
   @Test
+  @SuppressWarnings("unchecked")
   public void testSchedule() throws SchedulerException
   { 
     DummyRunnable dr = new DummyRunnable();
@@ -158,6 +158,7 @@ public class QuartzSchedulerTest {
    * @throws SchedulerException 
    */
   @Test
+  @SuppressWarnings("unchecked")
   public void testInitException() throws SchedulerException
   {
     when(quartzScheduler.isStarted()).thenThrow(SchedulerException.class);
@@ -200,6 +201,7 @@ public class QuartzSchedulerTest {
    * @throws SchedulerException 
    */
   @Test
+  @SuppressWarnings("unchecked")
   public void testCloseException() throws IOException, SchedulerException
   {
     when(quartzScheduler.isStarted()).thenThrow(SchedulerException.class);

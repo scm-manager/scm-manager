@@ -377,7 +377,7 @@ public final class GitUtil
 
     try
     {
-      Ref ref = repo.getRef(branchName);
+      Ref ref = repo.findRef(branchName);
 
       if (ref != null)
       {
