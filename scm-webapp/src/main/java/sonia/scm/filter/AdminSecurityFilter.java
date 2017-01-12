@@ -77,15 +77,9 @@ public class AdminSecurityFilter extends SecurityFilter
   /**
    * Returns {@code true} if the subject has the admin role.
    *
-<<<<<<< working copy
-   * @param subject
-   *
-   * @return
-=======
    * @param subject subject
-   *
+   * 
    * @return {@code true} if the subject has the admin role
->>>>>>> merge rev
    */
   @Override
   protected boolean hasPermission(Subject subject)
