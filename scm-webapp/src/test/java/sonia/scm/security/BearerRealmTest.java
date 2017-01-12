@@ -35,6 +35,7 @@ package sonia.scm.security;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.collect.Sets;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwsHeader;
 import io.jsonwebtoken.Jwts;
@@ -66,8 +67,13 @@ import static org.mockito.Mockito.*;
 import java.security.SecureRandom;
 
 import java.util.Date;
+import java.util.Set;
 
 import javax.crypto.spec.SecretKeySpec;
+import org.hamcrest.Matchers;
+import org.junit.Rule;
+import org.junit.rules.ExpectedException;
+import org.mockito.Mockito;
 
 /**
  *
@@ -76,6 +82,9 @@ import javax.crypto.spec.SecretKeySpec;
 @RunWith(MockitoJUnitRunner.class)
 public class BearerRealmTest
 {
+  
+  @Rule
+  public ExpectedException expectedException = ExpectedException.none();
 
   /**
    * Method description
@@ -103,6 +112,32 @@ public class BearerRealmTest
 
     assertEquals(marvin.getName(), principals.getPrimaryPrincipal());
     assertEquals(marvin, principals.oneByType(User.class));
+  }
+  
+  /**
+   * Test {@link BearerRealm#doGetAuthenticationInfo(AuthenticationToken)} with a failed
+   * claims validation.
+   */
+  @Test
+  public void testDoGetAuthenticationInfoWithInvalidClaims()
+  {
+    SecureKey key = createSecureKey();
+    User marvin = UserTestData.createMarvin();
+    when(userDAO.get(marvin.getName())).thenReturn(marvin);
+
+    resolveKey(key);
+
+    String compact = createCompactToken(marvin.getName(), key);
+
+    // treat claims as invalid
+    when(validator.validate(Mockito.anyMap())).thenReturn(false);
+    
+    // expect exception
+    expectedException.expect(AuthenticationException.class);
+    expectedException.expectMessage(Matchers.containsString("claims"));
+    
+    // kick authentication
+    realm.doGetAuthenticationInfo(new BearerAuthenticationToken(compact));
   }
 
   /**
@@ -176,7 +211,9 @@ public class BearerRealmTest
   @Before
   public void setUp()
   {
-    realm = new BearerRealm(keyResolver, userDAO, groupDAO);
+    when(validator.validate(Mockito.anyMap())).thenReturn(true);
+    Set<TokenClaimsValidator> validators = Sets.newHashSet(validator);
+    realm = new BearerRealm(keyResolver, userDAO, groupDAO, validators);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -257,10 +294,13 @@ public class BearerRealmTest
   }
 
   //~--- fields ---------------------------------------------------------------
-
+  
   /** Field description */
   private final SecureRandom random = new SecureRandom();
 
+  @Mock
+  private TokenClaimsValidator validator;
+  
   /** Field description */
   @Mock
   private GroupDAO groupDAO;

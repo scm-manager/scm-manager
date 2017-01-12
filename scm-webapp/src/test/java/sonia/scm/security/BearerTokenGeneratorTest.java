@@ -35,6 +35,7 @@ package sonia.scm.security;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.collect.Sets;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 
@@ -57,6 +58,7 @@ import static org.mockito.Mockito.*;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.security.SecureRandom;
+import java.util.Set;
 
 /**
  *
@@ -89,6 +91,7 @@ public class BearerTokenGeneratorTest
 
     assertEquals(trillian.getName(), claims.getSubject());
     assertEquals("sid", claims.getId());
+    assertEquals("123", claims.get("abc"));
   }
 
   //~--- set methods ----------------------------------------------------------
@@ -100,7 +103,9 @@ public class BearerTokenGeneratorTest
   @Before
   public void setUp()
   {
-    tokenGenerator = new BearerTokenGenerator(keyGenerator, keyResolver);
+    Set<TokenClaimsEnricher> enrichers = Sets.newHashSet();
+    enrichers.add((claims) -> {claims.put("abc", "123");});
+    tokenGenerator = new BearerTokenGenerator(keyGenerator, keyResolver, enrichers);
   }
 
   //~--- methods --------------------------------------------------------------

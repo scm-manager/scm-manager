@@ -43,9 +43,13 @@ import sonia.scm.user.User;
 
 import static com.google.common.base.Preconditions.*;
 
+import com.google.common.collect.Maps;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.Date;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -58,7 +62,7 @@ import javax.inject.Inject;
  */
 public final class BearerTokenGenerator
 {
-
+  
   /**
    * the logger for BearerTokenGenerator
    */
@@ -73,13 +77,15 @@ public final class BearerTokenGenerator
    *
    * @param keyGenerator key generator
    * @param keyResolver secure key resolver
+   * @param enrichers token claims modifier
    */
   @Inject
-  public BearerTokenGenerator(KeyGenerator keyGenerator,
-    SecureKeyResolver keyResolver)
-  {
+  public BearerTokenGenerator(
+    KeyGenerator keyGenerator, SecureKeyResolver keyResolver, Set<TokenClaimsEnricher> enrichers
+  ) {
     this.keyGenerator = keyGenerator;
     this.keyResolver = keyResolver;
+    this.enrichers = enrichers;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -92,8 +98,7 @@ public final class BearerTokenGenerator
    *
    * @return bearer token
    */
-  public String createBearerToken(User user)
-  {
+  public String createBearerToken(User user) {
     checkNotNull(user, "user is required");
 
     String username = user.getName();
@@ -109,8 +114,16 @@ public final class BearerTokenGenerator
     // TODO: should be configurable
     long expiration = TimeUnit.MILLISECONDS.convert(10, TimeUnit.HOURS);
 
+    Map<String,Object> claim = Maps.newHashMap();
+    
+    // enrich claims with registered enrichers
+    enrichers.forEach((enricher) -> {
+      enricher.enrich(claim);
+    });
+    
     //J-
     return Jwts.builder()
+      .setClaims(claim)
       .setSubject(username)
       .setId(id)
       .signWith(SignatureAlgorithm.HS256, key.getBytes())
@@ -122,6 +135,9 @@ public final class BearerTokenGenerator
 
   //~--- fields ---------------------------------------------------------------
 
+  /** token claims modifier **/
+  private final Set<TokenClaimsEnricher> enrichers;
+  
   /** key generator */
   private final KeyGenerator keyGenerator;
 

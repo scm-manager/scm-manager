@@ -50,11 +50,14 @@ import sonia.scm.plugin.Extension;
 import sonia.scm.user.UserDAO;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import java.util.Set;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Realm for authentication with {@link BearerAuthenticationToken}.
@@ -67,6 +70,11 @@ import javax.inject.Singleton;
 public class BearerRealm extends AuthenticatingRealm
 {
 
+  /**
+   * the logger for BearerRealm
+   */
+  private static final Logger LOG = LoggerFactory.getLogger(BearerRealm.class);
+  
   /** realm name */
   @VisibleForTesting
   static final String REALM = "BearerRealm";
@@ -80,13 +88,16 @@ public class BearerRealm extends AuthenticatingRealm
    * @param resolver key resolver
    * @param userDAO user dao
    * @param groupDAO group dao
+   * @param validators token claims validators
    */
   @Inject
   public BearerRealm(SecureKeyResolver resolver, UserDAO userDAO,
-    GroupDAO groupDAO)
+    GroupDAO groupDAO, Set<TokenClaimsValidator> validators)
   {
     this.resolver = resolver;
     this.helper = new DAORealmHelper(REALM, userDAO, groupDAO);
+    this.validators = validators;
+    
     setCredentialsMatcher(new AllowAllCredentialsMatcher());
     setAuthenticationTokenClass(BearerAuthenticationToken.class);
   }
@@ -135,6 +146,14 @@ public class BearerRealm extends AuthenticatingRealm
         .parseClaimsJws(token.getCredentials())
         .getBody();
       //J+
+      
+      // check all registered claims validators
+      validators.forEach((validator) -> {
+        if (!validator.validate(claims)) {
+          LOG.warn("token claims is invalid, marked by validator {}", validator.getClass());
+          throw new AuthenticationException("token claims is invalid");
+        }
+      });
     }
     catch (JwtException ex)
     {
@@ -146,6 +165,9 @@ public class BearerRealm extends AuthenticatingRealm
 
   //~--- fields ---------------------------------------------------------------
 
+  /** token claims validators **/
+  private final Set<TokenClaimsValidator> validators;
+  
   /** dao realm helper */
   private final DAORealmHelper helper;
 
