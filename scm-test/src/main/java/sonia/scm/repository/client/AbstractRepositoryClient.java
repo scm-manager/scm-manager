@@ -40,7 +40,9 @@ import java.io.File;
 /**
  *
  * @author Sebastian Sdorra
+ * @deprecated
  */
+@Deprecated
 public abstract class AbstractRepositoryClient implements RepositoryClient
 {
 

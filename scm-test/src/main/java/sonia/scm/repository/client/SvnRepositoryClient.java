@@ -58,7 +58,10 @@ import java.util.List;
 /**
  *
  * @author Sebastian Sdorra
+ * 
+ * @deprecated
  */
+@Deprecated
 public class SvnRepositoryClient extends AbstractRepositoryClient
 {
 

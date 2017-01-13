@@ -36,7 +36,9 @@ package sonia.scm.repository.client;
 /**
  *
  * @author Sebastian Sdorra
+ * @deprecated
  */
+@Deprecated
 public class RepositoryClientException extends Exception
 {
 
