@@ -76,9 +76,11 @@ import org.junit.rules.ExpectedException;
 import org.mockito.Mockito;
 
 /**
- *
+ * Unit tests for {@link BearerRealm}.
+ * 
  * @author Sebastian Sdorra
  */
+@SuppressWarnings("unchecked")
 @RunWith(MockitoJUnitRunner.class)
 public class BearerRealmTest
 {
