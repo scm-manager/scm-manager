@@ -41,5 +41,7 @@ public final class Xsrf {
   static final String HEADER_KEY = "X-XSRF-Token";
   
   static final String CLAIMS_KEY = "scm-manager.org/xsrf";
-  
+
+  private Xsrf() {
+  }
 }

@@ -62,6 +62,12 @@ public class XsrfTokenClaimsEnricher implements TokenClaimsEnricher {
   private final ScmConfiguration configuration;
   private final Provider<HttpServletRequest> requestProvider;
 
+  /**
+   * Constructs a new instance.
+   * 
+   * @param configuration scm main configuration
+   * @param requestProvider http request provider
+   */
   @Inject
   public XsrfTokenClaimsEnricher(ScmConfiguration configuration, Provider<HttpServletRequest> requestProvider) {
     this.configuration = configuration;
