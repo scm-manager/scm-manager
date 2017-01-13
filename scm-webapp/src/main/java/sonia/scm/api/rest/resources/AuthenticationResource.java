@@ -83,7 +83,6 @@ import javax.ws.rs.core.Response;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
-import sonia.scm.security.XsrfCookies;
 
 /**
  *
@@ -267,12 +266,8 @@ public class AuthenticationResource
   @GET
   @Path("logout")
   @TypeHint(ScmState.class)
-  public Response logout(@Context HttpServletRequest request,
-    @Context HttpServletResponse response)
+  public Response logout(@Context HttpServletRequest request, @Context HttpServletResponse response)
   {
-    // remove xsrf token
-    XsrfCookies.remove(request, response);
-    
     Subject subject = SecurityUtils.getSubject();
 
     subject.logout();
