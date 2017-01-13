@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010, Sebastian Sdorra
+ * Copyright (c) 2014, Sebastian Sdorra
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,77 +28,60 @@
  * http://bitbucket.org/sdorra/scm-manager
  *
  */
+package sonia.scm.repository.client.spi;
 
-
-
-package sonia.scm.repository.client;
-
-//~--- JDK imports ------------------------------------------------------------
-
+import com.google.common.collect.ImmutableSet;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import org.tmatesoft.svn.core.SVNURL;
+import org.tmatesoft.svn.core.wc.SVNClientManager;
+import sonia.scm.repository.client.api.ClientCommand;
 
 /**
- *
+ * Subversion repository client provider.
+ * 
  * @author Sebastian Sdorra
- * @deprecated use {@link sonia.scm.repository.client.api.RepositoryClient}
+ * @since 1.51
  */
-@Deprecated
-public interface RepositoryClient
-{
+public class SvnRepositoryClientProvider extends RepositoryClientProvider {
 
-  /**
-   * Method description
-   *
-   *
-   * @param file
-   * @param others
-   *
-   * @throws RepositoryClientException
-   */
-  public void add(String file, String... others)
-          throws RepositoryClientException;
+  private static final Set<ClientCommand> SUPPORTED_COMMANDS = ImmutableSet.of(
+    ClientCommand.ADD, ClientCommand.REMOVE, ClientCommand.COMMIT
+  );
+  
+  private final SVNClientManager client;
+  private final SVNURL remoteRepositoryURL;
+  private final File workingCopy;
 
-  /**
-   * Method description
-   *
-   *
-   * @throws RepositoryClientException
-   */
-  public void checkout() throws RepositoryClientException;
+  private final List<File> addedFiles = new ArrayList<>();
+  private final List<File> removedFiles = new ArrayList<>();
+  
+  SvnRepositoryClientProvider(SVNClientManager client, SVNURL remoteRepositoryURL, File workingCopy) {
+    this.client = client;
+    this.remoteRepositoryURL = remoteRepositoryURL;
+    this.workingCopy = workingCopy;
+  }
 
-  /**
-   * Method description
-   *
-   *
-   * @param message
-   *
-   * @throws RepositoryClientException
-   */
-  public void commit(String message) throws RepositoryClientException;
+  @Override
+  public SvnAddCommand getAddCommand() {
+    return new SvnAddCommand(workingCopy, addedFiles);
+  }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws RepositoryClientException
-   */
-  public void init() throws RepositoryClientException;
+  @Override
+  public SvnRemoveCommand getRemoveCommand() {
+    return new SvnRemoveCommand(workingCopy, removedFiles);
+  }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public File getLocalRepository();
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getRemoteRepository();
+  @Override
+  public SvnCommitCommand getCommitCommand() {
+    return new SvnCommitCommand(client, workingCopy, addedFiles, removedFiles);
+  }
+  
+  @Override
+  public Set<ClientCommand> getSupportedClientCommands() {
+    return SUPPORTED_COMMANDS;
+  }
+  
 }

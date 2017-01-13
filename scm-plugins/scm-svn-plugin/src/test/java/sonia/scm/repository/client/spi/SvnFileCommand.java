@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010, Sebastian Sdorra
+ * Copyright (c) 2014, Sebastian Sdorra
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,77 +28,35 @@
  * http://bitbucket.org/sdorra/scm-manager
  *
  */
-
-
-
-package sonia.scm.repository.client;
-
-//~--- JDK imports ------------------------------------------------------------
+package sonia.scm.repository.client.spi;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+
+import java.util.List;
 
 /**
- *
+ * Abstract file based svn command.
+ * 
  * @author Sebastian Sdorra
- * @deprecated use {@link sonia.scm.repository.client.api.RepositoryClient}
+ * @since 1.51
  */
-@Deprecated
-public interface RepositoryClient
-{
+public abstract class SvnFileCommand {
 
-  /**
-   * Method description
-   *
-   *
-   * @param file
-   * @param others
-   *
-   * @throws RepositoryClientException
-   */
-  public void add(String file, String... others)
-          throws RepositoryClientException;
+  private final File workingCopy;
+  private final List<File> pendingFiles;
 
-  /**
-   * Method description
-   *
-   *
-   * @throws RepositoryClientException
-   */
-  public void checkout() throws RepositoryClientException;
-
-  /**
-   * Method description
-   *
-   *
-   * @param message
-   *
-   * @throws RepositoryClientException
-   */
-  public void commit(String message) throws RepositoryClientException;
-
-  /**
-   * Method description
-   *
-   *
-   * @throws RepositoryClientException
-   */
-  public void init() throws RepositoryClientException;
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public File getLocalRepository();
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getRemoteRepository();
+  protected SvnFileCommand(File workingCopy, List<File> pendingFiles) {
+    this.workingCopy = workingCopy;
+    this.pendingFiles = pendingFiles;
+  }
+  
+  protected void append(String path) throws FileNotFoundException {
+    File file = new File(workingCopy, path);
+    if (!file.exists()) {
+      throw new FileNotFoundException("could not find file ".concat(path));
+    }
+    pendingFiles.add(file);
+  }
+  
 }

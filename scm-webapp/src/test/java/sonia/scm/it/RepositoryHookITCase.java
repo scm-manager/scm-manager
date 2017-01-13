@@ -40,6 +40,7 @@ import java.util.Collection;
 import org.junit.After;
 import static org.junit.Assert.*;
 import static org.hamcrest.Matchers.*;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -55,6 +56,7 @@ import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryTestData;
+import sonia.scm.repository.client.api.ClientCommand;
 import sonia.scm.repository.client.api.RepositoryClient;
 import sonia.scm.repository.client.api.RepositoryClientFactory;
 import sonia.scm.util.IOUtil;
@@ -122,13 +124,10 @@ public class RepositoryHookITCase extends AbstractAdminITCaseBase
   @Test
   public void testSimpleHook() throws IOException, InterruptedException 
   {
-    // push commit
+    // commit and push commit
     Files.write("a", new File(workingCopy, "a.txt"), Charsets.UTF_8);
     repositoryClient.getAddCommand().add("a.txt");
-    Changeset changeset = repositoryClient.getCommitCommand().commit(
-      new Person("scmadmin", "scmadmin@scm-manager.org"), "added a"
-    );
-    repositoryClient.getPushCommand().push();
+    Changeset changeset = commit("added a");
     
     // wait some time, because the debug hook is asnychron
     Thread.sleep(WAIT_TIME);
@@ -149,22 +148,21 @@ public class RepositoryHookITCase extends AbstractAdminITCaseBase
   @Test
   public void testOnlyNewCommit() throws IOException, InterruptedException 
   {
+    // skip test if branches are not supported by repository type
+    Assume.assumeTrue(repositoryClient.isCommandSupported(ClientCommand.BANCH));
+    
     // push commit
     Files.write("a", new File(workingCopy, "a.txt"), Charsets.UTF_8);
     repositoryClient.getAddCommand().add("a.txt");
-    Changeset a = repositoryClient.getCommitCommand().commit(
-      new Person("scmadmin", "scmadmin@scm-manager.org"), "added a"
-    );
-    repositoryClient.getPushCommand().push();
+    Changeset a = commit("added a");
     
-    // create branch, commit and push again
+    // create branch
     repositoryClient.getBranchCommand().branch("feature/added-b");
+    
+    // commit and push again
     Files.write("b", new File(workingCopy, "b.txt"), Charsets.UTF_8);
     repositoryClient.getAddCommand().add("a.txt");
-    Changeset b = repositoryClient.getCommitCommand().commit(
-      new Person("scmadmin", "scmadmin@scm-manager.org"), "added b"
-    );
-    repositoryClient.getPushCommand().push();
+    Changeset b = commit("added b");
     
     // wait some time, because the debug hook is asnychron
     Thread.sleep(WAIT_TIME);
@@ -179,6 +177,16 @@ public class RepositoryHookITCase extends AbstractAdminITCaseBase
         contains(a.getId())
       )
     ));
+  }
+  
+  private Changeset commit(String message) throws IOException {
+    Changeset a = repositoryClient.getCommitCommand().commit(
+      new Person("scmadmin", "scmadmin@scm-manager.org"), "added a"
+    );
+    if ( repositoryClient.isCommandSupported(ClientCommand.PUSH) ) {
+      repositoryClient.getPushCommand().push();
+    }
+    return a;
   }
   
   private RepositoryClient createRepositoryClient() throws IOException 
@@ -200,10 +208,9 @@ public class RepositoryHookITCase extends AbstractAdminITCaseBase
   {
     Collection<String[]> params = Lists.newArrayList();
     params.add(new String[] { "git" });
-    // params.add(new String[] { "svn" });
-    if (IOUtil.search("hg") != null)
-    {
-      params.add(new String[] { "hg" });
+    params.add(new String[] { "svn" });
+    if (IOUtil.search("hg") != null) {
+       params.add(new String[] { "hg" });
     }
     return params;
   }

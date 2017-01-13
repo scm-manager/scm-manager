@@ -47,7 +47,9 @@ import java.io.IOException;
 /**
  *
  * @author Sebastian Sdorra
+ * @deprecated 
  */
+@Deprecated
 public class HgRepositoryClient extends AbstractRepositoryClient
 {
 

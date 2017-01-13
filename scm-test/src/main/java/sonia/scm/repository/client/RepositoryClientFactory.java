@@ -40,7 +40,9 @@ import java.io.File;
 /**
  *
  * @author Sebastian Sdorra
+ * @deprecated use {@link sonia.scm.repository.client.api.RepositoryClientFactory}
  */
+@Deprecated
 public final class RepositoryClientFactory
 {
 

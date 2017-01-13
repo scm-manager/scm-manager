@@ -82,7 +82,9 @@ import java.util.List;
 /**
  *
  * @author Sebastian Sdorra
+ * @deprecated 
  */
+@Deprecated
 public class GitRepositoryClient extends AbstractRepositoryClient
 {
 

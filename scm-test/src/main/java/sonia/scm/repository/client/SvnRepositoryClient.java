@@ -59,7 +59,10 @@ import org.tmatesoft.svn.core.internal.util.SVNURLUtil;
 /**
  *
  * @author Sebastian Sdorra
+ * 
+ * @deprecated
  */
+@Deprecated
 public class SvnRepositoryClient extends AbstractRepositoryClient
 {
 

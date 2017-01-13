@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010, Sebastian Sdorra
+ * Copyright (c) 2014, Sebastian Sdorra
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,77 +28,27 @@
  * http://bitbucket.org/sdorra/scm-manager
  *
  */
-
-
-
-package sonia.scm.repository.client;
-
-//~--- JDK imports ------------------------------------------------------------
+package sonia.scm.repository.client.spi;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 /**
- *
+ * Add files to subversion repository.
+ * 
  * @author Sebastian Sdorra
- * @deprecated use {@link sonia.scm.repository.client.api.RepositoryClient}
+ * @since 1.51
  */
-@Deprecated
-public interface RepositoryClient
-{
+public final class SvnAddCommand extends SvnFileCommand implements AddCommand {
 
-  /**
-   * Method description
-   *
-   *
-   * @param file
-   * @param others
-   *
-   * @throws RepositoryClientException
-   */
-  public void add(String file, String... others)
-          throws RepositoryClientException;
+  SvnAddCommand(File workingCopy, List<File> pendingFiles) {
+    super(workingCopy, pendingFiles);
+  }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws RepositoryClientException
-   */
-  public void checkout() throws RepositoryClientException;
-
-  /**
-   * Method description
-   *
-   *
-   * @param message
-   *
-   * @throws RepositoryClientException
-   */
-  public void commit(String message) throws RepositoryClientException;
-
-  /**
-   * Method description
-   *
-   *
-   * @throws RepositoryClientException
-   */
-  public void init() throws RepositoryClientException;
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public File getLocalRepository();
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getRemoteRepository();
+  @Override
+  public void add(String path) throws IOException {
+    append(path);
+  }
+  
 }
