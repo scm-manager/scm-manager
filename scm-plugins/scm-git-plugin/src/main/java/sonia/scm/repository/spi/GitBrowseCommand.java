@@ -271,7 +271,7 @@ public class GitBrowseCommand extends AbstractGitCommand
       walk.markStart(commit);
       result = Util.getFirst(walk);
     }
-    catch (Exception ex)
+    catch (IOException ex)
     {
       logger.error("could not parse commit for file", ex);
     }
@@ -417,12 +417,9 @@ public class GitBrowseCommand extends AbstractGitCommand
         revision);
     }
 
-    Map<String, SubRepository> subRepositories = null;
-    ByteArrayOutputStream baos = null;
-
-    try
+    Map<String, SubRepository> subRepositories;
+    try ( ByteArrayOutputStream baos = new ByteArrayOutputStream() )
     {
-      baos = new ByteArrayOutputStream();
       new GitCatCommand(context, repository).getContent(repo, revision,
         PATH_MODULES, baos);
       subRepositories = GitSubModuleParser.parse(baos.toString());
@@ -431,8 +428,6 @@ public class GitBrowseCommand extends AbstractGitCommand
     {
       logger.trace("could not find .gitmodules", ex);
       subRepositories = Collections.EMPTY_MAP;
-    } finally {
-      IOUtil.close(baos);
     }
 
     return subRepositories;
@@ -461,8 +456,7 @@ public class GitBrowseCommand extends AbstractGitCommand
   }
 
   //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final Map<ObjectId, Map<String, SubRepository>> subrepositoryCache =
-    Maps.newHashMap();
+  
+  /** sub repository cache */
+  private final Map<ObjectId, Map<String, SubRepository>> subrepositoryCache = Maps.newHashMap();
 }

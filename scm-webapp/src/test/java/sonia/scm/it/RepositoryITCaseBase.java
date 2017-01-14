@@ -44,9 +44,6 @@ import sonia.scm.repository.Permission;
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryTestData;
-import sonia.scm.repository.client.RepositoryClient;
-import sonia.scm.repository.client.RepositoryClientException;
-import sonia.scm.repository.client.RepositoryClientFactory;
 import sonia.scm.user.User;
 import sonia.scm.user.UserTestData;
 import sonia.scm.util.IOUtil;
@@ -68,6 +65,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+
+import sonia.scm.repository.client.api.RepositoryClient;
+import sonia.scm.repository.client.api.RepositoryClientFactory;
 
 /**
  *
@@ -107,45 +107,40 @@ public class RepositoryITCaseBase
    * @param client
    *
    * @throws IOException
-   * @throws RepositoryClientException
    */
-  public static void addTestFiles(RepositoryClient client)
-          throws RepositoryClientException, IOException
+  public static void addTestFiles(RepositoryClient client) throws IOException
   {
     for (int i = 0; i < 5; i++)
     {
       createRandomFile(client);
     }
 
-    client.commit("added some test files");
+    commit(client, "added some test files");
   }
 
   /**
    * Method description
-   *
-   *
    *
    * @param repository
    * @param username
    * @param password
    *
    * @throws IOException
-   * @throws RepositoryClientException
    */
   public static void addTestFiles(Repository repository, String username,
                                   String password)
-          throws RepositoryClientException, IOException
+          throws IOException
   {
     File directory = createTempDirectory();
 
     try
     {
-      RepositoryClient rc =
-        RepositoryClientFactory.createClient(repository.getType(), directory,
-          repository.createUrl(BASE_URL), username, password);
-
-      rc.init();
-      addTestFiles(rc);
+      RepositoryClientFactory clientFactory = new RepositoryClientFactory();
+      RepositoryClient client = clientFactory.create(
+        repository.getType(), repository.createUrl(BASE_URL), username, password, directory
+      );
+      
+      addTestFiles(client);
     }
     finally
     {
@@ -190,11 +185,9 @@ public class RepositoryITCaseBase
    * @return
    *
    * @throws IOException
-   * @throws RepositoryClientException
    */
   @Parameters
-  public static Collection<Object[]> createParameters()
-          throws RepositoryClientException, IOException
+  public static Collection<Object[]> createParameters() throws IOException
   {
     Client client = createClient();
     ScmState state = authenticateAdmin(client);
@@ -202,7 +195,7 @@ public class RepositoryITCaseBase
     assertNotNull(state);
     assertTrue(state.isSuccess());
 
-    Collection<Object[]> params = new ArrayList<Object[]>();
+    Collection<Object[]> params = new ArrayList<>();
     User owner = UserTestData.createTrillian();
 
     createUser(owner);
@@ -242,16 +235,14 @@ public class RepositoryITCaseBase
    * @throws RepositoryClientException
    */
   private static void appendTestParemeter(Collection<Object[]> params,
-          String type, User owner, User write, User read, User noperm)
-          throws RepositoryClientException, IOException
+          String type, User owner, User write, User read, User noperm) throws IOException
   {
-    Repository repository = createTestRepository(null, type, owner, write,
-                              read);
-
+    Repository repository = createTestRepository(null, type, owner, write, read);
     params.add(new Object[]
     {
       repository, owner, write, read, noperm, "secret"
     });
+    
     repository = createTestRepository("test", type, owner, write, read);
     params.add(new Object[]
     {
@@ -276,8 +267,7 @@ public class RepositoryITCaseBase
    * @throws RepositoryClientException
    */
   private static Repository createTestRepository(String prefix, String type,
-          User owner, User write, User read)
-          throws RepositoryClientException, IOException
+          User owner, User write, User read) throws IOException
   {
     Client client = createAdminClient();
     Repository repository = RepositoryTestData.createHeartOfGold(type);
@@ -296,6 +286,7 @@ public class RepositoryITCaseBase
     //J+
     repository = createRepository(client, repository);
     client.destroy();
+    
     addTestFiles(repository, ADMIN_USERNAME, ADMIN_PASSWORD);
 
     return repository;
@@ -336,14 +327,14 @@ public class RepositoryITCaseBase
    * @param directory
    *
    * @return
-   *
-   * @throws RepositoryClientException
+   * 
+   * @throws IOException
    */
-  protected RepositoryClient createRepositoryClient(User user, File directory)
-          throws RepositoryClientException
+  protected RepositoryClient createRepositoryClient(User user, File directory) throws IOException
   {
-    return RepositoryClientFactory.createClient(repository.getType(),
-            directory, repository.createUrl(BASE_URL), user.getName(), password);
+    RepositoryClientFactory clientFactory = new RepositoryClientFactory();
+    return clientFactory.create(repository.getType(), repository.createUrl(BASE_URL),
+            user.getName(), password, directory);
   }
 
   //~--- fields ---------------------------------------------------------------

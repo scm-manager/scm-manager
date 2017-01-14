@@ -34,7 +34,6 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.io.Closeables;
 import com.google.common.io.Resources;
 
 import org.junit.Rule;
@@ -109,19 +108,12 @@ public class HgWindowsPackageFixTest
    */
   private File createHgBat(String number) throws IOException
   {
-    URL url =
-      Resources.getResource("sonia/scm/repository/hg.bat.".concat(number));
+    URL url = Resources.getResource("sonia/scm/repository/hg.bat.".concat(number));
     File file = tempFolder.newFile(number);
-    FileOutputStream fos = null;
 
-    try
+    try (FileOutputStream fos = new FileOutputStream(file))
     {
-      fos = new FileOutputStream(file);
       Resources.copy(url, fos);
-    }
-    finally
-    {
-      Closeables.close(fos, true);
     }
 
     return file;

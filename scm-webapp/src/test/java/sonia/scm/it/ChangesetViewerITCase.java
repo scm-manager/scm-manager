@@ -47,9 +47,7 @@ import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.Modifications;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryTestData;
-import sonia.scm.repository.client.RepositoryClient;
-import sonia.scm.repository.client.RepositoryClientException;
-import sonia.scm.repository.client.RepositoryClientFactory;
+
 import sonia.scm.util.IOUtil;
 
 import static org.hamcrest.Matchers.*;
@@ -71,6 +69,9 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
+
+import sonia.scm.repository.client.api.RepositoryClient;
+import sonia.scm.repository.client.api.RepositoryClientFactory;
 
 /**
  *
@@ -111,15 +112,13 @@ public class ChangesetViewerITCase extends AbstractAdminITCaseBase
    *
    * @throws IOException
    * @throws InterruptedException
-   * @throws RepositoryClientException
    */
   @Test
-  public void cachingTest()
-    throws RepositoryClientException, IOException, InterruptedException
+  public void cachingTest() throws IOException, InterruptedException
   {
     RepositoryClient rc = createRepositoryClient();
 
-    rc.checkout();
+    // rc.checkout();
     addTestFile(rc, "a", 1, false);
     addTestFile(rc, "b", 2, true);
   }
@@ -159,15 +158,13 @@ public class ChangesetViewerITCase extends AbstractAdminITCaseBase
    *
    * @throws IOException
    * @throws InterruptedException
-   * @throws RepositoryClientException
    */
   @Test
-  public void simpleTest()
-    throws RepositoryClientException, IOException, InterruptedException
+  public void simpleTest() throws IOException, InterruptedException
   {
     RepositoryClient rc = createRepositoryClient();
 
-    rc.init();
+    // rc.init();
     addTestFile(rc, "a", 1, false);
   }
 
@@ -185,30 +182,25 @@ public class ChangesetViewerITCase extends AbstractAdminITCaseBase
    * @throws RepositoryClientException
    */
   private void addTestFile(RepositoryClient rc, String name, int count,
-    boolean sleep)
-    throws IOException, RepositoryClientException, InterruptedException
+                           boolean sleep)
+          throws IOException, InterruptedException
   {
     File file = new File(localDirectory, name.concat(".txt"));
 
     writeRandomContent(file);
-    rc.add(name.concat(".txt"));
-    rc.commit("added-".concat(name).concat(".txt"));
+    rc.getAddCommand().add(name.concat(".txt"));
+    IntegrationTestUtil.commit(rc, "added-".concat(name).concat(".txt"));
 
-    if (sleep)
-    {
-
+    if (sleep) {
       // cache clear is async
       Thread.sleep(500l);
     }
 
     ChangesetPagingResult cpr = getChangesets(repository);
 
-    if ("svn".equals(repositoryType))
-    {
+    if ("svn".equals(repositoryType)) {
       assertEquals((count + 1), cpr.getTotal());
-    }
-    else
-    {
+    } else {
       assertEquals(count, cpr.getTotal());
     }
 
@@ -216,12 +208,9 @@ public class ChangesetViewerITCase extends AbstractAdminITCaseBase
 
     assertNotNull(changesets);
 
-    if ("svn".equals(repositoryType))
-    {
+    if ("svn".equals(repositoryType)) {
       assertEquals((count + 1), changesets.size());
-    }
-    else
-    {
+    } else {
       assertEquals(count, changesets.size());
     }
 
@@ -251,75 +240,32 @@ public class ChangesetViewerITCase extends AbstractAdminITCaseBase
     //J+
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   *
-   * @throws RepositoryClientException
-   */
-  private RepositoryClient createRepositoryClient()
-    throws RepositoryClientException
-  {
-    return RepositoryClientFactory.createClient(repositoryType, localDirectory,
-      repository.createUrl(BASE_URL), IntegrationTestUtil.ADMIN_USERNAME,
-      IntegrationTestUtil.ADMIN_PASSWORD);
+  private RepositoryClient createRepositoryClient() throws IOException {
+    RepositoryClientFactory factory = new RepositoryClientFactory();
+    return factory.create(
+      repositoryType, repository.createUrl(BASE_URL), 
+      IntegrationTestUtil.ADMIN_USERNAME, IntegrationTestUtil.ADMIN_PASSWORD, 
+      localDirectory
+    );
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param file
-   *
-   * @throws IOException
-   */
-  private void writeRandomContent(File file) throws IOException
-  {
-    FileOutputStream output = null;
-
-    try
-    {
-      output = new FileOutputStream(file);
-
-      Random random = new Random();
-      byte[] data = new byte[random.nextInt(1024)];
-
+  private void writeRandomContent(File file) throws IOException {
+    Random random = new Random();
+    byte[] data = new byte[random.nextInt(1024)];
+    
+    try (FileOutputStream output = new FileOutputStream(file)) {
       random.nextBytes(data);
       output.write(data);
-    }
-    finally
-    {
-      IOUtil.close(output);
     }
   }
 
   //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   */
-  private String getChangesetViewerUri(Repository repository)
-  {
+  private String getChangesetViewerUri(Repository repository) {
     return "repositories/".concat(repository.getId()).concat("/changesets");
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   */
-  private ChangesetPagingResult getChangesets(Repository repository)
-  {
+  private ChangesetPagingResult getChangesets(Repository repository) {
     WebResource resource = createResource(client,
                              getChangesetViewerUri(repository));
 
@@ -346,5 +292,5 @@ public class ChangesetViewerITCase extends AbstractAdminITCaseBase
   private Repository repository;
 
   /** Field description */
-  private String repositoryType;
+  private final String repositoryType;
 }

@@ -104,6 +104,11 @@ public class HgRepositoryClientProvider extends RepositoryClientProvider
   }
 
   @Override
+  public File getWorkingCopy() {
+    return repository.getDirectory();
+  }
+
+  @Override
   public void close() throws IOException
   {
     if ( hgrc != null && hgrc.exists() && ! hgrc.delete() ){

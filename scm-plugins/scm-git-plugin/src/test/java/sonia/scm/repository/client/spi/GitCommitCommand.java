@@ -35,8 +35,6 @@ package sonia.scm.repository.client.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.io.Closeables;
-
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -48,7 +46,6 @@ import sonia.scm.repository.client.api.RepositoryClientException;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
-import sonia.scm.util.IOUtil;
 
 /**
  *
@@ -83,31 +80,17 @@ public class GitCommitCommand implements CommitCommand
   @Override
   public Changeset commit(CommitRequest request) throws IOException
   {
-    Changeset changeset = null;
-    GitChangesetConverter converter = null;
-
-    try
+    try (GitChangesetConverter converter = new GitChangesetConverter(git.getRepository()))
     {
-      RevCommit commit = git.commit().setAuthor(
-                           request.getAuthor().getName(),
-                           request.getAuthor().getMail()).setMessage(
-                             request.getMessage()).call();
+      RevCommit commit = git.commit()
+        .setAuthor(request.getAuthor().getName(), request.getAuthor().getMail())
+        .setMessage(request.getMessage())
+        .call();
 
-      converter = new GitChangesetConverter(git.getRepository());
-
-      changeset = converter.createChangeset(commit);
+      return converter.createChangeset(commit);
+    } catch (GitAPIException ex) {
+      throw new RepositoryClientException("could not commit changes to repository", ex);
     }
-    catch (GitAPIException ex)
-    {
-      throw new RepositoryClientException(
-        "could not commit changes to repository", ex);
-    }
-    finally
-    {
-      IOUtil.close(converter);
-    }
-
-    return changeset;
   }
 
   //~--- fields ---------------------------------------------------------------

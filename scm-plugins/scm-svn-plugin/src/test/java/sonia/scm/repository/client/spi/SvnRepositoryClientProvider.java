@@ -52,15 +52,13 @@ public class SvnRepositoryClientProvider extends RepositoryClientProvider {
   );
   
   private final SVNClientManager client;
-  private final SVNURL remoteRepositoryURL;
   private final File workingCopy;
 
   private final List<File> addedFiles = new ArrayList<>();
   private final List<File> removedFiles = new ArrayList<>();
   
-  SvnRepositoryClientProvider(SVNClientManager client, SVNURL remoteRepositoryURL, File workingCopy) {
+  SvnRepositoryClientProvider(SVNClientManager client, File workingCopy) {
     this.client = client;
-    this.remoteRepositoryURL = remoteRepositoryURL;
     this.workingCopy = workingCopy;
   }
 
@@ -77,6 +75,11 @@ public class SvnRepositoryClientProvider extends RepositoryClientProvider {
   @Override
   public SvnCommitCommand getCommitCommand() {
     return new SvnCommitCommand(client, workingCopy, addedFiles, removedFiles);
+  }
+
+  @Override
+  public File getWorkingCopy() {
+    return workingCopy;
   }
   
   @Override

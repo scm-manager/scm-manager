@@ -113,11 +113,8 @@ public class SvnBrowseCommand extends AbstractSvnCommand
     String path = request.getPath();
     long revisionNumber = SvnUtil.getRevisionNumber(request.getRevision());
 
-    if (logger.isDebugEnabled())
-    {
-      logger.debug("browser repository {} in path {} at revision {}",
-        new Object[] { repository.getName(),
-        path, revisionNumber });
+    if (logger.isDebugEnabled()) {
+      logger.debug("browser repository {} in path {} at revision {}", repository.getName(), path, revisionNumber);
     }
 
     BrowserResult result = null;

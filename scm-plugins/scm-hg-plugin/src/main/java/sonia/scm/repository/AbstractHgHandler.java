@@ -35,8 +35,6 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.io.Closeables;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -164,7 +162,7 @@ public class AbstractHgHandler
    */
   protected Map<String, String> createEnvironment(String revision, String path)
   {
-    Map<String, String> env = new HashMap<String, String>();
+    Map<String, String> env = new HashMap<>();
 
     env.put(ENV_REVISION, HgUtil.getRevision(revision));
     env.put(ENV_PATH, Util.nonNull(path));
@@ -300,29 +298,15 @@ public class AbstractHgHandler
     throws IOException, RepositoryException
   {
     Process p = createScriptProcess(script, extraEnv);
-    T result = null;
-    InputStream input = null;
 
-    try
-    {
-      handleErrorStream(p.getErrorStream());
-      input = p.getInputStream();
-      result =
-        (T) handler.getJaxbContext().createUnmarshaller().unmarshal(input);
-      input.close();
-    }
-    catch (JAXBException ex)
-    {
+    handleErrorStream(p.getErrorStream());
+    try (InputStream input = p.getInputStream()) {
+      return  (T) handler.getJaxbContext().createUnmarshaller().unmarshal(input);
+    } catch (JAXBException ex) {
       logger.error("could not parse result", ex);
 
       throw new RepositoryException("could not parse result", ex);
     }
-    finally
-    {
-      Closeables.close(input, true);
-    }
-
-    return result;
   }
 
   //~--- methods --------------------------------------------------------------

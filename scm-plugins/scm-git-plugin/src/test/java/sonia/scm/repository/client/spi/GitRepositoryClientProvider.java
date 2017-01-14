@@ -35,6 +35,7 @@ package sonia.scm.repository.client.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.ImmutableSet;
+import java.io.File;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.transport.CredentialsProvider;
@@ -186,6 +187,11 @@ public class GitRepositoryClientProvider extends RepositoryClientProvider
   public TagCommand getTagCommand()
   {
     return new GitTagCommand(git);
+  }
+
+  @Override
+  public File getWorkingCopy() {
+    return git.getRepository().getDirectory();
   }
 
   //~--- fields ---------------------------------------------------------------

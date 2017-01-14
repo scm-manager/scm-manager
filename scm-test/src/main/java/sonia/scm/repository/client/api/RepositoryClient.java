@@ -44,6 +44,7 @@ import sonia.scm.util.IOUtil;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.Closeable;
+import java.io.File;
 
 /**
  *
@@ -188,6 +189,16 @@ public final class RepositoryClient implements Closeable
     return new TagCommandBuilder(clientProvider.getTagCommand());
   }
 
+  /**
+   * Returns the working copy of the repository.
+   * 
+   * @return working copy
+   * @since 1.51
+   */
+  public File getWorkingCopy() {
+    return clientProvider.getWorkingCopy();
+  }
+  
   /**
    * Method description
    *
