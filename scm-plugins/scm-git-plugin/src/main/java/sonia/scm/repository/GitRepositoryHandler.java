@@ -52,12 +52,10 @@ import sonia.scm.util.AssertUtil;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Timer;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import sonia.scm.SCMContextProvider;
 import sonia.scm.schedule.Scheduler;
 import sonia.scm.schedule.Task;
@@ -307,21 +305,17 @@ public class GitRepositoryHandler
   protected void create(Repository repository, File directory)
     throws RepositoryException, IOException
   {
-    org.eclipse.jgit.lib.Repository gitRepository = null;
-
-    try
-    {
-      gitRepository = new FileRepositoryBuilder().setGitDir(
-        directory).readEnvironment().findGitDir().build();
+    try (org.eclipse.jgit.lib.Repository gitRepository = build(directory)) {
       gitRepository.create(true);
     }
-    finally
-    {
-      if (gitRepository != null)
-      {
-        gitRepository.close();
-      }
-    }
+  }
+  
+  private org.eclipse.jgit.lib.Repository build(File directory) throws IOException {
+    return new FileRepositoryBuilder()
+      .setGitDir(directory)
+      .readEnvironment()
+      .findGitDir()
+      .build();
   }
 
   /**

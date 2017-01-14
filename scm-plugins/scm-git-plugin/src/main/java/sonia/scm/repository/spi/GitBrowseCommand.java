@@ -269,7 +269,7 @@ public class GitBrowseCommand extends AbstractGitCommand
       walk.markStart(commit);
       result = Util.getFirst(walk);
     }
-    catch (Exception ex)
+    catch (IOException ex)
     {
       logger.error("could not parse commit for file", ex);
     }
@@ -414,7 +414,7 @@ public class GitBrowseCommand extends AbstractGitCommand
         revision);
     }
 
-    Map<String, SubRepository> subRepositories = null;
+    Map<String, SubRepository> subRepositories;
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
     try
@@ -456,7 +456,6 @@ public class GitBrowseCommand extends AbstractGitCommand
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
-  private Map<ObjectId, Map<String, SubRepository>> subrepositoryCache =
-    Maps.newHashMap();
+  /** sub repository cache */
+  private final Map<ObjectId, Map<String, SubRepository>> subrepositoryCache = Maps.newHashMap();
 }
