@@ -120,7 +120,6 @@ Sonia.login.Form = Ext.extend(Ext.FormPanel,{
         if ( debug ){
           console.debug( 'login success' );
         }
-        this.handleXsrf();
         main.loadState( action.result );
       },
 
@@ -147,35 +146,6 @@ Sonia.login.Form = Ext.extend(Ext.FormPanel,{
         form.reset();
       }
     });
-  },
-  
-  handleXsrf: function() {
-    var tokenCompressed = Ext.util.Cookies.get('X-Bearer-Token');
-    if (tokenCompressed) {
-      var tokenClaimsCompressed = tokenCompressed.split('.')[1];
-      tokenClaimsCompressed = tokenClaimsCompressed.replace('-', '+').replace('_', '/');
-      if (!window.atob) {
-        if (debug) {
-          console.log('ERROR: browser does not support window.atob');
-        }
-      } else {
-        var token = Ext.util.JSON.decode(window.atob(tokenClaimsCompressed));
-        var xsrfToken = token['scm-manager.org/xsrf'];
-        if (xsrfToken) {
-          // TODO check for support
-          localStorage.setItem('X-XSRF-Token', xsrfToken);
-        } else {
-          if (debug) {
-            console.log('no xsrf token found');
-          }
-          // TODO check for support
-          localStorage.removeItem('X-XSRF-Token');
-        }
-      }
-    } else {
-      // TODO check for support
-      localStorage.removeItem('X-XSRF-Token');
-    }
   },
 
   specialKeyPressed: function(field, e){

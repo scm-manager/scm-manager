@@ -39,8 +39,7 @@ Ext.Ajax.defaultHeaders = {
 
 // XSRF protection
 Ext.Ajax.on('beforerequest', function(conn, options){
-  // TODO check for support
-  var token = localStorage.getItem('X-XSRF-Token');
+  var token = Sonia.security.getXsrfToken();
   if (token){
     if (!options.headers){
       options.headers = {};

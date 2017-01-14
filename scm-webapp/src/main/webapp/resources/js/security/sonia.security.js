@@ -31,3 +31,18 @@
 
 // register namespace
 Ext.ns('Sonia.security');
+
+Sonia.security.getXsrfToken = function() {
+  var tokenCompressed = Ext.util.Cookies.get('X-Bearer-Token');
+  if (tokenCompressed) {
+    var tokenClaimsCompressed = tokenCompressed.split('.')[1];
+    tokenClaimsCompressed = tokenClaimsCompressed.replace('-', '+').replace('_', '/');
+    if (window.atob) {
+      var token = Ext.util.JSON.decode(window.atob(tokenClaimsCompressed));
+      return token['scm-manager.org/xsrf'];
+    } else if (debug) {
+      console.log('ERROR: browser does not support window.atob');
+    }
+  }
+  return undefined;
+};
