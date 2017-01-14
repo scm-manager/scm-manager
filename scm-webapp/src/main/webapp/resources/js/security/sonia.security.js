@@ -39,7 +39,7 @@ Sonia.security.getXsrfToken = function() {
     tokenClaimsCompressed = tokenClaimsCompressed.replace('-', '+').replace('_', '/');
     if (window.atob) {
       var token = Ext.util.JSON.decode(window.atob(tokenClaimsCompressed));
-      return token['scm-manager.org/xsrf'];
+      return token['xsrf'];
     } else if (debug) {
       console.log('ERROR: browser does not support window.atob');
     }

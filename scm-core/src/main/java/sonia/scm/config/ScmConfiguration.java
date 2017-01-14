@@ -734,5 +734,5 @@ public class ScmConfiguration
    * @since 1.47
    */
   @XmlElement(name = "xsrf-protection")
-  private boolean enabledXsrfProtection = false;
+  private boolean enabledXsrfProtection = true;
 }
