@@ -65,12 +65,10 @@ public final class RepositoryITUtil
   /**
    * Method description
    *
-   *
    * @param repository
    * @param other
    */
-  public static void assertRepositoriesEquals(Repository repository,
-    Repository other)
+  public static void assertRepositoriesEquals(Repository repository, Repository other)
   {
     assertEquals(repository.getName(), other.getName());
     assertEquals(repository.getDescription(), other.getDescription());
@@ -81,8 +79,6 @@ public final class RepositoryITUtil
 
   /**
    * Method description
-   *
-   *
    *
    * @param client
    * @param repository
@@ -116,8 +112,6 @@ public final class RepositoryITUtil
   /**
    * Method description
    *
-   *
-   *
    * @param client
    * @param id
    */
@@ -141,10 +135,6 @@ public final class RepositoryITUtil
   /**
    * Method description
    *
-   *
-   *
-   *
-   *
    * @param client
    * @param url
    *
@@ -167,11 +157,6 @@ public final class RepositoryITUtil
 
   /**
    * Method description
-   *
-   *
-   *
-   *
-   *
    *
    * @param client
    * @param id

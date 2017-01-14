@@ -44,6 +44,7 @@ import sonia.scm.repository.client.spi.RepositoryClientProvider;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.Closeable;
+import java.io.File;
 
 /**
  *
@@ -189,6 +190,16 @@ public final class RepositoryClient implements Closeable
   }
 
   /**
+   * Returns the working copy of the repository.
+   * 
+   * @return working copy
+   * @since 1.51
+   */
+  public File getWorkingCopy() {
+    return clientProvider.getWorkingCopy();
+  }
+  
+  /**
    * Method description
    *
    *
@@ -204,5 +215,5 @@ public final class RepositoryClient implements Closeable
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private RepositoryClientProvider clientProvider;
+  private final RepositoryClientProvider clientProvider;
 }

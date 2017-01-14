@@ -40,6 +40,7 @@ import sonia.scm.repository.client.api.ClientCommandNotSupportedException;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.Closeable;
+import java.io.File;
 import java.io.IOException;
 
 import java.util.Set;
@@ -138,4 +139,12 @@ public abstract class RepositoryClientProvider implements Closeable
   {
     throw new ClientCommandNotSupportedException(ClientCommand.TAG);
   }
+
+  /**
+   * Returns the working copy of the repository client.
+   *
+   * @return working copy
+   * @since 1.51
+   */
+  public abstract File getWorkingCopy();
 }

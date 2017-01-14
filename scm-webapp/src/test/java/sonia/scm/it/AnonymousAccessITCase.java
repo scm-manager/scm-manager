@@ -52,9 +52,6 @@ import sonia.scm.repository.Permission;
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryTestData;
-import sonia.scm.repository.client.RepositoryClient;
-import sonia.scm.repository.client.RepositoryClientException;
-import sonia.scm.repository.client.RepositoryClientFactory;
 
 import static org.junit.Assert.*;
 
@@ -72,6 +69,9 @@ import java.io.IOException;
 
 import java.util.Arrays;
 import java.util.Collection;
+
+import sonia.scm.repository.client.api.RepositoryClient;
+import sonia.scm.repository.client.api.RepositoryClientFactory;
 
 /**
  *
@@ -189,14 +189,11 @@ public class AnonymousAccessITCase
   /**
    * Issue 97
    *
-   *
    * @throws IOException
-   * @throws RepositoryClientException
    */
   @Test
   @Ignore
-  public void testAllowedAnonymousPush()
-          throws IOException, RepositoryClientException
+  public void testAllowedAnonymousPush() throws IOException
   {
     Client client = createAdminClient();
     WebResource resource = createResource(client,
@@ -208,7 +205,7 @@ public class AnonymousAccessITCase
     RepositoryClient repositoryClient = createAnonymousRepositoryClient();
 
     createRandomFile(repositoryClient);
-    repositoryClient.commit("added test files");
+    commit(repositoryClient, "added test files");
   }
 
   /**
@@ -216,34 +213,30 @@ public class AnonymousAccessITCase
    *
    *
    * @throws IOException
-   * @throws RepositoryClientException
    */
   @Test
-  public void testAnonymousClone() throws RepositoryClientException, IOException
+  public void testAnonymousClone() throws IOException
   {
     testSimpleAdminPush();
 
     RepositoryClient client = createAnonymousRepositoryClient();
 
-    client.checkout();
+    // client.checkout();
   }
 
   /**
    * Method description
    *
-   *
    * @throws IOException
-   * @throws RepositoryClientException
    */
   @Ignore
-  @Test(expected = RepositoryClientException.class)
-  public void testDeniedAnonymousPush()
-          throws IOException, RepositoryClientException
+  @Test(expected = IOException.class)
+  public void testDeniedAnonymousPush() throws IOException
   {
     RepositoryClient repositoryClient = createAnonymousRepositoryClient();
 
     createRandomFile(repositoryClient);
-    repositoryClient.commit("added anonymous test file");
+    commit(repositoryClient, "added anonymous test file");
   }
 
   /**
@@ -251,81 +244,30 @@ public class AnonymousAccessITCase
    *
    *
    * @throws IOException
-   * @throws RepositoryClientException
    */
   @Test
-  public void testSimpleAdminPush()
-          throws RepositoryClientException, IOException
+  public void testSimpleAdminPush() throws IOException
   {
-    RepositoryClient client = createAdminRepositoryClient();
+    RepositoryClient repositoryClient = createAdminRepositoryClient();
 
-    createRandomFile(client);
-    client.commit("added random file");
+    createRandomFile(repositoryClient);
+    commit(repositoryClient, "added random file");
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   *
-   * @throws IOException
-   * @throws RepositoryClientException
-   */
-  private RepositoryClient createAdminRepositoryClient()
-          throws IOException, RepositoryClientException
-  {
+  private RepositoryClient createAdminRepositoryClient() throws IOException {
     return createRepositoryClient(ADMIN_USERNAME, ADMIN_PASSWORD);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   *
-   * @throws IOException
-   * @throws RepositoryClientException
-   */
-  private RepositoryClient createAnonymousRepositoryClient()
-          throws IOException, RepositoryClientException
-  {
+  private RepositoryClient createAnonymousRepositoryClient() throws IOException {
     return createRepositoryClient(null, null);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param username
-   * @param password
-   *
-   * @return
-   *
-   * @throws IOException
-   * @throws RepositoryClientException
-   */
-  private RepositoryClient createRepositoryClient(String username,
-          String password)
-          throws IOException, RepositoryClientException
-  {
+  private RepositoryClient createRepositoryClient(String username, String password) throws IOException {
     File directory = temporaryFolder.newFolder();
-    RepositoryClient client = null;
+    String remoteUrl = repository.createUrl(BASE_URL);
 
-    if ((username != null) && (password != null))
-    {
-      client = RepositoryClientFactory.createClient(repositoryType, directory,
-              repository.getUrl(), username, password);
-    }
-    else
-    {
-      client = RepositoryClientFactory.createClient(repositoryType, directory,
-              repository.getUrl());
-    }
-
-    client.init();
-
-    return client;
+    RepositoryClientFactory factory = new RepositoryClientFactory();
+    return factory.create(repositoryType, remoteUrl, username, password, directory);
   }
 
   //~--- fields ---------------------------------------------------------------
@@ -338,5 +280,5 @@ public class AnonymousAccessITCase
   private Repository repository;
 
   /** Field description */
-  private String repositoryType;
+  private final String repositoryType;
 }

@@ -44,6 +44,7 @@ import org.tmatesoft.svn.core.wc.SVNUpdateClient;
 import org.tmatesoft.svn.core.wc.SVNWCUtil;
 import org.tmatesoft.svn.core.wc2.SvnOperationFactory;
 import sonia.scm.repository.SvnRepositoryHandler;
+import sonia.scm.repository.client.api.RepositoryClientException;
 
 /**
  * Client provider factory for subversion.
@@ -60,7 +61,7 @@ public class SvnRepositoryClientFactoryProvider implements RepositoryClientFacto
     try {
       source = SVNURL.fromFile(workingCopy);
     } catch (SVNException ex) {
-      throw new IOException("failed to parse svn url", ex);
+      throw new RepositoryClientException("failed to parse svn url", ex);
     }      
     
     // create client
@@ -69,11 +70,11 @@ public class SvnRepositoryClientFactoryProvider implements RepositoryClientFacto
     try {
       updateClient.doCheckout(source, workingCopy, SVNRevision.HEAD, SVNRevision.HEAD, SVNDepth.INFINITY, true);
     } catch (SVNException ex) {
-      throw new IOException("failed to checkout repository", ex);
+      throw new RepositoryClientException("failed to checkout repository", ex);
     }
     
     // return client provider
-    return new SvnRepositoryClientProvider(client, source, workingCopy);
+    return new SvnRepositoryClientProvider(client, workingCopy);
   }
 
   @Override
@@ -101,7 +102,7 @@ public class SvnRepositoryClientFactoryProvider implements RepositoryClientFacto
     try {
       remoteUrl = SVNURL.parseURIEncoded(url);
     } catch (SVNException ex) {
-      throw new IOException("failed to parse svn url", ex);
+      throw new RepositoryClientException("failed to parse svn url", ex);
     }
     
     // initial checkout
@@ -109,11 +110,11 @@ public class SvnRepositoryClientFactoryProvider implements RepositoryClientFacto
     try {
       updateClient.doCheckout(remoteUrl, workingCopy, SVNRevision.HEAD, SVNRevision.HEAD, SVNDepth.INFINITY, true);
     } catch (SVNException ex) {
-      throw new IOException("failed to checkout repository", ex);
+      throw new RepositoryClientException("failed to checkout repository", ex);
     }
     
     // return client provider
-    return new SvnRepositoryClientProvider(client, remoteUrl, workingCopy);
+    return new SvnRepositoryClientProvider(client, workingCopy);
   }
 
   @Override

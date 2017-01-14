@@ -32,7 +32,6 @@ package sonia.scm.repository.client.spi;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import org.tmatesoft.svn.core.SVNCommitInfo;
@@ -46,8 +45,10 @@ import org.tmatesoft.svn.core.wc2.SvnCommit;
 import org.tmatesoft.svn.core.wc2.SvnLog;
 import org.tmatesoft.svn.core.wc2.SvnRevisionRange;
 import org.tmatesoft.svn.core.wc2.SvnTarget;
+
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.SvnUtil;
+import sonia.scm.repository.client.api.RepositoryClientException;
 
 /**
  *
@@ -71,18 +72,14 @@ public class SvnCommitCommand implements CommitCommand {
   public Changeset commit(CommitRequest request) throws IOException {
     SVNWCClient wClient = client.getWCClient();
     
-    List<File> filesToCommit = new ArrayList<>();
-    
     // add files
     try {
       wClient.doAdd(addedFiles.toArray(new File[0]), true, false, false,
                     SVNDepth.INFINITY, false, false, false);
-      
-      filesToCommit.addAll(addedFiles);
       addedFiles.clear();
       
     } catch (SVNException ex) {
-      throw new IOException("failed to add files", ex);
+      throw new RepositoryClientException("failed to add files", ex);
     }
     
     // remove files
@@ -92,18 +89,14 @@ public class SvnCommitCommand implements CommitCommand {
         File file = removeIt.next();
         wClient.doDelete(file, false, true, false);
         removeIt.remove();
-        filesToCommit.add(file);
       }
     } catch (SVNException ex) {
-      throw new IOException("failed to remove files", ex);
+      throw new RepositoryClientException("failed to remove files", ex);
     }
-    
     
     SvnTarget workingCopyTarget = SvnTarget.fromFile(workingCopy);
     Changeset changeset;
     SVNCommitInfo info;
-    
-    
     
     // commit files
     try {
@@ -120,7 +113,7 @@ public class SvnCommitCommand implements CommitCommand {
       }
       
     } catch (SVNException ex) {
-      throw new IOException("failed to commit", ex);
+      throw new RepositoryClientException("failed to commit", ex);
     }
     
     // get log for commit
@@ -133,7 +126,7 @@ public class SvnCommitCommand implements CommitCommand {
       
       changeset = SvnUtil.createChangeset(log.run());
     } catch (SVNException ex) {
-      throw new IOException("failed to create log entry for last commit", ex);
+      throw new RepositoryClientException("failed to create log entry for last commit", ex);
     }
     
     return changeset;

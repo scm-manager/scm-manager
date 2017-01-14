@@ -37,8 +37,6 @@ package sonia.scm.it;
 
 import sonia.scm.ScmState;
 import sonia.scm.Type;
-import sonia.scm.repository.client.RepositoryClient;
-import sonia.scm.repository.client.RepositoryClientException;
 import sonia.scm.user.User;
 import sonia.scm.util.IOUtil;
 
@@ -63,6 +61,9 @@ import java.util.Collection;
 import java.util.UUID;
 
 import javax.ws.rs.core.MultivaluedMap;
+import sonia.scm.repository.Person;
+import sonia.scm.repository.client.api.ClientCommand;
+import sonia.scm.repository.client.api.RepositoryClient;
 
 /**
  *
@@ -70,6 +71,8 @@ import javax.ws.rs.core.MultivaluedMap;
  */
 public final class IntegrationTestUtil
 {
+  
+  public static final Person AUTHOR = new Person("SCM Administrator", "scmadmin@scm-manager.org");
 
   /** Field description */
   public static final String ADMIN_PASSWORD = "scmadmin";
@@ -182,33 +185,40 @@ public final class IntegrationTestUtil
   }
 
   /**
+   * Commit and push changes.
+   * 
+   * @param repositoryClient repository client
+   * @param message commit message
+   * 
+   * @throws IOException 
+   * 
+   * @since 1.51
+   */
+  public static void commit(RepositoryClient repositoryClient, String message) throws IOException {
+    repositoryClient.getCommitCommand().commit(IntegrationTestUtil.AUTHOR, message);
+    if ( repositoryClient.isCommandSupported(ClientCommand.PUSH) ) {
+      repositoryClient.getPushCommand().push();
+    }
+  }
+  
+  /**
    * Method description
-   *
-   *
    *
    * @param client
    *
    * @throws IOException
-   * @throws RepositoryClientException
    */
-  public static void createRandomFile(RepositoryClient client)
-    throws IOException, RepositoryClientException
+  public static void createRandomFile(RepositoryClient client) throws IOException
   {
     String uuid = UUID.randomUUID().toString();
     String name = "file-" + uuid + ".uuid";
-    FileOutputStream out = null;
 
-    try
-    {
-      out = new FileOutputStream(new File(client.getLocalRepository(), name));
+    File file = new File(client.getWorkingCopy(), name);
+    try (FileOutputStream out = new FileOutputStream(file)) {
       out.write(uuid.getBytes());
     }
-    finally
-    {
-      IOUtil.close(out);
-    }
 
-    client.add(name);
+    client.getAddCommand().add(name);
   }
 
   /**
@@ -219,7 +229,7 @@ public final class IntegrationTestUtil
    */
   public static Collection<String[]> createRepositoryTypeParameters()
   {
-    Collection<String[]> params = new ArrayList<String[]>();
+    Collection<String[]> params = new ArrayList<>();
 
     params.add(new String[] { "git" });
     params.add(new String[] { "svn" });
@@ -258,7 +268,7 @@ public final class IntegrationTestUtil
   {
     return REST_BASE_URL.concat(url).concat(EXTENSION);
   }
-
+  
   /**
    * Method description
    *

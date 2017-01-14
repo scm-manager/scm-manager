@@ -32,6 +32,7 @@ package sonia.scm.repository.client.spi;
 
 import com.aragost.javahg.Repository;
 import com.aragost.javahg.RepositoryConfiguration;
+import com.aragost.javahg.commands.ExecutionException;
 import com.aragost.javahg.commands.PullCommand;
 import com.google.common.base.Strings;
 import java.io.File;
@@ -40,6 +41,7 @@ import java.net.URL;
 import sonia.scm.io.INIConfiguration;
 import sonia.scm.io.INIConfigurationWriter;
 import sonia.scm.io.INISection;
+import sonia.scm.repository.client.api.RepositoryClientException;
 import sonia.scm.util.IOUtil;
 
 /**
@@ -53,19 +55,17 @@ public class HgRepositoryClientFactoryProvider implements RepositoryClientFactor
   private static final String TYPE = "hg";
   
   @Override
-  public RepositoryClientProvider create(File main, File workingCopy) throws IOException
-  {
+  public RepositoryClientProvider create(File main, File workingCopy) throws IOException {
     return create(main.toURI().toString(), null, null, workingCopy);
   }
   
   @Override
   public RepositoryClientProvider create(String url, String username, String password, File workingCopy) 
-    throws IOException 
-  {
+    throws IOException {
     RepositoryConfiguration configuration = new RepositoryConfiguration();
     String binary = IOUtil.search("hg");
     if (Strings.isNullOrEmpty(binary)){
-      throw new IOException("could not find mercurial binary (hg)");
+      throw new RepositoryClientException("could not find mercurial binary (hg)");
     }
     configuration.setHgBin(binary);
     
@@ -77,13 +77,18 @@ public class HgRepositoryClientFactoryProvider implements RepositoryClientFactor
     }
     
     Repository repository = Repository.create(configuration, workingCopy);
-    PullCommand.on(repository).execute(url);
+    try {
+      PullCommand command = PullCommand.on(repository);
+      command.cmdAppend("-u");
+      command.execute(url);
+    } catch (ExecutionException ex) {
+      throw new RepositoryClientException("failed to pull from remote repository", ex);
+    }
     
     return new HgRepositoryClientProvider(repository, hgrc, url);
   }
   
-  private File createHgrc(String url, String username, String password) throws IOException
-  {
+  private File createHgrc(String url, String username, String password) throws IOException {
     URL repositoryUrl = new URL(url);
       
     INIConfiguration hgConfig = new INIConfiguration();
@@ -101,8 +106,7 @@ public class HgRepositoryClientFactoryProvider implements RepositoryClientFactor
     );
     authSection.setParameter(prefix + "schemes", repositoryUrl.getProtocol());
     authSection.setParameter(prefix + "username", username);
-    if (!Strings.isNullOrEmpty(password))
-    {
+    if (!Strings.isNullOrEmpty(password)) {
       authSection.setParameter(prefix + "password", password);
     }
     hgConfig.addSection(authSection);
@@ -114,8 +118,7 @@ public class HgRepositoryClientFactoryProvider implements RepositoryClientFactor
   }
 
   @Override
-  public String getType()
-  {
+  public String getType() {
     return TYPE;
   }
   

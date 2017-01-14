@@ -105,13 +105,18 @@ public class GitRepositoryClientFactoryProvider
   {
     Git git = null;
 
-    CredentialsProvider credentialsProvider =
-      new UsernamePasswordCredentialsProvider(username, password);
+    CredentialsProvider credentialsProvider = null;
+    if ( username != null && password != null ) {
+      credentialsProvider = new UsernamePasswordCredentialsProvider(username, password);
+    }
 
     try
     {
-      git = Git.cloneRepository().setURI(url).setDirectory(
-        workingCopy).setCredentialsProvider(credentialsProvider).call();
+      git = Git.cloneRepository()
+        .setURI(url)
+        .setDirectory(workingCopy)
+        .setCredentialsProvider(credentialsProvider)
+        .call();
     }
     catch (GitAPIException ex)
     {

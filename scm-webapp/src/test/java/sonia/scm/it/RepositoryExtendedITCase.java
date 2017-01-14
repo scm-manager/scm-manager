@@ -42,8 +42,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.client.RepositoryClient;
-import sonia.scm.repository.client.RepositoryClientException;
 import sonia.scm.user.User;
 import sonia.scm.util.IOUtil;
 
@@ -55,6 +53,9 @@ import static sonia.scm.it.IntegrationTestUtil.*;
 
 import java.io.File;
 import java.io.IOException;
+
+import sonia.scm.repository.client.api.RepositoryClient;
+import sonia.scm.repository.client.api.RepositoryClientException;
 
 /**
  *
@@ -100,14 +101,14 @@ public class RepositoryExtendedITCase extends RepositoryITCaseBase
    * Method description
    *
    *
-   * @throws RepositoryClientException
+   * @throws IOException
    */
   @Test(expected = RepositoryClientException.class)
-  public void readFailed() throws RepositoryClientException
+  public void readFailed() throws IOException
   {
     RepositoryClient rc = createRepositoryClient(nopermUser, directory);
 
-    rc.checkout();
+    // rc.checkout();
 
     // ugly workaround
     if (repository.getType().equals("git"))
@@ -120,7 +121,7 @@ public class RepositoryExtendedITCase extends RepositoryITCaseBase
         }
       }
 
-      throw new RepositoryClientException("checkout failed");
+      throw new IOException("checkout failed");
     }
   }
 
@@ -139,47 +140,40 @@ public class RepositoryExtendedITCase extends RepositoryITCaseBase
    *
    *
    * @throws IOException
-   * @throws RepositoryClientException
    */
   @Test
-  public void simpleRead() throws RepositoryClientException, IOException
+  public void simpleRead() throws IOException
   {
     RepositoryClient rc = createRepositoryClient(readUser, directory);
 
-    rc.checkout();
+    // rc.checkout();
   }
 
   /**
    * Method description
    *
-   *
-   *
    * @throws IOException
-   * @throws RepositoryClientException
    */
   @Test
-  public void simpleWrite() throws RepositoryClientException, IOException
+  public void simpleWrite() throws IOException
   {
     RepositoryClient rc = createRepositoryClient(writeUser, directory);
 
-    rc.checkout();
+    // rc.checkout();
     addTestFiles(rc);
   }
 
   /**
    * Method description
    *
-   *
-   *
    * @throws IOException
-   * @throws RepositoryClientException
    */
-  @Test(expected = RepositoryClientException.class)
-  public void writeFailed() throws RepositoryClientException, IOException
+  @Test(expected = IOException.class)
+  public void writeFailed() throws IOException
   {
     RepositoryClient rc = createRepositoryClient(readUser, directory);
 
-    rc.checkout();
+    // rc.checkout();
     addTestFiles(rc);
   }
 

@@ -82,35 +82,22 @@ public class GitCommitCommand implements CommitCommand
   @Override
   public Changeset commit(CommitRequest request) throws IOException
   {
-    Changeset changeset = null;
-    GitChangesetConverter converter = null;
-
-    try
+    try (GitChangesetConverter converter = new GitChangesetConverter(git.getRepository()))
     {
       RevCommit commit = git.commit().setAuthor(
                            request.getAuthor().getName(),
                            request.getAuthor().getMail()).setMessage(
                              request.getMessage()).call();
 
-      converter = new GitChangesetConverter(git.getRepository());
 
-      changeset = converter.createChangeset(commit);
+      return converter.createChangeset(commit);
+    } catch (GitAPIException ex) {
+      throw new RepositoryClientException("could not commit changes to repository", ex);
     }
-    catch (GitAPIException ex)
-    {
-      throw new RepositoryClientException(
-        "could not commit changes to repository", ex);
-    }
-    finally
-    {
-      Closeables.closeQuietly(converter);
-    }
-
-    return changeset;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Git git;
+  private final Git git;
 }
