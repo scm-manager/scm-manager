@@ -56,57 +56,41 @@ import java.io.ObjectOutputStream;
  * @since 1.29
  * @see <a href="http://javatechniques.com/blog/faster-deep-copies-of-java-objects" target="_blank">http://javatechniques.com/blog/faster-deep-copies-of-java-objects</a>
  */
-public final class DeepCopy
-{
+public final class DeepCopy {
 
+  private DeepCopy() {
+  }
+  
   /**
    * Returns a copy of the object, or null if the object cannot
    * be serialized.
    *
-   * @param orig
-   * @param <T>
+   * @param orig object to copy
+   * @param <T> type of object to copy
    *
-   * @return
+   * @return deep copy of object
    *
    * @throws IOException
    */
   @SuppressWarnings("unchecked")
-  public static <T> T copy(T orig) throws IOException
-  {
-    T obj = null;
-
-    Closer closer = Closer.create();
-
-    try
-    {
-
+  public static <T> T copy(T orig) throws IOException {
+    try (Closer closer = Closer.create()) {
       // Write the object out to a byte array
-      FastByteArrayOutputStream fbos =
-        closer.register(new FastByteArrayOutputStream());
-      ObjectOutputStream out = closer.register(new ObjectOutputStream(fbos));
-
-      out.writeObject(orig);
-      out.flush();
-      out.close();
+      FastByteArrayOutputStream fbos = closer.register(new FastByteArrayOutputStream());
+      try (ObjectOutputStream out = new ObjectOutputStream(fbos)) {
+        out.writeObject(orig);
+        out.flush();
+      }
 
       // Retrieve an input stream from the byte array and read
       // a copy of the object back in.
       // use ScmObjectInputStream to solve ClassNotFoundException
       // for plugin classes
-      ObjectInputStream in =
-        closer.register(new ScmObjectInputStream(fbos.getInputStream()));
-
-      obj = (T) in.readObject();
-    }
-    catch (Exception ex)
-    {
+      ObjectInputStream in = closer.register(new ScmObjectInputStream(fbos.getInputStream()));
+      
+      return (T) in.readObject();
+    } catch (ClassNotFoundException ex) {
       throw new IOException("could not copy object", ex);
     }
-    finally
-    {
-      closer.close();
-    }
-
-    return obj;
   }
 }

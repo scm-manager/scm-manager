@@ -45,23 +45,20 @@ import java.io.IOException;
 import java.io.Serializable;
 
 /**
- *
+ * Unit tests for {@link DeepCopy}.
+ * 
  * @author Sebastian Sdorra
  */
-public class DeepCopyTest
-{
+public class DeepCopyTest {
 
   /**
-   * Method description
-   *
+   * Tests {@link DeepCopy#copy(Object)}.
    *
    * @throws IOException
    */
   @Test
-  public void testDeepCopy() throws IOException
-  {
-    Person orig = new Person("Tricia", "McMillan",
-                    new Address("Magrathea", "Mainstreet 3"));
+  public void testDeepCopy() throws IOException {
+    Person orig = new Person("Tricia", "McMillan", new Address("Magrathea", "Mainstreet 3"));
     Person copy = DeepCopy.copy(orig);
 
     assertNotSame(orig, copy);
@@ -69,73 +66,35 @@ public class DeepCopyTest
   }
 
   /**
-   * Method description
-   *
+   * Tests {@link DeepCopy#copy(Object)} with a non serializable object.
    *
    * @throws IOException
    */
   @Test(expected = IOException.class)
-  public void testDeepCopyNonSerializable() throws IOException
-  {
+  public void testDeepCopyNonSerializable() throws IOException {
     DeepCopy.copy(new NonSerializable());
   }
 
   //~--- inner classes --------------------------------------------------------
 
-  /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 14/03/08
-   * @author         Enter your name here...
-   */
-  private static class Address implements Serializable
-  {
+  private static class Address implements Serializable {
 
-    /** Field description */
     private static final long serialVersionUID = 3200816222378286310L;
-
-    //~--- constructors -------------------------------------------------------
-
-    /**
-     * Constructs ...
-     *
-     */
+    
     public Address() {}
 
-    /**
-     * Constructs ...
-     *
-     *
-     * @param city
-     * @param street
-     */
-    public Address(String city, String street)
-    {
+    public Address(String city, String street) {
       this.city = city;
       this.street = street;
     }
 
-    //~--- methods ------------------------------------------------------------
-
-    /**
-     * Method description
-     *
-     *
-     * @param obj
-     *
-     * @return
-     */
     @Override
-    public boolean equals(Object obj)
-    {
-      if (obj == null)
-      {
+    public boolean equals(Object obj) {
+      if (obj == null) {
         return false;
       }
 
-      if (getClass() != obj.getClass())
-      {
+      if (getClass() != obj.getClass()) {
         return false;
       }
 
@@ -144,94 +103,40 @@ public class DeepCopyTest
       return Objects.equal(city, other.city)
         && Objects.equal(street, other.street);
     }
-
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
+    
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
       return Objects.hashCode(city, street);
     }
 
     //~--- get methods --------------------------------------------------------
 
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
-    public String getCity()
-    {
+    public String getCity() {
       return city;
     }
 
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
-    public String getStreet()
-    {
+    public String getStreet() {
       return street;
     }
 
     //~--- fields -------------------------------------------------------------
 
-    /** Field description */
     private String city;
 
-    /** Field description */
     private String street;
   }
 
-
-  /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 14/03/08
-   * @author         Enter your name here...    
-   */
   private static class NonSerializable {}
 
+  private static class Person implements Serializable {
 
-  /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 14/03/08
-   * @author         Enter your name here...
-   */
-  private static class Person implements Serializable
-  {
-
-    /** Field description */
     private static final long serialVersionUID = -2098386757802626539L;
 
     //~--- constructors -------------------------------------------------------
 
-    /**
-     * Constructs ...
-     *
-     */
     public Person() {}
 
-    /**
-     * Constructs ...
-     *
-     *
-     * @param firstname
-     * @param lastname
-     * @param address
-     */
-    public Person(String firstname, String lastname, Address address)
-    {
+    public Person(String firstname, String lastname, Address address) {
       this.firstname = firstname;
       this.lastname = lastname;
       this.address = address;
@@ -239,24 +144,13 @@ public class DeepCopyTest
 
     //~--- methods ------------------------------------------------------------
 
-    /**
-     * Method description
-     *
-     *
-     * @param obj
-     *
-     * @return
-     */
     @Override
-    public boolean equals(Object obj)
-    {
-      if (obj == null)
-      {
+    public boolean equals(Object obj) {
+      if (obj == null) {
         return false;
       }
 
-      if (getClass() != obj.getClass())
-      {
+      if (getClass() != obj.getClass()) {
         return false;
       }
 
@@ -267,62 +161,31 @@ public class DeepCopyTest
         && Objects.equal(address, other.address);
     }
 
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
       return Objects.hashCode(firstname, lastname, address);
     }
 
     //~--- get methods --------------------------------------------------------
 
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
-    public Address getAddress()
-    {
+    public Address getAddress() {
       return address;
     }
-
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
-    public String getFirstname()
-    {
+    
+    public String getFirstname() {
       return firstname;
     }
 
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
-    public String getLastname()
-    {
+    public String getLastname() {
       return lastname;
     }
 
     //~--- fields -------------------------------------------------------------
 
-    /** Field description */
     private Address address;
-
-    /** Field description */
+    
     private String firstname;
 
-    /** Field description */
     private String lastname;
   }
 }
