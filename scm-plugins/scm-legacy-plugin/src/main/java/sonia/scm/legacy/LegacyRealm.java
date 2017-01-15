@@ -48,10 +48,10 @@ import org.apache.shiro.realm.AuthenticatingRealm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sonia.scm.group.GroupDAO;
 import sonia.scm.plugin.Extension;
+
 import sonia.scm.security.DAORealmHelper;
-import sonia.scm.user.UserDAO;
+import sonia.scm.security.DAORealmHelperFactory;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -92,13 +92,12 @@ public class LegacyRealm extends AuthenticatingRealm
    * Constructs ...
    *
    *
-   * @param userDAO
-   * @param groupDAO
+   * @param helperFactory
    */
   @Inject
-  public LegacyRealm(UserDAO userDAO, GroupDAO groupDAO)
+  public LegacyRealm(DAORealmHelperFactory helperFactory)
   {
-    this.helper = new DAORealmHelper(REALM, userDAO, groupDAO);
+    this.helper = helperFactory.create(REALM);
     setAuthenticationTokenClass(UsernamePasswordToken.class);
 
     HashedCredentialsMatcher matcher = new HashedCredentialsMatcher();

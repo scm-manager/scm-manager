@@ -77,15 +77,14 @@ public class DefaultRealm extends AuthorizingRealm
    *
    * @param service
    * @param collector
-   * @param userDAO
-   * @param groupDAO
+   * @param helperFactory
    */
   @Inject
   public DefaultRealm(PasswordService service,
-    DefaultAuthorizationCollector collector, UserDAO userDAO, GroupDAO groupDAO)
+    DefaultAuthorizationCollector collector, DAORealmHelperFactory helperFactory)
   {
     this.collector = collector;
-    this.helper = new DAORealmHelper(REALM, userDAO, groupDAO);
+    this.helper = helperFactory.create(REALM);
 
     PasswordMatcher matcher = new PasswordMatcher();
 

@@ -71,6 +71,7 @@ import static org.mockito.Mockito.*;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.List;
+import org.mockito.InjectMocks;
 
 /**
  *
@@ -221,7 +222,7 @@ public class DefaultRealmTest
     // use a small number of iterations for faster test execution
     hashService.setHashIterations(512);
     service.setHashService(hashService);
-    realm = new DefaultRealm(service, collector, userDAO, groupDAO);
+    realm = new DefaultRealm(service, collector, helperFactory);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -296,13 +297,15 @@ public class DefaultRealmTest
   @Mock
   private GroupDAO groupDAO;
 
+  @Mock
+  private UserDAO userDAO;
+  
+  @InjectMocks
+  private DAORealmHelperFactory helperFactory;
+  
   /** Field description */
   private DefaultRealm realm;
 
   /** Field description */
   private DefaultPasswordService service;
-
-  /** Field description */
-  @Mock
-  private UserDAO userDAO;
 }

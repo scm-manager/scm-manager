@@ -54,8 +54,10 @@ import sonia.scm.user.UserDAO;
 import sonia.scm.user.UserTestData;
 
 import static org.junit.Assert.*;
+import org.junit.Before;
 
 import static org.mockito.Mockito.*;
+import sonia.scm.security.DAORealmHelperFactory;
 
 /**
  *
@@ -71,6 +73,14 @@ public class LegacyRealmTest
 
   //~--- methods --------------------------------------------------------------
 
+  /**
+   * Prepare object under test.
+   */
+  @Before
+  public void prepareObjectUnderTest() {
+    this.realm = new LegacyRealm(helperFactory);
+  }
+  
   /**
    * Method description
    *
@@ -134,15 +144,15 @@ public class LegacyRealmTest
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
+  @Mock
+  private UserDAO userDAO;
+  
   @Mock
   private GroupDAO groupDAO;
 
-  /** Field description */
   @InjectMocks
+  private DAORealmHelperFactory helperFactory;
+  
   private LegacyRealm realm;
 
-  /** Field description */
-  @Mock
-  private UserDAO userDAO;
 }

@@ -168,14 +168,6 @@ public final class DAORealmHelper
 
   //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param principal
-   *
-   * @return
-   */
   private GroupNames collectGroups(String principal)
   {
     Builder<String> builder = ImmutableSet.builder();
