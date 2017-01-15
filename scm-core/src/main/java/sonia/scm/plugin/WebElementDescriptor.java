@@ -38,6 +38,7 @@ import sonia.scm.xml.XmlArrayStringAdapter;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.Arrays;
+import java.util.Objects;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -46,7 +47,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
- *
+ * Descriptor for web elements such as filter or servlets. A web element can be registered by using the 
+ * {@link sonia.scm.filter.WebElement} annotation.
+ * 
  * @author Sebastian Sdorra
  * @since 2.0.0
  */
@@ -134,6 +137,30 @@ public final class WebElementDescriptor
   public boolean isRegex()
   {
     return regex;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(clazz, pattern, Arrays.hashCode(morePatterns), regex);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+    
+    final WebElementDescriptor other = (WebElementDescriptor) obj;
+    return Objects.equals(clazz, other.clazz)
+      && Objects.equals(pattern, other.pattern)
+      && Arrays.equals(morePatterns, other.morePatterns)
+      && this.regex == other.regex;
   }
 
   //~--- fields ---------------------------------------------------------------

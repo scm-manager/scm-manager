@@ -28,12 +28,15 @@
  */
 package sonia.scm.filter;
 
+import java.util.Objects;
+
 import sonia.scm.plugin.WebElementDescriptor;
 
 /**
  *
  * @author Sebastian Sdorra
  * @param <T>
+ * @since 2.0.0
  */
 public final class TypedWebElementDescriptor<T> 
 {
@@ -55,6 +58,28 @@ public final class TypedWebElementDescriptor<T>
   public WebElementDescriptor getDescriptor()
   {
     return descriptor;
+  }
+  
+  @Override
+  public int hashCode() {
+    return Objects.hash(clazz, descriptor);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+    
+    final TypedWebElementDescriptor other = (TypedWebElementDescriptor) obj;
+    return Objects.equals(clazz, other.clazz)
+      && Objects.equals(descriptor, other.descriptor);
   }
   
 }
