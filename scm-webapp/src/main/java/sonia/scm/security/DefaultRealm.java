@@ -89,7 +89,7 @@ public class DefaultRealm extends AuthorizingRealm
     PasswordMatcher matcher = new PasswordMatcher();
 
     matcher.setPasswordService(service);
-    setCredentialsMatcher(matcher);
+    setCredentialsMatcher(helper.wrapCredentialsMatcher(matcher));
     setAuthenticationTokenClass(UsernamePasswordToken.class);
   }
 

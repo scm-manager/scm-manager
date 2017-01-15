@@ -135,6 +135,8 @@ import sonia.scm.net.ahc.JsonContentTransformer;
 import sonia.scm.net.ahc.XmlContentTransformer;
 import sonia.scm.schedule.QuartzScheduler;
 import sonia.scm.schedule.Scheduler;
+import sonia.scm.security.ConfigurableLoginAttemptHandler;
+import sonia.scm.security.LoginAttemptHandler;
 import sonia.scm.web.UserAgentParser;
 
 /**
@@ -273,6 +275,7 @@ public class ScmServletModule extends JerseyServletModule
     pluginLoader.getExtensionProcessor().processAutoBindExtensions(binder());
 
     // bind security stuff
+    bind(LoginAttemptHandler.class).to(ConfigurableLoginAttemptHandler.class);
     bind(SecuritySystem.class).to(DefaultSecuritySystem.class);
     bind(AdministrationContext.class, DefaultAdministrationContext.class);
 

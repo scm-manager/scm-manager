@@ -73,30 +73,28 @@ public class LegacyRealm extends AuthenticatingRealm
   @VisibleForTesting
   static final String REALM = "LegacyRealm";
 
-  /** Field description */
-  //J-
-  private static final CharMatcher HEX_MATCHER = CharMatcher.inRange('0', '9')
+  private static final CharMatcher HEX_MATCHER = CharMatcher
+    .inRange('0', '9')
     .or(CharMatcher.inRange('a', 'f'))
-    .or(CharMatcher.inRange('A', 'F'));
-  //J+
+    .or(CharMatcher.inRange('A', 'F')
+  );
 
   /**
-   *   the logger for LegacyRealm
+   * the logger for LegacyRealm
    */
-  private static final Logger logger =
-    LoggerFactory.getLogger(LegacyRealm.class);
+  private static final Logger LOG = LoggerFactory.getLogger(LegacyRealm.class);
 
+  private final DAORealmHelper helper;
+  
   //~--- constructors ---------------------------------------------------------
-
+  
   /**
-   * Constructs ...
+   * Constructs a new instance.
    *
-   *
-   * @param helperFactory
+   * @param helperFactory dao realm helper factory
    */
   @Inject
-  public LegacyRealm(DAORealmHelperFactory helperFactory)
-  {
+  public LegacyRealm(DAORealmHelperFactory helperFactory) {
     this.helper = helperFactory.create(REALM);
     setAuthenticationTokenClass(UsernamePasswordToken.class);
 
@@ -105,64 +103,36 @@ public class LegacyRealm extends AuthenticatingRealm
     matcher.setHashAlgorithmName(Sha1Hash.ALGORITHM_NAME);
     matcher.setHashIterations(1);
     matcher.setStoredCredentialsHexEncoded(true);
-    setCredentialsMatcher(matcher);
+    setCredentialsMatcher(helper.wrapCredentialsMatcher(matcher));
   }
 
   //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param token
-   *
-   * @return
-   *
-   * @throws AuthenticationException
-   */
   @Override
-  protected AuthenticationInfo doGetAuthenticationInfo(
-    AuthenticationToken token)
-    throws AuthenticationException
-  {
-    Preconditions.checkArgument(token instanceof UsernamePasswordToken,
-      "unsupported token");
-
+  protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
+    Preconditions.checkArgument(token instanceof UsernamePasswordToken, "unsupported token");
     return returnOnHexCredentials(helper.getAuthenticationInfo(token));
   }
 
-  private AuthenticationInfo returnOnHexCredentials(AuthenticationInfo info)
-  {
+  private AuthenticationInfo returnOnHexCredentials(AuthenticationInfo info) {
     AuthenticationInfo result = null;
 
-    if (info != null)
-    {
+    if (info != null) {
       Object credentials = info.getCredentials();
 
-      if (credentials instanceof String)
-      {
+      if (credentials instanceof String) {
         String password = (String) credentials;
 
-        if (HEX_MATCHER.matchesAllOf(password))
-        {
+        if (HEX_MATCHER.matchesAllOf(password)) {
           result = info;
+        } else {
+          LOG.debug("hash contains non hex chars");
         }
-        else
-        {
-          logger.debug("hash contains non hex chars");
-        }
-      }
-      else
-      {
-        logger.debug("non string crendentials found");
+      } else {
+        LOG.debug("non string crendentials found");
       }
     }
-
     return result;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final DAORealmHelper helper;
 }

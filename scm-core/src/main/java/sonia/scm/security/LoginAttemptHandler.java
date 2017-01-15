@@ -30,45 +30,48 @@
  */
 package sonia.scm.security;
 
-import javax.inject.Inject;
-import sonia.scm.group.GroupDAO;
-import sonia.scm.user.UserDAO;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.AuthenticationInfo;
+import org.apache.shiro.authc.AuthenticationToken;
 
 /**
- * Factory to create {@link DAORealmHelper} instances.
- * 
+ * Login attempt handler.
+ *
  * @author Sebastian Sdorra
- * @since 2.0.0
+ * @since 1.34
  */
-public final class DAORealmHelperFactory {
-  
-  private final LoginAttemptHandler loginAttemptHandler;
-  private final UserDAO userDAO; 
-  private final GroupDAO groupDAO;
+public interface LoginAttemptHandler
+{
 
   /**
-   * Constructs a new instance.
-   * 
-   * @param loginAttemptHandler login attempt handler
-   * @param userDAO user dao
-   * @param groupDAO group dao
+   * This method is called before the authentication procedure is invoked.
+   *
+   * @param token authentication token
+   *
+   * @throws AuthenticationException
    */
-  @Inject
-  public DAORealmHelperFactory(LoginAttemptHandler loginAttemptHandler, UserDAO userDAO, GroupDAO groupDAO) {
-    this.loginAttemptHandler = loginAttemptHandler;
-    this.userDAO = userDAO;
-    this.groupDAO = groupDAO;
-  }
-  
+  public void beforeAuthentication(AuthenticationToken token) throws AuthenticationException;
+
   /**
-   * Creates a new {@link DAORealmHelper} for the given realm with the injected dao instances.
-   * 
-   * @param realm name of realm
-   * 
-   * @return new {@link DAORealmHelper} instance.
+   * Handle successful authentication.
+   *
+   * @param token authentication token
+   * @param info successful authentication result
+   *
+   * @throws AuthenticationException
    */
-  public DAORealmHelper create(String realm) {
-    return new DAORealmHelper(loginAttemptHandler, userDAO, groupDAO, realm);
-  }
-  
+  public void onSuccessfulAuthentication(AuthenticationToken token, AuthenticationInfo info) 
+    throws AuthenticationException;
+
+  /**
+   * Handle unsuccessful authentication.
+   *
+   *
+   * @param token authentication token
+   * @param info unsuccessful authentication result
+   *
+   * @throws AuthenticationException
+   */
+  public void onUnsuccessfulAuthentication(AuthenticationToken token, AuthenticationInfo info)
+    throws AuthenticationException;
 }

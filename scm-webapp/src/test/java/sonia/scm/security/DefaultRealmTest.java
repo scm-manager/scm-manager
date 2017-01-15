@@ -293,7 +293,9 @@ public class DefaultRealmTest
   @Mock
   private DefaultAuthorizationCollector collector;
 
-  /** Field description */
+  @Mock
+  private LoginAttemptHandler loginAttemptHandler;
+  
   @Mock
   private GroupDAO groupDAO;
 

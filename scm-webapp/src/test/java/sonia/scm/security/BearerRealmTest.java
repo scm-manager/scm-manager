@@ -73,6 +73,7 @@ import javax.crypto.spec.SecretKeySpec;
 import org.hamcrest.Matchers;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
+import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 
 /**
@@ -215,7 +216,7 @@ public class BearerRealmTest
   {
     when(validator.validate(Mockito.anyMap())).thenReturn(true);
     Set<TokenClaimsValidator> validators = Sets.newHashSet(validator);
-    realm = new BearerRealm(keyResolver, userDAO, groupDAO, validators);
+    realm = new BearerRealm(helperFactory, keyResolver, validators);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -300,6 +301,12 @@ public class BearerRealmTest
   /** Field description */
   private final SecureRandom random = new SecureRandom();
 
+  @InjectMocks
+  private DAORealmHelperFactory helperFactory;
+  
+  @Mock
+  private LoginAttemptHandler loginAttemptHandler;
+  
   @Mock
   private TokenClaimsValidator validator;
   

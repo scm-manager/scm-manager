@@ -44,6 +44,7 @@ import org.apache.shiro.authc.DisabledAccountException;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authc.credential.CredentialsMatcher;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 
 import org.slf4j.Logger;
@@ -70,21 +71,29 @@ public final class DAORealmHelper
   /**
    * the logger for DAORealmHelper
    */
-  private static final Logger logger =
-    LoggerFactory.getLogger(DAORealmHelper.class);
+  private static final Logger LOG = LoggerFactory.getLogger(DAORealmHelper.class);
 
+  private final LoginAttemptHandler loginAttemptHandler;
+  
+  private final UserDAO userDAO;
+  
+  private final GroupDAO groupDAO;
+
+  private final String realm;
+  
   //~--- constructors ---------------------------------------------------------
-
+  
   /**
-   * Constructs ...
+   * Constructs a new instance. Consider to use {@link DAORealmHelperFactory} which
+   * handles dependency injection.
    *
-   *
-   * @param realm
-   * @param userDAO
-   * @param groupDAO
+   * @param loginAttemptHandler login attempt handler for wrapping credentials matcher
+   * @param userDAO user dao
+   * @param groupDAO group dao
+   * @param realm name of realm
    */
-  public DAORealmHelper(String realm, UserDAO userDAO, GroupDAO groupDAO)
-  {
+  public DAORealmHelper(LoginAttemptHandler loginAttemptHandler, UserDAO userDAO, GroupDAO groupDAO, String realm) {
+    this.loginAttemptHandler = loginAttemptHandler;
     this.realm = realm;
     this.userDAO = userDAO;
     this.groupDAO = groupDAO;
@@ -92,6 +101,17 @@ public final class DAORealmHelper
 
   //~--- get methods ----------------------------------------------------------
 
+  /**
+   * Wraps credentials matcher and applies login attempt policies.
+   * 
+   * @param credentialsMatcher credentials matcher to wrap
+   * 
+   * @return wrapped credentials matcher
+   */
+  public CredentialsMatcher wrapCredentialsMatcher(CredentialsMatcher credentialsMatcher) {
+    return new RetryLimitPasswordMatcher(loginAttemptHandler, credentialsMatcher);
+  }
+  
   /**
    * Method description
    *
@@ -102,11 +122,8 @@ public final class DAORealmHelper
    *
    * @throws AuthenticationException
    */
-  public AuthenticationInfo getAuthenticationInfo(AuthenticationToken token)
-    throws AuthenticationException
-  {
-    checkArgument(token instanceof UsernamePasswordToken, "%s is required",
-      UsernamePasswordToken.class);
+  public AuthenticationInfo getAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
+    checkArgument(token instanceof UsernamePasswordToken, "%s is required", UsernamePasswordToken.class);
 
     UsernamePasswordToken upt = (UsernamePasswordToken) token;
     String principal = upt.getUsername();
@@ -123,31 +140,18 @@ public final class DAORealmHelper
    *
    * @return
    */
-  public AuthenticationInfo getAuthenticationInfo(String principal,
-    String credentials)
-  {
+  public AuthenticationInfo getAuthenticationInfo(String principal, String credentials) {
     checkArgument(!Strings.isNullOrEmpty(principal), "username is required");
 
-    logger.debug("try to authenticate {}", principal);
+    LOG.debug("try to authenticate {}", principal);
 
     User user = userDAO.get(principal);
-
-    if (user == null)
-    {
-      //J-
-      throw new UnknownAccountException(
-        String.format("unknown account %s", principal)
-      );
-      //J+
+    if (user == null) {
+      throw new UnknownAccountException(String.format("unknown account %s", principal));
     }
 
-    if (!user.isActive())
-    {
-      //J-
-      throw new DisabledAccountException(
-        String.format("account %s is disabled", principal)
-      );
-      //J+
+    if (!user.isActive()) {
+      throw new DisabledAccountException(String.format("account %s is disabled", principal));
     }
 
     SimplePrincipalCollection collection = new SimplePrincipalCollection();
@@ -158,8 +162,7 @@ public final class DAORealmHelper
 
     String creds = credentials;
 
-    if (credentials == null)
-    {
+    if (credentials == null) {
       creds = user.getPassword();
     }
 
@@ -168,36 +171,44 @@ public final class DAORealmHelper
 
   //~--- methods --------------------------------------------------------------
 
-  private GroupNames collectGroups(String principal)
-  {
+  private GroupNames collectGroups(String principal) {
     Builder<String> builder = ImmutableSet.builder();
 
     builder.add(GroupNames.AUTHENTICATED);
 
-    for (Group group : groupDAO.getAll())
-    {
-      if (group.isMember(principal))
-      {
+    for (Group group : groupDAO.getAll()) {
+      if (group.isMember(principal)) {
         builder.add(group.getName());
       }
     }
 
     GroupNames groups = new GroupNames(builder.build());
-
-    logger.debug("collected following groups for principal {}: {}", principal,
-      groups);
-
+    LOG.debug("collected following groups for principal {}: {}", principal, groups);
     return groups;
   }
 
-  //~--- fields ---------------------------------------------------------------
+  private static class RetryLimitPasswordMatcher implements CredentialsMatcher {
 
-  /** Field description */
-  private final GroupDAO groupDAO;
+    private final LoginAttemptHandler loginAttemptHandler;
+    private final CredentialsMatcher credentialsMatcher;
 
-  /** Field description */
-  private final String realm;
-
-  /** Field description */
-  private final UserDAO userDAO;
+    private RetryLimitPasswordMatcher(LoginAttemptHandler loginAttemptHandler, CredentialsMatcher credentialsMatcher) {
+      this.loginAttemptHandler = loginAttemptHandler;
+      this.credentialsMatcher = credentialsMatcher;
+    }
+    
+    @Override
+    public boolean doCredentialsMatch(AuthenticationToken token, AuthenticationInfo info) {
+      loginAttemptHandler.beforeAuthentication(token);
+      boolean result = credentialsMatcher.doCredentialsMatch(token, info);
+      if ( result ) {
+        loginAttemptHandler.onSuccessfulAuthentication(token, info);
+      } else {
+        loginAttemptHandler.onUnsuccessfulAuthentication(token, info);
+      }
+      return result;
+    }
+    
+  }
+  
 }

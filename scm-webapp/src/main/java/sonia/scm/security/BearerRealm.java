@@ -84,18 +84,17 @@ public class BearerRealm extends AuthenticatingRealm
   /**
    * Constructs ...
    *
-   *
+   * @param helperFactory dao realm helper factory
    * @param resolver key resolver
-   * @param userDAO user dao
-   * @param groupDAO group dao
    * @param validators token claims validators
    */
   @Inject
-  public BearerRealm(SecureKeyResolver resolver, UserDAO userDAO,
-    GroupDAO groupDAO, Set<TokenClaimsValidator> validators)
+  public BearerRealm(
+    DAORealmHelperFactory helperFactory, SecureKeyResolver resolver, Set<TokenClaimsValidator> validators
+  )
   {
+    this.helper = helperFactory.create(REALM);
     this.resolver = resolver;
-    this.helper = new DAORealmHelper(REALM, userDAO, groupDAO);
     this.validators = validators;
     
     setCredentialsMatcher(new AllowAllCredentialsMatcher());

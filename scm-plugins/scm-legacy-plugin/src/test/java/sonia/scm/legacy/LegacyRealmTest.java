@@ -58,6 +58,7 @@ import org.junit.Before;
 
 import static org.mockito.Mockito.*;
 import sonia.scm.security.DAORealmHelperFactory;
+import sonia.scm.security.LoginAttemptHandler;
 
 /**
  *
@@ -144,6 +145,9 @@ public class LegacyRealmTest
 
   //~--- fields ---------------------------------------------------------------
 
+  @Mock
+  private LoginAttemptHandler loginAttemptHandler;
+  
   @Mock
   private UserDAO userDAO;
   
