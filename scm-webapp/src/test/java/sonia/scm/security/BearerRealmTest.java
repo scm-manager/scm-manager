@@ -35,6 +35,7 @@ package sonia.scm.security;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwsHeader;
@@ -115,6 +116,35 @@ public class BearerRealmTest
 
     assertEquals(marvin.getName(), principals.getPrimaryPrincipal());
     assertEquals(marvin, principals.oneByType(User.class));
+    assertNotNull(principals.oneByType(Scope.class));
+    assertTrue(principals.oneByType(Scope.class).isEmpty());
+  }
+  
+  /**
+   * Test {@link BearerRealm#doGetAuthenticationInfo(AuthenticationToken)} with scope.
+   *
+   */
+  @Test
+  public void testDoGetAuthenticationInfoWithScope()
+  {
+    SecureKey key = createSecureKey();
+
+    User marvin = UserTestData.createMarvin();
+
+    when(userDAO.get(marvin.getName())).thenReturn(marvin);
+
+    resolveKey(key);
+
+    String compact = createCompactToken(
+      marvin.getName(), 
+      key, 
+      new Date(System.currentTimeMillis() + 60000), 
+      Scope.valueOf("repo:*", "user:*")
+    );
+    
+    AuthenticationInfo info = realm.doGetAuthenticationInfo(new BearerAuthenticationToken(compact));
+    Scope scope = info.getPrincipals().oneByType(Scope.class);
+    assertThat(scope, Matchers.containsInAnyOrder("repo:*", "user:*"));
   }
   
   /**
@@ -159,7 +189,7 @@ public class BearerRealmTest
     resolveKey(key);
 
     Date exp = new Date(System.currentTimeMillis() - 600l);
-    String compact = createCompactToken(trillian.getName(), key, exp);
+    String compact = createCompactToken(trillian.getName(), key, exp, Scope.empty());
 
     realm.doGetAuthenticationInfo(new BearerAuthenticationToken(compact));
   }
@@ -221,66 +251,30 @@ public class BearerRealmTest
 
   //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param subject
-   * @param key
-   *
-   * @return
-   */
-  private String createCompactToken(String subject, SecureKey key)
-  {
-    return createCompactToken(subject, key,
-      new Date(System.currentTimeMillis() + 60000));
+private String createCompactToken(String subject, SecureKey key) {
+    return createCompactToken(subject, key, Scope.empty());
+  }
+  
+  private String createCompactToken(String subject, SecureKey key, Scope scope) {
+    return createCompactToken(subject, key, new Date(System.currentTimeMillis() + 60000), scope);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param subject
-   * @param key
-   * @param exp
-   *
-   * @return
-   */
-  private String createCompactToken(String subject, SecureKey key, Date exp)
-  {
-    //J-
+  private String createCompactToken(String subject, SecureKey key, Date exp, Scope scope) {
     return Jwts.builder()
+      .claim(Scopes.CLAIMS_KEY, ImmutableList.copyOf(scope))
       .setSubject(subject)
       .setExpiration(exp)
       .signWith(SignatureAlgorithm.HS256, key.getBytes())
       .compact();
-    //J+
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  private SecureKey createSecureKey()
-  {
+  private SecureKey createSecureKey() {
     byte[] bytes = new byte[32];
-
     random.nextBytes(bytes);
-
     return new SecureKey(bytes, System.currentTimeMillis());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param key
-   */
-  private void resolveKey(SecureKey key)
-  {
-    //J-
+  private void resolveKey(SecureKey key) {
     when(
       keyResolver.resolveSigningKey(
         any(JwsHeader.class), 
@@ -293,7 +287,6 @@ public class BearerRealmTest
         SignatureAlgorithm.HS256.getValue()
       )
     );
-    //J+
   }
 
   //~--- fields ---------------------------------------------------------------

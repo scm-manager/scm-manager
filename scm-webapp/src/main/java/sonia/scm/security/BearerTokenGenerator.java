@@ -42,6 +42,7 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.user.User;
 
 import static com.google.common.base.Preconditions.*;
+import com.google.common.collect.ImmutableSet;
 
 import com.google.common.collect.Maps;
 
@@ -95,10 +96,11 @@ public final class BearerTokenGenerator
    *
    *
    * @param user user
+   * @param scope scope of token
    *
    * @return bearer token
    */
-  public String createBearerToken(User user) {
+  public String createBearerToken(User user, Scope scope) {
     checkNotNull(user, "user is required");
 
     String username = user.getName();
@@ -114,16 +116,19 @@ public final class BearerTokenGenerator
     // TODO: should be configurable
     long expiration = TimeUnit.MILLISECONDS.convert(10, TimeUnit.HOURS);
 
-    Map<String,Object> claim = Maps.newHashMap();
+    Map<String,Object> claims = Maps.newHashMap();
+    
+    // add scope to claims
+    Scopes.toClaims(claims, scope);
     
     // enrich claims with registered enrichers
     enrichers.forEach((enricher) -> {
-      enricher.enrich(claim);
+      enricher.enrich(claims);
     });
     
     //J-
     return Jwts.builder()
-      .setClaims(claim)
+      .setClaims(claims)
       .setSubject(username)
       .setId(id)
       .signWith(SignatureAlgorithm.HS256, key.getBytes())

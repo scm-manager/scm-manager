@@ -45,14 +45,16 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 
-import sonia.scm.group.GroupDAO;
+import sonia.scm.group.GroupNames;
 import sonia.scm.plugin.Extension;
-import sonia.scm.user.UserDAO;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Default authorizing realm.
@@ -64,6 +66,13 @@ import javax.inject.Singleton;
 @Singleton
 public class DefaultRealm extends AuthorizingRealm
 {
+  
+  private static final String SEPARATOR = System.getProperty("line.separator", "\n");
+  
+  /**
+   * the logger for DefaultRealm
+   */
+  private static final Logger LOG = LoggerFactory.getLogger(DefaultRealm.class);
 
   /** Field description */
   @VisibleForTesting
@@ -122,10 +131,61 @@ public class DefaultRealm extends AuthorizingRealm
    * @return
    */
   @Override
-  protected AuthorizationInfo doGetAuthorizationInfo(
-    PrincipalCollection principals)
+  protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals)
   {
-    return collector.collect(principals);
+    AuthorizationInfo info = collector.collect(principals);
+    
+    Scope scope = principals.oneByType(Scope.class);
+    if (scope != null && ! scope.isEmpty()) {
+      LOG.trace("filter permissions by scope {}", scope);
+      AuthorizationInfo filtered = Scopes.filter(getPermissionResolver(), info, scope);
+      if (LOG.isTraceEnabled()) {
+        log(principals, info, filtered);
+      }
+      return filtered;
+    } else if (LOG.isTraceEnabled()) {
+      LOG.trace("principal does not contain scope informations, returning all permissions");
+      log(principals, info, null);
+    }
+    
+    return info;
+  }
+  
+  private void log( PrincipalCollection collection, AuthorizationInfo original, AuthorizationInfo filtered ) {
+    StringBuilder buffer = new StringBuilder("authorization summary: ");
+    
+    buffer.append(SEPARATOR).append("username   : ").append(collection.getPrimaryPrincipal());
+    buffer.append(SEPARATOR).append("groups     : ");
+    append(buffer, collection.oneByType(GroupNames.class));
+    buffer.append(SEPARATOR).append("roles      : ");
+    append(buffer, original.getRoles()); 
+    buffer.append(SEPARATOR).append("scope      : ");
+    append(buffer, collection.oneByType(Scope.class)); 
+    
+    if ( filtered != null ) {
+      buffer.append(SEPARATOR).append("permissions (filtered by scope): ");
+      append(buffer, filtered);
+      buffer.append(SEPARATOR).append("permissions (unfiltered): ");
+    } else {
+      buffer.append(SEPARATOR).append("permissions: ");
+    }
+    append(buffer, original);
+    
+    LOG.trace(buffer.toString());
+  }
+  
+  private void append(StringBuilder buffer, AuthorizationInfo authz) {
+    append(buffer, authz.getStringPermissions());
+    append(buffer, authz.getObjectPermissions());    
+  }
+  
+  private void append(StringBuilder buffer, Iterable<?> iterable){
+    if (iterable != null){
+      for ( Object item : iterable )
+      {
+        buffer.append(SEPARATOR).append(" - ").append(item);
+      }      
+    }
   }
 
   //~--- fields ---------------------------------------------------------------

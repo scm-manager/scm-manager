@@ -39,7 +39,6 @@ import com.github.legman.Subscribe;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
-import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
 import com.google.inject.Inject;
@@ -444,37 +443,7 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
 
     SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(roles);
     info.addStringPermissions(permissions);
-    
-    if (logger.isTraceEnabled()){
-      logger.trace(createAuthorizationSummary(user, groups, info));
-    }
-    
     return info;
-  }
-  
-  private String createAuthorizationSummary(User user, GroupNames groups, AuthorizationInfo authzInfo)
-  {
-    StringBuilder buffer = new StringBuilder("authorization summary: ");
-    
-    buffer.append(SEPARATOR).append("username   : ").append(user.getName());
-    buffer.append(SEPARATOR).append("groups     : ");
-    append(buffer, groups);
-    buffer.append(SEPARATOR).append("roles      : ");
-    append(buffer, authzInfo.getRoles());
-    buffer.append(SEPARATOR).append("permissions:");
-    append(buffer, authzInfo.getStringPermissions());
-    append(buffer, authzInfo.getObjectPermissions());
-    
-    return buffer.toString();
-  }
-  
-  private void append(StringBuilder buffer, Iterable<?> iterable){
-    if (iterable != null){
-      for ( Object item : iterable )
-      {
-        buffer.append(SEPARATOR).append(" - ").append(item);
-      }      
-    }
   }
 
   //~--- get methods ----------------------------------------------------------

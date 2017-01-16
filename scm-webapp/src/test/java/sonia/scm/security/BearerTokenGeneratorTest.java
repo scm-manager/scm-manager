@@ -61,83 +61,82 @@ import java.security.SecureRandom;
 import java.util.Set;
 
 /**
- *
+ * Tests {@link BearerTokenGenerator}.
+ * 
  * @author Sebastian Sdorra
  */
 @RunWith(MockitoJUnitRunner.class)
 public class BearerTokenGeneratorTest
 {
 
+  private final SecureRandom random = new SecureRandom();
+
+  @Mock
+  private KeyGenerator keyGenerator;
+
+  @Mock
+  private SecureKeyResolver keyResolver;
+
+  private BearerTokenGenerator tokenGenerator;
+  
   /**
-   * Method description
-   *
-   */
-  @Test
-  public void testCreateBearerToken()
-  {
-    User trillian = UserTestData.createTrillian();
-    SecureKey key = createSecureKey();
-
-    when(keyGenerator.createKey()).thenReturn("sid");
-    when(keyResolver.getSecureKey(trillian.getName())).thenReturn(key);
-
-    String token = tokenGenerator.createBearerToken(trillian);
-
-    assertThat(token, not(isEmptyOrNullString()));
-    assertTrue(Jwts.parser().isSigned(token));
-
-    Claims claims = Jwts.parser().setSigningKey(key.getBytes()).parseClaimsJws(
-                      token).getBody();
-
-    assertEquals(trillian.getName(), claims.getSubject());
-    assertEquals("sid", claims.getId());
-    assertEquals("123", claims.get("abc"));
-  }
-
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
+   * Set up mocks and object under test.
    */
   @Before
-  public void setUp()
-  {
+  public void setUp() {
     Set<TokenClaimsEnricher> enrichers = Sets.newHashSet();
     enrichers.add((claims) -> {claims.put("abc", "123");});
     tokenGenerator = new BearerTokenGenerator(keyGenerator, keyResolver, enrichers);
   }
 
-  //~--- methods --------------------------------------------------------------
-
+  
   /**
-   * Method description
-   *
-   *
-   * @return
+   * Tests {@link BearerTokenGenerator#createBearerToken(User, Scope)}.
    */
-  private SecureKey createSecureKey()
+  @Test
+  public void testCreateBearerToken()
   {
-    byte[] bytes = new byte[32];
-
-    random.nextBytes(bytes);
-
-    return new SecureKey(bytes, System.currentTimeMillis());
+    Claims claims = createAssertAndParseToken(UserTestData.createTrillian(), "sid", Scope.empty());
+    
+    assertEquals("123", claims.get("abc"));
+    assertNull(claims.get(Scopes.CLAIMS_KEY));
   }
 
-  //~--- fields ---------------------------------------------------------------
+  /**
+   * Tests {@link BearerTokenGenerator#createBearerToken(User, Scope)} with scope.
+   */
+  @Test
+  @SuppressWarnings("unchecked")
+  public void testCreateBearerTokenWithScope(){
+    Claims claims = createAssertAndParseToken(UserTestData.createTrillian(), "sid", Scope.valueOf("repo:*", "user:*"));
+    assertEquals("123", claims.get("abc"));
+    
+    Scope scope = Scopes.fromClaims(claims);
+    assertThat(scope, containsInAnyOrder("repo:*", "user:*"));
+  }
+  
+  private Claims createAssertAndParseToken(User user, String id, Scope scope){
+    SecureKey key = createSecureKey();
 
-  /** Field description */
-  private final SecureRandom random = new SecureRandom();
+    when(keyGenerator.createKey()).thenReturn(id);
+    when(keyResolver.getSecureKey(user.getName())).thenReturn(key);
 
-  /** Field description */
-  @Mock
-  private KeyGenerator keyGenerator;
+    String token = tokenGenerator.createBearerToken(user, scope);
 
-  /** Field description */
-  @Mock
-  private SecureKeyResolver keyResolver;
+    assertThat(token, not(isEmptyOrNullString()));
+    assertTrue(Jwts.parser().isSigned(token));
 
-  /** Field description */
-  private BearerTokenGenerator tokenGenerator;
+    Claims claims = Jwts.parser().setSigningKey(key.getBytes()).parseClaimsJws(token).getBody();
+    
+    assertEquals(user.getName(), claims.getSubject());
+    assertEquals(id, claims.getId());
+    
+    return claims;
+  }
+
+  private SecureKey createSecureKey() {
+    byte[] bytes = new byte[32];
+    random.nextBytes(bytes);
+    return new SecureKey(bytes, System.currentTimeMillis());
+  }
 }

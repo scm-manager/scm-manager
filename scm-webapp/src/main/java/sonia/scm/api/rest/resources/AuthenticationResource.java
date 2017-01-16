@@ -39,6 +39,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import java.util.List;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -83,6 +84,7 @@ import javax.ws.rs.core.Response;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import sonia.scm.security.Scope;
 
 /**
  *
@@ -144,6 +146,7 @@ public class AuthenticationResource
    * @param username the username for the authentication
    * @param password the password for the authentication
    * @param cookie create authentication token
+   * @param scope scope of created token
    *
    * @return
    */
@@ -153,8 +156,9 @@ public class AuthenticationResource
   public Response authenticate(@Context HttpServletRequest request,
     @Context HttpServletResponse response,
     @FormParam("username") String username,
-    @FormParam("password") String password, @FormParam("rememberMe")
-  @QueryParam("cookie") boolean cookie)
+    @FormParam("password") String password, 
+    @QueryParam("cookie") boolean cookie,
+    @QueryParam("scope") List<String> scope)
   {
     Preconditions.checkArgument(!Strings.isNullOrEmpty(username),
       "username parameter is required");
@@ -171,7 +175,7 @@ public class AuthenticationResource
 
       User user = subject.getPrincipals().oneByType(User.class);
 
-      String token = tokenGenerator.createBearerToken(user);
+      String token = tokenGenerator.createBearerToken(user, scope != null ? Scope.valueOf(scope) : Scope.empty());
 
       ScmState state;
 

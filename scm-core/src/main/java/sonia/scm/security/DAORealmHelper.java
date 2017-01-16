@@ -33,6 +33,7 @@ package sonia.scm.security;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
@@ -128,7 +129,7 @@ public final class DAORealmHelper
     UsernamePasswordToken upt = (UsernamePasswordToken) token;
     String principal = upt.getUsername();
 
-    return getAuthenticationInfo(principal, null);
+    return getAuthenticationInfo(principal, null, null);
   }
 
   /**
@@ -137,10 +138,11 @@ public final class DAORealmHelper
    *
    * @param principal
    * @param credentials
+   * @param scope
    *
    * @return
    */
-  public AuthenticationInfo getAuthenticationInfo(String principal, String credentials) {
+  public AuthenticationInfo getAuthenticationInfo(String principal, String credentials, Scope scope) {
     checkArgument(!Strings.isNullOrEmpty(principal), "username is required");
 
     LOG.debug("try to authenticate {}", principal);
@@ -159,6 +161,7 @@ public final class DAORealmHelper
     collection.add(principal, realm);
     collection.add(user, realm);
     collection.add(collectGroups(principal), realm);
+    collection.add(Objects.firstNonNull(scope, Scope.empty()), realm);
 
     String creds = credentials;
 

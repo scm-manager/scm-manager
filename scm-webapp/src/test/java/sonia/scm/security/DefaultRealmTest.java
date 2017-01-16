@@ -35,6 +35,7 @@ package sonia.scm.security;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
 
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -71,6 +72,11 @@ import static org.mockito.Mockito.*;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.List;
+import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.Permission;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
+import org.apache.shiro.authz.permission.WildcardPermissionResolver;
+import org.hamcrest.Matchers;
 import org.mockito.InjectMocks;
 
 /**
@@ -108,6 +114,62 @@ public class DefaultRealmTest
 
     realm.doGetAuthorizationInfo(col);
     verify(collector, times(1)).collect(col);
+  }
+  
+  /**
+   * Tests {@link DefaultRealm#doGetAuthorizationInfo(PrincipalCollection)} without scope.
+   */
+  @Test
+  public void testGetAuthorizationInfoWithoutScope(){
+    SimplePrincipalCollection col = new SimplePrincipalCollection();
+    
+    SimpleAuthorizationInfo collectorsAuthz = new SimpleAuthorizationInfo();
+    collectorsAuthz.addStringPermission("repository:*");
+    when(collector.collect(col)).thenReturn(collectorsAuthz);
+    
+    AuthorizationInfo realmsAutz = realm.doGetAuthorizationInfo(col);
+    assertThat(realmsAutz.getObjectPermissions(), is(nullValue()));
+    assertThat(realmsAutz.getStringPermissions(), Matchers.contains("repository:*"));
+  }
+
+  /**
+   * Tests {@link DefaultRealm#doGetAuthorizationInfo(PrincipalCollection)} with empty scope.
+   */  
+  @Test
+  public void testGetAuthorizationInfoWithEmptyScope(){
+    SimplePrincipalCollection col = new SimplePrincipalCollection();
+    col.add(Scope.empty(), DefaultRealm.REALM);
+    
+    SimpleAuthorizationInfo collectorsAuthz = new SimpleAuthorizationInfo();
+    collectorsAuthz.addStringPermission("repository:*");
+    when(collector.collect(col)).thenReturn(collectorsAuthz);
+    
+    AuthorizationInfo realmsAutz = realm.doGetAuthorizationInfo(col);
+    assertThat(realmsAutz.getObjectPermissions(), is(nullValue()));
+    assertThat(realmsAutz.getStringPermissions(), Matchers.contains("repository:*"));
+  }
+  
+  /**
+   * Tests {@link DefaultRealm#doGetAuthorizationInfo(PrincipalCollection)} with scope.
+   */
+  @Test
+  public void testGetAuthorizationInfoWithScope(){
+    SimplePrincipalCollection col = new SimplePrincipalCollection();
+    col.add(Scope.valueOf("user:*:me"), DefaultRealm.REALM);
+    
+    SimpleAuthorizationInfo collectorsAuthz = new SimpleAuthorizationInfo();
+    collectorsAuthz.addStringPermission("repository:*");
+    collectorsAuthz.addStringPermission("user:*:me");
+    when(collector.collect(col)).thenReturn(collectorsAuthz);
+    
+    AuthorizationInfo realmsAutz = realm.doGetAuthorizationInfo(col);
+    assertThat(
+      Collections2.transform(realmsAutz.getObjectPermissions(), Permission::toString), 
+      allOf(
+        Matchers.contains("user:*:me"),
+        not(Matchers.contains("repository:*"))
+      )
+    );
   }
 
   /**
@@ -223,6 +285,9 @@ public class DefaultRealmTest
     hashService.setHashIterations(512);
     service.setHashService(hashService);
     realm = new DefaultRealm(service, collector, helperFactory);
+    
+    // set permission resolver
+    realm.setPermissionResolver(new WildcardPermissionResolver());
   }
 
   //~--- methods --------------------------------------------------------------

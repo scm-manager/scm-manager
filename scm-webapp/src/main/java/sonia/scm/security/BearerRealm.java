@@ -50,6 +50,8 @@ import sonia.scm.plugin.Extension;
 import sonia.scm.user.UserDAO;
 
 import static com.google.common.base.Preconditions.checkArgument;
+
+import java.util.List;
 import java.util.Set;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -113,8 +115,7 @@ public class BearerRealm extends AuthenticatingRealm
    * @return authentication data from user and group dao
    */
   @Override
-  protected AuthenticationInfo doGetAuthenticationInfo(
-    AuthenticationToken token)
+  protected AuthenticationInfo doGetAuthenticationInfo( AuthenticationToken token)
   {
     checkArgument(token instanceof BearerAuthenticationToken, "%s is required",
       BearerAuthenticationToken.class);
@@ -122,7 +123,7 @@ public class BearerRealm extends AuthenticatingRealm
     BearerAuthenticationToken bt = (BearerAuthenticationToken) token;
     Claims c = checkToken(bt);
 
-    return helper.getAuthenticationInfo(c.getSubject(), bt.getCredentials());
+    return helper.getAuthenticationInfo(c.getSubject(), bt.getCredentials(), Scopes.fromClaims(c));
   }
 
   /**
