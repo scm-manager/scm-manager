@@ -81,6 +81,7 @@ public final class JwtAccessToken implements AccessToken {
   }
   
   @Override
+  @SuppressWarnings("unchecked")
   public Optional<Object> getCustom(String key) {
     return Optional.ofNullable(claims.get(key));
   }

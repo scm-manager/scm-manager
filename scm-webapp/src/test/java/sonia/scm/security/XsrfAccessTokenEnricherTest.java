@@ -31,13 +31,8 @@
 
 package sonia.scm.security;
 
-import com.google.common.collect.Maps;
-import java.util.Map;
-import javax.inject.Provider;
 import javax.servlet.http.HttpServletRequest;
 import org.junit.Test;
-import static org.junit.Assert.*;
-import static org.hamcrest.Matchers.*;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -47,19 +42,22 @@ import sonia.scm.config.ScmConfiguration;
 import sonia.scm.util.HttpUtil;
 
 /**
- * Unit tests for {@link XsrfTokenClaimsEnricher}.
+ * Unit tests for {@link XsrfAccessTokenEnricher}.
  * 
  * @author Sebastian Sdorra
  */
 @RunWith(MockitoJUnitRunner.class)
-public class XsrfTokenClaimsEnricherTest {
+public class XsrfAccessTokenEnricherTest {
 
   @Mock
   private HttpServletRequest request;
 
+  @Mock
+  private AccessTokenBuilder builder;
+  
   private ScmConfiguration configuration;
   
-  private XsrfTokenClaimsEnricher enricher;
+  private XsrfAccessTokenEnricher enricher;
   
   /**
    * Prepare object under test.
@@ -67,11 +65,16 @@ public class XsrfTokenClaimsEnricherTest {
   @Before
   public void prepareObjectUnderTest() {
     configuration = new ScmConfiguration();
-    enricher = new XsrfTokenClaimsEnricher(configuration, () -> request);
+    enricher = new XsrfAccessTokenEnricher(configuration, () -> request) {
+      @Override
+      String createToken() {
+        return "42";
+      }
+    };
   }
   
   /**
-   * Tests {@link XsrfTokenClaimsEnricher#enrich(java.util.Map)}.
+   * Tests {@link XsrfAccessTokenEnricher#enrich(java.util.Map)}.
    */
   @Test
   public void testEnrich() {
@@ -80,15 +83,14 @@ public class XsrfTokenClaimsEnricherTest {
     when(request.getHeader(HttpUtil.HEADER_SCM_CLIENT)).thenReturn(HttpUtil.SCM_CLIENT_WUI);
     
     // execute
-    Map<String,Object> claims = Maps.newHashMap();
-    enricher.enrich(claims);
+    enricher.enrich(builder);
     
     // assert
-    assertNotNull(claims.get(Xsrf.CLAIMS_KEY));
+    verify(builder).custom(Xsrf.TOKEN_KEY, "42");
   }
   
   /**
-   * Tests {@link XsrfTokenClaimsEnricher#enrich(java.util.Map)} with disabled xsrf protection.
+   * Tests {@link XsrfAccessTokenEnricher#enrich(java.util.Map)} with disabled xsrf protection.
    */
   @Test
   public void testEnrichWithDisabledXsrf() {
@@ -97,15 +99,14 @@ public class XsrfTokenClaimsEnricherTest {
     when(request.getHeader(HttpUtil.HEADER_SCM_CLIENT)).thenReturn(HttpUtil.SCM_CLIENT_WUI);
     
     // execute
-    Map<String,Object> claims = Maps.newHashMap();
-    enricher.enrich(claims);
+    enricher.enrich(builder);
     
     // assert
-    assertNull(claims.get(Xsrf.CLAIMS_KEY)); 
+    verify(builder, never()).custom(Xsrf.TOKEN_KEY, "42");
   }
   
  /**
-   * Tests {@link XsrfTokenClaimsEnricher#enrich(java.util.Map)} with disabled xsrf protection.
+   * Tests {@link XsrfAccessTokenEnricher#enrich(java.util.Map)} with disabled xsrf protection.
    */
   @Test
   public void testEnrichWithNonWuiClient() {
@@ -113,11 +114,10 @@ public class XsrfTokenClaimsEnricherTest {
     configuration.setEnabledXsrfProtection(true);
     
     // execute
-    Map<String,Object> claims = Maps.newHashMap();
-    enricher.enrich(claims);
+    enricher.enrich(builder);
     
     // assert
-    assertNull(claims.get(Xsrf.CLAIMS_KEY)); 
+    verify(builder, never()).custom(Xsrf.TOKEN_KEY, "42");
   }
 
 }

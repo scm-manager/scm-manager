@@ -30,7 +30,7 @@
  */
 package sonia.scm.security;
 
-import java.util.Map;
+import com.google.common.annotations.VisibleForTesting;
 import java.util.UUID;
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -42,22 +42,22 @@ import sonia.scm.plugin.Extension;
 import sonia.scm.util.HttpUtil;
 
 /**
- * Xsrf token claims enricher will add an xsrf protection key to the claims of the jwt token. The enricher will only
- * add the xsrf protection key, if the authentication request is issued from the web interface and xsrf protection is
- * enabled. The xsrf key will be validated on every request by the {@link XsrfTokenClaimsValidator}. Xsrf protection is 
- * disabled by default and can be enabled with {@link ScmConfiguration#setEnabledXsrfProtection(boolean)}.
+ * Xsrf access token enricher will add an xsrf custom field to the access token. The enricher will only
+ * add the xsrf field, if the authentication request is issued from the web interface and xsrf protection is
+ * enabled. The xsrf field will be validated on every request by the {@link XsrfTokenClaimsValidator}. Xsrf protection
+ * can be disabled with {@link ScmConfiguration#setEnabledXsrfProtection(boolean)}.
  * 
- * @see https://bitbucket.org/sdorra/scm-manager/issues/793/json-hijacking-vulnerability-cwe-116-cwe
+ * @see <a href="https://goo.gl/s67xO3">Issue 793</a>
  * @author Sebastian Sdorra
  * @since 2.0.0
  */
 @Extension
-public class XsrfTokenClaimsEnricher implements TokenClaimsEnricher {
+public class XsrfAccessTokenEnricher implements AccessTokenEnricher {
 
   /**
-   * the logger for XsrfTokenClaimsEnricher
+   * the logger for XsrfAccessTokenEnricher
    */
-  private static final Logger LOG = LoggerFactory.getLogger(XsrfTokenClaimsEnricher.class);
+  private static final Logger LOG = LoggerFactory.getLogger(XsrfAccessTokenEnricher.class);
   
   private final ScmConfiguration configuration;
   private final Provider<HttpServletRequest> requestProvider;
@@ -69,17 +69,17 @@ public class XsrfTokenClaimsEnricher implements TokenClaimsEnricher {
    * @param requestProvider http request provider
    */
   @Inject
-  public XsrfTokenClaimsEnricher(ScmConfiguration configuration, Provider<HttpServletRequest> requestProvider) {
+  public XsrfAccessTokenEnricher(ScmConfiguration configuration, Provider<HttpServletRequest> requestProvider) {
     this.configuration = configuration;
     this.requestProvider = requestProvider;
   }
   
   @Override
-  public void enrich(Map<String, Object> claims) {
+  public void enrich(AccessTokenBuilder builder) {
     if (configuration.isEnabledXsrfProtection()) {
       if (HttpUtil.isWUIRequest(requestProvider.get())) {
         LOG.debug("received wui token claim, enrich jwt with xsrf key");
-        claims.put(Xsrf.CLAIMS_KEY, createToken());
+        builder.custom(Xsrf.TOKEN_KEY, createToken());
       } else {
         LOG.trace("skip xsrf enrichment, because jwt session is started from a non wui client");
       }
@@ -88,7 +88,8 @@ public class XsrfTokenClaimsEnricher implements TokenClaimsEnricher {
     }
   }
   
-  private String createToken() {
+  @VisibleForTesting
+  String createToken() {
     // TODO create interface and use a better method
     return UUID.randomUUID().toString();
   }

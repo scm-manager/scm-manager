@@ -70,7 +70,7 @@ public class XsrfTokenClaimsValidatorTest {
   public void testValidate() {
     // prepare
     Map<String, Object> claims = Maps.newHashMap();
-    claims.put(Xsrf.CLAIMS_KEY, "abc");
+    claims.put(Xsrf.TOKEN_KEY, "abc");
     when(request.getHeader(Xsrf.HEADER_KEY)).thenReturn("abc");
     
     // execute and assert
@@ -84,7 +84,7 @@ public class XsrfTokenClaimsValidatorTest {
   public void testValidateWithWrongHeader() {
     // prepare
     Map<String, Object> claims = Maps.newHashMap();
-    claims.put(Xsrf.CLAIMS_KEY, "abc");
+    claims.put(Xsrf.TOKEN_KEY, "abc");
     when(request.getHeader(Xsrf.HEADER_KEY)).thenReturn("123");
     
     // execute and assert
@@ -98,7 +98,7 @@ public class XsrfTokenClaimsValidatorTest {
   public void testValidateWithoutHeader() {
     // prepare
     Map<String, Object> claims = Maps.newHashMap();
-    claims.put(Xsrf.CLAIMS_KEY, "abc");
+    claims.put(Xsrf.TOKEN_KEY, "abc");
     
     // execute and assert
     assertFalse(validator.validate(claims));

@@ -30,24 +30,23 @@
  */
 package sonia.scm.security;
 
-import java.util.Map;
-
 import sonia.scm.plugin.ExtensionPoint;
 
 /**
- * TokenClaimsEnricher is able to modify the claims of a JWT token, before it is delivered to the client. 
- * TokenClaimsEnricher can be used to add custom values to the token claim.
+ * AccessTokenEnricher is able to enhance the {@link AccessToken}, before it is delivered to the client. 
+ * AccessTokenEnricher can be used to add custom fields to the {@link AccessToken}. The enricher is always called before
+ * an {@link AccessToken} is build by the {@link AccessTokenBuilder}.
  * 
  * @author Sebastian Sdorra
  * @since 2.0.0
  */
 @ExtensionPoint
-public interface TokenClaimsEnricher {
+public interface AccessTokenEnricher {
   
   /**
-   * Modify the token claims.
+   * Enriches the access token by adding fields to the {@link AccessTokenBuilder}.
    * 
-   * @param claims token claims
+   * @param builder access token builder
    */
-  void enrich(Map<String, Object> claims);
+  void enrich(AccessTokenBuilder builder);
 }

@@ -61,7 +61,6 @@ public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
   
   private final KeyGenerator keyGenerator; 
   private final SecureKeyResolver keyResolver; 
-  private final Set<TokenClaimsEnricher> enrichers;
   
   private String subject;
   private String issuer;
@@ -71,12 +70,9 @@ public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
   
   private final Map<String,Object> custom = Maps.newHashMap();
   
-  JwtAccessTokenBuilder(
-    KeyGenerator keyGenerator, SecureKeyResolver keyResolver, Set<TokenClaimsEnricher> enrichers
-  )  {
+  JwtAccessTokenBuilder(KeyGenerator keyGenerator, SecureKeyResolver keyResolver)  {
     this.keyGenerator = keyGenerator;
     this.keyResolver = keyResolver;
-    this.enrichers = enrichers;
   }
 
   @Override
@@ -142,11 +138,6 @@ public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
     
     // add scope to custom claims
     Scopes.toClaims(customClaims, scope);
-    
-    // enrich claims with registered enrichers
-    enrichers.forEach((enricher) -> {
-      enricher.enrich(customClaims);
-    });
     
     Date now = new Date();
     long expiration = expiresInUnit.toMillis(expiresIn);

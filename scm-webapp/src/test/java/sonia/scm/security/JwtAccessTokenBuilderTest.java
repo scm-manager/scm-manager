@@ -63,9 +63,9 @@ public class JwtAccessTokenBuilderTest {
   @Mock
   private SecureKeyResolver secureKeyResolver;
   
-  private Set<TokenClaimsEnricher> enrichers;
+  private Set<AccessTokenEnricher> enrichers;
   
-  private JwtAccessTokenBuilder builder;
+  private JwtAccessTokenBuilderFactory factory;
   
   @Rule
   public ShiroRule shiro = new ShiroRule();
@@ -78,9 +78,8 @@ public class JwtAccessTokenBuilderTest {
     when(keyGenerator.createKey()).thenReturn("42");
     when(secureKeyResolver.getSecureKey(anyString())).thenReturn(createSecureKey());
     enrichers = Sets.newHashSet();
-    JwtAccessTokenBuilderFactory factory = new JwtAccessTokenBuilderFactory(keyGenerator, secureKeyResolver, enrichers);
-    builder = factory.create();
-  }  
+    factory = new JwtAccessTokenBuilderFactory(keyGenerator, secureKeyResolver, enrichers);
+  }
   
   /**
    * Tests {@link JwtAccessTokenBuilder#build()} with subject from shiro context.
@@ -92,7 +91,7 @@ public class JwtAccessTokenBuilderTest {
     password = "secret"
   )
   public void testBuildWithoutSubject() {
-    JwtAccessToken token = builder.build();
+    JwtAccessToken token = factory.create().build();
     assertEquals("trillian", token.getSubject());
   }
   
@@ -101,7 +100,7 @@ public class JwtAccessTokenBuilderTest {
    */
   @Test
   public void testBuildWithSubject() {
-    JwtAccessToken token = builder.subject("dent").build();
+    JwtAccessToken token = factory.create().subject("dent").build();
     assertEquals("dent", token.getSubject());
   }
   
@@ -110,8 +109,8 @@ public class JwtAccessTokenBuilderTest {
    */
   @Test
   public void testBuildWithEnricher() {
-    enrichers.add((claims) -> claims.put("c", "d"));
-    JwtAccessToken token = builder.subject("dent").build();
+    enrichers.add((b) -> b.custom("c", "d"));
+    JwtAccessToken token = factory.create().subject("dent").build();
     assertEquals("d", token.getCustom("c").get());
   }
   
@@ -120,7 +119,7 @@ public class JwtAccessTokenBuilderTest {
    */
   @Test
   public void testBuild(){
-    JwtAccessToken token = builder.subject("dent")
+    JwtAccessToken token = factory.create().subject("dent")
       .issuer("https://www.scm-manager.org")
       .expiresIn(5, TimeUnit.SECONDS)
       .custom("a", "b")

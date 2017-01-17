@@ -45,11 +45,11 @@ public final class JwtAccessTokenBuilderFactory implements AccessTokenBuilderFac
 
   private final KeyGenerator keyGenerator;
   private final SecureKeyResolver keyResolver;
-  private final Set<TokenClaimsEnricher> enrichers;
+  private final Set<AccessTokenEnricher> enrichers;
 
   @Inject
   public JwtAccessTokenBuilderFactory(
-    KeyGenerator keyGenerator, SecureKeyResolver keyResolver, Set<TokenClaimsEnricher> enrichers
+    KeyGenerator keyGenerator, SecureKeyResolver keyResolver, Set<AccessTokenEnricher> enrichers
   ) {
     this.keyGenerator = keyGenerator;
     this.keyResolver = keyResolver;
@@ -58,7 +58,14 @@ public final class JwtAccessTokenBuilderFactory implements AccessTokenBuilderFac
 
   @Override
   public JwtAccessTokenBuilder create() {
-    return new JwtAccessTokenBuilder(keyGenerator, keyResolver, enrichers);
+    JwtAccessTokenBuilder builder = new JwtAccessTokenBuilder(keyGenerator, keyResolver);
+    
+    // enrich access token builder
+    enrichers.forEach((enricher) -> {
+      enricher.enrich(builder);
+    });
+    
+    return builder;
   }
 
 }

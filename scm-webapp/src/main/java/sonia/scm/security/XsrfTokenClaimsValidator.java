@@ -70,7 +70,7 @@ public class XsrfTokenClaimsValidator implements TokenClaimsValidator {
   
   @Override
   public boolean validate(Map<String, Object> claims) {
-    String xsrfClaimValue = (String) claims.get(Xsrf.CLAIMS_KEY);
+    String xsrfClaimValue = (String) claims.get(Xsrf.TOKEN_KEY);
     if (!Strings.isNullOrEmpty(xsrfClaimValue)) {
       String xsrfHeaderValue = requestProvider.get().getHeader(Xsrf.HEADER_KEY);
       return xsrfClaimValue.equals(xsrfHeaderValue);
