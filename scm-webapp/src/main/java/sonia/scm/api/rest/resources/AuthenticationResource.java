@@ -57,17 +57,8 @@ import sonia.scm.ScmState;
 import sonia.scm.ScmStateFactory;
 import sonia.scm.api.rest.RestActionResult;
 import sonia.scm.config.ScmConfiguration;
-import sonia.scm.security.BearerTokenGenerator;
 import sonia.scm.security.Tokens;
-import sonia.scm.user.User;
 import sonia.scm.util.HttpUtil;
-import sonia.scm.util.Util;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.concurrent.TimeUnit;
-
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -84,6 +75,10 @@ import javax.ws.rs.core.Response;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import sonia.scm.security.AccessToken;
+import sonia.scm.security.AccessTokenBuilder;
+import sonia.scm.security.AccessTokenBuilderFactory;
+import sonia.scm.security.AccessTokenCookieIssuer;
 import sonia.scm.security.Scope;
 
 /**
@@ -118,15 +113,17 @@ public class AuthenticationResource
    *
    * @param configuration
    * @param stateFactory
-   * @param tokenGenerator
+   * @param tokenBuilderFactory
+   * @param cookieIssuer
    */
   @Inject
   public AuthenticationResource(ScmConfiguration configuration,
-    ScmStateFactory stateFactory, BearerTokenGenerator tokenGenerator)
+    ScmStateFactory stateFactory, AccessTokenBuilderFactory tokenBuilderFactory, AccessTokenCookieIssuer cookieIssuer)
   {
     this.configuration = configuration;
     this.stateFactory = stateFactory;
-    this.tokenGenerator = tokenGenerator;
+    this.tokenBuilderFactory = tokenBuilderFactory;
+    this.cookieIssuer = cookieIssuer;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -170,33 +167,20 @@ public class AuthenticationResource
 
     try
     {
-      subject.login(Tokens.createAuthenticationToken(request, username,
-        password));
-
-      User user = subject.getPrincipals().oneByType(User.class);
-
-      String token = tokenGenerator.createBearerToken(user, scope != null ? Scope.valueOf(scope) : Scope.empty());
+      subject.login(Tokens.createAuthenticationToken(request, username, password));      
+      AccessTokenBuilder tokenBuilder = tokenBuilderFactory.create();
+      if ( scope != null ) {
+        tokenBuilder.scope(Scope.valueOf(scope));
+      }
+      AccessToken token = tokenBuilder.build();
 
       ScmState state;
 
-      if (cookie)
-      {
-        Cookie c = new Cookie(HttpUtil.COOKIE_BEARER_AUTHENTICATION, token);
-
-        c.setPath(request.getContextPath());
-
-        // TODO: should be configureable
-        c.setMaxAge((int) TimeUnit.SECONDS.convert(10, TimeUnit.HOURS));
-        
-        // set http only flag only xsrf protection is disabled,
-        // because we have to extract the xsrf key with javascript in the wui
-        c.setHttpOnly(!configuration.isEnabledXsrfProtection());
-        response.addCookie(c);
+      if (cookie) {
+        cookieIssuer.authenticate(request, response, token);
         state = stateFactory.createState(subject);
-      }
-      else
-      {
-        state = stateFactory.createState(subject, token);
+      } else {
+        state = stateFactory.createState(subject, token.compact());
       }
 
       res = Response.ok(state).build();
@@ -276,16 +260,8 @@ public class AuthenticationResource
 
     subject.logout();
 
-    // remove bearer authentication cookie
-    Cookie c = new Cookie(
-      HttpUtil.COOKIE_BEARER_AUTHENTICATION,
-      Util.EMPTY_STRING
-    );
-    c.setPath(request.getContextPath());
-    c.setMaxAge(0);
-    c.setHttpOnly(true);
-    
-    response.addCookie(c);
+    // remove authentication cookie
+    cookieIssuer.invalidate(request, response);
 
     Response resp;
 
@@ -481,5 +457,8 @@ public class AuthenticationResource
   private final ScmStateFactory stateFactory;
 
   /** Field description */
-  private final BearerTokenGenerator tokenGenerator;
+  private final AccessTokenBuilderFactory tokenBuilderFactory; 
+  
+  /** Field description */
+  private final AccessTokenCookieIssuer cookieIssuer;
 }

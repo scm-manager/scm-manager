@@ -86,6 +86,9 @@ public final class HttpUtil
 
   /**
    * Name of bearer authentication cookie.
+   * 
+   * TODO find a better place
+   * 
    * @since 2.0.0
    */
   public static final String COOKIE_BEARER_AUTHENTICATION = "X-Bearer-Token";

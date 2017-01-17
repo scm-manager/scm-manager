@@ -33,7 +33,6 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.annotations.VisibleForTesting;
 import sonia.scm.plugin.Extension;
 import sonia.scm.security.BearerAuthenticationToken;
 
@@ -41,6 +40,7 @@ import sonia.scm.security.BearerAuthenticationToken;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import sonia.scm.util.HttpUtil;
 
 /**
  * Creates an {@link BearerAuthenticationToken} from the {@link #COOKIE_NAME} 
@@ -52,12 +52,6 @@ import javax.servlet.http.HttpServletRequest;
 @Extension
 public class CookieBearerWebTokenGenerator implements WebTokenGenerator
 {
-
-  /** cookie name */
-  @VisibleForTesting
-  static final String COOKIE_NAME = "X-Bearer-Token";
-
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Creates an {@link BearerAuthenticationToken} from the {@link #COOKIE_NAME} 
@@ -77,7 +71,7 @@ public class CookieBearerWebTokenGenerator implements WebTokenGenerator
     {
       for (Cookie cookie : cookies)
       {
-        if (COOKIE_NAME.equals(cookie.getName()))
+        if (HttpUtil.COOKIE_BEARER_AUTHENTICATION.equals(cookie.getName()))
         {
           token = new BearerAuthenticationToken(cookie.getValue());
 

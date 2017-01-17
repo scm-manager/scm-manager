@@ -72,7 +72,7 @@ public final class Scopes {
   public static Scope fromClaims(Map<String,Object> claims) {
     Scope scope = Scope.empty();
     if (claims.containsKey(Scopes.CLAIMS_KEY)) {
-      scope = Scope.valueOf((List<String>)claims.get(Scopes.CLAIMS_KEY));
+      scope = Scope.valueOf((Iterable<String>)claims.get(Scopes.CLAIMS_KEY));
     }
     return scope;
   }

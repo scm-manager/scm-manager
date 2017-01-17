@@ -51,6 +51,7 @@ import static org.mockito.Mockito.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import sonia.scm.util.HttpUtil;
 
 /**
  *
@@ -69,7 +70,7 @@ public class CookieBearerWebTokenGeneratorTest
   {
     Cookie c = mock(Cookie.class);
 
-    when(c.getName()).thenReturn(CookieBearerWebTokenGenerator.COOKIE_NAME);
+    when(c.getName()).thenReturn(HttpUtil.COOKIE_BEARER_AUTHENTICATION);
     when(c.getValue()).thenReturn("value");
     when(request.getCookies()).thenReturn(new Cookie[] { c });
 
