@@ -40,7 +40,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import static org.mockito.Mockito.*;
 import org.mockito.runners.MockitoJUnitRunner;
-import sonia.scm.security.BearerAuthenticationToken;
+import sonia.scm.security.BearerToken;
 
 /**
  *
@@ -71,8 +71,8 @@ public class BearerWebTokenGeneratorTest {
     when(request.getHeader("Authorization")).thenReturn("Bearer asd");
     AuthenticationToken token = tokenGenerator.createToken(request);
     assertNotNull(token);
-    assertThat(token, instanceOf(BearerAuthenticationToken.class));
-    BearerAuthenticationToken bt = (BearerAuthenticationToken) token;
+    assertThat(token, instanceOf(BearerToken.class));
+    BearerToken bt = (BearerToken) token;
     assertThat(bt.getCredentials(), equalTo("asd"));
   }
 

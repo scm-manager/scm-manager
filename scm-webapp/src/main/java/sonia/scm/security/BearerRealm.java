@@ -62,7 +62,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Realm for authentication with {@link BearerAuthenticationToken}.
+ * Realm for authentication with {@link BearerToken}.
  *
  * @author Sebastian Sdorra
  * @since 2.0.0
@@ -100,7 +100,7 @@ public class BearerRealm extends AuthenticatingRealm
     this.validators = validators;
     
     setCredentialsMatcher(new AllowAllCredentialsMatcher());
-    setAuthenticationTokenClass(BearerAuthenticationToken.class);
+    setAuthenticationTokenClass(BearerToken.class);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -117,10 +117,10 @@ public class BearerRealm extends AuthenticatingRealm
   @Override
   protected AuthenticationInfo doGetAuthenticationInfo( AuthenticationToken token)
   {
-    checkArgument(token instanceof BearerAuthenticationToken, "%s is required",
-      BearerAuthenticationToken.class);
+    checkArgument(token instanceof BearerToken, "%s is required",
+      BearerToken.class);
 
-    BearerAuthenticationToken bt = (BearerAuthenticationToken) token;
+    BearerToken bt = (BearerToken) token;
     Claims c = checkToken(bt);
 
     return helper.getAuthenticationInfo(c.getSubject(), bt.getCredentials(), Scopes.fromClaims(c));
@@ -134,7 +134,7 @@ public class BearerRealm extends AuthenticatingRealm
    *
    * @return claim
    */
-  private Claims checkToken(BearerAuthenticationToken token)
+  private Claims checkToken(BearerToken token)
   {
     Claims claims;
 

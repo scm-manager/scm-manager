@@ -48,7 +48,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import sonia.scm.group.GroupDAO;
-import sonia.scm.security.BearerAuthenticationToken;
+import sonia.scm.security.BearerToken;
 import sonia.scm.user.User;
 import sonia.scm.user.UserDAO;
 import sonia.scm.user.UserTestData;
@@ -140,7 +140,7 @@ public class LegacyRealmTest
   @Test(expected = IllegalArgumentException.class)
   public void testDoGetAuthenticationInfoWrongToken()
   {
-    realm.doGetAuthenticationInfo(new BearerAuthenticationToken("test"));
+    realm.doGetAuthenticationInfo(BearerToken.valueOf("test"));
   }
 
   //~--- fields ---------------------------------------------------------------

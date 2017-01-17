@@ -33,6 +33,8 @@ package sonia.scm.security;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import org.apache.shiro.authc.AuthenticationToken;
 
 /**
@@ -41,69 +43,48 @@ import org.apache.shiro.authc.AuthenticationToken;
  * @author Sebastian Sdorra
  * @since 2.0.0
  */
-public class BearerAuthenticationToken implements AuthenticationToken
-{
+public final class BearerToken implements AuthenticationToken {
 
-  /** Field description */
-  private static final long serialVersionUID = -5005335710978534182L;
-
-  //~--- constructors ---------------------------------------------------------
+  private final String raw;
 
   /**
-   * Constructs a new BearerAuthenticationToken
-   *
-   *
-   * @param token bearer token
+   * Constructs a new instance.
+   * 
+   * @param raw raw bearer token
    */
-  public BearerAuthenticationToken(String token)
-  {
-    this.token = token;
+  private BearerToken(String raw) {
+    this.raw = raw;
   }
-
-  //~--- get methods ----------------------------------------------------------
-
+  
   /**
-   * Returns the token.
-   *
-   *
-   * @return token
+   * Returns the wrapped raw format of the token.
+   * 
+   * @return raw format
    */
   @Override
-  public String getCredentials()
-  {
-    return token;
+  public String getCredentials() {
+    return raw;
   }
 
   /**
-   * Returns the username or null.
-   *
-   *
-   * @return username or null
+   * Returns always {@code null}.
+   * 
+   * @return {@code null}
    */
   @Override
-  public String getPrincipal()
-  {
+  public Object getPrincipal() {
     return null;
   }
-
-  //~--- set methods ----------------------------------------------------------
-
+  
   /**
-   * Sets the username.
-   *
-   *
-   * @param username username
+   * Creates a new {@link BearerToken} from raw string representation.
+   * 
+   * @param raw string representation
+   * 
+   * @return new bearer token
    */
-  public void setUsername(String username)
-  {
-    this.username = username;
+  public static BearerToken valueOf(String raw){
+    Preconditions.checkArgument(!Strings.isNullOrEmpty(raw), "raw token is required");
+    return new BearerToken(raw);
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** bearer token */
-  private final String token;
-
-  /** username */
-  private String username;
 }

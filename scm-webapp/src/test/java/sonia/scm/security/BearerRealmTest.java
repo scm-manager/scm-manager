@@ -107,7 +107,7 @@ public class BearerRealmTest
 
     String compact = createCompactToken(marvin.getName(), key);
 
-    BearerAuthenticationToken token = new BearerAuthenticationToken(compact);
+    BearerToken token = BearerToken.valueOf(compact);
     AuthenticationInfo info = realm.doGetAuthenticationInfo(token);
 
     assertNotNull(info);
@@ -142,7 +142,7 @@ public class BearerRealmTest
       Scope.valueOf("repo:*", "user:*")
     );
     
-    AuthenticationInfo info = realm.doGetAuthenticationInfo(new BearerAuthenticationToken(compact));
+    AuthenticationInfo info = realm.doGetAuthenticationInfo(BearerToken.valueOf(compact));
     Scope scope = info.getPrincipals().oneByType(Scope.class);
     assertThat(scope, Matchers.containsInAnyOrder("repo:*", "user:*"));
   }
@@ -170,7 +170,7 @@ public class BearerRealmTest
     expectedException.expectMessage(Matchers.containsString("claims"));
     
     // kick authentication
-    realm.doGetAuthenticationInfo(new BearerAuthenticationToken(compact));
+    realm.doGetAuthenticationInfo(BearerToken.valueOf(compact));
   }
 
   /**
@@ -191,7 +191,7 @@ public class BearerRealmTest
     Date exp = new Date(System.currentTimeMillis() - 600l);
     String compact = createCompactToken(trillian.getName(), key, exp, Scope.empty());
 
-    realm.doGetAuthenticationInfo(new BearerAuthenticationToken(compact));
+    realm.doGetAuthenticationInfo(BearerToken.valueOf(compact));
   }
 
   /**
@@ -206,7 +206,7 @@ public class BearerRealmTest
     User trillian = UserTestData.createTrillian();
     String compact = createCompactToken(trillian.getName(), createSecureKey());
 
-    realm.doGetAuthenticationInfo(new BearerAuthenticationToken(compact));
+    realm.doGetAuthenticationInfo(BearerToken.valueOf(compact));
   }
 
   /**
@@ -222,7 +222,7 @@ public class BearerRealmTest
 
     String compact = Jwts.builder().setSubject("test").compact();
 
-    realm.doGetAuthenticationInfo(new BearerAuthenticationToken(compact));
+    realm.doGetAuthenticationInfo(BearerToken.valueOf(compact));
   }
 
   /**

@@ -34,7 +34,7 @@ package sonia.scm.web;
 //~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.plugin.Extension;
-import sonia.scm.security.BearerAuthenticationToken;
+import sonia.scm.security.BearerToken;
 import sonia.scm.util.HttpUtil;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -42,7 +42,7 @@ import sonia.scm.util.HttpUtil;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * Creates a {@link BearerAuthenticationToken} from an authorization header with
+ * Creates a {@link BearerToken} from an authorization header with
  * bearer authorization.
  * 
  * @author Sebastian Sdorra
@@ -53,24 +53,24 @@ public class BearerWebTokenGenerator extends SchemeBasedWebTokenGenerator
 {
 
   /**
-   * Creates a {@link BearerAuthenticationToken} from an authorization header 
+   * Creates a {@link BearerToken} from an authorization header 
    * with bearer authorization.
    *
    * @param request http servlet request
    * @param scheme authorization scheme
    * @param authorization authorization payload
    *
-   * @return {@link BearerAuthenticationToken} or {@code null}
+   * @return {@link BearerToken} or {@code null}
    */
   @Override
-  protected BearerAuthenticationToken createToken(HttpServletRequest request,
+  protected BearerToken createToken(HttpServletRequest request,
     String scheme, String authorization)
   {
-    BearerAuthenticationToken token = null;
+    BearerToken token = null;
 
     if (HttpUtil.AUTHORIZATION_SCHEME_BEARER.equalsIgnoreCase(scheme))
     {
-      token = new BearerAuthenticationToken(authorization);
+      token = BearerToken.valueOf(authorization);
     }
 
     return token;

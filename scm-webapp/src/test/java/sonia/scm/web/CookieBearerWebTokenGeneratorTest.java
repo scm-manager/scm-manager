@@ -41,7 +41,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import sonia.scm.security.BearerAuthenticationToken;
+import sonia.scm.security.BearerToken;
 
 import static org.junit.Assert.*;
 
@@ -74,7 +74,7 @@ public class CookieBearerWebTokenGeneratorTest
     when(c.getValue()).thenReturn("value");
     when(request.getCookies()).thenReturn(new Cookie[] { c });
 
-    BearerAuthenticationToken token = tokenGenerator.createToken(request);
+    BearerToken token = tokenGenerator.createToken(request);
 
     assertNotNull(token);
     assertEquals("value", token.getCredentials());
