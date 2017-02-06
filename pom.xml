@@ -425,7 +425,7 @@
 
     <!-- repostitory libraries -->
     <jgit.version>4.4.0.201606070830-r-scm1</jgit.version>
-    <svnkit.version>1.8.5-scm4</svnkit.version>
+    <svnkit.version>1.8.14-scm1</svnkit.version>
 
     <!-- util libraries -->
     <guava.version>15.0</guava.version>
