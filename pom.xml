@@ -424,7 +424,7 @@
     <shiro.version>1.3.0</shiro.version>
 
     <!-- repostitory libraries -->
-    <jgit.version>4.4.0.201606070830-r-scm1</jgit.version>
+    <jgit.version>v4.5.0.201609210915-r-scm1</jgit.version>
     <svnkit.version>1.8.14-scm1</svnkit.version>
 
     <!-- util libraries -->
