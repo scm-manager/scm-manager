@@ -37,6 +37,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.Ordering;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,6 +69,7 @@ import java.io.StringWriter;
 
 import java.util.Iterator;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -96,15 +98,18 @@ public class SvnCollectionRenderer implements CollectionRenderer
    * @param configuration
    * @param templateEngineFactory
    * @param repositoryProvider
+   * @param requestProvider
    */
   @Inject
   public SvnCollectionRenderer(ScmConfiguration configuration,
     TemplateEngineFactory templateEngineFactory,
-    RepositoryProvider repositoryProvider)
+    RepositoryProvider repositoryProvider,
+    Provider<HttpServletRequest> requestProvider)
   {
     this.configuration = configuration;
     this.templateEngineFactory = templateEngineFactory;
     this.repositoryProvider = repositoryProvider;
+    this.requestProvider = requestProvider;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -177,10 +182,8 @@ public class SvnCollectionRenderer implements CollectionRenderer
       entries.add(new DirectoryEntry(resource, entry));
     }
 
-    UrlProvider urlProvider =
-      UrlProviderFactory.createUrlProvider(configuration.getBaseUrl(),
-        UrlProviderFactory.TYPE_WUI);
-
+    UrlProvider urlProvider = createUrlProvider();
+    
     //J-
     return new RepositoryWrapper(
       urlProvider.getRepositoryUrlProvider(), 
@@ -189,6 +192,16 @@ public class SvnCollectionRenderer implements CollectionRenderer
       new DirectoryOrdering().immutableSortedCopy(entries.build())
     );
     //J+
+  }
+  
+  private UrlProvider createUrlProvider() {
+    String baseUrl = getBaseUrl();
+    logger.trace("render subversion collection with base url: {}", baseUrl);
+    return UrlProviderFactory.createUrlProvider(baseUrl, UrlProviderFactory.TYPE_WUI); 
+  }
+  
+  private String getBaseUrl() {
+    return HttpUtil.getCompleteUrl(requestProvider.get());
   }
 
   //~--- inner classes --------------------------------------------------------
@@ -472,6 +485,8 @@ public class SvnCollectionRenderer implements CollectionRenderer
 
   //~--- fields ---------------------------------------------------------------
 
+  private final Provider<HttpServletRequest> requestProvider;
+  
   /** Field description */
   private final ScmConfiguration configuration;
 

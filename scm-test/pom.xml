@@ -54,4 +54,22 @@
     
   </dependencies>
   
+  <!-- for svnkit and jgit -->
+  
+  <repositories>
+      
+    <repository>
+      <id>maven.tmatesoft.com</id>
+      <name>tmatesoft release repository</name>
+      <url>https://maven.tmatesoft.com/content/repositories/releases</url>
+    </repository>
+    
+    <repository>
+      <id>jgit-repository</id>
+      <name>jgit release repository</name>
+      <url>http://download.eclipse.org/jgit/maven</url>
+    </repository>
+  
+  </repositories>
+
 </project>
