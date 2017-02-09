@@ -108,15 +108,17 @@ public class AuthorizationScopeITCase {
   
   private String createAuthenticationToken(String scope) {
     Client client = createClient();
-    String url = createResourceUrl("authentication/login");
-    if (!Strings.isNullOrEmpty(scope)) {
-      url = url.concat("?scope=").concat(scope);
-    }
+    String url = createResourceUrl("auth/access_token");
+    
     WebResource wr =  client.resource(url);
     MultivaluedMap<String, String> formData = new MultivaluedMapImpl();
 
     formData.add("username", ADMIN_USERNAME);
     formData.add("password", ADMIN_PASSWORD);
+    formData.add("grant_type", "password");
+    if (!Strings.isNullOrEmpty(scope)) {
+      formData.add("scope", scope);
+    }
 
     ClientResponse response = wr.type("application/x-www-form-urlencoded").post(ClientResponse.class, formData);
     if (response.getStatus() >= 300 ){

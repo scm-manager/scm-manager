@@ -110,17 +110,16 @@ public final class IntegrationTestUtil
    *
    * @return
    */
-  public static ClientResponse authenticate(Client client, String username,
-    String password)
-  {
-    WebResource wr =  client.resource(createResourceUrl("authentication/login").concat("?cookie=true"));
+  public static ClientResponse authenticate(Client client, String username, String password) {
+    WebResource wr =  client.resource(createResourceUrl("auth/access_token"));
     MultivaluedMap<String, String> formData = new MultivaluedMapImpl();
 
     formData.add("username", username);
     formData.add("password", password);
+    formData.add("cookie", "true");
+    formData.add("grant_type", "password");
 
-    return wr.type("application/x-www-form-urlencoded").post(
-      ClientResponse.class, formData);
+    return wr.type("application/x-www-form-urlencoded").post(ClientResponse.class, formData);
   }
 
   /**
@@ -294,7 +293,7 @@ public final class IntegrationTestUtil
    */
   public static void logoutClient(Client client)
   {
-    WebResource wr = createResource(client, "authentication/logout");
+    WebResource wr = createResource(client, "auth/logout");
     ClientResponse response = wr.get(ClientResponse.class);
 
     assertNotNull(response);

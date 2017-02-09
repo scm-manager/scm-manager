@@ -70,7 +70,7 @@ public class SecurityFilter extends HttpFilter
   static final String ATTRIBUTE_REMOTE_USER = "principal";
 
   /** Field description */
-  public static final String URL_AUTHENTICATION = "/api/rest/authentication";
+  public static final String URL_AUTHENTICATION = "/api/rest/auth";
 
   //~--- constructors ---------------------------------------------------------
 

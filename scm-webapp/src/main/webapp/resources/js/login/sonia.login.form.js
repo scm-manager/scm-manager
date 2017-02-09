@@ -61,7 +61,7 @@ Sonia.login.Form = Ext.extend(Ext.FormPanel,{
 
     var config = {
       labelWidth: 120,
-      url: restUrl + "authentication/login.json?cookie=true",
+      url: restUrl + "auth/access_token.json",
       frame: true,
       title: this.titleText,
       defaultType: 'textfield',
@@ -93,6 +93,14 @@ Sonia.login.Form = Ext.extend(Ext.FormPanel,{
             scope: this
           }
         }
+      }, {
+        name: 'grant_type',
+        value: 'password',
+        xtype: 'hidden'
+      }, {
+        name: 'cookie',
+        value: 'true',
+        xtype: 'hidden'
       }],
       buttons: buttons
     };
@@ -110,6 +118,7 @@ Sonia.login.Form = Ext.extend(Ext.FormPanel,{
 
   authenticate: function(){
     var form = this.getForm();
+    
     form.submit({
       scope: this,
       method: 'POST',

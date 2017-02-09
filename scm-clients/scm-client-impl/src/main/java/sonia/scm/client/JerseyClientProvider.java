@@ -194,6 +194,7 @@ public class JerseyClientProvider implements ScmClientProvider
 
     formData.add("username", username);
     formData.add("password", password);
+    formData.add("grant_type", "password");
 
     return resource.type("application/x-www-form-urlencoded").post(
       ClientResponse.class, formData);

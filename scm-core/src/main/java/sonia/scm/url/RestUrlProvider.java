@@ -48,7 +48,7 @@ public class RestUrlProvider implements UrlProvider
   public static final String PART_API = "api/rest/";
 
   /** Field description */
-  public static final String PART_AUTHENTICATION = "authentication/login";
+  public static final String PART_AUTHENTICATION = "auth/access_token";
 
   /** Field description */
   public static final String PART_CONFIG = "config";
@@ -60,7 +60,7 @@ public class RestUrlProvider implements UrlProvider
   public static final String PART_REPOSITORIES = "repositories";
 
   /** Field description */
-  public static final String PART_STATE = "authentication";
+  public static final String PART_STATE = "auth";
 
   /** Field description */
   public static final String PART_USER = "users";

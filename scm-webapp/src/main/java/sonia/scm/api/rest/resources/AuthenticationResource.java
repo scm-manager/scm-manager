@@ -67,7 +67,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -86,7 +85,7 @@ import sonia.scm.security.Scope;
  * @author Sebastian Sdorra
  */
 @Singleton
-@Path("authentication")
+@Path("auth")
 @ExternallyManagedLifecycle
 @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 public class AuthenticationResource
@@ -140,6 +139,7 @@ public class AuthenticationResource
    *
    * @param request current http request
    * @param response current http response
+   * @param grantType grant type, currently only password is supported
    * @param username the username for the authentication
    * @param password the password for the authentication
    * @param cookie create authentication token
@@ -148,19 +148,20 @@ public class AuthenticationResource
    * @return
    */
   @POST
-  @Path("login")
+  @Path("access_token")
   @TypeHint(ScmState.class)
-  public Response authenticate(@Context HttpServletRequest request,
+  public Response authenticate(
+    @Context HttpServletRequest request,
     @Context HttpServletResponse response,
+    @FormParam("grant_type") String grantType,
     @FormParam("username") String username,
     @FormParam("password") String password, 
-    @QueryParam("cookie") boolean cookie,
-    @QueryParam("scope") List<String> scope)
+    @FormParam("cookie") boolean cookie,
+    @FormParam("scope") List<String> scope)
   {
-    Preconditions.checkArgument(!Strings.isNullOrEmpty(username),
-      "username parameter is required");
-    Preconditions.checkArgument(!Strings.isNullOrEmpty(password),
-      "password parameter is required");
+    Preconditions.checkArgument(!Strings.isNullOrEmpty(grantType), "grant_type parameter is required");
+    Preconditions.checkArgument(!Strings.isNullOrEmpty(username), "username parameter is required");
+    Preconditions.checkArgument(!Strings.isNullOrEmpty(password), "password parameter is required");
 
     Response res;
     Subject subject = SecurityUtils.getSubject();
@@ -168,6 +169,7 @@ public class AuthenticationResource
     try
     {
       subject.login(Tokens.createAuthenticationToken(request, username, password));      
+      
       AccessTokenBuilder tokenBuilder = tokenBuilderFactory.create();
       if ( scope != null ) {
         tokenBuilder.scope(Scope.valueOf(scope));
@@ -211,8 +213,7 @@ public class AuthenticationResource
       }
       else
       {
-        logger.warn("authentication failed, account {} is temporary locked",
-          username);
+        logger.warn("authentication failed, account {} is temporary locked", username);
       }
 
       res = handleFailedAuthentication(request, ex, Response.Status.FORBIDDEN,
@@ -229,8 +230,7 @@ public class AuthenticationResource
         logger.warn("authentication failed for user {}", username);
       }
 
-      res = handleFailedAuthentication(request, ex,
-        Response.Status.UNAUTHORIZED,
+      res = handleFailedAuthentication(request, ex, Response.Status.UNAUTHORIZED,
         WUIAuthenticationFailure.WRONG_CREDENTIALS);
     }
 

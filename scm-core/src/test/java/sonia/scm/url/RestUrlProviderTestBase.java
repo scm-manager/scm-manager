@@ -76,7 +76,7 @@ public abstract class RestUrlProviderTestBase extends UrlProviderTestBase
   @Override
   protected String getExpectedAuthenticationUrl(String baseUrl)
   {
-    return createRestUrl(baseUrl, "authentication/login");
+    return createRestUrl(baseUrl, "auth/access_token");
   }
 
   /**
@@ -104,6 +104,6 @@ public abstract class RestUrlProviderTestBase extends UrlProviderTestBase
   @Override
   protected String getExpectedStateUrl(String baseUrl)
   {
-    return createRestUrl(baseUrl, "authentication");
+    return createRestUrl(baseUrl, "auth");
   }
 }
