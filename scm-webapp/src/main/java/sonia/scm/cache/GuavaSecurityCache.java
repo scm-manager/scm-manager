@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010, Sebastian Sdorra
+ * Copyright (c) 2014, Sebastian Sdorra
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,38 +28,56 @@
  * http://bitbucket.org/sdorra/scm-manager
  *
  */
-
-
 package sonia.scm.cache;
 
-import org.junit.Assert;
+import com.google.common.cache.Cache;
+import java.util.Collection;
+import java.util.Set;
+import org.apache.shiro.cache.CacheException;
 
 /**
- *
+ * Guava based implementation of {@link org.apache.shiro.cache.Cache}.
+ * 
  * @author Sebastian Sdorra
+ * 
+ * @since 1.52
+ * 
+ * @param <K>
+ * @param <V>
  */
-public class GuavaCacheManagerTest extends CacheManagerTestBase
-{
+public class GuavaSecurityCache<K, V> extends GuavaBaseCache<K, V> implements org.apache.shiro.cache.Cache<K, V> {
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  protected CacheManager createCacheManager()
-  {
-    return CacheTestUtil.createDefaultGuavaCacheManager();
-  }
-
-  @Override
-  protected void assertIsSame(Cache c1, Cache c2) {
-    Assert.assertSame(
-      ((GuavaCache)c1).getWrappedCache(),
-      ((GuavaCache)c2).getWrappedCache()
-    );
+  GuavaSecurityCache(Cache<K, V> cache, CopyStrategy copyStrategy, String name) {
+    super(cache, copyStrategy, name);
   }
   
+  @Override
+  public V put(K key, V value) throws CacheException {
+    V previousValue = cache.getIfPresent(key);
+    cache.put(key, value);
+    return previousValue;
+  }
+
+  @Override
+  public V remove(K key) throws CacheException {
+    V previousValue = cache.getIfPresent(key);
+    cache.invalidate(key);
+    return previousValue;
+  }
+
+  @Override
+  public int size() {
+    return (int) cache.size();
+  }
+
+  @Override
+  public Set<K> keys() {
+    return cache.asMap().keySet();
+  }
+
+  @Override
+  public Collection<V> values() {
+    return cache.asMap().values();
+  }
   
 }

@@ -47,66 +47,52 @@ import java.io.IOException;
 
 import java.util.Map;
 
+import org.apache.shiro.cache.CacheException;
+
 /**
- *
+ * Guava based implementation of {@link CacheManager} and {@link org.apache.shiro.cache.CacheManager}.
+ * 
  * @author Sebastian Sdorra
  */
 @Singleton
-public class GuavaCacheManager implements CacheManager
+public class GuavaCacheManager implements CacheManager, org.apache.shiro.cache.CacheManager
 {
 
   /**
    * the logger for GuavaCacheManager
    */
-  private static final Logger logger =
-    LoggerFactory.getLogger(GuavaCacheManager.class);
+  private static final Logger logger = LoggerFactory.getLogger(GuavaCacheManager.class);
 
+  private volatile Map<String, CacheWithConfiguration> cacheMap = Maps.newHashMap();
+  
+  private GuavaCacheConfiguration defaultConfiguration;
+  
+  
   //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   */
-  public GuavaCacheManager()
-  {
+  public GuavaCacheManager() {
     this(GuavaCacheConfigurationReader.read());
   }
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param config
-   */
   @VisibleForTesting
-  protected GuavaCacheManager(GuavaCacheManagerConfiguration config)
-  {
+  protected GuavaCacheManager(GuavaCacheManagerConfiguration config) {
     defaultConfiguration = config.getDefaultCache();
 
-    for (GuavaNamedCacheConfiguration ncc : config.getCaches())
-    {
-      logger.debug("create cache {} from configured configuration {}",
-        ncc.getName(), ncc);
-      cacheMap.put(ncc.getName(), new GuavaCache(ncc));
+    for (GuavaNamedCacheConfiguration ncc : config.getCaches()) {
+      logger.debug("create cache {} from configured configuration {}", ncc.getName(), ncc);
+      cacheMap.put(ncc.getName(), new CacheWithConfiguration(
+        GuavaCaches.create(defaultConfiguration, ncc.getName()), 
+        defaultConfiguration)
+      );
     }
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
   @Override
-  public void close() throws IOException
-  {
+  public void close() throws IOException {
     logger.info("close guava cache manager");
 
-    for (Cache c : cacheMap.values())
-    {
-      c.clear();
+    for (CacheWithConfiguration c : cacheMap.values()) {
+      c.cache.invalidateAll();
     }
 
     cacheMap.clear();
@@ -114,43 +100,44 @@ public class GuavaCacheManager implements CacheManager
 
   //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param key
-   * @param value
-   * @param name
-   * @param <K>
-   * @param <V>
-   *
-   * @return
-   */
-  @Override
-  public synchronized <K, V> GuavaCache<K, V> getCache(Class<K> key,
-    Class<V> value, String name)
-  {
+  private synchronized <K, V> CacheWithConfiguration<K, V> getCacheWithConfiguration(String name) {
     logger.trace("try to retrieve cache {}", name);
 
-    GuavaCache<K, V> cache = cacheMap.get(name);
+    CacheWithConfiguration<K, V> cache = cacheMap.get(name);
 
-    if (cache == null)
-    {
+    if (cache == null) {
       logger.debug(
         "cache {} does not exists, creating a new instance from default configuration: {}",
-        name, defaultConfiguration);
-      cache = new GuavaCache<K, V>(defaultConfiguration, name);
+        name, defaultConfiguration
+      );
+      cache = new CacheWithConfiguration(GuavaCaches.create(defaultConfiguration, name), defaultConfiguration);
       cacheMap.put(name, cache);
     }
-
+    
     return cache;
   }
+  
+  @Override
+  public <K, V> GuavaCache<K, V> getCache(Class<K> key, Class<V> value, String name) {
+    CacheWithConfiguration<K, V> cw = getCacheWithConfiguration(name);
+    return new GuavaCache<>(cw.cache, cw.configuration.getCopyStrategy(), name);
+  }
+  
+  @Override
+  public <K, V> GuavaSecurityCache<K, V> getCache(String name) throws CacheException {
+    CacheWithConfiguration<K, V> cw = getCacheWithConfiguration(name);
+    return new GuavaSecurityCache<>(cw.cache, cw.configuration.getCopyStrategy(), name);
+  }
 
-  //~--- fields ---------------------------------------------------------------
+  private static class CacheWithConfiguration<K,V> {
+  
+    private final com.google.common.cache.Cache<K,V> cache;
+    private final GuavaCacheConfiguration configuration;
 
-  /** Field description */
-  private volatile Map<String, GuavaCache> cacheMap = Maps.newHashMap();
-
-  /** Field description */
-  private GuavaCacheConfiguration defaultConfiguration;
+    private CacheWithConfiguration(com.google.common.cache.Cache<K, V> cache, GuavaCacheConfiguration configuration) {
+      this.cache = cache;
+      this.configuration = configuration;
+    }
+    
+  }
 }

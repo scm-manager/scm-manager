@@ -333,7 +333,7 @@ public class AuthorizationCollector
    *
    * @return
    */
-  AuthorizationInfo collect(PrincipalCollection principals)
+  public AuthorizationInfo collect(PrincipalCollection principals)
   {
     Preconditions.checkNotNull(principals, "principals parameter is required");
 
