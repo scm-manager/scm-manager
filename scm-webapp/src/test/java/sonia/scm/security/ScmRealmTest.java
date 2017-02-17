@@ -479,7 +479,15 @@ public class ScmRealmTest
     
     CacheManager cacheManager = new MapCacheManager();
     
-    AuthorizationCollector collector = new AuthorizationCollector(
+    AuthenticationInfoCollector authcCollector = new AuthenticationInfoCollector(
+      new ScmConfiguration(), 
+      userManager, 
+      groupManager, 
+      userDAO, 
+      requestProvider
+    );
+    
+    AuthorizationCollector authzCollector = new AuthorizationCollector(
       cacheManager, 
       repositoryDAO,
       securitySystem, 
@@ -502,17 +510,10 @@ public class ScmRealmTest
     };
 
     return new ScmRealm(
-      new ScmConfiguration(),
+      new AuthenticatorFacade(authManager, requestProvider, responseProvider),
       dummyLoginAttemptHandler,
-      collector,
-      // cacheManager,
-      userManager,
-      groupManager,
-      userDAO,
-      authManager,
-      null,
-      requestProvider,
-      responseProvider
+      authcCollector,
+      authzCollector
     );
     //J+
   }
