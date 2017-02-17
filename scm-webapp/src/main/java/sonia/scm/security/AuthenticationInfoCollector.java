@@ -30,295 +30,95 @@
  */
 package sonia.scm.security;
 
-import com.google.common.base.Joiner;
-import com.google.common.collect.Sets;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
-import java.io.IOException;
-import java.util.Collection;
 import java.util.Set;
-import javax.servlet.http.HttpServletRequest;
-import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.DisabledAccountException;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.HandlerEvent;
-import sonia.scm.config.ScmConfiguration;
-import sonia.scm.group.Group;
-import sonia.scm.group.GroupManager;
 import sonia.scm.group.GroupNames;
 import sonia.scm.user.User;
-import sonia.scm.user.UserDAO;
-import sonia.scm.user.UserEventHack;
-import sonia.scm.user.UserException;
-import sonia.scm.user.UserManager;
-import sonia.scm.util.Util;
 import sonia.scm.web.security.AuthenticationResult;
 
 /**
- *
+ * Collects authentication info for realm.
+ * 
  * @author Sebastian Sdorra
+ * @since 1.52
  */
 public class AuthenticationInfoCollector {
- 
-  private static final String SCM_CREDENTIALS = "SCM_CREDENTIALS";
   
   /**
    * the logger for AuthenticationInfoCollector
    */
-  private static final Logger logger = LoggerFactory.getLogger(AuthenticationInfoCollector.class);
+  private static final Logger LOG = LoggerFactory.getLogger(AuthenticationInfoCollector.class);
   
-  private final ScmConfiguration configuration;
-  private final UserManager userManager;
-  private final GroupManager groupManager; 
-  private final UserDAO userDAO;
-  private final Provider<HttpServletRequest> requestProvider;
+  private final LocalDatabaseSynchronizer synchronizer;
+  private final GroupCollector groupCollector; 
+  private final SessionStore sessionStore;
 
+  /**
+   * Construct a new AuthenticationInfoCollector.
+   * 
+   * @param synchronizer local database synchronizer
+   * @param groupCollector groups collector
+   * @param sessionStore session store
+   */
   @Inject
-  public AuthenticationInfoCollector(ScmConfiguration configuration, UserManager userManager, GroupManager groupManager,
-    UserDAO userDAO, Provider<HttpServletRequest> requestProvider) {
-    this.configuration = configuration;
-    this.userManager = userManager;
-    this.groupManager = groupManager;
-    this.userDAO = userDAO;
-    this.requestProvider = requestProvider;
+  public AuthenticationInfoCollector(
+    LocalDatabaseSynchronizer synchronizer, GroupCollector groupCollector, SessionStore sessionStore
+  ) {
+    this.synchronizer = synchronizer;
+    this.groupCollector = groupCollector;
+    this.sessionStore = sessionStore;
   }
   
-  AuthenticationInfo createAuthenticationInfo(UsernamePasswordToken token, AuthenticationResult result) {
-    User user = result.getUser();
-    Collection<String> groups = authenticate(requestProvider.get(), new String(token.getPassword()), result);
-
+  /**
+   * Creates authentication info from token and authentication result.
+   * 
+   * @param token username and password token
+   * @param authenticationResult authentication result
+   * 
+   * @return authentication info
+   */
+  public AuthenticationInfo createAuthenticationInfo(
+    UsernamePasswordToken token, AuthenticationResult authenticationResult
+  ) {
+    User user = authenticationResult.getUser();
+    Set<String> groups = groupCollector.collectGroups(authenticationResult);
+    
+    synchronizer.synchronize(user, groups);
+    
+    if (isUserIsDisabled(user)) {
+      throwAccountIsDisabledExceptionAndLog(user.getName());
+    }
+    
+    PrincipalCollection collection = createPrincipalCollection(user, groups);
+    
+    AuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(collection, token.getPassword());
+    sessionStore.store(token);
+    return authenticationInfo;
+  }
+  
+  private PrincipalCollection createPrincipalCollection(User user, Set<String> groups) {
     SimplePrincipalCollection collection = new SimplePrincipalCollection();
-
-    /*
-     * the first (primary) principal should be a unique identifier
-     */
     collection.add(user.getId(), ScmRealm.NAME);
     collection.add(user, ScmRealm.NAME);
     collection.add(new GroupNames(groups), ScmRealm.NAME);
-
-    return new SimpleAuthenticationInfo(collection, token.getPassword());
+    return collection;
   }
   
+  private boolean isUserIsDisabled(User user) {
+    return !user.isActive();
+  }
   
-  private Set<String> authenticate(HttpServletRequest request, String password, AuthenticationResult ar) {
-    Set<String> groupSet = null;
-    User user = ar.getUser();
-
-    try
-    {
-      groupSet = createGroupSet(ar);
-
-      // check for admin user
-      checkForAuthenticatedAdmin(user, groupSet);
-
-      // store user
-      User dbUser = userDAO.get(user.getName());
-
-      if (dbUser != null)
-      {
-        checkDBForAdmin(user, dbUser);
-        checkDBForActive(user, dbUser);
-      }
-
-      // create new user
-      else if (user.isValid())
-      {
-        user.setCreationDate(System.currentTimeMillis());
-
-        // TODO find a better way
-        UserEventHack.fireEvent(userManager, user, HandlerEvent.BEFORE_CREATE);
-        userDAO.add(user);
-        UserEventHack.fireEvent(userManager, user, HandlerEvent.CREATE);
-      }
-      else if (logger.isErrorEnabled())
-      {
-        logger.error("could not create user {}, beacause it is not valid",
-          user.getName());
-      }
-
-      if (user.isActive())
-      {
-
-        if (logger.isDebugEnabled())
-        {
-          logGroups(user, groupSet);
-        }
-
-        // store encrypted credentials in session
-        String credentials = user.getName();
-
-        if (Util.isNotEmpty(password))
-        {
-          credentials = credentials.concat(":").concat(password);
-        }
-
-        credentials = CipherUtil.getInstance().encode(credentials);
-        request.getSession(true).setAttribute(SCM_CREDENTIALS, credentials);
-      }
-      else
-      {
-
-        String msg = "user ".concat(user.getName()).concat(" is deactivated");
-
-        if (logger.isWarnEnabled())
-        {
-          logger.warn(msg);
-        }
-
-        throw new DisabledAccountException(msg);
-
-      }
-    }
-    catch (IOException | UserException ex)
-    {
-      logger.error("authentication failed", ex);
-
-      throw new AuthenticationException("authentication failed", ex);
-    }
-
-    return groupSet;
+  private void throwAccountIsDisabledExceptionAndLog(String username) {
+    String msg = "user ".concat(username).concat(" is deactivated");
+    LOG.warn(msg);
+    throw new DisabledAccountException(msg);
   }
-
-  private void checkDBForActive(User user, User dbUser)
-  {
-    // user is deactivated by database
-    if (!dbUser.isActive())
-    {
-      if (logger.isDebugEnabled())
-      {
-        logger.debug("user {} is marked as deactivated by local database",
-          user.getName());
-      }
-
-      user.setActive(false);
-    }
-  }
-
-  private void checkDBForAdmin(User user, User dbUser) throws UserException, IOException
-  {
-
-    // if database user is an admin, set admin for the current user
-    if (dbUser.isAdmin())
-    {
-      if (logger.isDebugEnabled())
-      {
-        logger.debug("user {} of type {} is marked as admin by local database",
-          user.getName(), user.getType());
-      }
-
-      user.setAdmin(true);
-    }
-
-    // modify existing user, copy properties except password and admin
-    if (user.copyProperties(dbUser, false))
-    {
-      user.setLastModified(System.currentTimeMillis());
-      UserEventHack.fireEvent(userManager, user, HandlerEvent.BEFORE_MODIFY);
-      userDAO.modify(user);
-      UserEventHack.fireEvent(userManager, user, HandlerEvent.MODIFY);
-    }
-  }
-
-  private void checkForAuthenticatedAdmin(User user, Set<String> groupSet)
-  {
-    if (!user.isAdmin())
-    {
-      user.setAdmin(isAdmin(user, groupSet));
-
-      if (logger.isDebugEnabled() && user.isAdmin())
-      {
-        logger.debug("user {} is marked as admin by configuration",
-          user.getName());
-      }
-    }
-    else if (logger.isDebugEnabled())
-    {
-      logger.debug("authenticator {} marked user {} as admin", user.getType(),
-        user.getName());
-    }
-  }
-
-  private Set<String> createGroupSet(AuthenticationResult ar)
-  {
-    Set<String> groupSet = Sets.newHashSet();
-
-    // add group for all authenticated users
-    groupSet.add(GroupNames.AUTHENTICATED);
-
-    // load external groups
-    Collection<String> extGroups = ar.getGroups();
-
-    if (extGroups != null)
-    {
-      groupSet.addAll(extGroups);
-    }
-
-    // load internal groups
-    loadGroups(ar.getUser(), groupSet);
-
-    return groupSet;
-  }
-
-  private void loadGroups(User user, Set<String> groupSet)
-  {
-    Collection<Group> groupCollection = groupManager.getGroupsForMember(user.getName());
-
-    if (groupCollection != null)
-    {
-      for (Group group : groupCollection)
-      {
-        groupSet.add(group.getName());
-      }
-    }
-  }
-
-  private void logGroups(User user, Set<String> groups)
-  {
-    StringBuilder msg = new StringBuilder("user ");
-
-    msg.append(user.getName());
-
-    if (Util.isNotEmpty(groups))
-    {
-      msg.append(" is member of ");
-
-      Joiner.on(", ").appendTo(msg, groups);
-    }
-    else
-    {
-      msg.append(" is not a member of a group");
-    }
-
-    logger.debug(msg.toString());
-  }
-
-  private boolean isAdmin(User user, Collection<String> groups)
-  {
-    boolean result = false;
-    Set<String> adminUsers = configuration.getAdminUsers();
-
-    if (adminUsers != null)
-    {
-      result = adminUsers.contains(user.getName());
-    }
-
-    if (!result)
-    {
-      Set<String> adminGroups = configuration.getAdminGroups();
-
-      if (adminGroups != null)
-      {
-        result = Util.containsOne(adminGroups, groups);
-      }
-    }
-
-    return result;
-  }
-
-  
 }

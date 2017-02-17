@@ -479,12 +479,18 @@ public class ScmRealmTest
     
     CacheManager cacheManager = new MapCacheManager();
     
+    AdminDetector adminSelector = new AdminDetector(new ScmConfiguration());
+    LocalDatabaseSynchronizer synchronizer = new LocalDatabaseSynchronizer(
+      adminSelector, userManager, userDAO
+    );
+    
+    GroupCollector groupCollector = new GroupCollector(groupManager);
+    SessionStore sessionStore = new SessionStore(requestProvider);
+    
     AuthenticationInfoCollector authcCollector = new AuthenticationInfoCollector(
-      new ScmConfiguration(), 
-      userManager, 
-      groupManager, 
-      userDAO, 
-      requestProvider
+      synchronizer, 
+      groupCollector,
+      sessionStore
     );
     
     AuthorizationCollector authzCollector = new AuthorizationCollector(

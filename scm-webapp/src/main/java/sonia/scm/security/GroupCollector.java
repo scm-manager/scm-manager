@@ -30,17 +30,33 @@
  */
 package sonia.scm.security;
 
+import com.google.common.base.Joiner;
+import com.google.common.collect.Sets;
 import com.google.inject.Inject;
+import java.util.Collection;
 import java.util.Set;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sonia.scm.group.Group;
 import sonia.scm.group.GroupManager;
+import sonia.scm.group.GroupNames;
+import sonia.scm.user.User;
+import sonia.scm.util.Util;
 import sonia.scm.web.security.AuthenticationResult;
 
 /**
- *
+ * Collects groups from {@link GroupManager} after authentication.
+ * 
  * @author Sebastian Sdorra
+ * @since 1.52
  */
 public class GroupCollector {
   
+  /**
+   * the logger for GroupCollector
+   */
+  private static final Logger LOG = LoggerFactory.getLogger(GroupCollector.class);
+ 
   private final GroupManager groupManager;
 
   @Inject
@@ -48,8 +64,60 @@ public class GroupCollector {
     this.groupManager = groupManager;
   }
   
-  public Set<String> collectGroups(AuthenticationResult result){
+  /**
+   * Collect groups from {@link AuthenticationResult} and {@link GroupManager}.
+   * 
+   * @param authenticationResult authentication result
+   * 
+   * @return collected groups
+   */
+  public Set<String> collectGroups(AuthenticationResult authenticationResult) {
+    Set<String> groups = Sets.newHashSet();
+
+    // add group for all authenticated users
+    groups.add(GroupNames.AUTHENTICATED);
+
+    // load external groups
+    Collection<String> groupsFromAuthenticator = authenticationResult.getGroups();
+
+    if (groupsFromAuthenticator != null) {
+      groups.addAll(groupsFromAuthenticator);
+    }
+
+    User user = authenticationResult.getUser();
+    loadGroupFromDatabase(user, groups);
+
+    if (LOG.isDebugEnabled()) {
+      LOG.debug(createMembershipLogMessage(user, groups));
+    }
     
+    return groups;
+  }
+
+  private void loadGroupFromDatabase(User user, Set<String> groupSet) {
+    Collection<Group> groupCollection = groupManager.getGroupsForMember(user.getName());
+
+    if (groupCollection != null) {
+      for (Group group : groupCollection) {
+        groupSet.add(group.getName());
+      }
+    }
+  }
+  
+  private String createMembershipLogMessage(User user, Set<String> groups) {
+    StringBuilder msg = new StringBuilder("user ");
+
+    msg.append(user.getName());
+
+    if (Util.isNotEmpty(groups)) {
+      msg.append(" is member of ");
+
+      Joiner.on(", ").appendTo(msg, groups);
+    } else {
+      msg.append(" is not a member of a group");
+    }
+    
+    return msg.toString();
   }
   
 }
