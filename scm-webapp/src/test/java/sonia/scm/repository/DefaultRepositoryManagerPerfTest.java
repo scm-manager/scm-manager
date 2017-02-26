@@ -72,8 +72,11 @@ import sonia.scm.security.SecuritySystem;
 import sonia.scm.user.UserTestData;
 
 /**
- *
+ * Performance test for {@link RepositoryManager#getAll()}.
+ * 
+ * @see <a href="https://goo.gl/PD1AeM">Issue 781</a>
  * @author Sebastian Sdorra
+ * @since 1.52
  */
 @RunWith(MockitoJUnitRunner.class)
 public class DefaultRepositoryManagerPerfTest {
@@ -105,6 +108,9 @@ public class DefaultRepositoryManagerPerfTest {
   
   private AuthorizationCollector authzCollector;
   
+  /**
+   * Setup object under test.
+   */
   @Before
   public void setUpObjectUnderTest(){
     when(repositoryHandler.getType()).thenReturn(new Type(REPOSITORY_TYPE, REPOSITORY_TYPE));
@@ -132,11 +138,17 @@ public class DefaultRepositoryManagerPerfTest {
     ThreadContext.bind(securityManager);
   }
   
+  /**
+   * Tear down test objects.
+   */
   @After
   public void tearDown(){
     ThreadContext.unbindSecurityManager();
   }
   
+  /**
+   * Start performance test and ensure that the timeout is not reached.
+   */
   @Test(timeout = 6000l)
   public void perfTestGetAll(){
     SecurityUtils.getSubject().login(new UsernamePasswordToken("trillian", "secret"));

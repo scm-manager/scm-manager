@@ -35,6 +35,7 @@ package sonia.scm.security;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -46,9 +47,11 @@ import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authc.pam.UnsupportedTokenException;
 import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.web.security.AuthenticationResult;
 import sonia.scm.web.security.AuthenticationState;
 
@@ -63,6 +66,11 @@ import sonia.scm.web.security.AuthenticationState;
 @Singleton
 public class ScmRealm extends AuthorizingRealm {
   
+  /**
+   * the logger for ScmRealm
+   */
+  private static final Logger logger = LoggerFactory.getLogger(ScmRealm.class);
+  
   public static final String NAME = "scm";
   
 
@@ -74,32 +82,35 @@ public class ScmRealm extends AuthorizingRealm {
   /**
    * Constructs a new scm realm.
    *
+   * @param cacheManager cache manager
    * @param authenticator authenticator facade
    * @param loginAttemptHandler login attempt handler
    * @param authcCollector authentication info collector
    * @param authzCollector authorization collector
    */
   @Inject
-  public ScmRealm(AuthenticatorFacade authenticator, LoginAttemptHandler loginAttemptHandler, 
+  public ScmRealm(CacheManager cacheManager,
+    AuthenticatorFacade authenticator, LoginAttemptHandler loginAttemptHandler, 
     AuthenticationInfoCollector authcCollector, AuthorizationCollector authzCollector) {
+    super(cacheManager);
+    
     this.authenticator = authenticator;
     this.loginAttemptHandler = loginAttemptHandler;
     this.authcCollector = authcCollector;
     this.authzCollector = authzCollector;
-    
 
     // set token class
     setAuthenticationTokenClass(UsernamePasswordToken.class);
-
-    // use own custom caching
-    setCachingEnabled(false);
-    setAuthenticationCachingEnabled(false);
-    setAuthorizationCachingEnabled(false);
 
     // set components
     setPermissionResolver(new RepositoryPermissionResolver());
   }
 
+  @Override
+  protected Object getAuthorizationCacheKey(PrincipalCollection principals) {
+    return principals.getPrimaryPrincipal();
+  }
+  
   @Override
   protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authToken) throws AuthenticationException {
     UsernamePasswordToken token = castToken(authToken);
@@ -137,5 +148,24 @@ public class ScmRealm extends AuthorizingRealm {
   @Override
   protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals){
     return authzCollector.collect(principals);
+  }
+
+  @Subscribe
+  public void invalidateCache(AuthorizationChangedEvent event) {
+    if (event.isEveryUserAffected()) {
+      invalidateUserCache(event.getNameOfAffectedUser());
+    } else {
+      invalidateCache();
+    }
+  }
+  
+  private void invalidateUserCache(final String username) {
+    logger.info("invalidate cache for user {}, because of a received authorization event", username);
+    getAuthorizationCache().remove(username);
+  }
+  
+  private void invalidateCache() {
+    logger.info("invalidate cache, because of a received authorization event");
+    getAuthorizationCache().clear();
   }
 }

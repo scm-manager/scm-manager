@@ -93,7 +93,7 @@ public class AuthenticationInfoCollector {
     
     synchronizer.synchronize(user, groups);
     
-    if (isUserIsDisabled(user)) {
+    if (isUserDisabled(user)) {
       throwAccountIsDisabledExceptionAndLog(user.getName());
     }
     
@@ -112,7 +112,7 @@ public class AuthenticationInfoCollector {
     return collection;
   }
   
-  private boolean isUserIsDisabled(User user) {
+  private boolean isUserDisabled(User user) {
     return !user.isActive();
   }
   

@@ -166,6 +166,7 @@ import sonia.scm.net.ahc.JsonContentTransformer;
 import sonia.scm.net.ahc.XmlContentTransformer;
 import sonia.scm.schedule.QuartzScheduler;
 import sonia.scm.schedule.Scheduler;
+import sonia.scm.security.AuthorizationChangedEventProducer;
 import sonia.scm.security.XsrfProtectionFilter;
 import sonia.scm.web.UserAgentParser;
 
@@ -300,6 +301,7 @@ public class ScmServletModule extends ServletModule
     pluginLoader.processExtensions(binder());
 
     // bind security stuff
+    bind(AuthorizationChangedEventProducer.class);
     bind(PermissionResolver.class, RepositoryPermissionResolver.class);
     bind(AuthenticationManager.class, ChainAuthenticatonManager.class);
     bind(SecurityContext.class).to(BasicSecurityContext.class);
@@ -310,6 +312,7 @@ public class ScmServletModule extends ServletModule
 
     // bind cache
     bind(CacheManager.class, GuavaCacheManager.class);
+    bind(org.apache.shiro.cache.CacheManager.class, GuavaCacheManager.class);
 
     // bind dao
     bind(GroupDAO.class, XmlGroupDAO.class);
@@ -386,8 +389,7 @@ public class ScmServletModule extends ServletModule
     filter(PATTERN_ALL).through(BaseUrlFilter.class);
     filter(PATTERN_ALL).through(AutoLoginFilter.class);
     filterRegex(RESOURCE_REGEX).through(GZipFilter.class);
-    filter(PATTERN_RESTAPI,
-      PATTERN_DEBUG).through(ApiBasicAuthenticationFilter.class);
+    filter(PATTERN_RESTAPI, PATTERN_DEBUG).through(ApiBasicAuthenticationFilter.class);
     filter(PATTERN_RESTAPI, PATTERN_DEBUG).through(SecurityFilter.class);
     filter(PATTERN_CONFIG, PATTERN_ADMIN).through(AdminSecurityFilter.class);
 
@@ -434,11 +436,7 @@ public class ScmServletModule extends ServletModule
       UriExtensionsConfig.class.getName());
 
     String restPath = getRestPackages();
-
-    if (logger.isInfoEnabled())
-    {
-      logger.info("configure jersey with package path: {}", restPath);
-    }
+    logger.info("configure jersey with package path: {}", restPath);
 
     params.put(PackagesResourceConfig.PROPERTY_PACKAGES, restPath);
     serve(PATTERN_RESTAPI).with(GuiceContainer.class, params);
