@@ -128,7 +128,7 @@ public class DeactivatedUserITCase
                                 "slart123");
 
     assertNotNull(response);
-    assertEquals(401, response.getStatus());
+    assertEquals(403, response.getStatus());
   }
 
   //~--- fields ---------------------------------------------------------------
