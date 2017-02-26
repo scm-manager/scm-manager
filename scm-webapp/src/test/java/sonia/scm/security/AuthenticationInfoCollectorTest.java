@@ -66,7 +66,7 @@ public class AuthenticationInfoCollectorTest {
   private GroupCollector groupCollector; 
   
   @Mock
-  private SessionStore sessionStore;
+  private CredentialsStore sessionStore;
   
   @InjectMocks
   private AuthenticationInfoCollector collector;

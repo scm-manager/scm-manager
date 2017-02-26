@@ -484,7 +484,7 @@ public class ScmRealmTest
     );
     
     GroupCollector groupCollector = new GroupCollector(groupManager);
-    SessionStore sessionStore = new SessionStore(requestProvider);
+    CredentialsStore sessionStore = new CredentialsStore(requestProvider);
     
     AuthenticationInfoCollector authcCollector = new AuthenticationInfoCollector(
       synchronizer, 

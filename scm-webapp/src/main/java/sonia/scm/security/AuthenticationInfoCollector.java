@@ -59,22 +59,22 @@ public class AuthenticationInfoCollector {
   
   private final LocalDatabaseSynchronizer synchronizer;
   private final GroupCollector groupCollector; 
-  private final SessionStore sessionStore;
+  private final CredentialsStore sessionStore;
 
   /**
    * Construct a new AuthenticationInfoCollector.
    * 
    * @param synchronizer local database synchronizer
    * @param groupCollector groups collector
-   * @param sessionStore session store
+   * @param credentialsStore credentials store
    */
   @Inject
   public AuthenticationInfoCollector(
-    LocalDatabaseSynchronizer synchronizer, GroupCollector groupCollector, SessionStore sessionStore
+    LocalDatabaseSynchronizer synchronizer, GroupCollector groupCollector, CredentialsStore credentialsStore
   ) {
     this.synchronizer = synchronizer;
     this.groupCollector = groupCollector;
-    this.sessionStore = sessionStore;
+    this.sessionStore = credentialsStore;
   }
   
   /**
