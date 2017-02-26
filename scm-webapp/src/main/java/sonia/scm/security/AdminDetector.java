@@ -85,8 +85,8 @@ public class AdminDetector {
   
   private boolean isAdminByConfiguration(User user, Collection<String> groups) {
     boolean result = false;
+    
     Set<String> adminUsers = configuration.getAdminUsers();
-
     if (adminUsers != null) {
       result = adminUsers.contains(user.getName());
     }

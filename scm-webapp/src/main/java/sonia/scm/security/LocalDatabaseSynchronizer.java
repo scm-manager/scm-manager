@@ -32,7 +32,6 @@ package sonia.scm.security;
 
 import com.google.inject.Inject;
 import java.util.Set;
-import org.apache.shiro.authc.DisabledAccountException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.HandlerEvent;
