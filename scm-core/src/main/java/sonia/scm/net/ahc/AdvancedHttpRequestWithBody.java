@@ -123,7 +123,7 @@ public class AdvancedHttpRequestWithBody
   }
 
   /**
-   * Transforms the given object to a xml string and set this string as request
+   * Transforms the given object to a json string and set this string as request
    * content.
    *
    * @param object object to transform

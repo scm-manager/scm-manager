@@ -253,7 +253,9 @@ public abstract class AdvancedHttpResponse
   }
 
   /**
-   * Transforms the response content from xml to the given type.
+   * Transforms the response content to the given type. The method will use
+   * the {@link ContentTransformer} which is responsible for the the given
+   * content type.
    *
    * @param <T> object type
    * @param type object type
