@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010, Sebastian Sdorra
+ * Copyright (c) 2014, Sebastian Sdorra
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,38 +28,62 @@
  * http://bitbucket.org/sdorra/scm-manager
  *
  */
+package sonia.scm.security;
 
-
-package sonia.scm.cache;
-
-import org.junit.Assert;
+import sonia.scm.event.Event;
 
 /**
- *
+ * This type of event is fired whenever a authorization relevant data changes. This event
+ * is especially useful for cache invalidation.
+ * 
  * @author Sebastian Sdorra
+ * @since 1.52
  */
-public class GuavaCacheManagerTest extends CacheManagerTestBase
-{
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  protected CacheManager createCacheManager()
-  {
-    return CacheTestUtil.createDefaultGuavaCacheManager();
-  }
-
-  @Override
-  protected void assertIsSame(Cache c1, Cache c2) {
-    Assert.assertSame(
-      ((GuavaCache)c1).getWrappedCache(),
-      ((GuavaCache)c2).getWrappedCache()
-    );
+@Event
+public final class AuthorizationChangedEvent {
+  
+  private final String nameOfAffectedUser;
+  
+  private AuthorizationChangedEvent(String nameOfAffectedUser) {
+    this.nameOfAffectedUser = nameOfAffectedUser;
   }
   
+  /**
+   * Returns {@code true} if every user is affected by this data change.
+   * 
+   * @return {@code true} if every user is affected
+   */
+  public boolean isEveryUserAffected(){
+    return nameOfAffectedUser != null;
+  }
+  
+  /**
+   * Returns the name of the user which is affected by this event.
+   * 
+   * @return name of affected user
+   */
+  public String getNameOfAffectedUser(){
+    return nameOfAffectedUser;
+  }
+  
+  /**
+   * Creates a new event which affects every user.
+   * 
+   * @return new event for every user
+   */
+  public static AuthorizationChangedEvent createForEveryUser() {
+    return new AuthorizationChangedEvent(null);
+  }
+  
+  /**
+   * Create a new event which affect a single user.
+   * 
+   * @param nameOfAffectedUser name of affected user
+   * 
+   * @return new event for a single user
+   */
+  public static AuthorizationChangedEvent createForUser(String nameOfAffectedUser) {
+    return new AuthorizationChangedEvent(nameOfAffectedUser);
+  }
   
 }

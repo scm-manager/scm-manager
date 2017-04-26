@@ -54,8 +54,6 @@ import org.junit.Test;
 
 import org.mockito.Mockito;
 
-import sonia.scm.cache.CacheManager;
-import sonia.scm.cache.MapCacheManager;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupManager;
@@ -89,6 +87,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import sonia.scm.cache.GuavaCacheManager;
 
 /**
  *
@@ -477,10 +476,24 @@ public class ScmRealmTest
       Collections.EMPTY_LIST
     );
     
-    CacheManager cacheManager = new MapCacheManager();
+    GuavaCacheManager cacheManager = new GuavaCacheManager();
     
-    AuthorizationCollector collector = new AuthorizationCollector(
-      cacheManager, 
+    AdminDetector adminSelector = new AdminDetector(new ScmConfiguration());
+    LocalDatabaseSynchronizer synchronizer = new LocalDatabaseSynchronizer(
+      adminSelector, userManager, userDAO
+    );
+    
+    GroupCollector groupCollector = new GroupCollector(groupManager);
+    CredentialsStore sessionStore = new CredentialsStore(requestProvider);
+    
+    AuthenticationInfoCollector authcCollector = new AuthenticationInfoCollector(
+      synchronizer, 
+      groupCollector,
+      sessionStore
+    );
+    
+    AuthorizationCollector authzCollector = new AuthorizationCollector(
+      cacheManager,
       repositoryDAO,
       securitySystem, 
       new RepositoryPermissionResolver()
@@ -502,17 +515,11 @@ public class ScmRealmTest
     };
 
     return new ScmRealm(
-      new ScmConfiguration(),
+      cacheManager,
+      new AuthenticatorFacade(authManager, requestProvider, responseProvider),
       dummyLoginAttemptHandler,
-      collector,
-      // cacheManager,
-      userManager,
-      groupManager,
-      userDAO,
-      authManager,
-      null,
-      requestProvider,
-      responseProvider
+      authcCollector,
+      authzCollector
     );
     //J+
   }

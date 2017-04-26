@@ -57,14 +57,11 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
-import sonia.scm.group.GroupEvent;
 import sonia.scm.group.GroupNames;
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryDAO;
-import sonia.scm.repository.RepositoryEvent;
 import sonia.scm.user.User;
-import sonia.scm.user.UserEvent;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -72,10 +69,6 @@ import sonia.scm.util.Util;
 import java.util.List;
 import java.util.Set;
 import sonia.scm.Filter;
-import sonia.scm.group.Group;
-import sonia.scm.group.GroupModificationEvent;
-import sonia.scm.repository.RepositoryModificationEvent;
-import sonia.scm.user.UserModificationEvent;
 
 /**
  *
@@ -98,7 +91,7 @@ public class AuthorizationCollector
     LoggerFactory.getLogger(AuthorizationCollector.class);
 
   //~--- constructors ---------------------------------------------------------
-
+  
   /**
    * Constructs ...
    *
@@ -114,8 +107,7 @@ public class AuthorizationCollector
     RepositoryDAO repositoryDAO, SecuritySystem securitySystem,
     PermissionResolver resolver)
   {
-    this.cache = cacheManager.getCache(CacheKey.class, AuthorizationInfo.class,
-      CACHE_NAME);
+    this.cache = cacheManager.getCache(CacheKey.class, AuthorizationInfo.class, CACHE_NAME);
     this.repositoryDAO = repositoryDAO;
     this.securitySystem = securitySystem;
     this.resolver = resolver;
@@ -147,193 +139,13 @@ public class AuthorizationCollector
   }
 
   /**
-   * Invalidates the cache of a user which was modified. The cache entries for the user will be invalidated for the
-   * following reasons:
-   * <ul>
-   * <li>Admin or Active flag was modified.</li>
-   * <li>New user created, for the case of old cache values</li>
-   * <li>User deleted</li>
-   * </ul>
-   *
-   * @param event user event
-   */
-  @Subscribe
-  public void onEvent(UserEvent event)
-  {
-    if (event.getEventType().isPost())
-    {
-      User user = event.getItem();
-      String username = user.getId();
-      if (event instanceof UserModificationEvent)
-      {
-        User beforeModification = ((UserModificationEvent) event).getItemBeforeModification();
-        if (shouldCacheBeCleared(user, beforeModification))
-        {
-          logger.debug("invalidate cache of user {}, because of a permission relevant field has changed", username);
-          invalidateUserCache(username);
-        }
-        else
-        {
-          logger.debug("cache of user {} is not invalidated, because no permission relevant field has changed", username);
-        }
-      }
-      else
-      {
-        logger.debug("invalidate cache of user {}, because of user {} event", username, event.getEventType());
-        invalidateUserCache(username);
-      }
-    }
-  }
-
-  private boolean shouldCacheBeCleared(User user, User beforeModification)
-  {
-    return user.isAdmin() != beforeModification.isAdmin() || user.isActive() != beforeModification.isActive();
-  }
-
-  private void invalidateUserCache(final String username)
-  {
-    cache.removeAll(new Filter<CacheKey>()
-    {
-      @Override
-      public boolean accept(CacheKey item)
-      {
-        return username.equalsIgnoreCase(item.username);
-      }
-    });
-  }
-
-  /**
-   * Invalidates the whole cache, if a repository has changed. The cache get cleared for one of the following reasons:
-   * <ul>
-   * <li>New repository created</li>
-   * <li>Repository was removed</li>
-   * <li>Archived, Public readable or permission field of the repository was modified</li>
-   * </ul>
-   *
-   * @param event repository event
-   */
-  @Subscribe
-  public void onEvent(RepositoryEvent event)
-  {
-    if (event.getEventType().isPost())
-    {
-      Repository repository = event.getItem();
-      
-      if (event instanceof RepositoryModificationEvent)
-      {
-        Repository beforeModification = ((RepositoryModificationEvent) event).getItemBeforeModification();
-        if (shouldCacheBeCleared(repository, beforeModification))
-        {
-          logger.debug("clear cache, because a relevant field of repository {} has changed", repository.getName());
-          cache.clear();
-        }
-        else
-        {
-          logger.debug(
-            "cache is not invalidated, because non relevant field of repository {} has changed",
-            repository.getName()
-          );
-        }
-      }
-      else
-      {
-        logger.debug("clear cache, received {} event of repository {}", event.getEventType(), repository.getName());
-        cache.clear();
-      }
-    }
-  }
-
-  private boolean shouldCacheBeCleared(Repository repository, Repository beforeModification)
-  {
-    return repository.isArchived() != beforeModification.isArchived()
-      || repository.isPublicReadable() != beforeModification.isPublicReadable()
-      || ! repository.getPermissions().equals(beforeModification.getPermissions());
-  }
-
-  /**
-   * Invalidates the whole cache if a group permission has changed and invalidates the cached entries of a user, if a
-   * user permission has changed.
-   *
-   *
-   * @param event permission event
-   */
-  @Subscribe
-  public void onEvent(StoredAssignedPermissionEvent event)
-  {
-    if (event.getEventType().isPost())
-    {
-      StoredAssignedPermission permission = event.getPermission();
-      if (permission.isGroupPermission())
-      {
-        logger.debug("clear cache, because global group permission {} has changed", permission.getId());
-        cache.clear();
-      }
-      else
-      {
-        logger.debug(
-            "clear cache of user {}, because permission {} has changed", 
-            permission.getName(), event.getPermission().getId()
-        );
-        invalidateUserCache(permission.getName());
-      }
-    }
-  }
-
-  /**
-   * Invalidates the whole cache, if a group has changed. The cache get cleared for one of the following reasons:
-   * <ul>
-   * <li>New group created</li>
-   * <li>Group was removed</li>
-   * <li>Group members was modified</li>
-   * </ul>
-   *
-   * @param event group event
-   */
-  @Subscribe
-  public void onEvent(GroupEvent event)
-  {
-    if (event.getEventType().isPost())
-    {
-      Group group = event.getItem();
-      if (event instanceof GroupModificationEvent)
-      {
-        Group beforeModification = ((GroupModificationEvent) event).getItemBeforeModification();
-        if (shouldCacheBeCleared(group, beforeModification))
-        {
-          logger.debug("clear cache, because group {} has changed", group.getId());
-          cache.clear();
-        }
-        else
-        {
-          logger.debug(
-            "cache is not invalidated, because non relevant field of group {} has changed",
-            group.getId()
-          );
-        }
-      }
-      else
-      {
-        logger.debug("clear cache, received group event {} for group {}", event.getEventType(), group.getId());
-        cache.clear();
-      }
-    }
-  }
-
-  private boolean shouldCacheBeCleared(Group group, Group beforeModification)
-  {
-    return !group.getMembers().equals(beforeModification.getMembers());
-  }
-
-  /**
    * Method description
-   *
-   *
    *
    * @param principals
    *
    * @return
    */
-  AuthorizationInfo collect(PrincipalCollection principals)
+  public AuthorizationInfo collect(PrincipalCollection principals)
   {
     Preconditions.checkNotNull(principals, "principals parameter is required");
 
@@ -566,6 +378,30 @@ public class AuthorizationCollector
     return (perm.isGroupPermission() && groups.contains(perm.getName()))
       || ((!perm.isGroupPermission()) && user.getName().equals(perm.getName()));
     //J+
+  }
+  
+  @Subscribe
+  public void invalidateCache(AuthorizationChangedEvent event) {
+    if (event.isEveryUserAffected()) {
+      invalidateUserCache(event.getNameOfAffectedUser());
+    } else {
+      invalidateCache();
+    }
+  }
+  
+  private void invalidateUserCache(final String username) {
+    logger.info("invalidate cache for user {}, because of a received authorization event", username);
+    cache.removeAll(new Filter<CacheKey>() {
+      @Override
+      public boolean accept(CacheKey item) {
+        return username.equalsIgnoreCase(item.username);
+      }
+    });
+  }
+  
+  private void invalidateCache() {
+    logger.info("invalidate cache, because of a received authorization event");
+    cache.clear();
   }
 
   //~--- inner classes --------------------------------------------------------

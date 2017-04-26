@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010, Sebastian Sdorra
+ * Copyright (c) 2014, Sebastian Sdorra
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,38 +28,51 @@
  * http://bitbucket.org/sdorra/scm-manager
  *
  */
+package sonia.scm.security;
 
-
-package sonia.scm.cache;
-
-import org.junit.Assert;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import sonia.scm.web.security.AuthenticationManager;
+import sonia.scm.web.security.AuthenticationResult;
 
 /**
+ * Facade for the authentication process. The main reason for this facade is to reduce the number of constructor 
+ * parameters on the realm. This should improve testability.
  *
  * @author Sebastian Sdorra
+ * @since 1.52
  */
-public class GuavaCacheManagerTest extends CacheManagerTestBase
-{
+public class AuthenticatorFacade {
+  
+  private final AuthenticationManager authenticator;
+  private final Provider<HttpServletRequest> requestProvider;
+  private final Provider<HttpServletResponse> responseProvider;
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  protected CacheManager createCacheManager()
-  {
-    return CacheTestUtil.createDefaultGuavaCacheManager();
-  }
-
-  @Override
-  protected void assertIsSame(Cache c1, Cache c2) {
-    Assert.assertSame(
-      ((GuavaCache)c1).getWrappedCache(),
-      ((GuavaCache)c2).getWrappedCache()
-    );
+  @Inject
+  public AuthenticatorFacade(AuthenticationManager authenticator, Provider<HttpServletRequest> requestProvider,
+    Provider<HttpServletResponse> responseProvider) {
+    this.authenticator = authenticator;
+    this.requestProvider = requestProvider;
+    this.responseProvider = responseProvider;
   }
   
+  /**
+   * Delegates the authentication request to the injected implementation of the {@link AuthenticationManager}.
+   * 
+   * @param token username password token
+   * 
+   * @return authentication result
+   */
+  public AuthenticationResult authenticate(UsernamePasswordToken token) {
+    return authenticator.authenticate(
+      requestProvider.get(), 
+      responseProvider.get(),
+      token.getUsername(), 
+      new String(token.getPassword())
+    );
+  }
   
 }

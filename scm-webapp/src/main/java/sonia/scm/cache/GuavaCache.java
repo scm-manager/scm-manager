@@ -34,18 +34,6 @@ package sonia.scm.cache;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.Sets;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import sonia.scm.Filter;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.Set;
-
 /**
  *
  * @author Sebastian Sdorra
@@ -53,185 +41,22 @@ import java.util.Set;
  * @param <K>
  * @param <V>
  */
-public class GuavaCache<K, V> implements Cache<K, V>
-{
+public class GuavaCache<K, V> extends GuavaBaseCache<K, V> implements Cache<K, V> {
 
-  /**
-   * the logger for GuavaCache
-   */
-  private static final Logger logger =
-    LoggerFactory.getLogger(GuavaCache.class);
-
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param configuration
-   */
-  public GuavaCache(GuavaNamedCacheConfiguration configuration)
-  {
-    this(configuration, configuration.getName());
+  GuavaCache(com.google.common.cache.Cache<K, V> cache, CopyStrategy copyStrategy, String name) {
+    super(cache, copyStrategy, name);
   }
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param configuration
-   * @param name
-   */
-  public GuavaCache(GuavaCacheConfiguration configuration, String name)
-  {
-    this(GuavaCaches.create(configuration, name),
-      configuration.getCopyStrategy(), name);
-  }
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param cache
-   * @param copyStrategy
-   * @param name
-   */
-  @VisibleForTesting
-  protected GuavaCache(com.google.common.cache.Cache<K, V> cache,
-    CopyStrategy copyStrategy, String name)
-  {
-    this.cache = cache;
-    this.name = name;
-
-    if (copyStrategy != null)
-    {
-      this.copyStrategy = copyStrategy;
-    }
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   */
+  
   @Override
-  public void clear()
-  {
-    if (logger.isDebugEnabled())
-    {
-      logger.debug("clear cache {}", name);
-    }
-
-    cache.invalidateAll();
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param key
-   *
-   * @return
-   */
-  @Override
-  public boolean contains(K key)
-  {
-    return cache.getIfPresent(key) != null;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param key
-   * @param value
-   */
-  @Override
-  public void put(K key, V value)
-  {
+  public void put(K key, V value) {
     cache.put(key, copyStrategy.copyOnWrite(value));
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param key
-   *
-   * @return
-   */
   @Override
-  public boolean remove(K key)
-  {
+  public boolean remove(K key) {
     cache.invalidate(key);
 
     return true;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param filter
-   *
-   * @return
-   */
-  @Override
-  public boolean removeAll(Filter<K> filter)
-  {
-    Set<K> keysToRemove = Sets.newHashSet();
-
-    for (K key : cache.asMap().keySet())
-    {
-      if (filter.accept(key))
-      {
-        keysToRemove.add(key);
-      }
-    }
-
-    boolean result = false;
-
-    if (!keysToRemove.isEmpty())
-    {
-      cache.invalidateAll(keysToRemove);
-      result = true;
-    }
-
-    return result;
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param key
-   *
-   * @return
-   */
-  @Override
-  public V get(K key)
-  {
-    V value = cache.getIfPresent(key);
-
-    if (value != null)
-    {
-      value = copyStrategy.copyOnRead(value);
-    }
-
-    return value;
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private com.google.common.cache.Cache<K, V> cache;
-
-  /** Field description */
-  private CopyStrategy copyStrategy = CopyStrategy.NONE;
-
-  /** Field description */
-  private String name;
+  }  
+  
 }

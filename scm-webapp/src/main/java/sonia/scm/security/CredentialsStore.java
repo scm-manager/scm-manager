@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010, Sebastian Sdorra
+ * Copyright (c) 2014, Sebastian Sdorra
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,38 +28,53 @@
  * http://bitbucket.org/sdorra/scm-manager
  *
  */
+package sonia.scm.security;
 
-
-package sonia.scm.cache;
-
-import org.junit.Assert;
+import com.google.common.annotations.VisibleForTesting;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import javax.servlet.http.HttpServletRequest;
+import org.apache.shiro.authc.UsernamePasswordToken;
 
 /**
- *
+ * Stores credentials of the user in the http session of the user.
+ * 
  * @author Sebastian Sdorra
+ * @since 1.52
  */
-public class GuavaCacheManagerTest extends CacheManagerTestBase
-{
+public class CredentialsStore {
+  
+  @VisibleForTesting
+  static final String SCM_CREDENTIALS = "SCM_CREDENTIALS";
+  
+  private final Provider<HttpServletRequest> requestProvider;
+
+  @Inject
+  public CredentialsStore(Provider<HttpServletRequest> requestProvider) {
+    this.requestProvider = requestProvider;
+  }
 
   /**
-   * Method description
-   *
-   *
-   * @return
+   * Extracts the user credentials from token, encrypts them, and stores them in the http session.
+   * 
+   * @param token username password token
    */
-  @Override
-  protected CacheManager createCacheManager()
-  {
-    return CacheTestUtil.createDefaultGuavaCacheManager();
-  }
+  public void store(UsernamePasswordToken token) {
+    // store encrypted credentials in session
+    String credentials = token.getUsername();
 
-  @Override
-  protected void assertIsSame(Cache c1, Cache c2) {
-    Assert.assertSame(
-      ((GuavaCache)c1).getWrappedCache(),
-      ((GuavaCache)c2).getWrappedCache()
-    );
+    char[] password = token.getPassword();
+    if (password != null && password.length > 0) {
+      credentials = credentials.concat(":").concat(new String(password));
+    }
+
+    credentials = encrypt(credentials);
+    requestProvider.get().getSession(true).setAttribute(SCM_CREDENTIALS, credentials);
   }
   
+  @VisibleForTesting
+  protected String encrypt(String credentials){
+    return CipherUtil.getInstance().encode(credentials);
+  }
   
 }

@@ -159,8 +159,7 @@ public abstract class CacheManagerTestBase<C extends Cache>
    * @param c1
    * @param c2
    */
-  protected void assertIsSame(Cache<String, String> c1,
-    Cache<String, String> c2)
+  protected void assertIsSame(Cache<String, String> c1, Cache<String, String> c2)
   {
     assertSame(c1, c2);
   }
