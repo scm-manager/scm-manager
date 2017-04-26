@@ -81,6 +81,9 @@ public class ValidationUtilTest
     assertTrue(ValidationUtil.isMailAddressValid("s.sdorra@t.co"));
     assertTrue(ValidationUtil.isMailAddressValid("s.sdorra@ucla.college")); 
     assertTrue(ValidationUtil.isMailAddressValid("s.sdorra@example.xn--p1ai"));
+    
+    // issue 909
+    assertTrue(ValidationUtil.isMailAddressValid("s.sdorra@scm.solutions")); 
 
     // false
     assertFalse(ValidationUtil.isMailAddressValid("ostfalia.de"));
