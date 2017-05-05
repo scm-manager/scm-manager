@@ -317,6 +317,8 @@ public class SvnRepositoryHandler
                      comp.isPre15Compatible(), comp.isPre16Compatible(),
                      comp.isPre17Compatible(), comp.isWith17Compatible());
 
+      fixMissingInstanceID(directory);
+      
       svnRepository = SVNRepositoryFactory.create(url);
 
       String uuid = svnRepository.getRepositoryUUID(true);
@@ -346,6 +348,14 @@ public class SvnRepositoryHandler
       SvnUtil.closeSession(svnRepository);
     }
   }
+  
+  private void fixMissingInstanceID(File directory) throws IOException {
+    InstanceIDFix fix = new InstanceIDFix(directory);
+    if (fix.isRequired()) {
+      fix.addInstanceID();
+    }
+  }
+
 
   /**
    * Method description

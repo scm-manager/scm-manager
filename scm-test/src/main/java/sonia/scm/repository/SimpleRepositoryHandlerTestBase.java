@@ -76,6 +76,11 @@ public abstract class SimpleRepositoryHandlerTestBase extends AbstractTestBase
   protected abstract RepositoryHandler createRepositoryHandler(
           StoreFactory factory, File directory);
 
+  
+  protected RepositoryHandler getHandler() {
+    return handler;
+  }
+  
   /**
    * Method description
    *
@@ -202,7 +207,7 @@ public abstract class SimpleRepositoryHandlerTestBase extends AbstractTestBase
 
   /** Field description */
   protected File baseDirectory;
-
+  
   /** Field description */
   private RepositoryHandler handler;
 }

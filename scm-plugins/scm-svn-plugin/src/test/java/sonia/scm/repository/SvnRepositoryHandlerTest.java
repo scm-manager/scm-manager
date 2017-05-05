@@ -35,6 +35,8 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Charsets;
+import com.google.common.io.Files;
 import sonia.scm.io.DefaultFileSystem;
 import sonia.scm.store.StoreFactory;
 
@@ -43,6 +45,9 @@ import static org.junit.Assert.*;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import org.junit.Test;
 
 /**
  *
@@ -66,7 +71,7 @@ public class SvnRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase
     assertTrue(format.isFile());
 
     File db = new File(directory, "db");
-
+    
     assertTrue(db.exists());
     assertTrue(db.isDirectory());
   }
@@ -95,5 +100,19 @@ public class SvnRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase
     handler.setConfig(config);
 
     return handler;
+  }
+  
+  @Test
+  public void testCreatedUUID() throws RepositoryException, IOException {
+    SvnRepositoryHandler handler = (SvnRepositoryHandler) getHandler();
+    handler.getConfig().setCompatibility(Compatibility.WITH17);
+    
+    Repository repository = RepositoryTestData.createRestaurantAtTheEndOfTheUniverse();
+    handler.create(repository);
+    
+    File directory = handler.getDirectory(repository);
+    File uuidFile = new File(directory, "db" + File.separator + "uuid");
+    List<String> lines = Files.readLines(uuidFile, Charsets.UTF_8);
+    assertEquals(2, lines.size());
   }
 }

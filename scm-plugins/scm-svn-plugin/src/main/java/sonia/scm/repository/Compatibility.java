@@ -40,7 +40,8 @@ package sonia.scm.repository;
 public enum Compatibility
 {
   NONE(false, false, false, false, false),
-  PRE14(true, true, true, true, false), PRE15(false, true, true, true, false),
+  PRE14(true, true, true, true, false), 
+  PRE15(false, true, true, true, false),
   PRE16(false, false, true, true, false),
   PRE17(false, false, false, true, false),
   WITH17(false, false, false, false, true);
