@@ -37,8 +37,6 @@ import com.google.inject.Inject;
 
 import org.apache.shiro.SecurityUtils;
 
-import org.codehaus.enunciate.modules.jersey.ExternallyManagedLifecycle;
-
 import sonia.scm.security.KeyGenerator;
 import sonia.scm.security.Role;
 
@@ -56,7 +54,6 @@ import javax.ws.rs.core.MediaType;
  * @since 1.41
  */
 @Path("security/key")
-@ExternallyManagedLifecycle
 public class KeyResource
 {
 

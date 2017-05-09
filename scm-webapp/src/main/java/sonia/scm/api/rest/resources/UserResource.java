@@ -37,11 +37,9 @@ package sonia.scm.api.rest.resources;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.webcohesion.enunciate.metadata.rs.TypeHint;
 
 import org.apache.shiro.SecurityUtils;
-
-import org.codehaus.enunciate.jaxrs.TypeHint;
-import org.codehaus.enunciate.modules.jersey.ExternallyManagedLifecycle;
 
 import sonia.scm.security.EncryptionHandler;
 import sonia.scm.security.Role;
@@ -78,7 +76,6 @@ import javax.ws.rs.core.UriInfo;
  */
 @Singleton
 @Path("users")
-@ExternallyManagedLifecycle
 public class UserResource extends AbstractManagerResource<User, UserException>
 {
 

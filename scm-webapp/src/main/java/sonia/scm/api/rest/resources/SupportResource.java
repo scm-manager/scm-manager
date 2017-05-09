@@ -42,8 +42,6 @@ import com.google.inject.Inject;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
-import org.codehaus.enunciate.modules.jersey.ExternallyManagedLifecycle;
-
 import sonia.scm.SCMContextProvider;
 import sonia.scm.ServletContainerDetector;
 import sonia.scm.Type;
@@ -79,7 +77,6 @@ import javax.ws.rs.core.MediaType;
  * @author Sebastian Sdorra
  */
 @Path("support")
-@ExternallyManagedLifecycle
 public class SupportResource
 {
 

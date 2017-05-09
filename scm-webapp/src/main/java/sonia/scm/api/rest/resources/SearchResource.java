@@ -39,8 +39,6 @@ import com.google.common.base.Function;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import org.codehaus.enunciate.modules.jersey.ExternallyManagedLifecycle;
-
 import sonia.scm.HandlerEvent;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
@@ -68,7 +66,6 @@ import javax.ws.rs.core.MediaType;
  */
 @Singleton
 @Path("search")
-@ExternallyManagedLifecycle
 public class SearchResource implements UserListener, GroupListener
 {
 

@@ -43,9 +43,6 @@ import com.google.inject.Inject;
 
 import org.apache.shiro.SecurityUtils;
 
-import org.codehaus.enunciate.jaxrs.TypeHint;
-import org.codehaus.enunciate.modules.jersey.ExternallyManagedLifecycle;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,6 +71,7 @@ import static com.google.common.base.Preconditions.*;
 
 import com.sun.jersey.api.client.ClientResponse.Status;
 import com.sun.jersey.multipart.FormDataParam;
+import com.webcohesion.enunciate.metadata.rs.TypeHint;
 
 import java.io.File;
 import java.io.IOException;
@@ -111,7 +109,6 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Sebastian Sdorra
  */
 @Path("import/repositories")
-@ExternallyManagedLifecycle
 public class RepositoryImportResource
 {
 

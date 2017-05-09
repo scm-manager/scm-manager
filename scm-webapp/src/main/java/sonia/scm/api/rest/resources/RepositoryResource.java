@@ -39,11 +39,9 @@ import com.google.common.base.Strings;
 import com.google.common.io.Closeables;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.webcohesion.enunciate.metadata.rs.TypeHint;
 
 import org.apache.shiro.SecurityUtils;
-
-import org.codehaus.enunciate.jaxrs.TypeHint;
-import org.codehaus.enunciate.modules.jersey.ExternallyManagedLifecycle;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -111,7 +109,6 @@ import javax.ws.rs.core.UriInfo;
  */
 @Singleton
 @Path("repositories")
-@ExternallyManagedLifecycle
 public class RepositoryResource
   extends AbstractManagerResource<Repository, RepositoryException>
 {

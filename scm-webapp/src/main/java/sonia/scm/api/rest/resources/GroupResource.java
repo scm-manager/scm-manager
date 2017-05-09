@@ -37,11 +37,9 @@ package sonia.scm.api.rest.resources;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.webcohesion.enunciate.metadata.rs.TypeHint;
 
 import org.apache.shiro.SecurityUtils;
-
-import org.codehaus.enunciate.jaxrs.TypeHint;
-import org.codehaus.enunciate.modules.jersey.ExternallyManagedLifecycle;
 
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupException;
@@ -75,7 +73,6 @@ import javax.ws.rs.core.UriInfo;
  */
 @Path("groups")
 @Singleton
-@ExternallyManagedLifecycle
 public class GroupResource
   extends AbstractManagerResource<Group, GroupException>
 {

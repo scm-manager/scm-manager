@@ -39,30 +39,33 @@
     Description: Enunciate configuration
 -->
 
-<enunciate label="full" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:noNamespaceSchemaLocation="http://enunciate.codehaus.org/schemas/enunciate-1.27.xsd">
+<enunciate xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:noNamespaceSchemaLocation="http://enunciate.webcohesion.com/schemas/enunciate-2.9.0.xsd"
+           slug="scm-manager" version="${project.version}">
 
+  <title>SCM-Manager API</title>
+  
+  <description>
+    <![CDATA[
+      <h1>SCM-Manager API</h1>
+      <p>This page describes the REST Api of <a href="https://www.scm-manager.org">SCM-Manager</a> ${project.version}.</p>
+    ]]>
+  </description>
+  
   <api-classes>
-    <include pattern="sonia.scm.api.rest.resources.*" />
+    <exclude pattern="sonia.scm.debug.DebugResource" /> 
     <exclude pattern="sonia.scm.api.rest.resources.ConfigurationResource" /> 
     <exclude pattern="sonia.scm.api.rest.resources.SupportResource" />
     <exclude pattern="sonia.scm.api.rest.resources.RepositoryRootResource" />
   </api-classes>
 
-  <services>
-    <rest defaultRestSubcontext="/api/rest" />
-  </services>
-
   <modules>
     
-    <docs title="SCM-Manager API" />
+    <jaxrs datatype-detection="local">
+      <application path="/api/rest" />
+    </jaxrs>
     
-    <jersey resourceProviderFactory="com.sun.jersey.guice.spi.container.GuiceComponentProviderFactory">
-      <init-param name="com.sun.jersey.api.json.POJOMappingFeature" value="true" />
-      <init-param name="com.sun.jersey.config.feature.Redirect" value="true" />
-      <init-param name="com.sun.jersey.config.property.resourceConfigClass" value="sonia.scm.api.rest.UriExtensionsConfig" /> 
-      <init-param name="com.sun.jersey.config.property.packages" value="sonia.scm.api.rest" />
-    </jersey>
+    <docs disableResourceLinks="true" includeApplicationPath="true" />
   
   </modules>
 
