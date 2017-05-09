@@ -34,6 +34,8 @@ package sonia.scm.api.rest.resources;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
+import com.webcohesion.enunciate.metadata.rs.ResponseCode;
+import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 
 import org.apache.shiro.SecurityUtils;
 
@@ -72,17 +74,15 @@ public class KeyResource
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Generates a unique key. This method can only executed with administration
-   * privileges.<br />
-   * <br />
-   * <ul>
-   *   <li>200 success</li>
-   *   <li>500 internal server error</li>
-   * </ul>
+   * Generates a unique key. <strong>Note:</strong> This method can only executed with administration privileges.
    *
    * @return unique key
    */
   @GET
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
   @Produces(MediaType.TEXT_PLAIN)
   public String generateKey()
   {

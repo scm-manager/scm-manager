@@ -36,6 +36,8 @@ package sonia.scm.api.rest.resources;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
+import com.webcohesion.enunciate.metadata.rs.ResponseCode;
+import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
 
 import org.apache.shiro.SecurityUtils;
@@ -66,7 +68,8 @@ import javax.ws.rs.core.Response;
 import sonia.scm.security.Role;
 
 /**
- *
+ * Resource to change the password of the authenticated user.
+ * 
  * @author Sebastian Sdorra
  */
 @Path("action/change-password")
@@ -98,14 +101,7 @@ public class ChangePasswordResource
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Changes the password of the current user.<br />
-   * <br />
-   * Status codes:
-   * <ul>
-   *   <li>200 success</li>
-   *   <li>400 bad request, the old password is not correct</li>
-   *   <li>500 internal server error</li>
-   * </ul>
+   * Changes the password of the current user.
    *
    * @param oldPassword old password of the current user
    * @param newPassword new password for the current user
@@ -117,6 +113,11 @@ public class ChangePasswordResource
    */
   @POST
   @TypeHint(RestActionResult.class)
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 400, condition = "bad request, the old password is not correct"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public Response changePassword(@FormParam("old-password") String oldPassword,
     @FormParam("new-password") String newPassword)

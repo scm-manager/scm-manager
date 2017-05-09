@@ -35,6 +35,8 @@ package sonia.scm.api.rest.resources;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.webcohesion.enunciate.metadata.rs.ResponseCode;
+import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 
 import org.apache.shiro.SecurityUtils;
 
@@ -60,12 +62,7 @@ public class CipherResource
 
   /**
    * Encrypts the request body and returns an encrypted string. This method can
-   * only executed with administration privileges.<br />
-   * <br />
-   * <ul>
-   *   <li>200 success</li>
-   *   <li>500 internal server error</li>
-   * </ul>
+   * only executed with administration privileges.
    *
    * @param value value to encrypt
    *
@@ -73,6 +70,10 @@ public class CipherResource
    */
   @POST
   @Path("encrypt")
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
   @Produces(MediaType.TEXT_PLAIN)
   public String encrypt(String value)
   {

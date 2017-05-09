@@ -53,6 +53,9 @@ import sonia.scm.plugin.PluginInformationComparator;
 //~--- JDK imports ------------------------------------------------------------
 
 import com.sun.jersey.multipart.FormDataParam;
+import com.webcohesion.enunciate.metadata.rs.ResponseCode;
+import com.webcohesion.enunciate.metadata.rs.StatusCodes;
+import com.webcohesion.enunciate.metadata.rs.TypeHint;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -73,7 +76,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 /**
- *
+ * RESTful Web Service Endpoint to manage plugins.
+ * 
  * @author Sebastian Sdorra
  */
 @Singleton
@@ -104,13 +108,7 @@ public class PluginResource
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Installs a plugin from a package.<br />
-   * <br />
-   * <ul>
-   *   <li>200 success</li>
-   *   <li>412 precondition failed</li>
-   *   <li>500 internal server error</li>
-   * </ul>
+   * Installs a plugin from a package.
    *
    * @param uploadedInputStream
    * @return
@@ -119,6 +117,11 @@ public class PluginResource
    */
   @POST
   @Path("install-package")
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 412, condition = "precondition failed"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
   @Consumes(MediaType.MULTIPART_FORM_DATA)
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public Response install(
@@ -150,35 +153,30 @@ public class PluginResource
   }
 
   /**
-   * Installs a plugin.<br />
-   * <br />
-   * <ul>
-   *   <li>200 success</li>
-   *   <li>500 internal server error</li>
-   * </ul>
+   * Installs a plugin.
    *
    * @param id id of the plugin to be installed
    *
    * @return
    */
   @POST
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
+  @TypeHint(TypeHint.NO_CONTENT.class)
   @Path("install/{id}")
   public Response install(@PathParam("id") String id)
   {
     pluginManager.install(id);
 
+    // TODO should return 204 no content
     return Response.ok().build();
   }
 
   /**
    * Installs a plugin from a package. This method is a workaround for ExtJS
-   * file upload, which requires text/html as content-type.<br />
-   * <br />
-   * <ul>
-   *   <li>200 success</li>
-   *   <li>412 precondition failed</li>
-   *   <li>500 internal server error</li>
-   * </ul>
+   * file upload, which requires text/html as content-type.
    *
    * @param uploadedInputStream
    * @return
@@ -187,6 +185,11 @@ public class PluginResource
    */
   @POST
   @Path("install-package.html")
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 412, condition = "precondition failed"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
   @Consumes(MediaType.MULTIPART_FORM_DATA)
   @Produces(MediaType.TEXT_HTML)
   public Response installFromUI(
@@ -197,60 +200,62 @@ public class PluginResource
   }
 
   /**
-   * Uninstalls a plugin.<br />
-   * <br />
-   * <ul>
-   *   <li>200 success</li>
-   *   <li>500 internal server error</li>
-   * </ul>
+   * Uninstalls a plugin.
    *
    * @param id id of the plugin to be uninstalled
    *
    * @return
    */
   @POST
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
   @Path("uninstall/{id}")
   public Response uninstall(@PathParam("id") String id)
   {
     pluginManager.uninstall(id);
 
+    // TODO should return 204 content
+    // consider to do a uninstall with a delete
     return Response.ok().build();
   }
 
   /**
-   * Updates a plugin.<br />
-   * <br />
-   * <ul>
-   *   <li>200 success</li>
-   *   <li>500 internal server error</li>
-   * </ul>
+   * Updates a plugin.
    *
    * @param id id of the plugin to be updated
    *
    * @return
    */
   @POST
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
   @Path("update/{id}")
   public Response update(@PathParam("id") String id)
   {
     pluginManager.update(id);
 
+    // TODO should return 204 content
+    // consider to do an update with a put
+    
     return Response.ok().build();
   }
 
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Returns all plugins.<br />
-   * <br />
-   * <ul>
-   *   <li>200 success</li>
-   *   <li>500 internal server error</li>
-   * </ul>
+   * Returns all plugins.
    *
    * @return all plugins
    */
   @GET
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public Collection<PluginInformation> getAll()
   {
@@ -258,17 +263,16 @@ public class PluginResource
   }
 
   /**
-   * Returns all available plugins.<br />
-   * <br />
-   * <ul>
-   *   <li>200 success</li>
-   *   <li>500 internal server error</li>
-   * </ul>
+   * Returns all available plugins.
    *
    * @return all available plugins
    */
   @GET
   @Path("available")
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public Collection<PluginInformation> getAvailable()
   {
@@ -276,17 +280,16 @@ public class PluginResource
   }
 
   /**
-   * Returns all plugins which are available for update.<br />
-   * <br />
-   * <ul>
-   *   <li>200 success</li>
-   *   <li>500 internal server error</li>
-   * </ul>
+   * Returns all plugins which are available for update.
    *
    * @return all plugins which are available for update
    */
   @GET
   @Path("updates")
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public Collection<PluginInformation> getAvailableUpdates()
   {
@@ -294,17 +297,16 @@ public class PluginResource
   }
 
   /**
-   * Returns all installed plugins.<br />
-   * <br />
-   * <ul>
-   *   <li>200 success</li>
-   *   <li>500 internal server error</li>
-   * </ul>
+   * Returns all installed plugins.
    *
    * @return all installed plugins
    */
   @GET
   @Path("installed")
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public Collection<PluginInformation> getInstalled()
   {
@@ -312,17 +314,16 @@ public class PluginResource
   }
 
   /**
-   * Returns all plugins for the overview.<br />
-   * <br />
-   * <ul>
-   *   <li>200 success</li>
-   *   <li>500 internal server error</li>
-   * </ul>
+   * Returns all plugins for the overview.
    *
    * @return all plugins for the overview
    */
   @GET
   @Path("overview")
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public Collection<PluginInformation> getOverview()
   {
