@@ -48,7 +48,7 @@
   <description>
     <![CDATA[
       <h1>SCM-Manager API</h1>
-      <p>This page describes the REST Api of <a href="https://www.scm-manager.org">SCM-Manager</a> ${project.version}.</p>
+      <p>This page describes the RESTful Web Service API of <a href="https://www.scm-manager.org">SCM-Manager</a> ${project.version}.</p>
     ]]>
   </description>
   

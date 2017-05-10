@@ -46,7 +46,7 @@
   <fileSets>
 
     <fileSet>
-      <directory>target/restdocs</directory>
+      <directory>target/apidocs</directory>
       <filtered>false</filtered>
       <outputDirectory>.</outputDirectory>
       <directoryMode>0755</directoryMode>
