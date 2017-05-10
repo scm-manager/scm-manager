@@ -47,7 +47,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 
 /**
- *
+ * Resource for managing system security permissions.
+ * 
  * @author Sebastian Sdorra
  */
 @Path("security/permission")
@@ -72,31 +73,28 @@ public class SecuritySystemResource
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns group permission sub resource.
    *
+   * @param group name of group
    *
-   * @param group
-   *
-   * @return
+   * @return sub resource
    */
   @Path("group/{group}")
-  public GroupPermissionResource getGroupSubResource(
-    @PathParam("group") String group)
+  public GroupPermissionResource getGroupSubResource(@PathParam("group") String group)
   {
     return new GroupPermissionResource(system, group);
   }
 
   /**
-   * Method description
+   * Returns user permission sub resource.
    *
    *
-   * @param user
+   * @param user name of user
    *
-   * @return
+   * @return sub resource
    */
   @Path("user/{user}")
-  public UserPermissionResource getUserSubResource(
-    @PathParam("user") String user)
+  public UserPermissionResource getUserSubResource(@PathParam("user") String user)
   {
     return new UserPermissionResource(system, user);
   }
@@ -104,5 +102,5 @@ public class SecuritySystemResource
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private SecuritySystem system;
+  private final SecuritySystem system;
 }

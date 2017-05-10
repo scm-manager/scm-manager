@@ -111,6 +111,7 @@ public class PluginResource
    * Installs a plugin from a package.
    *
    * @param uploadedInputStream
+   * 
    * @return
    *
    * @throws IOException

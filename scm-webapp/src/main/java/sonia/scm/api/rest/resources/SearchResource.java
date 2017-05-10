@@ -38,6 +38,8 @@ package sonia.scm.api.rest.resources;
 import com.google.common.base.Function;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.webcohesion.enunciate.metadata.rs.ResponseCode;
+import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 
 import sonia.scm.HandlerEvent;
 import sonia.scm.cache.Cache;
@@ -61,7 +63,9 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 /**
- *
+ * RESTful Web Service Resource to search users and groups. This endpoint can be used to implement typeahead input 
+ * fields for permissions.
+ * 
  * @author Sebastian Sdorra
  */
 @Singleton
@@ -138,12 +142,7 @@ public class SearchResource implements UserListener, GroupListener
   }
 
   /**
-   * Returns a list of groups found by the given search string.<br />
-   * <br />
-   * <ul>
-   *   <li>200 success</li>
-   *   <li>500 internal server error</li>
-   * </ul>
+   * Returns a list of groups found by the given search string.
    *
    * @param queryString the search string
    *
@@ -151,6 +150,10 @@ public class SearchResource implements UserListener, GroupListener
    */
   @GET
   @Path("groups")
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public SearchResults searchGroups(@QueryParam("query") String queryString)
   {
@@ -174,12 +177,7 @@ public class SearchResource implements UserListener, GroupListener
   }
 
   /**
-   * Returns a list of users found by the given search string.<br />
-   * <br />
-   * <ul>
-   *   <li>200 success</li>
-   *   <li>500 internal server error</li>
-   * </ul>
+   * Returns a list of users found by the given search string.
    *
    * @param queryString the search string
    *
@@ -187,6 +185,10 @@ public class SearchResource implements UserListener, GroupListener
    */
   @GET
   @Path("users")
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public SearchResults searchUsers(@QueryParam("query") String queryString)
   {
@@ -208,8 +210,8 @@ public class SearchResource implements UserListener, GroupListener
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private SearchHandler<Group> groupSearchHandler;
+  private final SearchHandler<Group> groupSearchHandler;
 
   /** Field description */
-  private SearchHandler<User> userSearchHandler;
+  private final SearchHandler<User> userSearchHandler;
 }

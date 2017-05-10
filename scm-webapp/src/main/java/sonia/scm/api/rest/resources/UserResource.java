@@ -37,6 +37,9 @@ package sonia.scm.api.rest.resources;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.webcohesion.enunciate.metadata.rs.ResponseCode;
+import com.webcohesion.enunciate.metadata.rs.ResponseHeader;
+import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
 
 import org.apache.shiro.SecurityUtils;
@@ -71,7 +74,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 /**
- *
+ * RESTful Web Service Resource to manage users.
+ * 
  * @author Sebastian Sdorra
  */
 @Singleton
@@ -96,8 +100,7 @@ public class UserResource extends AbstractManagerResource<User, UserException>
    * @param securityContextProvider
    */
   @Inject
-  public UserResource(UserManager userManager,
-    EncryptionHandler encryptionHandler)
+  public UserResource(UserManager userManager, EncryptionHandler encryptionHandler)
   {
     super(userManager);
     this.encryptionHandler = encryptionHandler;
@@ -106,15 +109,7 @@ public class UserResource extends AbstractManagerResource<User, UserException>
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Creates a new user.<br />
-   * This method requires admin privileges.<br />
-   * <br />
-   * Status codes:
-   * <ul>
-   *   <li>201 create success</li>
-   *   <li>403 forbidden, the current user has no admin privileges</li>
-   *   <li>500 internal server error</li>
-   * </ul>
+   * Creates a new user. <strong>Note:</strong> This method requires admin privileges.
    *
    * @param uriInfo current uri informations
    * @param user the user to be created
@@ -122,6 +117,14 @@ public class UserResource extends AbstractManagerResource<User, UserException>
    * @return
    */
   @POST
+  @StatusCodes({
+    @ResponseCode(code = 201, condition = "create success", additionalHeaders = {
+      @ResponseHeader(name = "Location", description = "uri to the created group")
+    }),
+    @ResponseCode(code = 403, condition = "forbidden, the current user has no admin privileges"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
+  @TypeHint(TypeHint.NO_CONTENT.class)
   @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   @Override
   public Response create(@Context UriInfo uriInfo, User user)
@@ -130,15 +133,7 @@ public class UserResource extends AbstractManagerResource<User, UserException>
   }
 
   /**
-   * Deletes a user.<br />
-   * This method requires admin privileges.<br />
-   * <br />
-   * Status codes:
-   * <ul>
-   *  <li>201 delete success</li>
-   *  <li>403 forbidden, the current user has no admin privileges</li>
-   *  <li>500 internal server error</li>
-   * </ul>
+   * Deletes a user. <strong>Note:</strong> This method requires admin privileges.
    *
    * @param name the name of the user to delete.
    *
@@ -146,6 +141,12 @@ public class UserResource extends AbstractManagerResource<User, UserException>
    */
   @DELETE
   @Path("{id}")
+  @StatusCodes({
+    @ResponseCode(code = 204, condition = "delete success"),
+    @ResponseCode(code = 403, condition = "forbidden, the current user has no admin privileges"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
+  @TypeHint(TypeHint.NO_CONTENT.class)
   @Override
   public Response delete(@PathParam("id") String name)
   {
@@ -153,15 +154,7 @@ public class UserResource extends AbstractManagerResource<User, UserException>
   }
 
   /**
-   * Modifies the given user.<br />
-   * This method requires admin privileges.<br />
-   * <br />
-   * Status codes:
-   * <ul>
-   *   <li>201 update successful</li>
-   *   <li>403 forbidden, the current user has no admin privileges</li>
-   *   <li>500 internal server error</li>
-   * </ul>
+   * Modifies the given user. <strong>Note:</strong> This method requires admin privileges.
    *
    * @param uriInfo current uri informations
    * @param name name of the user to be modified
@@ -171,6 +164,12 @@ public class UserResource extends AbstractManagerResource<User, UserException>
    */
   @PUT
   @Path("{id}")
+  @StatusCodes({
+    @ResponseCode(code = 204, condition = "update success"),
+    @ResponseCode(code = 403, condition = "forbidden, the current user has no admin privileges"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
+  @TypeHint(TypeHint.NO_CONTENT.class)
   @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   @Override
   public Response update(@Context UriInfo uriInfo,
@@ -182,16 +181,7 @@ public class UserResource extends AbstractManagerResource<User, UserException>
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Returns a user.<br />
-   * This method requires admin privileges.<br />
-   * <br />
-   * Status codes:
-   * <ul>
-   *   <li>200 get successful</li>
-   *   <li>403 forbidden, the current user has no admin privileges</li>
-   *   <li>404 not found, no user with the specified id/name available</li>
-   *   <li>500 internal server error</li>
-   * </ul>
+   * Returns a user. <strong>Note:</strong> This method requires admin privileges.
    *
    * @param request the current request
    * @param id the id/name of the user
@@ -201,6 +191,12 @@ public class UserResource extends AbstractManagerResource<User, UserException>
   @GET
   @Path("{id}")
   @TypeHint(User.class)
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 403, condition = "forbidden, the current user has no admin privileges"),
+    @ResponseCode(code = 404, condition = "not found, no group with the specified id/name available"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   @Override
   public Response get(@Context Request request, @PathParam("id") String id)
@@ -220,15 +216,7 @@ public class UserResource extends AbstractManagerResource<User, UserException>
   }
 
   /**
-   * Returns all users.<br />
-   * This method requires admin privileges.<br />
-   * <br />
-   * Status codes:
-   * <ul>
-   *   <li>200 get successful</li>
-   *   <li>403 forbidden, the current user has no admin privileges</li>
-   *   <li>500 internal server error</li>
-   * </ul>
+   * Returns all users. <strong>Note:</strong> This method requires admin privileges.
    *
    * @param request the current request
    * @param start the start value for paging
@@ -240,6 +228,11 @@ public class UserResource extends AbstractManagerResource<User, UserException>
    */
   @GET
   @TypeHint(User[].class)
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 403, condition = "forbidden, the current user has no admin privileges"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   @Override
   public Response getAll(@Context Request request, @DefaultValue("0")
@@ -253,14 +246,6 @@ public class UserResource extends AbstractManagerResource<User, UserException>
 
   //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param items
-   *
-   * @return
-   */
   @Override
   protected GenericEntity<Collection<User>> createGenericEntity(
     Collection<User> items)
@@ -269,24 +254,12 @@ public class UserResource extends AbstractManagerResource<User, UserException>
     ;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param user
-   */
   @Override
   protected void preCreate(User user)
   {
     encryptPassword(user);
   }
-
-  /**
-   * Method description
-   *
-   *
-   * @param user
-   */
+  
   @Override
   protected void preUpate(User user)
   {
@@ -303,14 +276,6 @@ public class UserResource extends AbstractManagerResource<User, UserException>
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param users
-   *
-   * @return
-   */
   @Override
   protected Collection<User> prepareForReturn(Collection<User> users)
   {
@@ -325,14 +290,6 @@ public class UserResource extends AbstractManagerResource<User, UserException>
     return users;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param user
-   *
-   * @return
-   */
   @Override
   protected User prepareForReturn(User user)
   {
@@ -341,42 +298,18 @@ public class UserResource extends AbstractManagerResource<User, UserException>
     return user;
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param user
-   *
-   * @return
-   */
   @Override
   protected String getId(User user)
   {
     return user.getName();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
   protected String getPathPart()
   {
     return PATH_PART;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param user
-   */
   private void encryptPassword(User user)
   {
     String password = user.getPassword();
