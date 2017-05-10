@@ -6,13 +6,13 @@
   <parent>
     <groupId>sonia.scm</groupId>
     <artifactId>scm</artifactId>
-    <version>1.52-SNAPSHOT</version>
+    <version>1.52</version>
   </parent>
 
   <groupId>sonia.scm.clients</groupId>
   <artifactId>scm-clients</artifactId>
   <packaging>pom</packaging>
-  <version>1.52-SNAPSHOT</version>
+  <version>1.52</version>
   <name>scm-clients</name>
 
   <modules>
@@ -32,7 +32,7 @@
       <artifactId>scm-core</artifactId>
       <groupId>sonia.scm</groupId>
       <type>jar</type>
-      <version>1.52-SNAPSHOT</version>
+      <version>1.52</version>
       <exclusions>
         <exclusion>
           <artifactId>shiro-core</artifactId>
