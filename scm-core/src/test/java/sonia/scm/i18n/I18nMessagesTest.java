@@ -58,6 +58,17 @@ public class I18nMessagesTest
   @Test
   public void testI18n()
   {
+    /*
+      lookup-order for this test:
+      - TM_en (es specified, but not ava)
+      - TM_<execution-locale>
+      - TM
+
+      This means that, if there is no default locale specified,  this test accidentally passes on non-german machines, an fails on german machines, since the execution locale is de_DE, which is checked even before the fallback locale is considered.
+     */
+
+    Locale.setDefault(Locale.ENGLISH);
+
     TestMessages msg = I18nMessages.get(TestMessages.class);
 
     assertEquals("Normal Key", msg.normalKey);

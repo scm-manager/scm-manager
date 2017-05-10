@@ -55,7 +55,9 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 
+import java.io.IOException;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 /**
  *
@@ -155,7 +157,11 @@ public class AbstractTestBase
     }
     finally
     {
-      IOUtil.delete(tempDirectory);
+      try {
+        IOUtil.delete(tempDirectory);
+      } catch (IOException e) {
+        Logger.getGlobal().warning(String.format("deleting temp <%s> failed: %s", tempDirectory.getAbsolutePath(), e.getMessage()));
+      }
     }
   }
 
