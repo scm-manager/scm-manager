@@ -865,6 +865,7 @@
             <configuration>
               <configFile>${project.build.directory}/enunciate.xml</configFile>
               <docsDir>${project.build.directory}</docsDir>
+              <docsSubdir>restdocs</docsSubdir>
             </configuration>
             <dependencies>
               <dependency>
