@@ -35,23 +35,31 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import org.eclipse.jgit.http.server.GitServlet;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static org.slf4j.LoggerFactory.getLogger;
 
+
+import org.eclipse.jgit.lfs.lib.Constants;
+import static org.eclipse.jgit.lfs.lib.Constants.CONTENT_TYPE_GIT_LFS_JSON;
+
+import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryProvider;
 import sonia.scm.repository.RepositoryRequestListenerUtil;
 import sonia.scm.util.HttpUtil;
+import sonia.scm.web.lfs.servlet.LfsServletFactory;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import sonia.scm.repository.RepositoryException;
@@ -73,7 +81,7 @@ public class ScmGitServlet extends GitServlet
 
   /** the logger for ScmGitServlet */
   private static final Logger logger =
-    LoggerFactory.getLogger(ScmGitServlet.class);
+    getLogger(ScmGitServlet.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -90,14 +98,19 @@ public class ScmGitServlet extends GitServlet
    */
   @Inject
   public ScmGitServlet(GitRepositoryResolver repositoryResolver,
-    GitReceivePackFactory receivePackFactory,
-    GitRepositoryViewer repositoryViewer,
-    RepositoryProvider repositoryProvider,
-    RepositoryRequestListenerUtil repositoryRequestListenerUtil)
+                       GitReceivePackFactory receivePackFactory,
+                       GitRepositoryViewer repositoryViewer,
+                       RepositoryProvider repositoryProvider,
+                       RepositoryRequestListenerUtil repositoryRequestListenerUtil,
+                       LfsServletFactory lfsServletFactory,
+                       UserAgentParser userAgentParser)
   {
     this.repositoryProvider = repositoryProvider;
     this.repositoryViewer = repositoryViewer;
     this.repositoryRequestListenerUtil = repositoryRequestListenerUtil;
+    this.lfsServletFactory = lfsServletFactory;
+    this.userAgentParser = userAgentParser;
+
     setRepositoryResolver(repositoryResolver);
     setReceivePackFactory(receivePackFactory);
   }
@@ -120,49 +133,44 @@ public class ScmGitServlet extends GitServlet
     throws ServletException, IOException
   {
     String uri = HttpUtil.getStrippedURI(request);
+    logger.trace("--request URI: {}", uri);
 
-    if (uri.matches(REGEX_GITHTTPBACKEND))
-    {
-      sonia.scm.repository.Repository repository = repositoryProvider.get();
+    //decide the type of response to be presented to the client
+    UserAgent userAgent = userAgentParser.parse(request);
+    if (userAgent.isBrowser()) {
 
-      if (repository != null)
-      {
-        if (repositoryRequestListenerUtil.callListeners(request, response,
-          repository))
-        {
-          super.service(request, response);
-        }
-        else if (logger.isDebugEnabled())
-        {
+      renderHtmlRepositryOverview(request, response);
+    } else {
+
+      //service the request for a git client
+      final Repository repository = repositoryProvider.get();
+
+      if (repository == null) {
+
+        //repository could not be matched found the current request
+        super.service(request, response);
+      } else {
+
+        if (repositoryRequestListenerUtil.callListeners(request, response, repository)) {
+          handleRequest(request, response, repository);
+        } else if (logger.isDebugEnabled()) {
           logger.debug("request aborted by repository request listener");
         }
       }
-      else
-      {
-        super.service(request, response);
-      }
-    }
-    else
-    {
-      printGitInformation(request, response);
     }
   }
 
   /**
-   * Method description
-   *
-   *
-   *
+   * This method renders basic information about the repository into the response. The result is meant to be viewed by
+   * browser.
    * @param request
    * @param response
    *
    * @throws IOException
    * @throws ServletException
    */
-  private void printGitInformation(HttpServletRequest request,
-    HttpServletResponse response)
-    throws ServletException, IOException
-  {
+  private void renderHtmlRepositryOverview(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
     sonia.scm.repository.Repository scmRepository = repositoryProvider.get();
 
     if (scmRepository != null)
@@ -186,6 +194,113 @@ public class ScmGitServlet extends GitServlet
     }
   }
 
+  /**
+   * Decides the type request being currently made and delegates it accordingly.
+   * <ul>
+   * <li>Batch API:</li>
+   * <ul>
+   * <li> used to provide the client with information on how handle the large files of a repository.</li>
+   * <li> response contains the information where to perform the actual upload and download of the large objects.</li>
+   * </ul>
+   * <li>Transfer API:</li>
+   * <ul>
+   * <li>receives and provides the actual large objects (resolves the pointer placed in the file of the working copy).</li>
+   * <li>invoked only after the Batch API has been questioned about what to do with the large files</li>
+   * </ul>
+   * <li>Regular HTTP Backend</li>
+   * <ul>
+   * <li>services everything that is not git-lfs.</li>
+   * </ul>
+   * </li>
+   * </ul>
+   */
+  private void handleRequest(HttpServletRequest request, HttpServletResponse response, Repository repository) throws ServletException, IOException {
+
+    logger.trace("--- Repository is: {}", repository.getName());
+    if (isLfsBatchApiRequest(request, repository.getName())) {
+
+      logger.trace("--- detected LFS Batch API Request");
+      HttpServlet servlet = lfsServletFactory.createProtocolServletFor(repository, request);
+      servlet.service(request, response);
+    } else if (isLfsFileTransferRequest(request, repository.getName())) {
+
+      logger.trace("--- detected LFS File Transfer Request");
+      HttpServlet servlet = lfsServletFactory.createFileLfsServletFor(repository, request);
+      servlet.service(request, response);
+    } else {
+      logger.trace("--- seems to be regular Git HTTP backend request: {}", request.getRequestURI());
+      //continue to the regular HTTP Backend
+      super.service(request, response);
+    }
+  }
+
+  /**
+   * Decides whether or not a request is for the LFS Batch API,
+   * <p>
+   * - PUT or GET
+   * - exactly for this repository
+   * - Content Type is {@link Constants#HDR_APPLICATION_OCTET_STREAM}.
+   *
+   * @return Returns {@code false} if either of the conditions does not match. Returns true if all match.
+   */
+  private static boolean isLfsFileTransferRequest(HttpServletRequest request, String repository) {
+
+    String regex = String.format("^%s%s/%s(\\.git)?/info/lfs/objects/[a-z0-9]{64}$", request.getContextPath(), GitServletModule.GIT_PATH, repository);
+    boolean pathMatches = request.getRequestURI().matches(regex);
+
+    boolean methodMatches = request.getMethod().equals("PUT") || request.getMethod().equals("GET");
+
+    return pathMatches && methodMatches;
+  }
+
+  /**
+   * Decides whether or not a request is for the LFS Batch API,
+   * <p>
+   * - POST
+   * - exactly for this repository
+   * - Content Type is {@link Constants#CONTENT_TYPE_GIT_LFS_JSON}.
+   *
+   * @return Returns {@code false} if either of the conditions does not match. Returns true if all match.
+   */
+  private static boolean isLfsBatchApiRequest(HttpServletRequest request, String repository) {
+
+    String regex = String.format("^%s%s/%s(\\.git)?/info/lfs/objects/batch$", request.getContextPath(), GitServletModule.GIT_PATH, repository);
+    boolean pathMatches = request.getRequestURI().matches(regex);
+
+    boolean methodMatches = "POST".equals(request.getMethod());
+
+    boolean headerContentTypeMatches = isLfsContentHeaderField(request.getContentType(), CONTENT_TYPE_GIT_LFS_JSON);
+    boolean headerAcceptMatches = isLfsContentHeaderField(request.getHeader("Accept"), CONTENT_TYPE_GIT_LFS_JSON);
+
+    return pathMatches && methodMatches && headerContentTypeMatches && headerAcceptMatches;
+  }
+
+  /**
+   * Checks whether request is of the specific content type.
+   *
+   * @param request             The HTTP request header value to be examined.
+   * @param expectedContentType The expected content type.
+   * @return Returns {@code true} if the request has the expected content type. Return {@code false} otherwise.
+   */
+  @VisibleForTesting
+  static boolean isLfsContentHeaderField(String request, String expectedContentType) {
+
+    if (request == null || request.isEmpty()) {
+      return false;
+    }
+
+    String[] parts = request.split(" ");
+    for (String part : parts) {
+      if (part.startsWith(expectedContentType)) {
+
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
@@ -194,6 +309,14 @@ public class ScmGitServlet extends GitServlet
   /** Field description */
   private final RepositoryRequestListenerUtil repositoryRequestListenerUtil;
 
-  /** Field description */
+  /**
+   * Field description
+   */
   private final GitRepositoryViewer repositoryViewer;
+
+  private final LfsServletFactory lfsServletFactory;
+
+  private final UserAgentParser userAgentParser;
+
+
 }

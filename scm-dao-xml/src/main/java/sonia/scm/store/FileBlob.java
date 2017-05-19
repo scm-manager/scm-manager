@@ -119,6 +119,19 @@ public final class FileBlob implements Blob
     return new FileOutputStream(file);
   }
 
+  @Override
+  public long getSize() {
+    if (this.file.isFile()) {
+
+      return this.file.length();
+    } else {
+
+      //to sum up all other cases, in which we cannot determine a size
+      return -1;
+
+    }
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */

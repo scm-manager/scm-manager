@@ -35,6 +35,7 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -127,13 +128,22 @@ public class GitPermissionFilter extends ProviderPermissionFilter
    * @return
    */
   @Override
-  protected boolean isWriteRequest(HttpServletRequest request)
-  {
+  protected boolean isWriteRequest(HttpServletRequest request) {
+
     String uri = request.getRequestURI();
 
-    return uri.endsWith(URI_RECEIVE_PACK)
-      || (uri.endsWith(URI_REF_INFO)
-        && PARAMETER_VALUE_RECEIVE.equals(
-          request.getParameter(PARAMETER_SERVICE)));
+    return uri.endsWith(URI_RECEIVE_PACK) ||
+            (uri.endsWith(URI_REF_INFO) && PARAMETER_VALUE_RECEIVE.equals(request.getParameter(PARAMETER_SERVICE))) ||
+            isLfsFileUpload(request);
+
   }
+
+  @VisibleForTesting
+  static boolean isLfsFileUpload(HttpServletRequest request) {
+    String regex = String.format("^%s%s/.+(\\.git)?/info/lfs/objects/[a-z0-9]{64}$", request.getContextPath(), GitServletModule.GIT_PATH);
+    return request.getRequestURI().matches(regex) && "PUT".equals(request.getMethod());
+
+  }
+
+
 }

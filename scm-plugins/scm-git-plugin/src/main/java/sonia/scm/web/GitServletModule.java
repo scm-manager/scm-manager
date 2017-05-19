@@ -49,8 +49,11 @@ import sonia.scm.plugin.ext.Extension;
 public class GitServletModule extends ServletModule
 {
 
+  public static final String GIT_PATH = "/git";
+
   /** Field description */
-  public static final String PATTERN_GIT = "/git/*";
+  public static final String PATTERN_GIT = GIT_PATH + "/*";
+
 
   //~--- methods --------------------------------------------------------------
 

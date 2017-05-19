@@ -53,6 +53,12 @@ public class GitUserAgentProvider implements UserAgentProvider
                                  false).basicAuthenticationCharset(
                                  Charsets.UTF_8).build();
 
+  @VisibleForTesting
+  static final UserAgent GIT_LFS = UserAgent.builder("Git Lfs")
+                                            .browser(false)
+                                            .basicAuthenticationCharset(Charsets.UTF_8)
+                                            .build();
+
   /** Field description */
   @VisibleForTesting
   static final UserAgent MSYSGIT = UserAgent.builder("msysGit").browser(
@@ -60,10 +66,11 @@ public class GitUserAgentProvider implements UserAgentProvider
                                      Charsets.UTF_8).build();
 
   /** Field description */
-  private static final String PREFIX = "git/";
+  private static final String PREFIX_REGULAR = "git/";
+  private static final String PREFIX_LFS = "git-lfs/";
 
   /** Field description */
-  private static final String SUFFIX = "msysgit";
+  private static final String SUFFIX_MSYSGIT = "msysgit";
 
   //~--- methods --------------------------------------------------------------
 
@@ -80,16 +87,14 @@ public class GitUserAgentProvider implements UserAgentProvider
   {
     UserAgent ua = null;
 
-    if (userAgentString.startsWith(PREFIX))
-    {
-      if (userAgentString.contains(SUFFIX))
-      {
+    if (userAgentString.startsWith(PREFIX_REGULAR)) {
+      if (userAgentString.contains(SUFFIX_MSYSGIT)) {
         ua = MSYSGIT;
-      }
-      else
-      {
+      } else {
         ua = GIT;
       }
+    } else if (userAgentString.startsWith(PREFIX_LFS)) {
+      ua = GIT_LFS;
     }
 
     return ua;

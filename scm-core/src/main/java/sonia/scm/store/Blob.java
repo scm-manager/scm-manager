@@ -85,4 +85,13 @@ public interface Blob
    * @throws IOException
    */
   public OutputStream getOutputStream() throws IOException;
+
+  /**
+   *
+   * Returns the size (in bytes) of the blob.
+   * @since 1.54
+   */
+  public long getSize();
+
+
 }
