@@ -35,6 +35,7 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
@@ -972,24 +973,45 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
   }
 
   /**
-   * Method description
+   * This method checks whether or not the provided path belongs to the provided repository.
    *
-   *
-   * @param repository
-   * @param path
-   *
-   * @return
+   * @param repository The repository to be tested.
+   * @param path       The path that might be part of the repository.
+   * @return Returns <code>true</code> if path belongs to the repository. Returns <code>false</code> otherwise.
    */
-  private boolean isNameMatching(Repository repository, String path)
-  {
+  private boolean isNameMatching(Repository repository, String path) {
+    return isNameMatching(repository.getType(), repository.getName(), path);
+  }
+
+  /**
+   * This method checks whether or not the provided path belongs to the provided repository.
+   *
+   * @param repositoryType The type of the repository being tested.
+   * @param repositoryName The name of the repository being tested.
+   * @param path       The path that might be part of the repository.
+   * @return Returns <code>true</code> if path belongs to the repository. Returns <code>false</code> otherwise.
+   */
+  @VisibleForTesting
+  boolean isNameMatching(String repositoryType, String repositoryName, String path) {
     boolean result = false;
-    String name = repository.getName();
 
-    if (path.startsWith(name))
-    {
-      String sub = path.substring(name.length());
+    if (path.startsWith(repositoryName)) {
 
-      result = Util.isEmpty(sub) || sub.startsWith(HttpUtil.SEPARATOR_PATH);
+      String pathPart = path.substring(repositoryName.length());
+
+      //TODO: this introduces a strong coupling to the git plugin. This can be resolved with a "Repository Matcher" API.
+      //ausformulieren, ticketId weg
+      if (GitRepositoryHandler.TYPE_NAME.equals(repositoryType)) {
+
+        //git repository may also be named <<repo-name>>.git by convention
+        if (pathPart.startsWith(GitRepositoryHandler.DOT_GIT)) {
+          //if this is the case, just also cut it away
+          pathPart = pathPart.substring(GitRepositoryHandler.DOT_GIT.length());
+        }
+      }
+
+      result = Util.isEmpty(pathPart) || pathPart.startsWith(HttpUtil.SEPARATOR_PATH);
+
     }
 
     return result;

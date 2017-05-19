@@ -46,6 +46,7 @@ import sonia.scm.security.DefaultKeyGenerator;
 import sonia.scm.store.JAXBStoreFactory;
 import sonia.scm.store.StoreFactory;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
 import static org.mockito.Mockito.*;
@@ -90,6 +91,29 @@ public class DefaultRepositoryManagerTest extends RepositoryManagerTestBase
     assertEquals("project1/test-1",
       m.getFromUri("/git/project1/test-1/ka/some/path").getName());
     assertNull(m.getFromUri("/git/project1/test-3/ka/some/path"));
+  }
+
+  @Test
+  public void testNameIsMatching() throws Exception {
+    DefaultRepositoryManager m = createManager();
+
+    assertThat(m.isNameMatching(GitRepositoryHandler.TYPE_NAME, "repo-name", "repo-name"), is(true));
+    assertThat(m.isNameMatching(GitRepositoryHandler.TYPE_NAME, "repo-name", "repo-name/"), is(true));
+    assertThat(m.isNameMatching(GitRepositoryHandler.TYPE_NAME, "repo-name", "repo-name/and-more-is-valid"), is(true));
+    assertThat(m.isNameMatching(GitRepositoryHandler.TYPE_NAME, "repo-name", "repo-name.git/and-more-is-valid"),
+               is(true));
+
+
+    assertThat(m.isNameMatching(GitRepositoryHandler.TYPE_NAME, "repo-name", "not-the-name"), is(false));
+    assertThat(m.isNameMatching(GitRepositoryHandler.TYPE_NAME, "repo-name", "repo-na"), is(false));
+
+    assertThat(m.isNameMatching(GitRepositoryHandler.TYPE_NAME, "repo-name", "/repo-name/"), is(false));
+
+    assertThat(m.isNameMatching(HgRepositoryHandler.TYPE_NAME, "repo-name", "repo-name.git/and-more-is-valid"),
+               is(false));
+    assertThat(m.isNameMatching(SvnRepositoryHandler.TYPE_NAME, "repo-name", "repo-name.git/and-more-is-valid"),
+               is(false));
+
   }
 
   //~--- methods --------------------------------------------------------------
