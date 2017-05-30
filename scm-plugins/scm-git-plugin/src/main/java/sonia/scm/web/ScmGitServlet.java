@@ -102,14 +102,12 @@ public class ScmGitServlet extends GitServlet
                        GitRepositoryViewer repositoryViewer,
                        RepositoryProvider repositoryProvider,
                        RepositoryRequestListenerUtil repositoryRequestListenerUtil,
-                       LfsServletFactory lfsServletFactory,
-                       UserAgentParser userAgentParser)
+                       LfsServletFactory lfsServletFactory)
   {
     this.repositoryProvider = repositoryProvider;
     this.repositoryViewer = repositoryViewer;
     this.repositoryRequestListenerUtil = repositoryRequestListenerUtil;
     this.lfsServletFactory = lfsServletFactory;
-    this.userAgentParser = userAgentParser;
 
     setRepositoryResolver(repositoryResolver);
     setReceivePackFactory(receivePackFactory);
@@ -131,34 +129,74 @@ public class ScmGitServlet extends GitServlet
   protected void service(HttpServletRequest request,
     HttpServletResponse response)
     throws ServletException, IOException
-  {
-    String uri = HttpUtil.getStrippedURI(request);
-    logger.trace("--request URI: {}", uri);
-
-    //decide the type of response to be presented to the client
-    UserAgent userAgent = userAgentParser.parse(request);
-    if (userAgent.isBrowser()) {
-
-      renderHtmlRepositryOverview(request, response);
+  {    
+    Repository repository = repositoryProvider.get();
+    if (repository != null) {
+      handleRequest(request, response, repository);
     } else {
-
-      //service the request for a git client
-      final Repository repository = repositoryProvider.get();
-
-      if (repository == null) {
-
-        //repository could not be matched found the current request
-        super.service(request, response);
-      } else {
-
-        if (repositoryRequestListenerUtil.callListeners(request, response, repository)) {
-          handleRequest(request, response, repository);
-        } else if (logger.isDebugEnabled()) {
-          logger.debug("request aborted by repository request listener");
-        }
-      }
+      // logger
+      response.sendError(HttpServletResponse.SC_NOT_FOUND);
     }
   }
+  
+  /**
+   * Decides the type request being currently made and delegates it accordingly.
+   * <ul>
+   * <li>Batch API:</li>
+   * <ul>
+   * <li>used to provide the client with information on how handle the large files of a repository.</li>
+   * <li>response contains the information where to perform the actual upload and download of the large objects.</li>
+   * </ul>
+   * <li>Transfer API:</li>
+   * <ul>
+   * <li>receives and provides the actual large objects (resolves the pointer placed in the file of the working copy).</li>
+   * <li>invoked only after the Batch API has been questioned about what to do with the large files</li>
+   * </ul>
+   * <li>Regular Git Http API:</li>
+   * <ul>
+   * <li>regular git http wire protocol, use by normal git clients.</li>
+   * </ul>
+   * <li>Browser Overview:<li>
+   * <ul>
+   * <li>short repository overview for browser clients.</li>
+   * </ul>
+   * </li>
+   * </ul>
+   */
+  private void handleRequest(HttpServletRequest request, HttpServletResponse response, Repository repository) throws ServletException, IOException {
+    
+    logger.trace("--- Repository is: {}", repository.getName());
+    if (isLfsBatchApiRequest(request, repository.getName())) {
+      
+      logger.trace("--- detected LFS Batch API Request");
+      HttpServlet servlet = lfsServletFactory.createProtocolServletFor(repository, request);
+      handleGitRequest(servlet, request, response, repository);
+    } else if (isLfsFileTransferRequest(request, repository.getName())) {
+
+      logger.trace("--- detected LFS File Transfer Request");
+      HttpServlet servlet = lfsServletFactory.createFileLfsServletFor(repository, request);
+      handleGitRequest(servlet, request, response, repository);
+    } else if (isRegularGitAPIRequest(request)) {
+      logger.trace("--- seems to be regular Git HTTP backend request: {}", request.getRequestURI());
+      // continue with the regular git Backend
+      handleGitRequest(this, request, response, repository);
+    } else {
+      renderHtmlRepositryOverview(request, response);
+    }
+  }
+  
+  private boolean isRegularGitAPIRequest(HttpServletRequest request) {
+    return HttpUtil.getStrippedURI(request).matches(REGEX_GITHTTPBACKEND);
+  }
+  
+  private void handleGitRequest(HttpServlet servlet, HttpServletRequest request, HttpServletResponse response, Repository repository) throws ServletException, IOException {
+    if (repositoryRequestListenerUtil.callListeners(request, response, repository)) {
+      servlet.service(request, response);
+    } else if (logger.isDebugEnabled()) {
+      logger.debug("request aborted by repository request listener");
+    }
+  }
+  
 
   /**
    * This method renders basic information about the repository into the response. The result is meant to be viewed by
@@ -191,46 +229,6 @@ public class ScmGitServlet extends GitServlet
     else
     {
       response.sendError(HttpServletResponse.SC_NOT_FOUND);
-    }
-  }
-
-  /**
-   * Decides the type request being currently made and delegates it accordingly.
-   * <ul>
-   * <li>Batch API:</li>
-   * <ul>
-   * <li> used to provide the client with information on how handle the large files of a repository.</li>
-   * <li> response contains the information where to perform the actual upload and download of the large objects.</li>
-   * </ul>
-   * <li>Transfer API:</li>
-   * <ul>
-   * <li>receives and provides the actual large objects (resolves the pointer placed in the file of the working copy).</li>
-   * <li>invoked only after the Batch API has been questioned about what to do with the large files</li>
-   * </ul>
-   * <li>Regular HTTP Backend</li>
-   * <ul>
-   * <li>services everything that is not git-lfs.</li>
-   * </ul>
-   * </li>
-   * </ul>
-   */
-  private void handleRequest(HttpServletRequest request, HttpServletResponse response, Repository repository) throws ServletException, IOException {
-
-    logger.trace("--- Repository is: {}", repository.getName());
-    if (isLfsBatchApiRequest(request, repository.getName())) {
-
-      logger.trace("--- detected LFS Batch API Request");
-      HttpServlet servlet = lfsServletFactory.createProtocolServletFor(repository, request);
-      servlet.service(request, response);
-    } else if (isLfsFileTransferRequest(request, repository.getName())) {
-
-      logger.trace("--- detected LFS File Transfer Request");
-      HttpServlet servlet = lfsServletFactory.createFileLfsServletFor(repository, request);
-      servlet.service(request, response);
-    } else {
-      logger.trace("--- seems to be regular Git HTTP backend request: {}", request.getRequestURI());
-      //continue to the regular HTTP Backend
-      super.service(request, response);
     }
   }
 
@@ -315,8 +313,5 @@ public class ScmGitServlet extends GitServlet
   private final GitRepositoryViewer repositoryViewer;
 
   private final LfsServletFactory lfsServletFactory;
-
-  private final UserAgentParser userAgentParser;
-
 
 }
