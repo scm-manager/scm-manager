@@ -76,8 +76,6 @@ public class CreateRepositoriesITCase extends AbstractAdminITCaseBase
    */
   public CreateRepositoriesITCase(String repositoryType)
   {
-    System.out.append("==> CreateRepositoriesITCase - ").println(
-        repositoryType);
     this.repositoryType = repositoryType;
   }
 
@@ -92,14 +90,14 @@ public class CreateRepositoriesITCase extends AbstractAdminITCaseBase
   @Parameters
   public static Collection<String[]> createParameters()
   {
-    Collection<String[]> params = new ArrayList<String[]>();
+    Collection<String[]> params = new ArrayList<>();
 
     params.add(new String[] { "git" });
-    params.add(new String[] { "git" });
+    params.add(new String[] { "svn" });
 
     if (IOUtil.search("hg") != null)
     {
-      params.add(new String[] { "git" });
+      params.add(new String[] { "hg" });
     }
 
     return params;
