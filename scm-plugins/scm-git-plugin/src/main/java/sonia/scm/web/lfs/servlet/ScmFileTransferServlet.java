@@ -246,10 +246,12 @@ public class ScmFileTransferServlet extends HttpServlet {
 
   private void readBlobFromResponse(HttpServletRequest request, HttpServletResponse response, AnyLongObjectId objectId) throws IOException {
 
-    try (OutputStream blobOutputStream = blobStore.create(objectId.getName()).getOutputStream();
+    Blob blob = blobStore.create(objectId.getName());
+    try (OutputStream blobOutputStream = blob.getOutputStream();
          ServletInputStream requestInputStream = request.getInputStream()) {
 
       IOUtil.copy(requestInputStream, blobOutputStream);
+      blob.commit();
 
       response.setContentType(Constants.CONTENT_TYPE_GIT_LFS_JSON);
       response.setStatus(HttpServletResponse.SC_OK);
