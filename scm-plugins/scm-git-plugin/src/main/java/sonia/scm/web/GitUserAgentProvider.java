@@ -41,18 +41,14 @@ import java.util.Locale;
 import sonia.scm.plugin.ext.Extension;
 
 /**
- *
+ * UserAgent provider for git related clients. 
  * @author Sebastian Sdorra <sebastian.sdorra@gmail.com>
  * @since 1.45
  */
 @Extension
-public class GitUserAgentProvider implements UserAgentProvider
-{
+public class GitUserAgentProvider implements UserAgentProvider {
  
   private static final String PREFIX_JGIT = "jgit/";
-  private static final String PREFIX_REGULAR = "git/";
-  private static final String PREFIX_LFS = "git-lfs/";
-  private static final String SUFFIX_MSYSGIT = "msysgit";
 
   @VisibleForTesting
   static final UserAgent JGIT = UserAgent.builder("JGit")
@@ -60,11 +56,15 @@ public class GitUserAgentProvider implements UserAgentProvider
           .basicAuthenticationCharset(Charsets.UTF_8)
           .build();
   
+  private static final String PREFIX_REGULAR = "git/";
+  
   @VisibleForTesting
   static final UserAgent GIT = UserAgent.builder("Git")
           .browser(false)
           .basicAuthenticationCharset(Charsets.UTF_8)
           .build();
+  
+  private static final String PREFIX_LFS = "git-lfs/";
 
   @VisibleForTesting
   static final UserAgent GIT_LFS = UserAgent.builder("Git Lfs")
@@ -72,6 +72,8 @@ public class GitUserAgentProvider implements UserAgentProvider
           .basicAuthenticationCharset(Charsets.UTF_8)
           .build();
 
+  private static final String SUFFIX_MSYSGIT = "msysgit";
+  
   @VisibleForTesting
   static final UserAgent MSYSGIT = UserAgent.builder("msysGit")
           .browser(false)
@@ -83,8 +85,7 @@ public class GitUserAgentProvider implements UserAgentProvider
   //~--- methods --------------------------------------------------------------
 
   @Override
-  public UserAgent parseUserAgent(String userAgentString)
-  {
+  public UserAgent parseUserAgent(String userAgentString) {
     String lowerUserAgent = toLower(userAgentString);
     
     if (isJGit(lowerUserAgent)) {
