@@ -168,13 +168,13 @@ public class ScmGitServlet extends GitServlet
   private void handleRequest(HttpServletRequest request, HttpServletResponse response, Repository repository) throws ServletException, IOException {
     logger.trace("handle git repository at {}", repository.getName());
     if (isLfsBatchApiRequest(request, repository.getName())) {
-      
+      HttpServlet servlet = lfsServletFactory.createProtocolServletFor(repository, request);
       logger.trace("handle lfs batch api request");
-      handleGitLfsRequest(request, response, repository);
+      handleGitLfsRequest(servlet, request, response, repository);
     } else if (isLfsFileTransferRequest(request, repository.getName())) {
-
+      HttpServlet servlet = lfsServletFactory.createFileLfsServletFor(repository, request);
       logger.trace("handle lfs file transfer request");
-      handleGitLfsRequest(request, response, repository);
+      handleGitLfsRequest(servlet, request, response, repository);
     } else if (isRegularGitAPIRequest(request)) {
       logger.trace("handle regular git request");
       // continue with the regular git Backend
@@ -189,8 +189,7 @@ public class ScmGitServlet extends GitServlet
     return REGEX_GITHTTPBACKEND.matcher(HttpUtil.getStrippedURI(request)).matches();
   }
   
-  private void handleGitLfsRequest(HttpServletRequest request, HttpServletResponse response, Repository repository) throws ServletException, IOException {
-    HttpServlet servlet = lfsServletFactory.createProtocolServletFor(repository, request);
+  private void handleGitLfsRequest(HttpServlet servlet, HttpServletRequest request, HttpServletResponse response, Repository repository) throws ServletException, IOException {
     if (repositoryRequestListenerUtil.callListeners(request, response, repository)) {
       servlet.service(request, response);
     } else if (logger.isDebugEnabled()) {

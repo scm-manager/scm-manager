@@ -30,53 +30,43 @@
  */
 
 
+package sonia.scm.web.lfs;
 
-package sonia.scm.web;
-
-//~--- non-JDK imports --------------------------------------------------------
-
-import com.google.inject.servlet.ServletModule;
-
-import org.eclipse.jgit.transport.ScmTransportProtocol;
-
-import sonia.scm.plugin.ext.Extension;
-import sonia.scm.web.lfs.LfsBlobStoreFactory;
-import sonia.scm.web.lfs.LfsStoreRemoveListener;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import static org.mockito.Matchers.matches;
+import org.mockito.Mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import org.mockito.runners.MockitoJUnitRunner;
+import sonia.scm.repository.Repository;
+import sonia.scm.store.BlobStoreFactory;
 
 /**
- *
+ * Unit tests for {@link LfsBlobStoreFactory}.
+ * 
  * @author Sebastian Sdorra
  */
-@Extension
-public class GitServletModule extends ServletModule
-{
+@RunWith(MockitoJUnitRunner.class)
+public class LfsBlobStoreFactoryTest {
 
-  public static final String GIT_PATH = "/git";
+  @Mock
+  private BlobStoreFactory blobStoreFactory;
+  
+  @InjectMocks
+  private LfsBlobStoreFactory lfsBlobStoreFactory;
+   
+  @Test
+  public void getBlobStore() throws Exception {
+    lfsBlobStoreFactory.getLfsBlobStore(new Repository("the-id", "GIT", "the-name"));
 
-  /** Field description */
-  public static final String PATTERN_GIT = GIT_PATH + "/*";
+    // just make sure the right parameter is passed, as properly validating the return value is nearly impossible with 
+    // the return value (and should not be part of this test)
+    verify(blobStoreFactory).getBlobStore(matches("the-id-git-lfs"));
 
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   */
-  @Override
-  protected void configureServlets()
-  {
-    bind(GitRepositoryViewer.class);
-    bind(GitRepositoryResolver.class);
-    bind(GitReceivePackFactory.class);
-    bind(ScmTransportProtocol.class);
-    
-    bind(LfsBlobStoreFactory.class);
-    bind(LfsStoreRemoveListener.class);
-
-    // serlvelts and filters
-    filter(PATTERN_GIT).through(GitBasicAuthenticationFilter.class);
-    filter(PATTERN_GIT).through(GitPermissionFilter.class);
-    serve(PATTERN_GIT).with(ScmGitServlet.class);
+    // make sure there have been no further usages of the factory
+    verifyNoMoreInteractions(blobStoreFactory);
   }
+  
 }

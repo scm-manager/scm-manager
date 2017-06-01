@@ -30,53 +30,51 @@
  */
 
 
+package sonia.scm.web.lfs;
 
-package sonia.scm.web;
-
-//~--- non-JDK imports --------------------------------------------------------
-
-import com.google.inject.servlet.ServletModule;
-
-import org.eclipse.jgit.transport.ScmTransportProtocol;
-
-import sonia.scm.plugin.ext.Extension;
-import sonia.scm.web.lfs.LfsBlobStoreFactory;
-import sonia.scm.web.lfs.LfsStoreRemoveListener;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import sonia.scm.repository.Repository;
+import sonia.scm.store.BlobStore;
+import sonia.scm.store.BlobStoreFactory;
 
 /**
- *
+ * Creates {@link BlobStore} objects to store lfs objects.
+ * 
  * @author Sebastian Sdorra
+ * @since 1.54
  */
-@Extension
-public class GitServletModule extends ServletModule
-{
-
-  public static final String GIT_PATH = "/git";
-
-  /** Field description */
-  public static final String PATTERN_GIT = GIT_PATH + "/*";
-
-
-  //~--- methods --------------------------------------------------------------
+@Singleton
+public class LfsBlobStoreFactory {
+  
+  private static final String GIT_LFS_REPOSITORY_POSTFIX = "-git-lfs";
+  
+  private final BlobStoreFactory blobStoreFactory;
 
   /**
-   * Method description
-   *
+   * Create a new instance.
+   * 
+   * @param blobStoreFactory blob store factory
    */
-  @Override
-  protected void configureServlets()
-  {
-    bind(GitRepositoryViewer.class);
-    bind(GitRepositoryResolver.class);
-    bind(GitReceivePackFactory.class);
-    bind(ScmTransportProtocol.class);
-    
-    bind(LfsBlobStoreFactory.class);
-    bind(LfsStoreRemoveListener.class);
-
-    // serlvelts and filters
-    filter(PATTERN_GIT).through(GitBasicAuthenticationFilter.class);
-    filter(PATTERN_GIT).through(GitPermissionFilter.class);
-    serve(PATTERN_GIT).with(ScmGitServlet.class);
+  @Inject
+  public LfsBlobStoreFactory(BlobStoreFactory blobStoreFactory) {
+    this.blobStoreFactory = blobStoreFactory;
+  }
+  
+  /**
+   * Provides a {@link BlobStore} corresponding to the SCM Repository.
+   * <p>
+   * git-lfs repositories should generally carry the same name as their regular SCM repository counterparts. However,
+   * we have decided to store them under their IDs instead of their names, since the names might change and provide
+   * other drawbacks, as well.
+   * <p>
+   * These repositories will have {@linkplain #GIT_LFS_REPOSITORY_POSTFIX} appended to their IDs.
+   *
+   * @param repository The SCM Repository to provide a LFS {@link BlobStore} for.
+   * 
+   * @return blob store for the corresponding scm repository
+   */
+  public BlobStore getLfsBlobStore(Repository repository) {
+    return blobStoreFactory.getBlobStore(repository.getId() + GIT_LFS_REPOSITORY_POSTFIX);
   }
 }
