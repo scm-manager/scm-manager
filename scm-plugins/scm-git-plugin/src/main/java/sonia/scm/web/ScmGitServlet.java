@@ -95,6 +95,7 @@ public class ScmGitServlet extends GitServlet
    * @param repositoryViewer
    * @param repositoryProvider
    * @param repositoryRequestListenerUtil
+   * @param lfsServletFactory
    */
   @Inject
   public ScmGitServlet(GitRepositoryResolver repositoryResolver,
@@ -164,22 +165,19 @@ public class ScmGitServlet extends GitServlet
    * </ul>
    */
   private void handleRequest(HttpServletRequest request, HttpServletResponse response, Repository repository) throws ServletException, IOException {
-    
     logger.trace("--- Repository is: {}", repository.getName());
     if (isLfsBatchApiRequest(request, repository.getName())) {
       
       logger.trace("--- detected LFS Batch API Request");
-      HttpServlet servlet = lfsServletFactory.createProtocolServletFor(repository, request);
-      handleGitRequest(servlet, request, response, repository);
+      handleGitLfsRequest(request, response, repository);
     } else if (isLfsFileTransferRequest(request, repository.getName())) {
 
       logger.trace("--- detected LFS File Transfer Request");
-      HttpServlet servlet = lfsServletFactory.createFileLfsServletFor(repository, request);
-      handleGitRequest(servlet, request, response, repository);
+      handleGitLfsRequest(request, response, repository);
     } else if (isRegularGitAPIRequest(request)) {
       logger.trace("--- seems to be regular Git HTTP backend request: {}", request.getRequestURI());
       // continue with the regular git Backend
-      handleGitRequest(this, request, response, repository);
+      handleRegularGitRequest(request, response, repository);
     } else {
       renderHtmlRepositryOverview(request, response);
     }
@@ -189,9 +187,18 @@ public class ScmGitServlet extends GitServlet
     return HttpUtil.getStrippedURI(request).matches(REGEX_GITHTTPBACKEND);
   }
   
-  private void handleGitRequest(HttpServlet servlet, HttpServletRequest request, HttpServletResponse response, Repository repository) throws ServletException, IOException {
+  private void handleGitLfsRequest(HttpServletRequest request, HttpServletResponse response, Repository repository) throws ServletException, IOException {
+    HttpServlet servlet = lfsServletFactory.createProtocolServletFor(repository, request);
     if (repositoryRequestListenerUtil.callListeners(request, response, repository)) {
       servlet.service(request, response);
+    } else if (logger.isDebugEnabled()) {
+      logger.debug("request aborted by repository request listener");
+    }
+  }
+  
+  private void handleRegularGitRequest(HttpServletRequest request, HttpServletResponse response, Repository repository) throws ServletException, IOException {
+    if (repositoryRequestListenerUtil.callListeners(request, response, repository)) {
+      super.service(request, response);
     } else if (logger.isDebugEnabled()) {
       logger.debug("request aborted by repository request listener");
     }
