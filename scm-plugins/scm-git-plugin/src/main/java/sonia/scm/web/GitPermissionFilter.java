@@ -73,6 +73,8 @@ public class GitPermissionFilter extends ProviderPermissionFilter
 
   /** Field description */
   public static final String URI_REF_INFO = "/info/refs";
+  
+  public static final String METHOD_LFS_UPLOAD = "PUT";
 
   //~--- constructors ---------------------------------------------------------
 
@@ -129,21 +131,23 @@ public class GitPermissionFilter extends ProviderPermissionFilter
    */
   @Override
   protected boolean isWriteRequest(HttpServletRequest request) {
-
-    String uri = request.getRequestURI();
-
-    return uri.endsWith(URI_RECEIVE_PACK) ||
-            (uri.endsWith(URI_REF_INFO) && PARAMETER_VALUE_RECEIVE.equals(request.getParameter(PARAMETER_SERVICE))) ||
-            isLfsFileUpload(request);
-
+    return isReceivePackRequest(request) ||
+        isReceiveServiceRequest(request) ||
+        isLfsFileUpload(request);
+  }
+  
+  private boolean isReceivePackRequest(HttpServletRequest request) {
+    return request.getRequestURI().endsWith(URI_RECEIVE_PACK);
+  }
+  
+  private boolean isReceiveServiceRequest(HttpServletRequest request) {
+    return request.getRequestURI().endsWith(URI_REF_INFO) 
+        && PARAMETER_VALUE_RECEIVE.equals(request.getParameter(PARAMETER_SERVICE));
   }
 
   @VisibleForTesting
-  static boolean isLfsFileUpload(HttpServletRequest request) {
-    String regex = String.format("^%s%s/.+(\\.git)?/info/lfs/objects/[a-z0-9]{64}$", request.getContextPath(), GitServletModule.GIT_PATH);
-    return request.getRequestURI().matches(regex) && "PUT".equals(request.getMethod());
-
+  private static boolean isLfsFileUpload(HttpServletRequest request) {
+    return METHOD_LFS_UPLOAD.equalsIgnoreCase(request.getMethod());
   }
-
 
 }
