@@ -57,6 +57,7 @@ import sonia.scm.web.lfs.servlet.LfsServletFactory;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -73,15 +74,15 @@ public class ScmGitServlet extends GitServlet
 {
 
   /** Field description */
-  public static final String REGEX_GITHTTPBACKEND =
-    "(?x)^/git/(.*/(HEAD|info/refs|objects/(info/[^/]+|[0-9a-f]{2}/[0-9a-f]{38}|pack/pack-[0-9a-f]{40}\\.(pack|idx))|git-(upload|receive)-pack))$";
+  public static final Pattern REGEX_GITHTTPBACKEND = Pattern.compile(
+    "(?x)^/git/(.*/(HEAD|info/refs|objects/(info/[^/]+|[0-9a-f]{2}/[0-9a-f]{38}|pack/pack-[0-9a-f]{40}\\.(pack|idx))|git-(upload|receive)-pack))$"
+  );
 
   /** Field description */
   private static final long serialVersionUID = -7712897339207470674L;
 
   /** the logger for ScmGitServlet */
-  private static final Logger logger =
-    getLogger(ScmGitServlet.class);
+  private static final Logger logger = getLogger(ScmGitServlet.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -165,26 +166,27 @@ public class ScmGitServlet extends GitServlet
    * </ul>
    */
   private void handleRequest(HttpServletRequest request, HttpServletResponse response, Repository repository) throws ServletException, IOException {
-    logger.trace("--- Repository is: {}", repository.getName());
+    logger.trace("handle git repository at {}", repository.getName());
     if (isLfsBatchApiRequest(request, repository.getName())) {
       
-      logger.trace("--- detected LFS Batch API Request");
+      logger.trace("handle lfs batch api request");
       handleGitLfsRequest(request, response, repository);
     } else if (isLfsFileTransferRequest(request, repository.getName())) {
 
-      logger.trace("--- detected LFS File Transfer Request");
+      logger.trace("handle lfs file transfer request");
       handleGitLfsRequest(request, response, repository);
     } else if (isRegularGitAPIRequest(request)) {
-      logger.trace("--- seems to be regular Git HTTP backend request: {}", request.getRequestURI());
+      logger.trace("handle regular git request");
       // continue with the regular git Backend
       handleRegularGitRequest(request, response, repository);
     } else {
-      renderHtmlRepositryOverview(request, response);
+      logger.trace("handle browser request");
+      handleBrowserRequest(request, response, repository);
     }
   }
   
   private boolean isRegularGitAPIRequest(HttpServletRequest request) {
-    return HttpUtil.getStrippedURI(request).matches(REGEX_GITHTTPBACKEND);
+    return REGEX_GITHTTPBACKEND.matcher(HttpUtil.getStrippedURI(request)).matches();
   }
   
   private void handleGitLfsRequest(HttpServletRequest request, HttpServletResponse response, Repository repository) throws ServletException, IOException {
@@ -214,28 +216,11 @@ public class ScmGitServlet extends GitServlet
    * @throws IOException
    * @throws ServletException
    */
-  private void renderHtmlRepositryOverview(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-    sonia.scm.repository.Repository scmRepository = repositoryProvider.get();
-
-    if (scmRepository != null)
-    {
-      try
-      {
-        repositoryViewer.handleRequest(request, response, scmRepository);
-      }
-      catch (RepositoryException ex)
-      {
-        throw new ServletException("could not create repository view", ex);
-      }
-      catch (IOException ex)
-      {
-        throw new ServletException("could not create repository view", ex);
-      }
-    }
-    else
-    {
-      response.sendError(HttpServletResponse.SC_NOT_FOUND);
+  private void handleBrowserRequest(HttpServletRequest request, HttpServletResponse response, Repository repository) throws ServletException, IOException {
+    try {
+      repositoryViewer.handleRequest(request, response, repository);
+    } catch (RepositoryException | IOException ex) {
+      throw new ServletException("could not create repository view", ex);
     }
   }
 
