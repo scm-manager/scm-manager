@@ -57,16 +57,6 @@
       <version>1.54-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>sonia.scm</groupId>
-      <artifactId>scm-dao-xml</artifactId>
-      <version>1.52-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>sonia.scm</groupId>
-      <artifactId>scm-dao-xml</artifactId>
-      <version>1.52-SNAPSHOT</version>
-    </dependency>
 
   </dependencies>
   
