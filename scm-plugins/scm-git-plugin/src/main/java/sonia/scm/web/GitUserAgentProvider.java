@@ -41,7 +41,7 @@ import java.util.Locale;
 import sonia.scm.plugin.ext.Extension;
 
 /**
- * UserAgent provider for git related clients. 
+ * UserAgent provider for git related clients.
  * @author Sebastian Sdorra <sebastian.sdorra@gmail.com>
  * @since 1.45
  */

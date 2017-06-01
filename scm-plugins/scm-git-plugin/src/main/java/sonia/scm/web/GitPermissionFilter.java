@@ -55,80 +55,49 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- *
+ * GitPermissionFilter decides if a git request requires write or read privileges.
+ * 
  * @author Sebastian Sdorra
  */
 @Singleton
 public class GitPermissionFilter extends ProviderPermissionFilter
 {
 
-  /** Field description */
-  public static final String PARAMETER_SERVICE = "service";
+  private static final String PARAMETER_SERVICE = "service";
 
-  /** Field description */
-  public static final String PARAMETER_VALUE_RECEIVE = "git-receive-pack";
+  private static final String PARAMETER_VALUE_RECEIVE = "git-receive-pack";
 
-  /** Field description */
-  public static final String URI_RECEIVE_PACK = "git-receive-pack";
+  private static final String URI_RECEIVE_PACK = "git-receive-pack";
 
-  /** Field description */
-  public static final String URI_REF_INFO = "/info/refs";
+  private static final String URI_REF_INFO = "/info/refs";
   
-  public static final String METHOD_LFS_UPLOAD = "PUT";
+  private static final String METHOD_LFS_UPLOAD = "PUT";
 
   //~--- constructors ---------------------------------------------------------
 
   /**
-   * Constructs ...
+   * Constructs a new instance of the GitPermissionFilter.
    *
-   * @param configuration
-   * @param repositoryProvider
+   * @param configuration scm main configuration
+   * @param repositoryProvider repository provider
    */
   @Inject
-  public GitPermissionFilter(ScmConfiguration configuration,
-    RepositoryProvider repositoryProvider)
-  {
+  public GitPermissionFilter(ScmConfiguration configuration, RepositoryProvider repositoryProvider) {
     super(configuration, repositoryProvider);
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param response
-   *
-   * @throws IOException
-   */
   @Override
-  protected void sendNotEnoughPrivilegesError(HttpServletRequest request,
-    HttpServletResponse response)
-    throws IOException
-  {
-    if (GitUtil.isGitClient(request))
-    {
+  protected void sendNotEnoughPrivilegesError(HttpServletRequest request, HttpServletResponse response) 
+    throws IOException {
+    if (GitUtil.isGitClient(request)) {
       GitSmartHttpTools.sendError(request, response,
         HttpServletResponse.SC_FORBIDDEN,
         ClientMessages.get(request).notEnoughPrivileges());
-    }
-    else
-    {
+    } else {
       super.sendNotEnoughPrivilegesError(request, response);
     }
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   */
   @Override
   protected boolean isWriteRequest(HttpServletRequest request) {
     return isReceivePackRequest(request) ||

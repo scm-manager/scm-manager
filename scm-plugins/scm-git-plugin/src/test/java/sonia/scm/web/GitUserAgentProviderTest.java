@@ -33,8 +33,6 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.base.Strings;
-
 import org.junit.Test;
 
 import static org.junit.Assert.*;

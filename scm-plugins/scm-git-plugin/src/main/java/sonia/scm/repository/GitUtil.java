@@ -70,6 +70,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpServletRequest;
+import sonia.scm.web.GitUserAgentProvider;
 
 /**
  *
@@ -77,6 +78,8 @@ import javax.servlet.http.HttpServletRequest;
  */
 public final class GitUtil
 {
+  
+  private static final GitUserAgentProvider GIT_USER_AGENT_PROVIDER = new GitUserAgentProvider();
 
   /** Field description */
   public static final String REF_HEAD = "HEAD";
@@ -698,7 +701,7 @@ public final class GitUtil
    */
   public static boolean isGitClient(HttpServletRequest request)
   {
-    return HttpUtil.userAgentStartsWith(request, USERAGENT_GIT);
+    return GIT_USER_AGENT_PROVIDER.parseUserAgent(request.getHeader(HttpUtil.HEADER_USERAGENT)) != null;
   }
 
   /**

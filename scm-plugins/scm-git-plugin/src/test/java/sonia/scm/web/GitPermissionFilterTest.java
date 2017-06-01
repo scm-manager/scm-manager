@@ -17,6 +17,7 @@ import static org.mockito.Mockito.*;
 import org.mockito.runners.MockitoJUnitRunner;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.RepositoryProvider;
+import sonia.scm.util.HttpUtil;
 
 /**
  * Unit tests for {@link GitPermissionFilter}.
@@ -84,8 +85,17 @@ public class GitPermissionFilterTest {
   
   @Test
   public void testSendNotEnoughPrivilegesErrorAsGitClient() throws IOException {
+    verifySendNotEnoughPrivilegesErrorAsGitClient("git/2.9.3");
+  }
+  
+  @Test
+  public void testSendNotEnoughPrivilegesErrorAsJGitClient() throws IOException {
+    verifySendNotEnoughPrivilegesErrorAsGitClient("JGit/4.2");
+  }
+  
+  private void verifySendNotEnoughPrivilegesErrorAsGitClient(String userAgent) throws IOException {
     HttpServletRequest request = mockGitReceivePackServiceRequest();
-    when(request.getHeader("User-Agent")).thenReturn("git/2.9.3");
+    when(request.getHeader(HttpUtil.HEADER_USERAGENT)).thenReturn(userAgent);
     
     CapturingServletOutputStream stream = new CapturingServletOutputStream();
     when(response.getOutputStream()).thenReturn(stream);
@@ -93,7 +103,7 @@ public class GitPermissionFilterTest {
     permissionFilter.sendNotEnoughPrivilegesError(request, response);
     
     verify(response).setStatus(HttpServletResponse.SC_OK);
-    assertThat(stream.toString(), containsString("privileges"));
+    assertThat(stream.toString(), containsString("privileges"));    
   }
   
   private HttpServletRequest mockGitReceivePackServiceRequest() {

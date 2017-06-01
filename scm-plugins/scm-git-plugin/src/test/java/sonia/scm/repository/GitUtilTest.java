@@ -42,8 +42,10 @@ import static org.mockito.Mockito.*;
 
 import java.io.File;
 import java.io.IOException;
+import javax.servlet.http.HttpServletRequest;
 
 import static org.junit.Assert.*;
+import sonia.scm.util.HttpUtil;
 
 /**
  * Unit tests for {@link GitUtil}.
@@ -113,5 +115,23 @@ public class GitUtilTest
     when(repo.getDirectory()).thenReturn(directory);
 
     return repo;
+  }
+  
+  @Test
+  public void testIsGitClient() {
+    HttpServletRequest request = mockRequestWithUserAgent("Git/2.9.3");
+    assertTrue(GitUtil.isGitClient(request));
+    
+    request = mockRequestWithUserAgent("JGit/2.9.3");
+    assertTrue(GitUtil.isGitClient(request));
+    
+    request = mockRequestWithUserAgent("Mozilla/5.0 (Linux; Android 4.0.4; Galaxy Nexus Build/IMM76B) ...");
+    assertFalse(GitUtil.isGitClient(request));
+  }
+  
+  private HttpServletRequest mockRequestWithUserAgent(String userAgent) {
+    HttpServletRequest request = mock(HttpServletRequest.class);
+    when(request.getHeader(HttpUtil.HEADER_USERAGENT)).thenReturn(userAgent);    
+    return request;
   }
 }
