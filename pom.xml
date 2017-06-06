@@ -417,7 +417,7 @@
     <jersey.version>1.19.4</jersey.version>
     <ehcache.version>2.6.6</ehcache.version>
     <freemarker.version>2.3.20</freemarker.version>
-    <jetty.version>7.6.19.v20160209</jetty.version>
+    <jetty.version>7.6.21.v20160908</jetty.version>
     <jetty.maven.version>7.6.16.v20140903</jetty.maven.version>
 
     <!-- security libraries -->
