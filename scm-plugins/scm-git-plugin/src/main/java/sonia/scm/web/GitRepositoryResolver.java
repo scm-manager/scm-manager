@@ -35,6 +35,7 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.inject.Inject;
 
 import org.eclipse.jgit.errors.RepositoryNotFoundException;
@@ -63,13 +64,11 @@ import javax.servlet.http.HttpServletRequest;
  *
  * @author Sebastian Sdorra
  */
-public class GitRepositoryResolver
-        implements RepositoryResolver<HttpServletRequest>
+public class GitRepositoryResolver implements RepositoryResolver<HttpServletRequest>
 {
 
   /** the logger for GitRepositoryResolver */
-  private static final Logger logger =
-    LoggerFactory.getLogger(GitRepositoryResolver.class);
+  private static final Logger logger = LoggerFactory.getLogger(GitRepositoryResolver.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -114,20 +113,14 @@ public class GitRepositoryResolver
 
       if (config.isValid())
       {
-        File gitdir = new File(config.getRepositoryDirectory(), repositoryName);
-
-        if (logger.isDebugEnabled())
-        {
-          logger.debug("try to open git repository at {}", gitdir);
-        }
-
-        if (!gitdir.exists())
-        {
+        File gitdir = findRepository(config.getRepositoryDirectory(), repositoryName);
+        if (gitdir == null) {
           throw new RepositoryNotFoundException(repositoryName);
         }
+        
+        logger.debug("try to open git repository at {}", gitdir);
 
-        repository = RepositoryCache.open(FileKey.lenient(gitdir, FS.DETECTED),
-                                          true);
+        repository = RepositoryCache.open(FileKey.lenient(gitdir, FS.DETECTED), true);
       }
       else
       {
@@ -139,16 +132,38 @@ public class GitRepositoryResolver
         throw new ServiceNotEnabledException();
       }
     }
-    catch (RuntimeException e)
-    {
-      throw new RepositoryNotFoundException(repositoryName, e);
-    }
-    catch (IOException e)
+    catch (RuntimeException | IOException e)
     {
       throw new RepositoryNotFoundException(repositoryName, e);
     }
 
     return repository;
+  }
+  
+  @VisibleForTesting
+  File findRepository(File parentDirectory, String repositoryName) {
+    File repositoryDirectory = new File(parentDirectory, repositoryName);
+    if (repositoryDirectory.exists()) {
+      return repositoryDirectory;
+    }
+    
+    if (endsWithDotGit(repositoryName)) {
+      String repositoryNameWithoutDotGit = repositoryNameWithoutDotGit(repositoryName);
+      repositoryDirectory = new File(parentDirectory, repositoryNameWithoutDotGit);
+      if (repositoryDirectory.exists()) {
+        return repositoryDirectory;
+      }
+    }
+    
+    return null;
+  }
+  
+  private boolean endsWithDotGit(String repositoryName) {
+    return repositoryName.endsWith(GitRepositoryHandler.DOT_GIT);
+  }
+  
+  private String repositoryNameWithoutDotGit(String repositoryName) {
+    return repositoryName.substring(0, repositoryName.length() - GitRepositoryHandler.DOT_GIT.length());
   }
 
   //~--- fields ---------------------------------------------------------------
