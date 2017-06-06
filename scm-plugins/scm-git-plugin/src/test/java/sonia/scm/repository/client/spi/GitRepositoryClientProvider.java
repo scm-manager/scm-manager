@@ -191,7 +191,7 @@ public class GitRepositoryClientProvider extends RepositoryClientProvider
 
   @Override
   public File getWorkingCopy() {
-    return git.getRepository().getDirectory();
+    return git.getRepository().getWorkTree();
   }
 
   //~--- fields ---------------------------------------------------------------
