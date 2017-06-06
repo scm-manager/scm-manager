@@ -35,7 +35,6 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
@@ -110,6 +109,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
    * @param repositoryListenersProvider
    * @param repositoryHooksProvider
    * @param preProcessorUtil
+   * @param repositoryMatcher
    */
   @Inject
   public DefaultRepositoryManager(ScmConfiguration configuration,
@@ -117,7 +117,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
     RepositoryDAO repositoryDAO, Set<RepositoryHandler> handlerSet,
     Provider<Set<RepositoryListener>> repositoryListenersProvider,
     Provider<Set<RepositoryHook>> repositoryHooksProvider,
-    PreProcessorUtil preProcessorUtil)
+    PreProcessorUtil preProcessorUtil, RepositoryMatcher repositoryMatcher)
   {
     this.configuration = configuration;
     this.keyGenerator = keyGenerator;
@@ -125,6 +125,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
     this.repositoryListenersProvider = repositoryListenersProvider;
     this.repositoryHooksProvider = repositoryHooksProvider;
     this.preProcessorUtil = preProcessorUtil;
+    this.repositoryMatcher = repositoryMatcher;
 
     //J-
     ThreadFactory factory = new ThreadFactoryBuilder()
@@ -703,7 +704,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
 
       for (Repository r : repositories)
       {
-        if (type.equals(r.getType()) && isNameMatching(r, uri))
+        if (repositoryMatcher.matches(r, type, uri))
         {
           assertIsReader(r);
           repository = r.clone();
@@ -973,51 +974,6 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
   }
 
   /**
-   * This method checks whether or not the provided path belongs to the provided repository.
-   *
-   * @param repository The repository to be tested.
-   * @param path       The path that might be part of the repository.
-   * @return Returns <code>true</code> if path belongs to the repository. Returns <code>false</code> otherwise.
-   */
-  private boolean isNameMatching(Repository repository, String path) {
-    return isNameMatching(repository.getType(), repository.getName(), path);
-  }
-
-  /**
-   * This method checks whether or not the provided path belongs to the provided repository.
-   *
-   * @param repositoryType The type of the repository being tested.
-   * @param repositoryName The name of the repository being tested.
-   * @param path       The path that might be part of the repository.
-   * @return Returns <code>true</code> if path belongs to the repository. Returns <code>false</code> otherwise.
-   */
-  @VisibleForTesting
-  boolean isNameMatching(String repositoryType, String repositoryName, String path) {
-    boolean result = false;
-
-    if (path.startsWith(repositoryName)) {
-
-      String pathPart = path.substring(repositoryName.length());
-
-      //TODO: this introduces a strong coupling to the git plugin. This can be resolved with a "Repository Matcher" API.
-      //ausformulieren, ticketId weg
-      if (GitRepositoryHandler.TYPE_NAME.equals(repositoryType)) {
-
-        //git repository may also be named <<repo-name>>.git by convention
-        if (pathPart.startsWith(GitRepositoryHandler.DOT_GIT)) {
-          //if this is the case, just also cut it away
-          pathPart = pathPart.substring(GitRepositoryHandler.DOT_GIT.length());
-        }
-      }
-
-      result = Util.isEmpty(pathPart) || pathPart.startsWith(HttpUtil.SEPARATOR_PATH);
-
-    }
-
-    return result;
-  }
-
-  /**
    * Method description
    *
    *
@@ -1072,4 +1028,6 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
 
   /** Field description */
   private Set<Type> types;
+  
+  private RepositoryMatcher repositoryMatcher;
 }

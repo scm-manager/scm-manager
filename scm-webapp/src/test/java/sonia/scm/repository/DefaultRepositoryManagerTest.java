@@ -46,7 +46,6 @@ import sonia.scm.security.DefaultKeyGenerator;
 import sonia.scm.store.JAXBStoreFactory;
 import sonia.scm.store.StoreFactory;
 
-import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
 import static org.mockito.Mockito.*;
@@ -54,6 +53,7 @@ import static org.mockito.Mockito.*;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
+import java.util.Collections;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -77,43 +77,19 @@ public class DefaultRepositoryManagerTest extends RepositoryManagerTestBase
     throws RepositoryException, IOException
   {
     RepositoryManager m = createManager();
-
     m.init(contextProvider);
+    
     createRepository(m, new Repository("1", "hg", "scm"));
     createRepository(m, new Repository("2", "hg", "scm-test"));
     createRepository(m, new Repository("3", "git", "project1/test-1"));
     createRepository(m, new Repository("4", "git", "project1/test-2"));
+    
     assertEquals("scm", m.getFromUri("hg/scm").getName());
     assertEquals("scm-test", m.getFromUri("hg/scm-test").getName());
     assertEquals("scm-test", m.getFromUri("/hg/scm-test").getName());
-    assertEquals("project1/test-1",
-      m.getFromUri("/git/project1/test-1").getName());
-    assertEquals("project1/test-1",
-      m.getFromUri("/git/project1/test-1/ka/some/path").getName());
+    assertEquals("project1/test-1", m.getFromUri("/git/project1/test-1").getName());
+    assertEquals("project1/test-1", m.getFromUri("/git/project1/test-1/ka/some/path").getName());
     assertNull(m.getFromUri("/git/project1/test-3/ka/some/path"));
-  }
-
-  @Test
-  public void testNameIsMatching() throws Exception {
-    DefaultRepositoryManager m = createManager();
-
-    assertThat(m.isNameMatching(GitRepositoryHandler.TYPE_NAME, "repo-name", "repo-name"), is(true));
-    assertThat(m.isNameMatching(GitRepositoryHandler.TYPE_NAME, "repo-name", "repo-name/"), is(true));
-    assertThat(m.isNameMatching(GitRepositoryHandler.TYPE_NAME, "repo-name", "repo-name/and-more-is-valid"), is(true));
-    assertThat(m.isNameMatching(GitRepositoryHandler.TYPE_NAME, "repo-name", "repo-name.git/and-more-is-valid"),
-               is(true));
-
-
-    assertThat(m.isNameMatching(GitRepositoryHandler.TYPE_NAME, "repo-name", "not-the-name"), is(false));
-    assertThat(m.isNameMatching(GitRepositoryHandler.TYPE_NAME, "repo-name", "repo-na"), is(false));
-
-    assertThat(m.isNameMatching(GitRepositoryHandler.TYPE_NAME, "repo-name", "/repo-name/"), is(false));
-
-    assertThat(m.isNameMatching(HgRepositoryHandler.TYPE_NAME, "repo-name", "repo-name.git/and-more-is-valid"),
-               is(false));
-    assertThat(m.isNameMatching(SvnRepositoryHandler.TYPE_NAME, "repo-name", "repo-name.git/and-more-is-valid"),
-               is(false));
-
   }
 
   //~--- methods --------------------------------------------------------------
@@ -180,7 +156,7 @@ public class DefaultRepositoryManagerTest extends RepositoryManagerTestBase
 
     return new DefaultRepositoryManager(configuration, contextProvider,
       new DefaultKeyGenerator(), repositoryDAO, handlerSet, listenerProvider,
-      hookProvider, createEmptyPreProcessorUtil());
+      hookProvider, createEmptyPreProcessorUtil(), createRepositoryMatcher());
   }
 
   /**
@@ -202,6 +178,10 @@ public class DefaultRepositoryManagerTest extends RepositoryManagerTestBase
     );
     //J+
   }
+          
+  private RepositoryMatcher createRepositoryMatcher() {
+    return new RepositoryMatcher(Collections.<RepositoryPathMatcher>emptySet());
+  }       
 
   /**
    * Method description

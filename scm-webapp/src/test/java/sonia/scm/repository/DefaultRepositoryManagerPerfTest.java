@@ -117,6 +117,7 @@ public class DefaultRepositoryManagerPerfTest {
     Set<RepositoryHandler> handlerSet = ImmutableSet.of(repositoryHandler);
     Provider<Set<RepositoryListener>> repositoryListenersProvider = new SetProvider();
     Provider<Set<RepositoryHook>> repositoryHooksProvider = new SetProvider();
+    RepositoryMatcher repositoryMatcher = new RepositoryMatcher(Collections.<RepositoryPathMatcher>emptySet());
     
     repositoryManager = new DefaultRepositoryManager(
       configuration, 
@@ -126,7 +127,8 @@ public class DefaultRepositoryManagerPerfTest {
       handlerSet, 
       repositoryListenersProvider, 
       repositoryHooksProvider, 
-      preProcessorUtil
+      preProcessorUtil,
+      repositoryMatcher
     );
     
     setUpTestRepositories();
