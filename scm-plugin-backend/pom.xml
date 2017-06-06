@@ -111,6 +111,10 @@
 
   </dependencies>
 
+  <properties>
+    <sonar.exclusions>src/main/webapp/template/**</sonar.exclusions>
+  </properties>
+
   <build>
 
     <plugins>

@@ -80,6 +80,7 @@ public class SecurityModule extends ShiroWebModule
   private static final String PAGE_UNAUTHORIZED = "/error/unauthorized.html";
 
   /** Field description */
+  @SuppressWarnings("squid:S2068")
   private static final String PARAM_PASSWORD = "password";
 
   /** Field description */

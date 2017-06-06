@@ -78,6 +78,7 @@ public class ConnectionProvider
   public static final String DEFAULT_DB_SHEME = "local:";
 
   /** Field description */
+  @SuppressWarnings("squid:S2068")
   public static final String DEFAULT_PASSWORD = "admin";
 
   /** Field description */

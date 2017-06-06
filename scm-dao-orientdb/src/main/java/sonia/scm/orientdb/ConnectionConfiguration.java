@@ -126,6 +126,7 @@ public class ConnectionConfiguration
    * @return
    */
   @Override
+  @SuppressWarnings("squid:S2068")
   public String toString()
   {
     String pwd = null;

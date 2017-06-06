@@ -76,6 +76,7 @@ public class UserConverter extends AbstractConverter implements Converter<User>
   public static final String FIELD_MAIL = "mail";
 
   /** Field description */
+  @SuppressWarnings("squid:S2068")
   public static final String FIELD_PASSWORD = "password";
 
   /** Field description */

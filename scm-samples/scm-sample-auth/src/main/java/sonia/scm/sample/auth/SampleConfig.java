@@ -76,6 +76,7 @@ public class SampleConfig
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
+  @SuppressWarnings("squid:S2068")
   @XmlElement(name = "password-suffix")
   private String passwordSuffix = "123";
 }

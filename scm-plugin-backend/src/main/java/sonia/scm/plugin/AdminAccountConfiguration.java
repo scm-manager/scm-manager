@@ -133,6 +133,7 @@ public class AdminAccountConfiguration implements SaltedAuthenticationInfo
    * @return
    */
   @Override
+  @SuppressWarnings("squid:S2068")
   public String toString()
   {
     //J-
