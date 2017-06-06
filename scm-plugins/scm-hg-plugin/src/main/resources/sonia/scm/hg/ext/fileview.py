@@ -32,7 +32,10 @@
 
 Prints date, size and last message of files.
 """
-from mercurial import util
+from mercurial import cmdutil,util
+
+cmdtable = {}
+command = cmdutil.command(cmdtable)
 
 class SubRepository:
   url = None
@@ -133,6 +136,14 @@ def printFile(ui, repo, file, disableLastCommit, transport):
     format = 'f%s\n%i %s %s\0'
   ui.write( format % (file.path(), file.size(), date, description) )
 
+@command('fileview', [
+    ('r', 'revision', 'tip', 'revision to print'),
+    ('p', 'path', '', 'path to print'),
+    ('c', 'recursive', False, 'browse repository recursive'),
+    ('d', 'disableLastCommit', False, 'disables last commit description and date'),
+    ('s', 'disableSubRepositoryDetection', False, 'disables detection of sub repositories'),
+    ('t', 'transport', False, 'format the output for command server'),
+  ])
 def fileview(ui, repo, **opts):
   files = []
   directories = []
@@ -154,15 +165,3 @@ def fileview(ui, repo, **opts):
     printDirectory(ui, d, transport)
   for f in files:
     printFile(ui, repo, f, opts['disableLastCommit'], transport)
-  
-cmdtable = {
-  # cmd name        function call
-  'fileview': (fileview,[
-    ('r', 'revision', 'tip', 'revision to print'),
-    ('p', 'path', '', 'path to print'),
-    ('c', 'recursive', False, 'browse repository recursive'),
-    ('d', 'disableLastCommit', False, 'disables last commit description and date'),
-    ('s', 'disableSubRepositoryDetection', False, 'disables detection of sub repositories'),
-    ('t', 'transport', False, 'format the output for command server'),
-  ])
-}

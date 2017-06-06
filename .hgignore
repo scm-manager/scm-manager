@@ -28,3 +28,4 @@ Desktop DF$
 \.idea$
 # jrebel
 rebel.xml
+\.pyc
