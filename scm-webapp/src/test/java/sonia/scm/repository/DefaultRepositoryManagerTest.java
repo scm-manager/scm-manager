@@ -55,12 +55,12 @@ import static org.hamcrest.Matchers.*;
 //~--- JDK imports ------------------------------------------------------------
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Collections;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
 import org.apache.shiro.authz.UnauthorizedException;
-import org.hamcrest.Matchers;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
 import org.mockito.invocation.InvocationOnMock;
@@ -492,19 +492,18 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
   @Test
   public void getRepositoryFromRequestUriTest() throws RepositoryException, IOException {
     RepositoryManager m = createManager();
-
     m.init(contextProvider);
+    
     createRepository(m, new Repository("1", "hg", "scm"));
     createRepository(m, new Repository("2", "hg", "scm-test"));
     createRepository(m, new Repository("3", "git", "project1/test-1"));
     createRepository(m, new Repository("4", "git", "project1/test-2"));
+    
     assertEquals("scm", m.getFromUri("hg/scm").getName());
     assertEquals("scm-test", m.getFromUri("hg/scm-test").getName());
     assertEquals("scm-test", m.getFromUri("/hg/scm-test").getName());
-    assertEquals("project1/test-1",
-      m.getFromUri("/git/project1/test-1").getName());
-    assertEquals("project1/test-1",
-      m.getFromUri("/git/project1/test-1/ka/some/path").getName());
+    assertEquals("project1/test-1", m.getFromUri("/git/project1/test-1").getName());
+    assertEquals("project1/test-1", m.getFromUri("/git/project1/test-1/ka/some/path").getName());
     assertNull(m.getFromUri("/git/project1/test-3/ka/some/path"));
   }
 
@@ -543,7 +542,7 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
     configuration.setEnableRepositoryArchive(archiveEnabled);
 
     return new DefaultRepositoryManager(configuration, contextProvider,
-      keyGenerator, repositoryDAO, handlerSet);
+      keyGenerator, repositoryDAO, handlerSet, createRepositoryMatcher());
   }
   
   private void createRepository(RepositoryManager m, Repository repository)
@@ -569,6 +568,10 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
     assertEquals(repo.getCreationDate(), other.getCreationDate());
     assertEquals(repo.getLastModified(), other.getLastModified());
   }
+          
+  private RepositoryMatcher createRepositoryMatcher() {
+    return new RepositoryMatcher(Collections.<RepositoryPathMatcher>emptySet());
+  }       
 
   private Repository createRepository(Repository repository) throws RepositoryException, IOException {
     manager.create(repository);

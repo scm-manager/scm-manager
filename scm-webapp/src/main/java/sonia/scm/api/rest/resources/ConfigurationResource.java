@@ -41,8 +41,6 @@ import com.google.inject.Singleton;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
-import org.codehaus.enunciate.modules.jersey.ExternallyManagedLifecycle;
-
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.security.Role;
 import sonia.scm.security.ScmSecurityException;
@@ -66,7 +64,6 @@ import javax.ws.rs.core.UriInfo;
  */
 @Singleton
 @Path("config")
-@ExternallyManagedLifecycle
 public class ConfigurationResource
 {
 

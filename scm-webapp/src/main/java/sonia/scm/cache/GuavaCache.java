@@ -63,8 +63,7 @@ public class GuavaCache<K, V>
   /**
    * the logger for GuavaCache
    */
-  private static final Logger logger =
-    LoggerFactory.getLogger(GuavaCache.class);
+  private static final Logger logger = LoggerFactory.getLogger(GuavaCache.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -89,8 +88,7 @@ public class GuavaCache<K, V>
   @SuppressWarnings("unchecked")
   public GuavaCache(GuavaCacheConfiguration configuration, String name)
   {
-    this(GuavaCaches.create(configuration, name),
-      configuration.getCopyStrategy(), name);
+    this(GuavaCaches.create(configuration, name), configuration.getCopyStrategy(), name);
   }
 
   /**
@@ -117,7 +115,7 @@ public class GuavaCache<K, V>
       this.copyStrategy = CopyStrategy.NONE;
     }
   }
-
+  
   //~--- methods --------------------------------------------------------------
 
   /**

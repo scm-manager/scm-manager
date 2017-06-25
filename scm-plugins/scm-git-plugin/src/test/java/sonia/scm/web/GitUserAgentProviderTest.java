@@ -33,51 +33,46 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.base.Strings;
-
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.util.Locale;
-
 /**
- *
+ * Unit tests for {@link GitUserAgentProvider}.
+ * 
  * @author Sebastian Sdorra <sebastian.sdorra@triology.de>
  */
-public class GitUserAgentProviderTest
-{
+public class GitUserAgentProviderTest {
 
-  /**
-   * Method description
-   *
-   */
+  private final GitUserAgentProvider provider = new GitUserAgentProvider();
+  
   @Test
-  public void testParseUserAgent()
-  {
+  public void testParseUserAgent() {
     assertEquals(GitUserAgentProvider.GIT, parse("git/1.7.9.5"));
+    assertEquals(GitUserAgentProvider.JGIT, parse("jgit/4.5.2"));
+    assertEquals(GitUserAgentProvider.GIT_LFS, parse("git-lfs/2.0.1 (GitHub; windows amd64; go 1.8; git 678cdbd4)"));
     assertEquals(GitUserAgentProvider.MSYSGIT, parse("git/1.8.3.msysgit.0"));
     assertNull(parse("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36"));
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param v
-   *
-   * @return
-   */
-  private UserAgent parse(String v)
-  {
-    return provider.parseUserAgent(
-      Strings.nullToEmpty(v).toLowerCase(Locale.ENGLISH));
+  @Test
+  public void testParseUserAgentCaseSensitive() {
+    assertEquals(GitUserAgentProvider.GIT, parse("Git/1.7.9.5"));
+  }
+  
+  @Test
+  public void testParseUserAgentWithEmptyValue() {
+    assertNull(parse(null));
+  }
+  
+  @Test
+  public void testParseUserAgentWithNullValue() {
+    assertNull(parse(null));
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final GitUserAgentProvider provider = new GitUserAgentProvider();
+  private UserAgent parse(String v) {
+    return provider.parseUserAgent(v);
+  }
 }

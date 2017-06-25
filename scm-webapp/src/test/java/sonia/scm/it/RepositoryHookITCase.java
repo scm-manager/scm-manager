@@ -181,7 +181,7 @@ public class RepositoryHookITCase extends AbstractAdminITCaseBase
   
   private Changeset commit(String message) throws IOException {
     Changeset a = repositoryClient.getCommitCommand().commit(
-      new Person("scmadmin", "scmadmin@scm-manager.org"), "added a"
+      new Person("scmadmin", "scmadmin@scm-manager.org"), message
     );
     if ( repositoryClient.isCommandSupported(ClientCommand.PUSH) ) {
       repositoryClient.getPushCommand().push();

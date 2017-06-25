@@ -81,7 +81,10 @@ public class GitRepositoryHandler
 
   /** Field description */
   public static final String TYPE_NAME = "git";
-  
+
+
+  public static final String DOT_GIT = ".git";
+
   private static final Logger logger = LoggerFactory.getLogger(GitRepositoryHandler.class);
 
   /** Field description */

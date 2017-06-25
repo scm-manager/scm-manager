@@ -104,15 +104,18 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
    * @param keyGenerator
    * @param repositoryDAO
    * @param handlerSet
+   * @param repositoryMatcher
    */
   @Inject
   public DefaultRepositoryManager(ScmConfiguration configuration,
     SCMContextProvider contextProvider, KeyGenerator keyGenerator,
-    RepositoryDAO repositoryDAO, Set<RepositoryHandler> handlerSet)
+    RepositoryDAO repositoryDAO, Set<RepositoryHandler> handlerSet, 
+    RepositoryMatcher repositoryMatcher)
   {
     this.configuration = configuration;
     this.keyGenerator = keyGenerator;
     this.repositoryDAO = repositoryDAO;
+    this.repositoryMatcher = repositoryMatcher;
 
     //J-
     ThreadFactory factory = new ThreadFactoryBuilder()
@@ -558,7 +561,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
 
       for (Repository r : repositories)
       {
-        if (type.equals(r.getType()) && isNameMatching(r, uri))
+        if (repositoryMatcher.matches(r, type, uri))
         {
           check.check(r);
           repository = r.clone();
@@ -715,30 +718,6 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
     return handler;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   * @param path
-   *
-   * @return
-   */
-  private boolean isNameMatching(Repository repository, String path)
-  {
-    boolean result = false;
-    String name = repository.getName();
-
-    if (path.startsWith(name))
-    {
-      String sub = path.substring(name.length());
-
-      result = Util.isEmpty(sub) || sub.startsWith(HttpUtil.SEPARATOR_PATH);
-    }
-
-    return result;
-  }
-
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
@@ -758,4 +737,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
 
   /** Field description */
   private final Set<Type> types;
+  
+  /** Field description */
+  private RepositoryMatcher repositoryMatcher;
 }

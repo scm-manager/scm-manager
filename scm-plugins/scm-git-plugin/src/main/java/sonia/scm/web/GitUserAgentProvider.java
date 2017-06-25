@@ -35,63 +35,89 @@ package sonia.scm.web;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Charsets;
+import com.google.common.base.Strings;
+import java.util.Locale;
 
 import sonia.scm.plugin.Extension;
 
 /**
- *
+ * UserAgent provider for git related clients.
  * @author Sebastian Sdorra <sebastian.sdorra@gmail.com>
  * @since 1.45
  */
 @Extension
-public class GitUserAgentProvider implements UserAgentProvider
-{
+public class GitUserAgentProvider implements UserAgentProvider {
+ 
+  private static final String PREFIX_JGIT = "jgit/";
 
-  /** Field description */
   @VisibleForTesting
-  static final UserAgent GIT = UserAgent.builder("Git").browser(
-                                 false).basicAuthenticationCharset(
-                                 Charsets.UTF_8).build();
-
-  /** Field description */
+  static final UserAgent JGIT = UserAgent.builder("JGit")
+          .browser(false)
+          .basicAuthenticationCharset(Charsets.UTF_8)
+          .build();
+  
+  private static final String PREFIX_REGULAR = "git/";
+  
   @VisibleForTesting
-  static final UserAgent MSYSGIT = UserAgent.builder("msysGit").browser(
-                                     false).basicAuthenticationCharset(
-                                     Charsets.UTF_8).build();
+  static final UserAgent GIT = UserAgent.builder("Git")
+          .browser(false)
+          .basicAuthenticationCharset(Charsets.UTF_8)
+          .build();
+  
+  private static final String PREFIX_LFS = "git-lfs/";
 
-  /** Field description */
-  private static final String PREFIX = "git/";
+  @VisibleForTesting
+  static final UserAgent GIT_LFS = UserAgent.builder("Git Lfs")
+          .browser(false)
+          .basicAuthenticationCharset(Charsets.UTF_8)
+          .build();
 
-  /** Field description */
-  private static final String SUFFIX = "msysgit";
+  private static final String SUFFIX_MSYSGIT = "msysgit";
+  
+  @VisibleForTesting
+  static final UserAgent MSYSGIT = UserAgent.builder("msysGit")
+          .browser(false)
+          .basicAuthenticationCharset(Charsets.UTF_8)
+          .build();
+
+
 
   //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param userAgentString
-   *
-   * @return
-   */
   @Override
-  public UserAgent parseUserAgent(String userAgentString)
-  {
-    UserAgent ua = null;
-
-    if (userAgentString.startsWith(PREFIX))
-    {
-      if (userAgentString.contains(SUFFIX))
-      {
-        ua = MSYSGIT;
-      }
-      else
-      {
-        ua = GIT;
-      }
+  public UserAgent parseUserAgent(String userAgentString) {
+    String lowerUserAgent = toLower(userAgentString);
+    
+    if (isJGit(lowerUserAgent)) {
+      return JGIT;
+    } else if (isMsysGit(lowerUserAgent)) {
+      return MSYSGIT;
+    } else if (isGitLFS(lowerUserAgent)) {
+      return GIT_LFS;
+    } else if (isGit(lowerUserAgent)) {
+      return GIT;
+    } else {
+      return null;
     }
-
-    return ua;
+  }
+  
+  private String toLower(String value) {
+    return Strings.nullToEmpty(value).toLowerCase(Locale.ENGLISH);
+  }
+  
+  private boolean isJGit(String userAgent) {
+    return userAgent.startsWith(PREFIX_JGIT);
+  }
+  
+  private boolean isMsysGit(String userAgent) {
+    return userAgent.startsWith(PREFIX_REGULAR) && userAgent.contains(SUFFIX_MSYSGIT);
+  }
+  
+  private boolean isGitLFS(String userAgent) {
+    return userAgent.startsWith(PREFIX_LFS);
+  }
+  
+  private boolean isGit(String userAgent) {
+    return userAgent.startsWith(PREFIX_REGULAR);
   }
 }

@@ -43,9 +43,6 @@ import com.google.inject.Inject;
 
 import org.apache.shiro.SecurityUtils;
 
-import org.codehaus.enunciate.jaxrs.TypeHint;
-import org.codehaus.enunciate.modules.jersey.ExternallyManagedLifecycle;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,6 +71,10 @@ import static com.google.common.base.Preconditions.*;
 
 import com.sun.jersey.api.client.ClientResponse.Status;
 import com.sun.jersey.multipart.FormDataParam;
+import com.webcohesion.enunciate.metadata.rs.ResponseCode;
+import com.webcohesion.enunciate.metadata.rs.ResponseHeader;
+import com.webcohesion.enunciate.metadata.rs.StatusCodes;
+import com.webcohesion.enunciate.metadata.rs.TypeHint;
 
 import java.io.File;
 import java.io.IOException;
@@ -111,7 +112,6 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Sebastian Sdorra
  */
 @Path("import/repositories")
-@ExternallyManagedLifecycle
 public class RepositoryImportResource
 {
 
@@ -142,17 +142,8 @@ public class RepositoryImportResource
   /**
    * Imports a repository type specific bundle. The bundle file is uploaded to
    * the server which is running scm-manager. After the upload has finished, the
-   * bundle file is passed to the {@link UnbundleCommandBuilder}. This method
-   * requires admin privileges.<br />
-   *
-   * Status codes:
-   * <ul>
-   *   <li>201 created</li>
-   *   <li>400 bad request, the import bundle feature is not supported by this
-   *       type of repositories or the parameters are not valid.</li>
-   *   <li>500 internal server error</li>
-   *   <li>409 conflict, a repository with the name already exists.</li>
-   * </ul>
+   * bundle file is passed to the {@link UnbundleCommandBuilder}. <strong>Note:</strong> This method
+   * requires admin privileges.
    *
    * @param uriInfo uri info
    * @param type repository type
@@ -160,12 +151,23 @@ public class RepositoryImportResource
    * @param inputStream input bundle
    * @param compressed true if the bundle is gzip compressed
    *
-   * @return empty response with location header which points to the imported
-   *  repository
+   * @return empty response with location header which points to the imported repository
    * @since 1.43
    */
   @POST
   @Path("{type}/bundle")
+  @StatusCodes({
+    @ResponseCode(code = 201, condition = "created", additionalHeaders = {
+      @ResponseHeader(name = "Location", description = "uri to the imported repository")
+    }),
+    @ResponseCode(
+      code = 400, 
+      condition = "bad request, the import bundle feature is not supported by this type of repositories or the parameters are not valid"
+    ),
+    @ResponseCode(code = 409, condition = "conflict, a repository with the name already exists"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
+  @TypeHint(TypeHint.NO_CONTENT.class)
   @Consumes(MediaType.MULTIPART_FORM_DATA)
   public Response importFromBundle(@Context UriInfo uriInfo,
     @PathParam("type") String type, @FormDataParam("name") String name,
@@ -182,18 +184,8 @@ public class RepositoryImportResource
    * This method works exactly like
    * {@link #importFromBundle(UriInfo, String, String, InputStream)}, but this
    * method returns an html content-type. The method exists only for a
-   * workaround of the javascript ui extjs. This method requires admin
-   * privileges.<br />
-   *
-   * Status codes:
-   * <ul>
-   *   <li>201 created</li>
-   *   <li>400 bad request, the import bundle feature is not supported by this
-   *       type of repositories or the parameters are not valid.</li>
-   *   <li>500 internal server error</li>
-   *   <li>409 conflict, a repository with the name already exists.</li>
-   * </ul>
-   *
+   * workaround of the javascript ui extjs. <strong>Note:</strong> This method requires admin
+   * privileges.
    *
    * @param type repository type
    * @param name name of the repository
@@ -206,6 +198,16 @@ public class RepositoryImportResource
    */
   @POST
   @Path("{type}/bundle.html")
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(
+      code = 400, 
+      condition = "bad request, the import bundle feature is not supported by this type of repositories or the parameters are not valid"
+    ),
+    @ResponseCode(code = 409, condition = "conflict, a repository with the name already exists"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
+  @TypeHint(RestActionUploadResult.class)
   @Consumes(MediaType.MULTIPART_FORM_DATA)
   @Produces(MediaType.TEXT_HTML)
   public Response importFromBundleUI(@PathParam("type") String type,
@@ -234,16 +236,7 @@ public class RepositoryImportResource
    * Imports a external repository which is accessible via url. The method can
    * only be used, if the repository type supports the {@link Command#PULL}. The
    * method will return a location header with the url to the imported
-   * repository. This method requires admin privileges.<br />
-   *
-   * Status codes:
-   * <ul>
-   *   <li>201 created</li>
-   *   <li>400 bad request, the import by url feature is not supported by this
-   *       type of repositories or the parameters are not valid.</li>
-   *   <li>409 conflict, a repository with the name already exists.</li>
-   *   <li>500 internal server error</li>
-   * </ul>
+   * repository. <strong>Note:</strong> This method requires admin privileges.
    *
    * @param uriInfo uri info
    * @param type repository type
@@ -255,6 +248,18 @@ public class RepositoryImportResource
    */
   @POST
   @Path("{type}/url")
+  @StatusCodes({
+    @ResponseCode(code = 201, condition = "created", additionalHeaders = {
+      @ResponseHeader(name = "Location", description = "uri to the imported repository")
+    }),
+    @ResponseCode(
+      code = 400, 
+      condition = "bad request, the import feature is not supported by this type of repositories or the parameters are not valid"
+    ),
+    @ResponseCode(code = 409, condition = "conflict, a repository with the name already exists"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
+  @TypeHint(TypeHint.NO_CONTENT.class)
   @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public Response importFromUrl(@Context UriInfo uriInfo,
     @PathParam("type") String type, UrlImportRequest request)
@@ -298,15 +303,7 @@ public class RepositoryImportResource
 
   /**
    * Imports repositories of the given type from the configured repository
-   * directory. This method requires admin privileges.<br />
-   * <br />
-   * Status codes:
-   * <ul>
-   *   <li>200 ok, successful</li>
-   *   <li>400 bad request, the import feature is not
-   *       supported by this type of repositories.</li>
-   *   <li>500 internal server error</li>
-   * </ul>
+   * directory. <strong>Note:</strong> This method requires admin privileges.
    *
    * @param type repository type
    *
@@ -314,6 +311,14 @@ public class RepositoryImportResource
    */
   @POST
   @Path("{type}")
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(
+      code = 400, 
+      condition = "bad request, the import feature is not supported by this type of repositories"
+    ),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
   @TypeHint(Repository[].class)
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public Response importRepositories(@PathParam("type") String type)
@@ -333,19 +338,19 @@ public class RepositoryImportResource
 
   /**
    * Imports repositories of all supported types from the configured repository
-   * directories. This method requires admin privileges.<br />
-   * <br />
-   * Status codes:
-   * <ul>
-   *   <li>200 ok, successful</li>
-   *   <li>400 bad request, the import feature is not
-   *       supported by this type of repositories.</li>
-   *   <li>500 internal server error</li>
-   * </ul>
+   * directories. <strong>Note:</strong> This method requires admin privileges.
    *
    * @return imported repositories
    */
   @POST
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(
+      code = 400, 
+      condition = "bad request, the import feature is not supported by this type of repositories"
+    ),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
   @TypeHint(Repository[].class)
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public Response importRepositories()
@@ -371,15 +376,7 @@ public class RepositoryImportResource
   /**
    * Imports repositories of the given type from the configured repository
    * directory. Returns a list of successfully imported directories and a list
-   * of failed directories. This method requires admin privileges.<br />
-   * <br />
-   * Status codes:
-   * <ul>
-   *   <li>200 ok, successful</li>
-   *   <li>400 bad request, the import feature is not
-   *       supported by this type of repositories.</li>
-   *   <li>500 internal server error</li>
-   * </ul>
+   * of failed directories. <strong>Note:</strong> This method requires admin privileges.
    *
    * @param type repository type
    *
@@ -388,6 +385,14 @@ public class RepositoryImportResource
    */
   @POST
   @Path("{type}/directory")
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(
+      code = 400, 
+      condition = "bad request, the import feature is not supported by this type of repositories"
+    ),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
   @TypeHint(ImportResult.class)
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public Response importRepositoriesFromDirectory(
@@ -456,22 +461,20 @@ public class RepositoryImportResource
 
   /**
    * Returns a list of repository types, which support the directory import
-   * feature.
-   *
-   * This method requires admin privileges.<br />
-   * <br />
-   * Status codes:
-   * <ul>
-   *   <li>200 ok, successful</li>
-   *   <li>400 bad request, the import feature is not
-   *       supported by this type of repositories.</li>
-   *   <li>500 internal server error</li>
-   * </ul>
+   * feature. <strong>Note:</strong> This method requires admin privileges.
    *
    * @return list of repository types
    */
   @GET
   @TypeHint(Type[].class)
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(
+      code = 400, 
+      condition = "bad request, the import feature is not supported by this type of repositories"
+    ),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public Response getImportableTypes()
   {

@@ -50,22 +50,14 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import org.junit.Rule;
 import org.mockito.runners.MockitoJUnitRunner;
-import sonia.scm.HandlerEventType;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
-import sonia.scm.group.Group;
-import sonia.scm.group.GroupEvent;
-import sonia.scm.group.GroupModificationEvent;
 import sonia.scm.group.GroupNames;
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryDAO;
-import sonia.scm.repository.RepositoryEvent;
-import sonia.scm.repository.RepositoryModificationEvent;
 import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.user.User;
-import sonia.scm.user.UserEvent;
-import sonia.scm.user.UserModificationEvent;
 import sonia.scm.user.UserTestData;
 
 /**
@@ -82,7 +74,7 @@ public class DefaultAuthorizationCollectorTest {
   
   @Mock
   private CacheManager cacheManager;
-
+  
   @Mock
   private RepositoryDAO repositoryDAO;
 
@@ -104,160 +96,6 @@ public class DefaultAuthorizationCollectorTest {
     collector = new DefaultAuthorizationCollector(cacheManager, repositoryDAO, securitySystem);
   }
 
-  /**
-   * Tests {@link AuthorizationCollector#onEvent(sonia.scm.user.UserEvent)}.
-   */
-  @Test
-  public void testOnUserEvent()
-  {
-    User user = UserTestData.createDent();
-    collector.onEvent(new UserEvent(HandlerEventType.BEFORE_CREATE, user));
-    verify(cache, never()).clear();
-    
-    collector.onEvent(new UserEvent(HandlerEventType.CREATE, user));
-    verify(cache).removeAll(Mockito.any(Predicate.class));
-  }
-  
-  /**
-   * Tests {@link AuthorizationCollector#onEvent(sonia.scm.user.UserEvent)} with modified user.
-   */
-  @Test  
-  public void testOnUserModificationEvent()
-  {
-    User user = UserTestData.createDent();
-    User userModified = UserTestData.createDent();
-    userModified.setDisplayName("Super Dent");
-    
-    collector.onEvent(new UserModificationEvent(HandlerEventType.BEFORE_CREATE, userModified, user));
-    verify(cache, never()).removeAll(Mockito.any(Predicate.class));
-    
-    collector.onEvent(new UserModificationEvent(HandlerEventType.CREATE, userModified, user));
-    verify(cache, never()).removeAll(Mockito.any(Predicate.class));
-    
-    userModified.setAdmin(true);
-    
-    collector.onEvent(new UserModificationEvent(HandlerEventType.BEFORE_CREATE, userModified, user));
-    verify(cache, never()).removeAll(Mockito.any(Predicate.class));
-    
-    collector.onEvent(new UserModificationEvent(HandlerEventType.CREATE, userModified, user));
-    verify(cache).removeAll(Mockito.any(Predicate.class));
-  }
-  
-  /**
-   * Tests {@link AuthorizationCollector#onEvent(sonia.scm.group.GroupEvent)}.
-   */
-  @Test
-  public void testOnGroupEvent()
-  {
-    Group group = new Group("xml", "base");
-    collector.onEvent(new GroupEvent(HandlerEventType.BEFORE_CREATE, group));
-    verify(cache, never()).clear();
-    
-    collector.onEvent(new GroupEvent(HandlerEventType.CREATE, group));
-    verify(cache).clear();
-  }
-  
-  /**
-   * Tests {@link AuthorizationCollector#onEvent(sonia.scm.group.GroupEvent)} with modified groups.
-   */
-  @Test
-  public void testOnGroupModificationEvent()
-  {
-    Group group = new Group("xml", "base");
-    Group modifiedGroup = new Group("xml", "base");
-    collector.onEvent(new GroupModificationEvent(HandlerEventType.BEFORE_MODIFY, modifiedGroup, group));
-    verify(cache, never()).clear();
-    
-    collector.onEvent(new GroupModificationEvent(HandlerEventType.MODIFY, modifiedGroup, group));
-    verify(cache, never()).clear();
-    
-    modifiedGroup.add("test");
-    collector.onEvent(new GroupModificationEvent(HandlerEventType.MODIFY, modifiedGroup, group));
-    verify(cache).clear();
-  }
-  
-  /**
-   * Tests {@link AuthorizationCollector#onEvent(sonia.scm.repository.RepositoryEvent)}.
-   */
-  @Test
-  public void testOnRepositoryEvent()
-  {
-    Repository repository = RepositoryTestData.createHeartOfGold();
-    collector.onEvent(new RepositoryEvent(HandlerEventType.BEFORE_CREATE, repository));
-    verify(cache, never()).clear();
-    
-    collector.onEvent(new RepositoryEvent(HandlerEventType.CREATE, repository));
-    verify(cache).clear();
-  }
-  
- /**
-   * Tests {@link AuthorizationCollector#onEvent(sonia.scm.repository.RepositoryEvent)} with modified repository.
-   */
-  @Test
-  public void testOnRepositoryModificationEvent()
-  {
-    Repository repositoryModified = RepositoryTestData.createHeartOfGold();
-    repositoryModified.setName("test123");
-    repositoryModified.setPermissions(Lists.newArrayList(new sonia.scm.repository.Permission("test")));
-    
-    Repository repository = RepositoryTestData.createHeartOfGold();
-    repository.setPermissions(Lists.newArrayList(new sonia.scm.repository.Permission("test")));
-    
-    collector.onEvent(new RepositoryModificationEvent(HandlerEventType.BEFORE_CREATE, repositoryModified, repository));
-    verify(cache, never()).clear();
-    
-    collector.onEvent(new RepositoryModificationEvent(HandlerEventType.CREATE, repositoryModified, repository));
-    verify(cache, never()).clear();
-    
-    repositoryModified.setPermissions(Lists.newArrayList(new sonia.scm.repository.Permission("test")));
-    collector.onEvent(new RepositoryModificationEvent(HandlerEventType.CREATE, repositoryModified, repository));
-    verify(cache, never()).clear();
-    
-    repositoryModified.setPermissions(Lists.newArrayList(new sonia.scm.repository.Permission("test123")));
-    collector.onEvent(new RepositoryModificationEvent(HandlerEventType.CREATE, repositoryModified, repository));
-    verify(cache).clear();
-    
-    repositoryModified.setPermissions(
-      Lists.newArrayList(new sonia.scm.repository.Permission("test", PermissionType.READ, true))
-    );
-    collector.onEvent(new RepositoryModificationEvent(HandlerEventType.CREATE, repositoryModified, repository));
-    verify(cache, times(2)).clear();
-    
-    repositoryModified.setPermissions(
-      Lists.newArrayList(new sonia.scm.repository.Permission("test", PermissionType.WRITE))
-    );
-    collector.onEvent(new RepositoryModificationEvent(HandlerEventType.CREATE, repositoryModified, repository));
-    verify(cache, times(3)).clear();
-  }
-  
-  /**
-   * Tests {@link AuthorizationCollector#onEvent(sonia.scm.security.StoredAssignedPermissionEvent)}.
-   */
-  @Test
-  public void testOnStoredAssignedPermissionEvent()
-  {
-    StoredAssignedPermission groupPermission = new StoredAssignedPermission(
-      "123", new AssignedPermission("_authenticated", true, "repository:read:*")
-    );
-    collector.onEvent(new StoredAssignedPermissionEvent(HandlerEventType.BEFORE_CREATE, groupPermission));
-    verify(cache, never()).clear();
-    
-    collector.onEvent(new StoredAssignedPermissionEvent(HandlerEventType.CREATE, groupPermission));
-    verify(cache).clear();
-    
-    
-    StoredAssignedPermission userPermission = new StoredAssignedPermission(
-      "123", new AssignedPermission("trillian", false, "repository:read:*")
-    );
-    collector.onEvent(new StoredAssignedPermissionEvent(HandlerEventType.BEFORE_CREATE, userPermission));
-    verify(cache, never()).removeAll(Mockito.any(Predicate.class));
-    verify(cache).clear();
-    
-    collector.onEvent(new StoredAssignedPermissionEvent(HandlerEventType.CREATE, userPermission));
-    verify(cache).removeAll(Mockito.any(Predicate.class));
-    verify(cache).clear();
-  }
-  
   /**
    * Tests {@link AuthorizationCollector#collect()} without user role.
    */
@@ -386,8 +224,7 @@ public class DefaultAuthorizationCollectorTest {
     assertThat(authInfo.getStringPermissions(), containsInAnyOrder("one:one", "two:two"));
   }
   
-  private void authenticate(User user, String group, String... groups)
-  {
+  private void authenticate(User user, String group, String... groups) {
     SimplePrincipalCollection spc = new SimplePrincipalCollection();
     spc.add(user.getName(), "unit");
     spc.add(user, "unit");
@@ -396,4 +233,16 @@ public class DefaultAuthorizationCollectorTest {
     shiro.setSubject(subject);
   }
 
+  /**
+   * Tests {@link AuthorizationCollector#invalidateCache(sonia.scm.security.AuthorizationChangedEvent)}.
+   */
+  @Test
+  public void testInvalidateCache() {
+    collector.invalidateCache(AuthorizationChangedEvent.createForEveryUser());
+    verify(cache).clear();
+    
+    collector.invalidateCache(AuthorizationChangedEvent.createForUser("dent"));
+    verify(cache).removeAll(Mockito.any(Predicate.class));
+  }
+  
 }

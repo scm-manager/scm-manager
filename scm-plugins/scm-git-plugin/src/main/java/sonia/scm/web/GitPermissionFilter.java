@@ -35,6 +35,7 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -57,7 +58,8 @@ import sonia.scm.filter.Filters;
 import sonia.scm.filter.WebElement;
 
 /**
- *
+ * GitPermissionFilter decides if a git request requires write or read privileges.
+ * 
  * @author Sebastian Sdorra
  */
 @Priority(Filters.PRIORITY_AUTHORIZATION)
@@ -65,79 +67,60 @@ import sonia.scm.filter.WebElement;
 public class GitPermissionFilter extends ProviderPermissionFilter
 {
 
-  /** Field description */
-  public static final String PARAMETER_SERVICE = "service";
+  private static final String PARAMETER_SERVICE = "service";
 
-  /** Field description */
-  public static final String PARAMETER_VALUE_RECEIVE = "git-receive-pack";
+  private static final String PARAMETER_VALUE_RECEIVE = "git-receive-pack";
 
-  /** Field description */
-  public static final String URI_RECEIVE_PACK = "git-receive-pack";
+  private static final String URI_RECEIVE_PACK = "git-receive-pack";
 
-  /** Field description */
-  public static final String URI_REF_INFO = "/info/refs";
+  private static final String URI_REF_INFO = "/info/refs";
+  
+  private static final String METHOD_LFS_UPLOAD = "PUT";
 
   //~--- constructors ---------------------------------------------------------
 
   /**
-   * Constructs ...
+   * Constructs a new instance of the GitPermissionFilter.
    *
-   * @param configuration
-   * @param repositoryProvider
+   * @param configuration scm main configuration
+   * @param repositoryProvider repository provider
    */
   @Inject
-  public GitPermissionFilter(ScmConfiguration configuration,
-    RepositoryProvider repositoryProvider)
-  {
+  public GitPermissionFilter(ScmConfiguration configuration, RepositoryProvider repositoryProvider) {
     super(configuration, repositoryProvider);
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param response
-   *
-   * @throws IOException
-   */
   @Override
-  protected void sendNotEnoughPrivilegesError(HttpServletRequest request,
-    HttpServletResponse response)
-    throws IOException
-  {
-    if (GitUtil.isGitClient(request))
-    {
+  protected void sendNotEnoughPrivilegesError(HttpServletRequest request, HttpServletResponse response) 
+    throws IOException {
+    if (GitUtil.isGitClient(request)) {
       GitSmartHttpTools.sendError(request, response,
         HttpServletResponse.SC_FORBIDDEN,
         ClientMessages.get(request).notEnoughPrivileges());
-    }
-    else
-    {
+    } else {
       super.sendNotEnoughPrivilegesError(request, response);
     }
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   */
   @Override
-  protected boolean isWriteRequest(HttpServletRequest request)
-  {
-    String uri = request.getRequestURI();
-
-    return uri.endsWith(URI_RECEIVE_PACK)
-      || (uri.endsWith(URI_REF_INFO)
-        && PARAMETER_VALUE_RECEIVE.equals(
-          request.getParameter(PARAMETER_SERVICE)));
+  protected boolean isWriteRequest(HttpServletRequest request) {
+    return isReceivePackRequest(request) ||
+        isReceiveServiceRequest(request) ||
+        isLfsFileUpload(request);
   }
+  
+  private boolean isReceivePackRequest(HttpServletRequest request) {
+    return request.getRequestURI().endsWith(URI_RECEIVE_PACK);
+  }
+  
+  private boolean isReceiveServiceRequest(HttpServletRequest request) {
+    return request.getRequestURI().endsWith(URI_REF_INFO) 
+        && PARAMETER_VALUE_RECEIVE.equals(request.getParameter(PARAMETER_SERVICE));
+  }
+
+  @VisibleForTesting
+  private static boolean isLfsFileUpload(HttpServletRequest request) {
+    return METHOD_LFS_UPLOAD.equalsIgnoreCase(request.getMethod());
+  }
+
 }

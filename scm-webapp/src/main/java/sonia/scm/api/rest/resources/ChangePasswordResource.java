@@ -36,13 +36,13 @@ package sonia.scm.api.rest.resources;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
+import com.webcohesion.enunciate.metadata.rs.ResponseCode;
+import com.webcohesion.enunciate.metadata.rs.StatusCodes;
+import com.webcohesion.enunciate.metadata.rs.TypeHint;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.credential.PasswordService;
 import org.apache.shiro.subject.Subject;
-
-import org.codehaus.enunciate.jaxrs.TypeHint;
-import org.codehaus.enunciate.modules.jersey.ExternallyManagedLifecycle;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,10 +68,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
- *
+ * Resource to change the password of the authenticated user.
+ * 
  * @author Sebastian Sdorra
  */
-@ExternallyManagedLifecycle
 @Path("action/change-password")
 public class ChangePasswordResource
 {
@@ -100,14 +100,7 @@ public class ChangePasswordResource
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Changes the password of the current user.<br />
-   * <br />
-   * Status codes:
-   * <ul>
-   *   <li>200 success</li>
-   *   <li>400 bad request, the old password is not correct</li>
-   *   <li>500 internal server error</li>
-   * </ul>
+   * Changes the password of the current user.
    *
    * @param oldPassword old password of the current user
    * @param newPassword new password for the current user
@@ -119,6 +112,11 @@ public class ChangePasswordResource
    */
   @POST
   @TypeHint(RestActionResult.class)
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 400, condition = "bad request, the old password is not correct"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public Response changePassword(@FormParam("old-password") String oldPassword,
     @FormParam("new-password") String newPassword)

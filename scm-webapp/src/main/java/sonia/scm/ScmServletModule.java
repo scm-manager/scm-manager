@@ -137,6 +137,7 @@ import sonia.scm.schedule.QuartzScheduler;
 import sonia.scm.schedule.Scheduler;
 import sonia.scm.security.ConfigurableLoginAttemptHandler;
 import sonia.scm.security.LoginAttemptHandler;
+import sonia.scm.security.AuthorizationChangedEventProducer;
 import sonia.scm.web.UserAgentParser;
 
 /**
@@ -276,11 +277,14 @@ public class ScmServletModule extends JerseyServletModule
 
     // bind security stuff
     bind(LoginAttemptHandler.class).to(ConfigurableLoginAttemptHandler.class);
+    bind(AuthorizationChangedEventProducer.class);
+
     bind(SecuritySystem.class).to(DefaultSecuritySystem.class);
     bind(AdministrationContext.class, DefaultAdministrationContext.class);
 
     // bind cache
     bind(CacheManager.class, GuavaCacheManager.class);
+    bind(org.apache.shiro.cache.CacheManager.class, GuavaCacheManager.class);
 
     // bind dao
     bind(GroupDAO.class, XmlGroupDAO.class);

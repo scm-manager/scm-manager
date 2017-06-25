@@ -40,8 +40,8 @@ import com.github.legman.Subscribe;
 import com.google.common.base.Function;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import org.codehaus.enunciate.modules.jersey.ExternallyManagedLifecycle;
+import com.webcohesion.enunciate.metadata.rs.ResponseCode;
+import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
@@ -64,12 +64,13 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 /**
- *
+ * RESTful Web Service Resource to search users and groups. This endpoint can be used to implement typeahead input 
+ * fields for permissions.
+ * 
  * @author Sebastian Sdorra
  */
 @Singleton
 @Path("search")
-@ExternallyManagedLifecycle
 public class SearchResource
 {
 
@@ -140,12 +141,7 @@ public class SearchResource
   }
 
   /**
-   * Returns a list of groups found by the given search string.<br />
-   * <br />
-   * <ul>
-   *   <li>200 success</li>
-   *   <li>500 internal server error</li>
-   * </ul>
+   * Returns a list of groups found by the given search string.
    *
    * @param queryString the search string
    *
@@ -153,6 +149,10 @@ public class SearchResource
    */
   @GET
   @Path("groups")
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public SearchResults searchGroups(@QueryParam("query") String queryString)
   {
@@ -176,12 +176,7 @@ public class SearchResource
   }
 
   /**
-   * Returns a list of users found by the given search string.<br />
-   * <br />
-   * <ul>
-   *   <li>200 success</li>
-   *   <li>500 internal server error</li>
-   * </ul>
+   * Returns a list of users found by the given search string.
    *
    * @param queryString the search string
    *
@@ -189,6 +184,10 @@ public class SearchResource
    */
   @GET
   @Path("users")
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public SearchResults searchUsers(@QueryParam("query") String queryString)
   {

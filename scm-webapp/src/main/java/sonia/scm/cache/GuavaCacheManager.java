@@ -49,7 +49,8 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
- *
+ * Guava based implementation of {@link CacheManager} and {@link org.apache.shiro.cache.CacheManager}.
+ * 
  * @author Sebastian Sdorra
  */
 @Singleton
@@ -57,7 +58,7 @@ public class GuavaCacheManager
   implements CacheManager, org.apache.shiro.cache.CacheManager
 {
 
-  /**
+ /**
    * the logger for GuavaCacheManager
    */
   private static final Logger logger =

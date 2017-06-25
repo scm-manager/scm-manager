@@ -41,6 +41,8 @@ import org.eclipse.jgit.transport.ScmTransportProtocol;
 
 import sonia.scm.plugin.Extension;
 
+import sonia.scm.web.lfs.LfsBlobStoreFactory;
+
 /**
  *
  * @author Sebastian Sdorra
@@ -49,8 +51,11 @@ import sonia.scm.plugin.Extension;
 public class GitServletModule extends ServletModule
 {
 
+  public static final String GIT_PATH = "/git";
+
   /** Field description */
-  public static final String PATTERN_GIT = "/git/*";
+  public static final String PATTERN_GIT = GIT_PATH + "/*";
+
 
   //~--- methods --------------------------------------------------------------
 
@@ -65,6 +70,8 @@ public class GitServletModule extends ServletModule
     bind(GitRepositoryResolver.class);
     bind(GitReceivePackFactory.class);
     bind(ScmTransportProtocol.class);
+    
+    bind(LfsBlobStoreFactory.class);
 
     // serlvelts and filters
     serve(PATTERN_GIT).with(ScmGitServlet.class);

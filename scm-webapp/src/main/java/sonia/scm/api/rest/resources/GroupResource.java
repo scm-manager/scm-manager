@@ -37,11 +37,12 @@ package sonia.scm.api.rest.resources;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.webcohesion.enunciate.metadata.rs.ResponseCode;
+import com.webcohesion.enunciate.metadata.rs.ResponseHeader;
+import com.webcohesion.enunciate.metadata.rs.StatusCodes;
+import com.webcohesion.enunciate.metadata.rs.TypeHint;
 
 import org.apache.shiro.SecurityUtils;
-
-import org.codehaus.enunciate.jaxrs.TypeHint;
-import org.codehaus.enunciate.modules.jersey.ExternallyManagedLifecycle;
 
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupException;
@@ -70,12 +71,12 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 /**
- *
+ * RESTful Web Service Resource to manage groups and their members.
+ * 
  * @author Sebastian Sdorra
  */
 @Path("groups")
 @Singleton
-@ExternallyManagedLifecycle
 public class GroupResource
   extends AbstractManagerResource<Group, GroupException>
 {
@@ -102,15 +103,7 @@ public class GroupResource
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Creates a new group.<br />
-   * This method requires admin privileges.<br />
-   * <br />
-   * Status codes:
-   * <ul>
-   *   <li>201 create success</li>
-   *   <li>403 forbidden, the current user has no admin privileges</li>
-   *   <li>500 internal server error</li>
-   * </ul>
+   * Creates a new group. <strong>Note:</strong> This method requires admin privileges.
    *
    * @param uriInfo current uri informations
    * @param group the group to be created
@@ -118,6 +111,14 @@ public class GroupResource
    * @return
    */
   @POST
+  @StatusCodes({
+    @ResponseCode(code = 201, condition = "create success", additionalHeaders = {
+      @ResponseHeader(name = "Location", description = "uri to the created group")
+    }),
+    @ResponseCode(code = 403, condition = "forbidden, the current user has no admin privileges"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
+  @TypeHint(TypeHint.NO_CONTENT.class)
   @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   @Override
   public Response create(@Context UriInfo uriInfo, Group group)
@@ -126,15 +127,7 @@ public class GroupResource
   }
 
   /**
-   * Deletes a group.<br />
-   * This method requires admin privileges.<br />
-   * <br />
-   * Status codes:
-   * <ul>
-   *  <li>201 delete success</li>
-   *  <li>403 forbidden, the current user has no admin privileges</li>
-   *  <li>500 internal server error</li>
-   * </ul>
+   * Deletes a group. <strong>Note:</strong> This method requires admin privileges.
    *
    * @param name the name of the group to delete.
    *
@@ -142,6 +135,12 @@ public class GroupResource
    */
   @DELETE
   @Path("{id}")
+  @StatusCodes({
+    @ResponseCode(code = 204, condition = "delete success"),
+    @ResponseCode(code = 403, condition = "forbidden, the current user has no admin privileges"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
+  @TypeHint(TypeHint.NO_CONTENT.class)
   @Override
   public Response delete(@PathParam("id") String name)
   {
@@ -149,15 +148,7 @@ public class GroupResource
   }
 
   /**
-   * Modifies the given group.<br />
-   * This method requires admin privileges.<br />
-   * <br />
-   * Status codes:
-   * <ul>
-   *   <li>201 update successful</li>
-   *   <li>403 forbidden, the current user has no admin privileges</li>
-   *   <li>500 internal server error</li>
-   * </ul>
+   * Modifies the given group. <strong>Note:</strong> This method requires admin privileges.
    *
    * @param uriInfo current uri informations
    * @param name name of the group to be modified
@@ -167,6 +158,12 @@ public class GroupResource
    */
   @PUT
   @Path("{id}")
+  @StatusCodes({
+    @ResponseCode(code = 204, condition = "update success"),
+    @ResponseCode(code = 403, condition = "forbidden, the current user has no admin privileges"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
+  @TypeHint(TypeHint.NO_CONTENT.class)
   @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   @Override
   public Response update(@Context UriInfo uriInfo,
@@ -178,16 +175,7 @@ public class GroupResource
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Returns a group.<br />
-   * This method requires admin privileges.<br />
-   * <br />
-   * Status codes:
-   * <ul>
-   *   <li>200 get successful</li>
-   *   <li>403 forbidden, the current user has no admin privileges</li>
-   *   <li>404 not found, no group with the specified id/name available</li>
-   *   <li>500 internal server error</li>
-   * </ul>
+   * Fetches a group by its name or id. <strong>Note:</strong> This method requires admin privileges.
    *
    * @param request the current request
    * @param id the id/name of the group
@@ -197,6 +185,12 @@ public class GroupResource
   @GET
   @Path("{id}")
   @TypeHint(Group.class)
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 403, condition = "forbidden, the current user has no admin privileges"),
+    @ResponseCode(code = 404, condition = "not found, no group with the specified id/name available"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   @Override
   public Response get(@Context Request request, @PathParam("id") String id)
@@ -216,15 +210,7 @@ public class GroupResource
   }
 
   /**
-   * Returns all groups.<br />
-   * This method requires admin privileges.<br />
-   * <br />
-   * Status codes:
-   * <ul>
-   *   <li>200 get successful</li>
-   *   <li>403 forbidden, the current user has no admin privileges</li>
-   *   <li>500 internal server error</li>
-   * </ul>
+   * Returns all groups. <strong>Note:</strong> This method requires admin privileges.
    *
    * @param request the current request
    * @param start the start value for paging
@@ -237,6 +223,11 @@ public class GroupResource
   @GET
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   @TypeHint(Group[].class)
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 403, condition = "forbidden, the current user has no admin privileges"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
   @Override
   public Response getAll(@Context Request request, @DefaultValue("0")
   @QueryParam("start") int start, @DefaultValue("-1")
@@ -249,14 +240,6 @@ public class GroupResource
 
   //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param items
-   *
-   * @return
-   */
   @Override
   protected GenericEntity<Collection<Group>> createGenericEntity(
     Collection<Group> items)
@@ -267,26 +250,12 @@ public class GroupResource
 
   //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param group
-   *
-   * @return
-   */
   @Override
   protected String getId(Group group)
   {
     return group.getName();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
   protected String getPathPart()
   {

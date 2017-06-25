@@ -218,20 +218,9 @@
     <!-- rest documentation -->
     
     <dependency>
-      <groupId>org.codehaus.enunciate</groupId>
-      <artifactId>enunciate-jersey-rt</artifactId>
+      <groupId>com.webcohesion.enunciate</groupId>
+      <artifactId>enunciate-core-annotations</artifactId>
       <version>${enunciate.version}</version>
-      <!-- fix conflict with jersey-json -->
-      <exclusions>
-        <exclusion>
-          <artifactId>jackson-jaxrs</artifactId>
-          <groupId>org.codehaus.jackson</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>jackson-xc</artifactId>
-          <groupId>org.codehaus.jackson</groupId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <!-- test scope -->
@@ -545,10 +534,14 @@
     <scm.home>target/scm-it</scm.home>
     <environment.profile>default</environment.profile>
     <selenium.version>2.53.1</selenium.version>
-    <enunciate.version>1.31</enunciate.version>
+    <enunciate.version>2.9.1</enunciate.version>
     <wagon.version>1.0</wagon.version>
     <mustache.version>0.8.17</mustache.version>
     <netbeans.hint.deploy.server>Tomcat</netbeans.hint.deploy.server>
+    <sonar.issue.ignore.multicriteria>e1</sonar.issue.ignore.multicriteria>
+    <sonar.issue.ignore.multicriteria.e1.ruleKey>javascript:S3827</sonar.issue.ignore.multicriteria.e1.ruleKey>
+    <sonar.issue.ignore.multicriteria.e1.resourceKey>**.js</sonar.issue.ignore.multicriteria.e1.resourceKey>
+    <sonar.exclusions>src/main/webapp/resources/extjs/**,src/main/webapp/resources/moment/**,src/main/webapp/resources/syntaxhighlighter/**</sonar.exclusions>
   </properties>
 
   <profiles>
@@ -793,8 +786,35 @@
         <plugins>
           
           <plugin>
-            <groupId>org.codehaus.enunciate</groupId>
-            <artifactId>maven-enunciate-plugin</artifactId>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-resources-plugin</artifactId>
+            <version>2.6</version>
+            <executions>
+              <execution>
+                <id>copy-enunciate-configuration</id>
+                <phase>compile</phase>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+                <configuration>
+                  <outputDirectory>${project.build.directory}</outputDirectory>
+                  <resources>          
+                    <resource>
+                      <directory>src/main/doc</directory>
+                      <filtering>true</filtering>
+                      <includes>
+                        <include>**/enunciate.xml</include>
+                      </includes>
+                    </resource>
+                  </resources>              
+                </configuration>            
+              </execution>
+            </executions>
+          </plugin>
+          
+          <plugin>
+            <groupId>com.webcohesion.enunciate</groupId>
+            <artifactId>enunciate-maven-plugin</artifactId>
             <version>${enunciate.version}</version>
             <executions>
               <execution>
@@ -805,14 +825,21 @@
               </execution>
             </executions>
             <configuration>
-              <configFile>src/main/doc/enunciate.xml</configFile>
-              <docsDir>${project.build.directory}/restdocs</docsDir>
+              <configFile>${project.build.directory}/enunciate.xml</configFile>
+              <docsDir>${project.build.directory}</docsDir>
+              <docsSubdir>restdocs</docsSubdir>
             </configuration>
             <dependencies>
               <dependency>
-                <groupId>org.codehaus.enunciate</groupId>
-                <artifactId>enunciate-jersey</artifactId>
-                <version>${enunciate.version}</version>
+                <groupId>com.webcohesion.enunciate</groupId>
+                <artifactId>enunciate-top</artifactId>
+                <version>2.9.1</version>
+                <exclusions>
+                  <exclusion>
+                    <groupId>com.webcohesion.enunciate</groupId>
+                    <artifactId>enunciate-swagger</artifactId>
+                  </exclusion>
+                </exclusions>
               </dependency>
             </dependencies>
           </plugin>

@@ -125,8 +125,7 @@ public class DeactivatedUserITCase
   public void testFailedAuthentication()
   {
     Client client = createClient();
-    ClientResponse response = authenticate(client, slarti.getName(),
-                                "slart123");
+    ClientResponse response = authenticate(client, slarti.getName(), "slart123");
     assertNotNull(response);
     assertEquals(HttpServletResponse.SC_UNAUTHORIZED, response.getStatus());
   }

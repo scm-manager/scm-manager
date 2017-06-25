@@ -38,11 +38,12 @@ package sonia.scm.api.rest.resources;
 import com.google.common.base.Strings;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.webcohesion.enunciate.metadata.rs.ResponseCode;
+import com.webcohesion.enunciate.metadata.rs.ResponseHeader;
+import com.webcohesion.enunciate.metadata.rs.StatusCodes;
+import com.webcohesion.enunciate.metadata.rs.TypeHint;
 
 import org.apache.shiro.SecurityUtils;
-
-import org.codehaus.enunciate.jaxrs.TypeHint;
-import org.codehaus.enunciate.modules.jersey.ExternallyManagedLifecycle;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -103,14 +104,13 @@ import javax.ws.rs.core.UriInfo;
 import org.apache.shiro.authz.AuthorizationException;
 
 /**
- *
+ * Repository related RESTful Web Service Endpoint.
+ * 
  * @author Sebastian Sdorra
  */
 @Singleton
 @Path("repositories")
-@ExternallyManagedLifecycle
-public class RepositoryResource
-  extends AbstractManagerResource<Repository, RepositoryException>
+public class RepositoryResource extends AbstractManagerResource<Repository, RepositoryException>
 {
 
   /** Field description */
@@ -147,22 +147,22 @@ public class RepositoryResource
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Creates a new repository.<br />
-   * This method requires admin privileges.<br />
-   * <br />
-   * Status codes:
-   * <ul>
-   *   <li>201 create success</li>
-   *   <li>403 forbidden, the current user has no admin privileges</li>
-   *   <li>500 internal server error</li>
-   * </ul>
+   * Creates a new repository.<strong>Note:</strong> This method requires admin privileges.
    *
    * @param uriInfo current uri informations
    * @param repository the repository to be created
    *
-   * @return
+   * @return empty response with location header to the new repository
    */
   @POST
+  @StatusCodes({
+    @ResponseCode(code = 201, condition = "success", additionalHeaders = {
+      @ResponseHeader(name = "Location", description = "uri to the new created repository")
+    }),
+    @ResponseCode(code = 403, condition = "forbidden, the current user has no admin privileges"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
+  @TypeHint(TypeHint.NO_CONTENT.class)
   @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   @Override
   public Response create(@Context UriInfo uriInfo, Repository repository)
@@ -171,19 +171,7 @@ public class RepositoryResource
   }
 
   /**
-   * Deletes a repository.<br />
-   * This method requires owner privileges.<br />
-   * <br />
-   * Status codes:
-   * <ul>
-   *  <li>201 delete success</li>
-   *  <li>403 forbidden, the current user has no owner privileges</li>
-   *  <li>
-   *    412 forbidden, the repository is not archived,
-   *    this error occurs only with enabled repository archive.
-   *  </li>
-   *  <li>500 internal server error</li>
-   * </ul>
+   * Deletes a repository. <strong>Note:</strong> This method requires owner privileges.
    *
    * @param id the id of the repository to delete.
    *
@@ -191,6 +179,17 @@ public class RepositoryResource
    */
   @DELETE
   @Path("{id}")
+  @StatusCodes({
+    @ResponseCode(code = 204, condition = "delete success"),
+    @ResponseCode(code = 403, condition = "forbidden, the current user has no owner privileges"),
+    @ResponseCode(code = 404, condition = "could not find repository"),
+    @ResponseCode(
+      code = 412, 
+      condition = "precondition failed, the repository is not archived, this error occurs only with enabled repository archive"
+    ),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
+  @TypeHint(TypeHint.NO_CONTENT.class)
   @Override
   public Response delete(@PathParam("id") String id)
   {
@@ -232,20 +231,20 @@ public class RepositoryResource
   }
 
   /**
-   * Re run repository health checks.<br />
-   * Status codes:
-   * <ul>
-   *  <li>201 re run success</li>
-   *  <li>403 forbidden, the current user has no owner privileges</li>
-   *  <li>404 could not find repository</li>
-   *  <li>500 internal server error</li>
-   * </ul>
+   * Re run repository health checks.
    *
    * @param id id of the repository
    *
    * @return
    */
   @POST
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "re run success"),
+    @ResponseCode(code = 403, condition = "forbidden, the current user has no owner privileges"),
+    @ResponseCode(code = 404, condition = "could not find repository"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
+  @TypeHint(TypeHint.NO_CONTENT.class)
   @Path("{id}/healthcheck")
   public Response runHealthChecks(@PathParam("id") String id)
   {
@@ -254,6 +253,7 @@ public class RepositoryResource
     try
     {
       healthChecker.check(id);
+      // TODO should return 204 instead of 200
       response = Response.ok().build();
     }
     catch (RepositoryNotFoundException ex)
@@ -271,15 +271,7 @@ public class RepositoryResource
   }
 
   /**
-   * Modifies the given repository.<br />
-   * This method requires owner privileges.<br />
-   * <br />
-   * Status codes:
-   * <ul>
-   *   <li>201 update successful</li>
-   *   <li>403 forbidden, the current user has no owner privileges</li>
-   *   <li>500 internal server error</li>
-   * </ul>
+   * Modifies the given repository. <strong>Note:</strong> This method requires owner privileges.
    *
    * @param uriInfo current uri informations
    * @param id id of the repository to be modified
@@ -289,10 +281,16 @@ public class RepositoryResource
    */
   @PUT
   @Path("{id}")
+  @StatusCodes({
+    @ResponseCode(code = 204, condition = "update successful"),
+    @ResponseCode(code = 403, condition = "forbidden, the current user has no owner privileges"),
+    @ResponseCode(code = 404, condition = "could not find repository"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
+  @TypeHint(TypeHint.NO_CONTENT.class)
   @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   @Override
-  public Response update(@Context UriInfo uriInfo, @PathParam("id") String id,
-    Repository repository)
+  public Response update(@Context UriInfo uriInfo, @PathParam("id") String id, Repository repository)
   {
     return super.update(uriInfo, id, repository);
   }
@@ -300,14 +298,7 @@ public class RepositoryResource
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Returns the {@link Repository} with the specified id.<br />
-   * <br />
-   * Status codes:
-   * <ul>
-   *   <li>200 get successful</li>
-   *   <li>404 not found, no repository with the specified id available</li>
-   *   <li>500 internal server error</li>
-   * </ul>
+   * Returns the {@link Repository} with the specified id.
    *
    * @param request the current request
    * @param id the id/name of the user
@@ -317,6 +308,11 @@ public class RepositoryResource
   @GET
   @Path("{id}")
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 404, condition = "not found, no repository with the specified id available"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
   @TypeHint(Repository.class)
   @Override
   public Response get(@Context Request request, @PathParam("id") String id)
@@ -325,13 +321,7 @@ public class RepositoryResource
   }
 
   /**
-   * Returns all repositories.<br />
-   * <br />
-   * Status codes:
-   * <ul>
-   *   <li>200 get successful</li>
-   *   <li>500 internal server error</li>
-   * </ul>
+   * Returns all repositories.
    *
    * @param request the current request
    * @param start the start value for paging
@@ -343,6 +333,10 @@ public class RepositoryResource
    */
   @GET
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
   @TypeHint(Repository[].class)
   @Override
   public Response getAll(@Context Request request, @DefaultValue("0")
@@ -355,16 +349,7 @@ public class RepositoryResource
   }
 
   /**
-   * Returns a annotate/blame view for the given path.<br />
-   * <br />
-   * Status codes:
-   * <ul>
-   *   <li>200 get successful</li>
-   *   <li>400 bad request, the blame feature is not
-   *       supported by this type of repositories.</li>
-   *   <li>404 not found, if the repository or the path could not be found</li>
-   *   <li>500 internal server error</li>
-   * </ul>
+   * Returns a annotate/blame view for the given path.
    *
    * @param id the id of the repository
    * @param revision the revision of the file
@@ -377,6 +362,12 @@ public class RepositoryResource
    */
   @GET
   @Path("{id}/blame")
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 400, condition = "bad request, the blame feature is not supported by this type of repositories."),
+    @ResponseCode(code = 404, condition = "not found, the repository or the path could not be found"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
   @TypeHint(BlameResult.class)
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public Response getBlame(@PathParam("id") String id,
@@ -430,16 +421,7 @@ public class RepositoryResource
   }
 
   /**
-   * Returns all {@link Branches} of a repository.<br />
-   * <br />
-   * Status codes:
-   * <ul>
-   *   <li>200 get successful</li>
-   *   <li>400 bad request, the content feature is not
-   *       supported by this type of repositories.</li>
-   *   <li>404 not found, if the repository or the path could not be found</li>
-   *   <li>500 internal server error</li>
-   * </ul>
+   * Returns all {@link Branches} of a repository.
    *
    * @param id the id of the repository
    *
@@ -452,6 +434,14 @@ public class RepositoryResource
    */
   @GET
   @Path("{id}/branches")
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 400, condition = "bad request, the branch feature is not supported by this type of repositories."),
+    @ResponseCode(code = 404, condition = "not found, the repository could not be found"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
+  @TypeHint(Branches.class)
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public Response getBranches(@PathParam("id") String id)
     throws RepositoryException, IOException
   {
@@ -490,16 +480,7 @@ public class RepositoryResource
   }
 
   /**
-   * Returns a list of folders and files for the given folder.<br />
-   * <br />
-   * Status codes:
-   * <ul>
-   *   <li>200 get successful</li>
-   *   <li>400 bad request, the browse feature is not
-   *       supported by this type of repositories.</li>
-   *   <li>404 not found, if the repository or the path could not be found</li>
-   *   <li>500 internal server error</li>
-   * </ul>
+   * Returns a list of folders and files for the given folder.
    *
    * @param id the id of the repository
    * @param revision the revision of the file
@@ -515,6 +496,12 @@ public class RepositoryResource
    */
   @GET
   @Path("{id}/browse")
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 400, condition = "bad request, the browse feature is not supported by this type of repositories."),
+    @ResponseCode(code = 404, condition = "not found, the repository or the path could not be found"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
   @TypeHint(BrowserResult.class)
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   //J-
@@ -581,15 +568,7 @@ public class RepositoryResource
   }
 
   /**
-   * Returns the {@link Repository} with the specified type and name.<br />
-   * <br />
-   * Status codes:
-   * <ul>
-   *   <li>200 get successful</li>
-   *   <li>404 not found,
-   *       no repository with the specified type and name available</li>
-   *   <li>500 internal server error</li>
-   * </ul>
+   * Returns the {@link Repository} with the specified type and name.
    *
    * @param type the type of the repository
    * @param name the name of the repository
@@ -598,8 +577,13 @@ public class RepositoryResource
    */
   @GET
   @Path("{type: [a-z]+}/{name: .*}")
-  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 404, condition = "not found, no repository with the specified type and name available"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
   @TypeHint(Repository.class)
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public Response getByTypeAndName(@PathParam("type") String type,
     @PathParam("name") String name)
   {
@@ -621,17 +605,7 @@ public class RepositoryResource
 
   /**
    * Returns the {@link Changeset} from the given repository
-   * with the specified revision.<br />
-   * <br />
-   * Status codes:
-   * <ul>
-   *   <li>200 get successful</li>
-   *   <li>400 bad request, the changeset feature is not
-   *       supported by this type of repositories.</li>
-   *   <li>404 not found, if the repository or
-   *       the revision could not be found</li>
-   *   <li>500 internal server error</li>
-   * </ul>
+   * with the specified revision.
    *
    * @param id the id of the repository
    * @param revision the revision of the changeset
@@ -643,6 +617,14 @@ public class RepositoryResource
    */
   @GET
   @Path("{id}/changeset/{revision}")
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 400, condition = "bad request, the changeset feature is not supported by this type of repositories."),
+    @ResponseCode(code = 404, condition = "not found, the repository or the revision could not be found"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
+  @TypeHint(Changeset.class)
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public Response getChangeset(@PathParam("id") String id,
     @PathParam("revision") String revision)
     throws IOException, RepositoryException
@@ -691,16 +673,7 @@ public class RepositoryResource
   }
 
   /**
-   * Returns a list of {@link Changeset} for the given repository.<br />
-   * <br />
-   * Status codes:
-   * <ul>
-   *   <li>200 get successful</li>
-   *   <li>400 bad request, the changeset feature is not
-   *       supported by this type of repositories.</li>
-   *   <li>404 not found, if the repository or the path could not be found</li>
-   *   <li>500 internal server error</li>
-   * </ul>
+   * Returns a list of {@link Changeset} for the given repository.
    *
    * @param id the id of the repository
    * @param path path of a file
@@ -716,6 +689,12 @@ public class RepositoryResource
    */
   @GET
   @Path("{id}/changesets")
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 400, condition = "bad request, the changeset feature is not supported by this type of repositories."),
+    @ResponseCode(code = 404, condition = "not found, the repository or the path could not be found"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
   @TypeHint(ChangesetPagingResult.class)
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   //J-
@@ -784,16 +763,7 @@ public class RepositoryResource
   }
 
   /**
-   * Returns the content of a file.<br />
-   * <br />
-   * Status codes:
-   * <ul>
-   *   <li>200 get successful</li>
-   *   <li>400 bad request, the content feature is not
-   *       supported by this type of repositories.</li>
-   *   <li>404 not found, if the repository or the path could not be found</li>
-   *   <li>500 internal server error</li>
-   * </ul>
+   * Returns the content of a file.
    *
    * @param id the id of the repository
    * @param revision the revision of the file
@@ -803,6 +773,12 @@ public class RepositoryResource
    */
   @GET
   @Path("{id}/content")
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 400, condition = "bad request, the content feature is not supported by this type of repositories."),
+    @ResponseCode(code = 404, condition = "not found, the repository or the path could not be found"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
   @TypeHint(StreamingOutput.class)
   @Produces({ MediaType.APPLICATION_OCTET_STREAM })
   public Response getContent(@PathParam("id") String id,
@@ -855,16 +831,7 @@ public class RepositoryResource
   }
 
   /**
-   * Returns the modifications of a {@link Changeset}.<br />
-   * <br />
-   * Status codes:
-   * <ul>
-   *   <li>200 get successful</li>
-   *   <li>400 bad request, the content feature is not
-   *       supported by this type of repositories.</li>
-   *   <li>404 not found, if the repository or the path could not be found</li>
-   *   <li>500 internal server error</li>
-   * </ul>
+   * Returns the modifications of a {@link Changeset}.
    *
    * @param id the id of the repository
    * @param revision the revision of the file
@@ -878,6 +845,12 @@ public class RepositoryResource
    */
   @GET
   @Path("{id}/diff")
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 400, condition = "bad request, the diff feature is not supported by this type of repositories."),
+    @ResponseCode(code = 404, condition = "not found, the repository or the path could not be found"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
   @TypeHint(DiffStreamingOutput.class)
   @Produces(MediaType.APPLICATION_OCTET_STREAM)
   public Response getDiff(@PathParam("id") String id,
@@ -943,16 +916,7 @@ public class RepositoryResource
   }
 
   /**
-   * Returns all {@link Tags} of a repository.<br />
-   * <br />
-   * Status codes:
-   * <ul>
-   *   <li>200 get successful</li>
-   *   <li>400 bad request, the content feature is not
-   *       supported by this type of repositories.</li>
-   *   <li>404 not found, if the repository or the path could not be found</li>
-   *   <li>500 internal server error</li>
-   * </ul>
+   * Returns all {@link Tags} of a repository.
    *
    * @param id the id of the repository
    *
@@ -965,6 +929,14 @@ public class RepositoryResource
    */
   @GET
   @Path("{id}/tags")
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 400, condition = "bad request, the tag feature is not supported by this type of repositories."),
+    @ResponseCode(code = 404, condition = "not found, the repository could not be found"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
+  @TypeHint(Tags.class)
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public Response getTags(@PathParam("id") String id)
     throws RepositoryException, IOException
   {

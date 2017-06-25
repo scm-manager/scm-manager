@@ -38,6 +38,10 @@ package sonia.scm.api.rest.resources;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
+import com.webcohesion.enunciate.metadata.rs.ResponseCode;
+import com.webcohesion.enunciate.metadata.rs.ResponseHeader;
+import com.webcohesion.enunciate.metadata.rs.StatusCodes;
+import com.webcohesion.enunciate.metadata.rs.TypeHint;
 
 import sonia.scm.api.rest.Permission;
 import sonia.scm.security.AssignedPermission;
@@ -114,13 +118,7 @@ public abstract class AbstractPermissionResource
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Adds a new permission to the user or group managed by the resource.<br />
-   * <br />
-   * Status codes:
-   * <ul>
-   *   <li>201 add successful</li>
-   *   <li>500 internal server error</li>
-   * </ul>
+   * Adds a new permission to the user or group managed by the resource.
    *
    * @param uriInfo uri informations
    * @param permission permission to add
@@ -128,6 +126,13 @@ public abstract class AbstractPermissionResource
    * @return web response
    */
   @POST
+  @StatusCodes({
+    @ResponseCode(code = 201, condition = "creates", additionalHeaders = {
+      @ResponseHeader(name = "Location", description = "uri to new create permission")
+    }),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
+  @TypeHint(TypeHint.NO_CONTENT.class)
   @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public Response add(@Context UriInfo uriInfo, Permission permission)
   {
@@ -139,15 +144,7 @@ public abstract class AbstractPermissionResource
   }
 
   /**
-   * Deletes a permission from the user or group managed by the resource.<br />
-   * <br />
-   * Status codes:
-   * <ul>
-   *   <li>200 delete successful</li>
-   *   <li>400 bad request, permission id does not belong to the user or group</li>
-   *   <li>404 not found, no permission with the specified id available</li>
-   *   <li>500 internal server error</li>
-   * </ul>
+   * Deletes a permission from the user or group managed by the resource.
    *
    * @param id id of the permission
    *
@@ -155,6 +152,13 @@ public abstract class AbstractPermissionResource
    */
   @DELETE
   @Path("{id}")
+  @StatusCodes({
+    @ResponseCode(code = 204, condition = "success"),
+    @ResponseCode(code = 400, condition = "bad request, permission id does not belong to the user or group"),
+    @ResponseCode(code = 404, condition = "not found, no permission with the specified id available"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
+  @TypeHint(TypeHint.NO_CONTENT.class)
   public Response delete(@PathParam("id") String id)
   {
     StoredAssignedPermission sap = getPermission(id);
@@ -165,16 +169,7 @@ public abstract class AbstractPermissionResource
   }
 
   /**
-   * Updates the specified permission on the user or group managed by the
-   * resource.<br />
-   * <br />
-   * Status codes:
-   * <ul>
-   *   <li>204 update successful</li>
-   *   <li>400 bad request, permission id does not belong to the user or group</li>
-   *   <li>404 not found, no permission with the specified id available</li>
-   *   <li>500 internal server error</li>
-   * </ul>
+   * Updates the specified permission on the user or group managed by the resource.
    *
    * @param id id of the permission
    * @param permission updated permission
@@ -183,6 +178,13 @@ public abstract class AbstractPermissionResource
    */
   @PUT
   @Path("{id}")
+  @StatusCodes({
+    @ResponseCode(code = 204, condition = "success"),
+    @ResponseCode(code = 400, condition = "bad request, permission id does not belong to the user or group"),
+    @ResponseCode(code = 404, condition = "not found, no permission with the specified id available"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
+  @TypeHint(TypeHint.NO_CONTENT.class)
   @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public Response update(@PathParam("id") String id, Permission permission)
   {
@@ -197,16 +199,7 @@ public abstract class AbstractPermissionResource
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Returns the {@link Permission} with the specified id.<br />
-   * <br />
-   * Status codes:
-   * <ul>
-   *   <li>200 get successful</li>
-   *   <li>400 bad request, permission id does not belong to the user or group</li>
-   *   <li>404 not found, no permission with the specified id available</li>
-   *   <li>500 internal server error</li>
-   * </ul>
-   *
+   * Returns the {@link Permission} with the specified id.
    *
    * @param id id of the {@link Permission}
    *
@@ -214,6 +207,12 @@ public abstract class AbstractPermissionResource
    */
   @GET
   @Path("{id}")
+  @StatusCodes({
+    @ResponseCode(code = 204, condition = "success"),
+    @ResponseCode(code = 400, condition = "bad request, permission id does not belong to the user or group"),
+    @ResponseCode(code = 404, condition = "not found, no permission with the specified id available"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public Permission get(@PathParam("id") String id)
   {
@@ -223,17 +222,15 @@ public abstract class AbstractPermissionResource
   }
 
   /**
-   * Returns all permissions of the user or group managed by the resource.<br />
-   * <br />
-   * Status codes:
-   * <ul>
-   *   <li>200 get successful</li>
-   *   <li>500 internal server error</li>
-   * </ul>
+   * Returns all permissions of the user or group managed by the resource.
    *
    * @return all permissions of the user or group
    */
   @GET
+  @StatusCodes({
+    @ResponseCode(code = 204, condition = "success"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public List<Permission> getAll()
   {

@@ -39,7 +39,10 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import java.util.List;
+
+import com.webcohesion.enunciate.metadata.rs.ResponseCode;
+import com.webcohesion.enunciate.metadata.rs.StatusCodes;
+import com.webcohesion.enunciate.metadata.rs.TypeHint;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -47,8 +50,6 @@ import org.apache.shiro.authc.DisabledAccountException;
 import org.apache.shiro.authc.ExcessiveAttemptsException;
 import org.apache.shiro.subject.Subject;
 
-import org.codehaus.enunciate.jaxrs.TypeHint;
-import org.codehaus.enunciate.modules.jersey.ExternallyManagedLifecycle;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,6 +60,11 @@ import sonia.scm.api.rest.RestActionResult;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.security.Tokens;
 import sonia.scm.util.HttpUtil;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -81,12 +87,12 @@ import sonia.scm.security.AccessTokenCookieIssuer;
 import sonia.scm.security.Scope;
 
 /**
- *
+ * Authentication related RESTful Web Service endpoint.
+ * 
  * @author Sebastian Sdorra
  */
 @Singleton
 @Path("auth")
-@ExternallyManagedLifecycle
 @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 public class AuthenticationResource
 {
@@ -128,15 +134,8 @@ public class AuthenticationResource
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Authenticate a user and return the state of the application.<br />
-   * <br />
-   * <ul>
-   *   <li>200 success</li>
-   *   <li>400 bad request, required parameter is missing.</li>
-   *   <li>401 unauthorized, the specified username or password is wrong</li>
-   *   <li>500 internal server error</li>
-   * </ul>
-   *
+   * Authenticate a user and return the state of the application.
+   * 
    * @param request current http request
    * @param response current http response
    * @param grantType grant type, currently only password is supported
@@ -150,6 +149,12 @@ public class AuthenticationResource
   @POST
   @Path("access_token")
   @TypeHint(ScmState.class)
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 400, condition = "bad request, required parameter is missing"),
+    @ResponseCode(code = 401, condition = "unauthorized, the specified username or password is wrong"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
   public Response authenticate(
     @Context HttpServletRequest request,
     @Context HttpServletResponse response,
@@ -238,13 +243,7 @@ public class AuthenticationResource
   }
 
   /**
-   * Logout the current user. Returns the current state of the application,
-   * if public access is enabled.<br />
-   * <br />
-   * <ul>
-   *   <li>200 success</li>
-   *   <li>500 internal server error</li>
-   * </ul>
+   * Logout the current user. Returns the current state of the application, if public access is enabled.
    *
    * @param request the current http request
    * @param response the current http response
@@ -254,6 +253,10 @@ public class AuthenticationResource
   @GET
   @Path("logout")
   @TypeHint(ScmState.class)
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
   public Response logout(@Context HttpServletRequest request, @Context HttpServletResponse response)
   {
     Subject subject = SecurityUtils.getSubject();
@@ -280,16 +283,8 @@ public class AuthenticationResource
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * This method is an alias of the
-   * {@link #getState(javax.servlet.http.HttpServletRequest)} method.
-   * The only difference between the methods,
-   * is that this one could not be used with basic authentication.<br />
-   * <br />
-   * <ul>
-   *   <li>200 success</li>
-   *   <li>401 unauthorized, user is not authenticated and public access is disabled.</li>
-   *   <li>500 internal server error</li>
-   * </ul>
+   * This method is an alias of the {@link #getState(HttpServletRequest)} method.
+   * The only difference between the methods, is that this one could not be used with basic authentication.
    *
    * @param request the current http request
    *
@@ -298,19 +293,18 @@ public class AuthenticationResource
   @GET
   @Path("state")
   @TypeHint(ScmState.class)
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 401, condition = "unauthorized, user is not authenticated and public access is disabled"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
   public Response getCurrentState(@Context HttpServletRequest request)
   {
     return getState(request);
   }
 
   /**
-   * Returns the current state of the application.<br />
-   * <br />
-   * <ul>
-   *   <li>200 success</li>
-   *   <li>401 unauthorized, user is not authenticated and public access is disabled.</li>
-   *   <li>500 internal server error</li>
-   * </ul>
+   * Returns the current state of the application.
    *
    * @param request the current http request
    *
@@ -318,6 +312,11 @@ public class AuthenticationResource
    */
   @GET
   @TypeHint(ScmState.class)
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 401, condition = "unauthorized, user is not authenticated and public access is disabled"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
   public Response getState(@Context HttpServletRequest request)
   {
     Response response;
