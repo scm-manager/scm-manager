@@ -205,6 +205,7 @@
               </platform>
               <scripts>
                 <preInstall>${project.basedir}/src/main/nativepkg/create-user</preInstall>
+                <postInstall>${project.basedir}/src/main/nativepkg/clear-cache</postInstall>
               </scripts>
               <mappings>
                 <files>

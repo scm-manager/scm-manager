@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# clear workdir after upgrade
+# https://bitbucket.org/sdorra/scm-manager/issues/923/scmmanager-installed-from-debian-package
+
+WORKDIR="/var/cache/scm/work/webapp"
+if [ -d "${WORKDIR}" ]; then
+  rm -rf "${WORKDIR}"
+fi
