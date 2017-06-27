@@ -32,6 +32,9 @@
 
 package sonia.scm.it;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.TypeFactory;
+import com.fasterxml.jackson.module.jaxb.JaxbAnnotationIntrospector;
 import com.google.common.base.Charsets;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.UniformInterfaceException;
@@ -41,8 +44,6 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.shiro.crypto.hash.Sha256Hash;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.xc.JaxbAnnotationIntrospector;
 import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Test;
@@ -81,7 +82,7 @@ public class GitLfsITCase {
   private Repository repository;
   
   public GitLfsITCase() {
-    mapper.setAnnotationIntrospector(new JaxbAnnotationIntrospector());
+    mapper.setAnnotationIntrospector(new JaxbAnnotationIntrospector(TypeFactory.defaultInstance()));
   }
   
   // lifecycle methods

@@ -311,7 +311,7 @@ Sonia.repository.Panel = Ext.extend(Sonia.rest.Panel, {
         console.debug('toggle repository ' + item.name + ' archive to ' + item.archived);
       }
       
-      var url = restUrl + 'repositories/' + item.id + '.json';
+      var url = restUrl + 'repositories/' + item.id;
       this.executeRemoteCall(title, String.format(msg, item.name), 
         'PUT', url, item, function(result){
           main.handleFailure(
@@ -331,7 +331,7 @@ Sonia.repository.Panel = Ext.extend(Sonia.rest.Panel, {
         console.debug( 'remove repository ' + item.name );
       }
 
-      var url = restUrl + 'repositories/' + item.id + '.json';
+      var url = restUrl + 'repositories/' + item.id;
       this.executeRemoteCall(this.removeTitleText, 
         String.format(this.removeMsgText, item.name), 
         'DELETE', url, null, function(result){

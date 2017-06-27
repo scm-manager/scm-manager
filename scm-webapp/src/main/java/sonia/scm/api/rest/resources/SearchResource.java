@@ -154,7 +154,7 @@ public class SearchResource implements UserListener, GroupListener
     @ResponseCode(code = 200, condition = "success"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
-  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   public SearchResults searchGroups(@QueryParam("query") String queryString)
   {
     return groupSearchHandler.search(queryString,
@@ -189,7 +189,7 @@ public class SearchResource implements UserListener, GroupListener
     @ResponseCode(code = 200, condition = "success"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
-  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   public SearchResults searchUsers(@QueryParam("query") String queryString)
   {
     return userSearchHandler.search(queryString,

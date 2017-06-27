@@ -42,13 +42,13 @@
     <dependency>
       <groupId>com.sun.jersey</groupId>
       <artifactId>jersey-client</artifactId>
-      <version>${jersey.version}</version>
+      <version>${jersey-client.version}</version>
     </dependency>
     
     <dependency>
       <groupId>com.sun.jersey.contribs</groupId>
       <artifactId>jersey-multipart</artifactId>
-      <version>${jersey.version}</version>
+      <version>${jersey-client.version}</version>
     </dependency>
     
     <!-- test scope -->

@@ -90,6 +90,8 @@
   <!--
   <logger name="net.sf.ehcache" level="DEBUG" />
   -->
+  
+  <logger name="org.jboss.resteasy" level="DEBUG" />
 
   <root level="WARN">
     <appender-ref ref="STDOUT" />

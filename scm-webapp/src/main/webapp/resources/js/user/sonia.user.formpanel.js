@@ -129,7 +129,7 @@ Sonia.user.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
       console.debug( 'update user: ' + item.name );
     }
     this.fixRequest(item);
-    var url = restUrl + 'users/' + encodeURIComponent(item.name) + '.json';
+    var url = restUrl + 'users/' + encodeURIComponent(item.name);
     Ext.Ajax.request({
       url: url,
       jsonData: item,
@@ -159,7 +159,7 @@ Sonia.user.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
     this.fixRequest(user);
     // set user type
     user.type = state.defaultUserType;
-    var url = restUrl + 'users.json';
+    var url = restUrl + 'users';
     Ext.Ajax.request({
       url: url,
       jsonData: user,

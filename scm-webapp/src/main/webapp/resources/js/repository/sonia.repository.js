@@ -181,7 +181,7 @@ Sonia.repository.get = function(id, callback){
     execCallback(repository);
   } else {
     Ext.Ajax.request({
-      url: restUrl + 'repositories/' + id + '.json',
+      url: restUrl + 'repositories/' + id,
       method: 'GET',
       scope: this,
       success: function(response){

@@ -35,14 +35,12 @@ package sonia.scm;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.collect.Maps;
 import com.google.inject.Provider;
 import com.google.inject.multibindings.Multibinder;
 import com.google.inject.name.Names;
 import com.google.inject.servlet.RequestScoped;
-import com.google.inject.servlet.ServletModule;
 import com.google.inject.throwingproviders.ThrowingProviderBinder;
-
-import org.apache.shiro.authz.permission.PermissionResolver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,11 +50,6 @@ import sonia.scm.cache.CacheManager;
 import sonia.scm.cache.GuavaCacheManager;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.event.ScmEventBus;
-import sonia.scm.filter.AdminSecurityFilter;
-import sonia.scm.filter.BaseUrlFilter;
-import sonia.scm.filter.GZipFilter;
-import sonia.scm.filter.MDCFilter;
-import sonia.scm.filter.SecurityFilter;
 import sonia.scm.group.DefaultGroupManager;
 import sonia.scm.group.GroupDAO;
 import sonia.scm.group.GroupManager;
@@ -64,20 +57,14 @@ import sonia.scm.group.GroupManagerProvider;
 import sonia.scm.group.xml.XmlGroupDAO;
 import sonia.scm.io.DefaultFileSystem;
 import sonia.scm.io.FileSystem;
-import sonia.scm.net.HttpClient;
-import sonia.scm.net.URLHttpClient;
 import sonia.scm.plugin.DefaultPluginLoader;
 import sonia.scm.plugin.DefaultPluginManager;
-import sonia.scm.plugin.Plugin;
 import sonia.scm.plugin.PluginLoader;
 import sonia.scm.plugin.PluginManager;
-import sonia.scm.repository.ChangesetViewerUtil;
 import sonia.scm.repository.DefaultRepositoryManager;
 import sonia.scm.repository.DefaultRepositoryProvider;
 import sonia.scm.repository.HealthCheckContextListener;
-import sonia.scm.repository.LastModifiedUpdateListener;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryBrowserUtil;
 import sonia.scm.repository.RepositoryDAO;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryManagerProvider;
@@ -92,15 +79,9 @@ import sonia.scm.resources.ResourceManager;
 import sonia.scm.resources.ScriptResourceServlet;
 import sonia.scm.security.CipherHandler;
 import sonia.scm.security.CipherUtil;
-import sonia.scm.security.ConfigurableLoginAttemptHandler;
 import sonia.scm.security.DefaultKeyGenerator;
 import sonia.scm.security.DefaultSecuritySystem;
-import sonia.scm.security.EncryptionHandler;
 import sonia.scm.security.KeyGenerator;
-import sonia.scm.security.LoginAttemptHandler;
-import sonia.scm.security.MessageDigestEncryptionHandler;
-import sonia.scm.security.RepositoryPermissionResolver;
-import sonia.scm.security.SecurityContext;
 import sonia.scm.security.SecuritySystem;
 import sonia.scm.store.BlobStoreFactory;
 import sonia.scm.store.ConfigurationEntryStoreFactory;
@@ -108,16 +89,10 @@ import sonia.scm.store.DataStoreFactory;
 import sonia.scm.store.FileBlobStoreFactory;
 import sonia.scm.store.JAXBConfigurationEntryStoreFactory;
 import sonia.scm.store.JAXBDataStoreFactory;
-import sonia.scm.store.JAXBStoreFactory;
-import sonia.scm.store.ListenableStoreFactory;
-import sonia.scm.store.StoreFactory;
-import sonia.scm.template.DefaultEngine;
-import sonia.scm.template.FreemarkerTemplateEngine;
-import sonia.scm.template.FreemarkerTemplateHandler;
+import sonia.scm.store.JAXBConfigurationStoreFactory;
 import sonia.scm.template.MustacheTemplateEngine;
 import sonia.scm.template.TemplateEngine;
 import sonia.scm.template.TemplateEngineFactory;
-import sonia.scm.template.TemplateHandler;
 import sonia.scm.template.TemplateServlet;
 import sonia.scm.url.RestJsonUrlProvider;
 import sonia.scm.url.RestXmlUrlProvider;
@@ -133,21 +108,16 @@ import sonia.scm.util.DebugServlet;
 import sonia.scm.util.ScmConfigurationUtil;
 import sonia.scm.web.cgi.CGIExecutorFactory;
 import sonia.scm.web.cgi.DefaultCGIExecutorFactory;
-import sonia.scm.web.filter.AutoLoginFilter;
 import sonia.scm.web.filter.LoggingFilter;
 import sonia.scm.web.security.AdministrationContext;
-import sonia.scm.web.security.ApiBasicAuthenticationFilter;
-import sonia.scm.web.security.AuthenticationManager;
-import sonia.scm.web.security.BasicSecurityContext;
-import sonia.scm.web.security.ChainAuthenticatonManager;
 import sonia.scm.web.security.DefaultAdministrationContext;
-import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import com.sun.jersey.api.core.PackagesResourceConfig;
 import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.jersey.api.json.JSONConfiguration;
+import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 import com.sun.jersey.spi.container.servlet.ServletContainer;
 
@@ -157,6 +127,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+
+import javax.servlet.ServletContext;
+import sonia.scm.store.ConfigurationStoreFactory;
+
 import javax.net.ssl.SSLContext;
 import sonia.scm.net.SSLContextProvider;
 import sonia.scm.net.ahc.AdvancedHttpClient;
@@ -166,15 +140,16 @@ import sonia.scm.net.ahc.JsonContentTransformer;
 import sonia.scm.net.ahc.XmlContentTransformer;
 import sonia.scm.schedule.QuartzScheduler;
 import sonia.scm.schedule.Scheduler;
+import sonia.scm.security.ConfigurableLoginAttemptHandler;
+import sonia.scm.security.LoginAttemptHandler;
 import sonia.scm.security.AuthorizationChangedEventProducer;
-import sonia.scm.security.XsrfProtectionFilter;
 import sonia.scm.web.UserAgentParser;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class ScmServletModule extends ServletModule
+public class ScmServletModule extends JerseyServletModule
 {
 
   /** Field description */
@@ -239,11 +214,15 @@ public class ScmServletModule extends ServletModule
    * Constructs ...
    *
    *
+   *
+   * @param servletContext
    * @param pluginLoader
    * @param overrides
    */
-  ScmServletModule(DefaultPluginLoader pluginLoader, ClassOverrides overrides)
+  ScmServletModule(ServletContext servletContext,
+    DefaultPluginLoader pluginLoader, ClassOverrides overrides)
   {
+    this.servletContext = servletContext;
     this.pluginLoader = pluginLoader;
     this.overrides = overrides;
   }
@@ -263,22 +242,24 @@ public class ScmServletModule extends ServletModule
 
     bind(SCMContextProvider.class).toInstance(context);
 
-    ScmConfiguration config = getScmConfiguration(context);
+    ScmConfiguration config = getScmConfiguration();
     CipherUtil cu = CipherUtil.getInstance();
-
+    
     // bind repository provider
     ThrowingProviderBinder.create(binder()).bind(
       RepositoryProvider.class, Repository.class).to(
       DefaultRepositoryProvider.class).in(RequestScoped.class);
 
+    // bind servlet context
+    bind(ServletContext.class).annotatedWith(Default.class).toInstance(
+      servletContext);
+
     // bind event api
     bind(ScmEventBus.class).toInstance(ScmEventBus.getInstance());
 
     // bind core
-    bind(StoreFactory.class, JAXBStoreFactory.class);
-    bind(ListenableStoreFactory.class, JAXBStoreFactory.class);
-    bind(ConfigurationEntryStoreFactory.class,
-      JAXBConfigurationEntryStoreFactory.class);
+    bind(ConfigurationStoreFactory.class, JAXBConfigurationStoreFactory.class);
+    bind(ConfigurationEntryStoreFactory.class, JAXBConfigurationEntryStoreFactory.class);
     bind(DataStoreFactory.class, JAXBDataStoreFactory.class);
     bind(BlobStoreFactory.class, FileBlobStoreFactory.class);
     bind(ScmConfiguration.class).toInstance(config);
@@ -291,24 +272,20 @@ public class ScmServletModule extends ServletModule
     // note CipherUtil uses an other generator
     bind(KeyGenerator.class).to(DefaultKeyGenerator.class);
     bind(CipherHandler.class).toInstance(cu.getCipherHandler());
-    bind(EncryptionHandler.class, MessageDigestEncryptionHandler.class);
     bind(FileSystem.class, DefaultFileSystem.class);
 
     // bind health check stuff
     bind(HealthCheckContextListener.class);
 
     // bind extensions
-    pluginLoader.processExtensions(binder());
+    pluginLoader.getExtensionProcessor().processAutoBindExtensions(binder());
 
     // bind security stuff
+    bind(LoginAttemptHandler.class).to(ConfigurableLoginAttemptHandler.class);
     bind(AuthorizationChangedEventProducer.class);
-    bind(PermissionResolver.class, RepositoryPermissionResolver.class);
-    bind(AuthenticationManager.class, ChainAuthenticatonManager.class);
-    bind(SecurityContext.class).to(BasicSecurityContext.class);
-    bind(WebSecurityContext.class).to(BasicSecurityContext.class);
+
     bind(SecuritySystem.class).to(DefaultSecuritySystem.class);
     bind(AdministrationContext.class, DefaultAdministrationContext.class);
-    bind(LoginAttemptHandler.class, ConfigurableLoginAttemptHandler.class);
 
     // bind cache
     bind(CacheManager.class, GuavaCacheManager.class);
@@ -326,14 +303,10 @@ public class ScmServletModule extends ServletModule
     bindDecorated(GroupManager.class, DefaultGroupManager.class,
       GroupManagerProvider.class);
     bind(CGIExecutorFactory.class, DefaultCGIExecutorFactory.class);
-    bind(ChangesetViewerUtil.class);
-    bind(RepositoryBrowserUtil.class);
 
     // bind sslcontext provider
     bind(SSLContext.class).toProvider(SSLContextProvider.class);
     
-    // bind httpclient
-    bind(HttpClient.class, URLHttpClient.class);
     
     // bind ahc
     Multibinder<ContentTransformer> transformers =
@@ -378,24 +351,7 @@ public class ScmServletModule extends ServletModule
     {
       filter(PATTERN_ALL).through(LoggingFilter.class);
     }
-
-    // protect api agains xsrf attacks
-    filter(PATTERN_RESTAPI).through(XsrfProtectionFilter.class);
     
-    /*
-     * filter(PATTERN_PAGE,
-     *      PATTERN_STATIC_RESOURCES).through(StaticResourceFilter.class);
-     */
-    filter(PATTERN_ALL).through(BaseUrlFilter.class);
-    filter(PATTERN_ALL).through(AutoLoginFilter.class);
-    filterRegex(RESOURCE_REGEX).through(GZipFilter.class);
-    filter(PATTERN_RESTAPI, PATTERN_DEBUG).through(ApiBasicAuthenticationFilter.class);
-    filter(PATTERN_RESTAPI, PATTERN_DEBUG).through(SecurityFilter.class);
-    filter(PATTERN_CONFIG, PATTERN_ADMIN).through(AdminSecurityFilter.class);
-
-    // added mdcs for logging
-    filter(PATTERN_ALL).through(MDCFilter.class);
-
     // debug servlet
     serve(PATTERN_DEBUG).with(DebugServlet.class);
 
@@ -403,23 +359,21 @@ public class ScmServletModule extends ServletModule
     serve(PATTERN_PLUGIN_SCRIPT).with(ScriptResourceServlet.class);
 
     // template
-    bind(TemplateHandler.class).to(FreemarkerTemplateHandler.class);
     serve(PATTERN_INDEX, "/").with(TemplateServlet.class);
 
     Multibinder<TemplateEngine> engineBinder =
       Multibinder.newSetBinder(binder(), TemplateEngine.class);
 
     engineBinder.addBinding().to(MustacheTemplateEngine.class);
-    engineBinder.addBinding().to(FreemarkerTemplateEngine.class);
-    bind(TemplateEngine.class).annotatedWith(DefaultEngine.class).to(
+    bind(TemplateEngine.class).annotatedWith(Default.class).to(
       MustacheTemplateEngine.class);
     bind(TemplateEngineFactory.class);
 
     // bind events
-    bind(LastModifiedUpdateListener.class);
+    // bind(LastModifiedUpdateListener.class);
 
     // jersey
-    Map<String, String> params = new HashMap<String, String>();
+    Map<String, String> params = Maps.newHashMap();
 
     /*
      * params.put("com.sun.jersey.spi.container.ContainerRequestFilters",
@@ -432,61 +386,15 @@ public class ScmServletModule extends ServletModule
     params.put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE.toString());
     params.put(ResourceConfig.FEATURE_REDIRECT, Boolean.TRUE.toString());
     params.put(ResourceConfig.FEATURE_DISABLE_WADL, Boolean.TRUE.toString());
+
+    /*
+     * TODO remove UriExtensionsConfig and PackagesResourceConfig
+     * to stop jersey classpath scanning
+     */
     params.put(ServletContainer.RESOURCE_CONFIG_CLASS,
       UriExtensionsConfig.class.getName());
-
-    String restPath = getRestPackages();
-    logger.info("configure jersey with package path: {}", restPath);
-
-    params.put(PackagesResourceConfig.PROPERTY_PACKAGES, restPath);
+    params.put(PackagesResourceConfig.PROPERTY_PACKAGES, "unbound");
     serve(PATTERN_RESTAPI).with(GuiceContainer.class, params);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param packageSet
-   * @param plugin
-   */
-  private void appendPluginPackages(Set<String> packageSet, Plugin plugin)
-  {
-    Set<String> pluginPackageSet = plugin.getPackageSet();
-
-    if (pluginPackageSet != null)
-    {
-      for (String pluginPkg : pluginPackageSet)
-      {
-        boolean append = true;
-
-        for (String pkg : packageSet)
-        {
-          if (pluginPkg.startsWith(pkg))
-          {
-            append = false;
-
-            break;
-          }
-        }
-
-        if (append)
-        {
-          if (logger.isDebugEnabled())
-          {
-            String name = "unknown";
-
-            if (plugin.getInformation() != null)
-            {
-              name = plugin.getInformation().getName();
-            }
-
-            logger.debug("plugin {} added rest path {}", name, pluginPkg);
-          }
-
-          packageSet.add(pluginPkg);
-        }
-      }
-    }
   }
 
   /**
@@ -577,44 +485,6 @@ public class ScmServletModule extends ServletModule
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  private String getRestPackages()
-  {
-    Set<String> packageSet = new HashSet<String>();
-
-    packageSet.add(SCMContext.DEFAULT_PACKAGE);
-
-    Collection<Plugin> plugins = pluginLoader.getInstalledPlugins();
-
-    if (plugins != null)
-    {
-      for (Plugin plugin : plugins)
-      {
-        appendPluginPackages(packageSet, plugin);
-      }
-    }
-
-    StringBuilder buffer = new StringBuilder();
-    Iterator<String> pkgIterator = packageSet.iterator();
-
-    while (pkgIterator.hasNext())
-    {
-      buffer.append(pkgIterator.next());
-
-      if (pkgIterator.hasNext())
-      {
-        buffer.append(";");
-      }
-    }
-
-    return buffer.toString();
-  }
-
-  /**
    * Load ScmConfiguration with JAXB
    *
    *
@@ -622,7 +492,7 @@ public class ScmServletModule extends ServletModule
    *
    * @return
    */
-  private ScmConfiguration getScmConfiguration(SCMContextProvider context)
+  private ScmConfiguration getScmConfiguration()
   {
     ScmConfiguration configuration = new ScmConfiguration();
 
@@ -634,8 +504,11 @@ public class ScmServletModule extends ServletModule
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private ClassOverrides overrides;
+  private final ClassOverrides overrides;
 
   /** Field description */
-  private DefaultPluginLoader pluginLoader;
+  private final DefaultPluginLoader pluginLoader;
+
+  /** Field description */
+  private final ServletContext servletContext;
 }

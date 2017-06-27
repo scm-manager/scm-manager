@@ -53,7 +53,7 @@ Sonia.security.PermissionsPanel = Ext.extend(Ext.Panel, {
     this.permissionStore = new Sonia.rest.JsonStore({
       proxy: new Ext.data.HttpProxy({
         api: {
-          read: restUrl + this.baseUrl + '.json'
+          read: restUrl + this.baseUrl
         },
         disableCaching: false
       }),
@@ -179,7 +179,7 @@ Sonia.security.PermissionsPanel = Ext.extend(Ext.Panel, {
   
   addPermission: function(record){
     Ext.Ajax.request({
-      url: restUrl + this.baseUrl + '.json',
+      url: restUrl + this.baseUrl,
       method: 'POST',
       jsonData: record.data,
       scope: this,
@@ -194,7 +194,7 @@ Sonia.security.PermissionsPanel = Ext.extend(Ext.Panel, {
   
   modifyPermission: function(id, record){
     Ext.Ajax.request({
-      url: restUrl + this.baseUrl + '/' + encodeURIComponent(id) + '.json',
+      url: restUrl + this.baseUrl + '/' + encodeURIComponent(id),
       method: 'PUT',
       jsonData: record.data,
       scope: this,
@@ -207,7 +207,7 @@ Sonia.security.PermissionsPanel = Ext.extend(Ext.Panel, {
 
   removePermission: function(store, record){
     Ext.Ajax.request({
-      url: restUrl + this.baseUrl + '/' + encodeURIComponent(record.get('id'))  + '.json',
+      url: restUrl + this.baseUrl + '/' + encodeURIComponent(record.get('id')),
       method: 'DELETE',
       scope: this,
       success: function(){

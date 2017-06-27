@@ -52,7 +52,6 @@ import sonia.scm.plugin.PluginInformationComparator;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import com.sun.jersey.multipart.FormDataParam;
 import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
@@ -66,6 +65,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -124,9 +124,9 @@ public class PluginResource
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @Consumes(MediaType.MULTIPART_FORM_DATA)
-  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   public Response install(
-    @FormDataParam("package") InputStream uploadedInputStream)
+    /*@FormParam("package")*/ InputStream uploadedInputStream)
     throws IOException
   {
     Response response = null;
@@ -194,7 +194,7 @@ public class PluginResource
   @Consumes(MediaType.MULTIPART_FORM_DATA)
   @Produces(MediaType.TEXT_HTML)
   public Response installFromUI(
-    @FormDataParam("package") InputStream uploadedInputStream)
+    /*@FormParam("package")*/ InputStream uploadedInputStream)
     throws IOException
   {
     return install(uploadedInputStream);
@@ -257,7 +257,7 @@ public class PluginResource
     @ResponseCode(code = 200, condition = "success"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
-  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   public Collection<PluginInformation> getAll()
   {
     return pluginManager.getAll();
@@ -274,7 +274,7 @@ public class PluginResource
     @ResponseCode(code = 200, condition = "success"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
-  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   public Collection<PluginInformation> getAvailable()
   {
     return pluginManager.getAvailable();
@@ -291,7 +291,7 @@ public class PluginResource
     @ResponseCode(code = 200, condition = "success"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
-  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   public Collection<PluginInformation> getAvailableUpdates()
   {
     return pluginManager.getAvailableUpdates();
@@ -325,7 +325,7 @@ public class PluginResource
     @ResponseCode(code = 200, condition = "success"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
-  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   public Collection<PluginInformation> getOverview()
   {
     //J-

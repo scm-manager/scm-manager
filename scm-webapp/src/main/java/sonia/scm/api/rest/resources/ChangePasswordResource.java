@@ -118,7 +118,7 @@ public class ChangePasswordResource
     @ResponseCode(code = 400, condition = "bad request, the old password is not correct"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
-  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   public Response changePassword(@FormParam("old-password") String oldPassword,
     @FormParam("new-password") String newPassword)
     throws UserException, IOException

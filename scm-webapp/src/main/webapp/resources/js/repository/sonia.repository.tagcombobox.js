@@ -37,7 +37,7 @@ Sonia.repository.TagComboBox = Ext.extend(Ext.form.ComboBox, {
   initComponent: function(){    
     var tagStore = new Sonia.rest.JsonStore({
       proxy: new Ext.data.HttpProxy({
-        url: restUrl + 'repositories/' + this.repositoryId + '/tags.json',
+        url: restUrl + 'repositories/' + this.repositoryId + '/tags',
         method: 'GET',
         disableCaching: false
       }),
