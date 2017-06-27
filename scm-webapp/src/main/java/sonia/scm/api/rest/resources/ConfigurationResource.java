@@ -89,7 +89,7 @@ public class ConfigurationResource
    * @return
    */
   @GET
-  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   public Response getConfiguration()
   {
     Response response = null;
@@ -118,7 +118,7 @@ public class ConfigurationResource
    * @return
    */
   @POST
-  @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   public Response setConfig(@Context UriInfo uriInfo,
     ScmConfiguration newConfig)
   {

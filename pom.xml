@@ -261,7 +261,6 @@
           <links>
             <link>http://download.oracle.com/javase/8/docs/api/</link>
             <link>http://download.oracle.com/docs/cd/E17802_01/products/products/servlet/2.5/docs/servlet-2_5-mr2/</link>
-            <link>http://jersey.java.net/nonav/apidocs/${jersey.version}/jersey/</link>
             <link>https://google.github.io/guice/api-docs/${guice.version}/javadoc</link>
             <link>http://www.slf4j.org/api/</link>
             <link>http://shiro.apache.org/static/current/apidocs/</link>
@@ -482,8 +481,10 @@
     <slf4j.version>1.7.22</slf4j.version>
     <logback.version>1.1.10</logback.version>
     <servlet.version>3.0.1</servlet.version>
+    
+    <jaxrs.version>2.0.1</jaxrs.version>
+    <jersey-client.version>1.19.4</jersey-client.version>
     <guice.version>4.0</guice.version>
-    <jersey.version>1.19.4</jersey.version>
     
     <!-- event bus -->
     <legman.version>1.2.0</legman.version>

@@ -261,7 +261,7 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
         onSubmit: function(values){
           this.el.mask(this.submitText);
           Ext.Ajax.request({
-            url: restUrl + 'config.json',
+            url: restUrl + 'config',
             method: 'POST',
             jsonData: values,
             scope: this,
@@ -283,7 +283,7 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
         onLoad: function(el){
           var tid = setTimeout( function(){ el.mask(this.loadingText); }, 100);
           Ext.Ajax.request({
-            url: restUrl + 'config.json',
+            url: restUrl + 'config',
             method: 'GET',
             scope: this,
             disableCaching: true,

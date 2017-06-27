@@ -163,7 +163,7 @@ public class RepositoryResource extends AbstractManagerResource<Repository, Repo
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
-  @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   @Override
   public Response create(@Context UriInfo uriInfo, Repository repository)
   {
@@ -288,7 +288,7 @@ public class RepositoryResource extends AbstractManagerResource<Repository, Repo
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
-  @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   @Override
   public Response update(@Context UriInfo uriInfo, @PathParam("id") String id, Repository repository)
   {
@@ -307,7 +307,7 @@ public class RepositoryResource extends AbstractManagerResource<Repository, Repo
    */
   @GET
   @Path("{id}")
-  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   @StatusCodes({
     @ResponseCode(code = 200, condition = "success"),
     @ResponseCode(code = 404, condition = "not found, no repository with the specified id available"),
@@ -332,7 +332,7 @@ public class RepositoryResource extends AbstractManagerResource<Repository, Repo
    * @return all repositories
    */
   @GET
-  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   @StatusCodes({
     @ResponseCode(code = 200, condition = "success"),
     @ResponseCode(code = 500, condition = "internal server error")
@@ -369,7 +369,7 @@ public class RepositoryResource extends AbstractManagerResource<Repository, Repo
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(BlameResult.class)
-  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   public Response getBlame(@PathParam("id") String id,
     @QueryParam("revision") String revision, @QueryParam("path") String path)
     throws RepositoryException, IOException
@@ -441,7 +441,7 @@ public class RepositoryResource extends AbstractManagerResource<Repository, Repo
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(Branches.class)
-  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   public Response getBranches(@PathParam("id") String id)
     throws RepositoryException, IOException
   {
@@ -503,7 +503,7 @@ public class RepositoryResource extends AbstractManagerResource<Repository, Repo
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(BrowserResult.class)
-  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   //J-
   public Response getBrowserResult(
     @PathParam("id") String id,
@@ -583,7 +583,7 @@ public class RepositoryResource extends AbstractManagerResource<Repository, Repo
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(Repository.class)
-  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   public Response getByTypeAndName(@PathParam("type") String type,
     @PathParam("name") String name)
   {
@@ -624,7 +624,7 @@ public class RepositoryResource extends AbstractManagerResource<Repository, Repo
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(Changeset.class)
-  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   public Response getChangeset(@PathParam("id") String id,
     @PathParam("revision") String revision)
     throws IOException, RepositoryException
@@ -696,7 +696,7 @@ public class RepositoryResource extends AbstractManagerResource<Repository, Repo
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(ChangesetPagingResult.class)
-  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   //J-
   public Response getChangesets(
     @PathParam("id") String id,
@@ -936,7 +936,7 @@ public class RepositoryResource extends AbstractManagerResource<Repository, Repo
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(Tags.class)
-  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   public Response getTags(@PathParam("id") String id)
     throws RepositoryException, IOException
   {

@@ -62,10 +62,9 @@ import sonia.scm.web.cgi.EnvList;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import com.sun.jersey.core.util.Base64;
-
 import java.io.File;
 import java.io.IOException;
+import java.util.Base64;
 
 import java.util.Enumeration;
 
@@ -215,7 +214,8 @@ public class HgCGIServlet extends HttpServlet
         String encodedUserInfo =
           authorization.substring(
             HttpUtil.AUTHORIZATION_SCHEME_BASIC.length()).trim();
-        String userInfo = Base64.base64Decode(encodedUserInfo);
+        // TODO check encoding of user-agent ?
+        String userInfo = new String(Base64.getDecoder().decode(encodedUserInfo));
 
         env.set(SCM_CREDENTIALS, CipherUtil.getInstance().encode(userInfo));
       }

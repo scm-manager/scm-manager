@@ -55,8 +55,6 @@ import sonia.scm.util.SystemUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import com.sun.jersey.api.view.Viewable;
-
 import java.io.IOException;
 
 import java.util.List;
@@ -71,6 +69,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import sonia.scm.store.ConfigurationStoreFactory;
+import sonia.scm.template.Viewable;
 
 /**
  *

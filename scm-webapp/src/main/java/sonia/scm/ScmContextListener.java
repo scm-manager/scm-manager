@@ -35,13 +35,11 @@ package sonia.scm;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.base.Stopwatch;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Lists;
-import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
-import com.google.inject.servlet.GuiceServletContextListener;
+import java.util.Collections;
 
 import org.apache.shiro.guice.web.ShiroWebModule;
 
@@ -65,6 +63,7 @@ import java.util.Set;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
+import org.jboss.resteasy.plugins.guice.GuiceResteasyBootstrapServletContextListener;
 import sonia.scm.debug.DebugModule;
 import sonia.scm.filter.WebElementModule;
 import sonia.scm.schedule.Scheduler;
@@ -73,183 +72,65 @@ import sonia.scm.schedule.Scheduler;
  *
  * @author Sebastian Sdorra
  */
-public class ScmContextListener extends GuiceServletContextListener
+public class ScmContextListener extends GuiceResteasyBootstrapServletContextListener
 {
 
   /**
    * the logger for ScmContextListener
    */
-  private static final Logger logger =
-    LoggerFactory.getLogger(ScmContextListener.class);
-
+  private static final Logger LOG = LoggerFactory.getLogger(ScmContextListener.class);
+  
+  private final ClassLoader parent;
+  private final Set<PluginWrapper> plugins;
+  private Injector injector;
+  
   //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param parent
-   * @param plugins
-   */
+  
   public ScmContextListener(ClassLoader parent, Set<PluginWrapper> plugins)
   {
     this.parent = parent;
     this.plugins = plugins;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param servletContextEvent
-   */
-  @Override
-  public void contextDestroyed(ServletContextEvent servletContextEvent)
-  {
-    if ((globalInjector != null) &&!startupError)
-    {
-      // close Scheduler
-      IOUtil.close(globalInjector.getInstance(Scheduler.class));
-
-      // close RepositoryManager
-      IOUtil.close(globalInjector.getInstance(RepositoryManager.class));
-
-      // close GroupManager
-      IOUtil.close(globalInjector.getInstance(GroupManager.class));
-
-      // close UserManager
-      IOUtil.close(globalInjector.getInstance(UserManager.class));
-
-      // close CacheManager
-      IOUtil.close(globalInjector.getInstance(CacheManager.class));
-
-      //J-
-      // call destroy of servlet context listeners
-      globalInjector.getInstance(ServletContextListenerHolder.class)
-                    .contextDestroyed(servletContextEvent);
-      //J+
-    }
-
-    super.contextDestroyed(servletContextEvent);
+  public Set<PluginWrapper> getPlugins() {
+    return plugins;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param servletContextEvent
-   */
   @Override
-  public void contextInitialized(ServletContextEvent servletContextEvent)
-  {
-    this.servletContext = servletContextEvent.getServletContext();
-
-    if (SCMContext.getContext().getStartupError() == null)
-    {
+  public void contextInitialized(ServletContextEvent servletContextEvent) {
+    beforeInjectorCreation();
+    super.contextInitialized(servletContextEvent);
+    afterInjectorCreation(servletContextEvent);
+  }
+  
+  private void beforeInjectorCreation() {
+    upgradeIfNecessary();
+  }
+  
+  private void upgradeIfNecessary() {
+    if (!hasStartupErrors()) {
       UpgradeManager upgradeHandler = new UpgradeManager();
 
       upgradeHandler.doUpgrade();
     }
-    else
-    {
-      startupError = true;
-    }
-
-    super.contextInitialized(servletContextEvent);
-
-    // call destroy event
-    if ((globalInjector != null) &&!startupError)
-    {
-      //J-
-      // bind eager singletons
-      globalInjector.getInstance(EagerSingletonModule.class)
-                    .initialize(globalInjector);
-      // init servlet context listeners
-      globalInjector.getInstance(ServletContextListenerHolder.class)
-                    .contextInitialized(servletContextEvent);
-      //J+
-    }
   }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Set<PluginWrapper> getPlugins()
-  {
-    return plugins;
+  
+  private boolean hasStartupErrors() {
+    return SCMContext.getContext().getStartupError() != null;
   }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
-  protected Injector getInjector()
-  {
-    if (startupError)
-    {
-      globalInjector = getErrorInjector();
+  protected List<? extends Module> getModules(ServletContext context) {
+    if (hasStartupErrors()) {
+      return getErrorModules();
     }
-    else
-    {
-      globalInjector = getDefaultInjector(servletContext);
-    }
-
-    return globalInjector;
+    return getDefaultModules(context);
   }
+  
+  private List<? extends Module> getDefaultModules(ServletContext context) {
+    DefaultPluginLoader pluginLoader = new DefaultPluginLoader(context, parent, plugins);
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param ep
-   * @param moduleList
-   */
-  private void appendModules(ExtensionProcessor ep, List<Module> moduleList)
-  {
-    for (Class<? extends Module> module : ep.byExtensionPoint(Module.class))
-    {
-      try
-      {
-        logger.info("add module {}", module);
-        moduleList.add(module.newInstance());
-      }
-      catch (IllegalAccessException | InstantiationException ex)
-      {
-        throw Throwables.propagate(ex);
-      }
-    }
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param servletCtx
-   * @return
-   */
-  private Injector getDefaultInjector(ServletContext servletCtx)
-  {
-    Stopwatch sw = Stopwatch.createStarted();
-    DefaultPluginLoader pluginLoader = new DefaultPluginLoader(servletCtx,
-                                         parent, plugins);
-
-    ClassOverrides overrides =
-      ClassOverrides.findOverrides(pluginLoader.getUberClassLoader());
+    ClassOverrides overrides = ClassOverrides.findOverrides(pluginLoader.getUberClassLoader());
     List<Module> moduleList = Lists.newArrayList();
 
     moduleList.add(new ScmInitializerModule());
@@ -257,9 +138,9 @@ public class ScmContextListener extends GuiceServletContextListener
     moduleList.add(new EagerSingletonModule());
     moduleList.add(ShiroWebModule.guiceFilterModule());
     moduleList.add(new WebElementModule(pluginLoader));
-    moduleList.add(new ScmServletModule(servletCtx, pluginLoader, overrides));
+    moduleList.add(new ScmServletModule(context, pluginLoader, overrides));
     moduleList.add(
-      new ScmSecurityModule(servletCtx, pluginLoader.getExtensionProcessor())
+      new ScmSecurityModule(context, pluginLoader.getExtensionProcessor())
     );
     appendModules(pluginLoader.getExtensionProcessor(), moduleList);
     moduleList.addAll(overrides.getModules());
@@ -268,41 +149,75 @@ public class ScmContextListener extends GuiceServletContextListener
       moduleList.add(new DebugModule());
     }
 
-    SCMContextProvider ctx = SCMContext.getContext();
-
-    Injector injector =
-      Guice.createInjector(ctx.getStage().getInjectionStage(), moduleList);
-
-    logger.info("created injector in {}", sw.stop());
-
-    return injector;
+    return moduleList;    
+  }
+  
+  private void appendModules(ExtensionProcessor ep, List<Module> moduleList) {
+    for (Class<? extends Module> module : ep.byExtensionPoint(Module.class)) {
+      try {
+        LOG.info("add module {}", module);
+        moduleList.add(module.newInstance());
+      } catch (IllegalAccessException | InstantiationException ex) {
+        throw Throwables.propagate(ex);
+      }
+    }
+  }
+  
+  private List<? extends Module> getErrorModules() {
+    return Collections.singletonList(new ScmErrorModule());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  private Injector getErrorInjector()
+  @Override
+  protected void withInjector(Injector injector) {
+    this.injector = injector;
+  }
+  
+  private void afterInjectorCreation(ServletContextEvent event) {
+    if (injector != null && !hasStartupErrors()) {
+      bindEagerSingletons();
+      initializeServletContextListeners(event);
+    } 
+  }
+  
+  private void bindEagerSingletons() {
+    injector.getInstance(EagerSingletonModule.class).initialize(injector);
+  }
+  
+  private void initializeServletContextListeners(ServletContextEvent event) {
+    injector.getInstance(ServletContextListenerHolder.class).contextInitialized(event);
+  }
+  
+  @Override
+  public void contextDestroyed(ServletContextEvent servletContextEvent)
   {
-    return Guice.createInjector(new ScmErrorModule());
+    if (injector != null &&!hasStartupErrors()) {
+      closeCloseables();
+      destroyServletContextListeners(servletContextEvent);
+    }
+
+    super.contextDestroyed(servletContextEvent);
+  }
+  
+  private void closeCloseables() {
+    // close Scheduler
+    IOUtil.close(injector.getInstance(Scheduler.class));
+
+    // close RepositoryManager
+    IOUtil.close(injector.getInstance(RepositoryManager.class));
+
+    // close GroupManager
+    IOUtil.close(injector.getInstance(GroupManager.class));
+
+    // close UserManager
+    IOUtil.close(injector.getInstance(UserManager.class));
+
+    // close CacheManager
+    IOUtil.close(injector.getInstance(CacheManager.class));
   }
 
-  //~--- fields ---------------------------------------------------------------
+  private void destroyServletContextListeners(ServletContextEvent event) {
+    injector.getInstance(ServletContextListenerHolder.class).contextDestroyed(event);
+  }
 
-  /** Field description */
-  private final ClassLoader parent;
 
-  /** Field description */
-  private final Set<PluginWrapper> plugins;
-
-  /** Field description */
-  private Injector globalInjector;
-
-  /** Field description */
-  private ServletContext servletContext;
-
-  /** Field description */
-  private boolean startupError = false;
 }

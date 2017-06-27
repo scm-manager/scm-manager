@@ -67,7 +67,7 @@ public final class DebugResource
    * @return all received hook data for the given repository
    */
   @GET
-  @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   public Collection<DebugHookData> getAll(@PathParam("repository") String repository){
     return debugService.getAll(repository);
   }
@@ -81,7 +81,7 @@ public final class DebugResource
    */
   @GET
   @Path("last")
-  @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   public DebugHookData getLast(@PathParam("repository") String repository){
     return debugService.getLast(repository);
   }

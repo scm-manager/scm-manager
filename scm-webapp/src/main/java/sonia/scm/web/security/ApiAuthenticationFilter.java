@@ -67,7 +67,7 @@ public class ApiAuthenticationFilter extends AuthenticationFilter
 {
 
   /** login uri */
-  public static final String URI_LOGIN = "/api/rest/authentication/login";
+  public static final String URI_LOGIN = "/api/rest/auth/access_token";
 
   //~--- constructors ---------------------------------------------------------
 

@@ -119,7 +119,7 @@ public class GroupResource
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
-  @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   @Override
   public Response create(@Context UriInfo uriInfo, Group group)
   {
@@ -164,7 +164,7 @@ public class GroupResource
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
-  @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   @Override
   public Response update(@Context UriInfo uriInfo,
     @PathParam("id") String name, Group group)
@@ -191,7 +191,7 @@ public class GroupResource
     @ResponseCode(code = 404, condition = "not found, no group with the specified id/name available"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
-  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   @Override
   public Response get(@Context Request request, @PathParam("id") String id)
   {
@@ -221,7 +221,7 @@ public class GroupResource
    * @return
    */
   @GET
-  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   @TypeHint(Group[].class)
   @StatusCodes({
     @ResponseCode(code = 200, condition = "success"),

@@ -58,7 +58,7 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
     
     var browserStore = new Sonia.rest.JsonStore({
       proxy: new Ext.data.HttpProxy({
-        url: restUrl + 'repositories/' + this.repository.id  + '/browse.json',
+        url: restUrl + 'repositories/' + this.repository.id,
         method: 'GET'
       }),
       fields: ['path', 'name', 'length', 'lastModified', 'directory', 'description', 'subrepository'],

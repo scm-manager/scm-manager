@@ -35,17 +35,16 @@ package sonia.scm;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.collect.Maps;
 import com.google.inject.Provider;
 import com.google.inject.multibindings.Multibinder;
 import com.google.inject.name.Names;
 import com.google.inject.servlet.RequestScoped;
+import com.google.inject.servlet.ServletModule;
 import com.google.inject.throwingproviders.ThrowingProviderBinder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sonia.scm.api.rest.UriExtensionsConfig;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.cache.GuavaCacheManager;
 import sonia.scm.config.ScmConfiguration;
@@ -114,14 +113,6 @@ import sonia.scm.web.security.DefaultAdministrationContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import com.sun.jersey.api.core.PackagesResourceConfig;
-import com.sun.jersey.api.core.ResourceConfig;
-import com.sun.jersey.api.json.JSONConfiguration;
-import com.sun.jersey.guice.JerseyServletModule;
-import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
-import com.sun.jersey.spi.container.servlet.ServletContainer;
-
-import java.util.Map;
 
 import javax.servlet.ServletContext;
 import sonia.scm.store.ConfigurationStoreFactory;
@@ -144,7 +135,7 @@ import sonia.scm.web.UserAgentParser;
  *
  * @author Sebastian Sdorra
  */
-public class ScmServletModule extends JerseyServletModule
+public class ScmServletModule extends ServletModule
 {
 
   /** Field description */
@@ -366,30 +357,6 @@ public class ScmServletModule extends JerseyServletModule
 
     // bind events
     // bind(LastModifiedUpdateListener.class);
-
-    // jersey
-    Map<String, String> params = Maps.newHashMap();
-
-    /*
-     * params.put("com.sun.jersey.spi.container.ContainerRequestFilters",
-     *          "com.sun.jersey.api.container.filter.LoggingFilter");
-     * params.put("com.sun.jersey.spi.container.ContainerResponseFilters",
-     *          "com.sun.jersey.api.container.filter.LoggingFilter");
-     * params.put("com.sun.jersey.config.feature.Trace", "true");
-     * params.put("com.sun.jersey.config.feature.TracePerRequest", "true");
-     */
-    params.put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE.toString());
-    params.put(ResourceConfig.FEATURE_REDIRECT, Boolean.TRUE.toString());
-    params.put(ResourceConfig.FEATURE_DISABLE_WADL, Boolean.TRUE.toString());
-
-    /*
-     * TODO remove UriExtensionsConfig and PackagesResourceConfig
-     * to stop jersey classpath scanning
-     */
-    params.put(ServletContainer.RESOURCE_CONFIG_CLASS,
-      UriExtensionsConfig.class.getName());
-    params.put(PackagesResourceConfig.PROPERTY_PACKAGES, "unbound");
-    serve(PATTERN_RESTAPI).with(GuiceContainer.class, params);
   }
 
   /**
