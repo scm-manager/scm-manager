@@ -259,17 +259,17 @@ public class Modifications implements Serializable
   //~--- fields ---------------------------------------------------------------
 
   /** list of added files */
-  @XmlElement(name = "file")
+  @XmlElement(name = "added")
   @XmlElementWrapper(name = "added")
   private List<String> added;
 
   /** list of modified files */
-  @XmlElement(name = "file")
+  @XmlElement(name = "modified")
   @XmlElementWrapper(name = "modified")
   private List<String> modified;
 
   /** list of removed files */
-  @XmlElement(name = "file")
+  @XmlElement(name = "removed")
   @XmlElementWrapper(name = "removed")
   private List<String> removed;
 }
