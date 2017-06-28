@@ -62,6 +62,7 @@ import java.util.Collection;
 import java.util.UUID;
 
 import javax.ws.rs.core.MultivaluedMap;
+import sonia.scm.api.rest.JSONContextResolver;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.client.api.ClientCommand;
 import sonia.scm.repository.client.api.RepositoryClient;
@@ -86,9 +87,6 @@ public final class IntegrationTestUtil
   
   /** scm-manager base url for the rest api */
   public static final String REST_BASE_URL = BASE_URL.concat("api/rest/");
-
-  /** Field description */
-  public static final String EXTENSION = ".xml";
 
   //~--- constructors ---------------------------------------------------------
 
@@ -177,9 +175,8 @@ public final class IntegrationTestUtil
   public static Client createClient()
   {
     DefaultApacheHttpClientConfig config = new DefaultApacheHttpClientConfig();
-
-    config.getProperties().put(ApacheHttpClientConfig.PROPERTY_HANDLE_COOKIES,
-      true);
+    config.getSingletons().add(new JSONContextResolver());
+    config.getProperties().put(ApacheHttpClientConfig.PROPERTY_HANDLE_COOKIES, true);
 
     return ApacheHttpClient.create(config);
   }
@@ -266,7 +263,7 @@ public final class IntegrationTestUtil
    */
   public static String createResourceUrl(String url)
   {
-    return REST_BASE_URL.concat(url).concat(EXTENSION);
+    return REST_BASE_URL.concat(url);
   }
   
   /**
