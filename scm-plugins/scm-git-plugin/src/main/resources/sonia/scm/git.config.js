@@ -60,7 +60,7 @@ Sonia.git.ConfigPanel = Ext.extend(Sonia.config.SimpleConfigForm, {
 
     var config = {
       title : this.titleText,
-      configUrl: restUrl + 'config/repositories/git.json',
+      configUrl: restUrl + 'config/repositories/git',
       items : [{
         xtype: 'textfield',
         name: 'repositoryDirectory',

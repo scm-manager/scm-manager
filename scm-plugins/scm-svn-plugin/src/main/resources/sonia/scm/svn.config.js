@@ -55,7 +55,7 @@ Sonia.svn.ConfigPanel = Ext.extend(Sonia.config.SimpleConfigForm, {
 
     var config = {
       title : this.titleText,
-      configUrl: restUrl + 'config/repositories/svn.json',
+      configUrl: restUrl + 'config/repositories/svn',
       items : [{
         xtype: 'textfield',
         name: 'repositoryDirectory',

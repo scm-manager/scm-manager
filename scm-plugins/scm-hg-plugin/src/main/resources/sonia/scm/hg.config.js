@@ -125,7 +125,7 @@ Sonia.hg.ConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
               if (debug){
                 console.debug( 'load config from wizard and submit to server' );
               }
-              self.loadConfig( self.el, 'config/repositories/hg/auto-configuration.json', 'POST', config );
+              self.loadConfig( self.el, 'config/repositories/hg/auto-configuration', 'POST', config );
             } else {
               if (debug){
                 console.debug( 'reload config' );
@@ -146,7 +146,7 @@ Sonia.hg.ConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
   onSubmit: function(values){
     this.el.mask(this.submitText);
     Ext.Ajax.request({
-      url: restUrl + 'config/repositories/hg.json',
+      url: restUrl + 'config/repositories/hg',
       method: 'POST',
       jsonData: values,
       scope: this,
@@ -162,7 +162,7 @@ Sonia.hg.ConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
   },
 
   onLoad: function(el){
-    this.loadConfig(el, 'config/repositories/hg.json', 'GET');
+    this.loadConfig(el, 'config/repositories/hg', 'GET');
   },
 
   loadConfig: function(el, url, method, config){

@@ -136,7 +136,7 @@ Sonia.hg.ConfigWizardPanel = Ext.extend(Ext.Panel,{
     var packageStore = new Ext.data.JsonStore({
       storeId: 'pkgStore',
       proxy: new Ext.data.HttpProxy({
-        url: restUrl + 'config/repositories/hg/packages.json',
+        url: restUrl + 'config/repositories/hg/packages',
         disableCaching: false
       }),
       fields: [ 'id', 'hg-version', 'python-version', 'size' ],
@@ -151,7 +151,7 @@ Sonia.hg.ConfigWizardPanel = Ext.extend(Ext.Panel,{
     
     var hgInstallationStore = new Ext.data.Store({
       proxy: new  Ext.data.HttpProxy({
-        url: restUrl + 'config/repositories/hg/installations/hg.json'
+        url: restUrl + 'config/repositories/hg/installations/hg'
       }),
       fields: [ 'path' ],
       reader: new Sonia.hg.InstallationJsonReader(),
@@ -161,7 +161,7 @@ Sonia.hg.ConfigWizardPanel = Ext.extend(Ext.Panel,{
     
     var pythonInstallationStore = new Ext.data.Store({
       proxy: new  Ext.data.HttpProxy({
-        url: restUrl + 'config/repositories/hg/installations/python.json'
+        url: restUrl + 'config/repositories/hg/installations/python'
       }),
       fields: [ 'path' ],
       reader: new Sonia.hg.InstallationJsonReader(),
@@ -370,7 +370,7 @@ Sonia.hg.ConfigWizardPanel = Ext.extend(Ext.Panel,{
     });
     
     Ext.Ajax.request({
-      url: restUrl + 'config/repositories/hg/packages/' + pkg + '.json',
+      url: restUrl + 'config/repositories/hg/packages/' + pkg,
       method: 'POST',
       scope: this,
       timeout: 900000, // 15min
