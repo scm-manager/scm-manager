@@ -109,7 +109,7 @@ public class HgConfigResource
    */
   @POST
   @Path("auto-configuration")
-  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   public HgConfig autoConfiguration(@Context UriInfo uriInfo)
   {
     return autoConfiguration(uriInfo, null);
@@ -126,8 +126,8 @@ public class HgConfigResource
    */
   @POST
   @Path("auto-configuration")
-  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-  @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+  @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   public HgConfig autoConfiguration(@Context UriInfo uriInfo, HgConfig config)
   {
     if (config == null)
@@ -185,7 +185,7 @@ public class HgConfigResource
    * @return
    */
   @GET
-  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   public HgConfig getConfig()
   {
     HgConfig config = handler.getConfig();
@@ -206,7 +206,7 @@ public class HgConfigResource
    */
   @GET
   @Path("installations/hg")
-  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   public InstallationsResponse getHgInstallations()
   {
     List<String> installations =
@@ -223,7 +223,7 @@ public class HgConfigResource
    */
   @GET
   @Path("packages")
-  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   public HgPackages getPackages()
   {
     return pkgReader.getPackages();
@@ -237,7 +237,7 @@ public class HgConfigResource
    */
   @GET
   @Path("installations/python")
-  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   public InstallationsResponse getPythonInstallations()
   {
     List<String> installations =
@@ -260,7 +260,7 @@ public class HgConfigResource
    * @throws IOException
    */
   @POST
-  @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML  })
   public Response setConfig(@Context UriInfo uriInfo, HgConfig config)
     throws IOException
   {

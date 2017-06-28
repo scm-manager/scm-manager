@@ -57,7 +57,7 @@ import javax.ws.rs.core.UriInfo;
  */
 @Singleton
 @Path("config/repositories/git")
-@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 public class GitConfigResource
 {
 
@@ -108,7 +108,7 @@ public class GitConfigResource
    * @return
    */
   @POST
-  @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   public Response setConfig(@Context UriInfo uriInfo, GitConfig config)
   {
     repositoryHandler.setConfig(config);
