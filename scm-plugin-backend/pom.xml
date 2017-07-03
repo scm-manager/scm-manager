@@ -9,7 +9,6 @@
     <version>1.55-SNAPSHOT</version>
   </parent>
 
-  <groupId>sonia.scm</groupId>
   <artifactId>scm-plugin-backend</artifactId>
   <packaging>war</packaging>
   <version>1.55-SNAPSHOT</version>

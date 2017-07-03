@@ -9,7 +9,6 @@
     <version>2.0.0-SNAPSHOT</version>
   </parent>
 
-  <groupId>sonia.scm.clients</groupId>
   <artifactId>scm-client-api</artifactId>
   <packaging>jar</packaging>
   <version>2.0.0-SNAPSHOT</version>
