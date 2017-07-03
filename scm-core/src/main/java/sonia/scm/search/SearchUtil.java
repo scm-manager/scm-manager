@@ -37,17 +37,15 @@ package sonia.scm.search;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.TransformFilter;
 import sonia.scm.util.Util;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -165,23 +163,18 @@ public final class SearchUtil
     List<T> items = new ArrayList<T>();
     int index = 0;
     int counter = 0;
-    Iterator<T> it = collection.iterator();
 
-    while (it.hasNext())
-    {
-      T item = filter.accept(it.next());
+    for (final T aCollection : collection) {
+      T item = filter.accept(aCollection);
 
-      if (item != null)
-      {
+      if (item != null) {
         index++;
 
-        if (searchRequest.getStartWith() <= index)
-        {
+        if (searchRequest.getStartWith() <= index) {
           items.add(item);
           counter++;
 
-          if (searchRequest.getMaxResults() <= counter)
-          {
+          if (searchRequest.getMaxResults() <= counter) {
             break;
           }
         }

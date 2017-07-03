@@ -235,22 +235,15 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
             revWalk.markStart(revWalk.lookupCommit(head));
           }
 
-          Iterator<RevCommit> iterator = revWalk.iterator();
-
-          while (iterator.hasNext())
-          {
-            RevCommit commit = iterator.next();
-
+          for (final RevCommit commit : revWalk) {
             if ((counter >= start)
-              && ((limit < 0) || (counter < start + limit)))
-            {
+              && ((limit < 0) || (counter < start + limit))) {
               changesetList.add(converter.createChangeset(commit));
             }
 
             counter++;
 
-            if ((endId != null) && commit.getId().equals(endId))
-            {
+            if ((endId != null) && commit.getId().equals(endId)) {
               break;
             }
           }
