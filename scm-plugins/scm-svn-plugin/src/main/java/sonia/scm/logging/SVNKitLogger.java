@@ -211,15 +211,7 @@ public class SVNKitLogger extends SVNDebugLogAdapter
    */
   private Logger getLogger(SVNLogType type)
   {
-    Logger logger = loggerMap.get(type);
-
-    if (logger == null)
-    {
-      logger = LoggerFactory.getLogger(parseName(type.getName()));
-      loggerMap.put(type, logger);
-    }
-
-    return logger;
+    return loggerMap.computeIfAbsent(type, t -> LoggerFactory.getLogger(parseName(t.getName())));
   }
 
   //~--- fields ---------------------------------------------------------------

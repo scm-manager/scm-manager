@@ -35,15 +35,10 @@ package sonia.scm.cli.config;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
  *
@@ -148,15 +143,7 @@ public class ScmClientConfig
    */
   public ServerConfig getConfig(String name)
   {
-    ServerConfig config = serverConfigMap.get(name);
-
-    if (config == null)
-    {
-      config = new ServerConfig();
-      serverConfigMap.put(name, config);
-    }
-
-    return config;
+    return serverConfigMap.computeIfAbsent(name, k -> new ServerConfig());
   }
 
   /**
