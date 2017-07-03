@@ -229,7 +229,7 @@ public final class IOUtil
       while (byteCount > 0)
       {
         int max = (byteCount < bufferSize)
-          ? (int) byteCount
+          ? byteCount
           : bufferSize;
 
         len = in.read(buffer, 0, max);
