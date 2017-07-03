@@ -51,7 +51,7 @@ public final class HealthCheckResult
 
   /** healthy result */
   private static final HealthCheckResult HEALTHY =
-    new HealthCheckResult(ImmutableSet.<HealthCheckFailure>of());
+    new HealthCheckResult(ImmutableSet.of());
 
   //~--- constructors ---------------------------------------------------------
 

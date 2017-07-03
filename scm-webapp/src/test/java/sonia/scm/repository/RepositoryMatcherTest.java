@@ -48,7 +48,7 @@ public class RepositoryMatcherTest {
   
   @Before
   public void setUp() {
-    Set<RepositoryPathMatcher> pathMatchers = Sets.<RepositoryPathMatcher>newHashSet(new AbcRepositoryPathMatcher());
+    Set<RepositoryPathMatcher> pathMatchers = Sets.newHashSet(new AbcRepositoryPathMatcher());
     this.matcher = new RepositoryMatcher(pathMatchers);
   }
 

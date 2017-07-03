@@ -419,7 +419,7 @@ public class RepositoryImportResource
         {
           logger.debug("start directory import, using normal import handler");
           result = new ImportResult(importHandler.importRepositories(manager),
-            ImmutableList.<String>of());
+            ImmutableList.of());
         }
 
         response = Response.ok(result).build();

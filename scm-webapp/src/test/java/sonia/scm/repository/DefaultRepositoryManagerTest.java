@@ -568,7 +568,7 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
   }
           
   private RepositoryMatcher createRepositoryMatcher() {
-    return new RepositoryMatcher(Collections.<RepositoryPathMatcher>emptySet());
+    return new RepositoryMatcher(Collections.emptySet());
   }       
 
   private Repository createRepository(Repository repository) throws RepositoryException, IOException {
