@@ -40,17 +40,9 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.io.Closeables;
 import com.google.inject.Inject;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import sonia.scm.repository.Branch;
-import sonia.scm.repository.Branches;
-import sonia.scm.repository.Changeset;
-import sonia.scm.repository.ChangesetPagingResult;
-import sonia.scm.repository.Person;
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryException;
+import sonia.scm.repository.*;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.template.Template;
@@ -63,16 +55,16 @@ import sonia.scm.util.HttpUtil;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
-import java.io.Writer;
-
-import java.util.Date;
-import java.util.Iterator;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -310,16 +302,10 @@ public class GitRepositoryViewer
                                            .setPagingLimit(CHANGESET_PER_BRANCH)
                                            .getChangesets();
         
-        Iterable<ChangesetModel> changesets = 
-          Iterables.transform(cpr, new Function<Changeset,ChangesetModel>()
-        {
-
-          @Override
-          public ChangesetModel apply(Changeset changeset)
-          {
-            return new ChangesetModel(changeset);
-          }
-        });
+        Iterable<ChangesetModel> changesets =
+          StreamSupport.stream(cpr.spliterator(), false)
+                       .map(ChangesetModel::new)
+                       .collect(Collectors.toList());
         //J+
 
         model = new BranchModel(name, changesets);

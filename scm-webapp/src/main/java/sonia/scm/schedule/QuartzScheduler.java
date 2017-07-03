@@ -35,20 +35,15 @@ import com.google.common.base.Throwables;
 import com.google.inject.Injector;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
-import java.io.IOException;
-import javax.inject.Inject;
-import org.quartz.CronScheduleBuilder;
-import org.quartz.JobBuilder;
-import org.quartz.JobDataMap;
-import org.quartz.JobDetail;
-import org.quartz.SchedulerException;
-import org.quartz.Trigger;
-import org.quartz.TriggerBuilder;
+import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.Initable;
 import sonia.scm.SCMContextProvider;
+
+import javax.inject.Inject;
+import java.io.IOException;
 
 /**
  * {@link Scheduler} which uses the quartz scheduler.
@@ -130,13 +125,7 @@ public class QuartzScheduler implements Scheduler, Initable {
   @Override
   public Task schedule(String expression, final Runnable runnable)
   {
-    return schedule(expression, new Provider<Runnable>(){
-      @Override
-      public Runnable get()
-      {
-        return runnable;
-      }
-    });
+    return schedule(expression, () -> runnable);
   }
 
   @Override

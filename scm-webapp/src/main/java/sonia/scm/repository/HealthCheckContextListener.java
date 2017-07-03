@@ -128,15 +128,7 @@ public class HealthCheckContextListener implements ServletContextListener
     {
 
       // excute health checks for all repsitories asynchronous
-      SecurityUtils.getSubject().execute(new Runnable()
-      {
-
-        @Override
-        public void run()
-        {
-          healthChecker.checkAll();
-        }
-      });
+      SecurityUtils.getSubject().execute(healthChecker::checkAll);
     }
 
     //~--- fields -------------------------------------------------------------

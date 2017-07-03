@@ -37,20 +37,17 @@ package sonia.scm.installer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.repository.HgConfig;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.RegistryUtil;
 import sonia.scm.util.Util;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
-
 import java.util.ArrayList;
 import java.util.List;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -222,14 +219,7 @@ public class WindowsHgInstaller extends AbstractHgInstaller
   private boolean checkForOptimizedByteCode(String part)
   {
     File libDir = new File(part);
-    String[] pyoFiles = libDir.list(new FilenameFilter()
-    {
-      @Override
-      public boolean accept(File file, String name)
-      {
-        return name.toLowerCase().endsWith(".pyo");
-      }
-    });
+    String[] pyoFiles = libDir.list((file, name) -> name.toLowerCase().endsWith(".pyo"));
 
     return Util.isNotEmpty(pyoFiles);
   }

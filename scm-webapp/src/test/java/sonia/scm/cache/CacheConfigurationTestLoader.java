@@ -34,7 +34,6 @@ package sonia.scm.cache;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.base.Function;
 import com.google.common.collect.Iterators;
 import com.google.common.io.ByteSource;
 import com.google.common.io.Files;
@@ -196,15 +195,7 @@ public class CacheConfigurationTestLoader implements CacheConfigurationLoader
     else
     {
       urlIterator = Iterators.transform(moduleConfigurations,
-        new Function<String, URL>()
-      {
-
-        @Override
-        public URL apply(String resource)
-        {
-          return getResource(resource);
-        }
-      });
+                                        this::getResource);
     }
 
     return urlIterator;

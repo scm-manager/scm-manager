@@ -35,18 +35,14 @@ package sonia.scm.cache;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.base.Predicate;
-
 import org.junit.After;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
-
 import sonia.scm.util.IOUtil;
 
-import static org.hamcrest.Matchers.*;
-
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.*;
-import org.junit.Assume;
 
 /**
  *
@@ -166,14 +162,7 @@ public abstract class CacheTestBase
     cache.put("a-1", "test123");
     cache.put("a-2", "test123");
 
-    Iterable<String> previous = cache.removeAll(new Predicate<String>()
-    {
-      @Override
-      public boolean apply(String item)
-      {
-        return item.startsWith("test");
-      }
-    });
+    Iterable<String> previous = cache.removeAll(item -> item != null && item.startsWith("test"));
 
     assertThat(previous, containsInAnyOrder("test123", "test456"));
     assertNull(cache.get("test-1"));

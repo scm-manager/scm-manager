@@ -34,26 +34,22 @@ package sonia.scm.security;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.base.Predicate;
-
 import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.mgt.DefaultSecurityManager;
 import org.apache.shiro.realm.SimpleAccountRealm;
-
 import org.junit.Before;
 import org.junit.Test;
-
 import sonia.scm.AbstractTestBase;
 import sonia.scm.store.JAXBConfigurationEntryStoreFactory;
 import sonia.scm.util.MockUtil;
 
-import static org.hamcrest.Matchers.*;
+import java.util.List;
 
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.Assert.*;
 
 //~--- JDK imports ------------------------------------------------------------
-
-import java.util.List;
 
 /**
  *
@@ -184,15 +180,7 @@ public class DefaultSecuritySystemTest extends AbstractTestBase
     createPermission("hitchhiker", true, "repository:*:READ");
 
     List<StoredAssignedPermission> filtered =
-      securitySystem.getPermissions(new Predicate<AssignedPermission>()
-    {
-
-      @Override
-      public boolean apply(AssignedPermission input)
-      {
-        return !input.isGroupPermission();
-      }
-    });
+      securitySystem.getPermissions(input -> !(input != null && input.isGroupPermission()));
 
     assertEquals(2, filtered.size());
     assertThat(filtered, containsInAnyOrder(trillian, dent));

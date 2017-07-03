@@ -40,10 +40,8 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.HandlerEventType;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.TransformFilter;
@@ -52,16 +50,10 @@ import sonia.scm.search.SearchUtil;
 import sonia.scm.util.CollectionAppender;
 import sonia.scm.util.Util;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
+import java.util.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -269,22 +261,17 @@ public class DefaultGroupManager extends AbstractGroupManager
     }
 
     final PermissionActionCheck<Group> check = GroupPermissions.read();
-    return SearchUtil.search(searchRequest, groupDAO.getAll(),
-      new TransformFilter<Group>()
-    {
-      @Override
-      public Group accept(Group group)
-      {
-        Group result = null;
+    final TransformFilter<Group> groupTransformFilter = group -> {
+      Group result = null;
 
-        if (check.isPermitted(group) && matches(searchRequest, group))
-        {
-          result = group.clone();
-        }
-
-        return result;
+      if (check.isPermitted(group) && matches(searchRequest, group)) {
+        result = group.clone();
       }
-    });
+
+      return result;
+    };
+    return SearchUtil.search(searchRequest, groupDAO.getAll(),
+                             groupTransformFilter);
   }
   
   private boolean matches(SearchRequest searchRequest, Group group) {
@@ -374,17 +361,13 @@ public class DefaultGroupManager extends AbstractGroupManager
   {
     final PermissionActionCheck<Group> check = GroupPermissions.read();
 
-    return Util.createSubCollection(groupDAO.getAll(), comparator,
-      new CollectionAppender<Group>()
-    {
-      @Override
-      public void append(Collection<Group> collection, Group group)
-      {
-        if (check.isPermitted(group)) {
-          collection.add(group.clone());
-        }
+    final CollectionAppender<Group> groupCollectionAppender = (collection, group) -> {
+      if (check.isPermitted(group)) {
+        collection.add(group.clone());
       }
-    }, start, limit);
+    };
+    return Util.createSubCollection(groupDAO.getAll(), comparator,
+                                    groupCollectionAppender, start, limit);
   }
 
   /**

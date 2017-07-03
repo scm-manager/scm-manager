@@ -34,23 +34,19 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.base.Function;
 import com.google.common.collect.Lists;
-
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
-
 import sonia.scm.repository.Branch;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryException;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
-
 import java.util.List;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -94,22 +90,16 @@ public class GitBranchesCommand extends AbstractGitCommand
     {
       List<Ref> refs = git.branchList().call();
 
-      branches = Lists.transform(refs, new Function<Ref, Branch>()
-      {
+      branches = Lists.transform(refs, ref -> {
+        Branch branch = null;
+        String branchName = GitUtil.getBranch(ref);
 
-        @Override
-        public Branch apply(Ref ref)
+        if (branchName != null)
         {
-          Branch branch = null;
-          String branchName = GitUtil.getBranch(ref);
-
-          if (branchName != null)
-          {
-            branch = new Branch(branchName, GitUtil.getId(ref.getObjectId()));
-          }
-
-          return branch;
+          branch = new Branch(branchName, GitUtil.getId(ref.getObjectId()));
         }
+
+        return branch;
       });
 
     }

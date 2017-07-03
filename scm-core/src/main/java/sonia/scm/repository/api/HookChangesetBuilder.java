@@ -35,11 +35,8 @@ package sonia.scm.repository.api;
 
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.io.DeepCopy;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.PreProcessorUtil;
@@ -47,11 +44,12 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.spi.HookChangesetProvider;
 import sonia.scm.repository.spi.HookChangesetRequest;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
-
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * The {@link HookChangesetBuilder} is able to return all {@link Changeset}s
@@ -120,35 +118,26 @@ public final class HookChangesetBuilder
 
     if (!disablePreProcessors)
     {
-      changesets = Iterables.transform(changesets,
-        new Function<Changeset, Changeset>()
-      {
+      final Function<Changeset, Changeset> changesetFunction = c -> {
+        Changeset copy = null;
 
-        @Override
-        public Changeset apply(Changeset c)
-        {
-          Changeset copy = null;
-
-          try
-          {
-            copy = DeepCopy.copy(c);
-            preProcessorUtil.prepareForReturn(repository, copy,
-              !disableEscaping);
-          }
-          catch (IOException ex)
-          {
-            logger.error("could not create a copy of changeset", ex);
-          }
-
-          if (copy == null)
-          {
-            copy = c;
-          }
-
-          return copy;
+        try {
+          copy = DeepCopy.copy(c);
+          preProcessorUtil.prepareForReturn(repository, copy,
+                                            !disableEscaping);
+        } catch (IOException ex) {
+          logger.error("could not create a copy of changeset", ex);
         }
 
-      });
+        if (copy == null) {
+          copy = c;
+        }
+
+        return copy;
+      };
+      changesets = StreamSupport.stream(changesets.spliterator(), false)
+                                .map(changesetFunction::apply)
+                                .collect(Collectors.toList());
     }
 
     return changesets;

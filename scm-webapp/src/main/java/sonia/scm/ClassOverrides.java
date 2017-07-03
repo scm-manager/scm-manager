@@ -38,24 +38,11 @@ package sonia.scm;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import com.google.inject.Module;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.ClassLoaders;
 import sonia.scm.util.Util;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
-
-import java.net.URL;
-
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.List;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -63,6 +50,14 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -103,35 +98,29 @@ public class ClassOverrides implements Iterable<ClassOverride>
         classLoader.getResources(OVERRIDE_PATH);
       final JAXBContext context = JAXBContext.newInstance(ClassOverrides.class);
 
-      ClassLoaders.executeInContext(classLoader, new Runnable()
-      {
-
-        @Override
-        public void run()
+      ClassLoaders.executeInContext(classLoader, () -> {
+        while (overridesEnm.hasMoreElements())
         {
-          while (overridesEnm.hasMoreElements())
+          URL overrideUrl = overridesEnm.nextElement();
+
+          if (logger.isInfoEnabled())
           {
-            URL overrideUrl = overridesEnm.nextElement();
+            logger.info("load override from {}",
+              overrideUrl.toExternalForm());
+          }
 
-            if (logger.isInfoEnabled())
-            {
-              logger.info("load override from {}",
-                overrideUrl.toExternalForm());
-            }
+          try
+          {
+            ClassOverrides co =
+              (ClassOverrides) context.createUnmarshaller().unmarshal(
+                overrideUrl);
 
-            try
-            {
-              ClassOverrides co =
-                (ClassOverrides) context.createUnmarshaller().unmarshal(
-                  overrideUrl);
-
-              overrides.append(co);
-            }
-            catch (JAXBException ex)
-            {
-              logger.error(
-                "could not load ".concat(overrideUrl.toExternalForm()), ex);
-            }
+            overrides.append(co);
+          }
+          catch (JAXBException ex)
+          {
+            logger.error(
+              "could not load ".concat(overrideUrl.toExternalForm()), ex);
           }
         }
       });
@@ -217,28 +206,21 @@ public class ClassOverrides implements Iterable<ClassOverride>
 
     if (Util.isNotEmpty(moduleClasses))
     {
-      modules = Lists.transform(moduleClasses,
-        new Function<Class<? extends Module>, Module>()
-      {
-        @Override
-        public Module apply(Class<? extends Module> moduleClass)
-        {
-          Module module = null;
+      final Function<Class<? extends Module>, Module> classModuleFunction = moduleClass -> {
+        Module module = null;
 
-          try
-          {
-            module = moduleClass.newInstance();
-          }
-          catch (IllegalAccessException | InstantiationException ex)
-          {
-            logger.error(
-              "could not create module instance of ".concat(
-                moduleClass.getName()), ex);
-          }
-
-          return module;
+        try {
+          module = moduleClass.newInstance();
+        } catch (IllegalAccessException | InstantiationException ex) {
+          logger.error(
+            "could not create module instance of ".concat(
+              moduleClass.getName()), ex);
         }
-      });
+
+        return module;
+      };
+      modules = Lists.transform(moduleClasses,
+                                classModuleFunction);
     }
     else
     {

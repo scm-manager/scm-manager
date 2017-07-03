@@ -35,39 +35,27 @@ package sonia.scm.api.rest.resources;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.ResponseHeader;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
-
 import sonia.scm.api.rest.Permission;
 import sonia.scm.security.AssignedPermission;
 import sonia.scm.security.SecuritySystem;
 import sonia.scm.security.StoredAssignedPermission;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.net.URI;
-
-import java.util.List;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
+import java.net.URI;
+import java.util.List;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Abstract base class for global permission resources.
@@ -277,15 +265,7 @@ public abstract class AbstractPermissionResource
       securitySystem.getPermissions(predicate);
 
     return Lists.transform(permissions,
-      new Function<StoredAssignedPermission, Permission>()
-    {
-
-      @Override
-      public Permission apply(StoredAssignedPermission mgp)
-      {
-        return new Permission(mgp.getId(), mgp.getPermission());
-      }
-    });
+                           mgp -> new Permission(mgp.getId(), mgp.getPermission()));
   }
 
   //~--- fields ---------------------------------------------------------------

@@ -33,13 +33,12 @@ package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.List;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -96,15 +95,7 @@ public final class PluginNode
    */
   public PluginNode getChild(final String id)
   {
-    return Iterables.find(children, new Predicate<PluginNode>()
-    {
-
-      @Override
-      public boolean apply(PluginNode node)
-      {
-        return node.getId().equals(id);
-      }
-    });
+    return Iterables.find(children, node -> node.getId().equals(id));
   }
 
   /**

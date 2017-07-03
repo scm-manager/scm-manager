@@ -37,26 +37,18 @@ package sonia.scm.repository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.SCMContext;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 import sonia.scm.web.HgUtil;
 
-//~--- JDK imports ------------------------------------------------------------
-
+import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import javax.xml.bind.JAXBException;
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -232,24 +224,19 @@ public class AbstractHgHandler
   {
     if (errorStream != null)
     {
-      new Thread(new Runnable()
-      {
-        @Override
-        public void run()
+      new Thread(() -> {
+        try
         {
-          try
-          {
-            String content = IOUtil.getContent(errorStream);
+          String content = IOUtil.getContent(errorStream);
 
-            if (Util.isNotEmpty(content))
-            {
-              logger.error(content.trim());
-            }
-          }
-          catch (IOException ex)
+          if (Util.isNotEmpty(content))
           {
-            logger.error("error during logging", ex);
+            logger.error(content.trim());
           }
+        }
+        catch (IOException ex)
+        {
+          logger.error("error during logging", ex);
         }
       }).start();
     }

@@ -156,23 +156,18 @@ public class SearchResource
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public SearchResults searchGroups(@QueryParam("query") String queryString)
   {
-    return groupSearchHandler.search(queryString,
-      new Function<Group, SearchResult>()
-    {
-      @Override
-      public SearchResult apply(Group group)
-      {
-        String label = group.getName();
-        String description = group.getDescription();
+    final Function<Group, SearchResult> groupSearchResultFunction = group -> {
+      String label = group.getName();
+      String description = group.getDescription();
 
-        if (description != null)
-        {
-          label = label.concat(" (").concat(description).concat(")");
-        }
-
-        return new SearchResult(group.getName(), label);
+      if (description != null) {
+        label = label.concat(" (").concat(description).concat(")");
       }
-    });
+
+      return new SearchResult(group.getName(), label);
+    };
+    return groupSearchHandler.search(queryString,
+                                     groupSearchResultFunction);
   }
 
   /**
@@ -191,19 +186,15 @@ public class SearchResource
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public SearchResults searchUsers(@QueryParam("query") String queryString)
   {
+    final Function<User, SearchResult> userSearchResultFunction = user -> {
+      StringBuilder label = new StringBuilder(user.getName());
+
+      label.append(" (").append(user.getDisplayName()).append(")");
+
+      return new SearchResult(user.getName(), label.toString());
+    };
     return userSearchHandler.search(queryString,
-      new Function<User, SearchResult>()
-    {
-      @Override
-      public SearchResult apply(User user)
-      {
-        StringBuilder label = new StringBuilder(user.getName());
-
-        label.append(" (").append(user.getDisplayName()).append(")");
-
-        return new SearchResult(user.getName(), label.toString());
-      }
-    });
+                                    userSearchResultFunction);
   }
 
   //~--- fields ---------------------------------------------------------------

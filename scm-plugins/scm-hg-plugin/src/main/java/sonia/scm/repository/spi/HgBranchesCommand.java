@@ -36,19 +36,16 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.aragost.javahg.Changeset;
-
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
-
 import sonia.scm.repository.Branch;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryException;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
-
 import java.util.List;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -87,26 +84,18 @@ public class HgBranchesCommand extends AbstractCommand
     List<com.aragost.javahg.commands.Branch> hgBranches =
       com.aragost.javahg.commands.BranchesCommand.on(open()).execute();
 
-    List<Branch> branches = Lists.transform(hgBranches,
-                              new Function<com.aragost.javahg.commands.Branch,
-                                Branch>()
-    {
+    final Function<com.aragost.javahg.commands.Branch, Branch> branchFunction = hgBranch -> {
+      String node = null;
+      Changeset changeset = hgBranch.getBranchTip();
 
-      @Override
-      public Branch apply(com.aragost.javahg.commands.Branch hgBranch)
-      {
-        String node = null;
-        Changeset changeset = hgBranch.getBranchTip();
-
-        if (changeset != null)
-        {
-          node = changeset.getNode();
-        }
-
-        return new Branch(hgBranch.getName(), node);
+      if (changeset != null) {
+        node = changeset.getNode();
       }
-    });
 
-    return branches;
+      return new Branch(hgBranch.getName(), node);
+    };
+
+    return Lists.transform(hgBranches,
+                           branchFunction);
   }
 }

@@ -33,25 +33,21 @@ package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.base.Function;
 import com.google.common.collect.Lists;
-
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import static org.hamcrest.Matchers.*;
-
-import static org.junit.Assert.*;
-
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.junit.Assert.assertThat;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -265,15 +261,7 @@ public class PluginTreeTest
    */
   private List<String> unwrapIds(List<PluginNode> nodes)
   {
-    return Lists.transform(nodes, new Function<PluginNode, String>()
-    {
-
-      @Override
-      public String apply(PluginNode input)
-      {
-        return input.getId();
-      }
-    });
+    return Lists.transform(nodes, PluginNode::getId);
   }
 
   //~--- fields ---------------------------------------------------------------

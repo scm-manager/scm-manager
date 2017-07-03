@@ -73,20 +73,15 @@ public class ScmInitializerModule extends AbstractModule
       @Override
       public <I> void hear(TypeLiteral<I> type, TypeEncounter<I> encounter)
       {
-        encounter.register(new InjectionListener<I>()
-        {
-          @Override
-          public void afterInjection(Object i)
+        encounter.register((InjectionListener<I>) i -> {
+          if (logger.isTraceEnabled())
           {
-            if (logger.isTraceEnabled())
-            {
-              logger.trace("initialize initable {}", i.getClass());
-            }
-
-            Initable initable = (Initable) i;
-
-            initable.init(SCMContext.getContext());
+            logger.trace("initialize initable {}", i.getClass());
           }
+
+          Initable initable = (Initable) i;
+
+          initable.init(SCMContext.getContext());
         });
       }
     });

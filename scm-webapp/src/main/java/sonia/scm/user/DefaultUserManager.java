@@ -38,13 +38,10 @@ package sonia.scm.user;
 import com.github.sdorra.ssp.PermissionActionCheck;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.HandlerEventType;
 import sonia.scm.SCMContextProvider;
-import sonia.scm.TransformFilter;
 import sonia.scm.search.SearchRequest;
 import sonia.scm.search.SearchUtil;
 import sonia.scm.util.AssertUtil;
@@ -52,20 +49,14 @@ import sonia.scm.util.CollectionAppender;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
-import java.io.InputStream;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -297,16 +288,12 @@ public class DefaultUserManager extends AbstractUserManager
     }
 
     final PermissionActionCheck<User> check = UserPermissions.read();
-    return SearchUtil.search(searchRequest, userDAO.getAll(), new TransformFilter<User>() {
-      @Override
-      public User accept(User user)
-      {
-        User result = null;
-        if (check.isPermitted(user) && matches(searchRequest, user)) {
-          result = user.clone();
-        }
-        return result;
+    return SearchUtil.search(searchRequest, userDAO.getAll(), user -> {
+      User result = null;
+      if (check.isPermitted(user) && matches(searchRequest, user)) {
+        result = user.clone();
       }
+      return result;
     });
   }
   
@@ -392,17 +379,13 @@ public class DefaultUserManager extends AbstractUserManager
   @Override
   public Collection<User> getAll(Comparator<User> comaparator, int start, int limit) {
     final PermissionActionCheck<User> check = UserPermissions.read();
-    return Util.createSubCollection(userDAO.getAll(), comaparator,
-      new CollectionAppender<User>()
-    {
-      @Override
-      public void append(Collection<User> collection, User item)
-      {
-        if (check.isPermitted(item)) {
-          collection.add(item.clone());
-        }
+    final CollectionAppender<User> userCollectionAppender = (collection, item) -> {
+      if (check.isPermitted(item)) {
+        collection.add(item.clone());
       }
-    }, start, limit);
+    };
+    return Util.createSubCollection(userDAO.getAll(), comaparator,
+                                    userCollectionAppender, start, limit);
   }
 
   /**

@@ -36,7 +36,6 @@ package sonia.scm.security;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.github.legman.Subscribe;
-
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
@@ -44,12 +43,9 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
 import org.apache.shiro.SecurityUtils;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.HandlerEventType;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.group.GroupEvent;
@@ -58,23 +54,20 @@ import sonia.scm.store.ConfigurationEntryStoreFactory;
 import sonia.scm.user.UserEvent;
 import sonia.scm.util.ClassLoaders;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
-
-import java.net.URL;
-
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Map.Entry;
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Map.Entry;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * TODO add events
@@ -191,16 +184,8 @@ public class DefaultSecuritySystem implements SecuritySystem
   {
     if (event.getEventType() == HandlerEventType.DELETE)
     {
-      deletePermissions(new Predicate<AssignedPermission>()
-      {
-
-        @Override
-        public boolean apply(AssignedPermission p)
-        {
-          return !p.isGroupPermission()
-            && event.getItem().getName().equals(p.getName());
-        }
-      });
+      deletePermissions(p -> !(p != null && p.isGroupPermission())
+        && event.getItem().getName().equals(p != null ? p.getName() : null));
     }
   }
 
@@ -215,16 +200,8 @@ public class DefaultSecuritySystem implements SecuritySystem
   {
     if (event.getEventType() == HandlerEventType.DELETE)
     {
-      deletePermissions(new Predicate<AssignedPermission>()
-      {
-
-        @Override
-        public boolean apply(AssignedPermission p)
-        {
-          return p.isGroupPermission()
-            && event.getItem().getName().equals(p.getName());
-        }
-      });
+      deletePermissions(p -> (p != null && p.isGroupPermission())
+        && event.getItem().getName().equals(p.getName()));
     }
   }
 

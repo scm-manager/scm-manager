@@ -64,14 +64,7 @@ public class ScmEventBusModule extends AbstractModule
       @Override
       public <I> void hear(TypeLiteral<I> type, TypeEncounter<I> encounter)
       {
-        encounter.register(new InjectionListener<I>()
-        {
-          @Override
-          public void afterInjection(Object object)
-          {
-            ScmEventBus.getInstance().register(object);
-          }
-        });
+        encounter.register((InjectionListener<I>) object -> ScmEventBus.getInstance().register(object));
       }
 
     });
