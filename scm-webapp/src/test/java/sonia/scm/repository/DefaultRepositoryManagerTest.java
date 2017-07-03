@@ -293,9 +293,7 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
     keys.push("p42");
     keys.push("hof");
 
-    when(keyGenerator.createKey()).then((InvocationOnMock invocation) -> {
-      return keys.pop();
-    });
+    when(keyGenerator.createKey()).then((InvocationOnMock invocation) -> keys.pop());
 
     // create repository manager
     RepositoryManager repositoryManager = createRepositoryManager(false, keyGenerator);

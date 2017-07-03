@@ -30,9 +30,10 @@
  */
 package sonia.scm.security;
 
-import java.util.Set;
-import javax.inject.Inject;
 import sonia.scm.plugin.Extension;
+
+import javax.inject.Inject;
+import java.util.Set;
 
 /**
  * Jwt implementation of {@link AccessTokenBuilderFactory}.
@@ -61,9 +62,7 @@ public final class JwtAccessTokenBuilderFactory implements AccessTokenBuilderFac
     JwtAccessTokenBuilder builder = new JwtAccessTokenBuilder(keyGenerator, keyResolver);
     
     // enrich access token builder
-    enrichers.forEach((enricher) -> {
-      enricher.enrich(builder);
-    });
+    enrichers.forEach((enricher) -> enricher.enrich(builder));
     
     return builder;
   }
