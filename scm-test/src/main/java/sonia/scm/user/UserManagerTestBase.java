@@ -301,7 +301,7 @@ public abstract class UserManagerTestBase
 
     while (!fin)
     {
-      Thread.sleep(100l);
+      Thread.sleep(100L);
       fin = true;
 
       for (MultiThreadTester tester : testers)

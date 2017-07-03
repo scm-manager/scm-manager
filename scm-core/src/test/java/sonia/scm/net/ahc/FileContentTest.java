@@ -76,7 +76,7 @@ public class FileContentTest
     FileContent content = create("abc");
 
     content.prepare(request);
-    verify(request).contentLength(3l);
+    verify(request).contentLength(3L);
   }
 
   /**

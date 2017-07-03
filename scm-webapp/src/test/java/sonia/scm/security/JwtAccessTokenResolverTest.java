@@ -132,7 +132,7 @@ public class JwtAccessTokenResolverTest {
     resolveKey(secureKey);
     
     // create expired token
-    Date exp = new Date(System.currentTimeMillis() - 600l);
+    Date exp = new Date(System.currentTimeMillis() - 600L);
     String compact = createCompactToken("trillian", secureKey, exp, Scope.empty());
     
     // expect exception

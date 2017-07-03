@@ -58,7 +58,7 @@ public class ByteSourceContentTest {
     ByteSource source = ByteSource.wrap("abc".getBytes(Charsets.UTF_8));
     ByteSourceContent content = new ByteSourceContent(source);
     content.prepare(request);
-    verify(request).contentLength(3l);
+    verify(request).contentLength(3L);
   }
   
   @Test

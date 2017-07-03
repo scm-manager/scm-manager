@@ -701,7 +701,7 @@ public class ScmConfiguration
    * @since 1.34
    */
   @XmlElement(name = "login-attempt-limit-timeout")
-  private long loginAttemptLimitTimeout = TimeUnit.MINUTES.toSeconds(5l);
+  private long loginAttemptLimitTimeout = TimeUnit.MINUTES.toSeconds(5L);
 
   /** Field description */
   private boolean enableProxy = false;

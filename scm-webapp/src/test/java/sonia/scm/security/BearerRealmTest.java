@@ -188,7 +188,7 @@ public class BearerRealmTest
 
     resolveKey(key);
 
-    Date exp = new Date(System.currentTimeMillis() - 600l);
+    Date exp = new Date(System.currentTimeMillis() - 600L);
     String compact = createCompactToken(trillian.getName(), key, exp, Scope.empty());
 
     realm.doGetAuthenticationInfo(BearerToken.valueOf(compact));

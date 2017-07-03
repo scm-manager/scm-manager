@@ -193,7 +193,7 @@ public class ChangesetViewerITCase extends AbstractAdminITCaseBase
 
     if (sleep) {
       // cache clear is async
-      Thread.sleep(500l);
+      Thread.sleep(500L);
     }
 
     ChangesetPagingResult cpr = getChangesets(repository);

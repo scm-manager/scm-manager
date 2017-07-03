@@ -145,7 +145,7 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
   private PullResponse convert(Git git, FetchResult fetch)
     throws RepositoryException
   {
-    long counter = 0l;
+    long counter = 0L;
 
     for (TrackingRefUpdate tru : fetch.getTrackingRefUpdates())
     {

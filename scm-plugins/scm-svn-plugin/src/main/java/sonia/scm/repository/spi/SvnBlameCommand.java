@@ -120,7 +120,7 @@ public class SvnBlameCommand extends AbstractSvnCommand implements BlameCommand
       SVNLogClient svnLogClient = new SVNLogClient(svnManager, null);
 
       svnLogClient.doAnnotate(svnurl, SVNRevision.UNDEFINED,
-                              SVNRevision.create(1l), endRevision,
+                              SVNRevision.create(1L), endRevision,
                               new SvnBlameHandler(svnRepository, path,
                                 blameLines));
     }

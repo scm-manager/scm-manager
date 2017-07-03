@@ -78,9 +78,9 @@ public class SvnBundleCommandTest extends AbstractSvnCommandTestBase
                            repository).bundle(req);
 
     assertThat(res, notNullValue());
-    assertThat(res.getChangesetCount(), is(5l));
+    assertThat(res.getChangesetCount(), is(5L));
     assertTrue("file does not exists", file.exists());
-    assertThat(file.length(), greaterThan(0l));
+    assertThat(file.length(), greaterThan(0L));
   }
 
   //~--- fields ---------------------------------------------------------------

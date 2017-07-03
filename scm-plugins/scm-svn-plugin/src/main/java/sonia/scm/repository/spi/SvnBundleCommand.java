@@ -98,7 +98,7 @@ public class SvnBundleCommand extends AbstractSvnCommand
     try
     {
       outputStream = target.openBufferedStream();
-      adminClient.doDump(repository, outputStream, SVNRevision.create(-1l),
+      adminClient.doDump(repository, outputStream, SVNRevision.create(-1L),
         SVNRevision.HEAD, false, false);
     }
     finally

@@ -122,7 +122,7 @@ public abstract class HttpCacheITCaseBase<T>
     long lastModified = getLastModified(response);
 
     // wait 1 second because http date is not millisecond precision
-    Thread.sleep(1000l);
+    Thread.sleep(1000L);
     item = createSampleItem();
     response = getCollectionResponse();
 

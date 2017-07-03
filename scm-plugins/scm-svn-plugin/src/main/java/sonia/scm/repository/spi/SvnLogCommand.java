@@ -203,7 +203,7 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
    */
   private long parseRevision(String v) throws RepositoryException
   {
-    long result = -1l;
+    long result = -1L;
 
     if (!Strings.isNullOrEmpty(v))
     {
@@ -252,7 +252,7 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
         new ChangesetCollector(changesets));
     }
 
-    return new ChangesetPagingResult((int) (latest + 1l), changesets);
+    return new ChangesetPagingResult((int) (latest + 1L), changesets);
   }
 
   /**
@@ -279,7 +279,7 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
     long endRev = Math.max(endRevision, 0);
     long maxRev = repo.getLatestRevision();
 
-    if (startRevision >= 0l)
+    if (startRevision >= 0L)
     {
       startRev = startRevision;
     }

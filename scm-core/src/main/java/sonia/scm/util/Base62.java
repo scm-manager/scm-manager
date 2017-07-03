@@ -46,7 +46,7 @@ public final class Base62 extends AbstractBase
 {
 
   /** base value */
-  private static final BigInteger BASE = BigInteger.valueOf(62l);
+  private static final BigInteger BASE = BigInteger.valueOf(62L);
 
   /** char table */
   private static final String CHARS =

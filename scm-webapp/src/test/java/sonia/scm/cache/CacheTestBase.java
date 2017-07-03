@@ -177,8 +177,8 @@ public abstract class CacheTestBase
     // skip test if implementation does not support stats
     Assume.assumeTrue( stats != null );
     assertEquals("test", stats.getName());
-    assertEquals(0l, stats.getHitCount());
-    assertEquals(0l, stats.getMissCount());
+    assertEquals(0L, stats.getHitCount());
+    assertEquals(0L, stats.getMissCount());
     cache.put("test-1", "test123");
     cache.put("test-2", "test456");
     cache.get("test-1");
@@ -186,11 +186,11 @@ public abstract class CacheTestBase
     cache.get("test-1");
     cache.get("test-3");
     // check that stats have not changed
-    assertEquals(0l, stats.getHitCount());
-    assertEquals(0l, stats.getMissCount());
+    assertEquals(0L, stats.getHitCount());
+    assertEquals(0L, stats.getMissCount());
     stats = cache.getStatistics();
-    assertEquals(3l, stats.getHitCount());
-    assertEquals(1l, stats.getMissCount());
+    assertEquals(3L, stats.getHitCount());
+    assertEquals(1L, stats.getMissCount());
     assertEquals(0.75d, stats.getHitRate(), 0.0d);
     assertEquals(0.25d, stats.getMissRate(), 0.0d);
   }

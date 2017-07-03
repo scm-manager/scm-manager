@@ -56,7 +56,7 @@ public class UrlBuilderTest
     UrlBuilder builder = new UrlBuilder("http://www.short.de");
 
     builder.appendParameter("i", 123).appendParameter("s", "abc");
-    builder.appendParameter("b", true).appendParameter("l", 321l);
+    builder.appendParameter("b", true).appendParameter("l", 321L);
     assertEquals("http://www.short.de?i=123&s=abc&b=true&l=321", builder.toString());
     builder.appendParameter("c", "a b");
     assertEquals("http://www.short.de?i=123&s=abc&b=true&l=321&c=a%20b", builder.toString());

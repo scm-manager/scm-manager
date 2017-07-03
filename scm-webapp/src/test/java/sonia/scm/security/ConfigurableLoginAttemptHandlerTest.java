@@ -74,7 +74,7 @@ public class ConfigurableLoginAttemptHandlerTest {
     handler.onUnsuccessfulAuthentication(token, new SimpleAuthenticationInfo());
     handler.beforeAuthentication(token);
     handler.onUnsuccessfulAuthentication(token, new SimpleAuthenticationInfo());
-    Thread.sleep(TimeUnit.MILLISECONDS.toMillis(1200l));
+    Thread.sleep(TimeUnit.MILLISECONDS.toMillis(1200L));
     handler.beforeAuthentication(token);
   }
 
