@@ -40,32 +40,25 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.io.ByteSource;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
 import sonia.scm.config.ScmConfiguration;
-
-import static org.hamcrest.Matchers.*;
-
-import static org.junit.Assert.*;
-
-import static org.mockito.Mockito.*;
-
-//~--- JDK imports ------------------------------------------------------------
+import sonia.scm.net.SSLContextProvider;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-
 import java.net.HttpURLConnection;
-
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
-import sonia.scm.net.SSLContextProvider;
+
+import static org.hamcrest.Matchers.contains;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.when;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *

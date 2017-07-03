@@ -47,7 +47,6 @@ import sonia.scm.event.ScmEventBus;
 //~--- JDK imports ------------------------------------------------------------
 
 import javax.servlet.FilterConfig;
-import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletException;
 
 /**

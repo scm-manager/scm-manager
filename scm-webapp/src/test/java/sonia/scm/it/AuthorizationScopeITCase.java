@@ -36,18 +36,20 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
-import java.util.List;
-import javax.ws.rs.core.MultivaluedMap;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import sonia.scm.ScmState;
-import static sonia.scm.it.IntegrationTestUtil.*;
-import static sonia.scm.it.RepositoryITUtil.*;
-import static sonia.scm.it.RepositoryITUtil.createRepository;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryTestData;
+
+import javax.ws.rs.core.MultivaluedMap;
+import java.util.List;
+
+import static sonia.scm.it.IntegrationTestUtil.*;
+import static sonia.scm.it.RepositoryITUtil.createRepository;
+import static sonia.scm.it.RepositoryITUtil.deleteRepository;
 
 /**
  * Integration test for authorization with scope.

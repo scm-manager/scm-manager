@@ -31,13 +31,13 @@
 package sonia.scm.repository.client.spi;
 
 import com.google.common.collect.ImmutableSet;
+import org.tmatesoft.svn.core.wc.SVNClientManager;
+import sonia.scm.repository.client.api.ClientCommand;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import org.tmatesoft.svn.core.SVNURL;
-import org.tmatesoft.svn.core.wc.SVNClientManager;
-import sonia.scm.repository.client.api.ClientCommand;
 
 /**
  * Subversion repository client provider.

@@ -33,19 +33,15 @@ package sonia.scm.cli.cmd;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.collect.Maps;
 
 import org.kohsuke.args4j.Option;
-
 import sonia.scm.client.ImportUrlRequest;
 import sonia.scm.client.ScmClientSession;
 import sonia.scm.repository.Repository;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.net.URL;
 
-import java.util.Map;
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *

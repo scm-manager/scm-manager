@@ -38,22 +38,17 @@ package sonia.scm.user;
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.collect.Lists;
-
-import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-
 import sonia.scm.store.JAXBConfigurationStoreFactory;
 import sonia.scm.user.xml.XmlUserDAO;
-import sonia.scm.util.MockUtil;
+
+import java.util.Collections;
+import java.util.List;
 
 import static org.mockito.Mockito.*;
 
 //~--- JDK imports ------------------------------------------------------------
-
-import java.util.Collections;
-import java.util.List;
-import org.junit.Rule;
-import sonia.scm.store.ConfigurationStoreFactory;
 
 /**
  *

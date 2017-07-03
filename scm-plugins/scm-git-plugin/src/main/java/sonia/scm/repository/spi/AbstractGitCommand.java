@@ -34,18 +34,17 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
-import org.eclipse.jgit.lib.Repository;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
 import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.Repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.GitConstants;
 import sonia.scm.repository.GitUtil;
+
+import java.io.IOException;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *

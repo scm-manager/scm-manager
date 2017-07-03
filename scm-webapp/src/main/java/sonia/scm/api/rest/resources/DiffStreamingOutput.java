@@ -35,26 +35,22 @@ package sonia.scm.api.rest.resources;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.io.Closeables;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.repository.PathNotFoundException;
 import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.repository.api.DiffCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
-import java.io.OutputStream;
+import sonia.scm.util.IOUtil;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
-import sonia.scm.util.IOUtil;
+import java.io.IOException;
+import java.io.OutputStream;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *

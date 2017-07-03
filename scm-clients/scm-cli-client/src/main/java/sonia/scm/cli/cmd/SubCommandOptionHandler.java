@@ -37,13 +37,10 @@ package sonia.scm.cli.cmd;
 
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
-import org.kohsuke.args4j.Localizable;
 import org.kohsuke.args4j.OptionDef;
-import org.kohsuke.args4j.spi.Messages;
 import org.kohsuke.args4j.spi.OptionHandler;
 import org.kohsuke.args4j.spi.Parameters;
 import org.kohsuke.args4j.spi.Setter;
-
 import sonia.scm.cli.SimpleLocalizable;
 
 /**

@@ -33,10 +33,6 @@
 
 package sonia.scm.plugin;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import com.google.inject.Module;
-
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.Collection;

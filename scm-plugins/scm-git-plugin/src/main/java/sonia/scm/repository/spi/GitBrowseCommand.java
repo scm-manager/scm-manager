@@ -71,7 +71,6 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import sonia.scm.util.IOUtil;
 
 /**
  *

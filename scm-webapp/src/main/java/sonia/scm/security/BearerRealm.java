@@ -34,32 +34,27 @@ package sonia.scm.security;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.annotations.VisibleForTesting;
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.credential.AllowAllCredentialsMatcher;
 import org.apache.shiro.realm.AuthenticatingRealm;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.group.GroupDAO;
 import sonia.scm.plugin.Extension;
 import sonia.scm.user.UserDAO;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
-import java.util.List;
-import java.util.Set;
-
-//~--- JDK imports ------------------------------------------------------------
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Set;
+
+import static com.google.common.base.Preconditions.checkArgument;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Realm for authentication with {@link BearerToken}.

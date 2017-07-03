@@ -30,21 +30,18 @@
  */
 package sonia.scm.security;
 
-import com.google.common.annotations.VisibleForTesting;
-import java.util.Date;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sonia.scm.config.ScmConfiguration;
+import sonia.scm.util.HttpUtil;
+import sonia.scm.util.Util;
 
-import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import sonia.scm.config.ScmConfiguration;
-import sonia.scm.util.HttpUtil;
-import sonia.scm.util.Util;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Generates cookies and invalidates access token cookies.
