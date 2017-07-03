@@ -36,26 +36,19 @@ package sonia.scm.plugin;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Objects;
-
 import sonia.scm.PlatformType;
 import sonia.scm.SCMContext;
 import sonia.scm.util.SystemUtil;
 import sonia.scm.util.Util;
 import sonia.scm.version.Version;
 
-//~--- JDK imports ------------------------------------------------------------
-
+import javax.xml.bind.annotation.*;
 import java.io.Serializable;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -315,14 +308,14 @@ public class PluginCondition implements Cloneable, Serializable
     osType = osType.toLowerCase(Locale.ENGLISH);
 
     //J-
-    return ((osType.indexOf("win") >= 0) && (PlatformType.WINDOWS == type))
-      || ((osType.indexOf("unix") >= 0) && type.isUnix())
-      || ((osType.indexOf("posix") >= 0) && type.isPosix())
-      || ((osType.indexOf("mac") >= 0) && (PlatformType.MAC == type))
-      || ((osType.indexOf("linux") >= 0) && (PlatformType.LINUX == type))
-      || ((osType.indexOf("solaris") >= 0) && (PlatformType.SOLARIS == type)) 
-      || ((osType.indexOf("openbsd") >= 0) && (PlatformType.OPENBSD == type)) 
-      || ((osType.indexOf("freebsd") >= 0) && (PlatformType.FREEBSD == type));
+    return ((osType.contains("win")) && (PlatformType.WINDOWS == type))
+      || ((osType.contains("unix")) && type.isUnix())
+      || ((osType.contains("posix")) && type.isPosix())
+      || ((osType.contains("mac")) && (PlatformType.MAC == type))
+      || ((osType.contains("linux")) && (PlatformType.LINUX == type))
+      || ((osType.contains("solaris")) && (PlatformType.SOLARIS == type))
+      || ((osType.contains("openbsd")) && (PlatformType.OPENBSD == type))
+      || ((osType.contains("freebsd")) && (PlatformType.FREEBSD == type));
     //J+
   }
 
