@@ -33,14 +33,10 @@
 
 package sonia.scm.util;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.common.base.Splitter;
-
 import sonia.scm.Validateable;
 
-//~--- JDK imports ------------------------------------------------------------
-
+import java.util.Arrays;
 import java.util.regex.Pattern;
 
 /**
@@ -120,25 +116,9 @@ public final class ValidationUtil
    *
    * @return
    */
-  public static boolean isNotContaining(String value,
-    String... notAllowedStrings)
-  {
-    boolean result = Util.isNotEmpty(value);
-
-    if (result && (notAllowedStrings != null))
-    {
-      for (String nas : notAllowedStrings)
-      {
-        if (value.indexOf(nas) >= 0)
-        {
-          result = false;
-
-          break;
-        }
-      }
-    }
-
-    return result;
+  public static boolean isNotContaining(String value, String... notAllowedStrings) {
+    return !Util.isNotEmpty(value) || (notAllowedStrings != null) && Arrays.stream(notAllowedStrings)
+                                                                          .noneMatch(value::contains);
   }
 
   /**
