@@ -506,12 +506,10 @@ public final class Util
   {
     StringBuilder buffer = new StringBuilder();
 
-    for (int i = 0; i < byteValue.length; i++)
-    {
-      int x = byteValue[i] & 0xff;
+    for (final byte aByteValue : byteValue) {
+      int x = aByteValue & 0xff;
 
-      if (x < 16)
-      {
+      if (x < 16) {
         buffer.append('0');
       }
 

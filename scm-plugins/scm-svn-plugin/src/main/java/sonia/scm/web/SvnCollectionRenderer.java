@@ -38,10 +38,8 @@ import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.Ordering;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.tmatesoft.svn.core.SVNDirEntry;
 import org.tmatesoft.svn.core.SVNErrorMessage;
 import org.tmatesoft.svn.core.SVNException;
@@ -50,7 +48,6 @@ import org.tmatesoft.svn.core.internal.server.dav.CollectionRenderer;
 import org.tmatesoft.svn.core.internal.server.dav.DAVPathUtil;
 import org.tmatesoft.svn.core.internal.server.dav.DAVResource;
 import org.tmatesoft.svn.core.internal.server.dav.DAVResourceURI;
-
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryProvider;
@@ -62,14 +59,12 @@ import sonia.scm.url.UrlProvider;
 import sonia.scm.url.UrlProviderFactory;
 import sonia.scm.util.HttpUtil;
 
-//~--- JDK imports ------------------------------------------------------------
-
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.StringWriter;
-
-import java.util.Iterator;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -174,10 +169,8 @@ public class SvnCollectionRenderer implements CollectionRenderer
       entries.add(new DirectoryEntry("..", parent, true));
     }
 
-    for (Iterator iterator = resource.getEntries().iterator();
-      iterator.hasNext(); )
-    {
-      SVNDirEntry entry = (SVNDirEntry) iterator.next();
+    for (final Object o : resource.getEntries()) {
+      SVNDirEntry entry = (SVNDirEntry) o;
 
       entries.add(new DirectoryEntry(resource, entry));
     }
