@@ -105,13 +105,7 @@ public abstract class AbstactImportHandler implements AdvancedImportHandler
     {
       return doRepositoryImport(manager, false);
     }
-    catch (IOException ex)
-    {
-
-      // should never happen
-      throw Throwables.propagate(ex);
-    }
-    catch (RepositoryException ex)
+    catch (IOException | RepositoryException ex)
     {
 
       // should never happen

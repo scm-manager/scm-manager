@@ -285,15 +285,10 @@ public class RepositoryImportResource
       service = serviceFactory.create(repository);
       service.getPullCommand().pull(request.getUrl());
     }
-    catch (RepositoryException ex)
+    catch (RepositoryException | IOException ex)
     {
       handleImportFailure(ex, repository);
-    }
-    catch (IOException ex)
-    {
-      handleImportFailure(ex, repository);
-    }
-    finally
+    } finally
     {
       IOUtil.close(service);
     }
@@ -437,12 +432,7 @@ public class RepositoryImportResource
               .concat(type), ex);
         response = Response.status(Status.BAD_REQUEST).build();
       }
-      catch (IOException ex)
-      {
-        logger.warn("exception occured durring directory import", ex);
-        response = Response.serverError().build();
-      }
-      catch (RepositoryException ex)
+      catch (IOException | RepositoryException ex)
       {
         logger.warn("exception occured durring directory import", ex);
         response = Response.serverError().build();
@@ -561,11 +551,7 @@ public class RepositoryImportResource
 
       throw new WebApplicationException(Response.Status.CONFLICT);
     }
-    catch (RepositoryException ex)
-    {
-      handleGenericCreationFailure(ex, type, name);
-    }
-    catch (IOException ex)
+    catch (RepositoryException | IOException ex)
     {
       handleGenericCreationFailure(ex, type, name);
     }
@@ -615,15 +601,10 @@ public class RepositoryImportResource
         service = serviceFactory.create(repository);
         service.getUnbundleCommand().setCompressed(compressed).unbundle(file);
       }
-      catch (RepositoryException ex)
+      catch (RepositoryException | IOException ex)
       {
         handleImportFailure(ex, repository);
-      }
-      catch (IOException ex)
-      {
-        handleImportFailure(ex, repository);
-      }
-      finally
+      } finally
       {
         IOUtil.close(service);
         IOUtil.delete(file);
@@ -717,11 +698,7 @@ public class RepositoryImportResource
     {
       manager.delete(repository);
     }
-    catch (IOException e)
-    {
-      logger.error("can not delete repository", e);
-    }
-    catch (RepositoryException e)
+    catch (IOException | RepositoryException e)
     {
       logger.error("can not delete repository", e);
     }
@@ -772,11 +749,7 @@ public class RepositoryImportResource
       {
         throw new WebApplicationException(ex, Response.Status.BAD_REQUEST);
       }
-      catch (IOException ex)
-      {
-        throw new WebApplicationException(ex);
-      }
-      catch (RepositoryException ex)
+      catch (IOException | RepositoryException ex)
       {
         throw new WebApplicationException(ex);
       }

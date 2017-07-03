@@ -36,31 +36,21 @@ package sonia.scm.repository;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.github.legman.Subscribe;
-
 import com.google.common.base.Objects;
-import com.google.inject.Inject;
-import com.google.inject.OutOfScopeException;
-import com.google.inject.Provider;
-import com.google.inject.ProvisionException;
-import com.google.inject.Singleton;
-
+import com.google.inject.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.config.ScmConfiguration;
-
+import sonia.scm.config.ScmConfigurationChangedEvent;
+import sonia.scm.net.ahc.AdvancedHttpClient;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 
-//~--- JDK imports ------------------------------------------------------------
-
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-
 import java.util.UUID;
 
-import javax.servlet.http.HttpServletRequest;
-import sonia.scm.config.ScmConfigurationChangedEvent;
-import sonia.scm.net.ahc.AdvancedHttpClient;
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -331,11 +321,7 @@ public class HgHookManager
     {
       request = httpServletRequestProvider.get();
     }
-    catch (ProvisionException ex)
-    {
-      logger.debug("http servlet request is not available");
-    }
-    catch (OutOfScopeException ex)
+    catch (ProvisionException | OutOfScopeException ex)
     {
       logger.debug("http servlet request is not available");
     }

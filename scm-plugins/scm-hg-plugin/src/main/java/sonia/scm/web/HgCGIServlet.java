@@ -39,20 +39,12 @@ import com.google.common.base.Stopwatch;
 import com.google.common.base.Strings;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
+import com.sun.jersey.core.util.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
-import sonia.scm.repository.HgConfig;
-import sonia.scm.repository.HgEnvironment;
-import sonia.scm.repository.HgHookManager;
-import sonia.scm.repository.HgPythonScript;
-import sonia.scm.repository.HgRepositoryHandler;
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryProvider;
-import sonia.scm.repository.RepositoryRequestListenerUtil;
+import sonia.scm.repository.*;
 import sonia.scm.security.CipherUtil;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.HttpUtil;
@@ -60,20 +52,16 @@ import sonia.scm.web.cgi.CGIExecutor;
 import sonia.scm.web.cgi.CGIExecutorFactory;
 import sonia.scm.web.cgi.EnvList;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import com.sun.jersey.core.util.Base64;
-
-import java.io.File;
-import java.io.IOException;
-
-import java.util.Enumeration;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.IOException;
+import java.util.Enumeration;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -186,11 +174,7 @@ public class HgCGIServlet extends HttpServlet
       {
         handleRequest(request, response, repository);
       }
-      catch (ServletException ex)
-      {
-        exceptionHandler.handleException(request, response, ex);
-      }
-      catch (IOException ex)
+      catch (ServletException | IOException ex)
       {
         exceptionHandler.handleException(request, response, ex);
       }
