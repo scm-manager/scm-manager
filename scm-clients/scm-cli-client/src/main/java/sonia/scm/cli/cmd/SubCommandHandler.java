@@ -83,7 +83,7 @@ public class SubCommandHandler
    */
   private SubCommandHandler()
   {
-    subCommands = new HashMap<String, CommandDescriptor>();
+    subCommands = new HashMap<>();
     loadSubCommands();
   }
 
@@ -133,7 +133,7 @@ public class SubCommandHandler
   public List<CommandDescriptor> getDescriptors()
   {
     List<CommandDescriptor> descs =
-      new ArrayList<CommandDescriptor>(subCommands.values());
+      new ArrayList<>(subCommands.values());
 
     Collections.sort(descs);
 

@@ -282,7 +282,7 @@ public class WindowsHgInstaller extends AbstractHgInstaller
    */
   private List<String> getInstallations(String[] registryKeys)
   {
-    List<String> installations = new ArrayList<String>();
+    List<String> installations = new ArrayList<>();
 
     for (String registryKey : registryKeys)
     {

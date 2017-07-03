@@ -129,7 +129,7 @@ public class TemplateServlet extends HttpServlet
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException
   {
-    Map<String, Object> params = new HashMap<String, Object>();
+    Map<String, Object> params = new HashMap<>();
     String contextPath = request.getContextPath();
 
     params.put("contextPath", contextPath);

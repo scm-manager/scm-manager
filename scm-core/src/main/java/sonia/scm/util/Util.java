@@ -262,8 +262,8 @@ public final class Util
     Comparator<T> comparator, CollectionAppender<T> appender, int start,
     int limit)
   {
-    List<T> result = new ArrayList<T>();
-    List<T> valueList = new ArrayList<T>(values);
+    List<T> result = new ArrayList<>();
+    List<T> valueList = new ArrayList<>(values);
 
     if (comparator != null)
     {

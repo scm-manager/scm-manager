@@ -85,7 +85,7 @@ public final class RepositoryUtil
   public static List<File> searchRepositoryDirectories(File directory,
     String... names)
   {
-    List<File> repositories = new ArrayList<File>();
+    List<File> repositories = new ArrayList<>();
 
     searchRepositoryDirectories(repositories, directory, Arrays.asList(names));
 
@@ -253,7 +253,7 @@ public final class RepositoryUtil
     String... directoryNames)
     throws IOException
   {
-    List<String> repositories = new ArrayList<String>();
+    List<String> repositories = new ArrayList<>();
     List<File> repositoryFiles = searchRepositoryDirectories(baseDirectory,
                                    directoryNames);
 

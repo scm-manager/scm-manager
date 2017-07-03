@@ -202,5 +202,5 @@ public class XmlUserDatabase implements XmlDatabase<User>
   /** Field description */
   @XmlJavaTypeAdapter(XmlUserMapAdapter.class)
   @XmlElement(name = "users")
-  private Map<String, User> userMap = new LinkedHashMap<String, User>();
+  private Map<String, User> userMap = new LinkedHashMap<>();
 }

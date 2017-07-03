@@ -592,7 +592,7 @@ public final class IOUtil
   public static List<String> searchAll(String[] path, String cmd,
     String checkParameter)
   {
-    List<String> cmds = new ArrayList<String>();
+    List<String> cmds = new ArrayList<>();
 
     if (isCommandAvailable(cmd, checkParameter))
     {

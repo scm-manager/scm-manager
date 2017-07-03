@@ -168,7 +168,7 @@ public class HgLogCommand extends AbstractCommand implements LogCommand
       {
 
         // empty repository
-        result = new ChangesetPagingResult(0, new ArrayList<Changeset>());
+        result = new ChangesetPagingResult(0, new ArrayList<>());
       }
     }
 

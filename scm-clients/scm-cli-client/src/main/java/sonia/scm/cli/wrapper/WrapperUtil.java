@@ -71,7 +71,7 @@ public final class WrapperUtil
    */
   public static List<GroupWrapper> wrapGroups(Collection<Group> groups)
   {
-    List<GroupWrapper> wrappers = new ArrayList<GroupWrapper>();
+    List<GroupWrapper> wrappers = new ArrayList<>();
 
     for (Group g : groups)
     {
@@ -95,7 +95,7 @@ public final class WrapperUtil
   public static List<RepositoryWrapper> wrapRepositories(ServerConfig config,
     Collection<Repository> repositories)
   {
-    List<RepositoryWrapper> wrappers = new ArrayList<RepositoryWrapper>();
+    List<RepositoryWrapper> wrappers = new ArrayList<>();
 
     for (Repository r : repositories)
     {
@@ -115,7 +115,7 @@ public final class WrapperUtil
    */
   public static List<UserWrapper> wrapUsers(Collection<User> users)
   {
-    List<UserWrapper> wrappers = new ArrayList<UserWrapper>();
+    List<UserWrapper> wrappers = new ArrayList<>();
 
     for (User u : users)
     {

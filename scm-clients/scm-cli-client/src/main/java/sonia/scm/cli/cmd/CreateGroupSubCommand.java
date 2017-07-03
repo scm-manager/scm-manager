@@ -169,7 +169,7 @@ public class CreateGroupSubCommand extends TemplateSubCommand
 
     session.getGroupHandler().create(group);
 
-    Map<String, Object> env = new HashMap<String, Object>();
+    Map<String, Object> env = new HashMap<>();
 
     env.put("group", new GroupWrapper(group));
     renderTemplate(env, GetGroupSubCommand.TEMPLATE);

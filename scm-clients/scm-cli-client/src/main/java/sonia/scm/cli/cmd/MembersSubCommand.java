@@ -132,7 +132,7 @@ public abstract class MembersSubCommand extends TemplateSubCommand
       modifyMembers(group, members);
       handler.modify(group);
 
-      Map<String, Object> env = new HashMap<String, Object>();
+      Map<String, Object> env = new HashMap<>();
 
       env.put("group", new GroupWrapper(group));
       renderTemplate(env, GetGroupSubCommand.TEMPLATE);

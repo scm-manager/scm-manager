@@ -184,7 +184,7 @@ public class ModifyUserSubCommand extends TemplateSubCommand
 
       handler.modify(user);
 
-      Map<String, Object> env = new HashMap<String, Object>();
+      Map<String, Object> env = new HashMap<>();
 
       env.put("user", new UserWrapper(user));
       renderTemplate(env, GetUserSubCommand.TEMPLATE);

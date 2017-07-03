@@ -174,7 +174,7 @@ public class AbstractHgHandler
    */
   protected Process createHgProcess(String... args) throws IOException
   {
-    return createHgProcess(new HashMap<String, String>(), args);
+    return createHgProcess(new HashMap<>(), args);
   }
 
   /**
@@ -262,7 +262,7 @@ public class AbstractHgHandler
     throws IOException, RepositoryException
   {
     return getResultFromScript(resultType, script,
-      new HashMap<String, String>());
+                               new HashMap<>());
   }
 
   /**
@@ -315,7 +315,7 @@ public class AbstractHgHandler
     throws IOException
   {
     HgConfig config = handler.getConfig();
-    List<String> cmdList = new ArrayList<String>();
+    List<String> cmdList = new ArrayList<>();
 
     cmdList.add(cmd);
 

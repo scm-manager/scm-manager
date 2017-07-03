@@ -81,7 +81,7 @@ public class XmlGroupMapAdapter
   @Override
   public Map<String, Group> unmarshal(XmlGroupList groups) throws Exception
   {
-    Map<String, Group> groupMap = new LinkedHashMap<String, Group>();
+    Map<String, Group> groupMap = new LinkedHashMap<>();
 
     for (Group group : groups)
     {

@@ -72,7 +72,7 @@ public class ListRepositoriesSubCommand extends TemplateSubCommand
   {
     ScmClientSession session = createSession();
     List<Repository> repositories = session.getRepositoryHandler().getAll();
-    Map<String, Object> env = new HashMap<String, Object>();
+    Map<String, Object> env = new HashMap<>();
 
     env.put("repositories", WrapperUtil.wrapRepositories(config, repositories));
     renderTemplate(env, TEMPLATE);

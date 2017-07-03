@@ -298,6 +298,5 @@ public class XmlRepositoryDatabase implements XmlDatabase<Repository>
   /** Field description */
   @XmlJavaTypeAdapter(XmlRepositoryMapAdapter.class)
   @XmlElement(name = "repositories")
-  private Map<String, Repository> repositoryMap = new LinkedHashMap<String,
-                                                    Repository>();
+  private Map<String, Repository> repositoryMap = new LinkedHashMap<>();
 }

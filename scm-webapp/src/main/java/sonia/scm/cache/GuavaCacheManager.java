@@ -140,7 +140,7 @@ public class GuavaCacheManager
       logger.debug(
         "cache {} does not exists, creating a new instance from default configuration: {}",
         name, defaultConfiguration);
-      cache = new GuavaCache<K, V>(defaultConfiguration, name);
+      cache = new GuavaCache<>(defaultConfiguration, name);
       cacheMap.put(name, cache);
     }
 

@@ -183,5 +183,5 @@ public abstract class AbstractResourceProcessor implements ResourceProcessor
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Map<String, String> variableMap = new HashMap<String, String>();
+  private Map<String, String> variableMap = new HashMap<>();
 }

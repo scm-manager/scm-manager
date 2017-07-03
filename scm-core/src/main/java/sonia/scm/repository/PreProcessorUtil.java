@@ -110,8 +110,8 @@ public class PreProcessorUtil
     EscapeUtil.escape(blameLine);
 
     PreProcessorHandler<BlameLine> handler =
-      new PreProcessorHandler<BlameLine>(blameLinePreProcessorFactorySet,
-        blameLinePreProcessorSet, repository);
+      new PreProcessorHandler<>(blameLinePreProcessorFactorySet,
+                                blameLinePreProcessorSet, repository);
 
     handler.callPreProcessors(blameLine);
     handler.callPreProcessorFactories(blameLine);
@@ -154,8 +154,8 @@ public class PreProcessorUtil
     }
 
     PreProcessorHandler<BlameLine> handler =
-      new PreProcessorHandler<BlameLine>(blameLinePreProcessorFactorySet,
-        blameLinePreProcessorSet, repository);
+      new PreProcessorHandler<>(blameLinePreProcessorFactorySet,
+                                blameLinePreProcessorSet, repository);
 
     handler.callPreProcessors(blameResult.getBlameLines());
     handler.callPreProcessorFactories(blameResult.getBlameLines());
@@ -198,8 +198,8 @@ public class PreProcessorUtil
     }
 
     PreProcessorHandler<Changeset> handler =
-      new PreProcessorHandler<Changeset>(changesetPreProcessorFactorySet,
-        changesetPreProcessorSet, repository);
+      new PreProcessorHandler<>(changesetPreProcessorFactorySet,
+                                changesetPreProcessorSet, repository);
 
     handler.callPreProcessors(changeset);
     handler.callPreProcessorFactories(changeset);
@@ -242,8 +242,8 @@ public class PreProcessorUtil
     }
 
     PreProcessorHandler<FileObject> handler =
-      new PreProcessorHandler<FileObject>(fileObjectPreProcessorFactorySet,
-        fileObjectPreProcessorSet, repository);
+      new PreProcessorHandler<>(fileObjectPreProcessorFactorySet,
+                                fileObjectPreProcessorSet, repository);
 
     handler.callPreProcessors(result);
     handler.callPreProcessorFactories(result);
@@ -274,8 +274,8 @@ public class PreProcessorUtil
     }
 
     PreProcessorHandler<Changeset> handler =
-      new PreProcessorHandler<Changeset>(changesetPreProcessorFactorySet,
-        changesetPreProcessorSet, repository);
+      new PreProcessorHandler<>(changesetPreProcessorFactorySet,
+                                changesetPreProcessorSet, repository);
 
     handler.callPreProcessors(result);
     handler.callPreProcessorFactories(result);

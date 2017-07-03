@@ -102,9 +102,9 @@ public class JAXBConfigurationEntryStoreFactory
       type, name);
 
     //J-
-    return new JAXBConfigurationEntryStore<T>(
-      new File(directory,name.concat(StoreConstants.FILE_EXTENSION)), 
-      keyGenerator, 
+    return new JAXBConfigurationEntryStore<>(
+      new File(directory, name.concat(StoreConstants.FILE_EXTENSION)),
+      keyGenerator,
       type
     );
     //J+

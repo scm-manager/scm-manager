@@ -187,7 +187,7 @@ public class JerseyClientRepositoryBrowser implements ClientRepositoryBrowser
         BrowserResult result = response.getEntity(BrowserResult.class);
 
         AssertUtil.assertIsNotNull(result);
-        files = new ArrayList<FileObjectWrapper>();
+        files = new ArrayList<>();
 
         List<FileObject> foList = result.getFiles();
 

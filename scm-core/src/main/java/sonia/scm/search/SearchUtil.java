@@ -160,7 +160,7 @@ public final class SearchUtil
   public static <T> Collection<T> search(SearchRequest searchRequest,
     Collection<T> collection, TransformFilter<T> filter)
   {
-    List<T> items = new ArrayList<T>();
+    List<T> items = new ArrayList<>();
     int index = 0;
     int counter = 0;
 

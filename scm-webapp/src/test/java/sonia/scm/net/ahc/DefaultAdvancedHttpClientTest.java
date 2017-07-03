@@ -284,7 +284,7 @@ public class DefaultAdvancedHttpClientTest
   public void setUp()
   {
     configuration = new ScmConfiguration();
-    transformers = new HashSet<ContentTransformer>();
+    transformers = new HashSet<>();
     client = new TestingAdvacedHttpClient(configuration, transformers);
   }
 

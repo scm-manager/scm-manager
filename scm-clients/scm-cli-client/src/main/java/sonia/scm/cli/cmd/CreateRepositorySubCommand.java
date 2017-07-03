@@ -168,7 +168,7 @@ public class CreateRepositorySubCommand extends TemplateSubCommand
 
     session.getRepositoryHandler().create(repository);
 
-    Map<String, Object> env = new HashMap<String, Object>();
+    Map<String, Object> env = new HashMap<>();
 
     env.put("repository", new RepositoryWrapper(config, repository));
     renderTemplate(env, GetRepositorySubCommand.TEMPLATE);

@@ -111,10 +111,10 @@ public class PluginCenter implements Serializable
   /** Field description */
   @XmlElement(name = "plugin")
   @XmlElementWrapper(name = "plugins")
-  private Set<PluginInformation> plugins = new HashSet<PluginInformation>();
+  private Set<PluginInformation> plugins = new HashSet<>();
 
   /** Field description */
   @XmlElement(name = "repository")
   @XmlElementWrapper(name = "repositories")
-  private Set<PluginRepository> repositories = new HashSet<PluginRepository>();
+  private Set<PluginRepository> repositories = new HashSet<>();
 }

@@ -198,7 +198,7 @@ public class GitChangesetConverter implements Closeable
 
     if (Util.isNotEmpty(parents))
     {
-      parentList = new ArrayList<String>();
+      parentList = new ArrayList<>();
 
       for (RevCommit parent : parents)
       {

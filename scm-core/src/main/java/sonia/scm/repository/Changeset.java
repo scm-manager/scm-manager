@@ -220,7 +220,7 @@ public class Changeset extends BasicPropertiesAware
   {
     if (branches == null)
     {
-      branches = new ArrayList<String>();
+      branches = new ArrayList<>();
     }
 
     return branches;
@@ -286,7 +286,7 @@ public class Changeset extends BasicPropertiesAware
   {
     if (parents == null)
     {
-      parents = new ArrayList<String>();
+      parents = new ArrayList<>();
     }
 
     return parents;
@@ -302,7 +302,7 @@ public class Changeset extends BasicPropertiesAware
   {
     if (tags == null)
     {
-      tags = new ArrayList<String>();
+      tags = new ArrayList<>();
     }
 
     return tags;

@@ -66,7 +66,7 @@ public class PluginTreeTest
   public void testPluginConditionFailed() throws IOException
   {
     PluginCondition condition = new PluginCondition("999",
-                                  new ArrayList<String>(), "hit");
+                                                    new ArrayList<>(), "hit");
     Plugin plugin = new Plugin(2, createInfo("a", "b", "1"), null, condition,
                       false, null);
     ExplodedSmp smp = createSmp(plugin);

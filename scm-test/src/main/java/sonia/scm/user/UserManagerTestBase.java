@@ -282,7 +282,7 @@ public abstract class UserManagerTestBase
     throws UserException, IOException, InterruptedException
   {
     int initialSize = manager.getAll().size();
-    List<MultiThreadTester> testers = new ArrayList<MultiThreadTester>();
+    List<MultiThreadTester> testers = new ArrayList<>();
 
     for (int i = 0; i < THREAD_COUNT; i++)
     {

@@ -102,7 +102,7 @@ public class GetUserSubCommand extends TemplateSubCommand
 
     if (user != null)
     {
-      Map<String, Object> env = new HashMap<String, Object>();
+      Map<String, Object> env = new HashMap<>();
 
       env.put("user", new UserWrapper(user));
       renderTemplate(env, TEMPLATE);

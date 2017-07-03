@@ -117,7 +117,7 @@ public class GetRepositorySubCommand extends TemplateSubCommand
 
     if (repository != null)
     {
-      Map<String, Object> env = new HashMap<String, Object>();
+      Map<String, Object> env = new HashMap<>();
 
       env.put("repository", new RepositoryWrapper(config, repository));
       renderTemplate(env, TEMPLATE);

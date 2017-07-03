@@ -128,7 +128,7 @@ public class TemplateEngineFactoryTest
     assertTrue(engines.contains(engine1));
     assertTrue(engines.contains(engine2));
 
-    Set<TemplateEngine> ce = new HashSet<TemplateEngine>();
+    Set<TemplateEngine> ce = new HashSet<>();
 
     ce.add(engine1);
     factory = new TemplateEngineFactory(ce, engine2);

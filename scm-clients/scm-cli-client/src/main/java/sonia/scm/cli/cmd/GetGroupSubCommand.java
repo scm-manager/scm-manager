@@ -102,7 +102,7 @@ public class GetGroupSubCommand extends TemplateSubCommand
 
     if (group != null)
     {
-      Map<String, Object> env = new HashMap<String, Object>();
+      Map<String, Object> env = new HashMap<>();
 
       env.put("group", new GroupWrapper(group));
       renderTemplate(env, TEMPLATE);

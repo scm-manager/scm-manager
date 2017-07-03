@@ -1028,7 +1028,7 @@ public class RepositoryResource extends AbstractManagerResource<Repository, Repo
     {
       if (repository.getPermissions() == null)
       {
-        repository.setPermissions(new ArrayList<Permission>());
+        repository.setPermissions(new ArrayList<>());
       }
     }
     else

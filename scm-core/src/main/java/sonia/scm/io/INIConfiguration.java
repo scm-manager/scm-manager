@@ -52,7 +52,7 @@ public class INIConfiguration
    */
   public INIConfiguration()
   {
-    this.sectionMap = new LinkedHashMap<String, INISection>();
+    this.sectionMap = new LinkedHashMap<>();
   }
 
   //~--- methods --------------------------------------------------------------

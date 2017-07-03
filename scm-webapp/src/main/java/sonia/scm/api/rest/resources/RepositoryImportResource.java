@@ -320,7 +320,7 @@ public class RepositoryImportResource
   {
     SecurityUtils.getSubject().checkRole(Role.ADMIN);
 
-    List<Repository> repositories = new ArrayList<Repository>();
+    List<Repository> repositories = new ArrayList<>();
 
     importFromDirectory(repositories, type);
 
@@ -354,7 +354,7 @@ public class RepositoryImportResource
 
     logger.info("start directory import for all supported repository types");
 
-    List<Repository> repositories = new ArrayList<Repository>();
+    List<Repository> repositories = new ArrayList<>();
 
     for (Type t : findImportableTypes())
     {
@@ -628,7 +628,7 @@ public class RepositoryImportResource
    */
   private List<Type> findImportableTypes()
   {
-    List<Type> types = new ArrayList<Type>();
+    List<Type> types = new ArrayList<>();
     Collection<Type> handlerTypes = manager.getTypes();
 
     for (Type t : handlerTypes)

@@ -100,7 +100,7 @@ public final class UberClassLoader extends ClassLoader
 
         if (clazz != null)
         {
-          cache.put(name, new WeakReference<Class<?>>(clazz));
+          cache.put(name, new WeakReference<>(clazz));
 
           break;
         }

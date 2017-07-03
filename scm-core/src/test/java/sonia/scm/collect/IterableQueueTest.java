@@ -63,7 +63,7 @@ public class IterableQueueTest
   @Test(expected = IllegalStateException.class)
   public void testDuplicatedEndReached()
   {
-    IterableQueue<String> queue = new IterableQueue<String>();
+    IterableQueue<String> queue = new IterableQueue<>();
 
     queue.endReached();
     queue.endReached();
@@ -76,7 +76,7 @@ public class IterableQueueTest
   @Test
   public void testIterator()
   {
-    IterableQueue<String> queue = new IterableQueue<String>();
+    IterableQueue<String> queue = new IterableQueue<>();
 
     assertEquals(QueueIterator.class, queue.iterator().getClass());
     queue.endReached();
@@ -120,7 +120,7 @@ public class IterableQueueTest
   @Test(expected = IllegalStateException.class)
   public void testPushEndReached()
   {
-    IterableQueue<String> queue = new IterableQueue<String>();
+    IterableQueue<String> queue = new IterableQueue<>();
 
     queue.push("a");
     queue.endReached();
@@ -134,7 +134,7 @@ public class IterableQueueTest
   @Test
   public void testSingleConsumer()
   {
-    final IterableQueue<Integer> queue = new IterableQueue<Integer>();
+    final IterableQueue<Integer> queue = new IterableQueue<>();
 
     new Thread(new IntegerProducer(queue, false, 100)).start();
     assertResult(Lists.newArrayList(queue), 100);
@@ -176,12 +176,12 @@ public class IterableQueueTest
     ExecutorService executor = Executors.newFixedThreadPool(threads);
     List<Future<List<Integer>>> futures = Lists.newArrayList();
 
-    final IterableQueue<Integer> queue = new IterableQueue<Integer>();
+    final IterableQueue<Integer> queue = new IterableQueue<>();
 
     for (int i = 0; i < consumer; i++)
     {
       Future<List<Integer>> future =
-        executor.submit(new CallableQueueCollector<Integer>(queue));
+        executor.submit(new CallableQueueCollector<>(queue));
 
       futures.add(future);
     }

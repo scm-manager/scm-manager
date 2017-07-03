@@ -50,7 +50,7 @@ public class WUIModelUrlProviderTest extends ModelUrlProviderTestBase
    */
   public WUIModelUrlProviderTest()
   {
-    modelMap = new HashMap<String, String>();
+    modelMap = new HashMap<>();
     modelMap.put(MODEL_REPOSITORY, "repositoryPanel");
     modelMap.put(MODEL_USERS, "userPanel");
     modelMap.put(MODEL_GROUPS, "groupPanel");

@@ -153,7 +153,7 @@ public class ErrorServlet extends HttpServlet
     {
       writer = response.getWriter();
 
-      Map<String, Object> env = new HashMap<String, Object>();
+      Map<String, Object> env = new HashMap<>();
       String error = Util.EMPTY_STRING;
 
       if (context.getStartupError() != null)

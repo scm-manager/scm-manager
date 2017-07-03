@@ -98,14 +98,14 @@ public class SearchResource
     // create user searchhandler
     Cache<String, SearchResults> userCache = cacheManager.getCache(CACHE_USER);
 
-    this.userSearchHandler = new SearchHandler<User>(userCache, userManager);
+    this.userSearchHandler = new SearchHandler<>(userCache, userManager);
 
     // create group searchhandler
     Cache<String, SearchResults> groupCache =
       cacheManager.getCache(CACHE_GROUP);
 
-    this.groupSearchHandler = new SearchHandler<Group>(groupCache,
-      groupManager);
+    this.groupSearchHandler = new SearchHandler<>(groupCache,
+                                                  groupManager);
   }
 
   //~--- methods --------------------------------------------------------------

@@ -111,14 +111,14 @@ public abstract class PermissionSubCommand extends TemplateSubCommand
 
       if (permissions == null)
       {
-        permissions = new ArrayList<Permission>();
+        permissions = new ArrayList<>();
       }
 
       modifyPermissions(permissions);
       repository.setPermissions(permissions);
       handler.modify(repository);
 
-      Map<String, Object> env = new HashMap<String, Object>();
+      Map<String, Object> env = new HashMap<>();
 
       env.put("repository", new RepositoryWrapper(config, repository));
       renderTemplate(env, GetRepositorySubCommand.TEMPLATE);

@@ -106,7 +106,7 @@ public class PluginInformation
 
     if (Util.isNotEmpty(screenshots))
     {
-      clone.setScreenshots(new ArrayList<String>(screenshots));
+      clone.setScreenshots(new ArrayList<>(screenshots));
     }
 
     clone.setState(state);

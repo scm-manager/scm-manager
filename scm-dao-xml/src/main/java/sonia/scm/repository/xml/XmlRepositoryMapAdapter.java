@@ -83,8 +83,7 @@ public class XmlRepositoryMapAdapter
   public Map<String, Repository> unmarshal(XmlRepositoryList repositories)
           throws Exception
   {
-    Map<String, Repository> repositoryMap = new LinkedHashMap<String,
-                                              Repository>();
+    Map<String, Repository> repositoryMap = new LinkedHashMap<>();
 
     for (Repository repository : repositories)
     {

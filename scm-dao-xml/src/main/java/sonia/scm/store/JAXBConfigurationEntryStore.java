@@ -436,8 +436,8 @@ public class JAXBConfigurationEntryStore<V> implements ConfigurationEntryStore<V
         writer.writeEndElement();
 
         // value
-        JAXBElement<V> je = new JAXBElement<V>(QName.valueOf(TAG_VALUE), type,
-                              e.getValue());
+        JAXBElement<V> je = new JAXBElement<>(QName.valueOf(TAG_VALUE), type,
+                                              e.getValue());
 
         m.marshal(je, writer);
 

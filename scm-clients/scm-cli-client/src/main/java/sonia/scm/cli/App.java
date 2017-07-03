@@ -288,7 +288,7 @@ public class App
 
   /** Field description */
   @Argument(index = 1, metaVar = "arg")
-  private List<String> arguments = new ArrayList<String>();
+  private List<String> arguments = new ArrayList<>();
 
   /** Field description */
   private BufferedReader input;

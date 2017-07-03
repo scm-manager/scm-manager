@@ -137,7 +137,7 @@ public class GitBlameCommand extends AbstractGitCommand implements BlameCommand
               request.getPath()));
       }
 
-      List<BlameLine> blameLines = new ArrayList<BlameLine>();
+      List<BlameLine> blameLines = new ArrayList<>();
       int total = gitBlameResult.getResultContents().size();
       int i = 0;
 

@@ -111,7 +111,7 @@ public class DefaultUberWebResourceLoaderTest extends WebResourceLoaderTestBase
 
     DefaultUberWebResourceLoader resourceLoader =
       new DefaultUberWebResourceLoader(servletContext,
-        new ArrayList<PluginWrapper>());
+                                       new ArrayList<>());
 
     resourceLoader.getCache().put("/myresource", GITHUB);
 
@@ -152,7 +152,7 @@ public class DefaultUberWebResourceLoaderTest extends WebResourceLoaderTestBase
 
     WebResourceLoader resourceLoader =
       new DefaultUberWebResourceLoader(servletContext,
-        new ArrayList<PluginWrapper>());
+                                       new ArrayList<>());
     URL resource = resourceLoader.getResource("/myresource");
 
     assertSame(SCM_MANAGER, resource);

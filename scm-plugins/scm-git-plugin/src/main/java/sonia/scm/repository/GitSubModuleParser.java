@@ -71,8 +71,7 @@ public final class GitSubModuleParser
    */
   public static Map<String, SubRepository> parse(String content)
   {
-    Map<String, SubRepository> subRepositories = new HashMap<String,
-                                                   SubRepository>();
+    Map<String, SubRepository> subRepositories = new HashMap<>();
     Scanner scanner = new Scanner(content);
     SubRepository repository = null;
 

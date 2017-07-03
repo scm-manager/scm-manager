@@ -209,7 +209,7 @@ public abstract class AbstractRepositoryHandler<C extends SimpleRepositoryConfig
   private void fireConfigChanged()
   {
     ScmEventBus.getInstance().post(
-      new RepositoryHandlerConfigChangedEvent<C>(config));
+      new RepositoryHandlerConfigChangedEvent<>(config));
   }
 
   //~--- fields ---------------------------------------------------------------

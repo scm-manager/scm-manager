@@ -89,7 +89,7 @@ public class GroupITCase extends AbstractAdminITCaseBase
     group.setName("group-a");
     group.setDescription("group a");
 
-    List<String> members = new ArrayList<String>();
+    List<String> members = new ArrayList<>();
 
     members.add("slarti");
     members.add("marvin");
@@ -110,7 +110,7 @@ public class GroupITCase extends AbstractAdminITCaseBase
     group.setName("group-b");
     group.setDescription("group b");
 
-    List<String> members = new ArrayList<String>();
+    List<String> members = new ArrayList<>();
 
     members.add("slarti");
     members.add("dent");

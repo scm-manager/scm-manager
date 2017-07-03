@@ -71,7 +71,7 @@ public class ListUsersSubCommand extends TemplateSubCommand
   {
     ScmClientSession session = createSession();
     List<User> users = session.getUserHandler().getAll();
-    Map<String, Object> env = new HashMap<String, Object>();
+    Map<String, Object> env = new HashMap<>();
 
     env.put("users", WrapperUtil.wrapUsers(users));
     renderTemplate(env, TEMPLATE);

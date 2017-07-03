@@ -63,7 +63,7 @@ public class XmlConfigAdapter
   @Override
   public XmlConfigSet marshal(Map<String, ServerConfig> map) throws Exception
   {
-    Set<XmlConfigElement> set = new HashSet<XmlConfigElement>();
+    Set<XmlConfigElement> set = new HashSet<>();
 
     for (Map.Entry<String, ServerConfig> e : map.entrySet())
     {
@@ -86,7 +86,7 @@ public class XmlConfigAdapter
   @Override
   public Map<String, ServerConfig> unmarshal(XmlConfigSet set) throws Exception
   {
-    Map<String, ServerConfig> map = new HashMap<String, ServerConfig>();
+    Map<String, ServerConfig> map = new HashMap<>();
 
     for (XmlConfigElement e : set)
     {

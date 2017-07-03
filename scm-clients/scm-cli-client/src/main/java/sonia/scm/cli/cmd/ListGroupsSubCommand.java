@@ -71,7 +71,7 @@ public class ListGroupsSubCommand extends TemplateSubCommand
   {
     ScmClientSession session = createSession();
     List<Group> groups = session.getGroupHandler().getAll();
-    Map<String, Object> env = new HashMap<String, Object>();
+    Map<String, Object> env = new HashMap<>();
 
     env.put("groups", WrapperUtil.wrapGroups(groups));
     renderTemplate(env, TEMPLATE);

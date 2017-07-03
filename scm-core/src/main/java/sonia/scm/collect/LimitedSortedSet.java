@@ -63,7 +63,7 @@ public class LimitedSortedSet<E> extends ForwardingSortedSet<E>
    */
   public LimitedSortedSet(int maxSize)
   {
-    this.sortedSet = new TreeSet<E>();
+    this.sortedSet = new TreeSet<>();
     this.maxSize = maxSize;
   }
 

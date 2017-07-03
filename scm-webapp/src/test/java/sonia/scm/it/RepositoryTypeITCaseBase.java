@@ -59,7 +59,7 @@ public class RepositoryTypeITCaseBase
   @Parameters
   public static Collection<String[]> createParameters()
   {
-    Collection<String[]> params = new ArrayList<String[]>();
+    Collection<String[]> params = new ArrayList<>();
 
     params.add(new String[] { "git" });
     params.add(new String[] { "svn" });

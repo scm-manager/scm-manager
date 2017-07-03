@@ -72,7 +72,7 @@ public class XmlRepositoryList implements Iterable<Repository>
    */
   public XmlRepositoryList(Map<String, Repository> repositoryMap)
   {
-    this.repositories = new LinkedList<Repository>(repositoryMap.values());
+    this.repositories = new LinkedList<>(repositoryMap.values());
   }
 
   //~--- methods --------------------------------------------------------------

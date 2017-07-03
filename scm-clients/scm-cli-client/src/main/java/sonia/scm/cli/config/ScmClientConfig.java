@@ -63,7 +63,7 @@ public class ScmClientConfig
    */
   private ScmClientConfig()
   {
-    this.serverConfigMap = new HashMap<String, ServerConfig>();
+    this.serverConfigMap = new HashMap<>();
   }
 
   //~--- get methods ----------------------------------------------------------

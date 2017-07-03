@@ -101,7 +101,7 @@ public class PluginCondition implements Cloneable, Serializable
 
     if (Util.isNotEmpty(os))
     {
-      clone.setOs(new ArrayList<String>(os));
+      clone.setOs(new ArrayList<>(os));
     }
 
     return clone;
