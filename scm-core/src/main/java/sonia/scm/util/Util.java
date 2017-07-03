@@ -38,23 +38,12 @@ package sonia.scm.util;
 import com.google.common.base.Strings;
 import com.google.common.collect.Multimap;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.math.BigInteger;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.TimeZone;
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -278,7 +267,7 @@ public final class Util
 
     if (comparator != null)
     {
-      Collections.sort(valueList, comparator);
+      valueList.sort(comparator);
     }
 
     int length = valueList.size();

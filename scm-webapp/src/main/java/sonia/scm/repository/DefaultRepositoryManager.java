@@ -403,7 +403,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
 
     if (comparator != null)
     {
-      Collections.sort(repositories, comparator);
+      repositories.sort(comparator);
     }
 
     return repositories;

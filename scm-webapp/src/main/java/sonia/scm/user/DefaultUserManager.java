@@ -359,7 +359,7 @@ public class DefaultUserManager extends AbstractUserManager
     }
 
     if (comparator != null) {
-      Collections.sort(users, comparator);
+      users.sort(comparator);
     }
 
     return users;

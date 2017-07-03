@@ -191,7 +191,7 @@ public final class BrowseCommandBuilder
 
       if (fileObjects != null)
       {
-        Collections.sort(fileObjects, FileObjectNameComparator.instance);
+        fileObjects.sort(FileObjectNameComparator.instance);
         result.setFiles(fileObjects);
       }
     }

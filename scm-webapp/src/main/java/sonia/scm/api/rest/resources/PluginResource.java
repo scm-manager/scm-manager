@@ -38,42 +38,27 @@ package sonia.scm.api.rest.resources;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import sonia.scm.api.rest.RestActionResult;
-import sonia.scm.api.rest.RestActionUploadResult;
-import sonia.scm.plugin.OverviewPluginPredicate;
-import sonia.scm.plugin.PluginConditionFailedException;
-import sonia.scm.plugin.PluginInformation;
-import sonia.scm.plugin.PluginInformationComparator;
-import sonia.scm.plugin.PluginManager;
-
-//~--- JDK imports ------------------------------------------------------------
-
 import com.sun.jersey.multipart.FormDataParam;
 import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sonia.scm.api.rest.RestActionResult;
+import sonia.scm.api.rest.RestActionUploadResult;
+import sonia.scm.plugin.*;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * RESTful Web Service Endpoint to manage plugins.
@@ -334,7 +319,7 @@ public class PluginResource
     );
     //J+
 
-    Collections.sort(plugins, PluginInformationComparator.INSTANCE);
+    plugins.sort(PluginInformationComparator.INSTANCE);
 
     Iterator<PluginInformation> it = plugins.iterator();
     String last = null;

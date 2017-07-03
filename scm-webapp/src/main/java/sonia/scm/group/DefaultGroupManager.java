@@ -338,7 +338,7 @@ public class DefaultGroupManager extends AbstractGroupManager
 
     if (comparator != null)
     {
-      Collections.sort(groups, comparator);
+      groups.sort(comparator);
     }
 
     return groups;

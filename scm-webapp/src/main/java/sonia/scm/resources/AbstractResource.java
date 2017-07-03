@@ -36,22 +36,17 @@ package sonia.scm.resources;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.io.Resources;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.plugin.PluginLoader;
 import sonia.scm.util.Util;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
 import java.io.OutputStream;
-
 import java.net.URL;
-
-import java.util.Collections;
 import java.util.List;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -105,7 +100,7 @@ public abstract class AbstractResource implements Resource
 
     if (Util.isNotEmpty(resourceHandlers))
     {
-      Collections.sort(resourceHandlers, new ResourceHandlerComparator());
+      resourceHandlers.sort(new ResourceHandlerComparator());
 
       for (ResourceHandler resourceHandler : resourceHandlers)
       {
