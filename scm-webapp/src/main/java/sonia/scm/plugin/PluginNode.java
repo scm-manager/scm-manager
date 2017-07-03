@@ -33,7 +33,6 @@ package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 import java.util.List;
@@ -95,7 +94,9 @@ public final class PluginNode
    */
   public PluginNode getChild(final String id)
   {
-    return Iterables.find(children, node -> node.getId().equals(id));
+    return children.stream()
+                   .filter(node -> node.getId().equals(id)).findFirst()
+                   .orElse(null);
   }
 
   /**
