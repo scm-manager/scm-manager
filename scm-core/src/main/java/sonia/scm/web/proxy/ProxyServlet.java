@@ -40,28 +40,20 @@ import com.google.common.io.ByteStreams;
 import com.google.common.io.Closer;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.net.HttpURLConnection;
-
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -175,10 +167,8 @@ public class ProxyServlet extends HttpServlet
   private void copyContent(HttpURLConnection con, HttpServletResponse response)
     throws IOException
   {
-    Closer closer = Closer.create();
 
-    try
-    {
+    try (Closer closer = Closer.create()) {
       InputStream webToProxyBuf =
         closer.register(new BufferedInputStream(con.getInputStream()));
       OutputStream proxyToClientBuf =
@@ -187,10 +177,6 @@ public class ProxyServlet extends HttpServlet
       long bytes = ByteStreams.copy(webToProxyBuf, proxyToClientBuf);
 
       logger.trace("copied {} bytes for proxy", bytes);
-    }
-    finally
-    {
-      closer.close();
     }
   }
 
