@@ -36,13 +36,11 @@ package sonia.scm.cli.cmd;
 //~--- non-JDK imports --------------------------------------------------------
 
 import org.kohsuke.args4j.Option;
-
 import sonia.scm.repository.Permission;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.Iterator;
 import java.util.List;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -91,17 +89,7 @@ public class DeletePermissionSubCommand extends PermissionSubCommand
   @Override
   protected void modifyPermissions(List<Permission> permissions)
   {
-    Iterator<Permission> it = permissions.iterator();
-
-    while (it.hasNext())
-    {
-      Permission p = it.next();
-
-      if (name.equals(p.getName()))
-      {
-        it.remove();
-      }
-    }
+    permissions.removeIf(p -> name.equals(p.getName()));
   }
 
   //~--- fields ---------------------------------------------------------------
