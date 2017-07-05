@@ -37,7 +37,9 @@ import com.google.common.base.Splitter;
 import sonia.scm.Validateable;
 
 import java.util.Arrays;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.StreamSupport;
 
 /**
  *
@@ -58,6 +60,7 @@ public final class ValidationUtil
   private static final String REGEX_REPOSITORYNAME =
     "(?!^\\.\\.$)(?!^\\.$)(?!.*[\\\\\\[\\]])^[A-z0-9\\.][A-z0-9\\.\\-_/]*$";
 
+  private static final Pattern REPO_NAME_REGEX = Pattern.compile(REGEX_REPOSITORYNAME);
   //~--- constructors ---------------------------------------------------------
 
   /**
@@ -130,29 +133,10 @@ public final class ValidationUtil
    *
    * @return
    */
-  public static boolean isRepositoryNameValid(String name)
-  {
-    Pattern pattern = Pattern.compile(REGEX_REPOSITORYNAME);
-    boolean result = true;
-
-    if (Util.isNotEmpty(name))
-    {
-      for (String p : Splitter.on('/').split(name))
-      {
-        if (!pattern.matcher(p).matches())
-        {
-          result = false;
-
-          break;
-        }
-      }
-    }
-    else
-    {
-      result = false;
-    }
-
-    return result;
+  public static boolean isRepositoryNameValid(String name) {
+    return Util.isNotEmpty(name) && StreamSupport.stream(Splitter.on('/').split(name).spliterator(), false)
+                                                 .map(REPO_NAME_REGEX::matcher)
+                                                 .allMatch(Matcher::matches);
   }
 
   /**
