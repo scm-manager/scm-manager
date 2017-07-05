@@ -33,6 +33,7 @@ package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -129,12 +130,12 @@ public final class ExtensionPointElement
   public String toString()
   {
     //J-
-    return Objects.toStringHelper(this)
-                  .add("class", clazz)
-                  .add("description", description)
-                  .add("multiple", multiple)
-                  .add("autoBind", autoBind)
-                  .toString();
+    return MoreObjects.toStringHelper(this)
+                      .add("class", clazz)
+                      .add("description", description)
+                      .add("multiple", multiple)
+                      .add("autoBind", autoBind)
+                      .toString();
     //J+
   }
 

@@ -35,21 +35,16 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 
-//~--- JDK imports ------------------------------------------------------------
-
+import javax.xml.bind.annotation.*;
 import java.io.Serializable;
-
 import java.util.Iterator;
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Changeset information by line for a given file.
@@ -163,10 +158,10 @@ public class BlameResult implements Serializable, Iterable<BlameLine>
   public String toString()
   {
     //J-
-    return Objects.toStringHelper(this)
-            .add("total", total)
-            .add("blameLines", blameLines)
-            .toString();
+    return MoreObjects.toStringHelper(this)
+                      .add("total", total)
+                      .add("blameLines", blameLines)
+                      .toString();
     //J+
   }
 

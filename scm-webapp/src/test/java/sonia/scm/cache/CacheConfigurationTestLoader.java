@@ -43,6 +43,7 @@ import org.junit.rules.TemporaryFolder;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Collections;
 import java.util.Iterator;
 
 import static org.mockito.Mockito.mock;
@@ -190,7 +191,7 @@ public class CacheConfigurationTestLoader implements CacheConfigurationLoader
 
     if (moduleConfigurations == null)
     {
-      urlIterator = Iterators.emptyIterator();
+      urlIterator = Collections.emptyIterator();
     }
     else
     {

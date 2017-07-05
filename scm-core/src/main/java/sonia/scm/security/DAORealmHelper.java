@@ -33,24 +33,15 @@ package sonia.scm.security;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
-
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.AuthenticationInfo;
-import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.authc.DisabledAccountException;
-import org.apache.shiro.authc.SimpleAuthenticationInfo;
-import org.apache.shiro.authc.UnknownAccountException;
-import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authc.*;
 import org.apache.shiro.authc.credential.CredentialsMatcher;
 import org.apache.shiro.subject.SimplePrincipalCollection;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupDAO;
 import sonia.scm.group.GroupNames;
@@ -161,7 +152,7 @@ public final class DAORealmHelper
     collection.add(principal, realm);
     collection.add(user, realm);
     collection.add(collectGroups(principal), realm);
-    collection.add(Objects.firstNonNull(scope, Scope.empty()), realm);
+    collection.add(MoreObjects.firstNonNull(scope, Scope.empty()), realm);
 
     String creds = credentials;
 

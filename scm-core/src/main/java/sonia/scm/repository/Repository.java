@@ -37,26 +37,21 @@ package sonia.scm.repository;
 
 import com.github.sdorra.ssp.PermissionObject;
 import com.github.sdorra.ssp.StaticPermissions;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
-
 import sonia.scm.BasicPropertiesAware;
 import sonia.scm.ModelObject;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 import sonia.scm.util.ValidationUtil;
 
-//~--- JDK imports ------------------------------------------------------------
-
+import javax.xml.bind.annotation.*;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Source code repository.
@@ -253,20 +248,20 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
   public String toString()
   {
     //J-
-    return Objects.toStringHelper(this)
-            .add("id", id)
-            .add("name", name)
-            .add("contact", contact)
-            .add("description", description)
-            .add("publicReadable", publicReadable)
-            .add("archived", archived)
-            .add("permissions", permissions)
-            .add("type", type)
-            .add("lastModified", lastModified)
-            .add("creationDate", creationDate)
-            .add("properties", properties)
-            .add("healthCheckFailures", healthCheckFailures)
-            .toString();
+    return MoreObjects.toStringHelper(this)
+                      .add("id", id)
+                      .add("name", name)
+                      .add("contact", contact)
+                      .add("description", description)
+                      .add("publicReadable", publicReadable)
+                      .add("archived", archived)
+                      .add("permissions", permissions)
+                      .add("type", type)
+                      .add("lastModified", lastModified)
+                      .add("creationDate", creationDate)
+                      .add("properties", properties)
+                      .add("healthCheckFailures", healthCheckFailures)
+                      .toString();
     //J+
   }
 

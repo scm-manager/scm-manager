@@ -36,7 +36,7 @@ package sonia.scm.repository;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.github.legman.Subscribe;
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import com.google.inject.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -263,7 +263,7 @@ public class HgHookManager
   {
     //J-
     return HttpUtil.getUriWithoutEndSeperator(
-      Objects.firstNonNull(
+      MoreObjects.firstNonNull(
         configuration.getBaseUrl(), 
         "http://localhost:8080/scm"
       )

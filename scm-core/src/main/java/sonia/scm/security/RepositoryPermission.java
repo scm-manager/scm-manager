@@ -35,6 +35,7 @@ package sonia.scm.security;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 import org.apache.shiro.authz.Permission;
@@ -174,10 +175,10 @@ public final class RepositoryPermission
   public String toString()
   {
     //J-
-    return Objects.toStringHelper(this)
-                  .add("repositoryId", repositoryId)
-                  .add("permissionType", permissionType)
-                  .toString();
+    return MoreObjects.toStringHelper(this)
+                      .add("repositoryId", repositoryId)
+                      .add("permissionType", permissionType)
+                      .toString();
     //J+
   }
 

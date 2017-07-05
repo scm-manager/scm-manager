@@ -37,20 +37,19 @@ package sonia.scm.user;
 
 import com.github.sdorra.ssp.PermissionObject;
 import com.github.sdorra.ssp.StaticPermissions;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-
 import sonia.scm.BasicPropertiesAware;
 import sonia.scm.ModelObject;
 import sonia.scm.util.Util;
 import sonia.scm.util.ValidationUtil;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.security.Principal;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.security.Principal;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -259,18 +258,18 @@ public class User extends BasicPropertiesAware implements Principal, ModelObject
                  : "(not set)";
 
     //J-
-    return Objects.toStringHelper(this)
-            .add("name", name)
-            .add("displayName",displayName)
-            .add("mail", mail)
-            .add("password", pwd)
-            .add("admin", admin)
-            .add("type", type)
-            .add("active", active)
-            .add("creationDate", creationDate)
-            .add("lastModified", lastModified)
-            .add("properties", properties)
-            .toString();
+    return MoreObjects.toStringHelper(this)
+                      .add("name", name)
+                      .add("displayName",displayName)
+                      .add("mail", mail)
+                      .add("password", pwd)
+                      .add("admin", admin)
+                      .add("type", type)
+                      .add("active", active)
+                      .add("creationDate", creationDate)
+                      .add("lastModified", lastModified)
+                      .add("properties", properties)
+                      .toString();
     //J+
   }
 

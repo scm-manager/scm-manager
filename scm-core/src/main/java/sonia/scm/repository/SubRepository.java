@@ -35,16 +35,16 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.Serializable;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.io.Serializable;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * @since 1.10
@@ -157,11 +157,11 @@ public class SubRepository implements Serializable
   public String toString()
   {
     //J-
-    return Objects.toStringHelper(this)
-            .add("repositoryUrl", repositoryUrl)
-            .add("browserUrl", browserUrl)
-            .add("revision", revision)
-            .toString();
+    return MoreObjects.toStringHelper(this)
+                      .add("repositoryUrl", repositoryUrl)
+                      .add("browserUrl", browserUrl)
+                      .add("revision", revision)
+                      .toString();
     //J+
   }
 

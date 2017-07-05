@@ -34,6 +34,7 @@ package sonia.scm.repository.client.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 /**
@@ -103,10 +104,10 @@ public final class TagRequest
   public String toString()
   {
     //J-
-    return Objects.toStringHelper(this)
-                  .add("revision", revision)
-                  .add("name", name)
-                  .toString();
+    return MoreObjects.toStringHelper(this)
+                      .add("revision", revision)
+                      .add("name", name)
+                      .toString();
     //J+
   }
 

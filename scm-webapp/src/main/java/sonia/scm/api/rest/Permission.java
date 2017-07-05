@@ -34,15 +34,15 @@ package sonia.scm.api.rest;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.Serializable;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.io.Serializable;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -127,10 +127,10 @@ public class Permission implements Serializable
   public String toString()
   {
     //J-
-    return Objects.toStringHelper(this)
-                  .add("id", id)
-                  .add("value", value)
-                  .toString();
+    return MoreObjects.toStringHelper(this)
+                      .add("id", id)
+                      .add("value", value)
+                      .toString();
     //J+
   }
 

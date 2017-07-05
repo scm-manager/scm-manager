@@ -34,17 +34,18 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.Iterator;
-import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Iterator;
+import java.util.List;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Represents all branches of a repository.
@@ -148,9 +149,9 @@ public final class Branches implements Iterable<Branch>
   public String toString()
   {
     //J-
-    return Objects.toStringHelper(this)
-                  .add("branches", branches)
-                  .toString();
+    return MoreObjects.toStringHelper(this)
+                      .add("branches", branches)
+                      .toString();
     //J+
   }
 

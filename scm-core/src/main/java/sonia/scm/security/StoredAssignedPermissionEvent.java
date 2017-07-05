@@ -34,14 +34,14 @@ package sonia.scm.security;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-
 import sonia.scm.HandlerEventType;
-
-//~--- JDK imports ------------------------------------------------------------
+import sonia.scm.event.Event;
 
 import java.io.Serializable;
-import sonia.scm.event.Event;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Event which is fired after a {@link StoredAssignedPermission} was added,
@@ -114,10 +114,10 @@ public final class StoredAssignedPermissionEvent implements Serializable
   public String toString()
   {
     //J-
-    return Objects.toStringHelper(this)
-                  .add("type", type)
-                  .add("permission", permission)
-                  .toString();
+    return MoreObjects.toStringHelper(this)
+                      .add("type", type)
+                      .add("permission", permission)
+                      .toString();
     //J+
   }
 

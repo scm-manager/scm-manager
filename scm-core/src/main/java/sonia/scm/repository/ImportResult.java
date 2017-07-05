@@ -33,18 +33,19 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
-import static com.google.common.base.Preconditions.*;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.List;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Import result of the {@link AdvancedImportHandler}.
@@ -130,10 +131,10 @@ public final class ImportResult
   public String toString()
   {
     //J-
-    return Objects.toStringHelper(this)
-                  .add("importedDirectories", importedDirectories)
-                  .add("failedDirectories", failedDirectories)
-                  .toString();
+    return MoreObjects.toStringHelper(this)
+                      .add("importedDirectories", importedDirectories)
+                      .add("failedDirectories", failedDirectories)
+                      .toString();
     //J+
   }
 

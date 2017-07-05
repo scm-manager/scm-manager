@@ -34,6 +34,7 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -100,10 +101,10 @@ public class HgVersion
   public String toString()
   {
     //J-
-    return Objects.toStringHelper(this)
-                  .add("mercurial", mercurial)
-                  .add("python", python)
-                  .toString();
+    return MoreObjects.toStringHelper(this)
+                      .add("mercurial", mercurial)
+                      .add("python", python)
+                      .toString();
     //J+
   }
 

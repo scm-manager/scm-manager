@@ -30,12 +30,8 @@
  */
 package sonia.scm.security;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import com.google.inject.Inject;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.TimeUnit;
-import javax.inject.Singleton;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -43,6 +39,11 @@ import org.apache.shiro.authc.ExcessiveAttemptsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.config.ScmConfiguration;
+
+import javax.inject.Singleton;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Configurable implementation of {@link LoginAttemptHandler}.
@@ -175,10 +176,10 @@ public class ConfigurableLoginAttemptHandler implements LoginAttemptHandler {
 
     @Override
     public String toString() {
-      return Objects.toStringHelper(this)
-                    .add("counter", counter)
-                    .add("lastAttempt", lastAttempt)
-                    .toString();
+      return MoreObjects.toStringHelper(this)
+                        .add("counter", counter)
+                        .add("lastAttempt", lastAttempt)
+                        .toString();
     }
     
   }

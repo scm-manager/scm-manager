@@ -34,6 +34,7 @@ package sonia.scm;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -97,10 +98,10 @@ public class ClassOverride implements Validateable
   public String toString()
   {
     //J-
-    return Objects.toStringHelper(this)
-            .add("bind", bind)
-            .add("to", to)
-            .toString();
+    return MoreObjects.toStringHelper(this)
+                      .add("bind", bind)
+                      .add("to", to)
+                      .toString();
     //J+
   }
 

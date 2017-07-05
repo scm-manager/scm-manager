@@ -35,6 +35,7 @@ package sonia.scm.api.rest.resources;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
@@ -820,10 +821,10 @@ public class RepositoryImportResource
     public String toString()
     {
       //J-
-      return Objects.toStringHelper(this)
-                    .add("name", name)
-                    .add("url", url)
-                    .toString();
+      return MoreObjects.toStringHelper(this)
+                        .add("name", name)
+                        .add("url", url)
+                        .toString();
       //J+
     }
 

@@ -35,15 +35,15 @@ package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.Set;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import java.util.Set;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -124,10 +124,10 @@ public class PluginResources
   public String toString()
   {
     //J-
-    return Objects.toStringHelper(this)
-                  .add("scriptResources", scriptResources)
-                  .add("stylesheetResources", stylesheetResources)
-                  .toString();
+    return MoreObjects.toStringHelper(this)
+                      .add("scriptResources", scriptResources)
+                      .add("stylesheetResources", stylesheetResources)
+                      .toString();
     //J+
   }
 

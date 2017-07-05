@@ -34,6 +34,7 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 /**
@@ -84,11 +85,11 @@ public abstract class PagedRemoteCommandRequest extends RemoteCommandRequest
   {
 
     //J-
-    return Objects.toStringHelper(this)
-                  .add("remoteURL", remoteRepository)
-                  .add("pagingStart", pagingStart)
-                  .add("pagingLimit", pagingLimit)
-                  .toString();
+    return MoreObjects.toStringHelper(this)
+                      .add("remoteURL", remoteRepository)
+                      .add("pagingStart", pagingStart)
+                      .add("pagingLimit", pagingLimit)
+                      .toString();
     //J+
   }
 

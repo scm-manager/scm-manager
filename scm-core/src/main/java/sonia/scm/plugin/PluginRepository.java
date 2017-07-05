@@ -35,11 +35,12 @@ package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.Serializable;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -121,8 +122,10 @@ public class PluginRepository implements Serializable
   @Override
   public String toString()
   {
-    return Objects.toStringHelper(this).add("id", id).add("url",
-      url).toString();
+    return MoreObjects.toStringHelper(this)
+                      .add("id", id)
+                      .add("url", url)
+                      .toString();
   }
 
   //~--- get methods ----------------------------------------------------------

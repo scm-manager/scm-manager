@@ -37,23 +37,22 @@ package sonia.scm.group;
 
 import com.github.sdorra.ssp.PermissionObject;
 import com.github.sdorra.ssp.StaticPermissions;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
-
 import sonia.scm.BasicPropertiesAware;
 import sonia.scm.ModelObject;
 import sonia.scm.util.Util;
 import sonia.scm.util.ValidationUtil;
 
-//~--- JDK imports ------------------------------------------------------------
-
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Organizes users into a group for easier permissions management.
@@ -274,15 +273,15 @@ public class Group extends BasicPropertiesAware
   public String toString()
   {
     //J-
-    return Objects.toStringHelper(this)
-             .add("name", name)
-             .add("description", description)
-             .add("members", members)
-             .add("type", type)
-             .add("creationDate", creationDate)
-             .add("lastModified", lastModified)
-             .add("properties", properties)
-             .toString();
+    return MoreObjects.toStringHelper(this)
+                      .add("name", name)
+                      .add("description", description)
+                      .add("members", members)
+                      .add("type", type)
+                      .add("creationDate", creationDate)
+                      .add("lastModified", lastModified)
+                      .add("properties", properties)
+                      .toString();
     //J+
   }
 

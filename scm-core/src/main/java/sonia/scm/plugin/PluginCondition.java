@@ -35,6 +35,7 @@ package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import sonia.scm.PlatformType;
 import sonia.scm.SCMContext;
@@ -157,11 +158,11 @@ public class PluginCondition implements Cloneable, Serializable
   public String toString()
   {
     //J-
-    return Objects.toStringHelper(this)
-                  .add("arch", arch)
-                  .add("minVersion", minVersion)
-                  .add("os", os)
-                  .toString();
+    return MoreObjects.toStringHelper(this)
+                      .add("arch", arch)
+                      .add("minVersion", minVersion)
+                      .add("os", os)
+                      .toString();
     //J+
   }
 

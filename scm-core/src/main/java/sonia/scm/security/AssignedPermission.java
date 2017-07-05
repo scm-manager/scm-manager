@@ -34,16 +34,16 @@ package sonia.scm.security;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.Serializable;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.io.Serializable;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Permission object which is assigned to a specific user or group.
@@ -150,11 +150,11 @@ public class AssignedPermission implements PermissionObject, Serializable
   public String toString()
   {
     //J-
-    return Objects.toStringHelper(this)
-                  .add("name", name)
-                  .add("groupPermisison", groupPermission)
-                  .add("permission", permission)
-                  .toString();
+    return MoreObjects.toStringHelper(this)
+                      .add("name", name)
+                      .add("groupPermisison", groupPermission)
+                      .add("permission", permission)
+                      .toString();
     //J+
   }
 

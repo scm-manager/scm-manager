@@ -35,18 +35,17 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-
 import sonia.scm.LastModifiedAware;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.Serializable;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.io.Serializable;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * The FileObject represents a file or a directory in a repository.
@@ -110,15 +109,15 @@ public class FileObject implements LastModifiedAware, Serializable
   public String toString()
   {
     //J-
-    return Objects.toStringHelper(this)
-            .add("name", name)
-            .add("path", path)
-            .add("directory", directory)
-            .add("description", description)
-            .add("length", length)
-            .add("subRepository", subRepository)
-            .add("lastModified", lastModified)
-            .toString();
+    return MoreObjects.toStringHelper(this)
+                      .add("name", name)
+                      .add("path", path)
+                      .add("directory", directory)
+                      .add("description", description)
+                      .add("length", length)
+                      .add("subRepository", subRepository)
+                      .add("lastModified", lastModified)
+                      .toString();
     //J+
   }
 

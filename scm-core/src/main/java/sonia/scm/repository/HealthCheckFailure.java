@@ -33,6 +33,7 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -132,12 +133,12 @@ public final class HealthCheckFailure
   public String toString()
   {
     //J-
-    return Objects.toStringHelper(this)
-                  .add("id", id)
-                  .add("summary", summary)
-                  .add("url", url)
-                  .add("description", description)
-                  .toString();
+    return MoreObjects.toStringHelper(this)
+                      .add("id", id)
+                      .add("summary", summary)
+                      .add("url", url)
+                      .add("description", description)
+                      .toString();
     //J+
   }
 

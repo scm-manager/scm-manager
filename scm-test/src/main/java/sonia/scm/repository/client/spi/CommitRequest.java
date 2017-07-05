@@ -34,6 +34,7 @@ package sonia.scm.repository.client.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 import sonia.scm.repository.Person;
@@ -105,10 +106,10 @@ public final class CommitRequest
   public String toString()
   {
     //J-
-    return Objects.toStringHelper(this)
-                  .add("author", author)
-                  .add("message", message)
-                  .toString();
+    return MoreObjects.toStringHelper(this)
+                      .add("author", author)
+                      .add("message", message)
+                      .toString();
     //J+
   }
 

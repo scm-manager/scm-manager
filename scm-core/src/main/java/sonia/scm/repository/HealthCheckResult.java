@@ -33,6 +33,7 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSet;
 
@@ -182,7 +183,7 @@ public final class HealthCheckResult
   @Override
   public String toString()
   {
-    return Objects.toStringHelper(this).add("failures", failures).toString();
+    return MoreObjects.toStringHelper(this).add("failures", failures).toString();
   }
 
   //~--- get methods ----------------------------------------------------------

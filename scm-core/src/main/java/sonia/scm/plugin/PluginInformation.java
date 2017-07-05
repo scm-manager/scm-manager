@@ -37,24 +37,17 @@ package sonia.scm.plugin;
 
 import com.github.sdorra.ssp.PermissionObject;
 import com.github.sdorra.ssp.StaticPermissions;
-
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-
 import sonia.scm.Validateable;
 import sonia.scm.util.Util;
 
-//~--- JDK imports ------------------------------------------------------------
-
+import javax.xml.bind.annotation.*;
 import java.io.Serializable;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -180,21 +173,21 @@ public class PluginInformation
   public String toString()
   {
     //J-
-    return Objects.toStringHelper(this)
-                  .add("artifactId", artifactId)
-                  .add("author", author)
-                  .add("category", category)
-                  .add("tags", tags)
-                  .add("condition", condition)
-                  .add("description", description)
-                  .add("groupId", groupId)
-                  .add("name", name)
-                  .add("screenshots", screenshots)
-                  .add("state", state)
-                  .add("url", url)
-                  .add("version", version)
-                  .add("wiki", wiki)
-                  .toString();
+    return MoreObjects.toStringHelper(this)
+                      .add("artifactId", artifactId)
+                      .add("author", author)
+                      .add("category", category)
+                      .add("tags", tags)
+                      .add("condition", condition)
+                      .add("description", description)
+                      .add("groupId", groupId)
+                      .add("name", name)
+                      .add("screenshots", screenshots)
+                      .add("state", state)
+                      .add("url", url)
+                      .add("version", version)
+                      .add("wiki", wiki)
+                      .toString();
     //J+
   }
 

@@ -35,6 +35,7 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 /**
@@ -127,13 +128,13 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest
   public String toString()
   {
     //J-
-    return Objects.toStringHelper(this)
-                  .add("path", getPath())
-                  .add("revision", getRevision())
-                  .add("recursive", recursive)
-                  .add("disableLastCommit", disableLastCommit)
-                  .add("disableSubRepositoryDetection", disableSubRepositoryDetection)
-                  .toString();
+    return MoreObjects.toStringHelper(this)
+                      .add("path", getPath())
+                      .add("revision", getRevision())
+                      .add("recursive", recursive)
+                      .add("disableLastCommit", disableLastCommit)
+                      .add("disableSubRepositoryDetection", disableSubRepositoryDetection)
+                      .toString();
     //J+
   }
 

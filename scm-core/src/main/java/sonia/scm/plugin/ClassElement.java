@@ -33,6 +33,7 @@ package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -117,10 +118,10 @@ public final class ClassElement
   public String toString()
   {
     //J-
-    return Objects.toStringHelper(this)
-                  .add("clazz", clazz)
-                  .add("description", description)
-                  .toString();
+    return MoreObjects.toStringHelper(this)
+                      .add("clazz", clazz)
+                      .add("description", description)
+                      .toString();
     //J+
   }
 

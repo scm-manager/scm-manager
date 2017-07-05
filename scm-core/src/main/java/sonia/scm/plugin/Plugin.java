@@ -35,18 +35,14 @@ package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSet;
 
-//~--- JDK imports ------------------------------------------------------------
-
+import javax.xml.bind.annotation.*;
 import java.util.Set;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -142,14 +138,14 @@ public final class Plugin extends ScmModule
   public String toString()
   {
     //J-
-    return Objects.toStringHelper(this)
-                  .add("scmVersion", scmVersion)
-                  .add("condition", condition)
-                  .add("information", information)
-                  .add("resources", resources)
-                  .add("childFirstClassLoader", childFirstClassLoader)
-                  .add("dependencies", dependencies)
-                  .toString();
+    return MoreObjects.toStringHelper(this)
+                      .add("scmVersion", scmVersion)
+                      .add("condition", condition)
+                      .add("information", information)
+                      .add("resources", resources)
+                      .add("childFirstClassLoader", childFirstClassLoader)
+                      .add("dependencies", dependencies)
+                      .toString();
     //J+
   }
 

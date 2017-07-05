@@ -34,17 +34,16 @@ package sonia.scm.cache;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.base.Objects;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.Serializable;
+import com.google.common.base.MoreObjects;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.io.Serializable;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -70,19 +69,19 @@ public class GuavaCacheConfiguration implements Serializable
   public String toString()
   {
     //J-
-    return Objects.toStringHelper(this)
-                  .add("concurrencyLevel", concurrencyLevel)
-                  .add("copyStrategy", copyStrategy)
-                  .add("expireAfterAccess", expireAfterAccess)
-                  .add("expireAfterWrite", expireAfterWrite)
-                  .add("initialCapacity", initialCapacity)
-                  .add("maximumSize", maximumSize)
-                  .add("maximumWeight", maximumWeight)
-                  .add("recordStats", recordStats)
-                  .add("softValues", softValues)
-                  .add("weakKeys", weakKeys)
-                  .add("weakValues", weakValues)
-                  .omitNullValues().toString();
+    return MoreObjects.toStringHelper(this)
+                      .add("concurrencyLevel", concurrencyLevel)
+                      .add("copyStrategy", copyStrategy)
+                      .add("expireAfterAccess", expireAfterAccess)
+                      .add("expireAfterWrite", expireAfterWrite)
+                      .add("initialCapacity", initialCapacity)
+                      .add("maximumSize", maximumSize)
+                      .add("maximumWeight", maximumWeight)
+                      .add("recordStats", recordStats)
+                      .add("softValues", softValues)
+                      .add("weakKeys", weakKeys)
+                      .add("weakValues", weakValues)
+                      .omitNullValues().toString();
     //J+
   }
 

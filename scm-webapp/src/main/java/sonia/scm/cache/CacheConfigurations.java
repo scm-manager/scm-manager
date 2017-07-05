@@ -45,6 +45,7 @@ import java.io.IOException;
 
 import java.net.URL;
 
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Iterator;
 
@@ -109,7 +110,7 @@ public final class CacheConfigurations
 
     if (it == null)
     {
-      it = Iterators.emptyIterator();
+      it = Collections.emptyIterator();
     }
 
     return it;
