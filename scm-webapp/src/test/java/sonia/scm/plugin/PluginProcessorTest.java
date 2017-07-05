@@ -35,6 +35,7 @@ package sonia.scm.plugin;
 
 import com.google.common.base.Charsets;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Streams;
 import com.google.common.io.Resources;
 import org.junit.Before;
 import org.junit.Rule;
@@ -48,7 +49,6 @@ import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.Set;
-import java.util.stream.StreamSupport;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -366,10 +366,10 @@ public class PluginProcessorTest
   private PluginWrapper findPlugin(Iterable<PluginWrapper> plugin,
     final String id)
   {
-    return StreamSupport.stream(plugin.spliterator(), false)
-                        .filter(input -> id.equals(input.getId()))
-                        .findFirst()
-                        .orElse(null);
+    return Streams.stream(plugin)
+                  .filter(input -> id.equals(input.getId()))
+                  .findFirst()
+                  .orElse(null);
   }
 
   //~--- inner classes --------------------------------------------------------

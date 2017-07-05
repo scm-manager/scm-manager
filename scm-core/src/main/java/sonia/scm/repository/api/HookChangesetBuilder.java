@@ -33,8 +33,8 @@ package sonia.scm.repository.api;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Streams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.io.DeepCopy;
@@ -46,8 +46,8 @@ import sonia.scm.repository.spi.HookChangesetRequest;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -135,9 +135,9 @@ public final class HookChangesetBuilder
 
         return copy;
       };
-      changesets = StreamSupport.stream(changesets.spliterator(), false)
-                                .map(changesetFunction::apply)
-                                .collect(Collectors.toList());
+      changesets = Streams.stream(changesets)
+                          .map(changesetFunction::apply)
+                          .collect(Collectors.toList());
     }
 
     return changesets;

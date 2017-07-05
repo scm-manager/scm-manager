@@ -34,12 +34,12 @@
 package sonia.scm.util;
 
 import com.google.common.base.Splitter;
+import com.google.common.collect.Streams;
 import sonia.scm.Validateable;
 
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.StreamSupport;
 
 /**
  *
@@ -134,9 +134,9 @@ public final class ValidationUtil
    * @return
    */
   public static boolean isRepositoryNameValid(String name) {
-    return Util.isNotEmpty(name) && StreamSupport.stream(Splitter.on('/').split(name).spliterator(), false)
-                                                 .map(REPO_NAME_REGEX::matcher)
-                                                 .allMatch(Matcher::matches);
+    return Util.isNotEmpty(name) && Streams.stream(Splitter.on('/').split(name))
+                                           .map(REPO_NAME_REGEX::matcher)
+                                           .allMatch(Matcher::matches);
   }
 
   /**

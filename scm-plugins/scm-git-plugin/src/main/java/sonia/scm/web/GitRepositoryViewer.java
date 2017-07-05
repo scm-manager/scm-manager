@@ -38,6 +38,7 @@ package sonia.scm.web;
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Streams;
 import com.google.common.io.Closeables;
 import com.google.inject.Inject;
 import org.slf4j.Logger;
@@ -62,7 +63,6 @@ import java.io.Writer;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -301,11 +301,10 @@ public class GitRepositoryViewer
                                            .setBranch(name)
                                            .setPagingLimit(CHANGESET_PER_BRANCH)
                                            .getChangesets();
-        
-        Iterable<ChangesetModel> changesets =
-          StreamSupport.stream(cpr.spliterator(), false)
-                       .map(ChangesetModel::new)
-                       .collect(Collectors.toList());
+
+        Iterable<ChangesetModel> changesets = Streams.stream(cpr)
+                                                     .map(ChangesetModel::new)
+                                                     .collect(Collectors.toList());
         //J+
 
         model = new BranchModel(name, changesets);
