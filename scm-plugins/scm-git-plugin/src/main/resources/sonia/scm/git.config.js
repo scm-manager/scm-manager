@@ -37,6 +37,7 @@ Sonia.git.ConfigPanel = Ext.extend(Sonia.config.SimpleConfigForm, {
   titleText: 'Git Settings',
   repositoryDirectoryText: 'Repository directory',
   gcExpressionText: 'Git GC Cron Expression',
+  disallowNonFastForwardText: 'Disallow Non Fast-Forward',
   disabledText: 'Disabled',
 
   // helpTexts
@@ -53,6 +54,8 @@ Sonia.git.ConfigPanel = Ext.extend(Sonia.config.SimpleConfigForm, {
                          </table>\n\
                          <p>E.g.: To run the task on every sunday at two o\'clock in the morning: 0 0 2 ? * SUN</p>\n\
                          <p>For more informations please have a look at <a href="http://www.quartz-scheduler.org/documentation/quartz-2.2.x/tutorials/crontrigger.html">Quartz CronTrigger</a></p>',
+  // TODO i18n
+  disallowNonFastForwardHelpText: 'Reject git pushes which are non fast-forward such as --force.',
   disabledHelpText: 'Enable or disable the Git plugin.\n\
                     Note you have to reload the page, after changing this value.',
 
@@ -73,6 +76,12 @@ Sonia.git.ConfigPanel = Ext.extend(Sonia.config.SimpleConfigForm, {
         fieldLabel: this.gcExpressionText,
         helpText: this.gcExpressionHelpText,
         allowBlank : true        
+      },{
+        xtype: 'checkbox',
+        name: 'disallow-non-fast-forward',
+        fieldLabel: this.disallowNonFastForwardText,
+        inputValue: 'true',
+        helpText: this.disallowNonFastForwardHelpText
       },{
         xtype: 'checkbox',
         name: 'disabled',

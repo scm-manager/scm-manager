@@ -51,9 +51,18 @@ public class GitConfig extends SimpleRepositoryConfig {
   @XmlElement(name = "gc-expression")
   private String gcExpression;
 
-  public String getGcExpression()
-  {
+  @XmlElement(name = "disallow-non-fast-forward")
+  private boolean nonFastForwardDisallowed;
+
+  public String getGcExpression() {
     return gcExpression;
   }
-  
+
+  public boolean isNonFastForwardDisallowed() {
+    return nonFastForwardDisallowed;
+  }
+
+  public void setNonFastForwardDisallowed(boolean nonFastForwardDisallowed) {
+    this.nonFastForwardDisallowed = nonFastForwardDisallowed;
+  }
 }
