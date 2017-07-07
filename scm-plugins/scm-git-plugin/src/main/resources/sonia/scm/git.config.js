@@ -176,9 +176,9 @@ Sonia.git.GitSettingsFormPanel = Ext.extend(Sonia.repository.SettingsFormPanel, 
   prepareUpdate: function(item) {
     if (item.defaultBranch) {
       var defaultBranch = item.defaultBranch;
-      delete item.defaultBranch;
       this.setDefaultBranch(item, defaultBranch);
     }
+    delete item.defaultBranch;
   }
   
 });
