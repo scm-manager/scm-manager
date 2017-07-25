@@ -40,6 +40,12 @@
       <groupId>org.slf4j</groupId>
       <version>${slf4j.version}</version>
     </dependency>
+
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+      <version>1.2</version>
+    </dependency>
     
     <!-- security -->
     
