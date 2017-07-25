@@ -64,7 +64,6 @@
               <assembleDirectory>${exploded.directory}</assembleDirectory>
               <repoPath>lib</repoPath>
               <repositoryLayout>flat</repositoryLayout>
-              <includeConfigurationDirectoryInClasspath>true</includeConfigurationDirectoryInClasspath>
               <daemons>
                 <daemon>
 
