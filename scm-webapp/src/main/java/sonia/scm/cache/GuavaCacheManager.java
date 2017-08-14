@@ -78,13 +78,20 @@ public class GuavaCacheManager implements CacheManager, org.apache.shiro.cache.C
   protected GuavaCacheManager(GuavaCacheManagerConfiguration config) {
     defaultConfiguration = config.getDefaultCache();
 
-    for (GuavaNamedCacheConfiguration ncc : config.getCaches()) {
-      logger.debug("create cache {} from configured configuration {}", ncc.getName(), ncc);
-      cacheMap.put(ncc.getName(), new CacheWithConfiguration(
-        GuavaCaches.create(defaultConfiguration, ncc.getName()), 
-        defaultConfiguration)
+    for (GuavaNamedCacheConfiguration namedCacheConfiguration : config.getCaches()) {
+      logger.debug("create cache {} from configured configuration {}",
+        namedCacheConfiguration.getName(), namedCacheConfiguration
       );
+      cacheMap.put(namedCacheConfiguration.getName(), createCacheWithConfiguration(namedCacheConfiguration));
     }
+  }
+
+  private CacheWithConfiguration createCacheWithConfiguration(GuavaNamedCacheConfiguration namedCacheConfiguration) {
+    return createCacheWithConfiguration(namedCacheConfiguration, namedCacheConfiguration.getName());
+  }
+
+  private CacheWithConfiguration createCacheWithConfiguration(GuavaCacheConfiguration configuration, String name) {
+    return new CacheWithConfiguration(GuavaCaches.create(configuration, name), configuration);
   }
 
   @Override
@@ -110,7 +117,7 @@ public class GuavaCacheManager implements CacheManager, org.apache.shiro.cache.C
         "cache {} does not exists, creating a new instance from default configuration: {}",
         name, defaultConfiguration
       );
-      cache = new CacheWithConfiguration(GuavaCaches.create(defaultConfiguration, name), defaultConfiguration);
+      cache = createCacheWithConfiguration(defaultConfiguration, name);
       cacheMap.put(name, cache);
     }
     

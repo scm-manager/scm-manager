@@ -32,14 +32,32 @@
 
 package sonia.scm.cache;
 
+import com.google.common.collect.Lists;
 import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Answers;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
 /**
  *
  * @author Sebastian Sdorra
  */
+@RunWith(MockitoJUnitRunner.class)
 public class GuavaCacheManagerTest extends CacheManagerTestBase
 {
+
+  @Mock(answer = Answers.CALLS_REAL_METHODS)
+  private GuavaCacheConfiguration defaultConfiguration;
+
+  @Mock(answer = Answers.CALLS_REAL_METHODS)
+  private GuavaNamedCacheConfiguration configuration;
 
   /**
    * Method description
@@ -60,6 +78,24 @@ public class GuavaCacheManagerTest extends CacheManagerTestBase
       ((GuavaCache)c2).getWrappedCache()
     );
   }
-  
+
+  @Test
+  public void configuration() {
+    when(configuration.getName()).thenReturn("my-crazy-cache");
+    when(configuration.getCopyStrategy()).thenReturn(CopyStrategy.READWRITE);
+    when(defaultConfiguration.getCopyStrategy()).thenReturn(CopyStrategy.READ);
+
+    List<GuavaNamedCacheConfiguration> configurations = Lists.newArrayList(configuration);
+    GuavaCacheManagerConfiguration managerConfiguration = new GuavaCacheManagerConfiguration(defaultConfiguration, configurations);
+    GuavaCacheManager guavaCacheManager = new GuavaCacheManager(managerConfiguration);
+
+    // default cache
+    GuavaSecurityCache<?,?> sorbotCache = guavaCacheManager.getCache("sorbot-cache");
+    assertEquals(CopyStrategy.READ, sorbotCache.copyStrategy);
+
+    // configured cache
+    GuavaSecurityCache<?,?> crazyCache = guavaCacheManager.getCache("my-crazy-cache");
+    assertEquals(CopyStrategy.READWRITE, crazyCache.copyStrategy);
+  }
   
 }
