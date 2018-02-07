@@ -68,17 +68,40 @@ public class GitHookTagProvider implements HookTagProvider {
       
       if (Strings.isNullOrEmpty(tag)){
         logger.debug("received ref name {} is not a tag", refName);
-      } else if (rc.getType() == ReceiveCommand.Type.CREATE) {
-        createdTagBuilder.add(new Tag(tag, GitUtil.getId(rc.getNewId())));
-      } else if (rc.getType() == ReceiveCommand.Type.DELETE){
-        deletedTagBuilder.add(new Tag(tag, GitUtil.getId(rc.getOldId())));
+      } else if (isCreate(rc)) {
+        createdTagBuilder.add(createTagFromNewId(rc, tag));
+      } else if (isDelete(rc)){
+        deletedTagBuilder.add(createTagFromOldId(rc, tag));
+      } else if (isUpdate(rc)) {
+        createdTagBuilder.add(createTagFromNewId(rc, tag));
+        deletedTagBuilder.add(createTagFromOldId(rc, tag));
       }
     }
     
     createdTags = createdTagBuilder.build();
     deletedTags = deletedTagBuilder.build();
   }
-  
+
+  private Tag createTagFromNewId(ReceiveCommand rc, String tag) {
+    return new Tag(tag, GitUtil.getId(rc.getNewId()));
+  }
+
+  private Tag createTagFromOldId(ReceiveCommand rc, String tag) {
+    return new Tag(tag, GitUtil.getId(rc.getOldId()));
+  }
+
+  private boolean isUpdate(ReceiveCommand rc) {
+    return rc.getType() == ReceiveCommand.Type.UPDATE || rc.getType() == ReceiveCommand.Type.UPDATE_NONFASTFORWARD;
+  }
+
+  private boolean isDelete(ReceiveCommand rc) {
+    return rc.getType() == ReceiveCommand.Type.DELETE;
+  }
+
+  private boolean isCreate(ReceiveCommand rc) {
+    return rc.getType() == ReceiveCommand.Type.CREATE;
+  }
+
   @Override
   public List<Tag> getCreatedTags() {
     return createdTags;

@@ -32,19 +32,22 @@
 package sonia.scm.repository.api;
 
 import com.google.common.collect.Lists;
-import java.util.List;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.transport.ReceiveCommand;
-import org.junit.Test;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-import static org.hamcrest.Matchers.*;
 import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.mockito.stubbing.OngoingStubbing;
 import sonia.scm.repository.Tag;
+
+import java.util.List;
+
+import static org.hamcrest.Matchers.empty;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.when;
 
 /**
  * Unit tests for {@link GitHookTagProvider}.
@@ -53,6 +56,11 @@ import sonia.scm.repository.Tag;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class GitHookTagProviderTest {
+
+  private static final String ZERO = ObjectId.zeroId().getName();
+
+  @Rule
+  public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
   @Mock
   private ReceiveCommand command;
@@ -73,7 +81,7 @@ public class GitHookTagProviderTest {
   @Test
   public void testGetCreatedTags() {
     String revision = "b2002b64013e54b78eac251df0672bd5d6a83aa7";
-    GitHookTagProvider provider = createProvider(ReceiveCommand.Type.CREATE, "refs/tags/1.0.0", revision);
+    GitHookTagProvider provider = createProvider(ReceiveCommand.Type.CREATE, "refs/tags/1.0.0", revision, ZERO);
     
     assertTag("1.0.0", revision, provider.getCreatedTags());
     assertThat(provider.getDeletedTags(), empty());
@@ -85,7 +93,7 @@ public class GitHookTagProviderTest {
   @Test
   public void testGetDeletedTags() {
     String revision = "b2002b64013e54b78eac251df0672bd5d6a83aa7";
-    GitHookTagProvider provider = createProvider(ReceiveCommand.Type.DELETE, "refs/tags/1.0.0", revision);
+    GitHookTagProvider provider = createProvider(ReceiveCommand.Type.DELETE, "refs/tags/1.0.0", ZERO, revision);
     
     assertThat(provider.getCreatedTags(), empty());
     assertTag("1.0.0", revision, provider.getDeletedTags());
@@ -97,10 +105,23 @@ public class GitHookTagProviderTest {
   @Test
   public void testWithBranch(){
     String revision = "b2002b64013e54b78eac251df0672bd5d6a83aa7";
-    GitHookTagProvider provider = createProvider(ReceiveCommand.Type.CREATE, "refs/heads/1.0.0", revision);
+    GitHookTagProvider provider = createProvider(ReceiveCommand.Type.CREATE, "refs/heads/1.0.0", revision, revision);
     
     assertThat(provider.getCreatedTags(), empty());
     assertThat(provider.getDeletedTags(), empty());
+  }
+
+  /**
+   * Tests {@link GitHookTagProvider} with update command.
+   */
+  @Test
+  public void testUpdateTags() {
+    String newId = "b2002b64013e54b78eac251df0672bd5d6a83aa7";
+    String oldId = "e0f2be968b147ff7043684a7715d2fe852553db4";
+
+    GitHookTagProvider provider = createProvider(ReceiveCommand.Type.UPDATE, "refs/tags/1.0.0", newId, oldId);
+    assertTag("1.0.0", newId, provider.getCreatedTags());
+    assertTag("1.0.0", oldId, provider.getDeletedTags());
   }
   
   private void assertTag(String name, String revision, List<Tag> tags){
@@ -112,18 +133,11 @@ public class GitHookTagProviderTest {
     assertEquals(revision, tag.getRevision());
   }
   
-  private GitHookTagProvider createProvider(ReceiveCommand.Type type, String ref, String id){
-    OngoingStubbing<ObjectId> ongoing;
-    if (type == ReceiveCommand.Type.CREATE){
-      ongoing = when(command.getNewId());
-    } else {
-      ongoing = when(command.getOldId());
-    }
-    ongoing.thenReturn(ObjectId.fromString(id));
-    
+  private GitHookTagProvider createProvider(ReceiveCommand.Type type, String ref, String newId, String oldId){
+    when(command.getNewId()).thenReturn(ObjectId.fromString(newId));
+    when(command.getOldId()).thenReturn(ObjectId.fromString(oldId));
     when(command.getType()).thenReturn(type);
     when(command.getRefName()).thenReturn(ref);
-    
     return new GitHookTagProvider(commands);
   }
 
