@@ -35,33 +35,27 @@ package sonia.scm.api.rest.resources;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.net.UrlEscapers;
 import org.apache.commons.beanutils.BeanComparator;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.LastModifiedAware;
 import sonia.scm.Manager;
 import sonia.scm.ModelObject;
 import sonia.scm.api.rest.RestExceptionResult;
 import sonia.scm.security.ScmSecurityException;
 import sonia.scm.util.AssertUtil;
-import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 
-//~--- JDK imports ------------------------------------------------------------
-
+import javax.ws.rs.core.*;
+import javax.ws.rs.core.Response.Status;
+import java.net.URI;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
 
-import javax.ws.rs.core.CacheControl;
-import javax.ws.rs.core.EntityTag;
-import javax.ws.rs.core.GenericEntity;
-import javax.ws.rs.core.Request;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.core.UriInfo;
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -140,18 +134,14 @@ public abstract class AbstractManagerResource<T extends ModelObject,
   {
     preCreate(item);
 
-    Response response = null;
+    Response response;
 
     try
     {
       manager.create(item);
 
       String id = getId(item);
-
-      id = HttpUtil.encode(id);
-      response = Response.created(
-        uriInfo.getAbsolutePath().resolve(
-          getPathPart().concat("/").concat(id))).build();
+      response = Response.created(location(uriInfo, id)).build();
     }
     catch (ScmSecurityException ex)
     {
@@ -165,6 +155,12 @@ public abstract class AbstractManagerResource<T extends ModelObject,
     }
 
     return response;
+  }
+
+  @VisibleForTesting
+  URI location(UriInfo uriInfo, String id) {
+    String escaped = UrlEscapers.urlPathSegmentEscaper().escape(id);
+    return uriInfo.getAbsolutePath().resolve(getPathPart().concat("/").concat(escaped));
   }
 
   /**

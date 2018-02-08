@@ -34,7 +34,10 @@ package sonia.scm.url;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.junit.Test;
 import sonia.scm.util.HttpUtil;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  *
@@ -155,5 +158,17 @@ public abstract class RestModelUrlProviderTestBase
   {
     return createRestUrl(baseUrl,
                          model.concat(HttpUtil.SEPARATOR_PATH).concat(item));
+  }
+
+  @Test
+  public void testGetDetailUrlWithSpaces()
+  {
+    String item = "Item with Spaces";
+
+    for (String model : MODELS)
+    {
+      assertEquals(getExpectedDetailUrl(BASEURL, model, "Item%20with%20Spaces"),
+        createModelUrlProvider(BASEURL, model).getDetailUrl(item));
+    }
   }
 }
