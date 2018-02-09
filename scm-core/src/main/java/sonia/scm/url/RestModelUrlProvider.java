@@ -35,6 +35,7 @@ package sonia.scm.url;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.net.UrlEscapers;
 import sonia.scm.util.HttpUtil;
 
 /**
@@ -84,7 +85,8 @@ public class RestModelUrlProvider implements ModelUrlProvider
   @Override
   public String getDetailUrl(String name)
   {
-    return HttpUtil.append(base, name).concat(extension);
+    String escaped = UrlEscapers.urlPathSegmentEscaper().escape(name);
+    return HttpUtil.append(base, escaped).concat(extension);
   }
 
   //~--- fields ---------------------------------------------------------------

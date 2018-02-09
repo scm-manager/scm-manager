@@ -58,7 +58,7 @@ public abstract class ModelUrlProviderTestBase extends UrlTestBase
   public static final String MODEL_USERS = "users";
 
   /** Field description */
-  private static final String[] MODELS = new String[] { MODEL_REPOSITORY,
+  protected static final String[] MODELS = new String[] { MODEL_REPOSITORY,
           MODEL_USERS, MODEL_GROUPS };
 
   //~--- methods --------------------------------------------------------------
@@ -162,7 +162,7 @@ public abstract class ModelUrlProviderTestBase extends UrlTestBase
    *
    * @return
    */
-  private ModelUrlProvider createModelUrlProvider(String baseUrl, String model)
+  protected ModelUrlProvider createModelUrlProvider(String baseUrl, String model)
   {
     ModelUrlProvider urlProvider = null;
 

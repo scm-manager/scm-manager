@@ -35,10 +35,13 @@ package sonia.scm.client.it;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.junit.Test;
 import sonia.scm.client.ClientHandler;
+import sonia.scm.client.GroupClientHandler;
 import sonia.scm.client.JerseyClientSession;
-import sonia.scm.client.it.AbstractClientHandlerTestBase.ModifyTest;
 import sonia.scm.group.Group;
+
+import static sonia.scm.client.it.ClientTestUtil.createAdminSession;
 
 /**
  *
@@ -98,5 +101,25 @@ public class JerseyGroupClientHandlerITCase
   protected Group createTestData(int number)
   {
     return new Group("xml", "group-" + number);
+  }
+
+  /**
+   * Tests crud operations with a group which name contains spaces.
+   *
+   * @see <a href="https://bitbucket.org/sdorra/scm-manager/issues/965/modify-a-group-with-spaces-not-allowed>#965</a>
+   */
+  @Test
+  public void testGroupNamesWithSpaces() {
+    JerseyClientSession session = createAdminSession();
+    GroupClientHandler handler = session.getGroupHandler();
+
+    String name = "SCM Special Group";
+    handler.create(new Group("xml", name));
+
+    Group group = handler.get(name);
+    group.add("Some Member");
+    handler.modify(group);
+
+    handler.delete(name);
   }
 }
