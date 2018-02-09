@@ -6,13 +6,13 @@
   <parent>
     <groupId>sonia.scm</groupId>
     <artifactId>scm</artifactId>
-    <version>1.57-SNAPSHOT</version>
+    <version>1.57</version>
   </parent>
 
   <groupId>sonia.scm</groupId>
   <artifactId>scm-webapp</artifactId>
   <packaging>war</packaging>
-  <version>1.57-SNAPSHOT</version>
+  <version>1.57</version>
   <name>scm-webapp</name>
 
   <dependencies>
@@ -38,31 +38,31 @@
     <dependency>
       <groupId>sonia.scm</groupId>
       <artifactId>scm-core</artifactId>
-      <version>1.57-SNAPSHOT</version>
+      <version>1.57</version>
     </dependency>
     
     <dependency>
       <groupId>sonia.scm</groupId>
       <artifactId>scm-dao-xml</artifactId>
-      <version>1.57-SNAPSHOT</version>
+      <version>1.57</version>
     </dependency>
 
     <dependency>
       <groupId>sonia.scm.plugins</groupId>
       <artifactId>scm-hg-plugin</artifactId>
-      <version>1.57-SNAPSHOT</version>
+      <version>1.57</version>
     </dependency>
 
     <dependency>
       <groupId>sonia.scm.plugins</groupId>
       <artifactId>scm-svn-plugin</artifactId>
-      <version>1.57-SNAPSHOT</version>
+      <version>1.57</version>
     </dependency>
 
     <dependency>
       <groupId>sonia.scm.plugins</groupId>
       <artifactId>scm-git-plugin</artifactId>
-      <version>1.57-SNAPSHOT</version>
+      <version>1.57</version>
     </dependency>
     
     <!-- security -->
@@ -285,7 +285,7 @@
     <dependency>
       <groupId>sonia.scm</groupId>
       <artifactId>scm-test</artifactId>
-      <version>1.57-SNAPSHOT</version>
+      <version>1.57</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
@@ -298,7 +298,7 @@
     <dependency>
       <groupId>sonia.scm.plugins</groupId>
       <artifactId>scm-git-plugin</artifactId>
-      <version>1.57-SNAPSHOT</version>
+      <version>1.57</version>
       <classifier>tests</classifier>
       <scope>test</scope>
     </dependency>
@@ -306,7 +306,7 @@
     <dependency>
       <groupId>sonia.scm.plugins</groupId>
       <artifactId>scm-hg-plugin</artifactId>
-      <version>1.57-SNAPSHOT</version>
+      <version>1.57</version>
       <classifier>tests</classifier>
       <scope>test</scope>
     </dependency>
@@ -314,7 +314,7 @@
     <dependency>
       <groupId>sonia.scm.plugins</groupId>
       <artifactId>scm-svn-plugin</artifactId>
-      <version>1.57-SNAPSHOT</version>
+      <version>1.57</version>
       <classifier>tests</classifier>
       <scope>test</scope>
     </dependency>
@@ -558,7 +558,7 @@
         <dependency>
           <groupId>sonia.scm</groupId>
           <artifactId>scm-dao-orientdb</artifactId>
-          <version>1.57-SNAPSHOT</version>
+          <version>1.57</version>
         </dependency>
         
       </dependencies>
