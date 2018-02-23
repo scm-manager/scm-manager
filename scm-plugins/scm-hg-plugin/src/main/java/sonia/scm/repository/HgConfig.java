@@ -123,6 +123,10 @@ public class HgConfig extends SimpleRepositoryConfig
     return useOptimizedBytecode;
   }
 
+  public boolean isDisableHookSSLValidation() {
+    return disableHookSSLValidation;
+  }
+
   /**
    * Method description
    *
@@ -204,6 +208,10 @@ public class HgConfig extends SimpleRepositoryConfig
     this.useOptimizedBytecode = useOptimizedBytecode;
   }
 
+  public void setDisableHookSSLValidation(boolean disableHookSSLValidation) {
+    this.disableHookSSLValidation = disableHookSSLValidation;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
@@ -223,4 +231,10 @@ public class HgConfig extends SimpleRepositoryConfig
 
   /** Field description */
   private boolean showRevisionInId = false;
+
+  /**
+   * disable validation of ssl certificates for mercurial hook
+   * @see <a href="https://goo.gl/zH5eY8">Issue 959</a>
+   */
+  private boolean disableHookSSLValidation = false;
 }

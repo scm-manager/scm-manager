@@ -63,6 +63,7 @@ import java.io.File;
 import java.io.IOException;
 
 import java.util.Enumeration;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -77,6 +78,8 @@ import javax.servlet.http.HttpSession;
 @Singleton
 public class HgCGIServlet extends HttpServlet
 {
+
+  private static final String ENV_PYTHON_HTTPS_VERIFY = "PYTHONHTTPSVERIFY";
 
   /** Field description */
   public static final String ENV_REPOSITORY_NAME = "REPO_NAME";
@@ -268,9 +271,16 @@ public class HgCGIServlet extends HttpServlet
       directory.getAbsolutePath());
 
     // add hook environment
+    Map<String, String> environment = executor.getEnvironment().asMutableMap();
+    if (handler.getConfig().isDisableHookSSLValidation()) {
+      // disable ssl validation
+      // Issue 959: https://goo.gl/zH5eY8
+      environment.put(ENV_PYTHON_HTTPS_VERIFY, "0");
+    }
+
     //J-
     HgEnvironment.prepareEnvironment(
-      executor.getEnvironment().asMutableMap(),
+      environment,
       handler,
       hookManager, 
       request
