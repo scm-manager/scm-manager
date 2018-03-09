@@ -46,6 +46,8 @@ Sonia.hg.ConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
   encodingText: 'Encoding',
   disabledText: 'Disabled',
   showRevisionInIdText: 'Show Revision',
+  // TODO: i18n
+  disableHookSSLValidationText: 'Disable SSL Validation on Hooks',
 
   // helpText
   hgBinaryHelpText: 'Location of Mercurial binary.',
@@ -58,6 +60,9 @@ Sonia.hg.ConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
                     Note you have to reload the page, after changing this value.',
   showRevisionInIdHelpText: 'Show revision as part of the node id. Note: \n\
           You have to restart the ApplicationServer to affect cached changesets.',
+  // TODO: i18n
+  disableHookSSLValidationHelpText: 'Disables the validation of ssl certificates for the mercurial hook, which forwards the repository changes back to scm-manager. \n\
+                                     This option should only be used, if SCM-Manager uses a self signed certificate.',
 
   initComponent: function(){
 
@@ -104,6 +109,12 @@ Sonia.hg.ConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
         fieldLabel: this.showRevisionInIdText,
         inputValue: 'true',
         helpText: this.showRevisionInIdHelpText
+      },{
+        xtype: 'checkbox',
+        name: 'disableHookSSLValidation',
+        fieldLabel: this.disableHookSSLValidationText,
+        inputValue: 'true',
+        helpText: this.disableHookSSLValidationHelpText
       },{
         xtype: 'checkbox',
         name: 'disabled',
