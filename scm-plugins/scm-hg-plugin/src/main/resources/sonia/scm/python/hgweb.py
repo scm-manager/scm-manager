@@ -31,12 +31,21 @@
 
 
 import os
-from mercurial import demandimport
+from mercurial import demandimport, ui as uimod, hg
 from mercurial.hgweb import hgweb, wsgicgi
-
-repositoryPath = os.environ['SCM_REPOSITORY_PATH']
 
 demandimport.enable()
 
-application = hgweb(repositoryPath)
+u = uimod.ui.load()
+
+# pass SCM_HTTP_POST_ARGS to enable experimental httppostargs protocol of mercurial
+# SCM_HTTP_POST_ARGS is set by HgCGIServlet
+# Issue 970: https://goo.gl/poascp
+u.setconfig('experimental', 'httppostargs', os.environ['SCM_HTTP_POST_ARGS'])
+
+# open repository
+# SCM_REPOSITORY_PATH contains the repository path and is set by HgCGIServlet
+r = hg.repository(u, os.environ['SCM_REPOSITORY_PATH'])
+
+application = hgweb(r)
 wsgicgi.launch(application)

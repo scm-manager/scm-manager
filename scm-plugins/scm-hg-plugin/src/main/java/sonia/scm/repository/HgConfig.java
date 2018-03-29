@@ -127,6 +127,10 @@ public class HgConfig extends SimpleRepositoryConfig
     return disableHookSSLValidation;
   }
 
+  public boolean isEnableHttpPostArgs() {
+    return enableHttpPostArgs;
+  }
+
   /**
    * Method description
    *
@@ -197,6 +201,10 @@ public class HgConfig extends SimpleRepositoryConfig
     this.showRevisionInId = showRevisionInId;
   }
 
+  public void setEnableHttpPostArgs(boolean enableHttpPostArgs) {
+    this.enableHttpPostArgs = enableHttpPostArgs;
+  }
+
   /**
    * Method description
    *
@@ -231,6 +239,8 @@ public class HgConfig extends SimpleRepositoryConfig
 
   /** Field description */
   private boolean showRevisionInId = false;
+
+  private boolean enableHttpPostArgs = false;
 
   /**
    * disable validation of ssl certificates for mercurial hook
