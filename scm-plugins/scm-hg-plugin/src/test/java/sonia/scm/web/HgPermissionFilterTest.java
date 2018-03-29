@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2014, Sebastian Sdorra
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
@@ -13,7 +13,7 @@
  * 3. Neither the name of SCM-Manager; nor the names of its
  *    contributors may be used to endorse or promote products derived from this
  *    software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,9 +24,9 @@
  * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * http://bitbucket.org/sdorra/scm-manager
- * 
+ *
  */
 
 package sonia.scm.web;
@@ -48,7 +48,7 @@ import sonia.scm.repository.RepositoryProvider;
 
 /**
  * Unit tests for {@link HgPermissionFilter}.
- * 
+ *
  * @author Sebastian Sdorra
  */
 @RunWith(MockitoJUnitRunner.class)
@@ -56,7 +56,7 @@ public class HgPermissionFilterTest {
 
   @Mock
   private ScmConfiguration configuration;
-  
+
   @Mock
   private RepositoryProvider repositoryProvider;
 
@@ -64,7 +64,7 @@ public class HgPermissionFilterTest {
 
   @InjectMocks
   private HgPermissionFilter filter;
-  
+
   /**
    * Tests {@link HgPermissionFilter#isWriteRequest(HttpServletRequest)}.
    */
@@ -75,7 +75,7 @@ public class HgPermissionFilterTest {
     assertFalse(isWriteRequest("HEAD"));
     assertFalse(isWriteRequest("TRACE"));
     assertFalse(isWriteRequest("OPTIONS"));
-    
+
     // write methods
     assertTrue(isWriteRequest("POST"));
     assertTrue(isWriteRequest("PUT"));
@@ -85,6 +85,7 @@ public class HgPermissionFilterTest {
 
   private boolean isWriteRequest(String method) {
     HttpServletRequest request = mock(HttpServletRequest.class);
+    when(request.getQueryString()).thenReturn("cmd=capabilities");
     when(request.getMethod()).thenReturn(method);
     return filter.isWriteRequest(request);
   }
@@ -161,6 +162,17 @@ public class HgPermissionFilterTest {
     assertIsReadRequest(wireProtocol.listkeys(BOOKMARKS));
     assertIsReadRequest(wireProtocol.listkeys(PHASES));
     assertIsWriteRequest(wireProtocol.pushkey("markone&namespace=bookmarks&new=ef5993bb4abb32a0565c347844c6d939fc4f4b98&old="));
+  }
+
+  /**
+   * Tests {@link HgPermissionFilter#isWriteRequest(HttpServletRequest)} with a write request hidden in a batch GET
+   * request.
+   *
+   * @see <a href="https://goo.gl/poascp">Issue #970</a>
+   */
+  @Test
+  public void testIsWriteRequestWithBookmarkPushInABatch() {
+    assertIsWriteRequest(wireProtocol.batch("pushkey key=markthree,namespace=bookmarks,new=187ddf37e237c370514487a0bb1a226f11a780b3,old="));
   }
 
   private void assertIsReadRequest(HttpServletRequest request) {

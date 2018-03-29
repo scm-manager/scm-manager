@@ -51,13 +51,13 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * Permission filter for mercurial repositories.
- * 
+ *
  * @author Sebastian Sdorra
  */
 @Singleton
 public class HgPermissionFilter extends ProviderPermissionFilter
 {
-  
+
   private static final Set<String> READ_METHODS = ImmutableSet.of("GET", "HEAD", "OPTIONS", "TRACE");
 
   /**
@@ -78,6 +78,9 @@ public class HgPermissionFilter extends ProviderPermissionFilter
   @Override
   protected boolean isWriteRequest(HttpServletRequest request)
   {
-    return !READ_METHODS.contains(request.getMethod());
+    if (READ_METHODS.contains(request.getMethod())) {
+      return WireProtocol.isWriteRequest(request);
+    }
+    return true;
   }
 }

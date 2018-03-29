@@ -1,7 +1,11 @@
 package sonia.scm.web;
 
+import com.google.common.collect.Lists;
+
 import javax.servlet.http.HttpServletRequest;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 
 import static org.mockito.Mockito.*;
@@ -21,55 +25,64 @@ public class WireProtocolRequestMockFactory {
   }
 
   public HttpServletRequest capabilities() {
-    return base("GET", "?cmd=capabilities");
+    return base("GET", "cmd=capabilities");
   }
 
   public HttpServletRequest listkeys(Namespace namespace) {
-    HttpServletRequest request = base("GET", "?cmd=capabilities");
+    HttpServletRequest request = base("GET", "cmd=capabilities");
     header(request, "vary", "X-HgArg-1");
     header(request, "x-hgarg-1", namespaceValue(namespace));
     return request;
   }
 
   public HttpServletRequest branchmap() {
-    return base("GET", "?cmd=branchmap");
+    return base("GET", "cmd=branchmap");
   }
 
   public HttpServletRequest batch(String... args) {
-    HttpServletRequest request = base("GET", "?cmd=batch");
+    HttpServletRequest request = base("GET", "cmd=batch");
     args(request, "cmds", args);
     return request;
   }
 
   public HttpServletRequest unbundle(long contentLength, String... heads) {
-    HttpServletRequest request = base("POST", "?cmd=unbundle");
+    HttpServletRequest request = base("POST", "cmd=unbundle");
     header(request, "Content-Length", String.valueOf(contentLength));
     args(request, "heads", heads);
     return request;
   }
 
   public HttpServletRequest pushkey(String... keys) {
-    HttpServletRequest request = base("POST", "?cmd=pushkey");
+    HttpServletRequest request = base("POST", "cmd=pushkey");
     args(request, "key", keys);
     return request;
   }
 
   public HttpServletRequest known(String... nodes) {
-    HttpServletRequest request = base("POST", "?cmd=pushkey");
+    HttpServletRequest request = base("GET", "cmd=known");
     args(request, "nodes", nodes);
     return request;
   }
 
   private void args(HttpServletRequest request, String prefix, String[] values) {
+    List<String> headers = Lists.newArrayList();
+
     StringBuilder vary = new StringBuilder();
     for ( int i=0; i<values.length; i++ ) {
+      String header = "X-HgArg-" + (i+1);
+
       if (i>0) {
         vary.append(",");
       }
-      vary.append("X-HgArg-" + (i+1));
-      header(request, "X-HgArg-" + (i+1), prefix + "=" + values[i]);
+
+      vary.append(header);
+      headers.add(header);
+
+      header(request, header, prefix + "=" + values[i]);
     }
     header(request, "Vary", vary.toString());
+
+    when(request.getHeaderNames()).thenReturn(Collections.enumeration(headers));
   }
 
   private HttpServletRequest base(String method, String queryStringValue) {
