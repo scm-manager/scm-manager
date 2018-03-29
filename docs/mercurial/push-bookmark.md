@@ -1,5 +1,6 @@
 # Push bookmark
 
+```http
 GET /scm/hg/hgtest?cmd=capabilities HTTP/1.1.
 Accept-Encoding: identity.
 accept: application/mercurial-0.1.
@@ -113,3 +114,4 @@ Content-Length: 2.
 Server: Jetty(7.6.21.v20160908).
 .
 1
+```
