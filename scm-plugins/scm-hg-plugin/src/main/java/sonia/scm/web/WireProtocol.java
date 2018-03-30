@@ -33,14 +33,17 @@
 package sonia.scm.web;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.google.common.base.Throwables;
 import com.google.common.collect.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.util.HttpUtil;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -73,7 +76,10 @@ public final class WireProtocol {
    * - no command was specified with the request (is required for the hgweb ui)
    * - the command in the query string was found in the list of read request
    * - if query string contains the batch command, then all commands specified in X-HgArg headers must be
-   *   in the list of read request
+   *   in the list of read requests
+   * - in case of enabled HttpPostArgs protocol and query string container the batch command, the header X-HgArgs-Post
+   *   is read and the commands which are specified in the body from 0 to the value of X-HgArgs-Post must be in the list
+   *   of read requests
    *
    * @param request http request
    *
@@ -94,14 +100,38 @@ public final class WireProtocol {
   @VisibleForTesting
   static List<String> commandsOf(HttpServletRequest request) {
     List<String> listOfCmds = Lists.newArrayList();
+
     String cmd = getCommandFromQueryString(request);
     if (cmd != null) {
       listOfCmds.add(cmd);
       if (isBatchCommand(cmd)) {
         parseHgArgHeaders(request, listOfCmds);
+        handleHttpPostArgs(request, listOfCmds);
       }
     }
     return Collections.unmodifiableList(listOfCmds);
+  }
+
+  private static void handleHttpPostArgs(HttpServletRequest request, List<String> listOfCmds) {
+    int hgArgsPostSize = request.getIntHeader("X-HgArgs-Post");
+    if (hgArgsPostSize > 0) {
+
+      if (request instanceof HgServletRequest) {
+        HgServletRequest hgRequest = (HgServletRequest) request;
+
+        try {
+          byte[] bytes = hgRequest.getInputStream().readAndCapture(hgArgsPostSize);
+          String hgArgs = new String(bytes, Charsets.US_ASCII);
+          String decoded = decodeValue(hgArgs);
+          parseHgCommandHeader(listOfCmds, decoded);
+        } catch (IOException ex) {
+          throw Throwables.propagate(ex);
+        }
+      } else {
+        throw new IllegalArgumentException("could not process the httppostargs protocol without HgServletRequest");
+      }
+
+    }
   }
 
   private static void parseHgArgHeaders(HttpServletRequest request, List<String> listOfCmds) {
@@ -115,9 +145,13 @@ public final class WireProtocol {
   private static void parseHgArgHeader(HttpServletRequest request, List<String> listOfCmds, String header) {
     if (isHgArgHeader(header)) {
       String value = getHeaderDecoded(request, header);
-      if (isHgArgCommandHeader(value)) {
-        parseHgCommandHeader(listOfCmds, value);
-      }
+      parseHgArgValue(listOfCmds, value);
+    }
+  }
+
+  private static void parseHgArgValue(List<String> listOfCmds, String value) {
+    if (isHgArgCommandHeader(value)) {
+      parseHgCommandHeader(listOfCmds, value);
     }
   }
 
@@ -143,7 +177,11 @@ public final class WireProtocol {
   }
 
   private static String getHeaderDecoded(HttpServletRequest request, String header) {
-    return HttpUtil.decode(Strings.nullToEmpty(request.getHeader(header)));
+    return decodeValue(request.getHeader(header));
+  }
+
+  private static String decodeValue(String value) {
+    return HttpUtil.decode(Strings.nullToEmpty(value));
   }
 
   private static boolean isHgArgHeader(String header) {

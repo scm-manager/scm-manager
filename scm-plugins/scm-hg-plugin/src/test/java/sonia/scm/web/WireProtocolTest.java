@@ -32,14 +32,17 @@
 
 package sonia.scm.web;
 
+import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
-
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
@@ -91,6 +94,18 @@ public class WireProtocolTest {
     expectQueryCommand("unbundle", "bool=&cmd=unbundle");
     expectQueryCommand("unbundle", "bool&cmd=unbundle");
     expectQueryCommand("unbundle", "prefix=stu==ff&cmd=unbundle");
+  }
+
+  @Test
+  public void testGetCommandsOfWithHgArgsPost() throws IOException {
+    when(request.getMethod()).thenReturn("POST");
+    when(request.getQueryString()).thenReturn("cmd=batch");
+    when(request.getIntHeader("X-HgArgs-Post")).thenReturn(29);
+    when(request.getHeaderNames()).thenReturn(Collections.enumeration(Lists.newArrayList("X-HgArgs-Post")));
+    when(request.getInputStream()).thenReturn(new BufferedServletInputStream("cmds=lheads+%3Bknown+nodes%3D"));
+
+    List<String> commands = WireProtocol.commandsOf(new HgServletRequest(request));
+    assertThat(commands, contains("batch", "lheads", "known"));
   }
 
   @Test
@@ -157,6 +172,21 @@ public class WireProtocolTest {
     List<String> commands = WireProtocol.commandsOf(request);
     assertEquals(1, commands.size());
     assertTrue(commands.contains(expected));
+  }
+
+  private static class BufferedServletInputStream extends ServletInputStream {
+
+    private ByteArrayInputStream input;
+
+    BufferedServletInputStream(String content) {
+      this.input = new ByteArrayInputStream(content.getBytes(Charsets.US_ASCII));
+    }
+
+    @Override
+    public int read() {
+      return input.read();
+    }
+
   }
 
 }

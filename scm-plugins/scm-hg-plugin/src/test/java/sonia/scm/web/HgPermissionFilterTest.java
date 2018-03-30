@@ -31,20 +31,26 @@
 
 package sonia.scm.web;
 
-import javax.servlet.http.HttpServletRequest;
+import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
-
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import static org.mockito.Mockito.*;
-import static sonia.scm.web.WireProtocolRequestMockFactory.CMDS_HEADS_KNOWN_NODES;
-import static sonia.scm.web.WireProtocolRequestMockFactory.Namespace.*;
-
 import org.mockito.runners.MockitoJUnitRunner;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.repository.HgConfig;
+import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.RepositoryProvider;
+
+import javax.servlet.http.HttpServletRequest;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static sonia.scm.web.WireProtocolRequestMockFactory.CMDS_HEADS_KNOWN_NODES;
+import static sonia.scm.web.WireProtocolRequestMockFactory.Namespace.BOOKMARKS;
+import static sonia.scm.web.WireProtocolRequestMockFactory.Namespace.PHASES;
 
 /**
  * Unit tests for {@link HgPermissionFilter}.
@@ -60,10 +66,18 @@ public class HgPermissionFilterTest {
   @Mock
   private RepositoryProvider repositoryProvider;
 
+  @Mock
+  private HgRepositoryHandler hgRepositoryHandler;
+
   private WireProtocolRequestMockFactory wireProtocol = new WireProtocolRequestMockFactory("/scm/hg/repo");
 
   @InjectMocks
   private HgPermissionFilter filter;
+
+  @Before
+  public void setUp() {
+    when(hgRepositoryHandler.getConfig()).thenReturn(new HgConfig());
+  }
 
   /**
    * Tests {@link HgPermissionFilter#isWriteRequest(HttpServletRequest)}.
@@ -83,9 +97,27 @@ public class HgPermissionFilterTest {
     assertTrue(isWriteRequest("KA"));
   }
 
+  /**
+   * Tests {@link HgPermissionFilter#isWriteRequest(HttpServletRequest)} with enabled httppostargs option.
+   */
+  @Test
+  public void testIsWriteRequestWithEnabledHttpPostArgs() {
+    HgConfig config = new HgConfig();
+    config.setEnableHttpPostArgs(true);
+    when(hgRepositoryHandler.getConfig()).thenReturn(config);
+
+    assertFalse(isWriteRequest("POST"));
+    assertFalse(isWriteRequest("POST", "heads"));
+    assertTrue(isWriteRequest("POST", "unbundle"));
+  }
+
   private boolean isWriteRequest(String method) {
+    return isWriteRequest(method, "capabilities");
+  }
+
+  private boolean isWriteRequest(String method, String command) {
     HttpServletRequest request = mock(HttpServletRequest.class);
-    when(request.getQueryString()).thenReturn("cmd=capabilities");
+    when(request.getQueryString()).thenReturn("cmd=" + command);
     when(request.getMethod()).thenReturn(method);
     return filter.isWriteRequest(request);
   }
