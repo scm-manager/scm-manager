@@ -44,8 +44,9 @@ import sonia.scm.repository.RepositoryProvider;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static sonia.scm.web.WireProtocolRequestMockFactory.CMDS_HEADS_KNOWN_NODES;
@@ -59,6 +60,9 @@ import static sonia.scm.web.WireProtocolRequestMockFactory.Namespace.PHASES;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class HgPermissionFilterTest {
+
+  @Mock
+  private HttpServletRequest request;
 
   @Mock
   private ScmConfiguration configuration;
@@ -77,6 +81,20 @@ public class HgPermissionFilterTest {
   @Before
   public void setUp() {
     when(hgRepositoryHandler.getConfig()).thenReturn(new HgConfig());
+  }
+
+  /**
+   * Tests {@link HgPermissionFilter#wrapRequestIfRequired(HttpServletRequest)}.
+   */
+  @Test
+  public void testWrapRequestIfRequired() {
+    assertSame(request, filter.wrapRequestIfRequired(request));
+
+    HgConfig hgConfig = new HgConfig();
+    hgConfig.setEnableHttpPostArgs(true);
+    when(hgRepositoryHandler.getConfig()).thenReturn(hgConfig);
+
+    assertThat(filter.wrapRequestIfRequired(request), is(instanceOf(HgServletRequest.class)));
   }
 
   /**

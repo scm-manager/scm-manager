@@ -35,6 +35,7 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -81,18 +82,28 @@ public class HgPermissionFilter extends ProviderPermissionFilter
 
   @Override
   protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-    HgServletRequest hgRequest = new HgServletRequest(request);
-    super.doFilter(hgRequest, response, chain);
-    // TODO closing stream in case of fire?
+    super.doFilter(wrapRequestIfRequired(request), response, chain);
+  }
+
+  @VisibleForTesting
+  HttpServletRequest wrapRequestIfRequired(HttpServletRequest request) {
+    if (isHttpPostArgsEnabled()) {
+      return new HgServletRequest(request);
+    }
+    return request;
   }
 
   @Override
   protected boolean isWriteRequest(HttpServletRequest request)
   {
-    if (repositoryHandler.getConfig().isEnableHttpPostArgs()) {
+    if (isHttpPostArgsEnabled()) {
       return isHttpPostArgsWriteRequest(request);
     }
     return isDefaultWriteRequest(request);
+  }
+
+  private boolean isHttpPostArgsEnabled() {
+    return repositoryHandler.getConfig().isEnableHttpPostArgs();
   }
 
   private boolean isHttpPostArgsWriteRequest(HttpServletRequest request) {
