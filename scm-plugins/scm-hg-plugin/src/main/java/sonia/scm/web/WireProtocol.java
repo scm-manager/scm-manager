@@ -119,18 +119,24 @@ public final class WireProtocol {
       if (request instanceof HgServletRequest) {
         HgServletRequest hgRequest = (HgServletRequest) request;
 
-        try {
-          byte[] bytes = hgRequest.getInputStream().readAndCapture(hgArgsPostSize);
-          String hgArgs = new String(bytes, Charsets.US_ASCII);
-          String decoded = decodeValue(hgArgs);
-          parseHgCommandHeader(listOfCmds, decoded);
-        } catch (IOException ex) {
-          throw Throwables.propagate(ex);
-        }
+        parseHttpPostArgs(listOfCmds, hgArgsPostSize, hgRequest);
       } else {
         throw new IllegalArgumentException("could not process the httppostargs protocol without HgServletRequest");
       }
 
+    }
+  }
+
+  private static void parseHttpPostArgs(List<String> listOfCmds, int hgArgsPostSize, HgServletRequest hgRequest) {
+    try {
+      byte[] bytes = hgRequest.getInputStream().readAndCapture(hgArgsPostSize);
+      // we use iso-8859-1 for encoding, because the post args are normally http headers which are using iso-8859-1
+      // see https://tools.ietf.org/html/rfc7230#section-3.2.4
+      String hgArgs = new String(bytes, Charsets.ISO_8859_1);
+      String decoded = decodeValue(hgArgs);
+      parseHgCommandHeader(listOfCmds, decoded);
+    } catch (IOException ex) {
+      throw Throwables.propagate(ex);
     }
   }
 
