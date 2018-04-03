@@ -65,7 +65,9 @@ Sonia.hg.ConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
   disableHookSSLValidationHelpText: 'Disables the validation of ssl certificates for the mercurial hook, which forwards the repository changes back to scm-manager. \n\
                                      This option should only be used, if SCM-Manager uses a self signed certificate.',
   // TODO explain it
-  enableHttpPostArgsHelpText: 'Enables the experimental HttpPostArgs Protocol.',
+  enableHttpPostArgsHelpText: 'Enables the experimental HttpPostArgs Protocol of mercurial.\n\
+    The HttpPostArgs Protocol uses the body of post requests to send the meta information instead of http headers.\
+    This helps to reduce the header size of mercurial requests. HttpPostArgs is supported since mercurial 3.8.',
 
   initComponent: function(){
 
