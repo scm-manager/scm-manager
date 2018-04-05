@@ -70,7 +70,6 @@
     <module>scm-plugins</module>
     <module>scm-samples</module>
     <module>scm-dao-xml</module>
-    <module>scm-dao-orientdb</module>
     <module>scm-webapp</module>
     <module>scm-server</module>
     <module>scm-plugin-backend</module>
