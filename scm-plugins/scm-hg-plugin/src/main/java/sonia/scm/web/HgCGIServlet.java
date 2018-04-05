@@ -87,6 +87,8 @@ public class HgCGIServlet extends HttpServlet
   /** Field description */
   public static final String ENV_REPOSITORY_PATH = "SCM_REPOSITORY_PATH";
 
+  private static final String ENV_HTTP_POST_ARGS = "SCM_HTTP_POST_ARGS";
+
   /** Field description */
   public static final String ENV_SESSION_PREFIX = "SCM_";
 
@@ -278,11 +280,15 @@ public class HgCGIServlet extends HttpServlet
       environment.put(ENV_PYTHON_HTTPS_VERIFY, "0");
     }
 
+    // enable experimental httppostargs protocol of mercurial
+    // Issue 970: https://goo.gl/poascp
+    environment.put(ENV_HTTP_POST_ARGS, String.valueOf(handler.getConfig().isEnableHttpPostArgs()));
+
     //J-
     HgEnvironment.prepareEnvironment(
       environment,
       handler,
-      hookManager, 
+      hookManager,
       request
     );
     //J+

@@ -48,6 +48,7 @@ Sonia.hg.ConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
   showRevisionInIdText: 'Show Revision',
   // TODO: i18n
   disableHookSSLValidationText: 'Disable SSL Validation on Hooks',
+  enableHttpPostArgsText: 'Enable HttpPostArgs Protocol',
 
   // helpText
   hgBinaryHelpText: 'Location of Mercurial binary.',
@@ -63,6 +64,10 @@ Sonia.hg.ConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
   // TODO: i18n
   disableHookSSLValidationHelpText: 'Disables the validation of ssl certificates for the mercurial hook, which forwards the repository changes back to scm-manager. \n\
                                      This option should only be used, if SCM-Manager uses a self signed certificate.',
+  // TODO explain it
+  enableHttpPostArgsHelpText: 'Enables the experimental HttpPostArgs Protocol of mercurial.\n\
+    The HttpPostArgs Protocol uses the body of post requests to send the meta information instead of http headers.\
+    This helps to reduce the header size of mercurial requests. HttpPostArgs is supported since mercurial 3.8.',
 
   initComponent: function(){
 
@@ -117,10 +122,16 @@ Sonia.hg.ConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
         helpText: this.disableHookSSLValidationHelpText
       },{
         xtype: 'checkbox',
+        name: 'enableHttpPostArgs',
+        fieldLabel: this.enableHttpPostArgsText,
+        inputValue: 'true',
+        helpText: this.enableHttpPostArgsHelpText
+      },{
+        xtype: 'checkbox',
         name: 'disabled',
         fieldLabel: this.disabledText,
         inputValue: 'true',
-        helpText: this.disabledHelpText        
+        helpText: this.disabledHelpText
       },{
         xtype: 'button',
         text: this.configWizardText,
@@ -260,11 +271,11 @@ Sonia.repository.typeIcons['hg'] = 'resources/images/icons/16x16/mercurial.png';
 // override ChangesetViewerGrid to render changeset id's with revisions
 
 Ext.override(Sonia.repository.ChangesetViewerGrid, {
-  
+
   isMercurialRepository: function(){
     return this.repository.type === 'hg';
   },
-  
+
   getChangesetId: function(id, record){
     if ( this.isMercurialRepository() ){
       var rev = Sonia.util.getProperty(record.get('properties'), 'hg.rev');
@@ -274,7 +285,7 @@ Ext.override(Sonia.repository.ChangesetViewerGrid, {
     }
     return id;
   },
-  
+
   getParentIds: function(id, record){
     var parents = record.get('parents');
     if ( this.isMercurialRepository() ){
@@ -285,7 +296,7 @@ Ext.override(Sonia.repository.ChangesetViewerGrid, {
           parents[0] = rev + ':' + parents[0];
         }
         if ( parents.length > 1 ){
-          rev = Sonia.util.getProperty(properties, 'hg.p2.rev');          
+          rev = Sonia.util.getProperty(properties, 'hg.p2.rev');
           if (rev){
             parents[1] = rev + ':' + parents[1];
           }
@@ -294,5 +305,5 @@ Ext.override(Sonia.repository.ChangesetViewerGrid, {
     }
     return parents;
   }
-  
+
 });
