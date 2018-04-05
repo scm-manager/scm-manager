@@ -34,13 +34,13 @@ package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.eclipse.aether.repository.Authentication;
+import org.eclipse.aether.repository.Proxy;
+import org.eclipse.aether.repository.ProxySelector;
+import org.eclipse.aether.repository.RemoteRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.sonatype.aether.repository.Authentication;
-import org.sonatype.aether.repository.Proxy;
-import org.sonatype.aether.repository.ProxySelector;
-import org.sonatype.aether.repository.RemoteRepository;
 
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.util.Util;
@@ -89,8 +89,11 @@ public class DefaultProxySelector implements ProxySelector
 
     if (Util.isNotEmpty(username) || Util.isNotEmpty(password))
     {
-      authentication = new Authentication(Util.nonNull(username),
-              Util.nonNull(password));
+      /*
+      TODO
+      authentication = new Authentication(Util.nonNull(username), Util.nonNull(password));
+       */
+
     }
 
     return new Proxy(Proxy.TYPE_HTTP, configuration.getProxyServer(),

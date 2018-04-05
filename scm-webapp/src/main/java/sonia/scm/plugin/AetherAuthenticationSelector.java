@@ -36,19 +36,17 @@ package sonia.scm.plugin;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
-
+import org.eclipse.aether.repository.Authentication;
+import org.eclipse.aether.repository.AuthenticationSelector;
+import org.eclipse.aether.repository.RemoteRepository;
+import org.eclipse.aether.util.repository.AuthenticationBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import org.sonatype.aether.repository.Authentication;
-import org.sonatype.aether.repository.AuthenticationSelector;
-import org.sonatype.aether.repository.RemoteRepository;
-
 import sonia.scm.plugin.AdvancedPluginConfiguration.Server;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.Map;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -115,8 +113,10 @@ public class AetherAuthenticationSelector implements AuthenticationSelector
     {
       logger.info("use user {} for repository wiht id {}",
         server.getUsername(), repository.getId());
-      authentication = new Authentication(server.getUsername(),
-        server.getPassword());
+      authentication = new AuthenticationBuilder()
+        .addUsername(server.getUsername())
+        .addPassword(server.getPassword())
+        .build();
     }
 
     return authentication;

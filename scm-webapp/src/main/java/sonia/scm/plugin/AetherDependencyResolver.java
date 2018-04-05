@@ -36,26 +36,23 @@ package sonia.scm.plugin;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.Lists;
-
+import org.eclipse.aether.RepositorySystem;
+import org.eclipse.aether.RepositorySystemSession;
+import org.eclipse.aether.collection.CollectRequest;
+import org.eclipse.aether.collection.DependencyCollectionException;
+import org.eclipse.aether.graph.Dependency;
+import org.eclipse.aether.graph.DependencyNode;
+import org.eclipse.aether.repository.LocalRepository;
+import org.eclipse.aether.repository.RemoteRepository;
+import org.eclipse.aether.resolution.DependencyResolutionException;
+import org.eclipse.aether.util.graph.visitor.PreorderNodeListGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import org.sonatype.aether.RepositorySystem;
-import org.sonatype.aether.RepositorySystemSession;
-import org.sonatype.aether.collection.CollectRequest;
-import org.sonatype.aether.collection.DependencyCollectionException;
-import org.sonatype.aether.graph.Dependency;
-import org.sonatype.aether.graph.DependencyNode;
-import org.sonatype.aether.repository.LocalRepository;
-import org.sonatype.aether.repository.RemoteRepository;
-import org.sonatype.aether.resolution.DependencyResolutionException;
-import org.sonatype.aether.util.graph.PreorderNodeListGenerator;
-
 import sonia.scm.config.ScmConfiguration;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.List;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -83,9 +80,9 @@ public class AetherDependencyResolver
    * @param remoteRepositories
    */
   public AetherDependencyResolver(ScmConfiguration configuration,
-    AdvancedPluginConfiguration advancedPluginConfiguration,
-    RepositorySystem system, LocalRepository localRepository,
-    List<RemoteRepository> remoteRepositories)
+                                  AdvancedPluginConfiguration advancedPluginConfiguration,
+                                  RepositorySystem system, LocalRepository localRepository,
+                                  List<RemoteRepository> remoteRepositories)
   {
     this.configuration = configuration;
     this.advancedPluginConfiguration = advancedPluginConfiguration;

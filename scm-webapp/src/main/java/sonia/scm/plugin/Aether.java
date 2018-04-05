@@ -35,40 +35,33 @@ package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.apache.maven.repository.internal.MavenRepositorySystemSession;
-
+import com.google.common.base.Throwables;
+import org.apache.maven.repository.internal.MavenRepositorySystemUtils;
+import org.eclipse.aether.DefaultRepositorySystemSession;
+import org.eclipse.aether.RepositorySystem;
+import org.eclipse.aether.RepositorySystemSession;
+import org.eclipse.aether.artifact.DefaultArtifact;
+import org.eclipse.aether.collection.CollectRequest;
+import org.eclipse.aether.collection.DependencyCollectionException;
+import org.eclipse.aether.collection.DependencyGraphTransformer;
+import org.eclipse.aether.graph.Dependency;
+import org.eclipse.aether.graph.DependencyFilter;
+import org.eclipse.aether.graph.DependencyNode;
+import org.eclipse.aether.repository.*;
+import org.eclipse.aether.resolution.DependencyRequest;
+import org.eclipse.aether.resolution.DependencyResolutionException;
+import org.eclipse.aether.spi.locator.ServiceLocator;
+import org.eclipse.aether.util.artifact.JavaScopes;
+import org.eclipse.aether.util.filter.AndDependencyFilter;
+import org.eclipse.aether.util.filter.DependencyFilterUtils;
+import org.eclipse.aether.util.graph.transformer.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import org.sonatype.aether.RepositorySystem;
-import org.sonatype.aether.RepositorySystemSession;
-import org.sonatype.aether.collection.CollectRequest;
-import org.sonatype.aether.collection.DependencyCollectionException;
-import org.sonatype.aether.collection.DependencyGraphTransformer;
-import org.sonatype.aether.graph.Dependency;
-import org.sonatype.aether.graph.DependencyFilter;
-import org.sonatype.aether.graph.DependencyNode;
-import org.sonatype.aether.repository.LocalRepository;
-import org.sonatype.aether.repository.LocalRepositoryManager;
-import org.sonatype.aether.repository.Proxy;
-import org.sonatype.aether.repository.RemoteRepository;
-import org.sonatype.aether.repository.RepositoryPolicy;
-import org.sonatype.aether.resolution.DependencyRequest;
-import org.sonatype.aether.resolution.DependencyResolutionException;
-import org.sonatype.aether.util.artifact.DefaultArtifact;
-import org.sonatype.aether.util.artifact.JavaScopes;
-import org.sonatype.aether.util.filter.AndDependencyFilter;
-import org.sonatype.aether.util.filter.DependencyFilterUtils;
-import org.sonatype.aether.util.graph.transformer
-  .ChainedDependencyGraphTransformer;
-import org.sonatype.aether.util.graph.transformer.ConflictMarker;
-import org.sonatype.aether.util.graph.transformer.JavaDependencyContextRefiner;
-import org.sonatype.aether.util.graph.transformer.JavaEffectiveScopeCalculator;
-import org.sonatype.aether.util.graph.transformer
-  .NearestVersionConflictResolver;
-
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.net.Proxies;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  *
@@ -76,6 +69,8 @@ import sonia.scm.net.Proxies;
  */
 public final class Aether
 {
+
+  private static final ServiceLocator serviceLocator = new AetherServiceLocator();
 
   /** Field description */
   private static final DependencyFilter FILTER =
@@ -134,11 +129,9 @@ public final class Aether
   public static RemoteRepository createRemoteRepository(
     ScmConfiguration configuration, PluginRepository pluginRepository)
   {
-    RemoteRepository remoteRepository =
-      new RemoteRepository(pluginRepository.getId(), "default",
-        pluginRepository.getUrl());
+    RemoteRepository.Builder builder = new RemoteRepository.Builder(pluginRepository.getId(), "default", pluginRepository.getUrl());
 
-    if (Proxies.isEnabled(configuration, remoteRepository.getHost()))
+    if (Proxies.isEnabled(configuration, hostFromUrl(pluginRepository.getUrl())))
     {
       Proxy proxy = DefaultProxySelector.createProxy(configuration);
 
@@ -148,10 +141,18 @@ public final class Aether
           pluginRepository.getUrl());
       }
 
-      remoteRepository.setProxy(proxy);
+      builder.setProxy(proxy);
     }
 
-    return remoteRepository;
+    return builder.build();
+  }
+
+  private static String hostFromUrl(String url) {
+    try {
+      return new URL(url).getHost();
+    } catch (MalformedURLException e) {
+      throw Throwables.propagate(e);
+    }
   }
 
   /**
@@ -162,7 +163,7 @@ public final class Aether
    */
   public static RepositorySystem createRepositorySystem()
   {
-    return new AetherServiceLocator().getService(RepositorySystem.class);
+    return serviceLocator.getService(RepositorySystem.class);
   }
 
   /**
@@ -181,8 +182,7 @@ public final class Aether
     ScmConfiguration configuration,
     AdvancedPluginConfiguration advancedPluginConfiguration)
   {
-    MavenRepositorySystemSession session = new MavenRepositorySystemSession();
-
+    DefaultRepositorySystemSession session = MavenRepositorySystemUtils.newSession();
     session.setChecksumPolicy(RepositoryPolicy.CHECKSUM_POLICY_WARN);
 
     if (configuration.isEnableProxy())
@@ -191,23 +191,26 @@ public final class Aether
       session.setProxySelector(new DefaultProxySelector(configuration));
     }
 
-    LocalRepositoryManager localRepositoryManager =
-      system.newLocalRepositoryManager(localRepository);
+    LocalRepositoryManager localRepositoryManager = system.newLocalRepositoryManager(session, localRepository);
 
     session.setLocalRepositoryManager(localRepositoryManager);
     session.setAuthenticationSelector(
       new AetherAuthenticationSelector(advancedPluginConfiguration)
     );
 
-    // create graph transformer to resolve dependency conflicts
-    //J-
-    DependencyGraphTransformer dgt = new ChainedDependencyGraphTransformer(
-      new ConflictMarker(), 
-      new JavaEffectiveScopeCalculator(),
-      new NearestVersionConflictResolver(),
-      new JavaDependencyContextRefiner() 
+    // create graph transformer and conflictResolver to resolve dependency conflicts
+    ConflictResolver conflictResolver = new ConflictResolver(
+      new NearestVersionSelector(),
+      new JavaScopeSelector(),
+      new SimpleOptionalitySelector(),
+      new JavaScopeDeriver()
     );
-    //J+
+
+    DependencyGraphTransformer dgt = new ChainedDependencyGraphTransformer(
+      new ConflictMarker(),
+      conflictResolver,
+      new JavaDependencyContextRefiner()
+    );
 
     session.setDependencyGraphTransformer(dgt);
 
@@ -228,7 +231,7 @@ public final class Aether
    * @throws DependencyResolutionException
    */
   public static DependencyNode resolveDependencies(RepositorySystem system,
-    RepositorySystemSession session, CollectRequest request)
+                                                   RepositorySystemSession session, CollectRequest request)
     throws DependencyCollectionException, DependencyResolutionException
   {
     DependencyNode node = system.collectDependencies(session,

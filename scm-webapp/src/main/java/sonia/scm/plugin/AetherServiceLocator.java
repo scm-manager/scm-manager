@@ -37,32 +37,30 @@ package sonia.scm.plugin;
 import org.apache.maven.repository.internal.DefaultArtifactDescriptorReader;
 import org.apache.maven.repository.internal.DefaultVersionRangeResolver;
 import org.apache.maven.repository.internal.DefaultVersionResolver;
+import org.apache.maven.repository.internal.MavenRepositorySystemUtils;
+import org.eclipse.aether.connector.basic.BasicRepositoryConnectorFactory;
+import org.eclipse.aether.impl.ArtifactDescriptorReader;
+import org.eclipse.aether.impl.DefaultServiceLocator;
+import org.eclipse.aether.impl.VersionRangeResolver;
+import org.eclipse.aether.impl.VersionResolver;
+import org.eclipse.aether.internal.impl.slf4j.Slf4jLoggerFactory;
+import org.eclipse.aether.spi.connector.RepositoryConnectorFactory;
+import org.eclipse.aether.spi.connector.transport.TransporterFactory;
+import org.eclipse.aether.spi.locator.ServiceLocator;
+import org.eclipse.aether.spi.log.LoggerFactory;
+import org.eclipse.aether.transport.file.FileTransporterFactory;
+import org.eclipse.aether.transport.http.HttpTransporterFactory;
 
-import org.slf4j.LoggerFactory;
-
-import org.sonatype.aether.connector.async.AsyncRepositoryConnectorFactory;
-import org.sonatype.aether.connector.file.FileRepositoryConnectorFactory;
-import org.sonatype.aether.impl.ArtifactDescriptorReader;
-import org.sonatype.aether.impl.VersionRangeResolver;
-import org.sonatype.aether.impl.VersionResolver;
-import org.sonatype.aether.impl.internal.DefaultServiceLocator;
-import org.sonatype.aether.impl.internal.Slf4jLogger;
-import org.sonatype.aether.spi.connector.RepositoryConnectorFactory;
-import org.sonatype.aether.spi.log.Logger;
+import java.util.List;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class AetherServiceLocator extends DefaultServiceLocator
+public class AetherServiceLocator implements ServiceLocator
 {
 
-  /** Field description */
-  private static final String LOGGER_NAME = "org.sonatype.aether";
-
-  /** Field description */
-  private static final Slf4jLogger logger =
-    new Slf4jLogger(LoggerFactory.getLogger(LOGGER_NAME));
+  private DefaultServiceLocator delegate;
 
   //~--- constructors ---------------------------------------------------------
 
@@ -70,16 +68,25 @@ public class AetherServiceLocator extends DefaultServiceLocator
    * Constructs ...
    *
    */
-  public AetherServiceLocator()
+  AetherServiceLocator()
   {
-    setServices(Logger.class, logger);
-    addService(VersionResolver.class, DefaultVersionResolver.class);
-    addService(VersionRangeResolver.class, DefaultVersionRangeResolver.class);
-    addService(ArtifactDescriptorReader.class,
-      DefaultArtifactDescriptorReader.class);
-    addService(RepositoryConnectorFactory.class,
-      AsyncRepositoryConnectorFactory.class);
-    addService(RepositoryConnectorFactory.class,
-      FileRepositoryConnectorFactory.class);
+    delegate = MavenRepositorySystemUtils.newServiceLocator();
+    delegate.setService(LoggerFactory.class, Slf4jLoggerFactory.class);
+    delegate.addService(VersionResolver.class, DefaultVersionResolver.class);
+    delegate.addService(VersionRangeResolver.class, DefaultVersionRangeResolver.class);
+    delegate.addService(ArtifactDescriptorReader.class, DefaultArtifactDescriptorReader.class);
+    delegate.addService(TransporterFactory.class, HttpTransporterFactory.class);
+    delegate.addService(TransporterFactory.class, FileTransporterFactory.class);
+    delegate.addService(RepositoryConnectorFactory.class, BasicRepositoryConnectorFactory.class);
+  }
+
+  @Override
+  public <T> T getService(Class<T> type) {
+    return delegate.getService(type);
+  }
+
+  @Override
+  public <T> List<T> getServices(Class<T> type) {
+    return delegate.getServices(type);
   }
 }

@@ -40,10 +40,10 @@ import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.sonatype.aether.RepositorySystem;
-import org.sonatype.aether.graph.Dependency;
-import org.sonatype.aether.repository.LocalRepository;
-import org.sonatype.aether.repository.RemoteRepository;
+import org.eclipse.aether.RepositorySystem;
+import org.eclipse.aether.graph.Dependency;
+import org.eclipse.aether.repository.LocalRepository;
+import org.eclipse.aether.repository.RemoteRepository;
 
 import sonia.scm.ConfigurationException;
 import sonia.scm.SCMContextProvider;
@@ -190,7 +190,6 @@ public class AetherPluginHandler
    *
    *
    * @param dependency
-   * @param dependencies
    * @param localDependencies
    */
   private void collectDependencies(Dependency dependency,
@@ -200,7 +199,7 @@ public class AetherPluginHandler
     {
       //J-
       AetherDependencyResolver resolver = new AetherDependencyResolver(
-        configuration, advancedPluginConfiguration, repositorySystem, 
+        configuration, advancedPluginConfiguration, repositorySystem,
         localRepository, remoteRepositories
       );
       //J+
