@@ -136,7 +136,6 @@
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
-      <version>${logback.version}</version>
     </dependency>
     
     <dependency>
@@ -174,13 +173,11 @@
     <dependency>
       <groupId>commons-beanutils</groupId>
       <artifactId>commons-beanutils</artifactId>
-      <version>1.9.2</version>
     </dependency>
     
     <dependency>
       <groupId>commons-collections</groupId>
       <artifactId>commons-collections</artifactId>
-      <version>3.2.1</version>
     </dependency>
     
     <!-- 
@@ -210,14 +207,6 @@
           <groupId>c3p0</groupId>
         </exclusion>
       </exclusions>
-    </dependency>
-    
-    <!-- fix version conflict -->
-    
-    <dependency>
-      <groupId>org.apache.httpcomponents</groupId>
-      <artifactId>httpclient</artifactId>
-      <version>4.2.6</version>
     </dependency>
     
     <!-- template engine -->
