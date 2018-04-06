@@ -36,7 +36,7 @@ from mercurial.hgweb import hgweb, wsgicgi
 
 demandimport.enable()
 
-u = uimod.ui.load()
+u = uimod.ui()
 
 # pass SCM_HTTP_POST_ARGS to enable experimental httppostargs protocol of mercurial
 # SCM_HTTP_POST_ARGS is set by HgCGIServlet
