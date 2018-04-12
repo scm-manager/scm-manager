@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-      
+
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -15,7 +15,7 @@
   <name>scm-core</name>
 
   <dependencies>
-    
+
     <!-- servlet api -->
 
     <dependency>
@@ -24,22 +24,22 @@
       <version>${servlet.version}</version>
       <scope>provided</scope>
     </dependency>
-    
+
     <!-- logging -->
 
     <dependency>
       <artifactId>slf4j-api</artifactId>
       <groupId>org.slf4j</groupId>
     </dependency>
-    
+
     <!-- security -->
-    
+
     <dependency>
       <groupId>org.apache.shiro</groupId>
       <artifactId>shiro-core</artifactId>
       <version>${shiro.version}</version>
     </dependency>
-    
+
     <!-- injection -->
 
     <dependency>
@@ -59,13 +59,13 @@
       <artifactId>guice-servlet</artifactId>
       <version>${guice.version}</version>
     </dependency>
-    
+
     <dependency>
       <groupId>com.google.inject.extensions</groupId>
       <artifactId>guice-throwingproviders</artifactId>
       <version>${guice.version}</version>
     </dependency>
-    
+
     <!-- rest api -->
 
     <dependency>
@@ -73,15 +73,37 @@
       <artifactId>jersey-core</artifactId>
       <version>${jersey.version}</version>
     </dependency>
-    
+
+    <!-- xml -->
+
+    <dependency>
+      <groupId>javax.xml.bind</groupId>
+      <artifactId>jaxb-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.sun.xml.bind</groupId>
+      <artifactId>jaxb-impl</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.glassfish.jaxb</groupId>
+      <artifactId>jaxb-runtime</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.activation</groupId>
+      <artifactId>activation</artifactId>
+    </dependency>
+
     <!-- util -->
-    
+
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
       <version>${guava.version}</version>
     </dependency>
-    
+
     <dependency>
       <groupId>commons-lang</groupId>
       <artifactId>commons-lang</artifactId>
@@ -89,14 +111,14 @@
     </dependency>
 
   </dependencies>
-  
+
   <build>
     <plugins>
-      
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.9</version>
+        <version>3.0.0</version>
         <configuration>
           <useStandardDocletOptions>true</useStandardDocletOptions>
           <charset>${project.build.sourceEncoding}</charset>
@@ -122,8 +144,8 @@
           </links>
         </configuration>
       </plugin>
-      
+
     </plugins>
   </build>
-  
+
 </project>
