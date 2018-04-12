@@ -362,16 +362,7 @@
             <artifactId>maven-javadoc-plugin</artifactId>
             <version>3.0.0</version>
             <configuration>
-              <doclet>org.jboss.apiviz.APIviz</doclet>
-              <docletArtifact>
-                <groupId>org.jboss.apiviz</groupId>
-                <artifactId>apiviz</artifactId>
-                <version>1.3.2.GA</version>
-              </docletArtifact>
-              <additionalparam>
-                -sourceclasspath ${project.build.outputDirectory}
-                -nopackagediagram
-              </additionalparam>
+              <failOnError>false</failOnError>
             </configuration>
           </plugin>
 
