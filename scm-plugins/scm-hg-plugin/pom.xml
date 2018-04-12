@@ -28,7 +28,7 @@
     <dependency>
       <groupId>com.aragost.javahg</groupId>
       <artifactId>javahg</artifactId>
-      <version>0.13</version>
+      <version>0.13-java7</version>
       <exclusions>
         <exclusion>
           <groupId>com.google.guava</groupId>
