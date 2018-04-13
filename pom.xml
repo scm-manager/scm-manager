@@ -170,6 +170,13 @@
               <rules>
                 <enforceBytecodeVersion>
                   <maxJdkVersion>1.7</maxJdkVersion>
+                  <ignoreClasses>
+                    <!--
+                    ignore java 9 module info classes
+                    because jaxb is compiled with java 7 expect of module-info, which is compiled with java 9
+                    -->
+                    <ignoreClass>module-info</ignoreClass>
+                  </ignoreClasses>
                 </enforceBytecodeVersion>
               </rules>
               <fail>true</fail>
