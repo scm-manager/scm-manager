@@ -42,7 +42,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
 /**
- * Weak implementation of {@link CipherStreamHandler}.
+ * Weak implementation of {@link CipherStreamHandler}. This is the old implementation, which was used in versions prior
+ * 1.60.
  *
  * @see <a href="https://bitbucket.org/sdorra/scm-manager/issues/978/iteration-count-for-password-based">Issue 978</a>
  * @see <a href="https://bitbucket.org/sdorra/scm-manager/issues/979/constant-salts-for-pbe-are-insecure">Issue 979</a>

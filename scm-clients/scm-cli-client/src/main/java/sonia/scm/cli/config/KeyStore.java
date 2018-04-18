@@ -46,7 +46,7 @@ public interface KeyStore {
   /**
    * Reads the secret key from the store. The method returns {@code null} if no secret key was stored.
    *
-   * @return secret key of {@code null}
+   * @return secret key or {@code null}
    */
   String get();
 
