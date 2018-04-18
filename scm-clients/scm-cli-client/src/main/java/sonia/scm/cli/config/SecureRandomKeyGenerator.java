@@ -32,33 +32,38 @@
 
 package sonia.scm.cli.config;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import com.google.common.annotations.VisibleForTesting;
+import sonia.scm.security.KeyGenerator;
+
+import java.security.SecureRandom;
+import java.util.Locale;
 
 /**
- * The CipherStreamHandler is able to encrypt and decrypt streams.
+ * Create keys by using {@link SecureRandom}. The SecureRandomKeyGenerator produces aes compatible keys.
+ * Warning the class is not thread safe.
  *
  * @author Sebastian Sdorra
  * @since 1.60
  */
-public interface CipherStreamHandler {
+public class SecureRandomKeyGenerator implements KeyGenerator {
 
-  /**
-   * Decrypts the given input stream.
-   *
-   * @param inputStream encrypted input stream
-   *
-   * @return raw input stream
-   */
-  InputStream decrypt(InputStream inputStream) throws IOException;
+  private SecureRandom random = new SecureRandom();
 
-  /**
-   * Encrypts the given output stream.
-   *
-   * @param outputStream raw output stream
-   *
-   * @return encrypting output stream
-   */
-  OutputStream encrypt(OutputStream outputStream) throws IOException;
+  // key length 16 for aes128
+  @VisibleForTesting
+  static final int KEY_LENGTH = 16;
+
+  private static final String UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  private static final String LOWER = UPPER.toLowerCase(Locale.ENGLISH);
+  private static final String DIGITS = "0123456789";
+  private static final char[] ALL = (UPPER + LOWER + DIGITS).toCharArray();
+
+  @Override
+  public String createKey() {
+    char[] key = new char[KEY_LENGTH];
+    for (int idx = 0; idx < KEY_LENGTH; ++idx) {
+      key[idx] = ALL[random.nextInt(ALL.length)];
+    }
+    return new String(key);
+  }
 }

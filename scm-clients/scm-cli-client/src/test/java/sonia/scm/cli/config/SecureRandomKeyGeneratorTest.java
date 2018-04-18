@@ -29,36 +29,19 @@
  *
  */
 
-
 package sonia.scm.cli.config;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import org.junit.Test;
 
-/**
- * The CipherStreamHandler is able to encrypt and decrypt streams.
- *
- * @author Sebastian Sdorra
- * @since 1.60
- */
-public interface CipherStreamHandler {
+import static org.junit.Assert.*;
 
-  /**
-   * Decrypts the given input stream.
-   *
-   * @param inputStream encrypted input stream
-   *
-   * @return raw input stream
-   */
-  InputStream decrypt(InputStream inputStream) throws IOException;
+public class SecureRandomKeyGeneratorTest {
 
-  /**
-   * Encrypts the given output stream.
-   *
-   * @param outputStream raw output stream
-   *
-   * @return encrypting output stream
-   */
-  OutputStream encrypt(OutputStream outputStream) throws IOException;
+  @Test
+  public void testCreateKey() {
+    SecureRandomKeyGenerator keyGenerator = new SecureRandomKeyGenerator();
+    assertNotNull(keyGenerator.createKey());
+    assertEquals(SecureRandomKeyGenerator.KEY_LENGTH, keyGenerator.createKey().length());
+  }
+
 }

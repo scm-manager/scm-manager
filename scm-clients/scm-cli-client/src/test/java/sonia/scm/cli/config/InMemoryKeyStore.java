@@ -32,33 +32,22 @@
 
 package sonia.scm.cli.config;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+public class InMemoryKeyStore implements KeyStore {
 
-/**
- * The CipherStreamHandler is able to encrypt and decrypt streams.
- *
- * @author Sebastian Sdorra
- * @since 1.60
- */
-public interface CipherStreamHandler {
+  private String secretKey;
 
-  /**
-   * Decrypts the given input stream.
-   *
-   * @param inputStream encrypted input stream
-   *
-   * @return raw input stream
-   */
-  InputStream decrypt(InputStream inputStream) throws IOException;
+  @Override
+  public void set(String secretKey) {
+    this.secretKey = secretKey;
+  }
 
-  /**
-   * Encrypts the given output stream.
-   *
-   * @param outputStream raw output stream
-   *
-   * @return encrypting output stream
-   */
-  OutputStream encrypt(OutputStream outputStream) throws IOException;
+  @Override
+  public String get() {
+    return secretKey;
+  }
+
+  @Override
+  public void remove() {
+    this.secretKey = null;
+  }
 }

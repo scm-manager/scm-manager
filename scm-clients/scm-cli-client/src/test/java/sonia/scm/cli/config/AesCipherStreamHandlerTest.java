@@ -32,33 +32,37 @@
 
 package sonia.scm.cli.config;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import com.google.common.base.Charsets;
+import com.google.common.io.ByteStreams;
+import org.junit.Test;
+import sonia.scm.security.KeyGenerator;
 
-/**
- * The CipherStreamHandler is able to encrypt and decrypt streams.
- *
- * @author Sebastian Sdorra
- * @since 1.60
- */
-public interface CipherStreamHandler {
+import java.io.*;
 
-  /**
-   * Decrypts the given input stream.
-   *
-   * @param inputStream encrypted input stream
-   *
-   * @return raw input stream
-   */
-  InputStream decrypt(InputStream inputStream) throws IOException;
+import static org.junit.Assert.assertEquals;
 
-  /**
-   * Encrypts the given output stream.
-   *
-   * @param outputStream raw output stream
-   *
-   * @return encrypting output stream
-   */
-  OutputStream encrypt(OutputStream outputStream) throws IOException;
+public class AesCipherStreamHandlerTest {
+
+  private final KeyGenerator keyGenerator = new SecureRandomKeyGenerator();
+
+  @Test
+  public void testEncryptAndDecrypt() throws IOException {
+    AesCipherStreamHandler cipherStreamHandler = new AesCipherStreamHandler(keyGenerator.createKey());
+
+    // douglas adams
+    String content = "If you try and take a cat apart to see how it works, the first thing you have on your hands is a nonworking cat.";
+
+    // encrypt
+    ByteArrayOutputStream output = new ByteArrayOutputStream();
+    OutputStream encryptedOutput = cipherStreamHandler.encrypt(output);
+    encryptedOutput.write(content.getBytes(Charsets.UTF_8));
+    encryptedOutput.close();
+
+    InputStream input = new ByteArrayInputStream(output.toByteArray());
+    input = cipherStreamHandler.decrypt(input);
+    byte[] decrypted = ByteStreams.toByteArray(input);
+
+    assertEquals(content, new String(decrypted, Charsets.UTF_8));
+  }
+
 }

@@ -31,6 +31,8 @@
 
 package sonia.scm.cli.config;
 
+import com.google.common.io.Files;
+import com.google.common.io.Resources;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -38,10 +40,9 @@ import sonia.scm.security.UUIDKeyGenerator;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class ScmClientConfigFileHandlerTest {
 
@@ -53,7 +54,7 @@ public class ScmClientConfigFileHandlerTest {
     File configFile = temporaryFolder.newFile();
 
     ScmClientConfigFileHandler handler = new ScmClientConfigFileHandler(
-      new InMemoryKeyStore(), new UUIDKeyGenerator(), configFile
+      new InMemoryKeyStore(), configFile
     );
 
     ScmClientConfig config = new ScmClientConfig();
@@ -76,23 +77,62 @@ public class ScmClientConfigFileHandlerTest {
     assertFalse(configFile.exists());
   }
 
-  private static class InMemoryKeyStore implements KeyStore {
+  @Test
+  public void testClientConfigFileHandlerWithOldConfiguration() throws IOException {
+    File configFile = temporaryFolder.newFile();
 
-    private String secretKey;
+    // old implementation has used uuids as keys
+    String key = new UUIDKeyGenerator().createKey();
 
-    @Override
-    public void set(String secretKey) {
-      this.secretKey = secretKey;
-    }
+    WeakCipherStreamHandler weakCipherStreamHandler = new WeakCipherStreamHandler(key);
+    ScmClientConfig clientConfig = ClientConfigurationTests.createSampleConfig();
+    ClientConfigurationTests.encrypt(weakCipherStreamHandler, clientConfig, configFile);
 
-    @Override
-    public String get() {
-      return secretKey;
-    }
+    assertFalse(ConfigFiles.isFormatV2(configFile));
 
-    @Override
-    public void remove() {
-      this.secretKey = null;
-    }
+    KeyStore keyStore = new InMemoryKeyStore();
+    keyStore.set(key);
+
+    ScmClientConfigFileHandler handler = new ScmClientConfigFileHandler(
+      keyStore, configFile
+    );
+
+    ScmClientConfig config = handler.read();
+    ClientConfigurationTests.assertSampleConfig(config);
+
+    // ensure key has changed
+    assertNotEquals(key, keyStore.get());
+
+    // ensure config rewritten with v2
+    assertTrue(ConfigFiles.isFormatV2(configFile));
+  }
+
+  @Test
+  public void testClientConfigFileHandlerWithRealMigration() throws IOException {
+    URL resource = Resources.getResource("sonia/scm/cli/config/scm-cli-config.enc.xml");
+    byte[] bytes = Resources.toByteArray(resource);
+
+    File configFile = temporaryFolder.newFile();
+    Files.write(bytes, configFile);
+
+    String key = "358e018a-0c3c-4339-8266-3874e597305f";
+    KeyStore keyStore = new InMemoryKeyStore();
+    keyStore.set(key);
+
+    ScmClientConfigFileHandler handler = new ScmClientConfigFileHandler(
+      keyStore, configFile
+    );
+
+    ScmClientConfig config = handler.read();
+    ServerConfig defaultConfig = config.getDefaultConfig();
+    assertEquals("http://hitchhicker.com/scm", defaultConfig.getServerUrl());
+    assertEquals("tricia", defaultConfig.getUsername());
+    assertEquals("trillian123", defaultConfig.getPassword());
+
+    // ensure key has changed
+    assertNotEquals(key, keyStore.get());
+
+    // ensure config rewritten with v2
+    assertTrue(ConfigFiles.isFormatV2(configFile));
   }
 }

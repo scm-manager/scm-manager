@@ -35,15 +35,10 @@ package sonia.scm.cli.config;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.security.KeyGenerator;
-import sonia.scm.security.UUIDKeyGenerator;
 import sonia.scm.util.Util;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -63,40 +58,20 @@ public class ScmClientConfigFileHandler
   //~--- constructors ---------------------------------------------------------
 
   private final KeyStore keyStore;
-  private final KeyGenerator keyGenerator;
   private final File file;
-  private final JAXBContext context;
-
-  private final CipherStreamHandler cipherStreamHandler;
 
 
   /**
-   * Constructs ...
+   * Constructs a new ScmClientConfigFileHandler
    *
    */
   public ScmClientConfigFileHandler() {
-    this(new PrefsKeyStore(), new UUIDKeyGenerator(), getDefaultConfigFile());
+    this(new PrefsKeyStore(), getDefaultConfigFile());
   }
 
-  ScmClientConfigFileHandler(KeyStore keyStore, KeyGenerator keyGenerator, File file) {
+  ScmClientConfigFileHandler(KeyStore keyStore,File file) {
     this.keyStore = keyStore;
-    this.keyGenerator = keyGenerator;
     this.file = file;
-
-    String key = keyStore.get();
-
-    if (Util.isEmpty(key)) {
-      key = keyGenerator.createKey();
-      keyStore.set(key);
-    }
-
-    cipherStreamHandler = new WeakCipherStreamHandler(key.toCharArray());
-
-    try {
-      context = JAXBContext.newInstance(ScmClientConfig.class);
-    } catch (JAXBException ex) {
-      throw new ScmConfigException("could not create JAXBContext for ScmClientConfig", ex);
-    }
   }
 
   //~--- methods --------------------------------------------------------------
@@ -132,14 +107,24 @@ public class ScmClientConfigFileHandler
     ScmClientConfig config = null;
 
     if (file.exists()) {
-      try (InputStream input = cipherStreamHandler.decrypt(new FileInputStream(file))) {
-        Unmarshaller um = context.createUnmarshaller();
-        config = (ScmClientConfig) um.unmarshal(input);
-      } catch (IOException | JAXBException ex) {
-        throw new ScmConfigException("could not read config file", ex);
-      }
+      config = readFromFile();
     }
 
+    return config;
+  }
+
+  private ScmClientConfig readFromFile() {
+    ScmClientConfig config;
+    try {
+      if (ConfigFiles.isFormatV2(file)) {
+        config = ConfigFiles.parseV2(keyStore, file);
+      } else {
+        config = ConfigFiles.parseV1(keyStore, file);
+        ConfigFiles.store(keyStore, config, file);
+      }
+    } catch (IOException ex) {
+      throw new ScmConfigException("could not read config file", ex);
+    }
     return config;
   }
 
@@ -150,10 +135,9 @@ public class ScmClientConfigFileHandler
    * @param config
    */
   public void write(ScmClientConfig config) {
-    try (OutputStream output =  cipherStreamHandler.encrypt(new FileOutputStream(file))) {
-      Marshaller m = context.createMarshaller();
-      m.marshal(config, output);
-    } catch (IOException | JAXBException ex) {
+    try {
+      ConfigFiles.store(keyStore, config, file);
+    } catch (IOException ex) {
       throw new ScmConfigException("could not write config file", ex);
     }
   }
