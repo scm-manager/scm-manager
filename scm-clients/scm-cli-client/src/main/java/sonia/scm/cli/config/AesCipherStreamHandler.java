@@ -37,7 +37,7 @@ import com.google.common.base.Charsets;
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
-import javax.crypto.spec.GCMParameterSpec;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
 import java.io.InputStream;
@@ -53,7 +53,9 @@ import java.security.SecureRandom;
  */
 public class AesCipherStreamHandler implements CipherStreamHandler {
 
-  private static final String ALGORITHM = "AES/GCM/NoPadding";
+  private static final String CIPHER_ALGORITHM = "AES/CBC/PKCS5PADDING";
+  private static final String SECRET_KEY_ALGORITHM = "AES";
+  private static final int IV_LENGTH = 16;
 
   private final SecureRandom random = new SecureRandom();
 
@@ -77,9 +79,13 @@ public class AesCipherStreamHandler implements CipherStreamHandler {
   }
 
   private Cipher createCipherForDecryption(InputStream inputStream) throws IOException {
-    byte[] iv =new byte[12];
+    byte[] iv = createEmptyIvArray();
     inputStream.read(iv);
     return createCipher(Cipher.DECRYPT_MODE, iv);
+  }
+
+  private byte[] createEmptyIvArray() {
+    return new byte[IV_LENGTH];
   }
 
   private Cipher createCipherForEncryption() {
@@ -90,16 +96,16 @@ public class AesCipherStreamHandler implements CipherStreamHandler {
   private byte[] generateIV() {
     // use 12 byte as described at nist
     // https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-38d.pdf
-    byte[] iv = new byte[12];
+    byte[] iv = createEmptyIvArray();
     random.nextBytes(iv);
     return iv;
   }
 
   private Cipher createCipher(int mode, byte[] iv) {
     try {
-      Cipher cipher = Cipher.getInstance(ALGORITHM);
-      GCMParameterSpec parameterSpec = new GCMParameterSpec(128, iv);
-      cipher.init(mode, new SecretKeySpec(secretKey, "AES"), parameterSpec);
+      Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM);
+      IvParameterSpec ivParameterSpec = new IvParameterSpec(iv);
+      cipher.init(mode, new SecretKeySpec(secretKey, SECRET_KEY_ALGORITHM), ivParameterSpec);
       return cipher;
     } catch (Exception ex) {
       throw new ScmConfigException("failed to create cipher", ex);
