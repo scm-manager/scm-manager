@@ -68,7 +68,7 @@ public class EncryptionKeyStoreWrapper implements KeyStore {
   };
 
   @VisibleForTesting
-  static final String ENCRYPTED_PREFIX = "enc:";
+  static final String ENCRYPTED_PREFIX = "SKV2:";
 
   private KeyStore wrappedKeyStore;
 
