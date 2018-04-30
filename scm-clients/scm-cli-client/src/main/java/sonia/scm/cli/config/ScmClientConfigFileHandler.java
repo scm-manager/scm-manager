@@ -62,11 +62,11 @@ public class ScmClientConfigFileHandler
 
 
   /**
-   * Constructs a new ScmClientConfigFileHandler
-   *
+   * Constructs a new ScmClientConfigFileHandler with a encrypted {@link java.util.prefs.Preferences} based
+   * {@link KeyStore} and a determined default location.
    */
   public ScmClientConfigFileHandler() {
-    this(new PrefsKeyStore(), getDefaultConfigFile());
+    this(new EncryptionKeyStoreWrapper(new PrefsKeyStore()), getDefaultConfigFile());
   }
 
   ScmClientConfigFileHandler(KeyStore keyStore,File file) {

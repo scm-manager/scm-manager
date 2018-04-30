@@ -54,7 +54,7 @@ public class ScmClientConfigFileHandlerTest {
     File configFile = temporaryFolder.newFile();
 
     ScmClientConfigFileHandler handler = new ScmClientConfigFileHandler(
-      new InMemoryKeyStore(), configFile
+      new EncryptionKeyStoreWrapper(new InMemoryKeyStore()), configFile
     );
 
     ScmClientConfig config = new ScmClientConfig();
@@ -90,7 +90,7 @@ public class ScmClientConfigFileHandlerTest {
 
     assertFalse(ConfigFiles.isFormatV2(configFile));
 
-    KeyStore keyStore = new InMemoryKeyStore();
+    KeyStore keyStore = new EncryptionKeyStoreWrapper(new InMemoryKeyStore());
     keyStore.set(key);
 
     ScmClientConfigFileHandler handler = new ScmClientConfigFileHandler(
@@ -116,7 +116,7 @@ public class ScmClientConfigFileHandlerTest {
     Files.write(bytes, configFile);
 
     String key = "358e018a-0c3c-4339-8266-3874e597305f";
-    KeyStore keyStore = new InMemoryKeyStore();
+    KeyStore keyStore = new EncryptionKeyStoreWrapper(new InMemoryKeyStore());
     keyStore.set(key);
 
     ScmClientConfigFileHandler handler = new ScmClientConfigFileHandler(
