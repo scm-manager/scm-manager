@@ -69,7 +69,7 @@ public class ConfigFilesTest {
 
   @Test
   public void testParseV1() throws IOException {
-    InMemoryKeyStore keyStore = createKeyStore();
+    InMemorySecretKeyStore keyStore = createKeyStore();
     WeakCipherStreamHandler handler = new WeakCipherStreamHandler(keyStore.get());
 
     ScmClientConfig config = ClientConfigurationTests.createSampleConfig();
@@ -82,7 +82,7 @@ public class ConfigFilesTest {
 
   @Test
   public void storeAndParseV2() throws IOException {
-    InMemoryKeyStore keyStore = new InMemoryKeyStore();
+    InMemorySecretKeyStore keyStore = new InMemorySecretKeyStore();
     ScmClientConfig config = ClientConfigurationTests.createSampleConfig();
     File file = temporaryFolder.newFile();
 
@@ -95,9 +95,9 @@ public class ConfigFilesTest {
     ClientConfigurationTests.assertSampleConfig(config);
   }
 
-  private InMemoryKeyStore createKeyStore() {
+  private InMemorySecretKeyStore createKeyStore() {
     String secretKey = new SecureRandomKeyGenerator().createKey();
-    InMemoryKeyStore keyStore = new InMemoryKeyStore();
+    InMemorySecretKeyStore keyStore = new InMemorySecretKeyStore();
     keyStore.set(secretKey);
     return keyStore;
   }

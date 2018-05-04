@@ -57,20 +57,20 @@ public class ScmClientConfigFileHandler
 
   //~--- constructors ---------------------------------------------------------
 
-  private final KeyStore keyStore;
+  private final SecretKeyStore secretKeyStore;
   private final File file;
 
 
   /**
    * Constructs a new ScmClientConfigFileHandler with a encrypted {@link java.util.prefs.Preferences} based
-   * {@link KeyStore} and a determined default location.
+   * {@link SecretKeyStore} and a determined default location.
    */
   public ScmClientConfigFileHandler() {
-    this(new EncryptionKeyStoreWrapper(new PrefsKeyStore()), getDefaultConfigFile());
+    this(new EncryptionSecretKeyStoreWrapper(new PrefsSecretKeyStore()), getDefaultConfigFile());
   }
 
-  ScmClientConfigFileHandler(KeyStore keyStore,File file) {
-    this.keyStore = keyStore;
+  ScmClientConfigFileHandler(SecretKeyStore secretKeyStore, File file) {
+    this.secretKeyStore = secretKeyStore;
     this.file = file;
   }
 
@@ -94,7 +94,7 @@ public class ScmClientConfigFileHandler
       throw new ScmConfigException("could not delete config file");
     }
 
-    keyStore.remove();
+    secretKeyStore.remove();
   }
 
   /**
@@ -117,10 +117,10 @@ public class ScmClientConfigFileHandler
     ScmClientConfig config;
     try {
       if (ConfigFiles.isFormatV2(file)) {
-        config = ConfigFiles.parseV2(keyStore, file);
+        config = ConfigFiles.parseV2(secretKeyStore, file);
       } else {
-        config = ConfigFiles.parseV1(keyStore, file);
-        ConfigFiles.store(keyStore, config, file);
+        config = ConfigFiles.parseV1(secretKeyStore, file);
+        ConfigFiles.store(secretKeyStore, config, file);
       }
     } catch (IOException ex) {
       throw new ScmConfigException("could not read config file", ex);
@@ -136,7 +136,7 @@ public class ScmClientConfigFileHandler
    */
   public void write(ScmClientConfig config) {
     try {
-      ConfigFiles.store(keyStore, config, file);
+      ConfigFiles.store(secretKeyStore, config, file);
     } catch (IOException ex) {
       throw new ScmConfigException("could not write config file", ex);
     }

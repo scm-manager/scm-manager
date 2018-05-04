@@ -31,27 +31,37 @@
 
 package sonia.scm.cli.config;
 
+import java.util.prefs.Preferences;
+
 /**
- * KeyStore is able to read and write keys.
+ * SecretKeyStore implementation with uses {@link Preferences}.
+ *
+ * @author Sebastian Sdorra
+ * @since 1.60
  */
-public interface KeyStore {
+public class PrefsSecretKeyStore implements SecretKeyStore {
 
-  /**
-   * Writes the given secret key to the store.
-   *
-   * @param secretKey secret key to write
-   */
-  void set(String secretKey);
+  private static final String PREF_SECRET_KEY = "scm.client.key";
 
-  /**
-   * Reads the secret key from the store. The method returns {@code null} if no secret key was stored.
-   *
-   * @return secret key or {@code null}
-   */
-  String get();
+  private final Preferences preferences;
 
-  /**
-   * Removes the secret key from store.
-   */
-  void remove();
+  PrefsSecretKeyStore() {
+    // we use ScmClientConfigFileHandler as base for backward compatibility
+    preferences = Preferences.userNodeForPackage(ScmClientConfigFileHandler.class);
+  }
+
+  @Override
+  public void set(String secretKey) {
+    preferences.put(PREF_SECRET_KEY, secretKey);
+  }
+
+  @Override
+  public String get() {
+    return preferences.get(PREF_SECRET_KEY, null);
+  }
+
+  @Override
+  public void remove() {
+    preferences.remove(PREF_SECRET_KEY);
+  }
 }

@@ -78,15 +78,15 @@ final class ConfigFiles {
   /**
    * Decrypt and parse v1 configuration file.
    *
-   * @param keyStore key store
+   * @param secretKeyStore key store
    * @param file configuration file
    *
    * @return client configuration
    *
    * @throws IOException
    */
-  static ScmClientConfig parseV1(KeyStore keyStore, File file) throws IOException {
-    String secretKey = secretKey(keyStore);
+  static ScmClientConfig parseV1(SecretKeyStore secretKeyStore, File file) throws IOException {
+    String secretKey = secretKey(secretKeyStore);
     CipherStreamHandler cipherStreamHandler = new WeakCipherStreamHandler(secretKey);
     return decrypt(cipherStreamHandler, new FileInputStream(file));
   }
@@ -94,15 +94,15 @@ final class ConfigFiles {
    /**
    * Decrypt and parse v12configuration file.
    *
-   * @param keyStore key store
+   * @param secretKeyStore key store
    * @param file configuration file
    *
    * @return client configuration
    *
    * @throws IOException
    */
-  static ScmClientConfig parseV2(KeyStore keyStore, File file) throws IOException {
-    String secretKey = secretKey(keyStore);
+  static ScmClientConfig parseV2(SecretKeyStore secretKeyStore, File file) throws IOException {
+    String secretKey = secretKey(secretKeyStore);
     CipherStreamHandler cipherStreamHandler = new AesCipherStreamHandler(secretKey);
     try (InputStream input = new FileInputStream(file)) {
       input.skip(VERSION_IDENTIFIER.length);
@@ -114,24 +114,24 @@ final class ConfigFiles {
    * Store encrypt and write the configuration to the given file.
    * Note the method uses always the latest available format.
    *
-   * @param keyStore key store
+   * @param secretKeyStore key store
    * @param config configuration
    * @param file configuration file
    *
    * @throws IOException
    */
-  static void store(KeyStore keyStore, ScmClientConfig config, File file) throws IOException {
+  static void store(SecretKeyStore secretKeyStore, ScmClientConfig config, File file) throws IOException {
     String secretKey = keyGenerator.createKey();
     CipherStreamHandler cipherStreamHandler = new AesCipherStreamHandler(secretKey);
     try (OutputStream output = new FileOutputStream(file)) {
       output.write(VERSION_IDENTIFIER);
       encrypt(cipherStreamHandler, output, config);
     }
-    keyStore.set(secretKey);
+    secretKeyStore.set(secretKey);
   }
 
-  private static String secretKey(KeyStore keyStore) {
-    String secretKey = keyStore.get();
+  private static String secretKey(SecretKeyStore secretKeyStore) {
+    String secretKey = secretKeyStore.get();
     Preconditions.checkState(!Strings.isNullOrEmpty(secretKey), "no stored secret key found");
     return secretKey;
   }

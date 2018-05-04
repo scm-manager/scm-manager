@@ -47,14 +47,14 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 /**
- * The EncryptionKeyStoreWrapper is a wrapper around the {@link KeyStore} interface. The wrapper will encrypt the passed
- * keys, before they are written to the underlying {@link KeyStore} implementation. The wrapper will also honor old
- * unencrypted keys.
+ * The EncryptionSecretKeyStoreWrapper is a wrapper around the {@link SecretKeyStore} interface. The wrapper will
+ * encrypt the passed secret keys, before they are written to the underlying {@link SecretKeyStore} implementation. The
+ * wrapper will also honor old unencrypted keys.
  *
  * @author Sebastian Sdorra
  * @since 1.60
  */
-public class EncryptionKeyStoreWrapper implements KeyStore {
+public class EncryptionSecretKeyStoreWrapper implements SecretKeyStore {
 
   private static final String ALGORITHM = "AES";
 
@@ -70,16 +70,16 @@ public class EncryptionKeyStoreWrapper implements KeyStore {
   @VisibleForTesting
   static final String ENCRYPTED_PREFIX = "SKV2:";
 
-  private KeyStore wrappedKeyStore;
+  private SecretKeyStore wrappedSecretKeyStore;
 
-  EncryptionKeyStoreWrapper(KeyStore wrappedKeyStore) {
-    this.wrappedKeyStore = wrappedKeyStore;
+  EncryptionSecretKeyStoreWrapper(SecretKeyStore wrappedSecretKeyStore) {
+    this.wrappedSecretKeyStore = wrappedSecretKeyStore;
   }
 
   @Override
   public void set(String secretKey) {
     String encrypted = encrypt(secretKey);
-    wrappedKeyStore.set(ENCRYPTED_PREFIX.concat(encrypted));
+    wrappedSecretKeyStore.set(ENCRYPTED_PREFIX.concat(encrypted));
   }
 
   private String encrypt(String value) {
@@ -98,7 +98,7 @@ public class EncryptionKeyStoreWrapper implements KeyStore {
 
   @Override
   public String get() {
-    String value = wrappedKeyStore.get();
+    String value = wrappedSecretKeyStore.get();
     if (Strings.nullToEmpty(value).startsWith(ENCRYPTED_PREFIX)) {
       String encrypted = value.substring(ENCRYPTED_PREFIX.length());
       return decrypt(encrypted);
@@ -133,6 +133,6 @@ public class EncryptionKeyStoreWrapper implements KeyStore {
 
   @Override
   public void remove() {
-    wrappedKeyStore.remove();
+    wrappedSecretKeyStore.remove();
   }
 }

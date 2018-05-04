@@ -29,25 +29,32 @@
  *
  */
 
-
 package sonia.scm.cli.config;
 
-public class InMemoryKeyStore implements KeyStore {
+/**
+ * SecretKeyStore is able to read and write secret keys.
+ *
+ * @author Sebastian Sdorra
+ * @since 1.60
+ */
+public interface SecretKeyStore {
 
-  private String secretKey;
+  /**
+   * Writes the given secret key to the store.
+   *
+   * @param secretKey secret key to write
+   */
+  void set(String secretKey);
 
-  @Override
-  public void set(String secretKey) {
-    this.secretKey = secretKey;
-  }
+  /**
+   * Reads the secret key from the store. The method returns {@code null} if no secret key was stored.
+   *
+   * @return secret key or {@code null}
+   */
+  String get();
 
-  @Override
-  public String get() {
-    return secretKey;
-  }
-
-  @Override
-  public void remove() {
-    this.secretKey = null;
-  }
+  /**
+   * Removes the secret key from store.
+   */
+  void remove();
 }

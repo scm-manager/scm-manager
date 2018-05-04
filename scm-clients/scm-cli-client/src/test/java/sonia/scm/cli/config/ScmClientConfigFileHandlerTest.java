@@ -54,7 +54,7 @@ public class ScmClientConfigFileHandlerTest {
     File configFile = temporaryFolder.newFile();
 
     ScmClientConfigFileHandler handler = new ScmClientConfigFileHandler(
-      new EncryptionKeyStoreWrapper(new InMemoryKeyStore()), configFile
+      new EncryptionSecretKeyStoreWrapper(new InMemorySecretKeyStore()), configFile
     );
 
     ScmClientConfig config = new ScmClientConfig();
@@ -90,18 +90,18 @@ public class ScmClientConfigFileHandlerTest {
 
     assertFalse(ConfigFiles.isFormatV2(configFile));
 
-    KeyStore keyStore = new EncryptionKeyStoreWrapper(new InMemoryKeyStore());
-    keyStore.set(key);
+    SecretKeyStore secretKeyStore = new EncryptionSecretKeyStoreWrapper(new InMemorySecretKeyStore());
+    secretKeyStore.set(key);
 
     ScmClientConfigFileHandler handler = new ScmClientConfigFileHandler(
-      keyStore, configFile
+      secretKeyStore, configFile
     );
 
     ScmClientConfig config = handler.read();
     ClientConfigurationTests.assertSampleConfig(config);
 
     // ensure key has changed
-    assertNotEquals(key, keyStore.get());
+    assertNotEquals(key, secretKeyStore.get());
 
     // ensure config rewritten with v2
     assertTrue(ConfigFiles.isFormatV2(configFile));
@@ -116,11 +116,11 @@ public class ScmClientConfigFileHandlerTest {
     Files.write(bytes, configFile);
 
     String key = "358e018a-0c3c-4339-8266-3874e597305f";
-    KeyStore keyStore = new EncryptionKeyStoreWrapper(new InMemoryKeyStore());
-    keyStore.set(key);
+    SecretKeyStore secretKeyStore = new EncryptionSecretKeyStoreWrapper(new InMemorySecretKeyStore());
+    secretKeyStore.set(key);
 
     ScmClientConfigFileHandler handler = new ScmClientConfigFileHandler(
-      keyStore, configFile
+      secretKeyStore, configFile
     );
 
     ScmClientConfig config = handler.read();
@@ -130,7 +130,7 @@ public class ScmClientConfigFileHandlerTest {
     assertEquals("trillian123", defaultConfig.getPassword());
 
     // ensure key has changed
-    assertNotEquals(key, keyStore.get());
+    assertNotEquals(key, secretKeyStore.get());
 
     // ensure config rewritten with v2
     assertTrue(ConfigFiles.isFormatV2(configFile));

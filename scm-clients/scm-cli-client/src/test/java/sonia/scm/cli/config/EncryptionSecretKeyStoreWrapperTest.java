@@ -29,36 +29,32 @@
  *
  */
 
+
+
 package sonia.scm.cli.config;
 
-import java.util.prefs.Preferences;
+import org.junit.Test;
 
-/**
- * KeyStore implementation with uses {@link Preferences}.
- */
-public class PrefsKeyStore implements KeyStore {
+import static org.junit.Assert.*;
 
-  private static final String PREF_SECRET_KEY = "scm.client.key";
+public class EncryptionSecretKeyStoreWrapperTest {
 
-  private final Preferences preferences;
+  private SecretKeyStore secretKeyStore = new InMemorySecretKeyStore();
 
-  public PrefsKeyStore() {
-    // we use ScmClientConfigFileHandler as base for backward compatibility
-    preferences = Preferences.userNodeForPackage(ScmClientConfigFileHandler.class);
+  @Test
+  public void testEncryptionKeyStoreWrapper() {
+    EncryptionSecretKeyStoreWrapper wrapper = new EncryptionSecretKeyStoreWrapper(secretKeyStore);
+    wrapper.set("mysecretkey");
+
+    assertEquals("mysecretkey", wrapper.get());
+    assertTrue(secretKeyStore.get().startsWith(EncryptionSecretKeyStoreWrapper.ENCRYPTED_PREFIX));
   }
 
-  @Override
-  public void set(String secretKey) {
-    preferences.put(PREF_SECRET_KEY, secretKey);
+  @Test
+  public void testEncryptionKeyStoreWrapperWithOldUnencryptedKey() {
+    secretKeyStore.set("mysecretkey");
+    EncryptionSecretKeyStoreWrapper wrapper = new EncryptionSecretKeyStoreWrapper(secretKeyStore);
+    assertEquals("mysecretkey", wrapper.get());
   }
 
-  @Override
-  public String get() {
-    return preferences.get(PREF_SECRET_KEY, null);
-  }
-
-  @Override
-  public void remove() {
-    preferences.remove(PREF_SECRET_KEY);
-  }
 }

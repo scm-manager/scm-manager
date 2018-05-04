@@ -30,31 +30,24 @@
  */
 
 
-
 package sonia.scm.cli.config;
 
-import org.junit.Test;
+public class InMemorySecretKeyStore implements SecretKeyStore {
 
-import static org.junit.Assert.*;
+  private String secretKey;
 
-public class EncryptionKeyStoreWrapperTest {
-
-  private KeyStore keyStore = new InMemoryKeyStore();
-
-  @Test
-  public void testEncryptionKeyStoreWrapper() {
-    EncryptionKeyStoreWrapper wrapper = new EncryptionKeyStoreWrapper(keyStore);
-    wrapper.set("mysecretkey");
-
-    assertEquals("mysecretkey", wrapper.get());
-    assertTrue(keyStore.get().startsWith(EncryptionKeyStoreWrapper.ENCRYPTED_PREFIX));
+  @Override
+  public void set(String secretKey) {
+    this.secretKey = secretKey;
   }
 
-  @Test
-  public void testEncryptionKeyStoreWrapperWithOldUnencryptedKey() {
-    keyStore.set("mysecretkey");
-    EncryptionKeyStoreWrapper wrapper = new EncryptionKeyStoreWrapper(keyStore);
-    assertEquals("mysecretkey", wrapper.get());
+  @Override
+  public String get() {
+    return secretKey;
   }
 
+  @Override
+  public void remove() {
+    this.secretKey = null;
+  }
 }
