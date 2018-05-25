@@ -221,7 +221,7 @@ public abstract class AbstractManagerResource<T extends ModelObject,
   {
     Response response = null;
 
-    preUpate(item);
+    preUpdate(item);
 
     try
     {
@@ -432,7 +432,7 @@ public abstract class AbstractManagerResource<T extends ModelObject,
    *
    * @param item
    */
-  protected void preUpate(T item) {}
+  protected void preUpdate(T item) {}
 
   /**
    * Method description

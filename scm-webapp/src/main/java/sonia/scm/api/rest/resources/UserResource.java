@@ -260,7 +260,7 @@ public class UserResource extends AbstractManagerResource<User, UserException>
   }
   
   @Override
-  protected void preUpate(User user)
+  protected void preUpdate(User user)
   {
     if (DUMMY_PASSWORT.equals(user.getPassword()))
     {
