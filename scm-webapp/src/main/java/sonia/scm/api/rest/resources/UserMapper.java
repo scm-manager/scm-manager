@@ -17,6 +17,8 @@ public abstract class UserMapper {
 
   abstract public UserDto userToUserDto(User user, @Context UriInfo uriInfo);
 
+  abstract public User userDtoToUser(UserDto user, @Context UriInfo uriInfo);
+
   @AfterMapping
   public void appendLinks(User source, @MappingTarget UserDto target, @Context UriInfo uriInfo) {
     Map<String, Link> links = new LinkedHashMap<>();

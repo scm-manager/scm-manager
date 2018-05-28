@@ -202,14 +202,13 @@ public abstract class AbstractManagerResource<T extends ModelObject,
    *
    *
    *
-   *  @param uriInfo
    *  @param name
    *  @param item
    *
    *
    * @return
    */
-  public Response update(UriInfo uriInfo, String name, T item)
+  public Response update(String name, T item)
   {
     Response response = null;
 

@@ -97,4 +97,20 @@ public class UserNewResource extends AbstractManagerResource<User, UserException
     items.stream().map(user -> UserMapper.INSTANCE.userToUserDto(user, uriInfo)).collect(Collectors.toList());
     return Response.ok(new GenericEntity<Collection<User>>(items) {}).build();
   }
+
+  @PUT
+  @Path("{id}")
+  @StatusCodes({
+    @ResponseCode(code = 204, condition = "update success"),
+    @ResponseCode(code = 403, condition = "forbidden, the current user has no admin privileges"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
+  @TypeHint(TypeHint.NO_CONTENT.class)
+  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+  public Response update(@Context UriInfo uriInfo,
+                         @PathParam("id") String name, UserDto userDto)
+  {
+    User user = UserMapper.INSTANCE.userDtoToUser(userDto, uriInfo);
+    return super.update(name, user);
+  }
 }

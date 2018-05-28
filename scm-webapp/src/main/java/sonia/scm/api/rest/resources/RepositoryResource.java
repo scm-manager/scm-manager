@@ -42,66 +42,26 @@ import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.ResponseHeader;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
-
 import org.apache.shiro.SecurityUtils;
-
+import org.apache.shiro.authz.AuthorizationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.config.ScmConfiguration;
-import sonia.scm.repository.BlameResult;
-import sonia.scm.repository.Branches;
-import sonia.scm.repository.BrowserResult;
-import sonia.scm.repository.Changeset;
-import sonia.scm.repository.ChangesetPagingResult;
-import sonia.scm.repository.HealthChecker;
-import sonia.scm.repository.Permission;
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryException;
-import sonia.scm.repository.RepositoryIsNotArchivedException;
-import sonia.scm.repository.RepositoryManager;
-import sonia.scm.repository.RepositoryNotFoundException;
-import sonia.scm.repository.Tags;
-import sonia.scm.repository.api.BlameCommandBuilder;
-import sonia.scm.repository.api.BrowseCommandBuilder;
-import sonia.scm.repository.api.CatCommandBuilder;
-import sonia.scm.repository.api.CommandNotSupportedException;
-import sonia.scm.repository.api.DiffCommandBuilder;
-import sonia.scm.repository.api.DiffFormat;
-import sonia.scm.repository.api.LogCommandBuilder;
-import sonia.scm.repository.api.RepositoryService;
-import sonia.scm.repository.api.RepositoryServiceFactory;
+import sonia.scm.repository.*;
+import sonia.scm.repository.api.*;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 
-//~--- JDK imports ------------------------------------------------------------
-
+import javax.ws.rs.*;
+import javax.ws.rs.core.*;
+import javax.ws.rs.core.Response.Status;
 import java.io.IOException;
-
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.GenericEntity;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Request;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.core.StreamingOutput;
-import javax.ws.rs.core.UriInfo;
-import org.apache.shiro.authz.AuthorizationException;
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Repository related RESTful Web Service Endpoint.
@@ -273,7 +233,6 @@ public class RepositoryResource extends AbstractManagerResource<Repository, Repo
   /**
    * Modifies the given repository. <strong>Note:</strong> This method requires owner privileges.
    *
-   * @param uriInfo current uri informations
    * @param id id of the repository to be modified
    * @param repository repository object to modify
    *
@@ -290,9 +249,9 @@ public class RepositoryResource extends AbstractManagerResource<Repository, Repo
   @TypeHint(TypeHint.NO_CONTENT.class)
   @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   @Override
-  public Response update(@Context UriInfo uriInfo, @PathParam("id") String id, Repository repository)
+  public Response update(@PathParam("id") String id, Repository repository)
   {
-    return super.update(uriInfo, id, repository);
+    return super.update(id, repository);
   }
 
   //~--- get methods ----------------------------------------------------------

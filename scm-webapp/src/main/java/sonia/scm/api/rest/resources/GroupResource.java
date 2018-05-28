@@ -41,34 +41,17 @@ import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.ResponseHeader;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
-
 import org.apache.shiro.SecurityUtils;
-
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupException;
 import sonia.scm.group.GroupManager;
 import sonia.scm.security.Role;
 
-//~--- JDK imports ------------------------------------------------------------
-
+import javax.ws.rs.*;
+import javax.ws.rs.core.*;
 import java.util.Collection;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.GenericEntity;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Request;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * RESTful Web Service Resource to manage groups and their members.
@@ -150,7 +133,6 @@ public class GroupResource
   /**
    * Modifies the given group. <strong>Note:</strong> This method requires admin privileges.
    *
-   * @param uriInfo current uri informations
    * @param name name of the group to be modified
    * @param group group object to modify
    *
@@ -166,10 +148,9 @@ public class GroupResource
   @TypeHint(TypeHint.NO_CONTENT.class)
   @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   @Override
-  public Response update(@Context UriInfo uriInfo,
-    @PathParam("id") String name, Group group)
+  public Response update(@PathParam("id") String name, Group group)
   {
-    return super.update(uriInfo, name, group);
+    return super.update(name, group);
   }
 
   //~--- get methods ----------------------------------------------------------

@@ -41,10 +41,8 @@ import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.ResponseHeader;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
-
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.credential.PasswordService;
-
 import sonia.scm.security.Role;
 import sonia.scm.user.User;
 import sonia.scm.user.UserException;
@@ -52,26 +50,11 @@ import sonia.scm.user.UserManager;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.Util;
 
-//~--- JDK imports ------------------------------------------------------------
-
+import javax.ws.rs.*;
+import javax.ws.rs.core.*;
 import java.util.Collection;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.GenericEntity;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Request;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * RESTful Web Service Resource to manage users.
@@ -155,7 +138,6 @@ public class UserResource extends AbstractManagerResource<User, UserException>
   /**
    * Modifies the given user. <strong>Note:</strong> This method requires admin privileges.
    *
-   * @param uriInfo current uri informations
    * @param name name of the user to be modified
    * @param user user object to modify
    *
@@ -171,10 +153,9 @@ public class UserResource extends AbstractManagerResource<User, UserException>
   @TypeHint(TypeHint.NO_CONTENT.class)
   @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   @Override
-  public Response update(@Context UriInfo uriInfo,
-    @PathParam("id") String name, User user)
+  public Response update(@PathParam("id") String name, User user)
   {
-    return super.update(uriInfo, name, user);
+    return super.update(name, user);
   }
 
   //~--- get methods ----------------------------------------------------------
