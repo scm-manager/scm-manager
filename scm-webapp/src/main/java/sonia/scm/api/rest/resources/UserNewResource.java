@@ -6,7 +6,6 @@ import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import org.apache.shiro.SecurityUtils;
-import sonia.scm.Manager;
 import sonia.scm.security.Role;
 import sonia.scm.user.User;
 import sonia.scm.user.UserException;
@@ -57,13 +56,12 @@ public class UserNewResource extends AbstractManagerResource<User, UserException
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-  @Override
-  public Response get(@Context Request request, @PathParam("id") String id)
+  public Response get(@Context Request request, @Context UriInfo uriInfo, @PathParam("id") String id)
   {
     if (SecurityUtils.getSubject().hasRole(Role.ADMIN))
     {
       User user = manager.get(id);
-      UserDto userDto = UserMapper.INSTANCE.userToUserDto(user);
+      UserDto userDto = UserMapper.INSTANCE.userToUserDto(user, uriInfo);
       return Response.ok(userDto).build();
     }
     else

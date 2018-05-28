@@ -2,6 +2,9 @@ package sonia.scm.api.rest.resources;
 
 import lombok.Data;
 
+import javax.xml.bind.annotation.XmlElement;
+import java.util.Map;
+
 @Data
 public class UserDto {
   private boolean active;
@@ -13,4 +16,7 @@ public class UserDto {
   private String name;
   private String password;
   private String type;
+
+  @XmlElement(name = "_links")
+  private Map<String, Link> links;
 }
