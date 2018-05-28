@@ -135,4 +135,18 @@ public class UserNewResource extends AbstractManagerResource<User, UserException
     User user = UserDto2UserMapper.INSTANCE.userDtoToUser(userDto, "", passwordService);
     return super.create(uriInfo, user);
   }
+
+  @DELETE
+  @Path("{id}")
+  @StatusCodes({
+    @ResponseCode(code = 204, condition = "delete success"),
+    @ResponseCode(code = 403, condition = "forbidden, the current user has no admin privileges"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
+  @TypeHint(TypeHint.NO_CONTENT.class)
+  @Override
+  public Response delete(@PathParam("id") String name)
+  {
+    return super.delete(name);
+  }
 }
