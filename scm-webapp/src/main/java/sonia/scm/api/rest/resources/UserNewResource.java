@@ -3,6 +3,7 @@ package sonia.scm.api.rest.resources;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.webcohesion.enunciate.metadata.rs.ResponseCode;
+import com.webcohesion.enunciate.metadata.rs.ResponseHeader;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import org.apache.shiro.SecurityUtils;
@@ -117,5 +118,21 @@ public class UserNewResource extends AbstractManagerResource<User, UserException
     User o = manager.get(name);
     User user = UserDto2UserMapper.INSTANCE.userDtoToUser(userDto, o.getPassword(), passwordService);
     return super.update(name, user);
+  }
+
+  @POST
+  @StatusCodes({
+    @ResponseCode(code = 201, condition = "create success", additionalHeaders = {
+      @ResponseHeader(name = "Location", description = "uri to the created group")
+    }),
+    @ResponseCode(code = 403, condition = "forbidden, the current user has no admin privileges"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
+  @TypeHint(TypeHint.NO_CONTENT.class)
+  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+  public Response create(@Context UriInfo uriInfo, UserDto userDto)
+  {
+    User user = UserDto2UserMapper.INSTANCE.userDtoToUser(userDto, "", passwordService);
+    return super.create(uriInfo, user);
   }
 }
