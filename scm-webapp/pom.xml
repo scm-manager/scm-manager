@@ -23,7 +23,7 @@
       <groupId>sonia.scm</groupId>
       <artifactId>scm-annotation-processor</artifactId>
       <version>2.0.0-SNAPSHOT</version>
-      <scope>provided</scope>
+      <optional>true</optional>
     </dependency>
     
     <dependency>
@@ -370,6 +370,25 @@
       <scope>provided</scope>
     </dependency>
 
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.16.18</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mapstruct</groupId>
+      <artifactId>mapstruct-jdk8</artifactId>
+      <version>${org.mapstruct.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mapstruct</groupId>
+      <artifactId>mapstruct-processor</artifactId>
+      <version>${org.mapstruct.version}</version>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -456,7 +475,7 @@
           </execution>
         </executions>
       </plugin>
-      
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-war-plugin</artifactId>
@@ -533,6 +552,7 @@
     <sonar.issue.ignore.multicriteria.e1.ruleKey>javascript:S3827</sonar.issue.ignore.multicriteria.e1.ruleKey>
     <sonar.issue.ignore.multicriteria.e1.resourceKey>**.js</sonar.issue.ignore.multicriteria.e1.resourceKey>
     <sonar.exclusions>src/main/webapp/resources/extjs/**,src/main/webapp/resources/moment/**,src/main/webapp/resources/syntaxhighlighter/**</sonar.exclusions>
+    <org.mapstruct.version>1.2.0.Final</org.mapstruct.version>
   </properties>
 
   <profiles>
