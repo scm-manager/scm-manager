@@ -12,12 +12,15 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Mapper
-public abstract class UserMapper {
-  public static UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
+public abstract class User2UserDtoMapper {
+  public static User2UserDtoMapper INSTANCE = Mappers.getMapper(User2UserDtoMapper.class);
 
   abstract public UserDto userToUserDto(User user, @Context UriInfo uriInfo);
 
-  abstract public User userDtoToUser(UserDto user, @Context UriInfo uriInfo);
+  @AfterMapping
+  public void removePassword(User source, @MappingTarget UserDto target, @Context UriInfo uriInfo) {
+    target.setPassword(UserResource.DUMMY_PASSWORT);
+  }
 
   @AfterMapping
   public void appendLinks(User source, @MappingTarget UserDto target, @Context UriInfo uriInfo) {

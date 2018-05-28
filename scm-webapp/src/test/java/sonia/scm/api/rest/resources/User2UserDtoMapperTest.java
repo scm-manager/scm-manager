@@ -9,13 +9,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 
-public class UserMapperTest {
+public class User2UserDtoMapperTest {
 
   @Test
   public void shouldMapLinks() {
     User user = new User();
     user.setName("abc");
-    UserDto userDto = UserMapper.INSTANCE.userToUserDto(user, mock(UriInfo.class));
+    UserDto userDto = User2UserDtoMapper.INSTANCE.userToUserDto(user, mock(UriInfo.class));
     assertEquals("abc" , userDto.getName());
     assertNotNull("expected map with links", userDto.getLinks());
   }

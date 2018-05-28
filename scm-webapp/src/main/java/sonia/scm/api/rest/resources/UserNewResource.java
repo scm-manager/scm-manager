@@ -6,6 +6,7 @@ import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.credential.PasswordService;
 import sonia.scm.security.Role;
 import sonia.scm.user.User;
 import sonia.scm.user.UserException;
@@ -24,9 +25,12 @@ public class UserNewResource extends AbstractManagerResource<User, UserException
   /** Field description */
   public static final String PATH_PART = "usersnew";
 
+  private final PasswordService passwordService;
+
   @Inject
-  public UserNewResource(UserManager userManager) {
+  public UserNewResource(UserManager userManager, PasswordService passwordService) {
     super(userManager);
+    this.passwordService = passwordService;
   }
 
   @Override
@@ -59,7 +63,7 @@ public class UserNewResource extends AbstractManagerResource<User, UserException
     if (SecurityUtils.getSubject().hasRole(Role.ADMIN))
     {
       User user = manager.get(id);
-      UserDto userDto = UserMapper.INSTANCE.userToUserDto(user, uriInfo);
+      UserDto userDto = User2UserDtoMapper.INSTANCE.userToUserDto(user, uriInfo);
       return Response.ok(userDto).build();
     }
     else
@@ -94,7 +98,7 @@ public class UserNewResource extends AbstractManagerResource<User, UserException
                          @QueryParam("desc") boolean desc)
   {
     Collection<User> items = fetchItems(sortby, desc, start, limit);
-    items.stream().map(user -> UserMapper.INSTANCE.userToUserDto(user, uriInfo)).collect(Collectors.toList());
+    items.stream().map(user -> User2UserDtoMapper.INSTANCE.userToUserDto(user, uriInfo)).collect(Collectors.toList());
     return Response.ok(new GenericEntity<Collection<User>>(items) {}).build();
   }
 
@@ -110,7 +114,8 @@ public class UserNewResource extends AbstractManagerResource<User, UserException
   public Response update(@Context UriInfo uriInfo,
                          @PathParam("id") String name, UserDto userDto)
   {
-    User user = UserMapper.INSTANCE.userDtoToUser(userDto, uriInfo);
+    User o = manager.get(name);
+    User user = UserDto2UserMapper.INSTANCE.userDtoToUser(userDto, o.getPassword(), passwordService);
     return super.update(name, user);
   }
 }
