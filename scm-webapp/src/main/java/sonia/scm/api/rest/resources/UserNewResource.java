@@ -11,12 +11,10 @@ import sonia.scm.user.User;
 import sonia.scm.user.UserException;
 import sonia.scm.user.UserManager;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 @Singleton
 @Path("usersnew")
@@ -68,4 +66,35 @@ public class UserNewResource extends AbstractManagerResource<User, UserException
     {
       return Response.status(Response.Status.FORBIDDEN).build();
     }
-  }}
+  }
+
+  /**
+   * Returns all users. <strong>Note:</strong> This method requires admin privileges.
+   *
+   * @param request the current request
+   * @param start the start value for paging
+   * @param limit the limit value for paging
+   * @param sortby sort parameter
+   * @param desc sort direction desc or aesc
+   *
+   * @return
+   */
+  @GET
+  @TypeHint(User[].class)
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 403, condition = "forbidden, the current user has no admin privileges"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
+  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+  public Response getAll(@Context Request request, @Context UriInfo uriInfo, @DefaultValue("0")
+  @QueryParam("start") int start, @DefaultValue("-1")
+                         @QueryParam("limit") int limit, @QueryParam("sortby") String sortby,
+                         @DefaultValue("false")
+                         @QueryParam("desc") boolean desc)
+  {
+    Collection<User> items = fetchItems(sortby, desc, start, limit);
+    items.stream().map(user -> UserMapper.INSTANCE.userToUserDto(user, uriInfo)).collect(Collectors.toList());
+    return Response.ok(new GenericEntity<Collection<User>>(items) {}).build();
+  }
+}
