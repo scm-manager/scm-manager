@@ -8,10 +8,9 @@ import sonia.scm.user.User;
 
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
+import java.net.URI;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import static javax.ws.rs.core.Link.fromUri;
 
 @Mapper
 public abstract class User2UserDtoMapper {
@@ -26,14 +25,25 @@ public abstract class User2UserDtoMapper {
   @AfterMapping
   void appendLinks(@MappingTarget UserDto target, @Context UriInfo uriInfo) {
     Map<String, Link> links = new LinkedHashMap<>();
-    links.put("self", new Link(uriInfo.getBaseUri().resolve(fromUri(UriBuilder.fromResource(UserNewResource.class)
-      .path(UserNewResource.class, "get").build(target.getName())).build().getUri())));
-    links.put("delete", new Link(uriInfo.getBaseUri().resolve(fromUri(UriBuilder.fromResource(UserNewResource.class)
-      .path(UserNewResource.class, "delete").build(target.getName())).build().getUri())));
-    links.put("update", new Link(uriInfo.getBaseUri().resolve(fromUri(UriBuilder.fromResource(UserNewResource.class)
-      .path(UserNewResource.class, "update").build(target.getName())).build().getUri())));
-    links.put("create", new Link(uriInfo.getBaseUri().resolve(fromUri(UriBuilder.fromResource(UserNewResource.class)
-      .path(UserNewResource.class, "create").build()).build().getUri())));
+    links.put("self", createLink("get", uriInfo, target.getName()));
+    links.put("delete", createLink("delete", uriInfo, target.getName()));
+    links.put("update", createLink("update", uriInfo, target.getName()));
+    links.put("create", createLink("create", uriInfo));
     target.setLinks(links);
+  }
+
+  private Link createLink(String methodName, UriInfo uriInfo, String... parameters) {
+    URI baseUri = uriInfo.getBaseUri();
+    URI relativeUri = createRelativeUri(methodName, parameters);
+    URI absoluteUri = baseUri.resolve(relativeUri);
+    return new Link(absoluteUri);
+  }
+
+  private URI createRelativeUri(String methodName, Object[] parameters) {
+    return userUriBuilder().path(UserNewResource.class, methodName).build(parameters);
+  }
+
+  private UriBuilder userUriBuilder() {
+    return UriBuilder.fromResource(UserNewResource.class);
   }
 }
