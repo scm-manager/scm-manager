@@ -27,7 +27,7 @@ public class User2UserDtoMapperTest {
   }
 
   @Test
-  public void shouldMapLinks() throws URISyntaxException {
+  public void shouldMapLinks() {
     User user = new User();
     user.setName("abc");
 
