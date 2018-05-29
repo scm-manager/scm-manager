@@ -15,6 +15,7 @@ import sonia.scm.user.UserManager;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Singleton
@@ -100,8 +101,8 @@ public class UserNewResource extends AbstractManagerResource<User, UserException
                          @QueryParam("desc") boolean desc)
   {
     Collection<User> items = fetchItems(sortby, desc, start, limit);
-    items.stream().map(user -> userToDtoMapper.userToUserDto(user, uriInfo)).collect(Collectors.toList());
-    return Response.ok(new GenericEntity<Collection<User>>(items) {}).build();
+    List<UserDto> collect = items.stream().map(user -> userToDtoMapper.userToUserDto(user, uriInfo)).collect(Collectors.toList());
+    return Response.ok(new GenericEntity<Collection<UserDto>>(collect) {}).build();
   }
 
   @PUT
@@ -122,6 +123,7 @@ public class UserNewResource extends AbstractManagerResource<User, UserException
   }
 
   @POST
+  @Path("")
   @StatusCodes({
     @ResponseCode(code = 201, condition = "create success", additionalHeaders = {
       @ResponseHeader(name = "Location", description = "uri to the created group")
