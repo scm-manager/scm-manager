@@ -552,7 +552,6 @@
     <sonar.issue.ignore.multicriteria.e1.ruleKey>javascript:S3827</sonar.issue.ignore.multicriteria.e1.ruleKey>
     <sonar.issue.ignore.multicriteria.e1.resourceKey>**.js</sonar.issue.ignore.multicriteria.e1.resourceKey>
     <sonar.exclusions>src/main/webapp/resources/extjs/**,src/main/webapp/resources/moment/**,src/main/webapp/resources/syntaxhighlighter/**</sonar.exclusions>
-    <org.mapstruct.version>1.2.0.Final</org.mapstruct.version>
   </properties>
 
   <profiles>

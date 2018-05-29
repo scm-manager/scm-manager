@@ -1,11 +1,11 @@
 package sonia.scm.api.rest.resources;
 
+import com.google.inject.Inject;
 import org.apache.shiro.authc.credential.PasswordService;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
-import org.mapstruct.factory.Mappers;
 import sonia.scm.user.User;
 
 import static sonia.scm.api.rest.resources.UserResource.DUMMY_PASSWORT;
@@ -13,13 +13,14 @@ import static sonia.scm.api.rest.resources.UserResource.DUMMY_PASSWORT;
 @Mapper
 public abstract class UserDto2UserMapper {
 
-  public static UserDto2UserMapper INSTANCE = Mappers.getMapper(UserDto2UserMapper.class);
+  @Inject
+  private PasswordService passwordService;
 
   @Mapping(source = "password", target = "password", qualifiedByName = "encrypt")
-  abstract public User userDtoToUser(UserDto userDto, @Context String originalPassword, @Context PasswordService passwordService);
+  public abstract User userDtoToUser(UserDto userDto, @Context String originalPassword);
 
   @Named("encrypt")
-  public String encrypt(String password, @Context String originalPassword, @Context PasswordService passwordService) {
+  String encrypt(String password, @Context String originalPassword) {
 
     if (DUMMY_PASSWORT.equals(password))
     {

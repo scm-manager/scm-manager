@@ -510,6 +510,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <netbeans.hint.license>SCM-BSD</netbeans.hint.license>
     <jdk.classifier />
+    <org.mapstruct.version>1.2.0.Final</org.mapstruct.version>
   </properties>
 
 </project>

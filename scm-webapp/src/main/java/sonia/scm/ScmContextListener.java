@@ -39,34 +39,31 @@ import com.google.common.base.Throwables;
 import com.google.common.collect.Lists;
 import com.google.inject.Injector;
 import com.google.inject.Module;
-import java.util.Collections;
-
 import org.apache.shiro.guice.web.ShiroWebModule;
-
+import org.jboss.resteasy.plugins.guice.GuiceResteasyBootstrapServletContextListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import sonia.scm.api.rest.resources.MapperModule;
 import sonia.scm.cache.CacheManager;
+import sonia.scm.debug.DebugModule;
+import sonia.scm.filter.WebElementModule;
 import sonia.scm.group.GroupManager;
 import sonia.scm.plugin.DefaultPluginLoader;
 import sonia.scm.plugin.ExtensionProcessor;
 import sonia.scm.plugin.PluginWrapper;
 import sonia.scm.repository.RepositoryManager;
+import sonia.scm.schedule.Scheduler;
 import sonia.scm.upgrade.UpgradeManager;
 import sonia.scm.user.UserManager;
 import sonia.scm.util.IOUtil;
 
-//~--- JDK imports ------------------------------------------------------------
-
+import javax.servlet.ServletContext;
+import javax.servlet.ServletContextEvent;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
-import org.jboss.resteasy.plugins.guice.GuiceResteasyBootstrapServletContextListener;
-import sonia.scm.debug.DebugModule;
-import sonia.scm.filter.WebElementModule;
-import sonia.scm.schedule.Scheduler;
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -148,6 +145,7 @@ public class ScmContextListener extends GuiceResteasyBootstrapServletContextList
     if (SCMContext.getContext().getStage() == Stage.DEVELOPMENT){
       moduleList.add(new DebugModule());
     }
+    moduleList.add(new MapperModule());
 
     return moduleList;    
   }

@@ -7,7 +7,6 @@ import com.webcohesion.enunciate.metadata.rs.ResponseHeader;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.credential.PasswordService;
 import sonia.scm.security.Role;
 import sonia.scm.user.User;
 import sonia.scm.user.UserException;
@@ -26,12 +25,14 @@ public class UserNewResource extends AbstractManagerResource<User, UserException
   /** Field description */
   public static final String PATH_PART = "usersnew";
 
-  private final PasswordService passwordService;
+  private final UserDto2UserMapper dtoToUserMapper;
+  private final User2UserDtoMapper userToDtoMapper;
 
   @Inject
-  public UserNewResource(UserManager userManager, PasswordService passwordService) {
+  public UserNewResource(UserManager userManager, UserDto2UserMapper dtoToUserMapper, User2UserDtoMapper userToDtoMapper) {
     super(userManager);
-    this.passwordService = passwordService;
+    this.dtoToUserMapper = dtoToUserMapper;
+    this.userToDtoMapper = userToDtoMapper;
   }
 
   @Override
@@ -64,7 +65,7 @@ public class UserNewResource extends AbstractManagerResource<User, UserException
     if (SecurityUtils.getSubject().hasRole(Role.ADMIN))
     {
       User user = manager.get(id);
-      UserDto userDto = User2UserDtoMapper.INSTANCE.userToUserDto(user, uriInfo);
+      UserDto userDto = userToDtoMapper.userToUserDto(user, uriInfo);
       return Response.ok(userDto).build();
     }
     else
@@ -99,7 +100,7 @@ public class UserNewResource extends AbstractManagerResource<User, UserException
                          @QueryParam("desc") boolean desc)
   {
     Collection<User> items = fetchItems(sortby, desc, start, limit);
-    items.stream().map(user -> User2UserDtoMapper.INSTANCE.userToUserDto(user, uriInfo)).collect(Collectors.toList());
+    items.stream().map(user -> userToDtoMapper.userToUserDto(user, uriInfo)).collect(Collectors.toList());
     return Response.ok(new GenericEntity<Collection<User>>(items) {}).build();
   }
 
@@ -116,7 +117,7 @@ public class UserNewResource extends AbstractManagerResource<User, UserException
                          @PathParam("id") String name, UserDto userDto)
   {
     User o = manager.get(name);
-    User user = UserDto2UserMapper.INSTANCE.userDtoToUser(userDto, o.getPassword(), passwordService);
+    User user = dtoToUserMapper.userDtoToUser(userDto, o.getPassword());
     return super.update(name, user);
   }
 
@@ -132,7 +133,7 @@ public class UserNewResource extends AbstractManagerResource<User, UserException
   @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   public Response create(@Context UriInfo uriInfo, UserDto userDto)
   {
-    User user = UserDto2UserMapper.INSTANCE.userDtoToUser(userDto, "", passwordService);
+    User user = dtoToUserMapper.userDtoToUser(userDto, "");
     return super.create(uriInfo, user);
   }
 
