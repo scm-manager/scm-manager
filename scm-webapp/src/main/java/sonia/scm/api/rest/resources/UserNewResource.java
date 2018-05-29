@@ -117,8 +117,8 @@ public class UserNewResource extends AbstractManagerResource<User, UserException
   public Response update(@Context UriInfo uriInfo,
                          @PathParam("id") String name, UserDto userDto)
   {
-    User o = manager.get(name);
-    User user = dtoToUserMapper.userDtoToUser(userDto, o.getPassword());
+    String originalPassword = manager.get(name).getPassword();
+    User user = dtoToUserMapper.userDtoToUser(userDto, originalPassword);
     return super.update(name, user);
   }
 
