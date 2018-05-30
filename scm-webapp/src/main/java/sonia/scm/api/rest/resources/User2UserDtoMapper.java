@@ -24,13 +24,13 @@ public abstract class User2UserDtoMapper {
 
   @AfterMapping
   void appendLinks(@MappingTarget UserDto target, @Context UriInfo uriInfo) {
-    LinkMapBuilder userLinkBuilder = new LinkMapBuilder(uriInfo, UserNewResource.class, UserNewResource.UserSubResource.class);
-    LinkMapBuilder collectionLinkBuilder = new LinkMapBuilder(uriInfo, UserNewResource.class, UserNewResource.UsersResource.class);
+    LinkMapBuilder userLinkBuilder = new LinkMapBuilder(uriInfo, UserNewResource.class, UserSubResource.class);
+    LinkMapBuilder collectionLinkBuilder = new LinkMapBuilder(uriInfo, UserNewResource.class, UserCollectionResource.class);
     userLinkBuilder.add("self").method("getUserSubResource").parameters(target.getName()).method("get").parameters();
     if (SecurityUtils.getSubject().hasRole(Role.ADMIN)) {
       userLinkBuilder.add("delete").method("getUserSubResource").parameters(target.getName()).method("delete").parameters();
       userLinkBuilder.add("update").method("getUserSubResource").parameters(target.getName()).method("update").parameters();
-      collectionLinkBuilder.add("create").method("getUsersResource").parameters().method("create").parameters();
+      collectionLinkBuilder.add("create").method("getUserCollectionResource").parameters().method("create").parameters();
     }
     Map<String, Link> join = new HashMap<>();
     join.putAll(userLinkBuilder.getLinkMap());
