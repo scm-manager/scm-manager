@@ -51,105 +51,124 @@ public class UserNewResource extends AbstractManagerResource<User, UserException
     return PATH_PART;
   }
 
-  @GET
-  @Path("{id}")
-  @TypeHint(UserDto.class)
-  @StatusCodes({
-    @ResponseCode(code = 200, condition = "success"),
-    @ResponseCode(code = 403, condition = "forbidden, the current user has no admin privileges"),
-    @ResponseCode(code = 404, condition = "not found, no group with the specified id/name available"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
-  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-  public Response get(@Context Request request, @Context UriInfo uriInfo, @PathParam("id") String id)
-  {
-    if (SecurityUtils.getSubject().hasRole(Role.ADMIN))
-    {
-      User user = manager.get(id);
-      UserDto userDto = userToDtoMapper.userToUserDto(user, uriInfo);
-      return Response.ok(userDto).build();
-    }
-    else
-    {
-      return Response.status(Response.Status.FORBIDDEN).build();
-    }
-  }
-
-  /**
-   * Returns all users. <strong>Note:</strong> This method requires admin privileges.
-   *
-   * @param request the current request
-   * @param start the start value for paging
-   * @param limit the limit value for paging
-   * @param sortby sort parameter
-   * @param desc sort direction desc or aesc
-   *
-   * @return
-   */
-  @GET
-  @TypeHint(User[].class)
-  @StatusCodes({
-    @ResponseCode(code = 200, condition = "success"),
-    @ResponseCode(code = 403, condition = "forbidden, the current user has no admin privileges"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
-  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-  public Response getAll(@Context Request request, @Context UriInfo uriInfo, @DefaultValue("0")
-  @QueryParam("start") int start, @DefaultValue("-1")
-                         @QueryParam("limit") int limit, @QueryParam("sortby") String sortby,
-                         @DefaultValue("false")
-                         @QueryParam("desc") boolean desc)
-  {
-    Collection<User> items = fetchItems(sortby, desc, start, limit);
-    List<UserDto> collect = items.stream().map(user -> userToDtoMapper.userToUserDto(user, uriInfo)).collect(Collectors.toList());
-    return Response.ok(new GenericEntity<Collection<UserDto>>(collect) {}).build();
-  }
-
-  @PUT
-  @Path("{id}")
-  @StatusCodes({
-    @ResponseCode(code = 204, condition = "update success"),
-    @ResponseCode(code = 403, condition = "forbidden, the current user has no admin privileges"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
-  @TypeHint(TypeHint.NO_CONTENT.class)
-  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-  public Response update(@Context UriInfo uriInfo,
-                         @PathParam("id") String name, UserDto userDto)
-  {
-    String originalPassword = manager.get(name).getPassword();
-    User user = dtoToUserMapper.userDtoToUser(userDto, originalPassword);
-    return super.update(name, user);
-  }
-
-  @POST
   @Path("")
-  @StatusCodes({
-    @ResponseCode(code = 201, condition = "create success", additionalHeaders = {
-      @ResponseHeader(name = "Location", description = "uri to the created group")
-    }),
-    @ResponseCode(code = 403, condition = "forbidden, the current user has no admin privileges"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
-  @TypeHint(TypeHint.NO_CONTENT.class)
-  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-  public Response create(@Context UriInfo uriInfo, UserDto userDto)
+  public UsersResource getUsersResource()
   {
-    User user = dtoToUserMapper.userDtoToUser(userDto, "");
-    return super.create(uriInfo, user);
+    return new UsersResource();
   }
 
-  @DELETE
-  @Path("{id}")
-  @StatusCodes({
-    @ResponseCode(code = 204, condition = "delete success"),
-    @ResponseCode(code = 403, condition = "forbidden, the current user has no admin privileges"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
-  @TypeHint(TypeHint.NO_CONTENT.class)
-  @Override
-  public Response delete(@PathParam("id") String name)
+  public class UsersResource
   {
-    return super.delete(name);
+    /**
+     * Returns all users. <strong>Note:</strong> This method requires admin privileges.
+     *
+     * @param request the current request
+     * @param start   the start value for paging
+     * @param limit   the limit value for paging
+     * @param sortby  sort parameter
+     * @param desc    sort direction desc or aesc
+     * @return
+     */
+    @GET
+    @Path("")
+    @TypeHint(User[].class)
+    @StatusCodes({
+      @ResponseCode(code = 200, condition = "success"),
+      @ResponseCode(code = 403, condition = "forbidden, the current user has no admin privileges"),
+      @ResponseCode(code = 500, condition = "internal server error")
+    })
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response getAll(@Context Request request, @Context UriInfo uriInfo, @DefaultValue("0")
+    @QueryParam("start") int start, @DefaultValue("-1")
+    @QueryParam("limit") int limit, @QueryParam("sortby") String sortby,
+      @DefaultValue("false")
+      @QueryParam("desc") boolean desc)
+    {
+       Collection<User> items = fetchItems(sortby, desc, start, limit);
+      List<UserDto> collect = items.stream().map(user -> userToDtoMapper.userToUserDto(user, uriInfo)).collect(Collectors.toList());
+      return Response.ok(new GenericEntity<Collection<UserDto>>(collect)
+      {
+      }).build();
+    }
+
+    @POST
+    @Path("")
+    @StatusCodes({
+      @ResponseCode(code = 201, condition = "create success", additionalHeaders = {
+        @ResponseHeader(name = "Location", description = "uri to the created group")
+      }),
+      @ResponseCode(code = 403, condition = "forbidden, the current user has no admin privileges"),
+      @ResponseCode(code = 500, condition = "internal server error")
+    })
+    @TypeHint(TypeHint.NO_CONTENT.class)
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response create(@Context UriInfo uriInfo, UserDto userDto)
+    {
+      User user = dtoToUserMapper.userDtoToUser(userDto, "");
+      return UserNewResource.this.create(uriInfo, user);
+    }
+  }
+
+  @Path("{id}")
+  public UserSubResource getUserSubResource()
+  {
+    return new UserSubResource();
+  }
+
+  public class UserSubResource
+  {
+    @GET
+    @Path("")
+    @TypeHint(UserDto.class)
+    @StatusCodes({
+      @ResponseCode(code = 200, condition = "success"),
+      @ResponseCode(code = 403, condition = "forbidden, the current user has no admin privileges"),
+      @ResponseCode(code = 404, condition = "not found, no group with the specified id/name available"),
+      @ResponseCode(code = 500, condition = "internal server error")
+    })
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response get(@Context Request request, @Context UriInfo uriInfo, @PathParam("id") String id)
+    {
+      if (SecurityUtils.getSubject().hasRole(Role.ADMIN))
+      {
+        User user = manager.get(id);
+        UserDto userDto = userToDtoMapper.userToUserDto(user, uriInfo);
+        return Response.ok(userDto).build();
+      }
+      else
+      {
+        return Response.status(Response.Status.FORBIDDEN).build();
+      }
+    }
+
+    @PUT
+    @Path("")
+    @StatusCodes({
+      @ResponseCode(code = 204, condition = "update success"),
+      @ResponseCode(code = 403, condition = "forbidden, the current user has no admin privileges"),
+      @ResponseCode(code = 500, condition = "internal server error")
+    })
+    @TypeHint(TypeHint.NO_CONTENT.class)
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response update(@Context UriInfo uriInfo,
+      @PathParam("id") String name, UserDto userDto)
+    {
+      String originalPassword = manager.get(name).getPassword();
+      User user = dtoToUserMapper.userDtoToUser(userDto, originalPassword);
+      return UserNewResource.this.update(name, user);
+    }
+
+    @DELETE
+    @Path("")
+    @StatusCodes({
+      @ResponseCode(code = 204, condition = "delete success"),
+      @ResponseCode(code = 403, condition = "forbidden, the current user has no admin privileges"),
+      @ResponseCode(code = 500, condition = "internal server error")
+    })
+    @TypeHint(TypeHint.NO_CONTENT.class)
+    public Response delete(@PathParam("id") String name)
+    {
+      return UserNewResource.this.delete(name);
+    }
   }
 }

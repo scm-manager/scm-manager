@@ -1,16 +1,15 @@
 package sonia.scm.api.rest.resources;
 
+import org.apache.shiro.SecurityUtils;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
+import sonia.scm.security.Role;
 import sonia.scm.user.User;
 
-import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
-import java.net.URI;
-import java.util.Collections;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.Map;
 
 @Mapper
@@ -25,43 +24,17 @@ public abstract class User2UserDtoMapper {
 
   @AfterMapping
   void appendLinks(@MappingTarget UserDto target, @Context UriInfo uriInfo) {
-    LinkMapBuilder builder = new LinkMapBuilder(uriInfo);
-    builder.add("self", "get", target.getName());
-    builder.add("delete", "delete", target.getName());
-    builder.add("update", "update", target.getName());
-    builder.add("create", "create");
-    target.setLinks(builder.getLinkMap());
-  }
-
-  private static class LinkMapBuilder {
-    private final UriInfo uriInfo;
-    private final Map<String, Link> links = new LinkedHashMap<>();
-
-    private LinkMapBuilder(UriInfo uriInfo) {
-      this.uriInfo = uriInfo;
+    LinkMapBuilder userLinkBuilder = new LinkMapBuilder(uriInfo, UserNewResource.class, UserNewResource.UserSubResource.class);
+    LinkMapBuilder collectionLinkBuilder = new LinkMapBuilder(uriInfo, UserNewResource.class, UserNewResource.UsersResource.class);
+    userLinkBuilder.add("self").method("getUserSubResource").parameters(target.getName()).method("get").parameters();
+    if (SecurityUtils.getSubject().hasRole(Role.ADMIN)) {
+      userLinkBuilder.add("delete").method("getUserSubResource").parameters(target.getName()).method("delete").parameters();
+      userLinkBuilder.add("update").method("getUserSubResource").parameters(target.getName()).method("update").parameters();
+      collectionLinkBuilder.add("create").method("getUsersResource").parameters().method("create").parameters();
     }
-
-    void add(String linkName, String methodName, String... parameters) {
-      links.put(linkName, createLink(methodName, parameters));
-    }
-
-    Map<String, Link> getLinkMap() {
-      return Collections.unmodifiableMap(links);
-    }
-
-    private Link createLink(String methodName, String... parameters) {
-      URI baseUri = uriInfo.getBaseUri();
-      URI relativeUri = createRelativeUri(methodName, parameters);
-      URI absoluteUri = baseUri.resolve(relativeUri);
-      return new Link(absoluteUri);
-    }
-
-    private URI createRelativeUri(String methodName, Object[] parameters) {
-      return userUriBuilder().path(UserNewResource.class, methodName).build(parameters);
-    }
-
-    private UriBuilder userUriBuilder() {
-      return UriBuilder.fromResource(UserNewResource.class);
-    }
+    Map<String, Link> join = new HashMap<>();
+    join.putAll(userLinkBuilder.getLinkMap());
+    join.putAll(collectionLinkBuilder.getLinkMap());
+    target.setLinks(join);
   }
 }
