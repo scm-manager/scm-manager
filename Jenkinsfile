@@ -17,6 +17,10 @@ node() { // No specific label
 
         Maven mvn = new MavenWrapper(this)
 
+        stage('Checkout') {
+            checkout scm
+        }
+
         stage('Build') {
             mvn 'clean install -DskipTests'
             archive '**/target/*.jar,**/target/*.zip'
