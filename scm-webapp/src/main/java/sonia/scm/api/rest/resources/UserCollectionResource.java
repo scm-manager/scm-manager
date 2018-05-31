@@ -73,9 +73,8 @@ public class UserCollectionResource extends AbstractManagerResource<User, UserEx
     User user = dtoToUserMapper.userDtoToUser(userDto, "");
     manager.create(user);
 
-    LinkMapBuilder builder = new LinkMapBuilder(uriInfo, UserNewResource.class, UserSubResource.class);
-    builder.add("self").method("getUserSubResource").parameters(user.getName()).method("get").parameters();
-    return Response.created(builder.getLinkMap().get("self").getHref()).build();
+    LinkBuilder builder = new LinkBuilder(uriInfo, UserNewResource.class, UserSubResource.class);
+    return Response.created(builder.method("getUserSubResource").parameters(user.getName()).method("get").parameters().create().getHref()).build();
   }
 
   @Override

@@ -24,17 +24,15 @@ public abstract class User2UserDtoMapper {
 
   @AfterMapping
   void appendLinks(@MappingTarget UserDto target, @Context UriInfo uriInfo) {
-    LinkMapBuilder userLinkBuilder = new LinkMapBuilder(uriInfo, UserNewResource.class, UserSubResource.class);
-    LinkMapBuilder collectionLinkBuilder = new LinkMapBuilder(uriInfo, UserNewResource.class, UserCollectionResource.class);
-    userLinkBuilder.add("self").method("getUserSubResource").parameters(target.getName()).method("get").parameters();
+    LinkBuilder userLinkBuilder = new LinkBuilder(uriInfo, UserNewResource.class, UserSubResource.class);
+    LinkBuilder collectionLinkBuilder = new LinkBuilder(uriInfo, UserNewResource.class, UserCollectionResource.class);
+    Map<String, Link> links = new HashMap<>();
+    links.put("self", userLinkBuilder.method("getUserSubResource").parameters(target.getName()).method("get").parameters().create());
     if (SecurityUtils.getSubject().hasRole(Role.ADMIN)) {
-      userLinkBuilder.add("delete").method("getUserSubResource").parameters(target.getName()).method("delete").parameters();
-      userLinkBuilder.add("update").method("getUserSubResource").parameters(target.getName()).method("update").parameters();
-      collectionLinkBuilder.add("create").method("getUserCollectionResource").parameters().method("create").parameters();
+      links.put("delete", userLinkBuilder.method("getUserSubResource").parameters(target.getName()).method("delete").parameters().create());
+      links.put("update", userLinkBuilder.method("getUserSubResource").parameters(target.getName()).method("update").parameters().create());
+      links.put("create", collectionLinkBuilder.method("getUserCollectionResource").parameters().method("create").parameters().create());
     }
-    Map<String, Link> join = new HashMap<>();
-    join.putAll(userLinkBuilder.getLinkMap());
-    join.putAll(collectionLinkBuilder.getLinkMap());
-    target.setLinks(join);
+    target.setLinks(links);
   }
 }
