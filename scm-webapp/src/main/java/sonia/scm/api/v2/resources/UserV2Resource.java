@@ -6,15 +6,15 @@ import com.google.inject.Singleton;
 import javax.ws.rs.Path;
 
 @Singleton
-@Path(UserNewResource.USERS_PATH_V2)
-public class UserNewResource {
+@Path(UserV2Resource.USERS_PATH_V2)
+public class UserV2Resource {
 
   public static final String USERS_PATH_V2 = "v2/users/";
   private final UserCollectionResource userCollectionResource;
   private final UserSubResource userSubResource;
 
   @Inject
-  public UserNewResource(UserCollectionResource userCollectionResource, UserSubResource userSubResource) {
+  public UserV2Resource(UserCollectionResource userCollectionResource, UserSubResource userSubResource) {
     this.userCollectionResource = userCollectionResource;
     this.userSubResource = userSubResource;
   }

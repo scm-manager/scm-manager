@@ -31,7 +31,7 @@ public class User2UserDtoMapperTest {
   @Before
   public void init() throws URISyntaxException {
     baseUri = new URI("http://example.com/base/");
-    expextedBaseUri = baseUri.resolve(UserNewResource.USERS_PATH_V2 + "/");
+    expextedBaseUri = baseUri.resolve(UserV2Resource.USERS_PATH_V2 + "/");
     when(uriInfo.getBaseUri()).thenReturn(baseUri);
     subjectThreadState.bind();
   }

@@ -25,8 +25,8 @@ public abstract class User2UserDtoMapper {
 
   @AfterMapping
   void appendLinks(@MappingTarget UserDto target, @Context UriInfo uriInfo) {
-    LinkBuilder userLinkBuilder = new LinkBuilder(uriInfo, UserNewResource.class, UserSubResource.class);
-    LinkBuilder collectionLinkBuilder = new LinkBuilder(uriInfo, UserNewResource.class, UserCollectionResource.class);
+    LinkBuilder userLinkBuilder = new LinkBuilder(uriInfo, UserV2Resource.class, UserSubResource.class);
+    LinkBuilder collectionLinkBuilder = new LinkBuilder(uriInfo, UserV2Resource.class, UserCollectionResource.class);
     Map<String, Link> links = new HashMap<>();
     links.put("self", userLinkBuilder.method("getUserSubResource").parameters(target.getName()).method("get").parameters().create());
     if (SecurityUtils.getSubject().hasRole(Role.ADMIN)) {
