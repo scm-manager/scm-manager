@@ -558,7 +558,7 @@ public abstract class AbstractManagerResource<T extends ModelObject,
    *
    * @return
    */
-  Collection<T> fetchItems(String sortby, boolean desc, int start,
+  protected Collection<T> fetchItems(String sortby, boolean desc, int start,
     int limit)
   {
     AssertUtil.assertPositive(start);

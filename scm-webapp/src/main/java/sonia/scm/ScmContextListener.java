@@ -43,7 +43,7 @@ import org.apache.shiro.guice.web.ShiroWebModule;
 import org.jboss.resteasy.plugins.guice.GuiceResteasyBootstrapServletContextListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.api.rest.resources.MapperModule;
+import sonia.scm.api.v2.resources.MapperModule;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.debug.DebugModule;
 import sonia.scm.filter.WebElementModule;

@@ -1,4 +1,4 @@
-package sonia.scm.api.rest.resources;
+package sonia.scm.api.v2.resources;
 
 import org.apache.shiro.authc.credential.PasswordService;
 import org.junit.Before;

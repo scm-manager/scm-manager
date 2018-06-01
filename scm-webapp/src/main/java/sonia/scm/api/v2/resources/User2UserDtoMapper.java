@@ -1,10 +1,11 @@
-package sonia.scm.api.rest.resources;
+package sonia.scm.api.v2.resources;
 
 import org.apache.shiro.SecurityUtils;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
+import sonia.scm.api.rest.resources.UserResource;
 import sonia.scm.security.Role;
 import sonia.scm.user.User;
 

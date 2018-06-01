@@ -1,4 +1,4 @@
-package sonia.scm.api.rest.resources;
+package sonia.scm.api.v2.resources;
 
 import com.google.common.collect.ImmutableList;
 

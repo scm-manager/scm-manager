@@ -1,4 +1,4 @@
-package sonia.scm.api.rest.resources;
+package sonia.scm.api.v2.resources;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -6,7 +6,7 @@ import com.google.inject.Singleton;
 import javax.ws.rs.Path;
 
 @Singleton
-@Path("usersnew")
+@Path("v2/users")
 public class UserNewResource {
 
   private final UserCollectionResource userCollectionResource;

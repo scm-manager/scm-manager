@@ -1,4 +1,4 @@
-package sonia.scm.api.rest.resources;
+package sonia.scm.api.v2.resources;
 
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.support.SubjectThreadState;
@@ -6,6 +6,7 @@ import org.apache.shiro.util.ThreadState;
 import org.junit.Before;
 import org.junit.Test;
 import org.mapstruct.factory.Mappers;
+import sonia.scm.api.rest.resources.UserResource;
 import sonia.scm.user.User;
 
 import javax.ws.rs.core.UriInfo;
@@ -41,10 +42,10 @@ public class User2UserDtoMapperTest {
 
     UserDto userDto = mapper.userToUserDto(user, uriInfo);
 
-    assertEquals("expected map with self baseUri", baseUri.resolve("usersnew/abc"), userDto.getLinks().get("self").getHref());
-    assertEquals("expected map with delete baseUri", baseUri.resolve("usersnew/abc"), userDto.getLinks().get("delete").getHref());
-    assertEquals("expected map with update baseUri", baseUri.resolve("usersnew/abc"), userDto.getLinks().get("update").getHref());
-    assertEquals("expected map with create baseUri", baseUri.resolve("usersnew"), userDto.getLinks().get("create").getHref());
+    assertEquals("expected map with self baseUri", baseUri.resolve("v2/users/abc"), userDto.getLinks().get("self").getHref());
+    assertEquals("expected map with delete baseUri", baseUri.resolve("v2/users/abc"), userDto.getLinks().get("delete").getHref());
+    assertEquals("expected map with update baseUri", baseUri.resolve("v2/users/abc"), userDto.getLinks().get("update").getHref());
+    assertEquals("expected map with create baseUri", baseUri.resolve("v2/users"), userDto.getLinks().get("create").getHref());
   }
 
   @Test
@@ -55,7 +56,7 @@ public class User2UserDtoMapperTest {
 
     UserDto userDto = mapper.userToUserDto(user, uriInfo);
 
-    assertEquals("expected map with self baseUri", baseUri.resolve("usersnew/abc"), userDto.getLinks().get("self").getHref());
+    assertEquals("expected map with self baseUri", baseUri.resolve("v2/users/abc"), userDto.getLinks().get("self").getHref());
     assertNull("expected map without delete baseUri", userDto.getLinks().get("delete"));
     assertNull("expected map without update baseUri", userDto.getLinks().get("update"));
     assertNull("expected map without create baseUri", userDto.getLinks().get("create"));

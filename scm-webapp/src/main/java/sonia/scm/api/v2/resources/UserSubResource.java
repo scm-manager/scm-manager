@@ -1,10 +1,11 @@
-package sonia.scm.api.rest.resources;
+package sonia.scm.api.v2.resources;
 
 import com.google.inject.Inject;
 import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import org.apache.shiro.SecurityUtils;
+import sonia.scm.api.rest.resources.AbstractManagerResource;
 import sonia.scm.security.Role;
 import sonia.scm.user.User;
 import sonia.scm.user.UserException;
