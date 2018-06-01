@@ -1,15 +1,13 @@
 package sonia.scm.api.v2.resources;
 
 import org.apache.shiro.SecurityUtils;
-import org.mapstruct.AfterMapping;
-import org.mapstruct.Context;
-import org.mapstruct.Mapper;
-import org.mapstruct.MappingTarget;
+import org.mapstruct.*;
 import sonia.scm.api.rest.resources.UserResource;
 import sonia.scm.security.Role;
 import sonia.scm.user.User;
 
 import javax.ws.rs.core.UriInfo;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,5 +33,10 @@ public abstract class User2UserDtoMapper {
       links.put("create", collectionLinkBuilder.method("getUserCollectionResource").parameters().method("create").parameters().create());
     }
     target.setLinks(links);
+  }
+
+  @Mappings({@Mapping(target = "lastModified"), @Mapping(target = "creationDate")})
+  Instant mapTime(Long epochMilli) {
+    return epochMilli == null? null: Instant.ofEpochMilli(epochMilli);
   }
 }

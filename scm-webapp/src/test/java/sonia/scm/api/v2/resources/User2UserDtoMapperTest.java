@@ -12,6 +12,7 @@ import sonia.scm.user.User;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.Instant;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -83,5 +84,20 @@ public class User2UserDtoMapperTest {
     UserDto userDto = mapper.userToUserDto(user, uriInfo);
 
     assertEquals(UserResource.DUMMY_PASSWORT, userDto.getPassword());
+  }
+
+  @Test
+  public void shouldMapTimes() {
+    User user = new User();
+    user.setName("abc");
+    Instant expectedCreationDate = Instant.ofEpochSecond(6666666);
+    Instant expectedModificationDate = expectedCreationDate.plusSeconds(1);
+    user.setCreationDate(expectedCreationDate.toEpochMilli());
+    user.setLastModified(expectedModificationDate.toEpochMilli());
+
+    UserDto userDto = mapper.userToUserDto(user, uriInfo);
+
+    assertEquals(expectedCreationDate, userDto.getCreationDate());
+    assertEquals(expectedModificationDate, userDto.getLastModified());
   }
 }

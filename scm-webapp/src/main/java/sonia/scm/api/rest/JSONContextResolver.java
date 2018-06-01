@@ -36,7 +36,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.introspect.AnnotationIntrospectorPair;
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import com.fasterxml.jackson.databind.type.TypeFactory;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationIntrospector;
+
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.ContextResolver;
@@ -55,7 +58,9 @@ public final class JSONContextResolver implements ContextResolver<ObjectMapper> 
   private final ObjectMapper mapper;
 
   public JSONContextResolver() {
-    mapper = new ObjectMapper();
+    mapper = new ObjectMapper()
+      .registerModule(new Jdk8Module())
+      .registerModule(new JavaTimeModule());
     mapper.setAnnotationIntrospector(createAnnotationIntrospector());
     mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
   }
