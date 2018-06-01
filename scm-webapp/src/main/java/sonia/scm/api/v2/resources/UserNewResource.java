@@ -6,9 +6,10 @@ import com.google.inject.Singleton;
 import javax.ws.rs.Path;
 
 @Singleton
-@Path("v2/users")
+@Path(UserNewResource.USERS_PATH_V2)
 public class UserNewResource {
 
+  public static final String USERS_PATH_V2 = "v2/users/";
   private final UserCollectionResource userCollectionResource;
   private final UserSubResource userSubResource;
 
