@@ -39,8 +39,7 @@ public class User2UserDtoMapperTest {
 
   @Test
   public void shouldMapLinks_forAdmin() {
-    User user = new User();
-    user.setName("abc");
+    User user = createDefaultUser();
     when(subject.hasRole("admin")).thenReturn(true);
 
     UserDto userDto = mapper.userToUserDto(user, uriInfo);
@@ -51,10 +50,16 @@ public class User2UserDtoMapperTest {
     assertEquals("expected map with create baseUri", expextedBaseUri, userDto.getLinks().get("create").getHref());
   }
 
-  @Test
-  public void shouldMapLinks_forNormalUser() {
+  private User createDefaultUser() {
     User user = new User();
     user.setName("abc");
+    user.setCreationDate(1L);
+    return user;
+  }
+
+  @Test
+  public void shouldMapLinks_forNormalUser() {
+    User user = createDefaultUser();
     when(subject.hasRole("user")).thenReturn(true);
 
     UserDto userDto = mapper.userToUserDto(user, uriInfo);
@@ -67,8 +72,7 @@ public class User2UserDtoMapperTest {
 
   @Test
   public void shouldMapFields() {
-    User user = new User();
-    user.setName("abc");
+    User user = createDefaultUser();
 
     UserDto userDto = mapper.userToUserDto(user, uriInfo);
 
@@ -77,9 +81,8 @@ public class User2UserDtoMapperTest {
 
   @Test
   public void shouldRemovePassword() {
-    User user = new User();
+    User user = createDefaultUser();
     user.setPassword("password");
-    user.setName("abc");
 
     UserDto userDto = mapper.userToUserDto(user, uriInfo);
 
@@ -88,8 +91,7 @@ public class User2UserDtoMapperTest {
 
   @Test
   public void shouldMapTimes() {
-    User user = new User();
-    user.setName("abc");
+    User user = createDefaultUser();
     Instant expectedCreationDate = Instant.ofEpochSecond(6666666);
     Instant expectedModificationDate = expectedCreationDate.plusSeconds(1);
     user.setCreationDate(expectedCreationDate.toEpochMilli());
@@ -98,6 +100,6 @@ public class User2UserDtoMapperTest {
     UserDto userDto = mapper.userToUserDto(user, uriInfo);
 
     assertEquals(expectedCreationDate, userDto.getCreationDate());
-    assertEquals(expectedModificationDate, userDto.getLastModified());
+    assertEquals(expectedModificationDate, userDto.getLastModified().get());
   }
 }

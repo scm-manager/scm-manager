@@ -79,6 +79,7 @@ public class UserV2ResourceTest {
     User user = new User();
     user.setName("Neo");
     user.setPassword("redpill");
+    user.setCreationDate(System.currentTimeMillis());
     return user;
   }
 }

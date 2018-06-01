@@ -10,6 +10,7 @@ import javax.ws.rs.core.UriInfo;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Mapper
 public abstract class User2UserDtoMapper {
@@ -35,8 +36,16 @@ public abstract class User2UserDtoMapper {
     target.setLinks(links);
   }
 
-  @Mappings({@Mapping(target = "lastModified"), @Mapping(target = "creationDate")})
+  @Mapping(target = "creationDate")
   Instant mapTime(Long epochMilli) {
-    return epochMilli == null? null: Instant.ofEpochMilli(epochMilli);
+    // TODO assert parameter not null
+    return Instant.ofEpochMilli(epochMilli);
+  }
+
+  @Mapping(target = "lastModified")
+  Optional<Instant> mapOptionalTime(Long epochMilli) {
+    return Optional
+      .ofNullable(epochMilli)
+      .map(Instant::ofEpochMilli);
   }
 }

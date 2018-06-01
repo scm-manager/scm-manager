@@ -2,10 +2,14 @@ package sonia.scm.api.v2.resources;
 
 import com.google.inject.Inject;
 import org.apache.shiro.authc.credential.PasswordService;
-import org.mapstruct.*;
+import org.mapstruct.Context;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 import sonia.scm.user.User;
 
 import java.time.Instant;
+import java.util.Optional;
 
 import static sonia.scm.api.rest.resources.UserResource.DUMMY_PASSWORT;
 
@@ -31,8 +35,14 @@ public abstract class UserDto2UserMapper {
     }
   }
 
-  @Mappings({@Mapping(target = "lastModified"), @Mapping(target = "creationDate")})
+  @Mapping(target = "creationDate")
   Long mapTime(Instant instant) {
-    return instant == null? null: instant.toEpochMilli();
+    // TODO assert parameter not null
+    return instant.toEpochMilli();
+  }
+
+  @Mapping(target = "lastModified")
+  Long mapOptionalTime(Optional<Instant> instant) {
+    return instant.map(Instant::toEpochMilli).orElse(null);
   }
 }

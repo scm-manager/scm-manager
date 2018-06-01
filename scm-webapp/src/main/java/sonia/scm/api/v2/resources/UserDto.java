@@ -5,6 +5,7 @@ import lombok.Data;
 import javax.xml.bind.annotation.XmlElement;
 import java.time.Instant;
 import java.util.Map;
+import java.util.Optional;
 
 @Data
 public class UserDto {
@@ -12,7 +13,7 @@ public class UserDto {
   private boolean admin;
   private Instant creationDate;
   private String displayName;
-  private Instant lastModified;
+  private Optional<Instant> lastModified;
   private String mail;
   private String name;
   private String password;
