@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Singleton
-@Produces(MediaType.APPLICATION_JSON)
+@Produces("application/vnd.scmm-user+json")
 public class UserCollectionResource extends AbstractManagerResource<User, UserException> {
   private final UserDto2UserMapper dtoToUserMapper;
   private final User2UserDtoMapper userToDtoMapper;

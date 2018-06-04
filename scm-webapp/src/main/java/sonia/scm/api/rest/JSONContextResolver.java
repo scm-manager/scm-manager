@@ -43,7 +43,6 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationIntrospector;
 
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.ContextResolver;
 import javax.ws.rs.ext.Provider;
 
@@ -54,7 +53,7 @@ import javax.ws.rs.ext.Provider;
  * @since 2.0.0
  */
 @Provider
-@Produces(MediaType.APPLICATION_JSON)
+@Produces("application/*+json")
 public final class JSONContextResolver implements ContextResolver<ObjectMapper> {
 
   private final ObjectMapper mapper;

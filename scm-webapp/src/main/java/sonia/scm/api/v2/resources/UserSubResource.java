@@ -17,7 +17,7 @@ import javax.ws.rs.core.*;
 import java.util.Collection;
 
 @Singleton
-@Produces(MediaType.APPLICATION_JSON)
+@Produces("application/vnd.scmm-user+json")
 public class UserSubResource extends AbstractManagerResource<User, UserException> {
   private final UserDto2UserMapper dtoToUserMapper;
   private final User2UserDtoMapper userToDtoMapper;
