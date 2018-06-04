@@ -1,6 +1,7 @@
 package sonia.scm.api.v2.resources;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
@@ -15,6 +16,8 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.Collection;
 
+@Singleton
+@Produces(MediaType.APPLICATION_JSON)
 public class UserSubResource extends AbstractManagerResource<User, UserException> {
   private final UserDto2UserMapper dtoToUserMapper;
   private final User2UserDtoMapper userToDtoMapper;
@@ -35,7 +38,6 @@ public class UserSubResource extends AbstractManagerResource<User, UserException
     @ResponseCode(code = 404, condition = "not found, no group with the specified id/name available"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
-  @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
   public Response get(@Context Request request, @Context UriInfo uriInfo, @PathParam("id") String id)
   {
     if (SecurityUtils.getSubject().hasRole(Role.ADMIN))
@@ -58,7 +60,6 @@ public class UserSubResource extends AbstractManagerResource<User, UserException
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
-  @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
   public Response update(@Context UriInfo uriInfo,
     @PathParam("id") String name, UserDto userDto)
   {

@@ -33,6 +33,7 @@ package sonia.scm.api.rest;
 import com.fasterxml.jackson.databind.AnnotationIntrospector;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.introspect.AnnotationIntrospectorPair;
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import com.fasterxml.jackson.databind.type.TypeFactory;
@@ -63,6 +64,8 @@ public final class JSONContextResolver implements ContextResolver<ObjectMapper> 
       .registerModule(new JavaTimeModule());
     mapper.setAnnotationIntrospector(createAnnotationIntrospector());
     mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+    mapper.configure(SerializationFeature.WRITE_DATES_WITH_ZONE_ID, true);
   }
   
   private AnnotationIntrospector createAnnotationIntrospector() {

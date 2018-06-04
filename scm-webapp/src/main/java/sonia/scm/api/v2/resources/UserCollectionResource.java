@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Singleton
+@Produces(MediaType.APPLICATION_JSON)
 public class UserCollectionResource extends AbstractManagerResource<User, UserException> {
   private final UserDto2UserMapper dtoToUserMapper;
   private final User2UserDtoMapper userToDtoMapper;
@@ -48,7 +49,6 @@ public class UserCollectionResource extends AbstractManagerResource<User, UserEx
     @ResponseCode(code = 403, condition = "forbidden, the current user has no admin privileges"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
-  @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
   public Response getAll(@Context Request request, @Context UriInfo uriInfo, @DefaultValue("0")
   @QueryParam("start") int start, @DefaultValue("-1")
   @QueryParam("limit") int limit, @QueryParam("sortby") String sortby,
@@ -69,7 +69,6 @@ public class UserCollectionResource extends AbstractManagerResource<User, UserEx
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
-  @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
   public Response create(@Context UriInfo uriInfo, UserDto userDto) throws IOException, UserException {
     User user = dtoToUserMapper.userDtoToUser(userDto, "");
     manager.create(user);

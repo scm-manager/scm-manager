@@ -30,15 +30,26 @@
  */
 package sonia.scm.api.rest;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.junit.Test;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import org.junit.Test;
+import java.io.IOException;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.util.Optional;
+
 import static org.junit.Assert.*;
 
 /**
@@ -47,7 +58,7 @@ import static org.junit.Assert.*;
  * @author Sebastian Sdorra
  */
 public class JSONContextResolverTest {
-  
+
   private final ObjectMapper mapper = new JSONContextResolver().getContext(Object.class);
 
   /**
@@ -138,5 +149,48 @@ public class JSONContextResolverTest {
       return label;
     }
     
+  }
+
+  @Test
+  public void shouldWriteDate() throws JsonProcessingException {
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    LocalDateTime dateTime = LocalDateTime.parse("1998-06-13 14:40", formatter);
+
+    DateSample value = new DateSample(dateTime.toInstant(ZoneOffset.UTC));
+
+    assertEquals("{\"date\":\"1998-06-13T14:40:00Z\"}", mapper.writeValueAsString(value));
+  }
+
+  @Data @AllArgsConstructor @NoArgsConstructor
+  private static class DateSample {
+    private Instant date;
+  }
+
+  @Test
+  public void shouldNotWriteEmptyOptionals() throws JsonProcessingException {
+    OptionalSample emptyValue = new OptionalSample(Optional.empty());
+    OptionalSample presentValue = new OptionalSample(Optional.of("world"));
+
+    assertEquals("{}", mapper.writeValueAsString(emptyValue));
+    assertEquals("{\"value\":\"world\"}", mapper.writeValueAsString(presentValue));
+  }
+
+  @Test
+  public void shouldReadEmptyOptionals() throws IOException {
+    OptionalSample value = mapper.readValue("{}", OptionalSample.class);
+    assertNotNull("Optional should not be null", value.getValue());
+    assertFalse("Optional should be set as empty", value.getValue().isPresent());
+  }
+
+  @Test
+  public void shouldReadNonEmptyOptionals() throws IOException {
+    OptionalSample value = mapper.readValue("{\"value\":\"world\"}", OptionalSample.class);
+    assertEquals("world", value.getValue().get());
+  }
+
+  @Data @AllArgsConstructor @NoArgsConstructor
+  private static class OptionalSample {
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private Optional<String> value;
   }
 }
