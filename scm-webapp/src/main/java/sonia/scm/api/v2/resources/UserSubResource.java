@@ -16,8 +16,10 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.Collection;
 
+import static sonia.scm.api.v2.resources.ScmMediaType.USER;
+
 @Singleton
-@Produces("application/vnd.scmm-user+json")
+@Produces(USER)
 public class UserSubResource extends AbstractManagerResource<User, UserException> {
   private final UserDto2UserMapper dtoToUserMapper;
   private final User2UserDtoMapper userToDtoMapper;

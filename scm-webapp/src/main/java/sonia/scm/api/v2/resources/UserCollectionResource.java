@@ -18,8 +18,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static sonia.scm.api.v2.resources.ScmMediaType.USER;
+
 @Singleton
-@Produces("application/vnd.scmm-user+json")
+@Produces(USER)
 public class UserCollectionResource extends AbstractManagerResource<User, UserException> {
   private final UserDto2UserMapper dtoToUserMapper;
   private final User2UserDtoMapper userToDtoMapper;
