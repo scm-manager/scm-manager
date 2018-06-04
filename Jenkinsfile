@@ -22,12 +22,12 @@ node() { // No specific label
         }
 
         stage('Build') {
-            mvn 'clean install -DskipTests'
+            mvn 'clean install -Prelease -DskipTests'
             archive '**/target/*.jar,**/target/*.zip'
         }
 
         stage('Unit Test') {
-            mvn 'test'
+            mvn 'test -Prelease -Dsonia.scm.test.skip.hg=true'
         }
 
         stage('SonarQube') {
