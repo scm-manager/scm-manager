@@ -17,11 +17,6 @@ public class UserCollectionDto extends HalRepresentation {
       .with(page.links(
         fromTemplate(baseUrl + "{?page,pageSize}"),
         EnumSet.allOf(PagingRel.class)))
-//      .array(users
-//        .stream()
-//        .limit(page.getPageNumber()*page.getPageSize())
-//        .map(stuff -> linkBuilder("item", stuff.getLinks().getLinkBy("self").get().getHref()).withTitle(stuff.getName()).build())
-//        .collect(toList()))
       .build(),
       embeddedBuilder()
         .with("users", users)
