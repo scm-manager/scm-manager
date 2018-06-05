@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static de.otto.edison.hal.paging.NumberedPaging.zeroBasedNumberedPaging;
 import static sonia.scm.api.v2.resources.ScmMediaType.USER;
 
 @Singleton
@@ -52,13 +53,18 @@ public class UserCollectionResource extends AbstractManagerResource<User, UserEx
     @ResponseCode(code = 500, condition = "internal server error")
   })
   public Response getAll(@Context Request request, @Context UriInfo uriInfo, @DefaultValue("0")
-  @QueryParam("start") int start, @DefaultValue("-1")
-  @QueryParam("limit") int limit, @QueryParam("sortby") String sortby,
+  @QueryParam("page") int page, @DefaultValue("10")
+  @QueryParam("pageSize") int pageSize, @QueryParam("sortby") String sortby,
     @DefaultValue("false")
     @QueryParam("desc") boolean desc) {
-    Collection<User> items = fetchItems(sortby, desc, start, limit);
-    List<UserDto> collect = items.stream().map(user -> userToDtoMapper.userToUserDto(user, uriInfo)).collect(Collectors.toList());
-    return Response.ok(new GenericEntity<Collection<UserDto>>(collect) {}).build();
+    Collection<User> items = fetchItems(sortby, desc, page * pageSize, pageSize);
+
+    LinkBuilder collectionLinkBuilder = new LinkBuilder(uriInfo, UserV2Resource.class, UserCollectionResource.class);
+    String baseUrl = collectionLinkBuilder.method("getUserCollectionResource").parameters().method("create").parameters().href();
+
+    List<UserDto> dtos = items.stream().map(user -> userToDtoMapper.userToUserDto(user, uriInfo)).collect(Collectors.toList());
+
+    return Response.ok(new UserCollectionDto(baseUrl, zeroBasedNumberedPaging(page, pageSize, true), dtos)).build();
   }
 
   @POST
