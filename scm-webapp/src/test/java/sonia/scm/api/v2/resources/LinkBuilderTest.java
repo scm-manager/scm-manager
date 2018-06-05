@@ -46,8 +46,7 @@ public class LinkBuilderTest {
     URI actual = builder
       .method("sub")
       .parameters("param_x")
-      .create()
-      .getHref();
+      .create();
     assertEquals("http://example.com/base/main/param_x", actual.toString());
   }
 
@@ -55,13 +54,12 @@ public class LinkBuilderTest {
   public void shouldBuildPathOverSubResources() {
     LinkBuilder builder = new LinkBuilder(uriInfo, Main.class, Sub.class);
 
-    URI actual =     builder
+    URI actual = builder
       .method("sub")
       .parameters("param_x")
       .method("x")
       .parameters("param_y", "param_z")
-      .create()
-      .getHref();
+      .create();
     assertEquals("http://example.com/base/main/param_x/sub/param_y/param_z", actual.toString());
   }
 
@@ -72,8 +70,7 @@ public class LinkBuilderTest {
     URI actual = builder
       .method("get")
       .parameters()
-      .create()
-      .getHref();
+      .create();
     assertEquals("http://example.com/base", actual.toString());
   }
 

@@ -45,7 +45,7 @@ class LinkBuilder {
     return new Parameters(method);
   }
 
-  public Link create() {
+  public URI create() {
     if (calls.size() < classes.length) {
       throw new IllegalStateException("not enough methods for all classes");
     }
@@ -53,7 +53,11 @@ class LinkBuilder {
     URI baseUri = uriInfo.getBaseUri();
     URI relativeUri = createRelativeUri();
     URI absoluteUri = baseUri.resolve(relativeUri);
-    return new Link(absoluteUri);
+    return absoluteUri;
+  }
+
+  public String href() {
+    return create().toString();
   }
 
   private LinkBuilder add(String method, String[] parameters) {

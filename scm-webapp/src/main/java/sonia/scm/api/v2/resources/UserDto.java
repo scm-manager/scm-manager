@@ -1,17 +1,17 @@
 package sonia.scm.api.v2.resources;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import de.otto.edison.hal.HalRepresentation;
+import de.otto.edison.hal.Links;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
-import java.util.Map;
 import java.util.Optional;
 
 @Data @AllArgsConstructor @NoArgsConstructor
-public class UserDto {
+public class UserDto extends HalRepresentation {
   private boolean active;
   private boolean admin;
   private Instant creationDate;
@@ -23,6 +23,8 @@ public class UserDto {
   private String password;
   private String type;
 
-  @JsonProperty("_links")
-  private Map<String, Link> links;
+  @Override
+  protected HalRepresentation add(Links links) {
+    return super.add(links);
+  }
 }

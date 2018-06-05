@@ -15,7 +15,7 @@ import java.net.URISyntaxException;
 import java.time.Instant;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertFalse;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -26,13 +26,12 @@ public class User2UserDtoMapperTest {
   private final Subject subject = mock(Subject.class);
   private ThreadState subjectThreadState = new SubjectThreadState(subject);
 
-  private URI baseUri;
-  private URI expextedBaseUri;
+  private URI expectedBaseUri;
 
   @Before
   public void init() throws URISyntaxException {
-    baseUri = new URI("http://example.com/base/");
-    expextedBaseUri = baseUri.resolve(UserV2Resource.USERS_PATH_V2 + "/");
+    URI baseUri = new URI("http://example.com/base/");
+    expectedBaseUri = baseUri.resolve(UserV2Resource.USERS_PATH_V2 + "/");
     when(uriInfo.getBaseUri()).thenReturn(baseUri);
     subjectThreadState.bind();
   }
@@ -44,10 +43,10 @@ public class User2UserDtoMapperTest {
 
     UserDto userDto = mapper.userToUserDto(user, uriInfo);
 
-    assertEquals("expected map with self baseUri",   expextedBaseUri.resolve("abc"), userDto.getLinks().get("self").getHref());
-    assertEquals("expected map with delete baseUri", expextedBaseUri.resolve("abc"), userDto.getLinks().get("delete").getHref());
-    assertEquals("expected map with update baseUri", expextedBaseUri.resolve("abc"), userDto.getLinks().get("update").getHref());
-    assertEquals("expected map with create baseUri", expextedBaseUri, userDto.getLinks().get("create").getHref());
+    assertEquals("expected self link",   expectedBaseUri.resolve("abc").toString(), userDto.getLinks().getLinkBy("self").get().getHref());
+    assertEquals("expected delete link", expectedBaseUri.resolve("abc").toString(), userDto.getLinks().getLinkBy("delete").get().getHref());
+    assertEquals("expected update link", expectedBaseUri.resolve("abc").toString(), userDto.getLinks().getLinkBy("update").get().getHref());
+    assertEquals("expected create link", expectedBaseUri.toString(), userDto.getLinks().getLinkBy("create").get().getHref());
   }
 
   private User createDefaultUser() {
@@ -64,10 +63,10 @@ public class User2UserDtoMapperTest {
 
     UserDto userDto = mapper.userToUserDto(user, uriInfo);
 
-    assertEquals("expected map with self baseUri", expextedBaseUri.resolve("abc"), userDto.getLinks().get("self").getHref());
-    assertNull("expected map without delete baseUri", userDto.getLinks().get("delete"));
-    assertNull("expected map without update baseUri", userDto.getLinks().get("update"));
-    assertNull("expected map without create baseUri", userDto.getLinks().get("create"));
+    assertEquals("expected self link", expectedBaseUri.resolve("abc").toString(), userDto.getLinks().getLinkBy("self").get().getHref());
+    assertFalse("expected no delete link", userDto.getLinks().getLinkBy("delete").isPresent());
+    assertFalse("expected no update link", userDto.getLinks().getLinkBy("update").isPresent());
+    assertFalse("expected no create link", userDto.getLinks().getLinkBy("create").isPresent());
   }
 
   @Test

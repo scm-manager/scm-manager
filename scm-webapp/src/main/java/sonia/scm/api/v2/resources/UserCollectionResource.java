@@ -76,7 +76,7 @@ public class UserCollectionResource extends AbstractManagerResource<User, UserEx
     manager.create(user);
 
     LinkBuilder builder = new LinkBuilder(uriInfo, UserV2Resource.class, UserSubResource.class);
-    return Response.created(builder.method("getUserSubResource").parameters(user.getName()).method("get").parameters().create().getHref()).build();
+    return Response.created(builder.method("getUserSubResource").parameters(user.getName()).method("get").parameters().create()).build();
   }
 
   @Override

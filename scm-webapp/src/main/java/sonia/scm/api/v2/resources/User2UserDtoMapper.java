@@ -1,5 +1,6 @@
 package sonia.scm.api.v2.resources;
 
+import de.otto.edison.hal.Links;
 import org.apache.shiro.SecurityUtils;
 import org.mapstruct.*;
 import sonia.scm.api.rest.resources.UserResource;
@@ -8,9 +9,10 @@ import sonia.scm.user.User;
 
 import javax.ws.rs.core.UriInfo;
 import java.time.Instant;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
+
+import static de.otto.edison.hal.Link.link;
+import static de.otto.edison.hal.Links.linkingTo;
 
 @Mapper
 public abstract class User2UserDtoMapper {
@@ -26,14 +28,17 @@ public abstract class User2UserDtoMapper {
   void appendLinks(@MappingTarget UserDto target, @Context UriInfo uriInfo) {
     LinkBuilder userLinkBuilder = new LinkBuilder(uriInfo, UserV2Resource.class, UserSubResource.class);
     LinkBuilder collectionLinkBuilder = new LinkBuilder(uriInfo, UserV2Resource.class, UserCollectionResource.class);
-    Map<String, Link> links = new HashMap<>();
-    links.put("self", userLinkBuilder.method("getUserSubResource").parameters(target.getName()).method("get").parameters().create());
+
+    Links.Builder linksBuilder = linkingTo()
+      .self(userLinkBuilder.method("getUserSubResource").parameters(target.getName()).method("get").parameters().href());
     if (SecurityUtils.getSubject().hasRole(Role.ADMIN)) {
-      links.put("delete", userLinkBuilder.method("getUserSubResource").parameters(target.getName()).method("delete").parameters().create());
-      links.put("update", userLinkBuilder.method("getUserSubResource").parameters(target.getName()).method("update").parameters().create());
-      links.put("create", collectionLinkBuilder.method("getUserCollectionResource").parameters().method("create").parameters().create());
+      linksBuilder
+        .single(link("delete", userLinkBuilder.method("getUserSubResource").parameters(target.getName()).method("delete").parameters().href()))
+        .single(link("update", userLinkBuilder.method("getUserSubResource").parameters(target.getName()).method("update").parameters().href()))
+        .single(link("create", collectionLinkBuilder. method("getUserCollectionResource").parameters().method("create").parameters().href()));
     }
-    target.setLinks(links);
+    target.add(
+      linksBuilder.build());
   }
 
   @Mapping(target = "creationDate")
