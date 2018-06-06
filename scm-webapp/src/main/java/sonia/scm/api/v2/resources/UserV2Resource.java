@@ -1,11 +1,9 @@
 package sonia.scm.api.v2.resources;
 
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 import javax.ws.rs.Path;
 
-@Singleton
 @Path(UserV2Resource.USERS_PATH_V2)
 public class UserV2Resource {
 

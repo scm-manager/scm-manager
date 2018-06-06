@@ -1,7 +1,6 @@
 package sonia.scm.api.v2.resources;
 
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
@@ -18,7 +17,6 @@ import javax.ws.rs.core.*;
 import java.util.Collection;
 
 
-@Singleton
 @Produces(VndMediaType.USER)
 public class UserSubResource extends AbstractManagerResource<User, UserException> {
   private final UserDto2UserMapper dtoToUserMapper;

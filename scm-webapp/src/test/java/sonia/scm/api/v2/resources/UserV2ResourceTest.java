@@ -9,6 +9,7 @@ import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import sonia.scm.PageResult;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
 
@@ -17,6 +18,8 @@ import java.net.URISyntaxException;
 import java.util.Collections;
 
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -35,7 +38,7 @@ public class UserV2ResourceTest {
   @Before
   public void prepareEnvironment() {
     UserManager userManager = mock(UserManager.class);
-    when(userManager.getAll()).thenReturn(Collections.singletonList(createDummyUser()));
+    when(userManager.getPage(any(), eq(0), eq(10))).thenReturn(new PageResult<>(Collections.singletonList(createDummyUser()), true));
 
     UserDto2UserMapperImpl dtoToUserMapper = new UserDto2UserMapperImpl();
     User2UserDtoMapperImpl userToDtoMapper = new User2UserDtoMapperImpl();
