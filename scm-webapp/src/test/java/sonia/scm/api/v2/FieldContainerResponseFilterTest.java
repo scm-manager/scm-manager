@@ -15,6 +15,8 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -63,10 +65,35 @@ public class FieldContainerResponseFilterTest {
     assertEquals("{\"one\":1,\"five\":5}", objectMapper.writeValueAsString(node));
   }
 
+  @Test
+  public void testFilterEmpty() throws IOException {
+    applyFields();
+    JsonNode node = applyEntity("filter-test-002");
+
+    filter.filter(requestContext, responseContext);
+
+    assertEquals("{\"one\":1,\"two\":{\"three\":3,\"four\":4},\"five\":5}", objectMapper.writeValueAsString(node));
+  }
+
+  @Test
+  public void testFilterNotSet() throws IOException {
+    applyFields((List) null);
+    JsonNode node = applyEntity("filter-test-002");
+
+    filter.filter(requestContext, responseContext);
+
+    assertEquals("{\"one\":1,\"two\":{\"three\":3,\"four\":4},\"five\":5}", objectMapper.writeValueAsString(node));
+  }
+
   private void applyFields(String... fields) {
+    ArrayList<String> fieldList = Lists.newArrayList(fields);
+    applyFields(fieldList);
+  }
+
+  private void applyFields(List<String> fieldList) {
     UriInfo info = mock(UriInfo.class);
     MultivaluedMap<String,String> queryParameters = mock(MultivaluedMap.class);
-    when(queryParameters.get("fields")).thenReturn(Lists.newArrayList(fields));
+    when(queryParameters.get("fields")).thenReturn(fieldList);
     when(info.getQueryParameters()).thenReturn(queryParameters);
     when(requestContext.getUriInfo()).thenReturn(info);
   }

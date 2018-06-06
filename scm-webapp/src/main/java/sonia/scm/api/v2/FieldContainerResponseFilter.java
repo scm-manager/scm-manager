@@ -1,7 +1,6 @@
 package sonia.scm.api.v2;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.google.common.collect.Lists;
 
 import javax.annotation.Priority;
 import javax.ws.rs.Priorities;
@@ -12,6 +11,11 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.Provider;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static java.util.Arrays.stream;
+import static java.util.Collections.emptyList;
+import static java.util.Optional.ofNullable;
 
 /**
  * <p>Post processor for rest requests filtering json responses when a {@value PARAMETER_FIELDS} query
@@ -51,27 +55,16 @@ public class FieldContainerResponseFilter implements ContainerResponseFilter {
   }
 
   private List<String> extractFieldsFrom(ContainerRequestContext requestContext) {
-    List<String> fields = Lists.newArrayList();
-
-    List<String> fieldParameters = getFieldParameterFrom(requestContext);
-    if (fieldParameters != null && !fieldParameters.isEmpty()) {
-      for (String fieldParameter : fieldParameters) {
-        appendFieldsFromParameter(fields, fieldParameter);
-      }
-    }
-
-    return fields;
+    return getFieldParameterFrom(requestContext)
+      .orElse(emptyList())
+      .stream()
+      .flatMap(p -> stream(p.split(FIELD_SEPARATOR)))
+      .collect(Collectors.toList());
   }
 
-  private List<String> getFieldParameterFrom(ContainerRequestContext requestContext) {
+  private Optional<List<String>> getFieldParameterFrom(ContainerRequestContext requestContext) {
     MultivaluedMap<String, String> queryParameters = requestContext.getUriInfo().getQueryParameters();
-    return queryParameters.get(PARAMETER_FIELDS);
+    List<String> fieldParameters = queryParameters.get(PARAMETER_FIELDS);
+    return ofNullable(fieldParameters);
   }
-
-  private void appendFieldsFromParameter(List<String> fields, String fieldParameter) {
-    for (String field : fieldParameter.split(FIELD_SEPARATOR)) {
-      fields.add(field);
-    }
-  }
-
 }
