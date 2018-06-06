@@ -37,13 +37,14 @@ public class UserCollectionResource extends AbstractManagerResource<User, UserEx
   }
 
   /**
-   * Returns all users. <strong>Note:</strong> This method requires admin privileges.
+   * Returns all users for a given page number with a given page size (default page size is {@value DEFAULT_PAGE_SIZE}).
+   * <strong>Note:</strong> This method requires admin privileges.
    *
-   * @param request the current request
-   * @param start   the start value for paging
-   * @param limit   the limit value for paging
-   * @param sortby  sort parameter
-   * @param desc    sort direction desc or aesc
+   * @param request  the current request
+   * @param page     the number of the requested page
+   * @param pageSize the page size (default page size is {@value DEFAULT_PAGE_SIZE})
+   * @param sortby   sort parameter
+   * @param desc     sort direction desc or aesc
    * @return
    */
   @GET
