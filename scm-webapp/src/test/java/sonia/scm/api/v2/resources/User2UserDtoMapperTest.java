@@ -2,6 +2,7 @@ package sonia.scm.api.v2.resources;
 
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.support.SubjectThreadState;
+import org.apache.shiro.util.ThreadContext;
 import org.apache.shiro.util.ThreadState;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,7 +25,7 @@ public class User2UserDtoMapperTest {
   private final User2UserDtoMapper mapper = Mappers.getMapper(User2UserDtoMapper.class);
   private final UriInfo uriInfo = mock(UriInfo.class);
   private final Subject subject = mock(Subject.class);
-  private ThreadState subjectThreadState = new SubjectThreadState(subject);
+  private final ThreadState subjectThreadState = new SubjectThreadState(subject);
 
   private URI expectedBaseUri;
 
@@ -34,19 +35,29 @@ public class User2UserDtoMapperTest {
     expectedBaseUri = baseUri.resolve(UserV2Resource.USERS_PATH_V2 + "/");
     when(uriInfo.getBaseUri()).thenReturn(baseUri);
     subjectThreadState.bind();
+    ThreadContext.bind(subject);
   }
 
   @Test
-  public void shouldMapLinks_forAdmin() {
+  public void shouldMapLinks_forUpdate() {
     User user = createDefaultUser();
-    when(subject.hasRole("admin")).thenReturn(true);
+    when(subject.isPermitted("user:modify:abc")).thenReturn(true);
+
+    UserDto userDto = mapper.userToUserDto(user, uriInfo);
+
+    assertEquals("expected self link",   expectedBaseUri.resolve("abc").toString(), userDto.getLinks().getLinkBy("self").get().getHref());
+    assertEquals("expected update link", expectedBaseUri.resolve("abc").toString(), userDto.getLinks().getLinkBy("update").get().getHref());
+  }
+
+  @Test
+  public void shouldMapLinks_forDelete() {
+    User user = createDefaultUser();
+    when(subject.isPermitted("user:delete:abc")).thenReturn(true);
 
     UserDto userDto = mapper.userToUserDto(user, uriInfo);
 
     assertEquals("expected self link",   expectedBaseUri.resolve("abc").toString(), userDto.getLinks().getLinkBy("self").get().getHref());
     assertEquals("expected delete link", expectedBaseUri.resolve("abc").toString(), userDto.getLinks().getLinkBy("delete").get().getHref());
-    assertEquals("expected update link", expectedBaseUri.resolve("abc").toString(), userDto.getLinks().getLinkBy("update").get().getHref());
-    assertEquals("expected create link", expectedBaseUri.toString(), userDto.getLinks().getLinkBy("create").get().getHref());
   }
 
   private User createDefaultUser() {
@@ -66,7 +77,6 @@ public class User2UserDtoMapperTest {
     assertEquals("expected self link", expectedBaseUri.resolve("abc").toString(), userDto.getLinks().getLinkBy("self").get().getHref());
     assertFalse("expected no delete link", userDto.getLinks().getLinkBy("delete").isPresent());
     assertFalse("expected no update link", userDto.getLinks().getLinkBy("update").isPresent());
-    assertFalse("expected no create link", userDto.getLinks().getLinkBy("create").isPresent());
   }
 
   @Test

@@ -1,11 +1,10 @@
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.Links;
-import org.apache.shiro.SecurityUtils;
 import org.mapstruct.*;
 import sonia.scm.api.rest.resources.UserResource;
-import sonia.scm.security.Role;
 import sonia.scm.user.User;
+import sonia.scm.user.UserPermissions;
 
 import javax.ws.rs.core.UriInfo;
 import java.time.Instant;
@@ -25,17 +24,18 @@ public abstract class User2UserDtoMapper {
   }
 
   @AfterMapping
-  void appendLinks(@MappingTarget UserDto target, @Context UriInfo uriInfo) {
+  void appendLinks(User user, @MappingTarget UserDto target, @Context UriInfo uriInfo) {
     LinkBuilder userLinkBuilder = new LinkBuilder(uriInfo, UserV2Resource.class, UserSubResource.class);
-    LinkBuilder collectionLinkBuilder = new LinkBuilder(uriInfo, UserV2Resource.class, UserCollectionResource.class);
 
     Links.Builder linksBuilder = linkingTo()
       .self(userLinkBuilder.method("getUserSubResource").parameters(target.getName()).method("get").parameters().href());
-    if (SecurityUtils.getSubject().hasRole(Role.ADMIN)) {
+    if (UserPermissions.delete(user).isPermitted()) {
       linksBuilder
-        .single(link("delete", userLinkBuilder.method("getUserSubResource").parameters(target.getName()).method("delete").parameters().href()))
-        .single(link("update", userLinkBuilder.method("getUserSubResource").parameters(target.getName()).method("update").parameters().href()))
-        .single(link("create", collectionLinkBuilder. method("getUserCollectionResource").parameters().method("create").parameters().href()));
+        .single(link("delete", userLinkBuilder.method("getUserSubResource").parameters(target.getName()).method("delete").parameters().href()));
+    }
+    if (UserPermissions.modify(user).isPermitted()) {
+      linksBuilder
+        .single(link("update", userLinkBuilder.method("getUserSubResource").parameters(target.getName()).method("update").parameters().href()));
     }
     target.add(
       linksBuilder.build());
