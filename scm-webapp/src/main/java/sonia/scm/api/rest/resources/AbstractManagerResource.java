@@ -37,8 +37,10 @@ package sonia.scm.api.rest.resources;
 
 import org.apache.commons.beanutils.BeanComparator;
 import org.apache.shiro.authz.AuthorizationException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import sonia.scm.LastModifiedAware;
 import sonia.scm.Manager;
 import sonia.scm.ModelObject;
@@ -48,13 +50,19 @@ import sonia.scm.util.AssertUtil;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 
-import javax.ws.rs.core.*;
-import javax.ws.rs.core.Response.Status;
+//~--- JDK imports ------------------------------------------------------------
+
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
 
-//~--- JDK imports ------------------------------------------------------------
+import javax.ws.rs.core.CacheControl;
+import javax.ws.rs.core.EntityTag;
+import javax.ws.rs.core.GenericEntity;
+import javax.ws.rs.core.Request;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriInfo;
 
 /**
  *
@@ -559,7 +567,7 @@ public abstract class AbstractManagerResource<T extends ModelObject,
    *
    * @return
    */
-  protected Collection<T> fetchItems(String sortby, boolean desc, int start,
+  private Collection<T> fetchItems(String sortby, boolean desc, int start,
     int limit)
   {
     AssertUtil.assertPositive(start);

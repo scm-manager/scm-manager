@@ -60,7 +60,7 @@ public class JsonMarshallingResponseFilterTest {
   public void testFilter() {
     when(responseContext.hasEntity()).thenReturn(Boolean.TRUE);
     when(responseContext.getEntity()).thenReturn(new JsonMarshallingResponseFilterTest.Sample("one-two-three"));
-    when(responseContext.getMediaType()).thenReturn(VndMediaType.jsonType("sample"));
+    when(responseContext.getMediaType()).thenReturn(MediaType.valueOf(VndMediaType.USER));
 
     filter.filter(requestContext, responseContext);
 
@@ -81,7 +81,7 @@ public class JsonMarshallingResponseFilterTest {
 
     when(responseContext.hasEntity()).thenReturn(Boolean.TRUE);
     when(responseContext.getEntity()).thenReturn(new JsonMarshallingResponseFilterTest.Sample("one-two-three"));
-    when(responseContext.getMediaType()).thenReturn(VndMediaType.jsonType("sample"));
+    when(responseContext.getMediaType()).thenReturn(MediaType.valueOf(VndMediaType.USER));
 
     filter.filter(requestContext, responseContext);
 

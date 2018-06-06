@@ -15,6 +15,10 @@ import javax.ws.rs.container.ContainerResponseFilter;
 import javax.ws.rs.ext.Provider;
 import java.util.Set;
 
+/**
+ * Transforms json rest responses to {@link JsonNode} trees to support further post processing
+ * and processes all registered plugins for the {@link JsonEnricher} extension point.
+ */
 @Provider
 @Priority(Priorities.USER + 1000)
 public class JsonMarshallingResponseFilter implements ContainerResponseFilter {

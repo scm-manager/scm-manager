@@ -13,6 +13,13 @@ import javax.ws.rs.ext.Provider;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * <p>Post processor for rest requests filtering json responses when a {@value PARAMETER_FIELDS} query
+ * parameter is provided. In this case, only the given fields will returned. It is possible, to specify
+ * paths for nested fields. Multiple fields have to be devided using {@value FIELD_SEPARATOR}.</p>
+ * <p>This requires the {@link JsonMarshallingResponseFilter} to be processed first to create
+ * the {@link JsonNode} tree.</p>
+ */
 @Provider
 @Priority(Priorities.USER)
 public class FieldContainerResponseFilter implements ContainerResponseFilter {

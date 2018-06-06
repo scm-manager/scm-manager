@@ -5,6 +5,7 @@ import org.mapstruct.*;
 import sonia.scm.api.rest.resources.UserResource;
 import sonia.scm.user.User;
 import sonia.scm.user.UserPermissions;
+import sonia.scm.util.AssertUtil;
 
 import javax.ws.rs.core.UriInfo;
 import java.time.Instant;
@@ -43,7 +44,7 @@ public abstract class User2UserDtoMapper {
 
   @Mapping(target = "creationDate")
   Instant mapTime(Long epochMilli) {
-    // TODO assert parameter not null
+    AssertUtil.assertIsNotNull(epochMilli);
     return Instant.ofEpochMilli(epochMilli);
   }
 

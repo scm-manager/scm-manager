@@ -12,12 +12,21 @@ import sonia.scm.user.UserException;
 import sonia.scm.user.UserManager;
 import sonia.scm.web.VndMediaType;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.*;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.GenericEntity;
+import javax.ws.rs.core.Request;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.util.Collection;
 
-@Produces(VndMediaType.USER)
+@Produces(VndMediaType.USER_COLLECTION)
 public class UserCollectionResource extends AbstractManagerResource<User, UserException> {
   public static final int DEFAULT_PAGE_SIZE = 10;
   private final UserDto2UserMapper dtoToUserMapper;
@@ -57,9 +66,14 @@ public class UserCollectionResource extends AbstractManagerResource<User, UserEx
     @QueryParam("desc") boolean desc) {
     PageResult<User> pageResult = fetchPage(sortby, desc, page, pageSize);
 
-    return Response.ok(new UserCollection2DtoMapper(userToDtoMapper).userCollectionToUserDto(uriInfo, page, pageSize, pageResult)).build();
+    return Response.ok(new UserCollection2DtoMapper(userToDtoMapper).userCollectionToDto(uriInfo, page, pageSize, pageResult)).build();
   }
 
+  /**
+   * Creates a new user.
+   * @param userDto The user to be created.
+   * @return A response with the link to the new user (if created successfully).
+   */
   @POST
   @Path("")
   @StatusCodes({

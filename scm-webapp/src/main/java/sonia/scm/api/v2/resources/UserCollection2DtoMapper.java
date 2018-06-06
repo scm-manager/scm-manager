@@ -29,7 +29,7 @@ public class UserCollection2DtoMapper {
     this.userToDtoMapper = userToDtoMapper;
   }
 
-  public UserCollectionDto userCollectionToUserDto(UriInfo uriInfo, int pageNumber, int pageSize, PageResult<User> pageResult) {
+  public UserCollectionDto userCollectionToDto(UriInfo uriInfo, int pageNumber, int pageSize, PageResult<User> pageResult) {
     NumberedPaging paging = zeroBasedNumberedPaging(pageNumber, pageSize, pageResult.hasMore());
     List<UserDto> dtos = pageResult.getEntities().stream().map(user -> userToDtoMapper.userToUserDto(user, uriInfo)).collect(Collectors.toList());
 
