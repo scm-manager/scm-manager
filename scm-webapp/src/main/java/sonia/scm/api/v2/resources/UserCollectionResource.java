@@ -11,6 +11,7 @@ import sonia.scm.api.rest.resources.AbstractManagerResource;
 import sonia.scm.user.User;
 import sonia.scm.user.UserException;
 import sonia.scm.user.UserManager;
+import sonia.scm.web.VndMediaType;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
@@ -20,10 +21,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static de.otto.edison.hal.paging.NumberedPaging.zeroBasedNumberedPaging;
-import static sonia.scm.api.v2.resources.ScmMediaType.USER;
 
 @Singleton
-@Produces(USER)
+@Produces(VndMediaType.USER)
 public class UserCollectionResource extends AbstractManagerResource<User, UserException> {
   public static final int DEFAULT_PAGE_SIZE = 10;
   private final UserDto2UserMapper dtoToUserMapper;

@@ -35,37 +35,34 @@ package sonia.scm.it;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.ScmState;
-import sonia.scm.Type;
-import sonia.scm.user.User;
-import sonia.scm.util.IOUtil;
-
-import static org.junit.Assert.*;
-
-//~--- JDK imports ------------------------------------------------------------
-
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.filter.LoggingFilter;
 import com.sun.jersey.client.apache.ApacheHttpClient;
 import com.sun.jersey.client.apache.config.ApacheHttpClientConfig;
 import com.sun.jersey.client.apache.config.DefaultApacheHttpClientConfig;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
+import sonia.scm.ScmState;
+import sonia.scm.Type;
+import sonia.scm.api.rest.JSONContextResolver;
+import sonia.scm.api.rest.ObjectMapperProvider;
+import sonia.scm.repository.Person;
+import sonia.scm.repository.client.api.ClientCommand;
+import sonia.scm.repository.client.api.RepositoryClient;
+import sonia.scm.user.User;
+import sonia.scm.util.IOUtil;
 
+import javax.ws.rs.core.MultivaluedMap;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
 
-import javax.ws.rs.core.MultivaluedMap;
-import sonia.scm.api.rest.JSONContextResolver;
-import sonia.scm.repository.Person;
-import sonia.scm.repository.client.api.ClientCommand;
-import sonia.scm.repository.client.api.RepositoryClient;
+import static org.junit.Assert.*;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -175,7 +172,7 @@ public final class IntegrationTestUtil
   public static Client createClient()
   {
     DefaultApacheHttpClientConfig config = new DefaultApacheHttpClientConfig();
-    config.getSingletons().add(new JSONContextResolver());
+    config.getSingletons().add(new JSONContextResolver(new ObjectMapperProvider().get()));
     config.getProperties().put(ApacheHttpClientConfig.PROPERTY_HANDLE_COOKIES, true);
 
     return ApacheHttpClient.create(config);

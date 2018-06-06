@@ -59,7 +59,7 @@ import static org.junit.Assert.*;
  */
 public class JSONContextResolverTest {
 
-  private final ObjectMapper mapper = new JSONContextResolver().getContext(Object.class);
+  private final ObjectMapper mapper = new ObjectMapperProvider().get();
 
   /**
    * Tests json unmarshalling with unknown properties.
