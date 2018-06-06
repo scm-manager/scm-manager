@@ -42,6 +42,7 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.LastModifiedAware;
 import sonia.scm.Manager;
 import sonia.scm.ModelObject;
+import sonia.scm.PageResult;
 import sonia.scm.api.rest.RestExceptionResult;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.HttpUtil;
@@ -586,6 +587,19 @@ public abstract class AbstractManagerResource<T extends ModelObject,
     }
 
     return items;
+  }
+
+  protected PageResult<T> fetchPage(String sortby, boolean desc, int pageNumber,
+    int pageSize) {
+    AssertUtil.assertPositive(pageNumber);
+    AssertUtil.assertPositive(pageSize);
+
+    if (Util.isEmpty(sortby)) {
+      // replace with something useful
+      sortby = "id";
+    }
+
+    return manager.getPage(createComparator(sortby, desc), pageNumber, pageSize);
   }
 
   //~--- get methods ----------------------------------------------------------

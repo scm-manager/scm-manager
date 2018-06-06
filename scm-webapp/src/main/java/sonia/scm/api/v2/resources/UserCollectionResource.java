@@ -6,6 +6,7 @@ import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.ResponseHeader;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
+import sonia.scm.PageResult;
 import sonia.scm.api.rest.resources.AbstractManagerResource;
 import sonia.scm.user.User;
 import sonia.scm.user.UserException;
@@ -24,6 +25,7 @@ import static sonia.scm.api.v2.resources.ScmMediaType.USER;
 @Singleton
 @Produces(USER)
 public class UserCollectionResource extends AbstractManagerResource<User, UserException> {
+  public static final int DEFAULT_PAGE_SIZE = 10;
   private final UserDto2UserMapper dtoToUserMapper;
   private final User2UserDtoMapper userToDtoMapper;
 
@@ -53,18 +55,18 @@ public class UserCollectionResource extends AbstractManagerResource<User, UserEx
     @ResponseCode(code = 500, condition = "internal server error")
   })
   public Response getAll(@Context Request request, @Context UriInfo uriInfo, @DefaultValue("0")
-  @QueryParam("page") int page, @DefaultValue("10")
+  @QueryParam("page") int page, @DefaultValue("" + DEFAULT_PAGE_SIZE)
   @QueryParam("pageSize") int pageSize, @QueryParam("sortby") String sortby,
     @DefaultValue("false")
     @QueryParam("desc") boolean desc) {
-    Collection<User> items = fetchItems(sortby, desc, page * pageSize, pageSize);
+    PageResult<User> pageResult = fetchPage(sortby, desc, page, pageSize);
 
     LinkBuilder collectionLinkBuilder = new LinkBuilder(uriInfo, UserV2Resource.class, UserCollectionResource.class);
     String baseUrl = collectionLinkBuilder.method("getUserCollectionResource").parameters().method("create").parameters().href();
 
-    List<UserDto> dtos = items.stream().map(user -> userToDtoMapper.userToUserDto(user, uriInfo)).collect(Collectors.toList());
+    List<UserDto> dtos = pageResult.getEntities().stream().map(user -> userToDtoMapper.userToUserDto(user, uriInfo)).collect(Collectors.toList());
 
-    return Response.ok(new UserCollectionDto(baseUrl, zeroBasedNumberedPaging(page, pageSize, true), dtos)).build();
+    return Response.ok(new UserCollectionDto(baseUrl, zeroBasedNumberedPaging(page, pageSize, pageResult.hasMore()), dtos)).build();
   }
 
   @POST

@@ -35,8 +35,9 @@ package sonia.scm;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.IOException;
+import sonia.scm.util.Util;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Comparator;
 
@@ -61,7 +62,7 @@ public interface Manager<T extends ModelObject, E extends Exception>
    * @throws E
    * @throws IOException
    */
-  public void refresh(T object) throws E, IOException;
+  void refresh(T object) throws E, IOException;
 
   //~--- get methods ----------------------------------------------------------
 
@@ -73,7 +74,7 @@ public interface Manager<T extends ModelObject, E extends Exception>
    *
    * @return object with the given id
    */
-  public T get(String id);
+  T get(String id);
 
   /**
    * Returns a {@link java.util.Collection} of all objects in the store.
@@ -81,7 +82,7 @@ public interface Manager<T extends ModelObject, E extends Exception>
    *
    * @return all object in the store
    */
-  public Collection<T> getAll();
+  Collection<T> getAll();
 
   /**
    * Returns all object of the store sorted by the given {@link java.util.Comparator}
@@ -91,7 +92,7 @@ public interface Manager<T extends ModelObject, E extends Exception>
    * @since 1.4
    * @return all object of the store sorted by the given {@link java.util.Comparator}
    */
-  public Collection<T> getAll(Comparator<T> comparator);
+  Collection<T> getAll(Comparator<T> comparator);
 
   /**
    * Returns objects from the store which are starts at the given start
@@ -105,7 +106,7 @@ public interface Manager<T extends ModelObject, E extends Exception>
    * @return objects from the store which are starts at the given 
    *         start parameter
    */
-  public Collection<T> getAll(int start, int limit);
+  Collection<T> getAll(int start, int limit);
 
   /**
    * Returns objects from the store which are starts at the given start
@@ -121,5 +122,26 @@ public interface Manager<T extends ModelObject, E extends Exception>
    * @return objects from the store which are starts at the given 
    *         start parameter
    */
-  public Collection<T> getAll(Comparator<T> comparator, int start, int limit);
+  Collection<T> getAll(Comparator<T> comparator, int start, int limit);
+
+  /**
+   * Returns objects from the store divided into pages with the given page
+   * size for the given page number (zero based) and sorted by the given
+   * {@link java.util.Comparator}.
+   *
+   * @param comparator to sort the returned objects
+   * @param pageNumber the number of the page to be returned (zero based)
+   * @param pageSize the size of the pages
+   *
+   * @since 2.0
+   * @return {@link PageResult} with the objects from the store for the requested
+   *         page. If the requested page number exceeds the existing pages, an
+   *         empty page result is returned.
+   */
+  default PageResult<T> getPage(Comparator<T> comparator, int pageNumber, int pageSize) {
+    Collection<T> entities = getAll(comparator, pageNumber * pageSize, pageSize + 1);
+    boolean hasMore = entities.size() > pageSize;
+    return new PageResult<>(Util.createSubCollection(entities, 0, pageSize), hasMore);
+  }
+
 }
