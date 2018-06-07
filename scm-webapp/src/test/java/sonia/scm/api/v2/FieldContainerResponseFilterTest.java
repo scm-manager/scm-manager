@@ -38,7 +38,7 @@ public class FieldContainerResponseFilterTest {
   @Test
   public void testFilter() throws IOException {
     applyFields("one");
-    JsonNode node = applyEntity("filter-test-002");
+    JsonNode node = applyEntity("filter-test-nested");
 
     filter.filter(requestContext, responseContext);
 
@@ -48,7 +48,7 @@ public class FieldContainerResponseFilterTest {
   @Test
   public void testFilterWithMultiple() throws IOException {
     applyFields("one", "five");
-    JsonNode node = applyEntity("filter-test-002");
+    JsonNode node = applyEntity("filter-test-nested");
 
     filter.filter(requestContext, responseContext);
 
@@ -58,7 +58,7 @@ public class FieldContainerResponseFilterTest {
   @Test
   public void testFilterCommaSeparated() throws IOException {
     applyFields("one,five");
-    JsonNode node = applyEntity("filter-test-002");
+    JsonNode node = applyEntity("filter-test-nested");
 
     filter.filter(requestContext, responseContext);
 
@@ -68,7 +68,7 @@ public class FieldContainerResponseFilterTest {
   @Test
   public void testFilterEmpty() throws IOException {
     applyFields();
-    JsonNode node = applyEntity("filter-test-002");
+    JsonNode node = applyEntity("filter-test-nested");
 
     filter.filter(requestContext, responseContext);
 
@@ -78,7 +78,7 @@ public class FieldContainerResponseFilterTest {
   @Test
   public void testFilterNotSet() throws IOException {
     applyFields((List) null);
-    JsonNode node = applyEntity("filter-test-002");
+    JsonNode node = applyEntity("filter-test-nested");
 
     filter.filter(requestContext, responseContext);
 

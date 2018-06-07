@@ -48,9 +48,7 @@ public class JsonMarshallingResponseFilter implements ContainerResponseFilter {
       node
     );
 
-    for (JsonEnricher enricher : enrichers) {
-      enricher.enrich(context);
-    }
+    enrichers.forEach(enricher -> enricher.enrich(context));
   }
 
   private JsonNode getJsonEntity(ContainerResponseContext responseContext) {

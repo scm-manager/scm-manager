@@ -10,6 +10,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.net.URL;
 
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
@@ -19,9 +20,9 @@ public class JsonFiltersTest {
 
   @Test
   public void testFilterByFields() throws IOException {
-    JsonNode node = readJson("filter-test-001");
+    JsonNode node = readJson("filter-test-simple");
 
-    JsonFilters.filterByFields(node, Lists.newArrayList("one"));
+    JsonFilters.filterByFields(node, asList("one"));
 
     assertEquals(1, node.get("one").intValue());
     assertFalse(node.has("two"));
@@ -30,9 +31,9 @@ public class JsonFiltersTest {
 
   @Test
   public void testFilterByFieldsWithMultipleFields() throws IOException {
-    JsonNode node = readJson("filter-test-001");
+    JsonNode node = readJson("filter-test-simple");
 
-    JsonFilters.filterByFields(node, Lists.newArrayList("one", "three"));
+    JsonFilters.filterByFields(node, asList("one", "three"));
 
     assertEquals(1, node.get("one").intValue());
     assertFalse(node.has("two"));
@@ -41,22 +42,22 @@ public class JsonFiltersTest {
 
   @Test
   public void testFilterByFieldsWithNonPrimitive() throws IOException {
-    JsonNode node = readJson("filter-test-002");
-    JsonFilters.filterByFields(node, Lists.newArrayList("two"));
+    JsonNode node = readJson("filter-test-nested");
+    JsonFilters.filterByFields(node, asList("two"));
     assertEquals("{\"two\":{\"three\":3,\"four\":4}}", objectMapper.writeValueAsString(node));
   }
 
   @Test
   public void testFilterByFieldsWithDeepField() throws IOException {
-    JsonNode node = readJson("filter-test-002");
-    JsonFilters.filterByFields(node, Lists.newArrayList("two.three"));
+    JsonNode node = readJson("filter-test-nested");
+    JsonFilters.filterByFields(node, asList("two.three"));
     assertEquals("{\"two\":{\"three\":3}}", objectMapper.writeValueAsString(node));
   }
 
   @Test
   public void testFilterByFieldsWithVeryDeepField() throws IOException {
-    JsonNode node = readJson("filter-test-003");
-    JsonFilters.filterByFields(node, Lists.newArrayList("two.three.four.five"));
+    JsonNode node = readJson("filter-test-deep-path");
+    JsonFilters.filterByFields(node, asList("two.three.four.five"));
     assertFalse(node.has("one"));
     String json = objectMapper.writeValueAsString(node.get("two").get("three").get("four").get("five"));
     assertEquals("{\"six\":6,\"seven\":7}", json);
@@ -64,10 +65,10 @@ public class JsonFiltersTest {
 
   @Test
   public void testFilterByFieldsWithArray() throws IOException {
-    JsonNode node = readJson("filter-test-004");
-    JsonFilters.filterByFields(node, Lists.newArrayList("one.two"));
+    JsonNode node = readJson("filter-test-arrays");
+    JsonFilters.filterByFields(node, asList("one.two"));
     ArrayNode one = (ArrayNode) node.get("one");
-    assertEquals(one.size(), 2);
+    assertEquals(2, one.size());
     for (int i=0; i<one.size(); i++) {
       JsonNode childOfOne = one.get(i);
       assertFalse(childOfOne.has("three"));
@@ -79,5 +80,4 @@ public class JsonFiltersTest {
     URL resource = Resources.getResource("sonia/scm/api/v2/" + name + ".json");
     return objectMapper.readTree(resource);
   }
-
 }

@@ -9,6 +9,7 @@ import javax.ws.rs.container.ContainerResponseContext;
 import javax.ws.rs.container.ContainerResponseFilter;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.Provider;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -35,7 +36,7 @@ public class FieldContainerResponseFilter implements ContainerResponseFilter {
   public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext) {
     Optional<JsonNode> entity = getJsonEntity(responseContext);
     if (entity.isPresent()) {
-      List<String> fields = extractFieldsFrom(requestContext);
+      Collection<String> fields = extractFieldsFrom(requestContext);
       if (!fields.isEmpty()) {
         JsonFilters.filterByFields(entity.get(), fields);
       }
@@ -54,7 +55,7 @@ public class FieldContainerResponseFilter implements ContainerResponseFilter {
     return entity instanceof JsonNode;
   }
 
-  private List<String> extractFieldsFrom(ContainerRequestContext requestContext) {
+  private Collection<String> extractFieldsFrom(ContainerRequestContext requestContext) {
     return getFieldParameterFrom(requestContext)
       .orElse(emptyList())
       .stream()
@@ -62,9 +63,9 @@ public class FieldContainerResponseFilter implements ContainerResponseFilter {
       .collect(Collectors.toList());
   }
 
-  private Optional<List<String>> getFieldParameterFrom(ContainerRequestContext requestContext) {
+  private Optional<Collection<String>> getFieldParameterFrom(ContainerRequestContext requestContext) {
     MultivaluedMap<String, String> queryParameters = requestContext.getUriInfo().getQueryParameters();
-    List<String> fieldParameters = queryParameters.get(PARAMETER_FIELDS);
+    Collection<String> fieldParameters = queryParameters.get(PARAMETER_FIELDS);
     return ofNullable(fieldParameters);
   }
 }
