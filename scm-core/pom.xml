@@ -40,7 +40,12 @@
       <groupId>org.slf4j</groupId>
       <version>${slf4j.version}</version>
     </dependency>
-    
+    <dependency>
+      <artifactId>jcl-over-slf4j</artifactId>
+      <groupId>org.slf4j</groupId>
+      <version>${slf4j.version}</version>
+    </dependency>
+
     <!-- security -->
     
     <dependency>

@@ -496,7 +496,7 @@
 
     <!-- security libraries -->
     <ssp.version>1.0.0-SNAPSHOT</ssp.version>
-    <shiro.version>1.4.0-RC2</shiro.version>
+    <shiro.version>1.4.0</shiro.version>
 
     <!-- repostitory libraries -->
     <jgit.version>v4.5.2.201704071617-r-scm1</jgit.version>
