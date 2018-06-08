@@ -4,6 +4,7 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.support.SubjectThreadState;
 import org.apache.shiro.util.ThreadContext;
 import org.apache.shiro.util.ThreadState;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mapstruct.factory.Mappers;
@@ -36,6 +37,11 @@ public class User2UserDtoMapperTest {
     when(uriInfo.getBaseUri()).thenReturn(baseUri);
     subjectThreadState.bind();
     ThreadContext.bind(subject);
+  }
+
+  @After
+  public void unbindSubject() {
+    ThreadContext.unbindSubject();
   }
 
   @Test
