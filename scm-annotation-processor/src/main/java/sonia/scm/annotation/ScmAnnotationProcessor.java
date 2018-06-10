@@ -101,6 +101,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import static javax.lang.model.util.ElementFilter.methodsIn;
+
 /**
  *
  * @author Sebastian Sdorra
@@ -432,7 +434,7 @@ public final class ScmAnnotationProcessor extends AbstractProcessor
           //J-
           descriptorElements.add(
             new SubscriberElement(
-              clazz.toString(), 
+              clazz.toString(),
               param.asType().toString(),
               desc
             )
@@ -537,6 +539,15 @@ public final class ScmAnnotationProcessor extends AbstractProcessor
         {
           attributes.put(entry.getKey().getSimpleName().toString(),
             getValue(entry.getValue()));
+        }
+
+        // add default values
+        for (ExecutableElement meth : methodsIn(am.getAnnotationType().asElement().getEnclosedElements())) {
+          String attribute = meth.getSimpleName().toString();
+          AnnotationValue defaultValue = meth.getDefaultValue();
+          if (defaultValue != null && !attributes.containsKey(attribute)) {
+            attributes.put(attribute, getValue(defaultValue));
+          }
         }
       }
     }
