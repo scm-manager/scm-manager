@@ -66,7 +66,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "groups")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Group extends BasicPropertiesAware
-  implements ModelObject, Iterable<String>, PermissionObject
+  implements ModelObject, PermissionObject
 {
 
   /** Field description */
@@ -245,7 +245,6 @@ public class Group extends BasicPropertiesAware
    *
    * @return a {@link java.util.Iterator} for the members of this {@link Group}
    */
-  @Override
   public Iterator<String> iterator()
   {
     return getMembers().iterator();
