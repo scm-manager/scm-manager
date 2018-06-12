@@ -1,5 +1,6 @@
 package sonia.scm.api.v2.resources;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Links;
 import lombok.Data;
@@ -7,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.time.Instant;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,9 +17,11 @@ public class GroupDto extends HalRepresentation {
 
   private Instant creationDate;
   private String description;
+  @JsonInclude(JsonInclude.Include.NON_EMPTY)
   private Optional<Instant> lastModified;
   private String name;
   private String type;
+  private Collection<MemberDto> members;
 
   @Override
   protected HalRepresentation add(Links links) {

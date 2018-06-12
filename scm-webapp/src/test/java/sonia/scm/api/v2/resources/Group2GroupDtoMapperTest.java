@@ -13,7 +13,9 @@ import sonia.scm.group.Group;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.stream.IntStream;
 
+import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -42,14 +44,45 @@ public class Group2GroupDtoMapperTest {
   }
 
   @Test
-  public void shouldMapLinks_forUpdate() {
+  public void shouldMapAttributes() {
     Group group = createDefaultGroup();
-    when(subject.isPermitted("user:modify:abc")).thenReturn(true);
 
     GroupDto groupDto = mapper.groupToGroupDto(group, uriInfo);
 
-    assertEquals("expected self link",   expectedBaseUri.resolve("abc").toString(), groupDto.getLinks().getLinkBy("self").get().getHref());
+    assertEquals("abc", groupDto.getName());
+    assertEquals("abc", groupDto.getName());
+  }
+
+  @Test
+  public void shouldMapSelfLink() {
+    Group group = createDefaultGroup();
+
+    GroupDto groupDto = mapper.groupToGroupDto(group, uriInfo);
+
+    assertEquals("expected self link", expectedBaseUri.resolve("abc").toString(), groupDto.getLinks().getLinkBy("self").get().getHref());
+  }
+
+  @Test
+  public void shouldMapLink_forUpdate() {
+    Group group = createDefaultGroup();
+    when(subject.isPermitted("group:modify:abc")).thenReturn(true);
+
+    GroupDto groupDto = mapper.groupToGroupDto(group, uriInfo);
+
     assertEquals("expected update link", expectedBaseUri.resolve("abc").toString(), groupDto.getLinks().getLinkBy("update").get().getHref());
+  }
+
+  @Test
+  public void shouldCreateMemberDtos() {
+    Group group = createDefaultGroup();
+    group.setMembers(IntStream.range(0, 10).mapToObj(n -> "user" + n).collect(toList()));
+
+    GroupDto groupDto = mapper.groupToGroupDto(group, uriInfo);
+
+    assertEquals(10, groupDto.getMembers().size());
+    MemberDto actualMember = groupDto.getMembers().iterator().next();
+    assertEquals("user0", actualMember.getName());
+    assertEquals("http://example.com/base/v2/users/user0", actualMember.getLinks().getLinkBy("self").get().getHref());
   }
 
   private Group createDefaultGroup() {
