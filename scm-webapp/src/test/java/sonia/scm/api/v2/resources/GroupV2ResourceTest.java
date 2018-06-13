@@ -18,13 +18,17 @@ import sonia.scm.group.GroupException;
 import sonia.scm.group.GroupManager;
 import sonia.scm.web.VndMediaType;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 @SubjectAware(
@@ -53,11 +57,58 @@ public class GroupV2ResourceTest {
     initMocks(this);
     doNothing().when(groupManager).create(groupCaptor.capture());
 
+    Group group = new Group();
+    group.setName("admin");
+    group.setCreationDate(0L);
+    group.setMembers(Collections.singletonList("user"));
+    when(groupManager.get("admin")).thenReturn(group);
+
     GroupCollectionResource groupCollectionResource = new GroupCollectionResource(groupManager, dtoToGroupMapper, groupToDtoMapper);
-    GroupSubResource groupSubResource = new GroupSubResource(groupToDtoMapper);
+    GroupSubResource groupSubResource = new GroupSubResource(groupManager, groupToDtoMapper);
     GroupV2Resource groupV2Resource = new GroupV2Resource(groupCollectionResource, groupSubResource);
 
     dispatcher.getRegistry().addSingletonResource(groupV2Resource);
+  }
+
+  @Test
+  public void shouldGetNotFoundForNotExistentGroup() throws URISyntaxException {
+    MockHttpRequest request = MockHttpRequest.get("/" + GroupV2Resource.GROUPS_PATH_V2 + "nosuchgroup");
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_NOT_FOUND, response.getStatus());
+  }
+
+  @Test
+  @SubjectAware(username = "unpriv")
+  public void shouldGetNotAuthorizedForWrongUser() throws URISyntaxException {
+    MockHttpRequest request = MockHttpRequest.get("/" + GroupV2Resource.GROUPS_PATH_V2 + "admin");
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_FORBIDDEN, response.getStatus());
+  }
+
+  @Test
+  public void shouldGetGroup() throws URISyntaxException {
+    Group group = new Group();
+    group.setName("admin");
+    group.setCreationDate(0L);
+    group.setMembers(Collections.singletonList("user"));
+    when(groupManager.get("admin")).thenReturn(group);
+
+    MockHttpRequest request = MockHttpRequest.get("/" + GroupV2Resource.GROUPS_PATH_V2 + "admin");
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+    assertTrue(response.getContentAsString().contains("\"name\":\"admin\""));
+    assertTrue(response.getContentAsString().contains("\"self\":{\"href\":\"/v2/groups/admin\"}"));
+    assertTrue(response.getContentAsString().contains("\"delete\":{\"href\":\"/v2/groups/admin\"}"));
+    assertTrue(response.getContentAsString().contains("\"name\":\"user\""));
   }
 
   @Test

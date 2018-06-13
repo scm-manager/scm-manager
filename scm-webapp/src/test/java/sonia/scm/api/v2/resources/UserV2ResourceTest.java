@@ -62,7 +62,9 @@ public class UserV2ResourceTest {
   @Before
   public void prepareEnvironment() throws IOException, UserException {
     initMocks(this);
-    when(userManager.getPage(any(), eq(0), eq(10))).thenReturn(new PageResult<>(Collections.singletonList(createDummyUser()), true));
+    User dummyUser = createDummyUser();
+    when(userManager.getPage(any(), eq(0), eq(10))).thenReturn(new PageResult<>(Collections.singletonList(dummyUser), true));
+    when(userManager.get("Neo")).thenReturn(dummyUser);
     doNothing().when(userManager).create(userCaptor.capture());
 
     UserCollectionResource userCollectionResource = new UserCollectionResource(userManager, dtoToUserMapper, userToDtoMapper);
@@ -74,7 +76,7 @@ public class UserV2ResourceTest {
 
   @Test
   public void shouldCreateFullResponseForAdmin() throws URISyntaxException {
-    MockHttpRequest request = MockHttpRequest.get("/" + UserV2Resource.USERS_PATH_V2);
+    MockHttpRequest request = MockHttpRequest.get("/" + UserV2Resource.USERS_PATH_V2 + "Neo");
     MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
@@ -88,7 +90,7 @@ public class UserV2ResourceTest {
 
   @Test
   @SubjectAware(username = "unpriv")
-  public void shouldCreateLimitedResponseForAdmin() throws URISyntaxException {
+  public void shouldCreateLimitedResponseForSimpleUser() throws URISyntaxException {
     MockHttpRequest request = MockHttpRequest.get("/" + UserV2Resource.USERS_PATH_V2);
     MockHttpResponse response = new MockHttpResponse();
 
@@ -99,6 +101,17 @@ public class UserV2ResourceTest {
     assertTrue(response.getContentAsString().contains("\"password\":\"__dummypassword__\""));
     assertTrue(response.getContentAsString().contains("\"self\":{\"href\":\"/v2/users/Neo\"}"));
     assertFalse(response.getContentAsString().contains("\"delete\":{\"href\":\"/v2/users/Neo\"}"));
+  }
+
+  @Test
+  @SubjectAware(username = "unpriv")
+  public void shouldNotGetSingleUserForSimpleUser() throws URISyntaxException {
+    MockHttpRequest request = MockHttpRequest.get("/" + UserV2Resource.USERS_PATH_V2 + "Neo");
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_FORBIDDEN, response.getStatus());
   }
 
   @Test
