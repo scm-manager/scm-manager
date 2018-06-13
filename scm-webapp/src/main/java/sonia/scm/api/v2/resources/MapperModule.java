@@ -2,7 +2,6 @@ package sonia.scm.api.v2.resources;
 
 import com.google.inject.AbstractModule;
 import org.mapstruct.factory.Mappers;
-import sonia.scm.group.Group;
 
 public class MapperModule extends AbstractModule {
   @Override
@@ -11,5 +10,6 @@ public class MapperModule extends AbstractModule {
     bind(User2UserDtoMapper.class).to(Mappers.getMapper(User2UserDtoMapper.class).getClass());
 
     bind(Group2GroupDtoMapper.class).to(Mappers.getMapper(Group2GroupDtoMapper.class).getClass());
+    bind(GroupDto2GroupMapper.class).to(Mappers.getMapper(GroupDto2GroupMapper.class).getClass());
   }
 }
