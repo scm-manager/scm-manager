@@ -11,7 +11,6 @@ import java.time.Instant;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -37,20 +36,6 @@ public class UserDto2UserMapperTest {
     dto.setPassword("unencrypted");
     User user = mapper.userDtoToUser(dto, "original password");
     assertEquals("encrypted" , user.getPassword());
-  }
-
-  @Test
-  public void shouldMapTimes() {
-    UserDto dto = createDefaultDto();
-    Instant expectedCreationDate = Instant.ofEpochMilli(66666660000L);
-    Optional<Instant> expectedModificationDate = Optional.empty();
-    dto.setCreationDate(expectedCreationDate);
-    dto.setLastModified(expectedModificationDate);
-
-    User user = mapper.userDtoToUser(dto, "original password");
-
-    assertEquals((Long) expectedCreationDate.toEpochMilli(), user.getCreationDate());
-    assertNull(user.getLastModified());
   }
 
   @Before
