@@ -79,8 +79,8 @@ public class Group2GroupDtoMapperTest {
 
     GroupDto groupDto = mapper.groupToGroupDto(group, uriInfo);
 
-    assertEquals(10, groupDto.getMembers().size());
-    MemberDto actualMember = groupDto.getMembers().iterator().next();
+    assertEquals(10, groupDto.getEmbedded().getItemsBy("members").size());
+    MemberDto actualMember = (MemberDto) groupDto.getEmbedded().getItemsBy("members").iterator().next();
     assertEquals("user0", actualMember.getName());
     assertEquals("http://example.com/base/v2/users/user0", actualMember.getLinks().getLinkBy("self").get().getHref());
   }

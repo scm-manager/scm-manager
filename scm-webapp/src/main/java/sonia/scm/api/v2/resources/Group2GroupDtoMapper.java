@@ -12,7 +12,7 @@ import sonia.scm.util.AssertUtil;
 
 import javax.ws.rs.core.UriInfo;
 import java.time.Instant;
-import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -41,8 +41,10 @@ public abstract class Group2GroupDtoMapper {
     target.add(linksBuilder.build());
   }
 
-  Collection<MemberDto> mapMembers(Collection<String> members, @Context UriInfo uriInfo) {
-    return members.stream().map(name -> this.createMember(name, uriInfo)).collect(Collectors.toList());
+  @AfterMapping
+  void mapMembers(Group group, @MappingTarget GroupDto target, @Context UriInfo uriInfo) {
+    List<MemberDto> memberDtos = group.getMembers().stream().map(name -> this.createMember(name, uriInfo)).collect(Collectors.toList());
+    target.withEmbedded("members", memberDtos);
   }
 
   private MemberDto createMember(String name, UriInfo uriInfo) {

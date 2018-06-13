@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,7 +19,6 @@ public class GroupDto extends HalRepresentation {
   private Optional<Instant> lastModified;
   private String name;
   private String type;
-  private Collection<MemberDto> members;
 
   @Override
   protected HalRepresentation add(Links links) {
