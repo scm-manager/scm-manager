@@ -5,14 +5,13 @@ import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Links;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
 
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-@Data @Accessors @NoArgsConstructor
+@Data @NoArgsConstructor
 public class GroupDto extends HalRepresentation {
 
   private Instant creationDate;
