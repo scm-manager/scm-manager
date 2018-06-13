@@ -2,6 +2,7 @@ package sonia.scm.api.v2.resources;
 
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
+import com.google.common.io.Resources;
 import org.apache.shiro.authc.credential.PasswordService;
 import org.jboss.resteasy.core.Dispatcher;
 import org.jboss.resteasy.mock.MockDispatcherFactory;
@@ -22,6 +23,7 @@ import sonia.scm.web.VndMediaType;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
@@ -100,8 +102,14 @@ public class UserV2ResourceTest {
   }
 
   @Test
-  public void shouldCreateNewUserWithEncryptedPassword() throws URISyntaxException {
-    MockHttpRequest request = MockHttpRequest.post("/" + UserV2Resource.USERS_PATH_V2).contentType(VndMediaType.USER).content("{\"active\":true,\"admin\":false,\"displayName\":\"rpf\",\"mail\":\"x@abcde.cd\",\"name\":\"rpf\",\"password\":\"pwd123\",\"type\":\"xml\"}".getBytes());
+  public void shouldCreateNewUserWithEncryptedPassword() throws URISyntaxException, IOException {
+    URL url = Resources.getResource("sonia/scm/api/v2/user-test-create.json");
+    byte[] userJson = Resources.toByteArray(url);
+
+    MockHttpRequest request = MockHttpRequest
+      .post("/" + UserV2Resource.USERS_PATH_V2)
+      .contentType(VndMediaType.USER)
+      .content(userJson);
     MockHttpResponse response = new MockHttpResponse();
     when(passwordService.encryptPassword("pwd123")).thenReturn("encrypted123");
 
