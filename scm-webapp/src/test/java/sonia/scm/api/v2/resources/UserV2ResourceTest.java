@@ -2,6 +2,7 @@ package sonia.scm.api.v2.resources;
 
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
+import org.apache.shiro.authc.credential.PasswordService;
 import org.jboss.resteasy.core.Dispatcher;
 import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.mock.MockHttpRequest;
@@ -9,19 +10,29 @@ import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import sonia.scm.PageResult;
 import sonia.scm.user.User;
+import sonia.scm.user.UserException;
 import sonia.scm.user.UserManager;
+import sonia.scm.web.VndMediaType;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Collections;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 @SubjectAware(
   username = "trillian",
@@ -35,13 +46,23 @@ public class UserV2ResourceTest {
 
   private Dispatcher dispatcher = MockDispatcherFactory.createDispatcher();
 
-  @Before
-  public void prepareEnvironment() {
-    UserManager userManager = mock(UserManager.class);
-    when(userManager.getPage(any(), eq(0), eq(10))).thenReturn(new PageResult<>(Collections.singletonList(createDummyUser()), true));
+  @Mock
+  private PasswordService passwordService;
+  @Mock
+  private UserManager userManager;
+  @InjectMocks
+  UserDto2UserMapperImpl dtoToUserMapper;
+  @InjectMocks
+  User2UserDtoMapperImpl userToDtoMapper;
 
-    UserDto2UserMapperImpl dtoToUserMapper = new UserDto2UserMapperImpl();
-    User2UserDtoMapperImpl userToDtoMapper = new User2UserDtoMapperImpl();
+  ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
+
+  @Before
+  public void prepareEnvironment() throws IOException, UserException {
+    initMocks(this);
+    when(userManager.getPage(any(), eq(0), eq(10))).thenReturn(new PageResult<>(Collections.singletonList(createDummyUser()), true));
+    doNothing().when(userManager).create(userCaptor.capture());
+
     UserCollectionResource userCollectionResource = new UserCollectionResource(userManager, dtoToUserMapper, userToDtoMapper);
     UserSubResource userSubResource = new UserSubResource(dtoToUserMapper, userToDtoMapper, userManager);
     UserV2Resource userV2Resource = new UserV2Resource(userCollectionResource, userSubResource);
@@ -76,6 +97,20 @@ public class UserV2ResourceTest {
     assertTrue(response.getContentAsString().contains("\"password\":\"__dummypassword__\""));
     assertTrue(response.getContentAsString().contains("\"self\":{\"href\":\"/v2/users/Neo\"}"));
     assertFalse(response.getContentAsString().contains("\"delete\":{\"href\":\"/v2/users/Neo\"}"));
+  }
+
+  @Test
+  public void shouldCreateNewUserWithEncryptedPassword() throws URISyntaxException {
+    MockHttpRequest request = MockHttpRequest.post("/" + UserV2Resource.USERS_PATH_V2).contentType(VndMediaType.USER).content("{\"active\":true,\"admin\":false,\"displayName\":\"rpf\",\"mail\":\"x@abcde.cd\",\"name\":\"rpf\",\"password\":\"pwd123\",\"type\":\"xml\"}".getBytes());
+    MockHttpResponse response = new MockHttpResponse();
+    when(passwordService.encryptPassword("pwd123")).thenReturn("encrypted123");
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(201, response.getStatus());
+    User createdUser = userCaptor.getValue();
+    assertNotNull(createdUser);
+    assertEquals("encrypted123", createdUser.getPassword());
   }
 
   private User createDummyUser() {

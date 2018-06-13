@@ -5,11 +5,9 @@ import org.apache.shiro.authc.credential.PasswordService;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 import org.mapstruct.Named;
 import sonia.scm.user.User;
-
-import java.time.Instant;
-import java.util.Optional;
 
 import static sonia.scm.api.rest.resources.UserResource.DUMMY_PASSWORT;
 
@@ -19,7 +17,11 @@ public abstract class UserDto2UserMapper {
   @Inject
   private PasswordService passwordService;
 
-  @Mapping(source = "password", target = "password", qualifiedByName = "encrypt")
+  @Mappings({
+    @Mapping(source = "password", target = "password", qualifiedByName = "encrypt"),
+    @Mapping(target = "creationDate", ignore = true),
+    @Mapping(target = "lastModified", ignore = true)
+  })
   public abstract User userDtoToUser(UserDto userDto, @Context String originalPassword);
 
   @Named("encrypt")
@@ -33,16 +35,5 @@ public abstract class UserDto2UserMapper {
     {
       return passwordService.encryptPassword(password);
     }
-  }
-
-  @Mapping(target = "creationDate")
-  Long mapTime(Instant instant) {
-    // TODO assert parameter not null
-    return instant.toEpochMilli();
-  }
-
-  @Mapping(target = "lastModified")
-  Long mapOptionalTime(Optional<Instant> instant) {
-    return instant.map(Instant::toEpochMilli).orElse(null);
   }
 }
