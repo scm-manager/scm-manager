@@ -39,21 +39,18 @@ import com.github.sdorra.ssp.PermissionObject;
 import com.github.sdorra.ssp.StaticPermissions;
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
-
 import sonia.scm.BasicPropertiesAware;
 import sonia.scm.ModelObject;
 import sonia.scm.util.Util;
 import sonia.scm.util.ValidationUtil;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Arrays;
+import java.util.List;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Organizes users into a group for easier permissions management.
@@ -237,17 +234,6 @@ public class Group extends BasicPropertiesAware
   {
     return Objects.hashCode(name, description, members, type, creationDate,
       lastModified, properties);
-  }
-
-  /**
-   * Returns a {@link java.util.Iterator} for the members of this {@link Group}.
-   *
-   *
-   * @return a {@link java.util.Iterator} for the members of this {@link Group}
-   */
-  public Iterator<String> iterator()
-  {
-    return getMembers().iterator();
   }
 
   /**
