@@ -26,7 +26,7 @@ class ResourceLinks {
       return groupLinkBuilder.method("getGroupSubResource").parameters(name).method("delete").parameters().href();
     }
 
-    public String update(String name) {
+    String update(String name) {
       return groupLinkBuilder.method("getGroupSubResource").parameters(name).method("update").parameters().href();
     }
   }
@@ -50,7 +50,7 @@ class ResourceLinks {
       return userLinkBuilder.method("getUserSubResource").parameters(name).method("delete").parameters().href();
     }
 
-    public String update(String name) {
+     String update(String name) {
       return userLinkBuilder.method("getUserSubResource").parameters(name).method("update").parameters().href();
     }
   }
@@ -70,7 +70,7 @@ class ResourceLinks {
       return collectionLinkBuilder.method("getUserCollectionResource").parameters().method("getAll").parameters().href();
     }
 
-    public String create() {
+    String create() {
       return collectionLinkBuilder.method("getUserCollectionResource").parameters().method("create").parameters().href();
     }
   }
