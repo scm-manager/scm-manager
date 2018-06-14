@@ -4,23 +4,19 @@ import de.otto.edison.hal.Links;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupPermissions;
-import sonia.scm.util.AssertUtil;
 
 import javax.ws.rs.core.UriInfo;
-import java.time.Instant;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static de.otto.edison.hal.Link.link;
 import static de.otto.edison.hal.Links.linkingTo;
 
 @Mapper
-public abstract class GroupToGroupDtoMapper {
+public abstract class GroupToGroupDtoMapper extends BaseMapper {
 
   public abstract GroupDto map(Group group, @Context UriInfo uriInfo);
 
@@ -54,18 +50,5 @@ public abstract class GroupToGroupDtoMapper {
     MemberDto memberDto = new MemberDto(name);
     memberDto.add(linksBuilder.build());
     return memberDto;
-  }
-
-  @Mapping(target = "creationDate")
-  Instant mapTime(Long epochMilli) {
-    AssertUtil.assertIsNotNull(epochMilli);
-    return Instant.ofEpochMilli(epochMilli);
-  }
-
-  @Mapping(target = "lastModified")
-  Optional<Instant> mapOptionalTime(Long epochMilli) {
-    return Optional
-      .ofNullable(epochMilli)
-      .map(Instant::ofEpochMilli);
   }
 }

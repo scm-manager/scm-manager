@@ -8,17 +8,14 @@ import org.mapstruct.MappingTarget;
 import sonia.scm.api.rest.resources.UserResource;
 import sonia.scm.user.User;
 import sonia.scm.user.UserPermissions;
-import sonia.scm.util.AssertUtil;
 
 import javax.ws.rs.core.UriInfo;
-import java.time.Instant;
-import java.util.Optional;
 
 import static de.otto.edison.hal.Link.link;
 import static de.otto.edison.hal.Links.linkingTo;
 
 @Mapper
-public abstract class UserToUserDtoMapper {
+public abstract class UserToUserDtoMapper extends BaseMapper {
 
   public abstract UserDto map(User user, @Context UriInfo uriInfo);
 
@@ -43,16 +40,5 @@ public abstract class UserToUserDtoMapper {
     }
     target.add(
       linksBuilder.build());
-  }
-
-  Instant mapTime(Long epochMilli) {
-    AssertUtil.assertIsNotNull(epochMilli);
-    return Instant.ofEpochMilli(epochMilli);
-  }
-
-  Optional<Instant> mapOptionalTime(Long epochMilli) {
-    return Optional
-      .ofNullable(epochMilli)
-      .map(Instant::ofEpochMilli);
   }
 }
