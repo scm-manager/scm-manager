@@ -55,7 +55,7 @@ public class UserCollectionResource extends AbstractManagerResource<User, UserEx
    */
   @GET
   @Path("")
-  @TypeHint(User[].class)
+  @TypeHint(UserDto[].class)
   @StatusCodes({
     @ResponseCode(code = 200, condition = "success"),
     @ResponseCode(code = 403, condition = "forbidden, the current user has no admin privileges"),

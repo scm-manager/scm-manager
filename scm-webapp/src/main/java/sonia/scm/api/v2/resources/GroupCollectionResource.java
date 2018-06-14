@@ -5,6 +5,7 @@ import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.ResponseHeader;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
+import sonia.scm.PageResult;
 import sonia.scm.api.rest.resources.AbstractManagerResource;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupException;
@@ -12,11 +13,15 @@ import sonia.scm.group.GroupManager;
 import sonia.scm.web.VndMediaType;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericEntity;
+import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
@@ -38,7 +43,6 @@ public class GroupCollectionResource extends AbstractManagerResource<Group, Grou
     this.groupToDtoMapper = groupToDtoMapper;
   }
 
-
   /**
    * Creates a new group.
    * @param groupDto The group to be created.
@@ -59,6 +63,36 @@ public class GroupCollectionResource extends AbstractManagerResource<Group, Grou
     Group group = dtoToGroupMapper.map(groupDto);
     manager.create(group);
     return Response.created(URI.create(group(uriInfo).self(group.getName()))).build();
+  }
+
+  /**
+   * Returns all groups for a given page number with a given page size (default page size is {@value DEFAULT_PAGE_SIZE}).
+   * <strong>Note:</strong> This method requires admin privileges.
+   *
+   * @param request  the current request
+   * @param page     the number of the requested page
+   * @param pageSize the page size (default page size is {@value DEFAULT_PAGE_SIZE})
+   * @param sortby   sort parameter
+   * @param desc     sort direction desc or aesc
+   * @return
+   */
+  @GET
+  @Path("")
+  @TypeHint(GroupDto[].class)
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 403, condition = "forbidden, the current user has no admin privileges"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
+  public Response getAll(@Context Request request, @Context UriInfo uriInfo,
+    @DefaultValue("0") @QueryParam("page") int page,
+    @DefaultValue("" + DEFAULT_PAGE_SIZE) @QueryParam("pageSize") int pageSize,
+    @QueryParam("sortby") String sortby,
+    @DefaultValue("false")
+    @QueryParam("desc") boolean desc) {
+    PageResult<Group> pageResult = fetchPage(sortby, desc, page, pageSize);
+
+    return Response.ok(new GroupCollectionToDtoMapper(groupToDtoMapper).map(uriInfo, page, pageSize, pageResult)).build();
   }
 
   @Override

@@ -31,6 +31,26 @@ class ResourceLinks {
     }
   }
 
+  static GroupCollectionLinks groupCollection(UriInfo uriInfo) {
+    return new GroupCollectionLinks(uriInfo);
+  }
+
+  static class GroupCollectionLinks {
+    private final LinkBuilder collectionLinkBuilder;
+
+    private GroupCollectionLinks(UriInfo uriInfo) {
+      collectionLinkBuilder = new LinkBuilder(uriInfo, GroupV2Resource.class, GroupCollectionResource.class);
+    }
+
+    String self() {
+      return collectionLinkBuilder.method("getGroupCollectionResource").parameters().method("getAll").parameters().href();
+    }
+
+    String create() {
+      return collectionLinkBuilder.method("getGroupCollectionResource").parameters().method("create").parameters().href();
+    }
+  }
+
   static UserLinks user(UriInfo uriInfo) {
     return new UserLinks(uriInfo);
   }
