@@ -21,9 +21,9 @@ import static org.junit.Assert.assertFalse;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class User2UserDtoMapperTest {
+public class UserToUserDtoMapperTest {
 
-  private final User2UserDtoMapper mapper = Mappers.getMapper(User2UserDtoMapper.class);
+  private final UserToUserDtoMapper mapper = Mappers.getMapper(UserToUserDtoMapper.class);
   private final UriInfo uriInfo = mock(UriInfo.class);
   private final Subject subject = mock(Subject.class);
   private final ThreadState subjectThreadState = new SubjectThreadState(subject);

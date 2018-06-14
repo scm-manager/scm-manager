@@ -10,12 +10,12 @@ import sonia.scm.group.Group;
 import java.util.stream.Collectors;
 
 @Mapper
-public abstract class GroupDto2GroupMapper {
+public abstract class GroupDtoToGroupMapper {
   @Mappings({
     @Mapping(target = "creationDate", ignore = true),
     @Mapping(target = "lastModified", ignore = true)
   })
-  public abstract Group groupDtoToGroup(GroupDto groupDto);
+  public abstract Group map(GroupDto groupDto);
 
   @AfterMapping
   void mapMembers(GroupDto dto, @MappingTarget Group target) {

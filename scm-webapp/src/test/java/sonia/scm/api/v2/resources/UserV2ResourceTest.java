@@ -53,9 +53,9 @@ public class UserV2ResourceTest {
   @Mock
   private UserManager userManager;
   @InjectMocks
-  UserDto2UserMapperImpl dtoToUserMapper;
+  UserDtoToUserMapperImpl dtoToUserMapper;
   @InjectMocks
-  User2UserDtoMapperImpl userToDtoMapper;
+  UserToUserDtoMapperImpl userToDtoMapper;
 
   ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
 
@@ -132,6 +132,20 @@ public class UserV2ResourceTest {
     User createdUser = userCaptor.getValue();
     assertNotNull(createdUser);
     assertEquals("encrypted123", createdUser.getPassword());
+  }
+
+  @Test
+  public void shouldFailForMissingContent() throws URISyntaxException {
+    MockHttpRequest request = MockHttpRequest
+      .post("/" + UserV2Resource.USERS_PATH_V2)
+      .contentType(VndMediaType.USER)
+      .content(new byte[] {});
+    MockHttpResponse response = new MockHttpResponse();
+    when(passwordService.encryptPassword("pwd123")).thenReturn("encrypted123");
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(400, response.getStatus());
   }
 
   private User createDummyUser() {

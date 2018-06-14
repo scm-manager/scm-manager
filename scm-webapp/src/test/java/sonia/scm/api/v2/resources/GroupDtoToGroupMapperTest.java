@@ -9,13 +9,13 @@ import sonia.scm.group.Group;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 
-public class GroupDto2GroupMapperTest {
+public class GroupDtoToGroupMapperTest {
 
   @Test
   public void shouldMapAttributes() {
     GroupDto dto = new GroupDto();
     dto.setName("group");
-    Group group = Mappers.getMapper(GroupDto2GroupMapper.class).groupDtoToGroup(dto);
+    Group group = Mappers.getMapper(GroupDtoToGroupMapper.class).map(dto);
     assertEquals("group", group.getName());
   }
 
@@ -30,7 +30,7 @@ public class GroupDto2GroupMapperTest {
 
     dto.withEmbedded("members", asList(member1, member2));
 
-    Group group = Mappers.getMapper(GroupDto2GroupMapper.class).groupDtoToGroup(dto);
+    Group group = Mappers.getMapper(GroupDtoToGroupMapper.class).map(dto);
 
     assertEquals(2, group.getMembers().size());
     assertEquals("member1", group.getMembers().get(0));

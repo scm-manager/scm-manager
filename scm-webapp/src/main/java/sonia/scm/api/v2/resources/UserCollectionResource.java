@@ -29,11 +29,11 @@ import java.util.Collection;
 @Produces(VndMediaType.USER_COLLECTION)
 public class UserCollectionResource extends AbstractManagerResource<User, UserException> {
   public static final int DEFAULT_PAGE_SIZE = 10;
-  private final UserDto2UserMapper dtoToUserMapper;
-  private final User2UserDtoMapper userToDtoMapper;
+  private final UserDtoToUserMapper dtoToUserMapper;
+  private final UserToUserDtoMapper userToDtoMapper;
 
   @Inject
-  public UserCollectionResource(UserManager manager, UserDto2UserMapper dtoToUserMapper, User2UserDtoMapper userToDtoMapper) {
+  public UserCollectionResource(UserManager manager, UserDtoToUserMapper dtoToUserMapper, UserToUserDtoMapper userToDtoMapper) {
     super(manager);
     this.dtoToUserMapper = dtoToUserMapper;
     this.userToDtoMapper = userToDtoMapper;
@@ -66,7 +66,7 @@ public class UserCollectionResource extends AbstractManagerResource<User, UserEx
     @QueryParam("desc") boolean desc) {
     PageResult<User> pageResult = fetchPage(sortby, desc, page, pageSize);
 
-    return Response.ok(new UserCollection2DtoMapper(userToDtoMapper).map(uriInfo, page, pageSize, pageResult)).build();
+    return Response.ok(new UserCollectionToDtoMapper(userToDtoMapper).map(uriInfo, page, pageSize, pageResult)).build();
   }
 
   /**

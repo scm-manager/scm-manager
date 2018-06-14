@@ -25,14 +25,14 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class UserCollection2DtoMapperTest {
+public class UserCollectionToDtoMapperTest {
 
   private final UriInfo uriInfo = mock(UriInfo.class);
-  private final User2UserDtoMapper userToDtoMapper = mock(User2UserDtoMapper.class);
+  private final UserToUserDtoMapper userToDtoMapper = mock(UserToUserDtoMapper.class);
   private final Subject subject = mock(Subject.class);
   private final ThreadState subjectThreadState = new SubjectThreadState(subject);
 
-  private final UserCollection2DtoMapper mapper = new UserCollection2DtoMapper(userToDtoMapper);
+  private final UserCollectionToDtoMapper mapper = new UserCollectionToDtoMapper(userToDtoMapper);
 
   private URI expectedBaseUri;
 

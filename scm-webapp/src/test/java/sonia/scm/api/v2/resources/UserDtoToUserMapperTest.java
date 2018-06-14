@@ -14,12 +14,12 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-public class UserDto2UserMapperTest {
+public class UserDtoToUserMapperTest {
 
   @Mock
   private PasswordService passwordService;
   @InjectMocks
-  private UserDto2UserMapperImpl mapper;
+  private UserDtoToUserMapperImpl mapper;
 
   @Test
   public void shouldMapFields() {

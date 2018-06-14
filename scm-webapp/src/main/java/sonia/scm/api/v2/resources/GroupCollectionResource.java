@@ -25,11 +25,11 @@ import java.util.Collection;
 @Produces(VndMediaType.GROUP_COLLECTION)
 public class GroupCollectionResource extends AbstractManagerResource<Group, GroupException> {
   public static final int DEFAULT_PAGE_SIZE = 10;
-  private final GroupDto2GroupMapper dtoToGroupMapper;
-  private final Group2GroupDtoMapper groupToDtoMapper;
+  private final GroupDtoToGroupMapper dtoToGroupMapper;
+  private final GroupToGroupDtoMapper groupToDtoMapper;
 
   @Inject
-  public GroupCollectionResource(GroupManager manager, GroupDto2GroupMapper dtoToGroupMapper, Group2GroupDtoMapper groupToDtoMapper) {
+  public GroupCollectionResource(GroupManager manager, GroupDtoToGroupMapper dtoToGroupMapper, GroupToGroupDtoMapper groupToDtoMapper) {
     super(manager);
     this.dtoToGroupMapper = dtoToGroupMapper;
     this.groupToDtoMapper = groupToDtoMapper;
@@ -53,7 +53,7 @@ public class GroupCollectionResource extends AbstractManagerResource<Group, Grou
   @TypeHint(TypeHint.NO_CONTENT.class)
   @Consumes(VndMediaType.GROUP)
   public Response create(@Context UriInfo uriInfo, GroupDto groupDto) throws IOException, GroupException {
-    Group group = dtoToGroupMapper.groupDtoToGroup(groupDto);
+    Group group = dtoToGroupMapper.map(groupDto);
     System.out.println(group);
     manager.create(group);
 

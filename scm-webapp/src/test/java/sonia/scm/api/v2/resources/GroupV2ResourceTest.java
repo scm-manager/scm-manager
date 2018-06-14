@@ -46,9 +46,9 @@ public class GroupV2ResourceTest {
   @Mock
   private GroupManager groupManager;
   @InjectMocks
-  GroupDto2GroupMapperImpl dtoToGroupMapper;
+  GroupDtoToGroupMapperImpl dtoToGroupMapper;
   @InjectMocks
-  Group2GroupDtoMapperImpl groupToDtoMapper;
+  GroupToGroupDtoMapperImpl groupToDtoMapper;
 
   ArgumentCaptor<Group> groupCaptor = ArgumentCaptor.forClass(Group.class);
 

@@ -6,10 +6,10 @@ import org.mapstruct.factory.Mappers;
 public class MapperModule extends AbstractModule {
   @Override
   protected void configure() {
-    bind(UserDto2UserMapper.class).to(Mappers.getMapper(UserDto2UserMapper.class).getClass());
-    bind(User2UserDtoMapper.class).to(Mappers.getMapper(User2UserDtoMapper.class).getClass());
+    bind(UserDtoToUserMapper.class).to(Mappers.getMapper(UserDtoToUserMapper.class).getClass());
+    bind(UserToUserDtoMapper.class).to(Mappers.getMapper(UserToUserDtoMapper.class).getClass());
 
-    bind(Group2GroupDtoMapper.class).to(Mappers.getMapper(Group2GroupDtoMapper.class).getClass());
-    bind(GroupDto2GroupMapper.class).to(Mappers.getMapper(GroupDto2GroupMapper.class).getClass());
+    bind(GroupToGroupDtoMapper.class).to(Mappers.getMapper(GroupToGroupDtoMapper.class).getClass());
+    bind(GroupDtoToGroupMapper.class).to(Mappers.getMapper(GroupDtoToGroupMapper.class).getClass());
   }
 }

@@ -12,7 +12,7 @@ import sonia.scm.user.User;
 import static sonia.scm.api.rest.resources.UserResource.DUMMY_PASSWORT;
 
 @Mapper
-public abstract class UserDto2UserMapper {
+public abstract class UserDtoToUserMapper {
 
   @Inject
   private PasswordService passwordService;

@@ -18,7 +18,7 @@ import static de.otto.edison.hal.Link.link;
 import static de.otto.edison.hal.Links.linkingTo;
 
 @Mapper
-public abstract class User2UserDtoMapper {
+public abstract class UserToUserDtoMapper {
 
   public abstract UserDto map(User user, @Context UriInfo uriInfo);
 

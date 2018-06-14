@@ -20,12 +20,12 @@ import static de.otto.edison.hal.Link.link;
 import static de.otto.edison.hal.Links.linkingTo;
 import static de.otto.edison.hal.paging.NumberedPaging.zeroBasedNumberedPaging;
 
-public class UserCollection2DtoMapper {
+public class UserCollectionToDtoMapper {
 
-  private final User2UserDtoMapper userToDtoMapper;
+  private final UserToUserDtoMapper userToDtoMapper;
 
   @Inject
-  public UserCollection2DtoMapper(User2UserDtoMapper userToDtoMapper) {
+  public UserCollectionToDtoMapper(UserToUserDtoMapper userToDtoMapper) {
     this.userToDtoMapper = userToDtoMapper;
   }
 

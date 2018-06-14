@@ -20,9 +20,9 @@ import static de.otto.edison.hal.Link.link;
 import static de.otto.edison.hal.Links.linkingTo;
 
 @Mapper
-public abstract class Group2GroupDtoMapper {
+public abstract class GroupToGroupDtoMapper {
 
-  public abstract GroupDto groupToGroupDto(Group group, @Context UriInfo uriInfo);
+  public abstract GroupDto map(Group group, @Context UriInfo uriInfo);
 
   @AfterMapping
   void appendLinks(Group group, @MappingTarget GroupDto target, @Context UriInfo uriInfo) {

@@ -20,9 +20,9 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class Group2GroupDtoMapperTest {
+public class GroupToGroupDtoMapperTest {
 
-  private final Group2GroupDtoMapper mapper = Mappers.getMapper(Group2GroupDtoMapper.class);
+  private final GroupToGroupDtoMapper mapper = Mappers.getMapper(GroupToGroupDtoMapper.class);
   private final UriInfo uriInfo = mock(UriInfo.class);
   private final Subject subject = mock(Subject.class);
   private final ThreadState subjectThreadState = new SubjectThreadState(subject);
@@ -47,7 +47,7 @@ public class Group2GroupDtoMapperTest {
   public void shouldMapAttributes() {
     Group group = createDefaultGroup();
 
-    GroupDto groupDto = mapper.groupToGroupDto(group, uriInfo);
+    GroupDto groupDto = mapper.map(group, uriInfo);
 
     assertEquals("abc", groupDto.getName());
     assertEquals("abc", groupDto.getName());
@@ -57,7 +57,7 @@ public class Group2GroupDtoMapperTest {
   public void shouldMapSelfLink() {
     Group group = createDefaultGroup();
 
-    GroupDto groupDto = mapper.groupToGroupDto(group, uriInfo);
+    GroupDto groupDto = mapper.map(group, uriInfo);
 
     assertEquals("expected self link", expectedBaseUri.resolve("abc").toString(), groupDto.getLinks().getLinkBy("self").get().getHref());
   }
@@ -67,7 +67,7 @@ public class Group2GroupDtoMapperTest {
     Group group = createDefaultGroup();
     when(subject.isPermitted("group:modify:abc")).thenReturn(true);
 
-    GroupDto groupDto = mapper.groupToGroupDto(group, uriInfo);
+    GroupDto groupDto = mapper.map(group, uriInfo);
 
     assertEquals("expected update link", expectedBaseUri.resolve("abc").toString(), groupDto.getLinks().getLinkBy("update").get().getHref());
   }
@@ -77,7 +77,7 @@ public class Group2GroupDtoMapperTest {
     Group group = createDefaultGroup();
     group.setMembers(IntStream.range(0, 10).mapToObj(n -> "user" + n).collect(toList()));
 
-    GroupDto groupDto = mapper.groupToGroupDto(group, uriInfo);
+    GroupDto groupDto = mapper.map(group, uriInfo);
 
     assertEquals(10, groupDto.getEmbedded().getItemsBy("members").size());
     MemberDto actualMember = (MemberDto) groupDto.getEmbedded().getItemsBy("members").iterator().next();

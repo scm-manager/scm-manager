@@ -25,10 +25,10 @@ import java.util.Collection;
 @Produces(VndMediaType.GROUP)
 public class GroupSubResource extends AbstractManagerResource<Group, GroupException> {
 
-  private final Group2GroupDtoMapper groupToGroupDtoMapper;
+  private final GroupToGroupDtoMapper groupToGroupDtoMapper;
 
   @Inject
-  public GroupSubResource(GroupManager manager, Group2GroupDtoMapper groupToGroupDtoMapper) {
+  public GroupSubResource(GroupManager manager, GroupToGroupDtoMapper groupToGroupDtoMapper) {
     super(manager);
     this.groupToGroupDtoMapper = groupToGroupDtoMapper;
   }
@@ -42,7 +42,7 @@ public class GroupSubResource extends AbstractManagerResource<Group, GroupExcept
       if (group == null) {
         return Response.status(Response.Status.NOT_FOUND).build();
       }
-      GroupDto groupDto = groupToGroupDtoMapper.groupToGroupDto(group, uriInfo);
+      GroupDto groupDto = groupToGroupDtoMapper.map(group, uriInfo);
       return Response.ok(groupDto).build();
     }
     else
