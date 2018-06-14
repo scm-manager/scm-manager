@@ -19,6 +19,7 @@ import static de.otto.edison.hal.Embedded.embeddedBuilder;
 import static de.otto.edison.hal.Link.link;
 import static de.otto.edison.hal.Links.linkingTo;
 import static de.otto.edison.hal.paging.NumberedPaging.zeroBasedNumberedPaging;
+import static sonia.scm.api.v2.resources.ResourceLinks.userCollection;
 
 public class UserCollectionToDtoMapper {
 
@@ -42,16 +43,14 @@ public class UserCollectionToDtoMapper {
   }
 
   private static Links createLinks(UriInfo uriInfo, NumberedPaging page) {
-    LinkBuilder collectionLinkBuilder = new LinkBuilder(uriInfo, UserV2Resource.class, UserCollectionResource.class);
-    String baseUrl = collectionLinkBuilder.method("getUserCollectionResource").parameters().method("create").parameters().href();
+    String baseUrl = userCollection(uriInfo).self();
 
     Links.Builder linksBuilder = linkingTo()
       .with(page.links(
         fromTemplate(baseUrl + "{?page,pageSize}"),
         EnumSet.allOf(PagingRel.class)));
     if (UserPermissions.create().isPermitted()) {
-      linksBuilder
-        .single(link("create", collectionLinkBuilder. method("getUserCollectionResource").parameters().method("create").parameters().href()));
+      linksBuilder.single(link("create", userCollection(uriInfo).create()));
     }
     return linksBuilder.build();
   }

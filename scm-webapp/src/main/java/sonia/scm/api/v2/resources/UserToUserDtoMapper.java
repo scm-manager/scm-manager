@@ -13,6 +13,7 @@ import javax.ws.rs.core.UriInfo;
 
 import static de.otto.edison.hal.Link.link;
 import static de.otto.edison.hal.Links.linkingTo;
+import static sonia.scm.api.v2.resources.ResourceLinks.user;
 
 @Mapper
 public abstract class UserToUserDtoMapper extends BaseMapper {
@@ -26,17 +27,12 @@ public abstract class UserToUserDtoMapper extends BaseMapper {
 
   @AfterMapping
   void appendLinks(User user, @MappingTarget UserDto target, @Context UriInfo uriInfo) {
-    LinkBuilder userLinkBuilder = new LinkBuilder(uriInfo, UserV2Resource.class, UserSubResource.class);
-
-    Links.Builder linksBuilder = linkingTo()
-      .self(userLinkBuilder.method("getUserSubResource").parameters(target.getName()).method("get").parameters().href());
+    Links.Builder linksBuilder = linkingTo().self(user(uriInfo).self(target.getName()));
     if (UserPermissions.delete(user).isPermitted()) {
-      linksBuilder
-        .single(link("delete", userLinkBuilder.method("getUserSubResource").parameters(target.getName()).method("delete").parameters().href()));
+      linksBuilder.single(link("delete", user(uriInfo).delete(target.getName())));
     }
     if (UserPermissions.modify(user).isPermitted()) {
-      linksBuilder
-        .single(link("update", userLinkBuilder.method("getUserSubResource").parameters(target.getName()).method("update").parameters().href()));
+      linksBuilder.single(link("update", user(uriInfo).update(target.getName())));
     }
     target.add(
       linksBuilder.build());

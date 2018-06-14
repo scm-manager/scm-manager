@@ -14,6 +14,8 @@ import java.util.stream.Collectors;
 
 import static de.otto.edison.hal.Link.link;
 import static de.otto.edison.hal.Links.linkingTo;
+import static sonia.scm.api.v2.resources.ResourceLinks.group;
+import static sonia.scm.api.v2.resources.ResourceLinks.user;
 
 @Mapper
 public abstract class GroupToGroupDtoMapper extends BaseMapper {
@@ -22,17 +24,12 @@ public abstract class GroupToGroupDtoMapper extends BaseMapper {
 
   @AfterMapping
   void appendLinks(Group group, @MappingTarget GroupDto target, @Context UriInfo uriInfo) {
-    LinkBuilder groupLinkBuilder = new LinkBuilder(uriInfo, GroupV2Resource.class, GroupSubResource.class);
-
-    Links.Builder linksBuilder = linkingTo()
-      .self(groupLinkBuilder.method("getGroupSubResource").parameters(target.getName()).method("get").parameters().href());
+    Links.Builder linksBuilder = linkingTo().self(group(uriInfo).self(target.getName()));
     if (GroupPermissions.delete(group).isPermitted()) {
-      linksBuilder
-        .single(link("delete", groupLinkBuilder.method("getGroupSubResource").parameters(target.getName()).method("delete").parameters().href()));
+      linksBuilder.single(link("delete", group(uriInfo).delete(target.getName())));
     }
     if (GroupPermissions.modify(group).isPermitted()) {
-      linksBuilder
-        .single(link("update", groupLinkBuilder.method("getGroupSubResource").parameters(target.getName()).method("update").parameters().href()));
+      linksBuilder.single(link("update", group(uriInfo).update(target.getName())));
     }
     target.add(linksBuilder.build());
   }
@@ -44,9 +41,7 @@ public abstract class GroupToGroupDtoMapper extends BaseMapper {
   }
 
   private MemberDto createMember(String name, UriInfo uriInfo) {
-    LinkBuilder userLinkBuilder = new LinkBuilder(uriInfo, UserV2Resource.class, UserSubResource.class);
-    Links.Builder linksBuilder = linkingTo()
-      .self(userLinkBuilder.method("getUserSubResource").parameters(name).method("get").parameters().href());
+    Links.Builder linksBuilder = linkingTo().self(user(uriInfo).self(name));
     MemberDto memberDto = new MemberDto(name);
     memberDto.add(linksBuilder.build());
     return memberDto;
