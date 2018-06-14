@@ -66,7 +66,7 @@ public class UserCollectionResource extends AbstractManagerResource<User, UserEx
     @QueryParam("desc") boolean desc) {
     PageResult<User> pageResult = fetchPage(sortby, desc, page, pageSize);
 
-    return Response.ok(new UserCollection2DtoMapper(userToDtoMapper).userCollectionToDto(uriInfo, page, pageSize, pageResult)).build();
+    return Response.ok(new UserCollection2DtoMapper(userToDtoMapper).map(uriInfo, page, pageSize, pageResult)).build();
   }
 
   /**
@@ -85,7 +85,7 @@ public class UserCollectionResource extends AbstractManagerResource<User, UserEx
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
   public Response create(@Context UriInfo uriInfo, UserDto userDto) throws IOException, UserException {
-    User user = dtoToUserMapper.userDtoToUser(userDto, "");
+    User user = dtoToUserMapper.map(userDto, "");
     manager.create(user);
 
     LinkBuilder builder = new LinkBuilder(uriInfo, UserV2Resource.class, UserSubResource.class);

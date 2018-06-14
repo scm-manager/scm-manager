@@ -25,7 +25,7 @@ public class PageResult<T extends ModelObject> {
   }
 
   /**
-   * If this is <code>true</code>, there are more pages (that is, mor entities).
+   * If this is <code>true</code>, there are more pages (that is, more entities).
    */
   public boolean hasMore() {
     return hasMore;

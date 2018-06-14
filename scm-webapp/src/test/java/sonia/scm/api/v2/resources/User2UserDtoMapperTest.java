@@ -49,7 +49,7 @@ public class User2UserDtoMapperTest {
     User user = createDefaultUser();
     when(subject.isPermitted("user:modify:abc")).thenReturn(true);
 
-    UserDto userDto = mapper.userToUserDto(user, uriInfo);
+    UserDto userDto = mapper.map(user, uriInfo);
 
     assertEquals("expected self link",   expectedBaseUri.resolve("abc").toString(), userDto.getLinks().getLinkBy("self").get().getHref());
     assertEquals("expected update link", expectedBaseUri.resolve("abc").toString(), userDto.getLinks().getLinkBy("update").get().getHref());
@@ -60,7 +60,7 @@ public class User2UserDtoMapperTest {
     User user = createDefaultUser();
     when(subject.isPermitted("user:delete:abc")).thenReturn(true);
 
-    UserDto userDto = mapper.userToUserDto(user, uriInfo);
+    UserDto userDto = mapper.map(user, uriInfo);
 
     assertEquals("expected self link",   expectedBaseUri.resolve("abc").toString(), userDto.getLinks().getLinkBy("self").get().getHref());
     assertEquals("expected delete link", expectedBaseUri.resolve("abc").toString(), userDto.getLinks().getLinkBy("delete").get().getHref());
@@ -78,7 +78,7 @@ public class User2UserDtoMapperTest {
     User user = createDefaultUser();
     when(subject.hasRole("user")).thenReturn(true);
 
-    UserDto userDto = mapper.userToUserDto(user, uriInfo);
+    UserDto userDto = mapper.map(user, uriInfo);
 
     assertEquals("expected self link", expectedBaseUri.resolve("abc").toString(), userDto.getLinks().getLinkBy("self").get().getHref());
     assertFalse("expected no delete link", userDto.getLinks().getLinkBy("delete").isPresent());
@@ -89,7 +89,7 @@ public class User2UserDtoMapperTest {
   public void shouldMapFields() {
     User user = createDefaultUser();
 
-    UserDto userDto = mapper.userToUserDto(user, uriInfo);
+    UserDto userDto = mapper.map(user, uriInfo);
 
     assertEquals("abc", userDto.getName());
   }
@@ -99,7 +99,7 @@ public class User2UserDtoMapperTest {
     User user = createDefaultUser();
     user.setPassword("password");
 
-    UserDto userDto = mapper.userToUserDto(user, uriInfo);
+    UserDto userDto = mapper.map(user, uriInfo);
 
     assertEquals(UserResource.DUMMY_PASSWORT, userDto.getPassword());
   }
@@ -112,7 +112,7 @@ public class User2UserDtoMapperTest {
     user.setCreationDate(expectedCreationDate.toEpochMilli());
     user.setLastModified(expectedModificationDate.toEpochMilli());
 
-    UserDto userDto = mapper.userToUserDto(user, uriInfo);
+    UserDto userDto = mapper.map(user, uriInfo);
 
     assertEquals(expectedCreationDate, userDto.getCreationDate());
     assertEquals(expectedModificationDate, userDto.getLastModified().get());

@@ -22,7 +22,7 @@ public abstract class UserDto2UserMapper {
     @Mapping(target = "creationDate", ignore = true),
     @Mapping(target = "lastModified", ignore = true)
   })
-  public abstract User userDtoToUser(UserDto userDto, @Context String originalPassword);
+  public abstract User map(UserDto userDto, @Context String originalPassword);
 
   @Named("encrypt")
   String encrypt(String password, @Context String originalPassword) {

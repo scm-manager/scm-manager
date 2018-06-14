@@ -52,7 +52,7 @@ public class UserSubResource extends AbstractManagerResource<User, UserException
     if (SecurityUtils.getSubject().hasRole(Role.ADMIN))
     {
       User user = manager.get(id);
-      UserDto userDto = userToDtoMapper.userToUserDto(user, uriInfo);
+      UserDto userDto = userToDtoMapper.map(user, uriInfo);
       return Response.ok(userDto).build();
     }
     else
@@ -73,7 +73,7 @@ public class UserSubResource extends AbstractManagerResource<User, UserException
     @PathParam("id") String name, UserDto userDto)
   {
     String originalPassword = manager.get(name).getPassword();
-    User user = dtoToUserMapper.userDtoToUser(userDto, originalPassword);
+    User user = dtoToUserMapper.map(userDto, originalPassword);
     return update(name, user);
   }
 
