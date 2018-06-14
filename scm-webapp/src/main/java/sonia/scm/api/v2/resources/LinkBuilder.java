@@ -38,14 +38,14 @@ class LinkBuilder {
     this.calls = calls;
   }
 
-  public Parameters method(String method) {
+  Parameters method(String method) {
     if (calls.size() >= classes.length) {
       throw new IllegalStateException("no more classes for methods");
     }
     return new Parameters(method);
   }
 
-  public URI create() {
+  URI create() {
     if (calls.size() < classes.length) {
       throw new IllegalStateException("not enough methods for all classes");
     }
@@ -56,7 +56,7 @@ class LinkBuilder {
     return absoluteUri;
   }
 
-  public String href() {
+  String href() {
     return create().toString();
   }
 
@@ -95,7 +95,7 @@ class LinkBuilder {
       this.method = method;
     }
 
-    public LinkBuilder parameters(String... parameters) {
+    LinkBuilder parameters(String... parameters) {
       return LinkBuilder.this.add(method, parameters);
     }
   }

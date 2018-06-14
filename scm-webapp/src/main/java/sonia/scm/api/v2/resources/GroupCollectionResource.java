@@ -20,7 +20,10 @@ import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
+import java.net.URI;
 import java.util.Collection;
+
+import static sonia.scm.api.v2.resources.ResourceLinks.group;
 
 @Produces(VndMediaType.GROUP_COLLECTION)
 public class GroupCollectionResource extends AbstractManagerResource<Group, GroupException> {
@@ -54,11 +57,8 @@ public class GroupCollectionResource extends AbstractManagerResource<Group, Grou
   @Consumes(VndMediaType.GROUP)
   public Response create(@Context UriInfo uriInfo, GroupDto groupDto) throws IOException, GroupException {
     Group group = dtoToGroupMapper.map(groupDto);
-    System.out.println(group);
     manager.create(group);
-
-    LinkBuilder builder = new LinkBuilder(uriInfo, GroupV2Resource.class, GroupSubResource.class);
-    return Response.created(builder.method("getGroupSubResource").parameters(group.getName()).method("get").parameters().create()).build();
+    return Response.created(URI.create(group(uriInfo).self(group.getName()))).build();
   }
 
   @Override

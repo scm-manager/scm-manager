@@ -24,7 +24,10 @@ import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
+import java.net.URI;
 import java.util.Collection;
+
+import static sonia.scm.api.v2.resources.ResourceLinks.user;
 
 @Produces(VndMediaType.USER_COLLECTION)
 public class UserCollectionResource extends AbstractManagerResource<User, UserException> {
@@ -87,9 +90,7 @@ public class UserCollectionResource extends AbstractManagerResource<User, UserEx
   public Response create(@Context UriInfo uriInfo, UserDto userDto) throws IOException, UserException {
     User user = dtoToUserMapper.map(userDto, "");
     manager.create(user);
-
-    LinkBuilder builder = new LinkBuilder(uriInfo, UserV2Resource.class, UserSubResource.class);
-    return Response.created(builder.method("getUserSubResource").parameters(user.getName()).method("get").parameters().create()).build();
+    return Response.created(URI.create(user(uriInfo).self(user.getName()))).build();
   }
 
   @Override
