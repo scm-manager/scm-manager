@@ -35,7 +35,6 @@ public abstract class UserToUserDtoMapper extends BaseMapper {
     if (UserPermissions.modify(user).isPermitted()) {
       linksBuilder.single(link("update", user(uriInfoStore.get()).update(target.getName())));
     }
-    target.add(
-      linksBuilder.build());
+    target.add(linksBuilder.build());
   }
 }
