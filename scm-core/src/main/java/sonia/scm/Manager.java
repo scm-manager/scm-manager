@@ -41,6 +41,8 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Comparator;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 /**
  * Base interface for all manager classes.
  *
@@ -139,6 +141,9 @@ public interface Manager<T extends ModelObject, E extends Exception>
    *         empty page result is returned.
    */
   default PageResult<T> getPage(Comparator<T> comparator, int pageNumber, int pageSize) {
+    checkArgument(pageSize > 0, "pageSize must be at least 1");
+    checkArgument(pageNumber >= 0, "pageNumber must be non-negative");
+
     Collection<T> entities = getAll(comparator, pageNumber * pageSize, pageSize + 1);
     boolean hasMore = entities.size() > pageSize;
     return new PageResult<>(Util.createSubCollection(entities, 0, pageSize), hasMore);
