@@ -39,7 +39,7 @@ public class GroupCollectionToDtoMapperTest {
 
   @Before
   public void init() throws URISyntaxException {
-//    uriInfoStore.set(uriInfo);
+    uriInfoStore.set(uriInfo);
     URI baseUri = new URI("http://example.com/base/");
     expectedBaseUri = baseUri.resolve(GroupV2Resource.GROUPS_PATH_V2 + "/");
     when(uriInfo.getBaseUri()).thenReturn(baseUri);

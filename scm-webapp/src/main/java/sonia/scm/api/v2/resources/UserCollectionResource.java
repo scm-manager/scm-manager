@@ -88,6 +88,9 @@ public class UserCollectionResource extends AbstractManagerResource<User, UserEx
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
   public Response create(@Context UriInfo uriInfo, UserDto userDto) throws IOException, UserException {
+    if (userDto == null) {
+      return Response.status(400).build();
+    }
     User user = dtoToUserMapper.map(userDto, "");
     manager.create(user);
     return Response.created(URI.create(user(uriInfo).self(user.getName()))).build();
