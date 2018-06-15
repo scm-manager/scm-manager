@@ -45,10 +45,14 @@ public class GroupV2ResourceTest {
 
   @Mock
   private GroupManager groupManager;
+  private final UriInfoStore uriInfoStore = new UriInfoStore();
   @InjectMocks
   GroupDtoToGroupMapperImpl dtoToGroupMapper;
   @InjectMocks
   GroupToGroupDtoMapperImpl groupToDtoMapper;
+  @InjectMocks
+  GroupCollectionToDtoMapper groupCollectionToDtoMapper;
+
 
   ArgumentCaptor<Group> groupCaptor = ArgumentCaptor.forClass(Group.class);
 
@@ -63,7 +67,7 @@ public class GroupV2ResourceTest {
     group.setMembers(Collections.singletonList("user"));
     when(groupManager.get("admin")).thenReturn(group);
 
-    GroupCollectionResource groupCollectionResource = new GroupCollectionResource(groupManager, dtoToGroupMapper, groupToDtoMapper);
+    GroupCollectionResource groupCollectionResource = new GroupCollectionResource(groupManager, dtoToGroupMapper, groupToDtoMapper, groupCollectionToDtoMapper);
     GroupSubResource groupSubResource = new GroupSubResource(groupManager, groupToDtoMapper);
     GroupV2Resource groupV2Resource = new GroupV2Resource(groupCollectionResource, groupSubResource);
 

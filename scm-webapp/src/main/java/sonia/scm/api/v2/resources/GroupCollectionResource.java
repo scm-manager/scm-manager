@@ -35,12 +35,14 @@ public class GroupCollectionResource extends AbstractManagerResource<Group, Grou
   public static final int DEFAULT_PAGE_SIZE = 10;
   private final GroupDtoToGroupMapper dtoToGroupMapper;
   private final GroupToGroupDtoMapper groupToDtoMapper;
+  private final GroupCollectionToDtoMapper groupCollectionToDtoMapper;
 
   @Inject
-  public GroupCollectionResource(GroupManager manager, GroupDtoToGroupMapper dtoToGroupMapper, GroupToGroupDtoMapper groupToDtoMapper) {
+  public GroupCollectionResource(GroupManager manager, GroupDtoToGroupMapper dtoToGroupMapper, GroupToGroupDtoMapper groupToDtoMapper, GroupCollectionToDtoMapper groupCollectionToDtoMapper) {
     super(manager);
     this.dtoToGroupMapper = dtoToGroupMapper;
     this.groupToDtoMapper = groupToDtoMapper;
+    this.groupCollectionToDtoMapper = groupCollectionToDtoMapper;
   }
 
   /**
@@ -92,7 +94,7 @@ public class GroupCollectionResource extends AbstractManagerResource<Group, Grou
     @QueryParam("desc") boolean desc) {
     PageResult<Group> pageResult = fetchPage(sortby, desc, page, pageSize);
 
-    return Response.ok(new GroupCollectionToDtoMapper(groupToDtoMapper).map(uriInfo, page, pageSize, pageResult)).build();
+    return Response.ok(groupCollectionToDtoMapper.map(page, pageSize, pageResult)).build();
   }
 
   @Override

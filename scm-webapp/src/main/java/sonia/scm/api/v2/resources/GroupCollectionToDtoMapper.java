@@ -9,7 +9,6 @@ import sonia.scm.group.Group;
 import sonia.scm.group.GroupPermissions;
 
 import javax.inject.Inject;
-import javax.ws.rs.core.UriInfo;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,33 +23,35 @@ import static sonia.scm.api.v2.resources.ResourceLinks.groupCollection;
 public class GroupCollectionToDtoMapper {
 
   private final GroupToGroupDtoMapper groupToDtoMapper;
+  private final UriInfoStore uriInfoStore;
 
   @Inject
-  public GroupCollectionToDtoMapper(GroupToGroupDtoMapper groupToDtoMapper) {
+  public GroupCollectionToDtoMapper(GroupToGroupDtoMapper groupToDtoMapper, UriInfoStore uriInfoStore) {
     this.groupToDtoMapper = groupToDtoMapper;
+    this.uriInfoStore = uriInfoStore;
   }
 
-  public GroupCollectionDto map(UriInfo uriInfo, int pageNumber, int pageSize, PageResult<Group> pageResult) {
+  public GroupCollectionDto map(int pageNumber, int pageSize, PageResult<Group> pageResult) {
     NumberedPaging paging = zeroBasedNumberedPaging(pageNumber, pageSize, pageResult.hasMore());
-    List<GroupDto> dtos = pageResult.getEntities().stream().map(user -> groupToDtoMapper.map(user, uriInfo)).collect(Collectors.toList());
+    List<GroupDto> dtos = pageResult.getEntities().stream().map(user -> groupToDtoMapper.map(user, uriInfoStore.get())).collect(Collectors.toList());
 
     GroupCollectionDto groupCollectionDto = new GroupCollectionDto(
-      createLinks(uriInfo, paging),
+      createLinks(paging),
       embedDtos(dtos)
     );
     groupCollectionDto.setPage(pageNumber);
     return groupCollectionDto;
   }
 
-  private static Links createLinks(UriInfo uriInfo, NumberedPaging page) {
-    String baseUrl = groupCollection(uriInfo).self();
+  private Links createLinks(NumberedPaging page) {
+    String baseUrl = groupCollection(uriInfoStore.get()).self();
 
     Links.Builder linksBuilder = linkingTo()
       .with(page.links(
         fromTemplate(baseUrl + "{?page,pageSize}"),
         EnumSet.allOf(PagingRel.class)));
     if (GroupPermissions.create().isPermitted()) {
-      linksBuilder.single(link("create", groupCollection(uriInfo).create()));
+      linksBuilder.single(link("create", groupCollection(uriInfoStore.get()).create()));
     }
     return linksBuilder.build();
   }
