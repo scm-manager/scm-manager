@@ -42,7 +42,7 @@ public class GroupSubResource extends AbstractManagerResource<Group, GroupExcept
       if (group == null) {
         return Response.status(Response.Status.NOT_FOUND).build();
       }
-      GroupDto groupDto = groupToGroupDtoMapper.map(group, uriInfo);
+      GroupDto groupDto = groupToGroupDtoMapper.map(group);
       return Response.ok(groupDto).build();
     }
     else

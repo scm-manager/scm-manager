@@ -23,19 +23,27 @@ import static sonia.scm.api.v2.resources.ResourceLinks.userCollection;
 
 public class UserCollectionToDtoMapper {
 
-  private final UserToUserDtoMapper userToDtoMapper;
-
   @Inject
-  public UserCollectionToDtoMapper(UserToUserDtoMapper userToDtoMapper) {
+  private UserToUserDtoMapper userToDtoMapper;
+  @Inject
+  private UriInfoStore uriInfoStore;
+
+  public UserCollectionToDtoMapper(UserToUserDtoMapper userToDtoMapper, UriInfoStore uriInfoStore) {
     this.userToDtoMapper = userToDtoMapper;
+    this.uriInfoStore = uriInfoStore;
   }
 
-  public UserCollectionDto map(UriInfo uriInfo, int pageNumber, int pageSize, PageResult<User> pageResult) {
+  public UserCollectionToDtoMapper() {
+  }
+
+
+
+  public UserCollectionDto map(int pageNumber, int pageSize, PageResult<User> pageResult) {
     NumberedPaging paging = zeroBasedNumberedPaging(pageNumber, pageSize, pageResult.hasMore());
-    List<UserDto> dtos = pageResult.getEntities().stream().map(user -> userToDtoMapper.map(user, uriInfo)).collect(Collectors.toList());
+    List<UserDto> dtos = pageResult.getEntities().stream().map(userToDtoMapper::map).collect(Collectors.toList());
 
     UserCollectionDto userCollectionDto = new UserCollectionDto(
-      createLinks(uriInfo, paging),
+      createLinks(uriInfoStore.get(), paging),
       embedDtos(dtos)
     );
     userCollectionDto.setPage(pageNumber);

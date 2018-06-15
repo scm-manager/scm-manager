@@ -21,7 +21,9 @@ import sonia.scm.user.UserManager;
 import sonia.scm.web.VndMediaType;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collections;
@@ -49,15 +51,22 @@ public class UserV2ResourceTest {
   private Dispatcher dispatcher = MockDispatcherFactory.createDispatcher();
 
   @Mock
+  private UriInfo uriInfo;
+  @Mock
+  private UriInfoStore uriInfoStore;
+
+  @Mock
   private PasswordService passwordService;
   @Mock
   private UserManager userManager;
   @InjectMocks
-  UserDtoToUserMapperImpl dtoToUserMapper;
+  private UserDtoToUserMapperImpl dtoToUserMapper;
   @InjectMocks
-  UserToUserDtoMapperImpl userToDtoMapper;
+  private UserToUserDtoMapperImpl userToDtoMapper;
 
-  ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
+  private UserCollectionToDtoMapper userCollectionToDtoMapper;
+
+  private ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
 
   @Before
   public void prepareEnvironment() throws IOException, UserException {
@@ -67,11 +76,14 @@ public class UserV2ResourceTest {
     when(userManager.get("Neo")).thenReturn(dummyUser);
     doNothing().when(userManager).create(userCaptor.capture());
 
-    UserCollectionResource userCollectionResource = new UserCollectionResource(userManager, dtoToUserMapper, userToDtoMapper);
+    userCollectionToDtoMapper = new UserCollectionToDtoMapper(userToDtoMapper, uriInfoStore);
+    UserCollectionResource userCollectionResource = new UserCollectionResource(userManager, dtoToUserMapper, userToDtoMapper, userCollectionToDtoMapper);
     UserSubResource userSubResource = new UserSubResource(dtoToUserMapper, userToDtoMapper, userManager);
     UserV2Resource userV2Resource = new UserV2Resource(userCollectionResource, userSubResource);
 
     dispatcher.getRegistry().addSingletonResource(userV2Resource);
+    when(uriInfo.getBaseUri()).thenReturn(URI.create("/"));
+    when(uriInfoStore.get()).thenReturn(uriInfo);
   }
 
   @Test
@@ -82,6 +94,7 @@ public class UserV2ResourceTest {
     dispatcher.invoke(request, response);
 
     assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+    System.out.println(response.getContentAsString());
     assertTrue(response.getContentAsString().contains("\"name\":\"Neo\""));
     assertTrue(response.getContentAsString().contains("\"password\":\"__dummypassword__\""));
     assertTrue(response.getContentAsString().contains("\"self\":{\"href\":\"/v2/users/Neo\"}"));

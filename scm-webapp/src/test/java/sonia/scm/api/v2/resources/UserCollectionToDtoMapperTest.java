@@ -4,10 +4,11 @@ import de.otto.edison.hal.HalRepresentation;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.support.SubjectThreadState;
 import org.apache.shiro.util.ThreadContext;
-import org.apache.shiro.util.ThreadState;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import sonia.scm.PageResult;
 import sonia.scm.user.User;
 
@@ -22,25 +23,34 @@ import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 public class UserCollectionToDtoMapperTest {
 
-  private final UriInfo uriInfo = mock(UriInfo.class);
-  private final UserToUserDtoMapper userToDtoMapper = mock(UserToUserDtoMapper.class);
-  private final Subject subject = mock(Subject.class);
-  private final ThreadState subjectThreadState = new SubjectThreadState(subject);
+  @Mock
+  private  UriInfo uriInfo;
+  @Mock
+  private  UriInfoStore uriInfoStore;
+  @Mock
+  private  UserToUserDtoMapper userToDtoMapper;
+  @Mock
+  private  Subject subject;
 
-  private final UserCollectionToDtoMapper mapper = new UserCollectionToDtoMapper(userToDtoMapper);
+  @InjectMocks
+  private SubjectThreadState subjectThreadState;
+  @InjectMocks
+  private UserCollectionToDtoMapper mapper;
 
   private URI expectedBaseUri;
 
   @Before
   public void init() throws URISyntaxException {
+    initMocks(this);
     URI baseUri = new URI("http://example.com/base/");
     expectedBaseUri = baseUri.resolve(UserV2Resource.USERS_PATH_V2 + "/");
     when(uriInfo.getBaseUri()).thenReturn(baseUri);
+    when(uriInfoStore.get()).thenReturn(uriInfo);
     subjectThreadState.bind();
     ThreadContext.bind(subject);
   }
@@ -53,28 +63,28 @@ public class UserCollectionToDtoMapperTest {
   @Test
   public void shouldSetPageNumber() {
     PageResult<User> pageResult = mockPageResult(true, "Hannes");
-    UserCollectionDto userCollectionDto = mapper.map(uriInfo, 1, 1, pageResult);
+    UserCollectionDto userCollectionDto = mapper.map(1, 1, pageResult);
     assertEquals(1, userCollectionDto.getPage());
   }
 
   @Test
   public void shouldHaveSelfLink() {
     PageResult<User> pageResult = mockPageResult(true, "Hannes");
-    UserCollectionDto userCollectionDto = mapper.map(uriInfo, 1, 1, pageResult);
+    UserCollectionDto userCollectionDto = mapper.map(1, 1, pageResult);
     assertTrue(userCollectionDto.getLinks().getLinkBy("self").get().getHref().startsWith(expectedBaseUri.toString()));
   }
 
   @Test
   public void shouldCreateNextPageLink_whenHasMore() {
     PageResult<User> pageResult = mockPageResult(true, "Hannes");
-    UserCollectionDto userCollectionDto = mapper.map(uriInfo, 1, 1, pageResult);
+    UserCollectionDto userCollectionDto = mapper.map(1, 1, pageResult);
     assertTrue(userCollectionDto.getLinks().getLinkBy("next").get().getHref().contains("page=2"));
   }
 
   @Test
   public void shouldNotCreateNextPageLink_whenNoMore() {
     PageResult<User> pageResult = mockPageResult(false, "Hannes");
-    UserCollectionDto userCollectionDto = mapper.map(uriInfo, 1, 1, pageResult);
+    UserCollectionDto userCollectionDto = mapper.map(1, 1, pageResult);
     assertFalse(userCollectionDto.getLinks().stream().anyMatch(link -> link.getHref().contains("page=2")));
   }
 
@@ -83,7 +93,7 @@ public class UserCollectionToDtoMapperTest {
     PageResult<User> pageResult = mockPageResult(false, "Hannes");
     when(subject.isPermitted("user:create")).thenReturn(true);
 
-    UserCollectionDto userCollectionDto = mapper.map(uriInfo, 1, 1, pageResult);
+    UserCollectionDto userCollectionDto = mapper.map(1, 1, pageResult);
 
     assertTrue(userCollectionDto.getLinks().getLinkBy("create").isPresent());
   }
@@ -93,7 +103,7 @@ public class UserCollectionToDtoMapperTest {
     PageResult<User> pageResult = mockPageResult(false, "Hannes");
     when(subject.isPermitted("user:create")).thenReturn(false);
 
-    UserCollectionDto userCollectionDto = mapper.map(uriInfo, 1, 1, pageResult);
+    UserCollectionDto userCollectionDto = mapper.map(1, 1, pageResult);
 
     assertFalse(userCollectionDto.getLinks().getLinkBy("create").isPresent());
   }
@@ -101,7 +111,7 @@ public class UserCollectionToDtoMapperTest {
   @Test
   public void shouldMapUsers() {
     PageResult<User> pageResult = mockPageResult(false, "Hannes", "Wurst");
-    UserCollectionDto userCollectionDto = mapper.map(uriInfo, 1, 2, pageResult);
+    UserCollectionDto userCollectionDto = mapper.map(1, 2, pageResult);
     List<HalRepresentation> users = userCollectionDto.getEmbedded().getItemsBy("users");
     assertEquals(2, users.size());
     assertEquals("Hannes", ((UserDto) users.get(0)).getName());
@@ -116,7 +126,7 @@ public class UserCollectionToDtoMapperTest {
   private User mockUserWithDto(String userName) {
     User user = new User();
     user.setName(userName);
-    when(userToDtoMapper.map(user, uriInfo)).thenReturn(createUserDto(user));
+    when(userToDtoMapper.map(user)).thenReturn(createUserDto(user));
     return user;
   }
 

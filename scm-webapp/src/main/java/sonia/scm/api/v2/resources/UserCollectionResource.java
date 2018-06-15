@@ -34,12 +34,14 @@ public class UserCollectionResource extends AbstractManagerResource<User, UserEx
   public static final int DEFAULT_PAGE_SIZE = 10;
   private final UserDtoToUserMapper dtoToUserMapper;
   private final UserToUserDtoMapper userToDtoMapper;
+  private final UserCollectionToDtoMapper userCollectionToDtoMapper;
 
   @Inject
-  public UserCollectionResource(UserManager manager, UserDtoToUserMapper dtoToUserMapper, UserToUserDtoMapper userToDtoMapper) {
+  public UserCollectionResource(UserManager manager, UserDtoToUserMapper dtoToUserMapper, UserToUserDtoMapper userToDtoMapper, UserCollectionToDtoMapper userCollectionToDtoMapper) {
     super(manager);
     this.dtoToUserMapper = dtoToUserMapper;
     this.userToDtoMapper = userToDtoMapper;
+    this.userCollectionToDtoMapper = userCollectionToDtoMapper;
   }
 
   /**
@@ -61,7 +63,7 @@ public class UserCollectionResource extends AbstractManagerResource<User, UserEx
     @ResponseCode(code = 403, condition = "forbidden, the current user has no admin privileges"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
-  public Response getAll(@Context Request request, @Context UriInfo uriInfo,
+  public Response getAll(@Context Request request,
     @DefaultValue("0") @QueryParam("page") int page,
     @DefaultValue("" + DEFAULT_PAGE_SIZE) @QueryParam("pageSize") int pageSize,
     @QueryParam("sortby") String sortby,
@@ -69,7 +71,7 @@ public class UserCollectionResource extends AbstractManagerResource<User, UserEx
     @QueryParam("desc") boolean desc) {
     PageResult<User> pageResult = fetchPage(sortby, desc, page, pageSize);
 
-    return Response.ok(new UserCollectionToDtoMapper(userToDtoMapper).map(uriInfo, page, pageSize, pageResult)).build();
+    return Response.ok(userCollectionToDtoMapper.map(page, pageSize, pageResult)).build();
   }
 
   /**

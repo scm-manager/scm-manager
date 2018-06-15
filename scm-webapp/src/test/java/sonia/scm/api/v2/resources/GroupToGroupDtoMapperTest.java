@@ -7,7 +7,8 @@ import org.apache.shiro.util.ThreadState;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mapstruct.factory.Mappers;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import sonia.scm.group.Group;
 
 import javax.ws.rs.core.UriInfo;
@@ -19,11 +20,18 @@ import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 public class GroupToGroupDtoMapperTest {
 
-  private final GroupToGroupDtoMapper mapper = Mappers.getMapper(GroupToGroupDtoMapper.class);
-  private final UriInfo uriInfo = mock(UriInfo.class);
+  @Mock
+  private UriInfo uriInfo;
+  @Mock
+  private UriInfoStore uriInfoStore;
+
+  @InjectMocks
+  private GroupToGroupDtoMapperImpl mapper;
+
   private final Subject subject = mock(Subject.class);
   private final ThreadState subjectThreadState = new SubjectThreadState(subject);
 
@@ -31,9 +39,11 @@ public class GroupToGroupDtoMapperTest {
 
   @Before
   public void init() throws URISyntaxException {
+    initMocks(this);
     URI baseUri = new URI("http://example.com/base/");
     expectedBaseUri = baseUri.resolve(GroupV2Resource.GROUPS_PATH_V2 + "/");
     when(uriInfo.getBaseUri()).thenReturn(baseUri);
+    when(uriInfoStore.get()).thenReturn(uriInfo);
     subjectThreadState.bind();
     ThreadContext.bind(subject);
   }
@@ -47,7 +57,7 @@ public class GroupToGroupDtoMapperTest {
   public void shouldMapAttributes() {
     Group group = createDefaultGroup();
 
-    GroupDto groupDto = mapper.map(group, uriInfo);
+    GroupDto groupDto = mapper.map(group);
 
     assertEquals("abc", groupDto.getName());
     assertEquals("abc", groupDto.getName());
@@ -57,7 +67,7 @@ public class GroupToGroupDtoMapperTest {
   public void shouldMapSelfLink() {
     Group group = createDefaultGroup();
 
-    GroupDto groupDto = mapper.map(group, uriInfo);
+    GroupDto groupDto = mapper.map(group);
 
     assertEquals("expected self link", expectedBaseUri.resolve("abc").toString(), groupDto.getLinks().getLinkBy("self").get().getHref());
   }
@@ -67,7 +77,7 @@ public class GroupToGroupDtoMapperTest {
     Group group = createDefaultGroup();
     when(subject.isPermitted("group:modify:abc")).thenReturn(true);
 
-    GroupDto groupDto = mapper.map(group, uriInfo);
+    GroupDto groupDto = mapper.map(group);
 
     assertEquals("expected update link", expectedBaseUri.resolve("abc").toString(), groupDto.getLinks().getLinkBy("update").get().getHref());
   }
@@ -77,7 +87,7 @@ public class GroupToGroupDtoMapperTest {
     Group group = createDefaultGroup();
     group.setMembers(IntStream.range(0, 10).mapToObj(n -> "user" + n).collect(toList()));
 
-    GroupDto groupDto = mapper.map(group, uriInfo);
+    GroupDto groupDto = mapper.map(group);
 
     assertEquals(10, groupDto.getEmbedded().getItemsBy("members").size());
     MemberDto actualMember = (MemberDto) groupDto.getEmbedded().getItemsBy("members").iterator().next();

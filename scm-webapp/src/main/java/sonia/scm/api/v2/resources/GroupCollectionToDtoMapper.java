@@ -33,7 +33,7 @@ public class GroupCollectionToDtoMapper {
 
   public GroupCollectionDto map(int pageNumber, int pageSize, PageResult<Group> pageResult) {
     NumberedPaging paging = zeroBasedNumberedPaging(pageNumber, pageSize, pageResult.hasMore());
-    List<GroupDto> dtos = pageResult.getEntities().stream().map(user -> groupToDtoMapper.map(user, uriInfoStore.get())).collect(Collectors.toList());
+    List<GroupDto> dtos = pageResult.getEntities().stream().map(user -> groupToDtoMapper.map(user)).collect(Collectors.toList());
 
     GroupCollectionDto groupCollectionDto = new GroupCollectionDto(
       createLinks(paging),

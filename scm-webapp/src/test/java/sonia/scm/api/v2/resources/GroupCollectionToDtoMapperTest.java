@@ -118,7 +118,7 @@ public class GroupCollectionToDtoMapperTest {
   private Group mockGroupWithDto(String groupName) {
     Group group = new Group();
     group.setName(groupName);
-    when(groupToDtoMapper.map(group, uriInfo)).thenReturn(createGroupDto(group));
+    when(groupToDtoMapper.map(group)).thenReturn(createGroupDto(group));
     return group;
   }
 

@@ -19,7 +19,9 @@ import sonia.scm.group.GroupManager;
 import sonia.scm.web.VndMediaType;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collections;
@@ -45,7 +47,10 @@ public class GroupV2ResourceTest {
 
   @Mock
   private GroupManager groupManager;
-  private final UriInfoStore uriInfoStore = new UriInfoStore();
+  @Mock
+  private UriInfo uriInfo;
+  @Mock
+  private UriInfoStore uriInfoStore;
   @InjectMocks
   GroupDtoToGroupMapperImpl dtoToGroupMapper;
   @InjectMocks
@@ -72,6 +77,9 @@ public class GroupV2ResourceTest {
     GroupV2Resource groupV2Resource = new GroupV2Resource(groupCollectionResource, groupSubResource);
 
     dispatcher.getRegistry().addSingletonResource(groupV2Resource);
+
+    when(uriInfo.getBaseUri()).thenReturn(URI.create("/"));
+    when(uriInfoStore.get()).thenReturn(uriInfo);
   }
 
   @Test
