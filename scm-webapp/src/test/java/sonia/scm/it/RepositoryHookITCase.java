@@ -34,12 +34,7 @@ import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 import com.google.common.io.Files;
 import com.sun.jersey.api.client.WebResource;
-import java.io.File;
-import java.io.IOException;
-import java.util.Collection;
 import org.junit.After;
-import static org.junit.Assert.*;
-import static org.hamcrest.Matchers.*;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Rule;
@@ -49,9 +44,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import sonia.scm.debug.DebugHookData;
-import static sonia.scm.it.IntegrationTestUtil.createResource;
-import static sonia.scm.it.RepositoryITUtil.createRepository;
-import static sonia.scm.it.RepositoryITUtil.deleteRepository;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.Repository;
@@ -60,6 +52,19 @@ import sonia.scm.repository.client.api.ClientCommand;
 import sonia.scm.repository.client.api.RepositoryClient;
 import sonia.scm.repository.client.api.RepositoryClientFactory;
 import sonia.scm.util.IOUtil;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Collection;
+
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static sonia.scm.it.IntegrationTestUtil.createResource;
+import static sonia.scm.it.RepositoryITUtil.createRepository;
+import static sonia.scm.it.RepositoryITUtil.deleteRepository;
 
 /**
  * Integration tests for repository hooks.
@@ -149,7 +154,7 @@ public class RepositoryHookITCase extends AbstractAdminITCaseBase
   public void testOnlyNewCommit() throws IOException, InterruptedException 
   {
     // skip test if branches are not supported by repository type
-    Assume.assumeTrue(repositoryClient.isCommandSupported(ClientCommand.BANCH));
+    Assume.assumeTrue(repositoryClient.isCommandSupported(ClientCommand.BRANCH));
     
     // push commit
     Files.write("a", new File(workingCopy, "a.txt"), Charsets.UTF_8);

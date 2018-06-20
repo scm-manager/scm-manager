@@ -35,19 +35,16 @@ package sonia.scm.repository.client.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.ImmutableSet;
-import java.io.File;
-
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.transport.CredentialsProvider;
-
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.client.api.ClientCommand;
 
-//~--- JDK imports ------------------------------------------------------------
-
+import java.io.File;
 import java.io.IOException;
-
 import java.util.Set;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -59,7 +56,7 @@ public class GitRepositoryClientProvider extends RepositoryClientProvider
   /** Field description */
   private static final Set<ClientCommand> SUPPORTED_COMMANDS =
     ImmutableSet.of(ClientCommand.ADD, ClientCommand.REMOVE,
-      ClientCommand.COMMIT, ClientCommand.TAG, ClientCommand.BANCH,
+      ClientCommand.COMMIT, ClientCommand.TAG, ClientCommand.BRANCH,
       ClientCommand.PUSH);
 
   //~--- constructors ---------------------------------------------------------

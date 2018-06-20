@@ -32,10 +32,11 @@ package sonia.scm.repository.client.spi;
 
 import com.aragost.javahg.Repository;
 import com.google.common.collect.ImmutableSet;
+import sonia.scm.repository.client.api.ClientCommand;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Set;
-import sonia.scm.repository.client.api.ClientCommand;
 
 /**
  * Mercurial implementation of the {@link RepositoryClientProvider}.
@@ -47,7 +48,7 @@ public class HgRepositoryClientProvider extends RepositoryClientProvider
   
   private static final Set<ClientCommand> SUPPORTED_COMMANDS = ImmutableSet.of(
     ClientCommand.ADD, ClientCommand.REMOVE, ClientCommand.COMMIT, 
-    ClientCommand.TAG, ClientCommand.BANCH, ClientCommand.PUSH
+    ClientCommand.TAG, ClientCommand.BRANCH, ClientCommand.PUSH
   );
   
   private final Repository repository;

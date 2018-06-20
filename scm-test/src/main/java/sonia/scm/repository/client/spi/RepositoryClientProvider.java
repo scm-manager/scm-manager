@@ -37,13 +37,12 @@ package sonia.scm.repository.client.spi;
 import sonia.scm.repository.client.api.ClientCommand;
 import sonia.scm.repository.client.api.ClientCommandNotSupportedException;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
-
 import java.util.Set;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -93,7 +92,7 @@ public abstract class RepositoryClientProvider implements Closeable
    */
   public BranchCommand getBranchCommand()
   {
-    throw new ClientCommandNotSupportedException(ClientCommand.BANCH);
+    throw new ClientCommandNotSupportedException(ClientCommand.BRANCH);
   }
 
   /**
