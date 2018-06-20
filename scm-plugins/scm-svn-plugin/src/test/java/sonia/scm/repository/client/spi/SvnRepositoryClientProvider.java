@@ -31,13 +31,11 @@
 package sonia.scm.repository.client.spi;
 
 import com.google.common.collect.ImmutableSet;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import org.tmatesoft.svn.core.SVNURL;
 import org.tmatesoft.svn.core.wc.SVNClientManager;
 import sonia.scm.repository.client.api.ClientCommand;
+
+import java.io.File;
+import java.util.Set;
 
 /**
  * Subversion repository client provider.
@@ -54,27 +52,27 @@ public class SvnRepositoryClientProvider extends RepositoryClientProvider {
   private final SVNClientManager client;
   private final File workingCopy;
 
-  private final List<File> addedFiles = new ArrayList<>();
-  private final List<File> removedFiles = new ArrayList<>();
-  
+  private final SvnChangeWorker changeWorker;
+
   SvnRepositoryClientProvider(SVNClientManager client, File workingCopy) {
+    changeWorker = new SvnChangeWorker(workingCopy);
     this.client = client;
     this.workingCopy = workingCopy;
   }
 
   @Override
-  public SvnAddCommand getAddCommand() {
-    return new SvnAddCommand(workingCopy, addedFiles);
+  public AddCommand getAddCommand() {
+    return changeWorker.addCommand();
   }
 
   @Override
-  public SvnRemoveCommand getRemoveCommand() {
-    return new SvnRemoveCommand(workingCopy, removedFiles);
+  public RemoveCommand getRemoveCommand() {
+    return changeWorker.removeCommand();
   }
 
   @Override
-  public SvnCommitCommand getCommitCommand() {
-    return new SvnCommitCommand(client, workingCopy, addedFiles, removedFiles);
+  public CommitCommand getCommitCommand() {
+    return changeWorker.commitCommand(client);
   }
 
   @Override

@@ -32,97 +32,38 @@
 
 package sonia.scm.repository.client.api;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.repository.client.spi.AddCommand;
 import sonia.scm.util.Util;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
 
 /**
- *
- * @author Sebastian Sdorra
  * @since 1.18
  */
-public final class AddCommandBuilder
-{
+public final class AddCommandBuilder {
 
-  /**
-   * the logger for AddCommandBuilder
-   */
-  private static final Logger logger =
-    LoggerFactory.getLogger(AddCommandBuilder.class);
+  private static final Logger logger = LoggerFactory.getLogger(AddCommandBuilder.class);
 
-  //~--- constructors ---------------------------------------------------------
+  private final AddCommand command;
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param directory
-   * @param command
-   */
-  AddCommandBuilder(AddCommand command)
-  {
+  AddCommandBuilder(AddCommand command) {
     this.command = command;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param path
-   * @param pathes
-   *
-   * @return
-   *
-   * @throws IOException
-   */
-  public AddCommandBuilder add(String path, String... pathes) throws IOException
-  {
-    add(path);
-
-    if (Util.isNotEmpty(pathes))
-    {
-      for (String p : pathes)
-      {
-        add(p);
-      }
+  public AddCommandBuilder add(String... paths) throws IOException {
+    for (String p : paths) {
+      add(p);
     }
-
     return this;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param path
-   *
-   * @throws IOException
-   */
-  private void add(String path) throws IOException
-  {
-    if (Util.isNotEmpty(path))
-    {
-      if (logger.isDebugEnabled())
-      {
-        logger.debug("add path {}", path);
-      }
+  private void add(String path) throws IOException {
+    if (Util.isNotEmpty(path)) {
+      logger.debug("add path {}", path);
 
       command.add(path);
     }
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private AddCommand command;
 }
