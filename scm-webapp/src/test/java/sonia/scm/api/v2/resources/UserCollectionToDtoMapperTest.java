@@ -48,7 +48,7 @@ public class UserCollectionToDtoMapperTest {
   public void init() throws URISyntaxException {
     initMocks(this);
     URI baseUri = new URI("http://example.com/base/");
-    expectedBaseUri = baseUri.resolve(UserV2Resource.USERS_PATH_V2 + "/");
+    expectedBaseUri = baseUri.resolve(UserRootResource.USERS_PATH_V2 + "/");
     when(uriInfo.getBaseUri()).thenReturn(baseUri);
     when(uriInfoStore.get()).thenReturn(uriInfo);
     subjectThreadState.bind();

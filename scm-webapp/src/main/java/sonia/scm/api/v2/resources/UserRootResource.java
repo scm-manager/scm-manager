@@ -4,17 +4,17 @@ import com.google.inject.Inject;
 
 import javax.ws.rs.Path;
 
-@Path(UserV2Resource.USERS_PATH_V2)
-public class UserV2Resource {
+@Path(UserRootResource.USERS_PATH_V2)
+public class UserRootResource {
 
   public static final String USERS_PATH_V2 = "v2/users/";
   private final UserCollectionResource userCollectionResource;
-  private final UserSubResource userSubResource;
+  private final UserResource userResource;
 
   @Inject
-  public UserV2Resource(UserCollectionResource userCollectionResource, UserSubResource userSubResource) {
+  public UserRootResource(UserCollectionResource userCollectionResource, UserResource userResource) {
     this.userCollectionResource = userCollectionResource;
-    this.userSubResource = userSubResource;
+    this.userResource = userResource;
   }
 
   @Path("")
@@ -23,7 +23,7 @@ public class UserV2Resource {
   }
 
   @Path("{id}")
-  public UserSubResource getUserSubResource() {
-    return userSubResource;
+  public UserResource getUserResource() {
+    return userResource;
   }
 }

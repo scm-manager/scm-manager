@@ -36,8 +36,6 @@ public class UserCollectionToDtoMapper {
   public UserCollectionToDtoMapper() {
   }
 
-
-
   public UserCollectionDto map(int pageNumber, int pageSize, PageResult<User> pageResult) {
     NumberedPaging paging = zeroBasedNumberedPaging(pageNumber, pageSize, pageResult.hasMore());
     List<UserDto> dtos = pageResult.getEntities().stream().map(userToDtoMapper::map).collect(Collectors.toList());

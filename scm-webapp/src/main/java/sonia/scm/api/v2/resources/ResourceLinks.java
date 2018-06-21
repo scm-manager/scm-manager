@@ -59,19 +59,19 @@ class ResourceLinks {
     private final LinkBuilder userLinkBuilder;
 
     private UserLinks(UriInfo uriInfo) {
-      userLinkBuilder = new LinkBuilder(uriInfo, UserV2Resource.class, UserSubResource.class);
+      userLinkBuilder = new LinkBuilder(uriInfo, UserRootResource.class, UserResource.class);
     }
 
     String self(String name) {
-      return userLinkBuilder.method("getUserSubResource").parameters(name).method("get").parameters().href();
+      return userLinkBuilder.method("getUserResource").parameters(name).method("get").parameters().href();
     }
 
     String delete(String name) {
-      return userLinkBuilder.method("getUserSubResource").parameters(name).method("delete").parameters().href();
+      return userLinkBuilder.method("getUserResource").parameters(name).method("delete").parameters().href();
     }
 
      String update(String name) {
-      return userLinkBuilder.method("getUserSubResource").parameters(name).method("update").parameters().href();
+      return userLinkBuilder.method("getUserResource").parameters(name).method("update").parameters().href();
     }
   }
 
@@ -83,7 +83,7 @@ class ResourceLinks {
     private final LinkBuilder collectionLinkBuilder;
 
     private UserCollectionLinks(UriInfo uriInfo) {
-      collectionLinkBuilder = new LinkBuilder(uriInfo, UserV2Resource.class, UserCollectionResource.class);
+      collectionLinkBuilder = new LinkBuilder(uriInfo, UserRootResource.class, UserCollectionResource.class);
     }
 
     String self() {

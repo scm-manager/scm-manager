@@ -22,31 +22,31 @@ public class ResourceLinksTest {
   @Test
   public void shouldCreateCorrectUserSelfUrl() {
     String url = user(uriInfo).self("ich");
-    assertEquals(BASE_URL + UserV2Resource.USERS_PATH_V2 + "ich", url);
+    assertEquals(BASE_URL + UserRootResource.USERS_PATH_V2 + "ich", url);
   }
 
   @Test
   public void shouldCreateCorrectUserDeleteUrl() {
     String url = user(uriInfo).delete("ich");
-    assertEquals(BASE_URL + UserV2Resource.USERS_PATH_V2 + "ich", url);
+    assertEquals(BASE_URL + UserRootResource.USERS_PATH_V2 + "ich", url);
   }
 
   @Test
   public void shouldCreateCorrectUserUpdateUrl() {
     String url = user(uriInfo).update("ich");
-    assertEquals(BASE_URL + UserV2Resource.USERS_PATH_V2 + "ich", url);
+    assertEquals(BASE_URL + UserRootResource.USERS_PATH_V2 + "ich", url);
   }
 
   @Test
   public void shouldCreateCorrectUserCreateUrl() {
     String url = userCollection(uriInfo).create();
-    assertEquals(BASE_URL + UserV2Resource.USERS_PATH_V2, url);
+    assertEquals(BASE_URL + UserRootResource.USERS_PATH_V2, url);
   }
 
   @Test
   public void shouldCreateCorrectUserCollectionUrl() {
     String url = userCollection(uriInfo).self();
-    assertEquals(BASE_URL + UserV2Resource.USERS_PATH_V2, url);
+    assertEquals(BASE_URL + UserRootResource.USERS_PATH_V2, url);
   }
 
   @Test

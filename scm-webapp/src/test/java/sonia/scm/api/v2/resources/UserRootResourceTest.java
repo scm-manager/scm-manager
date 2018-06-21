@@ -43,7 +43,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
   password = "secret",
   configuration = "classpath:sonia/scm/repository/shiro.ini"
 )
-public class UserV2ResourceTest {
+public class UserRootResourceTest {
 
   @Rule
   public ShiroRule shiro = new ShiroRule();
@@ -78,17 +78,17 @@ public class UserV2ResourceTest {
 
     userCollectionToDtoMapper = new UserCollectionToDtoMapper(userToDtoMapper, uriInfoStore);
     UserCollectionResource userCollectionResource = new UserCollectionResource(userManager, dtoToUserMapper, userToDtoMapper, userCollectionToDtoMapper);
-    UserSubResource userSubResource = new UserSubResource(dtoToUserMapper, userToDtoMapper, userManager);
-    UserV2Resource userV2Resource = new UserV2Resource(userCollectionResource, userSubResource);
+    UserResource userResource = new UserResource(dtoToUserMapper, userToDtoMapper, userManager);
+    UserRootResource userRootResource = new UserRootResource(userCollectionResource, userResource);
 
-    dispatcher.getRegistry().addSingletonResource(userV2Resource);
+    dispatcher.getRegistry().addSingletonResource(userRootResource);
     when(uriInfo.getBaseUri()).thenReturn(URI.create("/"));
     when(uriInfoStore.get()).thenReturn(uriInfo);
   }
 
   @Test
   public void shouldCreateFullResponseForAdmin() throws URISyntaxException {
-    MockHttpRequest request = MockHttpRequest.get("/" + UserV2Resource.USERS_PATH_V2 + "Neo");
+    MockHttpRequest request = MockHttpRequest.get("/" + UserRootResource.USERS_PATH_V2 + "Neo");
     MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
@@ -104,7 +104,7 @@ public class UserV2ResourceTest {
   @Test
   @SubjectAware(username = "unpriv")
   public void shouldCreateLimitedResponseForSimpleUser() throws URISyntaxException {
-    MockHttpRequest request = MockHttpRequest.get("/" + UserV2Resource.USERS_PATH_V2);
+    MockHttpRequest request = MockHttpRequest.get("/" + UserRootResource.USERS_PATH_V2);
     MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
@@ -119,7 +119,7 @@ public class UserV2ResourceTest {
   @Test
   @SubjectAware(username = "unpriv")
   public void shouldNotGetSingleUserForSimpleUser() throws URISyntaxException {
-    MockHttpRequest request = MockHttpRequest.get("/" + UserV2Resource.USERS_PATH_V2 + "Neo");
+    MockHttpRequest request = MockHttpRequest.get("/" + UserRootResource.USERS_PATH_V2 + "Neo");
     MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
@@ -133,7 +133,7 @@ public class UserV2ResourceTest {
     byte[] userJson = Resources.toByteArray(url);
 
     MockHttpRequest request = MockHttpRequest
-      .post("/" + UserV2Resource.USERS_PATH_V2)
+      .post("/" + UserRootResource.USERS_PATH_V2)
       .contentType(VndMediaType.USER)
       .content(userJson);
     MockHttpResponse response = new MockHttpResponse();
@@ -150,7 +150,7 @@ public class UserV2ResourceTest {
   @Test
   public void shouldFailForMissingContent() throws URISyntaxException {
     MockHttpRequest request = MockHttpRequest
-      .post("/" + UserV2Resource.USERS_PATH_V2)
+      .post("/" + UserRootResource.USERS_PATH_V2)
       .contentType(VndMediaType.USER)
       .content(new byte[] {});
     MockHttpResponse response = new MockHttpResponse();

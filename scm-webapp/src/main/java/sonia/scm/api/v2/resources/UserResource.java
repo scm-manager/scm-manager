@@ -27,12 +27,12 @@ import java.util.Collection;
 
 
 @Produces(VndMediaType.USER)
-public class UserSubResource extends AbstractManagerResource<User, UserException> {
+public class UserResource extends AbstractManagerResource<User, UserException> {
   private final UserDtoToUserMapper dtoToUserMapper;
   private final UserToUserDtoMapper userToDtoMapper;
 
   @Inject
-  public UserSubResource(UserDtoToUserMapper dtoToUserMapper, UserToUserDtoMapper userToDtoMapper, UserManager manager) {
+  public UserResource(UserDtoToUserMapper dtoToUserMapper, UserToUserDtoMapper userToDtoMapper, UserManager manager) {
     super(manager);
     this.dtoToUserMapper = dtoToUserMapper;
     this.userToDtoMapper = userToDtoMapper;
