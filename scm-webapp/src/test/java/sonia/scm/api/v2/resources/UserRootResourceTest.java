@@ -64,8 +64,6 @@ public class UserRootResourceTest {
   @InjectMocks
   private UserToUserDtoMapperImpl userToDtoMapper;
 
-  private UserCollectionToDtoMapper userCollectionToDtoMapper;
-
   private ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
 
   @Before
@@ -76,10 +74,11 @@ public class UserRootResourceTest {
     when(userManager.get("Neo")).thenReturn(dummyUser);
     doNothing().when(userManager).create(userCaptor.capture());
 
-    userCollectionToDtoMapper = new UserCollectionToDtoMapper(userToDtoMapper, uriInfoStore);
-    UserCollectionResource userCollectionResource = new UserCollectionResource(userManager, dtoToUserMapper, userToDtoMapper, userCollectionToDtoMapper);
+    UserCollectionToDtoMapper userCollectionToDtoMapper = new UserCollectionToDtoMapper(userToDtoMapper, uriInfoStore);
+    UserCollectionResource userCollectionResource = new UserCollectionResource(userManager, dtoToUserMapper, userToDtoMapper,
+                                                                               userCollectionToDtoMapper);
     UserResource userResource = new UserResource(dtoToUserMapper, userToDtoMapper, userManager);
-    UserRootResource userRootResource = new UserRootResource(userCollectionResource, userResource);
+    UserRootResource userRootResource = new UserRootResource(MockProvider.of(userCollectionResource), MockProvider.of(userResource));
 
     dispatcher.getRegistry().addSingletonResource(userRootResource);
     when(uriInfo.getBaseUri()).thenReturn(URI.create("/"));
