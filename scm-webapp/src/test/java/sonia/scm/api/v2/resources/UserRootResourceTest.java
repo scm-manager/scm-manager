@@ -93,7 +93,6 @@ public class UserRootResourceTest {
     dispatcher.invoke(request, response);
 
     assertEquals(HttpServletResponse.SC_OK, response.getStatus());
-    System.out.println(response.getContentAsString());
     assertTrue(response.getContentAsString().contains("\"name\":\"Neo\""));
     assertTrue(response.getContentAsString().contains("\"password\":\"__dummypassword__\""));
     assertTrue(response.getContentAsString().contains("\"self\":{\"href\":\"/v2/users/Neo\"}"));
@@ -113,17 +112,6 @@ public class UserRootResourceTest {
     assertTrue(response.getContentAsString().contains("\"password\":\"__dummypassword__\""));
     assertTrue(response.getContentAsString().contains("\"self\":{\"href\":\"/v2/users/Neo\"}"));
     assertFalse(response.getContentAsString().contains("\"delete\":{\"href\":\"/v2/users/Neo\"}"));
-  }
-
-  @Test
-  @SubjectAware(username = "unpriv")
-  public void shouldNotGetSingleUserForSimpleUser() throws URISyntaxException {
-    MockHttpRequest request = MockHttpRequest.get("/" + UserRootResource.USERS_PATH_V2 + "Neo");
-    MockHttpResponse response = new MockHttpResponse();
-
-    dispatcher.invoke(request, response);
-
-    assertEquals(HttpServletResponse.SC_FORBIDDEN, response.getStatus());
   }
 
   @Test

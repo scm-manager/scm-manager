@@ -4,9 +4,7 @@ import com.google.inject.Inject;
 import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
-import org.apache.shiro.SecurityUtils;
 import sonia.scm.api.rest.resources.AbstractManagerResource;
-import sonia.scm.security.Role;
 import sonia.scm.user.User;
 import sonia.scm.user.UserException;
 import sonia.scm.user.UserManager;
@@ -47,18 +45,10 @@ public class UserResource extends AbstractManagerResource<User, UserException> {
     @ResponseCode(code = 404, condition = "not found, no group with the specified id/name available"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
-  public Response get(@Context Request request, @Context UriInfo uriInfo, @PathParam("id") String id)
-  {
-    if (SecurityUtils.getSubject().hasRole(Role.ADMIN))
-    {
+  public Response get(@Context Request request, @Context UriInfo uriInfo, @PathParam("id") String id) {
       User user = manager.get(id);
       UserDto userDto = userToDtoMapper.map(user);
       return Response.ok(userDto).build();
-    }
-    else
-    {
-      return Response.status(Response.Status.FORBIDDEN).build();
-    }
   }
 
   @PUT
@@ -70,8 +60,7 @@ public class UserResource extends AbstractManagerResource<User, UserException> {
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
   public Response update(@Context UriInfo uriInfo,
-    @PathParam("id") String name, UserDto userDto)
-  {
+    @PathParam("id") String name, UserDto userDto) {
     String originalPassword = manager.get(name).getPassword();
     User user = dtoToUserMapper.map(userDto, originalPassword);
     return update(name, user);
@@ -85,8 +74,7 @@ public class UserResource extends AbstractManagerResource<User, UserException> {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
-  public Response delete(@PathParam("id") String name)
-  {
+  public Response delete(@PathParam("id") String name) {
     return super.delete(name);
   }
 
