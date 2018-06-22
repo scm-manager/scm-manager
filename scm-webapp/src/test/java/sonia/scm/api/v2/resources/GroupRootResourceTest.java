@@ -46,35 +46,32 @@ public class GroupRootResourceTest {
   private Dispatcher dispatcher = MockDispatcherFactory.createDispatcher();
 
   @Mock
-  private GroupManager groupManager;
-  @Mock
   private UriInfo uriInfo;
   @Mock
   private UriInfoStore uriInfoStore;
-  @InjectMocks
-  GroupDtoToGroupMapperImpl dtoToGroupMapper;
-  @InjectMocks
-  GroupToGroupDtoMapperImpl groupToDtoMapper;
-  @InjectMocks
-  GroupCollectionToDtoMapper groupCollectionToDtoMapper;
 
+  @Mock
+  private GroupManager groupManager;
+  @InjectMocks
+  private GroupDtoToGroupMapperImpl dtoToGroupMapper;
+  @InjectMocks
+  private GroupToGroupDtoMapperImpl groupToDtoMapper;
+  @InjectMocks
+  private GroupCollectionToDtoMapper groupCollectionToDtoMapper;
 
-  ArgumentCaptor<Group> groupCaptor = ArgumentCaptor.forClass(Group.class);
+  private ArgumentCaptor<Group> groupCaptor = ArgumentCaptor.forClass(Group.class);
 
   @Before
   public void prepareEnvironment() throws IOException, GroupException {
     initMocks(this);
     doNothing().when(groupManager).create(groupCaptor.capture());
 
-    Group group = new Group();
-    group.setName("admin");
-    group.setCreationDate(0L);
-    group.setMembers(Collections.singletonList("user"));
+    Group group = createDummyGroup();
     when(groupManager.get("admin")).thenReturn(group);
 
     GroupCollectionResource groupCollectionResource = new GroupCollectionResource(groupManager, dtoToGroupMapper, groupToDtoMapper, groupCollectionToDtoMapper);
     GroupResource groupResource = new GroupResource(groupManager, groupToDtoMapper);
-    GroupRootResource groupRootResource = new GroupRootResource(groupCollectionResource, groupResource);
+    GroupRootResource groupRootResource = new GroupRootResource(MockProvider.of(groupCollectionResource), MockProvider.of(groupResource));
 
     dispatcher.getRegistry().addSingletonResource(groupRootResource);
 
@@ -105,10 +102,7 @@ public class GroupRootResourceTest {
 
   @Test
   public void shouldGetGroup() throws URISyntaxException {
-    Group group = new Group();
-    group.setName("admin");
-    group.setCreationDate(0L);
-    group.setMembers(Collections.singletonList("user"));
+    Group group = createDummyGroup();
     when(groupManager.get("admin")).thenReturn(group);
 
     MockHttpRequest request = MockHttpRequest.get("/" + GroupRootResource.GROUPS_PATH_V2 + "admin");
@@ -141,5 +135,13 @@ public class GroupRootResourceTest {
     assertNotNull(createdGroup);
     assertEquals(2, createdGroup.getMembers().size());
     assertEquals("user1", createdGroup.getMembers().get(0));
+  }
+
+  private Group createDummyGroup() {
+    Group group = new Group();
+    group.setName("admin");
+    group.setCreationDate(0L);
+    group.setMembers(Collections.singletonList("user"));
+    return group;
   }
 }
