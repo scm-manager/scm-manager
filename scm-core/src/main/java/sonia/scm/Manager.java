@@ -33,13 +33,9 @@
 
 package sonia.scm;
 
-import sonia.scm.util.Util;
-
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Comparator;
-
-import static com.google.common.base.Preconditions.checkArgument;
 
 /**
  * Base interface for all manager classes.
@@ -141,14 +137,7 @@ public interface Manager<T extends ModelObject, E extends Exception>
    *         empty page result is returned.
    */
   default PageResult<T> getPage(Comparator<T> comparator, int pageNumber, int pageSize) {
-    checkArgument(pageSize > 0, "pageSize must be at least 1");
-    checkArgument(pageNumber >= 0, "pageNumber must be non-negative");
-
-    Collection<T> allEntities = getAll(comparator);
-
-    Collection<T> pagedEntities = Util.createSubCollection(allEntities, pageNumber * pageSize, pageSize);
-
-    return new PageResult<>(pagedEntities, allEntities.size());
+    return PageResult.createPage(getAll(comparator), pageNumber, pageSize);
   }
 
 }

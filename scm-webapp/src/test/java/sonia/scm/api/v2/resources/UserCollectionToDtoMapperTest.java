@@ -16,7 +16,6 @@ import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -25,6 +24,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static sonia.scm.PageResult.createPage;
 
 public class UserCollectionToDtoMapperTest {
 
@@ -76,8 +76,7 @@ public class UserCollectionToDtoMapperTest {
 
   @Test
   public void shouldCreateNextPageLink_whenHasMore() {
-    PageResult<User> intermediate = mockPageResult("Hannes");
-    PageResult<User> pageResult = new PageResult<>(intermediate.getEntities(), 2);
+    PageResult<User> pageResult = createPage(createUsers("Hannes", "Karl"), 0, 1);
 
     UserCollectionDto userCollectionDto = mapper.map(1, 1, pageResult);
     assertTrue(userCollectionDto.getLinks().getLinkBy("next").get().getHref().contains("page=2"));
@@ -121,8 +120,11 @@ public class UserCollectionToDtoMapperTest {
   }
 
   private PageResult<User> mockPageResult(String... userNames) {
-    Collection<User> users = Arrays.stream(userNames).map(this::mockUserWithDto).collect(toList());
-    return new PageResult<>(users, users.size());
+    return createPage(createUsers(userNames), 0, userNames.length);
+  }
+
+  private List<User> createUsers(String... userNames) {
+    return Arrays.stream(userNames).map(this::mockUserWithDto).collect(toList());
   }
 
   private User mockUserWithDto(String userName) {

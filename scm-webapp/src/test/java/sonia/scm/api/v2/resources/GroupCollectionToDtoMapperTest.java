@@ -24,6 +24,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static sonia.scm.PageResult.createPage;
 
 public class GroupCollectionToDtoMapperTest {
 
@@ -68,9 +69,7 @@ public class GroupCollectionToDtoMapperTest {
 
   @Test
   public void shouldCreateNextPageLink_whenHasMore() {
-    PageResult<Group> intermediate = mockPageResult("nobodies");
-    PageResult<Group> pageResult = new PageResult<>(intermediate.getEntities(), 2);
-
+    PageResult<Group> pageResult = createPage(createGroups("nobodies", "bosses"), 0, 1);
     GroupCollectionDto groupCollectionDto = mapper.map(1, 1, pageResult);
     assertTrue(groupCollectionDto.getLinks().getLinkBy("next").get().getHref().contains("page=2"));
   }
@@ -113,8 +112,12 @@ public class GroupCollectionToDtoMapperTest {
   }
 
   private PageResult<Group> mockPageResult(String... groupNames) {
-    Collection<Group> groups = Arrays.stream(groupNames).map(this::mockGroupWithDto).collect(toList());
+    Collection<Group> groups = createGroups(groupNames);
     return new PageResult<>(groups, groups.size());
+  }
+
+  private List<Group> createGroups(String... groupNames) {
+    return Arrays.stream(groupNames).map(this::mockGroupWithDto).collect(toList());
   }
 
   private Group mockGroupWithDto(String groupName) {
