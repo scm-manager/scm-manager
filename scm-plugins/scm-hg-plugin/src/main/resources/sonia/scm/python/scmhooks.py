@@ -46,7 +46,7 @@ def printMessages(ui, msgs):
   for line in msgs:
     if line.startswith("_e") or line.startswith("_n"):
       line = line[2:];
-    ui.warn(line);
+    ui.warn('%s\n' % line.rstrip())
 
 def callHookUrl(ui, repo, hooktype, node):
   abort = True
