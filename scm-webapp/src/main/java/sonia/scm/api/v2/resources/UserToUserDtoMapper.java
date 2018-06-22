@@ -1,6 +1,5 @@
 package sonia.scm.api.v2.resources;
 
-import com.google.inject.Inject;
 import de.otto.edison.hal.Links;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
@@ -8,6 +7,8 @@ import org.mapstruct.MappingTarget;
 import sonia.scm.api.rest.resources.UserResource;
 import sonia.scm.user.User;
 import sonia.scm.user.UserPermissions;
+
+import javax.inject.Inject;
 
 import static de.otto.edison.hal.Link.link;
 import static de.otto.edison.hal.Links.linkingTo;
