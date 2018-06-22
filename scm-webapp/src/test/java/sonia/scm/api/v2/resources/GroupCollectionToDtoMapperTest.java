@@ -54,35 +54,37 @@ public class GroupCollectionToDtoMapperTest {
 
   @Test
   public void shouldSetPageNumber() {
-    PageResult<Group> pageResult = mockPageResult(true, "nobodies");
+    PageResult<Group> pageResult = mockPageResult("nobodies");
     GroupCollectionDto groupCollectionDto = mapper.map(1, 1, pageResult);
     assertEquals(1, groupCollectionDto.getPage());
   }
 
   @Test
   public void shouldHaveSelfLink() {
-    PageResult<Group> pageResult = mockPageResult(true, "nobodies");
+    PageResult<Group> pageResult = mockPageResult("nobodies");
     GroupCollectionDto groupCollectionDto = mapper.map(1, 1, pageResult);
     assertTrue(groupCollectionDto.getLinks().getLinkBy("self").get().getHref().startsWith(expectedBaseUri.toString()));
   }
 
   @Test
   public void shouldCreateNextPageLink_whenHasMore() {
-    PageResult<Group> pageResult = mockPageResult(true, "nobodies");
+    PageResult<Group> intermediate = mockPageResult("nobodies");
+    PageResult<Group> pageResult = new PageResult<>(intermediate.getEntities(), 2);
+
     GroupCollectionDto groupCollectionDto = mapper.map(1, 1, pageResult);
     assertTrue(groupCollectionDto.getLinks().getLinkBy("next").get().getHref().contains("page=2"));
   }
 
   @Test
   public void shouldNotCreateNextPageLink_whenNoMore() {
-    PageResult<Group> pageResult = mockPageResult(false, "nobodies");
+    PageResult<Group> pageResult = mockPageResult("nobodies");
     GroupCollectionDto groupCollectionDto = mapper.map(1, 1, pageResult);
     assertFalse(groupCollectionDto.getLinks().stream().anyMatch(link -> link.getHref().contains("page=2")));
   }
 
   @Test
   public void shouldHaveCreateLink_whenHasPermission() {
-    PageResult<Group> pageResult = mockPageResult(false, "nobodies");
+    PageResult<Group> pageResult = mockPageResult("nobodies");
     when(subject.isPermitted("group:create")).thenReturn(true);
 
     GroupCollectionDto groupCollectionDto = mapper.map(1, 1, pageResult);
@@ -92,7 +94,7 @@ public class GroupCollectionToDtoMapperTest {
 
   @Test
   public void shouldNotHaveCreateLink_whenHasNoPermission() {
-    PageResult<Group> pageResult = mockPageResult(false, "nobodies");
+    PageResult<Group> pageResult = mockPageResult("nobodies");
     when(subject.isPermitted("group:create")).thenReturn(false);
 
     GroupCollectionDto groupCollectionDto = mapper.map(1, 1, pageResult);
@@ -102,7 +104,7 @@ public class GroupCollectionToDtoMapperTest {
 
   @Test
   public void shouldMapGroups() {
-    PageResult<Group> pageResult = mockPageResult(false, "nobodies", "bosses");
+    PageResult<Group> pageResult = mockPageResult("nobodies", "bosses");
     GroupCollectionDto groupCollectionDto = mapper.map(1, 2, pageResult);
     List<HalRepresentation> groups = groupCollectionDto.getEmbedded().getItemsBy("groups");
     assertEquals(2, groups.size());
@@ -110,9 +112,9 @@ public class GroupCollectionToDtoMapperTest {
     assertEquals("bosses", ((GroupDto) groups.get(1)).getName());
   }
 
-  private PageResult<Group> mockPageResult(boolean hasMore, String... groupNames) {
+  private PageResult<Group> mockPageResult(String... groupNames) {
     Collection<Group> groups = Arrays.stream(groupNames).map(this::mockGroupWithDto).collect(toList());
-    return new PageResult<>(groups, hasMore);
+    return new PageResult<>(groups, groups.size());
   }
 
   private Group mockGroupWithDto(String groupName) {

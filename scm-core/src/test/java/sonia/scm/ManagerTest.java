@@ -4,14 +4,16 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
+import java.util.stream.IntStream;
 
-import static org.junit.Assert.*;
+import static java.util.stream.Collectors.toList;
+import static org.junit.Assert.assertEquals;
 
 public class ManagerTest {
+
+  private int givenItemCount = 0;
 
   private Manager manager = new Manager() {
     @Override
@@ -26,12 +28,12 @@ public class ManagerTest {
 
     @Override
     public Collection getAll() {
-      return null;
+      return IntStream.range(0, givenItemCount).boxed().collect(toList());
     }
 
     @Override
     public Collection getAll(Comparator comparator) {
-      return null;
+      return getAll();
     }
 
     @Override
@@ -41,13 +43,7 @@ public class ManagerTest {
 
     @Override
     public Collection getAll(Comparator comparator, int start, int limit) {
-      if (start == 0 && (limit == 3) || (limit == 5)) {
-        return Arrays.asList(1, 2, 3);
-      } else if (start == 0 && limit == 6) {
-        return Collections.emptyList();
-      } else {
-        return Arrays.asList(3);
-      }
+      return null;
     }
 
     @Override
@@ -85,28 +81,37 @@ public class ManagerTest {
 
   @Test
   public void getsNoPage() {
+    givenItemCount = 0;
     PageResult singlePage = manager.getPage(comparator, 0, 5);
-    assertFalse(singlePage.hasMore());
     assertEquals(0, singlePage.getEntities().size());
+    assertEquals(givenItemCount, singlePage.getOverallCount());
   }
 
   @Test
-  public void getsSinglePage() {
-
+  public void getsSinglePageWithoutEnoughItems() {
+    givenItemCount = 3;
     PageResult singlePage = manager.getPage(comparator, 0, 4);
-    assertFalse(singlePage.hasMore());
     assertEquals(3, singlePage.getEntities().size() );
+    assertEquals(givenItemCount, singlePage.getOverallCount());
+  }
+
+  @Test
+  public void getsSinglePageWithExactCountOfItems() {
+    givenItemCount = 3;
+    PageResult singlePage = manager.getPage(comparator, 0, 3);
+    assertEquals(3, singlePage.getEntities().size() );
+    assertEquals(givenItemCount, singlePage.getOverallCount());
   }
 
   @Test
   public void getsTwoPages() {
-
+    givenItemCount = 3;
     PageResult page1 = manager.getPage(comparator, 0, 2);
-    assertTrue(page1.hasMore());
     assertEquals(2, page1.getEntities().size());
+    assertEquals(givenItemCount, page1.getOverallCount());
 
     PageResult page2 = manager.getPage(comparator, 1, 2);
-    assertFalse(page2.hasMore());
     assertEquals(1, page2.getEntities().size());
+    assertEquals(givenItemCount, page2.getOverallCount());
   }
 }

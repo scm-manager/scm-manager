@@ -11,13 +11,13 @@ import sonia.scm.group.GroupPermissions;
 import javax.inject.Inject;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.damnhandy.uri.template.UriTemplate.fromTemplate;
 import static de.otto.edison.hal.Embedded.embeddedBuilder;
 import static de.otto.edison.hal.Link.link;
 import static de.otto.edison.hal.Links.linkingTo;
 import static de.otto.edison.hal.paging.NumberedPaging.zeroBasedNumberedPaging;
+import static java.util.stream.Collectors.toList;
 import static sonia.scm.api.v2.resources.ResourceLinks.groupCollection;
 
 public class GroupCollectionToDtoMapper {
@@ -32,8 +32,8 @@ public class GroupCollectionToDtoMapper {
   }
 
   public GroupCollectionDto map(int pageNumber, int pageSize, PageResult<Group> pageResult) {
-    NumberedPaging paging = zeroBasedNumberedPaging(pageNumber, pageSize, pageResult.hasMore());
-    List<GroupDto> dtos = pageResult.getEntities().stream().map(user -> groupToDtoMapper.map(user)).collect(Collectors.toList());
+    NumberedPaging paging = zeroBasedNumberedPaging(pageNumber, pageSize, pageResult.getOverallCount());
+    List<GroupDto> dtos = pageResult.getEntities().stream().map(groupToDtoMapper::map).collect(toList());
 
     GroupCollectionDto groupCollectionDto = new GroupCollectionDto(
       createLinks(paging),

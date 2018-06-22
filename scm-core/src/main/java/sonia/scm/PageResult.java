@@ -5,16 +5,16 @@ import java.util.Collections;
 
 /**
  * This represents the result of a page request. Contains the results for
- * the page and a flag whether there are more pages or not.
+ * the page and the overall count of all elements.
  */
 public class PageResult<T extends ModelObject> {
 
   private final Collection<T> entities;
-  private final boolean hasMore;
+  private final int overallCount;
 
-  public PageResult(Collection<T> entities, boolean hasMore) {
+  public PageResult(Collection<T> entities, int overallCount) {
     this.entities = entities;
-    this.hasMore = hasMore;
+    this.overallCount = overallCount;
   }
 
   /**
@@ -25,9 +25,9 @@ public class PageResult<T extends ModelObject> {
   }
 
   /**
-   * If this is <code>true</code>, there are more pages (that is, more entities).
+   * The overall count of all available elements.
    */
-  public boolean hasMore() {
-    return hasMore;
+  public int getOverallCount() {
+    return overallCount;
   }
 }
