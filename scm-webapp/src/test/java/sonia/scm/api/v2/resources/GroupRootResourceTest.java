@@ -38,7 +38,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
   password = "secret",
   configuration = "classpath:sonia/scm/repository/shiro.ini"
 )
-public class GroupV2ResourceTest {
+public class GroupRootResourceTest {
 
   @Rule
   public ShiroRule shiro = new ShiroRule();
@@ -73,10 +73,10 @@ public class GroupV2ResourceTest {
     when(groupManager.get("admin")).thenReturn(group);
 
     GroupCollectionResource groupCollectionResource = new GroupCollectionResource(groupManager, dtoToGroupMapper, groupToDtoMapper, groupCollectionToDtoMapper);
-    GroupSubResource groupSubResource = new GroupSubResource(groupManager, groupToDtoMapper);
-    GroupV2Resource groupV2Resource = new GroupV2Resource(groupCollectionResource, groupSubResource);
+    GroupResource groupResource = new GroupResource(groupManager, groupToDtoMapper);
+    GroupRootResource groupRootResource = new GroupRootResource(groupCollectionResource, groupResource);
 
-    dispatcher.getRegistry().addSingletonResource(groupV2Resource);
+    dispatcher.getRegistry().addSingletonResource(groupRootResource);
 
     when(uriInfo.getBaseUri()).thenReturn(URI.create("/"));
     when(uriInfoStore.get()).thenReturn(uriInfo);
@@ -84,7 +84,7 @@ public class GroupV2ResourceTest {
 
   @Test
   public void shouldGetNotFoundForNotExistentGroup() throws URISyntaxException {
-    MockHttpRequest request = MockHttpRequest.get("/" + GroupV2Resource.GROUPS_PATH_V2 + "nosuchgroup");
+    MockHttpRequest request = MockHttpRequest.get("/" + GroupRootResource.GROUPS_PATH_V2 + "nosuchgroup");
     MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
@@ -95,7 +95,7 @@ public class GroupV2ResourceTest {
   @Test
   @SubjectAware(username = "unpriv")
   public void shouldGetNotAuthorizedForWrongUser() throws URISyntaxException {
-    MockHttpRequest request = MockHttpRequest.get("/" + GroupV2Resource.GROUPS_PATH_V2 + "admin");
+    MockHttpRequest request = MockHttpRequest.get("/" + GroupRootResource.GROUPS_PATH_V2 + "admin");
     MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
@@ -111,7 +111,7 @@ public class GroupV2ResourceTest {
     group.setMembers(Collections.singletonList("user"));
     when(groupManager.get("admin")).thenReturn(group);
 
-    MockHttpRequest request = MockHttpRequest.get("/" + GroupV2Resource.GROUPS_PATH_V2 + "admin");
+    MockHttpRequest request = MockHttpRequest.get("/" + GroupRootResource.GROUPS_PATH_V2 + "admin");
     MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
@@ -129,7 +129,7 @@ public class GroupV2ResourceTest {
     byte[] groupJson = Resources.toByteArray(url);
 
     MockHttpRequest request = MockHttpRequest
-      .post("/" + GroupV2Resource.GROUPS_PATH_V2)
+      .post("/" + GroupRootResource.GROUPS_PATH_V2)
       .contentType(VndMediaType.GROUP)
       .content(groupJson);
     MockHttpResponse response = new MockHttpResponse();

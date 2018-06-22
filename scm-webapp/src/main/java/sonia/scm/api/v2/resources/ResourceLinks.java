@@ -15,19 +15,19 @@ class ResourceLinks {
     private final LinkBuilder groupLinkBuilder;
 
     private GroupLinks(UriInfo uriInfo) {
-      groupLinkBuilder = new LinkBuilder(uriInfo, GroupV2Resource.class, GroupSubResource.class);
+      groupLinkBuilder = new LinkBuilder(uriInfo, GroupRootResource.class, GroupResource.class);
     }
 
     String self(String name) {
-      return groupLinkBuilder.method("getGroupSubResource").parameters(name).method("get").parameters().href();
+      return groupLinkBuilder.method("getGroupResource").parameters(name).method("get").parameters().href();
     }
 
     String delete(String name) {
-      return groupLinkBuilder.method("getGroupSubResource").parameters(name).method("delete").parameters().href();
+      return groupLinkBuilder.method("getGroupResource").parameters(name).method("delete").parameters().href();
     }
 
     String update(String name) {
-      return groupLinkBuilder.method("getGroupSubResource").parameters(name).method("update").parameters().href();
+      return groupLinkBuilder.method("getGroupResource").parameters(name).method("update").parameters().href();
     }
   }
 
@@ -39,7 +39,7 @@ class ResourceLinks {
     private final LinkBuilder collectionLinkBuilder;
 
     private GroupCollectionLinks(UriInfo uriInfo) {
-      collectionLinkBuilder = new LinkBuilder(uriInfo, GroupV2Resource.class, GroupCollectionResource.class);
+      collectionLinkBuilder = new LinkBuilder(uriInfo, GroupRootResource.class, GroupCollectionResource.class);
     }
 
     String self() {
