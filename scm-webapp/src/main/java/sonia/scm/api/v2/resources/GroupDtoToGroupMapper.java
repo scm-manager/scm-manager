@@ -1,5 +1,6 @@
 package sonia.scm.api.v2.resources;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -19,6 +20,13 @@ public abstract class GroupDtoToGroupMapper {
 
   @AfterMapping
   void mapMembers(GroupDto dto, @MappingTarget Group target) {
-    target.setMembers(dto.getEmbedded().getItemsBy("members").stream().map(m -> m.getAttribute("name").asText()).collect(Collectors.toList()));
+    target.setMembers(
+      dto
+        .getEmbedded()
+        .getItemsBy("members")
+        .stream()
+        .map(m -> m.getAttribute("name"))
+        .map(JsonNode::asText)
+        .collect(Collectors.toList()));
   }
 }
