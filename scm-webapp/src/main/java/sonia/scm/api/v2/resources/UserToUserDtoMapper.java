@@ -15,12 +15,10 @@ import static de.otto.edison.hal.Links.linkingTo;
 import static sonia.scm.api.v2.resources.ResourceLinks.user;
 
 @Mapper
-public abstract class UserToUserDtoMapper extends BaseMapper {
+public abstract class UserToUserDtoMapper extends BaseMapper<User, UserDto> {
 
   @Inject
   private UriInfoStore uriInfoStore;
-
-  public abstract UserDto map(User user);
 
   @AfterMapping
   void removePassword(@MappingTarget UserDto target) {

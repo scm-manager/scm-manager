@@ -56,29 +56,29 @@ public class GroupCollectionToDtoMapperTest {
   @Test
   public void shouldSetPageNumber() {
     PageResult<Group> pageResult = mockPageResult("nobodies");
-    GroupCollectionDto groupCollectionDto = mapper.map(1, 1, pageResult);
-    assertEquals(1, groupCollectionDto.getPage());
+    CollectionDto collectionDto = mapper.map(1, 1, pageResult);
+    assertEquals(1, collectionDto.getPage());
   }
 
   @Test
   public void shouldHaveSelfLink() {
     PageResult<Group> pageResult = mockPageResult("nobodies");
-    GroupCollectionDto groupCollectionDto = mapper.map(1, 1, pageResult);
-    assertTrue(groupCollectionDto.getLinks().getLinkBy("self").get().getHref().startsWith(expectedBaseUri.toString()));
+    CollectionDto collectionDto = mapper.map(1, 1, pageResult);
+    assertTrue(collectionDto.getLinks().getLinkBy("self").get().getHref().startsWith(expectedBaseUri.toString()));
   }
 
   @Test
   public void shouldCreateNextPageLink_whenHasMore() {
     PageResult<Group> pageResult = createPage(createGroups("nobodies", "bosses"), 0, 1);
-    GroupCollectionDto groupCollectionDto = mapper.map(0, 1, pageResult);
-    assertTrue(groupCollectionDto.getLinks().getLinkBy("next").get().getHref().contains("page=1"));
+    CollectionDto collectionDto = mapper.map(0, 1, pageResult);
+    assertTrue(collectionDto.getLinks().getLinkBy("next").get().getHref().contains("page=1"));
   }
 
   @Test
   public void shouldNotCreateNextPageLink_whenNoMore() {
     PageResult<Group> pageResult = mockPageResult("nobodies");
-    GroupCollectionDto groupCollectionDto = mapper.map(1, 1, pageResult);
-    assertFalse(groupCollectionDto.getLinks().stream().anyMatch(link -> link.getHref().contains("page=2")));
+    CollectionDto collectionDto = mapper.map(1, 1, pageResult);
+    assertFalse(collectionDto.getLinks().stream().anyMatch(link -> link.getHref().contains("page=2")));
   }
 
   @Test
@@ -86,9 +86,9 @@ public class GroupCollectionToDtoMapperTest {
     PageResult<Group> pageResult = mockPageResult("nobodies");
     when(subject.isPermitted("group:create")).thenReturn(true);
 
-    GroupCollectionDto groupCollectionDto = mapper.map(1, 1, pageResult);
+    CollectionDto collectionDto = mapper.map(1, 1, pageResult);
 
-    assertTrue(groupCollectionDto.getLinks().getLinkBy("create").isPresent());
+    assertTrue(collectionDto.getLinks().getLinkBy("create").isPresent());
   }
 
   @Test
@@ -96,16 +96,16 @@ public class GroupCollectionToDtoMapperTest {
     PageResult<Group> pageResult = mockPageResult("nobodies");
     when(subject.isPermitted("group:create")).thenReturn(false);
 
-    GroupCollectionDto groupCollectionDto = mapper.map(1, 1, pageResult);
+    CollectionDto collectionDto = mapper.map(1, 1, pageResult);
 
-    assertFalse(groupCollectionDto.getLinks().getLinkBy("create").isPresent());
+    assertFalse(collectionDto.getLinks().getLinkBy("create").isPresent());
   }
 
   @Test
   public void shouldMapGroups() {
     PageResult<Group> pageResult = mockPageResult("nobodies", "bosses");
-    GroupCollectionDto groupCollectionDto = mapper.map(1, 2, pageResult);
-    List<HalRepresentation> groups = groupCollectionDto.getEmbedded().getItemsBy("groups");
+    CollectionDto collectionDto = mapper.map(1, 2, pageResult);
+    List<HalRepresentation> groups = collectionDto.getEmbedded().getItemsBy("groups");
     assertEquals(2, groups.size());
     assertEquals("nobodies", ((GroupDto) groups.get(0)).getName());
     assertEquals("bosses", ((GroupDto) groups.get(1)).getName());

@@ -6,12 +6,12 @@ import de.otto.edison.hal.Links;
 import lombok.Data;
 
 @Data
-public class GroupCollectionDto extends HalRepresentation {
+public class CollectionDto extends HalRepresentation {
 
   private int page;
   private int pageTotal;
 
-  public GroupCollectionDto(Links links, Embedded embedded) {
+  public CollectionDto(Links links, Embedded embedded) {
     super(links, embedded);
   }
 }
