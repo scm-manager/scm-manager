@@ -1,11 +1,12 @@
 package sonia.scm.api.v2.resources;
 
-import org.apache.shiro.SecurityUtils;
+import com.webcohesion.enunciate.metadata.rs.ResponseCode;
+import com.webcohesion.enunciate.metadata.rs.StatusCodes;
+import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import sonia.scm.api.rest.resources.AbstractManagerResource;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupException;
 import sonia.scm.group.GroupManager;
-import sonia.scm.security.Role;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
@@ -35,20 +36,17 @@ public class GroupResource extends AbstractManagerResource<Group, GroupException
 
   @Path("")
   @GET
+  @TypeHint(GroupDto.class)
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 403, condition = "forbidden, the current user has no privileges to read the group"),
+    @ResponseCode(code = 404, condition = "not found, no group with the specified id/name available"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
   public Response get(@Context Request request, @Context UriInfo uriInfo, @PathParam("id") String id) {
-    if (SecurityUtils.getSubject().hasRole(Role.ADMIN))
-    {
       Group group = manager.get(id);
-      if (group == null) {
-        return Response.status(Response.Status.NOT_FOUND).build();
-      }
       GroupDto groupDto = groupToGroupDtoMapper.map(group);
       return Response.ok(groupDto).build();
-    }
-    else
-    {
-      return Response.status(Response.Status.FORBIDDEN).build();
-    }
   }
 
   @Path("")

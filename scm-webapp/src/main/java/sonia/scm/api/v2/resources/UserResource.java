@@ -41,8 +41,8 @@ public class UserResource extends AbstractManagerResource<User, UserException> {
   @TypeHint(UserDto.class)
   @StatusCodes({
     @ResponseCode(code = 200, condition = "success"),
-    @ResponseCode(code = 403, condition = "forbidden, the current user has no admin privileges"),
-    @ResponseCode(code = 404, condition = "not found, no group with the specified id/name available"),
+    @ResponseCode(code = 403, condition = "forbidden, the current user has no privileges to read the user"),
+    @ResponseCode(code = 404, condition = "not found, no user with the specified id/name available"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
   public Response get(@Context Request request, @Context UriInfo uriInfo, @PathParam("id") String id) {
