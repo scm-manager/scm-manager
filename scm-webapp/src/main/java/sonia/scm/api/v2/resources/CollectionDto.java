@@ -4,14 +4,15 @@ import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Links;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-@Data
-public class CollectionDto extends HalRepresentation {
+@Data @EqualsAndHashCode(callSuper = false)
+class CollectionDto extends HalRepresentation {
 
   private int page;
   private int pageTotal;
 
-  public CollectionDto(Links links, Embedded embedded) {
+  CollectionDto(Links links, Embedded embedded) {
     super(links, embedded);
   }
 }
