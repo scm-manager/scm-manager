@@ -9,7 +9,6 @@ import sonia.scm.user.User;
 import sonia.scm.user.UserPermissions;
 
 import javax.inject.Inject;
-import javax.ws.rs.core.UriInfo;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -37,22 +36,22 @@ public class UserCollectionToDtoMapper {
     List<UserDto> dtos = pageResult.getEntities().stream().map(userToDtoMapper::map).collect(toList());
 
     UserCollectionDto userCollectionDto = new UserCollectionDto(
-      createLinks(uriInfoStore.get(), paging),
+      createLinks(paging),
       embedDtos(dtos)
     );
     userCollectionDto.setPage(pageNumber);
     return userCollectionDto;
   }
 
-  private static Links createLinks(UriInfo uriInfo, NumberedPaging page) {
-    String baseUrl = userCollection(uriInfo).self();
+  private Links createLinks(NumberedPaging page) {
+    String baseUrl = userCollection(uriInfoStore.get()).self();
 
     Links.Builder linksBuilder = linkingTo()
       .with(page.links(
         fromTemplate(baseUrl + "{?page,pageSize}"),
         EnumSet.allOf(PagingRel.class)));
     if (UserPermissions.create().isPermitted()) {
-      linksBuilder.single(link("create", userCollection(uriInfo).create()));
+      linksBuilder.single(link("create", userCollection(uriInfoStore.get()).create()));
     }
     return linksBuilder.build();
   }
