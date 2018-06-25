@@ -19,8 +19,15 @@ import static sonia.scm.api.v2.resources.ResourceLinks.user;
 @Mapper
 public abstract class GroupToGroupDtoMapper extends BaseMapper<Group, GroupDto> {
 
-  @Inject
   private UriInfoStore uriInfoStore;
+
+  GroupToGroupDtoMapper() {
+  }
+
+  @Inject
+  public GroupToGroupDtoMapper(UriInfoStore uriInfoStore) {
+    this.uriInfoStore = uriInfoStore;
+  }
 
   @AfterMapping
   void appendLinks(Group group, @MappingTarget GroupDto target) {
