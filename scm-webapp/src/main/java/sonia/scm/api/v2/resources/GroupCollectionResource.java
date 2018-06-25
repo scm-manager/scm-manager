@@ -62,6 +62,9 @@ public class GroupCollectionResource extends AbstractManagerResource<Group, Grou
   @TypeHint(TypeHint.NO_CONTENT.class)
   @Consumes(VndMediaType.GROUP)
   public Response create(@Context UriInfo uriInfo, GroupDto groupDto) throws IOException, GroupException {
+    if (groupDto == null) {
+      return Response.status(400).build();
+    }
     Group group = dtoToGroupMapper.map(groupDto);
     manager.create(group);
     return Response.created(URI.create(group(uriInfo).self(group.getName()))).build();
