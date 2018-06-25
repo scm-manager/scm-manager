@@ -154,7 +154,7 @@
       <artifactId>resteasy-servlet-initializer</artifactId>
       <version>${resteasy.version}</version>
     </dependency>
-    // TODO switch back to de.otto.edison after edison hal bugfix
+    <!-- TODO switch back to de.otto.edison after edison hal bugfix -->
     <dependency>
       <groupId>com.github.pfeuffer</groupId>
       <artifactId>edison-hal</artifactId>
