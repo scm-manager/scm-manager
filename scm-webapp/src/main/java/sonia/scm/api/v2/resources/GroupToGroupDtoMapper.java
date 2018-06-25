@@ -41,7 +41,7 @@ public abstract class GroupToGroupDtoMapper extends BaseMapper<Group, GroupDto> 
   @AfterMapping
   void mapMembers(Group group, @MappingTarget GroupDto target) {
     List<MemberDto> memberDtos = group.getMembers().stream().map(this::createMember).collect(Collectors.toList());
-    target.withEmbedded("members", memberDtos);
+    target.withMembers(memberDtos);
   }
 
   private MemberDto createMember(String name) {

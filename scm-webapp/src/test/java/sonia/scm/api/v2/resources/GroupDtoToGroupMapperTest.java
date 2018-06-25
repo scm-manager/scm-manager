@@ -1,7 +1,6 @@
 package sonia.scm.api.v2.resources;
 
 import com.fasterxml.jackson.databind.node.TextNode;
-import de.otto.edison.hal.HalRepresentation;
 import org.junit.Test;
 import org.mapstruct.factory.Mappers;
 import sonia.scm.group.Group;
@@ -23,12 +22,12 @@ public class GroupDtoToGroupMapperTest {
   public void shouldMapMembers() {
     GroupDto dto = new GroupDto();
 
-    HalRepresentation member1 = new HalRepresentation();
+    MemberDto member1 = new MemberDto();
     member1.getAttributes().put("name", new TextNode("member1"));
-    HalRepresentation member2 = new HalRepresentation();
+    MemberDto member2 = new MemberDto();
     member2.getAttributes().put("name", new TextNode("member2"));
 
-    dto.withEmbedded("members", asList(member1, member2));
+    dto.withMembers(asList(member1, member2));
 
     Group group = Mappers.getMapper(GroupDtoToGroupMapper.class).map(dto);
 

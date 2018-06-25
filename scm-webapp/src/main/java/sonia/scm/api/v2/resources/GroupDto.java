@@ -25,8 +25,7 @@ public class GroupDto extends HalRepresentation {
     return super.add(links);
   }
 
-  @Override
-  protected HalRepresentation withEmbedded(String rel, List<? extends HalRepresentation> embeddedItems) {
-    return super.withEmbedded(rel, embeddedItems);
+  public HalRepresentation withMembers(List<MemberDto> members) {
+    return super.withEmbedded("members", members);
   }
 }
