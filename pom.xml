@@ -92,6 +92,12 @@
       </snapshots>
     </repository>
 
+    // TODO remove jitpack after edison hal bugfix
+    <repository>
+      <id>jitpack</id>
+      <url>https://jitpack.io</url>
+    </repository>
+
   </repositories>
 
   <pluginRepositories>
