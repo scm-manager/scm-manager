@@ -67,17 +67,17 @@ public class ResourceLinksTest {
     assertEquals(BASE_URL + GroupRootResource.GROUPS_PATH_V2 + "nobodies", url);
   }
 
-//  @Test
-//  public void shouldCreateCorrectGroupCreateUrl() {
-//    String url = ResourceLinks.groupCollection(uriInfo).create();
-//    assertEquals(BASE_URL + GroupRootResource.GROUPS_PATH_V2, url);
-//  }
-//
-//  @Test
-//  public void shouldCreateCorrectGroupCollectionUrl() {
-//    String url = ResourceLinks.groupCollection(uriInfo).self();
-//    assertEquals(BASE_URL + GroupRootResource.GROUPS_PATH_V2, url);
-//  }
+  @Test
+  public void shouldCreateCorrectGroupCreateUrl() {
+    String url = ResourceLinks.groupCollection(uriInfo).create();
+    assertEquals(BASE_URL + GroupRootResource.GROUPS_PATH_V2, url);
+  }
+
+  @Test
+  public void shouldCreateCorrectGroupCollectionUrl() {
+    String url = ResourceLinks.groupCollection(uriInfo).self();
+    assertEquals(BASE_URL + GroupRootResource.GROUPS_PATH_V2, url);
+  }
 
   @Before
   public void initUriInfo() {
