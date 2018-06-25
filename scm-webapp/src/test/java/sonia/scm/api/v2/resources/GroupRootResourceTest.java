@@ -90,17 +90,6 @@ public class GroupRootResourceTest {
   }
 
   @Test
-  @SubjectAware(username = "unpriv")
-  public void shouldGetNotAuthorizedForWrongUser() throws URISyntaxException {
-    MockHttpRequest request = MockHttpRequest.get("/" + GroupRootResource.GROUPS_PATH_V2 + "admin");
-    MockHttpResponse response = new MockHttpResponse();
-
-    dispatcher.invoke(request, response);
-
-    assertEquals(HttpServletResponse.SC_FORBIDDEN, response.getStatus());
-  }
-
-  @Test
   public void shouldGetGroup() throws URISyntaxException {
     Group group = createDummyGroup();
     when(groupManager.get("admin")).thenReturn(group);

@@ -148,6 +148,16 @@ public class UserRootResourceTest {
     assertEquals(400, response.getStatus());
   }
 
+  @Test
+  public void shouldGetNotFoundForNotExistentUser() throws URISyntaxException {
+    MockHttpRequest request = MockHttpRequest.get("/" + UserRootResource.USERS_PATH_V2 + "nosuchuser");
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_NOT_FOUND, response.getStatus());
+  }
+
   private User createDummyUser() {
     User user = new User();
     user.setName("Neo");

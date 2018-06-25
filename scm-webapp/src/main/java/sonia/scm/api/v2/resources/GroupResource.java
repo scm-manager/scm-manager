@@ -44,9 +44,12 @@ public class GroupResource extends AbstractManagerResource<Group, GroupException
     @ResponseCode(code = 500, condition = "internal server error")
   })
   public Response get(@Context Request request, @Context UriInfo uriInfo, @PathParam("id") String id) {
-      Group group = manager.get(id);
-      GroupDto groupDto = groupToGroupDtoMapper.map(group);
-      return Response.ok(groupDto).build();
+    Group group = manager.get(id);
+    if (group == null) {
+      return Response.status(Response.Status.NOT_FOUND).build();
+    }
+    GroupDto groupDto = groupToGroupDtoMapper.map(group);
+    return Response.ok(groupDto).build();
   }
 
   @Path("")

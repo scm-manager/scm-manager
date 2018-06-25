@@ -46,9 +46,12 @@ public class UserResource extends AbstractManagerResource<User, UserException> {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   public Response get(@Context Request request, @Context UriInfo uriInfo, @PathParam("id") String id) {
-      User user = manager.get(id);
-      UserDto userDto = userToDtoMapper.map(user);
-      return Response.ok(userDto).build();
+    User user = manager.get(id);
+    if (user == null) {
+      return Response.status(Response.Status.NOT_FOUND).build();
+    }
+    UserDto userDto = userToDtoMapper.map(user);
+    return Response.ok(userDto).build();
   }
 
   @PUT
