@@ -5,17 +5,15 @@ import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-import org.mapstruct.Mappings;
 import sonia.scm.group.Group;
 
 import java.util.stream.Collectors;
 
 @Mapper
 public abstract class GroupDtoToGroupMapper {
-  @Mappings({
-    @Mapping(target = "creationDate", ignore = true),
-    @Mapping(target = "lastModified", ignore = true)
-  })
+
+  @Mapping(target = "creationDate", ignore = true)
+  @Mapping(target = "lastModified", ignore = true)
   public abstract Group map(GroupDto groupDto);
 
   @AfterMapping

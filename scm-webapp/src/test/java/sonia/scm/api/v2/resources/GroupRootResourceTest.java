@@ -73,7 +73,7 @@ public class GroupRootResourceTest {
     when(groupManager.get("admin")).thenReturn(group);
 
     GroupCollectionToDtoMapper groupCollectionToDtoMapper = new GroupCollectionToDtoMapper(groupToDtoMapper, uriInfoStore);
-    GroupCollectionResource groupCollectionResource = new GroupCollectionResource(groupManager, dtoToGroupMapper, groupToDtoMapper, groupCollectionToDtoMapper);
+    GroupCollectionResource groupCollectionResource = new GroupCollectionResource(groupManager, dtoToGroupMapper, groupCollectionToDtoMapper);
     GroupResource groupResource = new GroupResource(groupManager, groupToDtoMapper);
     GroupRootResource groupRootResource = new GroupRootResource(MockProvider.of(groupCollectionResource), MockProvider.of(groupResource));
 

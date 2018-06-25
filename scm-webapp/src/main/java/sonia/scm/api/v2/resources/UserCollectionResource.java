@@ -33,14 +33,12 @@ import static sonia.scm.api.v2.resources.ResourceLinks.user;
 public class UserCollectionResource extends AbstractManagerResource<User, UserException> {
   public static final int DEFAULT_PAGE_SIZE = 10;
   private final UserDtoToUserMapper dtoToUserMapper;
-  private final UserToUserDtoMapper userToDtoMapper;
   private final UserCollectionToDtoMapper userCollectionToDtoMapper;
 
   @Inject
-  public UserCollectionResource(UserManager manager, UserDtoToUserMapper dtoToUserMapper, UserToUserDtoMapper userToDtoMapper, UserCollectionToDtoMapper userCollectionToDtoMapper) {
+  public UserCollectionResource(UserManager manager, UserDtoToUserMapper dtoToUserMapper, UserCollectionToDtoMapper userCollectionToDtoMapper) {
     super(manager);
     this.dtoToUserMapper = dtoToUserMapper;
-    this.userToDtoMapper = userToDtoMapper;
     this.userCollectionToDtoMapper = userCollectionToDtoMapper;
   }
 
@@ -63,6 +61,7 @@ public class UserCollectionResource extends AbstractManagerResource<User, UserEx
     @ResponseCode(code = 403, condition = "forbidden, the current user has no admin privileges"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
+  @Override
   public Response getAll(@Context Request request,
     @DefaultValue("0") @QueryParam("page") int page,
     @DefaultValue("" + DEFAULT_PAGE_SIZE) @QueryParam("pageSize") int pageSize,

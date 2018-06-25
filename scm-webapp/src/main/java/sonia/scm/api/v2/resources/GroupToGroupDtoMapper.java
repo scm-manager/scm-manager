@@ -16,18 +16,15 @@ import static de.otto.edison.hal.Links.linkingTo;
 import static sonia.scm.api.v2.resources.ResourceLinks.group;
 import static sonia.scm.api.v2.resources.ResourceLinks.user;
 
+/**
+ * Mapstruct does not support parameterized (i.e. non-default) constructors. Thus, we need to use field injection.
+ */
+@java.lang.SuppressWarnings("squid:S3306")
 @Mapper
 public abstract class GroupToGroupDtoMapper extends BaseMapper<Group, GroupDto> {
 
-  private UriInfoStore uriInfoStore;
-
-  GroupToGroupDtoMapper() {
-  }
-
   @Inject
-  public GroupToGroupDtoMapper(UriInfoStore uriInfoStore) {
-    this.uriInfoStore = uriInfoStore;
-  }
+  private UriInfoStore uriInfoStore;
 
   @AfterMapping
   void appendLinks(Group group, @MappingTarget GroupDto target) {
@@ -44,7 +41,7 @@ public abstract class GroupToGroupDtoMapper extends BaseMapper<Group, GroupDto> 
   @AfterMapping
   void mapMembers(Group group, @MappingTarget GroupDto target) {
     List<MemberDto> memberDtos = group.getMembers().stream().map(this::createMember).collect(Collectors.toList());
-    target.withEmbedded("members", memberDtos);
+    target.withMembers(memberDtos);
   }
 
   private MemberDto createMember(String name) {

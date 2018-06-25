@@ -34,15 +34,44 @@ import static sonia.scm.api.v2.resources.ResourceLinks.group;
 public class GroupCollectionResource extends AbstractManagerResource<Group, GroupException> {
   public static final int DEFAULT_PAGE_SIZE = 10;
   private final GroupDtoToGroupMapper dtoToGroupMapper;
-  private final GroupToGroupDtoMapper groupToDtoMapper;
   private final GroupCollectionToDtoMapper groupCollectionToDtoMapper;
 
   @Inject
-  public GroupCollectionResource(GroupManager manager, GroupDtoToGroupMapper dtoToGroupMapper, GroupToGroupDtoMapper groupToDtoMapper, GroupCollectionToDtoMapper groupCollectionToDtoMapper) {
+  public GroupCollectionResource(GroupManager manager, GroupDtoToGroupMapper dtoToGroupMapper, GroupCollectionToDtoMapper groupCollectionToDtoMapper) {
     super(manager);
     this.dtoToGroupMapper = dtoToGroupMapper;
-    this.groupToDtoMapper = groupToDtoMapper;
     this.groupCollectionToDtoMapper = groupCollectionToDtoMapper;
+  }
+
+  /**
+   * Returns all groups for a given page number with a given page size (default page size is {@value DEFAULT_PAGE_SIZE}).
+   * <strong>Note:</strong> This method requires admin privileges.
+   *
+   * @param request  the current request
+   * @param page     the number of the requested page
+   * @param pageSize the page size (default page size is {@value DEFAULT_PAGE_SIZE})
+   * @param sortby   sort parameter
+   * @param desc     sort direction desc or aesc
+   * @return
+   */
+  @GET
+  @Path("")
+  @TypeHint(GroupDto[].class)
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 403, condition = "forbidden, the current user has no admin privileges"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
+  @Override
+  public Response getAll(@Context Request request,
+    @DefaultValue("0") @QueryParam("page") int page,
+    @DefaultValue("" + DEFAULT_PAGE_SIZE) @QueryParam("pageSize") int pageSize,
+    @QueryParam("sortby") String sortby,
+    @DefaultValue("false")
+    @QueryParam("desc") boolean desc) {
+    PageResult<Group> pageResult = fetchPage(sortby, desc, page, pageSize);
+
+    return Response.ok(groupCollectionToDtoMapper.map(page, pageSize, pageResult)).build();
   }
 
   /**
@@ -68,36 +97,6 @@ public class GroupCollectionResource extends AbstractManagerResource<Group, Grou
     Group group = dtoToGroupMapper.map(groupDto);
     manager.create(group);
     return Response.created(URI.create(group(uriInfo).self(group.getName()))).build();
-  }
-
-  /**
-   * Returns all groups for a given page number with a given page size (default page size is {@value DEFAULT_PAGE_SIZE}).
-   * <strong>Note:</strong> This method requires admin privileges.
-   *
-   * @param request  the current request
-   * @param page     the number of the requested page
-   * @param pageSize the page size (default page size is {@value DEFAULT_PAGE_SIZE})
-   * @param sortby   sort parameter
-   * @param desc     sort direction desc or aesc
-   * @return
-   */
-  @GET
-  @Path("")
-  @TypeHint(GroupDto[].class)
-  @StatusCodes({
-    @ResponseCode(code = 200, condition = "success"),
-    @ResponseCode(code = 403, condition = "forbidden, the current user has no admin privileges"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
-  public Response getAll(@Context Request request, @Context UriInfo uriInfo,
-    @DefaultValue("0") @QueryParam("page") int page,
-    @DefaultValue("" + DEFAULT_PAGE_SIZE) @QueryParam("pageSize") int pageSize,
-    @QueryParam("sortby") String sortby,
-    @DefaultValue("false")
-    @QueryParam("desc") boolean desc) {
-    PageResult<Group> pageResult = fetchPage(sortby, desc, page, pageSize);
-
-    return Response.ok(groupCollectionToDtoMapper.map(page, pageSize, pageResult)).build();
   }
 
   @Override
