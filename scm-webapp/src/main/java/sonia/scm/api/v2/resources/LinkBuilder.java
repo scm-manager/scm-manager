@@ -9,7 +9,7 @@ import java.util.Arrays;
 
 /**
  * This class is used to create links for JAX-RS resources. Create a new instance specifying all resource classes used
- * to process the request. Than for each of these classes call <code>builder.method(...).parameters(...)</code> for each
+ * to process the request. Then for each of these classes call <code>builder.method(...).parameters(...)</code> for each
  * of these classes consecutively. The builder itself is immutable, so that each instance is reusable and you get a new
  * builder for each method.
  *

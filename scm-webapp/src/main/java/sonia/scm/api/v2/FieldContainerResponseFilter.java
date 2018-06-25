@@ -24,7 +24,7 @@ import static java.util.Optional.ofNullable;
  * the {@link JsonNode} tree.</p>
  */
 @Provider
-@Priority(FilterPriorities.FIELD_FILTER)
+@Priority(ResponseFilterPriorities.FIELD_FILTER)
 public class FieldContainerResponseFilter implements ContainerResponseFilter {
 
   private static final String PARAMETER_FIELDS = "fields";

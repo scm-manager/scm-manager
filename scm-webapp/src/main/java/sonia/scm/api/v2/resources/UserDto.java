@@ -5,12 +5,14 @@ import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Links;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 import java.util.Optional;
 
-@Data @AllArgsConstructor @NoArgsConstructor
+@AllArgsConstructor @NoArgsConstructor
+@Data @EqualsAndHashCode(callSuper = false)
 public class UserDto extends HalRepresentation {
   private boolean active;
   private boolean admin;
@@ -24,6 +26,7 @@ public class UserDto extends HalRepresentation {
   private String type;
 
   @Override
+  @SuppressWarnings("squid:S1185") // We want to have this method available in this package
   protected HalRepresentation add(Links links) {
     return super.add(links);
   }

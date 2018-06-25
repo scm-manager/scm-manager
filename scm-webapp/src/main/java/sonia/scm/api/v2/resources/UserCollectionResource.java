@@ -2,6 +2,7 @@ package sonia.scm.api.v2.resources;
 
 import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.ResponseHeader;
+import com.webcohesion.enunciate.metadata.rs.ResponseHeaders;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import sonia.scm.PageResult;
@@ -31,12 +32,14 @@ import static sonia.scm.api.v2.resources.ResourceLinks.user;
 
 @Produces(VndMediaType.USER_COLLECTION)
 public class UserCollectionResource extends AbstractManagerResource<User, UserException> {
-  public static final int DEFAULT_PAGE_SIZE = 10;
+
+  private static final int DEFAULT_PAGE_SIZE = 10;
   private final UserDtoToUserMapper dtoToUserMapper;
   private final UserCollectionToDtoMapper userCollectionToDtoMapper;
 
   @Inject
-  public UserCollectionResource(UserManager manager, UserDtoToUserMapper dtoToUserMapper, UserCollectionToDtoMapper userCollectionToDtoMapper) {
+  public UserCollectionResource(UserManager manager, UserDtoToUserMapper dtoToUserMapper,
+                                UserCollectionToDtoMapper userCollectionToDtoMapper) {
     super(manager);
     this.dtoToUserMapper = dtoToUserMapper;
     this.userCollectionToDtoMapper = userCollectionToDtoMapper;
@@ -44,50 +47,52 @@ public class UserCollectionResource extends AbstractManagerResource<User, UserEx
 
   /**
    * Returns all users for a given page number with a given page size (default page size is {@value DEFAULT_PAGE_SIZE}).
-   * <strong>Note:</strong> This method requires admin privileges.
+   *
+   * <strong>Note:</strong> This method requires "user" privileges.
    *
    * @param request  the current request
    * @param page     the number of the requested page
    * @param pageSize the page size (default page size is {@value DEFAULT_PAGE_SIZE})
-   * @param sortby   sort parameter
-   * @param desc     sort direction desc or aesc
-   * @return
+   * @param sortBy   sort parameter
+   * @param desc     sort direction desc or asc
    */
   @GET
   @Path("")
   @TypeHint(UserDto[].class)
   @StatusCodes({
     @ResponseCode(code = 200, condition = "success"),
-    @ResponseCode(code = 403, condition = "forbidden, the current user has no admin privileges"),
+    @ResponseCode(code = 403, condition = "forbidden, the current user does not have the \"user\" privilege"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @Override
   public Response getAll(@Context Request request,
     @DefaultValue("0") @QueryParam("page") int page,
     @DefaultValue("" + DEFAULT_PAGE_SIZE) @QueryParam("pageSize") int pageSize,
-    @QueryParam("sortby") String sortby,
-    @DefaultValue("false")
-    @QueryParam("desc") boolean desc) {
-    PageResult<User> pageResult = fetchPage(sortby, desc, page, pageSize);
+    @QueryParam("sortby") String sortBy,
+    @DefaultValue("false") @QueryParam("desc") boolean desc) {
+
+    PageResult<User> pageResult = fetchPage(sortBy, desc, page, pageSize);
 
     return Response.ok(userCollectionToDtoMapper.map(page, pageSize, pageResult)).build();
   }
 
   /**
    * Creates a new user.
+   *
+   * <strong>Note:</strong> This method requires "user" privileges.
+   *
    * @param userDto The user to be created.
    * @return A response with the link to the new user (if created successfully).
    */
   @POST
   @Path("")
   @StatusCodes({
-    @ResponseCode(code = 201, condition = "create success", additionalHeaders = {
-      @ResponseHeader(name = "Location", description = "uri to the created group")
-    }),
-    @ResponseCode(code = 403, condition = "forbidden, the current user has no admin privileges"),
+    @ResponseCode(code = 201, condition = "create success"),
+    @ResponseCode(code = 403, condition = "forbidden, the current user does not have the \"user\" privilege"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
+  @ResponseHeaders(@ResponseHeader(name = "Location", description = "uri to the created user"))
   public Response create(@Context UriInfo uriInfo, UserDto userDto) throws IOException, UserException {
     if (userDto == null) {
       return Response.status(400).build();

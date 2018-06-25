@@ -11,12 +11,12 @@ import java.util.Map;
 
 import static java.util.Arrays.stream;
 
-public final class JsonFilters {
+final class JsonFilters {
 
   private JsonFilters() {
   }
 
-  public static void filterByFields(JsonNode root, Collection<String> filterExpressions) {
+  static void filterByFields(JsonNode root, Collection<String> filterExpressions) {
     createJsonFilterNode(filterExpressions).filterNode(root);
   }
 

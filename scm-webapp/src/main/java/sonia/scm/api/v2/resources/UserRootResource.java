@@ -4,10 +4,13 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.ws.rs.Path;
 
+/**
+ *  RESTful Web Service Resource to manage users.
+ */
 @Path(UserRootResource.USERS_PATH_V2)
 public class UserRootResource {
 
-  public static final String USERS_PATH_V2 = "v2/users/";
+  static final String USERS_PATH_V2 = "v2/users/";
   private final Provider<UserCollectionResource> userCollectionResource;
   private final Provider<UserResource> userResource;
 

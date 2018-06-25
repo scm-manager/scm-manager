@@ -11,10 +11,8 @@ import javax.inject.Inject;
 
 import static sonia.scm.api.rest.resources.UserResource.DUMMY_PASSWORT;
 
-/**
- * Mapstruct does not support parameterized (i.e. non-default) constructors. Thus, we need to use field injection.
- */
-@java.lang.SuppressWarnings("squid:S3306")
+// Mapstruct does not support parameterized (i.e. non-default) constructors. Thus, we need to use field injection.
+@SuppressWarnings("squid:S3306")
 @Mapper
 public abstract class UserDtoToUserMapper {
 

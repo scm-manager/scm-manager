@@ -80,7 +80,8 @@ public class UserRootResourceTest {
     UserCollectionResource userCollectionResource = new UserCollectionResource(userManager, dtoToUserMapper,
       userCollectionToDtoMapper);
     UserResource userResource = new UserResource(dtoToUserMapper, userToDtoMapper, userManager);
-    UserRootResource userRootResource = new UserRootResource(MockProvider.of(userCollectionResource), MockProvider.of(userResource));
+    UserRootResource userRootResource = new UserRootResource(MockProvider.of(userCollectionResource),
+                                                             MockProvider.of(userResource));
 
     dispatcher.getRegistry().addSingletonResource(userRootResource);
     when(uriInfo.getBaseUri()).thenReturn(URI.create("/"));

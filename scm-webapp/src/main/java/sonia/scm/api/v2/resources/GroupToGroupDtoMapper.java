@@ -16,10 +16,8 @@ import static de.otto.edison.hal.Links.linkingTo;
 import static sonia.scm.api.v2.resources.ResourceLinks.group;
 import static sonia.scm.api.v2.resources.ResourceLinks.user;
 
-/**
- * Mapstruct does not support parameterized (i.e. non-default) constructors. Thus, we need to use field injection.
- */
-@java.lang.SuppressWarnings("squid:S3306")
+// Mapstruct does not support parameterized (i.e. non-default) constructors. Thus, we need to use field injection.
+@SuppressWarnings("squid:S3306")
 @Mapper
 public abstract class GroupToGroupDtoMapper extends BaseMapper<Group, GroupDto> {
 

@@ -26,6 +26,7 @@ import java.util.Collection;
 
 @Produces(VndMediaType.USER)
 public class UserResource extends AbstractManagerResource<User, UserException> {
+
   private final UserDtoToUserMapper dtoToUserMapper;
   private final UserToUserDtoMapper userToDtoMapper;
 
@@ -36,6 +37,15 @@ public class UserResource extends AbstractManagerResource<User, UserException> {
     this.userToDtoMapper = userToDtoMapper;
   }
 
+  /**
+   * Returns a user.
+   *
+   * <strong>Note:</strong> This method requires "user" privileges.
+   *
+   * @param request the current request
+   * @param id the id/name of the user
+   *
+   */
   @GET
   @Path("")
   @TypeHint(UserDto.class)
@@ -54,11 +64,19 @@ public class UserResource extends AbstractManagerResource<User, UserException> {
     return Response.ok(userDto).build();
   }
 
+  /**
+   * Modifies the given user.
+   *
+   * <strong>Note:</strong> This method requires "user" privileges.
+   *
+   * @param name name of the user to be modified
+   * @param userDto user object to modify
+   */
   @PUT
   @Path("")
   @StatusCodes({
     @ResponseCode(code = 204, condition = "update success"),
-    @ResponseCode(code = 403, condition = "forbidden, the current user has no admin privileges"),
+    @ResponseCode(code = 403, condition = "forbidden, the current user does not have the \"user\" privilege"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
@@ -69,14 +87,23 @@ public class UserResource extends AbstractManagerResource<User, UserException> {
     return update(name, user);
   }
 
+  /**
+   * Deletes a user.
+   *
+   * <strong>Note:</strong> This method requires "user" privileges.
+   *
+   * @param name the name of the user to delete.
+   *
+   */
   @DELETE
   @Path("")
   @StatusCodes({
     @ResponseCode(code = 204, condition = "delete success"),
-    @ResponseCode(code = 403, condition = "forbidden, the current user has no admin privileges"),
+    @ResponseCode(code = 403, condition = "forbidden, the current user does not have the \"user\" privilege"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
+  @Override
   public Response delete(@PathParam("id") String name) {
     return super.delete(name);
   }

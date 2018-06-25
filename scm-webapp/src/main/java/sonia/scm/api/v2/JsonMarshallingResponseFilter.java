@@ -19,7 +19,7 @@ import java.util.Set;
  * and processes all registered plugins for the {@link JsonEnricher} extension point.
  */
 @Provider
-@Priority(FilterPriorities.JSON_MARSHALLING)
+@Priority(ResponseFilterPriorities.JSON_MARSHALLING)
 public class JsonMarshallingResponseFilter implements ContainerResponseFilter {
 
   private final ObjectMapper objectMapper;
