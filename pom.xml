@@ -6,7 +6,7 @@
   <groupId>sonia.scm</groupId>
   <artifactId>scm</artifactId>
   <packaging>pom</packaging>
-  <version>2.0.0-SNAPSHOT</version>
+  <version>1.61-SNAPSHOT</version>
   <description>
     The easiest way to share your Git, Mercurial
     and Subversion repositories over http.
@@ -59,20 +59,18 @@
     <url>https://scm-manager.ci.cloudbees.com/</url>
   </ciManagement>
 
-  <prerequisites>
-    <maven>3.1.0</maven>
-  </prerequisites>
-
   <modules>
-    <module>scm-annotations</module>
-    <module>scm-annotation-processor</module>
     <module>scm-core</module>
     <module>scm-test</module>
+    <module>maven</module>
     <module>scm-plugins</module>
+    <module>scm-samples</module>
     <module>scm-dao-xml</module>
     <module>scm-webapp</module>
     <module>scm-server</module>
+    <module>scm-plugin-backend</module>
     <module>scm-clients</module>
+    <module>support</module>
   </modules>
 
   <repositories>
@@ -81,15 +79,6 @@
       <id>maven.scm-manager.org</id>
       <name>scm-manager release repository</name>
       <url>http://maven.scm-manager.org/nexus/content/groups/public</url>
-    </repository>
-    
-    <repository>
-      <id>ossrh</id>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-      <snapshots>
-        <enabled>true</enabled>
-        <updatePolicy>daily</updatePolicy>
-      </snapshots>
     </repository>
 
   </repositories>
@@ -139,52 +128,20 @@
       <version>${mokito.version}</version>
       <scope>test</scope>
     </dependency>
-    
+
   </dependencies>
 
   <build>
     <plugins>
-      
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-enforcer-plugin</artifactId>
-        <version>1.4.1</version>
-        <executions>
-          <execution>
-            <id>enforce-java</id>
-            <phase>compile</phase>
-            <goals>
-              <goal>enforce</goal>
-            </goals>
-            <configuration>
-              <rules>
-                <!--
-                enforce minimum 1.8.0-101 to accept Let’s Encrypt certificates
-                -->
-                <requireJavaVersion>
-                  <version>[1.8.0-101,)</version>
-                </requireJavaVersion>
-                <!--
-                enforce minimum maven 3.1 for the smp plugin
-                -->
-                <requireMavenVersion>
-                  <version>[3.1,)</version>
-                </requireMavenVersion>
-              </rules>
-              <fail>true</fail>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
 
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>animal-sniffer-maven-plugin</artifactId>
-        <version>1.15</version>
+        <version>1.16</version>
         <configuration>
           <signature>
             <groupId>org.codehaus.mojo.signature</groupId>
-            <artifactId>java18</artifactId>
+            <artifactId>java17</artifactId>
             <version>1.0</version>
           </signature>
         </configuration>
@@ -200,21 +157,49 @@
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>3.0.0-M1</version>
+        <executions>
+          <execution>
+            <id>enforce-java</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <enforceBytecodeVersion>
+                  <maxJdkVersion>1.7</maxJdkVersion>
+                  <ignoreClasses>
+                    <!--
+                    ignore java 9 module info classes
+                    because jaxb is compiled with java 7 expect of module-info, which is compiled with java 9
+                    -->
+                    <ignoreClass>module-info</ignoreClass>
+                  </ignoreClasses>
+                </enforceBytecodeVersion>
+              </rules>
+              <fail>true</fail>
+            </configuration>
+          </execution>
+        </executions>
+        <dependencies>
+          <dependency>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>extra-enforcer-rules</artifactId>
+            <version>1.0-beta-7</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.5.1</version>
+        <version>3.0</version>
         <configuration>
-          <showWarnings>true</showWarnings>
-          <showDeprecation>true</showDeprecation>
           <source>${project.build.javaLevel}</source>
           <target>${project.build.javaLevel}</target>
-          <testSource>${project.test.javaLevel}</testSource>
-          <testTarget>${project.test.javaLevel}</testTarget>
           <encoding>${project.build.sourceEncoding}</encoding>
-          <!--
-          suppress compiler warning about bootclasspath with older source
-          see https://blogs.oracle.com/darcy/entry/bootclasspath_older_source
-          -->
-          <compilerArgument>-Xlint:unchecked,-options</compilerArgument>
         </configuration>
       </plugin>
 
@@ -259,7 +244,7 @@
           <author>true</author>
           <keywords>true</keywords>
           <links>
-            <link>http://download.oracle.com/javase/8/docs/api/</link>
+            <link>http://download.oracle.com/javase/7/docs/api/</link>
             <link>http://download.oracle.com/docs/cd/E17802_01/products/products/servlet/2.5/docs/servlet-2_5-mr2/</link>
             <link>http://jersey.java.net/nonav/apidocs/${jersey.version}/jersey/</link>
             <link>https://google.github.io/guice/api-docs/${guice.version}/javadoc</link>
@@ -316,80 +301,58 @@
         <artifactId>maven-eclipse-plugin</artifactId>
         <version>2.6</version>
       </plugin>
-      
-      <!-- code coverage -->
-      
-      <plugin>
-        <groupId>org.jacoco</groupId>
-        <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.7.7.201606060606</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>prepare-agent</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>report</id>
-            <phase>prepare-package</phase>
-            <goals>
-              <goal>report</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      
+
       <!-- reporting -->
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-site-plugin</artifactId>
-        <version>3.2</version>
-        <configuration>
-          <reportPlugins>
-
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-project-info-reports-plugin</artifactId>
-              <version>2.4</version>
-            </plugin>
-
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-jxr-plugin</artifactId>
-              <version>2.3</version>
-            </plugin>
-
-            <plugin>
-              <groupId>org.codehaus.mojo</groupId>
-              <artifactId>findbugs-maven-plugin</artifactId>
-              <version>2.4.0</version>
-            </plugin>
-
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-surefire-report-plugin</artifactId>
-              <version>2.12</version>
-            </plugin>
-
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-pmd-plugin</artifactId>
-              <version>2.7.1</version>
-              <configuration>
-                <linkXref>true</linkXref>
-                <sourceEncoding>${project.build.sourceEncoding}</sourceEncoding>
-                <targetJdk>${project.build.javaLevel}</targetJdk>
-              </configuration>
-            </plugin>
-
-          </reportPlugins>
-        </configuration>
+        <version>3.7</version>
       </plugin>
 
     </plugins>
 
   </build>
+
+  <reporting>
+    <plugins>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+        <version>2.4</version>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jxr-plugin</artifactId>
+        <version>2.3</version>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>findbugs-maven-plugin</artifactId>
+        <version>2.4.0</version>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-report-plugin</artifactId>
+        <version>2.12</version>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-pmd-plugin</artifactId>
+        <version>2.7.1</version>
+        <configuration>
+          <sourceEncoding>${project.build.sourceEncoding}</sourceEncoding>
+          <targetJdk>${project.build.javaLevel}</targetJdk>
+        </configuration>
+      </plugin>
+
+    </plugins>
+  </reporting>
 
   <profiles>
 
@@ -434,18 +397,9 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
-            <version>2.8.1</version>
+            <version>3.0.0</version>
             <configuration>
-              <doclet>org.jboss.apiviz.APIviz</doclet>
-              <docletArtifact>
-                <groupId>org.jboss.apiviz</groupId>
-                <artifactId>apiviz</artifactId>
-                <version>1.3.2.GA</version>
-              </docletArtifact>
-              <additionalparam>
-                -sourceclasspath ${project.build.outputDirectory}
-                -nopackagediagram
-              </additionalparam>
+              <failOnError>false</failOnError>
             </configuration>
           </plugin>
 
@@ -455,6 +409,101 @@
     </profile>
 
   </profiles>
+
+  <dependencyManagement>
+    <dependencies>
+
+      <!-- utils -->
+
+      <dependency>
+        <groupId>commons-beanutils</groupId>
+        <artifactId>commons-beanutils</artifactId>
+        <version>1.9.3</version>
+      </dependency>
+
+      <dependency>
+        <groupId>commons-collections</groupId>
+        <artifactId>commons-collections</artifactId>
+        <version>3.2.2</version>
+      </dependency>
+
+      <!-- http -->
+
+      <dependency>
+        <groupId>org.apache.httpcomponents</groupId>
+        <artifactId>httpclient</artifactId>
+        <version>4.5.5</version>
+      </dependency>
+
+      <!-- logging -->
+
+      <dependency>
+        <artifactId>slf4j-api</artifactId>
+        <groupId>org.slf4j</groupId>
+        <version>${slf4j.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <version>${logback.version}</version>
+      </dependency>
+
+
+      <!-- json -->
+
+      <dependency>
+        <groupId>org.codehaus.jackson</groupId>
+        <artifactId>jackson-core-asl</artifactId>
+        <version>${jackson.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.codehaus.jackson</groupId>
+        <artifactId>jackson-mapper-asl</artifactId>
+        <version>${jackson.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.codehaus.jackson</groupId>
+        <artifactId>jackson-jaxrs</artifactId>
+        <version>${jackson.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.codehaus.jackson</groupId>
+        <artifactId>jackson-xc</artifactId>
+        <version>${jackson.version}</version>
+      </dependency>
+
+      <!-- xml -->
+
+      <dependency>
+        <groupId>javax.xml.bind</groupId>
+        <artifactId>jaxb-api</artifactId>
+        <version>${jaxb.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.sun.xml.bind</groupId>
+        <artifactId>jaxb-impl</artifactId>
+        <version>${jaxb.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.glassfish.jaxb</groupId>
+        <artifactId>jaxb-runtime</artifactId>
+        <version>${jaxb.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>javax.activation</groupId>
+        <artifactId>activation</artifactId>
+        <version>1.1.1</version>
+      </dependency>
+
+    </dependencies>
+  </dependencyManagement>
 
   <distributionManagement>
 
@@ -479,37 +528,31 @@
     <junit.version>4.12</junit.version>
 
     <!-- logging libraries -->
-    <slf4j.version>1.7.22</slf4j.version>
+    <slf4j.version>1.7.25</slf4j.version>
     <logback.version>1.2.3</logback.version>
-    <servlet.version>3.0.1</servlet.version>
-    <jaxrs.version>2.0.1</jaxrs.version>
-    <guice.version>4.0</guice.version>
+    <servlet.version>2.5</servlet.version>
+    <guice.version>3.0</guice.version>
     <jersey.version>1.19.4</jersey.version>
-
-    <!-- event bus -->
-    <legman.version>1.2.0</legman.version>
-
     <ehcache.version>2.6.6</ehcache.version>
     <freemarker.version>2.3.20</freemarker.version>
-    
-    <!-- webserver -->
-    <jetty.version>9.2.10.v20150310</jetty.version>
-    <jetty.maven.version>9.2.10.v20150310</jetty.maven.version>
+    <jetty.version>7.6.21.v20160908</jetty.version>
+    <jetty.maven.version>7.6.16.v20140903</jetty.maven.version>
+    <jackson.version>1.9.13</jackson.version>
+    <jaxb.version>2.3.0</jaxb.version>
 
     <!-- security libraries -->
-    <ssp.version>1.0.0-SNAPSHOT</ssp.version>
-    <shiro.version>1.4.0-RC2</shiro.version>
+    <shiro.version>1.3.2</shiro.version>
 
-    <!-- repostitory libraries -->
-    <jgit.version>v4.5.2.201704071617-r-scm1</jgit.version>
-    <svnkit.version>1.8.15-scm1</svnkit.version>
+    <!-- repository libraries -->
+    <jgit.version>v4.5.3.201708160445-r-scm1</jgit.version>
+    <svnkit.version>1.9.0-scm3</svnkit.version>
 
     <!-- util libraries -->
-    <guava.version>16.0.1</guava.version>
+    <guava.version>15.0</guava.version>
     <quartz.version>2.2.3</quartz.version>
 
     <!-- build properties -->
-    <project.build.javaLevel>1.8</project.build.javaLevel>
+    <project.build.javaLevel>1.7</project.build.javaLevel>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <netbeans.hint.license>SCM-BSD</netbeans.hint.license>
     <jdk.classifier />

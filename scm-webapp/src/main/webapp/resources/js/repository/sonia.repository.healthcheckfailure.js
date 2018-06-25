@@ -75,7 +75,7 @@ Sonia.repository.HealthCheckFailure = Ext.extend(Ext.Panel, {
   },
   
   rerunHealthChecks: function(){
-    var url = restUrl + 'repositories/' + this.repository.id + '/healthcheck';
+    var url = restUrl + 'repositories/' + this.repository.id + '/healthcheck.json';
     var el = this.el;
     var tid = setTimeout( function(){el.mask('Loading ...');}, 100);
     

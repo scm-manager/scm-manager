@@ -133,7 +133,7 @@ public abstract class AbstractPermissionResource
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
-  @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+  @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public Response add(@Context UriInfo uriInfo, Permission permission)
   {
     AssignedPermission ap = transformPermission(permission);
@@ -185,7 +185,7 @@ public abstract class AbstractPermissionResource
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
-  @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+  @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public Response update(@PathParam("id") String id, Permission permission)
   {
     StoredAssignedPermission sap = getPermission(id);
@@ -213,7 +213,7 @@ public abstract class AbstractPermissionResource
     @ResponseCode(code = 404, condition = "not found, no permission with the specified id available"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
-  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public Permission get(@PathParam("id") String id)
   {
     StoredAssignedPermission sap = getPermission(id);
@@ -231,7 +231,7 @@ public abstract class AbstractPermissionResource
     @ResponseCode(code = 204, condition = "success"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
-  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public List<Permission> getAll()
   {
     return getPermissions(getPredicate());

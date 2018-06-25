@@ -71,7 +71,7 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
 
     var repositoryStore = new Ext.data.GroupingStore({
       proxy: new Ext.data.HttpProxy({
-        url: restUrl + 'repositories',
+        url: restUrl + 'repositories.json',
         disableCaching: false
       }),
       idProperty: 'id',

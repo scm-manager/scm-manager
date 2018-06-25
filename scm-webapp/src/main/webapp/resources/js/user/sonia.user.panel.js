@@ -126,7 +126,7 @@ Sonia.user.Panel = Ext.extend(Sonia.rest.Panel, {
     var selected = grid.getSelectionModel().getSelected();
     if ( selected ){
       var item = selected.data;
-      var url = restUrl + 'users/' + encodeURIComponent(item.name);
+      var url = restUrl + 'users/' + encodeURIComponent(item.name) + '.json';
 
       Ext.MessageBox.show({
         title: this.removeTitleText,

@@ -131,7 +131,7 @@ Sonia.repository.CommitPanel = Ext.extend(Ext.Panel, {
     }
     
     Ext.Ajax.request({
-      url: restUrl + 'repositories/' + this.repository.id + '/changeset/' + this.revision,
+      url: restUrl + 'repositories/' + this.repository.id + '/changeset/' + this.revision + '.json',
       method: 'GET',
       scope: this,
       success: function(response){

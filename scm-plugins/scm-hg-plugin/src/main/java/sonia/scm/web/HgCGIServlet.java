@@ -36,7 +36,6 @@ package sonia.scm.web;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Stopwatch;
-import com.google.common.base.Strings;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -53,21 +52,18 @@ import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryProvider;
 import sonia.scm.repository.RepositoryRequestListenerUtil;
-import sonia.scm.security.CipherUtil;
 import sonia.scm.util.AssertUtil;
-import sonia.scm.util.HttpUtil;
 import sonia.scm.web.cgi.CGIExecutor;
 import sonia.scm.web.cgi.CGIExecutorFactory;
 import sonia.scm.web.cgi.EnvList;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import com.sun.jersey.core.util.Base64;
-
 import java.io.File;
 import java.io.IOException;
 
 import java.util.Enumeration;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -83,17 +79,18 @@ import javax.servlet.http.HttpSession;
 public class HgCGIServlet extends HttpServlet
 {
 
+  private static final String ENV_PYTHON_HTTPS_VERIFY = "PYTHONHTTPSVERIFY";
+
   /** Field description */
   public static final String ENV_REPOSITORY_NAME = "REPO_NAME";
 
   /** Field description */
   public static final String ENV_REPOSITORY_PATH = "SCM_REPOSITORY_PATH";
 
-  /** Field description */
-  public static final String ENV_SESSION_PREFIX = "SCM_";
+  private static final String ENV_HTTP_POST_ARGS = "SCM_HTTP_POST_ARGS";
 
   /** Field description */
-  private static final String SCM_CREDENTIALS = "SCM_CREDENTIALS";
+  public static final String ENV_SESSION_PREFIX = "SCM_";
 
   /** Field description */
   private static final long serialVersionUID = -3492811300905099810L;
@@ -231,7 +228,6 @@ public class HgCGIServlet extends HttpServlet
    * @param env
    * @param session
    */
-  @SuppressWarnings("unchecked")
   private void passSessionAttributes(EnvList env, HttpSession session)
   {
     Enumeration<String> enm = session.getAttributeNames();
@@ -277,19 +273,27 @@ public class HgCGIServlet extends HttpServlet
       directory.getAbsolutePath());
 
     // add hook environment
+    Map<String, String> environment = executor.getEnvironment().asMutableMap();
+    if (handler.getConfig().isDisableHookSSLValidation()) {
+      // disable ssl validation
+      // Issue 959: https://goo.gl/zH5eY8
+      environment.put(ENV_PYTHON_HTTPS_VERIFY, "0");
+    }
+
+    // enable experimental httppostargs protocol of mercurial
+    // Issue 970: https://goo.gl/poascp
+    environment.put(ENV_HTTP_POST_ARGS, String.valueOf(handler.getConfig().isEnableHttpPostArgs()));
+
     //J-
     HgEnvironment.prepareEnvironment(
-      executor.getEnvironment().asMutableMap(),
+      environment,
       handler,
-      hookManager, 
+      hookManager,
       request
     );
     //J+
 
-    addCredentials(executor.getEnvironment(), request);
-
-    // unused ???
-    HttpSession session = request.getSession(false);
+    HttpSession session = request.getSession();
 
     if (session != null)
     {

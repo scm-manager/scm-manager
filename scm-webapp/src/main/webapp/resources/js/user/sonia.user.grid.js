@@ -49,7 +49,7 @@ Sonia.user.Grid = Ext.extend(Sonia.rest.Grid, {
 
     var userStore = new Sonia.rest.JsonStore({
       proxy: new Ext.data.HttpProxy({
-        url: restUrl + 'users',
+        url: restUrl + 'users.json',
         disableCaching: false
       }),
       idProperty: 'name',

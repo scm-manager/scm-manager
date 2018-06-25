@@ -41,6 +41,7 @@ Sonia.login.Form = Ext.extend(Ext.FormPanel,{
   failedDescriptionText: 'Incorrect username, password or not enough permission. Please Try again.',
   accountLockedText: 'Account is locked.',
   accountTemporaryLockedText: 'Account is temporary locked. Please try again later.',
+  rememberMeText: 'Remember me',
 
   initComponent: function(){
     var buttons = [];
@@ -93,14 +94,11 @@ Sonia.login.Form = Ext.extend(Ext.FormPanel,{
             scope: this
           }
         }
-      }, {
-        name: 'grant_type',
-        value: 'password',
-        xtype: 'hidden'
-      }, {
-        name: 'cookie',
-        value: 'true',
-        xtype: 'hidden'
+      },{
+        xtype: 'checkbox',
+        fieldLabel: this.rememberMeText,
+        name: 'rememberMe',
+        inputValue: 'true'
       }],
       buttons: buttons
     };
@@ -118,7 +116,6 @@ Sonia.login.Form = Ext.extend(Ext.FormPanel,{
 
   authenticate: function(){
     var form = this.getForm();
-    
     form.submit({
       scope: this,
       method: 'POST',

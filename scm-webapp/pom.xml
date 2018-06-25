@@ -6,54 +6,63 @@
   <parent>
     <groupId>sonia.scm</groupId>
     <artifactId>scm</artifactId>
-    <version>2.0.0-SNAPSHOT</version>
+    <version>1.61-SNAPSHOT</version>
   </parent>
 
   <groupId>sonia.scm</groupId>
   <artifactId>scm-webapp</artifactId>
   <packaging>war</packaging>
-  <version>2.0.0-SNAPSHOT</version>
+  <version>1.61-SNAPSHOT</version>
   <name>scm-webapp</name>
 
   <dependencies>
 
-    <!-- annotation processor -->
-    
-    <dependency>
-      <groupId>sonia.scm</groupId>
-      <artifactId>scm-annotation-processor</artifactId>
-      <version>2.0.0-SNAPSHOT</version>
-      <scope>provided</scope>
-    </dependency>
-    
     <dependency>
       <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
+      <artifactId>servlet-api</artifactId>
       <version>${servlet.version}</version>
       <scope>provided</scope>
     </dependency>
 
     <!-- fix javadoc -->
-    
-    <dependency>    
+
+    <dependency>
       <groupId>javax.transaction</groupId>
       <artifactId>jta</artifactId>
       <version>1.1</version>
       <scope>provided</scope>
     </dependency>
-    
+
     <!-- scm -->
-    
+
     <dependency>
       <groupId>sonia.scm</groupId>
       <artifactId>scm-core</artifactId>
-      <version>2.0.0-SNAPSHOT</version>
+      <version>1.61-SNAPSHOT</version>
     </dependency>
-    
+
     <dependency>
       <groupId>sonia.scm</groupId>
       <artifactId>scm-dao-xml</artifactId>
-      <version>2.0.0-SNAPSHOT</version>
+      <version>1.61-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>sonia.scm.plugins</groupId>
+      <artifactId>scm-hg-plugin</artifactId>
+      <version>1.61-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>sonia.scm.plugins</groupId>
+      <artifactId>scm-svn-plugin</artifactId>
+      <version>1.61-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>sonia.scm.plugins</groupId>
+      <artifactId>scm-git-plugin</artifactId>
+      <version>1.61-SNAPSHOT</version>
     </dependency>
 
     <!-- security -->
@@ -63,17 +72,11 @@
       <artifactId>shiro-web</artifactId>
       <version>${shiro.version}</version>
     </dependency>
-            
+
     <dependency>
       <groupId>org.apache.shiro</groupId>
       <artifactId>shiro-guice</artifactId>
       <version>${shiro.version}</version>
-    </dependency>
-    
-    <dependency>
-      <groupId>io.jsonwebtoken</groupId>
-      <artifactId>jjwt</artifactId>
-      <version>0.4</version>
     </dependency>
 
     <!-- rest api -->
@@ -113,13 +116,13 @@
       <!-- included by dependency rewrite -->
       <scope>provided</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>com.sun.jersey.contribs</groupId>
       <artifactId>jersey-multipart</artifactId>
       <version>${jersey.version}</version>
     </dependency>
-    
+
     <!-- injection -->
 
     <dependency>
@@ -127,66 +130,73 @@
       <artifactId>guice-multibindings</artifactId>
       <version>${guice.version}</version>
     </dependency>
-    
-    <!-- event bus -->
-    
-    <dependency>
-      <groupId>com.github.legman.support</groupId>
-      <artifactId>shiro</artifactId>
-      <version>${legman.version}</version>
-    </dependency>
-    
+
     <!-- logging -->
 
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
-      <version>${logback.version}</version>
     </dependency>
-    
+
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>jcl-over-slf4j</artifactId>
       <version>${slf4j.version}</version>
     </dependency>
-    
+
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>log4j-over-slf4j</artifactId>
       <version>${slf4j.version}</version>
     </dependency>
-    
+
+    <!-- cache -->
+
+    <dependency>
+      <groupId>net.sf.ehcache</groupId>
+      <artifactId>ehcache-core</artifactId>
+      <version>${ehcache.version}</version>
+    </dependency>
+
+    <!--
+    fix java.lang.NoClassDefFoundError org/w3c/dom/ElementTraversal
+    -->
+
+    <dependency>
+      <groupId>xml-apis</groupId>
+      <artifactId>xml-apis</artifactId>
+      <version>1.4.01</version>
+    </dependency>
+
     <!-- only for BeanComparator, replace with own implementation -->
-    
+
     <dependency>
       <groupId>commons-beanutils</groupId>
       <artifactId>commons-beanutils</artifactId>
-      <version>1.9.2</version>
     </dependency>
-    
+
     <dependency>
       <groupId>commons-collections</groupId>
       <artifactId>commons-collections</artifactId>
-      <version>3.2.1</version>
     </dependency>
-    
-    <!-- 
-      fix installation of httpasswd-plugin 
+
+    <!--
+      fix installation of httpasswd-plugin
       https://groups.google.com/d/topic/scmmanager/eN7UtG8TwW8/discussion
     -->
-    
+
     <dependency>
       <groupId>commons-codec</groupId>
       <artifactId>commons-codec</artifactId>
       <version>1.9</version>
     </dependency>
-   
+
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
       <version>${guava.version}</version>
     </dependency>
-    
+
     <dependency>
       <groupId>org.quartz-scheduler</groupId>
       <artifactId>quartz</artifactId>
@@ -198,25 +208,67 @@
         </exclusion>
       </exclusions>
     </dependency>
-    
-    <!-- fix version conflict -->
-    
-    <dependency>
-      <groupId>org.apache.httpcomponents</groupId>
-      <artifactId>httpclient</artifactId>
-      <version>4.2.6</version>
-    </dependency>
-    
+
     <!-- template engine -->
-    
+
+    <dependency>
+      <groupId>org.freemarker</groupId>
+      <artifactId>freemarker</artifactId>
+      <version>${freemarker.version}</version>
+    </dependency>
+
     <dependency>
       <groupId>com.github.spullara.mustache.java</groupId>
       <artifactId>compiler</artifactId>
       <version>${mustache.version}</version>
     </dependency>
-    
+
+    <!-- aether -->
+
+    <dependency>
+      <groupId>org.eclipse.aether</groupId>
+      <artifactId>aether-api</artifactId>
+      <version>${aether.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.eclipse.aether</groupId>
+      <artifactId>aether-impl</artifactId>
+      <version>${aether.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-aether-provider</artifactId>
+      <version>${maven.version}</version>
+      <exclusions>
+        <exclusion>
+          <artifactId>plexus-component-annotations</artifactId>
+          <groupId>org.codehaus.plexus</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>org.eclipse.aether</groupId>
+      <artifactId>aether-transport-http</artifactId>
+      <version>${aether.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.eclipse.aether</groupId>
+      <artifactId>aether-transport-file</artifactId>
+      <version>${aether.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.eclipse.aether</groupId>
+      <artifactId>aether-connector-basic</artifactId>
+      <version>${aether.version}</version>
+    </dependency>
+
     <!-- rest documentation -->
-    
+
     <dependency>
       <groupId>com.webcohesion.enunciate</groupId>
       <artifactId>enunciate-core-annotations</artifactId>
@@ -228,7 +280,7 @@
     <dependency>
       <groupId>sonia.scm</groupId>
       <artifactId>scm-test</artifactId>
-      <version>2.0.0-SNAPSHOT</version>
+      <version>1.61-SNAPSHOT</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
@@ -237,7 +289,31 @@
         </exclusion>
       </exclusions>
     </dependency>
-    
+
+    <dependency>
+      <groupId>sonia.scm.plugins</groupId>
+      <artifactId>scm-git-plugin</artifactId>
+      <version>1.61-SNAPSHOT</version>
+      <classifier>tests</classifier>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>sonia.scm.plugins</groupId>
+      <artifactId>scm-hg-plugin</artifactId>
+      <version>1.61-SNAPSHOT</version>
+      <classifier>tests</classifier>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>sonia.scm.plugins</groupId>
+      <artifactId>scm-svn-plugin</artifactId>
+      <version>1.61-SNAPSHOT</version>
+      <classifier>tests</classifier>
+      <scope>test</scope>
+    </dependency>
+
     <dependency>
       <groupId>org.seleniumhq.selenium</groupId>
       <artifactId>selenium-java</artifactId>
@@ -251,7 +327,7 @@
       <version>${selenium.version}</version>
       <scope>test</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>org.seleniumhq.selenium</groupId>
       <artifactId>htmlunit-driver</artifactId>
@@ -272,71 +348,23 @@
       <version>${jersey.version}</version>
       <scope>test</scope>
     </dependency>
-    
-    <!-- core plugins -->
-    
-    
+
     <dependency>
       <groupId>com.github.sdorra</groupId>
       <artifactId>shiro-unit</artifactId>
       <version>1.0.0</version>
       <scope>test</scope>
     </dependency>
-    
-    <dependency>
-      <groupId>sonia.scm.plugins</groupId>
-      <artifactId>scm-git-plugin</artifactId>
-      <version>2.0.0-SNAPSHOT</version>
-      <classifier>tests</classifier>
-      <scope>test</scope>
-    </dependency>
-    
-    <dependency>
-      <groupId>sonia.scm.plugins</groupId>
-      <artifactId>scm-git-plugin</artifactId>
-      <version>2.0.0-SNAPSHOT</version>
-      <scope>test</scope>
-    </dependency>
-    
-    <dependency>
-      <groupId>sonia.scm.plugins</groupId>
-      <artifactId>scm-hg-plugin</artifactId>
-      <version>2.0.0-SNAPSHOT</version>
-      <classifier>tests</classifier>
-      <scope>test</scope>
-    </dependency>
-    
-    <dependency>
-      <groupId>sonia.scm.plugins</groupId>
-      <artifactId>scm-hg-plugin</artifactId>
-      <version>2.0.0-SNAPSHOT</version>
-      <scope>test</scope>
-    </dependency>
-    
-    <dependency>
-      <groupId>sonia.scm.plugins</groupId>
-      <artifactId>scm-svn-plugin</artifactId>
-      <version>2.0.0-SNAPSHOT</version>
-      <classifier>tests</classifier>
-      <scope>test</scope>
-    </dependency>
-    
-    <dependency>
-      <groupId>sonia.scm.plugins</groupId>
-      <artifactId>scm-svn-plugin</artifactId>
-      <version>2.0.0-SNAPSHOT</version>
-      <scope>test</scope>
-    </dependency>
-    
+
     <!-- global excludes -->
-    
+
     <dependency>
       <groupId>commons-logging</groupId>
       <artifactId>commons-logging</artifactId>
       <version>1.1.3</version>
       <scope>provided</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
@@ -347,8 +375,9 @@
   </dependencies>
 
   <build>
+
     <plugins>
-    
+
       <plugin>
         <groupId>com.mycila.maven-license-plugin</groupId>
         <artifactId>maven-license-plugin</artifactId>
@@ -371,6 +400,7 @@
         </configuration>
       </plugin>
 
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
@@ -388,49 +418,39 @@
           </execution>
         </executions>
       </plugin>
-      
+
       <plugin>
-        <groupId>sonia.scm.maven</groupId>
-        <artifactId>smp-maven-plugin</artifactId>
-        <version>1.0.0-alpha-2</version>
-        <configuration>
-          <artifactItems>
-            <artifactItem>
-              <groupId>sonia.scm.plugins</groupId>
-              <artifactId>scm-hg-plugin</artifactId>
-              <version>${project.version}</version>
-              <type>smp</type>
-            </artifactItem>
-            <artifactItem>
-              <groupId>sonia.scm.plugins</groupId>
-              <artifactId>scm-svn-plugin</artifactId>
-              <version>${project.version}</version>
-              <type>smp</type>
-            </artifactItem>
-            <artifactItem>
-              <groupId>sonia.scm.plugins</groupId>
-              <artifactId>scm-git-plugin</artifactId>
-              <version>${project.version}</version>
-              <type>smp</type>
-            </artifactItem>
-            <artifactItem>
-              <groupId>sonia.scm.plugins</groupId>
-              <artifactId>scm-legacy-plugin</artifactId>
-              <version>${project.version}</version>
-              <type>smp</type>
-            </artifactItem>
-          </artifactItems>
-        </configuration>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.6</version>
         <executions>
           <execution>
+            <id>repack</id>
             <phase>compile</phase>
             <goals>
-              <goal>copy-core-plugins</goal>
+              <goal>run</goal>
             </goals>
+            <configuration>
+              <target>
+                <!--
+                add beans.xml to jersey-guice
+                -->
+                <property name="beans.file" value="src/main/webapp/WEB-INF/beans.xml" />
+                <property name="temp.dir" value="${project.build.directory}/tmp" />
+                <property name="rewrite.dir" value="${project.build.directory}/dependency-rewrite/WEB-INF/lib" />
+                <property name="suffix" value="gfcdifix" />
+
+                <!-- jersey guice -->
+                <property name="jersey.tmp" value="${temp.dir}/jersey-guice" />
+                <unzip src="${com.sun.jersey.contribs:jersey-guice:jar}" dest="${jersey.tmp}" />
+                <copy file="${beans.file}" toDir="${jersey.tmp}/META-INF" />
+                <zip basedir="${jersey.tmp}" destfile="${rewrite.dir}/jersey-guice-${jersey.version}-${suffix}.jar" />
+              </target>
+            </configuration>
           </execution>
         </executions>
       </plugin>
-      
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-war-plugin</artifactId>
@@ -444,7 +464,7 @@
           </webResources>
         </configuration>
       </plugin>
-      
+
       <plugin>
         <groupId>sonia.maven</groupId>
         <artifactId>change-env</artifactId>
@@ -464,7 +484,7 @@
       </plugin>
 
       <plugin>
-        <groupId>org.eclipse.jetty</groupId>
+        <groupId>org.mortbay.jetty</groupId>
         <artifactId>jetty-maven-plugin</artifactId>
         <version>${jetty.maven.version}</version>
         <configuration>
@@ -484,14 +504,23 @@
               <value>true</value>
             </systemProperty>
           </systemProperties>
+          <connectors>
+            <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
+              <port>8081</port>
+              <maxIdleTime>60000</maxIdleTime>
+              <requestHeaderSize>16384</requestHeaderSize>
+            </connector>
+          </connectors>
           <webApp>
             <contextPath>/scm</contextPath>
           </webApp>
-          <jettyXml>${project.basedir}/src/main/conf/jetty.xml</jettyXml>
+          <source>${project.build.javaLevel}</source>
+          <target>${project.build.javaLevel}</target>
+          <encoding>${project.build.sourceEncoding}</encoding>
           <scanIntervalSeconds>0</scanIntervalSeconds>
         </configuration>
-      </plugin>        
-      
+      </plugin>
+
     </plugins>
 
     <finalName>scm-webapp</finalName>
@@ -503,7 +532,9 @@
     <environment.profile>default</environment.profile>
     <selenium.version>2.53.1</selenium.version>
     <enunciate.version>2.9.1</enunciate.version>
+    <aether.version>1.1.0</aether.version>
     <wagon.version>1.0</wagon.version>
+    <maven.version>3.3.9</maven.version>
     <mustache.version>0.8.17</mustache.version>
     <netbeans.hint.deploy.server>Tomcat</netbeans.hint.deploy.server>
     <sonar.issue.ignore.multicriteria>e1</sonar.issue.ignore.multicriteria>
@@ -513,7 +544,21 @@
   </properties>
 
   <profiles>
-  
+
+    <profile>
+      <id>cluster</id>
+
+      <dependencies>
+
+        <dependency>
+          <groupId>sonia.scm</groupId>
+          <artifactId>scm-dao-orientdb</artifactId>
+          <version>1.58-SNAPSHOT</version>
+        </dependency>
+
+      </dependencies>
+    </profile>
+
     <profile>
       <id>release</id>
 
@@ -594,7 +639,7 @@
           </plugin>
 
           <plugin>
-            <groupId>org.eclipse.jetty</groupId>
+            <groupId>org.mortbay.jetty</groupId>
             <artifactId>jetty-maven-plugin</artifactId>
             <version>${jetty.maven.version}</version>
             <configuration>
@@ -610,7 +655,16 @@
                   <value>${scm.stage}</value>
                 </systemProperty>
               </systemProperties>
-              <jettyXml>${project.basedir}/src/main/conf/jetty.xml</jettyXml>
+              <connectors>
+                <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
+                  <port>8081</port>
+                  <maxIdleTime>60000</maxIdleTime>
+                  <requestHeaderSize>16384</requestHeaderSize>
+                </connector>
+              </connectors>
+              <source>${project.build.javaLevel}</source>
+              <target>${project.build.javaLevel}</target>
+              <encoding>${project.build.sourceEncoding}</encoding>
               <scanIntervalSeconds>0</scanIntervalSeconds>
               <daemon>true</daemon>
             </configuration>
@@ -631,29 +685,29 @@
               </execution>
             </executions>
           </plugin>
-          
+
         </plugins>
       </build>
 
     </profile>
-    
+
     <profile>
       <id>selenium</id>
-          
+
       <dependencies>
-        
+
         <dependency>
           <groupId>org.apache.httpcomponents</groupId>
           <artifactId>httpclient</artifactId>
           <version>4.3.2</version>
           <scope>test</scope>
         </dependency>
-        
+
       </dependencies>
-          
+
       <build>
         <plugins>
-          
+
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-failsafe-plugin</artifactId>
@@ -678,15 +732,12 @@
               </execution>
             </executions>
           </plugin>
-          
+
           <plugin>
-            <groupId>org.eclipse.jetty</groupId>
+            <groupId>org.mortbay.jetty</groupId>
             <artifactId>jetty-maven-plugin</artifactId>
             <version>${jetty.maven.version}</version>
             <configuration>
-              <httpConnector>
-                <port>8082</port>
-              </httpConnector>
               <stopPort>8086</stopPort>
               <stopKey>STOP</stopKey>
               <systemProperties>
@@ -695,7 +746,16 @@
                   <value>target/scm-it</value>
                 </systemProperty>
               </systemProperties>
-              <jettyXml>${project.basedir}/src/main/conf/jetty.xml</jettyXml>
+              <connectors>
+                <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
+                  <port>8082</port>
+                  <maxIdleTime>60000</maxIdleTime>
+                  <requestHeaderSize>16384</requestHeaderSize>
+                </connector>
+              </connectors>
+              <source>${project.build.javaLevel}</source>
+              <target>${project.build.javaLevel}</target>
+              <encoding>${project.build.sourceEncoding}</encoding>
               <scanIntervalSeconds>0</scanIntervalSeconds>
               <daemon>true</daemon>
             </configuration>
@@ -716,7 +776,7 @@
               </execution>
             </executions>
           </plugin>
-          
+
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>selenium-maven-plugin</artifactId>
@@ -737,22 +797,22 @@
                 <phase>post-integration-test</phase>
                 <goals>
                   <goal>stop-server</goal>
-                </goals>                
+                </goals>
               </execution>
             </executions>
           </plugin>
-          
+
         </plugins>
       </build>
-      
+
     </profile>
-    
+
     <profile>
       <id>doc</id>
-      
+
       <build>
         <plugins>
-          
+
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-resources-plugin</artifactId>
@@ -766,7 +826,7 @@
                 </goals>
                 <configuration>
                   <outputDirectory>${project.build.directory}</outputDirectory>
-                  <resources>          
+                  <resources>
                     <resource>
                       <directory>src/main/doc</directory>
                       <filtering>true</filtering>
@@ -774,12 +834,12 @@
                         <include>**/enunciate.xml</include>
                       </includes>
                     </resource>
-                  </resources>              
-                </configuration>            
+                  </resources>
+                </configuration>
               </execution>
             </executions>
           </plugin>
-          
+
           <plugin>
             <groupId>com.webcohesion.enunciate</groupId>
             <artifactId>enunciate-maven-plugin</artifactId>
@@ -811,7 +871,7 @@
               </dependency>
             </dependencies>
           </plugin>
-          
+
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-assembly-plugin</artifactId>
@@ -830,12 +890,12 @@
               </execution>
             </executions>
           </plugin>
-          
+
         </plugins>
       </build>
     </profile>
 
   </profiles>
-  
+
 </project>
 

@@ -514,7 +514,7 @@ Sonia.repository.ImportPanel = Ext.extend(Ext.Panel, {
   importFromUrl: function(layout, repository){
     var lbox = this.showLoadingBox();
     Ext.Ajax.request({
-      url: restUrl + 'import/repositories/' + this.repositoryType + '/url',
+      url: restUrl + 'import/repositories/' + this.repositoryType + '/url.json',
       method: 'POST',
       scope: this,
       timeout: 300000, // 5min
@@ -533,7 +533,7 @@ Sonia.repository.ImportPanel = Ext.extend(Ext.Panel, {
   importFromDirectory: function(layout){
     var lbox = this.showLoadingBox();
     Ext.Ajax.request({
-      url: restUrl + 'import/repositories/' + this.repositoryType + '/directory',
+      url: restUrl + 'import/repositories/' + this.repositoryType + '/directory.json',
       timeout: 300000, // 5min
       method: 'POST',
       scope: this,

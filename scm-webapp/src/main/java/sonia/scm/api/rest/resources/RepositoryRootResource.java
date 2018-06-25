@@ -50,6 +50,8 @@ import sonia.scm.util.HttpUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import com.sun.jersey.api.view.Viewable;
+
 import java.io.IOException;
 
 import java.util.Collection;
@@ -65,7 +67,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import sonia.scm.template.Viewable;
 
 /**
  *
@@ -75,13 +76,17 @@ import sonia.scm.template.Viewable;
 public class RepositoryRootResource
 {
 
-  private static final String TEMPLATE = "/templates/repository-root.mustache";
+  /** Field description */
+  public static final String TEMPLATE = "/templates/repository-root.mustache";
 
-  private final RepositoryManager repositoryManager;
-  
+  //~--- constructors ---------------------------------------------------------
+
   /**
    * Constructs ...
-   * 
+   *
+   *
+   *
+   * @param templateHandler
    * @param repositoryManager
    */
   @Inject
@@ -325,4 +330,10 @@ public class RepositoryRootResource
     /** Field description */
     private UrlProvider urlProvider;
   }
+
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private RepositoryManager repositoryManager;
 }

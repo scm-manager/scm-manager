@@ -81,7 +81,7 @@ Sonia.plugin.Center = Ext.extend(Ext.util.Observable, {
     var loadingBox = this.createLoadingBox( this.installWaitMsgText );
 
     Ext.Ajax.request({
-      url: restUrl + 'plugins/install/' + pluginId,
+      url: restUrl + 'plugins/install/' + pluginId + '.json',
       method: 'POST',
       scope: this,
       timeout: 300000, // 5min
@@ -116,7 +116,7 @@ Sonia.plugin.Center = Ext.extend(Ext.util.Observable, {
     var loadingBox = this.createLoadingBox( this.uninstallWaitMsgText );
 
     Ext.Ajax.request({
-      url: restUrl + 'plugins/uninstall/' + pluginId,
+      url: restUrl + 'plugins/uninstall/' + pluginId + '.json',
       method: 'POST',
       scope: this,
       success: function(){
@@ -150,7 +150,7 @@ Sonia.plugin.Center = Ext.extend(Ext.util.Observable, {
     var loadingBox = this.createLoadingBox( this.updateWaitMsgText );
 
     Ext.Ajax.request({
-      url: restUrl + 'plugins/update/' + pluginId,
+      url: restUrl + 'plugins/update/' + pluginId + '.json',
       method: 'POST',
       scope: this,
       timeout: 300000, // 5min

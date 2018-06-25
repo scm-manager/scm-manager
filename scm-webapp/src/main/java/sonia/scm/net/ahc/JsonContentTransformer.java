@@ -33,15 +33,13 @@ package sonia.scm.net.ahc;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.fasterxml.jackson.databind.AnnotationIntrospector;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.introspect.AnnotationIntrospectorPair;
-import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
-import com.fasterxml.jackson.databind.type.TypeFactory;
-import com.fasterxml.jackson.module.jaxb.JaxbAnnotationIntrospector;
-
 import com.google.common.io.ByteSource;
+
+import org.codehaus.jackson.map.AnnotationIntrospector;
+import org.codehaus.jackson.map.DeserializationConfig;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.introspect.JacksonAnnotationIntrospector;
+import org.codehaus.jackson.xc.JaxbAnnotationIntrospector;
 
 import sonia.scm.plugin.ext.Extension;
 import sonia.scm.util.IOUtil;
@@ -75,12 +73,12 @@ public class JsonContentTransformer implements ContentTransformer
 
     // allow jackson and jaxb annotations
     AnnotationIntrospector jackson = new JacksonAnnotationIntrospector();
-    AnnotationIntrospector jaxb = new JaxbAnnotationIntrospector(TypeFactory.defaultInstance());
+    AnnotationIntrospector jaxb = new JaxbAnnotationIntrospector();
 
-    this.mapper.setAnnotationIntrospector(new AnnotationIntrospectorPair(jackson, jaxb));
+    this.mapper.setAnnotationIntrospector(new AnnotationIntrospector.Pair(jackson, jaxb));
 
     // do not fail on unknown json properties
-    this.mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    this.mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
   }
 
   //~--- methods --------------------------------------------------------------

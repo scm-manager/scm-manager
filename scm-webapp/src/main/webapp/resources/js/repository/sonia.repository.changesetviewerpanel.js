@@ -46,7 +46,7 @@ Sonia.repository.ChangesetViewerPanel = Ext.extend(Ext.Panel, {
   
   initComponent: function(){
     if (! this.url){
-      this.url = restUrl + 'repositories/' + this.repository.id  + '/changesets';
+      this.url = restUrl + 'repositories/' + this.repository.id  + '/changesets.json';
     }
     
     if ( ! this.startLimit ){

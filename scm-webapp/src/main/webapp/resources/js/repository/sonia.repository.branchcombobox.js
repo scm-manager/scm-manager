@@ -38,7 +38,7 @@ Sonia.repository.BranchComboBox = Ext.extend(Ext.form.ComboBox, {
   initComponent: function(){
     var branchStore = new Sonia.rest.JsonStore({
       proxy: new Ext.data.HttpProxy({
-        url: restUrl + 'repositories/' + this.repositoryId + '/branches',
+        url: restUrl + 'repositories/' + this.repositoryId + '/branches.json',
         method: 'GET',
         disableCaching: false
       }),

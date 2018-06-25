@@ -83,7 +83,7 @@ var userSearchStore = new Ext.data.JsonStore({
   idProperty: 'value',
   fields: ['value','label'],
   proxy: new Ext.data.HttpProxy({
-    url: restUrl + 'search/users',
+    url: restUrl + 'search/users.json',
     method: 'GET'
   })
 });
@@ -93,7 +93,7 @@ var groupSearchStore = new Ext.data.JsonStore({
   idProperty: 'value',
   fields: ['value','label'],
   proxy: new Ext.data.HttpProxy({
-    url: restUrl + 'search/groups',
+    url: restUrl + 'search/groups.json',
     method: 'GET'
   })
 });

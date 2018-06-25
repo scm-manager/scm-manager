@@ -69,6 +69,8 @@ import static com.google.common.base.Preconditions.*;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import com.sun.jersey.api.client.ClientResponse.Status;
+import com.sun.jersey.multipart.FormDataParam;
 import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.ResponseHeader;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
@@ -87,7 +89,6 @@ import java.util.Set;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -110,7 +111,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author Sebastian Sdorra
  */
-// @Path("import/repositories")
+@Path("import/repositories")
 public class RepositoryImportResource
 {
 
@@ -169,8 +170,8 @@ public class RepositoryImportResource
   @TypeHint(TypeHint.NO_CONTENT.class)
   @Consumes(MediaType.MULTIPART_FORM_DATA)
   public Response importFromBundle(@Context UriInfo uriInfo,
-    @PathParam("type") String type, @FormParam("name") String name,
-    @FormParam("bundle") InputStream inputStream, @QueryParam("compressed")
+    @PathParam("type") String type, @FormDataParam("name") String name,
+    @FormDataParam("bundle") InputStream inputStream, @QueryParam("compressed")
   @DefaultValue("false") boolean compressed)
   {
     Repository repository = doImportFromBundle(type, name, inputStream,
@@ -210,8 +211,8 @@ public class RepositoryImportResource
   @Consumes(MediaType.MULTIPART_FORM_DATA)
   @Produces(MediaType.TEXT_HTML)
   public Response importFromBundleUI(@PathParam("type") String type,
-    @FormParam("name") String name,
-    @FormParam("bundle") InputStream inputStream, @QueryParam("compressed")
+    @FormDataParam("name") String name,
+    @FormDataParam("bundle") InputStream inputStream, @QueryParam("compressed")
   @DefaultValue("false") boolean compressed)
   {
     Response response;
@@ -259,7 +260,7 @@ public class RepositoryImportResource
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
-  @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+  @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public Response importFromUrl(@Context UriInfo uriInfo,
     @PathParam("type") String type, UrlImportRequest request)
   {
@@ -319,7 +320,7 @@ public class RepositoryImportResource
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(Repository[].class)
-  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public Response importRepositories(@PathParam("type") String type)
   {
     SecurityUtils.getSubject().checkRole(Role.ADMIN);
@@ -351,7 +352,7 @@ public class RepositoryImportResource
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(Repository[].class)
-  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public Response importRepositories()
   {
     SecurityUtils.getSubject().checkRole(Role.ADMIN);
@@ -393,7 +394,7 @@ public class RepositoryImportResource
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(ImportResult.class)
-  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public Response importRepositoriesFromDirectory(
     @PathParam("type") String type)
   {
@@ -434,7 +435,7 @@ public class RepositoryImportResource
           .warn(
             "import feature is not supported by repository handler for type "
               .concat(type), ex);
-        response = Response.status(Response.Status.BAD_REQUEST).build();
+        response = Response.status(Status.BAD_REQUEST).build();
       }
       catch (IOException ex)
       {
@@ -450,7 +451,7 @@ public class RepositoryImportResource
     else
     {
       logger.warn("could not find reposiotry handler for type {}", type);
-      response = Response.status(Response.Status.BAD_REQUEST).build();
+      response = Response.status(Status.BAD_REQUEST).build();
     }
 
     return response;
@@ -474,7 +475,7 @@ public class RepositoryImportResource
     ),
     @ResponseCode(code = 500, condition = "internal server error")
   })
-  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public Response getImportableTypes()
   {
     SecurityUtils.getSubject().checkRole(Role.ADMIN);

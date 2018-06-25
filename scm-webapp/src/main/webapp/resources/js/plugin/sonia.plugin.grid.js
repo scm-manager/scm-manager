@@ -81,7 +81,7 @@ Sonia.plugin.Grid = Ext.extend(Sonia.rest.Grid, {
     
     var pluginStore = new Ext.data.GroupingStore({
       proxy: new Ext.data.HttpProxy({
-        url: restUrl + 'plugins/overview',
+        url: restUrl + 'plugins/overview.json',
         disableCaching: false
       }),
       reader: new Ext.data.JsonReader({

@@ -28,63 +28,89 @@
  * http://bitbucket.org/sdorra/scm-manager
  *
  */
-package sonia.scm.template;
 
-import com.google.common.base.Objects;
 
+
+package sonia.scm.api.rest;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import com.sun.jersey.api.core.PackagesResourceConfig;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.ws.rs.core.MediaType;
 
 /**
- * A viewable holds the path to a template and the context object which is used to render the template. Viewables can
- * be used as return type of jax-rs resources.
- * 
+ *
  * @author Sebastian Sdorra
- * @since 2.0.0
  */
-public final class Viewable {
-  
-  private final String path;
-  private final Object context;
+public class UriExtensionsConfig extends PackagesResourceConfig
+{
 
-  public Viewable(String path, Object context) {
-    this.path = path;
-    this.context = context;
+  /** Field description */
+  public static final String EXTENSION_JSON = "json";
+
+  /** Field description */
+  public static final String EXTENSION_XML = "xml";
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   */
+  public UriExtensionsConfig()
+  {
+    super();
   }
 
-  public String getPath() {
-    return path;
+  /**
+   * Constructs ...
+   *
+   *
+   * @param props
+   */
+  public UriExtensionsConfig(Map<String, Object> props)
+  {
+    super(props);
   }
 
-  public Object getContext() {
-    return context;
+  /**
+   * Constructs ...
+   *
+   *
+   * @param paths
+   */
+  public UriExtensionsConfig(String[] paths)
+  {
+    super(paths);
   }
 
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   @Override
-  public int hashCode() {
-    return Objects.hashCode(path, context);
+  public Map<String, MediaType> getMediaTypeMappings()
+  {
+    if (mediaTypeMap == null)
+    {
+      mediaTypeMap = new HashMap<String, MediaType>();
+      mediaTypeMap.put(EXTENSION_JSON, MediaType.APPLICATION_JSON_TYPE);
+      mediaTypeMap.put(EXTENSION_XML, MediaType.APPLICATION_XML_TYPE);
+    }
+
+    return mediaTypeMap;
   }
 
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj) {
-      return true;
-    }
-    if (obj == null) {
-      return false;
-    }
-    if (getClass() != obj.getClass()) {
-      return false;
-    }
-    final Viewable other = (Viewable) obj;
-    return !Objects.equal(this.path, other.path)
-      && Objects.equal(this.context, other.context);
-  }
+  //~--- fields ---------------------------------------------------------------
 
-  @Override
-  public String toString() {
-    return Objects.toStringHelper(this)
-            .add("path", path)
-            .add("context", context)
-            .toString();
-  }
-  
+  /** Field description */
+  private Map<String, MediaType> mediaTypeMap;
 }
