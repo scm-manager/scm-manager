@@ -77,8 +77,8 @@ public class UserRootResourceTest {
     doNothing().when(userManager).delete(userCaptor.capture());
 
     UserCollectionToDtoMapper userCollectionToDtoMapper = new UserCollectionToDtoMapper(userToDtoMapper, uriInfoStore);
-    UserCollectionResource userCollectionResource = new UserCollectionResource(userManager, dtoToUserMapper, userToDtoMapper,
-                                                                               userCollectionToDtoMapper);
+    UserCollectionResource userCollectionResource = new UserCollectionResource(userManager, dtoToUserMapper,
+      userCollectionToDtoMapper);
     UserResource userResource = new UserResource(dtoToUserMapper, userToDtoMapper, userManager);
     UserRootResource userRootResource = new UserRootResource(MockProvider.of(userCollectionResource), MockProvider.of(userResource));
 

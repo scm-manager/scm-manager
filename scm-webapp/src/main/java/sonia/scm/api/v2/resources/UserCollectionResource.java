@@ -33,14 +33,12 @@ import static sonia.scm.api.v2.resources.ResourceLinks.user;
 public class UserCollectionResource extends AbstractManagerResource<User, UserException> {
   public static final int DEFAULT_PAGE_SIZE = 10;
   private final UserDtoToUserMapper dtoToUserMapper;
-  private final UserToUserDtoMapper userToDtoMapper;
   private final UserCollectionToDtoMapper userCollectionToDtoMapper;
 
   @Inject
-  public UserCollectionResource(UserManager manager, UserDtoToUserMapper dtoToUserMapper, UserToUserDtoMapper userToDtoMapper, UserCollectionToDtoMapper userCollectionToDtoMapper) {
+  public UserCollectionResource(UserManager manager, UserDtoToUserMapper dtoToUserMapper, UserCollectionToDtoMapper userCollectionToDtoMapper) {
     super(manager);
     this.dtoToUserMapper = dtoToUserMapper;
-    this.userToDtoMapper = userToDtoMapper;
     this.userCollectionToDtoMapper = userCollectionToDtoMapper;
   }
 

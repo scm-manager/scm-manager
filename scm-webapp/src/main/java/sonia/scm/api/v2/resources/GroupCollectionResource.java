@@ -34,14 +34,12 @@ import static sonia.scm.api.v2.resources.ResourceLinks.group;
 public class GroupCollectionResource extends AbstractManagerResource<Group, GroupException> {
   public static final int DEFAULT_PAGE_SIZE = 10;
   private final GroupDtoToGroupMapper dtoToGroupMapper;
-  private final GroupToGroupDtoMapper groupToDtoMapper;
   private final GroupCollectionToDtoMapper groupCollectionToDtoMapper;
 
   @Inject
-  public GroupCollectionResource(GroupManager manager, GroupDtoToGroupMapper dtoToGroupMapper, GroupToGroupDtoMapper groupToDtoMapper, GroupCollectionToDtoMapper groupCollectionToDtoMapper) {
+  public GroupCollectionResource(GroupManager manager, GroupDtoToGroupMapper dtoToGroupMapper, GroupCollectionToDtoMapper groupCollectionToDtoMapper) {
     super(manager);
     this.dtoToGroupMapper = dtoToGroupMapper;
-    this.groupToDtoMapper = groupToDtoMapper;
     this.groupCollectionToDtoMapper = groupCollectionToDtoMapper;
   }
 
