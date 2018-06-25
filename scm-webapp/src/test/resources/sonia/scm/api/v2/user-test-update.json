@@ -1,9 +1,9 @@
 {
   "active": true,
   "admin": false,
-  "displayName": "someone",
-  "mail": "x@example.com",
-  "name": "someone",
+  "displayName": "Neo",
+  "mail": "neo@example.com",
+  "name": "Neo",
   "password": "pwd123",
   "type": "xml"
 }

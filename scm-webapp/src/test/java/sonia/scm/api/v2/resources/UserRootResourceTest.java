@@ -73,6 +73,7 @@ public class UserRootResourceTest {
     when(userManager.getPage(any(), eq(0), eq(10))).thenReturn(new PageResult<>(singletonList(dummyUser), 1));
     when(userManager.get("Neo")).thenReturn(dummyUser);
     doNothing().when(userManager).create(userCaptor.capture());
+    doNothing().when(userManager).modify(userCaptor.capture());
 
     UserCollectionToDtoMapper userCollectionToDtoMapper = new UserCollectionToDtoMapper(userToDtoMapper, uriInfoStore);
     UserCollectionResource userCollectionResource = new UserCollectionResource(userManager, dtoToUserMapper, userToDtoMapper,
@@ -132,6 +133,26 @@ public class UserRootResourceTest {
     User createdUser = userCaptor.getValue();
     assertNotNull(createdUser);
     assertEquals("encrypted123", createdUser.getPassword());
+  }
+
+  @Test
+  public void shouldUpdateChangedUserWithEncryptedPassword() throws URISyntaxException, IOException {
+    URL url = Resources.getResource("sonia/scm/api/v2/user-test-update.json");
+    byte[] userJson = Resources.toByteArray(url);
+
+    MockHttpRequest request = MockHttpRequest
+      .put("/" + UserRootResource.USERS_PATH_V2 + "Neo")
+      .contentType(VndMediaType.USER)
+      .content(userJson);
+    MockHttpResponse response = new MockHttpResponse();
+    when(passwordService.encryptPassword("pwd123")).thenReturn("encrypted123");
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(204, response.getStatus());
+    User updatedUser = userCaptor.getValue();
+    assertNotNull(updatedUser);
+    assertEquals("encrypted123", updatedUser.getPassword());
   }
 
   @Test
