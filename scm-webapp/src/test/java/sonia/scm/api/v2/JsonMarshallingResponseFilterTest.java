@@ -24,7 +24,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class JsonMarshallingResponseFilterTest {
@@ -47,13 +49,17 @@ public class JsonMarshallingResponseFilterTest {
 
   private JsonMarshallingResponseFilter filter;
 
+  private URI expectedUri;
+
   @Before
   public void setUpObjectUnderTest() throws URISyntaxException {
     this.enrichers = new HashSet<>();
     filter = new JsonMarshallingResponseFilter(mapper, enrichers);
 
+    expectedUri = new URI("https://www.scm-manager.org/scm/api/v2/repositories");
+
     when(requestContext.getUriInfo()).thenReturn(uriInfo);
-    when(uriInfo.getRequestUri()).thenReturn(new URI("https://www.scm-manager.org/scm/api/v2/repositories"));
+    when(uriInfo.getRequestUri()).thenReturn(expectedUri);
   }
 
   @Test
@@ -72,16 +78,24 @@ public class JsonMarshallingResponseFilterTest {
 
   @Test
   public void testFilterWithEnricher() {
+    Sample expectedEntity = new Sample("one-two-three");
+    MediaType expectedMediaType = MediaType.valueOf(VndMediaType.USER);
+
+    when(responseContext.hasEntity()).thenReturn(Boolean.TRUE);
+    when(responseContext.getEntity()).thenReturn(expectedEntity);
+    when(responseContext.getMediaType()).thenReturn(expectedMediaType);
+
     enrichers.add(context -> {
       JsonNode node = context.getResponseEntity();
+
+      assertEquals(mapper.valueToTree(expectedEntity), node);
+      assertEquals(expectedUri, context.getRequestUri());
+      assertEquals(expectedMediaType, context.getResponseMediaType());
+
       if (node.isObject()) {
         ((ObjectNode)node).put("version", 2);
       }
     });
-
-    when(responseContext.hasEntity()).thenReturn(Boolean.TRUE);
-    when(responseContext.getEntity()).thenReturn(new JsonMarshallingResponseFilterTest.Sample("one-two-three"));
-    when(responseContext.getMediaType()).thenReturn(MediaType.valueOf(VndMediaType.USER));
 
     filter.filter(requestContext, responseContext);
 
