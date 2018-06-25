@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import sonia.scm.PageResult;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupException;
 import sonia.scm.group.GroupManager;
@@ -26,9 +27,12 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collections;
 
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -56,8 +60,6 @@ public class GroupRootResourceTest {
   private GroupDtoToGroupMapperImpl dtoToGroupMapper;
   @InjectMocks
   private GroupToGroupDtoMapperImpl groupToDtoMapper;
-  @InjectMocks
-  private GroupCollectionToDtoMapper groupCollectionToDtoMapper;
 
   private ArgumentCaptor<Group> groupCaptor = ArgumentCaptor.forClass(Group.class);
 
@@ -67,8 +69,10 @@ public class GroupRootResourceTest {
     doNothing().when(groupManager).create(groupCaptor.capture());
 
     Group group = createDummyGroup();
+    when(groupManager.getPage(any(), eq(0), eq(10))).thenReturn(new PageResult<>(singletonList(group), 1));
     when(groupManager.get("admin")).thenReturn(group);
 
+    GroupCollectionToDtoMapper groupCollectionToDtoMapper = new GroupCollectionToDtoMapper(groupToDtoMapper, uriInfoStore);
     GroupCollectionResource groupCollectionResource = new GroupCollectionResource(groupManager, dtoToGroupMapper, groupToDtoMapper, groupCollectionToDtoMapper);
     GroupResource groupResource = new GroupResource(groupManager, groupToDtoMapper);
     GroupRootResource groupRootResource = new GroupRootResource(MockProvider.of(groupCollectionResource), MockProvider.of(groupResource));
@@ -124,6 +128,31 @@ public class GroupRootResourceTest {
     assertNotNull(createdGroup);
     assertEquals(2, createdGroup.getMembers().size());
     assertEquals("user1", createdGroup.getMembers().get(0));
+  }
+
+  @Test
+  public void shouldFailForMissingContent() throws URISyntaxException {
+    MockHttpRequest request = MockHttpRequest
+      .post("/" + GroupRootResource.GROUPS_PATH_V2)
+      .contentType(VndMediaType.GROUP)
+      .content(new byte[] {});
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(400, response.getStatus());
+  }
+
+  @Test
+  public void shouldGetAll() throws URISyntaxException {
+    MockHttpRequest request = MockHttpRequest.get("/" + GroupRootResource.GROUPS_PATH_V2);
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+    assertTrue(response.getContentAsString().contains("\"name\":\"admin\""));
+    assertTrue(response.getContentAsString().contains("\"self\":{\"href\":\"/v2/groups/admin\"}"));
   }
 
   private Group createDummyGroup() {
