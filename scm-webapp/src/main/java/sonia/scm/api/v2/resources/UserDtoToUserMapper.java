@@ -1,7 +1,10 @@
 package sonia.scm.api.v2.resources;
 
 import org.apache.shiro.authc.credential.PasswordService;
-import org.mapstruct.*;
+import org.mapstruct.Context;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 import sonia.scm.user.User;
 
 import javax.inject.Inject;
@@ -18,11 +21,9 @@ public abstract class UserDtoToUserMapper {
   @Inject
   private PasswordService passwordService;
 
-  @Mappings({
-    @Mapping(source = "password", target = "password", qualifiedByName = "encrypt"),
-    @Mapping(target = "creationDate", ignore = true),
-    @Mapping(target = "lastModified", ignore = true)
-  })
+  @Mapping(source = "password", target = "password", qualifiedByName = "encrypt")
+  @Mapping(target = "creationDate", ignore = true)
+  @Mapping(target = "lastModified", ignore = true)
   public abstract User map(UserDto userDto, @Context String originalPassword);
 
   @Named("encrypt")
