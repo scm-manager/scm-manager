@@ -26,8 +26,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Collections;
 
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -70,7 +70,7 @@ public class UserRootResourceTest {
   public void prepareEnvironment() throws IOException, UserException {
     initMocks(this);
     User dummyUser = createDummyUser();
-    when(userManager.getPage(any(), eq(0), eq(10))).thenReturn(new PageResult<>(Collections.singletonList(dummyUser), true));
+    when(userManager.getPage(any(), eq(0), eq(10))).thenReturn(new PageResult<>(singletonList(dummyUser), 1));
     when(userManager.get("Neo")).thenReturn(dummyUser);
     doNothing().when(userManager).create(userCaptor.capture());
 

@@ -1,6 +1,5 @@
 package sonia.scm.api.v2.resources;
 
-import com.google.inject.Inject;
 import de.otto.edison.hal.Links;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
@@ -8,6 +7,7 @@ import org.mapstruct.MappingTarget;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupPermissions;
 
+import javax.inject.Inject;
 import java.util.List;
 import java.util.stream.Collectors;
 

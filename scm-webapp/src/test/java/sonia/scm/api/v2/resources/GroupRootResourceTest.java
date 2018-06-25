@@ -38,7 +38,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
   password = "secret",
   configuration = "classpath:sonia/scm/repository/shiro.ini"
 )
-public class GroupV2ResourceTest {
+public class GroupRootResourceTest {
 
   @Rule
   public ShiroRule shiro = new ShiroRule();
@@ -46,37 +46,34 @@ public class GroupV2ResourceTest {
   private Dispatcher dispatcher = MockDispatcherFactory.createDispatcher();
 
   @Mock
-  private GroupManager groupManager;
-  @Mock
   private UriInfo uriInfo;
   @Mock
   private UriInfoStore uriInfoStore;
-  @InjectMocks
-  GroupDtoToGroupMapperImpl dtoToGroupMapper;
-  @InjectMocks
-  GroupToGroupDtoMapperImpl groupToDtoMapper;
-  @InjectMocks
-  GroupCollectionToDtoMapper groupCollectionToDtoMapper;
 
+  @Mock
+  private GroupManager groupManager;
+  @InjectMocks
+  private GroupDtoToGroupMapperImpl dtoToGroupMapper;
+  @InjectMocks
+  private GroupToGroupDtoMapperImpl groupToDtoMapper;
+  @InjectMocks
+  private GroupCollectionToDtoMapper groupCollectionToDtoMapper;
 
-  ArgumentCaptor<Group> groupCaptor = ArgumentCaptor.forClass(Group.class);
+  private ArgumentCaptor<Group> groupCaptor = ArgumentCaptor.forClass(Group.class);
 
   @Before
   public void prepareEnvironment() throws IOException, GroupException {
     initMocks(this);
     doNothing().when(groupManager).create(groupCaptor.capture());
 
-    Group group = new Group();
-    group.setName("admin");
-    group.setCreationDate(0L);
-    group.setMembers(Collections.singletonList("user"));
+    Group group = createDummyGroup();
     when(groupManager.get("admin")).thenReturn(group);
 
     GroupCollectionResource groupCollectionResource = new GroupCollectionResource(groupManager, dtoToGroupMapper, groupToDtoMapper, groupCollectionToDtoMapper);
-    GroupSubResource groupSubResource = new GroupSubResource(groupManager, groupToDtoMapper);
-    GroupV2Resource groupV2Resource = new GroupV2Resource(groupCollectionResource, groupSubResource);
+    GroupResource groupResource = new GroupResource(groupManager, groupToDtoMapper);
+    GroupRootResource groupRootResource = new GroupRootResource(MockProvider.of(groupCollectionResource), MockProvider.of(groupResource));
 
-    dispatcher.getRegistry().addSingletonResource(groupV2Resource);
+    dispatcher.getRegistry().addSingletonResource(groupRootResource);
 
     when(uriInfo.getBaseUri()).thenReturn(URI.create("/"));
     when(uriInfoStore.get()).thenReturn(uriInfo);
@@ -84,7 +81,7 @@ public class GroupV2ResourceTest {
 
   @Test
   public void shouldGetNotFoundForNotExistentGroup() throws URISyntaxException {
-    MockHttpRequest request = MockHttpRequest.get("/" + GroupV2Resource.GROUPS_PATH_V2 + "nosuchgroup");
+    MockHttpRequest request = MockHttpRequest.get("/" + GroupRootResource.GROUPS_PATH_V2 + "nosuchgroup");
     MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
@@ -95,7 +92,7 @@ public class GroupV2ResourceTest {
   @Test
   @SubjectAware(username = "unpriv")
   public void shouldGetNotAuthorizedForWrongUser() throws URISyntaxException {
-    MockHttpRequest request = MockHttpRequest.get("/" + GroupV2Resource.GROUPS_PATH_V2 + "admin");
+    MockHttpRequest request = MockHttpRequest.get("/" + GroupRootResource.GROUPS_PATH_V2 + "admin");
     MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
@@ -105,13 +102,10 @@ public class GroupV2ResourceTest {
 
   @Test
   public void shouldGetGroup() throws URISyntaxException {
-    Group group = new Group();
-    group.setName("admin");
-    group.setCreationDate(0L);
-    group.setMembers(Collections.singletonList("user"));
+    Group group = createDummyGroup();
     when(groupManager.get("admin")).thenReturn(group);
 
-    MockHttpRequest request = MockHttpRequest.get("/" + GroupV2Resource.GROUPS_PATH_V2 + "admin");
+    MockHttpRequest request = MockHttpRequest.get("/" + GroupRootResource.GROUPS_PATH_V2 + "admin");
     MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
@@ -129,7 +123,7 @@ public class GroupV2ResourceTest {
     byte[] groupJson = Resources.toByteArray(url);
 
     MockHttpRequest request = MockHttpRequest
-      .post("/" + GroupV2Resource.GROUPS_PATH_V2)
+      .post("/" + GroupRootResource.GROUPS_PATH_V2)
       .contentType(VndMediaType.GROUP)
       .content(groupJson);
     MockHttpResponse response = new MockHttpResponse();
@@ -141,5 +135,13 @@ public class GroupV2ResourceTest {
     assertNotNull(createdGroup);
     assertEquals(2, createdGroup.getMembers().size());
     assertEquals("user1", createdGroup.getMembers().get(0));
+  }
+
+  private Group createDummyGroup() {
+    Group group = new Group();
+    group.setName("admin");
+    group.setCreationDate(0L);
+    group.setMembers(Collections.singletonList("user"));
+    return group;
   }
 }

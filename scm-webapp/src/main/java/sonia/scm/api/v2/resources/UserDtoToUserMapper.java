@@ -1,6 +1,5 @@
 package sonia.scm.api.v2.resources;
 
-import com.google.inject.Inject;
 import org.apache.shiro.authc.credential.PasswordService;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
@@ -8,6 +7,8 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import org.mapstruct.Named;
 import sonia.scm.user.User;
+
+import javax.inject.Inject;
 
 import static sonia.scm.api.rest.resources.UserResource.DUMMY_PASSWORT;
 

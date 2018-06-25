@@ -23,12 +23,12 @@ import javax.ws.rs.core.UriInfo;
 import java.util.Collection;
 
 @Produces(VndMediaType.GROUP)
-public class GroupSubResource extends AbstractManagerResource<Group, GroupException> {
+public class GroupResource extends AbstractManagerResource<Group, GroupException> {
 
   private final GroupToGroupDtoMapper groupToGroupDtoMapper;
 
   @Inject
-  public GroupSubResource(GroupManager manager, GroupToGroupDtoMapper groupToGroupDtoMapper) {
+  public GroupResource(GroupManager manager, GroupToGroupDtoMapper groupToGroupDtoMapper) {
     super(manager);
     this.groupToGroupDtoMapper = groupToGroupDtoMapper;
   }

@@ -33,15 +33,9 @@
 
 package sonia.scm;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import sonia.scm.util.Util;
-
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Comparator;
-
-import static com.google.common.base.Preconditions.checkArgument;
 
 /**
  * Base interface for all manager classes.
@@ -130,6 +124,8 @@ public interface Manager<T extends ModelObject, E extends Exception>
    * Returns objects from the store divided into pages with the given page
    * size for the given page number (zero based) and sorted by the given
    * {@link java.util.Comparator}.
+   * <p>This default implementation reads all items, first, so you might want to adapt this
+   * whenever reading is expensive!</p>
    *
    * @param comparator to sort the returned objects
    * @param pageNumber the number of the page to be returned (zero based)
@@ -141,12 +137,7 @@ public interface Manager<T extends ModelObject, E extends Exception>
    *         empty page result is returned.
    */
   default PageResult<T> getPage(Comparator<T> comparator, int pageNumber, int pageSize) {
-    checkArgument(pageSize > 0, "pageSize must be at least 1");
-    checkArgument(pageNumber >= 0, "pageNumber must be non-negative");
-
-    Collection<T> entities = getAll(comparator, pageNumber * pageSize, pageSize + 1);
-    boolean hasMore = entities.size() > pageSize;
-    return new PageResult<>(Util.createSubCollection(entities, 0, pageSize), hasMore);
+    return PageResult.createPage(getAll(comparator), pageNumber, pageSize);
   }
 
 }

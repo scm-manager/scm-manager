@@ -16,7 +16,6 @@ import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -25,6 +24,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static sonia.scm.PageResult.createPage;
 
 public class UserCollectionToDtoMapperTest {
 
@@ -62,35 +62,36 @@ public class UserCollectionToDtoMapperTest {
 
   @Test
   public void shouldSetPageNumber() {
-    PageResult<User> pageResult = mockPageResult(true, "Hannes");
+    PageResult<User> pageResult = mockPageResult("Hannes");
     UserCollectionDto userCollectionDto = mapper.map(1, 1, pageResult);
     assertEquals(1, userCollectionDto.getPage());
   }
 
   @Test
   public void shouldHaveSelfLink() {
-    PageResult<User> pageResult = mockPageResult(true, "Hannes");
+    PageResult<User> pageResult = mockPageResult("Hannes");
     UserCollectionDto userCollectionDto = mapper.map(1, 1, pageResult);
     assertTrue(userCollectionDto.getLinks().getLinkBy("self").get().getHref().startsWith(expectedBaseUri.toString()));
   }
 
   @Test
   public void shouldCreateNextPageLink_whenHasMore() {
-    PageResult<User> pageResult = mockPageResult(true, "Hannes");
+    PageResult<User> pageResult = createPage(createUsers("Hannes", "Karl"), 0, 1);
+
     UserCollectionDto userCollectionDto = mapper.map(1, 1, pageResult);
     assertTrue(userCollectionDto.getLinks().getLinkBy("next").get().getHref().contains("page=2"));
   }
 
   @Test
   public void shouldNotCreateNextPageLink_whenNoMore() {
-    PageResult<User> pageResult = mockPageResult(false, "Hannes");
+    PageResult<User> pageResult = mockPageResult("Hannes");
     UserCollectionDto userCollectionDto = mapper.map(1, 1, pageResult);
     assertFalse(userCollectionDto.getLinks().stream().anyMatch(link -> link.getHref().contains("page=2")));
   }
 
   @Test
   public void shouldHaveCreateLink_whenHasPermission() {
-    PageResult<User> pageResult = mockPageResult(false, "Hannes");
+    PageResult<User> pageResult = mockPageResult("Hannes");
     when(subject.isPermitted("user:create")).thenReturn(true);
 
     UserCollectionDto userCollectionDto = mapper.map(1, 1, pageResult);
@@ -100,7 +101,7 @@ public class UserCollectionToDtoMapperTest {
 
   @Test
   public void shouldNotHaveCreateLink_whenHasNoPermission() {
-    PageResult<User> pageResult = mockPageResult(false, "Hannes");
+    PageResult<User> pageResult = mockPageResult("Hannes");
     when(subject.isPermitted("user:create")).thenReturn(false);
 
     UserCollectionDto userCollectionDto = mapper.map(1, 1, pageResult);
@@ -110,7 +111,7 @@ public class UserCollectionToDtoMapperTest {
 
   @Test
   public void shouldMapUsers() {
-    PageResult<User> pageResult = mockPageResult(false, "Hannes", "Wurst");
+    PageResult<User> pageResult = mockPageResult("Hannes", "Wurst");
     UserCollectionDto userCollectionDto = mapper.map(1, 2, pageResult);
     List<HalRepresentation> users = userCollectionDto.getEmbedded().getItemsBy("users");
     assertEquals(2, users.size());
@@ -118,9 +119,12 @@ public class UserCollectionToDtoMapperTest {
     assertEquals("Wurst", ((UserDto) users.get(1)).getName());
   }
 
-  private PageResult<User> mockPageResult(boolean hasMore, String... userNames) {
-    Collection<User> users = Arrays.stream(userNames).map(this::mockUserWithDto).collect(toList());
-    return new PageResult<>(users, hasMore);
+  private PageResult<User> mockPageResult(String... userNames) {
+    return createPage(createUsers(userNames), 0, userNames.length);
+  }
+
+  private List<User> createUsers(String... userNames) {
+    return Arrays.stream(userNames).map(this::mockUserWithDto).collect(toList());
   }
 
   private User mockUserWithDto(String userName) {

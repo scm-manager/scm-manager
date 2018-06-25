@@ -52,31 +52,31 @@ public class ResourceLinksTest {
   @Test
   public void shouldCreateCorrectGroupSelfUrl() {
     String url = group(uriInfo).self("nobodies");
-    assertEquals(BASE_URL + GroupV2Resource.GROUPS_PATH_V2 + "nobodies", url);
+    assertEquals(BASE_URL + GroupRootResource.GROUPS_PATH_V2 + "nobodies", url);
   }
 
   @Test
   public void shouldCreateCorrectGroupDeleteUrl() {
     String url = group(uriInfo).delete("nobodies");
-    assertEquals(BASE_URL + GroupV2Resource.GROUPS_PATH_V2 + "nobodies", url);
+    assertEquals(BASE_URL + GroupRootResource.GROUPS_PATH_V2 + "nobodies", url);
   }
 
   @Test
   public void shouldCreateCorrectGroupUpdateUrl() {
     String url = group(uriInfo).update("nobodies");
-    assertEquals(BASE_URL + GroupV2Resource.GROUPS_PATH_V2 + "nobodies", url);
+    assertEquals(BASE_URL + GroupRootResource.GROUPS_PATH_V2 + "nobodies", url);
   }
 
 //  @Test
 //  public void shouldCreateCorrectGroupCreateUrl() {
 //    String url = ResourceLinks.groupCollection(uriInfo).create();
-//    assertEquals(BASE_URL + GroupV2Resource.GROUPS_PATH_V2, url);
+//    assertEquals(BASE_URL + GroupRootResource.GROUPS_PATH_V2, url);
 //  }
 //
 //  @Test
 //  public void shouldCreateCorrectGroupCollectionUrl() {
 //    String url = ResourceLinks.groupCollection(uriInfo).self();
-//    assertEquals(BASE_URL + GroupV2Resource.GROUPS_PATH_V2, url);
+//    assertEquals(BASE_URL + GroupRootResource.GROUPS_PATH_V2, url);
 //  }
 
   @Before

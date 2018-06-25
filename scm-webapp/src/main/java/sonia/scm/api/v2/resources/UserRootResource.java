@@ -1,7 +1,6 @@
 package sonia.scm.api.v2.resources;
 
-import com.google.inject.Inject;
-
+import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.ws.rs.Path;
 

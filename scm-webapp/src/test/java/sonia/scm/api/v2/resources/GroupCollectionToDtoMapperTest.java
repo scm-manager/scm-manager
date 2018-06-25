@@ -24,6 +24,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static sonia.scm.PageResult.createPage;
 
 public class GroupCollectionToDtoMapperTest {
 
@@ -41,7 +42,7 @@ public class GroupCollectionToDtoMapperTest {
   public void init() throws URISyntaxException {
     uriInfoStore.set(uriInfo);
     URI baseUri = new URI("http://example.com/base/");
-    expectedBaseUri = baseUri.resolve(GroupV2Resource.GROUPS_PATH_V2 + "/");
+    expectedBaseUri = baseUri.resolve(GroupRootResource.GROUPS_PATH_V2 + "/");
     when(uriInfo.getBaseUri()).thenReturn(baseUri);
     subjectThreadState.bind();
     ThreadContext.bind(subject);
@@ -54,35 +55,35 @@ public class GroupCollectionToDtoMapperTest {
 
   @Test
   public void shouldSetPageNumber() {
-    PageResult<Group> pageResult = mockPageResult(true, "nobodies");
+    PageResult<Group> pageResult = mockPageResult("nobodies");
     GroupCollectionDto groupCollectionDto = mapper.map(1, 1, pageResult);
     assertEquals(1, groupCollectionDto.getPage());
   }
 
   @Test
   public void shouldHaveSelfLink() {
-    PageResult<Group> pageResult = mockPageResult(true, "nobodies");
+    PageResult<Group> pageResult = mockPageResult("nobodies");
     GroupCollectionDto groupCollectionDto = mapper.map(1, 1, pageResult);
     assertTrue(groupCollectionDto.getLinks().getLinkBy("self").get().getHref().startsWith(expectedBaseUri.toString()));
   }
 
   @Test
   public void shouldCreateNextPageLink_whenHasMore() {
-    PageResult<Group> pageResult = mockPageResult(true, "nobodies");
+    PageResult<Group> pageResult = createPage(createGroups("nobodies", "bosses"), 0, 1);
     GroupCollectionDto groupCollectionDto = mapper.map(1, 1, pageResult);
     assertTrue(groupCollectionDto.getLinks().getLinkBy("next").get().getHref().contains("page=2"));
   }
 
   @Test
   public void shouldNotCreateNextPageLink_whenNoMore() {
-    PageResult<Group> pageResult = mockPageResult(false, "nobodies");
+    PageResult<Group> pageResult = mockPageResult("nobodies");
     GroupCollectionDto groupCollectionDto = mapper.map(1, 1, pageResult);
     assertFalse(groupCollectionDto.getLinks().stream().anyMatch(link -> link.getHref().contains("page=2")));
   }
 
   @Test
   public void shouldHaveCreateLink_whenHasPermission() {
-    PageResult<Group> pageResult = mockPageResult(false, "nobodies");
+    PageResult<Group> pageResult = mockPageResult("nobodies");
     when(subject.isPermitted("group:create")).thenReturn(true);
 
     GroupCollectionDto groupCollectionDto = mapper.map(1, 1, pageResult);
@@ -92,7 +93,7 @@ public class GroupCollectionToDtoMapperTest {
 
   @Test
   public void shouldNotHaveCreateLink_whenHasNoPermission() {
-    PageResult<Group> pageResult = mockPageResult(false, "nobodies");
+    PageResult<Group> pageResult = mockPageResult("nobodies");
     when(subject.isPermitted("group:create")).thenReturn(false);
 
     GroupCollectionDto groupCollectionDto = mapper.map(1, 1, pageResult);
@@ -102,7 +103,7 @@ public class GroupCollectionToDtoMapperTest {
 
   @Test
   public void shouldMapGroups() {
-    PageResult<Group> pageResult = mockPageResult(false, "nobodies", "bosses");
+    PageResult<Group> pageResult = mockPageResult("nobodies", "bosses");
     GroupCollectionDto groupCollectionDto = mapper.map(1, 2, pageResult);
     List<HalRepresentation> groups = groupCollectionDto.getEmbedded().getItemsBy("groups");
     assertEquals(2, groups.size());
@@ -110,9 +111,13 @@ public class GroupCollectionToDtoMapperTest {
     assertEquals("bosses", ((GroupDto) groups.get(1)).getName());
   }
 
-  private PageResult<Group> mockPageResult(boolean hasMore, String... groupNames) {
-    Collection<Group> groups = Arrays.stream(groupNames).map(this::mockGroupWithDto).collect(toList());
-    return new PageResult<>(groups, hasMore);
+  private PageResult<Group> mockPageResult(String... groupNames) {
+    Collection<Group> groups = createGroups(groupNames);
+    return new PageResult<>(groups, groups.size());
+  }
+
+  private List<Group> createGroups(String... groupNames) {
+    return Arrays.stream(groupNames).map(this::mockGroupWithDto).collect(toList());
   }
 
   private Group mockGroupWithDto(String groupName) {

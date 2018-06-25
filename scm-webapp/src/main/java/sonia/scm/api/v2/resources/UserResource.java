@@ -1,6 +1,5 @@
 package sonia.scm.api.v2.resources;
 
-import com.google.inject.Inject;
 import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
@@ -10,6 +9,7 @@ import sonia.scm.user.UserException;
 import sonia.scm.user.UserManager;
 import sonia.scm.web.VndMediaType;
 
+import javax.inject.Inject;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
