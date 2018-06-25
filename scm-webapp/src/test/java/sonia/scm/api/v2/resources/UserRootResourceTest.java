@@ -30,11 +30,11 @@ import java.net.URL;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -74,6 +74,7 @@ public class UserRootResourceTest {
     when(userManager.get("Neo")).thenReturn(dummyUser);
     doNothing().when(userManager).create(userCaptor.capture());
     doNothing().when(userManager).modify(userCaptor.capture());
+    doNothing().when(userManager).delete(userCaptor.capture());
 
     UserCollectionToDtoMapper userCollectionToDtoMapper = new UserCollectionToDtoMapper(userToDtoMapper, uriInfoStore);
     UserCollectionResource userCollectionResource = new UserCollectionResource(userManager, dtoToUserMapper, userToDtoMapper,
@@ -116,7 +117,7 @@ public class UserRootResourceTest {
   }
 
   @Test
-  public void shouldCreateNewUserWithEncryptedPassword() throws URISyntaxException, IOException {
+  public void shouldCreateNewUserWithEncryptedPassword() throws URISyntaxException, IOException, UserException {
     URL url = Resources.getResource("sonia/scm/api/v2/user-test-create.json");
     byte[] userJson = Resources.toByteArray(url);
 
@@ -129,14 +130,14 @@ public class UserRootResourceTest {
 
     dispatcher.invoke(request, response);
 
-    assertEquals(201, response.getStatus());
+    assertEquals(HttpServletResponse.SC_CREATED, response.getStatus());
+    verify(userManager).create(any(User.class));
     User createdUser = userCaptor.getValue();
-    assertNotNull(createdUser);
     assertEquals("encrypted123", createdUser.getPassword());
   }
 
   @Test
-  public void shouldUpdateChangedUserWithEncryptedPassword() throws URISyntaxException, IOException {
+  public void shouldUpdateChangedUserWithEncryptedPassword() throws URISyntaxException, IOException, UserException {
     URL url = Resources.getResource("sonia/scm/api/v2/user-test-update.json");
     byte[] userJson = Resources.toByteArray(url);
 
@@ -149,9 +150,9 @@ public class UserRootResourceTest {
 
     dispatcher.invoke(request, response);
 
-    assertEquals(204, response.getStatus());
+    assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
+    verify(userManager).modify(any(User.class));
     User updatedUser = userCaptor.getValue();
-    assertNotNull(updatedUser);
     assertEquals("encrypted123", updatedUser.getPassword());
   }
 
@@ -166,7 +167,7 @@ public class UserRootResourceTest {
 
     dispatcher.invoke(request, response);
 
-    assertEquals(400, response.getStatus());
+    assertEquals(HttpServletResponse.SC_BAD_REQUEST, response.getStatus());
   }
 
   @Test
@@ -177,6 +178,17 @@ public class UserRootResourceTest {
     dispatcher.invoke(request, response);
 
     assertEquals(HttpServletResponse.SC_NOT_FOUND, response.getStatus());
+  }
+
+  @Test
+  public void shouldDeleteUser() throws URISyntaxException, IOException, UserException {
+    MockHttpRequest request = MockHttpRequest.delete("/" + UserRootResource.USERS_PATH_V2 + "Neo");
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    verify(userManager).delete(any(User.class));
+    assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
   }
 
   private User createDummyUser() {
