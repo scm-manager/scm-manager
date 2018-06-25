@@ -23,17 +23,13 @@ import static sonia.scm.api.v2.resources.ResourceLinks.userCollection;
 
 public class UserCollectionToDtoMapper {
 
-  @Inject
-  private UserToUserDtoMapper userToDtoMapper;
-  @Inject
-  private UriInfoStore uriInfoStore;
+  private final UserToUserDtoMapper userToDtoMapper;
+  private final UriInfoStore uriInfoStore;
 
+  @Inject
   public UserCollectionToDtoMapper(UserToUserDtoMapper userToDtoMapper, UriInfoStore uriInfoStore) {
     this.userToDtoMapper = userToDtoMapper;
     this.uriInfoStore = uriInfoStore;
-  }
-
-  public UserCollectionToDtoMapper() {
   }
 
   public UserCollectionDto map(int pageNumber, int pageSize, PageResult<User> pageResult) {

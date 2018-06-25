@@ -70,8 +70,8 @@ public class GroupCollectionToDtoMapperTest {
   @Test
   public void shouldCreateNextPageLink_whenHasMore() {
     PageResult<Group> pageResult = createPage(createGroups("nobodies", "bosses"), 0, 1);
-    GroupCollectionDto groupCollectionDto = mapper.map(1, 1, pageResult);
-    assertTrue(groupCollectionDto.getLinks().getLinkBy("next").get().getHref().contains("page=2"));
+    GroupCollectionDto groupCollectionDto = mapper.map(0, 1, pageResult);
+    assertTrue(groupCollectionDto.getLinks().getLinkBy("next").get().getHref().contains("page=1"));
   }
 
   @Test
