@@ -8,18 +8,15 @@ import javax.inject.Inject;
 
 import static sonia.scm.api.rest.resources.UserResource.DUMMY_PASSWORT;
 
+/**
+ * Mapstruct does not support parameterized (i.e. non-default) constructors. Thus, we need to use field injection.
+ */
+@java.lang.SuppressWarnings("squid:S3306")
 @Mapper
 public abstract class UserDtoToUserMapper {
 
-  private PasswordService passwordService;
-
-  UserDtoToUserMapper() {
-  }
-
   @Inject
-  public UserDtoToUserMapper(PasswordService passwordService) {
-    this.passwordService = passwordService;
-  }
+  private PasswordService passwordService;
 
   @Mappings({
     @Mapping(source = "password", target = "password", qualifiedByName = "encrypt"),
