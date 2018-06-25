@@ -61,6 +61,7 @@ public class UserCollectionResource extends AbstractManagerResource<User, UserEx
     @ResponseCode(code = 403, condition = "forbidden, the current user has no admin privileges"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
+  @Override
   public Response getAll(@Context Request request,
     @DefaultValue("0") @QueryParam("page") int page,
     @DefaultValue("" + DEFAULT_PAGE_SIZE) @QueryParam("pageSize") int pageSize,
