@@ -3,14 +3,12 @@ package sonia.scm.api.v2;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import javax.annotation.Priority;
-import javax.ws.rs.Priorities;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerResponseContext;
 import javax.ws.rs.container.ContainerResponseFilter;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.Provider;
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -19,14 +17,14 @@ import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
 
 /**
- * <p>Post processor for rest requests filtering json responses when a {@value PARAMETER_FIELDS} query
- * parameter is provided. In this case, only the given fields will returned. It is possible, to specify
- * paths for nested fields. Multiple fields have to be devided using {@value FIELD_SEPARATOR}.</p>
+ * <p>Post processor for REST requests filtering JSON responses when a {@value PARAMETER_FIELDS} query
+ * parameter is provided. In this case, only the given fields will returned. It is possible to specify
+ * paths for nested fields. Multiple fields have to be separated using {@value FIELD_SEPARATOR}.</p>
  * <p>This requires the {@link JsonMarshallingResponseFilter} to be processed first to create
  * the {@link JsonNode} tree.</p>
  */
 @Provider
-@Priority(Priorities.USER)
+@Priority(FilterPriorities.FIELD_FILTER)
 public class FieldContainerResponseFilter implements ContainerResponseFilter {
 
   private static final String PARAMETER_FIELDS = "fields";
