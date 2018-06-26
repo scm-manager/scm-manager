@@ -29,7 +29,7 @@ class ResourceManagerAdapter<T extends ModelObject, D extends HalRepresentation,
     return Response.ok(dto).build();
   }
 
-  public Response update(String id, D dto, Function<T, T> mapper) {
+  public Response update(String id, Function<T, T> mapper) {
     T existingEntity = manager.get(id);
     T changedEntity = mapper.apply(existingEntity);
     return update(id, changedEntity);

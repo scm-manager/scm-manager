@@ -74,7 +74,7 @@ public class UserResource {
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
   public Response update(@Context UriInfo uriInfo, @PathParam("id") String name, UserDto userDto) {
-    return adapter.update(name, userDto, existing -> dtoToUserMapper.map(userDto, existing.getPassword()));
+    return adapter.update(name, existing -> dtoToUserMapper.map(userDto, existing.getPassword()));
   }
 
   /**
