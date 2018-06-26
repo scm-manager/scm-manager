@@ -3,7 +3,6 @@ package sonia.scm.api.v2.resources;
 import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
-import sonia.scm.api.rest.resources.AbstractManagerResource;
 import sonia.scm.user.User;
 import sonia.scm.user.UserException;
 import sonia.scm.user.UserManager;
@@ -17,24 +16,23 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import java.util.Collection;
-
 
 @Produces(VndMediaType.USER)
-public class UserResource extends AbstractManagerResource<User, UserException> {
+public class UserResource {
 
   private final UserDtoToUserMapper dtoToUserMapper;
   private final UserToUserDtoMapper userToDtoMapper;
 
+  private final ResourceManagerAdapter<User, UserDto, UserException> adapter;
+
   @Inject
   public UserResource(UserDtoToUserMapper dtoToUserMapper, UserToUserDtoMapper userToDtoMapper, UserManager manager) {
-    super(manager);
     this.dtoToUserMapper = dtoToUserMapper;
     this.userToDtoMapper = userToDtoMapper;
+    this.adapter = new ResourceManagerAdapter<>(manager);
   }
 
   /**
@@ -56,12 +54,7 @@ public class UserResource extends AbstractManagerResource<User, UserException> {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   public Response get(@Context Request request, @Context UriInfo uriInfo, @PathParam("id") String id) {
-    User user = manager.get(id);
-    if (user == null) {
-      return Response.status(Response.Status.NOT_FOUND).build();
-    }
-    UserDto userDto = userToDtoMapper.map(user);
-    return Response.ok(userDto).build();
+    return adapter.get(id, userToDtoMapper::map);
   }
 
   /**
@@ -80,11 +73,8 @@ public class UserResource extends AbstractManagerResource<User, UserException> {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
-  public Response update(@Context UriInfo uriInfo,
-    @PathParam("id") String name, UserDto userDto) {
-    String originalPassword = manager.get(name).getPassword();
-    User user = dtoToUserMapper.map(userDto, originalPassword);
-    return update(name, user);
+  public Response update(@Context UriInfo uriInfo, @PathParam("id") String name, UserDto userDto) {
+    return adapter.update(name, userDto, existing -> dtoToUserMapper.map(userDto, existing.getPassword()));
   }
 
   /**
@@ -103,23 +93,7 @@ public class UserResource extends AbstractManagerResource<User, UserException> {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
-  @Override
   public Response delete(@PathParam("id") String name) {
-    return super.delete(name);
-  }
-
-  @Override
-  protected GenericEntity<Collection<User>> createGenericEntity(Collection<User> items) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  protected String getId(User item) {
-    return item.getName();
-  }
-
-  @Override
-  protected String getPathPart() {
-    throw new UnsupportedOperationException();
+    return adapter.delete(name);
   }
 }
