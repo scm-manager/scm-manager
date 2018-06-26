@@ -119,6 +119,30 @@ public class UserCollectionToDtoMapperTest {
     assertEquals("Wurst", ((UserDto) users.get(1)).getName());
   }
 
+  @Test
+  public void shouldCreatePageTotal_forSparsePages() {
+    PageResult<User> pageResult = createPage(createUsers("Hannes", "Karl", "Piet"), 0, 1);
+
+    CollectionDto collectionDto = mapper.map(0, 2, pageResult);
+    assertEquals(2, collectionDto.getPageTotal());
+  }
+
+  @Test
+  public void shouldCreatePageTotal_forCompletePages() {
+    PageResult<User> pageResult = createPage(createUsers("Hannes", "Karl", "Piet", "Hein"), 0, 1);
+
+    CollectionDto collectionDto = mapper.map(0, 2, pageResult);
+    assertEquals(2, collectionDto.getPageTotal());
+  }
+
+  @Test
+  public void shouldCreatePageTotal_forNoPages() {
+    PageResult<User> pageResult = createPage(createUsers(), 0, 1);
+
+    CollectionDto collectionDto = mapper.map(0, 1, pageResult);
+    assertEquals(0, collectionDto.getPageTotal());
+  }
+
   private PageResult<User> mockPageResult(String... userNames) {
     return createPage(createUsers(userNames), 0, userNames.length);
   }

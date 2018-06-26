@@ -39,7 +39,16 @@ abstract class BasicCollectionToDtoMapper<E extends ModelObject, D extends HalRe
       embedDtos(dtos)
     );
     collectionDto.setPage(pageNumber);
+    collectionDto.setPageTotal(computePageTotal(pageSize, pageResult));
     return collectionDto;
+  }
+
+  private int computePageTotal(int pageSize, PageResult<E> pageResult) {
+    if (pageResult.getOverallCount() % pageSize > 0) {
+      return pageResult.getOverallCount() / pageSize + 1;
+    } else {
+      return pageResult.getOverallCount() / pageSize;
+    }
   }
 
   private Links createLinks(NumberedPaging page) {
