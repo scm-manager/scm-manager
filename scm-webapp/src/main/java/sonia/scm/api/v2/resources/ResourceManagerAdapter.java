@@ -14,48 +14,70 @@ import java.util.Collection;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-class ResourceManagerAdapter<T extends ModelObject, D extends HalRepresentation, E extends Exception> extends AbstractManagerResource<T, E> {
+/**
+ * Adapter from resource http endpoints to managers.
+ * @param <MODEL_OBJECT> The type of the model object, eg. {@link sonia.scm.user.User}.
+ * @param <DTO> The corresponding transport object, eg. {@link UserDto}.
+ * @param <EXCEPTION> The exception type for the model object, eg. {@link sonia.scm.user.UserException}.
+ */
+class ResourceManagerAdapter<MODEL_OBJECT extends ModelObject, DTO extends HalRepresentation, EXCEPTION extends Exception> extends AbstractManagerResource<MODEL_OBJECT, EXCEPTION> {
 
-  ResourceManagerAdapter(Manager<T, E> manager) {
+  ResourceManagerAdapter(Manager<MODEL_OBJECT, EXCEPTION> manager) {
     super(manager);
   }
 
-  public Response get(String id, Function<T, D> mapToDto) {
-    T entity = manager.get(id);
-    if (entity == null) {
+  /**
+   * Reads the model object for the given id, transforms it to a dto and returns a corresponding http response.
+   * This handles all corner cases, eg. no matching object for the id or missing privileges.
+   */
+  Response get(String id, Function<MODEL_OBJECT, DTO> mapToDto) {
+    MODEL_OBJECT modelObject = manager.get(id);
+    if (modelObject == null) {
       return Response.status(Response.Status.NOT_FOUND).build();
     }
-    D dto = mapToDto.apply(entity);
+    DTO dto = mapToDto.apply(modelObject);
     return Response.ok(dto).build();
   }
 
-  public Response update(String id, Function<T, T> applyChanges) {
-    T existingEntity = manager.get(id);
-    T changedEntity = applyChanges.apply(existingEntity);
-    return update(id, changedEntity);
+  /**
+   * Update the model object for the given id according to the given function and returns a corresponding http response.
+   * This handles all corner cases, eg. no matching object for the id or missing privileges.
+   */
+  public Response update(String id, Function<MODEL_OBJECT, MODEL_OBJECT> applyChanges) {
+    MODEL_OBJECT existingModelObject = manager.get(id);
+    MODEL_OBJECT changedModelObject = applyChanges.apply(existingModelObject);
+    return update(id, changedModelObject);
   }
 
-  public Response getAll(int page, int pageSize, String sortBy, boolean desc, Function<PageResult<T>, CollectionDto> mapToDto) {
-    PageResult<T> pageResult = fetchPage(sortBy, desc, page, pageSize);
+  /**
+   * Reads all model objects in a paged way, maps them using the given function and returns a corresponding http response.
+   * This handles all corner cases, eg. missing privileges.
+   */
+  public Response getAll(int page, int pageSize, String sortBy, boolean desc, Function<PageResult<MODEL_OBJECT>, CollectionDto> mapToDto) {
+    PageResult<MODEL_OBJECT> pageResult = fetchPage(sortBy, desc, page, pageSize);
     return Response.ok(mapToDto.apply(pageResult)).build();
   }
 
-  public Response create(D dto, Supplier<T> entitySupplyer, Function<T, String> uriCreator) throws IOException, E {
+  /**
+   * Creates a model object for the given dto and returns a corresponding http response.
+   * This handles all corner cases, eg. no conflicts or missing privileges.
+   */
+  public Response create(DTO dto, Supplier<MODEL_OBJECT> modelObjectSupplier, Function<MODEL_OBJECT, String> uriCreator) throws IOException, EXCEPTION {
     if (dto == null) {
       return Response.status(400).build();
     }
-    T entity = entitySupplyer.get();
-    manager.create(entity);
-    return Response.created(URI.create(uriCreator.apply(entity))).build();
+    MODEL_OBJECT modelObject = modelObjectSupplier.get();
+    manager.create(modelObject);
+    return Response.created(URI.create(uriCreator.apply(modelObject))).build();
   }
 
   @Override
-  protected GenericEntity<Collection<T>> createGenericEntity(Collection<T> items) {
+  protected GenericEntity<Collection<MODEL_OBJECT>> createGenericEntity(Collection<MODEL_OBJECT> modelObjects) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  protected String getId(T item) {
+  protected String getId(MODEL_OBJECT item) {
     return item.getId();
   }
 
