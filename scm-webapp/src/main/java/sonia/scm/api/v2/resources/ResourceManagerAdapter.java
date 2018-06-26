@@ -14,9 +14,9 @@ import java.util.Collection;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class ResourceManagerAdapter<T extends ModelObject, D extends HalRepresentation, E extends Exception> extends AbstractManagerResource<T, E> {
+class ResourceManagerAdapter<T extends ModelObject, D extends HalRepresentation, E extends Exception> extends AbstractManagerResource<T, E> {
 
-  public ResourceManagerAdapter(Manager<T, E> manager) {
+  ResourceManagerAdapter(Manager<T, E> manager) {
     super(manager);
   }
 
