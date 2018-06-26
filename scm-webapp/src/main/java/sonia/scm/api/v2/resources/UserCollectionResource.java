@@ -5,8 +5,6 @@ import com.webcohesion.enunciate.metadata.rs.ResponseHeader;
 import com.webcohesion.enunciate.metadata.rs.ResponseHeaders;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
-import sonia.scm.PageResult;
-import sonia.scm.api.rest.resources.AbstractManagerResource;
 import sonia.scm.user.User;
 import sonia.scm.user.UserException;
 import sonia.scm.user.UserManager;
@@ -20,29 +18,28 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
-import java.net.URI;
-import java.util.Collection;
 
 import static sonia.scm.api.v2.resources.ResourceLinks.user;
 
 @Produces(VndMediaType.USER_COLLECTION)
-public class UserCollectionResource extends AbstractManagerResource<User, UserException> {
+public class UserCollectionResource {
 
   private static final int DEFAULT_PAGE_SIZE = 10;
   private final UserDtoToUserMapper dtoToUserMapper;
   private final UserCollectionToDtoMapper userCollectionToDtoMapper;
 
+  private final ResourceManagerAdapter<User, UserDto, UserException> adapter;
+
   @Inject
   public UserCollectionResource(UserManager manager, UserDtoToUserMapper dtoToUserMapper,
                                 UserCollectionToDtoMapper userCollectionToDtoMapper) {
-    super(manager);
     this.dtoToUserMapper = dtoToUserMapper;
     this.userCollectionToDtoMapper = userCollectionToDtoMapper;
+    this.adapter = new ResourceManagerAdapter<>(manager);
   }
 
   /**
@@ -64,16 +61,12 @@ public class UserCollectionResource extends AbstractManagerResource<User, UserEx
     @ResponseCode(code = 403, condition = "forbidden, the current user does not have the \"user\" privilege"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
-  @Override
   public Response getAll(@Context Request request,
     @DefaultValue("0") @QueryParam("page") int page,
     @DefaultValue("" + DEFAULT_PAGE_SIZE) @QueryParam("pageSize") int pageSize,
     @QueryParam("sortby") String sortBy,
     @DefaultValue("false") @QueryParam("desc") boolean desc) {
-
-    PageResult<User> pageResult = fetchPage(sortBy, desc, page, pageSize);
-
-    return Response.ok(userCollectionToDtoMapper.map(page, pageSize, pageResult)).build();
+    return adapter.getAll(page, pageSize, sortBy, desc, pageResult -> userCollectionToDtoMapper.map(page, pageSize, pageResult));
   }
 
   /**
@@ -94,26 +87,6 @@ public class UserCollectionResource extends AbstractManagerResource<User, UserEx
   @TypeHint(TypeHint.NO_CONTENT.class)
   @ResponseHeaders(@ResponseHeader(name = "Location", description = "uri to the created user"))
   public Response create(@Context UriInfo uriInfo, UserDto userDto) throws IOException, UserException {
-    if (userDto == null) {
-      return Response.status(400).build();
-    }
-    User user = dtoToUserMapper.map(userDto, "");
-    manager.create(user);
-    return Response.created(URI.create(user(uriInfo).self(user.getName()))).build();
-  }
-
-  @Override
-  protected GenericEntity<Collection<User>> createGenericEntity(Collection<User> items) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  protected String getId(User item) {
-    return item.getName();
-  }
-
-  @Override
-  protected String getPathPart() {
-    throw new UnsupportedOperationException();
+    return adapter.create(userDto, () -> dtoToUserMapper.map(userDto, ""), user -> user(uriInfo).self(user.getName()));
   }
 }

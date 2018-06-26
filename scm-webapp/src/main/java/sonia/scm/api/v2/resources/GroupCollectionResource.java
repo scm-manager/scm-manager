@@ -4,8 +4,6 @@ import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.ResponseHeader;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
-import sonia.scm.PageResult;
-import sonia.scm.api.rest.resources.AbstractManagerResource;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupException;
 import sonia.scm.group.GroupManager;
@@ -20,27 +18,26 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
-import java.net.URI;
-import java.util.Collection;
 
 import static sonia.scm.api.v2.resources.ResourceLinks.group;
 
 @Produces(VndMediaType.GROUP_COLLECTION)
-public class GroupCollectionResource extends AbstractManagerResource<Group, GroupException> {
+public class GroupCollectionResource {
   public static final int DEFAULT_PAGE_SIZE = 10;
   private final GroupDtoToGroupMapper dtoToGroupMapper;
   private final GroupCollectionToDtoMapper groupCollectionToDtoMapper;
 
+  private final ResourceManagerAdapter<Group, GroupDto, GroupException> adapter;
+
   @Inject
   public GroupCollectionResource(GroupManager manager, GroupDtoToGroupMapper dtoToGroupMapper, GroupCollectionToDtoMapper groupCollectionToDtoMapper) {
-    super(manager);
     this.dtoToGroupMapper = dtoToGroupMapper;
     this.groupCollectionToDtoMapper = groupCollectionToDtoMapper;
+    this.adapter = new ResourceManagerAdapter<>(manager);
   }
 
   /**
@@ -50,7 +47,7 @@ public class GroupCollectionResource extends AbstractManagerResource<Group, Grou
    * @param request  the current request
    * @param page     the number of the requested page
    * @param pageSize the page size (default page size is {@value DEFAULT_PAGE_SIZE})
-   * @param sortby   sort parameter
+   * @param sortBy   sort parameter
    * @param desc     sort direction desc or aesc
    * @return
    */
@@ -62,16 +59,13 @@ public class GroupCollectionResource extends AbstractManagerResource<Group, Grou
     @ResponseCode(code = 403, condition = "forbidden, the current user has no admin privileges"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
-  @Override
   public Response getAll(@Context Request request,
     @DefaultValue("0") @QueryParam("page") int page,
     @DefaultValue("" + DEFAULT_PAGE_SIZE) @QueryParam("pageSize") int pageSize,
-    @QueryParam("sortby") String sortby,
+    @QueryParam("sortby") String sortBy,
     @DefaultValue("false")
     @QueryParam("desc") boolean desc) {
-    PageResult<Group> pageResult = fetchPage(sortby, desc, page, pageSize);
-
-    return Response.ok(groupCollectionToDtoMapper.map(page, pageSize, pageResult)).build();
+    return adapter.getAll(page, pageSize, sortBy, desc, pageResult -> groupCollectionToDtoMapper.map(page, pageSize, pageResult));
   }
 
   /**
@@ -91,26 +85,6 @@ public class GroupCollectionResource extends AbstractManagerResource<Group, Grou
   @TypeHint(TypeHint.NO_CONTENT.class)
   @Consumes(VndMediaType.GROUP)
   public Response create(@Context UriInfo uriInfo, GroupDto groupDto) throws IOException, GroupException {
-    if (groupDto == null) {
-      return Response.status(400).build();
-    }
-    Group group = dtoToGroupMapper.map(groupDto);
-    manager.create(group);
-    return Response.created(URI.create(group(uriInfo).self(group.getName()))).build();
-  }
-
-  @Override
-  protected GenericEntity<Collection<Group>> createGenericEntity(Collection<Group> items) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  protected String getId(Group item) {
-    return item.getName();
-  }
-
-  @Override
-  protected String getPathPart() {
-    throw new UnsupportedOperationException();
+    return adapter.create(groupDto, () -> dtoToGroupMapper.map(groupDto), group -> group(uriInfo).self(group.getName()));
   }
 }
