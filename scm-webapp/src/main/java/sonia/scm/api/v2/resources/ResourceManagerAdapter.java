@@ -20,24 +20,24 @@ class ResourceManagerAdapter<T extends ModelObject, D extends HalRepresentation,
     super(manager);
   }
 
-  public Response get(String id, Function<T, D> mapper) {
+  public Response get(String id, Function<T, D> mapToDto) {
     T entity = manager.get(id);
     if (entity == null) {
       return Response.status(Response.Status.NOT_FOUND).build();
     }
-    D dto = mapper.apply(entity);
+    D dto = mapToDto.apply(entity);
     return Response.ok(dto).build();
   }
 
-  public Response update(String id, Function<T, T> mapper) {
+  public Response update(String id, Function<T, T> applyChanges) {
     T existingEntity = manager.get(id);
-    T changedEntity = mapper.apply(existingEntity);
+    T changedEntity = applyChanges.apply(existingEntity);
     return update(id, changedEntity);
   }
 
-  public Response getAll(int page, int pageSize, String sortBy, boolean desc, Function<PageResult<T>, CollectionDto> mappger) {
+  public Response getAll(int page, int pageSize, String sortBy, boolean desc, Function<PageResult<T>, CollectionDto> mapToDto) {
     PageResult<T> pageResult = fetchPage(sortBy, desc, page, pageSize);
-    return Response.ok(mappger.apply(pageResult)).build();
+    return Response.ok(mapToDto.apply(pageResult)).build();
   }
 
   public Response create(D dto, Supplier<T> entitySupplyer, Function<T, String> uriCreator) throws IOException, E {
