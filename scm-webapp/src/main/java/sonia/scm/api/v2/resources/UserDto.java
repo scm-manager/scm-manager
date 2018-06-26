@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
+import java.util.Map;
 import java.util.Optional;
 
 @AllArgsConstructor @NoArgsConstructor
@@ -24,6 +25,7 @@ public class UserDto extends HalRepresentation {
   private String name;
   private String password;
   private String type;
+  private Map<String, String> properties;
 
   @Override
   @SuppressWarnings("squid:S1185") // We want to have this method available in this package
