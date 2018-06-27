@@ -9,12 +9,7 @@ import sonia.scm.group.GroupManager;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
@@ -24,11 +19,14 @@ import javax.ws.rs.core.UriInfo;
 public class GroupResource {
 
   private final GroupToGroupDtoMapper groupToGroupDtoMapper;
+  private final GroupDtoToGroupMapper dtoToGroupMapper;
   private final ResourceManagerAdapter<Group, GroupDto, GroupException> adapter;
 
   @Inject
-  public GroupResource(GroupManager manager, GroupToGroupDtoMapper groupToGroupDtoMapper) {
+  public GroupResource(GroupManager manager, GroupToGroupDtoMapper groupToGroupDtoMapper,
+                       GroupDtoToGroupMapper groupDtoToGroupMapper) {
     this.groupToGroupDtoMapper = groupToGroupDtoMapper;
+    this.dtoToGroupMapper = groupDtoToGroupMapper;
     this.adapter = new ResourceManagerAdapter<>(manager);
   }
 
@@ -51,9 +49,24 @@ public class GroupResource {
     throw new RuntimeException();
   }
 
-  @Path("")
+
+  /**
+   * Modifies the given group.
+   *
+   * <strong>Note:</strong> This method requires "group" privileges.
+   *
+   * @param name name of the group to be modified
+   * @param groupDto group object to modify
+   */
   @PUT
-  public Response update(@PathParam("id") String id) {
-    throw new RuntimeException();
+  @Path("")
+  @StatusCodes({
+    @ResponseCode(code = 204, condition = "update success"),
+    @ResponseCode(code = 403, condition = "forbidden, the current user does not have the \"group\" privilege"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
+  @TypeHint(TypeHint.NO_CONTENT.class)
+  public Response update(@Context UriInfo uriInfo, @PathParam("id") String name, GroupDto groupDto) {
+    return adapter.update(name, existing -> dtoToGroupMapper.map(groupDto));
   }
 }

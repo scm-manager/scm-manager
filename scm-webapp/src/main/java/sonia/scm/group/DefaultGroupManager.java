@@ -40,10 +40,8 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.HandlerEventType;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.TransformFilter;
@@ -52,16 +50,10 @@ import sonia.scm.search.SearchUtil;
 import sonia.scm.util.CollectionAppender;
 import sonia.scm.util.Util;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
+import java.util.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -214,6 +206,7 @@ public class DefaultGroupManager extends AbstractGroupManager
       removeDuplicateMembers(group);
       fireEvent(HandlerEventType.BEFORE_MODIFY, group, notModified);
       group.setLastModified(System.currentTimeMillis());
+      group.setCreationDate(notModified.getCreationDate());
       groupDAO.modify(group);
       fireEvent(HandlerEventType.MODIFY, group, notModified);
     }

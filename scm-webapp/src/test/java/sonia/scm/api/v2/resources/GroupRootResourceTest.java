@@ -28,9 +28,7 @@ import java.net.URL;
 import java.util.Collections;
 
 import static java.util.Collections.singletonList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doNothing;
@@ -74,7 +72,7 @@ public class GroupRootResourceTest {
 
     GroupCollectionToDtoMapper groupCollectionToDtoMapper = new GroupCollectionToDtoMapper(groupToDtoMapper, uriInfoStore);
     GroupCollectionResource groupCollectionResource = new GroupCollectionResource(groupManager, dtoToGroupMapper, groupCollectionToDtoMapper);
-    GroupResource groupResource = new GroupResource(groupManager, groupToDtoMapper);
+    GroupResource groupResource = new GroupResource(groupManager, groupToDtoMapper, dtoToGroupMapper);
     GroupRootResource groupRootResource = new GroupRootResource(MockProvider.of(groupCollectionResource), MockProvider.of(groupResource));
 
     dispatcher.getRegistry().addSingletonResource(groupRootResource);
