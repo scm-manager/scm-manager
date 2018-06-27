@@ -14,6 +14,8 @@ import java.util.Collection;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
+
 /**
  * Adapter from resource http endpoints to managers.
  * @param <MODEL_OBJECT> The type of the model object, eg. {@link sonia.scm.user.User}.
@@ -49,6 +51,9 @@ class ResourceManagerAdapter<MODEL_OBJECT extends ModelObject, DTO extends HalRe
       return Response.status(Response.Status.NOT_FOUND).build();
     }
     MODEL_OBJECT changedModelObject = applyChanges.apply(existingModelObject);
+    if (!id.equals(changedModelObject.getId())) {
+      return Response.status(BAD_REQUEST).entity("illegal change of id").build();
+    }
     return update(id, changedModelObject);
   }
 
