@@ -9,6 +9,7 @@ import sonia.scm.user.UserManager;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -38,7 +39,7 @@ public class UserResource {
   /**
    * Returns a user.
    *
-   * <strong>Note:</strong> This method requires "user" privileges.
+   * <strong>Note:</strong> This method requires "user" privilege.
    *
    * @param request the current request
    * @param id the id/name of the user
@@ -49,7 +50,8 @@ public class UserResource {
   @TypeHint(UserDto.class)
   @StatusCodes({
     @ResponseCode(code = 200, condition = "success"),
-    @ResponseCode(code = 403, condition = "forbidden, the current user has no privileges to read the user"),
+    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
+    @ResponseCode(code = 403, condition = "not authorized, the current user has no privileges to read the user"),
     @ResponseCode(code = 404, condition = "not found, no user with the specified id/name available"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
@@ -58,30 +60,9 @@ public class UserResource {
   }
 
   /**
-   * Modifies the given user.
-   *
-   * <strong>Note:</strong> This method requires "user" privileges.
-   *
-   * @param name name of the user to be modified
-   * @param userDto user object to modify
-   */
-  @PUT
-  @Path("")
-  @StatusCodes({
-    @ResponseCode(code = 204, condition = "update success"),
-    @ResponseCode(code = 403, condition = "forbidden, the current user does not have the \"user\" privilege"),
-    @ResponseCode(code = 404, condition = "not found, no user with the specified id/name available"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
-  @TypeHint(TypeHint.NO_CONTENT.class)
-  public Response update(@Context UriInfo uriInfo, @PathParam("id") String name, UserDto userDto) {
-    return adapter.update(name, existing -> dtoToUserMapper.map(userDto, existing.getPassword()));
-  }
-
-  /**
    * Deletes a user.
    *
-   * <strong>Note:</strong> This method requires "user" privileges.
+   * <strong>Note:</strong> This method requires "user" privilege.
    *
    * @param name the name of the user to delete.
    *
@@ -89,12 +70,36 @@ public class UserResource {
   @DELETE
   @Path("")
   @StatusCodes({
-    @ResponseCode(code = 204, condition = "delete success"),
-    @ResponseCode(code = 403, condition = "forbidden, the current user does not have the \"user\" privilege"),
+    @ResponseCode(code = 204, condition = "delete success or nothing to delete"),
+    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
+    @ResponseCode(code = 403, condition = "not authorized, the current user does not have the \"user\" privilege"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
   public Response delete(@PathParam("id") String name) {
     return adapter.delete(name);
+  }
+
+  /**
+   * Modifies the given user.
+   *
+   * <strong>Note:</strong> This method requires "user" privilege.
+   *
+   * @param name name of the user to be modified
+   * @param userDto user object to modify
+   */
+  @PUT
+  @Path("")
+  @Consumes(VndMediaType.USER)
+  @StatusCodes({
+    @ResponseCode(code = 204, condition = "update success"),
+    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
+    @ResponseCode(code = 403, condition = "not authorized, the current user does not have the \"user\" privilege"),
+    @ResponseCode(code = 404, condition = "not found, no user with the specified id/name available"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
+  @TypeHint(TypeHint.NO_CONTENT.class)
+  public Response update(@Context UriInfo uriInfo, @PathParam("id") String name, UserDto userDto) {
+    return adapter.update(name, existing -> dtoToUserMapper.map(userDto, existing.getPassword()));
   }
 }
