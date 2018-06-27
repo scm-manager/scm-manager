@@ -72,7 +72,6 @@ public class UserRootResourceTest {
     initMocks(this);
     User dummyUser = createDummyUser("Neo");
     when(userManager.getPage(any(), eq(0), eq(10))).thenReturn(new PageResult<>(singletonList(dummyUser), 1));
-    when(userManager.get("Neo")).thenReturn(dummyUser);
     doNothing().when(userManager).create(userCaptor.capture());
     doNothing().when(userManager).modify(userCaptor.capture());
     doNothing().when(userManager).delete(userCaptor.capture());
@@ -197,7 +196,7 @@ public class UserRootResourceTest {
   public void shouldFailUpdateForDifferentIds() throws IOException, URISyntaxException, UserException {
     URL url = Resources.getResource("sonia/scm/api/v2/user-test-update.json");
     byte[] userJson = Resources.toByteArray(url);
-    when(userManager.get("Other")).thenReturn(createDummyUser("Other"));
+    createDummyUser("Other");
 
     MockHttpRequest request = MockHttpRequest
       .put("/" + UserRootResource.USERS_PATH_V2 + "Other")
@@ -234,6 +233,7 @@ public class UserRootResourceTest {
     user.setName(name);
     user.setPassword("redpill");
     user.setCreationDate(System.currentTimeMillis());
+    when(userManager.get(name)).thenReturn(user);
     return user;
   }
 }
