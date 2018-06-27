@@ -18,11 +18,17 @@ import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 
 /**
  * Adapter from resource http endpoints to managers.
+ *
+ * Provides common CRUD operations and DTO to Model Object mapping to keep Resources more DRY.
+ *
  * @param <MODEL_OBJECT> The type of the model object, eg. {@link sonia.scm.user.User}.
  * @param <DTO> The corresponding transport object, eg. {@link UserDto}.
  * @param <EXCEPTION> The exception type for the model object, eg. {@link sonia.scm.user.UserException}.
  */
-class ResourceManagerAdapter<MODEL_OBJECT extends ModelObject, DTO extends HalRepresentation, EXCEPTION extends Exception> extends AbstractManagerResource<MODEL_OBJECT, EXCEPTION> {
+@SuppressWarnings("squid:S00119") // "MODEL_OBJECT" is much more meaningful than "M", right?
+class ResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
+                             DTO extends HalRepresentation,
+                             EXCEPTION extends Exception> extends AbstractManagerResource<MODEL_OBJECT, EXCEPTION> {
 
   ResourceManagerAdapter(Manager<MODEL_OBJECT, EXCEPTION> manager) {
     super(manager);

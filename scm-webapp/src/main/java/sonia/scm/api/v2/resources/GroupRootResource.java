@@ -4,10 +4,13 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.ws.rs.Path;
 
+/**
+ * RESTful Web Service Resource to manage groups and their members.
+ */
 @Path(GroupRootResource.GROUPS_PATH_V2)
 public class GroupRootResource {
 
-  public static final String GROUPS_PATH_V2 = "v2/groups/";
+  static final String GROUPS_PATH_V2 = "v2/groups/";
 
   private final Provider<GroupCollectionResource> groupCollectionResource;
   private final Provider<GroupResource> groupResource;

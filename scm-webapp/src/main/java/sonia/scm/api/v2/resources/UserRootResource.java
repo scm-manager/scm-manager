@@ -11,6 +11,7 @@ import javax.ws.rs.Path;
 public class UserRootResource {
 
   static final String USERS_PATH_V2 = "v2/users/";
+
   private final Provider<UserCollectionResource> userCollectionResource;
   private final Provider<UserResource> userResource;
 
