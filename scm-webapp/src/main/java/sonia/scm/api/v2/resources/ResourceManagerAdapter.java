@@ -14,6 +14,8 @@ import java.util.Collection;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
+
 /**
  * Adapter from resource http endpoints to managers.
  *
@@ -55,6 +57,9 @@ class ResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
       return Response.status(Response.Status.NOT_FOUND).build();
     }
     MODEL_OBJECT changedModelObject = applyChanges.apply(existingModelObject);
+    if (!id.equals(changedModelObject.getId())) {
+      return Response.status(BAD_REQUEST).entity("illegal change of id").build();
+    }
     return update(id, changedModelObject);
   }
 
@@ -73,7 +78,7 @@ class ResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
    */
   public Response create(DTO dto, Supplier<MODEL_OBJECT> modelObjectSupplier, Function<MODEL_OBJECT, String> uriCreator) throws IOException, EXCEPTION {
     if (dto == null) {
-      return Response.status(400).build();
+      return Response.status(BAD_REQUEST).build();
     }
     MODEL_OBJECT modelObject = modelObjectSupplier.get();
     manager.create(modelObject);
