@@ -11,6 +11,7 @@ import sonia.scm.user.UserManager;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -25,7 +26,6 @@ import java.io.IOException;
 
 import static sonia.scm.api.v2.resources.ResourceLinks.user;
 
-@Produces(VndMediaType.USER_COLLECTION)
 public class UserCollectionResource {
 
   private static final int DEFAULT_PAGE_SIZE = 10;
@@ -45,7 +45,7 @@ public class UserCollectionResource {
   /**
    * Returns all users for a given page number with a given page size (default page size is {@value DEFAULT_PAGE_SIZE}).
    *
-   * <strong>Note:</strong> This method requires "user" privileges.
+   * <strong>Note:</strong> This method requires "user" privilege.
    *
    * @param request  the current request
    * @param page     the number of the requested page
@@ -55,10 +55,12 @@ public class UserCollectionResource {
    */
   @GET
   @Path("")
+  @Produces(VndMediaType.USER_COLLECTION)
   @TypeHint(UserDto[].class)
   @StatusCodes({
     @ResponseCode(code = 200, condition = "success"),
-    @ResponseCode(code = 403, condition = "forbidden, the current user does not have the \"user\" privilege"),
+    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
+    @ResponseCode(code = 403, condition = "not authorized, the current user does not have the \"user\" privilege"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
   public Response getAll(@Context Request request,
@@ -66,30 +68,33 @@ public class UserCollectionResource {
     @DefaultValue("" + DEFAULT_PAGE_SIZE) @QueryParam("pageSize") int pageSize,
     @QueryParam("sortby") String sortBy,
     @DefaultValue("false") @QueryParam("desc") boolean desc) {
-    return adapter.getAll(page, pageSize, sortBy, desc, pageResult -> userCollectionToDtoMapper.map(page, pageSize, pageResult));
+    return adapter.getAll(page, pageSize, sortBy, desc,
+                          pageResult -> userCollectionToDtoMapper.map(page, pageSize, pageResult));
   }
 
   /**
    * Creates a new user.
    *
-   * <strong>Note:</strong> This method requires "user" privileges.
+   * <strong>Note:</strong> This method requires "user" privilege.
    *
    * @param userDto The user to be created.
    * @return A response with the link to the new user (if created successfully).
    */
   @POST
   @Path("")
+  @Consumes(VndMediaType.USER)
   @StatusCodes({
-    @ResponseCode(code = 201, condition = "create success", additionalHeaders = {
-      @ResponseHeader(name = "Location", description = "uri to the created user")
-    }),
-    @ResponseCode(code = 403, condition = "forbidden, the current user does not have the \"user\" privilege"),
+    @ResponseCode(code = 201, condition = "create success"),
+    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
+    @ResponseCode(code = 403, condition = "not authorized, the current user does not have the \"user\" privilege"),
     @ResponseCode(code = 409, condition = "conflict, a user with this name already exists"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
   @ResponseHeaders(@ResponseHeader(name = "Location", description = "uri to the created user"))
   public Response create(@Context UriInfo uriInfo, UserDto userDto) throws IOException, UserException {
-    return adapter.create(userDto, () -> dtoToUserMapper.map(userDto, ""), user -> user(uriInfo).self(user.getName()));
+    return adapter.create(userDto,
+                          () -> dtoToUserMapper.map(userDto, ""),
+                          user -> user(uriInfo).self(user.getName()));
   }
 }

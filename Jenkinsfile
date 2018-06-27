@@ -11,7 +11,7 @@ node() { // No specific label
             disableConcurrentBuilds()
     ])
 
-    String defaultEmailRecipients = env.EMAIL_RECIPIENTS
+    String defaultEmailRecipients = env.EMAIL_SCM_RECIPIENTS
 
     catchError {
 
@@ -40,5 +40,8 @@ node() { // No specific label
     // Archive Unit and integration test results, if any
     junit allowEmptyResults: true, testResults: '**/target/failsafe-reports/TEST-*.xml,**/target/surefire-reports/TEST-*.xml,**/target/jest-reports/TEST-*.xml'
 
-    mailIfStatusChanged(findEmailRecipients(defaultEmailRecipients))
+    // Find maven warnings and visualize in job
+    warnings consoleParsers: [[parserName: 'Maven']], canRunOnFailed: true
+
+    mailIfStatusChanged(defaultEmailRecipients)
 }

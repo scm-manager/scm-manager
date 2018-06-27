@@ -3,16 +3,16 @@ package sonia.scm.api.v2.resources;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Links;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-@Data @NoArgsConstructor @EqualsAndHashCode(callSuper = true)
+@Getter @Setter @NoArgsConstructor
 public class GroupDto extends HalRepresentation {
 
   private Instant creationDate;

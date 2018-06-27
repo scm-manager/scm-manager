@@ -34,6 +34,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -69,9 +70,8 @@ public class UserRootResourceTest {
   @Before
   public void prepareEnvironment() throws IOException, UserException {
     initMocks(this);
-    User dummyUser = createDummyUser();
+    User dummyUser = createDummyUser("Neo");
     when(userManager.getPage(any(), eq(0), eq(10))).thenReturn(new PageResult<>(singletonList(dummyUser), 1));
-    when(userManager.get("Neo")).thenReturn(dummyUser);
     doNothing().when(userManager).create(userCaptor.capture());
     doNothing().when(userManager).modify(userCaptor.capture());
     doNothing().when(userManager).delete(userCaptor.capture());
@@ -192,11 +192,48 @@ public class UserRootResourceTest {
     assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
   }
 
-  private User createDummyUser() {
+  @Test
+  public void shouldFailUpdateForDifferentIds() throws IOException, URISyntaxException, UserException {
+    URL url = Resources.getResource("sonia/scm/api/v2/user-test-update.json");
+    byte[] userJson = Resources.toByteArray(url);
+    createDummyUser("Other");
+
+    MockHttpRequest request = MockHttpRequest
+      .put("/" + UserRootResource.USERS_PATH_V2 + "Other")
+      .contentType(VndMediaType.USER)
+      .content(userJson);
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_BAD_REQUEST, response.getStatus());
+    verify(userManager, never()).modify(any(User.class));
+  }
+
+  @Test
+  public void shouldFailUpdateForUnknownEntity() throws IOException, URISyntaxException, UserException {
+    URL url = Resources.getResource("sonia/scm/api/v2/user-test-update.json");
+    byte[] userJson = Resources.toByteArray(url);
+    when(userManager.get("Neo")).thenReturn(null);
+
+    MockHttpRequest request = MockHttpRequest
+      .put("/" + UserRootResource.USERS_PATH_V2 + "Neo")
+      .contentType(VndMediaType.USER)
+      .content(userJson);
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_NOT_FOUND, response.getStatus());
+    verify(userManager, never()).modify(any(User.class));
+  }
+
+  private User createDummyUser(String name) {
     User user = new User();
-    user.setName("Neo");
+    user.setName(name);
     user.setPassword("redpill");
     user.setCreationDate(System.currentTimeMillis());
+    when(userManager.get(name)).thenReturn(user);
     return user;
   }
 }

@@ -9,13 +9,18 @@ import sonia.scm.group.GroupManager;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-@Produces(VndMediaType.GROUP)
 public class GroupResource {
 
   private final GroupToGroupDtoMapper groupToGroupDtoMapper;
@@ -30,12 +35,23 @@ public class GroupResource {
     this.adapter = new ResourceManagerAdapter<>(manager);
   }
 
-  @Path("")
+  /**
+   * Returns a group.
+   *
+   * <strong>Note:</strong> This method requires "group" privilege.
+   *
+   * @param request the current request
+   * @param id the id/name of the group
+   *
+   */
   @GET
+  @Path("")
+  @Produces(VndMediaType.GROUP)
   @TypeHint(GroupDto.class)
   @StatusCodes({
     @ResponseCode(code = 200, condition = "success"),
-    @ResponseCode(code = 403, condition = "forbidden, the current user has no privileges to read the group"),
+    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
+    @ResponseCode(code = 403, condition = "not authorized, the current user has no privileges to read the group"),
     @ResponseCode(code = 404, condition = "not found, no group with the specified id/name available"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
@@ -43,26 +59,43 @@ public class GroupResource {
     return adapter.get(id, groupToGroupDtoMapper::map);
   }
 
-  @Path("")
+  /**
+   * Deletes a group.
+   *
+   * <strong>Note:</strong> This method requires "group" privilege.
+   *
+   * @param name the name of the group to delete.
+   *
+   */
   @DELETE
-  public Response delete(@PathParam("id") String id) {
-    throw new RuntimeException();
+  @Path("")
+  @StatusCodes({
+    @ResponseCode(code = 204, condition = "delete success or nothing to delete"),
+    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
+    @ResponseCode(code = 403, condition = "not authorized, the current user does not have the \"group\" privilege"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
+  @TypeHint(TypeHint.NO_CONTENT.class)
+  public Response delete(@PathParam("id") String name) {
+    throw new UnsupportedOperationException("Not yet implemented");
   }
-
 
   /**
    * Modifies the given group.
    *
-   * <strong>Note:</strong> This method requires "group" privileges.
+   * <strong>Note:</strong> This method requires "group" privilege.
    *
    * @param name name of the group to be modified
    * @param groupDto group object to modify
    */
   @PUT
   @Path("")
+  @Consumes(VndMediaType.GROUP)
   @StatusCodes({
     @ResponseCode(code = 204, condition = "update success"),
-    @ResponseCode(code = 403, condition = "forbidden, the current user does not have the \"group\" privilege"),
+    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
+    @ResponseCode(code = 403, condition = "not authorized, the current user does not have the \"group\" privilege"),
+    @ResponseCode(code = 404, condition = "not found, no group with the specified id/name available"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)

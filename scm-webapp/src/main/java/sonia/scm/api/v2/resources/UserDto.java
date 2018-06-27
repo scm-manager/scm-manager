@@ -3,17 +3,15 @@ package sonia.scm.api.v2.resources;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Links;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.Instant;
 import java.util.Map;
 import java.util.Optional;
 
-@AllArgsConstructor @NoArgsConstructor
-@Data @EqualsAndHashCode(callSuper = false)
+@NoArgsConstructor @Getter @Setter
 public class UserDto extends HalRepresentation {
   private boolean active;
   private boolean admin;

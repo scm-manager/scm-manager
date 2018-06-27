@@ -3,12 +3,11 @@ package sonia.scm.api.v2.resources;
 import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Links;
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@NoArgsConstructor @AllArgsConstructor
-@Data @EqualsAndHashCode(callSuper = false)
+@NoArgsConstructor @AllArgsConstructor @Getter @Setter
 public class MemberDto extends HalRepresentation {
   private String name;
 
