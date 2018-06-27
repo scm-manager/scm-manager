@@ -45,6 +45,9 @@ class ResourceManagerAdapter<MODEL_OBJECT extends ModelObject, DTO extends HalRe
    */
   public Response update(String id, Function<MODEL_OBJECT, MODEL_OBJECT> applyChanges) {
     MODEL_OBJECT existingModelObject = manager.get(id);
+    if (existingModelObject == null) {
+      return Response.status(Response.Status.NOT_FOUND).build();
+    }
     MODEL_OBJECT changedModelObject = applyChanges.apply(existingModelObject);
     return update(id, changedModelObject);
   }
