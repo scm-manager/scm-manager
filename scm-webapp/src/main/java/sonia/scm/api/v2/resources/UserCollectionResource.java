@@ -26,7 +26,6 @@ import java.io.IOException;
 
 import static sonia.scm.api.v2.resources.ResourceLinks.user;
 
-@Produces(VndMediaType.USER_COLLECTION)
 public class UserCollectionResource {
 
   private static final int DEFAULT_PAGE_SIZE = 10;
@@ -56,6 +55,7 @@ public class UserCollectionResource {
    */
   @GET
   @Path("")
+  @Produces(VndMediaType.USER_COLLECTION)
   @TypeHint(UserDto[].class)
   @StatusCodes({
     @ResponseCode(code = 200, condition = "success"),

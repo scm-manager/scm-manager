@@ -21,7 +21,6 @@ import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-@Produces(VndMediaType.USER)
 public class UserResource {
 
   private final UserDtoToUserMapper dtoToUserMapper;
@@ -47,6 +46,7 @@ public class UserResource {
    */
   @GET
   @Path("")
+  @Produces(VndMediaType.USER)
   @TypeHint(UserDto.class)
   @StatusCodes({
     @ResponseCode(code = 200, condition = "success"),

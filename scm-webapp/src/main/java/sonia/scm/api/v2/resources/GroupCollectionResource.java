@@ -26,7 +26,6 @@ import java.io.IOException;
 
 import static sonia.scm.api.v2.resources.ResourceLinks.group;
 
-@Produces(VndMediaType.GROUP_COLLECTION)
 public class GroupCollectionResource {
   
   private static final int DEFAULT_PAGE_SIZE = 10;
@@ -55,6 +54,7 @@ public class GroupCollectionResource {
    */
   @GET
   @Path("")
+  @Produces(VndMediaType.GROUP_COLLECTION)
   @TypeHint(GroupDto[].class)
   @StatusCodes({
     @ResponseCode(code = 200, condition = "success"),
