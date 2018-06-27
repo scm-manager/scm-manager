@@ -71,7 +71,6 @@ public class UserRootResourceTest {
   public void prepareEnvironment() throws IOException, UserException {
     initMocks(this);
     User dummyUser = createDummyUser("Neo");
-    when(userManager.getPage(any(), eq(0), eq(10))).thenReturn(new PageResult<>(singletonList(dummyUser), 1));
     doNothing().when(userManager).create(userCaptor.capture());
     doNothing().when(userManager).modify(userCaptor.capture());
     doNothing().when(userManager).delete(userCaptor.capture());
@@ -105,7 +104,7 @@ public class UserRootResourceTest {
   @Test
   @SubjectAware(username = "unpriv")
   public void shouldCreateLimitedResponseForSimpleUser() throws URISyntaxException {
-    MockHttpRequest request = MockHttpRequest.get("/" + UserRootResource.USERS_PATH_V2);
+    MockHttpRequest request = MockHttpRequest.get("/" + UserRootResource.USERS_PATH_V2 + "Neo");
     MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
@@ -226,6 +225,48 @@ public class UserRootResourceTest {
 
     assertEquals(HttpServletResponse.SC_NOT_FOUND, response.getStatus());
     verify(userManager, never()).modify(any(User.class));
+  }
+
+  @Test
+  public void shouldCreatePageForOnePageOnly() throws URISyntaxException {
+    PageResult<User> singletonPageResult = createSingletonPageResult(1);
+    when(userManager.getPage(any(), eq(0), eq(10))).thenReturn(singletonPageResult);
+    MockHttpRequest request = MockHttpRequest.get("/" + UserRootResource.USERS_PATH_V2);
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    System.out.println(response.getContentAsString());
+
+    assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+    assertTrue(response.getContentAsString().contains("\"name\":\"Neo\""));
+    assertTrue(response.getContentAsString().contains("\"self\":{\"href\":\"/v2/users/?page=0"));
+    assertTrue(response.getContentAsString().contains("\"create\":{\"href\":\"/v2/users/\"}"));
+    assertFalse(response.getContentAsString().contains("\"next\"")); // check for bug of edison-hal v2.0.0
+  }
+
+  @Test
+  public void shouldCreatePageForMultiplePages() throws URISyntaxException {
+    PageResult<User> singletonPageResult = createSingletonPageResult(3);
+    when(userManager.getPage(any(), eq(1), eq(1))).thenReturn(singletonPageResult);
+    MockHttpRequest request = MockHttpRequest.get("/" + UserRootResource.USERS_PATH_V2 + "?page=1&pageSize=1");
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    System.out.println(response.getContentAsString());
+
+    assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+    assertTrue(response.getContentAsString().contains("\"name\":\"Neo\""));
+    assertTrue(response.getContentAsString().contains("\"self\":{\"href\":\"/v2/users/?page=1"));
+    assertTrue(response.getContentAsString().contains("\"first\":{\"href\":\"/v2/users/?page=0"));
+    assertTrue(response.getContentAsString().contains("\"prev\":{\"href\":\"/v2/users/?page=0"));
+    assertTrue(response.getContentAsString().contains("\"next\":{\"href\":\"/v2/users/?page=2"));
+    assertTrue(response.getContentAsString().contains("\"last\":{\"href\":\"/v2/users/?page=2"));
+  }
+
+  private PageResult<User> createSingletonPageResult(int overallCount) {
+    return new PageResult<>(singletonList(createDummyUser("Neo")), overallCount);
   }
 
   private User createDummyUser(String name) {
