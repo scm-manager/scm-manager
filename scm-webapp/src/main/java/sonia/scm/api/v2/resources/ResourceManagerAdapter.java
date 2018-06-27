@@ -72,7 +72,7 @@ class ResourceManagerAdapter<MODEL_OBJECT extends ModelObject, DTO extends HalRe
    */
   public Response create(DTO dto, Supplier<MODEL_OBJECT> modelObjectSupplier, Function<MODEL_OBJECT, String> uriCreator) throws IOException, EXCEPTION {
     if (dto == null) {
-      return Response.status(400).build();
+      return Response.status(BAD_REQUEST).build();
     }
     MODEL_OBJECT modelObject = modelObjectSupplier.get();
     manager.create(modelObject);
