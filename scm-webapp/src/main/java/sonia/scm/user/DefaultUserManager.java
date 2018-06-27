@@ -38,10 +38,8 @@ package sonia.scm.user;
 import com.github.sdorra.ssp.PermissionActionCheck;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.HandlerEventType;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.TransformFilter;
@@ -52,20 +50,18 @@ import sonia.scm.util.CollectionAppender;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 
-//~--- JDK imports ------------------------------------------------------------
-
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 import java.io.IOException;
 import java.io.InputStream;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -243,6 +239,7 @@ public class DefaultUserManager extends AbstractUserManager
       AssertUtil.assertIsValid(user);
       fireEvent(HandlerEventType.BEFORE_MODIFY, user, notModified);
       user.setLastModified(System.currentTimeMillis());
+      user.setCreationDate(notModified.getCreationDate());
       userDAO.modify(user);
       fireEvent(HandlerEventType.MODIFY, user, notModified);
     }
