@@ -22,7 +22,7 @@ node() { // No specific label
         }
 
         stage('Build') {
-            mvn 'clean install -DskipTests'
+            mvn 'clean install -DskipTests -DperformRelease'
             archive '**/target/*.jar,**/target/*.zip'
         }
 
