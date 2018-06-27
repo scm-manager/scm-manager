@@ -70,6 +70,7 @@ public class UserResource {
   @StatusCodes({
     @ResponseCode(code = 204, condition = "update success"),
     @ResponseCode(code = 403, condition = "forbidden, the current user does not have the \"user\" privilege"),
+    @ResponseCode(code = 404, condition = "not found, no user with the specified id/name available"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)

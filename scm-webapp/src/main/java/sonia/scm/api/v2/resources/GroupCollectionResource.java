@@ -80,6 +80,7 @@ public class GroupCollectionResource {
       @ResponseHeader(name = "Location", description = "uri to the created group")
     }),
     @ResponseCode(code = 403, condition = "forbidden, the current user has no admin privileges"),
+    @ResponseCode(code = 409, condition = "conflict, a group with this name already exists"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)

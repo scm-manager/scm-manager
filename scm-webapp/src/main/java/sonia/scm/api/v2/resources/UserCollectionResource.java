@@ -80,8 +80,11 @@ public class UserCollectionResource {
   @POST
   @Path("")
   @StatusCodes({
-    @ResponseCode(code = 201, condition = "create success"),
+    @ResponseCode(code = 201, condition = "create success", additionalHeaders = {
+      @ResponseHeader(name = "Location", description = "uri to the created user")
+    }),
     @ResponseCode(code = 403, condition = "forbidden, the current user does not have the \"user\" privilege"),
+    @ResponseCode(code = 409, condition = "conflict, a user with this name already exists"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
