@@ -19,7 +19,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
@@ -45,9 +44,7 @@ public class GroupCollectionResource {
    * Returns all groups for a given page number with a given page size (default page size is {@value DEFAULT_PAGE_SIZE}).
    * 
    * <strong>Note:</strong> This method requires "group" privilege.
-   *
-   * @param request  the current request
-   * @param page     the number of the requested page
+   *  @param page     the number of the requested page
    * @param pageSize the page size (default page size is {@value DEFAULT_PAGE_SIZE})
    * @param sortBy   sort parameter
    * @param desc     sort direction desc or aesc
@@ -62,8 +59,7 @@ public class GroupCollectionResource {
     @ResponseCode(code = 403, condition = "not authorized, the current user does not have the \"group\" privilege"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
-  public Response getAll(@Context Request request,
-    @DefaultValue("0") @QueryParam("page") int page,
+  public Response getAll(@DefaultValue("0") @QueryParam("page") int page,
     @DefaultValue("" + DEFAULT_PAGE_SIZE) @QueryParam("pageSize") int pageSize,
     @QueryParam("sortby") String sortBy,
     @DefaultValue("false")

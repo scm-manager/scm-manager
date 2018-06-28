@@ -16,10 +16,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 
 public class UserResource {
 
@@ -40,7 +37,6 @@ public class UserResource {
    *
    * <strong>Note:</strong> This method requires "user" privilege.
    *
-   * @param request the current request
    * @param id the id/name of the user
    *
    */
@@ -55,7 +51,7 @@ public class UserResource {
     @ResponseCode(code = 404, condition = "not found, no user with the specified id/name available"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
-  public Response get(@Context Request request, @Context UriInfo uriInfo, @PathParam("id") String id) {
+  public Response get(@PathParam("id") String id) {
     return adapter.get(id, userToDtoMapper::map);
   }
 
@@ -99,7 +95,7 @@ public class UserResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
-  public Response update(@Context UriInfo uriInfo, @PathParam("id") String name, UserDto userDto) {
+  public Response update(@PathParam("id") String name, UserDto userDto) {
     return adapter.update(name, existing -> dtoToUserMapper.map(userDto, existing.getPassword()));
   }
 }

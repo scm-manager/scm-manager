@@ -9,11 +9,14 @@ import sonia.scm.group.GroupManager;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Request;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 
 public class GroupResource {
 
@@ -34,7 +37,6 @@ public class GroupResource {
    *
    * <strong>Note:</strong> This method requires "group" privilege.
    *
-   * @param request the current request
    * @param id the id/name of the group
    *
    */
@@ -49,7 +51,7 @@ public class GroupResource {
     @ResponseCode(code = 404, condition = "not found, no group with the specified id/name available"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
-  public Response get(@Context Request request, @Context UriInfo uriInfo, @PathParam("id") String id) {
+  public Response get(@PathParam("id") String id) {
     return adapter.get(id, groupToGroupDtoMapper::map);
   }
 
@@ -93,7 +95,7 @@ public class GroupResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
-  public Response update(@Context UriInfo uriInfo, @PathParam("id") String name, GroupDto groupDto) {
+  public Response update(@PathParam("id") String name, GroupDto groupDto) {
     return adapter.update(name, existing -> dtoToGroupMapper.map(groupDto));
   }
 }
