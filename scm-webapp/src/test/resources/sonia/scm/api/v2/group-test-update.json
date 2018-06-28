@@ -1,0 +1,11 @@
+{
+  "description": "Updated description",
+  "name": "admin",
+  "_embedded": {
+    "members": [
+      {
+        "name": "user"
+      }
+    ]
+  }
+}
