@@ -18,27 +18,25 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
-
-import static sonia.scm.api.v2.resources.ResourceLinks.user;
 
 public class UserCollectionResource {
 
   private static final int DEFAULT_PAGE_SIZE = 10;
   private final UserDtoToUserMapper dtoToUserMapper;
   private final UserCollectionToDtoMapper userCollectionToDtoMapper;
+  private final ResourceLinks resourceLinks;
 
   private final ResourceManagerAdapter<User, UserDto, UserException> adapter;
 
   @Inject
   public UserCollectionResource(UserManager manager, UserDtoToUserMapper dtoToUserMapper,
-                                UserCollectionToDtoMapper userCollectionToDtoMapper) {
+    UserCollectionToDtoMapper userCollectionToDtoMapper, ResourceLinks resourceLinks) {
     this.dtoToUserMapper = dtoToUserMapper;
     this.userCollectionToDtoMapper = userCollectionToDtoMapper;
     this.adapter = new ResourceManagerAdapter<>(manager);
+    this.resourceLinks = resourceLinks;
   }
 
   /**
@@ -88,9 +86,9 @@ public class UserCollectionResource {
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
   @ResponseHeaders(@ResponseHeader(name = "Location", description = "uri to the created user"))
-  public Response create(@Context UriInfo uriInfo, UserDto userDto) throws IOException, UserException {
+  public Response create(UserDto userDto) throws IOException, UserException {
     return adapter.create(userDto,
                           () -> dtoToUserMapper.map(userDto, ""),
-                          user -> user(uriInfo).self(user.getName()));
+      user -> resourceLinks.user().self(user.getName()));
   }
 }

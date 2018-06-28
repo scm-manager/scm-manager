@@ -10,6 +10,7 @@ import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.Answers;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -20,7 +21,6 @@ import sonia.scm.group.GroupManager;
 import sonia.scm.web.VndMediaType;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -28,7 +28,9 @@ import java.net.URL;
 import java.util.Collections;
 
 import static java.util.Collections.singletonList;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doNothing;
@@ -47,10 +49,8 @@ public class GroupRootResourceTest {
 
   private Dispatcher dispatcher = MockDispatcherFactory.createDispatcher();
 
-  @Mock
-  private UriInfo uriInfo;
-  @Mock
-  private UriInfoStore uriInfoStore;
+  @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+  private ResourceLinks resourceLinks;
 
   @Mock
   private GroupManager groupManager;
@@ -70,15 +70,14 @@ public class GroupRootResourceTest {
     when(groupManager.getPage(any(), eq(0), eq(10))).thenReturn(new PageResult<>(singletonList(group), 1));
     when(groupManager.get("admin")).thenReturn(group);
 
-    GroupCollectionToDtoMapper groupCollectionToDtoMapper = new GroupCollectionToDtoMapper(groupToDtoMapper, uriInfoStore);
-    GroupCollectionResource groupCollectionResource = new GroupCollectionResource(groupManager, dtoToGroupMapper, groupCollectionToDtoMapper);
+    ResourceLinksMock.initMock(resourceLinks, URI.create("/"));
+
+    GroupCollectionToDtoMapper groupCollectionToDtoMapper = new GroupCollectionToDtoMapper(groupToDtoMapper, resourceLinks);
+    GroupCollectionResource groupCollectionResource = new GroupCollectionResource(groupManager, dtoToGroupMapper, groupCollectionToDtoMapper, resourceLinks);
     GroupResource groupResource = new GroupResource(groupManager, groupToDtoMapper, dtoToGroupMapper);
     GroupRootResource groupRootResource = new GroupRootResource(MockProvider.of(groupCollectionResource), MockProvider.of(groupResource));
 
     dispatcher.getRegistry().addSingletonResource(groupRootResource);
-
-    when(uriInfo.getBaseUri()).thenReturn(URI.create("/"));
-    when(uriInfoStore.get()).thenReturn(uriInfo);
   }
 
   @Test

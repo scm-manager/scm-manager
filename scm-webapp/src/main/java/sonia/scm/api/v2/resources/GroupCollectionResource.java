@@ -18,25 +18,24 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 
-import static sonia.scm.api.v2.resources.ResourceLinks.group;
 
 public class GroupCollectionResource {
   
   private static final int DEFAULT_PAGE_SIZE = 10;
   private final GroupDtoToGroupMapper dtoToGroupMapper;
   private final GroupCollectionToDtoMapper groupCollectionToDtoMapper;
+  private final ResourceLinks resourceLinks;
 
   private final ResourceManagerAdapter<Group, GroupDto, GroupException> adapter;
 
   @Inject
-  public GroupCollectionResource(GroupManager manager, GroupDtoToGroupMapper dtoToGroupMapper, GroupCollectionToDtoMapper groupCollectionToDtoMapper) {
+  public GroupCollectionResource(GroupManager manager, GroupDtoToGroupMapper dtoToGroupMapper, GroupCollectionToDtoMapper groupCollectionToDtoMapper, ResourceLinks resourceLinks) {
     this.dtoToGroupMapper = dtoToGroupMapper;
     this.groupCollectionToDtoMapper = groupCollectionToDtoMapper;
+    this.resourceLinks = resourceLinks;
     this.adapter = new ResourceManagerAdapter<>(manager);
   }
 
@@ -85,9 +84,9 @@ public class GroupCollectionResource {
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
   @ResponseHeaders(@ResponseHeader(name = "Location", description = "uri to the created group"))
-  public Response create(@Context UriInfo uriInfo, GroupDto groupDto) throws IOException, GroupException {
+  public Response create(GroupDto groupDto) throws IOException, GroupException {
     return adapter.create(groupDto,
                           () -> dtoToGroupMapper.map(groupDto),
-                          group -> group(uriInfo).self(group.getName()));
+                          group -> resourceLinks.group().self(group.getName()));
   }
 }

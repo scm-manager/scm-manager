@@ -1,14 +1,20 @@
 package sonia.scm.api.v2.resources;
 
+import javax.inject.Inject;
 import javax.ws.rs.core.UriInfo;
 
 class ResourceLinks {
 
-  private ResourceLinks() {
+  private final UriInfoStore uriInfoStore;
+
+  @Inject
+  ResourceLinks(UriInfoStore uriInfoStore) {
+    this.uriInfoStore = uriInfoStore;
   }
 
-  static GroupLinks group(UriInfo uriInfo) {
-    return new GroupLinks(uriInfo);
+
+  GroupLinks group() {
+    return new GroupLinks(uriInfoStore.get());
   }
 
   static class GroupLinks {
@@ -31,8 +37,8 @@ class ResourceLinks {
     }
   }
 
-  static GroupCollectionLinks groupCollection(UriInfo uriInfo) {
-    return new GroupCollectionLinks(uriInfo);
+  GroupCollectionLinks groupCollection() {
+    return new GroupCollectionLinks(uriInfoStore.get());
   }
 
   static class GroupCollectionLinks {
@@ -51,8 +57,8 @@ class ResourceLinks {
     }
   }
 
-  static UserLinks user(UriInfo uriInfo) {
-    return new UserLinks(uriInfo);
+  UserLinks user() {
+    return new UserLinks(uriInfoStore.get());
   }
 
   static class UserLinks {
@@ -75,8 +81,8 @@ class ResourceLinks {
     }
   }
 
-  static UserCollectionLinks userCollection(UriInfo uriInfo) {
-    return new UserCollectionLinks(uriInfo);
+  UserCollectionLinks userCollection() {
+    return new UserCollectionLinks(uriInfoStore.get());
   }
 
   static class UserCollectionLinks {

@@ -2,85 +2,92 @@ package sonia.scm.api.v2.resources;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static sonia.scm.api.v2.resources.ResourceLinks.group;
-import static sonia.scm.api.v2.resources.ResourceLinks.user;
-import static sonia.scm.api.v2.resources.ResourceLinks.userCollection;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 public class ResourceLinksTest {
 
   private static final String BASE_URL = "http://example.com/";
 
-  private UriInfo uriInfo = mock(UriInfo.class);
+  @Mock
+  private UriInfoStore uriInfoStore;
+  @Mock
+  private UriInfo uriInfo;
+
+  @InjectMocks
+  private ResourceLinks resourceLinks;
 
   @Test
   public void shouldCreateCorrectUserSelfUrl() {
-    String url = user(uriInfo).self("ich");
+    String url = resourceLinks.user().self("ich");
     assertEquals(BASE_URL + UserRootResource.USERS_PATH_V2 + "ich", url);
   }
 
   @Test
   public void shouldCreateCorrectUserDeleteUrl() {
-    String url = user(uriInfo).delete("ich");
+    String url = resourceLinks.user().delete("ich");
     assertEquals(BASE_URL + UserRootResource.USERS_PATH_V2 + "ich", url);
   }
 
   @Test
   public void shouldCreateCorrectUserUpdateUrl() {
-    String url = user(uriInfo).update("ich");
+    String url = resourceLinks.user().update("ich");
     assertEquals(BASE_URL + UserRootResource.USERS_PATH_V2 + "ich", url);
   }
 
   @Test
   public void shouldCreateCorrectUserCreateUrl() {
-    String url = userCollection(uriInfo).create();
+    String url = resourceLinks.userCollection().create();
     assertEquals(BASE_URL + UserRootResource.USERS_PATH_V2, url);
   }
 
   @Test
   public void shouldCreateCorrectUserCollectionUrl() {
-    String url = userCollection(uriInfo).self();
+    String url = resourceLinks.userCollection().self();
     assertEquals(BASE_URL + UserRootResource.USERS_PATH_V2, url);
   }
 
   @Test
   public void shouldCreateCorrectGroupSelfUrl() {
-    String url = group(uriInfo).self("nobodies");
+    String url = resourceLinks.group().self("nobodies");
     assertEquals(BASE_URL + GroupRootResource.GROUPS_PATH_V2 + "nobodies", url);
   }
 
   @Test
   public void shouldCreateCorrectGroupDeleteUrl() {
-    String url = group(uriInfo).delete("nobodies");
+    String url = resourceLinks.group().delete("nobodies");
     assertEquals(BASE_URL + GroupRootResource.GROUPS_PATH_V2 + "nobodies", url);
   }
 
   @Test
   public void shouldCreateCorrectGroupUpdateUrl() {
-    String url = group(uriInfo).update("nobodies");
+    String url = resourceLinks.group().update("nobodies");
     assertEquals(BASE_URL + GroupRootResource.GROUPS_PATH_V2 + "nobodies", url);
   }
 
   @Test
   public void shouldCreateCorrectGroupCreateUrl() {
-    String url = ResourceLinks.groupCollection(uriInfo).create();
+    String url = resourceLinks.groupCollection().create();
     assertEquals(BASE_URL + GroupRootResource.GROUPS_PATH_V2, url);
   }
 
   @Test
   public void shouldCreateCorrectGroupCollectionUrl() {
-    String url = ResourceLinks.groupCollection(uriInfo).self();
+    String url = resourceLinks.groupCollection().self();
     assertEquals(BASE_URL + GroupRootResource.GROUPS_PATH_V2, url);
   }
 
   @Before
   public void initUriInfo() {
+    initMocks(this);
+    when(uriInfoStore.get()).thenReturn(uriInfo);
     when(uriInfo.getBaseUri()).thenReturn(URI.create(BASE_URL));
   }
 }

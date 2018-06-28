@@ -12,7 +12,6 @@ import javax.inject.Inject;
 
 import static de.otto.edison.hal.Link.link;
 import static de.otto.edison.hal.Links.linkingTo;
-import static sonia.scm.api.v2.resources.ResourceLinks.user;
 
 // Mapstruct does not support parameterized (i.e. non-default) constructors. Thus, we need to use field injection.
 @SuppressWarnings("squid:S3306")
@@ -20,7 +19,7 @@ import static sonia.scm.api.v2.resources.ResourceLinks.user;
 public abstract class UserToUserDtoMapper extends BaseMapper<User, UserDto> {
 
   @Inject
-  private UriInfoStore uriInfoStore;
+  private ResourceLinks resourceLinks;
 
   @AfterMapping
   void removePassword(@MappingTarget UserDto target) {
@@ -29,13 +28,14 @@ public abstract class UserToUserDtoMapper extends BaseMapper<User, UserDto> {
 
   @AfterMapping
   void appendLinks(User user, @MappingTarget UserDto target) {
-    Links.Builder linksBuilder = linkingTo().self(user(uriInfoStore.get()).self(target.getName()));
+    Links.Builder linksBuilder = linkingTo().self(resourceLinks.user().self(target.getName()));
     if (UserPermissions.delete(user).isPermitted()) {
-      linksBuilder.single(link("delete", user(uriInfoStore.get()).delete(target.getName())));
+      linksBuilder.single(link("delete", resourceLinks.user().delete(target.getName())));
     }
     if (UserPermissions.modify(user).isPermitted()) {
-      linksBuilder.single(link("update", user(uriInfoStore.get()).update(target.getName())));
+      linksBuilder.single(link("update", resourceLinks.user().update(target.getName())));
     }
     target.add(linksBuilder.build());
   }
+
 }

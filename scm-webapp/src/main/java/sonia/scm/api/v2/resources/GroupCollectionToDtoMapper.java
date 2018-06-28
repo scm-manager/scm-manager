@@ -5,26 +5,24 @@ import sonia.scm.group.GroupPermissions;
 
 import javax.inject.Inject;
 
-import static sonia.scm.api.v2.resources.ResourceLinks.groupCollection;
-
 public class GroupCollectionToDtoMapper extends BasicCollectionToDtoMapper<Group, GroupDto> {
 
-  private final UriInfoStore uriInfoStore;
+  private final ResourceLinks resourceLinks;
 
   @Inject
-  public GroupCollectionToDtoMapper(GroupToGroupDtoMapper groupToDtoMapper, UriInfoStore uriInfoStore) {
+  public GroupCollectionToDtoMapper(GroupToGroupDtoMapper groupToDtoMapper, ResourceLinks resourceLinks) {
     super("groups", groupToDtoMapper);
-    this.uriInfoStore = uriInfoStore;
+    this.resourceLinks = resourceLinks;
   }
 
   @Override
   String createCreateLink() {
-    return groupCollection(uriInfoStore.get()).create();
+    return resourceLinks.groupCollection().create();
   }
 
   @Override
   String createSelfLink() {
-    return groupCollection(uriInfoStore.get()).self();
+    return resourceLinks.groupCollection().self();
   }
 
   @Override

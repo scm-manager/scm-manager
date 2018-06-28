@@ -30,11 +30,12 @@ public class GroupCollectionToDtoMapperTest {
 
   private final UriInfo uriInfo = mock(UriInfo.class);
   private final UriInfoStore uriInfoStore = new UriInfoStore();
+  private final ResourceLinks resourceLinks = new ResourceLinks(uriInfoStore);
   private final GroupToGroupDtoMapper groupToDtoMapper = mock(GroupToGroupDtoMapper.class);
   private final Subject subject = mock(Subject.class);
   private final ThreadState subjectThreadState = new SubjectThreadState(subject);
 
-  private final GroupCollectionToDtoMapper mapper = new GroupCollectionToDtoMapper(groupToDtoMapper, uriInfoStore);
+  private final GroupCollectionToDtoMapper mapper = new GroupCollectionToDtoMapper(groupToDtoMapper, resourceLinks);
 
   private URI expectedBaseUri;
 

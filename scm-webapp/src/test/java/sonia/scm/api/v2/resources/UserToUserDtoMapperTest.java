@@ -7,12 +7,12 @@ import org.apache.shiro.util.ThreadState;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import sonia.scm.api.rest.resources.UserResource;
 import sonia.scm.user.User;
 
-import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Instant;
@@ -25,10 +25,8 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class UserToUserDtoMapperTest {
 
-  @Mock
-  private UriInfo uriInfo;
-  @Mock
-  private UriInfoStore uriInfoStore;
+  @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+  private ResourceLinks resourceLinks;
 
   @InjectMocks
   private UserToUserDtoMapperImpl mapper;
@@ -43,9 +41,8 @@ public class UserToUserDtoMapperTest {
     initMocks(this);
     URI baseUri = new URI("http://example.com/base/");
     expectedBaseUri = baseUri.resolve(UserRootResource.USERS_PATH_V2 + "/");
-    when(uriInfo.getBaseUri()).thenReturn(baseUri);
-    when(uriInfoStore.get()).thenReturn(uriInfo);
     subjectThreadState.bind();
+    ResourceLinksMock.initMock(resourceLinks, baseUri);
     ThreadContext.bind(subject);
   }
 
