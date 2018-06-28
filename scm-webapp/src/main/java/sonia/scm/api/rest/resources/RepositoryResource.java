@@ -42,12 +42,10 @@ import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.ResponseHeader;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
-
 import org.apache.shiro.SecurityUtils;
-
+import org.apache.shiro.authz.AuthorizationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.BlameResult;
 import sonia.scm.repository.Branches;
@@ -76,13 +74,6 @@ import sonia.scm.util.HttpUtil;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
-
-import java.util.ArrayList;
-import java.util.Collection;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
@@ -101,7 +92,11 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriInfo;
-import org.apache.shiro.authz.AuthorizationException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Repository related RESTful Web Service Endpoint.
@@ -218,7 +213,7 @@ public class RepositoryResource extends AbstractManagerResource<Repository, Repo
       catch (RepositoryException | IOException ex)
       {
         logger.error("error during create", ex);
-        response = createErrorResonse(ex);
+        response = createErrorResponse(ex);
       }
     }
     else
@@ -823,7 +818,7 @@ public class RepositoryResource extends AbstractManagerResource<Repository, Repo
     catch (Exception ex)
     {
       logger.error("could not retrive content", ex);
-      response = createErrorResonse(ex);
+      response = createErrorResponse(ex);
     }
 
     return response;
@@ -908,7 +903,7 @@ public class RepositoryResource extends AbstractManagerResource<Repository, Repo
     catch (Exception ex)
     {
       logger.error("could not create diff", ex);
-      response = createErrorResonse(ex);
+      response = createErrorResponse(ex);
     }
 
     return response;

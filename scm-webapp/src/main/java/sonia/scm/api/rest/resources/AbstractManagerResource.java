@@ -159,7 +159,7 @@ public abstract class AbstractManagerResource<T extends ModelObject,
     catch (Exception ex)
     {
       logger.error("error during create", ex);
-      response = createErrorResonse(ex);
+      response = createErrorResponse(ex);
     }
 
     return response;
@@ -195,7 +195,7 @@ public abstract class AbstractManagerResource<T extends ModelObject,
       catch (Exception ex)
       {
         logger.error("error during delete", ex);
-        response = createErrorResonse(ex);
+        response = createErrorResponse(ex);
       }
     }
 
@@ -227,13 +227,13 @@ public abstract class AbstractManagerResource<T extends ModelObject,
     }
     catch (AuthorizationException ex)
     {
-      logger.warn("update not allowd", ex);
+      logger.warn("update not allowed", ex);
       response = Response.status(Response.Status.FORBIDDEN).build();
     }
     catch (Exception ex)
     {
       logger.error("error during update", ex);
-      response = createErrorResonse(ex);
+      response = createErrorResponse(ex);
     }
 
     return response;
@@ -370,9 +370,9 @@ public abstract class AbstractManagerResource<T extends ModelObject,
    *
    * @return
    */
-  protected Response createErrorResonse(Throwable throwable)
+  protected Response createErrorResponse(Throwable throwable)
   {
-    return createErrorResonse(Status.INTERNAL_SERVER_ERROR,
+    return createErrorResponse(Status.INTERNAL_SERVER_ERROR,
       throwable.getMessage(), throwable);
   }
 
@@ -385,9 +385,9 @@ public abstract class AbstractManagerResource<T extends ModelObject,
    *
    * @return
    */
-  protected Response createErrorResonse(Status status, Throwable throwable)
+  protected Response createErrorResponse(Status status, Throwable throwable)
   {
-    return createErrorResonse(status, throwable.getMessage(), throwable);
+    return createErrorResponse(status, throwable.getMessage(), throwable);
   }
 
   /**
@@ -400,7 +400,7 @@ public abstract class AbstractManagerResource<T extends ModelObject,
    *
    * @return
    */
-  protected Response createErrorResonse(Status status, String message,
+  protected Response createErrorResponse(Status status, String message,
     Throwable throwable)
   {
     return Response.status(status).entity(new RestExceptionResult(message,
