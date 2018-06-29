@@ -40,12 +40,13 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.Files;
 import com.google.inject.Inject;
-
+import com.webcohesion.enunciate.metadata.rs.ResponseCode;
+import com.webcohesion.enunciate.metadata.rs.ResponseHeader;
+import com.webcohesion.enunciate.metadata.rs.StatusCodes;
+import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import org.apache.shiro.SecurityUtils;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.NotSupportedFeatuerException;
 import sonia.scm.Type;
 import sonia.scm.api.rest.RestActionUploadResult;
@@ -65,26 +66,6 @@ import sonia.scm.repository.api.UnbundleCommandBuilder;
 import sonia.scm.security.Role;
 import sonia.scm.util.IOUtil;
 
-import static com.google.common.base.Preconditions.*;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import com.webcohesion.enunciate.metadata.rs.ResponseCode;
-import com.webcohesion.enunciate.metadata.rs.ResponseHeader;
-import com.webcohesion.enunciate.metadata.rs.StatusCodes;
-import com.webcohesion.enunciate.metadata.rs.TypeHint;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-
-import java.net.URI;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.FormParam;
@@ -100,10 +81,22 @@ import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Rest resource for importing repositories.
@@ -564,10 +557,6 @@ public class RepositoryImportResource
     {
       handleGenericCreationFailure(ex, type, name);
     }
-    catch (IOException ex)
-    {
-      handleGenericCreationFailure(ex, type, name);
-    }
 
     return repository;
   }
@@ -715,10 +704,6 @@ public class RepositoryImportResource
     try
     {
       manager.delete(repository);
-    }
-    catch (IOException e)
-    {
-      logger.error("can not delete repository", e);
     }
     catch (RepositoryException e)
     {

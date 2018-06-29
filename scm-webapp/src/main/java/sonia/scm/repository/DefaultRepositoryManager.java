@@ -41,12 +41,9 @@ import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
 import org.apache.shiro.concurrent.SubjectAwareExecutorService;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.ArgumentIsInvalidException;
 import sonia.scm.ConfigurationException;
 import sonia.scm.HandlerEventType;
@@ -60,10 +57,8 @@ import sonia.scm.util.HttpUtil;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 
-//~--- JDK imports ------------------------------------------------------------
-
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -76,7 +71,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 
-import javax.servlet.http.HttpServletRequest;
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Default implementation of {@link RepositoryManager}.
@@ -164,7 +159,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
    * @throws RepositoryException
    */
   public void create(Repository repository, boolean initRepository)
-    throws RepositoryException, IOException
+    throws RepositoryException
   {
     logger.info("create repository {} of type {}", repository.getName(),
       repository.getType());
@@ -201,7 +196,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
    */
   @Override
   public void create(Repository repository)
-    throws RepositoryException, IOException
+    throws RepositoryException
   {
     create(repository, true);
   }
@@ -217,7 +212,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
    */
   @Override
   public void delete(Repository repository)
-    throws RepositoryException, IOException
+    throws RepositoryException
   {
     if (logger.isInfoEnabled())
     {
@@ -283,7 +278,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
    */
   @Override
   public void modify(Repository repository)
-    throws RepositoryException, IOException
+    throws RepositoryException
   {
     if (logger.isInfoEnabled())
     {
@@ -323,7 +318,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
    */
   @Override
   public void refresh(Repository repository)
-    throws RepositoryException, IOException
+    throws RepositoryException
   {
     AssertUtil.assertIsNotNull(repository);
     RepositoryPermissions.read(repository).check();

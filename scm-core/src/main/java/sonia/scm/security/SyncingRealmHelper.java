@@ -30,12 +30,10 @@ package sonia.scm.security;
 
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
-
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.subject.SimplePrincipalCollection;
-
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupException;
 import sonia.scm.group.GroupManager;
@@ -45,9 +43,6 @@ import sonia.scm.user.User;
 import sonia.scm.user.UserException;
 import sonia.scm.user.UserManager;
 import sonia.scm.web.security.AdministrationContext;
-
-
-import java.io.IOException;
 
 import java.util.Collection;
 
@@ -134,7 +129,7 @@ public final class SyncingRealmHelper {
           groupManager.create(group);
         }
       }
-      catch (GroupException | IOException ex) {
+      catch (GroupException ex) {
         throw new AuthenticationException("could not store group", ex);
       }
     });
@@ -155,7 +150,7 @@ public final class SyncingRealmHelper {
           userManager.create(user);
         }
       }
-      catch (UserException | IOException ex) {
+      catch (UserException ex) {
         throw new AuthenticationException("could not store user", ex);
       }
     });

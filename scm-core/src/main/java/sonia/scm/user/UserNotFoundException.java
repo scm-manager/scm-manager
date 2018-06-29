@@ -51,39 +51,7 @@ public class UserNotFoundException extends UserException
    * Constructs a new UserNotFoundException.
    *
    */
-  public UserNotFoundException() {}
-
-  /**
-   * Constructs a new UserNotFoundException.
-   *
-   *
-   * @param message message for the exception
-   */
-  public UserNotFoundException(String message)
-  {
-    super(message);
-  }
-
-  /**
-   * Constructs a new UserNotFoundException.
-   *
-   *
-   * @param throwable root cause
-   */
-  public UserNotFoundException(Throwable throwable)
-  {
-    super(throwable);
-  }
-
-  /**
-   * Constructs a new UserNotFoundException.
-   *
-   *
-   * @param message message for the exception
-   * @param throwable root cause
-   */
-  public UserNotFoundException(String message, Throwable throwable)
-  {
-    super(message, throwable);
+  public UserNotFoundException() {
+    super("user does not exists");
   }
 }
