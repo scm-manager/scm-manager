@@ -62,14 +62,7 @@ import sonia.scm.plugin.DefaultPluginLoader;
 import sonia.scm.plugin.DefaultPluginManager;
 import sonia.scm.plugin.PluginLoader;
 import sonia.scm.plugin.PluginManager;
-import sonia.scm.repository.DefaultRepositoryManager;
-import sonia.scm.repository.DefaultRepositoryProvider;
-import sonia.scm.repository.HealthCheckContextListener;
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryDAO;
-import sonia.scm.repository.RepositoryManager;
-import sonia.scm.repository.RepositoryManagerProvider;
-import sonia.scm.repository.RepositoryProvider;
+import sonia.scm.repository.*;
 import sonia.scm.repository.api.HookContextFactory;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.repository.spi.HookEventFacade;
@@ -360,6 +353,8 @@ public class ScmServletModule extends ServletModule
 
     // bind events
     // bind(LastModifiedUpdateListener.class);
+
+    bind(NamespaceStrategy.class, DefaultNamespaceStrategy.class);
   }
 
   /**

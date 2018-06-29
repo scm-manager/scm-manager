@@ -76,7 +76,7 @@ public class SvnRepositoryServiceResolver implements RepositoryServiceResolver
    * @return
    */
   @Override
-  public SvnRepositoryServiceProvider reslove(Repository repository)
+  public SvnRepositoryServiceProvider resolve(Repository repository)
   {
     SvnRepositoryServiceProvider provider = null;
 

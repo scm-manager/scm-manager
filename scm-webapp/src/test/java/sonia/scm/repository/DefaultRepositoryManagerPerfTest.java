@@ -93,6 +93,8 @@ public class DefaultRepositoryManagerPerfTest {
   private final ScmConfiguration configuration = new ScmConfiguration();
   
   private final KeyGenerator keyGenerator = new DefaultKeyGenerator();
+
+  private final NamespaceStrategy namespaceStrategy = new DefaultNamespaceStrategy();
   
   @Mock
   private RepositoryHandler repositoryHandler;
@@ -117,7 +119,8 @@ public class DefaultRepositoryManagerPerfTest {
       keyGenerator, 
       repositoryDAO,
       handlerSet, 
-      repositoryMatcher
+      repositoryMatcher,
+      namespaceStrategy
     );
     
     setUpTestRepositories();
