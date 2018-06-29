@@ -32,8 +32,6 @@
 
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import org.junit.Test;
 
 import static org.junit.Assert.*;
