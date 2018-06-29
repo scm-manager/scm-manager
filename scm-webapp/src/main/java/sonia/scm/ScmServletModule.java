@@ -42,10 +42,8 @@ import com.google.inject.name.Names;
 import com.google.inject.servlet.RequestScoped;
 import com.google.inject.servlet.ServletModule;
 import com.google.inject.throwingproviders.ThrowingProviderBinder;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.api.rest.ObjectMapperProvider;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.cache.GuavaCacheManager;
@@ -58,8 +56,15 @@ import sonia.scm.group.GroupManagerProvider;
 import sonia.scm.group.xml.XmlGroupDAO;
 import sonia.scm.io.DefaultFileSystem;
 import sonia.scm.io.FileSystem;
+import sonia.scm.net.SSLContextProvider;
+import sonia.scm.net.ahc.AdvancedHttpClient;
+import sonia.scm.net.ahc.ContentTransformer;
+import sonia.scm.net.ahc.DefaultAdvancedHttpClient;
+import sonia.scm.net.ahc.JsonContentTransformer;
+import sonia.scm.net.ahc.XmlContentTransformer;
 import sonia.scm.plugin.DefaultPluginLoader;
 import sonia.scm.plugin.DefaultPluginManager;
+import sonia.scm.plugin.ExtensionProcessor;
 import sonia.scm.plugin.PluginLoader;
 import sonia.scm.plugin.PluginManager;
 import sonia.scm.repository.DefaultRepositoryManager;
@@ -70,6 +75,7 @@ import sonia.scm.repository.RepositoryDAO;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryManagerProvider;
 import sonia.scm.repository.RepositoryProvider;
+import sonia.scm.repository.SpacesStrategy;
 import sonia.scm.repository.api.HookContextFactory;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.repository.spi.HookEventFacade;
@@ -78,19 +84,25 @@ import sonia.scm.resources.DefaultResourceManager;
 import sonia.scm.resources.DevelopmentResourceManager;
 import sonia.scm.resources.ResourceManager;
 import sonia.scm.resources.ScriptResourceServlet;
+import sonia.scm.schedule.QuartzScheduler;
+import sonia.scm.schedule.Scheduler;
+import sonia.scm.security.AuthorizationChangedEventProducer;
 import sonia.scm.security.CipherHandler;
 import sonia.scm.security.CipherUtil;
+import sonia.scm.security.ConfigurableLoginAttemptHandler;
 import sonia.scm.security.DefaultKeyGenerator;
 import sonia.scm.security.DefaultSecuritySystem;
 import sonia.scm.security.KeyGenerator;
+import sonia.scm.security.LoginAttemptHandler;
 import sonia.scm.security.SecuritySystem;
 import sonia.scm.store.BlobStoreFactory;
 import sonia.scm.store.ConfigurationEntryStoreFactory;
+import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.store.DataStoreFactory;
 import sonia.scm.store.FileBlobStoreFactory;
 import sonia.scm.store.JAXBConfigurationEntryStoreFactory;
-import sonia.scm.store.JAXBDataStoreFactory;
 import sonia.scm.store.JAXBConfigurationStoreFactory;
+import sonia.scm.store.JAXBDataStoreFactory;
 import sonia.scm.template.MustacheTemplateEngine;
 import sonia.scm.template.TemplateEngine;
 import sonia.scm.template.TemplateEngineFactory;
@@ -107,31 +119,17 @@ import sonia.scm.user.UserManagerProvider;
 import sonia.scm.user.xml.XmlUserDAO;
 import sonia.scm.util.DebugServlet;
 import sonia.scm.util.ScmConfigurationUtil;
+import sonia.scm.web.UserAgentParser;
 import sonia.scm.web.cgi.CGIExecutorFactory;
 import sonia.scm.web.cgi.DefaultCGIExecutorFactory;
 import sonia.scm.web.filter.LoggingFilter;
 import sonia.scm.web.security.AdministrationContext;
 import sonia.scm.web.security.DefaultAdministrationContext;
 
-//~--- JDK imports ------------------------------------------------------------
-
-
-import javax.servlet.ServletContext;
-import sonia.scm.store.ConfigurationStoreFactory;
-
 import javax.net.ssl.SSLContext;
-import sonia.scm.net.SSLContextProvider;
-import sonia.scm.net.ahc.AdvancedHttpClient;
-import sonia.scm.net.ahc.ContentTransformer;
-import sonia.scm.net.ahc.DefaultAdvancedHttpClient;
-import sonia.scm.net.ahc.JsonContentTransformer;
-import sonia.scm.net.ahc.XmlContentTransformer;
-import sonia.scm.schedule.QuartzScheduler;
-import sonia.scm.schedule.Scheduler;
-import sonia.scm.security.ConfigurableLoginAttemptHandler;
-import sonia.scm.security.LoginAttemptHandler;
-import sonia.scm.security.AuthorizationChangedEventProducer;
-import sonia.scm.web.UserAgentParser;
+import javax.servlet.ServletContext;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -202,17 +200,18 @@ public class ScmServletModule extends ServletModule
    * Constructs ...
    *
    *
-   *
    * @param servletContext
    * @param pluginLoader
    * @param overrides
+   * @param extensionProcessor
    */
   ScmServletModule(ServletContext servletContext,
-    DefaultPluginLoader pluginLoader, ClassOverrides overrides)
+    DefaultPluginLoader pluginLoader, ClassOverrides overrides, ExtensionProcessor extensionProcessor)
   {
     this.servletContext = servletContext;
     this.pluginLoader = pluginLoader;
     this.overrides = overrides;
+    this.extensionProcessor = extensionProcessor;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -283,6 +282,9 @@ public class ScmServletModule extends ServletModule
     bind(GroupDAO.class, XmlGroupDAO.class);
     bind(UserDAO.class, XmlUserDAO.class);
     bind(RepositoryDAO.class, XmlRepositoryDAO.class);
+
+    Class<? extends SpacesStrategy> mySpaceStrategy = extensionProcessor.byExtensionPoint(SpacesStrategy.class).iterator().next();
+    bind(SpacesStrategy.class, mySpaceStrategy);
 
     bindDecorated(RepositoryManager.class, DefaultRepositoryManager.class,
       RepositoryManagerProvider.class);
@@ -476,4 +478,6 @@ public class ScmServletModule extends ServletModule
 
   /** Field description */
   private final ServletContext servletContext;
+
+  private final ExtensionProcessor extensionProcessor;
 }

@@ -39,24 +39,22 @@ import com.github.sdorra.ssp.PermissionObject;
 import com.github.sdorra.ssp.StaticPermissions;
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
-
 import sonia.scm.BasicPropertiesAware;
 import sonia.scm.ModelObject;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 import sonia.scm.util.ValidationUtil;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Source code repository.
@@ -443,6 +441,10 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
         || ValidationUtil.isMailAddressValid(contact));
   }
 
+  public String getSpace() {
+    return space;
+  }
+
   //~--- set methods ----------------------------------------------------------
 
   /**
@@ -570,6 +572,9 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
     this.healthCheckFailures = healthCheckFailures;
   }
 
+  public void setSpace(String space) {
+    this.space = space;
+  }
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
@@ -609,4 +614,6 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
 
   /** Field description */
   private String type;
+
+  private String space;
 }

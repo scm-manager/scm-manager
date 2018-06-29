@@ -39,14 +39,10 @@ import com.google.common.base.Throwables;
 import com.google.common.collect.Lists;
 import com.google.inject.Injector;
 import com.google.inject.Module;
-
 import org.apache.shiro.guice.web.ShiroWebModule;
-
+import org.jboss.resteasy.plugins.guice.GuiceResteasyBootstrapServletContextListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import org.jboss.resteasy.plugins.guice.GuiceResteasyBootstrapServletContextListener;
-
 import sonia.scm.api.v2.resources.MapperModule;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.debug.DebugModule;
@@ -61,14 +57,13 @@ import sonia.scm.upgrade.UpgradeManager;
 import sonia.scm.user.UserManager;
 import sonia.scm.util.IOUtil;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.List;
-import java.util.Set;
-import java.util.Collections;
-
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -140,7 +135,7 @@ public class ScmContextListener extends GuiceResteasyBootstrapServletContextList
     moduleList.add(new EagerSingletonModule());
     moduleList.add(ShiroWebModule.guiceFilterModule());
     moduleList.add(new WebElementModule(pluginLoader));
-    moduleList.add(new ScmServletModule(context, pluginLoader, overrides));
+    moduleList.add(new ScmServletModule(context, pluginLoader, overrides, pluginLoader.getExtensionProcessor()));
     moduleList.add(
       new ScmSecurityModule(context, pluginLoader.getExtensionProcessor())
     );

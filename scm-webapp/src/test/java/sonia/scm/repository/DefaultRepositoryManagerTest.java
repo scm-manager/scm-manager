@@ -31,45 +31,54 @@
 package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
+
 import com.github.legman.Subscribe;
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.collect.ImmutableSet;
-
+import org.apache.shiro.authz.UnauthorizedException;
+import org.junit.Rule;
 import org.junit.Test;
-
+import org.junit.rules.ExpectedException;
+import org.mockito.invocation.InvocationOnMock;
+import sonia.scm.HandlerEventType;
+import sonia.scm.Manager;
+import sonia.scm.ManagerTestBase;
 import sonia.scm.Type;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.api.HookContext;
 import sonia.scm.repository.api.HookContextFactory;
 import sonia.scm.repository.api.HookFeature;
 import sonia.scm.repository.spi.HookContextProvider;
 import sonia.scm.repository.xml.XmlRepositoryDAO;
 import sonia.scm.security.DefaultKeyGenerator;
+import sonia.scm.security.KeyGenerator;
+import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.store.JAXBConfigurationStoreFactory;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-import static org.hamcrest.Matchers.*;
-
-//~--- JDK imports ------------------------------------------------------------
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
-
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
-import org.apache.shiro.authz.UnauthorizedException;
-import org.junit.Rule;
-import org.junit.rules.ExpectedException;
-import org.mockito.invocation.InvocationOnMock;
-import sonia.scm.HandlerEventType;
-import sonia.scm.Manager;
-import sonia.scm.ManagerTestBase;
-import sonia.scm.event.ScmEventBus;
-import sonia.scm.security.KeyGenerator;
-import sonia.scm.store.ConfigurationStoreFactory;
+
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Unit tests for {@link DefaultRepositoryManager}.
@@ -542,7 +551,7 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
     configuration.setEnableRepositoryArchive(archiveEnabled);
 
     return new DefaultRepositoryManager(configuration, contextProvider,
-      keyGenerator, repositoryDAO, handlerSet, createRepositoryMatcher());
+      keyGenerator, repositoryDAO, handlerSet, createRepositoryMatcher(), mock(SpacesStrategy.class));
   }
   
   private void createRepository(RepositoryManager m, Repository repository)

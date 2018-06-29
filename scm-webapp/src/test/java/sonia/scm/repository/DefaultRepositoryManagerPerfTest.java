@@ -33,13 +33,6 @@ package sonia.scm.repository;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Provider;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -58,7 +51,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import static org.mockito.Mockito.*;
 import org.mockito.runners.MockitoJUnitRunner;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.Type;
@@ -67,8 +59,18 @@ import sonia.scm.config.ScmConfiguration;
 import sonia.scm.security.AuthorizationCollector;
 import sonia.scm.security.DefaultKeyGenerator;
 import sonia.scm.security.KeyGenerator;
-import sonia.scm.security.SecuritySystem;
 import sonia.scm.user.UserTestData;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Performance test for {@link RepositoryManager#getAll()}.
@@ -117,8 +119,8 @@ public class DefaultRepositoryManagerPerfTest {
       keyGenerator, 
       repositoryDAO,
       handlerSet, 
-      repositoryMatcher
-    );
+      repositoryMatcher,
+      mock(SpacesStrategy.class));
     
     setUpTestRepositories();
     

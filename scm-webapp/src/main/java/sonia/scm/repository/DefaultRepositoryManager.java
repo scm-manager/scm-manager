@@ -41,12 +41,9 @@ import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
 import org.apache.shiro.concurrent.SubjectAwareExecutorService;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.ArgumentIsInvalidException;
 import sonia.scm.ConfigurationException;
 import sonia.scm.HandlerEventType;
@@ -60,10 +57,8 @@ import sonia.scm.util.HttpUtil;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 
-//~--- JDK imports ------------------------------------------------------------
-
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -76,7 +71,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 
-import javax.servlet.http.HttpServletRequest;
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Default implementation of {@link RepositoryManager}.
@@ -105,17 +100,19 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
    * @param repositoryDAO
    * @param handlerSet
    * @param repositoryMatcher
+   * @param spaceStrategy
    */
   @Inject
   public DefaultRepositoryManager(ScmConfiguration configuration,
     SCMContextProvider contextProvider, KeyGenerator keyGenerator,
-    RepositoryDAO repositoryDAO, Set<RepositoryHandler> handlerSet, 
-    RepositoryMatcher repositoryMatcher)
+    RepositoryDAO repositoryDAO, Set<RepositoryHandler> handlerSet,
+    RepositoryMatcher repositoryMatcher, SpacesStrategy spaceStrategy)
   {
     this.configuration = configuration;
     this.keyGenerator = keyGenerator;
     this.repositoryDAO = repositoryDAO;
     this.repositoryMatcher = repositoryMatcher;
+    this.spaceStrategy = spaceStrategy;
 
     //J-
     ThreadFactory factory = new ThreadFactoryBuilder()
@@ -168,6 +165,8 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
   {
     logger.info("create repository {} of type {}", repository.getName(),
       repository.getType());
+
+    repository.setSpace(spaceStrategy.getCurrentSpace());
 
     RepositoryPermissions.create().check();
     AssertUtil.assertIsValid(repository);
@@ -740,4 +739,6 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
   
   /** Field description */
   private RepositoryMatcher repositoryMatcher;
+
+  private final SpacesStrategy spaceStrategy;
 }
