@@ -29,3 +29,8 @@ Desktop DF$
 # jrebel
 rebel.xml
 \.pyc
+# ui
+scm-ui/node-modules/
+scm-ui/yarn.lock
+scm-ui/.gitignore
+scm-ui/package-lock.json
