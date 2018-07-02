@@ -253,7 +253,7 @@ public final class RepositoryServiceFactory
 
     for (RepositoryServiceResolver resolver : resolvers)
     {
-      RepositoryServiceProvider provider = resolver.reslove(repository);
+      RepositoryServiceProvider provider = resolver.resolve(repository);
 
       if (provider != null)
       {

@@ -548,10 +548,12 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
 
     ScmConfiguration configuration = new ScmConfiguration();
 
+    NamespaceStrategy namespaceStrategy = new DefaultNamespaceStrategy();
+
     configuration.setEnableRepositoryArchive(archiveEnabled);
 
     return new DefaultRepositoryManager(configuration, contextProvider,
-      keyGenerator, repositoryDAO, handlerSet, createRepositoryMatcher(), mock(SpacesStrategy.class));
+      keyGenerator, repositoryDAO, handlerSet, createRepositoryMatcher(), namespaceStrategy);
   }
   
   private void createRepository(RepositoryManager m, Repository repository)

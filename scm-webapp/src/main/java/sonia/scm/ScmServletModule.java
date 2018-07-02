@@ -67,15 +67,7 @@ import sonia.scm.plugin.DefaultPluginManager;
 import sonia.scm.plugin.ExtensionProcessor;
 import sonia.scm.plugin.PluginLoader;
 import sonia.scm.plugin.PluginManager;
-import sonia.scm.repository.DefaultRepositoryManager;
-import sonia.scm.repository.DefaultRepositoryProvider;
-import sonia.scm.repository.HealthCheckContextListener;
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryDAO;
-import sonia.scm.repository.RepositoryManager;
-import sonia.scm.repository.RepositoryManagerProvider;
-import sonia.scm.repository.RepositoryProvider;
-import sonia.scm.repository.SpacesStrategy;
+import sonia.scm.repository.*;
 import sonia.scm.repository.api.HookContextFactory;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.repository.spi.HookEventFacade;
@@ -283,9 +275,6 @@ public class ScmServletModule extends ServletModule
     bind(UserDAO.class, XmlUserDAO.class);
     bind(RepositoryDAO.class, XmlRepositoryDAO.class);
 
-    Class<? extends SpacesStrategy> mySpaceStrategy = extensionProcessor.byExtensionPoint(SpacesStrategy.class).iterator().next();
-    bind(SpacesStrategy.class, mySpaceStrategy);
-
     bindDecorated(RepositoryManager.class, DefaultRepositoryManager.class,
       RepositoryManagerProvider.class);
     bindDecorated(UserManager.class, DefaultUserManager.class,
@@ -296,7 +285,6 @@ public class ScmServletModule extends ServletModule
 
     // bind sslcontext provider
     bind(SSLContext.class).toProvider(SSLContextProvider.class);
-    
     
     // bind ahc
     Multibinder<ContentTransformer> transformers =
@@ -362,6 +350,9 @@ public class ScmServletModule extends ServletModule
 
     // bind events
     // bind(LastModifiedUpdateListener.class);
+
+    Class<? extends NamespaceStrategy> namespaceStrategy = extensionProcessor.byExtensionPoint(NamespaceStrategy.class).iterator().next();
+    bind(NamespaceStrategy.class, namespaceStrategy);
   }
 
   /**
