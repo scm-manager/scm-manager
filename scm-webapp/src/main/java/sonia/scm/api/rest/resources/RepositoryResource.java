@@ -131,7 +131,7 @@ public class RepositoryResource extends AbstractManagerResource<Repository, Repo
     RepositoryManager repositoryManager,
     RepositoryServiceFactory servicefactory, HealthChecker healthChecker)
   {
-    super(repositoryManager);
+    super(repositoryManager, Repository.class);
     this.configuration = configuration;
     this.repositoryManager = repositoryManager;
     this.servicefactory = servicefactory;

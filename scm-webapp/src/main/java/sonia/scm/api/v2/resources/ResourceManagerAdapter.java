@@ -30,8 +30,8 @@ class ResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
                              DTO extends HalRepresentation,
                              EXCEPTION extends Exception> extends AbstractManagerResource<MODEL_OBJECT, EXCEPTION> {
 
-  ResourceManagerAdapter(Manager<MODEL_OBJECT, EXCEPTION> manager) {
-    super(manager);
+  ResourceManagerAdapter(Manager<MODEL_OBJECT, EXCEPTION> manager, Class<MODEL_OBJECT> type) {
+    super(manager, type);
   }
 
   /**
