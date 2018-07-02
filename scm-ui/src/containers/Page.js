@@ -7,7 +7,7 @@ import Login from '../Login';
 
 
 type Props = {
-  loading: boolean,
+  login: boolean,
   error: any,
   repositories: any,
   fetchRepositoriesIfNeeded: () => void
@@ -20,10 +20,10 @@ class Page extends React.Component<Props> {
   }
 
   render() {
-    const { loading, error, repositories } = this.props;
+    const { login, error, repositories } = this.props;
 
 
-    if(loading) {
+    if(login) {
       return (
         <div>
           <h1>SCM</h1>
@@ -31,7 +31,7 @@ class Page extends React.Component<Props> {
         </div>
       );
     }
-    else if(!loading){
+    else if(!login){
       return (
         <div>
           <h1>SCM</h1>

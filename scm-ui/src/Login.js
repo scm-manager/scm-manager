@@ -8,7 +8,7 @@ const styles = {
     display: 'flex',
     height: '10em'
   },
-  loading: {
+  login: {
     margin: 'auto',
     textAlign: 'center'
   }
@@ -24,7 +24,7 @@ class Login extends React.Component<Props> {
     const { classes } = this.props;
     return (
       <div className={classes.wrapper}>
-        <div className={classes.loading}>
+        <div className={classes.login}>
           You need to log in! ...
         </div>
       </div>
