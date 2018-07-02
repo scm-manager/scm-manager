@@ -2,9 +2,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { fetchRepositoriesIfNeeded } from '../modules/page';
+import { fetchRepositoriesIfNeeded } from '../modules/users';
 import Login from '../Login';
-
 
 type Props = {
   loading: boolean,
@@ -13,7 +12,7 @@ type Props = {
   fetchRepositoriesIfNeeded: () => void
 }
 
-class Page extends React.Component<Props> {
+class Users extends React.Component<Props> {
 
   componentDidMount() {
     this.props.fetchRepositoriesIfNeeded();
@@ -21,6 +20,7 @@ class Page extends React.Component<Props> {
 
   render() {
     const { loading, error, repositories } = this.props;
+
 
 
     if(loading) {
@@ -35,15 +35,10 @@ class Page extends React.Component<Props> {
       return (
         <div>
           <h1>SCM</h1>
-          <h2>Startpage</h2>
-          <a href={"/users" }>
-            Users hier!
-          </a>
+          <h2>Users</h2>
         </div>
       );
     }
-
-
   }
 
 }
@@ -60,4 +55,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Page);
+export default connect(mapStateToProps, mapDispatchToProps)(Users);

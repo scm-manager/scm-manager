@@ -43,7 +43,7 @@ export default function reducer(state = {}, action = {}) {
     case FETCH_REPOSITORIES_SUCCESS:
       return {
         ...state,
-        loading: true,
+        loading: false,
         timestamp: action.timestamp,
         error: null,
         repositories: action.payload
@@ -51,7 +51,7 @@ export default function reducer(state = {}, action = {}) {
     case FETCH_REPOSITORIES_FAILURE:
       return {
         ...state,
-        loading: true,
+        loading: false,
         error: action.payload
       };
 
