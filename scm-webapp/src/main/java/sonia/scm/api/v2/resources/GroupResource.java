@@ -22,14 +22,14 @@ public class GroupResource {
 
   private final GroupToGroupDtoMapper groupToGroupDtoMapper;
   private final GroupDtoToGroupMapper dtoToGroupMapper;
-  private final ResourceManagerAdapter<Group, GroupDto, GroupException> adapter;
+  private final IdResourceManagerAdapter<Group, GroupDto, GroupException> adapter;
 
   @Inject
   public GroupResource(GroupManager manager, GroupToGroupDtoMapper groupToGroupDtoMapper,
                        GroupDtoToGroupMapper groupDtoToGroupMapper) {
     this.groupToGroupDtoMapper = groupToGroupDtoMapper;
     this.dtoToGroupMapper = groupDtoToGroupMapper;
-    this.adapter = new ResourceManagerAdapter<>(manager);
+    this.adapter = new IdResourceManagerAdapter<>(manager);
   }
 
   /**

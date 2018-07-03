@@ -38,13 +38,11 @@ package sonia.scm.repository;
 import sonia.scm.Type;
 import sonia.scm.TypeManager;
 
-//~--- JDK imports ------------------------------------------------------------
-
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-
 import java.util.Collection;
 
-import javax.servlet.http.HttpServletRequest;
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * The central class for managing {@link Repository} objects.
@@ -149,4 +147,12 @@ public interface RepositoryManager
    */
   @Override
   public RepositoryHandler getHandler(String type);
+
+  default Repository getByNamespace(String namespace, String name) {
+    return getAll()
+      .stream()
+      .filter(r -> r.getName().equals(name) && r.getNamespace().equals(namespace))
+      .findFirst()
+      .orElse(null);
+  }
 }

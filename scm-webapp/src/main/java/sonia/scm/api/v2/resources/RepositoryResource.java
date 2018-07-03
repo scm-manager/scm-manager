@@ -19,12 +19,14 @@ public class RepositoryResource {
 
   private final RepositoryToRepositoryDtoMapper repositoryToDtoMapper;
 
-  private final ResourceManagerAdapter<Repository, RepositoryDto, RepositoryException> adapter;
+  private final RepositoryManager manager;
+  private final SingleResourceManagerAdapter<Repository, RepositoryDto, RepositoryException> adapter;
 
   @Inject
   public RepositoryResource(RepositoryToRepositoryDtoMapper repositoryToDtoMapper, RepositoryManager manager) {
+    this.manager = manager;
     this.repositoryToDtoMapper = repositoryToDtoMapper;
-    this.adapter = new ResourceManagerAdapter<>(manager);
+    this.adapter = new SingleResourceManagerAdapter<>(manager);
   }
 
   @GET
@@ -39,6 +41,6 @@ public class RepositoryResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name) {
-    return adapter.get("31QwjAKOK2", repositoryToDtoMapper::map);
+    return adapter.get(() -> manager.getByNamespace(namespace, name), repositoryToDtoMapper::map);
   }
 }

@@ -1,13 +1,23 @@
 package sonia.scm.api.v2.resources;
 
-import com.webcohesion.enunciate.metadata.rs.*;
+import com.webcohesion.enunciate.metadata.rs.ResponseCode;
+import com.webcohesion.enunciate.metadata.rs.ResponseHeader;
+import com.webcohesion.enunciate.metadata.rs.ResponseHeaders;
+import com.webcohesion.enunciate.metadata.rs.StatusCodes;
+import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import sonia.scm.user.User;
 import sonia.scm.user.UserException;
 import sonia.scm.user.UserManager;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 
@@ -18,14 +28,14 @@ public class UserCollectionResource {
   private final UserCollectionToDtoMapper userCollectionToDtoMapper;
   private final ResourceLinks resourceLinks;
 
-  private final ResourceManagerAdapter<User, UserDto, UserException> adapter;
+  private final IdResourceManagerAdapter<User, UserDto, UserException> adapter;
 
   @Inject
   public UserCollectionResource(UserManager manager, UserDtoToUserMapper dtoToUserMapper,
     UserCollectionToDtoMapper userCollectionToDtoMapper, ResourceLinks resourceLinks) {
     this.dtoToUserMapper = dtoToUserMapper;
     this.userCollectionToDtoMapper = userCollectionToDtoMapper;
-    this.adapter = new ResourceManagerAdapter<>(manager);
+    this.adapter = new IdResourceManagerAdapter<>(manager);
     this.resourceLinks = resourceLinks;
   }
 

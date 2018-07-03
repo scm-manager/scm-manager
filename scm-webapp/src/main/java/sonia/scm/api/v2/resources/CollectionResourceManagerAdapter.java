@@ -26,41 +26,12 @@ import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
  * @param <EXCEPTION> The exception type for the model object, eg. {@link sonia.scm.user.UserException}.
  */
 @SuppressWarnings("squid:S00119") // "MODEL_OBJECT" is much more meaningful than "M", right?
-class ResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
+class CollectionResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
                              DTO extends HalRepresentation,
                              EXCEPTION extends Exception> extends AbstractManagerResource<MODEL_OBJECT, EXCEPTION> {
 
-  ResourceManagerAdapter(Manager<MODEL_OBJECT, EXCEPTION> manager) {
+  CollectionResourceManagerAdapter(Manager<MODEL_OBJECT, EXCEPTION> manager) {
     super(manager);
-  }
-
-  /**
-   * Reads the model object for the given id, transforms it to a dto and returns a corresponding http response.
-   * This handles all corner cases, eg. no matching object for the id or missing privileges.
-   */
-  Response get(String id, Function<MODEL_OBJECT, DTO> mapToDto) {
-    MODEL_OBJECT modelObject = manager.get(id);
-    if (modelObject == null) {
-      return Response.status(Response.Status.NOT_FOUND).build();
-    }
-    DTO dto = mapToDto.apply(modelObject);
-    return Response.ok(dto).build();
-  }
-
-  /**
-   * Update the model object for the given id according to the given function and returns a corresponding http response.
-   * This handles all corner cases, eg. no matching object for the id or missing privileges.
-   */
-  public Response update(String id, Function<MODEL_OBJECT, MODEL_OBJECT> applyChanges) {
-    MODEL_OBJECT existingModelObject = manager.get(id);
-    if (existingModelObject == null) {
-      return Response.status(Response.Status.NOT_FOUND).build();
-    }
-    MODEL_OBJECT changedModelObject = applyChanges.apply(existingModelObject);
-    if (!id.equals(changedModelObject.getId())) {
-      return Response.status(BAD_REQUEST).entity("illegal change of id").build();
-    }
-    return update(id, changedModelObject);
   }
 
   /**
