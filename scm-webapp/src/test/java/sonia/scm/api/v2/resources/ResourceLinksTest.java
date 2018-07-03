@@ -84,6 +84,30 @@ public class ResourceLinksTest {
     assertEquals(BASE_URL + GroupRootResource.GROUPS_PATH_V2, url);
   }
 
+  @Test
+  public void shouldCreateCorrectRepositorySelfUrl() {
+    String url = resourceLinks.repository().self("space", "repo");
+    assertEquals(BASE_URL + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo", url);
+  }
+
+  @Test
+  public void shouldCreateCorrectRepositoryDeleteUrl() {
+    String url = resourceLinks.repository().delete("space", "repo");
+    assertEquals(BASE_URL + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo", url);
+  }
+
+  @Test
+  public void shouldCreateCorrectRepositoryUpdateUrl() {
+    String url = resourceLinks.repository().update("space", "repo");
+    assertEquals(BASE_URL + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo", url);
+  }
+
+  @Test
+  public void shouldCreateCorrectTagCollectionUrl() {
+    String url = resourceLinks.tagCollection().self("space", "repo");
+    assertEquals(BASE_URL + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/tags/", url);
+  }
+
   @Before
   public void initUriInfo() {
     initMocks(this);

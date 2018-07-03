@@ -102,7 +102,7 @@ class ResourceLinks {
   }
 
   public RepositoryLinks repository() {
-    return null;
+    return new RepositoryLinks(uriInfoStore.get());
   }
 
   static class RepositoryLinks {
@@ -122,6 +122,22 @@ class ResourceLinks {
 
     String update(String namespace, String name) {
       return repositoryLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("update").parameters().href();
+    }
+  }
+
+  public TagCollectionLinks tagCollection() {
+    return new TagCollectionLinks(uriInfoStore.get());
+  }
+
+  static class TagCollectionLinks {
+    private final LinkBuilder repositoryLinkBuilder;
+
+    private TagCollectionLinks(UriInfo uriInfo) {
+      repositoryLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, TagRootResource.class, TagCollectionResource.class);
+    }
+
+    String self(String namespace, String name) {
+      return repositoryLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("tags").parameters().method("getTagCollectionResource").parameters().method("getAll").parameters().href();
     }
   }
 }

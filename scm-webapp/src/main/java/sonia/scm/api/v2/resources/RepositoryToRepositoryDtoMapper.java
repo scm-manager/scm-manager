@@ -34,6 +34,7 @@ public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Reposit
     if (RepositoryPermissions.modify(repository).isPermitted()) {
       linksBuilder.single(link("update", resourceLinks.repository().update(target.getNamespace(), target.getName())));
     }
+    linksBuilder.single(link("tags", resourceLinks.tagCollection().self(target.getNamespace(), target.getName())));
     target.add(linksBuilder.build());
   }
 }

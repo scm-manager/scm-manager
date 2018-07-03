@@ -101,6 +101,14 @@ public class RepositoryToRepositoryDtoMapperTest {
     assertEquals("READ", dto.getPermissions().get(0).getType());
   }
 
+  @Test
+  public void shouldCreateTagsLink() {
+    RepositoryDto dto = mapper.map(createTestRepository());
+    assertEquals(
+      "http://example.com/base/v2/groups/testspace/test/tags/",
+      dto.getLinks().getLinkBy("tags").get().getHref());
+  }
+
   private Repository createTestRepository() {
     Repository repository = new Repository();
     repository.setNamespace("testspace");

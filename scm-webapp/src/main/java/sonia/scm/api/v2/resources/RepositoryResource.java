@@ -9,7 +9,10 @@ import sonia.scm.repository.RepositoryManager;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -21,12 +24,14 @@ public class RepositoryResource {
 
   private final RepositoryManager manager;
   private final SingleResourceManagerAdapter<Repository, RepositoryDto, RepositoryException> adapter;
+  private final Provider<TagRootResource> tagRootResource;
 
   @Inject
-  public RepositoryResource(RepositoryToRepositoryDtoMapper repositoryToDtoMapper, RepositoryManager manager) {
+  public RepositoryResource(RepositoryToRepositoryDtoMapper repositoryToDtoMapper, RepositoryManager manager, Provider<TagRootResource> tagRootResource) {
     this.manager = manager;
     this.repositoryToDtoMapper = repositoryToDtoMapper;
     this.adapter = new SingleResourceManagerAdapter<>(manager);
+    this.tagRootResource = tagRootResource;
   }
 
   @GET
@@ -42,5 +47,22 @@ public class RepositoryResource {
   })
   public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name) {
     return adapter.get(() -> manager.getByNamespace(namespace, name), repositoryToDtoMapper::map);
+  }
+
+  @DELETE
+  @Path("")
+  public Response delete(@PathParam("namespace") String namespace, @PathParam("name") String name) {
+    throw new UnsupportedOperationException();
+  }
+
+  @PUT
+  @Path("")
+  public Response update(@PathParam("namespace") String namespace, @PathParam("name") String name) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Path("tags/")
+  public TagRootResource tags() {
+    return tagRootResource.get();
   }
 }
