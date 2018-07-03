@@ -100,4 +100,28 @@ class ResourceLinks {
       return collectionLinkBuilder.method("getUserCollectionResource").parameters().method("create").parameters().href();
     }
   }
+
+  public RepositoryLinks repository() {
+    return null;
+  }
+
+  static class RepositoryLinks {
+    private final LinkBuilder repositoryLinkBuilder;
+
+    private RepositoryLinks(UriInfo uriInfo) {
+      repositoryLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class);
+    }
+
+    String self(String namespace, String name) {
+      return repositoryLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("get").parameters().href();
+    }
+
+    String delete(String namespace, String name) {
+      return repositoryLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("delete").parameters().href();
+    }
+
+    String update(String namespace, String name) {
+      return repositoryLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("update").parameters().href();
+    }
+  }
 }

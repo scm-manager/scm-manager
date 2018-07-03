@@ -1,10 +1,13 @@
 package sonia.scm.api.v2.resources;
 
+import com.github.sdorra.shiro.ShiroRule;
+import com.github.sdorra.shiro.SubjectAware;
 import org.jboss.resteasy.core.Dispatcher;
 import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Answers;
 import org.mockito.InjectMocks;
@@ -22,9 +25,17 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
+@SubjectAware(
+  username = "trillian",
+  password = "secret",
+  configuration = "classpath:sonia/scm/repository/shiro.ini"
+)
 public class RepositoryRootResourceTest {
 
   private final Dispatcher dispatcher = MockDispatcherFactory.createDispatcher();
+
+  @Rule
+  public ShiroRule shiro = new ShiroRule();
 
   @Mock
   private RepositoryManager repositoryManager;
@@ -71,6 +82,7 @@ public class RepositoryRootResourceTest {
     Repository repository = new Repository();
     repository.setNamespace(namespace);
     repository.setName(name);
+    repository.setId("id");
     when(repositoryManager.getByNamespace(namespace, name)).thenReturn(repository);
     return repository;
   }

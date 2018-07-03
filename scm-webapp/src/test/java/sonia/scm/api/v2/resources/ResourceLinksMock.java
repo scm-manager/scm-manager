@@ -22,5 +22,9 @@ public class ResourceLinksMock {
 
     when(resourceLinks.groupCollection().self()).thenAnswer(invocation -> baseUri + GROUPS_PATH_V2);
     when(resourceLinks.groupCollection().create()).thenAnswer(invocation -> baseUri + GROUPS_PATH_V2);
+
+    when(resourceLinks.repository().self(anyString(), anyString())).thenAnswer(invocation -> baseUri + GROUPS_PATH_V2 + invocation.getArguments()[0] + "/"  + invocation.getArguments()[1]);
+    when(resourceLinks.repository().update(anyString(), anyString())).thenAnswer(invocation -> baseUri + GROUPS_PATH_V2 + invocation.getArguments()[0] + "/"  + invocation.getArguments()[1]);
+    when(resourceLinks.repository().delete(anyString(), anyString())).thenAnswer(invocation -> baseUri + GROUPS_PATH_V2 + invocation.getArguments()[0] + "/"  + invocation.getArguments()[1]);
   }
 }
