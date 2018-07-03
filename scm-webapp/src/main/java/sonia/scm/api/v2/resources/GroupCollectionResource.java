@@ -41,11 +41,12 @@ public class GroupCollectionResource {
 
   /**
    * Returns all groups for a given page number with a given page size (default page size is {@value DEFAULT_PAGE_SIZE}).
-   * 
+   *
    * <strong>Note:</strong> This method requires "group" privilege.
-   *  @param page     the number of the requested page
+   *
+   * @param page     the number of the requested page
    * @param pageSize the page size (default page size is {@value DEFAULT_PAGE_SIZE})
-   * @param sortBy   sort parameter
+   * @param sortBy   sort parameter (if empty - undefined sorting)
    * @param desc     sort direction desc or aesc
    */
   @GET
@@ -54,6 +55,7 @@ public class GroupCollectionResource {
   @TypeHint(GroupDto[].class)
   @StatusCodes({
     @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 400, condition = "\"sortBy\" field unknown"),
     @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
     @ResponseCode(code = 403, condition = "not authorized, the current user does not have the \"group\" privilege"),
     @ResponseCode(code = 500, condition = "internal server error")
