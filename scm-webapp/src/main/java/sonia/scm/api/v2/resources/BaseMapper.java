@@ -9,7 +9,7 @@ import java.time.Instant;
 abstract class BaseMapper<T extends ModelObject, D extends HalRepresentation> {
 
   @Mapping(target = "attributes", ignore = true) // We do not map HAL attributes
-  public abstract D map(T user);
+  public abstract D map(T modelObject);
 
   Instant mapTime(Long epochMilli) {
     return epochMilli == null? null: Instant.ofEpochMilli(epochMilli);
