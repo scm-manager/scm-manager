@@ -577,6 +577,9 @@ public abstract class AbstractManagerResource<T extends ModelObject,
     return items;
   }
 
+  // We have to handle IntrospectionException here, because it's a checked exception
+  // It shouldn't occur really - so creating a new unchecked exception would be over-engineered here
+  @SuppressWarnings("squid:S00112")
   private void checkSortByField(String sortBy) {
     try {
       BeanInfo info = Introspector.getBeanInfo(type);
@@ -589,17 +592,17 @@ public abstract class AbstractManagerResource<T extends ModelObject,
     }
   }
 
-  protected PageResult<T> fetchPage(String sortby, boolean desc, int pageNumber,
+  protected PageResult<T> fetchPage(String sortBy, boolean desc, int pageNumber,
     int pageSize) {
     AssertUtil.assertPositive(pageNumber);
     AssertUtil.assertPositive(pageSize);
 
-    if (Util.isEmpty(sortby)) {
+    if (Util.isEmpty(sortBy)) {
       // replace with something useful
-      sortby = "id";
+      sortBy = "id";
     }
 
-    return manager.getPage(createComparator(sortby, desc), pageNumber, pageSize);
+    return manager.getPage(createComparator(sortBy, desc), pageNumber, pageSize);
   }
 
   //~--- get methods ----------------------------------------------------------
