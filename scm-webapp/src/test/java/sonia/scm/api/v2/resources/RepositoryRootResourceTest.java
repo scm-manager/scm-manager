@@ -11,16 +11,20 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import sonia.scm.PageResult;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import static java.util.Collections.singletonList;
 import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -49,7 +53,9 @@ public class RepositoryRootResourceTest {
   public void prepareEnvironment() {
     initMocks(this);
     RepositoryResource repositoryResource = new RepositoryResource(repositoryToDtoMapper, repositoryManager, null, null, null, null, null);
-    RepositoryRootResource repositoryRootResource = new RepositoryRootResource(MockProvider.of(repositoryResource));
+    RepositoryCollectionToDtoMapper repositoryCollectionToDtoMapper = new RepositoryCollectionToDtoMapper(repositoryToDtoMapper, resourceLinks);
+    RepositoryCollectionResource repositoryCollectionResource = new RepositoryCollectionResource(repositoryManager, repositoryCollectionToDtoMapper);
+    RepositoryRootResource repositoryRootResource = new RepositoryRootResource(MockProvider.of(repositoryResource), MockProvider.of(repositoryCollectionResource));
     dispatcher.getRegistry().addSingletonResource(repositoryRootResource);
   }
 
@@ -76,6 +82,24 @@ public class RepositoryRootResourceTest {
 
     assertEquals(SC_OK, response.getStatus());
     assertTrue(response.getContentAsString().contains("\"name\":\"repo\""));
+  }
+
+  @Test
+  public void shouldGetAll() throws URISyntaxException {
+    PageResult<Repository> singletonPageResult = createSingletonPageResult(mockRepository("space", "repo"));
+    when(repositoryManager.getPage(any(), eq(0), eq(10))).thenReturn(singletonPageResult);
+
+    MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2);
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(SC_OK, response.getStatus());
+    assertTrue(response.getContentAsString().contains("\"name\":\"repo\""));
+  }
+
+  private PageResult<Repository> createSingletonPageResult(Repository repository) {
+    return new PageResult<>(singletonList(repository), 0);
   }
 
   private Repository mockRepository(String namespace, String name) {

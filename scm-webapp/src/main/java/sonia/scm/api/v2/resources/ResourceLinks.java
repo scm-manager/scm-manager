@@ -125,6 +125,26 @@ class ResourceLinks {
     }
   }
 
+  RepositoryCollectionLinks repositoryCollection() {
+    return new RepositoryCollectionLinks(uriInfoStore.get());
+  }
+
+  static class RepositoryCollectionLinks {
+    private final LinkBuilder collectionLinkBuilder;
+
+    RepositoryCollectionLinks(UriInfo uriInfo) {
+      collectionLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryCollectionResource.class);
+    }
+
+    String self() {
+      return collectionLinkBuilder.method("getRepositoryCollectionResource").parameters().method("getAll").parameters().href();
+    }
+
+    String create() {
+      return collectionLinkBuilder.method("getRepositoryCollectionResource").parameters().method("create").parameters().href();
+    }
+  }
+
   public TagCollectionLinks tagCollection() {
     return new TagCollectionLinks(uriInfoStore.get());
   }

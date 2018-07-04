@@ -18,6 +18,7 @@ public class ResourceLinksMock {
     when(resourceLinks.group()).thenReturn(new ResourceLinks.GroupLinks(uriInfo));
     when(resourceLinks.groupCollection()).thenReturn(new ResourceLinks.GroupCollectionLinks(uriInfo));
     when(resourceLinks.repository()).thenReturn(new ResourceLinks.RepositoryLinks(uriInfo));
+    when(resourceLinks.repositoryCollection()).thenReturn(new ResourceLinks.RepositoryCollectionLinks(uriInfo));
     when(resourceLinks.tagCollection()).thenReturn(new ResourceLinks.TagCollectionLinks(uriInfo));
     when(resourceLinks.branchCollection()).thenReturn(new ResourceLinks.BranchCollectionLinks(uriInfo));
     when(resourceLinks.changesetCollection()).thenReturn(new ResourceLinks.ChangesetCollectionLinks(uriInfo));
