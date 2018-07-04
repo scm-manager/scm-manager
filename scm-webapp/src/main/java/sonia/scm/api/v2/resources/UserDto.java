@@ -9,7 +9,6 @@ import lombok.Setter;
 
 import java.time.Instant;
 import java.util.Map;
-import java.util.Optional;
 
 @NoArgsConstructor @Getter @Setter
 public class UserDto extends HalRepresentation {
@@ -17,8 +16,8 @@ public class UserDto extends HalRepresentation {
   private boolean admin;
   private Instant creationDate;
   private String displayName;
-  @JsonInclude(JsonInclude.Include.NON_EMPTY)
-  private Optional<Instant> lastModified;
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  private Instant lastModified;
   private String mail;
   private String name;
   private String password;
