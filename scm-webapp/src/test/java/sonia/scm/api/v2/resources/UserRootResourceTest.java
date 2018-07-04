@@ -50,8 +50,7 @@ public class UserRootResourceTest {
 
   private Dispatcher dispatcher = MockDispatcherFactory.createDispatcher();
 
-  @Mock
-  private ResourceLinks resourceLinks;
+  private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(URI.create("/"));
 
   @Mock
   private PasswordService passwordService;
@@ -71,8 +70,6 @@ public class UserRootResourceTest {
     doNothing().when(userManager).create(userCaptor.capture());
     doNothing().when(userManager).modify(userCaptor.capture());
     doNothing().when(userManager).delete(userCaptor.capture());
-
-    ResourceLinksMock.initMock(resourceLinks, URI.create("/"));
 
     UserCollectionToDtoMapper userCollectionToDtoMapper = new UserCollectionToDtoMapper(userToDtoMapper, resourceLinks);
     UserCollectionResource userCollectionResource = new UserCollectionResource(userManager, dtoToUserMapper,

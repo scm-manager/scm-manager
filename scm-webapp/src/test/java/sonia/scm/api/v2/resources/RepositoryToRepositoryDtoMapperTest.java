@@ -4,17 +4,16 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.support.SubjectThreadState;
 import org.apache.shiro.util.ThreadContext;
 import org.apache.shiro.util.ThreadState;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import sonia.scm.repository.HealthCheckFailure;
 import sonia.scm.repository.Permission;
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
@@ -25,8 +24,8 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class RepositoryToRepositoryDtoMapperTest {
 
-  @Mock
-  private ResourceLinks resourceLinks;
+  private final URI baseUri = URI.create("http://example.com/base/");
+  private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
 
   @InjectMocks
   private RepositoryToRepositoryDtoMapperImpl mapper;
@@ -37,13 +36,16 @@ public class RepositoryToRepositoryDtoMapperTest {
   private URI expectedBaseUri;
 
   @Before
-  public void init() throws URISyntaxException {
+  public void init() {
     initMocks(this);
-    URI baseUri = new URI("http://example.com/base/");
     expectedBaseUri = baseUri.resolve(RepositoryRootResource.REPOSITORIES_PATH_V2 + "/");
     subjectThreadState.bind();
-    ResourceLinksMock.initMock(resourceLinks, baseUri);
     ThreadContext.bind(subject);
+  }
+
+  @After
+  public void cleanup() {
+    ThreadContext.unbindSubject();
   }
 
   @Test

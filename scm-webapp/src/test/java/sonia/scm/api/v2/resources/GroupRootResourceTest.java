@@ -48,8 +48,7 @@ public class GroupRootResourceTest {
 
   private Dispatcher dispatcher = MockDispatcherFactory.createDispatcher();
 
-  @Mock
-  private ResourceLinks resourceLinks;
+  private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(URI.create("/"));
 
   @Mock
   private GroupManager groupManager;
@@ -69,8 +68,6 @@ public class GroupRootResourceTest {
     Group group = createDummyGroup();
     when(groupManager.getPage(any(), eq(0), eq(10))).thenReturn(new PageResult<>(singletonList(group), 1));
     when(groupManager.get("admin")).thenReturn(group);
-
-    ResourceLinksMock.initMock(resourceLinks, URI.create("/"));
 
     GroupCollectionToDtoMapper groupCollectionToDtoMapper = new GroupCollectionToDtoMapper(groupToDtoMapper, resourceLinks);
     GroupCollectionResource groupCollectionResource = new GroupCollectionResource(groupManager, dtoToGroupMapper, groupCollectionToDtoMapper, resourceLinks);

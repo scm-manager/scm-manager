@@ -7,7 +7,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class ResourceLinksMock {
-  public static void initMock(ResourceLinks resourceLinks, URI baseUri) {
+  public static ResourceLinks createMock(URI baseUri) {
+    ResourceLinks resourceLinks = mock(ResourceLinks.class);
 
     UriInfo uriInfo = mock(UriInfo.class);
     when(uriInfo.getBaseUri()).thenReturn(baseUri);
@@ -19,5 +20,6 @@ public class ResourceLinksMock {
     when(resourceLinks.repository()).thenReturn(new ResourceLinks.RepositoryLinks(uriInfo));
     when(resourceLinks.tagCollection()).thenReturn(new ResourceLinks.TagCollectionLinks(uriInfo));
     when(resourceLinks.branchCollection()).thenReturn(new ResourceLinks.BranchCollectionLinks(uriInfo));
+    return resourceLinks;
   }
 }

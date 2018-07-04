@@ -8,12 +8,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import sonia.scm.api.rest.resources.UserResource;
 import sonia.scm.user.User;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.time.Instant;
 
 import static org.junit.Assert.assertEquals;
@@ -24,8 +22,8 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class UserToUserDtoMapperTest {
 
-  @Mock
-  private ResourceLinks resourceLinks;
+  private final URI baseUri = URI.create("http://example.com/base/");
+  private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
 
   @InjectMocks
   private UserToUserDtoMapperImpl mapper;
@@ -36,12 +34,10 @@ public class UserToUserDtoMapperTest {
   private URI expectedBaseUri;
 
   @Before
-  public void init() throws URISyntaxException {
+  public void init() {
     initMocks(this);
-    URI baseUri = new URI("http://example.com/base/");
     expectedBaseUri = baseUri.resolve(UserRootResource.USERS_PATH_V2 + "/");
     subjectThreadState.bind();
-    ResourceLinksMock.initMock(resourceLinks, baseUri);
     ThreadContext.bind(subject);
   }
 
