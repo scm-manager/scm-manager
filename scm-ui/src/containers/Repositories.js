@@ -2,18 +2,16 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { fetchRepositoriesIfNeeded } from '../modules/page';
+import { fetchRepositoriesIfNeeded } from '../modules/repositories';
 import Login from '../Login';
 
 
 type Props = {
   login: boolean,
   error: any,
-  repositories: any,
-  fetchRepositoriesIfNeeded: () => void
 }
 
-class Page extends React.Component<Props> {
+class Repositories extends React.Component<Props> {
 
   componentDidMount() {
     this.props.fetchRepositoriesIfNeeded();
@@ -60,4 +58,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Page);
+export default connect(mapStateToProps, mapDispatchToProps)(Repositories);

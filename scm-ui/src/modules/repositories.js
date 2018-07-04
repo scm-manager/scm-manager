@@ -1,9 +1,7 @@
 //@flow
-const FETCH_REPOSITORIES = 'smeagol/repositories/FETCH';
-const FETCH_REPOSITORIES_SUCCESS = 'smeagol/repositories/FETCH_SUCCESS';
-const FETCH_REPOSITORIES_FAILURE = 'smeagol/repositories/FETCH_FAILURE';
-
-const THRESHOLD_TIMESTAMP = 10000;
+const FETCH_REPOSITORIES = 'scm/repositories/FETCH';
+const FETCH_REPOSITORIES_SUCCESS = 'scm/repositories/FETCH_SUCCESS';
+const FETCH_REPOSITORIES_FAILURE = 'scm/repositories/FETCH_FAILURE';
 
 function requestRepositories() {
   return {

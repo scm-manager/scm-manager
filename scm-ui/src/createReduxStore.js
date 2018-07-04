@@ -3,7 +3,7 @@ import logger from 'redux-logger';
 import { createStore, compose, applyMiddleware, combineReducers } from 'redux';
 import { routerReducer, routerMiddleware } from 'react-router-redux';
 
-import page from './modules/page';
+import repositories from './modules/repositories';
 import users from './modules/users';
 
 function createReduxStore(history) {
@@ -11,7 +11,7 @@ function createReduxStore(history) {
 
   const reducer = combineReducers({
     router: routerReducer,
-    page,
+    repositories,
     users
   });
 

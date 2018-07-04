@@ -1,54 +1,54 @@
 //@flow
-const FETCH_REPOSITORIES = 'smeagol/repositories/FETCH';
-const FETCH_REPOSITORIES_SUCCESS = 'smeagol/repositories/FETCH_SUCCESS';
-const FETCH_REPOSITORIES_FAILURE = 'smeagol/repositories/FETCH_FAILURE';
+const FETCH_USERS = 'scm/users/FETCH';
+const FETCH_USERS_SUCCESS= 'scm/users/FETCH_SUCCESS';
+const FETCH_USERS_FAILURE = 'scm/users/FETCH_FAILURE';
 
 const THRESHOLD_TIMESTAMP = 10000;
 
-function requestRepositories() {
+function requestUsers() {
   return {
-    type: FETCH_REPOSITORIES
+    type: FETCH_USERS
   };
 }
 
 
-function fetchRepositories() {
+function fetchUsers() {
   return function(dispatch) {
-    dispatch(requestRepositories());
+    dispatch(requestUsers());
     return null;
   }
 }
 
-export function shouldFetchRepositories(state: any): boolean {
-  const repositories = state.repositories;
+export function shouldFetchUsers(state: any): boolean {
+  const users = state.users;
   return null;
 }
 
-export function fetchRepositoriesIfNeeded() {
+export function fetchUsersIfNeeded() {
   return (dispatch, getState) => {
-    if (shouldFetchRepositories(getState())) {
-      dispatch(fetchRepositories());
+    if (shouldFetchUsers(getState())) {
+      dispatch(fetchUsers());
     }
   }
 }
 
 export default function reducer(state = {}, action = {}) {
   switch (action.type) {
-    case FETCH_REPOSITORIES:
+    case FETCH_USERS:
       return {
         ...state,
         login: true,
         error: null
       };
-    case FETCH_REPOSITORIES_SUCCESS:
+    case FETCH_USERS_SUCCESS:
       return {
         ...state,
         login: false,
         timestamp: action.timestamp,
         error: null,
-        repositories: action.payload
+        users: action.payload
       };
-    case FETCH_REPOSITORIES_FAILURE:
+    case FETCH_USERS_FAILURE:
       return {
         ...state,
         login: false,

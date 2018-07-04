@@ -2,24 +2,24 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { fetchRepositoriesIfNeeded } from '../modules/users';
+import { fetchUsersIfNeeded } from '../modules/users';
 import Login from '../Login';
 
 type Props = {
   login: boolean,
   error: any,
-  repositories: any,
-  fetchRepositoriesIfNeeded: () => void
+  users: any,
+  fetchUsersIfNeeded: () => void
 }
 
 class Users extends React.Component<Props> {
 
   componentDidMount() {
-    this.props.fetchRepositoriesIfNeeded();
+    this.props.fetchUsersIfNeeded();
   }
 
   render() {
-    const { login, error, repositories } = this.props;
+    const { login, error, users } = this.props;
 
 
 
@@ -49,8 +49,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchRepositoriesIfNeeded: () => {
-      dispatch(fetchRepositoriesIfNeeded())
+    fetchUsersIfNeeded: () => {
+      dispatch(fetchUsersIfNeeded())
     }
   }
 };
