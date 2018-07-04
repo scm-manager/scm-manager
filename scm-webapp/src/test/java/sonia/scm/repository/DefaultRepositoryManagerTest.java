@@ -58,25 +58,11 @@ import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.store.JAXBConfigurationStoreFactory;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Stack;
+import java.util.*;
 
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.hasProperty;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -492,12 +478,15 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
     assertEquals(2, hook.eventsReceived);
   }
 
-  /**
-   * Tests {@link RepositoryManager#getFromTypeAndUri(String, String)}.
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
+  @Test
+  public void testNamespaceSet() throws Exception {
+    RepositoryManager repoManager = createRepositoryManager(false);
+    Repository repository = spy(createTestRepository());
+    repository.setName("Testrepo");
+    ((DefaultRepositoryManager) repoManager).create(repository);
+    assertEquals("default_namespace", repository.getNamespace());
+  }
+
   @Test
   public void getRepositoryFromRequestUriTest() throws RepositoryException, IOException {
     RepositoryManager m = createManager();
@@ -548,9 +537,10 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
 
     ScmConfiguration configuration = new ScmConfiguration();
 
-    NamespaceStrategy namespaceStrategy = new DefaultNamespaceStrategy();
-
     configuration.setEnableRepositoryArchive(archiveEnabled);
+
+    NamespaceStrategy namespaceStrategy = mock(NamespaceStrategy.class);
+    when(namespaceStrategy.getNamespace()).thenReturn("default_namespace");
 
     return new DefaultRepositoryManager(configuration, contextProvider,
       keyGenerator, repositoryDAO, handlerSet, createRepositoryMatcher(), namespaceStrategy);

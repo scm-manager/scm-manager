@@ -34,11 +34,7 @@ import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Provider;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.AuthenticationInfo;
-import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.authc.SimpleAuthenticationInfo;
-import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authc.*;
 import org.apache.shiro.authc.credential.AllowAllCredentialsMatcher;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.mgt.DefaultSecurityManager;
@@ -61,12 +57,7 @@ import sonia.scm.security.DefaultKeyGenerator;
 import sonia.scm.security.KeyGenerator;
 import sonia.scm.user.UserTestData;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static org.mockito.Mockito.mock;
@@ -96,8 +87,6 @@ public class DefaultRepositoryManagerPerfTest {
   
   private final KeyGenerator keyGenerator = new DefaultKeyGenerator();
 
-  private final NamespaceStrategy namespaceStrategy = new DefaultNamespaceStrategy();
-  
   @Mock
   private RepositoryHandler repositoryHandler;
   
@@ -114,7 +103,7 @@ public class DefaultRepositoryManagerPerfTest {
     when(repositoryHandler.getType()).thenReturn(new Type(REPOSITORY_TYPE, REPOSITORY_TYPE));
     Set<RepositoryHandler> handlerSet = ImmutableSet.of(repositoryHandler);
     RepositoryMatcher repositoryMatcher = new RepositoryMatcher(Collections.<RepositoryPathMatcher>emptySet());
-    
+    NamespaceStrategy namespaceStrategy = mock(NamespaceStrategy.class);
     repositoryManager = new DefaultRepositoryManager(
       configuration, 
       contextProvider, 
@@ -132,10 +121,7 @@ public class DefaultRepositoryManagerPerfTest {
     
     ThreadContext.bind(securityManager);
   }
-  
-  /**
-   * Tear down test objects.
-   */
+
   @After
   public void tearDown(){
     ThreadContext.unbindSecurityManager();

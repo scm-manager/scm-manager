@@ -42,29 +42,14 @@ import com.google.inject.Singleton;
 import org.apache.shiro.concurrent.SubjectAwareExecutorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.ArgumentIsInvalidException;
-import sonia.scm.ConfigurationException;
-import sonia.scm.HandlerEventType;
-import sonia.scm.SCMContextProvider;
-import sonia.scm.Type;
+import sonia.scm.*;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.security.KeyGenerator;
-import sonia.scm.util.AssertUtil;
-import sonia.scm.util.CollectionAppender;
-import sonia.scm.util.HttpUtil;
-import sonia.scm.util.IOUtil;
-import sonia.scm.util.Util;
+import sonia.scm.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -128,16 +113,6 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   * @param initRepository
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   public void create(Repository repository, boolean initRepository)
     throws RepositoryException, IOException {
     logger.info("create repository {} of type {}", repository.getName(),
@@ -163,30 +138,12 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
     fireEvent(HandlerEventType.CREATE, repository);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Override
   public void create(Repository repository)
     throws RepositoryException, IOException {
     create(repository, true);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Override
   public void delete(Repository repository)
     throws RepositoryException, IOException {
@@ -213,40 +170,16 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Override
   public void importRepository(Repository repository)
     throws RepositoryException, IOException {
     create(repository, false);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param context
-   */
   @Override
   public void init(SCMContextProvider context) {
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Override
   public void modify(Repository repository)
     throws RepositoryException, IOException {
@@ -273,15 +206,6 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Override
   public void refresh(Repository repository)
     throws RepositoryException, IOException {
@@ -299,16 +223,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
     }
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   *
-   * @return
-   */
   @Override
   public Repository get(String id) {
     AssertUtil.assertIsNotEmpty(id);
@@ -324,15 +239,6 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
     return repository;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param type
-   * @param name
-   *
-   * @return
-   */
   @Override
   public Repository get(String type, String name) {
     AssertUtil.assertIsNotEmpty(type);
@@ -348,14 +254,6 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
     return repository;
   }
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param comparator
-   * @return
-   */
   @Override
   public Collection<Repository> getAll(Comparator<Repository> comparator) {
     List<Repository> repositories = Lists.newArrayList();
@@ -378,28 +276,12 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
     return repositories;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
   public Collection<Repository> getAll() {
     return getAll(null);
   }
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param comparator
-   * @param start
-   * @param limit
-   *
-   * @return
-   */
+
   @Override
   public Collection<Repository> getAll(Comparator<Repository> comparator,
                                        int start, int limit) {
@@ -417,26 +299,11 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
       }, start, limit);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param start
-   * @param limit
-   *
-   * @return
-   */
   @Override
   public Collection<Repository> getAll(int start, int limit) {
     return getAll(null, start, limit);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
   public Collection<Type> getConfiguredTypes() {
     List<Type> validTypes = Lists.newArrayList();
@@ -450,14 +317,6 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
     return validTypes;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   */
   @Override
   public Repository getFromRequest(HttpServletRequest request) {
     AssertUtil.assertIsNotNull(request);
@@ -465,15 +324,6 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
     return getFromUri(HttpUtil.getStrippedURI(request));
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param type
-   * @param uri
-   *
-   * @return
-   */
   @Override
   public Repository getFromTypeAndUri(String type, String uri) {
     if (Strings.isNullOrEmpty(type)) {
@@ -512,14 +362,6 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
     return repository;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param uri
-   *
-   * @return
-   */
   @Override
   public Repository getFromUri(String uri) {
     AssertUtil.assertIsNotEmpty(uri);
@@ -541,51 +383,21 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
     return repository;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param type
-   *
-   * @return
-   */
   @Override
   public RepositoryHandler getHandler(String type) {
     return handlerMap.get(type);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
   public Long getLastModified() {
     return repositoryDAO.getLastModified();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
   public Collection<Type> getTypes() {
     return types;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param contextProvider
-   * @param handler
-   */
   private void addHandler(SCMContextProvider contextProvider,
                           RepositoryHandler handler) {
     AssertUtil.assertIsNotNull(handler);
@@ -609,19 +421,6 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
     types.add(type);
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   *
-   *
-   * @throws RepositoryException
-   */
   private RepositoryHandler getHandler(Repository repository)
     throws RepositoryException {
     String type = repository.getType();

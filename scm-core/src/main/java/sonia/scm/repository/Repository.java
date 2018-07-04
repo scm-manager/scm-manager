@@ -37,22 +37,16 @@ import com.github.sdorra.ssp.PermissionObject;
 import com.github.sdorra.ssp.StaticPermissions;
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
-
 import sonia.scm.BasicPropertiesAware;
 import sonia.scm.ModelObject;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 import sonia.scm.util.ValidationUtil;
 
+import javax.xml.bind.annotation.*;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Source code repository.
@@ -178,40 +172,23 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
     return healthCheckFailures;
   }
 
-  /**
-   * Returns the unique id of the {@link Repository}.
-   *
-   * @return unique id
-   */
   @Override
   public String getId() {
     return id;
   }
 
-  /**
-   * Returns the timestamp of the last modified date of the {@link Repository}.
-   *
-   * @return timestamp of the last modified date
-   */
   @Override
   public Long getLastModified() {
     return lastModified;
   }
 
-  /**
-   * Returns the name of the {@link Repository}.
-   *
-   * @return name of the {@link Repository}
-   */
+
   public String getName() {
     return name;
   }
 
-  /**
-   * Returns the access permissions of the {@link Repository}.
-   *
-   * @return access permissions
-   */
+  public String getNamespace() { return namespace; }
+
   public List<Permission> getPermissions() {
     if (permissions == null) {
       permissions = Lists.newArrayList();
