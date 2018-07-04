@@ -56,7 +56,6 @@ public class RepositoryToRepositoryDtoMapperTest {
     assertEquals("description", dto.getDescription());
     assertEquals("git", dto.getType());
     assertEquals("none@example.com", dto.getContact());
-    assertEquals("1", dto.getId());
   }
 
   @Test

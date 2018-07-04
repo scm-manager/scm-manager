@@ -13,7 +13,6 @@ import java.util.List;
 @Getter @Setter
 public class RepositoryDto extends HalRepresentation {
 
-  private String id;
   private String contact;
   private Instant creationDate;
   private String description;
