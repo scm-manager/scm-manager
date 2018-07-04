@@ -51,7 +51,12 @@ import sonia.scm.util.CollectionAppender;
 import sonia.scm.util.Util;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -106,7 +111,7 @@ public class DefaultGroupManager extends AbstractGroupManager
    * @throws IOException
    */
   @Override
-  public void create(Group group) throws GroupException, IOException
+  public void create(Group group) throws GroupException
   {
     String type = group.getType();
 
@@ -127,7 +132,7 @@ public class DefaultGroupManager extends AbstractGroupManager
     
     if (groupDAO.contains(name))
     {
-      throw new GroupAlreadyExistsException(name.concat(" group already exists"));
+      throw new GroupAlreadyExistsException(name);
     }
 
     removeDuplicateMembers(group);
@@ -147,7 +152,7 @@ public class DefaultGroupManager extends AbstractGroupManager
    * @throws IOException
    */
   @Override
-  public void delete(Group group) throws GroupException, IOException
+  public void delete(Group group) throws GroupException
   {
     if (logger.isInfoEnabled())
     {
@@ -166,7 +171,7 @@ public class DefaultGroupManager extends AbstractGroupManager
     }
     else
     {
-      throw new GroupNotFoundException("user does not exists");
+      throw new GroupNotFoundException();
     }
   }
 
@@ -189,7 +194,7 @@ public class DefaultGroupManager extends AbstractGroupManager
    * @throws IOException
    */
   @Override
-  public void modify(Group group) throws GroupException, IOException
+  public void modify(Group group) throws GroupException
   {
     if (logger.isInfoEnabled())
     {
@@ -212,7 +217,7 @@ public class DefaultGroupManager extends AbstractGroupManager
     }
     else
     {
-      throw new GroupNotFoundException("group does not exists");
+      throw new GroupNotFoundException();
     }
   }
 
@@ -226,7 +231,7 @@ public class DefaultGroupManager extends AbstractGroupManager
    * @throws IOException
    */
   @Override
-  public void refresh(Group group) throws GroupException, IOException
+  public void refresh(Group group) throws GroupException
   {
     String name = group.getName();
     if (logger.isInfoEnabled())
@@ -239,7 +244,7 @@ public class DefaultGroupManager extends AbstractGroupManager
 
     if (fresh == null)
     {
-      throw new GroupNotFoundException("group does not exists");
+      throw new GroupNotFoundException();
     }
 
     fresh.copyProperties(group);

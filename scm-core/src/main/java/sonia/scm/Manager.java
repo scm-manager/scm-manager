@@ -33,7 +33,6 @@
 
 package sonia.scm;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Comparator;
 
@@ -56,9 +55,8 @@ public interface Manager<T extends ModelObject, E extends Exception>
    * @param object to refresh
    *
    * @throws E
-   * @throws IOException
    */
-  void refresh(T object) throws E, IOException;
+  void refresh(T object) throws E;
 
   //~--- get methods ----------------------------------------------------------
 
