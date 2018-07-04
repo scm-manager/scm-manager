@@ -120,6 +120,12 @@ public class ResourceLinksTest {
     assertEquals(BASE_URL + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/changesets/", url);
   }
 
+  @Test
+  public void shouldCreateCorrectSourceCollectionUrl() {
+    String url = resourceLinks.sourceCollection().self("space", "repo");
+    assertEquals(BASE_URL + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/sources/", url);
+  }
+
   @Before
   public void initUriInfo() {
     initMocks(this);

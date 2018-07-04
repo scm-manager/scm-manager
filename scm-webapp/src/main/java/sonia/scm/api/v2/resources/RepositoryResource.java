@@ -27,6 +27,7 @@ public class RepositoryResource {
   private final Provider<TagRootResource> tagRootResource;
   private final Provider<BranchRootResource> branchRootResource;
   private final Provider<ChangesetRootResource> changesetRootResource;
+  private final Provider<SourceRootResource> sourceRootResource;
 
   @Inject
   public RepositoryResource(
@@ -34,13 +35,15 @@ public class RepositoryResource {
     RepositoryManager manager,
     Provider<TagRootResource> tagRootResource,
     Provider<BranchRootResource> branchRootResource,
-    Provider<ChangesetRootResource> changesetRootResource) {
+    Provider<ChangesetRootResource> changesetRootResource,
+    Provider<SourceRootResource> sourceRootResource) {
     this.manager = manager;
     this.repositoryToDtoMapper = repositoryToDtoMapper;
     this.adapter = new SingleResourceManagerAdapter<>(manager);
     this.tagRootResource = tagRootResource;
     this.branchRootResource = branchRootResource;
     this.changesetRootResource = changesetRootResource;
+    this.sourceRootResource = sourceRootResource;
   }
 
   @GET
@@ -83,5 +86,10 @@ public class RepositoryResource {
   @Path("changesets/")
   public ChangesetRootResource changesets() {
     return changesetRootResource.get();
+  }
+
+  @Path("sources/")
+  public SourceRootResource sources() {
+    return sourceRootResource.get();
   }
 }

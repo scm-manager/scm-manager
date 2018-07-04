@@ -172,4 +172,20 @@ class ResourceLinks {
       return changesetLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("changesets").parameters().method("getChangesetCollectionResource").parameters().method("getAll").parameters().href();
     }
   }
+
+  public SourceCollectionLinks sourceCollection() {
+    return new SourceCollectionLinks(uriInfoStore.get());
+  }
+
+  static class SourceCollectionLinks {
+    private final LinkBuilder sourceLinkBuilder;
+
+    SourceCollectionLinks(UriInfo uriInfo) {
+      sourceLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, SourceRootResource.class, SourceCollectionResource.class);
+    }
+
+    String self(String namespace, String name) {
+      return sourceLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("sources").parameters().method("getSourceCollectionResource").parameters().method("getAll").parameters().href();
+    }
+  }
 }
