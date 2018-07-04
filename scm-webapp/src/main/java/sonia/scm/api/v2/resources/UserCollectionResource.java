@@ -1,13 +1,23 @@
 package sonia.scm.api.v2.resources;
 
-import com.webcohesion.enunciate.metadata.rs.*;
+import com.webcohesion.enunciate.metadata.rs.ResponseCode;
+import com.webcohesion.enunciate.metadata.rs.ResponseHeader;
+import com.webcohesion.enunciate.metadata.rs.ResponseHeaders;
+import com.webcohesion.enunciate.metadata.rs.StatusCodes;
+import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import sonia.scm.user.User;
 import sonia.scm.user.UserException;
 import sonia.scm.user.UserManager;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 
@@ -25,7 +35,7 @@ public class UserCollectionResource {
     UserCollectionToDtoMapper userCollectionToDtoMapper, ResourceLinks resourceLinks) {
     this.dtoToUserMapper = dtoToUserMapper;
     this.userCollectionToDtoMapper = userCollectionToDtoMapper;
-    this.adapter = new ResourceManagerAdapter<>(manager);
+    this.adapter = new ResourceManagerAdapter<>(manager, User.class);
     this.resourceLinks = resourceLinks;
   }
 
@@ -33,9 +43,10 @@ public class UserCollectionResource {
    * Returns all users for a given page number with a given page size (default page size is {@value DEFAULT_PAGE_SIZE}).
    *
    * <strong>Note:</strong> This method requires "user" privilege.
-   *  @param page     the number of the requested page
+   *
+   * @param page     the number of the requested page
    * @param pageSize the page size (default page size is {@value DEFAULT_PAGE_SIZE})
-   * @param sortBy   sort parameter
+   * @param sortBy   sort parameter (if empty - undefined sorting)
    * @param desc     sort direction desc or asc
    */
   @GET
@@ -44,6 +55,7 @@ public class UserCollectionResource {
   @TypeHint(UserDto[].class)
   @StatusCodes({
     @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 400, condition = "\"sortBy\" field unknown"),
     @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
     @ResponseCode(code = 403, condition = "not authorized, the current user does not have the \"user\" privilege"),
     @ResponseCode(code = 500, condition = "internal server error")

@@ -41,17 +41,11 @@ import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.ResponseHeader;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
-
 import org.apache.shiro.SecurityUtils;
-
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupException;
 import sonia.scm.group.GroupManager;
 import sonia.scm.security.Role;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.Collection;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -69,6 +63,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import java.util.Collection;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * RESTful Web Service Resource to manage groups and their members.
@@ -97,7 +94,7 @@ public class GroupResource
   @Inject
   public GroupResource(GroupManager groupManager)
   {
-    super(groupManager);
+    super(groupManager, Group.class);
   }
 
   //~--- methods --------------------------------------------------------------
