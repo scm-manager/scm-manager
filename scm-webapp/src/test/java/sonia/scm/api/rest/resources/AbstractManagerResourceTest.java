@@ -2,7 +2,11 @@ package sonia.scm.api.rest.resources;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import sonia.scm.Manager;
 import sonia.scm.ModelObject;
 
@@ -13,24 +17,32 @@ import java.util.Comparator;
 
 import static java.util.Collections.emptyList;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 public class AbstractManagerResourceTest {
 
-  private final Manager<Simple, Exception> manager = mock(Manager.class);
-  private final Request request = mock(Request.class);
-  private final ArgumentCaptor<Comparator> comparatorCaptor = forClass(Comparator.class);
+  @Mock
+  private Manager<Simple, Exception> manager;
+  @Mock
+  private Request request;
+  @Captor
+  private ArgumentCaptor<Comparator<Simple>> comparatorCaptor;
 
-  private final AbstractManagerResource<Simple, Exception> abstractManagerResource = new SimpleManagerResource();
+  private AbstractManagerResource<Simple, Exception> abstractManagerResource;
+
+  @Before
+  public void captureComparator() {
+    when(manager.getAll(comparatorCaptor.capture(), eq(0), eq(1))).thenReturn(emptyList());
+    abstractManagerResource = new SimpleManagerResource();
+  }
 
   @Test
   public void shouldAcceptDefaultSortByParameter() {
     abstractManagerResource.getAll(request, 0, 1, null, true);
 
-    Comparator comparator = comparatorCaptor.getValue();
+    Comparator<Simple> comparator = comparatorCaptor.getValue();
     assertTrue(comparator.compare(new Simple("1", null), new Simple("2", null)) > 0);
   }
 
@@ -38,7 +50,7 @@ public class AbstractManagerResourceTest {
   public void shouldAcceptValidSortByParameter() {
     abstractManagerResource.getAll(request, 0, 1, "data", true);
 
-    Comparator comparator = comparatorCaptor.getValue();
+    Comparator<Simple> comparator = comparatorCaptor.getValue();
     assertTrue(comparator.compare(new Simple("", "1"), new Simple("", "2")) > 0);
   }
 
@@ -47,10 +59,6 @@ public class AbstractManagerResourceTest {
     abstractManagerResource.getAll(request, 0, 1, "x", true);
   }
 
-  @Before
-  public void captureComparator() {
-    when(manager.getAll(comparatorCaptor.capture(), eq(0), eq(1))).thenReturn(emptyList());
-  }
 
   private class SimpleManagerResource extends AbstractManagerResource<Simple, Exception> {
 
@@ -58,7 +66,7 @@ public class AbstractManagerResourceTest {
       disableCache = true;
     }
 
-    public SimpleManagerResource() {
+    private SimpleManagerResource() {
       super(AbstractManagerResourceTest.this.manager, Simple.class);
     }
 
@@ -83,7 +91,7 @@ public class AbstractManagerResourceTest {
     private String id;
     private String data;
 
-    public Simple(String id, String data) {
+    Simple(String id, String data) {
       this.id = id;
       this.data = data;
     }
