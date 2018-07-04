@@ -3,12 +3,14 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { fetchRepositoriesIfNeeded } from '../modules/repositories';
-import Login from '../Login';
+import Login from '../../containers/Login';
 
 
 type Props = {
   login: boolean,
-  error: any,
+  error: Error,
+  repositories: any,
+  fetchRepositoriesIfNeeded: () => void
 }
 
 class Repositories extends React.Component<Props> {
@@ -21,16 +23,7 @@ class Repositories extends React.Component<Props> {
     const { login, error, repositories } = this.props;
 
 
-    if(login) {
-      return (
-        <div>
-          <h1>SCM</h1>
-          <Login/>
-        </div>
-      );
-    }
-    else if(!login){
-      return (
+   return (
         <div>
           <h1>SCM</h1>
           <h2>Startpage</h2>
@@ -38,8 +31,7 @@ class Repositories extends React.Component<Props> {
             Users hier!
           </a>
         </div>
-      );
-    }
+      )
 
 
   }

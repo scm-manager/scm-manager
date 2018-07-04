@@ -44,6 +44,7 @@ import org.apache.shiro.subject.Subject;
 import sonia.scm.Priority;
 import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.security.SecurityRequests;
 import sonia.scm.web.filter.HttpFilter;
 import sonia.scm.web.filter.SecurityHttpServletRequestWrapper;
 
@@ -71,6 +72,8 @@ public class SecurityFilter extends HttpFilter
 
   /** Field description */
   public static final String URL_AUTHENTICATION = "/api/rest/auth";
+
+  public static final String URLV2_AUTHENTICATION = "/api/rest/v2/auth";
 
   //~--- constructors ---------------------------------------------------------
 
@@ -104,10 +107,7 @@ public class SecurityFilter extends HttpFilter
     HttpServletResponse response, FilterChain chain)
     throws IOException, ServletException
   {
-    String uri =
-      request.getRequestURI().substring(request.getContextPath().length());
-
-    if (!uri.startsWith(URL_AUTHENTICATION))
+    if (!SecurityRequests.isAuthenticationRequest(request))
     {
       Subject subject = SecurityUtils.getSubject();
       if (hasPermission(subject))

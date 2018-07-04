@@ -35,3 +35,4 @@ scm-ui/yarn.lock
 scm-ui/.gitignore
 scm-ui/package-lock.json
 node_modules
+scm-ui/.flowconfig

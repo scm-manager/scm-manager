@@ -1,9 +1,6 @@
-//@flow
 const FETCH_USERS = 'scm/users/FETCH';
 const FETCH_USERS_SUCCESS= 'scm/users/FETCH_SUCCESS';
 const FETCH_USERS_FAILURE = 'scm/users/FETCH_FAILURE';
-
-const THRESHOLD_TIMESTAMP = 10000;
 
 function requestUsers() {
   return {

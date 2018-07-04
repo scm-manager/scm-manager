@@ -1,12 +1,15 @@
-import thunk from 'redux-thunk';
-import logger from 'redux-logger';
-import { createStore, compose, applyMiddleware, combineReducers } from 'redux';
-import { routerReducer, routerMiddleware } from 'react-router-redux';
+// @flow
+import thunk from "redux-thunk";
+import logger from "redux-logger";
+import { createStore, compose, applyMiddleware, combineReducers } from "redux";
+import { routerReducer, routerMiddleware } from "react-router-redux";
 
-import repositories from './modules/repositories';
-import users from './modules/users';
+import repositories from "./repositories/modules/repositories";
+import users from "./users/modules/users";
 
-function createReduxStore(history) {
+import type {BrowserHistory} from "history/createBrowserHistory";
+
+function createReduxStore(history: BrowserHistory) {
   const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
   const reducer = combineReducers({

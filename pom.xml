@@ -70,6 +70,7 @@
     <module>scm-test</module>
     <module>scm-plugins</module>
     <module>scm-dao-xml</module>
+    <module>scm-ui</module>
     <module>scm-webapp</module>
     <module>scm-server</module>
     <module>scm-clients</module>

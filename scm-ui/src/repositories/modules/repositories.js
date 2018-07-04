@@ -1,4 +1,3 @@
-//@flow
 const FETCH_REPOSITORIES = 'scm/repositories/FETCH';
 const FETCH_REPOSITORIES_SUCCESS = 'scm/repositories/FETCH_SUCCESS';
 const FETCH_REPOSITORIES_FAILURE = 'scm/repositories/FETCH_FAILURE';

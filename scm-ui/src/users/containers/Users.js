@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { fetchUsersIfNeeded } from '../modules/users';
-import Login from '../Login';
+import Login from '../../containers/Login';
 
 type Props = {
   login: boolean,
@@ -22,23 +22,13 @@ class Users extends React.Component<Props> {
     const { login, error, users } = this.props;
 
 
-
-    if(login) {
-      return (
-        <div>
-          <h1>SCM</h1>
-          <Login/>
-        </div>
-      );
-    }
-    else if(!login){
       return (
         <div>
           <h1>SCM</h1>
           <h2>Users</h2>
         </div>
       );
-    }
+
   }
 
 }
