@@ -117,6 +117,14 @@ public class RepositoryToRepositoryDtoMapperTest {
       dto.getLinks().getLinkBy("branches").get().getHref());
   }
 
+  @Test
+  public void shouldCreateChangesetsLink() {
+    RepositoryDto dto = mapper.map(createTestRepository());
+    assertEquals(
+      "http://example.com/base/v2/repositories/testspace/test/changesets/",
+      dto.getLinks().getLinkBy("changesets").get().getHref());
+  }
+
   private Repository createTestRepository() {
     Repository repository = new Repository();
     repository.setNamespace("testspace");

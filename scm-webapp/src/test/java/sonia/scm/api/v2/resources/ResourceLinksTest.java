@@ -114,6 +114,12 @@ public class ResourceLinksTest {
     assertEquals(BASE_URL + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/branches/", url);
   }
 
+  @Test
+  public void shouldCreateCorrectChangesetCollectionUrl() {
+    String url = resourceLinks.changesetCollection().self("space", "repo");
+    assertEquals(BASE_URL + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/changesets/", url);
+  }
+
   @Before
   public void initUriInfo() {
     initMocks(this);

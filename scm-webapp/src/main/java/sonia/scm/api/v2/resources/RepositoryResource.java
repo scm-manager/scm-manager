@@ -26,18 +26,21 @@ public class RepositoryResource {
   private final SingleResourceManagerAdapter<Repository, RepositoryDto, RepositoryException> adapter;
   private final Provider<TagRootResource> tagRootResource;
   private final Provider<BranchRootResource> branchRootResource;
+  private final Provider<ChangesetRootResource> changesetRootResource;
 
   @Inject
   public RepositoryResource(
     RepositoryToRepositoryDtoMapper repositoryToDtoMapper,
     RepositoryManager manager,
     Provider<TagRootResource> tagRootResource,
-    Provider<BranchRootResource> branchRootResource) {
+    Provider<BranchRootResource> branchRootResource,
+    Provider<ChangesetRootResource> changesetRootResource) {
     this.manager = manager;
     this.repositoryToDtoMapper = repositoryToDtoMapper;
     this.adapter = new SingleResourceManagerAdapter<>(manager);
     this.tagRootResource = tagRootResource;
     this.branchRootResource = branchRootResource;
+    this.changesetRootResource = changesetRootResource;
   }
 
   @GET
@@ -75,5 +78,10 @@ public class RepositoryResource {
   @Path("branches/")
   public BranchRootResource branches() {
     return branchRootResource.get();
+  }
+
+  @Path("changesets/")
+  public ChangesetRootResource changesets() {
+    return changesetRootResource.get();
   }
 }

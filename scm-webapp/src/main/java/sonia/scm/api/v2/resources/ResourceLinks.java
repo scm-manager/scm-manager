@@ -156,4 +156,20 @@ class ResourceLinks {
       return branchLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("branches").parameters().method("getBranchCollectionResource").parameters().method("getAll").parameters().href();
     }
   }
+
+  public ChangesetCollectionLinks changesetCollection() {
+    return new ChangesetCollectionLinks(uriInfoStore.get());
+  }
+
+  static class ChangesetCollectionLinks {
+    private final LinkBuilder changesetLinkBuilder;
+
+    ChangesetCollectionLinks(UriInfo uriInfo) {
+      changesetLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, ChangesetRootResource.class, ChangesetCollectionResource.class);
+    }
+
+    String self(String namespace, String name) {
+      return changesetLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("changesets").parameters().method("getChangesetCollectionResource").parameters().method("getAll").parameters().href();
+    }
+  }
 }

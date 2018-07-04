@@ -48,7 +48,7 @@ public class RepositoryRootResourceTest {
   @Before
   public void prepareEnvironment() {
     initMocks(this);
-    RepositoryResource repositoryResource = new RepositoryResource(repositoryToDtoMapper, repositoryManager, null, null);
+    RepositoryResource repositoryResource = new RepositoryResource(repositoryToDtoMapper, repositoryManager, null, null, null);
     RepositoryRootResource repositoryRootResource = new RepositoryRootResource(MockProvider.of(repositoryResource));
     dispatcher.getRegistry().addSingletonResource(repositoryRootResource);
   }
