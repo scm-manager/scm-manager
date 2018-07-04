@@ -48,9 +48,9 @@ public class GroupAlreadyExistsException extends GroupException
   /**
    * Constructs a new instance.
    * 
-   * @param message exception message
+   * @param name The name (aka id) of the group
    */
-  public GroupAlreadyExistsException(String message) {
-    super(message);
+  public GroupAlreadyExistsException(String name) {
+    super(name + " group already exists");
   }
 }
