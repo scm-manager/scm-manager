@@ -130,14 +130,30 @@ class ResourceLinks {
   }
 
   static class TagCollectionLinks {
-    private final LinkBuilder repositoryLinkBuilder;
+    private final LinkBuilder tagLinkBuilder;
 
     private TagCollectionLinks(UriInfo uriInfo) {
-      repositoryLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, TagRootResource.class, TagCollectionResource.class);
+      tagLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, TagRootResource.class, TagCollectionResource.class);
     }
 
     String self(String namespace, String name) {
-      return repositoryLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("tags").parameters().method("getTagCollectionResource").parameters().method("getAll").parameters().href();
+      return tagLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("tags").parameters().method("getTagCollectionResource").parameters().method("getAll").parameters().href();
+    }
+  }
+
+  public BranchCollectionLinks branchCollection() {
+    return new BranchCollectionLinks(uriInfoStore.get());
+  }
+
+  static class BranchCollectionLinks {
+    private final LinkBuilder branchLinkBuilder;
+
+    private BranchCollectionLinks(UriInfo uriInfo) {
+      branchLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, BranchRootResource.class, BranchCollectionResource.class);
+    }
+
+    String self(String namespace, String name) {
+      return branchLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("branches").parameters().method("getBranchCollectionResource").parameters().method("getAll").parameters().href();
     }
   }
 }

@@ -37,6 +37,7 @@ import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.collect.ImmutableSet;
 import org.apache.shiro.authz.UnauthorizedException;
+import org.apache.shiro.util.ThreadContext;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -91,6 +92,10 @@ import static org.mockito.Mockito.when;
   configuration = "classpath:sonia/scm/repository/shiro.ini"
 )
 public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, RepositoryException> {
+
+  {
+    ThreadContext.unbindSecurityManager();
+  }
 
   @Rule
   public ShiroRule shiro = new ShiroRule();

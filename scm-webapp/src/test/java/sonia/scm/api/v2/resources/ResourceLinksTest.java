@@ -108,6 +108,12 @@ public class ResourceLinksTest {
     assertEquals(BASE_URL + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/tags/", url);
   }
 
+  @Test
+  public void shouldCreateCorrectBranchCollectionUrl() {
+    String url = resourceLinks.branchCollection().self("space", "repo");
+    assertEquals(BASE_URL + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/branches/", url);
+  }
+
   @Before
   public void initUriInfo() {
     initMocks(this);
