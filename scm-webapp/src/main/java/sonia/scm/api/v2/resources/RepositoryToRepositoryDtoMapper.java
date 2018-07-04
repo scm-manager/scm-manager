@@ -6,7 +6,6 @@ import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import sonia.scm.repository.HealthCheckFailure;
-import sonia.scm.repository.Permission;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryPermissions;
 
@@ -23,8 +22,6 @@ public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Reposit
 
   abstract HealthCheckFailureDto toDto(HealthCheckFailure failure);
 
-  abstract PermissionDto toDto(Permission permission);
-
   @AfterMapping
   void appendLinks(Repository repository, @MappingTarget RepositoryDto target) {
     Links.Builder linksBuilder = linkingTo().self(resourceLinks.repository().self(target.getNamespace(), target.getName()));
@@ -33,6 +30,7 @@ public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Reposit
     }
     if (RepositoryPermissions.modify(repository).isPermitted()) {
       linksBuilder.single(link("update", resourceLinks.repository().update(target.getNamespace(), target.getName())));
+      linksBuilder.single(link("permissions", resourceLinks.permissionCollection().self(target.getNamespace(), target.getName())));
     }
     linksBuilder.single(link("tags", resourceLinks.tagCollection().self(target.getNamespace(), target.getName())));
     linksBuilder.single(link("branches", resourceLinks.branchCollection().self(target.getNamespace(), target.getName())));

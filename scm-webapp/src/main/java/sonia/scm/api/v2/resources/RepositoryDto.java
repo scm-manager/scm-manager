@@ -6,7 +6,6 @@ import de.otto.edison.hal.Links;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.xml.bind.annotation.XmlElement;
 import java.time.Instant;
 import java.util.List;
 
@@ -21,9 +20,6 @@ public class RepositoryDto extends HalRepresentation {
   private Instant lastModified;
   private String namespace;
   private String name;
-  private List<PermissionDto> permissions;
-  @XmlElement(name = "public")
-  private boolean publicReadable = false;
   private boolean archived = false;
   private String type;
 

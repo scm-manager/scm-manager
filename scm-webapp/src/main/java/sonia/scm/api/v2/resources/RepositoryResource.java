@@ -28,6 +28,7 @@ public class RepositoryResource {
   private final Provider<BranchRootResource> branchRootResource;
   private final Provider<ChangesetRootResource> changesetRootResource;
   private final Provider<SourceRootResource> sourceRootResource;
+  private final Provider<PermissionRootResource> permissionRootResource;
 
   @Inject
   public RepositoryResource(
@@ -36,7 +37,7 @@ public class RepositoryResource {
     Provider<TagRootResource> tagRootResource,
     Provider<BranchRootResource> branchRootResource,
     Provider<ChangesetRootResource> changesetRootResource,
-    Provider<SourceRootResource> sourceRootResource) {
+    Provider<SourceRootResource> sourceRootResource, Provider<PermissionRootResource> permissionRootResource) {
     this.manager = manager;
     this.repositoryToDtoMapper = repositoryToDtoMapper;
     this.adapter = new SingleResourceManagerAdapter<>(manager);
@@ -44,6 +45,7 @@ public class RepositoryResource {
     this.branchRootResource = branchRootResource;
     this.changesetRootResource = changesetRootResource;
     this.sourceRootResource = sourceRootResource;
+    this.permissionRootResource = permissionRootResource;
   }
 
   @GET
@@ -91,5 +93,10 @@ public class RepositoryResource {
   @Path("sources/")
   public SourceRootResource sources() {
     return sourceRootResource.get();
+  }
+
+  @Path("permissions/")
+  public PermissionRootResource permissions() {
+    return permissionRootResource.get();
   }
 }

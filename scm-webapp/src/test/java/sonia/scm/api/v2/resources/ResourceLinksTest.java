@@ -126,6 +126,12 @@ public class ResourceLinksTest {
     assertEquals(BASE_URL + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/sources/", url);
   }
 
+  @Test
+  public void shouldCreateCorrectPermissionCollectionUrl() {
+    String url = resourceLinks.sourceCollection().self("space", "repo");
+    assertEquals(BASE_URL + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/sources/", url);
+  }
+
   @Before
   public void initUriInfo() {
     initMocks(this);

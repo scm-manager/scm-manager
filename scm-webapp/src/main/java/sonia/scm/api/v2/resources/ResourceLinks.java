@@ -188,4 +188,20 @@ class ResourceLinks {
       return sourceLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("sources").parameters().method("getSourceCollectionResource").parameters().method("getAll").parameters().href();
     }
   }
+
+  public PermissionCollectionLinks permissionCollection() {
+    return new PermissionCollectionLinks(uriInfoStore.get());
+  }
+
+  static class PermissionCollectionLinks {
+    private final LinkBuilder permissionLinkBuilder;
+
+    PermissionCollectionLinks(UriInfo uriInfo) {
+      permissionLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, PermissionRootResource.class, PermissionCollectionResource.class);
+    }
+
+    String self(String namespace, String name) {
+      return permissionLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("permissions").parameters().method("getPermissionCollectionResource").parameters().method("getAll").parameters().href();
+    }
+  }
 }

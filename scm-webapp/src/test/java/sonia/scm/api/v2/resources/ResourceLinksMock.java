@@ -22,6 +22,7 @@ public class ResourceLinksMock {
     when(resourceLinks.branchCollection()).thenReturn(new ResourceLinks.BranchCollectionLinks(uriInfo));
     when(resourceLinks.changesetCollection()).thenReturn(new ResourceLinks.ChangesetCollectionLinks(uriInfo));
     when(resourceLinks.sourceCollection()).thenReturn(new ResourceLinks.SourceCollectionLinks(uriInfo));
+    when(resourceLinks.permissionCollection()).thenReturn(new ResourceLinks.PermissionCollectionLinks(uriInfo));
     return resourceLinks;
   }
 }

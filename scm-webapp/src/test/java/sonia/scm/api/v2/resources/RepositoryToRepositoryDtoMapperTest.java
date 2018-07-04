@@ -1,11 +1,11 @@
 package sonia.scm.api.v2.resources;
 
-import org.apache.shiro.subject.Subject;
-import org.apache.shiro.subject.support.SubjectThreadState;
+import com.github.sdorra.shiro.ShiroRule;
+import com.github.sdorra.shiro.SubjectAware;
 import org.apache.shiro.util.ThreadContext;
-import org.apache.shiro.util.ThreadState;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import sonia.scm.repository.HealthCheckFailure;
@@ -18,11 +18,17 @@ import java.net.URI;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
+@SubjectAware(
+  username = "trillian",
+  password = "secret",
+  configuration = "classpath:sonia/scm/repository/shiro.ini"
+)
 public class RepositoryToRepositoryDtoMapperTest {
+
+  @Rule
+  public final ShiroRule rule = new ShiroRule();
 
   private final URI baseUri = URI.create("http://example.com/base/");
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
@@ -30,17 +36,9 @@ public class RepositoryToRepositoryDtoMapperTest {
   @InjectMocks
   private RepositoryToRepositoryDtoMapperImpl mapper;
 
-  private final Subject subject = mock(Subject.class);
-  private final ThreadState subjectThreadState = new SubjectThreadState(subject);
-
-  private URI expectedBaseUri;
-
   @Before
   public void init() {
     initMocks(this);
-    expectedBaseUri = baseUri.resolve(RepositoryRootResource.REPOSITORIES_PATH_V2 + "/");
-    subjectThreadState.bind();
-    ThreadContext.bind(subject);
   }
 
   @After
@@ -59,6 +57,7 @@ public class RepositoryToRepositoryDtoMapperTest {
   }
 
   @Test
+  @SubjectAware(username = "unpriv")
   public void shouldCreateLinksForUnprivilegedUser() {
     RepositoryDto dto = mapper.map(createTestRepository());
     assertEquals(
@@ -66,11 +65,11 @@ public class RepositoryToRepositoryDtoMapperTest {
       dto.getLinks().getLinkBy("self").get().getHref());
     assertFalse(dto.getLinks().getLinkBy("update").isPresent());
     assertFalse(dto.getLinks().getLinkBy("delete").isPresent());
+    assertFalse(dto.getLinks().getLinkBy("permissions").isPresent());
   }
 
   @Test
   public void shouldCreateDeleteLink() {
-    when(subject.isPermitted("repository:delete:1")).thenReturn(true);
     RepositoryDto dto = mapper.map(createTestRepository());
     assertEquals(
       "http://example.com/base/v2/repositories/testspace/test",
@@ -79,7 +78,6 @@ public class RepositoryToRepositoryDtoMapperTest {
 
   @Test
   public void shouldCreateUpdateLink() {
-    when(subject.isPermitted("repository:modify:1")).thenReturn(true);
     RepositoryDto dto = mapper.map(createTestRepository());
     assertEquals(
       "http://example.com/base/v2/repositories/testspace/test",
@@ -91,14 +89,6 @@ public class RepositoryToRepositoryDtoMapperTest {
     RepositoryDto dto = mapper.map(createTestRepository());
     assertEquals(1, dto.getHealthCheckFailures().size());
     assertEquals("summary", dto.getHealthCheckFailures().get(0).getSummary());
-  }
-
-  @Test
-  public void shouldMapPermissions() {
-    RepositoryDto dto = mapper.map(createTestRepository());
-    assertEquals(1, dto.getPermissions().size());
-    assertEquals("permission", dto.getPermissions().get(0).getName());
-    assertEquals("READ", dto.getPermissions().get(0).getType());
   }
 
   @Test
@@ -131,6 +121,14 @@ public class RepositoryToRepositoryDtoMapperTest {
     assertEquals(
       "http://example.com/base/v2/repositories/testspace/test/sources/",
       dto.getLinks().getLinkBy("sources").get().getHref());
+  }
+
+  @Test
+  public void shouldCreatePermissionsLink() {
+    RepositoryDto dto = mapper.map(createTestRepository());
+    assertEquals(
+      "http://example.com/base/v2/repositories/testspace/test/permissions/",
+      dto.getLinks().getLinkBy("permissions").get().getHref());
   }
 
   private Repository createTestRepository() {
