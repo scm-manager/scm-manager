@@ -7,7 +7,6 @@ import org.apache.shiro.util.ThreadContext;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import sonia.scm.PageResult;
@@ -28,7 +27,7 @@ import static sonia.scm.PageResult.createPage;
 
 public class UserCollectionToDtoMapperTest {
 
-  @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+  @Mock
   private ResourceLinks resourceLinks;
   @Mock
   private UserToUserDtoMapper userToDtoMapper;

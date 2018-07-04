@@ -6,7 +6,6 @@ import org.apache.shiro.util.ThreadContext;
 import org.apache.shiro.util.ThreadState;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import sonia.scm.repository.HealthCheckFailure;
@@ -26,7 +25,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class RepositoryToRepositoryDtoMapperTest {
 
-  @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+  @Mock
   private ResourceLinks resourceLinks;
 
   @InjectMocks
@@ -62,7 +61,7 @@ public class RepositoryToRepositoryDtoMapperTest {
   public void shouldCreateLinksForUnprivilegedUser() {
     RepositoryDto dto = mapper.map(createTestRepository());
     assertEquals(
-      "http://example.com/base/v2/groups/testspace/test",
+      "http://example.com/base/v2/repositories/testspace/test",
       dto.getLinks().getLinkBy("self").get().getHref());
     assertFalse(dto.getLinks().getLinkBy("update").isPresent());
     assertFalse(dto.getLinks().getLinkBy("delete").isPresent());
@@ -73,7 +72,7 @@ public class RepositoryToRepositoryDtoMapperTest {
     when(subject.isPermitted("repository:delete:1")).thenReturn(true);
     RepositoryDto dto = mapper.map(createTestRepository());
     assertEquals(
-      "http://example.com/base/v2/groups/testspace/test",
+      "http://example.com/base/v2/repositories/testspace/test",
       dto.getLinks().getLinkBy("delete").get().getHref());
   }
 
@@ -82,7 +81,7 @@ public class RepositoryToRepositoryDtoMapperTest {
     when(subject.isPermitted("repository:modify:1")).thenReturn(true);
     RepositoryDto dto = mapper.map(createTestRepository());
     assertEquals(
-      "http://example.com/base/v2/groups/testspace/test",
+      "http://example.com/base/v2/repositories/testspace/test",
       dto.getLinks().getLinkBy("update").get().getHref());
   }
 
@@ -105,7 +104,7 @@ public class RepositoryToRepositoryDtoMapperTest {
   public void shouldCreateTagsLink() {
     RepositoryDto dto = mapper.map(createTestRepository());
     assertEquals(
-      "http://example.com/base/v2/groups/testspace/test/tags/",
+      "http://example.com/base/v2/repositories/testspace/test/tags/",
       dto.getLinks().getLinkBy("tags").get().getHref());
   }
 
@@ -113,7 +112,7 @@ public class RepositoryToRepositoryDtoMapperTest {
   public void shouldCreateBranchesLink() {
     RepositoryDto dto = mapper.map(createTestRepository());
     assertEquals(
-      "http://example.com/base/v2/groups/testspace/test/branches/",
+      "http://example.com/base/v2/repositories/testspace/test/branches/",
       dto.getLinks().getLinkBy("branches").get().getHref());
   }
 

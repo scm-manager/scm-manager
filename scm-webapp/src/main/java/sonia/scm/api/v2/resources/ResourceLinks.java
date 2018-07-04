@@ -20,7 +20,7 @@ class ResourceLinks {
   static class GroupLinks {
     private final LinkBuilder groupLinkBuilder;
 
-    private GroupLinks(UriInfo uriInfo) {
+    GroupLinks(UriInfo uriInfo) {
       groupLinkBuilder = new LinkBuilder(uriInfo, GroupRootResource.class, GroupResource.class);
     }
 
@@ -44,7 +44,7 @@ class ResourceLinks {
   static class GroupCollectionLinks {
     private final LinkBuilder collectionLinkBuilder;
 
-    private GroupCollectionLinks(UriInfo uriInfo) {
+    GroupCollectionLinks(UriInfo uriInfo) {
       collectionLinkBuilder = new LinkBuilder(uriInfo, GroupRootResource.class, GroupCollectionResource.class);
     }
 
@@ -64,7 +64,7 @@ class ResourceLinks {
   static class UserLinks {
     private final LinkBuilder userLinkBuilder;
 
-    private UserLinks(UriInfo uriInfo) {
+    UserLinks(UriInfo uriInfo) {
       userLinkBuilder = new LinkBuilder(uriInfo, UserRootResource.class, UserResource.class);
     }
 
@@ -88,7 +88,7 @@ class ResourceLinks {
   static class UserCollectionLinks {
     private final LinkBuilder collectionLinkBuilder;
 
-    private UserCollectionLinks(UriInfo uriInfo) {
+    UserCollectionLinks(UriInfo uriInfo) {
       collectionLinkBuilder = new LinkBuilder(uriInfo, UserRootResource.class, UserCollectionResource.class);
     }
 
@@ -108,7 +108,7 @@ class ResourceLinks {
   static class RepositoryLinks {
     private final LinkBuilder repositoryLinkBuilder;
 
-    private RepositoryLinks(UriInfo uriInfo) {
+    RepositoryLinks(UriInfo uriInfo) {
       repositoryLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class);
     }
 
@@ -132,7 +132,7 @@ class ResourceLinks {
   static class TagCollectionLinks {
     private final LinkBuilder tagLinkBuilder;
 
-    private TagCollectionLinks(UriInfo uriInfo) {
+    TagCollectionLinks(UriInfo uriInfo) {
       tagLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, TagRootResource.class, TagCollectionResource.class);
     }
 
@@ -148,7 +148,7 @@ class ResourceLinks {
   static class BranchCollectionLinks {
     private final LinkBuilder branchLinkBuilder;
 
-    private BranchCollectionLinks(UriInfo uriInfo) {
+    BranchCollectionLinks(UriInfo uriInfo) {
       branchLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, BranchRootResource.class, BranchCollectionResource.class);
     }
 

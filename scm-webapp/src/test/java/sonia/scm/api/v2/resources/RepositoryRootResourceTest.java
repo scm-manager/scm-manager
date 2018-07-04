@@ -9,7 +9,6 @@ import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import sonia.scm.repository.Repository;
@@ -39,7 +38,7 @@ public class RepositoryRootResourceTest {
 
   @Mock
   private RepositoryManager repositoryManager;
-  @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+  @Mock
   private ResourceLinks resourceLinks;
   @InjectMocks
   private RepositoryToRepositoryDtoMapperImpl repositoryToDtoMapper;

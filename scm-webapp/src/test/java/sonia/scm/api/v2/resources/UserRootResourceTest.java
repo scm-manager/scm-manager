@@ -11,7 +11,6 @@ import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.mockito.Answers;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -51,7 +50,7 @@ public class UserRootResourceTest {
 
   private Dispatcher dispatcher = MockDispatcherFactory.createDispatcher();
 
-  @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+  @Mock
   private ResourceLinks resourceLinks;
 
   @Mock

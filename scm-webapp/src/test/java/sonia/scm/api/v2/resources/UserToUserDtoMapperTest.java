@@ -7,7 +7,6 @@ import org.apache.shiro.util.ThreadState;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import sonia.scm.api.rest.resources.UserResource;
@@ -25,7 +24,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class UserToUserDtoMapperTest {
 
-  @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+  @Mock
   private ResourceLinks resourceLinks;
 
   @InjectMocks
