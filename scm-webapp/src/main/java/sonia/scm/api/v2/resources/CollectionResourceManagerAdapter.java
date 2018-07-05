@@ -52,8 +52,8 @@ class CollectionResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
       return Response.status(BAD_REQUEST).build();
     }
     MODEL_OBJECT modelObject = modelObjectSupplier.get();
-    manager.create(modelObject);
-    return Response.created(URI.create(uriCreator.apply(modelObject))).build();
+    MODEL_OBJECT created = manager.create(modelObject);
+    return Response.created(URI.create(uriCreator.apply(created))).build();
   }
 
   @Override

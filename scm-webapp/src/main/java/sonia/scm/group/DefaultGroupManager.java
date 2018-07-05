@@ -51,7 +51,12 @@ import sonia.scm.util.CollectionAppender;
 import sonia.scm.util.Util;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -106,7 +111,7 @@ public class DefaultGroupManager extends AbstractGroupManager
    * @throws IOException
    */
   @Override
-  public void create(Group group) throws GroupException, IOException
+  public Group create(Group group) throws GroupException, IOException
   {
     String type = group.getType();
 
@@ -135,6 +140,7 @@ public class DefaultGroupManager extends AbstractGroupManager
     fireEvent(HandlerEventType.BEFORE_CREATE, group);
     groupDAO.add(group);
     fireEvent(HandlerEventType.CREATE, group);
+    return group;
   }
 
   /**

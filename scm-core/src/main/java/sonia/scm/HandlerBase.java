@@ -53,13 +53,9 @@ public interface HandlerBase<T extends TypedObject, E extends Exception>
   /**
    * Persists a new object.
    *
-   *
-   * @param object to store
-   *
-   * @throws E
-   * @throws IOException
+   * @return  The persisted object.
    */
-  public void create(T object) throws E, IOException;
+  public T create(T object) throws E, IOException;
 
   /**
    * Removes a persistent object.

@@ -158,7 +158,13 @@ public class RepositoryRootResourceTest {
   }
 
   @Test
-  public void shouldCreateNewRepository() throws URISyntaxException, IOException, RepositoryException {
+  public void shouldCreateNewRepositoryInCorrectNamespace() throws URISyntaxException, IOException, RepositoryException {
+    when(repositoryManager.create(any())).thenAnswer(invocation -> {
+      Repository repository = (Repository) invocation.getArguments()[0];
+      repository.setNamespace("otherspace");
+      return repository;
+    });
+
     URL url = Resources.getResource("sonia/scm/api/v2/repository-test-update.json");
     byte[] repositoryJson = Resources.toByteArray(url);
 
@@ -171,7 +177,7 @@ public class RepositoryRootResourceTest {
     dispatcher.invoke(request, response);
 
     assertEquals(HttpServletResponse.SC_CREATED, response.getStatus());
-    assertEquals("/v2/repositories/space/repo", response.getOutputHeaders().get("Location").get(0).toString());
+    assertEquals("/v2/repositories/otherspace/repo", response.getOutputHeaders().get("Location").get(0).toString());
     verify(repositoryManager).create(any(Repository.class));
   }
 

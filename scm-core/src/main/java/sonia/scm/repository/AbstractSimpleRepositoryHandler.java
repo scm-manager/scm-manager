@@ -38,23 +38,20 @@ package sonia.scm.repository;
 import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
 import com.google.common.io.Resources;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.ConfigurationException;
 import sonia.scm.io.CommandResult;
 import sonia.scm.io.ExtendedCommand;
 import sonia.scm.io.FileSystem;
+import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.util.IOUtil;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
 import java.io.IOException;
-
 import java.net.URL;
-import sonia.scm.store.ConfigurationStoreFactory;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -108,7 +105,7 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
    * @throws RepositoryException
    */
   @Override
-  public void create(Repository repository)
+  public Repository create(Repository repository)
           throws RepositoryException, IOException
   {
     File directory = getDirectory(repository);
@@ -125,6 +122,7 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
       fileSystem.create(directory);
       create(repository, directory);
       postCreate(repository, directory);
+      return repository;
     }
     catch (Exception ex)
     {
@@ -142,6 +140,7 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
 
       Throwables.propagateIfPossible(ex, RepositoryException.class,
                                      IOException.class);
+      return null;
     }
   }
 

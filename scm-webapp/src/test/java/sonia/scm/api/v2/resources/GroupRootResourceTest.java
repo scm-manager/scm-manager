@@ -62,7 +62,7 @@ public class GroupRootResourceTest {
   @Before
   public void prepareEnvironment() throws IOException, GroupException {
     initMocks(this);
-    doNothing().when(groupManager).create(groupCaptor.capture());
+    when(groupManager.create(groupCaptor.capture())).thenAnswer(invocation -> invocation.getArguments()[0]);
     doNothing().when(groupManager).modify(groupCaptor.capture());
 
     Group group = createDummyGroup();

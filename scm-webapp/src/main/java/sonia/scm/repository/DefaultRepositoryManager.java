@@ -138,7 +138,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
    * @throws IOException
    * @throws RepositoryException
    */
-  public void create(Repository repository, boolean initRepository)
+  public Repository create(Repository repository, boolean initRepository)
     throws RepositoryException, IOException {
     logger.info("create repository {} of type {}", repository.getName(),
       repository.getType());
@@ -161,6 +161,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
     fireEvent(HandlerEventType.BEFORE_CREATE, repository);
     repositoryDAO.add(repository);
     fireEvent(HandlerEventType.CREATE, repository);
+    return repository;
   }
 
   /**
@@ -173,9 +174,9 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
    * @throws RepositoryException
    */
   @Override
-  public void create(Repository repository)
+  public Repository create(Repository repository)
     throws RepositoryException, IOException {
-    create(repository, true);
+    return create(repository, true);
   }
 
   /**

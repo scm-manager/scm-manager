@@ -35,7 +35,6 @@ package sonia.scm;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
-
 import java.util.Collection;
 import java.util.Comparator;
 
@@ -78,9 +77,9 @@ public class ManagerDecorator<T extends ModelObject, E extends Exception>
    * {@inheritDoc}
    */
   @Override
-  public void create(T object) throws E, IOException
+  public T create(T object) throws E, IOException
   {
-    decorated.create(object);
+    return decorated.create(object);
   }
 
   /**

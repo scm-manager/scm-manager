@@ -137,7 +137,7 @@ public class DefaultUserManager extends AbstractUserManager
    * @throws UserException
    */
   @Override
-  public void create(User user) throws UserException, IOException
+  public User create(User user) throws UserException, IOException
   {
     String type = user.getType();
 
@@ -163,6 +163,7 @@ public class DefaultUserManager extends AbstractUserManager
     fireEvent(HandlerEventType.BEFORE_CREATE, user);
     userDAO.add(user);
     fireEvent(HandlerEventType.CREATE, user);
+    return user;
   }
 
   /**

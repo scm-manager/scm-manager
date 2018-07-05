@@ -67,7 +67,7 @@ public class UserRootResourceTest {
   public void prepareEnvironment() throws IOException, UserException {
     initMocks(this);
     User dummyUser = createDummyUser("Neo");
-    doNothing().when(userManager).create(userCaptor.capture());
+    when(userManager.create(userCaptor.capture())).thenAnswer(invocation -> invocation.getArguments()[0]);
     doNothing().when(userManager).modify(userCaptor.capture());
     doNothing().when(userManager).delete(userCaptor.capture());
 
