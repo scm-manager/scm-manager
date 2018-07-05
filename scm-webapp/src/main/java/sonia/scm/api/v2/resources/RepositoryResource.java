@@ -92,11 +92,10 @@ public class RepositoryResource {
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
   public Response update(@PathParam("namespace") String namespace, @PathParam("name") String name, RepositoryDto repositoryDto) {
-    return adapter.update(() -> manager.getByNamespace(namespace, name), existing -> {
-      Repository repository = dtoToRepositoryMapper.map(repositoryDto);
-      repository.setId(existing.getId());
-      return repository;
-    });
+    return adapter.update(
+      () -> manager.getByNamespace(namespace, name),
+      existing -> dtoToRepositoryMapper.map(repositoryDto, existing.getId())
+    );
   }
 
   @Path("tags/")

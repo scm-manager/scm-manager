@@ -68,7 +68,7 @@ public class RepositoryCollectionResource {
   @ResponseHeaders(@ResponseHeader(name = "Location", description = "uri to the created repository"))
   public Response create(RepositoryDto repositoryDto) throws IOException, RepositoryException {
     return adapter.create(repositoryDto,
-      () -> dtoToRepositoryMapper.map(repositoryDto),
+      () -> dtoToRepositoryMapper.map(repositoryDto, null),
       repository -> resourceLinks.repository().self(repository.getNamespace(), repository.getName()));
   }
 }
