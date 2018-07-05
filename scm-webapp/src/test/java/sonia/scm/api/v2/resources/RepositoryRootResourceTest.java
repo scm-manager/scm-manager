@@ -14,9 +14,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import sonia.scm.PageResult;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.web.VndMediaType;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -63,7 +65,7 @@ public class RepositoryRootResourceTest {
     initMocks(this);
     RepositoryResource repositoryResource = new RepositoryResource(repositoryToDtoMapper, dtoToRepositoryMapper, repositoryManager, null, null, null, null, null);
     RepositoryCollectionToDtoMapper repositoryCollectionToDtoMapper = new RepositoryCollectionToDtoMapper(repositoryToDtoMapper, resourceLinks);
-    RepositoryCollectionResource repositoryCollectionResource = new RepositoryCollectionResource(repositoryManager, repositoryCollectionToDtoMapper);
+    RepositoryCollectionResource repositoryCollectionResource = new RepositoryCollectionResource(repositoryManager, repositoryCollectionToDtoMapper, dtoToRepositoryMapper, resourceLinks);
     RepositoryRootResource repositoryRootResource = new RepositoryRootResource(MockProvider.of(repositoryResource), MockProvider.of(repositoryCollectionResource));
     dispatcher.getRegistry().addSingletonResource(repositoryRootResource);
   }
@@ -146,9 +148,6 @@ public class RepositoryRootResourceTest {
   public void shouldHandleDeleteForExistingRepository() throws Exception {
     mockRepository("space", "repo");
 
-    URL url = Resources.getResource("sonia/scm/api/v2/repository-test-update.json");
-    byte[] repository = Resources.toByteArray(url);
-
     MockHttpRequest request = MockHttpRequest.delete("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo");
     MockHttpResponse response = new MockHttpResponse();
 
@@ -156,6 +155,23 @@ public class RepositoryRootResourceTest {
 
     assertEquals(SC_NO_CONTENT, response.getStatus());
     verify(repositoryManager).delete(anyObject());
+  }
+
+  @Test
+  public void shouldCreateNewRepository() throws URISyntaxException, IOException, RepositoryException {
+    URL url = Resources.getResource("sonia/scm/api/v2/repository-test-update.json");
+    byte[] repositoryJson = Resources.toByteArray(url);
+
+    MockHttpRequest request = MockHttpRequest
+      .post("/" + RepositoryRootResource.REPOSITORIES_PATH_V2)
+      .contentType(VndMediaType.REPOSITORY)
+      .content(repositoryJson);
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_CREATED, response.getStatus());
+    verify(repositoryManager).create(any(Repository.class));
   }
 
   private PageResult<Repository> createSingletonPageResult(Repository repository) {
