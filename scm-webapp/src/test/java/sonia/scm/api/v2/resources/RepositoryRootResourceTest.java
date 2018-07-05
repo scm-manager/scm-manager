@@ -25,6 +25,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 
 import static java.util.Collections.singletonList;
+import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
@@ -33,6 +34,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -142,6 +144,25 @@ public class RepositoryRootResourceTest {
 
     assertEquals(SC_NO_CONTENT, response.getStatus());
     verify(repositoryManager).modify(anyObject());
+  }
+
+  @Test
+  public void shouldHandleUpdateForExistingRepositoryForChangedNamespace() throws Exception {
+    mockRepository("wrong", "repo");
+
+    URL url = Resources.getResource("sonia/scm/api/v2/repository-test-update.json");
+    byte[] repository = Resources.toByteArray(url);
+
+    MockHttpRequest request = MockHttpRequest
+      .put("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "wrong/repo")
+      .contentType(VndMediaType.REPOSITORY)
+      .content(repository);
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(SC_BAD_REQUEST, response.getStatus());
+    verify(repositoryManager, never()).modify(anyObject());
   }
 
   @Test

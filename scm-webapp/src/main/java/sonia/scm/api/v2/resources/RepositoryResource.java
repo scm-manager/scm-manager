@@ -94,7 +94,8 @@ public class RepositoryResource {
   public Response update(@PathParam("namespace") String namespace, @PathParam("name") String name, RepositoryDto repositoryDto) {
     return adapter.update(
       () -> manager.getByNamespace(namespace, name),
-      existing -> dtoToRepositoryMapper.map(repositoryDto, existing.getId())
+      existing -> dtoToRepositoryMapper.map(repositoryDto, existing.getId()),
+      changed -> changed.getName().equals(name) && changed.getNamespace().equals(namespace)
     );
   }
 

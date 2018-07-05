@@ -34,7 +34,11 @@ class IdResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
   }
 
   public Response update(String id, Function<MODEL_OBJECT, MODEL_OBJECT> applyChanges) {
-    return singleAdapter.update(() -> manager.get(id), applyChanges);
+    return singleAdapter.update(
+      () -> manager.get(id),
+      applyChanges,
+      changed -> changed.getId().equals(id)
+    );
   }
 
   public Response getAll(int page, int pageSize, String sortBy, boolean desc, Function<PageResult<MODEL_OBJECT>, CollectionDto> mapToDto) {

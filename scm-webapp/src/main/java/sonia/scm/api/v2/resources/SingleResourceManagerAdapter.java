@@ -9,6 +9,7 @@ import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
 import java.util.Collection;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
@@ -48,13 +49,13 @@ class SingleResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
    * Update the model object for the given id according to the given function and returns a corresponding http response.
    * This handles all corner cases, eg. no matching object for the id or missing privileges.
    */
-  public Response update(Supplier<MODEL_OBJECT> reader, Function<MODEL_OBJECT, MODEL_OBJECT> applyChanges) {
+  public Response update(Supplier<MODEL_OBJECT> reader, Function<MODEL_OBJECT, MODEL_OBJECT> applyChanges, Predicate<MODEL_OBJECT> hasSameKey) {
     MODEL_OBJECT existingModelObject = reader.get();
     if (existingModelObject == null) {
       return Response.status(Response.Status.NOT_FOUND).build();
     }
     MODEL_OBJECT changedModelObject = applyChanges.apply(existingModelObject);
-    if (!getId(existingModelObject).equals(getId(changedModelObject))) {
+    if (!hasSameKey.test(changedModelObject)) {
       return Response.status(BAD_REQUEST).entity("illegal change of id").build();
     }
     return update(getId(existingModelObject), changedModelObject);
