@@ -6,16 +6,19 @@ import { routerReducer, routerMiddleware } from "react-router-redux";
 
 import repositories from "./repositories/modules/repositories";
 import users from "./users/modules/users";
+import login from "./modules/login";
 
-import type {BrowserHistory} from "history/createBrowserHistory";
+import type { BrowserHistory } from "history/createBrowserHistory";
 
 function createReduxStore(history: BrowserHistory) {
-  const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+  const composeEnhancers =
+    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
   const reducer = combineReducers({
     router: routerReducer,
     repositories,
-    users
+    users,
+    login
   });
 
   return createStore(

@@ -6,29 +6,26 @@ import { withRouter } from "react-router-dom";
 
 type Props = {
   login: boolean
-}
+};
 
 class App extends Component {
-
   render() {
+    const { login } = this.props;
 
-    const { login} = this.props;
-
-    if(login) {
+    if (!login) {
       return (
         <div>
-          <Login/>
+          <Login />
+        </div>
+      );
+    } else {
+      return (
+        <div className="App">
+          <Navigation />
+          <Main />
         </div>
       );
     }
-    else {
-      return (
-      <div className="App">
-        <Navigation />
-        <Main />
-      </div>
-    );
-  }
   }
 }
 
