@@ -30,7 +30,7 @@ public class RepositoryCollectionResource {
 
   @Inject
   public RepositoryCollectionResource(RepositoryManager manager, RepositoryCollectionToDtoMapper repositoryCollectionToDtoMapper, RepositoryDtoToRepositoryMapper dtoToRepositoryMapper, ResourceLinks resourceLinks) {
-    this.adapter = new CollectionResourceManagerAdapter<>(manager);
+    this.adapter = new CollectionResourceManagerAdapter<>(manager, Repository.class);
     this.repositoryCollectionToDtoMapper = repositoryCollectionToDtoMapper;
     this.dtoToRepositoryMapper = dtoToRepositoryMapper;
     this.resourceLinks = resourceLinks;

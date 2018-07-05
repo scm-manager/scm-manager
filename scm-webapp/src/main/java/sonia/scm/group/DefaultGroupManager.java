@@ -111,7 +111,7 @@ public class DefaultGroupManager extends AbstractGroupManager
    * @throws IOException
    */
   @Override
-  public Group create(Group group) throws GroupException, IOException
+  public Group create(Group group) throws GroupException
   {
     String type = group.getType();
 
@@ -132,7 +132,7 @@ public class DefaultGroupManager extends AbstractGroupManager
     
     if (groupDAO.contains(name))
     {
-      throw new GroupAlreadyExistsException(name.concat(" group already exists"));
+      throw new GroupAlreadyExistsException(name);
     }
 
     removeDuplicateMembers(group);
@@ -153,7 +153,7 @@ public class DefaultGroupManager extends AbstractGroupManager
    * @throws IOException
    */
   @Override
-  public void delete(Group group) throws GroupException, IOException
+  public void delete(Group group) throws GroupException
   {
     if (logger.isInfoEnabled())
     {
@@ -172,7 +172,7 @@ public class DefaultGroupManager extends AbstractGroupManager
     }
     else
     {
-      throw new GroupNotFoundException("user does not exists");
+      throw new GroupNotFoundException();
     }
   }
 
@@ -195,7 +195,7 @@ public class DefaultGroupManager extends AbstractGroupManager
    * @throws IOException
    */
   @Override
-  public void modify(Group group) throws GroupException, IOException
+  public void modify(Group group) throws GroupException
   {
     if (logger.isInfoEnabled())
     {
@@ -218,7 +218,7 @@ public class DefaultGroupManager extends AbstractGroupManager
     }
     else
     {
-      throw new GroupNotFoundException("group does not exists");
+      throw new GroupNotFoundException();
     }
   }
 
@@ -232,7 +232,7 @@ public class DefaultGroupManager extends AbstractGroupManager
    * @throws IOException
    */
   @Override
-  public void refresh(Group group) throws GroupException, IOException
+  public void refresh(Group group) throws GroupException
   {
     String name = group.getName();
     if (logger.isInfoEnabled())
@@ -245,7 +245,7 @@ public class DefaultGroupManager extends AbstractGroupManager
 
     if (fresh == null)
     {
-      throw new GroupNotFoundException("group does not exists");
+      throw new GroupNotFoundException();
     }
 
     fresh.copyProperties(group);

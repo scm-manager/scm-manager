@@ -137,7 +137,7 @@ public class DefaultUserManager extends AbstractUserManager
    * @throws UserException
    */
   @Override
-  public User create(User user) throws UserException, IOException
+  public User create(User user) throws UserException
   {
     String type = user.getType();
 
@@ -155,7 +155,7 @@ public class DefaultUserManager extends AbstractUserManager
 
     if (userDAO.contains(user.getName()))
     {
-      throw new UserAlreadyExistsException(user.getName().concat(" user already exists"));
+      throw new UserAlreadyExistsException(user.getName());
     }
 
     AssertUtil.assertIsValid(user);
@@ -176,7 +176,7 @@ public class DefaultUserManager extends AbstractUserManager
    * @throws UserException
    */
   @Override
-  public void delete(User user) throws UserException, IOException
+  public void delete(User user) throws UserException
   {
     if (logger.isInfoEnabled())
     {
@@ -194,7 +194,7 @@ public class DefaultUserManager extends AbstractUserManager
     }
     else
     {
-      throw new UserNotFoundException("user does not exists");
+      throw new UserNotFoundException();
     }
   }
 
@@ -225,7 +225,7 @@ public class DefaultUserManager extends AbstractUserManager
    * @throws UserException
    */
   @Override
-  public void modify(User user) throws UserException, IOException
+  public void modify(User user) throws UserException
   {
     String name = user.getName();
     if (logger.isInfoEnabled())
@@ -246,7 +246,7 @@ public class DefaultUserManager extends AbstractUserManager
     }
     else
     {
-      throw new UserNotFoundException("user does not exists");
+      throw new UserNotFoundException();
     }
   }
 
@@ -260,7 +260,7 @@ public class DefaultUserManager extends AbstractUserManager
    * @throws UserException
    */
   @Override
-  public void refresh(User user) throws UserException, IOException
+  public void refresh(User user) throws UserException
   {
     if (logger.isInfoEnabled())
     {
@@ -272,7 +272,7 @@ public class DefaultUserManager extends AbstractUserManager
 
     if (fresh == null)
     {
-      throw new UserNotFoundException("user does not exists");
+      throw new UserNotFoundException();
     }
 
     fresh.copyProperties(user);

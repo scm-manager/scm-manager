@@ -106,7 +106,7 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
    */
   @Override
   public Repository create(Repository repository)
-          throws RepositoryException, IOException
+          throws RepositoryException
   {
     File directory = getDirectory(repository);
 
@@ -135,11 +135,14 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
               directory);
         }
 
-        fileSystem.destroy(directory);
+        try {
+          fileSystem.destroy(directory);
+        } catch (IOException e) {
+          logger.error("could not delete directory after failed repository creation: {}", directory, e);
+        }
       }
 
-      Throwables.propagateIfPossible(ex, RepositoryException.class,
-                                     IOException.class);
+      Throwables.propagateIfPossible(ex, RepositoryException.class);
       return null;
     }
   }
@@ -172,14 +175,17 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
    * @throws RepositoryException
    */
   @Override
-  public void delete(Repository repository)
-          throws RepositoryException, IOException
+  public void delete(Repository repository) throws RepositoryException
   {
     File directory = getDirectory(repository);
 
     if (directory.exists())
     {
-      fileSystem.destroy(directory);
+      try {
+        fileSystem.destroy(directory);
+      } catch (IOException e) {
+        throw new RepositoryException("could not delete repository", e);
+      }
       cleanupEmptyDirectories(config.getRepositoryDirectory(),
                               directory.getParentFile());
     }
@@ -231,8 +237,7 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
    * @throws RepositoryException
    */
   @Override
-  public void modify(Repository repository)
-          throws RepositoryException, IOException
+  public void modify(Repository repository) throws RepositoryException
   {
 
     // nothing todo

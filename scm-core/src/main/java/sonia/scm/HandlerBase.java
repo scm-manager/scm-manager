@@ -55,7 +55,7 @@ public interface HandlerBase<T extends TypedObject, E extends Exception>
    *
    * @return  The persisted object.
    */
-  public T create(T object) throws E, IOException;
+  public T create(T object) throws E;
 
   /**
    * Removes a persistent object.
@@ -66,7 +66,7 @@ public interface HandlerBase<T extends TypedObject, E extends Exception>
    * @throws E
    * @throws IOException
    */
-  public void delete(T object) throws E, IOException;
+  public void delete(T object) throws E;
 
   /**
    * Modifies a persistent object.
@@ -77,5 +77,5 @@ public interface HandlerBase<T extends TypedObject, E extends Exception>
    * @throws E
    * @throws IOException
    */
-  public void modify(T object) throws E, IOException;
+  public void modify(T object) throws E;
 }

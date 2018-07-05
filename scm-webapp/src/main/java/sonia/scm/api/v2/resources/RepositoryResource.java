@@ -43,7 +43,7 @@ public class RepositoryResource {
     this.dtoToRepositoryMapper = dtoToRepositoryMapper;
     this.manager = manager;
     this.repositoryToDtoMapper = repositoryToDtoMapper;
-    this.adapter = new SingleResourceManagerAdapter<>(manager);
+    this.adapter = new SingleResourceManagerAdapter<>(manager, Repository.class);
     this.tagRootResource = tagRootResource;
     this.branchRootResource = branchRootResource;
     this.changesetRootResource = changesetRootResource;

@@ -28,8 +28,8 @@ class SingleResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
                              DTO extends HalRepresentation,
                              EXCEPTION extends Exception> extends AbstractManagerResource<MODEL_OBJECT, EXCEPTION> {
 
-  SingleResourceManagerAdapter(Manager<MODEL_OBJECT, EXCEPTION> manager) {
-    super(manager);
+  SingleResourceManagerAdapter(Manager<MODEL_OBJECT, EXCEPTION> manager, Class<MODEL_OBJECT> type) {
+    super(manager, type);
   }
 
   /**

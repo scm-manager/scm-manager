@@ -23,10 +23,10 @@ class IdResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
   private final SingleResourceManagerAdapter<MODEL_OBJECT, DTO, EXCEPTION> singleAdapter;
   private final CollectionResourceManagerAdapter<MODEL_OBJECT, DTO, EXCEPTION> collectionAdapter;
 
-  IdResourceManagerAdapter(Manager<MODEL_OBJECT, EXCEPTION> manager) {
+  IdResourceManagerAdapter(Manager<MODEL_OBJECT, EXCEPTION> manager, Class<MODEL_OBJECT> type) {
     this.manager = manager;
-    singleAdapter = new SingleResourceManagerAdapter<>(manager);
-    collectionAdapter = new CollectionResourceManagerAdapter<>(manager);
+    singleAdapter = new SingleResourceManagerAdapter<>(manager, type);
+    collectionAdapter = new CollectionResourceManagerAdapter<>(manager, type);
   }
 
   Response get(String id, Function<MODEL_OBJECT, DTO> mapToDto) {

@@ -30,8 +30,8 @@ class CollectionResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
                              DTO extends HalRepresentation,
                              EXCEPTION extends Exception> extends AbstractManagerResource<MODEL_OBJECT, EXCEPTION> {
 
-  CollectionResourceManagerAdapter(Manager<MODEL_OBJECT, EXCEPTION> manager) {
-    super(manager);
+  CollectionResourceManagerAdapter(Manager<MODEL_OBJECT, EXCEPTION> manager, Class<MODEL_OBJECT> type) {
+    super(manager, type);
   }
 
   /**
@@ -47,7 +47,7 @@ class CollectionResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
    * Creates a model object for the given dto and returns a corresponding http response.
    * This handles all corner cases, eg. no conflicts or missing privileges.
    */
-  public Response create(DTO dto, Supplier<MODEL_OBJECT> modelObjectSupplier, Function<MODEL_OBJECT, String> uriCreator) throws IOException, EXCEPTION {
+  public Response create(DTO dto, Supplier<MODEL_OBJECT> modelObjectSupplier, Function<MODEL_OBJECT, String> uriCreator) throws EXCEPTION {
     if (dto == null) {
       return Response.status(BAD_REQUEST).build();
     }

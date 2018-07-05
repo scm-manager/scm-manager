@@ -139,7 +139,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
    * @throws RepositoryException
    */
   public Repository create(Repository repository, boolean initRepository)
-    throws RepositoryException, IOException {
+    throws RepositoryException {
     logger.info("create repository {} of type {}", repository.getName(),
       repository.getType());
 
@@ -175,7 +175,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
    */
   @Override
   public Repository create(Repository repository)
-    throws RepositoryException, IOException {
+    throws RepositoryException {
     return create(repository, true);
   }
 
@@ -190,7 +190,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
    */
   @Override
   public void delete(Repository repository)
-    throws RepositoryException, IOException {
+    throws RepositoryException {
     if (logger.isInfoEnabled()) {
       logger.info("delete repository {} of type {}", repository.getName(),
         repository.getType());
@@ -250,7 +250,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
    */
   @Override
   public void modify(Repository repository)
-    throws RepositoryException, IOException {
+    throws RepositoryException {
     if (logger.isInfoEnabled()) {
       logger.info("modify repository {} of type {}", repository.getName(),
         repository.getType());
@@ -285,7 +285,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
    */
   @Override
   public void refresh(Repository repository)
-    throws RepositoryException, IOException {
+    throws RepositoryException {
     AssertUtil.assertIsNotNull(repository);
     RepositoryPermissions.read(repository).check();
 

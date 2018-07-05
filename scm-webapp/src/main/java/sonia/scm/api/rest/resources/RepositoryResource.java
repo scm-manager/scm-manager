@@ -127,7 +127,7 @@ public class RepositoryResource extends AbstractManagerResource<Repository, Repo
   public RepositoryResource(RepositoryManager repositoryManager,
     RepositoryServiceFactory servicefactory, HealthChecker healthChecker)
   {
-    super(repositoryManager);
+    super(repositoryManager, Repository.class);
     this.repositoryManager = repositoryManager;
     this.servicefactory = servicefactory;
     this.healthChecker = healthChecker;
@@ -205,9 +205,9 @@ public class RepositoryResource extends AbstractManagerResource<Repository, Repo
         logger.warn("delete not allowed", ex);
         response = Response.status(Response.Status.FORBIDDEN).build();
       }
-      catch (RepositoryException | IOException ex)
+      catch (RepositoryException ex)
       {
-        logger.error("error during create", ex);
+        logger.error("error during delete", ex);
         response = createErrorResponse(ex);
       }
     }

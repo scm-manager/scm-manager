@@ -29,7 +29,7 @@ public class GroupResource {
                        GroupDtoToGroupMapper groupDtoToGroupMapper) {
     this.groupToGroupDtoMapper = groupToGroupDtoMapper;
     this.dtoToGroupMapper = groupDtoToGroupMapper;
-    this.adapter = new IdResourceManagerAdapter<>(manager);
+    this.adapter = new IdResourceManagerAdapter<>(manager, Group.class);
   }
 
   /**
