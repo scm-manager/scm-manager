@@ -18,6 +18,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 public class RepositoryResource {
 
@@ -63,7 +65,7 @@ public class RepositoryResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name) {
-    return adapter.get(() -> manager.getByNamespace(namespace, name), repositoryToDtoMapper::map);
+    return adapter.get(loadBy(namespace, name), repositoryToDtoMapper::map);
   }
 
   @DELETE
@@ -76,7 +78,7 @@ public class RepositoryResource {
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
   public Response delete(@PathParam("namespace") String namespace, @PathParam("name") String name) {
-    return adapter.delete(() -> manager.getByNamespace(namespace, name));
+    return adapter.delete(loadBy(namespace, name));
   }
 
   @PUT
@@ -93,9 +95,9 @@ public class RepositoryResource {
   @TypeHint(TypeHint.NO_CONTENT.class)
   public Response update(@PathParam("namespace") String namespace, @PathParam("name") String name, RepositoryDto repositoryDto) {
     return adapter.update(
-      () -> manager.getByNamespace(namespace, name),
+      loadBy(namespace, name),
       existing -> dtoToRepositoryMapper.map(repositoryDto, existing.getId()),
-      changed -> changed.getName().equals(name) && changed.getNamespace().equals(namespace)
+      nameAndNamespaceStaysTheSame(namespace, name)
     );
   }
 
@@ -122,5 +124,13 @@ public class RepositoryResource {
   @Path("permissions/")
   public PermissionRootResource permissions() {
     return permissionRootResource.get();
+  }
+
+  private Supplier<Repository> loadBy(String namespace, String name) {
+    return () -> manager.getByNamespace(namespace, name);
+  }
+
+  private Predicate<Repository> nameAndNamespaceStaysTheSame(String namespace, String name) {
+    return changed -> changed.getName().equals(name) && changed.getNamespace().equals(namespace);
   }
 }

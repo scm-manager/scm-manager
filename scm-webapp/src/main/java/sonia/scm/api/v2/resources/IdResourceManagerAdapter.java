@@ -8,10 +8,12 @@ import sonia.scm.PageResult;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 /**
- * Facade for {@link SingleResourceManagerAdapter} and {@link CollectionResourceManagerAdapter}.
+ * Facade for {@link SingleResourceManagerAdapter} and {@link CollectionResourceManagerAdapter}
+ * for model objects handled by a single id.
  */
 @SuppressWarnings("squid:S00119") // "MODEL_OBJECT" is much more meaningful than "M", right?
 class IdResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
@@ -30,14 +32,14 @@ class IdResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
   }
 
   Response get(String id, Function<MODEL_OBJECT, DTO> mapToDto) {
-    return singleAdapter.get(() -> manager.get(id), mapToDto);
+    return singleAdapter.get(loadBy(id), mapToDto);
   }
 
   public Response update(String id, Function<MODEL_OBJECT, MODEL_OBJECT> applyChanges) {
     return singleAdapter.update(
-      () -> manager.get(id),
+      loadBy(id),
       applyChanges,
-      changed -> changed.getId().equals(id)
+      idStaysTheSame(id)
     );
   }
 
@@ -51,5 +53,13 @@ class IdResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
 
   public Response delete(String id) {
     return singleAdapter.delete(id);
+  }
+
+  private Supplier<MODEL_OBJECT> loadBy(String id) {
+    return () -> manager.get(id);
+  }
+
+  private Predicate<MODEL_OBJECT> idStaysTheSame(String id) {
+    return changed -> changed.getId().equals(id);
   }
 }
