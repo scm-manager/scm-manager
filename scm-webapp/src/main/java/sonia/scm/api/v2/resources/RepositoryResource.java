@@ -10,6 +10,7 @@ import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -80,6 +81,16 @@ public class RepositoryResource {
 
   @PUT
   @Path("")
+  @Consumes(VndMediaType.REPOSITORY)
+  @StatusCodes({
+    @ResponseCode(code = 204, condition = "update success"),
+    @ResponseCode(code = 400, condition = "Invalid body, e.g. illegal change of namespace or name"),
+    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
+    @ResponseCode(code = 403, condition = "not authorized, the current user does not have the \"repository\" privilege"),
+    @ResponseCode(code = 404, condition = "not found, no repository with the specified namespace and name available"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
+  @TypeHint(TypeHint.NO_CONTENT.class)
   public Response update(@PathParam("namespace") String namespace, @PathParam("name") String name, RepositoryDto repositoryDto) {
     return adapter.update(() -> manager.getByNamespace(namespace, name), existing -> {
       Repository repository = dtoToRepositoryMapper.map(repositoryDto);
