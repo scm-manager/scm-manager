@@ -171,6 +171,7 @@ public class RepositoryRootResourceTest {
     dispatcher.invoke(request, response);
 
     assertEquals(HttpServletResponse.SC_CREATED, response.getStatus());
+    assertEquals("/v2/repositories/space/repo", response.getOutputHeaders().get("Location").get(0).toString());
     verify(repositoryManager).create(any(Repository.class));
   }
 

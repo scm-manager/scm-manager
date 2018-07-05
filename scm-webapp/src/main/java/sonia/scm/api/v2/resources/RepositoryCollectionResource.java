@@ -69,6 +69,6 @@ public class RepositoryCollectionResource {
   public Response create(RepositoryDto repositoryDto) throws IOException, RepositoryException {
     return adapter.create(repositoryDto,
       () -> dtoToRepositoryMapper.map(repositoryDto),
-      user -> resourceLinks.user().self(user.getName()));
+      repository -> resourceLinks.repository().self(repository.getNamespace(), repository.getName()));
   }
 }
