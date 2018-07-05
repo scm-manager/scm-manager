@@ -122,6 +122,6 @@ public class UserToUserDtoMapperTest {
     UserDto userDto = mapper.map(user);
 
     assertEquals(expectedCreationDate, userDto.getCreationDate());
-    assertEquals(expectedModificationDate, userDto.getLastModified().get());
+    assertEquals(expectedModificationDate, userDto.getLastModified());
   }
 }

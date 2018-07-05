@@ -49,11 +49,11 @@ public class UserAlreadyExistsException extends UserException
   /**
    * Constructs a new instance.
    *
-   * @param message message of exception
+   * @param name The name (aka id) of the user
    * @since 1.5
    */
-  public UserAlreadyExistsException(String message)
+  public UserAlreadyExistsException(String name)
   {
-    super(message);
+    super(name + " user already exists");
   }
 }
