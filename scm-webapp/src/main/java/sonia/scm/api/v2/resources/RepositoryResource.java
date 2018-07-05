@@ -21,6 +21,7 @@ import javax.ws.rs.core.Response;
 public class RepositoryResource {
 
   private final RepositoryToRepositoryDtoMapper repositoryToDtoMapper;
+  private final RepositoryDtoToRepositoryMapper dtoToRepositoryMapper;
 
   private final RepositoryManager manager;
   private final SingleResourceManagerAdapter<Repository, RepositoryDto, RepositoryException> adapter;
@@ -33,11 +34,12 @@ public class RepositoryResource {
   @Inject
   public RepositoryResource(
     RepositoryToRepositoryDtoMapper repositoryToDtoMapper,
-    RepositoryManager manager,
+    RepositoryDtoToRepositoryMapper dtoToRepositoryMapper, RepositoryManager manager,
     Provider<TagRootResource> tagRootResource,
     Provider<BranchRootResource> branchRootResource,
     Provider<ChangesetRootResource> changesetRootResource,
     Provider<SourceRootResource> sourceRootResource, Provider<PermissionRootResource> permissionRootResource) {
+    this.dtoToRepositoryMapper = dtoToRepositoryMapper;
     this.manager = manager;
     this.repositoryToDtoMapper = repositoryToDtoMapper;
     this.adapter = new SingleResourceManagerAdapter<>(manager);
@@ -65,14 +67,25 @@ public class RepositoryResource {
 
   @DELETE
   @Path("")
+  @StatusCodes({
+    @ResponseCode(code = 204, condition = "delete success or nothing to delete"),
+    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
+    @ResponseCode(code = 403, condition = "not authorized, the current user does not have the \"repository\" privilege"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
+  @TypeHint(TypeHint.NO_CONTENT.class)
   public Response delete(@PathParam("namespace") String namespace, @PathParam("name") String name) {
-    throw new UnsupportedOperationException();
+    return adapter.delete(() -> manager.getByNamespace(namespace, name));
   }
 
   @PUT
   @Path("")
-  public Response update(@PathParam("namespace") String namespace, @PathParam("name") String name) {
-    throw new UnsupportedOperationException();
+  public Response update(@PathParam("namespace") String namespace, @PathParam("name") String name, RepositoryDto repositoryDto) {
+    return adapter.update(() -> manager.getByNamespace(namespace, name), existing -> {
+      Repository repository = dtoToRepositoryMapper.map(repositoryDto);
+      repository.setId(existing.getId());
+      return repository;
+    });
   }
 
   @Path("tags/")

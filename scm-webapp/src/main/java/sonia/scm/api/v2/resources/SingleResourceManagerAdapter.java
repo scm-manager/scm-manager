@@ -60,6 +60,11 @@ class SingleResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
     return update(getId(existingModelObject), changedModelObject);
   }
 
+  public Response delete(Supplier<MODEL_OBJECT> reader) {
+    MODEL_OBJECT existingModelObject = reader.get();
+    return delete(existingModelObject.getId());
+  }
+
   @Override
   protected GenericEntity<Collection<MODEL_OBJECT>> createGenericEntity(Collection<MODEL_OBJECT> modelObjects) {
     throw new UnsupportedOperationException();
