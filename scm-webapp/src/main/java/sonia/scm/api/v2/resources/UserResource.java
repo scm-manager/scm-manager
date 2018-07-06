@@ -29,7 +29,7 @@ public class UserResource {
   public UserResource(UserDtoToUserMapper dtoToUserMapper, UserToUserDtoMapper userToDtoMapper, UserManager manager) {
     this.dtoToUserMapper = dtoToUserMapper;
     this.userToDtoMapper = userToDtoMapper;
-    this.adapter = new ResourceManagerAdapter<>(manager);
+    this.adapter = new ResourceManagerAdapter<>(manager, User.class);
   }
 
   /**

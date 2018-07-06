@@ -35,7 +35,6 @@ package sonia.scm;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
-
 import java.util.Collection;
 import java.util.Comparator;
 
@@ -78,7 +77,7 @@ public class ManagerDecorator<T extends ModelObject, E extends Exception>
    * {@inheritDoc}
    */
   @Override
-  public void create(T object) throws E, IOException
+  public void create(T object) throws E
   {
     decorated.create(object);
   }
@@ -87,7 +86,7 @@ public class ManagerDecorator<T extends ModelObject, E extends Exception>
    * {@inheritDoc}
    */
   @Override
-  public void delete(T object) throws E, IOException
+  public void delete(T object) throws E
   {
     decorated.delete(object);
   }
@@ -105,7 +104,7 @@ public class ManagerDecorator<T extends ModelObject, E extends Exception>
    * {@inheritDoc}
    */
   @Override
-  public void modify(T object) throws E, IOException
+  public void modify(T object) throws E
   {
     decorated.modify(object);
   }
@@ -114,7 +113,7 @@ public class ManagerDecorator<T extends ModelObject, E extends Exception>
    * {@inheritDoc}
    */
   @Override
-  public void refresh(T object) throws E, IOException
+  public void refresh(T object) throws E
   {
     decorated.refresh(object);
   }

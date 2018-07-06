@@ -81,7 +81,8 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
 
   @Override
   public void create(Repository repository)
-    throws RepositoryException, IOException {
+          throws RepositoryException, IOException
+  {
     File directory = getDirectory(repository);
 
     if (directory.exists()) {
@@ -106,7 +107,7 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
       }
 
       Throwables.propagateIfPossible(ex, RepositoryException.class,
-        IOException.class);
+                                     IOException.class);
     }
   }
 
@@ -121,7 +122,8 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
 
   @Override
   public void delete(Repository repository)
-    throws RepositoryException, IOException {
+          throws RepositoryException, IOException
+  {
     File directory = getDirectory(repository);
 
     if (directory.exists()) {
@@ -159,7 +161,8 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
 
   @Override
   public void modify(Repository repository)
-    throws RepositoryException, IOException {
+          throws RepositoryException, IOException
+  {
 
     // nothing to do
   }
