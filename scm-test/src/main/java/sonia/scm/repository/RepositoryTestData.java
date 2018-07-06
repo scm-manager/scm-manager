@@ -141,7 +141,7 @@ public final class RepositoryTestData
     heartOfGold.setName("HeartOfGold");
     heartOfGold.setDescription(
       "Heart of Gold is the first prototype ship to successfully utilise the revolutionary Infinite Improbability Drive");
-
+    heartOfGold.setId("hogId");
     return heartOfGold;
   }
 

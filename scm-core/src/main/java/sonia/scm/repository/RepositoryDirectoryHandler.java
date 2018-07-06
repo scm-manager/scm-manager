@@ -43,13 +43,5 @@ import java.io.File;
 public interface RepositoryDirectoryHandler extends RepositoryHandler
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   */
   public File getDirectory(Repository repository);
 }
