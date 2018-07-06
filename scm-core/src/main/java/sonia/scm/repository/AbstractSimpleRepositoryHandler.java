@@ -81,8 +81,7 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
 
   @Override
   public void create(Repository repository)
-          throws RepositoryException, IOException
-  {
+    throws RepositoryException {
     File directory = getDirectory(repository);
 
     if (directory.exists()) {
@@ -102,12 +101,14 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
             "delete repository directory {}, because of failed repository creation",
             directory);
         }
-
-        fileSystem.destroy(directory);
+        try {
+          fileSystem.destroy(directory);
+        } catch (IOException e) {
+          logger.error("Could not destroy directory", e);
+        }
       }
 
-      Throwables.propagateIfPossible(ex, RepositoryException.class,
-                                     IOException.class);
+      Throwables.propagateIfPossible(ex, RepositoryException.class);
     }
   }
 
@@ -122,12 +123,15 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
 
   @Override
   public void delete(Repository repository)
-          throws RepositoryException, IOException
-  {
+    throws RepositoryException {
     File directory = getDirectory(repository);
 
     if (directory.exists()) {
-      fileSystem.destroy(directory);
+      try {
+        fileSystem.destroy(directory);
+      } catch (IOException e) {
+        throw new RepositoryException("could not delete repository", e);
+      }
       cleanupEmptyDirectories(config.getRepositoryDirectory(),
         directory.getParentFile());
     } else if (logger.isWarnEnabled()) {
@@ -161,8 +165,7 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
 
   @Override
   public void modify(Repository repository)
-          throws RepositoryException, IOException
-  {
+    throws RepositoryException {
 
     // nothing to do
   }
