@@ -84,6 +84,18 @@ public class ResourceLinksTest {
     assertEquals(BASE_URL + GroupRootResource.GROUPS_PATH_V2, url);
   }
 
+  @Test
+  public void shouldCreateCorrectGlobalConfigSelfUrl() {
+    String url = resourceLinks.globalConfig().self();
+    assertEquals(BASE_URL + GlobalConfigResource.GLOBAL_CONFIG_PATH_V2, url);
+  }
+
+  @Test
+  public void shouldCreateCorrectGlobalConfigUpdateUrl() {
+    String url = resourceLinks.globalConfig().update();
+    assertEquals(BASE_URL + GlobalConfigResource.GLOBAL_CONFIG_PATH_V2, url);
+  }
+
   @Before
   public void initUriInfo() {
     initMocks(this);
