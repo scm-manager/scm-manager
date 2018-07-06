@@ -33,147 +33,103 @@
 
 package sonia.scm.repository;
 
-/**
- *
- * @author Sebastian Sdorra
- */
 public final class RepositoryTestData
 {
 
-  /**
-   * Constructs ...
-   *
-   */
   private RepositoryTestData() {}
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   public static Repository create42Puzzle()
   {
     return create42Puzzle(DummyRepositoryHandler.TYPE_NAME);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param type
-   *
-   * @return
-   */
   public static Repository create42Puzzle(String type)
   {
-    Repository repository = new Repository();
-
-    repository.setType(type);
-    repository.setContact("douglas.adams@hitchhiker.com");
-    repository.setName("42Puzzle");
-    repository.setDescription("The 42 Puzzle");
-
-    return repository;
+    return new Builder()
+      .type(type)
+      .contact("douglas.adams@hitchhiker.com")
+      .name("42Puzzle")
+      .description("The 42 Puzzle")
+      .build();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   public static Repository createHappyVerticalPeopleTransporter()
   {
     return createHappyVerticalPeopleTransporter(
       DummyRepositoryHandler.TYPE_NAME);
   }
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param type
-   * @return
-   */
   public static Repository createHappyVerticalPeopleTransporter(String type)
   {
-    Repository happyVerticalPeopleTransporter = new Repository();
-
-    happyVerticalPeopleTransporter.setType(type);
-    happyVerticalPeopleTransporter.setContact(
-      "zaphod.beeblebrox@hitchhiker.com");
-    happyVerticalPeopleTransporter.setName("happyVerticalPeopleTransporter");
-    happyVerticalPeopleTransporter.setDescription(
-      "Happy Vertical People Transporter");
-
-    return happyVerticalPeopleTransporter;
+    return new Builder()
+      .type(type)
+      .contact("zaphod.beeblebrox@hitchhiker.com")
+      .name("happyVerticalPeopleTransporter")
+      .description("Happy Vertical People Transporter")
+      .build();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   public static Repository createHeartOfGold()
   {
     return createHeartOfGold(DummyRepositoryHandler.TYPE_NAME);
   }
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param type
-   * @return
-   */
   public static Repository createHeartOfGold(String type)
   {
-    Repository heartOfGold = new Repository();
-
-    heartOfGold.setType(type);
-    heartOfGold.setContact("zaphod.beeblebrox@hitchhiker.com");
-    heartOfGold.setName("HeartOfGold");
-    heartOfGold.setDescription(
-      "Heart of Gold is the first prototype ship to successfully utilise the revolutionary Infinite Improbability Drive");
-    heartOfGold.setId("hogId");
-    return heartOfGold;
+    return new Builder()
+      .type(type)
+      .contact("zaphod.beeblebrox@hitchhiker.com")
+      .name("HeartOfGold")
+      .description(
+        "Heart of Gold is the first prototype ship to successfully utilise the revolutionary Infinite Improbability Drive")
+      .build();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   public static Repository createRestaurantAtTheEndOfTheUniverse()
   {
     return createRestaurantAtTheEndOfTheUniverse(
       DummyRepositoryHandler.TYPE_NAME);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param type
-   *
-   * @return
-   */
   public static Repository createRestaurantAtTheEndOfTheUniverse(String type)
   {
+    return new Builder()
+      .type(type)
+      .contact("douglas.adams@hitchhiker.com")
+      .name("RestaurantAtTheEndOfTheUniverse")
+      .description("The Restaurant at the End of the Universe")
+      .build();
+  }
+
+  private static class Builder {
+    private static int nextID = 0;
     Repository repository = new Repository();
+    {
+      repository.setId("ID-" + ++nextID);
+    }
 
-    repository.setType(type);
-    repository.setContact("douglas.adams@hitchhiker.com");
-    repository.setName("RestaurantAtTheEndOfTheUniverse");
-    repository.setDescription("The Restaurant at the End of the Universe");
+    Builder type(String type) {
+      repository.setType(type);
+      return this;
+    }
 
-    return repository;
+    Builder contact(String contact) {
+      repository.setContact(contact);
+      return this;
+    }
+
+    Builder name(String name) {
+      repository.setName(name);
+      return this;
+    }
+
+    Builder description(String description) {
+      repository.setDescription(description);
+      return this;
+    }
+
+    public Repository build() {
+      return repository;
+    }
   }
 }
