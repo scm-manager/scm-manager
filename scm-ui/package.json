@@ -22,7 +22,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "yarn flow && jest",
+    "test": "jest",
     "eject": "react-scripts eject",
     "flow": "flow"
   },
