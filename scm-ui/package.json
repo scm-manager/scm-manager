@@ -1,4 +1,5 @@
 {
+  "homepage": "/scm",
   "name": "scm-ui",
   "version": "0.1.0",
   "private": true,
@@ -21,12 +22,21 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
+    "test": "yarn flow && jest",
     "eject": "react-scripts eject",
     "flow": "flow"
   },
-  "proxy": "http://localhost:8081/scm",
+  "proxy": {
+    "/scm/api": {
+      "target": "http://localhost:8081"
+    }
+  },
   "devDependencies": {
     "prettier": "^1.13.7"
+  },
+  "babel": {
+    "presets": [
+      "react-app"
+    ]
   }
 }

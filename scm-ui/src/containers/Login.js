@@ -74,7 +74,3 @@ const StyledLogin = injectSheet(styles)(
   )(Login)
 );
 export default StyledLogin;
-// export default connect(
-//   mapStateToProps,
-//   mapDispatchToProps
-// )(StyledLogin);

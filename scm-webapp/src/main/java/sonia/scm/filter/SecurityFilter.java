@@ -75,33 +75,14 @@ public class SecurityFilter extends HttpFilter
 
   public static final String URLV2_AUTHENTICATION = "/api/rest/v2/auth";
 
-  //~--- constructors ---------------------------------------------------------
+  private final ScmConfiguration configuration;
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param configuration
-   */
   @Inject
   public SecurityFilter(ScmConfiguration configuration)
   {
     this.configuration = configuration;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param response
-   * @param chain
-   *
-   * @throws IOException
-   * @throws ServletException
-   */
   @Override
   protected void doFilter(HttpServletRequest request,
     HttpServletResponse response, FilterChain chain)
@@ -139,16 +120,6 @@ public class SecurityFilter extends HttpFilter
     }
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param subject
-   *
-   * @return
-   */
   protected boolean hasPermission(Subject subject)
   {
     return ((configuration != null)
@@ -173,8 +144,4 @@ public class SecurityFilter extends HttpFilter
     return username;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** scm configuration */
-  private final ScmConfiguration configuration;
 }

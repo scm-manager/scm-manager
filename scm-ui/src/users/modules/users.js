@@ -1,6 +1,8 @@
-const FETCH_USERS = 'scm/users/FETCH';
-const FETCH_USERS_SUCCESS= 'scm/users/FETCH_SUCCESS';
-const FETCH_USERS_FAILURE = 'scm/users/FETCH_FAILURE';
+// @flow
+
+const FETCH_USERS = "scm/users/FETCH";
+const FETCH_USERS_SUCCESS = "scm/users/FETCH_SUCCESS";
+const FETCH_USERS_FAILURE = "scm/users/FETCH_FAILURE";
 
 function requestUsers() {
   return {
@@ -8,12 +10,11 @@ function requestUsers() {
   };
 }
 
-
 function fetchUsers() {
   return function(dispatch) {
     dispatch(requestUsers());
     return null;
-  }
+  };
 }
 
 export function shouldFetchUsers(state: any): boolean {
@@ -26,10 +27,10 @@ export function fetchUsersIfNeeded() {
     if (shouldFetchUsers(getState())) {
       dispatch(fetchUsers());
     }
-  }
+  };
 }
 
-export default function reducer(state = {}, action = {}) {
+export default function reducer(state: any = {}, action: any = {}) {
   switch (action.type) {
     case FETCH_USERS:
       return {
@@ -53,6 +54,6 @@ export default function reducer(state = {}, action = {}) {
       };
 
     default:
-      return state
+      return state;
   }
 }

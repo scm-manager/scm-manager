@@ -1,9 +1,60 @@
 //@flow
 
-const LOGIN = "scm/auth/login";
-const LOGIN_REQUEST = "scm/auth/login_request";
-const LOGIN_SUCCESSFUL = "scm/auth/login_successful";
-const LOGIN_FAILED = "scm/auth/login_failed";
+const LOGIN_URL = "/scm/api/rest/v2/auth/access_token";
+const AUTHENTICATION_INFO_URL = "/scm/api/rest/v2/me";
+
+export const LOGIN = "scm/auth/login";
+export const LOGIN_REQUEST = "scm/auth/login_request";
+export const LOGIN_SUCCESSFUL = "scm/auth/login_successful";
+export const LOGIN_FAILED = "scm/auth/login_failed";
+export const GET_IS_AUTHENTICATED_REQUEST = "scm/auth/is_authenticated_request";
+export const GET_IS_AUTHENTICATED = "scm/auth/get_is_authenticated";
+export const IS_AUTHENTICATED = "scm/auth/is_authenticated";
+export const IS_NOT_AUTHENTICATED = "scm/auth/is_not_authenticated";
+
+export function getIsAuthenticatedRequest() {
+  return {
+    type: GET_IS_AUTHENTICATED_REQUEST
+  };
+}
+
+export function getIsAuthenticated() {
+  return function(dispatch) {
+    dispatch(getIsAuthenticatedRequest());
+
+    return fetch(AUTHENTICATION_INFO_URL, {
+      credentials: "same-origin",
+      headers: {
+        Cache: "no-cache"
+      }
+    })
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          dispatch(isNotAuthenticated());
+        }
+      })
+      .then(data => {
+        if (data) {
+          dispatch(isAuthenticated(data.username));
+        }
+      });
+  };
+}
+
+export function isAuthenticated(username: string) {
+  return {
+    type: IS_AUTHENTICATED,
+    username
+  };
+}
+
+export function isNotAuthenticated() {
+  return {
+    type: IS_NOT_AUTHENTICATED
+  };
+}
 
 export function loginRequest() {
   return {
@@ -18,18 +69,19 @@ export function login(username: string, password: string) {
     password: username,
     username: password
   };
-  console.log(login_data);
   return function(dispatch) {
     dispatch(loginRequest());
-    return fetch("/api/rest/v2/auth/access_token", {
+    return fetch(LOGIN_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json; charset=utf-8"
       },
+      credentials: "same-origin",
       body: JSON.stringify(login_data)
     }).then(
       response => {
         if (response.ok) {
+          dispatch(getIsAuthenticated());
           dispatch(loginSuccessful());
         }
       },
@@ -44,7 +96,7 @@ export function loginSuccessful() {
   };
 }
 
-export default function reducer(state = {}, action = {}) {
+export default function reducer(state: any = {}, action: any = {}) {
   switch (action.type) {
     case LOGIN:
       return {
@@ -63,6 +115,19 @@ export default function reducer(state = {}, action = {}) {
         ...state,
         login: false,
         error: action.payload
+      };
+    case IS_AUTHENTICATED:
+      return {
+        ...state,
+        login: true,
+        username: action.username
+      };
+    case IS_NOT_AUTHENTICATED:
+      return {
+        ...state,
+        login: false,
+        username: null,
+        error: null
       };
 
     default:
