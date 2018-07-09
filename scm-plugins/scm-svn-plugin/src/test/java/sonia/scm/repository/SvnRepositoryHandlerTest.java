@@ -117,6 +117,5 @@ public class SvnRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
 
     File path = repositoryHandler.getDirectory(repository);
     assertEquals("/path/id", path.getAbsolutePath());
-    assertTrue(path.getAbsolutePath().endsWith("id"));
   }
 }
