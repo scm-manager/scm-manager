@@ -4,16 +4,38 @@ const FETCH_USERS = "scm/users/FETCH";
 const FETCH_USERS_SUCCESS = "scm/users/FETCH_SUCCESS";
 const FETCH_USERS_FAILURE = "scm/users/FETCH_FAILURE";
 
+const USERS_URL = "/scm/api/rest/v2/users";
+
 function requestUsers() {
   return {
     type: FETCH_USERS
   };
 }
 
-function fetchUsers() {
+export function fetchUsers() {
   return function(dispatch) {
-    dispatch(requestUsers());
-    return null;
+    // dispatch(requestUsers());
+    return fetch(USERS_URL, {
+      credentials: "same-origin",
+      headers: {
+        Cache: "no-cache"
+      }
+    })
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        }
+      })
+      .then(data => {
+        dispatch(fetchUsersSuccess(data));
+      });
+  };
+}
+
+function fetchUsersSuccess(users: any) {
+  return {
+    type: FETCH_USERS_SUCCESS,
+    payload: users
   };
 }
 
@@ -35,16 +57,14 @@ export default function reducer(state: any = {}, action: any = {}) {
     case FETCH_USERS:
       return {
         ...state,
-        login: true,
-        error: null
+        users: [{ name: "" }]
       };
     case FETCH_USERS_SUCCESS:
       return {
         ...state,
-        login: false,
         timestamp: action.timestamp,
         error: null,
-        users: action.payload
+        users: action.payload._embedded.users
       };
     case FETCH_USERS_FAILURE:
       return {
