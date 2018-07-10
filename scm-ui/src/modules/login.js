@@ -66,8 +66,8 @@ export function login(username: string, password: string) {
   var login_data = {
     cookie: true,
     grant_type: "password",
-    password: username,
-    username: password
+    username,
+    password,
   };
   return function(dispatch) {
     dispatch(loginRequest());
