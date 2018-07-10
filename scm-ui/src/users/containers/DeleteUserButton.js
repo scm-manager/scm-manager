@@ -1,46 +1,36 @@
 // @flow
 import React from "react";
-import { deleteUser } from '../modules/users';
-import {connect} from "react-redux";
 
 type Props = {
   user: any,
-  deleteUser: (username: string) => void
+  deleteUser: (link: string) => void
 };
 
 class DeleteUser extends React.Component<Props> {
 
   deleteUser = () => {
-    this.props.deleteUser(this.props.user.name);
+    this.props.deleteUser(this.props.user._links.delete.href);
+  };
+
+  if(deleteButtonClicked) {
+    let deleteButtonAsk = <div>You really want to remove this user?</div>
+  }
+
+  isDeletable = () => {
+    return this.props.user._links.delete;
   };
 
   render() {
-    if(this.props.user._links.delete) {
-      return (
-        <button type="button" onClick={this.deleteUser}>
-          Delete User
-        </button>
-
-      );
+    if (!this.isDeletable()) {
+      return;
     }
+    return (
+      <button type="button" onClick={this.deleteUser}>
+        Delete User
+      </button>
+
+    );
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    users: state.users.users
-  };
-};
-
-const mapDispatchToProps = dispatch => {
-  return {
-    deleteUser: (username: string) => {
-      dispatch(deleteUser(username));
-    }
-  };
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(DeleteUser);
+export default DeleteUser;
