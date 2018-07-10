@@ -1,7 +1,6 @@
 //@flow
 
 import { apiClient } from "../apiclient";
-import { isRegExp } from "util";
 
 const LOGIN_URL = "/auth/access_token";
 const AUTHENTICATION_INFO_URL = "/me";
@@ -22,7 +21,7 @@ export function getIsAuthenticatedRequest() {
 }
 
 export function getIsAuthenticated() {
-  return function(dispatch: any) {
+  return function(dispatch: (any) => void) {
     dispatch(getIsAuthenticatedRequest());
     return apiClient
       .get(AUTHENTICATION_INFO_URL)
@@ -61,9 +60,9 @@ export function login(username: string, password: string) {
     cookie: true,
     grant_type: "password",
     username,
-    password
+    password,
   };
-  return function(dispatch: any) {
+  return function(dispatch: (any) => void) {
     dispatch(loginRequest());
     return apiClient.post(LOGIN_URL, login_data).then(response => {
       if (response.ok) {
