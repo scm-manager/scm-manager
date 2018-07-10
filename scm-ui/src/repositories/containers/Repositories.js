@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { fetchRepositoriesIfNeeded } from '../modules/repositories';
-import Login from '../../containers/Login';
+import { Link } from 'react-router-dom'
 
 
 type Props = {
@@ -27,9 +27,7 @@ class Repositories extends React.Component<Props> {
         <div>
           <h1>SCM</h1>
           <h2>Startpage</h2>
-          <a href={"/users" }>
-            Users hier!
-          </a>
+          <Link to='/users'>Users hier!</Link>
         </div>
       )
 
