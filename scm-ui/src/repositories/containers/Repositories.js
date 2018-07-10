@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { fetchRepositoriesIfNeeded } from '../modules/repositories';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 
 
 type Props = {

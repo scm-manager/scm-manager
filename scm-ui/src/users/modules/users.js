@@ -1,10 +1,16 @@
 // @flow
+import {apiClient, PAGE_NOT_FOUND_ERROR} from '../../apiclient';
 
 const FETCH_USERS = "scm/users/FETCH";
 const FETCH_USERS_SUCCESS = "scm/users/FETCH_SUCCESS";
 const FETCH_USERS_FAILURE = "scm/users/FETCH_FAILURE";
+const FETCH_USERS_NOTFOUND = 'scm/users/FETCH_NOTFOUND';
 
-const USERS_URL = "/scm/api/rest/v2/users";
+const DELETE_USER = "scm/users/DELETE";
+const DELETE_USER_SUCCESS = "scm/users/DELETE_SUCCESS";
+const DELETE_USER_FAILURE = "scm/users/DELETE_FAILURE";
+
+const USERS_URL = "users";
 
 function requestUsers() {
   return {
@@ -12,15 +18,29 @@ function requestUsers() {
   };
 }
 
+function failedToFetchUsers(url: string, err: Error) {
+  return {
+    type: FETCH_USERS_FAILURE,
+    payload: err,
+    url
+  };
+}
+
+function usersNotFound(url: string) {
+  return {
+    type: FETCH_USERS_NOTFOUND,
+    url
+  };
+}
+
 export function fetchUsers() {
+
   return function(dispatch) {
-    // dispatch(requestUsers());
-    return fetch(USERS_URL, {
-      credentials: "same-origin",
-      headers: {
-        Cache: "no-cache"
-      }
-    })
+    dispatch(requestUsers());
+    return apiClient.get(USERS_URL)
+      .then(response => {
+        return response;
+      })
       .then(response => {
         if (response.ok) {
           return response.json();
@@ -28,8 +48,15 @@ export function fetchUsers() {
       })
       .then(data => {
         dispatch(fetchUsersSuccess(data));
+      })
+      .catch((err) => {
+        if (err === PAGE_NOT_FOUND_ERROR) {
+          dispatch(usersNotFound(USERS_URL));
+        } else {
+          dispatch(failedToFetchUsers(USERS_URL, err));
+        }
       });
-  };
+  }
 }
 
 function fetchUsersSuccess(users: any) {
@@ -40,8 +67,10 @@ function fetchUsersSuccess(users: any) {
 }
 
 export function shouldFetchUsers(state: any): boolean {
-  const users = state.users;
-  return null;
+  if(state.users.users == null){
+    return true;
+  }
+  return false;
 }
 
 export function fetchUsersIfNeeded() {
@@ -52,17 +81,52 @@ export function fetchUsersIfNeeded() {
   };
 }
 
+
+
+function requestDeleteUser(url: string) {
+  return {
+    type: DELETE_USER,
+    url
+  };
+}
+
+function deleteUserSuccess() {
+  return {
+    type: DELETE_USER_SUCCESS,
+  };
+}
+
+function deleteUserFailure(url: string, err: Error) {
+  return {
+    type: DELETE_USER_FAILURE,
+    payload: err,
+    url
+  };
+}
+
+export function deleteUser(username: string) {
+  return function(dispatch) {
+    dispatch(requestDeleteUser(username));
+    return apiClient.delete(USERS_URL + '/' + username)
+      .then(() => {
+        dispatch(deleteUserSuccess());
+      })
+      .catch((err) => dispatch(deleteUserFailure(username, err)));
+  }
+}
+
+
+
 export default function reducer(state: any = {}, action: any = {}) {
   switch (action.type) {
     case FETCH_USERS:
       return {
         ...state,
-        users: [{ name: "" }]
+        users: null
       };
     case FETCH_USERS_SUCCESS:
       return {
         ...state,
-        timestamp: action.timestamp,
         error: null,
         users: action.payload._embedded.users
       };
@@ -71,6 +135,11 @@ export default function reducer(state: any = {}, action: any = {}) {
         ...state,
         login: false,
         error: action.payload
+      };
+    case DELETE_USER_SUCCESS:
+      return {
+        ...state,
+        users: null
       };
 
     default:

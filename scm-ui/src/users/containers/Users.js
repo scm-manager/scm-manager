@@ -11,12 +11,18 @@ type Props = {
   error: any,
   users: any,
   fetchUsersIfNeeded: () => void,
-  fetchUsers: () => void
+  fetchUsers: () => void,
+  fetchUsersIfNeeded: (url: string) => void,
+
 };
 
 class Users extends React.Component<Props> {
   componentWillMount() {
-    this.props.fetchUsers();
+    this.props.fetchUsersIfNeeded();
+  }
+
+  componentDidUpdate() {
+    this.props.fetchUsersIfNeeded();
   }
 
   render() {

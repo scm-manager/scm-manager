@@ -1,16 +1,14 @@
 // @flow
 
 // get api base url from environment
-const apiUrl = process.env.API_URL || process.env.PUBLIC_URL || "";
+const apiUrl = process.env.API_URL || process.env.PUBLIC_URL || "/scm";
 
 export const PAGE_NOT_FOUND_ERROR = Error("page not found");
 
-// fetch does not send the X-Requested-With header (https://github.com/github/fetch/issues/17),
-// but we need the header to detect ajax request (AjaxAwareAuthenticationRedirectStrategy).
 const fetchOptions: RequestOptions = {
   credentials: "same-origin",
   headers: {
-    "X-Requested-With": "XMLHttpRequest"
+    Cache: "no-cache"
   }
 };
 
@@ -40,7 +38,7 @@ class ApiClient {
     return this.httpRequestWithJSONBody(url, payload, "POST");
   }
 
-  delete(url: string, payload: any) {
+  delete(url: string) {
     let options: RequestOptions = {
       method: "DELETE"
     };
