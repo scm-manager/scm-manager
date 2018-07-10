@@ -1,10 +1,10 @@
 // @flow
-import {apiClient, PAGE_NOT_FOUND_ERROR} from '../../apiclient';
+import { apiClient, PAGE_NOT_FOUND_ERROR } from "../../apiclient";
 
 const FETCH_USERS = "scm/users/FETCH";
 const FETCH_USERS_SUCCESS = "scm/users/FETCH_SUCCESS";
 const FETCH_USERS_FAILURE = "scm/users/FETCH_FAILURE";
-const FETCH_USERS_NOTFOUND = 'scm/users/FETCH_NOTFOUND';
+const FETCH_USERS_NOTFOUND = "scm/users/FETCH_NOTFOUND";
 
 const DELETE_USER = "scm/users/DELETE";
 const DELETE_USER_SUCCESS = "scm/users/DELETE_SUCCESS";
@@ -34,10 +34,10 @@ function usersNotFound(url: string) {
 }
 
 export function fetchUsers() {
-
-  return function(dispatch) {
+  return function(dispatch: any => void) {
     dispatch(requestUsers());
-    return apiClient.get(USERS_URL)
+    return apiClient
+      .get(USERS_URL)
       .then(response => {
         return response;
       })
@@ -49,14 +49,14 @@ export function fetchUsers() {
       .then(data => {
         dispatch(fetchUsersSuccess(data));
       })
-      .catch((err) => {
+      .catch(err => {
         if (err === PAGE_NOT_FOUND_ERROR) {
           dispatch(usersNotFound(USERS_URL));
         } else {
           dispatch(failedToFetchUsers(USERS_URL, err));
         }
       });
-  }
+  };
 }
 
 function fetchUsersSuccess(users: any) {
@@ -67,7 +67,7 @@ function fetchUsersSuccess(users: any) {
 }
 
 export function shouldFetchUsers(state: any): boolean {
-  if(state.users.users == null){
+  if (state.users.users == null) {
     return true;
   }
   return false;
@@ -81,8 +81,6 @@ export function fetchUsersIfNeeded() {
   };
 }
 
-
-
 function requestDeleteUser(url: string) {
   return {
     type: DELETE_USER,
@@ -92,7 +90,7 @@ function requestDeleteUser(url: string) {
 
 function deleteUserSuccess() {
   return {
-    type: DELETE_USER_SUCCESS,
+    type: DELETE_USER_SUCCESS
   };
 }
 
@@ -107,15 +105,14 @@ function deleteUserFailure(url: string, err: Error) {
 export function deleteUser(username: string) {
   return function(dispatch) {
     dispatch(requestDeleteUser(username));
-    return apiClient.delete(USERS_URL + '/' + username)
+    return apiClient
+      .delete(USERS_URL + "/" + username)
       .then(() => {
         dispatch(deleteUserSuccess());
       })
-      .catch((err) => dispatch(deleteUserFailure(username, err)));
-  }
+      .catch(err => dispatch(deleteUserFailure(username, err)));
+  };
 }
-
-
 
 export default function reducer(state: any = {}, action: any = {}) {
   switch (action.type) {

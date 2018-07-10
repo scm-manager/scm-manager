@@ -1,7 +1,10 @@
 //@flow
 
-const LOGIN_URL = "/scm/api/rest/v2/auth/access_token";
-const AUTHENTICATION_INFO_URL = "/scm/api/rest/v2/me";
+import { apiClient } from "../apiclient";
+import { isRegExp } from "util";
+
+const LOGIN_URL = "/auth/access_token";
+const AUTHENTICATION_INFO_URL = "/me";
 
 export const LOGIN = "scm/auth/login";
 export const LOGIN_REQUEST = "scm/auth/login_request";
@@ -19,21 +22,12 @@ export function getIsAuthenticatedRequest() {
 }
 
 export function getIsAuthenticated() {
-  return function(dispatch) {
+  return function(dispatch: any) {
     dispatch(getIsAuthenticatedRequest());
-
-    return fetch(AUTHENTICATION_INFO_URL, {
-      credentials: "same-origin",
-      headers: {
-        Cache: "no-cache"
-      }
-    })
+    return apiClient
+      .get(AUTHENTICATION_INFO_URL)
       .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          dispatch(isNotAuthenticated());
-        }
+        return response.json();
       })
       .then(data => {
         if (data) {
@@ -66,27 +60,17 @@ export function login(username: string, password: string) {
   var login_data = {
     cookie: true,
     grant_type: "password",
-    password: username,
-    username: password
+    username,
+    password
   };
-  return function(dispatch) {
+  return function(dispatch: any) {
     dispatch(loginRequest());
-    return fetch(LOGIN_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json; charset=utf-8"
-      },
-      credentials: "same-origin",
-      body: JSON.stringify(login_data)
-    }).then(
-      response => {
-        if (response.ok) {
-          dispatch(getIsAuthenticated());
-          dispatch(loginSuccessful());
-        }
-      },
-      error => console.log("error logging in: " + error)
-    );
+    return apiClient.post(LOGIN_URL, login_data).then(response => {
+      if (response.ok) {
+        dispatch(getIsAuthenticated());
+        dispatch(loginSuccessful());
+      }
+    });
   };
 }
 

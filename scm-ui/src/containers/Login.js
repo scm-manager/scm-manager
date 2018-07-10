@@ -16,17 +16,31 @@ const styles = {
   }
 };
 
-class Login extends React.Component<Props> {
-  state = {};
-  handleUsernameChange(event) {
+type Props = {
+  classes: any,
+  login: (username: string, password: string) => void
+};
+
+type State = {
+  username: string,
+  password: string
+};
+
+class Login extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = { username: "", password: "" };
+  }
+
+  handleUsernameChange(event: SyntheticInputEvent<HTMLInputElement>) {
     this.setState({ username: event.target.value });
   }
 
-  handlePasswordChange(event) {
+  handlePasswordChange(event: SyntheticInputEvent<HTMLInputElement>) {
     this.setState({ password: event.target.value });
   }
 
-  handleSubmit(event) {
+  handleSubmit(event: Event) {
     event.preventDefault();
     this.props.login(this.state.username, this.state.password);
   }

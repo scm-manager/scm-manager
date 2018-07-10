@@ -6,10 +6,7 @@ type Props = {
   user: any
 };
 
-
-
 export default class UserRow extends React.Component<Props> {
-
   render() {
     return (
       <tr>
@@ -19,10 +16,9 @@ export default class UserRow extends React.Component<Props> {
           <input type="checkbox" id="admin" checked={this.props.user.admin} />
         </td>
         <td>
-         <DeleteUserButton user={this.props.user}/>
+          <DeleteUserButton user={this.props.user} />
         </td>
       </tr>
-
     );
   }
 }
