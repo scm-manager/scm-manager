@@ -40,9 +40,10 @@ import sonia.scm.store.InMemoryConfigurationStoreFactory;
 import sonia.scm.util.IOUtil;
 
 import java.io.File;
-import java.io.IOException;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -59,19 +60,12 @@ public abstract class SimpleRepositoryHandlerTestBase extends AbstractTestBase {
     ConfigurationStoreFactory factory, File directory);
 
   @Test
-  public void testCreate() throws RepositoryException, IOException {
-    createRepository();
-  }
-
-  @Test(expected = RepositoryAlreadyExistsException.class)
-  public void testCreateExisitingRepository()
-    throws RepositoryException, IOException {
-    createRepository();
+  public void testCreate() throws RepositoryException {
     createRepository();
   }
 
   @Test
-  public void testCreateResourcePath() throws RepositoryException, IOException {
+  public void testCreateResourcePath() throws RepositoryException {
     Repository repository = createRepository();
     String path = handler.createResourcePath(repository);
 
@@ -81,7 +75,7 @@ public abstract class SimpleRepositoryHandlerTestBase extends AbstractTestBase {
   }
 
   @Test
-  public void testDelete() throws RepositoryException, IOException {
+  public void testDelete() throws RepositoryException {
     Repository repository = createRepository();
 
     handler.delete(repository);
@@ -92,7 +86,7 @@ public abstract class SimpleRepositoryHandlerTestBase extends AbstractTestBase {
   }
 
   @Override
-  protected void postSetUp() throws Exception {
+  protected void postSetUp() {
     InMemoryConfigurationStoreFactory storeFactory = new InMemoryConfigurationStoreFactory();
     baseDirectory = new File(contextProvider.getBaseDirectory(), "repositories");
     IOUtil.mkdirs(baseDirectory);
@@ -106,7 +100,7 @@ public abstract class SimpleRepositoryHandlerTestBase extends AbstractTestBase {
     }
   }
 
-  private Repository createRepository() throws RepositoryException, IOException {
+  private Repository createRepository() throws RepositoryException {
     Repository repository = RepositoryTestData.createHeartOfGold();
 
     handler.create(repository);
@@ -119,7 +113,6 @@ public abstract class SimpleRepositoryHandlerTestBase extends AbstractTestBase {
 
     return repository;
   }
-
 
   protected File baseDirectory;
 

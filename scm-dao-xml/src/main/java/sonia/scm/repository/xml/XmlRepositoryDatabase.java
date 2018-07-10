@@ -35,34 +35,26 @@ package sonia.scm.repository.xml;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.xml.XmlDatabase;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+//~--- JDK imports ------------------------------------------------------------
+
 @XmlRootElement(name = "repository-db")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class XmlRepositoryDatabase implements XmlDatabase<Repository>
 {
 
-  /**
-   * Constructs ...
-   *
-   */
   public XmlRepositoryDatabase()
   {
     long c = System.currentTimeMillis();
@@ -71,124 +63,53 @@ public class XmlRepositoryDatabase implements XmlDatabase<Repository>
     lastModified = c;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param type
-   * @param name
-   *
-   * @return
-   */
-  static String createKey(String type, String name)
+  static String createKeyX(NamespaceAndName namespaceAndName)
   {
-    return type.concat(":").concat(name);
+    return namespaceAndName.getNamespace() + ":" + namespaceAndName.getName();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   */
-  static String createKey(Repository repository)
+  static String createKeyX(Repository repository)
   {
-    return createKey(repository.getType(), repository.getName());
+    return createKeyX(repository.getNamespaceAndName());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   */
   @Override
   public void add(Repository repository)
   {
-    repositoryMap.put(createKey(repository), repository);
+    repositoryMap.put(createKeyX(repository), repository);
   }
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param type
-   * @param name
-   *
-   * @return
-   */
-  public boolean contains(String type, String name)
+  public boolean contains(NamespaceAndName namespaceAndName)
   {
-    return repositoryMap.containsKey(createKey(type, name));
+    return repositoryMap.containsKey(createKeyX(namespaceAndName));
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   *
-   * @return
-   */
   @Override
   public boolean contains(String id)
   {
     return get(id) != null;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   */
   public boolean contains(Repository repository)
   {
-    return repositoryMap.containsKey(createKey(repository));
+    return repositoryMap.containsKey(createKeyX(repository));
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   */
-  public void remove(Repository repository)
+  public void removeX(Repository repository)
   {
-    repositoryMap.remove(createKey(repository));
+    repositoryMap.remove(createKeyX(repository));
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   *
-   * @return
-   */
   @Override
   public Repository remove(String id)
   {
     Repository r = get(id);
 
-    remove(r);
+    removeX(r);
 
     return r;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
   public Collection<Repository> values()
   {
@@ -197,18 +118,9 @@ public class XmlRepositoryDatabase implements XmlDatabase<Repository>
 
   //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param type
-   * @param name
-   *
-   * @return
-   */
-  public Repository get(String type, String name)
+  public Repository get(NamespaceAndName namespaceAndName)
   {
-    return repositoryMap.get(createKey(type, name));
+    return repositoryMap.get(createKeyX(namespaceAndName));
   }
 
   /**
@@ -298,6 +210,5 @@ public class XmlRepositoryDatabase implements XmlDatabase<Repository>
   /** Field description */
   @XmlJavaTypeAdapter(XmlRepositoryMapAdapter.class)
   @XmlElement(name = "repositories")
-  private Map<String, Repository> repositoryMap = new LinkedHashMap<String,
-                                                    Repository>();
+  private Map<String, Repository> repositoryMap = new LinkedHashMap<>();
 }

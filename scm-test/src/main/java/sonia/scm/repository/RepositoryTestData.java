@@ -6,13 +6,13 @@
  * modification, are permitted provided that the following conditions are met:
  *
  * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
+ * this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
  * 3. Neither the name of SCM-Manager; nor the names of its
- *    contributors may be used to endorse or promote products derived from this
- *    software without specific prior written permission.
+ * contributors may be used to endorse or promote products derived from this
+ * software without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -26,26 +26,22 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * http://bitbucket.org/sdorra/scm-manager
- *
  */
-
 
 
 package sonia.scm.repository;
 
-public final class RepositoryTestData
-{
+public final class RepositoryTestData {
 
-  private RepositoryTestData() {}
+  private RepositoryTestData() {
+  }
 
-  public static Repository create42Puzzle()
-  {
+  public static Repository create42Puzzle() {
     return create42Puzzle(DummyRepositoryHandler.TYPE_NAME);
   }
 
-  public static Repository create42Puzzle(String type)
-  {
-    return new Builder()
+  public static Repository create42Puzzle(String type) {
+    return new RepositoryBuilder()
       .type(type)
       .contact("douglas.adams@hitchhiker.com")
       .name("42Puzzle")
@@ -53,15 +49,13 @@ public final class RepositoryTestData
       .build();
   }
 
-  public static Repository createHappyVerticalPeopleTransporter()
-  {
+  public static Repository createHappyVerticalPeopleTransporter() {
     return createHappyVerticalPeopleTransporter(
       DummyRepositoryHandler.TYPE_NAME);
   }
 
-  public static Repository createHappyVerticalPeopleTransporter(String type)
-  {
-    return new Builder()
+  public static Repository createHappyVerticalPeopleTransporter(String type) {
+    return new RepositoryBuilder()
       .type(type)
       .contact("zaphod.beeblebrox@hitchhiker.com")
       .name("happyVerticalPeopleTransporter")
@@ -69,14 +63,12 @@ public final class RepositoryTestData
       .build();
   }
 
-  public static Repository createHeartOfGold()
-  {
+  public static Repository createHeartOfGold() {
     return createHeartOfGold(DummyRepositoryHandler.TYPE_NAME);
   }
 
-  public static Repository createHeartOfGold(String type)
-  {
-    return new Builder()
+  public static Repository createHeartOfGold(String type) {
+    return new RepositoryBuilder()
       .type(type)
       .contact("zaphod.beeblebrox@hitchhiker.com")
       .name("HeartOfGold")
@@ -85,51 +77,17 @@ public final class RepositoryTestData
       .build();
   }
 
-  public static Repository createRestaurantAtTheEndOfTheUniverse()
-  {
+  public static Repository createRestaurantAtTheEndOfTheUniverse() {
     return createRestaurantAtTheEndOfTheUniverse(
       DummyRepositoryHandler.TYPE_NAME);
   }
 
-  public static Repository createRestaurantAtTheEndOfTheUniverse(String type)
-  {
-    return new Builder()
+  public static Repository createRestaurantAtTheEndOfTheUniverse(String type) {
+    return new RepositoryBuilder()
       .type(type)
       .contact("douglas.adams@hitchhiker.com")
       .name("RestaurantAtTheEndOfTheUniverse")
       .description("The Restaurant at the End of the Universe")
       .build();
-  }
-
-  private static class Builder {
-    private static int nextID = 0;
-    Repository repository = new Repository();
-    {
-      repository.setId("ID-" + ++nextID);
-    }
-
-    Builder type(String type) {
-      repository.setType(type);
-      return this;
-    }
-
-    Builder contact(String contact) {
-      repository.setContact(contact);
-      return this;
-    }
-
-    Builder name(String name) {
-      repository.setName(name);
-      return this;
-    }
-
-    Builder description(String description) {
-      repository.setDescription(description);
-      return this;
-    }
-
-    public Repository build() {
-      return repository;
-    }
   }
 }

@@ -101,7 +101,7 @@ public class HgRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
     hgConfig.setPythonBinary("python");
     repositoryHandler.setConfig(hgConfig);
 
-    Repository repository = new Repository("id", "git", "Name");
+    Repository repository = new Repository("id", "git", "Space", "Name");
 
     File path = repositoryHandler.getDirectory(repository);
     assertEquals("/path/id", path.getAbsolutePath());

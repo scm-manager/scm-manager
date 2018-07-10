@@ -56,7 +56,7 @@ public class DummyRepositoryHandler
 
   public static final Type TYPE = new Type(TYPE_NAME, TYPE_DISPLAYNAME);
 
-  private Set<String> existingRepoNames = new HashSet<>();
+  private final Set<String> existingRepoNames = new HashSet<>();
 
   public DummyRepositoryHandler(ConfigurationStoreFactory storeFactory) {
     super(storeFactory, new DefaultFileSystem());
@@ -69,12 +69,12 @@ public class DummyRepositoryHandler
 
 
   @Override
-  protected void create(Repository repository, File directory)
-    throws RepositoryException {
-    if (existingRepoNames.contains(repository.getNamespace() + repository.getName())) {
+  protected void create(Repository repository, File directory) throws RepositoryException {
+    String key = repository.getNamespace() + "/" + repository.getName();
+    if (existingRepoNames.contains(key)) {
       throw new RepositoryAlreadyExistsException("Repo exists");
     } else {
-      existingRepoNames.add(repository.getNamespace() + repository.getName());
+      existingRepoNames.add(key);
     }
   }
 

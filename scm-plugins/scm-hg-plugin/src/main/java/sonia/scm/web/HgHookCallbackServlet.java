@@ -40,13 +40,10 @@ import com.google.common.io.Closeables;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
-
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.repository.HgContext;
 import sonia.scm.repository.HgHookManager;
 import sonia.scm.repository.HgRepositoryHandler;
@@ -62,19 +59,17 @@ import sonia.scm.security.Tokens;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
-import java.io.PrintWriter;
-
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -187,7 +182,7 @@ public class HgHookCallbackServlet extends HttpServlet
 
     if (m.matches())
     {
-      String repositoryId = getRepositoryName(request);
+      String id = getRepositoryId(request);
       String type = m.group(1);
       String challenge = request.getParameter(PARAM_CHALLENGE);
 
@@ -204,7 +199,7 @@ public class HgHookCallbackServlet extends HttpServlet
             authenticate(request, credentials);
           }
 
-          hookCallback(response, repositoryId, type, challenge, node);
+          hookCallback(response, id, type, challenge, node);
         }
         else if (logger.isDebugEnabled())
         {
@@ -227,13 +222,6 @@ public class HgHookCallbackServlet extends HttpServlet
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param credentials
-   */
   private void authenticate(HttpServletRequest request, String credentials)
   {
     try
@@ -270,18 +258,7 @@ public class HgHookCallbackServlet extends HttpServlet
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param response
-   * @param repositoryName
-   * @param node
-   * @param type
-   *
-   * @throws IOException
-   */
-  private void fireHook(HttpServletResponse response, String repositoryName,
+  private void fireHook(HttpServletResponse response, String id,
     String node, RepositoryHookType type)
     throws IOException
   {
@@ -294,11 +271,10 @@ public class HgHookCallbackServlet extends HttpServlet
         contextProvider.get().setPending(true);
       }
 
-      context = new HgHookContextProvider(handler, repositoryName, hookManager,
+      context = new HgHookContextProvider(handler, id, hookManager,
         node, type);
 
-      hookEventFacade.handle(HgRepositoryHandler.TYPE_NAME,
-        repositoryName).fireHookEvent(type, context);
+      hookEventFacade.handle(id).fireHookEvent(type, context);
 
       printMessages(response, context);
     }
@@ -306,7 +282,7 @@ public class HgHookCallbackServlet extends HttpServlet
     {
       if (logger.isErrorEnabled())
       {
-        logger.error("could not find repository {}", repositoryName);
+        logger.error("could not find repository with id {}", id);
 
         if (logger.isTraceEnabled())
         {
@@ -322,22 +298,7 @@ public class HgHookCallbackServlet extends HttpServlet
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param response
-   * @param repositoryName
-   * @param typeName
-   * @param challenge
-   * @param node
-   *
-   * @throws IOException
-   */
-  private void hookCallback(HttpServletResponse response,
-    String repositoryName, String typeName, String challenge, String node)
-    throws IOException
-  {
+  private void hookCallback(HttpServletResponse response, String id, String typeName, String challenge, String node) throws IOException {
     if (hookManager.isAcceptAble(challenge))
     {
       RepositoryHookType type = null;
@@ -353,7 +314,7 @@ public class HgHookCallbackServlet extends HttpServlet
 
       if (type != null)
       {
-        fireHook(response, repositoryName, node, type);
+        fireHook(response, id, node, type);
       }
       else
       {
@@ -403,12 +364,12 @@ public class HgHookCallbackServlet extends HttpServlet
    * Method description
    *
    *
-   * @param resonse
+   * @param response
    * @param context
    *
    * @throws IOException
    */
-  private void printMessages(HttpServletResponse resonse,
+  private void printMessages(HttpServletResponse response,
     HgHookContextProvider context)
     throws IOException
   {
@@ -420,7 +381,7 @@ public class HgHookCallbackServlet extends HttpServlet
 
       try
       {
-        writer = resonse.getWriter();
+        writer = response.getWriter();
 
         printMessages(writer, msgs);
       }
@@ -506,9 +467,9 @@ public class HgHookCallbackServlet extends HttpServlet
    *
    * @return
    */
-  private String getRepositoryName(HttpServletRequest request)
+  private String getRepositoryId(HttpServletRequest request)
   {
-    String name = null;
+    String id = null;
     String path = request.getParameter(PARAM_REPOSITORYPATH);
 
     if (Util.isNotEmpty(path))
@@ -520,11 +481,11 @@ public class HgHookCallbackServlet extends HttpServlet
        */
       try
       {
-        name = RepositoryUtil.getRepositoryName(handler, path);
+        id = RepositoryUtil.getRepositoryId(handler, path);
       }
       catch (IOException ex)
       {
-        logger.error("could not find name of repository", ex);
+        logger.error("could not find namespace and name of repository", ex);
       }
     }
     else if (logger.isWarnEnabled())
@@ -532,7 +493,7 @@ public class HgHookCallbackServlet extends HttpServlet
       logger.warn("no repository path parameter found");
     }
 
-    return name;
+    return id;
   }
 
   //~--- fields ---------------------------------------------------------------

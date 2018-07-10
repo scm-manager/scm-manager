@@ -113,7 +113,7 @@ public class SvnRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
     svnConfig.setRepositoryDirectory(new File("/path"));
     repositoryHandler.setConfig(svnConfig);
 
-    Repository repository = new Repository("id", "svn", "Name");
+    Repository repository = new Repository("id", "svn", "Space", "Name");
 
     File path = repositoryHandler.getDirectory(repository);
     assertEquals("/path/id", path.getAbsolutePath());

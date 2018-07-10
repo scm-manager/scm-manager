@@ -43,7 +43,12 @@ import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 import sonia.scm.util.ValidationUtil;
 
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -95,9 +100,10 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
    * @param type type of the {@link Repository}
    * @param name name of the {@link Repository}
    */
-  public Repository(String id, String type, String name) {
+  public Repository(String id, String type, String namespace, String name) {
     this.id = id;
     this.type = type;
+    this.namespace = namespace;
     this.name = name;
   }
 
@@ -188,6 +194,11 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
   }
 
   public String getNamespace() { return namespace; }
+
+  @XmlTransient
+  public NamespaceAndName getNamespaceAndName() {
+    return new NamespaceAndName(getNamespace(), getName());
+  }
 
   public List<Permission> getPermissions() {
     if (permissions == null) {
@@ -347,7 +358,7 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
   public String createUrl(String baseUrl) {
     String url = HttpUtil.append(baseUrl, type);
 
-    return HttpUtil.append(url, name);
+    return HttpUtil.concatenate(url, namespace, name);
   }
 
   /**

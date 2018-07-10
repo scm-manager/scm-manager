@@ -35,7 +35,7 @@ package sonia.scm.repository.spi;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-
+import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RepositoryHookEvent;
@@ -72,50 +72,15 @@ public final class HookEventFacade
 
   //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   *
-   * @return
-   *
-   * @throws RepositoryException
-   */
-  public HookEventHandler handle(String id) throws RepositoryException
-  {
+  public HookEventHandler handle(String id) throws RepositoryException {
     return handle(repositoryManagerProvider.get().get(id));
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param type
-   * @param repositoryName
-   *
-   * @return
-   *
-   * @throws RepositoryException
-   */
-  public HookEventHandler handle(String type, String repositoryName)
-    throws RepositoryException
-  {
-    return handle(repositoryManagerProvider.get().get(type, repositoryName));
+  public HookEventHandler handle(NamespaceAndName namespaceAndName) throws RepositoryException {
+    return handle(repositoryManagerProvider.get().get(namespaceAndName));
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   *
-   * @throws RepositoryException
-   */
-  public HookEventHandler handle(Repository repository)
-    throws RepositoryException
+  public HookEventHandler handle(Repository repository) throws RepositoryException
   {
     if (repository == null)
     {

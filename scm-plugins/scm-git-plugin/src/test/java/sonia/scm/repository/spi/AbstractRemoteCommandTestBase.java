@@ -38,33 +38,30 @@ package sonia.scm.repository.spi;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 import com.google.inject.Provider;
-
 import org.eclipse.jgit.api.CommitCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.transport.ScmTransportProtocol;
 import org.eclipse.jgit.transport.Transport;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
-
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.Repository;
 import sonia.scm.user.User;
 import sonia.scm.user.UserTestData;
 
-import static org.junit.Assert.*;
-
-import static org.mockito.Mockito.*;
-
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.File;
 import java.io.IOException;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -88,8 +85,8 @@ public class AbstractRemoteCommandTestBase
     outgoingDirectory = tempFolder.newFile("outgoing");
     outgoingDirectory.delete();
 
-    incomgingRepository = new Repository("1", "git", "incoming");
-    outgoingRepository = new Repository("2", "git", "outgoing");
+    incomgingRepository = new Repository("1", "git", "space", "incoming");
+    outgoingRepository = new Repository("2", "git", "space", "outgoing");
 
     incoming = Git.init().setDirectory(incomingDirectory).setBare(false).call();
     outgoing = Git.init().setDirectory(outgoingDirectory).setBare(false).call();

@@ -37,12 +37,11 @@ package sonia.scm.repository.xml;
 
 import sonia.scm.repository.Repository;
 
-//~--- JDK imports ------------------------------------------------------------
-
+import javax.xml.bind.annotation.adapters.XmlAdapter;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import javax.xml.bind.annotation.adapters.XmlAdapter;
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -88,7 +87,7 @@ public class XmlRepositoryMapAdapter
 
     for (Repository repository : repositories)
     {
-      repositoryMap.put(XmlRepositoryDatabase.createKey(repository),
+      repositoryMap.put(XmlRepositoryDatabase.createKeyX(repository),
                         repository);
     }
 

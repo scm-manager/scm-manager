@@ -106,7 +106,7 @@ public class GitRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
     gitConfig.setRepositoryDirectory(new File("/path"));
     repositoryHandler.setConfig(gitConfig);
 
-    Repository repository = new Repository("id", "git", "Name");
+    Repository repository = new Repository("id", "git", "Space", "Name");
 
     File path = repositoryHandler.getDirectory(repository);
     assertEquals("/path/id", path.getAbsolutePath());

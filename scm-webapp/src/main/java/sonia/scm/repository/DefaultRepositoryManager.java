@@ -42,14 +42,29 @@ import com.google.inject.Singleton;
 import org.apache.shiro.concurrent.SubjectAwareExecutorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.*;
+import sonia.scm.ArgumentIsInvalidException;
+import sonia.scm.ConfigurationException;
+import sonia.scm.HandlerEventType;
+import sonia.scm.SCMContextProvider;
+import sonia.scm.Type;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.security.KeyGenerator;
-import sonia.scm.util.*;
+import sonia.scm.util.AssertUtil;
+import sonia.scm.util.CollectionAppender;
+import sonia.scm.util.HttpUtil;
+import sonia.scm.util.IOUtil;
+import sonia.scm.util.Util;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -105,7 +120,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
 
 
   @Override
-  public void close() throws IOException {
+  public void close() {
     executorService.shutdown();
 
     for (RepositoryHandler handler : handlerMap.values()) {
@@ -115,13 +130,12 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
 
   public void create(Repository repository, boolean initRepository)
     throws RepositoryException {
-    logger.info("create repository {} of type {}", repository.getName(),
-      repository.getType());
+    logger.info("create repository {} of type {}", repository.getNamespaceAndName(), repository.getType());
 
     RepositoryPermissions.create().check();
     AssertUtil.assertIsValid(repository);
 
-    if (repositoryDAO.contains(repository)) {
+    if (repositoryDAO.contains(repository.getNamespaceAndName())) {
       throw RepositoryAlreadyExistsException.create(repository);
     }
 
@@ -190,8 +204,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
 
     AssertUtil.assertIsValid(repository);
 
-    Repository oldRepository = repositoryDAO.get(repository.getType(),
-      repository.getName());
+    Repository oldRepository = repositoryDAO.get(repository.getNamespaceAndName());
 
     if (oldRepository != null) {
       RepositoryPermissions.modify(oldRepository).check();
@@ -212,8 +225,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
     AssertUtil.assertIsNotNull(repository);
     RepositoryPermissions.read(repository).check();
 
-    Repository fresh = repositoryDAO.get(repository.getType(),
-      repository.getName());
+    Repository fresh = repositoryDAO.get(repository.getNamespaceAndName());
 
     if (fresh != null) {
       fresh.copyProperties(repository);
@@ -240,11 +252,12 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
   }
 
   @Override
-  public Repository get(String type, String name) {
-    AssertUtil.assertIsNotEmpty(type);
-    AssertUtil.assertIsNotEmpty(name);
+  public Repository get(NamespaceAndName namespaceAndName) {
+    AssertUtil.assertIsNotNull(namespaceAndName);
+    AssertUtil.assertIsNotEmpty(namespaceAndName.getNamespace());
+    AssertUtil.assertIsNotEmpty(namespaceAndName.getName());
 
-    Repository repository = repositoryDAO.get(type, name);
+    Repository repository = repositoryDAO.get(namespaceAndName);
 
     if (repository != null) {
       RepositoryPermissions.read(repository).check();
@@ -325,7 +338,27 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
   }
 
   @Override
-  public Repository getFromTypeAndUri(String type, String uri) {
+  public Repository getFromUri(String uri) {
+    AssertUtil.assertIsNotEmpty(uri);
+
+    if (uri.startsWith(HttpUtil.SEPARATOR_PATH)) {
+      uri = uri.substring(1);
+    }
+
+    int typeSeparator = uri.indexOf(HttpUtil.SEPARATOR_PATH);
+    Repository repository = null;
+
+    if (typeSeparator > 0) {
+      String type = uri.substring(0, typeSeparator);
+
+      uri = uri.substring(typeSeparator + 1);
+      repository = getFromTypeAndUri(type, uri);
+    }
+
+    return repository;
+  }
+
+  private Repository getFromTypeAndUri(String type, String uri) {
     if (Strings.isNullOrEmpty(type)) {
       throw new ArgumentIsInvalidException("argument type is required");
     }
@@ -357,27 +390,6 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
     if ((repository == null) && logger.isDebugEnabled()) {
       logger.debug("could not find repository with type {} and uri {}", type,
         uri);
-    }
-
-    return repository;
-  }
-
-  @Override
-  public Repository getFromUri(String uri) {
-    AssertUtil.assertIsNotEmpty(uri);
-
-    if (uri.startsWith(HttpUtil.SEPARATOR_PATH)) {
-      uri = uri.substring(1);
-    }
-
-    int typeSeperator = uri.indexOf(HttpUtil.SEPARATOR_PATH);
-    Repository repository = null;
-
-    if (typeSeperator > 0) {
-      String type = uri.substring(0, typeSeperator);
-
-      uri = uri.substring(typeSeperator + 1);
-      repository = getFromTypeAndUri(type, uri);
     }
 
     return repository;
