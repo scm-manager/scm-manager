@@ -39,10 +39,8 @@ import com.google.common.base.Stopwatch;
 import com.google.common.base.Strings;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.HgConfig;
@@ -60,19 +58,17 @@ import sonia.scm.web.cgi.CGIExecutor;
 import sonia.scm.web.cgi.CGIExecutorFactory;
 import sonia.scm.web.cgi.EnvList;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Base64;
-
-import java.util.Enumeration;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.IOException;
+import java.util.Base64;
+import java.util.Enumeration;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -305,7 +301,7 @@ public class HgCGIServlet extends HttpServlet
     executor.setExceptionHandler(exceptionHandler);
     executor.setStatusCodeHandler(exceptionHandler);
     executor.setContentLengthWorkaround(true);
-    executor.getEnvironment().set(ENV_REPOSITORY_NAME, name);
+    executor.getEnvironment().set(ENV_REPOSITORY_NAME, repository.getNamespace() + "/" + repository.getName());
     executor.getEnvironment().set(ENV_REPOSITORY_PATH,
       directory.getAbsolutePath());
 
