@@ -265,6 +265,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
       RepositoryPermissions.modify(oldRepository).check();
       fireEvent(HandlerEventType.BEFORE_MODIFY, repository, oldRepository);
       repository.setLastModified(System.currentTimeMillis());
+      repository.setCreationDate(oldRepository.getCreationDate());
       getHandler(repository).modify(repository);
       repositoryDAO.modify(repository);
       fireEvent(HandlerEventType.MODIFY, repository, oldRepository);
