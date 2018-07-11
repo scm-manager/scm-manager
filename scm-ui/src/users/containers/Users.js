@@ -2,9 +2,9 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import { fetchUsers, deleteUser } from "../modules/users";
-import Login from "../../containers/Login";
-import UserRow from "./UserRow";
+import { fetchUsers, addUser, editUser, deleteUser } from "../modules/users";
+import UserForm from "./UserForm";
+import UserTable from "./UserTable";
 import type { User } from "../types/User";
 
 type Props = {
@@ -12,7 +12,9 @@ type Props = {
   error: Error,
   users: Array<User>,
   fetchUsers: () => void,
-  deleteUser: string => void
+  deleteUser: string => void,
+  addUser: User => void,
+  editUser: User => void
 };
 
 class Users extends React.Component<Props> {
@@ -20,34 +22,35 @@ class Users extends React.Component<Props> {
     this.props.fetchUsers();
   }
 
+  addUser = (user: User) => {
+    this.props.addUser(user);
+  };
+
+  editUser = (user: User) => {
+    this.props.editUser(user);
+  };
+
   render() {
-    if (this.props.users) {
+    const { users, deleteUser } = this.props;
+    const testUser: User = {
+      name: "user",
+      displayName: "user_display",
+      password: "pw",
+      mail: "mail@mail.de",
+      active: true,
+      admin: true
+    };
+    if (users) {
       return (
-        <div>
-          <h1>SCM</h1>
-          <h2>Users</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Display Name</th>
-                <th>E-Mail</th>
-                <th>Admin</th>
-              </tr>
-            </thead>
-            <tbody>
-              {this.props.users.map((user, index) => {
-                return (
-                  <UserRow
-                    key={index}
-                    user={user}
-                    deleteUser={this.props.deleteUser}
-                  />
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+        <section className="section">
+          <div className="container">
+            <h1 className="title">SCM</h1>
+            <h2 className="subtitle">Users</h2>
+            <UserTable users={users} deleteUser={deleteUser} />
+            {/* <UserForm submitForm={this.submitForm} /> */}
+            <UserForm submitForm={user => {}} user={testUser} />
+          </div>
+        </section>
       );
     } else {
       return <div>Loading...</div>;
@@ -65,6 +68,12 @@ const mapDispatchToProps = dispatch => {
   return {
     fetchUsers: () => {
       dispatch(fetchUsers());
+    },
+    addUser: (user: User) => {
+      dispatch(addUser(user));
+    },
+    editUser: (user: User) => {
+      dispatch(editUser(user));
     },
     deleteUser: (link: string) => {
       dispatch(deleteUser(link));

@@ -22,7 +22,7 @@ class InputField extends React.Component<Props> {
   renderLabel = () => {
     const label = this.props.label;
     if (label) {
-      return <label class="label">{label}</label>;
+      return <label className="label">{label}</label>;
     }
     return "";
   };
@@ -31,11 +31,11 @@ class InputField extends React.Component<Props> {
     const { type, placeholder } = this.props;
 
     return (
-      <div class="field">
+      <div className="field">
         {this.renderLabel()}
-        <div class="control">
+        <div className="control">
           <input
-            class="input"
+            className="input"
             type={type}
             placeholder={placeholder}
             onChange={this.handleInput}

@@ -4,6 +4,7 @@ import Login from "./Login";
 import { getIsAuthenticated } from "../modules/login";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
+import { ThunkDispatch } from "redux-thunk";
 
 import "./App.css";
 import Header from "../components/Header";
@@ -44,7 +45,7 @@ class App extends Component<Props> {
   }
 }
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: ThunkDispatch) => {
   return {
     getAuthState: () => dispatch(getIsAuthenticated())
   };

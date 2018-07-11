@@ -42,6 +42,24 @@ class ApiClient {
     return this.httpRequestWithJSONBody(url, payload, "POST");
   }
 
+  postWithContentType(url: string, payload: any, contentType: string) {
+    return this.httpRequestWithContentType(
+      url,
+      "POST",
+      JSON.stringify(payload),
+      contentType
+    );
+  }
+
+  putWithContentType(url: string, payload: any, contentType: string) {
+    return this.httpRequestWithContentType(
+      url,
+      "PUT",
+      JSON.stringify(payload),
+      contentType
+    );
+  }
+
   delete(url: string): Promise<Response> {
     let options: RequestOptions = {
       method: "DELETE"
@@ -55,13 +73,37 @@ class ApiClient {
     payload: any,
     method: string
   ): Promise<Response> {
+    // let options: RequestOptions = {
+    //   method: method,
+    //   body: JSON.stringify(payload)
+    // };
+    // options = Object.assign(options, fetchOptions);
+    // // $FlowFixMe
+    // options.headers["Content-Type"] = "application/json";
+
+    // return fetch(createUrl(url), options).then(handleStatusCode);
+
+    return this.httpRequestWithContentType(
+      url,
+      method,
+      JSON.stringify(payload),
+      "application/json"
+    ).then(handleStatusCode);
+  }
+
+  httpRequestWithContentType(
+    url: string,
+    method: string,
+    payload: any,
+    contentType: string
+  ): Promise<Response> {
     let options: RequestOptions = {
       method: method,
-      body: JSON.stringify(payload)
+      body: payload
     };
     options = Object.assign(options, fetchOptions);
     // $FlowFixMe
-    options.headers["Content-Type"] = "application/json";
+    options.headers["Content-Type"] = contentType;
 
     return fetch(createUrl(url), options).then(handleStatusCode);
   }

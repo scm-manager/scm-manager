@@ -5,6 +5,8 @@ export type User = {
   displayName: string,
   name: string,
   mail: string,
+  password: string,
   admin: boolean,
-  _links: Links
+  active: boolean,
+  _links?: Links
 };
