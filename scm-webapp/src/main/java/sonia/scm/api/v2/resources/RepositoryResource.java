@@ -18,6 +18,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -153,7 +154,7 @@ public class RepositoryResource {
     return permissionRootResource.get();
   }
 
-  private Supplier<Repository> loadBy(String namespace, String name) {
+  private Supplier<Optional<Repository>> loadBy(String namespace, String name) {
     return () -> manager.getByNamespace(namespace, name);
   }
 

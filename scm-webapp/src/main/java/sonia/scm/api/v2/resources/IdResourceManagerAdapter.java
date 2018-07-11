@@ -7,6 +7,7 @@ import sonia.scm.PageResult;
 
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -55,8 +56,8 @@ class IdResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
     return singleAdapter.delete(id);
   }
 
-  private Supplier<MODEL_OBJECT> loadBy(String id) {
-    return () -> manager.get(id);
+  private Supplier<Optional<MODEL_OBJECT>> loadBy(String id) {
+    return () -> Optional.ofNullable(manager.get(id));
   }
 
   private Predicate<MODEL_OBJECT> idStaysTheSame(String id) {
