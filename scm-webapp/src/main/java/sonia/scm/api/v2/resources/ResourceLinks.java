@@ -20,7 +20,7 @@ class ResourceLinks {
   static class GroupLinks {
     private final LinkBuilder groupLinkBuilder;
 
-    private GroupLinks(UriInfo uriInfo) {
+    GroupLinks(UriInfo uriInfo) {
       groupLinkBuilder = new LinkBuilder(uriInfo, GroupRootResource.class, GroupResource.class);
     }
 
@@ -44,7 +44,7 @@ class ResourceLinks {
   static class GroupCollectionLinks {
     private final LinkBuilder collectionLinkBuilder;
 
-    private GroupCollectionLinks(UriInfo uriInfo) {
+    GroupCollectionLinks(UriInfo uriInfo) {
       collectionLinkBuilder = new LinkBuilder(uriInfo, GroupRootResource.class, GroupCollectionResource.class);
     }
 
@@ -64,7 +64,7 @@ class ResourceLinks {
   static class UserLinks {
     private final LinkBuilder userLinkBuilder;
 
-    private UserLinks(UriInfo uriInfo) {
+    UserLinks(UriInfo uriInfo) {
       userLinkBuilder = new LinkBuilder(uriInfo, UserRootResource.class, UserResource.class);
     }
 
@@ -88,7 +88,7 @@ class ResourceLinks {
   static class UserCollectionLinks {
     private final LinkBuilder collectionLinkBuilder;
 
-    private UserCollectionLinks(UriInfo uriInfo) {
+    UserCollectionLinks(UriInfo uriInfo) {
       collectionLinkBuilder = new LinkBuilder(uriInfo, UserRootResource.class, UserCollectionResource.class);
     }
 
@@ -98,6 +98,130 @@ class ResourceLinks {
 
     String create() {
       return collectionLinkBuilder.method("getUserCollectionResource").parameters().method("create").parameters().href();
+    }
+  }
+
+  public RepositoryLinks repository() {
+    return new RepositoryLinks(uriInfoStore.get());
+  }
+
+  static class RepositoryLinks {
+    private final LinkBuilder repositoryLinkBuilder;
+
+    RepositoryLinks(UriInfo uriInfo) {
+      repositoryLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class);
+    }
+
+    String self(String namespace, String name) {
+      return repositoryLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("get").parameters().href();
+    }
+
+    String delete(String namespace, String name) {
+      return repositoryLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("delete").parameters().href();
+    }
+
+    String update(String namespace, String name) {
+      return repositoryLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("update").parameters().href();
+    }
+  }
+
+  RepositoryCollectionLinks repositoryCollection() {
+    return new RepositoryCollectionLinks(uriInfoStore.get());
+  }
+
+  static class RepositoryCollectionLinks {
+    private final LinkBuilder collectionLinkBuilder;
+
+    RepositoryCollectionLinks(UriInfo uriInfo) {
+      collectionLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryCollectionResource.class);
+    }
+
+    String self() {
+      return collectionLinkBuilder.method("getRepositoryCollectionResource").parameters().method("getAll").parameters().href();
+    }
+
+    String create() {
+      return collectionLinkBuilder.method("getRepositoryCollectionResource").parameters().method("create").parameters().href();
+    }
+  }
+
+  public TagCollectionLinks tagCollection() {
+    return new TagCollectionLinks(uriInfoStore.get());
+  }
+
+  static class TagCollectionLinks {
+    private final LinkBuilder tagLinkBuilder;
+
+    TagCollectionLinks(UriInfo uriInfo) {
+      tagLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, TagRootResource.class, TagCollectionResource.class);
+    }
+
+    String self(String namespace, String name) {
+      return tagLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("tags").parameters().method("getTagCollectionResource").parameters().method("getAll").parameters().href();
+    }
+  }
+
+  public BranchCollectionLinks branchCollection() {
+    return new BranchCollectionLinks(uriInfoStore.get());
+  }
+
+  static class BranchCollectionLinks {
+    private final LinkBuilder branchLinkBuilder;
+
+    BranchCollectionLinks(UriInfo uriInfo) {
+      branchLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, BranchRootResource.class, BranchCollectionResource.class);
+    }
+
+    String self(String namespace, String name) {
+      return branchLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("branches").parameters().method("getBranchCollectionResource").parameters().method("getAll").parameters().href();
+    }
+  }
+
+  public ChangesetCollectionLinks changesetCollection() {
+    return new ChangesetCollectionLinks(uriInfoStore.get());
+  }
+
+  static class ChangesetCollectionLinks {
+    private final LinkBuilder changesetLinkBuilder;
+
+    ChangesetCollectionLinks(UriInfo uriInfo) {
+      changesetLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, ChangesetRootResource.class, ChangesetCollectionResource.class);
+    }
+
+    String self(String namespace, String name) {
+      return changesetLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("changesets").parameters().method("getChangesetCollectionResource").parameters().method("getAll").parameters().href();
+    }
+  }
+
+  public SourceCollectionLinks sourceCollection() {
+    return new SourceCollectionLinks(uriInfoStore.get());
+  }
+
+  static class SourceCollectionLinks {
+    private final LinkBuilder sourceLinkBuilder;
+
+    SourceCollectionLinks(UriInfo uriInfo) {
+      sourceLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, SourceRootResource.class, SourceCollectionResource.class);
+    }
+
+    String self(String namespace, String name) {
+      return sourceLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("sources").parameters().method("getSourceCollectionResource").parameters().method("getAll").parameters().href();
+    }
+  }
+
+  public PermissionCollectionLinks permissionCollection() {
+    return new PermissionCollectionLinks(uriInfoStore.get());
+  }
+
+  static class PermissionCollectionLinks {
+    private final LinkBuilder permissionLinkBuilder;
+
+    PermissionCollectionLinks(UriInfo uriInfo) {
+      permissionLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, PermissionRootResource.class, PermissionCollectionResource.class);
+    }
+
+    String self(String namespace, String name) {
+      return permissionLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("permissions").parameters().method("getPermissionCollectionResource").parameters().method("getAll").parameters().href();
     }
   }
 }

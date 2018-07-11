@@ -105,7 +105,7 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
    * @throws RepositoryException
    */
   @Override
-  public void create(Repository repository)
+  public Repository create(Repository repository)
           throws RepositoryException
   {
     File directory = getDirectory(repository);
@@ -122,6 +122,7 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
       fileSystem.create(directory);
       create(repository, directory);
       postCreate(repository, directory);
+      return repository;
     }
     catch (Exception ex)
     {
@@ -142,6 +143,8 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
       }
 
       Throwables.propagateIfPossible(ex, RepositoryException.class);
+      // This point will never be reached
+      return null;
     }
   }
 

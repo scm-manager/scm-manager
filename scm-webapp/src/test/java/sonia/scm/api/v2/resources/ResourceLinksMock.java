@@ -1,26 +1,29 @@
 package sonia.scm.api.v2.resources;
 
+import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
-import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static sonia.scm.api.v2.resources.GroupRootResource.GROUPS_PATH_V2;
-import static sonia.scm.api.v2.resources.UserRootResource.USERS_PATH_V2;
 
 public class ResourceLinksMock {
-  public static void initMock(ResourceLinks resourceLinks, URI baseUri) {
-    when(resourceLinks.user().self(anyString())).thenAnswer(invocation -> baseUri + USERS_PATH_V2 + invocation.getArguments()[0]);
-    when(resourceLinks.user().update(anyString())).thenAnswer(invocation -> baseUri + USERS_PATH_V2 + invocation.getArguments()[0]);
-    when(resourceLinks.user().delete(anyString())).thenAnswer(invocation -> baseUri + USERS_PATH_V2 + invocation.getArguments()[0]);
+  public static ResourceLinks createMock(URI baseUri) {
+    ResourceLinks resourceLinks = mock(ResourceLinks.class);
 
-    when(resourceLinks.userCollection().self()).thenAnswer(invocation -> baseUri + USERS_PATH_V2);
-    when(resourceLinks.userCollection().create()).thenAnswer(invocation -> baseUri + USERS_PATH_V2);
+    UriInfo uriInfo = mock(UriInfo.class);
+    when(uriInfo.getBaseUri()).thenReturn(baseUri);
 
-    when(resourceLinks.group().self(anyString())).thenAnswer(invocation -> baseUri + GROUPS_PATH_V2 + invocation.getArguments()[0]);
-    when(resourceLinks.group().update(anyString())).thenAnswer(invocation -> baseUri + GROUPS_PATH_V2 + invocation.getArguments()[0]);
-    when(resourceLinks.group().delete(anyString())).thenAnswer(invocation -> baseUri + GROUPS_PATH_V2 + invocation.getArguments()[0]);
-
-    when(resourceLinks.groupCollection().self()).thenAnswer(invocation -> baseUri + GROUPS_PATH_V2);
-    when(resourceLinks.groupCollection().create()).thenAnswer(invocation -> baseUri + GROUPS_PATH_V2);
+    when(resourceLinks.user()).thenReturn(new ResourceLinks.UserLinks(uriInfo));
+    when(resourceLinks.userCollection()).thenReturn(new ResourceLinks.UserCollectionLinks(uriInfo));
+    when(resourceLinks.group()).thenReturn(new ResourceLinks.GroupLinks(uriInfo));
+    when(resourceLinks.groupCollection()).thenReturn(new ResourceLinks.GroupCollectionLinks(uriInfo));
+    when(resourceLinks.repository()).thenReturn(new ResourceLinks.RepositoryLinks(uriInfo));
+    when(resourceLinks.repositoryCollection()).thenReturn(new ResourceLinks.RepositoryCollectionLinks(uriInfo));
+    when(resourceLinks.tagCollection()).thenReturn(new ResourceLinks.TagCollectionLinks(uriInfo));
+    when(resourceLinks.branchCollection()).thenReturn(new ResourceLinks.BranchCollectionLinks(uriInfo));
+    when(resourceLinks.changesetCollection()).thenReturn(new ResourceLinks.ChangesetCollectionLinks(uriInfo));
+    when(resourceLinks.sourceCollection()).thenReturn(new ResourceLinks.SourceCollectionLinks(uriInfo));
+    when(resourceLinks.permissionCollection()).thenReturn(new ResourceLinks.PermissionCollectionLinks(uriInfo));
+    return resourceLinks;
   }
 }
