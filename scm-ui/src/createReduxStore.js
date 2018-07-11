@@ -7,6 +7,7 @@ import { routerReducer, routerMiddleware } from "react-router-redux";
 import repositories from "./repositories/modules/repositories";
 import users from "./users/modules/users";
 import login from "./modules/login";
+import me from "./modules/me";
 
 import type { BrowserHistory } from "history/createBrowserHistory";
 
@@ -18,7 +19,8 @@ function createReduxStore(history: BrowserHistory) {
     router: routerReducer,
     repositories,
     users,
-    login
+    login,
+    me
   });
 
   return createStore(

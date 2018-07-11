@@ -2,6 +2,8 @@
 import React from "react";
 import PrimaryNavigationLink from "./PrimaryNavigationLink";
 
+type Props = {};
+
 class PrimaryNavigation extends React.Component<Props> {
   render() {
     return (

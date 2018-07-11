@@ -5,30 +5,36 @@ import classNames from "classnames";
 
 type Props = {
   value: string,
+  disabled: boolean,
+  isLoading: boolean,
   large?: boolean,
   fullWidth?: boolean
 };
 
 class SubmitButton extends React.Component<Props> {
   render() {
-    const { value, large, fullWidth } = this.props;
+    const { value, large, fullWidth, isLoading, disabled } = this.props;
 
     const largeClass = large ? "is-large" : "";
     const fullWidthClass = fullWidth ? "is-fullwidth" : "";
+    const loadingClass = isLoading ? "is-loading" : "";
 
     return (
       <div className="field">
         <div className="control">
-          <input
+          <button
             type="submit"
+            disabled={disabled}
             className={classNames(
               "button",
               "is-link",
               largeClass,
-              fullWidthClass
+              fullWidthClass,
+              loadingClass
             )}
-            value={value}
-          />
+          >
+            {value}
+          </button>
         </div>
       </div>
     );

@@ -6,6 +6,7 @@ type Props = {
   label?: string,
   placeholder?: string,
   type?: string,
+  autofocus?: boolean,
   onChange: string => void
 };
 
@@ -14,6 +15,14 @@ class InputField extends React.Component<Props> {
     type: "text",
     placeholder: ""
   };
+
+  field: ?HTMLInputElement;
+
+  componentDidMount() {
+    if (this.props.autofocus && this.field) {
+      this.field.focus();
+    }
+  }
 
   handleInput = (event: SyntheticInputEvent<HTMLInputElement>) => {
     this.props.onChange(event.target.value);
@@ -35,6 +44,9 @@ class InputField extends React.Component<Props> {
         {this.renderLabel()}
         <div className="control">
           <input
+            ref={input => {
+              this.field = input;
+            }}
             className="input"
             type={type}
             placeholder={placeholder}

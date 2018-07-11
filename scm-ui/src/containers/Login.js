@@ -9,11 +9,9 @@ import SubmitButton from "../components/SubmitButton";
 
 import classNames from "classnames";
 import Avatar from "../images/blib.jpg";
+import ErrorNotification from "../components/ErrorNotification";
 
 const styles = {
-  spacing: {
-    paddingTop: "5rem"
-  },
   avatar: {
     marginTop: "-70px",
     paddingBottom: "20px"
@@ -32,6 +30,8 @@ const styles = {
 };
 
 type Props = {
+  loading: boolean,
+  error: Error,
   classes: any,
   login: (username: string, password: string) => void
 };
@@ -55,16 +55,26 @@ class Login extends React.Component<Props, State> {
     this.setState({ password: value });
   };
 
-  handleSubmit(event: Event) {
+  handleSubmit = (event: Event) => {
     event.preventDefault();
-    this.props.login(this.state.username, this.state.password);
+    if (this.isValid()) {
+      this.props.login(this.state.username, this.state.password);
+    }
+  };
+
+  isValid() {
+    return this.state.username && this.state.password;
+  }
+
+  isInValid() {
+    return !this.isValid();
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, loading, error } = this.props;
     return (
-      <section className="hero is-fullheight">
-        <div className={classes.spacing}>
+      <section className="hero has-background-light">
+        <div className="hero-body">
           <div className="container has-text-centered">
             <div className="column is-4 is-offset-4">
               <h3 className="title">Login</h3>
@@ -77,9 +87,11 @@ class Login extends React.Component<Props, State> {
                     alt="SCM-Manager"
                   />
                 </figure>
-                <form onSubmit={this.handleSubmit.bind(this)}>
+                <ErrorNotification error={error} />
+                <form onSubmit={this.handleSubmit}>
                   <InputField
                     placeholder="Your Username"
+                    autofocus={true}
                     onChange={this.handleUsernameChange}
                   />
                   <InputField
@@ -87,7 +99,12 @@ class Login extends React.Component<Props, State> {
                     type="password"
                     onChange={this.handlePasswordChange}
                   />
-                  <SubmitButton value="Login" fullWidth={true} />
+                  <SubmitButton
+                    value="Login"
+                    disabled={this.isInValid()}
+                    fullWidth={true}
+                    isLoading={loading}
+                  />
                 </form>
               </div>
             </div>
@@ -99,7 +116,7 @@ class Login extends React.Component<Props, State> {
 }
 
 const mapStateToProps = state => {
-  return {};
+  return state.login || {};
 };
 
 const mapDispatchToProps = dispatch => {
