@@ -7,9 +7,7 @@ import org.apache.shiro.util.ThreadState;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Answers;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import sonia.scm.group.Group;
 
 import java.net.URI;
@@ -24,8 +22,9 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class GroupToGroupDtoMapperTest {
 
-  @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-  private ResourceLinks resourceLinks;
+  private final URI baseUri = URI.create("http://example.com/base/");
+  @SuppressWarnings("unused") // Is injected
+  private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
 
   @InjectMocks
   private GroupToGroupDtoMapperImpl mapper;
@@ -38,12 +37,8 @@ public class GroupToGroupDtoMapperTest {
   @Before
   public void init() throws URISyntaxException {
     initMocks(this);
-    URI baseUri = new URI("http://example.com/base/");
     expectedBaseUri = baseUri.resolve(GroupRootResource.GROUPS_PATH_V2 + "/");
     subjectThreadState.bind();
-
-    ResourceLinksMock.initMock(resourceLinks, baseUri);
-
     ThreadContext.bind(subject);
   }
 

@@ -111,7 +111,7 @@ public class DefaultGroupManager extends AbstractGroupManager
    * @throws IOException
    */
   @Override
-  public void create(Group group) throws GroupException
+  public Group create(Group group) throws GroupException
   {
     String type = group.getType();
 
@@ -140,6 +140,7 @@ public class DefaultGroupManager extends AbstractGroupManager
     fireEvent(HandlerEventType.BEFORE_CREATE, group);
     groupDAO.add(group);
     fireEvent(HandlerEventType.CREATE, group);
+    return group;
   }
 
   /**

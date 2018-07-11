@@ -29,14 +29,14 @@ public class GroupCollectionResource {
   private final GroupCollectionToDtoMapper groupCollectionToDtoMapper;
   private final ResourceLinks resourceLinks;
 
-  private final ResourceManagerAdapter<Group, GroupDto, GroupException> adapter;
+  private final IdResourceManagerAdapter<Group, GroupDto, GroupException> adapter;
 
   @Inject
   public GroupCollectionResource(GroupManager manager, GroupDtoToGroupMapper dtoToGroupMapper, GroupCollectionToDtoMapper groupCollectionToDtoMapper, ResourceLinks resourceLinks) {
     this.dtoToGroupMapper = dtoToGroupMapper;
     this.groupCollectionToDtoMapper = groupCollectionToDtoMapper;
     this.resourceLinks = resourceLinks;
-    this.adapter = new ResourceManagerAdapter<>(manager, Group.class);
+    this.adapter = new IdResourceManagerAdapter<>(manager, Group.class);
   }
 
   /**

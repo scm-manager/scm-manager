@@ -46,7 +46,6 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.AuthorizationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.BlameResult;
 import sonia.scm.repository.Branches;
 import sonia.scm.repository.BrowserResult;
@@ -120,19 +119,15 @@ public class RepositoryResource extends AbstractManagerResource<Repository, Repo
   /**
    * Constructs ...
    *
-   *
-   * @param configuration
-   * @param repositoryManager
+   *  @param repositoryManager
    * @param servicefactory
    * @param healthChecker
    */
   @Inject
-  public RepositoryResource(ScmConfiguration configuration,
-    RepositoryManager repositoryManager,
+  public RepositoryResource(RepositoryManager repositoryManager,
     RepositoryServiceFactory servicefactory, HealthChecker healthChecker)
   {
     super(repositoryManager, Repository.class);
-    this.configuration = configuration;
     this.repositoryManager = repositoryManager;
     this.servicefactory = servicefactory;
     this.healthChecker = healthChecker;
@@ -1066,9 +1061,6 @@ public class RepositoryResource extends AbstractManagerResource<Repository, Repo
   }
   
   //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final ScmConfiguration configuration;
 
   /** Field description */
   private final HealthChecker healthChecker;

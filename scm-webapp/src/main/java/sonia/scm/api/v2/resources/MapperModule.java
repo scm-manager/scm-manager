@@ -15,6 +15,9 @@ public class MapperModule extends AbstractModule {
     bind(GroupToGroupDtoMapper.class).to(Mappers.getMapper(GroupToGroupDtoMapper.class).getClass());
     bind(GroupCollectionToDtoMapper.class);
 
+    bind(RepositoryToRepositoryDtoMapper.class).to(Mappers.getMapper(RepositoryToRepositoryDtoMapper.class).getClass());
+    bind(RepositoryDtoToRepositoryMapper.class).to(Mappers.getMapper(RepositoryDtoToRepositoryMapper.class).getClass());
+
     bind(UriInfoStore.class).in(ServletScopes.REQUEST);
   }
 }

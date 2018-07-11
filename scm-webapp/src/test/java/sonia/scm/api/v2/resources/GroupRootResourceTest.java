@@ -10,7 +10,6 @@ import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.mockito.Answers;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -49,8 +48,7 @@ public class GroupRootResourceTest {
 
   private Dispatcher dispatcher = MockDispatcherFactory.createDispatcher();
 
-  @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-  private ResourceLinks resourceLinks;
+  private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(URI.create("/"));
 
   @Mock
   private GroupManager groupManager;
@@ -64,14 +62,12 @@ public class GroupRootResourceTest {
   @Before
   public void prepareEnvironment() throws IOException, GroupException {
     initMocks(this);
-    doNothing().when(groupManager).create(groupCaptor.capture());
+    when(groupManager.create(groupCaptor.capture())).thenAnswer(invocation -> invocation.getArguments()[0]);
     doNothing().when(groupManager).modify(groupCaptor.capture());
 
     Group group = createDummyGroup();
     when(groupManager.getPage(any(), eq(0), eq(10))).thenReturn(new PageResult<>(singletonList(group), 1));
     when(groupManager.get("admin")).thenReturn(group);
-
-    ResourceLinksMock.initMock(resourceLinks, URI.create("/"));
 
     GroupCollectionToDtoMapper groupCollectionToDtoMapper = new GroupCollectionToDtoMapper(groupToDtoMapper, resourceLinks);
     GroupCollectionResource groupCollectionResource = new GroupCollectionResource(groupManager, dtoToGroupMapper, groupCollectionToDtoMapper, resourceLinks);

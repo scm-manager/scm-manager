@@ -77,9 +77,9 @@ public class ManagerDecorator<T extends ModelObject, E extends Exception>
    * {@inheritDoc}
    */
   @Override
-  public void create(T object) throws E
+  public T create(T object) throws E
   {
-    decorated.create(object);
+    return decorated.create(object);
   }
 
   /**

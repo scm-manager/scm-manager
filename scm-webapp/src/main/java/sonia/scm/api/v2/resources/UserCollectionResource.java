@@ -28,14 +28,14 @@ public class UserCollectionResource {
   private final UserCollectionToDtoMapper userCollectionToDtoMapper;
   private final ResourceLinks resourceLinks;
 
-  private final ResourceManagerAdapter<User, UserDto, UserException> adapter;
+  private final IdResourceManagerAdapter<User, UserDto, UserException> adapter;
 
   @Inject
   public UserCollectionResource(UserManager manager, UserDtoToUserMapper dtoToUserMapper,
     UserCollectionToDtoMapper userCollectionToDtoMapper, ResourceLinks resourceLinks) {
     this.dtoToUserMapper = dtoToUserMapper;
     this.userCollectionToDtoMapper = userCollectionToDtoMapper;
-    this.adapter = new ResourceManagerAdapter<>(manager, User.class);
+    this.adapter = new IdResourceManagerAdapter<>(manager, User.class);
     this.resourceLinks = resourceLinks;
   }
 

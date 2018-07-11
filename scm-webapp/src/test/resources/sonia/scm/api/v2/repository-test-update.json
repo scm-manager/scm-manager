@@ -1,0 +1,8 @@
+{
+  "contact": "none@example.com",
+  "description": "Test repository",
+  "namespace": "space",
+  "name": "repo",
+  "archived": false,
+  "type": "git"
+}
