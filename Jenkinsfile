@@ -26,7 +26,7 @@ node() { // No specific label
       }
 
       stage('Build') {
-        mvn 'clean install -DskipTests -DperformRelease'
+        mvn 'clean install -DskipTests -DperformRelease -Dmaven.javadoc.failOnError=false'
         archive '**/target/*.jar,**/target/*.zip'
       }
 
