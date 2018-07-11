@@ -130,9 +130,13 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
 
   public void create(Repository repository, boolean initRepository)
     throws RepositoryException {
-    logger.info("create repository {} of type {}", repository.getNamespaceAndName(), repository.getType());
+    logger.info("create repository {} of type {}", repository.getName(), repository.getType());
 
     RepositoryPermissions.create().check();
+
+    repository.setNamespace(namespaceStrategy.getNamespace());
+    logger.info("setting namespace of new repository {} to {}", repository.getName(), repository.getNamespace());
+
     AssertUtil.assertIsValid(repository);
 
     if (repositoryDAO.contains(repository.getNamespaceAndName())) {
@@ -141,7 +145,6 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
 
     repository.setId(keyGenerator.createKey());
     repository.setCreationDate(System.currentTimeMillis());
-    repository.setNamespace(namespaceStrategy.getNamespace());
 
     if (initRepository) {
       getHandler(repository).create(repository);
