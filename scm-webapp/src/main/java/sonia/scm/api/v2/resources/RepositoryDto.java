@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 
 @Getter @Setter
 public class RepositoryDto extends HalRepresentation {
@@ -22,6 +23,7 @@ public class RepositoryDto extends HalRepresentation {
   private String name;
   private boolean archived = false;
   private String type;
+  protected Map<String, String> properties;
 
   @Override
   @SuppressWarnings("squid:S1185") // We want to have this method available in this package
