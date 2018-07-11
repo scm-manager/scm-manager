@@ -1,6 +1,6 @@
 //@flow
 
-import { apiClient } from "../apiclient";
+import { apiClient, NOT_AUTHENTICATED_ERROR } from "../apiclient";
 
 const LOGIN_URL = "/auth/access_token";
 const AUTHENTICATION_INFO_URL = "/me";
@@ -21,7 +21,7 @@ export function getIsAuthenticatedRequest() {
 }
 
 export function getIsAuthenticated() {
-  return function(dispatch: (any) => void) {
+  return function(dispatch: any => void) {
     dispatch(getIsAuthenticatedRequest());
     return apiClient
       .get(AUTHENTICATION_INFO_URL)
@@ -31,6 +31,13 @@ export function getIsAuthenticated() {
       .then(data => {
         if (data) {
           dispatch(isAuthenticated(data.username));
+        }
+      })
+      .catch((error: Error) => {
+        if (error === NOT_AUTHENTICATED_ERROR) {
+          dispatch(isNotAuthenticated());
+        } else {
+          // TODO: Handle errors other than not_authenticated
         }
       });
   };
@@ -60,9 +67,9 @@ export function login(username: string, password: string) {
     cookie: true,
     grant_type: "password",
     username,
-    password,
+    password
   };
-  return function(dispatch: (any) => void) {
+  return function(dispatch: any => void) {
     dispatch(loginRequest());
     return apiClient.post(LOGIN_URL, login_data).then(response => {
       if (response.ok) {
@@ -79,23 +86,29 @@ export function loginSuccessful() {
   };
 }
 
-export default function reducer(state: any = {}, action: any = {}) {
+export default function reducer(
+  state: any = { loading: true },
+  action: any = {}
+) {
   switch (action.type) {
     case LOGIN:
       return {
         ...state,
+        loading: true,
         login: false,
         error: null
       };
     case LOGIN_SUCCESSFUL:
       return {
         ...state,
+        loading: false,
         login: true,
         error: null
       };
     case LOGIN_FAILED:
       return {
         ...state,
+        loading: false,
         login: false,
         error: action.payload
       };
@@ -103,12 +116,14 @@ export default function reducer(state: any = {}, action: any = {}) {
       return {
         ...state,
         login: true,
+        loading: false,
         username: action.username
       };
     case IS_NOT_AUTHENTICATED:
       return {
         ...state,
         login: false,
+        loading: false,
         username: null,
         error: null
       };

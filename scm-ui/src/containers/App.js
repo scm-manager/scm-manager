@@ -9,17 +9,19 @@ import { withRouter } from "react-router-dom";
 type Props = {
   login: boolean,
   username: string,
-  getAuthState: any
+  getAuthState: () => void,
+  loading: boolean
 };
 
-class App extends Component {
-  componentWillMount() {
+class App extends Component<Props> {
+  componentDidMount() {
     this.props.getAuthState();
   }
   render() {
-    const { login, username } = this.props.login;
-
-    if (!login) {
+    const { login, username, loading } = this.props;
+    if (loading) {
+      return <div>Loading...</div>;
+    } else if (!login) {
       return (
         <div>
           <Login />
@@ -44,7 +46,7 @@ const mapDispatchToProps = dispatch => {
 };
 
 const mapStateToProps = state => {
-  return { login: state.login };
+  return state.login || {};
 };
 
 export default withRouter(

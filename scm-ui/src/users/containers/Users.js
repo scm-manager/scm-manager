@@ -2,27 +2,22 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import { fetchUsersIfNeeded, fetchUsers } from "../modules/users";
+import { fetchUsers, deleteUser } from "../modules/users";
 import Login from "../../containers/Login";
 import UserRow from "./UserRow";
+import type { User } from "../types/User";
 
 type Props = {
   login: boolean,
-  error: any,
-  users: any,
-  fetchUsersIfNeeded: () => void,
+  error: Error,
+  users: Array<User>,
   fetchUsers: () => void,
-  fetchUsersIfNeeded: (url: string) => void,
-
+  deleteUser: string => void
 };
 
 class Users extends React.Component<Props> {
-  componentWillMount() {
-    this.props.fetchUsersIfNeeded();
-  }
-
-  componentDidUpdate() {
-    this.props.fetchUsersIfNeeded();
+  componentDidMount() {
+    this.props.fetchUsers();
   }
 
   render() {
@@ -35,13 +30,20 @@ class Users extends React.Component<Props> {
             <thead>
               <tr>
                 <th>Name</th>
+                <th>Display Name</th>
                 <th>E-Mail</th>
                 <th>Admin</th>
               </tr>
             </thead>
             <tbody>
               {this.props.users.map((user, index) => {
-                return <UserRow key={index} user={user} />;
+                return (
+                  <UserRow
+                    key={index}
+                    user={user}
+                    deleteUser={this.props.deleteUser}
+                  />
+                );
               })}
             </tbody>
           </table>
@@ -61,11 +63,11 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchUsersIfNeeded: () => {
-      dispatch(fetchUsersIfNeeded());
-    },
     fetchUsers: () => {
       dispatch(fetchUsers());
+    },
+    deleteUser: (link: string) => {
+      dispatch(deleteUser(link));
     }
   };
 };

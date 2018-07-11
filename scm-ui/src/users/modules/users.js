@@ -1,5 +1,6 @@
 // @flow
 import { apiClient, PAGE_NOT_FOUND_ERROR } from "../../apiclient";
+import { ThunkDispatch } from "redux-thunk";
 
 const FETCH_USERS = "scm/users/FETCH";
 const FETCH_USERS_SUCCESS = "scm/users/FETCH_SUCCESS";
@@ -34,7 +35,7 @@ function usersNotFound(url: string) {
 }
 
 export function fetchUsers() {
-  return function(dispatch: any => void) {
+  return function(dispatch: ThunkDispatch) {
     dispatch(requestUsers());
     return apiClient
       .get(USERS_URL)
@@ -66,21 +67,6 @@ function fetchUsersSuccess(users: any) {
   };
 }
 
-export function shouldFetchUsers(state: any): boolean {
-  if (state.users.users == null) {
-    return true;
-  }
-  return false;
-}
-
-export function fetchUsersIfNeeded() {
-  return (dispatch, getState) => {
-    if (shouldFetchUsers(getState())) {
-      dispatch(fetchUsers());
-    }
-  };
-}
-
 function requestDeleteUser(url: string) {
   return {
     type: DELETE_USER,
@@ -102,41 +88,42 @@ function deleteUserFailure(url: string, err: Error) {
   };
 }
 
-export function deleteUser(username: string) {
-  return function(dispatch) {
-    dispatch(requestDeleteUser(username));
+export function deleteUser(link: string) {
+  return function(dispatch: ThunkDispatch) {
+    dispatch(requestDeleteUser(link));
     return apiClient
-      .delete(USERS_URL + "/" + username)
+      .delete(link)
       .then(() => {
         dispatch(deleteUserSuccess());
+        dispatch(fetchUsers());
       })
-      .catch(err => dispatch(deleteUserFailure(username, err)));
+      .catch(err => dispatch(deleteUserFailure(link, err)));
   };
 }
 
 export default function reducer(state: any = {}, action: any = {}) {
   switch (action.type) {
     case FETCH_USERS:
+    case DELETE_USER:
       return {
         ...state,
-        users: null
+        users: null,
+        loading: true
       };
     case FETCH_USERS_SUCCESS:
       return {
         ...state,
         error: null,
-        users: action.payload._embedded.users
+        users: action.payload._embedded.users,
+        loading: false
       };
     case FETCH_USERS_FAILURE:
+    case DELETE_USER_FAILURE:
       return {
         ...state,
         login: false,
-        error: action.payload
-      };
-    case DELETE_USER_SUCCESS:
-      return {
-        ...state,
-        users: null
+        error: action.payload,
+        loading: false
       };
 
     default:

@@ -1,20 +1,16 @@
 // @flow
 import React from "react";
+import type { User } from "../types/User";
 
 type Props = {
-  user: any,
+  user: User,
   deleteUser: (link: string) => void
 };
 
 class DeleteUser extends React.Component<Props> {
-
   deleteUser = () => {
     this.props.deleteUser(this.props.user._links.delete.href);
   };
-
-  if(deleteButtonClicked) {
-    let deleteButtonAsk = <div>You really want to remove this user?</div>
-  }
 
   isDeletable = () => {
     return this.props.user._links.delete;
@@ -28,7 +24,6 @@ class DeleteUser extends React.Component<Props> {
       <button type="button" onClick={this.deleteUser}>
         Delete User
       </button>
-
     );
   }
 }

@@ -4,6 +4,7 @@
 const apiUrl = process.env.API_URL || process.env.PUBLIC_URL || "/scm";
 
 export const PAGE_NOT_FOUND_ERROR = Error("page not found");
+export const NOT_AUTHENTICATED_ERROR = Error("not authenticated");
 
 const fetchOptions: RequestOptions = {
   credentials: "same-origin",
@@ -15,7 +16,7 @@ const fetchOptions: RequestOptions = {
 function handleStatusCode(response: Response) {
   if (!response.ok) {
     if (response.status === 401) {
-      return response;
+      throw NOT_AUTHENTICATED_ERROR;
     }
     if (response.status === 404) {
       throw PAGE_NOT_FOUND_ERROR;
@@ -26,11 +27,14 @@ function handleStatusCode(response: Response) {
 }
 
 function createUrl(url: string) {
+  if (url.indexOf("://") > 0) {
+    return url;
+  }
   return `${apiUrl}/api/rest/v2/${url}`;
 }
 
 class ApiClient {
-  get(url: string) {
+  get(url: string): Promise<Response> {
     return fetch(createUrl(url), fetchOptions).then(handleStatusCode);
   }
 
@@ -38,7 +42,7 @@ class ApiClient {
     return this.httpRequestWithJSONBody(url, payload, "POST");
   }
 
-  delete(url: string) {
+  delete(url: string): Promise<Response> {
     let options: RequestOptions = {
       method: "DELETE"
     };
@@ -46,7 +50,11 @@ class ApiClient {
     return fetch(createUrl(url), options).then(handleStatusCode);
   }
 
-  httpRequestWithJSONBody(url: string, payload: any, method: string) {
+  httpRequestWithJSONBody(
+    url: string,
+    payload: any,
+    method: string
+  ): Promise<Response> {
     let options: RequestOptions = {
       method: method,
       body: JSON.stringify(payload)
