@@ -19,7 +19,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
 
 public class RepositoryCollectionResource {
 
@@ -39,7 +38,7 @@ public class RepositoryCollectionResource {
   @GET
   @Path("")
   @Produces(VndMediaType.REPOSITORY_COLLECTION)
-  @TypeHint(UserDto[].class)
+  @TypeHint(RepositoryDto[].class)
   @StatusCodes({
     @ResponseCode(code = 200, condition = "success"),
     @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
@@ -66,7 +65,7 @@ public class RepositoryCollectionResource {
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
   @ResponseHeaders(@ResponseHeader(name = "Location", description = "uri to the created repository"))
-  public Response create(RepositoryDto repositoryDto) throws IOException, RepositoryException {
+  public Response create(RepositoryDto repositoryDto) throws RepositoryException {
     return adapter.create(repositoryDto,
       () -> dtoToRepositoryMapper.map(repositoryDto, null),
       repository -> resourceLinks.repository().self(repository.getNamespace(), repository.getName()));

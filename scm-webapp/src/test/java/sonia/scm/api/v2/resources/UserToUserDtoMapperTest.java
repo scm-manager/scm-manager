@@ -23,6 +23,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class UserToUserDtoMapperTest {
 
   private final URI baseUri = URI.create("http://example.com/base/");
+  @SuppressWarnings("unused") // Is injected
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
 
   @InjectMocks

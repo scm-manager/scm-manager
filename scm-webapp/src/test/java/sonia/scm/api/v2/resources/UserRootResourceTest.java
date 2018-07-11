@@ -64,7 +64,7 @@ public class UserRootResourceTest {
   private ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
 
   @Before
-  public void prepareEnvironment() throws IOException, UserException {
+  public void prepareEnvironment() throws UserException {
     initMocks(this);
     User dummyUser = createDummyUser("Neo");
     when(userManager.create(userCaptor.capture())).thenAnswer(invocation -> invocation.getArguments()[0]);

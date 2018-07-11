@@ -15,7 +15,7 @@ import sonia.scm.repository.Repository;
 
 import java.net.URI;
 
-import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -31,6 +31,7 @@ public class RepositoryToRepositoryDtoMapperTest {
   public final ShiroRule rule = new ShiroRule();
 
   private final URI baseUri = URI.create("http://example.com/base/");
+  @SuppressWarnings("unused") // Is injected
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
 
   @InjectMocks
@@ -140,8 +141,8 @@ public class RepositoryToRepositoryDtoMapperTest {
     repository.setContact("none@example.com");
     repository.setId("1");
     repository.setCreationDate(System.currentTimeMillis());
-    repository.setHealthCheckFailures(asList(new HealthCheckFailure("1", "summary", "url", "failure")));
-    repository.setPermissions(asList(new Permission("permission", PermissionType.READ)));
+    repository.setHealthCheckFailures(singletonList(new HealthCheckFailure("1", "summary", "url", "failure")));
+    repository.setPermissions(singletonList(new Permission("permission", PermissionType.READ)));
 
     return repository;
   }
