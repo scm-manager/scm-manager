@@ -12,12 +12,13 @@ import PrimaryNavigation from "../components/PrimaryNavigation";
 import Loading from "../components/Loading";
 import Notification from "../components/Notification";
 import Footer from "../components/Footer";
+import ErrorNotification from "../components/ErrorNotification";
 
 type Props = {
-  login: boolean,
   me: any,
-  fetchMe: () => void,
-  loading: boolean
+  error: Error,
+  loading: boolean,
+  fetchMe: () => void
 };
 
 class App extends Component<Props> {
@@ -25,13 +26,16 @@ class App extends Component<Props> {
     this.props.fetchMe();
   }
   render() {
-    const { me, loading } = this.props;
+    const { me, loading, error } = this.props;
 
     let content = [];
     let navigation;
 
     if (loading) {
       content.push(<Loading />);
+    } else if (error) {
+      // TODO add error page instead of plain notification
+      content.push(<ErrorNotification error={error} />);
     } else if (!me) {
       content.push(<Login />);
     } else {

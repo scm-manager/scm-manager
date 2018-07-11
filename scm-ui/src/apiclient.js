@@ -30,7 +30,11 @@ function createUrl(url: string) {
   if (url.indexOf("://") > 0) {
     return url;
   }
-  return `${apiUrl}/api/rest/v2/${url}`;
+  let urlWithEndingSlash = url;
+  if (url.indexOf("/") !== 0) {
+    urlWithEndingSlash += "/";
+  }
+  return `${apiUrl}/api/rest/v2${urlWithEndingSlash}`;
 }
 
 class ApiClient {
