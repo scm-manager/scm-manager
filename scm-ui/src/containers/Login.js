@@ -4,15 +4,30 @@ import injectSheet from "react-jss";
 import { login } from "../modules/login";
 import { connect } from "react-redux";
 
+import InputField from "../components/InputField";
+import SubmitButton from "../components/SubmitButton";
+
+import classNames from "classnames";
+import Avatar from "../images/blib.jpg";
+
 const styles = {
-  wrapper: {
-    width: "100%",
-    display: "flex",
-    height: "10em"
+  spacing: {
+    paddingTop: "5rem"
   },
-  login: {
-    margin: "auto",
-    textAlign: "center"
+  avatar: {
+    marginTop: "-70px",
+    paddingBottom: "20px"
+  },
+  avatarImage: {
+    border: "1px solid lightgray",
+    padding: "5px",
+    background: "#fff",
+    borderRadius: "50%",
+    width: "128px",
+    height: "128px"
+  },
+  avatarSpacing: {
+    marginTop: "5rem"
   }
 };
 
@@ -32,13 +47,13 @@ class Login extends React.Component<Props, State> {
     this.state = { username: "", password: "" };
   }
 
-  handleUsernameChange(event: SyntheticInputEvent<HTMLInputElement>) {
-    this.setState({ username: event.target.value });
-  }
+  handleUsernameChange = (value: string) => {
+    this.setState({ username: value });
+  };
 
-  handlePasswordChange(event: SyntheticInputEvent<HTMLInputElement>) {
-    this.setState({ password: event.target.value });
-  }
+  handlePasswordChange = (value: string) => {
+    this.setState({ password: value });
+  };
 
   handleSubmit(event: Event) {
     event.preventDefault();
@@ -48,24 +63,37 @@ class Login extends React.Component<Props, State> {
   render() {
     const { classes } = this.props;
     return (
-      <div className={classes.wrapper}>
-        <div className={classes.login}>
-          You need to log in! ...
-          <form onSubmit={this.handleSubmit.bind(this)}>
-            <input
-              type="text"
-              defaultValue="Username"
-              onChange={this.handleUsernameChange.bind(this)}
-            />
-            <input
-              type="password"
-              defaultValue="Password"
-              onChange={this.handlePasswordChange.bind(this)}
-            />
-            <input type="submit" value="Login" />
-          </form>
+      <section className="hero is-fullheight">
+        <div className={classes.spacing}>
+          <div className="container has-text-centered">
+            <div className="column is-4 is-offset-4">
+              <h3 className="title">Login</h3>
+              <p className="subtitle">Please login to proceed.</p>
+              <div className={classNames("box", classes.avatarSpacing)}>
+                <figure className={classes.avatar}>
+                  <img
+                    className={classes.avatarImage}
+                    src={Avatar}
+                    alt="SCM-Manager"
+                  />
+                </figure>
+                <form onSubmit={this.handleSubmit.bind(this)}>
+                  <InputField
+                    placeholder="Your Username"
+                    onChange={this.handleUsernameChange}
+                  />
+                  <InputField
+                    placeholder="Your Password"
+                    type="password"
+                    onChange={this.handlePasswordChange}
+                  />
+                  <SubmitButton value="Login" fullWidth={true} />
+                </form>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
+      </section>
     );
   }
 }
