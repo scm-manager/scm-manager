@@ -143,6 +143,7 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
       }
 
       Throwables.propagateIfPossible(ex, RepositoryException.class);
+      // This point will never be reached
       return null;
     }
   }

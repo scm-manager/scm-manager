@@ -93,10 +93,6 @@ import static org.mockito.Mockito.when;
 )
 public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, RepositoryException> {
 
-  {
-    ThreadContext.unbindSecurityManager();
-  }
-
   @Rule
   public ShiroRule shiro = new ShiroRule();
 
