@@ -53,6 +53,15 @@ public class RepositoryResource {
     this.permissionRootResource = permissionRootResource;
   }
 
+  /**
+   * Returns a repository.
+   *
+   * <strong>Note:</strong> This method requires "repository" privilege.
+   *
+   * @param namespace the namespace of the repository
+   * @param name the name of the repository
+   *
+   */
   @GET
   @Path("")
   @Produces(VndMediaType.REPOSITORY)
@@ -68,6 +77,15 @@ public class RepositoryResource {
     return adapter.get(loadBy(namespace, name), repositoryToDtoMapper::map);
   }
 
+  /**
+   * Deletes a repository.
+   *
+   * <strong>Note:</strong> This method requires "repository" privilege.
+   *
+   * @param namespace the namespace of the repository to delete
+   * @param name the name of the repository to delete
+   *
+   */
   @DELETE
   @Path("")
   @StatusCodes({
@@ -81,6 +99,15 @@ public class RepositoryResource {
     return adapter.delete(loadBy(namespace, name));
   }
 
+  /**
+   * Modifies the given repository.
+   *
+   * <strong>Note:</strong> This method requires "repository" privilege.
+   *
+   * @param namespace the namespace of the repository to be modified
+   * @param name the name of the repository to be modified
+   * @param repositoryDto repository object to modify
+   */
   @PUT
   @Path("")
   @Consumes(VndMediaType.REPOSITORY)

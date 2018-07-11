@@ -23,6 +23,8 @@ import java.io.IOException;
 
 public class RepositoryCollectionResource {
 
+  private static final int DEFAULT_PAGE_SIZE = 10;
+
   private final CollectionResourceManagerAdapter<Repository, RepositoryDto, RepositoryException> adapter;
   private final RepositoryCollectionToDtoMapper repositoryCollectionToDtoMapper;
   private final RepositoryDtoToRepositoryMapper dtoToRepositoryMapper;
@@ -36,6 +38,16 @@ public class RepositoryCollectionResource {
     this.resourceLinks = resourceLinks;
   }
 
+  /**
+   * Returns all repositories for a given page number with a given page size (default page size is {@value DEFAULT_PAGE_SIZE}).
+   *
+   * <strong>Note:</strong> This method requires "repository" privilege.
+   *
+   * @param page     the number of the requested page
+   * @param pageSize the page size (default page size is {@value DEFAULT_PAGE_SIZE})
+   * @param sortBy   sort parameter (if empty - undefined sorting)
+   * @param desc     sort direction desc or asc
+   */
   @GET
   @Path("")
   @Produces(VndMediaType.REPOSITORY_COLLECTION)
@@ -47,13 +59,22 @@ public class RepositoryCollectionResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   public Response getAll(@DefaultValue("0") @QueryParam("page") int page,
-    @DefaultValue("10") @QueryParam("pageSize") int pageSize,
+    @DefaultValue("" + DEFAULT_PAGE_SIZE) @QueryParam("pageSize") int pageSize,
     @QueryParam("sortBy") String sortBy,
     @DefaultValue("false") @QueryParam("desc") boolean desc) {
     return adapter.getAll(page, pageSize, sortBy, desc,
       pageResult -> repositoryCollectionToDtoMapper.map(page, pageSize, pageResult));
   }
 
+  /**
+   * Creates a new repository.
+   *
+   * <strong>Note:</strong> This method requires "repository" privilege. The namespace of the given repository will
+   *   be ignored and set by the configured namespace strategy.
+   *
+   * @param repositoryDto The repository to be created.
+   * @return A response with the link to the new repository (if created successfully).
+   */
   @POST
   @Path("")
   @Consumes(VndMediaType.REPOSITORY)
