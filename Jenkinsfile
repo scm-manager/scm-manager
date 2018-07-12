@@ -6,6 +6,9 @@ import com.cloudogu.ces.cesbuildlib.*
 
 node() { // No specific label
 
+  // Change this as when we go back to default - necessary for proper SonarQube analysis
+  mainBranch = "2.0.0-m3"
+
   properties([
     // Keep only the last 10 build to preserve space
     buildDiscarder(logRotator(numToKeepStr: '10')),
@@ -55,13 +58,12 @@ node() { // No specific label
   mailIfStatusChanged(commitAuthorEmail)
 }
 
-// Change this as when we go back to default - necessary for proper SonarQube analysis
-String mainBranch = "2.0.0-m3"
+String mainBranch
 
 Maven setupMavenBuild() {
   Maven mvn = new MavenWrapper(this)
 
-  if (env.BRANCH_NAME == "master") {
+  if (mainBranch.equals(env.BRANCH_NAME)) {
     // Release starts javadoc, which takes very long, so do only for certain branches
     mvn.additionalArgs += ' -DperformRelease'
     // JDK8 is more strict, we should fix this before the next release. Right now, this is just not the focus, yet.
