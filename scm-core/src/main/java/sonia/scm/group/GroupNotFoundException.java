@@ -53,6 +53,6 @@ public class GroupNotFoundException extends GroupException
    *
    */
   public GroupNotFoundException() {
-    super("group does not exists");
+    super("group does not exist");
   }
 }

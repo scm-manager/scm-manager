@@ -52,6 +52,6 @@ public class UserNotFoundException extends UserException
    *
    */
   public UserNotFoundException() {
-    super("user does not exists");
+    super("user does not exist");
   }
 }
