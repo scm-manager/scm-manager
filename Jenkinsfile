@@ -85,7 +85,7 @@ void analyzeWith(Maven mvn) {
         "-Dsonar.pullrequest.key=${env.CHANGE_ID} " +
         "-Dsonar.pullrequest.provider=bitbucketcloud " +
         "-Dsonar.pullrequest.bitbucketcloud.owner=sdorra " +
-        "-Dsonar.pullrequest.bitbucketcloud.repository=sonarcloudtest "
+        "-Dsonar.pullrequest.bitbucketcloud.repository=scm-manager "
     } else {
       mvnArgs += " -Dsonar.branch.name=${env.BRANCH_NAME} "
       if (!mainBranch.equals(env.BRANCH_NAME)) {
