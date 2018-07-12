@@ -11,17 +11,13 @@ node() { // No specific label
     disableConcurrentBuilds()
   ])
 
-  String defaultEmailRecipients = env.EMAIL_SCM_RECIPIENTS
-
   catchError {
 
     Maven mvn = new MavenWrapper(this)
     // Maven build specified it must be 1.8.0-101 or newer
     def javaHome = tool 'JDK-1.8.0-101+'
 
-    withEnv(["JAVA_HOME=${javaHome}", "PATH=${env.JAVA_HOME}/bin:${env.PATH}",
-             // Give Maven enough memory to do SonarQube analysis
-             "MAVEN_OPTS=-Xmx1g"]) {
+    withEnv(["JAVA_HOME=${javaHome}", "PATH=${env.JAVA_HOME}/bin:${env.PATH}"]) {
 
       stage('Checkout') {
         checkout scm
