@@ -12,6 +12,7 @@ import Header from "../components/Header";
 import PrimaryNavigation from "../components/PrimaryNavigation";
 import Loading from "../components/Loading";
 import ErrorNotification from "../components/ErrorNotification";
+import ErrorPage from "../components/ErrorPage";
 
 type Props = {
   me: any,
@@ -40,7 +41,13 @@ class App extends Component<Props> {
       content = <Loading />;
     } else if (error) {
       // TODO add error page instead of plain notification
-      content = <ErrorNotification error={error} />;
+      content = (
+        <ErrorPage
+          title="Error"
+          subtitle="Unknown error occurred"
+          error={error}
+        />
+      );
     } else if (!me) {
       content = <Login />;
     } else {
