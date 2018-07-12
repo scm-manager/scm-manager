@@ -188,7 +188,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
       repositoryDAO.delete(repository);
       fireEvent(HandlerEventType.DELETE, repository);
     } else {
-      throw new RepositoryNotFoundException();
+      throw new RepositoryNotFoundException(repository);
     }
   }
 
@@ -262,7 +262,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
     if (fresh != null) {
       fresh.copyProperties(repository);
     } else {
-      throw new RepositoryNotFoundException();
+      throw new RepositoryNotFoundException(repository);
     }
   }
 

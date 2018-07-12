@@ -52,8 +52,8 @@ public class RepositoryNotFoundException extends RepositoryException
    * error detail message.
    *
    */
-  public RepositoryNotFoundException() {
-    super("repository does not exist");
+  public RepositoryNotFoundException(Repository repository) {
+    super("repository "  + repository.getName() + "/"  + repository.getNamespace() + " does not exist");
   }
 
   public RepositoryNotFoundException(String repositoryId) {

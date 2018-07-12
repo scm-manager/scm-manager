@@ -52,7 +52,7 @@ public class GroupNotFoundException extends GroupException
    * Constructs a new GroupNotFoundException.
    *
    */
-  public GroupNotFoundException() {
-    super("group does not exist");
+  public GroupNotFoundException(Group group) {
+    super("group "  + group.getName() + " does not exist");
   }
 }

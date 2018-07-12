@@ -154,7 +154,7 @@ public class DefaultGroupManager extends AbstractGroupManager
     }
     else
     {
-      throw new GroupNotFoundException();
+      throw new GroupNotFoundException(group);
     }
   }
 
@@ -214,7 +214,7 @@ public class DefaultGroupManager extends AbstractGroupManager
 
     if (fresh == null)
     {
-      throw new GroupNotFoundException();
+      throw new GroupNotFoundException(group);
     }
 
     fresh.copyProperties(group);

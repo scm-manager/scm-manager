@@ -9,19 +9,17 @@ import java.util.function.Supplier;
 public class ManagerDaoAdapter<T extends ModelObject, E extends Exception> {
 
   private final GenericDAO<T> dao;
-  private final Supplier<E> notFoundException;
+  private final Function<T, E> notFoundException;
   private final Function<T, E> alreadyExistsException;
 
-  public ManagerDaoAdapter(GenericDAO<T> dao, Supplier<E> notFoundException, Function<T, E> alreadyExistsException) {
+  public ManagerDaoAdapter(GenericDAO<T> dao, Function<T, E> notFoundException, Function<T, E> alreadyExistsException) {
     this.dao = dao;
     this.notFoundException = notFoundException;
     this.alreadyExistsException = alreadyExistsException;
   }
 
   public void modify(T object, Function<T, PermissionCheck> permissionCheck, AroundHandler<T, E> beforeUpdate, AroundHandler<T, E> afterUpdate) throws E {
-    String name = object.getId();
-
-    T notModified = dao.get(name);
+    T notModified = dao.get(object.getId());
     if (notModified != null) {
       permissionCheck.apply(notModified).check();
       AssertUtil.assertIsValid(object);
@@ -35,7 +33,7 @@ public class ManagerDaoAdapter<T extends ModelObject, E extends Exception> {
 
       afterUpdate.handle(notModified);
     } else {
-      throw notFoundException.get();
+      throw notFoundException.apply(object);
     }
   }
 

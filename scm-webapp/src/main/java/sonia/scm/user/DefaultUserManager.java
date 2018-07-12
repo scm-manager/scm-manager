@@ -185,7 +185,7 @@ public class DefaultUserManager extends AbstractUserManager
     }
     else
     {
-      throw new UserNotFoundException();
+      throw new UserNotFoundException(user);
     }
   }
 
@@ -249,7 +249,7 @@ public class DefaultUserManager extends AbstractUserManager
 
     if (fresh == null)
     {
-      throw new UserNotFoundException();
+      throw new UserNotFoundException(user);
     }
 
     fresh.copyProperties(user);
