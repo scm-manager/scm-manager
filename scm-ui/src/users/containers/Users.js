@@ -2,15 +2,27 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import { fetchUsers, addUser, editUser, deleteUser } from "../modules/users";
+import {
+  fetchUsers,
+  addUser,
+  editUser,
+  deleteUser,
+  getUsersFromState
+} from "../modules/users";
 import UserForm from "./UserForm";
 import UserTable from "./UserTable";
 import type { User } from "../types/User";
 
+type UserEntry = {
+  loading: boolean,
+  error: Error,
+  user: User
+};
+
 type Props = {
   login: boolean,
   error: Error,
-  users: Array<User>,
+  userEntries: Array<UserEntry>,
   fetchUsers: () => void,
   deleteUser: string => void,
   addUser: User => void,
@@ -31,7 +43,7 @@ class Users extends React.Component<Props> {
   };
 
   render() {
-    const { users, deleteUser } = this.props;
+    const { userEntries, deleteUser } = this.props;
     const testUser: User = {
       name: "user",
       displayName: "user_display",
@@ -40,13 +52,13 @@ class Users extends React.Component<Props> {
       active: true,
       admin: true
     };
-    if (users) {
+    if (userEntries) {
       return (
         <section className="section">
           <div className="container">
             <h1 className="title">SCM</h1>
             <h2 className="subtitle">Users</h2>
-            <UserTable users={users} deleteUser={deleteUser} />
+            <UserTable entries={userEntries} deleteUser={deleteUser} />
             {/* <UserForm submitForm={this.submitForm} /> */}
             <UserForm submitForm={user => {}} user={testUser} />
           </div>
@@ -59,8 +71,12 @@ class Users extends React.Component<Props> {
 }
 
 const mapStateToProps = state => {
+  const userEntries = getUsersFromState(state);
+  if (!userEntries) {
+    return {};
+  }
   return {
-    users: state.users.users
+    userEntries
   };
 };
 
