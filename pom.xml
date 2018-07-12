@@ -145,6 +145,16 @@
       <version>${mokito.version}</version>
       <scope>test</scope>
     </dependency>
+
+    <dependency>
+      <!-- Dependency used in Jenkinsfile. Including this in maven provides code completion in Jenkinsfile. -->
+      <groupId>com.github.cloudogu</groupId>
+      <artifactId>ces-build-lib</artifactId>
+      <!-- Keep this version in sync with the one used in Jenkinsfile -->
+      <version>9aadeeb</version>
+      <!-- Don't ship this dependency with the app -->
+      <optional>true</optional>
+    </dependency>
     
   </dependencies>
 

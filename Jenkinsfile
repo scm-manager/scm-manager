@@ -1,4 +1,6 @@
 #!groovy
+
+// Keep the version in sync with the one used in pom.xml in order to get correct syntax completion.
 @Library('github.com/cloudogu/ces-build-lib@9aadeeb')
 import com.cloudogu.ces.cesbuildlib.*
 
