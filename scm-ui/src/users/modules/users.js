@@ -3,22 +3,22 @@ import { apiClient, PAGE_NOT_FOUND_ERROR } from "../../apiclient";
 import type { User } from "../types/User";
 import { ThunkDispatch } from "redux-thunk";
 
-const FETCH_USERS = "scm/users/FETCH";
-const FETCH_USERS_SUCCESS = "scm/users/FETCH_SUCCESS";
-const FETCH_USERS_FAILURE = "scm/users/FETCH_FAILURE";
-const FETCH_USERS_NOTFOUND = "scm/users/FETCH_NOTFOUND";
+export const FETCH_USERS = "scm/users/FETCH";
+export const FETCH_USERS_SUCCESS = "scm/users/FETCH_SUCCESS";
+export const FETCH_USERS_FAILURE = "scm/users/FETCH_FAILURE";
+export const FETCH_USERS_NOTFOUND = "scm/users/FETCH_NOTFOUND";
 
-const ADD_USER = "scm/users/ADD";
-const ADD_USER_SUCCESS = "scm/users/ADD_SUCCESS";
-const ADD_USER_FAILURE = "scm/users/ADD_FAILURE";
+export const ADD_USER = "scm/users/ADD";
+export const ADD_USER_SUCCESS = "scm/users/ADD_SUCCESS";
+export const ADD_USER_FAILURE = "scm/users/ADD_FAILURE";
 
-const EDIT_USER = "scm/users/EDIT";
-const EDIT_USER_SUCCESS = "scm/users/EDIT_SUCCESS";
-const EDIT_USER_FAILURE = "scm/users/EDIT_FAILURE";
+export const EDIT_USER = "scm/users/EDIT";
+export const EDIT_USER_SUCCESS = "scm/users/EDIT_SUCCESS";
+export const EDIT_USER_FAILURE = "scm/users/EDIT_FAILURE";
 
-const DELETE_USER = "scm/users/DELETE";
-const DELETE_USER_SUCCESS = "scm/users/DELETE_SUCCESS";
-const DELETE_USER_FAILURE = "scm/users/DELETE_FAILURE";
+export const DELETE_USER = "scm/users/DELETE";
+export const DELETE_USER_SUCCESS = "scm/users/DELETE_SUCCESS";
+export const DELETE_USER_FAILURE = "scm/users/DELETE_FAILURE";
 
 const USERS_URL = "users";
 
@@ -45,7 +45,7 @@ function usersNotFound(url: string) {
 }
 
 export function fetchUsers() {
-  return function(dispatch: ThunkDispatch) {
+  return function(dispatch: any) {
     dispatch(requestUsers());
     return apiClient
       .get(USERS_URL)
@@ -179,21 +179,58 @@ export function deleteUser(link: string) {
   };
 }
 
+export function getUsersFromState(state) {
+  if (!state.users.users) {
+    return null;
+  }
+  const userNames = state.users.users.entries;
+  if (!userNames) {
+    return null;
+  }
+  var userEntries = new Array();
+
+  for (let userName of userNames) {
+    userEntries.push(state.users.usersByNames[userName]);
+  }
+
+  return userEntries;
+}
+
+function extractUsersByNames(users: Array<User>, userNames: Array<string>) {
+  var usersByNames = {};
+
+  for (let user of users) {
+    usersByNames[user.name] = {
+      entry: user
+    };
+  }
+  return usersByNames;
+}
+
 export default function reducer(state: any = {}, action: any = {}) {
   switch (action.type) {
     case FETCH_USERS:
+      return {
+        loading: true,
+        error: null
+      };
     case DELETE_USER:
       return {
         ...state,
-        users: null,
-        loading: true
+        users: null
       };
     case FETCH_USERS_SUCCESS:
+      const users = action.payload._embedded.users;
+      const userNames = users.map(user => user.name);
+      const usersByNames = {...state.usersByNames, extractUsersByNames(users, userNames)};
       return {
         ...state,
-        error: null,
-        users: action.payload._embedded.users,
-        loading: false
+        users: {
+          error: null,
+          entries: userNames,
+          loading: false
+        },
+        usersByNames
       };
     case FETCH_USERS_FAILURE:
     case DELETE_USER_FAILURE:

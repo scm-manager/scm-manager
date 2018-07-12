@@ -4,13 +4,14 @@ import UserRow from "./UserRow";
 import type { User } from "../types/User";
 
 type Props = {
-  users: Array<User>,
+  entries: [{ loading: boolean, error: Error, user: User }],
   deleteUser: string => void
 };
 
 class UserTable extends React.Component<Props> {
   render() {
-    const { users, deleteUser } = this.props;
+    const { deleteUser } = this.props;
+    const entries = this.props.entries;
     return (
       <table>
         <thead>
@@ -22,8 +23,10 @@ class UserTable extends React.Component<Props> {
           </tr>
         </thead>
         <tbody>
-          {users.map((user, index) => {
-            return <UserRow key={index} user={user} deleteUser={deleteUser} />;
+          {entries.map((entry, index) => {
+            return (
+              <UserRow key={index} entry={entry} deleteUser={deleteUser} />
+            );
           })}
         </tbody>
       </table>

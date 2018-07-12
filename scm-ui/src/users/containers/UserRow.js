@@ -4,13 +4,14 @@ import DeleteUserButton from "./DeleteUserButton";
 import type { User } from "../types/User";
 
 type Props = {
-  user: User,
+  entry: { loading: boolean, error: Error, user: User },
   deleteUser: string => void
 };
 
 export default class UserRow extends React.Component<Props> {
   render() {
-    const { user, deleteUser } = this.props;
+    const { deleteUser } = this.props;
+    const user = this.props.entry.entry;
     return (
       <tr>
         <td>{user.name}</td>
