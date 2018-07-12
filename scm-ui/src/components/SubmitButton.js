@@ -1,6 +1,5 @@
 //@flow
 import React from "react";
-import Logo from "./Logo";
 import classNames from "classnames";
 
 type Props = {

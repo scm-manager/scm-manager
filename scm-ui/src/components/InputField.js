@@ -1,6 +1,5 @@
 //@flow
 import React from "react";
-import Image from "../images/logo.png";
 
 type Props = {
   label?: string,

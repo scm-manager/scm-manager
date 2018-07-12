@@ -1,12 +1,11 @@
 //@flow
 import React from "react";
-import injectSheet from "react-jss";
-import classNames from "classnames";
 
 import { Route, withRouter } from "react-router";
 
 import Repositories from "../repositories/containers/Repositories";
 import Users from "../users/containers/Users";
+
 import { Switch } from "react-router-dom";
 import Footer from "../components/Footer";
 
