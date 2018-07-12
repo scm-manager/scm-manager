@@ -15,7 +15,7 @@ node() { // No specific label
 
   catchError {
 
-    Maven mvn = new MavenWrapper(this)
+    Maven mvn = setupMavenBuild()
     // Maven build specified it must be 1.8.0-101 or newer
     def javaHome = tool 'JDK-1.8.0-101+'
 
@@ -26,8 +26,7 @@ node() { // No specific label
       }
 
       stage('Build') {
-        // TODO release build only on default? or 2.0.0-M3 -> JavaDoc takes ages
-        mvn 'clean install -DskipTests -DperformRelease -Dmaven.javadoc.failOnError=false'
+        mvn 'clean install -DskipTests'
       }
 
       stage('Unit Test') {
@@ -58,6 +57,18 @@ node() { // No specific label
 
 // Change this as when we go back to default - necessary for proper SonarQube analysis
 String mainBranch = "2.0.0-m3"
+
+Maven setupMavenBuild() {
+  Maven mvn = new MavenWrapper(this)
+
+  if (env.BRANCH_NAME == "master") {
+    // Release starts javadoc, which takes very long, so do only for certain branches
+    mvn.additionalArgs += ' -DperformRelease'
+    // JDK8 is more strict, we should fix this before the next release. Right now, this is just not the focus, yet.
+    mvn.additionalArgs += ' -Dmaven.javadoc.failOnError=false'
+  }
+  return mvn
+}
 
 void analyzeWith(Maven mvn) {
 
