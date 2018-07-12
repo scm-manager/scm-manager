@@ -158,38 +158,23 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
     );
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Override
-  public void delete(Repository repository)
-    throws RepositoryException {
-    if (logger.isInfoEnabled()) {
-      logger.info("delete repository {} of type {}", repository.getName(),
-        repository.getType());
-    }
+  public void delete(Repository repository) throws RepositoryException {
+    logger.info("delete repository {} of type {}", repository.getName(), repository.getType());
+    managerDaoAdapter.delete(
+      repository,
+      () -> RepositoryPermissions.delete(repository),
+      this::preDelete,
+      toDelete -> fireEvent(HandlerEventType.DELETE, toDelete)
+    );
+  }
 
-    RepositoryPermissions.delete(repository).check();
-
-    if (configuration.isEnableRepositoryArchive() && !repository.isArchived()) {
-      throw new RepositoryIsNotArchivedException(
-        "Repository could not deleted, because it is not archived.");
+  private void preDelete(Repository toDelete) throws RepositoryException {
+    if (configuration.isEnableRepositoryArchive() && !toDelete.isArchived()) {
+      throw new RepositoryIsNotArchivedException("Repository could not deleted, because it is not archived.");
     }
-
-    if (repositoryDAO.contains(repository)) {
-      fireEvent(HandlerEventType.BEFORE_DELETE, repository);
-      getHandler(repository).delete(repository);
-      repositoryDAO.delete(repository);
-      fireEvent(HandlerEventType.DELETE, repository);
-    } else {
-      throw new RepositoryNotFoundException(repository);
-    }
+    fireEvent(HandlerEventType.BEFORE_DELETE, toDelete);
+    getHandler(toDelete).delete(toDelete);
   }
 
   /**

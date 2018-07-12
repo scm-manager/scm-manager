@@ -125,37 +125,15 @@ public class DefaultGroupManager extends AbstractGroupManager
     );
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param group
-   *
-   * @throws GroupException
-   * @throws IOException
-   */
   @Override
-  public void delete(Group group) throws GroupException
-  {
-    if (logger.isInfoEnabled())
-    {
-      logger.info("delete group {} of type {}", group.getName(),
-        group.getType());
-    }
-
-    String name = group.getName();
-    GroupPermissions.delete().check(name);
-
-    if (groupDAO.contains(name))
-    {
-      fireEvent(HandlerEventType.BEFORE_DELETE, group);
-      groupDAO.delete(group);
-      fireEvent(HandlerEventType.DELETE, group);
-    }
-    else
-    {
-      throw new GroupNotFoundException(group);
-    }
+  public void delete(Group group) throws GroupException {
+    logger.info("delete group {} of type {}", group.getName(), group.getType());
+    managerDaoAdapter.delete(
+      group,
+      () -> GroupPermissions.delete(group.getName()),
+      toDelete -> fireEvent(HandlerEventType.BEFORE_DELETE, toDelete),
+      toDelete -> fireEvent(HandlerEventType.DELETE, toDelete)
+    );
   }
 
   /**

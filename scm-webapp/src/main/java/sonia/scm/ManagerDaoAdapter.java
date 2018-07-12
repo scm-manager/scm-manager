@@ -50,6 +50,17 @@ public class ManagerDaoAdapter<T extends ModelObject, E extends Exception> {
     return newObject;
   }
 
+  public void delete(T toDelete, Supplier<PermissionCheck> permissionCheck, AroundHandler<T, E> beforeDelete, AroundHandler<T, E> afterDelete) throws E {
+    permissionCheck.get().check();
+    if (dao.contains(toDelete)) {
+      beforeDelete.handle(toDelete);
+      dao.delete(toDelete);
+      afterDelete.handle(toDelete);
+    } else {
+      throw notFoundException.apply(toDelete);
+    }
+  }
+
   @FunctionalInterface
   public interface AroundHandler<T extends ModelObject, E extends Exception> {
     void handle(T notModified) throws E;

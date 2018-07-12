@@ -157,36 +157,15 @@ public class DefaultUserManager extends AbstractUserManager
     );
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param user
-   *
-   * @throws IOException
-   * @throws UserException
-   */
   @Override
-  public void delete(User user) throws UserException
-  {
-    if (logger.isInfoEnabled())
-    {
-      logger.info("delete user {} of type {}", user.getName(), user.getType());
-    }
-
-    String name = user.getName();
-    UserPermissions.delete(name).check();
-
-    if (userDAO.contains(name))
-    {
-      fireEvent(HandlerEventType.BEFORE_DELETE, user);
-      userDAO.delete(user);
-      fireEvent(HandlerEventType.DELETE, user);
-    }
-    else
-    {
-      throw new UserNotFoundException(user);
-    }
+  public void delete(User user) throws UserException {
+    logger.info("delete user {} of type {}", user.getName(), user.getType());
+    managerDaoAdapter.delete(
+      user,
+      () -> UserPermissions.delete(user.getName()),
+      toDelete -> fireEvent(HandlerEventType.BEFORE_DELETE, toDelete),
+      toDelete -> fireEvent(HandlerEventType.DELETE, toDelete)
+    );
   }
 
   /**
