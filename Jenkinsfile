@@ -40,7 +40,6 @@ node() { // No specific label
 
         def sonarQube = new SonarQube(this, 'sonarcloud.io')
 
-        // TODO move this to ces-build-lib so we can use "sonarqube.analyzeWith(mvn)" here
         analyzeWith(mvn)
 
         if (!sonarQube.waitForQualityGateWebhookToBeCalled()) {
@@ -58,6 +57,9 @@ node() { // No specific label
 
   mailIfStatusChanged(commitAuthorEmail)
 }
+
+// Change this as when we go back to default - necessary for proper SonarQube analysis
+String mainBranch = "2.0.0-m3"
 
 void analyzeWith(Maven mvn) {
 
@@ -77,9 +79,9 @@ void analyzeWith(Maven mvn) {
         "-Dsonar.pullrequest.bitbucketcloud.repository=sonarcloudtest "
     } else {
       mvnArgs += " -Dsonar.branch.name=${env.BRANCH_NAME} "
-      if (!"default".equals(env.BRANCH_NAME)) {
-        // Avoid exception "The main branch must not have a target" on master branch
-        mvnArgs += " -Dsonar.branch.target=default "
+      if (!mainBranch.equals(env.BRANCH_NAME)) {
+        // Avoid exception "The main branch must not have a target" on main branch
+        mvnArgs += " -Dsonar.branch.target=${mainBranch} "
       }
     }
     mvn "${mvnArgs}"
