@@ -5,8 +5,8 @@ import classNames from "classnames";
 
 type Props = {
   value: string,
-  disabled: boolean,
-  isLoading: boolean,
+  disabled?: boolean,
+  isLoading?: boolean,
   large?: boolean,
   fullWidth?: boolean
 };

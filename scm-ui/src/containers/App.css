@@ -13,6 +13,10 @@
   margin: 0 !important;
   padding: 0 0 0 3.8em !important; }
 
+html, body {
+  background-color: whitesmoke;
+  height: 100%; }
+
 /*! bulma.io v0.7.1 | MIT License | github.com/jgthms/bulma */
 @keyframes spinAround {
   from {

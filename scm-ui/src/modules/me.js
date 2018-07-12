@@ -1,6 +1,6 @@
 //@flow
-
 import { apiClient, NOT_AUTHENTICATED_ERROR } from "../apiclient";
+import type { Me } from "../types/me";
 
 const AUTHENTICATION_INFO_URL = "/me";
 
@@ -15,7 +15,7 @@ export function meRequest() {
   };
 }
 
-export function meSuccess(user: any) {
+export function meSuccess(user: Me) {
   return {
     type: ME_AUTHENTICATED_SUCCESS,
     payload: user

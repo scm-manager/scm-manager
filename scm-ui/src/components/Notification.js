@@ -24,7 +24,7 @@ class Notification extends React.Component<Props> {
   }
 
   render() {
-    const { type, children, onClose } = this.props;
+    const { type, children } = this.props;
     return (
       <div className={classNames("notification", "is-" + type)}>
         {this.renderCloseButton()}

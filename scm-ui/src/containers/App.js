@@ -10,7 +10,6 @@ import "./App.css";
 import Header from "../components/Header";
 import PrimaryNavigation from "../components/PrimaryNavigation";
 import Loading from "../components/Loading";
-import Notification from "../components/Notification";
 import Footer from "../components/Footer";
 import ErrorNotification from "../components/ErrorNotification";
 
@@ -28,27 +27,25 @@ class App extends Component<Props> {
   render() {
     const { me, loading, error } = this.props;
 
-    let content = [];
+    let content;
     let navigation;
 
     if (loading) {
-      content.push(<Loading />);
+      content = <Loading />;
     } else if (error) {
       // TODO add error page instead of plain notification
-      content.push(<ErrorNotification error={error} />);
+      content = <ErrorNotification error={error} />;
     } else if (!me) {
-      content.push(<Login />);
+      content = <Login />;
     } else {
-      content.push(<Main />, <Footer me={me} />);
+      content = <Main me={me} />;
       navigation = <PrimaryNavigation />;
     }
 
     return (
       <div className="App">
         <Header>{navigation}</Header>
-        {content.map(c => {
-          return c;
-        })}
+        {content}
       </div>
     );
   }

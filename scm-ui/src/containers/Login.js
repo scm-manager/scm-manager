@@ -72,6 +72,7 @@ class Login extends React.Component<Props, State> {
 
   render() {
     const { classes, loading, error } = this.props;
+
     return (
       <section className="hero has-background-light">
         <div className="hero-body">

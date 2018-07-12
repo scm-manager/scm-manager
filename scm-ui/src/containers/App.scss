@@ -26,5 +26,10 @@ $blue: #33B2E8;
   padding: 0 0 0 3.8em !important;
 }
 
+html, body {
+  background-color: whitesmoke;
+  height: 100%;
+}
+
 // 6. Import the rest of Bulma
 @import "bulma/bulma";

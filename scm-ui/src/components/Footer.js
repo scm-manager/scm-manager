@@ -1,16 +1,17 @@
 //@flow
 import React from "react";
+import type { Me } from "../types/me";
 
 type Props = {
-  me: any
+  me: Me
 };
 
 class Footer extends React.Component<Props> {
   render() {
     return (
-      <footer class="footer">
-        <div class="container is-centered">
-          <p class="has-text-centered">{this.props.me.username}</p>
+      <footer className="footer">
+        <div className="container is-centered">
+          <p className="has-text-centered">{this.props.me.username}</p>
         </div>
       </footer>
     );
