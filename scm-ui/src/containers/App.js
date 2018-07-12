@@ -1,9 +1,9 @@
 import React, { Component } from "react";
+import type { ThunkDispatch } from "redux-thunk";
 import Main from "./Main";
 import Login from "./Login";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { ThunkDispatch } from "redux-thunk";
 import { fetchMe } from "../modules/me";
 
 import "./App.css";
