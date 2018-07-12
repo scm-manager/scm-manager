@@ -106,6 +106,21 @@ public class AbstractManagerResourceTest {
     }
 
     @Override
+    public void setLastModified(Long timestamp) {
+
+    }
+
+    @Override
+    public Long getCreationDate() {
+      return null;
+    }
+
+    @Override
+    public void setCreationDate(Long timestamp) {
+
+    }
+
+    @Override
     public Long getLastModified() {
       return null;
     }

@@ -52,17 +52,11 @@ public class RepositoryNotFoundException extends RepositoryException
    * error detail message.
    *
    */
-  public RepositoryNotFoundException() {}
+  public RepositoryNotFoundException(Repository repository) {
+    super("repository "  + repository.getName() + "/"  + repository.getNamespace() + " does not exist");
+  }
 
-  /**
-   * Constructs a new {@link RepositoryNotFoundException} with the specified  
-   * error detail message.
-   *
-   *
-   * @param message error detail message
-   */
-  public RepositoryNotFoundException(String message)
-  {
-    super(message);
+  public RepositoryNotFoundException(String repositoryId) {
+    super("repository with id " + repositoryId + " does not exist");
   }
 }

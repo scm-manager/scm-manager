@@ -51,7 +51,7 @@ public class UserNotFoundException extends UserException
    * Constructs a new UserNotFoundException.
    *
    */
-  public UserNotFoundException() {
-    super("user does not exists");
+  public UserNotFoundException(User user) {
+    super("user " + user.getName() + " does not exist");
   }
 }
