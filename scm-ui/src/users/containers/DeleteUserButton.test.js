@@ -29,6 +29,7 @@ it("should render the button", () => {
   expect(button.text()).not.toBe("");
 });
 
+//TODO: Fix wrong test!
 it("should call the delete user function with delete url", () => {
   const user = {
     _links: {

@@ -167,6 +167,7 @@ function deleteUserFailure(url: string, err: Error) {
 }
 
 export function deleteUser(link: string) {
+
   return function(dispatch: ThunkDispatch) {
     dispatch(requestDeleteUser(link));
     return apiClient
@@ -177,6 +178,7 @@ export function deleteUser(link: string) {
       })
       .catch(err => dispatch(deleteUserFailure(link, err)));
   };
+
 }
 
 export default function reducer(state: any = {}, action: any = {}) {

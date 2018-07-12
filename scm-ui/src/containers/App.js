@@ -8,6 +8,7 @@ import { fetchMe } from "../modules/me";
 import { logout } from "../modules/auth";
 
 import "./App.css";
+import "../components/ConfirmAlert.css";
 import Header from "../components/Header";
 import PrimaryNavigation from "../components/PrimaryNavigation";
 import Loading from "../components/Loading";
