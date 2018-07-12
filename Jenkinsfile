@@ -56,7 +56,7 @@ node() { // No specific label
   // Find maven warnings and visualize in job
   warnings consoleParsers: [[parserName: 'Maven']], canRunOnFailed: true
 
-  mailIfStatusChanged(defaultEmailRecipients)
+  mailIfStatusChanged(commitAuthorEmail)
 }
 
 void analyzeWith(Maven mvn) {
@@ -84,4 +84,13 @@ void analyzeWith(Maven mvn) {
     }
     mvn "${mvnArgs}"
   }
+}
+
+String getCommitAuthorComplete() {
+  new Sh(this).returnStdOut 'hg log --branch . --limit 1 --template "{author}"'
+}
+
+String getCommitAuthorEmail() {
+  def matcher = getCommitAuthorComplete() =~ "<(.*?)>"
+  matcher ? matcher[0][1] : ""
 }
