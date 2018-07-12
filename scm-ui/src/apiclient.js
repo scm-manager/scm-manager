@@ -26,15 +26,15 @@ function handleStatusCode(response: Response) {
   return response;
 }
 
-function createUrl(url: string) {
+export function createUrl(url: string) {
   if (url.indexOf("://") > 0) {
     return url;
   }
-  let urlWithEndingSlash = url;
+  let urlWithStartingSlash = url;
   if (url.indexOf("/") !== 0) {
-    urlWithEndingSlash += "/";
+    urlWithStartingSlash = "/" + urlWithStartingSlash;
   }
-  return `${apiUrl}/api/rest/v2${urlWithEndingSlash}`;
+  return `${apiUrl}/api/rest/v2${urlWithStartingSlash}`;
 }
 
 class ApiClient {
