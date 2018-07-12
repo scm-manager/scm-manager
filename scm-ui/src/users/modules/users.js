@@ -167,7 +167,6 @@ function deleteUserFailure(url: string, err: Error) {
 }
 
 export function deleteUser(link: string) {
-
   return function(dispatch: ThunkDispatch) {
     dispatch(requestDeleteUser(link));
     return apiClient
@@ -178,7 +177,6 @@ export function deleteUser(link: string) {
       })
       .catch(err => dispatch(deleteUserFailure(link, err)));
   };
-
 }
 
 export function getUsersFromState(state) {
@@ -198,13 +196,21 @@ export function getUsersFromState(state) {
   return userEntries;
 }
 
-function extractUsersByNames(users: Array<User>, userNames: Array<string>) {
+function extractUsersByNames(
+  users: Array<User>,
+  userNames: Array<string>,
+  oldUsersByNames: {}
+) {
   var usersByNames = {};
 
   for (let user of users) {
     usersByNames[user.name] = {
       entry: user
     };
+  }
+
+  for (var userName in oldUsersByNames) {
+    usersByNames[userName] = oldUsersByNames[userName];
   }
   return usersByNames;
 }
@@ -224,7 +230,12 @@ export default function reducer(state: any = {}, action: any = {}) {
     case FETCH_USERS_SUCCESS:
       const users = action.payload._embedded.users;
       const userNames = users.map(user => user.name);
-      const usersByNames = {...state.usersByNames, extractUsersByNames(users, userNames)};
+      const usersByNames = extractUsersByNames(
+        users,
+        userNames,
+        state.usersByNames
+      );
+
       return {
         ...state,
         users: {
