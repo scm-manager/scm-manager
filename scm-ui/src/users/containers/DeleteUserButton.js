@@ -4,10 +4,11 @@ import type { User } from "../types/User";
 
 type Props = {
   user: User,
-  deleteUser: (link: string) => void
+  deleteUser: (link: string) => void,
 };
 
-class DeleteUser extends React.Component<Props> {
+class DeleteUserButton extends React.Component<Props> {
+
   deleteUser = () => {
     this.props.deleteUser(this.props.user._links.delete.href);
   };
@@ -17,15 +18,13 @@ class DeleteUser extends React.Component<Props> {
   };
 
   render() {
-    if (!this.isDeletable()) {
-      return;
-    }
     return (
-      <button type="button" onClick={this.deleteUser}>
-        Delete User
+
+      <button type="button" onClick={(e) => { if (window.confirm('Are you sure you wish to delete this item?')) this.deleteUser() } }>
+        Delete User       
       </button>
     );
   }
 }
 
-export default DeleteUser;
+export default DeleteUserButton;
