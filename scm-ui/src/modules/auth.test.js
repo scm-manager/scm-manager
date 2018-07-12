@@ -1,10 +1,14 @@
 // @flow
 import reducer, {
   login,
+  logout,
   LOGIN_REQUEST,
   LOGIN_FAILED,
-  LOGIN_SUCCESSFUL
-} from "./login";
+  LOGIN_SUCCESSFUL,
+  LOGOUT_REQUEST,
+  LOGOUT_SUCCESSFUL,
+  LOGOUT_FAILED
+} from "./auth";
 
 import { ME_AUTHENTICATED_REQUEST, ME_AUTHENTICATED_SUCCESS } from "./me";
 
@@ -66,6 +70,44 @@ describe("action tests", () => {
       expect(actions[1].payload).toBeDefined();
     });
   });
+
+  test("logout success", () => {
+    fetchMock.deleteOnce("/scm/api/rest/v2/auth/access_token", {
+      status: 204
+    });
+
+    fetchMock.getOnce("/scm/api/rest/v2/me", {
+      status: 401
+    });
+
+    const expectedActions = [
+      { type: LOGOUT_REQUEST },
+      { type: LOGOUT_SUCCESSFUL },
+      { type: ME_AUTHENTICATED_REQUEST }
+    ];
+
+    const store = mockStore({});
+
+    return store.dispatch(logout()).then(() => {
+      expect(store.getActions()).toEqual(expectedActions);
+    });
+  });
+
+  test("logout failed", () => {
+    fetchMock.deleteOnce("/scm/api/rest/v2/auth/access_token", {
+      status: 500
+    });
+
+    const expectedActions = [{ type: LOGOUT_REQUEST }, { type: LOGOUT_FAILED }];
+
+    const store = mockStore({});
+    return store.dispatch(logout()).then(() => {
+      const actions = store.getActions();
+      expect(actions[0].type).toEqual(LOGOUT_REQUEST);
+      expect(actions[1].type).toEqual(LOGOUT_FAILED);
+      expect(actions[1].payload).toBeDefined();
+    });
+  });
 });
 
 describe("reducer tests", () => {
@@ -88,6 +130,31 @@ describe("reducer tests", () => {
     var newState = reducer({}, { type: LOGIN_FAILED, payload: err });
     expect(newState.loading).toBeFalsy();
     expect(newState.login).toBeFalsy();
+    expect(newState.error).toBe(err);
+  });
+
+  test("logout request", () => {
+    var newState = reducer({ login: true }, { type: LOGOUT_REQUEST });
+    expect(newState.loading).toBeTruthy();
+    expect(newState.login).toBeTruthy();
+    expect(newState.error).toBeNull();
+  });
+
+  test("logout successful", () => {
+    var newState = reducer({ login: true }, { type: LOGOUT_SUCCESSFUL });
+    expect(newState.loading).toBeFalsy();
+    expect(newState.login).toBeFalsy();
+    expect(newState.error).toBeNull();
+  });
+
+  test("logout failed", () => {
+    const err = new Error("error!");
+    var newState = reducer(
+      { login: true },
+      { type: LOGOUT_FAILED, payload: err }
+    );
+    expect(newState.loading).toBeFalsy();
+    expect(newState.login).toBeTruthy();
     expect(newState.error).toBe(err);
   });
 });

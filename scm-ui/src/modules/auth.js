@@ -1,6 +1,6 @@
 //@flow
 
-import { apiClient, NOT_AUTHENTICATED_ERROR } from "../apiclient";
+import { apiClient } from "../apiclient";
 import { fetchMe } from "./me";
 
 const LOGIN_URL = "/auth/access_token";
@@ -8,6 +8,10 @@ const LOGIN_URL = "/auth/access_token";
 export const LOGIN_REQUEST = "scm/auth/login_request";
 export const LOGIN_SUCCESSFUL = "scm/auth/login_successful";
 export const LOGIN_FAILED = "scm/auth/login_failed";
+
+export const LOGOUT_REQUEST = "scm/auth/logout_request";
+export const LOGOUT_SUCCESSFUL = "scm/auth/logout_successful";
+export const LOGOUT_FAILED = "scm/auth/logout_failed";
 
 export function login(username: string, password: string) {
   const login_data = {
@@ -50,6 +54,41 @@ export function loginFailed(error: Error) {
   };
 }
 
+export function logout() {
+  return function(dispatch: any) {
+    dispatch(logoutRequest());
+    return apiClient
+      .delete(LOGIN_URL)
+      .then(() => {
+        dispatch(logoutSuccess());
+        // not the best way or?
+        dispatch(fetchMe());
+      })
+      .catch(error => {
+        dispatch(logoutFailed(error));
+      });
+  };
+}
+
+export function logoutRequest() {
+  return {
+    type: LOGOUT_REQUEST
+  };
+}
+
+export function logoutSuccess() {
+  return {
+    type: LOGOUT_SUCCESSFUL
+  };
+}
+
+export function logoutFailed(error: Error) {
+  return {
+    type: LOGOUT_FAILED,
+    payload: error
+  };
+}
+
 export default function reducer(state: any = {}, action: any = {}) {
   switch (action.type) {
     case LOGIN_REQUEST:
@@ -71,6 +110,26 @@ export default function reducer(state: any = {}, action: any = {}) {
         ...state,
         loading: false,
         login: false,
+        error: action.payload
+      };
+
+    case LOGOUT_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        error: null
+      };
+    case LOGOUT_SUCCESSFUL:
+      return {
+        ...state,
+        loading: false,
+        login: false,
+        error: null
+      };
+    case LOGOUT_FAILED:
+      return {
+        ...state,
+        loading: false,
         error: action.payload
       };
 

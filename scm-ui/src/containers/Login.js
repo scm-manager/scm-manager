@@ -1,7 +1,7 @@
 //@flow
 import React from "react";
 import injectSheet from "react-jss";
-import { login } from "../modules/login";
+import { login } from "../modules/auth";
 import { connect } from "react-redux";
 
 import InputField from "../components/InputField";

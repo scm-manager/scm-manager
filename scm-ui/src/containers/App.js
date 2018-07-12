@@ -5,25 +5,31 @@ import Login from "./Login";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { fetchMe } from "../modules/me";
+import { logout } from "../modules/auth";
 
 import "./App.css";
 import Header from "../components/Header";
 import PrimaryNavigation from "../components/PrimaryNavigation";
 import Loading from "../components/Loading";
-import Footer from "../components/Footer";
 import ErrorNotification from "../components/ErrorNotification";
 
 type Props = {
   me: any,
   error: Error,
   loading: boolean,
-  fetchMe: () => void
+  fetchMe: () => void,
+  logout: () => void
 };
 
 class App extends Component<Props> {
   componentDidMount() {
     this.props.fetchMe();
   }
+
+  logout = () => {
+    this.props.logout();
+  };
+
   render() {
     const { me, loading, error } = this.props;
 
@@ -39,7 +45,7 @@ class App extends Component<Props> {
       content = <Login />;
     } else {
       content = <Main me={me} />;
-      navigation = <PrimaryNavigation />;
+      navigation = <PrimaryNavigation onLogout={this.logout} />;
     }
 
     return (
@@ -53,7 +59,8 @@ class App extends Component<Props> {
 
 const mapDispatchToProps = (dispatch: ThunkDispatch) => {
   return {
-    fetchMe: () => dispatch(fetchMe())
+    fetchMe: () => dispatch(fetchMe()),
+    logout: () => dispatch(logout())
   };
 };
 

@@ -4,16 +4,16 @@ import { Route, Link } from "react-router-dom";
 
 type Props = {
   to: string,
-  activeOnlyWhenExact?: boolean,
-  children?: React.Node
+  label: string,
+  activeOnlyWhenExact?: boolean
 };
 
 class PrimaryNavigationLink extends React.Component<Props> {
   renderLink = (route: any) => {
-    const { to, children } = this.props;
+    const { to, label } = this.props;
     return (
       <li className={route.match ? "is-active" : ""}>
-        <Link to={to}>{children}</Link>
+        <Link to={to}>{label}</Link>
       </li>
     );
   };
