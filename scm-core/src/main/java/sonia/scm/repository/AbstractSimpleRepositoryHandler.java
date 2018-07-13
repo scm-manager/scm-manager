@@ -97,11 +97,7 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
       return repository;
     } catch (Exception ex) {
       if (directory.exists()) {
-        if (logger.isDebugEnabled()) {
-          logger.debug(
-            "delete repository directory {}, because of failed repository creation",
-            directory);
-        }
+        logger.warn("delete repository directory {}, because of failed repository creation", directory);
         try {
           fileSystem.destroy(directory);
         } catch (IOException e) {
@@ -137,8 +133,8 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
       }
       cleanupEmptyDirectories(config.getRepositoryDirectory(),
         directory.getParentFile());
-    } else if (logger.isWarnEnabled()) {
-      logger.warn("repository {} not found", repository);
+    } else {
+      logger.warn("repository {} not found", repository.getNamespaceAndName());
     }
   }
 
@@ -167,8 +163,7 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
   }
 
   @Override
-  public void modify(Repository repository)
-    throws RepositoryException {
+  public void modify(Repository repository) {
 
     // nothing to do
   }
@@ -274,14 +269,10 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
     File parent = directory.getParentFile();
 
     while ((parent != null) && !repositoryDirectory.equals(parent)) {
-      if (logger.isTraceEnabled()) {
-        logger.trace("check {} for existing repository", parent);
-      }
+      logger.trace("check {} for existing repository", parent);
 
       if (isRepository(parent)) {
-        if (logger.isErrorEnabled()) {
-          logger.error("parent path {} is a repository", parent);
-        }
+        logger.error("parent path {} is a repository", parent);
 
         StringBuilder buffer = new StringBuilder("repository with name ");
         buffer.append(directory.getName()).append(" already exists");
@@ -303,6 +294,7 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
         } else {
           logger.warn("could not delete directory {}", directory);
         }
+
       } else {
         logger.debug("could not remove non empty directory {}", directory);
       }
