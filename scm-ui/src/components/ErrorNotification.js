@@ -3,7 +3,7 @@ import React from "react";
 import Notification from "./Notification";
 
 type Props = {
-  error: Error
+  error?: Error
 };
 
 class ErrorNotification extends React.Component<Props> {

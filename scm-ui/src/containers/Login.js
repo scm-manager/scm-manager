@@ -1,5 +1,6 @@
 //@flow
 import React from "react";
+import { Redirect, withRouter } from "react-router-dom";
 import injectSheet from "react-jss";
 import { login } from "../modules/auth";
 import { connect } from "react-redux";
@@ -30,9 +31,15 @@ const styles = {
 };
 
 type Props = {
-  loading: boolean,
-  error: Error,
+  authenticated?: boolean,
+  loading?: boolean,
+  error?: Error,
+
   classes: any,
+
+  from: any,
+  location: any,
+
   login: (username: string, password: string) => void
 };
 
@@ -70,8 +77,17 @@ class Login extends React.Component<Props, State> {
     return !this.isValid();
   }
 
+  renderRedirect = () => {
+    const { from } = this.props.location.state || { from: { pathname: "/" } };
+    return <Redirect to={from} />;
+  };
+
   render() {
-    const { classes, loading, error } = this.props;
+    const { authenticated, loading, error, classes } = this.props;
+
+    if (authenticated) {
+      return this.renderRedirect();
+    }
 
     return (
       <section className="hero has-background-light">
@@ -117,7 +133,7 @@ class Login extends React.Component<Props, State> {
 }
 
 const mapStateToProps = state => {
-  return state.login || {};
+  return state.auth.login || {};
 };
 
 const mapDispatchToProps = dispatch => {
@@ -133,4 +149,4 @@ const StyledLogin = injectSheet(styles)(
     mapDispatchToProps
   )(Login)
 );
-export default StyledLogin;
+export default withRouter(StyledLogin);

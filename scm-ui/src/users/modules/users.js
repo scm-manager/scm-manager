@@ -1,5 +1,5 @@
 // @flow
-import { apiClient, PAGE_NOT_FOUND_ERROR } from "../../apiclient";
+import { apiClient, NOT_FOUND_ERROR } from "../../apiclient";
 import type { User } from "../types/User";
 import { ThunkDispatch } from "redux-thunk";
 
@@ -61,7 +61,7 @@ export function fetchUsers() {
         dispatch(fetchUsersSuccess(data));
       })
       .catch(err => {
-        if (err === PAGE_NOT_FOUND_ERROR) {
+        if (err === NOT_FOUND_ERROR) {
           dispatch(usersNotFound(USERS_URL));
         } else {
           dispatch(failedToFetchUsers(USERS_URL, err));

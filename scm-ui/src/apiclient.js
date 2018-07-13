@@ -3,8 +3,8 @@
 // get api base url from environment
 const apiUrl = process.env.API_URL || process.env.PUBLIC_URL || "/scm";
 
-export const PAGE_NOT_FOUND_ERROR = Error("page not found");
-export const NOT_AUTHENTICATED_ERROR = Error("not authenticated");
+export const NOT_FOUND_ERROR = Error("not found");
+export const UNAUTHORIZED_ERROR = Error("unauthorized");
 
 const fetchOptions: RequestOptions = {
   credentials: "same-origin",
@@ -16,10 +16,10 @@ const fetchOptions: RequestOptions = {
 function handleStatusCode(response: Response) {
   if (!response.ok) {
     if (response.status === 401) {
-      throw NOT_AUTHENTICATED_ERROR;
+      throw UNAUTHORIZED_ERROR;
     }
     if (response.status === 404) {
-      throw PAGE_NOT_FOUND_ERROR;
+      throw NOT_FOUND_ERROR;
     }
     throw new Error("server returned status code " + response.status);
   }

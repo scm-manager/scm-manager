@@ -22,7 +22,6 @@ class SubmitButton extends React.Component<Props> {
       <div className="field">
         <div className="control">
           <button
-            type="submit"
             disabled={disabled}
             className={classNames(
               "button",

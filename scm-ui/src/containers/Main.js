@@ -5,26 +5,36 @@ import { Route, withRouter } from "react-router";
 
 import Repositories from "../repositories/containers/Repositories";
 import Users from "../users/containers/Users";
+import Login from "../containers/Login";
+import Logout from "../containers/Logout";
 
 import { Switch } from "react-router-dom";
-import Footer from "../components/Footer";
-
-import type { Me } from "../types/me";
+import ProtectedRoute from "../components/ProtectedRoute";
 
 type Props = {
-  me: Me
+  authenticated?: boolean
 };
 
 class Main extends React.Component<Props> {
   render() {
-    const { me } = this.props;
+    const { authenticated } = this.props;
     return (
       <div>
         <Switch>
-          <Route exact path="/" component={Repositories} />
-          <Route path="/users" component={Users} />
+          <ProtectedRoute
+            exact
+            path="/"
+            component={Repositories}
+            authenticated={authenticated}
+          />
+          <Route exact path="/login" component={Login} />
+          <Route path="/logout" component={Logout} />
+          <ProtectedRoute
+            path="/users"
+            component={Users}
+            authenticated={authenticated}
+          />
         </Switch>
-        <Footer me={me} />
       </div>
     );
   }

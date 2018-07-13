@@ -1,11 +1,8 @@
 //@flow
 import React from "react";
 import PrimaryNavigationLink from "./PrimaryNavigationLink";
-import PrimaryNavigationAction from "./PrimaryNavigationAction";
 
-type Props = {
-  onLogout: () => void
-};
+type Props = {};
 
 class PrimaryNavigation extends React.Component<Props> {
   render() {
@@ -13,10 +10,7 @@ class PrimaryNavigation extends React.Component<Props> {
       <nav className="tabs is-boxed">
         <ul>
           <PrimaryNavigationLink to="/users" label="Users" />
-          <PrimaryNavigationAction
-            onClick={this.props.onLogout}
-            label="Logout"
-          />
+          <PrimaryNavigationLink to="/logout" label="Logout" />
         </ul>
       </nav>
     );

@@ -1,26 +1,23 @@
 import React, { Component } from "react";
-import type { ThunkDispatch } from "redux-thunk";
 import Main from "./Main";
-import Login from "./Login";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { fetchMe } from "../modules/me";
-import { logout } from "../modules/auth";
+import { fetchMe } from "../modules/auth";
 
 import "./App.css";
 import "../components/ConfirmAlert.css";
 import Header from "../components/Header";
 import PrimaryNavigation from "../components/PrimaryNavigation";
 import Loading from "../components/Loading";
-import ErrorNotification from "../components/ErrorNotification";
 import ErrorPage from "../components/ErrorPage";
+import Footer from "../components/Footer";
 
 type Props = {
   me: any,
   error: Error,
   loading: boolean,
-  fetchMe: () => void,
-  logout: () => void
+  authenticated?: boolean,
+  fetchMe: () => void
 };
 
 class App extends Component<Props> {
@@ -28,20 +25,15 @@ class App extends Component<Props> {
     this.props.fetchMe();
   }
 
-  logout = () => {
-    this.props.logout();
-  };
-
   render() {
-    const { me, loading, error } = this.props;
+    const { entry, loading, error, authenticated } = this.props;
 
     let content;
-    let navigation;
+    const navigation = authenticated ? <PrimaryNavigation /> : "";
 
     if (loading) {
       content = <Loading />;
     } else if (error) {
-      // TODO add error page instead of plain notification
       content = (
         <ErrorPage
           title="Error"
@@ -49,31 +41,31 @@ class App extends Component<Props> {
           error={error}
         />
       );
-    } else if (!me) {
-      content = <Login />;
     } else {
-      content = <Main me={me} />;
-      navigation = <PrimaryNavigation onLogout={this.logout} />;
+      content = <Main authenticated={authenticated} />;
     }
-
     return (
       <div className="App">
         <Header>{navigation}</Header>
         {content}
+        <Footer me={entry} />
       </div>
     );
   }
 }
 
-const mapDispatchToProps = (dispatch: ThunkDispatch) => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
-    fetchMe: () => dispatch(fetchMe()),
-    logout: () => dispatch(logout())
+    fetchMe: () => dispatch(fetchMe())
   };
 };
 
 const mapStateToProps = state => {
-  return state.me || {};
+  let mapped = state.auth.me || {};
+  if (state.auth.login) {
+    mapped.authenticated = state.auth.login.authenticated;
+  }
+  return mapped;
 };
 
 export default withRouter(
