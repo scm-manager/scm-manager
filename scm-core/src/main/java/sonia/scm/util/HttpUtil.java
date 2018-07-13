@@ -82,9 +82,9 @@ public final class HttpUtil
 
   /**
    * Name of bearer authentication cookie.
-   * 
+   *
    * TODO find a better place
-   * 
+   *
    * @since 2.0.0
    */
   public static final String COOKIE_BEARER_AUTHENTICATION = "X-Bearer-Token";
@@ -97,7 +97,7 @@ public final class HttpUtil
    * @since 2.0.0
    */
   public static final String HEADER_AUTHORIZATION = "Authorization";
-  
+
   /**
    * content-length header
    * @since 1.46
@@ -248,6 +248,14 @@ public final class HttpUtil
 
   //~--- methods --------------------------------------------------------------
 
+  /**
+   * Joins all path elements together separated by {@code {@link #SEPARATOR_PATH}}.
+   *
+   * @param pathElements path elements
+   *
+   * @return concatenated path
+   * @since 2.0.0
+   */
   public static String concatenate(String... pathElements) {
     return Arrays.stream(pathElements).reduce(HttpUtil::append).orElse("");
   }

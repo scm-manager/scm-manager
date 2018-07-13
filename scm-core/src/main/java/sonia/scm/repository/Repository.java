@@ -59,7 +59,7 @@ import java.util.List;
  * @author Sebastian Sdorra
  */
 @StaticPermissions(
-  value = "repository", 
+  value = "repository",
   permissions = {"read", "write", "modify", "delete", "healthCheck"}
 )
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -356,9 +356,7 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
    * @since 1.17
    */
   public String createUrl(String baseUrl) {
-    String url = HttpUtil.append(baseUrl, type);
-
-    return HttpUtil.concatenate(url, namespace, name);
+    return HttpUtil.concatenate(baseUrl, type, namespace, name);
   }
 
   /**
