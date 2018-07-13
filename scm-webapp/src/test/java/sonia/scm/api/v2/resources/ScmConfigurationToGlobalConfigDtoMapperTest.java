@@ -6,14 +6,11 @@ import org.apache.shiro.util.ThreadContext;
 import org.apache.shiro.util.ThreadState;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Answers;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.security.Role;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -24,8 +21,9 @@ import static sonia.scm.api.v2.resources.GlobalConfigResourceTest.createConfigur
 
 public class ScmConfigurationToGlobalConfigDtoMapperTest {
 
-  @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-  private ResourceLinks resourceLinks;
+  private URI baseUri =  URI.create("http://example.com/base/");
+  @SuppressWarnings("unused") // Is injected
+  private ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
 
   @InjectMocks
   private ScmConfigurationToGlobalConfigDtoMapperImpl mapper;
@@ -36,12 +34,10 @@ public class ScmConfigurationToGlobalConfigDtoMapperTest {
   private URI expectedBaseUri;
 
   @Before
-  public void init() throws URISyntaxException {
+  public void init() {
     initMocks(this);
-    URI baseUri = new URI("http://example.com/base/");
     expectedBaseUri = baseUri.resolve(GlobalConfigResource.GLOBAL_CONFIG_PATH_V2);
     subjectThreadState.bind();
-    ResourceLinksMock.initMock(resourceLinks, baseUri);
     ThreadContext.bind(subject);
   }
 

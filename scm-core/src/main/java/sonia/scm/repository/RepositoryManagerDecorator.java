@@ -38,13 +38,11 @@ package sonia.scm.repository;
 import sonia.scm.ManagerDecorator;
 import sonia.scm.Type;
 
-//~--- JDK imports ------------------------------------------------------------
-
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-
 import java.util.Collection;
 
-import javax.servlet.http.HttpServletRequest;
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Decorator for {@link RepositoryManager}.
@@ -92,19 +90,10 @@ public class RepositoryManagerDecorator
 
   //~--- get methods ----------------------------------------------------------
 
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @param type
-   * @param name
-   *
-   * @return
-   */
   @Override
-  public Repository get(String type, String name)
+  public Repository get(String namespace, String name)
   {
-    return decorated.get(type, name);
+    return decorated.get(namespace, name);
   }
 
   /**

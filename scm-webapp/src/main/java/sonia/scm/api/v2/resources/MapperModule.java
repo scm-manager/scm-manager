@@ -18,6 +18,9 @@ public class MapperModule extends AbstractModule {
     bind(ScmConfigurationToGlobalConfigDtoMapper.class).to(Mappers.getMapper(ScmConfigurationToGlobalConfigDtoMapper.class).getClass());
     bind(GlobalConfigDtoToScmConfigurationMapper.class).to(Mappers.getMapper(GlobalConfigDtoToScmConfigurationMapper.class).getClass());
 
+    bind(RepositoryToRepositoryDtoMapper.class).to(Mappers.getMapper(RepositoryToRepositoryDtoMapper.class).getClass());
+    bind(RepositoryDtoToRepositoryMapper.class).to(Mappers.getMapper(RepositoryDtoToRepositoryMapper.class).getClass());
+
     bind(UriInfoStore.class).in(ServletScopes.REQUEST);
   }
 }

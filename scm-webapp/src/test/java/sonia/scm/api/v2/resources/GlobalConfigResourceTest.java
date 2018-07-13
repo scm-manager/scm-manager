@@ -10,9 +10,7 @@ import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.mockito.Answers;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.web.VndMediaType;
 
@@ -40,8 +38,9 @@ public class GlobalConfigResourceTest {
 
   private Dispatcher dispatcher = MockDispatcherFactory.createDispatcher();
 
-  @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-  private ResourceLinks resourceLinks;
+  private final URI baseUri = URI.create("/");
+  @SuppressWarnings("unused") // Is injected
+  private ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
 
   @InjectMocks
   private GlobalConfigDtoToScmConfigurationMapperImpl dtoToConfigMapper;
@@ -49,10 +48,8 @@ public class GlobalConfigResourceTest {
   private ScmConfigurationToGlobalConfigDtoMapperImpl configToDtoMapper;
 
   @Before
-  public void prepareEnvironment() throws IOException {
+  public void prepareEnvironment() {
     initMocks(this);
-
-    ResourceLinksMock.initMock(resourceLinks, URI.create("/"));
 
     GlobalConfigResource globalConfigResource = new GlobalConfigResource(dtoToConfigMapper,
       configToDtoMapper, createConfiguration());

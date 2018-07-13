@@ -40,24 +40,17 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.Files;
 import com.google.inject.Inject;
-
+import com.webcohesion.enunciate.metadata.rs.ResponseCode;
+import com.webcohesion.enunciate.metadata.rs.ResponseHeader;
+import com.webcohesion.enunciate.metadata.rs.StatusCodes;
+import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import org.apache.shiro.SecurityUtils;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.NotSupportedFeatuerException;
 import sonia.scm.Type;
 import sonia.scm.api.rest.RestActionUploadResult;
-import sonia.scm.repository.AdvancedImportHandler;
-import sonia.scm.repository.ImportHandler;
-import sonia.scm.repository.ImportResult;
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryAlreadyExistsException;
-import sonia.scm.repository.RepositoryException;
-import sonia.scm.repository.RepositoryHandler;
-import sonia.scm.repository.RepositoryManager;
-import sonia.scm.repository.RepositoryType;
+import sonia.scm.repository.*;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
@@ -65,45 +58,24 @@ import sonia.scm.repository.api.UnbundleCommandBuilder;
 import sonia.scm.security.Role;
 import sonia.scm.util.IOUtil;
 
-import static com.google.common.base.Preconditions.*;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import com.webcohesion.enunciate.metadata.rs.ResponseCode;
-import com.webcohesion.enunciate.metadata.rs.ResponseHeader;
-import com.webcohesion.enunciate.metadata.rs.StatusCodes;
-import com.webcohesion.enunciate.metadata.rs.TypeHint;
-
+import javax.ws.rs.*;
+import javax.ws.rs.core.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-
 import java.net.URI;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.GenericEntity;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Rest resource for importing repositories.
@@ -564,10 +536,6 @@ public class RepositoryImportResource
     {
       handleGenericCreationFailure(ex, type, name);
     }
-    catch (IOException ex)
-    {
-      handleGenericCreationFailure(ex, type, name);
-    }
 
     return repository;
   }
@@ -715,10 +683,6 @@ public class RepositoryImportResource
     try
     {
       manager.delete(repository);
-    }
-    catch (IOException e)
-    {
-      logger.error("can not delete repository", e);
     }
     catch (RepositoryException e)
     {

@@ -37,37 +37,26 @@ package sonia.scm.repository.api;
 
 import com.github.legman.ReferenceType;
 import com.github.legman.Subscribe;
-
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.HandlerEventType;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.config.ScmConfiguration;
-import sonia.scm.repository.PostReceiveRepositoryHookEvent;
-import sonia.scm.repository.PreProcessorUtil;
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryCacheKeyPredicate;
-import sonia.scm.repository.RepositoryEvent;
-import sonia.scm.repository.RepositoryManager;
-import sonia.scm.repository.RepositoryNotFoundException;
-import sonia.scm.repository.RepositoryPermissions;
+import sonia.scm.event.ScmEventBus;
+import sonia.scm.repository.*;
 import sonia.scm.repository.spi.RepositoryServiceProvider;
 import sonia.scm.repository.spi.RepositoryServiceResolver;
 import sonia.scm.security.ScmSecurityException;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.Set;
-import sonia.scm.event.ScmEventBus;
-import sonia.scm.repository.ClearRepositoryCacheEvent;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * The {@link RepositoryServiceFactory} is the entrypoint of the repository api.
@@ -179,8 +168,7 @@ public final class RepositoryServiceFactory
 
     if (repository == null)
     {
-      throw new RepositoryNotFoundException(
-        "could not find a repository with id ".concat(repositoryId));
+      throw new RepositoryNotFoundException(repositoryId);
     }
 
     return create(repository);

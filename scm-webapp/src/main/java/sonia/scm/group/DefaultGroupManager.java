@@ -43,6 +43,7 @@ import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.HandlerEventType;
+import sonia.scm.ManagerDaoAdapter;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.TransformFilter;
 import sonia.scm.search.SearchRequest;
@@ -79,6 +80,10 @@ public class DefaultGroupManager extends AbstractGroupManager
   public DefaultGroupManager(GroupDAO groupDAO)
   {
     this.groupDAO = groupDAO;
+    this.managerDaoAdapter = new ManagerDaoAdapter<>(
+      groupDAO,
+      GroupNotFoundException::new,
+      GroupAlreadyExistsException::new);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -96,78 +101,34 @@ public class DefaultGroupManager extends AbstractGroupManager
     // do nothing
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param group
-   *
-   * @throws GroupException
-   * @throws IOException
-   */
   @Override
-  public void create(Group group) throws GroupException, IOException
-  {
+  public Group create(Group group) throws GroupException {
     String type = group.getType();
-
-    if (Util.isEmpty(type))
-    {
+    if (Util.isEmpty(type)) {
       group.setType(groupDAO.getType());
     }
 
-    String name = group.getName();
-    
-    if (logger.isInfoEnabled())
-    {
-      logger.info("create group {} of type {}", name,
-        group.getType());
-    }
-
-    GroupPermissions.create().check();
-    
-    if (groupDAO.contains(name))
-    {
-      throw new GroupAlreadyExistsException(name.concat(" group already exists"));
-    }
+    logger.info("create group {} of type {}", group.getName(), group.getType());
 
     removeDuplicateMembers(group);
-    group.setCreationDate(System.currentTimeMillis());
-    fireEvent(HandlerEventType.BEFORE_CREATE, group);
-    groupDAO.add(group);
-    fireEvent(HandlerEventType.CREATE, group);
+
+    return managerDaoAdapter.create(
+      group,
+      GroupPermissions::create,
+      newGroup -> fireEvent(HandlerEventType.BEFORE_CREATE, newGroup),
+      newGroup -> fireEvent(HandlerEventType.CREATE, newGroup)
+    );
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param group
-   *
-   * @throws GroupException
-   * @throws IOException
-   */
   @Override
-  public void delete(Group group) throws GroupException, IOException
-  {
-    if (logger.isInfoEnabled())
-    {
-      logger.info("delete group {} of type {}", group.getName(),
-        group.getType());
-    }
-
-    String name = group.getName();
-    GroupPermissions.delete().check(name);
-
-    if (groupDAO.contains(name))
-    {
-      fireEvent(HandlerEventType.BEFORE_DELETE, group);
-      groupDAO.delete(group);
-      fireEvent(HandlerEventType.DELETE, group);
-    }
-    else
-    {
-      throw new GroupNotFoundException("user does not exists");
-    }
+  public void delete(Group group) throws GroupException {
+    logger.info("delete group {} of type {}", group.getName(), group.getType());
+    managerDaoAdapter.delete(
+      group,
+      () -> GroupPermissions.delete(group.getName()),
+      toDelete -> fireEvent(HandlerEventType.BEFORE_DELETE, toDelete),
+      toDelete -> fireEvent(HandlerEventType.DELETE, toDelete)
+    );
   }
 
   /**
@@ -189,31 +150,18 @@ public class DefaultGroupManager extends AbstractGroupManager
    * @throws IOException
    */
   @Override
-  public void modify(Group group) throws GroupException, IOException
-  {
-    if (logger.isInfoEnabled())
-    {
-      logger.info("modify group {} of type {}", group.getName(),
-        group.getType());
-    }
+  public void modify(Group group) throws GroupException {
+    logger.info("modify group {} of type {}", group.getName(), group.getType());
 
-    String name = group.getName();
-    GroupPermissions.modify().check(name);
-
-    Group notModified = groupDAO.get(name);
-    if (notModified != null)
-    {
-      removeDuplicateMembers(group);
-      fireEvent(HandlerEventType.BEFORE_MODIFY, group, notModified);
-      group.setLastModified(System.currentTimeMillis());
-      group.setCreationDate(notModified.getCreationDate());
-      groupDAO.modify(group);
-      fireEvent(HandlerEventType.MODIFY, group, notModified);
-    }
-    else
-    {
-      throw new GroupNotFoundException("group does not exists");
-    }
+    managerDaoAdapter.modify(
+      group,
+      GroupPermissions::modify,
+      notModified -> {
+        removeDuplicateMembers(group);
+        fireEvent(HandlerEventType.BEFORE_MODIFY, group, notModified);
+      },
+      notModified -> fireEvent(HandlerEventType.MODIFY, group, notModified)
+    );
   }
 
   /**
@@ -226,7 +174,7 @@ public class DefaultGroupManager extends AbstractGroupManager
    * @throws IOException
    */
   @Override
-  public void refresh(Group group) throws GroupException, IOException
+  public void refresh(Group group) throws GroupException
   {
     String name = group.getName();
     if (logger.isInfoEnabled())
@@ -239,7 +187,7 @@ public class DefaultGroupManager extends AbstractGroupManager
 
     if (fresh == null)
     {
-      throw new GroupNotFoundException("group does not exists");
+      throw new GroupNotFoundException(group);
     }
 
     fresh.copyProperties(group);
@@ -452,4 +400,5 @@ public class DefaultGroupManager extends AbstractGroupManager
 
   /** Field description */
   private GroupDAO groupDAO;
+  private final ManagerDaoAdapter<Group, GroupException> managerDaoAdapter;
 }

@@ -85,6 +85,54 @@ public class ResourceLinksTest {
   }
 
   @Test
+  public void shouldCreateCorrectRepositorySelfUrl() {
+    String url = resourceLinks.repository().self("space", "repo");
+    assertEquals(BASE_URL + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo", url);
+  }
+
+  @Test
+  public void shouldCreateCorrectRepositoryDeleteUrl() {
+    String url = resourceLinks.repository().delete("space", "repo");
+    assertEquals(BASE_URL + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo", url);
+  }
+
+  @Test
+  public void shouldCreateCorrectRepositoryUpdateUrl() {
+    String url = resourceLinks.repository().update("space", "repo");
+    assertEquals(BASE_URL + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo", url);
+  }
+
+  @Test
+  public void shouldCreateCorrectTagCollectionUrl() {
+    String url = resourceLinks.tagCollection().self("space", "repo");
+    assertEquals(BASE_URL + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/tags/", url);
+  }
+
+  @Test
+  public void shouldCreateCorrectBranchCollectionUrl() {
+    String url = resourceLinks.branchCollection().self("space", "repo");
+    assertEquals(BASE_URL + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/branches/", url);
+  }
+
+  @Test
+  public void shouldCreateCorrectChangesetCollectionUrl() {
+    String url = resourceLinks.changesetCollection().self("space", "repo");
+    assertEquals(BASE_URL + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/changesets/", url);
+  }
+
+  @Test
+  public void shouldCreateCorrectSourceCollectionUrl() {
+    String url = resourceLinks.sourceCollection().self("space", "repo");
+    assertEquals(BASE_URL + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/sources/", url);
+  }
+
+  @Test
+  public void shouldCreateCorrectPermissionCollectionUrl() {
+    String url = resourceLinks.sourceCollection().self("space", "repo");
+    assertEquals(BASE_URL + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/sources/", url);
+  }
+
+  @Test
   public void shouldCreateCorrectGlobalConfigSelfUrl() {
     String url = resourceLinks.globalConfig().self();
     assertEquals(BASE_URL + GlobalConfigResource.GLOBAL_CONFIG_PATH_V2, url);

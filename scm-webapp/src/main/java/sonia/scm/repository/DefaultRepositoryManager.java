@@ -42,29 +42,14 @@ import com.google.inject.Singleton;
 import org.apache.shiro.concurrent.SubjectAwareExecutorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.ArgumentIsInvalidException;
-import sonia.scm.ConfigurationException;
-import sonia.scm.HandlerEventType;
-import sonia.scm.SCMContextProvider;
-import sonia.scm.Type;
+import sonia.scm.*;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.security.KeyGenerator;
-import sonia.scm.util.AssertUtil;
-import sonia.scm.util.CollectionAppender;
-import sonia.scm.util.HttpUtil;
-import sonia.scm.util.IOUtil;
-import sonia.scm.util.Util;
+import sonia.scm.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -90,6 +75,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
   private final Set<Type> types;
   private RepositoryMatcher repositoryMatcher;
   private NamespaceStrategy namespaceStrategy;
+  private final ManagerDaoAdapter<Repository, RepositoryException> managerDaoAdapter;
 
 
   @Inject
@@ -116,6 +102,10 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
     for (RepositoryHandler handler : handlerSet) {
       addHandler(contextProvider, handler);
     }
+    managerDaoAdapter = new ManagerDaoAdapter<>(
+      repositoryDAO,
+      RepositoryNotFoundException::new,
+      RepositoryAlreadyExistsException::create);
   }
 
 
@@ -128,89 +118,47 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   * @param initRepository
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
-  public void create(Repository repository, boolean initRepository)
-    throws RepositoryException, IOException {
-    logger.info("create repository {} of type {}", repository.getName(),
-      repository.getType());
+  @Override
+  public Repository create(Repository repository) throws RepositoryException {
+    return create(repository, true);
+  }
 
-    RepositoryPermissions.create().check();
-    AssertUtil.assertIsValid(repository);
-
-    if (repositoryDAO.contains(repository)) {
-      throw RepositoryAlreadyExistsException.create(repository);
-    }
-
+  public Repository create(Repository repository, boolean initRepository) throws RepositoryException {
     repository.setId(keyGenerator.createKey());
-    repository.setCreationDate(System.currentTimeMillis());
     repository.setNamespace(namespaceStrategy.getNamespace());
 
-    if (initRepository) {
-      getHandler(repository).create(repository);
-    }
+    logger.info("create repository {} of type {} in namespace {}", repository.getName(), repository.getType(), repository.getNamespace());
 
-    fireEvent(HandlerEventType.BEFORE_CREATE, repository);
-    repositoryDAO.add(repository);
-    fireEvent(HandlerEventType.CREATE, repository);
+    return managerDaoAdapter.create(
+      repository,
+      RepositoryPermissions::create,
+      newRepository -> {
+        if (initRepository) {
+          getHandler(newRepository).create(newRepository);
+        }
+        fireEvent(HandlerEventType.BEFORE_CREATE, newRepository);
+      },
+      newRepository -> fireEvent(HandlerEventType.CREATE, newRepository)
+    );
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Override
-  public void create(Repository repository)
-    throws RepositoryException, IOException {
-    create(repository, true);
+  public void delete(Repository repository) throws RepositoryException {
+    logger.info("delete repository {} of type {}", repository.getName(), repository.getType());
+    managerDaoAdapter.delete(
+      repository,
+      () -> RepositoryPermissions.delete(repository),
+      this::preDelete,
+      toDelete -> fireEvent(HandlerEventType.DELETE, toDelete)
+    );
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
-  @Override
-  public void delete(Repository repository)
-    throws RepositoryException, IOException {
-    if (logger.isInfoEnabled()) {
-      logger.info("delete repository {} of type {}", repository.getName(),
-        repository.getType());
+  private void preDelete(Repository toDelete) throws RepositoryException {
+    if (configuration.isEnableRepositoryArchive() && !toDelete.isArchived()) {
+      throw new RepositoryIsNotArchivedException("Repository could not deleted, because it is not archived.");
     }
-
-    RepositoryPermissions.delete(repository).check();
-
-    if (configuration.isEnableRepositoryArchive() && !repository.isArchived()) {
-      throw new RepositoryIsNotArchivedException(
-        "Repository could not deleted, because it is not archived.");
-    }
-
-    if (repositoryDAO.contains(repository)) {
-      fireEvent(HandlerEventType.BEFORE_DELETE, repository);
-      getHandler(repository).delete(repository);
-      repositoryDAO.delete(repository);
-      fireEvent(HandlerEventType.DELETE, repository);
-    } else {
-      throw new RepositoryNotFoundException(
-        "repository ".concat(repository.getName()).concat(" not found"));
-    }
+    fireEvent(HandlerEventType.BEFORE_DELETE, toDelete);
+    getHandler(toDelete).delete(toDelete);
   }
 
   /**
@@ -248,29 +196,18 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
    * @throws RepositoryException
    */
   @Override
-  public void modify(Repository repository)
-    throws RepositoryException, IOException {
-    if (logger.isInfoEnabled()) {
-      logger.info("modify repository {} of type {}", repository.getName(),
-        repository.getType());
-    }
+  public void modify(Repository repository) throws RepositoryException {
+    logger.info("modify repository {} of type {}", repository.getName(), repository.getType());
 
-    AssertUtil.assertIsValid(repository);
-
-    Repository oldRepository = repositoryDAO.get(repository.getType(),
-      repository.getName());
-
-    if (oldRepository != null) {
-      RepositoryPermissions.modify(oldRepository).check();
-      fireEvent(HandlerEventType.BEFORE_MODIFY, repository, oldRepository);
-      repository.setLastModified(System.currentTimeMillis());
-      getHandler(repository).modify(repository);
-      repositoryDAO.modify(repository);
-      fireEvent(HandlerEventType.MODIFY, repository, oldRepository);
-    } else {
-      throw new RepositoryNotFoundException(
-        "repository ".concat(repository.getName()).concat(" not found"));
-    }
+    managerDaoAdapter.modify(
+      repository,
+      RepositoryPermissions::modify,
+      notModified -> {
+        fireEvent(HandlerEventType.BEFORE_MODIFY, repository, notModified);
+        getHandler(repository).modify(repository);
+      },
+      notModified -> fireEvent(HandlerEventType.MODIFY, repository, notModified)
+    );
   }
 
   /**
@@ -284,7 +221,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
    */
   @Override
   public void refresh(Repository repository)
-    throws RepositoryException, IOException {
+    throws RepositoryException {
     AssertUtil.assertIsNotNull(repository);
     RepositoryPermissions.read(repository).check();
 
@@ -294,8 +231,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
     if (fresh != null) {
       fresh.copyProperties(repository);
     } else {
-      throw new RepositoryNotFoundException(
-        "repository ".concat(repository.getName()).concat(" not found"));
+      throw new RepositoryNotFoundException(repository);
     }
   }
 
@@ -636,5 +572,4 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
 
     return handler;
   }
-
 }

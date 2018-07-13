@@ -18,14 +18,14 @@ public class UserCollectionResource {
   private final UserCollectionToDtoMapper userCollectionToDtoMapper;
   private final ResourceLinks resourceLinks;
 
-  private final ResourceManagerAdapter<User, UserDto, UserException> adapter;
+  private final IdResourceManagerAdapter<User, UserDto, UserException> adapter;
 
   @Inject
   public UserCollectionResource(UserManager manager, UserDtoToUserMapper dtoToUserMapper,
     UserCollectionToDtoMapper userCollectionToDtoMapper, ResourceLinks resourceLinks) {
     this.dtoToUserMapper = dtoToUserMapper;
     this.userCollectionToDtoMapper = userCollectionToDtoMapper;
-    this.adapter = new ResourceManagerAdapter<>(manager);
+    this.adapter = new IdResourceManagerAdapter<>(manager, User.class);
     this.resourceLinks = resourceLinks;
   }
 
@@ -33,9 +33,10 @@ public class UserCollectionResource {
    * Returns all users for a given page number with a given page size (default page size is {@value DEFAULT_PAGE_SIZE}).
    *
    * <strong>Note:</strong> This method requires "user" privilege.
-   *  @param page     the number of the requested page
+   *
+   * @param page     the number of the requested page
    * @param pageSize the page size (default page size is {@value DEFAULT_PAGE_SIZE})
-   * @param sortBy   sort parameter
+   * @param sortBy   sort parameter (if empty - undefined sorting)
    * @param desc     sort direction desc or asc
    */
   @GET
@@ -44,6 +45,7 @@ public class UserCollectionResource {
   @TypeHint(UserDto[].class)
   @StatusCodes({
     @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 400, condition = "\"sortBy\" field unknown"),
     @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
     @ResponseCode(code = 403, condition = "not authorized, the current user does not have the \"user\" privilege"),
     @ResponseCode(code = 500, condition = "internal server error")

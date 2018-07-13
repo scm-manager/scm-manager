@@ -38,23 +38,20 @@ package sonia.scm.repository;
 import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
 import com.google.common.io.Resources;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.ConfigurationException;
 import sonia.scm.io.CommandResult;
 import sonia.scm.io.ExtendedCommand;
 import sonia.scm.io.FileSystem;
+import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.util.IOUtil;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
 import java.io.IOException;
-
 import java.net.URL;
-import sonia.scm.store.ConfigurationStoreFactory;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -108,8 +105,8 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
    * @throws RepositoryException
    */
   @Override
-  public void create(Repository repository)
-          throws RepositoryException, IOException
+  public Repository create(Repository repository)
+          throws RepositoryException
   {
     File directory = getDirectory(repository);
 
@@ -125,6 +122,7 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
       fileSystem.create(directory);
       create(repository, directory);
       postCreate(repository, directory);
+      return repository;
     }
     catch (Exception ex)
     {
@@ -137,11 +135,16 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
               directory);
         }
 
-        fileSystem.destroy(directory);
+        try {
+          fileSystem.destroy(directory);
+        } catch (IOException e) {
+          logger.error("could not delete directory after failed repository creation: {}", directory, e);
+        }
       }
 
-      Throwables.propagateIfPossible(ex, RepositoryException.class,
-                                     IOException.class);
+      Throwables.propagateIfPossible(ex, RepositoryException.class);
+      // This point will never be reached
+      return null;
     }
   }
 
@@ -173,14 +176,17 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
    * @throws RepositoryException
    */
   @Override
-  public void delete(Repository repository)
-          throws RepositoryException, IOException
+  public void delete(Repository repository) throws RepositoryException
   {
     File directory = getDirectory(repository);
 
     if (directory.exists())
     {
-      fileSystem.destroy(directory);
+      try {
+        fileSystem.destroy(directory);
+      } catch (IOException e) {
+        throw new RepositoryException("could not delete repository", e);
+      }
       cleanupEmptyDirectories(config.getRepositoryDirectory(),
                               directory.getParentFile());
     }
@@ -232,8 +238,7 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
    * @throws RepositoryException
    */
   @Override
-  public void modify(Repository repository)
-          throws RepositoryException, IOException
+  public void modify(Repository repository) throws RepositoryException
   {
 
     // nothing todo
