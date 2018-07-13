@@ -566,7 +566,7 @@
     <sonar.issue.ignore.multicriteria>e1</sonar.issue.ignore.multicriteria>
     <sonar.issue.ignore.multicriteria.e1.ruleKey>javascript:S3827</sonar.issue.ignore.multicriteria.e1.ruleKey>
     <sonar.issue.ignore.multicriteria.e1.resourceKey>**.js</sonar.issue.ignore.multicriteria.e1.resourceKey>
-    <sonar.exclusions>src/main/webapp/resources/extjs/**,src/main/webapp/resources/moment/**,src/main/webapp/resources/syntaxhighlighter/**</sonar.exclusions>
+    <sonar.exclusions>src/main/webapp**</sonar.exclusions>
   </properties>
 
   <profiles>
