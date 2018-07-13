@@ -1,18 +1,17 @@
 package sonia.scm.repository;
 
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
 import sonia.scm.plugin.Extension;
-import sonia.scm.user.User;
 
-
+/**
+ * The DefaultNamespaceStrategy returns the username of the currently logged in user as namespace.
+ * @since 2.0.0
+ */
 @Extension
 public class DefaultNamespaceStrategy implements NamespaceStrategy {
 
   @Override
   public String getNamespace() {
-    Subject subject = SecurityUtils.getSubject();
-    String displayName = subject.getPrincipals().oneByType(User.class).getName();
-    return displayName;
+    return SecurityUtils.getSubject().getPrincipal().toString();
   }
 }
