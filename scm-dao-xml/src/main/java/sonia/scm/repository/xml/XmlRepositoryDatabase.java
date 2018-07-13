@@ -63,25 +63,25 @@ public class XmlRepositoryDatabase implements XmlDatabase<Repository>
     lastModified = c;
   }
 
-  static String createKeyX(NamespaceAndName namespaceAndName)
+  static String createKey(NamespaceAndName namespaceAndName)
   {
     return namespaceAndName.getNamespace() + ":" + namespaceAndName.getName();
   }
 
-  static String createKeyX(Repository repository)
+  static String createKey(Repository repository)
   {
-    return createKeyX(repository.getNamespaceAndName());
+    return createKey(repository.getNamespaceAndName());
   }
 
   @Override
   public void add(Repository repository)
   {
-    repositoryMap.put(createKeyX(repository), repository);
+    repositoryMap.put(createKey(repository), repository);
   }
 
   public boolean contains(NamespaceAndName namespaceAndName)
   {
-    return repositoryMap.containsKey(createKeyX(namespaceAndName));
+    return repositoryMap.containsKey(createKey(namespaceAndName));
   }
 
   @Override
@@ -92,12 +92,12 @@ public class XmlRepositoryDatabase implements XmlDatabase<Repository>
 
   public boolean contains(Repository repository)
   {
-    return repositoryMap.containsKey(createKeyX(repository));
+    return repositoryMap.containsKey(createKey(repository));
   }
 
-  public void removeX(Repository repository)
+  public void remove(Repository repository)
   {
-    repositoryMap.remove(createKeyX(repository));
+    repositoryMap.remove(createKey(repository));
   }
 
   @Override
@@ -105,7 +105,7 @@ public class XmlRepositoryDatabase implements XmlDatabase<Repository>
   {
     Repository r = get(id);
 
-    removeX(r);
+    remove(r);
 
     return r;
   }
@@ -120,7 +120,7 @@ public class XmlRepositoryDatabase implements XmlDatabase<Repository>
 
   public Repository get(NamespaceAndName namespaceAndName)
   {
-    return repositoryMap.get(createKeyX(namespaceAndName));
+    return repositoryMap.get(createKey(namespaceAndName));
   }
 
   /**

@@ -47,47 +47,19 @@ import java.util.Map;
  *
  * @author Sebastian Sdorra
  */
-public class XmlRepositoryMapAdapter
-        extends XmlAdapter<XmlRepositoryList, Map<String, Repository>>
-{
+public class XmlRepositoryMapAdapter extends XmlAdapter<XmlRepositoryList, Map<String, Repository>> {
 
-  /**
-   * Method description
-   *
-   *
-   * @param repositoryMap
-   *
-   * @return
-   *
-   * @throws Exception
-   */
   @Override
-  public XmlRepositoryList marshal(Map<String, Repository> repositoryMap)
-          throws Exception
-  {
+  public XmlRepositoryList marshal(Map<String, Repository> repositoryMap) {
     return new XmlRepositoryList(repositoryMap);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param repositories
-   *
-   * @return
-   *
-   * @throws Exception
-   */
   @Override
-  public Map<String, Repository> unmarshal(XmlRepositoryList repositories)
-          throws Exception
-  {
-    Map<String, Repository> repositoryMap = new LinkedHashMap<String,
-                                              Repository>();
+  public Map<String, Repository> unmarshal(XmlRepositoryList repositories) {
+    Map<String, Repository> repositoryMap = new LinkedHashMap<>();
 
-    for (Repository repository : repositories)
-    {
-      repositoryMap.put(XmlRepositoryDatabase.createKeyX(repository),
+    for (Repository repository : repositories) {
+      repositoryMap.put(XmlRepositoryDatabase.createKey(repository),
                         repository);
     }
 
