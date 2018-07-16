@@ -162,20 +162,17 @@ public class HgHookCallbackServlet extends HttpServlet
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param response
-   *
-   * @throws IOException
-   * @throws ServletException
-   */
   @Override
-  protected void doPost(HttpServletRequest request,
-    HttpServletResponse response)
-    throws ServletException, IOException
+  protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    try {
+      handlePostRequest(request, response);
+    }  catch (IOException ex) {
+      logger.warn("error in hook callback execution, sending internal server error", ex);
+      response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  private void handlePostRequest(HttpServletRequest request, HttpServletResponse response) throws IOException
   {
     String strippedURI = HttpUtil.getStrippedURI(request);
     Matcher m = REGEX_URL.matcher(strippedURI);
