@@ -36,11 +36,9 @@ node() { // No specific label
 
       stage('SonarQube') {
 
-        def sonarQube = new SonarQube(this, 'sonarcloud.io')
-
         analyzeWith(mvn)
 
-        if (!sonarQube.waitForQualityGateWebhookToBeCalled()) {
+        if (!waitForQualityGateWebhookToBeCalled()) {
           currentBuild.result = 'UNSTABLE'
         }
       }
@@ -94,6 +92,17 @@ void analyzeWith(Maven mvn) {
       }
     }
     mvn "${mvnArgs}"
+  }
+}
+
+boolean waitForQualityGateWebhookToBeCalled() {
+
+  timeout(time: 2, unit: 'MINUTES') { // Needed when there is no webhook for example
+    def qGate = waitForQualityGate()
+    echo "SonarQube Quality Gate status: ${qGate.status}"
+    if (qGate.status != 'OK') {
+      return false
+    }
   }
 }
 
