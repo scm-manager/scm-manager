@@ -226,6 +226,23 @@
       </plugin>
 
       <plugin>
+        <groupId>com.github.legman</groupId>
+        <artifactId>legman-maven-plugin</artifactId>
+        <version>${legman.version}</version>
+        <configuration>
+          <fail>true</fail>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>process-classes</phase>
+            <goals>
+              <goal>guava-migration-check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.5.1</version>
@@ -513,7 +530,7 @@
     <guice.version>4.0</guice.version>
     
     <!-- event bus -->
-    <legman.version>1.2.0</legman.version>
+    <legman.version>1.3.0</legman.version>
     
     <!-- webserver -->
     <jetty.version>9.2.10.v20150310</jetty.version>
