@@ -177,8 +177,7 @@ public final class RepositoryServiceFactory
 
     if (repository == null)
     {
-      throw new RepositoryNotFoundException(
-        "could not find a repository with id ".concat(repositoryId));
+      throw new RepositoryNotFoundException(repositoryId);
     }
 
     return create(repository);

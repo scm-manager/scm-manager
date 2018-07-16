@@ -45,6 +45,7 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.ArgumentIsInvalidException;
 import sonia.scm.ConfigurationException;
 import sonia.scm.HandlerEventType;
+import sonia.scm.ManagerDaoAdapter;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.Type;
 import sonia.scm.config.ScmConfiguration;
@@ -90,6 +91,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
   private final Set<Type> types;
   private RepositoryMatcher repositoryMatcher;
   private NamespaceStrategy namespaceStrategy;
+  private final ManagerDaoAdapter<Repository, RepositoryException> managerDaoAdapter;
 
 
   @Inject
@@ -116,6 +118,10 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
     for (RepositoryHandler handler : handlerSet) {
       addHandler(contextProvider, handler);
     }
+    managerDaoAdapter = new ManagerDaoAdapter<>(
+      repositoryDAO,
+      RepositoryNotFoundException::new,
+      RepositoryAlreadyExistsException::create);
   }
 
 
@@ -128,64 +134,47 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
     }
   }
 
-  public Repository create(Repository repository, boolean initRepository)
-    throws RepositoryException {
-    logger.info("create repository {} of type {}", repository.getName(), repository.getType());
-
-    RepositoryPermissions.create().check();
-
-    repository.setNamespace(namespaceStrategy.getNamespace());
-    logger.info("setting namespace of new repository {} to {}", repository.getName(), repository.getNamespace());
-
-    AssertUtil.assertIsValid(repository);
-
-    if (repositoryDAO.contains(repository.getNamespaceAndName())) {
-      throw RepositoryAlreadyExistsException.create(repository);
-    }
-
-    repository.setId(keyGenerator.createKey());
-    repository.setCreationDate(System.currentTimeMillis());
-
-    if (initRepository) {
-      getHandler(repository).create(repository);
-    }
-
-    fireEvent(HandlerEventType.BEFORE_CREATE, repository);
-    repositoryDAO.add(repository);
-    fireEvent(HandlerEventType.CREATE, repository);
-    return repository;
-  }
-
   @Override
-  public Repository create(Repository repository)
-    throws RepositoryException {
+  public Repository create(Repository repository) throws RepositoryException {
     return create(repository, true);
   }
 
+  public Repository create(Repository repository, boolean initRepository) throws RepositoryException {
+    repository.setId(keyGenerator.createKey());
+    repository.setNamespace(namespaceStrategy.getNamespace());
+
+    logger.info("create repository {} of type {} in namespace {}", repository.getName(), repository.getType(), repository.getNamespace());
+
+    return managerDaoAdapter.create(
+      repository,
+      RepositoryPermissions::create,
+      newRepository -> {
+        if (initRepository) {
+          getHandler(newRepository).create(newRepository);
+        }
+        fireEvent(HandlerEventType.BEFORE_CREATE, newRepository);
+      },
+      newRepository -> fireEvent(HandlerEventType.CREATE, newRepository)
+    );
+  }
+
   @Override
-  public void delete(Repository repository)
-    throws RepositoryException {
-    if (logger.isInfoEnabled()) {
-      logger.info("delete repository {} of type {}", repository.getName(),
-        repository.getType());
-    }
+  public void delete(Repository repository) throws RepositoryException {
+    logger.info("delete repository {} of type {}", repository.getName(), repository.getType());
+    managerDaoAdapter.delete(
+      repository,
+      () -> RepositoryPermissions.delete(repository),
+      this::preDelete,
+      toDelete -> fireEvent(HandlerEventType.DELETE, toDelete)
+    );
+  }
 
-    RepositoryPermissions.delete(repository).check();
-
-    if (configuration.isEnableRepositoryArchive() && !repository.isArchived()) {
-      throw new RepositoryIsNotArchivedException(
-        "Repository could not deleted, because it is not archived.");
+  private void preDelete(Repository toDelete) throws RepositoryException {
+    if (configuration.isEnableRepositoryArchive() && !toDelete.isArchived()) {
+      throw new RepositoryIsNotArchivedException("Repository could not deleted, because it is not archived.");
     }
-
-    if (repositoryDAO.contains(repository)) {
-      fireEvent(HandlerEventType.BEFORE_DELETE, repository);
-      getHandler(repository).delete(repository);
-      repositoryDAO.delete(repository);
-      fireEvent(HandlerEventType.DELETE, repository);
-    } else {
-      throw new RepositoryNotFoundException(
-        "repository ".concat(repository.getName()).concat(" not found"));
-    }
+    fireEvent(HandlerEventType.BEFORE_DELETE, toDelete);
+    getHandler(toDelete).delete(toDelete);
   }
 
   @Override
@@ -199,29 +188,18 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
   }
 
   @Override
-  public void modify(Repository repository)
-    throws RepositoryException {
-    if (logger.isInfoEnabled()) {
-      logger.info("modify repository {} of type {}", repository.getName(),
-        repository.getType());
-    }
+  public void modify(Repository repository) throws RepositoryException {
+    logger.info("modify repository {} of type {}", repository.getName(), repository.getType());
 
-    AssertUtil.assertIsValid(repository);
-
-    Repository oldRepository = repositoryDAO.get(repository.getNamespaceAndName());
-
-    if (oldRepository != null) {
-      RepositoryPermissions.modify(oldRepository).check();
-      fireEvent(HandlerEventType.BEFORE_MODIFY, repository, oldRepository);
-      repository.setLastModified(System.currentTimeMillis());
-      repository.setCreationDate(oldRepository.getCreationDate());
-      getHandler(repository).modify(repository);
-      repositoryDAO.modify(repository);
-      fireEvent(HandlerEventType.MODIFY, repository, oldRepository);
-    } else {
-      throw new RepositoryNotFoundException(
-        "repository ".concat(repository.getName()).concat(" not found"));
-    }
+    managerDaoAdapter.modify(
+      repository,
+      RepositoryPermissions::modify,
+      notModified -> {
+        fireEvent(HandlerEventType.BEFORE_MODIFY, repository, notModified);
+        getHandler(repository).modify(repository);
+      },
+      notModified -> fireEvent(HandlerEventType.MODIFY, repository, notModified)
+    );
   }
 
   @Override
@@ -235,8 +213,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
     if (fresh != null) {
       fresh.copyProperties(repository);
     } else {
-      throw new RepositoryNotFoundException(
-        "repository ".concat(repository.getName()).concat(" not found"));
+      throw new RepositoryNotFoundException(repository);
     }
   }
 
@@ -452,5 +429,4 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
 
     return handler;
   }
-
 }

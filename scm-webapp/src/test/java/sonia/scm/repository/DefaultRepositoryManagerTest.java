@@ -37,7 +37,6 @@ import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.collect.ImmutableSet;
 import org.apache.shiro.authz.UnauthorizedException;
-import org.apache.shiro.util.ThreadContext;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -45,7 +44,9 @@ import org.mockito.invocation.InvocationOnMock;
 import sonia.scm.HandlerEventType;
 import sonia.scm.Manager;
 import sonia.scm.ManagerTestBase;
+import sonia.scm.ModelObject;
 import sonia.scm.Type;
+import sonia.scm.TypedObject;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.api.HookContext;
@@ -99,6 +100,8 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
   @Rule
   public ExpectedException thrown = ExpectedException.none();
 
+  private ScmConfiguration configuration;
+
   private String mockedNamespace = "default_namespace";
 
   @Test
@@ -139,7 +142,8 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
 
   @Test(expected = RepositoryIsNotArchivedException.class)
   public void testDeleteNonArchived() throws RepositoryException {
-    delete(createRepositoryManager(true), createTestRepository());
+    configuration.setEnableRepositoryArchive(true);
+    delete(manager, createTestRepository());
   }
 
   @Test(expected = RepositoryNotFoundException.class)
@@ -307,7 +311,7 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
     assertNotNull(hearReference);
     assertEquals(hearReference.getDescription(), "prototype ship");
   }
-  
+
   @Test
   @SubjectAware(username = "crato")
   public void testModifyWithoutRequiredPermissions() throws RepositoryException {
@@ -492,7 +496,7 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
 
     XmlRepositoryDAO repositoryDAO = new XmlRepositoryDAO(factory);
 
-    ScmConfiguration configuration = new ScmConfiguration();
+    this.configuration = new ScmConfiguration();
 
     configuration.setEnableRepositoryArchive(archiveEnabled);
 

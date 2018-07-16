@@ -42,15 +42,9 @@ package sonia.scm.group;
 public class GroupAlreadyExistsException extends GroupException
 {
 
-  /** Field description */
   private static final long serialVersionUID = 4042878550219750430L;
   
-  /**
-   * Constructs a new instance.
-   * 
-   * @param name The name (aka id) of the group
-   */
-  public GroupAlreadyExistsException(String name) {
-    super(name + " group already exists");
+  public GroupAlreadyExistsException(Group group) {
+    super(group.getName() + " group already exists");
   }
 }
