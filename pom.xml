@@ -72,7 +72,6 @@
     <module>scm-dao-xml</module>
     <module>scm-webapp</module>
     <module>scm-server</module>
-    <module>scm-clients</module>
   </modules>
 
   <repositories>
