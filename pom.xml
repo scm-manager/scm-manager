@@ -235,6 +235,8 @@
           <execution>
             <phase>process-classes</phase>
             <goals>
+              <!-- Prevent usage of guava annotations that would be silently ignored -> hard to find.
+                   We use legman annotations instead, that provide additional features such as weak references.  -->
               <goal>guava-migration-check</goal>
             </goals>
           </execution>
