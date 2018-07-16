@@ -4,6 +4,7 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.support.SubjectThreadState;
 import org.apache.shiro.util.ThreadContext;
 import org.apache.shiro.util.ThreadState;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -39,6 +40,11 @@ public class ScmConfigurationToGlobalConfigDtoMapperTest {
     expectedBaseUri = baseUri.resolve(GlobalConfigResource.GLOBAL_CONFIG_PATH_V2);
     subjectThreadState.bind();
     ThreadContext.bind(subject);
+  }
+
+  @After
+  public void unbindSubject() {
+    ThreadContext.unbindSubject();
   }
 
   @Test
