@@ -103,19 +103,21 @@ public final class RepositoryUtil
 
   public static String getRepositoryId(File baseDirectory, File directory) throws IOException {
     String path = directory.getCanonicalPath();
-    int directoryLength = baseDirectory.getCanonicalPath().length();
+    String basePath = baseDirectory.getCanonicalPath();
 
-    if (directoryLength < path.length())
-    {
-      String id = IOUtil.trimSeperatorChars(path.substring(directoryLength));
-      Preconditions.checkState(!id.contains("\\") && !id.contains("/"),
-        "got illegal repository directory with separators in id: " + path);
-      return id;
-    }
-    else
-    {
-      throw new IllegalStateException("path is shorter as the main repository path");
-    }
+    Preconditions.checkArgument(
+      path.startsWith(basePath),
+      "repository path %s is not in the main repository path %s", path, basePath
+    );
+
+    String id = IOUtil.trimSeperatorChars(path.substring(basePath.length()));
+
+    Preconditions.checkArgument(
+      !id.contains("\\") && !id.contains("/"),
+      "got illegal repository directory with separators in id: %s", path
+    );
+
+    return id;
   }
 
   private static void searchRepositoryDirectories(List<File> repositories,
