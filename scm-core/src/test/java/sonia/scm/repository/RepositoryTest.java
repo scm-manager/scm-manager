@@ -34,7 +34,7 @@ package sonia.scm.repository;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  *
@@ -50,7 +50,7 @@ public class RepositoryTest
   @Test
   public void testCreateUrl()
   {
-    Repository repository = new Repository("123", "hg", "test/repo");
+    Repository repository = new Repository("123", "hg", "test", "repo");
 
     assertEquals("http://localhost:8080/scm/hg/test/repo",
                  repository.createUrl("http://localhost:8080/scm"));

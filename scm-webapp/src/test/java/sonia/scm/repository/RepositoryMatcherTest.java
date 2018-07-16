@@ -31,10 +31,13 @@
 package sonia.scm.repository;
 
 import com.google.common.collect.Sets;
-import java.util.Set;
-import org.junit.Test;
-import static org.junit.Assert.*;
 import org.junit.Before;
+import org.junit.Test;
+
+import java.util.Set;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Unit tests for {@link RepositoryMatcher}.
@@ -54,11 +57,11 @@ public class RepositoryMatcherTest {
 
   @Test
   public void testMatches() {
-    assertFalse(matcher.matches(repository("hg", "scm"), "hg", "scm-test/ka"));
-    assertFalse(matcher.matches(repository("git", "scm-test"), "hg", "scm-test"));
+    assertFalse(matcher.matches(repository("hg", "scm"), "hg", "namespace/scm-test/ka"));
+    assertFalse(matcher.matches(repository("git", "scm-test"), "hg", "namespace/scm-test"));
     
-    assertTrue(matcher.matches(repository("hg", "scm-test"), "hg", "scm-test/ka"));
-    assertTrue(matcher.matches(repository("hg", "scm-test"), "hg", "scm-test"));
+    assertTrue(matcher.matches(repository("hg", "scm-test"), "hg", "namespace/scm-test/ka"));
+    assertTrue(matcher.matches(repository("hg", "scm-test"), "hg", "namespace/scm-test"));
   }
   
   @Test
@@ -68,7 +71,7 @@ public class RepositoryMatcherTest {
   }
   
   private Repository repository(String type, String name) {
-    return new Repository(type + "-" + name, type, name);
+    return new Repository(type + "-" + name, type, "namespace", name);
   }
   
   private static class AbcRepositoryPathMatcher implements RepositoryPathMatcher {
