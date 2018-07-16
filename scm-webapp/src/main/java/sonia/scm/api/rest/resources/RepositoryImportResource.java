@@ -740,7 +740,7 @@ public class RepositoryImportResource
           for (String repositoryName : repositoryNames)
           {
             // TODO #8783
-            Repository repository = null; //manager.get(type, repositoryName);
+            /*Repository repository = null; //manager.get(type, repositoryName);
 
             if (repository != null)
             {
@@ -750,7 +750,7 @@ public class RepositoryImportResource
             {
               logger.warn("could not find imported repository {}",
                 repositoryName);
-            }
+            }*/
           }
         }
       }
