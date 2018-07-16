@@ -1,19 +1,19 @@
 /**
  * Copyright (c) 2010, Sebastian Sdorra
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * <p>
  * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
+ * this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
  * 3. Neither the name of SCM-Manager; nor the names of its
- *    contributors may be used to endorse or promote products derived from this
- *    software without specific prior written permission.
- *
+ * contributors may be used to endorse or promote products derived from this
+ * software without specific prior written permission.
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,11 +24,9 @@
  * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * <p>
  * http://bitbucket.org/sdorra/scm-manager
- *
  */
-
 
 
 package sonia.scm.repository;
@@ -36,157 +34,78 @@ package sonia.scm.repository;
 //~--- non-JDK imports --------------------------------------------------------
 
 import org.junit.Test;
-
 import sonia.scm.AbstractTestBase;
+import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.store.InMemoryConfigurationStoreFactory;
 import sonia.scm.util.IOUtil;
 
-import static org.junit.Assert.*;
+import java.io.File;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 //~--- JDK imports ------------------------------------------------------------
-
-import java.io.File;
-import java.io.IOException;
-import sonia.scm.store.ConfigurationStoreFactory;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public abstract class SimpleRepositoryHandlerTestBase extends AbstractTestBase
-{
+public abstract class SimpleRepositoryHandlerTestBase extends AbstractTestBase {
 
-  /**
-   * Method description
-   *
-   *
-   * @param directory
-   */
+
   protected abstract void checkDirectory(File directory);
 
-  /**
-   * Method description
-   *
-   *
-   * @param factory
-   * @param directory
-   *
-   * @return
-   */
   protected abstract RepositoryHandler createRepositoryHandler(
-          ConfigurationStoreFactory factory, File directory);
+    ConfigurationStoreFactory factory, File directory);
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test
-  public void testCreate() throws RepositoryException, IOException
-  {
+  public void testCreate() throws RepositoryException {
     createRepository();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
-  @Test(expected = RepositoryAlreadyExistsException.class)
-  public void testCreateExisitingRepository()
-          throws RepositoryException, IOException
-  {
-    createRepository();
-    createRepository();
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test
-  public void testCreateResourcePath() throws RepositoryException, IOException
-  {
+  public void testCreateResourcePath() throws RepositoryException {
     Repository repository = createRepository();
     String path = handler.createResourcePath(repository);
 
     assertNotNull(path);
     assertTrue(path.trim().length() > 0);
-    assertTrue(path.contains(repository.getName()));
+    assertTrue(path.contains(repository.getId()));
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test
-  public void testDelete() throws RepositoryException, IOException
-  {
+  public void testDelete() throws RepositoryException {
     Repository repository = createRepository();
 
     handler.delete(repository);
 
-    File directory = new File(baseDirectory, repository.getName());
+    File directory = new File(baseDirectory, repository.getId());
 
     assertFalse(directory.exists());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws Exception
-   */
   @Override
-  protected void postSetUp() throws Exception
-  {
+  protected void postSetUp() {
     InMemoryConfigurationStoreFactory storeFactory = new InMemoryConfigurationStoreFactory();
     baseDirectory = new File(contextProvider.getBaseDirectory(), "repositories");
     IOUtil.mkdirs(baseDirectory);
     handler = createRepositoryHandler(storeFactory, baseDirectory);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws Exception
-   */
   @Override
-  protected void preTearDown() throws Exception
-  {
-    if (handler != null)
-    {
+  protected void preTearDown() throws Exception {
+    if (handler != null) {
       handler.close();
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
-  private Repository createRepository() throws RepositoryException, IOException
-  {
+  private Repository createRepository() throws RepositoryException {
     Repository repository = RepositoryTestData.createHeartOfGold();
 
     handler.create(repository);
 
-    File directory = new File(baseDirectory, repository.getName());
+    File directory = new File(baseDirectory, repository.getId());
 
     assertTrue(directory.exists());
     assertTrue(directory.isDirectory());
@@ -195,11 +114,7 @@ public abstract class SimpleRepositoryHandlerTestBase extends AbstractTestBase
     return repository;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
   protected File baseDirectory;
 
-  /** Field description */
   private RepositoryHandler handler;
 }

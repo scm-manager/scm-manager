@@ -194,7 +194,9 @@ public class ScmServletModule extends ServletModule
 
     ScmConfiguration config = getScmConfiguration();
     CipherUtil cu = CipherUtil.getInstance();
-    
+
+    bind(NamespaceStrategy.class).toProvider(NamespaceStrategyProvider.class);
+
     // bind repository provider
     ThrowingProviderBinder.create(binder()).bind(
       RepositoryProvider.class, Repository.class).to(
@@ -311,9 +313,9 @@ public class ScmServletModule extends ServletModule
     // bind events
     // bind(LastModifiedUpdateListener.class);
 
-    Class<? extends NamespaceStrategy> namespaceStrategy = extensionProcessor.byExtensionPoint(NamespaceStrategy.class).iterator().next();
-    bind(NamespaceStrategy.class, namespaceStrategy);
+
   }
+
 
   /**
    * Method description

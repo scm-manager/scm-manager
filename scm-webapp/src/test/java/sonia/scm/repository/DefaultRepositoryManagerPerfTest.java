@@ -96,8 +96,6 @@ public class DefaultRepositoryManagerPerfTest {
   
   private final KeyGenerator keyGenerator = new DefaultKeyGenerator();
 
-  private final NamespaceStrategy namespaceStrategy = new DefaultNamespaceStrategy();
-  
   @Mock
   private RepositoryHandler repositoryHandler;
   
@@ -114,7 +112,7 @@ public class DefaultRepositoryManagerPerfTest {
     when(repositoryHandler.getType()).thenReturn(new Type(REPOSITORY_TYPE, REPOSITORY_TYPE));
     Set<RepositoryHandler> handlerSet = ImmutableSet.of(repositoryHandler);
     RepositoryMatcher repositoryMatcher = new RepositoryMatcher(Collections.<RepositoryPathMatcher>emptySet());
-    
+    NamespaceStrategy namespaceStrategy = mock(NamespaceStrategy.class);
     repositoryManager = new DefaultRepositoryManager(
       configuration, 
       contextProvider, 
@@ -132,10 +130,7 @@ public class DefaultRepositoryManagerPerfTest {
     
     ThreadContext.bind(securityManager);
   }
-  
-  /**
-   * Tear down test objects.
-   */
+
   @After
   public void tearDown(){
     ThreadContext.unbindSecurityManager();
@@ -188,8 +183,8 @@ private long calculateAverage(List<Long> times) {
     when(repositoryDAO.getAll()).thenReturn(repositories.values());
   }
   
-  private Repository createTestRepository(int number){
-    Repository repository = new Repository(keyGenerator.createKey(), REPOSITORY_TYPE, "repo-" + number);
+  private Repository createTestRepository(int number) {
+    Repository repository = new Repository(keyGenerator.createKey(), REPOSITORY_TYPE, "namespace", "repo-" + number);
     repository.getPermissions().add(new Permission("trillian", PermissionType.READ));
     return repository;
   }

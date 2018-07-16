@@ -35,13 +35,14 @@ package sonia.scm.web.lfs;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import static org.mockito.Matchers.matches;
 import org.mockito.Mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 import org.mockito.runners.MockitoJUnitRunner;
 import sonia.scm.repository.Repository;
 import sonia.scm.store.BlobStoreFactory;
+
+import static org.mockito.Matchers.matches;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 /**
  * Unit tests for {@link LfsBlobStoreFactory}.
@@ -59,7 +60,7 @@ public class LfsBlobStoreFactoryTest {
    
   @Test
   public void getBlobStore() throws Exception {
-    lfsBlobStoreFactory.getLfsBlobStore(new Repository("the-id", "GIT", "the-name"));
+    lfsBlobStoreFactory.getLfsBlobStore(new Repository("the-id", "GIT", "space", "the-name"));
 
     // just make sure the right parameter is passed, as properly validating the return value is nearly impossible with 
     // the return value (and should not be part of this test)

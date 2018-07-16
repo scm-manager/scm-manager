@@ -77,6 +77,7 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -101,9 +102,8 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
 
   private ScmConfiguration configuration;
 
-  /**
-   * Tests {@link RepositoryManager#create(TypedObject)}.
-   */
+  private String mockedNamespace = "default_namespace";
+
   @Test
   public void testCreate() throws RepositoryException {
     Repository heartOfGold = createTestRepository();
@@ -113,9 +113,6 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
     assertRepositoriesEquals(dbRepo, heartOfGold);
   }
 
-  /**
-   * Tests {@link RepositoryManager#create(TypedObject)} without the required permissions.
-   */
   @SubjectAware(
     username = "unpriv"
   )
@@ -124,26 +121,17 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
     createTestRepository();
   }
 
-  /**
-   * Tests {@link RepositoryManager#create(TypedObject)} with a already existing repository.
-   */
   @Test(expected = RepositoryAlreadyExistsException.class)
   public void testCreateExisting() throws RepositoryException {
     createTestRepository();
     createTestRepository();
   }
 
-  /**
-   * Tests {@link RepositoryManager#delete(TypedObject)}.
-   */
   @Test
   public void testDelete() throws RepositoryException {
     delete(manager, createTestRepository());
   }
 
-  /**
-   * Tests {@link RepositoryManager#delete(TypedObject)} without the required permissions.
-   */
   @SubjectAware(
     username = "unpriv"
   )
@@ -152,27 +140,17 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
     delete(manager, createTestRepository());
   }
 
-  /**
-   * Tests {@link RepositoryManager#delete(TypedObject)} with a non archived repository and with
-   * enabled archive mode.
-   */
   @Test(expected = RepositoryIsNotArchivedException.class)
   public void testDeleteNonArchived() throws RepositoryException {
     configuration.setEnableRepositoryArchive(true);
     delete(manager, createTestRepository());
   }
 
-  /**
-   * Tests {@link RepositoryManager#delete(TypedObject)} with a non existing repository.
-   */
   @Test(expected = RepositoryNotFoundException.class)
   public void testDeleteNotFound() throws RepositoryException {
     manager.delete(createRepositoryWithId());
   }
 
-  /**
-   * Tests {@link RepositoryManager#delete(TypedObject)} with enabled archive mode.
-   */
   @Test
   public void testDeleteWithEnabledArchive()
     throws RepositoryException {
@@ -184,9 +162,6 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
     delete(drm, repository);
   }
 
-  /**
-   * Tests {@link RepositoryManager#get(java.lang.String)} .
-   */
   @Test
   public void testGet() throws RepositoryException {
     Repository heartOfGold = createTestRepository();
@@ -202,9 +177,6 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
     assertEquals(description, heartOfGold.getDescription());
   }
 
-  /**
-   * Tests {@link RepositoryManager#get(java.lang.String)} without required privileges.
-   */
   @Test
   @SubjectAware(
     username = "crato"
@@ -217,9 +189,6 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
     manager.get(heartOfGold.getId());
   }
 
-  /**
-   * Tests {@link RepositoryManager#getAll()}.
-   */
   @Test
   public void testGetAll() throws RepositoryException {
     Repository heartOfGold = createTestRepository();
@@ -256,13 +225,10 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
       heartOfGold.getDescription().equals(heartReference.getDescription()));
   }
 
-  /**
-   * Tests {@link RepositoryManager#getAll()} with permission for 2 of 3 repositories.
-   */
   @Test
   @SuppressWarnings("unchecked")
   @SubjectAware(username = "dent")
-  public void testGetAllWithPermissions() throws RepositoryException {
+  public void testGetAllWithPermissionsForTwoOrThreeRepos() throws RepositoryException {
     // mock key generator
     KeyGenerator keyGenerator = mock(KeyGenerator.class);
     Stack<String> keys = new Stack<>();
@@ -302,9 +268,6 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
     );
   }
 
-  /**
-   * Tests repository manager events.
-   */
   @Test
   public void testEvents() throws RepositoryException {
     RepositoryManager repoManager = createRepositoryManager(false);
@@ -336,9 +299,6 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
     assertSame(HandlerEventType.DELETE, listener.postEvent);
   }
 
-  /**
-   * Tests {@link RepositoryManager#modify(TypedObject)}.
-   */
   @Test
   public void testModify() throws RepositoryException {
     Repository heartOfGold = createTestRepository();
@@ -351,11 +311,7 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
     assertNotNull(hearReference);
     assertEquals(hearReference.getDescription(), "prototype ship");
   }
-  
-  /**
-   * Tests {@link RepositoryManager#modify(TypedObject)} without
-   * the required permissions.
-   */
+
   @Test
   @SubjectAware(username = "crato")
   public void testModifyWithoutRequiredPermissions() throws RepositoryException {
@@ -367,18 +323,11 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
     manager.modify(heartOfGold);
   }
 
-  /**
-   * Tests {@link RepositoryManager#modify(TypedObject)} with a non
-   * existing repository.
-   */
   @Test(expected = RepositoryNotFoundException.class)
   public void testModifyNotFound() throws RepositoryException {
     manager.modify(createRepositoryWithId());
   }
 
-  /**
-   * Tests {@link RepositoryManager#refresh(ModelObject)}.
-   */
   @Test
   public void testRefresh() throws RepositoryException {
     Repository heartOfGold = createTestRepository();
@@ -389,10 +338,6 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
     assertEquals(description, heartOfGold.getDescription());
   }
 
-  /**
-   * Tests {@link RepositoryManager#refresh(ModelObject)} without
-   * required permissions.
-   */
   @Test
   @SubjectAware(username = "crato")
   public void testRefreshWithoutRequiredPermissions() throws RepositoryException {
@@ -404,18 +349,11 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
     manager.refresh(heartOfGold);
   }
 
-  /**
-   * Tests {@link RepositoryManager#refresh(ModelObject)} with a non existing
-   * repository.
-   */
   @Test(expected = RepositoryNotFoundException.class)
   public void testRefreshNotFound() throws RepositoryException {
     manager.refresh(createRepositoryWithId());
   }
 
-  /**
-   * Tests repository hooks.
-   */
   @Test
   public void testRepositoryHook() throws RepositoryException {
     CountingReceiveHook hook = new CountingReceiveHook();
@@ -436,25 +374,96 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
     assertEquals(2, hook.eventsReceived);
   }
 
-  /**
-   * Tests {@link RepositoryManager#getFromTypeAndUri(String, String)}.
-   */
   @Test
-  public void getRepositoryFromRequestUriTest() throws RepositoryException {
+  public void testNamespaceSet() throws Exception {
+    RepositoryManager repoManager = createRepositoryManager(false);
+    Repository repository = spy(createTestRepository());
+    repository.setName("Testrepo");
+    ((DefaultRepositoryManager) repoManager).create(repository);
+    assertEquals("default_namespace", repository.getNamespace());
+  }
+
+  @Test
+  public void getRepositoryFromRequestUri_withoutLeadingSlash() throws RepositoryException {
     RepositoryManager m = createManager();
     m.init(contextProvider);
-    
-    createRepository(m, new Repository("1", "hg", "scm"));
-    createRepository(m, new Repository("2", "hg", "scm-test"));
-    createRepository(m, new Repository("3", "git", "project1/test-1"));
-    createRepository(m, new Repository("4", "git", "project1/test-2"));
-    
-    assertEquals("scm", m.getFromUri("hg/scm").getName());
-    assertEquals("scm-test", m.getFromUri("hg/scm-test").getName());
-    assertEquals("scm-test", m.getFromUri("/hg/scm-test").getName());
-    assertEquals("project1/test-1", m.getFromUri("/git/project1/test-1").getName());
-    assertEquals("project1/test-1", m.getFromUri("/git/project1/test-1/ka/some/path").getName());
-    assertNull(m.getFromUri("/git/project1/test-3/ka/some/path"));
+
+    createUriTestRepositories(m);
+
+    assertEquals("scm-test", m.getFromUri("hg/namespace/scm-test").getName());
+    assertEquals("namespace", m.getFromUri("hg/namespace/scm-test").getNamespace());
+  }
+
+  @Test
+  public void getRepositoryFromRequestUri_withLeadingSlash() throws RepositoryException {
+    RepositoryManager m = createManager();
+    m.init(contextProvider);
+
+    createUriTestRepositories(m);
+
+    assertEquals("scm-test", m.getFromUri("/hg/namespace/scm-test").getName());
+    assertEquals("namespace", m.getFromUri("/hg/namespace/scm-test").getNamespace());
+  }
+
+  @Test
+  public void getRepositoryFromRequestUri_withPartialName() throws RepositoryException {
+    RepositoryManager m = createManager();
+    m.init(contextProvider);
+
+    createUriTestRepositories(m);
+
+    assertEquals("scm", m.getFromUri("hg/namespace/scm").getName());
+    assertEquals("namespace", m.getFromUri("hg/namespace/scm").getNamespace());
+  }
+
+  @Test
+  public void getRepositoryFromRequestUri_withTrailingFilePath() throws RepositoryException {
+    RepositoryManager m = createManager();
+    m.init(contextProvider);
+
+    createUriTestRepositories(m);
+
+    assertEquals("test-1", m.getFromUri("/git/namespace/test-1/ka/some/path").getName());
+  }
+
+  @Test
+  public void getRepositoryFromRequestUri_forNotExistingRepositoryName() throws RepositoryException {
+    RepositoryManager m = createManager();
+    m.init(contextProvider);
+
+    createUriTestRepositories(m);
+
+    assertNull(m.getFromUri("/git/namespace/test-3/ka/some/path"));
+  }
+
+  @Test
+  public void getRepositoryFromRequestUri_forWrongNamespace() throws RepositoryException {
+    RepositoryManager m = createManager();
+    m.init(contextProvider);
+
+    createUriTestRepositories(m);
+
+    assertNull(m.getFromUri("/git/other/other/test-2"));
+  }
+
+  @Test
+  public void shouldSetNamespace() throws RepositoryException {
+    Repository repository = new Repository(null, "hg", null, "scm");
+    manager.create(repository);
+    assertNotNull(repository.getId());
+    assertNotNull(repository.getNamespace());
+  }
+
+  private void createUriTestRepositories(RepositoryManager m) throws RepositoryException {
+    mockedNamespace = "namespace";
+    createRepository(m, new Repository("1", "hg", "namespace", "scm"));
+    createRepository(m, new Repository("2", "hg", "namespace", "scm-test"));
+    createRepository(m, new Repository("3", "git", "namespace", "test-1"));
+    createRepository(m, new Repository("4", "git", "namespace", "test-2"));
+
+    mockedNamespace = "other";
+    createRepository(m, new Repository("1", "hg", "other", "scm"));
+    createRepository(m, new Repository("2", "hg", "other", "scm-test"));
   }
 
   //~--- methods --------------------------------------------------------------
@@ -489,9 +498,10 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
 
     this.configuration = new ScmConfiguration();
 
-    NamespaceStrategy namespaceStrategy = new DefaultNamespaceStrategy();
-
     configuration.setEnableRepositoryArchive(archiveEnabled);
+
+    NamespaceStrategy namespaceStrategy = mock(NamespaceStrategy.class);
+    when(namespaceStrategy.getNamespace()).thenAnswer(invocation -> mockedNamespace);
 
     return new DefaultRepositoryManager(configuration, contextProvider,
       keyGenerator, repositoryDAO, handlerSet, createRepositoryMatcher(), namespaceStrategy);
