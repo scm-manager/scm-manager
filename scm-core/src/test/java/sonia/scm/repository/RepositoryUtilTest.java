@@ -55,13 +55,19 @@ public class RepositoryUtilTest {
     File repositoryTypeRoot = temporaryFolder.newFolder();
     repositoryConfig.setRepositoryDirectory(repositoryTypeRoot);
 
-    System.out.println(repositoryTypeRoot);
-
     File repository = new File(temporaryFolder.newFolder(), "abc");
-    System.out.println(repository);
 
     String id = RepositoryUtil.getRepositoryId(repositoryHandler, repository.getPath());
     assertEquals("abc", id);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testGetRepositoryIdWithInvalidId() throws IOException {
+    File repositoryTypeRoot = temporaryFolder.newFolder();
+    repositoryConfig.setRepositoryDirectory(repositoryTypeRoot);
+
+    File repository = new File(repositoryTypeRoot, "abc/123");
+    RepositoryUtil.getRepositoryId(repositoryHandler, repository.getPath());
   }
 
 }

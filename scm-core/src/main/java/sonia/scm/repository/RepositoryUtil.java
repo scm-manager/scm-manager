@@ -36,8 +36,6 @@ package sonia.scm.repository;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Preconditions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import sonia.scm.io.DirectoryFileFilter;
 import sonia.scm.util.IOUtil;
 
@@ -55,32 +53,10 @@ import java.util.List;
  * @author Sebastian Sdorra
  * @since 1.11
  */
-public final class RepositoryUtil
-{
+public final class RepositoryUtil {
 
-  /** the logger for RepositoryUtil */
-  private static final Logger logger =
-    LoggerFactory.getLogger(RepositoryUtil.class);
-
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   */
   private RepositoryUtil() {}
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param directory
-   * @param names
-   *
-   * @return
-   */
   public static List<File> searchRepositoryDirectories(File directory, String... names) {
     List<File> repositories = new ArrayList<>();
 
@@ -89,6 +65,7 @@ public final class RepositoryUtil
     return repositories;
   }
 
+  @SuppressWarnings("squid:S2083") // ignore, because the path is validated at {@link #getRepositoryId(File, File)}
   public static String getRepositoryId(AbstractRepositoryHandler handler, String directoryPath) throws IOException {
     return getRepositoryId(handler.getConfig().getRepositoryDirectory(), new File(directoryPath));
   }
@@ -120,33 +97,24 @@ public final class RepositoryUtil
     return id;
   }
 
-  private static void searchRepositoryDirectories(List<File> repositories,
-    File directory, List<String> names)
-  {
+  private static void searchRepositoryDirectories(List<File> repositories, File directory, List<String> names) {
     boolean found = false;
 
-    for (String name : names)
-    {
-      if (new File(directory, name).exists())
-      {
+    for (String name : names) {
+      if (new File(directory, name).exists()) {
         found = true;
 
         break;
       }
     }
 
-    if (found)
-    {
+    if (found) {
       repositories.add(directory);
-    }
-    else
-    {
+    } else {
       File[] directories = directory.listFiles(DirectoryFileFilter.instance);
 
-      if (directories != null)
-      {
-        for (File d : directories)
-        {
+      if (directories != null) {
+        for (File d : directories) {
           searchRepositoryDirectories(repositories, d, names);
         }
       }
