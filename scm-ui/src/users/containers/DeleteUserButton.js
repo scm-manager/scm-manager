@@ -1,28 +1,30 @@
 // @flow
 import React from "react";
-import type {
-  User
-} from "../types/User";
-import {
-  confirmAlert
-} from '../../components/ConfirmAlert';
+import type { User } from "../types/User";
+import { confirmAlert } from '../../components/ConfirmAlert';
 
 type Props = {
   user: User,
+  confirmDialog?: boolean,
   deleteUser: (link: string) => void,
 };
 
-class DeleteUserButton extends React.Component < Props > {
+class DeleteUserButton extends React.Component<Props> {
 
-  deleteUser = () => {
-    this.props.deleteUser(this.props.user._links.delete.href);
+  static defaultProps = {
+    confirmDialog: true
   };
 
-  confirmDelete = () => {
-    confirmAlert({
+  deleteUser = () => {
+    this.props.deleteUser(this.props.user._links.delete.href); 
+  };
+
+  confirmDelete = () =>{
+    confirmAlert({ 
       title: 'Delete user',
       message: 'Do you really want to delete the user?',
-      buttons: [{
+      buttons: [
+        {
           label: 'Yes',
           onClick: () => this.deleteUser()
         },
@@ -31,26 +33,24 @@ class DeleteUserButton extends React.Component < Props > {
           onClick: () => null
         }
       ]
-    })
-  }
+    });
+  };
 
   isDeletable = () => {
     return this.props.user._links.delete;
   };
 
   render() {
+    const { confirmDialog } = this.props;
+    const action = confirmDialog ? this.confirmDelete : this.deleteUser;
+
     if (!this.isDeletable()) {
       return;
     }
-    return ( <
-      button type = "button"
-      onClick = {
-        (e) => {
-          this.confirmDelete()
-        }
-      } >
-      Delete User <
-      /button>
+    return (
+      <button type="button" onClick={(e) => { action() } }>
+        Delete User       
+      </button>
     );
   }
 }
