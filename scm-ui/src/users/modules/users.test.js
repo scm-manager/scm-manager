@@ -222,8 +222,8 @@ describe("fetch tests", () => {
 describe("reducer tests", () => {
   test("users request", () => {
     var newState = reducer({}, { type: FETCH_USERS });
-    expect(newState.users.loading).toBeTruthy();
-    expect(newState.users.error).toBeNull();
+    expect(newState.loading).toBeTruthy();
+    expect(newState.error).toBeNull();
   });
 
   test("fetch users successful", () => {
@@ -250,8 +250,8 @@ describe("reducer tests", () => {
 
   test("delete user requested", () => {
     const state = {
-      usersByNames : {
-        "zaphod": {
+      usersByNames: {
+        zaphod: {
           loading: false,
           error: null,
           entry: userZaphod
@@ -263,17 +263,17 @@ describe("reducer tests", () => {
     const zaphod = newState.usersByNames["zaphod"];
     expect(zaphod.loading).toBeTruthy();
     expect(zaphod.entry).toBe(userZaphod);
-  })
+  });
 
   it("should not effect other users if one user will be deleted", () => {
     const state = {
-      usersByNames : {
-        "zaphod": {
+      usersByNames: {
+        zaphod: {
           loading: false,
           error: null,
           entry: userZaphod
         },
-        "ford": {
+        ford: {
           loading: false
         }
       }
@@ -286,8 +286,8 @@ describe("reducer tests", () => {
 
   it("should set the error of user which could not be deleted", () => {
     const state = {
-      usersByNames : {
-        "zaphod": {
+      usersByNames: {
+        zaphod: {
           loading: false,
           error: null,
           entry: userZaphod
@@ -304,13 +304,13 @@ describe("reducer tests", () => {
 
   it("should not effect other users if one user could not be deleted", () => {
     const state = {
-      usersByNames : {
-        "zaphod": {
+      usersByNames: {
+        zaphod: {
           loading: false,
           error: null,
           entry: userZaphod
         },
-        "ford": {
+        ford: {
           loading: false
         }
       }
@@ -321,7 +321,6 @@ describe("reducer tests", () => {
     const ford = newState.usersByNames["ford"];
     expect(ford.loading).toBeFalsy();
   });
-
 
   test("reducer does not replace whole usersByNames map", () => {
     const oldState = {
@@ -339,7 +338,6 @@ describe("reducer tests", () => {
     expect(newState.usersByNames["zaphod"]).toBeDefined();
     expect(newState.usersByNames["ford"]).toBeDefined();
   });
-  
 
   test("edit user", () => {
     const newState = reducer(

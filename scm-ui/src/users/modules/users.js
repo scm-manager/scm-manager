@@ -1,17 +1,8 @@
 // @flow
-import {
-  apiClient,
-  NOT_FOUND_ERROR
-} from "../../apiclient";
-import type {
-  User
-} from "../types/User";
-import type {
-  UserEntry
-} from "../types/UserEntry";
-import {
-  Dispatch
-} from "redux";
+import { apiClient, NOT_FOUND_ERROR } from "../../apiclient";
+import type { User } from "../types/User";
+import type { UserEntry } from "../types/UserEntry";
+import { Dispatch } from "redux";
 
 export const FETCH_USERS = "scm/users/FETCH";
 export const FETCH_USERS_SUCCESS = "scm/users/FETCH_SUCCESS";
@@ -58,7 +49,7 @@ function usersNotFound(url: string) {
 }
 
 export function fetchUsers() {
-  return function (dispatch: any) {
+  return function(dispatch: any) {
     dispatch(requestUsers());
     return apiClient
       .get(USERS_URL)
@@ -98,7 +89,7 @@ function requestAddUser(user: User) {
 }
 
 export function addUser(user: User) {
-  return function (dispatch: Dispatch) {
+  return function(dispatch: Dispatch) {
     dispatch(requestAddUser(user));
     return apiClient
       .postWithContentType(USERS_URL, user, CONTENT_TYPE_USER)
@@ -132,7 +123,7 @@ function requestUpdateUser(user: User) {
 }
 
 export function updateUser(user: User) {
-  return function (dispatch: Dispatch) {
+  return function(dispatch: Dispatch) {
     dispatch(requestUpdateUser(user));
     return apiClient
       .putWithContentType(user._links.update.href, user, CONTENT_TYPE_USER)
@@ -182,9 +173,8 @@ export function deleteUserFailure(user: User, error: Error) {
   };
 }
 
-
 export function deleteUser(user: User) {
-  return function (dispatch: any) {
+  return function(dispatch: any) {
     dispatch(requestDeleteUser(user));
     return apiClient
       .delete(user._links.delete.href)
@@ -204,7 +194,7 @@ export function getUsersFromState(state) {
   if (!userNames) {
     return null;
   }
-  var userEntries: Array < UserEntry > = [];
+  const userEntries: Array<UserEntry> = [];
 
   for (let userName of userNames) {
     userEntries.push(state.users.usersByNames[userName]);
@@ -214,11 +204,11 @@ export function getUsersFromState(state) {
 }
 
 function extractUsersByNames(
-  users: Array < User > ,
-  userNames: Array < string > ,
+  users: Array<User>,
+  userNames: Array<string>,
   oldUsersByNames: {}
 ) {
-  var usersByNames = {};
+  const usersByNames = {};
 
   for (let user of users) {
     usersByNames[user.name] = {
@@ -226,7 +216,7 @@ function extractUsersByNames(
     };
   }
 
-  for (var userName in oldUsersByNames) {
+  for (let userName in oldUsersByNames) {
     usersByNames[userName] = oldUsersByNames[userName];
   }
   return usersByNames;
@@ -239,7 +229,11 @@ export function editUser(user: User) {
   };
 }
 
-const reduceUsersByNames = (state: any, username: string, newUserState: any) => {
+const reduceUsersByNames = (
+  state: any,
+  username: string,
+  newUserState: any
+) => {
   const newUsersByNames = {
     ...state.usersByNames,
     [username]: newUserState
