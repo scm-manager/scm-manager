@@ -9,8 +9,8 @@ public class VndMediaType {
   private static final String VERSION = "2";
   private static final String TYPE = "application";
   private static final String SUBTYPE_PREFIX = "vnd.scmm-";
-  private static final String PREFIX = TYPE + "/" + SUBTYPE_PREFIX;
-  private static final String SUFFIX = "+json;v=" + VERSION;
+  public static final String PREFIX = TYPE + "/" + SUBTYPE_PREFIX;
+  public static final String SUFFIX = "+json;v=" + VERSION;
 
   public static final String USER = PREFIX + "user" + SUFFIX;
   public static final String GROUP = PREFIX + "group" + SUFFIX;

@@ -55,5 +55,8 @@ public class GitConfig extends SimpleRepositoryConfig {
   {
     return gcExpression;
   }
-  
+
+  public void setGcExpression(String gcExpression) {
+    this.gcExpression = gcExpression;
+  }
 }
