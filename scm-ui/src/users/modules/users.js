@@ -219,8 +219,12 @@ export default function reducer(state: any = {}, action: any = {}) {
   switch (action.type) {
     case FETCH_USERS:
       return {
-        loading: true,
-        error: null
+        ...state,
+        users: {
+          error: null,
+          entries: null,
+          loading: true
+        }
       };
     case DELETE_USER:
       return {
@@ -246,13 +250,17 @@ export default function reducer(state: any = {}, action: any = {}) {
         usersByNames
       };
     case FETCH_USERS_FAILURE:
-    case DELETE_USER_FAILURE:
       return {
         ...state,
-        login: false,
         error: action.payload,
         loading: false
-      };
+       };  
+    case DELETE_USER_FAILURE:
+        return {
+          ...state,
+          error: action.payload,
+          loading: false
+        };
 
     default:
       return state;

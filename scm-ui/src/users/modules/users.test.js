@@ -157,8 +157,8 @@ describe("fetch tests", () => {
 describe("reducer tests", () => {
   test("users request", () => {
     var newState = reducer({}, { type: FETCH_USERS });
-    expect(newState.loading).toBeTruthy();
-    expect(newState.error).toBeNull();
+    expect(newState.users.loading).toBeTruthy();
+    expect(newState.users.error).toBeNull();
   });
 
   test("fetch users successful", () => {
