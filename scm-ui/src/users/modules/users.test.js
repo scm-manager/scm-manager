@@ -15,7 +15,9 @@ import {
   UPDATE_USER,
   UPDATE_USER_FAILURE,
   UPDATE_USER_SUCCESS,
-  EDIT_USER
+  EDIT_USER,
+  requestDeleteUser,
+  deleteUserFailure
 } from "./users";
 
 import reducer from "./users";
@@ -215,6 +217,81 @@ describe("reducer tests", () => {
     });
   });
 
+  test("delete user requested", () => {
+    const state = {
+      usersByNames : {
+        "zaphod": {
+          loading: false,
+          error: null,
+          entry: userZaphod
+        }
+      }
+    };
+
+    const newState = reducer(state, requestDeleteUser(userZaphod));
+    const zaphod = newState.usersByNames["zaphod"];
+    expect(zaphod.loading).toBeTruthy();
+    expect(zaphod.entry).toBe(userZaphod);
+  })
+
+  it("should not effect other users if one user will be deleted", () => {
+    const state = {
+      usersByNames : {
+        "zaphod": {
+          loading: false,
+          error: null,
+          entry: userZaphod
+        },
+        "ford": {
+          loading: false
+        }
+      }
+    };
+
+    const newState = reducer(state, requestDeleteUser(userZaphod));
+    const ford = newState.usersByNames["ford"];
+    expect(ford.loading).toBeFalsy();
+  });
+
+  it("should set the error of user which could not be deleted", () => {
+    const state = {
+      usersByNames : {
+        "zaphod": {
+          loading: false,
+          error: null,
+          entry: userZaphod
+        }
+      }
+    };
+
+    const error = new Error("error");
+    const newState = reducer(state, deleteUserFailure(userZaphod, error));
+    const zaphod = newState.usersByNames["zaphod"];
+    expect(zaphod.loading).toBeFalsy();
+    expect(zaphod.error).toBe(error);
+  });
+
+  it("should not effect other users if one user could not be deleted", () => {
+    const state = {
+      usersByNames : {
+        "zaphod": {
+          loading: false,
+          error: null,
+          entry: userZaphod
+        },
+        "ford": {
+          loading: false
+        }
+      }
+    };
+
+    const error = new Error("error");
+    const newState = reducer(state, deleteUserFailure(userZaphod, error));
+    const ford = newState.usersByNames["ford"];
+    expect(ford.loading).toBeFalsy();
+  });
+
+
   test("reducer does not replace whole usersByNames map", () => {
     const oldState = {
       usersByNames: {
@@ -231,6 +308,7 @@ describe("reducer tests", () => {
     expect(newState.usersByNames["zaphod"]).toBeDefined();
     expect(newState.usersByNames["ford"]).toBeDefined();
   });
+  
 
   test("edit user", () => {
     const newState = reducer(

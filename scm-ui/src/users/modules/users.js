@@ -158,37 +158,40 @@ function updateUserFailure(user: User, error: Error) {
   };
 }
 
-function requestDeleteUser(url: string) {
+export function requestDeleteUser(user: User) {
   return {
     type: DELETE_USER,
-    url
+    payload: user
   };
 }
 
-function deleteUserSuccess() {
+function deleteUserSuccess(user: User) {
   return {
-    type: DELETE_USER_SUCCESS
+    type: DELETE_USER_SUCCESS,
+    payload: user
   };
 }
 
-function deleteUserFailure(url: string, err: Error) {
+export function deleteUserFailure(user: User, error: Error) {
   return {
     type: DELETE_USER_FAILURE,
-    payload: err,
-    url
+    payload: { 
+      error, 
+      user
+    }
   };
 }
 
-export function deleteUser(link: string) {
-  return function (dispatch: ThunkDispatch) {
-    dispatch(requestDeleteUser(link));
+export function deleteUser(user: User) {
+  return function (dispatch: any) {
+    dispatch(requestDeleteUser(user));
     return apiClient
-      .delete(link)
+      .delete(user._links.delete.href)
       .then(() => {
-        dispatch(deleteUserSuccess());
+        dispatch(deleteUserSuccess(user));
         dispatch(fetchUsers());
       })
-      .catch(err => dispatch(deleteUserFailure(link, err)));
+      .catch(err => dispatch(deleteUserFailure(user, err)));
   };
 }
 
@@ -235,6 +238,18 @@ export function editUser(user: User) {
   };
 }
 
+const reduceUsersByNames = (state: any, username: string, newUserState: any) => {
+  const newUsersByNames = {
+    ...state.usersByNames,
+    [username] : newUserState
+  };
+
+  return {
+    ...state,
+    usersByNames: newUsersByNames
+  };
+};
+
 export default function reducer(state: any = {}, action: any = {}) {
   switch (action.type) {
     case FETCH_USERS:
@@ -247,10 +262,11 @@ export default function reducer(state: any = {}, action: any = {}) {
         }
       };
     case DELETE_USER:
-      return {
-        ...state,
-        users: null
-      };
+      return reduceUsersByNames(state, action.payload.name, {
+        loading: true,
+        error: null,
+        entry: action.payload
+      });
     case FETCH_USERS_SUCCESS:
       const users = action.payload._embedded.users;
       const userNames = users.map(user => user.name);
@@ -269,6 +285,7 @@ export default function reducer(state: any = {}, action: any = {}) {
         },
         usersByNames
       };
+
     case FETCH_USERS_FAILURE:
       return {
         ...state,
@@ -276,11 +293,11 @@ export default function reducer(state: any = {}, action: any = {}) {
         loading: false
       };
     case DELETE_USER_FAILURE:
-      return {
-        ...state,
-        error: action.payload,
-        loading: false
-      };
+    return reduceUsersByNames(state, action.payload.user.name, {
+      loading: false,
+      error: action.payload.error,
+      entry: action.payload.user
+    });
     case EDIT_USER:
       return {
         ...state,
