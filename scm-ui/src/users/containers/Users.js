@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import {
   fetchUsers,
   addUser,
+  updateUser,
   editUser,
   deleteUser,
   getUsersFromState
@@ -26,10 +27,12 @@ type Props = {
   fetchUsers: () => void,
   deleteUser: string => void,
   addUser: User => void,
-  editUser: User => void
+  updateUser: User => void,
+  editUser: User => void,
+  userToEdit: User
 };
 
-class Users extends React.Component<Props> {
+class Users extends React.Component<Props, User> {
   componentDidMount() {
     this.props.fetchUsers();
   }
@@ -38,29 +41,43 @@ class Users extends React.Component<Props> {
     this.props.addUser(user);
   };
 
-  editUser = (user: User) => {
-    this.props.editUser(user);
+  updateUser = (user: User) => {
+    this.props.updateUser(user);
+  };
+
+  componentDidUpdate(prevProps: Props) {
+    if (prevProps.userToEdit !== this.props.userToEdit) {
+      this.setState(this.props.userToEdit);
+    }
+  }
+
+  submitUser = (user: User) => {
+    if (user._links && user._links.update) {
+      this.updateUser(user);
+    } else {
+      this.addUser(user);
+    }
   };
 
   render() {
-    const { userEntries, deleteUser } = this.props;
-    const testUser: User = {
-      name: "user",
-      displayName: "user_display",
-      password: "pw",
-      mail: "mail@mail.de",
-      active: true,
-      admin: true
-    };
+    const { userEntries, deleteUser, editUser } = this.props;
     if (userEntries) {
       return (
         <section className="section">
           <div className="container">
             <h1 className="title">SCM</h1>
             <h2 className="subtitle">Users</h2>
-            <UserTable entries={userEntries} deleteUser={deleteUser} />
-            {/* <UserForm submitForm={this.submitForm} /> */}
-            <UserForm submitForm={user => {}} user={testUser} />
+            <UserTable
+              entries={userEntries}
+              deleteUser={deleteUser}
+              editUser={(user: User) => {
+                this.props.editUser(user);
+              }}
+            />
+            <UserForm
+              submitForm={user => this.submitUser(user)}
+              user={this.props.userToEdit}
+            />
           </div>
         </section>
       );
@@ -72,11 +89,13 @@ class Users extends React.Component<Props> {
 
 const mapStateToProps = state => {
   const userEntries = getUsersFromState(state);
+  var userToEdit = state.users.editUser;
   if (!userEntries) {
-    return {};
+    return { userToEdit };
   }
   return {
-    userEntries
+    userEntries,
+    userToEdit
   };
 };
 
@@ -88,11 +107,14 @@ const mapDispatchToProps = dispatch => {
     addUser: (user: User) => {
       dispatch(addUser(user));
     },
-    editUser: (user: User) => {
-      dispatch(editUser(user));
+    updateUser: (user: User) => {
+      dispatch(updateUser(user));
     },
     deleteUser: (link: string) => {
       dispatch(deleteUser(link));
+    },
+    editUser: (user: User) => {
+      dispatch(editUser(user));
     }
   };
 };

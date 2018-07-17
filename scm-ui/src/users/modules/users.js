@@ -2,6 +2,7 @@
 import { apiClient, NOT_FOUND_ERROR } from "../../apiclient";
 import type { User } from "../types/User";
 import { ThunkDispatch } from "redux-thunk";
+import { Dispatch } from "redux";
 
 export const FETCH_USERS = "scm/users/FETCH";
 export const FETCH_USERS_SUCCESS = "scm/users/FETCH_SUCCESS";
@@ -13,8 +14,10 @@ export const ADD_USER_SUCCESS = "scm/users/ADD_SUCCESS";
 export const ADD_USER_FAILURE = "scm/users/ADD_FAILURE";
 
 export const EDIT_USER = "scm/users/EDIT";
-export const EDIT_USER_SUCCESS = "scm/users/EDIT_SUCCESS";
-export const EDIT_USER_FAILURE = "scm/users/EDIT_FAILURE";
+
+export const UPDATE_USER = "scm/users/UPDATE";
+export const UPDATE_USER_SUCCESS = "scm/users/UPDATE_SUCCESS";
+export const UPDATE_USER_FAILURE = "scm/users/UPDATE_FAILURE";
 
 export const DELETE_USER = "scm/users/DELETE";
 export const DELETE_USER_SUCCESS = "scm/users/DELETE_SUCCESS";
@@ -85,7 +88,7 @@ function requestAddUser(user: User) {
 }
 
 export function addUser(user: User) {
-  return function(dispatch: ThunkDispatch) {
+  return function(dispatch: Dispatch) {
     dispatch(requestAddUser(user));
     return apiClient
       .postWithContentType(USERS_URL, user, CONTENT_TYPE_USER)
@@ -111,9 +114,36 @@ function addUserFailure(user: User, err: Error) {
   };
 }
 
-function requestAddUser(user: User) {
+function requestUpdateUser(user: User) {
   return {
-    type: ADD_USER,
+    type: UPDATE_USER,
+    user
+  };
+}
+
+export function updateUser(user: User) {
+  return function(dispatch: Dispatch) {
+    dispatch(requestUpdateUser(user));
+    return apiClient
+      .putWithContentType(user._links.update.href, user, CONTENT_TYPE_USER)
+      .then(() => {
+        dispatch(updateUserSuccess());
+        dispatch(fetchUsers());
+      })
+      .catch(err => dispatch(updateUserFailure(user, err)));
+  };
+}
+
+function updateUserSuccess() {
+  return {
+    type: UPDATE_USER_SUCCESS
+  };
+}
+
+function updateUserFailure(user: User, error: Error) {
+  return {
+    type: UPDATE_USER_FAILURE,
+    payload: error,
     user
   };
 }
@@ -128,20 +158,6 @@ export function editUser(user: User) {
         dispatch(fetchUsers());
       })
       .catch(err => dispatch(addUserFailure(user, err)));
-  };
-}
-
-function editUserSuccess() {
-  return {
-    type: ADD_USER_SUCCESS
-  };
-}
-
-function addUserFailure(user: User, err: Error) {
-  return {
-    type: ADD_USER_FAILURE,
-    payload: err,
-    user
   };
 }
 
@@ -215,6 +231,13 @@ function extractUsersByNames(
   return usersByNames;
 }
 
+function editUser(user: User) {
+  return {
+    type: EDIT_USER,
+    user
+  };
+}
+
 export default function reducer(state: any = {}, action: any = {}) {
   switch (action.type) {
     case FETCH_USERS:
@@ -253,7 +276,11 @@ export default function reducer(state: any = {}, action: any = {}) {
         error: action.payload,
         loading: false
       };
-
+    case EDIT_USER:
+      return {
+        ...state,
+        editUser: action.user
+      };
     default:
       return state;
   }

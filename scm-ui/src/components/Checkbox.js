@@ -3,6 +3,7 @@ import React from "react";
 
 type Props = {
   label: string,
+  checked: boolean,
   onChange: boolean => void
 };
 class Checkbox extends React.Component<Props> {
@@ -15,7 +16,11 @@ class Checkbox extends React.Component<Props> {
       <div className="field">
         <div className="control">
           <label className="checkbox">
-            <input type="checkbox" onChange={this.onCheckboxChange} />{" "}
+            <input
+              type="checkbox"
+              checked={this.props.checked}
+              onChange={this.onCheckboxChange}
+            />
             {this.props.label}
           </label>
         </div>
