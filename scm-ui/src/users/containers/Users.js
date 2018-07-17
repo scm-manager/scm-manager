@@ -6,19 +6,14 @@ import {
   fetchUsers,
   addUser,
   updateUser,
-  editUser,
   deleteUser,
+  editUser,
   getUsersFromState
 } from "../modules/users";
 import UserForm from "./UserForm";
 import UserTable from "./UserTable";
 import type { User } from "../types/User";
-
-type UserEntry = {
-  loading: boolean,
-  error: Error,
-  user: User
-};
+import type { UserEntry } from "../types/UserEntry";
 
 type Props = {
   login: boolean,
@@ -60,7 +55,7 @@ class Users extends React.Component<Props, User> {
   };
 
   render() {
-    const { userEntries, deleteUser, editUser } = this.props;
+    const { userEntries, deleteUser, editUser, userToEdit } = this.props;
     if (userEntries) {
       return (
         <section className="section">
@@ -70,13 +65,11 @@ class Users extends React.Component<Props, User> {
             <UserTable
               entries={userEntries}
               deleteUser={deleteUser}
-              editUser={(user: User) => {
-                this.props.editUser(user);
-              }}
+              editUser={user => editUser(user)}
             />
             <UserForm
               submitForm={user => this.submitUser(user)}
-              user={this.props.userToEdit}
+              user={userToEdit}
             />
           </div>
         </section>

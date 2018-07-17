@@ -33,7 +33,6 @@ class UserForm extends React.Component<Props, User> {
   }
 
   render() {
-    const { submitForm } = this.props;
     const user = this.state;
     return (
       <div className="container">

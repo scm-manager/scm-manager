@@ -1,7 +1,7 @@
 // @flow
 import { apiClient, NOT_FOUND_ERROR } from "../../apiclient";
 import type { User } from "../types/User";
-import { ThunkDispatch } from "redux-thunk";
+import type { UserEntry } from "../types/UserEntry";
 import { Dispatch } from "redux";
 
 export const FETCH_USERS = "scm/users/FETCH";
@@ -148,19 +148,6 @@ function updateUserFailure(user: User, error: Error) {
   };
 }
 
-export function editUser(user: User) {
-  return function(dispatch: ThunkDispatch) {
-    dispatch(requestAddUser(user));
-    return apiClient
-      .putWithContentType(USERS_URL + "/" + user.name, user, CONTENT_TYPE_USER)
-      .then(() => {
-        dispatch(addUserSuccess());
-        dispatch(fetchUsers());
-      })
-      .catch(err => dispatch(addUserFailure(user, err)));
-  };
-}
-
 function requestDeleteUser(url: string) {
   return {
     type: DELETE_USER,
@@ -203,7 +190,7 @@ export function getUsersFromState(state) {
   if (!userNames) {
     return null;
   }
-  var userEntries = new Array();
+  var userEntries: Array<UserEntry> = [];
 
   for (let userName of userNames) {
     userEntries.push(state.users.usersByNames[userName]);
@@ -231,7 +218,7 @@ function extractUsersByNames(
   return usersByNames;
 }
 
-function editUser(user: User) {
+export function editUser(user: User) {
   return {
     type: EDIT_USER,
     user

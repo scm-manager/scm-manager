@@ -10,7 +10,12 @@ import {
   FETCH_USERS,
   FETCH_USERS_SUCCESS,
   fetchUsers,
-  FETCH_USERS_FAILURE
+  FETCH_USERS_FAILURE,
+  updateUser,
+  UPDATE_USER,
+  UPDATE_USER_FAILURE,
+  UPDATE_USER_SUCCESS,
+  EDIT_USER
 } from "./users";
 
 import reducer from "./users";
@@ -152,6 +157,33 @@ describe("fetch tests", () => {
       expect(actions[1].payload).toBeDefined();
     });
   });
+
+  test("successful user update", () => {
+    fetchMock.putOnce("http://localhost:8081/scm/api/rest/v2/users/zaphod", {
+      status: 204
+    });
+
+    const store = mockStore({});
+    return store.dispatch(updateUser(userZaphod)).then(() => {
+      const actions = store.getActions();
+      expect(actions[0].type).toEqual(UPDATE_USER);
+      expect(actions[1].type).toEqual(UPDATE_USER_SUCCESS);
+    });
+  });
+
+  test("user update failed", () => {
+    fetchMock.putOnce("http://localhost:8081/scm/api/rest/v2/users/zaphod", {
+      status: 500
+    });
+
+    const store = mockStore({});
+    return store.dispatch(updateUser(userZaphod)).then(() => {
+      const actions = store.getActions();
+      expect(actions[0].type).toEqual(UPDATE_USER);
+      expect(actions[1].type).toEqual(UPDATE_USER_FAILURE);
+      expect(actions[1].payload).toBeDefined();
+    });
+  });
 });
 
 describe("reducer tests", () => {
@@ -198,5 +230,16 @@ describe("reducer tests", () => {
     });
     expect(newState.usersByNames["zaphod"]).toBeDefined();
     expect(newState.usersByNames["ford"]).toBeDefined();
+  });
+
+  test("edit user", () => {
+    const newState = reducer(
+      {},
+      {
+        type: EDIT_USER,
+        user: userZaphod
+      }
+    );
+    expect(newState.editUser).toEqual(userZaphod);
   });
 });

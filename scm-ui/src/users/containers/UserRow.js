@@ -26,7 +26,7 @@ export default class UserRow extends React.Component<Props> {
           <DeleteUserButton user={user} deleteUser={deleteUser} />
         </td>
         <td>
-          <EditUserButton user={user} editUser={this.props.editUser} />
+          <EditUserButton user={user} editUser={editUser} />
         </td>
       </tr>
     );

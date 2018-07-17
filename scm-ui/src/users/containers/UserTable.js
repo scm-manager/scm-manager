@@ -1,11 +1,11 @@
 // @flow
 import React from "react";
 import UserRow from "./UserRow";
-import { editUser } from "../modules/users";
 import type { User } from "../types/User";
+import type { UserEntry } from "../types/UserEntry";
 
 type Props = {
-  entries: [{ loading: boolean, error: Error, user: User }],
+  entries: Array<UserEntry>,
   deleteUser: string => void,
   editUser: User => void
 };
