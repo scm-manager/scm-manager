@@ -1,16 +1,18 @@
 // @flow
 import React from "react";
 import DeleteUserButton from "./DeleteUserButton";
+import EditUserButton from "./EditUserButton";
 import type { User } from "../types/User";
 
 type Props = {
   entry: { loading: boolean, error: Error, user: User },
-  deleteUser: string => void
+  deleteUser: string => void,
+  editUser: User => void
 };
 
 export default class UserRow extends React.Component<Props> {
   render() {
-    const { deleteUser } = this.props;
+    const { deleteUser, editUser } = this.props;
     const user = this.props.entry.entry;
     return (
       <tr>
@@ -22,6 +24,9 @@ export default class UserRow extends React.Component<Props> {
         </td>
         <td>
           <DeleteUserButton user={user} deleteUser={deleteUser} />
+        </td>
+        <td>
+          <EditUserButton user={user} editUser={editUser} />
         </td>
       </tr>
     );

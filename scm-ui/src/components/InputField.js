@@ -4,6 +4,7 @@ import React from "react";
 type Props = {
   label?: string,
   placeholder?: string,
+  value?: string,
   type?: string,
   autofocus?: boolean,
   onChange: string => void
@@ -36,7 +37,7 @@ class InputField extends React.Component<Props> {
   };
 
   render() {
-    const { type, placeholder } = this.props;
+    const { type, placeholder, value } = this.props;
 
     return (
       <div className="field">
@@ -49,6 +50,7 @@ class InputField extends React.Component<Props> {
             className="input"
             type={type}
             placeholder={placeholder}
+            value={value}
             onChange={this.handleInput}
           />
         </div>

@@ -11,46 +11,62 @@ type Props = {
 };
 
 class UserForm extends React.Component<Props, User> {
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      name: "",
+      displayName: "",
+      mail: "",
+      password: "",
+      admin: false,
+      active: false
+    };
+  }
+
   submit = (event: Event) => {
     event.preventDefault();
     this.props.submitForm(this.state);
   };
 
+  componentWillReceiveProps() {
+    this.setState(this.props.user);
+  }
+
   render() {
-    const { submitForm, user } = this.props;
+    const user = this.state;
     return (
       <div className="container">
         <form onSubmit={this.submit}>
           <InputField
             label="Username"
             onChange={this.handleUsernameChange}
-            value={user !== undefined ? user.name : ""}
+            value={user ? user.name : ""}
           />
           <InputField
             label="Display Name"
             onChange={this.handleDisplayNameChange}
-            value={user !== undefined ? user.displayName : ""}
+            value={user ? user.displayName : ""}
           />
           <InputField
             label="E-Mail"
             onChange={this.handleEmailChange}
-            value={user !== undefined ? user.mail : ""}
+            value={user ? user.mail : ""}
           />
           <InputField
             label="Password"
             type="password"
             onChange={this.handlePasswordChange}
-            value={user !== undefined ? user.password : ""}
+            value={user ? user.password : ""}
           />
           <Checkbox
             label="Admin"
             onChange={this.handleAdminChange}
-            checked={user !== undefined ? user.admin : false}
+            checked={user ? user.admin : false}
           />
           <Checkbox
             label="Active"
             onChange={this.handleActiveChange}
-            value={user !== undefined ? user.active : false}
+            checked={user ? user.active : false}
           />
           <SubmitButton value="Submit" />
         </form>

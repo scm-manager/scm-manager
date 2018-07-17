@@ -1,7 +1,17 @@
 // @flow
-import { apiClient, NOT_FOUND_ERROR } from "../../apiclient";
-import type { User } from "../types/User";
-import { ThunkDispatch } from "redux-thunk";
+import {
+  apiClient,
+  NOT_FOUND_ERROR
+} from "../../apiclient";
+import type {
+  User
+} from "../types/User";
+import type {
+  UserEntry
+} from "../types/UserEntry";
+import {
+  Dispatch
+} from "redux";
 
 export const FETCH_USERS = "scm/users/FETCH";
 export const FETCH_USERS_SUCCESS = "scm/users/FETCH_SUCCESS";
@@ -13,8 +23,10 @@ export const ADD_USER_SUCCESS = "scm/users/ADD_SUCCESS";
 export const ADD_USER_FAILURE = "scm/users/ADD_FAILURE";
 
 export const EDIT_USER = "scm/users/EDIT";
-export const EDIT_USER_SUCCESS = "scm/users/EDIT_SUCCESS";
-export const EDIT_USER_FAILURE = "scm/users/EDIT_FAILURE";
+
+export const UPDATE_USER = "scm/users/UPDATE";
+export const UPDATE_USER_SUCCESS = "scm/users/UPDATE_SUCCESS";
+export const UPDATE_USER_FAILURE = "scm/users/UPDATE_FAILURE";
 
 export const DELETE_USER = "scm/users/DELETE";
 export const DELETE_USER_SUCCESS = "scm/users/DELETE_SUCCESS";
@@ -23,6 +35,7 @@ export const DELETE_USER_FAILURE = "scm/users/DELETE_FAILURE";
 const USERS_URL = "users";
 
 const CONTENT_TYPE_USER = "application/vnd.scmm-user+json;v=2";
+
 function requestUsers() {
   return {
     type: FETCH_USERS
@@ -45,7 +58,7 @@ function usersNotFound(url: string) {
 }
 
 export function fetchUsers() {
-  return function(dispatch: any) {
+  return function (dispatch: any) {
     dispatch(requestUsers());
     return apiClient
       .get(USERS_URL)
@@ -85,7 +98,7 @@ function requestAddUser(user: User) {
 }
 
 export function addUser(user: User) {
-  return function(dispatch: ThunkDispatch) {
+  return function (dispatch: Dispatch) {
     dispatch(requestAddUser(user));
     return apiClient
       .postWithContentType(USERS_URL, user, CONTENT_TYPE_USER)
@@ -111,36 +124,36 @@ function addUserFailure(user: User, err: Error) {
   };
 }
 
-function requestAddUser(user: User) {
+function requestUpdateUser(user: User) {
   return {
-    type: ADD_USER,
+    type: UPDATE_USER,
     user
   };
 }
 
-export function editUser(user: User) {
-  return function(dispatch: ThunkDispatch) {
-    dispatch(requestAddUser(user));
+export function updateUser(user: User) {
+  return function (dispatch: Dispatch) {
+    dispatch(requestUpdateUser(user));
     return apiClient
-      .putWithContentType(USERS_URL + "/" + user.name, user, CONTENT_TYPE_USER)
+      .putWithContentType(user._links.update.href, user, CONTENT_TYPE_USER)
       .then(() => {
-        dispatch(addUserSuccess());
+        dispatch(updateUserSuccess());
         dispatch(fetchUsers());
       })
-      .catch(err => dispatch(addUserFailure(user, err)));
+      .catch(err => dispatch(updateUserFailure(user, err)));
   };
 }
 
-function editUserSuccess() {
+function updateUserSuccess() {
   return {
-    type: ADD_USER_SUCCESS
+    type: UPDATE_USER_SUCCESS
   };
 }
 
-function addUserFailure(user: User, err: Error) {
+function updateUserFailure(user: User, error: Error) {
   return {
-    type: ADD_USER_FAILURE,
-    payload: err,
+    type: UPDATE_USER_FAILURE,
+    payload: error,
     user
   };
 }
@@ -167,7 +180,7 @@ function deleteUserFailure(url: string, err: Error) {
 }
 
 export function deleteUser(link: string) {
-  return function(dispatch: ThunkDispatch) {
+  return function (dispatch: ThunkDispatch) {
     dispatch(requestDeleteUser(link));
     return apiClient
       .delete(link)
@@ -187,7 +200,7 @@ export function getUsersFromState(state) {
   if (!userNames) {
     return null;
   }
-  var userEntries = new Array();
+  var userEntries: Array < UserEntry > = [];
 
   for (let userName of userNames) {
     userEntries.push(state.users.usersByNames[userName]);
@@ -197,8 +210,8 @@ export function getUsersFromState(state) {
 }
 
 function extractUsersByNames(
-  users: Array<User>,
-  userNames: Array<string>,
+  users: Array < User > ,
+  userNames: Array < string > ,
   oldUsersByNames: {}
 ) {
   var usersByNames = {};
@@ -213,6 +226,13 @@ function extractUsersByNames(
     usersByNames[userName] = oldUsersByNames[userName];
   }
   return usersByNames;
+}
+
+export function editUser(user: User) {
+  return {
+    type: EDIT_USER,
+    user
+  };
 }
 
 export default function reducer(state: any = {}, action: any = {}) {
@@ -254,14 +274,18 @@ export default function reducer(state: any = {}, action: any = {}) {
         ...state,
         error: action.payload,
         loading: false
-       };  
+      };
     case DELETE_USER_FAILURE:
-        return {
-          ...state,
-          error: action.payload,
-          loading: false
-        };
-
+      return {
+        ...state,
+        error: action.payload,
+        loading: false
+      };
+    case EDIT_USER:
+      return {
+        ...state,
+        editUser: action.user
+      };
     default:
       return state;
   }
