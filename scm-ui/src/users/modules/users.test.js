@@ -11,6 +11,10 @@ import {
   FETCH_USERS_SUCCESS,
   fetchUsers,
   FETCH_USERS_FAILURE,
+  addUser,
+  ADD_USER,
+  ADD_USER_SUCCESS,
+  ADD_USER_FAILURE,
   updateUser,
   UPDATE_USER,
   UPDATE_USER_FAILURE,
@@ -156,6 +160,33 @@ describe("fetch tests", () => {
       const actions = store.getActions();
       expect(actions[0].type).toEqual(FETCH_USERS);
       expect(actions[1].type).toEqual(FETCH_USERS_FAILURE);
+      expect(actions[1].payload).toBeDefined();
+    });
+  });
+
+  test("successful user add", () => {
+    fetchMock.postOnce("/scm/api/rest/v2/users", {
+      status: 204
+    });
+
+    const store = mockStore({});
+    return store.dispatch(addUser(userZaphod)).then(() => {
+      const actions = store.getActions();
+      expect(actions[0].type).toEqual(ADD_USER);
+      expect(actions[1].type).toEqual(ADD_USER_SUCCESS);
+    });
+  });
+
+  test("user add failed", () => {
+    fetchMock.postOnce("/scm/api/rest/v2/users", {
+      status: 500
+    });
+
+    const store = mockStore({});
+    return store.dispatch(addUser(userZaphod)).then(() => {
+      const actions = store.getActions();
+      expect(actions[0].type).toEqual(ADD_USER);
+      expect(actions[1].type).toEqual(ADD_USER_FAILURE);
       expect(actions[1].payload).toBeDefined();
     });
   });

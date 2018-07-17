@@ -175,12 +175,13 @@ function deleteUserSuccess(user: User) {
 export function deleteUserFailure(user: User, error: Error) {
   return {
     type: DELETE_USER_FAILURE,
-    payload: { 
-      error, 
+    payload: {
+      error,
       user
     }
   };
 }
+
 
 export function deleteUser(user: User) {
   return function (dispatch: any) {
@@ -241,7 +242,7 @@ export function editUser(user: User) {
 const reduceUsersByNames = (state: any, username: string, newUserState: any) => {
   const newUsersByNames = {
     ...state.usersByNames,
-    [username] : newUserState
+    [username]: newUserState
   };
 
   return {
@@ -254,12 +255,8 @@ export default function reducer(state: any = {}, action: any = {}) {
   switch (action.type) {
     case FETCH_USERS:
       return {
-        ...state,
-        users: {
-          error: null,
-          entries: null,
-          loading: true
-        }
+        loading: true,
+        error: null
       };
     case DELETE_USER:
       return reduceUsersByNames(state, action.payload.name, {
@@ -287,17 +284,12 @@ export default function reducer(state: any = {}, action: any = {}) {
       };
 
     case FETCH_USERS_FAILURE:
-      return {
-        ...state,
-        error: action.payload,
-        loading: false
-      };
     case DELETE_USER_FAILURE:
-    return reduceUsersByNames(state, action.payload.user.name, {
-      loading: false,
-      error: action.payload.error,
-      entry: action.payload.user
-    });
+      return reduceUsersByNames(state, action.payload.user.name, {
+        loading: false,
+        error: action.payload.error,
+        entry: action.payload.user
+      });
     case EDIT_USER:
       return {
         ...state,
