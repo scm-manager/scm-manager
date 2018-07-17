@@ -26,6 +26,7 @@ export const DELETE_USER_FAILURE = "scm/users/DELETE_FAILURE";
 const USERS_URL = "users";
 
 const CONTENT_TYPE_USER = "application/vnd.scmm-user+json;v=2";
+
 function requestUsers() {
   return {
     type: FETCH_USERS
@@ -48,7 +49,7 @@ function usersNotFound(url: string) {
 }
 
 export function fetchUsers() {
-  return function(dispatch: any) {
+  return function (dispatch: any) {
     dispatch(requestUsers());
     return apiClient
       .get(USERS_URL)
@@ -88,7 +89,7 @@ function requestAddUser(user: User) {
 }
 
 export function addUser(user: User) {
-  return function(dispatch: Dispatch) {
+  return function (dispatch: Dispatch) {
     dispatch(requestAddUser(user));
     return apiClient
       .postWithContentType(USERS_URL, user, CONTENT_TYPE_USER)
@@ -122,7 +123,7 @@ function requestUpdateUser(user: User) {
 }
 
 export function updateUser(user: User) {
-  return function(dispatch: Dispatch) {
+  return function (dispatch: Dispatch) {
     dispatch(requestUpdateUser(user));
     return apiClient
       .putWithContentType(user._links.update.href, user, CONTENT_TYPE_USER)
