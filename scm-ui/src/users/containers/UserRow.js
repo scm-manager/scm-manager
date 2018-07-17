@@ -6,7 +6,7 @@ import type { User } from "../types/User";
 
 type Props = {
   entry: { loading: boolean, error: Error, user: User },
-  deleteUser: string => void,
+  deleteUser: User => void,
   editUser: User => void
 };
 
@@ -31,4 +31,4 @@ export default class UserRow extends React.Component<Props> {
       </tr>
     );
   }
-}
+}          

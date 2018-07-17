@@ -20,7 +20,7 @@ type Props = {
   error: Error,
   userEntries: Array<UserEntry>,
   fetchUsers: () => void,
-  deleteUser: string => void,
+  deleteUser: User => void,
   addUser: User => void,
   updateUser: User => void,
   editUser: User => void,

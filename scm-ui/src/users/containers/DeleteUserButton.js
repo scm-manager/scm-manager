@@ -6,7 +6,7 @@ import { confirmAlert } from '../../components/ConfirmAlert';
 type Props = {
   user: User,
   confirmDialog?: boolean,
-  deleteUser: (link: string) => void,
+  deleteUser: (user: User) => void,
 };
 
 class DeleteUserButton extends React.Component<Props> {
@@ -16,7 +16,7 @@ class DeleteUserButton extends React.Component<Props> {
   };
 
   deleteUser = () => {
-    this.props.deleteUser(this.props.user._links.delete.href); 
+    this.props.deleteUser(this.props.user);
   };
 
   confirmDelete = () =>{
