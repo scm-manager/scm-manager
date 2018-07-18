@@ -23,55 +23,59 @@ class UserForm extends React.Component<Props, User> {
     };
   }
 
+  componentDidMount() {
+    this.setState({ ...this.props.user });
+  }
+
   submit = (event: Event) => {
     event.preventDefault();
     this.props.submitForm(this.state);
   };
 
-  componentWillReceiveProps() {
-    this.setState(this.props.user);
-  }
-
   render() {
     const user = this.state;
-    return (
-      <div className="container">
-        <form onSubmit={this.submit}>
-          <InputField
-            label="Username"
-            onChange={this.handleUsernameChange}
-            value={user ? user.name : ""}
-          />
-          <InputField
-            label="Display Name"
-            onChange={this.handleDisplayNameChange}
-            value={user ? user.displayName : ""}
-          />
-          <InputField
-            label="E-Mail"
-            onChange={this.handleEmailChange}
-            value={user ? user.mail : ""}
-          />
-          <InputField
-            label="Password"
-            type="password"
-            onChange={this.handlePasswordChange}
-            value={user ? user.password : ""}
-          />
-          <Checkbox
-            label="Admin"
-            onChange={this.handleAdminChange}
-            checked={user ? user.admin : false}
-          />
-          <Checkbox
-            label="Active"
-            onChange={this.handleActiveChange}
-            checked={user ? user.active : false}
-          />
-          <SubmitButton value="Submit" />
-        </form>
-      </div>
-    );
+    if (user) {
+      return (
+        <div className="container">
+          <form onSubmit={this.submit}>
+            <InputField
+              label="Username"
+              onChange={this.handleUsernameChange}
+              value={user ? user.name : ""}
+            />
+            <InputField
+              label="Display Name"
+              onChange={this.handleDisplayNameChange}
+              value={user ? user.displayName : ""}
+            />
+            <InputField
+              label="E-Mail"
+              onChange={this.handleEmailChange}
+              value={user ? user.mail : ""}
+            />
+            <InputField
+              label="Password"
+              type="password"
+              onChange={this.handlePasswordChange}
+              value={user ? user.password : ""}
+            />
+            <Checkbox
+              label="Admin"
+              onChange={this.handleAdminChange}
+              checked={user ? user.admin : false}
+            />
+            <Checkbox
+              label="Active"
+              onChange={this.handleActiveChange}
+              checked={user ? user.active : false}
+            />
+            <SubmitButton value="Submit" />
+          </form>
+        </div>
+      );
+    } else {
+      return <div>Loading...</div>;
+    }
   }
 
   handleUsernameChange = (name: string) => {

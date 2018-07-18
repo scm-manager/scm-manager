@@ -2,17 +2,9 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import {
-  fetchUsers,
-  addUser,
-  updateUser,
-  deleteUser,
-  editUser,
-  getUsersFromState
-} from "../modules/users";
+import { fetchUsers, deleteUser, getUsersFromState } from "../modules/users";
 import Loading from "../../components/Loading";
 import ErrorNotification from "../../components/ErrorNotification";
-import UserForm from "./UserForm";
 import UserTable from "./UserTable";
 import type { User } from "../types/User";
 import type { UserEntry } from "../types/UserEntry";
@@ -22,39 +14,13 @@ type Props = {
   error: Error,
   userEntries: Array<UserEntry>,
   fetchUsers: () => void,
-  deleteUser: User => void,
-  addUser: User => void,
-  updateUser: User => void,
-  editUser: User => void,
-  userToEdit: User
+  deleteUser: User => void
 };
 
 class Users extends React.Component<Props, User> {
   componentDidMount() {
     this.props.fetchUsers();
   }
-
-  addUser = (user: User) => {
-    this.props.addUser(user);
-  };
-
-  updateUser = (user: User) => {
-    this.props.updateUser(user);
-  };
-
-  componentDidUpdate(prevProps: Props) {
-    if (prevProps.userToEdit !== this.props.userToEdit) {
-      this.setState(this.props.userToEdit);
-    }
-  }
-
-  submitUser = (user: User) => {
-    if (user._links && user._links.update) {
-      this.updateUser(user);
-    } else {
-      this.addUser(user);
-    }
-  };
 
   render() {
     return (
@@ -69,20 +35,12 @@ class Users extends React.Component<Props, User> {
   }
 
   renderContent() {
-    const { userEntries, deleteUser, editUser, userToEdit, error } = this.props;
+    const { userEntries, deleteUser, error } = this.props;
     if (userEntries) {
       return (
         <div>
           <ErrorNotification error={error} />
-          <UserTable
-            entries={userEntries}
-            deleteUser={deleteUser}
-            editUser={user => editUser(user)}
-          />
-          <UserForm
-            submitForm={user => this.submitUser(user)}
-            user={userToEdit}
-          />
+          <UserTable entries={userEntries} deleteUser={deleteUser} />
         </div>
       );
     } else {
@@ -93,13 +51,8 @@ class Users extends React.Component<Props, User> {
 
 const mapStateToProps = state => {
   const userEntries = getUsersFromState(state);
-  const userToEdit = state.users.editUser;
-  if (!userEntries) {
-    return { userToEdit };
-  }
   return {
     userEntries,
-    userToEdit,
     error: state.users.error
   };
 };
@@ -109,17 +62,8 @@ const mapDispatchToProps = dispatch => {
     fetchUsers: () => {
       dispatch(fetchUsers());
     },
-    addUser: (user: User) => {
-      dispatch(addUser(user));
-    },
-    updateUser: (user: User) => {
-      dispatch(updateUser(user));
-    },
     deleteUser: (user: User) => {
       dispatch(deleteUser(user));
-    },
-    editUser: (user: User) => {
-      dispatch(editUser(user));
     }
   };
 };

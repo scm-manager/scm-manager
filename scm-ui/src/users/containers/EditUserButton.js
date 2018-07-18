@@ -3,24 +3,24 @@ import React from "react";
 import EditButton from "../../components/EditButton";
 import type { User } from "../types/User";
 import type { UserEntry } from "../types/UserEntry";
+import { Link } from "react-router-dom";
 
 type Props = {
-  entry: UserEntry,
-  editUser: User => void
+  entry: UserEntry
 };
 
 class EditUserButton extends React.Component<Props> {
   render() {
+    const { entry } = this.props;
+    const link = "/users/edit/" + entry.entry.name;
+
     if (!this.isEditable()) {
       return "";
     }
-    const { entry, editUser } = this.props;
     return (
-      <EditButton
-        label="Edit"
-        action={e => editUser(entry.entry)}
-        loading={entry.loading}
-      />
+      <Link to={link}>
+        <EditButton label="Edit" action={() => {}} loading={entry.loading} />
+      </Link>
     );
   }
 

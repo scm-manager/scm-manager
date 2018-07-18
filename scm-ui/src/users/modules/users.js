@@ -9,6 +9,9 @@ export const FETCH_USERS_SUCCESS = "scm/users/FETCH_SUCCESS";
 export const FETCH_USERS_FAILURE = "scm/users/FETCH_FAILURE";
 export const FETCH_USERS_NOTFOUND = "scm/users/FETCH_NOTFOUND";
 
+export const FETCH_USER = "scm/users/FETCH_USER";
+export const FETCH_USER_SUCCESS = "scm/users/FETCH_USER_SUCCESS";
+
 export const ADD_USER = "scm/users/ADD";
 export const ADD_USER_SUCCESS = "scm/users/ADD_SUCCESS";
 export const ADD_USER_FAILURE = "scm/users/ADD_FAILURE";
@@ -24,6 +27,7 @@ export const DELETE_USER_SUCCESS = "scm/users/DELETE_SUCCESS";
 export const DELETE_USER_FAILURE = "scm/users/DELETE_FAILURE";
 
 const USERS_URL = "users";
+const USER_URL = "users/";
 
 const CONTENT_TYPE_USER = "application/vnd.scmm-user+json;v=2";
 
@@ -78,6 +82,47 @@ function fetchUsersSuccess(users: any) {
   return {
     type: FETCH_USERS_SUCCESS,
     payload: users
+  };
+}
+
+function requestUser(name: string) {
+  return {
+    type: FETCH_USER,
+    payload: { name }
+  };
+}
+
+export function fetchUser(name: string) {
+  const userUrl = USER_URL + name;
+  return function(dispatch: any) {
+    dispatch(requestUsers());
+    return apiClient
+      .get(userUrl)
+      .then(response => {
+        return response;
+      })
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        }
+      })
+      .then(data => {
+        dispatch(fetchUserSuccess(data));
+      })
+      .catch(err => {
+        if (err === NOT_FOUND_ERROR) {
+          dispatch(usersNotFound(userUrl));
+        } else {
+          dispatch(failedToFetchUsers(userUrl, err));
+        }
+      });
+  };
+}
+
+function fetchUserSuccess(user: User) {
+  return {
+    type: FETCH_USER_SUCCESS,
+    payload: user
   };
 }
 
@@ -258,7 +303,13 @@ export default function reducer(state: any = {}, action: any = {}) {
         error: null,
         entry: action.payload
       });
+    case FETCH_USER:
+      return reduceUsersByNames(state, action.payload.name, {
+        loading: true,
+        error: null
+      });
     case FETCH_USERS_SUCCESS:
+      // return red(state, action.payload._embedded.users);
       const users = action.payload._embedded.users;
       const userNames = users.map(user => user.name);
       const usersByNames = extractUsersByNames(
@@ -266,7 +317,6 @@ export default function reducer(state: any = {}, action: any = {}) {
         userNames,
         state.usersByNames
       );
-
       return {
         ...state,
         users: {
@@ -275,6 +325,21 @@ export default function reducer(state: any = {}, action: any = {}) {
           loading: false
         },
         usersByNames
+      };
+    case FETCH_USER_SUCCESS:
+      const ubn = extractUsersByNames(
+        [action.payload],
+        [action.payload.name],
+        state.usersByNames
+      );
+      return {
+        ...state,
+        users: {
+          error: null,
+          entries: [action.payload.name],
+          loading: false
+        },
+        usersByNames: ubn
       };
 
     case FETCH_USERS_FAILURE:
