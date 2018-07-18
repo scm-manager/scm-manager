@@ -1,5 +1,5 @@
 import React from "react";
-import { configure, shallow } from "enzyme";
+import { configure, mount, shallow } from "enzyme";
 import DeleteUserButton from "./DeleteUserButton";
 import Adapter from "enzyme-adapter-react-16";
 
@@ -12,42 +12,51 @@ configure({ adapter: new Adapter() });
 
 describe("DeleteUserButton", () => {
   it("should render nothing, if the delete link is missing", () => {
-    const user = {
-      _links: {}
+    const entry = {
+      entry: {
+        _links: {}
+      }
     };
 
     const button = shallow(
-      <DeleteUserButton user={user} deleteUser={() => {}} />
+      <DeleteUserButton entry={entry} deleteUser={() => {}} />
     );
     expect(button.text()).toBe("");
   });
 
   it("should render the button", () => {
-    const user = {
-      _links: {
-        delete: {
-          href: "/users"
+    const entry = {
+      entry: {
+        _links: {
+          delete: {
+            href: "/users"
+          }
         }
       }
     };
 
-    const button = shallow(
-      <DeleteUserButton user={user} deleteUser={() => {}} />
+    const button = mount(
+      <DeleteUserButton entry={entry} deleteUser={() => {}} />
     );
+
+    console.log(button);
+
     expect(button.text()).not.toBe("");
   });
 
   it("should open the confirm dialog on button click", () => {
-    const user = {
-      _links: {
-        delete: {
-          href: "/users"
+    const entry = {
+      entry: {
+        _links: {
+          delete: {
+            href: "/users"
+          }
         }
       }
     };
 
-    const button = shallow(
-      <DeleteUserButton user={user} deleteUser={() => {}} />
+    const button = mount(
+      <DeleteUserButton entry={entry} deleteUser={() => {}} />
     );
     button.simulate("click");
 
@@ -55,10 +64,12 @@ describe("DeleteUserButton", () => {
   });
 
   it("should call the delete user function with delete url", () => {
-    const user = {
-      _links: {
-        delete: {
-          href: "/users"
+    const entry = {
+      entry: {
+        _links: {
+          delete: {
+            href: "/users"
+          }
         }
       }
     };
@@ -68,9 +79,9 @@ describe("DeleteUserButton", () => {
       calledUrl = user._links.delete.href;
     }
 
-    const button = shallow(
+    const button = mount(
       <DeleteUserButton
-        user={user}
+        entry={entry}
         confirmDialog={false}
         deleteUser={capture}
       />

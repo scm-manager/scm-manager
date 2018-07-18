@@ -46,7 +46,7 @@ class DeleteUserButton extends React.Component<Props> {
     const action = confirmDialog ? this.confirmDelete : this.deleteUser;
 
     if (!this.isDeletable()) {
-      return;
+      return null;
     }
     return (
       <DeleteButton label="Delete" action={action} loading={entry.loading} />

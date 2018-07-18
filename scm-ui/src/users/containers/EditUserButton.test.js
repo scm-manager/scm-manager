@@ -8,24 +8,27 @@ import "raf/polyfill";
 configure({ adapter: new Adapter() });
 
 it("should render nothing, if the edit link is missing", () => {
-  const user = {
-    _links: {}
+  const entry = {
+    entry: {
+      _links: {}
+    }
   };
 
-  const button = shallow(<EditUserButton user={user} />);
+  const button = shallow(<EditUserButton entry={entry} />);
   expect(button.text()).toBe("");
 });
 
 it("should render the button", () => {
-  const user = {
-    _links: {
-      update: {
-        href: "/users"
+  const entry = {
+    entry: {
+      _links: {
+        update: {
+          href: "/users"
+        }
       }
     }
   };
 
-  const button = shallow(<EditUserButton user={user} />);
+  const button = shallow(<EditUserButton entry={entry} />);
   expect(button.text()).not.toBe("");
 });
-
