@@ -1,14 +1,10 @@
 import React from "react";
-import { configure, mount, shallow } from "enzyme";
+import { mount, shallow } from "enzyme";
+import "../../tests/enzyme";
 import DeleteUserButton from "./DeleteUserButton";
-import Adapter from "enzyme-adapter-react-16";
 
 import { confirmAlert } from "../../components/ConfirmAlert";
 jest.mock("../../components/ConfirmAlert");
-
-import "raf/polyfill";
-
-configure({ adapter: new Adapter() });
 
 describe("DeleteUserButton", () => {
   it("should render nothing, if the delete link is missing", () => {
@@ -38,9 +34,6 @@ describe("DeleteUserButton", () => {
     const button = mount(
       <DeleteUserButton entry={entry} deleteUser={() => {}} />
     );
-
-    console.log(button);
-
     expect(button.text()).not.toBe("");
   });
 

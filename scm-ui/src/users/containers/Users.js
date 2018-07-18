@@ -11,6 +11,7 @@ import {
   getUsersFromState
 } from "../modules/users";
 import Loading from "../../components/Loading";
+import ErrorNotification from "../../components/ErrorNotification";
 import UserForm from "./UserForm";
 import UserTable from "./UserTable";
 import type { User } from "../types/User";
@@ -68,10 +69,11 @@ class Users extends React.Component<Props, User> {
   }
 
   renderContent() {
-    const { userEntries, deleteUser, editUser, userToEdit } = this.props;
+    const { userEntries, deleteUser, editUser, userToEdit, error } = this.props;
     if (userEntries) {
       return (
         <div>
+          <ErrorNotification error={error} />
           <UserTable
             entries={userEntries}
             deleteUser={deleteUser}
@@ -97,7 +99,8 @@ const mapStateToProps = state => {
   }
   return {
     userEntries,
-    userToEdit
+    userToEdit,
+    error: state.users.error
   };
 };
 

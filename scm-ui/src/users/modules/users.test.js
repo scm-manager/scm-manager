@@ -1,7 +1,4 @@
 //@flow
-import React from "react";
-import { configure, shallow } from "enzyme";
-import Adapter from "enzyme-adapter-react-16";
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 import fetchMock from "fetch-mock";
@@ -21,14 +18,14 @@ import {
   UPDATE_USER_SUCCESS,
   EDIT_USER,
   requestDeleteUser,
-  deleteUserFailure
+  deleteUserFailure,
+  DELETE_USER,
+  DELETE_USER_SUCCESS,
+  DELETE_USER_FAILURE,
+  deleteUser
 } from "./users";
 
 import reducer from "./users";
-
-import "raf/polyfill";
-
-configure({ adapter: new Adapter() });
 
 const userZaphod = {
   active: true,
@@ -165,15 +162,20 @@ describe("users fetch()", () => {
   });
 
   it("should add a user successfully", () => {
+    // unmatched
     fetchMock.postOnce("/scm/api/rest/v2/users", {
       status: 204
     });
+
+    // after create, the users are fetched again
+    fetchMock.getOnce("/scm/api/rest/v2/users", response);
 
     const store = mockStore({});
     return store.dispatch(addUser(userZaphod)).then(() => {
       const actions = store.getActions();
       expect(actions[0].type).toEqual(ADD_USER);
       expect(actions[1].type).toEqual(ADD_USER_SUCCESS);
+      expect(actions[2].type).toEqual(FETCH_USERS);
     });
   });
 
@@ -195,12 +197,15 @@ describe("users fetch()", () => {
     fetchMock.putOnce("http://localhost:8081/scm/api/rest/v2/users/zaphod", {
       status: 204
     });
+    // after update, the users are fetched again
+    fetchMock.getOnce("/scm/api/rest/v2/users", response);
 
     const store = mockStore({});
     return store.dispatch(updateUser(userZaphod)).then(() => {
       const actions = store.getActions();
       expect(actions[0].type).toEqual(UPDATE_USER);
       expect(actions[1].type).toEqual(UPDATE_USER_SUCCESS);
+      expect(actions[2].type).toEqual(FETCH_USERS);
     });
   });
 
@@ -214,6 +219,38 @@ describe("users fetch()", () => {
       const actions = store.getActions();
       expect(actions[0].type).toEqual(UPDATE_USER);
       expect(actions[1].type).toEqual(UPDATE_USER_FAILURE);
+      expect(actions[1].payload).toBeDefined();
+    });
+  });
+
+  it("should delete successfully user zaphod", () => {
+    fetchMock.deleteOnce("http://localhost:8081/scm/api/rest/v2/users/zaphod", {
+      status: 204
+    });
+    // after update, the users are fetched again
+    fetchMock.getOnce("/scm/api/rest/v2/users", response);
+
+    const store = mockStore({});
+    return store.dispatch(deleteUser(userZaphod)).then(() => {
+      const actions = store.getActions();
+      expect(actions[0].type).toEqual(DELETE_USER);
+      expect(actions[0].payload).toBe(userZaphod);
+      expect(actions[1].type).toEqual(DELETE_USER_SUCCESS);
+      expect(actions[2].type).toEqual(FETCH_USERS);
+    });
+  });
+
+  it("should fail to delete user zaphod", () => {
+    fetchMock.deleteOnce("http://localhost:8081/scm/api/rest/v2/users/zaphod", {
+      status: 500
+    });
+
+    const store = mockStore({});
+    return store.dispatch(deleteUser(userZaphod)).then(() => {
+      const actions = store.getActions();
+      expect(actions[0].type).toEqual(DELETE_USER);
+      expect(actions[0].payload).toBe(userZaphod);
+      expect(actions[1].type).toEqual(DELETE_USER_FAILURE);
       expect(actions[1].payload).toBeDefined();
     });
   });
@@ -288,8 +325,7 @@ describe("users reducer", () => {
     const state = {
       usersByNames: {
         zaphod: {
-          loading: false,
-          error: null,
+          loading: true,
           entry: userZaphod
         }
       }
