@@ -1,28 +1,30 @@
 //@flow
 import React from "react";
+import EditButton from "../../components/EditButton";
 import type { User } from "../types/User";
 
 type Props = {
-  user: User,
+  entry: UserEntry,
   editUser: User => void
 };
 
-type State = {};
-
-class EditUserButton extends React.Component<Props, State> {
+class EditUserButton extends React.Component<Props> {
   render() {
     if (!this.isEditable()) {
       return "";
     }
+    const { entry, editUser } = this.props;
     return (
-      <button type="button" onClick={e => this.props.editUser(this.props.user)}>
-        Edit user
-      </button>
+      <EditButton
+        label="Edit"
+        action={e => editUser(entry.entry)}
+        loading={entry.loading}
+      />
     );
   }
 
   isEditable = () => {
-    return this.props.user._links.update;
+    return this.props.entry.entry._links.update;
   };
 }
 

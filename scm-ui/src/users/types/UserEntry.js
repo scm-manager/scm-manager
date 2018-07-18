@@ -1,7 +1,7 @@
 type UserEntry = {
   loading: boolean,
   error: Error,
-  user: User
+  entry: User
 };
 
 export type UserEntry;

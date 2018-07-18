@@ -15,13 +15,15 @@ class UserTable extends React.Component<Props> {
     const { deleteUser, editUser } = this.props;
     const entries = this.props.entries;
     return (
-      <table>
+      <table className="table is-hoverable is-fullwidth">
         <thead>
           <tr>
             <th>Name</th>
             <th>Display Name</th>
             <th>E-Mail</th>
             <th>Admin</th>
+            <th />
+            <th />
           </tr>
         </thead>
         <tbody>

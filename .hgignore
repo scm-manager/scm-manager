@@ -30,9 +30,7 @@ Desktop DF$
 rebel.xml
 \.pyc
 # ui
-scm-ui/node_modules
-scm-ui/yarn.lock
-scm-ui/.gitignore
-scm-ui/package-lock.json
-node_modules
-scm-ui/.flowconfig
+scm-ui/build
+scm-ui/coverage
+/?node_modules/
+

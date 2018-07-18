@@ -1,35 +1,36 @@
 // @flow
 import React from "react";
 import type { User } from "../types/User";
-import { confirmAlert } from '../../components/ConfirmAlert';
+import type { UserEntry } from "../types/UserEntry";
+import { confirmAlert } from "../../components/ConfirmAlert";
+import DeleteButton from "../../components/DeleteButton";
 
 type Props = {
-  user: User,
+  entry: UserEntry,
   confirmDialog?: boolean,
-  deleteUser: (user: User) => void,
+  deleteUser: (user: User) => void
 };
 
 class DeleteUserButton extends React.Component<Props> {
-
   static defaultProps = {
     confirmDialog: true
   };
 
   deleteUser = () => {
-    this.props.deleteUser(this.props.user);
+    this.props.deleteUser(this.props.entry.entry);
   };
 
-  confirmDelete = () =>{
-    confirmAlert({ 
-      title: 'Delete user',
-      message: 'Do you really want to delete the user?',
+  confirmDelete = () => {
+    confirmAlert({
+      title: "Delete user",
+      message: "Do you really want to delete the user?",
       buttons: [
         {
-          label: 'Yes',
+          label: "Yes",
           onClick: () => this.deleteUser()
         },
         {
-          label: 'No',
+          label: "No",
           onClick: () => null
         }
       ]
@@ -37,20 +38,18 @@ class DeleteUserButton extends React.Component<Props> {
   };
 
   isDeletable = () => {
-    return this.props.user._links.delete;
+    return this.props.entry.entry._links.delete;
   };
 
   render() {
-    const { confirmDialog } = this.props;
+    const { confirmDialog, entry } = this.props;
     const action = confirmDialog ? this.confirmDelete : this.deleteUser;
 
     if (!this.isDeletable()) {
       return;
     }
     return (
-      <button type="button" onClick={(e) => { action() } }>
-        Delete User       
-      </button>
+      <DeleteButton label="Delete" action={action} loading={entry.loading} />
     );
   }
 }

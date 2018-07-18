@@ -10,6 +10,7 @@ import {
   editUser,
   getUsersFromState
 } from "../modules/users";
+import Loading from "../../components/Loading";
 import UserForm from "./UserForm";
 import UserTable from "./UserTable";
 import type { User } from "../types/User";
@@ -55,27 +56,35 @@ class Users extends React.Component<Props, User> {
   };
 
   render() {
+    return (
+      <section className="section">
+        <div className="container">
+          <h1 className="title">SCM</h1>
+          <h2 className="subtitle">Users</h2>
+          {this.renderContent()}
+        </div>
+      </section>
+    );
+  }
+
+  renderContent() {
     const { userEntries, deleteUser, editUser, userToEdit } = this.props;
     if (userEntries) {
       return (
-        <section className="section">
-          <div className="container">
-            <h1 className="title">SCM</h1>
-            <h2 className="subtitle">Users</h2>
-            <UserTable
-              entries={userEntries}
-              deleteUser={deleteUser}
-              editUser={user => editUser(user)}
-            />
-            <UserForm
-              submitForm={user => this.submitUser(user)}
-              user={userToEdit}
-            />
-          </div>
-        </section>
+        <div>
+          <UserTable
+            entries={userEntries}
+            deleteUser={deleteUser}
+            editUser={user => editUser(user)}
+          />
+          <UserForm
+            submitForm={user => this.submitUser(user)}
+            user={userToEdit}
+          />
+        </div>
       );
     } else {
-      return <div>Loading...</div>;
+      return <Loading />;
     }
   }
 }
