@@ -112,8 +112,8 @@ const mapDispatchToProps = dispatch => {
     updateUser: (user: User) => {
       dispatch(updateUser(user));
     },
-    deleteUser: (link: string) => {
-      dispatch(deleteUser(link));
+    deleteUser: (user: User) => {
+      dispatch(deleteUser(user));
     },
     editUser: (user: User) => {
       dispatch(editUser(user));

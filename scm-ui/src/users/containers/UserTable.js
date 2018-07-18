@@ -6,7 +6,7 @@ import type { UserEntry } from "../types/UserEntry";
 
 type Props = {
   entries: Array<UserEntry>,
-  deleteUser: string => void,
+  deleteUser: User => void,
   editUser: User => void
 };
 

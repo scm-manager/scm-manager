@@ -2,6 +2,7 @@
 import React from "react";
 import EditButton from "../../components/EditButton";
 import type { User } from "../types/User";
+import type { UserEntry } from "../types/UserEntry";
 
 type Props = {
   entry: UserEntry,
