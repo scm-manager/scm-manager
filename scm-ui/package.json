@@ -27,6 +27,7 @@
     "build-js": "react-scripts build",
     "build": "npm-run-all build-css build-js",
     "test": "jest",
+    "test-coverage": "yarn run test --coverage",
     "eject": "react-scripts eject",
     "flow": "flow"
   },

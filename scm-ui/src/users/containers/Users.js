@@ -82,7 +82,7 @@ class Users extends React.Component<Props, User> {
 
 const mapStateToProps = state => {
   const userEntries = getUsersFromState(state);
-  var userToEdit = state.users.editUser;
+  const userToEdit = state.users.editUser;
   if (!userEntries) {
     return { userToEdit };
   }

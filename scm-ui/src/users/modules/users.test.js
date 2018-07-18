@@ -125,14 +125,14 @@ const response = {
   responseBody
 };
 
-describe("fetch tests", () => {
+describe("users fetch()", () => {
   const mockStore = configureMockStore([thunk]);
   afterEach(() => {
     fetchMock.reset();
     fetchMock.restore();
   });
 
-  test("successful users fetch", () => {
+  it("should successfully fetch users", () => {
     fetchMock.getOnce("/scm/api/rest/v2/users", response);
 
     const expectedActions = [
@@ -150,7 +150,7 @@ describe("fetch tests", () => {
     });
   });
 
-  test("me fetch failed", () => {
+  it("should fail getting users on HTTP 500", () => {
     fetchMock.getOnce("/scm/api/rest/v2/users", {
       status: 500
     });
@@ -164,7 +164,7 @@ describe("fetch tests", () => {
     });
   });
 
-  test("successful user add", () => {
+  it("should add a user successfully", () => {
     fetchMock.postOnce("/scm/api/rest/v2/users", {
       status: 204
     });
@@ -177,7 +177,7 @@ describe("fetch tests", () => {
     });
   });
 
-  test("user add failed", () => {
+  it("should fail adding a user on HTTP 500", () => {
     fetchMock.postOnce("/scm/api/rest/v2/users", {
       status: 500
     });
@@ -191,7 +191,7 @@ describe("fetch tests", () => {
     });
   });
 
-  test("successful user update", () => {
+  it("successfully update user", () => {
     fetchMock.putOnce("http://localhost:8081/scm/api/rest/v2/users/zaphod", {
       status: 204
     });
@@ -204,7 +204,7 @@ describe("fetch tests", () => {
     });
   });
 
-  test("user update failed", () => {
+  it("should fail updating user on HTTP 500", () => {
     fetchMock.putOnce("http://localhost:8081/scm/api/rest/v2/users/zaphod", {
       status: 500
     });
@@ -219,15 +219,15 @@ describe("fetch tests", () => {
   });
 });
 
-describe("reducer tests", () => {
-  test("users request", () => {
-    var newState = reducer({}, { type: FETCH_USERS });
+describe("users reducer", () => {
+  test("should update state correctly according to FETCH_USERS action", () => {
+    const newState = reducer({}, { type: FETCH_USERS });
     expect(newState.loading).toBeTruthy();
     expect(newState.error).toBeNull();
   });
 
-  test("fetch users successful", () => {
-    var newState = reducer(
+  it("should update state correctly according to FETCH_USERS_SUCCESS action", () => {
+    const newState = reducer(
       {},
       { type: FETCH_USERS_SUCCESS, payload: responseBody }
     );
@@ -248,7 +248,7 @@ describe("reducer tests", () => {
     });
   });
 
-  test("delete user requested", () => {
+  test("should update state correctly according to DELETE_USER action", () => {
     const state = {
       usersByNames: {
         zaphod: {
@@ -322,7 +322,7 @@ describe("reducer tests", () => {
     expect(ford.loading).toBeFalsy();
   });
 
-  test("reducer does not replace whole usersByNames map", () => {
+  it("should not replace whole usersByNames map when fetching users", () => {
     const oldState = {
       usersByNames: {
         ford: {
@@ -339,7 +339,7 @@ describe("reducer tests", () => {
     expect(newState.usersByNames["ford"]).toBeDefined();
   });
 
-  test("edit user", () => {
+  it("should update state correctly according to EDIT_USER action", () => {
     const newState = reducer(
       {},
       {
