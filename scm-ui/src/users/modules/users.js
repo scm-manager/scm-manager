@@ -16,6 +16,8 @@ export const ADD_USER = "scm/users/ADD";
 export const ADD_USER_SUCCESS = "scm/users/ADD_SUCCESS";
 export const ADD_USER_FAILURE = "scm/users/ADD_FAILURE";
 
+export const EDIT_USER = "scm/users/EDIT";
+
 export const UPDATE_USER = "scm/users/UPDATE";
 export const UPDATE_USER_SUCCESS = "scm/users/UPDATE_SUCCESS";
 export const UPDATE_USER_FAILURE = "scm/users/UPDATE_FAILURE";
@@ -35,18 +37,13 @@ export function requestUsers() {
   };
 }
 
-export function failedToFetchUsers(url: string, err: Error) {
+export function failedToFetchUsers(url: string, error: Error) {
   return {
     type: FETCH_USERS_FAILURE,
-    payload: err,
-    url
-  };
-}
-
-function usersNotFound(url: string) {
-  return {
-    type: FETCH_USERS_NOTFOUND,
-    url
+    payload: {
+      error,
+      url
+    }
   };
 }
 
@@ -66,12 +63,9 @@ export function fetchUsers() {
       .then(data => {
         dispatch(fetchUsersSuccess(data));
       })
-      .catch(err => {
-        if (err === NOT_FOUND_ERROR) {
-          dispatch(usersNotFound(USERS_URL));
-        } else {
-          dispatch(failedToFetchUsers(USERS_URL, err));
-        }
+      .catch(cause => {
+        const error = new Error(`could not fetch users: ${cause.message}`);
+        dispatch(failedToFetchUsers(USERS_URL, error));
       });
   };
 }
@@ -107,12 +101,9 @@ export function fetchUser(name: string) {
       .then(data => {
         dispatch(fetchUserSuccess(data));
       })
-      .catch(err => {
-        if (err === NOT_FOUND_ERROR) {
-          dispatch(usersNotFound(userUrl));
-        } else {
-          dispatch(failedToFetchUsers(userUrl, err));
-        }
+      .catch(cause => {
+        const error = new Error(`could not fetch user: ${cause.message}`);
+        dispatch(failedToFetchUsers(USERS_URL, error));
       });
   };
 }
@@ -178,20 +169,24 @@ export function updateUser(user: User) {
     return apiClient
       .putWithContentType(user._links.update.href, user, CONTENT_TYPE_USER)
       .then(() => {
-        dispatch(updateUserSuccess());
+        dispatch(updateUserSuccess(user));
         dispatch(fetchUsers());
       })
-      .catch(err => dispatch(updateUserFailure(user, err)));
+      .catch(err => {
+        console.log(err)
+        dispatch(updateUserFailure(user, err))
+      });
   };
 }
 
-function updateUserSuccess() {
+function updateUserSuccess(user: User) {
   return {
-    type: UPDATE_USER_SUCCESS
+    type: UPDATE_USER_SUCCESS,
+    user
   };
 }
 
-function updateUserFailure(user: User, error: Error) {
+export function updateUserFailure(user: User, error: Error) {
   return {
     type: UPDATE_USER_FAILURE,
     payload: error,
@@ -206,7 +201,7 @@ export function requestDeleteUser(user: User) {
   };
 }
 
-function deleteUserSuccess(user: User) {
+export function deleteUserSuccess(user: User) {
   return {
     type: DELETE_USER_SUCCESS,
     payload: user
@@ -232,7 +227,12 @@ export function deleteUser(user: User) {
         dispatch(deleteUserSuccess(user));
         dispatch(fetchUsers());
       })
-      .catch(err => dispatch(deleteUserFailure(user, err)));
+      .catch(cause => {
+        const error = new Error(
+          `could not delete user ${user.name}: ${cause.message}`
+        );
+        dispatch(deleteUserFailure(user, error));
+      });
   };
 }
 
@@ -271,6 +271,21 @@ function extractUsersByNames(
   }
   return usersByNames;
 }
+function deleteUserInUsersByNames(users: {}, userName: any) {
+  let newUsers = {};
+  for (let username in users) {
+    if (username != userName) newUsers[username] = users[username];
+  }
+  return newUsers;
+}
+
+function deleteUserInEntries(users: [], userName: any) {
+  let newUsers = [];
+  for (let user of users) {
+    if (user != userName) newUsers.push(user);
+  }
+  return newUsers;
+}
 
 const reduceUsersByNames = (
   state: any,
@@ -292,8 +307,10 @@ export default function reducer(state: any = {}, action: any = {}) {
   switch (action.type) {
     case FETCH_USERS:
       return {
-        loading: true,
-        error: null
+        ...state,
+        users: {
+          loading: true
+        }
       };
     case DELETE_USER:
       return reduceUsersByNames(state, action.payload.name, {
@@ -340,14 +357,43 @@ export default function reducer(state: any = {}, action: any = {}) {
         },
         usersByNames: ubn
       };
-
+    case DELETE_USER_SUCCESS:
+      const newUserByNames = deleteUserInUsersByNames(state.usersByNames, [
+        action.payload.name
+      ]);
+      const newUserEntries = deleteUserInEntries(state.users.entries, [
+        action.payload.name
+      ]);
+      return {
+        ...state,
+        users: {
+          ...state.users,
+          entries: newUserEntries
+        },
+        usersByNames: newUserByNames
+      };
     case FETCH_USERS_FAILURE:
+      return {
+        ...state,
+        users: {
+          ...state.users,
+          loading: false,
+          error: action.payload.error
+        }
+      };
     case DELETE_USER_FAILURE:
-      return reduceUsersByNames(state, action.payload.user.name, {
+      const newState = reduceUsersByNames(state, action.payload.user.name, {
         loading: false,
         error: action.payload.error,
         entry: action.payload.user
       });
+      return {
+        ...newState,
+        users: {
+          ...newState.users,
+          error: action.payload.error
+        }
+      };
     case ADD_USER:
       return {
         ...state,
@@ -363,9 +409,17 @@ export default function reducer(state: any = {}, action: any = {}) {
         users: {
           ...state.users,
           loading: false,
-        error: null
+          error: null
         }
-        
+      };
+    case ADD_USER_SUCCESS:
+      return {
+        ...state,
+        users: {
+          ...state.users,
+          loading: false,
+          error: null
+        }
       };
     case ADD_USER_FAILURE:
       return {
@@ -376,6 +430,31 @@ export default function reducer(state: any = {}, action: any = {}) {
           error: action.payload
         }
       };
+    case UPDATE_USER:
+      return {
+        ...state,
+        usersByNames: {
+          ...state.usersByNames,
+          [action.user.name]: {
+            loading: true,
+            error: null,
+            entry: action.user
+          }
+        }
+      };
+    case UPDATE_USER_SUCCESS:
+      return {
+        ...state,
+        usersByNames: {
+          ...state.usersByNames,
+          [action.user.name]: {
+            loading: false,
+            error: null,
+            entry: action.user
+          }
+        }
+      };
+
     default:
       return state;
   }

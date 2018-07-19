@@ -66,10 +66,16 @@ class Users extends React.Component<Props, User> {
 
 const mapStateToProps = state => {
   const userEntries = getUsersFromState(state);
+  let error = null;
+  let canAddUsers = false;
+  if (state.users && state.users.users) {
+    error = state.users.users.error;
+    canAddUsers = state.users.users.userCreatePermission;
+  }
   return {
     userEntries,
-    error: state.users.error,
-    canAddUsers: state.users.userCreatePermission
+    error,
+    canAddUsers
   };
 };
 

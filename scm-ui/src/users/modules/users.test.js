@@ -16,6 +16,7 @@ import {
   UPDATE_USER,
   UPDATE_USER_FAILURE,
   UPDATE_USER_SUCCESS,
+  EDIT_USER,
   requestDeleteUser,
   deleteUserFailure,
   DELETE_USER,
@@ -26,7 +27,10 @@ import {
   fetchUsersSuccess,
   requestAddUser,
   addUserSuccess,
-  addUserFailure
+  addUserFailure,
+  updateUserFailure,
+  deleteUserSuccess,
+  failedToFetchUsers
 } from "./users";
 
 import reducer from "./users";
@@ -261,10 +265,10 @@ describe("users fetch()", () => {
 });
 
 describe("users reducer", () => {
-  test("should update state correctly according to FETCH_USERS action", () => {
+  it("should update state correctly according to FETCH_USERS action", () => {
     const newState = reducer({}, requestUsers());
-    expect(newState.loading).toBeTruthy();
-    expect(newState.error).toBeNull();
+    expect(newState.users.loading).toBeTruthy();
+    expect(newState.users.error).toBeFalsy();
   });
 
   it("should update state correctly according to FETCH_USERS_SUCCESS action", () => {
@@ -273,7 +277,8 @@ describe("users reducer", () => {
     expect(newState.users).toEqual({
       entries: ["zaphod", "ford"],
       error: null,
-      loading: false
+      loading: false,
+      userCreatePermission: true
     });
 
     expect(newState.usersByNames).toEqual({
@@ -286,7 +291,7 @@ describe("users reducer", () => {
     });
   });
 
-  it("should update state correctly according to DELETE_USER action", () => {
+  test("should update state correctly according to DELETE_USER action", () => {
     const state = {
       usersByNames: {
         zaphod: {
