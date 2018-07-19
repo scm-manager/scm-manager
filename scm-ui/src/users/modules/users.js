@@ -1,8 +1,17 @@
 // @flow
-import { apiClient, NOT_FOUND_ERROR } from "../../apiclient";
-import type { User } from "../types/User";
-import type { UserEntry } from "../types/UserEntry";
-import { Dispatch } from "redux";
+import {
+  apiClient,
+  NOT_FOUND_ERROR
+} from "../../apiclient";
+import type {
+  User
+} from "../types/User";
+import type {
+  UserEntry
+} from "../types/UserEntry";
+import {
+  Dispatch
+} from "redux";
 
 export const FETCH_USERS = "scm/users/FETCH";
 export const FETCH_USERS_SUCCESS = "scm/users/FETCH_SUCCESS";
@@ -53,7 +62,7 @@ function usersNotFound(url: string) {
 }
 
 export function fetchUsers() {
-  return function(dispatch: any) {
+  return function (dispatch: any) {
     dispatch(requestUsers());
     return apiClient
       .get(USERS_URL)
@@ -96,7 +105,7 @@ function requestUser(name: string) {
 
 export function fetchUser(name: string) {
   const userUrl = USER_URL + name;
-  return function(dispatch: any) {
+  return function (dispatch: any) {
     dispatch(requestUsers());
     return apiClient
       .get(userUrl)
@@ -136,7 +145,7 @@ function requestAddUser(user: User) {
 }
 
 export function addUser(user: User) {
-  return function(dispatch: Dispatch) {
+  return function (dispatch: Dispatch) {
     dispatch(requestAddUser(user));
     return apiClient
       .postWithContentType(USERS_URL, user, CONTENT_TYPE_USER)
@@ -170,7 +179,7 @@ function requestUpdateUser(user: User) {
 }
 
 export function updateUser(user: User) {
-  return function(dispatch: Dispatch) {
+  return function (dispatch: Dispatch) {
     dispatch(requestUpdateUser(user));
     return apiClient
       .putWithContentType(user._links.update.href, user, CONTENT_TYPE_USER)
@@ -203,7 +212,7 @@ export function requestDeleteUser(user: User) {
   };
 }
 
-function deleteUserSuccess(user: User) {
+export function deleteUserSuccess(user: User) {
   return {
     type: DELETE_USER_SUCCESS,
     payload: user
@@ -221,7 +230,7 @@ export function deleteUserFailure(user: User, error: Error) {
 }
 
 export function deleteUser(user: User) {
-  return function(dispatch: any) {
+  return function (dispatch: any) {
     dispatch(requestDeleteUser(user));
     return apiClient
       .delete(user._links.delete.href)
@@ -229,7 +238,10 @@ export function deleteUser(user: User) {
         dispatch(deleteUserSuccess(user));
         dispatch(fetchUsers());
       })
-      .catch(err => dispatch(deleteUserFailure(user, err)));
+      .catch(cause => {
+        const error = new Error(`could not delete user ${user.name}: ${cause.message}`);
+        dispatch(deleteUserFailure(user, error));
+      });
   };
 }
 
@@ -241,7 +253,7 @@ export function getUsersFromState(state) {
   if (!userNames) {
     return null;
   }
-  const userEntries: Array<UserEntry> = [];
+  const userEntries: Array < UserEntry > = [];
 
   for (let userName of userNames) {
     userEntries.push(state.users.usersByNames[userName]);
@@ -251,8 +263,8 @@ export function getUsersFromState(state) {
 }
 
 function extractUsersByNames(
-  users: Array<User>,
-  userNames: Array<string>,
+  users: Array < User > ,
+  userNames: Array < string > ,
   oldUsersByNames: {}
 ) {
   const usersByNames = {};
@@ -274,6 +286,24 @@ export function editUser(user: User) {
     type: EDIT_USER,
     user
   };
+}
+
+function deleteUserInUsersByNames(users:{}, userName: any){
+  let newUsers = {};
+  for(let username in users){
+    if(username != userName)
+      newUsers[username] = users[username];
+  }
+  return newUsers;
+}
+
+function deleteUserInEntries(users:[], userName: any){
+  let newUsers = [];
+  for(let user of users){
+    if(user != userName)
+      newUsers.push(user);
+  }
+  return newUsers;
 }
 
 const reduceUsersByNames = (
@@ -332,8 +362,7 @@ export default function reducer(state: any = {}, action: any = {}) {
       };
     case FETCH_USER_SUCCESS:
       const ubn = extractUsersByNames(
-        [action.payload],
-        [action.payload.name],
+        [action.payload], [action.payload.name],
         state.usersByNames
       );
       return {
@@ -345,7 +374,17 @@ export default function reducer(state: any = {}, action: any = {}) {
         },
         usersByNames: ubn
       };
-
+    case DELETE_USER_SUCCESS:
+      const newUserByNames = deleteUserInUsersByNames(state.usersByNames, [action.payload.name]);
+      const newUserEntries = deleteUserInEntries(state.users.entries, [action.payload.name]);
+      return {
+        ...state,
+        users: {
+          ...state.users,
+          entries: newUserEntries
+        },
+        usersByNames: newUserByNames
+      }
     case FETCH_USERS_FAILURE:
     case DELETE_USER_FAILURE:
       const newState = reduceUsersByNames(state, action.payload.user.name, {

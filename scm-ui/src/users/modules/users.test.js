@@ -23,7 +23,8 @@ import {
   DELETE_USER_SUCCESS,
   DELETE_USER_FAILURE,
   deleteUser,
-  updateUserFailure
+  updateUserFailure,
+  deleteUserSuccess
 } from "./users";
 
 import reducer from "./users";
@@ -363,6 +364,44 @@ describe("users reducer", () => {
     const newState = reducer(state, deleteUserFailure(userZaphod, error));
     const ford = newState.usersByNames["ford"];
     expect(ford.loading).toBeFalsy();
+  });
+
+  it("should delete deleted user in users in state if delete user action is successful", () => {
+    const state = {
+      users: {
+        entries: [
+          "zaphod",
+          "ford"
+        ]
+      }
+    };
+    const newState = reducer(state, deleteUserSuccess(userZaphod));
+    expect(newState.users.entries).toContain("ford");
+    expect(newState.users.entries).not.toContain("zaphod");
+  });
+
+  it("should delete deleted user in usersByNames in state if delete user action is successful", () => {
+    const state = {
+      users: {
+        entries: [
+          "zaphod",
+          "ford"
+        ]
+      },
+      usersByNames: {
+        zaphod: {
+          entry: userZaphod
+        },
+        ford: {
+          entry: userFord
+        }
+      }
+    };
+    const newState = reducer(state, deleteUserSuccess(userZaphod));
+    const ford = newState.usersByNames["ford"];
+    const zaphod = newState.usersByNames["zaphod"];
+    expect(zaphod).toBeUndefined();
+    expect(ford.entry).toBe(userFord);
   });
 
   it("should set global error state if one user could not be deleted", () => {
