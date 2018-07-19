@@ -88,7 +88,9 @@ function fetchUsersSuccess(users: any) {
 function requestUser(name: string) {
   return {
     type: FETCH_USER,
-    payload: { name }
+    payload: {
+      name
+    }
   };
 }
 
@@ -186,7 +188,7 @@ function updateUserSuccess() {
   };
 }
 
-function updateUserFailure(user: User, error: Error) {
+export function updateUserFailure(user: User, error: Error) {
   return {
     type: UPDATE_USER_FAILURE,
     payload: error,
@@ -294,8 +296,10 @@ export default function reducer(state: any = {}, action: any = {}) {
   switch (action.type) {
     case FETCH_USERS:
       return {
-        loading: true,
-        error: null
+        ...state,
+        users: {
+          loading: true
+        }
       };
     case DELETE_USER:
       return reduceUsersByNames(state, action.payload.name, {
@@ -344,11 +348,18 @@ export default function reducer(state: any = {}, action: any = {}) {
 
     case FETCH_USERS_FAILURE:
     case DELETE_USER_FAILURE:
-      return reduceUsersByNames(state, action.payload.user.name, {
+      const newState = reduceUsersByNames(state, action.payload.user.name, {
         loading: false,
         error: action.payload.error,
         entry: action.payload.user
       });
+      return {
+        ...newState,
+        users: {
+          ...newState.users,
+          error: action.payload.error
+        }
+      };
     case EDIT_USER:
       return {
         ...state,

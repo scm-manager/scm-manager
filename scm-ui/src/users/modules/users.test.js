@@ -22,7 +22,8 @@ import {
   DELETE_USER,
   DELETE_USER_SUCCESS,
   DELETE_USER_FAILURE,
-  deleteUser
+  deleteUser,
+  updateUserFailure
 } from "./users";
 
 import reducer from "./users";
@@ -118,7 +119,9 @@ const responseBody = {
 };
 
 const response = {
-  headers: { "content-type": "application/json" },
+  headers: {
+    "content-type": "application/json"
+  },
   responseBody
 };
 
@@ -132,8 +135,9 @@ describe("users fetch()", () => {
   it("should successfully fetch users", () => {
     fetchMock.getOnce("/scm/api/rest/v2/users", response);
 
-    const expectedActions = [
-      { type: FETCH_USERS },
+    const expectedActions = [{
+        type: FETCH_USERS
+      },
       {
         type: FETCH_USERS_SUCCESS,
         payload: response
@@ -257,17 +261,20 @@ describe("users fetch()", () => {
 });
 
 describe("users reducer", () => {
-  test("should update state correctly according to FETCH_USERS action", () => {
-    const newState = reducer({}, { type: FETCH_USERS });
-    expect(newState.loading).toBeTruthy();
-    expect(newState.error).toBeNull();
+
+  it("should update state correctly according to FETCH_USERS action", () => {
+    const newState = reducer({}, {
+      type: FETCH_USERS
+    });
+    expect(newState.users.loading).toBeTruthy();
+    expect(newState.users.error).toBeFalsy();
   });
 
   it("should update state correctly according to FETCH_USERS_SUCCESS action", () => {
-    const newState = reducer(
-      {},
-      { type: FETCH_USERS_SUCCESS, payload: responseBody }
-    );
+    const newState = reducer({}, {
+      type: FETCH_USERS_SUCCESS,
+      payload: responseBody
+    });
 
     expect(newState.users).toEqual({
       entries: ["zaphod", "ford"],
@@ -358,6 +365,44 @@ describe("users reducer", () => {
     expect(ford.loading).toBeFalsy();
   });
 
+  it("should set global error state if one user could not be deleted", () => {
+    const state = {
+      users: {
+        error: null
+      },
+      usersByNames: {
+        zaphod: {
+          loading: false,
+          error: null,
+          entry: userZaphod
+        }
+      }
+    };
+
+    const error = new Error("could not delete user zaphod: ..");
+    const newState = reducer(state, deleteUserFailure(userZaphod, error));
+    expect(newState.users.error).toBe(error);
+  });
+
+  it("should not set global error state if one user could not be edited", () => {
+    const state = {
+      users: {
+        error: null
+      },
+      usersByNames: {
+        zaphod: {
+          loading: false,
+          error: null,
+          entry: userZaphod
+        }
+      }
+    };
+
+    const error = new Error("could not edit user zaphod: ..");
+    const newState = reducer(state, updateUserFailure(userZaphod, error));
+    expect(newState.users.error).toBe(null);
+  });
+
   it("should not replace whole usersByNames map when fetching users", () => {
     const oldState = {
       usersByNames: {
@@ -376,13 +421,10 @@ describe("users reducer", () => {
   });
 
   it("should update state correctly according to EDIT_USER action", () => {
-    const newState = reducer(
-      {},
-      {
-        type: EDIT_USER,
-        user: userZaphod
-      }
-    );
+    const newState = reducer({}, {
+      type: EDIT_USER,
+      user: userZaphod
+    });
     expect(newState.editUser).toEqual(userZaphod);
   });
 });
