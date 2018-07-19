@@ -294,7 +294,7 @@ describe("users reducer", () => {
     });
   });
 
-  test("should update state correctly according to DELETE_USER action", () => {
+  it("should update state correctly according to DELETE_USER action", () => {
     const state = {
       usersByNames: {
         zaphod: {
