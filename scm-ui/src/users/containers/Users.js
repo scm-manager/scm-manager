@@ -7,6 +7,7 @@ import Loading from "../../components/Loading";
 import ErrorNotification from "../../components/ErrorNotification";
 import UserTable from "./UserTable";
 import type { User } from "../types/User";
+import AddButton from "../../components/AddButton";
 import type { UserEntry } from "../types/UserEntry";
 
 type Props = {
@@ -14,7 +15,8 @@ type Props = {
   error: Error,
   userEntries: Array<UserEntry>,
   fetchUsers: () => void,
-  deleteUser: User => void
+  deleteUser: User => void,
+  canAddUsers: boolean
 };
 
 class Users extends React.Component<Props, User> {
@@ -29,6 +31,7 @@ class Users extends React.Component<Props, User> {
           <h1 className="title">SCM</h1>
           <h2 className="subtitle">Users</h2>
           {this.renderContent()}
+          {this.renderAddButton()}
         </div>
       </section>
     );
@@ -47,13 +50,26 @@ class Users extends React.Component<Props, User> {
       return <Loading />;
     }
   }
+
+  renderAddButton() {
+    if (this.props.canAddUsers) {
+      return (
+        <div>
+          <AddButton label="Add User" link="/users/add" />
+        </div>
+      );
+    } else {
+      return;
+    }
+  }
 }
 
 const mapStateToProps = state => {
   const userEntries = getUsersFromState(state);
   return {
     userEntries,
-    error: state.users.error
+    error: state.users.error,
+    canAddUsers: state.users.userCreatePermission
   };
 };
 

@@ -5,10 +5,10 @@ import UserForm from "./UserForm";
 import type { User } from "../types/User";
 
 import { addUser } from "../modules/users";
-import { Route, Link } from "react-router-dom";
 
 type Props = {
-  addUser: User => void
+  addUser: User => void,
+  loading?: boolean
 };
 
 class AddUser extends React.Component<Props> {
@@ -17,7 +17,10 @@ class AddUser extends React.Component<Props> {
 
     return (
       <div>
-        <UserForm submitForm={user => addUser(user)} />
+        <UserForm
+          submitForm={user => addUser(user)}
+          loading={this.props.loading}
+        />
       </div>
     );
   }
@@ -32,6 +35,11 @@ const mapDispatchToProps = dispatch => {
 };
 
 const mapStateToProps = (state, ownProps) => {
+  if (state.users && state.users.users) {
+    return {
+      loading: state.users.users.loading
+    };
+  }
   return {};
 };
 

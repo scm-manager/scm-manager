@@ -1,41 +1,10 @@
 //@flow
 import React from "react";
-import classNames from "classnames";
+import Button, { type ButtonProps } from "./Button";
 
-type Props = {
-  value: string,
-  disabled?: boolean,
-  isLoading?: boolean,
-  large?: boolean,
-  fullWidth?: boolean
-};
-
-class SubmitButton extends React.Component<Props> {
+class SubmitButton extends React.Component<ButtonProps> {
   render() {
-    const { value, large, fullWidth, isLoading, disabled } = this.props;
-
-    const largeClass = large ? "is-large" : "";
-    const fullWidthClass = fullWidth ? "is-fullwidth" : "";
-    const loadingClass = isLoading ? "is-loading" : "";
-
-    return (
-      <div className="field">
-        <div className="control">
-          <button
-            disabled={disabled}
-            className={classNames(
-              "button",
-              "is-link",
-              largeClass,
-              fullWidthClass,
-              loadingClass
-            )}
-          >
-            {value}
-          </button>
-        </div>
-      </div>
-    );
+    return <Button type="primary" {...this.props} />;
   }
 }
 

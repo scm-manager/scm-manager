@@ -117,10 +117,10 @@ class Login extends React.Component<Props, State> {
                     onChange={this.handlePasswordChange}
                   />
                   <SubmitButton
-                    value="Login"
+                    label="Login"
                     disabled={this.isInValid()}
                     fullWidth={true}
-                    isLoading={loading}
+                    loading={loading}
                   />
                 </form>
               </div>

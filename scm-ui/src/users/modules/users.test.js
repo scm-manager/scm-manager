@@ -16,13 +16,17 @@ import {
   UPDATE_USER,
   UPDATE_USER_FAILURE,
   UPDATE_USER_SUCCESS,
-  EDIT_USER,
   requestDeleteUser,
   deleteUserFailure,
   DELETE_USER,
   DELETE_USER_SUCCESS,
   DELETE_USER_FAILURE,
-  deleteUser
+  deleteUser,
+  requestUsers,
+  fetchUsersSuccess,
+  requestAddUser,
+  addUserSuccess,
+  addUserFailure
 } from "./users";
 
 import reducer from "./users";
@@ -258,16 +262,13 @@ describe("users fetch()", () => {
 
 describe("users reducer", () => {
   test("should update state correctly according to FETCH_USERS action", () => {
-    const newState = reducer({}, { type: FETCH_USERS });
+    const newState = reducer({}, requestUsers());
     expect(newState.loading).toBeTruthy();
     expect(newState.error).toBeNull();
   });
 
   it("should update state correctly according to FETCH_USERS_SUCCESS action", () => {
-    const newState = reducer(
-      {},
-      { type: FETCH_USERS_SUCCESS, payload: responseBody }
-    );
+    const newState = reducer({}, fetchUsersSuccess(responseBody));
 
     expect(newState.users).toEqual({
       entries: ["zaphod", "ford"],
@@ -285,7 +286,7 @@ describe("users reducer", () => {
     });
   });
 
-  test("should update state correctly according to DELETE_USER action", () => {
+  it("should update state correctly according to DELETE_USER action", () => {
     const state = {
       usersByNames: {
         zaphod: {
@@ -367,22 +368,35 @@ describe("users reducer", () => {
       }
     };
 
-    const newState = reducer(oldState, {
-      type: FETCH_USERS_SUCCESS,
-      payload: responseBodyZaphod
-    });
+    const newState = reducer(oldState, fetchUsersSuccess(responseBody));
     expect(newState.usersByNames["zaphod"]).toBeDefined();
     expect(newState.usersByNames["ford"]).toBeDefined();
   });
 
-  it("should update state correctly according to EDIT_USER action", () => {
+  it("should set userCreatePermission to true if update link is present", () => {
+    const newState = reducer({}, fetchUsersSuccess(responseBody));
+
+    expect(newState.users.userCreatePermission).toBeTruthy();
+  });
+
+  it("should update state correctly according to ADD_USER action", () => {
+    const newState = reducer({}, requestAddUser(userZaphod));
+    expect(newState.users.loading).toBeTruthy();
+    expect(newState.users.error).toBeNull();
+  });
+
+  it("should update state correctly according to ADD_USER_SUCCESS action", () => {
+    const newState = reducer({ loading: true }, addUserSuccess());
+    expect(newState.users.loading).toBeFalsy();
+    expect(newState.users.error).toBeNull();
+  });
+
+  it("should set the loading to false and the error if user could not be added", () => {
     const newState = reducer(
-      {},
-      {
-        type: EDIT_USER,
-        user: userZaphod
-      }
+      { loading: true, error: null },
+      addUserFailure(userFord, new Error("kaputt kaputt"))
     );
-    expect(newState.editUser).toEqual(userZaphod);
+    expect(newState.users.loading).toBeFalsy();
+    expect(newState.users.error).toEqual(new Error("kaputt kaputt"));
   });
 });

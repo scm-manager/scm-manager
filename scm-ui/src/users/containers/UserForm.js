@@ -4,10 +4,12 @@ import type { User } from "../types/User";
 import InputField from "../../components/InputField";
 import Checkbox from "../../components/Checkbox";
 import SubmitButton from "../../components/SubmitButton";
+import { connect } from "react-redux";
 
 type Props = {
   submitForm: User => void,
-  user?: User
+  user?: User,
+  loading?: boolean
 };
 
 class UserForm extends React.Component<Props, User> {
@@ -69,7 +71,7 @@ class UserForm extends React.Component<Props, User> {
               onChange={this.handleActiveChange}
               checked={user ? user.active : false}
             />
-            <SubmitButton value="Submit" />
+            <SubmitButton label="Submit" loading={this.props.loading} />
           </form>
         </div>
       );

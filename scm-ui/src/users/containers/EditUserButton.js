@@ -1,7 +1,6 @@
 //@flow
 import React from "react";
 import EditButton from "../../components/EditButton";
-import type { User } from "../types/User";
 import type { UserEntry } from "../types/UserEntry";
 import { Link } from "react-router-dom";
 
@@ -17,11 +16,7 @@ class EditUserButton extends React.Component<Props> {
     if (!this.isEditable()) {
       return "";
     }
-    return (
-      <Link to={link}>
-        <EditButton label="Edit" action={() => {}} loading={entry.loading} />
-      </Link>
-    );
+    return <EditButton label="Edit" link={link} loading={entry.loading} />;
   }
 
   isEditable = () => {

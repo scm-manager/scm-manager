@@ -3,21 +3,16 @@ import React from "react";
 import { connect } from "react-redux";
 import UserForm from "./UserForm";
 import type { User } from "../types/User";
+import Loading from "../../components/Loading";
 
-import {
-  updateUser,
-  deleteUser,
-  editUser,
-  fetchUser,
-  getUsersFromState
-} from "../modules/users";
-import { Route, Link } from "react-router-dom";
+import { updateUser, fetchUser } from "../modules/users";
 
 type Props = {
   name: string,
   fetchUser: string => void,
-  usersByNames: Map<string, any>,
-  updateUser: User => void
+  userEntry?: UserEntry,
+  updateUser: User => void,
+  loading: boolean
 };
 
 class EditUser extends React.Component<Props> {
@@ -28,15 +23,18 @@ class EditUser extends React.Component<Props> {
   render() {
     const submitUser = this.props.updateUser;
 
-    const { usersByNames, name } = this.props;
+    const { userEntry } = this.props;
 
-    if (!usersByNames || usersByNames[name].loading) {
-      return <div>Loading...</div>;
+    if (!userEntry || userEntry.loading) {
+      return <Loading />;
     } else {
-      const user = usersByNames[name].entry;
       return (
         <div>
-          <UserForm submitForm={user => submitUser(user)} user={user} />
+          <UserForm
+            submitForm={user => submitUser(user)}
+            user={userEntry.entry}
+            loading={userEntry.loading}
+          />
         </div>
       );
     }
@@ -55,9 +53,15 @@ const mapDispatchToProps = dispatch => {
 };
 
 const mapStateToProps = (state, ownProps) => {
+  const name = ownProps.match.params.name;
+  let userEntry;
+  if (state.users && state.users.usersByNames) {
+    userEntry = state.users.usersByNames[name];
+  }
+
   return {
-    usersByNames: state.users.usersByNames,
-    name: ownProps.match.params.name
+    name,
+    userEntry
   };
 };
 

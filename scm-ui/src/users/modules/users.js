@@ -16,8 +16,6 @@ export const ADD_USER = "scm/users/ADD";
 export const ADD_USER_SUCCESS = "scm/users/ADD_SUCCESS";
 export const ADD_USER_FAILURE = "scm/users/ADD_FAILURE";
 
-export const EDIT_USER = "scm/users/EDIT";
-
 export const UPDATE_USER = "scm/users/UPDATE";
 export const UPDATE_USER_SUCCESS = "scm/users/UPDATE_SUCCESS";
 export const UPDATE_USER_FAILURE = "scm/users/UPDATE_FAILURE";
@@ -31,13 +29,13 @@ const USER_URL = "users/";
 
 const CONTENT_TYPE_USER = "application/vnd.scmm-user+json;v=2";
 
-function requestUsers() {
+export function requestUsers() {
   return {
     type: FETCH_USERS
   };
 }
 
-function failedToFetchUsers(url: string, err: Error) {
+export function failedToFetchUsers(url: string, err: Error) {
   return {
     type: FETCH_USERS_FAILURE,
     payload: err,
@@ -78,14 +76,14 @@ export function fetchUsers() {
   };
 }
 
-function fetchUsersSuccess(users: any) {
+export function fetchUsersSuccess(users: any) {
   return {
     type: FETCH_USERS_SUCCESS,
     payload: users
   };
 }
 
-function requestUser(name: string) {
+export function requestUser(name: string) {
   return {
     type: FETCH_USER,
     payload: { name }
@@ -126,7 +124,7 @@ function fetchUserSuccess(user: User) {
   };
 }
 
-function requestAddUser(user: User) {
+export function requestAddUser(user: User) {
   return {
     type: ADD_USER,
     user
@@ -142,17 +140,24 @@ export function addUser(user: User) {
         dispatch(addUserSuccess());
         dispatch(fetchUsers());
       })
-      .catch(err => dispatch(addUserFailure(user, err)));
+      .catch(err =>
+        dispatch(
+          addUserFailure(
+            user,
+            new Error(`failed to add user ${user.name}: ${err.message}`)
+          )
+        )
+      );
   };
 }
 
-function addUserSuccess() {
+export function addUserSuccess() {
   return {
     type: ADD_USER_SUCCESS
   };
 }
 
-function addUserFailure(user: User, err: Error) {
+export function addUserFailure(user: User, err: Error) {
   return {
     type: ADD_USER_FAILURE,
     payload: err,
@@ -267,13 +272,6 @@ function extractUsersByNames(
   return usersByNames;
 }
 
-export function editUser(user: User) {
-  return {
-    type: EDIT_USER,
-    user
-  };
-}
-
 const reduceUsersByNames = (
   state: any,
   username: string,
@@ -320,6 +318,7 @@ export default function reducer(state: any = {}, action: any = {}) {
       return {
         ...state,
         users: {
+          userCreatePermission: action.payload._links.create ? true : false,
           error: null,
           entries: userNames,
           loading: false
@@ -349,10 +348,33 @@ export default function reducer(state: any = {}, action: any = {}) {
         error: action.payload.error,
         entry: action.payload.user
       });
-    case EDIT_USER:
+    case ADD_USER:
       return {
         ...state,
-        editUser: action.user
+        users: {
+          ...state.users,
+          loading: true,
+          error: null
+        }
+      };
+    case ADD_USER_SUCCESS:
+      return {
+        ...state,
+        users: {
+          ...state.users,
+          loading: false,
+        error: null
+        }
+        
+      };
+    case ADD_USER_FAILURE:
+      return {
+        ...state,
+        users: {
+          ...state.users,
+          loading: false,
+          error: action.payload
+        }
       };
     default:
       return state;
