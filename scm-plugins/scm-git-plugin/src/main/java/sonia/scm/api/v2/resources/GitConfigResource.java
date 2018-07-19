@@ -18,7 +18,7 @@ import javax.ws.rs.core.UriInfo;
 @Path(GitConfigResource.GIT_CONFIG_PATH_V2)
 public class GitConfigResource {
 
-  static final String GIT_CONFIG_PATH_V2 = "v2/config/repository/git";
+  static final String GIT_CONFIG_PATH_V2 = "v2/config/repositories/git";
   private final GitConfigDtoToGitConfigMapper dtoToConfigMapper;
   private final GitConfigToGitConfigDtoMapper configToDtoMapper;
   private final GitRepositoryHandler repositoryHandler;
