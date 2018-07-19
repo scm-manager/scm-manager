@@ -11,6 +11,7 @@ export const FETCH_USERS_NOTFOUND = "scm/users/FETCH_NOTFOUND";
 
 export const FETCH_USER = "scm/users/FETCH_USER";
 export const FETCH_USER_SUCCESS = "scm/users/FETCH_USER_SUCCESS";
+export const FETCH_USER_FAILURE = "scm/users/FETCH_USER_FAILURE";
 
 export const ADD_USER = "scm/users/ADD";
 export const ADD_USER_SUCCESS = "scm/users/ADD_SUCCESS";
@@ -108,10 +109,18 @@ export function fetchUser(name: string) {
   };
 }
 
-function fetchUserSuccess(user: User) {
+export function fetchUserSuccess(user: User) {
   return {
     type: FETCH_USER_SUCCESS,
     payload: user
+  };
+}
+
+export function fetchUserFailure(user: User, error: Error) {
+  return {
+    type: FETCH_USER_FAILURE,
+    user,
+    error
   };
 }
 
@@ -173,8 +182,8 @@ export function updateUser(user: User) {
         dispatch(fetchUsers());
       })
       .catch(err => {
-        console.log(err)
-        dispatch(updateUserFailure(user, err))
+        console.log(err);
+        dispatch(updateUserFailure(user, err));
       });
   };
 }
@@ -305,6 +314,7 @@ const reduceUsersByNames = (
 
 export default function reducer(state: any = {}, action: any = {}) {
   switch (action.type) {
+    // fetch user list cases
     case FETCH_USERS:
       return {
         ...state,
@@ -312,17 +322,6 @@ export default function reducer(state: any = {}, action: any = {}) {
           loading: true
         }
       };
-    case DELETE_USER:
-      return reduceUsersByNames(state, action.payload.name, {
-        loading: true,
-        error: null,
-        entry: action.payload
-      });
-    case FETCH_USER:
-      return reduceUsersByNames(state, action.payload.name, {
-        loading: true,
-        error: null
-      });
     case FETCH_USERS_SUCCESS:
       // return red(state, action.payload._embedded.users);
       const users = action.payload._embedded.users;
@@ -342,6 +341,22 @@ export default function reducer(state: any = {}, action: any = {}) {
         },
         usersByNames
       };
+    case FETCH_USERS_FAILURE:
+      return {
+        ...state,
+        users: {
+          ...state.users,
+          loading: false,
+          error: action.payload.error
+        }
+      };
+    // Fetch single user cases
+    case FETCH_USER:
+      return reduceUsersByNames(state, action.payload.name, {
+        loading: true,
+        error: null
+      });
+
     case FETCH_USER_SUCCESS:
       const ubn = extractUsersByNames(
         [action.payload],
@@ -357,6 +372,19 @@ export default function reducer(state: any = {}, action: any = {}) {
         },
         usersByNames: ubn
       };
+    case FETCH_USER_FAILURE:
+      return reduceUsersByNames(state, action.user.name, {
+        loading: true,
+        error: action.error
+      });
+    // Delete single user cases
+    case DELETE_USER:
+      return reduceUsersByNames(state, action.payload.name, {
+        loading: true,
+        error: null,
+        entry: action.payload
+      });
+
     case DELETE_USER_SUCCESS:
       const newUserByNames = deleteUserInUsersByNames(state.usersByNames, [
         action.payload.name
@@ -372,15 +400,7 @@ export default function reducer(state: any = {}, action: any = {}) {
         },
         usersByNames: newUserByNames
       };
-    case FETCH_USERS_FAILURE:
-      return {
-        ...state,
-        users: {
-          ...state.users,
-          loading: false,
-          error: action.payload.error
-        }
-      };
+
     case DELETE_USER_FAILURE:
       const newState = reduceUsersByNames(state, action.payload.user.name, {
         loading: false,
@@ -394,21 +414,13 @@ export default function reducer(state: any = {}, action: any = {}) {
           error: action.payload.error
         }
       };
+    // Add single user cases
     case ADD_USER:
       return {
         ...state,
         users: {
           ...state.users,
           loading: true,
-          error: null
-        }
-      };
-    case ADD_USER_SUCCESS:
-      return {
-        ...state,
-        users: {
-          ...state.users,
-          loading: false,
           error: null
         }
       };
@@ -430,6 +442,7 @@ export default function reducer(state: any = {}, action: any = {}) {
           error: action.payload
         }
       };
+    // Update single user cases
     case UPDATE_USER:
       return {
         ...state,
@@ -454,7 +467,6 @@ export default function reducer(state: any = {}, action: any = {}) {
           }
         }
       };
-
     default:
       return state;
   }

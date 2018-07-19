@@ -30,7 +30,9 @@ import {
   addUserFailure,
   updateUserFailure,
   deleteUserSuccess,
-  failedToFetchUsers
+  failedToFetchUsers,
+  requestUser,
+  fetchUserFailure
 } from "./users";
 
 import reducer from "./users";
@@ -403,5 +405,18 @@ describe("users reducer", () => {
     );
     expect(newState.users.loading).toBeFalsy();
     expect(newState.users.error).toEqual(new Error("kaputt kaputt"));
+  });
+
+  it("should update state according to FETCH_USER action", () => {
+    const newState = reducer({}, requestUser("zaphod"));
+    expect(newState.usersByNames["zaphod"].loading).toBeTruthy();
+  });
+
+  it("should uppdate state according to FETCH_USER_FAILURE action", () => {
+    const newState = reducer(
+      {},
+      fetchUserFailure(userFord, new Error("kaputt!"))
+    );
+    expect(newState.usersByNames["ford"].error).toBeTruthy;
   });
 });
