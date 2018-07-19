@@ -56,13 +56,6 @@ export function failedToFetchUsers(url: string, error: Error) {
   };
 }
 
-function usersNotFound(url: string) {
-  return {
-    type: FETCH_USERS_NOTFOUND,
-    url
-  };
-}
-
 export function fetchUsers() {
   return function (dispatch: any) {
     dispatch(requestUsers());
