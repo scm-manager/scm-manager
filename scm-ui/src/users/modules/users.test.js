@@ -24,7 +24,8 @@ import {
   DELETE_USER_FAILURE,
   deleteUser,
   updateUserFailure,
-  deleteUserSuccess
+  deleteUserSuccess,
+  failedToFetchUsers
 } from "./users";
 
 import reducer from "./users";
@@ -440,6 +441,20 @@ describe("users reducer", () => {
     const error = new Error("could not edit user zaphod: ..");
     const newState = reducer(state, updateUserFailure(userZaphod, error));
     expect(newState.users.error).toBe(null);
+  });
+
+  it("should set error state if users could not be fetched", () => {
+    const state = {
+      users: {
+        error: null,
+        loading: true
+      }
+    };
+
+    const error = new Error("could not edit user zaphod: ..");
+    const newState = reducer(state, failedToFetchUsers('/users', error));
+    expect(newState.users.error).toBe(error);
+    expect(newState.users.loading).toBeFalsy();
   });
 
   it("should not replace whole usersByNames map when fetching users", () => {

@@ -46,11 +46,13 @@ function requestUsers() {
   };
 }
 
-function failedToFetchUsers(url: string, err: Error) {
+export function failedToFetchUsers(url: string, error: Error) {
   return {
     type: FETCH_USERS_FAILURE,
-    payload: err,
-    url
+    payload: {
+      error,
+      url
+    }
   };
 }
 
@@ -77,12 +79,9 @@ export function fetchUsers() {
       .then(data => {
         dispatch(fetchUsersSuccess(data));
       })
-      .catch(err => {
-        if (err === NOT_FOUND_ERROR) {
-          dispatch(usersNotFound(USERS_URL));
-        } else {
-          dispatch(failedToFetchUsers(USERS_URL, err));
-        }
+      .catch(cause => {
+        const error = new Error(`could not fetch users: ${cause.message}`);
+        dispatch(failedToFetchUsers(USERS_URL, error));
       });
   };
 }
@@ -120,12 +119,9 @@ export function fetchUser(name: string) {
       .then(data => {
         dispatch(fetchUserSuccess(data));
       })
-      .catch(err => {
-        if (err === NOT_FOUND_ERROR) {
-          dispatch(usersNotFound(userUrl));
-        } else {
-          dispatch(failedToFetchUsers(userUrl, err));
-        }
+      .catch(cause => {
+        const error = new Error(`could not fetch user: ${cause.message}`);
+        dispatch(failedToFetchUsers(USERS_URL, error));
       });
   };
 }
@@ -386,6 +382,14 @@ export default function reducer(state: any = {}, action: any = {}) {
         usersByNames: newUserByNames
       }
     case FETCH_USERS_FAILURE:
+      return {
+        ...state,
+        users: {
+          ...state.users,
+          loading: false,
+          error: action.payload.error
+        }
+      };
     case DELETE_USER_FAILURE:
       const newState = reduceUsersByNames(state, action.payload.user.name, {
         loading: false,

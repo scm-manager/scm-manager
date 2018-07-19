@@ -43,7 +43,14 @@ class Users extends React.Component<Props, User> {
           <UserTable entries={userEntries} deleteUser={deleteUser} />
         </div>
       );
-    } else {
+    } else if(error){
+      return (
+        <div>
+          <ErrorNotification error={error} />
+        </div>
+      );
+    }
+    else {
       return <Loading />;
     }
   }
