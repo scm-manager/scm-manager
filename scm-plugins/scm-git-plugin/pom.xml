@@ -59,20 +59,6 @@
       <scope>test</scope>
     </dependency>
 
-    <dependency>
-      <groupId>com.sun.jersey</groupId>
-      <artifactId>jersey-client</artifactId>
-      <version>${jersey-client.version}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>com.sun.jersey.contribs</groupId>
-      <artifactId>jersey-apache-client</artifactId>
-      <version>${jersey-client.version}</version>
-      <scope>test</scope>
-    </dependency>
-
   </dependencies>
   
   <!-- create test jar -->
