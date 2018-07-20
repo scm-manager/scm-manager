@@ -6,13 +6,12 @@ import type { UserEntry } from "../types/UserEntry";
 
 type Props = {
   entries: Array<UserEntry>,
-  deleteUser: User => void,
-  editUser: User => void
+  deleteUser: User => void
 };
 
 class UserTable extends React.Component<Props> {
   render() {
-    const { deleteUser, editUser } = this.props;
+    const { deleteUser } = this.props;
     const entries = this.props.entries;
     return (
       <table className="table is-hoverable is-fullwidth">
@@ -29,12 +28,7 @@ class UserTable extends React.Component<Props> {
         <tbody>
           {entries.map((entry, index) => {
             return (
-              <UserRow
-                key={index}
-                entry={entry}
-                deleteUser={deleteUser}
-                editUser={editUser}
-              />
+              <UserRow key={index} entry={entry} deleteUser={deleteUser} />
             );
           })}
         </tbody>

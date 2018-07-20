@@ -7,13 +7,12 @@ import type { UserEntry } from "../types/UserEntry";
 
 type Props = {
   entry: UserEntry,
-  deleteUser: User => void,
-  editUser: User => void
+  deleteUser: User => void
 };
 
 export default class UserRow extends React.Component<Props> {
   render() {
-    const { entry, deleteUser, editUser } = this.props;
+    const { entry, deleteUser } = this.props;
     const user = entry.entry;
     return (
       <tr>
@@ -27,7 +26,7 @@ export default class UserRow extends React.Component<Props> {
           <DeleteUserButton entry={entry} deleteUser={deleteUser} />
         </td>
         <td>
-          <EditUserButton entry={entry} editUser={editUser} />
+          <EditUserButton entry={entry} />
         </td>
       </tr>
     );

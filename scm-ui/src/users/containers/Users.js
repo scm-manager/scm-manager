@@ -3,7 +3,7 @@ import React from "react";
 import { connect } from "react-redux";
 
 import { fetchUsers, deleteUser, getUsersFromState } from "../modules/users";
-import Loading from "../../components/Loading";
+import Page from "../../components/Page";
 import ErrorNotification from "../../components/ErrorNotification";
 import UserTable from "./UserTable";
 import type { User } from "../types/User";
@@ -11,7 +11,7 @@ import AddButton from "../../components/AddButton";
 import type { UserEntry } from "../types/UserEntry";
 
 type Props = {
-  login: boolean,
+  loading?: boolean,
   error: Error,
   userEntries: Array<UserEntry>,
   fetchUsers: () => void,
@@ -25,30 +25,18 @@ class Users extends React.Component<Props, User> {
   }
 
   render() {
+    const { userEntries, deleteUser, loading, error } = this.props;
     return (
-      <section className="section">
-        <div className="container">
-          <h1 className="title">SCM</h1>
-          <h2 className="subtitle">Users</h2>
-          {this.renderContent()}
-          {this.renderAddButton()}
-        </div>
-      </section>
+      <Page
+        title="Users"
+        subtitle="Create, read, update and delete users"
+        loading={loading || !userEntries}
+        error={error}
+      >
+        <UserTable entries={userEntries} deleteUser={deleteUser} />
+        {this.renderAddButton()}
+      </Page>
     );
-  }
-
-  renderContent() {
-    const { userEntries, deleteUser, error } = this.props;
-    if (userEntries) {
-      return (
-        <div>
-          <ErrorNotification error={error} />
-          <UserTable entries={userEntries} deleteUser={deleteUser} />
-        </div>
-      );
-    } else {
-      return <Loading />;
-    }
   }
 
   renderAddButton() {
@@ -67,14 +55,17 @@ class Users extends React.Component<Props, User> {
 const mapStateToProps = state => {
   const userEntries = getUsersFromState(state);
   let error = null;
+  let loading = false;
   let canAddUsers = false;
   if (state.users && state.users.users) {
     error = state.users.users.error;
     canAddUsers = state.users.users.userCreatePermission;
+    loading = state.users.users.loading;
   }
   return {
     userEntries,
     error,
+    loading,
     canAddUsers
   };
 };
