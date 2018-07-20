@@ -29,7 +29,7 @@ class Page extends React.Component<Props> {
   renderSubtitle() {
     const { subtitle } = this.props;
     if (subtitle) {
-      return <h2 className="subtitle">Users</h2>;
+      return <h2 className="subtitle">{subtitle}</h2>;
     }
     return null;
   }
