@@ -119,15 +119,18 @@ export function fetchUserSuccess(user: User) {
 export function fetchUserFailure(user: User, error: Error) {
   return {
     type: FETCH_USER_FAILURE,
-    user,
-    error
+    error: true,
+    payload: {
+      user,
+      error
+    }
   };
 }
 
 export function requestAddUser(user: User) {
   return {
     type: ADD_USER,
-    user
+    payload: user
   };
 }
 
@@ -157,18 +160,21 @@ export function addUserSuccess() {
   };
 }
 
-export function addUserFailure(user: User, err: Error) {
+export function addUserFailure(user: User, error: Error) {
   return {
     type: ADD_USER_FAILURE,
-    payload: err,
-    user
+    error: true,
+    payload: {
+      error,
+      user
+    }
   };
 }
 
 function requestUpdateUser(user: User) {
   return {
     type: UPDATE_USER,
-    user
+    payload: user
   };
 }
 
@@ -191,15 +197,18 @@ export function updateUser(user: User) {
 function updateUserSuccess(user: User) {
   return {
     type: UPDATE_USER_SUCCESS,
-    user
+    payload: user
   };
 }
 
 export function updateUserFailure(user: User, error: Error) {
   return {
     type: UPDATE_USER_FAILURE,
-    payload: error,
-    user
+    error: true,
+    payload: {
+      error,
+      user
+    }
   };
 }
 
@@ -220,6 +229,7 @@ export function deleteUserSuccess(user: User) {
 export function deleteUserFailure(user: User, error: Error) {
   return {
     type: DELETE_USER_FAILURE,
+    error: true,
     payload: {
       error,
       user
@@ -373,9 +383,9 @@ export default function reducer(state: any = {}, action: any = {}) {
         usersByNames: ubn
       };
     case FETCH_USER_FAILURE:
-      return reduceUsersByNames(state, action.user.name, {
+      return reduceUsersByNames(state, action.payload.user.name, {
         loading: true,
-        error: action.error
+        error: action.payload.error
       });
     // Delete single user cases
     case DELETE_USER:
@@ -439,7 +449,7 @@ export default function reducer(state: any = {}, action: any = {}) {
         users: {
           ...state.users,
           loading: false,
-          error: action.payload
+          error: action.payload.error
         }
       };
     // Update single user cases
