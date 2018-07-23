@@ -3,6 +3,7 @@ import React from "react";
 import { connect } from "react-redux";
 import UserForm from "./UserForm";
 import type { User } from "../types/User";
+import type { UserEntry } from "../types/UserEntry";
 import Loading from "../../components/Loading";
 
 import { updateUser, fetchUser } from "../modules/users";
