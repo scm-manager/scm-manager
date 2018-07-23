@@ -21,7 +21,6 @@ import sonia.scm.user.UserManager;
 import sonia.scm.web.VndMediaType;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -51,10 +50,7 @@ public class UserRootResourceTest {
 
   private Dispatcher dispatcher = MockDispatcherFactory.createDispatcher();
 
-  @Mock
-  private UriInfo uriInfo;
-  @Mock
-  private UriInfoStore uriInfoStore;
+  private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(URI.create("/"));
 
   @Mock
   private PasswordService passwordService;
@@ -68,23 +64,21 @@ public class UserRootResourceTest {
   private ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
 
   @Before
-  public void prepareEnvironment() throws IOException, UserException {
+  public void prepareEnvironment() throws UserException {
     initMocks(this);
     User dummyUser = createDummyUser("Neo");
-    doNothing().when(userManager).create(userCaptor.capture());
+    when(userManager.create(userCaptor.capture())).thenAnswer(invocation -> invocation.getArguments()[0]);
     doNothing().when(userManager).modify(userCaptor.capture());
     doNothing().when(userManager).delete(userCaptor.capture());
 
-    UserCollectionToDtoMapper userCollectionToDtoMapper = new UserCollectionToDtoMapper(userToDtoMapper, uriInfoStore);
+    UserCollectionToDtoMapper userCollectionToDtoMapper = new UserCollectionToDtoMapper(userToDtoMapper, resourceLinks);
     UserCollectionResource userCollectionResource = new UserCollectionResource(userManager, dtoToUserMapper,
-      userCollectionToDtoMapper);
+       userCollectionToDtoMapper, resourceLinks);
     UserResource userResource = new UserResource(dtoToUserMapper, userToDtoMapper, userManager);
     UserRootResource userRootResource = new UserRootResource(MockProvider.of(userCollectionResource),
                                                              MockProvider.of(userResource));
 
     dispatcher.getRegistry().addSingletonResource(userRootResource);
-    when(uriInfo.getBaseUri()).thenReturn(URI.create("/"));
-    when(uriInfoStore.get()).thenReturn(uriInfo);
   }
 
   @Test

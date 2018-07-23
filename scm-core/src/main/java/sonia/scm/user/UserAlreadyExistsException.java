@@ -41,19 +41,11 @@ package sonia.scm.user;
 public class UserAlreadyExistsException extends UserException
 {
 
-  /** Field description */
   private static final long serialVersionUID = 9182294539718090814L;
 
   //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs a new instance.
-   *
-   * @param message message of exception
-   * @since 1.5
-   */
-  public UserAlreadyExistsException(String message)
-  {
-    super(message);
+  public UserAlreadyExistsException(User user) {
+    super(user.getName() + " user already exists");
   }
 }

@@ -82,7 +82,7 @@ public class HgRepositoryServiceResolver implements RepositoryServiceResolver
    * @return
    */
   @Override
-  public HgRepositoryServiceProvider reslove(Repository repository)
+  public HgRepositoryServiceProvider resolve(Repository repository)
   {
     HgRepositoryServiceProvider provider = null;
 

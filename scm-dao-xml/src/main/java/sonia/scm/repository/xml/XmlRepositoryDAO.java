@@ -36,11 +36,11 @@ package sonia.scm.repository.xml;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
+import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryDAO;
-import sonia.scm.xml.AbstractXmlDAO;
 import sonia.scm.store.ConfigurationStoreFactory;
+import sonia.scm.xml.AbstractXmlDAO;
 
 /**
  *
@@ -71,36 +71,18 @@ public class XmlRepositoryDAO
 
   //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param type
-   * @param name
-   *
-   * @return
-   */
   @Override
-  public boolean contains(String type, String name)
+  public boolean contains(NamespaceAndName namespaceAndName)
   {
-    return db.contains(type, name);
+    return db.contains(namespaceAndName);
   }
 
   //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param type
-   * @param name
-   *
-   * @return
-   */
   @Override
-  public Repository get(String type, String name)
+  public Repository get(NamespaceAndName namespaceAndName)
   {
-    return db.get(type, name);
+    return db.get(namespaceAndName);
   }
 
   //~--- methods --------------------------------------------------------------

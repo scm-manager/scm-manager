@@ -18,28 +18,25 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
-
-import static sonia.scm.api.v2.resources.ResourceLinks.user;
 
 public class UserCollectionResource {
 
   private static final int DEFAULT_PAGE_SIZE = 10;
   private final UserDtoToUserMapper dtoToUserMapper;
   private final UserCollectionToDtoMapper userCollectionToDtoMapper;
+  private final ResourceLinks resourceLinks;
 
-  private final ResourceManagerAdapter<User, UserDto, UserException> adapter;
+  private final IdResourceManagerAdapter<User, UserDto, UserException> adapter;
 
   @Inject
   public UserCollectionResource(UserManager manager, UserDtoToUserMapper dtoToUserMapper,
-                                UserCollectionToDtoMapper userCollectionToDtoMapper) {
+    UserCollectionToDtoMapper userCollectionToDtoMapper, ResourceLinks resourceLinks) {
     this.dtoToUserMapper = dtoToUserMapper;
     this.userCollectionToDtoMapper = userCollectionToDtoMapper;
-    this.adapter = new ResourceManagerAdapter<>(manager);
+    this.adapter = new IdResourceManagerAdapter<>(manager, User.class);
+    this.resourceLinks = resourceLinks;
   }
 
   /**
@@ -47,10 +44,9 @@ public class UserCollectionResource {
    *
    * <strong>Note:</strong> This method requires "user" privilege.
    *
-   * @param request  the current request
    * @param page     the number of the requested page
    * @param pageSize the page size (default page size is {@value DEFAULT_PAGE_SIZE})
-   * @param sortBy   sort parameter
+   * @param sortBy   sort parameter (if empty - undefined sorting)
    * @param desc     sort direction desc or asc
    */
   @GET
@@ -59,14 +55,14 @@ public class UserCollectionResource {
   @TypeHint(UserDto[].class)
   @StatusCodes({
     @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 400, condition = "\"sortBy\" field unknown"),
     @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
     @ResponseCode(code = 403, condition = "not authorized, the current user does not have the \"user\" privilege"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
-  public Response getAll(@Context Request request,
-    @DefaultValue("0") @QueryParam("page") int page,
+  public Response getAll(@DefaultValue("0") @QueryParam("page") int page,
     @DefaultValue("" + DEFAULT_PAGE_SIZE) @QueryParam("pageSize") int pageSize,
-    @QueryParam("sortby") String sortBy,
+    @QueryParam("sortBy") String sortBy,
     @DefaultValue("false") @QueryParam("desc") boolean desc) {
     return adapter.getAll(page, pageSize, sortBy, desc,
                           pageResult -> userCollectionToDtoMapper.map(page, pageSize, pageResult));
@@ -92,9 +88,9 @@ public class UserCollectionResource {
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
   @ResponseHeaders(@ResponseHeader(name = "Location", description = "uri to the created user"))
-  public Response create(@Context UriInfo uriInfo, UserDto userDto) throws IOException, UserException {
+  public Response create(UserDto userDto) throws IOException, UserException {
     return adapter.create(userDto,
                           () -> dtoToUserMapper.map(userDto, ""),
-                          user -> user(uriInfo).self(user.getName()));
+      user -> resourceLinks.user().self(user.getName()));
   }
 }

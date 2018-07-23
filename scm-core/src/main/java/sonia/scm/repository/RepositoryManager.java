@@ -38,13 +38,12 @@ package sonia.scm.repository;
 import sonia.scm.Type;
 import sonia.scm.TypeManager;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
-
-import java.util.Collection;
-
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Optional;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * The central class for managing {@link Repository} objects.
@@ -83,18 +82,17 @@ public interface RepositoryManager
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Returns a {@link Repository} by its type and name or
+   * Returns a {@link Repository} by its namespace and name or
    * null if the {@link Repository} could not be found.
    *
    *
-   * @param type type of the {@link Repository}
-   * @param name name of the {@link Repository}
+   * @param namespaceAndName namespace and name of the {@link Repository}
    *
    *
-   * @return {@link Repository} by its type and name or null
+   * @return {@link Repository} by its namespace and name or null
    * if the {@link Repository} could not be found
    */
-  public Repository get(String type, String name);
+  public Repository get(NamespaceAndName namespaceAndName);
 
   /**
    * Returns all configured repository types.
@@ -114,18 +112,6 @@ public interface RepositoryManager
    * @since 1.9
    */
   public Repository getFromRequest(HttpServletRequest request);
-
-  /**
-   * Returns the {@link Repository} associated to the given type and path.
-   *
-   *
-   * @param type type of the repository (hg, git ...)
-   * @param uri
-   *
-   * @return the {@link Repository} associated to the given type and path
-   * @since 1.9
-   */
-  public Repository getFromTypeAndUri(String type, String uri);
 
   /**
    * Returns the {@link Repository} associated to the request uri.
@@ -149,4 +135,11 @@ public interface RepositoryManager
    */
   @Override
   public RepositoryHandler getHandler(String type);
+
+  default Optional<Repository> getByNamespace(String namespace, String name) {
+    return getAll()
+      .stream()
+      .filter(r -> r.getName().equals(name) && r.getNamespace().equals(namespace))
+      .findFirst();
+  }
 }

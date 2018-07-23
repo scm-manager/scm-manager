@@ -37,20 +37,20 @@ package sonia.scm.repository.api;
 
 import com.github.legman.ReferenceType;
 import com.github.legman.Subscribe;
-
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.HandlerEventType;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.event.ScmEventBus;
+import sonia.scm.repository.ClearRepositoryCacheEvent;
+import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.PostReceiveRepositoryHookEvent;
 import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.Repository;
@@ -63,11 +63,9 @@ import sonia.scm.repository.spi.RepositoryServiceProvider;
 import sonia.scm.repository.spi.RepositoryServiceResolver;
 import sonia.scm.security.ScmSecurityException;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.Set;
-import sonia.scm.event.ScmEventBus;
-import sonia.scm.repository.ClearRepositoryCacheEvent;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * The {@link RepositoryServiceFactory} is the entrypoint of the repository api.
@@ -179,8 +177,7 @@ public final class RepositoryServiceFactory
 
     if (repository == null)
     {
-      throw new RepositoryNotFoundException(
-        "could not find a repository with id ".concat(repositoryId));
+      throw new RepositoryNotFoundException(repositoryId);
     }
 
     return create(repository);
@@ -190,8 +187,7 @@ public final class RepositoryServiceFactory
    * Creates a new RepositoryService for the given repository.
    *
    *
-   * @param type type of the repository
-   * @param name name of the repository
+   * @param namespaceAndName namespace and name of the repository
    *
    * @return a implementation of RepositoryService
    *         for the given type of repository
@@ -204,24 +200,19 @@ public final class RepositoryServiceFactory
    * @throws ScmSecurityException if current user has not read permissions
    *         for that repository
    */
-  public RepositoryService create(String type, String name)
+  public RepositoryService create(NamespaceAndName namespaceAndName)
     throws RepositoryNotFoundException
   {
-    Preconditions.checkArgument(!Strings.isNullOrEmpty(type),
-      "a non empty type is required");
-    Preconditions.checkArgument(!Strings.isNullOrEmpty(name),
-      "a non empty name is required");
+    Preconditions.checkArgument(namespaceAndName != null,
+      "a non empty namespace and name is required");
 
-    Repository repository = repositoryManager.get(type, name);
+    Repository repository = repositoryManager.get(namespaceAndName);
 
     if (repository == null)
     {
-      StringBuilder msg =
-        new StringBuilder("could not find a repository with type ");
+      String msg = "could not find a repository with namespace/name " + namespaceAndName;
 
-      msg.append(type).append(" and name ").append(name);
-
-      throw new RepositoryNotFoundException(msg.toString());
+      throw new RepositoryNotFoundException(msg);
     }
 
     return create(repository);
@@ -253,7 +244,7 @@ public final class RepositoryServiceFactory
 
     for (RepositoryServiceResolver resolver : resolvers)
     {
-      RepositoryServiceProvider provider = resolver.reslove(repository);
+      RepositoryServiceProvider provider = resolver.resolve(repository);
 
       if (provider != null)
       {

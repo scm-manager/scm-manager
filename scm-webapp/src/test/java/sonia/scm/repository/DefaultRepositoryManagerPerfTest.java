@@ -33,13 +33,6 @@ package sonia.scm.repository;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Provider;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -58,7 +51,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import static org.mockito.Mockito.*;
 import org.mockito.runners.MockitoJUnitRunner;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.Type;
@@ -67,8 +59,18 @@ import sonia.scm.config.ScmConfiguration;
 import sonia.scm.security.AuthorizationCollector;
 import sonia.scm.security.DefaultKeyGenerator;
 import sonia.scm.security.KeyGenerator;
-import sonia.scm.security.SecuritySystem;
 import sonia.scm.user.UserTestData;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Performance test for {@link RepositoryManager#getAll()}.
@@ -93,7 +95,7 @@ public class DefaultRepositoryManagerPerfTest {
   private final ScmConfiguration configuration = new ScmConfiguration();
   
   private final KeyGenerator keyGenerator = new DefaultKeyGenerator();
-  
+
   @Mock
   private RepositoryHandler repositoryHandler;
   
@@ -110,14 +112,15 @@ public class DefaultRepositoryManagerPerfTest {
     when(repositoryHandler.getType()).thenReturn(new Type(REPOSITORY_TYPE, REPOSITORY_TYPE));
     Set<RepositoryHandler> handlerSet = ImmutableSet.of(repositoryHandler);
     RepositoryMatcher repositoryMatcher = new RepositoryMatcher(Collections.<RepositoryPathMatcher>emptySet());
-    
+    NamespaceStrategy namespaceStrategy = mock(NamespaceStrategy.class);
     repositoryManager = new DefaultRepositoryManager(
       configuration, 
       contextProvider, 
       keyGenerator, 
       repositoryDAO,
       handlerSet, 
-      repositoryMatcher
+      repositoryMatcher,
+      namespaceStrategy
     );
     
     setUpTestRepositories();
@@ -127,10 +130,7 @@ public class DefaultRepositoryManagerPerfTest {
     
     ThreadContext.bind(securityManager);
   }
-  
-  /**
-   * Tear down test objects.
-   */
+
   @After
   public void tearDown(){
     ThreadContext.unbindSecurityManager();
@@ -183,8 +183,8 @@ private long calculateAverage(List<Long> times) {
     when(repositoryDAO.getAll()).thenReturn(repositories.values());
   }
   
-  private Repository createTestRepository(int number){
-    Repository repository = new Repository(keyGenerator.createKey(), REPOSITORY_TYPE, "repo-" + number);
+  private Repository createTestRepository(int number) {
+    Repository repository = new Repository(keyGenerator.createKey(), REPOSITORY_TYPE, "namespace", "repo-" + number);
     repository.getPermissions().add(new Permission("trillian", PermissionType.READ));
     return repository;
   }

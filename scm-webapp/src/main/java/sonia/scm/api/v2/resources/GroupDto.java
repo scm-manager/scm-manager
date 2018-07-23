@@ -10,15 +10,14 @@ import lombok.Setter;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Getter @Setter @NoArgsConstructor
 public class GroupDto extends HalRepresentation {
 
   private Instant creationDate;
   private String description;
-  @JsonInclude(JsonInclude.Include.NON_EMPTY)
-  private Optional<Instant> lastModified;
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  private Instant lastModified;
   private String name;
   private String type;
   private Map<String, String> properties;

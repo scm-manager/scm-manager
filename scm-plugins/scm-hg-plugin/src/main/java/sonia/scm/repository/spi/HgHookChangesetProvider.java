@@ -34,19 +34,17 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.aragost.javahg.Repository;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.repository.HgHookManager;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.spi.javahg.HgLogChangesetCommand;
 import sonia.scm.web.HgUtil;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.File;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -63,22 +61,12 @@ public class HgHookChangesetProvider implements HookChangesetProvider
 
   //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param handler
-   * @param repositoryName
-   * @param hookManager
-   * @param startRev
-   * @param type
-   */
   public HgHookChangesetProvider(HgRepositoryHandler handler,
-    String repositoryName, HgHookManager hookManager, String startRev,
+    String id, HgHookManager hookManager, String startRev,
     RepositoryHookType type)
   {
     this.handler = handler;
-    this.repositoryName = repositoryName;
+    this.id = id;
     this.hookManager = hookManager;
     this.startRev = startRev;
     this.type = type;
@@ -136,7 +124,7 @@ public class HgHookChangesetProvider implements HookChangesetProvider
   private Repository open()
   {
     File directory = handler.getConfig().getRepositoryDirectory();
-    File repositoryDirectory = new File(directory, repositoryName);
+    File repositoryDirectory = new File(directory, id);
 
     // use HG_PENDING only for pre receive hooks
     boolean pending = type == RepositoryHookType.PRE_RECEIVE;
@@ -155,7 +143,7 @@ public class HgHookChangesetProvider implements HookChangesetProvider
   private HgHookManager hookManager;
 
   /** Field description */
-  private String repositoryName;
+  private String id;
 
   /** Field description */
   private HookChangesetResponse response;

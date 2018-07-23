@@ -31,45 +31,56 @@
 package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
+
 import com.github.legman.Subscribe;
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.collect.ImmutableSet;
-
+import org.apache.shiro.authz.UnauthorizedException;
+import org.junit.Rule;
 import org.junit.Test;
-
+import org.junit.rules.ExpectedException;
+import org.mockito.invocation.InvocationOnMock;
+import sonia.scm.HandlerEventType;
+import sonia.scm.Manager;
+import sonia.scm.ManagerTestBase;
+import sonia.scm.ModelObject;
 import sonia.scm.Type;
+import sonia.scm.TypedObject;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.api.HookContext;
 import sonia.scm.repository.api.HookContextFactory;
 import sonia.scm.repository.api.HookFeature;
 import sonia.scm.repository.spi.HookContextProvider;
 import sonia.scm.repository.xml.XmlRepositoryDAO;
 import sonia.scm.security.DefaultKeyGenerator;
+import sonia.scm.security.KeyGenerator;
+import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.store.JAXBConfigurationStoreFactory;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-import static org.hamcrest.Matchers.*;
-
-//~--- JDK imports ------------------------------------------------------------
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
-
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
-import org.apache.shiro.authz.UnauthorizedException;
-import org.junit.Rule;
-import org.junit.rules.ExpectedException;
-import org.mockito.invocation.InvocationOnMock;
-import sonia.scm.HandlerEventType;
-import sonia.scm.Manager;
-import sonia.scm.ManagerTestBase;
-import sonia.scm.event.ScmEventBus;
-import sonia.scm.security.KeyGenerator;
-import sonia.scm.store.ConfigurationStoreFactory;
+
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Unit tests for {@link DefaultRepositoryManager}.
@@ -89,14 +100,12 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
   @Rule
   public ExpectedException thrown = ExpectedException.none();
 
-  /**
-   * Tests {@link RepositoryManager#create(sonia.scm.repository.Repository)}.
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
+  private ScmConfiguration configuration;
+
+  private String mockedNamespace = "default_namespace";
+
   @Test
-  public void testCreate() throws RepositoryException, IOException {
+  public void testCreate() throws RepositoryException {
     Repository heartOfGold = createTestRepository();
     Repository dbRepo = manager.get(heartOfGold.getId());
 
@@ -104,89 +113,47 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
     assertRepositoriesEquals(dbRepo, heartOfGold);
   }
 
-  /**
-   * Tests {@link RepositoryManager#create(sonia.scm.repository.Repository)} without the required permissions.
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @SubjectAware(
     username = "unpriv"
   )
   @Test(expected = UnauthorizedException.class)
-  public void testCreateWithoutPrivileges() throws RepositoryException, IOException {
+  public void testCreateWithoutPrivileges() throws RepositoryException {
     createTestRepository();
   }
 
-  /**
-   * Tests {@link RepositoryManager#create(sonia.scm.repository.Repository)} with a already existing repository.
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test(expected = RepositoryAlreadyExistsException.class)
-  public void testCreateExisting() throws RepositoryException, IOException {
+  public void testCreateExisting() throws RepositoryException {
     createTestRepository();
     createTestRepository();
   }
 
-  /**
-   * Tests {@link RepositoryManager#delete(sonia.scm.repository.Repository)}.
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test
-  public void testDelete() throws RepositoryException, IOException {
+  public void testDelete() throws RepositoryException {
     delete(manager, createTestRepository());
   }
 
-  /**
-   * Tests {@link RepositoryManager#delete(sonia.scm.repository.Repository)} without the required permissions.
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @SubjectAware(
     username = "unpriv"
   )
   @Test(expected = UnauthorizedException.class)
-  public void testDeleteWithoutPrivileges() throws RepositoryException, IOException {
+  public void testDeleteWithoutPrivileges() throws RepositoryException {
     delete(manager, createTestRepository());
   }
 
-  /**
-   * Tests {@link RepositoryManager#delete(sonia.scm.repository.Repository)} with a non archived repository and with
-   * enabled archive mode.
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test(expected = RepositoryIsNotArchivedException.class)
-  public void testDeleteNonArchived() throws RepositoryException, IOException {
-    delete(createRepositoryManager(true), createTestRepository());
+  public void testDeleteNonArchived() throws RepositoryException {
+    configuration.setEnableRepositoryArchive(true);
+    delete(manager, createTestRepository());
   }
 
-  /**
-   * Tests {@link RepositoryManager#delete(sonia.scm.repository.Repository)} with a non existing repository.
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test(expected = RepositoryNotFoundException.class)
-  public void testDeleteNotFound() throws RepositoryException, IOException {
+  public void testDeleteNotFound() throws RepositoryException {
     manager.delete(createRepositoryWithId());
   }
 
-  /**
-   * Tests {@link RepositoryManager#delete(sonia.scm.repository.Repository)} with enabled archive mode.
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test
   public void testDeleteWithEnabledArchive()
-    throws RepositoryException, IOException {
+    throws RepositoryException {
     Repository repository = createTestRepository();
 
     repository.setArchived(true);
@@ -195,14 +162,8 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
     delete(drm, repository);
   }
 
-  /**
-   * Tests {@link RepositoryManager#get(java.lang.String)} .
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test
-  public void testGet() throws RepositoryException, IOException {
+  public void testGet() throws RepositoryException {
     Repository heartOfGold = createTestRepository();
     String id = heartOfGold.getId();
     String description = heartOfGold.getDescription();
@@ -216,17 +177,11 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
     assertEquals(description, heartOfGold.getDescription());
   }
 
-  /**
-   * Tests {@link RepositoryManager#get(java.lang.String)} without required privileges.
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test
   @SubjectAware(
     username = "crato"
   )
-  public void testGetWithoutRequiredPrivileges() throws RepositoryException, IOException {
+  public void testGetWithoutRequiredPrivileges() throws RepositoryException {
     Repository heartOfGold = RepositoryTestData.createHeartOfGold();
     manager.create(heartOfGold);
 
@@ -234,14 +189,8 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
     manager.get(heartOfGold.getId());
   }
 
-  /**
-   * Tests {@link RepositoryManager#getAll()}.
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test
-  public void testGetAll() throws RepositoryException, IOException {
+  public void testGetAll() throws RepositoryException {
     Repository heartOfGold = createTestRepository();
     Repository happyVerticalPeopleTransporter = createSecondTestRepository();
     boolean foundHeart = false;
@@ -276,16 +225,10 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
       heartOfGold.getDescription().equals(heartReference.getDescription()));
   }
 
-  /**
-   * Tests {@link RepositoryManager#getAll()} with permission for 2 of 3 repositories.
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test
   @SuppressWarnings("unchecked")
   @SubjectAware(username = "dent")
-  public void testGetAllWithPermissions() throws RepositoryException, IOException {
+  public void testGetAllWithPermissionsForTwoOrThreeRepos() throws RepositoryException {
     // mock key generator
     KeyGenerator keyGenerator = mock(KeyGenerator.class);
     Stack<String> keys = new Stack<>();
@@ -325,14 +268,8 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
     );
   }
 
-  /**
-   * Tests repository manager events.
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test
-  public void testEvents() throws RepositoryException, IOException {
+  public void testEvents() throws RepositoryException {
     RepositoryManager repoManager = createRepositoryManager(false);
     repoManager.init(contextProvider);
     TestListener listener = new TestListener();
@@ -362,14 +299,8 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
     assertSame(HandlerEventType.DELETE, listener.postEvent);
   }
 
-  /**
-   * Tests {@link RepositoryManager#modify(sonia.scm.repository.Repository)}.
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test
-  public void testModify() throws RepositoryException, IOException {
+  public void testModify() throws RepositoryException {
     Repository heartOfGold = createTestRepository();
 
     heartOfGold.setDescription("prototype ship");
@@ -380,17 +311,10 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
     assertNotNull(hearReference);
     assertEquals(hearReference.getDescription(), "prototype ship");
   }
-  
-  /**
-   * Tests {@link RepositoryManager#modify(sonia.scm.repository.Repository)} without
-   * the required permissions.
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
+
   @Test
   @SubjectAware(username = "crato")
-  public void testModifyWithoutRequiredPermissions() throws RepositoryException, IOException {
+  public void testModifyWithoutRequiredPermissions() throws RepositoryException {
     Repository heartOfGold = RepositoryTestData.createHeartOfGold();
     manager.create(heartOfGold);
     heartOfGold.setDescription("prototype ship");
@@ -399,26 +323,13 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
     manager.modify(heartOfGold);
   }
 
-  /**
-   * Tests {@link RepositoryManager#modify(sonia.scm.repository.Repository)} with a non
-   * existing repository.
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test(expected = RepositoryNotFoundException.class)
-  public void testModifyNotFound() throws RepositoryException, IOException {
+  public void testModifyNotFound() throws RepositoryException {
     manager.modify(createRepositoryWithId());
   }
 
-  /**
-   * Tests {@link RepositoryManager#refresh(sonia.scm.repository.Repository)}.
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test
-  public void testRefresh() throws RepositoryException, IOException {
+  public void testRefresh() throws RepositoryException {
     Repository heartOfGold = createTestRepository();
     String description = heartOfGold.getDescription();
 
@@ -427,16 +338,9 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
     assertEquals(description, heartOfGold.getDescription());
   }
 
-  /**
-   * Tests {@link RepositoryManager#refresh(sonia.scm.repository.Repository)} without
-   * required permissions.
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test
   @SubjectAware(username = "crato")
-  public void testRefreshWithoutRequiredPermissions() throws RepositoryException, IOException {
+  public void testRefreshWithoutRequiredPermissions() throws RepositoryException {
     Repository heartOfGold = RepositoryTestData.createHeartOfGold();
     manager.create(heartOfGold);
     heartOfGold.setDescription("prototype ship");
@@ -445,26 +349,13 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
     manager.refresh(heartOfGold);
   }
 
-  /**
-   * Tests {@link RepositoryManager#refresh(sonia.scm.repository.Repository)} with a non existing
-   * repository.
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test(expected = RepositoryNotFoundException.class)
-  public void testRefreshNotFound() throws RepositoryException, IOException {
+  public void testRefreshNotFound() throws RepositoryException {
     manager.refresh(createRepositoryWithId());
   }
 
-  /**
-   * Tests repository hooks.
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test
-  public void testRepositoryHook() throws RepositoryException, IOException {
+  public void testRepositoryHook() throws RepositoryException {
     CountingReceiveHook hook = new CountingReceiveHook();
     RepositoryManager repoManager = createRepositoryManager(false);
 
@@ -483,28 +374,96 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
     assertEquals(2, hook.eventsReceived);
   }
 
-  /**
-   * Tests {@link RepositoryManager#getFromTypeAndUri(String, String)}.
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test
-  public void getRepositoryFromRequestUriTest() throws RepositoryException, IOException {
+  public void testNamespaceSet() throws Exception {
+    RepositoryManager repoManager = createRepositoryManager(false);
+    Repository repository = spy(createTestRepository());
+    repository.setName("Testrepo");
+    ((DefaultRepositoryManager) repoManager).create(repository);
+    assertEquals("default_namespace", repository.getNamespace());
+  }
+
+  @Test
+  public void getRepositoryFromRequestUri_withoutLeadingSlash() throws RepositoryException {
     RepositoryManager m = createManager();
     m.init(contextProvider);
-    
-    createRepository(m, new Repository("1", "hg", "scm"));
-    createRepository(m, new Repository("2", "hg", "scm-test"));
-    createRepository(m, new Repository("3", "git", "project1/test-1"));
-    createRepository(m, new Repository("4", "git", "project1/test-2"));
-    
-    assertEquals("scm", m.getFromUri("hg/scm").getName());
-    assertEquals("scm-test", m.getFromUri("hg/scm-test").getName());
-    assertEquals("scm-test", m.getFromUri("/hg/scm-test").getName());
-    assertEquals("project1/test-1", m.getFromUri("/git/project1/test-1").getName());
-    assertEquals("project1/test-1", m.getFromUri("/git/project1/test-1/ka/some/path").getName());
-    assertNull(m.getFromUri("/git/project1/test-3/ka/some/path"));
+
+    createUriTestRepositories(m);
+
+    assertEquals("scm-test", m.getFromUri("hg/namespace/scm-test").getName());
+    assertEquals("namespace", m.getFromUri("hg/namespace/scm-test").getNamespace());
+  }
+
+  @Test
+  public void getRepositoryFromRequestUri_withLeadingSlash() throws RepositoryException {
+    RepositoryManager m = createManager();
+    m.init(contextProvider);
+
+    createUriTestRepositories(m);
+
+    assertEquals("scm-test", m.getFromUri("/hg/namespace/scm-test").getName());
+    assertEquals("namespace", m.getFromUri("/hg/namespace/scm-test").getNamespace());
+  }
+
+  @Test
+  public void getRepositoryFromRequestUri_withPartialName() throws RepositoryException {
+    RepositoryManager m = createManager();
+    m.init(contextProvider);
+
+    createUriTestRepositories(m);
+
+    assertEquals("scm", m.getFromUri("hg/namespace/scm").getName());
+    assertEquals("namespace", m.getFromUri("hg/namespace/scm").getNamespace());
+  }
+
+  @Test
+  public void getRepositoryFromRequestUri_withTrailingFilePath() throws RepositoryException {
+    RepositoryManager m = createManager();
+    m.init(contextProvider);
+
+    createUriTestRepositories(m);
+
+    assertEquals("test-1", m.getFromUri("/git/namespace/test-1/ka/some/path").getName());
+  }
+
+  @Test
+  public void getRepositoryFromRequestUri_forNotExistingRepositoryName() throws RepositoryException {
+    RepositoryManager m = createManager();
+    m.init(contextProvider);
+
+    createUriTestRepositories(m);
+
+    assertNull(m.getFromUri("/git/namespace/test-3/ka/some/path"));
+  }
+
+  @Test
+  public void getRepositoryFromRequestUri_forWrongNamespace() throws RepositoryException {
+    RepositoryManager m = createManager();
+    m.init(contextProvider);
+
+    createUriTestRepositories(m);
+
+    assertNull(m.getFromUri("/git/other/other/test-2"));
+  }
+
+  @Test
+  public void shouldSetNamespace() throws RepositoryException {
+    Repository repository = new Repository(null, "hg", null, "scm");
+    manager.create(repository);
+    assertNotNull(repository.getId());
+    assertNotNull(repository.getNamespace());
+  }
+
+  private void createUriTestRepositories(RepositoryManager m) throws RepositoryException {
+    mockedNamespace = "namespace";
+    createRepository(m, new Repository("1", "hg", "namespace", "scm"));
+    createRepository(m, new Repository("2", "hg", "namespace", "scm-test"));
+    createRepository(m, new Repository("3", "git", "namespace", "test-1"));
+    createRepository(m, new Repository("4", "git", "namespace", "test-2"));
+
+    mockedNamespace = "other";
+    createRepository(m, new Repository("1", "hg", "other", "scm"));
+    createRepository(m, new Repository("2", "hg", "other", "scm-test"));
   }
 
   //~--- methods --------------------------------------------------------------
@@ -537,16 +496,19 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
 
     XmlRepositoryDAO repositoryDAO = new XmlRepositoryDAO(factory);
 
-    ScmConfiguration configuration = new ScmConfiguration();
+    this.configuration = new ScmConfiguration();
 
     configuration.setEnableRepositoryArchive(archiveEnabled);
 
+    NamespaceStrategy namespaceStrategy = mock(NamespaceStrategy.class);
+    when(namespaceStrategy.getNamespace()).thenAnswer(invocation -> mockedNamespace);
+
     return new DefaultRepositoryManager(configuration, contextProvider,
-      keyGenerator, repositoryDAO, handlerSet, createRepositoryMatcher());
+      keyGenerator, repositoryDAO, handlerSet, createRepositoryMatcher(), namespaceStrategy);
   }
   
   private void createRepository(RepositoryManager m, Repository repository)
-    throws RepositoryException, IOException {
+    throws RepositoryException {
     m.create(repository);
   }
 
@@ -573,7 +535,7 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
     return new RepositoryMatcher(Collections.<RepositoryPathMatcher>emptySet());
   }       
 
-  private Repository createRepository(Repository repository) throws RepositoryException, IOException {
+  private Repository createRepository(Repository repository) throws RepositoryException {
     manager.create(repository);
     assertNotNull(repository.getId());
     assertNotNull(manager.get(repository.getId()));
@@ -588,17 +550,17 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
     return repository;
   }
 
-  private Repository createSecondTestRepository() throws RepositoryException, IOException {
+  private Repository createSecondTestRepository() throws RepositoryException {
     return createRepository(
       RepositoryTestData.createHappyVerticalPeopleTransporter());
   }
 
-  private Repository createTestRepository() throws RepositoryException, IOException {
+  private Repository createTestRepository() throws RepositoryException {
     return createRepository(RepositoryTestData.createHeartOfGold());
   }
 
   private void delete(Manager<Repository, RepositoryException> manager, Repository repository)
-    throws RepositoryException, IOException {
+    throws RepositoryException {
 
     String id = repository.getId();
 

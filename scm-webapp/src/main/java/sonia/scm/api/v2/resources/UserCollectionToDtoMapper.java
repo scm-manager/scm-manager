@@ -5,28 +5,26 @@ import sonia.scm.user.UserPermissions;
 
 import javax.inject.Inject;
 
-import static sonia.scm.api.v2.resources.ResourceLinks.userCollection;
-
 // Mapstruct does not support parameterized (i.e. non-default) constructors. Thus, we need to use field injection.
 @SuppressWarnings("squid:S3306")
 public class UserCollectionToDtoMapper extends BasicCollectionToDtoMapper<User, UserDto> {
 
-  private final UriInfoStore uriInfoStore;
+  private final ResourceLinks resourceLinks;
 
   @Inject
-  public UserCollectionToDtoMapper(UserToUserDtoMapper userToDtoMapper, UriInfoStore uriInfoStore) {
+  public UserCollectionToDtoMapper(UserToUserDtoMapper userToDtoMapper, ResourceLinks resourceLinks) {
     super("users", userToDtoMapper);
-    this.uriInfoStore = uriInfoStore;
+    this.resourceLinks = resourceLinks;
   }
 
   @Override
   String createCreateLink() {
-    return userCollection(uriInfoStore.get()).create();
+    return resourceLinks.userCollection().create();
   }
 
   @Override
   String createSelfLink() {
-    return userCollection(uriInfoStore.get()).self();
+    return resourceLinks.userCollection().self();
   }
 
   @Override

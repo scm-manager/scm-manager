@@ -52,39 +52,7 @@ public class GroupNotFoundException extends GroupException
    * Constructs a new GroupNotFoundException.
    *
    */
-  public GroupNotFoundException() {}
-
-  /**
-   * Constructs a new GroupNotFoundException.
-   *
-   *
-   * @param message message for the exception
-   */
-  public GroupNotFoundException(String message)
-  {
-    super(message);
-  }
-
-  /**
-   * Constructs a new GroupNotFoundException.
-   *
-   *
-   * @param throwable root cause
-   */
-  public GroupNotFoundException(Throwable throwable)
-  {
-    super(throwable);
-  }
-
-  /**
-   * Constructs a new GroupNotFoundException.
-   *
-   *
-   * @param message message for the exception
-   * @param throwable root cause
-   */
-  public GroupNotFoundException(String message, Throwable throwable)
-  {
-    super(message, throwable);
+  public GroupNotFoundException(Group group) {
+    super("group "  + group.getName() + " does not exist");
   }
 }

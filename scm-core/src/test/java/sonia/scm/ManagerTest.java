@@ -88,7 +88,7 @@ public class ManagerTest {
     public Collection getAll(Comparator comparator, int start, int limit) {  return null; }
 
     @Override
-    public void create(TypedObject object) {}
+    public TypedObject create(TypedObject object) { return null; }
 
     @Override
     public void delete(TypedObject object) {}

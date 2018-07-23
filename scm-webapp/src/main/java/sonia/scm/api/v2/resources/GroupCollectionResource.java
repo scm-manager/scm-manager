@@ -18,38 +18,35 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 
-import static sonia.scm.api.v2.resources.ResourceLinks.group;
 
 public class GroupCollectionResource {
   
   private static final int DEFAULT_PAGE_SIZE = 10;
   private final GroupDtoToGroupMapper dtoToGroupMapper;
   private final GroupCollectionToDtoMapper groupCollectionToDtoMapper;
+  private final ResourceLinks resourceLinks;
 
-  private final ResourceManagerAdapter<Group, GroupDto, GroupException> adapter;
+  private final IdResourceManagerAdapter<Group, GroupDto, GroupException> adapter;
 
   @Inject
-  public GroupCollectionResource(GroupManager manager, GroupDtoToGroupMapper dtoToGroupMapper, GroupCollectionToDtoMapper groupCollectionToDtoMapper) {
+  public GroupCollectionResource(GroupManager manager, GroupDtoToGroupMapper dtoToGroupMapper, GroupCollectionToDtoMapper groupCollectionToDtoMapper, ResourceLinks resourceLinks) {
     this.dtoToGroupMapper = dtoToGroupMapper;
     this.groupCollectionToDtoMapper = groupCollectionToDtoMapper;
-    this.adapter = new ResourceManagerAdapter<>(manager);
+    this.resourceLinks = resourceLinks;
+    this.adapter = new IdResourceManagerAdapter<>(manager, Group.class);
   }
 
   /**
    * Returns all groups for a given page number with a given page size (default page size is {@value DEFAULT_PAGE_SIZE}).
-   * 
+   *
    * <strong>Note:</strong> This method requires "group" privilege.
    *
-   * @param request  the current request
    * @param page     the number of the requested page
    * @param pageSize the page size (default page size is {@value DEFAULT_PAGE_SIZE})
-   * @param sortBy   sort parameter
+   * @param sortBy   sort parameter (if empty - undefined sorting)
    * @param desc     sort direction desc or aesc
    */
   @GET
@@ -58,14 +55,14 @@ public class GroupCollectionResource {
   @TypeHint(GroupDto[].class)
   @StatusCodes({
     @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 400, condition = "\"sortBy\" field unknown"),
     @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
     @ResponseCode(code = 403, condition = "not authorized, the current user does not have the \"group\" privilege"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
-  public Response getAll(@Context Request request,
-    @DefaultValue("0") @QueryParam("page") int page,
+  public Response getAll(@DefaultValue("0") @QueryParam("page") int page,
     @DefaultValue("" + DEFAULT_PAGE_SIZE) @QueryParam("pageSize") int pageSize,
-    @QueryParam("sortby") String sortBy,
+    @QueryParam("sortBy") String sortBy,
     @DefaultValue("false")
     @QueryParam("desc") boolean desc) {
     return adapter.getAll(page, pageSize, sortBy, desc,
@@ -89,9 +86,9 @@ public class GroupCollectionResource {
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
   @ResponseHeaders(@ResponseHeader(name = "Location", description = "uri to the created group"))
-  public Response create(@Context UriInfo uriInfo, GroupDto groupDto) throws IOException, GroupException {
+  public Response create(GroupDto groupDto) throws IOException, GroupException {
     return adapter.create(groupDto,
                           () -> dtoToGroupMapper.map(groupDto),
-                          group -> group(uriInfo).self(group.getName()));
+                          group -> resourceLinks.group().self(group.getName()));
   }
 }

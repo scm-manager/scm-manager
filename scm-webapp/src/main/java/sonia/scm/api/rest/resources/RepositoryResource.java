@@ -42,13 +42,10 @@ import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.ResponseHeader;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
-
 import org.apache.shiro.SecurityUtils;
-
+import org.apache.shiro.authz.AuthorizationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.BlameResult;
 import sonia.scm.repository.Branches;
 import sonia.scm.repository.BrowserResult;
@@ -76,13 +73,6 @@ import sonia.scm.util.HttpUtil;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
-
-import java.util.ArrayList;
-import java.util.Collection;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
@@ -101,7 +91,11 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriInfo;
-import org.apache.shiro.authz.AuthorizationException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Repository related RESTful Web Service Endpoint.
@@ -125,19 +119,15 @@ public class RepositoryResource extends AbstractManagerResource<Repository, Repo
   /**
    * Constructs ...
    *
-   *
-   * @param configuration
-   * @param repositoryManager
+   *  @param repositoryManager
    * @param servicefactory
    * @param healthChecker
    */
   @Inject
-  public RepositoryResource(ScmConfiguration configuration,
-    RepositoryManager repositoryManager,
+  public RepositoryResource(RepositoryManager repositoryManager,
     RepositoryServiceFactory servicefactory, HealthChecker healthChecker)
   {
-    super(repositoryManager);
-    this.configuration = configuration;
+    super(repositoryManager, Repository.class);
     this.repositoryManager = repositoryManager;
     this.servicefactory = servicefactory;
     this.healthChecker = healthChecker;
@@ -215,10 +205,10 @@ public class RepositoryResource extends AbstractManagerResource<Repository, Repo
         logger.warn("delete not allowed", ex);
         response = Response.status(Response.Status.FORBIDDEN).build();
       }
-      catch (RepositoryException | IOException ex)
+      catch (RepositoryException ex)
       {
-        logger.error("error during create", ex);
-        response = createErrorResonse(ex);
+        logger.error("error during delete", ex);
+        response = createErrorResponse(ex);
       }
     }
     else
@@ -567,42 +557,6 @@ public class RepositoryResource extends AbstractManagerResource<Repository, Repo
   }
 
   /**
-   * Returns the {@link Repository} with the specified type and name.
-   *
-   * @param type the type of the repository
-   * @param name the name of the repository
-   *
-   * @return the {@link Repository} with the specified type and name
-   */
-  @GET
-  @Path("{type: [a-z]+}/{name: .*}")
-  @StatusCodes({
-    @ResponseCode(code = 200, condition = "success"),
-    @ResponseCode(code = 404, condition = "not found, no repository with the specified type and name available"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
-  @TypeHint(Repository.class)
-  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-  public Response getByTypeAndName(@PathParam("type") String type,
-    @PathParam("name") String name)
-  {
-    Response response;
-    Repository repository = repositoryManager.get(type, name);
-
-    if (repository != null)
-    {
-      prepareForReturn(repository);
-      response = Response.ok(repository).build();
-    }
-    else
-    {
-      response = Response.status(Response.Status.NOT_FOUND).build();
-    }
-
-    return response;
-  }
-
-  /**
    * Returns the {@link Changeset} from the given repository
    * with the specified revision.
    *
@@ -823,7 +777,7 @@ public class RepositoryResource extends AbstractManagerResource<Repository, Repo
     catch (Exception ex)
     {
       logger.error("could not retrive content", ex);
-      response = createErrorResonse(ex);
+      response = createErrorResponse(ex);
     }
 
     return response;
@@ -908,7 +862,7 @@ public class RepositoryResource extends AbstractManagerResource<Repository, Repo
     catch (Exception ex)
     {
       logger.error("could not create diff", ex);
-      response = createErrorResonse(ex);
+      response = createErrorResponse(ex);
     }
 
     return response;
@@ -1107,9 +1061,6 @@ public class RepositoryResource extends AbstractManagerResource<Repository, Repo
   }
   
   //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final ScmConfiguration configuration;
 
   /** Field description */
   private final HealthChecker healthChecker;

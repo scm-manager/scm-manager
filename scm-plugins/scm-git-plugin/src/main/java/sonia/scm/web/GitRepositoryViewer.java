@@ -56,9 +56,6 @@ import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.template.Template;
 import sonia.scm.template.TemplateEngine;
 import sonia.scm.template.TemplateEngineFactory;
-import sonia.scm.url.RepositoryUrlProvider;
-import sonia.scm.url.UrlProvider;
-import sonia.scm.url.UrlProviderFactory;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
@@ -137,21 +134,14 @@ public class GitRepositoryViewer
 
     logger.trace("render git repository quick view with base url {}", baseUrl);
 
-    UrlProvider urlProvider = UrlProviderFactory.createUrlProvider(baseUrl,
-                                UrlProviderFactory.TYPE_WUI);
-
     response.setContentType(MIMETYPE_HTML);
-
-    RepositoryUrlProvider rup = urlProvider.getRepositoryUrlProvider();
 
     TemplateEngine engine = templateEngineFactory.getDefaultEngine();
     Template template = engine.getTemplate(RESOURCE_GITINDEX);
     //J-
     ImmutableMap<String,Object> env = ImmutableMap.of(
       "repository", repository, 
-      "branches", createBranchesModel(repository),
-      "commitViewLink", rup.getChangesetUrl(repository.getId(), 0, 20),
-      "sourceViewLink", rup.getBrowseUrl(repository.getId(), null, null)
+      "branches", createBranchesModel(repository)
     );
     //J+
 

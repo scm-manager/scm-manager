@@ -33,20 +33,16 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.eventbus.Subscribe;
+import com.github.legman.Subscribe;
 import com.google.inject.Inject;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.EagerSingleton;
 import sonia.scm.plugin.Extension;
 import sonia.scm.web.security.AdministrationContext;
 import sonia.scm.web.security.PrivilegedAction;
 
 //~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
 
 /**
  *
@@ -154,7 +150,7 @@ public final class LastModifiedUpdateListener
         {
           repositoryManager.modify(dbr);
         }
-        catch (RepositoryException | IOException ex)
+        catch (RepositoryException ex)
         {
           logger.error("could not modify repository", ex);
         }

@@ -8,13 +8,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import sonia.scm.api.rest.resources.UserResource;
 import sonia.scm.user.User;
 
-import javax.ws.rs.core.UriInfo;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.time.Instant;
 
 import static org.junit.Assert.assertEquals;
@@ -25,10 +22,9 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class UserToUserDtoMapperTest {
 
-  @Mock
-  private UriInfo uriInfo;
-  @Mock
-  private UriInfoStore uriInfoStore;
+  private final URI baseUri = URI.create("http://example.com/base/");
+  @SuppressWarnings("unused") // Is injected
+  private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
 
   @InjectMocks
   private UserToUserDtoMapperImpl mapper;
@@ -39,12 +35,9 @@ public class UserToUserDtoMapperTest {
   private URI expectedBaseUri;
 
   @Before
-  public void init() throws URISyntaxException {
+  public void init() {
     initMocks(this);
-    URI baseUri = new URI("http://example.com/base/");
     expectedBaseUri = baseUri.resolve(UserRootResource.USERS_PATH_V2 + "/");
-    when(uriInfo.getBaseUri()).thenReturn(baseUri);
-    when(uriInfoStore.get()).thenReturn(uriInfo);
     subjectThreadState.bind();
     ThreadContext.bind(subject);
   }
@@ -125,6 +118,6 @@ public class UserToUserDtoMapperTest {
     UserDto userDto = mapper.map(user);
 
     assertEquals(expectedCreationDate, userDto.getCreationDate());
-    assertEquals(expectedModificationDate, userDto.getLastModified().get());
+    assertEquals(expectedModificationDate, userDto.getLastModified());
   }
 }
