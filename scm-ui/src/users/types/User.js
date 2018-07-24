@@ -8,5 +8,5 @@ export type User = {
   password: string,
   admin: boolean,
   active: boolean,
-  _links?: Links
+  _links: Links
 };
