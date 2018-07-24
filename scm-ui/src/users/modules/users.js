@@ -2,28 +2,26 @@
 import { apiClient, NOT_FOUND_ERROR } from "../../apiclient";
 import type { User } from "../types/User";
 import type { UserEntry } from "../types/UserEntry";
-import { Dispatch } from "redux";
+import asyncActionCreator from "./asyncActionCreator";
 
-export const FETCH_USERS = "scm/users/FETCH";
+export const FETCH_USERS_PENDING = "scm/users/FETCH_PENDING";
 export const FETCH_USERS_SUCCESS = "scm/users/FETCH_SUCCESS";
 export const FETCH_USERS_FAILURE = "scm/users/FETCH_FAILURE";
 export const FETCH_USERS_NOTFOUND = "scm/users/FETCH_NOTFOUND";
 
-export const FETCH_USER = "scm/users/FETCH_USER";
+export const FETCH_USER_PENDING = "scm/users/FETCH_USER_PENDING";
 export const FETCH_USER_SUCCESS = "scm/users/FETCH_USER_SUCCESS";
 export const FETCH_USER_FAILURE = "scm/users/FETCH_USER_FAILURE";
 
-export const ADD_USER = "scm/users/ADD";
+export const ADD_USER_PENDING = "scm/users/ADD_PENDING";
 export const ADD_USER_SUCCESS = "scm/users/ADD_SUCCESS";
 export const ADD_USER_FAILURE = "scm/users/ADD_FAILURE";
 
-export const EDIT_USER = "scm/users/EDIT";
-
-export const UPDATE_USER = "scm/users/UPDATE";
+export const UPDATE_USER_PENDING = "scm/users/UPDATE_PENDING";
 export const UPDATE_USER_SUCCESS = "scm/users/UPDATE_SUCCESS";
 export const UPDATE_USER_FAILURE = "scm/users/UPDATE_FAILURE";
 
-export const DELETE_USER = "scm/users/DELETE";
+export const DELETE_USER_PENDING = "scm/users/DELETE_PENDING";
 export const DELETE_USER_SUCCESS = "scm/users/DELETE_SUCCESS";
 export const DELETE_USER_FAILURE = "scm/users/DELETE_FAILURE";
 
@@ -34,7 +32,7 @@ const CONTENT_TYPE_USER = "application/vnd.scmm-user+json;v=2";
 
 export function requestUsers() {
   return {
-    type: FETCH_USERS
+    type: FETCH_USERS_PENDING
   };
 }
 
@@ -80,7 +78,7 @@ export function fetchUsersSuccess(users: any) {
 
 export function requestUser(name: string) {
   return {
-    type: FETCH_USER,
+    type: FETCH_USER_PENDING,
     payload: { name }
   };
 }
@@ -88,7 +86,7 @@ export function requestUser(name: string) {
 export function fetchUser(name: string) {
   const userUrl = USER_URL + name;
   return function(dispatch: any) {
-    dispatch(requestUsers());
+    dispatch(requestUser(name));
     return apiClient
       .get(userUrl)
       .then(response => {
@@ -104,7 +102,7 @@ export function fetchUser(name: string) {
       })
       .catch(cause => {
         const error = new Error(`could not fetch user: ${cause.message}`);
-        dispatch(failedToFetchUsers(USERS_URL, error));
+        dispatch(fetchUserFailure(USERS_URL, error));
       });
   };
 }
@@ -116,12 +114,12 @@ export function fetchUserSuccess(user: User) {
   };
 }
 
-export function fetchUserFailure(user: User, error: Error) {
+export function fetchUserFailure(username: string, error: Error) {
   return {
     type: FETCH_USER_FAILURE,
     error: true,
     payload: {
-      user,
+      username,
       error
     }
   };
@@ -129,7 +127,7 @@ export function fetchUserFailure(user: User, error: Error) {
 
 export function requestAddUser(user: User) {
   return {
-    type: ADD_USER,
+    type: ADD_USER_PENDING,
     payload: user
   };
 }
@@ -173,7 +171,7 @@ export function addUserFailure(user: User, error: Error) {
 
 function requestUpdateUser(user: User) {
   return {
-    type: UPDATE_USER,
+    type: UPDATE_USER_PENDING,
     payload: user
   };
 }
@@ -214,7 +212,7 @@ export function updateUserFailure(user: User, error: Error) {
 
 export function requestDeleteUser(user: User) {
   return {
-    type: DELETE_USER,
+    type: DELETE_USER_PENDING,
     payload: user
   };
 }
@@ -325,7 +323,7 @@ const reduceUsersByNames = (
 export default function reducer(state: any = {}, action: any = {}) {
   switch (action.type) {
     // fetch user list cases
-    case FETCH_USERS:
+    case FETCH_USERS_PENDING:
       return {
         ...state,
         users: {
@@ -361,7 +359,7 @@ export default function reducer(state: any = {}, action: any = {}) {
         }
       };
     // Fetch single user cases
-    case FETCH_USER:
+    case FETCH_USER_PENDING:
       return reduceUsersByNames(state, action.payload.name, {
         loading: true,
         error: null
@@ -383,12 +381,12 @@ export default function reducer(state: any = {}, action: any = {}) {
         usersByNames: ubn
       };
     case FETCH_USER_FAILURE:
-      return reduceUsersByNames(state, action.payload.user.name, {
+      return reduceUsersByNames(state, action.payload.username, {
         loading: true,
         error: action.payload.error
       });
     // Delete single user cases
-    case DELETE_USER:
+    case DELETE_USER_PENDING:
       return reduceUsersByNames(state, action.payload.name, {
         loading: true,
         error: null,
@@ -425,7 +423,7 @@ export default function reducer(state: any = {}, action: any = {}) {
         }
       };
     // Add single user cases
-    case ADD_USER:
+    case ADD_USER_PENDING:
       return {
         ...state,
         users: {
@@ -453,7 +451,7 @@ export default function reducer(state: any = {}, action: any = {}) {
         }
       };
     // Update single user cases
-    case UPDATE_USER:
+    case UPDATE_USER_PENDING:
       return {
         ...state,
         usersByNames: {

@@ -4,22 +4,21 @@ import thunk from "redux-thunk";
 import fetchMock from "fetch-mock";
 
 import {
-  FETCH_USERS,
+  FETCH_USERS_PENDING,
   FETCH_USERS_SUCCESS,
   fetchUsers,
   FETCH_USERS_FAILURE,
   addUser,
-  ADD_USER,
+  ADD_USER_PENDING,
   ADD_USER_SUCCESS,
   ADD_USER_FAILURE,
   updateUser,
-  UPDATE_USER,
+  UPDATE_USER_PENDING,
   UPDATE_USER_FAILURE,
   UPDATE_USER_SUCCESS,
-  EDIT_USER,
   requestDeleteUser,
   deleteUserFailure,
-  DELETE_USER,
+  DELETE_USER_PENDING,
   DELETE_USER_SUCCESS,
   DELETE_USER_FAILURE,
   deleteUser,
@@ -143,7 +142,7 @@ describe("users fetch()", () => {
     fetchMock.getOnce("/scm/api/rest/v2/users", response);
 
     const expectedActions = [
-      { type: FETCH_USERS },
+      { type: FETCH_USERS_PENDING },
       {
         type: FETCH_USERS_SUCCESS,
         payload: response
@@ -165,7 +164,7 @@ describe("users fetch()", () => {
     const store = mockStore({});
     return store.dispatch(fetchUsers()).then(() => {
       const actions = store.getActions();
-      expect(actions[0].type).toEqual(FETCH_USERS);
+      expect(actions[0].type).toEqual(FETCH_USERS_PENDING);
       expect(actions[1].type).toEqual(FETCH_USERS_FAILURE);
       expect(actions[1].payload).toBeDefined();
     });
@@ -183,9 +182,9 @@ describe("users fetch()", () => {
     const store = mockStore({});
     return store.dispatch(addUser(userZaphod)).then(() => {
       const actions = store.getActions();
-      expect(actions[0].type).toEqual(ADD_USER);
+      expect(actions[0].type).toEqual(ADD_USER_PENDING);
       expect(actions[1].type).toEqual(ADD_USER_SUCCESS);
-      expect(actions[2].type).toEqual(FETCH_USERS);
+      expect(actions[2].type).toEqual(FETCH_USERS_PENDING);
     });
   });
 
@@ -197,7 +196,7 @@ describe("users fetch()", () => {
     const store = mockStore({});
     return store.dispatch(addUser(userZaphod)).then(() => {
       const actions = store.getActions();
-      expect(actions[0].type).toEqual(ADD_USER);
+      expect(actions[0].type).toEqual(ADD_USER_PENDING);
       expect(actions[1].type).toEqual(ADD_USER_FAILURE);
       expect(actions[1].payload).toBeDefined();
     });
@@ -213,9 +212,9 @@ describe("users fetch()", () => {
     const store = mockStore({});
     return store.dispatch(updateUser(userZaphod)).then(() => {
       const actions = store.getActions();
-      expect(actions[0].type).toEqual(UPDATE_USER);
+      expect(actions[0].type).toEqual(UPDATE_USER_PENDING);
       expect(actions[1].type).toEqual(UPDATE_USER_SUCCESS);
-      expect(actions[2].type).toEqual(FETCH_USERS);
+      expect(actions[2].type).toEqual(FETCH_USERS_PENDING);
     });
   });
 
@@ -227,7 +226,7 @@ describe("users fetch()", () => {
     const store = mockStore({});
     return store.dispatch(updateUser(userZaphod)).then(() => {
       const actions = store.getActions();
-      expect(actions[0].type).toEqual(UPDATE_USER);
+      expect(actions[0].type).toEqual(UPDATE_USER_PENDING);
       expect(actions[1].type).toEqual(UPDATE_USER_FAILURE);
       expect(actions[1].payload).toBeDefined();
     });
@@ -243,10 +242,10 @@ describe("users fetch()", () => {
     const store = mockStore({});
     return store.dispatch(deleteUser(userZaphod)).then(() => {
       const actions = store.getActions();
-      expect(actions[0].type).toEqual(DELETE_USER);
+      expect(actions[0].type).toEqual(DELETE_USER_PENDING);
       expect(actions[0].payload).toBe(userZaphod);
       expect(actions[1].type).toEqual(DELETE_USER_SUCCESS);
-      expect(actions[2].type).toEqual(FETCH_USERS);
+      expect(actions[2].type).toEqual(FETCH_USERS_PENDING);
     });
   });
 
@@ -258,7 +257,7 @@ describe("users fetch()", () => {
     const store = mockStore({});
     return store.dispatch(deleteUser(userZaphod)).then(() => {
       const actions = store.getActions();
-      expect(actions[0].type).toEqual(DELETE_USER);
+      expect(actions[0].type).toEqual(DELETE_USER_PENDING);
       expect(actions[0].payload).toBe(userZaphod);
       expect(actions[1].type).toEqual(DELETE_USER_FAILURE);
       expect(actions[1].payload).toBeDefined();
@@ -412,10 +411,10 @@ describe("users reducer", () => {
     expect(newState.usersByNames["zaphod"].loading).toBeTruthy();
   });
 
-  it("should uppdate state according to FETCH_USER_FAILURE action", () => {
+  it("should update state according to FETCH_USER_FAILURE action", () => {
     const newState = reducer(
       {},
-      fetchUserFailure(userFord, new Error("kaputt!"))
+      fetchUserFailure(userFord.name, new Error("kaputt!"))
     );
     expect(newState.usersByNames["ford"].error).toBeTruthy;
   });
