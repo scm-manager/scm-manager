@@ -1,9 +1,8 @@
 //@flow
 import React from "react";
-import type { Me } from "../types/me";
 
 type Props = {
-  me?: Me
+  me?: string
 };
 
 class Footer extends React.Component<Props> {
@@ -15,7 +14,7 @@ class Footer extends React.Component<Props> {
     return (
       <footer className="footer">
         <div className="container is-centered">
-          <p className="has-text-centered">{me.username}</p>
+          <p className="has-text-centered">{me}</p>
         </div>
       </footer>
     );

@@ -18,6 +18,7 @@ type Props = {
   error: Error,
   loading: boolean,
   authenticated?: boolean,
+  displayName: string,
   t: string => string,
   fetchMe: () => void
 };
@@ -28,7 +29,7 @@ class App extends Component<Props> {
   }
 
   render() {
-    const { entry, loading, error, t, authenticated } = this.props;
+    const { loading, error, authenticated, displayName, t } = this.props;
 
     let content;
     const navigation = authenticated ? <PrimaryNavigation /> : "";
@@ -50,7 +51,7 @@ class App extends Component<Props> {
       <div className="App">
         <Header>{navigation}</Header>
         {content}
-        <Footer me={entry} />
+        <Footer me={displayName} />
       </div>
     );
   }
@@ -64,10 +65,17 @@ const mapDispatchToProps = (dispatch: any) => {
 
 const mapStateToProps = state => {
   let mapped = state.auth.me || {};
+  let displayName;
   if (state.auth.login) {
     mapped.authenticated = state.auth.login.authenticated;
   }
-  return mapped;
+  if (state.auth.me && state.auth.me.entry) {
+    displayName = state.auth.me.entry.entity.displayName;
+  }
+  return {
+    ...mapped,
+    displayName
+  };
 };
 
 export default withRouter(
