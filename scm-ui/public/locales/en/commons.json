@@ -29,6 +29,7 @@
     "alt": "SCM-Manager"
   },
   "primary-navigation": {
+    "repositories": "Repositories",
     "users": "Users",
     "logout": "Logout"
   }

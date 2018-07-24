@@ -1,6 +1,7 @@
 // @flow
 import React from "react";
 import { connect } from "react-redux";
+import { translate } from "react-i18next";
 
 import { fetchUsers, deleteUser, getUsersFromState } from "../modules/users";
 import Page from "../../components/Page";
@@ -12,6 +13,7 @@ import type { UserEntry } from "../types/UserEntry";
 type Props = {
   loading?: boolean,
   error: Error,
+  t: string => string,
   userEntries: Array<UserEntry>,
   fetchUsers: () => void,
   deleteUser: User => void,
@@ -24,11 +26,11 @@ class Users extends React.Component<Props, User> {
   }
 
   render() {
-    const { userEntries, deleteUser, loading, error } = this.props;
+    const { userEntries, deleteUser, loading, t, error } = this.props;
     return (
       <Page
-        title="Users"
-        subtitle="Create, read, update and delete users"
+        title={t("users.title")}
+        subtitle={t("users.subtitle")}
         loading={loading || !userEntries}
         error={error}
       >
@@ -39,10 +41,11 @@ class Users extends React.Component<Props, User> {
   }
 
   renderAddButton() {
-    if (this.props.canAddUsers) {
+    const { canAddUsers, t } = this.props;
+    if (canAddUsers) {
       return (
         <div>
-          <AddButton label="Add User" link="/users/add" />
+          <AddButton label={t("users.add-button")} link="/users/add" />
         </div>
       );
     } else {
@@ -83,4 +86,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Users);
+)(translate("users")(Users));

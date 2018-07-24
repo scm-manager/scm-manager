@@ -1,27 +1,22 @@
 // @flow
-import React from 'react';
-
-import { Link } from 'react-router-dom';
-
+import React from "react";
+import Page from "../../components/Page";
+import { translate } from "react-i18next";
 
 type Props = {
-}
+  t: string => string
+};
 
 class Repositories extends React.Component<Props> {
-
   render() {
-
-   return (
-        <div>
-          <h1>SCM</h1>
-          <h2>Repositories will be shown here.</h2>
-          <Link to='/users'>Users hier!</Link>
-        </div>
-      )
-
-
+    const { t } = this.props;
+    return (
+      <Page
+        title={t("repositories.title")}
+        subtitle={t("repositories.subtitle")}
+      />
+    );
   }
-
 }
 
-export default (Repositories);
+export default translate("repositories")(Repositories);
