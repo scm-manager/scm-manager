@@ -1,5 +1,6 @@
 // @flow
 import React from "react";
+import { translate } from "react-i18next";
 import type { User } from "../types/User";
 import type { UserEntry } from "../types/UserEntry";
 import { confirmAlert } from "../../components/ConfirmAlert";
@@ -8,6 +9,7 @@ import DeleteButton from "../../components/DeleteButton";
 type Props = {
   entry: UserEntry,
   confirmDialog?: boolean,
+  t: string => string,
   deleteUser: (user: User) => void
 };
 
@@ -21,16 +23,17 @@ class DeleteUserButton extends React.Component<Props> {
   };
 
   confirmDelete = () => {
+    const { t } = this.props;
     confirmAlert({
-      title: "Delete user",
-      message: "Do you really want to delete the user?",
+      title: t("delete-user-button.confirm-alert.title"),
+      message: t("delete-user-button.confirm-alert.message"),
       buttons: [
         {
-          label: "Yes",
+          label: t("delete-user-button.confirm-alert.submit"),
           onClick: () => this.deleteUser()
         },
         {
-          label: "No",
+          label: t("delete-user-button.confirm-alert.cancel"),
           onClick: () => null
         }
       ]
@@ -42,16 +45,20 @@ class DeleteUserButton extends React.Component<Props> {
   };
 
   render() {
-    const { confirmDialog, entry } = this.props;
+    const { confirmDialog, entry, t } = this.props;
     const action = confirmDialog ? this.confirmDelete : this.deleteUser;
 
     if (!this.isDeletable()) {
       return null;
     }
     return (
-      <DeleteButton label="Delete" action={action} loading={entry.loading} />
+      <DeleteButton
+        label={t("delete-user-button.label")}
+        action={action}
+        loading={entry.loading}
+      />
     );
   }
 }
 
-export default DeleteUserButton;
+export default translate("users")(DeleteUserButton);

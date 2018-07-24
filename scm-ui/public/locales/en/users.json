@@ -1,0 +1,30 @@
+{
+  "user": {
+    "name": "Username",
+    "displayName": "Display Name",
+    "mail": "E-Mail",
+    "password": "Password",
+    "admin": "Admin",
+    "active": "Active"
+  },
+  "users": {
+    "title": "Users",
+    "subtitle": "Create, read, update and delete users",
+    "add-button": "Add User"
+  },
+  "delete-user-button": {
+    "label": "Delete",
+    "confirm-alert": {
+      "title": "Delete user",
+      "message": "Do you really want to delete the user?",
+      "submit": "Yes",
+      "cancel": "No"
+    }
+  },
+  "edit-user-button": {
+    "label": "Edit"
+  },
+  "user-form": {
+    "submit": "Submit"
+  }
+}
