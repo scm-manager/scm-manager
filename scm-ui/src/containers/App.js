@@ -14,11 +14,10 @@ import ErrorPage from "../components/ErrorPage";
 import Footer from "../components/Footer";
 
 type Props = {
-  me: any,
+  me: Me,
   error: Error,
   loading: boolean,
   authenticated?: boolean,
-  displayName: string,
   t: string => string,
   fetchMe: () => void
 };
@@ -29,7 +28,7 @@ class App extends Component<Props> {
   }
 
   render() {
-    const { loading, error, authenticated, displayName, t } = this.props;
+    const { me, loading, error, authenticated, t } = this.props;
 
     let content;
     const navigation = authenticated ? <PrimaryNavigation /> : "";
@@ -51,7 +50,7 @@ class App extends Component<Props> {
       <div className="App">
         <Header>{navigation}</Header>
         {content}
-        <Footer me={displayName} />
+        <Footer me={me} />
       </div>
     );
   }
@@ -65,16 +64,14 @@ const mapDispatchToProps = (dispatch: any) => {
 
 const mapStateToProps = state => {
   let mapped = state.auth.me || {};
-  let displayName;
+
   if (state.auth.login) {
     mapped.authenticated = state.auth.login.authenticated;
   }
-  if (state.auth.me && state.auth.me.entry) {
-    displayName = state.auth.me.entry.displayName;
-  }
+
   return {
     ...mapped,
-    displayName
+    me: mapped.entry
   };
 };
 

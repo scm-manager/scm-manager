@@ -205,7 +205,9 @@ export const fetchMe = () => {
         return response.json();
       })
       .then(me => {
-        dispatch(fetchMeSuccess(me));
+        dispatch(
+          fetchMeSuccess({ userName: me.name, displayName: me.displayName })
+        );
       })
       .catch((error: Error) => {
         if (error === UNAUTHORIZED_ERROR) {

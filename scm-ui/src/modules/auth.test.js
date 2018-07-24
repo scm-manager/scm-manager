@@ -166,13 +166,16 @@ describe("auth actions", () => {
 
   it("should dispatch fetch me success", () => {
     fetchMock.getOnce("/scm/api/rest/v2/me", {
-      body: { username: "sorbot" },
+      body: { name: "sorbot", displayName: "Sorbot" },
       headers: { "content-type": "application/json" }
     });
 
     const expectedActions = [
       { type: FETCH_ME_REQUEST },
-      { type: FETCH_ME_SUCCESS, payload: { username: "sorbot" } }
+      {
+        type: FETCH_ME_SUCCESS,
+        payload: { userName: "sorbot", displayName: "Sorbot" }
+      }
     ];
 
     const store = mockStore({});
