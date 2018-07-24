@@ -143,11 +143,10 @@
     </dependency>
 
     <!-- test -->
-    
+
     <dependency>
       <groupId>com.github.sdorra</groupId>
       <artifactId>shiro-unit</artifactId>
-      <version>1.0.0</version>
       <scope>test</scope>
     </dependency>
 
