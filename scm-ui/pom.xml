@@ -21,8 +21,8 @@
     <sonar.sources>src</sonar.sources>
     <sonar.test.exclusions>**/*.test.js,src/tests/**</sonar.test.exclusions>
     <sonar.coverage.exclusions>**/*.test.js,src/tests/**</sonar.coverage.exclusions>
-    <sonar.javascript.jstest.reportsPath>target/reports</sonar.javascript.jstest.reportsPath>
-    <sonar.javascript.lcov.reportPaths>target/coverage/lcov.info</sonar.javascript.lcov.reportPaths>
+    <sonar.javascript.jstest.reportsPath>target/jest-reports</sonar.javascript.jstest.reportsPath>
+    <sonar.javascript.lcov.reportPaths>target/jest-reports/coverage/lcov.info</sonar.javascript.lcov.reportPaths>
   </properties>
 
   <build>

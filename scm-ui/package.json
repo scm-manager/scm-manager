@@ -56,13 +56,13 @@
     ]
   },
   "jest": {
-    "coverageDirectory": "target/coverage",
+    "coverageDirectory": "target/jest-reports/coverage",
     "coveragePathIgnorePatterns": [
       "src/tests/.*"
     ],
     "reporters": [ "default", "jest-junit" ]
   },
   "jest-junit": {
-    "output": "./target/reports/jest-junit.xml"
+    "output": "./target/jest-reports/TEST-all.xml"
   }
 }
