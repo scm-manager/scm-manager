@@ -25,7 +25,6 @@ export const DELETE_USER_SUCCESS = "scm/users/DELETE_SUCCESS";
 export const DELETE_USER_FAILURE = "scm/users/DELETE_FAILURE";
 
 const USERS_URL = "users";
-const USER_URL = "users/";
 
 const CONTENT_TYPE_USER = "application/vnd.scmm-user+json;v=2";
 
