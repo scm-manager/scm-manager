@@ -100,14 +100,29 @@ public class SecurityFilterTest {
   }
   
   /**
-   * Tests filter on authentication endpoint.
-   * 
+   * Tests filter on authentication endpoint v1.
+   *
    * @throws IOException
    * @throws ServletException 
    */
   @Test
-  public void testDoOnAuthenticationUrl() throws IOException, ServletException {
-    when(request.getRequestURI()).thenReturn("/scm/api/rest/authentication");
+  public void testDoOnAuthenticationUrlV1() throws IOException, ServletException {
+    checkIfAuthenticationUrlIsPassedThrough("/scm/api/rest/auth/access_token");
+  }
+
+  /**
+   * Tests filter on authentication endpoint v2.
+   *
+   * @throws IOException
+   * @throws ServletException
+   */
+  @Test
+  public void testDoOnAuthenticationUrlV2() throws IOException, ServletException {
+    checkIfAuthenticationUrlIsPassedThrough("/scm/api/rest/v2/auth/access_token");
+  }
+
+  private void checkIfAuthenticationUrlIsPassedThrough(String uri) throws IOException, ServletException {
+    when(request.getRequestURI()).thenReturn(uri);
     securityFilter.doFilter(request, response, chain);
     verify(request, never()).setAttribute(Mockito.anyString(), Mockito.any());
     verify(chain).doFilter(request, response);
