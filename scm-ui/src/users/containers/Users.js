@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 
 import { fetchUsers, deleteUser, getUsersFromState } from "../modules/users";
 import Page from "../../components/Page";
-import ErrorNotification from "../../components/ErrorNotification";
 import UserTable from "./UserTable";
 import type { User } from "../types/User";
 import AddButton from "../../components/AddButton";

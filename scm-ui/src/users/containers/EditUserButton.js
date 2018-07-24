@@ -2,7 +2,6 @@
 import React from "react";
 import EditButton from "../../components/EditButton";
 import type { UserEntry } from "../types/UserEntry";
-import { Link } from "react-router-dom";
 
 type Props = {
   entry: UserEntry

@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import UserForm from "./UserForm";
 import type { User } from "../types/User";
 
-import { addUser } from "../modules/users";
+import { createUser } from "../modules/users";
 
 type Props = {
   addUser: User => void,
@@ -29,7 +29,7 @@ class AddUser extends React.Component<Props> {
 const mapDispatchToProps = dispatch => {
   return {
     addUser: (user: User) => {
-      dispatch(addUser(user));
+      dispatch(createUser(user));
     }
   };
 };

@@ -31,7 +31,7 @@ node() { // No specific label
       }
 
       stage('Unit Test') {
-        mvn 'test -Dsonia.scm.test.skip.hg=true'
+        mvn 'test -Dsonia.scm.test.skip.hg=true -Dmaven.test.failure.ignore=true'
       }
 
       stage('SonarQube') {

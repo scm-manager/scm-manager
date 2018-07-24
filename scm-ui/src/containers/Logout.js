@@ -1,6 +1,7 @@
 //@flow
 import React from "react";
 import { connect } from "react-redux";
+import { translate } from "react-i18next";
 import { Redirect } from "react-router-dom";
 
 import { logout, isAuthenticated } from "../modules/auth";
@@ -8,6 +9,7 @@ import ErrorPage from "../components/ErrorPage";
 import Loading from "../components/Loading";
 
 type Props = {
+  t: string => string,
   loading: boolean,
   authenticated: boolean,
   error?: Error,
@@ -20,13 +22,13 @@ class Logout extends React.Component<Props> {
   }
 
   render() {
-    const { authenticated, loading, error } = this.props;
+    const { authenticated, loading, t, error } = this.props;
     // TODO logout is called twice
     if (error) {
       return (
         <ErrorPage
-          title="Logout failed"
-          subtitle="Something went wrong durring logout"
+          title={t("logout.error.title")}
+          subtitle={t("logout.error.subtitle")}
           error={error}
         />
       );
@@ -53,4 +55,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Logout);
+)(translate("commons")(Logout));

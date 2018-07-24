@@ -2,6 +2,7 @@
 import React from "react";
 import { Redirect, withRouter } from "react-router-dom";
 import injectSheet from "react-jss";
+import { translate } from "react-i18next";
 import { login } from "../modules/auth";
 import { connect } from "react-redux";
 
@@ -35,6 +36,7 @@ type Props = {
   loading?: boolean,
   error?: Error,
 
+  t: string => string,
   classes: any,
 
   from: any,
@@ -83,7 +85,7 @@ class Login extends React.Component<Props, State> {
   };
 
   render() {
-    const { authenticated, loading, error, classes } = this.props;
+    const { authenticated, loading, error, t, classes } = this.props;
 
     if (authenticated) {
       return this.renderRedirect();
@@ -94,30 +96,30 @@ class Login extends React.Component<Props, State> {
         <div className="hero-body">
           <div className="container has-text-centered">
             <div className="column is-4 is-offset-4">
-              <h3 className="title">Login</h3>
-              <p className="subtitle">Please login to proceed.</p>
+              <h3 className="title">{t("login.title")}</h3>
+              <p className="subtitle">{t("login.subtitle")}</p>
               <div className={classNames("box", classes.avatarSpacing)}>
                 <figure className={classes.avatar}>
                   <img
                     className={classes.avatarImage}
                     src={Avatar}
-                    alt="SCM-Manager"
+                    alt={t("login.logo-alt")}
                   />
                 </figure>
                 <ErrorNotification error={error} />
                 <form onSubmit={this.handleSubmit}>
                   <InputField
-                    placeholder="Your Username"
+                    placeholder={t("login.username-placeholder")}
                     autofocus={true}
                     onChange={this.handleUsernameChange}
                   />
                   <InputField
-                    placeholder="Your Password"
+                    placeholder={t("login.password-placeholder")}
                     type="password"
                     onChange={this.handlePasswordChange}
                   />
                   <SubmitButton
-                    label="Login"
+                    label={t("login.submit")}
                     disabled={this.isInValid()}
                     fullWidth={true}
                     loading={loading}
@@ -147,6 +149,6 @@ const StyledLogin = injectSheet(styles)(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )(Login)
+  )(translate("commons")(Login))
 );
 export default withRouter(StyledLogin);

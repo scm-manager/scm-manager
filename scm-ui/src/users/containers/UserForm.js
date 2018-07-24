@@ -4,7 +4,6 @@ import type { User } from "../types/User";
 import InputField from "../../components/InputField";
 import Checkbox from "../../components/Checkbox";
 import SubmitButton from "../../components/SubmitButton";
-import { connect } from "react-redux";
 
 type Props = {
   submitForm: User => void,

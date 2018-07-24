@@ -4,34 +4,33 @@ import thunk from "redux-thunk";
 import fetchMock from "fetch-mock";
 
 import {
-  FETCH_USERS,
+  FETCH_USERS_PENDING,
   FETCH_USERS_SUCCESS,
   fetchUsers,
   FETCH_USERS_FAILURE,
-  addUser,
-  ADD_USER,
-  ADD_USER_SUCCESS,
-  ADD_USER_FAILURE,
-  updateUser,
-  UPDATE_USER,
-  UPDATE_USER_FAILURE,
-  UPDATE_USER_SUCCESS,
-  EDIT_USER,
-  requestDeleteUser,
+  createUserPending,
+  CREATE_USER_PENDING,
+  CREATE_USER_SUCCESS,
+  CREATE_USER_FAILURE,
+  modifyUser,
+  MODIFY_USER_PENDING,
+  MODIFY_USER_FAILURE,
+  MODIFY_USER_SUCCESS,
+  deleteUserPending,
   deleteUserFailure,
   DELETE_USER,
   DELETE_USER_SUCCESS,
   DELETE_USER_FAILURE,
   deleteUser,
-  requestUsers,
+  fetchUsersFailure,
   fetchUsersSuccess,
-  requestAddUser,
-  addUserSuccess,
-  addUserFailure,
-  updateUserFailure,
+  createUser,
+  createUserSuccess,
+  createUserFailure,
+  modifyUserFailure,
   deleteUserSuccess,
-  failedToFetchUsers,
-  requestUser,
+  fetchUsersPending,
+  fetchUserPending,
   fetchUserFailure
 } from "./users";
 
@@ -143,7 +142,7 @@ describe("users fetch()", () => {
     fetchMock.getOnce("/scm/api/rest/v2/users", response);
 
     const expectedActions = [
-      { type: FETCH_USERS },
+      { type: FETCH_USERS_PENDING },
       {
         type: FETCH_USERS_SUCCESS,
         payload: response
@@ -165,7 +164,7 @@ describe("users fetch()", () => {
     const store = mockStore({});
     return store.dispatch(fetchUsers()).then(() => {
       const actions = store.getActions();
-      expect(actions[0].type).toEqual(FETCH_USERS);
+      expect(actions[0].type).toEqual(FETCH_USERS_PENDING);
       expect(actions[1].type).toEqual(FETCH_USERS_FAILURE);
       expect(actions[1].payload).toBeDefined();
     });
@@ -181,11 +180,11 @@ describe("users fetch()", () => {
     fetchMock.getOnce("/scm/api/rest/v2/users", response);
 
     const store = mockStore({});
-    return store.dispatch(addUser(userZaphod)).then(() => {
+    return store.dispatch(createUser(userZaphod)).then(() => {
       const actions = store.getActions();
-      expect(actions[0].type).toEqual(ADD_USER);
-      expect(actions[1].type).toEqual(ADD_USER_SUCCESS);
-      expect(actions[2].type).toEqual(FETCH_USERS);
+      expect(actions[0].type).toEqual(CREATE_USER_PENDING);
+      expect(actions[1].type).toEqual(CREATE_USER_SUCCESS);
+      expect(actions[2].type).toEqual(FETCH_USERS_PENDING);
     });
   });
 
@@ -195,10 +194,10 @@ describe("users fetch()", () => {
     });
 
     const store = mockStore({});
-    return store.dispatch(addUser(userZaphod)).then(() => {
+    return store.dispatch(createUser(userZaphod)).then(() => {
       const actions = store.getActions();
-      expect(actions[0].type).toEqual(ADD_USER);
-      expect(actions[1].type).toEqual(ADD_USER_FAILURE);
+      expect(actions[0].type).toEqual(CREATE_USER_PENDING);
+      expect(actions[1].type).toEqual(CREATE_USER_FAILURE);
       expect(actions[1].payload).toBeDefined();
     });
   });
@@ -211,11 +210,11 @@ describe("users fetch()", () => {
     fetchMock.getOnce("/scm/api/rest/v2/users", response);
 
     const store = mockStore({});
-    return store.dispatch(updateUser(userZaphod)).then(() => {
+    return store.dispatch(modifyUser(userZaphod)).then(() => {
       const actions = store.getActions();
-      expect(actions[0].type).toEqual(UPDATE_USER);
-      expect(actions[1].type).toEqual(UPDATE_USER_SUCCESS);
-      expect(actions[2].type).toEqual(FETCH_USERS);
+      expect(actions[0].type).toEqual(MODIFY_USER_PENDING);
+      expect(actions[1].type).toEqual(MODIFY_USER_SUCCESS);
+      expect(actions[2].type).toEqual(FETCH_USERS_PENDING);
     });
   });
 
@@ -225,10 +224,10 @@ describe("users fetch()", () => {
     });
 
     const store = mockStore({});
-    return store.dispatch(updateUser(userZaphod)).then(() => {
+    return store.dispatch(modifyUser(userZaphod)).then(() => {
       const actions = store.getActions();
-      expect(actions[0].type).toEqual(UPDATE_USER);
-      expect(actions[1].type).toEqual(UPDATE_USER_FAILURE);
+      expect(actions[0].type).toEqual(MODIFY_USER_PENDING);
+      expect(actions[1].type).toEqual(MODIFY_USER_FAILURE);
       expect(actions[1].payload).toBeDefined();
     });
   });
@@ -246,7 +245,7 @@ describe("users fetch()", () => {
       expect(actions[0].type).toEqual(DELETE_USER);
       expect(actions[0].payload).toBe(userZaphod);
       expect(actions[1].type).toEqual(DELETE_USER_SUCCESS);
-      expect(actions[2].type).toEqual(FETCH_USERS);
+      expect(actions[2].type).toEqual(FETCH_USERS_PENDING);
     });
   });
 
@@ -267,8 +266,8 @@ describe("users fetch()", () => {
 });
 
 describe("users reducer", () => {
-  it("should update state correctly according to FETCH_USERS action", () => {
-    const newState = reducer({}, requestUsers());
+  it("should update state correctly according to FETCH_USERS_PENDING action", () => {
+    const newState = reducer({}, fetchUsersPending());
     expect(newState.users.loading).toBeTruthy();
     expect(newState.users.error).toBeFalsy();
   });
@@ -304,7 +303,7 @@ describe("users reducer", () => {
       }
     };
 
-    const newState = reducer(state, requestDeleteUser(userZaphod));
+    const newState = reducer(state, deleteUserPending(userZaphod));
     const zaphod = newState.usersByNames["zaphod"];
     expect(zaphod.loading).toBeTruthy();
     expect(zaphod.entry).toBe(userZaphod);
@@ -324,7 +323,7 @@ describe("users reducer", () => {
       }
     };
 
-    const newState = reducer(state, requestDeleteUser(userZaphod));
+    const newState = reducer(state, deleteUserPending(userZaphod));
     const ford = newState.usersByNames["ford"];
     expect(ford.loading).toBeFalsy();
   });
@@ -386,14 +385,14 @@ describe("users reducer", () => {
     expect(newState.users.userCreatePermission).toBeTruthy();
   });
 
-  it("should update state correctly according to ADD_USER action", () => {
-    const newState = reducer({}, requestAddUser(userZaphod));
+  it("should update state correctly according to CREATE_USER_PENDING action", () => {
+    const newState = reducer({}, createUserPending(userZaphod));
     expect(newState.users.loading).toBeTruthy();
     expect(newState.users.error).toBeNull();
   });
 
-  it("should update state correctly according to ADD_USER_SUCCESS action", () => {
-    const newState = reducer({ loading: true }, addUserSuccess());
+  it("should update state correctly according to CREATE_USER_SUCCESS action", () => {
+    const newState = reducer({ loading: true }, createUserSuccess());
     expect(newState.users.loading).toBeFalsy();
     expect(newState.users.error).toBeNull();
   });
@@ -401,14 +400,14 @@ describe("users reducer", () => {
   it("should set the loading to false and the error if user could not be added", () => {
     const newState = reducer(
       { loading: true, error: null },
-      addUserFailure(userFord, new Error("kaputt kaputt"))
+      createUserFailure(userFord, new Error("kaputt kaputt"))
     );
     expect(newState.users.loading).toBeFalsy();
     expect(newState.users.error).toEqual(new Error("kaputt kaputt"));
   });
 
-  it("should update state according to FETCH_USER action", () => {
-    const newState = reducer({}, requestUser("zaphod"));
+  it("should update state according to FETCH_USER_PENDING action", () => {
+    const newState = reducer({}, fetchUserPending("zaphod"));
     expect(newState.usersByNames["zaphod"].loading).toBeTruthy();
   });
 

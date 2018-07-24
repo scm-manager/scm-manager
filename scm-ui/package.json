@@ -7,8 +7,12 @@
     "bulma": "^0.7.1",
     "classnames": "^2.2.5",
     "history": "^4.7.2",
+    "i18next": "^11.4.0",
+    "i18next-browser-languagedetector": "^2.2.2",
+    "i18next-fetch-backend": "^0.1.0",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
+    "react-i18next": "^7.9.0",
     "react-jss": "^8.6.0",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.3.1",
@@ -27,7 +31,8 @@
     "build-js": "react-scripts build",
     "build": "npm-run-all build-css build-js",
     "test": "jest",
-    "test-coverage": "yarn run test --coverage",
+    "test-coverage": "jest --coverage",
+    "test-ci": "jest --ci --coverage",
     "eject": "react-scripts eject",
     "flow": "flow"
   },
@@ -42,6 +47,7 @@
     "fetch-mock": "^6.5.0",
     "flow-bin": "^0.77.0",
     "flow-typed": "^2.5.1",
+    "jest-junit": "^5.1.0",
     "node-sass-chokidar": "^1.3.0",
     "npm-run-all": "^4.1.3",
     "prettier": "^1.13.7",
@@ -52,5 +58,18 @@
     "presets": [
       "react-app"
     ]
+  },
+  "jest": {
+    "coverageDirectory": "target/jest-reports/coverage",
+    "coveragePathIgnorePatterns": [
+      "src/tests/.*"
+    ],
+    "reporters": [
+      "default",
+      "jest-junit"
+    ]
+  },
+  "jest-junit": {
+    "output": "./target/jest-reports/TEST-all.xml"
   }
 }

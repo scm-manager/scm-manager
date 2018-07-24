@@ -158,6 +158,19 @@
     
   </dependencies>
 
+  <dependencyManagement>
+    <dependencies>
+
+      <dependency>
+        <groupId>com.github.sdorra</groupId>
+        <artifactId>shiro-unit</artifactId>
+        <version>1.0.1</version>
+        <scope>test</scope>
+      </dependency>
+
+    </dependencies>
+  </dependencyManagement>
+
   <build>
 
     <pluginManagement>

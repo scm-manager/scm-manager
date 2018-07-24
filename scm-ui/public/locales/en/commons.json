@@ -1,0 +1,35 @@
+{
+  "login": {
+    "title": "Login",
+    "subtitle": "Please login to proceed.",
+    "logo-alt": "SCM-Manager",
+    "username-placeholder": "Your Username",
+    "password-placeholder": "Your Password",
+    "submit": "Login"
+  },
+  "logout": {
+    "error": {
+      "title": "Logout failed",
+      "subtitle": "Something went wrong during logout"
+    }
+  },
+  "app": {
+    "error": {
+      "title": "Error",
+      "subtitle": "Unknown error occurred"
+    }
+  },
+  "error-notification": {
+    "prefix": "Error"
+  },
+  "loading": {
+    "alt": "Loading ..."
+  },
+  "logo": {
+    "alt": "SCM-Manager"
+  },
+  "primary-navigation": {
+    "users": "Users",
+    "logout": "Logout"
+  }
+}
