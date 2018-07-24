@@ -70,11 +70,6 @@ public class SecurityFilter extends HttpFilter
   @VisibleForTesting
   static final String ATTRIBUTE_REMOTE_USER = "principal";
 
-  /** Field description */
-  public static final String URL_AUTHENTICATION = "/api/rest/auth";
-
-  public static final String URLV2_AUTHENTICATION = "/api/rest/v2/auth";
-
   private final ScmConfiguration configuration;
 
   @Inject
