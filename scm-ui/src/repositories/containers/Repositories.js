@@ -14,7 +14,9 @@ class Repositories extends React.Component<Props> {
       <Page
         title={t("repositories.title")}
         subtitle={t("repositories.subtitle")}
-      />
+      >
+        {t("repositories.body")}
+      </Page>
     );
   }
 }

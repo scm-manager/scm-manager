@@ -23,7 +23,8 @@ class UserForm extends React.Component<Props, User> {
       mail: "",
       password: "",
       admin: false,
-      active: false
+      active: false,
+      _links: {}
     };
   }
 
