@@ -31,7 +31,9 @@
 package sonia.scm.repository;
 
 import org.junit.Test;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Unit tests for {@link GitRepositoryPathMatcher}.
@@ -45,18 +47,18 @@ public class GitRepositoryPathMatcherTest {
 
   @Test
   public void testIsPathMatching() {
-    assertFalse(pathMatcher.isPathMatching(repository("my-repo"), "my-repoo"));
-    assertFalse(pathMatcher.isPathMatching(repository("my"), "my-repo"));
-    assertFalse(pathMatcher.isPathMatching(repository("my"), "my-repo/with/path"));
+    assertFalse(pathMatcher.isPathMatching(repository("space", "my-repo"), "my-repoo"));
+    assertFalse(pathMatcher.isPathMatching(repository("space", "my"), "my-repo"));
+    assertFalse(pathMatcher.isPathMatching(repository("space", "my"), "my-repo/with/path"));
     
-    assertTrue(pathMatcher.isPathMatching(repository("my-repo"), "my-repo"));
-    assertTrue(pathMatcher.isPathMatching(repository("my-repo"), "my-repo.git"));
-    assertTrue(pathMatcher.isPathMatching(repository("my-repo"), "my-repo/with/path"));
-    assertTrue(pathMatcher.isPathMatching(repository("my-repo"), "my-repo.git/with/path"));
+    assertTrue(pathMatcher.isPathMatching(repository("space", "my-repo"), "my-repo"));
+    assertTrue(pathMatcher.isPathMatching(repository("space", "my-repo"), "my-repo.git"));
+    assertTrue(pathMatcher.isPathMatching(repository("space", "my-repo"), "my-repo/with/path"));
+    assertTrue(pathMatcher.isPathMatching(repository("space", "my-repo"), "my-repo.git/with/path"));
   }
   
-  private Repository repository(String name) {
-    return new Repository(name, GitRepositoryHandler.TYPE_NAME, name);
+  private Repository repository(String namespace, String name) {
+    return new Repository(name, GitRepositoryHandler.TYPE_NAME, namespace, name);
   }
   
 }

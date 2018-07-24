@@ -33,8 +33,6 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import sonia.scm.plugin.ExtensionPoint;
 import sonia.scm.repository.Repository;
 
@@ -55,5 +53,5 @@ public interface RepositoryServiceResolver
    *
    * @return
    */
-  public RepositoryServiceProvider reslove(Repository repository);
+  public RepositoryServiceProvider resolve(Repository repository);
 }

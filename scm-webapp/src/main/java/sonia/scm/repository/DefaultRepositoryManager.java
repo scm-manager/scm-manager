@@ -1,19 +1,19 @@
 /**
  * Copyright (c) 2010, Sebastian Sdorra
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * <p>
  * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
+ * this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
  * 3. Neither the name of SCM-Manager; nor the names of its
- *    contributors may be used to endorse or promote products derived from this
- *    software without specific prior written permission.
- *
+ * contributors may be used to endorse or promote products derived from this
+ * software without specific prior written permission.
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,11 +24,9 @@
  * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * <p>
  * http://bitbucket.org/sdorra/scm-manager
- *
  */
-
 
 
 package sonia.scm.repository;
@@ -41,15 +39,13 @@ import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
 import org.apache.shiro.concurrent.SubjectAwareExecutorService;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.ArgumentIsInvalidException;
 import sonia.scm.ConfigurationException;
 import sonia.scm.HandlerEventType;
+import sonia.scm.ManagerDaoAdapter;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.Type;
 import sonia.scm.config.ScmConfiguration;
@@ -60,10 +56,8 @@ import sonia.scm.util.HttpUtil;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 
-//~--- JDK imports ------------------------------------------------------------
-
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -76,7 +70,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 
-import javax.servlet.http.HttpServletRequest;
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Default implementation of {@link RepositoryManager}.
@@ -84,310 +78,170 @@ import javax.servlet.http.HttpServletRequest;
  * @author Sebastian Sdorra
  */
 @Singleton
-public class DefaultRepositoryManager extends AbstractRepositoryManager
-{
+public class DefaultRepositoryManager extends AbstractRepositoryManager {
 
-  /** Field description */
   private static final String THREAD_NAME = "Hook-%s";
-
-  /** Field description */
   private static final Logger logger =
     LoggerFactory.getLogger(DefaultRepositoryManager.class);
+  private final ScmConfiguration configuration;
+  private final ExecutorService executorService;
+  private final Map<String, RepositoryHandler> handlerMap;
+  private final KeyGenerator keyGenerator;
+  private final RepositoryDAO repositoryDAO;
+  private final Set<Type> types;
+  private RepositoryMatcher repositoryMatcher;
+  private NamespaceStrategy namespaceStrategy;
+  private final ManagerDaoAdapter<Repository, RepositoryException> managerDaoAdapter;
 
-  //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   * @param configuration
-   * @param contextProvider
-   * @param keyGenerator
-   * @param repositoryDAO
-   * @param handlerSet
-   * @param repositoryMatcher
-   */
   @Inject
   public DefaultRepositoryManager(ScmConfiguration configuration,
-    SCMContextProvider contextProvider, KeyGenerator keyGenerator,
-    RepositoryDAO repositoryDAO, Set<RepositoryHandler> handlerSet, 
-    RepositoryMatcher repositoryMatcher)
-  {
+                                  SCMContextProvider contextProvider, KeyGenerator keyGenerator,
+                                  RepositoryDAO repositoryDAO, Set<RepositoryHandler> handlerSet,
+                                  RepositoryMatcher repositoryMatcher,
+                                  NamespaceStrategy namespaceStrategy) {
     this.configuration = configuration;
     this.keyGenerator = keyGenerator;
     this.repositoryDAO = repositoryDAO;
     this.repositoryMatcher = repositoryMatcher;
+    this.namespaceStrategy = namespaceStrategy;
 
-    //J-
     ThreadFactory factory = new ThreadFactoryBuilder()
       .setNameFormat(THREAD_NAME).build();
     this.executorService = new SubjectAwareExecutorService(
       Executors.newCachedThreadPool(factory)
     );
-    //J+
 
     handlerMap = new HashMap<>();
     types = new HashSet<>();
 
-    for (RepositoryHandler handler : handlerSet)
-    {
+    for (RepositoryHandler handler : handlerSet) {
       addHandler(contextProvider, handler);
     }
+    managerDaoAdapter = new ManagerDaoAdapter<>(
+      repositoryDAO,
+      RepositoryNotFoundException::new,
+      RepositoryAlreadyExistsException::create);
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
   @Override
-  public void close() throws IOException
-  {
+  public void close() {
     executorService.shutdown();
 
-    for (RepositoryHandler handler : handlerMap.values())
-    {
+    for (RepositoryHandler handler : handlerMap.values()) {
       IOUtil.close(handler);
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   * @param initRepository
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
-  public void create(Repository repository, boolean initRepository)
-    throws RepositoryException, IOException
-  {
-    logger.info("create repository {} of type {}", repository.getName(),
-      repository.getType());
+  @Override
+  public Repository create(Repository repository) throws RepositoryException {
+    return create(repository, true);
+  }
 
-    RepositoryPermissions.create().check();
-    AssertUtil.assertIsValid(repository);
-
-    if (repositoryDAO.contains(repository))
-    {
-      throw RepositoryAlreadyExistsException.create(repository);
-    }
-
+  public Repository create(Repository repository, boolean initRepository) throws RepositoryException {
     repository.setId(keyGenerator.createKey());
-    repository.setCreationDate(System.currentTimeMillis());
+    repository.setNamespace(namespaceStrategy.getNamespace());
 
-    if (initRepository)
-    {
-      getHandler(repository).create(repository);
-    }
+    logger.info("create repository {} of type {} in namespace {}", repository.getName(), repository.getType(), repository.getNamespace());
 
-    fireEvent(HandlerEventType.BEFORE_CREATE, repository);
-    repositoryDAO.add(repository);
-    fireEvent(HandlerEventType.CREATE, repository);
+    return managerDaoAdapter.create(
+      repository,
+      RepositoryPermissions::create,
+      newRepository -> {
+        if (initRepository) {
+          getHandler(newRepository).create(newRepository);
+        }
+        fireEvent(HandlerEventType.BEFORE_CREATE, newRepository);
+      },
+      newRepository -> fireEvent(HandlerEventType.CREATE, newRepository)
+    );
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Override
-  public void create(Repository repository)
-    throws RepositoryException, IOException
-  {
-    create(repository, true);
+  public void delete(Repository repository) throws RepositoryException {
+    logger.info("delete repository {} of type {}", repository.getName(), repository.getType());
+    managerDaoAdapter.delete(
+      repository,
+      () -> RepositoryPermissions.delete(repository),
+      this::preDelete,
+      toDelete -> fireEvent(HandlerEventType.DELETE, toDelete)
+    );
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
-  @Override
-  public void delete(Repository repository)
-    throws RepositoryException, IOException
-  {
-    if (logger.isInfoEnabled())
-    {
-      logger.info("delete repository {} of type {}", repository.getName(),
-        repository.getType());
+  private void preDelete(Repository toDelete) throws RepositoryException {
+    if (configuration.isEnableRepositoryArchive() && !toDelete.isArchived()) {
+      throw new RepositoryIsNotArchivedException("Repository could not deleted, because it is not archived.");
     }
-
-    RepositoryPermissions.delete(repository).check();
-
-    if (configuration.isEnableRepositoryArchive() &&!repository.isArchived())
-    {
-      throw new RepositoryIsNotArchivedException(
-        "Repository could not deleted, because it is not archived.");
-    }
-
-    if (repositoryDAO.contains(repository))
-    {
-      fireEvent(HandlerEventType.BEFORE_DELETE, repository);
-      getHandler(repository).delete(repository);
-      repositoryDAO.delete(repository);
-      fireEvent(HandlerEventType.DELETE, repository);
-    }
-    else
-    {
-      throw new RepositoryNotFoundException(
-        "repository ".concat(repository.getName()).concat(" not found"));
-    }
+    fireEvent(HandlerEventType.BEFORE_DELETE, toDelete);
+    getHandler(toDelete).delete(toDelete);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Override
   public void importRepository(Repository repository)
-    throws RepositoryException, IOException
-  {
+    throws RepositoryException, IOException {
     create(repository, false);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param context
-   */
   @Override
-  public void init(SCMContextProvider context) {}
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
-  @Override
-  public void modify(Repository repository)
-    throws RepositoryException, IOException
-  {
-    if (logger.isInfoEnabled())
-    {
-      logger.info("modify repository {} of type {}", repository.getName(),
-        repository.getType());
-    }
-
-    AssertUtil.assertIsValid(repository);
-
-    Repository oldRepository = repositoryDAO.get(repository.getType(),
-                                 repository.getName());
-
-    if (oldRepository != null)
-    {
-      RepositoryPermissions.modify(oldRepository).check();
-      fireEvent(HandlerEventType.BEFORE_MODIFY, repository, oldRepository);
-      repository.setLastModified(System.currentTimeMillis());
-      getHandler(repository).modify(repository);
-      repositoryDAO.modify(repository);
-      fireEvent(HandlerEventType.MODIFY, repository, oldRepository);
-    }
-    else
-    {
-      throw new RepositoryNotFoundException(
-        "repository ".concat(repository.getName()).concat(" not found"));
-    }
+  public void init(SCMContextProvider context) {
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
+  @Override
+  public void modify(Repository repository) throws RepositoryException {
+    logger.info("modify repository {} of type {}", repository.getName(), repository.getType());
+
+    managerDaoAdapter.modify(
+      repository,
+      RepositoryPermissions::modify,
+      notModified -> {
+        fireEvent(HandlerEventType.BEFORE_MODIFY, repository, notModified);
+        getHandler(repository).modify(repository);
+      },
+      notModified -> fireEvent(HandlerEventType.MODIFY, repository, notModified)
+    );
+  }
+
   @Override
   public void refresh(Repository repository)
-    throws RepositoryException, IOException
-  {
+    throws RepositoryException {
     AssertUtil.assertIsNotNull(repository);
     RepositoryPermissions.read(repository).check();
 
-    Repository fresh = repositoryDAO.get(repository.getType(),
-                         repository.getName());
+    Repository fresh = repositoryDAO.get(repository.getNamespaceAndName());
 
-    if (fresh != null)
-    {
+    if (fresh != null) {
       fresh.copyProperties(repository);
-    }
-    else
-    {
-      throw new RepositoryNotFoundException(
-        "repository ".concat(repository.getName()).concat(" not found"));
+    } else {
+      throw new RepositoryNotFoundException(repository);
     }
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   *
-   * @return
-   */
   @Override
-  public Repository get(String id)
-  {
+  public Repository get(String id) {
     AssertUtil.assertIsNotEmpty(id);
 
     RepositoryPermissions.read(id).check();
 
     Repository repository = repositoryDAO.get(id);
 
-    if (repository != null)
-    {
+    if (repository != null) {
       repository = repository.clone();
     }
 
     return repository;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param type
-   * @param name
-   *
-   * @return
-   */
   @Override
-  public Repository get(String type, String name)
-  {
-    AssertUtil.assertIsNotEmpty(type);
-    AssertUtil.assertIsNotEmpty(name);
+  public Repository get(NamespaceAndName namespaceAndName) {
+    AssertUtil.assertIsNotNull(namespaceAndName);
+    AssertUtil.assertIsNotEmpty(namespaceAndName.getNamespace());
+    AssertUtil.assertIsNotEmpty(namespaceAndName.getName());
 
-    Repository repository = repositoryDAO.get(type, name);
+    Repository repository = repositoryDAO.get(namespaceAndName);
 
-    if (repository != null)
-    {
+    if (repository != null) {
       RepositoryPermissions.read(repository).check();
       repository = repository.clone();
     }
@@ -395,114 +249,62 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
     return repository;
   }
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param comparator
-   * @return
-   */
   @Override
-  public Collection<Repository> getAll(Comparator<Repository> comparator)
-  {
+  public Collection<Repository> getAll(Comparator<Repository> comparator) {
     List<Repository> repositories = Lists.newArrayList();
 
     PermissionActionCheck<Repository> check = RepositoryPermissions.read();
 
-    for (Repository repository : repositoryDAO.getAll())
-    {
+    for (Repository repository : repositoryDAO.getAll()) {
       if (handlerMap.containsKey(repository.getType())
-        && check.isPermitted(repository))
-      {
+        && check.isPermitted(repository)) {
         Repository r = repository.clone();
 
         repositories.add(r);
       }
     }
 
-    if (comparator != null)
-    {
+    if (comparator != null) {
       Collections.sort(repositories, comparator);
     }
 
     return repositories;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public Collection<Repository> getAll()
-  {
+  public Collection<Repository> getAll() {
     return getAll(null);
   }
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param comparator
-   * @param start
-   * @param limit
-   *
-   * @return
-   */
+
   @Override
   public Collection<Repository> getAll(Comparator<Repository> comparator,
-    int start, int limit)
-  {
+                                       int start, int limit) {
     final PermissionActionCheck<Repository> check =
       RepositoryPermissions.read();
 
     return Util.createSubCollection(repositoryDAO.getAll(), comparator,
-      new CollectionAppender<Repository>()
-    {
-      @Override
-      public void append(Collection<Repository> collection, Repository item)
-      {
-        if (check.isPermitted(item))
-        {
-          collection.add(item.clone());
+      new CollectionAppender<Repository>() {
+        @Override
+        public void append(Collection<Repository> collection, Repository item) {
+          if (check.isPermitted(item)) {
+            collection.add(item.clone());
+          }
         }
-      }
-    }, start, limit);
+      }, start, limit);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param start
-   * @param limit
-   *
-   * @return
-   */
   @Override
-  public Collection<Repository> getAll(int start, int limit)
-  {
+  public Collection<Repository> getAll(int start, int limit) {
     return getAll(null, start, limit);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public Collection<Type> getConfiguredTypes()
-  {
+  public Collection<Type> getConfiguredTypes() {
     List<Type> validTypes = Lists.newArrayList();
 
-    for (RepositoryHandler handler : handlerMap.values())
-    {
-      if (handler.isConfigured())
-      {
+    for (RepositoryHandler handler : handlerMap.values()) {
+      if (handler.isConfigured()) {
         validTypes.add(handler.getType());
       }
     }
@@ -510,41 +312,40 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
     return validTypes;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   */
   @Override
-  public Repository getFromRequest(HttpServletRequest request)
-  {
+  public Repository getFromRequest(HttpServletRequest request) {
     AssertUtil.assertIsNotNull(request);
 
     return getFromUri(HttpUtil.getStrippedURI(request));
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param type
-   * @param uri
-   *
-   * @return
-   */
   @Override
-  public Repository getFromTypeAndUri(String type, String uri)
-  {
-    if (Strings.isNullOrEmpty(type))
-    {
+  public Repository getFromUri(String uri) {
+    AssertUtil.assertIsNotEmpty(uri);
+
+    if (uri.startsWith(HttpUtil.SEPARATOR_PATH)) {
+      uri = uri.substring(1);
+    }
+
+    int typeSeparator = uri.indexOf(HttpUtil.SEPARATOR_PATH);
+    Repository repository = null;
+
+    if (typeSeparator > 0) {
+      String type = uri.substring(0, typeSeparator);
+
+      uri = uri.substring(typeSeparator + 1);
+      repository = getFromTypeAndUri(type, uri);
+    }
+
+    return repository;
+  }
+
+  private Repository getFromTypeAndUri(String type, String uri) {
+    if (Strings.isNullOrEmpty(type)) {
       throw new ArgumentIsInvalidException("argument type is required");
     }
 
-    if (Strings.isNullOrEmpty(uri))
-    {
+    if (Strings.isNullOrEmpty(uri)) {
       throw new ArgumentIsInvalidException("argument uri is required");
     }
 
@@ -553,16 +354,13 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
 
     Repository repository = null;
 
-    if (handlerMap.containsKey(type))
-    {
+    if (handlerMap.containsKey(type)) {
       Collection<Repository> repositories = repositoryDAO.getAll();
 
       PermissionActionCheck<Repository> check = RepositoryPermissions.read();
 
-      for (Repository r : repositories)
-      {
-        if (repositoryMatcher.matches(r, type, uri))
-        {
+      for (Repository r : repositories) {
+        if (repositoryMatcher.matches(r, type, uri)) {
           check.check(r);
           repository = r.clone();
 
@@ -571,8 +369,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
       }
     }
 
-    if ((repository == null) && logger.isDebugEnabled())
-    {
+    if ((repository == null) && logger.isDebugEnabled()) {
       logger.debug("could not find repository with type {} and uri {}", type,
         uri);
     }
@@ -580,103 +377,35 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
     return repository;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param uri
-   *
-   * @return
-   */
   @Override
-  public Repository getFromUri(String uri)
-  {
-    AssertUtil.assertIsNotEmpty(uri);
-
-    if (uri.startsWith(HttpUtil.SEPARATOR_PATH))
-    {
-      uri = uri.substring(1);
-    }
-
-    int typeSeperator = uri.indexOf(HttpUtil.SEPARATOR_PATH);
-    Repository repository = null;
-
-    if (typeSeperator > 0)
-    {
-      String type = uri.substring(0, typeSeperator);
-
-      uri = uri.substring(typeSeperator + 1);
-      repository = getFromTypeAndUri(type, uri);
-    }
-
-    return repository;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param type
-   *
-   * @return
-   */
-  @Override
-  public RepositoryHandler getHandler(String type)
-  {
+  public RepositoryHandler getHandler(String type) {
     return handlerMap.get(type);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public Long getLastModified()
-  {
+  public Long getLastModified() {
     return repositoryDAO.getLastModified();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public Collection<Type> getTypes()
-  {
+  public Collection<Type> getTypes() {
     return types;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param contextProvider
-   * @param handler
-   */
   private void addHandler(SCMContextProvider contextProvider,
-    RepositoryHandler handler)
-  {
+                          RepositoryHandler handler) {
     AssertUtil.assertIsNotNull(handler);
 
     Type type = handler.getType();
 
     AssertUtil.assertIsNotNull(type);
 
-    if (handlerMap.containsKey(type.getName()))
-    {
+    if (handlerMap.containsKey(type.getName())) {
       throw new ConfigurationException(
         type.getName().concat("allready registered"));
     }
 
-    if (logger.isInfoEnabled())
-    {
+    if (logger.isInfoEnabled()) {
       logger.info("added RepositoryHandler {} for type {}", handler.getClass(),
         type);
     }
@@ -686,58 +415,18 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
     types.add(type);
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   *
-   *
-   * @throws RepositoryException
-   */
   private RepositoryHandler getHandler(Repository repository)
-    throws RepositoryException
-  {
+    throws RepositoryException {
     String type = repository.getType();
     RepositoryHandler handler = handlerMap.get(type);
 
-    if (handler == null)
-    {
+    if (handler == null) {
       throw new RepositoryHandlerNotFoundException(
         "could not find handler for ".concat(type));
-    }
-    else if (!handler.isConfigured())
-    {
+    } else if (!handler.isConfigured()) {
       throw new RepositoryException("handler is not configured");
     }
 
     return handler;
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final ScmConfiguration configuration;
-
-  /** Field description */
-  private final ExecutorService executorService;
-
-  /** Field description */
-  private final Map<String, RepositoryHandler> handlerMap;
-
-  /** Field description */
-  private final KeyGenerator keyGenerator;
-
-  /** Field description */
-  private final RepositoryDAO repositoryDAO;
-
-  /** Field description */
-  private final Set<Type> types;
-  
-  /** Field description */
-  private RepositoryMatcher repositoryMatcher;
 }

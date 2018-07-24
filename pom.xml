@@ -73,7 +73,6 @@
     <module>scm-ui</module>
     <module>scm-webapp</module>
     <module>scm-server</module>
-    <module>scm-clients</module>
   </modules>
 
   <repositories>
@@ -146,10 +145,44 @@
       <version>${mokito.version}</version>
       <scope>test</scope>
     </dependency>
+
+    <dependency>
+      <!-- Dependency used in Jenkinsfile. Including this in maven provides code completion in Jenkinsfile. -->
+      <groupId>com.github.cloudogu</groupId>
+      <artifactId>ces-build-lib</artifactId>
+      <!-- Keep this version in sync with the one used in Jenkinsfile -->
+      <version>9aadeeb</version>
+      <!-- Don't ship this dependency with the app -->
+      <optional>true</optional>
+    </dependency>
     
   </dependencies>
 
+  <dependencyManagement>
+    <dependencies>
+
+      <dependency>
+        <groupId>com.github.sdorra</groupId>
+        <artifactId>shiro-unit</artifactId>
+        <version>1.0.1</version>
+        <scope>test</scope>
+      </dependency>
+
+    </dependencies>
+  </dependencyManagement>
+
   <build>
+
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <version>3.0.1</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+
     <plugins>
       
       <plugin>
@@ -206,6 +239,23 @@
       </plugin>
 
       <plugin>
+        <groupId>com.github.legman</groupId>
+        <artifactId>legman-maven-plugin</artifactId>
+        <version>${legman.version}</version>
+        <configuration>
+          <fail>true</fail>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>process-classes</phase>
+            <goals>
+              <goal>guava-migration-check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.5.1</version>
@@ -255,7 +305,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.9</version>
         <configuration>
           <useStandardDocletOptions>true</useStandardDocletOptions>
           <charset>${project.build.sourceEncoding}</charset>
@@ -440,7 +489,6 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
-            <version>2.8.1</version>
             <configuration>
               <doclet>org.jboss.apiviz.APIviz</doclet>
               <docletArtifact>
@@ -495,7 +543,7 @@
     <guice.version>4.0</guice.version>
     
     <!-- event bus -->
-    <legman.version>1.2.0</legman.version>
+    <legman.version>1.3.0</legman.version>
     
     <!-- webserver -->
     <jetty.version>9.2.10.v20150310</jetty.version>

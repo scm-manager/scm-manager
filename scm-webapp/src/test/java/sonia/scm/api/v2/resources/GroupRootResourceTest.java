@@ -20,7 +20,6 @@ import sonia.scm.group.GroupManager;
 import sonia.scm.web.VndMediaType;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -28,7 +27,9 @@ import java.net.URL;
 import java.util.Collections;
 
 import static java.util.Collections.singletonList;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doNothing;
@@ -47,10 +48,7 @@ public class GroupRootResourceTest {
 
   private Dispatcher dispatcher = MockDispatcherFactory.createDispatcher();
 
-  @Mock
-  private UriInfo uriInfo;
-  @Mock
-  private UriInfoStore uriInfoStore;
+  private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(URI.create("/"));
 
   @Mock
   private GroupManager groupManager;
@@ -64,21 +62,19 @@ public class GroupRootResourceTest {
   @Before
   public void prepareEnvironment() throws IOException, GroupException {
     initMocks(this);
-    doNothing().when(groupManager).create(groupCaptor.capture());
+    when(groupManager.create(groupCaptor.capture())).thenAnswer(invocation -> invocation.getArguments()[0]);
+    doNothing().when(groupManager).modify(groupCaptor.capture());
 
     Group group = createDummyGroup();
     when(groupManager.getPage(any(), eq(0), eq(10))).thenReturn(new PageResult<>(singletonList(group), 1));
     when(groupManager.get("admin")).thenReturn(group);
 
-    GroupCollectionToDtoMapper groupCollectionToDtoMapper = new GroupCollectionToDtoMapper(groupToDtoMapper, uriInfoStore);
-    GroupCollectionResource groupCollectionResource = new GroupCollectionResource(groupManager, dtoToGroupMapper, groupCollectionToDtoMapper);
+    GroupCollectionToDtoMapper groupCollectionToDtoMapper = new GroupCollectionToDtoMapper(groupToDtoMapper, resourceLinks);
+    GroupCollectionResource groupCollectionResource = new GroupCollectionResource(groupManager, dtoToGroupMapper, groupCollectionToDtoMapper, resourceLinks);
     GroupResource groupResource = new GroupResource(groupManager, groupToDtoMapper, dtoToGroupMapper);
     GroupRootResource groupRootResource = new GroupRootResource(MockProvider.of(groupCollectionResource), MockProvider.of(groupResource));
 
     dispatcher.getRegistry().addSingletonResource(groupRootResource);
-
-    when(uriInfo.getBaseUri()).thenReturn(URI.create("/"));
-    when(uriInfoStore.get()).thenReturn(uriInfo);
   }
 
   @Test
@@ -106,6 +102,74 @@ public class GroupRootResourceTest {
     assertTrue(response.getContentAsString().contains("\"self\":{\"href\":\"/v2/groups/admin\"}"));
     assertTrue(response.getContentAsString().contains("\"delete\":{\"href\":\"/v2/groups/admin\"}"));
     assertTrue(response.getContentAsString().contains("\"name\":\"user\""));
+  }
+
+  @Test
+  public void shouldUpdateGroup() throws URISyntaxException, IOException {
+    URL url = Resources.getResource("sonia/scm/api/v2/group-test-update.json");
+    byte[] groupJson = Resources.toByteArray(url);
+
+    Group group = createDummyGroup();
+    when(groupManager.get("admin")).thenReturn(group);
+    Group updatedGroup = createDummyGroup();
+    updatedGroup.setDescription("Updated description");
+
+    MockHttpRequest request = MockHttpRequest
+      .put("/" + GroupRootResource.GROUPS_PATH_V2 + "admin")
+      .contentType(VndMediaType.GROUP)
+      .content(groupJson);
+
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+    Group capturedGroup = groupCaptor.getValue();
+
+    assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
+
+    assertEquals("Updated description", capturedGroup.getDescription());
+  }
+
+  @Test
+  public void updateShouldFailOnNonexistentGroup() throws URISyntaxException, IOException {
+    URL url = Resources.getResource("sonia/scm/api/v2/group-test-update.json");
+    byte[] groupJson = Resources.toByteArray(url);
+
+    Group updatedGroup = createDummyGroup();
+    updatedGroup.setDescription("Updated description");
+
+    MockHttpRequest request = MockHttpRequest
+      .put("/" + GroupRootResource.GROUPS_PATH_V2 + "idontexist")
+      .contentType(VndMediaType.GROUP)
+      .content(groupJson);
+
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_NOT_FOUND, response.getStatus());
+  }
+
+  @Test
+  public void shouldDeleteGroup() throws URISyntaxException {
+    Group group = createDummyGroup();
+    when(groupManager.get("admin")).thenReturn(group);
+
+    MockHttpRequest request = MockHttpRequest.delete("/" + GroupRootResource.GROUPS_PATH_V2 + "admin");
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
+  }
+
+  @Test
+  public void shouldNotFailOnDeletingNonexistentGroup() throws URISyntaxException {
+    MockHttpRequest request = MockHttpRequest.delete("/" + GroupRootResource.GROUPS_PATH_V2 + "idontexist");
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
   }
 
   @Test

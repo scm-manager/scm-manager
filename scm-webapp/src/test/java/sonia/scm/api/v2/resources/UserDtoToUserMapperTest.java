@@ -8,7 +8,6 @@ import org.mockito.Mock;
 import sonia.scm.user.User;
 
 import java.time.Instant;
-import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
@@ -47,7 +46,7 @@ public class UserDtoToUserMapperTest {
     UserDto dto = new UserDto();
     dto.setName("abc");
     dto.setCreationDate(Instant.now());
-    dto.setLastModified(Optional.empty());
+    dto.setLastModified(null);
     return dto;
   }
 }

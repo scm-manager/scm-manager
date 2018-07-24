@@ -41,11 +41,11 @@ import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.HandlerEventType;
+import sonia.scm.ManagerDaoAdapter;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.TransformFilter;
 import sonia.scm.search.SearchRequest;
 import sonia.scm.search.SearchUtil;
-import sonia.scm.util.AssertUtil;
 import sonia.scm.util.CollectionAppender;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
@@ -96,6 +96,10 @@ public class DefaultUserManager extends AbstractUserManager
   public DefaultUserManager(UserDAO userDAO)
   {
     this.userDAO = userDAO;
+    this.managerDaoAdapter = new ManagerDaoAdapter<>(
+      userDAO,
+      UserNotFoundException::new,
+      UserAlreadyExistsException::new);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -137,64 +141,31 @@ public class DefaultUserManager extends AbstractUserManager
    * @throws UserException
    */
   @Override
-  public void create(User user) throws UserException, IOException
-  {
+  public User create(User user) throws UserException {
     String type = user.getType();
-
-    if (Util.isEmpty(type))
-    {
+    if (Util.isEmpty(type)) {
       user.setType(userDAO.getType());
     }
 
-    if (logger.isInfoEnabled())
-    {
-      logger.info("create user {} of type {}", user.getName(), user.getType());
-    }
+    logger.info("create user {} of type {}", user.getName(), user.getType());
 
-    UserPermissions.create().check();
-
-    if (userDAO.contains(user.getName()))
-    {
-      throw new UserAlreadyExistsException(user.getName().concat(" user already exists"));
-    }
-
-    AssertUtil.assertIsValid(user);
-    user.setCreationDate(System.currentTimeMillis());
-    fireEvent(HandlerEventType.BEFORE_CREATE, user);
-    userDAO.add(user);
-    fireEvent(HandlerEventType.CREATE, user);
+    return managerDaoAdapter.create(
+      user,
+      UserPermissions::create,
+      newUser -> fireEvent(HandlerEventType.BEFORE_CREATE, newUser),
+      newUser -> fireEvent(HandlerEventType.CREATE, newUser)
+    );
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param user
-   *
-   * @throws IOException
-   * @throws UserException
-   */
   @Override
-  public void delete(User user) throws UserException, IOException
-  {
-    if (logger.isInfoEnabled())
-    {
-      logger.info("delete user {} of type {}", user.getName(), user.getType());
-    }
-
-    String name = user.getName();
-    UserPermissions.delete(name).check();
-
-    if (userDAO.contains(name))
-    {
-      fireEvent(HandlerEventType.BEFORE_DELETE, user);
-      userDAO.delete(user);
-      fireEvent(HandlerEventType.DELETE, user);
-    }
-    else
-    {
-      throw new UserNotFoundException("user does not exists");
-    }
+  public void delete(User user) throws UserException {
+    logger.info("delete user {} of type {}", user.getName(), user.getType());
+    managerDaoAdapter.delete(
+      user,
+      () -> UserPermissions.delete(user.getName()),
+      toDelete -> fireEvent(HandlerEventType.BEFORE_DELETE, toDelete),
+      toDelete -> fireEvent(HandlerEventType.DELETE, toDelete)
+    );
   }
 
   /**
@@ -224,29 +195,15 @@ public class DefaultUserManager extends AbstractUserManager
    * @throws UserException
    */
   @Override
-  public void modify(User user) throws UserException, IOException
+  public void modify(User user) throws UserException
   {
-    String name = user.getName();
-    if (logger.isInfoEnabled())
-    {
-      logger.info("modify user {} of type {}", user.getName(), user.getType());
-    }
-    
-    UserPermissions.modify(user).check();
-    User notModified = userDAO.get(name);
-    if (notModified != null)
-    {
-      AssertUtil.assertIsValid(user);
-      fireEvent(HandlerEventType.BEFORE_MODIFY, user, notModified);
-      user.setLastModified(System.currentTimeMillis());
-      user.setCreationDate(notModified.getCreationDate());
-      userDAO.modify(user);
-      fireEvent(HandlerEventType.MODIFY, user, notModified);
-    }
-    else
-    {
-      throw new UserNotFoundException("user does not exists");
-    }
+    logger.info("modify user {} of type {}", user.getName(), user.getType());
+
+    managerDaoAdapter.modify(
+      user,
+      UserPermissions::modify,
+      notModified -> fireEvent(HandlerEventType.BEFORE_MODIFY, user, notModified),
+      notModified -> fireEvent(HandlerEventType.MODIFY, user, notModified));
   }
 
   /**
@@ -259,7 +216,7 @@ public class DefaultUserManager extends AbstractUserManager
    * @throws UserException
    */
   @Override
-  public void refresh(User user) throws UserException, IOException
+  public void refresh(User user) throws UserException
   {
     if (logger.isInfoEnabled())
     {
@@ -271,7 +228,7 @@ public class DefaultUserManager extends AbstractUserManager
 
     if (fresh == null)
     {
-      throw new UserNotFoundException("user does not exists");
+      throw new UserNotFoundException(user);
     }
 
     fresh.copyProperties(user);
@@ -496,6 +453,6 @@ public class DefaultUserManager extends AbstractUserManager
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
   private final UserDAO userDAO;
+  private final ManagerDaoAdapter<User, UserException> managerDaoAdapter;
 }

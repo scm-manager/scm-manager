@@ -76,7 +76,7 @@ public class GitRepositoryServiceResolver implements RepositoryServiceResolver
    * @return
    */
   @Override
-  public GitRepositoryServiceProvider reslove(Repository repository)
+  public GitRepositoryServiceProvider resolve(Repository repository)
   {
     GitRepositoryServiceProvider provider = null;
 

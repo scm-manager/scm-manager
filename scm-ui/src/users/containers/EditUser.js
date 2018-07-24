@@ -3,9 +3,10 @@ import React from "react";
 import { connect } from "react-redux";
 import UserForm from "./UserForm";
 import type { User } from "../types/User";
+import type { UserEntry } from "../types/UserEntry";
 import Loading from "../../components/Loading";
 
-import { updateUser, fetchUser } from "../modules/users";
+import { modifyUser, fetchUser } from "../modules/users";
 
 type Props = {
   name: string,
@@ -47,7 +48,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(fetchUser(name));
     },
     updateUser: (user: User) => {
-      dispatch(updateUser(user));
+      dispatch(modifyUser(user));
     }
   };
 };

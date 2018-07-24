@@ -13,8 +13,6 @@ import java.util.stream.Collectors;
 
 import static de.otto.edison.hal.Link.link;
 import static de.otto.edison.hal.Links.linkingTo;
-import static sonia.scm.api.v2.resources.ResourceLinks.group;
-import static sonia.scm.api.v2.resources.ResourceLinks.user;
 
 // Mapstruct does not support parameterized (i.e. non-default) constructors. Thus, we need to use field injection.
 @SuppressWarnings("squid:S3306")
@@ -22,16 +20,16 @@ import static sonia.scm.api.v2.resources.ResourceLinks.user;
 public abstract class GroupToGroupDtoMapper extends BaseMapper<Group, GroupDto> {
 
   @Inject
-  private UriInfoStore uriInfoStore;
+  private ResourceLinks resourceLinks;
 
   @AfterMapping
   void appendLinks(Group group, @MappingTarget GroupDto target) {
-    Links.Builder linksBuilder = linkingTo().self(group(uriInfoStore.get()).self(target.getName()));
+    Links.Builder linksBuilder = linkingTo().self(resourceLinks.group().self(target.getName()));
     if (GroupPermissions.delete(group).isPermitted()) {
-      linksBuilder.single(link("delete", group(uriInfoStore.get()).delete(target.getName())));
+      linksBuilder.single(link("delete", resourceLinks.group().delete(target.getName())));
     }
     if (GroupPermissions.modify(group).isPermitted()) {
-      linksBuilder.single(link("update", group(uriInfoStore.get()).update(target.getName())));
+      linksBuilder.single(link("update", resourceLinks.group().update(target.getName())));
     }
     target.add(linksBuilder.build());
   }
@@ -43,7 +41,7 @@ public abstract class GroupToGroupDtoMapper extends BaseMapper<Group, GroupDto> 
   }
 
   private MemberDto createMember(String name) {
-    Links.Builder linksBuilder = linkingTo().self(user(uriInfoStore.get()).self(name));
+    Links.Builder linksBuilder = linkingTo().self(resourceLinks.user().self(name));
     MemberDto memberDto = new MemberDto(name);
     memberDto.add(linksBuilder.build());
     return memberDto;

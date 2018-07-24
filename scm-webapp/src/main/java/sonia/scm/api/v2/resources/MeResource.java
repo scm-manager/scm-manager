@@ -25,12 +25,11 @@ public class MeResource {
 
   private final UserToUserDtoMapper userToDtoMapper;
 
-  private final ResourceManagerAdapter<User, UserDto, UserException> adapter;
-
+  private final IdResourceManagerAdapter<User, UserDto, UserException> adapter;
   @Inject
   public MeResource(UserToUserDtoMapper userToDtoMapper, UserManager manager) {
     this.userToDtoMapper = userToDtoMapper;
-    this.adapter = new ResourceManagerAdapter<>(manager);
+    this.adapter = new IdResourceManagerAdapter<>(manager, User.class);
   }
 
   /**

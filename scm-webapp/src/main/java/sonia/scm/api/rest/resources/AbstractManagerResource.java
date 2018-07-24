@@ -55,6 +55,11 @@ import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
@@ -76,17 +81,15 @@ public abstract class AbstractManagerResource<T extends ModelObject,
   private static final Logger logger =
     LoggerFactory.getLogger(AbstractManagerResource.class);
 
-  //~--- constructors ---------------------------------------------------------
+  protected final Manager<T, E> manager;
+  private final Class<T> type;
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param manager
-   */
-  public AbstractManagerResource(Manager<T, E> manager)
-  {
+  protected int cacheMaxAge = 0;
+  protected boolean disableCache = false;
+
+  public AbstractManagerResource(Manager<T, E> manager, Class<T> type) {
     this.manager = manager;
+    this.type = type;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -159,7 +162,7 @@ public abstract class AbstractManagerResource<T extends ModelObject,
     catch (Exception ex)
     {
       logger.error("error during create", ex);
-      response = createErrorResonse(ex);
+      response = createErrorResponse(ex);
     }
 
     return response;
@@ -195,7 +198,7 @@ public abstract class AbstractManagerResource<T extends ModelObject,
       catch (Exception ex)
       {
         logger.error("error during delete", ex);
-        response = createErrorResonse(ex);
+        response = createErrorResponse(ex);
       }
     }
 
@@ -227,13 +230,13 @@ public abstract class AbstractManagerResource<T extends ModelObject,
     }
     catch (AuthorizationException ex)
     {
-      logger.warn("update not allowd", ex);
+      logger.warn("update not allowed", ex);
       response = Response.status(Response.Status.FORBIDDEN).build();
     }
     catch (Exception ex)
     {
       logger.error("error during update", ex);
-      response = createErrorResonse(ex);
+      response = createErrorResponse(ex);
     }
 
     return response;
@@ -370,9 +373,9 @@ public abstract class AbstractManagerResource<T extends ModelObject,
    *
    * @return
    */
-  protected Response createErrorResonse(Throwable throwable)
+  protected Response createErrorResponse(Throwable throwable)
   {
-    return createErrorResonse(Status.INTERNAL_SERVER_ERROR,
+    return createErrorResponse(Status.INTERNAL_SERVER_ERROR,
       throwable.getMessage(), throwable);
   }
 
@@ -385,9 +388,9 @@ public abstract class AbstractManagerResource<T extends ModelObject,
    *
    * @return
    */
-  protected Response createErrorResonse(Status status, Throwable throwable)
+  protected Response createErrorResponse(Status status, Throwable throwable)
   {
-    return createErrorResonse(status, throwable.getMessage(), throwable);
+    return createErrorResponse(status, throwable.getMessage(), throwable);
   }
 
   /**
@@ -400,7 +403,7 @@ public abstract class AbstractManagerResource<T extends ModelObject,
    *
    * @return
    */
-  protected Response createErrorResonse(Status status, String message,
+  protected Response createErrorResponse(Status status, String message,
     Throwable throwable)
   {
     return Response.status(status).entity(new RestExceptionResult(message,
@@ -526,45 +529,25 @@ public abstract class AbstractManagerResource<T extends ModelObject,
     return builder.build();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param sortby
-   * @param desc
-   *
-   * @return
-   */
   @SuppressWarnings("unchecked")
-  private Comparator<T> createComparator(String sortby, boolean desc)
+  private Comparator<T> createComparator(String sortBy, boolean desc)
   {
+    checkSortByField(sortBy);
     Comparator comparator;
 
     if (desc)
     {
-      comparator = new BeanReverseComparator(sortby);
+      comparator = new BeanReverseComparator(sortBy);
     }
     else
     {
-      comparator = new BeanComparator(sortby);
+      comparator = new BeanComparator(sortBy);
     }
 
     return comparator;
   }
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param sortby
-   * @param desc
-   * @param start
-   * @param limit
-   *
-   * @return
-   */
-  private Collection<T> fetchItems(String sortby, boolean desc, int start,
+  private Collection<T> fetchItems(String sortBy, boolean desc, int start,
     int limit)
   {
     AssertUtil.assertPositive(start);
@@ -573,18 +556,18 @@ public abstract class AbstractManagerResource<T extends ModelObject,
 
     if (limit > 0)
     {
-      if (Util.isEmpty(sortby))
+      if (Util.isEmpty(sortBy))
       {
 
         // replace with something useful
-        sortby = "id";
+        sortBy = "id";
       }
 
-      items = manager.getAll(createComparator(sortby, desc), start, limit);
+      items = manager.getAll(createComparator(sortBy, desc), start, limit);
     }
-    else if (Util.isNotEmpty(sortby))
+    else if (Util.isNotEmpty(sortBy))
     {
-      items = manager.getAll(createComparator(sortby, desc));
+      items = manager.getAll(createComparator(sortBy, desc));
     }
     else
     {
@@ -594,17 +577,32 @@ public abstract class AbstractManagerResource<T extends ModelObject,
     return items;
   }
 
-  protected PageResult<T> fetchPage(String sortby, boolean desc, int pageNumber,
+  // We have to handle IntrospectionException here, because it's a checked exception
+  // It shouldn't occur really - so creating a new unchecked exception would be over-engineered here
+  @SuppressWarnings("squid:S00112")
+  private void checkSortByField(String sortBy) {
+    try {
+      BeanInfo info = Introspector.getBeanInfo(type);
+      PropertyDescriptor[] pds = info.getPropertyDescriptors();
+      if (Arrays.stream(pds).noneMatch(p -> p.getName().equals(sortBy))) {
+        throw new IllegalArgumentException("sortBy");
+      }
+    } catch (IntrospectionException e) {
+      throw new RuntimeException("error introspecting model type " + type.getName(), e);
+    }
+  }
+
+  protected PageResult<T> fetchPage(String sortBy, boolean desc, int pageNumber,
     int pageSize) {
     AssertUtil.assertPositive(pageNumber);
     AssertUtil.assertPositive(pageSize);
 
-    if (Util.isEmpty(sortby)) {
+    if (Util.isEmpty(sortBy)) {
       // replace with something useful
-      sortby = "id";
+      sortBy = "id";
     }
 
-    return manager.getPage(createComparator(sortby, desc), pageNumber, pageSize);
+    return manager.getPage(createComparator(sortBy, desc), pageNumber, pageSize);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -676,16 +674,4 @@ public abstract class AbstractManagerResource<T extends ModelObject,
       return super.compare(o1, o2) * -1;
     }
   }
-
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  protected int cacheMaxAge = 0;
-
-  /** Field description */
-  protected boolean disableCache = false;
-
-  /** Field description */
-  protected Manager<T, E> manager;
 }
