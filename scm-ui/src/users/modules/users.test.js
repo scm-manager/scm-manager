@@ -24,6 +24,10 @@ import {
   deleteUser,
   fetchUsersFailure,
   fetchUsersSuccess,
+  fetchUser,
+  FETCH_USER_PENDING,
+  FETCH_USER_SUCCESS,
+  FETCH_USER_FAILURE,
   createUser,
   createUserSuccess,
   createUserFailure,
@@ -131,6 +135,8 @@ const response = {
   responseBody
 };
 
+const USERS_URL = "/scm/api/rest/v2/users";
+
 describe("users fetch()", () => {
   const mockStore = configureMockStore([thunk]);
   afterEach(() => {
@@ -139,7 +145,7 @@ describe("users fetch()", () => {
   });
 
   it("should successfully fetch users", () => {
-    fetchMock.getOnce("/scm/api/rest/v2/users", response);
+    fetchMock.getOnce(USERS_URL, response);
 
     const expectedActions = [
       { type: FETCH_USERS_PENDING },
@@ -157,7 +163,7 @@ describe("users fetch()", () => {
   });
 
   it("should fail getting users on HTTP 500", () => {
-    fetchMock.getOnce("/scm/api/rest/v2/users", {
+    fetchMock.getOnce(USERS_URL, {
       status: 500
     });
 
@@ -170,14 +176,40 @@ describe("users fetch()", () => {
     });
   });
 
+  it("should sucessfully fetch single user", () => {
+    fetchMock.getOnce(USERS_URL + "/zaphod", userZaphod);
+
+    const store = mockStore({});
+    return store.dispatch(fetchUser("zaphod")).then(() => {
+      const actions = store.getActions();
+      expect(actions[0].type).toEqual(FETCH_USER_PENDING);
+      expect(actions[1].type).toEqual(FETCH_USER_SUCCESS);
+      expect(actions[1].payload).toBeDefined();
+    });
+  });
+
+  it("should fail fetching single user on HTTP 500", () => {
+    fetchMock.getOnce(USERS_URL + "/zaphod", {
+      status: 500
+    });
+
+    const store = mockStore({});
+    return store.dispatch(fetchUser("zaphod")).then(() => {
+      const actions = store.getActions();
+      expect(actions[0].type).toEqual(FETCH_USER_PENDING);
+      expect(actions[1].type).toEqual(FETCH_USER_FAILURE);
+      expect(actions[1].payload).toBeDefined();
+    });
+  });
+
   it("should add a user successfully", () => {
     // unmatched
-    fetchMock.postOnce("/scm/api/rest/v2/users", {
+    fetchMock.postOnce(USERS_URL, {
       status: 204
     });
 
     // after create, the users are fetched again
-    fetchMock.getOnce("/scm/api/rest/v2/users", response);
+    fetchMock.getOnce(USERS_URL, response);
 
     const store = mockStore({});
     return store.dispatch(createUser(userZaphod)).then(() => {
@@ -189,7 +221,7 @@ describe("users fetch()", () => {
   });
 
   it("should fail adding a user on HTTP 500", () => {
-    fetchMock.postOnce("/scm/api/rest/v2/users", {
+    fetchMock.postOnce(USERS_URL, {
       status: 500
     });
 
@@ -207,7 +239,7 @@ describe("users fetch()", () => {
       status: 204
     });
     // after update, the users are fetched again
-    fetchMock.getOnce("/scm/api/rest/v2/users", response);
+    fetchMock.getOnce(USERS_URL, response);
 
     const store = mockStore({});
     return store.dispatch(modifyUser(userZaphod)).then(() => {
@@ -237,7 +269,7 @@ describe("users fetch()", () => {
       status: 204
     });
     // after update, the users are fetched again
-    fetchMock.getOnce("/scm/api/rest/v2/users", response);
+    fetchMock.getOnce(USERS_URL, response);
 
     const store = mockStore({});
     return store.dispatch(deleteUser(userZaphod)).then(() => {
@@ -411,10 +443,10 @@ describe("users reducer", () => {
     expect(newState.usersByNames["zaphod"].loading).toBeTruthy();
   });
 
-  it("should uppdate state according to FETCH_USER_FAILURE action", () => {
+  it("should update state according to FETCH_USER_FAILURE action", () => {
     const newState = reducer(
       {},
-      fetchUserFailure(userFord, new Error("kaputt!"))
+      fetchUserFailure(userFord.name, new Error("kaputt!"))
     );
     expect(newState.usersByNames["ford"].error).toBeTruthy;
   });

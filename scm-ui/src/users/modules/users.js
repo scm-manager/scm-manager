@@ -3,6 +3,7 @@ import { apiClient } from "../../apiclient";
 import type { User } from "../types/User";
 import type { UserEntry } from "../types/UserEntry";
 import { Dispatch } from "redux";
+import { Action } from "../../types/Action";
 
 export const FETCH_USERS_PENDING = "scm/users/FETCH_USERS_PENDING";
 export const FETCH_USERS_SUCCESS = "scm/users/FETCH_USERS_SUCCESS";
@@ -25,6 +26,7 @@ export const DELETE_USER_SUCCESS = "scm/users/DELETE_SUCCESS";
 export const DELETE_USER_FAILURE = "scm/users/DELETE_FAILURE";
 
 const USERS_URL = "users";
+const USER_URL = "users/";
 
 const CONTENT_TYPE_USER = "application/vnd.scmm-user+json;v=2";
 
@@ -53,20 +55,20 @@ export function fetchUsers() {
   };
 }
 
-export function fetchUsersPending() {
+export function fetchUsersPending(): Action {
   return {
     type: FETCH_USERS_PENDING
   };
 }
 
-export function fetchUsersSuccess(users: any) {
+export function fetchUsersSuccess(users: any): Action {
   return {
     type: FETCH_USERS_SUCCESS,
     payload: users
   };
 }
 
-export function fetchUsersFailure(url: string, error: Error) {
+export function fetchUsersFailure(url: string, error: Error): Action {
   return {
     type: FETCH_USERS_FAILURE,
     payload: {
@@ -81,7 +83,7 @@ export function fetchUsersFailure(url: string, error: Error) {
 export function fetchUser(name: string) {
   const userUrl = USERS_URL + "/" + name;
   return function(dispatch: any) {
-    dispatch(fetchUsersPending());
+    dispatch(fetchUserPending(name));
     return apiClient
       .get(userUrl)
       .then(response => {
@@ -97,30 +99,32 @@ export function fetchUser(name: string) {
       })
       .catch(cause => {
         const error = new Error(`could not fetch user: ${cause.message}`);
-        dispatch(fetchUsersFailure(USERS_URL, error));
+        dispatch(fetchUserFailure(USERS_URL, error));
       });
   };
 }
 
-export function fetchUserPending(name: string) {
+export function fetchUserPending(name: string): Action {
   return {
     type: FETCH_USER_PENDING,
     payload: { name }
   };
 }
 
-export function fetchUserSuccess(user: any) {
+export function fetchUserSuccess(user: any): Action {
   return {
     type: FETCH_USER_SUCCESS,
     payload: user
   };
 }
 
-export function fetchUserFailure(user: User, error: Error) {
+export function fetchUserFailure(username: string, error: Error): Action {
   return {
     type: FETCH_USER_FAILURE,
-    user,
-    error
+    payload: {
+      username,
+      error
+    }
   };
 }
 
@@ -146,20 +150,20 @@ export function createUser(user: User) {
   };
 }
 
-export function createUserPending(user: User) {
+export function createUserPending(user: User): Action {
   return {
     type: CREATE_USER_PENDING,
     user
   };
 }
 
-export function createUserSuccess() {
+export function createUserSuccess(): Action {
   return {
     type: CREATE_USER_SUCCESS
   };
 }
 
-export function createUserFailure(user: User, err: Error) {
+export function createUserFailure(user: User, err: Error): Action {
   return {
     type: CREATE_USER_FAILURE,
     payload: err,
@@ -184,25 +188,31 @@ export function modifyUser(user: User) {
   };
 }
 
-function modifyUserPending(user: User) {
+function modifyUserPending(user: User): Action {
   return {
     type: MODIFY_USER_PENDING,
-    user
+    payload: {
+      user
+    }
   };
 }
 
-function modifyUserSuccess(user: User) {
+function modifyUserSuccess(user: User): Action {
   return {
     type: MODIFY_USER_SUCCESS,
-    user
+    payload: {
+      user
+    }
   };
 }
 
-export function modifyUserFailure(user: User, error: Error) {
+export function modifyUserFailure(user: User, error: Error): Action {
   return {
     type: MODIFY_USER_FAILURE,
-    payload: error,
-    user
+    payload: {
+      error,
+      user
+    }
   };
 }
 
@@ -226,21 +236,21 @@ export function deleteUser(user: User) {
   };
 }
 
-export function deleteUserPending(user: User) {
+export function deleteUserPending(user: User): Action {
   return {
     type: DELETE_USER,
     payload: user
   };
 }
 
-export function deleteUserSuccess(user: User) {
+export function deleteUserSuccess(user: User): Action {
   return {
     type: DELETE_USER_SUCCESS,
     payload: user
   };
 }
 
-export function deleteUserFailure(user: User, error: Error) {
+export function deleteUserFailure(user: User, error: Error): Action {
   return {
     type: DELETE_USER_FAILURE,
     payload: {
@@ -380,9 +390,9 @@ export default function reducer(state: any = {}, action: any = {}) {
         usersByNames: ubn
       };
     case FETCH_USER_FAILURE:
-      return reduceUsersByNames(state, action.user.name, {
+      return reduceUsersByNames(state, action.payload.username, {
         loading: true,
-        error: action.error
+        error: action.payload.error
       });
     // Delete single user cases
     case DELETE_USER:
