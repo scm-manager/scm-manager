@@ -1,20 +1,30 @@
 //@flow
 import React from "react";
+import { translate } from "react-i18next";
 import PrimaryNavigationLink from "./PrimaryNavigationLink";
 
-type Props = {};
+type Props = {
+  t: string => string
+};
 
 class PrimaryNavigation extends React.Component<Props> {
   render() {
+    const { t } = this.props;
     return (
       <nav className="tabs is-boxed">
         <ul>
-          <PrimaryNavigationLink to="/users" label="Users" />
-          <PrimaryNavigationLink to="/logout" label="Logout" />
+          <PrimaryNavigationLink
+            to="/users"
+            label={t("primary-navigation.users")}
+          />
+          <PrimaryNavigationLink
+            to="/logout"
+            label={t("primary-navigation.logout")}
+          />
         </ul>
       </nav>
     );
   }
 }
 
-export default PrimaryNavigation;
+export default translate("commons")(PrimaryNavigation);

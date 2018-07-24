@@ -1,5 +1,6 @@
 //@flow
 import React from "react";
+import { translate } from "react-i18next";
 import injectSheet from "react-jss";
 import Image from "../images/loading.svg";
 
@@ -24,20 +25,21 @@ const styles = {
 };
 
 type Props = {
+  t: string => string,
   classes: any
 };
 
 class Loading extends React.Component<Props> {
   render() {
-    const { classes } = this.props;
+    const { t, classes } = this.props;
     return (
       <div className={classes.wrapper}>
         <div className={classes.loading}>
-          <img className={classes.image} src={Image} alt="Loading ..." />
+          <img className={classes.image} src={Image} alt={t("loading.alt")} />
         </div>
       </div>
     );
   }
 }
 
-export default injectSheet(styles)(Loading);
+export default injectSheet(styles)(translate("commons")(Loading));

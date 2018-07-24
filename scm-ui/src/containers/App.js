@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Main from "./Main";
 import { connect } from "react-redux";
+import { translate } from "react-i18next";
 import { withRouter } from "react-router-dom";
 import { fetchMe } from "../modules/auth";
 
@@ -17,6 +18,7 @@ type Props = {
   error: Error,
   loading: boolean,
   authenticated?: boolean,
+  t: string => string,
   fetchMe: () => void
 };
 
@@ -26,7 +28,7 @@ class App extends Component<Props> {
   }
 
   render() {
-    const { entry, loading, error, authenticated } = this.props;
+    const { entry, loading, error, t, authenticated } = this.props;
 
     let content;
     const navigation = authenticated ? <PrimaryNavigation /> : "";
@@ -36,8 +38,8 @@ class App extends Component<Props> {
     } else if (error) {
       content = (
         <ErrorPage
-          title="Error"
-          subtitle="Unknown error occurred"
+          title={t("app.error.title")}
+          subtitle={t("app.error.subtitle")}
           error={error}
         />
       );
@@ -72,5 +74,5 @@ export default withRouter(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )(App)
+  )(translate("commons")(App))
 );

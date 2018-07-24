@@ -1,18 +1,20 @@
 //@flow
 import React from "react";
+import { translate } from "react-i18next";
 import Notification from "./Notification";
 
 type Props = {
+  t: string => string,
   error?: Error
 };
 
 class ErrorNotification extends React.Component<Props> {
   render() {
-    const { error } = this.props;
+    const { t, error } = this.props;
     if (error) {
       return (
         <Notification type="danger">
-          <strong>Error:</strong> {error.message}
+          <strong>{t("error-notification.prefix")}:</strong> {error.message}
         </Notification>
       );
     }
@@ -20,4 +22,4 @@ class ErrorNotification extends React.Component<Props> {
   }
 }
 
-export default ErrorNotification;
+export default translate("commons")(ErrorNotification);

@@ -7,8 +7,12 @@
     "bulma": "^0.7.1",
     "classnames": "^2.2.5",
     "history": "^4.7.2",
+    "i18next": "^11.4.0",
+    "i18next-browser-languagedetector": "^2.2.2",
+    "i18next-fetch-backend": "^0.1.0",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
+    "react-i18next": "^7.9.0",
     "react-jss": "^8.6.0",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.3.1",
@@ -60,7 +64,10 @@
     "coveragePathIgnorePatterns": [
       "src/tests/.*"
     ],
-    "reporters": [ "default", "jest-junit" ]
+    "reporters": [
+      "default",
+      "jest-junit"
+    ]
   },
   "jest-junit": {
     "output": "./target/jest-reports/TEST-all.xml"

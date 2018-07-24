@@ -1,13 +1,17 @@
 //@flow
 import React from "react";
+import { translate } from "react-i18next";
 import Image from "../images/logo.png";
 
-type Props = {};
+type Props = {
+  t: string => string
+};
 
 class Logo extends React.Component<Props> {
   render() {
-    return <img src={Image} alt="SCM-Manager logo" />;
+    const { t } = this.props;
+    return <img src={Image} alt={t("logo.alt")} />;
   }
 }
 
-export default Logo;
+export default translate("commons")(Logo);
