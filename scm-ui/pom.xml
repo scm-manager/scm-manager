@@ -16,6 +16,15 @@
   <version>2.0.0-SNAPSHOT</version>
   <name>scm-ui</name>
 
+  <properties>
+    <sonar.language>js</sonar.language>
+    <sonar.sources>src</sonar.sources>
+    <sonar.test.exclusions>**/*.test.js,src/tests/**</sonar.test.exclusions>
+    <sonar.coverage.exclusions>**/*.test.js,src/tests/**</sonar.coverage.exclusions>
+    <sonar.javascript.jstest.reportsPath>target/reports</sonar.javascript.jstest.reportsPath>
+    <sonar.javascript.lcov.reportPaths>target/coverage/lcov.info</sonar.javascript.lcov.reportPaths>
+  </properties>
+
   <build>
     <plugins>
 
@@ -58,12 +67,11 @@
               <goal>run</goal>
             </goals>
             <configuration>
-              <script>test-coverage</script>
+              <script>test-ci</script>
             </configuration>
           </execution>
         </executions>
       </plugin>
-
 
     </plugins>
   </build>
