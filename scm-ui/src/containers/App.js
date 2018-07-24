@@ -70,7 +70,7 @@ const mapStateToProps = state => {
     mapped.authenticated = state.auth.login.authenticated;
   }
   if (state.auth.me && state.auth.me.entry) {
-    displayName = state.auth.me.entry.entity.displayName;
+    displayName = state.auth.me.entry.displayName;
   }
   return {
     ...mapped,
