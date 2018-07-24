@@ -154,7 +154,6 @@ export function createUserPending(user: User) {
   };
 }
 
-
 export function createUserSuccess() {
   return {
     type: CREATE_USER_SUCCESS
@@ -181,7 +180,6 @@ export function modifyUser(user: User) {
         dispatch(fetchUsers());
       })
       .catch(err => {
-        console.log(err);
         dispatch(modifyUserFailure(user, err));
       });
   };

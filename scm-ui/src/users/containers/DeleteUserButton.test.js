@@ -1,6 +1,7 @@
 import React from "react";
 import { mount, shallow } from "enzyme";
 import "../../tests/enzyme";
+import "../../tests/i18n";
 import DeleteUserButton from "./DeleteUserButton";
 
 import { confirmAlert } from "../../components/ConfirmAlert";
