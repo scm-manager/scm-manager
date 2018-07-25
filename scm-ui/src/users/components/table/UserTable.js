@@ -2,7 +2,7 @@
 import React from "react";
 import { translate } from "react-i18next";
 import UserRow from "./UserRow";
-import type { UserEntry } from "../types/UserEntry";
+import type { UserEntry } from "../../types/UserEntry";
 
 type Props = {
   t: string => string,

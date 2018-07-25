@@ -1,8 +1,8 @@
 //@flow
 import React from "react";
-import type { User } from "../types/User";
+import type { User } from "../../types/User";
 import { translate } from "react-i18next";
-import { Checkbox } from "../../components/forms";
+import { Checkbox } from "../../../components/forms";
 
 type Props = {
   user: User,

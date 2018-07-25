@@ -3,7 +3,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { Page } from "../../components/layout";
 import { Route } from "react-router";
-import Details from "./Details";
+import { Details } from "./../components/table";
 import EditUser from "./EditUser";
 import type { User } from "../types/User";
 import type { UserEntry } from "../types/UserEntry";
@@ -11,7 +11,7 @@ import { fetchUser, deleteUser } from "../modules/users";
 import Loading from "../../components/Loading";
 
 import { Navigation, Section, NavLink } from "../../components/navigation";
-import DeleteUserButton from "./DeleteUserButton";
+import { DeleteUserButton } from "./../components/buttons";
 import ErrorPage from "../../components/ErrorPage";
 
 type Props = {

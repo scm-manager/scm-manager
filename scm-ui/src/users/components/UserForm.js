@@ -9,6 +9,7 @@ import Loading from "../../components/Loading";
 type Props = {
   submitForm: User => void,
   user?: User,
+  loading?: boolean,
   t: string => string
 };
 
@@ -38,49 +39,49 @@ class UserForm extends React.Component<Props, User> {
   render() {
     const { t } = this.props;
     const user = this.state;
-
-    let nameField = null;
-    if (!this.props.user) {
-      nameField = (
-        <InputField
-          label={t("user.name")}
-          onChange={this.handleUsernameChange}
-          value={user ? user.name : ""}
-        />
+    if (user) {
+      return (
+        <form onSubmit={this.submit}>
+          <InputField
+            label={t("user.name")}
+            onChange={this.handleUsernameChange}
+            value={user ? user.name : ""}
+          />
+          <InputField
+            label={t("user.displayName")}
+            onChange={this.handleDisplayNameChange}
+            value={user ? user.displayName : ""}
+          />
+          <InputField
+            label={t("user.mail")}
+            onChange={this.handleEmailChange}
+            value={user ? user.mail : ""}
+          />
+          <InputField
+            label={t("user.password")}
+            type="password"
+            onChange={this.handlePasswordChange}
+            value={user ? user.password : ""}
+          />
+          <Checkbox
+            label={t("user.admin")}
+            onChange={this.handleAdminChange}
+            checked={user ? user.admin : false}
+          />
+          <Checkbox
+            label={t("user.active")}
+            onChange={this.handleActiveChange}
+            checked={user ? user.active : false}
+          />
+          <SubmitButton
+            label={t("user-form.submit")}
+            loading={this.props.loading}
+          />
+        </form>
       );
+    } else {
+      return <Loading />;
     }
-    return (
-      <form onSubmit={this.submit}>
-        {nameField}
-        <InputField
-          label={t("user.displayName")}
-          onChange={this.handleDisplayNameChange}
-          value={user ? user.displayName : ""}
-        />
-        <InputField
-          label={t("user.mail")}
-          onChange={this.handleEmailChange}
-          value={user ? user.mail : ""}
-        />
-        <InputField
-          label={t("user.password")}
-          type="password"
-          onChange={this.handlePasswordChange}
-          value={user ? user.password : ""}
-        />
-        <Checkbox
-          label={t("user.admin")}
-          onChange={this.handleAdminChange}
-          checked={user ? user.admin : false}
-        />
-        <Checkbox
-          label={t("user.active")}
-          onChange={this.handleActiveChange}
-          checked={user ? user.active : false}
-        />
-        <SubmitButton label={t("user-form.submit")} />
-      </form>
-    );
   }
 
   handleUsernameChange = (name: string) => {

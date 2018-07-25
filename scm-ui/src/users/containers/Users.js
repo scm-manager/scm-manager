@@ -5,7 +5,7 @@ import { translate } from "react-i18next";
 
 import { fetchUsers, getUsersFromState } from "../modules/users";
 import { Page } from "../../components/layout";
-import UserTable from "./UserTable";
+import { UserTable } from "./../components/table";
 import type { User } from "../types/User";
 import { AddButton } from "../../components/buttons";
 import type { UserEntry } from "../types/UserEntry";

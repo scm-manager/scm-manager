@@ -1,7 +1,7 @@
 import React from "react";
 import { shallow } from "enzyme";
-import "../../tests/enzyme";
-import "../../tests/i18n";
+import "../../../tests/enzyme";
+import "../../../tests/i18n";
 import EditUserButton from "./EditUserButton";
 
 it("should render nothing, if the edit link is missing", () => {

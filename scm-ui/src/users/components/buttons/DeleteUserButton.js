@@ -1,9 +1,9 @@
 // @flow
 import React from "react";
 import { translate } from "react-i18next";
-import type { User } from "../types/User";
-import { confirmAlert } from "../../components/modals/ConfirmAlert";
-import { NavAction } from "../../components/navigation";
+import type { User } from "../../types/User";
+import { confirmAlert } from "../../../components/modals/ConfirmAlert";
+import { NavAction } from "../../../components/navigation";
 
 type Props = {
   user: User,

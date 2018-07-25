@@ -1,7 +1,7 @@
 //@flow
 import React from "react";
 import { connect } from "react-redux";
-import UserForm from "./UserForm";
+import UserForm from "./../components/UserForm";
 import type { User } from "../types/User";
 import type { History } from "history";
 import { createUser } from "../modules/users";
