@@ -31,6 +31,8 @@ import {
   createUser,
   createUserSuccess,
   createUserFailure,
+  modifyUserPending,
+  modifyUserSuccess,
   modifyUserFailure,
   fetchUserSuccess,
   deleteUserSuccess,
@@ -317,8 +319,8 @@ describe("users fetch()", () => {
 describe("users reducer", () => {
   it("should update state correctly according to FETCH_USERS_PENDING action", () => {
     const newState = reducer({}, fetchUsersPending());
-    expect(newState.users.loading).toBeTruthy();
-    expect(newState.users.error).toBeFalsy();
+    expect(newState.list.loading).toBeTruthy();
+    expect(newState.list.error).toBeFalsy();
   });
 
   it("should update state correctly according to FETCH_USERS_SUCCESS action", () => {
@@ -327,7 +329,8 @@ describe("users reducer", () => {
     expect(newState.list).toEqual({
       entries: ["zaphod", "ford"],
       error: null,
-      loading: false
+      loading: false,
+      userCreatePermission: true
     });
 
     expect(newState.byNames).toEqual({
@@ -339,7 +342,7 @@ describe("users reducer", () => {
       }
     });
 
-    expect(newState.userCreatePermission).toBeTruthy();
+    expect(newState.list.userCreatePermission).toBeTruthy();
   });
 
   test("should update state correctly according to DELETE_USER action", () => {
@@ -432,19 +435,19 @@ describe("users reducer", () => {
   it("should set userCreatePermission to true if update link is present", () => {
     const newState = reducer({}, fetchUsersSuccess(responseBody));
 
-    expect(newState.userCreatePermission).toBeTruthy();
+    expect(newState.list.userCreatePermission).toBeTruthy();
   });
 
   it("should update state correctly according to CREATE_USER_PENDING action", () => {
     const newState = reducer({}, createUserPending(userZaphod));
-    expect(newState.list.loading).toBeTruthy();
-    expect(newState.list.error).toBeNull();
+    expect(newState.create.loading).toBeTruthy();
+    expect(newState.create.error).toBeFalsy();
   });
 
   it("should update state correctly according to CREATE_USER_SUCCESS action", () => {
     const newState = reducer({ loading: true }, createUserSuccess());
-    expect(newState.list.loading).toBeFalsy();
-    expect(newState.list.error).toBeNull();
+    expect(newState.create.loading).toBeFalsy();
+    expect(newState.create.error).toBeFalsy();
   });
 
   it("should set the loading to false and the error if user could not be created", () => {
@@ -452,8 +455,8 @@ describe("users reducer", () => {
       { loading: true, error: null },
       createUserFailure(userFord, new Error("kaputt kaputt"))
     );
-    expect(newState.list.loading).toBeFalsy();
-    expect(newState.list.error).toEqual(new Error("kaputt kaputt"));
+    expect(newState.create.loading).toBeFalsy();
+    expect(newState.create.error).toEqual(new Error("kaputt kaputt"));
   });
 
   it("should update state according to FETCH_USER_PENDING action", () => {
@@ -499,5 +502,46 @@ describe("users reducer", () => {
     expect(newState.byNames["ford"].loading).toBeFalsy();
     expect(newState.byNames["ford"].entry).toBe(userFord);
     expect(newState.list.entries).toEqual(["zaphod"]);
+  });
+
+  it("should update state according to MODIFY_USER_PENDING action", () => {
+    const newState = reducer(
+      {
+        error: new Error("something"),
+        entry: {}
+      },
+      modifyUserPending(userFord)
+    );
+    expect(newState.byNames["ford"].loading).toBeTruthy();
+    expect(newState.byNames["ford"].error).toBeFalsy();
+    expect(newState.byNames["ford"].entry).toBeFalsy();
+  });
+
+  it("should update state according to MODIFY_USER_SUCCESS action", () => {
+    const newState = reducer(
+      {
+        loading: true,
+        error: new Error("something"),
+        entry: {}
+      },
+      modifyUserSuccess(userFord)
+    );
+    expect(newState.byNames["ford"].loading).toBeFalsy();
+    expect(newState.byNames["ford"].error).toBeFalsy();
+    expect(newState.byNames["ford"].entry).toBe(userFord);
+  });
+
+  it("should update state according to MODIFY_USER_SUCCESS action", () => {
+    const error = new Error("something went wrong");
+    const newState = reducer(
+      {
+        loading: true,
+        entry: {}
+      },
+      modifyUserFailure(userFord, error)
+    );
+    expect(newState.byNames["ford"].loading).toBeFalsy();
+    expect(newState.byNames["ford"].error).toBe(error);
+    expect(newState.byNames["ford"].entry).toBeFalsy();
   });
 });

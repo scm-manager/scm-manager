@@ -58,10 +58,10 @@ const mapStateToProps = state => {
   let error = null;
   let loading = false;
   let canAddUsers = false;
-  if (state.users && state.users.users) {
-    error = state.users.users.error;
-    canAddUsers = state.users.users.userCreatePermission;
-    loading = state.users.users.loading;
+  if (state.users && state.users.list) {
+    error = state.users.list.error;
+    canAddUsers = state.users.list.userCreatePermission;
+    loading = state.users.list.loading;
   }
   return {
     userEntries,

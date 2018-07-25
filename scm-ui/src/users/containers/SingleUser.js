@@ -91,8 +91,8 @@ class SingleUser extends React.Component<Props> {
 const mapStateToProps = (state, ownProps) => {
   const name = ownProps.match.params.name;
   let userEntry;
-  if (state.users && state.users.usersByNames) {
-    userEntry = state.users.usersByNames[name];
+  if (state.users && state.users.byNames) {
+    userEntry = state.users.byNames[name];
   }
 
   return {
