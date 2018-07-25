@@ -3,7 +3,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { translate } from "react-i18next";
 
-import { fetchUsers, deleteUser, getUsersFromState } from "../modules/users";
+import { fetchUsers, getUsersFromState } from "../modules/users";
 import Page from "../../components/Page";
 import UserTable from "./UserTable";
 import type { User } from "../types/User";
@@ -16,7 +16,6 @@ type Props = {
   t: string => string,
   userEntries: Array<UserEntry>,
   fetchUsers: () => void,
-  deleteUser: User => void,
   canAddUsers: boolean
 };
 
@@ -26,7 +25,7 @@ class Users extends React.Component<Props, User> {
   }
 
   render() {
-    const { userEntries, deleteUser, loading, t, error } = this.props;
+    const { userEntries, loading, t, error } = this.props;
     return (
       <Page
         title={t("users.title")}
@@ -34,7 +33,7 @@ class Users extends React.Component<Props, User> {
         loading={loading || !userEntries}
         error={error}
       >
-        <UserTable entries={userEntries} deleteUser={deleteUser} />
+        <UserTable entries={userEntries} />
         {this.renderAddButton()}
       </Page>
     );
@@ -76,9 +75,6 @@ const mapDispatchToProps = dispatch => {
   return {
     fetchUsers: () => {
       dispatch(fetchUsers());
-    },
-    deleteUser: (user: User) => {
-      dispatch(deleteUser(user));
     }
   };
 };

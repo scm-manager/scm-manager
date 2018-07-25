@@ -209,15 +209,11 @@ describe("users fetch()", () => {
       status: 204
     });
 
-    // after create, the users are fetched again
-    fetchMock.getOnce(USERS_URL, response);
-
     const store = mockStore({});
     return store.dispatch(createUser(userZaphod)).then(() => {
       const actions = store.getActions();
       expect(actions[0].type).toEqual(CREATE_USER_PENDING);
       expect(actions[1].type).toEqual(CREATE_USER_SUCCESS);
-      expect(actions[2].type).toEqual(FETCH_USERS_PENDING);
     });
   });
 
@@ -232,6 +228,24 @@ describe("users fetch()", () => {
       expect(actions[0].type).toEqual(CREATE_USER_PENDING);
       expect(actions[1].type).toEqual(CREATE_USER_FAILURE);
       expect(actions[1].payload).toBeDefined();
+    });
+  });
+
+  it("should call the callback after user successfully created", () => {
+    // unmatched
+    fetchMock.postOnce(USERS_URL, {
+      status: 204
+    });
+
+    let callMe = "not yet";
+
+    const callback = () => {
+      callMe = "yeah";
+    };
+
+    const store = mockStore({});
+    return store.dispatch(createUser(userZaphod, callback)).then(() => {
+      expect(callMe).toBe("yeah");
     });
   });
 
@@ -269,8 +283,6 @@ describe("users fetch()", () => {
     fetchMock.deleteOnce("http://localhost:8081/scm/api/rest/v2/users/zaphod", {
       status: 204
     });
-    // after update, the users are fetched again
-    fetchMock.getOnce(USERS_URL, response);
 
     const store = mockStore({});
     return store.dispatch(deleteUser(userZaphod)).then(() => {
@@ -278,7 +290,6 @@ describe("users fetch()", () => {
       expect(actions[0].type).toEqual(DELETE_USER);
       expect(actions[0].payload).toBe(userZaphod);
       expect(actions[1].type).toEqual(DELETE_USER_SUCCESS);
-      expect(actions[2].type).toEqual(FETCH_USERS_PENDING);
     });
   });
 
@@ -458,11 +469,19 @@ describe("users reducer", () => {
   });
 
   it("should update state according to FETCH_USER_FAILURE action", () => {
+    const error = new Error("kaputt!");
     const newState = reducer(
-      {},
-      fetchUserFailure(userFord.name, new Error("kaputt!"))
+      {
+        usersByNames: {
+          ford: {
+            loading: true
+          }
+        }
+      },
+      fetchUserFailure(userFord.name, error)
     );
-    expect(newState.usersByNames["ford"].error).toBeTruthy();
+    expect(newState.usersByNames["ford"].error).toBe(error);
+    expect(newState.usersByNames["ford"].loading).toBeFalsy();
   });
 
   it("should update state according to FETCH_USER_SUCCESS action", () => {

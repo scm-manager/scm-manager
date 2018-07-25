@@ -9,61 +9,53 @@ jest.mock("../../components/ConfirmAlert");
 
 describe("DeleteUserButton", () => {
   it("should render nothing, if the delete link is missing", () => {
-    const entry = {
-      entry: {
-        _links: {}
-      }
+    const user = {
+      _links: {}
     };
 
     const button = shallow(
-      <DeleteUserButton entry={entry} deleteUser={() => {}} />
+      <DeleteUserButton user={user} deleteUser={() => {}} />
     );
     expect(button.text()).toBe("");
   });
 
   it("should render the button", () => {
-    const entry = {
-      entry: {
-        _links: {
-          delete: {
-            href: "/users"
-          }
+    const user = {
+      _links: {
+        delete: {
+          href: "/users"
         }
       }
     };
 
     const button = mount(
-      <DeleteUserButton entry={entry} deleteUser={() => {}} />
+      <DeleteUserButton user={user} deleteUser={() => {}} />
     );
     expect(button.text()).not.toBe("");
   });
 
   it("should open the confirm dialog on button click", () => {
-    const entry = {
-      entry: {
-        _links: {
-          delete: {
-            href: "/users"
-          }
+    const user = {
+      _links: {
+        delete: {
+          href: "/users"
         }
       }
     };
 
     const button = mount(
-      <DeleteUserButton entry={entry} deleteUser={() => {}} />
+      <DeleteUserButton user={user} deleteUser={() => {}} />
     );
-    button.simulate("click");
+    button.find("a").simulate("click");
 
     expect(confirmAlert.mock.calls.length).toBe(1);
   });
 
   it("should call the delete user function with delete url", () => {
-    const entry = {
-      entry: {
-        _links: {
-          delete: {
-            href: "/users"
-          }
+    const user = {
+      _links: {
+        delete: {
+          href: "/users"
         }
       }
     };
@@ -75,12 +67,12 @@ describe("DeleteUserButton", () => {
 
     const button = mount(
       <DeleteUserButton
-        entry={entry}
+        user={user}
         confirmDialog={false}
         deleteUser={capture}
       />
     );
-    button.simulate("click");
+    button.find("a").simulate("click");
 
     expect(calledUrl).toBe("/users");
   });

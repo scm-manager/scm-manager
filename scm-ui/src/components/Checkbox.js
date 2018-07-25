@@ -2,13 +2,15 @@
 import React from "react";
 
 type Props = {
-  label: string,
+  label?: string,
   checked: boolean,
-  onChange: boolean => void
+  onChange?: boolean => void
 };
 class Checkbox extends React.Component<Props> {
   onCheckboxChange = (event: SyntheticInputEvent<HTMLInputElement>) => {
-    this.props.onChange(event.target.checked);
+    if (this.props.onChange) {
+      this.props.onChange(event.target.checked);
+    }
   };
 
   render() {

@@ -78,7 +78,6 @@ export function fetchUsersFailure(url: string, error: Error): Action {
 }
 
 //fetch user
-//TODO: fetchUsersPending and FetchUsersFailure are the wrong functions here!
 export function fetchUser(name: string) {
   const userUrl = USERS_URL + "/" + name;
   return function(dispatch: any) {
@@ -98,7 +97,7 @@ export function fetchUser(name: string) {
       })
       .catch(cause => {
         const error = new Error(`could not fetch user: ${cause.message}`);
-        dispatch(fetchUserFailure(USERS_URL, error));
+        dispatch(fetchUserFailure(name, error));
       });
   };
 }
@@ -129,14 +128,16 @@ export function fetchUserFailure(username: string, error: Error): Action {
 
 //create user
 
-export function createUser(user: User) {
+export function createUser(user: User, callback?: () => void) {
   return function(dispatch: Dispatch) {
     dispatch(createUserPending(user));
     return apiClient
       .postWithContentType(USERS_URL, user, CONTENT_TYPE_USER)
       .then(() => {
         dispatch(createUserSuccess());
-        dispatch(fetchUsers());
+        if (callback) {
+          callback();
+        }
       })
       .catch(err =>
         dispatch(
@@ -224,7 +225,6 @@ export function deleteUser(user: User) {
       .delete(user._links.delete.href)
       .then(() => {
         dispatch(deleteUserSuccess(user));
-        dispatch(fetchUsers());
       })
       .catch(cause => {
         const error = new Error(
@@ -382,7 +382,7 @@ export default function reducer(state: any = {}, action: any = {}) {
 
     case FETCH_USER_FAILURE:
       return reduceUsersByNames(state, action.payload.username, {
-        loading: true,
+        loading: false,
         error: action.payload.error
       });
 
@@ -411,18 +411,12 @@ export default function reducer(state: any = {}, action: any = {}) {
       };
 
     case DELETE_USER_FAILURE:
-      const newState = reduceUsersByNames(state, action.payload.user.name, {
+      return reduceUsersByNames(state, action.payload.user.name, {
         loading: false,
         error: action.payload.error,
         entry: action.payload.user
       });
-      return {
-        ...newState,
-        users: {
-          ...newState.users,
-          error: action.payload.error
-        }
-      };
+
     // Add single user cases
     case CREATE_USER_PENDING:
       return {

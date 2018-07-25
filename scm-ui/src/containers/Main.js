@@ -10,8 +10,8 @@ import Logout from "../containers/Logout";
 
 import { Switch } from "react-router-dom";
 import ProtectedRoute from "../components/ProtectedRoute";
-import EditUser from "../users/containers/EditUser";
 import AddUser from "../users/containers/AddUser";
+import SingleUser from "../users/containers/SingleUser";
 
 type Props = {
   authenticated?: boolean
@@ -39,13 +39,13 @@ class Main extends React.Component<Props> {
           />
           <ProtectedRoute
             authenticated={authenticated}
-            path="/users/edit/:name"
-            component={EditUser}
+            path="/users/add"
+            component={AddUser}
           />
           <ProtectedRoute
             authenticated={authenticated}
-            path="/users/add"
-            component={AddUser}
+            path="/user/:name"
+            component={SingleUser}
           />
         </Switch>
       </div>

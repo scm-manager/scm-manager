@@ -2,12 +2,11 @@
 import React from "react";
 import { translate } from "react-i18next";
 import type { User } from "../types/User";
-import type { UserEntry } from "../types/UserEntry";
 import { confirmAlert } from "../../components/ConfirmAlert";
-import DeleteButton from "../../components/DeleteButton";
+import { NavAction } from "../../components/SecondaryNavigation";
 
 type Props = {
-  entry: UserEntry,
+  user: User,
   confirmDialog?: boolean,
   t: string => string,
   deleteUser: (user: User) => void
@@ -19,7 +18,7 @@ class DeleteUserButton extends React.Component<Props> {
   };
 
   deleteUser = () => {
-    this.props.deleteUser(this.props.entry.entry);
+    this.props.deleteUser(this.props.user);
   };
 
   confirmDelete = () => {
@@ -41,23 +40,17 @@ class DeleteUserButton extends React.Component<Props> {
   };
 
   isDeletable = () => {
-    return this.props.entry.entry._links.delete;
+    return this.props.user._links.delete;
   };
 
   render() {
-    const { confirmDialog, entry, t } = this.props;
+    const { confirmDialog, t } = this.props;
     const action = confirmDialog ? this.confirmDelete : this.deleteUser;
 
     if (!this.isDeletable()) {
       return null;
     }
-    return (
-      <DeleteButton
-        label={t("delete-user-button.label")}
-        action={action}
-        loading={entry.loading}
-      />
-    );
+    return <NavAction label={t("delete-user-button.label")} action={action} />;
   }
 }
 

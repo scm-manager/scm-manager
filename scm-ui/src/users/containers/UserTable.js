@@ -2,36 +2,29 @@
 import React from "react";
 import { translate } from "react-i18next";
 import UserRow from "./UserRow";
-import type { User } from "../types/User";
 import type { UserEntry } from "../types/UserEntry";
 
 type Props = {
   t: string => string,
-  entries: Array<UserEntry>,
-  deleteUser: User => void
+  entries: Array<UserEntry>
 };
 
 class UserTable extends React.Component<Props> {
   render() {
-    const { deleteUser, t } = this.props;
-    const entries = this.props.entries;
+    const { entries, t } = this.props;
     return (
       <table className="table is-hoverable is-fullwidth">
         <thead>
           <tr>
-            <th>{t("user.name")}</th>
+            <th className="is-hidden-mobile">{t("user.name")}</th>
             <th>{t("user.displayName")}</th>
             <th>{t("user.mail")}</th>
-            <th>{t("user.admin")}</th>
-            <th />
-            <th />
+            <th className="is-hidden-mobile">{t("user.admin")}</th>
           </tr>
         </thead>
         <tbody>
           {entries.map((entry, index) => {
-            return (
-              <UserRow key={index} entry={entry} deleteUser={deleteUser} />
-            );
+            return <UserRow key={index} user={entry.entry} />;
           })}
         </tbody>
       </table>
