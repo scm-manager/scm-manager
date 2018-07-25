@@ -17,3 +17,11 @@ code --install-extension rebornix.project-snippets
 # debugging with chrome browser
 code --install-extension msjsdiag.debugger-for-chrome
 ```
+
+## Install pre-commit hook
+
+```bash
+echo "" >> .hg/hgrc
+echo "[hooks]" >> .hg/hgrc
+echo "pre-commit = cd scm-ui && yarn run pre-commit" >> .hg/hgrc
+```
