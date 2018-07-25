@@ -1,5 +1,5 @@
 // @flow
-import type { Me } from "../types/me";
+import type { Me } from "../types/Me";
 
 import { apiClient, UNAUTHORIZED_ERROR } from "../apiclient";
 
