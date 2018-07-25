@@ -374,25 +374,18 @@ export default function reducer(state: any = {}, action: any = {}) {
       });
 
     case FETCH_USER_SUCCESS:
-      const ubn = extractUsersByNames(
-        [action.payload],
-        [action.payload.name],
-        state.usersByNames
-      );
-      return {
-        ...state,
-        users: {
-          error: null,
-          entries: [action.payload.name],
-          loading: false
-        },
-        usersByNames: ubn
-      };
+      return reduceUsersByNames(state, action.payload.name, {
+        loading: false,
+        error: null,
+        entry: action.payload
+      });
+
     case FETCH_USER_FAILURE:
       return reduceUsersByNames(state, action.payload.username, {
         loading: true,
         error: action.payload.error
       });
+
     // Delete single user cases
     case DELETE_USER:
       return reduceUsersByNames(state, action.payload.name, {

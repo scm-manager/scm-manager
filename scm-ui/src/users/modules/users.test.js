@@ -35,7 +35,8 @@ import {
   deleteUserSuccess,
   fetchUsersPending,
   fetchUserPending,
-  fetchUserFailure
+  fetchUserFailure,
+  fetchUserSuccess
 } from "./users";
 
 import reducer from "./users";
@@ -443,11 +444,44 @@ describe("users reducer", () => {
     expect(newState.usersByNames["zaphod"].loading).toBeTruthy();
   });
 
+  it("should not affect users state", () => {
+    const newState = reducer(
+      {
+        users: {
+          entries: ["ford"]
+        }
+      },
+      fetchUserPending("zaphod")
+    );
+    expect(newState.usersByNames["zaphod"].loading).toBeTruthy();
+    expect(newState.users.entries).toEqual(["ford"]);
+  });
+
   it("should update state according to FETCH_USER_FAILURE action", () => {
     const newState = reducer(
       {},
       fetchUserFailure(userFord.name, new Error("kaputt!"))
     );
-    expect(newState.usersByNames["ford"].error).toBeTruthy;
+    expect(newState.usersByNames["ford"].error).toBeTruthy();
+  });
+
+  it("should update state according to FETCH_USER_SUCCESS action", () => {
+    const newState = reducer({}, fetchUserSuccess(userFord));
+    expect(newState.usersByNames["ford"].loading).toBeFalsy();
+    expect(newState.usersByNames["ford"].entry).toBe(userFord);
+  });
+
+  it("should affect users state nor the state of other users", () => {
+    const newState = reducer(
+      {
+        users: {
+          entries: ["zaphod"]
+        }
+      },
+      fetchUserSuccess(userFord)
+    );
+    expect(newState.usersByNames["ford"].loading).toBeFalsy();
+    expect(newState.usersByNames["ford"].entry).toBe(userFord);
+    expect(newState.users.entries).toEqual(["zaphod"]);
   });
 });
