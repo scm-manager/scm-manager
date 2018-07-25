@@ -1,6 +1,6 @@
 // @flow
 import React from "react";
-import Page from "../../components/Page";
+import { Page } from "../../components/layout";
 import { translate } from "react-i18next";
 
 type Props = {

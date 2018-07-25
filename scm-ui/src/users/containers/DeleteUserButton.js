@@ -2,8 +2,8 @@
 import React from "react";
 import { translate } from "react-i18next";
 import type { User } from "../types/User";
-import { confirmAlert } from "../../components/ConfirmAlert";
-import { NavAction } from "../../components/SecondaryNavigation";
+import { confirmAlert } from "../../components/modals/ConfirmAlert";
+import { NavAction } from "../../components/navigation";
 
 type Props = {
   user: User,

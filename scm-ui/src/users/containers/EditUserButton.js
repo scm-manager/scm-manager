@@ -1,7 +1,7 @@
 //@flow
 import React from "react";
 import { translate } from "react-i18next";
-import EditButton from "../../components/EditButton";
+import { EditButton } from "../../components/buttons";
 import type { UserEntry } from "../types/UserEntry";
 
 type Props = {

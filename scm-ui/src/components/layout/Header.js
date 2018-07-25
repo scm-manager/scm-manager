@@ -1,6 +1,6 @@
 //@flow
 import * as React from "react";
-import Logo from "./Logo";
+import Logo from "./../Logo";
 
 type Props = {
   children?: React.Node

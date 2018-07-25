@@ -4,8 +4,8 @@ import "../../tests/enzyme";
 import "../../tests/i18n";
 import DeleteUserButton from "./DeleteUserButton";
 
-import { confirmAlert } from "../../components/ConfirmAlert";
-jest.mock("../../components/ConfirmAlert");
+import { confirmAlert } from "../../components/modals/ConfirmAlert";
+jest.mock("../../components/modals/ConfirmAlert");
 
 describe("DeleteUserButton", () => {
   it("should render nothing, if the delete link is missing", () => {

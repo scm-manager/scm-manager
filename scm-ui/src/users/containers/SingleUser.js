@@ -1,7 +1,7 @@
 //@flow
 import React from "react";
 import { connect } from "react-redux";
-import Page from "../../components/Page";
+import { Page } from "../../components/layout";
 import { Route } from "react-router";
 import Details from "./Details";
 import EditUser from "./EditUser";
@@ -10,11 +10,7 @@ import type { UserEntry } from "../types/UserEntry";
 import { fetchUser, deleteUser } from "../modules/users";
 import Loading from "../../components/Loading";
 
-import {
-  Navigation,
-  Section,
-  NavLink
-} from "../../components/SecondaryNavigation";
+import { Navigation, Section, NavLink } from "../../components/navigation";
 import DeleteUserButton from "./DeleteUserButton";
 import ErrorPage from "../../components/ErrorPage";
 

@@ -1,6 +1,6 @@
 //@flow
 import React from "react";
-import type { Me } from "../types/Me";
+import type { Me } from "../../types/Me";
 
 type Props = {
   me?: Me

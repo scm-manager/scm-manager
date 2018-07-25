@@ -1,7 +1,7 @@
 //@flow
 import * as React from "react";
-import Loading from "./Loading";
-import ErrorNotification from "./ErrorNotification";
+import Loading from "./../Loading";
+import ErrorNotification from "./../ErrorNotification";
 
 type Props = {
   title: string,

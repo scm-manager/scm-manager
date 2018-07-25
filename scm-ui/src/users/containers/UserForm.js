@@ -2,9 +2,8 @@
 import React from "react";
 import { translate } from "react-i18next";
 import type { User } from "../types/User";
-import InputField from "../../components/InputField";
-import Checkbox from "../../components/Checkbox";
-import SubmitButton from "../../components/SubmitButton";
+import { InputField, Checkbox } from "../../components/forms";
+import { SubmitButton } from "../../components/buttons";
 import Loading from "../../components/Loading";
 
 type Props = {

@@ -5,7 +5,7 @@ import UserForm from "./UserForm";
 import type { User } from "../types/User";
 import type { History } from "history";
 import { createUser } from "../modules/users";
-import Page from "../../components/Page";
+import { Page } from "../../components/layout";
 
 type Props = {
   addUser: (user: User, callback?: () => void) => void,

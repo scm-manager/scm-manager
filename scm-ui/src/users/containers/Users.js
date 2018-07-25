@@ -4,10 +4,10 @@ import { connect } from "react-redux";
 import { translate } from "react-i18next";
 
 import { fetchUsers, getUsersFromState } from "../modules/users";
-import Page from "../../components/Page";
+import { Page } from "../../components/layout";
 import UserTable from "./UserTable";
 import type { User } from "../types/User";
-import AddButton from "../../components/AddButton";
+import { AddButton } from "../../components/buttons";
 import type { UserEntry } from "../types/UserEntry";
 
 type Props = {

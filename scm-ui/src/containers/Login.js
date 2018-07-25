@@ -6,8 +6,8 @@ import { translate } from "react-i18next";
 import { login } from "../modules/auth";
 import { connect } from "react-redux";
 
-import InputField from "../components/InputField";
-import SubmitButton from "../components/SubmitButton";
+import { InputField } from "../components/forms";
+import { SubmitButton } from "../components/buttons";
 
 import classNames from "classnames";
 import Avatar from "../images/blib.jpg";

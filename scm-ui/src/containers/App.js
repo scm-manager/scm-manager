@@ -6,12 +6,11 @@ import { withRouter } from "react-router-dom";
 import { fetchMe } from "../modules/auth";
 
 import "./App.css";
-import "../components/ConfirmAlert.css";
-import Header from "../components/Header";
-import PrimaryNavigation from "../components/PrimaryNavigation";
+import "../components/modals/ConfirmAlert.css";
+import { PrimaryNavigation } from "../components/navigation";
 import Loading from "../components/Loading";
 import ErrorPage from "../components/ErrorPage";
-import Footer from "../components/Footer";
+import { Footer, Header } from "../components/layout";
 
 type Props = {
   me: Me,
