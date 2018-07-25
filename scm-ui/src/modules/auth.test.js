@@ -153,8 +153,6 @@ describe("auth actions", () => {
       status: 400
     });
 
-    const expectedActions = [{ type: LOGIN_REQUEST }, { type: LOGIN_FAILURE }];
-
     const store = mockStore({});
     return store.dispatch(login("tricia", "secret123")).then(() => {
       const actions = store.getActions();
@@ -243,11 +241,6 @@ describe("auth actions", () => {
     fetchMock.deleteOnce("/scm/api/rest/v2/auth/access_token", {
       status: 500
     });
-
-    const expectedActions = [
-      { type: LOGOUT_REQUEST },
-      { type: LOGOUT_FAILURE }
-    ];
 
     const store = mockStore({});
     return store.dispatch(logout()).then(() => {

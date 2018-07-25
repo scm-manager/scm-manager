@@ -272,7 +272,7 @@ export function getUsersFromState(state: any) {
   const userEntries: Array<UserEntry> = [];
 
   for (let userName of userNames) {
-    userEntries.push(state.users.usersByNames[userName]);
+    userEntries.push(state.users.byNames[userName]);
   }
 
   return userEntries;
@@ -318,13 +318,13 @@ const reduceUsersByNames = (
   newUserState: any
 ) => {
   const newUsersByNames = {
-    ...state.usersByNames,
+    ...state.byNames,
     [username]: newUserState
   };
 
   return {
     ...state,
-    usersByNames: newUsersByNames
+    byNames: newUsersByNames
   };
 };
 
@@ -342,25 +342,21 @@ export default function reducer(state: any = {}, action: any = {}) {
       // return red(state, action.payload._embedded.users);
       const users = action.payload._embedded.users;
       const userNames = users.map(user => user.name);
-      const usersByNames = extractUsersByNames(
-        users,
-        userNames,
-        state.usersByNames
-      );
+      const byNames = extractUsersByNames(users, userNames, state.byNames);
       return {
         ...state,
-        users: {
-          userCreatePermission: action.payload._links.create ? true : false,
+        userCreatePermission: action.payload._links.create ? true : false,
+        list: {
           error: null,
           entries: userNames,
           loading: false
         },
-        usersByNames
+        byNames
       };
     case FETCH_USERS_FAILURE:
       return {
         ...state,
-        users: {
+        list: {
           ...state.users,
           loading: false,
           error: action.payload.error
@@ -421,8 +417,8 @@ export default function reducer(state: any = {}, action: any = {}) {
     case CREATE_USER_PENDING:
       return {
         ...state,
-        users: {
-          ...state.users,
+        list: {
+          ...state.list,
           loading: true,
           error: null
         }
@@ -430,7 +426,7 @@ export default function reducer(state: any = {}, action: any = {}) {
     case CREATE_USER_SUCCESS:
       return {
         ...state,
-        users: {
+        list: {
           ...state.users,
           loading: false,
           error: null
@@ -439,7 +435,7 @@ export default function reducer(state: any = {}, action: any = {}) {
     case CREATE_USER_FAILURE:
       return {
         ...state,
-        users: {
+        list: {
           ...state.users,
           loading: false,
           error: action.payload
