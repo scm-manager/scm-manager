@@ -50,10 +50,8 @@ const mapDispatchToProps = dispatch => {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  if (state.users && state.users.users) {
-    return {
-      loading: state.users.users.loading
-    };
+  if (state.users && state.users.create) {
+    return state.users.create;
   }
   return {};
 };
