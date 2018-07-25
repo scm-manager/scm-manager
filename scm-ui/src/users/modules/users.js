@@ -3,7 +3,7 @@ import { apiClient } from "../../apiclient";
 import type { User } from "../types/User";
 import type { UserEntry } from "../types/UserEntry";
 import { Dispatch } from "redux";
-import { Action } from "../../types/Action";
+import type { Action } from "../../types/Action";
 
 export const FETCH_USERS_PENDING = "scm/users/FETCH_USERS_PENDING";
 export const FETCH_USERS_SUCCESS = "scm/users/FETCH_USERS_SUCCESS";
