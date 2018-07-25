@@ -89,28 +89,6 @@ const userFord = {
   }
 };
 
-const responseBodyZaphod = {
-  page: 0,
-  pageTotal: 1,
-  _links: {
-    self: {
-      href: "http://localhost:3000/scm/api/rest/v2/users/?page=0&pageSize=10"
-    },
-    first: {
-      href: "http://localhost:3000/scm/api/rest/v2/users/?page=0&pageSize=10"
-    },
-    last: {
-      href: "http://localhost:3000/scm/api/rest/v2/users/?page=0&pageSize=10"
-    },
-    create: {
-      href: "http://localhost:3000/scm/api/rest/v2/users/"
-    }
-  },
-  _embedded: {
-    users: [userZaphod]
-  }
-};
-
 const responseBody = {
   page: 0,
   pageTotal: 1,
@@ -259,14 +237,12 @@ describe("users fetch()", () => {
       status: 204
     });
     // after update, the users are fetched again
-    fetchMock.getOnce(USERS_URL, response);
 
     const store = mockStore({});
     return store.dispatch(modifyUser(userZaphod)).then(() => {
       const actions = store.getActions();
       expect(actions[0].type).toEqual(MODIFY_USER_PENDING);
       expect(actions[1].type).toEqual(MODIFY_USER_SUCCESS);
-      expect(actions[2].type).toEqual(FETCH_USERS_PENDING);
     });
   });
 
@@ -345,7 +321,7 @@ describe("users reducer", () => {
     expect(newState.list.userCreatePermission).toBeTruthy();
   });
 
-  test("should update state correctly according to DELETE_USER action", () => {
+  test("should update state correctly according to DELETE_USER_PENDING action", () => {
     const state = {
       usersByNames: {
         zaphod: {
@@ -364,7 +340,7 @@ describe("users reducer", () => {
 
   it("should not effect other users if one user will be deleted", () => {
     const state = {
-      usersByNames: {
+      byNames: {
         zaphod: {
           loading: false,
           error: null,
@@ -377,7 +353,7 @@ describe("users reducer", () => {
     };
 
     const newState = reducer(state, deleteUserPending(userZaphod));
-    const ford = newState.usersByNames["ford"];
+    const ford = newState.byNames["ford"];
     expect(ford.loading).toBeFalsy();
   });
 
@@ -400,7 +376,7 @@ describe("users reducer", () => {
 
   it("should not effect other users if one user could not be deleted", () => {
     const state = {
-      usersByNames: {
+      byNames: {
         zaphod: {
           loading: false,
           error: null,
@@ -414,8 +390,33 @@ describe("users reducer", () => {
 
     const error = new Error("error");
     const newState = reducer(state, deleteUserFailure(userZaphod, error));
-    const ford = newState.usersByNames["ford"];
+    const ford = newState.byNames["ford"];
     expect(ford.loading).toBeFalsy();
+  });
+
+  it("should remove user from state when delete succeeds", () => {
+    const state = {
+      list: {
+        entries: ["ford", "zaphod"]
+      },
+      byNames: {
+        zaphod: {
+          loading: true,
+          error: null,
+          entry: userZaphod
+        },
+        ford: {
+          loading: true,
+          error: null,
+          entry: userFord
+        }
+      }
+    };
+
+    const newState = reducer(state, deleteUserSuccess(userFord));
+    expect(newState.byNames["zaphod"]).toBeDefined();
+    expect(newState.list.entries).toEqual(["zaphod"]);
+    expect(newState.byNames["ford"]).toBeFalsy();
   });
 
   it("should not replace whole byNames map when fetching users", () => {
@@ -430,6 +431,21 @@ describe("users reducer", () => {
     const newState = reducer(oldState, fetchUsersSuccess(responseBody));
     expect(newState.byNames["zaphod"]).toBeDefined();
     expect(newState.byNames["ford"]).toBeDefined();
+  });
+
+  it("should set error when fetching users failed", () => {
+    const oldState = {
+      list: {
+        loading: true
+      }
+    };
+
+    const error = new Error("kaputt");
+
+    const newState = reducer(oldState, fetchUsersFailure("url.com", error));
+
+    expect(newState.list.loading).toBeFalsy();
+    expect(newState.list.error).toEqual(error);
   });
 
   it("should set userCreatePermission to true if update link is present", () => {

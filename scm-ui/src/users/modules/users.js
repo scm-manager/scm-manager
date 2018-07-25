@@ -180,7 +180,6 @@ export function modifyUser(user: User) {
       .putWithContentType(user._links.update.href, user, CONTENT_TYPE_USER)
       .then(() => {
         dispatch(modifyUserSuccess(user));
-        dispatch(fetchUsers());
       })
       .catch(err => {
         dispatch(modifyUserFailure(user, err));
@@ -292,7 +291,7 @@ function extractUsersByNames(
   }
   return usersByNames;
 }
-function deleteUserInUsersByNames(users: {}, userName: any) {
+function deleteUserInUsersByNames(users: {}, userName: string) {
   let newUsers = {};
   for (let username in users) {
     if (username !== userName) newUsers[username] = users[username];
@@ -300,7 +299,7 @@ function deleteUserInUsersByNames(users: {}, userName: any) {
   return newUsers;
 }
 
-function deleteUserInEntries(users: [], userName: any) {
+function deleteUserInEntries(users: [], userName: string) {
   let newUsers = [];
   for (let user of users) {
     if (user !== userName) newUsers.push(user);
@@ -331,11 +330,13 @@ export default function reducer(state: any = {}, action: any = {}) {
         }
       };
     case FETCH_USERS_SUCCESS:
+      // return red(state, action.payload._embedded.users);
       const users = action.payload._embedded.users;
       const userNames = users.map(user => user.name);
       const byNames = extractUsersByNames(users, userNames, state.byNames);
       return {
         ...state,
+        userCreatePermission: action.payload._links.create ? true : false,
         list: {
           error: null,
           entries: userNames,
@@ -382,12 +383,14 @@ export default function reducer(state: any = {}, action: any = {}) {
       });
 
     case DELETE_USER_SUCCESS:
-      const newUserByNames = deleteUserInUsersByNames(state.byNames, [
+      const newUserByNames = deleteUserInUsersByNames(
+        state.byNames,
         action.payload.name
-      ]);
-      const newUserEntries = deleteUserInEntries(state.list.entries, [
+      );
+      const newUserEntries = deleteUserInEntries(
+        state.list.entries,
         action.payload.name
-      ]);
+      );
       return {
         ...state,
         list: {
