@@ -7,8 +7,9 @@ import javax.servlet.http.HttpServletRequest;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by omilke on 18.05.2017.
@@ -18,14 +19,15 @@ public class LfsServletFactoryTest {
   @Test
   public void buildBaseUri() throws Exception {
 
+    String repositoryNamespace = "space";
     String repositoryName = "git-lfs-demo";
 
-    String result = LfsServletFactory.buildBaseUri(new Repository("", "GIT", repositoryName), RequestWithUri(repositoryName, true));
+    String result = LfsServletFactory.buildBaseUri(new Repository("", "GIT", repositoryNamespace, repositoryName), RequestWithUri(repositoryName, true));
     assertThat(result, is(equalTo("http://localhost:8081/scm/git/git-lfs-demo.git/info/lfs/objects/")));
 
 
     //result will be with dot-gix suffix, ide
-    result = LfsServletFactory.buildBaseUri(new Repository("", "GIT", repositoryName), RequestWithUri(repositoryName, false));
+    result = LfsServletFactory.buildBaseUri(new Repository("", "GIT", repositoryNamespace, repositoryName), RequestWithUri(repositoryName, false));
     assertThat(result, is(equalTo("http://localhost:8081/scm/git/git-lfs-demo.git/info/lfs/objects/")));
   }
 

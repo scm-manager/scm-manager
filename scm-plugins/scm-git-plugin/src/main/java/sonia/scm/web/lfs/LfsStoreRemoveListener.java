@@ -32,7 +32,7 @@
 
 package sonia.scm.web.lfs;
 
-import com.google.common.eventbus.Subscribe;
+import com.github.legman.Subscribe;
 import com.google.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

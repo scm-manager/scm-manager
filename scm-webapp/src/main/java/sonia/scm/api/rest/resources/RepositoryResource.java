@@ -522,42 +522,6 @@ public class RepositoryResource extends AbstractManagerResource<Repository, Repo
   }
 
   /**
-   * Returns the {@link Repository} with the specified type and name.
-   *
-   * @param type the type of the repository
-   * @param name the name of the repository
-   *
-   * @return the {@link Repository} with the specified type and name
-   */
-  @GET
-  @Path("{type: [a-z]+}/{name: .*}")
-  @StatusCodes({
-    @ResponseCode(code = 200, condition = "success"),
-    @ResponseCode(code = 404, condition = "not found, no repository with the specified type and name available"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
-  @TypeHint(Repository.class)
-  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-  public Response getByTypeAndName(@PathParam("type") String type,
-    @PathParam("name") String name)
-  {
-    Response response;
-    Repository repository = repositoryManager.get(type, name);
-
-    if (repository != null)
-    {
-      prepareForReturn(repository);
-      response = Response.ok(repository).build();
-    }
-    else
-    {
-      response = Response.status(Response.Status.NOT_FOUND).build();
-    }
-
-    return response;
-  }
-
-  /**
    * Returns the {@link Changeset} from the given repository
    * with the specified revision.
    *

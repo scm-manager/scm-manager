@@ -36,18 +36,15 @@ package sonia.scm.repository;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Throwables;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.repository.ImportResult.Builder;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
 import java.io.IOException;
-
 import java.util.List;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Abstract base class for directory based {@link ImportHandler} and
@@ -164,23 +161,24 @@ public abstract class AbstactImportHandler implements AdvancedImportHandler
 
     logger.trace("search for repositories to import");
 
-    try
-    {
-
-      List<String> repositoryNames =
-        RepositoryUtil.getRepositoryNames(getRepositoryHandler(),
-          getDirectoryNames());
-
-      for (String repositoryName : repositoryNames)
-      {
-        importRepository(manager, builder, throwExceptions, repositoryName);
-      }
-
-    }
-    catch (IOException ex)
-    {
-      handleException(ex, throwExceptions);
-    }
+    // TODO #8783
+//    try
+//    {
+//
+//      List<String> repositoryNames =
+//        RepositoryUtil.getRepositoryNames(getRepositoryHandler(),
+//          getDirectoryNames());
+//
+//      for (String repositoryName : repositoryNames)
+//      {
+//        importRepository(manager, builder, throwExceptions, repositoryName);
+//      }
+//
+//    }
+//    catch (IOException ex)
+//    {
+//      handleException(ex, throwExceptions);
+//    }
 
     return builder.build();
   }
@@ -214,46 +212,48 @@ public abstract class AbstactImportHandler implements AdvancedImportHandler
    * @param manager
    * @param builder
    * @param throwExceptions
-   * @param repositoryName
+   * @param directoryName
    *
    * @throws IOException
    * @throws RepositoryException
    */
   private void importRepository(RepositoryManager manager, Builder builder,
-    boolean throwExceptions, String repositoryName)
+    boolean throwExceptions, String directoryName)
     throws IOException, RepositoryException
   {
-    logger.trace("check repository {} for import", repositoryName);
+    logger.trace("check repository {} for import", directoryName);
 
-    Repository repository = manager.get(getTypeName(), repositoryName);
-
-    if (repository == null)
-    {
-      try
-      {
-        importRepository(manager, repositoryName);
-        builder.addImportedDirectory(repositoryName);
-      }
-      catch (IOException ex)
-      {
-        builder.addFailedDirectory(repositoryName);
-        handleException(ex, throwExceptions);
-      }
-      catch (IllegalStateException ex)
-      {
-        builder.addFailedDirectory(repositoryName);
-        handleException(ex, throwExceptions);
-      }
-      catch (RepositoryException ex)
-      {
-        builder.addFailedDirectory(repositoryName);
-        handleException(ex, throwExceptions);
-      }
-    }
-    else if (logger.isDebugEnabled())
-    {
-      logger.debug("repository {} is allready managed", repositoryName);
-    }
+    // TODO #8783
+//
+//    Repository repository = manager.get(namespaceAndName);
+//
+//    if (repository == null)
+//    {
+//      try
+//      {
+//        importRepository(manager, repositoryName);
+//        builder.addImportedDirectory(repositoryName);
+//      }
+//      catch (IOException ex)
+//      {
+//        builder.addFailedDirectory(repositoryName);
+//        handleException(ex, throwExceptions);
+//      }
+//      catch (IllegalStateException ex)
+//      {
+//        builder.addFailedDirectory(repositoryName);
+//        handleException(ex, throwExceptions);
+//      }
+//      catch (RepositoryException ex)
+//      {
+//        builder.addFailedDirectory(repositoryName);
+//        handleException(ex, throwExceptions);
+//      }
+//    }
+//    else if (logger.isDebugEnabled())
+//    {
+//      logger.debug("repository {} is already managed", repositoryName);
+//    }
   }
 
   /**

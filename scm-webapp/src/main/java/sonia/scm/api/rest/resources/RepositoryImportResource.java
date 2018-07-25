@@ -522,7 +522,8 @@ public class RepositoryImportResource
 
     try
     {
-      repository = new Repository(null, type, name);
+      // TODO #8783
+//      repository = new Repository(null, type, name);
       manager.create(repository);
     }
     catch (RepositoryAlreadyExistsException ex)
@@ -717,7 +718,8 @@ public class RepositoryImportResource
         {
           for (String repositoryName : repositoryNames)
           {
-            Repository repository = manager.get(type, repositoryName);
+            // TODO #8783
+            /*Repository repository = null; //manager.get(type, repositoryName);
 
             if (repository != null)
             {
@@ -727,7 +729,7 @@ public class RepositoryImportResource
             {
               logger.warn("could not find imported repository {}",
                 repositoryName);
-            }
+            }*/
           }
         }
       }

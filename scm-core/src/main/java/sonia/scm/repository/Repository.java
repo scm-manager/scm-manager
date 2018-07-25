@@ -43,7 +43,12 @@ import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 import sonia.scm.util.ValidationUtil;
 
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -54,7 +59,7 @@ import java.util.List;
  * @author Sebastian Sdorra
  */
 @StaticPermissions(
-  value = "repository", 
+  value = "repository",
   permissions = {"read", "write", "modify", "delete", "healthCheck"}
 )
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -95,9 +100,10 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
    * @param type type of the {@link Repository}
    * @param name name of the {@link Repository}
    */
-  public Repository(String id, String type, String name) {
+  public Repository(String id, String type, String namespace, String name) {
     this.id = id;
     this.type = type;
+    this.namespace = namespace;
     this.name = name;
   }
 
@@ -172,44 +178,28 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
     return healthCheckFailures;
   }
 
-  /**
-   * Returns the unique id of the {@link Repository}.
-   *
-   * @return unique id
-   */
   @Override
   public String getId() {
     return id;
   }
 
-  /**
-   * Returns the timestamp of the last modified date of the {@link Repository}.
-   *
-   * @return timestamp of the last modified date
-   */
   @Override
   public Long getLastModified() {
     return lastModified;
   }
 
-  /**
-   * Returns the name of the {@link Repository}.
-   *
-   * @return name of the {@link Repository}
-   */
+
   public String getName() {
     return name;
   }
 
-  public String getNamespace() {
-    return namespace;
+  public String getNamespace() { return namespace; }
+
+  @XmlTransient
+  public NamespaceAndName getNamespaceAndName() {
+    return new NamespaceAndName(getNamespace(), getName());
   }
 
-  /**
-   * Returns the access permissions of the {@link Repository}.
-   *
-   * @return access permissions
-   */
   public List<Permission> getPermissions() {
     if (permissions == null) {
       permissions = Lists.newArrayList();
@@ -366,9 +356,7 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
    * @since 1.17
    */
   public String createUrl(String baseUrl) {
-    String url = HttpUtil.append(baseUrl, type);
-
-    return HttpUtil.append(url, name);
+    return HttpUtil.concatenate(baseUrl, type, namespace, name);
   }
 
   /**
