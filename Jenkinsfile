@@ -1,7 +1,7 @@
 #!groovy
 
 // Keep the version in sync with the one used in pom.xml in order to get correct syntax completion.
-@Library('github.com/cloudogu/ces-build-lib@9aadeeb')
+@Library('github.com/cloudogu/ces-build-lib@59d3e94')
 import com.cloudogu.ces.cesbuildlib.*
 
 node() { // No specific label
