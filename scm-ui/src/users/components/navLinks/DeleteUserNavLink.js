@@ -12,7 +12,7 @@ type Props = {
   deleteUser: (user: User) => void
 };
 
-class DeleteUserButton extends React.Component<Props> {
+class DeleteUserNavLink extends React.Component<Props> {
   static defaultProps = {
     confirmDialog: true
   };
@@ -54,4 +54,4 @@ class DeleteUserButton extends React.Component<Props> {
   }
 }
 
-export default translate("users")(DeleteUserButton);
+export default translate("users")(DeleteUserNavLink);

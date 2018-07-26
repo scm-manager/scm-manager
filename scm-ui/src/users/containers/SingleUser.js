@@ -12,7 +12,7 @@ import { fetchUser, deleteUser } from "../modules/users";
 import Loading from "../../components/Loading";
 
 import { Navigation, Section, NavLink } from "../../components/navigation";
-import { DeleteUserButton } from "./../components/buttons";
+import { DeleteUserNavLink, EditUserNavLink } from "./../components/navLinks";
 import ErrorPage from "../../components/ErrorPage";
 
 type Props = {
@@ -84,10 +84,10 @@ class SingleUser extends React.Component<Props> {
             <Navigation>
               <Section label="Navigation">
                 <NavLink to={`${url}`} label="Information" />
-                <NavLink to={`${url}/edit`} label="Edit" />
+                <EditUserNavLink user={user} editUrl={`${url}/edit`} />
               </Section>
               <Section label="Actions">
-                <DeleteUserButton user={user} deleteUser={this.deleteUser} />
+                <DeleteUserNavLink user={user} deleteUser={this.deleteUser} />
                 <NavLink to="/users" label="Back" />
               </Section>
             </Navigation>
