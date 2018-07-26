@@ -2,24 +2,24 @@ import React from "react";
 import { mount, shallow } from "enzyme";
 import "../../../tests/enzyme";
 import "../../../tests/i18n";
-import DeleteUserButton from "./DeleteUserButton";
+import DeleteUserNavLink from "./DeleteUserNavLink";
 
 import { confirmAlert } from "../../../components/modals/ConfirmAlert";
 jest.mock("../../../components/modals/ConfirmAlert");
 
-describe("DeleteUserButton", () => {
+describe("DeleteUserNavLink", () => {
   it("should render nothing, if the delete link is missing", () => {
     const user = {
       _links: {}
     };
 
-    const button = shallow(
-      <DeleteUserButton user={user} deleteUser={() => {}} />
+    const navLink = shallow(
+      <DeleteUserNavLink user={user} deleteUser={() => {}} />
     );
-    expect(button.text()).toBe("");
+    expect(navLink.text()).toBe("");
   });
 
-  it("should render the button", () => {
+  it("should render the navLink", () => {
     const user = {
       _links: {
         delete: {
@@ -28,13 +28,13 @@ describe("DeleteUserButton", () => {
       }
     };
 
-    const button = mount(
-      <DeleteUserButton user={user} deleteUser={() => {}} />
+    const navLink = mount(
+      <DeleteUserNavLink user={user} deleteUser={() => {}} />
     );
-    expect(button.text()).not.toBe("");
+    expect(navLink.text()).not.toBe("");
   });
 
-  it("should open the confirm dialog on button click", () => {
+  it("should open the confirm dialog on navLink click", () => {
     const user = {
       _links: {
         delete: {
@@ -43,10 +43,10 @@ describe("DeleteUserButton", () => {
       }
     };
 
-    const button = mount(
-      <DeleteUserButton user={user} deleteUser={() => {}} />
+    const navLink = mount(
+      <DeleteUserNavLink user={user} deleteUser={() => {}} />
     );
-    button.find("a").simulate("click");
+    navLink.find("a").simulate("click");
 
     expect(confirmAlert.mock.calls.length).toBe(1);
   });
@@ -65,14 +65,14 @@ describe("DeleteUserButton", () => {
       calledUrl = user._links.delete.href;
     }
 
-    const button = mount(
-      <DeleteUserButton
+    const navLink = mount(
+      <DeleteUserNavLink
         user={user}
         confirmDialog={false}
         deleteUser={capture}
       />
     );
-    button.find("a").simulate("click");
+    navLink.find("a").simulate("click");
 
     expect(calledUrl).toBe("/users");
   });

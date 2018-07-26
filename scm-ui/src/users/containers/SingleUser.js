@@ -1,18 +1,18 @@
 //@flow
 import React from "react";
-import {connect} from "react-redux";
-import {Page} from "../../components/layout";
-import {Route} from "react-router";
-import {Details} from "./../components/table";
+import { connect } from "react-redux";
+import { Page } from "../../components/layout";
+import { Route } from "react-router";
+import { Details } from "./../components/table";
 import EditUser from "./EditUser";
-import type {User} from "../types/User";
-import type {UserEntry} from "../types/UserEntry";
-import type {History} from "history";
-import {deleteUser, fetchUser} from "../modules/users";
+import type { User } from "../types/User";
+import type { UserEntry } from "../types/UserEntry";
+import type { History } from "history";
+import { fetchUser, deleteUser } from "../modules/users";
 import Loading from "../../components/Loading";
 
-import {Navigation, NavLink, Section} from "../../components/navigation";
-import {DeleteUserButton} from "./../components/buttons";
+import { Navigation, Section, NavLink } from "../../components/navigation";
+import { DeleteUserNavLink, EditUserNavLink } from "./../components/navLinks";
 import ErrorPage from "../../components/ErrorPage";
 
 type Props = {
@@ -84,10 +84,10 @@ class SingleUser extends React.Component<Props> {
             <Navigation>
               <Section label="Navigation">
                 <NavLink to={`${url}`} label="Information" />
-                <NavLink to={`${url}/edit`} label="Edit" />
+                <EditUserNavLink user={user} editUrl={`${url}/edit`} />
               </Section>
               <Section label="Actions">
-                <DeleteUserButton user={user} deleteUser={this.deleteUser} />
+                <DeleteUserNavLink user={user} deleteUser={this.deleteUser} />
                 <NavLink to="/users" label="Back" />
               </Section>
             </Navigation>
