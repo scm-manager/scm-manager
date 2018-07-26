@@ -14,8 +14,11 @@ import Loading from "../../components/Loading";
 import { Navigation, Section, NavLink } from "../../components/navigation";
 import { DeleteUserNavLink, EditUserNavLink } from "./../components/navLinks";
 import ErrorPage from "../../components/ErrorPage";
+import { translate } from "react-i18next";
+
 
 type Props = {
+  t: string => string,
   name: string,
   userEntry?: UserEntry,
   match: any,
@@ -49,7 +52,7 @@ class SingleUser extends React.Component<Props> {
   };
 
   render() {
-    const { userEntry } = this.props;
+    const { t, userEntry } = this.props;
 
     if (!userEntry || userEntry.loading) {
       return <Loading />;
@@ -58,8 +61,8 @@ class SingleUser extends React.Component<Props> {
     if (userEntry.error) {
       return (
         <ErrorPage
-          title="Error"
-          subtitle="Unknown user error"
+          title={t("single-user.error-title")}
+          subtitle={t("single-user.error-subtitle")}
           error={userEntry.error}
         />
       );
@@ -67,8 +70,6 @@ class SingleUser extends React.Component<Props> {
 
     const user = userEntry.entry;
     const url = this.matchedUrl();
-
-    // TODO i18n
 
     return (
       <Page title={user.displayName}>
@@ -82,13 +83,13 @@ class SingleUser extends React.Component<Props> {
           </div>
           <div className="column">
             <Navigation>
-              <Section label="Navigation">
-                <NavLink to={`${url}`} label="Information" />
+              <Section label={t("single-user.navigation-label")}>
+                <NavLink to={`${url}`} label={t("single-user.information-label")} />
                 <EditUserNavLink user={user} editUrl={`${url}/edit`} />
               </Section>
-              <Section label="Actions">
+              <Section label={t("single-user.actions-label")}>
                 <DeleteUserNavLink user={user} deleteUser={this.deleteUser} />
-                <NavLink to="/users" label="Back" />
+                <NavLink to="/users" label={t("single-user.back-label")} />
               </Section>
             </Navigation>
           </div>
@@ -125,4 +126,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(SingleUser);
+)(translate("users")(SingleUser));

@@ -26,5 +26,17 @@
   },
   "user-form": {
     "submit": "Submit"
+  },
+  "add-user": {
+    "title": "Create User",
+    "subtitle": "Create a new user"
+  },
+  "single-user": {
+    "error-title": "Error",
+    "error-subtitle": "Unknown user error",
+    "navigation-label": "Navigation",
+    "actions-label": "Actions",
+    "information-label": "Information",
+    "back-label": "Back"
   }
 }
