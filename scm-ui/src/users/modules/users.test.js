@@ -18,7 +18,7 @@ import {
   MODIFY_USER_SUCCESS,
   deleteUserPending,
   deleteUserFailure,
-  DELETE_USER,
+  DELETE_USER_PENDING,
   DELETE_USER_SUCCESS,
   DELETE_USER_FAILURE,
   deleteUser,
@@ -270,7 +270,7 @@ describe("users fetch()", () => {
     const store = mockStore({});
     return store.dispatch(deleteUser(userZaphod)).then(() => {
       const actions = store.getActions();
-      expect(actions[0].type).toEqual(DELETE_USER);
+      expect(actions[0].type).toEqual(DELETE_USER_PENDING);
       expect(actions[0].payload).toBe(userZaphod);
       expect(actions[1].type).toEqual(DELETE_USER_SUCCESS);
     });
@@ -284,7 +284,7 @@ describe("users fetch()", () => {
     const store = mockStore({});
     return store.dispatch(deleteUser(userZaphod)).then(() => {
       const actions = store.getActions();
-      expect(actions[0].type).toEqual(DELETE_USER);
+      expect(actions[0].type).toEqual(DELETE_USER_PENDING);
       expect(actions[0].payload).toBe(userZaphod);
       expect(actions[1].type).toEqual(DELETE_USER_FAILURE);
       expect(actions[1].payload).toBeDefined();
@@ -318,12 +318,46 @@ describe("users reducer", () => {
       }
     });
 
+    it("should set error when fetching users failed", () => {
+      const oldState = {
+        list: {
+          loading: true
+        }
+      };
+
+      const error = new Error("kaputt");
+
+      const newState = reducer(oldState, fetchUsersFailure("url.com", error));
+      expect(newState.list.loading).toBeFalsy();
+      expect(newState.list.error).toEqual(error);
+    });
+
+    it("should set userCreatePermission to true if update link is present", () => {
+      const newState = reducer({}, fetchUsersSuccess(responseBody));
+
+      expect(newState.list.userCreatePermission).toBeTruthy();
+    });
+
     expect(newState.list.userCreatePermission).toBeTruthy();
+  });
+
+  it("should not replace whole byNames map when fetching users", () => {
+    const oldState = {
+      byNames: {
+        ford: {
+          entry: userFord
+        }
+      }
+    };
+
+    const newState = reducer(oldState, fetchUsersSuccess(responseBody));
+    expect(newState.byNames["zaphod"]).toBeDefined();
+    expect(newState.byNames["ford"]).toBeDefined();
   });
 
   test("should update state correctly according to DELETE_USER_PENDING action", () => {
     const state = {
-      usersByNames: {
+      byNames: {
         zaphod: {
           loading: false,
           error: null,
@@ -359,7 +393,7 @@ describe("users reducer", () => {
 
   it("should set the error of user which could not be deleted", () => {
     const state = {
-      usersByNames: {
+      byNames: {
         zaphod: {
           loading: true,
           entry: userZaphod
@@ -419,41 +453,6 @@ describe("users reducer", () => {
     expect(newState.byNames["ford"]).toBeFalsy();
   });
 
-  it("should not replace whole byNames map when fetching users", () => {
-    const oldState = {
-      byNames: {
-        ford: {
-          entry: userFord
-        }
-      }
-    };
-
-    const newState = reducer(oldState, fetchUsersSuccess(responseBody));
-    expect(newState.byNames["zaphod"]).toBeDefined();
-    expect(newState.byNames["ford"]).toBeDefined();
-  });
-
-  it("should set error when fetching users failed", () => {
-    const oldState = {
-      list: {
-        loading: true
-      }
-    };
-
-    const error = new Error("kaputt");
-
-    const newState = reducer(oldState, fetchUsersFailure("url.com", error));
-
-    expect(newState.list.loading).toBeFalsy();
-    expect(newState.list.error).toEqual(error);
-  });
-
-  it("should set userCreatePermission to true if update link is present", () => {
-    const newState = reducer({}, fetchUsersSuccess(responseBody));
-
-    expect(newState.list.userCreatePermission).toBeTruthy();
-  });
-
   it("should update state correctly according to CREATE_USER_PENDING action", () => {
     const newState = reducer({}, createUserPending(userZaphod));
     expect(newState.create.loading).toBeTruthy();
@@ -461,14 +460,17 @@ describe("users reducer", () => {
   });
 
   it("should update state correctly according to CREATE_USER_SUCCESS action", () => {
-    const newState = reducer({ loading: true }, createUserSuccess());
+    const newState = reducer(
+      { create: { loading: true } },
+      createUserSuccess()
+    );
     expect(newState.create.loading).toBeFalsy();
     expect(newState.create.error).toBeFalsy();
   });
 
   it("should set the loading to false and the error if user could not be created", () => {
     const newState = reducer(
-      { loading: true, error: null },
+      { create: { loading: true, error: null } },
       createUserFailure(userFord, new Error("kaputt kaputt"))
     );
     expect(newState.create.loading).toBeFalsy();
@@ -480,17 +482,17 @@ describe("users reducer", () => {
     expect(newState.byNames["zaphod"].loading).toBeTruthy();
   });
 
-  it("should not affect users state", () => {
+  it("should not affect list state", () => {
     const newState = reducer(
       {
-        users: {
+        list: {
           entries: ["ford"]
         }
       },
       fetchUserPending("zaphod")
     );
     expect(newState.byNames["zaphod"].loading).toBeTruthy();
-    expect(newState.users.entries).toEqual(["ford"]);
+    expect(newState.list.entries).toEqual(["ford"]);
   });
 
   it("should update state according to FETCH_USER_FAILURE action", () => {
@@ -523,8 +525,12 @@ describe("users reducer", () => {
   it("should update state according to MODIFY_USER_PENDING action", () => {
     const newState = reducer(
       {
-        error: new Error("something"),
-        entry: {}
+        byNames: {
+          ford: {
+            error: new Error("something"),
+            entry: {}
+          }
+        }
       },
       modifyUserPending(userFord)
     );
@@ -536,9 +542,13 @@ describe("users reducer", () => {
   it("should update state according to MODIFY_USER_SUCCESS action", () => {
     const newState = reducer(
       {
-        loading: true,
-        error: new Error("something"),
-        entry: {}
+        byNames: {
+          ford: {
+            loading: true,
+            error: new Error("something"),
+            entry: {}
+          }
+        }
       },
       modifyUserSuccess(userFord)
     );
@@ -551,8 +561,12 @@ describe("users reducer", () => {
     const error = new Error("something went wrong");
     const newState = reducer(
       {
-        loading: true,
-        entry: {}
+        byNames: {
+          ford: {
+            loading: true,
+            entry: {}
+          }
+        }
       },
       modifyUserFailure(userFord, error)
     );

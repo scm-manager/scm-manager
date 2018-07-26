@@ -2,7 +2,7 @@
 import { apiClient } from "../../apiclient";
 import type { User } from "../types/User";
 import type { UserEntry } from "../types/UserEntry";
-import { Dispatch } from "redux";
+import { Dispatch, combineReducers } from "redux";
 import type { Action } from "../../types/Action";
 
 export const FETCH_USERS_PENDING = "scm/users/FETCH_USERS_PENDING";
@@ -21,7 +21,7 @@ export const MODIFY_USER_PENDING = "scm/users/MODIFY_USER_PENDING";
 export const MODIFY_USER_SUCCESS = "scm/users/MODIFY_USER_SUCCESS";
 export const MODIFY_USER_FAILURE = "scm/users/MODIFY_USER_FAILURE";
 
-export const DELETE_USER = "scm/users/DELETE";
+export const DELETE_USER_PENDING = "scm/users/DELETE_PENDING";
 export const DELETE_USER_SUCCESS = "scm/users/DELETE_SUCCESS";
 export const DELETE_USER_FAILURE = "scm/users/DELETE_FAILURE";
 
@@ -232,7 +232,7 @@ export function deleteUser(user: User) {
 
 export function deleteUserPending(user: User): Action {
   return {
-    type: DELETE_USER,
+    type: DELETE_USER_PENDING,
     payload: user
   };
 }
@@ -291,6 +291,7 @@ function extractUsersByNames(
   }
   return usersByNames;
 }
+
 function deleteUserInUsersByNames(users: {}, userName: string) {
   let newUsers = {};
   for (let username in users) {
@@ -309,129 +310,82 @@ function deleteUserInEntries(users: [], userName: string) {
 
 const reducerByName = (state: any, username: string, newUserState: any) => {
   const newUsersByNames = {
-    ...state.byNames,
+    ...state,
     [username]: newUserState
   };
 
-  return {
-    ...state,
-    byNames: newUsersByNames
-  };
+  return newUsersByNames;
 };
 
-export default function reducer(state: any = {}, action: any = {}) {
+function listReducer(state: any = {}, action: any = {}) {
   switch (action.type) {
-    // fetch user list cases
+    // Fetch all users actions
     case FETCH_USERS_PENDING:
       return {
         ...state,
-        list: {
-          loading: true
-        }
+        loading: true
       };
     case FETCH_USERS_SUCCESS:
-      // return red(state, action.payload._embedded.users);
       const users = action.payload._embedded.users;
       const userNames = users.map(user => user.name);
-      const byNames = extractUsersByNames(users, userNames, state.byNames);
       return {
         ...state,
-        userCreatePermission: action.payload._links.create ? true : false,
-        list: {
-          error: null,
-          entries: userNames,
-          loading: false,
-          userCreatePermission: action.payload._links.create ? true : false
-        },
-        byNames
+        error: null,
+        entries: userNames,
+        loading: false,
+        userCreatePermission: action.payload._links.create ? true : false
       };
     case FETCH_USERS_FAILURE:
       return {
         ...state,
-        list: {
-          ...state.users,
-          loading: false,
-          error: action.payload.error
-        }
+        loading: false,
+        error: action.payload.error
       };
-    // Fetch single user cases
+    // Delete single user actions
+    case DELETE_USER_SUCCESS:
+      const newUserEntries = deleteUserInEntries(
+        state.entries,
+        action.payload.name
+      );
+      return {
+        ...state,
+        entries: newUserEntries
+      };
+    default:
+      return state;
+  }
+}
+
+function byNamesReducer(state: any = {}, action: any = {}) {
+  switch (action.type) {
+    // Fetch all users actions
+    case FETCH_USERS_SUCCESS:
+      const users = action.payload._embedded.users;
+      const userNames = users.map(user => user.name);
+      const byNames = extractUsersByNames(users, userNames, state.byNames);
+      return {
+        ...byNames
+      };
+
+    // Fetch single user actions
     case FETCH_USER_PENDING:
       return reducerByName(state, action.payload.name, {
         loading: true,
         error: null
       });
-
     case FETCH_USER_SUCCESS:
       return reducerByName(state, action.payload.name, {
         loading: false,
         error: null,
         entry: action.payload
       });
-
     case FETCH_USER_FAILURE:
       return reducerByName(state, action.payload.username, {
         loading: false,
         error: action.payload.error
       });
 
-    // Delete single user cases
-    case DELETE_USER:
-      return reducerByName(state, action.payload.name, {
-        loading: true,
-        error: null,
-        entry: action.payload
-      });
-
-    case DELETE_USER_SUCCESS:
-      const newUserByNames = deleteUserInUsersByNames(
-        state.byNames,
-        action.payload.name
-      );
-      const newUserEntries = deleteUserInEntries(
-        state.list.entries,
-        action.payload.name
-      );
-      return {
-        ...state,
-        list: {
-          ...state.list,
-          entries: newUserEntries
-        },
-        byNames: newUserByNames
-      };
-
-    case DELETE_USER_FAILURE:
-      return reducerByName(state, action.payload.user.name, {
-        loading: false,
-        error: action.payload.error,
-        entry: action.payload.user
-      });
-
-    // Add single user cases
-    case CREATE_USER_PENDING:
-      return {
-        ...state,
-        create: {
-          loading: true
-        }
-      };
-    case CREATE_USER_SUCCESS:
-      return {
-        ...state,
-        create: {
-          loading: false
-        }
-      };
-    case CREATE_USER_FAILURE:
-      return {
-        ...state,
-        create: {
-          loading: false,
-          error: action.payload
-        }
-      };
-
-    // Update single user cases
+    // Update single user actions
     case MODIFY_USER_PENDING:
       return reducerByName(state, action.payload.name, {
         loading: true
@@ -444,7 +398,57 @@ export default function reducer(state: any = {}, action: any = {}) {
       return reducerByName(state, action.payload.user.name, {
         error: action.payload.error
       });
+
+    // Delete single user actions
+    case DELETE_USER_PENDING:
+      return reducerByName(state, action.payload.name, {
+        loading: true,
+        error: null,
+        entry: action.payload
+      });
+    case DELETE_USER_SUCCESS:
+      const newUserByNames = deleteUserInUsersByNames(
+        state,
+        action.payload.name
+      );
+      return newUserByNames;
+
+    case DELETE_USER_FAILURE:
+      return reducerByName(state, action.payload.user.name, {
+        loading: false,
+        error: action.payload.error,
+        entry: action.payload.user
+      });
     default:
       return state;
   }
 }
+
+function createReducer(state: any = {}, action: any = {}) {
+  switch (action.type) {
+    case CREATE_USER_PENDING:
+      return {
+        ...state,
+        loading: true
+      };
+    case CREATE_USER_SUCCESS:
+      return {
+        ...state,
+        loading: false
+      };
+    case CREATE_USER_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload
+      };
+    default:
+      return state;
+  }
+}
+
+export default combineReducers({
+  list: listReducer,
+  byNames: byNamesReducer,
+  create: createReducer
+});
