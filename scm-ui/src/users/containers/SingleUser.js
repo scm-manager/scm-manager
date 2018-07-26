@@ -7,6 +7,7 @@ import { Details } from "./../components/table";
 import EditUser from "./EditUser";
 import type { User } from "../types/User";
 import type { UserEntry } from "../types/UserEntry";
+import type { History } from "history";
 import { fetchUser, deleteUser } from "../modules/users";
 import Loading from "../../components/Loading";
 
@@ -18,14 +19,23 @@ type Props = {
   name: string,
   userEntry?: UserEntry,
   match: any,
-  deleteUser: (user: User) => void,
-  fetchUser: string => void
+  deleteUser: (user: User, callback?: () => void) => void,
+  fetchUser: string => void,
+  history: History
 };
 
 class SingleUser extends React.Component<Props> {
   componentDidMount() {
     this.props.fetchUser(this.props.name);
   }
+
+  userDeleted = () => {
+    this.props.history.push("/users");
+  };
+
+  deleteUser = (user: User) => {
+    this.props.deleteUser(user, this.userDeleted);
+  };
 
   stripEndingSlash = (url: string) => {
     if (url.endsWith("/")) {
@@ -34,8 +44,12 @@ class SingleUser extends React.Component<Props> {
     return url;
   };
 
+  matchedUrl = () => {
+    return this.stripEndingSlash(this.props.match.url);
+  };
+
   render() {
-    const { userEntry, match, deleteUser } = this.props;
+    const { userEntry } = this.props;
 
     if (!userEntry || userEntry.loading) {
       return <Loading />;
@@ -52,7 +66,7 @@ class SingleUser extends React.Component<Props> {
     }
 
     const user = userEntry.entry;
-    const url = this.stripEndingSlash(match.url);
+    const url = this.matchedUrl();
 
     // TODO i18n
 
@@ -73,7 +87,7 @@ class SingleUser extends React.Component<Props> {
                 <NavLink to={`${url}/edit`} label="Edit" />
               </Section>
               <Section label="Actions">
-                <DeleteUserButton user={user} deleteUser={deleteUser} />
+                <DeleteUserButton user={user} deleteUser={this.deleteUser} />
                 <NavLink to="/users" label="Back" />
               </Section>
             </Navigation>
@@ -102,8 +116,8 @@ const mapDispatchToProps = dispatch => {
     fetchUser: (name: string) => {
       dispatch(fetchUser(name));
     },
-    deleteUser: (user: User) => {
-      dispatch(deleteUser(user));
+    deleteUser: (user: User, callback?: () => void) => {
+      dispatch(deleteUser(user, callback));
     }
   };
 };
