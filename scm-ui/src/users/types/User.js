@@ -1,5 +1,5 @@
 //@flow
-import type { Link, Links } from "../../types/hal";
+import type { Links } from "../../types/hal";
 
 export type User = {
   displayName: string,
