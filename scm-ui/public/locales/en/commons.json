@@ -32,5 +32,9 @@
     "repositories": "Repositories",
     "users": "Users",
     "logout": "Logout"
+  },
+  "paginator": {
+    "next": "Next",
+    "previous": "Previous"
   }
 }

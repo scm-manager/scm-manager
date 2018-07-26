@@ -1,0 +1,227 @@
+// @flow
+import React from "react";
+import type { PagedCollection } from "../types/Collection";
+import { mount, shallow } from "enzyme";
+import "../tests/enzyme";
+import "../tests/i18n";
+
+import Paginator from "./Paginator";
+
+describe("paginator rendering tests", () => {
+  const dummyLink = {
+    href: "https://dummy"
+  };
+
+  it("should render all buttons but disabled, without links", () => {
+    const collection = {
+      page: 10,
+      pageTotal: 20,
+      _links: {}
+    };
+
+    const paginator = shallow(<Paginator collection={collection} />);
+    const buttons = paginator.find("Button");
+    expect(buttons.length).toBe(7);
+    for (let button of buttons) {
+      expect(button.props.disabled).toBeTruthy();
+    }
+  });
+
+  it("should render buttons for first page", () => {
+    const collection = {
+      page: 0,
+      pageTotal: 148,
+      _links: {
+        first: dummyLink,
+        next: dummyLink,
+        last: dummyLink
+      }
+    };
+
+    const paginator = shallow(<Paginator collection={collection} />);
+    const buttons = paginator.find("Button");
+    expect(buttons.length).toBe(5);
+
+    // previous button
+    expect(buttons.get(0).props.disabled).toBeTruthy();
+    // last button
+    expect(buttons.get(1).props.disabled).toBeFalsy();
+    // first button
+    const firstButton = buttons.get(2).props;
+    expect(firstButton.disabled).toBeTruthy();
+    expect(firstButton.label).toBe(1);
+
+    // next button
+    const nextButton = buttons.get(3).props;
+    expect(nextButton.disabled).toBeFalsy();
+    expect(nextButton.label).toBe("2");
+
+    // last button
+    const lastButton = buttons.get(4).props;
+    expect(lastButton.disabled).toBeFalsy();
+    expect(lastButton.label).toBe("148");
+  });
+
+  it("should render buttons for second page", () => {
+    const collection = {
+      page: 1,
+      pageTotal: 148,
+      _links: {
+        first: dummyLink,
+        prev: dummyLink,
+        next: dummyLink,
+        last: dummyLink
+      }
+    };
+
+    const paginator = shallow(<Paginator collection={collection} />);
+    const buttons = paginator.find("Button");
+    expect(buttons.length).toBe(6);
+
+    // previous button
+    expect(buttons.get(0).props.disabled).toBeFalsy();
+    // last button
+    expect(buttons.get(1).props.disabled).toBeFalsy();
+    // first button
+    const firstButton = buttons.get(2).props;
+    expect(firstButton.disabled).toBeFalsy();
+    expect(firstButton.label).toBe("1");
+
+    // current button
+    const currentButton = buttons.get(3).props;
+    expect(currentButton.disabled).toBeTruthy();
+    expect(currentButton.label).toBe(2);
+
+    // next button
+    const nextButton = buttons.get(4).props;
+    expect(nextButton.disabled).toBeFalsy();
+    expect(nextButton.label).toBe("3");
+
+    // last button
+    const lastButton = buttons.get(5).props;
+    expect(lastButton.disabled).toBeFalsy();
+    expect(lastButton.label).toBe("148");
+  });
+
+  it("should render buttons for last page", () => {
+    const collection = {
+      page: 147,
+      pageTotal: 148,
+      _links: {
+        first: dummyLink,
+        prev: dummyLink
+      }
+    };
+
+    const paginator = shallow(<Paginator collection={collection} />);
+    const buttons = paginator.find("Button");
+    expect(buttons.length).toBe(5);
+
+    // previous button
+    expect(buttons.get(0).props.disabled).toBeFalsy();
+    // last button
+    expect(buttons.get(1).props.disabled).toBeTruthy();
+    // first button
+    const firstButton = buttons.get(2).props;
+    expect(firstButton.disabled).toBeFalsy();
+    expect(firstButton.label).toBe("1");
+
+    // next button
+    const nextButton = buttons.get(3).props;
+    expect(nextButton.disabled).toBeFalsy();
+    expect(nextButton.label).toBe("147");
+
+    // last button
+    const lastButton = buttons.get(4).props;
+    expect(lastButton.disabled).toBeTruthy();
+    expect(lastButton.label).toBe(148);
+  });
+
+  it("should render buttons for penultimate page", () => {
+    const collection = {
+      page: 146,
+      pageTotal: 148,
+      _links: {
+        first: dummyLink,
+        prev: dummyLink,
+        next: dummyLink,
+        last: dummyLink
+      }
+    };
+
+    const paginator = shallow(<Paginator collection={collection} />);
+    const buttons = paginator.find("Button");
+    expect(buttons.length).toBe(6);
+
+    // previous button
+    expect(buttons.get(0).props.disabled).toBeFalsy();
+    // last button
+    expect(buttons.get(1).props.disabled).toBeFalsy();
+
+    // first button
+    const firstButton = buttons.get(2).props;
+    expect(firstButton.disabled).toBeFalsy();
+    expect(firstButton.label).toBe("1");
+
+    const currentButton = buttons.get(3).props;
+    expect(currentButton.disabled).toBeFalsy();
+    expect(currentButton.label).toBe("146");
+
+    // current button
+    const nextButton = buttons.get(4).props;
+    expect(nextButton.disabled).toBeTruthy();
+    expect(nextButton.label).toBe(147);
+
+    // last button
+    const lastButton = buttons.get(5).props;
+    expect(lastButton.disabled).toBeFalsy();
+    expect(lastButton.label).toBe("148");
+  });
+
+  it("should render buttons for a page in the middle", () => {
+    const collection = {
+      page: 41,
+      pageTotal: 148,
+      _links: {
+        first: dummyLink,
+        prev: dummyLink,
+        next: dummyLink,
+        last: dummyLink
+      }
+    };
+
+    const paginator = shallow(<Paginator collection={collection} />);
+    const buttons = paginator.find("Button");
+    expect(buttons.length).toBe(7);
+
+    // previous button
+    expect(buttons.get(0).props.disabled).toBeFalsy();
+    // next button
+    expect(buttons.get(1).props.disabled).toBeFalsy();
+
+    // first button
+    const firstButton = buttons.get(2).props;
+    expect(firstButton.disabled).toBeFalsy();
+    expect(firstButton.label).toBe("1");
+
+    // previous Button
+    const previousButton = buttons.get(3).props;
+    expect(previousButton.disabled).toBeFalsy();
+    expect(previousButton.label).toBe("41");
+
+    // current button
+    const currentButton = buttons.get(4).props;
+    expect(currentButton.disabled).toBeTruthy();
+    expect(currentButton.label).toBe(42);
+
+    // next button
+    const nextButton = buttons.get(5).props;
+    expect(nextButton.disabled).toBeFalsy();
+    expect(nextButton.label).toBe("43");
+
+    // last button
+    const lastButton = buttons.get(6).props;
+    expect(lastButton.disabled).toBeFalsy();
+    expect(lastButton.label).toBe("148");
+  });
+});

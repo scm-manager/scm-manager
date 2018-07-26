@@ -32,18 +32,20 @@ const CONTENT_TYPE_USER = "application/vnd.scmm-user+json;v=2";
 //fetch users
 
 export function fetchUsers() {
+  return fetchUsersByLink(USERS_URL);
+}
+
+export function fetchUsersByPage(page: number) {
+  // backend start counting by 0
+  return fetchUsersByLink(USERS_URL + "?page=" + (page - 1));
+}
+
+export function fetchUsersByLink(link: string) {
   return function(dispatch: any) {
     dispatch(fetchUsersPending());
     return apiClient
-      .get(USERS_URL)
-      .then(response => {
-        return response;
-      })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        }
-      })
+      .get(link)
+      .then(response => response.json())
       .then(data => {
         dispatch(fetchUsersSuccess(data));
       })
@@ -345,7 +347,10 @@ export default function reducer(state: any = {}, action: any = {}) {
           error: null,
           entries: userNames,
           loading: false,
-          userCreatePermission: action.payload._links.create ? true : false
+          userCreatePermission: action.payload._links.create ? true : false,
+          page: action.payload.page,
+          pageTotal: action.payload.pageTotal,
+          _links: action.payload._links
         },
         byNames
       };
@@ -450,3 +455,11 @@ export default function reducer(state: any = {}, action: any = {}) {
       return state;
   }
 }
+
+// selectors
+
+export const selectList = (state: Object) => {
+  if (state.users && state.users.list && state.users.list._links) {
+    return state.users.list;
+  }
+};

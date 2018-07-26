@@ -43,6 +43,12 @@ class Main extends React.Component<Props> {
             component={AddUser}
           />
           <ProtectedRoute
+            exact
+            path="/users/:page"
+            component={Users}
+            authenticated={authenticated}
+          />
+          <ProtectedRoute
             authenticated={authenticated}
             path="/user/:name"
             component={SingleUser}

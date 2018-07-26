@@ -359,7 +359,10 @@ describe("users reducer", () => {
       entries: ["zaphod", "ford"],
       error: null,
       loading: false,
-      userCreatePermission: true
+      userCreatePermission: true,
+      page: 0,
+      pageTotal: 1,
+      _links: responseBody._links
     });
 
     expect(newState.byNames).toEqual({
