@@ -29,6 +29,8 @@ const USERS_URL = "users";
 
 const CONTENT_TYPE_USER = "application/vnd.scmm-user+json;v=2";
 
+//TODO i18n
+
 //fetch users
 
 export function fetchUsers() {
