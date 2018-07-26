@@ -258,15 +258,29 @@ describe("users fetch()", () => {
     fetchMock.putOnce("http://localhost:8081/scm/api/rest/v2/users/zaphod", {
       status: 204
     });
-    // after update, the users are fetched again
-    fetchMock.getOnce(USERS_URL, response);
 
     const store = mockStore({});
     return store.dispatch(modifyUser(userZaphod)).then(() => {
       const actions = store.getActions();
+      expect(actions.length).toBe(2);
       expect(actions[0].type).toEqual(MODIFY_USER_PENDING);
       expect(actions[1].type).toEqual(MODIFY_USER_SUCCESS);
-      expect(actions[2].type).toEqual(FETCH_USERS_PENDING);
+    });
+  });
+
+  it("should call callback, after successful modified user", () => {
+    fetchMock.putOnce("http://localhost:8081/scm/api/rest/v2/users/zaphod", {
+      status: 204
+    });
+
+    let called = false;
+    const callMe = () => {
+      called = true;
+    };
+
+    const store = mockStore({});
+    return store.dispatch(modifyUser(userZaphod, callMe)).then(() => {
+      expect(called).toBeTruthy();
     });
   });
 
@@ -288,15 +302,30 @@ describe("users fetch()", () => {
     fetchMock.deleteOnce("http://localhost:8081/scm/api/rest/v2/users/zaphod", {
       status: 204
     });
-    // after update, the users are fetched again
-    fetchMock.getOnce(USERS_URL, response);
 
     const store = mockStore({});
     return store.dispatch(deleteUser(userZaphod)).then(() => {
       const actions = store.getActions();
+      expect(actions.length).toBe(2);
       expect(actions[0].type).toEqual(DELETE_USER);
       expect(actions[0].payload).toBe(userZaphod);
       expect(actions[1].type).toEqual(DELETE_USER_SUCCESS);
+    });
+  });
+
+  it("should call the callback, after successful delete", () => {
+    fetchMock.deleteOnce("http://localhost:8081/scm/api/rest/v2/users/zaphod", {
+      status: 204
+    });
+
+    let called = false;
+    const callMe = () => {
+      called = true;
+    };
+
+    const store = mockStore({});
+    return store.dispatch(deleteUser(userZaphod, callMe)).then(() => {
+      expect(called).toBeTruthy();
     });
   });
 

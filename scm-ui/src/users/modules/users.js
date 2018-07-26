@@ -173,14 +173,16 @@ export function createUserFailure(user: User, err: Error): Action {
 
 //modify user
 
-export function modifyUser(user: User) {
+export function modifyUser(user: User, callback?: () => void) {
   return function(dispatch: Dispatch) {
     dispatch(modifyUserPending(user));
     return apiClient
       .putWithContentType(user._links.update.href, user, CONTENT_TYPE_USER)
       .then(() => {
         dispatch(modifyUserSuccess(user));
-        dispatch(fetchUsers());
+        if (callback) {
+          callback();
+        }
       })
       .catch(err => {
         dispatch(modifyUserFailure(user, err));
@@ -214,13 +216,16 @@ export function modifyUserFailure(user: User, error: Error): Action {
 
 //delete user
 
-export function deleteUser(user: User) {
+export function deleteUser(user: User, callback?: () => void) {
   return function(dispatch: any) {
     dispatch(deleteUserPending(user));
     return apiClient
       .delete(user._links.delete.href)
       .then(() => {
         dispatch(deleteUserSuccess(user));
+        if (callback) {
+          callback();
+        }
       })
       .catch(cause => {
         const error = new Error(
