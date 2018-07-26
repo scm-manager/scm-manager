@@ -39,8 +39,6 @@ import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 @SubjectAware(
-//  username = "trillian",
-//  password = "secret",
   configuration = "classpath:sonia/scm/repository/shiro.ini"
 )
 public class MeResourceTest {
@@ -50,6 +48,8 @@ public class MeResourceTest {
 
   private Dispatcher dispatcher = MockDispatcherFactory.createDispatcher();
 
+
+  private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(URI.create("/"));
   @Mock
   private UriInfo uriInfo;
   @Mock
@@ -67,9 +67,10 @@ public class MeResourceTest {
   public void prepareEnvironment() throws IOException, UserException {
     initMocks(this);
     createDummyUser("trillian");
-    doNothing().when(userManager).create(userCaptor.capture());
+    when(userManager.create(userCaptor.capture())).thenAnswer(invocation -> invocation.getArguments()[0]);
     doNothing().when(userManager).modify(userCaptor.capture());
     doNothing().when(userManager).delete(userCaptor.capture());
+    userToDtoMapper.setResourceLinks(resourceLinks);
     MeResource meResource = new MeResource(userToDtoMapper, userManager);
     dispatcher.getRegistry().addSingletonResource(meResource);
     when(uriInfo.getBaseUri()).thenReturn(URI.create("/"));
