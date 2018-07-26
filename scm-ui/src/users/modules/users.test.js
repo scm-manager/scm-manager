@@ -3,45 +3,43 @@ import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 import fetchMock from "fetch-mock";
 
-import {
-  FETCH_USERS_PENDING,
-  FETCH_USERS_SUCCESS,
-  fetchUsers,
-  FETCH_USERS_FAILURE,
-  createUserPending,
+import reducer, {
+  CREATE_USER_FAILURE,
   CREATE_USER_PENDING,
   CREATE_USER_SUCCESS,
-  CREATE_USER_FAILURE,
-  modifyUser,
-  MODIFY_USER_PENDING,
-  MODIFY_USER_FAILURE,
-  MODIFY_USER_SUCCESS,
-  deleteUserPending,
-  deleteUserFailure,
+  createUser,
+  createUserFailure,
+  createUserPending,
+  createUserSuccess,
+  DELETE_USER_FAILURE,
   DELETE_USER_PENDING,
   DELETE_USER_SUCCESS,
-  DELETE_USER_FAILURE,
   deleteUser,
-  fetchUsersFailure,
-  fetchUsersSuccess,
-  fetchUser,
+  deleteUserFailure,
+  deleteUserPending,
+  deleteUserSuccess,
+  FETCH_USER_FAILURE,
   FETCH_USER_PENDING,
   FETCH_USER_SUCCESS,
-  FETCH_USER_FAILURE,
-  createUser,
-  createUserSuccess,
-  createUserFailure,
-  modifyUserPending,
-  modifyUserSuccess,
-  modifyUserFailure,
-  fetchUserSuccess,
-  deleteUserSuccess,
-  fetchUsersPending,
+  FETCH_USERS_FAILURE,
+  FETCH_USERS_PENDING,
+  FETCH_USERS_SUCCESS,
+  fetchUser,
+  fetchUserFailure,
   fetchUserPending,
-  fetchUserFailure
+  fetchUsers,
+  fetchUsersFailure,
+  fetchUsersPending,
+  fetchUsersSuccess,
+  fetchUserSuccess,
+  MODIFY_USER_FAILURE,
+  MODIFY_USER_PENDING,
+  MODIFY_USER_SUCCESS,
+  modifyUser,
+  modifyUserFailure,
+  modifyUserPending,
+  modifyUserSuccess
 } from "./users";
-
-import reducer from "./users";
 
 const userZaphod = {
   active: true,
@@ -236,13 +234,29 @@ describe("users fetch()", () => {
     fetchMock.putOnce("http://localhost:8081/scm/api/rest/v2/users/zaphod", {
       status: 204
     });
-    // after update, the users are fetched again
 
     const store = mockStore({});
     return store.dispatch(modifyUser(userZaphod)).then(() => {
       const actions = store.getActions();
+      expect(actions.length).toBe(2);
       expect(actions[0].type).toEqual(MODIFY_USER_PENDING);
       expect(actions[1].type).toEqual(MODIFY_USER_SUCCESS);
+    });
+  });
+
+  it("should call callback, after successful modified user", () => {
+    fetchMock.putOnce("http://localhost:8081/scm/api/rest/v2/users/zaphod", {
+      status: 204
+    });
+
+    let called = false;
+    const callMe = () => {
+      called = true;
+    };
+
+    const store = mockStore({});
+    return store.dispatch(modifyUser(userZaphod, callMe)).then(() => {
+      expect(called).toBeTruthy();
     });
   });
 
@@ -264,15 +278,30 @@ describe("users fetch()", () => {
     fetchMock.deleteOnce("http://localhost:8081/scm/api/rest/v2/users/zaphod", {
       status: 204
     });
-    // after update, the users are fetched again
-    fetchMock.getOnce(USERS_URL, response);
 
     const store = mockStore({});
     return store.dispatch(deleteUser(userZaphod)).then(() => {
       const actions = store.getActions();
+      expect(actions.length).toBe(2);
       expect(actions[0].type).toEqual(DELETE_USER_PENDING);
       expect(actions[0].payload).toBe(userZaphod);
       expect(actions[1].type).toEqual(DELETE_USER_SUCCESS);
+    });
+  });
+
+  it("should call the callback, after successful delete", () => {
+    fetchMock.deleteOnce("http://localhost:8081/scm/api/rest/v2/users/zaphod", {
+      status: 204
+    });
+
+    let called = false;
+    const callMe = () => {
+      called = true;
+    };
+
+    const store = mockStore({});
+    return store.dispatch(deleteUser(userZaphod, callMe)).then(() => {
+      expect(called).toBeTruthy();
     });
   });
 

@@ -1,10 +1,9 @@
 // @flow
 import React from "react";
-import { translate } from "react-i18next";
-import type { User } from "../types/User";
-import { InputField, Checkbox } from "../../components/forms";
-import { SubmitButton } from "../../components/buttons";
-import Loading from "../../components/Loading";
+import {translate} from "react-i18next";
+import type {User} from "../types/User";
+import {Checkbox, InputField} from "../../components/forms";
+import {SubmitButton} from "../../components/buttons";
 
 type Props = {
   submitForm: User => void,

@@ -1,9 +1,9 @@
 // @flow
-import { apiClient } from "../../apiclient";
-import type { User } from "../types/User";
-import type { UserEntry } from "../types/UserEntry";
-import { Dispatch, combineReducers } from "redux";
-import type { Action } from "../../types/Action";
+import {apiClient} from "../../apiclient";
+import type {User} from "../types/User";
+import type {UserEntry} from "../types/UserEntry";
+import {combineReducers, Dispatch} from "redux";
+import type {Action} from "../../types/Action";
 
 export const FETCH_USERS_PENDING = "scm/users/FETCH_USERS_PENDING";
 export const FETCH_USERS_SUCCESS = "scm/users/FETCH_USERS_SUCCESS";
@@ -173,13 +173,16 @@ export function createUserFailure(user: User, err: Error): Action {
 
 //modify user
 
-export function modifyUser(user: User) {
+export function modifyUser(user: User, callback?: () => void) {
   return function(dispatch: Dispatch) {
     dispatch(modifyUserPending(user));
     return apiClient
       .putWithContentType(user._links.update.href, user, CONTENT_TYPE_USER)
       .then(() => {
         dispatch(modifyUserSuccess(user));
+        if (callback) {
+          callback();
+        }
       })
       .catch(err => {
         dispatch(modifyUserFailure(user, err));
@@ -213,13 +216,16 @@ export function modifyUserFailure(user: User, error: Error): Action {
 
 //delete user
 
-export function deleteUser(user: User) {
+export function deleteUser(user: User, callback?: () => void) {
   return function(dispatch: any) {
     dispatch(deleteUserPending(user));
     return apiClient
       .delete(user._links.delete.href)
       .then(() => {
         dispatch(deleteUserSuccess(user));
+        if (callback) {
+          callback();
+        }
       })
       .catch(cause => {
         const error = new Error(
