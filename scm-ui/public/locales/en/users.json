@@ -38,5 +38,13 @@
     "actions-label": "Actions",
     "information-label": "Information",
     "back-label": "Back"
+  },
+  "validation": {
+    "mail-invalid": "This email is invalid",
+    "name-invalid": "This name is invalid",
+    "displayname-invalid": "This displayname is invalid",
+    "password-invalid": "Password has to be at least six characters",
+    "passwordValidation-invalid": "Passwords have to be the same",
+    "validatePassword": "Please validate password here"
   }
 }
