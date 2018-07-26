@@ -1,9 +1,9 @@
 // @flow
-import {apiClient} from "../../apiclient";
-import type {User} from "../types/User";
-import type {UserEntry} from "../types/UserEntry";
-import {combineReducers, Dispatch} from "redux";
-import type {Action} from "../../types/Action";
+import { apiClient } from "../../apiclient";
+import type { User } from "../types/User";
+import type { UserEntry } from "../types/UserEntry";
+import { combineReducers, Dispatch } from "redux";
+import type { Action } from "../../types/Action";
 
 export const FETCH_USERS_PENDING = "scm/users/FETCH_USERS_PENDING";
 export const FETCH_USERS_SUCCESS = "scm/users/FETCH_USERS_SUCCESS";
