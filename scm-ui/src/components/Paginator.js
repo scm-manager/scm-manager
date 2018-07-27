@@ -26,15 +26,17 @@ class Paginator extends React.Component<Props> {
   }
 
   renderPreviousButton() {
+    const { t } = this.props;
     return this.renderButton(
       "pagination-previous",
-      "paginator.previous",
+      t("paginator.previous"),
       "prev"
     );
   }
 
   renderNextButton() {
-    return this.renderButton("pagination-next", "paginator.next", "next");
+    const { t } = this.props;
+    return this.renderButton("pagination-next", t("paginator.next"), "next");
   }
 
   renderLastButton() {
@@ -47,11 +49,10 @@ class Paginator extends React.Component<Props> {
   }
 
   renderButton(className: string, label: string, linkType: string) {
-    const { t } = this.props;
     return (
       <Button
         className={className}
-        label={t(label)}
+        label={label}
         disabled={this.isLinkUnavailable(linkType)}
         action={this.createAction(linkType)}
       />
