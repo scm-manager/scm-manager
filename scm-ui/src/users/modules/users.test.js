@@ -38,7 +38,9 @@ import {
   deleteUserSuccess,
   fetchUsersPending,
   fetchUserPending,
-  fetchUserFailure
+  fetchUserFailure,
+  selectListAsCollection,
+  isPermittedToCreateUsers
 } from "./users";
 
 import reducer from "./users";
@@ -359,10 +361,12 @@ describe("users reducer", () => {
       entries: ["zaphod", "ford"],
       error: null,
       loading: false,
-      userCreatePermission: true,
-      page: 0,
-      pageTotal: 1,
-      _links: responseBody._links
+      entry: {
+        userCreatePermission: true,
+        page: 0,
+        pageTotal: 1,
+        _links: responseBody._links
+      }
     });
 
     expect(newState.byNames).toEqual({
@@ -374,7 +378,7 @@ describe("users reducer", () => {
       }
     });
 
-    expect(newState.list.userCreatePermission).toBeTruthy();
+    expect(newState.list.entry.userCreatePermission).toBeTruthy();
   });
 
   test("should update state correctly according to DELETE_USER action", () => {
@@ -464,10 +468,10 @@ describe("users reducer", () => {
     expect(newState.byNames["ford"]).toBeDefined();
   });
 
-  it("should set userCreatePermission to true if update link is present", () => {
+  it("should set userCreatePermission to true if create link is present", () => {
     const newState = reducer({}, fetchUsersSuccess(responseBody));
 
-    expect(newState.list.userCreatePermission).toBeTruthy();
+    expect(newState.list.entry.userCreatePermission).toBeTruthy();
   });
 
   it("should update state correctly according to CREATE_USER_PENDING action", () => {
@@ -575,5 +579,48 @@ describe("users reducer", () => {
     expect(newState.byNames["ford"].loading).toBeFalsy();
     expect(newState.byNames["ford"].error).toBe(error);
     expect(newState.byNames["ford"].entry).toBeFalsy();
+  });
+});
+
+describe("selector tests", () => {
+  it("should return an empty object", () => {
+    expect(selectListAsCollection({})).toEqual({});
+    expect(selectListAsCollection({ users: { a: "a" } })).toEqual({});
+  });
+
+  it("should return a state slice collection", () => {
+    const state = {
+      users: {
+        list: {
+          loading: false
+        }
+      }
+    };
+    expect(selectListAsCollection(state)).toEqual({ loading: false });
+  });
+
+  it("should return false", () => {
+    expect(isPermittedToCreateUsers({})).toBe(false);
+    expect(isPermittedToCreateUsers({ users: { list: { entry: {} } } })).toBe(
+      false
+    );
+    expect(
+      isPermittedToCreateUsers({
+        users: { list: { entry: { userCreatePermission: false } } }
+      })
+    ).toBe(false);
+  });
+
+  it("should return true", () => {
+    const state = {
+      users: {
+        list: {
+          entry: {
+            userCreatePermission: true
+          }
+        }
+      }
+    };
+    expect(isPermittedToCreateUsers(state)).toBe(true);
   });
 });

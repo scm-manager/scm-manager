@@ -4,6 +4,7 @@ import type { User } from "../types/User";
 import type { UserEntry } from "../types/UserEntry";
 import { Dispatch } from "redux";
 import type { Action } from "../../types/Action";
+import type { PageCollectionStateSlice } from "../../types/Collection";
 
 export const FETCH_USERS_PENDING = "scm/users/FETCH_USERS_PENDING";
 export const FETCH_USERS_SUCCESS = "scm/users/FETCH_USERS_SUCCESS";
@@ -345,12 +346,14 @@ export default function reducer(state: any = {}, action: any = {}) {
         ...state,
         list: {
           error: null,
-          entries: userNames,
           loading: false,
-          userCreatePermission: action.payload._links.create ? true : false,
-          page: action.payload.page,
-          pageTotal: action.payload.pageTotal,
-          _links: action.payload._links
+          entries: userNames,
+          entry: {
+            userCreatePermission: action.payload._links.create ? true : false,
+            page: action.payload.page,
+            pageTotal: action.payload.pageTotal,
+            _links: action.payload._links
+          }
         },
         byNames
       };
@@ -458,8 +461,31 @@ export default function reducer(state: any = {}, action: any = {}) {
 
 // selectors
 
-export const selectList = (state: Object) => {
-  if (state.users && state.users.list && state.users.list._links) {
+const selectList = (state: Object) => {
+  if (state.users && state.users.list) {
     return state.users.list;
   }
+  return {};
+};
+
+const selectListEntry = (state: Object) => {
+  const list = selectList(state);
+  if (list.entry) {
+    return list.entry;
+  }
+  return {};
+};
+
+export const selectListAsCollection = (
+  state: Object
+): PageCollectionStateSlice => {
+  return selectList(state);
+};
+
+export const isPermittedToCreateUsers = (state: Object): boolean => {
+  const permission = selectListEntry(state).userCreatePermission;
+  if (permission) {
+    return true;
+  }
+  return false;
 };
