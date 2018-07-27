@@ -1,9 +1,10 @@
 // @flow
 import React from "react";
-import {translate} from "react-i18next";
-import type {User} from "../types/User";
-import {Checkbox, InputField} from "../../components/forms";
-import {SubmitButton} from "../../components/buttons";
+import { translate } from "react-i18next";
+import type { User } from "../types/User";
+import { Checkbox, InputField } from "../../components/forms";
+import { SubmitButton } from "../../components/buttons";
+import * as validator from "./userValidation";
 
 type Props = {
   submitForm: User => void,
@@ -21,11 +22,10 @@ type State = {
   validatePassword: string
 };
 
-
 class UserForm extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    
+
     this.state = {
       user: {
         name: "",
@@ -46,7 +46,7 @@ class UserForm extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    this.setState({ user: {...this.props.user} });
+    this.setState({ user: { ...this.props.user } });
   }
 
   submit = (event: Event) => {
@@ -57,8 +57,14 @@ class UserForm extends React.Component<Props, State> {
   render() {
     const { t } = this.props;
     const user = this.state.user;
-    const ButtonClickable = (this.state.validatePasswordError || this.state.nameValidationError || this.state.mailValidationError || this.state.validatePasswordError
-    || this.state.displayNameValidationError || user.name === undefined|| user.displayName === undefined);
+    const ButtonClickable =
+      this.state.validatePasswordError ||
+      this.state.nameValidationError ||
+      this.state.mailValidationError ||
+      this.state.validatePasswordError ||
+      this.state.displayNameValidationError ||
+      user.name === undefined ||
+      user.displayName === undefined;
     let nameField = null;
     if (!this.props.user) {
       nameField = (
@@ -66,8 +72,8 @@ class UserForm extends React.Component<Props, State> {
           label={t("user.name")}
           onChange={this.handleUsernameChange}
           value={user ? user.name : ""}
-          validationError= {this.state.nameValidationError}
-          errorMessage= {t("validation.name-invalid")}
+          validationError={this.state.nameValidationError}
+          errorMessage={t("validation.name-invalid")}
         />
       );
     }
@@ -85,7 +91,7 @@ class UserForm extends React.Component<Props, State> {
           label={t("user.mail")}
           onChange={this.handleEmailChange}
           value={user ? user.mail : ""}
-          validationError= {this.state.mailValidationError}
+          validationError={this.state.mailValidationError}
           errorMessage={t("validation.mail-invalid")}
         />
         <InputField
@@ -114,47 +120,68 @@ class UserForm extends React.Component<Props, State> {
           onChange={this.handleActiveChange}
           checked={user ? user.active : false}
         />
-        <SubmitButton disabled={ButtonClickable} label={t("user-form.submit")} />
+        <SubmitButton
+          disabled={ButtonClickable}
+          label={t("user-form.submit")}
+        />
       </form>
     );
   }
 
-  
   handleUsernameChange = (name: string) => {
-    const REGEX_NAME = /^[^ ][A-z0-9\\.\-_@ ]*[^ ]$/;
-    this.setState(  {nameValidationError: !REGEX_NAME.test(name),  user : {...this.state.user, name} } );
+    this.setState({
+      nameValidationError: !validator.isNameValid(name),
+      user: { ...this.state.user, name }
+    });
   };
 
-  handleDisplayNameChange = (displayName: string) => {    
-    const REGEX_NAME = /^[^ ][A-z0-9\\.\-_@ ]*[^ ]$/;
-    this.setState({displayNameValidationError: !REGEX_NAME.test(displayName),  user : {...this.state.user, displayName} } );
+  handleDisplayNameChange = (displayName: string) => {
+    this.setState({
+      displayNameValidationError: !validator.isDisplayNameValid(displayName),
+      user: { ...this.state.user, displayName }
+    });
   };
 
   handleEmailChange = (mail: string) => {
-    const REGEX_MAIL = /^[A-z0-9][\w.-]*@[A-z0-9][\w\-\\.]*\.[A-z0-9][A-z0-9-]+$/;
-    this.setState(  {mailValidationError: !REGEX_MAIL.test(mail),  user : {...this.state.user, mail} } );
+    this.setState({
+      mailValidationError: !validator.isMailValid(mail),
+      user: { ...this.state.user, mail }
+    });
   };
 
   handlePasswordChange = (password: string) => {
-    const validatePasswordError = !this.checkPasswords(password, this.state.validatePassword);
-    this.setState(  {validatePasswordError: (password.length < 6) || (password.length > 32),  passwordValidationError: validatePasswordError, user : {...this.state.user, password} } );
+    const validatePasswordError = !this.checkPasswords(
+      password,
+      this.state.validatePassword
+    );
+    this.setState({
+      validatePasswordError: !validator.isPasswordValid(password),
+      passwordValidationError: validatePasswordError,
+      user: { ...this.state.user, password }
+    });
   };
 
   handlePasswordValidationChange = (validatePassword: string) => {
-    const validatePasswordError = this.checkPasswords(this.state.user.password, validatePassword)
-    this.setState({ validatePassword, passwordValidationError: !validatePasswordError });
+    const validatePasswordError = this.checkPasswords(
+      this.state.user.password,
+      validatePassword
+    );
+    this.setState({
+      validatePassword,
+      passwordValidationError: !validatePasswordError
+    });
   };
 
   checkPasswords = (password1: string, password2: string) => {
-    return (password1 === password2);
-  }
+    return password1 === password2;
+  };
 
   handleAdminChange = (admin: boolean) => {
-    this.setState({ user : {...this.state.user, admin} });
+    this.setState({ user: { ...this.state.user, admin } });
   };
 
   handleActiveChange = (active: boolean) => {
-    this.setState({ user : {...this.state.user, active} });
+    this.setState({ user: { ...this.state.user, active } });
   };
 }
 
