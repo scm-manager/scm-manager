@@ -52,6 +52,13 @@ class UserForm extends React.Component<Props, State> {
     }
   }
 
+  isFalsy(value) {
+    if (!value) {
+      return true;
+    }
+    return false;
+  }
+
   isValid = () => {
     const user = this.state.user;
     return !(
@@ -60,8 +67,8 @@ class UserForm extends React.Component<Props, State> {
       this.state.mailValidationError ||
       this.state.validatePasswordError ||
       this.state.displayNameValidationError ||
-      user.name === undefined ||
-      user.displayName === undefined
+      this.isFalsy(user.name) ||
+      this.isFalsy(user.displayName)
     );
   };
 
