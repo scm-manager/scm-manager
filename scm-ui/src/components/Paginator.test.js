@@ -224,4 +224,31 @@ describe("paginator rendering tests", () => {
     expect(lastButton.disabled).toBeFalsy();
     expect(lastButton.label).toBe("148");
   });
+
+  it("should call the function with the last previous url", () => {
+    const collection = {
+      page: 41,
+      pageTotal: 148,
+      _links: {
+        first: dummyLink,
+        prev: {
+          href: "https://www.scm-manager.org"
+        },
+        next: dummyLink,
+        last: dummyLink
+      }
+    };
+
+    let urlToOpen;
+    const callMe = (url: string) => {
+      urlToOpen = url;
+    };
+
+    const paginator = mount(
+      <Paginator collection={collection} onPageChange={callMe} />
+    );
+    paginator.find("Button.pagination-previous").simulate("click");
+
+    expect(urlToOpen).toBe("https://www.scm-manager.org");
+  });
 });
