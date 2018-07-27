@@ -9,6 +9,7 @@ import * as validator from "./userValidation";
 type Props = {
   submitForm: User => void,
   user?: User,
+  loading?: boolean,
   t: string => string
 };
 
@@ -80,7 +81,7 @@ class UserForm extends React.Component<Props, State> {
   };
 
   render() {
-    const { t } = this.props;
+    const { loading, t } = this.props;
     const user = this.state.user;
 
     let nameField = null;
@@ -140,6 +141,7 @@ class UserForm extends React.Component<Props, State> {
         />
         <SubmitButton
           disabled={!this.isValid()}
+          loading={loading}
           label={t("user-form.submit")}
         />
       </form>

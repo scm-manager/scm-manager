@@ -38,10 +38,12 @@ class AddUser extends React.Component<Props> {
       <Page
         title={t("add-user.title")}
         subtitle={t("add-user.subtitle")}
-        loading={loading}
         error={error}
       >
-        <UserForm submitForm={user => this.createUser(user)} />
+        <UserForm
+          submitForm={user => this.createUser(user)}
+          loading={loading}
+        />
       </Page>
     );
   }
