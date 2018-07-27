@@ -49,22 +49,30 @@ class UserForm extends React.Component<Props, State> {
     this.setState({ user: { ...this.props.user } });
   }
 
-  submit = (event: Event) => {
-    event.preventDefault();
-    this.props.submitForm(this.state.user);
-  };
-
-  render() {
-    const { t } = this.props;
+  isValid = () => {
     const user = this.state.user;
-    const ButtonClickable =
+    return !(
       this.state.validatePasswordError ||
       this.state.nameValidationError ||
       this.state.mailValidationError ||
       this.state.validatePasswordError ||
       this.state.displayNameValidationError ||
       user.name === undefined ||
-      user.displayName === undefined;
+      user.displayName === undefined
+    );
+  };
+
+  submit = (event: Event) => {
+    event.preventDefault();
+    if (this.isValid()) {
+      this.props.submitForm(this.state.user);
+    }
+  };
+
+  render() {
+    const { t } = this.props;
+    const user = this.state.user;
+
     let nameField = null;
     if (!this.props.user) {
       nameField = (
@@ -121,7 +129,7 @@ class UserForm extends React.Component<Props, State> {
           checked={user ? user.active : false}
         />
         <SubmitButton
-          disabled={ButtonClickable}
+          disabled={!this.isValid()}
           label={t("user-form.submit")}
         />
       </form>
