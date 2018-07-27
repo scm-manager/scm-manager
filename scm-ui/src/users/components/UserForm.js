@@ -46,7 +46,10 @@ class UserForm extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    this.setState({ user: { ...this.props.user } });
+    const { user } = this.props;
+    if (user) {
+      this.setState({ user: { ...user } });
+    }
   }
 
   isValid = () => {
