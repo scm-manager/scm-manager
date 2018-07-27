@@ -1,8 +1,5 @@
 package sonia.scm.api.v2.resources;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
 import com.google.inject.Inject;
 import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
@@ -26,11 +23,7 @@ import javax.ws.rs.core.Response;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.List;
 
-/**
- * Created by masuewer on 04.07.18.
- */
 @Path(AuthenticationResource.PATH)
 public class AuthenticationResource {
 
@@ -61,7 +54,7 @@ public class AuthenticationResource {
   public Response authenticateViaForm(
     @Context HttpServletRequest request,
     @Context HttpServletResponse response,
-    @BeanParam AuthenticationRequest authentication
+    @BeanParam AuthenticationRequestDto authentication
   ) {
     return authenticate(request, response, authentication);
   }
@@ -78,7 +71,7 @@ public class AuthenticationResource {
   public Response authenticateViaJSONBody(
     @Context HttpServletRequest request,
     @Context HttpServletResponse response,
-    AuthenticationRequest authentication
+    AuthenticationRequestDto authentication
     ) {
     return authenticate(request, response, authentication);
   }
@@ -86,7 +79,7 @@ public class AuthenticationResource {
   private Response authenticate(
     HttpServletRequest request,
     HttpServletResponse response,
-    AuthenticationRequest authentication
+    AuthenticationRequestDto authentication
   ) {
     authentication.validate();
 
@@ -178,51 +171,6 @@ public class AuthenticationResource {
 
     // TODO anonymous access ??
     return Response.noContent().build();
-  }
-
-  public static class AuthenticationRequest {
-
-    @FormParam("grant_type")
-    @JsonProperty("grant_type")
-    private String grantType;
-
-    @FormParam("username")
-    private String username;
-
-    @FormParam("password")
-    private String password;
-
-    @FormParam("cookie")
-    private boolean cookie;
-
-    @FormParam("scope")
-    private List<String> scope;
-
-    public String getGrantType() {
-      return grantType;
-    }
-
-    public String getUsername() {
-      return username;
-    }
-
-    public String getPassword() {
-      return password;
-    }
-
-    public boolean isCookie() {
-      return cookie;
-    }
-
-    public List<String> getScope() {
-      return scope;
-    }
-
-    public void validate() {
-      Preconditions.checkArgument(!Strings.isNullOrEmpty(grantType), "grant_type parameter is required");
-      Preconditions.checkArgument(!Strings.isNullOrEmpty(username), "username parameter is required");
-      Preconditions.checkArgument(!Strings.isNullOrEmpty(password), "password parameter is required");
-    }
   }
 
 

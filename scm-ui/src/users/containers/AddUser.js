@@ -6,8 +6,10 @@ import type { User } from "../types/User";
 import type { History } from "history";
 import { createUser } from "../modules/users";
 import { Page } from "../../components/layout";
+import { translate } from "react-i18next";
 
 type Props = {
+  t: string => string,
   addUser: (user: User, callback?: () => void) => void,
   loading?: boolean,
   error?: Error,
@@ -25,13 +27,12 @@ class AddUser extends React.Component<Props> {
   };
 
   render() {
-    const { loading, error } = this.props;
+    const { t, loading, error } = this.props;
 
-    // TODO i18n
     return (
       <Page
-        title="Create User"
-        subtitle="Create a new user"
+        title={t("add-user.title")}
+        subtitle={t("add-user.subtitle")}
         loading={loading}
         error={error}
       >
@@ -59,4 +60,4 @@ const mapStateToProps = (state, ownProps) => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(AddUser);
+)(translate("users")(AddUser));

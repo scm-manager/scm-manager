@@ -1,11 +1,11 @@
 //@flow
 import React from "react";
-import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
+import {connect} from "react-redux";
+import {withRouter} from "react-router-dom";
 import UserForm from "./../components/UserForm";
-import type { User } from "../types/User";
-import { modifyUser } from "../modules/users";
-import type { History } from "history";
+import type {User} from "../types/User";
+import {modifyUser} from "../modules/users";
+import type {History} from "history";
 
 type Props = {
   user: User,

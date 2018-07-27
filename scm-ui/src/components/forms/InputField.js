@@ -1,5 +1,6 @@
 //@flow
 import React from "react";
+import classNames from "classnames";
 
 type Props = {
   label?: string,
@@ -7,7 +8,9 @@ type Props = {
   value?: string,
   type?: string,
   autofocus?: boolean,
-  onChange: string => void
+  onChange: string => void,
+  validationError: boolean,
+  errorMessage: string
 };
 
 class InputField extends React.Component<Props> {
@@ -37,8 +40,9 @@ class InputField extends React.Component<Props> {
   };
 
   render() {
-    const { type, placeholder, value } = this.props;
-
+    const { type, placeholder, value, validationError, errorMessage } = this.props;
+    const errorView = validationError ? "is-danger" : "";
+    const helper = validationError ? <p className="help is-danger">{errorMessage}</p> : "";
     return (
       <div className="field">
         {this.renderLabel()}
@@ -47,13 +51,17 @@ class InputField extends React.Component<Props> {
             ref={input => {
               this.field = input;
             }}
-            className="input"
+            className={ classNames(
+              "input",
+              errorView
+            )}
             type={type}
             placeholder={placeholder}
             value={value}
             onChange={this.handleInput}
           />
         </div>
+        {helper}
       </div>
     );
   }
