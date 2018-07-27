@@ -16,6 +16,7 @@ export const FETCH_USER_FAILURE = "scm/users/FETCH_USER_FAILURE";
 export const CREATE_USER_PENDING = "scm/users/CREATE_USER_PENDING";
 export const CREATE_USER_SUCCESS = "scm/users/CREATE_USER_SUCCESS";
 export const CREATE_USER_FAILURE = "scm/users/CREATE_USER_FAILURE";
+export const CREATE_USER_RESET = "scm/users/CREATE_USER_RESET";
 
 export const MODIFY_USER_PENDING = "scm/users/MODIFY_USER_PENDING";
 export const MODIFY_USER_SUCCESS = "scm/users/MODIFY_USER_SUCCESS";
@@ -170,6 +171,12 @@ export function createUserFailure(user: User, err: Error): Action {
     type: CREATE_USER_FAILURE,
     payload: err,
     user
+  };
+}
+
+export function createUserReset() {
+  return {
+    type: CREATE_USER_RESET
   };
 }
 
@@ -436,17 +443,15 @@ function createReducer(state: any = {}, action: any = {}) {
   switch (action.type) {
     case CREATE_USER_PENDING:
       return {
-        ...state,
         loading: true
       };
     case CREATE_USER_SUCCESS:
+    case CREATE_USER_RESET:
       return {
-        ...state,
         loading: false
       };
     case CREATE_USER_FAILURE:
       return {
-        ...state,
         loading: false,
         error: action.payload
       };

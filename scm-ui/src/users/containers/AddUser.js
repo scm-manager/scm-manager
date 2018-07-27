@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import UserForm from "./../components/UserForm";
 import type { User } from "../types/User";
 import type { History } from "history";
-import { createUser } from "../modules/users";
+import { createUser, createUserReset } from "../modules/users";
 import { Page } from "../../components/layout";
 import { translate } from "react-i18next";
 
@@ -13,10 +13,15 @@ type Props = {
   addUser: (user: User, callback?: () => void) => void,
   loading?: boolean,
   error?: Error,
-  history: History
+  history: History,
+  resetForm: () => void
 };
 
 class AddUser extends React.Component<Props> {
+  componentDidMount() {
+    this.props.resetForm();
+  }
+
   userCreated = () => {
     const { history } = this.props;
     history.push("/users");
@@ -46,6 +51,9 @@ const mapDispatchToProps = dispatch => {
   return {
     addUser: (user: User, callback?: () => void) => {
       dispatch(createUser(user, callback));
+    },
+    resetForm: () => {
+      dispatch(createUserReset());
     }
   };
 };

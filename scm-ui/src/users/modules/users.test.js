@@ -11,6 +11,7 @@ import reducer, {
   createUserFailure,
   createUserPending,
   createUserSuccess,
+  createUserReset,
   DELETE_USER_FAILURE,
   DELETE_USER_PENDING,
   DELETE_USER_SUCCESS,
@@ -504,6 +505,15 @@ describe("users reducer", () => {
     );
     expect(newState.create.loading).toBeFalsy();
     expect(newState.create.error).toEqual(new Error("kaputt kaputt"));
+  });
+
+  it("should reset the user create form", () => {
+    const newState = reducer(
+      { create: { loading: true, error: new Error("kaputt kaputt") } },
+      createUserReset()
+    );
+    expect(newState.create.loading).toBeFalsy();
+    expect(newState.create.error).toBeFalsy();
   });
 
   it("should update state according to FETCH_USER_PENDING action", () => {
