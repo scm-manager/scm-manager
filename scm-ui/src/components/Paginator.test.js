@@ -1,6 +1,5 @@
 // @flow
 import React from "react";
-import type { PagedCollection } from "../types/Collection";
 import { mount, shallow } from "enzyme";
 import "../tests/enzyme";
 import "../tests/i18n";
