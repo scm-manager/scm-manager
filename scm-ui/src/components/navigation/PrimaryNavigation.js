@@ -20,6 +20,7 @@ class PrimaryNavigation extends React.Component<Props> {
           />
           <PrimaryNavigationLink
             to="/users"
+            match="/(user|users)"
             label={t("primary-navigation.users")}
           />
           <PrimaryNavigationLink

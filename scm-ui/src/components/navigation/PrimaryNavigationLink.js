@@ -5,6 +5,7 @@ import { Route, Link } from "react-router-dom";
 type Props = {
   to: string,
   label: string,
+  match?: string,
   activeOnlyWhenExact?: boolean
 };
 
@@ -19,9 +20,14 @@ class PrimaryNavigationLink extends React.Component<Props> {
   };
 
   render() {
-    const { to, activeOnlyWhenExact } = this.props;
+    const { to, match, activeOnlyWhenExact } = this.props;
+    const path = match ? match : to;
     return (
-      <Route path={to} exact={activeOnlyWhenExact} children={this.renderLink} />
+      <Route
+        path={path}
+        exact={activeOnlyWhenExact}
+        children={this.renderLink}
+      />
     );
   }
 }
