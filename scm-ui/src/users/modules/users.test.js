@@ -15,21 +15,38 @@ import reducer, {
   deleteUserSuccess,
   FETCH_USER_FAILURE,
   FETCH_USER_PENDING,
+  isFetchUserPending,
   FETCH_USER_SUCCESS,
   FETCH_USERS_FAILURE,
   FETCH_USERS_PENDING,
   FETCH_USERS_SUCCESS,
   fetchUser,
   fetchUserSuccess,
+  getFetchUserFailure,
   fetchUsers,
   fetchUsersSuccess,
+  isFetchUsersPending,
   selectListAsCollection,
   isPermittedToCreateUsers,
+  MODIFY_USER,
   MODIFY_USER_FAILURE,
   MODIFY_USER_PENDING,
   MODIFY_USER_SUCCESS,
   modifyUser,
-  modifyUserSuccess
+  modifyUserSuccess,
+  getUsersFromState,
+  FETCH_USERS,
+  getFetchUsersFailure,
+  FETCH_USER,
+  CREATE_USER,
+  isCreateUserPending,
+  getCreateUserFailure,
+  getUserByName,
+  isModifyUserPending,
+  getModifyUserFailure,
+  DELETE_USER,
+  isDeleteUserPending,
+  getDeleteUserFailure
 } from "./users";
 
 const userZaphod = {
@@ -106,6 +123,8 @@ const response = {
 };
 
 const USERS_URL = "/scm/api/rest/v2/users";
+
+const error = new Error("KAPUTT");
 
 describe("users fetch()", () => {
   const mockStore = configureMockStore([thunk]);
@@ -456,5 +475,166 @@ describe("selector tests", () => {
       }
     };
     expect(isPermittedToCreateUsers(state)).toBe(true);
+  });
+
+  it("should get users from state", () => {
+    const state = {
+      users: {
+        list: {
+          entries: ["a", "b"]
+        },
+        byNames: {
+          a: { name: "a" },
+          b: { name: "b" }
+        }
+      }
+    };
+    expect(getUsersFromState(state)).toEqual([{ name: "a" }, { name: "b" }]);
+  });
+
+  it("should return true, when fetch users is pending", () => {
+    const state = {
+      pending: {
+        [FETCH_USERS]: true
+      }
+    };
+    expect(isFetchUsersPending(state)).toEqual(true);
+  });
+
+  it("should return false, when fetch users is not pending", () => {
+    expect(isFetchUsersPending({})).toEqual(false);
+  });
+
+  it("should return error when fetch users did fail", () => {
+    const state = {
+      failure: {
+        [FETCH_USERS]: error
+      }
+    };
+    expect(getFetchUsersFailure(state)).toEqual(error);
+  });
+
+  it("should return undefined when fetch users did not fail", () => {
+    expect(getFetchUsersFailure({})).toBe(undefined);
+  });
+
+  it("should return true if create user is pending", () => {
+    const state = {
+      pending: {
+        [CREATE_USER]: true
+      }
+    };
+    expect(isCreateUserPending(state)).toBe(true);
+  });
+
+  it("should return false if create user is not pending", () => {
+    const state = {
+      pending: {
+        [CREATE_USER]: false
+      }
+    };
+    expect(isCreateUserPending(state)).toBe(false);
+  });
+
+  it("should return error when create user did fail", () => {
+    const state = {
+      failure: {
+        [CREATE_USER]: error
+      }
+    };
+    expect(getCreateUserFailure(state)).toEqual(error);
+  });
+
+  it("should return undefined when create user did not fail", () => {
+    expect(getCreateUserFailure({})).toBe(undefined);
+  });
+
+  it("should return user ford", () => {
+    const state = {
+      users: {
+        byNames: {
+          ford: userFord
+        }
+      }
+    };
+    expect(getUserByName(state, "ford")).toEqual(userFord);
+  });
+
+  it("should return true, when fetch user zaphod is pending", () => {
+    const state = {
+      pending: {
+        [FETCH_USER + "/zaphod"]: true
+      }
+    };
+    expect(isFetchUserPending(state, "zaphod")).toEqual(true);
+  });
+
+  it("should return false, when fetch user zaphod is not pending", () => {
+    expect(isFetchUserPending({}, "zaphod")).toEqual(false);
+  });
+
+  it("should return error when fetch user zaphod did fail", () => {
+    const state = {
+      failure: {
+        [FETCH_USER + "/zaphod"]: error
+      }
+    };
+    expect(getFetchUserFailure(state, "zaphod")).toEqual(error);
+  });
+
+  it("should return undefined when fetch user zaphod did not fail", () => {
+    expect(getFetchUserFailure({}, "zaphod")).toBe(undefined);
+  });
+
+  it("should return true, when modify user ford is pending", () => {
+    const state = {
+      pending: {
+        [MODIFY_USER + "/ford"]: true
+      }
+    };
+    expect(isModifyUserPending(state, "ford")).toEqual(true);
+  });
+
+  it("should return false, when modify user ford is not pending", () => {
+    expect(isModifyUserPending({}, "ford")).toEqual(false);
+  });
+
+  it("should return error when modify user ford did fail", () => {
+    const state = {
+      failure: {
+        [MODIFY_USER + "/ford"]: error
+      }
+    };
+    expect(getModifyUserFailure(state, "ford")).toEqual(error);
+  });
+
+  it("should return undefined when modify user ford did not fail", () => {
+    expect(getModifyUserFailure({}, "ford")).toBe(undefined);
+  });
+
+  it("should return true, when delete user zaphod is pending", () => {
+    const state = {
+      pending: {
+        [DELETE_USER + "/zaphod"]: true
+      }
+    };
+    expect(isDeleteUserPending(state, "zaphod")).toEqual(true);
+  });
+
+  it("should return false, when delete user zaphod is not pending", () => {
+    expect(isDeleteUserPending({}, "zaphod")).toEqual(false);
+  });
+
+  it("should return error when delete user zaphod did fail", () => {
+    const state = {
+      failure: {
+        [DELETE_USER + "/zaphod"]: error
+      }
+    };
+    expect(getDeleteUserFailure(state, "zaphod")).toEqual(error);
+  });
+
+  it("should return undefined when delete user zaphod did not fail", () => {
+    expect(getDeleteUserFailure({}, "zaphod")).toBe(undefined);
   });
 });
