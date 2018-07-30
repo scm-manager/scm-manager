@@ -5,14 +5,10 @@ import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.DisabledAccountException;
-import org.apache.shiro.authc.ExcessiveAttemptsException;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.api.rest.RestActionResult;
 import sonia.scm.security.*;
-import sonia.scm.util.HttpUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,9 +16,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
 
 @Path(AuthenticationResource.PATH)
 public class AuthenticationResource {
@@ -106,38 +99,6 @@ public class AuthenticationResource {
         res = Response.ok( token.compact() ).build();
       }
     }
-    catch (DisabledAccountException ex)
-    {
-      if (LOG.isTraceEnabled())
-      {
-        LOG.trace(
-          "authentication failed, account user ".concat(authentication.getUsername()).concat(
-            " is locked"), ex);
-      }
-      else
-      {
-        LOG.warn("authentication failed, account {} is locked", authentication.getUsername());
-      }
-
-      res = handleFailedAuthentication(request, ex, Response.Status.FORBIDDEN,
-        WUIAuthenticationFailure.LOCKED);
-    }
-    catch (ExcessiveAttemptsException ex)
-    {
-      if (LOG.isTraceEnabled())
-      {
-        LOG.trace(
-          "authentication failed, account user ".concat(authentication.getUsername()).concat(
-            " is temporary locked"), ex);
-      }
-      else
-      {
-        LOG.warn("authentication failed, account {} is temporary locked", authentication.getUsername());
-      }
-
-      res = handleFailedAuthentication(request, ex, Response.Status.FORBIDDEN,
-        WUIAuthenticationFailure.TEMPORARY_LOCKED);
-    }
     catch (AuthenticationException ex)
     {
       if (LOG.isTraceEnabled())
@@ -149,8 +110,9 @@ public class AuthenticationResource {
         LOG.warn("authentication failed for user {}", authentication.getUsername());
       }
 
-      res = handleFailedAuthentication(request, ex, Response.Status.UNAUTHORIZED,
-        WUIAuthenticationFailure.WRONG_CREDENTIALS);
+      // TODO DisabledAccountException, ExcessiveAttemptsException for ui?
+
+      return Response.status(Response.Status.UNAUTHORIZED).build();
     }
 
     return res;
@@ -173,47 +135,6 @@ public class AuthenticationResource {
 
     // TODO anonymous access ??
     return Response.noContent().build();
-  }
-
-
-  private Response handleFailedAuthentication(HttpServletRequest request,
-                                              AuthenticationException ex, Response.Status status,
-                                              WUIAuthenticationFailure failure) {
-    Response response;
-
-    if (HttpUtil.isWUIRequest(request)) {
-      response = Response.ok(new WUIAuthenticationFailedResult(failure,
-        ex.getMessage())).build();
-    } else {
-      response = Response.status(status).build();
-    }
-
-    return response;
-  }
-
-  private enum WUIAuthenticationFailure { LOCKED, TEMPORARY_LOCKED, WRONG_CREDENTIALS }
-
-  @XmlRootElement(name = "result")
-  @XmlAccessorType(XmlAccessType.FIELD)
-  private static final class WUIAuthenticationFailedResult extends RestActionResult {
-
-    private final WUIAuthenticationFailure failure;
-    private final String message;
-
-    public WUIAuthenticationFailedResult(WUIAuthenticationFailure failure, String message) {
-      super(false);
-      this.failure = failure;
-      this.message = message;
-    }
-
-    public WUIAuthenticationFailure getFailure() {
-      return failure;
-    }
-
-    public String getMessage() {
-      return message;
-    }
-
   }
 
 }
