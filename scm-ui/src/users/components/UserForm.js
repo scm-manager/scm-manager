@@ -66,7 +66,7 @@ class UserForm extends React.Component<Props, State> {
       this.state.validatePasswordError ||
       this.state.nameValidationError ||
       this.state.mailValidationError ||
-      this.state.validatePasswordError ||
+      this.state.passwordValidationError ||
       this.state.displayNameValidationError ||
       this.isFalsy(user.name) ||
       this.isFalsy(user.displayName)
