@@ -6,6 +6,8 @@ import { routerReducer, routerMiddleware } from "react-router-redux";
 
 import users from "./users/modules/users";
 import auth from "./modules/auth";
+import pending from "./modules/pending";
+import failure from "./modules/failure";
 
 import type { BrowserHistory } from "history/createBrowserHistory";
 
@@ -15,6 +17,8 @@ function createReduxStore(history: BrowserHistory) {
 
   const reducer = combineReducers({
     router: routerReducer,
+    pending,
+    failure,
     users,
     auth
   });

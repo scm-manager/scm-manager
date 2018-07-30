@@ -1,5 +1,6 @@
 // @flow
 export type Action = {
   type: string,
-  payload?: any
+  payload?: any,
+  itemId?: string | number
 };
