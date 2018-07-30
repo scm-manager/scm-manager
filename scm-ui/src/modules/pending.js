@@ -1,8 +1,13 @@
 // @flow
 import type { Action } from "../types/Action";
+import * as types from "./types";
 
-const PENDING_SUFFIX = "_PENDING";
-const RESET_PATTERN = /^(.*)_(SUCCESS|FAILURE|RESET)$/;
+const PENDING_SUFFIX = "_" + types.PENDING_SUFFIX;
+const RESET_ACTIONTYPES = [
+  types.SUCCESS_SUFFIX,
+  types.FAILURE_SUFFIX,
+  types.RESET_SUFFIX
+];
 
 function removeFromState(state: Object, identifier: string) {
   let newState = {};
@@ -32,13 +37,16 @@ export default function reducer(state: Object = {}, action: Action): Object {
       [identifier]: true
     };
   } else {
-    const matches = RESET_PATTERN.exec(type);
-    if (matches) {
-      let identifier = matches[1];
-      if (action.itemId) {
-        identifier += "/" + action.itemId;
+    const index = type.lastIndexOf("_");
+    if (index > 0) {
+      const actionType = type.substring(index + 1);
+      if (RESET_ACTIONTYPES.indexOf(actionType) >= 0 || action.resetPending) {
+        let identifier = type.substring(0, index);
+        if (action.itemId) {
+          identifier += "/" + action.itemId;
+        }
+        return removeFromState(state, identifier);
       }
-      return removeFromState(state, identifier);
     }
   }
   return state;

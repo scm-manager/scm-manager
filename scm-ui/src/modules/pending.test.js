@@ -47,6 +47,16 @@ describe("pending reducer", () => {
     expect(newState["FETCH_ITEMS"]).toBeFalsy();
   });
 
+  it("should reset pending state for FETCH_ITEMS, if resetPending prop is available", () => {
+    const newState = reducer(
+      {
+        FETCH_ITEMS: true
+      },
+      { type: "FETCH_ITEMS_SOMETHING", resetPending: true }
+    );
+    expect(newState["FETCH_ITEMS"]).toBeFalsy();
+  });
+
   it("should reset pending state for FETCH_ITEMS after FETCH_ITEMS_SUCCESS, but should not affect others", () => {
     const newState = reducer(
       {

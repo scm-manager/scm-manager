@@ -3,7 +3,12 @@ import React from "react";
 import { Redirect, withRouter } from "react-router-dom";
 import injectSheet from "react-jss";
 import { translate } from "react-i18next";
-import { login } from "../modules/auth";
+import {
+  login,
+  isAuthenticated,
+  isLoginPending,
+  getLoginFailure
+} from "../modules/auth";
 import { connect } from "react-redux";
 
 import { InputField } from "../components/forms";
@@ -32,17 +37,18 @@ const styles = {
 };
 
 type Props = {
-  authenticated?: boolean,
-  loading?: boolean,
-  error?: Error,
+  authenticated: boolean,
+  loading: boolean,
+  error: Error,
 
+  // dispatcher props
+  login: (username: string, password: string) => void,
+
+  // context props
   t: string => string,
   classes: any,
-
   from: any,
-  location: any,
-
-  login: (username: string, password: string) => void
+  location: any
 };
 
 type State = {
@@ -135,7 +141,14 @@ class Login extends React.Component<Props, State> {
 }
 
 const mapStateToProps = state => {
-  return state.auth.login || {};
+  const authenticated = isAuthenticated(state);
+  const loading = isLoginPending(state);
+  const error = getLoginFailure(state);
+  return {
+    authenticated,
+    loading,
+    error
+  };
 };
 
 const mapDispatchToProps = dispatch => {

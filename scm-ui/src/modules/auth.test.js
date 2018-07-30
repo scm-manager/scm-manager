@@ -3,109 +3,69 @@ import reducer, {
   logout,
   logoutSuccess,
   loginSuccess,
-  fetchMeRequest,
-  loginRequest,
-  logoutRequest,
-  fetchMeFailure,
   fetchMeUnauthenticated,
-  loginFailure,
-  logoutFailure,
-  LOGIN_REQUEST,
-  FETCH_ME_REQUEST,
   LOGIN_SUCCESS,
   login,
   LOGIN_FAILURE,
   LOGOUT_FAILURE,
+  LOGOUT_SUCCESS,
   FETCH_ME_SUCCESS,
   fetchMe,
   FETCH_ME_FAILURE,
   FETCH_ME_UNAUTHORIZED,
-  isAuthenticated
+  isAuthenticated,
+  LOGIN_PENDING,
+  FETCH_ME_PENDING,
+  LOGOUT_PENDING,
+  getMe,
+  isFetchMePending,
+  isLoginPending,
+  isLogoutPending,
+  getFetchMeFailure,
+  LOGIN,
+  FETCH_ME,
+  LOGOUT,
+  getLoginFailure,
+  getLogoutFailure
 } from "./auth";
 
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 import fetchMock from "fetch-mock";
-import { LOGOUT_REQUEST, LOGOUT_SUCCESS } from "./auth";
+
+const me = { name: "tricia", displayName: "Tricia McMillian" };
 
 describe("auth reducer", () => {
-  it("should initialize in loading state ", () => {
-    const state = reducer();
-    expect(state.me.loading).toBeTruthy();
-  });
-
   it("should set me and login on successful fetch of me", () => {
-    const state = reducer(undefined, fetchMeSuccess({ username: "tricia" }));
-    expect(state.me.loading).toBeFalsy();
-    expect(state.me.entry.username).toBe("tricia");
-    expect(state.login.authenticated).toBeTruthy();
+    const state = reducer(undefined, fetchMeSuccess(me));
+    expect(state.me).toBe(me);
+    expect(state.authenticated).toBe(true);
   });
 
   it("should set authenticated to false", () => {
     const initialState = {
-      login: {
-        authenticated: true
-      },
-      me: {
-        username: "tricia"
-      }
+      authenticated: true,
+      me
     };
     const state = reducer(initialState, fetchMeUnauthenticated());
-    expect(state.me.username).toBeUndefined();
-    expect(state.login.authenticated).toBeFalsy();
+    expect(state.me.name).toBeUndefined();
+    expect(state.authenticated).toBe(false);
   });
 
   it("should reset the state after logout", () => {
     const initialState = {
-      login: {
-        authenticated: true
-      },
-      me: {
-        username: "tricia"
-      }
+      authenticated: true,
+      me
     };
     const state = reducer(initialState, logoutSuccess());
-    expect(state.me.loading).toBeTruthy();
-    expect(state.me.entry).toBeFalsy();
-    expect(state.login).toBeUndefined();
+    expect(state.me).toBeUndefined();
+    expect(state.authenticated).toBeUndefined();
   });
 
-  it("should set state authenticated after login", () => {
-    const state = reducer(undefined, loginSuccess());
-    expect(state.login.authenticated).toBeTruthy();
-  });
-
-  it("should set me to loading", () => {
-    const state = reducer({ me: { loading: false } }, fetchMeRequest());
-    expect(state.me.loading).toBeTruthy();
-  });
-
-  it("should set login to loading", () => {
-    const state = reducer({ login: { loading: false } }, loginRequest());
-    expect(state.login.loading).toBeTruthy();
-  });
-
-  it("should set logout to loading", () => {
-    const state = reducer({ logout: { loading: false } }, logoutRequest());
-    expect(state.logout.loading).toBeTruthy();
-  });
-
-  it("should set me to error", () => {
-    const error = new Error("failed");
-    const state = reducer(undefined, fetchMeFailure(error));
-    expect(state.me.error).toBe(error);
-  });
-
-  it("should set login to error", () => {
-    const error = new Error("failed");
-    const state = reducer(undefined, loginFailure(error));
-    expect(state.login.error).toBe(error);
-  });
-
-  it("should set logout to error", () => {
-    const error = new Error("failed");
-    const state = reducer(undefined, logoutFailure(error));
-    expect(state.logout.error).toBe(error);
+  it("should set state authenticated and me after login", () => {
+    const state = reducer(undefined, loginSuccess(me));
+    expect(state.me).toBe(me);
+    expect(state.authenticated).toBe(true);
   });
 });
 
@@ -129,16 +89,13 @@ describe("auth actions", () => {
     });
 
     fetchMock.getOnce("/scm/api/rest/v2/me", {
-      body: {
-        username: "tricia"
-      },
+      body: me,
       headers: { "content-type": "application/json" }
     });
 
     const expectedActions = [
-      { type: LOGIN_REQUEST },
-      { type: FETCH_ME_REQUEST },
-      { type: LOGIN_SUCCESS }
+      { type: LOGIN_PENDING },
+      { type: LOGIN_SUCCESS, payload: me }
     ];
 
     const store = mockStore({});
@@ -156,7 +113,7 @@ describe("auth actions", () => {
     const store = mockStore({});
     return store.dispatch(login("tricia", "secret123")).then(() => {
       const actions = store.getActions();
-      expect(actions[0].type).toEqual(LOGIN_REQUEST);
+      expect(actions[0].type).toEqual(LOGIN_PENDING);
       expect(actions[1].type).toEqual(LOGIN_FAILURE);
       expect(actions[1].payload).toBeDefined();
     });
@@ -164,15 +121,15 @@ describe("auth actions", () => {
 
   it("should dispatch fetch me success", () => {
     fetchMock.getOnce("/scm/api/rest/v2/me", {
-      body: { name: "sorbot", displayName: "Sorbot" },
+      body: me,
       headers: { "content-type": "application/json" }
     });
 
     const expectedActions = [
-      { type: FETCH_ME_REQUEST },
+      { type: FETCH_ME_PENDING },
       {
         type: FETCH_ME_SUCCESS,
-        payload: { userName: "sorbot", displayName: "Sorbot" }
+        payload: me
       }
     ];
 
@@ -191,7 +148,7 @@ describe("auth actions", () => {
     const store = mockStore({});
     return store.dispatch(fetchMe()).then(() => {
       const actions = store.getActions();
-      expect(actions[0].type).toEqual(FETCH_ME_REQUEST);
+      expect(actions[0].type).toEqual(FETCH_ME_PENDING);
       expect(actions[1].type).toEqual(FETCH_ME_FAILURE);
       expect(actions[1].payload).toBeDefined();
     });
@@ -203,8 +160,8 @@ describe("auth actions", () => {
     });
 
     const expectedActions = [
-      { type: FETCH_ME_REQUEST },
-      { type: FETCH_ME_UNAUTHORIZED }
+      { type: FETCH_ME_PENDING },
+      { type: FETCH_ME_UNAUTHORIZED, resetPending: true }
     ];
 
     const store = mockStore({});
@@ -225,9 +182,8 @@ describe("auth actions", () => {
     });
 
     const expectedActions = [
-      { type: LOGOUT_REQUEST },
-      { type: LOGOUT_SUCCESS },
-      { type: FETCH_ME_REQUEST }
+      { type: LOGOUT_PENDING },
+      { type: LOGOUT_SUCCESS }
     ];
 
     const store = mockStore({});
@@ -245,7 +201,7 @@ describe("auth actions", () => {
     const store = mockStore({});
     return store.dispatch(logout()).then(() => {
       const actions = store.getActions();
-      expect(actions[0].type).toEqual(LOGOUT_REQUEST);
+      expect(actions[0].type).toEqual(LOGOUT_PENDING);
       expect(actions[1].type).toEqual(LOGOUT_FAILURE);
       expect(actions[1].payload).toBeDefined();
     });
@@ -253,18 +209,71 @@ describe("auth actions", () => {
 });
 
 describe("auth selectors", () => {
-  it("should be false", () => {
-    expect(isAuthenticated({})).toBeFalsy();
-    expect(isAuthenticated({ auth: {} })).toBeFalsy();
-    expect(isAuthenticated({ auth: { login: {} } })).toBeFalsy();
-    expect(
-      isAuthenticated({ auth: { login: { authenticated: false } } })
-    ).toBeFalsy();
+  const error = new Error("yo it failed");
+
+  it("should be false, if authenticated is undefined or false", () => {
+    expect(isAuthenticated({})).toBe(false);
+    expect(isAuthenticated({ auth: {} })).toBe(false);
+    expect(isAuthenticated({ auth: { authenticated: false } })).toBe(false);
   });
 
-  it("shuld be true", () => {
-    expect(
-      isAuthenticated({ auth: { login: { authenticated: true } } })
-    ).toBeTruthy();
+  it("should be true, if authenticated is true", () => {
+    expect(isAuthenticated({ auth: { authenticated: true } })).toBe(true);
+  });
+
+  it("should return me", () => {
+    expect(getMe({ auth: { me } })).toBe(me);
+  });
+
+  it("should return undefined, if me is not set", () => {
+    expect(getMe({})).toBeUndefined();
+  });
+
+  it("should return true, if FETCH_ME is pending", () => {
+    expect(isFetchMePending({ pending: { [FETCH_ME]: true } })).toBe(true);
+  });
+
+  it("should return false, if FETCH_ME is not in pending state", () => {
+    expect(isFetchMePending({ pending: {} })).toBe(false);
+  });
+
+  it("should return true, if LOGIN is pending", () => {
+    expect(isLoginPending({ pending: { [LOGIN]: true } })).toBe(true);
+  });
+
+  it("should return false, if LOGIN is not in pending state", () => {
+    expect(isLoginPending({ pending: {} })).toBe(false);
+  });
+
+  it("should return true, if LOGOUT is pending", () => {
+    expect(isLogoutPending({ pending: { [LOGOUT]: true } })).toBe(true);
+  });
+
+  it("should return false, if LOGOUT is not in pending state", () => {
+    expect(isLogoutPending({ pending: {} })).toBe(false);
+  });
+
+  it("should return the error, if failure state is set for FETCH_ME", () => {
+    expect(getFetchMeFailure({ failure: { [FETCH_ME]: error } })).toBe(error);
+  });
+
+  it("should return unknown, if failure state is not set for FETCH_ME", () => {
+    expect(getFetchMeFailure({})).toBeUndefined();
+  });
+
+  it("should return the error, if failure state is set for LOGIN", () => {
+    expect(getLoginFailure({ failure: { [LOGIN]: error } })).toBe(error);
+  });
+
+  it("should return unknown, if failure state is not set for LOGIN", () => {
+    expect(getLoginFailure({})).toBeUndefined();
+  });
+
+  it("should return the error, if failure state is set for LOGOUT", () => {
+    expect(getLogoutFailure({ failure: { [LOGOUT]: error } })).toBe(error);
+  });
+
+  it("should return unknown, if failure state is not set for LOGOUT", () => {
+    expect(getLogoutFailure({})).toBeUndefined();
   });
 });

@@ -3,7 +3,13 @@ import Main from "./Main";
 import { connect } from "react-redux";
 import { translate } from "react-i18next";
 import { withRouter } from "react-router-dom";
-import { fetchMe } from "../modules/auth";
+import {
+  fetchMe,
+  isAuthenticated,
+  getMe,
+  isFetchMePending,
+  getFetchMeFailure
+} from "../modules/auth";
 
 import "./App.css";
 import "../components/modals/ConfirmAlert.css";
@@ -14,11 +20,15 @@ import { Footer, Header } from "../components/layout";
 
 type Props = {
   me: Me,
+  authenticated: boolean,
   error: Error,
   loading: boolean,
-  authenticated?: boolean,
-  t: string => string,
-  fetchMe: () => void
+
+  // dispatcher functions
+  fetchMe: () => void,
+
+  // context props
+  t: string => string
 };
 
 class App extends Component<Props> {
@@ -62,15 +72,15 @@ const mapDispatchToProps = (dispatch: any) => {
 };
 
 const mapStateToProps = state => {
-  let mapped = state.auth.me || {};
-
-  if (state.auth.login) {
-    mapped.authenticated = state.auth.login.authenticated;
-  }
-
+  const authenticated = isAuthenticated(state);
+  const me = getMe(state);
+  const loading = isFetchMePending(state);
+  const error = getFetchMeFailure(state);
   return {
-    ...mapped,
-    me: mapped.entry
+    authenticated,
+    me,
+    loading,
+    error
   };
 };
 

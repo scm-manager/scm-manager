@@ -1,102 +1,50 @@
 // @flow
 import type { Me } from "../types/Me";
+import * as types from "./types";
 
 import { apiClient, UNAUTHORIZED_ERROR } from "../apiclient";
+import { isPending } from "./pending";
+import { getFailure } from "./failure";
 
 // Action
 
-export const LOGIN_REQUEST = "scm/auth/LOGIN_REQUEST";
-export const LOGIN_SUCCESS = "scm/auth/LOGIN_SUCCESS";
-export const LOGIN_FAILURE = "scm/auth/LOGIN_FAILURE";
+export const LOGIN = "scm/auth/LOGIN";
+export const LOGIN_PENDING = `${LOGIN}_${types.PENDING_SUFFIX}`;
+export const LOGIN_SUCCESS = `${LOGIN}_${types.SUCCESS_SUFFIX}`;
+export const LOGIN_FAILURE = `${LOGIN}_${types.FAILURE_SUFFIX}`;
 
-export const FETCH_ME_REQUEST = "scm/auth/FETCH_ME_REQUEST";
-export const FETCH_ME_SUCCESS = "scm/auth/FETCH_ME_SUCCESS";
-export const FETCH_ME_FAILURE = "scm/auth/FETCH_ME_FAILURE";
-export const FETCH_ME_UNAUTHORIZED = "scm/auth/FETCH_ME_UNAUTHORIZED";
+export const FETCH_ME = "scm/auth/FETCH_ME";
+export const FETCH_ME_PENDING = `${FETCH_ME}_${types.PENDING_SUFFIX}`;
+export const FETCH_ME_SUCCESS = `${FETCH_ME}_${types.SUCCESS_SUFFIX}`;
+export const FETCH_ME_FAILURE = `${FETCH_ME}_${types.FAILURE_SUFFIX}`;
+export const FETCH_ME_UNAUTHORIZED = `${FETCH_ME}_UNAUTHORIZED`;
 
-export const LOGOUT_REQUEST = "scm/auth/LOGOUT_REQUEST";
-export const LOGOUT_SUCCESS = "scm/auth/LOGOUT_SUCCESS";
-export const LOGOUT_FAILURE = "scm/auth/LOGOUT_FAILURE";
+export const LOGOUT = "scm/auth/LOGOUT";
+export const LOGOUT_PENDING = `${LOGOUT}_${types.PENDING_SUFFIX}`;
+export const LOGOUT_SUCCESS = `${LOGOUT}_${types.SUCCESS_SUFFIX}`;
+export const LOGOUT_FAILURE = `${LOGOUT}_${types.FAILURE_SUFFIX}`;
 
 // Reducer
 
-const initialState = {
-  me: { loading: true }
-};
+const initialState = {};
 
-export default function reducer(state: any = initialState, action: any = {}) {
+export default function reducer(state: Object = initialState, action: Object) {
   switch (action.type) {
-    case LOGIN_REQUEST:
-      return {
-        ...state,
-        login: {
-          loading: true
-        }
-      };
     case LOGIN_SUCCESS:
-      return {
-        ...state,
-        login: {
-          authenticated: true
-        }
-      };
-    case LOGIN_FAILURE:
-      return {
-        ...state,
-        login: {
-          error: action.payload
-        }
-      };
-
-    case FETCH_ME_REQUEST:
-      return {
-        ...state,
-        me: {
-          loading: true
-        }
-      };
     case FETCH_ME_SUCCESS:
       return {
         ...state,
-        me: {
-          entry: action.payload
-        },
-        login: {
-          authenticated: true
-        }
+        me: action.payload,
+        authenticated: true
       };
     case FETCH_ME_UNAUTHORIZED:
       return {
-        ...state,
         me: {},
-        login: {
-          authenticated: false
-        }
-      };
-    case FETCH_ME_FAILURE:
-      return {
-        ...state,
-        me: {
-          error: action.payload
-        }
-      };
-
-    case LOGOUT_REQUEST:
-      return {
-        ...state,
-        logout: {
-          loading: true
-        }
+        authenticated: false
       };
     case LOGOUT_SUCCESS:
       return initialState;
-    case LOGOUT_FAILURE:
-      return {
-        ...state,
-        logout: {
-          error: action.payload
-        }
-      };
+
     default:
       return state;
   }
@@ -104,15 +52,16 @@ export default function reducer(state: any = initialState, action: any = {}) {
 
 // Action Creators
 
-export const loginRequest = () => {
+export const loginPending = () => {
   return {
-    type: LOGIN_REQUEST
+    type: LOGIN_PENDING
   };
 };
 
-export const loginSuccess = () => {
+export const loginSuccess = (me: Me) => {
   return {
-    type: LOGIN_SUCCESS
+    type: LOGIN_SUCCESS,
+    payload: me
   };
 };
 
@@ -123,9 +72,9 @@ export const loginFailure = (error: Error) => {
   };
 };
 
-export const logoutRequest = () => {
+export const logoutPending = () => {
   return {
-    type: LOGOUT_REQUEST
+    type: LOGOUT_PENDING
   };
 };
 
@@ -142,9 +91,9 @@ export const logoutFailure = (error: Error) => {
   };
 };
 
-export const fetchMeRequest = () => {
+export const fetchMePending = () => {
   return {
-    type: FETCH_ME_REQUEST
+    type: FETCH_ME_PENDING
   };
 };
 
@@ -157,7 +106,8 @@ export const fetchMeSuccess = (me: Me) => {
 
 export const fetchMeUnauthenticated = () => {
   return {
-    type: FETCH_ME_UNAUTHORIZED
+    type: FETCH_ME_UNAUTHORIZED,
+    resetPending: true
   };
 };
 
@@ -175,6 +125,17 @@ const LOGIN_URL = "/auth/access_token";
 
 // side effects
 
+const callFetchMe = (): Promise<Me> => {
+  return apiClient
+    .get(ME_URL)
+    .then(response => {
+      return response.json();
+    })
+    .then(json => {
+      return { name: json.name, displayName: json.displayName };
+    });
+};
+
 export const login = (username: string, password: string) => {
   const login_data = {
     cookie: true,
@@ -183,12 +144,14 @@ export const login = (username: string, password: string) => {
     password
   };
   return function(dispatch: any) {
-    dispatch(loginRequest());
+    dispatch(loginPending());
     return apiClient
       .post(LOGIN_URL, login_data)
       .then(response => {
-        dispatch(fetchMe());
-        dispatch(loginSuccess());
+        return callFetchMe();
+      })
+      .then(me => {
+        dispatch(loginSuccess(me));
       })
       .catch(err => {
         dispatch(loginFailure(err));
@@ -198,16 +161,10 @@ export const login = (username: string, password: string) => {
 
 export const fetchMe = () => {
   return function(dispatch: any) {
-    dispatch(fetchMeRequest());
-    return apiClient
-      .get(ME_URL)
-      .then(response => {
-        return response.json();
-      })
+    dispatch(fetchMePending());
+    return callFetchMe()
       .then(me => {
-        dispatch(
-          fetchMeSuccess({ userName: me.name, displayName: me.displayName })
-        );
+        dispatch(fetchMeSuccess(me));
       })
       .catch((error: Error) => {
         if (error === UNAUTHORIZED_ERROR) {
@@ -221,12 +178,11 @@ export const fetchMe = () => {
 
 export const logout = () => {
   return function(dispatch: any) {
-    dispatch(logoutRequest());
+    dispatch(logoutPending());
     return apiClient
       .delete(LOGIN_URL)
       .then(() => {
         dispatch(logoutSuccess());
-        dispatch(fetchMe());
       })
       .catch(error => {
         dispatch(logoutFailure(error));
@@ -236,6 +192,41 @@ export const logout = () => {
 
 // selectors
 
-export const isAuthenticated = (state: any): boolean => {
-  return state.auth && state.auth.login && state.auth.login.authenticated;
+const stateAuth = (state: Object): Object => {
+  return state.auth || {};
+};
+
+export const isAuthenticated = (state: Object) => {
+  if (stateAuth(state).authenticated) {
+    return true;
+  }
+  return false;
+};
+
+export const getMe = (state: Object): Me => {
+  return stateAuth(state).me;
+};
+
+export const isFetchMePending = (state: Object) => {
+  return isPending(state, FETCH_ME);
+};
+
+export const getFetchMeFailure = (state: Object) => {
+  return getFailure(state, FETCH_ME);
+};
+
+export const isLoginPending = (state: Object) => {
+  return isPending(state, LOGIN);
+};
+
+export const getLoginFailure = (state: Object) => {
+  return getFailure(state, LOGIN);
+};
+
+export const isLogoutPending = (state: Object) => {
+  return isPending(state, LOGOUT);
+};
+
+export const getLogoutFailure = (state: Object) => {
+  return getFailure(state, LOGOUT);
 };

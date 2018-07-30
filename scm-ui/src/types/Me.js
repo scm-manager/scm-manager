@@ -1,6 +1,6 @@
 // @flow
 
 export type Me = {
-  userName: string,
+  name: string,
   displayName: string
 };

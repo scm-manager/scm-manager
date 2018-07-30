@@ -4,16 +4,25 @@ import { connect } from "react-redux";
 import { translate } from "react-i18next";
 import { Redirect } from "react-router-dom";
 
-import { logout, isAuthenticated } from "../modules/auth";
+import {
+  logout,
+  isAuthenticated,
+  isLogoutPending,
+  getLogoutFailure
+} from "../modules/auth";
 import ErrorPage from "../components/ErrorPage";
 import Loading from "../components/Loading";
 
 type Props = {
-  t: string => string,
-  loading: boolean,
   authenticated: boolean,
-  error?: Error,
-  logout: () => void
+  loading: boolean,
+  error: Error,
+
+  // dispatcher functions
+  logout: () => void,
+
+  // context props
+  t: string => string
 };
 
 class Logout extends React.Component<Props> {
@@ -22,8 +31,7 @@ class Logout extends React.Component<Props> {
   }
 
   render() {
-    const { authenticated, loading, t, error } = this.props;
-    // TODO logout is called twice
+    const { authenticated, loading, error, t } = this.props;
     if (error) {
       return (
         <ErrorPage
@@ -41,9 +49,14 @@ class Logout extends React.Component<Props> {
 }
 
 const mapStateToProps = state => {
-  let mapped = state.auth.logout || {};
-  mapped.authenticated = isAuthenticated(state);
-  return mapped;
+  const authenticated = isAuthenticated(state);
+  const loading = isLogoutPending(state);
+  const error = getLogoutFailure(state);
+  return {
+    authenticated,
+    loading,
+    error
+  };
 };
 
 const mapDispatchToProps = dispatch => {
