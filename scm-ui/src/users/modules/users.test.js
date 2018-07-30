@@ -517,7 +517,7 @@ describe("users reducer", () => {
   it("should set the loading to false and the error if user could not be created", () => {
     const newState = reducer(
       { create: { loading: true, error: null } },
-      createUserFailure(userFord, new Error("kaputt kaputt"))
+      createUserFailure(new Error("kaputt kaputt"))
     );
     expect(newState.create.loading).toBeFalsy();
     expect(newState.create.error).toEqual(new Error("kaputt kaputt"));

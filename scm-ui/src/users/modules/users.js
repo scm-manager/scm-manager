@@ -111,7 +111,7 @@ export function fetchUser(name: string) {
 export function fetchUserPending(name: string): Action {
   return {
     type: FETCH_USER_PENDING,
-    payload: { name }
+    payload: name
   };
 }
 
@@ -122,11 +122,11 @@ export function fetchUserSuccess(user: any): Action {
   };
 }
 
-export function fetchUserFailure(username: string, error: Error): Action {
+export function fetchUserFailure(name: string, error: Error): Action {
   return {
     type: FETCH_USER_FAILURE,
     payload: {
-      username,
+      name,
       error
     }
   };
@@ -148,7 +148,6 @@ export function createUser(user: User, callback?: () => void) {
       .catch(err =>
         dispatch(
           createUserFailure(
-            user,
             new Error(`failed to add user ${user.name}: ${err.message}`)
           )
         )
@@ -169,11 +168,10 @@ export function createUserSuccess(): Action {
   };
 }
 
-export function createUserFailure(user: User, err: Error): Action {
+export function createUserFailure(error: Error): Action {
   return {
     type: CREATE_USER_FAILURE,
-    payload: err,
-    user
+    payload: error
   };
 }
 
@@ -392,7 +390,7 @@ function byNamesReducer(state: any = {}, action: any = {}) {
 
     // Fetch single user actions
     case FETCH_USER_PENDING:
-      return reducerByName(state, action.payload.name, {
+      return reducerByName(state, action.payload, {
         loading: true,
         error: null
       });
@@ -403,7 +401,7 @@ function byNamesReducer(state: any = {}, action: any = {}) {
         entry: action.payload
       });
     case FETCH_USER_FAILURE:
-      return reducerByName(state, action.payload.username, {
+      return reducerByName(state, action.payload.name, {
         loading: false,
         error: action.payload.error
       });
