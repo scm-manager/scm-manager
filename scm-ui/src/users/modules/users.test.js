@@ -418,14 +418,19 @@ describe("selector tests", () => {
   });
 
   it("should return a state slice collection", () => {
+    const collection = {
+      page: 3,
+      totalPages: 42
+    };
+
     const state = {
       users: {
         list: {
-          loading: false
+          entry: collection
         }
       }
     };
-    expect(selectListAsCollection(state)).toEqual({ loading: false });
+    expect(selectListAsCollection(state)).toBe(collection);
   });
 
   it("should return false", () => {
