@@ -29,7 +29,7 @@ public class AuthenticationResource {
 
   private static final Logger LOG = LoggerFactory.getLogger(AuthenticationResource.class);
 
-  public static final String PATH = "v2/auth";
+  static final String PATH = "v2/auth";
 
   private final AccessTokenBuilderFactory tokenBuilderFactory;
   private final AccessTokenCookieIssuer cookieIssuer;
@@ -81,7 +81,9 @@ public class AuthenticationResource {
     HttpServletResponse response,
     AuthenticationRequestDto authentication
   ) {
-    authentication.validate();
+    if (!authentication.isValid()) {
+      return Response.status(Response.Status.BAD_REQUEST).build();
+    }
 
     Response res;
     Subject subject = SecurityUtils.getSubject();

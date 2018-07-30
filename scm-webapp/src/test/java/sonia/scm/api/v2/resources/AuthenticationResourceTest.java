@@ -80,6 +80,35 @@ public class AuthenticationResourceTest {
     "\t\"password\": \"doesNotMatter\"\n" +
     "}";
 
+  private static final String AUTH_JSON_WITHOUT_USERNAME = String.join("\n",
+    "{",
+    "\"grant_type\": \"password\",",
+    "\"password\": \"tricia123\"",
+    "}"
+  );
+
+  private static final String AUTH_JSON_WITHOUT_PASSWORD = String.join("\n",
+    "{",
+    "\"grant_type\": \"password\",",
+    "\"username\": \"trillian\"",
+    "}"
+  );
+
+  private static final String AUTH_JSON_WITHOUT_GRANT_TYPE = String.join("\n",
+    "{",
+    "\"username\": \"trillian\",",
+    "\"password\": \"tricia123\"",
+    "}"
+  );
+
+  private static final String AUTH_JSON_WITH_INVALID_GRANT_TYPE = String.join("\n",
+    "{",
+    "\"grant_type\": \"el speciale\",",
+    "\"username\": \"trillian\",",
+    "\"password\": \"tricia123\"",
+    "}"
+  );
+
   @Before
   public void prepareEnvironment() {
     AuthenticationResource authenticationResource = new AuthenticationResource(accessTokenBuilderFactory, cookieIssuer);
@@ -122,13 +151,41 @@ public class AuthenticationResourceTest {
 
   @Test
   public void shouldNotAuthNonexistingUser() throws URISyntaxException {
-
     MockHttpRequest request = getMockHttpRequest(AUTH_JSON_NOT_EXISTING_USER);
     MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
 
     assertEquals(HttpServletResponse.SC_UNAUTHORIZED, response.getStatus());
+  }
+
+  @Test
+  public void shouldReturnBadStatusIfPasswordParameterIsMissing() throws URISyntaxException {
+    shouldReturnBadRequest(AUTH_JSON_WITHOUT_USERNAME);
+  }
+
+  @Test
+  public void shouldReturnBadStatusIfUsernameParameterIsMissing() throws URISyntaxException {
+    shouldReturnBadRequest(AUTH_JSON_WITHOUT_PASSWORD);
+  }
+
+  @Test
+  public void shouldReturnBadStatusIfGrantTypeParameterIsMissing() throws URISyntaxException {
+    shouldReturnBadRequest(AUTH_JSON_WITHOUT_GRANT_TYPE);
+  }
+
+  @Test
+  public void shouldReturnBadStatusIfGrantTypeParameterIsInvalid() throws URISyntaxException {
+    shouldReturnBadRequest(AUTH_JSON_WITH_INVALID_GRANT_TYPE);
+  }
+
+  private void shouldReturnBadRequest(String requestBody) throws URISyntaxException {
+    MockHttpRequest request = getMockHttpRequest(requestBody);
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_BAD_REQUEST, response.getStatus());
   }
 
   private MockHttpRequest getMockHttpRequest(String jsonPayload) throws URISyntaxException {

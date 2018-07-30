@@ -1,7 +1,6 @@
 package sonia.scm.api.v2.resources;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 
 import javax.ws.rs.FormParam;
@@ -45,9 +44,8 @@ public class AuthenticationRequestDto {
     return scope;
   }
 
-  public void validate() {
-    Preconditions.checkArgument(!Strings.isNullOrEmpty(grantType), "grant_type parameter is required");
-    Preconditions.checkArgument(!Strings.isNullOrEmpty(username), "username parameter is required");
-    Preconditions.checkArgument(!Strings.isNullOrEmpty(password), "password parameter is required");
+  public boolean isValid() {
+    // password is currently the only valid grant_type
+    return "password".equals(grantType) && !Strings.isNullOrEmpty(username) && !Strings.isNullOrEmpty(password);
   }
 }
