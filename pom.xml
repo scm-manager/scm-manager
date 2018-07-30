@@ -91,7 +91,6 @@
       </snapshots>
     </repository>
 
-    <!-- TODO remove jitpack after edison hal bugfix -->
     <repository>
       <id>jitpack</id>
       <url>https://jitpack.io</url>
@@ -165,6 +164,20 @@
         <artifactId>shiro-unit</artifactId>
         <version>1.0.1</version>
         <scope>test</scope>
+      </dependency>
+
+      <!-- TODO replace by proper version from maven central (group: com.github.sdorra) once its there. -->
+      <dependency>
+        <groupId>com.github.schnatterer.shiro-static-permissions</groupId>
+        <artifactId>ssp-lib</artifactId>
+        <version>${ssp.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.github.schnatterer.shiro-static-permissions</groupId>
+        <artifactId>ssp-processor</artifactId>
+        <version>${ssp.version}</version>
+        <optional>true</optional>
       </dependency>
 
     </dependencies>
@@ -551,7 +564,7 @@
     <jetty.maven.version>9.2.10.v20150310</jetty.maven.version>
 
     <!-- security libraries -->
-    <ssp.version>1.0.0-SNAPSHOT</ssp.version>
+    <ssp.version>-SNAPSHOT</ssp.version>
     <shiro.version>1.4.0</shiro.version>
 
     <!-- repostitory libraries -->

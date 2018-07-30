@@ -1,12 +1,11 @@
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.Links;
-import org.apache.shiro.SecurityUtils;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
+import sonia.scm.config.ConfigurationPermissions;
 import sonia.scm.config.ScmConfiguration;
-import sonia.scm.security.Role;
 
 import javax.inject.Inject;
 
@@ -26,8 +25,7 @@ public abstract class ScmConfigurationToGlobalConfigDtoMapper {
   @AfterMapping
   void appendLinks(ScmConfiguration config, @MappingTarget GlobalConfigDto target) {
     Links.Builder linksBuilder = linkingTo().self(resourceLinks.globalConfig().self());
-    // TODO: ConfigPermissions?
-    if (SecurityUtils.getSubject().hasRole(Role.ADMIN)) {
+    if (ConfigurationPermissions.write(config).isPermitted()) {
       linksBuilder.single(link("update", resourceLinks.globalConfig().update()));
     }
     target.add(linksBuilder.build());

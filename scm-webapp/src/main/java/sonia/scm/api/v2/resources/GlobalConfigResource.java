@@ -3,14 +3,17 @@ package sonia.scm.api.v2.resources;
 import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
-import org.apache.shiro.SecurityUtils;
+import sonia.scm.config.ConfigurationPermissions;
 import sonia.scm.config.ScmConfiguration;
-import sonia.scm.security.Role;
 import sonia.scm.util.ScmConfigurationUtil;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
@@ -44,16 +47,12 @@ public class GlobalConfigResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   public Response get() {
-    Response response;
 
-    // TODO ConfigPermisions?
-    if (SecurityUtils.getSubject().hasRole(Role.ADMIN)) {
-      response = Response.ok(configToDtoMapper.map(configuration)).build();
-    } else {
-      response = Response.status(Response.Status.FORBIDDEN).build();
-    }
+    // We do this permission check in Resource and not in ScmConfiguration, because it must be available for reading
+    // from within the code (plugins, etc.), but not for the whole anonymous world outside.
+    ConfigurationPermissions.read(configuration).check();
 
-    return response;
+    return Response.ok(configToDtoMapper.map(configuration)).build();
   }
 
   /**
@@ -72,20 +71,17 @@ public class GlobalConfigResource {
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
   public Response update(GlobalConfigDto configDto, @Context UriInfo uriInfo) {
-    Response response;
 
-    // TODO ConfigPermisions?
-    if (SecurityUtils.getSubject().hasRole(Role.ADMIN)) {
-      ScmConfiguration config = dtoToConfigMapper.map(configDto);
+    // This *could* be moved to ScmConfiguration or ScmConfigurationUtil classes.
+    // But to where to check? load() or store()? Leave it for now, SCMv1 legacy that can be cleaned up later.
+    ConfigurationPermissions.write(configuration).check();
+
+    ScmConfiguration config = dtoToConfigMapper.map(configDto);
+    synchronized (ScmConfiguration.class) {
       configuration.load(config);
-      synchronized (ScmConfiguration.class) {
-        ScmConfigurationUtil.getInstance().store(configuration);
-      }
-      response = Response.created(uriInfo.getRequestUri()).build();
-    } else {
-      response = Response.status(Response.Status.FORBIDDEN).build();
+      ScmConfigurationUtil.getInstance().store(configuration);
     }
 
-    return response;
+    return Response.created(uriInfo.getRequestUri()).build();
   }
 }

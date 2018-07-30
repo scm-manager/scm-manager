@@ -51,7 +51,7 @@ public class ScmConfigurationToGlobalConfigDtoMapperTest {
   public void shouldMapFields() {
     ScmConfiguration config = createConfiguration();
 
-    when(subject.hasRole(Role.ADMIN)).thenReturn(true);
+    when(subject.isPermitted("configuration:write:global")).thenReturn(true);
     GlobalConfigDto dto = mapper.map(config);
 
     assertEquals("baseurl", dto.getBaseUrl());
@@ -63,7 +63,7 @@ public class ScmConfigurationToGlobalConfigDtoMapperTest {
   public void shouldMapFieldsWithoutUpdate() {
     ScmConfiguration config = createConfiguration();
 
-    when(subject.hasRole(Role.ADMIN)).thenReturn(false);
+    when(subject.hasRole("configuration:write:global")).thenReturn(false);
     GlobalConfigDto dto = mapper.map(config);
 
     assertEquals("baseurl", dto.getBaseUrl());

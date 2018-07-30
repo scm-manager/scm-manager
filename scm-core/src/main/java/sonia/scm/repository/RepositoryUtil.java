@@ -74,7 +74,7 @@ public final class RepositoryUtil {
     return getRepositoryId(handler.getConfig(), directory);
   }
 
-  public static String getRepositoryId(SimpleRepositoryConfig config, File directory) throws IOException {
+  public static String getRepositoryId(RepositoryConfig config, File directory) throws IOException {
     return getRepositoryId(config.getRepositoryDirectory(), directory);
   }
 

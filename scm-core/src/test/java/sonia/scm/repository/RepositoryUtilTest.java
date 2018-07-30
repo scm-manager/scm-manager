@@ -21,9 +21,14 @@ public class RepositoryUtilTest {
   public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
   @Mock
-  private AbstractRepositoryHandler<SimpleRepositoryConfig> repositoryHandler;
+  private AbstractRepositoryHandler<RepositoryConfig> repositoryHandler;
 
-  private SimpleRepositoryConfig repositoryConfig = new SimpleRepositoryConfig();
+  private RepositoryConfig repositoryConfig = new RepositoryConfig() {
+    @Override
+    public String getId() {
+      return "repository";
+    }
+  };
 
   @Before
   public void setUpMocks() {

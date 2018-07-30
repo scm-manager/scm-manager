@@ -44,6 +44,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.File;
 import java.util.Set;
@@ -57,10 +58,11 @@ import java.util.concurrent.TimeUnit;
  *
  * @author Sebastian Sdorra
  */
+
 @Singleton
 @XmlRootElement(name = "scm-config")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class ScmConfiguration {
+public class ScmConfiguration implements Configuration {
 
   /**
    * Default JavaScript date format
@@ -500,5 +502,13 @@ public class ScmConfiguration {
 
   public void setDefaultNamespaceStrategy(String defaultNamespaceStrategy) {
     this.defaultNamespaceStrategy = defaultNamespaceStrategy;
+  }
+
+  @Override
+  // Only for permission checks, don't serialize to XML
+  @XmlTransient
+  public String getId() {
+    // Don't change this without migrating SCM permission configuration!
+    return "global";
   }
 }

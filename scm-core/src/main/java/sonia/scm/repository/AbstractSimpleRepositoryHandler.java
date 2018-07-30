@@ -55,7 +55,7 @@ import java.net.URL;
  * @param <C>
  * @author Sebastian Sdorra
  */
-public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepositoryConfig>
+public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig>
   extends AbstractRepositoryHandler<C> implements RepositoryDirectoryHandler {
 
   public static final String DEFAULT_VERSION_INFORMATION = "unknown";
