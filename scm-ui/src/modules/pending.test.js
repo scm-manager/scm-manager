@@ -6,6 +6,12 @@ describe("pending reducer", () => {
     expect(newState["FETCH_ITEMS"]).toBe(true);
   });
 
+  it("should do nothing for unknown action types", () => {
+    const state = {};
+    const newState = reducer(state, { type: "UNKNOWN" });
+    expect(newState).toBe(state);
+  });
+
   it("should set pending for FETCH_ITEMS to true, but should not affect others", () => {
     const newState = reducer(
       {

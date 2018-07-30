@@ -10,6 +10,12 @@ describe("failure reducer", () => {
     expect(newState["FETCH_ITEMS"]).toBe(err);
   });
 
+  it("should do nothing for unknown action types", () => {
+    const state = {};
+    const newState = reducer(state, { type: "UNKNOWN" });
+    expect(newState).toBe(state);
+  });
+
   it("should set the error for FETCH_ITEMS, if payload has multiple values", () => {
     const newState = reducer(
       {},
@@ -52,12 +58,32 @@ describe("failure reducer", () => {
     expect(newState["FETCH_ITEMS"]).toBeFalsy();
   });
 
+  it("should reset FETCH_ITEMS after FETCH_ITEMS_RESET, but should not affect others", () => {
+    const newState = reducer(
+      {
+        FETCH_ITEMS: err,
+        FETCH_USERS: err
+      },
+      { type: "FETCH_ITEMS_RESET" }
+    );
+    expect(newState["FETCH_ITEMS"]).toBeFalsy();
+    expect(newState["FETCH_USERS"]).toBe(err);
+  });
+
   it("should set the error for a single item of FETCH_ITEM", () => {
     const newState = reducer(
       {},
       { type: "FETCH_ITEM_FAILURE", payload: err, itemId: 42 }
     );
     expect(newState["FETCH_ITEM/42"]).toBe(err);
+  });
+
+  it("should reset error for a single item of FETCH_ITEM", () => {
+    const newState = reducer(
+      { "FETCH_ITEM/42": err },
+      { type: "FETCH_ITEM_SUCCESS", payload: err, itemId: 42 }
+    );
+    expect(newState["FETCH_ITEM/42"]).toBeUndefined();
   });
 });
 

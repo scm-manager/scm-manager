@@ -28,7 +28,10 @@ export const LOGOUT_FAILURE = `${LOGOUT}_${types.FAILURE_SUFFIX}`;
 
 const initialState = {};
 
-export default function reducer(state: Object = initialState, action: Object) {
+export default function reducer(
+  state: Object = initialState,
+  action: Object = { type: "UNKNOWN" }
+) {
   switch (action.type) {
     case LOGIN_SUCCESS:
     case FETCH_ME_SUCCESS:

@@ -28,7 +28,10 @@ function extractIdentifierFromPending(action: Action) {
   return identifier;
 }
 
-export default function reducer(state: Object = {}, action: Action): Object {
+export default function reducer(
+  state: Object = {},
+  action: Action = { type: "UNKNOWN" }
+): Object {
   const type = action.type;
   if (type.endsWith(PENDING_SUFFIX)) {
     const identifier = extractIdentifierFromPending(action);

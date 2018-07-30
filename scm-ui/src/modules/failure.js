@@ -23,7 +23,10 @@ function removeFromState(state: Object, identifier: string) {
   return newState;
 }
 
-export default function reducer(state: Object = {}, action: Action): Object {
+export default function reducer(
+  state: Object = {},
+  action: Action = { type: "UNKNOWN" }
+): Object {
   const type = action.type;
   if (type.endsWith(FAILURE_SUFFIX)) {
     const identifier = extractIdentifierFromFailure(action);

@@ -98,12 +98,7 @@ export function fetchUser(name: string) {
     return apiClient
       .get(userUrl)
       .then(response => {
-        return response;
-      })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        }
+        return response.json();
       })
       .then(data => {
         dispatch(fetchUserSuccess(data));
