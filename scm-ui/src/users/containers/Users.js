@@ -1,80 +1,127 @@
 // @flow
 import React from "react";
+import type { History } from "history";
 import { connect } from "react-redux";
 import { translate } from "react-i18next";
 
-import { fetchUsers, getUsersFromState } from "../modules/users";
+import {
+  fetchUsersByPage,
+  fetchUsersByLink,
+  getUsersFromState,
+  selectListAsCollection,
+  isPermittedToCreateUsers
+} from "../modules/users";
+
 import { Page } from "../../components/layout";
 import { UserTable } from "./../components/table";
-import type { User } from "../types/User";
-import { AddButton } from "../../components/buttons";
 import type { UserEntry } from "../types/UserEntry";
+import type { PageCollectionStateSlice } from "../../types/Collection";
+import Paginator from "../../components/Paginator";
+import CreateUserButton from "../components/buttons/CreateUserButton";
 
 type Props = {
-  loading?: boolean,
-  error: Error,
+  userEntries: UserEntry[],
+  canAddUsers: boolean,
+  list: PageCollectionStateSlice,
+  page: number,
+
+  // context objects
   t: string => string,
-  userEntries: Array<UserEntry>,
-  fetchUsers: () => void,
-  canAddUsers: boolean
+  history: History,
+
+  // dispatch functions
+  fetchUsersByPage: (page: number) => void,
+  fetchUsersByLink: (link: string) => void
 };
 
-class Users extends React.Component<Props, User> {
+class Users extends React.Component<Props> {
   componentDidMount() {
-    this.props.fetchUsers();
+    this.props.fetchUsersByPage(this.props.page);
   }
 
+  onPageChange = (link: string) => {
+    this.props.fetchUsersByLink(link);
+  };
+
+  /**
+   * reflect page transitions in the uri
+   */
+  componentDidUpdate = (prevProps: Props) => {
+    const { page, list } = this.props;
+    if (list.entry) {
+      // backend starts paging by 0
+      const statePage: number = list.entry.page + 1;
+      if (page !== statePage) {
+        this.props.history.push(`/users/${statePage}`);
+      }
+    }
+  };
+
   render() {
-    const { userEntries, loading, t, error } = this.props;
+    const { userEntries, list, t } = this.props;
     return (
       <Page
         title={t("users.title")}
         subtitle={t("users.subtitle")}
-        loading={loading || !userEntries}
-        error={error}
+        loading={list.loading || !userEntries}
+        error={list.error}
       >
         <UserTable entries={userEntries} />
-        {this.renderAddButton()}
+        {this.renderPaginator()}
+        {this.renderCreateButton()}
       </Page>
     );
   }
 
-  renderAddButton() {
-    const { canAddUsers, t } = this.props;
-    if (canAddUsers) {
+  renderPaginator() {
+    const { list } = this.props;
+    if (list.entry) {
       return (
-        <div>
-          <AddButton label={t("users.add-button")} link="/users/add" />
-        </div>
+        <Paginator collection={list.entry} onPageChange={this.onPageChange} />
       );
+    }
+    return null;
+  }
+
+  renderCreateButton() {
+    if (this.props.canAddUsers) {
+      return <CreateUserButton />;
     } else {
       return;
     }
   }
 }
 
-const mapStateToProps = state => {
-  const userEntries = getUsersFromState(state);
-  let error = null;
-  let loading = false;
-  let canAddUsers = false;
-  if (state.users && state.users.list) {
-    error = state.users.list.error;
-    canAddUsers = state.users.list.userCreatePermission;
-    loading = state.users.list.loading;
+const getPageFromProps = props => {
+  let page = props.match.params.page;
+  if (page) {
+    page = parseInt(page, 10);
+  } else {
+    page = 1;
   }
+  return page;
+};
+
+const mapStateToProps = (state, ownProps) => {
+  const page = getPageFromProps(ownProps);
+  const userEntries = getUsersFromState(state);
+  const canAddUsers = isPermittedToCreateUsers(state);
+  const list = selectListAsCollection(state);
   return {
     userEntries,
-    error,
-    loading,
-    canAddUsers
+    canAddUsers,
+    list,
+    page
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchUsers: () => {
-      dispatch(fetchUsers());
+    fetchUsersByPage: (page: number) => {
+      dispatch(fetchUsersByPage(page));
+    },
+    fetchUsersByLink: (link: string) => {
+      dispatch(fetchUsersByLink(link));
     }
   };
 };

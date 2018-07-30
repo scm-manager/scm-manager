@@ -33,6 +33,8 @@ import reducer, {
   fetchUsersPending,
   fetchUsersSuccess,
   fetchUserSuccess,
+  selectListAsCollection,
+  isPermittedToCreateUsers,
   MODIFY_USER_FAILURE,
   MODIFY_USER_PENDING,
   MODIFY_USER_SUCCESS,
@@ -336,7 +338,12 @@ describe("users reducer", () => {
       entries: ["zaphod", "ford"],
       error: null,
       loading: false,
-      userCreatePermission: true
+      entry: {
+        userCreatePermission: true,
+        page: 0,
+        pageTotal: 1,
+        _links: responseBody._links
+      }
     });
 
     expect(newState.byNames).toEqual({
@@ -348,27 +355,27 @@ describe("users reducer", () => {
       }
     });
 
-    it("should set error when fetching users failed", () => {
-      const oldState = {
-        list: {
-          loading: true
-        }
-      };
+    expect(newState.list.entry.userCreatePermission).toBeTruthy();
+  });
 
-      const error = new Error("kaputt");
+  it("should set error when fetching users failed", () => {
+    const oldState = {
+      list: {
+        loading: true
+      }
+    };
 
-      const newState = reducer(oldState, fetchUsersFailure("url.com", error));
-      expect(newState.list.loading).toBeFalsy();
-      expect(newState.list.error).toEqual(error);
-    });
+    const error = new Error("kaputt");
 
-    it("should set userCreatePermission to true if update link is present", () => {
-      const newState = reducer({}, fetchUsersSuccess(responseBody));
+    const newState = reducer(oldState, fetchUsersFailure("url.com", error));
+    expect(newState.list.loading).toBeFalsy();
+    expect(newState.list.error).toEqual(error);
+  });
 
-      expect(newState.list.userCreatePermission).toBeTruthy();
-    });
+  it("should set userCreatePermission to true if update link is present", () => {
+    const newState = reducer({}, fetchUsersSuccess(responseBody));
 
-    expect(newState.list.userCreatePermission).toBeTruthy();
+    expect(newState.list.entry.userCreatePermission).toBeTruthy();
   });
 
   it("should not replace whole byNames map when fetching users", () => {
@@ -385,7 +392,7 @@ describe("users reducer", () => {
     expect(newState.byNames["ford"]).toBeDefined();
   });
 
-  test("should update state correctly according to DELETE_USER_PENDING action", () => {
+  it("should update state correctly according to DELETE_USER_PENDING action", () => {
     const state = {
       byNames: {
         zaphod: {
@@ -479,8 +486,17 @@ describe("users reducer", () => {
 
     const newState = reducer(state, deleteUserSuccess(userFord));
     expect(newState.byNames["zaphod"]).toBeDefined();
-    expect(newState.list.entries).toEqual(["zaphod"]);
     expect(newState.byNames["ford"]).toBeFalsy();
+    expect(newState.list.entries).toEqual(["zaphod"]);
+  });
+
+  it("should set userCreatePermission to true if create link is present", () => {
+    const newState = reducer({}, fetchUsersSuccess(responseBody));
+
+    expect(newState.list.entry.userCreatePermission).toBeTruthy();
+    expect(newState.list.entries).toEqual(["zaphod", "ford"]);
+    expect(newState.byNames["ford"]).toBeTruthy();
+    expect(newState.byNames["zaphod"]).toBeTruthy();
   });
 
   it("should update state correctly according to CREATE_USER_PENDING action", () => {
@@ -612,5 +628,48 @@ describe("users reducer", () => {
     expect(newState.byNames["ford"].loading).toBeFalsy();
     expect(newState.byNames["ford"].error).toBe(error);
     expect(newState.byNames["ford"].entry).toBeFalsy();
+  });
+});
+
+describe("selector tests", () => {
+  it("should return an empty object", () => {
+    expect(selectListAsCollection({})).toEqual({});
+    expect(selectListAsCollection({ users: { a: "a" } })).toEqual({});
+  });
+
+  it("should return a state slice collection", () => {
+    const state = {
+      users: {
+        list: {
+          loading: false
+        }
+      }
+    };
+    expect(selectListAsCollection(state)).toEqual({ loading: false });
+  });
+
+  it("should return false", () => {
+    expect(isPermittedToCreateUsers({})).toBe(false);
+    expect(isPermittedToCreateUsers({ users: { list: { entry: {} } } })).toBe(
+      false
+    );
+    expect(
+      isPermittedToCreateUsers({
+        users: { list: { entry: { userCreatePermission: false } } }
+      })
+    ).toBe(false);
+  });
+
+  it("should return true", () => {
+    const state = {
+      users: {
+        list: {
+          entry: {
+            userCreatePermission: true
+          }
+        }
+      }
+    };
+    expect(isPermittedToCreateUsers(state)).toBe(true);
   });
 });

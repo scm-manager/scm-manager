@@ -4,6 +4,7 @@ import type { User } from "../types/User";
 import type { UserEntry } from "../types/UserEntry";
 import { combineReducers, Dispatch } from "redux";
 import type { Action } from "../../types/Action";
+import type { PageCollectionStateSlice } from "../../types/Collection";
 
 export const FETCH_USERS_PENDING = "scm/users/FETCH_USERS_PENDING";
 export const FETCH_USERS_SUCCESS = "scm/users/FETCH_USERS_SUCCESS";
@@ -35,18 +36,20 @@ const CONTENT_TYPE_USER = "application/vnd.scmm-user+json;v=2";
 //fetch users
 
 export function fetchUsers() {
+  return fetchUsersByLink(USERS_URL);
+}
+
+export function fetchUsersByPage(page: number) {
+  // backend start counting by 0
+  return fetchUsersByLink(USERS_URL + "?page=" + (page - 1));
+}
+
+export function fetchUsersByLink(link: string) {
   return function(dispatch: any) {
     dispatch(fetchUsersPending());
     return apiClient
-      .get(USERS_URL)
-      .then(response => {
-        return response;
-      })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        }
-      })
+      .get(link)
+      .then(response => response.json())
       .then(data => {
         dispatch(fetchUsersSuccess(data));
       })
@@ -348,7 +351,12 @@ function listReducer(state: any = {}, action: any = {}) {
         error: null,
         entries: userNames,
         loading: false,
-        userCreatePermission: action.payload._links.create ? true : false
+        entry: {
+          userCreatePermission: action.payload._links.create ? true : false,
+          page: action.payload.page,
+          pageTotal: action.payload.pageTotal,
+          _links: action.payload._links
+        }
       };
     case FETCH_USERS_FAILURE:
       return {
@@ -439,6 +447,36 @@ function byNamesReducer(state: any = {}, action: any = {}) {
   }
 }
 
+// selectors
+
+const selectList = (state: Object) => {
+  if (state.users && state.users.list) {
+    return state.users.list;
+  }
+  return {};
+};
+
+const selectListEntry = (state: Object) => {
+  const list = selectList(state);
+  if (list.entry) {
+    return list.entry;
+  }
+  return {};
+};
+
+export const selectListAsCollection = (
+  state: Object
+): PageCollectionStateSlice => {
+  return selectList(state);
+};
+
+export const isPermittedToCreateUsers = (state: Object): boolean => {
+  const permission = selectListEntry(state).userCreatePermission;
+  if (permission) {
+    return true;
+  }
+  return false;
+};
 function createReducer(state: any = {}, action: any = {}) {
   switch (action.type) {
     case CREATE_USER_PENDING:

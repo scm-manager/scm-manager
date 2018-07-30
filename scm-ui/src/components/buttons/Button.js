@@ -9,7 +9,8 @@ export type ButtonProps = {
   disabled?: boolean,
   action?: () => void,
   link?: string,
-  fullWidth?: boolean
+  fullWidth?: boolean,
+  className?: string
 };
 
 type Props = ButtonProps & {
@@ -17,8 +18,20 @@ type Props = ButtonProps & {
 };
 
 class Button extends React.Component<Props> {
+  static defaultProps = {
+    type: "default"
+  };
+
   renderButton = () => {
-    const { label, loading, disabled, type, action, fullWidth } = this.props;
+    const {
+      label,
+      loading,
+      disabled,
+      type,
+      action,
+      fullWidth,
+      className
+    } = this.props;
     const loadingClass = loading ? "is-loading" : "";
     const fullWidthClass = fullWidth ? "is-fullwidth" : "";
     return (
@@ -29,7 +42,8 @@ class Button extends React.Component<Props> {
           "button",
           "is-" + type,
           loadingClass,
-          fullWidthClass
+          fullWidthClass,
+          className
         )}
       >
         {label}
