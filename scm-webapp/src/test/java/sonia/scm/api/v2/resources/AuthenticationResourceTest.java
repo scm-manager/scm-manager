@@ -66,6 +66,8 @@ public class AuthenticationResourceTest {
     "\t\"password\": \"secret\"\n" +
     "}";
 
+  private static final String AUTH_FORMENCODED_TRILLIAN = "cookie=true&grant_type=password&username=trillian&password=secret";
+
   private static final String AUTH_JSON_TRILLIAN_WRONG_PW = "{\n" +
     "\t\"cookie\": true,\n" +
     "\t\"grant_type\": \"password\",\n" +
@@ -139,6 +141,18 @@ public class AuthenticationResourceTest {
   }
 
   @Test
+  public void shouldAuthCorrectlyWithFormencodedData() throws URISyntaxException {
+
+    MockHttpRequest request = getMockHttpRequestUrlEncoded(AUTH_FORMENCODED_TRILLIAN);
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
+  }
+
+
+  @Test
   public void shouldNotAuthUserWithWrongPassword() throws URISyntaxException {
 
     MockHttpRequest request = getMockHttpRequest(AUTH_JSON_TRILLIAN_WRONG_PW);
@@ -179,6 +193,17 @@ public class AuthenticationResourceTest {
     shouldReturnBadRequest(AUTH_JSON_WITH_INVALID_GRANT_TYPE);
   }
 
+  @Test
+  @SubjectAware(username = "trillian", password = "secret")
+  public void shouldSuccessfullyLogoutUser() throws URISyntaxException {
+    MockHttpRequest request = MockHttpRequest.delete("/" + AuthenticationResource.PATH + "/access_token");
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+    assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
+  }
+
+
   private void shouldReturnBadRequest(String requestBody) throws URISyntaxException {
     MockHttpRequest request = getMockHttpRequest(requestBody);
     MockHttpResponse response = new MockHttpResponse();
@@ -193,6 +218,14 @@ public class AuthenticationResourceTest {
 
     request.content(jsonPayload.getBytes());
     request.contentType(MediaType.APPLICATION_JSON_TYPE);
+    return request;
+  }
+
+  private MockHttpRequest getMockHttpRequestUrlEncoded(String payload) throws URISyntaxException {
+    MockHttpRequest request = MockHttpRequest.post("/" + AuthenticationResource.PATH + "/access_token");
+
+    request.content(payload.getBytes());
+    request.contentType(MediaType.APPLICATION_FORM_URLENCODED_TYPE);
     return request;
   }
 
