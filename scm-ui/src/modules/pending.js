@@ -34,7 +34,11 @@ export default function reducer(state: Object = {}, action: Action): Object {
   } else {
     const matches = RESET_PATTERN.exec(type);
     if (matches) {
-      return removeFromState(state, matches[1]);
+      let identifier = matches[1];
+      if (action.itemId) {
+        identifier += "/" + action.itemId;
+      }
+      return removeFromState(state, identifier);
     }
   }
   return state;

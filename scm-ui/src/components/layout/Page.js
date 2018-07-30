@@ -35,7 +35,10 @@ class Page extends React.Component<Props> {
   }
 
   renderContent() {
-    const { loading, children } = this.props;
+    const { loading, children, error } = this.props;
+    if (error) {
+      return null;
+    }
     if (loading) {
       return <Loading />;
     }

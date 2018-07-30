@@ -69,6 +69,16 @@ describe("pending reducer", () => {
     expect(newState["FETCH_USER/21"]).toBe(true);
     expect(newState["FETCH_USER/42"]).toBe(false);
   });
+
+  it("should reset pending for a single item", () => {
+    const newState = reducer(
+      {
+        "FETCH_USER/42": true
+      },
+      { type: "FETCH_USER_SUCCESS", itemId: 42 }
+    );
+    expect(newState["FETCH_USER/42"]).toBeFalsy();
+  });
 });
 
 describe("pending selectors", () => {

@@ -10,9 +10,3 @@ export type PagedCollection = Collection & {
   page: number,
   pageTotal: number
 };
-
-export type PageCollectionStateSlice = {
-  entry?: PagedCollection,
-  error?: Error,
-  loading?: boolean
-};

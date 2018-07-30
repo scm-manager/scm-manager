@@ -4,17 +4,26 @@ import { connect } from "react-redux";
 import UserForm from "./../components/UserForm";
 import type { User } from "../types/User";
 import type { History } from "history";
-import { createUser, createUserReset } from "../modules/users";
+import {
+  createUser,
+  createUserReset,
+  isCreateUserPending,
+  getCreateUserFailure
+} from "../modules/users";
 import { Page } from "../../components/layout";
 import { translate } from "react-i18next";
 
 type Props = {
-  t: string => string,
-  addUser: (user: User, callback?: () => void) => void,
   loading?: boolean,
   error?: Error,
-  history: History,
-  resetForm: () => void
+
+  // dispatcher functions
+  addUser: (user: User, callback?: () => void) => void,
+  resetForm: () => void,
+
+  // context objects
+  t: string => string,
+  history: History
 };
 
 class AddUser extends React.Component<Props> {
@@ -61,10 +70,12 @@ const mapDispatchToProps = dispatch => {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  if (state.users && state.users.create) {
-    return state.users.create;
-  }
-  return {};
+  const loading = isCreateUserPending(state);
+  const error = getCreateUserFailure(state);
+  return {
+    loading,
+    error
+  };
 };
 
 export default connect(

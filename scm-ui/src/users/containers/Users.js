@@ -9,20 +9,24 @@ import {
   fetchUsersByLink,
   getUsersFromState,
   selectListAsCollection,
-  isPermittedToCreateUsers
+  isPermittedToCreateUsers,
+  isFetchUsersPending,
+  getFetchUsersFailure
 } from "../modules/users";
 
 import { Page } from "../../components/layout";
 import { UserTable } from "./../components/table";
-import type { UserEntry } from "../types/UserEntry";
-import type { PageCollectionStateSlice } from "../../types/Collection";
+import type { User } from "../types/User";
+import type { PagedCollection } from "../../types/Collection";
 import Paginator from "../../components/Paginator";
 import CreateUserButton from "../components/buttons/CreateUserButton";
 
 type Props = {
-  userEntries: UserEntry[],
+  users: User[],
+  loading: boolean,
+  error: Error,
   canAddUsers: boolean,
-  list: PageCollectionStateSlice,
+  list: PagedCollection,
   page: number,
 
   // context objects
@@ -48,9 +52,9 @@ class Users extends React.Component<Props> {
    */
   componentDidUpdate = (prevProps: Props) => {
     const { page, list } = this.props;
-    if (list.entry) {
+    if (list.page) {
       // backend starts paging by 0
-      const statePage: number = list.entry.page + 1;
+      const statePage: number = list.page + 1;
       if (page !== statePage) {
         this.props.history.push(`/users/${statePage}`);
       }
@@ -58,15 +62,15 @@ class Users extends React.Component<Props> {
   };
 
   render() {
-    const { userEntries, list, t } = this.props;
+    const { users, loading, error, t } = this.props;
     return (
       <Page
         title={t("users.title")}
         subtitle={t("users.subtitle")}
-        loading={list.loading || !userEntries}
-        error={list.error}
+        loading={loading || !users}
+        error={error}
       >
-        <UserTable entries={userEntries} />
+        <UserTable users={users} />
         {this.renderPaginator()}
         {this.renderCreateButton()}
       </Page>
@@ -75,10 +79,8 @@ class Users extends React.Component<Props> {
 
   renderPaginator() {
     const { list } = this.props;
-    if (list.entry) {
-      return (
-        <Paginator collection={list.entry} onPageChange={this.onPageChange} />
-      );
+    if (list) {
+      return <Paginator collection={list} onPageChange={this.onPageChange} />;
     }
     return null;
   }
@@ -103,12 +105,18 @@ const getPageFromProps = props => {
 };
 
 const mapStateToProps = (state, ownProps) => {
+  const users = getUsersFromState(state);
+  const loading = isFetchUsersPending(state);
+  const error = getFetchUsersFailure(state);
+
   const page = getPageFromProps(ownProps);
-  const userEntries = getUsersFromState(state);
   const canAddUsers = isPermittedToCreateUsers(state);
   const list = selectListAsCollection(state);
+
   return {
-    userEntries,
+    users,
+    loading,
+    error,
     canAddUsers,
     list,
     page

@@ -6,9 +6,16 @@ import { Route } from "react-router";
 import { Details } from "./../components/table";
 import EditUser from "./EditUser";
 import type { User } from "../types/User";
-import type { UserEntry } from "../types/UserEntry";
 import type { History } from "history";
-import { fetchUser, deleteUser } from "../modules/users";
+import {
+  fetchUser,
+  deleteUser,
+  getUserByName,
+  isFetchUserPending,
+  getFetchUserFailure,
+  isDeleteUserPending,
+  getDeleteUserFailure
+} from "../modules/users";
 import Loading from "../../components/Loading";
 
 import { Navigation, Section, NavLink } from "../../components/navigation";
@@ -16,14 +23,19 @@ import { DeleteUserNavLink, EditUserNavLink } from "./../components/navLinks";
 import ErrorPage from "../../components/ErrorPage";
 import { translate } from "react-i18next";
 
-
 type Props = {
-  t: string => string,
   name: string,
-  userEntry?: UserEntry,
-  match: any,
+  user: User,
+  loading: boolean,
+  error: Error,
+
+  // dispatcher functions
   deleteUser: (user: User, callback?: () => void) => void,
   fetchUser: string => void,
+
+  // context objects
+  t: string => string,
+  match: any,
   history: History
 };
 
@@ -52,23 +64,22 @@ class SingleUser extends React.Component<Props> {
   };
 
   render() {
-    const { t, userEntry } = this.props;
+    const { t, loading, error, user } = this.props;
 
-    if (!userEntry || userEntry.loading) {
-      return <Loading />;
-    }
-
-    if (userEntry.error) {
+    if (error) {
       return (
         <ErrorPage
           title={t("single-user.error-title")}
           subtitle={t("single-user.error-subtitle")}
-          error={userEntry.error}
+          error={error}
         />
       );
     }
 
-    const user = userEntry.entry;
+    if (!user || loading) {
+      return <Loading />;
+    }
+
     const url = this.matchedUrl();
 
     return (
@@ -84,7 +95,10 @@ class SingleUser extends React.Component<Props> {
           <div className="column">
             <Navigation>
               <Section label={t("single-user.navigation-label")}>
-                <NavLink to={`${url}`} label={t("single-user.information-label")} />
+                <NavLink
+                  to={`${url}`}
+                  label={t("single-user.information-label")}
+                />
                 <EditUserNavLink user={user} editUrl={`${url}/edit`} />
               </Section>
               <Section label={t("single-user.actions-label")}>
@@ -101,14 +115,17 @@ class SingleUser extends React.Component<Props> {
 
 const mapStateToProps = (state, ownProps) => {
   const name = ownProps.match.params.name;
-  let userEntry;
-  if (state.users && state.users.byNames) {
-    userEntry = state.users.byNames[name];
-  }
+  const user = getUserByName(state, name);
+  const loading =
+    isFetchUserPending(state, name) || isDeleteUserPending(state, name);
+  const error =
+    getFetchUserFailure(state, name) || getDeleteUserFailure(state, name);
 
   return {
     name,
-    userEntry
+    user,
+    loading,
+    error
   };
 };
 

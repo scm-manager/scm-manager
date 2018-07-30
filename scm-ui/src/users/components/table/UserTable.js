@@ -2,16 +2,16 @@
 import React from "react";
 import { translate } from "react-i18next";
 import UserRow from "./UserRow";
-import type { UserEntry } from "../../types/UserEntry";
+import type { User } from "../../types/User";
 
 type Props = {
   t: string => string,
-  entries: Array<UserEntry>
+  users: User[]
 };
 
 class UserTable extends React.Component<Props> {
   render() {
-    const { entries, t } = this.props;
+    const { users, t } = this.props;
     return (
       <table className="table is-hoverable is-fullwidth">
         <thead>
@@ -23,8 +23,8 @@ class UserTable extends React.Component<Props> {
           </tr>
         </thead>
         <tbody>
-          {entries.map((entry, index) => {
-            return <UserRow key={index} user={entry.entry} />;
+          {users.map((user, index) => {
+            return <UserRow key={index} user={user} />;
           })}
         </tbody>
       </table>

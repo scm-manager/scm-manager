@@ -1,12 +1,12 @@
 //@flow
 import React from "react";
 import { translate } from "react-i18next";
-import type { UserEntry } from "../../types/UserEntry";
+import type { User } from "../../types/User";
 import { NavLink } from "../../../components/navigation";
 
 type Props = {
   t: string => string,
-  user: UserEntry,
+  user: User,
   editUrl: String
 };
 

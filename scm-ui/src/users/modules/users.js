@@ -1,39 +1,46 @@
 // @flow
 import { apiClient } from "../../apiclient";
+import { isPending } from "../../modules/pending";
+import { getFailure } from "../../modules/failure";
+import * as types from "../../modules/types";
 import type { User } from "../types/User";
-import type { UserEntry } from "../types/UserEntry";
 import { combineReducers, Dispatch } from "redux";
 import type { Action } from "../../types/Action";
-import type { PageCollectionStateSlice } from "../../types/Collection";
+import type { PagedCollection } from "../../types/Collection";
 
-export const FETCH_USERS_PENDING = "scm/users/FETCH_USERS_PENDING";
-export const FETCH_USERS_SUCCESS = "scm/users/FETCH_USERS_SUCCESS";
-export const FETCH_USERS_FAILURE = "scm/users/FETCH_USERS_FAILURE";
+export const FETCH_USERS = "scm/users/FETCH_USERS";
+export const FETCH_USERS_PENDING = `${FETCH_USERS}_${types.PENDING_SUFFIX}`;
+export const FETCH_USERS_SUCCESS = `${FETCH_USERS}_${types.SUCCESS_SUFFIX}`;
+export const FETCH_USERS_FAILURE = `${FETCH_USERS}_${types.FAILURE_SUFFIX}`;
 
-export const FETCH_USER_PENDING = "scm/users/FETCH_USER_PENDING";
-export const FETCH_USER_SUCCESS = "scm/users/FETCH_USER_SUCCESS";
-export const FETCH_USER_FAILURE = "scm/users/FETCH_USER_FAILURE";
+export const FETCH_USER = "scm/users/FETCH_USER";
+export const FETCH_USER_PENDING = `${FETCH_USER}_${types.PENDING_SUFFIX}`;
+export const FETCH_USER_SUCCESS = `${FETCH_USER}_${types.SUCCESS_SUFFIX}`;
+export const FETCH_USER_FAILURE = `${FETCH_USER}_${types.FAILURE_SUFFIX}`;
 
-export const CREATE_USER_PENDING = "scm/users/CREATE_USER_PENDING";
-export const CREATE_USER_SUCCESS = "scm/users/CREATE_USER_SUCCESS";
-export const CREATE_USER_FAILURE = "scm/users/CREATE_USER_FAILURE";
-export const CREATE_USER_RESET = "scm/users/CREATE_USER_RESET";
+export const CREATE_USER = "scm/users/CREATE_USER";
+export const CREATE_USER_PENDING = `${CREATE_USER}_${types.PENDING_SUFFIX}`;
+export const CREATE_USER_SUCCESS = `${CREATE_USER}_${types.SUCCESS_SUFFIX}`;
+export const CREATE_USER_FAILURE = `${CREATE_USER}_${types.FAILURE_SUFFIX}`;
+export const CREATE_USER_RESET = `${CREATE_USER}_${types.RESET_SUFFIX}`;
 
-export const MODIFY_USER_PENDING = "scm/users/MODIFY_USER_PENDING";
-export const MODIFY_USER_SUCCESS = "scm/users/MODIFY_USER_SUCCESS";
-export const MODIFY_USER_FAILURE = "scm/users/MODIFY_USER_FAILURE";
+export const MODIFY_USER = "scm/users/MODIFY_USER";
+export const MODIFY_USER_PENDING = `${MODIFY_USER}_${types.PENDING_SUFFIX}`;
+export const MODIFY_USER_SUCCESS = `${MODIFY_USER}_${types.SUCCESS_SUFFIX}`;
+export const MODIFY_USER_FAILURE = `${MODIFY_USER}_${types.FAILURE_SUFFIX}`;
 
-export const DELETE_USER_PENDING = "scm/users/DELETE_PENDING";
-export const DELETE_USER_SUCCESS = "scm/users/DELETE_SUCCESS";
-export const DELETE_USER_FAILURE = "scm/users/DELETE_FAILURE";
+export const DELETE_USER = "scm/users/DELETE";
+export const DELETE_USER_PENDING = `${DELETE_USER}_${types.PENDING_SUFFIX}`;
+export const DELETE_USER_SUCCESS = `${DELETE_USER}_${types.SUCCESS_SUFFIX}`;
+export const DELETE_USER_FAILURE = `${DELETE_USER}_${types.FAILURE_SUFFIX}`;
 
 const USERS_URL = "users";
 
 const CONTENT_TYPE_USER = "application/vnd.scmm-user+json;v=2";
 
-//TODO i18n
+// TODO i18n for error messages
 
-//fetch users
+// fetch users
 
 export function fetchUsers() {
   return fetchUsersByLink(USERS_URL);
@@ -111,14 +118,16 @@ export function fetchUser(name: string) {
 export function fetchUserPending(name: string): Action {
   return {
     type: FETCH_USER_PENDING,
-    payload: name
+    payload: name,
+    itemId: name
   };
 }
 
 export function fetchUserSuccess(user: any): Action {
   return {
     type: FETCH_USER_SUCCESS,
-    payload: user
+    payload: user,
+    itemId: user.name
   };
 }
 
@@ -128,7 +137,8 @@ export function fetchUserFailure(name: string, error: Error): Action {
     payload: {
       name,
       error
-    }
+    },
+    itemId: name
   };
 }
 
@@ -203,14 +213,16 @@ export function modifyUser(user: User, callback?: () => void) {
 export function modifyUserPending(user: User): Action {
   return {
     type: MODIFY_USER_PENDING,
-    payload: user
+    payload: user,
+    itemId: user.name
   };
 }
 
 export function modifyUserSuccess(user: User): Action {
   return {
     type: MODIFY_USER_SUCCESS,
-    payload: user
+    payload: user,
+    itemId: user.name
   };
 }
 
@@ -220,7 +232,8 @@ export function modifyUserFailure(user: User, error: Error): Action {
     payload: {
       error,
       user
-    }
+    },
+    itemId: user.name
   };
 }
 
@@ -249,14 +262,16 @@ export function deleteUser(user: User, callback?: () => void) {
 export function deleteUserPending(user: User): Action {
   return {
     type: DELETE_USER_PENDING,
-    payload: user
+    payload: user,
+    itemId: user.name
   };
 }
 
 export function deleteUserSuccess(user: User): Action {
   return {
     type: DELETE_USER_SUCCESS,
-    payload: user
+    payload: user,
+    itemId: user.name
   };
 }
 
@@ -266,40 +281,20 @@ export function deleteUserFailure(user: User, error: Error): Action {
     payload: {
       error,
       user
-    }
+    },
+    itemId: user.name
   };
 }
 
-//helper functions
-
-export function getUsersFromState(state: any) {
-  if (!state.users.list) {
-    return null;
-  }
-  const userNames = state.users.list.entries;
-  if (!userNames) {
-    return null;
-  }
-  const userEntries: Array<UserEntry> = [];
-
-  for (let userName of userNames) {
-    userEntries.push(state.users.byNames[userName]);
-  }
-
-  return userEntries;
-}
-
 function extractUsersByNames(
-  users: Array<User>,
-  userNames: Array<string>,
-  oldUsersByNames: {}
+  users: User[],
+  userNames: string[],
+  oldUsersByNames: Object
 ) {
   const usersByNames = {};
 
   for (let user of users) {
-    usersByNames[user.name] = {
-      entry: user
-    };
+    usersByNames[user.name] = user;
   }
 
   for (let userName in oldUsersByNames) {
@@ -335,20 +330,12 @@ const reducerByName = (state: any, username: string, newUserState: any) => {
 
 function listReducer(state: any = {}, action: any = {}) {
   switch (action.type) {
-    // Fetch all users actions
-    case FETCH_USERS_PENDING:
-      return {
-        ...state,
-        loading: true
-      };
     case FETCH_USERS_SUCCESS:
       const users = action.payload._embedded.users;
       const userNames = users.map(user => user.name);
       return {
         ...state,
-        error: null,
         entries: userNames,
-        loading: false,
         entry: {
           userCreatePermission: action.payload._links.create ? true : false,
           page: action.payload.page,
@@ -356,12 +343,7 @@ function listReducer(state: any = {}, action: any = {}) {
           _links: action.payload._links
         }
       };
-    case FETCH_USERS_FAILURE:
-      return {
-        ...state,
-        loading: false,
-        error: action.payload.error
-      };
+
     // Delete single user actions
     case DELETE_USER_SUCCESS:
       const newUserEntries = deleteUserInEntries(
@@ -389,44 +371,12 @@ function byNamesReducer(state: any = {}, action: any = {}) {
       };
 
     // Fetch single user actions
-    case FETCH_USER_PENDING:
-      return reducerByName(state, action.payload, {
-        loading: true,
-        error: null
-      });
     case FETCH_USER_SUCCESS:
-      return reducerByName(state, action.payload.name, {
-        loading: false,
-        error: null,
-        entry: action.payload
-      });
-    case FETCH_USER_FAILURE:
-      return reducerByName(state, action.payload.name, {
-        loading: false,
-        error: action.payload.error
-      });
+      return reducerByName(state, action.payload.name, action.payload);
 
-    // Update single user actions
-    case MODIFY_USER_PENDING:
-      return reducerByName(state, action.payload.name, {
-        loading: true
-      });
     case MODIFY_USER_SUCCESS:
-      return reducerByName(state, action.payload.name, {
-        entry: action.payload
-      });
-    case MODIFY_USER_FAILURE:
-      return reducerByName(state, action.payload.user.name, {
-        error: action.payload.error
-      });
+      return reducerByName(state, action.payload.name, action.payload);
 
-    // Delete single user actions
-    case DELETE_USER_PENDING:
-      return reducerByName(state, action.payload.name, {
-        loading: true,
-        error: null,
-        entry: action.payload
-      });
     case DELETE_USER_SUCCESS:
       const newUserByNames = deleteUserInUsersByNames(
         state,
@@ -434,16 +384,15 @@ function byNamesReducer(state: any = {}, action: any = {}) {
       );
       return newUserByNames;
 
-    case DELETE_USER_FAILURE:
-      return reducerByName(state, action.payload.user.name, {
-        loading: false,
-        error: action.payload.error,
-        entry: action.payload.user
-      });
     default:
       return state;
   }
 }
+
+export default combineReducers({
+  list: listReducer,
+  byNames: byNamesReducer
+});
 
 // selectors
 
@@ -454,7 +403,7 @@ const selectList = (state: Object) => {
   return {};
 };
 
-const selectListEntry = (state: Object) => {
+const selectListEntry = (state: Object): Object => {
   const list = selectList(state);
   if (list.entry) {
     return list.entry;
@@ -462,10 +411,8 @@ const selectListEntry = (state: Object) => {
   return {};
 };
 
-export const selectListAsCollection = (
-  state: Object
-): PageCollectionStateSlice => {
-  return selectList(state);
+export const selectListAsCollection = (state: Object): PagedCollection => {
+  return selectListEntry(state);
 };
 
 export const isPermittedToCreateUsers = (state: Object): boolean => {
@@ -475,29 +422,63 @@ export const isPermittedToCreateUsers = (state: Object): boolean => {
   }
   return false;
 };
-function createReducer(state: any = {}, action: any = {}) {
-  switch (action.type) {
-    case CREATE_USER_PENDING:
-      return {
-        loading: true
-      };
-    case CREATE_USER_SUCCESS:
-    case CREATE_USER_RESET:
-      return {
-        loading: false
-      };
-    case CREATE_USER_FAILURE:
-      return {
-        loading: false,
-        error: action.payload
-      };
-    default:
-      return state;
+
+export function getUsersFromState(state: Object) {
+  const userNames = selectList(state).entries;
+  if (!userNames) {
+    return null;
+  }
+  const userEntries: User[] = [];
+
+  for (let userName of userNames) {
+    userEntries.push(state.users.byNames[userName]);
+  }
+
+  return userEntries;
+}
+
+export function isFetchUsersPending(state: Object) {
+  return isPending(state, FETCH_USERS);
+}
+
+export function getFetchUsersFailure(state: Object) {
+  return getFailure(state, FETCH_USERS);
+}
+
+export function isCreateUserPending(state: Object) {
+  return isPending(state, CREATE_USER);
+}
+
+export function getCreateUserFailure(state: Object) {
+  return getFailure(state, CREATE_USER);
+}
+
+export function getUserByName(state: Object, name: string) {
+  if (state.users && state.users.byNames) {
+    return state.users.byNames[name];
   }
 }
 
-export default combineReducers({
-  list: listReducer,
-  byNames: byNamesReducer,
-  create: createReducer
-});
+export function isFetchUserPending(state: Object, name: string) {
+  return isPending(state, FETCH_USER, name);
+}
+
+export function getFetchUserFailure(state: Object, name: string) {
+  return getFailure(state, FETCH_USER, name);
+}
+
+export function isModifyUserPending(state: Object, name: string) {
+  return isPending(state, MODIFY_USER, name);
+}
+
+export function getModifyUserFailure(state: Object, name: string) {
+  return getFailure(state, MODIFY_USER, name);
+}
+
+export function isDeleteUserPending(state: Object, name: string) {
+  return isPending(state, DELETE_USER, name);
+}
+
+export function getDeleteUserFailure(state: Object, name: string) {
+  return getFailure(state, DELETE_USER, name);
+}

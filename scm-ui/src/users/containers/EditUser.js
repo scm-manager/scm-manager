@@ -1,16 +1,26 @@
 //@flow
 import React from "react";
-import {connect} from "react-redux";
-import {withRouter} from "react-router-dom";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 import UserForm from "./../components/UserForm";
-import type {User} from "../types/User";
-import {modifyUser} from "../modules/users";
-import type {History} from "history";
+import type { User } from "../types/User";
+import {
+  modifyUser,
+  isModifyUserPending,
+  getModifyUserFailure
+} from "../modules/users";
+import type { History } from "history";
+import ErrorNotification from "../../components/ErrorNotification";
 
 type Props = {
-  user: User,
-  modifyUser: (user: User, callback?: () => void) => void,
   loading: boolean,
+  error: Error,
+
+  // dispatch functions
+  modifyUser: (user: User, callback?: () => void) => void,
+
+  // context objects
+  user: User,
   history: History
 };
 
@@ -24,8 +34,17 @@ class EditUser extends React.Component<Props> {
   };
 
   render() {
-    const { user } = this.props;
-    return <UserForm submitForm={user => this.modifyUser(user)} user={user} />;
+    const { user, loading, error } = this.props;
+    return (
+      <div>
+        <ErrorNotification error={error} />
+        <UserForm
+          submitForm={user => this.modifyUser(user)}
+          user={user}
+          loading={loading}
+        />
+      </div>
+    );
   }
 }
 
@@ -38,7 +57,12 @@ const mapDispatchToProps = dispatch => {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  return {};
+  const loading = isModifyUserPending(state, ownProps.user.name);
+  const error = getModifyUserFailure(state, ownProps.user.name);
+  return {
+    loading,
+    error
+  };
 };
 
 export default connect(
