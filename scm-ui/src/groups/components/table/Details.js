@@ -11,7 +11,9 @@ type Props = {
 
 class Details extends React.Component<Props> {
 
-  render() {
+  
+  render() {  console.log(new Date('2011-04-11T10:20:30Z').toString());
+
     const { group, t } = this.props;
     return (
       <table className="table">
@@ -26,11 +28,11 @@ class Details extends React.Component<Props> {
           </tr>
           <tr>
             <td>{t("group.creationDate")}</td>
-            <td>{group.creationDate}</td>
+            <td>{new Date(group.creationDate).toString()}</td>
           </tr>
           <tr>
             <td>{t("group.lastModified")}</td>
-            <td>{group.lastModified}</td>
+            <td>{new Date(group.lastModified).toString()}</td>
           </tr>
           <tr>
             <td>{t("group.type")}</td>
@@ -51,7 +53,7 @@ class Details extends React.Component<Props> {
           <td>{this.props.t("group.members")}</td>
           <td>
             <table><tbody>
-            {this.props.group.members.map((member, index) => {
+            {this.props.group._embedded.members.map((member, index) => {
             return <GroupMember key={index} member={member} />;
             })}
             </tbody></table>
