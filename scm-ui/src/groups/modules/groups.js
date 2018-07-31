@@ -83,3 +83,74 @@ export function fetchGroupsFailure(url: string, error: Error): Action {
     }
   };
 }
+
+
+//reducer
+function extractGroupsByNames(
+  groups: Groups[],
+  groupNames: string[],
+  oldGroupsByNames: Object
+) {
+  const groupsByNames = {};
+
+  for (let group of groups) {
+    groupsByNames[group.name] = group;
+  }
+
+  for (let groupName in oldGroupsByNames) {
+    groupsByNames[groupName] = oldGroupsByNames[groupName];
+  }
+  return groupsByNames;
+}
+
+
+const reducerByName = (state: any, groupname: string, newGroupState: any) => {
+  const newGroupsByNames = {
+    ...state,
+    [groupname]: newGroupState
+  };
+
+  return newGroupsByNames;
+};
+
+function listReducer(state: any = {}, action: any = {}) {
+  switch (action.type) {
+    case FETCH_GROUPS_SUCCESS:
+      const groups = action.payload._embedded.groups;
+      const groupNames = groups.map(group => group.name);
+      return {
+        ...state,
+        entries: groupNames,
+        entry: {
+          groupCreatePermission: action.payload._links.create ? true : false,
+          page: action.payload.page,
+          pageTotal: action.payload.pageTotal,
+          _links: action.payload._links
+        }
+      };
+
+    default:
+      return state;
+  }
+}
+
+function byNamesReducer(state: any = {}, action: any = {}) {
+  switch (action.type) {
+    // Fetch all groups actions
+    case FETCH_GROUPS_SUCCESS:
+      const groups = action.payload._embedded.groups;
+      const groupNames = groups.map(group => group.name);
+      const byNames = extractGroupsByNames(groups, groupNames, state.byNames);
+      return {
+        ...byNames
+      };
+
+    default:
+      return state;
+  }
+}
+
+export default combineReducers({
+  list: listReducer,
+  byNames: byNamesReducer
+});

@@ -3,17 +3,66 @@ import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 import fetchMock from "fetch-mock";
 
-import {fetchGroups,
+import reducer, {
+  fetchGroups,
   FETCH_GROUPS_PENDING,
   FETCH_GROUPS_SUCCESS,
-  FETCH_GROUPS_FAILURE
+  FETCH_GROUPS_FAILURE,
+  fetchGroupsSuccess
 } from "./groups"
 const GROUPS_URL = "/scm/api/rest/v2/groups";
 
 const groupZaphod = {
+  creationDate: "2018-07-31T08:39:07.860Z",
+  description: "This is a group",
+  name: "zaphodGroup",
+  type: "xml",
+  properties: {},
+  members: ["userZaphod"],
+  _links: {
+    self: {
+      href: "http://localhost:3000/scm/api/rest/v2/groups/zaphodGroup"
+    },
+    delete: {
+      href: "http://localhost:3000/scm/api/rest/v2/groups/zaphodGroup"
+    },
+    update: {
+      href:"http://localhost:3000/scm/api/rest/v2/groups/zaphodGroup"
+    }
+  },
+  _embedded: {
+    members: [{
+      name:"userZaphod",
+      _links: {
+        self :{
+          href: "http://localhost:3000/scm/api/rest/v2/users/userZaphod"
+        }
+      }
+    }]
+  }
 };
 
 const groupFord = {
+  creationDate: "2018-07-31T08:39:07.860Z",
+  description: "This is a group",
+  name: "fordGroup",
+  type: "xml",
+  properties: {},
+  members: [],
+  _links: {
+    self: {
+      href: "http://localhost:3000/scm/api/rest/v2/groups/fordGroup"
+    },
+    delete: {
+      href: "http://localhost:3000/scm/api/rest/v2/groups/fordGroup"
+    },
+    update: {
+      href:"http://localhost:3000/scm/api/rest/v2/groups/fordGroup"
+    }
+  },
+  _embedded: {
+    members: []
+  }
 };
 
 const responseBody = {
@@ -42,9 +91,6 @@ const response = {
   headers: { "content-type": "application/json" },
   responseBody
 };
-
-
-const error = new Error("KAPUTT");
 
 describe("groups fetch()", () => {
   const mockStore = configureMockStore([thunk]);
@@ -83,5 +129,56 @@ describe("groups fetch()", () => {
       expect(actions[1].type).toEqual(FETCH_GROUPS_FAILURE);
       expect(actions[1].payload).toBeDefined();
     });
+  });
+});
+
+describe("groups reducer", () => {
+
+  it("should update state correctly according to FETCH_USERS_SUCCESS action", () => {
+    const newState = reducer({}, fetchGroupsSuccess(responseBody));
+
+    expect(newState.list).toEqual({
+      entries: ["zaphodGroup", "fordGroup"],
+      entry: {
+        groupCreatePermission: true,
+        page: 0,
+        pageTotal: 1,
+        _links: responseBody._links
+      }
+    });
+
+    expect(newState.byNames).toEqual({
+      zaphodGroup: groupZaphod,
+      fordGroup: groupFord
+    });
+
+    expect(newState.list.entry.groupCreatePermission).toBeTruthy();
+  });
+
+  it("should set groupCreatePermission to true if update link is present", () => {
+    const newState = reducer({}, fetchGroupsSuccess(responseBody));
+
+    expect(newState.list.entry.groupCreatePermission).toBeTruthy();
+  });
+
+  it("should not replace whole byNames map when fetching users", () => {
+    const oldState = {
+      byNames: {
+        fordGroup: groupFord
+      }
+    };
+
+    const newState = reducer(oldState, fetchGroupsSuccess(responseBody));
+    expect(newState.byNames["zaphodGroup"]).toBeDefined();
+    expect(newState.byNames["fordGroup"]).toBeDefined();
+  });
+
+  it("should set userCreatePermission to true if create link is present", () => {
+    const newState = reducer({}, fetchGroupsSuccess(responseBody));
+
+    expect(newState.list.entry.groupCreatePermission).toBeTruthy();
+    expect(newState.list.entries).toEqual(["zaphodGroup", "fordGroup"]);
+    expect(newState.byNames["fordGroup"]).toBeTruthy();
+    expect(newState.byNames["zaphodGroup"]).toBeTruthy();
   });
 });
