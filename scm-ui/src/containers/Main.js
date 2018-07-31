@@ -1,9 +1,9 @@
 //@flow
 import React from "react";
 
-import { Route, withRouter } from "react-router";
+import { Route, Redirect, withRouter } from "react-router";
 
-import Repositories from "../repositories/containers/Repositories";
+import Overview from "../repos/containers/Overview";
 import Users from "../users/containers/Users";
 import Login from "../containers/Login";
 import Logout from "../containers/Logout";
@@ -21,16 +21,17 @@ class Main extends React.Component<Props> {
   render() {
     const { authenticated } = this.props;
     return (
-      <div>
+      <div className="main">
         <Switch>
-          <ProtectedRoute
-            exact
-            path="/"
-            component={Repositories}
-            authenticated={authenticated}
-          />
+          <Redirect exact path="/" to="/repos" />
           <Route exact path="/login" component={Login} />
           <Route path="/logout" component={Logout} />
+          <ProtectedRoute
+            exact
+            path="/repos"
+            component={Overview}
+            authenticated={authenticated}
+          />
           <ProtectedRoute
             exact
             path="/users"
