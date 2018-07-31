@@ -8,6 +8,7 @@ import type { History } from "history";
 import { Page } from "../../components/layout";
 import { GroupTable } from "./../components/table";
 import Paginator from "../../components/Paginator";
+import CreateGroupButton from "../components/buttons/CreateGroupButton";
 
 import {
   fetchGroupsByPage,
@@ -37,7 +38,6 @@ type Props = {
 };
 
 class Groups extends React.Component<Props> {
-
   componentDidMount() {
     this.props.fetchGroupsByPage(this.props.page);
   }
@@ -69,7 +69,7 @@ class Groups extends React.Component<Props> {
         loading={loading || !groups}
         error={error}
       >
-      <GroupTable groups={groups} />
+        <GroupTable groups={groups} />
         {this.renderPaginator()}
         {this.renderCreateButton()}
       </Page>
@@ -85,11 +85,11 @@ class Groups extends React.Component<Props> {
   }
 
   renderCreateButton() {
-   /* if (this.props.canAddGroups) {
+    if (this.props.canAddGroups) {
       return <CreateGroupButton />;
     } else {
       return;
-    }*/
+    }
   }
 }
 
@@ -122,7 +122,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     fetchGroupsByPage: (page: number) => {
       dispatch(fetchGroupsByPage(page));

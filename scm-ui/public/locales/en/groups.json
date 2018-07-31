@@ -22,5 +22,11 @@
   "add-group": {
     "title": "Create Group",
     "subtitle": "Create a new group"
+  },
+  "create-group-button": {
+    "label": "Create group"
+  },
+  "group-form": {
+    "submit": "Submit"
   }
 }
