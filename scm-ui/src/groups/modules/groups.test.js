@@ -18,7 +18,10 @@ import reducer, {
   createGroup,
   CREATE_GROUP_SUCCESS,
   CREATE_GROUP_PENDING,
-  CREATE_GROUP_FAILURE
+  CREATE_GROUP_FAILURE,
+  isCreateGroupPending,
+  CREATE_GROUP,
+  getCreateGroupFailure
 } from "./groups";
 const GROUPS_URL = "/scm/api/rest/v2/groups";
 
@@ -311,4 +314,26 @@ describe("selector tests", () => {
   it("should return undefined when fetch users did not fail", () => {
     expect(getFetchGroupsFailure({})).toBe(undefined);
   });
+
+  it("should return true if create group is pending", () => {
+    expect(isCreateGroupPending({pending: {
+      [CREATE_GROUP]: true
+    }})).toBeTruthy();
+  })
+
+  it("should return false if create group is not pending", () => {
+    expect(isCreateGroupPending({})).toBe(false);
+  })
+
+  it("should return error if creating group failed", () => {
+    expect(getCreateGroupFailure({
+      failure: {
+        [CREATE_GROUP]: error
+      }
+    })).toEqual(error)
+  })
+
+  it("should return undefined if creating group did not fail", () => {
+    expect(getCreateGroupFailure({})).toBeUndefined()
+  })
 });
