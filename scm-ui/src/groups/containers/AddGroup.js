@@ -3,7 +3,7 @@ import React from 'react';
 
 import Page from "../../components/layout/Page"
 import { translate } from "react-i18next";
-import GroupForm from '../../users/containers/GroupForm';
+import GroupForm from './GroupForm';
 
 export interface Props {
   t: string => string
