@@ -14,7 +14,8 @@ import AddUser from "../users/containers/AddUser";
 import SingleUser from "../users/containers/SingleUser";
 
 import Groups from "../groups/containers/Groups";
-import AddGroup from "../groups/containers/AddGroup"
+import SingleGroup from "../groups/containers/SingleGroup";
+import AddGroup from "../groups/containers/AddGroup";
 
 type Props = {
   authenticated?: boolean
@@ -61,6 +62,11 @@ class Main extends React.Component<Props> {
             path="/groups"
             component={Groups}
             authenticated={authenticated}
+          />
+          <ProtectedRoute
+            authenticated={authenticated}
+            path="/group/:name"
+            component={SingleGroup}
           />
           <ProtectedRoute
             authenticated={authenticated}

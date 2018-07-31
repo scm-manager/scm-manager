@@ -15,6 +15,15 @@ import reducer, {
   getFetchGroupsFailure,
   isFetchGroupsPending,
   selectListAsCollection,
+  fetchGroup,
+  FETCH_GROUP_PENDING,
+  FETCH_GROUP_SUCCESS,
+  FETCH_GROUP_FAILURE,
+  fetchGroupSuccess,
+  getFetchGroupFailure,
+  FETCH_GROUP,
+  isFetchGroupPending,
+  getGroupByName,
   createGroup,
   CREATE_GROUP_SUCCESS,
   CREATE_GROUP_PENDING,
@@ -27,22 +36,22 @@ const GROUPS_URL = "/scm/api/rest/v2/groups";
 
 const error = new Error("You have an error!");
 
-const groupZaphod = {
+const humanGroup = {
   creationDate: "2018-07-31T08:39:07.860Z",
   description: "This is a group",
-  name: "zaphodGroup",
+  name: "humanGroup",
   type: "xml",
   properties: {},
   members: ["userZaphod"],
   _links: {
     self: {
-      href: "http://localhost:3000/scm/api/rest/v2/groups/zaphodGroup"
+      href: "http://localhost:3000/scm/api/rest/v2/groups/humanGroup"
     },
     delete: {
-      href: "http://localhost:3000/scm/api/rest/v2/groups/zaphodGroup"
+      href: "http://localhost:3000/scm/api/rest/v2/groups/humanGroup"
     },
     update: {
-      href: "http://localhost:3000/scm/api/rest/v2/groups/zaphodGroup"
+      href:"http://localhost:3000/scm/api/rest/v2/groups/humanGroup"
     }
   },
   _embedded: {
@@ -59,22 +68,22 @@ const groupZaphod = {
   }
 };
 
-const groupFord = {
+const emptyGroup = {
   creationDate: "2018-07-31T08:39:07.860Z",
   description: "This is a group",
-  name: "fordGroup",
+  name: "emptyGroup",
   type: "xml",
   properties: {},
   members: [],
   _links: {
     self: {
-      href: "http://localhost:3000/scm/api/rest/v2/groups/fordGroup"
+      href: "http://localhost:3000/scm/api/rest/v2/groups/emptyGroup"
     },
     delete: {
-      href: "http://localhost:3000/scm/api/rest/v2/groups/fordGroup"
+      href: "http://localhost:3000/scm/api/rest/v2/groups/emptyGroup"
     },
     update: {
-      href: "http://localhost:3000/scm/api/rest/v2/groups/fordGroup"
+      href:"http://localhost:3000/scm/api/rest/v2/groups/emptyGroup"
     }
   },
   _embedded: {
@@ -100,7 +109,7 @@ const responseBody = {
     }
   },
   _embedded: {
-    groups: [groupZaphod, groupFord]
+    groups: [humanGroup, emptyGroup]
   }
 };
 
@@ -148,13 +157,40 @@ describe("groups fetch()", () => {
     });
   });
 
+  it("should sucessfully fetch single group", () => {
+    fetchMock.getOnce(GROUPS_URL + "/humandGroup", humanGroup);
+
+    const store = mockStore({});
+    return store.dispatch(fetchGroup("humandGroup")).then(() => {
+      const actions = store.getActions();
+      expect(actions[0].type).toEqual(FETCH_GROUP_PENDING);
+      expect(actions[1].type).toEqual(FETCH_GROUP_SUCCESS);
+      expect(actions[1].payload).toBeDefined();
+    });
+  });
+
+  it("should fail fetching single group on HTTP 500", () => {
+    fetchMock.getOnce(GROUPS_URL + "/humandGroup", {
+      status: 500
+    });
+
+    const store = mockStore({});
+    return store.dispatch(fetchGroup("humandGroup")).then(() => {
+      const actions = store.getActions();
+      expect(actions[0].type).toEqual(FETCH_GROUP_PENDING);
+      expect(actions[1].type).toEqual(FETCH_GROUP_FAILURE);
+      expect(actions[1].payload).toBeDefined();
+    });
+  });
+
+
   it("should successfully create group", () => {
     fetchMock.postOnce(GROUPS_URL, {
       status: 201
     });
 
     const store = mockStore({});
-    return store.dispatch(createGroup(groupZaphod)).then(() => {
+    return store.dispatch(createGroup(humanGroup)).then(() => {
       const actions = store.getActions();
       expect(actions[0].type).toEqual(CREATE_GROUP_PENDING);
       expect(actions[1].type).toEqual(CREATE_GROUP_SUCCESS);
@@ -167,7 +203,7 @@ describe("groups fetch()", () => {
     });
 
     const store = mockStore({});
-    return store.dispatch(createGroup(groupZaphod)).then(() => {
+    return store.dispatch(createGroup(humanGroup)).then(() => {
       const actions = store.getActions();
       expect(actions[0].type).toEqual(CREATE_GROUP_PENDING);
       expect(actions[1].type).toEqual(CREATE_GROUP_FAILURE);
@@ -178,11 +214,13 @@ describe("groups fetch()", () => {
 });
 
 describe("groups reducer", () => {
-  it("should update state correctly according to FETCH_USERS_SUCCESS action", () => {
+
+  it("should update state correctly according to FETCH_GROUPS_SUCCESS action", () => {
+
     const newState = reducer({}, fetchGroupsSuccess(responseBody));
 
     expect(newState.list).toEqual({
-      entries: ["zaphodGroup", "fordGroup"],
+      entries: ["humanGroup", "emptyGroup"],
       entry: {
         groupCreatePermission: true,
         page: 0,
@@ -192,8 +230,8 @@ describe("groups reducer", () => {
     });
 
     expect(newState.byNames).toEqual({
-      zaphodGroup: groupZaphod,
-      fordGroup: groupFord
+      humanGroup: humanGroup,
+      emptyGroup: emptyGroup
     });
 
     expect(newState.list.entry.groupCreatePermission).toBeTruthy();
@@ -205,26 +243,46 @@ describe("groups reducer", () => {
     expect(newState.list.entry.groupCreatePermission).toBeTruthy();
   });
 
-  it("should not replace whole byNames map when fetching users", () => {
+  it("should not replace whole byNames map when fetching groups", () => {
     const oldState = {
       byNames: {
-        fordGroup: groupFord
+        emptyGroup: emptyGroup
       }
     };
 
     const newState = reducer(oldState, fetchGroupsSuccess(responseBody));
-    expect(newState.byNames["zaphodGroup"]).toBeDefined();
-    expect(newState.byNames["fordGroup"]).toBeDefined();
+    expect(newState.byNames["humanGroup"]).toBeDefined();
+    expect(newState.byNames["emptyGroup"]).toBeDefined();
   });
 
-  it("should set userCreatePermission to true if create link is present", () => {
+  it("should set groupCreatePermission to true if create link is present", () => {
     const newState = reducer({}, fetchGroupsSuccess(responseBody));
 
     expect(newState.list.entry.groupCreatePermission).toBeTruthy();
-    expect(newState.list.entries).toEqual(["zaphodGroup", "fordGroup"]);
-    expect(newState.byNames["fordGroup"]).toBeTruthy();
-    expect(newState.byNames["zaphodGroup"]).toBeTruthy();
+    expect(newState.list.entries).toEqual(["humanGroup", "emptyGroup"]);
+    expect(newState.byNames["emptyGroup"]).toBeTruthy();
+    expect(newState.byNames["humanGroup"]).toBeTruthy();
   });
+
+
+  it("should update state according to FETCH_GROUP_SUCCESS action", () => {
+    const newState = reducer({}, fetchGroupSuccess(emptyGroup));
+    expect(newState.byNames["emptyGroup"]).toBe(emptyGroup);
+  });
+
+  it("should affect groups state nor the state of other groups", () => {
+    const newState = reducer(
+      {
+        list: {
+          entries: ["humanGroup"]
+        }
+      },
+      fetchGroupSuccess(emptyGroup)
+    );
+    expect(newState.byNames["emptyGroup"]).toBe(emptyGroup);
+    expect(newState.list.entries).toEqual(["humanGroup"]);
+  });
+
 });
 
 describe("selector tests", () => {
@@ -311,8 +369,45 @@ describe("selector tests", () => {
     expect(getFetchGroupsFailure(state)).toEqual(error);
   });
 
-  it("should return undefined when fetch users did not fail", () => {
+  it("should return undefined when fetch groups did not fail", () => {
     expect(getFetchGroupsFailure({})).toBe(undefined);
+  });
+
+  it("should return group emptyGroup", () => {
+    const state = {
+      groups: {
+        byNames: {
+          emptyGroup: emptyGroup
+        }
+      }
+    };
+    expect(getGroupByName(state, "emptyGroup")).toEqual(emptyGroup);
+  });
+
+  it("should return true, when fetch group humandGroup is pending", () => {
+    const state = {
+      pending: {
+        [FETCH_GROUP + "/humandGroup"]: true
+      }
+    };
+    expect(isFetchGroupPending(state, "humandGroup")).toEqual(true);
+  });
+
+  it("should return false, when fetch group humandGroup is not pending", () => {
+    expect(isFetchGroupPending({}, "humandGroup")).toEqual(false);
+  });
+
+  it("should return error when fetch group humandGroup did fail", () => {
+    const state = {
+      failure: {
+        [FETCH_GROUP + "/humandGroup"]: error
+      }
+    };
+    expect(getFetchGroupFailure(state, "humandGroup")).toEqual(error);
+  });
+
+  it("should return undefined when fetch group humandGroup did not fail", () => {
+    expect(getFetchGroupFailure({}, "humandGroup")).toBe(undefined);
   });
 
   it("should return true if create group is pending", () => {
@@ -336,4 +431,5 @@ describe("selector tests", () => {
   it("should return undefined if creating group did not fail", () => {
     expect(getCreateGroupFailure({})).toBeUndefined()
   })
+
 });

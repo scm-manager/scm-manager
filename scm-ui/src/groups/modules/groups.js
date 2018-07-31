@@ -37,7 +37,6 @@ const GROUPS_URL = "groups";
 const CONTENT_TYPE_GROUP = "application/vnd.scmm-group+json;v=2";
 
 // fetch groups
-
 export function fetchGroups() {
   return fetchGroupsByLink(GROUPS_URL);
 }
@@ -86,6 +85,54 @@ export function fetchGroupsFailure(url: string, error: Error): Action {
   };
 }
 
+//fetch group
+export function fetchGroup(name: string) {
+  const groupUrl = GROUPS_URL + "/" + name;
+  return function(dispatch: any) {
+    dispatch(fetchGroupPending(name));
+    return apiClient
+      .get(groupUrl)
+      .then(response => {
+        return response.json();
+      })
+      .then(data => {
+        dispatch(fetchGroupSuccess(data));
+      })
+      .catch(cause => {
+        const error = new Error(`could not fetch group: ${cause.message}`);
+        dispatch(fetchGroupFailure(name, error));
+      });
+  };
+}
+
+export function fetchGroupPending(name: string): Action {
+  return {
+    type: FETCH_GROUP_PENDING,
+    payload: name,
+    itemId: name
+  };
+}
+
+export function fetchGroupSuccess(group: any): Action {
+  return {
+    type: FETCH_GROUP_SUCCESS,
+    payload: group,
+    itemId: group.name
+  };
+}
+
+export function fetchGroupFailure(name: string, error: Error): Action {
+  return {
+    type: FETCH_GROUP_FAILURE,
+    payload: {
+      name,
+      error
+    },
+    itemId: name
+  };
+}
+
+//create group
 export function createGroup(group: Group) {
   return function(dispatch: Dispatch) {
     dispatch(createGroupPending());
@@ -120,6 +167,7 @@ export function createGroupFailure(error: Error) {
     payload: error
   };
 }
+
 
 //reducer
 function extractGroupsByNames(
@@ -179,7 +227,8 @@ function byNamesReducer(state: any = {}, action: any = {}) {
       return {
         ...byNames
       };
-
+    case FETCH_GROUP_SUCCESS:
+      return reducerByName(state, action.payload.name, action.payload);
     default:
       return state;
   }
@@ -253,4 +302,12 @@ export function getGroupByName(state: Object, name: string) {
   if (state.groups && state.groups.byNames) {
     return state.groups.byNames[name];
   }
+}
+
+export function isFetchGroupPending(state: Object, name: string) {
+  return isPending(state, FETCH_GROUP, name);
+}
+
+export function getFetchGroupFailure(state: Object, name: string) {
+  return getFailure(state, FETCH_GROUP, name);
 }

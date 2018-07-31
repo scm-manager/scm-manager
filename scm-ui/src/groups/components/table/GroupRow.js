@@ -18,7 +18,7 @@ export default class GroupRow extends React.Component<Props> {
     return (
       <tr>
         <td className="is-hidden-mobile">{this.renderLink(to, group.name)}</td>
-        <td>{this.renderLink(to, group.description)}</td>
+        <td>{group.description}</td>
       </tr>
     );
   }

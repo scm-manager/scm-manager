@@ -1,11 +1,23 @@
 {
   "group": {
     "name": "Name",
-    "description": "Description"
+    "description": "Description",
+    "creationDate": "Creation Date",
+    "lastModified": "Last Modified",
+    "type": "Type",
+    "members": "Members"
   },
   "groups": {
     "title": "Groups",
     "subtitle": "Create, read, update and delete groups"
+  },
+  "single-group": {
+    "error-title": "Error",
+    "error-subtitle": "Unknown group error",
+    "navigation-label": "Navigation",
+    "actions-label": "Actions",
+    "information-label": "Information",
+    "back-label": "Back"
   },
   "add-group": {
     "title": "Create Group",

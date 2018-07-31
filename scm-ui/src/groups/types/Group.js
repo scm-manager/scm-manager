@@ -8,7 +8,6 @@ export type Group = {
   description: string,
   lastModified: string,
   type: string,
-  properties: [],
   members: string[],
   _links: Links,
   _embedded: {
