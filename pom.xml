@@ -168,13 +168,13 @@
 
       <!-- TODO replace by proper version from maven central (group: com.github.sdorra) once its there. -->
       <dependency>
-        <groupId>com.github.schnatterer.shiro-static-permissions</groupId>
+        <groupId>com.github.sdorra.shiro-static-permissions</groupId>
         <artifactId>ssp-lib</artifactId>
         <version>${ssp.version}</version>
       </dependency>
 
       <dependency>
-        <groupId>com.github.schnatterer.shiro-static-permissions</groupId>
+        <groupId>com.github.sdorra.shiro-static-permissions</groupId>
         <artifactId>ssp-processor</artifactId>
         <version>${ssp.version}</version>
         <optional>true</optional>
@@ -564,7 +564,7 @@
     <jetty.maven.version>9.2.10.v20150310</jetty.maven.version>
 
     <!-- security libraries -->
-    <ssp.version>-SNAPSHOT</ssp.version>
+    <ssp.version>967c8fd521</ssp.version>
     <shiro.version>1.4.0</shiro.version>
 
     <!-- repostitory libraries -->
