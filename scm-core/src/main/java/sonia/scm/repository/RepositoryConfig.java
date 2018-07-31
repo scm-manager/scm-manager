@@ -33,15 +33,12 @@
 
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import sonia.scm.Validateable;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.File;
+import sonia.scm.config.Configuration;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+import java.io.File;
 
 /**
  * Basic {@link Repository} configuration class.
@@ -49,7 +46,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Sebastian Sdorra
  */
 @XmlRootElement
-public class SimpleRepositoryConfig implements Validateable
+public abstract class RepositoryConfig implements Validateable, Configuration
 {
 
   /**
@@ -119,4 +116,19 @@ public class SimpleRepositoryConfig implements Validateable
 
   /** directory for repositories */
   private File repositoryDirectory;
+
+  /**
+   * Specifies the identifier of the concrete {@link RepositoryConfig} when checking permissions of an object.
+   * The permission Strings will have the following format: "configuration:*:ID", where the ID part is defined by this
+   * method.
+   *
+   * For example: "configuration:read:git".
+   *
+   * No need to serialize this.
+   *
+   * @return identifier of this RepositoryConfig in permission strings
+   */
+  @Override
+  @XmlTransient // Only for permission checks, don't serialize to XML
+  public abstract String getId();
 }

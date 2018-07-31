@@ -56,7 +56,7 @@ import sonia.scm.store.ConfigurationStoreFactory;
  *
  * @param <C>
  */
-public abstract class AbstractRepositoryHandler<C extends SimpleRepositoryConfig>
+public abstract class AbstractRepositoryHandler<C extends RepositoryConfig>
   implements RepositoryHandler
 {
 

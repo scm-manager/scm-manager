@@ -27,9 +27,7 @@ import java.net.URL;
 import java.util.Collections;
 
 import static java.util.Collections.singletonList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doNothing;
@@ -111,8 +109,6 @@ public class GroupRootResourceTest {
 
     Group group = createDummyGroup();
     when(groupManager.get("admin")).thenReturn(group);
-    Group updatedGroup = createDummyGroup();
-    updatedGroup.setDescription("Updated description");
 
     MockHttpRequest request = MockHttpRequest
       .put("/" + GroupRootResource.GROUPS_PATH_V2 + "admin")
@@ -133,9 +129,6 @@ public class GroupRootResourceTest {
   public void updateShouldFailOnNonexistentGroup() throws URISyntaxException, IOException {
     URL url = Resources.getResource("sonia/scm/api/v2/group-test-update.json");
     byte[] groupJson = Resources.toByteArray(url);
-
-    Group updatedGroup = createDummyGroup();
-    updatedGroup.setDescription("Updated description");
 
     MockHttpRequest request = MockHttpRequest
       .put("/" + GroupRootResource.GROUPS_PATH_V2 + "idontexist")

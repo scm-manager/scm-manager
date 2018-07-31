@@ -37,6 +37,7 @@ import sonia.scm.Type;
 import sonia.scm.io.DefaultFileSystem;
 import sonia.scm.store.ConfigurationStoreFactory;
 
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
@@ -48,7 +49,7 @@ import java.util.Set;
  * @author Sebastian Sdorra
  */
 public class DummyRepositoryHandler
-  extends AbstractSimpleRepositoryHandler<SimpleRepositoryConfig> {
+  extends AbstractSimpleRepositoryHandler<DummyRepositoryHandler.DummyRepositoryConfig> {
 
   public static final String TYPE_DISPLAYNAME = "Dummy";
 
@@ -79,12 +80,20 @@ public class DummyRepositoryHandler
   }
 
   @Override
-  protected SimpleRepositoryConfig createInitialConfig() {
-    return new SimpleRepositoryConfig();
+  protected DummyRepositoryConfig createInitialConfig() {
+    return new DummyRepositoryConfig();
   }
 
   @Override
-  protected Class<SimpleRepositoryConfig> getConfigClass() {
-    return SimpleRepositoryConfig.class;
+  protected Class<DummyRepositoryConfig> getConfigClass() {
+    return DummyRepositoryConfig.class;
+  }
+
+  @XmlRootElement(name = "config")
+  public static class DummyRepositoryConfig extends RepositoryConfig {
+    @Override
+    public String getId() {
+      return TYPE_NAME;
+    }
   }
 }

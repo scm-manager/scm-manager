@@ -20,6 +20,8 @@ public class VndMediaType {
   public static final String REPOSITORY_COLLECTION = PREFIX + "repositoryCollection" + SUFFIX;
   public static final String ME = PREFIX + "me" + SUFFIX;
 
+  public static final String CONFIG = PREFIX + "config" + SUFFIX;
+
   private VndMediaType() {
   }
 

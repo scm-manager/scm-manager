@@ -49,6 +49,7 @@ import sonia.scm.security.Role;
  * 
  * @author Sebastian Sdorra
  */
+// TODO before releasing v2, delete this filter (we use Permission objects now)
 @WebElement(
   value = Filters.PATTERN_CONFIG,
   morePatterns = { 
