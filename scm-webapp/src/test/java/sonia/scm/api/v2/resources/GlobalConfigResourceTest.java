@@ -102,7 +102,6 @@ public class GlobalConfigResourceTest {
     assertTrue(response.getContentAsString().contains("\"proxyPassword\":\"newPassword\""));
     assertTrue(response.getContentAsString().contains("\"self\":{\"href\":\"/v2/config/global"));
     assertTrue("link not found", response.getContentAsString().contains("\"update\":{\"href\":\"/v2/config/global"));
-
   }
 
   @Test
