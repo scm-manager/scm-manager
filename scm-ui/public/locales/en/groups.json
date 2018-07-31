@@ -6,5 +6,9 @@
   "groups": {
     "title": "Groups",
     "subtitle": "Create, read, update and delete groups"
+  },
+  "add-group": {
+    "title": "Create Group",
+    "subtitle": "Create a new group"
   }
 }
