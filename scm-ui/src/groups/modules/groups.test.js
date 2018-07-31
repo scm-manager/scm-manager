@@ -14,12 +14,15 @@ import reducer, {
   getGroupsFromState,
   getFetchGroupsFailure,
   isFetchGroupsPending,
-  selectListAsCollection
-} from "./groups"
+  selectListAsCollection,
+  createGroup,
+  CREATE_GROUP_SUCCESS,
+  CREATE_GROUP_PENDING,
+  CREATE_GROUP_FAILURE
+} from "./groups";
 const GROUPS_URL = "/scm/api/rest/v2/groups";
 
 const error = new Error("You have an error!");
-
 
 const groupZaphod = {
   creationDate: "2018-07-31T08:39:07.860Z",
@@ -36,18 +39,20 @@ const groupZaphod = {
       href: "http://localhost:3000/scm/api/rest/v2/groups/zaphodGroup"
     },
     update: {
-      href:"http://localhost:3000/scm/api/rest/v2/groups/zaphodGroup"
+      href: "http://localhost:3000/scm/api/rest/v2/groups/zaphodGroup"
     }
   },
   _embedded: {
-    members: [{
-      name:"userZaphod",
-      _links: {
-        self :{
-          href: "http://localhost:3000/scm/api/rest/v2/users/userZaphod"
+    members: [
+      {
+        name: "userZaphod",
+        _links: {
+          self: {
+            href: "http://localhost:3000/scm/api/rest/v2/users/userZaphod"
+          }
         }
       }
-    }]
+    ]
   }
 };
 
@@ -66,7 +71,7 @@ const groupFord = {
       href: "http://localhost:3000/scm/api/rest/v2/groups/fordGroup"
     },
     update: {
-      href:"http://localhost:3000/scm/api/rest/v2/groups/fordGroup"
+      href: "http://localhost:3000/scm/api/rest/v2/groups/fordGroup"
     }
   },
   _embedded: {
@@ -139,10 +144,37 @@ describe("groups fetch()", () => {
       expect(actions[1].payload).toBeDefined();
     });
   });
+
+  it("should successfully create group", () => {
+    fetchMock.postOnce(GROUPS_URL, {
+      status: 201
+    });
+
+    const store = mockStore({});
+    return store.dispatch(createGroup(groupZaphod)).then(() => {
+      const actions = store.getActions();
+      expect(actions[0].type).toEqual(CREATE_GROUP_PENDING);
+      expect(actions[1].type).toEqual(CREATE_GROUP_SUCCESS);
+    });
+  });
+
+  it("should fail creating group on HTTP 500", () => {
+    fetchMock.postOnce(GROUPS_URL, {
+      status: 500
+    });
+
+    const store = mockStore({});
+    return store.dispatch(createGroup(groupZaphod)).then(() => {
+      const actions = store.getActions();
+      expect(actions[0].type).toEqual(CREATE_GROUP_PENDING);
+      expect(actions[1].type).toEqual(CREATE_GROUP_FAILURE);
+      expect(actions[1].payload).toBeDefined();
+      expect(actions[1].payload instanceof Error).toBeTruthy();
+    });
+  });
 });
 
 describe("groups reducer", () => {
-
   it("should update state correctly according to FETCH_USERS_SUCCESS action", () => {
     const newState = reducer({}, fetchGroupsSuccess(responseBody));
 
@@ -192,9 +224,7 @@ describe("groups reducer", () => {
   });
 });
 
-
 describe("selector tests", () => {
-
   it("should return an empty object", () => {
     expect(selectListAsCollection({})).toEqual({});
     expect(selectListAsCollection({ groups: { a: "a" } })).toEqual({});
@@ -281,5 +311,4 @@ describe("selector tests", () => {
   it("should return undefined when fetch users did not fail", () => {
     expect(getFetchGroupsFailure({})).toBe(undefined);
   });
-
 });

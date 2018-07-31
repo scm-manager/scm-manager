@@ -5,7 +5,7 @@ import * as types from "../../modules/types";
 import { combineReducers, Dispatch } from "redux";
 import type { Action } from "../../types/Action";
 import type { PagedCollection } from "../../types/Collection";
-import type {Groups}  from "../types/Groups";
+import type { Groups } from "../types/Groups";
 
 export const FETCH_GROUPS = "scm/groups/FETCH_GROUPS";
 export const FETCH_GROUPS_PENDING = `${FETCH_GROUPS}_${types.PENDING_SUFFIX}`;
@@ -34,6 +34,7 @@ export const DELETE_GROUP_SUCCESS = `${DELETE_GROUP}_${types.SUCCESS_SUFFIX}`;
 export const DELETE_GROUP_FAILURE = `${DELETE_GROUP}_${types.FAILURE_SUFFIX}`;
 
 const GROUPS_URL = "groups";
+const CONTENT_TYPE_GROUP = "application/vnd.scmm-group+json;v=2";
 
 // fetch groups
 
@@ -85,6 +86,40 @@ export function fetchGroupsFailure(url: string, error: Error): Action {
   };
 }
 
+export function createGroup(group: Group) {
+  return function(dispatch: Dispatch) {
+    dispatch(createGroupPending());
+    return apiClient
+      .postWithContentType(GROUPS_URL, group, CONTENT_TYPE_GROUP)
+      .then(() => dispatch(createGroupSuccess()))
+      .catch(error => {
+        dispatch(
+          createGroupFailure(
+            new Error(`Failed to create group ${group.name}: ${error.message}`)
+          )
+        );
+      });
+  };
+}
+
+export function createGroupPending() {
+  return {
+    type: CREATE_GROUP_PENDING
+  };
+}
+
+export function createGroupSuccess() {
+  return {
+    type: CREATE_GROUP_SUCCESS
+  };
+}
+
+export function createGroupFailure(error: Error) {
+  return {
+    type: CREATE_GROUP_FAILURE,
+    payload: error
+  };
+}
 
 //reducer
 function extractGroupsByNames(
@@ -103,7 +138,6 @@ function extractGroupsByNames(
   }
   return groupsByNames;
 }
-
 
 const reducerByName = (state: any, groupname: string, newGroupState: any) => {
   const newGroupsByNames = {
@@ -155,7 +189,6 @@ export default combineReducers({
   list: listReducer,
   byNames: byNamesReducer
 });
-
 
 // selectors
 
