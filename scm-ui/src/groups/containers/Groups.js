@@ -1,18 +1,24 @@
-// @flow
+//@flow
 import React from "react";
+import { connect } from "react-redux";
 
-type Props = {
-};
-
+type Props = {};
 
 class Groups extends React.Component<Props> {
-
-
   render() {
-    return (
-      "Groups will be displayed here!"
-    );
+    return "groups will be displayed here";
   }
+}
+
+const mapStateToProps = state => {
+  return {};
 };
 
-export default Groups;
+const mapDispatchToProps = (dispatch) => {
+  return {};
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Groups);
