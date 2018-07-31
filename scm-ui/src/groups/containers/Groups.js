@@ -1,8 +1,5 @@
 // @flow
 import React from "react";
-import type { History } from "history";
-import { connect } from "react-redux";
-import { translate } from "react-i18next";
 
 type Props = {
 };
