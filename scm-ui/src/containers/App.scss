@@ -1,0 +1,35 @@
+@import "bulma/sass/utilities/initial-variables";
+@import "bulma/sass/utilities/functions";
+
+$blue: #33B2E8;
+
+// $footer-background-color
+
+.is-ellipsis-overflow {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.has-rounded-border {
+  border-radius: 0.25rem;
+}
+
+.is-full-width {
+  width: 100%;
+}
+
+.fitParent {
+  // TODO get rid of important
+  margin: 0 !important;
+  // 3.8em for line-numbers
+  padding: 0 0 0 3.8em !important;
+}
+
+html, body {
+  background-color: whitesmoke;
+  height: 100%;
+}
+
+// 6. Import the rest of Bulma
+@import "bulma/bulma";

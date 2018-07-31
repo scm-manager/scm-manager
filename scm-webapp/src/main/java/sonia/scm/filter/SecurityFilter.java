@@ -44,6 +44,7 @@ import org.apache.shiro.subject.Subject;
 import sonia.scm.Priority;
 import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.security.SecurityRequests;
 import sonia.scm.web.filter.HttpFilter;
 import sonia.scm.web.filter.SecurityHttpServletRequestWrapper;
 
@@ -69,45 +70,20 @@ public class SecurityFilter extends HttpFilter
   @VisibleForTesting
   static final String ATTRIBUTE_REMOTE_USER = "principal";
 
-  /** Field description */
-  public static final String URL_AUTHENTICATION = "/api/rest/auth";
+  private final ScmConfiguration configuration;
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param configuration
-   */
   @Inject
   public SecurityFilter(ScmConfiguration configuration)
   {
     this.configuration = configuration;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param response
-   * @param chain
-   *
-   * @throws IOException
-   * @throws ServletException
-   */
   @Override
   protected void doFilter(HttpServletRequest request,
     HttpServletResponse response, FilterChain chain)
     throws IOException, ServletException
   {
-    String uri =
-      request.getRequestURI().substring(request.getContextPath().length());
-
-    if (!uri.startsWith(URL_AUTHENTICATION))
+    if (!SecurityRequests.isAuthenticationRequest(request))
     {
       Subject subject = SecurityUtils.getSubject();
       if (hasPermission(subject))
@@ -139,16 +115,6 @@ public class SecurityFilter extends HttpFilter
     }
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param subject
-   *
-   * @return
-   */
   protected boolean hasPermission(Subject subject)
   {
     return ((configuration != null)
@@ -173,8 +139,4 @@ public class SecurityFilter extends HttpFilter
     return username;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** scm configuration */
-  private final ScmConfiguration configuration;
 }

@@ -18,6 +18,7 @@ public class VndMediaType {
   public static final String USER_COLLECTION = PREFIX + "userCollection" + SUFFIX;
   public static final String GROUP_COLLECTION = PREFIX + "groupCollection" + SUFFIX;
   public static final String REPOSITORY_COLLECTION = PREFIX + "repositoryCollection" + SUFFIX;
+  public static final String ME = PREFIX + "me" + SUFFIX;
 
   private VndMediaType() {
   }
