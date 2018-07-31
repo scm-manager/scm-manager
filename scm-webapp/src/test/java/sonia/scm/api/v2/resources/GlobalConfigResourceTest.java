@@ -93,7 +93,7 @@ public class GlobalConfigResourceTest {
 
     MockHttpResponse response = new MockHttpResponse();
     dispatcher.invoke(request, response);
-    assertEquals(HttpServletResponse.SC_CREATED, response.getStatus());
+    assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
 
     request = MockHttpRequest.get("/" + GlobalConfigResource.GLOBAL_CONFIG_PATH_V2);
     response = new MockHttpResponse();

@@ -82,6 +82,6 @@ public class GlobalConfigResource {
       ScmConfigurationUtil.getInstance().store(configuration);
     }
 
-    return Response.created(uriInfo.getRequestUri()).build();
+    return Response.noContent().build();
   }
 }
