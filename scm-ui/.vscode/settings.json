@@ -1,0 +1,10 @@
+{
+  "javascript.validate.enable": false,
+  // Set the default
+  "editor.formatOnSave": false,
+  // Enable per-language
+  "[javascript]": {
+      "editor.formatOnSave": true
+  },
+  "flow.pathToFlow": "${workspaceRoot}/node_modules/.bin/flow"
+}

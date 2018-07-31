@@ -1,7 +1,7 @@
 #!groovy
 
 // Keep the version in sync with the one used in pom.xml in order to get correct syntax completion.
-@Library('github.com/cloudogu/ces-build-lib@9aadeeb')
+@Library('github.com/cloudogu/ces-build-lib@59d3e94')
 import com.cloudogu.ces.cesbuildlib.*
 
 node() { // No specific label
@@ -31,7 +31,7 @@ node() { // No specific label
       }
 
       stage('Unit Test') {
-        mvn 'test -Dsonia.scm.test.skip.hg=true'
+        mvn 'test -Dsonia.scm.test.skip.hg=true -Dmaven.test.failure.ignore=true'
       }
 
       stage('SonarQube') {

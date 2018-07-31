@@ -36,24 +36,22 @@ package sonia.scm.web.security;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
-
 import sonia.scm.Priority;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.filter.Filters;
 import sonia.scm.filter.WebElement;
-import sonia.scm.web.filter.AuthenticationFilter;
+import sonia.scm.security.SecurityRequests;
 import sonia.scm.web.WebTokenGenerator;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
-
-import java.util.Set;
+import sonia.scm.web.filter.AuthenticationFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Set;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Filter to handle authentication for the rest api of SCM-Manager.
@@ -65,9 +63,6 @@ import javax.servlet.http.HttpServletResponse;
   morePatterns = { Filters.PATTERN_DEBUG })
 public class ApiAuthenticationFilter extends AuthenticationFilter
 {
-
-  /** login uri */
-  public static final String URI_LOGIN = "/api/rest/auth/access_token";
 
   //~--- constructors ---------------------------------------------------------
 
@@ -104,7 +99,7 @@ public class ApiAuthenticationFilter extends AuthenticationFilter
     throws IOException, ServletException
   {
     // skip filter on login resource
-    if (request.getRequestURI().contains(URI_LOGIN))
+    if (SecurityRequests.isAuthenticationRequest(request))
     {
       chain.doFilter(request, response);
     }

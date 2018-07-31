@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>sonia.scm</groupId>
+    <artifactId>scm</artifactId>
+    <version>2.0.0-SNAPSHOT</version>
+  </parent>
+
+  <groupId>sonia.scm.clients</groupId>
+  <artifactId>scm-ui</artifactId>
+  <packaging>pom</packaging>
+  <version>2.0.0-SNAPSHOT</version>
+  <name>scm-ui</name>
+
+  <properties>
+    <sonar.language>js</sonar.language>
+    <sonar.sources>src</sonar.sources>
+    <sonar.test.exclusions>**/*.test.js,src/tests/**</sonar.test.exclusions>
+    <sonar.coverage.exclusions>**/*.test.js,src/tests/**</sonar.coverage.exclusions>
+    <sonar.javascript.jstest.reportsPath>target/jest-reports</sonar.javascript.jstest.reportsPath>
+    <sonar.javascript.lcov.reportPaths>target/jest-reports/coverage/lcov.info</sonar.javascript.lcov.reportPaths>
+  </properties>
+
+  <build>
+    <plugins>
+
+      <plugin>
+        <groupId>com.github.sdorra</groupId>
+        <artifactId>buildfrontend-maven-plugin</artifactId>
+        <version>2.0.1</version>
+        <configuration>
+          <node>
+            <version>8.11.3</version>
+          </node>
+          <pkgManager>
+            <type>YARN</type>
+            <version>1.7.0</version>
+          </pkgManager>
+          <script>run</script>
+        </configuration>
+        <executions>
+          <execution>
+            <id>install</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>install</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>build</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <script>build</script>
+            </configuration>
+          </execution>
+          <execution>
+            <id>test</id>
+            <phase>test</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <script>test-ci</script>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+    </plugins>
+  </build>
+</project>

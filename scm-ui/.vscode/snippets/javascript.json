@@ -1,0 +1,97 @@
+{
+	"React default component": {
+		"prefix": "rdc",
+		"body": [
+			"//@flow",
+			"import React from \"react\";",
+			"",
+			"type Props = {};",
+			"",
+			"class $1 extends React.Component<Props> {",
+			"  render() {",
+			"    return <div />;",
+			"  }",
+			"}",
+			"",
+			"export default $1;"
+		],
+		"description": "React default component with props"
+	},
+
+	"React styled component": {
+		"prefix": "rsc",
+		"body": [
+			"//@flow",
+			"import React from \"react\";",
+			"import injectSheet from \"react-jss\";",
+			"",
+			"const styles = {};",
+			"",
+			"type Props = {",
+			"  classes: any",
+			"};",
+			"",
+			"class $1 extends React.Component<Props> {",
+			"  render() {",
+			"    const { classes } = this.props;",
+			"    return <div />;",
+			"  }",
+			"}",
+			"",
+			"export default injectSheet(styles)($1);"
+		],
+		"description": "React default component with props"
+  },
+  
+  "React container component": {
+		"prefix": "rcc",
+		"body": [
+			"//@flow",
+			"import React from \"react\";",
+      "import { connect } from \"react-redux\";",
+			"",
+			"type Props = {};",
+			"",
+			"class $1 extends React.Component<Props> {",
+			"  render() {",
+			"    return <div />;",
+			"  }",
+      "}",
+      "",
+      "const mapStateToProps = state => {",
+        "  return {};",
+        "};",
+      "",
+      "const mapDispatchToProps = (dispatch) => {",
+      "  return {};",
+      "};",
+			"",
+			"export default connect(",
+      "  mapStateToProps,",
+      "  mapDispatchToProps",
+      ")($1);"
+		],
+		"description": "React component which is connected to the store"
+  },
+  
+  "React component test": {
+		"prefix": "rct",
+		"body": [
+			"//@flow",
+			"import React from \"react\";",
+      "import { configure, shallow } from \"enzyme\";",
+      "import Adapter from \"enzyme-adapter-react-16\";",
+      "",
+      "import \"raf/polyfill\";",
+      "",
+      "configure({ adapter: new Adapter() });",
+      "",
+      "it(\"should render the component\", () => {",
+      "  $0",
+      "  //const label = shallow(<Label value=\"awesome\" />);",
+      "  //expect(label.text()).toBe(\"awesome\");",
+      "});"
+		],
+		"description": "React component test with enzyme and jest"
+  }
+}
