@@ -36,20 +36,33 @@ class Details extends React.Component<Props> {
             <td>{t("group.type")}</td>
             <td>{group.type}</td>
           </tr>
-          <tr>
-            <td>{t("group.members")}</td>
-            <td>
-              <table><tbody>
-                {group.members.map((member, index) => {
-                  return <GroupMember key={index} member={member} />;
-                })}
-                </tbody></table>
-            </td>
-          </tr>
+          {this.renderMembers()}
         </tbody>
       </table>
     );
+
+
   }
+
+  renderMembers() {
+    if (this.props.group.members.length > 0) {
+      return (
+      <tr>
+          <td>{this.props.t("group.members")}</td>
+          <td>
+            <table><tbody>
+            {this.props.group.members.map((member, index) => {
+            return <GroupMember key={index} member={member} />;
+            })}
+            </tbody></table>
+          </td>
+      </tr>
+      );
+    } else {
+      return;
+    }
+  }
+
 }
 
 export default translate("groups")(Details);
