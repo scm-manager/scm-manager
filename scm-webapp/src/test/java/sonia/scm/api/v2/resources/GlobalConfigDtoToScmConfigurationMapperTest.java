@@ -51,8 +51,6 @@ public class GlobalConfigDtoToScmConfigurationMapperTest {
     assertEquals("https://plug.ins" , config.getPluginUrl());
     assertEquals(40 , config.getLoginAttemptLimitTimeout());
     assertTrue(config.isEnabledXsrfProtection());
-
-
   }
 
   private GlobalConfigDto createDefaultDto() {

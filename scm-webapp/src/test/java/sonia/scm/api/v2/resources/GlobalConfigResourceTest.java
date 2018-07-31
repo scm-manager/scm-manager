@@ -20,8 +20,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.HashSet;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -123,28 +121,10 @@ public class GlobalConfigResourceTest {
     dispatcher.invoke(request, response);
   }
 
-  public static ScmConfiguration createConfiguration() {
+  private static ScmConfiguration createConfiguration() {
     ScmConfiguration scmConfiguration = new ScmConfiguration();
     scmConfiguration.setProxyPassword("heartOfGold");
-    scmConfiguration.setProxyPort(1234);
-    scmConfiguration.setProxyServer("proxyserver");
-    scmConfiguration.setProxyUser("trillian");
-    scmConfiguration.setEnableProxy(true);
-    scmConfiguration.setRealmDescription("description");
-    scmConfiguration.setEnableRepositoryArchive(true);
-    scmConfiguration.setDisableGroupingGrid(true);
-    scmConfiguration.setDateFormat("dd");
-    scmConfiguration.setAnonymousAccessEnabled(true);
-    scmConfiguration.setAdminGroups(new HashSet<>(Arrays.asList("group")));
-    scmConfiguration.setAdminUsers(new HashSet<>(Arrays.asList("user1")));
-    scmConfiguration.setBaseUrl("baseurl");
-    scmConfiguration.setForceBaseUrl(true);
-    scmConfiguration.setLoginAttemptLimit(1);
-    scmConfiguration.setProxyExcludes(new HashSet<>(Arrays.asList("arthur", "dent")));
-    scmConfiguration.setSkipFailedAuthenticators(true);
-    scmConfiguration.setPluginUrl("pluginurl");
-    scmConfiguration.setLoginAttemptLimitTimeout(2);
-    scmConfiguration.setEnabledXsrfProtection(true);
+
     return scmConfiguration;
   }
 }
