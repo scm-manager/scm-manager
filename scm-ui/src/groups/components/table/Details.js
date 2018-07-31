@@ -2,7 +2,6 @@
 import React from "react";
 import type { Group } from "../../types/Group";
 import { translate } from "react-i18next";
-import { Checkbox } from "../../../components/forms";
 
 type Props = {
   group: Group,

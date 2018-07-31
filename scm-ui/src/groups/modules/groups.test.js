@@ -9,7 +9,6 @@ import reducer, {
   FETCH_GROUPS_PENDING,
   FETCH_GROUPS_SUCCESS,
   FETCH_GROUPS_FAILURE,
-  isFetchUsersPending,
   fetchGroupsSuccess,
   isPermittedToCreateGroups,
   getGroupsFromState,
