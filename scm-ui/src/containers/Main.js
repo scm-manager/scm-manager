@@ -13,6 +13,8 @@ import ProtectedRoute from "../components/ProtectedRoute";
 import AddUser from "../users/containers/AddUser";
 import SingleUser from "../users/containers/SingleUser";
 
+import Groups from "../groups/containers/Groups";
+
 type Props = {
   authenticated?: boolean
 };
@@ -52,6 +54,12 @@ class Main extends React.Component<Props> {
             authenticated={authenticated}
             path="/user/:name"
             component={SingleUser}
+          />
+          <ProtectedRoute
+            exact
+            path="/groups"
+            component={Groups}
+            authenticated={authenticated}
           />
         </Switch>
       </div>

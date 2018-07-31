@@ -31,7 +31,8 @@
   "primary-navigation": {
     "repositories": "Repositories",
     "users": "Users",
-    "logout": "Logout"
+    "logout": "Logout",
+    "groups": "Groups"
   },
   "paginator": {
     "next": "Next",
