@@ -5,6 +5,7 @@ import * as types from "../../modules/types";
 import { combineReducers, Dispatch } from "redux";
 import type { Action } from "../../types/Action";
 import type { PagedCollection } from "../../types/Collection";
+import type {Groups}  from "../types/Groups";
 
 export const FETCH_GROUPS = "scm/groups/FETCH_GROUPS";
 export const FETCH_GROUPS_PENDING = `${FETCH_GROUPS}_${types.PENDING_SUFFIX}`;
@@ -154,3 +155,69 @@ export default combineReducers({
   list: listReducer,
   byNames: byNamesReducer
 });
+
+
+// selectors
+
+const selectList = (state: Object) => {
+  if (state.groups && state.groups.list) {
+    return state.groups.list;
+  }
+  return {};
+};
+
+const selectListEntry = (state: Object): Object => {
+  const list = selectList(state);
+  if (list.entry) {
+    return list.entry;
+  }
+  return {};
+};
+
+export const selectListAsCollection = (state: Object): PagedCollection => {
+  return selectListEntry(state);
+};
+
+export const isPermittedToCreateGroups = (state: Object): boolean => {
+  const permission = selectListEntry(state).groupCreatePermission;
+  if (permission) {
+    return true;
+  }
+  return false;
+};
+
+export function getGroupsFromState(state: Object) {
+  const groupNames = selectList(state).entries;
+  if (!groupNames) {
+    return null;
+  }
+  const groupEntries: Group[] = [];
+
+  for (let groupName of groupNames) {
+    groupEntries.push(state.groups.byNames[groupName]);
+  }
+
+  return groupEntries;
+}
+
+export function isFetchGroupsPending(state: Object) {
+  return isPending(state, FETCH_GROUPS);
+}
+
+export function getFetchGroupsFailure(state: Object) {
+  return getFailure(state, FETCH_GROUPS);
+}
+
+export function isCreateGroupPending(state: Object) {
+  return isPending(state, CREATE_GROUP);
+}
+
+export function getCreateGroupFailure(state: Object) {
+  return getFailure(state, CREATE_GROUP);
+}
+
+export function getGroupByName(state: Object, name: string) {
+  if (state.groups && state.groups.byNames) {
+    return state.groups.byNames[name];
+  }
+}

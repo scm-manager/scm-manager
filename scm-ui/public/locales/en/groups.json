@@ -1,0 +1,10 @@
+{
+  "group": {
+    "name": "Name",
+    "description": "Description"
+  },
+  "groups": {
+    "title": "Groups",
+    "subtitle": "Create, read, update and delete groups"
+  }
+}

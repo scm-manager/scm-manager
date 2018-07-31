@@ -5,12 +5,22 @@ import fetchMock from "fetch-mock";
 
 import reducer, {
   fetchGroups,
+  FETCH_GROUPS,
   FETCH_GROUPS_PENDING,
   FETCH_GROUPS_SUCCESS,
   FETCH_GROUPS_FAILURE,
-  fetchGroupsSuccess
+  isFetchUsersPending,
+  fetchGroupsSuccess,
+  isPermittedToCreateGroups,
+  getGroupsFromState,
+  getFetchGroupsFailure,
+  isFetchGroupsPending,
+  selectListAsCollection
 } from "./groups"
 const GROUPS_URL = "/scm/api/rest/v2/groups";
+
+const error = new Error("You have an error!");
+
 
 const groupZaphod = {
   creationDate: "2018-07-31T08:39:07.860Z",
@@ -181,4 +191,96 @@ describe("groups reducer", () => {
     expect(newState.byNames["fordGroup"]).toBeTruthy();
     expect(newState.byNames["zaphodGroup"]).toBeTruthy();
   });
+});
+
+
+describe("selector tests", () => {
+
+  it("should return an empty object", () => {
+    expect(selectListAsCollection({})).toEqual({});
+    expect(selectListAsCollection({ groups: { a: "a" } })).toEqual({});
+  });
+
+  it("should return a state slice collection", () => {
+    const collection = {
+      page: 3,
+      totalPages: 42
+    };
+
+    const state = {
+      groups: {
+        list: {
+          entry: collection
+        }
+      }
+    };
+    expect(selectListAsCollection(state)).toBe(collection);
+  });
+
+  it("should return false", () => {
+    expect(isPermittedToCreateGroups({})).toBe(false);
+    expect(isPermittedToCreateGroups({ groups: { list: { entry: {} } } })).toBe(
+      false
+    );
+    expect(
+      isPermittedToCreateGroups({
+        groups: { list: { entry: { groupCreatePermission: false } } }
+      })
+    ).toBe(false);
+  });
+
+  it("should return true", () => {
+    const state = {
+      groups: {
+        list: {
+          entry: {
+            groupCreatePermission: true
+          }
+        }
+      }
+    };
+    expect(isPermittedToCreateGroups(state)).toBe(true);
+  });
+
+  it("should get groups from state", () => {
+    const state = {
+      groups: {
+        list: {
+          entries: ["a", "b"]
+        },
+        byNames: {
+          a: { name: "a" },
+          b: { name: "b" }
+        }
+      }
+    };
+    expect(getGroupsFromState(state)).toEqual([{ name: "a" }, { name: "b" }]);
+  });
+
+  it("should return true, when fetch groups is pending", () => {
+    const state = {
+      pending: {
+        [FETCH_GROUPS]: true
+      }
+    };
+    expect(isFetchGroupsPending(state)).toEqual(true);
+  });
+
+  it("should return false, when fetch groups is not pending", () => {
+    expect(isFetchGroupsPending({})).toEqual(false);
+  });
+
+  it("should return error when fetch groups did fail", () => {
+    const state = {
+      failure: {
+        [FETCH_GROUPS]: error
+      }
+    };
+    expect(getFetchGroupsFailure(state)).toEqual(error);
+  });
+
+  it("should return undefined when fetch users did not fail", () => {
+    expect(getFetchGroupsFailure({})).toBe(undefined);
+  });
+
 });
