@@ -18,7 +18,18 @@ export interface State {
 class GroupForm extends React.Component<Props, State> {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      group: {
+        name: "",
+        description: "",
+        _embedded: {
+          members: []
+        },
+        _links: {},
+        members: [],
+        type: "",
+      }
+    };
   }
   onSubmit = (event: Event) => {
     event.preventDefault();

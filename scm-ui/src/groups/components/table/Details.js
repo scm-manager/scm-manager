@@ -27,14 +27,6 @@ class Details extends React.Component<Props> {
             <td>{group.description}</td>
           </tr>
           <tr>
-            <td>{t("group.creationDate")}</td>
-            <td>{new Date(group.creationDate).toString()}</td>
-          </tr>
-          <tr>
-            <td>{t("group.lastModified")}</td>
-            <td>{new Date(group.lastModified).toString()}</td>
-          </tr>
-          <tr>
             <td>{t("group.type")}</td>
             <td>{group.type}</td>
           </tr>

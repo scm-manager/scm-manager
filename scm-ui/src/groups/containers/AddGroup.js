@@ -6,9 +6,11 @@ import { translate } from "react-i18next";
 import GroupForm from "./GroupForm";
 import { connect } from "react-redux";
 import { createGroup } from "../modules/groups";
+import type { Group } from "../types/Group";
 
 export interface Props {
   t: string => string;
+  createGroup: Group => void;
 }
 
 export interface State {}
