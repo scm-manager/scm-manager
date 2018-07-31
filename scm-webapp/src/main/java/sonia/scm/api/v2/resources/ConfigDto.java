@@ -11,7 +11,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @Setter
-public class GlobalConfigDto extends HalRepresentation {
+public class ConfigDto extends HalRepresentation {
 
   private String proxyPassword;
   private int proxyPort;

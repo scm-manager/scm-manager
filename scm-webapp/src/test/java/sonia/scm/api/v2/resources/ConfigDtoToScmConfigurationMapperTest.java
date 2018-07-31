@@ -12,10 +12,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-public class GlobalConfigDtoToScmConfigurationMapperTest {
+public class ConfigDtoToScmConfigurationMapperTest {
 
   @InjectMocks
-  private GlobalConfigDtoToScmConfigurationMapperImpl mapper;
+  private ConfigDtoToScmConfigurationMapperImpl mapper;
 
   private String[] expectedUsers = { "trillian", "arthur" };
   private String[] expectedGroups = { "admin", "plebs" };
@@ -28,7 +28,7 @@ public class GlobalConfigDtoToScmConfigurationMapperTest {
 
   @Test
   public void shouldMapFields() {
-    GlobalConfigDto dto = createDefaultDto();
+    ConfigDto dto = createDefaultDto();
     ScmConfiguration config = mapper.map(dto);
 
     assertEquals("prPw" , config.getProxyPassword());
@@ -53,29 +53,29 @@ public class GlobalConfigDtoToScmConfigurationMapperTest {
     assertTrue(config.isEnabledXsrfProtection());
   }
 
-  private GlobalConfigDto createDefaultDto() {
-    GlobalConfigDto globalConfigDto = new GlobalConfigDto();
-    globalConfigDto.setProxyPassword("prPw");
-    globalConfigDto.setProxyPort(42);
-    globalConfigDto.setProxyServer("srvr");
-    globalConfigDto.setProxyUser("user");
-    globalConfigDto.setEnableProxy(true);
-    globalConfigDto.setRealmDescription("realm");
-    globalConfigDto.setEnableRepositoryArchive(true);
-    globalConfigDto.setDisableGroupingGrid(true);
-    globalConfigDto.setDateFormat("yyyy");
-    globalConfigDto.setAnonymousAccessEnabled(true);
-    globalConfigDto.setAdminGroups(Sets.newSet(expectedGroups));
-    globalConfigDto.setAdminUsers(Sets.newSet(expectedUsers));
-    globalConfigDto.setBaseUrl("baseurl");
-    globalConfigDto.setForceBaseUrl(true);
-    globalConfigDto.setLoginAttemptLimit(41);
-    globalConfigDto.setProxyExcludes(Sets.newSet(expectedExcludes));
-    globalConfigDto.setSkipFailedAuthenticators(true);
-    globalConfigDto.setPluginUrl("https://plug.ins");
-    globalConfigDto.setLoginAttemptLimitTimeout(40);
-    globalConfigDto.setEnabledXsrfProtection(true);
+  private ConfigDto createDefaultDto() {
+    ConfigDto configDto = new ConfigDto();
+    configDto.setProxyPassword("prPw");
+    configDto.setProxyPort(42);
+    configDto.setProxyServer("srvr");
+    configDto.setProxyUser("user");
+    configDto.setEnableProxy(true);
+    configDto.setRealmDescription("realm");
+    configDto.setEnableRepositoryArchive(true);
+    configDto.setDisableGroupingGrid(true);
+    configDto.setDateFormat("yyyy");
+    configDto.setAnonymousAccessEnabled(true);
+    configDto.setAdminGroups(Sets.newSet(expectedGroups));
+    configDto.setAdminUsers(Sets.newSet(expectedUsers));
+    configDto.setBaseUrl("baseurl");
+    configDto.setForceBaseUrl(true);
+    configDto.setLoginAttemptLimit(41);
+    configDto.setProxyExcludes(Sets.newSet(expectedExcludes));
+    configDto.setSkipFailedAuthenticators(true);
+    configDto.setPluginUrl("https://plug.ins");
+    configDto.setLoginAttemptLimitTimeout(40);
+    configDto.setEnabledXsrfProtection(true);
 
-    return globalConfigDto;
+    return configDto;
   }
 }

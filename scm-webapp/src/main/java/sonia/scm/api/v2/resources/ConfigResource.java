@@ -18,16 +18,16 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-@Path(GlobalConfigResource.GLOBAL_CONFIG_PATH_V2)
-public class GlobalConfigResource {
+@Path(ConfigResource.CONFIG_PATH_V2)
+public class ConfigResource {
 
-  static final String GLOBAL_CONFIG_PATH_V2 = "v2/config/global";
-  private final GlobalConfigDtoToScmConfigurationMapper dtoToConfigMapper;
-  private final ScmConfigurationToGlobalConfigDtoMapper configToDtoMapper;
+  static final String CONFIG_PATH_V2 = "v2/config";
+  private final ConfigDtoToScmConfigurationMapper dtoToConfigMapper;
+  private final ScmConfigurationToConfigDtoMapper configToDtoMapper;
   private final ScmConfiguration configuration;
 
   @Inject
-  public GlobalConfigResource(GlobalConfigDtoToScmConfigurationMapper dtoToConfigMapper, ScmConfigurationToGlobalConfigDtoMapper configToDtoMapper, ScmConfiguration configuration) {
+  public ConfigResource(ConfigDtoToScmConfigurationMapper dtoToConfigMapper, ScmConfigurationToConfigDtoMapper configToDtoMapper, ScmConfiguration configuration) {
     this.dtoToConfigMapper = dtoToConfigMapper;
     this.configToDtoMapper = configToDtoMapper;
     this.configuration = configuration;
@@ -38,7 +38,7 @@ public class GlobalConfigResource {
    */
   @GET
   @Path("")
-  @Produces(VndMediaType.GLOBAL_CONFIG)
+  @Produces(VndMediaType.CONFIG)
   @TypeHint(UserDto.class)
   @StatusCodes({
     @ResponseCode(code = 200, condition = "success"),
@@ -62,7 +62,7 @@ public class GlobalConfigResource {
    */
   @PUT
   @Path("")
-  @Consumes(VndMediaType.GLOBAL_CONFIG)
+  @Consumes(VndMediaType.CONFIG)
   @StatusCodes({
     @ResponseCode(code = 201, condition = "update success"),
     @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
@@ -70,7 +70,7 @@ public class GlobalConfigResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
-  public Response update(GlobalConfigDto configDto, @Context UriInfo uriInfo) {
+  public Response update(ConfigDto configDto, @Context UriInfo uriInfo) {
 
     // This *could* be moved to ScmConfiguration or ScmConfigurationUtil classes.
     // But to where to check? load() or store()? Leave it for now, SCMv1 legacy that can be cleaned up later.

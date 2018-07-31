@@ -30,7 +30,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
   configuration = "classpath:sonia/scm/configuration/shiro.ini",
   password = "secret"
 )
-public class GlobalConfigResourceTest {
+public class ConfigResourceTest {
 
   @Rule
   public ShiroRule shiro = new ShiroRule();
@@ -45,36 +45,35 @@ public class GlobalConfigResourceTest {
   private ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
 
   @InjectMocks
-  private GlobalConfigDtoToScmConfigurationMapperImpl dtoToConfigMapper;
+  private ConfigDtoToScmConfigurationMapperImpl dtoToConfigMapper;
   @InjectMocks
-  private ScmConfigurationToGlobalConfigDtoMapperImpl configToDtoMapper;
+  private ScmConfigurationToConfigDtoMapperImpl configToDtoMapper;
 
   @Before
   public void prepareEnvironment() {
     initMocks(this);
 
-    GlobalConfigResource globalConfigResource = new GlobalConfigResource(dtoToConfigMapper,
-      configToDtoMapper, createConfiguration());
+    ConfigResource configResource = new ConfigResource(dtoToConfigMapper, configToDtoMapper, createConfiguration());
 
-    dispatcher.getRegistry().addSingletonResource(globalConfigResource);
+    dispatcher.getRegistry().addSingletonResource(configResource);
   }
 
   @Test
   @SubjectAware(username = "readOnly")
   public void shouldGetGlobalConfig() throws URISyntaxException {
-    MockHttpRequest request = MockHttpRequest.get("/" + GlobalConfigResource.GLOBAL_CONFIG_PATH_V2);
+    MockHttpRequest request = MockHttpRequest.get("/" + ConfigResource.CONFIG_PATH_V2);
     MockHttpResponse response = new MockHttpResponse();
     dispatcher.invoke(request, response);
     assertEquals(HttpServletResponse.SC_OK, response.getStatus());
     assertTrue(response.getContentAsString().contains("\"proxyPassword\":\"heartOfGold\""));
-    assertTrue(response.getContentAsString().contains("\"self\":{\"href\":\"/v2/config/global"));
-    assertFalse("Update link present", response.getContentAsString().contains("\"update\":{\"href\":\"/v2/config/global"));
+    assertTrue(response.getContentAsString().contains("\"self\":{\"href\":\"/v2/config"));
+    assertFalse("Update link present", response.getContentAsString().contains("\"update\":{\"href\":\"/v2/config"));
   }
 
   @Test
   @SubjectAware(username = "writeOnly")
-  public void shouldGetGlobalConfigOnlyWhenAuthorized() throws URISyntaxException {
-    MockHttpRequest request = MockHttpRequest.get("/" + GlobalConfigResource.GLOBAL_CONFIG_PATH_V2);
+  public void shouldGetConfigOnlyWhenAuthorized() throws URISyntaxException {
+    MockHttpRequest request = MockHttpRequest.get("/" + ConfigResource.CONFIG_PATH_V2);
     MockHttpResponse response = new MockHttpResponse();
 
     thrown.expectMessage("Subject does not have permission [configuration:read:global]");
@@ -84,38 +83,37 @@ public class GlobalConfigResourceTest {
 
   @Test
   @SubjectAware(username = "readWrite")
-  public void shouldUpdateGlobalConfig() throws URISyntaxException, IOException {
-    URL url = Resources.getResource("sonia/scm/api/v2/globalConfig-test-update.json");
+  public void shouldUpdateConfig() throws URISyntaxException, IOException {
+    URL url = Resources.getResource("sonia/scm/api/v2/config-test-update.json");
     byte[] configJson = Resources.toByteArray(url);
-    MockHttpRequest request = MockHttpRequest.put("/" + GlobalConfigResource.GLOBAL_CONFIG_PATH_V2)
-      .contentType(VndMediaType.GLOBAL_CONFIG)
+    MockHttpRequest request = MockHttpRequest.put("/" + ConfigResource.CONFIG_PATH_V2)
+      .contentType(VndMediaType.CONFIG)
       .content(configJson);
 
     MockHttpResponse response = new MockHttpResponse();
     dispatcher.invoke(request, response);
     assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
 
-    request = MockHttpRequest.get("/" + GlobalConfigResource.GLOBAL_CONFIG_PATH_V2);
+    request = MockHttpRequest.get("/" + ConfigResource.CONFIG_PATH_V2);
     response = new MockHttpResponse();
     dispatcher.invoke(request, response);
     assertEquals(HttpServletResponse.SC_OK, response.getStatus());
     assertTrue(response.getContentAsString().contains("\"proxyPassword\":\"newPassword\""));
-    assertTrue(response.getContentAsString().contains("\"self\":{\"href\":\"/v2/config/global"));
-    assertTrue("link not found", response.getContentAsString().contains("\"update\":{\"href\":\"/v2/config/global"));
+    assertTrue(response.getContentAsString().contains("\"self\":{\"href\":\"/v2/config"));
+    assertTrue("link not found", response.getContentAsString().contains("\"update\":{\"href\":\"/v2/config"));
   }
 
   @Test
   @SubjectAware(username = "readOnly")
-  public void shouldUpdateGlobalConfigOnlyWhenAuthorized() throws URISyntaxException, IOException {
-    URL url = Resources.getResource("sonia/scm/api/v2/globalConfig-test-update.json");
+  public void shouldUpdateConfigOnlyWhenAuthorized() throws URISyntaxException, IOException {
+    URL url = Resources.getResource("sonia/scm/api/v2/config-test-update.json");
     byte[] configJson = Resources.toByteArray(url);
-    MockHttpRequest request = MockHttpRequest.put("/" + GlobalConfigResource.GLOBAL_CONFIG_PATH_V2)
-      .contentType(VndMediaType.GLOBAL_CONFIG)
+    MockHttpRequest request = MockHttpRequest.put("/" + ConfigResource.CONFIG_PATH_V2)
+      .contentType(VndMediaType.CONFIG)
       .content(configJson);
     MockHttpResponse response = new MockHttpResponse();
 
     thrown.expectMessage("Subject does not have permission [configuration:write:global]");
-
 
     dispatcher.invoke(request, response);
   }

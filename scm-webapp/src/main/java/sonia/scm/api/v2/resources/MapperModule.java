@@ -15,8 +15,8 @@ public class MapperModule extends AbstractModule {
     bind(GroupToGroupDtoMapper.class).to(Mappers.getMapper(GroupToGroupDtoMapper.class).getClass());
     bind(GroupCollectionToDtoMapper.class);
 
-    bind(ScmConfigurationToGlobalConfigDtoMapper.class).to(Mappers.getMapper(ScmConfigurationToGlobalConfigDtoMapper.class).getClass());
-    bind(GlobalConfigDtoToScmConfigurationMapper.class).to(Mappers.getMapper(GlobalConfigDtoToScmConfigurationMapper.class).getClass());
+    bind(ScmConfigurationToConfigDtoMapper.class).to(Mappers.getMapper(ScmConfigurationToConfigDtoMapper.class).getClass());
+    bind(ConfigDtoToScmConfigurationMapper.class).to(Mappers.getMapper(ConfigDtoToScmConfigurationMapper.class).getClass());
 
     bind(RepositoryToRepositoryDtoMapper.class).to(Mappers.getMapper(RepositoryToRepositoryDtoMapper.class).getClass());
     bind(RepositoryDtoToRepositoryMapper.class).to(Mappers.getMapper(RepositoryDtoToRepositoryMapper.class).getClass());

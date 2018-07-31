@@ -133,15 +133,15 @@ public class ResourceLinksTest {
   }
 
   @Test
-  public void shouldCreateCorrectGlobalConfigSelfUrl() {
-    String url = resourceLinks.globalConfig().self();
-    assertEquals(BASE_URL + GlobalConfigResource.GLOBAL_CONFIG_PATH_V2, url);
+  public void shouldCreateCorrectConfigSelfUrl() {
+    String url = resourceLinks.config().self();
+    assertEquals(BASE_URL + ConfigResource.CONFIG_PATH_V2, url);
   }
 
   @Test
-  public void shouldCreateCorrectGlobalConfigUpdateUrl() {
-    String url = resourceLinks.globalConfig().update();
-    assertEquals(BASE_URL + GlobalConfigResource.GLOBAL_CONFIG_PATH_V2, url);
+  public void shouldCreateCorrectConfigUpdateUrl() {
+    String url = resourceLinks.config().update();
+    assertEquals(BASE_URL + ConfigResource.CONFIG_PATH_V2, url);
   }
 
   @Before

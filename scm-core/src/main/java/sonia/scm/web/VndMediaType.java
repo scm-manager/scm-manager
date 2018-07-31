@@ -19,7 +19,7 @@ public class VndMediaType {
   public static final String GROUP_COLLECTION = PREFIX + "groupCollection" + SUFFIX;
   public static final String REPOSITORY_COLLECTION = PREFIX + "repositoryCollection" + SUFFIX;
 
-  public static final String GLOBAL_CONFIG = PREFIX + "global_config" + SUFFIX;
+  public static final String CONFIG = PREFIX + "config" + SUFFIX;
 
   private VndMediaType() {
   }

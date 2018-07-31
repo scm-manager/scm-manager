@@ -101,23 +101,23 @@ class ResourceLinks {
     }
   }
 
-  GlobalConfigLinks globalConfig() {
-    return new GlobalConfigLinks(uriInfoStore.get());
+  ConfigLinks config() {
+    return new ConfigLinks(uriInfoStore.get());
   }
 
-  static class GlobalConfigLinks {
-    private final LinkBuilder globalConfigLinkBuilder;
+  static class ConfigLinks {
+    private final LinkBuilder configLinkBuilder;
 
-    GlobalConfigLinks(UriInfo uriInfo) {
-      globalConfigLinkBuilder = new LinkBuilder(uriInfo, GlobalConfigResource.class);
+    ConfigLinks(UriInfo uriInfo) {
+      configLinkBuilder = new LinkBuilder(uriInfo, ConfigResource.class);
     }
 
     String self() {
-      return globalConfigLinkBuilder.method("get").parameters().href();
+      return configLinkBuilder.method("get").parameters().href();
     }
 
     String update() {
-      return globalConfigLinkBuilder.method("update").parameters().href();
+      return configLinkBuilder.method("update").parameters().href();
     }
   }
 

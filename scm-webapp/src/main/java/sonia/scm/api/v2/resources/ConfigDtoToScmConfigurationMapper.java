@@ -6,7 +6,7 @@ import sonia.scm.config.ScmConfiguration;
 // Mapstruct does not support parameterized (i.e. non-default) constructors. Thus, we need to use field injection.
 @SuppressWarnings("squid:S3306")
 @Mapper
-public abstract class GlobalConfigDtoToScmConfigurationMapper {
+public abstract class ConfigDtoToScmConfigurationMapper {
 
-  public abstract ScmConfiguration map(GlobalConfigDto dto);
+  public abstract ScmConfiguration map(ConfigDto dto);
 }

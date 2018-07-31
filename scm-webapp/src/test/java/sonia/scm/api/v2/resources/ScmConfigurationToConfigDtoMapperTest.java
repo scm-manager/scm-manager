@@ -21,7 +21,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-public class ScmConfigurationToGlobalConfigDtoMapperTest {
+public class ScmConfigurationToConfigDtoMapperTest {
 
   private URI baseUri =  URI.create("http://example.com/base/");
 
@@ -33,7 +33,7 @@ public class ScmConfigurationToGlobalConfigDtoMapperTest {
   private ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
 
   @InjectMocks
-  private ScmConfigurationToGlobalConfigDtoMapperImpl mapper;
+  private ScmConfigurationToConfigDtoMapperImpl mapper;
 
   private final Subject subject = mock(Subject.class);
   private final ThreadState subjectThreadState = new SubjectThreadState(subject);
@@ -43,7 +43,7 @@ public class ScmConfigurationToGlobalConfigDtoMapperTest {
   @Before
   public void init() {
     initMocks(this);
-    expectedBaseUri = baseUri.resolve(GlobalConfigResource.GLOBAL_CONFIG_PATH_V2);
+    expectedBaseUri = baseUri.resolve(ConfigResource.CONFIG_PATH_V2);
     subjectThreadState.bind();
     ThreadContext.bind(subject);
   }
@@ -59,7 +59,7 @@ public class ScmConfigurationToGlobalConfigDtoMapperTest {
 
 
     when(subject.isPermitted("configuration:write:global")).thenReturn(true);
-    GlobalConfigDto dto = mapper.map(config);
+    ConfigDto dto = mapper.map(config);
 
     assertEquals("heartOfGold" , dto.getProxyPassword());
     assertEquals(1234 , dto.getProxyPort());
@@ -91,7 +91,7 @@ public class ScmConfigurationToGlobalConfigDtoMapperTest {
     ScmConfiguration config = createConfiguration();
 
     when(subject.hasRole("configuration:write:global")).thenReturn(false);
-    GlobalConfigDto dto = mapper.map(config);
+    ConfigDto dto = mapper.map(config);
 
     assertEquals("baseurl", dto.getBaseUrl());
     assertEquals(expectedBaseUri.toString(), dto.getLinks().getLinkBy("self").get().getHref());
