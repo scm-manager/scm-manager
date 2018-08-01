@@ -23,7 +23,8 @@ import java.util.Arrays;
  *     .create();
  * </pre>
  */
-class LinkBuilder {
+@SuppressWarnings("WeakerAccess") // Non-public will result in IllegalAccessError for plugins
+public class LinkBuilder {
   private final UriInfo uriInfo;
   private final Class[] classes;
   private final ImmutableList<Call> calls;
