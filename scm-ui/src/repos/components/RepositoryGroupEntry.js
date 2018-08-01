@@ -8,6 +8,9 @@ import RepositoryEntry from "./RepositoryEntry";
 const styles = {
   pointer: {
     cursor: "pointer"
+  },
+  repoGroup: {
+    marginBottom: "1em"
   }
 };
 
@@ -48,7 +51,7 @@ class RepositoryGroupEntry extends React.Component<Props, State> {
       });
     }
     return (
-      <div>
+      <div className={classes.repoGroup}>
         <h2>
           <span className={classes.pointer} onClick={this.toggleCollapse}>
             <i className={classNames("fa", icon)} /> {group.name}
