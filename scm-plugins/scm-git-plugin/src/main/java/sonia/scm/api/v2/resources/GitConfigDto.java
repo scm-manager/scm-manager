@@ -6,15 +6,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.xml.bind.annotation.XmlElement;
+import java.io.File;
 
 @NoArgsConstructor
 @Getter
 @Setter
-public class GitConfigDto extends SimpleRepositoryConfigDto {
+public class GitConfigDto extends HalRepresentation {
 
-  @XmlElement(name = "gc-expression")
   private String gcExpression;
+  private File repositoryDirectory;
+  private boolean disabled = false;
 
   @Override
   protected HalRepresentation add(Links links) {
