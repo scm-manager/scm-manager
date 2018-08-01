@@ -5,18 +5,17 @@ import InputField from "../../components/forms/InputField";
 import { SubmitButton } from "../../components/buttons";
 import { translate } from "react-i18next";
 import type { Group } from "../types/Group";
-import * as validator from "./groupValidation"
+import * as validator from "./groupValidation";
 
 type Props = {
   t: string => string,
   submitForm: Group => void
-}
+};
 
 type State = {
   group: Group,
-  nameValidationError: boolean,
-  descriptionValidationError: boolean
-}
+  nameValidationError: boolean
+};
 
 class GroupForm extends React.Component<Props, State> {
   constructor(props) {
@@ -30,10 +29,9 @@ class GroupForm extends React.Component<Props, State> {
         },
         _links: {},
         members: [],
-        type: "",
+        type: ""
       },
-      nameValidationError: false,
-      descriptionValidationError: false
+      nameValidationError: false
     };
   }
 
@@ -44,15 +42,15 @@ class GroupForm extends React.Component<Props, State> {
 
   isValid = () => {
     const group = this.state.group;
-    return !(this.state.nameValidationError || this.state.descriptionValidationError || group.name);
-  }
+    return !(this.state.nameValidationError || group.name);
+  };
 
   submit = (event: Event) => {
     event.preventDefault();
     if (this.isValid) {
-      this.props.submitForm(this.state.group)
+      this.props.submitForm(this.state.group);
     }
-  }
+  };
 
   render() {
     const { t } = this.props;
@@ -68,7 +66,7 @@ class GroupForm extends React.Component<Props, State> {
           label={t("group.description")}
           errorMessage=""
           onChange={this.handleDescriptionChange}
-          validationError={this.state.descriptionValidationError}
+          validationError={false}
         />
         <SubmitButton label={t("group-form.submit")} />
       </form>
@@ -78,13 +76,13 @@ class GroupForm extends React.Component<Props, State> {
   handleGroupNameChange = (name: string) => {
     this.setState({
       nameValidationError: !validator.isNameValid(name),
-      group: {...this.state.group, name}
+      group: { ...this.state.group, name }
     });
   };
 
   handleDescriptionChange = (description: string) => {
     this.setState({
-      group: {...this.state.group, description }
+      group: { ...this.state.group, description }
     });
   };
 }

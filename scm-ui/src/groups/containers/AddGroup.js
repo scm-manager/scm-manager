@@ -13,9 +13,9 @@ type Props = {
   t: string => string,
   createGroup: (group: Group, callback?: () => void) => void,
   history: History
-}
+};
 
-type State = {}
+type State = {};
 
 class AddGroup extends React.Component<Props, State> {
   render() {
@@ -30,21 +30,23 @@ class AddGroup extends React.Component<Props, State> {
   }
 
   groupCreated = () => {
-    console.log("pushing history")
-      this.props.history.push("/groups")
-  }
+    this.props.history.push("/groups");
+  };
   createGroup = (group: Group) => {
-    this.props.createGroup(group, this.groupCreated)
+    this.props.createGroup(group, this.groupCreated);
   };
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    createGroup: (group: Group, callback?: () => void) => dispatch(createGroup(group, callback))
+    createGroup: (group: Group, callback?: () => void) =>
+      dispatch(createGroup(group, callback))
   };
 };
 
-const mapStateToProps = state => {};
+const mapStateToProps = state => {
+  return {}
+};
 
 export default connect(
   mapStateToProps,
