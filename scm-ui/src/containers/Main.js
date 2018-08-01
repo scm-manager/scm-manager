@@ -73,6 +73,12 @@ class Main extends React.Component<Props> {
             path="/groups/add"
             component={AddGroup}
           />
+          <ProtectedRoute
+            exact
+            path="/groups/:page"
+            component={Groups}
+            authenticated={authenticated}
+          />
         </Switch>
       </div>
     );
