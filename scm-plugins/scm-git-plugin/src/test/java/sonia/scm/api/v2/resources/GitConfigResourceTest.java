@@ -75,9 +75,11 @@ public class GitConfigResourceTest {
     assertTrue(response.getContentAsString().contains("\"disabled\":false"));
     //assertTrue(response.getContentAsString().contains("\"repository-directory\":\"repository/directory\""));
     //assertTrue(response.getContentAsString().contains("\"gc-expression\":\"valid Git GC Cron Expression\""));
-    assertTrue(response.getContentAsString().contains("\"self\":{\"href\":\"/v2/config/repositories/git"));
-    assertTrue(response.getContentAsString().contains("\"update\":{\"href\":\"/v2/config/repositories/git"));
+    assertTrue(response.getContentAsString().contains("\"self\":{\"href\":\"/v2/config/git"));
+    assertTrue(response.getContentAsString().contains("\"update\":{\"href\":\"/v2/config/git"));
   }
+
+  // TODO negative tests
 
   private GitConfig createConfiguration() {
     GitConfig config = new GitConfig();
