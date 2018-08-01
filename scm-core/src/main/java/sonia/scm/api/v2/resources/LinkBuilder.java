@@ -29,7 +29,7 @@ public class LinkBuilder {
   private final Class[] classes;
   private final ImmutableList<Call> calls;
 
-  LinkBuilder(UriInfo uriInfo, Class... classes) {
+  public LinkBuilder(UriInfo uriInfo, Class... classes) {
     this(uriInfo, classes, ImmutableList.of());
   }
 
@@ -39,25 +39,24 @@ public class LinkBuilder {
     this.calls = calls;
   }
 
-  Parameters method(String method) {
+  public Parameters method(String method) {
     if (calls.size() >= classes.length) {
       throw new IllegalStateException("no more classes for methods");
     }
     return new Parameters(method);
   }
 
-  URI create() {
+  public URI create() {
     if (calls.size() < classes.length) {
       throw new IllegalStateException("not enough methods for all classes");
     }
 
     URI baseUri = uriInfo.getBaseUri();
     URI relativeUri = createRelativeUri();
-    URI absoluteUri = baseUri.resolve(relativeUri);
-    return absoluteUri;
+    return baseUri.resolve(relativeUri);
   }
 
-  String href() {
+  public String href() {
     return create().toString();
   }
 
@@ -88,7 +87,7 @@ public class LinkBuilder {
     return UriBuilder.fromResource(classes[0]);
   }
 
-  class Parameters {
+  public class Parameters {
 
     private final String method;
 
@@ -96,7 +95,7 @@ public class LinkBuilder {
       this.method = method;
     }
 
-    LinkBuilder parameters(String... parameters) {
+    public LinkBuilder parameters(String... parameters) {
       return LinkBuilder.this.add(method, parameters);
     }
   }
