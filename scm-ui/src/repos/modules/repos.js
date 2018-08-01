@@ -10,12 +10,13 @@ export const FETCH_REPOS_SUCCESS = `${FETCH_REPOS}_${types.SUCCESS_SUFFIX}`;
 export const FETCH_REPOS_FAILURE = `${FETCH_REPOS}_${types.FAILURE_SUFFIX}`;
 
 const REPOS_URL = "repositories";
+const SORT_BY = "sortBy=namespaceAndName";
 
 export function fetchRepos() {
   return function(dispatch: any) {
     dispatch(fetchReposPending());
     return apiClient
-      .get(REPOS_URL)
+      .get(`${REPOS_URL}?${SORT_BY}`)
       .then(response => response.json())
       .then(repositories => {
         dispatch(fetchReposSuccess(repositories));

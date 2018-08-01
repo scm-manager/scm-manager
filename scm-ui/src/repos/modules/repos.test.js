@@ -194,7 +194,7 @@ const repositoryCollectionWithNames: RepositoryCollection = {
 };
 
 describe("repos fetch", () => {
-  const REPOS_URL = "/scm/api/rest/v2/repositories";
+  const REPOS_URL = "/scm/api/rest/v2/repositories?sortBy=namespaceAndName";
   const mockStore = configureMockStore([thunk]);
 
   afterEach(() => {
