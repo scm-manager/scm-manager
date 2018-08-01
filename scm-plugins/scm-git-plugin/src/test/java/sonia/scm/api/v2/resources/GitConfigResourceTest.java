@@ -88,6 +88,17 @@ public class GitConfigResourceTest {
   }
 
   @Test
+  @SubjectAware(username = "readWrite")
+  public void shouldGetGitConfigEvenWhenItsEmpty() throws URISyntaxException, IOException {
+    when(repositoryHandler.getConfig()).thenReturn(null);
+
+    MockHttpResponse response = get();
+    String responseString = response.getContentAsString();
+
+    assertTrue(responseString.contains("\"disabled\":false"));
+  }
+
+  @Test
   @SubjectAware(username = "readOnly")
   public void shouldGetGitConfigWithoutUpdateLink() throws URISyntaxException {
     MockHttpResponse response = get();
