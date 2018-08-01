@@ -9,7 +9,8 @@ import * as validator from "./groupValidation";
 
 type Props = {
   t: string => string,
-  submitForm: Group => void
+  submitForm: Group => void,
+  loading?: boolean
 };
 
 type State = {
@@ -53,7 +54,7 @@ class GroupForm extends React.Component<Props, State> {
   };
 
   render() {
-    const { t } = this.props;
+    const { t, loading } = this.props;
     return (
       <form onSubmit={this.onSubmit}>
         <InputField
@@ -68,7 +69,7 @@ class GroupForm extends React.Component<Props, State> {
           onChange={this.handleDescriptionChange}
           validationError={false}
         />
-        <SubmitButton label={t("group-form.submit")} />
+          <SubmitButton label={t("group-form.submit")} loading={loading}/>
       </form>
     );
   }
