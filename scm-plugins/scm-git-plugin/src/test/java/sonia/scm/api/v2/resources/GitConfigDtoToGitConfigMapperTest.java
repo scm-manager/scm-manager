@@ -9,6 +9,7 @@ import sonia.scm.repository.GitConfig;
 import java.io.File;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GitConfigDtoToGitConfigMapperTest {
@@ -22,7 +23,7 @@ public class GitConfigDtoToGitConfigMapperTest {
     GitConfig config = mapper.map(dto);
     assertEquals("express", config.getGcExpression());
     assertEquals("repository/directory", config.getRepositoryDirectory().getPath());
-    assertEquals(false, config.isDisabled());
+    assertFalse(config.isDisabled());
   }
 
   private GitConfigDto createDefaultDto() {

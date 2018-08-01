@@ -1,12 +1,11 @@
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.Links;
-import org.apache.shiro.SecurityUtils;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
+import sonia.scm.config.ConfigurationPermissions;
 import sonia.scm.repository.GitConfig;
-import sonia.scm.security.Role;
 
 import javax.inject.Inject;
 
@@ -26,8 +25,7 @@ public abstract class GitConfigToGitConfigDtoMapper {
   @AfterMapping
   void appendLinks(GitConfig config, @MappingTarget GitConfigDto target) {
     Links.Builder linksBuilder = linkingTo().self(self());
-    // TODO: ConfigPermissions?
-    if (SecurityUtils.getSubject().hasRole(Role.ADMIN)) {
+    if (ConfigurationPermissions.write(config).isPermitted()) {
       linksBuilder.single(link("update", update()));
     }
     target.add(linksBuilder.build());

@@ -13,7 +13,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import sonia.scm.repository.GitConfig;
-import sonia.scm.security.Role;
 
 import java.io.File;
 import java.net.URI;
@@ -56,7 +55,7 @@ public class GitConfigToGitConfigDtoMapperTest {
   public void shouldMapFields() {
     GitConfig config = createConfiguration();
 
-    when(subject.hasRole(Role.ADMIN)).thenReturn(true);
+    when(subject.isPermitted("configuration:write:git")).thenReturn(true);
     GitConfigDto dto = mapper.map(config);
 
     assertEquals("express", dto.getGcExpression());
@@ -64,6 +63,17 @@ public class GitConfigToGitConfigDtoMapperTest {
     assertEquals("repository/directory", dto.getRepositoryDirectory().getPath());
     assertEquals(expectedBaseUri.toString(), dto.getLinks().getLinkBy("self").get().getHref());
     assertEquals(expectedBaseUri.toString(), dto.getLinks().getLinkBy("update").get().getHref());
+  }
+
+  @Test
+  public void shouldMapFieldsWithoutUpdate() {
+    GitConfig config = createConfiguration();
+
+    when(subject.isPermitted("configuration:write:git")).thenReturn(false);
+    GitConfigDto dto = mapper.map(config);
+
+    assertEquals(expectedBaseUri.toString(), dto.getLinks().getLinkBy("self").get().getHref());
+    assertFalse(dto.getLinks().hasLink("update"));
   }
 
   private GitConfig createConfiguration() {

@@ -64,7 +64,7 @@ public class ConfigResource {
   @Path("")
   @Consumes(VndMediaType.CONFIG)
   @StatusCodes({
-    @ResponseCode(code = 201, condition = "update success"),
+    @ResponseCode(code = 204, condition = "update success"),
     @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
     @ResponseCode(code = 403, condition = "not authorized, the current user has no privileges to update the global config"),
     @ResponseCode(code = 500, condition = "internal server error")
