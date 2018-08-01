@@ -57,9 +57,6 @@ import sonia.scm.repository.RepositoryProvider;
 import sonia.scm.template.Template;
 import sonia.scm.template.TemplateEngine;
 import sonia.scm.template.TemplateEngineFactory;
-import sonia.scm.url.RepositoryUrlProvider;
-import sonia.scm.url.UrlProvider;
-import sonia.scm.url.UrlProviderFactory;
 import sonia.scm.util.HttpUtil;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -182,24 +179,15 @@ public class SvnCollectionRenderer implements CollectionRenderer
       entries.add(new DirectoryEntry(resource, entry));
     }
 
-    UrlProvider urlProvider = createUrlProvider();
-    
     //J-
     return new RepositoryWrapper(
-      urlProvider.getRepositoryUrlProvider(), 
       repositoryProvider.get(), 
       resource,
       new DirectoryOrdering().immutableSortedCopy(entries.build())
     );
     //J+
   }
-  
-  private UrlProvider createUrlProvider() {
-    String baseUrl = getBaseUrl();
-    logger.trace("render subversion collection with base url: {}", baseUrl);
-    return UrlProviderFactory.createUrlProvider(baseUrl, UrlProviderFactory.TYPE_WUI); 
-  }
-  
+
   private String getBaseUrl() {
     return HttpUtil.getCompleteUrl(requestProvider.get());
   }
@@ -395,32 +383,18 @@ public class SvnCollectionRenderer implements CollectionRenderer
      *
      *
      *
-     * @param repositoryUrlProvider
      * @param repository
      * @param resource
      * @param entries
      */
-    public RepositoryWrapper(RepositoryUrlProvider repositoryUrlProvider,
-      Repository repository, DAVResource resource, List<DirectoryEntry> entries)
+    public RepositoryWrapper(Repository repository, DAVResource resource, List<DirectoryEntry> entries)
     {
-      this.repositoryUrlProvider = repositoryUrlProvider;
       this.repository = repository;
       this.resource = resource;
       this.entries = entries;
     }
 
     //~--- get methods --------------------------------------------------------
-
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
-    public String getCommitViewLink()
-    {
-      return repositoryUrlProvider.getChangesetUrl(repository.getId(), 0, 20);
-    }
 
     /**
      * Method description
@@ -455,18 +429,6 @@ public class SvnCollectionRenderer implements CollectionRenderer
       return repository;
     }
 
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
-    public String getSourceViewLink()
-    {
-      return repositoryUrlProvider.getBrowseUrl(repository.getId(),
-        resource.getResourceURI().getPath(), null);
-    }
-
     //~--- fields -------------------------------------------------------------
 
     /** Field description */
@@ -474,9 +436,6 @@ public class SvnCollectionRenderer implements CollectionRenderer
 
     /** Field description */
     private final Repository repository;
-
-    /** Field description */
-    private final RepositoryUrlProvider repositoryUrlProvider;
 
     /** Field description */
     private final DAVResource resource;

@@ -91,9 +91,9 @@ public class RepositoryManagerDecorator
   //~--- get methods ----------------------------------------------------------
 
   @Override
-  public Repository get(String namespace, String name)
+  public Repository get(NamespaceAndName namespaceAndName)
   {
-    return decorated.get(namespace, name);
+    return decorated.get(namespaceAndName);
   }
 
   /**
@@ -133,21 +133,6 @@ public class RepositoryManagerDecorator
   public Repository getFromRequest(HttpServletRequest request)
   {
     return decorated.getFromRequest(request);
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @param type
-   * @param uri
-   *
-   * @return
-   */
-  @Override
-  public Repository getFromTypeAndUri(String type, String uri)
-  {
-    return decorated.getFromTypeAndUri(type, uri);
   }
 
   /**

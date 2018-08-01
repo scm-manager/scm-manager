@@ -37,13 +37,10 @@ package sonia.scm.web;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.tmatesoft.svn.core.internal.server.dav.DAVConfig;
 import org.tmatesoft.svn.core.internal.server.dav.DAVServlet;
-
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryProvider;
 import sonia.scm.repository.RepositoryRequestListenerUtil;
@@ -51,14 +48,13 @@ import sonia.scm.repository.SvnRepositoryHandler;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.HttpUtil;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -224,7 +220,7 @@ public class SvnDAVServlet extends DAVServlet
           pathInfo = pathInfo.substring(1);
         }
 
-        pathInfo = pathInfo.substring(repository.getName().length());
+        pathInfo = pathInfo.substring(repository.getNamespace().length() + 1 + repository.getName().length());
       }
 
       return pathInfo;
@@ -249,7 +245,7 @@ public class SvnDAVServlet extends DAVServlet
           servletPath = servletPath.concat(HttpUtil.SEPARATOR_PATH);
         }
 
-        servletPath = servletPath.concat(repository.getName());
+        servletPath = servletPath + repository.getNamespace() + "/" + repository.getName();
       }
 
       return servletPath;

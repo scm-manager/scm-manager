@@ -35,20 +35,17 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import com.google.common.base.Preconditions;
 import sonia.scm.io.DirectoryFileFilter;
 import sonia.scm.util.IOUtil;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.File;
 import java.io.IOException;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+//~--- JDK imports ------------------------------------------------------------
 
 
 /**
@@ -56,257 +53,68 @@ import java.util.List;
  * @author Sebastian Sdorra
  * @since 1.11
  */
-public final class RepositoryUtil
-{
+public final class RepositoryUtil {
 
-  /** the logger for RepositoryUtil */
-  private static final Logger logger =
-    LoggerFactory.getLogger(RepositoryUtil.class);
-
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   */
   private RepositoryUtil() {}
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param directory
-   * @param names
-   *
-   * @return
-   */
-  public static List<File> searchRepositoryDirectories(File directory,
-    String... names)
-  {
-    List<File> repositories = new ArrayList<File>();
+  public static List<File> searchRepositoryDirectories(File directory, String... names) {
+    List<File> repositories = new ArrayList<>();
 
     searchRepositoryDirectories(repositories, directory, Arrays.asList(names));
 
     return repositories;
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param handler
-   * @param directoryPath
-   * @return
-   *
-   * @throws IOException
-   */
-  public static String getRepositoryName(AbstractRepositoryHandler handler,
-    String directoryPath)
-    throws IOException
-  {
-    return getRepositoryName(handler.getConfig().getRepositoryDirectory(),
-      new File(directoryPath));
+  @SuppressWarnings("squid:S2083") // ignore, because the path is validated at {@link #getRepositoryId(File, File)}
+  public static String getRepositoryId(AbstractRepositoryHandler handler, String directoryPath) throws IOException {
+    return getRepositoryId(handler.getConfig().getRepositoryDirectory(), new File(directoryPath));
   }
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param config
-   * @param directoryPath
-   * @return
-   *
-   * @throws IOException
-   */
-  public static String getRepositoryName(SimpleRepositoryConfig config,
-    String directoryPath)
-    throws IOException
-  {
-    return getRepositoryName(config.getRepositoryDirectory(),
-      new File(directoryPath));
+  public static String getRepositoryId(AbstractRepositoryHandler handler, File directory) throws IOException {
+    return getRepositoryId(handler.getConfig(), directory);
   }
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param handler
-   * @param directory
-   * @return
-   *
-   * @throws IOException
-   */
-  public static String getRepositoryName(AbstractRepositoryHandler handler,
-    File directory)
-    throws IOException
-  {
-    return getRepositoryName(handler.getConfig().getRepositoryDirectory(),
-      directory);
+  public static String getRepositoryId(RepositoryConfig config, File directory) throws IOException {
+    return getRepositoryId(config.getRepositoryDirectory(), directory);
   }
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param config
-   * @param directory
-   * @return
-   *
-   * @throws IOException
-   */
-  public static String getRepositoryName(SimpleRepositoryConfig config,
-    File directory)
-    throws IOException
-  {
-    return getRepositoryName(config.getRepositoryDirectory(), directory);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param baseDirectory
-   * @param directory
-   * @return
-   *
-   * @throws IOException
-   */
-  public static String getRepositoryName(File baseDirectory, File directory)
-    throws IOException
-  {
-    String name = null;
+  public static String getRepositoryId(File baseDirectory, File directory) throws IOException {
     String path = directory.getCanonicalPath();
-    int directoryLength = baseDirectory.getCanonicalPath().length();
+    String basePath = baseDirectory.getCanonicalPath();
 
-    if (directoryLength < path.length())
-    {
-      name = IOUtil.trimSeperatorChars(path.substring(directoryLength));
+    Preconditions.checkArgument(
+      path.startsWith(basePath),
+      "repository path %s is not in the main repository path %s", path, basePath
+    );
 
-      // replace windows path seperator
-      name = name.replaceAll("\\\\", "/");
-    }
-    else if (logger.isWarnEnabled())
-    {
-      logger.warn("path is shorter as the main repository path");
-    }
+    String id = IOUtil.trimSeperatorChars(path.substring(basePath.length()));
 
-    return name;
+    Preconditions.checkArgument(
+      !id.contains("\\") && !id.contains("/"),
+      "got illegal repository directory with separators in id: %s", path
+    );
+
+    return id;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param handler
-   * @param directoryNames
-   *
-   * @return
-   *
-   * @throws IOException
-   */
-  public static List<String> getRepositoryNames(
-    AbstractRepositoryHandler handler, String... directoryNames)
-    throws IOException
-  {
-    return getRepositoryNames(handler.getConfig(), directoryNames);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param config
-   * @param directoryNames
-   *
-   * @return
-   *
-   * @throws IOException
-   */
-  public static List<String> getRepositoryNames(SimpleRepositoryConfig config,
-    String... directoryNames)
-    throws IOException
-  {
-    return getRepositoryNames(config.getRepositoryDirectory(), directoryNames);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param baseDirectory
-   * @param directoryNames
-   *
-   * @return
-   *
-   * @throws IOException
-   */
-  public static List<String> getRepositoryNames(File baseDirectory,
-    String... directoryNames)
-    throws IOException
-  {
-    List<String> repositories = new ArrayList<String>();
-    List<File> repositoryFiles = searchRepositoryDirectories(baseDirectory,
-                                   directoryNames);
-
-    for (File file : repositoryFiles)
-    {
-      String name = getRepositoryName(baseDirectory, file);
-
-      if (name != null)
-      {
-        repositories.add(name);
-      }
-    }
-
-    return repositories;
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param repositories
-   * @param directory
-   * @param names
-   */
-  private static void searchRepositoryDirectories(List<File> repositories,
-    File directory, List<String> names)
-  {
+  private static void searchRepositoryDirectories(List<File> repositories, File directory, List<String> names) {
     boolean found = false;
 
-    for (String name : names)
-    {
-      if (new File(directory, name).exists())
-      {
+    for (String name : names) {
+      if (new File(directory, name).exists()) {
         found = true;
 
         break;
       }
     }
 
-    if (found)
-    {
+    if (found) {
       repositories.add(directory);
-    }
-    else
-    {
+    } else {
       File[] directories = directory.listFiles(DirectoryFileFilter.instance);
 
-      if (directories != null)
-      {
-        for (File d : directories)
-        {
+      if (directories != null) {
+        for (File d : directories) {
           searchRepositoryDirectories(repositories, d, names);
         }
       }

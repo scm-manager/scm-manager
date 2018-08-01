@@ -29,3 +29,8 @@ Desktop DF$
 # jrebel
 rebel.xml
 \.pyc
+# ui
+scm-ui/build
+scm-ui/coverage
+/?node_modules/
+

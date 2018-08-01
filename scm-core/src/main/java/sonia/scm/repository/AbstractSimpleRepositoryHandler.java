@@ -1,19 +1,19 @@
 /**
  * Copyright (c) 2010, Sebastian Sdorra
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * <p>
  * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
+ * this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
  * 3. Neither the name of SCM-Manager; nor the names of its
- *    contributors may be used to endorse or promote products derived from this
- *    software without specific prior written permission.
- *
+ * contributors may be used to endorse or promote products derived from this
+ * software without specific prior written permission.
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,11 +24,9 @@
  * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * <p>
  * http://bitbucket.org/sdorra/scm-manager
- *
  */
-
 
 
 package sonia.scm.repository;
@@ -54,91 +52,56 @@ import java.net.URL;
 //~--- JDK imports ------------------------------------------------------------
 
 /**
- *
- * @author Sebastian Sdorra
- *
- *
  * @param <C>
+ * @author Sebastian Sdorra
  */
-public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepositoryConfig>
-        extends AbstractRepositoryHandler<C> implements RepositoryDirectoryHandler
-{
+public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig>
+  extends AbstractRepositoryHandler<C> implements RepositoryDirectoryHandler {
 
-  /** Field description */
   public static final String DEFAULT_VERSION_INFORMATION = "unknown";
 
-  /** Field description */
   public static final String DIRECTORY_REPOSITORY = "repositories";
 
-  /** Field description */
   public static final String DOT = ".";
 
-  /** the logger for AbstractSimpleRepositoryHandler */
+  /**
+   * the logger for AbstractSimpleRepositoryHandler
+   */
   private static final Logger logger =
     LoggerFactory.getLogger(AbstractSimpleRepositoryHandler.class);
 
-  //~--- constructors ---------------------------------------------------------
+  private FileSystem fileSystem;
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param storeFactory
-   * @param fileSystem
-   */
+
   public AbstractSimpleRepositoryHandler(ConfigurationStoreFactory storeFactory,
-          FileSystem fileSystem)
-  {
+                                         FileSystem fileSystem) {
     super(storeFactory);
     this.fileSystem = fileSystem;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Override
   public Repository create(Repository repository)
-          throws RepositoryException
-  {
+    throws RepositoryException {
     File directory = getDirectory(repository);
 
-    if (directory.exists())
-    {
+    if (directory.exists()) {
       throw RepositoryAlreadyExistsException.create(repository);
     }
 
     checkPath(directory);
 
-    try
-    {
+    try {
       fileSystem.create(directory);
       create(repository, directory);
       postCreate(repository, directory);
       return repository;
-    }
-    catch (Exception ex)
-    {
-      if (directory.exists())
-      {
-        if (logger.isDebugEnabled())
-        {
-          logger.debug(
-              "delete repository directory {}, because of failed repository creation",
-              directory);
-        }
-
+    } catch (Exception ex) {
+      if (directory.exists()) {
+        logger.warn("delete repository directory {}, because of failed repository creation", directory);
         try {
           fileSystem.destroy(directory);
         } catch (IOException e) {
-          logger.error("could not delete directory after failed repository creation: {}", directory, e);
+          logger.error("Could not destroy directory", e);
         }
       }
 
@@ -148,77 +111,48 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param repository
-   * @return
-   */
   @Override
-  public String createResourcePath(Repository repository)
-  {
+  public String createResourcePath(Repository repository) {
     StringBuilder path = new StringBuilder("/");
 
-    path.append(getType().getName()).append("/").append(repository.getName());
+    path.append(getType().getName()).append("/").append(repository.getId());
 
     return path.toString();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Override
-  public void delete(Repository repository) throws RepositoryException
-  {
+  public void delete(Repository repository)
+    throws RepositoryException {
     File directory = getDirectory(repository);
 
-    if (directory.exists())
-    {
+    if (directory.exists()) {
       try {
         fileSystem.destroy(directory);
       } catch (IOException e) {
         throw new RepositoryException("could not delete repository", e);
       }
       cleanupEmptyDirectories(config.getRepositoryDirectory(),
-                              directory.getParentFile());
-    }
-    else if (logger.isWarnEnabled())
-    {
-      logger.warn("repository {} not found", repository);
+        directory.getParentFile());
+    } else {
+      logger.warn("repository {} not found", repository.getNamespaceAndName());
     }
   }
 
-  /**
-   * Method description
-   *
-   */
   @Override
-  public void loadConfig()
-  {
+  public void loadConfig() {
     super.loadConfig();
 
-    if (config == null)
-    {
+    if (config == null) {
       config = createInitialConfig();
 
-      if (config != null)
-      {
+      if (config != null) {
         File repositoryDirectory = config.getRepositoryDirectory();
 
-        if (repositoryDirectory == null)
-        {
+        if (repositoryDirectory == null) {
           repositoryDirectory = new File(
-              baseDirectory,
-              DIRECTORY_REPOSITORY.concat(File.separator).concat(
-                getType().getName()));
+            baseDirectory,
+            DIRECTORY_REPOSITORY.concat(File.separator).concat(
+              getType().getName()));
           config.setRepositoryDirectory(repositoryDirectory);
         }
 
@@ -228,107 +162,51 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Override
-  public void modify(Repository repository) throws RepositoryException
-  {
+  public void modify(Repository repository) {
 
-    // nothing todo
+    // nothing to do
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   */
   @Override
-  public File getDirectory(Repository repository)
-  {
+  public File getDirectory(Repository repository) {
     File directory = null;
 
-    if (isConfigured())
-    {
+    if (isConfigured()) {
       File repositoryDirectory = config.getRepositoryDirectory();
 
-      directory = new File(repositoryDirectory, repository.getName());
+      directory = new File(repositoryDirectory, repository.getId());
 
-      if (!IOUtil.isChild(repositoryDirectory, directory))
-      {
+      if (!IOUtil.isChild(repositoryDirectory, directory)) {
         StringBuilder msg = new StringBuilder(directory.getPath());
 
         msg.append("is not a child of ").append(repositoryDirectory.getPath());
 
         throw new ConfigurationException(msg.toString());
       }
-    }
-    else
-    {
+    } else {
       throw new ConfigurationException("RepositoryHandler is not configured");
     }
 
     return directory;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public String getVersionInformation()
-  {
+  public String getVersionInformation() {
     return DEFAULT_VERSION_INFORMATION;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   * @param directory
-   *
-   * @return
-   */
   protected ExtendedCommand buildCreateCommand(Repository repository,
-          File directory)
-  {
+                                               File directory) {
     throw new UnsupportedOperationException("method is not implemented");
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   * @param directory
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   protected void create(Repository repository, File directory)
-          throws RepositoryException, IOException
-  {
+    throws RepositoryException, IOException {
     ExtendedCommand cmd = buildCreateCommand(repository, directory);
     CommandResult result = cmd.execute();
 
-    if (!result.isSuccessfull())
-    {
+    if (!result.isSuccessfull()) {
       StringBuilder msg = new StringBuilder("command exit with error ");
 
       msg.append(result.getReturnCode()).append(" and message: '");
@@ -338,56 +216,31 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  protected C createInitialConfig()
-  {
+  protected C createInitialConfig() {
     return null;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   * @param directory
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   protected void postCreate(Repository repository, File directory)
-          throws IOException, RepositoryException {}
-
-  //~--- get methods ----------------------------------------------------------
+    throws IOException, RepositoryException {
+  }
 
   /**
    * Returns the content of a classpath resource or the given default content.
    *
-   *
-   * @param resource path of a classpath resource
+   * @param resource       path of a classpath resource
    * @param defaultContent default content to return
-   *
    * @return content of a classpath resource or defaultContent
    */
-  protected String getStringFromResource(String resource, String defaultContent)
-  {
+  protected String getStringFromResource(String resource, String defaultContent) {
     String content = defaultContent;
 
-    try
-    {
+    try {
       URL url = Resources.getResource(resource);
 
-      if (url != null)
-      {
+      if (url != null) {
         content = Resources.toString(url, Charsets.UTF_8);
       }
-    }
-    catch (IOException ex)
-    {
+    } catch (IOException ex) {
       logger.error("could not read resource", ex);
     }
 
@@ -397,45 +250,29 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
   /**
    * Returns true if the directory is a repository.
    *
-   *
    * @param directory directory to check
-   *
    * @return true if the directory is a repository
    * @since 1.9
    */
-  protected boolean isRepository(File directory)
-  {
+  protected boolean isRepository(File directory) {
     return new File(directory, DOT.concat(getType().getName())).exists();
   }
-
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Check path for existing repositories
    *
-   *
    * @param directory repository target directory
-   *
    * @throws RepositoryAlreadyExistsException
    */
-  private void checkPath(File directory) throws RepositoryAlreadyExistsException
-  {
+  private void checkPath(File directory) throws RepositoryAlreadyExistsException {
     File repositoryDirectory = config.getRepositoryDirectory();
     File parent = directory.getParentFile();
 
-    while ((parent != null) &&!repositoryDirectory.equals(parent))
-    {
-      if (logger.isTraceEnabled())
-      {
-        logger.trace("check {} for existing repository", parent);
-      }
+    while ((parent != null) && !repositoryDirectory.equals(parent)) {
+      logger.trace("check {} for existing repository", parent);
 
-      if (isRepository(parent))
-      {
-        if (logger.isErrorEnabled())
-        {
-          logger.error("parent path {} is a repository", parent);
-        }
+      if (isRepository(parent)) {
+        logger.error("parent path {} is a repository", parent);
 
         StringBuilder buffer = new StringBuilder("repository with name ");
         buffer.append(directory.getName()).append(" already exists");
@@ -446,49 +283,25 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param baseDirectory
-   * @param directory
-   */
-  private void cleanupEmptyDirectories(File baseDirectory, File directory)
-  {
-    if (IOUtil.isChild(baseDirectory, directory))
-    {
-      if (IOUtil.isEmpty(directory))
-      {
+  private void cleanupEmptyDirectories(File baseDirectory, File directory) {
+    if (IOUtil.isChild(baseDirectory, directory)) {
+      if (IOUtil.isEmpty(directory)) {
 
         // TODO use filesystem
-        if (directory.delete())
-        {
-          if (logger.isInfoEnabled())
-          {
-            logger.info("successfully deleted directory {}", directory);
-          }
-
+        if (directory.delete()) {
+          logger.info("successfully deleted directory {}", directory);
           cleanupEmptyDirectories(baseDirectory, directory.getParentFile());
-        }
-        else if (logger.isWarnEnabled())
-        {
+        } else {
           logger.warn("could not delete directory {}", directory);
         }
-      }
-      else if (logger.isDebugEnabled())
-      {
+
+      } else {
         logger.debug("could not remove non empty directory {}", directory);
       }
-    }
-    else if (logger.isWarnEnabled())
-    {
-      logger.warn("directory {} is not a child of {}", directory,
-                  baseDirectory);
+    } else {
+      logger.warn("directory {} is not a child of {}", directory, baseDirectory);
     }
   }
 
-  //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
-  private FileSystem fileSystem;
 }

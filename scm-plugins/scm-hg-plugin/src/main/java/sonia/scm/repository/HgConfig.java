@@ -33,20 +33,19 @@
 
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.util.Util;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+
 
 /**
  *
  * @author Sebastian Sdorra
  */
 @XmlRootElement(name = "config")
-public class HgConfig extends SimpleRepositoryConfig
+public class HgConfig extends RepositoryConfig
 {
 
   /**
@@ -223,4 +222,11 @@ public class HgConfig extends SimpleRepositoryConfig
 
   /** Field description */
   private boolean showRevisionInId = false;
+
+  @Override
+  @XmlTransient // Only for permission checks, don't serialize to XML
+  public String getId() {
+    // Don't change this without migrating SCM permission configuration!
+    return "hg";
+  }
 }

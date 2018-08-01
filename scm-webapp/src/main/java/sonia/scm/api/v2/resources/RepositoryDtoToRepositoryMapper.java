@@ -1,10 +1,6 @@
 package sonia.scm.api.v2.resources;
 
-import org.mapstruct.AfterMapping;
-import org.mapstruct.Context;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
+import org.mapstruct.*;
 import sonia.scm.repository.Repository;
 
 @Mapper

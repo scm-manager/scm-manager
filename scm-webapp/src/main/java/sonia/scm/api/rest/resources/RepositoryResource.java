@@ -46,51 +46,16 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.AuthorizationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.repository.BlameResult;
-import sonia.scm.repository.Branches;
-import sonia.scm.repository.BrowserResult;
-import sonia.scm.repository.Changeset;
-import sonia.scm.repository.ChangesetPagingResult;
-import sonia.scm.repository.HealthChecker;
-import sonia.scm.repository.Permission;
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryException;
-import sonia.scm.repository.RepositoryIsNotArchivedException;
-import sonia.scm.repository.RepositoryManager;
-import sonia.scm.repository.RepositoryNotFoundException;
-import sonia.scm.repository.Tags;
-import sonia.scm.repository.api.BlameCommandBuilder;
-import sonia.scm.repository.api.BrowseCommandBuilder;
-import sonia.scm.repository.api.CatCommandBuilder;
-import sonia.scm.repository.api.CommandNotSupportedException;
-import sonia.scm.repository.api.DiffCommandBuilder;
-import sonia.scm.repository.api.DiffFormat;
-import sonia.scm.repository.api.LogCommandBuilder;
-import sonia.scm.repository.api.RepositoryService;
-import sonia.scm.repository.api.RepositoryServiceFactory;
+import sonia.scm.repository.*;
+import sonia.scm.repository.api.*;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.GenericEntity;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Request;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.*;
+import javax.ws.rs.core.*;
 import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.core.StreamingOutput;
-import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -551,42 +516,6 @@ public class RepositoryResource extends AbstractManagerResource<Repository, Repo
     finally
     {
       IOUtil.close(service);
-    }
-
-    return response;
-  }
-
-  /**
-   * Returns the {@link Repository} with the specified type and name.
-   *
-   * @param type the type of the repository
-   * @param name the name of the repository
-   *
-   * @return the {@link Repository} with the specified type and name
-   */
-  @GET
-  @Path("{type: [a-z]+}/{name: .*}")
-  @StatusCodes({
-    @ResponseCode(code = 200, condition = "success"),
-    @ResponseCode(code = 404, condition = "not found, no repository with the specified type and name available"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
-  @TypeHint(Repository.class)
-  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-  public Response getByTypeAndName(@PathParam("type") String type,
-    @PathParam("name") String name)
-  {
-    Response response;
-    Repository repository = repositoryManager.get(type, name);
-
-    if (repository != null)
-    {
-      prepareForReturn(repository);
-      response = Response.ok(repository).build();
-    }
-    else
-    {
-      response = Response.status(Response.Status.NOT_FOUND).build();
     }
 
     return response;

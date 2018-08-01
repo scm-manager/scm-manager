@@ -1,7 +1,7 @@
 #!groovy
 
 // Keep the version in sync with the one used in pom.xml in order to get correct syntax completion.
-@Library('github.com/cloudogu/ces-build-lib@9aadeeb')
+@Library('github.com/cloudogu/ces-build-lib@59d3e94')
 import com.cloudogu.ces.cesbuildlib.*
 
 node() { // No specific label
@@ -31,16 +31,14 @@ node() { // No specific label
       }
 
       stage('Unit Test') {
-        mvn 'test -Dsonia.scm.test.skip.hg=true'
+        mvn 'test -Dsonia.scm.test.skip.hg=true -Dmaven.test.failure.ignore=true'
       }
 
       stage('SonarQube') {
 
-        def sonarQube = new SonarQube(this, 'sonarcloud.io')
-
         analyzeWith(mvn)
 
-        if (!sonarQube.waitForQualityGateWebhookToBeCalled()) {
+        if (!waitForQualityGateWebhookToBeCalled()) {
           currentBuild.result = 'UNSTABLE'
         }
       }
@@ -95,6 +93,18 @@ void analyzeWith(Maven mvn) {
     }
     mvn "${mvnArgs}"
   }
+}
+
+boolean waitForQualityGateWebhookToBeCalled() {
+  boolean isQualityGateSucceeded = true
+  timeout(time: 2, unit: 'MINUTES') { // Needed when there is no webhook for example
+    def qGate = waitForQualityGate()
+    echo "SonarQube Quality Gate status: ${qGate.status}"
+    if (qGate.status != 'OK') {
+      isQualityGateSucceeded = false
+    }
+  }
+  return isQualityGateSucceeded
 }
 
 String getCommitAuthorComplete() {

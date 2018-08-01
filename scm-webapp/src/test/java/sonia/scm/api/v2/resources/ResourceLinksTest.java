@@ -132,6 +132,18 @@ public class ResourceLinksTest {
     assertEquals(BASE_URL + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/sources/", url);
   }
 
+  @Test
+  public void shouldCreateCorrectConfigSelfUrl() {
+    String url = resourceLinks.config().self();
+    assertEquals(BASE_URL + ConfigResource.CONFIG_PATH_V2, url);
+  }
+
+  @Test
+  public void shouldCreateCorrectConfigUpdateUrl() {
+    String url = resourceLinks.config().update();
+    assertEquals(BASE_URL + ConfigResource.CONFIG_PATH_V2, url);
+  }
+
   @Before
   public void initUriInfo() {
     initMocks(this);

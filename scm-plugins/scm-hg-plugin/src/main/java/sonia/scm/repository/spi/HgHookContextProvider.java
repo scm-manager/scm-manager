@@ -38,16 +38,16 @@ import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.api.HgHookBranchProvider;
 import sonia.scm.repository.api.HgHookMessageProvider;
+import sonia.scm.repository.api.HgHookTagProvider;
 import sonia.scm.repository.api.HookBranchProvider;
 import sonia.scm.repository.api.HookFeature;
 import sonia.scm.repository.api.HookMessageProvider;
-
-//~--- JDK imports ------------------------------------------------------------
+import sonia.scm.repository.api.HookTagProvider;
 
 import java.util.EnumSet;
 import java.util.Set;
-import sonia.scm.repository.api.HgHookTagProvider;
-import sonia.scm.repository.api.HookTagProvider;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Mercurial implementation of {@link HookContextProvider}.
@@ -67,17 +67,16 @@ public class HgHookContextProvider extends HookContextProvider
    * Constructs a new instance.
    *
    * @param handler mercurial repository handler
-   * @param repositoryName name of changed repository
+   * @param namespaceAndName namespace and name of changed repository
    * @param hookManager mercurial hook manager
    * @param startRev start revision
    * @param type type of hook
    */
   public HgHookContextProvider(HgRepositoryHandler handler,
-    String repositoryName, HgHookManager hookManager, String startRev,
+    String id, HgHookManager hookManager, String startRev,
     RepositoryHookType type)
   {
-    this.hookChangesetProvider = new HgHookChangesetProvider(handler,
-      repositoryName, hookManager, startRev, type);
+    this.hookChangesetProvider = new HgHookChangesetProvider(handler, id, hookManager, startRev, type);
   }
 
   //~--- get methods ----------------------------------------------------------

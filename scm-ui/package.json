@@ -1,0 +1,76 @@
+{
+  "homepage": "/scm",
+  "name": "scm-ui",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "bulma": "^0.7.1",
+    "classnames": "^2.2.5",
+    "history": "^4.7.2",
+    "i18next": "^11.4.0",
+    "i18next-browser-languagedetector": "^2.2.2",
+    "i18next-fetch-backend": "^0.1.0",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1",
+    "react-i18next": "^7.9.0",
+    "react-jss": "^8.6.0",
+    "react-redux": "^5.0.7",
+    "react-router-dom": "^4.3.1",
+    "react-router-redux": "^5.0.0-alpha.9",
+    "react-scripts": "1.1.4",
+    "redux": "^4.0.0",
+    "redux-devtools-extension": "^2.13.5",
+    "redux-logger": "^3.0.6",
+    "redux-thunk": "^2.3.0"
+  },
+  "scripts": {
+    "build-css": "node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/",
+    "watch-css": "npm run build-css && node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/ --watch --recursive",
+    "start-js": "react-scripts start",
+    "start": "npm-run-all -p watch-css start-js",
+    "build-js": "react-scripts build",
+    "build": "npm-run-all build-css build-js",
+    "test": "jest",
+    "test-coverage": "jest --coverage",
+    "test-ci": "jest --ci --coverage",
+    "eject": "react-scripts eject",
+    "flow": "flow",
+    "pre-commit": "jest && flow && eslint src"
+  },
+  "proxy": {
+    "/scm/api": {
+      "target": "http://localhost:8081"
+    }
+  },
+  "devDependencies": {
+    "enzyme": "^3.3.0",
+    "enzyme-adapter-react-16": "^1.1.1",
+    "fetch-mock": "^6.5.0",
+    "flow-bin": "^0.77.0",
+    "flow-typed": "^2.5.1",
+    "jest-junit": "^5.1.0",
+    "node-sass-chokidar": "^1.3.0",
+    "npm-run-all": "^4.1.3",
+    "prettier": "^1.13.7",
+    "react-test-renderer": "^16.4.1",
+    "redux-mock-store": "^1.5.3"
+  },
+  "babel": {
+    "presets": [
+      "react-app"
+    ]
+  },
+  "jest": {
+    "coverageDirectory": "target/jest-reports/coverage",
+    "coveragePathIgnorePatterns": [
+      "src/tests/.*"
+    ],
+    "reporters": [
+      "default",
+      "jest-junit"
+    ]
+  },
+  "jest-junit": {
+    "output": "./target/jest-reports/TEST-all.xml"
+  }
+}

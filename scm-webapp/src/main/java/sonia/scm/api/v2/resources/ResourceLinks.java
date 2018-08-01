@@ -76,7 +76,7 @@ class ResourceLinks {
       return userLinkBuilder.method("getUserResource").parameters(name).method("delete").parameters().href();
     }
 
-     String update(String name) {
+    String update(String name) {
       return userLinkBuilder.method("getUserResource").parameters(name).method("update").parameters().href();
     }
   }
@@ -98,6 +98,26 @@ class ResourceLinks {
 
     String create() {
       return collectionLinkBuilder.method("getUserCollectionResource").parameters().method("create").parameters().href();
+    }
+  }
+
+  ConfigLinks config() {
+    return new ConfigLinks(uriInfoStore.get());
+  }
+
+  static class ConfigLinks {
+    private final LinkBuilder configLinkBuilder;
+
+    ConfigLinks(UriInfo uriInfo) {
+      configLinkBuilder = new LinkBuilder(uriInfo, ConfigResource.class);
+    }
+
+    String self() {
+      return configLinkBuilder.method("get").parameters().href();
+    }
+
+    String update() {
+      return configLinkBuilder.method("update").parameters().href();
     }
   }
 
