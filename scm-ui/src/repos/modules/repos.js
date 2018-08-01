@@ -3,6 +3,8 @@ import { apiClient } from "../../apiclient";
 import * as types from "../../modules/types";
 import type { Action } from "../../types/Action";
 import type { RepositoryCollection } from "../types/Repositories";
+import {isPending} from "../../modules/pending";
+import {getFailure} from "../../modules/failure";
 
 export const FETCH_REPOS = "scm/repos/FETCH_REPOS";
 export const FETCH_REPOS_PENDING = `${FETCH_REPOS}_${types.PENDING_SUFFIX}`;
@@ -102,4 +104,12 @@ export function getRepositoryCollection(state: Object) {
       }
     };
   }
+}
+
+export function isFetchReposPending(state: Object) {
+  return isPending(state, FETCH_REPOS);
+}
+
+export function getFetchReposFailure(state: Object) {
+  return getFailure(state, FETCH_REPOS);
 }

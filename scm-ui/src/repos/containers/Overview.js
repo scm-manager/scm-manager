@@ -4,13 +4,15 @@ import React from "react";
 import type { RepositoryCollection } from "../types/Repositories";
 
 import { connect } from "react-redux";
-import { fetchRepos, getRepositoryCollection } from "../modules/repos";
+import {fetchRepos, getFetchReposFailure, getRepositoryCollection, isFetchReposPending} from "../modules/repos";
 import { translate } from "react-i18next";
 import { Page } from "../../components/layout";
 import RepositoryList from "../components/RepositoryList";
 
 type Props = {
   collection: RepositoryCollection,
+  loading: boolean,
+  error: Error,
 
   // dispatched functions
   fetchRepos: () => void,
@@ -23,9 +25,9 @@ class Overview extends React.Component<Props> {
     this.props.fetchRepos();
   }
   render() {
-    const { t } = this.props;
+    const { error, loading, t } = this.props;
     return (
-      <Page title={t("overview.title")} subtitle={t("overview.subtitle")}>
+      <Page title={t("overview.title")} subtitle={t("overview.subtitle")} loading={loading} error={error}>
         {this.renderList()}
       </Page>
     );
@@ -44,8 +46,12 @@ class Overview extends React.Component<Props> {
 
 const mapStateToProps = (state, ownProps) => {
   const collection = getRepositoryCollection(state);
+  const loading = isFetchReposPending(state);
+  const error = getFetchReposFailure(state);
   return {
-    collection
+    collection,
+    loading,
+    error
   };
 };
 

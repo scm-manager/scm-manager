@@ -8,7 +8,7 @@ import reducer, {
   fetchRepos,
   FETCH_REPOS_FAILURE,
   fetchReposSuccess,
-  getRepositoryCollection
+  getRepositoryCollection, FETCH_REPOS, isFetchReposPending, getFetchReposFailure
 } from "./repos";
 import type { Repository, RepositoryCollection } from "../types/Repositories";
 
@@ -267,6 +267,9 @@ describe("repos reducer", () => {
 });
 
 describe("repos selectors", () => {
+
+  const error = new Error("something goes wrong");
+
   it("should return the repositories collection", () => {
     const state = {
       repos: {
@@ -281,5 +284,31 @@ describe("repos selectors", () => {
 
     const collection = getRepositoryCollection(state);
     expect(collection).toEqual(repositoryCollection);
+  });
+
+  it("should return true, when fetch repos is pending", () => {
+    const state = {
+      pending: {
+        [FETCH_REPOS]: true
+      }
+    };
+    expect(isFetchReposPending(state)).toEqual(true);
+  });
+
+  it("should return false, when fetch repos is not pending", () => {
+    expect(isFetchReposPending({})).toEqual(false);
+  });
+
+  it("should return error when fetch repos did fail", () => {
+    const state = {
+      failure: {
+        [FETCH_REPOS]: error
+      }
+    };
+    expect(getFetchReposFailure(state)).toEqual(error);
+  });
+
+  it("should return undefined when fetch repos did not fail", () => {
+    expect(getFetchReposFailure({})).toBe(undefined);
   });
 });
