@@ -36,11 +36,11 @@ package sonia.scm.web;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.servlet.ServletModule;
-
 import org.eclipse.jgit.transport.ScmTransportProtocol;
-
+import org.mapstruct.factory.Mappers;
+import sonia.scm.api.v2.resources.GitConfigDtoToGitConfigMapper;
+import sonia.scm.api.v2.resources.GitConfigToGitConfigDtoMapper;
 import sonia.scm.plugin.Extension;
-
 import sonia.scm.web.lfs.LfsBlobStoreFactory;
 
 /**
@@ -72,6 +72,9 @@ public class GitServletModule extends ServletModule
     bind(ScmTransportProtocol.class);
     
     bind(LfsBlobStoreFactory.class);
+
+    bind(GitConfigDtoToGitConfigMapper.class).to(Mappers.getMapper(GitConfigDtoToGitConfigMapper.class).getClass());
+    bind(GitConfigToGitConfigDtoMapper.class).to(Mappers.getMapper(GitConfigToGitConfigDtoMapper.class).getClass());
 
     // serlvelts and filters
     serve(PATTERN_GIT).with(ScmGitServlet.class);
