@@ -117,48 +117,42 @@
       <artifactId>jackson-datatype-jsr310</artifactId>
       <version>${jackson.version}</version>
     </dependency>
+
     <!-- rest api -->
     
     <dependency>
       <groupId>org.jboss.resteasy</groupId>
       <artifactId>resteasy-jaxrs</artifactId>
-      <version>${resteasy.version}</version>
     </dependency>
 
     <dependency>
       <groupId>org.jboss.resteasy</groupId>
       <artifactId>resteasy-jaxb-provider</artifactId>
-      <version>${resteasy.version}</version>
     </dependency>
 
     <dependency>
       <groupId>org.jboss.resteasy</groupId>
       <artifactId>resteasy-jackson2-provider</artifactId>
-      <version>${resteasy.version}</version>
     </dependency>
 
     <dependency>
       <groupId>org.jboss.resteasy</groupId>
       <artifactId>resteasy-multipart-provider</artifactId>
-      <version>${resteasy.version}</version>
     </dependency>
 
     <dependency>
       <groupId>org.jboss.resteasy</groupId>
       <artifactId>resteasy-guice</artifactId>
-      <version>${resteasy.version}</version>
     </dependency>
     
     <dependency>
       <groupId>org.jboss.resteasy</groupId>
       <artifactId>resteasy-servlet-initializer</artifactId>
-      <version>${resteasy.version}</version>
     </dependency>
 
     <dependency>
       <groupId>de.otto.edison</groupId>
       <artifactId>edison-hal</artifactId>
-      <version>2.0.1</version>
     </dependency>
 
     <!-- injection -->
@@ -261,7 +255,6 @@
     <dependency>
       <groupId>com.webcohesion.enunciate</groupId>
       <artifactId>enunciate-core-annotations</artifactId>
-      <version>${enunciate.version}</version>
     </dependency>
 
     <!-- test scope -->
@@ -387,20 +380,17 @@
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.16.18</version>
       <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>org.mapstruct</groupId>
       <artifactId>mapstruct-jdk8</artifactId>
-      <version>${org.mapstruct.version}</version>
     </dependency>
 
     <dependency>
       <groupId>org.mapstruct</groupId>
       <artifactId>mapstruct-processor</artifactId>
-      <version>${org.mapstruct.version}</version>
       <scope>provided</scope>
     </dependency>
 
@@ -557,7 +547,6 @@
     <scm.home>target/scm-it</scm.home>
     <environment.profile>default</environment.profile>
     <selenium.version>2.53.1</selenium.version>
-    <enunciate.version>2.9.1</enunciate.version>
     <wagon.version>1.0</wagon.version>
     <mustache.version>0.8.17</mustache.version>
     <netbeans.hint.deploy.server>Tomcat</netbeans.hint.deploy.server>

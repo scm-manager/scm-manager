@@ -37,7 +37,8 @@
     <dependency>
       <groupId>com.github.sdorra</groupId>
       <artifactId>shiro-unit</artifactId>
-      <scope>test</scope>
+      <!-- scm-test is test scoped in other modules and they might need shiro unit for their tests. -->
+      <scope>compile</scope>
     </dependency>
 
     <dependency>

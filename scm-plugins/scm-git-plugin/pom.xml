@@ -9,22 +9,13 @@
     <version>2.0.0-SNAPSHOT</version>
   </parent>
 
-  <groupId>sonia.scm.plugins</groupId>
   <artifactId>scm-git-plugin</artifactId>
-  <version>2.0.0-SNAPSHOT</version>
   <name>scm-git-plugin</name>
   <packaging>smp</packaging>
   <url>https://bitbucket.org/sdorra/scm-manager</url>
   <description>Plugin for the version control system Git</description>
 
   <dependencies>
-
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
-      <version>${servlet.version}</version>
-      <scope>provided</scope>
-    </dependency>
 
     <dependency>
       <groupId>sonia.jgit</groupId>
@@ -48,15 +39,6 @@
       <groupId>commons-lang</groupId>
       <artifactId>commons-lang</artifactId>
       <version>2.6</version>
-    </dependency>
-
-    <!-- test scope -->
-
-    <dependency>
-      <groupId>sonia.scm</groupId>
-      <artifactId>scm-test</artifactId>
-      <version>2.0.0-SNAPSHOT</version>
-      <scope>test</scope>
     </dependency>
 
   </dependencies>
