@@ -168,6 +168,54 @@ export function createGroupFailure(error: Error) {
   };
 }
 
+//delete group
+
+export function deleteGroup(group: Group, callback?: () => void) {
+  return function(dispatch: any) {
+    dispatch(deleteGroupPending(group));
+    return apiClient
+      .delete(group._links.delete.href)
+      .then(() => {
+        dispatch(deleteGroupSuccess(group));
+        if (callback) {
+          callback();
+        }
+      })
+      .catch(cause => {
+        const error = new Error(
+          `could not delete group ${group.name}: ${cause.message}`
+        );
+        dispatch(deleteGroupFailure(group, error));
+      });
+  };
+}
+
+export function deleteGroupPending(group: Group): Action {
+  return {
+    type: DELETE_GROUP_PENDING,
+    payload: group,
+    itemId: group.name
+  };
+}
+
+export function deleteGroupSuccess(group: Group): Action {
+  return {
+    type: DELETE_GROUP_SUCCESS,
+    payload: group,
+    itemId: group.name
+  };
+}
+
+export function deleteGroupFailure(group: Group, error: Error): Action {
+  return {
+    type: DELETE_GROUP_FAILURE,
+    payload: {
+      error,
+      group
+    },
+    itemId: group.name
+  };
+}
 
 //reducer
 function extractGroupsByNames(
@@ -185,6 +233,22 @@ function extractGroupsByNames(
     groupsByNames[groupName] = oldGroupsByNames[groupName];
   }
   return groupsByNames;
+}
+
+function deleteGroupInGroupsByNames(groups: {}, groupName: string) {
+  let newGroups = {};
+  for (let groupname in groups) {
+    if (groupname !== groupName) newGroups[groupname] = groups[groupname];
+  }
+  return newGroups;
+}
+
+function deleteGroupInEntries(groups: [], groupName: string) {
+  let newGroups = [];
+  for (let group of groups) {
+    if (group !== groupName) newGroups.push(group);
+  }
+  return newGroups;
 }
 
 const reducerByName = (state: any, groupname: string, newGroupState: any) => {
@@ -211,7 +275,16 @@ function listReducer(state: any = {}, action: any = {}) {
           _links: action.payload._links
         }
       };
-
+    // Delete single group actions
+    case DELETE_GROUP_SUCCESS:
+    const newGroupEntries = deleteGroupInEntries(
+      state.entries,
+      action.payload.name
+    );
+    return {
+      ...state,
+      entries: newGroupEntries
+    };
     default:
       return state;
   }
@@ -229,6 +302,13 @@ function byNamesReducer(state: any = {}, action: any = {}) {
       };
     case FETCH_GROUP_SUCCESS:
       return reducerByName(state, action.payload.name, action.payload);
+    case DELETE_GROUP_SUCCESS:
+      const newGroupByNames = deleteGroupInGroupsByNames(
+        state,
+        action.payload.name
+      );
+      return newGroupByNames;
+
     default:
       return state;
   }
@@ -310,4 +390,12 @@ export function isFetchGroupPending(state: Object, name: string) {
 
 export function getFetchGroupFailure(state: Object, name: string) {
   return getFailure(state, FETCH_GROUP, name);
+}
+
+export function isDeleteGroupPending(state: Object, name: string) {
+  return isPending(state, DELETE_GROUP, name);
+}
+
+export function getDeleteGroupFailure(state: Object, name: string) {
+  return getFailure(state, DELETE_GROUP, name);
 }

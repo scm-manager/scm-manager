@@ -30,7 +30,15 @@ import reducer, {
   CREATE_GROUP_FAILURE,
   isCreateGroupPending,
   CREATE_GROUP,
-  getCreateGroupFailure
+  getCreateGroupFailure,
+  deleteGroup,
+  DELETE_GROUP_PENDING,
+  DELETE_GROUP_SUCCESS,
+  DELETE_GROUP_FAILURE,
+  DELETE_GROUP,
+  deleteGroupSuccess,
+  isDeleteGroupPending,
+  getDeleteGroupFailure
 } from "./groups";
 const GROUPS_URL = "/scm/api/rest/v2/groups";
 
@@ -45,13 +53,13 @@ const humanGroup = {
   members: ["userZaphod"],
   _links: {
     self: {
-      href: "http://localhost:3000/scm/api/rest/v2/groups/humanGroup"
+      href: "http://localhost:8081/scm/api/rest/v2/groups/humanGroup"
     },
     delete: {
-      href: "http://localhost:3000/scm/api/rest/v2/groups/humanGroup"
+      href: "http://localhost:8081/scm/api/rest/v2/groups/humanGroup"
     },
     update: {
-      href:"http://localhost:3000/scm/api/rest/v2/groups/humanGroup"
+      href:"http://localhost:8081/scm/api/rest/v2/groups/humanGroup"
     }
   },
   _embedded: {
@@ -60,7 +68,7 @@ const humanGroup = {
         name: "userZaphod",
         _links: {
           self: {
-            href: "http://localhost:3000/scm/api/rest/v2/users/userZaphod"
+            href: "http://localhost:8081/scm/api/rest/v2/users/userZaphod"
           }
         }
       }
@@ -77,13 +85,13 @@ const emptyGroup = {
   members: [],
   _links: {
     self: {
-      href: "http://localhost:3000/scm/api/rest/v2/groups/emptyGroup"
+      href: "http://localhost:8081/scm/api/rest/v2/groups/emptyGroup"
     },
     delete: {
-      href: "http://localhost:3000/scm/api/rest/v2/groups/emptyGroup"
+      href: "http://localhost:8081/scm/api/rest/v2/groups/emptyGroup"
     },
     update: {
-      href:"http://localhost:3000/scm/api/rest/v2/groups/emptyGroup"
+      href:"http://localhost:8081/scm/api/rest/v2/groups/emptyGroup"
     }
   },
   _embedded: {
@@ -158,10 +166,10 @@ describe("groups fetch()", () => {
   });
 
   it("should sucessfully fetch single group", () => {
-    fetchMock.getOnce(GROUPS_URL + "/humandGroup", humanGroup);
+    fetchMock.getOnce(GROUPS_URL + "/humanGroup", humanGroup);
 
     const store = mockStore({});
-    return store.dispatch(fetchGroup("humandGroup")).then(() => {
+    return store.dispatch(fetchGroup("humanGroup")).then(() => {
       const actions = store.getActions();
       expect(actions[0].type).toEqual(FETCH_GROUP_PENDING);
       expect(actions[1].type).toEqual(FETCH_GROUP_SUCCESS);
@@ -170,12 +178,12 @@ describe("groups fetch()", () => {
   });
 
   it("should fail fetching single group on HTTP 500", () => {
-    fetchMock.getOnce(GROUPS_URL + "/humandGroup", {
+    fetchMock.getOnce(GROUPS_URL + "/humanGroup", {
       status: 500
     });
 
     const store = mockStore({});
-    return store.dispatch(fetchGroup("humandGroup")).then(() => {
+    return store.dispatch(fetchGroup("humanGroup")).then(() => {
       const actions = store.getActions();
       expect(actions[0].type).toEqual(FETCH_GROUP_PENDING);
       expect(actions[1].type).toEqual(FETCH_GROUP_FAILURE);
@@ -211,6 +219,53 @@ describe("groups fetch()", () => {
       expect(actions[1].payload instanceof Error).toBeTruthy();
     });
   });
+
+  it("should delete successfully group humanGroup", () => {
+    fetchMock.deleteOnce("http://localhost:8081/scm/api/rest/v2/groups/humanGroup", {
+      status: 204
+    });
+
+    const store = mockStore({});
+    return store.dispatch(deleteGroup(humanGroup)).then(() => {
+      const actions = store.getActions();
+      expect(actions.length).toBe(2);
+      expect(actions[0].type).toEqual(DELETE_GROUP_PENDING);
+      expect(actions[0].payload).toBe(humanGroup);
+      expect(actions[1].type).toEqual(DELETE_GROUP_SUCCESS);
+    });
+  });
+
+  it("should call the callback, after successful delete", () => {
+    fetchMock.deleteOnce("http://localhost:8081/scm/api/rest/v2/groups/humanGroup", {
+      status: 204
+    });
+
+    let called = false;
+    const callMe = () => {
+      called = true;
+    };
+
+    const store = mockStore({});
+    return store.dispatch(deleteGroup(humanGroup, callMe)).then(() => {
+      expect(called).toBeTruthy();
+    });
+  });
+
+  it("should fail to delete group humanGroup", () => {
+    fetchMock.deleteOnce("http://localhost:8081/scm/api/rest/v2/groups/humanGroup", {
+      status: 500
+    });
+
+    const store = mockStore({});
+    return store.dispatch(deleteGroup(humanGroup)).then(() => {
+      const actions = store.getActions();
+      expect(actions[0].type).toEqual(DELETE_GROUP_PENDING);
+      expect(actions[0].payload).toBe(humanGroup);
+      expect(actions[1].type).toEqual(DELETE_GROUP_FAILURE);
+      expect(actions[1].payload).toBeDefined();
+    });
+  });
+
 });
 
 describe("groups reducer", () => {
@@ -282,6 +337,24 @@ describe("groups reducer", () => {
     expect(newState.byNames["emptyGroup"]).toBe(emptyGroup);
     expect(newState.list.entries).toEqual(["humanGroup"]);
   });
+
+  it("should remove group from state when delete succeeds", () => {
+    const state = {
+      list: {
+        entries: ["humanGroup", "emptyGroup"]
+      },
+      byNames: {
+        humanGroup: humanGroup,
+        emptyGroup: emptyGroup
+      }
+    };
+
+    const newState = reducer(state, deleteGroupSuccess(emptyGroup));
+    expect(newState.byNames["humanGroup"]).toBeDefined();
+    expect(newState.byNames["emptyGroup"]).toBeFalsy();
+    expect(newState.list.entries).toEqual(["humanGroup"]);
+  });
+
 
 });
 
@@ -384,30 +457,30 @@ describe("selector tests", () => {
     expect(getGroupByName(state, "emptyGroup")).toEqual(emptyGroup);
   });
 
-  it("should return true, when fetch group humandGroup is pending", () => {
+  it("should return true, when fetch group humanGroup is pending", () => {
     const state = {
       pending: {
-        [FETCH_GROUP + "/humandGroup"]: true
+        [FETCH_GROUP + "/humanGroup"]: true
       }
     };
-    expect(isFetchGroupPending(state, "humandGroup")).toEqual(true);
+    expect(isFetchGroupPending(state, "humanGroup")).toEqual(true);
   });
 
-  it("should return false, when fetch group humandGroup is not pending", () => {
-    expect(isFetchGroupPending({}, "humandGroup")).toEqual(false);
+  it("should return false, when fetch group humanGroup is not pending", () => {
+    expect(isFetchGroupPending({}, "humanGroup")).toEqual(false);
   });
 
-  it("should return error when fetch group humandGroup did fail", () => {
+  it("should return error when fetch group humanGroup did fail", () => {
     const state = {
       failure: {
-        [FETCH_GROUP + "/humandGroup"]: error
+        [FETCH_GROUP + "/humanGroup"]: error
       }
     };
-    expect(getFetchGroupFailure(state, "humandGroup")).toEqual(error);
+    expect(getFetchGroupFailure(state, "humanGroup")).toEqual(error);
   });
 
-  it("should return undefined when fetch group humandGroup did not fail", () => {
-    expect(getFetchGroupFailure({}, "humandGroup")).toBe(undefined);
+  it("should return undefined when fetch group humanGroup did not fail", () => {
+    expect(getFetchGroupFailure({}, "humanGroup")).toBe(undefined);
   });
 
   it("should return true if create group is pending", () => {
@@ -431,5 +504,32 @@ describe("selector tests", () => {
   it("should return undefined if creating group did not fail", () => {
     expect(getCreateGroupFailure({})).toBeUndefined()
   })
+
+
+  it("should return true, when delete group humanGroup is pending", () => {
+    const state = {
+      pending: {
+        [DELETE_GROUP + "/humanGroup"]: true
+      }
+    };
+    expect(isDeleteGroupPending(state, "humanGroup")).toEqual(true);
+  });
+
+  it("should return false, when delete group humanGroup is not pending", () => {
+    expect(isDeleteGroupPending({}, "humanGroup")).toEqual(false);
+  });
+
+  it("should return error when delete group humanGroup did fail", () => {
+    const state = {
+      failure: {
+        [DELETE_GROUP + "/humanGroup"]: error
+      }
+    };
+    expect(getDeleteGroupFailure(state, "humanGroup")).toEqual(error);
+  });
+
+  it("should return undefined when delete group humanGroup did not fail", () => {
+    expect(getDeleteGroupFailure({}, "humanGroup")).toBe(undefined);
+  });
 
 });

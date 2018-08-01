@@ -4,9 +4,7 @@ import type { User } from "../../users/types/User";
 
 export type Group = {
   name: string,
-  creationDate: string,
   description: string,
-  lastModified: string,
   type: string,
   members: string[],
   _links: Links,
