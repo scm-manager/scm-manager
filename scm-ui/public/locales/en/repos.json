@@ -2,5 +2,9 @@
   "overview": {
     "title": "Repositories",
     "subtitle": "Overview of available repositories"
+  },
+  "repository-root": {
+    "error-title": "Error",
+    "error-subtitle": "Unknown repository error"
   }
 }

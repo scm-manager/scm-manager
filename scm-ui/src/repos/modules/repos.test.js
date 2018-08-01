@@ -13,7 +13,16 @@ import reducer, {
   isFetchReposPending,
   getFetchReposFailure,
   fetchReposByLink,
-  fetchReposByPage
+  fetchReposByPage,
+  FETCH_REPO,
+  fetchRepo,
+  FETCH_REPO_PENDING,
+  FETCH_REPO_SUCCESS,
+  FETCH_REPO_FAILURE,
+  fetchRepoSuccess,
+  getRepository,
+  isFetchRepoPending,
+  getFetchRepoFailure
 } from "./repos";
 import type { Repository, RepositoryCollection } from "../types/Repositories";
 
@@ -199,7 +208,9 @@ const repositoryCollectionWithNames: RepositoryCollection = {
 };
 
 describe("repos fetch", () => {
-  const REPOS_URL = "/scm/api/rest/v2/repositories?sortBy=namespaceAndName";
+  const REPOS_URL = "/scm/api/rest/v2/repositories";
+  const SORT = "sortBy=namespaceAndName";
+  const REPOS_URL_WITH_SORT = REPOS_URL + "?" + SORT;
   const mockStore = configureMockStore([thunk]);
 
   afterEach(() => {
@@ -208,8 +219,7 @@ describe("repos fetch", () => {
   });
 
   it("should successfully fetch repos", () => {
-    const url = REPOS_URL + "&page=42";
-    fetchMock.getOnce(url, repositoryCollection);
+    fetchMock.getOnce(REPOS_URL_WITH_SORT, repositoryCollection);
 
     const expectedActions = [
       { type: FETCH_REPOS_PENDING },
@@ -226,7 +236,7 @@ describe("repos fetch", () => {
   });
 
   it("should successfully fetch page 42", () => {
-    const url = REPOS_URL + "&page=42";
+    const url = REPOS_URL + "?page=42&" + SORT;
     fetchMock.getOnce(url, repositoryCollection);
 
     const expectedActions = [
@@ -245,7 +255,10 @@ describe("repos fetch", () => {
   });
 
   it("should successfully fetch repos from link", () => {
-    fetchMock.getOnce(REPOS_URL, repositoryCollection);
+    fetchMock.getOnce(
+      REPOS_URL + "?" + SORT + "&page=42",
+      repositoryCollection
+    );
 
     const expectedActions = [
       { type: FETCH_REPOS_PENDING },
@@ -287,7 +300,7 @@ describe("repos fetch", () => {
   });
 
   it("should dispatch FETCH_REPOS_FAILURE, it the request fails", () => {
-    fetchMock.getOnce(REPOS_URL, {
+    fetchMock.getOnce(REPOS_URL_WITH_SORT, {
       status: 500
     });
 
@@ -297,6 +310,48 @@ describe("repos fetch", () => {
       expect(actions[0].type).toEqual(FETCH_REPOS_PENDING);
       expect(actions[1].type).toEqual(FETCH_REPOS_FAILURE);
       expect(actions[1].payload).toBeDefined();
+    });
+  });
+
+  it("should successfully fetch repo slarti/fjords", () => {
+    fetchMock.getOnce(REPOS_URL + "/slarti/fjords", slartiFjords);
+
+    const expectedActions = [
+      {
+        type: FETCH_REPO_PENDING,
+        payload: {
+          namespace: "slarti",
+          name: "fjords"
+        },
+        itemId: "slarti/fjords"
+      },
+      {
+        type: FETCH_REPO_SUCCESS,
+        payload: slartiFjords,
+        itemId: "slarti/fjords"
+      }
+    ];
+
+    const store = mockStore({});
+    return store.dispatch(fetchRepo("slarti", "fjords")).then(() => {
+      expect(store.getActions()).toEqual(expectedActions);
+    });
+  });
+
+  it("should dispatch FETCH_REPO_FAILURE, it the request for slarti/fjords fails", () => {
+    fetchMock.getOnce(REPOS_URL + "/slarti/fjords", {
+      status: 500
+    });
+
+    const store = mockStore({});
+    return store.dispatch(fetchRepo("slarti", "fjords")).then(() => {
+      const actions = store.getActions();
+      expect(actions[0].type).toEqual(FETCH_REPO_PENDING);
+      expect(actions[1].type).toEqual(FETCH_REPO_FAILURE);
+      expect(actions[1].payload.namespace).toBe("slarti");
+      expect(actions[1].payload.name).toBe("fjords");
+      expect(actions[1].payload.error).toBeDefined();
+      expect(actions[1].itemId).toBe("slarti/fjords");
     });
   });
 });
@@ -328,6 +383,11 @@ describe("repos reducer", () => {
 
     expect(newState.byNames["hitchhiker/puzzle42"]).toBe(hitchhikerPuzzle42);
     expect(newState.byNames["hitchhiker/restatend"]).toBe(hitchhikerRestatend);
+    expect(newState.byNames["slarti/fjords"]).toBe(slartiFjords);
+  });
+
+  it("should store the repo at byNames", () => {
+    const newState = reducer({}, fetchRepoSuccess(slartiFjords));
     expect(newState.byNames["slarti/fjords"]).toBe(slartiFjords);
   });
 });
@@ -375,5 +435,40 @@ describe("repos selectors", () => {
 
   it("should return undefined when fetch repos did not fail", () => {
     expect(getFetchReposFailure({})).toBe(undefined);
+  });
+
+  it("should return the repository collection", () => {
+    const state = {
+      repos: {
+        byNames: {
+          "slarti/fjords": slartiFjords
+        }
+      }
+    };
+
+    const repository = getRepository(state, "slarti", "fjords");
+    expect(repository).toEqual(slartiFjords);
+  });
+
+  it("should return true, when fetch repo is pending", () => {
+    const state = {
+      pending: {
+        [FETCH_REPO + "/slarti/fjords"]: true
+      }
+    };
+    expect(isFetchRepoPending(state, "slarti", "fjords")).toEqual(true);
+  });
+
+  it("should return false, when fetch repo is not pending", () => {
+    expect(isFetchRepoPending({}, "slarti", "fjords")).toEqual(false);
+  });
+
+  it("should return error when fetch repo did fail", () => {
+    const state = {
+      failure: {
+        [FETCH_REPO + "/slarti/fjords"]: error
+      }
+    };
+    expect(getFetchRepoFailure(state, "slarti", "fjords")).toEqual(error);
   });
 });
