@@ -8,7 +8,12 @@ import reducer, {
   fetchRepos,
   FETCH_REPOS_FAILURE,
   fetchReposSuccess,
-  getRepositoryCollection, FETCH_REPOS, isFetchReposPending, getFetchReposFailure
+  getRepositoryCollection,
+  FETCH_REPOS,
+  isFetchReposPending,
+  getFetchReposFailure,
+  fetchReposByLink,
+  fetchReposByPage
 } from "./repos";
 import type { Repository, RepositoryCollection } from "../types/Repositories";
 
@@ -203,7 +208,26 @@ describe("repos fetch", () => {
   });
 
   it("should successfully fetch repos", () => {
-    fetchMock.getOnce(REPOS_URL, repositoryCollection);
+    const url = REPOS_URL + "&page=42";
+    fetchMock.getOnce(url, repositoryCollection);
+
+    const expectedActions = [
+      { type: FETCH_REPOS_PENDING },
+      {
+        type: FETCH_REPOS_SUCCESS,
+        payload: repositoryCollection
+      }
+    ];
+
+    const store = mockStore({});
+    return store.dispatch(fetchRepos()).then(() => {
+      expect(store.getActions()).toEqual(expectedActions);
+    });
+  });
+
+  it("should successfully fetch page 42", () => {
+    const url = REPOS_URL + "&page=42";
+    fetchMock.getOnce(url, repositoryCollection);
 
     const expectedActions = [
       { type: FETCH_REPOS_PENDING },
@@ -215,7 +239,49 @@ describe("repos fetch", () => {
 
     const store = mockStore({});
 
-    return store.dispatch(fetchRepos()).then(() => {
+    return store.dispatch(fetchReposByPage(43)).then(() => {
+      expect(store.getActions()).toEqual(expectedActions);
+    });
+  });
+
+  it("should successfully fetch repos from link", () => {
+    fetchMock.getOnce(REPOS_URL, repositoryCollection);
+
+    const expectedActions = [
+      { type: FETCH_REPOS_PENDING },
+      {
+        type: FETCH_REPOS_SUCCESS,
+        payload: repositoryCollection
+      }
+    ];
+
+    const store = mockStore({});
+    return store
+      .dispatch(
+        fetchReposByLink("/repositories?sortBy=namespaceAndName&page=42")
+      )
+      .then(() => {
+        expect(store.getActions()).toEqual(expectedActions);
+      });
+  });
+
+  it("should append sortby parameter and successfully fetch repos from link", () => {
+    fetchMock.getOnce(
+      "/scm/api/rest/v2/repositories?one=1&sortBy=namespaceAndName",
+      repositoryCollection
+    );
+
+    const expectedActions = [
+      { type: FETCH_REPOS_PENDING },
+      {
+        type: FETCH_REPOS_SUCCESS,
+        payload: repositoryCollection
+      }
+    ];
+
+    const store = mockStore({});
+
+    return store.dispatch(fetchReposByLink("/repositories?one=1")).then(() => {
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
@@ -267,7 +333,6 @@ describe("repos reducer", () => {
 });
 
 describe("repos selectors", () => {
-
   const error = new Error("something goes wrong");
 
   it("should return the repositories collection", () => {

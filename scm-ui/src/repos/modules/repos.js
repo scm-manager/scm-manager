@@ -15,10 +15,32 @@ const REPOS_URL = "repositories";
 const SORT_BY = "sortBy=namespaceAndName";
 
 export function fetchRepos() {
+  return fetchReposByLink(REPOS_URL);
+}
+
+export function fetchReposByPage(page: number) {
+  return fetchReposByLink(`${REPOS_URL}?page=${page - 1}`);
+}
+
+function appendSortByLink(url: string) {
+  if (url.includes(SORT_BY)) {
+    return url;
+  }
+  let urlWithSortBy = url;
+  if (url.includes("?")) {
+    urlWithSortBy += "&";
+  } else {
+    urlWithSortBy += "?";
+  }
+  return urlWithSortBy + SORT_BY;
+}
+
+export function fetchReposByLink(link: string) {
+  const url = appendSortByLink(link);
   return function(dispatch: any) {
     dispatch(fetchReposPending());
     return apiClient
-      .get(`${REPOS_URL}?${SORT_BY}`)
+      .get(url)
       .then(response => response.json())
       .then(repositories => {
         dispatch(fetchReposSuccess(repositories));
@@ -76,16 +98,15 @@ export default function reducer(
   state: Object = {},
   action: Action = { type: "UNKNOWN" }
 ): Object {
-  switch (action.type) {
-    case FETCH_REPOS_SUCCESS:
-      if (action.payload) {
-        return normalizeByNamespaceAndName(action.payload);
-      } else {
-        // TODO ???
-        return state;
-      }
-    default:
+  if (action.type === FETCH_REPOS_SUCCESS) {
+    if (action.payload) {
+      return normalizeByNamespaceAndName(action.payload);
+    } else {
+      // TODO ???
       return state;
+    }
+  } else {
+    return state;
   }
 }
 

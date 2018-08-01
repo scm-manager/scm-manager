@@ -34,6 +34,12 @@ class Main extends React.Component<Props> {
           />
           <ProtectedRoute
             exact
+            path="/repos/:page"
+            component={Overview}
+            authenticated={authenticated}
+          />
+          <ProtectedRoute
+            exact
             path="/users"
             component={Users}
             authenticated={authenticated}
