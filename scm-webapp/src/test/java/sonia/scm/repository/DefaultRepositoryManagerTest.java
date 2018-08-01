@@ -40,6 +40,7 @@ import org.apache.shiro.authz.UnauthorizedException;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import sonia.scm.HandlerEventType;
 import sonia.scm.Manager;
@@ -65,9 +66,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
 
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.hasProperty;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -501,7 +500,7 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
     configuration.setEnableRepositoryArchive(archiveEnabled);
 
     NamespaceStrategy namespaceStrategy = mock(NamespaceStrategy.class);
-    when(namespaceStrategy.getNamespace()).thenAnswer(invocation -> mockedNamespace);
+    when(namespaceStrategy.createNamespace(Mockito.any(Repository.class))).thenAnswer(invocation -> mockedNamespace);
 
     return new DefaultRepositoryManager(configuration, contextProvider,
       keyGenerator, repositoryDAO, handlerSet, createRepositoryMatcher(), namespaceStrategy);

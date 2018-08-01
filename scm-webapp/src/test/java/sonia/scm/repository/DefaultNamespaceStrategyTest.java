@@ -17,8 +17,16 @@ public class DefaultNamespaceStrategyTest {
 
   @Test
   @SubjectAware(username = "trillian", password = "secret")
-  public void testNamespaceStrategy() {
-    assertEquals("trillian", namespaceStrategy.getNamespace());
+  public void testNamespaceStrategyWithoutPreset() {
+    assertEquals("trillian", namespaceStrategy.createNamespace(new Repository()));
+  }
+
+  @Test
+  @SubjectAware(username = "trillian", password = "secret")
+  public void testNamespaceStrategyWithPreset() {
+    Repository repository = new Repository();
+    repository.setNamespace("awesome");
+    assertEquals("awesome", namespaceStrategy.createNamespace(repository));
   }
 
 }
