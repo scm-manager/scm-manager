@@ -205,6 +205,25 @@ describe("groups fetch()", () => {
     });
   });
 
+  it("should call the callback after creating group", () => {
+    fetchMock.postOnce(GROUPS_URL, {
+      status: 201
+    });
+    let called = false;
+
+    const callMe = () => {
+      called = true;
+    }
+    const store = mockStore({});
+    return store.dispatch(createGroup(humanGroup, callMe)).then(() => {
+      const actions = store.getActions();
+      expect(actions[0].type).toEqual(CREATE_GROUP_PENDING);
+      expect(actions[1].type).toEqual(CREATE_GROUP_SUCCESS);
+      expect(called).toEqual(true);
+    });
+  });
+  
+
   it("should fail creating group on HTTP 500", () => {
     fetchMock.postOnce(GROUPS_URL, {
       status: 500

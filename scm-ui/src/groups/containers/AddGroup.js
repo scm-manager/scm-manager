@@ -3,17 +3,19 @@ import React from "react";
 
 import Page from "../../components/layout/Page";
 import { translate } from "react-i18next";
-import GroupForm from "./GroupForm";
+import GroupForm from "../components/GroupForm";
 import { connect } from "react-redux";
 import { createGroup } from "../modules/groups";
 import type { Group } from "../types/Group";
+import type { History } from "history";
 
-export interface Props {
-  t: string => string;
-  createGroup: Group => void;
+type Props = {
+  t: string => string,
+  createGroup: (group: Group, callback?: () => void) => void,
+  history: History
 }
 
-export interface State {}
+type State = {}
 
 class AddGroup extends React.Component<Props, State> {
   render() {
@@ -27,14 +29,18 @@ class AddGroup extends React.Component<Props, State> {
     );
   }
 
+  groupCreated = () => {
+    console.log("pushing history")
+      this.props.history.push("/groups")
+  }
   createGroup = (group: Group) => {
-    this.props.createGroup(group);
+    this.props.createGroup(group, this.groupCreated)
   };
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    createGroup: (group: Group) => dispatch(createGroup(group))
+    createGroup: (group: Group, callback?: () => void) => dispatch(createGroup(group, callback))
   };
 };
 

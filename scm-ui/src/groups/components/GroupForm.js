@@ -5,14 +5,17 @@ import InputField from "../../components/forms/InputField";
 import { SubmitButton } from "../../components/buttons";
 import { translate } from "react-i18next";
 import type { Group } from "../types/Group";
+import * as validator from "./groupValidation"
 
-export interface Props {
-  t: string => string;
-  submitForm: Group => void;
+type Props = {
+  t: string => string,
+  submitForm: Group => void
 }
 
-export interface State {
-  group: Group;
+type State = {
+  group: Group,
+  nameValidationError: boolean,
+  descriptionValidationError: boolean
 }
 
 class GroupForm extends React.Component<Props, State> {
@@ -28,21 +31,27 @@ class GroupForm extends React.Component<Props, State> {
         _links: {},
         members: [],
         type: "",
-      }
+      },
+      nameValidationError: false,
+      descriptionValidationError: false
     };
   }
+
   onSubmit = (event: Event) => {
     event.preventDefault();
     this.props.submitForm(this.state.group);
   };
 
   isValid = () => {
-    return true;
+    const group = this.state.group;
+    return !(this.state.nameValidationError || this.state.descriptionValidationError || group.name);
   }
 
   submit = (event: Event) => {
     event.preventDefault();
-    this.props.submitForm(this.state.group)
+    if (this.isValid) {
+      this.props.submitForm(this.state.group)
+    }
   }
 
   render() {
@@ -51,15 +60,15 @@ class GroupForm extends React.Component<Props, State> {
       <form onSubmit={this.onSubmit}>
         <InputField
           label={t("group.name")}
-          errorMessage=""
+          errorMessage="group name invalid"
           onChange={this.handleGroupNameChange}
-          validationError={false}
+          validationError={this.state.nameValidationError}
         />
         <InputField
           label={t("group.description")}
           errorMessage=""
           onChange={this.handleDescriptionChange}
-          validationError={false}
+          validationError={this.state.descriptionValidationError}
         />
         <SubmitButton label={t("group-form.submit")} />
       </form>
@@ -68,19 +77,14 @@ class GroupForm extends React.Component<Props, State> {
 
   handleGroupNameChange = (name: string) => {
     this.setState({
-      group: {
-        ...this.state.group,
-        name
-      }
+      nameValidationError: !validator.isNameValid(name),
+      group: {...this.state.group, name}
     });
   };
 
   handleDescriptionChange = (description: string) => {
     this.setState({
-      group: {
-        ...this.state.group,
-        description
-      }
+      group: {...this.state.group, description }
     });
   };
 }

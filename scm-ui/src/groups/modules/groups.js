@@ -133,12 +133,16 @@ export function fetchGroupFailure(name: string, error: Error): Action {
 }
 
 //create group
-export function createGroup(group: Group) {
+export function createGroup(group: Group, callback?: () => void) {
   return function(dispatch: Dispatch) {
     dispatch(createGroupPending());
     return apiClient
       .postWithContentType(GROUPS_URL, group, CONTENT_TYPE_GROUP)
-      .then(() => dispatch(createGroupSuccess()))
+      .then(() => {
+        dispatch(createGroupSuccess())
+      if (callback) {
+        callback();
+      }})
       .catch(error => {
         dispatch(
           createGroupFailure(
@@ -168,6 +172,11 @@ export function createGroupFailure(error: Error) {
   };
 }
 
+export function createGroupReset() {
+  return {
+    type: CREATE_GROUP_RESET
+  }
+}
 //delete group
 
 export function deleteGroup(group: Group, callback?: () => void) {
