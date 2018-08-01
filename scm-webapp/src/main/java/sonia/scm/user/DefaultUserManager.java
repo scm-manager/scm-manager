@@ -40,6 +40,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.EagerSingleton;
 import sonia.scm.HandlerEventType;
 import sonia.scm.ManagerDaoAdapter;
 import sonia.scm.SCMContextProvider;
@@ -55,7 +56,11 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -63,7 +68,7 @@ import java.util.*;
  *
  * @author Sebastian Sdorra
  */
-@Singleton
+@Singleton @EagerSingleton
 public class DefaultUserManager extends AbstractUserManager
 {
 
