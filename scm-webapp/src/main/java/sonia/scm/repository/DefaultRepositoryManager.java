@@ -42,14 +42,30 @@ import com.google.inject.Singleton;
 import org.apache.shiro.concurrent.SubjectAwareExecutorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.*;
+import sonia.scm.ArgumentIsInvalidException;
+import sonia.scm.ConfigurationException;
+import sonia.scm.HandlerEventType;
+import sonia.scm.ManagerDaoAdapter;
+import sonia.scm.SCMContextProvider;
+import sonia.scm.Type;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.security.KeyGenerator;
-import sonia.scm.util.*;
+import sonia.scm.util.AssertUtil;
+import sonia.scm.util.CollectionAppender;
+import sonia.scm.util.HttpUtil;
+import sonia.scm.util.IOUtil;
+import sonia.scm.util.Util;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -138,7 +154,8 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
         }
         fireEvent(HandlerEventType.BEFORE_CREATE, newRepository);
       },
-      newRepository -> fireEvent(HandlerEventType.CREATE, newRepository)
+      newRepository -> fireEvent(HandlerEventType.CREATE, newRepository),
+      newRepository -> repositoryDAO.contains(newRepository.getNamespaceAndName())
     );
   }
 
