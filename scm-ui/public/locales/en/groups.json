@@ -30,7 +30,9 @@
     "label": "Edit"
   },
   "group-form": {
-    "submit": "Submit"
+    "submit": "Submit",
+    "name-error": "Group name is invalid",
+    "description-error": "Description is invalid"
   },
   "delete-group-button": {
     "label": "Delete",
