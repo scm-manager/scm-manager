@@ -398,7 +398,7 @@ describe("selector tests", () => {
     expect(selectListAsCollection(state)).toBe(collection);
   });
 
-  it("should return false", () => {
+  it("should return false when groupCreatePermission is false", () => {
     expect(isPermittedToCreateGroups({})).toBe(false);
     expect(isPermittedToCreateGroups({ groups: { list: { entry: {} } } })).toBe(
       false
@@ -410,7 +410,7 @@ describe("selector tests", () => {
     ).toBe(false);
   });
 
-  it("should return true", () => {
+  it("should return true when groupCreatePermission is true", () => {
     const state = {
       groups: {
         list: {
