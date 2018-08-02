@@ -4,13 +4,21 @@ import React from "react";
 import type { RepositoryCollection } from "../types/Repositories";
 
 import { connect } from "react-redux";
-import {fetchRepos, fetchReposByLink, fetchReposByPage, getFetchReposFailure, getRepositoryCollection, isFetchReposPending} from "../modules/repos";
+import {
+  fetchRepos,
+  fetchReposByLink,
+  fetchReposByPage,
+  getFetchReposFailure,
+  getRepositoryCollection,
+  isFetchReposPending
+} from "../modules/repos";
 import { translate } from "react-i18next";
 import { Page } from "../../components/layout";
 import RepositoryList from "../components/RepositoryList";
-import Paginator from '../../components/Paginator';
-import {withRouter} from 'react-router-dom';
+import Paginator from "../../components/Paginator";
+import { withRouter } from "react-router-dom";
 import type { History } from "history";
+import CreateButton from "../../components/buttons/CreateButton";
 
 type Props = {
   page: number,
@@ -44,24 +52,33 @@ class Overview extends React.Component<Props> {
         this.props.history.push(`/repos/${statePage}`);
       }
     }
-  };
+  }
 
   render() {
     const { error, loading, t } = this.props;
     return (
-      <Page title={t("overview.title")} subtitle={t("overview.subtitle")} loading={loading} error={error}>
+      <Page
+        title={t("overview.title")}
+        subtitle={t("overview.subtitle")}
+        loading={loading}
+        error={error}
+      >
         {this.renderList()}
       </Page>
     );
   }
 
   renderList() {
-    const { collection, fetchReposByLink } = this.props;
+    const { collection, fetchReposByLink, t } = this.props;
     if (collection) {
       return (
         <div>
           <RepositoryList repositories={collection._embedded.repositories} />
           <Paginator collection={collection} onPageChange={fetchReposByLink} />
+          <CreateButton
+            label={t("overview.create-button")}
+            link="/repos/create"
+          />
         </div>
       );
     }
@@ -98,10 +115,10 @@ const mapDispatchToProps = dispatch => {
       dispatch(fetchRepos());
     },
     fetchReposByPage: (page: number) => {
-      dispatch(fetchReposByPage(page))
+      dispatch(fetchReposByPage(page));
     },
     fetchReposByLink: (link: string) => {
-      dispatch(fetchReposByLink(link))
+      dispatch(fetchReposByLink(link));
     }
   };
 };

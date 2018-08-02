@@ -1,10 +1,28 @@
 {
+  "repository": {
+    "name": "Name",
+    "type": "Type",
+    "contact": "Contact",
+    "description": "Description"
+  },
+  "validation": {
+    "name-invalid": "The repository name is invalid",
+    "contact-invalid": "Contact must be a valid mail address"
+  },
   "overview": {
     "title": "Repositories",
-    "subtitle": "Overview of available repositories"
+    "subtitle": "Overview of available repositories",
+    "create-button": "Create"
   },
   "repository-root": {
     "error-title": "Error",
     "error-subtitle": "Unknown repository error"
+  },
+  "create": {
+    "title": "Create Repository",
+    "subtitle": "Create a new repository"
+  },
+  "repository-form": {
+    "submit": "Speichern"
   }
 }

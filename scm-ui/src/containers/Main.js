@@ -12,7 +12,8 @@ import { Switch } from "react-router-dom";
 import ProtectedRoute from "../components/ProtectedRoute";
 import AddUser from "../users/containers/AddUser";
 import SingleUser from "../users/containers/SingleUser";
-import RepositoryRoot from '../repos/containers/RepositoryRoot';
+import RepositoryRoot from "../repos/containers/RepositoryRoot";
+import Create from "../repos/containers/Create";
 
 type Props = {
   authenticated?: boolean
@@ -31,6 +32,12 @@ class Main extends React.Component<Props> {
             exact
             path="/repos"
             component={Overview}
+            authenticated={authenticated}
+          />
+          <ProtectedRoute
+            exact
+            path="/repos/create"
+            component={Create}
             authenticated={authenticated}
           />
           <ProtectedRoute
