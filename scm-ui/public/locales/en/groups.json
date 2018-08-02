@@ -26,6 +26,9 @@
   "create-group-button": {
     "label": "Create group"
   },
+  "edit-group-button": {
+    "label": "Edit"
+  },
   "group-form": {
     "submit": "Submit"
   }

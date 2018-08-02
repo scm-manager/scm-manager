@@ -17,6 +17,7 @@ import Loading from "../../components/Loading";
 import { Navigation, Section, NavLink } from "../../components/navigation";
 import ErrorPage from "../../components/ErrorPage";
 import { translate } from "react-i18next";
+import EditGroupNavLink from "../components/navLinks/EditGroupNavLink";
 
 type Props = {
   name: string,
@@ -83,6 +84,7 @@ class SingleGroup extends React.Component<Props> {
                 />
               </Section>
               <Section label={t("single-group.actions-label")}>
+                <EditGroupNavLink group={group} editUrl={`${url}/edit`}/>
                 <NavLink to="/groups" label={t("single-group.back-label")} />
               </Section>
             </Navigation>
