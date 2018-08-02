@@ -41,7 +41,7 @@ public class ConfigResource {
   @StatusCodes({
     @ResponseCode(code = 200, condition = "success"),
     @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
-    @ResponseCode(code = 403, condition = "not authorized, the current user has no privileges to read the global config"),
+    @ResponseCode(code = 403, condition = "not authorized, the current user does not have the \"configuration:read:global\" privilege"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
   public Response get() {
@@ -64,7 +64,7 @@ public class ConfigResource {
   @StatusCodes({
     @ResponseCode(code = 204, condition = "update success"),
     @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
-    @ResponseCode(code = 403, condition = "not authorized, the current user has no privileges to update the global config"),
+    @ResponseCode(code = 403, condition = "not authorized, the current user does not have the \"configuration:write:global\" privilege"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
