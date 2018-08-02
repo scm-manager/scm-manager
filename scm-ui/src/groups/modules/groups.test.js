@@ -374,7 +374,6 @@ describe("groups reducer", () => {
     expect(newState.list.entries).toEqual(["humanGroup"]);
   });
 
-
 });
 
 describe("selector tests", () => {
@@ -551,4 +550,25 @@ describe("selector tests", () => {
     expect(getDeleteGroupFailure({}, "humanGroup")).toBe(undefined);
   });
 
+  it("should return true, if createGroup is pending", () => {
+    const state = {
+      pending: {
+        [CREATE_GROUP]: true
+      }
+    }
+    expect(isCreateGroupPending(state)).toBe(true);
+  })
+
+  it("should return false, if createGroup is not pending", () => {
+    expect(isCreateGroupPending({})).toBe(false)
+  })
+
+  it("should return error of createGroup failed", () => {
+    const state = {
+      failure: {
+        [CREATE_GROUP]: error
+      }
+    }
+    expect(getCreateGroupFailure(state)).toEqual(error)
+  })
 });
