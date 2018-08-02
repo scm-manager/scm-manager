@@ -10,7 +10,8 @@ import * as validator from "./groupValidation";
 type Props = {
   t: string => string,
   submitForm: Group => void,
-  loading?: boolean
+  loading?: boolean,
+  group?: Group
 };
 
 type State = {
@@ -36,6 +37,13 @@ class GroupForm extends React.Component<Props, State> {
     };
   }
 
+  componentDidMount() {
+    const { group } = this.props
+    if (group) {
+      this.setState({group: {...group}})
+    }
+  }
+
   onSubmit = (event: Event) => {
     event.preventDefault();
     this.props.submitForm(this.state.group);
@@ -55,18 +63,27 @@ class GroupForm extends React.Component<Props, State> {
 
   render() {
     const { t, loading } = this.props;
-    return (
-      <form onSubmit={this.onSubmit}>
+    const { group } = this.state
+    let nameField = null;
+    if (!this.props.group) {
+      nameField = (
         <InputField
-          label={t("group.name")}
-          errorMessage="group name invalid"
-          onChange={this.handleGroupNameChange}
-          validationError={this.state.nameValidationError}
-        />
+        label={t("group.name")}
+        errorMessage="group name invalid" // TODO: i18n
+        onChange={this.handleGroupNameChange}
+        value={group.name}
+        validationError={this.state.nameValidationError}
+      />
+      );
+    }
+    return (   
+      <form onSubmit={this.onSubmit}>
+        {nameField}
         <InputField
           label={t("group.description")}
           errorMessage=""
           onChange={this.handleDescriptionChange}
+          value={group.description}
           validationError={false}
         />
           <SubmitButton label={t("group-form.submit")} loading={loading}/>

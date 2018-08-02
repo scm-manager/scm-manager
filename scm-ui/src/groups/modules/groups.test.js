@@ -38,7 +38,11 @@ import reducer, {
   DELETE_GROUP,
   deleteGroupSuccess,
   isDeleteGroupPending,
-  getDeleteGroupFailure
+  getDeleteGroupFailure,
+  modifyGroup,
+  MODIFY_GROUP_PENDING,
+  MODIFY_GROUP_SUCCESS,
+  MODIFY_GROUP_FAILURE
 } from "./groups";
 const GROUPS_URL = "/scm/api/rest/v2/groups";
 
@@ -238,6 +242,55 @@ describe("groups fetch()", () => {
       expect(actions[1].payload instanceof Error).toBeTruthy();
     });
   });
+
+  it("should successfully modify group", () => {
+    fetchMock.putOnce("http://localhost:8081/scm/api/rest/v2/groups/humanGroup", {
+      status: 204
+    });
+
+    const store = mockStore({}); 
+
+    return store.dispatch(modifyGroup(humanGroup)).then(() => {
+      const actions = store.getActions();
+      expect(actions[0].type).toEqual(MODIFY_GROUP_PENDING);
+      expect(actions[1].type).toEqual(MODIFY_GROUP_SUCCESS);
+      expect(actions[1].payload).toEqual(humanGroup)
+    });
+  })
+
+  it("should call the callback after modifying group", () => {
+    fetchMock.putOnce("http://localhost:8081/scm/api/rest/v2/groups/humanGroup", {
+      status: 204
+    });
+
+    let called = false;
+    const callback = () => {
+      called = true;
+    }
+    const store = mockStore({}); 
+
+    return store.dispatch(modifyGroup(humanGroup, callback)).then(() => {
+      const actions = store.getActions();
+      expect(actions[0].type).toEqual(MODIFY_GROUP_PENDING);
+      expect(actions[1].type).toEqual(MODIFY_GROUP_SUCCESS);
+      expect(called).toBe(true);
+    });
+  })
+
+  it("should fail modifying group on HTTP 500", () => {
+    fetchMock.putOnce("http://localhost:8081/scm/api/rest/v2/groups/humanGroup", {
+      status: 500
+    });
+
+    const store = mockStore({}); 
+
+    return store.dispatch(modifyGroup(humanGroup)).then(() => {
+      const actions = store.getActions();
+      expect(actions[0].type).toEqual(MODIFY_GROUP_PENDING);
+      expect(actions[1].type).toEqual(MODIFY_GROUP_FAILURE);
+      expect(actions[1].payload).toBeDefined();
+    });
+  })
 
   it("should delete successfully group humanGroup", () => {
     fetchMock.deleteOnce("http://localhost:8081/scm/api/rest/v2/groups/humanGroup", {

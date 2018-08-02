@@ -18,6 +18,7 @@ import { Navigation, Section, NavLink } from "../../components/navigation";
 import ErrorPage from "../../components/ErrorPage";
 import { translate } from "react-i18next";
 import EditGroupNavLink from "../components/navLinks/EditGroupNavLink";
+import EditGroup from "./EditGroup";
 
 type Props = {
   name: string,
@@ -74,6 +75,7 @@ class SingleGroup extends React.Component<Props> {
         <div className="columns">
           <div className="column is-three-quarters">
             <Route path={url} exact component={() => <Details group={group} />} />
+            <Route path={`${url}/edit`} exact component={() => <EditGroup group={group} />} />
           </div>
           <div className="column">
             <Navigation>

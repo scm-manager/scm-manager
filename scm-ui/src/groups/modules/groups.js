@@ -177,6 +177,49 @@ export function createGroupReset() {
     type: CREATE_GROUP_RESET
   }
 }
+
+// modify group 
+export function modifyGroup(group: Group, callback?: () => void) {
+  return function(dispatch: Dispatch) {
+    dispatch(modifyGroupPending());
+    return apiClient
+    .putWithContentType(group._links.update.href, group, CONTENT_TYPE_GROUP)
+    .then(() => {
+      dispatch(modifyGroupSuccess(group))
+      if (callback) {
+        callback()
+      }
+    })
+    .catch(cause => {
+      dispatch(modifyGroupFailure(group, new Error(`could not modify group ${group.name}: ${cause.message}`)))
+    })
+  };
+}
+
+export function modifyGroupPending(): Action {
+  return {
+    type: MODIFY_GROUP_PENDING
+  }
+}
+
+export function modifyGroupSuccess(group: Group): Action {
+  return {
+    type: MODIFY_GROUP_SUCCESS,
+    payload: group
+  }
+}
+
+export function modifyGroupFailure(group: Group, error: Error): Action {
+  return {
+    type: MODIFY_GROUP_FAILURE,
+    payload: {
+      error,
+      group
+    },
+    itemId: group.name
+  }
+}
+
 //delete group
 
 export function deleteGroup(group: Group, callback?: () => void) {
@@ -311,6 +354,8 @@ function byNamesReducer(state: any = {}, action: any = {}) {
       };
     case FETCH_GROUP_SUCCESS:
       return reducerByName(state, action.payload.name, action.payload);
+    case MODIFY_GROUP_SUCCESS: 
+      return reducerByName(state, action.payload.name, action.payload);
     case DELETE_GROUP_SUCCESS:
       const newGroupByNames = deleteGroupInGroupsByNames(
         state,
@@ -385,6 +430,14 @@ export function isCreateGroupPending(state: Object) {
 
 export function getCreateGroupFailure(state: Object) {
   return getFailure(state, CREATE_GROUP);
+}
+
+export function isModifyGroupPending(state: Object, name: string) {
+  return(isPending(state, MODIFY_GROUP, name))
+}
+
+export function getModifyGroupFailure(state: Object, name: string) {
+  return(getFailure(state, MODIFY_GROUP, name))
 }
 
 export function getGroupByName(state: Object, name: string) {
