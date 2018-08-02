@@ -3,6 +3,7 @@ package sonia.scm.api.v2.resources;
 import de.otto.edison.hal.Links;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import sonia.scm.config.ConfigurationPermissions;
 import sonia.scm.config.ScmConfiguration;
@@ -20,6 +21,7 @@ public abstract class ScmConfigurationToConfigDtoMapper {
   @Inject
   private ResourceLinks resourceLinks;
 
+  @Mapping(target = "attributes", ignore = true) // We do not map HAL attributes
   public abstract ConfigDto map(ScmConfiguration config);
 
   @AfterMapping

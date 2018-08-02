@@ -81,6 +81,7 @@ public class ScmConfigurationToConfigDtoMapperTest {
     assertEquals("pluginurl" , dto.getPluginUrl());
     assertEquals(2 , dto.getLoginAttemptLimitTimeout());
     assertTrue(dto.isEnabledXsrfProtection());
+    assertEquals("username", dto.getDefaultNamespaceStrategy());
 
     assertEquals(expectedBaseUri.toString(), dto.getLinks().getLinkBy("self").get().getHref());
     assertEquals(expectedBaseUri.toString(), dto.getLinks().getLinkBy("update").get().getHref());
@@ -120,6 +121,7 @@ public class ScmConfigurationToConfigDtoMapperTest {
     config.setPluginUrl("pluginurl");
     config.setLoginAttemptLimitTimeout(2);
     config.setEnabledXsrfProtection(true);
+    config.setDefaultNamespaceStrategy("username");
     return config;
   }
 
