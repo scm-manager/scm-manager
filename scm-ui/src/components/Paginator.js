@@ -93,8 +93,9 @@ class Paginator extends React.Component<Props> {
 
     if (page + 1 < pageTotal) {
       links.push(this.renderPageButton(page + 1, "next"));
-      links.push(this.seperator());
     }
+    if(page+2 < pageTotal) //if there exists pages between next and last
+      links.push(this.seperator());
     if (page < pageTotal) {
       links.push(this.renderLastButton());
     }
