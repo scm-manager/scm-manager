@@ -58,7 +58,7 @@ public class ConfigResource {
   /**
    * Modifies the global scm config.
    *
-   * @param configDto new global scm configuration as DTO
+   * @param configDto new configuration object
    */
   @PUT
   @Path("")

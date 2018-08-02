@@ -67,7 +67,7 @@ public class GitConfigResource {
   /**
    * Modifies the git config.
    *
-   * @param configDto new git configuration as DTO
+   * @param configDto new configuration object
    */
   @PUT
   @Path("")

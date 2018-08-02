@@ -67,7 +67,7 @@ public class HgConfigResource {
   /**
    * Modifies the hg config.
    *
-   * @param configDto new git configuration as DTO
+   * @param configDto new configuration object
    */
   @PUT
   @Path("")
