@@ -52,7 +52,7 @@ class Users extends React.Component<Props> {
    */
   componentDidUpdate = (prevProps: Props) => {
     const { page, list } = this.props;
-    if (list.page) {
+    if (list.page >= 0) {
       // backend starts paging by 0
       const statePage: number = list.page + 1;
       if (page !== statePage) {

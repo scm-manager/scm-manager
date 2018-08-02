@@ -4,20 +4,23 @@ import { connect } from "react-redux";
 import { Page } from "../../components/layout";
 import { Route } from "react-router";
 import { Details } from "./../components/table";
+import { DeleteGroupNavLink, EditGroupNavLink } from "./../components/navLinks";
 import type { Group } from "../types/Group";
 import type { History } from "history";
 import {
+  deleteGroup,
   fetchGroup,
   getGroupByName,
   isFetchGroupPending,
   getFetchGroupFailure,
+  getDeleteGroupFailure,
+  isDeleteGroupPending,
 } from "../modules/groups";
 import Loading from "../../components/Loading";
 
 import { Navigation, Section, NavLink } from "../../components/navigation";
 import ErrorPage from "../../components/ErrorPage";
 import { translate } from "react-i18next";
-import EditGroupNavLink from "../components/navLinks/EditGroupNavLink";
 import EditGroup from "./EditGroup";
 
 type Props = {
@@ -27,6 +30,7 @@ type Props = {
   error: Error,
 
   // dispatcher functions
+  deleteGroup: (group: Group, callback?: () => void) => void,
   fetchGroup: string => void,
 
   // context objects
@@ -45,6 +49,14 @@ class SingleGroup extends React.Component<Props> {
       return url.substring(0, url.length - 2);
     }
     return url;
+  };
+
+  deleteGroup = (group: Group) => {
+    this.props.deleteGroup(group, this.groupDeleted);
+  };
+
+  groupDeleted = () => {
+    this.props.history.push("/groups");
   };
 
   matchedUrl = () => {
@@ -86,6 +98,7 @@ class SingleGroup extends React.Component<Props> {
                 />
               </Section>
               <Section label={t("single-group.actions-label")}>
+                <DeleteGroupNavLink group={group} deleteGroup={this.deleteGroup} />
                 <EditGroupNavLink group={group} editUrl={`${url}/edit`}/>
                 <NavLink to="/groups" label={t("single-group.back-label")} />
               </Section>
@@ -101,9 +114,9 @@ const mapStateToProps = (state, ownProps) => {
   const name = ownProps.match.params.name;
   const group = getGroupByName(state, name);
   const loading =
-    isFetchGroupPending(state, name);
+    isFetchGroupPending(state, name) || isDeleteGroupPending(state, name);
   const error =
-    getFetchGroupFailure(state, name);
+    getFetchGroupFailure(state, name) || getDeleteGroupFailure(state, name);
 
   return {
     name,
@@ -118,6 +131,9 @@ const mapDispatchToProps = dispatch => {
     fetchGroup: (name: string) => {
       dispatch(fetchGroup(name));
     },
+    deleteGroup: (group: Group, callback?: () => void) => {
+      dispatch(deleteGroup(group, callback));
+    }
   };
 };
 
