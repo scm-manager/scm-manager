@@ -44,19 +44,25 @@ class GroupForm extends React.Component<Props, State> {
     }
   }
 
-  onSubmit = (event: Event) => {
-    event.preventDefault();
-    this.props.submitForm(this.state.group);
-  };
+  isFalsy(value) {
+    if (!value) {
+      return true;
+    }
+    return false;
+  }
 
   isValid = () => {
     const group = this.state.group;
-    return !(this.state.nameValidationError || group.name);
+    return !(
+      this.state.nameValidationError || 
+      this.isFalsy(group.name) ||
+      this.isFalsy(group.description)
+    );
   };
 
   submit = (event: Event) => {
     event.preventDefault();
-    if (this.isValid) {
+    if (this.isValid()) {
       this.props.submitForm(this.state.group);
     }
   };
@@ -69,7 +75,7 @@ class GroupForm extends React.Component<Props, State> {
       nameField = (
         <InputField
         label={t("group.name")}
-        errorMessage="group name invalid" // TODO: i18n
+        errorMessage={t("group-form.name-error")}
         onChange={this.handleGroupNameChange}
         value={group.name}
         validationError={this.state.nameValidationError}
@@ -77,16 +83,16 @@ class GroupForm extends React.Component<Props, State> {
       );
     }
     return (   
-      <form onSubmit={this.onSubmit}>
+      <form onSubmit={this.submit}>
         {nameField}
         <InputField
           label={t("group.description")}
-          errorMessage=""
+          errorMessage={t("group-form.description-error")}
           onChange={this.handleDescriptionChange}
           value={group.description}
           validationError={false}
         />
-          <SubmitButton label={t("group-form.submit")} loading={loading}/>
+          <SubmitButton disabled={!this.isValid()} label={t("group-form.submit")} loading={loading}/>
       </form>
     );
   }
