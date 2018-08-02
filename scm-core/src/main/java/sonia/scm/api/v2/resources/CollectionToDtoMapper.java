@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 import static de.otto.edison.hal.Embedded.embeddedBuilder;
 import static de.otto.edison.hal.Links.linkingTo;
 
-abstract class CollectionToDtoMapper<E, D extends HalRepresentation> {
+public abstract class CollectionToDtoMapper<E, D extends HalRepresentation> {
 
   private final String collectionName;
   private final BaseMapper<E, D> mapper;
