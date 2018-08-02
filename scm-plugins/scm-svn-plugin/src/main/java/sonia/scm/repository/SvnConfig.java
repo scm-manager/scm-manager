@@ -48,6 +48,9 @@ import javax.xml.bind.annotation.XmlTransient;
 public class SvnConfig extends RepositoryConfig
 {
 
+  @SuppressWarnings("WeakerAccess") // This might be needed for permission checking
+  public static final String PERMISSION = "svn";
+
   /**
    * Method description
    *
@@ -112,6 +115,6 @@ public class SvnConfig extends RepositoryConfig
   @XmlTransient // Only for permission checks, don't serialize to XML
   public String getId() {
     // Don't change this without migrating SCM permission configuration!
-    return "svn";
+    return PERMISSION;
   }
 }

@@ -48,6 +48,8 @@ import javax.xml.bind.annotation.XmlTransient;
 public class HgConfig extends RepositoryConfig
 {
 
+  public static final String PERMISSION = "hg";
+
   /**
    * Constructs ...
    *
@@ -227,6 +229,6 @@ public class HgConfig extends RepositoryConfig
   @XmlTransient // Only for permission checks, don't serialize to XML
   public String getId() {
     // Don't change this without migrating SCM permission configuration!
-    return "hg";
+    return PERMISSION;
   }
 }
