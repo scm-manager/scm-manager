@@ -36,14 +36,15 @@ package sonia.scm.web;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.servlet.ServletModule;
-
+import org.mapstruct.factory.Mappers;
+import sonia.scm.api.v2.resources.SvnConfigDtoToSvnConfigMapper;
+import sonia.scm.api.v2.resources.SvnConfigToSvnConfigDtoMapper;
 import sonia.scm.plugin.Extension;
-import sonia.scm.web.filter.AuthenticationFilter;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.util.HashMap;
 import java.util.Map;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -71,6 +72,9 @@ public class SvnServletModule extends ServletModule
     filter(PATTERN_SVN).through(SvnGZipFilter.class);
     filter(PATTERN_SVN).through(SvnBasicAuthenticationFilter.class);
     filter(PATTERN_SVN).through(SvnPermissionFilter.class);
+
+    bind(SvnConfigDtoToSvnConfigMapper.class).to(Mappers.getMapper(SvnConfigDtoToSvnConfigMapper.class).getClass());
+    bind(SvnConfigToSvnConfigDtoMapper.class).to(Mappers.getMapper(SvnConfigToSvnConfigDtoMapper.class).getClass());
 
     Map<String, String> parameters = new HashMap<String, String>();
 
