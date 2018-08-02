@@ -18,7 +18,7 @@ type Props = {
 };
 
 class EditGroup extends React.Component<Props> {
-  groupModified = (group: Group) => {
+  groupModified = (group: Group) => () => {
     this.props.history.push(`/group/${group.name}`)
   }
 
@@ -46,7 +46,9 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-   modifyGroup: (group: Group, callback?: () => void) => {dispatch(modifyGroup(group, callback))}
+   modifyGroup: (group: Group, callback?: () => void) => {
+     dispatch(modifyGroup(group, callback))
+    }
   };
 };
 

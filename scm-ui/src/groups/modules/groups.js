@@ -181,7 +181,7 @@ export function createGroupReset() {
 // modify group 
 export function modifyGroup(group: Group, callback?: () => void) {
   return function(dispatch: Dispatch) {
-    dispatch(modifyGroupPending());
+    dispatch(modifyGroupPending(group));
     return apiClient
     .putWithContentType(group._links.update.href, group, CONTENT_TYPE_GROUP)
     .then(() => {
@@ -196,16 +196,19 @@ export function modifyGroup(group: Group, callback?: () => void) {
   };
 }
 
-export function modifyGroupPending(): Action {
+export function modifyGroupPending(group: Group): Action {
   return {
-    type: MODIFY_GROUP_PENDING
+    type: MODIFY_GROUP_PENDING,
+    payload: group,
+    itemId: group.name
   }
 }
 
 export function modifyGroupSuccess(group: Group): Action {
   return {
     type: MODIFY_GROUP_SUCCESS,
-    payload: group
+    payload: group,
+    itemId: group.name
   }
 }
 

@@ -63,7 +63,7 @@ class GroupForm extends React.Component<Props, State> {
 
   render() {
     const { t, loading } = this.props;
-    const { group } = this.state
+    const group = this.state.group
     let nameField = null;
     if (!this.props.group) {
       nameField = (
@@ -76,7 +76,7 @@ class GroupForm extends React.Component<Props, State> {
       />
       );
     }
-    return (   
+    return (
       <form onSubmit={this.onSubmit}>
         {nameField}
         <InputField
