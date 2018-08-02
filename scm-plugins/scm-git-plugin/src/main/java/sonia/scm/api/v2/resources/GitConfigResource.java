@@ -30,7 +30,8 @@ public class GitConfigResource {
   private final GitRepositoryHandler repositoryHandler;
 
   @Inject
-  public GitConfigResource(GitConfigDtoToGitConfigMapper dtoToConfigMapper, GitConfigToGitConfigDtoMapper configToDtoMapper, GitRepositoryHandler repositoryHandler) {
+  public GitConfigResource(GitConfigDtoToGitConfigMapper dtoToConfigMapper, GitConfigToGitConfigDtoMapper configToDtoMapper,
+                           GitRepositoryHandler repositoryHandler) {
     this.dtoToConfigMapper = dtoToConfigMapper;
     this.configToDtoMapper = configToDtoMapper;
     this.repositoryHandler = repositoryHandler;

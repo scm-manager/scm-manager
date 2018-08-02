@@ -13,9 +13,10 @@ import java.io.File;
 @Setter
 public class GitConfigDto extends HalRepresentation {
 
-  private String gcExpression;
   private File repositoryDirectory;
   private boolean disabled = false;
+
+  private String gcExpression;
 
   @Override
   protected HalRepresentation add(Links links) {
