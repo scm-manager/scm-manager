@@ -435,7 +435,12 @@ describe("selector tests", () => {
         }
       }
     };
+    
     expect(getGroupsFromState(state)).toEqual([{ name: "a" }, { name: "b" }]);
+  });
+
+  it("should return null when there are no groups in the state", () => {
+    expect(getGroupsFromState({})).toBe(null)
   });
 
   it("should return true, when fetch groups is pending", () => {
