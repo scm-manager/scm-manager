@@ -6,6 +6,7 @@ import { SubmitButton } from "../../components/buttons";
 import type { Repository } from "../types/Repositories";
 import * as validator from "./repositoryValidation";
 import type { RepositoryType } from "../types/RepositoryTypes";
+import Textarea from "../../components/forms/Textarea";
 
 type Props = {
   submitForm: Repository => void,
@@ -89,7 +90,7 @@ class RepositoryForm extends React.Component<Props, State> {
           errorMessage={t("validation.contact-invalid")}
         />
 
-        <InputField
+        <Textarea
           label={t("repository.description")}
           onChange={this.handleDescriptionChange}
           value={repository ? repository.description : ""}
