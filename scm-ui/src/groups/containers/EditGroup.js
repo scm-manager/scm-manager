@@ -2,7 +2,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import GroupForm from "../components/GroupForm";
-import { modifyGroup } from "../modules/groups"
+import { modifyGroup, fetchGroup } from "../modules/groups"
 import type { History } from "history";
 import { withRouter } from "react-router-dom";
 import type { Group } from "../types/Group"
@@ -12,6 +12,7 @@ import ErrorNotification from "../../components/ErrorNotification";
 type Props = {
   group: Group,
   modifyGroup: (group: Group, callback?: () => void) => void,
+  fetchGroup: (name: string) => void,
   history: History,
   loading?: boolean,
   error: Error
@@ -19,6 +20,7 @@ type Props = {
 
 class EditGroup extends React.Component<Props> {
   groupModified = (group: Group) => () => {
+    this.props.fetchGroup(group.name)
     this.props.history.push(`/group/${group.name}`)
   }
 
@@ -48,6 +50,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
    modifyGroup: (group: Group, callback?: () => void) => {
      dispatch(modifyGroup(group, callback))
+    },
+    fetchGroup: (name: string) => {
+      dispatch(fetchGroup(name))
     }
   };
 };

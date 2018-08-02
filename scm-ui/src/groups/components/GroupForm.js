@@ -2,7 +2,7 @@
 import React from "react";
 
 import InputField from "../../components/forms/InputField";
-import { SubmitButton } from "../../components/buttons";
+import { SubmitButton, Button } from "../../components/buttons";
 import { translate } from "react-i18next";
 import type { Group } from "../types/Group";
 import * as validator from "./groupValidation";
@@ -16,6 +16,7 @@ type Props = {
 
 type State = {
   group: Group,
+  userToAdd: string,
   nameValidationError: boolean
 };
 
@@ -33,7 +34,8 @@ class GroupForm extends React.Component<Props, State> {
         members: [],
         type: ""
       },
-      nameValidationError: false
+      nameValidationError: false,
+      userToAdd: ""
     };
   }
 
@@ -67,7 +69,7 @@ class GroupForm extends React.Component<Props, State> {
     }
   };
 
-  render() {
+render() {
     const { t, loading } = this.props;
     const group = this.state.group
     let nameField = null;
@@ -93,9 +95,51 @@ class GroupForm extends React.Component<Props, State> {
           value={group.description}
           validationError={false}
         />
+        <label className="label">{t("group.members")}</label>
+        <table className="table is-hoverable is-fullwidth">
+        <tbody>
+          {this.state.group.members.map((user, index) => {
+            return <tr key={user}>
+            <td key={user}>{user}</td>
+            <td><Button label="Remove" action={this.removeUser.bind(this, user)} key={user}/></td>
+            </tr>
+          })}
+        </tbody>
+      </table>
+        <InputField
+          label="Add user"
+          errorMessage="Error"
+          onChange={this.handleAddUserChange}
+          validationError={false} 
+          value={this.state.userToAdd}/>
+        
+          <Button label="Add user" action={this.addUserClick} />
+
           <SubmitButton disabled={!this.isValid()} label={t("group-form.submit")} loading={loading}/>
       </form>
     );
+  }
+
+removeUser(user: string, event: Event) {
+    event.preventDefault();
+    let newMembers = this.state.group.members.filter(name => name !== user)
+    this.setState({...this.state, group: {
+      ...this.state.group,
+      members: newMembers}
+    })
+  }
+
+
+
+  addUserClick = (event: Event) => {
+    event.preventDefault();
+    this.setState({
+      ...this.state,
+      userToAdd: "",
+      group: {
+        ...this.state.group,
+        members: [...this.state.group.members, this.state.userToAdd]}
+    })
   }
 
   handleGroupNameChange = (name: string) => {
@@ -110,6 +154,13 @@ class GroupForm extends React.Component<Props, State> {
       group: { ...this.state.group, description }
     });
   };
+
+  handleAddUserChange = (username: string) => {
+    this.setState({
+      ...this.state,
+      userToAdd: username
+    })
+  }
 }
 
 export default translate("groups")(GroupForm);
