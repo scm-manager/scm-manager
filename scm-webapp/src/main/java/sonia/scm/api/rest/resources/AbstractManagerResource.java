@@ -379,20 +379,6 @@ public abstract class AbstractManagerResource<T extends ModelObject,
    *
    *
    * @param status
-   * @param throwable
-   *
-   * @return
-   */
-  protected Response createErrorResponse(Status status, Throwable throwable)
-  {
-    return createErrorResponse(status, throwable.getMessage(), throwable);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param status
    * @param message
    * @param throwable
    *
