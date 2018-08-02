@@ -14,9 +14,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 
 /**
  * RESTful Web Service Resource to manage the configuration of the git plugin.
@@ -79,7 +77,7 @@ public class GitConfigResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
-  public Response update(@Context UriInfo uriInfo, GitConfigDto configDto) {
+  public Response update(GitConfigDto configDto) {
 
     GitConfig config = dtoToConfigMapper.map(configDto);
 

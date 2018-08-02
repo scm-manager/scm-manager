@@ -14,9 +14,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 
 /**
  * RESTful Web Service Resource to manage the configuration of the hg plugin.
@@ -79,7 +77,7 @@ public class HgConfigResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
-  public Response update(@Context UriInfo uriInfo, HgConfigDto configDto) {
+  public Response update(HgConfigDto configDto) {
 
     HgConfig config = dtoToConfigMapper.map(configDto);
 
@@ -91,8 +89,8 @@ public class HgConfigResource {
     return Response.noContent().build();
   }
 
+
   // TODO
-  //* `auto-configuration`
   // * `packages`
   // * `packages/{pkgId}`
   // * `installations/hg`

@@ -14,9 +14,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 
 @Path(ConfigResource.CONFIG_PATH_V2)
 public class ConfigResource {
@@ -70,7 +68,7 @@ public class ConfigResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
-  public Response update(ConfigDto configDto, @Context UriInfo uriInfo) {
+  public Response update(ConfigDto configDto) {
 
     // This *could* be moved to ScmConfiguration or ScmConfigurationUtil classes.
     // But to where to check? load() or store()? Leave it for now, SCMv1 legacy that can be cleaned up later.
