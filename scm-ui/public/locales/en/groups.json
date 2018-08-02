@@ -31,5 +31,14 @@
   },
   "group-form": {
     "submit": "Submit"
+  },
+  "delete-group-button": {
+    "label": "Delete",
+    "confirm-alert": {
+      "title": "Delete Group",
+      "message": "Do you really want to delete the group?",
+      "submit": "Yes",
+      "cancel": "No"
+    }
   }
 }
