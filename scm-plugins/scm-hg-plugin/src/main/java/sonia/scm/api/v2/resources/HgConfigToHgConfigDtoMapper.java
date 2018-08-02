@@ -3,7 +3,6 @@ package sonia.scm.api.v2.resources;
 import de.otto.edison.hal.Links;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import sonia.scm.config.ConfigurationPermissions;
 import sonia.scm.repository.HgConfig;
@@ -16,13 +15,10 @@ import static de.otto.edison.hal.Links.linkingTo;
 // Mapstruct does not support parameterized (i.e. non-default) constructors. Thus, we need to use field injection.
 @SuppressWarnings("squid:S3306")
 @Mapper
-public abstract class HgConfigToHgConfigDtoMapper {
+public abstract class HgConfigToHgConfigDtoMapper extends BaseMapper<HgConfig, HgConfigDto> {
 
   @Inject
   private UriInfoStore uriInfoStore;
-
-  @Mapping(target = "attributes", ignore = true) // We do not map HAL attributes
-  public abstract HgConfigDto map(HgConfig config);
 
   @AfterMapping
   void appendLinks(HgConfig config, @MappingTarget HgConfigDto target) {
