@@ -5,6 +5,8 @@ import org.junit.Test;
 import org.mapstruct.factory.Mappers;
 import sonia.scm.group.Group;
 
+import java.util.Arrays;
+
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 
@@ -21,14 +23,7 @@ public class GroupDtoToGroupMapperTest {
   @Test
   public void shouldMapMembers() {
     GroupDto dto = new GroupDto();
-
-    MemberDto member1 = new MemberDto();
-    member1.getAttributes().put("name", new TextNode("member1"));
-    MemberDto member2 = new MemberDto();
-    member2.getAttributes().put("name", new TextNode("member2"));
-
-    dto.withMembers(asList(member1, member2));
-
+    dto.setMembers(Arrays.asList("member1", "member2"));
     Group group = Mappers.getMapper(GroupDtoToGroupMapper.class).map(dto);
 
     assertEquals(2, group.getMembers().size());
