@@ -19,7 +19,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import sonia.scm.repository.HgConfig;
 import sonia.scm.repository.HgRepositoryHandler;
-import sonia.scm.repository.HgVndMediaType;
+import sonia.scm.web.HgVndMediaType;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -124,21 +124,21 @@ public class HgConfigResourceTest {
 
   @Test
   @SubjectAware(username = "readOnly")
-  public void shouldUpdateConfigOnlyWhenAuthorized() throws URISyntaxException, IOException {
+  public void shouldUpdateConfigOnlyWhenAuthorized() throws URISyntaxException {
     thrown.expectMessage("Subject does not have permission [configuration:write:hg]");
 
     put();
   }
 
   private MockHttpResponse get() throws URISyntaxException {
-    MockHttpRequest request = MockHttpRequest.get("/" + HgConfigResource.GIT_CONFIG_PATH_V2);
+    MockHttpRequest request = MockHttpRequest.get("/" + HgConfigResource.HG_CONFIG_PATH_V2);
     MockHttpResponse response = new MockHttpResponse();
     dispatcher.invoke(request, response);
     return response;
   }
 
   private MockHttpResponse put() throws URISyntaxException {
-    MockHttpRequest request = MockHttpRequest.put("/" + HgConfigResource.GIT_CONFIG_PATH_V2)
+    MockHttpRequest request = MockHttpRequest.put("/" + HgConfigResource.HG_CONFIG_PATH_V2)
                                              .contentType(HgVndMediaType.HG_CONFIG)
                                              .content("{\"disabled\":true}".getBytes());
 

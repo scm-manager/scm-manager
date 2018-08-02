@@ -1,4 +1,4 @@
-package sonia.scm.repository;
+package sonia.scm.web;
 
 import sonia.scm.web.VndMediaType;
 

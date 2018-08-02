@@ -6,7 +6,7 @@ import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import sonia.scm.config.ConfigurationPermissions;
 import sonia.scm.repository.HgConfig;
 import sonia.scm.repository.HgRepositoryHandler;
-import sonia.scm.repository.HgVndMediaType;
+import sonia.scm.web.HgVndMediaType;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -21,10 +21,10 @@ import javax.ws.rs.core.UriInfo;
 /**
  * RESTful Web Service Resource to manage the configuration of the hg plugin.
  */
-@Path(HgConfigResource.GIT_CONFIG_PATH_V2)
+@Path(HgConfigResource.HG_CONFIG_PATH_V2)
 public class HgConfigResource {
 
-  static final String GIT_CONFIG_PATH_V2 = "v2/config/hg";
+  static final String HG_CONFIG_PATH_V2 = "v2/config/hg";
   private final HgConfigDtoToHgConfigMapper dtoToConfigMapper;
   private final HgConfigToHgConfigDtoMapper configToDtoMapper;
   private final HgRepositoryHandler repositoryHandler;
