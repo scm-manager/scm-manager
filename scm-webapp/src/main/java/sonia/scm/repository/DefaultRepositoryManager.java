@@ -300,8 +300,8 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
   }
 
   @Override
-  public Collection<Type> getConfiguredTypes() {
-    List<Type> validTypes = Lists.newArrayList();
+  public Collection<RepositoryType> getConfiguredTypes() {
+    List<RepositoryType> validTypes = Lists.newArrayList();
 
     for (RepositoryHandler handler : handlerMap.values()) {
       if (handler.isConfigured()) {

@@ -6,6 +6,7 @@ import javax.ws.rs.core.MediaType;
  * Vendor media types used by SCMM.
  */
 public class VndMediaType {
+
   private static final String VERSION = "2";
   private static final String TYPE = "application";
   private static final String SUBTYPE_PREFIX = "vnd.scmm-";
@@ -18,6 +19,8 @@ public class VndMediaType {
   public static final String USER_COLLECTION = PREFIX + "userCollection" + SUFFIX;
   public static final String GROUP_COLLECTION = PREFIX + "groupCollection" + SUFFIX;
   public static final String REPOSITORY_COLLECTION = PREFIX + "repositoryCollection" + SUFFIX;
+  public static final String REPOSITORY_TYPE_COLLECTION = PREFIX + "repositoryTypeCollection" + SUFFIX;
+  public static final String REPOSITORY_TYPE = PREFIX + "repositoryType" + SUFFIX;
   public static final String ME = PREFIX + "me" + SUFFIX;
 
   private VndMediaType() {

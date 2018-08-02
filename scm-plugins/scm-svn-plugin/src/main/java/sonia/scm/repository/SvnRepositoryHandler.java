@@ -49,7 +49,6 @@ import org.tmatesoft.svn.core.io.SVNRepository;
 import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
 import org.tmatesoft.svn.util.SVNDebugLog;
 
-import sonia.scm.Type;
 import sonia.scm.io.FileSystem;
 import sonia.scm.logging.SVNKitLogger;
 import sonia.scm.plugin.Extension;
@@ -87,7 +86,7 @@ public class SvnRepositoryHandler
   public static final String TYPE_NAME = "svn";
 
   /** Field description */
-  public static final Type TYPE = new RepositoryType(TYPE_NAME,
+  public static final RepositoryType TYPE = new RepositoryType(TYPE_NAME,
                                     TYPE_DISPLAYNAME,
                                     SvnRepositoryServiceProvider.COMMANDS);
 
@@ -150,7 +149,7 @@ public class SvnRepositoryHandler
    * @return
    */
   @Override
-  public Type getType()
+  public RepositoryType getType()
   {
     return TYPE;
   }

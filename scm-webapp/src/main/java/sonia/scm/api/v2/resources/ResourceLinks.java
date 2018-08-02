@@ -145,6 +145,39 @@ class ResourceLinks {
     }
   }
 
+  public RepositoryTypeLinks repositoryType() {
+    return new RepositoryTypeLinks(uriInfoStore.get());
+  }
+
+  static class RepositoryTypeLinks {
+    private final LinkBuilder repositoryTypeLinkBuilder;
+
+    RepositoryTypeLinks(UriInfo uriInfo) {
+      repositoryTypeLinkBuilder = new LinkBuilder(uriInfo, RepositoryTypeRootResource.class, RepositoryTypeResource.class);
+    }
+
+    String self(String name) {
+      return repositoryTypeLinkBuilder.method("getRepositoryTypeResource").parameters(name).method("get").parameters().href();
+    }
+  }
+
+  public RepositoryTypeCollectionLinks repositoryTypeCollection() {
+    return new RepositoryTypeCollectionLinks(uriInfoStore.get());
+  }
+
+  static class RepositoryTypeCollectionLinks {
+    private final LinkBuilder collectionLinkBuilder;
+
+    RepositoryTypeCollectionLinks(UriInfo uriInfo) {
+      collectionLinkBuilder = new LinkBuilder(uriInfo, RepositoryTypeRootResource.class, RepositoryTypeCollectionResource.class);
+    }
+
+    String self() {
+      return collectionLinkBuilder.method("getRepositoryTypeCollectionResource").parameters().method("getAll").parameters().href();
+    }
+  }
+
+
   public TagCollectionLinks tagCollection() {
     return new TagCollectionLinks(uriInfoStore.get());
   }

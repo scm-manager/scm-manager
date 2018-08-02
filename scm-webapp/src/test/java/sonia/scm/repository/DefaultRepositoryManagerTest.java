@@ -36,6 +36,7 @@ import com.github.legman.Subscribe;
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.junit.Rule;
 import org.junit.Test;
@@ -482,14 +483,14 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
     handlerSet.add(new DummyRepositoryHandler(factory));
     handlerSet.add(new DummyRepositoryHandler(factory) {
       @Override
-      public Type getType() {
-        return new Type("hg", "Mercurial");
+      public RepositoryType getType() {
+        return new RepositoryType("hg", "Mercurial", Sets.newHashSet());
       }
     });
     handlerSet.add(new DummyRepositoryHandler(factory) {
       @Override
-      public Type getType() {
-        return new Type("git", "Git");
+      public RepositoryType getType() {
+        return new RepositoryType("git", "Git", Sets.newHashSet());
       }
     });
 

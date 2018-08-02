@@ -47,6 +47,7 @@ import sonia.scm.Type;
 import sonia.scm.api.rest.JSONContextResolver;
 import sonia.scm.api.rest.ObjectMapperProvider;
 import sonia.scm.repository.Person;
+import sonia.scm.repository.RepositoryType;
 import sonia.scm.repository.client.api.ClientCommand;
 import sonia.scm.repository.client.api.RepositoryClient;
 import sonia.scm.user.User;
@@ -140,7 +141,7 @@ public final class IntegrationTestUtil
     assertEquals("scmadmin", user.getName());
     assertTrue(user.isAdmin());
 
-    Collection<Type> types = state.getRepositoryTypes();
+    Collection<RepositoryType> types = state.getRepositoryTypes();
 
     assertNotNull(types);
     assertFalse(types.isEmpty());

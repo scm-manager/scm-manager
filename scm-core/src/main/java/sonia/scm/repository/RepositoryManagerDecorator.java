@@ -103,7 +103,7 @@ public class RepositoryManagerDecorator
    * @return
    */
   @Override
-  public Collection<Type> getConfiguredTypes()
+  public Collection<RepositoryType> getConfiguredTypes()
   {
     return decorated.getConfiguredTypes();
   }

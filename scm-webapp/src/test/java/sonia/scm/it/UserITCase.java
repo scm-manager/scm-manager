@@ -40,6 +40,7 @@ import org.junit.Test;
 
 import sonia.scm.ScmState;
 import sonia.scm.Type;
+import sonia.scm.repository.RepositoryType;
 import sonia.scm.user.User;
 import sonia.scm.user.UserTestData;
 
@@ -204,7 +205,7 @@ public class UserITCase extends AbstractAdminITCaseBase
     assertEquals("scmadmin", user.getName());
     assertTrue(user.isAdmin());
 
-    Collection<Type> types = state.getRepositoryTypes();
+    Collection<RepositoryType> types = state.getRepositoryTypes();
 
     assertNotNull(types);
     assertFalse(types.isEmpty());

@@ -44,7 +44,6 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.ConfigurationException;
 import sonia.scm.SCMContextProvider;
-import sonia.scm.Type;
 import sonia.scm.installer.HgInstaller;
 import sonia.scm.installer.HgInstallerFactory;
 import sonia.scm.io.DirectoryFileFilter;
@@ -98,7 +97,7 @@ public class HgRepositoryHandler
   public static final String TYPE_NAME = "hg";
 
   /** Field description */
-  public static final Type TYPE = new RepositoryType(TYPE_NAME,
+  public static final RepositoryType TYPE = new RepositoryType(TYPE_NAME,
                                     TYPE_DISPLAYNAME,
                                     HgRepositoryServiceProvider.COMMANDS,
                                     HgRepositoryServiceProvider.FEATURES);
@@ -259,7 +258,7 @@ public class HgRepositoryHandler
    * @return
    */
   @Override
-  public Type getType()
+  public RepositoryType getType()
   {
     return TYPE;
   }

@@ -35,6 +35,7 @@ package sonia.scm;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.repository.RepositoryType;
 import sonia.scm.security.PermissionDescriptor;
 import sonia.scm.user.User;
 
@@ -82,9 +83,9 @@ public final class ScmState
    * @since 2.0.0
    */
   public ScmState(String version, User user, Collection<String> groups,
-    String token, Collection<Type> repositoryTypes, String defaultUserType,
-    ScmClientConfig clientConfig, List<String> assignedPermission,
-    List<PermissionDescriptor> availablePermissions)
+                  String token, Collection<RepositoryType> repositoryTypes, String defaultUserType,
+                  ScmClientConfig clientConfig, List<String> assignedPermission,
+                  List<PermissionDescriptor> availablePermissions)
   {
     this.version = version;
     this.user = user;
@@ -165,7 +166,7 @@ public final class ScmState
    *
    * @return all available repository types
    */
-  public Collection<Type> getRepositoryTypes()
+  public Collection<RepositoryType> getRepositoryTypes()
   {
     return repositoryTypes;
   }
@@ -244,7 +245,7 @@ public final class ScmState
 
   /** Field description */
   @XmlElement(name = "repositoryTypes")
-  private Collection<Type> repositoryTypes;
+  private Collection<RepositoryType> repositoryTypes;
 
   /** Field description */
   private User user;
