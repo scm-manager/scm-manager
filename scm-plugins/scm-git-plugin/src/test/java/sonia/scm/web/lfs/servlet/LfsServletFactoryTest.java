@@ -17,18 +17,18 @@ import static org.mockito.Mockito.when;
 public class LfsServletFactoryTest {
 
   @Test
-  public void buildBaseUri() throws Exception {
+  public void buildBaseUri() {
 
     String repositoryNamespace = "space";
     String repositoryName = "git-lfs-demo";
 
     String result = LfsServletFactory.buildBaseUri(new Repository("", "GIT", repositoryNamespace, repositoryName), RequestWithUri(repositoryName, true));
-    assertThat(result, is(equalTo("http://localhost:8081/scm/git/git-lfs-demo.git/info/lfs/objects/")));
+    assertThat(result, is(equalTo("http://localhost:8081/scm/git/space/git-lfs-demo.git/info/lfs/objects/")));
 
 
-    //result will be with dot-gix suffix, ide
+    //result will be with dot-git suffix, ide
     result = LfsServletFactory.buildBaseUri(new Repository("", "GIT", repositoryNamespace, repositoryName), RequestWithUri(repositoryName, false));
-    assertThat(result, is(equalTo("http://localhost:8081/scm/git/git-lfs-demo.git/info/lfs/objects/")));
+    assertThat(result, is(equalTo("http://localhost:8081/scm/git/space/git-lfs-demo.git/info/lfs/objects/")));
   }
 
   private HttpServletRequest RequestWithUri(String repositoryName, boolean withDotGitSuffix) {
