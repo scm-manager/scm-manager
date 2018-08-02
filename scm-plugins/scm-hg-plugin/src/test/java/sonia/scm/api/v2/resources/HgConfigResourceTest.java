@@ -21,6 +21,7 @@ import sonia.scm.repository.HgConfig;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.web.HgVndMediaType;
 
+import javax.inject.Provider;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
@@ -61,11 +62,22 @@ public class HgConfigResourceTest {
   @Mock
   private HgRepositoryHandler repositoryHandler;
 
+  @Mock
+  private Provider<HgConfigPackageResource> packagesResource;
+
+  @Mock
+  private Provider<HgConfigAutoConfigurationResource> autoconfigResource;
+
+  @Mock
+  private Provider<HgConfigInstallationsResource> installationsResource;
+
   @Before
   public void prepareEnvironment() {
     HgConfig gitConfig = createConfiguration();
     when(repositoryHandler.getConfig()).thenReturn(gitConfig);
-    HgConfigResource gitConfigResource = new HgConfigResource(dtoToConfigMapper, configToDtoMapper, repositoryHandler);
+    HgConfigResource gitConfigResource =
+      new HgConfigResource(dtoToConfigMapper, configToDtoMapper, repositoryHandler, packagesResource,
+                           autoconfigResource, installationsResource);
     dispatcher.getRegistry().addSingletonResource(gitConfigResource);
     when(uriInfoStore.get().getBaseUri()).thenReturn(baseUri);
   }
@@ -88,7 +100,7 @@ public class HgConfigResourceTest {
 
   @Test
   @SubjectAware(username = "readWrite")
-  public void shouldGetHgConfigEvenWhenItsEmpty() throws URISyntaxException, IOException {
+  public void shouldGetHgConfigEvenWhenItsEmpty() throws URISyntaxException {
     when(repositoryHandler.getConfig()).thenReturn(null);
 
     MockHttpResponse response = get();
@@ -139,7 +151,7 @@ public class HgConfigResourceTest {
 
   private MockHttpResponse put() throws URISyntaxException {
     MockHttpRequest request = MockHttpRequest.put("/" + HgConfigResource.HG_CONFIG_PATH_V2)
-                                             .contentType(HgVndMediaType.HG_CONFIG)
+                                             .contentType(HgVndMediaType.CONFIG)
                                              .content("{\"disabled\":true}".getBytes());
 
     MockHttpResponse response = new MockHttpResponse();

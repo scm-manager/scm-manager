@@ -9,6 +9,7 @@ import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.web.HgVndMediaType;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -23,16 +24,25 @@ import javax.ws.rs.core.Response;
 public class HgConfigResource {
 
   static final String HG_CONFIG_PATH_V2 = "v2/config/hg";
+
   private final HgConfigDtoToHgConfigMapper dtoToConfigMapper;
   private final HgConfigToHgConfigDtoMapper configToDtoMapper;
   private final HgRepositoryHandler repositoryHandler;
+  private final Provider<HgConfigPackageResource> packagesResource;
+  private final Provider<HgConfigAutoConfigurationResource> autoconfigResource;
+  private final Provider<HgConfigInstallationsResource> installationsResource;
 
   @Inject
   public HgConfigResource(HgConfigDtoToHgConfigMapper dtoToConfigMapper, HgConfigToHgConfigDtoMapper configToDtoMapper,
-                          HgRepositoryHandler repositoryHandler) {
+                          HgRepositoryHandler repositoryHandler, Provider<HgConfigPackageResource> packagesResource,
+                          Provider<HgConfigAutoConfigurationResource> autoconfigResource,
+                          Provider<HgConfigInstallationsResource> installationsResource) {
     this.dtoToConfigMapper = dtoToConfigMapper;
     this.configToDtoMapper = configToDtoMapper;
     this.repositoryHandler = repositoryHandler;
+    this.packagesResource = packagesResource;
+    this.autoconfigResource = autoconfigResource;
+    this.installationsResource = installationsResource;
   }
 
   /**
@@ -40,7 +50,7 @@ public class HgConfigResource {
    */
   @GET
   @Path("")
-  @Produces(HgVndMediaType.HG_CONFIG)
+  @Produces(HgVndMediaType.CONFIG)
   @TypeHint(HgConfigDto.class)
   @StatusCodes({
     @ResponseCode(code = 200, condition = "success"),
@@ -69,7 +79,7 @@ public class HgConfigResource {
    */
   @PUT
   @Path("")
-  @Consumes(HgVndMediaType.HG_CONFIG)
+  @Consumes(HgVndMediaType.CONFIG)
   @StatusCodes({
     @ResponseCode(code = 204, condition = "update success"),
     @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
@@ -89,10 +99,18 @@ public class HgConfigResource {
     return Response.noContent().build();
   }
 
+  @Path("packages")
+  public HgConfigPackageResource getPackagesResource() {
+    return packagesResource.get();
+  }
 
-  // TODO
-  // * `packages`
-  // * `packages/{pkgId}`
-  // * `installations/hg`
-  //  * `installations/python
+  @Path("auto-configuration")
+  public HgConfigAutoConfigurationResource getAutoConfigurationResource() {
+    return autoconfigResource.get();
+  }
+
+  @Path("installations")
+  public HgConfigInstallationsResource getInstallationsResource() {
+    return installationsResource.get();
+  }
 }
