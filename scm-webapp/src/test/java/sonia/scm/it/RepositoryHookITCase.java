@@ -200,7 +200,7 @@ public class RepositoryHookITCase extends AbstractAdminITCaseBase
    * @return repository types test parameter
    */
   @Parameters(name = "{0}")
-  public static Collection<String[]> createParameters()
+  public static Collection<String> createParameters()
   {
     return IntegrationTestUtil.createRepositoryTypeParameters();
   }

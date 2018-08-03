@@ -39,11 +39,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
-import sonia.scm.util.IOUtil;
 import sonia.scm.web.VndMediaType;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 
 import static org.hamcrest.Matchers.equalTo;
@@ -64,17 +62,8 @@ public class RepositoriesITCase {
   }
 
   @Parameters(name = "{0}")
-  public static Collection<String[]> createParameters() {
-    Collection<String[]> params = new ArrayList<>();
-
-    params.add(new String[]{"git"});
-    params.add(new String[]{"svn"});
-
-    if (IOUtil.search("hg") != null) {
-      params.add(new String[]{"hg"});
-    }
-
-    return params;
+  public static Collection<String> createParameters() {
+    return ScmParameterizedIntegrationTestUtil.createParameters();
   }
 
   @After

@@ -54,6 +54,7 @@ import static sonia.scm.it.IntegrationTestUtil.ADMIN_USERNAME;
 import static sonia.scm.it.IntegrationTestUtil.commit;
 import static sonia.scm.it.IntegrationTestUtil.createAdminClient;
 import static sonia.scm.it.IntegrationTestUtil.createRandomFile;
+import static sonia.scm.it.IntegrationTestUtil.createRepositoryTypeParameters;
 import static sonia.scm.it.IntegrationTestUtil.createResource;
 import static sonia.scm.it.IntegrationTestUtil.createTempDirectory;
 import static sonia.scm.it.IntegrationTestUtil.readJson;
@@ -200,8 +201,7 @@ public class RepositoryITCaseBase
     User noperm = UserTestData.createPerfect();
 
     createUser(noperm);
-    IntegrationTestUtil.createRepositoryTypeParameters().stream().map(array -> array[0])
-      .forEach(t -> appendTestParameter(params, t, owner, write, read, noperm));
+    createRepositoryTypeParameters().forEach(t -> appendTestParameter(params, t, owner, write, read, noperm));
 
     return params;
   }

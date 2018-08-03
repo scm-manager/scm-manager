@@ -162,22 +162,15 @@ public final class IntegrationTestUtil
     client.getAddCommand().add(name);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public static Collection<String[]> createRepositoryTypeParameters()
-  {
-    Collection<String[]> params = new ArrayList<>();
+  public static Collection<String> createRepositoryTypeParameters() {
+    Collection<String> params = new ArrayList<>();
 
-    params.add(new String[] { "git" });
-    params.add(new String[] { "svn" });
+    params.add("git");
+    params.add("svn" );
 
     if (IOUtil.search("hg") != null)
     {
-      params.add(new String[] { "hg" });
+      params.add("hg");
     }
 
     return params;
