@@ -73,6 +73,7 @@
     <module>scm-ui</module>
     <module>scm-webapp</module>
     <module>scm-server</module>
+    <module>scm-it</module>
   </modules>
 
   <repositories>

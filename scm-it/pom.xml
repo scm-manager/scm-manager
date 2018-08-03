@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>sonia.scm</groupId>
+    <artifactId>scm</artifactId>
+    <version>2.0.0-SNAPSHOT</version>
+  </parent>
+
+  <groupId>sonia.scm</groupId>
+  <artifactId>scm-it</artifactId>
+  <packaging>jar</packaging>
+  <version>2.0.0-SNAPSHOT</version>
+  <name>scm-it</name>
+
+  <dependencies>
+    <dependency>
+      <groupId>sonia.scm</groupId>
+      <artifactId>scm-core</artifactId>
+      <version>2.0.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>io.rest-assured</groupId>
+      <artifactId>rest-assured</artifactId>
+      <version>3.1.0</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+
+      <plugin>
+        <groupId>com.mycila.maven-license-plugin</groupId>
+        <artifactId>maven-license-plugin</artifactId>
+        <version>1.9.0</version>
+        <configuration>
+          <header>http://download.scm-manager.org/licenses/mvn-license.txt</header>
+          <includes>
+            <include>src/**</include>
+            <include>**/test/**</include>
+          </includes>
+          <excludes>
+            <exclude>target/**</exclude>
+            <exclude>.hg/**</exclude>
+            <exclude>src/main/webapp/resources/extjs/**</exclude>
+            <exclude>src/main/webapp/resources/syntaxhighlighter/**</exclude>
+            <exclude>src/main/webapp/resources/moment/**</exclude>
+            <exclude>**/*.mustache</exclude>
+          </excludes>
+          <strictCheck>true</strictCheck>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-maven-plugin</artifactId>
+        <version>${jetty.maven.version}</version>
+        <configuration>
+          <stopPort>8005</stopPort>
+          <stopKey>STOP</stopKey>
+          <systemProperties>
+            <systemProperty>
+              <name>scm.home</name>
+              <value>${scm.home}</value>
+            </systemProperty>
+            <systemProperty>
+              <name>scm.stage</name>
+              <value>${scm.stage}</value>
+            </systemProperty>
+            <systemProperty>
+              <name>java.awt.headless</name>
+              <value>true</value>
+            </systemProperty>
+          </systemProperties>
+          <webApp>
+            <contextPath>/scm</contextPath>
+          </webApp>
+          <jettyXml>${project.basedir}/src/main/conf/jetty.xml</jettyXml>
+          <scanIntervalSeconds>0</scanIntervalSeconds>
+        </configuration>
+      </plugin>
+    </plugins>
+
+    <finalName>scm-it</finalName>
+  </build>
+
+  <properties>
+  </properties>
+
+  <profiles>
+
+    <profile>
+      <id>it</id>
+
+      <build>
+        <plugins>
+
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-failsafe-plugin</artifactId>
+            <version>2.12</version>
+            <configuration>
+              <includes>
+                <include>sonia/scm/it/*ITCase.java</include>
+              </includes>
+            </configuration>
+            <executions>
+              <execution>
+                <id>integration-test</id>
+                <goals>
+                  <goal>integration-test</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>verify</id>
+                <goals>
+                  <goal>verify</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-maven-plugin</artifactId>
+            <version>${jetty.maven.version}</version>
+            <configuration>
+              <stopPort>8085</stopPort>
+              <stopKey>STOP</stopKey>
+              <systemProperties>
+                <systemProperty>
+                  <name>scm.home</name>
+                  <value>target/scm-it</value>
+                </systemProperty>
+                <systemProperty>
+                  <name>scm.stage</name>
+                  <value>${scm.stage}</value>
+                </systemProperty>
+              </systemProperties>
+              <jettyXml>${project.basedir}/src/main/conf/jetty.xml</jettyXml>
+              <war>${project.basedir}/../scm-webapp/target/scm-webapp.war</war>
+              <scanIntervalSeconds>0</scanIntervalSeconds>
+              <daemon>true</daemon>
+            </configuration>
+            <executions>
+              <execution>
+                <id>start-jetty</id>
+                <phase>pre-integration-test</phase>
+                <goals>
+                  <goal>deploy-war</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>stop-jetty</id>
+                <phase>post-integration-test</phase>
+                <goals>
+                  <goal>stop</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+
+        </plugins>
+      </build>
+
+    </profile>
+  </profiles>
+
+</project>
+
