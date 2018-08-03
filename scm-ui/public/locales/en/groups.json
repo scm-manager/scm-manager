@@ -29,6 +29,13 @@
   "edit-group-button": {
     "label": "Edit"
   },
+  "add-user-button": {
+    "label": "Add user"
+  },
+  "add-user-textfield": {
+    "label": "Add user",
+    "error": "Error adding user"
+  },
   "group-form": {
     "submit": "Submit",
     "name-error": "Group name is invalid",

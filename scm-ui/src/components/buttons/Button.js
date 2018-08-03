@@ -7,7 +7,7 @@ export type ButtonProps = {
   label: string,
   loading?: boolean,
   disabled?: boolean,
-  action?: () => void,
+  action?: (event: Event) => void,
   link?: string,
   fullWidth?: boolean,
   className?: string
@@ -37,7 +37,7 @@ class Button extends React.Component<Props> {
     return (
       <button
         disabled={disabled}
-        onClick={action ? action : () => {}}
+        onClick={action ? action : (event: Event) => {}}
         className={classNames(
           "button",
           "is-" + type,
