@@ -32,6 +32,9 @@
   "add-user-button": {
     "label": "Add user"
   },
+  "remove-user-button": {
+    "label": "Remove user"
+  },
   "add-user-textfield": {
     "label": "Add user",
     "error": "Error adding user"

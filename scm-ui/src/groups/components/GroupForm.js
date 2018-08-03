@@ -7,6 +7,7 @@ import { translate } from "react-i18next";
 import type { Group } from "../types/Group";
 import * as validator from "./groupValidation";
 import AddUserField from "./AddUserField";
+import UserNameTable from "./UserNameTable";
 
 type Props = {
   t: string => string,
@@ -41,7 +42,7 @@ class GroupForm extends React.Component<Props, State> {
   componentDidMount() {
     const { group } = this.props;
     if (group) {
-      this.setState({...this.state, group: { ...group } });
+      this.setState({ ...this.state, group: { ...group } });
     }
   }
 
@@ -94,26 +95,10 @@ class GroupForm extends React.Component<Props, State> {
           value={group.description}
           validationError={false}
         />
-        <label className="label">{t("group.members")}</label>
-        <table className="table is-hoverable is-fullwidth">
-          <tbody>
-            {this.state.group.members.map((user, index) => {
-              return (
-                <tr key={user}>
-                  <td key={user}>{user}</td>
-                  <td>
-                    <Button
-                      label="Remove"
-                      action={this.removeUser.bind(this, user)}
-                      key={user}
-                    />
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-
+        <UserNameTable
+          users={this.state.group.members}
+          userListChanged={this.userListChanged}
+        />
         <AddUserField addUser={this.addUser} />
         <SubmitButton
           disabled={!this.isValid()}
@@ -124,17 +109,16 @@ class GroupForm extends React.Component<Props, State> {
     );
   }
 
-  removeUser(user: string, event: Event) {
-    event.preventDefault();
-    let newMembers = this.state.group.members.filter(name => name !== user);
+  userListChanged = usernames => {
     this.setState({
       ...this.state,
       group: {
         ...this.state.group,
-        members: newMembers
+        members: usernames
       }
     });
   }
+
 
   addUser = (username: string) => {
     if (this.isMember(username)) {
@@ -148,11 +132,11 @@ class GroupForm extends React.Component<Props, State> {
         members: [...this.state.group.members, username]
       }
     });
-  }
+  };
 
   isMember = (username: string) => {
-    return this.state.group.members.includes(username)
-  }
+    return this.state.group.members.includes(username);
+  };
 
   handleGroupNameChange = (name: string) => {
     this.setState({
