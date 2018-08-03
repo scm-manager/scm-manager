@@ -27,7 +27,7 @@ function handleStatusCode(response: Response) {
 }
 
 export function createUrl(url: string) {
-  if (url.indexOf("://") > 0) {
+  if (url.includes("://")) {
     return url;
   }
   let urlWithStartingSlash = url;
@@ -42,26 +42,12 @@ class ApiClient {
     return fetch(createUrl(url), fetchOptions).then(handleStatusCode);
   }
 
-  post(url: string, payload: any) {
-    return this.httpRequestWithJSONBody(url, payload, "POST");
+  post(url: string, payload: any, contentType: string = "application/json") {
+    return this.httpRequestWithJSONBody("POST", url, contentType, payload);
   }
 
-  postWithContentType(url: string, payload: any, contentType: string) {
-    return this.httpRequestWithContentType(
-      url,
-      "POST",
-      JSON.stringify(payload),
-      contentType
-    );
-  }
-
-  putWithContentType(url: string, payload: any, contentType: string) {
-    return this.httpRequestWithContentType(
-      url,
-      "PUT",
-      JSON.stringify(payload),
-      contentType
-    );
+  put(url: string, payload: any, contentType: string = "application/json") {
+    return this.httpRequestWithJSONBody("PUT", url, contentType, payload);
   }
 
   delete(url: string): Promise<Response> {
@@ -73,37 +59,14 @@ class ApiClient {
   }
 
   httpRequestWithJSONBody(
-    url: string,
-    payload: any,
-    method: string
-  ): Promise<Response> {
-    // let options: RequestOptions = {
-    //   method: method,
-    //   body: JSON.stringify(payload)
-    // };
-    // options = Object.assign(options, fetchOptions);
-    // // $FlowFixMe
-    // options.headers["Content-Type"] = "application/json";
-
-    // return fetch(createUrl(url), options).then(handleStatusCode);
-
-    return this.httpRequestWithContentType(
-      url,
-      method,
-      JSON.stringify(payload),
-      "application/json"
-    ).then(handleStatusCode);
-  }
-
-  httpRequestWithContentType(
-    url: string,
     method: string,
-    payload: any,
-    contentType: string
+    url: string,
+    contentType: string,
+    payload: any
   ): Promise<Response> {
     let options: RequestOptions = {
       method: method,
-      body: payload
+      body: JSON.stringify(payload)
     };
     options = Object.assign(options, fetchOptions);
     // $FlowFixMe
