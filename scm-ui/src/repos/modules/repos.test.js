@@ -30,7 +30,14 @@ import reducer, {
   isCreateRepoPending,
   CREATE_REPO,
   getCreateRepoFailure,
-  isAbleToCreateRepos
+  isAbleToCreateRepos,
+  DELETE_REPO,
+  DELETE_REPO_SUCCESS,
+  deleteRepo,
+  DELETE_REPO_PENDING,
+  DELETE_REPO_FAILURE,
+  isDeleteRepoPending,
+  getDeleteRepoFailure
 } from "./repos";
 import type { Repository, RepositoryCollection } from "../types/Repositories";
 
@@ -364,7 +371,9 @@ describe("repos fetch", () => {
   });
 
   it("should successfully create repo slarti/fjords", () => {
-    fetchMock.postOnce(REPOS_URL, slartiFjords);
+    fetchMock.postOnce(REPOS_URL, {
+      status: 201
+    });
 
     const expectedActions = [
       {
@@ -382,7 +391,6 @@ describe("repos fetch", () => {
   });
 
   it("should successfully create repo slarti/fjords and call the callback", () => {
-    // unmatched
     fetchMock.postOnce(REPOS_URL, {
       status: 201
     });
@@ -410,6 +418,71 @@ describe("repos fetch", () => {
       expect(actions[0].type).toEqual(CREATE_REPO_PENDING);
       expect(actions[1].type).toEqual(CREATE_REPO_FAILURE);
       expect(actions[1].payload).toBeDefined();
+    });
+  });
+
+  it("should successfully delete repo slarti/fjords", () => {
+    fetchMock.delete(
+      "http://localhost:8081/scm/api/rest/v2/repositories/slarti/fjords",
+      {
+        status: 204
+      }
+    );
+
+    const expectedActions = [
+      {
+        type: DELETE_REPO_PENDING,
+        payload: slartiFjords,
+        itemId: "slarti/fjords"
+      },
+      {
+        type: DELETE_REPO_SUCCESS,
+        payload: slartiFjords,
+        itemId: "slarti/fjords"
+      }
+    ];
+
+    const store = mockStore({});
+    return store.dispatch(deleteRepo(slartiFjords)).then(() => {
+      expect(store.getActions()).toEqual(expectedActions);
+    });
+  });
+
+  it("should successfully delete repo slarti/fjords and call the callback", () => {
+    fetchMock.delete(
+      "http://localhost:8081/scm/api/rest/v2/repositories/slarti/fjords",
+      {
+        status: 204
+      }
+    );
+
+    let callMe = "not yet";
+
+    const callback = () => {
+      callMe = "yeah";
+    };
+
+    const store = mockStore({});
+    return store.dispatch(deleteRepo(slartiFjords, callback)).then(() => {
+      expect(callMe).toBe("yeah");
+    });
+  });
+
+  it("should disapatch failure on delete, if server returns status code 500", () => {
+    fetchMock.delete(
+      "http://localhost:8081/scm/api/rest/v2/repositories/slarti/fjords",
+      {
+        status: 500
+      }
+    );
+
+    const store = mockStore({});
+    return store.dispatch(deleteRepo(slartiFjords)).then(() => {
+      const actions = store.getActions();
+      expect(actions[0].type).toEqual(DELETE_REPO_PENDING);
+      expect(actions[1].type).toEqual(DELETE_REPO_FAILURE);
+      expect(actions[1].payload.repository).toBe(slartiFjords);
+      expect(actions[1].payload.error).toBeDefined();
     });
   });
 });
@@ -560,6 +633,34 @@ describe("repos selectors", () => {
 
   it("should return undefined when create repo did not fail", () => {
     expect(getCreateRepoFailure({})).toBe(undefined);
+  });
+
+  // delete
+
+  it("should return true, when delete repo is pending", () => {
+    const state = {
+      pending: {
+        [DELETE_REPO + "/slarti/fjords"]: true
+      }
+    };
+    expect(isDeleteRepoPending(state, "slarti", "fjords")).toEqual(true);
+  });
+
+  it("should return false, when delete repo is not pending", () => {
+    expect(isDeleteRepoPending({}, "slarti", "fjords")).toEqual(false);
+  });
+
+  it("should return error when delete repo did fail", () => {
+    const state = {
+      failure: {
+        [DELETE_REPO + "/slarti/fjords"]: error
+      }
+    };
+    expect(getDeleteRepoFailure(state, "slarti", "fjords")).toEqual(error);
+  });
+
+  it("should return undefined when delete repo did not fail", () => {
+    expect(getDeleteRepoFailure({}, "slarti", "fjords")).toBe(undefined);
   });
 
   it("should return true if the list contains the create link", () => {

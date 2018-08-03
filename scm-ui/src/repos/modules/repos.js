@@ -16,11 +16,16 @@ export const FETCH_REPO_PENDING = `${FETCH_REPO}_${types.PENDING_SUFFIX}`;
 export const FETCH_REPO_SUCCESS = `${FETCH_REPO}_${types.SUCCESS_SUFFIX}`;
 export const FETCH_REPO_FAILURE = `${FETCH_REPO}_${types.FAILURE_SUFFIX}`;
 
-export const CREATE_REPO = "scm/repos/FETCH_REPO";
+export const CREATE_REPO = "scm/repos/CREATE_REPO";
 export const CREATE_REPO_PENDING = `${CREATE_REPO}_${types.PENDING_SUFFIX}`;
 export const CREATE_REPO_SUCCESS = `${CREATE_REPO}_${types.SUCCESS_SUFFIX}`;
 export const CREATE_REPO_FAILURE = `${CREATE_REPO}_${types.FAILURE_SUFFIX}`;
 export const CREATE_REPO_RESET = `${CREATE_REPO}_${types.RESET_SUFFIX}`;
+
+export const DELETE_REPO = "scm/repos/DELETE_REPO";
+export const DELETE_REPO_PENDING = `${DELETE_REPO}_${types.PENDING_SUFFIX}`;
+export const DELETE_REPO_SUCCESS = `${DELETE_REPO}_${types.SUCCESS_SUFFIX}`;
+export const DELETE_REPO_FAILURE = `${DELETE_REPO}_${types.FAILURE_SUFFIX}`;
 
 const REPOS_URL = "repositories";
 
@@ -183,6 +188,55 @@ export function createRepoReset(): Action {
   };
 }
 
+// delete
+
+export function deleteRepo(repository: Repository, callback?: () => void) {
+  return function(dispatch: any) {
+    dispatch(deleteRepoPending(repository));
+    return apiClient
+      .delete(repository._links.delete.href)
+      .then(() => {
+        dispatch(deleteRepoSuccess(repository));
+        if (callback) {
+          callback();
+        }
+      })
+      .catch(err => {
+        dispatch(deleteRepoFailure(repository, err));
+      });
+  };
+}
+
+export function deleteRepoPending(repository: Repository): Action {
+  return {
+    type: DELETE_REPO_PENDING,
+    payload: repository,
+    itemId: createIdentifier(repository)
+  };
+}
+
+export function deleteRepoSuccess(repository: Repository): Action {
+  return {
+    type: DELETE_REPO_SUCCESS,
+    payload: repository,
+    itemId: createIdentifier(repository)
+  };
+}
+
+export function deleteRepoFailure(
+  repository: Repository,
+  error: Error
+): Action {
+  return {
+    type: DELETE_REPO_FAILURE,
+    payload: {
+      error,
+      repository
+    },
+    itemId: createIdentifier(repository)
+  };
+}
+
 // reducer
 
 function createIdentifier(repository: Repository) {
@@ -289,15 +343,12 @@ export function getFetchRepoFailure(
 }
 
 export function isAbleToCreateRepos(state: Object) {
-  if (
+  return !!(
     state.repos &&
     state.repos.list &&
     state.repos.list._links &&
     state.repos.list._links.create
-  ) {
-    return true;
-  }
-  return false;
+  );
 }
 
 export function isCreateRepoPending(state: Object) {
@@ -306,4 +357,20 @@ export function isCreateRepoPending(state: Object) {
 
 export function getCreateRepoFailure(state: Object) {
   return getFailure(state, CREATE_REPO);
+}
+
+export function isDeleteRepoPending(
+  state: Object,
+  namespace: string,
+  name: string
+) {
+  return isPending(state, DELETE_REPO, namespace + "/" + name);
+}
+
+export function getDeleteRepoFailure(
+  state: Object,
+  namespace: string,
+  name: string
+) {
+  return getFailure(state, DELETE_REPO, namespace + "/" + name);
 }
