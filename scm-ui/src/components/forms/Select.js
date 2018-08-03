@@ -16,6 +16,14 @@ type Props = {
 class Select extends React.Component<Props> {
   field: ?HTMLSelectElement;
 
+  componentDidMount() {
+    // trigger change after render, if value is null to set it to the first value
+    // of the given options.
+    if (!this.props.value && this.field && this.field.value) {
+      this.props.onChange(this.field.value);
+    }
+  }
+
   handleInput = (event: SyntheticInputEvent<HTMLSelectElement>) => {
     this.props.onChange(event.target.value);
   };
