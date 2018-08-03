@@ -10,6 +10,7 @@ import {
   fetchReposByPage,
   getFetchReposFailure,
   getRepositoryCollection,
+  isAbleToCreateRepos,
   isFetchReposPending
 } from "../modules/repos";
 import { translate } from "react-i18next";
@@ -25,11 +26,13 @@ type Props = {
   collection: RepositoryCollection,
   loading: boolean,
   error: Error,
+  showCreateButton: boolean,
 
   // dispatched functions
   fetchRepos: () => void,
   fetchReposByPage: number => void,
   fetchReposByLink: string => void,
+
   // context props
   t: string => string,
   history: History
@@ -69,17 +72,27 @@ class Overview extends React.Component<Props> {
   }
 
   renderList() {
-    const { collection, fetchReposByLink, t } = this.props;
+    const { collection, fetchReposByLink } = this.props;
     if (collection) {
       return (
         <div>
           <RepositoryList repositories={collection._embedded.repositories} />
           <Paginator collection={collection} onPageChange={fetchReposByLink} />
-          <CreateButton
-            label={t("overview.create-button")}
-            link="/repos/create"
-          />
+          {this.renderCreateButton()}
         </div>
+      );
+    }
+    return null;
+  }
+
+  renderCreateButton() {
+    const { showCreateButton, t } = this.props;
+    if (showCreateButton) {
+      return (
+        <CreateButton
+          label={t("overview.create-button")}
+          link="/repos/create"
+        />
       );
     }
     return null;
@@ -101,11 +114,13 @@ const mapStateToProps = (state, ownProps) => {
   const collection = getRepositoryCollection(state);
   const loading = isFetchReposPending(state);
   const error = getFetchReposFailure(state);
+  const showCreateButton = isAbleToCreateRepos(state);
   return {
     page,
     collection,
     loading,
-    error
+    error,
+    showCreateButton
   };
 };
 

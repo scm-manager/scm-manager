@@ -2,9 +2,9 @@
 import { apiClient } from "../../apiclient";
 import * as types from "../../modules/types";
 import type { Action } from "../../types/Action";
-import type {Repository, RepositoryCollection} from "../types/Repositories";
-import {isPending} from "../../modules/pending";
-import {getFailure} from "../../modules/failure";
+import type { Repository, RepositoryCollection } from "../types/Repositories";
+import { isPending } from "../../modules/pending";
+import { getFailure } from "../../modules/failure";
 
 export const FETCH_REPOS = "scm/repos/FETCH_REPOS";
 export const FETCH_REPOS_PENDING = `${FETCH_REPOS}_${types.PENDING_SUFFIX}`;
@@ -16,7 +16,15 @@ export const FETCH_REPO_PENDING = `${FETCH_REPO}_${types.PENDING_SUFFIX}`;
 export const FETCH_REPO_SUCCESS = `${FETCH_REPO}_${types.SUCCESS_SUFFIX}`;
 export const FETCH_REPO_FAILURE = `${FETCH_REPO}_${types.FAILURE_SUFFIX}`;
 
+export const CREATE_REPO = "scm/repos/FETCH_REPO";
+export const CREATE_REPO_PENDING = `${CREATE_REPO}_${types.PENDING_SUFFIX}`;
+export const CREATE_REPO_SUCCESS = `${CREATE_REPO}_${types.SUCCESS_SUFFIX}`;
+export const CREATE_REPO_FAILURE = `${CREATE_REPO}_${types.FAILURE_SUFFIX}`;
+export const CREATE_REPO_RESET = `${CREATE_REPO}_${types.RESET_SUFFIX}`;
+
 const REPOS_URL = "repositories";
+
+const CONTENT_TYPE = "application/vnd.scmm-repository+json;v=2";
 
 // fetch repos
 
@@ -84,15 +92,16 @@ export function fetchReposFailure(err: Error): Action {
 export function fetchRepo(namespace: string, name: string) {
   return function(dispatch: any) {
     dispatch(fetchRepoPending(namespace, name));
-    return apiClient.get(`${REPOS_URL}/${namespace}/${name}`)
+    return apiClient
+      .get(`${REPOS_URL}/${namespace}/${name}`)
       .then(response => response.json())
-      .then( repository => {
-        dispatch(fetchRepoSuccess(repository))
-      } )
+      .then(repository => {
+        dispatch(fetchRepoSuccess(repository));
+      })
       .catch(err => {
-        dispatch(fetchRepoFailure(namespace, name, err))
+        dispatch(fetchRepoFailure(namespace, name, err));
       });
-  }
+  };
 }
 
 export function fetchRepoPending(namespace: string, name: string): Action {
@@ -114,7 +123,11 @@ export function fetchRepoSuccess(repository: Repository): Action {
   };
 }
 
-export function fetchRepoFailure(namespace: string, name: string, error: Error): Action {
+export function fetchRepoFailure(
+  namespace: string,
+  name: string,
+  error: Error
+): Action {
   return {
     type: FETCH_REPO_FAILURE,
     payload: {
@@ -123,6 +136,50 @@ export function fetchRepoFailure(namespace: string, name: string, error: Error):
       error
     },
     itemId: namespace + "/" + name
+  };
+}
+
+// create repo
+
+export function createRepo(repository: Repository, callback?: () => void) {
+  return function(dispatch: any) {
+    dispatch(createRepoPending());
+    return apiClient
+      .post(REPOS_URL, repository, CONTENT_TYPE)
+      .then(() => {
+        dispatch(createRepoSuccess());
+        if (callback) {
+          callback();
+        }
+      })
+      .catch(err => {
+        dispatch(createRepoFailure(err));
+      });
+  };
+}
+
+export function createRepoPending(): Action {
+  return {
+    type: CREATE_REPO_PENDING
+  };
+}
+
+export function createRepoSuccess(): Action {
+  return {
+    type: CREATE_REPO_SUCCESS
+  };
+}
+
+export function createRepoFailure(err: Error): Action {
+  return {
+    type: CREATE_REPO_FAILURE,
+    payload: err
+  };
+}
+
+export function createRepoReset(): Action {
+  return {
+    type: CREATE_REPO_RESET
   };
 }
 
@@ -180,7 +237,7 @@ export default function reducer(
     case FETCH_REPO_SUCCESS:
       return reducerByNames(state, action.payload);
     default:
-    return state;
+      return state;
   }
 }
 
@@ -211,14 +268,42 @@ export function getFetchReposFailure(state: Object) {
 
 export function getRepository(state: Object, namespace: string, name: string) {
   if (state.repos && state.repos.byNames) {
-    return state.repos.byNames[ namespace + "/" + name];
+    return state.repos.byNames[namespace + "/" + name];
   }
 }
 
-export function isFetchRepoPending(state: Object, namespace: string, name: string) {
+export function isFetchRepoPending(
+  state: Object,
+  namespace: string,
+  name: string
+) {
   return isPending(state, FETCH_REPO, namespace + "/" + name);
 }
 
-export function getFetchRepoFailure(state: Object, namespace: string, name: string) {
+export function getFetchRepoFailure(
+  state: Object,
+  namespace: string,
+  name: string
+) {
   return getFailure(state, FETCH_REPO, namespace + "/" + name);
+}
+
+export function isAbleToCreateRepos(state: Object) {
+  if (
+    state.repos &&
+    state.repos.list &&
+    state.repos.list._links &&
+    state.repos.list._links.create
+  ) {
+    return true;
+  }
+  return false;
+}
+
+export function isCreateRepoPending(state: Object) {
+  return isPending(state, CREATE_REPO);
+}
+
+export function getCreateRepoFailure(state: Object) {
+  return getFailure(state, CREATE_REPO);
 }

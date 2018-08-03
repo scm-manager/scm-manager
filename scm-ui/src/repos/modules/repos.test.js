@@ -22,7 +22,15 @@ import reducer, {
   fetchRepoSuccess,
   getRepository,
   isFetchRepoPending,
-  getFetchRepoFailure
+  getFetchRepoFailure,
+  CREATE_REPO_PENDING,
+  CREATE_REPO_SUCCESS,
+  createRepo,
+  CREATE_REPO_FAILURE,
+  isCreateRepoPending,
+  CREATE_REPO,
+  getCreateRepoFailure,
+  isAbleToCreateRepos
 } from "./repos";
 import type { Repository, RepositoryCollection } from "../types/Repositories";
 
@@ -354,6 +362,56 @@ describe("repos fetch", () => {
       expect(actions[1].itemId).toBe("slarti/fjords");
     });
   });
+
+  it("should successfully create repo slarti/fjords", () => {
+    fetchMock.postOnce(REPOS_URL, slartiFjords);
+
+    const expectedActions = [
+      {
+        type: CREATE_REPO_PENDING
+      },
+      {
+        type: CREATE_REPO_SUCCESS
+      }
+    ];
+
+    const store = mockStore({});
+    return store.dispatch(createRepo(slartiFjords)).then(() => {
+      expect(store.getActions()).toEqual(expectedActions);
+    });
+  });
+
+  it("should successfully create repo slarti/fjords and call the callback", () => {
+    // unmatched
+    fetchMock.postOnce(REPOS_URL, {
+      status: 201
+    });
+
+    let callMe = "not yet";
+
+    const callback = () => {
+      callMe = "yeah";
+    };
+
+    const store = mockStore({});
+    return store.dispatch(createRepo(slartiFjords, callback)).then(() => {
+      expect(callMe).toBe("yeah");
+    });
+  });
+
+  it("should disapatch failure if server returns status code 500", () => {
+    fetchMock.postOnce(REPOS_URL, {
+      status: 500
+    });
+
+    const store = mockStore({});
+    return store.dispatch(createRepo(slartiFjords)).then(() => {
+      const actions = store.getActions();
+      expect(actions[0].type).toEqual(CREATE_REPO_PENDING);
+      expect(actions[1].type).toEqual(CREATE_REPO_FAILURE);
+      expect(actions[1].payload).toBeDefined();
+    });
+  });
 });
 
 describe("repos reducer", () => {
@@ -470,5 +528,59 @@ describe("repos selectors", () => {
       }
     };
     expect(getFetchRepoFailure(state, "slarti", "fjords")).toEqual(error);
+  });
+
+  it("should return undefined when fetch repo did not fail", () => {
+    expect(getFetchRepoFailure({}, "slarti", "fjords")).toBe(undefined);
+  });
+
+  // create
+
+  it("should return true, when create repo is pending", () => {
+    const state = {
+      pending: {
+        [CREATE_REPO]: true
+      }
+    };
+    expect(isCreateRepoPending(state)).toEqual(true);
+  });
+
+  it("should return false, when create repo is not pending", () => {
+    expect(isCreateRepoPending({})).toEqual(false);
+  });
+
+  it("should return error when create repo did fail", () => {
+    const state = {
+      failure: {
+        [CREATE_REPO]: error
+      }
+    };
+    expect(getCreateRepoFailure(state)).toEqual(error);
+  });
+
+  it("should return undefined when create repo did not fail", () => {
+    expect(getCreateRepoFailure({})).toBe(undefined);
+  });
+
+  it("should return true if the list contains the create link", () => {
+    const state = {
+      repos: {
+        list: repositoryCollection
+      }
+    };
+
+    expect(isAbleToCreateRepos(state)).toBe(true);
+  });
+
+  it("should return false, if create link is unavailable", () => {
+    const state = {
+      repos: {
+        list: {
+          _links: {}
+        }
+      }
+    };
+
+    expect(isAbleToCreateRepos(state)).toBe(false);
   });
 });
