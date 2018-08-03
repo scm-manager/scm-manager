@@ -3,7 +3,9 @@
     "name": "Name",
     "type": "Type",
     "contact": "Contact",
-    "description": "Description"
+    "description": "Description",
+    "creationDate": "Creation Date",
+    "lastModified": "Last Modified"
   },
   "validation": {
     "name-invalid": "The repository name is invalid",
@@ -16,7 +18,9 @@
   },
   "repository-root": {
     "error-title": "Error",
-    "error-subtitle": "Unknown repository error"
+    "error-subtitle": "Unknown repository error",
+    "actions-label": "Actions",
+    "back-label": "Back"
   },
   "create": {
     "title": "Create Repository",

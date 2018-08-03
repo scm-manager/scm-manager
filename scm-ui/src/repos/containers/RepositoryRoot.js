@@ -1,15 +1,20 @@
 //@flow
 import React from "react";
-import {fetchRepo, getFetchRepoFailure, getRepository, isFetchRepoPending} from '../modules/repos';
+import {
+  fetchRepo,
+  getFetchRepoFailure,
+  getRepository,
+  isFetchRepoPending
+} from "../modules/repos";
 import { connect } from "react-redux";
-import {Route} from "react-router-dom"
-import type {Repository} from '../types/Repositories';
-import {Page} from '../../components/layout';
-import Loading from '../../components/Loading';
-import ErrorPage from '../../components/ErrorPage';
+import { Route } from "react-router-dom";
+import type { Repository } from "../types/Repositories";
+import { Page } from "../../components/layout";
+import Loading from "../../components/Loading";
+import ErrorPage from "../../components/ErrorPage";
 import { translate } from "react-i18next";
-import {Navigation} from '../../components/navigation';
-import RepositoryDetails from '../components/RepositoryDetails';
+import { Navigation, NavLink, Section } from "../../components/navigation";
+import RepositoryDetails from "../components/RepositoryDetails";
 
 type Props = {
   namespace: string,
@@ -44,7 +49,6 @@ class RepositoryRoot extends React.Component<Props> {
     return this.stripEndingSlash(this.props.match.url);
   };
 
-
   render() {
     const { loading, error, repository, t } = this.props;
 
@@ -59,26 +63,33 @@ class RepositoryRoot extends React.Component<Props> {
     }
 
     if (!repository || loading) {
-      return <Loading />
+      return <Loading />;
     }
 
     const url = this.matchedUrl();
 
-    return <Page title={repository.namespace + "/" + repository.name}>
-      <div className="columns">
-        <div className="column is-three-quarters">
-          <Route path={url} exact component={() => <RepositoryDetails repository={repository} />} />
+    return (
+      <Page title={repository.namespace + "/" + repository.name}>
+        <div className="columns">
+          <div className="column is-three-quarters">
+            <Route
+              path={url}
+              exact
+              component={() => <RepositoryDetails repository={repository} />}
+            />
+          </div>
+          <div className="column">
+            <Navigation>
+              <Section label={t("repository-root.actions-label")}>
+                <NavLink to="/repos" label={t("repository-root.back-label")} />
+              </Section>
+            </Navigation>
+          </div>
         </div>
-        <div className="column">
-          <Navigation>
-
-          </Navigation>
-        </div>
-      </div>
-    </Page>
+      </Page>
+    );
   }
 }
-
 
 const mapStateToProps = (state, ownProps) => {
   const { namespace, name } = ownProps.match.params;
@@ -96,8 +107,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchRepo : (namespace: string, name: string) => {
-      dispatch(fetchRepo(namespace, name))
+    fetchRepo: (namespace: string, name: string) => {
+      dispatch(fetchRepo(namespace, name));
     }
   };
 };

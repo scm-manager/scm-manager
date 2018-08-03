@@ -5,7 +5,10 @@
     "mail": "E-Mail",
     "password": "Password",
     "admin": "Admin",
-    "active": "Active"
+    "active": "Active",
+    "type": "Type",
+    "creationDate": "Creation Date",
+    "lastModified": "Last Modified"
   },
   "users": {
     "title": "Users",

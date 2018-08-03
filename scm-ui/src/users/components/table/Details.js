@@ -3,6 +3,8 @@ import React from "react";
 import type { User } from "../../types/User";
 import { translate } from "react-i18next";
 import { Checkbox } from "../../../components/forms";
+import MailLink from "../../../components/MailLink";
+import DateFromNow from "../../../components/DateFromNow";
 
 type Props = {
   user: User,
@@ -25,7 +27,9 @@ class Details extends React.Component<Props> {
           </tr>
           <tr>
             <td>{t("user.mail")}</td>
-            <td>{user.mail}</td>
+            <td>
+              <MailLink address={user.mail} />
+            </td>
           </tr>
           <tr>
             <td>{t("user.admin")}</td>
@@ -37,6 +41,22 @@ class Details extends React.Component<Props> {
             <td>{t("user.active")}</td>
             <td>
               <Checkbox checked={user.active} />
+            </td>
+          </tr>
+          <tr>
+            <td>{t("user.type")}</td>
+            <td>{user.type}</td>
+          </tr>
+          <tr>
+            <td>{t("user.creationDate")}</td>
+            <td>
+              <DateFromNow date={user.creationDate} />
+            </td>
+          </tr>
+          <tr>
+            <td>{t("user.lastModified")}</td>
+            <td>
+              <DateFromNow date={user.lastModified} />
             </td>
           </tr>
         </tbody>
