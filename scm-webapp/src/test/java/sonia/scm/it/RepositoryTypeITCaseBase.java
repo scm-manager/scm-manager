@@ -36,39 +36,13 @@ package sonia.scm.it;
 
 import org.junit.runners.Parameterized.Parameters;
 
-import sonia.scm.util.IOUtil;
+import java.util.Collection;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.util.ArrayList;
-import java.util.Collection;
-
-/**
- *
- * @author Sebastian Sdorra
- */
-public class RepositoryTypeITCaseBase
-{
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Parameters
-  public static Collection<String[]> createParameters()
-  {
-    Collection<String[]> params = new ArrayList<String[]>();
-
-    params.add(new String[] { "git" });
-    params.add(new String[] { "svn" });
-
-    if (IOUtil.search("hg") != null)
-    {
-      params.add(new String[] { "hg" });
-    }
-
-    return params;
+public class RepositoryTypeITCaseBase {
+  @Parameters(name = "{0}")
+  public static Collection<String[]> createParameters() {
+    return IntegrationTestUtil.createRepositoryTypeParameters();
   }
 }

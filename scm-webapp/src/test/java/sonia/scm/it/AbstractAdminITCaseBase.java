@@ -35,14 +35,9 @@ package sonia.scm.it;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.junit.After;
-import org.junit.Before;
-
-import static sonia.scm.it.IntegrationTestUtil.*;
+import static sonia.scm.it.IntegrationTestUtil.createAdminClient;
 
 //~--- JDK imports ------------------------------------------------------------
-
-import com.sun.jersey.api.client.Client;
 
 /**
  *
@@ -50,30 +45,12 @@ import com.sun.jersey.api.client.Client;
  */
 public class AbstractAdminITCaseBase
 {
-
-  /**
-   * Method description
-   *
-   */
-  @Before
-  public void login()
-  {
-    client = createClient();
-    authenticateAdmin(client);
-  }
-
-  /**
-   * Method description
-   *
-   */
-  @After
-  public void logout()
-  {
-    logoutClient(client);
+  public AbstractAdminITCaseBase() {
+    client = createAdminClient();
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  protected Client client;
+  protected final ScmClient client;
 }

@@ -35,32 +35,32 @@ package sonia.scm.it;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.io.Resources;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.client.apache.ApacheHttpClient;
 import com.sun.jersey.client.apache.config.ApacheHttpClientConfig;
 import com.sun.jersey.client.apache.config.DefaultApacheHttpClientConfig;
-import com.sun.jersey.core.util.MultivaluedMapImpl;
-import sonia.scm.ScmState;
-import sonia.scm.Type;
+import de.otto.edison.hal.HalRepresentation;
 import sonia.scm.api.rest.JSONContextResolver;
 import sonia.scm.api.rest.ObjectMapperProvider;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.client.api.ClientCommand;
 import sonia.scm.repository.client.api.RepositoryClient;
-import sonia.scm.user.User;
 import sonia.scm.util.IOUtil;
 
-import javax.ws.rs.core.MultivaluedMap;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
-
-import static org.junit.Assert.*;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -83,7 +83,7 @@ public final class IntegrationTestUtil
   public static final String BASE_URL = "http://localhost:8081/scm/";
   
   /** scm-manager base url for the rest api */
-  public static final String REST_BASE_URL = BASE_URL.concat("api/rest/");
+  public static final String REST_BASE_URL = BASE_URL.concat("api/rest/v2/");
 
   //~--- constructors ---------------------------------------------------------
 
@@ -95,72 +95,10 @@ public final class IntegrationTestUtil
 
   //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param client
-   * @param username
-   * @param password
-   *
-   * @return
-   */
-  public static ClientResponse authenticate(Client client, String username, String password) {
-    WebResource wr =  client.resource(createResourceUrl("auth/access_token"));
-    MultivaluedMap<String, String> formData = new MultivaluedMapImpl();
 
-    formData.add("username", username);
-    formData.add("password", password);
-    formData.add("cookie", "true");
-    formData.add("grant_type", "password");
-
-    return wr.type("application/x-www-form-urlencoded").post(ClientResponse.class, formData);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param client
-   *
-   * @return
-   */
-  public static ScmState authenticateAdmin(Client client)
+  public static ScmClient createAdminClient()
   {
-    ClientResponse cr = authenticate(client, ADMIN_USERNAME, ADMIN_PASSWORD);
-    ScmState state = cr.getEntity(ScmState.class);
-
-    cr.close();
-    assertNotNull(state);
-    assertTrue(state.isSuccess());
-
-    User user = state.getUser();
-
-    assertNotNull(user);
-    assertEquals("scmadmin", user.getName());
-    assertTrue(user.isAdmin());
-
-    Collection<Type> types = state.getRepositoryTypes();
-
-    assertNotNull(types);
-    assertFalse(types.isEmpty());
-
-    return state;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public static Client createAdminClient()
-  {
-    Client client = createClient();
-
-    authenticateAdmin(client);
-
-    return client;
+    return new ScmClient("scmadmin", "scmadmin");
   }
 
   /**
@@ -176,6 +114,15 @@ public final class IntegrationTestUtil
     config.getProperties().put(ApacheHttpClientConfig.PROPERTY_HANDLE_COOKIES, true);
 
     return ApacheHttpClient.create(config);
+  }
+
+  public static String serialize(Object o) {
+    ObjectMapper mapper = new ObjectMapperProvider().get();
+    try {
+      return mapper.writeValueAsString(o);
+    } catch (JsonProcessingException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   /**
@@ -236,18 +183,21 @@ public final class IntegrationTestUtil
     return params;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param client
-   * @param url
-   *
-   * @return
-   */
-  public static WebResource createResource(Client client, String url)
-  {
-    return client.resource(createResourceUrl(url));
+  public static URI getLink(HalRepresentation object, String linkName) {
+    return URI.create(object.getLinks().getLinkBy("delete").get().getHref());
+  }
+
+  public static WebResource.Builder createResource(ScmClient client, String url) {
+    return createResource(client, createResourceUrl(url));
+  }
+  public static WebResource.Builder createResource(ScmClient client, URI url) {
+    return client.resource(url.toString());
+  }
+
+  public static ClientResponse post(ScmClient client, String path, String mediaType, Object o) {
+    return createResource(client, path)
+      .type(mediaType)
+      .post(ClientResponse.class, serialize(o));
   }
 
   /**
@@ -258,9 +208,9 @@ public final class IntegrationTestUtil
    *
    * @return
    */
-  public static String createResourceUrl(String url)
+  public static URI createResourceUrl(String url)
   {
-    return REST_BASE_URL.concat(url);
+    return URI.create(REST_BASE_URL).resolve(url);
   }
   
   /**
@@ -269,30 +219,20 @@ public final class IntegrationTestUtil
    *
    * @return
    */
-  public static File createTempDirectory()
-  {
-    File directory = new File(System.getProperty("java.io.tmpdir"),
-                       UUID.randomUUID().toString());
+  public static File createTempDirectory() {
+    File directory = new File(System.getProperty("java.io.tmpdir"), UUID.randomUUID().toString());
 
     IOUtil.mkdirs(directory);
 
     return directory;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param client
-   */
-  public static void logoutClient(Client client)
-  {
-    WebResource wr = createResource(client, "auth/logout");
-    ClientResponse response = wr.get(ClientResponse.class);
-
-    assertNotNull(response);
-    assertEquals(200, response.getStatus());
-    response.close();
-    client.destroy();
+  public static String readJson(String jsonFileName) {
+    URL url = Resources.getResource(jsonFileName);
+    try {
+      return Resources.toString(url, Charset.forName("UTF-8"));
+    } catch (IOException e) {
+      throw new RuntimeException("could not read json file " + jsonFileName, e);
+    }
   }
 }

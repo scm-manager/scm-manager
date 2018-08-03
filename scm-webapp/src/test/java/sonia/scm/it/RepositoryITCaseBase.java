@@ -37,37 +37,30 @@ package sonia.scm.it;
 
 import org.junit.AfterClass;
 import org.junit.runners.Parameterized.Parameters;
-
-import sonia.scm.ScmState;
-import sonia.scm.Type;
-import sonia.scm.repository.Permission;
-import sonia.scm.repository.PermissionType;
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryTestData;
+import sonia.scm.api.v2.resources.RepositoryDto;
+import sonia.scm.repository.client.api.RepositoryClient;
+import sonia.scm.repository.client.api.RepositoryClientFactory;
 import sonia.scm.user.User;
 import sonia.scm.user.UserTestData;
 import sonia.scm.util.IOUtil;
-import sonia.scm.util.Util;
-
-import static org.junit.Assert.*;
-
-import static sonia.scm.it.IntegrationTestUtil.*;
-import static sonia.scm.it.RepositoryITUtil.*;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.GenericType;
 
 import java.io.File;
 import java.io.IOException;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 
-import sonia.scm.repository.client.api.RepositoryClient;
-import sonia.scm.repository.client.api.RepositoryClientFactory;
+import static sonia.scm.it.IntegrationTestUtil.ADMIN_PASSWORD;
+import static sonia.scm.it.IntegrationTestUtil.ADMIN_USERNAME;
+import static sonia.scm.it.IntegrationTestUtil.commit;
+import static sonia.scm.it.IntegrationTestUtil.createAdminClient;
+import static sonia.scm.it.IntegrationTestUtil.createRandomFile;
+import static sonia.scm.it.IntegrationTestUtil.createResource;
+import static sonia.scm.it.IntegrationTestUtil.createTempDirectory;
+import static sonia.scm.it.IntegrationTestUtil.readJson;
+import static sonia.scm.it.RepositoryITUtil.createUrl;
+import static sonia.scm.it.UserITUtil.postUser;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -75,6 +68,15 @@ import sonia.scm.repository.client.api.RepositoryClientFactory;
  */
 public class RepositoryITCaseBase
 {
+
+  private static final Collection<RepositoryDto> CREATED_REPOSITORIES = new ArrayList<>();
+
+  protected User nopermUser;
+  protected User ownerUser;
+  protected String password;
+  protected User readUser;
+  protected RepositoryDto repository;
+  protected User writeUser;
 
   /**
    * Constructs ...
@@ -87,8 +89,8 @@ public class RepositoryITCaseBase
    * @param noperm
    * @param password
    */
-  public RepositoryITCaseBase(Repository repository, User owner, User write,
-                              User read, User noperm, String password)
+  public RepositoryITCaseBase(RepositoryDto repository, User owner, User write,
+    User read, User noperm, String password)
   {
     this.repository = repository;
     this.ownerUser = owner;
@@ -127,24 +129,27 @@ public class RepositoryITCaseBase
    *
    * @throws IOException
    */
-  public static void addTestFiles(Repository repository, String username,
-                                  String password)
-          throws IOException
+  public static void addTestFiles(RepositoryDto repository, String username,
+    String password)
   {
     File directory = createTempDirectory();
 
-    try
-    {
+    try {
       RepositoryClientFactory clientFactory = new RepositoryClientFactory();
       RepositoryClient client = clientFactory.create(
-        repository.getType(), repository.createUrl(BASE_URL), username, password, directory
+        repository.getType(), createUrl(repository),
+        username, password, directory
       );
-      
+
       addTestFiles(client);
-    }
-    finally
-    {
-      IOUtil.delete(directory);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    } finally {
+      try {
+        IOUtil.delete(directory);
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
     }
   }
 
@@ -155,27 +160,17 @@ public class RepositoryITCaseBase
   @AfterClass
   public static void cleanup()
   {
-    Client client = createAdminClient();
+    ScmClient client = createAdminClient();
 
     deleteUser(client, UserTestData.createTrillian());
     deleteUser(client, UserTestData.createZaphod());
     deleteUser(client, UserTestData.createMarvin());
     deleteUser(client, UserTestData.createPerfect());
 
-    Collection<Repository> repositories =
-      createResource(client, "repositories").get(
-          new GenericType<Collection<Repository>>() {}
-    );
-
-    if (repositories != null)
+    for (RepositoryDto r : CREATED_REPOSITORIES)
     {
-      for (Repository r : repositories)
-      {
-        createResource(client, "repositories/" + r.getId()).delete();
-      }
+      createResource(client, "repositories/" + r.getNamespace() + "/"  + r.getName()).delete();
     }
-
-    client.destroy();
   }
 
   /**
@@ -186,15 +181,9 @@ public class RepositoryITCaseBase
    *
    * @throws IOException
    */
-  @Parameters
+  @Parameters(name = "{6}")
   public static Collection<Object[]> createParameters() throws IOException
   {
-    Client client = createClient();
-    ScmState state = authenticateAdmin(client);
-
-    assertNotNull(state);
-    assertTrue(state.isSuccess());
-
     Collection<Object[]> params = new ArrayList<>();
     User owner = UserTestData.createTrillian();
 
@@ -211,11 +200,8 @@ public class RepositoryITCaseBase
     User noperm = UserTestData.createPerfect();
 
     createUser(noperm);
-
-    for (Type t : state.getRepositoryTypes())
-    {
-      appendTestParemeter(params, t.getName(), owner, write, read, noperm);
-    }
+    IntegrationTestUtil.createRepositoryTypeParameters().stream().map(array -> array[0])
+      .forEach(t -> appendTestParameter(params, t, owner, write, read, noperm));
 
     return params;
   }
@@ -232,22 +218,15 @@ public class RepositoryITCaseBase
    * @param noperm
    *
    * @throws IOException
-   * @throws RepositoryClientException
    */
-  private static void appendTestParemeter(Collection<Object[]> params,
-          String type, User owner, User write, User read, User noperm) throws IOException
+  private static void appendTestParameter(Collection<Object[]> params,
+    String type, User owner, User write, User read, User noperm)
   {
-    Repository repository = createTestRepository(null, type, owner, write, read);
+    RepositoryDto repository = createTestRepository(type, owner, write, read);
     params.add(new Object[]
-    {
-      repository, owner, write, read, noperm, "secret"
-    });
-    
-    repository = createTestRepository("test", type, owner, write, read);
-    params.add(new Object[]
-    {
-      repository, owner, write, read, noperm, "secret"
-    });
+      {
+        repository, owner, write, read, noperm, "secret", repository.getType() + "-" + owner.getId()
+      });
   }
 
   /**
@@ -255,7 +234,6 @@ public class RepositoryITCaseBase
    *
    *
    *
-   * @param prefix
    * @param type
    * @param owner
    * @param write
@@ -264,29 +242,23 @@ public class RepositoryITCaseBase
    * @return
    *
    * @throws IOException
-   * @throws RepositoryClientException
    */
-  private static Repository createTestRepository(String prefix, String type,
-          User owner, User write, User read) throws IOException
+  private static RepositoryDto createTestRepository(String type,
+    User owner, User write, User read)
   {
-    Client client = createAdminClient();
-    Repository repository = RepositoryTestData.createHeartOfGold(type);
+    ScmClient client = createAdminClient();
 
-    if (Util.isNotEmpty(prefix))
-    {
-      repository.setName(prefix.concat("/").concat(repository.getName()));
-    }
+    // TODO Activate for tests when implemented
+//    repository.setPermissions(Arrays.asList(
+//      new Permission(owner.getName(), PermissionType.OWNER),
+//      new Permission(write.getName(), PermissionType.WRITE),
+//      new Permission(read.getName(), PermissionType.READ))
+//    );
+    String repositoryJson = readJson("repository-" + type + ".json");
+    RepositoryDto repository = RepositoryITUtil.createRepository(client, repositoryJson);
 
-    //J-
-    repository.setPermissions(Arrays.asList(
-          new Permission(owner.getName(), PermissionType.OWNER), 
-          new Permission(write.getName(), PermissionType.WRITE),
-          new Permission(read.getName(), PermissionType.READ))
-    );
-    //J+
-    repository = createRepository(client, repository);
-    client.destroy();
-    
+    CREATED_REPOSITORIES.add(repository);
+
     addTestFiles(repository, ADMIN_USERNAME, ADMIN_PASSWORD);
 
     return repository;
@@ -300,11 +272,11 @@ public class RepositoryITCaseBase
    */
   private static void createUser(User user)
   {
-    Client client = createAdminClient();
+    ScmClient client = createAdminClient();
 
     user.setPassword("secret");
-    createResource(client, "users").post(user);
-    client.destroy();
+
+    postUser(client, user);
   }
 
   /**
@@ -314,7 +286,7 @@ public class RepositoryITCaseBase
    * @param client
    * @param user
    */
-  private static void deleteUser(Client client, User user)
+  private static void deleteUser(ScmClient client, User user)
   {
     createResource(client, "users/".concat(user.getName())).delete();
   }
@@ -327,33 +299,13 @@ public class RepositoryITCaseBase
    * @param directory
    *
    * @return
-   * 
+   *
    * @throws IOException
    */
   protected RepositoryClient createRepositoryClient(User user, File directory) throws IOException
   {
     RepositoryClientFactory clientFactory = new RepositoryClientFactory();
-    return clientFactory.create(repository.getType(), repository.createUrl(BASE_URL),
-            user.getName(), password, directory);
+    return clientFactory.create(repository.getType(), createUrl(repository),
+      user.getName(), password, directory);
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  protected User nopermUser;
-
-  /** Field description */
-  protected User ownerUser;
-
-  /** Field description */
-  protected String password;
-
-  /** Field description */
-  protected User readUser;
-
-  /** Field description */
-  protected Repository repository;
-
-  /** Field description */
-  protected User writeUser;
 }

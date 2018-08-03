@@ -34,23 +34,24 @@ package sonia.scm.it;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
+import org.junit.Ignore;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryTestData;
 
-import static org.junit.Assert.*;
-
-import static sonia.scm.it.IntegrationTestUtil.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static sonia.scm.it.IntegrationTestUtil.createAdminClient;
+import static sonia.scm.it.IntegrationTestUtil.createResource;
 
 //~--- JDK imports ------------------------------------------------------------
-
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
 
 /**
  *
  * @author Sebastian Sdorra
  */
+@Ignore()
 public class RepositoryHttpCacheITCase extends HttpCacheITCaseBase<Repository>
 {
 
@@ -64,8 +65,8 @@ public class RepositoryHttpCacheITCase extends HttpCacheITCaseBase<Repository>
   protected Repository createSampleItem()
   {
     Repository repository = RepositoryTestData.createHeartOfGold("git");
-    Client client = createAdminClient();
-    WebResource resource = createResource(client, "repositories");
+    ScmClient client = createAdminClient();
+    WebResource.Builder resource = createResource(client, "repositories");
     ClientResponse response = resource.post(ClientResponse.class, repository);
 
     assertNotNull(response);
@@ -74,8 +75,7 @@ public class RepositoryHttpCacheITCase extends HttpCacheITCaseBase<Repository>
     String location = response.getHeaders().get("Location").get(0);
 
     assertNotNull(location);
-    resource = client.resource(location);
-    response = resource.get(ClientResponse.class);
+    response = client.resource(location).get(ClientResponse.class);
     assertNotNull(response);
     assertEquals(200, response.getStatus());
     repository = response.getEntity(Repository.class);
@@ -94,8 +94,8 @@ public class RepositoryHttpCacheITCase extends HttpCacheITCaseBase<Repository>
   @Override
   protected void destroy(Repository item)
   {
-    Client client = createAdminClient();
-    WebResource resource = createResource(client,
+    ScmClient client = createAdminClient();
+    WebResource.Builder resource = createResource(client,
                              "repositories/".concat(item.getId()));
     ClientResponse response = resource.delete(ClientResponse.class);
 

@@ -37,31 +37,30 @@ package sonia.scm.it;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-
-import sonia.scm.repository.Repository;
+import sonia.scm.api.v2.resources.RepositoryDto;
+import sonia.scm.repository.client.api.RepositoryClient;
+import sonia.scm.repository.client.api.RepositoryClientException;
 import sonia.scm.user.User;
 import sonia.scm.util.IOUtil;
-
-import static org.junit.Assert.*;
-
-import static sonia.scm.it.IntegrationTestUtil.*;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
 import java.io.IOException;
 
-import sonia.scm.repository.client.api.RepositoryClient;
-import sonia.scm.repository.client.api.RepositoryClientException;
+import static org.junit.Assert.fail;
+import static sonia.scm.it.IntegrationTestUtil.createTempDirectory;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
  * @author Sebastian Sdorra
  */
 @RunWith(Parameterized.class)
+@Ignore("permissions not yet implemented -- see RepositoryITCaseBase#createTestRepository")
 public class RepositoryExtendedITCase extends RepositoryITCaseBase
 {
 
@@ -76,9 +75,9 @@ public class RepositoryExtendedITCase extends RepositoryITCaseBase
    * @param noperm
    * @param password
    */
-  public RepositoryExtendedITCase(Repository repository, User owner,
-                                  User write, User read, User noperm,
-                                  String password)
+  public RepositoryExtendedITCase(RepositoryDto repository, User owner,
+    User write, User read, User noperm,
+    String password, String ignore_testCaseName)
   {
     super(repository, owner, write, read, noperm, password);
   }

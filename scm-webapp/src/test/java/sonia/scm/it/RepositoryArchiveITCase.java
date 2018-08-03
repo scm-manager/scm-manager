@@ -35,26 +35,31 @@ package sonia.scm.it;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import sonia.scm.api.v2.resources.ConfigDto;
+import sonia.scm.api.v2.resources.RepositoryDto;
+import sonia.scm.web.VndMediaType;
 
-import sonia.scm.config.ScmConfiguration;
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryTestData;
+import javax.ws.rs.core.MediaType;
+import java.net.URI;
 
-import static org.junit.Assert.*;
-
-import static sonia.scm.it.IntegrationTestUtil.*;
-import static sonia.scm.it.RepositoryITUtil.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static sonia.scm.it.IntegrationTestUtil.createAdminClient;
+import static sonia.scm.it.IntegrationTestUtil.createResource;
+import static sonia.scm.it.IntegrationTestUtil.getLink;
+import static sonia.scm.it.IntegrationTestUtil.readJson;
+import static sonia.scm.it.IntegrationTestUtil.serialize;
+import static sonia.scm.it.RepositoryITUtil.createRepository;
+import static sonia.scm.it.RepositoryITUtil.deleteRepository;
 
 //~--- JDK imports ------------------------------------------------------------
-
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
 
 
 /**
@@ -83,11 +88,9 @@ public class RepositoryArchiveITCase extends RepositoryTypeITCaseBase
    *
    */
   @Before
-  public void createTestRepository()
-  {
-    repository = RepositoryTestData.createHeartOfGold(type);
+  public void createTestRepository() {
     client = createAdminClient();
-    repository = createRepository(client, repository);
+    repository = createRepository(client, readJson("repository-" + type + ".json"));
   }
 
   /**
@@ -101,10 +104,8 @@ public class RepositoryArchiveITCase extends RepositoryTypeITCaseBase
 
     if (repository != null)
     {
-      deleteRepository(client, repository.getId());
+      deleteRepository(client, repository);
     }
-
-    logoutClient(client);
   }
 
   /**
@@ -112,20 +113,19 @@ public class RepositoryArchiveITCase extends RepositoryTypeITCaseBase
    *
    */
   @Test
-  public void testDeleteAllowed()
-  {
+  public void testDeleteAllowed() {
     setArchiveMode(true);
-
-    WebResource resource = createResource(client,
-                             "repositories/".concat(repository.getId()));
 
     repository.setArchived(true);
 
-    ClientResponse response = resource.put(ClientResponse.class, repository);
+    ClientResponse response = createResource(client,
+      "repositories/" + repository.getNamespace() + "/" + repository.getName())
+      .type(VndMediaType.REPOSITORY).put(ClientResponse.class, serialize(repository));
 
     assertNotNull(response);
     assertEquals(204, response.getStatus());
-    response = resource.delete(ClientResponse.class);
+    response = createResource(client,
+      "repositories/" + repository.getNamespace() + "/" + repository.getName()).delete(ClientResponse.class);
     assertNotNull(response);
     assertEquals(204, response.getStatus());
     repository = null;
@@ -140,12 +140,12 @@ public class RepositoryArchiveITCase extends RepositoryTypeITCaseBase
   {
     setArchiveMode(true);
 
-    WebResource resource = createResource(client,
-                             "repositories/".concat(repository.getId()));
-    ClientResponse response = resource.delete(ClientResponse.class);
+    URI deleteUrl = getLink(repository, "delete");
+    ClientResponse response = createResource(client, deleteUrl).delete(ClientResponse.class);
 
     assertNotNull(response);
     assertEquals(412, response.getStatus());
+    response.close();
   }
 
   //~--- set methods ----------------------------------------------------------
@@ -158,25 +158,25 @@ public class RepositoryArchiveITCase extends RepositoryTypeITCaseBase
    */
   private void setArchiveMode(boolean archive)
   {
-    WebResource resource = createResource(client, "config");
-    ScmConfiguration config = resource.get(ScmConfiguration.class);
+    WebResource.Builder resource = createResource(client, "config").type(MediaType.APPLICATION_JSON);
+    ConfigDto config = resource.get(ConfigDto.class);
 
     assertNotNull(config);
     config.setEnableRepositoryArchive(archive);
 
-    ClientResponse resp = resource.post(ClientResponse.class, config);
+    ClientResponse resp = createResource(client, "config").type(VndMediaType.CONFIG).put(ClientResponse.class, config);
 
     assertNotNull(resp);
-    assertEquals(201, resp.getStatus());
+    assertEquals(204, resp.getStatus());
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Client client;
+  private ScmClient client;
 
   /** Field description */
-  private Repository repository;
+  private RepositoryDto repository;
 
   /** Field description */
   private String type;

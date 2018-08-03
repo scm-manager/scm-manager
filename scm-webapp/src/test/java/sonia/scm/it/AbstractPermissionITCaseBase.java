@@ -35,28 +35,25 @@ package sonia.scm.it;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.junit.After;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runners.Parameterized.Parameters;
-
 import sonia.scm.user.User;
 import sonia.scm.user.UserTestData;
 
-import static org.junit.Assert.*;
+import java.util.Collection;
 
-import static sonia.scm.it.IntegrationTestUtil.*;
+import static java.util.Arrays.asList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static sonia.scm.it.IntegrationTestUtil.createAdminClient;
+import static sonia.scm.it.IntegrationTestUtil.createResource;
+import static sonia.scm.it.IntegrationTestUtil.post;
 
 //~--- JDK imports ------------------------------------------------------------
-
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
-
-import java.util.ArrayList;
-import java.util.Collection;
 
 /**
  *
@@ -77,26 +74,24 @@ public abstract class AbstractPermissionITCaseBase<T>
   public AbstractPermissionITCaseBase(Credentials credentials)
   {
     this.credentials = credentials;
+    this.client = credentials.isAnonymous()? ScmClient.anonymous(): new ScmClient(credentials.getUsername(), credentials.getPassword());
   }
 
-  //~--- methods --------------------------------------------------------------
 
+  //~--- methods --------------------------------------------------------------
   /**
    * Method description
    *
    *
    * @return
    */
-  @Parameters
-  public static Collection<Credentials[]> createParameters()
+  @Parameters(name = "{1}")
+  public static Collection<Object[]> createParameters()
   {
-    Collection<Credentials[]> params = new ArrayList<>();
-
-    params.add(new Credentials[] { new Credentials() });
-    params.add(new Credentials[] {
-      new Credentials("trillian", "a.trillian124") });
-
-    return params;
+    return asList(
+      new Object[] {new Credentials(), "anonymous"},
+      new Object[] {new Credentials("trillian", "a.trillian124"), "trillian" }
+    );
   }
 
   /**
@@ -111,18 +106,13 @@ public abstract class AbstractPermissionITCaseBase<T>
 
     trillian.setPassword("a.trillian124");
 
-    Client client = createClient();
+    ScmClient client = createAdminClient();
 
-    authenticateAdmin(client);
-
-    WebResource wr = createResource(client, "users");
-    ClientResponse response = wr.post(ClientResponse.class, trillian);
+    ClientResponse response = UserITUtil.postUser(client, trillian);
 
     assertNotNull(response);
     assertEquals(201, response.getStatus());
     response.close();
-    logoutClient(client);
-    client.destroy();
   }
 
   /**
@@ -132,15 +122,12 @@ public abstract class AbstractPermissionITCaseBase<T>
   @AfterClass
   public static void removeTestUser()
   {
-    Client client = createClient();
-
-    authenticateAdmin(client);
+    ScmClient client = createAdminClient();
     createResource(client, "users/trillian").delete();
-    client.destroy();
   }
 
-  //~--- get methods ----------------------------------------------------------
 
+  //~--- get methods ----------------------------------------------------------
   /**
    * Method description
    *
@@ -189,29 +176,9 @@ public abstract class AbstractPermissionITCaseBase<T>
    */
   protected abstract String getModifyPath();
 
+  protected abstract String getMediaType();
+
   //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   */
-  @After
-  public void after()
-  {
-    client = createClient();
-    logout();
-  }
-
-  /**
-   * Method description
-   *
-   */
-  @Before
-  public void before()
-  {
-    client = createClient();
-    login();
-  }
 
   /**
    * Method description
@@ -220,9 +187,7 @@ public abstract class AbstractPermissionITCaseBase<T>
   @Test
   public void create()
   {
-    WebResource wr = createResource(client, getBasePath());
-
-    checkResponse(wr.post(ClientResponse.class, getCreateItem()));
+    checkResponse(post(client, getBasePath(), getMediaType(), getCreateItem()));
   }
 
   /**
@@ -232,7 +197,7 @@ public abstract class AbstractPermissionITCaseBase<T>
   @Test
   public void delete()
   {
-    WebResource wr = createResource(client, getDeletePath());
+    WebResource.Builder wr = createResource(client, getDeletePath());
 
     checkResponse(wr.delete(ClientResponse.class));
   }
@@ -244,9 +209,9 @@ public abstract class AbstractPermissionITCaseBase<T>
   @Test
   public void modify()
   {
-    WebResource wr = createResource(client, getModifyPath());
+    WebResource.Builder wr = createResource(client, getModifyPath());
 
-    checkResponse(wr.put(ClientResponse.class, getModifyItem()));
+    checkResponse(wr.type(getMediaType()).put(ClientResponse.class, getModifyItem()));
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -258,7 +223,7 @@ public abstract class AbstractPermissionITCaseBase<T>
   @Test
   public void get()
   {
-    WebResource wr = createResource(client, getGetPath());
+    WebResource.Builder wr = createResource(client, getGetPath());
 
     checkGetResponse(wr.get(ClientResponse.class));
   }
@@ -270,7 +235,7 @@ public abstract class AbstractPermissionITCaseBase<T>
   @Test
   public void getAll()
   {
-    WebResource wr = createResource(client, getBasePath());
+    WebResource.Builder wr = createResource(client, getBasePath());
 
     checkGetAllResponse(wr.get(ClientResponse.class));
   }
@@ -321,36 +286,9 @@ public abstract class AbstractPermissionITCaseBase<T>
     response.close();
   }
 
-  /**
-   * Method description
-   *
-   */
-  private void login()
-  {
-    if (!credentials.isAnonymous())
-    {
-      authenticate(client, credentials.getUsername(),
-                   credentials.getPassword());
-    }
-  }
-
-  /**
-   * Method description
-   *
-   */
-  private void logout()
-  {
-    if (!credentials.isAnonymous())
-    {
-      logoutClient(client);
-    }
-  }
-
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
-  protected Client client;
+  protected ScmClient client;
 
-  /** Field description */
   protected Credentials credentials;
 }
