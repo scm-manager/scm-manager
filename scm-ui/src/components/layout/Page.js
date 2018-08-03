@@ -8,6 +8,7 @@ type Props = {
   subtitle?: string,
   loading?: boolean,
   error?: Error,
+  showContentOnError?: boolean,
   children: React.Node
 };
 
@@ -35,8 +36,8 @@ class Page extends React.Component<Props> {
   }
 
   renderContent() {
-    const { loading, children, error } = this.props;
-    if (error) {
+    const { loading, children, showContentOnError, error } = this.props;
+    if (error && !showContentOnError) {
       return null;
     }
     if (loading) {
