@@ -16,6 +16,8 @@ import javax.ws.rs.Produces;
 
 public class HgConfigInstallationsResource {
 
+  public static final String PATH_HG = "hg";
+  public static final String PATH_PYTHON = "python";
   private final HgConfigInstallationsToDtoMapper hgConfigInstallationsToDtoMapper;
 
   @Inject
@@ -27,7 +29,7 @@ public class HgConfigInstallationsResource {
    * Returns the hg installations.
    */
   @GET
-  @Path("hg")
+  @Path(PATH_HG)
   @Produces(HgVndMediaType.INSTALLATIONS)
   @TypeHint(HalRepresentation.class)
   @StatusCodes({
@@ -40,14 +42,15 @@ public class HgConfigInstallationsResource {
 
     ConfigurationPermissions.read(HgConfig.PERMISSION).check();
 
-    return hgConfigInstallationsToDtoMapper.map(HgInstallerFactory.createInstaller().getHgInstallations());
+    return hgConfigInstallationsToDtoMapper.map(
+      HgInstallerFactory.createInstaller().getHgInstallations(), PATH_HG);
   }
 
   /**
    * Returns the python installations.
    */
   @GET
-  @Path("python")
+  @Path(PATH_PYTHON)
   @Produces(HgVndMediaType.INSTALLATIONS)
   @TypeHint(HalRepresentation.class)
   @StatusCodes({
@@ -60,6 +63,7 @@ public class HgConfigInstallationsResource {
 
     ConfigurationPermissions.read(HgConfig.PERMISSION).check();
 
-    return hgConfigInstallationsToDtoMapper.map(HgInstallerFactory.createInstaller().getPythonInstallations());
+    return hgConfigInstallationsToDtoMapper.map(
+      HgInstallerFactory.createInstaller().getPythonInstallations(), PATH_PYTHON);
   }
 }

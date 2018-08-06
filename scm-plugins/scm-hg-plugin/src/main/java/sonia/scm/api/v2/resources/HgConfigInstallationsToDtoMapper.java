@@ -1,21 +1,26 @@
 package sonia.scm.api.v2.resources;
 
-import de.otto.edison.hal.HalRepresentation;
+import com.google.inject.Inject;
 
-import javax.inject.Inject;
 import java.util.List;
 
 import static de.otto.edison.hal.Links.linkingTo;
 
 public class HgConfigInstallationsToDtoMapper {
-  @Inject private UriInfoStore uriInfoStore;
 
-  public HalRepresentation map(List<String> installations) {
-    return new HgConfigInstallationsDto(linkingTo().self(createSelfLink()).build(), installations);
+  private UriInfoStore uriInfoStore;
+
+  @Inject
+  public HgConfigInstallationsToDtoMapper(UriInfoStore uriInfoStore, String path) {
+    this.uriInfoStore = uriInfoStore;
   }
 
-  private String createSelfLink() {
-    LinkBuilder linkBuilder = new LinkBuilder(uriInfoStore.get(), HgConfigInstallationsResource.class);
-    return linkBuilder.method("get").parameters().href();
+  public HgConfigInstallationsDto map(List<String> installations, String path) {
+    return new HgConfigInstallationsDto(linkingTo().self(createSelfLink(path)).build(), installations);
+  }
+
+  private String createSelfLink(String path) {
+    LinkBuilder linkBuilder = new LinkBuilder(uriInfoStore.get(), HgConfigResource.class);
+    return linkBuilder.method("getInstallationsResource").parameters().href() + '/' + path;
   }
 }

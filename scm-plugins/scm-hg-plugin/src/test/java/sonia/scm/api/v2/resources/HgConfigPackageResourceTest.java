@@ -13,7 +13,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.Answers;
 import org.mockito.InjectMocks;
@@ -52,9 +51,6 @@ public class HgConfigPackageResourceTest {
 
   @Rule
   public ExpectedException thrown = ExpectedException.none();
-
-  @Rule
-  public TemporaryFolder folder= new TemporaryFolder();
 
   private Dispatcher dispatcher = MockDispatcherFactory.createDispatcher();
 
