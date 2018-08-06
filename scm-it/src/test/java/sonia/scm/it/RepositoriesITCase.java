@@ -35,12 +35,14 @@ package sonia.scm.it;
 
 import org.apache.http.HttpStatus;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import sonia.scm.web.VndMediaType;
 
+import javax.json.Json;
 import java.io.IOException;
 import java.util.Collection;
 
@@ -50,12 +52,13 @@ import static org.hamcrest.Matchers.nullValue;
 import static sonia.scm.it.RegExMatcher.matchesPattern;
 import static sonia.scm.it.RestUtil.createResourceUrl;
 import static sonia.scm.it.RestUtil.given;
-import static sonia.scm.it.RestUtil.readJson;
 
 @RunWith(Parameterized.class)
 public class RepositoriesITCase {
 
   private final String repositoryType;
+
+  private String repositoryUrl;
 
   public RepositoriesITCase(String repositoryType) {
     this.repositoryType = repositoryType;
@@ -66,6 +69,20 @@ public class RepositoriesITCase {
     return ScmParameterizedIntegrationTestUtil.createParameters();
   }
 
+  @Before
+  public void createRepository() {
+    this.repositoryUrl = given(VndMediaType.REPOSITORY)
+      .body(repositoryJson())
+
+      .when()
+      .post(createResourceUrl("repositories"))
+
+      .then()
+      .statusCode(HttpStatus.SC_CREATED)
+      .extract()
+      .header("location");
+  }
+
   @After
   public void cleanup() {
     TestData.cleanup();
@@ -73,8 +90,6 @@ public class RepositoriesITCase {
 
   @Test
   public void shouldCreateSuccessfully() throws IOException {
-    String repositoryUrl = createRepository();
-
     given(VndMediaType.REPOSITORY)
 
       .when()
@@ -92,9 +107,7 @@ public class RepositoriesITCase {
   }
 
   @Test
-  public void shouldDeleteSuccessfully() throws IOException {
-    String repositoryUrl = createRepository();
-
+  public void shouldDeleteSuccessfully() {
     given(VndMediaType.REPOSITORY)
 
       .when()
@@ -113,10 +126,8 @@ public class RepositoriesITCase {
   }
 
   @Test
-  public void shouldRejectMultipleCreations() throws IOException {
-    String repositoryJson = readJson("repository-" + repositoryType + ".json");
-    createRepository();
-
+  public void shouldRejectMultipleCreations() {
+    String repositoryJson = repositoryJson();
     given(VndMediaType.REPOSITORY)
       .body(repositoryJson)
 
@@ -127,16 +138,13 @@ public class RepositoriesITCase {
       .statusCode(HttpStatus.SC_CONFLICT);
   }
 
-  private String createRepository() throws IOException {
-    return given(VndMediaType.REPOSITORY)
-      .body(readJson("repository-" + repositoryType + ".json"))
-
-      .when()
-      .post(createResourceUrl("repositories"))
-
-      .then()
-      .statusCode(HttpStatus.SC_CREATED)
-      .extract()
-      .header("location");
+  private String repositoryJson() {
+    return Json.createObjectBuilder()
+      .add("contact", "zaphod.beeblebrox@hitchhiker.com")
+      .add("description", "Heart of Gold")
+      .add("name", "HeartOfGold-" + repositoryType)
+      .add("archived", false)
+      .add("type", repositoryType)
+      .build().toString();
   }
 }
