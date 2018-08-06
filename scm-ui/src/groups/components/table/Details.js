@@ -10,10 +10,7 @@ type Props = {
 };
 
 class Details extends React.Component<Props> {
-
-  
-  render() {  console.log(new Date('2011-04-11T10:20:30Z').toString());
-
+  render() {
     const { group, t } = this.props;
     return (
       <table className="table">
@@ -30,33 +27,30 @@ class Details extends React.Component<Props> {
             <td>{t("group.type")}</td>
             <td>{group.type}</td>
           </tr>
-          {this.renderMembers()}
+          <tr>
+            <td>{this.renderMembers()}</td>
+          </tr>
         </tbody>
       </table>
     );
-
-
   }
 
   renderMembers() {
     if (this.props.group.members.length > 0) {
       return (
-      <tr>
-          <td>{this.props.t("group.members")}</td>
-          <td>
-            <table><tbody>
+        <div>
+          {this.props.t("group.members")}
+          <ul>
             {this.props.group._embedded.members.map((member, index) => {
-            return <GroupMember key={index} member={member} />;
+              return <GroupMember key={index} member={member} />;
             })}
-            </tbody></table>
-          </td>
-      </tr>
+          </ul>
+        </div>
       );
     } else {
       return;
     }
   }
-
 }
 
 export default translate("groups")(Details);
