@@ -5,8 +5,8 @@ import sonia.scm.util.IOUtil;
 import java.util.ArrayList;
 import java.util.Collection;
 
-class ScmParameterizedIntegrationTestUtil {
-  static Collection<String> createParameters() {
+class ScmTypes {
+  static Collection<String> availableScmTypes() {
     Collection<String> params = new ArrayList<>();
 
     params.add("git");

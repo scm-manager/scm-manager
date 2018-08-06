@@ -34,7 +34,6 @@ package sonia.scm.it;
 //~--- non-JDK imports --------------------------------------------------------
 
 import org.apache.http.HttpStatus;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -48,7 +47,6 @@ import sonia.scm.repository.client.api.RepositoryClient;
 import sonia.scm.repository.client.api.RepositoryClientFactory;
 import sonia.scm.web.VndMediaType;
 
-import javax.json.Json;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -62,6 +60,8 @@ import static org.junit.Assert.assertEquals;
 import static sonia.scm.it.RegExMatcher.matchesPattern;
 import static sonia.scm.it.RestUtil.createResourceUrl;
 import static sonia.scm.it.RestUtil.given;
+import static sonia.scm.it.ScmTypes.availableScmTypes;
+import static sonia.scm.it.TestData.repositoryJson;
 
 @RunWith(Parameterized.class)
 public class RepositoriesITCase {
@@ -77,34 +77,21 @@ public class RepositoriesITCase {
 
   public RepositoriesITCase(String repositoryType) {
     this.repositoryType = repositoryType;
+    this.repositoryUrl = TestData.getDefaultRepositoryUrl(repositoryType);
   }
 
   @Parameters(name = "{0}")
   public static Collection<String> createParameters() {
-    return ScmParameterizedIntegrationTestUtil.createParameters();
+    return availableScmTypes();
   }
 
   @Before
   public void createRepository() {
-    this.repositoryUrl = given(VndMediaType.REPOSITORY)
-      .body(repositoryJson())
-
-      .when()
-      .post(createResourceUrl("repositories"))
-
-      .then()
-      .statusCode(HttpStatus.SC_CREATED)
-      .extract()
-      .header("location");
-  }
-
-  @After
-  public void cleanup() {
-    TestData.cleanup();
+    TestData.createDefault();
   }
 
   @Test
-  public void shouldCreateSuccessfully() throws IOException {
+  public void shouldCreateSuccessfully() {
     given(VndMediaType.REPOSITORY)
 
       .when()
@@ -142,7 +129,7 @@ public class RepositoriesITCase {
 
   @Test
   public void shouldRejectMultipleCreations() {
-    String repositoryJson = repositoryJson();
+    String repositoryJson = repositoryJson(repositoryType);
     given(VndMediaType.REPOSITORY)
       .body(repositoryJson)
 
@@ -207,15 +194,5 @@ public class RepositoriesITCase {
       .then()
       .extract()
       .path("_links.httpProtocol.href");
-  }
-
-  private String repositoryJson() {
-    return Json.createObjectBuilder()
-      .add("contact", "zaphod.beeblebrox@hitchhiker.com")
-      .add("description", "Heart of Gold")
-      .add("name", "HeartOfGold-" + repositoryType)
-      .add("archived", false)
-      .add("type", repositoryType)
-      .build().toString();
   }
 }
