@@ -36,25 +36,40 @@ package sonia.scm.it;
 import org.apache.http.HttpStatus;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+import sonia.scm.repository.Person;
+import sonia.scm.repository.client.api.ClientCommand;
+import sonia.scm.repository.client.api.RepositoryClient;
+import sonia.scm.repository.client.api.RepositoryClientFactory;
 import sonia.scm.web.VndMediaType;
 
 import javax.json.Json;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.UUID;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.assertEquals;
 import static sonia.scm.it.RegExMatcher.matchesPattern;
 import static sonia.scm.it.RestUtil.createResourceUrl;
 import static sonia.scm.it.RestUtil.given;
 
 @RunWith(Parameterized.class)
 public class RepositoriesITCase {
+
+  public static final Person AUTHOR = new Person("SCM Administrator", "scmadmin@scm-manager.org");
+
+  @Rule
+  public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
   private final String repositoryType;
 
@@ -136,6 +151,47 @@ public class RepositoriesITCase {
 
       .then()
       .statusCode(HttpStatus.SC_CONFLICT);
+  }
+
+  @Test
+  public void shouldCloneRepository() throws IOException {
+    RepositoryClient rc = createRepositoryClient();
+    assertEquals(1, rc.getWorkingCopy().list().length);
+  }
+
+  @Test
+  public void shouldCommitFiles() throws IOException {
+    RepositoryClient rc = createRepositoryClient();
+
+    for (int i = 0; i < 5; i++) {
+      createRandomFile(rc);
+    }
+
+    commit(rc, "added some test files");
+  }
+
+  public static void createRandomFile(RepositoryClient client) throws IOException {
+    String uuid = UUID.randomUUID().toString();
+    String name = "file-" + uuid + ".uuid";
+
+    File file = new File(client.getWorkingCopy(), name);
+    try (FileOutputStream out = new FileOutputStream(file)) {
+      out.write(uuid.getBytes());
+    }
+
+    client.getAddCommand().add(name);
+  }
+
+  public static void commit(RepositoryClient repositoryClient, String message) throws IOException {
+    repositoryClient.getCommitCommand().commit(AUTHOR, message);
+    if ( repositoryClient.isCommandSupported(ClientCommand.PUSH) ) {
+      repositoryClient.getPushCommand().push();
+    }
+  }
+
+  private RepositoryClient createRepositoryClient() throws IOException {
+    RepositoryClientFactory clientFactory = new RepositoryClientFactory();
+    return clientFactory.create(repositoryType, "http://localhost:8081/scm/" + repositoryType + "/scmadmin/HeartOfGold-" + repositoryType, "scmadmin", "scmadmin", temporaryFolder.newFolder());
   }
 
   private String repositoryJson() {

@@ -48,19 +48,14 @@ import de.otto.edison.hal.HalRepresentation;
 import sonia.scm.api.rest.JSONContextResolver;
 import sonia.scm.api.rest.ObjectMapperProvider;
 import sonia.scm.repository.Person;
-import sonia.scm.repository.client.api.ClientCommand;
-import sonia.scm.repository.client.api.RepositoryClient;
 import sonia.scm.util.IOUtil;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.UUID;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -125,43 +120,6 @@ public final class IntegrationTestUtil
     }
   }
 
-  /**
-   * Commit and push changes.
-   * 
-   * @param repositoryClient repository client
-   * @param message commit message
-   * 
-   * @throws IOException 
-   * 
-   * @since 1.51
-   */
-  public static void commit(RepositoryClient repositoryClient, String message) throws IOException {
-    repositoryClient.getCommitCommand().commit(IntegrationTestUtil.AUTHOR, message);
-    if ( repositoryClient.isCommandSupported(ClientCommand.PUSH) ) {
-      repositoryClient.getPushCommand().push();
-    }
-  }
-  
-  /**
-   * Method description
-   *
-   * @param client
-   *
-   * @throws IOException
-   */
-  public static void createRandomFile(RepositoryClient client) throws IOException
-  {
-    String uuid = UUID.randomUUID().toString();
-    String name = "file-" + uuid + ".uuid";
-
-    File file = new File(client.getWorkingCopy(), name);
-    try (FileOutputStream out = new FileOutputStream(file)) {
-      out.write(uuid.getBytes());
-    }
-
-    client.getAddCommand().add(name);
-  }
-
   public static Collection<String> createRepositoryTypeParameters() {
     Collection<String> params = new ArrayList<>();
 
@@ -206,20 +164,6 @@ public final class IntegrationTestUtil
     return URI.create(REST_BASE_URL).resolve(url);
   }
   
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public static File createTempDirectory() {
-    File directory = new File(System.getProperty("java.io.tmpdir"), UUID.randomUUID().toString());
-
-    IOUtil.mkdirs(directory);
-
-    return directory;
-  }
-
   public static String readJson(String jsonFileName) {
     URL url = Resources.getResource(jsonFileName);
     try {
