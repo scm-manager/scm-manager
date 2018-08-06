@@ -156,6 +156,8 @@
       <version>9aadeeb</version>
       <!-- Don't ship this dependency with the app -->
       <optional>true</optional>
+      <!-- Don't inherit this dependency! -->
+      <scope>provided</scope>
     </dependency>
     
   </dependencies>
