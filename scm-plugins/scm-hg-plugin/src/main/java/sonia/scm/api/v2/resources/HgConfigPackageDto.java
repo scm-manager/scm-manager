@@ -5,7 +5,6 @@ import de.otto.edison.hal.Links;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import sonia.scm.repository.HgConfig;
 
 @NoArgsConstructor
 @Getter
@@ -13,7 +12,7 @@ import sonia.scm.repository.HgConfig;
 public class HgConfigPackageDto extends HalRepresentation {
 
   private String arch;
-  private HgConfig hgConfigTemplate;
+  private HgConfigDto hgConfigTemplate;
   private String hgVersion;
   private String id;
   private String platform;

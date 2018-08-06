@@ -6,17 +6,18 @@ import javax.inject.Inject;
 
 public class HgConfigPackageCollectionToDtoMapper extends CollectionToDtoMapper<HgPackage, HgConfigPackageDto>  {
 
+  static final String COLLECTION_NAME = "packages";
   private UriInfoStore uriInfoStore;
 
   @Inject
   public HgConfigPackageCollectionToDtoMapper(HgConfigPackageToDtoMapper mapper, UriInfoStore uriInfoStore) {
-    super("packages", mapper);
+    super(COLLECTION_NAME, mapper);
     this.uriInfoStore = uriInfoStore;
   }
 
   @Override
   protected String createSelfLink() {
     LinkBuilder linkBuilder = new LinkBuilder(uriInfoStore.get(), HgConfigResource.class);
-    return linkBuilder.method("get").parameters().href();
+    return linkBuilder.method("getPackagesResource").parameters().href();
   }
 }

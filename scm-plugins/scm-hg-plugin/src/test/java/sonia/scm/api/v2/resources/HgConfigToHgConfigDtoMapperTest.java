@@ -14,14 +14,14 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import sonia.scm.repository.HgConfig;
 
-import java.io.File;
 import java.net.URI;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static sonia.scm.api.v2.resources.HgConfigTests.assertEqualsConfiguration;
+import static sonia.scm.api.v2.resources.HgConfigTests.createConfiguration;
 
 @RunWith(MockitoJUnitRunner.class)
 public class HgConfigToHgConfigDtoMapperTest {
@@ -59,15 +59,7 @@ public class HgConfigToHgConfigDtoMapperTest {
     when(subject.isPermitted("configuration:write:hg")).thenReturn(true);
     HgConfigDto dto = mapper.map(config);
 
-    assertTrue(dto.isDisabled());
-    assertEquals("repository/directory", dto.getRepositoryDirectory().getPath());
-
-    assertEquals("ABC", dto.getEncoding());
-    assertEquals("/etc/hg", dto.getHgBinary());
-    assertEquals("/py", dto.getPythonBinary());
-    assertEquals("/etc/", dto.getPythonPath());
-    assertTrue(dto.isShowRevisionInId());
-    assertTrue(dto.isUseOptimizedBytecode());
+    assertEqualsConfiguration(dto);
 
     assertEquals(expectedBaseUri.toString(), dto.getLinks().getLinkBy("self").get().getHref());
     assertEquals(expectedBaseUri.toString(), dto.getLinks().getLinkBy("update").get().getHref());
@@ -83,20 +75,4 @@ public class HgConfigToHgConfigDtoMapperTest {
     assertEquals(expectedBaseUri.toString(), dto.getLinks().getLinkBy("self").get().getHref());
     assertFalse(dto.getLinks().hasLink("update"));
   }
-
-  private HgConfig createConfiguration() {
-    HgConfig config = new HgConfig();
-    config.setDisabled(true);
-    config.setRepositoryDirectory(new File("repository/directory"));
-
-    config.setEncoding("ABC");
-    config.setHgBinary("/etc/hg");
-    config.setPythonBinary("/py");
-    config.setPythonPath("/etc/");
-    config.setShowRevisionInId(true);
-    config.setUseOptimizedBytecode(true);
-    
-    return config;
-  }
-
 }

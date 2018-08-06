@@ -61,7 +61,7 @@ public class HgConfigPackageResource {
   /**
    * Installs a mercurial package
    *
-   * @param id Identifier of the package to install
+   * @param pkgId Identifier of the package to install
    */
   @PUT
   @Path("{pkgId}")
@@ -73,22 +73,19 @@ public class HgConfigPackageResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
-  public Response installPackage(@PathParam("pkgId") String id) {
+  public Response installPackage(@PathParam("pkgId") String pkgId) {
     Response response;
 
     ConfigurationPermissions.write(HgConfig.PERMISSION).check();
 
-    HgPackage pkg = pkgReader.getPackage(id);
+    HgPackage pkg = pkgReader.getPackage(pkgId);
 
-    if (pkg != null) {
-      if (HgInstallerFactory.createInstaller().installPackage(client, handler,
-                                                              SCMContext.getContext().getBaseDirectory(), pkg)) {
-        response = Response.noContent().build();
-      } else {
-        response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-      }
+    // First path parm cannot be null (leaving it results in 405)
+    if (HgInstallerFactory.createInstaller()
+                          .installPackage(client, handler, SCMContext.getContext().getBaseDirectory(), pkg)) {
+      response = Response.noContent().build();
     } else {
-      response = Response.status(Response.Status.NOT_FOUND).build();
+      response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
     }
 
     return response;
