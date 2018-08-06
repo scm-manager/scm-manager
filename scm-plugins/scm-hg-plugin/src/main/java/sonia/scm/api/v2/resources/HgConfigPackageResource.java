@@ -80,7 +80,7 @@ public class HgConfigPackageResource {
 
     HgPackage pkg = pkgReader.getPackage(pkgId);
 
-    // First path parm cannot be null (leaving it results in 405)
+    // First path param cannot be null (leaving it results in 405)
     if (HgInstallerFactory.createInstaller()
                           .installPackage(client, handler, SCMContext.getContext().getBaseDirectory(), pkg)) {
       response = Response.noContent().build();

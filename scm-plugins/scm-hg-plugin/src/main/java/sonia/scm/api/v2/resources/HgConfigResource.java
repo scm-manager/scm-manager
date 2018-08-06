@@ -60,14 +60,14 @@ public class HgConfigResource {
   })
   public Response get() {
 
+    ConfigurationPermissions.read(HgConfig.PERMISSION).check();
+
     HgConfig config = repositoryHandler.getConfig();
 
     if (config == null) {
       config = new HgConfig();
       repositoryHandler.setConfig(config);
     }
-
-    ConfigurationPermissions.read(config).check();
 
     return Response.ok(configToDtoMapper.map(config)).build();
   }

@@ -7,7 +7,9 @@ import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import sonia.scm.config.ConfigurationPermissions;
 import sonia.scm.repository.HgConfig;
 import sonia.scm.repository.HgRepositoryHandler;
+import sonia.scm.web.HgVndMediaType;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
@@ -15,9 +17,12 @@ import javax.ws.rs.core.Response;
 public class HgConfigAutoConfigurationResource {
 
   private final HgRepositoryHandler repositoryHandler;
+  private final HgConfigDtoToHgConfigMapper dtoToConfigMapper;
 
   @Inject
-  public HgConfigAutoConfigurationResource(HgRepositoryHandler repositoryHandler) {
+  public HgConfigAutoConfigurationResource(HgConfigDtoToHgConfigMapper dtoToConfigMapper,
+                                           HgRepositoryHandler repositoryHandler) {
+    this.dtoToConfigMapper = dtoToConfigMapper;
     this.repositoryHandler = repositoryHandler;
   }
 
@@ -44,6 +49,7 @@ public class HgConfigAutoConfigurationResource {
    */
   @PUT
   @Path("")
+  @Consumes(HgVndMediaType.CONFIG)
   @StatusCodes({
     @ResponseCode(code = 204, condition = "update success"),
     @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
@@ -52,11 +58,13 @@ public class HgConfigAutoConfigurationResource {
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
   public Response autoConfiguration(HgConfigDto configDto) {
-    HgConfig config = repositoryHandler.getConfig();
 
-    if (config == null) {
+    HgConfig config;
+
+    if (configDto != null) {
+      config = dtoToConfigMapper.map(configDto);
+    } else {
       config = new HgConfig();
-      repositoryHandler.setConfig(config);
     }
 
     ConfigurationPermissions.write(config).check();
