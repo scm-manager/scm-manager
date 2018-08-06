@@ -75,33 +75,21 @@
       <artifactId>jjwt</artifactId>
       <version>0.4</version>
     </dependency>
-    
+
     <!-- json -->
-    
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-core</artifactId>
-      <version>${jackson.version}</version>
-    </dependency>
 
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-annotations</artifactId>
       <version>${jackson.version}</version>
     </dependency>
-    
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-      <version>${jackson.version}</version>
-    </dependency>
-    
+
     <dependency>
       <groupId>com.fasterxml.jackson.module</groupId>
       <artifactId>jackson-module-jaxb-annotations</artifactId>
       <version>${jackson.version}</version>
     </dependency>
-    
+
     <dependency>
       <groupId>com.fasterxml.jackson.jaxrs</groupId>
       <artifactId>jackson-jaxrs-base</artifactId>
@@ -119,7 +107,7 @@
     </dependency>
 
     <!-- rest api -->
-    
+
     <dependency>
       <groupId>org.jboss.resteasy</groupId>
       <artifactId>resteasy-jaxrs</artifactId>
@@ -144,7 +132,7 @@
       <groupId>org.jboss.resteasy</groupId>
       <artifactId>resteasy-guice</artifactId>
     </dependency>
-    
+
     <dependency>
       <groupId>org.jboss.resteasy</groupId>
       <artifactId>resteasy-servlet-initializer</artifactId>
@@ -157,7 +145,7 @@
       <artifactId>guice-multibindings</artifactId>
       <version>${guice.version}</version>
     </dependency>
-    
+
     <!-- event bus -->
     
     <dependency>
@@ -245,13 +233,6 @@
       <version>${mustache.version}</version>
     </dependency>
     
-    <!-- rest documentation -->
-    
-    <dependency>
-      <groupId>com.webcohesion.enunciate</groupId>
-      <artifactId>enunciate-core-annotations</artifactId>
-    </dependency>
-
     <!-- test scope -->
 
     <dependency>
@@ -303,8 +284,7 @@
     </dependency>
     
     <!-- core plugins -->
-    
-    
+
     <dependency>
       <groupId>com.github.sdorra</groupId>
       <artifactId>shiro-unit</artifactId>
