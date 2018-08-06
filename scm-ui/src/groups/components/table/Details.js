@@ -13,7 +13,7 @@ class Details extends React.Component<Props> {
   render() {
     const { group, t } = this.props;
     return (
-      <table className="table">
+      <table className="table content">
         <tbody>
           <tr>
             <td>{t("group.name")}</td>
