@@ -2,6 +2,7 @@
 import React from "react";
 import Button from "../../components/buttons/Button"
 import { translate } from "react-i18next"
+import RemoveUserButton from "./buttons/RemoveUserButton";
 
 type Props = {
   users: string[];
@@ -26,11 +27,7 @@ class UserNameTable extends React.Component<Props, State> {
                 <tr key={user}>
                   <td key={user}>{user}</td>
                   <td>
-                    <Button
-                      label={t("remove-user-button.label")}
-                      action={this.removeUser.bind(this, user)}
-                      key={user}
-                    />
+                    <RemoveUserButton username={user} removeUser={this.removeUser} />
                   </td>
                 </tr>
               );
@@ -41,9 +38,8 @@ class UserNameTable extends React.Component<Props, State> {
     );
   }
 
-  removeUser(user: string, event: Event) {
-    event.preventDefault();
-    const newUsers = this.props.users.filter(name => name !== user);
+  removeUser = (username: string) => {
+    const newUsers = this.props.users.filter(name => name !== username);
     this.props.userListChanged(newUsers);
   }
 }
