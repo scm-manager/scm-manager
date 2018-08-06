@@ -24,6 +24,7 @@ public class HgConfigDto extends HalRepresentation {
   private boolean showRevisionInId;
 
   @Override
+  @SuppressWarnings("squid:S1185") // We want to have this method available in this package
   protected HalRepresentation add(Links links) {
     return super.add(links);
   }

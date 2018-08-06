@@ -21,6 +21,7 @@ public class SvnConfigDto extends HalRepresentation {
   private Compatibility compatibility;
 
   @Override
+  @SuppressWarnings("squid:S1185") // We want to have this method available in this package
   protected HalRepresentation add(Links links) {
     return super.add(links);
   }
