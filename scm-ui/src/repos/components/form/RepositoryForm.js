@@ -1,12 +1,12 @@
 // @flow
 import React from "react";
 import { translate } from "react-i18next";
-import { InputField, Select } from "../../components/forms";
-import { SubmitButton } from "../../components/buttons";
-import type { Repository } from "../types/Repositories";
+import { InputField, Select } from "../../../components/forms/index";
+import { SubmitButton } from "../../../components/buttons/index";
+import type { Repository } from "../../types/Repositories";
 import * as validator from "./repositoryValidation";
-import type { RepositoryType } from "../types/RepositoryTypes";
-import Textarea from "../../components/forms/Textarea";
+import type { RepositoryType } from "../../types/RepositoryTypes";
+import Textarea from "../../../components/forms/Textarea";
 
 type Props = {
   submitForm: Repository => void,

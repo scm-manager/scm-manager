@@ -15,7 +15,7 @@ import {
 } from "../modules/repos";
 import { translate } from "react-i18next";
 import { Page } from "../../components/layout";
-import RepositoryList from "../components/RepositoryList";
+import RepositoryList from "../components/list";
 import Paginator from "../../components/Paginator";
 import { withRouter } from "react-router-dom";
 import type { History } from "history";

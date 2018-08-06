@@ -28,5 +28,14 @@
   },
   "repository-form": {
     "submit": "Speichern"
+  },
+  "delete-nav-action": {
+    "label": "Delete",
+    "confirm-alert": {
+      "title": "Delete repository",
+      "message": "Do you really want to delete the repository?",
+      "submit": "Yes",
+      "cancel": "No"
+    }
   }
 }

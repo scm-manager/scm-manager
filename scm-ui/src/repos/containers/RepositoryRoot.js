@@ -1,6 +1,7 @@
 //@flow
 import React from "react";
 import {
+  deleteRepo,
   fetchRepo,
   getFetchRepoFailure,
   getRepository,
@@ -15,6 +16,9 @@ import ErrorPage from "../../components/ErrorPage";
 import { translate } from "react-i18next";
 import { Navigation, NavLink, Section } from "../../components/navigation";
 import RepositoryDetails from "../components/RepositoryDetails";
+import DeleteNavAction from "../components/DeleteNavAction";
+
+import type { History } from "history";
 
 type Props = {
   namespace: string,
@@ -25,9 +29,11 @@ type Props = {
 
   // dispatch functions
   fetchRepo: (namespace: string, name: string) => void,
+  deleteRepo: (repository: Repository, () => void) => void,
 
   // context props
   t: string => string,
+  history: History,
   match: any
 };
 
@@ -47,6 +53,14 @@ class RepositoryRoot extends React.Component<Props> {
 
   matchedUrl = () => {
     return this.stripEndingSlash(this.props.match.url);
+  };
+
+  deleted = () => {
+    this.props.history.push("/repos");
+  };
+
+  delete = (repository: Repository) => {
+    this.props.deleteRepo(repository, this.deleted);
   };
 
   render() {
@@ -81,6 +95,7 @@ class RepositoryRoot extends React.Component<Props> {
           <div className="column">
             <Navigation>
               <Section label={t("repository-root.actions-label")}>
+                <DeleteNavAction repository={repository} delete={this.delete} />
                 <NavLink to="/repos" label={t("repository-root.back-label")} />
               </Section>
             </Navigation>
@@ -109,6 +124,9 @@ const mapDispatchToProps = dispatch => {
   return {
     fetchRepo: (namespace: string, name: string) => {
       dispatch(fetchRepo(namespace, name));
+    },
+    deleteRepo: (repository: Repository, callback: () => void) => {
+      dispatch(deleteRepo(repository, callback));
     }
   };
 };

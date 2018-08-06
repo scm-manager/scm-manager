@@ -1,5 +1,5 @@
 // @flow
-import * as generalValidator from "../../components/validation";
+import * as generalValidator from "../../../components/validation";
 
 export const isNameValid = (name: string) => {
   return generalValidator.isNameValid(name);

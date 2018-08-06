@@ -1,7 +1,7 @@
 //@flow
 import React from "react";
 
-import type { Repository } from "../types/Repositories";
+import type { Repository } from "../../types/Repositories";
 
 import groupByNamespace from "./groupByNamespace";
 import RepositoryGroupEntry from "./RepositoryGroupEntry";

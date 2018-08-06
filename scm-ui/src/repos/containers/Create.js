@@ -3,7 +3,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { translate } from "react-i18next";
 import { Page } from "../../components/layout";
-import RepositoryForm from "../components/RepositoryForm";
+import RepositoryForm from "../components/form";
 import type { RepositoryType } from "../types/RepositoryTypes";
 import {
   fetchRepositoryTypesIfNeeded,

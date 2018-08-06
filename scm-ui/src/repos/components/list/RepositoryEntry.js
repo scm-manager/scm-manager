@@ -2,12 +2,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import injectSheet from "react-jss";
-import type { Repository } from "../types/Repositories";
-import DateFromNow from "../../components/DateFromNow";
+import type { Repository } from "../../types/Repositories";
+import DateFromNow from "../../../components/DateFromNow";
 import RepositoryEntryLink from "./RepositoryEntryLink";
 import classNames from "classnames";
 
-import icon from "../../images/blib.jpg";
+import icon from "../../../images/blib.jpg";
 
 // TODO we need a variable or something central for the hover
 
