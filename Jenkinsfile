@@ -34,6 +34,10 @@ node() { // No specific label
         mvn 'test -Dsonia.scm.test.skip.hg=true -Dmaven.test.failure.ignore=true'
       }
 
+      stage('Integration Test') {
+        mvn 'verify -Pit -pl :scm-webapp,:scm-it'
+      }
+
       stage('SonarQube') {
 
         analyzeWith(mvn)
