@@ -2,7 +2,7 @@
 import React from "react";
 
 import InputField from "../../components/forms/InputField";
-import { SubmitButton, Button } from "../../components/buttons";
+import { SubmitButton } from "../../components/buttons";
 import { translate } from "react-i18next";
 import type { Group } from "../types/Group";
 import * as validator from "./groupValidation";
@@ -117,8 +117,7 @@ class GroupForm extends React.Component<Props, State> {
         members: usernames
       }
     });
-  }
-
+  };
 
   addUser = (username: string) => {
     if (this.isMember(username)) {

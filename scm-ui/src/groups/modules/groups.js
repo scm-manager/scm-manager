@@ -1,3 +1,4 @@
+// @flow
 import { apiClient } from "../../apiclient";
 import { isPending } from "../../modules/pending";
 import { getFailure } from "../../modules/failure";
@@ -5,7 +6,7 @@ import * as types from "../../modules/types";
 import { combineReducers, Dispatch } from "redux";
 import type { Action } from "../../types/Action";
 import type { PagedCollection } from "../../types/Collection";
-import type { Groups } from "../types/Groups";
+import type { Group } from "../types/Group";
 
 export const FETCH_GROUPS = "scm/groups/FETCH_GROUPS";
 export const FETCH_GROUPS_PENDING = `${FETCH_GROUPS}_${types.PENDING_SUFFIX}`;
@@ -139,10 +140,11 @@ export function createGroup(group: Group, callback?: () => void) {
     return apiClient
       .postWithContentType(GROUPS_URL, group, CONTENT_TYPE_GROUP)
       .then(() => {
-        dispatch(createGroupSuccess())
-      if (callback) {
-        callback();
-      }})
+        dispatch(createGroupSuccess());
+        if (callback) {
+          callback();
+        }
+      })
       .catch(error => {
         dispatch(
           createGroupFailure(
@@ -175,24 +177,29 @@ export function createGroupFailure(error: Error) {
 export function createGroupReset() {
   return {
     type: CREATE_GROUP_RESET
-  }
+  };
 }
 
-// modify group 
+// modify group
 export function modifyGroup(group: Group, callback?: () => void) {
   return function(dispatch: Dispatch) {
     dispatch(modifyGroupPending(group));
     return apiClient
-    .putWithContentType(group._links.update.href, group, CONTENT_TYPE_GROUP)
-    .then(() => {
-      dispatch(modifyGroupSuccess(group))
-      if (callback) {
-        callback()
-      }
-    })
-    .catch(cause => {
-      dispatch(modifyGroupFailure(group, new Error(`could not modify group ${group.name}: ${cause.message}`)))
-    })
+      .putWithContentType(group._links.update.href, group, CONTENT_TYPE_GROUP)
+      .then(() => {
+        dispatch(modifyGroupSuccess(group));
+        if (callback) {
+          callback();
+        }
+      })
+      .catch(cause => {
+        dispatch(
+          modifyGroupFailure(
+            group,
+            new Error(`could not modify group ${group.name}: ${cause.message}`)
+          )
+        );
+      });
   };
 }
 
@@ -201,7 +208,7 @@ export function modifyGroupPending(group: Group): Action {
     type: MODIFY_GROUP_PENDING,
     payload: group,
     itemId: group.name
-  }
+  };
 }
 
 export function modifyGroupSuccess(group: Group): Action {
@@ -209,7 +216,7 @@ export function modifyGroupSuccess(group: Group): Action {
     type: MODIFY_GROUP_SUCCESS,
     payload: group,
     itemId: group.name
-  }
+  };
 }
 
 export function modifyGroupFailure(group: Group, error: Error): Action {
@@ -220,7 +227,7 @@ export function modifyGroupFailure(group: Group, error: Error): Action {
       group
     },
     itemId: group.name
-  }
+  };
 }
 
 //delete group
@@ -274,7 +281,7 @@ export function deleteGroupFailure(group: Group, error: Error): Action {
 
 //reducer
 function extractGroupsByNames(
-  groups: Groups[],
+  groups: Group[],
   groupNames: string[],
   oldGroupsByNames: Object
 ) {
@@ -332,14 +339,14 @@ function listReducer(state: any = {}, action: any = {}) {
       };
     // Delete single group actions
     case DELETE_GROUP_SUCCESS:
-    const newGroupEntries = deleteGroupInEntries(
-      state.entries,
-      action.payload.name
-    );
-    return {
-      ...state,
-      entries: newGroupEntries
-    };
+      const newGroupEntries = deleteGroupInEntries(
+        state.entries,
+        action.payload.name
+      );
+      return {
+        ...state,
+        entries: newGroupEntries
+      };
     default:
       return state;
   }
@@ -357,7 +364,7 @@ function byNamesReducer(state: any = {}, action: any = {}) {
       };
     case FETCH_GROUP_SUCCESS:
       return reducerByName(state, action.payload.name, action.payload);
-    case MODIFY_GROUP_SUCCESS: 
+    case MODIFY_GROUP_SUCCESS:
       return reducerByName(state, action.payload.name, action.payload);
     case DELETE_GROUP_SUCCESS:
       const newGroupByNames = deleteGroupInGroupsByNames(
@@ -436,11 +443,11 @@ export function getCreateGroupFailure(state: Object) {
 }
 
 export function isModifyGroupPending(state: Object, name: string) {
-  return(isPending(state, MODIFY_GROUP, name))
+  return isPending(state, MODIFY_GROUP, name);
 }
 
 export function getModifyGroupFailure(state: Object, name: string) {
-  return(getFailure(state, MODIFY_GROUP, name))
+  return getFailure(state, MODIFY_GROUP, name);
 }
 
 export function getGroupByName(state: Object, name: string) {
