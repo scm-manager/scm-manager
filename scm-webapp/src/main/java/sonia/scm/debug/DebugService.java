@@ -34,9 +34,11 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.inject.Singleton;
-import java.util.Collection;
 import org.apache.shiro.SecurityUtils;
+import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.security.Role;
+
+import java.util.Collection;
 
 /**
  * The DebugService stores and returns received data from repository hook events.
@@ -47,30 +49,23 @@ import sonia.scm.security.Role;
 public final class DebugService
 {
 
-  private final Multimap<String,DebugHookData> receivedHooks = LinkedListMultimap.create();
+  private final Multimap<NamespaceAndName,DebugHookData> receivedHooks = LinkedListMultimap.create();
 
   /**
    * Stores {@link DebugHookData} for the given repository.
-   * 
-   * @param repository repository id
-   * @param hookData received hook data
    */
-  void put(String repository, DebugHookData hookData)
+  void put(NamespaceAndName namespaceAndName, DebugHookData hookData)
   {
-    receivedHooks.put(repository, hookData);
+    receivedHooks.put(namespaceAndName, hookData);
   }
   
   /**
    * Returns the last received hook data for the given repository.
-   * 
-   * @param repository repository id
-   * 
-   * @return the last received hook data for the given repository
    */
-  public DebugHookData getLast(String repository){
+  public DebugHookData getLast(NamespaceAndName namespaceAndName){
     SecurityUtils.getSubject().checkRole(Role.ADMIN);
     DebugHookData hookData = null;
-    Collection<DebugHookData> receivedHookData = receivedHooks.get(repository);
+    Collection<DebugHookData> receivedHookData = receivedHooks.get(namespaceAndName);
     if (receivedHookData != null && ! receivedHookData.isEmpty()){
       hookData = Iterables.getLast(receivedHookData);
     }
@@ -79,14 +74,9 @@ public final class DebugService
   
   /**
    * Returns all received hook data for the given repository.
-   * 
-   * @param repository repository id
-   * 
-   * @return all received hook data for the given repository
    */
-  public Collection<DebugHookData> getAll(String repository){
+  public Collection<DebugHookData> getAll(NamespaceAndName namespaceAndName){
     SecurityUtils.getSubject().checkRole(Role.ADMIN);
-    return receivedHooks.get(repository);
+    return receivedHooks.get(namespaceAndName);
   }
-  
 }

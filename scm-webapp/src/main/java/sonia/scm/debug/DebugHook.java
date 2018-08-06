@@ -34,12 +34,13 @@ import com.github.legman.ReferenceType;
 import com.github.legman.Subscribe;
 import com.google.common.base.Function;
 import com.google.common.collect.Collections2;
-import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.EagerSingleton;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.PostReceiveRepositoryHookEvent;
+
+import javax.inject.Inject;
 
 /**
  * {@link PostReceiveRepositoryHookEvent} which stores receives data and passes it to the {@link DebugService}.
@@ -78,7 +79,7 @@ public final class DebugHook
     LOG.trace("store changeset ids from repository", event.getRepository().getId());
     
     debugService.put(
-      event.getRepository().getId(), 
+      event.getRepository().getNamespaceAndName(),
       new DebugHookData(Collections2.transform(
         event.getContext().getChangesetProvider().getChangesetList(), IDEXTRACTOR)
       ));

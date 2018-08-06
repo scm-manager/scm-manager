@@ -76,6 +76,7 @@ public final class RepositoryITUtil
 
     assertNotNull(other);
     assertNotNull(other.getType());
+    assertNotNull(other.getNamespace());
     assertNotNull(other.getCreationDate());
 
     return other;

@@ -32,6 +32,7 @@ package sonia.scm.it;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
+import com.sun.jersey.api.client.WebResource;
 import org.junit.After;
 import org.junit.Assume;
 import org.junit.Before;
@@ -42,6 +43,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import sonia.scm.api.v2.resources.RepositoryDto;
+import sonia.scm.debug.DebugHookData;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.client.api.ClientCommand;
@@ -52,6 +54,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.core.AllOf.allOf;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static sonia.scm.it.IntegrationTestUtil.createResource;
 import static sonia.scm.it.IntegrationTestUtil.readJson;
 import static sonia.scm.it.RepositoryITUtil.createRepository;
 import static sonia.scm.it.RepositoryITUtil.deleteRepository;
@@ -129,10 +137,10 @@ public class RepositoryHookITCase extends AbstractAdminITCaseBase
     Thread.sleep(WAIT_TIME);
     
     // check debug servlet for pushed commit
-//    WebResource wr = createResource(client, "debug/" + repository.getId() + "/post-receive/last");
-//    DebugHookData data = wr.get(DebugHookData.class);
-//    assertNotNull(data);
-//    assertThat(data.getChangesets(), contains(changeset.getId()));
+    WebResource.Builder wr = createResource(client, "../debug/" + repository.getNamespace() + "/" + repository.getName() + "/post-receive/last");
+    DebugHookData data = wr.get(DebugHookData.class);
+    assertNotNull(data);
+    assertThat(data.getChangesets(), contains(changeset.getId()));
   }
   
   /**
@@ -164,15 +172,15 @@ public class RepositoryHookITCase extends AbstractAdminITCaseBase
     Thread.sleep(WAIT_TIME);
     
     // check debug servlet that only one commit is present
-//    WebResource wr = createResource(client, "debug/" + repository.getId() + "/post-receive/last");
-//    DebugHookData data = wr.get(DebugHookData.class);
-//    assertNotNull(data);
-//    assertThat(data.getChangesets(), allOf(
-//      contains(b.getId()),
-//      not(
-//        contains(a.getId())
-//      )
-//    ));
+    WebResource.Builder wr = createResource(client, "../debug/" + repository.getNamespace() + "/" + repository.getName() + "/post-receive/last");
+    DebugHookData data = wr.get(DebugHookData.class);
+    assertNotNull(data);
+    assertThat(data.getChangesets(), allOf(
+      contains(b.getId()),
+      not(
+        contains(a.getId())
+      )
+    ));
   }
   
   private Changeset commit(String message) throws IOException {
