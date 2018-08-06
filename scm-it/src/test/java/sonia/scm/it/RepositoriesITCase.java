@@ -155,22 +155,25 @@ public class RepositoriesITCase {
 
   @Test
   public void shouldCloneRepository() throws IOException {
-    RepositoryClient rc = createRepositoryClient();
-    assertEquals(1, rc.getWorkingCopy().list().length);
+    RepositoryClient client = createRepositoryClient();
+    assertEquals("expected metadata dir", 1, client.getWorkingCopy().list().length);
   }
 
   @Test
   public void shouldCommitFiles() throws IOException {
-    RepositoryClient rc = createRepositoryClient();
+    RepositoryClient client = createRepositoryClient();
 
     for (int i = 0; i < 5; i++) {
-      createRandomFile(rc);
+      createRandomFile(client);
     }
 
-    commit(rc, "added some test files");
+    commit(client);
+
+    RepositoryClient checkClient = createRepositoryClient();
+    assertEquals("expected 5 files and metadata dir", 6, checkClient.getWorkingCopy().list().length);
   }
 
-  public static void createRandomFile(RepositoryClient client) throws IOException {
+  private static void createRandomFile(RepositoryClient client) throws IOException {
     String uuid = UUID.randomUUID().toString();
     String name = "file-" + uuid + ".uuid";
 
@@ -182,8 +185,8 @@ public class RepositoriesITCase {
     client.getAddCommand().add(name);
   }
 
-  public static void commit(RepositoryClient repositoryClient, String message) throws IOException {
-    repositoryClient.getCommitCommand().commit(AUTHOR, message);
+  private static void commit(RepositoryClient repositoryClient) throws IOException {
+    repositoryClient.getCommitCommand().commit(AUTHOR, "commit");
     if ( repositoryClient.isCommandSupported(ClientCommand.PUSH) ) {
       repositoryClient.getPushCommand().push();
     }
