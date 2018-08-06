@@ -60,6 +60,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertEquals;
 import static sonia.scm.it.RegExMatcher.matchesPattern;
+import static sonia.scm.it.RestUtil.BASE_URL;
 import static sonia.scm.it.RestUtil.createResourceUrl;
 import static sonia.scm.it.RestUtil.given;
 
@@ -194,7 +195,7 @@ public class RepositoriesITCase {
 
   private RepositoryClient createRepositoryClient() throws IOException {
     RepositoryClientFactory clientFactory = new RepositoryClientFactory();
-    return clientFactory.create(repositoryType, "http://localhost:8081/scm/" + repositoryType + "/scmadmin/HeartOfGold-" + repositoryType, "scmadmin", "scmadmin", temporaryFolder.newFolder());
+    return clientFactory.create(repositoryType, BASE_URL + repositoryType + "/scmadmin/HeartOfGold-" + repositoryType, "scmadmin", "scmadmin", temporaryFolder.newFolder());
   }
 
   private String repositoryJson() {
