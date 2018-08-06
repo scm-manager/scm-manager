@@ -33,7 +33,6 @@
 
 package sonia.scm.it;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
@@ -48,6 +47,7 @@ import sonia.scm.web.VndMediaType;
 
 import javax.ws.rs.core.MediaType;
 import java.net.URI;
+import java.util.Collection;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -59,15 +59,12 @@ import static sonia.scm.it.IntegrationTestUtil.serialize;
 import static sonia.scm.it.RepositoryITUtil.createRepository;
 import static sonia.scm.it.RepositoryITUtil.deleteRepository;
 
-//~--- JDK imports ------------------------------------------------------------
-
-
 /**
  *
  * @author Sebastian Sdorra
  */
 @RunWith(Parameterized.class)
-public class RepositoryArchiveITCase extends RepositoryTypeITCaseBase
+public class RepositoryArchiveITCase
 {
 
   /**
@@ -82,6 +79,11 @@ public class RepositoryArchiveITCase extends RepositoryTypeITCaseBase
   }
 
   //~--- methods --------------------------------------------------------------
+
+  @Parameterized.Parameters(name = "{0}")
+  public static Collection<String> createParameters() {
+    return IntegrationTestUtil.createRepositoryTypeParameters();
+  }
 
   /**
    * Method description
@@ -148,8 +150,6 @@ public class RepositoryArchiveITCase extends RepositoryTypeITCaseBase
     response.close();
   }
 
-  //~--- set methods ----------------------------------------------------------
-
   /**
    * Method description
    *
@@ -169,8 +169,6 @@ public class RepositoryArchiveITCase extends RepositoryTypeITCaseBase
     assertNotNull(resp);
     assertEquals(204, resp.getStatus());
   }
-
-  //~--- fields ---------------------------------------------------------------
 
   /** Field description */
   private ScmClient client;
