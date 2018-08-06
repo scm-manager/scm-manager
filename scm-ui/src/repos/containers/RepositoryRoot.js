@@ -17,8 +17,10 @@ import { translate } from "react-i18next";
 import { Navigation, NavLink, Section } from "../../components/navigation";
 import RepositoryDetails from "../components/RepositoryDetails";
 import DeleteNavAction from "../components/DeleteNavAction";
+import Edit from "../containers/Edit";
 
 import type { History } from "history";
+import EditNavLink from "../components/EditNavLink";
 
 type Props = {
   namespace: string,
@@ -91,10 +93,15 @@ class RepositoryRoot extends React.Component<Props> {
               exact
               component={() => <RepositoryDetails repository={repository} />}
             />
+            <Route
+              path={`${url}/edit`}
+              component={() => <Edit repository={repository} />}
+            />
           </div>
           <div className="column">
             <Navigation>
               <Section label={t("repository-root.actions-label")}>
+                <EditNavLink repository={repository} editUrl={`${url}/edit`} />
                 <DeleteNavAction repository={repository} delete={this.delete} />
                 <NavLink to="/repos" label={t("repository-root.back-label")} />
               </Section>

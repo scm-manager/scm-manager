@@ -22,6 +22,11 @@ export const CREATE_REPO_SUCCESS = `${CREATE_REPO}_${types.SUCCESS_SUFFIX}`;
 export const CREATE_REPO_FAILURE = `${CREATE_REPO}_${types.FAILURE_SUFFIX}`;
 export const CREATE_REPO_RESET = `${CREATE_REPO}_${types.RESET_SUFFIX}`;
 
+export const MODIFY_REPO = "scm/repos/MODIFY_REPO";
+export const MODIFY_REPO_PENDING = `${MODIFY_REPO}_${types.PENDING_SUFFIX}`;
+export const MODIFY_REPO_SUCCESS = `${MODIFY_REPO}_${types.SUCCESS_SUFFIX}`;
+export const MODIFY_REPO_FAILURE = `${MODIFY_REPO}_${types.FAILURE_SUFFIX}`;
+
 export const DELETE_REPO = "scm/repos/DELETE_REPO";
 export const DELETE_REPO_PENDING = `${DELETE_REPO}_${types.PENDING_SUFFIX}`;
 export const DELETE_REPO_SUCCESS = `${DELETE_REPO}_${types.SUCCESS_SUFFIX}`;
@@ -188,6 +193,54 @@ export function createRepoReset(): Action {
   };
 }
 
+// modify
+
+export function modifyRepo(repository: Repository, callback?: () => void) {
+  return function(dispatch: any) {
+    dispatch(modifyRepoPending(repository));
+
+    return apiClient
+      .put(repository._links.update.href, repository, CONTENT_TYPE)
+      .then(() => {
+        dispatch(modifyRepoSuccess(repository));
+        if (callback) {
+          callback();
+        }
+      })
+      .catch(cause => {
+        const error = new Error(`failed to modify repo: ${cause.message}`);
+        dispatch(modifyRepoFailure(repository, error));
+      });
+  };
+}
+
+export function modifyRepoPending(repository: Repository): Action {
+  return {
+    type: MODIFY_REPO_PENDING,
+    payload: repository,
+    itemId: createIdentifier(repository)
+  };
+}
+
+export function modifyRepoSuccess(repository: Repository): Action {
+  return {
+    type: MODIFY_REPO_SUCCESS,
+    payload: repository,
+    itemId: createIdentifier(repository)
+  };
+}
+
+export function modifyRepoFailure(
+  repository: Repository,
+  error: Error
+): Action {
+  return {
+    type: MODIFY_REPO_FAILURE,
+    payload: { error, repository },
+    itemId: createIdentifier(repository)
+  };
+}
+
 // delete
 
 export function deleteRepo(repository: Repository, callback?: () => void) {
@@ -288,6 +341,8 @@ export default function reducer(
   switch (action.type) {
     case FETCH_REPOS_SUCCESS:
       return normalizeByNamespaceAndName(action.payload);
+    case MODIFY_REPO_SUCCESS:
+      return reducerByNames(state, action.payload);
     case FETCH_REPO_SUCCESS:
       return reducerByNames(state, action.payload);
     default:
@@ -357,6 +412,22 @@ export function isCreateRepoPending(state: Object) {
 
 export function getCreateRepoFailure(state: Object) {
   return getFailure(state, CREATE_REPO);
+}
+
+export function isModifyRepoPending(
+  state: Object,
+  namespace: string,
+  name: string
+) {
+  return isPending(state, MODIFY_REPO, namespace + "/" + name);
+}
+
+export function getModifyRepoFailure(
+  state: Object,
+  namespace: string,
+  name: string
+) {
+  return getFailure(state, MODIFY_REPO, namespace + "/" + name);
 }
 
 export function isDeleteRepoPending(

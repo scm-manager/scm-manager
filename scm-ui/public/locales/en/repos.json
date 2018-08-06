@@ -26,8 +26,15 @@
     "title": "Create Repository",
     "subtitle": "Create a new repository"
   },
+  "edit": {
+    "title": "Edit Repository",
+    "subtitle": "Edit an existing repository"
+  },
   "repository-form": {
-    "submit": "Speichern"
+    "submit": "Save"
+  },
+  "edit-nav-link": {
+    "label": "Edit"
   },
   "delete-nav-action": {
     "label": "Delete",

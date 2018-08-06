@@ -42,9 +42,8 @@ class Textarea extends React.Component<Props> {
             }}
             placeholder={placeholder}
             onChange={this.handleInput}
-          >
-            {value}
-          </textarea>
+            value={value}
+          />
         </div>
       </div>
     );

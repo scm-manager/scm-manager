@@ -37,7 +37,15 @@ import reducer, {
   DELETE_REPO_PENDING,
   DELETE_REPO_FAILURE,
   isDeleteRepoPending,
-  getDeleteRepoFailure
+  getDeleteRepoFailure,
+  modifyRepo,
+  MODIFY_REPO_PENDING,
+  MODIFY_REPO_SUCCESS,
+  MODIFY_REPO_FAILURE,
+  MODIFY_REPO,
+  isModifyRepoPending,
+  getModifyRepoFailure,
+  modifyRepoSuccess
 } from "./repos";
 import type { Repository, RepositoryCollection } from "../types/Repositories";
 
@@ -485,6 +493,64 @@ describe("repos fetch", () => {
       expect(actions[1].payload.error).toBeDefined();
     });
   });
+
+  it("should successfully modify slarti/fjords repo", () => {
+    fetchMock.putOnce(slartiFjords._links.update.href, {
+      status: 204
+    });
+
+    let editedFjords = {...slartiFjords};
+    editedFjords.description = "coast of africa";
+
+    const store = mockStore({});
+
+    return store.dispatch(modifyRepo(editedFjords)).then(() => {
+      const actions = store.getActions();
+      expect(actions[0].type).toEqual(MODIFY_REPO_PENDING);
+      expect(actions[1].type).toEqual(MODIFY_REPO_SUCCESS);
+    });
+  });
+
+  it("should successfully modify slarti/fjords repo and call the callback", () => {
+    fetchMock.putOnce(slartiFjords._links.update.href, {
+      status: 204
+    });
+
+    let editedFjords = {...slartiFjords};
+    editedFjords.description = "coast of africa";
+
+    const store = mockStore({});
+
+    let called = false;
+    const callback = () => {
+      called = true;
+    };
+
+    return store.dispatch(modifyRepo(editedFjords, callback)).then(() => {
+      const actions = store.getActions();
+      expect(actions[0].type).toEqual(MODIFY_REPO_PENDING);
+      expect(actions[1].type).toEqual(MODIFY_REPO_SUCCESS);
+      expect(called).toBe(true);
+    });
+  });
+
+  it("should fail modifying on HTTP 500", () => {
+    fetchMock.putOnce(slartiFjords._links.update.href, {
+      status: 500
+    });
+
+    let editedFjords = { ...slartiFjords };
+    editedFjords.description = "coast of africa";
+
+    const store = mockStore({});
+
+    return store.dispatch(modifyRepo(editedFjords)).then(() => {
+      const actions = store.getActions();
+      expect(actions[0].type).toEqual(MODIFY_REPO_PENDING);
+      expect(actions[1].type).toEqual(MODIFY_REPO_FAILURE);
+      expect(actions[1].payload).toBeDefined();
+    });
+  });
 });
 
 describe("repos reducer", () => {
@@ -520,6 +586,18 @@ describe("repos reducer", () => {
   it("should store the repo at byNames", () => {
     const newState = reducer({}, fetchRepoSuccess(slartiFjords));
     expect(newState.byNames["slarti/fjords"]).toBe(slartiFjords);
+  });
+
+  it("should update reposByNames", () => {
+    const oldState = {
+      byNames: {
+        "slarti/fjords": slartiFjords
+      }
+    };
+    let slartiFjordsEdited = { ...slartiFjords };
+    slartiFjordsEdited.description = "I bless the rains down in Africa";
+    const newState = reducer(oldState, modifyRepoSuccess(slartiFjordsEdited));
+    expect(newState.byNames["slarti/fjords"]).toEqual(slartiFjordsEdited);
   });
 });
 
@@ -633,6 +711,36 @@ describe("repos selectors", () => {
 
   it("should return undefined when create repo did not fail", () => {
     expect(getCreateRepoFailure({})).toBe(undefined);
+  });
+
+  // modify
+
+  it("should return true, when modify repo is pending", () => {
+    const state = {
+      pending: {
+        [MODIFY_REPO + "/slarti/fjords"]: true
+      }
+    };
+
+    expect(isModifyRepoPending(state, "slarti", "fjords")).toEqual(true);
+  });
+
+  it("should return false, when modify repo is not pending", () => {
+    expect(isModifyRepoPending({}, "slarti", "fjords")).toEqual(false);
+  });
+
+  it("should return error, when modify repo failed", () => {
+    const state = {
+      failure: {
+        [MODIFY_REPO + "/slarti/fjords"]: error
+      }
+    };
+
+    expect(getModifyRepoFailure(state, "slarti", "fjords")).toEqual(error);
+  });
+
+  it("should return undefined, when modify did not fail", () => {
+    expect(getModifyRepoFailure({}, "slarti", "fjords")).toBeUndefined();
   });
 
   // delete

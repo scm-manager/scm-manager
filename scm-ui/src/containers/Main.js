@@ -47,7 +47,6 @@ class Main extends React.Component<Props> {
             authenticated={authenticated}
           />
           <ProtectedRoute
-            exact
             path="/repo/:namespace/:name"
             component={RepositoryRoot}
             authenticated={authenticated}
