@@ -4,7 +4,7 @@ import Button, { type ButtonProps } from "./Button";
 
 class SubmitButton extends React.Component<ButtonProps> {
   render() {
-    return <Button type="primary" {...this.props} />;
+    return <Button type="submit" color="primary" {...this.props} />;
   }
 }
 

@@ -14,12 +14,14 @@ export type ButtonProps = {
 };
 
 type Props = ButtonProps & {
-  type: string
+  type: string,
+  color: string
 };
 
 class Button extends React.Component<Props> {
   static defaultProps = {
-    type: "default"
+    type: "button",
+    color: "default"
   };
 
   renderButton = () => {
@@ -28,6 +30,7 @@ class Button extends React.Component<Props> {
       loading,
       disabled,
       type,
+      color,
       action,
       fullWidth,
       className
@@ -36,11 +39,12 @@ class Button extends React.Component<Props> {
     const fullWidthClass = fullWidth ? "is-fullwidth" : "";
     return (
       <button
+        type={type}
         disabled={disabled}
         onClick={action ? action : (event: Event) => {}}
         className={classNames(
           "button",
-          "is-" + type,
+          "is-" + color,
           loadingClass,
           fullWidthClass,
           className

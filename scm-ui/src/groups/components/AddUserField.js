@@ -31,6 +31,7 @@ class AddUserField extends React.Component<Props, State> {
           onChange={this.handleAddUserChange}
           validationError={false} //TODO: validate user name
           value={this.state.userToAdd}
+          onReturnPressed={this.appendMember}
         />
         <AddButton
           label={t("add-user-button.label")}
@@ -42,9 +43,13 @@ class AddUserField extends React.Component<Props, State> {
 
   addButtonClicked = (event: Event) => {
     event.preventDefault();
+    this.appendMember();
+  };
+
+  appendMember = () => {
     this.props.addUser(this.state.userToAdd);
     this.setState({ ...this.state, userToAdd: "" });
-  };
+  }
 
   handleAddUserChange = (username: string) => {
     this.setState({ ...this.state, userToAdd: username });

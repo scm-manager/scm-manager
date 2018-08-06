@@ -1,6 +1,5 @@
 //@flow
 import React from "react";
-import Button from "../../components/buttons/Button"
 import { translate } from "react-i18next"
 import RemoveUserButton from "./buttons/RemoveUserButton";
 
