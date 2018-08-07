@@ -152,10 +152,11 @@ public class HgConfigPackageResourceTest {
 
   @Test
   @SubjectAware(username = "writeOnly")
-  public void shouldHandleMissingPackageId() throws Exception {
-
-    MockHttpResponse response = put(null);
-    assertEquals(HttpServletResponse.SC_METHOD_NOT_ALLOWED, response.getStatus());
+  public void shouldHandlePackagesThatAreNotFound() throws Exception {
+    String packageId = "this-package-does-not-ex";
+    when(hgPackageReader.getPackage(packageId)).thenReturn(null);
+    MockHttpResponse response = put(packageId);
+    assertEquals(HttpServletResponse.SC_NOT_FOUND, response.getStatus());
   }
 
   @Test

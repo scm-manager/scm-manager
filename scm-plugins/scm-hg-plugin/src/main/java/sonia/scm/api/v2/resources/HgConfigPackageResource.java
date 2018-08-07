@@ -80,12 +80,15 @@ public class HgConfigPackageResource {
 
     HgPackage pkg = pkgReader.getPackage(pkgId);
 
-    // First path param cannot be null (leaving it results in 405)
-    if (HgInstallerFactory.createInstaller()
-                          .installPackage(client, handler, SCMContext.getContext().getBaseDirectory(), pkg)) {
-      response = Response.noContent().build();
+    if (pkg != null) {
+      if (HgInstallerFactory.createInstaller()
+                            .installPackage(client, handler, SCMContext.getContext().getBaseDirectory(), pkg)) {
+        response = Response.noContent().build();
+      } else {
+        response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+      }
     } else {
-      response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+      response = Response.status(Response.Status.NOT_FOUND).build();
     }
 
     return response;
