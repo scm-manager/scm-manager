@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import sonia.scm.PageResult;
+import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RepositoryIsNotArchivedException;
@@ -26,8 +27,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 
 import static java.util.Collections.singletonList;
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
 import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
@@ -37,7 +36,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
@@ -80,7 +78,7 @@ public class RepositoryRootResourceTest {
 
   @Test
   public void shouldFailForNotExistingRepository() throws URISyntaxException {
-    when(repositoryManager.getByNamespace(anyString(), anyString())).thenReturn(empty());
+    when(repositoryManager.get(any(NamespaceAndName.class))).thenReturn(null);
     mockRepository("space", "repo");
 
     MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/other");
@@ -135,7 +133,7 @@ public class RepositoryRootResourceTest {
   public void shouldHandleUpdateForNotExistingRepository() throws URISyntaxException, IOException {
     URL url = Resources.getResource("sonia/scm/api/v2/repository-test-update.json");
     byte[] repository = Resources.toByteArray(url);
-    when(repositoryManager.getByNamespace(anyString(), anyString())).thenReturn(empty());
+    when(repositoryManager.get(any(NamespaceAndName.class))).thenReturn(null);
 
     MockHttpRequest request = MockHttpRequest
       .put("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo")
@@ -247,7 +245,7 @@ public class RepositoryRootResourceTest {
     repository.setName(name);
     String id = namespace + "-" + name;
     repository.setId(id);
-    when(repositoryManager.getByNamespace(namespace, name)).thenReturn(of(repository));
+    when(repositoryManager.get(new NamespaceAndName(namespace, name))).thenReturn(repository);
     when(repositoryManager.get(id)).thenReturn(repository);
     return repository;
   }

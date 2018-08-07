@@ -3,6 +3,7 @@ package sonia.scm.api.v2.resources;
 import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
+import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RepositoryIsNotArchivedException;
@@ -164,7 +165,7 @@ public class RepositoryResource {
   }
 
   private Supplier<Optional<Repository>> loadBy(String namespace, String name) {
-    return () -> manager.getByNamespace(namespace, name);
+    return () -> Optional.ofNullable(manager.get(new NamespaceAndName(namespace, name)));
   }
 
   private Predicate<Repository> nameAndNamespaceStaysTheSame(String namespace, String name) {

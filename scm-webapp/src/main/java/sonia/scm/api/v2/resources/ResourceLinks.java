@@ -2,6 +2,7 @@ package sonia.scm.api.v2.resources;
 
 import javax.inject.Inject;
 import javax.ws.rs.core.UriInfo;
+import java.net.URI;
 
 class ResourceLinks {
 
@@ -127,13 +128,19 @@ class ResourceLinks {
 
   static class RepositoryLinks {
     private final LinkBuilder repositoryLinkBuilder;
+    private final UriInfo uriInfo;
 
     RepositoryLinks(UriInfo uriInfo) {
       repositoryLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class);
+      this.uriInfo = uriInfo;
     }
 
     String self(String namespace, String name) {
       return repositoryLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("get").parameters().href();
+    }
+
+    String clone(String type, String namespace, String name) {
+      return uriInfo.getBaseUri().resolve(URI.create("../../" + type + "/" + namespace + "/" + name)).toASCIIString();
     }
 
     String delete(String namespace, String name) {
