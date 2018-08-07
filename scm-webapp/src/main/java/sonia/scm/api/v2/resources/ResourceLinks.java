@@ -1,5 +1,7 @@
 package sonia.scm.api.v2.resources;
 
+import sonia.scm.repository.NamespaceAndName;
+
 import javax.inject.Inject;
 import javax.ws.rs.core.UriInfo;
 
@@ -178,6 +180,22 @@ class ResourceLinks {
 
     String self(String namespace, String name) {
       return tagLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("tags").parameters().method("getTagCollectionResource").parameters().method("getAll").parameters().href();
+    }
+  }
+
+  public BranchLinks branch() {
+    return new BranchLinks(uriInfoStore.get());
+  }
+
+  static class BranchLinks {
+    private final LinkBuilder branchLinkBuilder;
+
+    BranchLinks(UriInfo uriInfo) {
+      branchLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, BranchRootResource.class, BranchResource.class);
+    }
+
+    String self(NamespaceAndName namespaceAndName, String branch) {
+      return branchLinkBuilder.method("getRepositoryResource").parameters(namespaceAndName.getNamespace(), namespaceAndName.getName()).method("branches").parameters().method("getBranchResource").parameters().method("get").parameters(branch).href();
     }
   }
 

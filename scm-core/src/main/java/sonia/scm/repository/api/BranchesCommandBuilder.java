@@ -35,10 +35,8 @@ package sonia.scm.repository.api;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Objects;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.repository.Branch;
@@ -49,9 +47,9 @@ import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.spi.BlameCommand;
 import sonia.scm.repository.spi.BranchesCommand;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * The branches command list all repository branches.<br />
@@ -139,10 +137,7 @@ public final class BranchesCommandBuilder
 
         branches = getBranchesFromCommand();
 
-        if (branches != null)
-        {
-          cache.put(key, branches);
-        }
+        cache.put(key, branches);
       }
       else if (logger.isDebugEnabled())
       {
