@@ -27,15 +27,15 @@ public class HgConfigPackageResource {
   private final HgPackageReader pkgReader;
   private final AdvancedHttpClient client;
   private final HgRepositoryHandler handler;
-  private final HgConfigPackageCollectionToDtoMapper configPackageCollectionToDtoMapper;
+  private final HgConfigPackagesToDtoMapper configPackageCollectionToDtoMapper;
 
   @Inject
   public HgConfigPackageResource(HgPackageReader pkgReader, AdvancedHttpClient client, HgRepositoryHandler handler,
-                                 HgConfigPackageCollectionToDtoMapper configPackageCollectionToDtoMapper) {
+                                 HgConfigPackagesToDtoMapper hgConfigPackagesToDtoMapper) {
     this.pkgReader = pkgReader;
     this.client = client;
     this.handler = handler;
-    this.configPackageCollectionToDtoMapper = configPackageCollectionToDtoMapper;
+    this.configPackageCollectionToDtoMapper = hgConfigPackagesToDtoMapper;
   }
 
   /**
@@ -55,7 +55,7 @@ public class HgConfigPackageResource {
 
     ConfigurationPermissions.read(HgConfig.PERMISSION).check();
 
-    return configPackageCollectionToDtoMapper.map(pkgReader.getPackages().getPackages());
+    return configPackageCollectionToDtoMapper.map(pkgReader.getPackages());
   }
 
   /**
