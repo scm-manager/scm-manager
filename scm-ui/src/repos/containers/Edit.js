@@ -2,7 +2,6 @@
 import React from "react";
 import { connect } from "react-redux";
 import { translate } from "react-i18next";
-import { Page } from "../../components/layout";
 import RepositoryForm from "../components/form";
 import type { Repository } from "../types/Repositories";
 import {
@@ -12,11 +11,12 @@ import {
 } from "../modules/repos";
 import { withRouter } from "react-router-dom";
 import type { History } from "history";
+import ErrorNotification from "../../components/ErrorNotification";
 
 type Props = {
   repository: Repository,
   modifyRepo: (Repository, () => void) => void,
-  modifyLoading: boolean,
+  loading: boolean,
   error: Error,
 
   // context props
@@ -25,43 +25,34 @@ type Props = {
 };
 
 class Edit extends React.Component<Props> {
-  componentDidMount() {}
-
   repoModified = () => {
     const { history, repository } = this.props;
     history.push(`/repo/${repository.namespace}/${repository.name}`);
   };
 
   render() {
-    const { t, modifyLoading, error } = this.props;
+    const { loading, error } = this.props;
     return (
-      <Page
-        title={t("edit.title")}
-        subtitle={t("edit.subtitle")}
-        error={error}
-        showContentOnError={true}
-      >
+      <div>
+        <ErrorNotification error={error} />
         <RepositoryForm
           repository={this.props.repository}
-          loading={modifyLoading}
+          loading={loading}
           submitForm={repo => {
             this.props.modifyRepo(repo, this.repoModified);
           }}
         />
-      </Page>
+      </div>
     );
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
   const { namespace, name } = ownProps.repository;
-
-  const modifyLoading = isModifyRepoPending(state, namespace, name);
-
+  const loading = isModifyRepoPending(state, namespace, name);
   const error = getModifyRepoFailure(state, namespace, name);
-
   return {
-    modifyLoading,
+    loading,
     error
   };
 };

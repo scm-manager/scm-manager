@@ -9,8 +9,6 @@ import classNames from "classnames";
 
 import icon from "../../../images/blib.jpg";
 
-// TODO we need a variable or something central for the hover
-
 const styles = {
   outer: {
     position: "relative"

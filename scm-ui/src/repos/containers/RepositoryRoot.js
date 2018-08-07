@@ -100,8 +100,11 @@ class RepositoryRoot extends React.Component<Props> {
           </div>
           <div className="column">
             <Navigation>
-              <Section label={t("repository-root.actions-label")}>
+              <Section label={t("repository-root.navigation-label")}>
+                <NavLink to={url} label={t("repository-root.information")} />
                 <EditNavLink repository={repository} editUrl={`${url}/edit`} />
+              </Section>
+              <Section label={t("repository-root.actions-label")}>
                 <DeleteNavAction repository={repository} delete={this.delete} />
                 <NavLink to="/repos" label={t("repository-root.back-label")} />
               </Section>
