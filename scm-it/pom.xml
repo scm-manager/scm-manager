@@ -152,6 +152,33 @@
           </plugin>
 
           <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <version>2.10</version>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>sonia.scm</groupId>
+                  <artifactId>scm-webapp</artifactId>
+                  <version>${project.version}</version>
+                  <type>war</type>
+                  <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+                  <destFileName>scm-webapp.war</destFileName>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+            <executions>
+              <execution>
+                <id>copy-war</id>
+                <phase>pre-integration-test</phase>
+                <goals>
+                  <goal>copy</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-maven-plugin</artifactId>
             <version>${jetty.maven.version}</version>
@@ -161,15 +188,22 @@
               <systemProperties>
                 <systemProperty>
                   <name>scm.home</name>
-                  <value>target/scm-it</value>
+                  <value>${scm.home}</value>
                 </systemProperty>
                 <systemProperty>
                   <name>scm.stage</name>
                   <value>${scm.stage}</value>
                 </systemProperty>
+                <systemProperty>
+                  <name>java.awt.headless</name>
+                  <value>true</value>
+                </systemProperty>
               </systemProperties>
+              <webApp>
+                <contextPath>/scm</contextPath>
+              </webApp>
               <jettyXml>${project.basedir}/src/main/conf/jetty.xml</jettyXml>
-              <war>${project.basedir}/../scm-webapp/target/scm-webapp.war</war>
+              <war>${project.build.outputDirectory}/scm-webapp.war</war>
               <scanIntervalSeconds>0</scanIntervalSeconds>
               <daemon>true</daemon>
             </configuration>
