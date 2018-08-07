@@ -1,10 +1,10 @@
 // @flow
 import React from "react";
 import { Link } from "react-router-dom";
-import type {User} from "../../../users/types/User";
+import type { Member } from "../../types/Group";
 
 type Props = {
-  member: User
+  member: Member
 };
 
 export default class GroupMember extends React.Component<Props> {
@@ -12,12 +12,11 @@ export default class GroupMember extends React.Component<Props> {
     return <Link to={to}>{label}</Link>;
   }
 
-  showName(to: any, member:User) {
-    if(member._links.self){
-      return  this.renderLink(to, member.name);
-    }
-    else {
-      return member.name
+  showName(to: any, member: Member) {
+    if (member._links.self) {
+      return this.renderLink(to, member.name);
+    } else {
+      return member.name;
     }
   }
 
@@ -26,11 +25,8 @@ export default class GroupMember extends React.Component<Props> {
     const to = `/user/${member.name}`;
     return (
       <tr className="is-hidden-mobile">
-        <td>
-          {this.showName(to, member)}
-        </td>
+        <td>{this.showName(to, member)}</td>
       </tr>
-
     );
   }
 }

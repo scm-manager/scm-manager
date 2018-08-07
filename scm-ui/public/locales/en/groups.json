@@ -29,15 +29,15 @@
   "edit-group-button": {
     "label": "Edit"
   },
-  "add-user-button": {
-    "label": "Add user"
+  "add-member-button": {
+    "label": "Add member"
   },
-  "remove-user-button": {
-    "label": "Remove user"
+  "remove-member-button": {
+    "label": "Remove member"
   },
-  "add-user-textfield": {
-    "label": "Add user",
-    "error": "Error adding user"
+  "add-member-textfield": {
+    "label": "Add member",
+    "error": "Error adding member"
   },
   "group-form": {
     "submit": "Submit",
