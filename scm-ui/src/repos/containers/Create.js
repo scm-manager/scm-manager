@@ -10,7 +10,7 @@ import {
   getFetchRepositoryTypesFailure,
   getRepositoryTypes,
   isFetchRepositoryTypesPending
-} from "../modules/repository-types";
+} from "../modules/repositoryTypes";
 import {
   createRepo,
   createRepoReset,

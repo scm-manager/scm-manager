@@ -499,7 +499,7 @@ describe("repos fetch", () => {
       status: 204
     });
 
-    let editedFjords = {...slartiFjords};
+    let editedFjords = { ...slartiFjords };
     editedFjords.description = "coast of africa";
 
     const store = mockStore({});
@@ -516,7 +516,7 @@ describe("repos fetch", () => {
       status: 204
     });
 
-    let editedFjords = {...slartiFjords};
+    let editedFjords = { ...slartiFjords };
     editedFjords.description = "coast of africa";
 
     const store = mockStore({});

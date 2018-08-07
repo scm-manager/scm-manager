@@ -14,8 +14,8 @@ import {
   getRepositoryTypes,
   isFetchRepositoryTypesPending,
   shouldFetchRepositoryTypes
-} from "./repository-types";
-import reducer from "./repository-types";
+} from "./repositoryTypes";
+import reducer from "./repositoryTypes";
 
 const git = {
   name: "git",
