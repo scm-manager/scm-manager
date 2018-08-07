@@ -35,7 +35,7 @@ node() { // No specific label
       }
 
       stage('Integration Test') {
-        mvn 'verify -Pit -pl :scm-webapp,:scm-it'
+        mvn 'verify -Pit -pl :scm-webapp,:scm-it  -Dmaven.test.failure.ignore=true'
       }
 
       stage('SonarQube') {
