@@ -25,6 +25,7 @@ public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Reposit
   @AfterMapping
   void appendLinks(Repository repository, @MappingTarget RepositoryDto target) {
     Links.Builder linksBuilder = linkingTo().self(resourceLinks.repository().self(target.getNamespace(), target.getName()));
+    linksBuilder.single(link("httpProtocol", resourceLinks.repository().clone(target.getType(), target.getNamespace(), target.getName())));
     if (RepositoryPermissions.delete(repository).isPermitted()) {
       linksBuilder.single(link("delete", resourceLinks.repository().delete(target.getNamespace(), target.getName())));
     }

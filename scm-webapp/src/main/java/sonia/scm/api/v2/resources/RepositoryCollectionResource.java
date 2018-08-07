@@ -40,7 +40,7 @@ public class RepositoryCollectionResource {
   @GET
   @Path("")
   @Produces(VndMediaType.REPOSITORY_COLLECTION)
-  @TypeHint(RepositoryDto[].class)
+  @TypeHint(CollectionDto.class)
   @StatusCodes({
     @ResponseCode(code = 200, condition = "success"),
     @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),

@@ -9,13 +9,13 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.repository.Repository;
 import sonia.scm.store.BlobStore;
 import sonia.scm.util.HttpUtil;
+import sonia.scm.web.lfs.LfsBlobStoreFactory;
 import sonia.scm.web.lfs.ScmBlobLfsRepository;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
-import sonia.scm.web.lfs.LfsBlobStoreFactory;
 
 /**
  * This factory class is a helper class to provide the {@link LfsProtocolServlet} and the {@link FileLfsServlet}
@@ -70,7 +70,7 @@ public class LfsServletFactory {
    */
   @VisibleForTesting
   static String buildBaseUri(Repository repository, HttpServletRequest request) {
-    return String.format("%s/git/%s.git/info/lfs/objects/", HttpUtil.getCompleteUrl(request), repository.getName());
+    return String.format("%s/git/%s/%s.git/info/lfs/objects/", HttpUtil.getCompleteUrl(request), repository.getNamespace(), repository.getName());
   }
 
 }

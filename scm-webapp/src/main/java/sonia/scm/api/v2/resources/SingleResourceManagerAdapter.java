@@ -31,8 +31,15 @@ class SingleResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
                              DTO extends HalRepresentation,
                              EXCEPTION extends Exception> extends AbstractManagerResource<MODEL_OBJECT, EXCEPTION> {
 
+  private final Function<Throwable, Optional<Response>> errorHandler;
+
   SingleResourceManagerAdapter(Manager<MODEL_OBJECT, EXCEPTION> manager, Class<MODEL_OBJECT> type) {
+    this(manager, type, e -> Optional.empty());
+  }
+
+  SingleResourceManagerAdapter(Manager<MODEL_OBJECT, EXCEPTION> manager, Class<MODEL_OBJECT> type, Function<Throwable, Optional<Response>> errorHandler) {
     super(manager, type);
+    this.errorHandler = errorHandler;
   }
 
   /**
@@ -68,6 +75,11 @@ class SingleResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
       .map(MODEL_OBJECT::getId)
       .map(this::delete)
       .orElse(null);
+  }
+
+  @Override
+  protected Response createErrorResponse(Throwable throwable) {
+    return errorHandler.apply(throwable).orElse(super.createErrorResponse(throwable));
   }
 
   @Override

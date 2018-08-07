@@ -19,6 +19,9 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 
+/**
+ * RESTful Web Service Resource to get currently logged in users.
+ */
 @Path(MeResource.ME_PATH_V2)
 public class MeResource {
   static final String ME_PATH_V2 = "v2/me/";

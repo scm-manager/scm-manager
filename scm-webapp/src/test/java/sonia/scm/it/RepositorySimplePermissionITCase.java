@@ -35,25 +35,27 @@ package sonia.scm.it;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
+import de.otto.edison.hal.HalRepresentation;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import sonia.scm.api.rest.ObjectMapperProvider;
+import sonia.scm.api.v2.resources.RepositoryDto;
+import sonia.scm.web.VndMediaType;
 
-import sonia.scm.repository.Repository;
+import java.io.IOException;
 
-import static org.junit.Assert.*;
-
-import static sonia.scm.it.IntegrationTestUtil.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static sonia.scm.it.IntegrationTestUtil.createAdminClient;
+import static sonia.scm.it.IntegrationTestUtil.createResource;
+import static sonia.scm.it.IntegrationTestUtil.serialize;
 
 //~--- JDK imports ------------------------------------------------------------
-
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.GenericType;
-import com.sun.jersey.api.client.WebResource;
-
-import java.util.Collection;
 
 /**
  *
@@ -61,11 +63,11 @@ import java.util.Collection;
  */
 @RunWith(Parameterized.class)
 public class RepositorySimplePermissionITCase
-        extends AbstractPermissionITCaseBase<Repository>
+        extends AbstractPermissionITCaseBase<RepositoryDto>
 {
 
   /** Field description */
-  private static String REPOSITORY_UUID;
+  private static String REPOSITORY_PATH;
 
   //~--- constructors ---------------------------------------------------------
 
@@ -75,7 +77,7 @@ public class RepositorySimplePermissionITCase
    *
    * @param credentials
    */
-  public RepositorySimplePermissionITCase(Credentials credentials)
+  public RepositorySimplePermissionITCase(Credentials credentials, String ignore_testCaseName)
   {
     super(credentials);
   }
@@ -87,20 +89,17 @@ public class RepositorySimplePermissionITCase
    *
    */
   @BeforeClass
-  public static void createTestRepository()
-  {
-    Repository repository = new Repository();
+  public static void createTestRepository() throws IOException {
+    RepositoryDto repository = new RepositoryDto();
 
     repository.setName("test-repo");
     repository.setType("git");
-    repository.setPublicReadable(false);
+//    repository.setPublicReadable(false);
 
-    Client client = createClient();
+    ScmClient client = createAdminClient();
 
-    authenticateAdmin(client);
-
-    WebResource wr = createResource(client, "repositories");
-    ClientResponse response = wr.post(ClientResponse.class, repository);
+    WebResource.Builder wr = createResource(client, "repositories");
+    ClientResponse response = wr.type(VndMediaType.REPOSITORY).post(ClientResponse.class, serialize(repository));
 
     assertNotNull(response);
     assertEquals(201, response.getStatus());
@@ -109,17 +108,13 @@ public class RepositorySimplePermissionITCase
 
     assertNotNull(repositoryUrl);
     response.close();
-    wr = client.resource(repositoryUrl);
-    response = wr.get(ClientResponse.class);
+    response = client.resource(repositoryUrl).get(ClientResponse.class);
     assertNotNull(response);
     assertEquals(200, response.getStatus());
-    repository = response.getEntity(Repository.class);
-    assertNotNull(repository);
-    REPOSITORY_UUID = repository.getId();
-    assertNotNull(REPOSITORY_UUID);
+    repository = new ObjectMapperProvider().get().readValue(response.getEntity(String.class), RepositoryDto.class);
+    REPOSITORY_PATH = repository.getNamespace() + "/" + repository.getName();
+    assertNotNull(REPOSITORY_PATH);
     response.close();
-    logoutClient(client);
-    client.destroy();
   }
 
   /**
@@ -127,13 +122,9 @@ public class RepositorySimplePermissionITCase
    *
    */
   @AfterClass
-  public static void removeTestRepoistory()
+  public static void removeTestRepository()
   {
-    Client client = createClient();
-
-    authenticateAdmin(client);
-    createResource(client, "repositories/" + REPOSITORY_UUID).delete();
-    client.destroy();
+    createResource(createAdminClient(), "repositories/" + REPOSITORY_PATH).delete();
   }
 
   /**
@@ -150,12 +141,16 @@ public class RepositorySimplePermissionITCase
       assertNotNull(response);
       assertEquals(200, response.getStatus());
 
-      Collection<Repository> repositories =
-        response.getEntity(new GenericType<Collection<Repository>>() {}
-      );
+      HalRepresentation repositories =
+        null;
+      try {
+        repositories = new ObjectMapperProvider().get().readValue(response.getEntity(String.class), HalRepresentation.class);
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
 
       assertNotNull(repositories);
-      assertTrue(repositories.isEmpty());
+      assertTrue(repositories.getEmbedded().getItemsBy("repositories").isEmpty());
       response.close();
     }
   }
@@ -198,9 +193,9 @@ public class RepositorySimplePermissionITCase
    * @return
    */
   @Override
-  protected Repository getCreateItem()
+  protected RepositoryDto getCreateItem()
   {
-    Repository repository = new Repository();
+    RepositoryDto repository = new RepositoryDto();
 
     repository.setName("create-test-repo");
     repository.setType("svn");
@@ -217,7 +212,7 @@ public class RepositorySimplePermissionITCase
   @Override
   protected String getDeletePath()
   {
-    return "repositories/".concat(REPOSITORY_UUID);
+    return "repositories/".concat(REPOSITORY_PATH);
   }
 
   /**
@@ -229,7 +224,7 @@ public class RepositorySimplePermissionITCase
   @Override
   protected String getGetPath()
   {
-    return "repositories/".concat(REPOSITORY_UUID);
+    return "repositories/".concat(REPOSITORY_PATH);
   }
 
   /**
@@ -239,11 +234,12 @@ public class RepositorySimplePermissionITCase
    * @return
    */
   @Override
-  protected Repository getModifyItem()
+  protected RepositoryDto getModifyItem()
   {
-    Repository repository = new Repository();
+    RepositoryDto repository = new RepositoryDto();
 
     repository.setName("test-repo");
+    repository.setNamespace("scmadmin");
     repository.setType("git");
     repository.setDescription("Test Repository");
 
@@ -259,6 +255,11 @@ public class RepositorySimplePermissionITCase
   @Override
   protected String getModifyPath()
   {
-    return "repositories/".concat(REPOSITORY_UUID);
+    return "repositories/".concat(REPOSITORY_PATH);
+  }
+
+  @Override
+  protected String getMediaType() {
+    return VndMediaType.REPOSITORY;
   }
 }

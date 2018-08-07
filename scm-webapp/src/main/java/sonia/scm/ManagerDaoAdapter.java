@@ -4,6 +4,7 @@ import com.github.sdorra.ssp.PermissionCheck;
 import sonia.scm.util.AssertUtil;
 
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public class ManagerDaoAdapter<T extends ModelObject, E extends Exception> {
@@ -38,9 +39,13 @@ public class ManagerDaoAdapter<T extends ModelObject, E extends Exception> {
   }
 
   public T create(T newObject, Supplier<PermissionCheck> permissionCheck, AroundHandler<T, E> beforeCreate, AroundHandler<T, E> afterCreate) throws E {
+    return create(newObject, permissionCheck, beforeCreate, afterCreate, dao::contains);
+  }
+
+  public T create(T newObject, Supplier<PermissionCheck> permissionCheck, AroundHandler<T, E> beforeCreate, AroundHandler<T, E> afterCreate, Predicate<T> existsCheck) throws E {
     permissionCheck.get().check();
     AssertUtil.assertIsValid(newObject);
-    if (dao.contains(newObject)) {
+    if (existsCheck.test(newObject)) {
       throw alreadyExistsException.apply(newObject);
     }
     newObject.setCreationDate(System.currentTimeMillis());

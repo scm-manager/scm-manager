@@ -35,13 +35,11 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.Type;
 import sonia.scm.TypeManager;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Optional;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -100,7 +98,7 @@ public interface RepositoryManager
    *
    * @return all configured repository types
    */
-  public Collection<Type> getConfiguredTypes();
+  public Collection<RepositoryType> getConfiguredTypes();
 
   /**
    * Returns the {@link Repository} associated to the request uri.
@@ -135,11 +133,4 @@ public interface RepositoryManager
    */
   @Override
   public RepositoryHandler getHandler(String type);
-
-  default Optional<Repository> getByNamespace(String namespace, String name) {
-    return getAll()
-      .stream()
-      .filter(r -> r.getName().equals(name) && r.getNamespace().equals(namespace))
-      .findFirst();
-  }
 }

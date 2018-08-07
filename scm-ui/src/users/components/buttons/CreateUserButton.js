@@ -1,30 +1,20 @@
 //@flow
 import React from "react";
-import injectSheet from "react-jss";
 import { translate } from "react-i18next";
-import { AddButton } from "../../../components/buttons";
-import classNames from "classnames";
+import { CreateButton } from "../../../components/buttons";
 
-const styles = {
-  spacing: {
-    margin: "1em 0 0 1em"
-  }
-};
-
+// TODO remove
 type Props = {
-  t: string => string,
-  classes: any
+  t: string => string
 };
 
 class CreateUserButton extends React.Component<Props> {
   render() {
-    const { classes, t } = this.props;
+    const { t } = this.props;
     return (
-      <div className={classNames("is-pulled-right", classes.spacing)}>
-        <AddButton label={t("create-user-button.label")} link="/users/add" />
-      </div>
+      <CreateButton label={t("create-user-button.label")} link="/users/add" />
     );
   }
 }
 
-export default translate("users")(injectSheet(styles)(CreateUserButton));
+export default translate("users")(CreateUserButton);

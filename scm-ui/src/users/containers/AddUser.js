@@ -48,6 +48,7 @@ class AddUser extends React.Component<Props> {
         title={t("add-user.title")}
         subtitle={t("add-user.subtitle")}
         error={error}
+        showContentOnError={true}
       >
         <UserForm
           submitForm={user => this.createUser(user)}

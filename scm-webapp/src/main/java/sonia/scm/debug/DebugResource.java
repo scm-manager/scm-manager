@@ -30,20 +30,22 @@
  */
 package sonia.scm.debug;
 
-import java.util.Collection;
+import sonia.scm.repository.NamespaceAndName;
+
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import java.util.Collection;
 
 /**
  * Rest api resource for the {@link DebugService}.
  * 
  * @author Sebastian Sdorra
  */
-@Path("debug/{repository}/post-receive")
+@Path("debug/{namespace}/{name}/post-receive")
 public final class DebugResource
 {
   private final DebugService debugService;
@@ -62,28 +64,30 @@ public final class DebugResource
   /**
    * Returns all received hook data for the given repository.
    * 
-   * @param repository repository id
-   * 
+   * @param namespace repository namespace
+   * @param name repository name
+   *
    * @return all received hook data for the given repository
    */
   @GET
   @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-  public Collection<DebugHookData> getAll(@PathParam("repository") String repository){
-    return debugService.getAll(repository);
+  public Collection<DebugHookData> getAll(@PathParam("namespace") String namespace, @PathParam("name") String name){
+    return debugService.getAll(new NamespaceAndName(namespace, name));
   }
   
   /**
    * Returns the last received hook data for the given repository.
-   * 
-   * @param repository repository id
+   *
+   * @param namespace repository namespace
+   * @param name repository name
    * 
    * @return the last received hook data for the given repository
    */
   @GET
   @Path("last")
   @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-  public DebugHookData getLast(@PathParam("repository") String repository){
-    return debugService.getLast(repository);
+  public DebugHookData getLast(@PathParam("namespace") String namespace, @PathParam("name") String name){
+    return debugService.getLast(new NamespaceAndName(namespace, name));
   }
   
 }

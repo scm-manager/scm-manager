@@ -10,7 +10,8 @@ export type ButtonProps = {
   action?: () => void,
   link?: string,
   fullWidth?: boolean,
-  className?: string
+  className?: string,
+  classes: any
 };
 
 type Props = ButtonProps & {

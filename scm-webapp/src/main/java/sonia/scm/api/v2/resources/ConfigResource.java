@@ -16,6 +16,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
+/**
+ * RESTful Web Service Resource to manage the configuration.
+ */
 @Path(ConfigResource.CONFIG_PATH_V2)
 public class ConfigResource {
 

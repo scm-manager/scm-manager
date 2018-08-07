@@ -42,7 +42,7 @@ public class UserCollectionResource {
   @GET
   @Path("")
   @Produces(VndMediaType.USER_COLLECTION)
-  @TypeHint(UserDto[].class)
+  @TypeHint(CollectionDto.class)
   @StatusCodes({
     @ResponseCode(code = 200, condition = "success"),
     @ResponseCode(code = 400, condition = "\"sortBy\" field unknown"),

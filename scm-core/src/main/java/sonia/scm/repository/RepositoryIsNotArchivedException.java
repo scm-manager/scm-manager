@@ -38,51 +38,11 @@ package sonia.scm.repository;
  *
  * @since 1.14
  */
-public class RepositoryIsNotArchivedException extends RepositoryException
-{
+public class RepositoryIsNotArchivedException extends RepositoryException {
 
-  /** Field description */
   private static final long serialVersionUID = 7728748133123987511L;
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   */
-  public RepositoryIsNotArchivedException() {}
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param message
-   */
-  public RepositoryIsNotArchivedException(String message)
-  {
-    super(message);
-  }
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param cause
-   */
-  public RepositoryIsNotArchivedException(Throwable cause)
-  {
-    super(cause);
-  }
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param message
-   * @param cause
-   */
-  public RepositoryIsNotArchivedException(String message, Throwable cause)
-  {
-    super(message, cause);
+  public RepositoryIsNotArchivedException() {
+    super("Repository could not be deleted, because it is not archived.");
   }
 }

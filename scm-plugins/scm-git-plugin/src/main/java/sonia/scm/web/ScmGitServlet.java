@@ -38,32 +38,27 @@ package sonia.scm.web;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
 import org.eclipse.jgit.http.server.GitServlet;
-
-import org.slf4j.Logger;
-import static org.slf4j.LoggerFactory.getLogger;
-
-
 import org.eclipse.jgit.lfs.lib.Constants;
-import static org.eclipse.jgit.lfs.lib.Constants.CONTENT_TYPE_GIT_LFS_JSON;
-
+import org.slf4j.Logger;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RepositoryProvider;
 import sonia.scm.repository.RepositoryRequestListenerUtil;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.web.lfs.servlet.LfsServletFactory;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
-import java.util.regex.Pattern;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import sonia.scm.repository.RepositoryException;
+import java.io.IOException;
+import java.util.regex.Pattern;
+
+import static org.eclipse.jgit.lfs.lib.Constants.CONTENT_TYPE_GIT_LFS_JSON;
+import static org.slf4j.LoggerFactory.getLogger;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -166,12 +161,13 @@ public class ScmGitServlet extends GitServlet
    * </ul>
    */
   private void handleRequest(HttpServletRequest request, HttpServletResponse response, Repository repository) throws ServletException, IOException {
-    logger.trace("handle git repository at {}", repository.getName());
-    if (isLfsBatchApiRequest(request, repository.getName())) {
+    String repoPath = repository.getNamespace() + "/" + repository.getName();
+    logger.trace("handle git repository at {}", repoPath);
+    if (isLfsBatchApiRequest(request, repoPath)) {
       HttpServlet servlet = lfsServletFactory.createProtocolServletFor(repository, request);
       logger.trace("handle lfs batch api request");
       handleGitLfsRequest(servlet, request, response, repository);
-    } else if (isLfsFileTransferRequest(request, repository.getName())) {
+    } else if (isLfsFileTransferRequest(request, repoPath)) {
       HttpServlet servlet = lfsServletFactory.createFileLfsServletFor(repository, request);
       logger.trace("handle lfs file transfer request");
       handleGitLfsRequest(servlet, request, response, repository);

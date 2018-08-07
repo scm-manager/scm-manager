@@ -3,14 +3,22 @@ package sonia.scm.api.v2.resources;
 import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
+import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryException;
+import sonia.scm.repository.RepositoryIsNotArchivedException;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -40,7 +48,7 @@ public class RepositoryResource {
     this.dtoToRepositoryMapper = dtoToRepositoryMapper;
     this.manager = manager;
     this.repositoryToDtoMapper = repositoryToDtoMapper;
-    this.adapter = new SingleResourceManagerAdapter<>(manager, Repository.class);
+    this.adapter = new SingleResourceManagerAdapter<>(manager, Repository.class, this::handleNotArchived);
     this.tagRootResource = tagRootResource;
     this.branchRootResource = branchRootResource;
     this.changesetRootResource = changesetRootResource;
@@ -148,8 +156,16 @@ public class RepositoryResource {
     return permissionRootResource.get();
   }
 
+  private Optional<Response> handleNotArchived(Throwable throwable) {
+    if (throwable instanceof RepositoryIsNotArchivedException) {
+      return Optional.of(Response.status(Response.Status.PRECONDITION_FAILED).build());
+    } else {
+      return Optional.empty();
+    }
+  }
+
   private Supplier<Optional<Repository>> loadBy(String namespace, String name) {
-    return () -> manager.getByNamespace(namespace, name);
+    return () -> Optional.ofNullable(manager.get(new NamespaceAndName(namespace, name)));
   }
 
   private Predicate<Repository> nameAndNamespaceStaysTheSame(String namespace, String name) {

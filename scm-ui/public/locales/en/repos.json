@@ -1,0 +1,46 @@
+{
+  "repository": {
+    "name": "Name",
+    "type": "Type",
+    "contact": "Contact",
+    "description": "Description",
+    "creationDate": "Creation Date",
+    "lastModified": "Last Modified"
+  },
+  "validation": {
+    "name-invalid": "The repository name is invalid",
+    "contact-invalid": "Contact must be a valid mail address"
+  },
+  "overview": {
+    "title": "Repositories",
+    "subtitle": "Overview of available repositories",
+    "create-button": "Create"
+  },
+  "repository-root": {
+    "error-title": "Error",
+    "error-subtitle": "Unknown repository error",
+    "actions-label": "Actions",
+    "back-label": "Back",
+    "navigation-label": "Navigation",
+    "information": "Information"
+  },
+  "create": {
+    "title": "Create Repository",
+    "subtitle": "Create a new repository"
+  },
+  "repository-form": {
+    "submit": "Save"
+  },
+  "edit-nav-link": {
+    "label": "Edit"
+  },
+  "delete-nav-action": {
+    "label": "Delete",
+    "confirm-alert": {
+      "title": "Delete repository",
+      "message": "Do you really want to delete the repository?",
+      "submit": "Yes",
+      "cancel": "No"
+    }
+  }
+}
