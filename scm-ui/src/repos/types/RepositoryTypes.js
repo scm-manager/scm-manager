@@ -9,6 +9,6 @@ export type RepositoryType = {
 
 export type RepositoryTypeCollection = Collection & {
   _embedded: {
-    "repository-types": RepositoryType[]
+    "repositoryTypes": RepositoryType[]
   }
 };

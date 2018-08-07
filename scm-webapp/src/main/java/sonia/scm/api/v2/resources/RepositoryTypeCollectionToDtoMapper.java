@@ -10,7 +10,7 @@ public class RepositoryTypeCollectionToDtoMapper extends CollectionToDtoMapper<R
 
   @Inject
   public RepositoryTypeCollectionToDtoMapper(RepositoryTypeToRepositoryTypeDtoMapper mapper, ResourceLinks resourceLinks) {
-    super("repository-types", mapper);
+    super("repositoryTypes", mapper);
     this.resourceLinks = resourceLinks;
   }
 

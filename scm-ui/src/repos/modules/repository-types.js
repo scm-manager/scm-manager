@@ -32,7 +32,7 @@ export function fetchRepositoryTypesIfNeeded() {
 function fetchRepositoryTypes(dispatch: any) {
   dispatch(fetchRepositoryTypesPending());
   return apiClient
-    .get("repository-types")
+    .get("repositoryTypes")
     .then(response => response.json())
     .then(repositoryTypes => {
       dispatch(fetchRepositoryTypesSuccess(repositoryTypes));
@@ -84,7 +84,7 @@ export default function reducer(
   action: Action = { type: "UNKNOWN" }
 ): RepositoryType[] {
   if (action.type === FETCH_REPOSITORY_TYPES_SUCCESS && action.payload) {
-    return action.payload._embedded["repository-types"];
+    return action.payload._embedded["repositoryTypes"];
   }
   return state;
 }

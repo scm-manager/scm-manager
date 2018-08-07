@@ -45,7 +45,7 @@ public class RepositoryTypeCollectionToDtoMapperTest {
   public void shouldHaveEmbeddedDtos() {
     HalRepresentation mappedTypes = collectionMapper.map(types);
     Embedded embedded = mappedTypes.getEmbedded();
-    List<RepositoryTypeDto> embeddedTypes = embedded.getItemsBy("repository-types", RepositoryTypeDto.class);
+    List<RepositoryTypeDto> embeddedTypes = embedded.getItemsBy("repositoryTypes", RepositoryTypeDto.class);
     assertEquals("hk", embeddedTypes.get(0).getName());
     assertEquals("hog", embeddedTypes.get(1).getName());
   }
@@ -54,7 +54,7 @@ public class RepositoryTypeCollectionToDtoMapperTest {
   public void shouldHaveSelfLink() {
     HalRepresentation mappedTypes = collectionMapper.map(types);
     Optional<Link> self = mappedTypes.getLinks().getLinkBy("self");
-    assertEquals("https://scm-manager.org/scm/v2/repository-types/", self.get().getHref());
+    assertEquals("https://scm-manager.org/scm/v2/repositoryTypes/", self.get().getHref());
   }
 
 }

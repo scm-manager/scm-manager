@@ -10,7 +10,7 @@ import javax.ws.rs.Path;
 @Path(RepositoryTypeRootResource.PATH)
 public class RepositoryTypeRootResource {
 
-  static final String PATH = "v2/repository-types/";
+  static final String PATH = "v2/repositoryTypes/";
 
   private Provider<RepositoryTypeCollectionResource> collectionResourceProvider;
   private Provider<RepositoryTypeResource> resourceProvider;

@@ -35,7 +35,7 @@ public class RepositoryTypeToRepositoryTypeDtoMapperTest {
   public void shouldAppendSelfLink() {
     RepositoryTypeDto dto = mapper.map(type);
     assertEquals(
-      "https://scm-manager.org/scm/v2/repository-types/hk",
+      "https://scm-manager.org/scm/v2/repositoryTypes/hk",
       dto.getLinks().getLinkBy("self").get().getHref()
     );
   }

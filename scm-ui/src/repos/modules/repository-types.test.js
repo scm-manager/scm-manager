@@ -22,7 +22,7 @@ const git = {
   displayName: "Git",
   _links: {
     self: {
-      href: "http://localhost:8081/scm/api/rest/v2/repository-types/git"
+      href: "http://localhost:8081/scm/api/rest/v2/repositoryTypes/git"
     }
   }
 };
@@ -32,7 +32,7 @@ const hg = {
   displayName: "Mercurial",
   _links: {
     self: {
-      href: "http://localhost:8081/scm/api/rest/v2/repository-types/hg"
+      href: "http://localhost:8081/scm/api/rest/v2/repositoryTypes/hg"
     }
   }
 };
@@ -42,18 +42,18 @@ const svn = {
   displayName: "Subversion",
   _links: {
     self: {
-      href: "http://localhost:8081/scm/api/rest/v2/repository-types/svn"
+      href: "http://localhost:8081/scm/api/rest/v2/repositoryTypes/svn"
     }
   }
 };
 
 const collection = {
   _embedded: {
-    "repository-types": [git, hg, svn]
+    repositoryTypes: [git, hg, svn]
   },
   _links: {
     self: {
-      href: "http://localhost:8081/scm/api/rest/v2/repository-types"
+      href: "http://localhost:8081/scm/api/rest/v2/repositoryTypes"
     }
   }
 };
@@ -97,7 +97,7 @@ describe("repository types caching", () => {
 });
 
 describe("repository types fetch", () => {
-  const URL = "/scm/api/rest/v2/repository-types";
+  const URL = "/scm/api/rest/v2/repositoryTypes";
   const mockStore = configureMockStore([thunk]);
 
   afterEach(() => {
