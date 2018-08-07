@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import sonia.scm.repository.NamespaceAndName;
 
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
@@ -112,6 +113,12 @@ public class ResourceLinksTest {
   public void shouldCreateCorrectBranchCollectionUrl() {
     String url = resourceLinks.branchCollection().self("space", "repo");
     assertEquals(BASE_URL + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/branches/", url);
+  }
+
+  @Test
+  public void shouldCreateCorrectBranchUrl() {
+    String url = resourceLinks.branch().self(new NamespaceAndName("space", "name"), "master");
+    assertEquals(BASE_URL + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/name/branches/master", url);
   }
 
   @Test
