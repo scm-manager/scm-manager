@@ -37,7 +37,7 @@
     "test-ci": "jest --ci --coverage",
     "eject": "react-scripts eject",
     "flow": "flow",
-    "pre-commit": "jest && eslint src"
+    "pre-commit": "jest && flow && eslint src"
   },
   "proxy": {
     "/scm/api": {
