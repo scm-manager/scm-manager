@@ -6,24 +6,24 @@ import classNames from "classnames";
 
 type Props = {
   t: string => string,
-  username: string,
-  removeUser: string => void
+  membername: string,
+  removeMember: string => void
 };
 
 type State = {};
 
 
 
-class RemoveUserButton extends React.Component<Props, State> {
+class RemoveMemberButton extends React.Component<Props, State> {
   render() {
-    const { t , username, removeUser} = this.props;
+    const { t , membername, removeMember} = this.props;
     return (
       <div className={classNames("is-pulled-right")}>
         <DeleteButton
-          label={t("remove-user-button.label")}
+          label={t("remove-member-button.label")}
           action={(event: Event) => {
             event.preventDefault();
-            removeUser(username);
+            removeMember(membername);
           }}
         />
       </div>
@@ -31,4 +31,4 @@ class RemoveUserButton extends React.Component<Props, State> {
   }
 }
 
-export default translate("groups")(RemoveUserButton);
+export default translate("groups")(RemoveMemberButton);

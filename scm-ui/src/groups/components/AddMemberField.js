@@ -8,19 +8,19 @@ import { isMemberNameValid } from "./groupValidation"
 
 type Props = {
   t: string => string,
-  addUser: string => void
+  addMember: string => void
 };
 
 type State = {
-  userToAdd: string,
+  memberToAdd: string,
   validationError: boolean
 };
 
-class AddUserField extends React.Component<Props, State> {
+class AddMemberField extends React.Component<Props, State> {
   constructor(props) {
     super(props);
     this.state = {
-      userToAdd: "",
+      memberToAdd: "",
       validationError: false
     };
   }
@@ -30,16 +30,15 @@ class AddUserField extends React.Component<Props, State> {
     return (
       <div className="field">
         <InputField
-          label={t("add-user-textfield.label")}
-          errorMessage={t("add-user-textfield.error")}
-          onChange={this.handleAddUserChange}
-          validationError={this.state.validationError}
-          value={this.state.userToAdd}
+          label={t("add-member-textfield.label")}
+          errorMessage={t("add-member-textfield.error")}
+          onChange={this.handleAddMemberChange}
+          validationError={this.state.validationError} //TODO: validate member name
+          value={this.state.memberToAdd}
           onReturnPressed={this.appendMember}
         />
         <AddButton
-
-          label={t("add-user-button.label")}
+          label={t("add-member-button.label")}
           action={this.addButtonClicked}
         />
       </div>
@@ -53,13 +52,14 @@ class AddUserField extends React.Component<Props, State> {
   };
 
   appendMember = () => {
-    this.props.addUser(this.state.userToAdd);
-    this.setState({ ...this.state, userToAdd: "" });
-  }
+    this.props.addMember(this.state.memberToAdd);
+    this.setState({ ...this.state, memberToAdd: "" });
+  };
 
-  handleAddUserChange = (username: string) => {
-    this.setState({ ...this.state, userToAdd: username, validationError: !isMemberNameValid(username)});
+
+  handleAddMemberChange = (membername: string) => {
+    this.setState({ ...this.state, memberToAdd: membername, validationError: !isMemberNameValid(membername) });
   };
 }
 
-export default translate("groups")(AddUserField);
+export default translate("groups")(AddMemberField);

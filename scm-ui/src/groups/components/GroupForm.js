@@ -6,8 +6,8 @@ import { SubmitButton } from "../../components/buttons";
 import { translate } from "react-i18next";
 import type { Group } from "../types/Group";
 import * as validator from "./groupValidation";
-import AddUserField from "./AddUserField";
-import UserNameTable from "./UserNameTable";
+import AddMemberField from "./AddMemberField";
+import MemberNameTable from "./MemberNameTable";
 
 type Props = {
   t: string => string,
@@ -95,11 +95,11 @@ class GroupForm extends React.Component<Props, State> {
           value={group.description}
           validationError={false}
         />
-        <UserNameTable
-          users={this.state.group.members}
-          userListChanged={this.userListChanged}
+        <MemberNameTable
+          members={this.state.group.members}
+          memberListChanged={this.memberListChanged}
         />
-        <AddUserField addUser={this.addUser} />
+        <AddMemberField addMember={this.addMember} />
         <SubmitButton
           disabled={!this.isValid()}
           label={t("group-form.submit")}
@@ -109,19 +109,18 @@ class GroupForm extends React.Component<Props, State> {
     );
   }
 
-  userListChanged = usernames => {
+  memberListChanged = membernames => {
     this.setState({
       ...this.state,
       group: {
         ...this.state.group,
-        members: usernames
+        members: membernames
       }
     });
-  }
+  };
 
-
-  addUser = (username: string) => {
-    if (this.isMember(username)) {
+  addMember = (membername: string) => {
+    if (this.isMember(membername)) {
       return;
     }
 
@@ -129,13 +128,13 @@ class GroupForm extends React.Component<Props, State> {
       ...this.state,
       group: {
         ...this.state.group,
-        members: [...this.state.group.members, username]
+        members: [...this.state.group.members, membername]
       }
     });
   };
 
-  isMember = (username: string) => {
-    return this.state.group.members.includes(username);
+  isMember = (membername: string) => {
+    return this.state.group.members.includes(membername);
   };
 
   handleGroupNameChange = (name: string) => {
