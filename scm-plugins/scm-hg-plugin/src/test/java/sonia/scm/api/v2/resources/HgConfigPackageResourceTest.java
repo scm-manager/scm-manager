@@ -56,11 +56,11 @@ public class HgConfigPackageResourceTest {
 
   private final URI baseUri = java.net.URI.create("/");
 
-  @InjectMocks
-  private HgConfigPackageToDtoMapperImpl hgConfigPackageToDtoMapper;
-
   @Mock(answer = Answers.RETURNS_DEEP_STUBS)
   private UriInfoStore uriInfoStore;
+
+  @InjectMocks
+  private HgConfigPackagesToDtoMapperImpl mapper;
 
   @Mock
   private HgRepositoryHandler repositoryHandler;
@@ -96,11 +96,7 @@ public class HgConfigPackageResourceTest {
     String responseString = response.getContentAsString();
     ObjectNode responseJson = new ObjectMapper().readValue(responseString, ObjectNode.class);
 
-
-    JsonNode embedded = responseJson.get("_embedded");
-    assertThat(embedded).isNotNull();
-
-    JsonNode packages = embedded.get("packages");
+    JsonNode packages = responseJson.get("packages");
     assertThat(packages).isNotNull();
     assertThat(packages).hasSize(2);
 
@@ -191,9 +187,6 @@ public class HgConfigPackageResourceTest {
   }
 
   private void setupResources() {
-    HgConfigPackageCollectionToDtoMapper mapper =
-      new HgConfigPackageCollectionToDtoMapper(hgConfigPackageToDtoMapper, uriInfoStore);
-
     HgConfigPackageResource hgConfigPackageResource =
       new HgConfigPackageResource(hgPackageReader, advancedHttpClient, repositoryHandler, mapper);
 

@@ -39,8 +39,7 @@ import com.google.inject.servlet.ServletModule;
 import org.mapstruct.factory.Mappers;
 import sonia.scm.api.v2.resources.HgConfigDtoToHgConfigMapper;
 import sonia.scm.api.v2.resources.HgConfigInstallationsToDtoMapper;
-import sonia.scm.api.v2.resources.HgConfigPackageCollectionToDtoMapper;
-import sonia.scm.api.v2.resources.HgConfigPackageToDtoMapper;
+import sonia.scm.api.v2.resources.HgConfigPackagesToDtoMapper;
 import sonia.scm.api.v2.resources.HgConfigToHgConfigDtoMapper;
 import sonia.scm.installer.HgPackageReader;
 import sonia.scm.plugin.Extension;
@@ -77,8 +76,7 @@ public class HgServletModule extends ServletModule
 
     bind(HgConfigDtoToHgConfigMapper.class).to(Mappers.getMapper(HgConfigDtoToHgConfigMapper.class).getClass());
     bind(HgConfigToHgConfigDtoMapper.class).to(Mappers.getMapper(HgConfigToHgConfigDtoMapper.class).getClass());
-    bind(HgConfigPackageToDtoMapper.class).to(Mappers.getMapper(HgConfigPackageToDtoMapper.class).getClass());
-    bind(HgConfigPackageCollectionToDtoMapper.class);
+    bind(HgConfigPackagesToDtoMapper.class).to(Mappers.getMapper(HgConfigPackagesToDtoMapper.class).getClass());
     bind(HgConfigInstallationsToDtoMapper.class);
 
     // bind servlets

@@ -53,7 +53,7 @@ class HgConfigTests {
     return hgPackage;
   }
 
-  static void assertEqualsPackage(HgConfigPackageDto dto) {
+  static void assertEqualsPackage(HgConfigPackagesDto.HgConfigPackageDto dto) {
     assertEquals("arch", dto.getArch());
     assertEquals("1", dto.getId());
     assertEquals("2", dto.getHgVersion());
@@ -64,8 +64,6 @@ class HgConfigTests {
 
     assertEqualsConfiguration(dto.getHgConfigTemplate());
     assertTrue(dto.getHgConfigTemplate().getLinks().isEmpty());
-
-    assertTrue(dto.getLinks().isEmpty());
   }
 
 }

@@ -1,7 +1,7 @@
 package sonia.scm.api.v2.resources;
 
-import com.google.inject.Inject;
 
+import javax.inject.Inject;
 import java.util.List;
 
 import static de.otto.edison.hal.Links.linkingTo;
@@ -11,7 +11,7 @@ public class HgConfigInstallationsToDtoMapper {
   private UriInfoStore uriInfoStore;
 
   @Inject
-  public HgConfigInstallationsToDtoMapper(UriInfoStore uriInfoStore, String path) {
+  public HgConfigInstallationsToDtoMapper(UriInfoStore uriInfoStore) {
     this.uriInfoStore = uriInfoStore;
   }
 
