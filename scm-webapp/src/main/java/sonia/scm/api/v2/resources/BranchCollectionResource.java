@@ -31,14 +31,25 @@ public class BranchCollectionResource {
     this.branchCollectionToDtoMapper = branchCollectionToDtoMapper;
   }
 
+  /**
+   * Returns the branches for a repository.
+   *
+   * <strong>Note:</strong> This method requires "repository" privilege.
+   *
+   * @param namespace the namespace of the repository
+   * @param name the name of the repository
+   *
+   */
   @GET
   @Path("")
   @Produces(VndMediaType.BRANCH_COLLECTION)
   @TypeHint(CollectionDto.class)
   @StatusCodes({
     @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 400, condition = "branches not supported for given repository"),
     @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
     @ResponseCode(code = 403, condition = "not authorized, the current user does not have the \"group\" privilege"),
+    @ResponseCode(code = 404, condition = "not found, no repository found for the given namespace and name"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
   public Response getAll(@PathParam("namespace") String namespace, @PathParam("name") String name) throws IOException, RepositoryException {

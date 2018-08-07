@@ -31,15 +31,26 @@ public class BranchResource {
     this.branchToDtoMapper = branchToDtoMapper;
   }
 
+  /**
+   * Returns a branch for a repository.
+   *
+   * <strong>Note:</strong> This method requires "repository" privilege.
+   *
+   * @param namespace the namespace of the repository
+   * @param name the name of the repository
+   * @param branchName the name of the branch
+   *
+   */
   @GET
   @Path("")
   @Produces(VndMediaType.BRANCH)
   @TypeHint(BranchDto.class)
   @StatusCodes({
     @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 400, condition = "branches not supported for given repository"),
     @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
     @ResponseCode(code = 403, condition = "not authorized, the current user has no privileges to read the branch"),
-    @ResponseCode(code = 404, condition = "not found, no branch with the specified name for the repository available"),
+    @ResponseCode(code = 404, condition = "not found, no branch with the specified name for the repository available or repository not found"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
   public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("branch") String branchName) throws IOException, RepositoryException {
