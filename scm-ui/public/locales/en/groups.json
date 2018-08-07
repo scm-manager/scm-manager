@@ -37,7 +37,7 @@
   },
   "add-user-textfield": {
     "label": "Add user",
-    "error": "Error adding user"
+    "error": "Username invalid"
   },
   "group-form": {
     "submit": "Submit",

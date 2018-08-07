@@ -16,8 +16,8 @@ class GroupTable extends React.Component<Props> {
       <table className="table is-hoverable is-fullwidth">
         <thead>
           <tr>
-            <th className="is-hidden-mobile">{t("group.name")}</th>
-            <th>{t("group.description")}</th>
+            <th>{t("group.name")}</th>
+            <th className="is-hidden-mobile">{t("group.description")}</th>
           </tr>
         </thead>
         <tbody>
