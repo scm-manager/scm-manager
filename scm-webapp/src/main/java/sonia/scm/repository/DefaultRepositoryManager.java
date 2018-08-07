@@ -141,7 +141,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
 
   public Repository create(Repository repository, boolean initRepository) throws RepositoryException {
     repository.setId(keyGenerator.createKey());
-    repository.setNamespace(namespaceStrategy.getNamespace());
+    repository.setNamespace(namespaceStrategy.createNamespace(repository));
 
     logger.info("create repository {} of type {} in namespace {}", repository.getName(), repository.getType(), repository.getNamespace());
 
@@ -301,8 +301,8 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
   }
 
   @Override
-  public Collection<Type> getConfiguredTypes() {
-    List<Type> validTypes = Lists.newArrayList();
+  public Collection<RepositoryType> getConfiguredTypes() {
+    List<RepositoryType> validTypes = Lists.newArrayList();
 
     for (RepositoryHandler handler : handlerMap.values()) {
       if (handler.isConfigured()) {

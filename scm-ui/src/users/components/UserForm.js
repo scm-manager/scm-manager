@@ -4,7 +4,8 @@ import { translate } from "react-i18next";
 import type { User } from "../types/User";
 import { Checkbox, InputField } from "../../components/forms";
 import { SubmitButton } from "../../components/buttons";
-import * as validator from "./userValidation";
+import * as validator from "../../components/validation";
+import * as userValidator from "./userValidation";
 
 type Props = {
   submitForm: User => void,
@@ -157,7 +158,9 @@ class UserForm extends React.Component<Props, State> {
 
   handleDisplayNameChange = (displayName: string) => {
     this.setState({
-      displayNameValidationError: !validator.isDisplayNameValid(displayName),
+      displayNameValidationError: !userValidator.isDisplayNameValid(
+        displayName
+      ),
       user: { ...this.state.user, displayName }
     });
   };
@@ -175,7 +178,7 @@ class UserForm extends React.Component<Props, State> {
       this.state.validatePassword
     );
     this.setState({
-      validatePasswordError: !validator.isPasswordValid(password),
+      validatePasswordError: !userValidator.isPasswordValid(password),
       passwordValidationError: validatePasswordError,
       user: { ...this.state.user, password }
     });

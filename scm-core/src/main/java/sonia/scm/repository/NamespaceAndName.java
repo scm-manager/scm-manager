@@ -5,7 +5,7 @@ import com.google.common.base.Strings;
 
 import java.util.Objects;
 
-public class NamespaceAndName {
+public class NamespaceAndName implements Comparable<NamespaceAndName> {
 
   private final String namespace;
   private final String name;
@@ -46,5 +46,14 @@ public class NamespaceAndName {
   @Override
   public int hashCode() {
     return Objects.hash(namespace, name);
+  }
+
+  @Override
+  public int compareTo(NamespaceAndName o) {
+    int result = namespace.compareTo(o.namespace);
+    if (result == 0) {
+      return name.compareTo(o.name);
+    }
+    return result;
   }
 }

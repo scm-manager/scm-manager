@@ -32,6 +32,7 @@ package sonia.scm.repository;
 
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import com.google.inject.Provider;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -109,7 +110,7 @@ public class DefaultRepositoryManagerPerfTest {
    */
   @Before
   public void setUpObjectUnderTest(){
-    when(repositoryHandler.getType()).thenReturn(new Type(REPOSITORY_TYPE, REPOSITORY_TYPE));
+    when(repositoryHandler.getType()).thenReturn(new RepositoryType(REPOSITORY_TYPE, REPOSITORY_TYPE, Sets.newHashSet()));
     Set<RepositoryHandler> handlerSet = ImmutableSet.of(repositoryHandler);
     RepositoryMatcher repositoryMatcher = new RepositoryMatcher(Collections.<RepositoryPathMatcher>emptySet());
     NamespaceStrategy namespaceStrategy = mock(NamespaceStrategy.class);

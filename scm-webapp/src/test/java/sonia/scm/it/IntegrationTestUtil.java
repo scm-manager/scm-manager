@@ -65,7 +65,7 @@ import java.util.Collection;
  */
 public final class IntegrationTestUtil
 {
-  
+
   public static final Person AUTHOR = new Person("SCM Administrator", "scmadmin@scm-manager.org");
 
   /** Field description */
@@ -73,10 +73,10 @@ public final class IntegrationTestUtil
 
   /** Field description */
   public static final String ADMIN_USERNAME = "scmadmin";
-  
+
   /** scm-manager base url */
   public static final String BASE_URL = "http://localhost:8081/scm/";
-  
+
   /** scm-manager base url for the rest api */
   public static final String REST_BASE_URL = BASE_URL.concat("api/rest/v2/");
 
@@ -163,7 +163,7 @@ public final class IntegrationTestUtil
   {
     return URI.create(REST_BASE_URL).resolve(url);
   }
-  
+
   public static String readJson(String jsonFileName) {
     URL url = Resources.getResource(jsonFileName);
     try {

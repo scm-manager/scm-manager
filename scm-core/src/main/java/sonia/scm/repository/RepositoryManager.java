@@ -35,7 +35,6 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.Type;
 import sonia.scm.TypeManager;
 
 import javax.servlet.http.HttpServletRequest;
@@ -99,7 +98,7 @@ public interface RepositoryManager
    *
    * @return all configured repository types
    */
-  public Collection<Type> getConfiguredTypes();
+  public Collection<RepositoryType> getConfiguredTypes();
 
   /**
    * Returns the {@link Repository} associated to the request uri.

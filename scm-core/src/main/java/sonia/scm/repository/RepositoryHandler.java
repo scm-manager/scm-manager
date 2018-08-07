@@ -82,4 +82,7 @@ public interface RepositoryHandler
    * @since 1.15
    */
   public String getVersionInformation();
+
+  @Override
+  RepositoryType getType();
 }

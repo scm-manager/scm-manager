@@ -98,7 +98,7 @@ class Login extends React.Component<Props, State> {
     }
 
     return (
-      <section className="hero has-background-light">
+      <section className="hero">
         <div className="hero-body">
           <div className="container has-text-centered">
             <div className="column is-4 is-offset-4">

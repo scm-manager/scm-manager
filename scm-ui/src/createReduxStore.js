@@ -5,6 +5,8 @@ import { createStore, compose, applyMiddleware, combineReducers } from "redux";
 import { routerReducer, routerMiddleware } from "react-router-redux";
 
 import users from "./users/modules/users";
+import repos from "./repos/modules/repos";
+import repositoryTypes from "./repos/modules/repositoryTypes";
 import auth from "./modules/auth";
 import pending from "./modules/pending";
 import failure from "./modules/failure";
@@ -20,6 +22,8 @@ function createReduxStore(history: BrowserHistory) {
     pending,
     failure,
     users,
+    repos,
+    repositoryTypes,
     auth
   });
 

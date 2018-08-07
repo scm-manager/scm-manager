@@ -36,10 +36,12 @@ import com.github.legman.Subscribe;
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import sonia.scm.*;
 import sonia.scm.config.ScmConfiguration;
@@ -57,7 +59,14 @@ import sonia.scm.store.JAXBConfigurationStoreFactory;
 import java.util.*;
 
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
@@ -66,7 +75,7 @@ import static org.mockito.Mockito.when;
 
 /**
  * Unit tests for {@link DefaultRepositoryManager}.
- * 
+ *
  * @author Sebastian Sdorra
  */
 @SubjectAware(
@@ -300,7 +309,7 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
     Repository heartOfGold = RepositoryTestData.createHeartOfGold();
     manager.create(heartOfGold);
     heartOfGold.setDescription("prototype ship");
-    
+
     thrown.expect(UnauthorizedException.class);
     manager.modify(heartOfGold);
   }
@@ -326,7 +335,7 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
     Repository heartOfGold = RepositoryTestData.createHeartOfGold();
     manager.create(heartOfGold);
     heartOfGold.setDescription("prototype ship");
-    
+
     thrown.expect(UnauthorizedException.class);
     manager.refresh(heartOfGold);
   }
@@ -449,7 +458,7 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
   }
 
   //~--- methods --------------------------------------------------------------
-  
+
   @Override
   protected DefaultRepositoryManager createManager() {
     return createRepositoryManager(false);
@@ -465,14 +474,14 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
     handlerSet.add(new DummyRepositoryHandler(factory));
     handlerSet.add(new DummyRepositoryHandler(factory) {
       @Override
-      public Type getType() {
-        return new Type("hg", "Mercurial");
+      public RepositoryType getType() {
+        return new RepositoryType("hg", "Mercurial", Sets.newHashSet());
       }
     });
     handlerSet.add(new DummyRepositoryHandler(factory) {
       @Override
-      public Type getType() {
-        return new Type("git", "Git");
+      public RepositoryType getType() {
+        return new RepositoryType("git", "Git", Sets.newHashSet());
       }
     });
 
@@ -483,12 +492,12 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
     configuration.setEnableRepositoryArchive(archiveEnabled);
 
     NamespaceStrategy namespaceStrategy = mock(NamespaceStrategy.class);
-    when(namespaceStrategy.getNamespace()).thenAnswer(invocation -> mockedNamespace);
+    when(namespaceStrategy.createNamespace(Mockito.any(Repository.class))).thenAnswer(invocation -> mockedNamespace);
 
     return new DefaultRepositoryManager(configuration, contextProvider,
       keyGenerator, repositoryDAO, handlerSet, createRepositoryMatcher(), namespaceStrategy);
   }
-  
+
   private void createRepository(RepositoryManager m, Repository repository)
     throws RepositoryException {
     m.create(repository);
@@ -503,7 +512,7 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
 
     return new HookContextFactory(ppu).createContext(provider, repository);
   }
-  
+
   private void assertRepositoriesEquals(Repository repo, Repository other) {
     assertEquals(repo.getId(), other.getId());
     assertEquals(repo.getName(), other.getName());
@@ -512,10 +521,10 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
     assertEquals(repo.getCreationDate(), other.getCreationDate());
     assertEquals(repo.getLastModified(), other.getLastModified());
   }
-          
+
   private RepositoryMatcher createRepositoryMatcher() {
     return new RepositoryMatcher(Collections.<RepositoryPathMatcher>emptySet());
-  }       
+  }
 
   private Repository createRepository(Repository repository) throws RepositoryException {
     manager.create(repository);
