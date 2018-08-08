@@ -3,6 +3,7 @@ import React from "react";
 import type { Group } from "../../types/Group";
 import { translate } from "react-i18next";
 import GroupMember from "./GroupMember";
+import DateFromNow from "../../../components/DateFromNow";
 
 type Props = {
   group: Group,
@@ -26,6 +27,18 @@ class Details extends React.Component<Props> {
           <tr>
             <td>{t("group.type")}</td>
             <td>{group.type}</td>
+          </tr>
+          <tr>
+            <td>{t("group.creationDate")}</td>
+            <td>
+              <DateFromNow date={group.creationDate} />
+            </td>
+          </tr>
+          <tr>
+            <td>{t("group.lastModified")}</td>
+            <td>
+              <DateFromNow date={group.lastModified} />
+            </td>
           </tr>
           {this.renderMembers()}
         </tbody>
