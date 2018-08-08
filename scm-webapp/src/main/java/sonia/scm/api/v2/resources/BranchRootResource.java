@@ -76,6 +76,12 @@ public class BranchRootResource {
     }
   }
 
+  @Path("{branch}/changesets/")
+  @GET
+  public Response history(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("branch") String branchName) {
+    return null;
+  }
+
   /**
    * Returns the branches for a repository.
    *

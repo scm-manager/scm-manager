@@ -11,6 +11,7 @@ import sonia.scm.repository.NamespaceAndName;
 
 import javax.inject.Inject;
 
+import static de.otto.edison.hal.Link.linkBuilder;
 import static de.otto.edison.hal.Links.linkingTo;
 
 @Mapper
@@ -24,7 +25,11 @@ public abstract class BranchToBranchDtoMapper {
 
   @AfterMapping
   void appendLinks(@MappingTarget BranchDto target, @Context NamespaceAndName namespaceAndName) {
-    Links.Builder linksBuilder = linkingTo().self(resourceLinks.branch().self(namespaceAndName, target.getName()));
+    Links.Builder linksBuilder = linkingTo()
+      .self(resourceLinks.branch().self(namespaceAndName, target.getName()))
+      .single(linkBuilder("history", resourceLinks.branch().history(namespaceAndName, target.getName())).build())
+      .single(linkBuilder("changeset", resourceLinks.changeset().changeset(namespaceAndName.getNamespace(), namespaceAndName.getName(), target.getRevision())).build())
+      .single(linkBuilder("source", resourceLinks.source().source(namespaceAndName.getNamespace(), namespaceAndName.getName(), target.getRevision())).build());
     target.add(linksBuilder.build());
   }
 }

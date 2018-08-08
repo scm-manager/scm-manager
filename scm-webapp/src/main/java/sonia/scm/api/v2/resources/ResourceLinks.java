@@ -237,6 +237,10 @@ class ResourceLinks {
     String self(NamespaceAndName namespaceAndName, String branch) {
       return branchLinkBuilder.method("getRepositoryResource").parameters(namespaceAndName.getNamespace(), namespaceAndName.getName()).method("branches").parameters().method("get").parameters(branch).href();
     }
+
+    public String history(NamespaceAndName namespaceAndName, String branch) {
+      return branchLinkBuilder.method("getRepositoryResource").parameters(namespaceAndName.getNamespace(), namespaceAndName.getName()).method("branches").parameters().method("history").parameters(branch).href();
+    }
   }
 
   public BranchCollectionLinks branchCollection() {
@@ -255,35 +259,43 @@ class ResourceLinks {
     }
   }
 
-  public ChangesetCollectionLinks changesetCollection() {
-    return new ChangesetCollectionLinks(uriInfoStore.get());
+  public ChangesetLinks changeset() {
+    return new ChangesetLinks(uriInfoStore.get());
   }
 
-  static class ChangesetCollectionLinks {
+  static class ChangesetLinks {
     private final LinkBuilder changesetLinkBuilder;
 
-    ChangesetCollectionLinks(UriInfo uriInfo) {
-      changesetLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, ChangesetRootResource.class, ChangesetCollectionResource.class);
+    ChangesetLinks(UriInfo uriInfo) {
+      changesetLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, ChangesetRootResource.class);
     }
 
     String self(String namespace, String name) {
-      return changesetLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("changesets").parameters().method("getChangesetCollectionResource").parameters().method("getAll").parameters().href();
+      return changesetLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("changesets").parameters().method("getAll").parameters().href();
+    }
+
+    public String changeset(String namespace, String name, String revision) {
+      return changesetLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("changesets").parameters().method("get").parameters(revision).href();
     }
   }
 
-  public SourceCollectionLinks sourceCollection() {
-    return new SourceCollectionLinks(uriInfoStore.get());
+  public SourceLinks source() {
+    return new SourceLinks(uriInfoStore.get());
   }
 
-  static class SourceCollectionLinks {
+  static class SourceLinks {
     private final LinkBuilder sourceLinkBuilder;
 
-    SourceCollectionLinks(UriInfo uriInfo) {
-      sourceLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, SourceRootResource.class, SourceCollectionResource.class);
+    SourceLinks(UriInfo uriInfo) {
+      sourceLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, SourceRootResource.class);
     }
 
     String self(String namespace, String name) {
-      return sourceLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("sources").parameters().method("getSourceCollectionResource").parameters().method("getAll").parameters().href();
+      return sourceLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("sources").parameters().method("getAll").parameters().href();
+    }
+
+    public String source(String namespace, String name, String revision) {
+      return sourceLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("sources").parameters().method("get").parameters(revision).href();
     }
   }
 
