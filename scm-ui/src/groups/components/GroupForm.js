@@ -8,6 +8,7 @@ import type { Group } from "../types/Group";
 import * as validator from "./groupValidation";
 import AddMemberField from "./AddMemberField";
 import MemberNameTable from "./MemberNameTable";
+import Textarea from "../../components/forms/Textarea";
 
 type Props = {
   t: string => string,
@@ -84,7 +85,7 @@ class GroupForm extends React.Component<Props, State> {
     return (
       <form onSubmit={this.submit}>
         {nameField}
-        <InputField
+        <Textarea
           label={t("group.description")}
           errorMessage={t("group-form.description-error")}
           onChange={this.handleDescriptionChange}
