@@ -5,6 +5,8 @@ import { reactI18nextModule } from "react-i18next";
 
 const loadPath = process.env.PUBLIC_URL + "/locales/{{lng}}/{{ns}}.json";
 
+// TODO load locales for moment
+
 i18n
   .use(Backend)
   .use(LanguageDetector)

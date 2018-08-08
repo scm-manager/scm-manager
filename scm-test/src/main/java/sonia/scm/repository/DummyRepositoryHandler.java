@@ -33,7 +33,7 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.Type;
+import com.google.common.collect.Sets;
 import sonia.scm.io.DefaultFileSystem;
 import sonia.scm.store.ConfigurationStoreFactory;
 
@@ -55,7 +55,7 @@ public class DummyRepositoryHandler
 
   public static final String TYPE_NAME = "dummy";
 
-  public static final Type TYPE = new Type(TYPE_NAME, TYPE_DISPLAYNAME);
+  public static final RepositoryType TYPE = new RepositoryType(TYPE_NAME, TYPE_DISPLAYNAME, Sets.newHashSet());
 
   private final Set<String> existingRepoNames = new HashSet<>();
 
@@ -64,7 +64,7 @@ public class DummyRepositoryHandler
   }
 
   @Override
-  public Type getType() {
+  public RepositoryType getType() {
     return TYPE;
   }
 

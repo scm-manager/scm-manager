@@ -4,6 +4,7 @@ import sonia.scm.repository.NamespaceAndName;
 
 import javax.inject.Inject;
 import javax.ws.rs.core.UriInfo;
+import java.net.URI;
 
 class ResourceLinks {
 
@@ -129,13 +130,19 @@ class ResourceLinks {
 
   static class RepositoryLinks {
     private final LinkBuilder repositoryLinkBuilder;
+    private final UriInfo uriInfo;
 
     RepositoryLinks(UriInfo uriInfo) {
       repositoryLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class);
+      this.uriInfo = uriInfo;
     }
 
     String self(String namespace, String name) {
       return repositoryLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("get").parameters().href();
+    }
+
+    String clone(String type, String namespace, String name) {
+      return uriInfo.getBaseUri().resolve(URI.create("../../" + type + "/" + namespace + "/" + name)).toASCIIString();
     }
 
     String delete(String namespace, String name) {
@@ -166,6 +173,39 @@ class ResourceLinks {
       return collectionLinkBuilder.method("getRepositoryCollectionResource").parameters().method("create").parameters().href();
     }
   }
+
+  public RepositoryTypeLinks repositoryType() {
+    return new RepositoryTypeLinks(uriInfoStore.get());
+  }
+
+  static class RepositoryTypeLinks {
+    private final LinkBuilder repositoryTypeLinkBuilder;
+
+    RepositoryTypeLinks(UriInfo uriInfo) {
+      repositoryTypeLinkBuilder = new LinkBuilder(uriInfo, RepositoryTypeRootResource.class, RepositoryTypeResource.class);
+    }
+
+    String self(String name) {
+      return repositoryTypeLinkBuilder.method("getRepositoryTypeResource").parameters(name).method("get").parameters().href();
+    }
+  }
+
+  public RepositoryTypeCollectionLinks repositoryTypeCollection() {
+    return new RepositoryTypeCollectionLinks(uriInfoStore.get());
+  }
+
+  static class RepositoryTypeCollectionLinks {
+    private final LinkBuilder collectionLinkBuilder;
+
+    RepositoryTypeCollectionLinks(UriInfo uriInfo) {
+      collectionLinkBuilder = new LinkBuilder(uriInfo, RepositoryTypeRootResource.class, RepositoryTypeCollectionResource.class);
+    }
+
+    String self() {
+      return collectionLinkBuilder.method("getRepositoryTypeCollectionResource").parameters().method("getAll").parameters().href();
+    }
+  }
+
 
   public TagCollectionLinks tagCollection() {
     return new TagCollectionLinks(uriInfoStore.get());

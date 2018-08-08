@@ -26,10 +26,23 @@ $blue: #33B2E8;
   padding: 0 0 0 3.8em !important;
 }
 
-html, body {
-  background-color: whitesmoke;
-  height: 100%;
+.main {
+  min-height: calc(100vh - 260px);
+}
+.footer {
+  height: 50px;
 }
 
 // 6. Import the rest of Bulma
 @import "bulma/bulma";
+
+// import at the end, because we need a lot of stuff from bulma/bulma
+.box-link-shadow {
+  &:hover,
+  &:focus {
+    box-shadow: $box-link-hover-shadow;
+  } 
+  &:active {
+    box-shadow: $box-link-active-shadow;
+  }
+}

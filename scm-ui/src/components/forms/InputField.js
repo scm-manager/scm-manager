@@ -9,6 +9,7 @@ type Props = {
   type?: string,
   autofocus?: boolean,
   onChange: string => void,
+  onReturnPressed?: () => void,
   validationError: boolean,
   errorMessage: string
 };
@@ -39,6 +40,17 @@ class InputField extends React.Component<Props> {
     return "";
   };
 
+  handleKeyPress = (event: SyntheticKeyboardEvent<HTMLInputElement>) => {
+    const onReturnPressed = this.props.onReturnPressed;
+    if (!onReturnPressed) {
+      return
+    }
+    if (event.key === "Enter") {
+      event.preventDefault();
+      onReturnPressed();
+    }
+  }
+
   render() {
     const { type, placeholder, value, validationError, errorMessage } = this.props;
     const errorView = validationError ? "is-danger" : "";
@@ -59,6 +71,7 @@ class InputField extends React.Component<Props> {
             placeholder={placeholder}
             value={value}
             onChange={this.handleInput}
+            onKeyPress={this.handleKeyPress}
           />
         </div>
         {helper}

@@ -143,7 +143,7 @@ export function createUser(user: User, callback?: () => void) {
   return function(dispatch: Dispatch) {
     dispatch(createUserPending(user));
     return apiClient
-      .postWithContentType(USERS_URL, user, CONTENT_TYPE_USER)
+      .post(USERS_URL, user, CONTENT_TYPE_USER)
       .then(() => {
         dispatch(createUserSuccess());
         if (callback) {
@@ -192,7 +192,7 @@ export function modifyUser(user: User, callback?: () => void) {
   return function(dispatch: Dispatch) {
     dispatch(modifyUserPending(user));
     return apiClient
-      .putWithContentType(user._links.update.href, user, CONTENT_TYPE_USER)
+      .put(user._links.update.href, user, CONTENT_TYPE_USER)
       .then(() => {
         dispatch(modifyUserSuccess(user));
         if (callback) {

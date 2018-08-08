@@ -41,7 +41,6 @@ import com.google.inject.Singleton;
 
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 
-import sonia.scm.Type;
 import sonia.scm.io.FileSystem;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.spi.GitRepositoryServiceProvider;
@@ -88,7 +87,7 @@ public class GitRepositoryHandler
   private static final Logger logger = LoggerFactory.getLogger(GitRepositoryHandler.class);
 
   /** Field description */
-  public static final Type TYPE = new RepositoryType(TYPE_NAME,
+  public static final RepositoryType TYPE = new RepositoryType(TYPE_NAME,
                                     TYPE_DISPLAYNAME,
                                     GitRepositoryServiceProvider.COMMANDS);
 
@@ -167,7 +166,7 @@ public class GitRepositoryHandler
    * @return
    */
   @Override
-  public Type getType()
+  public RepositoryType getType()
   {
     return TYPE;
   }

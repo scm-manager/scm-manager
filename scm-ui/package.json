@@ -6,10 +6,12 @@
   "dependencies": {
     "bulma": "^0.7.1",
     "classnames": "^2.2.5",
+    "font-awesome": "^4.7.0",
     "history": "^4.7.2",
     "i18next": "^11.4.0",
     "i18next-browser-languagedetector": "^2.2.2",
     "i18next-fetch-backend": "^0.1.0",
+    "moment": "^2.22.2",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-i18next": "^7.9.0",

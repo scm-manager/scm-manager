@@ -14,14 +14,19 @@ class PrimaryNavigation extends React.Component<Props> {
       <nav className="tabs is-boxed">
         <ul>
           <PrimaryNavigationLink
-            to="/"
-            activeOnlyWhenExact={true}
+            to="/repos"
+            match="/(repo|repos)"
             label={t("primary-navigation.repositories")}
           />
           <PrimaryNavigationLink
             to="/users"
             match="/(user|users)"
             label={t("primary-navigation.users")}
+          />
+          <PrimaryNavigationLink
+            to="/groups"
+            match="/(group|groups)"
+            label={t("primary-navigation.groups")}
           />
           <PrimaryNavigationLink
             to="/logout"

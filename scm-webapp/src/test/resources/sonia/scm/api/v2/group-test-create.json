@@ -2,14 +2,9 @@
   "description": "Tolle Gruppe",
   "name": "dev",
   "type": "developers",
+  "members": ["user1", "user2"],
   "_embedded": {
     "members": [
-      {
-        "name": "user1"
-      },
-      {
-        "name": "user2"
-      }
     ]
   }
 }

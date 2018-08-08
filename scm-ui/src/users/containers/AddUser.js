@@ -1,7 +1,7 @@
 //@flow
 import React from "react";
 import { connect } from "react-redux";
-import UserForm from "./../components/UserForm";
+import UserForm from "../components/UserForm";
 import type { User } from "../types/User";
 import type { History } from "history";
 import {
@@ -48,6 +48,7 @@ class AddUser extends React.Component<Props> {
         title={t("add-user.title")}
         subtitle={t("add-user.subtitle")}
         error={error}
+        showContentOnError={true}
       >
         <UserForm
           submitForm={user => this.createUser(user)}
