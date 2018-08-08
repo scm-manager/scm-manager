@@ -19,7 +19,7 @@ class MemberNameTable extends React.Component<Props, State> {
         <label className="label">{t("group.members")}</label>
         <table className="table is-hoverable is-fullwidth">
           <tbody>
-            {this.props.members.map((member, index) => {
+            {this.props.members.map(member => {
               return (
                 <tr key={member}>
                   <td key={member}>{member}</td>
