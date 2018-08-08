@@ -55,11 +55,7 @@ class GroupForm extends React.Component<Props, State> {
 
   isValid = () => {
     const group = this.state.group;
-    return !(
-      this.state.nameValidationError ||
-      this.isFalsy(group.name) ||
-      this.isFalsy(group.description)
-    );
+    return !(this.state.nameValidationError || this.isFalsy(group.name));
   };
 
   submit = (event: Event) => {
