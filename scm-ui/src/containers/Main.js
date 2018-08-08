@@ -15,6 +15,10 @@ import SingleUser from "../users/containers/SingleUser";
 import RepositoryRoot from "../repos/containers/RepositoryRoot";
 import Create from "../repos/containers/Create";
 
+import Groups from "../groups/containers/Groups";
+import SingleGroup from "../groups/containers/SingleGroup";
+import AddGroup from "../groups/containers/AddGroup";
+
 type Props = {
   authenticated?: boolean
 };
@@ -72,6 +76,28 @@ class Main extends React.Component<Props> {
             authenticated={authenticated}
             path="/user/:name"
             component={SingleUser}
+          />
+          <ProtectedRoute
+            exact
+            path="/groups"
+            component={Groups}
+            authenticated={authenticated}
+          />
+          <ProtectedRoute
+            authenticated={authenticated}
+            path="/group/:name"
+            component={SingleGroup}
+          />
+          <ProtectedRoute
+            authenticated={authenticated}
+            path="/groups/add"
+            component={AddGroup}
+          />
+          <ProtectedRoute
+            exact
+            path="/groups/:page"
+            component={Groups}
+            authenticated={authenticated}
           />
         </Switch>
       </div>

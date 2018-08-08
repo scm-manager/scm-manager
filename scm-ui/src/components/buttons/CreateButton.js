@@ -1,7 +1,7 @@
 //@flow
 import React from "react";
 import injectSheet from "react-jss";
-import Button, { type ButtonProps } from "./Button";
+import AddButton, { type ButtonProps } from "./Button";
 import classNames from "classnames";
 
 const styles = {
@@ -15,7 +15,7 @@ class CreateButton extends React.Component<ButtonProps> {
     const { classes } = this.props;
     return (
       <div className={classNames("is-pulled-right", classes.spacing)}>
-        <Button type="default" {...this.props} />
+        <AddButton {...this.props} />;
       </div>
     );
   }

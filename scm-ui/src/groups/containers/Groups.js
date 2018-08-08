@@ -1,31 +1,30 @@
-// @flow
+//@flow
 import React from "react";
-import type { History } from "history";
 import { connect } from "react-redux";
 import { translate } from "react-i18next";
+import type { Group } from "../types/Group.js";
+import type { PagedCollection } from "../../types/Collection";
+import type { History } from "history";
+import { Page } from "../../components/layout";
+import { GroupTable } from "./../components/table";
+import Paginator from "../../components/Paginator";
+import CreateGroupButton from "../components/buttons/CreateGroupButton";
 
 import {
-  fetchUsersByPage,
-  fetchUsersByLink,
-  getUsersFromState,
-  selectListAsCollection,
-  isPermittedToCreateUsers,
-  isFetchUsersPending,
-  getFetchUsersFailure
-} from "../modules/users";
-
-import { Page } from "../../components/layout";
-import { UserTable } from "./../components/table";
-import type { User } from "../types/User";
-import type { PagedCollection } from "../../types/Collection";
-import Paginator from "../../components/Paginator";
-import CreateUserButton from "../components/buttons/CreateUserButton";
+  fetchGroupsByPage,
+  fetchGroupsByLink,
+  getGroupsFromState,
+  isFetchGroupsPending,
+  getFetchGroupsFailure,
+  isPermittedToCreateGroups,
+  selectListAsCollection
+} from "../modules/groups";
 
 type Props = {
-  users: User[],
+  groups: Group[],
   loading: boolean,
   error: Error,
-  canAddUsers: boolean,
+  canAddGroups: boolean,
   list: PagedCollection,
   page: number,
 
@@ -34,43 +33,43 @@ type Props = {
   history: History,
 
   // dispatch functions
-  fetchUsersByPage: (page: number) => void,
-  fetchUsersByLink: (link: string) => void
+  fetchGroupsByPage: (page: number) => void,
+  fetchGroupsByLink: (link: string) => void
 };
 
-class Users extends React.Component<Props> {
+class Groups extends React.Component<Props> {
   componentDidMount() {
-    this.props.fetchUsersByPage(this.props.page);
+    this.props.fetchGroupsByPage(this.props.page);
   }
 
   onPageChange = (link: string) => {
-    this.props.fetchUsersByLink(link);
+    this.props.fetchGroupsByLink(link);
   };
 
   /**
    * reflect page transitions in the uri
    */
-  componentDidUpdate() {
+  componentDidUpdate = (prevProps: Props) => {
     const { page, list } = this.props;
-    if (list && (list.page || list.page === 0)) {
+    if (list.page >= 0) {
       // backend starts paging by 0
       const statePage: number = list.page + 1;
       if (page !== statePage) {
-        this.props.history.push(`/users/${statePage}`);
+        this.props.history.push(`/groups/${statePage}`);
       }
     }
-  }
+  };
 
   render() {
-    const { users, loading, error, t } = this.props;
+    const { groups, loading, error, t } = this.props;
     return (
       <Page
-        title={t("users.title")}
-        subtitle={t("users.subtitle")}
-        loading={loading || !users}
+        title={t("groups.title")}
+        subtitle={t("groups.subtitle")}
+        loading={loading || !groups}
         error={error}
       >
-        <UserTable users={users} />
+        <GroupTable groups={groups} />
         {this.renderPaginator()}
         {this.renderCreateButton()}
       </Page>
@@ -86,8 +85,8 @@ class Users extends React.Component<Props> {
   }
 
   renderCreateButton() {
-    if (this.props.canAddUsers) {
-      return <CreateUserButton />;
+    if (this.props.canAddGroups) {
+      return <CreateGroupButton />;
     } else {
       return;
     }
@@ -105,19 +104,19 @@ const getPageFromProps = props => {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  const users = getUsersFromState(state);
-  const loading = isFetchUsersPending(state);
-  const error = getFetchUsersFailure(state);
+  const groups = getGroupsFromState(state);
+  const loading = isFetchGroupsPending(state);
+  const error = getFetchGroupsFailure(state);
 
   const page = getPageFromProps(ownProps);
-  const canAddUsers = isPermittedToCreateUsers(state);
+  const canAddGroups = isPermittedToCreateGroups(state);
   const list = selectListAsCollection(state);
 
   return {
-    users,
+    groups,
     loading,
     error,
-    canAddUsers,
+    canAddGroups,
     list,
     page
   };
@@ -125,11 +124,11 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchUsersByPage: (page: number) => {
-      dispatch(fetchUsersByPage(page));
+    fetchGroupsByPage: (page: number) => {
+      dispatch(fetchGroupsByPage(page));
     },
-    fetchUsersByLink: (link: string) => {
-      dispatch(fetchUsersByLink(link));
+    fetchGroupsByLink: (link: string) => {
+      dispatch(fetchGroupsByLink(link));
     }
   };
 };
@@ -137,4 +136,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(translate("users")(Users));
+)(translate("groups")(Groups));

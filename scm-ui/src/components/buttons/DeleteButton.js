@@ -4,7 +4,7 @@ import Button, { type ButtonProps } from "./Button";
 
 class DeleteButton extends React.Component<ButtonProps> {
   render() {
-    return <Button type="warning" {...this.props} />;
+    return <Button color="warning" {...this.props} />;
   }
 }
 

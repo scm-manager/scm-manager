@@ -1,3 +1,4 @@
+// @flow
 import * as validator from "./validation";
 
 describe("test name validation", () => {
@@ -13,7 +14,12 @@ describe("test name validation", () => {
       "t ",
       " t",
       " t ",
-      ""
+      "",
+
+      " invalid_name",
+      "another%one",
+      "!!!",
+      "!_!"
     ];
     for (let name of invalidNames) {
       expect(validator.isNameValid(name)).toBe(false);
@@ -31,7 +37,13 @@ describe("test name validation", () => {
       "test@scm-manager.de",
       "test 123",
       "tt",
-      "t"
+      "t",
+
+      "valid_name",
+      "another1",
+      "stillValid",
+      "this.one_as-well",
+      "and@this"
     ];
     for (let name of validNames) {
       expect(validator.isNameValid(name)).toBe(true);
