@@ -109,7 +109,7 @@ public class SvnConfigResourceTest {
 
   @Test
   @SubjectAware(username = "writeOnly")
-  public void shouldGetConfigOnlyWhenAuthorized() throws URISyntaxException {
+  public void shouldNotGetConfigWhenNotAuthorized() throws URISyntaxException {
     thrown.expectMessage("Subject does not have permission [configuration:read:svn]");
 
     get();
@@ -124,7 +124,7 @@ public class SvnConfigResourceTest {
 
   @Test
   @SubjectAware(username = "readOnly")
-  public void shouldUpdateConfigOnlyWhenAuthorized() throws URISyntaxException {
+  public void shouldNotUpdateConfigWhenNotAuthorized() throws URISyntaxException {
     thrown.expectMessage("Subject does not have permission [configuration:write:svn]");
 
     put();

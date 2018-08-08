@@ -110,7 +110,7 @@ public class GitConfigResourceTest {
 
   @Test
   @SubjectAware(username = "writeOnly")
-  public void shouldGetConfigOnlyWhenAuthorized() throws URISyntaxException {
+  public void shouldNotGetConfigWhenNotAuthorized() throws URISyntaxException {
     thrown.expectMessage("Subject does not have permission [configuration:read:git]");
 
     get();
@@ -125,7 +125,7 @@ public class GitConfigResourceTest {
 
   @Test
   @SubjectAware(username = "readOnly")
-  public void shouldUpdateConfigOnlyWhenAuthorized() throws URISyntaxException, IOException {
+  public void shouldNotUpdateConfigWhenNotAuthorized() throws URISyntaxException, IOException {
     thrown.expectMessage("Subject does not have permission [configuration:write:git]");
 
     put();

@@ -81,7 +81,7 @@ public class HgConfigInstallationsResourceTest {
 
   @Test
   @SubjectAware(username = "writeOnly")
-  public void shouldGetHgInstallationsOnlyWhenAuthorized() throws Exception {
+  public void shouldNotGetHgInstallationsWhenNotAuthorized() throws Exception {
     thrown.expectMessage("Subject does not have permission [configuration:read:hg]");
 
     get("hg");
@@ -103,7 +103,7 @@ public class HgConfigInstallationsResourceTest {
 
   @Test
   @SubjectAware(username = "writeOnly")
-  public void shouldGetPythonInstallationsOnlyWhenAuthorized() throws Exception {
+  public void shouldNotGetPythonInstallationsWhenNotAuthorized() throws Exception {
     thrown.expectMessage("Subject does not have permission [configuration:read:hg]");
 
     get("python");

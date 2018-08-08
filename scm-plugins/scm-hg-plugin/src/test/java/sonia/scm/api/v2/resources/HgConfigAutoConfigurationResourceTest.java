@@ -23,9 +23,7 @@ import javax.inject.Provider;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URISyntaxException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -77,7 +75,7 @@ public class HgConfigAutoConfigurationResourceTest {
 
   @Test
   @SubjectAware(username = "readOnly")
-  public void shouldSetDefaultConfigAndInstallHgOnlyWhenAuthorized() throws Exception {
+  public void shouldNotSetDefaultConfigAndInstallHgWhenNotAuthorized() throws Exception {
     thrown.expectMessage("Subject does not have permission [configuration:write:hg]");
 
     put(null);
@@ -96,7 +94,7 @@ public class HgConfigAutoConfigurationResourceTest {
 
   @Test
   @SubjectAware(username = "readOnly")
-  public void shouldUpdateConfigAndInstallHgOnlyWhenAuthorized() throws Exception {
+  public void shouldNotUpdateConfigAndInstallHgWhenNotAuthorized() throws Exception {
     thrown.expectMessage("Subject does not have permission [configuration:write:hg]");
 
     put("{\"disabled\":true}");

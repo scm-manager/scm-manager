@@ -112,7 +112,7 @@ public class HgConfigPackageResourceTest {
 
   @Test
   @SubjectAware(username = "writeOnly")
-  public void shouldGetPackagesOnlyWhenAuthorized() throws Exception {
+  public void shouldNotGetPackagesWhenNotAuthorized() throws Exception {
     thrown.expectMessage("Subject does not have permission [configuration:read:hg]");
 
     get();
@@ -157,7 +157,7 @@ public class HgConfigPackageResourceTest {
 
   @Test
   @SubjectAware(username = "readOnly")
-  public void shouldInstallPackageOnlyWhenAuthorized() throws Exception {
+  public void shouldNotInstallPackageWhenNotAuthorized() throws Exception {
     thrown.expectMessage("Subject does not have permission [configuration:write:hg]");
 
     put("don-t-care");
