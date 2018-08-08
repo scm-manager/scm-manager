@@ -27,9 +27,7 @@ class Details extends React.Component<Props> {
             <td>{t("group.type")}</td>
             <td>{group.type}</td>
           </tr>
-          <tr>
-            <td>{this.renderMembers()}</td>
-          </tr>
+          {this.renderMembers()}
         </tbody>
       </table>
     );
@@ -38,14 +36,16 @@ class Details extends React.Component<Props> {
   renderMembers() {
     if (this.props.group.members.length > 0) {
       return (
-        <div>
-          {this.props.t("group.members")}
-          <ul>
-            {this.props.group._embedded.members.map((member, index) => {
-              return <GroupMember key={index} member={member} />;
-            })}
-          </ul>
-        </div>
+        <tr>
+          <td>
+            {this.props.t("group.members")}
+            <ul>
+              {this.props.group._embedded.members.map((member, index) => {
+                return <GroupMember key={index} member={member} />;
+              })}
+            </ul>
+          </td>
+        </tr>
       );
     } else {
       return;
