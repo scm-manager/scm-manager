@@ -36,34 +36,28 @@ package sonia.scm.plugin;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.Lists;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
-import static org.hamcrest.Matchers.*;
-
-import static org.junit.Assert.*;
-
-import static org.mockito.Mockito.*;
-
-//~--- JDK imports ------------------------------------------------------------
-
+import javax.servlet.ServletContext;
 import java.io.File;
 import java.io.IOException;
-
 import java.net.MalformedURLException;
 import java.net.URL;
-
 import java.nio.file.Path;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.ServletContext;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.when;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -107,8 +101,6 @@ public class DefaultUberWebResourceLoaderTest extends WebResourceLoaderTestBase
   @Test
   public void testGetResourceFromCache() throws MalformedURLException
   {
-    when(servletContext.getResource("/myresource")).thenReturn(SCM_MANAGER);
-
     DefaultUberWebResourceLoader resourceLoader =
       new DefaultUberWebResourceLoader(servletContext,
         new ArrayList<PluginWrapper>());

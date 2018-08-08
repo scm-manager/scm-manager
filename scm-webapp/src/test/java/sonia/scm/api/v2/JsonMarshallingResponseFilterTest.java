@@ -10,7 +10,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.web.JsonEnricher;
 import sonia.scm.web.VndMediaType;
 
@@ -114,7 +114,6 @@ public class JsonMarshallingResponseFilterTest {
   @Test
   public void testFilterWithNonVndEntity() {
     when(responseContext.hasEntity()).thenReturn(Boolean.TRUE);
-    when(responseContext.getEntity()).thenReturn(new JsonMarshallingResponseFilterTest.Sample("one-two-three"));
     when(responseContext.getMediaType()).thenReturn(MediaType.APPLICATION_JSON_TYPE);
 
     filter.filter(requestContext, responseContext);

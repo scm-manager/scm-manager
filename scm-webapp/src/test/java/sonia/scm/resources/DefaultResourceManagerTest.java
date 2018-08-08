@@ -32,21 +32,23 @@
 package sonia.scm.resources;
 
 import com.google.common.collect.ImmutableSet;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.junit.MockitoJUnitRunner;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
-import org.junit.Test;
-import static org.junit.Assert.*;
-import org.junit.Before;
-import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Unit tests for {@link DefaultResourceManager}.
  * 
  * @author Sebastian Sdorra
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class DefaultResourceManagerTest extends ResourceManagerTestBase {
 
   private DefaultResourceManager resourceManager;

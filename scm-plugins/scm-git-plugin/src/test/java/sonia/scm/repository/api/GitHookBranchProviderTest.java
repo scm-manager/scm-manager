@@ -43,7 +43,7 @@ import static org.hamcrest.Matchers.*;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /**
  * Unit tests for {@link GitHookBranchProvider}.

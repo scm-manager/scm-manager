@@ -30,20 +30,23 @@
  */
 package sonia.scm.web;
 
-import java.io.File;
-import java.io.IOException;
-import org.junit.Test;
-import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import static org.mockito.Mockito.*;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.repository.GitConfig;
 import sonia.scm.repository.GitRepositoryHandler;
+
+import java.io.File;
+import java.io.IOException;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Unit tests for {@link GitRepositoryResolver}.
@@ -70,8 +73,6 @@ public class GitRepositoryResolverTest {
     
     GitConfig config = new GitConfig();
     config.setRepositoryDirectory(parentDirectory);
-    
-    when(handler.getConfig()).thenReturn(config);
   }
   
   @Test
