@@ -92,7 +92,7 @@ public class RepositoryRootResourceTest {
   }
 
   @Test
-  public void shouldFindExistingRepository() throws URISyntaxException {
+  public void shouldFindExistingRepository() throws Exception {
     mockRepository("space", "repo");
 
     MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo");
@@ -105,7 +105,7 @@ public class RepositoryRootResourceTest {
   }
 
   @Test
-  public void shouldMapProperties() throws URISyntaxException {
+  public void shouldMapProperties() throws Exception {
     Repository repository = mockRepository("space", "repo");
     repository.setProperty("testKey", "testValue");
 
@@ -118,7 +118,7 @@ public class RepositoryRootResourceTest {
   }
 
   @Test
-  public void shouldGetAll() throws URISyntaxException {
+  public void shouldGetAll() throws Exception {
     PageResult<Repository> singletonPageResult = createSingletonPageResult(mockRepository("space", "repo"));
     when(repositoryManager.getPage(any(), eq(0), eq(10))).thenReturn(singletonPageResult);
 
