@@ -15,7 +15,7 @@ class CreateButton extends React.Component<ButtonProps> {
     const { classes } = this.props;
     return (
       <div className={classNames("is-pulled-right", classes.spacing)}>
-        <AddButton {...this.props} />;
+        <AddButton {...this.props} />
       </div>
     );
   }
