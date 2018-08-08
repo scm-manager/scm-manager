@@ -90,9 +90,10 @@ public class ScmConfiguration implements Configuration {
   /**
    * the logger for ScmConfiguration
    */
-  private static final Logger logger =
-    LoggerFactory.getLogger(ScmConfiguration.class);
+  private static final Logger logger = LoggerFactory.getLogger(ScmConfiguration.class);
 
+  @SuppressWarnings("WeakerAccess") // This might be needed for permission checking
+  public static final String PERMISSION = "global";
 
   @XmlElement(name = "admin-groups")
   @XmlJavaTypeAdapter(XmlSetStringAdapter.class)
@@ -509,6 +510,6 @@ public class ScmConfiguration implements Configuration {
   @XmlTransient
   public String getId() {
     // Don't change this without migrating SCM permission configuration!
-    return "global";
+    return PERMISSION;
   }
 }

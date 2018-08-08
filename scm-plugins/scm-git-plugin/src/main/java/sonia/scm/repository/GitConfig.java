@@ -48,7 +48,10 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement(name = "config")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class GitConfig extends RepositoryConfig {
-  
+
+  @SuppressWarnings("WeakerAccess") // This might be needed for permission checking
+  public static final String PERMISSION = "git";
+
   @XmlElement(name = "gc-expression")
   private String gcExpression;
 
@@ -57,10 +60,14 @@ public class GitConfig extends RepositoryConfig {
     return gcExpression;
   }
 
+  public void setGcExpression(String gcExpression) {
+    this.gcExpression = gcExpression;
+  }
+
   @Override
   @XmlTransient // Only for permission checks, don't serialize to XML
   public String getId() {
     // Don't change this without migrating SCM permission configuration!
-    return "git";
+    return PERMISSION;
   }
 }

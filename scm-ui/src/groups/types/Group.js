@@ -14,5 +14,7 @@ export type Group = Collection & {
   members: string[],
   _embedded: {
     members: Member[]
-  }
+  },
+  creationDate?: string,
+  lastModified?: string
 };

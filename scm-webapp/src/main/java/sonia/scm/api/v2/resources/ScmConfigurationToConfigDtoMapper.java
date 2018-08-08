@@ -15,12 +15,10 @@ import static de.otto.edison.hal.Links.linkingTo;
 // Mapstruct does not support parameterized (i.e. non-default) constructors. Thus, we need to use field injection.
 @SuppressWarnings("squid:S3306")
 @Mapper
-public abstract class ScmConfigurationToConfigDtoMapper {
+public abstract class ScmConfigurationToConfigDtoMapper extends BaseMapper<ScmConfiguration, ConfigDto> {
 
   @Inject
   private ResourceLinks resourceLinks;
-
-  public abstract ConfigDto map(ScmConfiguration config);
 
   @AfterMapping
   void appendLinks(ScmConfiguration config, @MappingTarget ConfigDto target) {

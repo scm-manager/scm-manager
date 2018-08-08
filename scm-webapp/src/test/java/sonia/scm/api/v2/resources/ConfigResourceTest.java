@@ -21,9 +21,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 @SubjectAware(
@@ -72,7 +70,7 @@ public class ConfigResourceTest {
 
   @Test
   @SubjectAware(username = "writeOnly")
-  public void shouldGetConfigOnlyWhenAuthorized() throws URISyntaxException {
+  public void shouldNotGetConfigWhenNotAuthorized() throws URISyntaxException {
     MockHttpRequest request = MockHttpRequest.get("/" + ConfigResource.CONFIG_PATH_V2);
     MockHttpResponse response = new MockHttpResponse();
 
@@ -96,8 +94,7 @@ public class ConfigResourceTest {
 
     request = MockHttpRequest.get("/" + ConfigResource.CONFIG_PATH_V2);
     response = new MockHttpResponse();
-    dispatcher.invoke(request, response);
-    assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+    dispatcher.invoke(request, response);    assertEquals(HttpServletResponse.SC_OK, response.getStatus());
     assertTrue(response.getContentAsString().contains("\"proxyPassword\":\"newPassword\""));
     assertTrue(response.getContentAsString().contains("\"self\":{\"href\":\"/v2/config"));
     assertTrue("link not found", response.getContentAsString().contains("\"update\":{\"href\":\"/v2/config"));
@@ -105,7 +102,7 @@ public class ConfigResourceTest {
 
   @Test
   @SubjectAware(username = "readOnly")
-  public void shouldUpdateConfigOnlyWhenAuthorized() throws URISyntaxException, IOException {
+  public void shouldNotUpdateConfigWhenNotAuthorized() throws URISyntaxException, IOException {
     URL url = Resources.getResource("sonia/scm/api/v2/config-test-update.json");
     byte[] configJson = Resources.toByteArray(url);
     MockHttpRequest request = MockHttpRequest.put("/" + ConfigResource.CONFIG_PATH_V2)

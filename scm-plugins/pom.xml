@@ -38,12 +38,26 @@
       <scope>provided</scope>
     </dependency>
     
-    <!-- annotation processor -->
+    <!-- annotation processors -->
     
     <dependency>
       <groupId>sonia.scm</groupId>
       <artifactId>scm-annotation-processor</artifactId>
       <version>2.0.0-SNAPSHOT</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- Annotation processor for DTO mappers-->
+    <dependency>
+      <groupId>org.mapstruct</groupId>
+      <artifactId>mapstruct-processor</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- Annotation processor for getter, setters, constructors, etc. -->
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
       <scope>provided</scope>
     </dependency>
     
@@ -55,6 +69,19 @@
       <version>2.0.0-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
+
+    <dependency>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>resteasy-jaxrs</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>resteasy-jackson2-provider</artifactId>
+      <scope>test</scope>
+    </dependency>
+
 
   </dependencies>
 
@@ -134,6 +161,96 @@
               <replace>true</replace>
               <baseDirectory>${project.build.directory}/classes</baseDirectory>
             </configuration>
+          </plugin>
+
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>doc</id>
+
+      <build>
+        <plugins>
+
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-resources-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>copy-enunciate-configuration</id>
+                <phase>compile</phase>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+                <configuration>
+                  <outputDirectory>${project.build.directory}</outputDirectory>
+                  <resources>
+                    <resource>
+                      <directory>src/main/doc</directory>
+                      <filtering>true</filtering>
+                      <includes>
+                        <include>**/enunciate.xml</include>
+                      </includes>
+                    </resource>
+                  </resources>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>com.webcohesion.enunciate</groupId>
+            <artifactId>enunciate-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>docs</goal>
+                </goals>
+                <phase>compile</phase>
+              </execution>
+            </executions>
+            <configuration>
+              <configFile>${project.build.directory}/enunciate.xml</configFile>
+              <docsDir>${project.build.directory}</docsDir>
+              <docsSubdir>restdocs</docsSubdir>
+            </configuration>
+            <dependencies>
+              <dependency>
+                <groupId>com.webcohesion.enunciate</groupId>
+                <artifactId>enunciate-top</artifactId>
+                <version>${enunciate.version}</version>
+                <exclusions>
+                  <exclusion>
+                    <groupId>com.webcohesion.enunciate</groupId>
+                    <artifactId>enunciate-swagger</artifactId>
+                  </exclusion>
+                </exclusions>
+              </dependency>
+              <dependency>
+                <groupId>com.webcohesion.enunciate</groupId>
+                <artifactId>enunciate-lombok</artifactId>
+                <version>${enunciate.version}</version>
+              </dependency>
+            </dependencies>
+          </plugin>
+
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <configuration>
+              <descriptors>
+                <descriptor>src/main/doc/assembly.xml</descriptor>
+              </descriptors>
+            </configuration>
+            <executions>
+              <execution>
+                <phase>package</phase>
+                <goals>
+                  <goal>single</goal>
+                </goals>
+              </execution>
+            </executions>
           </plugin>
 
         </plugins>

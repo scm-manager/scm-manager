@@ -33,6 +33,7 @@ public class ConfigDto extends HalRepresentation {
   private String pluginUrl;
   private long loginAttemptLimitTimeout;
   private boolean enabledXsrfProtection;
+  private String defaultNamespaceStrategy;
 
   @Override
   @SuppressWarnings("squid:S1185") // We want to have this method available in this package

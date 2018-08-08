@@ -24,6 +24,7 @@ public class GroupDto extends HalRepresentation {
   private List<String> members;
 
   @Override
+  @SuppressWarnings("squid:S1185") // We want to have this method available in this package
   protected HalRepresentation add(Links links) {
     return super.add(links);
   }

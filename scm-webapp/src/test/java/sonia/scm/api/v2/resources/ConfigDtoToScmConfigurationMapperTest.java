@@ -51,6 +51,7 @@ public class ConfigDtoToScmConfigurationMapperTest {
     assertEquals("https://plug.ins" , config.getPluginUrl());
     assertEquals(40 , config.getLoginAttemptLimitTimeout());
     assertTrue(config.isEnabledXsrfProtection());
+    assertEquals("username", config.getDefaultNamespaceStrategy());
   }
 
   private ConfigDto createDefaultDto() {
@@ -75,6 +76,7 @@ public class ConfigDtoToScmConfigurationMapperTest {
     configDto.setPluginUrl("https://plug.ins");
     configDto.setLoginAttemptLimitTimeout(40);
     configDto.setEnabledXsrfProtection(true);
+    configDto.setDefaultNamespaceStrategy("username");
 
     return configDto;
   }
