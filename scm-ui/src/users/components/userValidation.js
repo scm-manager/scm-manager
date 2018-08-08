@@ -1,10 +1,8 @@
 // @flow
 
-const nameRegex = /^([A-z0-9.\-_@]|[^ ]([A-z0-9.\-_@ ]*[A-z0-9.\-_@]|[^\s])?)$/;
+import { isNameValid } from "../../components/validation";
 
-export const isNameValid = (name: string) => {
-  return nameRegex.test(name);
-};
+export { isNameValid };
 
 export const isDisplayNameValid = (displayName: string) => {
   if (displayName) {

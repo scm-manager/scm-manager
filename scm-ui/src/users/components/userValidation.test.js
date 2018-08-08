@@ -1,45 +1,6 @@
 // @flow
 import * as validator from "./userValidation";
 
-describe("test name validation", () => {
-  it("should return false", () => {
-    // invalid names taken from ValidationUtilTest.java
-    const invalidNames = [
-      " test 123",
-      " test 123 ",
-      "test 123 ",
-      "test/123",
-      "test%123",
-      "test:123",
-      "t ",
-      " t",
-      " t ",
-      ""
-    ];
-    for (let name of invalidNames) {
-      expect(validator.isNameValid(name)).toBe(false);
-    }
-  });
-
-  it("should return true", () => {
-    // valid names taken from ValidationUtilTest.java
-    const validNames = [
-      "test",
-      "test.git",
-      "Test123.git",
-      "Test123-git",
-      "Test_user-123.git",
-      "test@scm-manager.de",
-      "test 123",
-      "tt",
-      "t"
-    ];
-    for (let name of validNames) {
-      expect(validator.isNameValid(name)).toBe(true);
-    }
-  });
-});
-
 describe("test displayName validation", () => {
   it("should return false", () => {
     expect(validator.isDisplayNameValid("")).toBe(false);
