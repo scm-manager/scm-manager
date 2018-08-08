@@ -191,11 +191,11 @@ class ResourceLinks {
     private final LinkBuilder branchLinkBuilder;
 
     BranchLinks(UriInfo uriInfo) {
-      branchLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, BranchRootResource.class, BranchResource.class);
+      branchLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, BranchRootResource.class);
     }
 
     String self(NamespaceAndName namespaceAndName, String branch) {
-      return branchLinkBuilder.method("getRepositoryResource").parameters(namespaceAndName.getNamespace(), namespaceAndName.getName()).method("branches").parameters().method("getBranchResource").parameters().method("get").parameters(branch).href();
+      return branchLinkBuilder.method("getRepositoryResource").parameters(namespaceAndName.getNamespace(), namespaceAndName.getName()).method("branches").parameters().method("get").parameters(branch).href();
     }
   }
 
@@ -207,11 +207,11 @@ class ResourceLinks {
     private final LinkBuilder branchLinkBuilder;
 
     BranchCollectionLinks(UriInfo uriInfo) {
-      branchLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, BranchRootResource.class, BranchCollectionResource.class);
+      branchLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, BranchRootResource.class);
     }
 
     String self(String namespace, String name) {
-      return branchLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("branches").parameters().method("getBranchCollectionResource").parameters().method("getAll").parameters().href();
+      return branchLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("branches").parameters().method("getAll").parameters().href();
     }
   }
 
