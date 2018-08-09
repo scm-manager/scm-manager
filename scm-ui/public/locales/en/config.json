@@ -1,7 +1,11 @@
 {
   "config": {
+    "navigation-title": "Navigation"
+  },
+  "global-config": {
     "title": "Configuration",
-    "navigation-title": "Navigation",
-    "globalConfig-label": "Global Configuration"
+    "navigation-label": "Global Configuration",
+    "error-title": "Error",
+    "error-subtitle": "Unknown Config Error"
   }
 }

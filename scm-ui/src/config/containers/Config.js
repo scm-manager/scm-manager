@@ -40,7 +40,7 @@ class Config extends React.Component<Props> {
           <div className="column">
             <Navigation>
               <Section label={t("config.navigation-title")}>
-                <NavLink to={`${url}`} label={t("config.globalConfig-label")} />
+                <NavLink to={`${url}`} label={t("global-config.navigation-label")} />
               </Section>
             </Navigation>
           </div>

@@ -4,11 +4,14 @@ import thunk from "redux-thunk";
 import fetchMock from "fetch-mock";
 
 import reducer, {
+  FETCH_CONFIG,
   FETCH_CONFIG_PENDING,
   FETCH_CONFIG_SUCCESS,
   FETCH_CONFIG_FAILURE,
   fetchConfig,
-  fetchConfigSuccess
+  fetchConfigSuccess,
+  getFetchConfigFailure,
+  isFetchConfigPending
 } from "./config";
 
 const CONFIG_URL = "/scm/api/rest/v2/config";
@@ -112,5 +115,33 @@ describe("config reducer", () => {
   it("should update state according to FETCH_GROUP_SUCCESS action", () => {
     const newState = reducer({}, fetchConfigSuccess(config));
     expect(newState.config.entries).toBe(config);
+  });
+});
+
+describe("selector tests", () => {
+  it("should return true, when fetch config is pending", () => {
+    const state = {
+      pending: {
+        [FETCH_CONFIG]: true
+      }
+    };
+    expect(isFetchConfigPending(state)).toEqual(true);
+  });
+
+  it("should return false, when fetch config is not pending", () => {
+    expect(isFetchConfigPending({})).toEqual(false);
+  });
+
+  it("should return error when fetch config did fail", () => {
+    const state = {
+      failure: {
+        [FETCH_CONFIG]: error
+      }
+    };
+    expect(getFetchConfigFailure(state)).toEqual(error);
+  });
+
+  it("should return undefined when fetch config did not fail", () => {
+    expect(getFetchConfigFailure({})).toBe(undefined);
   });
 });

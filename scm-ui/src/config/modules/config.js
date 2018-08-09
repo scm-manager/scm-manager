@@ -2,6 +2,8 @@
 import { apiClient } from "../../apiclient";
 import * as types from "../../modules/types";
 import type { Action } from "../../types/Action";
+import { isPending } from "../../modules/pending";
+import { getFailure } from "../../modules/failure";
 
 export const FETCH_CONFIG = "scm/groups/FETCH_CONFIG";
 export const FETCH_CONFIG_PENDING = `${FETCH_CONFIG}_${types.PENDING_SUFFIX}`;
@@ -69,3 +71,13 @@ function reducer(state: any = {}, action: any = {}) {
 }
 
 export default reducer;
+
+// selectors
+
+export function isFetchConfigPending(state: Object) {
+  return isPending(state, FETCH_CONFIG);
+}
+
+export function getFetchConfigFailure(state: Object) {
+  return getFailure(state, FETCH_CONFIG);
+}
