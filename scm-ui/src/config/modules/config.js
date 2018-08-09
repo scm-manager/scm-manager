@@ -60,10 +60,8 @@ function reducer(state: any = {}, action: any = {}) {
     case FETCH_CONFIG_SUCCESS:
       return {
         ...state,
-        config: {
-          entries: action.payload,
-          configUpdatePermission: action.payload._links.update ? true : false
-        }
+        entries: action.payload,
+        configUpdatePermission: action.payload._links.update ? true : false
       };
     default:
       return state;

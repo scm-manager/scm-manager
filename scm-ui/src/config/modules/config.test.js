@@ -100,7 +100,7 @@ describe("config reducer", () => {
   it("should update state correctly according to FETCH_CONFIG_SUCCESS action", () => {
     const newState = reducer({}, fetchConfigSuccess(config));
 
-    expect(newState.config).toEqual({
+    expect(newState).toEqual({
       entries: config,
       configUpdatePermission: true
     });
@@ -109,12 +109,12 @@ describe("config reducer", () => {
   it("should set configUpdatePermission to true if update link is present", () => {
     const newState = reducer({}, fetchConfigSuccess(config));
 
-    expect(newState.config.configUpdatePermission).toBeTruthy();
+    expect(newState.configUpdatePermission).toBeTruthy();
   });
 
-  it("should update state according to FETCH_GROUP_SUCCESS action", () => {
+  it("should update state according to FETCH_CONFIG_SUCCESS action", () => {
     const newState = reducer({}, fetchConfigSuccess(config));
-    expect(newState.config.entries).toBe(config);
+    expect(newState.entries).toBe(config);
   });
 });
 
