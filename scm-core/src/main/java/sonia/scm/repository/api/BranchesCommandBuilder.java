@@ -29,10 +29,7 @@
  *
  */
 
-
 package sonia.scm.repository.api;
-
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Objects;
 import org.slf4j.Logger;
@@ -49,7 +46,6 @@ import sonia.scm.repository.spi.BranchesCommand;
 
 import java.io.IOException;
 
-//~--- JDK imports ------------------------------------------------------------
 
 /**
  * The branches command list all repository branches.<br />

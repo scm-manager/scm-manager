@@ -56,10 +56,8 @@ public class BranchRootResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("branch") String branchName) throws IOException, RepositoryException {
-    System.out.println("in branch resource");
     try (RepositoryService repositoryService = servicefactory.create(new NamespaceAndName(namespace, name))) {
       Branches branches = repositoryService.getBranchesCommand().getBranches();
-      System.out.println("found branches: " + branches);
       return branches.getBranches()
         .stream()
         .filter(branch -> branchName.equals(branch.getName()))
@@ -71,7 +69,6 @@ public class BranchRootResource {
     } catch (CommandNotSupportedException ex) {
       return Response.status(Response.Status.BAD_REQUEST).build();
     } catch (RepositoryNotFoundException e) {
-      System.out.println("got RepositoryNotFoundException");
       return Response.status(Response.Status.NOT_FOUND).build();
     }
   }
@@ -79,7 +76,7 @@ public class BranchRootResource {
   @Path("{branch}/changesets/")
   @GET
   public Response history(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("branch") String branchName) {
-    return null;
+    throw new UnsupportedOperationException();
   }
 
   /**
