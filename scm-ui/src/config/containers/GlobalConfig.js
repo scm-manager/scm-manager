@@ -1,7 +1,6 @@
 import React from "react";
-import { Page } from "../../components/layout";
-import type { History } from "history";
 import { translate } from "react-i18next";
+import Title from "../../components/layout/Title";
 
 type Props = {
   // context objects
@@ -12,7 +11,7 @@ class GlobalConfig extends React.Component<Props> {
   render() {
     const { t } = this.props;
 
-    return <div>Here, global config will be shown</div>;
+    return <Title title={t("config.title")} />;
   }
 }
 

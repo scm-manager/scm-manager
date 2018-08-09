@@ -32,7 +32,7 @@ class Config extends React.Component<Props> {
     const url = this.matchedUrl();
 
     return (
-      <Page title={t("config.title")}>
+      <Page>
         <div className="columns">
           <div className="column is-three-quarters">
             <Route path={url} exact component={() => <GlobalConfig />} />
