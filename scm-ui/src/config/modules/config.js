@@ -5,7 +5,7 @@ import type { Action } from "../../types/Action";
 import { isPending } from "../../modules/pending";
 import { getFailure } from "../../modules/failure";
 
-export const FETCH_CONFIG = "scm/groups/FETCH_CONFIG";
+export const FETCH_CONFIG = "scm/config/FETCH_CONFIG";
 export const FETCH_CONFIG_PENDING = `${FETCH_CONFIG}_${types.PENDING_SUFFIX}`;
 export const FETCH_CONFIG_SUCCESS = `${FETCH_CONFIG}_${types.SUCCESS_SUFFIX}`;
 export const FETCH_CONFIG_FAILURE = `${FETCH_CONFIG}_${types.FAILURE_SUFFIX}`;
