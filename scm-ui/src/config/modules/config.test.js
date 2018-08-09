@@ -8,10 +8,14 @@ import reducer, {
   FETCH_CONFIG_PENDING,
   FETCH_CONFIG_SUCCESS,
   FETCH_CONFIG_FAILURE,
+  MODIFY_CONFIG_PENDING,
+  MODIFY_CONFIG_SUCCESS,
+  MODIFY_CONFIG_FAILURE,
   fetchConfig,
   fetchConfigSuccess,
   getFetchConfigFailure,
-  isFetchConfigPending
+  isFetchConfigPending,
+  modifyConfig
 } from "./config";
 
 const CONFIG_URL = "/scm/api/rest/v2/config";
@@ -91,6 +95,55 @@ describe("config fetch()", () => {
       const actions = store.getActions();
       expect(actions[0].type).toEqual(FETCH_CONFIG_PENDING);
       expect(actions[1].type).toEqual(FETCH_CONFIG_FAILURE);
+      expect(actions[1].payload).toBeDefined();
+    });
+  });
+
+  it("should successfully modify config", () => {
+    fetchMock.putOnce("http://localhost:8081/scm/api/rest/v2/config", {
+      status: 204
+    });
+
+    const store = mockStore({});
+
+    return store.dispatch(modifyConfig(config)).then(() => {
+      const actions = store.getActions();
+      expect(actions[0].type).toEqual(MODIFY_CONFIG_PENDING);
+      expect(actions[1].type).toEqual(MODIFY_CONFIG_SUCCESS);
+      expect(actions[1].payload).toEqual(config);
+    });
+  });
+
+  it("should call the callback after modifying config", () => {
+    fetchMock.putOnce("http://localhost:8081/scm/api/rest/v2/config", {
+      status: 204
+    });
+
+    let called = false;
+    const callback = () => {
+      called = true;
+    };
+    const store = mockStore({});
+
+    return store.dispatch(modifyConfig(config, callback)).then(() => {
+      const actions = store.getActions();
+      expect(actions[0].type).toEqual(MODIFY_CONFIG_PENDING);
+      expect(actions[1].type).toEqual(MODIFY_CONFIG_SUCCESS);
+      expect(called).toBe(true);
+    });
+  });
+
+  it("should fail modifying config on HTTP 500", () => {
+    fetchMock.putOnce("http://localhost:8081/scm/api/rest/v2/config", {
+      status: 500
+    });
+
+    const store = mockStore({});
+
+    return store.dispatch(modifyConfig(config)).then(() => {
+      const actions = store.getActions();
+      expect(actions[0].type).toEqual(MODIFY_CONFIG_PENDING);
+      expect(actions[1].type).toEqual(MODIFY_CONFIG_FAILURE);
       expect(actions[1].payload).toBeDefined();
     });
   });
