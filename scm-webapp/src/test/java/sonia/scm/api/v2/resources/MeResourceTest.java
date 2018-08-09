@@ -79,7 +79,7 @@ public class MeResourceTest {
 
   @Test
   @SubjectAware(username = "trillian", password = "secret")
-  public void shouldReturnCurrentlyAuthenticatedUser() throws Exception {
+  public void shouldReturnCurrentlyAuthenticatedUser() throws URISyntaxException {
     MockHttpRequest request = MockHttpRequest.get("/" + MeResource.ME_PATH_V2);
     request.accept(VndMediaType.USER);
     MockHttpResponse response = new MockHttpResponse();

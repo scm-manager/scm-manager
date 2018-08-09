@@ -60,7 +60,7 @@ public class ConfigResourceTest {
 
   @Test
   @SubjectAware(username = "readOnly")
-  public void shouldGetGlobalConfig() throws Exception {
+  public void shouldGetGlobalConfig() throws URISyntaxException {
     MockHttpRequest request = MockHttpRequest.get("/" + ConfigResource.CONFIG_PATH_V2);
     MockHttpResponse response = new MockHttpResponse();
     dispatcher.invoke(request, response);

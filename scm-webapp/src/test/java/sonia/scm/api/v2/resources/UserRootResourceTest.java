@@ -77,7 +77,7 @@ public class UserRootResourceTest {
   }
 
   @Test
-  public void shouldCreateFullResponseForAdmin() throws Exception {
+  public void shouldCreateFullResponseForAdmin() throws URISyntaxException {
     MockHttpRequest request = MockHttpRequest.get("/" + UserRootResource.USERS_PATH_V2 + "Neo");
     MockHttpResponse response = new MockHttpResponse();
 
@@ -92,7 +92,7 @@ public class UserRootResourceTest {
 
   @Test
   @SubjectAware(username = "unpriv")
-  public void shouldCreateLimitedResponseForSimpleUser() throws Exception {
+  public void shouldCreateLimitedResponseForSimpleUser() throws URISyntaxException {
     MockHttpRequest request = MockHttpRequest.get("/" + UserRootResource.USERS_PATH_V2 + "Neo");
     MockHttpResponse response = new MockHttpResponse();
 
@@ -217,7 +217,7 @@ public class UserRootResourceTest {
   }
 
   @Test
-  public void shouldCreatePageForOnePageOnly() throws Exception {
+  public void shouldCreatePageForOnePageOnly() throws URISyntaxException {
     PageResult<User> singletonPageResult = createSingletonPageResult(1);
     when(userManager.getPage(any(), eq(0), eq(10))).thenReturn(singletonPageResult);
     MockHttpRequest request = MockHttpRequest.get("/" + UserRootResource.USERS_PATH_V2);
@@ -235,7 +235,7 @@ public class UserRootResourceTest {
   }
 
   @Test
-  public void shouldCreatePageForMultiplePages() throws Exception {
+  public void shouldCreatePageForMultiplePages() throws URISyntaxException {
     PageResult<User> singletonPageResult = createSingletonPageResult(3);
     when(userManager.getPage(any(), eq(1), eq(1))).thenReturn(singletonPageResult);
     MockHttpRequest request = MockHttpRequest.get("/" + UserRootResource.USERS_PATH_V2 + "?page=1&pageSize=1");

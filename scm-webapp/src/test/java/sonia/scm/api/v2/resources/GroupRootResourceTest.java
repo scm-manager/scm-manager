@@ -86,7 +86,7 @@ public class GroupRootResourceTest {
   }
 
   @Test
-  public void shouldGetGroup() throws Exception {
+  public void shouldGetGroup() throws URISyntaxException {
     Group group = createDummyGroup();
     when(groupManager.get("admin")).thenReturn(group);
 
@@ -199,7 +199,7 @@ public class GroupRootResourceTest {
   }
 
   @Test
-  public void shouldGetAll() throws Exception {
+  public void shouldGetAll() throws URISyntaxException {
     MockHttpRequest request = MockHttpRequest.get("/" + GroupRootResource.GROUPS_PATH_V2);
     MockHttpResponse response = new MockHttpResponse();
 
