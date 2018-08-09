@@ -35,12 +35,15 @@ class Config extends React.Component<Props> {
       <Page>
         <div className="columns">
           <div className="column is-three-quarters">
-            <Route path={url} exact component={() => <GlobalConfig />} />
+            <Route path={url} exact component={GlobalConfig} />
           </div>
           <div className="column">
             <Navigation>
               <Section label={t("config.navigation-title")}>
-                <NavLink to={`${url}`} label={t("global-config.navigation-label")} />
+                <NavLink
+                  to={`${url}`}
+                  label={t("global-config.navigation-label")}
+                />
               </Section>
             </Navigation>
           </div>
