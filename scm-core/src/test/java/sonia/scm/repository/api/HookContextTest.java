@@ -33,15 +33,12 @@ package sonia.scm.repository.api;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import java.util.List;
-import org.junit.Test;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.PreProcessorUtil;
@@ -50,6 +47,16 @@ import sonia.scm.repository.spi.HookChangesetProvider;
 import sonia.scm.repository.spi.HookChangesetRequest;
 import sonia.scm.repository.spi.HookChangesetResponse;
 import sonia.scm.repository.spi.HookContextProvider;
+
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Unit tests for {@link HookContext}.
@@ -64,7 +71,7 @@ public class HookContextTest {
   
   @Mock
   private Repository repository;
-  
+
   @Mock
   private PreProcessorUtil preProcessorUtil;
   
@@ -79,7 +86,6 @@ public class HookContextTest {
    */
   @Before
   public void setUpMocks(){
-    when(repository.getName()).thenReturn("test");
     when(provider.getChangesetProvider()).thenReturn(changesetProvider);
     when(provider.getSupportedFeatures()).thenReturn(Sets.newHashSet(HookFeature.CHANGESET_PROVIDER));
     

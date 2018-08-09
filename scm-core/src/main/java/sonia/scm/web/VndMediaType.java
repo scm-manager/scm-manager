@@ -16,9 +16,11 @@ public class VndMediaType {
   public static final String USER = PREFIX + "user" + SUFFIX;
   public static final String GROUP = PREFIX + "group" + SUFFIX;
   public static final String REPOSITORY = PREFIX + "repository" + SUFFIX;
+  public static final String BRANCH = PREFIX + "branch" + SUFFIX;
   public static final String USER_COLLECTION = PREFIX + "userCollection" + SUFFIX;
   public static final String GROUP_COLLECTION = PREFIX + "groupCollection" + SUFFIX;
   public static final String REPOSITORY_COLLECTION = PREFIX + "repositoryCollection" + SUFFIX;
+  public static final String BRANCH_COLLECTION = PREFIX + "branchCollection" + SUFFIX;
   public static final String CONFIG = PREFIX + "config" + SUFFIX;
   public static final String REPOSITORY_TYPE_COLLECTION = PREFIX + "repositoryTypeCollection" + SUFFIX;
   public static final String REPOSITORY_TYPE = PREFIX + "repositoryType" + SUFFIX;

@@ -31,15 +31,19 @@
 
 package sonia.scm.security;
 
-import javax.servlet.http.HttpServletRequest;
-import org.junit.Test;
 import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import static org.mockito.Mockito.*;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.util.HttpUtil;
+
+import javax.servlet.http.HttpServletRequest;
+
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Unit tests for {@link XsrfAccessTokenEnricher}.
@@ -96,8 +100,7 @@ public class XsrfAccessTokenEnricherTest {
   public void testEnrichWithDisabledXsrf() {
     // prepare
     configuration.setEnabledXsrfProtection(false);
-    when(request.getHeader(HttpUtil.HEADER_SCM_CLIENT)).thenReturn(HttpUtil.SCM_CLIENT_WUI);
-    
+
     // execute
     enricher.enrich(builder);
     

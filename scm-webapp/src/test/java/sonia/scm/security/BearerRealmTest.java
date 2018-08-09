@@ -41,41 +41,36 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwsHeader;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.PrincipalCollection;
-
+import org.hamcrest.Matchers;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
-
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
-
+import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.group.GroupDAO;
 import sonia.scm.user.User;
 import sonia.scm.user.UserDAO;
 import sonia.scm.user.UserTestData;
 
-import static org.junit.Assert.*;
-
-import static org.mockito.Mockito.*;
-
-//~--- JDK imports ------------------------------------------------------------
-
+import javax.crypto.spec.SecretKeySpec;
 import java.security.SecureRandom;
-
 import java.util.Date;
 import java.util.Set;
 
-import javax.crypto.spec.SecretKeySpec;
-import org.hamcrest.Matchers;
-import org.junit.Rule;
-import org.junit.rules.ExpectedException;
-import org.mockito.InjectMocks;
-import org.mockito.Mockito;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.when;
 
 /**
  * Unit tests for {@link BearerRealm}.
@@ -156,7 +151,6 @@ public class BearerRealmTest
   {
     SecureKey key = createSecureKey();
     User marvin = UserTestData.createMarvin();
-    when(userDAO.get(marvin.getName())).thenReturn(marvin);
 
     resolveKey(key);
 
@@ -181,8 +175,6 @@ public class BearerRealmTest
   public void testDoGetAuthenticationInfoWithExpiredToken()
   {
     User trillian = UserTestData.createTrillian();
-
-    when(userDAO.get(trillian.getName())).thenReturn(trillian);
 
     SecureKey key = createSecureKey();
 
@@ -216,10 +208,6 @@ public class BearerRealmTest
   @Test(expected = AuthenticationException.class)
   public void testDoGetAuthenticationInfoWithoutSignature()
   {
-    User trillian = UserTestData.createTrillian();
-
-    when(userDAO.get(trillian.getName())).thenReturn(trillian);
-
     String compact = Jwts.builder().setSubject("test").compact();
 
     realm.doGetAuthenticationInfo(BearerToken.valueOf(compact));

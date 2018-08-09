@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.repository.RepositoryType;
 
 import java.net.URI;
@@ -18,7 +18,7 @@ import java.util.Optional;
 
 import static org.junit.Assert.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class RepositoryTypeCollectionToDtoMapperTest {
 
   private final URI baseUri = URI.create("https://scm-manager.org/scm/");

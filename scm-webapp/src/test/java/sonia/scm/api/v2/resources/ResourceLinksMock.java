@@ -21,10 +21,11 @@ public class ResourceLinksMock {
     when(resourceLinks.repositoryCollection()).thenReturn(new ResourceLinks.RepositoryCollectionLinks(uriInfo));
     when(resourceLinks.tagCollection()).thenReturn(new ResourceLinks.TagCollectionLinks(uriInfo));
     when(resourceLinks.branchCollection()).thenReturn(new ResourceLinks.BranchCollectionLinks(uriInfo));
-    when(resourceLinks.changesetCollection()).thenReturn(new ResourceLinks.ChangesetCollectionLinks(uriInfo));
-    when(resourceLinks.sourceCollection()).thenReturn(new ResourceLinks.SourceCollectionLinks(uriInfo));
+    when(resourceLinks.changeset()).thenReturn(new ResourceLinks.ChangesetLinks(uriInfo));
+    when(resourceLinks.source()).thenReturn(new ResourceLinks.SourceLinks(uriInfo));
     when(resourceLinks.permissionCollection()).thenReturn(new ResourceLinks.PermissionCollectionLinks(uriInfo));
     when(resourceLinks.config()).thenReturn(new ResourceLinks.ConfigLinks(uriInfo));
+    when(resourceLinks.branch()).thenReturn(new ResourceLinks.BranchLinks(uriInfo));
     when(resourceLinks.repositoryType()).thenReturn(new ResourceLinks.RepositoryTypeLinks(uriInfo));
     when(resourceLinks.repositoryTypeCollection()).thenReturn(new ResourceLinks.RepositoryTypeCollectionLinks(uriInfo));
 

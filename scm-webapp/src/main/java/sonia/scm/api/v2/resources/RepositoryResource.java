@@ -137,7 +137,7 @@ public class RepositoryResource {
   }
 
   @Path("branches/")
-  public BranchRootResource branches() {
+  public BranchRootResource branches(@PathParam("namespace") String namespace, @PathParam("name") String name) {
     return branchRootResource.get();
   }
 

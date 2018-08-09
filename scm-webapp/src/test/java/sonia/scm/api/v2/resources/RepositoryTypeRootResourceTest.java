@@ -11,7 +11,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryType;
 import sonia.scm.web.VndMediaType;
@@ -26,7 +26,7 @@ import static org.junit.Assert.*;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class RepositoryTypeRootResourceTest {
 
   private final Dispatcher dispatcher = MockDispatcherFactory.createDispatcher();
@@ -69,7 +69,7 @@ public class RepositoryTypeRootResourceTest {
   }
 
   @Test
-  public void shouldHaveCollectionSelfLink() throws URISyntaxException {
+  public void shouldHaveCollectionSelfLink() throws Exception {
     String uri = "/" + RepositoryTypeRootResource.PATH;
     MockHttpRequest request = MockHttpRequest.get(uri);
     MockHttpResponse response = new MockHttpResponse();
@@ -81,7 +81,7 @@ public class RepositoryTypeRootResourceTest {
   }
 
   @Test
-  public void shouldHaveEmbeddedRepositoryTypes() throws URISyntaxException {
+  public void shouldHaveEmbeddedRepositoryTypes() throws Exception {
     MockHttpRequest request = MockHttpRequest.get("/" + RepositoryTypeRootResource.PATH);
     MockHttpResponse response = new MockHttpResponse();
 
@@ -105,7 +105,7 @@ public class RepositoryTypeRootResourceTest {
   }
 
   @Test
-  public void shouldContainAttributes() throws URISyntaxException {
+  public void shouldContainAttributes() throws Exception {
     String uri = "/" + RepositoryTypeRootResource.PATH + "hk";
     MockHttpRequest request = MockHttpRequest.get(uri);
     MockHttpResponse response = new MockHttpResponse();
@@ -118,7 +118,7 @@ public class RepositoryTypeRootResourceTest {
   }
 
   @Test
-  public void shouldHaveSelfLink() throws URISyntaxException {
+  public void shouldHaveSelfLink() throws Exception {
     String uri = "/" + RepositoryTypeRootResource.PATH + "hk";
     MockHttpRequest request = MockHttpRequest.get(uri);
     MockHttpResponse response = new MockHttpResponse();

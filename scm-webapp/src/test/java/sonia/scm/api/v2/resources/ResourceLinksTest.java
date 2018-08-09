@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import sonia.scm.repository.NamespaceAndName;
 
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
@@ -115,20 +116,44 @@ public class ResourceLinksTest {
   }
 
   @Test
+  public void shouldCreateCorrectBranchUrl() {
+    String url = resourceLinks.branch().self(new NamespaceAndName("space", "name"), "master");
+    assertEquals(BASE_URL + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/name/branches/master", url);
+  }
+
+  @Test
+  public void shouldCreateCorrectBranchHiostoryUrl() {
+    String url = resourceLinks.branch().history(new NamespaceAndName("space", "name"), "master");
+    assertEquals(BASE_URL + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/name/branches/master/changesets/", url);
+  }
+
+  @Test
+  public void shouldCreateCorrectBranchChangesetUrl() {
+    String url = resourceLinks.changeset().changeset("space", "name", "revision");
+    assertEquals(BASE_URL + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/name/changesets/revision", url);
+  }
+
+  @Test
+  public void shouldCreateCorrectBranchSourceUrl() {
+    String url = resourceLinks.source().source("space", "name", "revision");
+    assertEquals(BASE_URL + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/name/sources/revision", url);
+  }
+
+  @Test
   public void shouldCreateCorrectChangesetCollectionUrl() {
-    String url = resourceLinks.changesetCollection().self("space", "repo");
+    String url = resourceLinks.changeset().self("space", "repo");
     assertEquals(BASE_URL + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/changesets/", url);
   }
 
   @Test
   public void shouldCreateCorrectSourceCollectionUrl() {
-    String url = resourceLinks.sourceCollection().self("space", "repo");
+    String url = resourceLinks.source().self("space", "repo");
     assertEquals(BASE_URL + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/sources/", url);
   }
 
   @Test
   public void shouldCreateCorrectPermissionCollectionUrl() {
-    String url = resourceLinks.sourceCollection().self("space", "repo");
+    String url = resourceLinks.source().self("space", "repo");
     assertEquals(BASE_URL + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/sources/", url);
   }
 

@@ -7,7 +7,7 @@ import com.google.common.io.Resources;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerResponseContext;
@@ -100,7 +100,6 @@ public class FieldContainerResponseFilterTest {
 
   private JsonNode applyEntity(String name) throws IOException {
     JsonNode node = readJson(name);
-    when(responseContext.hasEntity()).thenReturn(Boolean.TRUE);
     when(responseContext.getEntity()).thenReturn(node);
     return node;
   }
