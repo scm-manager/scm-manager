@@ -8,6 +8,9 @@ import org.mapstruct.MappingTarget;
 import sonia.scm.repository.HealthCheckFailure;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryPermissions;
+import sonia.scm.repository.api.Command;
+import sonia.scm.repository.api.RepositoryService;
+import sonia.scm.repository.api.RepositoryServiceFactory;
 
 import static de.otto.edison.hal.Link.link;
 import static de.otto.edison.hal.Links.linkingTo;
@@ -19,6 +22,8 @@ public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Reposit
 
   @Inject
   private ResourceLinks resourceLinks;
+  @Inject
+  private RepositoryServiceFactory serviceFactory;
 
   abstract HealthCheckFailureDto toDto(HealthCheckFailure failure);
 
@@ -33,8 +38,13 @@ public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Reposit
       linksBuilder.single(link("update", resourceLinks.repository().update(target.getNamespace(), target.getName())));
       linksBuilder.single(link("permissions", resourceLinks.permissionCollection().self(target.getNamespace(), target.getName())));
     }
-    linksBuilder.single(link("tags", resourceLinks.tagCollection().self(target.getNamespace(), target.getName())));
-    linksBuilder.single(link("branches", resourceLinks.branchCollection().self(target.getNamespace(), target.getName())));
+    RepositoryService repositoryService = serviceFactory.create(repository);
+    if (repositoryService.isSupported(Command.TAGS)) {
+      linksBuilder.single(link("tags", resourceLinks.tagCollection().self(target.getNamespace(), target.getName())));
+    }
+    if (repositoryService.isSupported(Command.BRANCHES)) {
+      linksBuilder.single(link("branches", resourceLinks.branchCollection().self(target.getNamespace(), target.getName())));
+    }
     linksBuilder.single(link("changesets", resourceLinks.changeset().self(target.getNamespace(), target.getName())));
     linksBuilder.single(link("sources", resourceLinks.source().self(target.getNamespace(), target.getName())));
     target.add(linksBuilder.build());
