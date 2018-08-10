@@ -7,17 +7,23 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.Answers;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import sonia.scm.repository.HealthCheckFailure;
 import sonia.scm.repository.Permission;
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.api.Command;
+import sonia.scm.repository.api.RepositoryServiceFactory;
 
 import java.net.URI;
 
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 @SubjectAware(
@@ -33,6 +39,8 @@ public class RepositoryToRepositoryDtoMapperTest {
   private final URI baseUri = URI.create("http://example.com/base/");
   @SuppressWarnings("unused") // Is injected
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
+  @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+  private RepositoryServiceFactory serviceFactory;
 
   @InjectMocks
   private RepositoryToRepositoryDtoMapperImpl mapper;
@@ -40,6 +48,7 @@ public class RepositoryToRepositoryDtoMapperTest {
   @Before
   public void init() {
     initMocks(this);
+    when(serviceFactory.create(any(Repository.class)).isSupported(any(Command.class))).thenReturn(true);
   }
 
   @After
@@ -103,7 +112,7 @@ public class RepositoryToRepositoryDtoMapperTest {
   }
 
   @Test
-  public void shouldCreateTagsLink() {
+  public void shouldCreateTagsLink_ifSupported() {
     RepositoryDto dto = mapper.map(createTestRepository());
     assertEquals(
       "http://example.com/base/v2/repositories/testspace/test/tags/",
@@ -111,11 +120,25 @@ public class RepositoryToRepositoryDtoMapperTest {
   }
 
   @Test
-  public void shouldCreateBranchesLink() {
+  public void shouldCreateBranchesLink_ifSupported() {
     RepositoryDto dto = mapper.map(createTestRepository());
     assertEquals(
       "http://example.com/base/v2/repositories/testspace/test/branches/",
       dto.getLinks().getLinkBy("branches").get().getHref());
+  }
+
+  @Test
+  public void shouldNotCreateTagsLink_ifNotSupported() {
+    when(serviceFactory.create(any(Repository.class)).isSupported(Command.TAGS)).thenReturn(false);
+    RepositoryDto dto = mapper.map(createTestRepository());
+    assertFalse(dto.getLinks().getLinkBy("tags").isPresent());
+  }
+
+  @Test
+  public void shouldNotCreateBranchesLink_ifNotSupported() {
+    when(serviceFactory.create(any(Repository.class)).isSupported(Command.BRANCHES)).thenReturn(false);
+    RepositoryDto dto = mapper.map(createTestRepository());
+    assertFalse(dto.getLinks().getLinkBy("branches").isPresent());
   }
 
   @Test
