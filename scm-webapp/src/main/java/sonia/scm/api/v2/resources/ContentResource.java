@@ -88,7 +88,7 @@ public class ContentResource {
     responseBuilder.header("Content-Length", content.length);
   }
 
-  private byte[] getContent(@PathParam("revision") String revision, @PathParam("path") String path, RepositoryService repositoryService) throws IOException, RepositoryException {
+  private byte[] getContent(String revision, String path, RepositoryService repositoryService) throws IOException, RepositoryException {
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     repositoryService.getCatCommand().setRevision(revision).retriveContent(outputStream, path);
     return outputStream.toByteArray();
