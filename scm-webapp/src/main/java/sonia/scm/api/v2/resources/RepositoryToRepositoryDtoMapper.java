@@ -38,12 +38,13 @@ public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Reposit
       linksBuilder.single(link("update", resourceLinks.repository().update(target.getNamespace(), target.getName())));
       linksBuilder.single(link("permissions", resourceLinks.permissionCollection().self(target.getNamespace(), target.getName())));
     }
-    RepositoryService repositoryService = serviceFactory.create(repository);
-    if (repositoryService.isSupported(Command.TAGS)) {
-      linksBuilder.single(link("tags", resourceLinks.tagCollection().self(target.getNamespace(), target.getName())));
-    }
-    if (repositoryService.isSupported(Command.BRANCHES)) {
-      linksBuilder.single(link("branches", resourceLinks.branchCollection().self(target.getNamespace(), target.getName())));
+    try (RepositoryService repositoryService = serviceFactory.create(repository)) {
+      if (repositoryService.isSupported(Command.TAGS)) {
+        linksBuilder.single(link("tags", resourceLinks.tagCollection().self(target.getNamespace(), target.getName())));
+      }
+      if (repositoryService.isSupported(Command.BRANCHES)) {
+        linksBuilder.single(link("branches", resourceLinks.branchCollection().self(target.getNamespace(), target.getName())));
+      }
     }
     linksBuilder.single(link("changesets", resourceLinks.changeset().self(target.getNamespace(), target.getName())));
     linksBuilder.single(link("sources", resourceLinks.source().self(target.getNamespace(), target.getName())));
