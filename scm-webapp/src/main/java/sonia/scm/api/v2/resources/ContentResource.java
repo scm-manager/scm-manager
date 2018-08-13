@@ -2,7 +2,8 @@ package sonia.scm.api.v2.resources;
 
 import com.github.sdorra.spotter.ContentType;
 import com.github.sdorra.spotter.ContentTypes;
-import com.github.sdorra.spotter.Language;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.PathNotFoundException;
 import sonia.scm.repository.RepositoryException;
@@ -16,11 +17,13 @@ import javax.ws.rs.HEAD;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.StreamingOutput;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Optional;
 
 public class ContentResource {
+
+  private static final Logger LOG = LoggerFactory.getLogger(ContentResource.class);
 
   private final RepositoryServiceFactory servicefactory;
 
@@ -34,17 +37,27 @@ public class ContentResource {
   public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision, @PathParam("path") String path) {
     try (RepositoryService repositoryService = servicefactory.create(new NamespaceAndName(namespace, name))) {
       try {
-        byte[] content = getContent(revision, path, repositoryService);
-        Response.ResponseBuilder responseBuilder = Response.ok(content);
-        appendContentType(path, content, responseBuilder);
+
+        StreamingOutput stream = os -> {
+          try {
+            repositoryService.getCatCommand().setRevision(revision).retriveContent(os, path);
+          } catch (RepositoryException e) {
+            e.printStackTrace();
+          }
+          os.close();
+        };
+
+        Response.ResponseBuilder responseBuilder = Response.ok(stream);
+        appendContentType(path, getHead(revision, path, repositoryService), responseBuilder);
+
         return responseBuilder.build();
       } catch (PathNotFoundException e) {
         return Response.status(404).build();
       } catch (IOException e) {
-        e.printStackTrace();
+        LOG.error("error reading repository resource {} from {}/{}", path, namespace, name, e);
         return Response.status(500).entity(e.getMessage()).build();
       } catch (RepositoryException e) {
-        e.printStackTrace();
+        LOG.error("error reading repository resource {} from {}/{}", path, namespace, name, e);
         return Response.status(500).entity(e.getMessage()).build();
       }
     } catch (RepositoryNotFoundException e) {
@@ -57,19 +70,18 @@ public class ContentResource {
   public Response metadata(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision, @PathParam("path") String path) {
     try (RepositoryService repositoryService = servicefactory.create(new NamespaceAndName(namespace, name))) {
       try {
-        byte[] content = getContent(revision, path, repositoryService);
 
         Response.ResponseBuilder responseBuilder = Response.ok();
 
-        appendContentType(path, content, responseBuilder);
+        appendContentType(path, getHead(revision, path, repositoryService), responseBuilder);
         return responseBuilder.build();
       } catch (PathNotFoundException e) {
         return Response.status(404).build();
       } catch (IOException e) {
-        e.printStackTrace();
+        LOG.error("error reading repository resource {} from {}/{}", path, namespace, name, e);
         return Response.status(500).entity(e.getMessage()).build();
       } catch (RepositoryException e) {
-        e.printStackTrace();
+        LOG.error("error reading repository resource {} from {}/{}", path, namespace, name, e);
         return Response.status(500).entity(e.getMessage()).build();
       }
     } catch (RepositoryNotFoundException e) {
@@ -77,18 +89,14 @@ public class ContentResource {
     }
   }
 
-  private void appendContentType(String path, byte[] content, Response.ResponseBuilder responseBuilder) {
-    ContentType contentType = ContentTypes.detect(path, content);
-    System.out.println("Content-Type: " + contentType);
-
-    Optional<Language> language = contentType.getLanguage();
-    if (language.isPresent()) {
-      responseBuilder.header("Content-Type", contentType);
-    }
-    responseBuilder.header("Content-Length", content.length);
+  private void appendContentType(String path, byte[] head, Response.ResponseBuilder responseBuilder) {
+    ContentType contentType = ContentTypes.detect(path, head);
+    responseBuilder.header("Content-Type", contentType.getRaw());
+    contentType.getLanguage().ifPresent(language -> responseBuilder.header("Language", language));
+    responseBuilder.header("Content-Length", head.length);
   }
 
-  private byte[] getContent(String revision, String path, RepositoryService repositoryService) throws IOException, RepositoryException {
+  private byte[] getHead(String revision, String path, RepositoryService repositoryService) throws IOException, RepositoryException {
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     repositoryService.getCatCommand().setRevision(revision).retriveContent(outputStream, path);
     return outputStream.toByteArray();
