@@ -7,5 +7,39 @@
     "navigation-label": "Global Configuration",
     "error-title": "Error",
     "error-subtitle": "Unknown Config Error"
+  },
+  "config-form": {
+    "submit": "Submit"
+  },
+  "proxy-settings": {
+    "name": "Proxy Settings",
+    "proxy-password": "Proxy Password",
+    "proxy-port": "Proxy Port",
+    "proxy-server": "Proxy Server",
+    "proxy-user": "Proxy User",
+    "enable-proxy": "Enable Proxy",
+    "proxy-excludes": "Proxy Excludes"
+  },
+  "base-url-settings": {
+    "name": "Base URL Settings",
+    "base-url": "Base URL",
+    "force-base-url": "Force Base URL"
+  },
+  "admin-settings": {
+    "admin-groups": "Admin Groups",
+    "admin-user": "Admin Users"
+  },
+  "general-settings": {
+    "realm-description": "Realm Description",
+    "enable-repository-archive": "Enable Repository Archive",
+    "disable-grouping-grid": "Disable Grouping Grid",
+    "date-format": "Date Format",
+    "anonymous-access-enabled": "Anonymous Access Enabled",
+    "login-attempt-limit": "Login Attempt Limit",
+    "skip-failed-authenticators": "Skip Failed Authenticators",
+    "plugin-url": "Plugin URL",
+    "login-attempt-limit-timeout": "Login Attempt Limit Timeout",
+    "enabled-xsrf-protection": "Enabled XSRF Protection",
+    "default-namespace-strategy": "Default Namespace Strategy"
   }
 }
