@@ -4,28 +4,46 @@ import Title from "../../components/layout/Title";
 import {
   fetchConfig,
   getFetchConfigFailure,
-  isFetchConfigPending
+  isFetchConfigPending,
+  getConfig,
+  modifyConfig,
+  isModifyConfigPending
 } from "../modules/config";
 import connect from "react-redux/es/connect/connect";
 import ErrorPage from "../../components/ErrorPage";
+import type { Config } from "../types/Config";
+import ConfigForm from "../components/form/ConfigForm";
 import Loading from "../../components/Loading";
+import type { User } from "../../users/types/User";
+import type { History } from "history";
 
 type Props = {
   loading: boolean,
   error: Error,
-
+  config: Config,
+  // dispatch functions
+  modifyConfig: (config: User, callback?: () => void) => void,
   // context objects
   t: string => string,
-  fetchConfig: void => void
+  fetchConfig: void => void,
+  history: History
 };
 
 class GlobalConfig extends React.Component<Props> {
+  configModified = (config: Config) => () => {
+    this.props.history.push(`/config`);
+  };
+
   componentDidMount() {
     this.props.fetchConfig();
   }
 
+  modifyConfig = (config: Config) => {
+    this.props.modifyConfig(config, this.configModified(config));
+  };
+
   render() {
-    const { t, error, loading } = this.props;
+    const { t, error, loading, config } = this.props;
 
     if (error) {
       return (
@@ -36,12 +54,20 @@ class GlobalConfig extends React.Component<Props> {
         />
       );
     }
-
     if (loading) {
       return <Loading />;
     }
 
-    return <Title title={t("global-config.title")} />;
+    return (
+      <div>
+        <Title title={t("global-config.title")} />
+        <ConfigForm
+          submitForm={config => this.modifyConfig(config)}
+          config={config}
+          loading={loading}
+        />
+      </div>
+    );
   }
 }
 
@@ -49,17 +75,22 @@ const mapDispatchToProps = dispatch => {
   return {
     fetchConfig: () => {
       dispatch(fetchConfig());
+    },
+    modifyConfig: (config: Config, callback?: () => void) => {
+      dispatch(modifyConfig(config, callback));
     }
   };
 };
 
 const mapStateToProps = state => {
-  const loading = isFetchConfigPending(state);
+  const loading = isFetchConfigPending(state) || isModifyConfigPending(state); //TODO: Button lädt so nicht, sondern gesamte Seite
   const error = getFetchConfigFailure(state);
+  const config = getConfig(state);
 
   return {
     loading,
-    error
+    error,
+    config
   };
 };
 
