@@ -8,6 +8,7 @@ import reducer, {
   FETCH_CONFIG_PENDING,
   FETCH_CONFIG_SUCCESS,
   FETCH_CONFIG_FAILURE,
+  MODIFY_CONFIG,
   MODIFY_CONFIG_PENDING,
   MODIFY_CONFIG_SUCCESS,
   MODIFY_CONFIG_FAILURE,
@@ -16,6 +17,8 @@ import reducer, {
   getFetchConfigFailure,
   isFetchConfigPending,
   modifyConfig,
+  isModifyConfigPending,
+  getModifyConfigFailure,
   getConfig,
   getConfigUpdatePermission
 } from "./config";
@@ -200,6 +203,32 @@ describe("selector tests", () => {
     expect(getFetchConfigFailure({})).toBe(undefined);
   });
 
+  it("should return true, when modify group is pending", () => {
+    const state = {
+      pending: {
+        [MODIFY_CONFIG]: true
+      }
+    };
+    expect(isModifyConfigPending(state)).toEqual(true);
+  });
+
+  it("should return false, when modify config is not pending", () => {
+    expect(isModifyConfigPending({})).toEqual(false);
+  });
+
+  it("should return error when modify config did fail", () => {
+    const state = {
+      failure: {
+        [MODIFY_CONFIG]: error
+      }
+    };
+    expect(getModifyConfigFailure(state)).toEqual(error);
+  });
+
+  it("should return undefined when modify config did not fail", () => {
+    expect(getModifyConfigFailure({})).toBe(undefined);
+  });
+
   it("should return config", () => {
     const state = {
       config: {
@@ -209,7 +238,7 @@ describe("selector tests", () => {
     expect(getConfig(state)).toEqual(config);
   });
 
-  it("should return configUpdatePermission", ()  => {
+  it("should return configUpdatePermission", () => {
     const state = {
       config: {
         configUpdatePermission: true

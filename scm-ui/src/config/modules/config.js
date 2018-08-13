@@ -134,6 +134,14 @@ export function getFetchConfigFailure(state: Object) {
   return getFailure(state, FETCH_CONFIG);
 }
 
+export function isModifyConfigPending(state: Object) {
+  return isPending(state, MODIFY_CONFIG);
+}
+
+export function getModifyConfigFailure(state: Object) {
+  return getFailure(state, MODIFY_CONFIG);
+}
+
 export function getConfig(state: Object) {
   if (state.config && state.config.entries) {
     return state.config.entries;
