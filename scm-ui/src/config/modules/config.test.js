@@ -57,7 +57,8 @@ const config = {
 };
 
 const responseBody = {
-  entries: config
+  entries: config,
+  configUpdatePermission: false
 };
 
 const response = {

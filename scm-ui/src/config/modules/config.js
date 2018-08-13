@@ -5,13 +5,14 @@ import type { Action } from "../../types/Action";
 import { isPending } from "../../modules/pending";
 import { getFailure } from "../../modules/failure";
 import { Dispatch } from "redux";
+import type { Config } from "../types/Config";
 
 export const FETCH_CONFIG = "scm/config/FETCH_CONFIG";
 export const FETCH_CONFIG_PENDING = `${FETCH_CONFIG}_${types.PENDING_SUFFIX}`;
 export const FETCH_CONFIG_SUCCESS = `${FETCH_CONFIG}_${types.SUCCESS_SUFFIX}`;
 export const FETCH_CONFIG_FAILURE = `${FETCH_CONFIG}_${types.FAILURE_SUFFIX}`;
 
-export const MODIFY_CONFIG = "scm/config/FETCH_CONFIG";
+export const MODIFY_CONFIG = "scm/config/MODIFY_CONFIG";
 export const MODIFY_CONFIG_PENDING = `${MODIFY_CONFIG}_${types.PENDING_SUFFIX}`;
 export const MODIFY_CONFIG_SUCCESS = `${MODIFY_CONFIG}_${types.SUCCESS_SUFFIX}`;
 export const MODIFY_CONFIG_FAILURE = `${MODIFY_CONFIG}_${types.FAILURE_SUFFIX}`;
@@ -44,7 +45,7 @@ export function fetchConfigPending(): Action {
   };
 }
 
-export function fetchConfigSuccess(config: any): Action {
+export function fetchConfigSuccess(config: Config): Action {
   return {
     type: FETCH_CONFIG_SUCCESS,
     payload: config
@@ -61,7 +62,7 @@ export function fetchConfigFailure(error: Error): Action {
 }
 
 // modify config
-export function modifyConfig(config: any, callback?: () => void) {
+export function modifyConfig(config: Config, callback?: () => void) {
   return function(dispatch: Dispatch) {
     dispatch(modifyConfigPending(config));
     return apiClient
@@ -83,21 +84,21 @@ export function modifyConfig(config: any, callback?: () => void) {
   };
 }
 
-export function modifyConfigPending(config: any): Action {
+export function modifyConfigPending(config: Config): Action {
   return {
     type: MODIFY_CONFIG_PENDING,
     payload: config
   };
 }
 
-export function modifyConfigSuccess(config: any): Action {
+export function modifyConfigSuccess(config: Config): Action {
   return {
     type: MODIFY_CONFIG_SUCCESS,
     payload: config
   };
 }
 
-export function modifyConfigFailure(config: any, error: Error): Action {
+export function modifyConfigFailure(config: Config, error: Error): Action {
   return {
     type: MODIFY_CONFIG_FAILURE,
     payload: {
