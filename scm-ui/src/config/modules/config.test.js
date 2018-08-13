@@ -15,7 +15,9 @@ import reducer, {
   fetchConfigSuccess,
   getFetchConfigFailure,
   isFetchConfigPending,
-  modifyConfig
+  modifyConfig,
+  getConfig,
+  getConfigUpdatePermission
 } from "./config";
 
 const CONFIG_URL = "/scm/api/rest/v2/config";
@@ -196,5 +198,23 @@ describe("selector tests", () => {
 
   it("should return undefined when fetch config did not fail", () => {
     expect(getFetchConfigFailure({})).toBe(undefined);
+  });
+
+  it("should return config", () => {
+    const state = {
+      config: {
+        entries: config
+      }
+    };
+    expect(getConfig(state)).toEqual(config);
+  });
+
+  it("should return configUpdatePermission", ()  => {
+    const state = {
+      config: {
+        configUpdatePermission: true
+      }
+    };
+    expect(getConfigUpdatePermission(state)).toEqual(true);
   });
 });

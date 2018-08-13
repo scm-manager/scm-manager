@@ -133,3 +133,15 @@ export function isFetchConfigPending(state: Object) {
 export function getFetchConfigFailure(state: Object) {
   return getFailure(state, FETCH_CONFIG);
 }
+
+export function getConfig(state: Object) {
+  if (state.config && state.config.entries) {
+    return state.config.entries;
+  }
+}
+
+export function getConfigUpdatePermission(state: Object) {
+  if (state.config && state.config.configUpdatePermission) {
+    return state.config.configUpdatePermission;
+  }
+}
