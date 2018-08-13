@@ -7,22 +7,31 @@ import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.repository.api.BrowseCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
+import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 
 public class SourceRootResource {
 
   private final RepositoryServiceFactory serviceFactory;
+  private final BrowserResultMapper browserResultMapper;
+
+
 
   @Inject
-  public SourceRootResource(RepositoryServiceFactory serviceFactory) {
+  public SourceRootResource(RepositoryServiceFactory serviceFactory, BrowserResultMapper browserResultMapper) {
     this.serviceFactory = serviceFactory;
+    this.browserResultMapper = browserResultMapper;
   }
 
   @GET
+  @Produces(VndMediaType.SOURCE)
   @Path("")
   public Response getAll(@PathParam("namespace") String namespace, @PathParam("name") String name) {
 
@@ -38,8 +47,7 @@ public class SourceRootResource {
     } catch (IOException e) {
       e.printStackTrace();
     }
-
-    return Response.ok(browserResult.toString()).build();
+    return Response.ok(browserResultMapper.map(browserResult)).build();
   }
 
   @GET

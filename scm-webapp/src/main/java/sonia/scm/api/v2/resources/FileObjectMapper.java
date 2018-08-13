@@ -4,6 +4,5 @@ import org.mapstruct.Mapper;
 import sonia.scm.repository.FileObject;
 
 @Mapper
-public abstract class FileObjectToFileObjectDtoMapper extends BaseMapper<FileObject, FileObjectDto> {
-
+public abstract class FileObjectMapper extends BaseMapper<FileObject, FileObjectDto> {
 }

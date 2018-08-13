@@ -11,26 +11,22 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.repository.FileObject;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 @RunWith(MockitoJUnitRunner.class)
-public class FileObjectToFileObjectDtoMapperTest {
-  private final URI baseUri = URI.create("http://example.com/base/");
+public class FileObjectMapperTest {
 
   @InjectMocks
-  private FileObjectToFileObjectDtoMapperImpl mapper;
+  private FileObjectMapperImpl mapper;
 
   private final Subject subject = mock(Subject.class);
   private final ThreadState subjectThreadState = new SubjectThreadState(subject);
 
 
   @Before
-  public void init() throws URISyntaxException {
+  public void init() {
     initMocks(this);
     subjectThreadState.bind();
     ThreadContext.bind(subject);
