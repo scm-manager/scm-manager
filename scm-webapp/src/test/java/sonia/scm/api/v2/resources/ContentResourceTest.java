@@ -18,6 +18,7 @@ import sonia.scm.repository.api.RepositoryServiceFactory;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
 
@@ -64,8 +65,7 @@ public class ContentResourceTest {
     Response response = contentResource.get(NAMESPACE, REPO_NAME, REV, "file");
     assertEquals(200, response.getStatus());
 
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    ((StreamingOutput) response.getEntity()).write(baos);
+    ByteArrayOutputStream baos = readOutputStream(response);
 
     assertEquals("Hello", baos.toString());
   }
@@ -115,6 +115,15 @@ public class ContentResourceTest {
     assertEquals("application/octet-stream", response.getHeaderString("Content-Type"));
   }
 
+  @Test
+  public void shouldHandleExceptionsInStreamProcessing() throws Exception {
+    Response response = contentResource.get(NAMESPACE, REPO_NAME, REV, "MissingFile");
+
+    ByteArrayOutputStream baos = readOutputStream(response);
+
+    assertEquals(404, response.getStatus());
+  }
+
   private void mockContentFromResource(String fileName) throws Exception {
     URL url = Resources.getResource(fileName);
     mockContent(fileName, Resources.toByteArray(url));
@@ -127,5 +136,11 @@ public class ContentResourceTest {
       outputStream.close();
       return null;
     }).when(catCommand).retriveContent(any(), eq(path));
+  }
+
+  private ByteArrayOutputStream readOutputStream(Response response) throws IOException {
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    ((StreamingOutput) response.getEntity()).write(baos);
+    return baos;
   }
 }

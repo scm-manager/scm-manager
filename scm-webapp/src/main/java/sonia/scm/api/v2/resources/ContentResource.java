@@ -16,7 +16,9 @@ import javax.ws.rs.GET;
 import javax.ws.rs.HEAD;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.StreamingOutput;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -41,8 +43,10 @@ public class ContentResource {
         StreamingOutput stream = os -> {
           try {
             repositoryService.getCatCommand().setRevision(revision).retriveContent(os, path);
+          } catch (PathNotFoundException e) {
+            throw new WebApplicationException(Status.NOT_FOUND);
           } catch (RepositoryException e) {
-            e.printStackTrace();
+            throw new WebApplicationException(Status.INTERNAL_SERVER_ERROR);
           }
           os.close();
         };
@@ -52,16 +56,16 @@ public class ContentResource {
 
         return responseBuilder.build();
       } catch (PathNotFoundException e) {
-        return Response.status(404).build();
+        return Response.status(Status.NOT_FOUND).build();
       } catch (IOException e) {
         LOG.error("error reading repository resource {} from {}/{}", path, namespace, name, e);
-        return Response.status(500).entity(e.getMessage()).build();
+        return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
       } catch (RepositoryException e) {
         LOG.error("error reading repository resource {} from {}/{}", path, namespace, name, e);
-        return Response.status(500).entity(e.getMessage()).build();
+        return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
       }
     } catch (RepositoryNotFoundException e) {
-      return Response.status(404).build();
+      return Response.status(Status.NOT_FOUND).build();
     }
   }
 
@@ -76,16 +80,16 @@ public class ContentResource {
         appendContentType(path, getHead(revision, path, repositoryService), responseBuilder);
         return responseBuilder.build();
       } catch (PathNotFoundException e) {
-        return Response.status(404).build();
+        return Response.status(Status.NOT_FOUND).build();
       } catch (IOException e) {
         LOG.error("error reading repository resource {} from {}/{}", path, namespace, name, e);
-        return Response.status(500).entity(e.getMessage()).build();
+        return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
       } catch (RepositoryException e) {
         LOG.error("error reading repository resource {} from {}/{}", path, namespace, name, e);
-        return Response.status(500).entity(e.getMessage()).build();
+        return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
       }
     } catch (RepositoryNotFoundException e) {
-      return Response.status(404).build();
+      return Response.status(Status.NOT_FOUND).build();
     }
   }
 
