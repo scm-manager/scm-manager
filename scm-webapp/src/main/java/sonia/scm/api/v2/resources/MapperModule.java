@@ -26,7 +26,7 @@ public class MapperModule extends AbstractModule {
 
     bind(BranchToBranchDtoMapper.class).to(Mappers.getMapper(BranchToBranchDtoMapper.class).getClass());
 
-    bind(BrowserResultMapper.class).to(Mappers.getMapper(BrowserResultMapper.class).getClass());
+    bind(FileObjectMapper.class).to(Mappers.getMapper(FileObjectMapper.class).getClass());
 
     bind(UriInfoStore.class).in(ServletScopes.REQUEST);
   }

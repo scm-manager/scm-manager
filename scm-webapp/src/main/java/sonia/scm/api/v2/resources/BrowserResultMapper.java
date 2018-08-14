@@ -1,18 +1,27 @@
 package sonia.scm.api.v2.resources;
 
-import org.mapstruct.Mapper;
+import de.otto.edison.hal.Links;
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.FileObject;
+import sonia.scm.repository.NamespaceAndName;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
-@Mapper
-public abstract class BrowserResultMapper extends BaseMapper<BrowserResult, BrowserResultDto> {
+public class BrowserResultMapper {
 
-  abstract FileObjectDto mapFileObject(FileObject fileObject);
+  @Inject
+  private FileObjectMapper fileObjectMapper;
 
-  public BrowserResultDto map(BrowserResult browserResult) {
+  @Inject
+  private ResourceLinks resourceLinks;
+
+  private FileObjectDto mapFileObject(FileObject fileObject, NamespaceAndName namespaceAndName, String revision) {
+    return fileObjectMapper.map(fileObject, namespaceAndName, revision);
+  }
+
+  public BrowserResultDto map(BrowserResult browserResult, NamespaceAndName namespaceAndName) {
     BrowserResultDto browserResultDto = new BrowserResultDto();
 
     browserResultDto.setTag(browserResult.getTag());
@@ -21,11 +30,17 @@ public abstract class BrowserResultMapper extends BaseMapper<BrowserResult, Brow
 
     List<FileObjectDto> fileObjectDtoList = new ArrayList<>();
     for (FileObject fileObject : browserResult.getFiles()) {
-      fileObjectDtoList.add(mapFileObject(fileObject));
+      fileObjectDtoList.add(mapFileObject(fileObject, namespaceAndName, browserResult.getRevision()));
     }
 
     browserResultDto.setFiles(fileObjectDtoList);
-
+    this.addLinks(browserResult, browserResultDto, namespaceAndName);
     return browserResultDto;
   }
+
+  private void addLinks(BrowserResult browserResult, BrowserResultDto dto, NamespaceAndName namespaceAndName) {
+    dto.add(Links.linkingTo().self(resourceLinks.source().self(namespaceAndName.getNamespace(), namespaceAndName.getName(), browserResult.getRevision())).build());
+  }
+
+
 }

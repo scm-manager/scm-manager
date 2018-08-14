@@ -1,6 +1,7 @@
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.HalRepresentation;
+import de.otto.edison.hal.Links;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,6 +17,12 @@ public class BrowserResultDto extends HalRepresentation implements Iterable<File
   private String tag;
   private String branch;
   private List<FileObjectDto> files;
+
+  @Override
+  @SuppressWarnings("squid:S1185") // We want to have this method available in this package
+  protected HalRepresentation add(Links links) {
+    return super.add(links);
+  }
 
   @Override
   public Iterator<FileObjectDto> iterator() {

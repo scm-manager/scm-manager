@@ -23,7 +23,6 @@ public class SourceRootResource {
   private final BrowserResultMapper browserResultMapper;
 
 
-
   @Inject
   public SourceRootResource(RepositoryServiceFactory serviceFactory, BrowserResultMapper browserResultMapper) {
     this.serviceFactory = serviceFactory;
@@ -35,23 +34,30 @@ public class SourceRootResource {
   @Path("")
   public Response getAll(@PathParam("namespace") String namespace, @PathParam("name") String name) {
 
-    BrowserResult browserResult = null;
-    try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
+    BrowserResult browserResult;
+    Response response;
+    NamespaceAndName namespaceAndName = new NamespaceAndName(namespace, name);
+    try (RepositoryService repositoryService = serviceFactory.create(namespaceAndName)) {
       BrowseCommandBuilder browseCommand = repositoryService.getBrowseCommand();
       browseCommand.setPath("/");
       browserResult = browseCommand.getBrowserResult();
+
+      if (browserResult != null) {
+        response = Response.ok(browserResultMapper.map(browserResult, namespaceAndName)).build();
+      } else {
+        response = Response.status(Response.Status.NOT_FOUND).build();
+      }
+
     } catch (RepositoryNotFoundException e) {
-      e.printStackTrace();
-    } catch (RepositoryException e) {
-      e.printStackTrace();
-    } catch (IOException e) {
-      e.printStackTrace();
+      response = Response.status(Response.Status.NOT_FOUND).build();
+    } catch (RepositoryException | IOException e) {
+      response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
     }
-    return Response.ok(browserResultMapper.map(browserResult)).build();
+    return response;
   }
 
   @GET
-  @Path("{revision}")
+  @Path("{revision}/{path: .*}")
   public Response get() {
     throw new UnsupportedOperationException();
   }
