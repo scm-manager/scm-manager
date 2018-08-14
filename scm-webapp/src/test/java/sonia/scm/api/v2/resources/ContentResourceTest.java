@@ -105,7 +105,7 @@ public class ContentResourceTest {
   }
 
   @Test
-  public void shouldRandomByteFile() throws Exception {
+  public void shouldHandleRandomByteFile() throws Exception {
     mockContentFromResource("JustBytes");
 
     Response response = contentResource.get(NAMESPACE, REPO_NAME, REV, "JustBytes");
