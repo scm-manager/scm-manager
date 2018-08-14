@@ -10,6 +10,7 @@ import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
+import sonia.scm.util.IOUtil;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -20,12 +21,14 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.StreamingOutput;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
 
 public class ContentResource {
 
   private static final Logger LOG = LoggerFactory.getLogger(ContentResource.class);
+  private static final int HEAD_BUFFER_SIZE = 1024;
 
   private final RepositoryServiceFactory serviceFactory;
 
@@ -98,8 +101,17 @@ public class ContentResource {
   }
 
   private byte[] getHead(String revision, String path, RepositoryService repositoryService) throws IOException, RepositoryException {
-    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    repositoryService.getCatCommand().setRevision(revision).retriveContent(outputStream, path);
-    return outputStream.toByteArray();
+    InputStream stream = repositoryService.getCatCommand().setRevision(revision).getStream(path);
+    try {
+      byte[] buffer = new byte[HEAD_BUFFER_SIZE];
+      int length = stream.read(buffer);
+      if (length < buffer.length) {
+        return Arrays.copyOf(buffer, length);
+      } else {
+        return buffer;
+      }
+    } finally {
+      IOUtil.close(stream);
+    }
   }
 }

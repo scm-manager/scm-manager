@@ -17,6 +17,7 @@ import sonia.scm.repository.api.RepositoryServiceFactory;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -55,7 +56,7 @@ public class ContentResourceTest {
 
     // defaults for unknown things
     doThrow(new RepositoryNotFoundException("x")).when(repositoryServiceFactory).create(not(eq(existingNamespaceAndName)));
-    doThrow(new PathNotFoundException("x")).when(catCommand).retriveContent(any(), any());
+    doThrow(new PathNotFoundException("x")).when(catCommand).getStream(any());
   }
 
   @Test
@@ -105,6 +106,17 @@ public class ContentResourceTest {
   }
 
   @Test
+  public void shouldRecognizeShebangSourceCode() throws Exception {
+    mockContentFromResource("someScript.sh");
+
+    Response response = contentResource.get(NAMESPACE, REPO_NAME, REV, "someScript.sh");
+    assertEquals(200, response.getStatus());
+
+    assertEquals("PYTHON", response.getHeaderString("Language"));
+    assertEquals("application/x-sh", response.getHeaderString("Content-Type"));
+  }
+
+  @Test
   public void shouldHandleRandomByteFile() throws Exception {
     mockContentFromResource("JustBytes");
 
@@ -127,6 +139,7 @@ public class ContentResourceTest {
       outputStream.close();
       return null;
     }).when(catCommand).retriveContent(any(), eq(path));
+    doAnswer(invocation -> new ByteArrayInputStream(content)).when(catCommand).getStream(eq(path));
   }
 
   private ByteArrayOutputStream readOutputStream(Response response) throws IOException {
