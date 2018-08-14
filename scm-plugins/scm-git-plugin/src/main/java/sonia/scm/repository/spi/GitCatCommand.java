@@ -34,28 +34,28 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.base.Strings;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectLoader;
+import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.treewalk.filter.PathFilter;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.PathNotFoundException;
 import sonia.scm.repository.RepositoryException;
 import sonia.scm.util.Util;
 
-//~--- JDK imports ------------------------------------------------------------
-
+import java.io.Closeable;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -110,22 +110,31 @@ public class GitCatCommand extends AbstractGitCommand implements CatCommand
     getContent(repo, revId, request.getPath(), output);
   }
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param repo
-   * @param revId
-   * @param path
-   * @param output
-   *
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
+  @Override
+  public InputStream getCatResultStream(CatCommandRequest request) throws IOException, RepositoryException {
+    logger.debug("try to read content for {}", request);
+
+    org.eclipse.jgit.lib.Repository repo = open();
+
+    ObjectId revId = getCommitOrDefault(repo, request.getRevision());
+    ClosableObjectLoaderContainer closableObjectLoaderContainer = getLoader(repo, revId, request.getPath());
+    return new InputStreamWrapper(closableObjectLoaderContainer);
+  }
+
   void getContent(org.eclipse.jgit.lib.Repository repo, ObjectId revId,
-                  String path, OutputStream output)
+    String path, OutputStream output)
+    throws IOException, RepositoryException
+  {
+    ClosableObjectLoaderContainer closableObjectLoaderContainer = getLoader(repo, revId, path);
+    try {
+      closableObjectLoaderContainer.objectLoader.copyTo(output);
+    } finally {
+      closableObjectLoaderContainer.close();
+    }
+  }
+
+  private ClosableObjectLoaderContainer getLoader(Repository repo, ObjectId revId,
+                  String path)
           throws IOException, RepositoryException
   {
     TreeWalk treeWalk = null;
@@ -157,23 +166,12 @@ public class GitCatCommand extends AbstractGitCommand implements CatCommand
 
       treeWalk.setFilter(PathFilter.create(path));
 
-      if (treeWalk.next())
+      if (treeWalk.next() && treeWalk.getFileMode(0).getObjectType() == Constants.OBJ_BLOB)
       {
+        ObjectId blobId = treeWalk.getObjectId(0);
+        ObjectLoader loader = repo.open(blobId);
 
-        // Path exists
-        if (treeWalk.getFileMode(0).getObjectType() == Constants.OBJ_BLOB)
-        {
-          ObjectId blobId = treeWalk.getObjectId(0);
-          ObjectLoader loader = repo.open(blobId);
-
-          loader.copyTo(output);
-        }
-        else
-        {
-
-          // Not a blob, its something else (tree, gitlink)
-          throw new PathNotFoundException(path);
-        }
+        return new ClosableObjectLoaderContainer(loader, treeWalk, revWalk);
       }
       else
       {
@@ -182,8 +180,52 @@ public class GitCatCommand extends AbstractGitCommand implements CatCommand
     }
     finally
     {
+    }
+  }
+
+  private static class ClosableObjectLoaderContainer implements Closeable {
+    private final ObjectLoader objectLoader;
+    private final TreeWalk treeWalk;
+    private final RevWalk revWalk;
+
+    private ClosableObjectLoaderContainer(ObjectLoader objectLoader, TreeWalk treeWalk, RevWalk revWalk) {
+      this.objectLoader = objectLoader;
+      this.treeWalk = treeWalk;
+      this.revWalk = revWalk;
+    }
+
+    @Override
+    public void close() throws IOException {
       GitUtil.release(revWalk);
       GitUtil.release(treeWalk);
     }
   }
+
+  private static class InputStreamWrapper extends InputStream {
+
+    private final InputStream delegate;
+    private final TreeWalk treeWalk;
+    private final RevWalk revWalk;
+
+    private InputStreamWrapper(ClosableObjectLoaderContainer container) throws IOException {
+      this(container.objectLoader.openStream(), container.treeWalk, container.revWalk);
+    }
+
+    private InputStreamWrapper(InputStream delegate, TreeWalk treeWalk, RevWalk revWalk) {
+        this.delegate = delegate;
+        this.treeWalk = treeWalk;
+        this.revWalk = revWalk;
+      }
+
+      @Override
+      public int read () throws IOException {
+        return delegate.read();
+      }
+
+      @Override
+      public void close () throws IOException {
+        GitUtil.release(revWalk);
+        GitUtil.release(treeWalk);
+      }
+    }
 }

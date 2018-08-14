@@ -37,21 +37,22 @@ package sonia.scm.repository.spi;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNProperties;
 import org.tmatesoft.svn.core.io.SVNRepository;
 import org.tmatesoft.svn.core.wc.SVNClientManager;
 import org.tmatesoft.svn.core.wc.admin.SVNLookClient;
-
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.SvnUtil;
 
-//~--- JDK imports ------------------------------------------------------------
-
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -118,6 +119,16 @@ public class SvnCatCommand extends AbstractSvnCommand implements CatCommand
 
       getCatFromRevision(request, output, revisionNumber);
     }
+  }
+
+  @Override
+  public InputStream getCatResultStream(CatCommandRequest request) throws IOException, RepositoryException {
+    // There seems to be no method creating an input stream as a result, so
+    // we have no other possibility then to copy the content into a buffer and
+    // stream it from there.
+    ByteArrayOutputStream output = new ByteArrayOutputStream();
+    getCatResult(request, output);
+    return new ByteArrayInputStream(output.toByteArray());
   }
 
   /**

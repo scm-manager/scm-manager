@@ -37,16 +37,15 @@ package sonia.scm.repository.spi;
 
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Closeables;
-
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryException;
 import sonia.scm.web.HgUtil;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -83,21 +82,24 @@ public class HgCatCommand extends AbstractCommand implements CatCommand
   public void getCatResult(CatCommandRequest request, OutputStream output)
     throws IOException, RepositoryException
   {
-    com.aragost.javahg.commands.CatCommand cmd =
-      com.aragost.javahg.commands.CatCommand.on(open());
-
-    cmd.rev(HgUtil.getRevision(request.getRevision()));
-
-    InputStream input = null;
-
+    InputStream input = getCatResultStream(request);
     try
     {
-      input = cmd.execute(request.getPath());
       ByteStreams.copy(input, output);
     }
     finally
     {
       Closeables.close(input, true);
     }
+  }
+
+  @Override
+  public InputStream getCatResultStream(CatCommandRequest request) throws IOException, RepositoryException {
+    com.aragost.javahg.commands.CatCommand cmd =
+      com.aragost.javahg.commands.CatCommand.on(open());
+
+    cmd.rev(HgUtil.getRevision(request.getRevision()));
+
+    return cmd.execute(request.getPath());
   }
 }

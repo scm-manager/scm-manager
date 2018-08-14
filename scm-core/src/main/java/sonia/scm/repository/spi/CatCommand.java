@@ -37,10 +37,11 @@ package sonia.scm.repository.spi;
 
 import sonia.scm.repository.RepositoryException;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -50,16 +51,7 @@ import java.io.OutputStream;
 public interface CatCommand
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param output
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
-  public void getCatResult(CatCommandRequest request, OutputStream output)
-          throws IOException, RepositoryException;
+  void getCatResult(CatCommandRequest request, OutputStream output) throws IOException, RepositoryException;
+
+  InputStream getCatResultStream(CatCommandRequest request) throws IOException, RepositoryException;
 }
