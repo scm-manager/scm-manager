@@ -38,25 +38,28 @@ public class ContentResource {
   @Path("{revision}/{path: .*}")
   public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision, @PathParam("path") String path) {
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
-        StreamingOutput stream = os -> {
-          try {
-            repositoryService.getCatCommand().setRevision(revision).retriveContent(os, path);
-          } catch (PathNotFoundException e) {
-            LOG.debug("path '{}' not found in repository {}/{}", path, namespace, name, e);
-            throw new WebApplicationException(Status.NOT_FOUND);
-          } catch (RepositoryException e) {
-            LOG.info("error reading repository resource {} from {}/{}", path, namespace, name, e);
-            throw new WebApplicationException(Status.INTERNAL_SERVER_ERROR);
-          }
-          os.close();
-        };
-
+      StreamingOutput stream = createStreamingOutput(namespace, name, revision, path, repositoryService);
       Response.ResponseBuilder responseBuilder = Response.ok(stream);
       return createContentHeader(namespace, name, revision, path, repositoryService, responseBuilder);
     } catch (RepositoryNotFoundException e) {
       LOG.debug("path '{}' not found in repository {}/{}", path, namespace, name, e);
       return Response.status(Status.NOT_FOUND).build();
     }
+  }
+
+  private StreamingOutput createStreamingOutput(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision, @PathParam("path") String path, RepositoryService repositoryService) {
+    return os -> {
+            try {
+              repositoryService.getCatCommand().setRevision(revision).retriveContent(os, path);
+              os.close();
+            } catch (PathNotFoundException e) {
+              LOG.debug("path '{}' not found in repository {}/{}", path, namespace, name, e);
+              throw new WebApplicationException(Status.NOT_FOUND);
+            } catch (RepositoryException e) {
+              LOG.info("error reading repository resource {} from {}/{}", path, namespace, name, e);
+              throw new WebApplicationException(Status.INTERNAL_SERVER_ERROR);
+            }
+          };
   }
 
   @HEAD
