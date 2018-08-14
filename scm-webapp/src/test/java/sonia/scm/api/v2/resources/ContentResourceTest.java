@@ -115,15 +115,6 @@ public class ContentResourceTest {
     assertEquals("application/octet-stream", response.getHeaderString("Content-Type"));
   }
 
-  @Test
-  public void shouldHandleExceptionsInStreamProcessing() throws Exception {
-    Response response = contentResource.get(NAMESPACE, REPO_NAME, REV, "MissingFile");
-
-    ByteArrayOutputStream baos = readOutputStream(response);
-
-    assertEquals(404, response.getStatus());
-  }
-
   private void mockContentFromResource(String fileName) throws Exception {
     URL url = Resources.getResource(fileName);
     mockContent(fileName, Resources.toByteArray(url));

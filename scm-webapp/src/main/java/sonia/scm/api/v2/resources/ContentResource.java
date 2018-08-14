@@ -27,17 +27,17 @@ public class ContentResource {
 
   private static final Logger LOG = LoggerFactory.getLogger(ContentResource.class);
 
-  private final RepositoryServiceFactory servicefactory;
+  private final RepositoryServiceFactory serviceFactory;
 
   @Inject
-  public ContentResource(RepositoryServiceFactory servicefactory) {
-    this.servicefactory = servicefactory;
+  public ContentResource(RepositoryServiceFactory serviceFactory) {
+    this.serviceFactory = serviceFactory;
   }
 
   @GET
   @Path("{revision}/{path: .*}")
   public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision, @PathParam("path") String path) {
-    try (RepositoryService repositoryService = servicefactory.create(new NamespaceAndName(namespace, name))) {
+    try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
       try {
 
         StreamingOutput stream = os -> {
@@ -72,7 +72,7 @@ public class ContentResource {
   @HEAD
   @Path("{revision}/{path: .*}")
   public Response metadata(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision, @PathParam("path") String path) {
-    try (RepositoryService repositoryService = servicefactory.create(new NamespaceAndName(namespace, name))) {
+    try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
       try {
 
         Response.ResponseBuilder responseBuilder = Response.ok();
