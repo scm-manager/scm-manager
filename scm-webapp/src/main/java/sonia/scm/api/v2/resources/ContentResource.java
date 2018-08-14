@@ -38,33 +38,23 @@ public class ContentResource {
   @Path("{revision}/{path: .*}")
   public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision, @PathParam("path") String path) {
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
-      try {
-
         StreamingOutput stream = os -> {
           try {
             repositoryService.getCatCommand().setRevision(revision).retriveContent(os, path);
           } catch (PathNotFoundException e) {
+            LOG.debug("path '{}' not found in repository {}/{}", path, namespace, name, e);
             throw new WebApplicationException(Status.NOT_FOUND);
           } catch (RepositoryException e) {
+            LOG.info("error reading repository resource {} from {}/{}", path, namespace, name, e);
             throw new WebApplicationException(Status.INTERNAL_SERVER_ERROR);
           }
           os.close();
         };
 
-        Response.ResponseBuilder responseBuilder = Response.ok(stream);
-        appendContentType(path, getHead(revision, path, repositoryService), responseBuilder);
-
-        return responseBuilder.build();
-      } catch (PathNotFoundException e) {
-        return Response.status(Status.NOT_FOUND).build();
-      } catch (IOException e) {
-        LOG.error("error reading repository resource {} from {}/{}", path, namespace, name, e);
-        return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
-      } catch (RepositoryException e) {
-        LOG.error("error reading repository resource {} from {}/{}", path, namespace, name, e);
-        return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
-      }
+      Response.ResponseBuilder responseBuilder = Response.ok(stream);
+      return createContentHeader(namespace, name, revision, path, repositoryService, responseBuilder);
     } catch (RepositoryNotFoundException e) {
+      LOG.debug("path '{}' not found in repository {}/{}", path, namespace, name, e);
       return Response.status(Status.NOT_FOUND).build();
     }
   }
@@ -73,27 +63,31 @@ public class ContentResource {
   @Path("{revision}/{path: .*}")
   public Response metadata(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision, @PathParam("path") String path) {
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
-      try {
-
         Response.ResponseBuilder responseBuilder = Response.ok();
-
-        appendContentType(path, getHead(revision, path, repositoryService), responseBuilder);
-        return responseBuilder.build();
-      } catch (PathNotFoundException e) {
-        return Response.status(Status.NOT_FOUND).build();
-      } catch (IOException e) {
-        LOG.error("error reading repository resource {} from {}/{}", path, namespace, name, e);
-        return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
-      } catch (RepositoryException e) {
-        LOG.error("error reading repository resource {} from {}/{}", path, namespace, name, e);
-        return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
-      }
+      return createContentHeader(namespace, name, revision, path, repositoryService, responseBuilder);
     } catch (RepositoryNotFoundException e) {
+      LOG.debug("path '{}' not found in repository {}/{}", path, namespace, name, e);
       return Response.status(Status.NOT_FOUND).build();
     }
   }
 
-  private void appendContentType(String path, byte[] head, Response.ResponseBuilder responseBuilder) {
+  private Response createContentHeader(String namespace, String name, String revision, String path, RepositoryService repositoryService, Response.ResponseBuilder responseBuilder) {
+    try {
+      appendContentHeader(path, getHead(revision, path, repositoryService), responseBuilder);
+    } catch (PathNotFoundException e) {
+      LOG.debug("path '{}' not found in repository {}/{}", path, namespace, name, e);
+      return Response.status(Status.NOT_FOUND).build();
+    } catch (IOException e) {
+      LOG.info("error reading repository resource {} from {}/{}", path, namespace, name, e);
+      return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+    } catch (RepositoryException e) {
+      LOG.info("error reading repository resource {} from {}/{}", path, namespace, name, e);
+      return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+    }
+    return responseBuilder.build();
+  }
+
+  private void appendContentHeader(String path, byte[] head, Response.ResponseBuilder responseBuilder) {
     ContentType contentType = ContentTypes.detect(path, head);
     responseBuilder.header("Content-Type", contentType.getRaw());
     contentType.getLanguage().ifPresent(language -> responseBuilder.header("Language", language));
