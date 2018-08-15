@@ -20,11 +20,14 @@ import javax.ws.rs.core.StreamingOutput;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.mockito.AdditionalMatchers.not;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -127,6 +130,18 @@ public class ContentResourceTest {
     assertEquals("application/octet-stream", response.getHeaderString("Content-Type"));
   }
 
+  @Test
+  public void shouldNotReadCompleteFileForHead() throws Exception {
+    FailingAfterSomeBytesStream stream = new FailingAfterSomeBytesStream();
+    doAnswer(invocation -> stream).when(catCommand).getStream(eq("readHeadOnly"));
+
+    Response response = contentResource.metadata(NAMESPACE, REPO_NAME, REV, "readHeadOnly");
+    assertEquals(200, response.getStatus());
+
+    assertEquals("application/octet-stream", response.getHeaderString("Content-Type"));
+    assertTrue("stream has to be closed after reading head", stream.isClosed());
+  }
+
   private void mockContentFromResource(String fileName) throws Exception {
     URL url = Resources.getResource(fileName);
     mockContent(fileName, Resources.toByteArray(url));
@@ -146,5 +161,26 @@ public class ContentResourceTest {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     ((StreamingOutput) response.getEntity()).write(baos);
     return baos;
+  }
+
+  private static class FailingAfterSomeBytesStream extends InputStream {
+    private int bytesRead = 0;
+    private boolean closed = false;
+    @Override
+    public int read() {
+      if (++bytesRead > 1024) {
+        fail("read too many bytes");
+      }
+      return 0;
+    }
+
+    @Override
+    public void close() throws IOException {
+      closed = true;
+    }
+
+    public boolean isClosed() {
+      return closed;
+    }
   }
 }
