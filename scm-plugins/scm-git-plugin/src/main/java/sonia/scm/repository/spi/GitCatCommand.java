@@ -32,8 +32,6 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectLoader;
@@ -51,135 +49,72 @@ import sonia.scm.repository.RepositoryException;
 import sonia.scm.util.Util;
 
 import java.io.Closeable;
+import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- */
-public class GitCatCommand extends AbstractGitCommand implements CatCommand
-{
+public class GitCatCommand extends AbstractGitCommand implements CatCommand {
 
-  /**
-   * the logger for GitCatCommand
-   */
-  private static final Logger logger =
-    LoggerFactory.getLogger(GitCatCommand.class);
+  private static final Logger logger = LoggerFactory.getLogger(GitCatCommand.class);
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   *
-   * @param context
-   * @param repository
-   */
-  public GitCatCommand(GitContext context,
-                       sonia.scm.repository.Repository repository)
-  {
+  public GitCatCommand(GitContext context, sonia.scm.repository.Repository repository) {
     super(context, repository);
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param output
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Override
-  public void getCatResult(CatCommandRequest request, OutputStream output)
-          throws IOException, RepositoryException
-  {
+  public void getCatResult(CatCommandRequest request, OutputStream output) throws IOException, RepositoryException {
     logger.debug("try to read content for {}", request);
-
-    org.eclipse.jgit.lib.Repository repo = open();
-    
-    ObjectId revId = getCommitOrDefault(repo, request.getRevision());
-    getContent(repo, revId, request.getPath(), output);
+    try (ClosableObjectLoaderContainer closableObjectLoaderContainer = getLoader(request)) {
+      closableObjectLoaderContainer.objectLoader.copyTo(output);
+    }
   }
 
   @Override
   public InputStream getCatResultStream(CatCommandRequest request) throws IOException, RepositoryException {
     logger.debug("try to read content for {}", request);
-
-    org.eclipse.jgit.lib.Repository repo = open();
-
-    ObjectId revId = getCommitOrDefault(repo, request.getRevision());
-    ClosableObjectLoaderContainer closableObjectLoaderContainer = getLoader(repo, revId, request.getPath());
-    return new InputStreamWrapper(closableObjectLoaderContainer);
+    return new InputStreamWrapper(getLoader(request));
   }
 
-  void getContent(org.eclipse.jgit.lib.Repository repo, ObjectId revId,
-    String path, OutputStream output)
-    throws IOException, RepositoryException
-  {
-    ClosableObjectLoaderContainer closableObjectLoaderContainer = getLoader(repo, revId, path);
-    try {
+  void getContent(org.eclipse.jgit.lib.Repository repo, ObjectId revId, String path, OutputStream output) throws IOException, RepositoryException {
+    try (ClosableObjectLoaderContainer closableObjectLoaderContainer = getLoader(repo, revId, path)) {
       closableObjectLoaderContainer.objectLoader.copyTo(output);
-    } finally {
-      closableObjectLoaderContainer.close();
     }
   }
 
-  private ClosableObjectLoaderContainer getLoader(Repository repo, ObjectId revId,
-                  String path)
-          throws IOException, RepositoryException
-  {
-    TreeWalk treeWalk = null;
-    RevWalk revWalk = null;
+  private ClosableObjectLoaderContainer getLoader(CatCommandRequest request) throws IOException, RepositoryException {
+    org.eclipse.jgit.lib.Repository repo = open();
+    ObjectId revId = getCommitOrDefault(repo, request.getRevision());
+    return getLoader(repo, revId, request.getPath());
+  }
 
-    try
-    {
-      treeWalk = new TreeWalk(repo);
-      treeWalk.setRecursive(Util.nonNull(path).contains("/"));
+  private ClosableObjectLoaderContainer getLoader(Repository repo, ObjectId revId, String path) throws IOException, RepositoryException {
+    TreeWalk treeWalk = new TreeWalk(repo);
+    treeWalk.setRecursive(Util.nonNull(path).contains("/"));
 
-      if (logger.isDebugEnabled())
-      {
-        logger.debug("load content for {} at {}", path, revId.name());
-      }
+    logger.debug("load content for {} at {}", path, revId.name());
 
-      revWalk = new RevWalk(repo);
+    RevWalk revWalk = new RevWalk(repo);
 
-      RevCommit entry = revWalk.parseCommit(revId);
-      RevTree revTree = entry.getTree();
+    RevCommit entry = revWalk.parseCommit(revId);
+    RevTree revTree = entry.getTree();
 
-      if (revTree != null)
-      {
-        treeWalk.addTree(revTree);
-      }
-      else
-      {
-        logger.error("could not find tree for {}", revId.name());
-      }
-
-      treeWalk.setFilter(PathFilter.create(path));
-
-      if (treeWalk.next() && treeWalk.getFileMode(0).getObjectType() == Constants.OBJ_BLOB)
-      {
-        ObjectId blobId = treeWalk.getObjectId(0);
-        ObjectLoader loader = repo.open(blobId);
-
-        return new ClosableObjectLoaderContainer(loader, treeWalk, revWalk);
-      }
-      else
-      {
-        throw new PathNotFoundException(path);
-      }
+    if (revTree != null) {
+      treeWalk.addTree(revTree);
+    } else {
+      logger.error("could not find tree for {}", revId.name());
     }
-    finally
-    {
+
+    treeWalk.setFilter(PathFilter.create(path));
+
+    if (treeWalk.next() && treeWalk.getFileMode(0).getObjectType() == Constants.OBJ_BLOB) {
+      ObjectId blobId = treeWalk.getObjectId(0);
+      ObjectLoader loader = repo.open(blobId);
+
+      return new ClosableObjectLoaderContainer(loader, treeWalk, revWalk);
+    } else {
+      throw new PathNotFoundException(path);
     }
   }
 
@@ -195,37 +130,28 @@ public class GitCatCommand extends AbstractGitCommand implements CatCommand
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() {
       GitUtil.release(revWalk);
       GitUtil.release(treeWalk);
     }
   }
 
-  private static class InputStreamWrapper extends InputStream {
+  private static class InputStreamWrapper extends FilterInputStream {
 
-    private final InputStream delegate;
-    private final TreeWalk treeWalk;
-    private final RevWalk revWalk;
+    private final ClosableObjectLoaderContainer container;
 
     private InputStreamWrapper(ClosableObjectLoaderContainer container) throws IOException {
-      this(container.objectLoader.openStream(), container.treeWalk, container.revWalk);
+      super(container.objectLoader.openStream());
+      this.container = container;
     }
 
-    private InputStreamWrapper(InputStream delegate, TreeWalk treeWalk, RevWalk revWalk) {
-        this.delegate = delegate;
-        this.treeWalk = treeWalk;
-        this.revWalk = revWalk;
-      }
-
-      @Override
-      public int read () throws IOException {
-        return delegate.read();
-      }
-
-      @Override
-      public void close () throws IOException {
-        GitUtil.release(revWalk);
-        GitUtil.release(treeWalk);
+    @Override
+    public void close() throws IOException {
+      try {
+        super.close();
+      } finally {
+        container.close();
       }
     }
+  }
 }
