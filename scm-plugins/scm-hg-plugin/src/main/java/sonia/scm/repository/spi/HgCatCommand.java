@@ -33,8 +33,7 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
+import com.aragost.javahg.commands.ExecutionException;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Closeables;
 import sonia.scm.repository.Repository;
@@ -45,50 +44,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-//~--- JDK imports ------------------------------------------------------------
+public class HgCatCommand extends AbstractCommand implements CatCommand {
 
-/**
- *
- * @author Sebastian Sdorra
- */
-public class HgCatCommand extends AbstractCommand implements CatCommand
-{
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param context
-   * @param repository
-   */
-  HgCatCommand(HgCommandContext context, Repository repository)
-  {
+  HgCatCommand(HgCommandContext context, Repository repository) {
     super(context, repository);
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param output
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Override
-  public void getCatResult(CatCommandRequest request, OutputStream output)
-    throws IOException, RepositoryException
-  {
+  public void getCatResult(CatCommandRequest request, OutputStream output) throws IOException, RepositoryException {
     InputStream input = getCatResultStream(request);
-    try
-    {
+    try {
       ByteStreams.copy(input, output);
-    }
-    finally
-    {
+    } finally {
       Closeables.close(input, true);
     }
   }
@@ -100,6 +67,10 @@ public class HgCatCommand extends AbstractCommand implements CatCommand
 
     cmd.rev(HgUtil.getRevision(request.getRevision()));
 
-    return cmd.execute(request.getPath());
+    try {
+      return cmd.execute(request.getPath());
+    } catch (ExecutionException e) {
+      throw new RepositoryException(e);
+    }
   }
 }
