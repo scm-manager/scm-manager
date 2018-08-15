@@ -15,11 +15,7 @@ import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.util.IOUtil;
 
 import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.HEAD;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.StreamingOutput;
@@ -134,7 +130,6 @@ public class ContentResource {
     ContentType contentType = ContentTypes.detect(path, head);
     responseBuilder.header("Content-Type", contentType.getRaw());
     contentType.getLanguage().ifPresent(language -> responseBuilder.header("Language", language));
-    responseBuilder.header("Content-Length", head.length);
   }
 
   private byte[] getHead(String revision, String path, RepositoryService repositoryService) throws IOException, RepositoryException {

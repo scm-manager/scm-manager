@@ -33,8 +33,6 @@
 
 package sonia.scm.repository.api;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import org.slf4j.Logger;
@@ -49,8 +47,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Shows the content of a file in the {@link Repository}.<br />
