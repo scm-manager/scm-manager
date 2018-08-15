@@ -31,8 +31,8 @@ public class SourceRootResource {
 
   @GET
   @Produces(VndMediaType.SOURCE)
-  @Path("")
-  public Response getAll(@PathParam("namespace") String namespace, @PathParam("name") String name) {
+  @Path("{revision : (\\w+)?}")
+  public Response getAll(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision) {
 
     BrowserResult browserResult;
     Response response;
@@ -40,6 +40,9 @@ public class SourceRootResource {
     try (RepositoryService repositoryService = serviceFactory.create(namespaceAndName)) {
       BrowseCommandBuilder browseCommand = repositoryService.getBrowseCommand();
       browseCommand.setPath("/");
+      if (revision != null && !revision.isEmpty()) {
+        browseCommand.setRevision(revision);
+      }
       browserResult = browseCommand.getBrowserResult();
 
       if (browserResult != null) {

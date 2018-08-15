@@ -1,11 +1,7 @@
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.Links;
-import org.mapstruct.AfterMapping;
-import org.mapstruct.Context;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
+import org.mapstruct.*;
 import sonia.scm.repository.Branch;
 import sonia.scm.repository.NamespaceAndName;
 
@@ -29,7 +25,7 @@ public abstract class BranchToBranchDtoMapper {
       .self(resourceLinks.branch().self(namespaceAndName, target.getName()))
       .single(linkBuilder("history", resourceLinks.branch().history(namespaceAndName, target.getName())).build())
       .single(linkBuilder("changeset", resourceLinks.changeset().changeset(namespaceAndName.getNamespace(), namespaceAndName.getName(), target.getRevision())).build())
-      .single(linkBuilder("source", resourceLinks.source().source(namespaceAndName.getNamespace(), namespaceAndName.getName(), target.getRevision())).build());
+      .single(linkBuilder("source", resourceLinks.source().self(namespaceAndName.getNamespace(), namespaceAndName.getName(), target.getRevision())).build());
     target.add(linksBuilder.build());
   }
 }

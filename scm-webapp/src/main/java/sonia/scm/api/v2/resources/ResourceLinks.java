@@ -291,18 +291,18 @@ class ResourceLinks {
     }
 
     String self(String namespace, String name, String revision) {
-      return sourceLinkBuilder.method("getRepositoryResource").parameters(namespace, name, revision).method("sources").parameters().method("getAll").parameters().href();
+      return sourceLinkBuilder.method("getRepositoryResource").parameters(namespace, name, revision).method("sources").parameters().method("getAll").parameters("").href();
     }
 
-    String withoutRevision(String namespace, String name) {
-      return sourceLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("sources").parameters().method("getAll").parameters().href();
+    String selfWithoutRevision(String namespace, String name) {
+      return sourceLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("sources").parameters().method("getAll").parameters("").href();
     }
 
     public String source(String namespace, String name, String revision) {
       return sourceLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("sources").parameters().method("get").parameters(revision).href();
     }
 
-    public String withPath(String namespace, String name, String revision, String path) {
+    public String sourceWithPath(String namespace, String name, String revision, String path) {
       return sourceLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("sources").parameters().method("get").parameters(revision, path).href();
     }
   }
