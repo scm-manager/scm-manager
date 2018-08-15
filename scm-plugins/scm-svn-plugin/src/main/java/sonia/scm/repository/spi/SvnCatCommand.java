@@ -37,13 +37,16 @@ package sonia.scm.repository.spi;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tmatesoft.svn.core.SVNErrorCode;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNProperties;
 import org.tmatesoft.svn.core.io.SVNRepository;
 import org.tmatesoft.svn.core.wc.SVNClientManager;
 import org.tmatesoft.svn.core.wc.admin.SVNLookClient;
+import sonia.scm.repository.PathNotFoundException;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryException;
+import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.repository.SvnUtil;
 
 import java.io.ByteArrayInputStream;
@@ -157,6 +160,17 @@ public class SvnCatCommand extends AbstractSvnCommand implements CatCommand
     }
     catch (SVNException ex)
     {
+      handleSvnException(request, ex);
+    }
+  }
+
+  private void handleSvnException(CatCommandRequest request, SVNException ex) throws RepositoryException {
+    int svnErrorCode = ex.getErrorMessage().getErrorCode().getCode();
+    if (SVNErrorCode.FS_NOT_FOUND.getCode() == svnErrorCode) {
+      throw new PathNotFoundException(request.getPath());
+    } else if (SVNErrorCode.FS_NO_SUCH_REVISION.getCode() == svnErrorCode) {
+      throw new RevisionNotFoundException(request.getRevision());
+    } else {
       throw new RepositoryException("could not get content from revision", ex);
     }
   }
