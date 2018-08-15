@@ -2,6 +2,8 @@ package sonia.scm.api.v2.resources;
 
 import com.github.sdorra.spotter.ContentType;
 import com.github.sdorra.spotter.ContentTypes;
+import com.webcohesion.enunciate.metadata.rs.ResponseCode;
+import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.NamespaceAndName;
@@ -37,8 +39,26 @@ public class ContentResource {
     this.serviceFactory = serviceFactory;
   }
 
+  /**
+   * Returns the content of a file for the given revision in the repository. The content type depends on the file
+   * content and can be discovered calling <code>HEAD</code> on the same URL. If a programming languge could be
+   * recognized, this will be given in the header <code>Language</code>.
+   *
+   * @param namespace the namespace of the repository
+   * @param name the name of the repository
+   * @param revision the revision
+   * @param path The path of the file
+   *
+   */
   @GET
   @Path("{revision}/{path: .*}")
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
+    @ResponseCode(code = 403, condition = "not authorized, the current user has no privileges to read the repository"),
+    @ResponseCode(code = 404, condition = "not found, no repository with the specified name available in the namespace"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
   public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision, @PathParam("path") String path) {
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
       StreamingOutput stream = createStreamingOutput(namespace, name, revision, path, repositoryService);
@@ -65,8 +85,25 @@ public class ContentResource {
           };
   }
 
+  /**
+   * Returns the content type and the programming language (if it can be detected) of a file for the given revision in
+   * the repository. The programming language will be given in the header <code>Language</code>.
+   *
+   * @param namespace the namespace of the repository
+   * @param name the name of the repository
+   * @param revision the revision
+   * @param path The path of the file
+   *
+   */
   @HEAD
   @Path("{revision}/{path: .*}")
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
+    @ResponseCode(code = 403, condition = "not authorized, the current user has no privileges to read the repository"),
+    @ResponseCode(code = 404, condition = "not found, no repository with the specified name available in the namespace"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
   public Response metadata(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision, @PathParam("path") String path) {
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
         Response.ResponseBuilder responseBuilder = Response.ok();
