@@ -87,7 +87,7 @@ public class GitCatCommandTest extends AbstractGitCommandTestBase {
     CatCommandRequest request = new CatCommandRequest();
 
     request.setPath("unknown");
-    assertEquals("b", execute(request));
+    execute(request);
   }
 
   @Test
