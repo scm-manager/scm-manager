@@ -33,13 +33,23 @@ public class SourceRootResource {
   @Produces(VndMediaType.SOURCE)
   @Path("{revision : (\\w+)?}")
   public Response getAll(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision) {
+    return getSource(namespace, name, "/", revision);
+  }
 
+  @GET
+  @Produces(VndMediaType.SOURCE)
+  @Path("{revision}/{path: .*}")
+  public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision, @PathParam("path") String path) {
+    return getSource(namespace, name, path, revision);
+  }
+
+  private Response getSource(String namespace, String repoName, String path, String revision) {
     BrowserResult browserResult;
     Response response;
-    NamespaceAndName namespaceAndName = new NamespaceAndName(namespace, name);
+    NamespaceAndName namespaceAndName = new NamespaceAndName(namespace, repoName);
     try (RepositoryService repositoryService = serviceFactory.create(namespaceAndName)) {
       BrowseCommandBuilder browseCommand = repositoryService.getBrowseCommand();
-      browseCommand.setPath("/");
+      browseCommand.setPath(path);
       if (revision != null && !revision.isEmpty()) {
         browseCommand.setRevision(revision);
       }
@@ -57,11 +67,5 @@ public class SourceRootResource {
       response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
     }
     return response;
-  }
-
-  @GET
-  @Path("{revision}/{path: .*}")
-  public Response get() {
-    throw new UnsupportedOperationException();
   }
 }
