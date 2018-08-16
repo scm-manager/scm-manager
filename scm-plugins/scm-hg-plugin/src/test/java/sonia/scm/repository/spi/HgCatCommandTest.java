@@ -42,8 +42,6 @@ import java.io.InputStream;
 
 import static org.junit.Assert.assertEquals;
 
-//~--- JDK imports ------------------------------------------------------------
-
 public class HgCatCommandTest extends AbstractHgCommandTestBase {
 
   @Test

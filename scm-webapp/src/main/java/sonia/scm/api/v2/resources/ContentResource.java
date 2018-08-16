@@ -73,17 +73,17 @@ public class ContentResource {
 
   private StreamingOutput createStreamingOutput(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision, @PathParam("path") String path, RepositoryService repositoryService) {
     return os -> {
-            try {
-              repositoryService.getCatCommand().setRevision(revision).retriveContent(os, path);
-              os.close();
-            } catch (PathNotFoundException e) {
-              LOG.debug("path '{}' not found in repository {}/{}", path, namespace, name, e);
-              throw new WebApplicationException(Status.NOT_FOUND);
-            } catch (RepositoryException e) {
-              LOG.info("error reading repository resource {} from {}/{}", path, namespace, name, e);
-              throw new WebApplicationException(Status.INTERNAL_SERVER_ERROR);
-            }
-          };
+      try {
+        repositoryService.getCatCommand().setRevision(revision).retriveContent(os, path);
+        os.close();
+      } catch (PathNotFoundException e) {
+        LOG.debug("path '{}' not found in repository {}/{}", path, namespace, name, e);
+        throw new WebApplicationException(Status.NOT_FOUND);
+      } catch (RepositoryException e) {
+        LOG.info("error reading repository resource {} from {}/{}", path, namespace, name, e);
+        throw new WebApplicationException(Status.INTERNAL_SERVER_ERROR);
+      }
+    };
   }
 
   /**
@@ -107,7 +107,7 @@ public class ContentResource {
   })
   public Response metadata(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision, @PathParam("path") String path) {
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
-        Response.ResponseBuilder responseBuilder = Response.ok();
+      Response.ResponseBuilder responseBuilder = Response.ok();
       return createContentHeader(namespace, name, revision, path, repositoryService, responseBuilder);
     } catch (RepositoryNotFoundException e) {
       LOG.debug("path '{}' not found in repository {}/{}", path, namespace, name, e);
@@ -124,10 +124,7 @@ public class ContentResource {
     } catch (RevisionNotFoundException e) {
       LOG.debug("revision '{}' not found in repository {}/{}", revision, namespace, name, e);
       return Response.status(Status.NOT_FOUND).build();
-    } catch (IOException e) {
-      LOG.info("error reading repository resource {} from {}/{}", path, namespace, name, e);
-      return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
-    } catch (RepositoryException e) {
+    } catch (IOException | RepositoryException e) {
       LOG.info("error reading repository resource {} from {}/{}", path, namespace, name, e);
       return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
     }
