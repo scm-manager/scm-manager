@@ -9,7 +9,8 @@
     "error-subtitle": "Unknown Config Error"
   },
   "config-form": {
-    "submit": "Submit"
+    "submit": "Submit",
+    "no-permission-notification": "Please note: You do not have the permission to edit the config!"
   },
   "proxy-settings": {
     "name": "Proxy Settings",

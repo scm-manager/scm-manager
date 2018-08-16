@@ -7,6 +7,7 @@ import ProxySettings from "./ProxySettings";
 import GeneralSettings from "./GeneralSettings";
 import BaseUrlSettings from "./BaseUrlSettings";
 import AdminSettings from "./AdminSettings";
+import Notification from "../../../components/Notification";
 
 type Props = {
   submitForm: Config => void,
@@ -17,7 +18,8 @@ type Props = {
 };
 
 type State = {
-  config: Config
+  config: Config,
+  showNotification: boolean
 };
 
 class ConfigForm extends React.Component<Props, State> {
@@ -48,15 +50,18 @@ class ConfigForm extends React.Component<Props, State> {
         enabledXsrfProtection: true,
         defaultNamespaceStrategy: "",
         _links: {}
-      }
+      },
+      showNotification: false
     };
   }
 
   componentDidMount() {
-    const { config } = this.props;
-    console.log(config);
+    const { config, configUpdatePermission } = this.props;
     if (config) {
-      this.setState({ config: { ...config } });
+      this.setState({ ...this.state, config: { ...config } });
+    }
+    if (!configUpdatePermission) {
+      this.setState({ ...this.state, showNotification: true });
     }
   }
 
@@ -67,9 +72,23 @@ class ConfigForm extends React.Component<Props, State> {
 
   render() {
     const { loading, t, configUpdatePermission } = this.props;
-    let config = this.state.config;
+    const config = this.state.config;
+
+    let noPermissionNotification = null;
+
+    if (this.state.showNotification) {
+      noPermissionNotification = (
+        <Notification
+          type={"info"}
+          children={t("config-form.no-permission-notification")}
+          onClose={() => this.onClose()}
+        />
+      );
+    }
+
     return (
       <form onSubmit={this.submit}>
+        {noPermissionNotification}
         <GeneralSettings
           realmDescription={config.realmDescription}
           enableRepositoryArchive={config.enableRepositoryArchive}
@@ -132,12 +151,20 @@ class ConfigForm extends React.Component<Props, State> {
   onChange = (isValid: boolean, changedValue: any, name: string) => {
     if (isValid) {
       this.setState({
+        ...this.state,
         config: {
           ...this.state.config,
           [name]: changedValue
         }
       });
     }
+  };
+
+  onClose = () => {
+    this.setState({
+      ...this.state,
+      showNotification: false
+    });
   };
 }
 
