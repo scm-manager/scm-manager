@@ -71,6 +71,15 @@ public class HgCatCommandTest extends AbstractHgCommandTestBase {
     execute(request);
   }
 
+  @Test(expected = RepositoryException.class)
+  public void testUnknownRevision() throws IOException, RepositoryException {
+    CatCommandRequest request = new CatCommandRequest();
+
+    request.setRevision("abc");
+    request.setPath("a.txt");
+    execute(request);
+  }
+
   @Test
   public void testSimpleStream() throws IOException, RepositoryException {
     CatCommandRequest request = new CatCommandRequest();

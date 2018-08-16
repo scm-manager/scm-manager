@@ -36,6 +36,7 @@ import org.junit.Test;
 import sonia.scm.repository.GitConstants;
 import sonia.scm.repository.PathNotFoundException;
 import sonia.scm.repository.RepositoryException;
+import sonia.scm.repository.RevisionNotFoundException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -87,6 +88,15 @@ public class GitCatCommandTest extends AbstractGitCommandTestBase {
     CatCommandRequest request = new CatCommandRequest();
 
     request.setPath("unknown");
+    execute(request);
+  }
+
+  @Test(expected = RevisionNotFoundException.class)
+  public void testUnknownRevision() throws IOException, RepositoryException {
+    CatCommandRequest request = new CatCommandRequest();
+
+    request.setRevision("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+    request.setPath("a.txt");
     execute(request);
   }
 

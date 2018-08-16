@@ -32,6 +32,7 @@
 
 package sonia.scm.repository.spi;
 
+import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectLoader;
@@ -46,6 +47,7 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.PathNotFoundException;
 import sonia.scm.repository.RepositoryException;
+import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.util.Util;
 
 import java.io.Closeable;
@@ -97,7 +99,12 @@ public class GitCatCommand extends AbstractGitCommand implements CatCommand {
 
     RevWalk revWalk = new RevWalk(repo);
 
-    RevCommit entry = revWalk.parseCommit(revId);
+    RevCommit entry = null;
+    try {
+      entry = revWalk.parseCommit(revId);
+    } catch (MissingObjectException e) {
+      throw new RevisionNotFoundException(revId.getName());
+    }
     RevTree revTree = entry.getTree();
 
     if (revTree != null) {
