@@ -55,5 +55,11 @@
     "login-attempt-limit-timeout": "Login Attempt Limit Timeout",
     "enabled-xsrf-protection": "Enabled XSRF Protection",
     "default-namespace-strategy": "Default Namespace Strategy"
+  },
+  "validation": {
+    "date-format-invalid": "The date format is not valid",
+    "login-attempt-limit-timeout-invalid": "This is not a number",
+    "login-attempt-limit-invalid": "This is not a number",
+    "plugin-url-invalid": "This is not a valid url"
   }
 }
