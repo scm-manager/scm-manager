@@ -1,13 +1,14 @@
 //@flow
 import React from "react";
-import { DeleteButton } from "../../../components/buttons";
+import {DeleteButton} from "../../../components/buttons";
 import { translate } from "react-i18next";
 import classNames from "classnames";
 
 type Props = {
   t: string => string,
   proxyExcludeName: string,
-  removeProxyExclude: string => void
+  removeProxyExclude: string => void,
+  disable: boolean
 };
 
 type State = {};
@@ -25,6 +26,7 @@ class RemoveProxyExcludeButton extends React.Component<Props, State> {
             event.preventDefault();
             removeProxyExclude(proxyExcludeName);
           }}
+          disabled={this.props.disable}
         />
       </div>
     );

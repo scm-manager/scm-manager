@@ -2,12 +2,13 @@
 import React from "react";
 
 import { translate } from "react-i18next";
-import { AddButton } from "../../../components/buttons";
+import {AddButton} from "../../../components/buttons";
 import InputField from "../../../components/forms/InputField";
 
 type Props = {
   t: string => string,
-  addProxyExclude: string => void
+  addProxyExclude: string => void,
+  disable: boolean
 };
 
 type State = {
@@ -36,10 +37,12 @@ class AddProxyExcludeField extends React.Component<Props, State> {
           validationError={false}
           value={this.state.proxyExcludeToAdd}
           onReturnPressed={this.appendProxyExclude}
+          disable={this.props.disable}
         />
         <AddButton
           label={t("proxy-settings.add-proxy-exclude-button")}
           action={this.addButtonClicked}
+          disabled={this.props.disable}
           //disabled={!isMemberNameValid(this.state.memberToAdd)}
         />
       </div>

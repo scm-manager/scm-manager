@@ -3,7 +3,6 @@ import React from "react";
 import { translate } from "react-i18next";
 import Subtitle from "../../../components/layout/Subtitle";
 import AdminGroupTable from "../table/AdminGroupTable";
-import ProxySettings from "./ProxySettings";
 import AdminUserTable from "../table/AdminUserTable";
 import AddAdminGroupField from "../fields/AddAdminGroupField";
 import AddAdminUserField from "../fields/AddAdminUserField";

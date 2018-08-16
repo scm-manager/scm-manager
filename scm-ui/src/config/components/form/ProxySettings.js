@@ -66,8 +66,9 @@ class ProxySettings extends React.Component<Props> {
           onChange={(isValid, changedValue, name) =>
             this.props.onChange(isValid, changedValue, name)
           }
+          disable={!enableProxy}
         />
-        <AddProxyExcludeField addProxyExclude={this.addProxyExclude} />
+        <AddProxyExcludeField addProxyExclude={this.addProxyExclude} disable={!enableProxy}/>
       </div>
     );
   }

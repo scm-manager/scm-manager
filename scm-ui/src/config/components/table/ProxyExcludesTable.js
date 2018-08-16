@@ -6,7 +6,8 @@ import RemoveProxyExcludeButton from "../buttons/RemoveProxyExcludeButton";
 type Props = {
   proxyExcludes: string[],
   t: string => string,
-  onChange: (boolean, any, string) => void
+  onChange: (boolean, any, string) => void,
+  disable: boolean
 };
 
 type State = {};
@@ -19,19 +20,20 @@ class ProxyExcludesTable extends React.Component<Props, State> {
         <label className="label">{t("proxy-settings.proxy-excludes")}</label>
         <table className="table is-hoverable is-fullwidth">
           <tbody>
-          {this.props.proxyExcludes.map(excludes => {
-            return (
-              <tr key={excludes}>
-                <td key={excludes}>{excludes}</td>
-                <td>
-                  <RemoveProxyExcludeButton
-                    proxyExcludeName={excludes}
-                    removeProxyExclude={this.removeProxyExclude}
-                  />
-                </td>
-              </tr>
-            );
-          })}
+            {this.props.proxyExcludes.map(excludes => {
+              return (
+                <tr key={excludes}>
+                  <td key={excludes}>{excludes}</td>
+                  <td>
+                    <RemoveProxyExcludeButton
+                      proxyExcludeName={excludes}
+                      removeProxyExclude={this.removeProxyExclude}
+                      disable={this.props.disable}
+                    />
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
@@ -39,7 +41,9 @@ class ProxyExcludesTable extends React.Component<Props, State> {
   }
 
   removeProxyExclude = (excludename: string) => {
-    const newExcludes = this.props.proxyExcludes.filter(name => name !== excludename);
+    const newExcludes = this.props.proxyExcludes.filter(
+      name => name !== excludename
+    );
     this.props.onChange(true, newExcludes, "proxyExcludes");
   };
 }
