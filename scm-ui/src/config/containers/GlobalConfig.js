@@ -8,7 +8,8 @@ import {
   getConfig,
   modifyConfig,
   isModifyConfigPending,
-  getConfigUpdatePermission
+  getConfigUpdatePermission,
+  getModifyConfigFailure
 } from "../modules/config";
 import connect from "react-redux/es/connect/connect";
 import ErrorPage from "../../components/ErrorPage";
@@ -89,7 +90,7 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
   const loading = isFetchConfigPending(state) || isModifyConfigPending(state); //TODO: Button lädt so nicht, sondern gesamte Seite
-  const error = getFetchConfigFailure(state);
+  const error = getFetchConfigFailure(state) || getModifyConfigFailure(state);
   const config = getConfig(state);
   const configUpdatePermission = getConfigUpdatePermission(state);
 
