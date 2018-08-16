@@ -1,7 +1,11 @@
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.Links;
-import org.mapstruct.*;
+import org.mapstruct.AfterMapping;
+import org.mapstruct.Context;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import sonia.scm.repository.Branch;
 import sonia.scm.repository.NamespaceAndName;
 
