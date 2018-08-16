@@ -44,6 +44,7 @@ class ProxySettings extends React.Component<Props> {
           label={t("proxy-settings.proxy-password")}
           onChange={this.handleProxyPasswordChange}
           value={proxyPassword}
+          type="password"
           disabled={!enableProxy || !hasUpdatePermission}
         />
         <InputField
