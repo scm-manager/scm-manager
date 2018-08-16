@@ -143,7 +143,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
     repository.setId(keyGenerator.createKey());
     repository.setNamespace(namespaceStrategy.createNamespace(repository));
 
-    logger.info("create repository {} of type {} in namespace {}", repository.getName(), repository.getType(), repository.getNamespace());
+    logger.info("create repository {}/{} of type {} in namespace {}", repository.getNamespace(), repository.getName(), repository.getType(), repository.getNamespace());
 
     return managerDaoAdapter.create(
       repository,
@@ -161,7 +161,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
 
   @Override
   public void delete(Repository repository) throws RepositoryException {
-    logger.info("delete repository {} of type {}", repository.getName(), repository.getType());
+    logger.info("delete repository {}/{} of type {}", repository.getNamespace(), repository.getName(), repository.getType());
     managerDaoAdapter.delete(
       repository,
       () -> RepositoryPermissions.delete(repository),
@@ -190,7 +190,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
 
   @Override
   public void modify(Repository repository) throws RepositoryException {
-    logger.info("modify repository {} of type {}", repository.getName(), repository.getType());
+    logger.info("modify repository {}/{} of type {}", repository.getNamespace(), repository.getName(), repository.getType());
 
     managerDaoAdapter.modify(
       repository,
@@ -403,7 +403,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
 
     if (handlerMap.containsKey(type.getName())) {
       throw new ConfigurationException(
-        type.getName().concat("allready registered"));
+        type.getName().concat("already registered"));
     }
 
     if (logger.isInfoEnabled()) {
