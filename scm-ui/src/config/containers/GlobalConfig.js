@@ -90,7 +90,7 @@ const mapDispatchToProps = dispatch => {
 };
 
 const mapStateToProps = state => {
-  const loading = isFetchConfigPending(state) || isModifyConfigPending(state); //TODO: Button lädt so nicht, sondern gesamte Seite
+  const loading = isFetchConfigPending(state) || isModifyConfigPending(state);
   const error = getFetchConfigFailure(state) || getModifyConfigFailure(state);
   const config = getConfig(state);
   const configUpdatePermission = getConfigUpdatePermission(state);
