@@ -16,10 +16,18 @@ public class RestUtil {
     return REST_BASE_URL.resolve(path);
   }
 
+  public static final String ADMIN_USERNAME = "scmadmin";
+  public static final String ADMIN_PASSWORD = "scmadmin";
+
   public static RequestSpecification given(String mediaType) {
     return RestAssured.given()
       .contentType(mediaType)
       .accept(mediaType)
-      .auth().preemptive().basic("scmadmin", "scmadmin");
+      .auth().preemptive().basic(ADMIN_USERNAME, ADMIN_PASSWORD);
+  }
+
+  public static RequestSpecification given() {
+    return RestAssured.given()
+      .auth().preemptive().basic(ADMIN_USERNAME, ADMIN_PASSWORD);
   }
 }
