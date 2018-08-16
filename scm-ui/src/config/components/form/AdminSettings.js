@@ -14,7 +14,7 @@ type Props = {
   t: string => string,
   onChange: (boolean, any, string) => void
 };
-//TODO: Einbauen!
+
 class AdminSettings extends React.Component<Props> {
   render() {
     const { t, adminGroups, adminUsers } = this.props;
