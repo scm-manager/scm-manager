@@ -110,6 +110,7 @@ class ConfigForm extends React.Component<Props, State> {
           proxyServer={config.proxyServer ? config.proxyServer : ""}
           proxyUser={config.proxyUser ? config.proxyUser : ""}
           enableProxy={config.enableProxy}
+          proxyExcludes={config.proxyExcludes}
           onChange={(isValid, changedValue, name) =>
             this.onChange(isValid, changedValue, name)
           }

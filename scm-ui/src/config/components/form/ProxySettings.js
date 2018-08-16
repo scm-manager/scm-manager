@@ -3,6 +3,8 @@ import React from "react";
 import { translate } from "react-i18next";
 import { Checkbox, InputField } from "../../../components/forms/index";
 import Subtitle from "../../../components/layout/Subtitle";
+import ProxyExcludesTable from "../table/ProxyExcludesTable";
+import AddProxyExcludeField from "../fields/AddProxyExcludeField";
 
 type Props = {
   proxyPassword: string,
@@ -23,7 +25,8 @@ class ProxySettings extends React.Component<Props> {
       proxyPort,
       proxyServer,
       proxyUser,
-      enableProxy
+      enableProxy,
+      proxyExcludes
     } = this.props;
 
     return (
@@ -58,6 +61,13 @@ class ProxySettings extends React.Component<Props> {
           onChange={this.handleProxyUserChange}
           disable={!enableProxy}
         />
+        <ProxyExcludesTable
+          proxyExcludes={proxyExcludes}
+          onChange={(isValid, changedValue, name) =>
+            this.props.onChange(isValid, changedValue, name)
+          }
+        />
+        <AddProxyExcludeField addProxyExclude={this.addProxyExclude} />
       </div>
     );
   }
@@ -76,6 +86,21 @@ class ProxySettings extends React.Component<Props> {
   };
   handleEnableProxyChange = (value: string) => {
     this.props.onChange(true, value, "enableProxy");
+  };
+
+  addProxyExclude = (proxyExcludeName: string) => {
+    if (this.isProxyExcludeMember(proxyExcludeName)) {
+      return;
+    }
+    this.props.onChange(
+      true,
+      [...this.props.proxyExcludes, proxyExcludeName],
+      "proxyExcludes"
+    );
+  };
+
+  isProxyExcludeMember = (proxyExcludeName: string) => {
+    return this.props.proxyExcludes.includes(proxyExcludeName);
   };
 }
 

@@ -18,7 +18,11 @@
     "proxy-server": "Proxy Server",
     "proxy-user": "Proxy User",
     "enable-proxy": "Enable Proxy",
-    "proxy-excludes": "Proxy Excludes"
+    "proxy-excludes": "Proxy Excludes",
+    "remove-proxy-exclude-button": "Remove Proxy Exclude",
+    "add-proxy-exclude-error": "The proxy exclude you want to add is not valid",
+    "add-proxy-exclude-textfield": "Add proxy exclude you want to add to proxy excludes here",
+    "add-proxy-exclude-button": "Add Proxy Exclude"
   },
   "base-url-settings": {
     "name": "Base URL Settings",
