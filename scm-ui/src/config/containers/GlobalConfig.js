@@ -16,7 +16,6 @@ import ErrorPage from "../../components/ErrorPage";
 import type { Config } from "../types/Config";
 import ConfigForm from "../components/form/ConfigForm";
 import Loading from "../../components/Loading";
-import type { User } from "../../users/types/User";
 import type { History } from "history";
 
 type Props = {
@@ -25,7 +24,7 @@ type Props = {
   config: Config,
   configUpdatePermission: boolean,
   // dispatch functions
-  modifyConfig: (config: User, callback?: () => void) => void,
+  modifyConfig: (config: Config, callback?: () => void) => void,
   // context objects
   t: string => string,
   fetchConfig: void => void,
@@ -33,7 +32,7 @@ type Props = {
 };
 
 class GlobalConfig extends React.Component<Props> {
-  configModified = (config: Config) => () => {
+  configModified = () => () => {
     this.props.fetchConfig();
     this.props.history.push(`/config`);
   };
@@ -43,8 +42,7 @@ class GlobalConfig extends React.Component<Props> {
   }
 
   modifyConfig = (config: Config) => {
-    console.log(config);
-    this.props.modifyConfig(config, this.configModified(config));
+    this.props.modifyConfig(config, this.configModified());
   };
 
   render() {
