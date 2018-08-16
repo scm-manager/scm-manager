@@ -8,6 +8,7 @@ import GeneralSettings from "./GeneralSettings";
 import BaseUrlSettings from "./BaseUrlSettings";
 import AdminSettings from "./AdminSettings";
 import Notification from "../../../components/Notification";
+import LoginAttempt from "./LoginAttempt";
 
 type Props = {
   submitForm: Config => void,
@@ -19,7 +20,8 @@ type Props = {
 
 type State = {
   config: Config,
-  showNotification: boolean
+  showNotification: boolean,
+  loginAttemptError: boolean
 };
 
 class ConfigForm extends React.Component<Props, State> {
@@ -51,7 +53,8 @@ class ConfigForm extends React.Component<Props, State> {
         defaultNamespaceStrategy: "",
         _links: {}
       },
-      showNotification: false
+      showNotification: false,
+      loginAttemptError: true
     };
   }
 
@@ -95,12 +98,19 @@ class ConfigForm extends React.Component<Props, State> {
           disableGroupingGrid={config.disableGroupingGrid}
           dateFormat={config.dateFormat}
           anonymousAccessEnabled={config.anonymousAccessEnabled}
-          loginAttemptLimit={config.loginAttemptLimit}
           skipFailedAuthenticators={config.skipFailedAuthenticators}
           pluginUrl={config.pluginUrl}
-          loginAttemptLimitTimeout={config.loginAttemptLimitTimeout}
           enabledXsrfProtection={config.enabledXsrfProtection}
           defaultNamespaceStrategy={config.defaultNamespaceStrategy}
+          onChange={(isValid, changedValue, name) =>
+            this.onChange(isValid, changedValue, name)
+          }
+          hasUpdatePermission={configUpdatePermission}
+        />
+        <hr />
+        <LoginAttempt
+          loginAttemptLimit={config.loginAttemptLimit}
+          loginAttemptLimitTimeout={config.loginAttemptLimitTimeout}
           onChange={(isValid, changedValue, name) =>
             this.onChange(isValid, changedValue, name)
           }
@@ -139,25 +149,27 @@ class ConfigForm extends React.Component<Props, State> {
         />
         <hr />
         <SubmitButton
-          // disabled={!this.isValid()}
           loading={loading}
           label={t("config-form.submit")}
-          disabled={!configUpdatePermission}
+          disabled={!configUpdatePermission || !this.isValid()}
         />
       </form>
     );
   }
 
+
   onChange = (isValid: boolean, changedValue: any, name: string) => {
-    if (isValid) {
-      this.setState({
-        ...this.state,
-        config: {
-          ...this.state.config,
-          [name]: changedValue
-        }
-      });
-    }
+    this.setState({
+      ...this.state,
+      config: {
+        ...this.state.config,
+        [name]: changedValue
+      }
+    });
+  };
+
+  isValid = () => {
+    return this.state.loginAttemptError;
   };
 
   onClose = () => {

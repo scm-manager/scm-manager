@@ -2,7 +2,6 @@
 import React from "react";
 import { translate } from "react-i18next";
 import { Checkbox, InputField } from "../../../components/forms/index";
-import * as validator from "../../../components/validation";
 
 type Props = {
   realmDescription: string,
@@ -10,10 +9,8 @@ type Props = {
   disableGroupingGrid: boolean,
   dateFormat: string,
   anonymousAccessEnabled: boolean,
-  loginAttemptLimit: number,
   skipFailedAuthenticators: boolean,
   pluginUrl: string,
-  loginAttemptLimitTimeout: number,
   enabledXsrfProtection: boolean,
   defaultNamespaceStrategy: string,
   t: string => string,
@@ -21,23 +18,7 @@ type Props = {
   hasUpdatePermission: boolean
 };
 
-type State = {
-  loginAttemptLimitError: boolean,
-  loginAttemptLimitTimeoutError: boolean
-};
-
-class GeneralSettings extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-
-    this.state = {
-      loginAttemptLimitError: false,
-      loginAttemptLimitTimeoutError: false,
-      baseUrlError: false,
-      pluginUrlError: false
-    };
-  }
-
+class GeneralSettings extends React.Component<Props> {
   render() {
     const {
       t,
@@ -46,10 +27,8 @@ class GeneralSettings extends React.Component<Props, State> {
       disableGroupingGrid,
       dateFormat,
       anonymousAccessEnabled,
-      loginAttemptLimit,
       skipFailedAuthenticators,
       pluginUrl,
-      loginAttemptLimitTimeout,
       enabledXsrfProtection,
       defaultNamespaceStrategy,
       hasUpdatePermission
@@ -61,6 +40,30 @@ class GeneralSettings extends React.Component<Props, State> {
           label={t("general-settings.realm-description")}
           onChange={this.handleRealmDescriptionChange}
           value={realmDescription}
+          disabled={!hasUpdatePermission}
+        />
+        <InputField
+          label={t("general-settings.date-format")}
+          onChange={this.handleDateFormatChange}
+          value={dateFormat}
+          disabled={!hasUpdatePermission}
+        />
+        <InputField
+          label={t("general-settings.plugin-url")}
+          onChange={this.handlePluginUrlChange}
+          value={pluginUrl}
+          disabled={!hasUpdatePermission}
+        />
+        <InputField
+          label={t("general-settings.default-namespace-strategy")}
+          onChange={this.handleDefaultNamespaceStrategyChange}
+          value={defaultNamespaceStrategy}
+          disabled={!hasUpdatePermission}
+        />
+        <Checkbox
+          checked={enabledXsrfProtection}
+          label={t("general-settings.enabled-xsrf-protection")}
+          onChange={this.handleEnabledXsrfProtectionChange}
           disabled={!hasUpdatePermission}
         />
         <Checkbox
@@ -75,56 +78,16 @@ class GeneralSettings extends React.Component<Props, State> {
           onChange={this.handleDisableGroupingGridChange}
           disabled={!hasUpdatePermission}
         />
-        <InputField
-          label={t("general-settings.date-format")}
-          onChange={this.handleDateFormatChange}
-          value={dateFormat}
-          disabled={!hasUpdatePermission}
-        />
         <Checkbox
           checked={anonymousAccessEnabled}
           label={t("general-settings.anonymous-access-enabled")}
           onChange={this.handleAnonymousAccessEnabledChange}
           disabled={!hasUpdatePermission}
         />
-        <InputField
-          label={t("general-settings.login-attempt-limit")}
-          onChange={this.handleLoginAttemptLimitChange}
-          value={loginAttemptLimit}
-          disabled={!hasUpdatePermission}
-          validationError={this.state.loginAttemptLimitError}
-          errorMessage={t("validation.login-attempt-limit-invalid")}
-        />
-        <InputField
-          label={t("general-settings.login-attempt-limit-timeout")}
-          onChange={this.handleLoginAttemptLimitTimeoutChange}
-          value={loginAttemptLimitTimeout}
-          disabled={!hasUpdatePermission}
-          validationError={this.state.loginAttemptLimitTimeoutError}
-          errorMessage={t("validation.login-attempt-limit-timeout-invalid")}
-        />
         <Checkbox
           checked={skipFailedAuthenticators}
           label={t("general-settings.skip-failed-authenticators")}
           onChange={this.handleSkipFailedAuthenticatorsChange}
-          disabled={!hasUpdatePermission}
-        />
-        <InputField
-          label={t("general-settings.plugin-url")}
-          onChange={this.handlePluginUrlChange}
-          value={pluginUrl}
-          disabled={!hasUpdatePermission}
-        />
-        <Checkbox
-          checked={enabledXsrfProtection}
-          label={t("general-settings.enabled-xsrf-protection")}
-          onChange={this.handleEnabledXsrfProtectionChange}
-          disabled={!hasUpdatePermission}
-        />
-        <InputField
-          label={t("general-settings.default-namespace-strategy")}
-          onChange={this.handleDefaultNamespaceStrategyChange}
-          value={defaultNamespaceStrategy}
           disabled={!hasUpdatePermission}
         />
       </div>
@@ -146,26 +109,14 @@ class GeneralSettings extends React.Component<Props, State> {
   handleAnonymousAccessEnabledChange = (value: string) => {
     this.props.onChange(true, value, "anonymousAccessEnabled");
   };
-  handleLoginAttemptLimitChange = (value: string) => {
-    this.setState({
-      ...this.state,
-      loginAttemptLimitError: !validator.isNumberValid(value)
-    });
-    this.props.onChange(true, value, "loginAttemptLimit");
-  };
+
   handleSkipFailedAuthenticatorsChange = (value: string) => {
     this.props.onChange(true, value, "skipFailedAuthenticators");
   };
   handlePluginUrlChange = (value: string) => {
     this.props.onChange(true, value, "pluginUrl");
   };
-  handleLoginAttemptLimitTimeoutChange = (value: string) => {
-    this.setState({
-      ...this.state,
-      loginAttemptLimitTimeoutError: !validator.isNumberValid(value)
-    });
-    this.props.onChange(true, value, "loginAttemptLimitTimeout");
-  };
+
   handleEnabledXsrfProtectionChange = (value: boolean) => {
     this.props.onChange(true, value, "enabledXsrfProtection");
   };

@@ -43,16 +43,19 @@
     "add-user-textfield": "Add user you want to add to admin users here",
     "add-user-button": "Add Admin User"
   },
+  "login-attempt": {
+    "name": "Login Attempt",
+    "login-attempt-limit": "Login Attempt Limit",
+    "login-attempt-limit-timeout": "Login Attempt Limit Timeout"
+  },
   "general-settings": {
     "realm-description": "Realm Description",
     "enable-repository-archive": "Enable Repository Archive",
     "disable-grouping-grid": "Disable Grouping Grid",
     "date-format": "Date Format",
     "anonymous-access-enabled": "Anonymous Access Enabled",
-    "login-attempt-limit": "Login Attempt Limit",
     "skip-failed-authenticators": "Skip Failed Authenticators",
     "plugin-url": "Plugin URL",
-    "login-attempt-limit-timeout": "Login Attempt Limit Timeout",
     "enabled-xsrf-protection": "Enabled XSRF Protection",
     "default-namespace-strategy": "Default Namespace Strategy"
   },
