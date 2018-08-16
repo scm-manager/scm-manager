@@ -99,6 +99,16 @@
       <artifactId>jackson-datatype-jsr310</artifactId>
       <version>${jackson.version}</version>
     </dependency>
+    <dependency>
+      <groupId>javax</groupId>
+      <artifactId>javaee-api</artifactId>
+      <version>7.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.hibernate.validator</groupId>
+      <artifactId>hibernate-validator</artifactId>
+      <version>6.0.12.Final</version>
+    </dependency>
 
     <!-- rest api -->
 
@@ -131,7 +141,11 @@
       <groupId>org.jboss.resteasy</groupId>
       <artifactId>resteasy-servlet-initializer</artifactId>
     </dependency>
-
+    <dependency>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>resteasy-validator-provider-11</artifactId>
+      <version>${resteasy.version}</version>
+    </dependency>
     <!-- injection -->
 
     <dependency>

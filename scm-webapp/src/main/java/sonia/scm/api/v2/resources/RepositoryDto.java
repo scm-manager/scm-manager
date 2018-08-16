@@ -6,6 +6,7 @@ import de.otto.edison.hal.Links;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.Pattern;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ public class RepositoryDto extends HalRepresentation {
   @JsonInclude(JsonInclude.Include.NON_NULL)
   private Instant lastModified;
   private String namespace;
+  @Pattern(regexp = "[\\w-]+", message = "The name must be a valid identifyer")
   private String name;
   private boolean archived = false;
   private String type;

@@ -1,13 +1,24 @@
 package sonia.scm.api.v2.resources;
 
-import com.webcohesion.enunciate.metadata.rs.*;
+import com.webcohesion.enunciate.metadata.rs.ResponseCode;
+import com.webcohesion.enunciate.metadata.rs.ResponseHeader;
+import com.webcohesion.enunciate.metadata.rs.ResponseHeaders;
+import com.webcohesion.enunciate.metadata.rs.StatusCodes;
+import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
-import javax.ws.rs.*;
+import javax.validation.Valid;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 public class RepositoryCollectionResource {
@@ -76,7 +87,7 @@ public class RepositoryCollectionResource {
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
   @ResponseHeaders(@ResponseHeader(name = "Location", description = "uri to the created repository"))
-  public Response create(RepositoryDto repositoryDto) throws RepositoryException {
+  public Response create(@Valid RepositoryDto repositoryDto) throws RepositoryException {
     return adapter.create(repositoryDto,
       () -> dtoToRepositoryMapper.map(repositoryDto, null),
       repository -> resourceLinks.repository().self(repository.getNamespace(), repository.getName()));
