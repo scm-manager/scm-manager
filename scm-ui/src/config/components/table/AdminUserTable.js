@@ -2,7 +2,6 @@
 import React from "react";
 import { translate } from "react-i18next";
 import RemoveAdminUserButton from "../buttons/RemoveAdminUserButton";
-import { InputField } from "../../../components/forms";
 
 type Props = {
   adminUsers: string[],

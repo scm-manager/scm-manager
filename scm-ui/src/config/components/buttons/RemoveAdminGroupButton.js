@@ -3,7 +3,6 @@ import React from "react";
 import { DeleteButton } from "../../../components/buttons";
 import { translate } from "react-i18next";
 import classNames from "classnames";
-import {InputField} from "../../../components/forms";
 
 type Props = {
   t: string => string,
@@ -14,11 +13,9 @@ type Props = {
 
 type State = {};
 
-
-
 class RemoveAdminGroupButton extends React.Component<Props, State> {
   render() {
-    const { t , groupname, removeGroup, disabled} = this.props;
+    const { t, groupname, removeGroup, disabled } = this.props;
     return (
       <div className={classNames("is-pulled-right")}>
         <DeleteButton

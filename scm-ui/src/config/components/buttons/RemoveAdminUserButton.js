@@ -3,7 +3,6 @@ import React from "react";
 import { DeleteButton } from "../../../components/buttons";
 import { translate } from "react-i18next";
 import classNames from "classnames";
-import { InputField } from "../../../components/forms";
 
 type Props = {
   t: string => string,
