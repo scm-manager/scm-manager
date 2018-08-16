@@ -10,13 +10,20 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.repository.FileObject;
+import sonia.scm.repository.NamespaceAndName;
+import sonia.scm.repository.SubRepository;
 
-import static org.junit.Assert.assertEquals;
+import java.net.URI;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.MockitoAnnotations.initMocks;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class FileObjectMapperTest {
+
+  private final URI baseUri = URI.create("http://example.com/base/");
+  @SuppressWarnings("unused") // Is injected
+  private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
 
   @InjectMocks
   private FileObjectMapperImpl mapper;
@@ -24,10 +31,11 @@ public class FileObjectMapperTest {
   private final Subject subject = mock(Subject.class);
   private final ThreadState subjectThreadState = new SubjectThreadState(subject);
 
+  private URI expectedBaseUri;
 
   @Before
   public void init() {
-    initMocks(this);
+    expectedBaseUri = baseUri.resolve(RepositoryRootResource.REPOSITORIES_PATH_V2 + "/");
     subjectThreadState.bind();
     ThreadContext.bind(subject);
   }
@@ -36,11 +44,26 @@ public class FileObjectMapperTest {
   @Test
   public void shouldMapAttributesCorrectly() {
     FileObject fileObject = createFileObject();
-    FileObjectDto dto = mapper.map(fileObject);
+    FileObjectDto dto = mapper.map(fileObject, new NamespaceAndName("namespace", "name"), "revision");
 
     assertEqualAttributes(fileObject, dto);
   }
 
+  @Test
+  public void shouldHaveCorrectSelfLink() {
+    FileObject fileObject = createFileObject();
+    FileObjectDto dto = mapper.map(fileObject, new NamespaceAndName("namespace", "name"), "revision");
+
+    assertThat(dto.getLinks().getLinkBy("self").get().getHref()).isEqualTo(expectedBaseUri.resolve("namespace/name/sources/revision/foo").toString());
+  }
+
+  @Test
+  public void shouldHaveCorrectContentLink() {
+    FileObject fileObject = createFileObject();
+    FileObjectDto dto = mapper.map(fileObject, new NamespaceAndName("namespace", "name"), "revision");
+
+    assertThat(dto.getLinks().getLinkBy("content").get().getHref()).isEqualTo(expectedBaseUri.resolve("namespace/name/content/revision/foo").toString());
+  }
 
   private FileObject createFileObject() {
     FileObject fileObject = new FileObject();
@@ -50,16 +73,18 @@ public class FileObjectMapperTest {
     fileObject.setDirectory(false);
     fileObject.setLength(100);
     fileObject.setLastModified(123L);
+
+    fileObject.setSubRepository(new SubRepository("repo.url"));
     return fileObject;
   }
 
-  //TODO: subrepo
   private void assertEqualAttributes(FileObject fileObject, FileObjectDto dto) {
-    assertEquals(fileObject.getName(), dto.getName());
-    assertEquals(fileObject.getDescription(), dto.getDescription());
-    assertEquals(fileObject.getPath(), dto.getPath());
-    assertEquals(fileObject.isDirectory(), dto.isDirectory());
-    assertEquals(fileObject.getLength(), dto.getLength());
-    assertEquals((long)fileObject.getLastModified(), dto.getLastModified().toEpochMilli());
+    assertThat(dto.getName()).isEqualTo(fileObject.getName());
+    assertThat(dto.getDescription()).isEqualTo(fileObject.getDescription());
+    assertThat(dto.getPath()).isEqualTo(fileObject.getPath());
+    assertThat(dto.isDirectory()).isEqualTo(fileObject.isDirectory());
+    assertThat(dto.getLength()).isEqualTo(fileObject.getLength());
+    assertThat(dto.getLastModified().toEpochMilli()).isEqualTo((long) fileObject.getLastModified());
+    assertThat(dto.getSubRepository().getBrowserUrl()).isEqualTo(fileObject.getSubRepository().getBrowserUrl());
   }
 }

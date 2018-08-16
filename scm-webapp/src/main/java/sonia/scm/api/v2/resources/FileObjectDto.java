@@ -17,8 +17,8 @@ public class FileObjectDto extends HalRepresentation {
   private boolean directory;
   private String description;
   private int length;
-  // TODO: What about subrepos?
   private Instant lastModified;
+  private SubRepositoryDto subRepository;
 
   @Override
   @SuppressWarnings("squid:S1185") // We want to have this method available in this package

@@ -305,6 +305,10 @@ class ResourceLinks {
     public String sourceWithPath(String namespace, String name, String revision, String path) {
       return sourceLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("sources").parameters().method("get").parameters(revision, path).href();
     }
+
+    public String content(String namespace, String name, String revision, String path) {
+      return sourceLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("content").parameters().method("get").parameters(revision, path).href();
+    }
   }
 
   public PermissionCollectionLinks permissionCollection() {
