@@ -7,7 +7,8 @@ import {
   isFetchConfigPending,
   getConfig,
   modifyConfig,
-  isModifyConfigPending
+  isModifyConfigPending,
+  getConfigUpdatePermission
 } from "../modules/config";
 import connect from "react-redux/es/connect/connect";
 import ErrorPage from "../../components/ErrorPage";
@@ -21,6 +22,7 @@ type Props = {
   loading: boolean,
   error: Error,
   config: Config,
+  configUpdatePermission: boolean,
   // dispatch functions
   modifyConfig: (config: User, callback?: () => void) => void,
   // context objects
@@ -31,6 +33,7 @@ type Props = {
 
 class GlobalConfig extends React.Component<Props> {
   configModified = (config: Config) => () => {
+    this.props.fetchConfig();
     this.props.history.push(`/config`);
   };
 
@@ -39,11 +42,12 @@ class GlobalConfig extends React.Component<Props> {
   }
 
   modifyConfig = (config: Config) => {
+    console.log(config);
     this.props.modifyConfig(config, this.configModified(config));
   };
 
   render() {
-    const { t, error, loading, config } = this.props;
+    const { t, error, loading, config, configUpdatePermission } = this.props;
 
     if (error) {
       return (
@@ -51,6 +55,7 @@ class GlobalConfig extends React.Component<Props> {
           title={t("global-config.error-title")}
           subtitle={t("global-config.error-subtitle")}
           error={error}
+          configUpdatePermission={configUpdatePermission}
         />
       );
     }
@@ -86,11 +91,13 @@ const mapStateToProps = state => {
   const loading = isFetchConfigPending(state) || isModifyConfigPending(state); //TODO: Button lädt so nicht, sondern gesamte Seite
   const error = getFetchConfigFailure(state);
   const config = getConfig(state);
+  const configUpdatePermission = getConfigUpdatePermission(state);
 
   return {
     loading,
     error,
-    config
+    config,
+    configUpdatePermission
   };
 };
 

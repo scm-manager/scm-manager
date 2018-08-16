@@ -6,12 +6,14 @@ import type { Config } from "../../types/Config";
 import ProxySettings from "./ProxySettings";
 import GeneralSettings from "./GeneralSettings";
 import BaseUrlSettings from "./BaseUrlSettings";
+import AdminSettings from "./AdminSettings";
 
 type Props = {
   submitForm: Config => void,
   config?: Config,
   loading?: boolean,
-  t: string => string
+  t: string => string,
+  configUpdatePermission: boolean
 };
 
 type State = {
@@ -85,6 +87,7 @@ class ConfigForm extends React.Component<Props, State> {
             this.onChange(isValid, changedValue, name)
           }
         />
+        <hr />
         <BaseUrlSettings
           baseUrl={config.baseUrl}
           forceBaseUrl={config.forceBaseUrl}
@@ -92,6 +95,15 @@ class ConfigForm extends React.Component<Props, State> {
             this.onChange(isValid, changedValue, name)
           }
         />
+        <hr />
+        <AdminSettings
+          adminGroups={config.adminGroups}
+          adminUsers={config.adminUsers}
+          onChange={(isValid, changedValue, name) =>
+            this.onChange(isValid, changedValue, name)
+          }
+        />
+        <hr />
         <ProxySettings
           proxyPassword={config.proxyPassword ? config.proxyPassword : ""}
           proxyPort={config.proxyPort}
@@ -102,6 +114,7 @@ class ConfigForm extends React.Component<Props, State> {
             this.onChange(isValid, changedValue, name)
           }
         />
+        <hr />
         <SubmitButton
           // disabled={!this.isValid()}
           loading={loading}
