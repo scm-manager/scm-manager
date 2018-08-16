@@ -66,9 +66,8 @@ class ConfigForm extends React.Component<Props, State> {
   };
 
   render() {
-    const { loading, t } = this.props;
+    const { loading, t, configUpdatePermission } = this.props;
     let config = this.state.config;
-
     return (
       <form onSubmit={this.submit}>
         <GeneralSettings
@@ -86,6 +85,7 @@ class ConfigForm extends React.Component<Props, State> {
           onChange={(isValid, changedValue, name) =>
             this.onChange(isValid, changedValue, name)
           }
+          hasUpdatePermission={configUpdatePermission}
         />
         <hr />
         <BaseUrlSettings
@@ -94,6 +94,7 @@ class ConfigForm extends React.Component<Props, State> {
           onChange={(isValid, changedValue, name) =>
             this.onChange(isValid, changedValue, name)
           }
+          hasUpdatePermission={configUpdatePermission}
         />
         <hr />
         <AdminSettings
@@ -102,6 +103,7 @@ class ConfigForm extends React.Component<Props, State> {
           onChange={(isValid, changedValue, name) =>
             this.onChange(isValid, changedValue, name)
           }
+          hasUpdatePermission={configUpdatePermission}
         />
         <hr />
         <ProxySettings
@@ -114,12 +116,14 @@ class ConfigForm extends React.Component<Props, State> {
           onChange={(isValid, changedValue, name) =>
             this.onChange(isValid, changedValue, name)
           }
+          hasUpdatePermission={configUpdatePermission}
         />
         <hr />
         <SubmitButton
           // disabled={!this.isValid()}
           loading={loading}
           label={t("config-form.submit")}
+          disabled={!configUpdatePermission}
         />
       </form>
     );

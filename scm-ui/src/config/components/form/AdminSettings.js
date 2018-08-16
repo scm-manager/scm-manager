@@ -11,12 +11,13 @@ type Props = {
   adminGroups: string[],
   adminUsers: string[],
   t: string => string,
-  onChange: (boolean, any, string) => void
+  onChange: (boolean, any, string) => void,
+  hasUpdatePermission: boolean
 };
 
 class AdminSettings extends React.Component<Props> {
   render() {
-    const { t, adminGroups, adminUsers } = this.props;
+    const { t, adminGroups, adminUsers, hasUpdatePermission } = this.props;
 
     return (
       <div>
@@ -26,15 +27,19 @@ class AdminSettings extends React.Component<Props> {
           onChange={(isValid, changedValue, name) =>
             this.props.onChange(isValid, changedValue, name)
           }
+          disabled={!hasUpdatePermission}
         />
-        <AddAdminGroupField addGroup={this.addGroup} />
+        <AddAdminGroupField addGroup={this.addGroup} disabled={!hasUpdatePermission}
+        />
         <AdminUserTable
           adminUsers={adminUsers}
           onChange={(isValid, changedValue, name) =>
             this.props.onChange(isValid, changedValue, name)
           }
+          disabled={!hasUpdatePermission}
         />
-        <AddAdminUserField addUser={this.addUser} />
+        <AddAdminUserField addUser={this.addUser} disabled={!hasUpdatePermission}
+        />
       </div>
     );
   }

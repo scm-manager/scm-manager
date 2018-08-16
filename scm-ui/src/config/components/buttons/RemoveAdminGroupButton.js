@@ -3,11 +3,13 @@ import React from "react";
 import { DeleteButton } from "../../../components/buttons";
 import { translate } from "react-i18next";
 import classNames from "classnames";
+import {InputField} from "../../../components/forms";
 
 type Props = {
   t: string => string,
   groupname: string,
-  removeGroup: string => void
+  removeGroup: string => void,
+  disabled: boolean
 };
 
 type State = {};
@@ -16,7 +18,7 @@ type State = {};
 
 class RemoveAdminGroupButton extends React.Component<Props, State> {
   render() {
-    const { t , groupname, removeGroup} = this.props;
+    const { t , groupname, removeGroup, disabled} = this.props;
     return (
       <div className={classNames("is-pulled-right")}>
         <DeleteButton
@@ -25,6 +27,7 @@ class RemoveAdminGroupButton extends React.Component<Props, State> {
             event.preventDefault();
             removeGroup(groupname);
           }}
+          disabled={disabled}
         />
       </div>
     );

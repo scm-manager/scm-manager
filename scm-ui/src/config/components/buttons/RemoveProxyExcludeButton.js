@@ -8,7 +8,7 @@ type Props = {
   t: string => string,
   proxyExcludeName: string,
   removeProxyExclude: string => void,
-  disable: boolean
+  disabled: boolean
 };
 
 type State = {};
@@ -26,7 +26,7 @@ class RemoveProxyExcludeButton extends React.Component<Props, State> {
             event.preventDefault();
             removeProxyExclude(proxyExcludeName);
           }}
-          disabled={this.props.disable}
+          disabled={this.props.disabled}
         />
       </div>
     );

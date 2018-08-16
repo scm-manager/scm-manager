@@ -14,7 +14,8 @@ type Props = {
   enableProxy: boolean,
   proxyExcludes: string[], //TODO: einbauen!
   t: string => string,
-  onChange: (boolean, any, string) => void
+  onChange: (boolean, any, string) => void,
+  hasUpdatePermission: boolean
 };
 
 class ProxySettings extends React.Component<Props> {
@@ -26,7 +27,8 @@ class ProxySettings extends React.Component<Props> {
       proxyServer,
       proxyUser,
       enableProxy,
-      proxyExcludes
+      proxyExcludes,
+      hasUpdatePermission
     } = this.props;
 
     return (
@@ -36,39 +38,43 @@ class ProxySettings extends React.Component<Props> {
           checked={enableProxy}
           label={t("proxy-settings.enable-proxy")}
           onChange={this.handleEnableProxyChange}
+          disabled={!hasUpdatePermission}
         />
         <InputField
           label={t("proxy-settings.proxy-password")}
           onChange={this.handleProxyPasswordChange}
           value={proxyPassword}
-          disable={!enableProxy}
+          disabled={!enableProxy || !hasUpdatePermission}
         />
         <InputField
           label={t("proxy-settings.proxy-port")}
           value={proxyPort}
           onChange={this.handleProxyPortChange}
-          disable={!enableProxy}
+          disabled={!enableProxy || !hasUpdatePermission}
         />
         <InputField
           label={t("proxy-settings.proxy-server")}
           value={proxyServer}
           onChange={this.handleProxyServerChange}
-          disable={!enableProxy}
+          disabled={!enableProxy || !hasUpdatePermission}
         />
         <InputField
           label={t("proxy-settings.proxy-user")}
           value={proxyUser}
           onChange={this.handleProxyUserChange}
-          disable={!enableProxy}
+          disabled={!enableProxy || !hasUpdatePermission}
         />
         <ProxyExcludesTable
           proxyExcludes={proxyExcludes}
           onChange={(isValid, changedValue, name) =>
             this.props.onChange(isValid, changedValue, name)
           }
-          disable={!enableProxy}
+          disabled={!enableProxy || !hasUpdatePermission}
         />
-        <AddProxyExcludeField addProxyExclude={this.addProxyExclude} disable={!enableProxy}/>
+        <AddProxyExcludeField
+          addProxyExclude={this.addProxyExclude}
+          disabled={!enableProxy || !hasUpdatePermission}
+        />
       </div>
     );
   }

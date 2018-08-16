@@ -16,7 +16,8 @@ type Props = {
   enabledXsrfProtection: boolean,
   defaultNamespaceStrategy: string,
   t: string => string,
-  onChange: (boolean, any, string) => void
+  onChange: (boolean, any, string) => void,
+  hasUpdatePermission: boolean
 };
 
 class GeneralSettings extends React.Component<Props> {
@@ -33,7 +34,8 @@ class GeneralSettings extends React.Component<Props> {
       pluginUrl,
       loginAttemptLimitTimeout,
       enabledXsrfProtection,
-      defaultNamespaceStrategy
+      defaultNamespaceStrategy,
+      hasUpdatePermission
     } = this.props;
 
     return (
@@ -42,56 +44,67 @@ class GeneralSettings extends React.Component<Props> {
           label={t("general-settings.realm-description")}
           onChange={this.handleRealmDescriptionChange}
           value={realmDescription}
+          disabled={!hasUpdatePermission}
         />
         <Checkbox
           checked={enableRepositoryArchive}
           label={t("general-settings.enable-repository-archive")}
           onChange={this.handleEnableRepositoryArchiveChange}
+          disabled={!hasUpdatePermission}
         />
         <Checkbox
           checked={disableGroupingGrid}
           label={t("general-settings.disable-grouping-grid")}
           onChange={this.handleDisableGroupingGridChange}
+          disabled={!hasUpdatePermission}
         />
         <InputField
           label={t("general-settings.date-format")}
           onChange={this.handleDateFormatChange}
           value={dateFormat}
+          disabled={!hasUpdatePermission}
         />
         <Checkbox
           checked={anonymousAccessEnabled}
           label={t("general-settings.anonymous-access-enabled")}
           onChange={this.handleAnonymousAccessEnabledChange}
+          disabled={!hasUpdatePermission}
         />
         <InputField
           label={t("general-settings.login-attempt-limit")}
           onChange={this.handleLoginAttemptLimitChange}
           value={loginAttemptLimit}
+          disabled={!hasUpdatePermission}
         />
         <InputField
           label={t("general-settings.login-attempt-limit-timeout")}
           onChange={this.handleLoginAttemptLimitTimeoutChange}
           value={loginAttemptLimitTimeout}
+          disabled={!hasUpdatePermission}
         />
         <Checkbox
           checked={skipFailedAuthenticators}
           label={t("general-settings.skip-failed-authenticators")}
           onChange={this.handleSkipFailedAuthenticatorsChange}
+          disabled={!hasUpdatePermission}
         />
         <InputField
           label={t("general-settings.plugin-url")}
           onChange={this.handlePluginUrlChange}
           value={pluginUrl}
+          disabled={!hasUpdatePermission}
         />
         <Checkbox
           checked={enabledXsrfProtection}
           label={t("general-settings.enabled-xsrf-protection")}
           onChange={this.handleEnabledXsrfProtectionChange}
+          disabled={!hasUpdatePermission}
         />
         <InputField
           label={t("general-settings.default-namespace-strategy")}
           onChange={this.handleDefaultNamespaceStrategyChange}
           value={defaultNamespaceStrategy}
+          disabled={!hasUpdatePermission}
         />
       </div>
     );

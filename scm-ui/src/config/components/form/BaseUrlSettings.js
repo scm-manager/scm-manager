@@ -8,12 +8,13 @@ type Props = {
   baseUrl: string,
   forceBaseUrl: boolean,
   t: string => string,
-  onChange: (boolean, any, string) => void
+  onChange: (boolean, any, string) => void,
+  hasUpdatePermission: boolean
 };
 
 class BaseUrlSettings extends React.Component<Props> {
   render() {
-    const { t, baseUrl, forceBaseUrl } = this.props;
+    const { t, baseUrl, forceBaseUrl, hasUpdatePermission } = this.props;
 
     return (
       <div>
@@ -22,11 +23,13 @@ class BaseUrlSettings extends React.Component<Props> {
           checked={forceBaseUrl}
           label={t("base-url-settings.force-base-url")}
           onChange={this.handleForceBaseUrlChange}
+          disabled={!hasUpdatePermission}
         />
         <InputField
           label={t("base-url-settings.base-url")}
           onChange={this.handleBaseUrlChange}
           value={baseUrl}
+          disabled={!hasUpdatePermission}
         />
       </div>
     );

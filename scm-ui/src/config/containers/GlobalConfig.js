@@ -71,6 +71,7 @@ class GlobalConfig extends React.Component<Props> {
           submitForm={config => this.modifyConfig(config)}
           config={config}
           loading={loading}
+          configUpdatePermission={configUpdatePermission}
         />
       </div>
     );

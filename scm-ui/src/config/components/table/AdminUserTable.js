@@ -2,18 +2,20 @@
 import React from "react";
 import { translate } from "react-i18next";
 import RemoveAdminUserButton from "../buttons/RemoveAdminUserButton";
+import { InputField } from "../../../components/forms";
 
 type Props = {
   adminUsers: string[],
   t: string => string,
-  onChange: (boolean, any, string) => void
+  onChange: (boolean, any, string) => void,
+  disabled: boolean
 };
 
 type State = {};
 
 class AdminUserTable extends React.Component<Props, State> {
   render() {
-    const { t } = this.props;
+    const { t, disabled } = this.props;
     return (
       <div>
         <label className="label">{t("admin-settings.admin-users")}</label>
@@ -27,6 +29,7 @@ class AdminUserTable extends React.Component<Props, State> {
                     <RemoveAdminUserButton
                       username={user}
                       removeUser={this.removeUser}
+                      disabled={disabled}
                     />
                   </td>
                 </tr>

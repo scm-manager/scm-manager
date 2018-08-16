@@ -7,11 +7,12 @@ import InputField from "../../../components/forms/InputField";
 
 type Props = {
   t: string => string,
-  addUser: string => void
+  addUser: string => void,
+  disabled: boolean
 };
 
 type State = {
-  userToAdd: string,
+  userToAdd: string
   //validationError: boolean
 };
 
@@ -19,27 +20,28 @@ class AddAdminUserField extends React.Component<Props, State> {
   constructor(props) {
     super(props);
     this.state = {
-      userToAdd: "",
+      userToAdd: ""
       //validationError: false
     };
   }
 
   render() {
-    const { t } = this.props;
+    const { t, disabled } = this.props;
     return (
       <div className="field">
         <InputField
-
           label={t("admin-settings.add-user-textfield")}
           errorMessage={t("admin-settings.add-user-error")}
           onChange={this.handleAddUserChange}
           validationError={false}
           value={this.state.userToAdd}
           onReturnPressed={this.appendUser}
+          disabled={disabled}
         />
         <AddButton
           label={t("admin-settings.add-user-button")}
           action={this.addButtonClicked}
+          disabled={disabled}
           //disabled={!isMemberNameValid(this.state.memberToAdd)}
         />
       </div>
@@ -62,7 +64,7 @@ class AddAdminUserField extends React.Component<Props, State> {
   handleAddUserChange = (username: string) => {
     this.setState({
       ...this.state,
-      userToAdd: username,
+      userToAdd: username
       //validationError: membername.length > 0 && !isMemberNameValid(membername)
     });
   };

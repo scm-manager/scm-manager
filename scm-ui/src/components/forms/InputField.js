@@ -12,7 +12,7 @@ type Props = {
   onReturnPressed?: () => void,
   validationError: boolean,
   errorMessage: string,
-  disable?: boolean
+  disabled?: boolean
 };
 
 class InputField extends React.Component<Props> {
@@ -60,7 +60,7 @@ class InputField extends React.Component<Props> {
       value,
       validationError,
       errorMessage,
-      disable
+      disabled
     } = this.props;
     const errorView = validationError ? "is-danger" : "";
     const helper = validationError ? (
@@ -82,7 +82,7 @@ class InputField extends React.Component<Props> {
             value={value}
             onChange={this.handleInput}
             onKeyPress={this.handleKeyPress}
-            disabled={disable}
+            disabled={disabled}
           />
         </div>
         {helper}

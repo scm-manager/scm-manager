@@ -7,7 +7,8 @@ import InputField from "../../../components/forms/InputField";
 
 type Props = {
   t: string => string,
-  addGroup: string => void
+  addGroup: string => void,
+  disabled: boolean
 };
 
 type State = {
@@ -25,7 +26,7 @@ class AddAdminGroupField extends React.Component<Props, State> {
   }
 
   render() {
-    const { t } = this.props;
+    const { t, disabled } = this.props;
     return (
       <div className="field">
         <InputField
@@ -36,10 +37,12 @@ class AddAdminGroupField extends React.Component<Props, State> {
           validationError={false}
           value={this.state.groupToAdd}
           onReturnPressed={this.appendGroup}
+          disabled={disabled}
         />
         <AddButton
           label={t("admin-settings.add-group-button")}
           action={this.addButtonClicked}
+          disabled={disabled}
           //disabled={!isMemberNameValid(this.state.memberToAdd)}
         />
       </div>

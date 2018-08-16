@@ -2,17 +2,17 @@
 import React from "react";
 
 import { translate } from "react-i18next";
-import {AddButton} from "../../../components/buttons";
+import { AddButton } from "../../../components/buttons";
 import InputField from "../../../components/forms/InputField";
 
 type Props = {
   t: string => string,
   addProxyExclude: string => void,
-  disable: boolean
+  disabled: boolean
 };
 
 type State = {
-  proxyExcludeToAdd: string,
+  proxyExcludeToAdd: string
   //validationError: boolean
 };
 
@@ -20,7 +20,7 @@ class AddProxyExcludeField extends React.Component<Props, State> {
   constructor(props) {
     super(props);
     this.state = {
-      proxyExcludeToAdd: "",
+      proxyExcludeToAdd: ""
       //validationError: false
     };
   }
@@ -30,19 +30,18 @@ class AddProxyExcludeField extends React.Component<Props, State> {
     return (
       <div className="field">
         <InputField
-
           label={t("proxy-settings.add-proxy-exclude-textfield")}
           errorMessage={t("proxy-settings.add-proxy-exclude-error")}
           onChange={this.handleAddProxyExcludeChange}
           validationError={false}
           value={this.state.proxyExcludeToAdd}
           onReturnPressed={this.appendProxyExclude}
-          disable={this.props.disable}
+          disabled={this.props.disabled}
         />
         <AddButton
           label={t("proxy-settings.add-proxy-exclude-button")}
           action={this.addButtonClicked}
-          disabled={this.props.disable}
+          disabled={this.props.disabled}
           //disabled={!isMemberNameValid(this.state.memberToAdd)}
         />
       </div>
@@ -65,7 +64,7 @@ class AddProxyExcludeField extends React.Component<Props, State> {
   handleAddProxyExcludeChange = (username: string) => {
     this.setState({
       ...this.state,
-      proxyExcludeToAdd: username,
+      proxyExcludeToAdd: username
       //validationError: membername.length > 0 && !isMemberNameValid(membername)
     });
   };

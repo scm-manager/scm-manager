@@ -6,14 +6,15 @@ import RemoveAdminGroupButton from "../buttons/RemoveAdminGroupButton";
 type Props = {
   adminGroups: string[],
   t: string => string,
-  onChange: (boolean, any, string) => void
+  onChange: (boolean, any, string) => void,
+  disabled: boolean
 };
 
 type State = {};
 
 class AdminGroupTable extends React.Component<Props, State> {
   render() {
-    const { t } = this.props;
+    const { t, disabled } = this.props;
     return (
       <div>
         <label className="label">{t("admin-settings.admin-groups")}</label>
@@ -27,6 +28,7 @@ class AdminGroupTable extends React.Component<Props, State> {
                     <RemoveAdminGroupButton
                       groupname={group}
                       removeGroup={this.removeGroup}
+                      disabled={disabled}
                     />
                   </td>
                 </tr>
