@@ -33,24 +33,19 @@
 
 package sonia.scm.repository.api;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.spi.CatCommand;
 import sonia.scm.repository.spi.CatCommandRequest;
 import sonia.scm.util.IOUtil;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
@@ -106,23 +101,31 @@ public final class CatCommandBuilder
   }
 
   /**
-   * Passes the content of the given file to the outputstream.
+   * Passes the content of the given file to the output stream.
    *
-   * @param outputStream outputstream for the content
+   * @param outputStream output stream for the content
    * @param path file path
-   *
-   * @return {@code this}
-   *
-   * @throws IOException
-   * @throws RepositoryException
    */
-  public CatCommandBuilder retriveContent(OutputStream outputStream,
-    String path)
-    throws IOException, RepositoryException
-  {
+  public void retriveContent(OutputStream outputStream, String path) throws IOException, RepositoryException {
     getCatResult(outputStream, path);
+  }
 
-    return this;
+  /**
+   * Returns an output stream with the file content.
+   *
+   * @param path file path
+   */
+  public InputStream getStream(String path) throws IOException, RepositoryException {
+    Preconditions.checkArgument(!Strings.isNullOrEmpty(path),
+      "path is required");
+
+    CatCommandRequest requestClone = request.clone();
+
+    requestClone.setPath(path);
+
+    logger.debug("create cat stream for {}", requestClone);
+
+    return catCommand.getCatResultStream(requestClone);
   }
 
   //~--- get methods ----------------------------------------------------------

@@ -67,6 +67,7 @@ public class SourceRootResourceTest {
         null,
         null,
         MockProvider.of(sourceRootResource),
+        null,
         null)),
         null);
 
