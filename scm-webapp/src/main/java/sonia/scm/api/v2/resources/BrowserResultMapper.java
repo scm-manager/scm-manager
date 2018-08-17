@@ -39,7 +39,11 @@ public class BrowserResultMapper {
   }
 
   private void addLinks(BrowserResult browserResult, BrowserResultDto dto, NamespaceAndName namespaceAndName) {
-    dto.add(Links.linkingTo().self(resourceLinks.source().self(namespaceAndName.getNamespace(), namespaceAndName.getName(), browserResult.getRevision())).build());
+    if (browserResult.getRevision() == null) {
+      dto.add(Links.linkingTo().self(resourceLinks.source().selfWithoutRevision(namespaceAndName.getNamespace(), namespaceAndName.getName())).build());
+    } else {
+      dto.add(Links.linkingTo().self(resourceLinks.source().self(namespaceAndName.getNamespace(), namespaceAndName.getName(), browserResult.getRevision())).build());
+    }
   }
 
 

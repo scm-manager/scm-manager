@@ -291,11 +291,11 @@ class ResourceLinks {
     }
 
     String self(String namespace, String name, String revision) {
-      return sourceLinkBuilder.method("getRepositoryResource").parameters(namespace, name, revision).method("sources").parameters().method("getAll").parameters("").href();
+      return sourceLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("sources").parameters().method("getAll").parameters(revision).href();
     }
 
     String selfWithoutRevision(String namespace, String name) {
-      return sourceLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("sources").parameters().method("getAll").parameters("").href();
+      return sourceLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("sources").parameters().method("getAllWithoutRevision").parameters().href();
     }
 
     public String source(String namespace, String name, String revision) {
@@ -303,7 +303,11 @@ class ResourceLinks {
     }
 
     public String sourceWithPath(String namespace, String name, String revision, String path) {
-      return sourceLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("sources").parameters().method("get").parameters(revision, path).href();
+      if (revision == null) {
+        return sourceLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("sources").parameters().method("get").parameters(null, path).href();
+      } else {
+        return sourceLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("sources").parameters().method("get").parameters(revision, path).href();
+      }
     }
 
     public String content(String namespace, String name, String revision, String path) {

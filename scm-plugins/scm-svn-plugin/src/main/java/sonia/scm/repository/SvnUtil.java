@@ -38,10 +38,8 @@ package sonia.scm.repository;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.io.Closeables;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.tmatesoft.svn.core.SVNErrorCode;
 import org.tmatesoft.svn.core.SVNLogEntry;
 import org.tmatesoft.svn.core.SVNLogEntryPath;
@@ -52,20 +50,17 @@ import org.tmatesoft.svn.core.internal.util.SVNXMLUtil;
 import org.tmatesoft.svn.core.io.SVNRepository;
 import org.tmatesoft.svn.core.wc.SVNClientManager;
 import org.tmatesoft.svn.core.wc.admin.SVNChangeEntry;
-
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 
-//~--- JDK imports ------------------------------------------------------------
-
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -366,6 +361,7 @@ public final class SvnUtil
   public static long getRevisionNumber(String revision)
     throws RepositoryException
   {
+    // REVIEW Bei SVN wird ohne Revision die -1 genommen, was zu einem Fehler führt
     long revisionNumber = -1;
 
     if (Util.isNotEmpty(revision))

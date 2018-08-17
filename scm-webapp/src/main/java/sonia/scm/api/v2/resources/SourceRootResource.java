@@ -31,7 +31,14 @@ public class SourceRootResource {
 
   @GET
   @Produces(VndMediaType.SOURCE)
-  @Path("{revision : (\\w+)?}")
+  @Path("")
+  public Response getAllWithoutRevision(@PathParam("namespace") String namespace, @PathParam("name") String name) {
+    return getSource(namespace, name, "/", null);
+  }
+
+  @GET
+  @Produces(VndMediaType.SOURCE)
+  @Path("{revision}")
   public Response getAll(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision) {
     return getSource(namespace, name, "/", revision);
   }
@@ -44,8 +51,6 @@ public class SourceRootResource {
   }
 
   private Response getSource(String namespace, String repoName, String path, String revision) {
-    BrowserResult browserResult;
-    Response response;
     NamespaceAndName namespaceAndName = new NamespaceAndName(namespace, repoName);
     try (RepositoryService repositoryService = serviceFactory.create(namespaceAndName)) {
       BrowseCommandBuilder browseCommand = repositoryService.getBrowseCommand();
@@ -53,19 +58,18 @@ public class SourceRootResource {
       if (revision != null && !revision.isEmpty()) {
         browseCommand.setRevision(revision);
       }
-      browserResult = browseCommand.getBrowserResult();
+      BrowserResult browserResult = browseCommand.getBrowserResult();
 
       if (browserResult != null) {
-        response = Response.ok(browserResultMapper.map(browserResult, namespaceAndName)).build();
+        return Response.ok(browserResultMapper.map(browserResult, namespaceAndName)).build();
       } else {
-        response = Response.status(Response.Status.NOT_FOUND).build();
+        return Response.status(Response.Status.NOT_FOUND).build();
       }
 
     } catch (RepositoryNotFoundException e) {
-      response = Response.status(Response.Status.NOT_FOUND).build();
+      return Response.status(Response.Status.NOT_FOUND).build();
     } catch (RepositoryException | IOException e) {
-      response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+      return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
     }
-    return response;
   }
 }

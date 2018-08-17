@@ -11,6 +11,8 @@ import org.junit.runners.Parameterized;
 import java.io.IOException;
 import java.util.Collection;
 
+import static java.lang.Thread.sleep;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assume.assumeFalse;
 import static sonia.scm.it.RestUtil.given;
@@ -63,5 +65,35 @@ public class RepositoryAccessITCase {
       .path("_embedded.branches[0].name");
 
     assertNotNull(branchName);
+  }
+
+  @Test
+  public void shouldReadContent() throws IOException, InterruptedException {
+    repositoryUtil.createAndCommitFile("a.txt", "a");
+
+    sleep(1000);
+
+    String sourcesUrl = given()
+      .when()
+      .get(TestData.getDefaultRepositoryUrl(repositoryType))
+      .then()
+      .statusCode(HttpStatus.SC_OK)
+      .extract()
+      .path("_links.sources.href");
+
+    String contentUrl = given()
+      .when()
+      .get(sourcesUrl)
+      .then()
+      .statusCode(HttpStatus.SC_OK)
+      .extract()
+      .path("files[0]._links.content.href");
+
+    given()
+      .when()
+      .get(contentUrl)
+      .then()
+      .statusCode(HttpStatus.SC_OK)
+      .body(equalTo("a"));
   }
 }

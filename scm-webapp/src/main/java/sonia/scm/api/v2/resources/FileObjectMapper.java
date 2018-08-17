@@ -25,9 +25,12 @@ public abstract class FileObjectMapper extends BaseMapper<FileObject, FileObject
 
   @AfterMapping
   void addLinks(FileObject fileObject, @MappingTarget FileObjectDto dto, @Context NamespaceAndName namespaceAndName, @Context String revision) {
-      dto.add(Links.linkingTo()
-        .self(resourceLinks.source().sourceWithPath(namespaceAndName.getNamespace(), namespaceAndName.getName(), revision, fileObject.getName()))
-        .single(link("content", resourceLinks.source().content(namespaceAndName.getNamespace(), namespaceAndName.getName(), revision, fileObject.getName())))
-        .build());
+    Links.Builder links = Links.linkingTo()
+      .self(resourceLinks.source().sourceWithPath(namespaceAndName.getNamespace(), namespaceAndName.getName(), revision, fileObject.getPath()));
+    if (!dto.isDirectory()) {
+      links.single(link("content", resourceLinks.source().content(namespaceAndName.getNamespace(), namespaceAndName.getName(), revision, fileObject.getPath())));
+    }
+
+    dto.add(links.build());
   }
 }

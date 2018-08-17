@@ -16,6 +16,7 @@ public class BrowserResultDto extends HalRepresentation implements Iterable<File
   private String revision;
   private String tag;
   private String branch;
+  // REVIEW files nicht embedded?
   private List<FileObjectDto> files;
 
   @Override
@@ -24,6 +25,7 @@ public class BrowserResultDto extends HalRepresentation implements Iterable<File
     return super.add(links);
   }
 
+  // REVIEW return null?
   @Override
   public Iterator<FileObjectDto> iterator() {
     Iterator<FileObjectDto> it = null;
