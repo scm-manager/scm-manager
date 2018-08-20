@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2010, Sebastian Sdorra All rights reserved.
+  Copyright (c) 2014, Sebastian Sdorra All rights reserved.
 
   Redistribution and use in source and binary forms, with or without
   modification, are permitted provided that the following conditions are met:
@@ -28,68 +28,23 @@
  */
 
 
+package sonia.scm.api.v2.resources;
 
-package sonia.scm.api.rest;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-//~--- JDK imports ------------------------------------------------------------
+import org.apache.shiro.authz.AuthorizationException;
+import sonia.scm.api.rest.StatusExceptionMapper;
 
 import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
 
 /**
- *
- * @author Sebastian Sdorra
- * @param <E>
+ * @author mkarray
+ * @since 2.0.0
  */
-public class StatusExceptionMapper<E extends Throwable>
-  implements ExceptionMapper<E>
-{
+@Provider
+public class AuthorizationExceptionMapper extends StatusExceptionMapper<AuthorizationException> {
 
-  /**
-   * the logger for StatusExceptionMapper
-   */
-  private static final Logger logger =
-    LoggerFactory.getLogger(StatusExceptionMapper.class);
-
-  private final Response.Status status;
-  private final Class<E> type;
-
-  /**
-   * Map an Exception to a HTTP Response
-   *
-   * @param type the exception class
-   * @param status the http status to be mapped
-   */
-  public StatusExceptionMapper(Class<E> type, Response.Status status)
-  {
-    this.type = type;
-    this.status = status;
-  }
-
-  /**
-   * provide a http responses from an exception
-   *
-   * @param exception the thrown exception
-   *
-   * @return the http response with the exception presentation
-   */
-  @Override
-  public Response toResponse(E exception)
-  {
-    if (logger.isDebugEnabled())
-    {
-      StringBuilder msg = new StringBuilder();
-
-      msg.append("map ").append(type.getSimpleName()).append("to status code ");
-      msg.append(status.getStatusCode());
-      logger.debug(msg.toString());
-    }
-
-    return Response.status(status).build();
+  public AuthorizationExceptionMapper() {
+    super(AuthorizationException.class, Response.Status.UNAUTHORIZED);
   }
 }
