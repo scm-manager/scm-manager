@@ -5,6 +5,7 @@ import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Links;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Email;
 
 import javax.validation.constraints.Pattern;
 import java.time.Instant;
@@ -14,6 +15,7 @@ import java.util.Map;
 @Getter @Setter
 public class RepositoryDto extends HalRepresentation {
 
+  @Email
   private String contact;
   private Instant creationDate;
   private String description;
@@ -21,7 +23,7 @@ public class RepositoryDto extends HalRepresentation {
   @JsonInclude(JsonInclude.Include.NON_NULL)
   private Instant lastModified;
   private String namespace;
-  @Pattern(regexp = "[\\w-]+", message = "The name must be a valid identifyer")
+  @Pattern(regexp = "[\\w-]+", message = "The name can only contain numbers, letters, underscore and hyphen")
   private String name;
   private boolean archived = false;
   private String type;
