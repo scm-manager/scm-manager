@@ -67,7 +67,7 @@ export function modifyConfig(config: Config, callback?: () => void) {
   return function(dispatch: Dispatch) {
     dispatch(modifyConfigPending(config));
     return apiClient
-      .put(config._links.update.href + "letsfail!", config, CONTENT_TYPE_CONFIG)
+      .put(config._links.update.href, config, CONTENT_TYPE_CONFIG)
       .then(() => {
         dispatch(modifyConfigSuccess(config));
         if (callback) {
