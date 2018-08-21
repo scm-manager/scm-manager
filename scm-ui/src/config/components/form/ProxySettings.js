@@ -65,7 +65,6 @@ class ProxySettings extends React.Component<Props> {
           onChange={this.handleProxyUserChange}
           disabled={!enableProxy || !hasUpdatePermission}
         />
-
         <ProxyExcludesTable
           proxyExcludes={proxyExcludes}
           onChange={(isValid, changedValue, name) =>

@@ -35,7 +35,6 @@ class AdminSettings extends React.Component<Props> {
           fieldLabel={t("admin-settings.add-group-textfield")}
           errorMessage={t("admin-settings.add-group-error")}
         />
-
         <AdminUserTable
           adminUsers={adminUsers}
           onChange={(isValid, changedValue, name) =>
