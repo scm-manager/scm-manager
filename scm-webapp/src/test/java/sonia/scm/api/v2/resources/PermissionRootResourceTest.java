@@ -53,11 +53,9 @@ import static org.mockito.MockitoAnnotations.initMocks;
 @RunWith(MockitoJUnitRunner.Silent.class)
 @Slf4j
 public class PermissionRootResourceTest {
-  public static final String REPOSITORY_NAMESPACE = "repo_namespace";
-  public static final String REPOSITORY_NAME = "repo";
+  private static final String REPOSITORY_NAMESPACE = "repo_namespace";
+  private static final String REPOSITORY_NAME = "repo";
   private static final String PERMISSION_NAME = "perm";
-
-
   private static final String PATH_OF_ALL_PERMISSIONS = REPOSITORY_NAMESPACE + "/" + REPOSITORY_NAME + "/permissions/";
   private static final String PATH_OF_ONE_PERMISSION = PATH_OF_ALL_PERMISSIONS + PERMISSION_NAME;
   private static final String PERMISSION_TEST_PAYLOAD = "{ \"name\" : \"permission_name\", \"type\" : \"READ\"  }";
@@ -93,7 +91,6 @@ public class PermissionRootResourceTest {
     .content(PERMISSION_TEST_PAYLOAD)
     .path(PATH_OF_ONE_PERMISSION);
 
-
   private final Dispatcher dispatcher = MockDispatcherFactory.createDispatcher();
 
   @Rule
@@ -101,7 +98,6 @@ public class PermissionRootResourceTest {
 
   @Mock
   private RepositoryManager repositoryManager;
-
 
   private final URI baseUri = URI.create("/");
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
@@ -112,9 +108,7 @@ public class PermissionRootResourceTest {
   @InjectMocks
   private PermissionDtoToPermissionMapperImpl permissionDtoToPermissionMapper;
 
-
   private PermissionRootResource permissionRootResource;
-
 
   @BeforeEach
   @Before
@@ -122,7 +116,7 @@ public class PermissionRootResourceTest {
     initMocks(this);
     permissionRootResource = spy(new PermissionRootResource(permissionDtoToPermissionMapper, permissionToPermissionDtoMapper, resourceLinks, repositoryManager));
     RepositoryRootResource repositoryRootResource = new RepositoryRootResource(MockProvider
-      .of(new RepositoryResource(null, null, null, null, null, null, null, MockProvider.of(permissionRootResource))), null);
+      .of(new RepositoryResource(null, null, null, null, null, null, null,null, MockProvider.of(permissionRootResource))), null);
     dispatcher.getRegistry().addSingletonResource(repositoryRootResource);
     dispatcher.getProviderFactory().registerProvider(RepositoryNotFoundExceptionMapper.class);
     dispatcher.getProviderFactory().registerProvider(PermissionNotFoundExceptionMapper.class);
@@ -130,31 +124,49 @@ public class PermissionRootResourceTest {
     dispatcher.getProviderFactory().registerProvider(AuthorizationExceptionMapper.class);
   }
 
+  @TestFactory
+  @DisplayName("test endpoints on missing repository and user is Admin")
+  Stream<DynamicTest> missedRepositoryTestFactory() {
+    return createDynamicTestsToAssertResponses(
+      requestGETAllPermissions.expectedResponseStatus(404),
+      requestGETPermission.expectedResponseStatus(404),
+      requestPOSTPermission.expectedResponseStatus(404),
+      requestDELETEPermission.expectedResponseStatus(404),
+      requestPUTPermission.expectedResponseStatus(404));
+  }
+
+  @TestFactory
+  @DisplayName("test endpoints on missing permission and user is Admin")
+  Stream<DynamicTest> missedPermissionTestFactory() {
+    authorizedUserHasARepository();
+    return createDynamicTestsToAssertResponses(
+      requestGETPermission.expectedResponseStatus(404),
+      requestPOSTPermission.expectedResponseStatus(201),
+      requestGETAllPermissions.expectedResponseStatus(200),
+      requestDELETEPermission.expectedResponseStatus(204),
+      requestPUTPermission.expectedResponseStatus(404));
+  }
+
+  @TestFactory
+  @DisplayName("test endpoints on missing permission and user is not Admin")
+  Stream<DynamicTest> missedPermissionUserForbiddenTestFactory() {
+    Repository mockRepository = mock(Repository.class);
+    when(mockRepository.getId()).thenReturn(REPOSITORY_NAME);
+    doThrow(AuthorizationException.class).when(permissionRootResource).checkUserPermitted(mockRepository);
+    when(repositoryManager.get(any(NamespaceAndName.class))).thenReturn(mockRepository);
+    return createDynamicTestsToAssertResponses(
+      requestGETPermission.expectedResponseStatus(401),
+      requestPOSTPermission.expectedResponseStatus(401),
+      requestGETAllPermissions.expectedResponseStatus(401),
+      requestDELETEPermission.expectedResponseStatus(401),
+      requestPUTPermission.expectedResponseStatus(401));
+  }
 
   @Test
   public void shouldGetAllPermissions() {
     authorizedUserHasARepositoryWithPermissions(TEST_PERMISSIONS);
-    assertExpectedRequest(requestGETAllPermissions
-      .expectedResponseStatus(200)
-      .responseValidator((response) -> {
-        String body = response.getContentAsString();
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-          List<PermissionDto> actualPermissionDtos = mapper.readValue(body, new TypeReference<List<PermissionDto>>() {
-          });
-          assertThat(actualPermissionDtos)
-            .as("response payload match permission object models")
-            .hasSize(TEST_PERMISSIONS.size())
-            .usingRecursiveFieldByFieldElementComparator()
-            .containsExactlyInAnyOrder(getExpectedPermissionDtos(TEST_PERMISSIONS))
-          ;
-        } catch (IOException e) {
-          fail();
-        }
-      })
-    );
+    assertGettingExpectedPermissions(ImmutableList.copyOf(TEST_PERMISSIONS));
   }
-
 
   @Test
   public void shouldGetPermissionByName() {
@@ -178,7 +190,6 @@ public class PermissionRootResourceTest {
       })
     );
   }
-
 
   @Test
   public void shouldGetCreatedPermissions() {
@@ -206,7 +217,6 @@ public class PermissionRootResourceTest {
       .expectedResponseStatus(409)
     );
   }
-
 
   @Test
   public void shouldGetUpdatedPermissions() {
@@ -287,7 +297,6 @@ public class PermissionRootResourceTest {
     );
   }
 
-
   private PermissionDto[] getExpectedPermissionDtos(ArrayList<Permission> permissions) {
     return permissions
       .stream()
@@ -309,30 +318,6 @@ public class PermissionRootResourceTest {
     return result;
   }
 
-  @TestFactory
-  @DisplayName("test endpoints on missing repository and user is Admin")
-  Stream<DynamicTest> missedRepositoryTestFactory() {
-    return createDynamicTestsToAssertResponses(
-      requestGETAllPermissions.expectedResponseStatus(404),
-      requestGETPermission.expectedResponseStatus(404),
-      requestPOSTPermission.expectedResponseStatus(404),
-      requestDELETEPermission.expectedResponseStatus(404),
-      requestPUTPermission.expectedResponseStatus(404));
-  }
-
-
-  @TestFactory
-  @DisplayName("test endpoints on missing permission and user is Admin")
-  Stream<DynamicTest> missedPermissionTestFactory() {
-    authorizedUserHasARepository();
-    return createDynamicTestsToAssertResponses(
-      requestGETPermission.expectedResponseStatus(404),
-      requestPOSTPermission.expectedResponseStatus(201),
-      requestGETAllPermissions.expectedResponseStatus(200),
-      requestDELETEPermission.expectedResponseStatus(204),
-      requestPUTPermission.expectedResponseStatus(404));
-  }
-
   private Repository authorizedUserHasARepository() {
     Repository mockRepository = mock(Repository.class);
     when(mockRepository.getId()).thenReturn(REPOSITORY_NAME);
@@ -347,25 +332,7 @@ public class PermissionRootResourceTest {
     when(authorizedUserHasARepository().getPermissions()).thenReturn(permissions);
   }
 
-
-  @TestFactory
-  @DisplayName("test endpoints on missing permission and user is not Admin")
-  Stream<DynamicTest> missedPermissionUserForbiddenTestFactory() {
-    Repository mockRepository = mock(Repository.class);
-    when(mockRepository.getId()).thenReturn(REPOSITORY_NAME);
-    doThrow(AuthorizationException.class).when(permissionRootResource).checkUserPermitted(mockRepository);
-    when(repositoryManager.get(any(NamespaceAndName.class))).thenReturn(mockRepository);
-    return createDynamicTestsToAssertResponses(
-      requestGETPermission.expectedResponseStatus(401),
-      requestPOSTPermission.expectedResponseStatus(401),
-      requestGETAllPermissions.expectedResponseStatus(401),
-      requestDELETEPermission.expectedResponseStatus(401),
-      requestPUTPermission.expectedResponseStatus(401));
-  }
-
-
   private Stream<DynamicTest> createDynamicTestsToAssertResponses(ExpectedRequest... expectedRequests) {
-
     return Stream.of(expectedRequests)
       .map(entry -> dynamicTest("the endpoint " + entry.description + " should return the status code " + entry.expectedResponseStatus, () -> assertExpectedRequest(entry)));
   }

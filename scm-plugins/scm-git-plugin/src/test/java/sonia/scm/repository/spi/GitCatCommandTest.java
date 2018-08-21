@@ -32,19 +32,17 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import org.junit.Test;
-
+import sonia.scm.repository.GitConstants;
+import sonia.scm.repository.PathNotFoundException;
 import sonia.scm.repository.RepositoryException;
-
-import static org.junit.Assert.*;
-
-//~--- JDK imports ------------------------------------------------------------
+import sonia.scm.repository.RevisionNotFoundException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import sonia.scm.repository.GitConstants;
+import java.io.InputStream;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Unit tests for {@link GitCatCommand}.
@@ -53,15 +51,8 @@ import sonia.scm.repository.GitConstants;
  *
  * @author Sebastian Sdorra
  */
-public class GitCatCommandTest extends AbstractGitCommandTestBase
-{
+public class GitCatCommandTest extends AbstractGitCommandTestBase {
   
-  /**
-   * Tests cat command with default branch.
-   * 
-   * @throws IOException
-   * @throws RepositoryException 
-   */
   @Test
   public void testDefaultBranch() throws IOException, RepositoryException {
     // without default branch, the repository head should be used
@@ -75,16 +66,8 @@ public class GitCatCommandTest extends AbstractGitCommandTestBase
     assertEquals("a and b", execute(request));
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test
-  public void testCat() throws IOException, RepositoryException
-  {
+  public void testCat() throws IOException, RepositoryException {
     CatCommandRequest request = new CatCommandRequest();
 
     request.setPath("a.txt");
@@ -92,36 +75,46 @@ public class GitCatCommandTest extends AbstractGitCommandTestBase
     assertEquals("a and b", execute(request));
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test
-  public void testSimpleCat() throws IOException, RepositoryException
-  {
+  public void testSimpleCat() throws IOException, RepositoryException {
     CatCommandRequest request = new CatCommandRequest();
 
     request.setPath("b.txt");
     assertEquals("b", execute(request));
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
-  private String execute(CatCommandRequest request)
-          throws IOException, RepositoryException
-  {
+  @Test(expected = PathNotFoundException.class)
+  public void testUnknownFile() throws IOException, RepositoryException {
+    CatCommandRequest request = new CatCommandRequest();
+
+    request.setPath("unknown");
+    execute(request);
+  }
+
+  @Test(expected = RevisionNotFoundException.class)
+  public void testUnknownRevision() throws IOException, RepositoryException {
+    CatCommandRequest request = new CatCommandRequest();
+
+    request.setRevision("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+    request.setPath("a.txt");
+    execute(request);
+  }
+
+  @Test
+  public void testSimpleStream() throws IOException, RepositoryException {
+    CatCommandRequest request = new CatCommandRequest();
+    request.setPath("b.txt");
+
+    InputStream catResultStream = new GitCatCommand(createContext(), repository).getCatResultStream(request);
+
+    assertEquals('b', catResultStream.read());
+    assertEquals('\n', catResultStream.read());
+    assertEquals(-1, catResultStream.read());
+
+    catResultStream.close();
+  }
+
+  private String execute(CatCommandRequest request) throws IOException, RepositoryException {
     String content = null;
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
