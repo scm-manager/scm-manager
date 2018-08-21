@@ -36,7 +36,7 @@ public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Reposit
     }
     if (RepositoryPermissions.modify(repository).isPermitted()) {
       linksBuilder.single(link("update", resourceLinks.repository().update(target.getNamespace(), target.getName())));
-      linksBuilder.single(link("permissions", resourceLinks.permissionCollection().self(target.getNamespace(), target.getName())));
+      linksBuilder.single(link("permissions", resourceLinks.permission().all(target.getNamespace(), target.getName())));
     }
     try (RepositoryService repositoryService = serviceFactory.create(repository)) {
       if (repositoryService.isSupported(Command.TAGS)) {
