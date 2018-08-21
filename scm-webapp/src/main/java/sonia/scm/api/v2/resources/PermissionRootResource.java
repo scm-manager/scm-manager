@@ -7,13 +7,13 @@ import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import sonia.scm.repository.NamespaceAndName;
+import sonia.scm.repository.Permission;
 import sonia.scm.repository.PermissionAlreadyExistsException;
 import sonia.scm.repository.PermissionNotFoundException;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryNotFoundException;
-import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
@@ -68,7 +68,7 @@ public class PermissionRootResource {
   @Consumes(VndMediaType.PERMISSION)
   public Response create(@PathParam("namespace") String namespace, @PathParam("name") String name, PermissionDto permission) throws RepositoryException {
     log.info("try to add new permission: {}", permission);
-    Repository repository = checkPermission(namespace, name);
+    Repository repository = load(namespace, name);
     checkPermissionAlreadyExists(permission, repository);
     repository.getPermissions().add(dtoToModelMapper.map(permission));
     manager.modify(repository);
@@ -94,7 +94,7 @@ public class PermissionRootResource {
   @TypeHint(PermissionDto.class)
   @Path("{permission-name}")
   public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("permission-name") String permissionName) throws RepositoryException {
-    Repository repository = checkPermission(namespace, name);
+    Repository repository = load(namespace, name);
     return Response.ok(
       repository.getPermissions()
         .stream()
@@ -124,7 +124,7 @@ public class PermissionRootResource {
   @TypeHint(PermissionDto.class)
   @Path("")
   public Response getAll(@PathParam("namespace") String namespace, @PathParam("name") String name) throws RepositoryNotFoundException {
-    Repository repository = checkPermission(namespace, name);
+    Repository repository = load(namespace, name);
     List<PermissionDto> permissionDtoList = repository.getPermissions()
       .stream()
       .map(per -> modelToDtoMapper.map(per, new NamespaceAndName(repository.getNamespace(), repository.getName())))
@@ -154,14 +154,13 @@ public class PermissionRootResource {
     @PathParam("permission-name") String permissionName,
     PermissionDto permission) throws RepositoryException {
     log.info("try to update the permission with name: {}. the modified permission is: {}", permissionName, permission);
-    Repository repository = checkPermission(namespace, name);
-    repository.getPermissions()
+    Repository repository = load(namespace, name);
+    Permission existingPermission = repository.getPermissions()
       .stream()
       .filter(perm -> StringUtils.isNotBlank(perm.getName()) && perm.getName().equals(permissionName))
       .findFirst()
-      .map(p -> dtoToModelMapper.map(p, permission))
-      .orElseThrow(() -> new PermissionNotFoundException(repository, permissionName))
-    ;
+      .orElseThrow(() -> new PermissionNotFoundException(repository, permissionName));
+    dtoToModelMapper.modify(existingPermission, permission);
     manager.modify(repository);
     log.info("the permission with name: {} is updated.", permissionName);
     return Response.noContent().build();
@@ -186,7 +185,7 @@ public class PermissionRootResource {
     @PathParam("name") String name,
     @PathParam("permission-name") String permissionName) throws RepositoryException {
     log.info("try to delete the permission with name: {}.", permissionName);
-    Repository repository = checkPermission(namespace, name);
+    Repository repository = load(namespace, name);
     repository.getPermissions()
       .stream()
       .filter(perm -> StringUtils.isNotBlank(perm.getName()) && perm.getName().equals(permissionName))
@@ -208,25 +207,10 @@ public class PermissionRootResource {
    * @return the repository if the user is permitted
    * @throws RepositoryNotFoundException if the repository does not exists
    */
-  private Repository checkPermission(@PathParam("namespace") String namespace, @PathParam("name") String name) throws RepositoryNotFoundException {
+  private Repository load(String namespace, String name) throws RepositoryNotFoundException {
     return Optional.ofNullable(manager.get(new NamespaceAndName(namespace, name)))
-      .filter(repository -> {
-        checkUserPermitted(repository);
-        return true;
-      })
       .orElseThrow(() -> new RepositoryNotFoundException(name));
   }
-
-
-  /**
-   * throw exception if the user is not permitted
-   *
-   * @param repository
-   */
-  protected void checkUserPermitted(Repository repository) {
-    RepositoryPermissions.modify(repository).check();
-  }
-
 
   /**
    * check if the permission already exists in the repository

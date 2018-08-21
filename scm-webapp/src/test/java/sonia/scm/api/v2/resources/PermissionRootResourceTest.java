@@ -18,10 +18,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
-import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.api.rest.AuthorizationExceptionMapper;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Permission;
@@ -44,14 +42,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-@RunWith(MockitoJUnitRunner.Silent.class)
 @Slf4j
 public class PermissionRootResourceTest {
   private static final String REPOSITORY_NAMESPACE = "repo_namespace";
@@ -112,7 +107,7 @@ public class PermissionRootResourceTest {
   @Before
   public void prepareEnvironment() {
     initMocks(this);
-    permissionRootResource = spy(new PermissionRootResource(permissionDtoToPermissionMapper, permissionToPermissionDtoMapper, resourceLinks, repositoryManager));
+    permissionRootResource = new PermissionRootResource(permissionDtoToPermissionMapper, permissionToPermissionDtoMapper, resourceLinks, repositoryManager);
     RepositoryRootResource repositoryRootResource = new RepositoryRootResource(MockProvider
       .of(new RepositoryResource(null, null, null, null, null, null, null,null, MockProvider.of(permissionRootResource))), null);
     dispatcher.getRegistry().addSingletonResource(repositoryRootResource);
@@ -150,8 +145,7 @@ public class PermissionRootResourceTest {
   Stream<DynamicTest> missedPermissionUserForbiddenTestFactory() {
     Repository mockRepository = mock(Repository.class);
     when(mockRepository.getId()).thenReturn(REPOSITORY_NAME);
-    doThrow(AuthorizationException.class).when(permissionRootResource).checkUserPermitted(mockRepository);
-    when(repositoryManager.get(any(NamespaceAndName.class))).thenReturn(mockRepository);
+    doThrow(AuthorizationException.class).when(repositoryManager).get(any(NamespaceAndName.class));
     return createDynamicTestsToAssertResponses(
       requestGETPermission.expectedResponseStatus(403),
       requestPOSTPermission.expectedResponseStatus(403),
@@ -321,7 +315,6 @@ public class PermissionRootResourceTest {
     when(mockRepository.getId()).thenReturn(REPOSITORY_NAME);
     when(mockRepository.getNamespace()).thenReturn(REPOSITORY_NAMESPACE);
     when(mockRepository.getName()).thenReturn(REPOSITORY_NAME);
-    doNothing().when(permissionRootResource).checkUserPermitted(mockRepository);
     when(repositoryManager.get(any(NamespaceAndName.class))).thenReturn(mockRepository);
     return mockRepository;
   }
@@ -344,9 +337,9 @@ public class PermissionRootResourceTest {
       .contentType(VndMediaType.PERMISSION);
     dispatcher.invoke(request, response);
     log.info("Test the Request :{}", entry);
-    assertThat(entry.expectedResponseStatus)
+    assertThat(response.getStatus())
       .as("assert status code")
-      .isEqualTo(response.getStatus());
+      .isEqualTo(entry.expectedResponseStatus);
     if (entry.responseValidator != null) {
       entry.responseValidator.accept(response);
     }
