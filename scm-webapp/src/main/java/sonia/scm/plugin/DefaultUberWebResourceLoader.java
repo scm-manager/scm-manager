@@ -42,6 +42,7 @@ import com.google.common.collect.ImmutableList.Builder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.util.HttpUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -185,7 +186,7 @@ public class DefaultUberWebResourceLoader implements UberWebResourceLoader
    */
   private URL find(String path)
   {
-    URL resource = null;
+    URL resource;
 
     try
     {

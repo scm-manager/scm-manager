@@ -40,9 +40,13 @@ import java.util.List;
  * This class collects and manages {@link Resource}
  * which are used by the web interface.
  *
+ * TODO remove before 2.0.0
+ *
  * @author Sebastian Sdorra
  * @since 1.12
+ * @deprecated unnecessary for new ui
  */
+@Deprecated
 public interface ResourceManager
 {
 

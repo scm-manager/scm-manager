@@ -49,6 +49,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.servlet.ServletContext;
 import sonia.scm.plugin.PluginWrapper;
@@ -146,7 +147,7 @@ public abstract class AbstractResourceManager implements ResourceManager
         processPlugin(resources, plugin.getPlugin());
       }
     }
-    
+
     // fix order of script resources, see https://goo.gl/ok03l4
     Collections.sort(resources);
 
@@ -172,7 +173,12 @@ public abstract class AbstractResourceManager implements ResourceManager
 
       if (scriptResources != null)
       {
-        resources.addAll(scriptResources);
+        // filter new resources and keep only the old ones, which are starting with a /
+        List<String> filtered = scriptResources.stream()
+          .filter((res) -> res.startsWith("/"))
+          .collect(Collectors.toList());
+
+        resources.addAll(filtered);
       }
     }
   }
