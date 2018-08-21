@@ -12,16 +12,14 @@ type Props = {
 };
 
 type State = {
-  groupToAdd: string,
-  //validationError: boolean
+  groupToAdd: string
 };
 
 class AddAdminGroupField extends React.Component<Props, State> {
   constructor(props) {
     super(props);
     this.state = {
-      groupToAdd: "",
-      //validationError: false
+      groupToAdd: ""
     };
   }
 
@@ -30,7 +28,6 @@ class AddAdminGroupField extends React.Component<Props, State> {
     return (
       <div className="field">
         <InputField
-
           label={t("admin-settings.add-group-textfield")}
           errorMessage={t("admin-settings.add-group-error")}
           onChange={this.handleAddGroupChange}
@@ -43,7 +40,6 @@ class AddAdminGroupField extends React.Component<Props, State> {
           label={t("admin-settings.add-group-button")}
           action={this.addButtonClicked}
           disabled={disabled}
-          //disabled={!isMemberNameValid(this.state.memberToAdd)}
         />
       </div>
     );
@@ -56,17 +52,14 @@ class AddAdminGroupField extends React.Component<Props, State> {
 
   appendGroup = () => {
     const { groupToAdd } = this.state;
-    //if (isMemberNameValid(memberToAdd)) {
-      this.props.addGroup(groupToAdd);
-      this.setState({ ...this.state, groupToAdd: "" });
-   // }
+    this.props.addGroup(groupToAdd);
+    this.setState({ ...this.state, groupToAdd: "" });
   };
 
   handleAddGroupChange = (groupname: string) => {
     this.setState({
       ...this.state,
-      groupToAdd: groupname,
-      //validationError: membername.length > 0 && !isMemberNameValid(membername)
+      groupToAdd: groupname
     });
   };
 }
