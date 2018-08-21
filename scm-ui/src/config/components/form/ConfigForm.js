@@ -178,10 +178,6 @@ class ConfigForm extends React.Component<Props, State> {
   };
 
   hasError = () => {
-    console.log(
-      this.state.error.loginAttemptLimit ||
-        this.state.error.loginAttemptLimitTimeout
-    );
     return (
       this.state.error.loginAttemptLimit ||
       this.state.error.loginAttemptLimitTimeout
