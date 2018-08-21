@@ -16,6 +16,7 @@ export const MODIFY_CONFIG = "scm/config/MODIFY_CONFIG";
 export const MODIFY_CONFIG_PENDING = `${MODIFY_CONFIG}_${types.PENDING_SUFFIX}`;
 export const MODIFY_CONFIG_SUCCESS = `${MODIFY_CONFIG}_${types.SUCCESS_SUFFIX}`;
 export const MODIFY_CONFIG_FAILURE = `${MODIFY_CONFIG}_${types.FAILURE_SUFFIX}`;
+export const MODIFY_CONFIG_RESET = `${MODIFY_CONFIG}_${types.RESET_SUFFIX}`;
 
 const CONFIG_URL = "config";
 const CONTENT_TYPE_CONFIG = "application/vnd.scmm-config+json;v=2";
@@ -66,7 +67,7 @@ export function modifyConfig(config: Config, callback?: () => void) {
   return function(dispatch: Dispatch) {
     dispatch(modifyConfigPending(config));
     return apiClient
-      .put(config._links.update.href, config, CONTENT_TYPE_CONFIG)
+      .put(config._links.update.href + "letsfail!", config, CONTENT_TYPE_CONFIG)
       .then(() => {
         dispatch(modifyConfigSuccess(config));
         if (callback) {
@@ -105,6 +106,12 @@ export function modifyConfigFailure(config: Config, error: Error): Action {
       error,
       config
     }
+  };
+}
+
+export function modifyConfigReset() {
+  return {
+    type: MODIFY_CONFIG_RESET
   };
 }
 

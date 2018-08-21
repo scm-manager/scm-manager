@@ -9,7 +9,8 @@ import {
   modifyConfig,
   isModifyConfigPending,
   getConfigUpdatePermission,
-  getModifyConfigFailure
+  getModifyConfigFailure,
+  modifyConfigReset
 } from "../modules/config";
 import connect from "react-redux/es/connect/connect";
 import ErrorPage from "../../components/ErrorPage";
@@ -28,6 +29,7 @@ type Props = {
   // context objects
   t: string => string,
   fetchConfig: void => void,
+  configReset: void => void,
   history: History
 };
 
@@ -38,6 +40,7 @@ class GlobalConfig extends React.Component<Props> {
   };
 
   componentDidMount() {
+    this.props.configReset();
     this.props.fetchConfig();
   }
 
@@ -83,6 +86,9 @@ const mapDispatchToProps = dispatch => {
     },
     modifyConfig: (config: Config, callback?: () => void) => {
       dispatch(modifyConfig(config, callback));
+    },
+    configReset: () => {
+      dispatch(modifyConfigReset());
     }
   };
 };
