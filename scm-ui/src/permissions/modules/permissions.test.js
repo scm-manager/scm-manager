@@ -5,7 +5,8 @@ import fetchMock from "fetch-mock";
 import {
   fetchPermissions,
   FETCH_PERMISSIONS_PENDING,
-  FETCH_PERMISSIONS_SUCCESS
+  FETCH_PERMISSIONS_SUCCESS,
+  FETCH_PERMISSIONS_FAILURE
 } from "./permissions";
 import type { Permission, Permissions } from "../types/Permissions";
 
@@ -62,6 +63,20 @@ describe("permission fetch", () => {
     const store = mockStore({});
     return store.dispatch(fetchPermissions("s", "b")).then(() => {
       expect(store.getActions()).toEqual(expectedActions);
+    });
+  });
+
+  it("should dispatch FETCH_PERMISSIONS_FAILURE, it the request fails", () => {
+    fetchMock.getOnce(REPOS_URL + "/s/b/permissions", {
+      status: 500
+    });
+
+    const store = mockStore({});
+    return store.dispatch(fetchPermissions("s", "b")).then(() => {
+      const actions = store.getActions();
+      expect(actions[0].type).toEqual(FETCH_PERMISSIONS_PENDING);
+      expect(actions[1].type).toEqual(FETCH_PERMISSIONS_FAILURE);
+      expect(actions[1].payload).toBeDefined();
     });
   });
 });

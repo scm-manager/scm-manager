@@ -13,7 +13,7 @@ export const FETCH_PERMISSIONS_FAILURE = `${FETCH_PERMISSIONS}_${types.FAILURE_S
 const REPOS_URL = "repositories";
 const PERMISSIONS_URL = "permissions";
 
-// fetch repos
+// fetch permissions
 
 export function fetchPermissions(namespace: string, name: string) {
   return function(dispatch: any) {
