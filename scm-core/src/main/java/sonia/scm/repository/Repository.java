@@ -35,6 +35,7 @@ package sonia.scm.repository;
 
 import com.github.sdorra.ssp.PermissionObject;
 import com.github.sdorra.ssp.StaticPermissions;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 import sonia.scm.BasicPropertiesAware;
@@ -401,7 +402,7 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
 
   @Override
   public String toString() {
-    return Objects.toStringHelper(this)
+    return MoreObjects.toStringHelper(this)
       .add("id", id)
       .add("namespace", namespace)
       .add("name", name)

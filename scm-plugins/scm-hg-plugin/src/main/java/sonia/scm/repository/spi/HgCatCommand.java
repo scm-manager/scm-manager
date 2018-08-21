@@ -36,8 +36,8 @@ package sonia.scm.repository.spi;
 import com.aragost.javahg.commands.ExecutionException;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Closeables;
+import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryException;
 import sonia.scm.web.HgUtil;
 
 import java.io.IOException;
@@ -51,7 +51,7 @@ public class HgCatCommand extends AbstractCommand implements CatCommand {
   }
 
   @Override
-  public void getCatResult(CatCommandRequest request, OutputStream output) throws IOException, RepositoryException {
+  public void getCatResult(CatCommandRequest request, OutputStream output) throws IOException {
     InputStream input = getCatResultStream(request);
     try {
       ByteStreams.copy(input, output);
@@ -61,7 +61,7 @@ public class HgCatCommand extends AbstractCommand implements CatCommand {
   }
 
   @Override
-  public InputStream getCatResultStream(CatCommandRequest request) throws IOException, RepositoryException {
+  public InputStream getCatResultStream(CatCommandRequest request) throws IOException {
     com.aragost.javahg.commands.CatCommand cmd =
       com.aragost.javahg.commands.CatCommand.on(open());
 
@@ -70,7 +70,7 @@ public class HgCatCommand extends AbstractCommand implements CatCommand {
     try {
       return cmd.execute(request.getPath());
     } catch (ExecutionException e) {
-      throw new RepositoryException(e);
+      throw new InternalRepositoryException(e);
     }
   }
 }

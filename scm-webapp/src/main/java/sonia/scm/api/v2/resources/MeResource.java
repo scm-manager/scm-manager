@@ -5,7 +5,6 @@ import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import org.apache.shiro.SecurityUtils;
 import sonia.scm.user.User;
-import sonia.scm.user.UserException;
 import sonia.scm.user.UserManager;
 import sonia.scm.web.VndMediaType;
 
@@ -28,7 +27,7 @@ public class MeResource {
 
   private final UserToUserDtoMapper userToDtoMapper;
 
-  private final IdResourceManagerAdapter<User, UserDto, UserException> adapter;
+  private final IdResourceManagerAdapter<User, UserDto> adapter;
   @Inject
   public MeResource(UserToUserDtoMapper userToDtoMapper, UserManager manager) {
     this.userToDtoMapper = userToDtoMapper;

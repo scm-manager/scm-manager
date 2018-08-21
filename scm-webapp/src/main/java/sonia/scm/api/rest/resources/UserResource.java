@@ -45,13 +45,25 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.credential.PasswordService;
 import sonia.scm.security.Role;
 import sonia.scm.user.User;
-import sonia.scm.user.UserException;
 import sonia.scm.user.UserManager;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.Util;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.*;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.GenericEntity;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Request;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import java.util.Collection;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -63,7 +75,7 @@ import java.util.Collection;
  */
 @Singleton
 @Path("users")
-public class UserResource extends AbstractManagerResource<User, UserException>
+public class UserResource extends AbstractManagerResource<User>
 {
 
   /** Field description */

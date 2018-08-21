@@ -1,6 +1,6 @@
 package sonia.scm.api.rest;
 
-import sonia.scm.group.GroupAlreadyExistsException;
+import sonia.scm.AlreadyExistsException;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -8,9 +8,9 @@ import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 @Provider
-public class GroupAlreadyExistsExceptionMapper implements ExceptionMapper<GroupAlreadyExistsException> {
+public class AlreadyExistsExceptionMapper implements ExceptionMapper<AlreadyExistsException> {
   @Override
-  public Response toResponse(GroupAlreadyExistsException exception) {
+  public Response toResponse(AlreadyExistsException exception) {
     return Response.status(Status.CONFLICT).build();
   }
 }

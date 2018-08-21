@@ -38,7 +38,6 @@ package sonia.scm.api.rest.resources;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.PathNotFoundException;
-import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.repository.api.CatCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
@@ -120,13 +119,13 @@ public class BrowserStreamingOutput implements StreamingOutput
 
       throw new WebApplicationException(Response.Status.NOT_FOUND);
     }
-    catch (RepositoryException ex)
-    {
-      logger.error("could not write content to page", ex);
-
-      throw new WebApplicationException(ex,
-        Response.Status.INTERNAL_SERVER_ERROR);
-    }
+//    catch (RepositoryException ex)
+//    {
+//      logger.error("could not write content to page", ex);
+//
+//      throw new WebApplicationException(ex,
+//        Response.Status.INTERNAL_SERVER_ERROR);
+//    }
     finally
     {
       IOUtil.close(repositoryService);

@@ -7,19 +7,15 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-public class ManagerDaoAdapter<T extends ModelObject, E extends Exception> {
+public class ManagerDaoAdapter<T extends ModelObject> {
 
   private final GenericDAO<T> dao;
-  private final Function<T, E> notFoundException;
-  private final Function<T, E> alreadyExistsException;
 
-  public ManagerDaoAdapter(GenericDAO<T> dao, Function<T, E> notFoundException, Function<T, E> alreadyExistsException) {
+  public ManagerDaoAdapter(GenericDAO<T> dao) {
     this.dao = dao;
-    this.notFoundException = notFoundException;
-    this.alreadyExistsException = alreadyExistsException;
   }
 
-  public void modify(T object, Function<T, PermissionCheck> permissionCheck, AroundHandler<T, E> beforeUpdate, AroundHandler<T, E> afterUpdate) throws E {
+  public void modify(T object, Function<T, PermissionCheck> permissionCheck, AroundHandler<T> beforeUpdate, AroundHandler<T> afterUpdate) throws NotFoundException {
     T notModified = dao.get(object.getId());
     if (notModified != null) {
       permissionCheck.apply(notModified).check();
@@ -34,19 +30,19 @@ public class ManagerDaoAdapter<T extends ModelObject, E extends Exception> {
 
       afterUpdate.handle(notModified);
     } else {
-      throw notFoundException.apply(object);
+      throw new NotFoundException();
     }
   }
 
-  public T create(T newObject, Supplier<PermissionCheck> permissionCheck, AroundHandler<T, E> beforeCreate, AroundHandler<T, E> afterCreate) throws E {
+  public T create(T newObject, Supplier<PermissionCheck> permissionCheck, AroundHandler<T> beforeCreate, AroundHandler<T> afterCreate) throws AlreadyExistsException {
     return create(newObject, permissionCheck, beforeCreate, afterCreate, dao::contains);
   }
 
-  public T create(T newObject, Supplier<PermissionCheck> permissionCheck, AroundHandler<T, E> beforeCreate, AroundHandler<T, E> afterCreate, Predicate<T> existsCheck) throws E {
+  public T create(T newObject, Supplier<PermissionCheck> permissionCheck, AroundHandler<T> beforeCreate, AroundHandler<T> afterCreate, Predicate<T> existsCheck) throws AlreadyExistsException {
     permissionCheck.get().check();
     AssertUtil.assertIsValid(newObject);
     if (existsCheck.test(newObject)) {
-      throw alreadyExistsException.apply(newObject);
+      throw new AlreadyExistsException();
     }
     newObject.setCreationDate(System.currentTimeMillis());
     beforeCreate.handle(newObject);
@@ -55,19 +51,19 @@ public class ManagerDaoAdapter<T extends ModelObject, E extends Exception> {
     return newObject;
   }
 
-  public void delete(T toDelete, Supplier<PermissionCheck> permissionCheck, AroundHandler<T, E> beforeDelete, AroundHandler<T, E> afterDelete) throws E {
+  public void delete(T toDelete, Supplier<PermissionCheck> permissionCheck, AroundHandler<T> beforeDelete, AroundHandler<T> afterDelete) throws NotFoundException {
     permissionCheck.get().check();
     if (dao.contains(toDelete)) {
       beforeDelete.handle(toDelete);
       dao.delete(toDelete);
       afterDelete.handle(toDelete);
     } else {
-      throw notFoundException.apply(toDelete);
+      throw new NotFoundException();
     }
   }
 
   @FunctionalInterface
-  public interface AroundHandler<T extends ModelObject, E extends Exception> {
-    void handle(T notModified) throws E;
+  public interface AroundHandler<T extends ModelObject> {
+    void handle(T notModified);
   }
 }

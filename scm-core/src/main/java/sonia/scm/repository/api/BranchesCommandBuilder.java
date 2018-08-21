@@ -40,8 +40,6 @@ import sonia.scm.repository.Branch;
 import sonia.scm.repository.Branches;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryCacheKey;
-import sonia.scm.repository.RepositoryException;
-import sonia.scm.repository.spi.BlameCommand;
 import sonia.scm.repository.spi.BranchesCommand;
 
 import java.io.IOException;
@@ -80,10 +78,8 @@ public final class BranchesCommandBuilder
    * only be called from the {@link RepositoryService}.
    *
    * @param cacheManager cache manager
-   * @param blameCommand implementation of the {@link BlameCommand}
-   * @param branchesCommand
+   * @param branchesCommand implementation of the {@link BranchesCommand}
    * @param repository repository to query
-   * @param preProcessorUtil
    */
   BranchesCommandBuilder(CacheManager cacheManager,
     BranchesCommand branchesCommand, Repository repository)
@@ -102,9 +98,8 @@ public final class BranchesCommandBuilder
    * @return branches from the repository
    *
    * @throws IOException
-   * @throws RepositoryException
    */
-  public Branches getBranches() throws RepositoryException, IOException
+  public Branches getBranches() throws IOException
   {
     Branches branches;
 
@@ -173,10 +168,9 @@ public final class BranchesCommandBuilder
    * @return
    *
    * @throws IOException
-   * @throws RepositoryException
    */
   private Branches getBranchesFromCommand()
-    throws RepositoryException, IOException
+    throws IOException
   {
     return new Branches(branchesCommand.getBranches());
   }

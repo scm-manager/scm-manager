@@ -42,7 +42,6 @@ import org.eclipse.jgit.http.server.GitServlet;
 import org.eclipse.jgit.lfs.lib.Constants;
 import org.slf4j.Logger;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RepositoryProvider;
 import sonia.scm.repository.RepositoryRequestListenerUtil;
 import sonia.scm.util.HttpUtil;
@@ -214,7 +213,7 @@ public class ScmGitServlet extends GitServlet
   private void handleBrowserRequest(HttpServletRequest request, HttpServletResponse response, Repository repository) throws ServletException, IOException {
     try {
       repositoryViewer.handleRequest(request, response, repository);
-    } catch (RepositoryException | IOException ex) {
+    } catch (IOException ex) {
       throw new ServletException("could not create repository view", ex);
     }
   }

@@ -44,10 +44,8 @@ import java.util.Collection;
  *
  * @param <T> type of the model object
  * @param <H> type of the handler
- * @param <E> type of the exception
  */
-public interface TypeManager<T extends ModelObject, H extends Handler<T, E>,
-  E extends Exception> extends Manager<T, E>
+public interface TypeManager<T extends ModelObject, H extends Handler<T>> extends Manager<T>
 {
 
   /**
@@ -58,7 +56,7 @@ public interface TypeManager<T extends ModelObject, H extends Handler<T, E>,
    *
    * @return the handler for given type
    */
-  public H getHandler(String type);
+  H getHandler(String type);
 
   /**
    * Returns a {@link java.util.Collection} of all
@@ -66,5 +64,5 @@ public interface TypeManager<T extends ModelObject, H extends Handler<T, E>,
    *
    * @return all available types
    */
-  public Collection<Type> getTypes();
+  Collection<Type> getTypes();
 }

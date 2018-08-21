@@ -4,19 +4,24 @@ import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import sonia.scm.group.Group;
-import sonia.scm.group.GroupException;
 import sonia.scm.group.GroupManager;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
 public class GroupResource {
 
   private final GroupToGroupDtoMapper groupToGroupDtoMapper;
   private final GroupDtoToGroupMapper dtoToGroupMapper;
-  private final IdResourceManagerAdapter<Group, GroupDto, GroupException> adapter;
+  private final IdResourceManagerAdapter<Group, GroupDto> adapter;
 
   @Inject
   public GroupResource(GroupManager manager, GroupToGroupDtoMapper groupToGroupDtoMapper,

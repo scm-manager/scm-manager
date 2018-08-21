@@ -22,22 +22,20 @@ import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
  *
  * @param <MODEL_OBJECT> The type of the model object, eg. {@link sonia.scm.user.User}.
  * @param <DTO> The corresponding transport object, eg. {@link UserDto}.
- * @param <EXCEPTION> The exception type for the model object, eg. {@link sonia.scm.user.UserException}.
  *
  * @see CollectionResourceManagerAdapter
  */
 @SuppressWarnings("squid:S00119") // "MODEL_OBJECT" is much more meaningful than "M", right?
 class SingleResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
-                             DTO extends HalRepresentation,
-                             EXCEPTION extends Exception> extends AbstractManagerResource<MODEL_OBJECT, EXCEPTION> {
+                             DTO extends HalRepresentation> extends AbstractManagerResource<MODEL_OBJECT> {
 
   private final Function<Throwable, Optional<Response>> errorHandler;
 
-  SingleResourceManagerAdapter(Manager<MODEL_OBJECT, EXCEPTION> manager, Class<MODEL_OBJECT> type) {
+  SingleResourceManagerAdapter(Manager<MODEL_OBJECT> manager, Class<MODEL_OBJECT> type) {
     this(manager, type, e -> Optional.empty());
   }
 
-  SingleResourceManagerAdapter(Manager<MODEL_OBJECT, EXCEPTION> manager, Class<MODEL_OBJECT> type, Function<Throwable, Optional<Response>> errorHandler) {
+  SingleResourceManagerAdapter(Manager<MODEL_OBJECT> manager, Class<MODEL_OBJECT> type, Function<Throwable, Optional<Response>> errorHandler) {
     super(manager, type);
     this.errorHandler = errorHandler;
   }

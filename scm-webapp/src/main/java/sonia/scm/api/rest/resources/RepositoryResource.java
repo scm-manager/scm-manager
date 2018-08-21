@@ -46,16 +46,51 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.AuthorizationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.repository.*;
-import sonia.scm.repository.api.*;
+import sonia.scm.NotFoundException;
+import sonia.scm.repository.BlameResult;
+import sonia.scm.repository.Branches;
+import sonia.scm.repository.BrowserResult;
+import sonia.scm.repository.Changeset;
+import sonia.scm.repository.ChangesetPagingResult;
+import sonia.scm.repository.HealthChecker;
+import sonia.scm.repository.Permission;
+import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryIsNotArchivedException;
+import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.RepositoryNotFoundException;
+import sonia.scm.repository.Tags;
+import sonia.scm.repository.api.BlameCommandBuilder;
+import sonia.scm.repository.api.BrowseCommandBuilder;
+import sonia.scm.repository.api.CatCommandBuilder;
+import sonia.scm.repository.api.CommandNotSupportedException;
+import sonia.scm.repository.api.DiffCommandBuilder;
+import sonia.scm.repository.api.DiffFormat;
+import sonia.scm.repository.api.LogCommandBuilder;
+import sonia.scm.repository.api.RepositoryService;
+import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.GenericEntity;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Request;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.StreamingOutput;
+import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -69,7 +104,7 @@ import java.util.Collection;
  */
 @Singleton
 @Path("repositories")
-public class RepositoryResource extends AbstractManagerResource<Repository, RepositoryException>
+public class RepositoryResource extends AbstractManagerResource<Repository>
 {
 
   /** Field description */
@@ -169,12 +204,15 @@ public class RepositoryResource extends AbstractManagerResource<Repository, Repo
       {
         logger.warn("delete not allowed", ex);
         response = Response.status(Response.Status.FORBIDDEN).build();
+      } catch (NotFoundException e) {
+        // there is nothing to do because delete should be idempotent
+        response = Response.ok().build();
       }
-      catch (RepositoryException ex)
-      {
-        logger.error("error during delete", ex);
-        response = createErrorResponse(ex);
-      }
+//      catch (IOException ex)
+//      {
+//        logger.error("error during delete", ex);
+//        response = Response.serverError().build();
+//      }
     }
     else
     {
@@ -215,10 +253,8 @@ public class RepositoryResource extends AbstractManagerResource<Repository, Repo
     {
       logger.warn("could not find repository ".concat(id), ex);
       response = Response.status(Status.NOT_FOUND).build();
-    }
-    catch (RepositoryException | IOException ex)
-    {
-      logger.error("error occured during health check", ex);
+    } catch (NotFoundException e) {
+      logger.error("error occured during health check", e);
       response = Response.serverError().build();
     }
 
@@ -312,7 +348,6 @@ public class RepositoryResource extends AbstractManagerResource<Repository, Repo
    * @return a annotate/blame view for the given path
    *
    * @throws IOException
-   * @throws RepositoryException
    */
   @GET
   @Path("{id}/blame")
@@ -326,7 +361,7 @@ public class RepositoryResource extends AbstractManagerResource<Repository, Repo
   @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   public Response getBlame(@PathParam("id") String id,
     @QueryParam("revision") String revision, @QueryParam("path") String path)
-    throws RepositoryException, IOException
+    throws IOException
   {
     Response response = null;
     RepositoryService service = null;
@@ -382,7 +417,6 @@ public class RepositoryResource extends AbstractManagerResource<Repository, Repo
    * @return all {@link Branches} of a repository
    *
    * @throws IOException
-   * @throws RepositoryException
    *
    * @since 1.18
    */
@@ -397,7 +431,7 @@ public class RepositoryResource extends AbstractManagerResource<Repository, Repo
   @TypeHint(Branches.class)
   @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   public Response getBranches(@PathParam("id") String id)
-    throws RepositoryException, IOException
+    throws IOException
   {
     Response response = null;
     RepositoryService service = null;
@@ -446,7 +480,6 @@ public class RepositoryResource extends AbstractManagerResource<Repository, Repo
    * @return a list of folders and files for the given folder
    *
    * @throws IOException
-   * @throws RepositoryException
    */
   @GET
   @Path("{id}/browse")
@@ -466,7 +499,7 @@ public class RepositoryResource extends AbstractManagerResource<Repository, Repo
     @QueryParam("disableLastCommit") @DefaultValue("false") boolean disableLastCommit,
     @QueryParam("disableSubRepositoryDetection") @DefaultValue("false") boolean disableSubRepositoryDetection,
     @QueryParam("recursive") @DefaultValue("false") boolean recursive)
-    throws RepositoryException, IOException
+    throws IOException
   //J+
   {
     Response response = null;
@@ -505,7 +538,7 @@ public class RepositoryResource extends AbstractManagerResource<Repository, Repo
         response = Response.status(Response.Status.NOT_FOUND).build();
       }
     }
-    catch (RepositoryNotFoundException ex)
+    catch (NotFoundException ex)
     {
       response = Response.status(Response.Status.NOT_FOUND).build();
     }
@@ -531,7 +564,6 @@ public class RepositoryResource extends AbstractManagerResource<Repository, Repo
    * @return a {@link Changeset} from the given repository
    *
    * @throws IOException
-   * @throws RepositoryException
    */
   @GET
   @Path("{id}/changeset/{revision}")
@@ -545,7 +577,7 @@ public class RepositoryResource extends AbstractManagerResource<Repository, Repo
   @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   public Response getChangeset(@PathParam("id") String id,
     @PathParam("revision") String revision)
-    throws IOException, RepositoryException
+    throws IOException
   {
     Response response = null;
 
@@ -568,7 +600,7 @@ public class RepositoryResource extends AbstractManagerResource<Repository, Repo
           response = Response.status(Status.NOT_FOUND).build();
         }
       }
-      catch (RepositoryNotFoundException ex)
+      catch (NotFoundException ex)
       {
         response = Response.status(Response.Status.NOT_FOUND).build();
       }
@@ -603,7 +635,6 @@ public class RepositoryResource extends AbstractManagerResource<Repository, Repo
    * @return a list of {@link Changeset} for the given repository
    *
    * @throws IOException
-   * @throws RepositoryException
    */
   @GET
   @Path("{id}/changesets")
@@ -623,7 +654,7 @@ public class RepositoryResource extends AbstractManagerResource<Repository, Repo
     @QueryParam("branch") String branch,
     @DefaultValue("0") @QueryParam("start") int start, 
     @DefaultValue("20") @QueryParam("limit") int limit
-  ) throws RepositoryException, IOException
+  ) throws IOException
   //J+
   {
     Response response = null;
@@ -664,7 +695,7 @@ public class RepositoryResource extends AbstractManagerResource<Repository, Repo
         response = Response.ok().build();
       }
     }
-    catch (RepositoryNotFoundException ex)
+    catch (NotFoundException ex)
     {
       response = Response.status(Response.Status.NOT_FOUND).build();
     }
@@ -759,7 +790,6 @@ public class RepositoryResource extends AbstractManagerResource<Repository, Repo
    * @return the modifications of a {@link Changeset}
    *
    * @throws IOException
-   * @throws RepositoryException
    */
   @GET
   @Path("{id}/diff")
@@ -774,7 +804,7 @@ public class RepositoryResource extends AbstractManagerResource<Repository, Repo
   public Response getDiff(@PathParam("id") String id,
     @QueryParam("revision") String revision, @QueryParam("path") String path,
     @QueryParam("format") DiffFormat format)
-    throws RepositoryException, IOException
+    throws IOException
   {
     AssertUtil.assertIsNotEmpty(id);
     AssertUtil.assertIsNotEmpty(revision);
@@ -841,7 +871,6 @@ public class RepositoryResource extends AbstractManagerResource<Repository, Repo
    * @return all {@link Tags} of a repository
    *
    * @throws IOException
-   * @throws RepositoryException
    *
    * @since 1.18
    */
@@ -856,7 +885,7 @@ public class RepositoryResource extends AbstractManagerResource<Repository, Repo
   @TypeHint(Tags.class)
   @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   public Response getTags(@PathParam("id") String id)
-    throws RepositoryException, IOException
+    throws IOException
   {
     Response response = null;
     RepositoryService service = null;

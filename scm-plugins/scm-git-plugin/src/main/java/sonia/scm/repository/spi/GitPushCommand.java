@@ -37,15 +37,13 @@ package sonia.scm.repository.spi;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.api.PushResponse;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -91,7 +89,7 @@ public class GitPushCommand extends AbstractGitPushOrPullCommand
    */
   @Override
   public PushResponse push(PushCommandRequest request)
-    throws IOException, RepositoryException
+    throws IOException
   {
     String remoteUrl = getRemoteUrl(request);
 

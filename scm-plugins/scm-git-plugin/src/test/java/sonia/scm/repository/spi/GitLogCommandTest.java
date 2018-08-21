@@ -35,22 +35,23 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.junit.Test;
-
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
+import sonia.scm.repository.GitConstants;
 import sonia.scm.repository.Modifications;
-import sonia.scm.repository.RepositoryException;
-
-import static org.hamcrest.Matchers.*;
-
-import static org.junit.Assert.*;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import sonia.scm.repository.GitConstants;
+
+import static org.hamcrest.Matchers.contains;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Unit tests for {@link GitLogCommand}.
@@ -65,10 +66,10 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
    * 
    * @throws IOException
    * @throws GitAPIException
-   * @throws RepositoryException 
+   * @
    */
   @Test
-  public void testGetDefaultBranch() throws IOException, GitAPIException, RepositoryException {
+  public void testGetDefaultBranch() throws IOException, GitAPIException {
     // without default branch, the repository head should be used
     ChangesetPagingResult result = createCommand().getChangesets(new LogCommandRequest());
 
@@ -99,7 +100,7 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
    * @throws RepositoryException
    */
   @Test
-  public void testGetAll() throws IOException, RepositoryException
+  public void testGetAll() throws IOException
   {
     ChangesetPagingResult result =
       createCommand().getChangesets(new LogCommandRequest());
@@ -117,7 +118,7 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
    * @throws RepositoryException
    */
   @Test
-  public void testGetAllByPath() throws IOException, RepositoryException
+  public void testGetAllByPath() throws IOException
   {
     LogCommandRequest request = new LogCommandRequest();
 
@@ -140,7 +141,7 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
    * @throws RepositoryException
    */
   @Test
-  public void testGetAllWithLimit() throws IOException, RepositoryException
+  public void testGetAllWithLimit() throws IOException
   {
     LogCommandRequest request = new LogCommandRequest();
 
@@ -171,7 +172,7 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
    * @throws RepositoryException
    */
   @Test
-  public void testGetAllWithPaging() throws IOException, RepositoryException
+  public void testGetAllWithPaging() throws IOException
   {
     LogCommandRequest request = new LogCommandRequest();
 
@@ -231,7 +232,7 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
    * @throws RepositoryException
    */
   @Test
-  public void testGetRange() throws IOException, RepositoryException
+  public void testGetRange() throws IOException
   {
     LogCommandRequest request = new LogCommandRequest();
 

@@ -5,7 +5,6 @@ import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RepositoryIsNotArchivedException;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.web.VndMediaType;
@@ -30,7 +29,7 @@ public class RepositoryResource {
   private final RepositoryDtoToRepositoryMapper dtoToRepositoryMapper;
 
   private final RepositoryManager manager;
-  private final SingleResourceManagerAdapter<Repository, RepositoryDto, RepositoryException> adapter;
+  private final SingleResourceManagerAdapter<Repository, RepositoryDto> adapter;
   private final Provider<TagRootResource> tagRootResource;
   private final Provider<BranchRootResource> branchRootResource;
   private final Provider<ChangesetRootResource> changesetRootResource;

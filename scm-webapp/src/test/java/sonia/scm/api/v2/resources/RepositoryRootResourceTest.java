@@ -16,7 +16,6 @@ import org.mockito.Mock;
 import sonia.scm.PageResult;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RepositoryIsNotArchivedException;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.api.RepositoryServiceFactory;
@@ -217,7 +216,7 @@ public class RepositoryRootResourceTest {
   }
 
   @Test
-  public void shouldCreateNewRepositoryInCorrectNamespace() throws URISyntaxException, IOException, RepositoryException {
+  public void shouldCreateNewRepositoryInCorrectNamespace() throws Exception {
     when(repositoryManager.create(any())).thenAnswer(invocation -> {
       Repository repository = (Repository) invocation.getArguments()[0];
       repository.setNamespace("otherspace");

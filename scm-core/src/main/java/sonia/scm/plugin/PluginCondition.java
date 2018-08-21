@@ -35,27 +35,25 @@ package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-
 import sonia.scm.PlatformType;
 import sonia.scm.SCMContext;
 import sonia.scm.util.SystemUtil;
 import sonia.scm.util.Util;
 import sonia.scm.version.Version;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.Serializable;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -164,7 +162,7 @@ public class PluginCondition implements Cloneable, Serializable
   public String toString()
   {
     //J-
-    return Objects.toStringHelper(this)
+    return MoreObjects.toStringHelper(this)
                   .add("arch", arch)
                   .add("minVersion", minVersion)
                   .add("os", os)

@@ -39,11 +39,8 @@ package sonia.scm;
  * @author Sebastian Sdorra
  *
  * @param <T> a typed object
- * @param <E>
  */
-public interface Handler<T extends TypedObject, E extends Exception>
-        extends HandlerBase<T, E>
-{
+public interface Handler<T extends TypedObject> extends HandlerBase<T> {
 
   /**
    * Returns the type object of the handler.
@@ -51,7 +48,7 @@ public interface Handler<T extends TypedObject, E extends Exception>
    *
    * @return type object of the handler
    */
-  public Type getType();
+  Type getType();
 
   /**
    * Returns true if the hanlder is configured.
@@ -59,5 +56,5 @@ public interface Handler<T extends TypedObject, E extends Exception>
    *
    * @return true if the hanlder is configured
    */
-  public boolean isConfigured();
+  boolean isConfigured();
 }

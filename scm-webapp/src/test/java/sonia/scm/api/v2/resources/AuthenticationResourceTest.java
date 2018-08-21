@@ -11,8 +11,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.config.ScmConfiguration;
@@ -20,25 +18,16 @@ import sonia.scm.security.AccessToken;
 import sonia.scm.security.AccessTokenBuilder;
 import sonia.scm.security.AccessTokenBuilderFactory;
 import sonia.scm.security.AccessTokenCookieIssuer;
-import sonia.scm.user.User;
-import sonia.scm.user.UserException;
-import sonia.scm.user.UserManager;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
-import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @SubjectAware(
   configuration = "classpath:sonia/scm/repository/shiro.ini"

@@ -35,9 +35,9 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.base.Throwables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.AlreadyExistsException;
 import sonia.scm.repository.ImportResult.Builder;
 
 import java.io.File;
@@ -86,9 +86,7 @@ public abstract class AbstactImportHandler implements AdvancedImportHandler
    * {@inheritDoc}
    */
   @Override
-  public List<String> importRepositories(RepositoryManager manager)
-    throws IOException, RepositoryException
-  {
+  public List<String> importRepositories(RepositoryManager manager) throws IOException {
     return doRepositoryImport(manager, true).getImportedDirectories();
   }
 
@@ -98,22 +96,7 @@ public abstract class AbstactImportHandler implements AdvancedImportHandler
   @Override
   public ImportResult importRepositoriesFromDirectory(RepositoryManager manager)
   {
-    try
-    {
-      return doRepositoryImport(manager, false);
-    }
-    catch (IOException ex)
-    {
-
-      // should never happen
-      throw Throwables.propagate(ex);
-    }
-    catch (RepositoryException ex)
-    {
-
-      // should never happen
-      throw Throwables.propagate(ex);
-    }
+    return doRepositoryImport(manager, false);
   }
 
   /**
@@ -126,12 +109,8 @@ public abstract class AbstactImportHandler implements AdvancedImportHandler
    * @return repository
    *
    * @throws IOException
-   * @throws RepositoryException
    */
-  protected Repository createRepository(File repositoryDirectory,
-    String repositoryName)
-    throws IOException, RepositoryException
-  {
+  protected Repository createRepository(File repositoryDirectory, String repositoryName) throws IOException {
     Repository repository = new Repository();
 
     repository.setName(repositoryName);
@@ -151,12 +130,8 @@ public abstract class AbstactImportHandler implements AdvancedImportHandler
    * @return import result
    *
    * @throws IOException
-   * @throws RepositoryException
    */
-  private ImportResult doRepositoryImport(RepositoryManager manager,
-    boolean throwExceptions)
-    throws IOException, RepositoryException
-  {
+  private ImportResult doRepositoryImport(RepositoryManager manager, boolean throwExceptions) {
     Builder builder = ImportResult.builder();
 
     logger.trace("search for repositories to import");
@@ -215,11 +190,10 @@ public abstract class AbstactImportHandler implements AdvancedImportHandler
    * @param directoryName
    *
    * @throws IOException
-   * @throws RepositoryException
    */
   private void importRepository(RepositoryManager manager, Builder builder,
     boolean throwExceptions, String directoryName)
-    throws IOException, RepositoryException
+    throws IOException
   {
     logger.trace("check repository {} for import", directoryName);
 
@@ -266,12 +240,10 @@ public abstract class AbstactImportHandler implements AdvancedImportHandler
    *
    * @return
    * @throws IOException
-   * @throws RepositoryException
    */
   private void importRepository(RepositoryManager manager,
     String repositoryName)
-    throws IOException, RepositoryException
-  {
+    throws IOException, AlreadyExistsException {
     Repository repository =
       createRepository(getRepositoryDirectory(repositoryName), repositoryName);
 

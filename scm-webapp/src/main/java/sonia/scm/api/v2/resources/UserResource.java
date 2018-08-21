@@ -4,12 +4,17 @@ import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import sonia.scm.user.User;
-import sonia.scm.user.UserException;
 import sonia.scm.user.UserManager;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
 public class UserResource {
@@ -17,7 +22,7 @@ public class UserResource {
   private final UserDtoToUserMapper dtoToUserMapper;
   private final UserToUserDtoMapper userToDtoMapper;
 
-  private final IdResourceManagerAdapter<User, UserDto, UserException> adapter;
+  private final IdResourceManagerAdapter<User, UserDto> adapter;
 
   @Inject
   public UserResource(UserDtoToUserMapper dtoToUserMapper, UserToUserDtoMapper userToDtoMapper, UserManager manager) {

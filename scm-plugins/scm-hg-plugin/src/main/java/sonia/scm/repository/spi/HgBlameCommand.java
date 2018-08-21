@@ -38,25 +38,20 @@ package sonia.scm.repository.spi;
 import com.aragost.javahg.Changeset;
 import com.aragost.javahg.commands.AnnotateCommand;
 import com.aragost.javahg.commands.AnnotateLine;
-
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.repository.BlameLine;
 import sonia.scm.repository.BlameResult;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryException;
 import sonia.scm.web.HgUtil;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
-
 import java.util.List;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -87,20 +82,9 @@ public class HgBlameCommand extends AbstractCommand implements BlameCommand
 
   //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Override
   public BlameResult getBlameResult(BlameCommandRequest request)
-    throws IOException, RepositoryException
+    throws IOException
   {
     if (logger.isDebugEnabled())
     {

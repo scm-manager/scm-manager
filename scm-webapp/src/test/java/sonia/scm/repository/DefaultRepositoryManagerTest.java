@@ -43,7 +43,11 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
-import sonia.scm.*;
+import sonia.scm.AlreadyExistsException;
+import sonia.scm.HandlerEventType;
+import sonia.scm.Manager;
+import sonia.scm.ManagerTestBase;
+import sonia.scm.NotFoundException;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.api.HookContext;
@@ -56,9 +60,15 @@ import sonia.scm.security.KeyGenerator;
 import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.store.JAXBConfigurationStoreFactory;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.Stack;
 
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -83,7 +93,7 @@ import static org.mockito.Mockito.when;
   password = "secret",
   configuration = "classpath:sonia/scm/repository/shiro.ini"
 )
-public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, RepositoryException> {
+public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
 
   @Rule
   public ShiroRule shiro = new ShiroRule();
@@ -96,7 +106,7 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
   private String mockedNamespace = "default_namespace";
 
   @Test
-  public void testCreate() throws RepositoryException {
+  public void testCreate() throws AlreadyExistsException {
     Repository heartOfGold = createTestRepository();
     Repository dbRepo = manager.get(heartOfGold.getId());
 
@@ -108,18 +118,18 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
     username = "unpriv"
   )
   @Test(expected = UnauthorizedException.class)
-  public void testCreateWithoutPrivileges() throws RepositoryException {
+  public void testCreateWithoutPrivileges() throws AlreadyExistsException {
     createTestRepository();
   }
 
-  @Test(expected = RepositoryAlreadyExistsException.class)
-  public void testCreateExisting() throws RepositoryException {
+  @Test(expected = AlreadyExistsException.class)
+  public void testCreateExisting() throws AlreadyExistsException {
     createTestRepository();
     createTestRepository();
   }
 
   @Test
-  public void testDelete() throws RepositoryException {
+  public void testDelete() throws Exception {
     delete(manager, createTestRepository());
   }
 
@@ -127,24 +137,23 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
     username = "unpriv"
   )
   @Test(expected = UnauthorizedException.class)
-  public void testDeleteWithoutPrivileges() throws RepositoryException {
+  public void testDeleteWithoutPrivileges() throws Exception {
     delete(manager, createTestRepository());
   }
 
   @Test(expected = RepositoryIsNotArchivedException.class)
-  public void testDeleteNonArchived() throws RepositoryException {
+  public void testDeleteNonArchived() throws Exception {
     configuration.setEnableRepositoryArchive(true);
     delete(manager, createTestRepository());
   }
 
-  @Test(expected = RepositoryNotFoundException.class)
-  public void testDeleteNotFound() throws RepositoryException {
+  @Test(expected = NotFoundException.class)
+  public void testDeleteNotFound() throws NotFoundException {
     manager.delete(createRepositoryWithId());
   }
 
   @Test
-  public void testDeleteWithEnabledArchive()
-    throws RepositoryException {
+  public void testDeleteWithEnabledArchive() throws Exception {
     Repository repository = createTestRepository();
 
     repository.setArchived(true);
@@ -154,7 +163,7 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
   }
 
   @Test
-  public void testGet() throws RepositoryException {
+  public void testGet() throws AlreadyExistsException {
     Repository heartOfGold = createTestRepository();
     String id = heartOfGold.getId();
     String description = heartOfGold.getDescription();
@@ -172,7 +181,7 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
   @SubjectAware(
     username = "crato"
   )
-  public void testGetWithoutRequiredPrivileges() throws RepositoryException {
+  public void testGetWithoutRequiredPrivileges() throws AlreadyExistsException {
     Repository heartOfGold = RepositoryTestData.createHeartOfGold();
     manager.create(heartOfGold);
 
@@ -181,7 +190,7 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
   }
 
   @Test
-  public void testGetAll() throws RepositoryException {
+  public void testGetAll() throws AlreadyExistsException {
     Repository heartOfGold = createTestRepository();
     Repository happyVerticalPeopleTransporter = createSecondTestRepository();
     boolean foundHeart = false;
@@ -219,7 +228,7 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
   @Test
   @SuppressWarnings("unchecked")
   @SubjectAware(username = "dent")
-  public void testGetAllWithPermissionsForTwoOrThreeRepos() throws RepositoryException {
+  public void testGetAllWithPermissionsForTwoOrThreeRepos() throws AlreadyExistsException {
     // mock key generator
     KeyGenerator keyGenerator = mock(KeyGenerator.class);
     Stack<String> keys = new Stack<>();
@@ -260,7 +269,7 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
   }
 
   @Test
-  public void testEvents() throws RepositoryException {
+  public void testEvents() throws Exception {
     RepositoryManager repoManager = createRepositoryManager(false);
     repoManager.init(contextProvider);
     TestListener listener = new TestListener();
@@ -291,7 +300,7 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
   }
 
   @Test
-  public void testModify() throws RepositoryException {
+  public void testModify() throws NotFoundException, AlreadyExistsException {
     Repository heartOfGold = createTestRepository();
 
     heartOfGold.setDescription("prototype ship");
@@ -305,7 +314,7 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
 
   @Test
   @SubjectAware(username = "crato")
-  public void testModifyWithoutRequiredPermissions() throws RepositoryException {
+  public void testModifyWithoutRequiredPermissions() throws AlreadyExistsException, NotFoundException {
     Repository heartOfGold = RepositoryTestData.createHeartOfGold();
     manager.create(heartOfGold);
     heartOfGold.setDescription("prototype ship");
@@ -314,13 +323,13 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
     manager.modify(heartOfGold);
   }
 
-  @Test(expected = RepositoryNotFoundException.class)
-  public void testModifyNotFound() throws RepositoryException {
+  @Test(expected = NotFoundException.class)
+  public void testModifyNotFound() throws NotFoundException {
     manager.modify(createRepositoryWithId());
   }
 
   @Test
-  public void testRefresh() throws RepositoryException {
+  public void testRefresh() throws NotFoundException, AlreadyExistsException {
     Repository heartOfGold = createTestRepository();
     String description = heartOfGold.getDescription();
 
@@ -331,7 +340,7 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
 
   @Test
   @SubjectAware(username = "crato")
-  public void testRefreshWithoutRequiredPermissions() throws RepositoryException {
+  public void testRefreshWithoutRequiredPermissions() throws AlreadyExistsException, NotFoundException {
     Repository heartOfGold = RepositoryTestData.createHeartOfGold();
     manager.create(heartOfGold);
     heartOfGold.setDescription("prototype ship");
@@ -341,12 +350,12 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
   }
 
   @Test(expected = RepositoryNotFoundException.class)
-  public void testRefreshNotFound() throws RepositoryException {
+  public void testRefreshNotFound() throws NotFoundException {
     manager.refresh(createRepositoryWithId());
   }
 
   @Test
-  public void testRepositoryHook() throws RepositoryException {
+  public void testRepositoryHook() throws AlreadyExistsException {
     CountingReceiveHook hook = new CountingReceiveHook();
     RepositoryManager repoManager = createRepositoryManager(false);
 
@@ -375,7 +384,7 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
   }
 
   @Test
-  public void getRepositoryFromRequestUri_withoutLeadingSlash() throws RepositoryException {
+  public void getRepositoryFromRequestUri_withoutLeadingSlash() throws AlreadyExistsException {
     RepositoryManager m = createManager();
     m.init(contextProvider);
 
@@ -386,7 +395,7 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
   }
 
   @Test
-  public void getRepositoryFromRequestUri_withLeadingSlash() throws RepositoryException {
+  public void getRepositoryFromRequestUri_withLeadingSlash() throws AlreadyExistsException {
     RepositoryManager m = createManager();
     m.init(contextProvider);
 
@@ -397,7 +406,7 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
   }
 
   @Test
-  public void getRepositoryFromRequestUri_withPartialName() throws RepositoryException {
+  public void getRepositoryFromRequestUri_withPartialName() throws AlreadyExistsException {
     RepositoryManager m = createManager();
     m.init(contextProvider);
 
@@ -408,7 +417,7 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
   }
 
   @Test
-  public void getRepositoryFromRequestUri_withTrailingFilePath() throws RepositoryException {
+  public void getRepositoryFromRequestUri_withTrailingFilePath() throws AlreadyExistsException {
     RepositoryManager m = createManager();
     m.init(contextProvider);
 
@@ -418,7 +427,7 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
   }
 
   @Test
-  public void getRepositoryFromRequestUri_forNotExistingRepositoryName() throws RepositoryException {
+  public void getRepositoryFromRequestUri_forNotExistingRepositoryName() throws AlreadyExistsException {
     RepositoryManager m = createManager();
     m.init(contextProvider);
 
@@ -428,7 +437,7 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
   }
 
   @Test
-  public void getRepositoryFromRequestUri_forWrongNamespace() throws RepositoryException {
+  public void getRepositoryFromRequestUri_forWrongNamespace() throws AlreadyExistsException {
     RepositoryManager m = createManager();
     m.init(contextProvider);
 
@@ -438,14 +447,14 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
   }
 
   @Test
-  public void shouldSetNamespace() throws RepositoryException {
+  public void shouldSetNamespace() throws AlreadyExistsException {
     Repository repository = new Repository(null, "hg", null, "scm");
     manager.create(repository);
     assertNotNull(repository.getId());
     assertNotNull(repository.getNamespace());
   }
 
-  private void createUriTestRepositories(RepositoryManager m) throws RepositoryException {
+  private void createUriTestRepositories(RepositoryManager m) throws AlreadyExistsException {
     mockedNamespace = "namespace";
     createRepository(m, new Repository("1", "hg", "namespace", "scm"));
     createRepository(m, new Repository("2", "hg", "namespace", "scm-test"));
@@ -498,8 +507,7 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
       keyGenerator, repositoryDAO, handlerSet, createRepositoryMatcher(), namespaceStrategy);
   }
 
-  private void createRepository(RepositoryManager m, Repository repository)
-    throws RepositoryException {
+  private void createRepository(RepositoryManager m, Repository repository) throws AlreadyExistsException {
     m.create(repository);
   }
 
@@ -526,7 +534,7 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
     return new RepositoryMatcher(Collections.<RepositoryPathMatcher>emptySet());
   }
 
-  private Repository createRepository(Repository repository) throws RepositoryException {
+  private Repository createRepository(Repository repository) throws AlreadyExistsException {
     manager.create(repository);
     assertNotNull(repository.getId());
     assertNotNull(manager.get(repository.getId()));
@@ -541,17 +549,16 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository, Re
     return repository;
   }
 
-  private Repository createSecondTestRepository() throws RepositoryException {
+  private Repository createSecondTestRepository() throws AlreadyExistsException {
     return createRepository(
       RepositoryTestData.createHappyVerticalPeopleTransporter());
   }
 
-  private Repository createTestRepository() throws RepositoryException {
+  private Repository createTestRepository() throws AlreadyExistsException {
     return createRepository(RepositoryTestData.createHeartOfGold());
   }
 
-  private void delete(Manager<Repository, RepositoryException> manager, Repository repository)
-    throws RepositoryException {
+  private void delete(Manager<Repository> manager, Repository repository) throws NotFoundException {
 
     String id = repository.getId();
 

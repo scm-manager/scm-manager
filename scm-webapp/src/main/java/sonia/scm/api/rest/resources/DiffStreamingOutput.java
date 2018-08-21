@@ -35,26 +35,20 @@ package sonia.scm.api.rest.resources;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.io.Closeables;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import sonia.scm.repository.PathNotFoundException;
-import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.repository.api.DiffCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
-import java.io.OutputStream;
+import sonia.scm.util.IOUtil;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
-import sonia.scm.util.IOUtil;
+import java.io.IOException;
+import java.io.OutputStream;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -96,21 +90,10 @@ public class DiffStreamingOutput implements StreamingOutput
    * @throws WebApplicationException
    */
   @Override
-  public void write(OutputStream output)
-    throws IOException, WebApplicationException
-  {
+  public void write(OutputStream output) throws IOException {
     try
     {
       builder.retriveContent(output);
-    }
-    catch (PathNotFoundException ex)
-    {
-      if (logger.isWarnEnabled())
-      {
-        logger.warn("could not find path {}", ex.getPath());
-      }
-
-      throw new WebApplicationException(Response.Status.NOT_FOUND);
     }
     catch (RevisionNotFoundException ex)
     {
@@ -121,13 +104,13 @@ public class DiffStreamingOutput implements StreamingOutput
 
       throw new WebApplicationException(Response.Status.NOT_FOUND);
     }
-    catch (RepositoryException ex)
-    {
-      logger.error("could not write content to page", ex);
-
-      throw new WebApplicationException(ex,
-        Response.Status.INTERNAL_SERVER_ERROR);
-    }
+//    catch (RepositoryException ex)
+//    {
+//      logger.error("could not write content to page", ex);
+//
+//      throw new WebApplicationException(ex,
+//        Response.Status.INTERNAL_SERVER_ERROR);
+//    }
     finally
     {
       IOUtil.close(repositoryService);

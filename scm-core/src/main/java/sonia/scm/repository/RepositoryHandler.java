@@ -47,7 +47,7 @@ import sonia.scm.plugin.ExtensionPoint;
  */
 @ExtensionPoint
 public interface RepositoryHandler
-        extends Handler<Repository, RepositoryException>
+        extends Handler<Repository>
 {
 
   /**

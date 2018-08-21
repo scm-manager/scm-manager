@@ -36,14 +36,14 @@ package sonia.scm.repository;
 import com.github.sdorra.ssp.PermissionActionCheck;
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
+import sonia.scm.ConcurrentModificationException;
+import sonia.scm.NotFoundException;
 
 import java.util.Set;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -77,20 +77,7 @@ public final class HealthChecker
 
   //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   *
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   * @throws RepositoryNotFoundException
-   */
-  public void check(String id)
-    throws RepositoryNotFoundException, RepositoryException, IOException
-  {
+  public void check(String id) throws NotFoundException {
     RepositoryPermissions.healthCheck(id).check();
 
     Repository repository = repositoryManager.get(id);
@@ -104,28 +91,13 @@ public final class HealthChecker
     doCheck(repository);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   public void check(Repository repository)
-    throws RepositoryException, IOException
-  {
+    throws NotFoundException, ConcurrentModificationException {
     RepositoryPermissions.healthCheck(repository).check();
 
     doCheck(repository);
   }
 
-  /**
-   * Method description
-   *
-   *
-   */
   public void checkAll()
   {
     logger.debug("check health of all repositories");
@@ -140,7 +112,7 @@ public final class HealthChecker
         {
           check(repository);
         }
-        catch (RepositoryException | IOException ex)
+        catch (ConcurrentModificationException | NotFoundException ex)
         {
           logger.error("health check ends with exception", ex);
         }
@@ -154,9 +126,7 @@ public final class HealthChecker
     }
   }
 
-  private void doCheck(Repository repository)
-    throws RepositoryException, IOException
-  {
+  private void doCheck(Repository repository) throws NotFoundException {
     logger.info("start health check for repository {}", repository.getName());
 
     HealthCheckResult result = HealthCheckResult.healthy();

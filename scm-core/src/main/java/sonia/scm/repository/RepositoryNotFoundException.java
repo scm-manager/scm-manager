@@ -33,13 +33,15 @@
 
 package sonia.scm.repository;
 
+import sonia.scm.NotFoundException;
+
 /**
  * Signals that the specified {@link Repository} could be found.
  *
  * @author Sebastian Sdorra
  * @since 1.6
  */
-public class RepositoryNotFoundException extends RepositoryException
+public class RepositoryNotFoundException extends NotFoundException
 {
 
   /** Field description */
@@ -53,10 +55,10 @@ public class RepositoryNotFoundException extends RepositoryException
    *
    */
   public RepositoryNotFoundException(Repository repository) {
-    super("repository "  + repository.getName() + "/"  + repository.getNamespace() + " does not exist");
+    super("repository", repository.getName() + "/"  + repository.getNamespace());
   }
 
   public RepositoryNotFoundException(String repositoryId) {
-    super("repository with id " + repositoryId + " does not exist");
+    super("repository", repositoryId);
   }
 }

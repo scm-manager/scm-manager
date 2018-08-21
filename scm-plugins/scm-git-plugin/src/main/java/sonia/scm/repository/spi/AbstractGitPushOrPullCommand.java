@@ -37,27 +37,22 @@ package sonia.scm.repository.spi;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Iterables;
-
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.transport.PushResult;
 import org.eclipse.jgit.transport.RemoteRefUpdate;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.GitUtil;
-import sonia.scm.repository.RepositoryException;
-
-//~--- JDK imports ------------------------------------------------------------
+import sonia.scm.repository.InternalRepositoryException;
 
 import java.io.File;
-import java.io.IOException;
-
 import java.util.Collection;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -94,20 +89,7 @@ public abstract class AbstractGitPushOrPullCommand extends AbstractGitCommand
 
   //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   * @param source
-   * @param remoteUrl
-   *
-   * @return
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
-  protected long push(Repository source, String remoteUrl)
-    throws IOException, RepositoryException
-  {
+  protected long push(Repository source, String remoteUrl) {
     Git git = Git.wrap(source);
     org.eclipse.jgit.api.PushCommand push = git.push();
 
@@ -132,7 +114,7 @@ public abstract class AbstractGitPushOrPullCommand extends AbstractGitCommand
     }
     catch (Exception ex)
     {
-      throw new RepositoryException("could not execute push/pull command", ex);
+      throw new InternalRepositoryException("could not execute push/pull command", ex);
     }
 
     return counter;

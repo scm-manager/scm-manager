@@ -37,7 +37,6 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RepositoryHookEvent;
 import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.RepositoryManager;
@@ -72,19 +71,18 @@ public final class HookEventFacade
 
   //~--- methods --------------------------------------------------------------
 
-  public HookEventHandler handle(String id) throws RepositoryException {
+  public HookEventHandler handle(String id) throws RepositoryNotFoundException {
     return handle(repositoryManagerProvider.get().get(id));
   }
 
-  public HookEventHandler handle(NamespaceAndName namespaceAndName) throws RepositoryException {
+  public HookEventHandler handle(NamespaceAndName namespaceAndName) throws RepositoryNotFoundException {
     return handle(repositoryManagerProvider.get().get(namespaceAndName));
   }
 
-  public HookEventHandler handle(Repository repository) throws RepositoryException
-  {
+  public HookEventHandler handle(Repository repository) throws RepositoryNotFoundException {
     if (repository == null)
     {
-      throw new RepositoryNotFoundException("could not find repository");
+      throw new RepositoryNotFoundException(repository);
     }
 
     return new HookEventHandler(repositoryManagerProvider.get(),

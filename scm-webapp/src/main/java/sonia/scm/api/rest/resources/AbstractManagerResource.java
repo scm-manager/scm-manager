@@ -48,8 +48,13 @@ import sonia.scm.util.AssertUtil;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 
-import javax.ws.rs.core.*;
+import javax.ws.rs.core.CacheControl;
+import javax.ws.rs.core.EntityTag;
+import javax.ws.rs.core.GenericEntity;
+import javax.ws.rs.core.Request;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriInfo;
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -61,28 +66,19 @@ import java.util.Date;
 
 //~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- *
- * @param <T>
- * @param <E>
- */
-public abstract class AbstractManagerResource<T extends ModelObject,
-  E extends Exception>
-{
+public abstract class AbstractManagerResource<T extends ModelObject> {
 
   /** the logger for AbstractManagerResource */
   private static final Logger logger =
     LoggerFactory.getLogger(AbstractManagerResource.class);
 
-  protected final Manager<T, E> manager;
+  protected final Manager<T> manager;
   private final Class<T> type;
 
   protected int cacheMaxAge = 0;
   protected boolean disableCache = false;
 
-  public AbstractManagerResource(Manager<T, E> manager, Class<T> type) {
+  public AbstractManagerResource(Manager<T> manager, Class<T> type) {
     this.manager = manager;
     this.type = type;
   }

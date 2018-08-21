@@ -36,23 +36,19 @@ package sonia.scm.security;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.github.legman.Subscribe;
-
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.group.GroupNames;
@@ -62,10 +58,10 @@ import sonia.scm.repository.RepositoryDAO;
 import sonia.scm.user.User;
 import sonia.scm.util.Util;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.List;
 import java.util.Set;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *

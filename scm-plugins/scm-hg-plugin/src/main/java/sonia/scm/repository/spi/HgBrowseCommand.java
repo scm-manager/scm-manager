@@ -36,15 +36,13 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Strings;
-
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.spi.javahg.HgFileviewCommand;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -67,20 +65,9 @@ public class HgBrowseCommand extends AbstractCommand implements BrowseCommand
 
   //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Override
   public BrowserResult getBrowserResult(BrowseCommandRequest request)
-    throws IOException, RepositoryException
+    throws IOException
   {
     HgFileviewCommand cmd = HgFileviewCommand.on(open());
 

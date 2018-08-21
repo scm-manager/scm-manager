@@ -37,29 +37,25 @@ package sonia.scm.repository.spi;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.revwalk.RevCommit;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.repository.BlameLine;
 import sonia.scm.repository.BlameResult;
 import sonia.scm.repository.GitUtil;
+import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryException;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
-
 import java.util.ArrayList;
 import java.util.List;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -76,15 +72,6 @@ public class GitBlameCommand extends AbstractGitCommand implements BlameCommand
 
   //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   *
-   *
-   * @param context
-   * @param repository
-   * @param repositoryDirectory
-   */
   public GitBlameCommand(GitContext context, Repository repository)
   {
     super(context, repository);
@@ -92,20 +79,9 @@ public class GitBlameCommand extends AbstractGitCommand implements BlameCommand
 
   //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Override
   public BlameResult getBlameResult(BlameCommandRequest request)
-          throws IOException, RepositoryException
+          throws IOException
   {
     if (logger.isDebugEnabled())
     {
@@ -132,7 +108,7 @@ public class GitBlameCommand extends AbstractGitCommand implements BlameCommand
 
       if (gitBlameResult == null)
       {
-        throw new RepositoryException(
+        throw new InternalRepositoryException(
             "could not create blame result for path ".concat(
               request.getPath()));
       }
@@ -174,7 +150,7 @@ public class GitBlameCommand extends AbstractGitCommand implements BlameCommand
     }
     catch (GitAPIException ex)
     {
-      throw new RepositoryException("could not create blame view", ex);
+      throw new InternalRepositoryException("could not create blame view", ex);
     }
 
     return result;

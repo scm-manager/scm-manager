@@ -38,25 +38,21 @@ package sonia.scm.repository;
 import com.google.common.base.Strings;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sonia.scm.SCMContextProvider;
 import sonia.scm.io.FileSystem;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.spi.GitRepositoryServiceProvider;
-
-//~--- JDK imports ------------------------------------------------------------
+import sonia.scm.schedule.Scheduler;
+import sonia.scm.schedule.Task;
+import sonia.scm.store.ConfigurationStoreFactory;
 
 import java.io.File;
 import java.io.IOException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import sonia.scm.SCMContextProvider;
-import sonia.scm.schedule.Scheduler;
-import sonia.scm.schedule.Task;
-import sonia.scm.store.ConfigurationStoreFactory;
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -185,20 +181,8 @@ public class GitRepositoryHandler
 
   //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   * @param directory
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Override
-  protected void create(Repository repository, File directory)
-    throws RepositoryException, IOException
-  {
+  protected void create(Repository repository, File directory) throws IOException {
     try (org.eclipse.jgit.lib.Repository gitRepository = build(directory)) {
       gitRepository.create(true);
     }

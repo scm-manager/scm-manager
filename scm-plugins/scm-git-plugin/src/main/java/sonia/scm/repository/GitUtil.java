@@ -39,7 +39,6 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-
 import org.eclipse.jgit.api.FetchCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -54,23 +53,19 @@ import org.eclipse.jgit.transport.FetchResult;
 import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.util.FS;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
+import sonia.scm.web.GitUserAgentProvider;
 
-//~--- JDK imports ------------------------------------------------------------
-
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
-
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import javax.servlet.http.HttpServletRequest;
-import sonia.scm.web.GitUserAgentProvider;
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -192,22 +187,7 @@ public final class GitUtil
     return tags;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param git
-   * @param directory
-   * @param remoteRepository
-   *
-   * @return
-   *
-   * @throws RepositoryException
-   */
-  public static FetchResult fetch(Git git, File directory,
-    Repository remoteRepository)
-    throws RepositoryException
-  {
+  public static FetchResult fetch(Git git, File directory, Repository remoteRepository) {
     try
     {
       FetchCommand fetch = git.fetch();
@@ -220,7 +200,7 @@ public final class GitUtil
     }
     catch (GitAPIException ex)
     {
-      throw new RepositoryException("could not fetch", ex);
+      throw new InternalRepositoryException("could not fetch", ex);
     }
   }
 
@@ -294,7 +274,7 @@ public final class GitUtil
   {
     if (walk != null)
     {
-      walk.close();;
+      walk.close();
     }
   }
 

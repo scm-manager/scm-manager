@@ -33,6 +33,7 @@ package sonia.scm.cache;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 /**
@@ -101,7 +102,7 @@ public final class CacheStatistics
   public String toString()
   {
     //J-
-    return Objects.toStringHelper(this)
+    return MoreObjects.toStringHelper(this)
                   .add("name", name)
                   .add("hitCount", hitCount)
                   .add("missCount", missCount)

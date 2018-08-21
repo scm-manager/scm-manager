@@ -34,15 +34,15 @@ package sonia.scm.io;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Objects;
-
 import org.junit.Test;
-
-import static org.junit.Assert.*;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
 import java.io.Serializable;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Unit tests for {@link DeepCopy}.

@@ -45,7 +45,7 @@ import sonia.scm.search.Searchable;
  * @author Sebastian Sdorra
  */
 public interface UserManager
-        extends Manager<User, UserException>, Searchable<User>
+        extends Manager<User>, Searchable<User>
 {
 
   /**

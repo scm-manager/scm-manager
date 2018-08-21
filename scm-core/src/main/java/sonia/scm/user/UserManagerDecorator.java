@@ -38,9 +38,9 @@ package sonia.scm.user;
 import sonia.scm.ManagerDecorator;
 import sonia.scm.search.SearchRequest;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.Collection;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Decorator for {@link UserManager}.
@@ -48,7 +48,7 @@ import java.util.Collection;
  * @author Sebastian Sdorra
  * @since 1.23
  */
-public class UserManagerDecorator extends ManagerDecorator<User, UserException>
+public class UserManagerDecorator extends ManagerDecorator<User>
   implements UserManager
 {
 

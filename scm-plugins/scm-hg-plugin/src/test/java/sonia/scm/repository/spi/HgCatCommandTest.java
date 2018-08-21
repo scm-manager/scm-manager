@@ -33,8 +33,10 @@
 
 package sonia.scm.repository.spi;
 
+import org.junit.Ignore;
 import org.junit.Test;
-import sonia.scm.repository.RepositoryException;
+import sonia.scm.NotFoundException;
+import sonia.scm.repository.InternalRepositoryException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -45,7 +47,7 @@ import static org.junit.Assert.assertEquals;
 public class HgCatCommandTest extends AbstractHgCommandTestBase {
 
   @Test
-  public void testCat() throws IOException, RepositoryException {
+  public void testCat() throws IOException {
     CatCommandRequest request = new CatCommandRequest();
 
     request.setPath("a.txt");
@@ -54,23 +56,24 @@ public class HgCatCommandTest extends AbstractHgCommandTestBase {
   }
 
   @Test
-  public void testSimpleCat() throws IOException, RepositoryException {
+  public void testSimpleCat() throws IOException {
     CatCommandRequest request = new CatCommandRequest();
 
     request.setPath("b.txt");
     assertEquals("b", execute(request));
   }
 
-  @Test(expected = RepositoryException.class)
-  public void testUnknownFile() throws IOException, RepositoryException {
+  @Test(expected = InternalRepositoryException.class)
+  public void testUnknownFile() throws IOException {
     CatCommandRequest request = new CatCommandRequest();
 
     request.setPath("unknown");
     execute(request);
   }
 
-  @Test(expected = RepositoryException.class)
-  public void testUnknownRevision() throws IOException, RepositoryException {
+  @Test(expected = NotFoundException.class)
+  @Ignore("detection of unknown revision in hg not yet implemented")
+  public void testUnknownRevision() throws IOException {
     CatCommandRequest request = new CatCommandRequest();
 
     request.setRevision("abc");
@@ -79,7 +82,7 @@ public class HgCatCommandTest extends AbstractHgCommandTestBase {
   }
 
   @Test
-  public void testSimpleStream() throws IOException, RepositoryException {
+  public void testSimpleStream() throws IOException {
     CatCommandRequest request = new CatCommandRequest();
     request.setPath("b.txt");
 
@@ -92,7 +95,7 @@ public class HgCatCommandTest extends AbstractHgCommandTestBase {
     catResultStream.close();
   }
 
-  private String execute(CatCommandRequest request) throws IOException, RepositoryException {
+  private String execute(CatCommandRequest request) throws IOException {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     new HgCatCommand(cmdContext, repository).getCatResult(request, baos);
     return baos.toString().trim();

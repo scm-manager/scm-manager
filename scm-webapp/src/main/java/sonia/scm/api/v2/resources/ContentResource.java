@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.PathNotFoundException;
-import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.repository.api.RepositoryService;
@@ -79,9 +78,9 @@ public class ContentResource {
       } catch (PathNotFoundException e) {
         LOG.debug("path '{}' not found in repository {}/{}", path, namespace, name, e);
         throw new WebApplicationException(Status.NOT_FOUND);
-      } catch (RepositoryException e) {
-        LOG.info("error reading repository resource {} from {}/{}", path, namespace, name, e);
-        throw new WebApplicationException(Status.INTERNAL_SERVER_ERROR);
+      } catch (RevisionNotFoundException e) {
+        LOG.debug("revision '{}' not found in repository {}/{}", revision, namespace, name, e);
+        throw new WebApplicationException(Status.NOT_FOUND);
       }
     };
   }
@@ -124,7 +123,7 @@ public class ContentResource {
     } catch (RevisionNotFoundException e) {
       LOG.debug("revision '{}' not found in repository {}/{}", revision, namespace, name, e);
       return Response.status(Status.NOT_FOUND).build();
-    } catch (IOException | RepositoryException e) {
+    } catch (IOException e) {
       LOG.info("error reading repository resource {} from {}/{}", path, namespace, name, e);
       return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
     }
@@ -137,7 +136,7 @@ public class ContentResource {
     contentType.getLanguage().ifPresent(language -> responseBuilder.header("Language", language));
   }
 
-  private byte[] getHead(String revision, String path, RepositoryService repositoryService) throws IOException, RepositoryException {
+  private byte[] getHead(String revision, String path, RepositoryService repositoryService) throws IOException, PathNotFoundException, RevisionNotFoundException {
     InputStream stream = repositoryService.getCatCommand().setRevision(revision).getStream(path);
     try {
       byte[] buffer = new byte[HEAD_BUFFER_SIZE];

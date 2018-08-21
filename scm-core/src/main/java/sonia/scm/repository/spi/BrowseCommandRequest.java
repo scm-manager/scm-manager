@@ -35,8 +35,8 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-
 /**
  *
  * @author Sebastian Sdorra
@@ -127,7 +127,7 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest
   public String toString()
   {
     //J-
-    return Objects.toStringHelper(this)
+    return MoreObjects.toStringHelper(this)
                   .add("path", getPath())
                   .add("revision", getRevision())
                   .add("recursive", recursive)

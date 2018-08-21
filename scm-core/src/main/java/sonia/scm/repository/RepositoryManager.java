@@ -35,6 +35,7 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.AlreadyExistsException;
 import sonia.scm.TypeManager;
 
 import javax.servlet.http.HttpServletRequest;
@@ -52,7 +53,7 @@ import java.util.Collection;
  * @apiviz.uses sonia.scm.repository.RepositoryHandler
  */
 public interface RepositoryManager
-  extends TypeManager<Repository, RepositoryHandler, RepositoryException>
+  extends TypeManager<Repository, RepositoryHandler>
 {
 
   /**
@@ -72,10 +73,8 @@ public interface RepositoryManager
    * @param repository {@link Repository} to import
    *
    * @throws IOException
-   * @throws RepositoryException
    */
-  public void importRepository(Repository repository)
-    throws IOException, RepositoryException;
+  public void importRepository(Repository repository) throws IOException, AlreadyExistsException;
 
   //~--- get methods ----------------------------------------------------------
 

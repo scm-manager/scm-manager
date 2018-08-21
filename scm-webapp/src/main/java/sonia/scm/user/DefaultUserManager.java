@@ -40,9 +40,11 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.AlreadyExistsException;
 import sonia.scm.EagerSingleton;
 import sonia.scm.HandlerEventType;
 import sonia.scm.ManagerDaoAdapter;
+import sonia.scm.NotFoundException;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.TransformFilter;
 import sonia.scm.search.SearchRequest;
@@ -97,10 +99,7 @@ public class DefaultUserManager extends AbstractUserManager
   public DefaultUserManager(UserDAO userDAO)
   {
     this.userDAO = userDAO;
-    this.managerDaoAdapter = new ManagerDaoAdapter<>(
-      userDAO,
-      UserNotFoundException::new,
-      UserAlreadyExistsException::new);
+    this.managerDaoAdapter = new ManagerDaoAdapter<>(userDAO);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -139,10 +138,9 @@ public class DefaultUserManager extends AbstractUserManager
    * @param user
    *
    * @throws IOException
-   * @throws UserException
    */
   @Override
-  public User create(User user) throws UserException {
+  public User create(User user) throws AlreadyExistsException {
     String type = user.getType();
     if (Util.isEmpty(type)) {
       user.setType(userDAO.getType());
@@ -159,7 +157,7 @@ public class DefaultUserManager extends AbstractUserManager
   }
 
   @Override
-  public void delete(User user) throws UserException {
+  public void delete(User user) throws NotFoundException {
     logger.info("delete user {} of type {}", user.getName(), user.getType());
     managerDaoAdapter.delete(
       user,
@@ -193,11 +191,9 @@ public class DefaultUserManager extends AbstractUserManager
    * @param user
    *
    * @throws IOException
-   * @throws UserException
    */
   @Override
-  public void modify(User user) throws UserException
-  {
+  public void modify(User user) throws NotFoundException {
     logger.info("modify user {} of type {}", user.getName(), user.getType());
 
     managerDaoAdapter.modify(
@@ -214,11 +210,9 @@ public class DefaultUserManager extends AbstractUserManager
    * @param user
    *
    * @throws IOException
-   * @throws UserException
    */
   @Override
-  public void refresh(User user) throws UserException
-  {
+  public void refresh(User user) throws NotFoundException {
     if (logger.isInfoEnabled())
     {
       logger.info("refresh user {} of type {}", user.getName(), user.getType());
@@ -229,7 +223,7 @@ public class DefaultUserManager extends AbstractUserManager
 
     if (fresh == null)
     {
-      throw new UserNotFoundException(user);
+      throw new NotFoundException();
     }
 
     fresh.copyProperties(user);
@@ -455,5 +449,5 @@ public class DefaultUserManager extends AbstractUserManager
   //~--- fields ---------------------------------------------------------------
 
   private final UserDAO userDAO;
-  private final ManagerDaoAdapter<User, UserException> managerDaoAdapter;
+  private final ManagerDaoAdapter<User> managerDaoAdapter;
 }

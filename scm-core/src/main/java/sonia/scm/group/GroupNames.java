@@ -39,13 +39,12 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.Serializable;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * This class represents all associated groups for a user.

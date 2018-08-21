@@ -15,7 +15,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import sonia.scm.PageResult;
 import sonia.scm.group.Group;
-import sonia.scm.group.GroupException;
 import sonia.scm.group.GroupManager;
 import sonia.scm.web.VndMediaType;
 
@@ -27,7 +26,9 @@ import java.net.URL;
 import java.util.Collections;
 
 import static java.util.Collections.singletonList;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doNothing;
@@ -58,7 +59,7 @@ public class GroupRootResourceTest {
   private ArgumentCaptor<Group> groupCaptor = ArgumentCaptor.forClass(Group.class);
 
   @Before
-  public void prepareEnvironment() throws IOException, GroupException {
+  public void prepareEnvironment() throws Exception {
     initMocks(this);
     when(groupManager.create(groupCaptor.capture())).thenAnswer(invocation -> invocation.getArguments()[0]);
     doNothing().when(groupManager).modify(groupCaptor.capture());

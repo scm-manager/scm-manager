@@ -35,16 +35,14 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import org.junit.Test;
-
 import sonia.scm.repository.BlameLine;
 import sonia.scm.repository.BlameResult;
-import sonia.scm.repository.RepositoryException;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 //~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
 
 /**
  *
@@ -53,15 +51,8 @@ import java.io.IOException;
 public class SvnBlameCommandTest extends AbstractSvnCommandTestBase
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test
-  public void testGetBlameResult() throws IOException, RepositoryException
+  public void testGetBlameResult()
   {
     BlameCommandRequest request = new BlameCommandRequest();
 
@@ -85,17 +76,8 @@ public class SvnBlameCommandTest extends AbstractSvnCommandTestBase
     assertNull(line.getAuthor().getMail());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test
-  public void testGetBlameResultWithRevision()
-          throws IOException, RepositoryException
-  {
+  public void testGetBlameResultWithRevision() {
     BlameCommandRequest request = new BlameCommandRequest();
 
     request.setPath("a.txt");

@@ -5,8 +5,8 @@ import com.webcohesion.enunciate.metadata.rs.ResponseHeader;
 import com.webcohesion.enunciate.metadata.rs.ResponseHeaders;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
+import sonia.scm.AlreadyExistsException;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.web.VndMediaType;
 
@@ -25,7 +25,7 @@ public class RepositoryCollectionResource {
 
   private static final int DEFAULT_PAGE_SIZE = 10;
 
-  private final CollectionResourceManagerAdapter<Repository, RepositoryDto, RepositoryException> adapter;
+  private final CollectionResourceManagerAdapter<Repository, RepositoryDto> adapter;
   private final RepositoryCollectionToDtoMapper repositoryCollectionToDtoMapper;
   private final RepositoryDtoToRepositoryMapper dtoToRepositoryMapper;
   private final ResourceLinks resourceLinks;
@@ -87,7 +87,7 @@ public class RepositoryCollectionResource {
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
   @ResponseHeaders(@ResponseHeader(name = "Location", description = "uri to the created repository"))
-  public Response create(@Valid RepositoryDto repositoryDto) throws RepositoryException {
+  public Response create(@Valid RepositoryDto repositoryDto) throws AlreadyExistsException {
     return adapter.create(repositoryDto,
       () -> dtoToRepositoryMapper.map(repositoryDto, null),
       repository -> resourceLinks.repository().self(repository.getNamespace(), repository.getName()));

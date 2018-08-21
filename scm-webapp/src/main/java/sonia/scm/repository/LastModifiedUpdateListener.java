@@ -38,6 +38,7 @@ import com.google.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.EagerSingleton;
+import sonia.scm.NotFoundException;
 import sonia.scm.plugin.Extension;
 import sonia.scm.web.security.AdministrationContext;
 import sonia.scm.web.security.PrivilegedAction;
@@ -146,13 +147,10 @@ public final class LastModifiedUpdateListener
         logger.info("update last modified date of repository {}", dbr.getId());
         dbr.setLastModified(System.currentTimeMillis());
 
-        try
-        {
+        try {
           repositoryManager.modify(dbr);
-        }
-        catch (RepositoryException ex)
-        {
-          logger.error("could not modify repository", ex);
+        } catch (NotFoundException e) {
+          logger.error("could not modify repository", e);
         }
       }
       else

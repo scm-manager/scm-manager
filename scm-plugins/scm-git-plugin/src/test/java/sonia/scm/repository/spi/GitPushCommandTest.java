@@ -37,19 +37,16 @@ package sonia.scm.repository.spi;
 
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.revwalk.RevCommit;
-
 import org.junit.Test;
-
-import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.api.PushResponse;
 
-import static org.junit.Assert.*;
+import java.io.IOException;
+import java.util.Iterator;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 //~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
-
-import java.util.Iterator;
 
 /**
  *
@@ -68,7 +65,7 @@ public class GitPushCommandTest extends AbstractRemoteCommandTestBase
    */
   @Test
   public void testPush()
-    throws IOException, GitAPIException, RepositoryException
+    throws IOException, GitAPIException
   {
     write(outgoing, outgoingDirectory, "a.txt", "content of a.txt");
 

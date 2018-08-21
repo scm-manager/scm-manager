@@ -36,36 +36,34 @@ package sonia.scm.security;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Throwables;
-
-import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-
+import sonia.scm.AlreadyExistsException;
+import sonia.scm.NotFoundException;
 import sonia.scm.group.Group;
-import sonia.scm.group.GroupException;
 import sonia.scm.group.GroupManager;
 import sonia.scm.group.GroupNames;
 import sonia.scm.user.User;
-import sonia.scm.user.UserException;
 import sonia.scm.user.UserManager;
 import sonia.scm.web.security.AdministrationContext;
 import sonia.scm.web.security.PrivilegedAction;
 
-import static org.hamcrest.Matchers.*;
+import java.io.IOException;
 
-import static org.junit.Assert.*;
-
-import static org.mockito.Mockito.*;
+import static org.hamcrest.Matchers.hasItem;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 //~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
 
 /**
  * Unit tests for {@link SyncingRealmHelper}.
@@ -131,11 +129,10 @@ public class SyncingRealmHelperTest {
   /**
    * Tests {@link SyncingRealmHelper#store(Group)}.
    *
-   * @throws GroupException
    * @throws IOException
    */
   @Test
-  public void testStoreGroupCreate() throws GroupException, IOException {
+  public void testStoreGroupCreate() throws AlreadyExistsException {
     Group group = new Group("unit-test", "heartOfGold");
 
     helper.store(group);
@@ -143,27 +140,21 @@ public class SyncingRealmHelperTest {
   }
 
   /**
-   * Tests {@link SyncingRealmHelper#store(Group)} with thrown {@link GroupException}.
-   *
-   * @throws GroupException
-   * @throws IOException
+   * Tests {@link SyncingRealmHelper#store(Group)}.
    */
-  @Test(expected = AuthenticationException.class)
-  public void testStoreGroupFailure() throws GroupException, IOException {
+  @Test(expected = IllegalStateException.class)
+  public void testStoreGroupFailure() throws AlreadyExistsException {
     Group group = new Group("unit-test", "heartOfGold");
 
-    doThrow(GroupException.class).when(groupManager).create(group);
+    doThrow(AlreadyExistsException.class).when(groupManager).create(group);
     helper.store(group);
   }
 
   /**
    * Tests {@link SyncingRealmHelper#store(Group)} with an existing group.
-   *
-   * @throws GroupException
-   * @throws IOException
    */
   @Test
-  public void testStoreGroupModify() throws GroupException, IOException {
+  public void testStoreGroupModify() throws NotFoundException {
     Group group = new Group("unit-test", "heartOfGold");
 
     when(groupManager.get("heartOfGold")).thenReturn(group);
@@ -175,11 +166,10 @@ public class SyncingRealmHelperTest {
   /**
    * Tests {@link SyncingRealmHelper#store(User)}.
    *
-   * @throws UserException
    * @throws IOException
    */
   @Test
-  public void testStoreUserCreate() throws UserException, IOException {
+  public void testStoreUserCreate() throws AlreadyExistsException {
     User user = new User("tricia");
 
     helper.store(user);
@@ -187,27 +177,21 @@ public class SyncingRealmHelperTest {
   }
 
   /**
-   * Tests {@link SyncingRealmHelper#store(User)} with a thrown {@link UserException}.
-   *
-   * @throws UserException
-   * @throws IOException
+   * Tests {@link SyncingRealmHelper#store(User)} with a thrown {@link AlreadyExistsException}.
    */
-  @Test(expected = AuthenticationException.class)
-  public void testStoreUserFailure() throws UserException, IOException {
+  @Test(expected = IllegalStateException.class)
+  public void testStoreUserFailure() throws AlreadyExistsException {
     User user = new User("tricia");
 
-    doThrow(UserException.class).when(userManager).create(user);
+    doThrow(AlreadyExistsException.class).when(userManager).create(user);
     helper.store(user);
   }
 
   /**
    * Tests {@link SyncingRealmHelper#store(User)} with an existing user.
-   *
-   * @throws UserException
-   * @throws IOException
    */
   @Test
-  public void testStoreUserModify() throws UserException, IOException {
+  public void testStoreUserModify() throws NotFoundException {
     when(userManager.contains("tricia")).thenReturn(Boolean.TRUE);
 
     User user = new User("tricia");
