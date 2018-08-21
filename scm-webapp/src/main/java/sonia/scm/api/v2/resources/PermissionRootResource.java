@@ -7,6 +7,7 @@ import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import sonia.scm.repository.NamespaceAndName;
+import sonia.scm.repository.Permission;
 import sonia.scm.repository.PermissionAlreadyExistsException;
 import sonia.scm.repository.PermissionNotFoundException;
 import sonia.scm.repository.Repository;
@@ -155,13 +156,12 @@ public class PermissionRootResource {
     PermissionDto permission) throws RepositoryException {
     log.info("try to update the permission with name: {}. the modified permission is: {}", permissionName, permission);
     Repository repository = checkPermission(namespace, name);
-    repository.getPermissions()
+    Permission existingPermission = repository.getPermissions()
       .stream()
       .filter(perm -> StringUtils.isNotBlank(perm.getName()) && perm.getName().equals(permissionName))
       .findFirst()
-      .map(p -> dtoToModelMapper.map(p, permission))
-      .orElseThrow(() -> new PermissionNotFoundException(repository, permissionName))
-    ;
+      .orElseThrow(() -> new PermissionNotFoundException(repository, permissionName));
+    dtoToModelMapper.modify(existingPermission, permission);
     manager.modify(repository);
     log.info("the permission with name: {} is updated.", permissionName);
     return Response.noContent().build();

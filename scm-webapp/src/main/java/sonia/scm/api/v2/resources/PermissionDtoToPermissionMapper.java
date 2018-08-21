@@ -16,6 +16,6 @@ public abstract class PermissionDtoToPermissionMapper {
    * @param permissionDto the source dto
    * @return the mapped target permission object
    */
-  public abstract Permission map(@MappingTarget Permission target, PermissionDto permissionDto);
+  public abstract Permission modify(@MappingTarget Permission target, PermissionDto permissionDto);
 
 }
