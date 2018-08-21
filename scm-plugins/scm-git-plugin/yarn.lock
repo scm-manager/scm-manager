@@ -578,9 +578,9 @@
     lodash "^4.17.10"
     to-fast-properties "^2.0.0"
 
-"@scm-manager/ui-bundler@^0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@scm-manager/ui-bundler/-/ui-bundler-0.0.1.tgz#5a8ed6236457bfe3b14ec04324555e0973c0a358"
+"@scm-manager/ui-bundler@^0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@scm-manager/ui-bundler/-/ui-bundler-0.0.2.tgz#1e1dc698aacb5145b1d2dd30a250e01f7ed504ca"
   dependencies:
     "@babel/core" "^7.0.0-rc.1"
     "@babel/preset-env" "^7.0.0-rc.1"
