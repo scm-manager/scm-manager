@@ -21,7 +21,10 @@ type Props = {
 type State = {
   config: Config,
   showNotification: boolean,
-  loginAttemptError: boolean
+  error: {
+    loginAttemptLimitTimeout: boolean,
+    loginAttemptLimit: boolean
+  }
 };
 
 class ConfigForm extends React.Component<Props, State> {
@@ -54,7 +57,10 @@ class ConfigForm extends React.Component<Props, State> {
         _links: {}
       },
       showNotification: false,
-      loginAttemptError: true
+      error: {
+        loginAttemptLimitTimeout: false,
+        loginAttemptLimit: false
+      }
     };
   }
 
@@ -151,12 +157,11 @@ class ConfigForm extends React.Component<Props, State> {
         <SubmitButton
           loading={loading}
           label={t("config-form.submit")}
-          disabled={!configUpdatePermission || !this.isValid()}
+          disabled={!configUpdatePermission || this.hasError()}
         />
       </form>
     );
   }
-
 
   onChange = (isValid: boolean, changedValue: any, name: string) => {
     this.setState({
@@ -164,12 +169,28 @@ class ConfigForm extends React.Component<Props, State> {
       config: {
         ...this.state.config,
         [name]: changedValue
+      },
+      error: {
+        ...this.state.error,
+        [name]: !isValid
       }
     });
   };
 
-  isValid = () => {
-    return this.state.loginAttemptError;
+  hasError = () => {
+    console.log("loginAttemtLimit " + this.state.error.loginAttemptLimit);
+    console.log(
+      "loginAttemtLimitTimeout " + this.state.error.loginAttemptLimitTimeout
+    );
+
+    console.log(
+      this.state.error.loginAttemptLimit ||
+        this.state.error.loginAttemptLimitTimeout
+    );
+    return (
+      this.state.error.loginAttemptLimit ||
+      this.state.error.loginAttemptLimitTimeout
+    );
   };
 
   onClose = () => {

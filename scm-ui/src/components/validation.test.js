@@ -85,3 +85,18 @@ describe("test mail validation", () => {
     }
   });
 });
+
+describe("test number validation", () => {
+  it("should return false", () => {
+    const invalid = ["1a", "35gu", "dj6", "45,5", "test"];
+    for (let number of invalid) {
+      expect(validator.isNumberValid(number)).toBe(false);
+    }
+  });
+  it("should return true", () => {
+    const valid = ["1", "35", "2", "235", "34.4"];
+    for (let number of valid) {
+      expect(validator.isNumberValid(number)).toBe(true);
+    }
+  });
+});
