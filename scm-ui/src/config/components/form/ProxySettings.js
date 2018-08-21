@@ -4,7 +4,7 @@ import { translate } from "react-i18next";
 import { Checkbox, InputField } from "../../../components/forms/index";
 import Subtitle from "../../../components/layout/Subtitle";
 import ProxyExcludesTable from "../table/ProxyExcludesTable";
-import AddProxyExcludeField from "../fields/AddProxyExcludeField";
+import AddEntryToTableField from "../../../components/forms/AddEntryToTableField";
 
 type Props = {
   proxyPassword: string,
@@ -65,6 +65,7 @@ class ProxySettings extends React.Component<Props> {
           onChange={this.handleProxyUserChange}
           disabled={!enableProxy || !hasUpdatePermission}
         />
+
         <ProxyExcludesTable
           proxyExcludes={proxyExcludes}
           onChange={(isValid, changedValue, name) =>
@@ -72,9 +73,12 @@ class ProxySettings extends React.Component<Props> {
           }
           disabled={!enableProxy || !hasUpdatePermission}
         />
-        <AddProxyExcludeField
-          addProxyExclude={this.addProxyExclude}
+        <AddEntryToTableField
+          addEntry={this.addProxyExclude}
           disabled={!enableProxy || !hasUpdatePermission}
+          buttonLabel={t("proxy-settings.add-proxy-exclude-button")}
+          fieldLabel={t("proxy-settings.add-proxy-exclude-textfield")}
+          errorMessage={t("proxy-settings.add-proxy-exclude-error")}
         />
       </div>
     );

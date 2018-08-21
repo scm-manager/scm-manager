@@ -4,8 +4,7 @@ import { translate } from "react-i18next";
 import Subtitle from "../../../components/layout/Subtitle";
 import AdminGroupTable from "../table/AdminGroupTable";
 import AdminUserTable from "../table/AdminUserTable";
-import AddAdminGroupField from "../fields/AddAdminGroupField";
-import AddAdminUserField from "../fields/AddAdminUserField";
+import AddEntryToTableField from "../../../components/forms/AddEntryToTableField";
 
 type Props = {
   adminGroups: string[],
@@ -29,8 +28,14 @@ class AdminSettings extends React.Component<Props> {
           }
           disabled={!hasUpdatePermission}
         />
-        <AddAdminGroupField addGroup={this.addGroup} disabled={!hasUpdatePermission}
+        <AddEntryToTableField
+          addEntry={this.addGroup}
+          disabled={!hasUpdatePermission}
+          buttonLabel={t("admin-settings.add-group-button")}
+          fieldLabel={t("admin-settings.add-group-textfield")}
+          errorMessage={t("admin-settings.add-group-error")}
         />
+
         <AdminUserTable
           adminUsers={adminUsers}
           onChange={(isValid, changedValue, name) =>
@@ -38,7 +43,12 @@ class AdminSettings extends React.Component<Props> {
           }
           disabled={!hasUpdatePermission}
         />
-        <AddAdminUserField addUser={this.addUser} disabled={!hasUpdatePermission}
+        <AddEntryToTableField
+          addEntry={this.addUser}
+          disabled={!hasUpdatePermission}
+          buttonLabel={t("admin-settings.add-user-button")}
+          fieldLabel={t("admin-settings.add-user-textfield")}
+          errorMessage={t("admin-settings.add-user-error")}
         />
       </div>
     );
