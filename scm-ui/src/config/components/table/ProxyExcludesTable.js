@@ -1,7 +1,7 @@
 //@flow
 import React from "react";
 import { translate } from "react-i18next";
-import RemoveProxyExcludeButton from "../buttons/RemoveProxyExcludeButton";
+import { RemoveEntryOfTableButton } from "../../../components/buttons";
 
 type Props = {
   proxyExcludes: string[],
@@ -25,10 +25,11 @@ class ProxyExcludesTable extends React.Component<Props, State> {
                 <tr key={excludes}>
                   <td key={excludes}>{excludes}</td>
                   <td>
-                    <RemoveProxyExcludeButton
-                      proxyExcludeName={excludes}
-                      removeProxyExclude={this.removeProxyExclude}
+                    <RemoveEntryOfTableButton
+                      entryname={excludes}
+                      removeEntry={this.removeEntry}
                       disabled={this.props.disabled}
+                      label={t("proxy-settings.remove-proxy-exclude-button")}
                     />
                   </td>
                 </tr>
@@ -40,7 +41,7 @@ class ProxyExcludesTable extends React.Component<Props, State> {
     );
   }
 
-  removeProxyExclude = (excludename: string) => {
+  removeEntry = (excludename: string) => {
     const newExcludes = this.props.proxyExcludes.filter(
       name => name !== excludename
     );

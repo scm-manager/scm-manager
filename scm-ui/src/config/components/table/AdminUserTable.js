@@ -1,7 +1,7 @@
 //@flow
 import React from "react";
 import { translate } from "react-i18next";
-import RemoveAdminUserButton from "../buttons/RemoveAdminUserButton";
+import { RemoveEntryOfTableButton } from "../../../components/buttons";
 
 type Props = {
   adminUsers: string[],
@@ -25,10 +25,11 @@ class AdminUserTable extends React.Component<Props, State> {
                 <tr key={user}>
                   <td key={user}>{user}</td>
                   <td>
-                    <RemoveAdminUserButton
-                      username={user}
-                      removeUser={this.removeUser}
+                    <RemoveEntryOfTableButton
+                      entryname={user}
+                      removeEntry={this.removeEntry}
                       disabled={disabled}
+                      label={t("admin-settings.remove-user-button")}
                     />
                   </td>
                 </tr>
@@ -40,7 +41,7 @@ class AdminUserTable extends React.Component<Props, State> {
     );
   }
 
-  removeUser = (username: string) => {
+  removeEntry = (username: string) => {
     const newUsers = this.props.adminUsers.filter(name => name !== username);
     this.props.onChange(true, newUsers, "adminUsers");
   };

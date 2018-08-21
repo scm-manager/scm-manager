@@ -1,7 +1,7 @@
 //@flow
 import React from "react";
 import { translate } from "react-i18next";
-import RemoveAdminGroupButton from "../buttons/RemoveAdminGroupButton";
+import { RemoveEntryOfTableButton } from "../../../components/buttons";
 
 type Props = {
   adminGroups: string[],
@@ -25,10 +25,11 @@ class AdminGroupTable extends React.Component<Props, State> {
                 <tr key={group}>
                   <td key={group}>{group}</td>
                   <td>
-                    <RemoveAdminGroupButton
-                      groupname={group}
-                      removeGroup={this.removeGroup}
+                    <RemoveEntryOfTableButton
+                      entryname={group}
+                      removeEntry={this.removeEntry}
                       disabled={disabled}
+                      label={t("admin-settings.remove-group-button")}
                     />
                   </td>
                 </tr>
@@ -40,7 +41,7 @@ class AdminGroupTable extends React.Component<Props, State> {
     );
   }
 
-  removeGroup = (groupname: string) => {
+  removeEntry = (groupname: string) => {
     const newGroups = this.props.adminGroups.filter(name => name !== groupname);
     this.props.onChange(true, newGroups, "adminGroups");
   };
