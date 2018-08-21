@@ -25,6 +25,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import sonia.scm.api.rest.AuthorizationExceptionMapper;
 import sonia.scm.repository.*;
 import sonia.scm.web.VndMediaType;
 
@@ -155,11 +156,11 @@ public class PermissionRootResourceTest {
     doThrow(AuthorizationException.class).when(permissionRootResource).checkUserPermitted(mockRepository);
     when(repositoryManager.get(any(NamespaceAndName.class))).thenReturn(mockRepository);
     return createDynamicTestsToAssertResponses(
-      requestGETPermission.expectedResponseStatus(401),
-      requestPOSTPermission.expectedResponseStatus(401),
-      requestGETAllPermissions.expectedResponseStatus(401),
-      requestDELETEPermission.expectedResponseStatus(401),
-      requestPUTPermission.expectedResponseStatus(401));
+      requestGETPermission.expectedResponseStatus(403),
+      requestPOSTPermission.expectedResponseStatus(403),
+      requestGETAllPermissions.expectedResponseStatus(403),
+      requestDELETEPermission.expectedResponseStatus(403),
+      requestPUTPermission.expectedResponseStatus(403));
   }
 
   @Test
