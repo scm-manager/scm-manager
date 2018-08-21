@@ -18,6 +18,7 @@ import { Navigation, NavLink, Section } from "../../components/navigation";
 import RepositoryDetails from "../components/RepositoryDetails";
 import DeleteNavAction from "../components/DeleteNavAction";
 import Edit from "../containers/Edit";
+import Permissions from "../../permissions/containers/Permissions";
 
 import type { History } from "history";
 import EditNavLink from "../components/EditNavLink";
@@ -96,6 +97,10 @@ class RepositoryRoot extends React.Component<Props> {
             <Route
               path={`${url}/edit`}
               component={() => <Edit repository={repository} />}
+            />
+            <Route
+              path={`${url}/permissions`}
+              component={() => <Permissions />}
             />
           </div>
           <div className="column">
