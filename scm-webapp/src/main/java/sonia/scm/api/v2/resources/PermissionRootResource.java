@@ -6,11 +6,25 @@ import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
-import sonia.scm.repository.*;
+import sonia.scm.repository.NamespaceAndName;
+import sonia.scm.repository.PermissionAlreadyExistsException;
+import sonia.scm.repository.PermissionNotFoundException;
+import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryException;
+import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.RepositoryNotFoundException;
+import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.util.List;
@@ -58,7 +72,7 @@ public class PermissionRootResource {
     checkPermissionAlreadyExists(permission, repository);
     repository.getPermissions().add(dtoToModelMapper.map(permission));
     manager.modify(repository);
-    return Response.created(URI.create(resourceLinks.permission().self(namespace,name,permission.getName()))).build();
+    return Response.created(URI.create(resourceLinks.permission().self(namespace, name, permission.getName()))).build();
   }
 
 
@@ -84,8 +98,8 @@ public class PermissionRootResource {
     return Response.ok(
       repository.getPermissions()
         .stream()
-        .filter(permission -> StringUtils.isNotBlank(permission.getName())  && permission.getName().equals(permissionName))
-        .map(permission -> modelToDtoMapper.map(permission, new NamespaceAndName(repository.getNamespace(),repository.getName())))
+        .filter(permission -> permissionName.equals(permission.getName()))
+        .map(permission -> modelToDtoMapper.map(permission, new NamespaceAndName(repository.getNamespace(), repository.getName())))
         .findFirst()
         .orElseThrow(() -> new PermissionNotFoundException(repository, permissionName))
     ).build();
@@ -113,7 +127,7 @@ public class PermissionRootResource {
     Repository repository = checkPermission(namespace, name);
     List<PermissionDto> permissionDtoList = repository.getPermissions()
       .stream()
-      .map(per -> modelToDtoMapper.map(per, new NamespaceAndName(repository.getNamespace(),repository.getName())))
+      .map(per -> modelToDtoMapper.map(per, new NamespaceAndName(repository.getNamespace(), repository.getName())))
       .collect(Collectors.toList());
     return Response.ok(permissionDtoList).build();
   }
@@ -136,54 +150,53 @@ public class PermissionRootResource {
   @Consumes(VndMediaType.PERMISSION)
   @Path("{permission-name}")
   public Response update(@PathParam("namespace") String namespace,
-                         @PathParam("name") String name,
-                         @PathParam("permission-name") String permissionName,
-                         PermissionDto permission) throws RepositoryException {
+    @PathParam("name") String name,
+    @PathParam("permission-name") String permissionName,
+    PermissionDto permission) throws RepositoryException {
     log.info("try to update the permission with name: {}. the modified permission is: {}", permissionName, permission);
     Repository repository = checkPermission(namespace, name);
     repository.getPermissions()
       .stream()
-      .filter(perm -> StringUtils.isNotBlank(perm.getName())  && perm.getName().equals(permissionName))
+      .filter(perm -> StringUtils.isNotBlank(perm.getName()) && perm.getName().equals(permissionName))
       .findFirst()
-      .map(p ->  dtoToModelMapper.map(p, permission))
+      .map(p -> dtoToModelMapper.map(p, permission))
       .orElseThrow(() -> new PermissionNotFoundException(repository, permissionName))
-      ;
+    ;
     manager.modify(repository);
     log.info("the permission with name: {} is updated.", permissionName);
     return Response.noContent().build();
   }
 
- /**
+  /**
    * Update a permission to the user or group managed by the repository
    *
    * @param permissionName permission to delete
    * @return a web response with the status code 204
    */
- @DELETE
- @StatusCodes({
-   @ResponseCode(code = 204, condition = "delete success or nothing to delete"),
-   @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
-   @ResponseCode(code = 403, condition = "not authorized"),
-   @ResponseCode(code = 500, condition = "internal server error")
- })
- @TypeHint(TypeHint.NO_CONTENT.class)
+  @DELETE
+  @StatusCodes({
+    @ResponseCode(code = 204, condition = "delete success or nothing to delete"),
+    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
+    @ResponseCode(code = 403, condition = "not authorized"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
+  @TypeHint(TypeHint.NO_CONTENT.class)
   @Path("{permission-name}")
   public Response delete(@PathParam("namespace") String namespace,
-                         @PathParam("name") String name,
-                         @PathParam("permission-name") String permissionName) throws RepositoryException {
+    @PathParam("name") String name,
+    @PathParam("permission-name") String permissionName) throws RepositoryException {
     log.info("try to delete the permission with name: {}.", permissionName);
     Repository repository = checkPermission(namespace, name);
     repository.getPermissions()
       .stream()
-      .filter(perm -> StringUtils.isNotBlank(perm.getName())  && perm.getName().equals(permissionName))
+      .filter(perm -> StringUtils.isNotBlank(perm.getName()) && perm.getName().equals(permissionName))
       .findFirst()
       .ifPresent(p -> repository.getPermissions().remove(p))
-      ;
+    ;
     manager.modify(repository);
     log.info("the permission with name: {} is updated.", permissionName);
     return Response.noContent().build();
   }
-
 
 
   /**
@@ -207,6 +220,7 @@ public class PermissionRootResource {
 
   /**
    * throw exception if the user is not permitted
+   *
    * @param repository
    */
   protected void checkUserPermitted(Repository repository) {

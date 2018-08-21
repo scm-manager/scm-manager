@@ -2,8 +2,6 @@ package sonia.scm.api.v2.resources;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.sdorra.shiro.ShiroRule;
-import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.collect.ImmutableList;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +13,6 @@ import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.jboss.resteasy.spi.HttpRequest;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -25,7 +22,11 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import sonia.scm.repository.*;
+import sonia.scm.repository.NamespaceAndName;
+import sonia.scm.repository.Permission;
+import sonia.scm.repository.PermissionType;
+import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryManager;
 import sonia.scm.web.VndMediaType;
 
 import java.io.IOException;
@@ -42,14 +43,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-@SubjectAware(
-  username = "trillian",
-  password = "secret",
-  configuration = "classpath:sonia/scm/repository/shiro.ini"
-)
 @RunWith(MockitoJUnitRunner.Silent.class)
 @Slf4j
 public class PermissionRootResourceTest {
@@ -92,9 +92,6 @@ public class PermissionRootResourceTest {
     .path(PATH_OF_ONE_PERMISSION);
 
   private final Dispatcher dispatcher = MockDispatcherFactory.createDispatcher();
-
-  @Rule
-  public ShiroRule shiro = new ShiroRule();
 
   @Mock
   private RepositoryManager repositoryManager;
@@ -163,13 +160,13 @@ public class PermissionRootResourceTest {
   }
 
   @Test
-  public void shouldGetAllPermissions() {
+  public void shouldGetAllPermissions() throws URISyntaxException {
     authorizedUserHasARepositoryWithPermissions(TEST_PERMISSIONS);
     assertGettingExpectedPermissions(ImmutableList.copyOf(TEST_PERMISSIONS));
   }
 
   @Test
-  public void shouldGetPermissionByName() {
+  public void shouldGetPermissionByName() throws URISyntaxException {
     authorizedUserHasARepositoryWithPermissions(TEST_PERMISSIONS);
     Permission expectedPermission = TEST_PERMISSIONS.get(0);
     assertExpectedRequest(requestGETPermission
@@ -192,7 +189,7 @@ public class PermissionRootResourceTest {
   }
 
   @Test
-  public void shouldGetCreatedPermissions() {
+  public void shouldGetCreatedPermissions() throws URISyntaxException {
     authorizedUserHasARepositoryWithPermissions(TEST_PERMISSIONS);
     Permission newPermission = new Permission("new_group_perm", PermissionType.WRITE, true);
     ArrayList<Permission> permissions = Lists.newArrayList(TEST_PERMISSIONS);
@@ -209,7 +206,7 @@ public class PermissionRootResourceTest {
   }
 
   @Test
-  public void shouldNotAddExistingPermission() {
+  public void shouldNotAddExistingPermission() throws URISyntaxException {
     authorizedUserHasARepositoryWithPermissions(TEST_PERMISSIONS);
     Permission newPermission = TEST_PERMISSIONS.get(0);
     assertExpectedRequest(requestPOSTPermission
@@ -219,7 +216,7 @@ public class PermissionRootResourceTest {
   }
 
   @Test
-  public void shouldGetUpdatedPermissions() {
+  public void shouldGetUpdatedPermissions() throws URISyntaxException {
     authorizedUserHasARepositoryWithPermissions(TEST_PERMISSIONS);
     Permission modifiedPermission = TEST_PERMISSIONS.get(0);
     // modify the type to owner
@@ -238,7 +235,7 @@ public class PermissionRootResourceTest {
 
 
   @Test
-  public void shouldDeletePermissions() {
+  public void shouldDeletePermissions() throws URISyntaxException {
     authorizedUserHasARepositoryWithPermissions(TEST_PERMISSIONS);
     Permission deletedPermission = TEST_PERMISSIONS.get(0);
     ImmutableList<Permission> expectedPermissions = ImmutableList.copyOf(TEST_PERMISSIONS.subList(1, TEST_PERMISSIONS.size()));
@@ -253,7 +250,7 @@ public class PermissionRootResourceTest {
   }
 
   @Test
-  public void deletingNotExistingPermissionShouldProcess() {
+  public void deletingNotExistingPermissionShouldProcess() throws URISyntaxException {
     authorizedUserHasARepositoryWithPermissions(TEST_PERMISSIONS);
     Permission deletedPermission = TEST_PERMISSIONS.get(0);
     ImmutableList<Permission> expectedPermissions = ImmutableList.copyOf(TEST_PERMISSIONS.subList(1, TEST_PERMISSIONS.size()));
@@ -275,7 +272,7 @@ public class PermissionRootResourceTest {
     assertGettingExpectedPermissions(expectedPermissions);
   }
 
-  private void assertGettingExpectedPermissions(ImmutableList<Permission> expectedPermissions) {
+  private void assertGettingExpectedPermissions(ImmutableList<Permission> expectedPermissions) throws URISyntaxException {
     assertExpectedRequest(requestGETAllPermissions
       .expectedResponseStatus(200)
       .responseValidator((response) -> {
@@ -337,17 +334,13 @@ public class PermissionRootResourceTest {
       .map(entry -> dynamicTest("the endpoint " + entry.description + " should return the status code " + entry.expectedResponseStatus, () -> assertExpectedRequest(entry)));
   }
 
-  private MockHttpResponse assertExpectedRequest(ExpectedRequest entry) {
+  private MockHttpResponse assertExpectedRequest(ExpectedRequest entry) throws URISyntaxException {
     MockHttpResponse response = new MockHttpResponse();
     HttpRequest request = null;
-    try {
-      request = MockHttpRequest
-        .create(entry.method, "/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + entry.path)
-        .content(entry.content)
-        .contentType(VndMediaType.PERMISSION);
-    } catch (URISyntaxException e) {
-      fail(e.getMessage());
-    }
+    request = MockHttpRequest
+      .create(entry.method, "/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + entry.path)
+      .content(entry.content)
+      .contentType(VndMediaType.PERMISSION);
     dispatcher.invoke(request, response);
     log.info("Test the Request :{}", entry);
     assertThat(entry.expectedResponseStatus)
