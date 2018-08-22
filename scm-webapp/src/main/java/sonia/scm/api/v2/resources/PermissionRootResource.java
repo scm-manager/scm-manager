@@ -14,6 +14,7 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryNotFoundException;
+import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
@@ -95,6 +96,7 @@ public class PermissionRootResource {
   @Path("{permission-name}")
   public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("permission-name") String permissionName) throws RepositoryException {
     Repository repository = load(namespace, name);
+    RepositoryPermissions.modify(repository).check();
     return Response.ok(
       repository.getPermissions()
         .stream()
@@ -125,6 +127,7 @@ public class PermissionRootResource {
   @Path("")
   public Response getAll(@PathParam("namespace") String namespace, @PathParam("name") String name) throws RepositoryNotFoundException {
     Repository repository = load(namespace, name);
+    RepositoryPermissions.modify(repository).check();
     List<PermissionDto> permissionDtoList = repository.getPermissions()
       .stream()
       .map(per -> modelToDtoMapper.map(per, new NamespaceAndName(repository.getNamespace(), repository.getName())))
