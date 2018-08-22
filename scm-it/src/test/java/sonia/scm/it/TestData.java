@@ -1,5 +1,6 @@
 package sonia.scm.it;
 
+import io.restassured.response.ValidatableResponse;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +23,7 @@ public class TestData {
 
   public static final String USER_SCM_ADMIN = "scmadmin";
   public static final String USER_ANONYMOUS = "anonymous";
-private static final List<String> PROTECTED_USERS = asList(USER_SCM_ADMIN, USER_ANONYMOUS);
+  private static final List<String> PROTECTED_USERS = asList(USER_SCM_ADMIN, USER_ANONYMOUS);
 
   private static Map<String, String> DEFAULT_REPOSITORIES = new HashMap<>();
 
@@ -48,7 +49,7 @@ private static final List<String> PROTECTED_USERS = asList(USER_SCM_ADMIN, USER_
         "                \"active\": true,\n" +
         "                \"admin\": false,\n" +
         "                \"creationDate\": \"2018-08-21T12:26:46.084Z\",\n" +
-        "                \"displayName\": \""+username+"\",\n" +
+        "                \"displayName\": \"" + username + "\",\n" +
         "                \"mail\": \"user1@scm-manager.org\",\n" +
         "                \"name\": \"" + username + "\",\n" +
         "                \"password\": \"" + password + "\",\n" +
@@ -66,8 +67,8 @@ private static final List<String> PROTECTED_USERS = asList(USER_SCM_ADMIN, USER_
     given(VndMediaType.PERMISSION)
       .when()
       .content("{\n" +
-        "\t\"type\": \""+permissionType.name()+"\",\n" +
-        "\t\"name\": \""+name+"\",\n" +
+        "\t\"type\": \"" + permissionType.name() + "\",\n" +
+        "\t\"name\": \"" + name + "\",\n" +
         "\t\"groupPermission\": false\n" +
         "\t\n" +
         "}")
@@ -77,18 +78,32 @@ private static final List<String> PROTECTED_USERS = asList(USER_SCM_ADMIN, USER_
     ;
   }
 
- public static List<Object> getUserPermissions(String username, String password, String repositoryType) {
-   return given(VndMediaType.PERMISSION, username, password)
-     .when()
-     .get(TestData.getDefaultPermissionUrl(repositoryType))
-     .then()
-     .statusCode(HttpStatus.SC_OK)
-     .extract()
-     .body().jsonPath().getList("");
- }
+  public static List<Object> getUserPermissions(String username, String password, String repositoryType) {
+    return callUserPermissions(username, password, repositoryType, HttpStatus.SC_OK)
+      .extract()
+      .body().jsonPath().getList("");
+  }
 
-  private static String getDefaultPermissionUrl(String repositoryType) {
-    return getDefaultRepositoryUrl(repositoryType)+"/permissions/";
+  public static ValidatableResponse callUserPermissions(String username, String password, String repositoryType, int expectedStatusCode) {
+    return given(VndMediaType.PERMISSION, username, password)
+      .when()
+      .get(TestData.getDefaultPermissionUrl(repositoryType))
+      .then()
+      .statusCode(expectedStatusCode);
+  }
+
+  public static ValidatableResponse callRepository(String username, String password, String repositoryType, int expectedStatusCode) {
+    return given(VndMediaType.REPOSITORY, username, password)
+
+      .when()
+      .get(getDefaultRepositoryUrl(repositoryType))
+
+      .then()
+      .statusCode(expectedStatusCode);
+  }
+
+  public static String getDefaultPermissionUrl(String repositoryType) {
+    return getDefaultRepositoryUrl(repositoryType) + "/permissions/";
   }
 
 

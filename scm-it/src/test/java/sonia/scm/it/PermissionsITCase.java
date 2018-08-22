@@ -53,6 +53,7 @@ import static org.junit.Assert.assertEquals;
 import static sonia.scm.it.RepositoryUtil.addAndCommitRandomFile;
 import static sonia.scm.it.RestUtil.given;
 import static sonia.scm.it.ScmTypes.availableScmTypes;
+import static sonia.scm.it.TestData.callUserPermissions;
 
 @RunWith(Parameterized.class)
 public class PermissionsITCase {
@@ -61,6 +62,7 @@ public class PermissionsITCase {
   public static final String USER_PASS = "pass";
   private static final String USER_WRITE = "user_write";
   private static final String USER_OWNER = "user_owner";
+  private static final String USER_OTHER = "user_other";
 
   @Rule
   public TemporaryFolder temporaryFolder = new TemporaryFolder();
@@ -87,27 +89,54 @@ public class PermissionsITCase {
     TestData.createUserPermission(USER_WRITE, PermissionType.WRITE, repositoryType);
     TestData.createUser(USER_OWNER, USER_PASS);
     TestData.createUserPermission(USER_OWNER, PermissionType.OWNER, repositoryType);
+    TestData.createUser(USER_OTHER, USER_PASS);
     createdPermissions = 3;
   }
 
   @Test
-  public void everyUserShouldSeePermissions() {
+  public void readUserShouldSeePermissions() {
     List<Object> userPermissions = TestData.getUserPermissions(USER_READ, USER_PASS, repositoryType);
-    assertEquals(userPermissions.size(), createdPermissions);
-    userPermissions = TestData.getUserPermissions(USER_WRITE, USER_PASS, repositoryType);
-    assertEquals(userPermissions.size(), createdPermissions);
-    userPermissions = TestData.getUserPermissions(USER_OWNER, USER_PASS, repositoryType);
     assertEquals(userPermissions.size(), createdPermissions);
   }
 
   @Test
-  public void everyUserShouldCloneRepository() throws IOException {
+  public void writeUserShouldSeePermissions() {
+    List<Object> userPermissions = TestData.getUserPermissions(USER_WRITE, USER_PASS, repositoryType);
+    assertEquals(userPermissions.size(), createdPermissions);
+  }
+
+  @Test
+  public void ownerShouldSeePermissions() {
+    List<Object> userPermissions = TestData.getUserPermissions(USER_OWNER, USER_PASS, repositoryType);
+    assertEquals(userPermissions.size(), createdPermissions);
+  }
+
+  @Test
+  public void otherUserShouldNotSeePermissions() {
+    callUserPermissions(USER_OTHER, USER_PASS, repositoryType, HttpStatus.SC_FORBIDDEN);
+  }
+
+  @Test
+  public void readUserShouldCloneRepository() throws IOException {
     RepositoryClient client = RepositoryUtil.createRepositoryClient(repositoryType, temporaryFolder.newFolder(), USER_READ, USER_PASS);
     assertEquals(1, Objects.requireNonNull(client.getWorkingCopy().list()).length);
-    client = RepositoryUtil.createRepositoryClient(repositoryType, temporaryFolder.newFolder(), USER_WRITE, USER_PASS);
+  }
+
+  @Test
+  public void writeUserShouldCloneRepository() throws IOException {
+    RepositoryClient client = RepositoryUtil.createRepositoryClient(repositoryType, temporaryFolder.newFolder(), USER_WRITE, USER_PASS);
     assertEquals(1, Objects.requireNonNull(client.getWorkingCopy().list()).length);
-    client = RepositoryUtil.createRepositoryClient(repositoryType, temporaryFolder.newFolder(), USER_OWNER, USER_PASS);
+  }
+
+  @Test
+  public void ownerShouldCloneRepository() throws IOException {
+    RepositoryClient client = RepositoryUtil.createRepositoryClient(repositoryType, temporaryFolder.newFolder(), USER_OWNER, USER_PASS);
     assertEquals(1, Objects.requireNonNull(client.getWorkingCopy().list()).length);
+  }
+
+  @Test
+  public void otherUserShouldNotCloneRepository() {
+    TestData.callRepository(USER_OTHER, USER_PASS, repositoryType, HttpStatus.SC_FORBIDDEN);
   }
 
   @Test(expected = RepositoryClientException.class)

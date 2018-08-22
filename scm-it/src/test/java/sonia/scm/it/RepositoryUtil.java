@@ -8,13 +8,10 @@ import sonia.scm.repository.Person;
 import sonia.scm.repository.client.api.ClientCommand;
 import sonia.scm.repository.client.api.RepositoryClient;
 import sonia.scm.repository.client.api.RepositoryClientFactory;
-import sonia.scm.web.VndMediaType;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
-
-import static sonia.scm.it.RestUtil.given;
 
 public class RepositoryUtil {
 
@@ -25,13 +22,7 @@ public class RepositoryUtil {
   }
 
   static RepositoryClient createRepositoryClient(String repositoryType, File folder, String username, String password) throws IOException {
-    String httpProtocolUrl = given(VndMediaType.REPOSITORY, username, password)
-
-      .when()
-      .get(TestData.getDefaultRepositoryUrl(repositoryType))
-
-      .then()
-      .statusCode(HttpStatus.SC_OK)
+    String httpProtocolUrl = TestData.callRepository(username, password, repositoryType, HttpStatus.SC_OK)
       .extract()
       .path("_links.httpProtocol.href");
 
