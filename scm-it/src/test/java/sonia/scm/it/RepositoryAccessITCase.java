@@ -46,8 +46,8 @@ public class RepositoryAccessITCase {
   public void shouldFindBranches() throws IOException {
     assumeFalse("There are no branches for SVN", repositoryType.equals("svn"));
 
-    RepositoryClient repositoryClient = RepositoryUtil.createRepositoryClient(repositoryType,  folder );
-    RepositoryUtil.createAndCommitFile(folder, repositoryClient, "scmadmin", "a.txt", "a");
+    RepositoryClient repositoryClient = RepositoryUtil.createRepositoryClient(repositoryType, folder);
+    RepositoryUtil.createAndCommitFile(repositoryClient, "scmadmin", "a.txt", "a");
 
     String branchesUrl = given()
       .when()

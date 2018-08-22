@@ -41,13 +41,17 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.client.api.RepositoryClient;
+import sonia.scm.repository.client.api.RepositoryClientException;
+import sonia.scm.web.VndMediaType;
 
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static sonia.scm.it.RepositoryUtil.addAndCommitRandomFile;
+import static sonia.scm.it.RestUtil.given;
 import static sonia.scm.it.ScmTypes.availableScmTypes;
 
 @RunWith(Parameterized.class)
@@ -106,34 +110,56 @@ public class PermissionsITCase {
     assertEquals(1, Objects.requireNonNull(client.getWorkingCopy().list()).length);
   }
 
-  @Test
-  public void userWithREADPermissionShouldBeNotAuthorizedToCommit() throws IOException {
-    assertFalse(RepositoryUtil.canUserCommit(USER_READ, USER_PASS, repositoryType, temporaryFolder));
+  @Test(expected = RepositoryClientException.class)
+  public void userWithReadPermissionShouldBeNotAuthorizedToCommit() throws IOException {
+    createAndCommit(USER_READ);
   }
 
   @Test
   public void userWithOwnerPermissionShouldBeAuthorizedToCommit() throws IOException {
-    assertTrue(RepositoryUtil.canUserCommit(USER_OWNER, USER_PASS, repositoryType, temporaryFolder));
+    createAndCommit(USER_OWNER);
   }
 
   @Test
   public void userWithWritePermissionShouldBeAuthorizedToCommit() throws IOException {
-    assertTrue(RepositoryUtil.canUserCommit(USER_WRITE, USER_PASS, repositoryType, temporaryFolder));
+    createAndCommit(USER_WRITE);
+  }
+
+  private void createAndCommit(String username) throws IOException {
+    RepositoryClient client = RepositoryUtil.createRepositoryClient(repositoryType, temporaryFolder.newFolder(), username, PermissionsITCase.USER_PASS);
+    addAndCommitRandomFile(client, username);
   }
 
   @Test
-  public void userWithWOwnerPermissionShouldBeAuthorizedToDeleteRepository(){
-    RepositoryUtil.assertDeleteRepositoryOperation(USER_OWNER, HttpStatus.SC_NO_CONTENT, HttpStatus.SC_NOT_FOUND, USER_PASS, repositoryType);
+  public void userWithOwnerPermissionShouldBeAuthorizedToDeleteRepository(){
+    assertDeleteRepositoryOperation(HttpStatus.SC_NO_CONTENT, HttpStatus.SC_NOT_FOUND, USER_OWNER, repositoryType);
   }
 
   @Test
-  public void userWithWReadPermissionShouldNotBeAuthorizedToDeleteRepository(){
-    RepositoryUtil.assertDeleteRepositoryOperation(USER_READ, HttpStatus.SC_FORBIDDEN, HttpStatus.SC_OK, USER_PASS, repositoryType);
+  public void userWithReadPermissionShouldNotBeAuthorizedToDeleteRepository(){
+    assertDeleteRepositoryOperation(HttpStatus.SC_FORBIDDEN, HttpStatus.SC_OK, USER_READ, repositoryType);
   }
 
   @Test
-  public void userWithWWritePermissionShouldNotBeAuthorizedToDeleteRepository(){
-    RepositoryUtil.assertDeleteRepositoryOperation(USER_WRITE, HttpStatus.SC_FORBIDDEN, HttpStatus.SC_OK, USER_PASS, repositoryType);
+  public void userWithWritePermissionShouldNotBeAuthorizedToDeleteRepository(){
+    assertDeleteRepositoryOperation(HttpStatus.SC_FORBIDDEN, HttpStatus.SC_OK, USER_WRITE, repositoryType);
   }
 
+  private void assertDeleteRepositoryOperation(int expectedDeleteStatus, int expectedGetStatus, String user, String repositoryType) {
+    given(VndMediaType.REPOSITORY, user, PermissionsITCase.USER_PASS)
+
+      .when()
+      .delete(TestData.getDefaultRepositoryUrl(repositoryType))
+
+      .then()
+      .statusCode(expectedDeleteStatus);
+
+    given(VndMediaType.REPOSITORY, user, PermissionsITCase.USER_PASS)
+
+      .when()
+      .get(TestData.getDefaultRepositoryUrl(repositoryType))
+
+      .then()
+      .statusCode(expectedGetStatus);
+  }
 }

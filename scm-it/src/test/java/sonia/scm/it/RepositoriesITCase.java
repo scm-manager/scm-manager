@@ -34,6 +34,7 @@ package sonia.scm.it;
 //~--- non-JDK imports --------------------------------------------------------
 
 import org.apache.http.HttpStatus;
+import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -52,7 +53,6 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static sonia.scm.it.RegExMatcher.matchesPattern;
 import static sonia.scm.it.RestUtil.createResourceUrl;
 import static sonia.scm.it.RestUtil.given;
@@ -136,13 +136,16 @@ public class RepositoriesITCase {
 
   @Test
   public void shouldCloneRepository() throws IOException {
-    RepositoryClient client = RepositoryUtil.createRepositoryClient(repositoryType,temporaryFolder.getRoot());
+    RepositoryClient client = RepositoryUtil.createRepositoryClient(repositoryType, temporaryFolder.getRoot());
     assertEquals("expected metadata dir", 1, Objects.requireNonNull(client.getWorkingCopy().list()).length);
   }
 
   @Test
   public void shouldCommitFiles() throws IOException {
-    assertTrue(RepositoryUtil.canScmAdminCommit(repositoryType,temporaryFolder));
+    RepositoryClient client = RepositoryUtil.createRepositoryClient(repositoryType, temporaryFolder.newFolder(), "scmadmin", "scmadmin");
+    String name = RepositoryUtil.addAndCommitRandomFile(client, "scmadmin");
+    RepositoryClient checkClient = RepositoryUtil.createRepositoryClient(repositoryType, temporaryFolder.newFolder(), "scmadmin", "scmadmin");
+    Assertions.assertThat(checkClient.getWorkingCopy().list()).contains(name);
   }
 
 }
