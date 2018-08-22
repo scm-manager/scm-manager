@@ -41,22 +41,18 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
-import sonia.scm.repository.Person;
-import sonia.scm.repository.client.api.ClientCommand;
 import sonia.scm.repository.client.api.RepositoryClient;
-import sonia.scm.repository.client.api.RepositoryClientFactory;
 import sonia.scm.web.VndMediaType;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.UUID;
+import java.util.Objects;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static sonia.scm.it.RegExMatcher.matchesPattern;
 import static sonia.scm.it.RestUtil.createResourceUrl;
 import static sonia.scm.it.RestUtil.given;
@@ -65,8 +61,6 @@ import static sonia.scm.it.TestData.repositoryJson;
 
 @RunWith(Parameterized.class)
 public class RepositoriesITCase {
-
-  public static final Person AUTHOR = new Person("SCM Administrator", "scmadmin@scm-manager.org");
 
   @Rule
   public TemporaryFolder temporaryFolder = new TemporaryFolder();
@@ -142,57 +136,13 @@ public class RepositoriesITCase {
 
   @Test
   public void shouldCloneRepository() throws IOException {
-    RepositoryClient client = createRepositoryClient();
-    assertEquals("expected metadata dir", 1, client.getWorkingCopy().list().length);
+    RepositoryClient client = RepositoryUtil.createRepositoryClient(repositoryType,temporaryFolder.getRoot());
+    assertEquals("expected metadata dir", 1, Objects.requireNonNull(client.getWorkingCopy().list()).length);
   }
 
   @Test
   public void shouldCommitFiles() throws IOException {
-    RepositoryClient client = createRepositoryClient();
-
-    for (int i = 0; i < 5; i++) {
-      createRandomFile(client);
-    }
-
-    commit(client);
-
-    RepositoryClient checkClient = createRepositoryClient();
-    assertEquals("expected 5 files and metadata dir", 6, checkClient.getWorkingCopy().list().length);
+    assertTrue(RepositoryUtil.canScmAdminCommit(repositoryType,temporaryFolder));
   }
 
-  private static void createRandomFile(RepositoryClient client) throws IOException {
-    String uuid = UUID.randomUUID().toString();
-    String name = "file-" + uuid + ".uuid";
-
-    File file = new File(client.getWorkingCopy(), name);
-    try (FileOutputStream out = new FileOutputStream(file)) {
-      out.write(uuid.getBytes());
-    }
-
-    client.getAddCommand().add(name);
-  }
-
-  private static void commit(RepositoryClient repositoryClient) throws IOException {
-    repositoryClient.getCommitCommand().commit(AUTHOR, "commit");
-    if ( repositoryClient.isCommandSupported(ClientCommand.PUSH) ) {
-      repositoryClient.getPushCommand().push();
-    }
-  }
-
-  private RepositoryClient createRepositoryClient() throws IOException {
-    RepositoryClientFactory clientFactory = new RepositoryClientFactory();
-    String cloneUrl = readCloneUrl();
-    return clientFactory.create(repositoryType, cloneUrl, "scmadmin", "scmadmin", temporaryFolder.newFolder());
-  }
-
-  private String readCloneUrl() {
-    return given(VndMediaType.REPOSITORY)
-
-      .when()
-      .get(repositoryUrl)
-
-      .then()
-      .extract()
-      .path("_links.httpProtocol.href");
-  }
 }

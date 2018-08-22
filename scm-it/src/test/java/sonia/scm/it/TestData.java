@@ -3,6 +3,7 @@ package sonia.scm.it;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.repository.PermissionType;
 import sonia.scm.web.VndMediaType;
 
 import javax.json.Json;
@@ -19,7 +20,9 @@ public class TestData {
 
   private static final Logger LOG = LoggerFactory.getLogger(TestData.class);
 
-  private static final List<String> PROTECTED_USERS = asList("scmadmin", "anonymous");
+  public static final String USER_SCM_ADMIN = "scmadmin";
+  public static final String USER_ANONYMOUS = "anonymous";
+private static final List<String> PROTECTED_USERS = asList(USER_SCM_ADMIN, USER_ANONYMOUS);
 
   private static Map<String, String> DEFAULT_REPOSITORIES = new HashMap<>();
 
@@ -37,6 +40,57 @@ public class TestData {
   public static String getDefaultRepositoryUrl(String repositoryType) {
     return DEFAULT_REPOSITORIES.get(repositoryType);
   }
+
+  public static void createUser(String username, String password) {
+    given(VndMediaType.USER)
+      .when()
+      .content(" {\n" +
+        "                \"active\": true,\n" +
+        "                \"admin\": false,\n" +
+        "                \"creationDate\": \"2018-08-21T12:26:46.084Z\",\n" +
+        "                \"displayName\": \""+username+"\",\n" +
+        "                \"mail\": \"user1@scm-manager.org\",\n" +
+        "                \"name\": \"" + username + "\",\n" +
+        "                \"password\": \"" + password + "\",\n" +
+        "                \"type\": \"xml\"\n" +
+        "               \n" +
+        "            }")
+      .post(createResourceUrl("users"))
+      .then()
+      .statusCode(HttpStatus.SC_CREATED)
+    ;
+  }
+
+
+  public static void createUserPermission(String name, PermissionType permissionType, String repositoryType) {
+    given(VndMediaType.PERMISSION)
+      .when()
+      .content("{\n" +
+        "\t\"type\": \""+permissionType.name()+"\",\n" +
+        "\t\"name\": \""+name+"\",\n" +
+        "\t\"groupPermission\": false\n" +
+        "\t\n" +
+        "}")
+      .post(TestData.getDefaultPermissionUrl(repositoryType))
+      .then()
+      .statusCode(HttpStatus.SC_CREATED)
+    ;
+  }
+
+ public static List<Object> getUserPermissions(String username, String password, String repositoryType) {
+   return given(VndMediaType.PERMISSION, username, password)
+     .when()
+     .get(TestData.getDefaultPermissionUrl(repositoryType))
+     .then()
+     .statusCode(HttpStatus.SC_OK)
+     .extract()
+     .body().jsonPath().getList("");
+ }
+
+  private static String getDefaultPermissionUrl(String repositoryType) {
+    return getDefaultRepositoryUrl(repositoryType)+"/permissions/";
+  }
+
 
   private static void cleanupRepositories() {
     List<String> repositories = given(VndMediaType.REPOSITORY_COLLECTION)
