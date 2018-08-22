@@ -4,7 +4,6 @@ import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.io.Resources;
 import org.jboss.resteasy.core.Dispatcher;
-import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.Before;
@@ -34,6 +33,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static sonia.scm.api.v2.resources.DispatcherMock.createDispatcher;
 
 @SubjectAware(
   username = "trillian",
@@ -45,7 +45,7 @@ public class GroupRootResourceTest {
   @Rule
   public ShiroRule shiro = new ShiroRule();
 
-  private Dispatcher dispatcher = MockDispatcherFactory.createDispatcher();
+  private Dispatcher dispatcher;
 
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(URI.create("/"));
 
@@ -73,7 +73,7 @@ public class GroupRootResourceTest {
     GroupResource groupResource = new GroupResource(groupManager, groupToDtoMapper, dtoToGroupMapper);
     GroupRootResource groupRootResource = new GroupRootResource(MockProvider.of(groupCollectionResource), MockProvider.of(groupResource));
 
-    dispatcher.getRegistry().addSingletonResource(groupRootResource);
+    dispatcher = createDispatcher(groupRootResource);
   }
 
   @Test

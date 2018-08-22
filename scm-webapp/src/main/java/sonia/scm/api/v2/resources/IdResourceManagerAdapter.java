@@ -4,6 +4,7 @@ import de.otto.edison.hal.HalRepresentation;
 import sonia.scm.AlreadyExistsException;
 import sonia.scm.Manager;
 import sonia.scm.ModelObject;
+import sonia.scm.NotFoundException;
 import sonia.scm.PageResult;
 
 import javax.ws.rs.core.Response;
@@ -31,11 +32,11 @@ class IdResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
     collectionAdapter = new CollectionResourceManagerAdapter<>(manager, type);
   }
 
-  Response get(String id, Function<MODEL_OBJECT, DTO> mapToDto) {
+  Response get(String id, Function<MODEL_OBJECT, DTO> mapToDto) throws NotFoundException {
     return singleAdapter.get(loadBy(id), mapToDto);
   }
 
-  public Response update(String id, Function<MODEL_OBJECT, MODEL_OBJECT> applyChanges) {
+  public Response update(String id, Function<MODEL_OBJECT, MODEL_OBJECT> applyChanges) throws NotFoundException {
     return singleAdapter.update(
       loadBy(id),
       applyChanges,

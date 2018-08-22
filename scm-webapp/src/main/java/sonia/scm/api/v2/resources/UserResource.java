@@ -3,6 +3,7 @@ package sonia.scm.api.v2.resources;
 import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
+import sonia.scm.NotFoundException;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
 import sonia.scm.web.VndMediaType;
@@ -50,7 +51,7 @@ public class UserResource {
     @ResponseCode(code = 404, condition = "not found, no user with the specified id/name available"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
-  public Response get(@PathParam("id") String id) {
+  public Response get(@PathParam("id") String id) throws NotFoundException {
     return adapter.get(id, userToDtoMapper::map);
   }
 
@@ -95,7 +96,7 @@ public class UserResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
-  public Response update(@PathParam("id") String name, UserDto userDto) {
+  public Response update(@PathParam("id") String name, UserDto userDto) throws NotFoundException {
     return adapter.update(name, existing -> dtoToUserMapper.map(userDto, existing.getPassword()));
   }
 }

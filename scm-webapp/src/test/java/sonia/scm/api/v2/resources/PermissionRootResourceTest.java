@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.AuthorizationException;
 import org.assertj.core.util.Lists;
 import org.jboss.resteasy.core.Dispatcher;
-import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.jboss.resteasy.spi.HttpRequest;
@@ -20,8 +19,6 @@ import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import sonia.scm.api.rest.AlreadyExistsExceptionMapper;
-import sonia.scm.api.rest.AuthorizationExceptionMapper;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Permission;
 import sonia.scm.repository.PermissionType;
@@ -47,6 +44,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static sonia.scm.api.v2.resources.DispatcherMock.createDispatcher;
 
 @Slf4j
 public class PermissionRootResourceTest {
@@ -88,7 +86,7 @@ public class PermissionRootResourceTest {
     .content(PERMISSION_TEST_PAYLOAD)
     .path(PATH_OF_ONE_PERMISSION);
 
-  private final Dispatcher dispatcher = MockDispatcherFactory.createDispatcher();
+  private Dispatcher dispatcher;
 
   @Mock
   private RepositoryManager repositoryManager;
@@ -111,11 +109,7 @@ public class PermissionRootResourceTest {
     permissionRootResource = new PermissionRootResource(permissionDtoToPermissionMapper, permissionToPermissionDtoMapper, resourceLinks, repositoryManager);
     RepositoryRootResource repositoryRootResource = new RepositoryRootResource(MockProvider
       .of(new RepositoryResource(null, null, null, null, null, null, null,null, MockProvider.of(permissionRootResource))), null);
-    dispatcher.getRegistry().addSingletonResource(repositoryRootResource);
-    dispatcher.getProviderFactory().registerProvider(NotFoundExceptionMapper.class);
-    dispatcher.getProviderFactory().registerProvider(NotFoundExceptionMapper.class);
-    dispatcher.getProviderFactory().registerProvider(AlreadyExistsExceptionMapper.class);
-    dispatcher.getProviderFactory().registerProvider(AuthorizationExceptionMapper.class);
+    dispatcher = createDispatcher(repositoryRootResource);
   }
 
   @TestFactory

@@ -3,6 +3,7 @@ package sonia.scm.api.v2.resources;
 import de.otto.edison.hal.HalRepresentation;
 import sonia.scm.Manager;
 import sonia.scm.ModelObject;
+import sonia.scm.NotFoundException;
 import sonia.scm.api.rest.resources.AbstractManagerResource;
 
 import javax.ws.rs.core.GenericEntity;
@@ -44,28 +45,25 @@ class SingleResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
    * Reads the model object for the given id, transforms it to a dto and returns a corresponding http response.
    * This handles all corner cases, eg. no matching object for the id or missing privileges.
    */
-  Response get(Supplier<Optional<MODEL_OBJECT>> reader, Function<MODEL_OBJECT, DTO> mapToDto) {
+  Response get(Supplier<Optional<MODEL_OBJECT>> reader, Function<MODEL_OBJECT, DTO> mapToDto) throws NotFoundException {
     return reader.get()
       .map(mapToDto)
       .map(Response::ok)
       .map(Response.ResponseBuilder::build)
-      .orElse(Response.status(Response.Status.NOT_FOUND).build());
+      .orElseThrow(NotFoundException::new);
   }
 
   /**
    * Update the model object for the given id according to the given function and returns a corresponding http response.
    * This handles all corner cases, eg. no matching object for the id or missing privileges.
    */
-  public Response update(Supplier<Optional<MODEL_OBJECT>> reader, Function<MODEL_OBJECT, MODEL_OBJECT> applyChanges, Predicate<MODEL_OBJECT> hasSameKey) {
-    Optional<MODEL_OBJECT> existingModelObject = reader.get();
-    if (!existingModelObject.isPresent()) {
-      return Response.status(Response.Status.NOT_FOUND).build();
-    }
-    MODEL_OBJECT changedModelObject = applyChanges.apply(existingModelObject.get());
+  public Response update(Supplier<Optional<MODEL_OBJECT>> reader, Function<MODEL_OBJECT, MODEL_OBJECT> applyChanges, Predicate<MODEL_OBJECT> hasSameKey) throws NotFoundException {
+    MODEL_OBJECT existingModelObject = reader.get().orElseThrow(NotFoundException::new);
+    MODEL_OBJECT changedModelObject = applyChanges.apply(existingModelObject);
     if (!hasSameKey.test(changedModelObject)) {
       return Response.status(BAD_REQUEST).entity("illegal change of id").build();
     }
-    return update(getId(existingModelObject.get()), changedModelObject);
+    return update(getId(existingModelObject), changedModelObject);
   }
 
   public Response delete(Supplier<Optional<MODEL_OBJECT>> reader) {
