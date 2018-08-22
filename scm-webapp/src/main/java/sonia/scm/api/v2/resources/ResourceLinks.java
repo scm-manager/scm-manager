@@ -298,20 +298,35 @@ class ResourceLinks {
       return sourceLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("sources").parameters().method("get").parameters(revision).href();
     }
   }
-
-  public PermissionCollectionLinks permissionCollection() {
-    return new PermissionCollectionLinks(uriInfoStore.get());
+  public PermissionLinks permission() {
+    return new PermissionLinks(uriInfoStore.get());
   }
 
-  static class PermissionCollectionLinks {
+  static class PermissionLinks {
     private final LinkBuilder permissionLinkBuilder;
 
-    PermissionCollectionLinks(UriInfo uriInfo) {
-      permissionLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, PermissionRootResource.class, PermissionCollectionResource.class);
+    PermissionLinks(UriInfo uriInfo) {
+      permissionLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, PermissionRootResource.class);
     }
 
-    String self(String namespace, String name) {
-      return permissionLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("permissions").parameters().method("getPermissionCollectionResource").parameters().method("getAll").parameters().href();
+    String all(String namespace, String name) {
+      return permissionLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("permissions").parameters().method("getAll").parameters().href();
+    }
+
+    String self(String repositoryNamespace, String repositoryName, String permissionName) {
+      return getLink(repositoryNamespace, repositoryName, permissionName, "get");
+    }
+
+    String update(String repositoryNamespace, String repositoryName, String permissionName) {
+      return getLink(repositoryNamespace, repositoryName, permissionName, "update");
+    }
+
+    String delete(String repositoryNamespace, String repositoryName, String permissionName) {
+      return getLink(repositoryNamespace, repositoryName, permissionName, "delete");
+    }
+
+    private String getLink(String repositoryNamespace, String repositoryName, String permissionName, String methodName) {
+      return permissionLinkBuilder.method("getRepositoryResource").parameters(repositoryNamespace, repositoryName).method("permissions").parameters().method(methodName).parameters(permissionName).href();
     }
   }
 }
