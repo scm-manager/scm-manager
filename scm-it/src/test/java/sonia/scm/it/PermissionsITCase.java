@@ -50,10 +50,12 @@ import java.util.List;
 import java.util.Objects;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static sonia.scm.it.RepositoryUtil.addAndCommitRandomFile;
 import static sonia.scm.it.RestUtil.given;
 import static sonia.scm.it.ScmTypes.availableScmTypes;
-import static sonia.scm.it.TestData.callUserPermissions;
+import static sonia.scm.it.TestData.USER_SCM_ADMIN;
+import static sonia.scm.it.TestData.callRepository;
 
 @RunWith(Parameterized.class)
 public class PermissionsITCase {
@@ -94,15 +96,35 @@ public class PermissionsITCase {
   }
 
   @Test
-  public void readUserShouldSeePermissions() {
-    List<Object> userPermissions = TestData.getUserPermissions(USER_READ, USER_PASS, repositoryType);
-    assertEquals(userPermissions.size(), createdPermissions);
+  public void readUserShouldNotSeePermissions() {
+    assertNull(callRepository(USER_WRITE, USER_PASS, repositoryType, HttpStatus.SC_OK)
+      .extract()
+      .body().jsonPath().getString("_links.permissions.href"));
   }
 
   @Test
-  public void writeUserShouldSeePermissions() {
-    List<Object> userPermissions = TestData.getUserPermissions(USER_WRITE, USER_PASS, repositoryType);
-    assertEquals(userPermissions.size(), createdPermissions);
+  public void readUserShouldNotSeeBruteForcePermissions() {
+    given(VndMediaType.PERMISSION, USER_READ, USER_PASS)
+      .when()
+      .get(TestData.getDefaultPermissionUrl(USER_SCM_ADMIN, USER_SCM_ADMIN, repositoryType))
+      .then()
+      .statusCode(HttpStatus.SC_FORBIDDEN);
+  }
+
+  @Test
+  public void writeUserShouldNotSeePermissions() {
+    assertNull(callRepository(USER_WRITE, USER_PASS, repositoryType, HttpStatus.SC_OK)
+      .extract()
+      .body().jsonPath().getString("_links.permissions.href"));
+  }
+
+  @Test
+  public void writeUserShouldNotSeeBruteForcePermissions() {
+    given(VndMediaType.PERMISSION, USER_WRITE, USER_PASS)
+      .when()
+      .get(TestData.getDefaultPermissionUrl(USER_SCM_ADMIN, USER_SCM_ADMIN, repositoryType))
+      .then()
+      .statusCode(HttpStatus.SC_FORBIDDEN);
   }
 
   @Test
@@ -112,8 +134,17 @@ public class PermissionsITCase {
   }
 
   @Test
-  public void otherUserShouldNotSeePermissions() {
-    callUserPermissions(USER_OTHER, USER_PASS, repositoryType, HttpStatus.SC_FORBIDDEN);
+  public void otherUserShouldNotSeeRepository() {
+    callRepository(USER_OTHER, USER_PASS, repositoryType, HttpStatus.SC_FORBIDDEN);
+  }
+
+  @Test
+  public void otherUserShouldNotSeeBruteForcePermissions() {
+    given(VndMediaType.PERMISSION, USER_OTHER, USER_PASS)
+      .when()
+      .get(TestData.getDefaultPermissionUrl(USER_SCM_ADMIN, USER_SCM_ADMIN, repositoryType))
+      .then()
+      .statusCode(HttpStatus.SC_FORBIDDEN);
   }
 
   @Test

@@ -72,7 +72,7 @@ public class TestData {
         "\t\"groupPermission\": false\n" +
         "\t\n" +
         "}")
-      .post(TestData.getDefaultPermissionUrl(repositoryType))
+      .post(TestData.getDefaultPermissionUrl(USER_SCM_ADMIN, USER_SCM_ADMIN, repositoryType))
       .then()
       .statusCode(HttpStatus.SC_CREATED)
     ;
@@ -87,7 +87,7 @@ public class TestData {
   public static ValidatableResponse callUserPermissions(String username, String password, String repositoryType, int expectedStatusCode) {
     return given(VndMediaType.PERMISSION, username, password)
       .when()
-      .get(TestData.getDefaultPermissionUrl(repositoryType))
+      .get(TestData.getDefaultPermissionUrl(username, password, repositoryType))
       .then()
       .statusCode(expectedStatusCode);
   }
@@ -102,8 +102,14 @@ public class TestData {
       .statusCode(expectedStatusCode);
   }
 
-  public static String getDefaultPermissionUrl(String repositoryType) {
-    return getDefaultRepositoryUrl(repositoryType) + "/permissions/";
+  public static String getDefaultPermissionUrl(String username, String password, String repositoryType) {
+    return given(VndMediaType.REPOSITORY, username, password)
+      .when()
+      .get(getDefaultRepositoryUrl(repositoryType))
+      .then()
+      .statusCode(HttpStatus.SC_OK)
+      .extract()
+      .body().jsonPath().getString("_links.permissions.href");
   }
 
 
