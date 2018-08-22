@@ -36,17 +36,14 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.Lists;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.tmatesoft.svn.core.SVNDirEntry;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNNodeKind;
 import org.tmatesoft.svn.core.SVNProperties;
 import org.tmatesoft.svn.core.SVNProperty;
 import org.tmatesoft.svn.core.io.SVNRepository;
-
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.FileObject;
 import sonia.scm.repository.Repository;
@@ -55,12 +52,11 @@ import sonia.scm.repository.SubRepository;
 import sonia.scm.repository.SvnUtil;
 import sonia.scm.util.Util;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
-
 import java.util.Collection;
 import java.util.List;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -141,6 +137,10 @@ public class SvnBrowseCommand extends AbstractSvnCommand
             entry, basePath));
 
         }
+      }
+
+      if (revisionNumber == -1) {
+        revisionNumber = svnRepository.getLatestRevision();
       }
 
       result = new BrowserResult();

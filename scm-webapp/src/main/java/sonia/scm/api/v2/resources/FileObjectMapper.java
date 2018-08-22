@@ -26,11 +26,15 @@ public abstract class FileObjectMapper extends BaseMapper<FileObject, FileObject
   @AfterMapping
   void addLinks(FileObject fileObject, @MappingTarget FileObjectDto dto, @Context NamespaceAndName namespaceAndName, @Context String revision) {
     Links.Builder links = Links.linkingTo()
-      .self(resourceLinks.source().sourceWithPath(namespaceAndName.getNamespace(), namespaceAndName.getName(), revision, fileObject.getPath()));
+      .self(resourceLinks.source().sourceWithPath(namespaceAndName.getNamespace(), namespaceAndName.getName(), revision, removeFirstSlash(fileObject.getPath())));
     if (!dto.isDirectory()) {
-      links.single(link("content", resourceLinks.source().content(namespaceAndName.getNamespace(), namespaceAndName.getName(), revision, fileObject.getPath())));
+      links.single(link("content", resourceLinks.source().content(namespaceAndName.getNamespace(), namespaceAndName.getName(), revision, removeFirstSlash(fileObject.getPath()))));
     }
 
     dto.add(links.build());
+  }
+
+  private String removeFirstSlash(String source) {
+    return source.startsWith("/") ? source.substring(1) : source;
   }
 }
