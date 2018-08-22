@@ -6,26 +6,11 @@ import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
-import sonia.scm.repository.NamespaceAndName;
-import sonia.scm.repository.Permission;
-import sonia.scm.repository.PermissionAlreadyExistsException;
-import sonia.scm.repository.PermissionNotFoundException;
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryException;
-import sonia.scm.repository.RepositoryManager;
-import sonia.scm.repository.RepositoryNotFoundException;
-import sonia.scm.repository.RepositoryPermissions;
+import sonia.scm.repository.*;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.util.List;
@@ -96,7 +81,7 @@ public class PermissionRootResource {
   @Path("{permission-name}")
   public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("permission-name") String permissionName) throws RepositoryException {
     Repository repository = load(namespace, name);
-    RepositoryPermissions.modify(repository).check();
+    checkUserPermission(repository);
     return Response.ok(
       repository.getPermissions()
         .stream()
@@ -127,12 +112,16 @@ public class PermissionRootResource {
   @Path("")
   public Response getAll(@PathParam("namespace") String namespace, @PathParam("name") String name) throws RepositoryNotFoundException {
     Repository repository = load(namespace, name);
-    RepositoryPermissions.modify(repository).check();
+    checkUserPermission(repository);
     List<PermissionDto> permissionDtoList = repository.getPermissions()
       .stream()
       .map(per -> modelToDtoMapper.map(per, new NamespaceAndName(repository.getNamespace(), repository.getName())))
       .collect(Collectors.toList());
     return Response.ok(permissionDtoList).build();
+  }
+
+  protected void checkUserPermission(Repository repository) {
+    RepositoryPermissions.modify(repository).check();
   }
 
 

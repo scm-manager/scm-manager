@@ -2,6 +2,8 @@ package sonia.scm.api.v2.resources;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.sdorra.shiro.ShiroRule;
+import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.collect.ImmutableList;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +15,7 @@ import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.jboss.resteasy.spi.HttpRequest;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -21,11 +24,7 @@ import org.junit.jupiter.api.TestFactory;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import sonia.scm.api.rest.AuthorizationExceptionMapper;
-import sonia.scm.repository.NamespaceAndName;
-import sonia.scm.repository.Permission;
-import sonia.scm.repository.PermissionType;
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.*;
 import sonia.scm.web.VndMediaType;
 
 import java.io.IOException;
@@ -42,12 +41,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 @Slf4j
+@SubjectAware(
+  username = "trillian",
+  password = "secret",
+  configuration = "classpath:sonia/scm/repository/shiro.ini"
+)
 public class PermissionRootResourceTest {
   private static final String REPOSITORY_NAMESPACE = "repo_namespace";
   private static final String REPOSITORY_NAME = "repo";
@@ -89,6 +91,9 @@ public class PermissionRootResourceTest {
 
   private final Dispatcher dispatcher = MockDispatcherFactory.createDispatcher();
 
+  @Rule
+  public ShiroRule shiro = new ShiroRule();
+
   @Mock
   private RepositoryManager repositoryManager;
 
@@ -107,7 +112,7 @@ public class PermissionRootResourceTest {
   @Before
   public void prepareEnvironment() {
     initMocks(this);
-    permissionRootResource = new PermissionRootResource(permissionDtoToPermissionMapper, permissionToPermissionDtoMapper, resourceLinks, repositoryManager);
+    permissionRootResource = spy(new PermissionRootResource(permissionDtoToPermissionMapper, permissionToPermissionDtoMapper, resourceLinks, repositoryManager));
     RepositoryRootResource repositoryRootResource = new RepositoryRootResource(MockProvider
       .of(new RepositoryResource(null, null, null, null, null, null, null,null, MockProvider.of(permissionRootResource))), null);
     dispatcher.getRegistry().addSingletonResource(repositoryRootResource);
@@ -316,6 +321,7 @@ public class PermissionRootResourceTest {
     when(mockRepository.getNamespace()).thenReturn(REPOSITORY_NAMESPACE);
     when(mockRepository.getName()).thenReturn(REPOSITORY_NAME);
     when(repositoryManager.get(any(NamespaceAndName.class))).thenReturn(mockRepository);
+    doNothing().when(permissionRootResource).checkUserPermission(any());
     return mockRepository;
   }
 
