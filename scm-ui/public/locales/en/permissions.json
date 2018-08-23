@@ -1,0 +1,6 @@
+{
+  "permissions": {
+    "error-title": "Error",
+    "error-subtitle": "Unknown permissions error"
+  }
+}
