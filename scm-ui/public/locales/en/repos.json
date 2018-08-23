@@ -22,7 +22,8 @@
     "actions-label": "Actions",
     "back-label": "Back",
     "navigation-label": "Navigation",
-    "information": "Information"
+    "information": "Information",
+    "permissions": "Permissions"
   },
   "create": {
     "title": "Create Repository",

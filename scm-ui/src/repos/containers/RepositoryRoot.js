@@ -22,6 +22,7 @@ import Permissions from "../../permissions/containers/Permissions";
 
 import type { History } from "history";
 import EditNavLink from "../components/EditNavLink";
+import PermissionsNavLink from "../components/PermissionsNavLink";
 
 type Props = {
   namespace: string,
@@ -107,6 +108,10 @@ class RepositoryRoot extends React.Component<Props> {
             <Navigation>
               <Section label={t("repository-root.navigation-label")}>
                 <NavLink to={url} label={t("repository-root.information")} />
+                <PermissionsNavLink
+                  permissionUrl={`${url}/permissions`}
+                  repository={repository}
+                />
                 <EditNavLink repository={repository} editUrl={`${url}/edit`} />
               </Section>
               <Section label={t("repository-root.actions-label")}>
