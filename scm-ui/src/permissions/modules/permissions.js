@@ -6,7 +6,7 @@ import type { PermissionCollection } from "../types/Permissions";
 import { isPending } from "../../modules/pending";
 import { getFailure } from "../../modules/failure";
 
-export const FETCH_PERMISSIONS = "scm/repos/FETCH_PERMISSIONS";
+export const FETCH_PERMISSIONS = "scm/permissions/FETCH_PERMISSIONS";
 export const FETCH_PERMISSIONS_PENDING = `${FETCH_PERMISSIONS}_${
   types.PENDING_SUFFIX
 }`;
@@ -112,10 +112,18 @@ export function getPermissionsOfRepo(
   }
 }
 
-export function isFetchPermissionsPending(state: Object) {
-  return isPending(state, FETCH_PERMISSIONS);
+export function isFetchPermissionsPending(
+  state: Object,
+  namespace: string,
+  name: string
+) {
+  return isPending(state, FETCH_PERMISSIONS, namespace + "/" + name);
 }
 
-export function getFetchPermissionsFailure(state: Object) {
-  return getFailure(state, FETCH_PERMISSIONS);
+export function getFetchPermissionsFailure(
+  state: Object,
+  namespace: string,
+  name: string
+) {
+  return getFailure(state, FETCH_PERMISSIONS, namespace + "/" + name);
 }

@@ -36,8 +36,7 @@ class Permissions extends React.Component<Props> {
   }
 
   render() {
-    const { namespace, name, loading, error, permissions, t } = this.props;
-
+    const { loading, error, permissions, t } = this.props;
     if (error) {
       return (
         <ErrorPage
@@ -62,8 +61,8 @@ class Permissions extends React.Component<Props> {
 const mapStateToProps = (state, ownProps) => {
   const namespace = ownProps.namespace;
   const name = ownProps.name;
-  const error = getFetchPermissionsFailure(state);
-  const loading = isFetchPermissionsPending(state);
+  const error = getFetchPermissionsFailure(state, namespace, name);
+  const loading = isFetchPermissionsPending(state, namespace, name);
   const permissions = getPermissionsOfRepo(state, namespace, name);
   return {
     namespace,

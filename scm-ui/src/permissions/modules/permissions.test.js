@@ -168,26 +168,34 @@ describe("permissions selectors", () => {
   it("should return true, when fetch permissions is pending", () => {
     const state = {
       pending: {
-        [FETCH_PERMISSIONS]: true
+        [FETCH_PERMISSIONS + "/hitchhiker/puzzle42"]: true
       }
     };
-    expect(isFetchPermissionsPending(state)).toEqual(true);
+    expect(isFetchPermissionsPending(state, "hitchhiker", "puzzle42")).toEqual(
+      true
+    );
   });
 
   it("should return false, when fetch permissions is not pending", () => {
-    expect(isFetchPermissionsPending({})).toEqual(false);
+    expect(isFetchPermissionsPending({}, "hitchiker", "puzzle42")).toEqual(
+      false
+    );
   });
 
   it("should return error when fetch permissions did fail", () => {
     const state = {
       failure: {
-        [FETCH_PERMISSIONS]: error
+        [FETCH_PERMISSIONS + "/hitchhiker/puzzle42"]: error
       }
     };
-    expect(getFetchPermissionsFailure(state)).toEqual(error);
+    expect(getFetchPermissionsFailure(state, "hitchhiker", "puzzle42")).toEqual(
+      error
+    );
   });
 
   it("should return undefined when fetch permissions did not fail", () => {
-    expect(getFetchPermissionsFailure({})).toBe(undefined);
+    expect(getFetchPermissionsFailure({}, "hitchhiker", "puzzle42")).toBe(
+      undefined
+    );
   });
 });

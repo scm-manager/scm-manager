@@ -59,6 +59,7 @@ export function getFailure(
   itemId?: string | number
 ) {
   if (state.failure) {
+    console.log(state.failure);
     let identifier = actionType;
     if (itemId) {
       identifier += "/" + itemId;
