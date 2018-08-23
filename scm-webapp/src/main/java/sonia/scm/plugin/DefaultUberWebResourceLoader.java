@@ -39,19 +39,18 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.util.HttpUtil;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import java.util.List;
 
 import javax.servlet.ServletContext;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Default implementation of the {@link UberWebResourceLoader}.
@@ -134,7 +133,7 @@ public class DefaultUberWebResourceLoader implements UberWebResourceLoader
 
     try
     {
-      URL ctxResource = servletContext.getResource(path);
+      URL ctxResource = nonDirectory(servletContext.getResource(path));
 
       if (ctxResource != null)
       {
@@ -144,7 +143,7 @@ public class DefaultUberWebResourceLoader implements UberWebResourceLoader
 
       for (PluginWrapper wrapper : plugins)
       {
-        URL resource = wrapper.getWebResourceLoader().getResource(path);
+        URL resource = nonDirectory(wrapper.getWebResourceLoader().getResource(path));
 
         if (resource != null)
         {
@@ -190,13 +189,13 @@ public class DefaultUberWebResourceLoader implements UberWebResourceLoader
 
     try
     {
-      resource = servletContext.getResource(path);
+      resource = nonDirectory(servletContext.getResource(path));
 
       if (resource == null)
       {
         for (PluginWrapper wrapper : plugins)
         {
-          resource = wrapper.getWebResourceLoader().getResource(path);
+          resource = nonDirectory(wrapper.getWebResourceLoader().getResource(path));
 
           if (resource != null)
           {
@@ -217,6 +216,29 @@ public class DefaultUberWebResourceLoader implements UberWebResourceLoader
     }
 
     return resource;
+  }
+
+  private URL nonDirectory(URL url) {
+    if (url == null) {
+      return null;
+    }
+
+    if (isDirectory(url)) {
+      return null;
+    }
+
+    return url;
+  }
+
+  private boolean isDirectory(URL url) {
+    if ("file".equals(url.getProtocol())) {
+      try {
+        return Files.isDirectory(Paths.get(url.toURI()));
+      } catch (URISyntaxException ex) {
+        throw Throwables.propagate(ex);
+      }
+    }
+    return false;
   }
 
   //~--- fields ---------------------------------------------------------------

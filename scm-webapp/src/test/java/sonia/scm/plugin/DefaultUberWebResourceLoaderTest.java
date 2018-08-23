@@ -36,6 +36,7 @@ package sonia.scm.plugin;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.Lists;
+import org.assertj.core.api.Assertions;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -52,9 +53,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -143,8 +143,7 @@ public class DefaultUberWebResourceLoaderTest extends WebResourceLoaderTestBase
     when(servletContext.getResource("/myresource")).thenReturn(SCM_MANAGER);
 
     WebResourceLoader resourceLoader =
-      new DefaultUberWebResourceLoader(servletContext,
-        new ArrayList<PluginWrapper>());
+      new DefaultUberWebResourceLoader(servletContext, new ArrayList<>());
     URL resource = resourceLoader.getResource("/myresource");
 
     assertSame(SCM_MANAGER, resource);
@@ -171,6 +170,50 @@ public class DefaultUberWebResourceLoaderTest extends WebResourceLoaderTestBase
 
     assertThat(resourceLoader.getResources("/myresource"),
       containsInAnyOrder(file.toURI().toURL(), BITBUCKET));
+  }
+
+  @Test
+  public void shouldReturnNullForDirectoryFromServletContext() throws IOException {
+    URL url = temp.newFolder().toURI().toURL();
+    when(servletContext.getResource("/myresource")).thenReturn(url);
+
+    WebResourceLoader resourceLoader =
+      new DefaultUberWebResourceLoader(servletContext, new ArrayList<>());
+
+    assertNull(resourceLoader.getResource("/myresource"));
+  }
+
+  @Test
+  public void shouldReturnNullForDirectoryFromPlugin() throws IOException {
+    URL url = temp.newFolder().toURI().toURL();
+    WebResourceLoader loader = mock(WebResourceLoader.class);
+    when(loader.getResource("/myresource")).thenReturn(url);
+
+    PluginWrapper pluginWrapper = mock(PluginWrapper.class);
+    when(pluginWrapper.getWebResourceLoader()).thenReturn(loader);
+
+    WebResourceLoader resourceLoader =
+      new DefaultUberWebResourceLoader(servletContext, Lists.newArrayList(pluginWrapper));
+
+    assertNull(resourceLoader.getResource("/myresource"));
+  }
+
+  @Test
+  public void shouldReturnNullForDirectories() throws IOException {
+    URL url = temp.newFolder().toURI().toURL();
+    when(servletContext.getResource("/myresource")).thenReturn(url);
+
+    WebResourceLoader loader = mock(WebResourceLoader.class);
+    when(loader.getResource("/myresource")).thenReturn(url);
+
+    PluginWrapper pluginWrapper = mock(PluginWrapper.class);
+    when(pluginWrapper.getWebResourceLoader()).thenReturn(loader);
+
+    UberWebResourceLoader resourceLoader =
+      new DefaultUberWebResourceLoader(servletContext, Lists.newArrayList(pluginWrapper));
+
+    List<URL> resources = resourceLoader.getResources("/myresource");
+    Assertions.assertThat(resources).isEmpty();
   }
 
   /**
