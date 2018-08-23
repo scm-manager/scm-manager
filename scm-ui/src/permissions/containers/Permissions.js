@@ -11,7 +11,7 @@ import {
 import Loading from "../../components/Loading";
 import ErrorPage from "../../components/ErrorPage";
 import type { PermissionCollection } from "../types/Permissions";
-import PermissionsTable from "../components/table/PermissionsTable";
+import PermissionsTable from "./PermissionsTable";
 
 type Props = {
   namespace: string,
@@ -36,7 +36,7 @@ class Permissions extends React.Component<Props> {
   }
 
   render() {
-    const { loading, error, permissions, t } = this.props;
+    const { loading, error, permissions, t, namespace, name } = this.props;
     if (error) {
       return (
         <ErrorPage
@@ -52,7 +52,7 @@ class Permissions extends React.Component<Props> {
     }
 
     if (permissions.length > 0)
-      return <PermissionsTable permissions={permissions} />;
+      return <PermissionsTable permissions={permissions} namespace={namespace} name={name} />;
 
     return <div />;
   }

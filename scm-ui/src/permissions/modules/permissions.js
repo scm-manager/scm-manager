@@ -2,7 +2,7 @@
 import { apiClient } from "../../apiclient";
 import * as types from "../../modules/types";
 import type { Action } from "../../types/Action";
-import type { PermissionCollection } from "../types/Permissions";
+import type { PermissionCollection, Permission } from "../types/Permissions";
 import { isPending } from "../../modules/pending";
 import { getFailure } from "../../modules/failure";
 
@@ -16,9 +16,19 @@ export const FETCH_PERMISSIONS_SUCCESS = `${FETCH_PERMISSIONS}_${
 export const FETCH_PERMISSIONS_FAILURE = `${FETCH_PERMISSIONS}_${
   types.FAILURE_SUFFIX
 }`;
-
+export const MODIFY_PERMISSION = "scm/permissions/MODFIY_PERMISSION";
+export const MODIFY_PERMISSION_PENDING = `${MODIFY_PERMISSION}_${
+  types.PENDING_SUFFIX
+}`;
+export const MODIFY_PERMISSION_SUCCESS = `${MODIFY_PERMISSION}_${
+  types.SUCCESS_SUFFIX
+}`;
+export const MODIFY_PERMISSION_FAILURE = `${MODIFY_PERMISSION}_${
+  types.FAILURE_SUFFIX
+}`;
 const REPOS_URL = "repositories";
 const PERMISSIONS_URL = "permissions";
+const CONTENT_TYPE = "application/vnd.scmm-permission+json";
 
 // fetch permissions
 
@@ -79,6 +89,79 @@ export function fetchPermissionsFailure(
   };
 }
 
+// modify permission
+
+export function modifyPermission(
+  permission: Permission,
+  namespace: string,
+  name: string,
+  callback?: () => void
+) {
+  return function(dispatch: any) {
+    dispatch(modifyPermissionPending(permission, namespace, name));
+
+    return apiClient
+      .put(permission._links.update.href, permission, CONTENT_TYPE)
+      .then(() => {
+        dispatch(modifyPermissionSuccess(permission, namespace, name));
+        if (callback) {
+          callback();
+        }
+      })
+      .catch(cause => {
+        const error = new Error(
+          `failed to modify permission: ${cause.message}`
+        );
+        dispatch(modifyPermissionFailure(permission, error, namespace, name));
+      });
+  };
+}
+
+export function modifyPermissionPending(
+  permission: Permission,
+  namespace: string,
+  name: string
+): Action {
+  return {
+    type: MODIFY_PERMISSION_PENDING,
+    payload: permission,
+    itemId: namespace + "/" + name
+  };
+}
+
+export function modifyPermissionSuccess(
+  permission: Permission,
+  namespace: string,
+  name: string
+): Action {
+  return {
+    type: MODIFY_PERMISSION_SUCCESS,
+    payload: permission,
+    itemId: namespace + "/" + name
+  };
+}
+
+export function modifyPermissionFailure(
+  permission: Permission,
+  error: Error,
+  namespace: string,
+  name: string
+): Action {
+  return {
+    type: MODIFY_PERMISSION_FAILURE,
+    payload: { error, permission },
+    itemId: namespace + "/" + name
+  };
+}
+
+function newPermissions(modifiedPermission: Permission) {
+  let newPermissions = [];
+  newPermissions[0] = modifiedPermission;
+  return {
+    newPermissions
+  };
+}
+
 // reducer
 export default function reducer(
   state: Object = {},
@@ -93,6 +176,12 @@ export default function reducer(
       return {
         ...state,
         [action.itemId]: action.payload
+      };
+    case MODIFY_PERMISSION_SUCCESS:
+      const newPermission = newPermissions(action.payload);
+      return {
+        ...state,
+        [action.itemId]: newPermission
       };
     default:
       return state;

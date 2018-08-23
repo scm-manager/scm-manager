@@ -4,17 +4,16 @@ import type { Permission } from "../../types/Permissions";
 import { Checkbox, InputField } from "../../../components/forms/index";
 import { DeleteButton, SubmitButton } from "../../../components/buttons/index";
 import { translate } from "react-i18next";
-import { Select } from "../../../components/forms";
+import { Select } from "../../../components/forms/index";
 
 type Props = {
+  submitForm: Permission => void,
   permission: Permission,
   t: string => string
 };
 
 type State = {
-  name: string,
-  type: string,
-  groupPermission: boolean
+  permission: Permission
 };
 
 class PermissionRowEditable extends React.Component<Props, State> {
@@ -22,9 +21,12 @@ class PermissionRowEditable extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      name: "",
-      type: "READ",
-      groupPermission: false
+      permission: {
+        name: "",
+        type: "READ",
+        groupPermission: false,
+        _links: {}
+      }
     };
   }
 
@@ -32,15 +34,21 @@ class PermissionRowEditable extends React.Component<Props, State> {
     const { permission } = this.props;
     if (permission) {
       this.setState({
-        name: permission.name,
-        type: permission.type,
-        groupPermission: permission.groupPermission
+        permission: {
+          name: permission.name,
+          type: permission.type,
+          groupPermission: permission.groupPermission,
+          _links: permission._links
+        }
       });
     }
   }
-
+  submit = (event: Event) => {
+    event.preventDefault();
+    this.props.submitForm(this.state.permission);
+  };
   render() {
-    const { name, type, groupPermission } = this.state;
+    const { permission } = this.state;
     const { t } = this.props;
     const types = ["READ", "OWNER", "GROUP"];
 
@@ -52,25 +60,30 @@ class PermissionRowEditable extends React.Component<Props, State> {
       <tr>
         <td>
           <InputField
-            value={name ? name : ""}
+            value={permission.name ? permission.name : ""}
             onChange={this.handleNameChange}
           />
         </td>
         <td className="is-hidden-mobile">
           <Select
             onChange={this.handleTypeChange}
-            value={type ? type : ""}
+            value={permission.type ? permission.type : ""}
             options={this.createSelectOptions(types)}
           />
         </td>
         <td>
           <Checkbox
-            checked={groupPermission ? groupPermission : false}
+            checked={
+              permission.groupPermission ? permission.groupPermission : false
+            }
             onChange={this.handleGroupPermissionChange}
           />
         </td>
         <td>
-          <SubmitButton label={t("edit-permission.save-button")} />
+          <SubmitButton
+            label={t("edit-permission.save-button")}
+            action={this.submit}
+          />
         </td>
         <td>{deleteButton}</td>
       </tr>
@@ -79,7 +92,10 @@ class PermissionRowEditable extends React.Component<Props, State> {
 
   handleTypeChange = (type: string) => {
     this.setState({
-      type: type
+      permission: {
+        ...this.state.permission,
+        type: type
+      }
     });
   };
 
@@ -94,13 +110,19 @@ class PermissionRowEditable extends React.Component<Props, State> {
 
   handleNameChange = (name: string) => {
     this.setState({
-      name: name
+      permission: {
+        ...this.state.permission,
+        name: name
+      }
     });
   };
 
   handleGroupPermissionChange = (groupPermission: boolean) => {
     this.setState({
-      groupPermission: groupPermission
+      permission: {
+        ...this.state.permission,
+        groupPermission: groupPermission
+      }
     });
   };
 }
