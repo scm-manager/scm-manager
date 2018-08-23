@@ -101,7 +101,12 @@ class RepositoryRoot extends React.Component<Props> {
             />
             <Route
               path={`${url}/permissions`}
-              component={() => <Permissions namespace={repository.namespace} name={repository.name} />}
+              component={() => (
+                <Permissions
+                  namespace={repository.namespace}
+                  name={repository.name}
+                />
+              )}
             />
           </div>
           <div className="column">
