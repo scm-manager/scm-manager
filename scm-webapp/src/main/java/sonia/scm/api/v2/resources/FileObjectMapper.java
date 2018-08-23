@@ -26,7 +26,7 @@ public abstract class FileObjectMapper extends BaseMapper<FileObject, FileObject
 
   @AfterMapping
   void addLinks(FileObject fileObject, @MappingTarget FileObjectDto dto, @Context NamespaceAndName namespaceAndName, @Context String revision) {
-    String path = fileObject.getPath();
+    String path = removeFirstSlash(fileObject.getPath());
     Links.Builder links = Links.linkingTo()
       .self(addPath(resourceLinks.source().sourceWithPath(namespaceAndName.getNamespace(), namespaceAndName.getName(), revision, ""), path));
     if (!dto.isDirectory()) {
@@ -39,5 +39,9 @@ public abstract class FileObjectMapper extends BaseMapper<FileObject, FileObject
   // we have to add the file path using URI, so that path separators (aka '/') will not be encoded as '%2F'
   private String addPath(String sourceWithPath, String path) {
     return URI.create(sourceWithPath).resolve(path).toASCIIString();
+  }
+
+  private String removeFirstSlash(String source) {
+    return source.startsWith("/") ? source.substring(1) : source;
   }
 }
