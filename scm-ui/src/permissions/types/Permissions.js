@@ -8,4 +8,4 @@ export type Permission = {
   _links: Links
 };
 
-export type Permissions = Permission[];
+export type PermissionCollection = Permission[];

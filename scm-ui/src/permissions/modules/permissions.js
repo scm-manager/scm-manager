@@ -2,7 +2,7 @@
 import { apiClient } from "../../apiclient";
 import * as types from "../../modules/types";
 import type { Action } from "../../types/Action";
-import type { Permissions } from "../types/Permissions";
+import type { PermissionCollection } from "../types/Permissions";
 import { isPending } from "../../modules/pending";
 import { getFailure } from "../../modules/failure";
 
@@ -52,7 +52,7 @@ export function fetchPermissionsPending(
 }
 
 export function fetchPermissionsSuccess(
-  permissions: Permissions,
+  permissions: PermissionCollection,
   namespace: string,
   name: string
 ): Action {

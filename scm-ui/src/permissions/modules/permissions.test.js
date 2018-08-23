@@ -13,7 +13,7 @@ import reducer, {
   FETCH_PERMISSIONS_SUCCESS,
   FETCH_PERMISSIONS_FAILURE
 } from "./permissions";
-import type { Permission, Permissions } from "../types/Permissions";
+import type { Permission, PermissionCollection } from "../types/Permissions";
 
 const hitchhiker_puzzle42Permission_user_eins: Permission = {
   name: "user_eins",
@@ -55,7 +55,7 @@ const hitchhiker_puzzle42Permission_user_zwei: Permission = {
   }
 };
 
-const hitchhiker_puzzle42Permissions: Permissions = [
+const hitchhiker_puzzle42Permissions: PermissionCollection = [
   hitchhiker_puzzle42Permission_user_eins,
   hitchhiker_puzzle42Permission_user_zwei
 ];

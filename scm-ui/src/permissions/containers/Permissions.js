@@ -8,23 +8,22 @@ import {
   isFetchPermissionsPending,
   getPermissionsOfRepo
 } from "../modules/permissions";
-import type { History } from "history";
 import Loading from "../../components/Loading";
 import ErrorPage from "../../components/ErrorPage";
+import type {PermissionCollection}  from "../types/Permissions";
 
 type Props = {
   namespace: string,
   name: string,
   loading: boolean,
   error: Error,
-  permissions: Permissions,
+  permissions: PermissionCollection,
 
   //dispatch functions
   fetchPermissions: (namespace: string, name: string) => void,
 
   // context props
   t: string => string,
-  history: History,
   match: any
 };
 
