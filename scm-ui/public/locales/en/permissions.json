@@ -4,8 +4,12 @@
     "error-subtitle": "Unknown permissions error"
   },
   "permission": {
-    "name": "Username",
+    "name": "Name",
     "type": "Type",
     "group-permission": "Group Permission"
+  },
+  "edit-permission": {
+    "delete-button": "Delete",
+    "save-button": "Save Changes"
   }
 }
