@@ -33,19 +33,21 @@ public class WebResourceServlet extends HttpServlet {
    * TODO remove old frontend servlets
    */
   @VisibleForTesting
-  static final String PATTERN = "/(?!api/|index.html|error.html|plugins/resources).+";
+  static final String PATTERN = "/(?!api/).*";
 
   private static final Logger LOG = LoggerFactory.getLogger(WebResourceServlet.class);
 
   private final UberWebResourceLoader webResourceLoader;
+  private final PushStateDispatcher pushStateDispatcher;
 
   @Inject
-  public WebResourceServlet(PluginLoader pluginLoader) {
+  public WebResourceServlet(PluginLoader pluginLoader, PushStateDispatcher dispatcher) {
     this.webResourceLoader = pluginLoader.getUberWebResourceLoader();
+    this.pushStateDispatcher = dispatcher;
   }
 
   @Override
-  protected void doGet(HttpServletRequest request, HttpServletResponse response) {
+  protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String uri = normalizeUri(request);
 
     LOG.trace("try to load {}", uri);
@@ -53,7 +55,7 @@ public class WebResourceServlet extends HttpServlet {
     if (url != null) {
       serveResource(response, url);
     } else {
-      handleResourceNotFound(response);
+      pushStateDispatcher.dispatch(request, response, uri);
     }
   }
 
@@ -71,7 +73,4 @@ public class WebResourceServlet extends HttpServlet {
     }
   }
 
-  private void handleResourceNotFound(HttpServletResponse response) {
-    response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-  }
 }

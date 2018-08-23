@@ -313,7 +313,7 @@ public class ScmServletModule extends ServletModule
     // bind events
     // bind(LastModifiedUpdateListener.class);
 
-
+    bind(PushStateDispatcher.class).toProvider(PushStateDispatcherProvider.class);
   }
 
 

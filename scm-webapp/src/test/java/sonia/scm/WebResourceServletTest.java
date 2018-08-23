@@ -40,13 +40,16 @@ public class WebResourceServletTest {
   @Mock
   private UberWebResourceLoader webResourceLoader;
 
+  @Mock
+  private PushStateDispatcher pushStateDispatcher;
+
   private WebResourceServlet servlet;
 
   @Before
   public void setUpMocks() {
     when(pluginLoader.getUberWebResourceLoader()).thenReturn(webResourceLoader);
     when(request.getContextPath()).thenReturn("/scm");
-    servlet = new WebResourceServlet(pluginLoader);
+    servlet = new WebResourceServlet(pluginLoader, pushStateDispatcher);
   }
 
   @Test
@@ -57,17 +60,17 @@ public class WebResourceServletTest {
     assertFalse("/api/v2/repositories".matches(WebResourceServlet.PATTERN));
 
     // exclude old style ui template servlets
-    assertFalse("/".matches(WebResourceServlet.PATTERN));
-    assertFalse("/index.html".matches(WebResourceServlet.PATTERN));
-    assertFalse("/error.html".matches(WebResourceServlet.PATTERN));
-    assertFalse("/plugins/resources/js/sonia/scm/hg.config-wizard.js".matches(WebResourceServlet.PATTERN));
+    assertTrue("/".matches(WebResourceServlet.PATTERN));
+    assertTrue("/index.html".matches(WebResourceServlet.PATTERN));
+    assertTrue("/error.html".matches(WebResourceServlet.PATTERN));
+    assertTrue("/plugins/resources/js/sonia/scm/hg.config-wizard.js".matches(WebResourceServlet.PATTERN));
   }
 
   @Test
-  public void testDoGetWithNonExistingResource() {
+  public void testDoGetWithNonExistingResource() throws IOException {
     when(request.getRequestURI()).thenReturn("/scm/awesome.jpg");
     servlet.doGet(request, response);
-    verify(response).setStatus(HttpServletResponse.SC_NOT_FOUND);
+    verify(pushStateDispatcher).dispatch(request, response, "/awesome.jpg");
   }
 
 
