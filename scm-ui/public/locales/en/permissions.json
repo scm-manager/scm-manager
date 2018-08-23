@@ -2,5 +2,10 @@
   "permissions": {
     "error-title": "Error",
     "error-subtitle": "Unknown permissions error"
+  },
+  "permission": {
+    "name": "Username",
+    "type": "Type",
+    "group-permission": "Group Permission"
   }
 }

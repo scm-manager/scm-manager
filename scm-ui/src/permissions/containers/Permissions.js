@@ -10,7 +10,8 @@ import {
 } from "../modules/permissions";
 import Loading from "../../components/Loading";
 import ErrorPage from "../../components/ErrorPage";
-import type {PermissionCollection}  from "../types/Permissions";
+import type { PermissionCollection } from "../types/Permissions";
+import PermissionsTable from "../components/table/PermissionsTable";
 
 type Props = {
   namespace: string,
@@ -51,7 +52,10 @@ class Permissions extends React.Component<Props> {
       return <Loading />;
     }
 
-    return <div>Permissions will be shown here!</div>;
+    if (permissions.length > 0)
+      return <PermissionsTable permissions={permissions} />;
+
+    return <div />;
   }
 }
 
