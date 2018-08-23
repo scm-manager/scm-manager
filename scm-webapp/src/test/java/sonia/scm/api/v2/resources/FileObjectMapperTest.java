@@ -54,7 +54,7 @@ public class FileObjectMapperTest {
     FileObject fileObject = createFileObject();
     FileObjectDto dto = mapper.map(fileObject, new NamespaceAndName("namespace", "name"), "revision");
 
-    assertThat(dto.getLinks().getLinkBy("self").get().getHref()).isEqualTo(expectedBaseUri.resolve("namespace/name/sources/revision/foo%2Fbar").toString());
+    assertThat(dto.getLinks().getLinkBy("self").get().getHref()).isEqualTo(expectedBaseUri.resolve("namespace/name/sources/revision/foo/bar").toString());
   }
 
   @Test
@@ -62,7 +62,7 @@ public class FileObjectMapperTest {
     FileObject fileObject = createFileObject();
     FileObjectDto dto = mapper.map(fileObject, new NamespaceAndName("namespace", "name"), "revision");
 
-    assertThat(dto.getLinks().getLinkBy("content").get().getHref()).isEqualTo(expectedBaseUri.resolve("namespace/name/content/revision/foo%2Fbar").toString());
+    assertThat(dto.getLinks().getLinkBy("content").get().getHref()).isEqualTo(expectedBaseUri.resolve("namespace/name/content/revision/foo/bar").toString());
   }
 
   private FileObject createFileObject() {

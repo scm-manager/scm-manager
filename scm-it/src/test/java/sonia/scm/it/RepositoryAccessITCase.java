@@ -70,6 +70,8 @@ public class RepositoryAccessITCase {
   @Test
   public void shouldReadContent() throws IOException, InterruptedException {
     repositoryUtil.createAndCommitFile("a.txt", "a");
+    tempFolder.newFolder("subfolder");
+    repositoryUtil.createAndCommitFile("subfolder/a.txt", "sub-a");
 
     sleep(1000);
 
@@ -81,19 +83,40 @@ public class RepositoryAccessITCase {
       .extract()
       .path("_links.sources.href");
 
-    String contentUrl = given()
+    String rootContentUrl = given()
       .when()
       .get(sourcesUrl)
       .then()
       .statusCode(HttpStatus.SC_OK)
       .extract()
-      .path("files[0]._links.content.href");
-
+      .path("files.find{it.name=='a.txt'}._links.content.href");
     given()
       .when()
-      .get(contentUrl)
+      .get(rootContentUrl)
       .then()
       .statusCode(HttpStatus.SC_OK)
       .body(equalTo("a"));
+
+    String subfolderSourceUrl = given()
+      .when()
+      .get(sourcesUrl)
+      .then()
+      .statusCode(HttpStatus.SC_OK)
+      .extract()
+      .path("files.find{it.name=='subfolder'}._links.self.href");
+    String subfolderContentUrl= given()
+      .when()
+      .get(subfolderSourceUrl)
+      .then()
+      .statusCode(HttpStatus.SC_OK)
+      .extract()
+      .path("files[0]._links.content.href");
+    System.out.println(subfolderContentUrl);
+    given()
+      .when()
+      .get(subfolderContentUrl)
+      .then()
+      .statusCode(HttpStatus.SC_OK)
+      .body(equalTo("sub-a"));
   }
 }

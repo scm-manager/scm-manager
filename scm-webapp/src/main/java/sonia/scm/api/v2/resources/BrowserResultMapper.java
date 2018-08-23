@@ -17,10 +17,6 @@ public class BrowserResultMapper {
   @Inject
   private ResourceLinks resourceLinks;
 
-  private FileObjectDto mapFileObject(FileObject fileObject, NamespaceAndName namespaceAndName, String revision) {
-    return fileObjectMapper.map(fileObject, namespaceAndName, revision);
-  }
-
   public BrowserResultDto map(BrowserResult browserResult, NamespaceAndName namespaceAndName) {
     BrowserResultDto browserResultDto = new BrowserResultDto();
 
@@ -36,6 +32,10 @@ public class BrowserResultMapper {
     browserResultDto.setFiles(fileObjectDtoList);
     this.addLinks(browserResult, browserResultDto, namespaceAndName);
     return browserResultDto;
+  }
+
+  private FileObjectDto mapFileObject(FileObject fileObject, NamespaceAndName namespaceAndName, String revision) {
+    return fileObjectMapper.map(fileObject, namespaceAndName, revision);
   }
 
   private void addLinks(BrowserResult browserResult, BrowserResultDto dto, NamespaceAndName namespaceAndName) {

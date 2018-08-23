@@ -45,9 +45,24 @@ public class RepositoryUtil {
   }
 
   void createAndCommitFile(String fileName, String content) throws IOException {
-    Files.write(content, new File(folder, fileName), Charsets.UTF_8);
-    repositoryClient.getAddCommand().add(fileName);
+    File file = new File(folder, fileName);
+    Files.write(content, file, Charsets.UTF_8);
+    addWithParentDirectories(file);
     commit("added " + fileName);
+  }
+
+  private String addWithParentDirectories(File file) throws IOException {
+    File parent = file.getParentFile();
+    String thisName = file.getName();
+    String path;
+    if (!folder.equals(parent)) {
+      addWithParentDirectories(parent);
+      path = addWithParentDirectories(parent) + File.separator + thisName;
+    } else {
+      path = thisName;
+    }
+    repositoryClient.getAddCommand().add(path);
+    return path;
   }
 
   Changeset commit(String message) throws IOException {
