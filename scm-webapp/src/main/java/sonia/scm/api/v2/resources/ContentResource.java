@@ -61,8 +61,8 @@ public class ContentResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision, @PathParam("path") String path) {
-    try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
-      StreamingOutput stream = createStreamingOutput(namespace, name, revision, path, repositoryService);
+    StreamingOutput stream = createStreamingOutput(namespace, name, revision, path);
+      try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
       Response.ResponseBuilder responseBuilder = Response.ok(stream);
       return createContentHeader(namespace, name, revision, path, repositoryService, responseBuilder);
     } catch (RepositoryNotFoundException e) {
@@ -71,9 +71,9 @@ public class ContentResource {
     }
   }
 
-  private StreamingOutput createStreamingOutput(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision, @PathParam("path") String path, RepositoryService repositoryService) {
+  private StreamingOutput createStreamingOutput(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision, @PathParam("path") String path) {
     return os -> {
-      try {
+      try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
         repositoryService.getCatCommand().setRevision(revision).retriveContent(os, path);
         os.close();
       } catch (PathNotFoundException e) {
