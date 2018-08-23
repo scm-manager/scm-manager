@@ -2,7 +2,9 @@
 import { apiClient } from "../../apiclient";
 import * as types from "../../modules/types";
 import type { Action } from "../../types/Action";
-import type { Permission, Permissions } from "../types/Permissions";
+import type { Permissions } from "../types/Permissions";
+import { isPending } from "../../modules/pending";
+import { getFailure } from "../../modules/failure";
 
 export const FETCH_PERMISSIONS = "scm/repos/FETCH_PERMISSIONS";
 export const FETCH_PERMISSIONS_PENDING = `${FETCH_PERMISSIONS}_${
@@ -88,8 +90,32 @@ export default function reducer(
 
   switch (action.type) {
     case FETCH_PERMISSIONS_SUCCESS:
-      return state;
+      return {
+        ...state,
+        [action.itemId]: action.payload
+      };
     default:
       return state;
   }
+}
+
+// selectors
+
+export function getPermissionsOfRepo(
+  state: Object,
+  namespace: string,
+  name: string
+) {
+  if (state.permissions && state.permissions[namespace + "/" + name]) {
+    const permissions = state.permissions[namespace + "/" + name];
+    return permissions;
+  }
+}
+
+export function isFetchPermissionsPending(state: Object) {
+  return isPending(state, FETCH_PERMISSIONS);
+}
+
+export function getFetchPermissionsFailure(state: Object) {
+  return getFailure(state, FETCH_PERMISSIONS);
 }
