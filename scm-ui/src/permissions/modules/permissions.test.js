@@ -2,8 +2,9 @@
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 import fetchMock from "fetch-mock";
-import {
+import reducer, {
   fetchPermissions,
+  fetchPermissionsSuccess,
   FETCH_PERMISSIONS_PENDING,
   FETCH_PERMISSIONS_SUCCESS,
   FETCH_PERMISSIONS_FAILURE
@@ -78,5 +79,28 @@ describe("permission fetch", () => {
       expect(actions[1].type).toEqual(FETCH_PERMISSIONS_FAILURE);
       expect(actions[1].payload).toBeDefined();
     });
+  });
+});
+
+describe("repos reducer", () => {
+  it("should return empty object, if state and action is undefined", () => {
+    expect(reducer()).toEqual({});
+  });
+
+  it("should return the same state, if the action is undefined", () => {
+    const state = { x: true };
+    expect(reducer(state)).toBe(state);
+  });
+
+  it("should return the same state, if the action is unknown to the reducer", () => {
+    const state = { x: true };
+    expect(reducer(state, { type: "EL_SPECIALE" })).toBe(state);
+  });
+
+  it("should store the permissions on FETCH_PERMISSION_SUCCESS", () => {
+    const newState = reducer(
+      {},
+      fetchPermissionsSuccess(s_bPermissions, "s", "b")
+    );
   });
 });

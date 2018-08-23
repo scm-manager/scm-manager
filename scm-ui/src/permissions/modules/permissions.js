@@ -5,10 +5,15 @@ import type { Action } from "../../types/Action";
 import type { Permission, Permissions } from "../types/Permissions";
 
 export const FETCH_PERMISSIONS = "scm/repos/FETCH_PERMISSIONS";
-export const FETCH_PERMISSIONS_PENDING = `${FETCH_PERMISSIONS}_${types.PENDING_SUFFIX}`;
-export const FETCH_PERMISSIONS_SUCCESS = `${FETCH_PERMISSIONS}_${types.SUCCESS_SUFFIX}`;
-export const FETCH_PERMISSIONS_FAILURE = `${FETCH_PERMISSIONS}_${types.FAILURE_SUFFIX}`;
-
+export const FETCH_PERMISSIONS_PENDING = `${FETCH_PERMISSIONS}_${
+  types.PENDING_SUFFIX
+}`;
+export const FETCH_PERMISSIONS_SUCCESS = `${FETCH_PERMISSIONS}_${
+  types.SUCCESS_SUFFIX
+}`;
+export const FETCH_PERMISSIONS_FAILURE = `${FETCH_PERMISSIONS}_${
+  types.FAILURE_SUFFIX
+}`;
 
 const REPOS_URL = "repositories";
 const PERMISSIONS_URL = "permissions";
@@ -30,7 +35,10 @@ export function fetchPermissions(namespace: string, name: string) {
   };
 }
 
-export function fetchPermissionsPending(namespace: string, name: string): Action {
+export function fetchPermissionsPending(
+  namespace: string,
+  name: string
+): Action {
   return {
     type: FETCH_PERMISSIONS_PENDING,
     payload: {
@@ -41,7 +49,11 @@ export function fetchPermissionsPending(namespace: string, name: string): Action
   };
 }
 
-export function fetchPermissionsSuccess(permissions: Permissions, namespace: string, name: string): Action {
+export function fetchPermissionsSuccess(
+  permissions: Permissions,
+  namespace: string,
+  name: string
+): Action {
   return {
     type: FETCH_PERMISSIONS_SUCCESS,
     payload: permissions,
@@ -63,4 +75,21 @@ export function fetchPermissionsFailure(
     },
     itemId: namespace + "/" + name
   };
+}
+
+// reducer
+export default function reducer(
+  state: Object = {},
+  action: Action = { type: "UNKNOWN" }
+): Object {
+  if (!action.payload) {
+    return state;
+  }
+
+  switch (action.type) {
+    case FETCH_PERMISSIONS_SUCCESS:
+      return state;
+    default:
+      return state;
+  }
 }
