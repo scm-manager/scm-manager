@@ -12,8 +12,6 @@ import sonia.scm.repository.SubRepository;
 import javax.inject.Inject;
 import java.net.URI;
 
-import static de.otto.edison.hal.Link.link;
-
 @Mapper
 public abstract class FileObjectToFileObjectDtoMapper extends BaseMapper<FileObject, FileObjectDto> {
 
@@ -27,10 +25,11 @@ public abstract class FileObjectToFileObjectDtoMapper extends BaseMapper<FileObj
   @AfterMapping
   void addLinks(FileObject fileObject, @MappingTarget FileObjectDto dto, @Context NamespaceAndName namespaceAndName, @Context String revision) {
     String path = removeFirstSlash(fileObject.getPath());
-    Links.Builder links = Links.linkingTo()
-      .self(addPath(resourceLinks.source().sourceWithPath(namespaceAndName.getNamespace(), namespaceAndName.getName(), revision, ""), path));
-    if (!dto.isDirectory()) {
-      links.single(link("content", addPath(resourceLinks.source().content(namespaceAndName.getNamespace(), namespaceAndName.getName(), revision, ""), path)));
+    Links.Builder links = Links.linkingTo();
+    if (dto.isDirectory()) {
+      links.self(addPath(resourceLinks.source().sourceWithPath(namespaceAndName.getNamespace(), namespaceAndName.getName(), revision, ""), path));
+    } else {
+      links.self(addPath(resourceLinks.source().content(namespaceAndName.getNamespace(), namespaceAndName.getName(), revision, ""), path));
     }
 
     dto.add(links.build());

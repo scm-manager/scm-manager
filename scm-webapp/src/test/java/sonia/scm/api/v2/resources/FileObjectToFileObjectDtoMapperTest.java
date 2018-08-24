@@ -50,8 +50,8 @@ public class FileObjectToFileObjectDtoMapperTest {
   }
 
   @Test
-  public void shouldHaveCorrectSelfLink() {
-    FileObject fileObject = createFileObject();
+  public void shouldHaveCorrectSelfLinkForDirectory() {
+    FileObject fileObject = createDirectoryObject();
     FileObjectDto dto = mapper.map(fileObject, new NamespaceAndName("namespace", "name"), "revision");
 
     assertThat(dto.getLinks().getLinkBy("self").get().getHref()).isEqualTo(expectedBaseUri.resolve("namespace/name/sources/revision/foo/bar").toString());
@@ -60,9 +60,16 @@ public class FileObjectToFileObjectDtoMapperTest {
   @Test
   public void shouldHaveCorrectContentLink() {
     FileObject fileObject = createFileObject();
+    fileObject.setDirectory(false);
     FileObjectDto dto = mapper.map(fileObject, new NamespaceAndName("namespace", "name"), "revision");
 
-    assertThat(dto.getLinks().getLinkBy("content").get().getHref()).isEqualTo(expectedBaseUri.resolve("namespace/name/content/revision/foo/bar").toString());
+    assertThat(dto.getLinks().getLinkBy("self").get().getHref()).isEqualTo(expectedBaseUri.resolve("namespace/name/content/revision/foo/bar").toString());
+  }
+
+  private FileObject createDirectoryObject() {
+    FileObject fileObject = createFileObject();
+    fileObject.setDirectory(true);
+    return fileObject;
   }
 
   private FileObject createFileObject() {
