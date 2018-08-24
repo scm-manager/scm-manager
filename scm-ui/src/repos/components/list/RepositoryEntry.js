@@ -6,6 +6,8 @@ import type { Repository } from "../../types/Repositories";
 import DateFromNow from "../../../components/DateFromNow";
 import RepositoryEntryLink from "./RepositoryEntryLink";
 import classNames from "classnames";
+import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import RepositoryAvatar from "./RepositoryAvatar";
 
 const styles = {
   outer: {
@@ -83,9 +85,7 @@ class RepositoryEntry extends React.Component<Props> {
         <Link className={classes.overlay} to={repositoryLink} />
         <article className={classNames("media", classes.inner)}>
           <figure className="media-left">
-            <p className="image is-64x64">
-              <img src="/images/blib.jpg" alt="Logo" />
-            </p>
+            <RepositoryAvatar repository={repository} />
           </figure>
           <div className="media-content">
             <div className="content">
