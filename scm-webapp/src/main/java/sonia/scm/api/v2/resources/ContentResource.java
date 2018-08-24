@@ -142,7 +142,9 @@ public class ContentResource {
     try {
       byte[] buffer = new byte[HEAD_BUFFER_SIZE];
       int length = stream.read(buffer);
-      if (length < buffer.length) {
+      if (length < 0) { // empty file
+        return new byte[]{};
+      } else if (length < buffer.length) {
         return Arrays.copyOf(buffer, length);
       } else {
         return buffer;

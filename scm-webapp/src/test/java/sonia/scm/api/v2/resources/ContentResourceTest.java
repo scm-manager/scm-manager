@@ -109,17 +109,6 @@ public class ContentResourceTest {
   }
 
   @Test
-  public void shouldRecognizeShebangSourceCode() throws Exception {
-    mockContentFromResource("someScript.sh");
-
-    Response response = contentResource.get(NAMESPACE, REPO_NAME, REV, "someScript.sh");
-    assertEquals(200, response.getStatus());
-
-    assertEquals("PYTHON", response.getHeaderString("Language"));
-    assertEquals("application/x-sh", response.getHeaderString("Content-Type"));
-  }
-
-  @Test
   public void shouldHandleRandomByteFile() throws Exception {
     mockContentFromResource("JustBytes");
 
@@ -140,6 +129,17 @@ public class ContentResourceTest {
 
     assertEquals("application/octet-stream", response.getHeaderString("Content-Type"));
     assertTrue("stream has to be closed after reading head", stream.isClosed());
+  }
+
+  @Test
+  public void shouldHandleEmptyFile() throws Exception {
+    mockContent("empty", new byte[]{});
+
+    Response response = contentResource.get(NAMESPACE, REPO_NAME, REV, "empty");
+    assertEquals(200, response.getStatus());
+
+    assertFalse(response.getHeaders().containsKey("Language"));
+    assertEquals("application/octet-stream", response.getHeaderString("Content-Type"));
   }
 
   private void mockContentFromResource(String fileName) throws Exception {
