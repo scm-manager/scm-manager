@@ -7,8 +7,6 @@ import DateFromNow from "../../../components/DateFromNow";
 import RepositoryEntryLink from "./RepositoryEntryLink";
 import classNames from "classnames";
 
-import icon from "../../../images/blib.jpg";
-
 const styles = {
   outer: {
     position: "relative"
@@ -86,7 +84,7 @@ class RepositoryEntry extends React.Component<Props> {
         <article className={classNames("media", classes.inner)}>
           <figure className="media-left">
             <p className="image is-64x64">
-              <img src={icon} alt="Logo" />
+              <img src="/images/blib.jpg" alt="Logo" />
             </p>
           </figure>
           <div className="media-content">

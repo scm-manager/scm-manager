@@ -503,9 +503,13 @@
               <name>java.awt.headless</name>
               <value>true</value>
             </systemProperty>
+            <systemProperty>
+              <name>sonia.scm.ui.proxy</name>
+              <value>http://localhost:9966</value>
+            </systemProperty>
           </systemProperties>
           <webApp>
-            <contextPath>/scm</contextPath>
+            <contextPath>/</contextPath>
           </webApp>
           <jettyXml>${project.basedir}/src/main/conf/jetty.xml</jettyXml>
           <scanIntervalSeconds>0</scanIntervalSeconds>

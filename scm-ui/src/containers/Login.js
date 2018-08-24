@@ -15,7 +15,6 @@ import { InputField } from "../components/forms";
 import { SubmitButton } from "../components/buttons";
 
 import classNames from "classnames";
-import Avatar from "../images/blib.jpg";
 import ErrorNotification from "../components/ErrorNotification";
 
 const styles = {
@@ -108,7 +107,7 @@ class Login extends React.Component<Props, State> {
                 <figure className={classes.avatar}>
                   <img
                     className={classes.avatarImage}
-                    src={Avatar}
+                    src="/images/blib.jpg"
                     alt={t("login.logo-alt")}
                   />
                 </figure>

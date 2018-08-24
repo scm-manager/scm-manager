@@ -12,7 +12,8 @@ import {
 } from "../modules/auth";
 
 import "./App.css";
-import "font-awesome/css/font-awesome.css";
+// TODO ???
+// import "font-awesome/css/font-awesome.css";
 import "../components/modals/ConfirmAlert.css";
 import { PrimaryNavigation } from "../components/navigation";
 import Loading from "../components/Loading";

@@ -1,7 +1,7 @@
 // @flow
 
 // get api base url from environment
-const apiUrl = process.env.API_URL || process.env.PUBLIC_URL || "/scm";
+const apiUrl = process.env.API_URL || process.env.PUBLIC_URL || "";
 
 export const NOT_FOUND_ERROR = Error("not found");
 export const UNAUTHORIZED_ERROR = Error("unauthorized");

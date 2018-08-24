@@ -1,3 +1,29 @@
 {
-  "extends": "react-app" 
+  "parser": "babel-eslint",
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:flowtype/recommended"
+  ],
+  "plugins": [
+    "flowtype",
+    "react",
+    "jsx-a11y",
+    "import"
+  ],
+  "rules": {
+    "quotes": ["error", "double"]
+  },
+  "env": {
+    "browser": true
+  },
+  "overrides": [
+    {
+      "files": [ "*.test.js" ],
+      "env": {
+        "jest": true,
+        "browser": true
+      }
+    }
+  ]
 }
