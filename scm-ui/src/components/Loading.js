@@ -25,12 +25,13 @@ const styles = {
 
 type Props = {
   t: string => string,
+  message?: string,
   classes: any
 };
 
 class Loading extends React.Component<Props> {
   render() {
-    const { t, classes } = this.props;
+    const { message, t, classes } = this.props;
     return (
       <div className={classes.wrapper}>
         <div className={classes.loading}>
@@ -39,6 +40,7 @@ class Loading extends React.Component<Props> {
             src="/images/loading.svg"
             alt={t("loading.alt")}
           />
+          <p className="has-text-centered">{message}</p>
         </div>
       </div>
     );

@@ -14,6 +14,7 @@ import type { BrowserHistory } from "history/createBrowserHistory";
 
 import createReduxStore from "./createReduxStore";
 import { ConnectedRouter } from "react-router-redux";
+import PluginLoader from "./components/PluginLoader";
 
 const publicUrl: string = process.env.PUBLIC_URL || "";
 
@@ -36,7 +37,9 @@ ReactDOM.render(
     <I18nextProvider i18n={i18n}>
       {/* ConnectedRouter will use the store from Provider automatically */}
       <ConnectedRouter history={history}>
-        <App />
+        <PluginLoader>
+          <App />
+        </PluginLoader>
       </ConnectedRouter>
     </I18nextProvider>
   </Provider>,
