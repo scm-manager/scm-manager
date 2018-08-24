@@ -21,7 +21,7 @@
     <module>scm-svn-plugin</module>
     <module>scm-legacy-plugin</module>
   </modules>
-  
+
   <dependencies>
 
     <dependency>
@@ -30,16 +30,16 @@
       <version>${servlet.version}</version>
       <scope>provided</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>sonia.scm</groupId>
       <artifactId>scm-core</artifactId>
       <version>2.0.0-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
-    
+
     <!-- annotation processors -->
-    
+
     <dependency>
       <groupId>sonia.scm</groupId>
       <artifactId>scm-annotation-processor</artifactId>
@@ -60,7 +60,7 @@
       <artifactId>lombok</artifactId>
       <scope>provided</scope>
     </dependency>
-    
+
     <!-- test scope -->
 
     <dependency>
@@ -107,9 +107,9 @@
       </resource>
 
     </resources>
-    
+
     <plugins>
-      
+
       <plugin>
         <groupId>sonia.scm.maven</groupId>
         <artifactId>smp-maven-plugin</artifactId>
@@ -135,7 +135,40 @@
           </execution>
         </executions>
       </plugin>
-      
+
+      <plugin>
+        <groupId>com.github.sdorra</groupId>
+        <artifactId>buildfrontend-maven-plugin</artifactId>
+        <version>2.0.1</version>
+        <configuration>
+          <node>
+            <version>8.11.3</version>
+          </node>
+          <pkgManager>
+            <type>YARN</type>
+            <version>1.7.0</version>
+          </pkgManager>
+          <failOnMissingPackageJson>false</failOnMissingPackageJson>
+          <script>build</script>
+        </configuration>
+        <executions>
+          <execution>
+            <id>install</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>install</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>build</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
     </plugins>
   </build>
 

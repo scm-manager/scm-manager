@@ -1,5 +1,5 @@
 {
-  "name": "@scm-manager/scm-git-plugin",
+  "name": "@scm-manager/scm-hg-plugin",
   "main": "src/main/js/index.js",
   "scripts": {
     "build": "ui-bundler plugin"
