@@ -1,12 +1,14 @@
 package sonia.scm.it;
 
 import org.apache.http.HttpStatus;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import sonia.scm.repository.client.api.ClientCommand;
 import sonia.scm.repository.client.api.RepositoryClient;
 
 import java.io.File;
@@ -14,7 +16,6 @@ import java.io.IOException;
 import java.util.Collection;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assume.assumeFalse;
 import static sonia.scm.it.RestUtil.given;
 import static sonia.scm.it.ScmTypes.availableScmTypes;
 
@@ -44,9 +45,10 @@ public class RepositoryAccessITCase {
 
   @Test
   public void shouldFindBranches() throws IOException {
-    assumeFalse("There are no branches for SVN", repositoryType.equals("svn"));
-
     RepositoryClient repositoryClient = RepositoryUtil.createRepositoryClient(repositoryType, folder);
+
+    Assume.assumeTrue("There are no branches for " + repositoryType, repositoryClient.isCommandSupported(ClientCommand.BRANCH));
+
     RepositoryUtil.createAndCommitFile(repositoryClient, "scmadmin", "a.txt", "a");
 
     String branchesUrl = given()
