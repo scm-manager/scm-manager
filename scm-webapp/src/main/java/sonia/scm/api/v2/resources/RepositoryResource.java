@@ -12,6 +12,7 @@ import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -125,7 +126,7 @@ public class RepositoryResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
-  public Response update(@PathParam("namespace") String namespace, @PathParam("name") String name, RepositoryDto repositoryDto) throws NotFoundException {
+  public Response update(@PathParam("namespace") String namespace, @PathParam("name") String name, @Valid RepositoryDto repositoryDto) throws NotFoundException {
     return adapter.update(
       loadBy(namespace, name),
       existing -> dtoToRepositoryMapper.map(repositoryDto, existing.getId()),

@@ -6,6 +6,7 @@ import de.otto.edison.hal.Links;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Pattern;
 import java.time.Instant;
@@ -23,9 +24,10 @@ public class RepositoryDto extends HalRepresentation {
   @JsonInclude(JsonInclude.Include.NON_NULL)
   private Instant lastModified;
   private String namespace;
-  @Pattern(regexp = "[\\w-]+", message = "The name can only contain numbers, letters, underscore and hyphen")
+  @Pattern(regexp = "(?!^\\.\\.$)(?!^\\.$)(?!.*[\\\\\\[\\]])^[A-z0-9\\.][A-z0-9\\.\\-_/]*$")
   private String name;
   private boolean archived = false;
+  @NotEmpty
   private String type;
   protected Map<String, String> properties;
 

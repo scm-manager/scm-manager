@@ -6,7 +6,10 @@ import de.otto.edison.hal.Links;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.Pattern;
 import java.time.Instant;
 import java.util.Map;
 
@@ -15,12 +18,16 @@ public class UserDto extends HalRepresentation {
   private boolean active;
   private boolean admin;
   private Instant creationDate;
+  @NotEmpty
   private String displayName;
   @JsonInclude(JsonInclude.Include.NON_NULL)
   private Instant lastModified;
+  @NotEmpty @Email
   private String mail;
+  @Pattern(regexp = "^[A-z0-9\\.\\-_@]|[^ ]([A-z0-9\\.\\-_@ ]*[A-z0-9\\.\\-_@]|[^ ])?$")
   private String name;
   private String password;
+  @NotEmpty
   private String type;
   private Map<String, String> properties;
 
