@@ -313,6 +313,10 @@ class ResourceLinks {
       return permissionLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("permissions").parameters().method("getAll").parameters().href();
     }
 
+    String create(String repositoryNamespace, String repositoryName) {
+      return permissionLinkBuilder.method("getRepositoryResource").parameters(repositoryNamespace, repositoryName).method("permissions").parameters().method("create").parameters().href();
+    }
+
     String self(String repositoryNamespace, String repositoryName, String permissionName) {
       return getLink(repositoryNamespace, repositoryName, permissionName, "get");
     }
