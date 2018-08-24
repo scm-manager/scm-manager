@@ -89,7 +89,7 @@ public class RepositoryAccessITCase {
       .then()
       .statusCode(HttpStatus.SC_OK)
       .extract()
-      .path("files.find{it.name=='a.txt'}._links.content.href");
+      .path("files.find{it.name=='a.txt'}._links.self.href");
     given()
       .when()
       .get(rootContentUrl)
@@ -110,7 +110,7 @@ public class RepositoryAccessITCase {
       .then()
       .statusCode(HttpStatus.SC_OK)
       .extract()
-      .path("files[0]._links.content.href");
+      .path("files[0]._links.self.href");
     System.out.println(subfolderContentUrl);
     given()
       .when()
