@@ -10,7 +10,11 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import sonia.scm.repository.*;
+import sonia.scm.repository.BrowserResult;
+import sonia.scm.repository.FileObject;
+import sonia.scm.repository.NamespaceAndName;
+import sonia.scm.repository.RepositoryException;
+import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.repository.api.BrowseCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
@@ -42,10 +46,10 @@ public class SourceRootResourceTest {
   private BrowseCommandBuilder browseCommandBuilder;
 
   @Mock
-  private FileObjectMapper fileObjectMapper;
+  private FileObjectToFileObjectDtoMapper fileObjectToFileObjectDtoMapper;
 
   @InjectMocks
-  private BrowserResultMapper browserResultMapper;
+  private BrowserResultToBrowserResultDtoMapper browserResultToBrowserResultDtoMapper;
 
 
   @Before
@@ -57,8 +61,8 @@ public class SourceRootResourceTest {
     dto.setName("name");
     dto.setLength(1024);
 
-    when(fileObjectMapper.map(any(FileObject.class), any(NamespaceAndName.class), anyString())).thenReturn(dto);
-    SourceRootResource sourceRootResource = new SourceRootResource(serviceFactory, browserResultMapper);
+    when(fileObjectToFileObjectDtoMapper.map(any(FileObject.class), any(NamespaceAndName.class), anyString())).thenReturn(dto);
+    SourceRootResource sourceRootResource = new SourceRootResource(serviceFactory, browserResultToBrowserResultDtoMapper);
     RepositoryRootResource repositoryRootResource =
       new RepositoryRootResource(MockProvider.of(new RepositoryResource(null,
         null,

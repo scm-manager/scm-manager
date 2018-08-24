@@ -19,14 +19,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
-public class FileObjectMapperTest {
+public class FileObjectToFileObjectDtoMapperTest {
 
   private final URI baseUri = URI.create("http://example.com/base/");
   @SuppressWarnings("unused") // Is injected
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
 
   @InjectMocks
-  private FileObjectMapperImpl mapper;
+  private FileObjectToFileObjectDtoMapperImpl mapper;
 
   private final Subject subject = mock(Subject.class);
   private final ThreadState subjectThreadState = new SubjectThreadState(subject);

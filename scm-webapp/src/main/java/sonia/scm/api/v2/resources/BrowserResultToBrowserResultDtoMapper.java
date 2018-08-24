@@ -9,10 +9,10 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BrowserResultMapper {
+public class BrowserResultToBrowserResultDtoMapper {
 
   @Inject
-  private FileObjectMapper fileObjectMapper;
+  private FileObjectToFileObjectDtoMapper fileObjectToFileObjectDtoMapper;
 
   @Inject
   private ResourceLinks resourceLinks;
@@ -35,7 +35,7 @@ public class BrowserResultMapper {
   }
 
   private FileObjectDto mapFileObject(FileObject fileObject, NamespaceAndName namespaceAndName, String revision) {
-    return fileObjectMapper.map(fileObject, namespaceAndName, revision);
+    return fileObjectToFileObjectDtoMapper.map(fileObject, namespaceAndName, revision);
   }
 
   private void addLinks(BrowserResult browserResult, BrowserResultDto dto, NamespaceAndName namespaceAndName) {

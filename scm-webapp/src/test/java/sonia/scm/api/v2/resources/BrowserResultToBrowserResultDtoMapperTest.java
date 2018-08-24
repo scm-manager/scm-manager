@@ -21,17 +21,17 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-public class BrowserResultMapperTest {
+public class BrowserResultToBrowserResultDtoMapperTest {
 
   private final URI baseUri = URI.create("http://example.com/base/");
   @SuppressWarnings("unused") // Is injected
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
 
   @Mock
-  private FileObjectMapper fileObjectMapper;
+  private FileObjectToFileObjectDtoMapper fileObjectToFileObjectDtoMapper;
 
   @InjectMocks
-  private BrowserResultMapper mapper;
+  private BrowserResultToBrowserResultDtoMapper mapper;
 
   private final Subject subject = mock(Subject.class);
   private final ThreadState subjectThreadState = new SubjectThreadState(subject);
@@ -77,8 +77,8 @@ public class BrowserResultMapperTest {
 
     BrowserResultDto dto = mapper.map(browserResult, namespaceAndName);
 
-    verify(fileObjectMapper).map(fileObject1, namespaceAndName, "Revision");
-    verify(fileObjectMapper).map(fileObject2, namespaceAndName, "Revision");
+    verify(fileObjectToFileObjectDtoMapper).map(fileObject1, namespaceAndName, "Revision");
+    verify(fileObjectToFileObjectDtoMapper).map(fileObject2, namespaceAndName, "Revision");
   }
 
   private BrowserResult createBrowserResult() {

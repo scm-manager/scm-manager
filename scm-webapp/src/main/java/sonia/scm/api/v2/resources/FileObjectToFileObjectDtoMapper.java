@@ -15,7 +15,7 @@ import java.net.URI;
 import static de.otto.edison.hal.Link.link;
 
 @Mapper
-public abstract class FileObjectMapper extends BaseMapper<FileObject, FileObjectDto> {
+public abstract class FileObjectToFileObjectDtoMapper extends BaseMapper<FileObject, FileObjectDto> {
 
   @Inject
   private ResourceLinks resourceLinks;
