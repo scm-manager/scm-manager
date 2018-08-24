@@ -1,6 +1,7 @@
 {
   "description": "Updated description",
   "name": "admin",
+  "type": "xml",
   "_embedded": {
     "members": [
       {
