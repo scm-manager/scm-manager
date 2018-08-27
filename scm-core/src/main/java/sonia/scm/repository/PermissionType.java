@@ -42,10 +42,10 @@ public enum PermissionType
 {
 
   /** read permision */
-  READ(0, "repository:read:"),
+  READ(0, "repository:read,pull:"),
 
   /** read and write permissionPrefix */
-  WRITE(10, "repository:read,write:"),
+  WRITE(10, "repository:read,pull,push:"),
 
   /**
    * read, write and

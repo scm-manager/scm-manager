@@ -6,44 +6,30 @@ import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
-import sonia.scm.repository.NamespaceAndName;
-import sonia.scm.repository.Permission;
-import sonia.scm.repository.PermissionAlreadyExistsException;
-import sonia.scm.repository.PermissionNotFoundException;
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryException;
-import sonia.scm.repository.RepositoryManager;
-import sonia.scm.repository.RepositoryNotFoundException;
+import sonia.scm.repository.*;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.net.URI;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 public class PermissionRootResource {
 
   private PermissionDtoToPermissionMapper dtoToModelMapper;
   private PermissionToPermissionDtoMapper modelToDtoMapper;
+  private PermissionCollectionToDtoMapper permissionCollectionToDtoMapper;
   private ResourceLinks resourceLinks;
   private final RepositoryManager manager;
 
 
   @Inject
-  public PermissionRootResource(PermissionDtoToPermissionMapper dtoToModelMapper, PermissionToPermissionDtoMapper modelToDtoMapper, ResourceLinks resourceLinks, RepositoryManager manager) {
+  public PermissionRootResource(PermissionDtoToPermissionMapper dtoToModelMapper, PermissionToPermissionDtoMapper modelToDtoMapper, PermissionCollectionToDtoMapper permissionCollectionToDtoMapper, ResourceLinks resourceLinks, RepositoryManager manager) {
     this.dtoToModelMapper = dtoToModelMapper;
     this.modelToDtoMapper = modelToDtoMapper;
+    this.permissionCollectionToDtoMapper = permissionCollectionToDtoMapper;
     this.resourceLinks = resourceLinks;
     this.manager = manager;
   }
@@ -66,9 +52,11 @@ public class PermissionRootResource {
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
   @Consumes(VndMediaType.PERMISSION)
+  @Path("")
   public Response create(@PathParam("namespace") String namespace, @PathParam("name") String name, PermissionDto permission) throws RepositoryException {
     log.info("try to add new permission: {}", permission);
     Repository repository = load(namespace, name);
+    RepositoryPermissions.permissionWrite(repository).check();
     checkPermissionAlreadyExists(permission, repository);
     repository.getPermissions().add(dtoToModelMapper.map(permission));
     manager.modify(repository);
@@ -95,11 +83,12 @@ public class PermissionRootResource {
   @Path("{permission-name}")
   public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("permission-name") String permissionName) throws RepositoryException {
     Repository repository = load(namespace, name);
+    RepositoryPermissions.permissionRead(repository).check();
     return Response.ok(
       repository.getPermissions()
         .stream()
         .filter(permission -> permissionName.equals(permission.getName()))
-        .map(permission -> modelToDtoMapper.map(permission, new NamespaceAndName(repository.getNamespace(), repository.getName())))
+        .map(permission -> modelToDtoMapper.map(permission, repository))
         .findFirst()
         .orElseThrow(() -> new PermissionNotFoundException(repository, permissionName))
     ).build();
@@ -125,11 +114,8 @@ public class PermissionRootResource {
   @Path("")
   public Response getAll(@PathParam("namespace") String namespace, @PathParam("name") String name) throws RepositoryNotFoundException {
     Repository repository = load(namespace, name);
-    List<PermissionDto> permissionDtoList = repository.getPermissions()
-      .stream()
-      .map(per -> modelToDtoMapper.map(per, new NamespaceAndName(repository.getNamespace(), repository.getName())))
-      .collect(Collectors.toList());
-    return Response.ok(permissionDtoList).build();
+    RepositoryPermissions.permissionRead(repository).check();
+    return Response.ok(permissionCollectionToDtoMapper.map(repository)).build();
   }
 
 
@@ -150,11 +136,12 @@ public class PermissionRootResource {
   @Consumes(VndMediaType.PERMISSION)
   @Path("{permission-name}")
   public Response update(@PathParam("namespace") String namespace,
-    @PathParam("name") String name,
-    @PathParam("permission-name") String permissionName,
-    PermissionDto permission) throws RepositoryException {
+                         @PathParam("name") String name,
+                         @PathParam("permission-name") String permissionName,
+                         PermissionDto permission) throws RepositoryException {
     log.info("try to update the permission with name: {}. the modified permission is: {}", permissionName, permission);
     Repository repository = load(namespace, name);
+    RepositoryPermissions.permissionWrite(repository).check();
     Permission existingPermission = repository.getPermissions()
       .stream()
       .filter(perm -> StringUtils.isNotBlank(perm.getName()) && perm.getName().equals(permissionName))
@@ -182,10 +169,11 @@ public class PermissionRootResource {
   @TypeHint(TypeHint.NO_CONTENT.class)
   @Path("{permission-name}")
   public Response delete(@PathParam("namespace") String namespace,
-    @PathParam("name") String name,
-    @PathParam("permission-name") String permissionName) throws RepositoryException {
+                         @PathParam("name") String name,
+                         @PathParam("permission-name") String permissionName) throws RepositoryException {
     log.info("try to delete the permission with name: {}.", permissionName);
     Repository repository = load(namespace, name);
+    RepositoryPermissions.modify(repository).check();
     repository.getPermissions()
       .stream()
       .filter(perm -> StringUtils.isNotBlank(perm.getName()) && perm.getName().equals(permissionName))

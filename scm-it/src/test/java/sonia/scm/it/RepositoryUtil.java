@@ -8,52 +8,42 @@ import sonia.scm.repository.Person;
 import sonia.scm.repository.client.api.ClientCommand;
 import sonia.scm.repository.client.api.RepositoryClient;
 import sonia.scm.repository.client.api.RepositoryClientFactory;
-import sonia.scm.web.VndMediaType;
 
 import java.io.File;
 import java.io.IOException;
-
-import static sonia.scm.it.RestUtil.ADMIN_PASSWORD;
-import static sonia.scm.it.RestUtil.ADMIN_USERNAME;
-import static sonia.scm.it.RestUtil.given;
+import java.util.UUID;
 
 public class RepositoryUtil {
 
   private static final RepositoryClientFactory REPOSITORY_CLIENT_FACTORY = new RepositoryClientFactory();
 
-  private final RepositoryClient repositoryClient;
-  private final File folder;
-
-  RepositoryUtil(String repositoryType, File folder) throws IOException {
-    this.repositoryClient = createRepositoryClient(repositoryType, folder);
-    this.folder = folder;
+  static RepositoryClient createRepositoryClient(String repositoryType, File folder) throws IOException {
+    return createRepositoryClient(repositoryType, folder, "scmadmin", "scmadmin");
   }
 
-  static RepositoryClient createRepositoryClient(String repositoryType, File folder) throws IOException {
-    String httpProtocolUrl = given(VndMediaType.REPOSITORY)
-
-      .when()
-      .get(TestData.getDefaultRepositoryUrl(repositoryType))
-
-      .then()
-      .statusCode(HttpStatus.SC_OK)
+  static RepositoryClient createRepositoryClient(String repositoryType, File folder, String username, String password) throws IOException {
+    String httpProtocolUrl = TestData.callRepository(username, password, repositoryType, HttpStatus.SC_OK)
       .extract()
       .path("_links.httpProtocol.href");
 
-
-    return REPOSITORY_CLIENT_FACTORY.create(repositoryType, httpProtocolUrl, ADMIN_USERNAME, ADMIN_PASSWORD, folder);
+    return REPOSITORY_CLIENT_FACTORY.create(repositoryType, httpProtocolUrl, username, password, folder);
   }
 
-  void createAndCommitFile(String fileName, String content) throws IOException {
-    Files.write(content, new File(folder, fileName), Charsets.UTF_8);
+  static String addAndCommitRandomFile(RepositoryClient client, String username) throws IOException {
+    String uuid = UUID.randomUUID().toString();
+    String name = "file-" + uuid + ".uuid";
+    createAndCommitFile(client, username, name, uuid);
+    return name;
+  }
+
+  static void createAndCommitFile(RepositoryClient repositoryClient, String username, String fileName, String content) throws IOException {
+    Files.write(content, new File(repositoryClient.getWorkingCopy(), fileName), Charsets.UTF_8);
     repositoryClient.getAddCommand().add(fileName);
-    commit("added " + fileName);
+    commit(repositoryClient, username, "added " + fileName);
   }
 
-  Changeset commit(String message) throws IOException {
-    Changeset changeset = repositoryClient.getCommitCommand().commit(
-      new Person("scmadmin", "scmadmin@scm-manager.org"), message
-    );
+  static Changeset commit(RepositoryClient repositoryClient, String username, String message) throws IOException {
+    Changeset changeset = repositoryClient.getCommitCommand().commit(new Person(username, username + "@scm-manager.org"), message);
     if (repositoryClient.isCommandSupported(ClientCommand.PUSH)) {
       repositoryClient.getPushCommand().push();
     }

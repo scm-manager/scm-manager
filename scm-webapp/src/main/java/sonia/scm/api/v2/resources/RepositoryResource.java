@@ -128,9 +128,15 @@ public class RepositoryResource {
   public Response update(@PathParam("namespace") String namespace, @PathParam("name") String name, RepositoryDto repositoryDto) {
     return adapter.update(
       loadBy(namespace, name),
-      existing -> dtoToRepositoryMapper.map(repositoryDto, existing.getId()),
+      existing -> processUpdate(repositoryDto, existing),
       nameAndNamespaceStaysTheSame(namespace, name)
     );
+  }
+
+  private Repository processUpdate(RepositoryDto repositoryDto, Repository existing) {
+    Repository changedRepository = dtoToRepositoryMapper.map(repositoryDto, existing.getId());
+    changedRepository.setPermissions(existing.getPermissions());
+    return changedRepository;
   }
 
   @Path("tags/")
@@ -176,6 +182,6 @@ public class RepositoryResource {
   }
 
   private Predicate<Repository> nameAndNamespaceStaysTheSame(String namespace, String name) {
-    return changed -> changed.getName().equals(name) && changed.getNamespace().equals(namespace);
+    return changed -> name.equals(changed.getName()) && namespace.equals(changed.getNamespace());
   }
 }
