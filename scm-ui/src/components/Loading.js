@@ -2,6 +2,7 @@
 import React from "react";
 import { translate } from "react-i18next";
 import injectSheet from "react-jss";
+import Image from "./Image";
 
 const styles = {
   wrapper: {
@@ -35,7 +36,7 @@ class Loading extends React.Component<Props> {
     return (
       <div className={classes.wrapper}>
         <div className={classes.loading}>
-          <img
+          <Image
             className={classes.image}
             src="/images/loading.svg"
             alt={t("loading.alt")}

@@ -3,7 +3,6 @@ package sonia.scm.api.v2.resources;
 import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
-import de.otto.edison.hal.HalRepresentation;
 import sonia.scm.plugin.PluginLoader;
 import sonia.scm.plugin.PluginWrapper;
 import sonia.scm.web.VndMediaType;

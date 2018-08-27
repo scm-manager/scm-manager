@@ -7,7 +7,8 @@ type Props = {
 class GitAvatar extends React.Component<Props> {
 
   render() {
-    return <img src="/images/git-logo.png" alt="Git Logo" />;
+    // TODO we have to use Image from ui-components
+    return <img src="/scm/images/git-logo.png" alt="Git Logo" />;
   }
 
 }

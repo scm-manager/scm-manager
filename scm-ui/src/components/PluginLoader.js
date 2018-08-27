@@ -62,11 +62,7 @@ class PluginLoader extends React.Component<Props, State> {
 
     const promises = [];
     for (let bundle of plugin.bundles) {
-      // skip old bundles
-      // TODO remove old bundles
-      if (bundle.indexOf("/") !== 0) {
-        promises.push(this.loadBundle(bundle));
-      }
+      promises.push(this.loadBundle(bundle));
     }
     return Promise.all(promises);
   };

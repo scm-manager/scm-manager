@@ -12,14 +12,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import sonia.scm.api.rest.resources.PluginResource;
 import sonia.scm.plugin.*;
 import sonia.scm.web.VndMediaType;
 
+import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashSet;
-import java.util.List;
 
 import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
@@ -36,12 +35,15 @@ public class UIRootResourceTest {
   @Mock
   private PluginLoader pluginLoader;
 
+  @Mock
+  private HttpServletRequest request;
+
   private final URI baseUri = URI.create("/");
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
 
   @Before
   public void setUpRestService() {
-    UIPluginDtoMapper mapper = new UIPluginDtoMapper(resourceLinks);
+    UIPluginDtoMapper mapper = new UIPluginDtoMapper(resourceLinks, request);
     UIPluginDtoCollectionMapper collectionMapper = new UIPluginDtoCollectionMapper(resourceLinks, mapper);
 
     UIPluginResource pluginResource = new UIPluginResource(pluginLoader, collectionMapper, mapper);
@@ -147,6 +149,24 @@ public class UIRootResourceTest {
 
     assertEquals(SC_OK, response.getStatus());
     assertTrue(response.getContentAsString().contains("\"self\":{\"href\":\"" + uri + "\"}"));
+  }
+
+  @Test
+  public void shouldHaveBundleWithContextPath() throws Exception {
+    when(request.getContextPath()).thenReturn("/scm");
+    mockPlugins(mockPlugin("awesome", "Awesome", createPluginResources("my/bundle.js")));
+
+    String uri = "/v2/ui/plugins/awesome";
+    MockHttpRequest request = MockHttpRequest.get(uri);
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(SC_OK, response.getStatus());
+
+    System.out.println();
+
+    assertTrue(response.getContentAsString().contains("/scm/my/bundle.js"));
   }
 
   private void mockPlugins(PluginWrapper... plugins) {

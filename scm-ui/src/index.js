@@ -16,11 +16,11 @@ import createReduxStore from "./createReduxStore";
 import { ConnectedRouter } from "react-router-redux";
 import PluginLoader from "./components/PluginLoader";
 
-const publicUrl: string = process.env.PUBLIC_URL || "";
+import { contextPath } from "./urls";
 
 // Create a history of your choosing (we're using a browser history in this case)
 const history: BrowserHistory = createHistory({
-  basename: publicUrl
+  basename: contextPath
 });
 
 // Add the reducer to your store on the `router` key

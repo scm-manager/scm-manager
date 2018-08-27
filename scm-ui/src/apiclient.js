@@ -1,7 +1,5 @@
 // @flow
-
-// get api base url from environment
-const apiUrl = process.env.API_URL || process.env.PUBLIC_URL || "";
+import { contextPath } from "./urls";
 
 export const NOT_FOUND_ERROR = Error("not found");
 export const UNAUTHORIZED_ERROR = Error("unauthorized");
@@ -34,7 +32,7 @@ export function createUrl(url: string) {
   if (url.indexOf("/") !== 0) {
     urlWithStartingSlash = "/" + urlWithStartingSlash;
   }
-  return `${apiUrl}/api/rest/v2${urlWithStartingSlash}`;
+  return `${contextPath}/api/rest/v2${urlWithStartingSlash}`;
 }
 
 class ApiClient {
