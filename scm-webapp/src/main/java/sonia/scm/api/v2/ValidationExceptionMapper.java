@@ -37,10 +37,10 @@ public class ValidationExceptionMapper implements ExceptionMapper<ResteasyViolat
   public static class ValidationError {
     @XmlElement(name = "violation")
     @XmlElementWrapper(name = "violations")
-    private List<ConstraintViolationBean> violoations;
+    private List<ConstraintViolationBean> violations;
 
-    public ValidationError(List<ConstraintViolationBean> violoations) {
-      this.violoations = violoations;
+    public ValidationError(List<ConstraintViolationBean> violations) {
+      this.violations = violations;
     }
   }
 
