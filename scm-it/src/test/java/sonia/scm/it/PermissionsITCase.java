@@ -97,7 +97,7 @@ public class PermissionsITCase {
 
   @Test
   public void readUserShouldNotSeePermissions() {
-    assertNull(callRepository(USER_WRITE, USER_PASS, repositoryType, HttpStatus.SC_OK)
+    assertNull(callRepository(USER_READ, USER_PASS, repositoryType, HttpStatus.SC_OK)
       .extract()
       .body().jsonPath().getString("_links.permissions.href"));
   }
