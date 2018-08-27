@@ -176,6 +176,6 @@ public class RepositoryResource {
   }
 
   private Predicate<Repository> nameAndNamespaceStaysTheSame(String namespace, String name) {
-    return changed -> changed.getName().equals(name) && changed.getNamespace().equals(namespace);
+    return changed -> name.equals(changed.getName()) && namespace.equals(changed.getNamespace());
   }
 }
