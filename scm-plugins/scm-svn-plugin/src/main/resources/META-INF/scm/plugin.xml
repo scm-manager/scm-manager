@@ -59,9 +59,5 @@
   <conditions>
     <min-version>${project.parent.version}</min-version>
   </conditions>
-  
-  <resources>
-    <script>/sonia/scm/svn.config.js</script>
-  </resources>
 
 </plugin>

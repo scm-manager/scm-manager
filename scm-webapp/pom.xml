@@ -509,7 +509,7 @@
             </systemProperty>
           </systemProperties>
           <webApp>
-            <contextPath>/</contextPath>
+            <contextPath>/scm</contextPath>
           </webApp>
           <jettyXml>${project.basedir}/src/main/conf/jetty.xml</jettyXml>
           <scanIntervalSeconds>0</scanIntervalSeconds>

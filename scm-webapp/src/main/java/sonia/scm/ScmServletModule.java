@@ -63,10 +63,6 @@ import sonia.scm.repository.api.HookContextFactory;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.repository.spi.HookEventFacade;
 import sonia.scm.repository.xml.XmlRepositoryDAO;
-import sonia.scm.resources.DefaultResourceManager;
-import sonia.scm.resources.DevelopmentResourceManager;
-import sonia.scm.resources.ResourceManager;
-import sonia.scm.resources.ScriptResourceServlet;
 import sonia.scm.schedule.QuartzScheduler;
 import sonia.scm.schedule.Scheduler;
 import sonia.scm.security.*;
@@ -266,16 +262,6 @@ public class ScmServletModule extends ServletModule
     transformers.addBinding().to(JsonContentTransformer.class);
     bind(AdvancedHttpClient.class).to(DefaultAdvancedHttpClient.class);
 
-    // bind resourcemanager
-    if (context.getStage() == Stage.DEVELOPMENT)
-    {
-      bind(ResourceManager.class, DevelopmentResourceManager.class);
-    }
-    else
-    {
-      bind(ResourceManager.class, DefaultResourceManager.class);
-    }
-
     // bind repository service factory
     bind(RepositoryServiceFactory.class);
 
@@ -294,9 +280,6 @@ public class ScmServletModule extends ServletModule
     
     // debug servlet
     serve(PATTERN_DEBUG).with(DebugServlet.class);
-
-    // plugin resources
-    serve(PATTERN_PLUGIN_SCRIPT).with(ScriptResourceServlet.class);
 
     // template
     serve(PATTERN_INDEX, "/").with(TemplateServlet.class);
