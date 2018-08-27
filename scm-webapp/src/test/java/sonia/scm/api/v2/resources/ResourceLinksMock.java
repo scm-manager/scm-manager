@@ -28,6 +28,8 @@ public class ResourceLinksMock {
     when(resourceLinks.branch()).thenReturn(new ResourceLinks.BranchLinks(uriInfo));
     when(resourceLinks.repositoryType()).thenReturn(new ResourceLinks.RepositoryTypeLinks(uriInfo));
     when(resourceLinks.repositoryTypeCollection()).thenReturn(new ResourceLinks.RepositoryTypeCollectionLinks(uriInfo));
+    when(resourceLinks.uiPluginCollection()).thenReturn(new ResourceLinks.UIPluginCollectionLinks(uriInfo));
+    when(resourceLinks.uiPlugin()).thenReturn(new ResourceLinks.UIPluginLinks(uriInfo));
 
     return resourceLinks;
   }

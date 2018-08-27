@@ -34,6 +34,7 @@ class PluginLoader extends React.Component<Props, State> {
       .get("ui/plugins")
       .then(response => response.text())
       .then(JSON.parse)
+      .then(pluginCollection => pluginCollection._embedded.plugins)
       .then(this.loadPlugins)
       .then(() => {
         this.setState({

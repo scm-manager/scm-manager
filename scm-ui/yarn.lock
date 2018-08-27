@@ -725,9 +725,9 @@
     node-mkdirs "^0.0.1"
     pom-parser "^1.1.1"
 
-"@scm-manager/ui-extensions@^0.0.4":
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/@scm-manager/ui-extensions/-/ui-extensions-0.0.4.tgz#466aa4f5caef5f5826d0ee190a87d9d847b72fdf"
+"@scm-manager/ui-extensions@^0.0.6":
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/@scm-manager/ui-extensions/-/ui-extensions-0.0.6.tgz#1508acdabdf552ac9d832e8cb078d4eeae48b7c7"
   dependencies:
     react "^16.4.2"
     react-dom "^16.4.2"

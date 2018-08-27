@@ -26,6 +26,10 @@ public class MapperModule extends AbstractModule {
 
     bind(BranchToBranchDtoMapper.class).to(Mappers.getMapper(BranchToBranchDtoMapper.class).getClass());
 
+    // no mapstruct required
+    bind(UIPluginDtoMapper.class);
+    bind(UIPluginDtoCollectionMapper.class);
+
     bind(UriInfoStore.class).in(ServletScopes.REQUEST);
   }
 }
