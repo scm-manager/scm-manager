@@ -1,20 +1,23 @@
 package sonia.scm.it;
 
 import org.apache.http.HttpStatus;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import sonia.scm.repository.client.api.ClientCommand;
+import sonia.scm.repository.client.api.RepositoryClient;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 
 import static java.lang.Thread.sleep;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assume.assumeFalse;
 import static sonia.scm.it.RestUtil.given;
 import static sonia.scm.it.ScmTypes.availableScmTypes;
 
@@ -25,7 +28,7 @@ public class RepositoryAccessITCase {
   public TemporaryFolder tempFolder = new TemporaryFolder();
 
   private final String repositoryType;
-  private RepositoryUtil repositoryUtil;
+  private File folder;
 
   public RepositoryAccessITCase(String repositoryType) {
     this.repositoryType = repositoryType;
@@ -37,16 +40,18 @@ public class RepositoryAccessITCase {
   }
 
   @Before
-  public void initClient() throws IOException {
+  public void initClient() {
     TestData.createDefault();
-    repositoryUtil = new RepositoryUtil(repositoryType, tempFolder.getRoot());
+    folder = tempFolder.getRoot();
   }
 
   @Test
   public void shouldFindBranches() throws IOException {
-    assumeFalse("There are no branches for SVN", repositoryType.equals("svn"));
+    RepositoryClient repositoryClient = RepositoryUtil.createRepositoryClient(repositoryType, folder);
 
-    repositoryUtil.createAndCommitFile("a.txt", "a");
+    Assume.assumeTrue("There are no branches for " + repositoryType, repositoryClient.isCommandSupported(ClientCommand.BRANCH));
+
+    RepositoryUtil.createAndCommitFile(repositoryClient, "scmadmin", "a.txt", "a");
 
     String branchesUrl = given()
       .when()

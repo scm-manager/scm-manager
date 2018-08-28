@@ -36,13 +36,11 @@ package sonia.scm.web.filter;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Splitter;
-
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.subject.Subject;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.ArgumentIsInvalidException;
 import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
@@ -53,17 +51,14 @@ import sonia.scm.security.ScmSecurityException;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
-
-import java.util.Iterator;
-
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.shiro.authz.AuthorizationException;
+import java.io.IOException;
+import java.util.Iterator;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Abstract http filter to check repository permissions.
@@ -339,7 +334,7 @@ public abstract class PermissionFilter extends HttpFilter
 
     if (writeRequest)
     {
-      permitted = RepositoryPermissions.write(repository).isPermitted();
+      permitted = RepositoryPermissions.push(repository).isPermitted();
     }
     else
     {

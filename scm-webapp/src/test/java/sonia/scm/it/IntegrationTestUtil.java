@@ -120,15 +120,15 @@ public final class IntegrationTestUtil
     }
   }
 
-  public static Collection<String> createRepositoryTypeParameters() {
-    Collection<String> params = new ArrayList<>();
+  public static Collection<String[]> createRepositoryTypeParameters() {
+    Collection<String[]> params = new ArrayList<>();
 
-    params.add("git");
-    params.add("svn" );
+    params.add(new String[]{"git"});
+    params.add(new String[]{"svn"});
 
     if (IOUtil.search("hg") != null)
     {
-      params.add("hg");
+      params.add(new String[]{"hg"});
     }
 
     return params;
