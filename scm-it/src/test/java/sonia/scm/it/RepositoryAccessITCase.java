@@ -74,9 +74,10 @@ public class RepositoryAccessITCase {
 
   @Test
   public void shouldReadContent() throws IOException, InterruptedException {
-    repositoryUtil.createAndCommitFile("a.txt", "a");
+    RepositoryClient repositoryClient = RepositoryUtil.createRepositoryClient(repositoryType, folder);
+    RepositoryUtil.createAndCommitFile(repositoryClient, "scmadmin", "a.txt", "a");
     tempFolder.newFolder("subfolder");
-    repositoryUtil.createAndCommitFile("subfolder/a.txt", "sub-a");
+    RepositoryUtil.createAndCommitFile(repositoryClient, "scmadmin", "subfolder/a.txt", "sub-a");
 
     sleep(1000);
 
