@@ -360,3 +360,11 @@ export function getModifyPermissionFailure(
     namespace + "/" + name + "/" + permissionname
   );
 }
+
+export function hasCreatePermission(
+  state: Object,
+  namespace: string,
+  name: string
+) {
+  return state.permissions[namespace + "/" + name].createPermission;
+}

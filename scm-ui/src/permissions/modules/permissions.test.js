@@ -13,6 +13,7 @@ import reducer, {
   getModifyPermissionFailure,
   isModifyPermissionPending,
   createPermission,
+  hasCreatePermission,
   MODIFY_PERMISSION_FAILURE,
   MODIFY_PERMISSION_PENDING,
   FETCH_PERMISSIONS,
@@ -432,5 +433,20 @@ describe("permissions selectors", () => {
     expect(
       getModifyPermissionFailure({}, "hitchhiker", "puzzle42", "user_eins")
     ).toBe(undefined);
+  });
+
+  it("should return true, when createPermission is true", () => {
+    const state = {
+      permissions: {
+        ["/hitchhiker/puzzle42"]: {
+          createPermission: true
+        }
+      }
+    };
+    expect(hasCreatePermission(state, "hitchhiker", "puzzle42")).toBe(true);
+  });
+
+  it("should return false, when createPermission is false", () => {
+    expect(hasCreatePermission({}, "hitchiker", "puzzle42")).toEqual(false);
   });
 });
