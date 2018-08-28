@@ -22,7 +22,6 @@ import reducer, {
   MODIFY_PERMISSION
 } from "./permissions";
 import type { Permission, PermissionCollection } from "../types/Permissions";
-import { modifyRepoSuccess } from "../../repos/modules/repos";
 
 const hitchhiker_puzzle42Permission_user_eins: Permission = {
   name: "user_eins",
@@ -144,14 +143,7 @@ describe("permission fetch", () => {
     const store = mockStore({});
 
     return store
-      .dispatch(
-        modifyPermission(
-          editedPermission,
-          "hitchhiker",
-          "puzzle42",
-          "user_eins"
-        )
-      )
+      .dispatch(modifyPermission(editedPermission, "hitchhiker", "puzzle42"))
       .then(() => {
         const actions = store.getActions();
         expect(actions[0].type).toEqual(MODIFY_PERMISSION_PENDING);
@@ -203,14 +195,7 @@ describe("permission fetch", () => {
     const store = mockStore({});
 
     return store
-      .dispatch(
-        modifyPermission(
-          editedPermission,
-          "hitchhiker",
-          "puzzle42",
-          "user_eins"
-        )
-      )
+      .dispatch(modifyPermission(editedPermission, "hitchhiker", "puzzle42"))
       .then(() => {
         const actions = store.getActions();
         expect(actions[0].type).toEqual(MODIFY_PERMISSION_PENDING);
