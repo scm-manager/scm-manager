@@ -51,11 +51,7 @@ import java.util.Collection;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static sonia.scm.it.IntegrationTestUtil.createAdminClient;
-import static sonia.scm.it.IntegrationTestUtil.createResource;
-import static sonia.scm.it.IntegrationTestUtil.getLink;
-import static sonia.scm.it.IntegrationTestUtil.readJson;
-import static sonia.scm.it.IntegrationTestUtil.serialize;
+import static sonia.scm.it.IntegrationTestUtil.*;
 import static sonia.scm.it.RepositoryITUtil.createRepository;
 import static sonia.scm.it.RepositoryITUtil.deleteRepository;
 
@@ -81,7 +77,7 @@ public class RepositoryArchiveITCase
   //~--- methods --------------------------------------------------------------
 
   @Parameterized.Parameters(name = "{0}")
-  public static Collection<String> createParameters() {
+  public static Collection<String[]> createParameters() {
     return IntegrationTestUtil.createRepositoryTypeParameters();
   }
 
