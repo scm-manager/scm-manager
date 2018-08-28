@@ -175,7 +175,7 @@ export default function reducer(
     case FETCH_PERMISSIONS_SUCCESS:
       return {
         ...state,
-        [action.itemId]: action.payload
+        [action.itemId]: action.payload._embedded.permissions
       };
     case MODIFY_PERMISSION_SUCCESS:
       const newPermission = newPermissions(action.payload);
