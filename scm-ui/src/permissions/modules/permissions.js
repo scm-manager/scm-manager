@@ -5,14 +5,7 @@ import type { Action } from "../../types/Action";
 import type { PermissionCollection, Permission } from "../types/Permissions";
 import { isPending } from "../../modules/pending";
 import { getFailure } from "../../modules/failure";
-import type { User } from "../../users/types/User";
 import { Dispatch } from "redux";
-import {
-  CREATE_USER_FAILURE,
-  CREATE_USER_PENDING,
-  CREATE_USER_RESET,
-  CREATE_USER_SUCCESS
-} from "../../users/modules/users";
 
 export const FETCH_PERMISSIONS = "scm/permissions/FETCH_PERMISSIONS";
 export const FETCH_PERMISSIONS_PENDING = `${FETCH_PERMISSIONS}_${
@@ -366,5 +359,7 @@ export function hasCreatePermission(
   namespace: string,
   name: string
 ) {
-  return state.permissions[namespace + "/" + name].createPermission;
+  if (state.permissions && state.permissions[namespace + "/" + name])
+    return state.permissions[namespace + "/" + name].createPermission;
+  else return null;
 }

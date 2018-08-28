@@ -6,12 +6,14 @@ import {
   fetchPermissions,
   getFetchPermissionsFailure,
   isFetchPermissionsPending,
-  getPermissionsOfRepo
+  getPermissionsOfRepo,
+  hasCreatePermission
 } from "../modules/permissions";
 import Loading from "../../components/Loading";
 import ErrorPage from "../../components/ErrorPage";
 import type { PermissionCollection } from "../types/Permissions";
 import SinglePermission from "./SinglePermission";
+import CreatePermissionForm from "../components/CreatePermissionForm";
 
 type Props = {
   namespace: string,
@@ -19,6 +21,7 @@ type Props = {
   loading: boolean,
   error: Error,
   permissions: PermissionCollection,
+  createPermission: boolean,
 
   //dispatch functions
   fetchPermissions: (namespace: string, name: string) => void,
@@ -36,7 +39,16 @@ class Permissions extends React.Component<Props> {
   }
 
   render() {
-    const { loading, error, permissions, t, namespace, name } = this.props;
+    const {
+      loading,
+      error,
+      permissions,
+      t,
+      namespace,
+      name,
+      createPermission
+    } = this.props;
+
     if (error) {
       return (
         <ErrorPage
@@ -51,29 +63,36 @@ class Permissions extends React.Component<Props> {
       return <Loading />;
     }
 
+    const createPermissionForm = createPermission ? (
+      <CreatePermissionForm />
+    ) : null;
+
     if (permissions.length > 0)
       return (
-        <table className="table is-hoverable is-fullwidth">
-          <thead>
-            <tr>
-              <th>{t("permission.name")}</th>
-              <th className="is-hidden-mobile">{t("permission.type")}</th>
-              <th>{t("permission.group-permission")}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {permissions.map((permission, index) => {
-              return (
-                <SinglePermission
-                  key={index}
-                  namespace={namespace}
-                  name={name}
-                  permission={permission}
-                />
-              );
-            })}
-          </tbody>
-        </table>
+        <div>
+          <table className="table is-hoverable is-fullwidth">
+            <thead>
+              <tr>
+                <th>{t("permission.name")}</th>
+                <th className="is-hidden-mobile">{t("permission.type")}</th>
+                <th>{t("permission.group-permission")}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {permissions.map((permission, index) => {
+                return (
+                  <SinglePermission
+                    key={index}
+                    namespace={namespace}
+                    name={name}
+                    permission={permission}
+                  />
+                );
+              })}
+            </tbody>
+          </table>
+          {createPermissionForm}
+        </div>
       );
 
     return <div />;
@@ -86,12 +105,14 @@ const mapStateToProps = (state, ownProps) => {
   const error = getFetchPermissionsFailure(state, namespace, name);
   const loading = isFetchPermissionsPending(state, namespace, name);
   const permissions = getPermissionsOfRepo(state, namespace, name);
+  const createPermission = hasCreatePermission(state, namespace, name);
   return {
     namespace,
     name,
     error,
     loading,
-    permissions
+    permissions,
+    createPermission
   };
 };
 
