@@ -62,7 +62,7 @@ export function fetchPermissionsPending(
 }
 
 export function fetchPermissionsSuccess(
-  permissions: PermissionCollection,
+  permissions: any,
   namespace: string,
   name: string
 ): Action {

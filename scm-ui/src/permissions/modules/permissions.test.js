@@ -66,6 +66,12 @@ const hitchhiker_puzzle42Permissions: PermissionCollection = [
   hitchhiker_puzzle42Permission_user_zwei
 ];
 
+const hitchhiker_puzzle42RepoPermissions = {
+  _embedded: {
+    permissions: hitchhiker_puzzle42Permissions
+  }
+};
+
 describe("permission fetch", () => {
   const REPOS_URL = "/scm/api/rest/v2/repositories";
   const mockStore = configureMockStore([thunk]);
@@ -78,7 +84,7 @@ describe("permission fetch", () => {
   it("should successfully fetch permissions to repo hitchhiker/puzzle42", () => {
     fetchMock.getOnce(
       REPOS_URL + "/hitchhiker/puzzle42/permissions",
-      hitchhiker_puzzle42Permissions
+      hitchhiker_puzzle42RepoPermissions
     );
 
     const expectedActions = [
@@ -92,7 +98,7 @@ describe("permission fetch", () => {
       },
       {
         type: FETCH_PERMISSIONS_SUCCESS,
-        payload: hitchhiker_puzzle42Permissions,
+        payload: hitchhiker_puzzle42RepoPermissions,
         itemId: "hitchhiker/puzzle42"
       }
     ];
@@ -216,7 +222,7 @@ describe("permissions reducer", () => {
     const newState = reducer(
       {},
       fetchPermissionsSuccess(
-        hitchhiker_puzzle42Permissions,
+        hitchhiker_puzzle42RepoPermissions,
         "hitchhiker",
         "puzzle42"
       )
