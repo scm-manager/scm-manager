@@ -5,10 +5,16 @@ import { Checkbox } from "../../components/forms/index";
 import { DeleteButton } from "../../components/buttons/index";
 import { translate } from "react-i18next";
 import { Select } from "../../components/forms/index";
-import { modifyPermission } from "../modules/permissions";
+import {
+  modifyPermission,
+  isModifyPermissionPending,
+  getModifyPermissionFailure,
+  modifyPermissionReset
+} from "../modules/permissions";
 import connect from "react-redux/es/connect/connect";
 import { withRouter } from "react-router-dom";
 import type { History } from "history";
+import ErrorNotification from "../../components/ErrorNotification";
 
 type Props = {
   submitForm: Permission => void,
@@ -18,7 +24,10 @@ type Props = {
   namespace: string,
   name: string,
   match: any,
-  history: History
+  history: History,
+  loading: boolean,
+  error: Error,
+  permissionReset: (string, string, string) => void
 };
 
 type State = {
@@ -41,6 +50,11 @@ class SinglePermission extends React.Component<Props, State> {
 
   componentDidMount() {
     const { permission } = this.props;
+    this.props.permissionReset(
+      this.props.namespace,
+      this.props.name,
+      permission.name
+    );
     if (permission) {
       this.setState({
         permission: {
@@ -55,9 +69,8 @@ class SinglePermission extends React.Component<Props, State> {
 
   render() {
     const { permission } = this.state;
-    const { t } = this.props;
+    const { t, loading, error } = this.props;
     const types = ["READ", "OWNER", "GROUP"];
-
     const deleteButton = this.props.permission._links.delete ? (
       <DeleteButton label={t("edit-permission.delete-button")} />
     ) : null;
@@ -68,11 +81,16 @@ class SinglePermission extends React.Component<Props, State> {
           onChange={this.handleTypeChange}
           value={permission.type ? permission.type : ""}
           options={this.createSelectOptions(types)}
+          loading={loading}
         />
       </td>
     ) : (
       <td>{permission.type}</td>
     );
+
+    const errorNotification = error ? (
+      <ErrorNotification error={error} />
+    ) : null;
 
     return (
       <tr>
@@ -81,7 +99,7 @@ class SinglePermission extends React.Component<Props, State> {
           <Checkbox checked={permission ? permission.groupPermission : false} />
         </td>
         {typeSelector}
-        <td>{deleteButton}</td>
+        <td>{deleteButton}</td> {errorNotification}
       </tr>
     );
   }
@@ -116,7 +134,23 @@ class SinglePermission extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {};
+const mapStateToProps = (state, ownProps) => {
+  const permission = ownProps.permission;
+  const loading = isModifyPermissionPending(
+    state,
+    ownProps.namespace,
+    ownProps.name,
+    permission.name
+  );
+  const error = getModifyPermissionFailure(
+    state,
+    ownProps.namespace,
+    ownProps.name,
+    permission.name
+  );
+
+  return { loading, error };
+};
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -126,6 +160,13 @@ const mapDispatchToProps = dispatch => {
       name: string
     ) => {
       dispatch(modifyPermission(permission, namespace, name));
+    },
+    permissionReset: (
+      namespace: string,
+      name: string,
+      permissionname: string
+    ) => {
+      dispatch(modifyPermissionReset(namespace, name, permissionname));
     }
   };
 };

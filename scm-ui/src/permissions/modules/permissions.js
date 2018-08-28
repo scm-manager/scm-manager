@@ -26,6 +26,9 @@ export const MODIFY_PERMISSION_SUCCESS = `${MODIFY_PERMISSION}_${
 export const MODIFY_PERMISSION_FAILURE = `${MODIFY_PERMISSION}_${
   types.FAILURE_SUFFIX
 }`;
+export const MODIFY_PERMISSION_RESET = `${MODIFY_PERMISSION}_${
+  types.RESET_SUFFIX
+}`;
 const REPOS_URL = "repositories";
 const PERMISSIONS_URL = "permissions";
 const CONTENT_TYPE = "application/vnd.scmm-permission+json";
@@ -98,15 +101,11 @@ export function modifyPermission(
   callback?: () => void
 ) {
   return function(dispatch: any) {
-    dispatch(
-      modifyPermissionPending(permission, namespace, name)
-    );
+    dispatch(modifyPermissionPending(permission, namespace, name));
     return apiClient
       .put(permission._links.update.href, permission, CONTENT_TYPE)
       .then(() => {
-        dispatch(
-          modifyPermissionSuccess(permission, namespace, name)
-        );
+        dispatch(modifyPermissionSuccess(permission, namespace, name));
         if (callback) {
           callback();
         }
@@ -142,7 +141,7 @@ export function modifyPermissionSuccess(
     payload: {
       permission
     },
-    itemId: namespace + "/" + name
+    itemId: namespace + "/" + name + "/" + permission.name
   };
 }
 
@@ -163,20 +162,25 @@ function newPermissions(
   oldPermissions: PermissionCollection,
   newPermission: Permission
 ) {
-  console.log("oldPermissions:");
-  console.log(oldPermissions);
-  console.log("new Permission:");
-  console.log(newPermission);
   for (let i = 0; i < oldPermissions.length; i++) {
-    console.log("permissionname:");
-    console.log("an der stelle i: " + oldPermissions[i].name);
     if (oldPermissions[i].name === newPermission.name) {
       oldPermissions.splice(i, 1, newPermission);
-      console.log("new Permissions");
-      console.log(oldPermissions);
       return oldPermissions;
     }
   }
+}
+
+// reset
+
+export function modifyPermissionReset(
+  namespace: string,
+  name: string,
+  permissionname: string
+) {
+  return {
+    type: MODIFY_PERMISSION_RESET,
+    itemId: namespace + "/" + name + "/" + permissionname
+  };
 }
 
 // reducer
