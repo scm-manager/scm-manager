@@ -139,7 +139,8 @@ export function modifyPermissionSuccess(
   return {
     type: MODIFY_PERMISSION_SUCCESS,
     payload: {
-      permission
+      permission,
+      position: namespace + "/" + name
     },
     itemId: namespace + "/" + name + "/" + permission.name
   };
@@ -170,8 +171,6 @@ function newPermissions(
   }
 }
 
-// reset
-
 export function modifyPermissionReset(
   namespace: string,
   name: string,
@@ -199,13 +198,14 @@ export default function reducer(
         [action.itemId]: action.payload._embedded.permissions
       };
     case MODIFY_PERMISSION_SUCCESS:
+      const positionOfPermission = action.payload.position;
       const newPermission = newPermissions(
-        state[action.itemId],
+        state[action.payload.position],
         action.payload.permission
       );
       return {
         ...state,
-        [action.itemId]: newPermission
+        [positionOfPermission]: newPermission
       };
     default:
       return state;
