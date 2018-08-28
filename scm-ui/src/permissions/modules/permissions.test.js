@@ -12,6 +12,7 @@ import reducer, {
   modifyPermissionSuccess,
   getModifyPermissionFailure,
   isModifyPermissionPending,
+  createPermission,
   MODIFY_PERMISSION_FAILURE,
   MODIFY_PERMISSION_PENDING,
   FETCH_PERMISSIONS,
@@ -19,7 +20,12 @@ import reducer, {
   FETCH_PERMISSIONS_SUCCESS,
   FETCH_PERMISSIONS_FAILURE,
   MODIFY_PERMISSION_SUCCESS,
-  MODIFY_PERMISSION
+  MODIFY_PERMISSION,
+  CREATE_PERMISSION,
+  CREATE_PERMISSION_PENDING,
+  CREATE_PERMISSION_SUCCESS,
+  CREATE_PERMISSION_FAILURE,
+  createPermissionSuccess
 } from "./permissions";
 import type { Permission, PermissionCollection } from "../types/Permissions";
 
@@ -71,6 +77,11 @@ const hitchhiker_puzzle42Permissions: PermissionCollection = [
 const hitchhiker_puzzle42RepoPermissions = {
   _embedded: {
     permissions: hitchhiker_puzzle42Permissions
+  },
+  _links: {
+    create: {
+      link: "link"
+    }
   }
 };
 
@@ -203,6 +214,83 @@ describe("permission fetch", () => {
         expect(actions[1].payload).toBeDefined();
       });
   });
+
+  it("should add a permission successfully", () => {
+    // unmatched
+    fetchMock.postOnce(REPOS_URL + "/hitchhiker/puzzle42/permissions", {
+      status: 204
+    });
+
+    // after create, the users are fetched again
+    fetchMock.getOnce(
+      REPOS_URL + "/hitchhiker/puzzle42",
+      hitchhiker_puzzle42RepoPermissions
+    );
+
+    const store = mockStore({});
+    return store
+      .dispatch(
+        createPermission(
+          hitchhiker_puzzle42Permission_user_eins,
+          "hitchhiker",
+          "puzzle42"
+        )
+      )
+      .then(() => {
+        const actions = store.getActions();
+        expect(actions[0].type).toEqual(CREATE_PERMISSION_PENDING);
+        expect(actions[1].type).toEqual(CREATE_PERMISSION_SUCCESS);
+      });
+  });
+
+  it("should fail adding a permission on HTTP 500", () => {
+    fetchMock.postOnce(REPOS_URL + "/hitchhiker/puzzle42/permissions", {
+      status: 500
+    });
+
+    const store = mockStore({});
+    return store
+      .dispatch(
+        createPermission(
+          hitchhiker_puzzle42Permission_user_eins,
+          "hitchhiker",
+          "puzzle42"
+        )
+      )
+      .then(() => {
+        const actions = store.getActions();
+        expect(actions[0].type).toEqual(CREATE_PERMISSION_PENDING);
+        expect(actions[1].type).toEqual(CREATE_PERMISSION_FAILURE);
+        expect(actions[1].payload).toBeDefined();
+      });
+  });
+
+  it("should call the callback after permission successfully created", () => {
+    // unmatched
+    fetchMock.postOnce(REPOS_URL + "/hitchhiker/puzzle42/permissions", {
+      status: 204
+    });
+
+    let callMe = "not yet";
+
+    const callback = () => {
+      callMe = "yeah";
+    };
+
+    const store = mockStore({});
+    return store
+      .dispatch(
+        createPermission(
+          hitchhiker_puzzle42Permission_user_eins,
+          "hitchhiker",
+          "puzzle42",
+          callback
+        )
+      )
+      .then(() => {
+        expect(callMe).toBe("yeah");
+      });
+  });
 });
 
 describe("permissions reducer", () => {
@@ -230,19 +318,23 @@ describe("permissions reducer", () => {
       )
     );
 
-    expect(newState["hitchhiker/puzzle42"]).toBe(
+    expect(newState["hitchhiker/puzzle42"].entries).toBe(
       hitchhiker_puzzle42Permissions
     );
   });
 
   it("should update permission", () => {
     const oldState = {
-      "hitchhiker/puzzle42": [hitchhiker_puzzle42Permission_user_eins]
+      "hitchhiker/puzzle42": {
+        entries: [hitchhiker_puzzle42Permission_user_eins]
+      }
     };
     let permissionEdited = { ...hitchhiker_puzzle42Permission_user_eins };
     permissionEdited.type = "OWNER";
     let expectedState = {
-      "hitchhiker/puzzle42": [permissionEdited]
+      "hitchhiker/puzzle42": {
+        entries: [permissionEdited]
+      }
     };
     const newState = reducer(
       oldState,
@@ -260,7 +352,9 @@ describe("permissions selectors", () => {
   it("should return the permissions of one repository", () => {
     const state = {
       permissions: {
-        "hitchhiker/puzzle42": hitchhiker_puzzle42Permissions
+        "hitchhiker/puzzle42": {
+          entries: hitchhiker_puzzle42Permissions
+        }
       }
     };
 

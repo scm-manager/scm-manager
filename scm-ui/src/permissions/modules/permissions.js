@@ -5,6 +5,14 @@ import type { Action } from "../../types/Action";
 import type { PermissionCollection, Permission } from "../types/Permissions";
 import { isPending } from "../../modules/pending";
 import { getFailure } from "../../modules/failure";
+import type { User } from "../../users/types/User";
+import { Dispatch } from "redux";
+import {
+  CREATE_USER_FAILURE,
+  CREATE_USER_PENDING,
+  CREATE_USER_RESET,
+  CREATE_USER_SUCCESS
+} from "../../users/modules/users";
 
 export const FETCH_PERMISSIONS = "scm/permissions/FETCH_PERMISSIONS";
 export const FETCH_PERMISSIONS_PENDING = `${FETCH_PERMISSIONS}_${
@@ -29,6 +37,17 @@ export const MODIFY_PERMISSION_FAILURE = `${MODIFY_PERMISSION}_${
 export const MODIFY_PERMISSION_RESET = `${MODIFY_PERMISSION}_${
   types.RESET_SUFFIX
 }`;
+export const CREATE_PERMISSION = "scm/permissions/CREATE_PERMISSION";
+export const CREATE_PERMISSION_PENDING = `${CREATE_PERMISSION}_${
+  types.PENDING_SUFFIX
+}`;
+export const CREATE_PERMISSION_SUCCESS = `$CREATE_PERMISSION}_${
+  types.SUCCESS_SUFFIX
+}`;
+export const CREATE_PERMISSION_FAILURE = `${CREATE_PERMISSION}_${
+  types.FAILURE_SUFFIX
+}`;
+
 const REPOS_URL = "repositories";
 const PERMISSIONS_URL = "permissions";
 const CONTENT_TYPE = "application/vnd.scmm-permission+json";
@@ -182,6 +201,75 @@ export function modifyPermissionReset(
   };
 }
 
+// create permission
+export function createPermission(
+  permission: Permission,
+  namespace: string,
+  name: string,
+  callback?: () => void
+) {
+  return function(dispatch: Dispatch) {
+    dispatch(createPermissionPending(permission, namespace, name));
+    return apiClient
+      .post(
+        `${REPOS_URL}/${namespace}/${name}/${PERMISSIONS_URL}`,
+        permission,
+        CONTENT_TYPE
+      )
+      .then(() => {
+        dispatch(createPermissionSuccess(namespace, name));
+        if (callback) {
+          callback();
+        }
+      })
+      .catch(err =>
+        dispatch(
+          createPermissionFailure(
+            new Error(
+              `failed to add permission ${permission.name}: ${err.message}`
+            ),
+            namespace,
+            name
+          )
+        )
+      );
+  };
+}
+
+export function createPermissionPending(
+  permission: Permission,
+  namespace: string,
+  name: string
+): Action {
+  return {
+    type: CREATE_PERMISSION_PENDING,
+    payload: permission,
+    itemId: namespace + "/" + name
+  };
+}
+
+export function createPermissionSuccess(
+  namespace: string,
+  name: string
+): Action {
+  return {
+    type: CREATE_PERMISSION_SUCCESS,
+    itemId: namespace + "/" + name
+  };
+}
+
+export function createPermissionFailure(
+  error: Error,
+  namespace: string,
+  name: string
+): Action {
+  return {
+    type: CREATE_PERMISSION_FAILURE,
+    payload: error,
+    itemId: namespace + "/" + name
+  };
+}
+
 // reducer
 export default function reducer(
   state: Object = {},
@@ -195,17 +283,23 @@ export default function reducer(
     case FETCH_PERMISSIONS_SUCCESS:
       return {
         ...state,
-        [action.itemId]: action.payload._embedded.permissions
+        [action.itemId]: {
+          entries: action.payload._embedded.permissions,
+          createPermission: action.payload._links.create ? true : false
+        }
       };
     case MODIFY_PERMISSION_SUCCESS:
       const positionOfPermission = action.payload.position;
       const newPermission = newPermissions(
-        state[action.payload.position],
+        state[action.payload.position].entries,
         action.payload.permission
       );
       return {
         ...state,
-        [positionOfPermission]: newPermission
+        [positionOfPermission]: {
+          ...state[positionOfPermission],
+          entries: newPermission
+        }
       };
     default:
       return state;
@@ -220,7 +314,7 @@ export function getPermissionsOfRepo(
   name: string
 ) {
   if (state.permissions && state.permissions[namespace + "/" + name]) {
-    const permissions = state.permissions[namespace + "/" + name];
+    const permissions = state.permissions[namespace + "/" + name].entries;
     return permissions;
   }
 }

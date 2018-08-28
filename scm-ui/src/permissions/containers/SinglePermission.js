@@ -70,7 +70,7 @@ class SinglePermission extends React.Component<Props, State> {
   render() {
     const { permission } = this.state;
     const { t, loading, error } = this.props;
-    const types = ["READ", "OWNER", "GROUP"];
+    const types = ["READ", "OWNER", "WRITE"];
     const deleteButton = this.props.permission._links.delete ? (
       <DeleteButton label={t("edit-permission.delete-button")} />
     ) : null;
@@ -99,7 +99,10 @@ class SinglePermission extends React.Component<Props, State> {
           <Checkbox checked={permission ? permission.groupPermission : false} />
         </td>
         {typeSelector}
-        <td>{deleteButton}</td> {errorNotification}
+        <td>
+          {deleteButton}
+          {errorNotification}
+        </td>
       </tr>
     );
   }
