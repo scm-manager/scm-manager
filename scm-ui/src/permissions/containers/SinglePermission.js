@@ -62,19 +62,25 @@ class SinglePermission extends React.Component<Props, State> {
       <DeleteButton label={t("edit-permission.delete-button")} />
     ) : null;
 
+    const typeSelector = this.props.permission._links.update ? (
+      <td>
+        <Select
+          onChange={this.handleTypeChange}
+          value={permission.type ? permission.type : ""}
+          options={this.createSelectOptions(types)}
+        />
+      </td>
+    ) : (
+      <td>{permission.type}</td>
+    );
+
     return (
       <tr>
         <td>{permission.name}</td>
-        <td className="is-hidden-mobile">
-          <Select
-            onChange={this.handleTypeChange}
-            value={permission.type ? permission.type : ""}
-            options={this.createSelectOptions(types)}
-          />
-        </td>
         <td>
           <Checkbox checked={permission ? permission.groupPermission : false} />
         </td>
+        {typeSelector}
         <td>{deleteButton}</td>
       </tr>
     );

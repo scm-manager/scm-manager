@@ -6,12 +6,12 @@ import {
   fetchPermissions,
   getFetchPermissionsFailure,
   isFetchPermissionsPending,
-  getPermissionsOfRepo,
+  getPermissionsOfRepo
 } from "../modules/permissions";
 import Loading from "../../components/Loading";
 import ErrorPage from "../../components/ErrorPage";
 import type { PermissionCollection } from "../types/Permissions";
-import PermissionsTable from "./PermissionsTable";
+import SinglePermission from "./SinglePermission";
 
 type Props = {
   namespace: string,
@@ -53,11 +53,27 @@ class Permissions extends React.Component<Props> {
 
     if (permissions.length > 0)
       return (
-        <PermissionsTable
-          permissions={permissions}
-          namespace={namespace}
-          name={name}
-        />
+        <table className="table is-hoverable is-fullwidth">
+          <thead>
+            <tr>
+              <th>{t("permission.name")}</th>
+              <th className="is-hidden-mobile">{t("permission.type")}</th>
+              <th>{t("permission.group-permission")}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {permissions.map((permission, index) => {
+              return (
+                <SinglePermission
+                  key={index}
+                  namespace={namespace}
+                  name={name}
+                  permission={permission}
+                />
+              );
+            })}
+          </tbody>
+        </table>
       );
 
     return <div />;
