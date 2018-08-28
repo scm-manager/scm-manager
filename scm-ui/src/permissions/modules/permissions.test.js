@@ -10,13 +10,16 @@ import reducer, {
   getFetchPermissionsFailure,
   modifyPermission,
   modifyPermissionSuccess,
+  getModifyPermissionFailure,
+  isModifyPermissionPending,
   MODIFY_PERMISSION_FAILURE,
   MODIFY_PERMISSION_PENDING,
   FETCH_PERMISSIONS,
   FETCH_PERMISSIONS_PENDING,
   FETCH_PERMISSIONS_SUCCESS,
   FETCH_PERMISSIONS_FAILURE,
-  MODIFY_PERMISSION_SUCCESS
+  MODIFY_PERMISSION_SUCCESS,
+  MODIFY_PERMISSION
 } from "./permissions";
 import type { Permission, PermissionCollection } from "../types/Permissions";
 import { modifyRepoSuccess } from "../../repos/modules/repos";
@@ -141,7 +144,14 @@ describe("permission fetch", () => {
     const store = mockStore({});
 
     return store
-      .dispatch(modifyPermission(editedPermission, "hitchhiker", "puzzle42"))
+      .dispatch(
+        modifyPermission(
+          editedPermission,
+          "hitchhiker",
+          "puzzle42",
+          "user_eins"
+        )
+      )
       .then(() => {
         const actions = store.getActions();
         expect(actions[0].type).toEqual(MODIFY_PERMISSION_PENDING);
@@ -193,7 +203,14 @@ describe("permission fetch", () => {
     const store = mockStore({});
 
     return store
-      .dispatch(modifyPermission(editedPermission, "hitchhiker", "puzzle42"))
+      .dispatch(
+        modifyPermission(
+          editedPermission,
+          "hitchhiker",
+          "puzzle42",
+          "user_eins"
+        )
+      )
       .then(() => {
         const actions = store.getActions();
         expect(actions[0].type).toEqual(MODIFY_PERMISSION_PENDING);
@@ -235,19 +252,20 @@ describe("permissions reducer", () => {
 
   it("should update permission", () => {
     const oldState = {
-      permissions: {
-        "hitchhiker/puzzle42": {
-          hitchhiker_puzzle42Permission_user_eins
-        }
-      }
+      "hitchhiker/puzzle42": [hitchhiker_puzzle42Permission_user_eins]
     };
     let permissionEdited = { ...hitchhiker_puzzle42Permission_user_eins };
     permissionEdited.type = "OWNER";
+    let expectedState = {
+      "hitchhiker/puzzle42": [permissionEdited]
+    };
     const newState = reducer(
       oldState,
       modifyPermissionSuccess(permissionEdited, "hitchhiker", "puzzle42")
     );
-    expect(newState["hitchhiker/puzzle42"]).toEqual(permissionEdited);
+    expect(newState["hitchhiker/puzzle42"]).toEqual(
+      expectedState["hitchhiker/puzzle42"]
+    );
   });
 });
 
@@ -301,5 +319,39 @@ describe("permissions selectors", () => {
     expect(getFetchPermissionsFailure({}, "hitchhiker", "puzzle42")).toBe(
       undefined
     );
+  });
+
+  it("should return true, when modify permission is pending", () => {
+    const state = {
+      pending: {
+        [MODIFY_PERMISSION + "/hitchhiker/puzzle42/user_eins"]: true
+      }
+    };
+    expect(
+      isModifyPermissionPending(state, "hitchhiker", "puzzle42", "user_eins")
+    ).toEqual(true);
+  });
+
+  it("should return false, when modify permissions is not pending", () => {
+    expect(
+      isModifyPermissionPending({}, "hitchiker", "puzzle42", "user_eins")
+    ).toEqual(false);
+  });
+
+  it("should return error when modify permissions did fail", () => {
+    const state = {
+      failure: {
+        [MODIFY_PERMISSION + "/hitchhiker/puzzle42/user_eins"]: error
+      }
+    };
+    expect(
+      getModifyPermissionFailure(state, "hitchhiker", "puzzle42", "user_eins")
+    ).toEqual(error);
+  });
+
+  it("should return undefined when modify permissions did not fail", () => {
+    expect(
+      getModifyPermissionFailure({}, "hitchhiker", "puzzle42", "user_eins")
+    ).toBe(undefined);
   });
 });

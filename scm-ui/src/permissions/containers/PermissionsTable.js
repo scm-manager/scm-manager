@@ -3,14 +3,8 @@ import React from "react";
 import { translate } from "react-i18next";
 import PermissionRow from "../components/table/PermissionRow";
 import type { Permission, PermissionCollection } from "../types/Permissions";
-import PermissionRowEditable from "../components/table/PermissionRowEditable";
-import connect from "react-redux/es/connect/connect";
-import { modifyPermission } from "../modules/permissions";
+import SinglePermission from "./SinglePermission";
 import type { History } from "history";
-import {
-  getModifyRepoFailure,
-  isModifyRepoPending
-} from "../../repos/modules/repos";
 
 type Props = {
   t: string => string,
@@ -18,12 +12,14 @@ type Props = {
   modifyPermission: (Permission, string, string, () => void) => void,
   namespace: string,
   name: string,
+  match: any,
   history: History
 };
 
 class PermissionsTable extends React.Component<Props> {
   permissionsModified = () => {
     const { history, name, namespace } = this.props;
+    console.log(history);
     history.push(`/repo/${namespace}/${name}/permissions`);
   };
 
@@ -43,17 +39,11 @@ class PermissionsTable extends React.Component<Props> {
           {permissions.map((permission, index) => {
             if (permission._links.update)
               return (
-                <PermissionRowEditable
+                <SinglePermission
                   key={index}
+                  namespace={namespace}
+                  name={name}
                   permission={permission}
-                  submitForm={permission => {
-                    this.props.modifyPermission(
-                      permission,
-                      namespace,
-                      name,
-                      this.permissionsModified
-                    );
-                  }}
                 />
               );
             else return <PermissionRow key={index} permission={permission} />;
@@ -64,21 +54,4 @@ class PermissionsTable extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {};
-
-const mapDispatchToProps = dispatch => {
-  return {
-    modifyPermission: (
-      permission: Permission,
-      namespace: string,
-      name: string,
-      callback: () => void
-    ) => {
-      dispatch(modifyPermission(permission, namespace, name, callback));
-    }
-  };
-};
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(translate("permissions")(PermissionsTable));
+export default translate("permissions")(PermissionsTable);

@@ -98,12 +98,15 @@ export function modifyPermission(
   callback?: () => void
 ) {
   return function(dispatch: any) {
-    dispatch(modifyPermissionPending(permission, namespace, name));
-
+    dispatch(
+      modifyPermissionPending(permission, namespace, name)
+    );
     return apiClient
       .put(permission._links.update.href, permission, CONTENT_TYPE)
       .then(() => {
-        dispatch(modifyPermissionSuccess(permission, namespace, name));
+        dispatch(
+          modifyPermissionSuccess(permission, namespace, name)
+        );
         if (callback) {
           callback();
         }
@@ -125,7 +128,7 @@ export function modifyPermissionPending(
   return {
     type: MODIFY_PERMISSION_PENDING,
     payload: permission,
-    itemId: namespace + "/" + name
+    itemId: namespace + "/" + name + "/" + permission.name
   };
 }
 
@@ -136,7 +139,9 @@ export function modifyPermissionSuccess(
 ): Action {
   return {
     type: MODIFY_PERMISSION_SUCCESS,
-    payload: permission,
+    payload: {
+      permission
+    },
     itemId: namespace + "/" + name
   };
 }
@@ -150,16 +155,28 @@ export function modifyPermissionFailure(
   return {
     type: MODIFY_PERMISSION_FAILURE,
     payload: { error, permission },
-    itemId: namespace + "/" + name
+    itemId: namespace + "/" + name + "/" + permission.name
   };
 }
 
-function newPermissions(modifiedPermission: Permission) {
-  let newPermissions = [];
-  newPermissions[0] = modifiedPermission;
-  return {
-    newPermissions
-  };
+function newPermissions(
+  oldPermissions: PermissionCollection,
+  newPermission: Permission
+) {
+  console.log("oldPermissions:");
+  console.log(oldPermissions);
+  console.log("new Permission:");
+  console.log(newPermission);
+  for (let i = 0; i < oldPermissions.length; i++) {
+    console.log("permissionname:");
+    console.log("an der stelle i: " + oldPermissions[i].name);
+    if (oldPermissions[i].name === newPermission.name) {
+      oldPermissions.splice(i, 1, newPermission);
+      console.log("new Permissions");
+      console.log(oldPermissions);
+      return oldPermissions;
+    }
+  }
 }
 
 // reducer
@@ -178,7 +195,10 @@ export default function reducer(
         [action.itemId]: action.payload._embedded.permissions
       };
     case MODIFY_PERMISSION_SUCCESS:
-      const newPermission = newPermissions(action.payload);
+      const newPermission = newPermissions(
+        state[action.itemId],
+        action.payload.permission
+      );
       return {
         ...state,
         [action.itemId]: newPermission
@@ -215,4 +235,30 @@ export function getFetchPermissionsFailure(
   name: string
 ) {
   return getFailure(state, FETCH_PERMISSIONS, namespace + "/" + name);
+}
+
+export function isModifyPermissionPending(
+  state: Object,
+  namespace: string,
+  name: string,
+  permissionname: string
+) {
+  return isPending(
+    state,
+    MODIFY_PERMISSION,
+    namespace + "/" + name + "/" + permissionname
+  );
+}
+
+export function getModifyPermissionFailure(
+  state: Object,
+  namespace: string,
+  name: string,
+  permissionname: string
+) {
+  return getFailure(
+    state,
+    MODIFY_PERMISSION,
+    namespace + "/" + name + "/" + permissionname
+  );
 }

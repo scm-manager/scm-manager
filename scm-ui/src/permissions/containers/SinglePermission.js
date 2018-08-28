@@ -1,22 +1,31 @@
 // @flow
 import React from "react";
-import type { Permission } from "../../types/Permissions";
-import { Checkbox, InputField } from "../../../components/forms/index";
-import { DeleteButton, SubmitButton } from "../../../components/buttons/index";
+import type { Permission } from "../types/Permissions";
+import { Checkbox } from "../../components/forms/index";
+import { DeleteButton } from "../../components/buttons/index";
 import { translate } from "react-i18next";
-import { Select } from "../../../components/forms/index";
+import { Select } from "../../components/forms/index";
+import { modifyPermission } from "../modules/permissions";
+import connect from "react-redux/es/connect/connect";
+import { withRouter } from "react-router-dom";
+import type { History } from "history";
 
 type Props = {
   submitForm: Permission => void,
+  modifyPermission: (Permission, string, string) => void,
   permission: Permission,
-  t: string => string
+  t: string => string,
+  namespace: string,
+  name: string,
+  match: any,
+  history: History
 };
 
 type State = {
   permission: Permission
 };
 
-class PermissionRowEditable extends React.Component<Props, State> {
+class SinglePermission extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
@@ -43,10 +52,7 @@ class PermissionRowEditable extends React.Component<Props, State> {
       });
     }
   }
-  submit = (event: Event) => {
-    event.preventDefault();
-    this.props.submitForm(this.state.permission);
-  };
+
   render() {
     const { permission } = this.state;
     const { t } = this.props;
@@ -58,12 +64,7 @@ class PermissionRowEditable extends React.Component<Props, State> {
 
     return (
       <tr>
-        <td>
-          <InputField
-            value={permission.name ? permission.name : ""}
-            onChange={this.handleNameChange}
-          />
-        </td>
+        <td>{permission.name}</td>
         <td className="is-hidden-mobile">
           <Select
             onChange={this.handleTypeChange}
@@ -72,18 +73,7 @@ class PermissionRowEditable extends React.Component<Props, State> {
           />
         </td>
         <td>
-          <Checkbox
-            checked={
-              permission.groupPermission ? permission.groupPermission : false
-            }
-            onChange={this.handleGroupPermissionChange}
-          />
-        </td>
-        <td>
-          <SubmitButton
-            label={t("edit-permission.save-button")}
-            action={this.submit}
-          />
+          <Checkbox checked={permission ? permission.groupPermission : false} />
         </td>
         <td>{deleteButton}</td>
       </tr>
@@ -97,6 +87,17 @@ class PermissionRowEditable extends React.Component<Props, State> {
         type: type
       }
     });
+    this.modifyPermission(type);
+  };
+
+  modifyPermission = (type: string) => {
+    let permission = this.state.permission;
+    permission.type = type;
+    this.props.modifyPermission(
+      permission,
+      this.props.namespace,
+      this.props.name
+    );
   };
 
   createSelectOptions(types: string[]) {
@@ -107,24 +108,22 @@ class PermissionRowEditable extends React.Component<Props, State> {
       };
     });
   }
-
-  handleNameChange = (name: string) => {
-    this.setState({
-      permission: {
-        ...this.state.permission,
-        name: name
-      }
-    });
-  };
-
-  handleGroupPermissionChange = (groupPermission: boolean) => {
-    this.setState({
-      permission: {
-        ...this.state.permission,
-        groupPermission: groupPermission
-      }
-    });
-  };
 }
 
-export default translate("permissions")(PermissionRowEditable);
+const mapStateToProps = (state, ownProps) => {};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    modifyPermission: (
+      permission: Permission,
+      namespace: string,
+      name: string
+    ) => {
+      dispatch(modifyPermission(permission, namespace, name));
+    }
+  };
+};
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(translate("permissions")(withRouter(SinglePermission)));

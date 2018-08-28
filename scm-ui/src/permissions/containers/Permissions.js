@@ -6,7 +6,7 @@ import {
   fetchPermissions,
   getFetchPermissionsFailure,
   isFetchPermissionsPending,
-  getPermissionsOfRepo
+  getPermissionsOfRepo,
 } from "../modules/permissions";
 import Loading from "../../components/Loading";
 import ErrorPage from "../../components/ErrorPage";
@@ -52,7 +52,13 @@ class Permissions extends React.Component<Props> {
     }
 
     if (permissions.length > 0)
-      return <PermissionsTable permissions={permissions} namespace={namespace} name={name} />;
+      return (
+        <PermissionsTable
+          permissions={permissions}
+          namespace={namespace}
+          name={name}
+        />
+      );
 
     return <div />;
   }
