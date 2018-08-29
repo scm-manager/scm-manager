@@ -117,7 +117,6 @@ public class RepositoryAccessITCase {
       .statusCode(HttpStatus.SC_OK)
       .extract()
       .path("files[0]._links.self.href");
-    System.out.println(subfolderContentUrl);
     given()
       .when()
       .get(subfolderContentUrl)
