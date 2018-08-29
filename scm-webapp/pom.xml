@@ -505,7 +505,7 @@
             </systemProperty>
             <systemProperty>
               <name>sonia.scm.ui.proxy</name>
-              <value>http://localhost:9966</value>
+              <value>http://localhost:3000</value>
             </systemProperty>
           </systemProperties>
           <webApp>
