@@ -2,10 +2,11 @@ package sonia.scm;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.io.ByteStreams;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -23,6 +24,8 @@ import java.util.Map;
  * @since 2.0.0
  */
 public final class ProxyPushStateDispatcher implements PushStateDispatcher {
+
+  private static final Logger LOG = LoggerFactory.getLogger(ProxyPushStateDispatcher.class);
 
   @FunctionalInterface
   interface ConnectionFactory {
@@ -57,41 +60,36 @@ public final class ProxyPushStateDispatcher implements PushStateDispatcher {
 
   @Override
   public void dispatch(HttpServletRequest request, HttpServletResponse response, String uri) throws IOException {
-    try {
-      proxy(request, response, uri);
-    } catch (FileNotFoundException ex) {
-      response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-    }
-  }
-
-  private void proxy(HttpServletRequest request, HttpServletResponse response, String uri) throws IOException {
     URL url = createProxyUrl(uri);
 
     HttpURLConnection connection = connectionFactory.open(url);
     connection.setRequestMethod(request.getMethod());
-    copyRequestHeaders(request, connection);
 
+    copyRequestHeaders(request, connection);
     if (request.getContentLength() > 0) {
       copyRequestBody(request, connection);
     }
 
     int responseCode = connection.getResponseCode();
     response.setStatus(responseCode);
+
     copyResponseHeaders(response, connection);
-
-    appendProxyHeader(response, url);
-
-    copyResponseBody(response, connection);
-  }
-
-  private void appendProxyHeader(HttpServletResponse response, URL url) {
-    response.addHeader("X-Forwarded-Port", String.valueOf(url.getPort()));
+    if (connection.getContentLength() > 0) {
+      copyResponseBody(response, connection);
+    }
   }
 
   private void copyResponseBody(HttpServletResponse response, HttpURLConnection connection) throws IOException {
-    try (InputStream input = connection.getInputStream(); OutputStream output = response.getOutputStream()) {
+    try (InputStream input = getConnectionInput(connection); OutputStream output = response.getOutputStream()) {
       ByteStreams.copy(input, output);
     }
+  }
+
+  private InputStream getConnectionInput(HttpURLConnection connection) throws IOException {
+    if (connection.getErrorStream() != null) {
+      return connection.getErrorStream();
+    }
+    return connection.getInputStream();
   }
 
   private void copyResponseHeaders(HttpServletResponse response, HttpURLConnection connection) {

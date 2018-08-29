@@ -51,11 +51,15 @@ public class ProxyPushStateDispatcherTest {
     when(request.getHeaders("Content-Type")).thenReturn(toEnum("application/json"));
 
     // configure proxy url connection mock
-    when(connection.getInputStream()).thenReturn(new ByteArrayInputStream("hitchhicker".getBytes(Charsets.UTF_8)));
+    byte[] data = "hitchhicker".getBytes(Charsets.UTF_8);
+    when(connection.getErrorStream()).thenReturn(null);
+    when(connection.getInputStream()).thenReturn(new ByteArrayInputStream(data));
+
     Map<String, List<String>> headerFields = new HashMap<>();
     headerFields.put("Content-Type", Lists.newArrayList("application/yaml"));
     when(connection.getHeaderFields()).thenReturn(headerFields);
     when(connection.getResponseCode()).thenReturn(200);
+    when(connection.getContentLength()).thenReturn(data.length);
 
     // configure response mock
     DevServletOutputStream output = new DevServletOutputStream();
@@ -70,6 +74,41 @@ public class ProxyPushStateDispatcherTest {
     // verify response
     verify(response).setStatus(200);
     verify(response).addHeader("Content-Type", "application/yaml");
+
+    assertEquals("hitchhicker", output.stream.toString());
+  }
+
+  @Test
+  public void testGetNotFound() throws IOException {
+    // configure request mock
+    when(request.getMethod()).thenReturn("GET");
+    when(request.getHeaderNames()).thenReturn(toEnum("Content-Type"));
+    when(request.getHeaders("Content-Type")).thenReturn(toEnum("application/json"));
+
+    // configure proxy url connection mock
+    byte[] data = "hitchhicker".getBytes(Charsets.UTF_8);
+    when(connection.getErrorStream()).thenReturn(new ByteArrayInputStream(data));
+
+    Map<String, List<String>> headerFields = new HashMap<>();
+    headerFields.put("Content-Type", Lists.newArrayList("application/yaml"));
+    when(connection.getHeaderFields()).thenReturn(headerFields);
+    when(connection.getResponseCode()).thenReturn(404);
+    when(connection.getContentLength()).thenReturn(data.length);
+
+    // configure response mock
+    DevServletOutputStream output = new DevServletOutputStream();
+    when(response.getOutputStream()).thenReturn(output);
+
+    dispatcher.dispatch(request, response, "/people/trillian");
+
+    // verify connection
+    verify(connection).setRequestMethod("GET");
+    verify(connection).setRequestProperty("Content-Type", "application/json");
+
+    // verify response
+    verify(response).setStatus(404);
+    verify(response).addHeader("Content-Type", "application/yaml");
+
     assertEquals("hitchhicker", output.stream.toString());
   }
 
@@ -82,13 +121,9 @@ public class ProxyPushStateDispatcherTest {
     when(request.getContentLength()).thenReturn(1);
 
     // configure proxy url connection mock
-    when(connection.getInputStream()).thenReturn(new ByteArrayInputStream(new byte[0]));
     Map<String, List<String>> headerFields = new HashMap<>();
     when(connection.getHeaderFields()).thenReturn(headerFields);
     when(connection.getResponseCode()).thenReturn(204);
-
-    // configure response mock
-    when(response.getOutputStream()).thenReturn(new DevServletOutputStream());
 
     ByteArrayOutputStream output = new ByteArrayOutputStream();
     when(connection.getOutputStream()).thenReturn(output);
