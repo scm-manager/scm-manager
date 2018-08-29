@@ -39,6 +39,8 @@ import io.jsonwebtoken.Jwts;
 import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+
+import org.apache.shiro.util.ThreadContext;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import static org.hamcrest.Matchers.*;
@@ -57,6 +59,10 @@ import org.mockito.junit.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class JwtAccessTokenBuilderTest {
   
+  {
+    ThreadContext.unbindSubject();
+  }
+
   @Mock
   private KeyGenerator keyGenerator;
   
