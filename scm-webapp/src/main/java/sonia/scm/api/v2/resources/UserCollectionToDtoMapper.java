@@ -7,7 +7,7 @@ import javax.inject.Inject;
 
 // Mapstruct does not support parameterized (i.e. non-default) constructors. Thus, we need to use field injection.
 @SuppressWarnings("squid:S3306")
-public class UserCollectionToDtoMapper extends BasicCollectionToDtoMapper<User, UserDto> {
+public class UserCollectionToDtoMapper extends BasicCollectionToDtoMapper<User, UserDto, UserToUserDtoMapper> {
 
   private final ResourceLinks resourceLinks;
 

@@ -5,7 +5,7 @@ import sonia.scm.group.GroupPermissions;
 
 import javax.inject.Inject;
 
-public class GroupCollectionToDtoMapper extends BasicCollectionToDtoMapper<Group, GroupDto> {
+public class GroupCollectionToDtoMapper extends BasicCollectionToDtoMapper<Group, GroupDto, GroupToGroupDtoMapper> {
 
   private final ResourceLinks resourceLinks;
 
