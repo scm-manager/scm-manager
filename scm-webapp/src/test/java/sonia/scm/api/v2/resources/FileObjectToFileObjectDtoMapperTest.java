@@ -4,6 +4,7 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.support.SubjectThreadState;
 import org.apache.shiro.util.ThreadContext;
 import org.apache.shiro.util.ThreadState;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,6 +41,10 @@ public class FileObjectToFileObjectDtoMapperTest {
     ThreadContext.bind(subject);
   }
 
+  @After
+  public void unbind() {
+    ThreadContext.unbindSubject();
+  }
 
   @Test
   public void shouldMapAttributesCorrectly() {

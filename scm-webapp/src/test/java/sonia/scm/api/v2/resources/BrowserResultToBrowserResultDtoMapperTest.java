@@ -4,6 +4,7 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.support.SubjectThreadState;
 import org.apache.shiro.util.ThreadContext;
 import org.apache.shiro.util.ThreadState;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -59,6 +60,11 @@ public class BrowserResultToBrowserResultDtoMapperTest {
     fileObject2.setPath("/path/object/2");
     fileObject2.setDescription("description of file object 2");
     fileObject2.setDirectory(true);
+  }
+
+  @After
+  public void unbind() {
+    ThreadContext.unbindSubject();
   }
 
   @Test

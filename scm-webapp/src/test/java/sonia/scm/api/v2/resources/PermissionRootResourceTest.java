@@ -18,6 +18,7 @@ import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.jboss.resteasy.spi.HttpRequest;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -144,6 +145,11 @@ public class PermissionRootResourceTest {
     dispatcher.getProviderFactory().registerProvider(PermissionNotFoundExceptionMapper.class);
     dispatcher.getProviderFactory().registerProvider(PermissionAlreadyExistsExceptionMapper.class);
     dispatcher.getProviderFactory().registerProvider(AuthorizationExceptionMapper.class);
+  }
+
+  @After
+  public void unbind() {
+    ThreadContext.unbindSubject();
   }
 
   @TestFactory
