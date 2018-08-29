@@ -37,6 +37,7 @@ public class RepositoryResource {
   private final Provider<SourceRootResource> sourceRootResource;
   private final Provider<ContentResource> contentResource;
   private final Provider<PermissionRootResource> permissionRootResource;
+  private final Provider<DiffRootResource> diffRootResource;
 
   @Inject
   public RepositoryResource(
@@ -45,7 +46,9 @@ public class RepositoryResource {
     Provider<TagRootResource> tagRootResource,
     Provider<BranchRootResource> branchRootResource,
     Provider<ChangesetRootResource> changesetRootResource,
-    Provider<SourceRootResource> sourceRootResource, Provider<ContentResource> contentResource, Provider<PermissionRootResource> permissionRootResource) {
+    Provider<SourceRootResource> sourceRootResource, Provider<ContentResource> contentResource,
+    Provider<PermissionRootResource> permissionRootResource,
+    Provider<DiffRootResource> diffRootResource) {
     this.dtoToRepositoryMapper = dtoToRepositoryMapper;
     this.manager = manager;
     this.repositoryToDtoMapper = repositoryToDtoMapper;
@@ -56,6 +59,7 @@ public class RepositoryResource {
     this.sourceRootResource = sourceRootResource;
     this.contentResource = contentResource;
     this.permissionRootResource = permissionRootResource;
+    this.diffRootResource = diffRootResource;
   }
 
   /**
@@ -142,6 +146,11 @@ public class RepositoryResource {
   @Path("tags/")
   public TagRootResource tags() {
     return tagRootResource.get();
+  }
+
+  @Path("diff/")
+  public DiffRootResource diff() {
+    return diffRootResource.get();
   }
 
   @Path("branches/")
