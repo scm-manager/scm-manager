@@ -13,6 +13,8 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import sonia.scm.PageResult;
+import sonia.scm.api.rest.JSONContextResolver;
+import sonia.scm.api.rest.ObjectMapperProvider;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupManager;
 import sonia.scm.web.VndMediaType;
@@ -28,8 +30,8 @@ import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -74,6 +76,7 @@ public class GroupRootResourceTest {
     GroupRootResource groupRootResource = new GroupRootResource(MockProvider.of(groupCollectionResource), MockProvider.of(groupResource));
 
     dispatcher = createDispatcher(groupRootResource);
+    dispatcher.getProviderFactory().registerProviderInstance(new JSONContextResolver(new ObjectMapperProvider().get()));
   }
 
   @Test
@@ -141,6 +144,23 @@ public class GroupRootResourceTest {
     dispatcher.invoke(request, response);
 
     assertEquals(HttpServletResponse.SC_NOT_FOUND, response.getStatus());
+  }
+
+  @Test
+  public void updateShouldFailOnConcurrentModification() throws URISyntaxException, IOException {
+    URL url = Resources.getResource("sonia/scm/api/v2/group-test-update-concurrent-modification.json");
+    byte[] groupJson = Resources.toByteArray(url);
+
+    MockHttpRequest request = MockHttpRequest
+      .put("/" + GroupRootResource.GROUPS_PATH_V2 + "admin")
+      .contentType(VndMediaType.GROUP)
+      .content(groupJson);
+
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_CONFLICT, response.getStatus());
   }
 
   @Test
@@ -216,6 +236,7 @@ public class GroupRootResourceTest {
     group.setName("admin");
     group.setCreationDate(0L);
     group.setMembers(Collections.singletonList("user"));
+    group.setLastModified(1234L);
     return group;
   }
 }

@@ -3,6 +3,7 @@ package sonia.scm.api.v2.resources;
 import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
+import sonia.scm.ConcurrentModificationException;
 import sonia.scm.NotFoundException;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupManager;
@@ -97,7 +98,7 @@ public class GroupResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
-  public Response update(@PathParam("id") String name, @Valid GroupDto groupDto) throws NotFoundException {
+  public Response update(@PathParam("id") String name, @Valid GroupDto groupDto) throws NotFoundException, ConcurrentModificationException {
     return adapter.update(name, existing -> dtoToGroupMapper.map(groupDto));
   }
 }

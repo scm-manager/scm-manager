@@ -27,7 +27,6 @@ public class UserDto extends HalRepresentation {
   @Pattern(regexp = "^[A-z0-9\\.\\-_@]|[^ ]([A-z0-9\\.\\-_@ ]*[A-z0-9\\.\\-_@]|[^ ])?$")
   private String name;
   private String password;
-  @NotEmpty
   private String type;
   private Map<String, String> properties;
 

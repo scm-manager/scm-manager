@@ -1,6 +1,7 @@
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.HalRepresentation;
+import sonia.scm.ConcurrentModificationException;
 import sonia.scm.Manager;
 import sonia.scm.ModelObject;
 import sonia.scm.NotFoundException;
@@ -57,13 +58,21 @@ class SingleResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
    * Update the model object for the given id according to the given function and returns a corresponding http response.
    * This handles all corner cases, eg. no matching object for the id or missing privileges.
    */
-  public Response update(Supplier<Optional<MODEL_OBJECT>> reader, Function<MODEL_OBJECT, MODEL_OBJECT> applyChanges, Predicate<MODEL_OBJECT> hasSameKey) throws NotFoundException {
+  public Response update(Supplier<Optional<MODEL_OBJECT>> reader, Function<MODEL_OBJECT, MODEL_OBJECT> applyChanges, Predicate<MODEL_OBJECT> hasSameKey) throws NotFoundException, ConcurrentModificationException {
     MODEL_OBJECT existingModelObject = reader.get().orElseThrow(NotFoundException::new);
     MODEL_OBJECT changedModelObject = applyChanges.apply(existingModelObject);
     if (!hasSameKey.test(changedModelObject)) {
       return Response.status(BAD_REQUEST).entity("illegal change of id").build();
     }
+    else if (modelObjectWasModifiedConcurrently(existingModelObject, changedModelObject)) {
+      throw new ConcurrentModificationException();
+    }
     return update(getId(existingModelObject), changedModelObject);
+  }
+
+  private boolean modelObjectWasModifiedConcurrently(MODEL_OBJECT existing, MODEL_OBJECT updated) {
+    return (existing.getLastModified() != null && updated.getLastModified() != null)
+      && (existing.getLastModified() > updated.getLastModified());
   }
 
   public Response delete(Supplier<Optional<MODEL_OBJECT>> reader) {

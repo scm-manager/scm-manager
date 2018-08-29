@@ -1,13 +1,13 @@
 package sonia.scm.api.v2.resources;
 
-import com.fasterxml.jackson.databind.node.TextNode;
 import org.junit.Test;
 import org.mapstruct.factory.Mappers;
 import sonia.scm.group.Group;
 
+import java.time.Instant;
 import java.util.Arrays;
 
-import static java.util.Arrays.asList;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
 public class GroupDtoToGroupMapperTest {
@@ -16,8 +16,10 @@ public class GroupDtoToGroupMapperTest {
   public void shouldMapAttributes() {
     GroupDto dto = new GroupDto();
     dto.setName("group");
+    dto.setLastModified(Instant.ofEpochMilli(1234));
     Group group = Mappers.getMapper(GroupDtoToGroupMapper.class).map(dto);
     assertEquals("group", group.getName());
+    assertThat(group.getLastModified()).isEqualTo(dto.getLastModified().toEpochMilli());
   }
 
   @Test
