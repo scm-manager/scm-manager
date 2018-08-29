@@ -3,6 +3,7 @@ package sonia.scm.api.v2.resources;
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.io.Resources;
+import org.apache.shiro.util.ThreadContext;
 import org.jboss.resteasy.core.Dispatcher;
 import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.mock.MockHttpRequest;
@@ -21,7 +22,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 @SubjectAware(
@@ -46,6 +49,13 @@ public class ConfigResourceTest {
   private ConfigDtoToScmConfigurationMapperImpl dtoToConfigMapper;
   @InjectMocks
   private ScmConfigurationToConfigDtoMapperImpl configToDtoMapper;
+
+  public ConfigResourceTest() {
+      // cleanup state that might have been left by other tests
+      ThreadContext.unbindSecurityManager();
+      ThreadContext.unbindSubject();
+      ThreadContext.remove();
+  }
 
   @Before
   public void prepareEnvironment() {

@@ -81,7 +81,7 @@ public class RepositoryArchiveITCase
   //~--- methods --------------------------------------------------------------
 
   @Parameterized.Parameters(name = "{0}")
-  public static Collection<String> createParameters() {
+  public static Collection<String[]> createParameters() {
     return IntegrationTestUtil.createRepositoryTypeParameters();
   }
 

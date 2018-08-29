@@ -60,7 +60,7 @@ import java.util.List;
  */
 @StaticPermissions(
   value = "repository",
-  permissions = {"read", "write", "modify", "delete", "healthCheck"}
+  permissions = {"read", "modify", "delete", "healthCheck", "pull", "push", "permissionRead", "permissionWrite"}
 )
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "repositories")

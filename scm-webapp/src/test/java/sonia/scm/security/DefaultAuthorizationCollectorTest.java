@@ -40,15 +40,12 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.hamcrest.Matchers;
-import org.junit.Test;
 import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import static org.mockito.Mockito.*;
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
-import org.junit.Rule;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
@@ -59,6 +56,16 @@ import sonia.scm.repository.RepositoryDAO;
 import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.user.User;
 import sonia.scm.user.UserTestData;
+
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyObject;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Unit tests for {@link AuthorizationCollector}.
@@ -200,7 +207,7 @@ public class DefaultAuthorizationCollectorTest {
     AuthorizationInfo authInfo = collector.collect();
     assertThat(authInfo.getRoles(), Matchers.containsInAnyOrder(Role.USER));
     assertThat(authInfo.getObjectPermissions(), nullValue());
-    assertThat(authInfo.getStringPermissions(), containsInAnyOrder("repository:read:one", "repository:read,write:two"));
+    assertThat(authInfo.getStringPermissions(), containsInAnyOrder("repository:read,pull:one", "repository:read,pull,push:two"));
   }
   
   /**

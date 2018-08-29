@@ -62,7 +62,7 @@ public class ContentResource {
   })
   public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision, @PathParam("path") String path) {
     StreamingOutput stream = createStreamingOutput(namespace, name, revision, path);
-      try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
+    try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
       Response.ResponseBuilder responseBuilder = Response.ok(stream);
       return createContentHeader(namespace, name, revision, path, repositoryService, responseBuilder);
     } catch (RepositoryNotFoundException e) {
