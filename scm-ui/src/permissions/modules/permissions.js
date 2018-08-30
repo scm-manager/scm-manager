@@ -2,7 +2,7 @@
 import { apiClient } from "../../apiclient";
 import * as types from "../../modules/types";
 import type { Action } from "../../types/Action";
-import type { PermissionCollection, Permission } from "../types/Permissions";
+import type {PermissionCollection, Permission, PermissionEntry} from "../types/Permissions";
 import { isPending } from "../../modules/pending";
 import { getFailure } from "../../modules/failure";
 import { Dispatch } from "redux";
@@ -206,7 +206,7 @@ export function modifyPermissionReset(
 
 // create permission
 export function createPermission(
-  permission: Permission,
+  permission: PermissionEntry,
   namespace: string,
   repoName: string,
   callback?: () => void
@@ -240,7 +240,7 @@ export function createPermission(
 }
 
 export function createPermissionPending(
-  permission: Permission,
+  permission: PermissionEntry,
   namespace: string,
   repoName: string
 ): Action {
@@ -252,7 +252,7 @@ export function createPermissionPending(
 }
 
 export function createPermissionSuccess(
-  permission: Permission,
+  permission: PermissionEntry,
   namespace: string,
   repoName: string
 ): Action {

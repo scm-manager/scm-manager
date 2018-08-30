@@ -40,6 +40,9 @@ import reducer, {
 } from "./permissions";
 import type { Permission, PermissionCollection } from "../types/Permissions";
 
+const namespace = "hitchhiker";
+const repoName = "puzzle42";
+
 const hitchhiker_puzzle42Permission_user_eins: Permission = {
   name: "user_eins",
   type: "READ",
@@ -115,7 +118,7 @@ describe("permission fetch", () => {
       {
         type: FETCH_PERMISSIONS_PENDING,
         payload: {
-          namespace: "hitchhiker",
+          namespace: namespace,
           repoName: "puzzle42"
         },
         itemId: "hitchhiker/puzzle42"

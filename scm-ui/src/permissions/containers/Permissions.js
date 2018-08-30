@@ -13,7 +13,7 @@ import {
 } from "../modules/permissions";
 import Loading from "../../components/Loading";
 import ErrorPage from "../../components/ErrorPage";
-import type { Permission, PermissionCollection } from "../types/Permissions";
+import type {Permission, PermissionCollection, PermissionEntry} from "../types/Permissions";
 import SinglePermission from "./SinglePermission";
 import CreatePermissionForm from "../components/CreatePermissionForm";
 
@@ -29,7 +29,7 @@ type Props = {
   //dispatch functions
   fetchPermissions: (namespace: string, repoName: string) => void,
   createPermission: (
-    permission: Permission,
+    permission: PermissionEntry,
     namespace: string,
     repoName: string
   ) => void,
@@ -143,7 +143,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(fetchPermissions(namespace, repoName));
     },
     createPermission: (
-      permission: Permission,
+      permission: PermissionEntry,
       namespace: string,
       repoName: string
     ) => {
