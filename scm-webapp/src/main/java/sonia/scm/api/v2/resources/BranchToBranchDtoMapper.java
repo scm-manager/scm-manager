@@ -29,7 +29,7 @@ public abstract class BranchToBranchDtoMapper {
       .self(resourceLinks.branch().self(namespaceAndName, target.getName()))
       .single(linkBuilder("history", resourceLinks.branch().history(namespaceAndName, target.getName())).build())
       .single(linkBuilder("changeset", resourceLinks.changeset().changeset(namespaceAndName.getNamespace(), namespaceAndName.getName(), target.getRevision())).build())
-      .single(linkBuilder("source", resourceLinks.source().source(namespaceAndName.getNamespace(), namespaceAndName.getName(), target.getRevision())).build());
+      .single(linkBuilder("source", resourceLinks.source().self(namespaceAndName.getNamespace(), namespaceAndName.getName(), target.getRevision())).build());
     target.add(linksBuilder.build());
   }
 }

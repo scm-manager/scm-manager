@@ -66,9 +66,7 @@ public class HgBrowseCommand extends AbstractCommand implements BrowseCommand
   //~--- get methods ----------------------------------------------------------
 
   @Override
-  public BrowserResult getBrowserResult(BrowseCommandRequest request)
-    throws IOException
-  {
+  public BrowserResult getBrowserResult(BrowseCommandRequest request) throws IOException {
     HgFileviewCommand cmd = HgFileviewCommand.on(open());
 
     if (!Strings.isNullOrEmpty(request.getRevision()))
@@ -99,6 +97,12 @@ public class HgBrowseCommand extends AbstractCommand implements BrowseCommand
     BrowserResult result = new BrowserResult();
 
     result.setFiles(cmd.execute());
+
+    if (!Strings.isNullOrEmpty(request.getRevision())) {
+      result.setRevision(request.getRevision());
+    } else {
+      result.setRevision("tip");
+    }
 
     return result;
   }

@@ -47,7 +47,7 @@ public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Reposit
       }
     }
     linksBuilder.single(link("changesets", resourceLinks.changeset().self(target.getNamespace(), target.getName())));
-    linksBuilder.single(link("sources", resourceLinks.source().self(target.getNamespace(), target.getName())));
+    linksBuilder.single(link("sources", resourceLinks.source().selfWithoutRevision(target.getNamespace(), target.getName())));
     target.add(linksBuilder.build());
   }
 }

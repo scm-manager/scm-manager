@@ -60,8 +60,8 @@ public class ContentResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision, @PathParam("path") String path) {
+    StreamingOutput stream = createStreamingOutput(namespace, name, revision, path);
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
-      StreamingOutput stream = createStreamingOutput(namespace, name, revision, path, repositoryService);
       Response.ResponseBuilder responseBuilder = Response.ok(stream);
       return createContentHeader(namespace, name, revision, path, repositoryService, responseBuilder);
     } catch (RepositoryNotFoundException e) {
@@ -70,11 +70,14 @@ public class ContentResource {
     }
   }
 
-  private StreamingOutput createStreamingOutput(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision, @PathParam("path") String path, RepositoryService repositoryService) {
+  private StreamingOutput createStreamingOutput(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision, @PathParam("path") String path) {
     return os -> {
-      try {
+      try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
         repositoryService.getCatCommand().setRevision(revision).retriveContent(os, path);
         os.close();
+      } catch (RepositoryNotFoundException e) {
+        LOG.debug("repository {}/{} not found", path, namespace, name, e);
+        throw new WebApplicationException(Status.NOT_FOUND);
       } catch (PathNotFoundException e) {
         LOG.debug("path '{}' not found in repository {}/{}", path, namespace, name, e);
         throw new WebApplicationException(Status.NOT_FOUND);
@@ -141,7 +144,9 @@ public class ContentResource {
     try {
       byte[] buffer = new byte[HEAD_BUFFER_SIZE];
       int length = stream.read(buffer);
-      if (length < buffer.length) {
+      if (length < 0) { // empty file
+        return new byte[]{};
+      } else if (length < buffer.length) {
         return Arrays.copyOf(buffer, length);
       } else {
         return buffer;

@@ -17,6 +17,7 @@ import org.jboss.resteasy.core.Dispatcher;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.jboss.resteasy.spi.HttpRequest;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -139,6 +140,11 @@ public class PermissionRootResourceTest {
     dispatcher = createDispatcher(repositoryRootResource);
     subjectThreadState.bind();
     ThreadContext.bind(subject);
+  }
+
+  @After
+  public void unbind() {
+    ThreadContext.unbindSubject();
   }
 
   @TestFactory

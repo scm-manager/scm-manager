@@ -112,6 +112,10 @@ public class SvnBrowseCommand extends AbstractSvnCommand
         }
       }
 
+      if (revisionNumber == -1) {
+        revisionNumber = svnRepository.getLatestRevision();
+      }
+
       result = new BrowserResult();
       result.setRevision(String.valueOf(revisionNumber));
       result.setFiles(children);

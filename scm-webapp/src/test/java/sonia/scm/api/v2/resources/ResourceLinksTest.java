@@ -135,8 +135,8 @@ public class ResourceLinksTest {
 
   @Test
   public void shouldCreateCorrectBranchSourceUrl() {
-    String url = resourceLinks.source().source("space", "name", "revision");
-    assertEquals(BASE_URL + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/name/sources/revision", url);
+    String url = resourceLinks.source().selfWithoutRevision("space", "name");
+    assertEquals(BASE_URL + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/name/sources/", url);
   }
 
   @Test
@@ -147,13 +147,18 @@ public class ResourceLinksTest {
 
   @Test
   public void shouldCreateCorrectSourceCollectionUrl() {
-    String url = resourceLinks.source().self("space", "repo");
+    String url = resourceLinks.source().selfWithoutRevision("space", "repo");
     assertEquals(BASE_URL + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/sources/", url);
   }
 
   @Test
+  public void shouldCreateCorrectSourceUrlWithFilename() {
+    String url = resourceLinks.source().sourceWithPath("foo", "bar", "rev", "file");
+    assertEquals(BASE_URL + RepositoryRootResource.REPOSITORIES_PATH_V2 + "foo/bar/sources/rev/file", url);
+  }
+  @Test
   public void shouldCreateCorrectPermissionCollectionUrl() {
-    String url = resourceLinks.source().self("space", "repo");
+    String url = resourceLinks.source().selfWithoutRevision("space", "repo");
     assertEquals(BASE_URL + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/sources/", url);
   }
 

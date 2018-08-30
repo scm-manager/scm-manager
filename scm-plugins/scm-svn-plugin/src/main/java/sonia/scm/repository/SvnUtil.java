@@ -347,6 +347,7 @@ public final class SvnUtil
   }
 
   public static long getRevisionNumber(String revision) throws RevisionNotFoundException {
+    // REVIEW Bei SVN wird ohne Revision die -1 genommen, was zu einem Fehler führt
     long revisionNumber = -1;
 
     if (Util.isNotEmpty(revision))

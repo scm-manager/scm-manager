@@ -15,6 +15,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 
+import static java.lang.Thread.sleep;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertNotNull;
 import static sonia.scm.it.RestUtil.given;
 import static sonia.scm.it.ScmTypes.availableScmTypes;
@@ -68,5 +70,58 @@ public class RepositoryAccessITCase {
       .path("_embedded.branches[0].name");
 
     assertNotNull(branchName);
+  }
+
+  @Test
+  public void shouldReadContent() throws IOException, InterruptedException {
+    RepositoryClient repositoryClient = RepositoryUtil.createRepositoryClient(repositoryType, folder);
+    RepositoryUtil.createAndCommitFile(repositoryClient, "scmadmin", "a.txt", "a");
+    tempFolder.newFolder("subfolder");
+    RepositoryUtil.createAndCommitFile(repositoryClient, "scmadmin", "subfolder/a.txt", "sub-a");
+
+    sleep(1000);
+
+    String sourcesUrl = given()
+      .when()
+      .get(TestData.getDefaultRepositoryUrl(repositoryType))
+      .then()
+      .statusCode(HttpStatus.SC_OK)
+      .extract()
+      .path("_links.sources.href");
+
+    String rootContentUrl = given()
+      .when()
+      .get(sourcesUrl)
+      .then()
+      .statusCode(HttpStatus.SC_OK)
+      .extract()
+      .path("files.find{it.name=='a.txt'}._links.self.href");
+    given()
+      .when()
+      .get(rootContentUrl)
+      .then()
+      .statusCode(HttpStatus.SC_OK)
+      .body(equalTo("a"));
+
+    String subfolderSourceUrl = given()
+      .when()
+      .get(sourcesUrl)
+      .then()
+      .statusCode(HttpStatus.SC_OK)
+      .extract()
+      .path("files.find{it.name=='subfolder'}._links.self.href");
+    String subfolderContentUrl= given()
+      .when()
+      .get(subfolderSourceUrl)
+      .then()
+      .statusCode(HttpStatus.SC_OK)
+      .extract()
+      .path("files[0]._links.self.href");
+    given()
+      .when()
+      .get(subfolderContentUrl)
+      .then()
+      .statusCode(HttpStatus.SC_OK)
+      .body(equalTo("sub-a"));
   }
 }
