@@ -32,7 +32,8 @@
     "repositories": "Repositories",
     "users": "Users",
     "logout": "Logout",
-    "groups": "Groups"
+    "groups": "Groups",
+    "config": "Configuration"
   },
   "paginator": {
     "next": "Next",

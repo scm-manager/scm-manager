@@ -19,6 +19,8 @@ import Groups from "../groups/containers/Groups";
 import SingleGroup from "../groups/containers/SingleGroup";
 import AddGroup from "../groups/containers/AddGroup";
 
+import Config from "../config/containers/Config";
+
 type Props = {
   authenticated?: boolean
 };
@@ -97,6 +99,12 @@ class Main extends React.Component<Props> {
             exact
             path="/groups/:page"
             component={Groups}
+            authenticated={authenticated}
+          />
+          <ProtectedRoute
+            exact
+            path="/config"
+            component={Config}
             authenticated={authenticated}
           />
         </Switch>

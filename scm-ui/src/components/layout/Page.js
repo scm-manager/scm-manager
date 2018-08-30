@@ -2,9 +2,11 @@
 import * as React from "react";
 import Loading from "./../Loading";
 import ErrorNotification from "./../ErrorNotification";
+import Title from "./Title";
+import Subtitle from "./Subtitle";
 
 type Props = {
-  title: string,
+  title?: string,
   subtitle?: string,
   loading?: boolean,
   error?: Error,
@@ -14,25 +16,17 @@ type Props = {
 
 class Page extends React.Component<Props> {
   render() {
-    const { title, error } = this.props;
+    const { title, error, subtitle } = this.props;
     return (
       <section className="section">
         <div className="container">
-          <h1 className="title">{title}</h1>
-          {this.renderSubtitle()}
+          <Title title={title} />
+          <Subtitle subtitle={subtitle} />
           <ErrorNotification error={error} />
           {this.renderContent()}
         </div>
       </section>
     );
-  }
-
-  renderSubtitle() {
-    const { subtitle } = this.props;
-    if (subtitle) {
-      return <h2 className="subtitle">{subtitle}</h2>;
-    }
-    return null;
   }
 
   renderContent() {
