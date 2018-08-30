@@ -25,6 +25,8 @@ public class MapperModule extends AbstractModule {
     bind(RepositoryTypeCollectionToDtoMapper.class);
 
     bind(BranchToBranchDtoMapper.class).to(Mappers.getMapper(BranchToBranchDtoMapper.class).getClass());
+    bind(PermissionDtoToPermissionMapper.class).to(Mappers.getMapper(PermissionDtoToPermissionMapper.class).getClass());
+    bind(PermissionToPermissionDtoMapper.class).to(Mappers.getMapper(PermissionToPermissionDtoMapper.class).getClass());
 
     // no mapstruct required
     bind(UIPluginDtoMapper.class);

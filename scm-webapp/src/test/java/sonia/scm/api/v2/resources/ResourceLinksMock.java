@@ -23,7 +23,7 @@ public class ResourceLinksMock {
     when(resourceLinks.branchCollection()).thenReturn(new ResourceLinks.BranchCollectionLinks(uriInfo));
     when(resourceLinks.changeset()).thenReturn(new ResourceLinks.ChangesetLinks(uriInfo));
     when(resourceLinks.source()).thenReturn(new ResourceLinks.SourceLinks(uriInfo));
-    when(resourceLinks.permissionCollection()).thenReturn(new ResourceLinks.PermissionCollectionLinks(uriInfo));
+    when(resourceLinks.permission()).thenReturn(new ResourceLinks.PermissionLinks(uriInfo));
     when(resourceLinks.config()).thenReturn(new ResourceLinks.ConfigLinks(uriInfo));
     when(resourceLinks.branch()).thenReturn(new ResourceLinks.BranchLinks(uriInfo));
     when(resourceLinks.repositoryType()).thenReturn(new ResourceLinks.RepositoryTypeLinks(uriInfo));

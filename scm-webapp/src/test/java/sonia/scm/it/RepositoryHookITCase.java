@@ -33,11 +33,7 @@ package sonia.scm.it;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 import com.sun.jersey.api.client.WebResource;
-import org.junit.After;
-import org.junit.Assume;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -208,7 +204,7 @@ public class RepositoryHookITCase extends AbstractAdminITCaseBase
    * @return repository types test parameter
    */
   @Parameters(name = "{0}")
-  public static Collection<String> createParameters()
+  public static Collection<String[]> createParameters()
   {
     return IntegrationTestUtil.createRepositoryTypeParameters();
   }

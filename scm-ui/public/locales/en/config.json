@@ -1,0 +1,68 @@
+{
+  "config": {
+    "navigation-title": "Navigation"
+  },
+  "global-config": {
+    "title": "Configuration",
+    "navigation-label": "Global Configuration",
+    "error-title": "Error",
+    "error-subtitle": "Unknown Config Error"
+  },
+  "config-form": {
+    "submit": "Submit",
+    "no-permission-notification": "Please note: You do not have the permission to edit the config!"
+  },
+  "proxy-settings": {
+    "name": "Proxy Settings",
+    "proxy-password": "Proxy Password",
+    "proxy-port": "Proxy Port",
+    "proxy-server": "Proxy Server",
+    "proxy-user": "Proxy User",
+    "enable-proxy": "Enable Proxy",
+    "proxy-excludes": "Proxy Excludes",
+    "remove-proxy-exclude-button": "Remove Proxy Exclude",
+    "add-proxy-exclude-error": "The proxy exclude you want to add is not valid",
+    "add-proxy-exclude-textfield": "Add proxy exclude you want to add to proxy excludes here",
+    "add-proxy-exclude-button": "Add Proxy Exclude"
+  },
+  "base-url-settings": {
+    "name": "Base URL Settings",
+    "base-url": "Base URL",
+    "force-base-url": "Force Base URL"
+  },
+  "admin-settings": {
+    "name": "Administration Settings",
+    "admin-groups": "Admin Groups",
+    "admin-users": "Admin Users",
+    "remove-group-button": "Remove Admin Group",
+    "remove-user-button": "Remove Admin User",
+    "add-group-error": "The group name you want to add is not valid",
+    "add-group-textfield": "Add group you want to add to admin groups here",
+    "add-group-button": "Add Admin Group",
+    "add-user-error": "The user name you want to add is not valid",
+    "add-user-textfield": "Add user you want to add to admin users here",
+    "add-user-button": "Add Admin User"
+  },
+  "login-attempt": {
+    "name": "Login Attempt",
+    "login-attempt-limit": "Login Attempt Limit",
+    "login-attempt-limit-timeout": "Login Attempt Limit Timeout"
+  },
+  "general-settings": {
+    "realm-description": "Realm Description",
+    "enable-repository-archive": "Enable Repository Archive",
+    "disable-grouping-grid": "Disable Grouping Grid",
+    "date-format": "Date Format",
+    "anonymous-access-enabled": "Anonymous Access Enabled",
+    "skip-failed-authenticators": "Skip Failed Authenticators",
+    "plugin-url": "Plugin URL",
+    "enabled-xsrf-protection": "Enabled XSRF Protection",
+    "default-namespace-strategy": "Default Namespace Strategy"
+  },
+  "validation": {
+    "date-format-invalid": "The date format is not valid",
+    "login-attempt-limit-timeout-invalid": "This is not a number",
+    "login-attempt-limit-invalid": "This is not a number",
+    "plugin-url-invalid": "This is not a valid url"
+  }
+}
