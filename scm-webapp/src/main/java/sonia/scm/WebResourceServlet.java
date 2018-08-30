@@ -30,10 +30,10 @@ public class WebResourceServlet extends HttpServlet {
   /**
    * exclude api requests and the old frontend servlets.
    *
-   * TODO remove old frontend servlets
+   * TODO remove old protocol servlets
    */
   @VisibleForTesting
-  static final String PATTERN = "/(?!api/).*";
+  static final String PATTERN = "/(?!api/|git/|hg/|svn/).*";
 
   private static final Logger LOG = LoggerFactory.getLogger(WebResourceServlet.class);
 
