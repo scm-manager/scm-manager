@@ -1,48 +1,32 @@
 //@flow
 import React from "react";
 import { translate } from "react-i18next";
-import { RemoveEntryOfTableButton } from "../../../components/buttons";
+import ArrayConfigTable from "./ArrayConfigTable";
 
 type Props = {
   adminUsers: string[],
-  t: string => string,
   onChange: (boolean, any, string) => void,
-  disabled: boolean
+  disabled: boolean,
+
+  // context props
+  t: string => string
 };
 
-type State = {};
-
-class AdminUserTable extends React.Component<Props, State> {
+class AdminUserTable extends React.Component<Props> {
   render() {
-    const { t, disabled } = this.props;
+    const { adminUsers, t, disabled } = this.props;
     return (
-      <div>
-        <label className="label">{t("admin-settings.admin-users")}</label>
-        <table className="table is-hoverable is-fullwidth">
-          <tbody>
-            {this.props.adminUsers.map(user => {
-              return (
-                <tr key={user}>
-                  <td key={user}>{user}</td>
-                  <td>
-                    <RemoveEntryOfTableButton
-                      entryname={user}
-                      removeEntry={this.removeEntry}
-                      disabled={disabled}
-                      label={t("admin-settings.remove-user-button")}
-                    />
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
+      <ArrayConfigTable
+        items={adminUsers}
+        label={t("admin-settings.admin-users")}
+        removeLabel={t("admin-settings.remove-user-button")}
+        onRemove={this.removeEntry}
+        disabled={disabled}
+      />
     );
   }
 
-  removeEntry = (username: string) => {
-    const newUsers = this.props.adminUsers.filter(name => name !== username);
+  removeEntry = (newUsers: string[]) => {
     this.props.onChange(true, newUsers, "adminUsers");
   };
 }

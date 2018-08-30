@@ -1,7 +1,7 @@
 //@flow
 import React from "react";
 import { translate } from "react-i18next";
-import { RemoveEntryOfTableButton } from "../../../components/buttons";
+import ArrayConfigTable from "./ArrayConfigTable";
 
 type Props = {
   proxyExcludes: string[],
@@ -14,37 +14,19 @@ type State = {};
 
 class ProxyExcludesTable extends React.Component<Props, State> {
   render() {
-    const { t } = this.props;
+    const { proxyExcludes, disabled, t } = this.props;
     return (
-      <div>
-        <label className="label">{t("proxy-settings.proxy-excludes")}</label>
-        <table className="table is-hoverable is-fullwidth">
-          <tbody>
-            {this.props.proxyExcludes.map(excludes => {
-              return (
-                <tr key={excludes}>
-                  <td key={excludes}>{excludes}</td>
-                  <td>
-                    <RemoveEntryOfTableButton
-                      entryname={excludes}
-                      removeEntry={this.removeEntry}
-                      disabled={this.props.disabled}
-                      label={t("proxy-settings.remove-proxy-exclude-button")}
-                    />
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
+      <ArrayConfigTable
+        items={proxyExcludes}
+        label={t("proxy-settings.proxy-excludes")}
+        removeLabel={t("proxy-settings.remove-proxy-exclude-button")}
+        onRemove={this.removeEntry}
+        disabled={disabled}
+      />
     );
   }
 
-  removeEntry = (excludename: string) => {
-    const newExcludes = this.props.proxyExcludes.filter(
-      name => name !== excludename
-    );
+  removeEntry = (newExcludes: string[]) => {
     this.props.onChange(true, newExcludes, "proxyExcludes");
   };
 }

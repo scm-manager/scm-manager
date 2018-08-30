@@ -1,48 +1,34 @@
 //@flow
 import React from "react";
 import { translate } from "react-i18next";
-import { RemoveEntryOfTableButton } from "../../../components/buttons";
+import ArrayConfigTable from "./ArrayConfigTable";
 
 type Props = {
   adminGroups: string[],
-  t: string => string,
   onChange: (boolean, any, string) => void,
-  disabled: boolean
+  disabled: boolean,
+
+  // context props
+  t: string => string
 };
 
 type State = {};
 
 class AdminGroupTable extends React.Component<Props, State> {
   render() {
-    const { t, disabled } = this.props;
+    const { t, disabled, adminGroups } = this.props;
     return (
-      <div>
-        <label className="label">{t("admin-settings.admin-groups")}</label>
-        <table className="table is-hoverable is-fullwidth">
-          <tbody>
-            {this.props.adminGroups.map(group => {
-              return (
-                <tr key={group}>
-                  <td key={group}>{group}</td>
-                  <td>
-                    <RemoveEntryOfTableButton
-                      entryname={group}
-                      removeEntry={this.removeEntry}
-                      disabled={disabled}
-                      label={t("admin-settings.remove-group-button")}
-                    />
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
+      <ArrayConfigTable
+        items={adminGroups}
+        label={t("admin-settings.admin-groups")}
+        removeLabel={t("admin-settings.remove-group-button")}
+        onRemove={this.removeEntry}
+        disabled={disabled}
+      />
     );
   }
 
-  removeEntry = (groupname: string) => {
-    const newGroups = this.props.adminGroups.filter(name => name !== groupname);
+  removeEntry = (newGroups: string[]) => {
     this.props.onChange(true, newGroups, "adminGroups");
   };
 }
