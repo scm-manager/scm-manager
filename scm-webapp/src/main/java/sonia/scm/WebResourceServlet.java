@@ -33,7 +33,7 @@ public class WebResourceServlet extends HttpServlet {
    * TODO remove old protocol servlets
    */
   @VisibleForTesting
-  static final String PATTERN = "/(?!api/|git/|hg/|svn/).*";
+  static final String PATTERN = "/(?!api/|git/|hg/|svn/|debug/).*";
 
   private static final Logger LOG = LoggerFactory.getLogger(WebResourceServlet.class);
 
