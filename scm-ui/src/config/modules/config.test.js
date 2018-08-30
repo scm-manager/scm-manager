@@ -56,6 +56,35 @@ const config = {
   }
 };
 
+const configWithNullValues = {
+  proxyPassword: null,
+  proxyPort: 8080,
+  proxyServer: "proxy.mydomain.com",
+  proxyUser: null,
+  enableProxy: false,
+  realmDescription: "SONIA :: SCM Manager",
+  enableRepositoryArchive: false,
+  disableGroupingGrid: false,
+  dateFormat: "YYYY-MM-DD HH:mm:ss",
+  anonymousAccessEnabled: false,
+  adminGroups: null,
+  adminUsers: null,
+  baseUrl: "http://localhost:8081/scm",
+  forceBaseUrl: false,
+  loginAttemptLimit: -1,
+  proxyExcludes: null,
+  skipFailedAuthenticators: false,
+  pluginUrl:
+    "http://plugins.scm-manager.org/scm-plugin-backend/api/{version}/plugins?os={os}&arch={arch}&snapshot=false",
+  loginAttemptLimitTimeout: 300,
+  enabledXsrfProtection: true,
+  defaultNamespaceStrategy: "sonia.scm.repository.DefaultNamespaceStrategy",
+  _links: {
+    self: { href: "http://localhost:8081/scm/api/rest/v2/config" },
+    update: { href: "http://localhost:8081/scm/api/rest/v2/config" }
+  }
+};
+
 const responseBody = {
   entries: config,
   configUpdatePermission: false
@@ -174,6 +203,14 @@ describe("config reducer", () => {
   it("should update state according to FETCH_CONFIG_SUCCESS action", () => {
     const newState = reducer({}, fetchConfigSuccess(config));
     expect(newState.entries).toBe(config);
+  });
+
+  it("should return empty arrays for null values", () => {
+    const config = reducer({}, fetchConfigSuccess(configWithNullValues))
+      .entries;
+    expect(config.adminUsers).toEqual([]);
+    expect(config.adminGroups).toEqual([]);
+    expect(config.proxyExcludes).toEqual([]);
   });
 });
 

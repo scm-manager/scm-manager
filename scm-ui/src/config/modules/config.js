@@ -117,12 +117,26 @@ export function modifyConfigReset() {
 
 //reducer
 
+function removeNullValues(config: Config) {
+  if (!config.adminGroups) {
+    config.adminGroups = [];
+  }
+  if (!config.adminUsers) {
+    config.adminUsers = [];
+  }
+  if (!config.proxyExcludes) {
+    config.proxyExcludes = [];
+  }
+  return config;
+}
+
 function reducer(state: any = {}, action: any = {}) {
   switch (action.type) {
     case FETCH_CONFIG_SUCCESS:
+      const config = removeNullValues(action.payload);
       return {
         ...state,
-        entries: action.payload,
+        entries: config,
         configUpdatePermission: action.payload._links.update ? true : false
       };
     default:
