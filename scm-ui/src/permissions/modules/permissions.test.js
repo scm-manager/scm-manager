@@ -33,7 +33,10 @@ import reducer, {
   DELETE_PERMISSION_PENDING,
   DELETE_PERMISSION_SUCCESS,
   DELETE_PERMISSION_FAILURE,
-  createPermissionSuccess
+  CREATE_PERMISSION,
+  createPermissionSuccess,
+  getCreatePermissionFailure,
+  isCreatePermissionPending
 } from "./permissions";
 import type { Permission, PermissionCollection } from "../types/Permissions";
 
@@ -113,7 +116,7 @@ describe("permission fetch", () => {
         type: FETCH_PERMISSIONS_PENDING,
         payload: {
           namespace: "hitchhiker",
-          name: "puzzle42"
+          repoName: "puzzle42"
         },
         itemId: "hitchhiker/puzzle42"
       },
@@ -635,5 +638,39 @@ describe("permissions selectors", () => {
     expect(
       getDeletePermissionFailure({}, "hitchhiker", "puzzle42", "user_eins")
     ).toBe(undefined);
+  });
+
+  it("should return true, when create permission is pending", () => {
+    const state = {
+      pending: {
+        [CREATE_PERMISSION + "/hitchhiker/puzzle42"]: true
+      }
+    };
+    expect(isCreatePermissionPending(state, "hitchhiker", "puzzle42")).toEqual(
+      true
+    );
+  });
+
+  it("should return false, when create permissions is not pending", () => {
+    expect(isCreatePermissionPending({}, "hitchiker", "puzzle42")).toEqual(
+      false
+    );
+  });
+
+  it("should return error when create permissions did fail", () => {
+    const state = {
+      failure: {
+        [CREATE_PERMISSION + "/hitchhiker/puzzle42"]: error
+      }
+    };
+    expect(getCreatePermissionFailure(state, "hitchhiker", "puzzle42")).toEqual(
+      error
+    );
+  });
+
+  it("should return undefined when create permissions did not fail", () => {
+    expect(getCreatePermissionFailure({}, "hitchhiker", "puzzle42")).toBe(
+      undefined
+    );
   });
 });

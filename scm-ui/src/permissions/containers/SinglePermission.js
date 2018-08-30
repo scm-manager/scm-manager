@@ -3,7 +3,6 @@ import React from "react";
 import type { Permission } from "../types/Permissions";
 import { Checkbox } from "../../components/forms/index";
 import { translate } from "react-i18next";
-import { Select } from "../../components/forms/index";
 import {
   modifyPermission,
   isModifyPermissionPending,
@@ -26,7 +25,7 @@ type Props = {
   permission: Permission,
   t: string => string,
   namespace: string,
-  name: string,
+  repoName: string,
   match: any,
   history: History,
   loading: boolean,
@@ -58,7 +57,7 @@ class SinglePermission extends React.Component<Props, State> {
     const { permission } = this.props;
     this.props.permissionReset(
       this.props.namespace,
-      this.props.name,
+      this.props.repoName,
       permission.name
     );
     if (permission) {
@@ -77,15 +76,13 @@ class SinglePermission extends React.Component<Props, State> {
     this.props.deletePermission(
       this.props.permission,
       this.props.namespace,
-      this.props.name
+      this.props.repoName
     );
   };
 
   render() {
     const { permission } = this.state;
-    const { t, loading, error, namespace, name } = this.props;
-    const types = ["READ", "OWNER", "WRITE"];
-
+    const { loading, error, namespace, repoName } = this.props;
     const typeSelector = this.props.permission._links.update ? (
       <td>
         <TypeSelector
@@ -113,7 +110,7 @@ class SinglePermission extends React.Component<Props, State> {
           <DeletePermissionButton
             permission={permission}
             namespace={namespace}
-            name={name}
+            repoName={repoName}
             deletePermission={this.deletePermission}
             loading={this.props.deleteLoading}
           />
@@ -139,7 +136,7 @@ class SinglePermission extends React.Component<Props, State> {
     this.props.modifyPermission(
       permission,
       this.props.namespace,
-      this.props.name
+      this.props.repoName
     );
   };
 
@@ -159,26 +156,26 @@ const mapStateToProps = (state, ownProps) => {
   const loading = isModifyPermissionPending(
     state,
     ownProps.namespace,
-    ownProps.name,
+    ownProps.repoName,
     permission.name
   );
   const error =
     getModifyPermissionFailure(
       state,
       ownProps.namespace,
-      ownProps.name,
+      ownProps.repoName,
       permission.name
     ) ||
     getDeletePermissionFailure(
       state,
       ownProps.namespace,
-      ownProps.name,
+      ownProps.repoName,
       permission.name
     );
   const deleteLoading = isDeletePermissionPending(
     state,
     ownProps.namespace,
-    ownProps.name,
+    ownProps.repoName,
     permission.name
   );
 
@@ -190,23 +187,23 @@ const mapDispatchToProps = dispatch => {
     modifyPermission: (
       permission: Permission,
       namespace: string,
-      name: string
+      repoName: string
     ) => {
-      dispatch(modifyPermission(permission, namespace, name));
+      dispatch(modifyPermission(permission, namespace, repoName));
     },
     permissionReset: (
       namespace: string,
-      name: string,
+      repoName: string,
       permissionname: string
     ) => {
-      dispatch(modifyPermissionReset(namespace, name, permissionname));
+      dispatch(modifyPermissionReset(namespace, repoName, permissionname));
     },
     deletePermission: (
       permission: Permission,
       namespace: string,
-      name: string
+      repoName: string
     ) => {
-      dispatch(deletePermission(permission, namespace, name));
+      dispatch(deletePermission(permission, namespace, repoName));
     }
   };
 };

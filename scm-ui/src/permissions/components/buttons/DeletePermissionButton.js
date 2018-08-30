@@ -8,13 +8,13 @@ import { DeleteButton } from "../../../components/buttons/index";
 type Props = {
   permission: Permission,
   namespace: string,
-  name: string,
+  repoName: string,
   confirmDialog?: boolean,
   t: string => string,
   deletePermission: (
     permission: Permission,
     namespace: string,
-    name: string
+    repoName: string
   ) => void,
   loading: boolean
 };
@@ -28,7 +28,7 @@ class DeletePermissionButton extends React.Component<Props> {
     this.props.deletePermission(
       this.props.permission,
       this.props.namespace,
-      this.props.name
+      this.props.repoName
     );
   };
 

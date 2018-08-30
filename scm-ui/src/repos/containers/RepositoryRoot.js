@@ -104,7 +104,7 @@ class RepositoryRoot extends React.Component<Props> {
               component={() => (
                 <Permissions
                   namespace={repository.namespace}
-                  name={repository.name}
+                  repoName={repository.name}
                 />
               )}
             />

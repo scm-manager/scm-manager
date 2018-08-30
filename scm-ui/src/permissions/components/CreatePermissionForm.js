@@ -8,7 +8,8 @@ import { SubmitButton } from "../../components/buttons";
 
 type Props = {
   t: string => string,
-  createPermission: (permission: Permission) => void
+  createPermission: (permission: Permission) => void,
+  loading: boolean
 };
 
 type State = {
@@ -29,7 +30,7 @@ class CreatePermissionForm extends React.Component<Props, State> {
   }
 
   render() {
-    const { t } = this.props;
+    const { t, loading } = this.props;
     const { name, type, groupPermission } = this.state;
 
     return (
@@ -71,6 +72,7 @@ class CreatePermissionForm extends React.Component<Props, State> {
         <SubmitButton
           label={t("add-permission.submit-button")}
           action={this.submit}
+          loading={loading}
         />
       </div>
     );

@@ -8,7 +8,8 @@ import {
   isFetchPermissionsPending,
   getPermissionsOfRepo,
   hasCreatePermission,
-  createPermission
+  createPermission,
+  isCreatePermissionPending
 } from "../modules/permissions";
 import Loading from "../../components/Loading";
 import ErrorPage from "../../components/ErrorPage";
@@ -18,18 +19,19 @@ import CreatePermissionForm from "../components/CreatePermissionForm";
 
 type Props = {
   namespace: string,
-  name: string,
+  repoName: string,
   loading: boolean,
   error: Error,
   permissions: PermissionCollection,
-  createPermission: boolean,
+  hasPermissionToCreate: boolean,
+  loadingCreatePermission: boolean,
 
   //dispatch functions
-  fetchPermissions: (namespace: string, name: string) => void,
+  fetchPermissions: (namespace: string, repoName: string) => void,
   createPermission: (
     permission: Permission,
     namespace: string,
-    name: string
+    repoName: string
   ) => void,
 
   // context props
@@ -39,9 +41,9 @@ type Props = {
 
 class Permissions extends React.Component<Props> {
   componentDidMount() {
-    const { fetchPermissions, namespace, name } = this.props;
+    const { fetchPermissions, namespace, repoName } = this.props;
 
-    fetchPermissions(namespace, name);
+    fetchPermissions(namespace, repoName);
   }
 
   render() {
@@ -51,8 +53,9 @@ class Permissions extends React.Component<Props> {
       permissions,
       t,
       namespace,
-      name,
-      createPermission
+      repoName,
+      loadingCreatePermission,
+      hasPermissionToCreate
     } = this.props;
 
     if (error) {
@@ -69,11 +72,12 @@ class Permissions extends React.Component<Props> {
       return <Loading />;
     }
 
-    const createPermissionForm = createPermission ? (
+    const createPermissionForm = hasPermissionToCreate ? (
       <CreatePermissionForm
         createPermission={permission =>
-          this.props.createPermission(permission, namespace, name)
+          this.props.createPermission(permission, namespace, repoName)
         }
+        loading={loadingCreatePermission}
       />
     ) : null;
 
@@ -94,7 +98,7 @@ class Permissions extends React.Component<Props> {
                   <SinglePermission
                     key={index}
                     namespace={namespace}
-                    name={name}
+                    repoName={repoName}
                     permission={permission}
                   />
                 );
@@ -111,33 +115,39 @@ class Permissions extends React.Component<Props> {
 
 const mapStateToProps = (state, ownProps) => {
   const namespace = ownProps.namespace;
-  const name = ownProps.name;
-  const error = getFetchPermissionsFailure(state, namespace, name);
-  const loading = isFetchPermissionsPending(state, namespace, name);
-  const permissions = getPermissionsOfRepo(state, namespace, name);
+  const repoName = ownProps.repoName;
+  const error = getFetchPermissionsFailure(state, namespace, repoName);
+  const loading = isFetchPermissionsPending(state, namespace, repoName);
+  const permissions = getPermissionsOfRepo(state, namespace, repoName);
+  const loadingCreatePermission = isCreatePermissionPending(
+    state,
+    namespace,
+    repoName
+  );
   console.log(permissions);
-  const createPermission = hasCreatePermission(state, namespace, name);
+  const hasPermissionToCreate = hasCreatePermission(state, namespace, repoName);
   return {
     namespace,
-    name,
+    repoName,
     error,
     loading,
     permissions,
-    createPermission
+    hasPermissionToCreate,
+    loadingCreatePermission
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchPermissions: (namespace: string, name: string) => {
-      dispatch(fetchPermissions(namespace, name));
+    fetchPermissions: (namespace: string, repoName: string) => {
+      dispatch(fetchPermissions(namespace, repoName));
     },
     createPermission: (
       permission: Permission,
       namespace: string,
-      name: string
+      repoName: string
     ) => {
-      dispatch(createPermission(permission, namespace, name));
+      dispatch(createPermission(permission, namespace, repoName));
     }
   };
 };
