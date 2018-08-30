@@ -46,3 +46,8 @@ $blue: #33B2E8;
     box-shadow: $box-link-active-shadow;
   }
 }
+
+
+@import "@fortawesome/fontawesome-free/scss/fontawesome.scss";
+$fa-font-path: "webfonts";
+@import "@fortawesome/fontawesome-free/scss/solid.scss";

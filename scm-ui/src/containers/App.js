@@ -11,10 +11,6 @@ import {
   getFetchMeFailure
 } from "../modules/auth";
 
-import "./App.css";
-// TODO ???
-// import "font-awesome/css/font-awesome.css";
-import "../components/modals/ConfirmAlert.css";
 import { PrimaryNavigation } from "../components/navigation";
 import Loading from "../components/Loading";
 import ErrorPage from "../components/ErrorPage";

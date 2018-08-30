@@ -2,62 +2,67 @@
 
 import React from "react";
 import { render, unmountComponentAtNode } from "react-dom";
+import "./ConfirmAlert.css";
 
 type Props = {
-  title:string,
+  title: string,
   message: string,
-  buttons: array,
-}
+  buttons: array
+};
 
 class ConfirmAlert extends React.Component<Props> {
- 
   handleClickButton = button => {
-    if (button.onClick) button.onClick()
-    this.close()
-  }
+    if (button.onClick) button.onClick();
+    this.close();
+  };
 
   close = () => {
-    removeElementReconfirm()
-  }
+    removeElementReconfirm();
+  };
 
-  render () {
+  render() {
     const { title, message, buttons } = this.props;
 
     return (
       <div className="react-confirm-alert-overlay">
         <div className="react-confirm-alert">
-          {<div className="react-confirm-alert-body">
+          {
+            <div className="react-confirm-alert-body">
               {title && <h1>{title}</h1>}
               {message}
               <div className="react-confirm-alert-button-group">
                 {buttons.map((button, i) => (
-                  <button key={i} onClick={() => this.handleClickButton(button)}>
+                  <button
+                    key={i}
+                    onClick={() => this.handleClickButton(button)}
+                  >
                     {button.label}
                   </button>
                 ))}
               </div>
-            </div>}
+            </div>
+          }
         </div>
       </div>
-    )
+    );
   }
 }
 
-function createElementReconfirm (properties) {
-  const divTarget = document.createElement('div')
-  divTarget.id = 'react-confirm-alert'
-  document.body.appendChild(divTarget)
-  render(<ConfirmAlert {...properties} />, divTarget)
+function createElementReconfirm(properties) {
+  const divTarget = document.createElement("div");
+  divTarget.id = "react-confirm-alert";
+  document.body.appendChild(divTarget);
+  render(<ConfirmAlert {...properties} />, divTarget);
 }
 
-function removeElementReconfirm () {
-  const target = document.getElementById('react-confirm-alert')
-  unmountComponentAtNode(target)
-  target.parentNode.removeChild(target)
+function removeElementReconfirm() {
+  const target = document.getElementById("react-confirm-alert");
+  unmountComponentAtNode(target);
+  target.parentNode.removeChild(target);
 }
 
-export function confirmAlert (properties) {
-  createElementReconfirm(properties)
+export function confirmAlert(properties) {
+  createElementReconfirm(properties);
 }
 
 export default ConfirmAlert;

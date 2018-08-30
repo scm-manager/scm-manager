@@ -45,7 +45,7 @@ class RepositoryEntry extends React.Component<Props> {
     if (repository._links["changesets"]) {
       return (
         <RepositoryEntryLink
-          iconClass="fa-code-fork"
+          iconClass="fa-code-branch"
           to={repositoryLink + "/changesets"}
         />
       );
