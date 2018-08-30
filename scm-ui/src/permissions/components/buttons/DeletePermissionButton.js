@@ -3,7 +3,7 @@ import React from "react";
 import { translate } from "react-i18next";
 import type { Permission } from "../../types/Permissions";
 import { confirmAlert } from "../../../components/modals/ConfirmAlert";
-import {DeleteButton} from "../../../components/buttons/index";
+import { DeleteButton } from "../../../components/buttons/index";
 
 type Props = {
   permission: Permission,
@@ -11,7 +11,12 @@ type Props = {
   name: string,
   confirmDialog?: boolean,
   t: string => string,
-  deletePermission: (permission: Permission, namespace: string, name: string) => void
+  deletePermission: (
+    permission: Permission,
+    namespace: string,
+    name: string
+  ) => void,
+  loading: boolean
 };
 
 class DeletePermissionButton extends React.Component<Props> {
@@ -20,7 +25,11 @@ class DeletePermissionButton extends React.Component<Props> {
   };
 
   deletePermission = () => {
-    this.props.deletePermission(this.props.permission, this.props.namespace, this.props.name);
+    this.props.deletePermission(
+      this.props.permission,
+      this.props.namespace,
+      this.props.name
+    );
   };
 
   confirmDelete = () => {
@@ -46,13 +55,19 @@ class DeletePermissionButton extends React.Component<Props> {
   };
 
   render() {
-    const { confirmDialog, t } = this.props;
+    const { confirmDialog, loading, t } = this.props;
     const action = confirmDialog ? this.confirmDelete : this.deletePermission;
 
     if (!this.isDeletable()) {
       return null;
     }
-    return <DeleteButton label={t("delete-permission-button.label")} action={action} />;
+    return (
+      <DeleteButton
+        label={t("delete-permission-button.label")}
+        action={action}
+        loading={loading}
+      />
+    );
   }
 }
 
