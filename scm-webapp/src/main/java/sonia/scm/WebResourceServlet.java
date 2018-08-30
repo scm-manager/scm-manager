@@ -47,7 +47,7 @@ public class WebResourceServlet extends HttpServlet {
   }
 
   @Override
-  protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+  protected void doGet(HttpServletRequest request, HttpServletResponse response) {
     String uri = normalizeUri(request);
 
     LOG.trace("try to load {}", uri);
@@ -55,7 +55,16 @@ public class WebResourceServlet extends HttpServlet {
     if (url != null) {
       serveResource(response, url);
     } else {
+      dispatch(request, response, uri);
+    }
+  }
+
+  private void dispatch(HttpServletRequest request, HttpServletResponse response, String uri) {
+    try {
       pushStateDispatcher.dispatch(request, response, uri);
+    } catch (IOException ex) {
+      LOG.error("failed to dispatch: " + uri, ex);
+      response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     }
   }
 

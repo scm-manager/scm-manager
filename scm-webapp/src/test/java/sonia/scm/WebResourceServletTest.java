@@ -105,6 +105,14 @@ public class WebResourceServletTest {
     verify(response).setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
   }
 
+  @Test
+  public void testDoGetWithDispatcherException() throws IOException {
+    when(request.getRequestURI()).thenReturn("/scm/awesome.jpg");
+    doThrow(IOException.class).when(pushStateDispatcher).dispatch(request, response, "/awesome.jpg");
+    servlet.doGet(request, response);
+    verify(response).setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+  }
+
   private static class TestingOutputServletOutputStream extends ServletOutputStream {
 
     private ByteArrayOutputStream buffer = new ByteArrayOutputStream();
