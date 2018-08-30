@@ -9,13 +9,16 @@ import {
   isModifyPermissionPending,
   getModifyPermissionFailure,
   modifyPermissionReset,
-  deletePermission
+  deletePermission,
+  getDeletePermissionFailure,
+  isDeletePermissionPending
 } from "../modules/permissions";
 import connect from "react-redux/es/connect/connect";
 import { withRouter } from "react-router-dom";
 import type { History } from "history";
 import ErrorNotification from "../../components/ErrorNotification";
 import DeletePermissionButton from "../components/buttons/DeletePermissionButton";
+import TypeSelector from "../components/TypeSelector";
 
 type Props = {
   submitForm: Permission => void,
@@ -29,7 +32,8 @@ type Props = {
   loading: boolean,
   error: Error,
   permissionReset: (string, string, string) => void,
-  deletePermission: (Permission, string, string, (void) => void) => void
+  deletePermission: (Permission, string, string) => void,
+  deleteLoading: boolean
 };
 
 type State = {
@@ -69,18 +73,11 @@ class SinglePermission extends React.Component<Props, State> {
     }
   }
 
-  permissionDeleted = () => {
-    this.props.history.push(
-      "/repo/" + this.props.namespace + "/" + this.props.name + "/permissions"
-    );
-  };
-
   deletePermission = () => {
     this.props.deletePermission(
       this.props.permission,
       this.props.namespace,
-      this.props.name,
-      this.permissionDeleted
+      this.props.name
     );
   };
 
@@ -91,10 +88,9 @@ class SinglePermission extends React.Component<Props, State> {
 
     const typeSelector = this.props.permission._links.update ? (
       <td>
-        <Select
-          onChange={this.handleTypeChange}
-          value={permission.type ? permission.type : ""}
-          options={this.createSelectOptions(types)}
+        <TypeSelector
+          handleTypeChange={this.handleTypeChange}
+          type={permission.type ? permission.type : "READ"}
           loading={loading}
         />
       </td>
@@ -119,6 +115,7 @@ class SinglePermission extends React.Component<Props, State> {
             namespace={namespace}
             name={name}
             deletePermission={this.deletePermission}
+            loading={this.props.deleteLoading}
           />
           {errorNotification}
         </td>
@@ -158,20 +155,34 @@ class SinglePermission extends React.Component<Props, State> {
 
 const mapStateToProps = (state, ownProps) => {
   const permission = ownProps.permission;
+  console.log(permission);
   const loading = isModifyPermissionPending(
     state,
     ownProps.namespace,
     ownProps.name,
     permission.name
   );
-  const error = getModifyPermissionFailure(
+  const error =
+    getModifyPermissionFailure(
+      state,
+      ownProps.namespace,
+      ownProps.name,
+      permission.name
+    ) ||
+    getDeletePermissionFailure(
+      state,
+      ownProps.namespace,
+      ownProps.name,
+      permission.name
+    );
+  const deleteLoading = isDeletePermissionPending(
     state,
     ownProps.namespace,
     ownProps.name,
     permission.name
   );
 
-  return { loading, error };
+  return { loading, error, deleteLoading };
 };
 
 const mapDispatchToProps = dispatch => {
@@ -193,10 +204,9 @@ const mapDispatchToProps = dispatch => {
     deletePermission: (
       permission: Permission,
       namespace: string,
-      name: string,
-      callback: () => void
+      name: string
     ) => {
-      dispatch(deletePermission(permission, namespace, name, callback));
+      dispatch(deletePermission(permission, namespace, name));
     }
   };
 };

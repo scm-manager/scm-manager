@@ -7,11 +7,12 @@ import {
   getFetchPermissionsFailure,
   isFetchPermissionsPending,
   getPermissionsOfRepo,
-  hasCreatePermission
+  hasCreatePermission,
+  createPermission
 } from "../modules/permissions";
 import Loading from "../../components/Loading";
 import ErrorPage from "../../components/ErrorPage";
-import type { PermissionCollection } from "../types/Permissions";
+import type { Permission, PermissionCollection } from "../types/Permissions";
 import SinglePermission from "./SinglePermission";
 import CreatePermissionForm from "../components/CreatePermissionForm";
 
@@ -25,6 +26,11 @@ type Props = {
 
   //dispatch functions
   fetchPermissions: (namespace: string, name: string) => void,
+  createPermission: (
+    permission: Permission,
+    namespace: string,
+    name: string
+  ) => void,
 
   // context props
   t: string => string,
@@ -64,7 +70,11 @@ class Permissions extends React.Component<Props> {
     }
 
     const createPermissionForm = createPermission ? (
-      <CreatePermissionForm />
+      <CreatePermissionForm
+        createPermission={permission =>
+          this.props.createPermission(permission, namespace, name)
+        }
+      />
     ) : null;
 
     if (permissions.length > 0)
@@ -105,6 +115,7 @@ const mapStateToProps = (state, ownProps) => {
   const error = getFetchPermissionsFailure(state, namespace, name);
   const loading = isFetchPermissionsPending(state, namespace, name);
   const permissions = getPermissionsOfRepo(state, namespace, name);
+  console.log(permissions);
   const createPermission = hasCreatePermission(state, namespace, name);
   return {
     namespace,
@@ -120,6 +131,13 @@ const mapDispatchToProps = dispatch => {
   return {
     fetchPermissions: (namespace: string, name: string) => {
       dispatch(fetchPermissions(namespace, name));
+    },
+    createPermission: (
+      permission: Permission,
+      namespace: string,
+      name: string
+    ) => {
+      dispatch(createPermission(permission, namespace, name));
     }
   };
 };

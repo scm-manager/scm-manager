@@ -20,5 +20,9 @@
       "submit": "Yes",
       "cancel": "No"
     }
+  },
+  "add-permission": {
+    "add-permission-heading": "Add new Permission",
+    "submit-button": "Submit"
   }
 }

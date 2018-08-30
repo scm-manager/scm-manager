@@ -16,6 +16,8 @@ import reducer, {
   hasCreatePermission,
   deletePermission,
   deletePermissionSuccess,
+  getDeletePermissionFailure,
+  isDeletePermissionPending,
   MODIFY_PERMISSION_FAILURE,
   MODIFY_PERMISSION_PENDING,
   FETCH_PERMISSIONS,
@@ -27,9 +29,11 @@ import reducer, {
   CREATE_PERMISSION_PENDING,
   CREATE_PERMISSION_SUCCESS,
   CREATE_PERMISSION_FAILURE,
+  DELETE_PERMISSION,
   DELETE_PERMISSION_PENDING,
   DELETE_PERMISSION_SUCCESS,
-  DELETE_PERMISSION_FAILURE
+  DELETE_PERMISSION_FAILURE,
+  createPermissionSuccess
 } from "./permissions";
 import type { Permission, PermissionCollection } from "../types/Permissions";
 
@@ -460,6 +464,33 @@ describe("permissions reducer", () => {
       expectedState["hitchhiker/puzzle42"]
     );
   });
+
+  it("should add permission", () => {
+    const oldState = {
+      "hitchhiker/puzzle42": {
+        entries: [hitchhiker_puzzle42Permission_user_eins]
+      }
+    };
+    let expectedState = {
+      "hitchhiker/puzzle42": {
+        entries: [
+          hitchhiker_puzzle42Permission_user_eins,
+          hitchhiker_puzzle42Permission_user_zwei
+        ]
+      }
+    };
+    const newState = reducer(
+      oldState,
+      createPermissionSuccess(
+        hitchhiker_puzzle42Permission_user_zwei,
+        "hitchhiker",
+        "puzzle42"
+      )
+    );
+    expect(newState["hitchhiker/puzzle42"]).toEqual(
+      expectedState["hitchhiker/puzzle42"]
+    );
+  });
 });
 
 describe("permissions selectors", () => {
@@ -570,5 +601,39 @@ describe("permissions selectors", () => {
       }
     };
     expect(hasCreatePermission(state, "hitchhiker", "puzzle42")).toEqual(false);
+  });
+
+  it("should return true, when delete permission is pending", () => {
+    const state = {
+      pending: {
+        [DELETE_PERMISSION + "/hitchhiker/puzzle42/user_eins"]: true
+      }
+    };
+    expect(
+      isDeletePermissionPending(state, "hitchhiker", "puzzle42", "user_eins")
+    ).toEqual(true);
+  });
+
+  it("should return false, when delete permissions is not pending", () => {
+    expect(
+      isDeletePermissionPending({}, "hitchiker", "puzzle42", "user_eins")
+    ).toEqual(false);
+  });
+
+  it("should return error when delete permissions did fail", () => {
+    const state = {
+      failure: {
+        [DELETE_PERMISSION + "/hitchhiker/puzzle42/user_eins"]: error
+      }
+    };
+    expect(
+      getDeletePermissionFailure(state, "hitchhiker", "puzzle42", "user_eins")
+    ).toEqual(error);
+  });
+
+  it("should return undefined when delete permissions did not fail", () => {
+    expect(
+      getDeletePermissionFailure({}, "hitchhiker", "puzzle42", "user_eins")
+    ).toBe(undefined);
   });
 });

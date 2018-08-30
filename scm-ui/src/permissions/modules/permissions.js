@@ -220,7 +220,7 @@ export function createPermission(
         CONTENT_TYPE
       )
       .then(() => {
-        dispatch(createPermissionSuccess(namespace, name));
+        dispatch(createPermissionSuccess(permission, namespace, name));
         if (callback) {
           callback();
         }
@@ -252,11 +252,16 @@ export function createPermissionPending(
 }
 
 export function createPermissionSuccess(
+  permission: Permission,
   namespace: string,
   name: string
 ): Action {
   return {
     type: CREATE_PERMISSION_SUCCESS,
+    payload: {
+      permission,
+      position: namespace + "/" + name
+    },
     itemId: namespace + "/" + name
   };
 }
@@ -386,6 +391,17 @@ export default function reducer(
           entries: newPermission
         }
       };
+    case CREATE_PERMISSION_SUCCESS:
+      const position = action.payload.position;
+      const permissions = state[action.payload.position].entries;
+      permissions.push(action.payload.permission);
+      return {
+        ...state,
+        [position]: {
+          ...state[position],
+          entries: permissions
+        }
+      };
     case DELETE_PERMISSION_SUCCESS:
       const permissionPosition = action.payload.position;
       const new_Permissions = deletePermissionFromState(
@@ -467,4 +483,30 @@ export function hasCreatePermission(
   if (state.permissions && state.permissions[namespace + "/" + name])
     return state.permissions[namespace + "/" + name].createPermission;
   else return null;
+}
+
+export function isDeletePermissionPending(
+  state: Object,
+  namespace: string,
+  name: string,
+  permissionname: string
+) {
+  return isPending(
+    state,
+    DELETE_PERMISSION,
+    namespace + "/" + name + "/" + permissionname
+  );
+}
+
+export function getDeletePermissionFailure(
+  state: Object,
+  namespace: string,
+  name: string,
+  permissionname: string
+) {
+  return getFailure(
+    state,
+    DELETE_PERMISSION,
+    namespace + "/" + name + "/" + permissionname
+  );
 }
