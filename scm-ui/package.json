@@ -35,7 +35,7 @@
     "start": "npm-run-all -p webfonts watch-css build-vendor start-js",
     "build-js": "ui-bundler bundle target/scm-ui.bundle.js",
     "build-vendor": "ui-bundler vendor target/vendor.bundle.js",
-    "build": "npm-run-all webfonts build-css build-vendor build-js",
+    "build": "npm-run-all -s webfonts build-css build-vendor build-js",
     "test": "ui-bundler test",
     "test-ci": "ui-bundler test --ci",
     "flow": "flow",
