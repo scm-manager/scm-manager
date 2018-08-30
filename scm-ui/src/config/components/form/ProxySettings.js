@@ -12,7 +12,7 @@ type Props = {
   proxyServer: string,
   proxyUser: string,
   enableProxy: boolean,
-  proxyExcludes: string[], //TODO: einbauen!
+  proxyExcludes: string[],
   t: string => string,
   onChange: (boolean, any, string) => void,
   hasUpdatePermission: boolean
