@@ -1,56 +1,29 @@
 //@flow
 import React from "react";
-import { translate } from "react-i18next";
 import type { Repository } from "../types/Repositories";
-import MailLink from "../../components/MailLink";
-import DateFromNow from "../../components/DateFromNow";
+import RepositoryDetailTable from "./RepositoryDetailTable";
+import { ExtensionPoint } from "@scm-manager/ui-extensions";
 
 type Props = {
-  repository: Repository,
-  // context props
-  t: string => string
+  repository: Repository
 };
 
 class RepositoryDetails extends React.Component<Props> {
   render() {
-    const { repository, t } = this.props;
+    const { repository } = this.props;
     return (
-      <table className="table">
-        <tbody>
-          <tr>
-            <td>{t("repository.name")}</td>
-            <td>{repository.name}</td>
-          </tr>
-          <tr>
-            <td>{t("repository.type")}</td>
-            <td>{repository.type}</td>
-          </tr>
-          <tr>
-            <td>{t("repository.contact")}</td>
-            <td>
-              <MailLink address={repository.contact} />
-            </td>
-          </tr>
-          <tr>
-            <td>{t("repository.description")}</td>
-            <td>{repository.description}</td>
-          </tr>
-          <tr>
-            <td>{t("repository.creationDate")}</td>
-            <td>
-              <DateFromNow date={repository.creationDate} />
-            </td>
-          </tr>
-          <tr>
-            <td>{t("repository.lastModified")}</td>
-            <td>
-              <DateFromNow date={repository.lastModified} />
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div>
+        <RepositoryDetailTable repository={repository} />
+        <div className="content">
+          <ExtensionPoint
+            name="repos.repository-details.information"
+            renderAll={true}
+            props={{ repository }}
+          />
+        </div>
+      </div>
     );
   }
 }
 
-export default translate("repos")(RepositoryDetails);
+export default RepositoryDetails;

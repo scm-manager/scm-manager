@@ -93,7 +93,7 @@ public class PathWebResourceLoader implements WebResourceLoader
     URL resource = null;
     Path file = directory.resolve(filePath(path));
 
-    if (Files.exists(file))
+    if (Files.exists(file) && ! Files.isDirectory(file))
     {
       logger.trace("found path {} at {}", path, file);
 

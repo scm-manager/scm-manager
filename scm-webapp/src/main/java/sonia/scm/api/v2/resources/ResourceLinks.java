@@ -349,4 +349,37 @@ class ResourceLinks {
       return permissionLinkBuilder.method("getRepositoryResource").parameters(repositoryNamespace, repositoryName).method("permissions").parameters().method(methodName).parameters(permissionName).href();
     }
   }
+
+
+  public UIPluginLinks uiPlugin() {
+    return new UIPluginLinks(uriInfoStore.get());
+  }
+
+  static class UIPluginLinks {
+    private final LinkBuilder uiPluginLinkBuilder;
+
+    UIPluginLinks(UriInfo uriInfo) {
+      uiPluginLinkBuilder = new LinkBuilder(uriInfo, UIRootResource.class, UIPluginResource.class);
+    }
+
+    String self(String id) {
+      return uiPluginLinkBuilder.method("plugins").parameters().method("getInstalledPlugin").parameters(id).href();
+    }
+  }
+
+  public UIPluginCollectionLinks uiPluginCollection() {
+    return new UIPluginCollectionLinks(uriInfoStore.get());
+  }
+
+  static class UIPluginCollectionLinks {
+    private final LinkBuilder uiPluginCollectionLinkBuilder;
+
+    UIPluginCollectionLinks(UriInfo uriInfo) {
+      uiPluginCollectionLinkBuilder = new LinkBuilder(uriInfo, UIRootResource.class, UIPluginResource.class);
+    }
+
+    String self() {
+      return uiPluginCollectionLinkBuilder.method("plugins").parameters().method("getInstalledPlugins").parameters().href();
+    }
+  }
 }

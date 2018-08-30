@@ -2,7 +2,7 @@
 import React from "react";
 import { translate } from "react-i18next";
 import injectSheet from "react-jss";
-import Image from "../images/loading.svg";
+import Image from "./Image";
 
 const styles = {
   wrapper: {
@@ -26,16 +26,22 @@ const styles = {
 
 type Props = {
   t: string => string,
+  message?: string,
   classes: any
 };
 
 class Loading extends React.Component<Props> {
   render() {
-    const { t, classes } = this.props;
+    const { message, t, classes } = this.props;
     return (
       <div className={classes.wrapper}>
         <div className={classes.loading}>
-          <img className={classes.image} src={Image} alt={t("loading.alt")} />
+          <Image
+            className={classes.image}
+            src="/images/loading.svg"
+            alt={t("loading.alt")}
+          />
+          <p className="has-text-centered">{message}</p>
         </div>
       </div>
     );

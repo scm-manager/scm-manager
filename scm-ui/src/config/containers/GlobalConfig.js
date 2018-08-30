@@ -1,3 +1,4 @@
+// @flow
 import React from "react";
 import { translate } from "react-i18next";
 import Title from "../../components/layout/Title";
@@ -12,7 +13,7 @@ import {
   getModifyConfigFailure,
   modifyConfigReset
 } from "../modules/config";
-import connect from "react-redux/es/connect/connect";
+import { connect } from "react-redux";
 import ErrorPage from "../../components/ErrorPage";
 import type { Config } from "../types/Config";
 import ConfigForm from "../components/form/ConfigForm";
