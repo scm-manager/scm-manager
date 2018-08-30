@@ -38,9 +38,9 @@ package sonia.scm.group;
 import sonia.scm.ManagerDecorator;
 import sonia.scm.search.SearchRequest;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.Collection;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Decorator for {@link GroupManager}.
@@ -49,7 +49,7 @@ import java.util.Collection;
  * @since 1.23
  */
 public class GroupManagerDecorator
-  extends ManagerDecorator<Group, GroupException> implements GroupManager
+  extends ManagerDecorator<Group> implements GroupManager
 {
 
   /**

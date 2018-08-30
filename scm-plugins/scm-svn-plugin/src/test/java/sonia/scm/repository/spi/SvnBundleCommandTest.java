@@ -37,22 +37,21 @@ package sonia.scm.repository.spi;
 
 import com.google.common.io.ByteSink;
 import com.google.common.io.Files;
-
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-
-import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.api.BundleResponse;
-
-import static org.hamcrest.Matchers.*;
-
-import static org.junit.Assert.*;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
 import java.io.IOException;
+
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -61,15 +60,8 @@ import java.io.IOException;
 public class SvnBundleCommandTest extends AbstractSvnCommandTestBase
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test
-  public void testBundle() throws IOException, RepositoryException
+  public void testBundle() throws IOException
   {
     File file = temp.newFile();
     ByteSink sink = Files.asByteSink(file);

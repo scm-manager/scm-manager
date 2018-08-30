@@ -48,4 +48,3 @@ public abstract class PermissionToPermissionDtoMapper {
     target.add(linksBuilder.build());
   }
 }
-

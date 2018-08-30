@@ -42,10 +42,9 @@ import java.util.Comparator;
  * @author Sebastian Sdorra
  *
  * @param <T> type of the model object
- * @param <E> type of the exception
  */
-public interface Manager<T extends ModelObject, E extends Exception>
-        extends HandlerBase<T, E>, LastModifiedAware
+public interface Manager<T extends ModelObject>
+        extends HandlerBase<T>, LastModifiedAware
 {
 
   /**
@@ -54,9 +53,9 @@ public interface Manager<T extends ModelObject, E extends Exception>
    *
    * @param object to refresh
    *
-   * @throws E
+   * @throws NotFoundException
    */
-  void refresh(T object) throws E;
+  void refresh(T object) throws NotFoundException;
 
   //~--- get methods ----------------------------------------------------------
 

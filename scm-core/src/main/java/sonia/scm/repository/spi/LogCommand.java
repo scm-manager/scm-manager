@@ -37,45 +37,20 @@ package sonia.scm.repository.spi;
 
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
-import sonia.scm.repository.RepositoryException;
-
-//~--- JDK imports ------------------------------------------------------------
+import sonia.scm.repository.RevisionNotFoundException;
 
 import java.io.IOException;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
  * @author Sebastian Sdorra
  * @since 1.17
  */
-public interface LogCommand
-{
+public interface LogCommand {
 
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   *
-   * @return
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
-  public Changeset getChangeset(String id)
-          throws IOException, RepositoryException;
+  Changeset getChangeset(String id) throws IOException, RevisionNotFoundException;
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
-  public ChangesetPagingResult getChangesets(LogCommandRequest request)
-          throws IOException, RepositoryException;
+  ChangesetPagingResult getChangesets(LogCommandRequest request) throws IOException, RevisionNotFoundException;
 }

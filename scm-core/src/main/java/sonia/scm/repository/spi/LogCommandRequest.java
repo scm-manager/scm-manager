@@ -35,11 +35,12 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.Serializable;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -125,7 +126,7 @@ public final class LogCommandRequest implements Serializable, Resetable
   public String toString()
   {
     //J-
-    return Objects.toStringHelper(this)
+    return MoreObjects.toStringHelper(this)
                   .add("startChangeset", startChangeset)
                   .add("endChangeset", endChangeset)
                   .add("pagingStart", pagingStart)

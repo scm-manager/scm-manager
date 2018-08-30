@@ -39,25 +39,19 @@ import com.google.inject.Inject;
 import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
-
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.credential.PasswordService;
 import org.apache.shiro.subject.Subject;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import sonia.scm.ConcurrentModificationException;
+import sonia.scm.NotFoundException;
 import sonia.scm.api.rest.RestActionResult;
 import sonia.scm.security.Role;
 import sonia.scm.security.ScmSecurityException;
 import sonia.scm.user.User;
-import sonia.scm.user.UserException;
 import sonia.scm.user.UserManager;
 import sonia.scm.util.AssertUtil;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
 
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
@@ -66,6 +60,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Resource to change the password of the authenticated user.
@@ -104,11 +100,6 @@ public class ChangePasswordResource
    *
    * @param oldPassword old password of the current user
    * @param newPassword new password for the current user
-   *
-   * @return
-   *
-   * @throws IOException
-   * @throws UserException
    */
   @POST
   @TypeHint(RestActionResult.class)
@@ -118,10 +109,7 @@ public class ChangePasswordResource
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-  public Response changePassword(@FormParam("old-password") String oldPassword,
-    @FormParam("new-password") String newPassword)
-    throws UserException, IOException
-  {
+  public Response changePassword(@FormParam("old-password") String oldPassword, @FormParam("new-password") String newPassword) throws NotFoundException, ConcurrentModificationException {
     AssertUtil.assertIsNotEmpty(oldPassword);
     AssertUtil.assertIsNotEmpty(newPassword);
 

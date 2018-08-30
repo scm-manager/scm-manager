@@ -36,21 +36,18 @@ package sonia.scm.repository.spi;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
-
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
-
 import sonia.scm.repository.Branch;
 import sonia.scm.repository.GitUtil;
+import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryException;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
-
 import java.util.List;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -74,18 +71,8 @@ public class GitBranchesCommand extends AbstractGitCommand
 
   //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Override
-  public List<Branch> getBranches() throws RepositoryException, IOException
-  {
+  public List<Branch> getBranches() throws IOException {
     List<Branch> branches = null;
 
     Git git = new Git(open());
@@ -115,7 +102,7 @@ public class GitBranchesCommand extends AbstractGitCommand
     }
     catch (GitAPIException ex)
     {
-      throw new RepositoryException("could not read branches", ex);
+      throw new InternalRepositoryException("could not read branches", ex);
     }
 
     return branches;

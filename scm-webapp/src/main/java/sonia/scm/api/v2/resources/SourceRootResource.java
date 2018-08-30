@@ -2,8 +2,8 @@ package sonia.scm.api.v2.resources;
 
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.NamespaceAndName;
-import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RepositoryNotFoundException;
+import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.repository.api.BrowseCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
@@ -66,9 +66,9 @@ public class SourceRootResource {
         return Response.status(Response.Status.NOT_FOUND).build();
       }
 
-    } catch (RepositoryNotFoundException e) {
+    } catch (RepositoryNotFoundException | RevisionNotFoundException e) {
       return Response.status(Response.Status.NOT_FOUND).build();
-    } catch (RepositoryException | IOException e) {
+    } catch (IOException e) {
       return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
     }
   }

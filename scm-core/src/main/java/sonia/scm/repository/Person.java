@@ -36,18 +36,16 @@ package sonia.scm.repository;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Objects;
-
 import sonia.scm.Validateable;
 import sonia.scm.util.Util;
 import sonia.scm.util.ValidationUtil;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.Serializable;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.io.Serializable;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * The {@link Person} (author) of a changeset.

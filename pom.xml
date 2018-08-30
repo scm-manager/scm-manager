@@ -765,7 +765,7 @@
     <svnkit.version>1.8.15-scm1</svnkit.version>
 
     <!-- util libraries -->
-    <guava.version>16.0.1</guava.version>
+    <guava.version>26.0-jre</guava.version>
     <quartz.version>2.2.3</quartz.version>
 
     <!-- build properties -->

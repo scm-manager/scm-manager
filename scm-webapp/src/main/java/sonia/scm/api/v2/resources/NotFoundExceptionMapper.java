@@ -31,8 +31,8 @@
 package sonia.scm.api.v2.resources;
 
 
+import sonia.scm.NotFoundException;
 import sonia.scm.api.rest.StatusExceptionMapper;
-import sonia.scm.repository.PermissionNotFoundException;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
@@ -41,9 +41,9 @@ import javax.ws.rs.ext.Provider;
  * @since 2.0.0
  */
 @Provider
-public class PermissionNotFoundExceptionMapper extends StatusExceptionMapper<PermissionNotFoundException> {
+public class NotFoundExceptionMapper extends StatusExceptionMapper<NotFoundException> {
 
-  public PermissionNotFoundExceptionMapper() {
-    super(PermissionNotFoundException.class, Response.Status.NOT_FOUND);
+  public NotFoundExceptionMapper() {
+    super(NotFoundException.class, Response.Status.NOT_FOUND);
   }
 }

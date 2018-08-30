@@ -47,12 +47,11 @@ import org.tmatesoft.svn.core.io.SVNRepository;
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.FileObject;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryException;
+import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.repository.SubRepository;
 import sonia.scm.repository.SvnUtil;
 import sonia.scm.util.Util;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
@@ -72,40 +71,14 @@ public class SvnBrowseCommand extends AbstractSvnCommand
   private static final Logger logger =
     LoggerFactory.getLogger(SvnBrowseCommand.class);
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   *
-   * @param context
-   * @param repository
-   * @param repositoryDirectory
-   */
   SvnBrowseCommand(SvnContext context, Repository repository)
   {
     super(context, repository);
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Override
   @SuppressWarnings("unchecked")
-  public BrowserResult getBrowserResult(BrowseCommandRequest request)
-    throws IOException, RepositoryException
-  {
+  public BrowserResult getBrowserResult(BrowseCommandRequest request) throws RevisionNotFoundException {
     String path = request.getPath();
     long revisionNumber = SvnUtil.getRevisionNumber(request.getRevision());
 
@@ -293,7 +266,7 @@ public class SvnBrowseCommand extends AbstractSvnCommand
     }
     catch (SVNException ex)
     {
-      logger.error("could not fetch file properties");
+      logger.error("could not fetch file properties", ex);
     }
   }
 }

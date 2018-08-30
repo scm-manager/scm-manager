@@ -1,15 +1,25 @@
 package sonia.scm.api.v2.resources;
 
-import com.webcohesion.enunciate.metadata.rs.*;
+import com.webcohesion.enunciate.metadata.rs.ResponseCode;
+import com.webcohesion.enunciate.metadata.rs.ResponseHeader;
+import com.webcohesion.enunciate.metadata.rs.ResponseHeaders;
+import com.webcohesion.enunciate.metadata.rs.StatusCodes;
+import com.webcohesion.enunciate.metadata.rs.TypeHint;
+import sonia.scm.AlreadyExistsException;
 import sonia.scm.group.Group;
-import sonia.scm.group.GroupException;
 import sonia.scm.group.GroupManager;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
-import javax.ws.rs.*;
+import javax.validation.Valid;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
 
 
 public class GroupCollectionResource {
@@ -19,7 +29,7 @@ public class GroupCollectionResource {
   private final GroupCollectionToDtoMapper groupCollectionToDtoMapper;
   private final ResourceLinks resourceLinks;
 
-  private final IdResourceManagerAdapter<Group, GroupDto, GroupException> adapter;
+  private final IdResourceManagerAdapter<Group, GroupDto> adapter;
 
   @Inject
   public GroupCollectionResource(GroupManager manager, GroupDtoToGroupMapper dtoToGroupMapper, GroupCollectionToDtoMapper groupCollectionToDtoMapper, ResourceLinks resourceLinks) {
@@ -76,7 +86,7 @@ public class GroupCollectionResource {
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
   @ResponseHeaders(@ResponseHeader(name = "Location", description = "uri to the created group"))
-  public Response create(GroupDto groupDto) throws IOException, GroupException {
+  public Response create(@Valid GroupDto groupDto) throws AlreadyExistsException {
     return adapter.create(groupDto,
                           () -> dtoToGroupMapper.map(groupDto),
                           group -> resourceLinks.group().self(group.getName()));

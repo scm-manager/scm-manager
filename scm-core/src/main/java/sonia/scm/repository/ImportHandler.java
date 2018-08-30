@@ -35,7 +35,6 @@ package sonia.scm.repository;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
-
 import java.util.List;
 
 /**
@@ -56,8 +55,6 @@ public interface ImportHandler
    *
    * @return a {@link List} names of imported repositories
    * @throws IOException
-   * @throws RepositoryException
    */
-  public List<String> importRepositories(RepositoryManager manager)
-          throws IOException, RepositoryException;
+  public List<String> importRepositories(RepositoryManager manager) throws IOException;
 }

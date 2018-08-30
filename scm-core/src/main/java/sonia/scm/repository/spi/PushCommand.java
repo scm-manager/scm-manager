@@ -34,12 +34,11 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.api.PushResponse;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -58,8 +57,6 @@ public interface PushCommand
    * @return
    *
    * @throws IOException
-   * @throws RepositoryException
    */
-  public PushResponse push(PushCommandRequest request)
-    throws IOException, RepositoryException;
+  PushResponse push(PushCommandRequest request) throws IOException;
 }

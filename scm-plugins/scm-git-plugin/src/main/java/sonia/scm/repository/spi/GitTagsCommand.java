@@ -37,26 +37,22 @@ package sonia.scm.repository.spi;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
-
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.repository.GitUtil;
+import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.Tag;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
-
 import java.util.List;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -79,17 +75,8 @@ public class GitTagsCommand extends AbstractGitCommand implements TagsCommand
 
   //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Override
-  public List<Tag> getTags() throws IOException, RepositoryException
+  public List<Tag> getTags() throws IOException
   {
     List<Tag> tags = null;
 
@@ -108,7 +95,7 @@ public class GitTagsCommand extends AbstractGitCommand implements TagsCommand
     }
     catch (GitAPIException ex)
     {
-      throw new RepositoryException("could not read tags from repository", ex);
+      throw new InternalRepositoryException("could not read tags from repository", ex);
     }
     finally
     {

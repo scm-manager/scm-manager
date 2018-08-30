@@ -35,20 +35,19 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.Serializable;
-
-import java.util.Iterator;
-import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.io.Serializable;
+import java.util.Iterator;
+import java.util.List;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -161,7 +160,7 @@ public class BrowserResult implements Iterable<FileObject>, Serializable
   public String toString()
   {
     //J-
-    return Objects.toStringHelper(this)
+    return MoreObjects.toStringHelper(this)
             .add("revision", revision)
             .add("tag", tag)
             .add("branch", branch)

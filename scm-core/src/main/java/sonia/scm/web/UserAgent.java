@@ -36,13 +36,14 @@ package sonia.scm.web;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Charsets;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
-import static com.google.common.base.Preconditions.*;
+import java.nio.charset.Charset;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 //~--- JDK imports ------------------------------------------------------------
-
-import java.nio.charset.Charset;
 
 /**
  * The software agent that is acting on behalf of a user. The user agent 
@@ -124,7 +125,7 @@ public final class UserAgent
   public String toString()
   {
     //J-
-    return Objects.toStringHelper(this)
+    return MoreObjects.toStringHelper(this)
                   .add("name", name)
                   .add("browser", browser)
                   .add("basicAuthenticationCharset", basicAuthenticationCharset)

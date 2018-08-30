@@ -37,22 +37,20 @@ package sonia.scm.repository.api;
 
 import com.google.common.io.ByteSink;
 import com.google.common.io.Files;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.spi.BundleCommand;
 import sonia.scm.repository.spi.BundleCommandRequest;
-
-import static com.google.common.base.Preconditions.*;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * The bundle command dumps a repository to a byte source such as a file. The
@@ -94,11 +92,8 @@ public final class BundleCommandBuilder
    * @return bundle response
    *
    * @throws IOException
-   * @throws RepositoryException
    */
-  public BundleResponse bundle(File outputFile)
-    throws IOException, RepositoryException
-  {
+  public BundleResponse bundle(File outputFile) throws IOException {
     checkArgument((outputFile != null) &&!outputFile.exists(),
       "file is null or exists already");
 
@@ -120,10 +115,9 @@ public final class BundleCommandBuilder
    * @return bundle response
    *
    * @throws IOException
-   * @throws RepositoryException
    */
   public BundleResponse bundle(OutputStream outputStream)
-    throws IOException, RepositoryException
+    throws IOException
   {
     checkNotNull(outputStream, "output stream is required");
 
@@ -141,10 +135,9 @@ public final class BundleCommandBuilder
    * @return bundle response
    *
    * @throws IOException
-   * @throws RepositoryException
    */
   public BundleResponse bundle(ByteSink sink)
-    throws IOException, RepositoryException
+    throws IOException
   {
     checkNotNull(sink, "byte sink is required");
     logger.info("bundle {} to byte sink");

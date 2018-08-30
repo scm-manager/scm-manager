@@ -36,18 +36,19 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import org.junit.Test;
-
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.FileObject;
-import sonia.scm.repository.RepositoryException;
-
-import static org.junit.Assert.*;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
-
 import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -56,16 +57,8 @@ import java.util.List;
 public class HgBrowseCommandTest extends AbstractHgCommandTestBase
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test
-  public void testBrowse() throws IOException, RepositoryException
-  {
+  public void testBrowse() throws IOException {
     List<FileObject> foList = getRootFromTip(new BrowseCommandRequest());
     FileObject a = getFileObject(foList, "a.txt");
     FileObject c = getFileObject(foList, "c");
@@ -81,16 +74,8 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase
     assertEquals("c", c.getPath());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test
-  public void testBrowseSubDirectory() throws IOException, RepositoryException
-  {
+  public void testBrowseSubDirectory() throws IOException {
     BrowseCommandRequest request = new BrowseCommandRequest();
 
     request.setPath("c");
@@ -137,16 +122,8 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase
     checkDate(e.getLastModified());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test
-  public void testDisableLastCommit() throws IOException, RepositoryException
-  {
+  public void testDisableLastCommit() throws IOException {
     BrowseCommandRequest request = new BrowseCommandRequest();
 
     request.setDisableLastCommit(true);
@@ -159,16 +136,8 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase
     assertNull(a.getLastModified());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test
-  public void testRecursive() throws IOException, RepositoryException
-  {
+  public void testRecursive() throws IOException {
     BrowseCommandRequest request = new BrowseCommandRequest();
 
     request.setRecursive(true);
@@ -215,20 +184,7 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase
     return a;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
-  private List<FileObject> getRootFromTip(BrowseCommandRequest request)
-    throws IOException, RepositoryException
-  {
+  private List<FileObject> getRootFromTip(BrowseCommandRequest request) throws IOException {
     BrowserResult result = new HgBrowseCommand(cmdContext,
                              repository).getBrowserResult(request);
 

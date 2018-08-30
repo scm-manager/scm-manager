@@ -3,20 +3,28 @@ package sonia.scm.api.v2.resources;
 import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
+import sonia.scm.ConcurrentModificationException;
+import sonia.scm.NotFoundException;
 import sonia.scm.group.Group;
-import sonia.scm.group.GroupException;
 import sonia.scm.group.GroupManager;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
-import javax.ws.rs.*;
+import javax.validation.Valid;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
 public class GroupResource {
 
   private final GroupToGroupDtoMapper groupToGroupDtoMapper;
   private final GroupDtoToGroupMapper dtoToGroupMapper;
-  private final IdResourceManagerAdapter<Group, GroupDto, GroupException> adapter;
+  private final IdResourceManagerAdapter<Group, GroupDto> adapter;
 
   @Inject
   public GroupResource(GroupManager manager, GroupToGroupDtoMapper groupToGroupDtoMapper,
@@ -45,7 +53,7 @@ public class GroupResource {
     @ResponseCode(code = 404, condition = "not found, no group with the specified id/name available"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
-  public Response get(@PathParam("id") String id) {
+  public Response get(@PathParam("id") String id) throws NotFoundException {
     return adapter.get(id, groupToGroupDtoMapper::map);
   }
 
@@ -90,7 +98,7 @@ public class GroupResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
-  public Response update(@PathParam("id") String name, GroupDto groupDto) {
+  public Response update(@PathParam("id") String name, @Valid GroupDto groupDto) throws NotFoundException, ConcurrentModificationException {
     return adapter.update(name, existing -> dtoToGroupMapper.map(groupDto));
   }
 }

@@ -34,27 +34,23 @@ package sonia.scm.cache;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.base.Charsets;
 import com.google.common.base.Function;
 import com.google.common.collect.Iterators;
 import com.google.common.io.ByteSource;
-import com.google.common.io.CharSource;
 import com.google.common.io.Files;
 import com.google.common.io.Resources;
-
 import org.junit.rules.TemporaryFolder;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Iterator;
+
+import static java.util.Collections.emptyIterator;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 //~--- JDK imports ------------------------------------------------------------
-
-import java.io.File;
-import java.io.IOException;
-
-import java.net.URL;
-
-import java.util.Iterator;
 
 /**
  *
@@ -196,7 +192,7 @@ public class CacheConfigurationTestLoader implements CacheConfigurationLoader
 
     if (moduleConfigurations == null)
     {
-      urlIterator = Iterators.emptyIterator();
+      urlIterator = emptyIterator();
     }
     else
     {

@@ -37,18 +37,15 @@ package sonia.scm.repository.spi;
 
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.revwalk.RevCommit;
-
 import org.junit.Test;
-
 import sonia.scm.repository.ChangesetPagingResult;
-import sonia.scm.repository.RepositoryException;
+
+import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 //~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
 
 /**
  * Unit tests for {@link OutgoingCommand}.
@@ -68,7 +65,7 @@ public class GitOutgoingCommandTest extends AbstractRemoteCommandTestBase
    */
   @Test
   public void testGetOutgoingChangesets()
-    throws IOException, GitAPIException, RepositoryException
+    throws IOException, GitAPIException
   {
     write(outgoing, outgoingDirectory, "a.txt", "content of a.txt");
 
@@ -102,7 +99,7 @@ public class GitOutgoingCommandTest extends AbstractRemoteCommandTestBase
    */
   @Test
   public void testGetOutgoingChangesetsWithAllreadyPushedChanges()
-    throws IOException, GitAPIException, RepositoryException
+    throws IOException, GitAPIException
   {
     write(outgoing, outgoingDirectory, "a.txt", "content of a.txt");
 
@@ -142,7 +139,7 @@ public class GitOutgoingCommandTest extends AbstractRemoteCommandTestBase
    */
   @Test
   public void testGetOutgoingChangesetsWithEmptyRepository()
-    throws IOException, RepositoryException
+    throws IOException
   {
     GitOutgoingCommand cmd = createCommand();
     OutgoingCommandRequest request = new OutgoingCommandRequest();

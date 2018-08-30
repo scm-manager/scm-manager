@@ -36,21 +36,19 @@ package sonia.scm.repository.api;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
-
 import sonia.scm.cache.CacheManager;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.spi.IncomingCommand;
 import sonia.scm.repository.spi.IncomingCommandRequest;
 import sonia.scm.security.RepositoryPermission;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * The incoming command shows new {@link Changeset}s found in a different
@@ -65,8 +63,6 @@ public final class IncomingCommandBuilder
   /**
    * Constructs a new {@link IncomingCommandBuilder}, this constructor should
    * only be called from the {@link RepositoryService}.
-   *
-   * @param cacheManager cache manager
    *
    * @param cacheManger
    * @param command implementation of the {@link IncomingCommand}
@@ -91,11 +87,10 @@ public final class IncomingCommandBuilder
    * @return incoming changesets
    *
    * @throws IOException
-   * @throws RepositoryException
    */
   public ChangesetPagingResult getIncomingChangesets(
     Repository remoteRepository)
-    throws IOException, RepositoryException
+    throws IOException
   {
     Subject subject = SecurityUtils.getSubject();
 

@@ -1,15 +1,25 @@
 package sonia.scm.api.v2.resources;
 
-import com.webcohesion.enunciate.metadata.rs.*;
+import com.webcohesion.enunciate.metadata.rs.ResponseCode;
+import com.webcohesion.enunciate.metadata.rs.ResponseHeader;
+import com.webcohesion.enunciate.metadata.rs.ResponseHeaders;
+import com.webcohesion.enunciate.metadata.rs.StatusCodes;
+import com.webcohesion.enunciate.metadata.rs.TypeHint;
+import sonia.scm.AlreadyExistsException;
 import sonia.scm.user.User;
-import sonia.scm.user.UserException;
 import sonia.scm.user.UserManager;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
-import javax.ws.rs.*;
+import javax.validation.Valid;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
 
 public class UserCollectionResource {
 
@@ -18,7 +28,7 @@ public class UserCollectionResource {
   private final UserCollectionToDtoMapper userCollectionToDtoMapper;
   private final ResourceLinks resourceLinks;
 
-  private final IdResourceManagerAdapter<User, UserDto, UserException> adapter;
+  private final IdResourceManagerAdapter<User, UserDto> adapter;
 
   @Inject
   public UserCollectionResource(UserManager manager, UserDtoToUserMapper dtoToUserMapper,
@@ -78,7 +88,7 @@ public class UserCollectionResource {
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
   @ResponseHeaders(@ResponseHeader(name = "Location", description = "uri to the created user"))
-  public Response create(UserDto userDto) throws IOException, UserException {
+  public Response create(@Valid UserDto userDto) throws AlreadyExistsException {
     return adapter.create(userDto,
                           () -> dtoToUserMapper.map(userDto, ""),
       user -> resourceLinks.user().self(user.getName()));

@@ -35,11 +35,10 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.repository.ChangesetPagingResult;
-import sonia.scm.repository.RepositoryException;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -58,9 +57,6 @@ public interface OutgoingCommand
    * @return
    *
    * @throws IOException
-   * @throws RepositoryException
    */
-  public ChangesetPagingResult getOutgoingChangesets(
-    OutgoingCommandRequest request)
-    throws IOException, RepositoryException;
+  ChangesetPagingResult getOutgoingChangesets(OutgoingCommandRequest request) throws IOException;
 }

@@ -346,21 +346,7 @@ public final class SvnUtil
     }
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param revision
-   *
-   * @return
-   *
-   * @throws RepositoryException
-   */
-  public static long getRevisionNumber(String revision)
-    throws RepositoryException
-  {
+  public static long getRevisionNumber(String revision) throws RevisionNotFoundException {
     // REVIEW Bei SVN wird ohne Revision die -1 genommen, was zu einem Fehler führt
     long revisionNumber = -1;
 
@@ -372,7 +358,7 @@ public final class SvnUtil
       }
       catch (NumberFormatException ex)
       {
-        throw new RepositoryException("given revision is not a svnrevision");
+        throw new RevisionNotFoundException(revision);
       }
     }
 

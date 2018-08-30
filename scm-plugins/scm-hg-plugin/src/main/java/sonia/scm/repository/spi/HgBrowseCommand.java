@@ -65,16 +65,6 @@ public class HgBrowseCommand extends AbstractCommand implements BrowseCommand
 
   //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   *
-   * @throws IOException
-   */
   @Override
   public BrowserResult getBrowserResult(BrowseCommandRequest request) throws IOException {
     HgFileviewCommand cmd = HgFileviewCommand.on(open());

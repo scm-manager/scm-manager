@@ -36,16 +36,15 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import org.junit.Test;
-
 import sonia.scm.repository.BlameLine;
 import sonia.scm.repository.BlameResult;
-import sonia.scm.repository.RepositoryException;
-
-import static org.junit.Assert.*;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -54,16 +53,8 @@ import java.io.IOException;
 public class HgBlameCommandTest extends AbstractHgCommandTestBase
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test
-  public void testGetBlameResult() throws IOException, RepositoryException
-  {
+  public void testGetBlameResult() throws IOException {
     BlameCommandRequest request = new BlameCommandRequest();
 
     request.setPath("a.txt");
@@ -87,17 +78,8 @@ public class HgBlameCommandTest extends AbstractHgCommandTestBase
                  line.getAuthor().getMail());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test
-  public void testGetBlameResultWithRevision()
-          throws IOException, RepositoryException
-  {
+  public void testGetBlameResultWithRevision() throws IOException {
     BlameCommandRequest request = new BlameCommandRequest();
 
     request.setPath("a.txt");

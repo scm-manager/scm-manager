@@ -3,15 +3,17 @@ package sonia.scm.api.v2.resources;
 import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
+import sonia.scm.ConcurrentModificationException;
+import sonia.scm.NotFoundException;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RepositoryIsNotArchivedException;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -30,7 +32,7 @@ public class RepositoryResource {
   private final RepositoryDtoToRepositoryMapper dtoToRepositoryMapper;
 
   private final RepositoryManager manager;
-  private final SingleResourceManagerAdapter<Repository, RepositoryDto, RepositoryException> adapter;
+  private final SingleResourceManagerAdapter<Repository, RepositoryDto> adapter;
   private final Provider<TagRootResource> tagRootResource;
   private final Provider<BranchRootResource> branchRootResource;
   private final Provider<ChangesetRootResource> changesetRootResource;
@@ -78,7 +80,7 @@ public class RepositoryResource {
     @ResponseCode(code = 404, condition = "not found, no repository with the specified name available in the namespace"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
-  public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name) {
+  public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name) throws NotFoundException {
     return adapter.get(loadBy(namespace, name), repositoryToDtoMapper::map);
   }
 
@@ -125,7 +127,7 @@ public class RepositoryResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
-  public Response update(@PathParam("namespace") String namespace, @PathParam("name") String name, RepositoryDto repositoryDto) {
+  public Response update(@PathParam("namespace") String namespace, @PathParam("name") String name, @Valid RepositoryDto repositoryDto) throws NotFoundException, ConcurrentModificationException {
     return adapter.update(
       loadBy(namespace, name),
       existing -> processUpdate(repositoryDto, existing),

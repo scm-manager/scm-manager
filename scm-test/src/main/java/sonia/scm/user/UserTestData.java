@@ -111,8 +111,9 @@ public final class UserTestData
    */
   public static User createTrillian()
   {
-    return new User("trillian", "Tricia McMillan",
-      "tricia.mcmillan@hitchhiker.com");
+    User user = new User("trillian", "Tricia McMillan", "tricia.mcmillan@hitchhiker.com");
+    user.setType("xml");
+    return user;
   }
 
   /**
@@ -123,7 +124,8 @@ public final class UserTestData
    */
   public static User createZaphod()
   {
-    return new User("zaphod", "Zaphod Beeblebrox",
-      "zaphod.beeblebrox@hitchhiker.com");
+    User user = new User("zaphod", "Zaphod Beeblebrox", "zaphod.beeblebrox@hitchhiker.com");
+    user.setType("xml");
+    return user;
   }
 }

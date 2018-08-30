@@ -37,7 +37,7 @@ package sonia.scm.util;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.CharMatcher;
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -700,7 +700,7 @@ public final class HttpUtil
   {
     String value = request.getHeader(header);
 
-    return Objects.firstNonNull(value, defaultValue);
+    return MoreObjects.firstNonNull(value, defaultValue);
   }
 
   /**

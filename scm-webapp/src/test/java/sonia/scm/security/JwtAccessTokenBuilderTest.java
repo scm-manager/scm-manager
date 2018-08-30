@@ -36,20 +36,26 @@ import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.collect.Sets;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import org.apache.shiro.util.ThreadContext;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
+
 import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.shiro.util.ThreadContext;
-import org.junit.Test;
-import static org.junit.Assert.*;
-import static org.hamcrest.Matchers.*;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import static org.mockito.Mockito.*;
-import org.mockito.junit.MockitoJUnitRunner;
+import static org.hamcrest.Matchers.isEmptyOrNullString;
+import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.when;
 
 /**
  * Unit test for {@link JwtAccessTokenBuilder}.

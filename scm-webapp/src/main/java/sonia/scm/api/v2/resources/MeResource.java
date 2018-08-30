@@ -4,8 +4,8 @@ import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import org.apache.shiro.SecurityUtils;
+import sonia.scm.NotFoundException;
 import sonia.scm.user.User;
-import sonia.scm.user.UserException;
 import sonia.scm.user.UserManager;
 import sonia.scm.web.VndMediaType;
 
@@ -28,7 +28,7 @@ public class MeResource {
 
   private final UserToUserDtoMapper userToDtoMapper;
 
-  private final IdResourceManagerAdapter<User, UserDto, UserException> adapter;
+  private final IdResourceManagerAdapter<User, UserDto> adapter;
   @Inject
   public MeResource(UserToUserDtoMapper userToDtoMapper, UserManager manager) {
     this.userToDtoMapper = userToDtoMapper;
@@ -47,7 +47,7 @@ public class MeResource {
     @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
-  public Response get(@Context Request request, @Context UriInfo uriInfo) {
+  public Response get(@Context Request request, @Context UriInfo uriInfo) throws NotFoundException {
 
     String id = (String) SecurityUtils.getSubject().getPrincipals().getPrimaryPrincipal();
     return adapter.get(id, userToDtoMapper::map);

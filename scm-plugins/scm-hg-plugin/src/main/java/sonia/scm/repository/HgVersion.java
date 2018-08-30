@@ -34,13 +34,14 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -100,7 +101,7 @@ public class HgVersion
   public String toString()
   {
     //J-
-    return Objects.toStringHelper(this)
+    return MoreObjects.toStringHelper(this)
                   .add("mercurial", mercurial)
                   .add("python", python)
                   .toString();

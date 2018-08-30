@@ -35,6 +35,7 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import sonia.scm.security.PermissionObject;
 
@@ -135,7 +136,7 @@ public class Permission implements PermissionObject, Serializable
 
     final Permission other = (Permission) obj;
 
-    return Objects.equal(name, other.name) 
+    return Objects.equal(name, other.name)
       && Objects.equal(type, other.type)
       && Objects.equal(groupPermission, other.groupPermission);
   }
@@ -157,7 +158,7 @@ public class Permission implements PermissionObject, Serializable
   public String toString()
   {
     //J-
-    return Objects.toStringHelper(this)
+    return MoreObjects.toStringHelper(this)
             .add("name", name)
             .add("type", type)
             .add("groupPermission", groupPermission)

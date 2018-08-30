@@ -5,7 +5,6 @@ import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import sonia.scm.repository.Branches;
 import sonia.scm.repository.NamespaceAndName;
-import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.repository.api.CommandNotSupportedException;
 import sonia.scm.repository.api.RepositoryService;
@@ -55,7 +54,7 @@ public class BranchRootResource {
     @ResponseCode(code = 404, condition = "not found, no branch with the specified name for the repository available or repository not found"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
-  public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("branch") String branchName) throws IOException, RepositoryException {
+  public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("branch") String branchName) throws IOException {
     try (RepositoryService repositoryService = servicefactory.create(new NamespaceAndName(namespace, name))) {
       Branches branches = repositoryService.getBranchesCommand().getBranches();
       return branches.getBranches()
@@ -100,7 +99,7 @@ public class BranchRootResource {
     @ResponseCode(code = 404, condition = "not found, no repository found for the given namespace and name"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
-  public Response getAll(@PathParam("namespace") String namespace, @PathParam("name") String name) throws IOException, RepositoryException {
+  public Response getAll(@PathParam("namespace") String namespace, @PathParam("name") String name) throws IOException {
     try (RepositoryService repositoryService = servicefactory.create(new NamespaceAndName(namespace, name))) {
       Branches branches = repositoryService.getBranchesCommand().getBranches();
       return Response.ok(branchCollectionToDtoMapper.map(namespace, name, branches.getBranches())).build();

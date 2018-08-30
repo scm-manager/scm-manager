@@ -35,6 +35,7 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.NotFoundException;
 import sonia.scm.util.Util;
 
 /**
@@ -42,8 +43,7 @@ import sonia.scm.util.Util;
  *
  * @author Sebastian Sdorra
  */
-public class RevisionNotFoundException extends RepositoryException
-{
+public class RevisionNotFoundException extends NotFoundException {
 
   /** Field description */
   private static final long serialVersionUID = -5594008535358811998L;
@@ -59,7 +59,7 @@ public class RevisionNotFoundException extends RepositoryException
    */
   public RevisionNotFoundException(String revision)
   {
-    super("revision \"".concat(Util.nonNull(revision)).concat("\" not found"));
+    super("revision", revision);
     this.revision = Util.nonNull(revision);
   }
 
