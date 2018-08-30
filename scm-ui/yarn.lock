@@ -724,9 +724,9 @@
     node-fetch "^2.1.1"
     url-template "^2.0.8"
 
-"@scm-manager/ui-bundler@^0.0.6":
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/@scm-manager/ui-bundler/-/ui-bundler-0.0.6.tgz#7c8b1787a468fb37fd9265c0edc210beb6c02538"
+"@scm-manager/ui-bundler@^0.0.7":
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/@scm-manager/ui-bundler/-/ui-bundler-0.0.7.tgz#4b14e89e60559617c5559226a7a9d4a342f7d8f4"
   dependencies:
     "@babel/core" "^7.0.0-rc.2"
     "@babel/plugin-proposal-class-properties" "^7.0.0-rc.2"
