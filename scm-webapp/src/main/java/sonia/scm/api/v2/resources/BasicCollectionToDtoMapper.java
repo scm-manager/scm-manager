@@ -11,6 +11,7 @@ import sonia.scm.PageResult;
 import javax.inject.Inject;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
 import static com.damnhandy.uri.template.UriTemplate.fromTemplate;
@@ -24,7 +25,7 @@ abstract class BasicCollectionToDtoMapper<E extends ModelObject, D extends HalRe
 
   private final String collectionName;
 
-  protected final M entityToDtoMapper;
+  private final M entityToDtoMapper;
 
   @Inject
   public BasicCollectionToDtoMapper(String collectionName, M entityToDtoMapper) {
@@ -32,15 +33,15 @@ abstract class BasicCollectionToDtoMapper<E extends ModelObject, D extends HalRe
     this.entityToDtoMapper = entityToDtoMapper;
   }
 
-  public CollectionDto map(int pageNumber, int pageSize, PageResult<E> pageResult) {
-    return map(pageNumber, pageSize, pageResult, entityToDtoMapper::map, createSelfLink());
+  CollectionDto map(int pageNumber, int pageSize, PageResult<E> pageResult, String selfLink, Optional<String> createLink) {
+    return map(pageNumber, pageSize, pageResult, selfLink, createLink, entityToDtoMapper::map);
   }
 
-  public CollectionDto map(int pageNumber, int pageSize, PageResult<E> pageResult, Function<E, D> mapper, String selfLink) {
+  CollectionDto map(int pageNumber, int pageSize, PageResult<E> pageResult, String selfLink, Optional<String> createLink, Function<E, ? extends HalRepresentation> mapper) {
     NumberedPaging paging = zeroBasedNumberedPaging(pageNumber, pageSize, pageResult.getOverallCount());
-    List<D> dtos = pageResult.getEntities().stream().map(mapper).collect(toList());
+    List<HalRepresentation> dtos = pageResult.getEntities().stream().map(mapper).collect(toList());
     CollectionDto collectionDto = new CollectionDto(
-      createLinks(paging, selfLink),
+      createLinks(paging, selfLink, createLink),
       embedDtos(dtos));
     collectionDto.setPage(pageNumber);
     collectionDto.setPageTotal(computePageTotal(pageSize, pageResult));
@@ -55,24 +56,16 @@ abstract class BasicCollectionToDtoMapper<E extends ModelObject, D extends HalRe
     }
   }
 
-  private Links createLinks(NumberedPaging page, String baseUrl) {
+  private Links createLinks(NumberedPaging page, String selfLink, Optional<String> createLink) {
     Links.Builder linksBuilder = linkingTo()
       .with(page.links(
-        fromTemplate(baseUrl + "{?page,pageSize}"),
+        fromTemplate(selfLink + "{?page,pageSize}"),
         EnumSet.allOf(PagingRel.class)));
-    if (isCreatePermitted()) {
-      linksBuilder.single(link("create", createCreateLink()));
-    }
+    createLink.ifPresent(link -> linksBuilder.single(link("create", link)));
     return linksBuilder.build();
   }
 
-  abstract boolean isCreatePermitted();
-
-  abstract String createCreateLink();
-
-  abstract String createSelfLink();
-
-  private Embedded embedDtos(List<D> dtos) {
+  private Embedded embedDtos(List<HalRepresentation> dtos) {
     return embeddedBuilder()
       .with(collectionName, dtos)
       .build();
