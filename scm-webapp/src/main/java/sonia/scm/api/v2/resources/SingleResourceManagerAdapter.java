@@ -71,8 +71,8 @@ class SingleResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
   }
 
   private boolean modelObjectWasModifiedConcurrently(MODEL_OBJECT existing, MODEL_OBJECT updated) {
-    return (existing.getLastModified() != null && updated.getLastModified() != null)
-      && (existing.getLastModified() > updated.getLastModified());
+    return existing.getLastModified() != null
+      && (updated.getLastModified() == null || existing.getLastModified() > updated.getLastModified());
   }
 
   public Response delete(Supplier<Optional<MODEL_OBJECT>> reader) {

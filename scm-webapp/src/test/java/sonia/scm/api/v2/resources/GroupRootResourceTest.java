@@ -122,10 +122,10 @@ public class GroupRootResourceTest {
     MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
-    Group capturedGroup = groupCaptor.getValue();
 
     assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
 
+    Group capturedGroup = groupCaptor.getValue();
     assertEquals("Updated description", capturedGroup.getDescription());
   }
 
@@ -147,8 +147,25 @@ public class GroupRootResourceTest {
   }
 
   @Test
-  public void updateShouldFailOnConcurrentModification() throws URISyntaxException, IOException {
+  public void updateShouldFailOnConcurrentModification_oldModificationDate() throws URISyntaxException, IOException {
     URL url = Resources.getResource("sonia/scm/api/v2/group-test-update-concurrent-modification.json");
+    byte[] groupJson = Resources.toByteArray(url);
+
+    MockHttpRequest request = MockHttpRequest
+      .put("/" + GroupRootResource.GROUPS_PATH_V2 + "admin")
+      .contentType(VndMediaType.GROUP)
+      .content(groupJson);
+
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_CONFLICT, response.getStatus());
+  }
+
+  @Test
+  public void updateShouldFailOnConcurrentModification_unsetModificationDate() throws URISyntaxException, IOException {
+    URL url = Resources.getResource("sonia/scm/api/v2/group-test-update-concurrent-modification_null_date.json");
     byte[] groupJson = Resources.toByteArray(url);
 
     MockHttpRequest request = MockHttpRequest
@@ -236,7 +253,7 @@ public class GroupRootResourceTest {
     group.setName("admin");
     group.setCreationDate(0L);
     group.setMembers(Collections.singletonList("user"));
-    group.setLastModified(1234L);
+    group.setLastModified(3600000L);
     return group;
   }
 }
