@@ -74,8 +74,7 @@ class PluginLoader extends React.Component<Props, State> {
       })
       .then(script => {
         // TODO is this safe???
-        // NOSONAR
-        eval(script);
+        eval(script); // NOSONAR
       });
   };
 
