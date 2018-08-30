@@ -14,6 +14,8 @@ import reducer, {
   isModifyPermissionPending,
   createPermission,
   hasCreatePermission,
+  deletePermission,
+  deletePermissionSuccess,
   MODIFY_PERMISSION_FAILURE,
   MODIFY_PERMISSION_PENDING,
   FETCH_PERMISSIONS,
@@ -22,11 +24,12 @@ import reducer, {
   FETCH_PERMISSIONS_FAILURE,
   MODIFY_PERMISSION_SUCCESS,
   MODIFY_PERMISSION,
-  CREATE_PERMISSION,
   CREATE_PERMISSION_PENDING,
   CREATE_PERMISSION_SUCCESS,
   CREATE_PERMISSION_FAILURE,
-  createPermissionSuccess
+  DELETE_PERMISSION_PENDING,
+  DELETE_PERMISSION_SUCCESS,
+  DELETE_PERMISSION_FAILURE
 } from "./permissions";
 import type { Permission, PermissionCollection } from "../types/Permissions";
 
@@ -292,6 +295,89 @@ describe("permission fetch", () => {
         expect(callMe).toBe("yeah");
       });
   });
+  it("should delete successfully permission user_eins", () => {
+    fetchMock.deleteOnce(
+      hitchhiker_puzzle42Permission_user_eins._links.delete.href,
+      {
+        status: 204
+      }
+    );
+
+    const store = mockStore({});
+    return store
+      .dispatch(
+        deletePermission(
+          hitchhiker_puzzle42Permission_user_eins,
+          "hitchhiker",
+          "puzzle42"
+        )
+      )
+      .then(() => {
+        const actions = store.getActions();
+        expect(actions.length).toBe(2);
+        expect(actions[0].type).toEqual(DELETE_PERMISSION_PENDING);
+        expect(actions[0].payload).toBe(
+          hitchhiker_puzzle42Permission_user_eins
+        );
+        expect(actions[1].type).toEqual(DELETE_PERMISSION_SUCCESS);
+      });
+  });
+
+  it("should call the callback, after successful delete", () => {
+    fetchMock.deleteOnce(
+      hitchhiker_puzzle42Permission_user_eins._links.delete.href,
+      {
+        status: 204
+      }
+    );
+
+    let called = false;
+    const callMe = () => {
+      called = true;
+    };
+
+    const store = mockStore({});
+    return store
+      .dispatch(
+        deletePermission(
+          hitchhiker_puzzle42Permission_user_eins,
+          "hitchhiker",
+          "puzzle42",
+          callMe
+        )
+      )
+      .then(() => {
+        expect(called).toBeTruthy();
+      });
+  });
+
+  it("should fail to delete permission", () => {
+    fetchMock.deleteOnce(
+      hitchhiker_puzzle42Permission_user_eins._links.delete.href,
+      {
+        status: 500
+      }
+    );
+
+    const store = mockStore({});
+    return store
+      .dispatch(
+        deletePermission(
+          hitchhiker_puzzle42Permission_user_eins,
+          "hitchhiker",
+          "puzzle42"
+        )
+      )
+      .then(() => {
+        const actions = store.getActions();
+        expect(actions[0].type).toEqual(DELETE_PERMISSION_PENDING);
+        expect(actions[0].payload).toBe(
+          hitchhiker_puzzle42Permission_user_eins
+        );
+        expect(actions[1].type).toEqual(DELETE_PERMISSION_FAILURE);
+        expect(actions[1].payload).toBeDefined();
+      });
+  });
 });
 
 describe("permissions reducer", () => {
@@ -340,6 +426,35 @@ describe("permissions reducer", () => {
     const newState = reducer(
       oldState,
       modifyPermissionSuccess(permissionEdited, "hitchhiker", "puzzle42")
+    );
+    expect(newState["hitchhiker/puzzle42"]).toEqual(
+      expectedState["hitchhiker/puzzle42"]
+    );
+  });
+
+  it("should remove permission from state when delete succeeds", () => {
+    const state = {
+      "hitchhiker/puzzle42": {
+        entries: [
+          hitchhiker_puzzle42Permission_user_eins,
+          hitchhiker_puzzle42Permission_user_zwei
+        ]
+      }
+    };
+
+    const expectedState = {
+      "hitchhiker/puzzle42": {
+        entries: [hitchhiker_puzzle42Permission_user_zwei]
+      }
+    };
+
+    const newState = reducer(
+      state,
+      deletePermissionSuccess(
+        hitchhiker_puzzle42Permission_user_eins,
+        "hitchhiker",
+        "puzzle42"
+      )
     );
     expect(newState["hitchhiker/puzzle42"]).toEqual(
       expectedState["hitchhiker/puzzle42"]

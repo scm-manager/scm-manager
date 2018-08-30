@@ -34,10 +34,20 @@ export const CREATE_PERMISSION = "scm/permissions/CREATE_PERMISSION";
 export const CREATE_PERMISSION_PENDING = `${CREATE_PERMISSION}_${
   types.PENDING_SUFFIX
 }`;
-export const CREATE_PERMISSION_SUCCESS = `$CREATE_PERMISSION}_${
+export const CREATE_PERMISSION_SUCCESS = `${CREATE_PERMISSION}_${
   types.SUCCESS_SUFFIX
 }`;
 export const CREATE_PERMISSION_FAILURE = `${CREATE_PERMISSION}_${
+  types.FAILURE_SUFFIX
+}`;
+export const DELETE_PERMISSION = "scm/permissions/DELETE_PERMISSION";
+export const DELETE_PERMISSION_PENDING = `${DELETE_PERMISSION}_${
+  types.PENDING_SUFFIX
+}`;
+export const DELETE_PERMISSION_SUCCESS = `${DELETE_PERMISSION}_${
+  types.SUCCESS_SUFFIX
+}`;
+export const DELETE_PERMISSION_FAILURE = `${DELETE_PERMISSION}_${
   types.FAILURE_SUFFIX
 }`;
 
@@ -263,6 +273,88 @@ export function createPermissionFailure(
   };
 }
 
+// delete permission
+
+export function deletePermission(
+  permission: Permission,
+  namespace: string,
+  name: string,
+  callback?: () => void
+) {
+  return function(dispatch: any) {
+    dispatch(deletePermissionPending(permission, namespace, name));
+    return apiClient
+      .delete(permission._links.delete.href)
+      .then(() => {
+        dispatch(deletePermissionSuccess(permission, namespace, name));
+        if (callback) {
+          callback();
+        }
+      })
+      .catch(cause => {
+        const error = new Error(
+          `could not delete permission ${permission.name}: ${cause.message}`
+        );
+        dispatch(deletePermissionFailure(permission, namespace, name, error));
+      });
+  };
+}
+
+export function deletePermissionPending(
+  permission: Permission,
+  namespace: string,
+  name: string
+): Action {
+  return {
+    type: DELETE_PERMISSION_PENDING,
+    payload: permission,
+    itemId: namespace + "/" + name + "/" + permission.name
+  };
+}
+
+export function deletePermissionSuccess(
+  permission: Permission,
+  namespace: string,
+  name: string
+): Action {
+  return {
+    type: DELETE_PERMISSION_SUCCESS,
+    payload: {
+      permission,
+      position: namespace + "/" + name
+    },
+    itemId: namespace + "/" + name + "/" + permission.name
+  };
+}
+
+export function deletePermissionFailure(
+  permission: Permission,
+  namespace: string,
+  name: string,
+  error: Error
+): Action {
+  return {
+    type: DELETE_PERMISSION_FAILURE,
+    payload: {
+      error,
+      permission
+    },
+    itemId: namespace + "/" + name + "/" + permission.name
+  };
+}
+
+function deletePermissionFromState(
+  oldPermissions: PermissionCollection,
+  permission: Permission
+) {
+  for (let i = 0; i < oldPermissions.length; i++) {
+    if (oldPermissions[i] === permission) {
+      oldPermissions.splice(i, 1);
+    }
+  }
+  return oldPermissions;
+}
+
 // reducer
 export default function reducer(
   state: Object = {},
@@ -292,6 +384,19 @@ export default function reducer(
         [positionOfPermission]: {
           ...state[positionOfPermission],
           entries: newPermission
+        }
+      };
+    case DELETE_PERMISSION_SUCCESS:
+      const permissionPosition = action.payload.position;
+      const new_Permissions = deletePermissionFromState(
+        state[action.payload.position].entries,
+        action.payload.permission
+      );
+      return {
+        ...state,
+        [permissionPosition]: {
+          ...state[permissionPosition],
+          entries: new_Permissions
         }
       };
     default:
