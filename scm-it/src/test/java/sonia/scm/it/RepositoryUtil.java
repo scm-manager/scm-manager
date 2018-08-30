@@ -37,9 +37,24 @@ public class RepositoryUtil {
   }
 
   static void createAndCommitFile(RepositoryClient repositoryClient, String username, String fileName, String content) throws IOException {
-    Files.write(content, new File(repositoryClient.getWorkingCopy(), fileName), Charsets.UTF_8);
-    repositoryClient.getAddCommand().add(fileName);
+    File file = new File(repositoryClient.getWorkingCopy(), fileName);
+    Files.write(content, file, Charsets.UTF_8);
+    addWithParentDirectories(repositoryClient, file);
     commit(repositoryClient, username, "added " + fileName);
+  }
+
+  private static String addWithParentDirectories(RepositoryClient repositoryClient, File file) throws IOException {
+    File parent = file.getParentFile();
+    String thisName = file.getName();
+    String path;
+    if (!repositoryClient.getWorkingCopy().equals(parent)) {
+      addWithParentDirectories(repositoryClient, parent);
+      path = addWithParentDirectories(repositoryClient, parent) + File.separator + thisName;
+    } else {
+      path = thisName;
+    }
+    repositoryClient.getAddCommand().add(path);
+    return path;
   }
 
   static Changeset commit(RepositoryClient repositoryClient, String username, String message) throws IOException {

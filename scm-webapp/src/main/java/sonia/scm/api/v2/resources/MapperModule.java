@@ -28,6 +28,8 @@ public class MapperModule extends AbstractModule {
     bind(PermissionDtoToPermissionMapper.class).to(Mappers.getMapper(PermissionDtoToPermissionMapper.class).getClass());
     bind(PermissionToPermissionDtoMapper.class).to(Mappers.getMapper(PermissionToPermissionDtoMapper.class).getClass());
 
+    bind(FileObjectToFileObjectDtoMapper.class).to(Mappers.getMapper(FileObjectToFileObjectDtoMapper.class).getClass());
+
     bind(UriInfoStore.class).in(ServletScopes.REQUEST);
   }
 }

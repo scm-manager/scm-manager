@@ -18,6 +18,7 @@ import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.jboss.resteasy.spi.HttpRequest;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -28,7 +29,11 @@ import org.junit.jupiter.api.TestFactory;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import sonia.scm.api.rest.AuthorizationExceptionMapper;
-import sonia.scm.repository.*;
+import sonia.scm.repository.NamespaceAndName;
+import sonia.scm.repository.Permission;
+import sonia.scm.repository.PermissionType;
+import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryManager;
 import sonia.scm.web.VndMediaType;
 
 import java.io.IOException;
@@ -46,7 +51,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 @Slf4j
@@ -137,6 +145,11 @@ public class PermissionRootResourceTest {
     dispatcher.getProviderFactory().registerProvider(PermissionNotFoundExceptionMapper.class);
     dispatcher.getProviderFactory().registerProvider(PermissionAlreadyExistsExceptionMapper.class);
     dispatcher.getProviderFactory().registerProvider(AuthorizationExceptionMapper.class);
+  }
+
+  @After
+  public void unbind() {
+    ThreadContext.unbindSubject();
   }
 
   @TestFactory
