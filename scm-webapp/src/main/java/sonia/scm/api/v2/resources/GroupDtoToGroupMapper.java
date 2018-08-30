@@ -8,15 +8,8 @@ import java.time.Instant;
 
 
 @Mapper
-public abstract class GroupDtoToGroupMapper {
+public abstract class GroupDtoToGroupMapper extends BaseDtoMapper {
 
   @Mapping(target = "creationDate", ignore = true)
   public abstract Group map(GroupDto groupDto);
-
-  Long mapDate(Instant value) {
-    if (value != null) {
-      return value.toEpochMilli();
-    }
-    return null;
-  }
 }

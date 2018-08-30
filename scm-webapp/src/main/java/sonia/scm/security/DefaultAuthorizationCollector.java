@@ -203,9 +203,9 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
       boolean hasPermission = false;
       for (sonia.scm.repository.Permission permission : repositoryPermissions)
       {
-        if (isUserPermitted(user, groups, permission))
+        hasPermission = isUserPermitted(user, groups, permission);
+        if (hasPermission)
         {
-
           String perm = permission.getType().getPermissionPrefix().concat(repository.getId());
           if (logger.isTraceEnabled())
           {

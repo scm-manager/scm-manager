@@ -10,10 +10,13 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Answers;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import sonia.scm.PageResult;
 import sonia.scm.repository.NamespaceAndName;
+import sonia.scm.repository.Permission;
+import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryIsNotArchivedException;
 import sonia.scm.repository.RepositoryManager;
@@ -33,10 +36,13 @@ import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
 import static javax.servlet.http.HttpServletResponse.SC_PRECONDITION_FAILED;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -237,6 +243,28 @@ public class RepositoryRootResourceTest {
     assertEquals(HttpServletResponse.SC_CREATED, response.getStatus());
     assertEquals("/v2/repositories/otherspace/repo", response.getOutputHeaders().get("Location").get(0).toString());
     verify(repositoryManager).create(any(Repository.class));
+  }
+
+  @Test
+  public void shouldNotOverwriteExistingPermissionsOnUpdate() throws Exception {
+    Repository existingRepository = mockRepository("space", "repo");
+    existingRepository.setPermissions(singletonList(new Permission("user", PermissionType.READ)));
+
+    URL url = Resources.getResource("sonia/scm/api/v2/repository-test-update.json");
+    byte[] repository = Resources.toByteArray(url);
+
+    ArgumentCaptor<Repository> modifiedRepositoryCaptor = forClass(Repository.class);
+    doNothing().when(repositoryManager).modify(modifiedRepositoryCaptor.capture());
+
+    MockHttpRequest request = MockHttpRequest
+      .put("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo")
+      .contentType(VndMediaType.REPOSITORY)
+      .content(repository);
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertFalse(modifiedRepositoryCaptor.getValue().getPermissions().isEmpty());
   }
 
   private PageResult<Repository> createSingletonPageResult(Repository repository) {
