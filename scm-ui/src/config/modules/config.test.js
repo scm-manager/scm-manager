@@ -23,7 +23,7 @@ import reducer, {
   getConfigUpdatePermission
 } from "./config";
 
-const CONFIG_URL = "/scm/api/rest/v2/config";
+const CONFIG_URL = "/api/rest/v2/config";
 
 const error = new Error("You have an error!");
 
@@ -40,7 +40,7 @@ const config = {
   anonymousAccessEnabled: false,
   adminGroups: [],
   adminUsers: [],
-  baseUrl: "http://localhost:8081/scm",
+  baseUrl: "http://localhost:8081",
   forceBaseUrl: false,
   loginAttemptLimit: -1,
   proxyExcludes: [],
@@ -51,8 +51,8 @@ const config = {
   enabledXsrfProtection: true,
   defaultNamespaceStrategy: "sonia.scm.repository.DefaultNamespaceStrategy",
   _links: {
-    self: { href: "http://localhost:8081/scm/api/rest/v2/config" },
-    update: { href: "http://localhost:8081/scm/api/rest/v2/config" }
+    self: { href: "http://localhost:8081/api/rest/v2/config" },
+    update: { href: "http://localhost:8081/api/rest/v2/config" }
   }
 };
 
@@ -69,7 +69,7 @@ const configWithNullValues = {
   anonymousAccessEnabled: false,
   adminGroups: null,
   adminUsers: null,
-  baseUrl: "http://localhost:8081/scm",
+  baseUrl: "http://localhost:8081",
   forceBaseUrl: false,
   loginAttemptLimit: -1,
   proxyExcludes: null,
@@ -80,8 +80,8 @@ const configWithNullValues = {
   enabledXsrfProtection: true,
   defaultNamespaceStrategy: "sonia.scm.repository.DefaultNamespaceStrategy",
   _links: {
-    self: { href: "http://localhost:8081/scm/api/rest/v2/config" },
-    update: { href: "http://localhost:8081/scm/api/rest/v2/config" }
+    self: { href: "http://localhost:8081/api/rest/v2/config" },
+    update: { href: "http://localhost:8081/api/rest/v2/config" }
   }
 };
 
@@ -135,7 +135,7 @@ describe("config fetch()", () => {
   });
 
   it("should successfully modify config", () => {
-    fetchMock.putOnce("http://localhost:8081/scm/api/rest/v2/config", {
+    fetchMock.putOnce("http://localhost:8081/api/rest/v2/config", {
       status: 204
     });
 
@@ -150,7 +150,7 @@ describe("config fetch()", () => {
   });
 
   it("should call the callback after modifying config", () => {
-    fetchMock.putOnce("http://localhost:8081/scm/api/rest/v2/config", {
+    fetchMock.putOnce("http://localhost:8081/api/rest/v2/config", {
       status: 204
     });
 
@@ -169,7 +169,7 @@ describe("config fetch()", () => {
   });
 
   it("should fail modifying config on HTTP 500", () => {
-    fetchMock.putOnce("http://localhost:8081/scm/api/rest/v2/config", {
+    fetchMock.putOnce("http://localhost:8081/api/rest/v2/config", {
       status: 500
     });
 
