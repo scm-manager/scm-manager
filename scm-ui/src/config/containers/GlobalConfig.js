@@ -17,7 +17,6 @@ import ErrorPage from "../../components/ErrorPage";
 import type { Config } from "../types/Config";
 import ConfigForm from "../components/form/ConfigForm";
 import Loading from "../../components/Loading";
-import type { History } from "history";
 
 type Props = {
   loading: boolean,
@@ -31,23 +30,17 @@ type Props = {
   configReset: void => void,
 
   // context objects
-  t: string => string,
-  history: History
+  t: string => string
 };
 
 class GlobalConfig extends React.Component<Props> {
-  configModified = () => () => {
-    this.props.fetchConfig();
-    this.props.history.push(`/config`);
-  };
-
   componentDidMount() {
     this.props.configReset();
     this.props.fetchConfig();
   }
 
   modifyConfig = (config: Config) => {
-    this.props.modifyConfig(config, this.configModified());
+    this.props.modifyConfig(config);
   };
 
   render() {

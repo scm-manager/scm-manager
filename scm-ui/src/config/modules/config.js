@@ -132,6 +132,7 @@ function removeNullValues(config: Config) {
 
 function reducer(state: any = {}, action: any = {}) {
   switch (action.type) {
+    case MODIFY_CONFIG_SUCCESS:
     case FETCH_CONFIG_SUCCESS:
       const config = removeNullValues(action.payload);
       return {
