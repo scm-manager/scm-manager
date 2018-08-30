@@ -2,19 +2,20 @@
 import React from "react";
 import type { Permission } from "../types/Permissions";
 import { Checkbox } from "../../components/forms/index";
-import { DeleteButton } from "../../components/buttons/index";
 import { translate } from "react-i18next";
 import { Select } from "../../components/forms/index";
 import {
   modifyPermission,
   isModifyPermissionPending,
   getModifyPermissionFailure,
-  modifyPermissionReset
+  modifyPermissionReset,
+  deletePermission
 } from "../modules/permissions";
 import connect from "react-redux/es/connect/connect";
 import { withRouter } from "react-router-dom";
 import type { History } from "history";
 import ErrorNotification from "../../components/ErrorNotification";
+import DeletePermissionButton from "../components/buttons/DeletePermissionButton";
 
 type Props = {
   submitForm: Permission => void,
@@ -27,7 +28,8 @@ type Props = {
   history: History,
   loading: boolean,
   error: Error,
-  permissionReset: (string, string, string) => void
+  permissionReset: (string, string, string) => void,
+  deletePermission: (Permission, string, string, (void) => void) => void
 };
 
 type State = {
@@ -67,13 +69,25 @@ class SinglePermission extends React.Component<Props, State> {
     }
   }
 
+  permissionDeleted = () => {
+    this.props.history.push(
+      "/repo/" + this.props.namespace + "/" + this.props.name + "/permissions"
+    );
+  };
+
+  deletePermission = () => {
+    this.props.deletePermission(
+      this.props.permission,
+      this.props.namespace,
+      this.props.name,
+      this.permissionDeleted
+    );
+  };
+
   render() {
     const { permission } = this.state;
-    const { t, loading, error } = this.props;
+    const { t, loading, error, namespace, name } = this.props;
     const types = ["READ", "OWNER", "WRITE"];
-    const deleteButton = this.props.permission._links.delete ? (
-      <DeleteButton label={t("edit-permission.delete-button")} />
-    ) : null;
 
     const typeSelector = this.props.permission._links.update ? (
       <td>
@@ -100,7 +114,12 @@ class SinglePermission extends React.Component<Props, State> {
         </td>
         {typeSelector}
         <td>
-          {deleteButton}
+          <DeletePermissionButton
+            permission={permission}
+            namespace={namespace}
+            name={name}
+            deletePermission={this.deletePermission}
+          />
           {errorNotification}
         </td>
       </tr>
@@ -170,6 +189,14 @@ const mapDispatchToProps = dispatch => {
       permissionname: string
     ) => {
       dispatch(modifyPermissionReset(namespace, name, permissionname));
+    },
+    deletePermission: (
+      permission: Permission,
+      namespace: string,
+      name: string,
+      callback: () => void
+    ) => {
+      dispatch(deletePermission(permission, namespace, name, callback));
     }
   };
 };

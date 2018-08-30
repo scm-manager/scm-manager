@@ -11,5 +11,14 @@
   "edit-permission": {
     "delete-button": "Delete",
     "save-button": "Save Changes"
+  },
+  "delete-permission-button": {
+    "label": "Delete",
+    "confirm-alert": {
+      "title": "Delete permission",
+      "message": "Do you really want to delete the permission?",
+      "submit": "Yes",
+      "cancel": "No"
+    }
   }
 }
