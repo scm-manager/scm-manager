@@ -42,7 +42,7 @@
     "pre-commit": "jest && flow && eslint src"
   },
   "devDependencies": {
-    "@scm-manager/ui-bundler": "^0.0.5",
+    "@scm-manager/ui-bundler": "^0.0.6",
     "babel-eslint": "^8.2.6",
     "copyfiles": "^2.0.0",
     "enzyme": "^3.3.0",
