@@ -13,7 +13,7 @@ type State = {
 };
 
 type Plugin = {
-  id: string,
+  name: string,
   bundles: string[]
 };
 

@@ -206,6 +206,7 @@ describe("config reducer", () => {
   });
 
   it("should return empty arrays for null values", () => {
+    // $FlowFixMe
     const config = reducer({}, fetchConfigSuccess(configWithNullValues))
       .entries;
     expect(config.adminUsers).toEqual([]);

@@ -754,9 +754,9 @@
     vinyl-source-stream "^2.0.0"
     watchify "^3.11.0"
 
-"@scm-manager/ui-extensions@^0.0.6":
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/@scm-manager/ui-extensions/-/ui-extensions-0.0.6.tgz#1508acdabdf552ac9d832e8cb078d4eeae48b7c7"
+"@scm-manager/ui-extensions@^0.0.7":
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/@scm-manager/ui-extensions/-/ui-extensions-0.0.7.tgz#a0a657a1410b78838ba0b36096ef631dca7fe27e"
   dependencies:
     react "^16.4.2"
     react-dom "^16.4.2"

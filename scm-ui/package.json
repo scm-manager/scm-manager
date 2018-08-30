@@ -6,7 +6,7 @@
   "main": "src/index.js",
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.3.1",
-    "@scm-manager/ui-extensions": "^0.0.6",
+    "@scm-manager/ui-extensions": "^0.0.7",
     "bulma": "^0.7.1",
     "classnames": "^2.2.5",
     "font-awesome": "^4.7.0",
