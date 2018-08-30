@@ -24,12 +24,14 @@ type Props = {
   error: Error,
   config: Config,
   configUpdatePermission: boolean,
+
   // dispatch functions
   modifyConfig: (config: Config, callback?: () => void) => void,
-  // context objects
-  t: string => string,
   fetchConfig: void => void,
   configReset: void => void,
+
+  // context objects
+  t: string => string,
   history: History
 };
 
