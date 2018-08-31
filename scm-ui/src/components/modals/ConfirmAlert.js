@@ -1,18 +1,26 @@
+// @flow
 //modified from https://github.com/GA-MO/react-confirm-alert
 
-import React from "react";
+import * as React from "react";
 import { render, unmountComponentAtNode } from "react-dom";
 import "./ConfirmAlert.css";
+
+type Button = {
+  label: string,
+  onClick: () => void | null
+};
 
 type Props = {
   title: string,
   message: string,
-  buttons: array
+  buttons: Button[]
 };
 
 class ConfirmAlert extends React.Component<Props> {
-  handleClickButton = button => {
-    if (button.onClick) button.onClick();
+  handleClickButton = (button: Button) => {
+    if (button.onClick) {
+      button.onClick();
+    }
     this.close();
   };
 
@@ -48,20 +56,26 @@ class ConfirmAlert extends React.Component<Props> {
   }
 }
 
-function createElementReconfirm(properties) {
+function createElementReconfirm(properties: Props) {
   const divTarget = document.createElement("div");
   divTarget.id = "react-confirm-alert";
-  document.body.appendChild(divTarget);
-  render(<ConfirmAlert {...properties} />, divTarget);
+  if (document.body) {
+    document.body.appendChild(divTarget);
+    render(<ConfirmAlert {...properties} />, divTarget);
+  }
 }
 
 function removeElementReconfirm() {
   const target = document.getElementById("react-confirm-alert");
-  unmountComponentAtNode(target);
-  target.parentNode.removeChild(target);
+  if (target) {
+    unmountComponentAtNode(target);
+    if (target.parentNode) {
+      target.parentNode.removeChild(target);
+    }
+  }
 }
 
-export function confirmAlert(properties) {
+export function confirmAlert(properties: Props) {
   createElementReconfirm(properties);
 }
 

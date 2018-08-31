@@ -6,7 +6,6 @@ import type { Repository } from "../../types/Repositories";
 import DateFromNow from "../../../components/DateFromNow";
 import RepositoryEntryLink from "./RepositoryEntryLink";
 import classNames from "classnames";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import RepositoryAvatar from "./RepositoryAvatar";
 
 const styles = {

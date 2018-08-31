@@ -1,3 +1,4 @@
+// @flow
 import React from "react";
 import { translate } from "react-i18next";
 import { Route } from "react-router";
