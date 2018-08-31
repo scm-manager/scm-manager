@@ -136,6 +136,7 @@ public class PermissionRootResource {
 
   /**
    * Update a permission to the user or group managed by the repository
+   * ignore the user input for groupPermission and take it from the path parameter (if the group prefix (@) exists it is a group permission)
    *
    * @param permission     permission to modify
    * @param permissionName permission to modify
@@ -153,10 +154,18 @@ public class PermissionRootResource {
   public Response update(@PathParam("namespace") String namespace,
                          @PathParam("name") String name,
                          @PathParam("permission-name") String permissionName,
-                         PermissionDto permission) throws NotFoundException {
+                         PermissionDto permission) throws NotFoundException, AlreadyExistsException {
     log.info("try to update the permission with name: {}. the modified permission is: {}", permissionName, permission);
     Repository repository = load(namespace, name);
     RepositoryPermissions.permissionWrite(repository).check();
+    String extractedPermissionName = getPermissionName(permissionName);
+    if (!isPermissionExist(new PermissionDto(extractedPermissionName, isGroupPermission(permissionName)), repository)) {
+      throw new NotFoundException("the permission " + extractedPermissionName + " does not exist");
+    }
+    permission.setGroupPermission(isGroupPermission(permissionName));
+    if (!extractedPermissionName.equals(permission.getName())) {
+      checkPermissionAlreadyExists(permission, repository, "target permission " + permission.getName() + " already exists");
+    }
     Permission existingPermission = repository.getPermissions()
       .stream()
       .filter(filterPermission(permissionName))
@@ -201,13 +210,19 @@ public class PermissionRootResource {
   }
 
   Predicate<Permission> filterPermission(String permissionName) {
-    boolean isGroupPermission = permissionName.startsWith(GROUP_PREFIX);
-    return permission -> Optional.of(permissionName)
-      .filter(p -> !isGroupPermission)
-      .orElse(permissionName.substring(1))
-      .equals(permission.getName())
+    return permission -> getPermissionName(permissionName).equals(permission.getName())
       &&
-      permission.isGroupPermission() == isGroupPermission;
+      permission.isGroupPermission() == isGroupPermission(permissionName);
+  }
+
+  private String getPermissionName(String permissionName) {
+    return Optional.of(permissionName)
+      .filter(p -> !isGroupPermission(permissionName))
+      .orElse(permissionName.substring(1));
+  }
+
+  private boolean isGroupPermission(String permissionName) {
+    return permissionName.startsWith(GROUP_PREFIX);
   }
 
 
@@ -230,15 +245,23 @@ public class PermissionRootResource {
    *
    * @param permission the searched permission
    * @param repository the repository to be inspected
+   * @param errorMessage error message
    * @throws AlreadyExistsException if the permission already exists in the repository
    */
-  private void checkPermissionAlreadyExists(PermissionDto permission, Repository repository) throws AlreadyExistsException {
-    boolean isPermissionAlreadyExist = repository.getPermissions()
+  private void checkPermissionAlreadyExists(PermissionDto permission, Repository repository, String errorMessage) throws AlreadyExistsException {
+    if (isPermissionExist(permission, repository)) {
+      throw new AlreadyExistsException(errorMessage);
+    }
+  }
+
+  private boolean isPermissionExist(PermissionDto permission, Repository repository) {
+    return repository.getPermissions()
       .stream()
       .anyMatch(p -> p.getName().equals(permission.getName()) && p.isGroupPermission() == permission.isGroupPermission());
-    if (isPermissionAlreadyExist) {
-      throw new AlreadyExistsException();
-    }
+  }
+
+  private void checkPermissionAlreadyExists(PermissionDto permission, Repository repository) throws AlreadyExistsException {
+    checkPermissionAlreadyExists(permission, repository, "the permission " + permission.getName() + " already exist.");
   }
 }
 

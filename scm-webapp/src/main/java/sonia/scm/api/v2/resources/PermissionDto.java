@@ -26,6 +26,14 @@ public class PermissionDto extends HalRepresentation {
 
   private boolean groupPermission = false;
 
+  public PermissionDto() {
+  }
+
+  public PermissionDto(String permissionName, boolean groupPermission) {
+    name = permissionName;
+    this.groupPermission = groupPermission;
+  }
+
 
   @Override
   @SuppressWarnings("squid:S1185") // We want to have this method available in this package
