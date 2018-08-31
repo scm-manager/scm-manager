@@ -32,25 +32,25 @@ public class SourceRootResource {
   @GET
   @Produces(VndMediaType.SOURCE)
   @Path("")
-  public Response getAllWithoutRevision(@PathParam("namespace") String namespace, @PathParam("name") String name) {
+  public Response getAllWithoutRevision(@PathParam("namespace") String namespace, @PathParam("name") String name) throws RevisionNotFoundException, RepositoryNotFoundException, IOException {
     return getSource(namespace, name, "/", null);
   }
 
   @GET
   @Produces(VndMediaType.SOURCE)
   @Path("{revision}")
-  public Response getAll(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision) {
+  public Response getAll(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision) throws RevisionNotFoundException, RepositoryNotFoundException, IOException {
     return getSource(namespace, name, "/", revision);
   }
 
   @GET
   @Produces(VndMediaType.SOURCE)
   @Path("{revision}/{path: .*}")
-  public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision, @PathParam("path") String path) {
+  public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision, @PathParam("path") String path) throws RevisionNotFoundException, RepositoryNotFoundException, IOException {
     return getSource(namespace, name, path, revision);
   }
 
-  private Response getSource(String namespace, String repoName, String path, String revision) {
+  private Response getSource(String namespace, String repoName, String path, String revision) throws IOException, RevisionNotFoundException, RepositoryNotFoundException {
     NamespaceAndName namespaceAndName = new NamespaceAndName(namespace, repoName);
     try (RepositoryService repositoryService = serviceFactory.create(namespaceAndName)) {
       BrowseCommandBuilder browseCommand = repositoryService.getBrowseCommand();
@@ -65,11 +65,6 @@ public class SourceRootResource {
       } else {
         return Response.status(Response.Status.NOT_FOUND).build();
       }
-
-    } catch (RepositoryNotFoundException | RevisionNotFoundException e) {
-      return Response.status(Response.Status.NOT_FOUND).build();
-    } catch (IOException e) {
-      return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
     }
   }
 }
