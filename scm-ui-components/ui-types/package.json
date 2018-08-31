@@ -1,0 +1,12 @@
+{
+  "name": "@scm-manager/ui-types",
+  "version": "0.0.1",
+  "description": "Flow types for SCM-Manager objects",
+  "main": "src/index.js",
+  "repository": "https://bitbucket.org/sdorra/scm-manager",
+  "license": "MIT",
+  "private": false,
+  "devDependencies": {
+    "@scm-manager/ui-bundler": "^0.0.9"
+  }
+}
