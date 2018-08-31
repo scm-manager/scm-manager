@@ -30,10 +30,10 @@ public class WebResourceServlet extends HttpServlet {
   /**
    * exclude api requests and the old frontend servlets.
    *
-   * TODO remove old protocol servlets
+   * TODO remove old protocol servlets and hook. Move /hook/hg to api?
    */
   @VisibleForTesting
-  static final String PATTERN = "/(?!api/|git/|hg/|svn/|debug/).*";
+  static final String PATTERN = "/(?!api/|git/|hg/|svn/|hook/).*";
 
   private static final Logger LOG = LoggerFactory.getLogger(WebResourceServlet.class);
 
