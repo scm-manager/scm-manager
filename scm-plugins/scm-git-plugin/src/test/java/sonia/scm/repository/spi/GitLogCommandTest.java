@@ -35,14 +35,11 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.eclipse.jgit.api.errors.GitAPIException;
 import org.junit.Test;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.GitConstants;
 import sonia.scm.repository.Modifications;
-
-import java.io.IOException;
 
 import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.assertEquals;
@@ -55,7 +52,7 @@ import static org.junit.Assert.assertTrue;
 
 /**
  * Unit tests for {@link GitLogCommand}.
- * 
+ *
  * @author Sebastian Sdorra
  */
 public class GitLogCommandTest extends AbstractGitCommandTestBase
@@ -63,13 +60,9 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
 
   /**
    * Tests log command with the usage of a default branch.
-   * 
-   * @throws IOException
-   * @throws GitAPIException
-   * @
    */
   @Test
-  public void testGetDefaultBranch() throws IOException, GitAPIException {
+  public void testGetDefaultBranch() throws Exception {
     // without default branch, the repository head should be used
     ChangesetPagingResult result = createCommand().getChangesets(new LogCommandRequest());
 
@@ -79,10 +72,10 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
     assertEquals("86a6645eceefe8b9a247db5eb16e3d89a7e6e6d1", result.getChangesets().get(1).getId());
     assertEquals("592d797cd36432e591416e8b2b98154f4f163411", result.getChangesets().get(2).getId());
     assertEquals("435df2f061add3589cb326cc64be9b9c3897ceca", result.getChangesets().get(3).getId());
-    
+
     // set default branch and fetch again
     repository.setProperty(GitConstants.PROPERTY_DEFAULT_BRANCH, "test-branch");
-    
+
     result = createCommand().getChangesets(new LogCommandRequest());
 
     assertNotNull(result);
@@ -91,16 +84,9 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
     assertEquals("592d797cd36432e591416e8b2b98154f4f163411", result.getChangesets().get(1).getId());
     assertEquals("435df2f061add3589cb326cc64be9b9c3897ceca", result.getChangesets().get(2).getId());
   }
-  
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
+
   @Test
-  public void testGetAll() throws IOException
+  public void testGetAll() throws Exception
   {
     ChangesetPagingResult result =
       createCommand().getChangesets(new LogCommandRequest());
@@ -110,15 +96,8 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
     assertEquals(4, result.getChangesets().size());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test
-  public void testGetAllByPath() throws IOException
+  public void testGetAllByPath() throws Exception
   {
     LogCommandRequest request = new LogCommandRequest();
 
@@ -133,15 +112,8 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
     assertEquals("435df2f061add3589cb326cc64be9b9c3897ceca", result.getChangesets().get(1).getId());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test
-  public void testGetAllWithLimit() throws IOException
+  public void testGetAllWithLimit() throws Exception
   {
     LogCommandRequest request = new LogCommandRequest();
 
@@ -164,15 +136,8 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
     assertEquals("86a6645eceefe8b9a247db5eb16e3d89a7e6e6d1", c2.getId());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test
-  public void testGetAllWithPaging() throws IOException
+  public void testGetAllWithPaging() throws Exception
   {
     LogCommandRequest request = new LogCommandRequest();
 
@@ -196,10 +161,6 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
     assertEquals("592d797cd36432e591416e8b2b98154f4f163411", c2.getId());
   }
 
-  /**
-   * Method description
-   *
-   */
   @Test
   public void testGetCommit()
   {
@@ -224,15 +185,8 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
     assertThat(mods.getAdded(), contains("a.txt", "b.txt"));
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test
-  public void testGetRange() throws IOException
+  public void testGetRange() throws Exception
   {
     LogCommandRequest request = new LogCommandRequest();
 
@@ -254,12 +208,6 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
     assertEquals("435df2f061add3589cb326cc64be9b9c3897ceca", c2.getId());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   private GitLogCommand createCommand()
   {
     return new GitLogCommand(createContext(), repository);

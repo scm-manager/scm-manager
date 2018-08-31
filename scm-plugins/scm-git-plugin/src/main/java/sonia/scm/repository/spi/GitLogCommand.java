@@ -37,6 +37,7 @@ package sonia.scm.repository.spi;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -51,6 +52,7 @@ import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.GitChangesetConverter;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.InternalRepositoryException;
+import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.util.IOUtil;
 
 import java.io.IOException;
@@ -156,15 +158,11 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
    * @return
    *
    * @throws IOException
-   * @throws RepositoryException
    */
   @Override
   @SuppressWarnings("unchecked")
-  public ChangesetPagingResult getChangesets(LogCommandRequest request)
-    throws IOException
-  {
-    if (logger.isDebugEnabled())
-    {
+  public ChangesetPagingResult getChangesets(LogCommandRequest request) throws RevisionNotFoundException {
+    if (logger.isDebugEnabled()) {
       logger.debug("fetch changesets for request: {}", request);
     }
 
@@ -172,17 +170,13 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
     GitChangesetConverter converter = null;
     RevWalk revWalk = null;
 
-    try (org.eclipse.jgit.lib.Repository gr = open())
-    {
-      if (!gr.getAllRefs().isEmpty())
-      {
+    try (org.eclipse.jgit.lib.Repository gr = open()) {
+      if (!gr.getAllRefs().isEmpty()) {
         int counter = 0;
         int start = request.getPagingStart();
 
-        if (start < 0)
-        {
-          if (logger.isErrorEnabled())
-          {
+        if (start < 0) {
+          if (logger.isErrorEnabled()) {
             logger.error("start parameter is negative, reset to 0");
           }
 
@@ -193,15 +187,13 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
         int limit = request.getPagingLimit();
         ObjectId startId = null;
 
-        if (!Strings.isNullOrEmpty(request.getStartChangeset()))
-        {
+        if (!Strings.isNullOrEmpty(request.getStartChangeset())) {
           startId = gr.resolve(request.getStartChangeset());
         }
 
         ObjectId endId = null;
 
-        if (!Strings.isNullOrEmpty(request.getEndChangeset()))
-        {
+        if (!Strings.isNullOrEmpty(request.getEndChangeset())) {
           endId = gr.resolve(request.getEndChangeset());
         }
 
@@ -209,56 +201,50 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
 
         converter = new GitChangesetConverter(gr, revWalk);
 
-        if (!Strings.isNullOrEmpty(request.getPath()))
-        {
+        if (!Strings.isNullOrEmpty(request.getPath())) {
           revWalk.setTreeFilter(
             AndTreeFilter.create(
               PathFilter.create(request.getPath()), TreeFilter.ANY_DIFF));
         }
-        
+
         ObjectId head = getBranchOrDefault(gr, request.getBranch());
 
-        if (head != null)
-        {
-          if (startId != null)
-          {
+        if (head != null) {
+          if (startId != null) {
             revWalk.markStart(revWalk.lookupCommit(startId));
-          }
-          else
-          {
+          } else {
             revWalk.markStart(revWalk.lookupCommit(head));
           }
 
           Iterator<RevCommit> iterator = revWalk.iterator();
 
-          while (iterator.hasNext())
-          {
+          while (iterator.hasNext()) {
             RevCommit commit = iterator.next();
 
             if ((counter >= start)
-              && ((limit < 0) || (counter < start + limit)))
-            {
+              && ((limit < 0) || (counter < start + limit))) {
               changesetList.add(converter.createChangeset(commit));
             }
 
             counter++;
 
-            if ((endId != null) && commit.getId().equals(endId))
-            {
+            if ((endId != null) && commit.getId().equals(endId)) {
               break;
             }
           }
         }
 
         changesets = new ChangesetPagingResult(counter, changesetList);
-      }
-      else if (logger.isWarnEnabled())
-      {
+      } else if (logger.isWarnEnabled()) {
         logger.warn("the repository {} seems to be empty",
           repository.getName());
 
         changesets = new ChangesetPagingResult(0, Collections.EMPTY_LIST);
       }
+    }
+    catch (MissingObjectException e)
+    {
+      throw new RevisionNotFoundException(e.getObjectId().name());
     }
     catch (Exception ex)
     {
