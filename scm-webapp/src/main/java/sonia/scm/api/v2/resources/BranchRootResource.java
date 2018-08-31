@@ -47,10 +47,9 @@ public class BranchRootResource {
    *
    * <strong>Note:</strong> This method requires "repository" privilege.
    *
-   * @param namespace the namespace of the repository
-   * @param name the name of the repository
+   * @param namespace  the namespace of the repository
+   * @param name       the name of the repository
    * @param branchName the name of the branch
-   *
    */
   @GET
   @Path("{branch}")
@@ -98,19 +97,20 @@ public class BranchRootResource {
                           @PathParam("branch") String branchName,
                           @DefaultValue("0") @QueryParam("page") int page,
                           @DefaultValue("10") @QueryParam("pageSize") int pageSize) throws Exception {
-    RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name));
-    Repository repository = repositoryService.getRepository();
-    RepositoryPermissions.read(repository).check();
-    ChangesetPagingResult changesets = repositoryService.getLogCommand()
-      .setPagingStart(page)
-      .setPagingLimit(pageSize)
-      .setBranch(branchName)
-      .getChangesets();
-    if (changesets != null && changesets.getChangesets() != null) {
-      PageResult<Changeset> pageResult = new PageResult<>(changesets.getChangesets(), changesets.getTotal());
-      return Response.ok(changesetCollectionToDtoMapper.map(page, pageSize, pageResult, repository)).build();
-    } else {
-      return Response.ok().build();
+    try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
+      Repository repository = repositoryService.getRepository();
+      RepositoryPermissions.read(repository).check();
+      ChangesetPagingResult changesets = repositoryService.getLogCommand()
+        .setPagingStart(page)
+        .setPagingLimit(pageSize)
+        .setBranch(branchName)
+        .getChangesets();
+      if (changesets != null && changesets.getChangesets() != null) {
+        PageResult<Changeset> pageResult = new PageResult<>(changesets.getChangesets(), changesets.getTotal());
+        return Response.ok(changesetCollectionToDtoMapper.map(page, pageSize, pageResult, repository)).build();
+      } else {
+        return Response.ok().build();
+      }
     }
   }
 
@@ -120,8 +120,7 @@ public class BranchRootResource {
    * <strong>Note:</strong> This method requires "repository" privilege.
    *
    * @param namespace the namespace of the repository
-   * @param name the name of the repository
-   *
+   * @param name      the name of the repository
    */
   @GET
   @Path("")

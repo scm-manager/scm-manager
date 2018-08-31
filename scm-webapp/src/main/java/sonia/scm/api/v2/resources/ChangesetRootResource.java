@@ -56,18 +56,19 @@ public class ChangesetRootResource {
   @TypeHint(CollectionDto.class)
   public Response getAll(@PathParam("namespace") String namespace, @PathParam("name") String name, @DefaultValue("0") @QueryParam("page") int page,
                          @DefaultValue("10") @QueryParam("pageSize") int pageSize) throws IOException, RevisionNotFoundException, RepositoryNotFoundException {
-    RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name));
-    Repository repository = repositoryService.getRepository();
-    RepositoryPermissions.read(repository).check();
-    ChangesetPagingResult changesets = repositoryService.getLogCommand()
-      .setPagingStart(page)
-      .setPagingLimit(pageSize)
-      .getChangesets();
-    if (changesets != null && changesets.getChangesets() != null) {
-      PageResult<Changeset> pageResult = new PageResult<>(changesets.getChangesets(), changesets.getTotal());
-      return Response.ok(changesetCollectionToDtoMapper.map(page, pageSize, pageResult, repository)).build();
-    } else {
-      return Response.ok().build();
+    try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
+      Repository repository = repositoryService.getRepository();
+      RepositoryPermissions.read(repository).check();
+      ChangesetPagingResult changesets = repositoryService.getLogCommand()
+        .setPagingStart(page)
+        .setPagingLimit(pageSize)
+        .getChangesets();
+      if (changesets != null && changesets.getChangesets() != null) {
+        PageResult<Changeset> pageResult = new PageResult<>(changesets.getChangesets(), changesets.getTotal());
+        return Response.ok(changesetCollectionToDtoMapper.map(page, pageSize, pageResult, repository)).build();
+      } else {
+        return Response.ok().build();
+      }
     }
   }
 
@@ -83,18 +84,19 @@ public class ChangesetRootResource {
   @TypeHint(ChangesetDto.class)
   @Path("{id}")
   public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("id") String id) throws IOException, RevisionNotFoundException, RepositoryNotFoundException {
-    RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name));
-    Repository repository = repositoryService.getRepository();
-    RepositoryPermissions.read(repository).check();
-    ChangesetPagingResult changesets = repositoryService.getLogCommand()
-      .setStartChangeset(id)
-      .setEndChangeset(id)
-      .getChangesets();
-    if (changesets != null && changesets.getChangesets() != null && changesets.getChangesets().size() == 1) {
-      PageResult<Changeset> pageResult = new PageResult<>(changesets.getChangesets(), changesets.getTotal());
-      return Response.ok(changesetToChangesetDtoMapper.map(changesets.getChangesets().get(0), repository)).build();
-    } else {
-      return Response.status(Response.Status.NOT_FOUND).build();
+    try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
+      Repository repository = repositoryService.getRepository();
+      RepositoryPermissions.read(repository).check();
+      ChangesetPagingResult changesets = repositoryService.getLogCommand()
+        .setStartChangeset(id)
+        .setEndChangeset(id)
+        .getChangesets();
+      if (changesets != null && changesets.getChangesets() != null && changesets.getChangesets().size() == 1) {
+        PageResult<Changeset> pageResult = new PageResult<>(changesets.getChangesets(), changesets.getTotal());
+        return Response.ok(changesetToChangesetDtoMapper.map(changesets.getChangesets().get(0), repository)).build();
+      } else {
+        return Response.status(Response.Status.NOT_FOUND).build();
+      }
     }
   }
 }
