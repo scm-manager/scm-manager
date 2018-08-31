@@ -5,7 +5,6 @@ import com.webcohesion.enunciate.metadata.rs.ResponseHeader;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
 import sonia.scm.AlreadyExistsException;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.NamespaceAndName;
@@ -28,10 +27,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 @Slf4j
 public class PermissionRootResource {
 
+  private static final String GROUP_PREFIX = "@";
   private PermissionDtoToPermissionMapper dtoToModelMapper;
   private PermissionToPermissionDtoMapper modelToDtoMapper;
   private PermissionCollectionToDtoMapper permissionCollectionToDtoMapper;
@@ -101,7 +102,7 @@ public class PermissionRootResource {
     return Response.ok(
       repository.getPermissions()
         .stream()
-        .filter(permission -> permissionName.equals(permission.getName()))
+        .filter(filterPermission(permissionName))
         .map(permission -> modelToDtoMapper.map(permission, repository))
         .findFirst()
         .orElseThrow(NotFoundException::new)
@@ -158,9 +159,9 @@ public class PermissionRootResource {
     RepositoryPermissions.permissionWrite(repository).check();
     Permission existingPermission = repository.getPermissions()
       .stream()
-      .filter(perm -> StringUtils.isNotBlank(perm.getName()) && perm.getName().equals(permissionName))
+      .filter(filterPermission(permissionName))
       .findFirst()
-      .orElseThrow(() -> new NotFoundException());
+      .orElseThrow(NotFoundException::new);
     dtoToModelMapper.modify(existingPermission, permission);
     manager.modify(repository);
     log.info("the permission with name: {} is updated.", permissionName);
@@ -186,17 +187,27 @@ public class PermissionRootResource {
                          @PathParam("name") String name,
                          @PathParam("permission-name") String permissionName) throws NotFoundException {
     log.info("try to delete the permission with name: {}.", permissionName);
-    Repository repository =  load(namespace, name);
+    Repository repository = load(namespace, name);
     RepositoryPermissions.modify(repository).check();
     repository.getPermissions()
       .stream()
-      .filter(perm -> StringUtils.isNotBlank(perm.getName()) && perm.getName().equals(permissionName))
+      .filter(filterPermission(permissionName))
       .findFirst()
       .ifPresent(p -> repository.getPermissions().remove(p))
     ;
     manager.modify(repository);
     log.info("the permission with name: {} is updated.", permissionName);
     return Response.noContent().build();
+  }
+
+  Predicate<Permission> filterPermission(String permissionName) {
+    boolean isGroupPermission = permissionName.startsWith(GROUP_PREFIX);
+    return permission -> Optional.of(permissionName)
+      .filter(p -> !isGroupPermission)
+      .orElse(permissionName.substring(1))
+      .equals(permission.getName())
+      &&
+      permission.isGroupPermission() == isGroupPermission;
   }
 
 
@@ -224,7 +235,7 @@ public class PermissionRootResource {
   private void checkPermissionAlreadyExists(PermissionDto permission, Repository repository) throws AlreadyExistsException {
     boolean isPermissionAlreadyExist = repository.getPermissions()
       .stream()
-      .anyMatch(p -> p.getName().equals(permission.getName()));
+      .anyMatch(p -> p.getName().equals(permission.getName()) && p.isGroupPermission() == permission.isGroupPermission());
     if (isPermissionAlreadyExist) {
       throw new AlreadyExistsException();
     }
