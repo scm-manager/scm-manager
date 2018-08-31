@@ -10,6 +10,7 @@ import org.jboss.resteasy.core.Dispatcher;
 import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -103,6 +104,11 @@ public class BranchRootResourceTest {
     subjectThreadState.bind();
     ThreadContext.bind(subject);
     when(subject.isPermitted(any(String.class))).thenReturn(true);
+  }
+
+  @After
+  public void cleanupContext() {
+    ThreadContext.unbindSubject();
   }
 
   @Test
