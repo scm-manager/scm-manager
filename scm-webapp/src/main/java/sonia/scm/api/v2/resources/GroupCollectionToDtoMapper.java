@@ -1,11 +1,16 @@
 package sonia.scm.api.v2.resources;
 
+import sonia.scm.PageResult;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupPermissions;
 
 import javax.inject.Inject;
+import java.util.Optional;
 
-public class GroupCollectionToDtoMapper extends BasicCollectionToDtoMapper<Group, GroupDto> {
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
+
+public class GroupCollectionToDtoMapper extends BasicCollectionToDtoMapper<Group, GroupDto, GroupToGroupDtoMapper> {
 
   private final ResourceLinks resourceLinks;
 
@@ -15,18 +20,15 @@ public class GroupCollectionToDtoMapper extends BasicCollectionToDtoMapper<Group
     this.resourceLinks = resourceLinks;
   }
 
-  @Override
-  String createCreateLink() {
-    return resourceLinks.groupCollection().create();
+  public CollectionDto map(int pageNumber, int pageSize, PageResult<Group> pageResult) {
+    return map(pageNumber, pageSize, pageResult, this.createSelfLink(), this.createCreateLink());
   }
 
-  @Override
-  String createSelfLink() {
+  private Optional<String> createCreateLink() {
+    return GroupPermissions.create().isPermitted() ? of(resourceLinks.groupCollection().create()): empty();
+  }
+
+  private String createSelfLink() {
     return resourceLinks.groupCollection().self();
-  }
-
-  @Override
-  boolean isCreatePermitted() {
-    return GroupPermissions.create().isPermitted();
   }
 }

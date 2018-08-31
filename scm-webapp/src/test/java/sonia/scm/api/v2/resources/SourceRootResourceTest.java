@@ -72,10 +72,12 @@ public class SourceRootResourceTest {
         null,
         MockProvider.of(sourceRootResource),
         null,
+        null,
         null)),
         null);
 
     dispatcher.getRegistry().addSingletonResource(repositoryRootResource);
+    dispatcher.getProviderFactory().registerProvider(NotFoundExceptionMapper.class);
   }
 
   @Test

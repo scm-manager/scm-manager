@@ -79,7 +79,7 @@ public class RepositoryRootResourceTest {
   @Before
   public void prepareEnvironment() {
     initMocks(this);
-    RepositoryResource repositoryResource = new RepositoryResource(repositoryToDtoMapper, dtoToRepositoryMapper, repositoryManager, null, null, null, null, null, null);
+    RepositoryResource repositoryResource = new RepositoryResource(repositoryToDtoMapper, dtoToRepositoryMapper, repositoryManager, null, null, null, null, null, null, null);
     RepositoryCollectionToDtoMapper repositoryCollectionToDtoMapper = new RepositoryCollectionToDtoMapper(repositoryToDtoMapper, resourceLinks);
     RepositoryCollectionResource repositoryCollectionResource = new RepositoryCollectionResource(repositoryManager, repositoryCollectionToDtoMapper, dtoToRepositoryMapper, resourceLinks);
     RepositoryRootResource repositoryRootResource = new RepositoryRootResource(MockProvider.of(repositoryResource), MockProvider.of(repositoryCollectionResource));

@@ -140,7 +140,7 @@ public final class BundleCommandBuilder
     throws IOException
   {
     checkNotNull(sink, "byte sink is required");
-    logger.info("bundle {} to byte sink");
+    logger.info("bundle {} to byte sink", sink);
 
     return bundleCommand.bundle(new BundleCommandRequest(sink));
   }
