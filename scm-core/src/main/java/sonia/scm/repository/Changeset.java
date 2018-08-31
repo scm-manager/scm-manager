@@ -271,12 +271,12 @@ public class Changeset extends BasicPropertiesAware implements ModelObject {
 
   @Override
   public void setLastModified(Long timestamp) {
-    this.setDate(timestamp);
+    throw new UnsupportedOperationException("changesets are immutable");
   }
 
   @Override
   public Long getLastModified() {
-    return getCreationDate();
+    return null;
   }
 
   @Override
