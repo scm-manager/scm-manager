@@ -1,5 +1,5 @@
 //@flow
-import React from 'react';
+import React from "react";
 import NavLink from "../../../components/navigation/NavLink";
 import { translate } from "react-i18next";
 import type { Group } from "../../types/Group";

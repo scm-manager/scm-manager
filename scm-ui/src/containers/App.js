@@ -1,3 +1,4 @@
+// @flow
 import React, { Component } from "react";
 import Main from "./Main";
 import { connect } from "react-redux";
@@ -15,6 +16,7 @@ import { PrimaryNavigation } from "../components/navigation";
 import Loading from "../components/Loading";
 import ErrorPage from "../components/ErrorPage";
 import { Footer, Header } from "../components/layout";
+import type { Me } from "../types/Me";
 
 type Props = {
   me: Me,

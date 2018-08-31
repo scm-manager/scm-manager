@@ -217,7 +217,7 @@ describe("groups fetch()", () => {
 
     const callMe = () => {
       called = true;
-    }
+    };
     const store = mockStore({});
     return store.dispatch(createGroup(humanGroup, callMe)).then(() => {
       const actions = store.getActions();
@@ -254,9 +254,9 @@ describe("groups fetch()", () => {
       const actions = store.getActions();
       expect(actions[0].type).toEqual(MODIFY_GROUP_PENDING);
       expect(actions[1].type).toEqual(MODIFY_GROUP_SUCCESS);
-      expect(actions[1].payload).toEqual(humanGroup)
+      expect(actions[1].payload).toEqual(humanGroup);
     });
-  })
+  });
 
   it("should call the callback after modifying group", () => {
     fetchMock.putOnce("http://localhost:8081/api/rest/v2/groups/humanGroup", {
@@ -266,7 +266,7 @@ describe("groups fetch()", () => {
     let called = false;
     const callback = () => {
       called = true;
-    }
+    };
     const store = mockStore({}); 
 
     return store.dispatch(modifyGroup(humanGroup, callback)).then(() => {
@@ -275,7 +275,7 @@ describe("groups fetch()", () => {
       expect(actions[1].type).toEqual(MODIFY_GROUP_SUCCESS);
       expect(called).toBe(true);
     });
-  })
+  });
 
   it("should fail modifying group on HTTP 500", () => {
     fetchMock.putOnce("http://localhost:8081/api/rest/v2/groups/humanGroup", {
@@ -290,7 +290,7 @@ describe("groups fetch()", () => {
       expect(actions[1].type).toEqual(MODIFY_GROUP_FAILURE);
       expect(actions[1].payload).toBeDefined();
     });
-  })
+  });
 
   it("should delete successfully group humanGroup", () => {
     fetchMock.deleteOnce("http://localhost:8081/api/rest/v2/groups/humanGroup", {
@@ -493,7 +493,7 @@ describe("selector tests", () => {
   });
 
   it("should return null when there are no groups in the state", () => {
-    expect(getGroupsFromState({})).toBe(null)
+    expect(getGroupsFromState({})).toBe(null);
   });
 
   it("should return true, when fetch groups is pending", () => {
@@ -563,23 +563,23 @@ describe("selector tests", () => {
     expect(isCreateGroupPending({pending: {
       [CREATE_GROUP]: true
     }})).toBeTruthy();
-  })
+  });
 
   it("should return false if create group is not pending", () => {
     expect(isCreateGroupPending({})).toBe(false);
-  })
+  });
 
   it("should return error if creating group failed", () => {
     expect(getCreateGroupFailure({
       failure: {
         [CREATE_GROUP]: error
       }
-    })).toEqual(error)
-  })
+    })).toEqual(error);
+  });
 
   it("should return undefined if creating group did not fail", () => {
-    expect(getCreateGroupFailure({})).toBeUndefined()
-  })
+    expect(getCreateGroupFailure({})).toBeUndefined();
+  });
 
 
   it("should return true, when delete group humanGroup is pending", () => {
@@ -613,20 +613,20 @@ describe("selector tests", () => {
       pending: {
         [CREATE_GROUP]: true
       }
-    }
+    };
     expect(isCreateGroupPending(state)).toBe(true);
-  })
+  });
 
   it("should return false, if createGroup is not pending", () => {
-    expect(isCreateGroupPending({})).toBe(false)
-  })
+    expect(isCreateGroupPending({})).toBe(false);
+  });
 
   it("should return error of createGroup failed", () => {
     const state = {
       failure: {
         [CREATE_GROUP]: error
       }
-    }
-    expect(getCreateGroupFailure(state)).toEqual(error)
-  })
+    };
+    expect(getCreateGroupFailure(state)).toEqual(error);
+  });
 });
