@@ -92,7 +92,6 @@ public class ChangesetRootResource {
         .setEndChangeset(id)
         .getChangesets();
       if (changesets != null && changesets.getChangesets() != null && changesets.getChangesets().size() == 1) {
-        PageResult<Changeset> pageResult = new PageResult<>(changesets.getChangesets(), changesets.getTotal());
         return Response.ok(changesetToChangesetDtoMapper.map(changesets.getChangesets().get(0), repository)).build();
       } else {
         return Response.status(Response.Status.NOT_FOUND).build();

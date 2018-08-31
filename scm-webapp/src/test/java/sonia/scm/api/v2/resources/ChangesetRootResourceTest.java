@@ -65,16 +65,6 @@ public class ChangesetRootResourceTest {
 
   private ChangesetCollectionToDtoMapper changesetCollectionToDtoMapper;
 
-  @Mock
-  private BranchCollectionToDtoMapper branchCollectionToDtoMapper;
-
-  @Mock
-  private ChangesetToParentDtoMapperImpl changesetToParentDtoMapper;
-
-  @Mock
-  private TagCollectionToDtoMapper tagCollectionToDtoMapper;
-
-
   @InjectMocks
   private ChangesetToChangesetDtoMapperImpl changesetToChangesetDtoMapper;
 
