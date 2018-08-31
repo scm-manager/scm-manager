@@ -35,11 +35,12 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.Serializable;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Single line of a file, in a {@link  BlameResult}.
@@ -140,7 +141,7 @@ public class BlameLine implements Serializable
   public String toString()
   {
     //J-
-    return Objects.toStringHelper(this)
+    return MoreObjects.toStringHelper(this)
             .add("lineNumber", lineNumber)
             .add("revision", revision)
             .add("author", author)

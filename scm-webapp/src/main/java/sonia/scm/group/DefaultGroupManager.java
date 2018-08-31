@@ -42,8 +42,10 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.AlreadyExistsException;
 import sonia.scm.HandlerEventType;
 import sonia.scm.ManagerDaoAdapter;
+import sonia.scm.NotFoundException;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.TransformFilter;
 import sonia.scm.search.SearchRequest;
@@ -52,7 +54,12 @@ import sonia.scm.util.CollectionAppender;
 import sonia.scm.util.Util;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -80,10 +87,7 @@ public class DefaultGroupManager extends AbstractGroupManager
   public DefaultGroupManager(GroupDAO groupDAO)
   {
     this.groupDAO = groupDAO;
-    this.managerDaoAdapter = new ManagerDaoAdapter<>(
-      groupDAO,
-      GroupNotFoundException::new,
-      GroupAlreadyExistsException::new);
+    this.managerDaoAdapter = new ManagerDaoAdapter<>(groupDAO);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -102,7 +106,7 @@ public class DefaultGroupManager extends AbstractGroupManager
   }
 
   @Override
-  public Group create(Group group) throws GroupException {
+  public Group create(Group group) throws AlreadyExistsException {
     String type = group.getType();
     if (Util.isEmpty(type)) {
       group.setType(groupDAO.getType());
@@ -121,7 +125,7 @@ public class DefaultGroupManager extends AbstractGroupManager
   }
 
   @Override
-  public void delete(Group group) throws GroupException {
+  public void delete(Group group) throws NotFoundException {
     logger.info("delete group {} of type {}", group.getName(), group.getType());
     managerDaoAdapter.delete(
       group,
@@ -140,17 +144,8 @@ public class DefaultGroupManager extends AbstractGroupManager
   @Override
   public void init(SCMContextProvider context) {}
 
-  /**
-   * Method description
-   *
-   *
-   * @param group
-   *
-   * @throws GroupException
-   * @throws IOException
-   */
   @Override
-  public void modify(Group group) throws GroupException {
+  public void modify(Group group) throws NotFoundException {
     logger.info("modify group {} of type {}", group.getName(), group.getType());
 
     managerDaoAdapter.modify(
@@ -164,18 +159,8 @@ public class DefaultGroupManager extends AbstractGroupManager
     );
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param group
-   *
-   * @throws GroupException
-   * @throws IOException
-   */
   @Override
-  public void refresh(Group group) throws GroupException
-  {
+  public void refresh(Group group) throws NotFoundException {
     String name = group.getName();
     if (logger.isInfoEnabled())
     {
@@ -187,7 +172,7 @@ public class DefaultGroupManager extends AbstractGroupManager
 
     if (fresh == null)
     {
-      throw new GroupNotFoundException(group);
+      throw new NotFoundException("group", group.getId());
     }
 
     fresh.copyProperties(group);
@@ -400,5 +385,5 @@ public class DefaultGroupManager extends AbstractGroupManager
 
   /** Field description */
   private GroupDAO groupDAO;
-  private final ManagerDaoAdapter<Group, GroupException> managerDaoAdapter;
+  private final ManagerDaoAdapter<Group> managerDaoAdapter;
 }

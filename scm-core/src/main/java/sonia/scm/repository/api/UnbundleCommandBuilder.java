@@ -37,24 +37,21 @@ package sonia.scm.repository.api;
 
 import com.google.common.io.ByteSource;
 import com.google.common.io.Files;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.spi.UnbundleCommand;
 import sonia.scm.repository.spi.UnbundleCommandRequest;
-
-import static com.google.common.base.Preconditions.*;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-
 import java.util.zip.GZIPInputStream;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * The unbundle command can restore an empty repository from a bundle. The
@@ -97,10 +94,9 @@ public final class UnbundleCommandBuilder
    * @return unbundle response
    *
    * @throws IOException
-   * @throws RepositoryException
    */
   public UnbundleResponse unbundle(File inputFile)
-    throws IOException, RepositoryException
+    throws IOException
   {
     checkArgument((inputFile != null) && inputFile.exists(),
       "existing file is required");
@@ -122,10 +118,9 @@ public final class UnbundleCommandBuilder
    * @return unbundle response
    *
    * @throws IOException
-   * @throws RepositoryException
    */
   public UnbundleResponse unbundle(InputStream inputStream)
-    throws IOException, RepositoryException
+    throws IOException
   {
     checkNotNull(inputStream, "input stream is required");
     logger.info("unbundle archive from stream");
@@ -142,10 +137,9 @@ public final class UnbundleCommandBuilder
    * @return unbundle response
    *
    * @throws IOException
-   * @throws RepositoryException
    */
   public UnbundleResponse unbundle(ByteSource byteSource)
-    throws IOException, RepositoryException
+    throws IOException
   {
     checkNotNull(byteSource, "byte source is required");
     logger.info("unbundle from byte source");
@@ -186,7 +180,7 @@ public final class UnbundleCommandBuilder
     {
 
       @Override
-      public InputStream openStream() throws IOException
+      public InputStream openStream()
       {
         return inputStream;
       }

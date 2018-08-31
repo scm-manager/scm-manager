@@ -37,20 +37,19 @@ package sonia.scm.user;
 
 import com.github.sdorra.ssp.PermissionObject;
 import com.github.sdorra.ssp.StaticPermissions;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-
 import sonia.scm.BasicPropertiesAware;
 import sonia.scm.ModelObject;
 import sonia.scm.util.Util;
 import sonia.scm.util.ValidationUtil;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.security.Principal;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.security.Principal;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -59,7 +58,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @StaticPermissions("user")
 @XmlRootElement(name = "users")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class User extends BasicPropertiesAware implements Principal, ModelObject, PermissionObject
+public class
+User extends BasicPropertiesAware implements Principal, ModelObject, PermissionObject
 {
 
   /** Field description */
@@ -259,7 +259,7 @@ public class User extends BasicPropertiesAware implements Principal, ModelObject
                  : "(not set)";
 
     //J-
-    return Objects.toStringHelper(this)
+    return MoreObjects.toStringHelper(this)
             .add("name", name)
             .add("displayName",displayName)
             .add("mail", mail)

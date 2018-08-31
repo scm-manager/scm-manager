@@ -14,10 +14,10 @@ import org.apache.shiro.util.ThreadContext;
 import org.apache.shiro.util.ThreadState;
 import org.assertj.core.util.Lists;
 import org.jboss.resteasy.core.Dispatcher;
-import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.jboss.resteasy.spi.HttpRequest;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -27,7 +27,6 @@ import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import sonia.scm.api.rest.AuthorizationExceptionMapper;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Permission;
 import sonia.scm.repository.PermissionType;
@@ -55,6 +54,7 @@ import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static sonia.scm.api.v2.resources.DispatcherMock.createDispatcher;
 
 @Slf4j
 @SubjectAware(
@@ -105,7 +105,7 @@ public class PermissionRootResourceTest {
     .content(PERMISSION_TEST_PAYLOAD)
     .path(PATH_OF_ONE_PERMISSION);
 
-  private final Dispatcher dispatcher = MockDispatcherFactory.createDispatcher();
+  private Dispatcher dispatcher;
 
   @Rule
   public ShiroRule shiro = new ShiroRule();
@@ -137,13 +137,14 @@ public class PermissionRootResourceTest {
     permissionRootResource = new PermissionRootResource(permissionDtoToPermissionMapper, permissionToPermissionDtoMapper, permissionCollectionToDtoMapper, resourceLinks, repositoryManager);
     RepositoryRootResource repositoryRootResource = new RepositoryRootResource(MockProvider
       .of(new RepositoryResource(null, null, null, null, null, null, null, null, MockProvider.of(permissionRootResource), null)), null);
+    dispatcher = createDispatcher(repositoryRootResource);
     subjectThreadState.bind();
     ThreadContext.bind(subject);
-    dispatcher.getRegistry().addSingletonResource(repositoryRootResource);
-    dispatcher.getProviderFactory().registerProvider(RepositoryNotFoundExceptionMapper.class);
-    dispatcher.getProviderFactory().registerProvider(PermissionNotFoundExceptionMapper.class);
-    dispatcher.getProviderFactory().registerProvider(PermissionAlreadyExistsExceptionMapper.class);
-    dispatcher.getProviderFactory().registerProvider(AuthorizationExceptionMapper.class);
+  }
+
+  @After
+  public void unbind() {
+    ThreadContext.unbindSubject();
   }
 
   @TestFactory

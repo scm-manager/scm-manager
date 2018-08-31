@@ -36,24 +36,20 @@ package sonia.scm.repository.api;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Objects;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryCacheKey;
-import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.Tag;
 import sonia.scm.repository.Tags;
 import sonia.scm.repository.spi.TagsCommand;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
-
 import java.util.List;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * The tags command list all repository tags.<br />
@@ -88,8 +84,7 @@ public final class TagsCommandBuilder
    * only be called from the {@link RepositoryService}.
    *
    * @param cacheManager cache manager
-   * @param logCommand implementation of the {@link TagsCommand}
-   * @param command
+   * @param command implementation of the {@link TagsCommand}
    * @param repository repository
    */
   TagsCommandBuilder(CacheManager cacheManager, TagsCommand command,
@@ -109,10 +104,8 @@ public final class TagsCommandBuilder
    * @return tags from the repository
    *
    * @throws IOException
-   * @throws RepositoryException
    */
-  public Tags getTags() throws RepositoryException, IOException
-  {
+  public Tags getTags() throws IOException {
     Tags tags;
 
     if (disableCache)
@@ -183,9 +176,8 @@ public final class TagsCommandBuilder
    * @return
    *
    * @throws IOException
-   * @throws RepositoryException
    */
-  private Tags getTagsFromCommand() throws RepositoryException, IOException
+  private Tags getTagsFromCommand() throws IOException
   {
     List<Tag> tagList = command.getTags();
 

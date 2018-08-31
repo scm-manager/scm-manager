@@ -4,7 +4,6 @@ import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.io.Resources;
 import org.jboss.resteasy.core.Dispatcher;
-import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.Before;
@@ -19,7 +18,6 @@ import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Permission;
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RepositoryIsNotArchivedException;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.api.RepositoryServiceFactory;
@@ -50,6 +48,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static sonia.scm.api.v2.resources.DispatcherMock.createDispatcher;
 
 @SubjectAware(
   username = "trillian",
@@ -58,7 +57,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 )
 public class RepositoryRootResourceTest {
 
-  private final Dispatcher dispatcher = MockDispatcherFactory.createDispatcher();
+  private Dispatcher dispatcher;
 
   @Rule
   public ShiroRule shiro = new ShiroRule();
@@ -84,7 +83,7 @@ public class RepositoryRootResourceTest {
     RepositoryCollectionToDtoMapper repositoryCollectionToDtoMapper = new RepositoryCollectionToDtoMapper(repositoryToDtoMapper, resourceLinks);
     RepositoryCollectionResource repositoryCollectionResource = new RepositoryCollectionResource(repositoryManager, repositoryCollectionToDtoMapper, dtoToRepositoryMapper, resourceLinks);
     RepositoryRootResource repositoryRootResource = new RepositoryRootResource(MockProvider.of(repositoryResource), MockProvider.of(repositoryCollectionResource));
-    dispatcher.getRegistry().addSingletonResource(repositoryRootResource);
+    dispatcher = createDispatcher(repositoryRootResource);
   }
 
   @Test
@@ -223,7 +222,7 @@ public class RepositoryRootResourceTest {
   }
 
   @Test
-  public void shouldCreateNewRepositoryInCorrectNamespace() throws URISyntaxException, IOException, RepositoryException {
+  public void shouldCreateNewRepositoryInCorrectNamespace() throws Exception {
     when(repositoryManager.create(any())).thenAnswer(invocation -> {
       Repository repository = (Repository) invocation.getArguments()[0];
       repository.setNamespace("otherspace");

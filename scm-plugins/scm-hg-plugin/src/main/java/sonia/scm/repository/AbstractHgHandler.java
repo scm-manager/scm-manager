@@ -37,18 +37,15 @@ package sonia.scm.repository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.SCMContext;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 import sonia.scm.web.HgUtil;
 
-//~--- JDK imports ------------------------------------------------------------
-
+import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -56,7 +53,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.bind.JAXBException;
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -257,45 +254,15 @@ public class AbstractHgHandler
 
   //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param resultType
-   * @param script
-   * @param <T>
-   *
-   * @return
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
-  protected <T> T getResultFromScript(Class<T> resultType,
-    HgPythonScript script)
-    throws IOException, RepositoryException
-  {
+  protected <T> T getResultFromScript(Class<T> resultType, HgPythonScript script) throws IOException {
     return getResultFromScript(resultType, script,
       new HashMap<String, String>());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param resultType
-   * @param script
-   * @param extraEnv
-   * @param <T>
-   *
-   * @return
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @SuppressWarnings("unchecked")
   protected <T> T getResultFromScript(Class<T> resultType,
     HgPythonScript script, Map<String, String> extraEnv)
-    throws IOException, RepositoryException
+    throws IOException
   {
     Process p = createScriptProcess(script, extraEnv);
 
@@ -305,7 +272,7 @@ public class AbstractHgHandler
     } catch (JAXBException ex) {
       logger.error("could not parse result", ex);
 
-      throw new RepositoryException("could not parse result", ex);
+      throw new InternalRepositoryException("could not parse result", ex);
     }
   }
 

@@ -37,22 +37,18 @@ package sonia.scm.repository.api;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.spi.PushCommand;
 import sonia.scm.repository.spi.PushCommandRequest;
 import sonia.scm.security.RepositoryPermission;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
-
 import java.net.URL;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * The push command push changes to a other repository.
@@ -91,11 +87,8 @@ public final class PushCommandBuilder
    * @return informations of the executed push command
    *
    * @throws IOException
-   * @throws RepositoryException
    */
-  public PushResponse push(Repository remoteRepository)
-    throws IOException, RepositoryException
-  {
+  public PushResponse push(Repository remoteRepository) throws IOException {
     Subject subject = SecurityUtils.getSubject();
 
     //J-
@@ -120,12 +113,10 @@ public final class PushCommandBuilder
    * @return informations of the executed push command
    *
    * @throws IOException
-   * @throws RepositoryException
    *
    * @since 1.43
    */
-  public PushResponse push(String url) throws IOException, RepositoryException
-  {
+  public PushResponse push(String url) throws IOException {
 
     URL remoteUrl = new URL(url);
 

@@ -58,36 +58,33 @@ const hitchhikerPuzzle42: Repository = {
   type: "svn",
   _links: {
     self: {
-      href:
-        "http://localhost:8081/scm/api/rest/v2/repositories/hitchhiker/puzzle42"
+      href: "http://localhost:8081/api/rest/v2/repositories/hitchhiker/puzzle42"
     },
     delete: {
-      href:
-        "http://localhost:8081/scm/api/rest/v2/repositories/hitchhiker/puzzle42"
+      href: "http://localhost:8081/api/rest/v2/repositories/hitchhiker/puzzle42"
     },
     update: {
-      href:
-        "http://localhost:8081/scm/api/rest/v2/repositories/hitchhiker/puzzle42"
+      href: "http://localhost:8081/api/rest/v2/repositories/hitchhiker/puzzle42"
     },
     permissions: {
       href:
-        "http://localhost:8081/scm/api/rest/v2/repositories/hitchhiker/puzzle42/permissions/"
+        "http://localhost:8081/api/rest/v2/repositories/hitchhiker/puzzle42/permissions/"
     },
     tags: {
       href:
-        "http://localhost:8081/scm/api/rest/v2/repositories/hitchhiker/puzzle42/tags/"
+        "http://localhost:8081/api/rest/v2/repositories/hitchhiker/puzzle42/tags/"
     },
     branches: {
       href:
-        "http://localhost:8081/scm/api/rest/v2/repositories/hitchhiker/puzzle42/branches/"
+        "http://localhost:8081/api/rest/v2/repositories/hitchhiker/puzzle42/branches/"
     },
     changesets: {
       href:
-        "http://localhost:8081/scm/api/rest/v2/repositories/hitchhiker/puzzle42/changesets/"
+        "http://localhost:8081/api/rest/v2/repositories/hitchhiker/puzzle42/changesets/"
     },
     sources: {
       href:
-        "http://localhost:8081/scm/api/rest/v2/repositories/hitchhiker/puzzle42/sources/"
+        "http://localhost:8081/api/rest/v2/repositories/hitchhiker/puzzle42/sources/"
     }
   }
 };
@@ -103,35 +100,35 @@ const hitchhikerRestatend: Repository = {
   _links: {
     self: {
       href:
-        "http://localhost:8081/scm/api/rest/v2/repositories/hitchhiker/restatend"
+        "http://localhost:8081/api/rest/v2/repositories/hitchhiker/restatend"
     },
     delete: {
       href:
-        "http://localhost:8081/scm/api/rest/v2/repositories/hitchhiker/restatend"
+        "http://localhost:8081/api/rest/v2/repositories/hitchhiker/restatend"
     },
     update: {
       href:
-        "http://localhost:8081/scm/api/rest/v2/repositories/hitchhiker/restatend"
+        "http://localhost:8081/api/rest/v2/repositories/hitchhiker/restatend"
     },
     permissions: {
       href:
-        "http://localhost:8081/scm/api/rest/v2/repositories/hitchhiker/restatend/permissions/"
+        "http://localhost:8081/api/rest/v2/repositories/hitchhiker/restatend/permissions/"
     },
     tags: {
       href:
-        "http://localhost:8081/scm/api/rest/v2/repositories/hitchhiker/restatend/tags/"
+        "http://localhost:8081/api/rest/v2/repositories/hitchhiker/restatend/tags/"
     },
     branches: {
       href:
-        "http://localhost:8081/scm/api/rest/v2/repositories/hitchhiker/restatend/branches/"
+        "http://localhost:8081/api/rest/v2/repositories/hitchhiker/restatend/branches/"
     },
     changesets: {
       href:
-        "http://localhost:8081/scm/api/rest/v2/repositories/hitchhiker/restatend/changesets/"
+        "http://localhost:8081/api/rest/v2/repositories/hitchhiker/restatend/changesets/"
     },
     sources: {
       href:
-        "http://localhost:8081/scm/api/rest/v2/repositories/hitchhiker/restatend/sources/"
+        "http://localhost:8081/api/rest/v2/repositories/hitchhiker/restatend/sources/"
     }
   }
 };
@@ -145,33 +142,32 @@ const slartiFjords: Repository = {
   creationDate: "2018-07-31T08:59:05.653Z",
   _links: {
     self: {
-      href: "http://localhost:8081/scm/api/rest/v2/repositories/slarti/fjords"
+      href: "http://localhost:8081/api/rest/v2/repositories/slarti/fjords"
     },
     delete: {
-      href: "http://localhost:8081/scm/api/rest/v2/repositories/slarti/fjords"
+      href: "http://localhost:8081/api/rest/v2/repositories/slarti/fjords"
     },
     update: {
-      href: "http://localhost:8081/scm/api/rest/v2/repositories/slarti/fjords"
+      href: "http://localhost:8081/api/rest/v2/repositories/slarti/fjords"
     },
     permissions: {
       href:
-        "http://localhost:8081/scm/api/rest/v2/repositories/slarti/fjords/permissions/"
+        "http://localhost:8081/api/rest/v2/repositories/slarti/fjords/permissions/"
     },
     tags: {
-      href:
-        "http://localhost:8081/scm/api/rest/v2/repositories/slarti/fjords/tags/"
+      href: "http://localhost:8081/api/rest/v2/repositories/slarti/fjords/tags/"
     },
     branches: {
       href:
-        "http://localhost:8081/scm/api/rest/v2/repositories/slarti/fjords/branches/"
+        "http://localhost:8081/api/rest/v2/repositories/slarti/fjords/branches/"
     },
     changesets: {
       href:
-        "http://localhost:8081/scm/api/rest/v2/repositories/slarti/fjords/changesets/"
+        "http://localhost:8081/api/rest/v2/repositories/slarti/fjords/changesets/"
     },
     sources: {
       href:
-        "http://localhost:8081/scm/api/rest/v2/repositories/slarti/fjords/sources/"
+        "http://localhost:8081/api/rest/v2/repositories/slarti/fjords/sources/"
     }
   }
 };
@@ -181,19 +177,16 @@ const repositoryCollection: RepositoryCollection = {
   pageTotal: 1,
   _links: {
     self: {
-      href:
-        "http://localhost:8081/scm/api/rest/v2/repositories/?page=0&pageSize=10"
+      href: "http://localhost:8081/api/rest/v2/repositories/?page=0&pageSize=10"
     },
     first: {
-      href:
-        "http://localhost:8081/scm/api/rest/v2/repositories/?page=0&pageSize=10"
+      href: "http://localhost:8081/api/rest/v2/repositories/?page=0&pageSize=10"
     },
     last: {
-      href:
-        "http://localhost:8081/scm/api/rest/v2/repositories/?page=0&pageSize=10"
+      href: "http://localhost:8081/api/rest/v2/repositories/?page=0&pageSize=10"
     },
     create: {
-      href: "http://localhost:8081/scm/api/rest/v2/repositories/"
+      href: "http://localhost:8081/api/rest/v2/repositories/"
     }
   },
   _embedded: {
@@ -206,19 +199,16 @@ const repositoryCollectionWithNames: RepositoryCollection = {
   pageTotal: 1,
   _links: {
     self: {
-      href:
-        "http://localhost:8081/scm/api/rest/v2/repositories/?page=0&pageSize=10"
+      href: "http://localhost:8081/api/rest/v2/repositories/?page=0&pageSize=10"
     },
     first: {
-      href:
-        "http://localhost:8081/scm/api/rest/v2/repositories/?page=0&pageSize=10"
+      href: "http://localhost:8081/api/rest/v2/repositories/?page=0&pageSize=10"
     },
     last: {
-      href:
-        "http://localhost:8081/scm/api/rest/v2/repositories/?page=0&pageSize=10"
+      href: "http://localhost:8081/api/rest/v2/repositories/?page=0&pageSize=10"
     },
     create: {
-      href: "http://localhost:8081/scm/api/rest/v2/repositories/"
+      href: "http://localhost:8081/api/rest/v2/repositories/"
     }
   },
   _embedded: {
@@ -231,7 +221,7 @@ const repositoryCollectionWithNames: RepositoryCollection = {
 };
 
 describe("repos fetch", () => {
-  const REPOS_URL = "/scm/api/rest/v2/repositories";
+  const REPOS_URL = "/api/rest/v2/repositories";
   const SORT = "sortBy=namespaceAndName";
   const REPOS_URL_WITH_SORT = REPOS_URL + "?" + SORT;
   const mockStore = configureMockStore([thunk]);
@@ -303,7 +293,7 @@ describe("repos fetch", () => {
 
   it("should append sortby parameter and successfully fetch repos from link", () => {
     fetchMock.getOnce(
-      "/scm/api/rest/v2/repositories?one=1&sortBy=namespaceAndName",
+      "/api/rest/v2/repositories?one=1&sortBy=namespaceAndName",
       repositoryCollection
     );
 
@@ -431,7 +421,7 @@ describe("repos fetch", () => {
 
   it("should successfully delete repo slarti/fjords", () => {
     fetchMock.delete(
-      "http://localhost:8081/scm/api/rest/v2/repositories/slarti/fjords",
+      "http://localhost:8081/api/rest/v2/repositories/slarti/fjords",
       {
         status: 204
       }
@@ -458,7 +448,7 @@ describe("repos fetch", () => {
 
   it("should successfully delete repo slarti/fjords and call the callback", () => {
     fetchMock.delete(
-      "http://localhost:8081/scm/api/rest/v2/repositories/slarti/fjords",
+      "http://localhost:8081/api/rest/v2/repositories/slarti/fjords",
       {
         status: 204
       }
@@ -478,7 +468,7 @@ describe("repos fetch", () => {
 
   it("should disapatch failure on delete, if server returns status code 500", () => {
     fetchMock.delete(
-      "http://localhost:8081/scm/api/rest/v2/repositories/slarti/fjords",
+      "http://localhost:8081/api/rest/v2/repositories/slarti/fjords",
       {
         status: 500
       }

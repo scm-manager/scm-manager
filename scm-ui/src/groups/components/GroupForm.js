@@ -6,9 +6,9 @@ import { SubmitButton } from "../../components/buttons";
 import { translate } from "react-i18next";
 import type { Group } from "../types/Group";
 import * as validator from "./groupValidation";
-import AddMemberField from "./AddMemberField";
 import MemberNameTable from "./MemberNameTable";
 import Textarea from "../../components/forms/Textarea";
+import AddEntryToTableField from "../../components/forms/AddEntryToTableField";
 
 type Props = {
   t: string => string,
@@ -96,7 +96,13 @@ class GroupForm extends React.Component<Props, State> {
           members={this.state.group.members}
           memberListChanged={this.memberListChanged}
         />
-        <AddMemberField addMember={this.addMember} />
+        <AddEntryToTableField
+          addEntry={this.addMember}
+          disabled={false}
+          buttonLabel={t("add-member-button.label")}
+          fieldLabel={t("add-member-textfield.label")}
+          errorMessage={t("add-member-textfield.error")}
+        />
         <SubmitButton
           disabled={!this.isValid()}
           label={t("group-form.submit")}

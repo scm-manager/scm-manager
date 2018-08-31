@@ -35,13 +35,11 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.repository.Branch;
-import sonia.scm.repository.RepositoryException;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
-
 import java.util.List;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -58,7 +56,6 @@ public interface BranchesCommand
    * @return
    *
    * @throws IOException
-   * @throws RepositoryException
    */
-  public List<Branch> getBranches() throws RepositoryException, IOException;
+  List<Branch> getBranches() throws IOException;
 }

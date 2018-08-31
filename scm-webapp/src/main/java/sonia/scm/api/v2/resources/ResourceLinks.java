@@ -318,12 +318,28 @@ class ResourceLinks {
       sourceLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, SourceRootResource.class);
     }
 
-    String self(String namespace, String name) {
-      return sourceLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("sources").parameters().method("getAll").parameters().href();
+    String self(String namespace, String name, String revision) {
+      return sourceLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("sources").parameters().method("getAll").parameters(revision).href();
+    }
+
+    String selfWithoutRevision(String namespace, String name) {
+      return sourceLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("sources").parameters().method("getAllWithoutRevision").parameters().href();
     }
 
     public String source(String namespace, String name, String revision) {
       return sourceLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("sources").parameters().method("get").parameters(revision).href();
+    }
+
+    public String sourceWithPath(String namespace, String name, String revision, String path) {
+      if (revision == null) {
+        return sourceLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("sources").parameters().method("get").parameters(null, path).href();
+      } else {
+        return sourceLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("sources").parameters().method("get").parameters(revision, path).href();
+      }
+    }
+
+    public String content(String namespace, String name, String revision, String path) {
+      return sourceLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("content").parameters().method("get").parameters(revision, path).href();
     }
   }
   public PermissionLinks permission() {
@@ -359,6 +375,39 @@ class ResourceLinks {
 
     private String getLink(String repositoryNamespace, String repositoryName, String permissionName, String methodName) {
       return permissionLinkBuilder.method("getRepositoryResource").parameters(repositoryNamespace, repositoryName).method("permissions").parameters().method(methodName).parameters(permissionName).href();
+    }
+  }
+
+
+  public UIPluginLinks uiPlugin() {
+    return new UIPluginLinks(uriInfoStore.get());
+  }
+
+  static class UIPluginLinks {
+    private final LinkBuilder uiPluginLinkBuilder;
+
+    UIPluginLinks(UriInfo uriInfo) {
+      uiPluginLinkBuilder = new LinkBuilder(uriInfo, UIRootResource.class, UIPluginResource.class);
+    }
+
+    String self(String id) {
+      return uiPluginLinkBuilder.method("plugins").parameters().method("getInstalledPlugin").parameters(id).href();
+    }
+  }
+
+  public UIPluginCollectionLinks uiPluginCollection() {
+    return new UIPluginCollectionLinks(uriInfoStore.get());
+  }
+
+  static class UIPluginCollectionLinks {
+    private final LinkBuilder uiPluginCollectionLinkBuilder;
+
+    UIPluginCollectionLinks(UriInfo uriInfo) {
+      uiPluginCollectionLinkBuilder = new LinkBuilder(uriInfo, UIRootResource.class, UIPluginResource.class);
+    }
+
+    String self() {
+      return uiPluginCollectionLinkBuilder.method("plugins").parameters().method("getInstalledPlugins").parameters().href();
     }
   }
 }

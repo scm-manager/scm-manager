@@ -35,7 +35,6 @@ package sonia.scm.repository.spi;
 import org.junit.Test;
 import sonia.scm.repository.GitConstants;
 import sonia.scm.repository.PathNotFoundException;
-import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RevisionNotFoundException;
 
 import java.io.ByteArrayOutputStream;
@@ -54,7 +53,7 @@ import static org.junit.Assert.assertEquals;
 public class GitCatCommandTest extends AbstractGitCommandTestBase {
   
   @Test
-  public void testDefaultBranch() throws IOException, RepositoryException {
+  public void testDefaultBranch() throws IOException, PathNotFoundException, RevisionNotFoundException {
     // without default branch, the repository head should be used
     CatCommandRequest request = new CatCommandRequest();
     request.setPath("a.txt");
@@ -67,7 +66,7 @@ public class GitCatCommandTest extends AbstractGitCommandTestBase {
   }
 
   @Test
-  public void testCat() throws IOException, RepositoryException {
+  public void testCat() throws IOException, PathNotFoundException, RevisionNotFoundException {
     CatCommandRequest request = new CatCommandRequest();
 
     request.setPath("a.txt");
@@ -76,7 +75,7 @@ public class GitCatCommandTest extends AbstractGitCommandTestBase {
   }
 
   @Test
-  public void testSimpleCat() throws IOException, RepositoryException {
+  public void testSimpleCat() throws IOException, PathNotFoundException, RevisionNotFoundException {
     CatCommandRequest request = new CatCommandRequest();
 
     request.setPath("b.txt");
@@ -84,7 +83,7 @@ public class GitCatCommandTest extends AbstractGitCommandTestBase {
   }
 
   @Test(expected = PathNotFoundException.class)
-  public void testUnknownFile() throws IOException, RepositoryException {
+  public void testUnknownFile() throws IOException, PathNotFoundException, RevisionNotFoundException {
     CatCommandRequest request = new CatCommandRequest();
 
     request.setPath("unknown");
@@ -92,7 +91,7 @@ public class GitCatCommandTest extends AbstractGitCommandTestBase {
   }
 
   @Test(expected = RevisionNotFoundException.class)
-  public void testUnknownRevision() throws IOException, RepositoryException {
+  public void testUnknownRevision() throws IOException, PathNotFoundException, RevisionNotFoundException {
     CatCommandRequest request = new CatCommandRequest();
 
     request.setRevision("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
@@ -101,7 +100,7 @@ public class GitCatCommandTest extends AbstractGitCommandTestBase {
   }
 
   @Test
-  public void testSimpleStream() throws IOException, RepositoryException {
+  public void testSimpleStream() throws IOException, PathNotFoundException, RevisionNotFoundException {
     CatCommandRequest request = new CatCommandRequest();
     request.setPath("b.txt");
 
@@ -114,7 +113,7 @@ public class GitCatCommandTest extends AbstractGitCommandTestBase {
     catResultStream.close();
   }
 
-  private String execute(CatCommandRequest request) throws IOException, RepositoryException {
+  private String execute(CatCommandRequest request) throws IOException, PathNotFoundException, RevisionNotFoundException {
     String content = null;
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
 

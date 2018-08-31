@@ -95,7 +95,7 @@ public class ChangesetRootResourceTest {
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(service);
     when(serviceFactory.create(any(Repository.class))).thenReturn(service);
     when(service.getRepository()).thenReturn(new Repository("repoId", "git", "space", "repo"));
-    dispatcher.getProviderFactory().registerProvider(RepositoryNotFoundExceptionMapper.class);
+    dispatcher.getProviderFactory().registerProvider(NotFoundExceptionMapper.class);
     dispatcher.getProviderFactory().registerProvider(AuthorizationExceptionMapper.class);
     when(service.getLogCommand()).thenReturn(logCommandBuilder);
     subjectThreadState.bind();

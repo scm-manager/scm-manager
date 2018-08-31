@@ -36,18 +36,16 @@ package sonia.scm.repository.spi;
 
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.revwalk.RevCommit;
-
+import org.junit.Ignore;
 import org.junit.Test;
-
 import sonia.scm.repository.ChangesetPagingResult;
-import sonia.scm.repository.RepositoryException;
-
-import static org.junit.Assert.*;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
-import org.junit.Ignore;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -67,7 +65,7 @@ public class GitIncomingCommandTest
    */
   @Test
   public void testGetIncomingChangesets()
-    throws IOException, GitAPIException, RepositoryException
+    throws IOException, GitAPIException
   {
     write(outgoing, outgoingDirectory, "a.txt", "content of a.txt");
 
@@ -101,7 +99,7 @@ public class GitIncomingCommandTest
    */
   @Test
   public void testGetIncomingChangesetsWithAllreadyPullChangesets()
-    throws IOException, GitAPIException, RepositoryException
+    throws IOException, GitAPIException
   {
     write(outgoing, outgoingDirectory, "a.txt", "content of a.txt");
 
@@ -138,7 +136,7 @@ public class GitIncomingCommandTest
    */
   @Test
   public void testGetIncomingChangesetsWithEmptyRepository()
-    throws IOException, RepositoryException
+    throws IOException
   {
     GitIncomingCommand cmd = createCommand();
     IncomingCommandRequest request = new IncomingCommandRequest();
@@ -163,7 +161,7 @@ public class GitIncomingCommandTest
   @Test
   @Ignore
   public void testGetIncomingChangesetsWithUnrelatedRepository()
-    throws IOException, RepositoryException, GitAPIException
+    throws IOException, GitAPIException
   {
     write(outgoing, outgoingDirectory, "a.txt", "content of a.txt");
 

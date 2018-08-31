@@ -39,9 +39,9 @@ import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ComparisonChain;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.Locale;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Version object for comparing and parsing versions.

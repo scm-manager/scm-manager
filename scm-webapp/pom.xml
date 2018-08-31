@@ -99,6 +99,12 @@
       <artifactId>jackson-datatype-jsr310</artifactId>
       <version>${jackson.version}</version>
     </dependency>
+    <dependency>
+      <groupId>javax</groupId>
+      <artifactId>javaee-api</artifactId>
+      <version>7.0</version>
+      <scope>test</scope>
+    </dependency>
 
     <!-- rest api -->
 
@@ -131,7 +137,11 @@
       <groupId>org.jboss.resteasy</groupId>
       <artifactId>resteasy-servlet-initializer</artifactId>
     </dependency>
-
+    <dependency>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>resteasy-validator-provider-11</artifactId>
+      <version>${resteasy.version}</version>
+    </dependency>
     <!-- injection -->
 
     <dependency>
@@ -502,6 +512,10 @@
             <systemProperty>
               <name>java.awt.headless</name>
               <value>true</value>
+            </systemProperty>
+            <systemProperty>
+              <name>sonia.scm.ui.proxy</name>
+              <value>http://localhost:3000</value>
             </systemProperty>
           </systemProperties>
           <webApp>

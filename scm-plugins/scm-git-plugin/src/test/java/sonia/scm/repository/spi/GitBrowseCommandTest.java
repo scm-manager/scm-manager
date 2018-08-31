@@ -36,19 +36,20 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import org.junit.Test;
-
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.FileObject;
-import sonia.scm.repository.RepositoryException;
-
-import static org.junit.Assert.*;
-
-//~--- JDK imports ------------------------------------------------------------
+import sonia.scm.repository.GitConstants;
+import sonia.scm.repository.RevisionNotFoundException;
 
 import java.io.IOException;
-
 import java.util.List;
-import sonia.scm.repository.GitConstants;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Unit tests for {@link GitBrowseCommand}.
@@ -60,12 +61,9 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase
   
   /**
    * Test browse command with default branch.
-   * 
-   * @throws IOException
-   * @throws RepositoryException 
    */
   @Test
-  public void testDefaultBranch() throws IOException, RepositoryException {
+  public void testDefaultBranch() throws IOException, RevisionNotFoundException {
     // without default branch, the repository head should be used
     BrowserResult result = createCommand().getBrowserResult(new BrowseCommandRequest());
     assertNotNull(result);
@@ -94,16 +92,8 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase
     assertEquals("c", foList.get(1).getName());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test
-  public void testBrowse() throws IOException, RepositoryException
-  {
+  public void testBrowse() throws IOException, RevisionNotFoundException {
     BrowserResult result =
       createCommand().getBrowserResult(new BrowseCommandRequest());
 
@@ -143,16 +133,8 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase
     assertEquals("c", c.getPath());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test
-  public void testBrowseSubDirectory() throws IOException, RepositoryException
-  {
+  public void testBrowseSubDirectory() throws IOException, RevisionNotFoundException {
     BrowseCommandRequest request = new BrowseCommandRequest();
 
     request.setPath("c");
@@ -198,16 +180,8 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase
     checkDate(e.getLastModified());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test
-  public void testRecusive() throws IOException, RepositoryException
-  {
+  public void testRecusive() throws IOException, RevisionNotFoundException {
     BrowseCommandRequest request = new BrowseCommandRequest();
 
     request.setRecursive(true);

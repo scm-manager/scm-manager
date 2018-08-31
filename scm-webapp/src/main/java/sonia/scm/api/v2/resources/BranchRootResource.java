@@ -9,7 +9,6 @@ import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.api.CommandNotSupportedException;
@@ -65,7 +64,7 @@ public class BranchRootResource {
     @ResponseCode(code = 404, condition = "not found, no branch with the specified name for the repository available or repository not found"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
-  public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("branch") String branchName) throws IOException, RepositoryException {
+  public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("branch") String branchName) throws IOException {
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
       Branches branches = repositoryService.getBranchesCommand().getBranches();
       return branches.getBranches()
@@ -136,7 +135,7 @@ public class BranchRootResource {
     @ResponseCode(code = 404, condition = "not found, no repository found for the given namespace and name"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
-  public Response getAll(@PathParam("namespace") String namespace, @PathParam("name") String name) throws IOException, RepositoryException {
+  public Response getAll(@PathParam("namespace") String namespace, @PathParam("name") String name) throws IOException {
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
       Branches branches = repositoryService.getBranchesCommand().getBranches();
       return Response.ok(branchCollectionToDtoMapper.map(namespace, name, branches.getBranches())).build();

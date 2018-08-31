@@ -36,15 +36,13 @@ package sonia.scm.repository.spi;
 
 import org.eclipse.jgit.api.LogCommand;
 import org.eclipse.jgit.lib.ObjectId;
-
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryException;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -84,7 +82,7 @@ public class GitOutgoingCommand extends AbstractGitIncomingOutgoingCommand
   @Override
   public ChangesetPagingResult getOutgoingChangesets(
     OutgoingCommandRequest request)
-    throws IOException, RepositoryException
+    throws IOException
   {
     return getIncomingOrOutgoingChangesets(request);
   }

@@ -44,9 +44,8 @@ import java.io.IOException;
  * @author Sebastian Sdorra
  *
  * @param <T> type object of the handler
- * @param <E> exception type of the handler
  */
-public interface HandlerBase<T extends TypedObject, E extends Exception>
+public interface HandlerBase<T extends TypedObject>
         extends Initable, Closeable
 {
 
@@ -55,7 +54,7 @@ public interface HandlerBase<T extends TypedObject, E extends Exception>
    *
    * @return  The persisted object.
    */
-  public T create(T object) throws E;
+  T create(T object) throws AlreadyExistsException;
 
   /**
    * Removes a persistent object.
@@ -63,10 +62,9 @@ public interface HandlerBase<T extends TypedObject, E extends Exception>
    *
    * @param object to delete
    *
-   * @throws E
    * @throws IOException
    */
-  public void delete(T object) throws E;
+  void delete(T object) throws NotFoundException;
 
   /**
    * Modifies a persistent object.
@@ -74,8 +72,7 @@ public interface HandlerBase<T extends TypedObject, E extends Exception>
    *
    * @param object to modify
    *
-   * @throws E
    * @throws IOException
    */
-  public void modify(T object) throws E;
+  void modify(T object) throws NotFoundException;
 }

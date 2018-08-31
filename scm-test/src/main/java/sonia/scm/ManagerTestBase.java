@@ -33,21 +33,21 @@
 
 package sonia.scm;
 
-import java.io.IOException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
 import sonia.scm.util.MockUtil;
 
+import java.io.IOException;
+
 /**
  *
  * @author Sebastian Sdorra
  *
  * @param <T>
- * @param <E>
  */
-public abstract class ManagerTestBase<T extends ModelObject, E extends Exception>
+public abstract class ManagerTestBase<T extends ModelObject>
 {
 
   @Rule
@@ -55,7 +55,7 @@ public abstract class ManagerTestBase<T extends ModelObject, E extends Exception
   
   protected SCMContextProvider contextProvider;
   
-  protected Manager<T, E> manager;
+  protected Manager<T> manager;
   
   @Before
   public void setUp() throws IOException {
@@ -75,6 +75,6 @@ public abstract class ManagerTestBase<T extends ModelObject, E extends Exception
    *
    * @return
    */
-  protected abstract Manager<T, E> createManager();
+  protected abstract Manager<T> createManager();
 
 }

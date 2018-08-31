@@ -35,16 +35,15 @@ package sonia.scm.security;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-
 import org.apache.shiro.authz.Permission;
-
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.Serializable;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * This class represents the permission to a repository of a user.
@@ -174,7 +173,7 @@ public final class RepositoryPermission
   public String toString()
   {
     //J-
-    return Objects.toStringHelper(this)
+    return MoreObjects.toStringHelper(this)
                   .add("repositoryId", repositoryId)
                   .add("permissionType", permissionType)
                   .toString();

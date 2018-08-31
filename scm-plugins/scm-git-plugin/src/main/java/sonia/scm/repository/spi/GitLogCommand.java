@@ -37,7 +37,6 @@ package sonia.scm.repository.spi;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -45,24 +44,21 @@ import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.treewalk.filter.AndTreeFilter;
 import org.eclipse.jgit.treewalk.filter.PathFilter;
 import org.eclipse.jgit.treewalk.filter.TreeFilter;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.GitChangesetConverter;
 import sonia.scm.repository.GitUtil;
-import sonia.scm.repository.RepositoryException;
+import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.util.IOUtil;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
-
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -165,7 +161,7 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
   @Override
   @SuppressWarnings("unchecked")
   public ChangesetPagingResult getChangesets(LogCommandRequest request)
-    throws IOException, RepositoryException
+    throws IOException
   {
     if (logger.isDebugEnabled())
     {
@@ -268,7 +264,7 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
     }
     catch (Exception ex)
     {
-      throw new RepositoryException("could not create change log", ex);
+      throw new InternalRepositoryException("could not create change log", ex);
     }
     finally
     {

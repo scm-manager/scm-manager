@@ -29,7 +29,7 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
     http://bitbucket.org/sdorra/scm-manager
-
+jo
 
 -->
 
@@ -42,7 +42,7 @@
 -->
 
 <plugin>
-  
+
   <scm-version>2</scm-version>
 
   <information>
@@ -60,10 +60,5 @@
   <conditions>
     <min-version>${project.parent.version}</min-version>
   </conditions>
-
-  <resources>
-    <script>/sonia/scm/hg.config.js</script>
-    <script>/sonia/scm/hg.config-wizard.js</script>
-  </resources>
 
 </plugin>

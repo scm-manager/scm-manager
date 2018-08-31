@@ -37,7 +37,6 @@ package sonia.scm.repository.spi;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-
 import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
@@ -49,29 +48,25 @@ import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.treewalk.filter.AndTreeFilter;
 import org.eclipse.jgit.treewalk.filter.PathFilter;
 import org.eclipse.jgit.treewalk.filter.TreeFilter;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.FileObject;
 import sonia.scm.repository.GitSubModuleParser;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.PathNotFoundException;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryException;
+import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.repository.SubRepository;
 import sonia.scm.util.Util;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import sonia.scm.util.IOUtil;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -105,22 +100,10 @@ public class GitBrowseCommand extends AbstractGitCommand
 
   //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Override
   @SuppressWarnings("unchecked")
   public BrowserResult getBrowserResult(BrowseCommandRequest request)
-    throws IOException, RepositoryException
-  {
+    throws IOException, RevisionNotFoundException {
     logger.debug("try to create browse result for {}", request);
 
     BrowserResult result;
@@ -174,8 +157,7 @@ public class GitBrowseCommand extends AbstractGitCommand
    */
   private FileObject createFileObject(org.eclipse.jgit.lib.Repository repo,
     BrowseCommandRequest request, ObjectId revId, TreeWalk treeWalk)
-    throws IOException, RepositoryException
-  {
+    throws IOException, RevisionNotFoundException {
     FileObject file;
 
     try
@@ -283,24 +265,9 @@ public class GitBrowseCommand extends AbstractGitCommand
     return result;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param repo
-   * @param request
-   * @param revId
-   * @param path
-   *
-   * @return
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   private BrowserResult getResult(org.eclipse.jgit.lib.Repository repo,
     BrowseCommandRequest request, ObjectId revId)
-    throws IOException, RepositoryException
-  {
+    throws IOException, RevisionNotFoundException {
     BrowserResult result = null;
     RevWalk revWalk = null;
     TreeWalk treeWalk = null;
@@ -393,24 +360,11 @@ public class GitBrowseCommand extends AbstractGitCommand
     return result;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param repo
-   * @param revision
-   *
-   * @return
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @SuppressWarnings("unchecked")
   private Map<String,
     SubRepository> getSubRepositories(org.eclipse.jgit.lib.Repository repo,
       ObjectId revision)
-    throws IOException, RepositoryException
-  {
+    throws IOException, RevisionNotFoundException {
     if (logger.isDebugEnabled())
     {
       logger.debug("read submodules of {} at {}", repository.getName(),
@@ -435,8 +389,7 @@ public class GitBrowseCommand extends AbstractGitCommand
 
   private SubRepository getSubRepository(org.eclipse.jgit.lib.Repository repo,
     ObjectId revId, String path)
-    throws IOException, RepositoryException
-  {
+    throws IOException, RevisionNotFoundException {
     Map<String, SubRepository> subRepositories = subrepositoryCache.get(revId);
 
     if (subRepositories == null)

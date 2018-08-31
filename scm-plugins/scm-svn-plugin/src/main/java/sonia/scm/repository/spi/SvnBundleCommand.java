@@ -37,24 +37,21 @@ package sonia.scm.repository.spi;
 
 import com.google.common.io.ByteSink;
 import com.google.common.io.Closeables;
-
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.wc.SVNClientManager;
 import org.tmatesoft.svn.core.wc.SVNRevision;
 import org.tmatesoft.svn.core.wc.admin.SVNAdminClient;
-
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.SvnUtil;
 import sonia.scm.repository.api.BundleResponse;
-
-import static com.google.common.base.Preconditions.*;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -64,31 +61,11 @@ public class SvnBundleCommand extends AbstractSvnCommand
   implements BundleCommand
 {
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param context
-   * @param repository
-   */
   public SvnBundleCommand(SvnContext context, Repository repository)
   {
     super(context, repository);
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param adminClient
-   * @param repository
-   * @param target
-   *
-   * @throws IOException
-   * @throws SVNException
-   */
   private static void dump(SVNAdminClient adminClient, File repository,
     ByteSink target)
     throws SVNException, IOException
@@ -107,21 +84,8 @@ public class SvnBundleCommand extends AbstractSvnCommand
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Override
-  public BundleResponse bundle(BundleCommandRequest request)
-    throws IOException, RepositoryException
-  {
+  public BundleResponse bundle(BundleCommandRequest request) throws IOException {
     ByteSink archive = checkNotNull(request.getArchive(),
                          "archive is required");
 

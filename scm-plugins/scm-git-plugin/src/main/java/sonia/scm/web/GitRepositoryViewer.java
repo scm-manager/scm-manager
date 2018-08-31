@@ -40,17 +40,14 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.io.Closeables;
 import com.google.inject.Inject;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.repository.Branch;
 import sonia.scm.repository.Branches;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.template.Template;
@@ -60,16 +57,14 @@ import sonia.scm.util.HttpUtil;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 
-//~--- JDK imports ------------------------------------------------------------
-
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Writer;
-
 import java.util.Date;
 import java.util.Iterator;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -113,21 +108,9 @@ public class GitRepositoryViewer
 
   //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param request
-   * @param response
-   * @param repository
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   public void handleRequest(HttpServletRequest request,
     HttpServletResponse response, Repository repository)
-    throws RepositoryException, IOException
+    throws IOException
   {
 
     String baseUrl = HttpUtil.getCompleteUrl(request);
@@ -171,7 +154,7 @@ public class GitRepositoryViewer
    * @throws RepositoryException
    */
   private BranchesModel createBranchesModel(Repository repository)
-    throws RepositoryException, IOException
+    throws IOException
   {
     BranchesModel model = null;
     RepositoryService service = null;

@@ -36,16 +36,13 @@ package sonia.scm.i18n;
 import com.google.common.base.Objects;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-
 import sonia.scm.util.ClassLoaders;
 
-//~--- JDK imports ------------------------------------------------------------
-
+import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Field;
-
 import java.util.Locale;
 
-import javax.servlet.http.HttpServletRequest;
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * The I18nMessages class instantiates a class and initializes all {@link String}

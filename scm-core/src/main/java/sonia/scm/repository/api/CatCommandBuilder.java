@@ -37,8 +37,9 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.repository.PathNotFoundException;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryException;
+import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.repository.spi.CatCommand;
 import sonia.scm.repository.spi.CatCommandRequest;
 import sonia.scm.util.IOUtil;
@@ -106,7 +107,7 @@ public final class CatCommandBuilder
    * @param outputStream output stream for the content
    * @param path file path
    */
-  public void retriveContent(OutputStream outputStream, String path) throws IOException, RepositoryException {
+  public void retriveContent(OutputStream outputStream, String path) throws IOException, PathNotFoundException, RevisionNotFoundException {
     getCatResult(outputStream, path);
   }
 
@@ -115,7 +116,7 @@ public final class CatCommandBuilder
    *
    * @param path file path
    */
-  public InputStream getStream(String path) throws IOException, RepositoryException {
+  public InputStream getStream(String path) throws IOException, PathNotFoundException, RevisionNotFoundException {
     Preconditions.checkArgument(!Strings.isNullOrEmpty(path),
       "path is required");
 
@@ -137,10 +138,8 @@ public final class CatCommandBuilder
    * @return content of the file
    *
    * @throws IOException
-   * @throws RepositoryException
    */
-  public String getContent(String path) throws IOException, RepositoryException
-  {
+  public String getContent(String path) throws IOException, PathNotFoundException, RevisionNotFoundException {
     String content = null;
     ByteArrayOutputStream baos = null;
 
@@ -185,11 +184,9 @@ public final class CatCommandBuilder
    * @param path path of the file
    *
    * @throws IOException
-   * @throws RepositoryException
    */
   private void getCatResult(OutputStream outputStream, String path)
-    throws IOException, RepositoryException
-  {
+    throws IOException, PathNotFoundException, RevisionNotFoundException {
     Preconditions.checkNotNull(outputStream, "OutputStream is required");
     Preconditions.checkArgument(!Strings.isNullOrEmpty(path),
       "path is required");

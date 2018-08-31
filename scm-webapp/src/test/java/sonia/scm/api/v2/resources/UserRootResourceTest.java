@@ -5,7 +5,6 @@ import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.io.Resources;
 import org.apache.shiro.authc.credential.PasswordService;
 import org.jboss.resteasy.core.Dispatcher;
-import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.Before;
@@ -16,22 +15,26 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import sonia.scm.PageResult;
 import sonia.scm.user.User;
-import sonia.scm.user.UserException;
 import sonia.scm.user.UserManager;
 import sonia.scm.web.VndMediaType;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
 import static java.util.Collections.singletonList;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static sonia.scm.api.v2.resources.DispatcherMock.createDispatcher;
 
 @SubjectAware(
   username = "trillian",
@@ -43,7 +46,7 @@ public class UserRootResourceTest {
   @Rule
   public ShiroRule shiro = new ShiroRule();
 
-  private Dispatcher dispatcher = MockDispatcherFactory.createDispatcher();
+  private Dispatcher dispatcher;
 
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(URI.create("/"));
 
@@ -59,7 +62,7 @@ public class UserRootResourceTest {
   private ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
 
   @Before
-  public void prepareEnvironment() throws UserException {
+  public void prepareEnvironment() throws Exception {
     initMocks(this);
     User dummyUser = createDummyUser("Neo");
     when(userManager.create(userCaptor.capture())).thenAnswer(invocation -> invocation.getArguments()[0]);
@@ -73,7 +76,7 @@ public class UserRootResourceTest {
     UserRootResource userRootResource = new UserRootResource(MockProvider.of(userCollectionResource),
                                                              MockProvider.of(userResource));
 
-    dispatcher.getRegistry().addSingletonResource(userRootResource);
+    dispatcher = createDispatcher(userRootResource);
   }
 
   @Test
@@ -106,7 +109,7 @@ public class UserRootResourceTest {
   }
 
   @Test
-  public void shouldCreateNewUserWithEncryptedPassword() throws URISyntaxException, IOException, UserException {
+  public void shouldCreateNewUserWithEncryptedPassword() throws Exception {
     URL url = Resources.getResource("sonia/scm/api/v2/user-test-create.json");
     byte[] userJson = Resources.toByteArray(url);
 
@@ -126,7 +129,7 @@ public class UserRootResourceTest {
   }
 
   @Test
-  public void shouldUpdateChangedUserWithEncryptedPassword() throws URISyntaxException, IOException, UserException {
+  public void shouldUpdateChangedUserWithEncryptedPassword() throws Exception {
     URL url = Resources.getResource("sonia/scm/api/v2/user-test-update.json");
     byte[] userJson = Resources.toByteArray(url);
 
@@ -170,7 +173,7 @@ public class UserRootResourceTest {
   }
 
   @Test
-  public void shouldDeleteUser() throws URISyntaxException, IOException, UserException {
+  public void shouldDeleteUser() throws Exception {
     MockHttpRequest request = MockHttpRequest.delete("/" + UserRootResource.USERS_PATH_V2 + "Neo");
     MockHttpResponse response = new MockHttpResponse();
 
@@ -181,7 +184,7 @@ public class UserRootResourceTest {
   }
 
   @Test
-  public void shouldFailUpdateForDifferentIds() throws IOException, URISyntaxException, UserException {
+  public void shouldFailUpdateForDifferentIds() throws Exception {
     URL url = Resources.getResource("sonia/scm/api/v2/user-test-update.json");
     byte[] userJson = Resources.toByteArray(url);
     createDummyUser("Other");
@@ -199,7 +202,7 @@ public class UserRootResourceTest {
   }
 
   @Test
-  public void shouldFailUpdateForUnknownEntity() throws IOException, URISyntaxException, UserException {
+  public void shouldFailUpdateForUnknownEntity() throws Exception {
     URL url = Resources.getResource("sonia/scm/api/v2/user-test-update.json");
     byte[] userJson = Resources.toByteArray(url);
     when(userManager.get("Neo")).thenReturn(null);

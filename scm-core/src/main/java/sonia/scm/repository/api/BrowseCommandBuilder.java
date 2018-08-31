@@ -36,10 +36,8 @@ package sonia.scm.repository.api;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Objects;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.repository.BrowserResult;
@@ -48,17 +46,16 @@ import sonia.scm.repository.FileObjectNameComparator;
 import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryCacheKey;
-import sonia.scm.repository.RepositoryException;
+import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.repository.spi.BrowseCommand;
 import sonia.scm.repository.spi.BrowseCommandRequest;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
 import java.io.Serializable;
-
 import java.util.Collections;
 import java.util.List;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * BrowseCommandBuilder is able to browse the files of a {@link Repository}.
@@ -100,7 +97,7 @@ public final class BrowseCommandBuilder
    * only be called from the {@link RepositoryService}.
    *
    * @param cacheManager cache manager
-   * @param logCommand implementation of the {@link LogCommand}
+   * @param browseCommand implementation of the {@link BrowseCommand}
    * @param browseCommand
    * @param repository repository to query
    * @param preProcessorUtil
@@ -140,11 +137,8 @@ public final class BrowseCommandBuilder
    * @return files for the given parameters
    *
    * @throws IOException
-   * @throws RepositoryException
    */
-  public BrowserResult getBrowserResult()
-    throws IOException, RepositoryException
-  {
+  public BrowserResult getBrowserResult() throws IOException, RevisionNotFoundException {
     BrowserResult result = null;
 
     if (disableCache)

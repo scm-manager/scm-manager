@@ -31,20 +31,19 @@
 package sonia.scm.security;
 
 import com.google.common.annotations.VisibleForTesting;
-import java.util.Date;
+import com.google.common.base.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sonia.scm.config.ScmConfiguration;
+import sonia.scm.util.HttpUtil;
+import sonia.scm.util.Util;
 
-import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import sonia.scm.config.ScmConfiguration;
-import sonia.scm.util.HttpUtil;
-import sonia.scm.util.Util;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Generates cookies and invalidates access token cookies.
@@ -81,7 +80,7 @@ public final class AccessTokenCookieIssuer {
   public void authenticate(HttpServletRequest request, HttpServletResponse response, AccessToken accessToken) {
     LOG.trace("create and attach cookie for access token {}", accessToken.getId());
     Cookie c = new Cookie(HttpUtil.COOKIE_BEARER_AUTHENTICATION, accessToken.compact());
-    c.setPath(request.getContextPath());
+    c.setPath(contextPath(request));
     c.setMaxAge(getMaxAge(accessToken));
     c.setHttpOnly(isHttpOnly());
     c.setSecure(isSecure(request));
@@ -100,13 +99,22 @@ public final class AccessTokenCookieIssuer {
     LOG.trace("invalidates access token cookie");
     
     Cookie c = new Cookie(HttpUtil.COOKIE_BEARER_AUTHENTICATION, Util.EMPTY_STRING);
-    c.setPath(request.getContextPath());
+    c.setPath(contextPath(request));
     c.setMaxAge(0);
     c.setHttpOnly(isHttpOnly());
     c.setSecure(isSecure(request));
     
     // attach empty cookie, that the browser can remove it
     response.addCookie(c);
+  }
+
+  @VisibleForTesting
+  String contextPath(HttpServletRequest request) {
+    String contextPath = request.getContextPath();
+    if (Strings.isNullOrEmpty(contextPath)) {
+      return "/";
+    }
+    return contextPath;
   }
   
   private int getMaxAge(AccessToken accessToken){

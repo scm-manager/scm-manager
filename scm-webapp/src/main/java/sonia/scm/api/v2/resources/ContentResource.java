@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.PathNotFoundException;
-import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.repository.api.RepositoryService;
@@ -61,8 +60,8 @@ public class ContentResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision, @PathParam("path") String path) {
+    StreamingOutput stream = createStreamingOutput(namespace, name, revision, path);
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
-      StreamingOutput stream = createStreamingOutput(namespace, name, revision, path, repositoryService);
       Response.ResponseBuilder responseBuilder = Response.ok(stream);
       return createContentHeader(namespace, name, revision, path, repositoryService, responseBuilder);
     } catch (RepositoryNotFoundException e) {
@@ -71,17 +70,20 @@ public class ContentResource {
     }
   }
 
-  private StreamingOutput createStreamingOutput(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision, @PathParam("path") String path, RepositoryService repositoryService) {
+  private StreamingOutput createStreamingOutput(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision, @PathParam("path") String path) {
     return os -> {
-      try {
+      try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
         repositoryService.getCatCommand().setRevision(revision).retriveContent(os, path);
         os.close();
+      } catch (RepositoryNotFoundException e) {
+        LOG.debug("repository {}/{} not found", path, namespace, name, e);
+        throw new WebApplicationException(Status.NOT_FOUND);
       } catch (PathNotFoundException e) {
         LOG.debug("path '{}' not found in repository {}/{}", path, namespace, name, e);
         throw new WebApplicationException(Status.NOT_FOUND);
-      } catch (RepositoryException e) {
-        LOG.info("error reading repository resource {} from {}/{}", path, namespace, name, e);
-        throw new WebApplicationException(Status.INTERNAL_SERVER_ERROR);
+      } catch (RevisionNotFoundException e) {
+        LOG.debug("revision '{}' not found in repository {}/{}", revision, namespace, name, e);
+        throw new WebApplicationException(Status.NOT_FOUND);
       }
     };
   }
@@ -124,7 +126,7 @@ public class ContentResource {
     } catch (RevisionNotFoundException e) {
       LOG.debug("revision '{}' not found in repository {}/{}", revision, namespace, name, e);
       return Response.status(Status.NOT_FOUND).build();
-    } catch (IOException | RepositoryException e) {
+    } catch (IOException e) {
       LOG.info("error reading repository resource {} from {}/{}", path, namespace, name, e);
       return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
     }
@@ -137,12 +139,14 @@ public class ContentResource {
     contentType.getLanguage().ifPresent(language -> responseBuilder.header("Language", language));
   }
 
-  private byte[] getHead(String revision, String path, RepositoryService repositoryService) throws IOException, RepositoryException {
+  private byte[] getHead(String revision, String path, RepositoryService repositoryService) throws IOException, PathNotFoundException, RevisionNotFoundException {
     InputStream stream = repositoryService.getCatCommand().setRevision(revision).getStream(path);
     try {
       byte[] buffer = new byte[HEAD_BUFFER_SIZE];
       int length = stream.read(buffer);
-      if (length < buffer.length) {
+      if (length < 0) { // empty file
+        return new byte[]{};
+      } else if (length < buffer.length) {
         return Arrays.copyOf(buffer, length);
       } else {
         return buffer;

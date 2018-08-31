@@ -38,9 +38,9 @@ package sonia.scm.group;
 import sonia.scm.Manager;
 import sonia.scm.search.Searchable;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.Collection;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * The central class for managing {@link Group}s.
@@ -49,7 +49,7 @@ import java.util.Collection;
  * @author Sebastian Sdorra
  */
 public interface GroupManager
-        extends Manager<Group, GroupException>, Searchable<Group>
+        extends Manager<Group>, Searchable<Group>
 {
 
   /**

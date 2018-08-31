@@ -37,10 +37,8 @@ package sonia.scm.repository.api;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.repository.Changeset;
@@ -48,14 +46,14 @@ import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryCacheKey;
-import sonia.scm.repository.RepositoryException;
+import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.repository.spi.LogCommand;
 import sonia.scm.repository.spi.LogCommandRequest;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
 import java.io.Serializable;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * LogCommandBuilder is able to show the history of a file in a
@@ -166,11 +164,8 @@ public final class LogCommandBuilder
    * @return the {@link Changeset} with the given id or null
    *
    * @throws IOException
-   * @throws RepositoryException
    */
-  public Changeset getChangeset(String id)
-    throws IOException, RepositoryException
-  {
+  public Changeset getChangeset(String id) throws IOException, RevisionNotFoundException {
     Changeset changeset;
 
     if (disableCache)
@@ -228,11 +223,8 @@ public final class LogCommandBuilder
    * @return all changesets with the given parameters
    *
    * @throws IOException
-   * @throws RepositoryException
    */
-  public ChangesetPagingResult getChangesets()
-    throws IOException, RepositoryException
-  {
+  public ChangesetPagingResult getChangesets() throws IOException, RevisionNotFoundException {
     ChangesetPagingResult cpr;
 
     if (disableCache)

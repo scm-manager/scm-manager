@@ -78,7 +78,7 @@ describe("auth actions", () => {
   });
 
   it("should dispatch login success and dispatch fetch me", () => {
-    fetchMock.postOnce("/scm/api/rest/v2/auth/access_token", {
+    fetchMock.postOnce("/api/rest/v2/auth/access_token", {
       body: {
         cookie: true,
         grant_type: "password",
@@ -88,7 +88,7 @@ describe("auth actions", () => {
       headers: { "content-type": "application/json" }
     });
 
-    fetchMock.getOnce("/scm/api/rest/v2/me", {
+    fetchMock.getOnce("/api/rest/v2/me", {
       body: me,
       headers: { "content-type": "application/json" }
     });
@@ -106,7 +106,7 @@ describe("auth actions", () => {
   });
 
   it("should dispatch login failure", () => {
-    fetchMock.postOnce("/scm/api/rest/v2/auth/access_token", {
+    fetchMock.postOnce("/api/rest/v2/auth/access_token", {
       status: 400
     });
 
@@ -120,7 +120,7 @@ describe("auth actions", () => {
   });
 
   it("should dispatch fetch me success", () => {
-    fetchMock.getOnce("/scm/api/rest/v2/me", {
+    fetchMock.getOnce("/api/rest/v2/me", {
       body: me,
       headers: { "content-type": "application/json" }
     });
@@ -141,7 +141,7 @@ describe("auth actions", () => {
   });
 
   it("should dispatch fetch me failure", () => {
-    fetchMock.getOnce("/scm/api/rest/v2/me", {
+    fetchMock.getOnce("/api/rest/v2/me", {
       status: 500
     });
 
@@ -155,7 +155,7 @@ describe("auth actions", () => {
   });
 
   it("should dispatch fetch me unauthorized", () => {
-    fetchMock.getOnce("/scm/api/rest/v2/me", {
+    fetchMock.getOnce("/api/rest/v2/me", {
       status: 401
     });
 
@@ -173,11 +173,11 @@ describe("auth actions", () => {
   });
 
   it("should dispatch logout success", () => {
-    fetchMock.deleteOnce("/scm/api/rest/v2/auth/access_token", {
+    fetchMock.deleteOnce("/api/rest/v2/auth/access_token", {
       status: 204
     });
 
-    fetchMock.getOnce("/scm/api/rest/v2/me", {
+    fetchMock.getOnce("/api/rest/v2/me", {
       status: 401
     });
 
@@ -194,7 +194,7 @@ describe("auth actions", () => {
   });
 
   it("should dispatch logout failure", () => {
-    fetchMock.deleteOnce("/scm/api/rest/v2/auth/access_token", {
+    fetchMock.deleteOnce("/api/rest/v2/auth/access_token", {
       status: 500
     });
 
