@@ -172,10 +172,8 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
     GitChangesetConverter converter = null;
     RevWalk revWalk = null;
 
-    try
+    try (org.eclipse.jgit.lib.Repository gr = open())
     {
-      org.eclipse.jgit.lib.Repository gr = open();
-
       if (!gr.getAllRefs().isEmpty())
       {
         int counter = 0;
