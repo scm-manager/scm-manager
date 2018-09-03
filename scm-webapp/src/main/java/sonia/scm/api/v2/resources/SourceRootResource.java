@@ -61,7 +61,7 @@ public class SourceRootResource {
       BrowserResult browserResult = browseCommand.getBrowserResult();
 
       if (browserResult != null) {
-        return Response.ok(browserResultToBrowserResultDtoMapper.map(browserResult, namespaceAndName)).build();
+        return Response.ok(browserResultToBrowserResultDtoMapper.map(browserResult, namespaceAndName, path)).build();
       } else {
         return Response.status(Response.Status.NOT_FOUND).build();
       }

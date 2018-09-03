@@ -17,7 +17,7 @@ public class BrowserResultToBrowserResultDtoMapper {
   @Inject
   private ResourceLinks resourceLinks;
 
-  public BrowserResultDto map(BrowserResult browserResult, NamespaceAndName namespaceAndName) {
+  public BrowserResultDto map(BrowserResult browserResult, NamespaceAndName namespaceAndName, String path) {
     BrowserResultDto browserResultDto = new BrowserResultDto();
 
     browserResultDto.setTag(browserResult.getTag());
@@ -30,7 +30,7 @@ public class BrowserResultToBrowserResultDtoMapper {
     }
 
     browserResultDto.setFiles(fileObjectDtoList);
-    this.addLinks(browserResult, browserResultDto, namespaceAndName);
+    this.addLinks(browserResult, browserResultDto, namespaceAndName, path);
     return browserResultDto;
   }
 
@@ -38,11 +38,14 @@ public class BrowserResultToBrowserResultDtoMapper {
     return fileObjectToFileObjectDtoMapper.map(fileObject, namespaceAndName, revision);
   }
 
-  private void addLinks(BrowserResult browserResult, BrowserResultDto dto, NamespaceAndName namespaceAndName) {
+  private void addLinks(BrowserResult browserResult, BrowserResultDto dto, NamespaceAndName namespaceAndName, String path) {
+    if (path.equals("/")) {
+      path = "";
+    }
     if (browserResult.getRevision() == null) {
       dto.add(Links.linkingTo().self(resourceLinks.source().selfWithoutRevision(namespaceAndName.getNamespace(), namespaceAndName.getName())).build());
     } else {
-      dto.add(Links.linkingTo().self(resourceLinks.source().self(namespaceAndName.getNamespace(), namespaceAndName.getName(), browserResult.getRevision())).build());
+      dto.add(Links.linkingTo().self(resourceLinks.source().sourceWithPath(namespaceAndName.getNamespace(), namespaceAndName.getName(), browserResult.getRevision(), path)).build());
     }
   }
 

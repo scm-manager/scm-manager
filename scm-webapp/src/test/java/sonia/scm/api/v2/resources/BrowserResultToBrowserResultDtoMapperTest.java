@@ -71,7 +71,7 @@ public class BrowserResultToBrowserResultDtoMapperTest {
   public void shouldMapAttributesCorrectly() {
     BrowserResult browserResult = createBrowserResult();
 
-    BrowserResultDto dto = mapper.map(browserResult, new NamespaceAndName("foo", "bar"));
+    BrowserResultDto dto = mapper.map(browserResult, new NamespaceAndName("foo", "bar"), "path");
 
     assertEqualAttributes(browserResult, dto);
   }
@@ -81,10 +81,20 @@ public class BrowserResultToBrowserResultDtoMapperTest {
     BrowserResult browserResult = createBrowserResult();
     NamespaceAndName namespaceAndName = new NamespaceAndName("foo", "bar");
 
-    BrowserResultDto dto = mapper.map(browserResult, namespaceAndName);
+    BrowserResultDto dto = mapper.map(browserResult, namespaceAndName, "path");
 
     verify(fileObjectToFileObjectDtoMapper).map(fileObject1, namespaceAndName, "Revision");
     verify(fileObjectToFileObjectDtoMapper).map(fileObject2, namespaceAndName, "Revision");
+  }
+
+  @Test
+  public void shouldSetLinksCorrectly() {
+    BrowserResult browserResult = createBrowserResult();
+    NamespaceAndName namespaceAndName = new NamespaceAndName("foo", "bar");
+
+    BrowserResultDto dto = mapper.map(browserResult, namespaceAndName, "path");
+
+    assertThat(dto.getLinks().getLinkBy("self").get().getHref()).contains("path");
   }
 
   private BrowserResult createBrowserResult() {
