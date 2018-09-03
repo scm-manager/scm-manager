@@ -3,13 +3,17 @@ import React from "react";
 import { translate } from "react-i18next";
 import { Checkbox, InputField } from "../../components/forms";
 import TypeSelector from "./TypeSelector";
-import type {PermissionEntry} from "../types/Permissions";
+import type {
+  PermissionCollection,
+  PermissionEntry
+} from "../types/Permissions";
 import { SubmitButton } from "../../components/buttons";
 
 type Props = {
   t: string => string,
   createPermission: (permission: PermissionEntry) => void,
-  loading: boolean
+  loading: boolean,
+  currentPermissions: PermissionCollection
 };
 
 type State = {
@@ -46,6 +50,8 @@ class CreatePermissionForm extends React.Component<Props, State> {
                 <InputField
                   value={name ? name : ""}
                   onChange={this.handleNameChange}
+                  validationError={this.currentPermissionIncludeName()}
+                  errorMessage={t("add-permission.name-input-invalid")}
                 />
               </td>
             </tr>
@@ -73,10 +79,30 @@ class CreatePermissionForm extends React.Component<Props, State> {
           label={t("add-permission.submit-button")}
           action={this.submit}
           loading={loading}
+          disabled={this.isValid()}
         />
       </div>
     );
   }
+
+  isValid = () => {
+    if (
+      this.state.name === null ||
+      this.state.name === "" ||
+      this.currentPermissionIncludeName()
+    ) {
+      return true;
+    }
+    return false;
+  };
+
+  currentPermissionIncludeName = () => {
+    for (let i = 0; i < this.props.currentPermissions.length; i++) {
+      if (this.props.currentPermissions[i].name === this.state.name)
+        return true;
+    }
+    return false;
+  };
 
   submit = () => {
     this.props.createPermission({

@@ -2,7 +2,11 @@
 import { apiClient } from "../../apiclient";
 import * as types from "../../modules/types";
 import type { Action } from "../../types/Action";
-import type {PermissionCollection, Permission, PermissionEntry} from "../types/Permissions";
+import type {
+  PermissionCollection,
+  Permission,
+  PermissionEntry
+} from "../types/Permissions";
 import { isPending } from "../../modules/pending";
 import { getFailure } from "../../modules/failure";
 import { Dispatch } from "redux";
@@ -39,6 +43,9 @@ export const CREATE_PERMISSION_SUCCESS = `${CREATE_PERMISSION}_${
 }`;
 export const CREATE_PERMISSION_FAILURE = `${CREATE_PERMISSION}_${
   types.FAILURE_SUFFIX
+}`;
+export const CREATE_PERMISSION_RESET = `${CREATE_PERMISSION}_${
+  types.RESET_SUFFIX
 }`;
 export const DELETE_PERMISSION = "scm/permissions/DELETE_PERMISSION";
 export const DELETE_PERMISSION_PENDING = `${DELETE_PERMISSION}_${
@@ -136,7 +143,9 @@ export function modifyPermission(
         const error = new Error(
           `failed to modify permission: ${cause.message}`
         );
-        dispatch(modifyPermissionFailure(permission, error, namespace, repoName));
+        dispatch(
+          modifyPermissionFailure(permission, error, namespace, repoName)
+        );
       });
   };
 }
@@ -278,6 +287,13 @@ export function createPermissionFailure(
   };
 }
 
+export function createPermissionReset(namespace: string, repoName: string) {
+  return {
+    type: CREATE_PERMISSION_RESET,
+    itemId: namespace + "/" + repoName
+  };
+}
+
 // delete permission
 
 export function deletePermission(
@@ -300,7 +316,9 @@ export function deletePermission(
         const error = new Error(
           `could not delete permission ${permission.name}: ${cause.message}`
         );
-        dispatch(deletePermissionFailure(permission, namespace, repoName, error));
+        dispatch(
+          deletePermissionFailure(permission, namespace, repoName, error)
+        );
       });
   };
 }
@@ -490,22 +508,14 @@ export function isCreatePermissionPending(
   namespace: string,
   repoName: string
 ) {
-  return isPending(
-    state,
-    CREATE_PERMISSION,
-    namespace + "/" + repoName
-  );
+  return isPending(state, CREATE_PERMISSION, namespace + "/" + repoName);
 }
 export function getCreatePermissionFailure(
   state: Object,
   namespace: string,
   repoName: string
 ) {
-  return getFailure(
-    state,
-    CREATE_PERMISSION,
-    namespace + "/" + repoName
-  );
+  return getFailure(state, CREATE_PERMISSION, namespace + "/" + repoName);
 }
 
 export function isDeletePermissionPending(

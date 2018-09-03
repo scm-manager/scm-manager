@@ -10,7 +10,7 @@ import {
   getPermissionsOfRepo,
   hasCreatePermission,
   createPermission,
-  isCreatePermissionPending
+  isCreatePermissionPending, getCreatePermissionFailure, createPermissionReset
 } from "../modules/permissions";
 import Loading from "../../components/Loading";
 import ErrorPage from "../../components/ErrorPage";
@@ -39,6 +39,7 @@ type Props = {
     repoName: string,
     callback?: () => void
   ) => void,
+  createPermissionReset: (string, string) => void,
 
   // context props
   t: string => string,
@@ -48,8 +49,9 @@ type Props = {
 
 class Permissions extends React.Component<Props> {
   componentDidMount() {
-    const { fetchPermissions, namespace, repoName } = this.props;
+    const { fetchPermissions, namespace, repoName, createPermissionReset } = this.props;
 
+    createPermissionReset(namespace, repoName);
     fetchPermissions(namespace, repoName);
   }
 
@@ -69,7 +71,6 @@ class Permissions extends React.Component<Props> {
       loadingCreatePermission,
       hasPermissionToCreate
     } = this.props;
-    console.log(permissions);
 
     if (error) {
       return (
@@ -96,6 +97,7 @@ class Permissions extends React.Component<Props> {
           )
         }
         loading={loadingCreatePermission}
+        currentPermissions={permissions}
       />
     ) : null;
     return (
@@ -130,7 +132,7 @@ class Permissions extends React.Component<Props> {
 const mapStateToProps = (state, ownProps) => {
   const namespace = ownProps.namespace;
   const repoName = ownProps.repoName;
-  const error = getFetchPermissionsFailure(state, namespace, repoName);
+  const error = getFetchPermissionsFailure(state, namespace, repoName) || getCreatePermissionFailure(state, namespace, repoName);
   const loading = isFetchPermissionsPending(state, namespace, repoName);
   const permissions = getPermissionsOfRepo(state, namespace, repoName);
   const loadingCreatePermission = isCreatePermissionPending(
@@ -162,6 +164,12 @@ const mapDispatchToProps = dispatch => {
       callback?: () => void
     ) => {
       dispatch(createPermission(permission, namespace, repoName, callback));
+    },
+    createPermissionReset: (
+      namespace: string,
+      repoName: string
+    ) => {
+      dispatch(createPermissionReset(namespace, repoName));
     }
   };
 };
