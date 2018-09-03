@@ -12,7 +12,7 @@ type Props = {
 
 class TypeSelector extends React.Component<Props> {
   render() {
-    const { t, type, handleTypeChange, loading } = this.props;
+    const { type, handleTypeChange, loading } = this.props;
     const types = ["READ", "OWNER", "WRITE"];
 
     return (
