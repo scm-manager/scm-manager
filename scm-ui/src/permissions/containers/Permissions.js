@@ -15,7 +15,6 @@ import {
 import Loading from "../../components/Loading";
 import ErrorPage from "../../components/ErrorPage";
 import type {
-  Permission,
   PermissionCollection,
   PermissionEntry
 } from "../types/Permissions";
@@ -70,6 +69,7 @@ class Permissions extends React.Component<Props> {
       loadingCreatePermission,
       hasPermissionToCreate
     } = this.props;
+    console.log(permissions);
 
     if (error) {
       return (
@@ -98,36 +98,32 @@ class Permissions extends React.Component<Props> {
         loading={loadingCreatePermission}
       />
     ) : null;
-
-    if (permissions.length > 0)
-      return (
-        <div>
-          <table className="table is-hoverable is-fullwidth">
-            <thead>
-              <tr>
-                <th>{t("permission.name")}</th>
-                <th className="is-hidden-mobile">{t("permission.type")}</th>
-                <th>{t("permission.group-permission")}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {permissions.map((permission, index) => {
-                return (
-                  <SinglePermission
-                    key={index}
-                    namespace={namespace}
-                    repoName={repoName}
-                    permission={permission}
-                  />
-                );
-              })}
-            </tbody>
-          </table>
-          {createPermissionForm}
-        </div>
-      );
-
-    return <div />;
+    return (
+      <div>
+        <table className="table is-hoverable is-fullwidth">
+          <thead>
+            <tr>
+              <th>{t("permission.name")}</th>
+              <th className="is-hidden-mobile">{t("permission.type")}</th>
+              <th>{t("permission.group-permission")}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {permissions.map(permission => {
+              return (
+                <SinglePermission
+                  key={permission.name}
+                  namespace={namespace}
+                  repoName={repoName}
+                  permission={permission}
+                />
+              );
+            })}
+          </tbody>
+        </table>
+        {createPermissionForm}
+      </div>
+    );
   }
 }
 
@@ -142,7 +138,6 @@ const mapStateToProps = (state, ownProps) => {
     namespace,
     repoName
   );
-  console.log(permissions);
   const hasPermissionToCreate = hasCreatePermission(state, namespace, repoName);
   return {
     namespace,
