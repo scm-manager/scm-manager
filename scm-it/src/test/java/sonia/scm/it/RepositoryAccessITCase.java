@@ -16,8 +16,8 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static java.lang.Thread.sleep;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertNotNull;
 import static sonia.scm.it.RestUtil.given;
@@ -98,6 +98,7 @@ public class RepositoryAccessITCase {
       .statusCode(HttpStatus.SC_OK)
       .extract()
       .path("files.find{it.name=='a.txt'}._links.self.href");
+
     given()
       .when()
       .get(rootContentUrl)
@@ -112,7 +113,15 @@ public class RepositoryAccessITCase {
       .statusCode(HttpStatus.SC_OK)
       .extract()
       .path("files.find{it.name=='subfolder'}._links.self.href");
-    String subfolderContentUrl= given()
+    String selfOfSubfolderUrl = given()
+      .when()
+      .get(subfolderSourceUrl)
+      .then()
+      .statusCode(HttpStatus.SC_OK)
+      .extract()
+      .path("_links.self.href");
+    assertThat(subfolderSourceUrl).isEqualTo(selfOfSubfolderUrl);
+    String subfolderContentUrl = given()
       .when()
       .get(subfolderSourceUrl)
       .then()
