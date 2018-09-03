@@ -1,6 +1,7 @@
 //@flow
 import React from "react";
 import connect from "react-redux/es/connect/connect";
+import { withRouter } from "react-router-dom";
 import { translate } from "react-i18next";
 import {
   fetchPermissions,
@@ -13,9 +14,14 @@ import {
 } from "../modules/permissions";
 import Loading from "../../components/Loading";
 import ErrorPage from "../../components/ErrorPage";
-import type {Permission, PermissionCollection, PermissionEntry} from "../types/Permissions";
+import type {
+  Permission,
+  PermissionCollection,
+  PermissionEntry
+} from "../types/Permissions";
 import SinglePermission from "./SinglePermission";
 import CreatePermissionForm from "../components/CreatePermissionForm";
+import type { History } from "history";
 
 type Props = {
   namespace: string,
@@ -31,12 +37,14 @@ type Props = {
   createPermission: (
     permission: PermissionEntry,
     namespace: string,
-    repoName: string
+    repoName: string,
+    callback?: () => void
   ) => void,
 
   // context props
   t: string => string,
-  match: any
+  match: any,
+  history: History
 };
 
 class Permissions extends React.Component<Props> {
@@ -45,6 +53,11 @@ class Permissions extends React.Component<Props> {
 
     fetchPermissions(namespace, repoName);
   }
+
+  permissionCreated = () => {
+    const { history, namespace, repoName } = this.props;
+    history.push(`/repo/${namespace}/${repoName}/permissions`);
+  };
 
   render() {
     const {
@@ -75,7 +88,12 @@ class Permissions extends React.Component<Props> {
     const createPermissionForm = hasPermissionToCreate ? (
       <CreatePermissionForm
         createPermission={permission =>
-          this.props.createPermission(permission, namespace, repoName)
+          this.props.createPermission(
+            permission,
+            namespace,
+            repoName,
+            this.permissionCreated()
+          )
         }
         loading={loadingCreatePermission}
       />
@@ -145,9 +163,10 @@ const mapDispatchToProps = dispatch => {
     createPermission: (
       permission: PermissionEntry,
       namespace: string,
-      repoName: string
+      repoName: string,
+      callback?: () => void
     ) => {
-      dispatch(createPermission(permission, namespace, repoName));
+      dispatch(createPermission(permission, namespace, repoName, callback));
     }
   };
 };
@@ -155,4 +174,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(translate("permissions")(Permissions));
+)(translate("permissions")(withRouter(Permissions)));
