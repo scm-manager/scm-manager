@@ -11,18 +11,17 @@ type Props = {
 };
 
 class TypeSelector extends React.Component<Props> {
-
   render() {
     const { t, type, handleTypeChange, loading } = this.props;
-    const types = ["READ", "OWNER", "GROUP"];
+    const types = ["READ", "OWNER", "WRITE"];
 
     return (
-            <Select
-              onChange={handleTypeChange}
-              value={type ? type : ""}
-              options={this.createSelectOptions(types)}
-              loading={loading}
-            />
+      <Select
+        onChange={handleTypeChange}
+        value={type ? type : ""}
+        options={this.createSelectOptions(types)}
+        loading={loading}
+      />
     );
   }
 
