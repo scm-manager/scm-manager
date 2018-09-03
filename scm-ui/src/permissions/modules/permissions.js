@@ -383,12 +383,13 @@ function deletePermissionFromState(
   oldPermissions: PermissionCollection,
   permission: Permission
 ) {
+  let newPermission = [];
   for (let i = 0; i < oldPermissions.length; i++) {
-    if (oldPermissions[i] === permission) {
-      oldPermissions.splice(i, 1);
+    if (oldPermissions[i] !== permission) {
+      newPermission.push(oldPermissions[i]);
     }
   }
-  return oldPermissions;
+  return newPermission;
 }
 
 // reducer

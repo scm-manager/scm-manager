@@ -159,7 +159,6 @@ class SinglePermission extends React.Component<Props, State> {
 
 const mapStateToProps = (state, ownProps) => {
   const permission = ownProps.permission;
-  console.log(permission);
   const loading = isModifyPermissionPending(
     state,
     ownProps.namespace,

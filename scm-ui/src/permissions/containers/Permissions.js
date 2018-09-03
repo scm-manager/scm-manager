@@ -10,7 +10,9 @@ import {
   getPermissionsOfRepo,
   hasCreatePermission,
   createPermission,
-  isCreatePermissionPending, getCreatePermissionFailure, createPermissionReset
+  isCreatePermissionPending,
+  getCreatePermissionFailure,
+  createPermissionReset
 } from "../modules/permissions";
 import Loading from "../../components/Loading";
 import ErrorPage from "../../components/ErrorPage";
@@ -49,7 +51,12 @@ type Props = {
 
 class Permissions extends React.Component<Props> {
   componentDidMount() {
-    const { fetchPermissions, namespace, repoName, createPermissionReset } = this.props;
+    const {
+      fetchPermissions,
+      namespace,
+      repoName,
+      createPermissionReset
+    } = this.props;
 
     createPermissionReset(namespace, repoName);
     fetchPermissions(namespace, repoName);
@@ -71,7 +78,6 @@ class Permissions extends React.Component<Props> {
       loadingCreatePermission,
       hasPermissionToCreate
     } = this.props;
-
     if (error) {
       return (
         <ErrorPage
@@ -132,7 +138,9 @@ class Permissions extends React.Component<Props> {
 const mapStateToProps = (state, ownProps) => {
   const namespace = ownProps.namespace;
   const repoName = ownProps.repoName;
-  const error = getFetchPermissionsFailure(state, namespace, repoName) || getCreatePermissionFailure(state, namespace, repoName);
+  const error =
+    getFetchPermissionsFailure(state, namespace, repoName) ||
+    getCreatePermissionFailure(state, namespace, repoName);
   const loading = isFetchPermissionsPending(state, namespace, repoName);
   const permissions = getPermissionsOfRepo(state, namespace, repoName);
   const loadingCreatePermission = isCreatePermissionPending(
@@ -165,10 +173,7 @@ const mapDispatchToProps = dispatch => {
     ) => {
       dispatch(createPermission(permission, namespace, repoName, callback));
     },
-    createPermissionReset: (
-      namespace: string,
-      repoName: string
-    ) => {
+    createPermissionReset: (namespace: string, repoName: string) => {
       dispatch(createPermissionReset(namespace, repoName));
     }
   };
