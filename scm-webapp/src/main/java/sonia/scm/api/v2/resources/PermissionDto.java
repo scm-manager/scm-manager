@@ -10,6 +10,8 @@ import lombok.ToString;
 @Getter @Setter @ToString
 public class PermissionDto extends HalRepresentation {
 
+  public static final String GROUP_PREFIX = "@";
+
   @JsonInclude(JsonInclude.Include.NON_NULL)
   private String name;
 

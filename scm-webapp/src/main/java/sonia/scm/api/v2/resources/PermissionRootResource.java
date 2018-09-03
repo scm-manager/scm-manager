@@ -29,10 +29,12 @@ import java.net.URI;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+import static sonia.scm.api.v2.resources.PermissionDto.GROUP_PREFIX;
+
 @Slf4j
 public class PermissionRootResource {
 
-  private static final String GROUP_PREFIX = "@";
+
   private PermissionDtoToPermissionMapper dtoToModelMapper;
   private PermissionToPermissionDtoMapper modelToDtoMapper;
   private PermissionCollectionToDtoMapper permissionCollectionToDtoMapper;
