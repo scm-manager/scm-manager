@@ -57,6 +57,9 @@ export const DELETE_PERMISSION_SUCCESS = `${DELETE_PERMISSION}_${
 export const DELETE_PERMISSION_FAILURE = `${DELETE_PERMISSION}_${
   types.FAILURE_SUFFIX
 }`;
+export const DELETE_PERMISSION_RESET = `${DELETE_PERMISSION}_${
+  types.RESET_SUFFIX
+}`;
 
 const REPOS_URL = "repositories";
 const PERMISSIONS_URL = "permissions";
@@ -366,6 +369,16 @@ export function deletePermissionFailure(
   };
 }
 
+export function deletePermissionReset(
+  namespace: string,
+  repoName: string,
+  permissionname: string
+) {
+  return {
+    type: DELETE_PERMISSION_RESET,
+    itemId: namespace + "/" + repoName + "/" + permissionname
+  };
+}
 function deletePermissionFromState(
   oldPermissions: PermissionCollection,
   permission: Permission

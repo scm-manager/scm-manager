@@ -10,7 +10,8 @@ import {
   modifyPermissionReset,
   deletePermission,
   getDeletePermissionFailure,
-  isDeletePermissionPending
+  isDeletePermissionPending,
+  deletePermissionReset
 } from "../modules/permissions";
 import connect from "react-redux/es/connect/connect";
 import { withRouter } from "react-router-dom";
@@ -31,6 +32,7 @@ type Props = {
   loading: boolean,
   error: Error,
   permissionReset: (string, string, string) => void,
+  deletePermissionReset: (string, string, string) => void,
   deletePermission: (Permission, string, string) => void,
   deleteLoading: boolean
 };
@@ -56,6 +58,11 @@ class SinglePermission extends React.Component<Props, State> {
   componentDidMount() {
     const { permission } = this.props;
     this.props.permissionReset(
+      this.props.namespace,
+      this.props.repoName,
+      permission.name
+    );
+    this.props.deletePermissionReset(
       this.props.namespace,
       this.props.repoName,
       permission.name
@@ -204,6 +211,13 @@ const mapDispatchToProps = dispatch => {
       repoName: string
     ) => {
       dispatch(deletePermission(permission, namespace, repoName));
+    },
+    deletePermissionReset: (
+      namespace: string,
+      repoName: string,
+      permissionname: string
+    ) => {
+      dispatch(deletePermissionReset(namespace, repoName, permissionname));
     }
   };
 };
