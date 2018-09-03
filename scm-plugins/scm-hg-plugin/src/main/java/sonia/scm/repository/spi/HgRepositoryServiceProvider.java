@@ -36,20 +36,20 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.io.Closeables;
-
 import sonia.scm.repository.Feature;
 import sonia.scm.repository.HgHookManager;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.Command;
-
-//~--- JDK imports ------------------------------------------------------------
+import sonia.scm.repository.api.ScmProtocol;
 
 import java.io.File;
 import java.io.IOException;
-
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Set;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -271,6 +271,12 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
   public TagsCommand getTagsCommand()
   {
     return new HgTagsCommand(context, repository);
+  }
+
+  @Override
+  public Set<ScmProtocol> getSupportedProtocols() {
+    // TODO #9248
+    return Collections.emptySet();
   }
 
   //~--- fields ---------------------------------------------------------------

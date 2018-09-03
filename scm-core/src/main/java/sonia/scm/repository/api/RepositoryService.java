@@ -42,6 +42,7 @@ import sonia.scm.repository.spi.RepositoryServiceProvider;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.util.Set;
 
 /**
  * From the {@link RepositoryService} it is possible to access all commands for
@@ -358,4 +359,16 @@ public final class RepositoryService implements Closeable {
   }
 
 
+  public Set<ScmProtocol> getSupportedProtocols() {
+    return provider.getSupportedProtocols();
+  }
+
+  public <T extends ScmProtocol> T getProtocol(Class<T> clazz) {
+    for (ScmProtocol scmProtocol : getSupportedProtocols()) {
+      if (clazz.isAssignableFrom(scmProtocol.getClass())) {
+        return (T) scmProtocol;
+      }
+    }
+    throw new IllegalArgumentException("no implementation for " + clazz.getName() + " and repository type " + getRepository().getType());
+  }
 }

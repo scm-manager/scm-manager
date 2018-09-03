@@ -38,14 +38,14 @@ package sonia.scm.repository.spi;
 import sonia.scm.repository.Feature;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.CommandNotSupportedException;
-
-//~--- JDK imports ------------------------------------------------------------
+import sonia.scm.repository.api.ScmProtocol;
 
 import java.io.Closeable;
 import java.io.IOException;
-
 import java.util.Collections;
 import java.util.Set;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -244,4 +244,6 @@ public abstract class RepositoryServiceProvider implements Closeable
   {
     throw new CommandNotSupportedException(Command.UNBUNDLE);
   }
+
+  public abstract Set<ScmProtocol> getSupportedProtocols();
 }

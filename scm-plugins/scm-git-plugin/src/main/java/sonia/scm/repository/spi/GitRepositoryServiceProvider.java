@@ -36,16 +36,16 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.ImmutableSet;
-
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.Command;
-
-//~--- JDK imports ------------------------------------------------------------
+import sonia.scm.repository.api.ScmProtocol;
 
 import java.io.IOException;
-
+import java.util.Collections;
 import java.util.Set;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -246,6 +246,12 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
   public TagsCommand getTagsCommand()
   {
     return new GitTagsCommand(context, repository);
+  }
+
+  @Override
+  public Set<ScmProtocol> getSupportedProtocols() {
+    // TODO #9246
+    return Collections.emptySet();
   }
 
   //~--- fields ---------------------------------------------------------------

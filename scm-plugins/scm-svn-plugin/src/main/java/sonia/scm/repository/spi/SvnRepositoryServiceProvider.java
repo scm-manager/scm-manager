@@ -37,16 +37,16 @@ package sonia.scm.repository.spi;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Closeables;
-
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.SvnRepositoryHandler;
 import sonia.scm.repository.api.Command;
-
-//~--- JDK imports ------------------------------------------------------------
+import sonia.scm.repository.api.ScmProtocol;
 
 import java.io.IOException;
-
+import java.util.Collections;
 import java.util.Set;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -189,6 +189,12 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
   public UnbundleCommand getUnbundleCommand()
   {
     return new SvnUnbundleCommand(context, repository);
+  }
+
+  @Override
+  public Set<ScmProtocol> getSupportedProtocols() {
+    // TODO #9247
+    return Collections.emptySet();
   }
 
   //~--- fields ---------------------------------------------------------------
