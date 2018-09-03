@@ -2,7 +2,6 @@
 .*/node_modules/module-deps/.*
 
 [include]
-../ui-types/.*
 
 [libs]
 

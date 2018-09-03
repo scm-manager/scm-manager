@@ -732,9 +732,9 @@
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/@scm-manager/eslint-config/-/eslint-config-0.0.2.tgz#94cc8c3fb4f51f870b235893dc134fc6c423ae85"
 
-"@scm-manager/ui-bundler@^0.0.9":
-  version "0.0.9"
-  resolved "https://registry.yarnpkg.com/@scm-manager/ui-bundler/-/ui-bundler-0.0.9.tgz#b61bdccaf6cf0ff3f4856098f95b462223c626c8"
+"@scm-manager/ui-bundler@^0.0.10":
+  version "0.0.10"
+  resolved "https://registry.yarnpkg.com/@scm-manager/ui-bundler/-/ui-bundler-0.0.10.tgz#94c90ed1c1830352e274e048158843436ce31352"
   dependencies:
     "@babel/core" "^7.0.0"
     "@babel/plugin-proposal-class-properties" "^7.0.0"

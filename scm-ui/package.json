@@ -31,8 +31,8 @@
     "webfonts": "copyfiles -f node_modules/@fortawesome/fontawesome-free/webfonts/* target/styles/webfonts",
     "build-css": "node-sass-chokidar --include-path ./styles --include-path ./node_modules styles/ -o target/styles",
     "watch-css": "npm run build-css && node-sass-chokidar --include-path ./styles --include-path ./node_modules styles/ -o target/styles --watch --recursive",
-    "start-js": "ui-bundler serve",
-    "start": "npm-run-all -p webfonts watch-css build-vendor start-js",
+    "start-js": "ui-bundler serve --vendor vendor.bundle.js",
+    "start": "npm-run-all -p webfonts watch-css start-js",
     "build-js": "ui-bundler bundle target/scm-ui.bundle.js",
     "build-vendor": "ui-bundler vendor target/vendor.bundle.js",
     "build": "npm-run-all -s webfonts build-css build-vendor build-js",
@@ -42,7 +42,7 @@
     "pre-commit": "jest && flow && eslint src"
   },
   "devDependencies": {
-    "@scm-manager/ui-bundler": "^0.0.9",
+    "@scm-manager/ui-bundler": "^0.0.12",
     "copyfiles": "^2.0.0",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",

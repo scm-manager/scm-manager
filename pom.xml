@@ -69,6 +69,7 @@
     <module>scm-annotation-processor</module>
     <module>scm-core</module>
     <module>scm-test</module>
+    <module>scm-ui-components</module>
     <module>scm-plugins</module>
     <module>scm-dao-xml</module>
     <module>scm-ui</module>

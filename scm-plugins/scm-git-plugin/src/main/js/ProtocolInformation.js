@@ -1,9 +1,9 @@
 //@flow
-import React from 'react';
+import React from "react";
+import { Repository } from "@scm-manager/ui-types";
 
-// TODO flow types ???
 type Props = {
-  repository: Object
+  repository: Repository
 }
 
 class ProtocolInformation extends React.Component<Props> {
