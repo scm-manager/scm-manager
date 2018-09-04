@@ -7,8 +7,9 @@ import sonia.scm.repository.spi.RepositoryServiceProvider;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.UriInfo;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.Set;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.util.IterableUtil.sizeOf;
@@ -26,7 +27,7 @@ public class RepositoryServiceTest {
     when(provider.getSupportedProtocols()).thenReturn(Collections.singleton(new DummyHttpProtocol()));
 
     RepositoryService repositoryService = new RepositoryService(null, provider, repository, null);
-    Set<ScmProtocol> supportedProtocols = repositoryService.getSupportedProtocols();
+    Collection<ScmProtocol> supportedProtocols = repositoryService.getSupportedProtocols();
 
     assertThat(sizeOf(supportedProtocols)).isEqualTo(1);
   }
@@ -38,7 +39,7 @@ public class RepositoryServiceTest {
     RepositoryService repositoryService = new RepositoryService(null, provider, repository, null);
     HttpScmProtocol protocol = repositoryService.getProtocol(HttpScmProtocol.class);
 
-    assertThat(protocol.getUrl()).isEqualTo("dummy");
+    assertThat(protocol.getUrl(null)).isEqualTo("dummy");
   }
 
   @Test
@@ -54,7 +55,7 @@ public class RepositoryServiceTest {
 
   private static class DummyHttpProtocol implements HttpScmProtocol {
     @Override
-    public String getUrl() {
+    public String getUrl(UriInfo uriInfo) {
       return "dummy";
     }
 

@@ -42,7 +42,7 @@ import sonia.scm.repository.spi.RepositoryServiceProvider;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.util.Set;
+import java.util.Collection;
 
 /**
  * From the {@link RepositoryService} it is possible to access all commands for
@@ -359,7 +359,7 @@ public final class RepositoryService implements Closeable {
   }
 
 
-  public Set<ScmProtocol> getSupportedProtocols() {
+  public Collection<ScmProtocol> getSupportedProtocols() {
     return provider.getSupportedProtocols();
   }
 

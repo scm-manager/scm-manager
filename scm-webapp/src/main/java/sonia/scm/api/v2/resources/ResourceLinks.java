@@ -4,7 +4,6 @@ import sonia.scm.repository.NamespaceAndName;
 
 import javax.inject.Inject;
 import javax.ws.rs.core.UriInfo;
-import java.net.URI;
 
 class ResourceLinks {
 
@@ -139,10 +138,6 @@ class ResourceLinks {
 
     String self(String namespace, String name) {
       return repositoryLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("get").parameters().href();
-    }
-
-    String clone(String type, String namespace, String name) {
-      return uriInfo.getBaseUri().resolve(URI.create("../../" + type + "/" + namespace + "/" + name)).toASCIIString();
     }
 
     String delete(String namespace, String name) {

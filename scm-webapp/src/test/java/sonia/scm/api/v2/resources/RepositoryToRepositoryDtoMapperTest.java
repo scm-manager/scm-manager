@@ -7,7 +7,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import sonia.scm.repository.HealthCheckFailure;
@@ -15,13 +14,18 @@ import sonia.scm.repository.Permission;
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.Command;
+import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
+import sonia.scm.repository.api.ScmProtocol;
 
 import java.net.URI;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptySet;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -39,8 +43,12 @@ public class RepositoryToRepositoryDtoMapperTest {
   private final URI baseUri = URI.create("http://example.com/base/");
   @SuppressWarnings("unused") // Is injected
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
-  @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+  @Mock//(answer = Answers.RETURNS_DEEP_STUBS)
   private RepositoryServiceFactory serviceFactory;
+  @Mock
+  private RepositoryService repositoryService;
+  @Mock
+  private UriInfoStore uriInfoStore;
 
   @InjectMocks
   private RepositoryToRepositoryDtoMapperImpl mapper;
@@ -48,7 +56,9 @@ public class RepositoryToRepositoryDtoMapperTest {
   @Before
   public void init() {
     initMocks(this);
-    when(serviceFactory.create(any(Repository.class)).isSupported(any(Command.class))).thenReturn(true);
+    when(serviceFactory.create(any(Repository.class))).thenReturn(repositoryService);
+    when(repositoryService.isSupported(any(Command.class))).thenReturn(true);
+    when(repositoryService.getSupportedProtocols()).thenReturn(emptySet());
   }
 
   @After
@@ -129,14 +139,14 @@ public class RepositoryToRepositoryDtoMapperTest {
 
   @Test
   public void shouldNotCreateTagsLink_ifNotSupported() {
-    when(serviceFactory.create(any(Repository.class)).isSupported(Command.TAGS)).thenReturn(false);
+    when(repositoryService.isSupported(Command.TAGS)).thenReturn(false);
     RepositoryDto dto = mapper.map(createTestRepository());
     assertFalse(dto.getLinks().getLinkBy("tags").isPresent());
   }
 
   @Test
   public void shouldNotCreateBranchesLink_ifNotSupported() {
-    when(serviceFactory.create(any(Repository.class)).isSupported(Command.BRANCHES)).thenReturn(false);
+    when(repositoryService.isSupported(Command.BRANCHES)).thenReturn(false);
     RepositoryDto dto = mapper.map(createTestRepository());
     assertFalse(dto.getLinks().getLinkBy("branches").isPresent());
   }
@@ -165,6 +175,43 @@ public class RepositoryToRepositoryDtoMapperTest {
       dto.getLinks().getLinkBy("permissions").get().getHref());
   }
 
+  @Test
+  public void shouldCreateCorrectProtocolLinks() {
+    when(repositoryService.getSupportedProtocols()).thenReturn(
+      asList(mockProtocol("http", "http://scm"), mockProtocol("other", "some://protocol"))
+    );
+
+    RepositoryDto dto = mapper.map(createTestRepository());
+    assertTrue("should contain http link", dto.getLinks().stream().anyMatch(l -> l.getName().equals("http") && l.getHref().equals("http://scm")));
+    assertTrue("should contain other link", dto.getLinks().stream().anyMatch(l -> l.getName().equals("other") && l.getHref().equals("some://protocol")));
+  }
+
+  @Test
+  @SubjectAware(username = "community")
+  public void shouldCreateProtocolLinksForPullPermission() {
+    when(repositoryService.getSupportedProtocols()).thenReturn(
+      asList(mockProtocol("http", "http://scm"), mockProtocol("other", "some://protocol"))
+    );
+
+    RepositoryDto dto = mapper.map(createTestRepository());
+    assertEquals(2, dto.getLinks().getLinksBy("protocol").size());
+  }
+
+  @Test
+  @SubjectAware(username = "unpriv")
+  public void shouldNotCreateProtocolLinksWithoutPullPermission() {
+    when(repositoryService.getSupportedProtocols()).thenReturn(
+      asList(mockProtocol("http", "http://scm"), mockProtocol("other", "some://protocol"))
+    );
+
+    RepositoryDto dto = mapper.map(createTestRepository());
+    assertTrue(dto.getLinks().getLinksBy("protocol").isEmpty());
+  }
+
+  private ScmProtocol mockProtocol(String type, String protocol) {
+    return new MockScmProtocol(type, protocol);
+  }
+
   private Repository createTestRepository() {
     Repository repository = new Repository();
     repository.setNamespace("testspace");
@@ -179,4 +226,5 @@ public class RepositoryToRepositoryDtoMapperTest {
 
     return repository;
   }
+
 }

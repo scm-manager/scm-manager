@@ -9,7 +9,6 @@ import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.mockito.Answers;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -20,6 +19,7 @@ import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryIsNotArchivedException;
 import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.web.VndMediaType;
 
@@ -29,6 +29,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
@@ -64,8 +65,12 @@ public class RepositoryRootResourceTest {
 
   @Mock
   private RepositoryManager repositoryManager;
-  @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+  @Mock
   private RepositoryServiceFactory serviceFactory;
+  @Mock
+  private RepositoryService service;
+  @Mock
+  private UriInfoStore uriInfoStore;
 
 
   private final URI baseUri = URI.create("/");
@@ -83,6 +88,7 @@ public class RepositoryRootResourceTest {
     RepositoryCollectionToDtoMapper repositoryCollectionToDtoMapper = new RepositoryCollectionToDtoMapper(repositoryToDtoMapper, resourceLinks);
     RepositoryCollectionResource repositoryCollectionResource = new RepositoryCollectionResource(repositoryManager, repositoryCollectionToDtoMapper, dtoToRepositoryMapper, resourceLinks);
     RepositoryRootResource repositoryRootResource = new RepositoryRootResource(MockProvider.of(repositoryResource), MockProvider.of(repositoryCollectionResource));
+    when(serviceFactory.create(any(Repository.class))).thenReturn(service);
     dispatcher = createDispatcher(repositoryRootResource);
   }
 
@@ -265,6 +271,20 @@ public class RepositoryRootResourceTest {
     dispatcher.invoke(request, response);
 
     assertFalse(modifiedRepositoryCaptor.getValue().getPermissions().isEmpty());
+  }
+
+  @Test
+  public void shouldCreateArrayOfProtocolUrls() throws Exception {
+    mockRepository("space", "repo");
+    when(service.getSupportedProtocols()).thenReturn(asList(new MockScmProtocol("http", "http://"), new MockScmProtocol("ssh", "ssh://")));
+
+    MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo");
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(SC_OK, response.getStatus());
+    assertTrue(response.getContentAsString().contains("\"protocol\":[{\"href\":\"http://\",\"name\":\"http\"},{\"href\":\"ssh://\",\"name\":\"ssh\"}]"));
   }
 
   private PageResult<Repository> createSingletonPageResult(Repository repository) {

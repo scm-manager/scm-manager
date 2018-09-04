@@ -1,5 +1,7 @@
 package sonia.scm.repository.api;
 
+import javax.ws.rs.core.UriInfo;
+
 /**
  * An ScmProtocol represents a concrete protocol provided by the SCM-Manager instance
  * to interact with a repository depending on its type. There may be multiple protocols
@@ -15,5 +17,5 @@ public interface ScmProtocol {
   /**
    * The URL to access the repository providing this protocol.
    */
-  String getUrl();
+  String getUrl(UriInfo uriInfo);
 }
