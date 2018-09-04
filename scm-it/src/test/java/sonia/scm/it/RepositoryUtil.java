@@ -5,6 +5,7 @@ import com.google.common.io.Files;
 import org.apache.http.HttpStatus;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Person;
+import sonia.scm.repository.Tag;
 import sonia.scm.repository.client.api.ClientCommand;
 import sonia.scm.repository.client.api.RepositoryClient;
 import sonia.scm.repository.client.api.RepositoryClientFactory;
@@ -36,11 +37,11 @@ public class RepositoryUtil {
     return name;
   }
 
-  static void createAndCommitFile(RepositoryClient repositoryClient, String username, String fileName, String content) throws IOException {
+  static Changeset createAndCommitFile(RepositoryClient repositoryClient, String username, String fileName, String content) throws IOException {
     File file = new File(repositoryClient.getWorkingCopy(), fileName);
     Files.write(content, file, Charsets.UTF_8);
     addWithParentDirectories(repositoryClient, file);
-    commit(repositoryClient, username, "added " + fileName);
+    return commit(repositoryClient, username, "added " + fileName);
   }
 
   private static String addWithParentDirectories(RepositoryClient repositoryClient, File file) throws IOException {
@@ -63,5 +64,17 @@ public class RepositoryUtil {
       repositoryClient.getPushCommand().push();
     }
     return changeset;
+  }
+
+  static Tag addTag(RepositoryClient repositoryClient, String revision, String tagName) throws IOException {
+    if (repositoryClient.isCommandSupported(ClientCommand.TAG)) {
+      Tag tag = repositoryClient.getTagCommand().setRevision(revision).tag(tagName, TestData.USER_SCM_ADMIN);
+      if (repositoryClient.isCommandSupported(ClientCommand.PUSH)) {
+        repositoryClient.getPushCommand().pushTags();
+      }
+      return tag;
+    }
+
+    return null;
   }
 }

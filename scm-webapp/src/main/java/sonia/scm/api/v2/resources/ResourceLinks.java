@@ -218,8 +218,8 @@ class ResourceLinks {
       tagLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, TagRootResource.class);
     }
 
-    String self(String namespace, String name, String id) {
-      return tagLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("tags").parameters().method("get").parameters(id).href();
+    String self(String namespace, String name, String tagName) {
+      return tagLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("tags").parameters().method("get").parameters(tagName).href();
     }
 
     String all(String namespace, String name) {

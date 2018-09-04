@@ -58,7 +58,7 @@ public class ChangesetRootResourceTest {
   private RepositoryServiceFactory serviceFactory;
 
   @Mock
-  private RepositoryService service;
+  private RepositoryService repositoryService;
 
   @Mock
   private LogCommandBuilder logCommandBuilder;
@@ -83,12 +83,12 @@ public class ChangesetRootResourceTest {
       .of(new RepositoryResource(null, null, null, null, null,
         MockProvider.of(changesetRootResource), null, null, null, null)), null);
     dispatcher.getRegistry().addSingletonResource(repositoryRootResource);
-    when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(service);
-    when(serviceFactory.create(any(Repository.class))).thenReturn(service);
-    when(service.getRepository()).thenReturn(new Repository("repoId", "git", "space", "repo"));
+    when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(repositoryService);
+    when(serviceFactory.create(any(Repository.class))).thenReturn(repositoryService);
+    when(repositoryService.getRepository()).thenReturn(new Repository("repoId", "git", "space", "repo"));
     dispatcher.getProviderFactory().registerProvider(NotFoundExceptionMapper.class);
     dispatcher.getProviderFactory().registerProvider(AuthorizationExceptionMapper.class);
-    when(service.getLogCommand()).thenReturn(logCommandBuilder);
+    when(repositoryService.getLogCommand()).thenReturn(logCommandBuilder);
     subjectThreadState.bind();
     ThreadContext.bind(subject);
     when(subject.isPermitted(any(String.class))).thenReturn(true);
