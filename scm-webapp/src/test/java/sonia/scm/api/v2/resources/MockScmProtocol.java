@@ -1,5 +1,6 @@
 package sonia.scm.api.v2.resources;
 
+import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.ScmProtocol;
 
 import javax.ws.rs.core.UriInfo;
@@ -19,7 +20,7 @@ class MockScmProtocol implements ScmProtocol {
   }
 
   @Override
-  public String getUrl(UriInfo uriInfo) {
+  public String getUrl(Repository repository, UriInfo uriInfo) {
     return protocol;
   }
 }

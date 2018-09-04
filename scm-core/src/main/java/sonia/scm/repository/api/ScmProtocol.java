@@ -1,5 +1,7 @@
 package sonia.scm.repository.api;
 
+import sonia.scm.repository.Repository;
+
 import javax.ws.rs.core.UriInfo;
 
 /**
@@ -17,5 +19,5 @@ public interface ScmProtocol {
   /**
    * The URL to access the repository providing this protocol.
    */
-  String getUrl(UriInfo uriInfo);
+  String getUrl(Repository repository, UriInfo uriInfo);
 }

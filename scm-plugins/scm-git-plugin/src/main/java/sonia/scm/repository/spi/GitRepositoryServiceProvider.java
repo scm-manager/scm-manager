@@ -40,6 +40,7 @@ import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.ScmProtocol;
+import sonia.scm.web.ScmGitServlet;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -250,8 +251,7 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
 
   @Override
   public Set<ScmProtocol> getSupportedProtocols() {
-    // TODO #9246
-    return Collections.emptySet();
+    return Collections.singleton(new ScmGitServlet(null, null, null, null, null, null));
   }
 
   //~--- fields ---------------------------------------------------------------

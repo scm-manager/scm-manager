@@ -40,30 +40,26 @@ import com.google.common.collect.Collections2;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Ordering;
 import com.google.inject.Inject;
-
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryTypePredicate;
+import sonia.scm.template.Viewable;
 import sonia.scm.util.HttpUtil;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
-
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
-
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import sonia.scm.template.Viewable;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -173,17 +169,6 @@ public class RepositoryRootResource
     public Repository getRepository()
     {
       return repository;
-    }
-
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
-    public String getUrl()
-    {
-      return repository.createUrl(baseUrl);
     }
 
     //~--- fields -------------------------------------------------------------

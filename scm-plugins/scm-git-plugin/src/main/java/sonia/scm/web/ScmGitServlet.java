@@ -44,6 +44,7 @@ import org.slf4j.Logger;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryProvider;
 import sonia.scm.repository.RepositoryRequestListenerUtil;
+import sonia.scm.repository.spi.HttpScmProtocol;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.web.lfs.servlet.LfsServletFactory;
 
@@ -51,7 +52,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
+import java.net.URI;
 import java.util.regex.Pattern;
 
 import static org.eclipse.jgit.lfs.lib.Constants.CONTENT_TYPE_GIT_LFS_JSON;
@@ -64,7 +67,7 @@ import static org.slf4j.LoggerFactory.getLogger;
  * @author Sebastian Sdorra
  */
 @Singleton
-public class ScmGitServlet extends GitServlet
+public class ScmGitServlet extends GitServlet implements HttpScmProtocol
 {
 
   /** Field description */
@@ -284,6 +287,16 @@ public class ScmGitServlet extends GitServlet
     return false;
   }
 
+  @Override
+  public void serve(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    service(request, response);
+  }
+
+  @Override
+  public String getUrl(Repository repository, UriInfo uriInfo) {
+    return uriInfo.getBaseUri().resolve(URI.create("../../git/" + repository.getNamespace() + "/" + repository.getName())).toASCIIString();
+  }
+
 
   //~--- fields ---------------------------------------------------------------
 
@@ -299,5 +312,4 @@ public class ScmGitServlet extends GitServlet
   private final GitRepositoryViewer repositoryViewer;
 
   private final LfsServletFactory lfsServletFactory;
-
 }

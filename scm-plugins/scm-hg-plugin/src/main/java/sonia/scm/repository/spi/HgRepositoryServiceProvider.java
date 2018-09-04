@@ -42,6 +42,7 @@ import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.ScmProtocol;
+import sonia.scm.web.HgCGIServlet;
 
 import java.io.File;
 import java.io.IOException;
@@ -275,8 +276,7 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
 
   @Override
   public Set<ScmProtocol> getSupportedProtocols() {
-    // TODO #9248
-    return Collections.emptySet();
+    return Collections.singleton(new HgCGIServlet(null, null, null, null, null, null));
   }
 
   //~--- fields ---------------------------------------------------------------

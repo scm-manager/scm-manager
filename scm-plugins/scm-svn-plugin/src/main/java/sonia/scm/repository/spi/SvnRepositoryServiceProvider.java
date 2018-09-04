@@ -41,6 +41,7 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.SvnRepositoryHandler;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.ScmProtocol;
+import sonia.scm.web.SvnDAVServlet;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -193,8 +194,7 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
 
   @Override
   public Set<ScmProtocol> getSupportedProtocols() {
-    // TODO #9247
-    return Collections.emptySet();
+    return Collections.singleton(new SvnDAVServlet(null, null, null, null));
   }
 
   //~--- fields ---------------------------------------------------------------

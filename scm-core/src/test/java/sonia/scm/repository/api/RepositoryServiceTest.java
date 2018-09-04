@@ -39,7 +39,7 @@ public class RepositoryServiceTest {
     RepositoryService repositoryService = new RepositoryService(null, provider, repository, null);
     HttpScmProtocol protocol = repositoryService.getProtocol(HttpScmProtocol.class);
 
-    assertThat(protocol.getUrl(null)).isEqualTo("dummy");
+    assertThat(protocol.getUrl(repository, null)).isEqualTo("dummy");
   }
 
   @Test
@@ -55,7 +55,7 @@ public class RepositoryServiceTest {
 
   private static class DummyHttpProtocol implements HttpScmProtocol {
     @Override
-    public String getUrl(UriInfo uriInfo) {
+    public String getUrl(Repository repository, UriInfo uriInfo) {
       return "dummy";
     }
 

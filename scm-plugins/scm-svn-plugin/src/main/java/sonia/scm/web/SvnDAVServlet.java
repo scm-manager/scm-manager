@@ -45,6 +45,7 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryProvider;
 import sonia.scm.repository.RepositoryRequestListenerUtil;
 import sonia.scm.repository.SvnRepositoryHandler;
+import sonia.scm.repository.spi.HttpScmProtocol;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.HttpUtil;
 
@@ -52,7 +53,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
+import java.net.URI;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -61,7 +64,7 @@ import java.io.IOException;
  * @author Sebastian Sdorra
  */
 @Singleton
-public class SvnDAVServlet extends DAVServlet
+public class SvnDAVServlet extends DAVServlet implements HttpScmProtocol
 {
 
   /** Field description */
@@ -281,6 +284,16 @@ public class SvnDAVServlet extends DAVServlet
 
     /** Field description */
     private final RepositoryProvider repositoryProvider;
+  }
+
+  @Override
+  public void serve(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    service(request, response);
+  }
+
+  @Override
+  public String getUrl(Repository repository, UriInfo uriInfo) {
+    return uriInfo.getBaseUri().resolve(URI.create("../../svn/" + repository.getNamespace() + "/" + repository.getName())).toASCIIString();
   }
 
 

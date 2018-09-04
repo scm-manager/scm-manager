@@ -50,7 +50,7 @@ public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Reposit
         Collection<ScmProtocol> supportedProtocols = repositoryService.getSupportedProtocols();
         List<Link> protocolLinks = supportedProtocols
           .stream()
-          .map(this::createProtocolLink)
+          .map(protocol -> createProtocolLink(protocol, repository))
           .collect(toList());
         linksBuilder.array(protocolLinks);
       }
@@ -66,7 +66,7 @@ public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Reposit
     target.add(linksBuilder.build());
   }
 
-  private Link createProtocolLink(ScmProtocol protocol) {
-    return Link.linkBuilder("protocol", protocol.getUrl(uriInfoStore.get())).withName(protocol.getType()).build();
+  private Link createProtocolLink(ScmProtocol protocol, Repository repository) {
+    return Link.linkBuilder("protocol", protocol.getUrl(repository, uriInfoStore.get())).withName(protocol.getType()).build();
   }
 }

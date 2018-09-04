@@ -51,6 +51,7 @@ import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryProvider;
 import sonia.scm.repository.RepositoryRequestListenerUtil;
+import sonia.scm.repository.spi.HttpScmProtocol;
 import sonia.scm.security.CipherUtil;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.HttpUtil;
@@ -63,8 +64,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.ws.rs.core.UriInfo;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.util.Base64;
 import java.util.Enumeration;
 
@@ -75,7 +78,7 @@ import java.util.Enumeration;
  * @author Sebastian Sdorra
  */
 @Singleton
-public class HgCGIServlet extends HttpServlet
+public class HgCGIServlet extends HttpServlet implements HttpScmProtocol
 {
 
   /** Field description */
@@ -357,6 +360,16 @@ public class HgCGIServlet extends HttpServlet
     }
 
     return python;
+  }
+
+  @Override
+  public void serve(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    service(request, response);
+  }
+
+  @Override
+  public String getUrl(Repository repository, UriInfo uriInfo) {
+    return uriInfo.getBaseUri().resolve(URI.create("../../hg/" + repository.getNamespace() + "/" + repository.getName())).toASCIIString();
   }
 
   //~--- fields ---------------------------------------------------------------
