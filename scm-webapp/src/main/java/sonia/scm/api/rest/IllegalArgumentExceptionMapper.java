@@ -33,6 +33,8 @@ package sonia.scm.api.rest;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import lombok.extern.slf4j.Slf4j;
+
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.ExceptionMapper;
@@ -43,7 +45,7 @@ import javax.ws.rs.ext.Provider;
  * @author Sebastian Sdorra
  * @since 1.36
  */
-@Provider
+@Provider @Slf4j
 public class IllegalArgumentExceptionMapper
   implements ExceptionMapper<IllegalArgumentException>
 {
@@ -59,6 +61,7 @@ public class IllegalArgumentExceptionMapper
   @Override
   public Response toResponse(IllegalArgumentException exception)
   {
+    log.info("caught IllegalArgumentException -- mapping to bad request", exception);
     return Response.status(Status.BAD_REQUEST).build();
   }
 }
