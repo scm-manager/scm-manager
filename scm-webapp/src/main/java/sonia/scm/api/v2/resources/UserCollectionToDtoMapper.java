@@ -1,13 +1,18 @@
 package sonia.scm.api.v2.resources;
 
+import sonia.scm.PageResult;
 import sonia.scm.user.User;
 import sonia.scm.user.UserPermissions;
 
 import javax.inject.Inject;
+import java.util.Optional;
+
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 
 // Mapstruct does not support parameterized (i.e. non-default) constructors. Thus, we need to use field injection.
 @SuppressWarnings("squid:S3306")
-public class UserCollectionToDtoMapper extends BasicCollectionToDtoMapper<User, UserDto> {
+public class UserCollectionToDtoMapper extends BasicCollectionToDtoMapper<User, UserDto, UserToUserDtoMapper> {
 
   private final ResourceLinks resourceLinks;
 
@@ -17,18 +22,15 @@ public class UserCollectionToDtoMapper extends BasicCollectionToDtoMapper<User, 
     this.resourceLinks = resourceLinks;
   }
 
-  @Override
-  String createCreateLink() {
-    return resourceLinks.userCollection().create();
+  public CollectionDto map(int pageNumber, int pageSize, PageResult<User> pageResult) {
+    return map(pageNumber, pageSize, pageResult, this.createSelfLink(), this.createCreateLink());
   }
 
-  @Override
+  Optional<String> createCreateLink() {
+    return UserPermissions.create().isPermitted() ? of(resourceLinks.userCollection().create()): empty();
+  }
+
   String createSelfLink() {
     return resourceLinks.userCollection().self();
-  }
-
-  @Override
-  boolean isCreatePermitted() {
-    return UserPermissions.create().isPermitted();
   }
 }

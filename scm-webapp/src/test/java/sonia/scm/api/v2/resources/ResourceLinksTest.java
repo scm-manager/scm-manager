@@ -105,7 +105,7 @@ public class ResourceLinksTest {
 
   @Test
   public void shouldCreateCorrectTagCollectionUrl() {
-    String url = resourceLinks.tagCollection().self("space", "repo");
+    String url = resourceLinks.tag().all("space", "repo");
     assertEquals(BASE_URL + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/tags/", url);
   }
 
@@ -141,7 +141,7 @@ public class ResourceLinksTest {
 
   @Test
   public void shouldCreateCorrectChangesetCollectionUrl() {
-    String url = resourceLinks.changeset().self("space", "repo");
+    String url = resourceLinks.changeset().all("space", "repo");
     assertEquals(BASE_URL + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/changesets/", url);
   }
 
