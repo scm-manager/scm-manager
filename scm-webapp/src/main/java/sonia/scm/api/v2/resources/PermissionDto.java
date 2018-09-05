@@ -23,7 +23,7 @@ public class PermissionDto extends HalRepresentation {
    *
    **/
   @JsonInclude(JsonInclude.Include.NON_NULL)
-  private String type ;
+  private String type;
 
 
   private boolean groupPermission = false;
