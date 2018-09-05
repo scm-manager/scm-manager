@@ -1,27 +1,65 @@
 package sonia.scm.api.v2.resources;
 
-import javax.ws.rs.DefaultValue;
+import com.webcohesion.enunciate.metadata.rs.ResponseCode;
+import com.webcohesion.enunciate.metadata.rs.StatusCodes;
+import sonia.scm.NotFoundException;
+import sonia.scm.repository.NamespaceAndName;
+import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryPermissions;
+import sonia.scm.repository.RevisionNotFoundException;
+import sonia.scm.repository.api.RepositoryService;
+import sonia.scm.repository.api.RepositoryServiceFactory;
+import sonia.scm.util.HttpUtil;
+import sonia.scm.web.VndMediaType;
+
+import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.StreamingOutput;
 
 public class DiffRootResource {
 
+  public static final String HEADER_CONTENT_DISPOSITION = "Content-Disposition";
+  private final RepositoryServiceFactory serviceFactory;
 
-  @GET
-  @Path("")
-  public Response getAll(@DefaultValue("0") @QueryParam("page") int page,
-                         @DefaultValue("10") @QueryParam("pageSize") int pageSize,
-                         @QueryParam("sortBy") String sortBy,
-                         @DefaultValue("false") @QueryParam("desc") boolean desc) {
-    throw new UnsupportedOperationException();
+  @Inject
+  public DiffRootResource(RepositoryServiceFactory serviceFactory) {
+    this.serviceFactory = serviceFactory;
   }
 
   @GET
-  @Path("{id}")
-  public Response get(String id) {
-    throw new UnsupportedOperationException();
+  @Path("{revision}")
+  @Produces(VndMediaType.DIFF)
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 400, condition = "Bad Request"),
+    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
+    @ResponseCode(code = 403, condition = "not authorized, the current user has no privileges to read the diff"),
+    @ResponseCode(code = 404, condition = "not found, no revision with the specified param for the repository available or repository not found"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
+  public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision) throws NotFoundException {
+    HttpUtil.checkForCRLFInjection(revision);
+    try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
+      Repository repository = repositoryService.getRepository();
+      RepositoryPermissions.read(repository).check();
+      StreamingOutput responseEntry = output -> {
+        try {
+          repositoryService.getDiffCommand()
+            .setRevision(revision)
+            .retriveContent(output);
+        } catch (RevisionNotFoundException e) {
+          throw new WebApplicationException(Response.Status.NOT_FOUND);
+        }
+      };
+      return Response.ok(responseEntry)
+        .header(HEADER_CONTENT_DISPOSITION, HttpUtil.createContentDispositionAttachmentHeader(String.format("%s-%s.diff", name, revision)))
+        .build();
+    }
   }
 
 }
