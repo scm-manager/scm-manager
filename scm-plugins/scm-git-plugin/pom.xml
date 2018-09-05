@@ -76,8 +76,18 @@
         </configuration>
         <executions>
           <execution>
-            <id>link-components</id>
-            <phase>process-resources</phase>
+            <id>link-ui-types</id>
+            <phase>process-sources</phase>
+            <goals>
+              <goal>install-link</goal>
+            </goals>
+            <configuration>
+              <pkg>@scm-manager/ui-types</pkg>
+            </configuration>
+          </execution>
+          <execution>
+            <id>link-ui-components</id>
+            <phase>process-sources</phase>
             <goals>
               <goal>install-link</goal>
             </goals>

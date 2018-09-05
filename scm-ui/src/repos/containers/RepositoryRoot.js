@@ -9,12 +9,16 @@ import {
 } from "../modules/repos";
 import { connect } from "react-redux";
 import { Route } from "react-router-dom";
-import type { Repository } from "../types/Repositories";
-import { Page } from "../../components/layout";
-import Loading from "../../components/Loading";
-import ErrorPage from "../../components/ErrorPage";
+import type { Repository } from "@scm-manager/ui-types";
+import {
+  Page,
+  Loading,
+  ErrorPage,
+  Navigation,
+  NavLink,
+  Section
+} from "@scm-manager/ui-components";
 import { translate } from "react-i18next";
-import { Navigation, NavLink, Section } from "../../components/navigation";
 import RepositoryDetails from "../components/RepositoryDetails";
 import DeleteNavAction from "../components/DeleteNavAction";
 import Edit from "../containers/Edit";

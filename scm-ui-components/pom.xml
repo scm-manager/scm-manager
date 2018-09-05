@@ -32,11 +32,31 @@
         </configuration>
         <executions>
           <execution>
-            <id>link</id>
+            <id>install</id>
             <phase>process-resources</phase>
             <goals>
-              <goal>link</goal>
+              <goal>install</goal>
             </goals>
+          </execution>
+          <execution>
+            <id>bootstrap</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <script>bootstrap</script>
+            </configuration>
+          </execution>
+          <execution>
+            <id>link</id>
+            <phase>package</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <script>link</script>
+            </configuration>
           </execution>
         </executions>
       </plugin>

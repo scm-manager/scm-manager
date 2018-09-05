@@ -1,12 +1,10 @@
 // @flow
-import { apiClient } from "../../apiclient";
+import { apiClient } from "@scm-manager/ui-components";
 import { isPending } from "../../modules/pending";
 import { getFailure } from "../../modules/failure";
 import * as types from "../../modules/types";
-import type { User } from "../types/User";
 import { combineReducers, Dispatch } from "redux";
-import type { Action } from "../../types/Action";
-import type { PagedCollection } from "../../types/Collection";
+import type { User, Action, PagedCollection } from "@scm-manager/ui-types";
 
 export const FETCH_USERS = "scm/users/FETCH_USERS";
 export const FETCH_USERS_PENDING = `${FETCH_USERS}_${types.PENDING_SUFFIX}`;

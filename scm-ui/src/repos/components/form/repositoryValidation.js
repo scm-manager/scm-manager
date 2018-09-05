@@ -1,10 +1,10 @@
 // @flow
-import * as generalValidator from "../../../components/validation";
+import { validation } from "@scm-manager/ui-components";
 
 export const isNameValid = (name: string) => {
-  return generalValidator.isNameValid(name);
+  return validation.isNameValid(name);
 };
 
 export function isContactValid(mail: string) {
-  return "" === mail || generalValidator.isMailValid(mail);
+  return "" === mail || validation.isMailValid(mail);
 }

@@ -1,6 +1,6 @@
 //@flow
 import React from "react";
-import { Repository } from "@scm-manager/ui-types";
+import type { Repository } from "@scm-manager/ui-types";
 
 type Props = {
   repository: Repository

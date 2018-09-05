@@ -1,6 +1,6 @@
 //@flow
 import React from "react";
-import type { RepositoryGroup } from "../../types/Repositories";
+import type { RepositoryGroup } from "@scm-manager/ui-types";
 import injectSheet from "react-jss";
 import classNames from "classnames";
 import RepositoryEntry from "./RepositoryEntry";

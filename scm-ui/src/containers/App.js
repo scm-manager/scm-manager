@@ -12,11 +12,14 @@ import {
   getFetchMeFailure
 } from "../modules/auth";
 
-import { PrimaryNavigation } from "../components/navigation";
-import Loading from "../components/Loading";
-import ErrorPage from "../components/ErrorPage";
-import { Footer, Header } from "../components/layout";
-import type { Me } from "../types/Me";
+import {
+  PrimaryNavigation,
+  Loading,
+  ErrorPage,
+  Footer,
+  Header
+} from "@scm-manager/ui-components";
+import type { Me } from "@scm-manager/ui-types";
 
 type Props = {
   me: Me,

@@ -2,9 +2,9 @@
 import React from "react";
 import { connect } from "react-redux";
 import { translate } from "react-i18next";
-import { Page } from "../../components/layout";
+import { Page } from "@scm-manager/ui-components";
 import RepositoryForm from "../components/form";
-import type { RepositoryType } from "../types/RepositoryTypes";
+import type { Repository, RepositoryType } from "@scm-manager/ui-types";
 import {
   fetchRepositoryTypesIfNeeded,
   getFetchRepositoryTypesFailure,
@@ -17,7 +17,6 @@ import {
   getCreateRepoFailure,
   isCreateRepoPending
 } from "../modules/repos";
-import type { Repository } from "../types/Repositories";
 import type { History } from "history";
 
 type Props = {

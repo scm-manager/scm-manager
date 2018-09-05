@@ -1,8 +1,7 @@
 // @flow
 import React from "react";
 import { translate } from "react-i18next";
-import { Checkbox, InputField } from "../../../components/forms/index";
-import Subtitle from "../../../components/layout/Subtitle";
+import { Checkbox, InputField, Subtitle } from "@scm-manager/ui-components";
 
 type Props = {
   baseUrl: string,

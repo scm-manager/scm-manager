@@ -1,7 +1,7 @@
 // @flow
 import React from "react";
 
-import type { RepositoryCollection } from "../types/Repositories";
+import type { RepositoryCollection } from "@scm-manager/ui-types";
 
 import { connect } from "react-redux";
 import {
@@ -14,12 +14,10 @@ import {
   isFetchReposPending
 } from "../modules/repos";
 import { translate } from "react-i18next";
-import { Page } from "../../components/layout";
+import { CreateButton, Page, Paginator } from "@scm-manager/ui-components";
 import RepositoryList from "../components/list";
-import Paginator from "../../components/Paginator";
 import { withRouter } from "react-router-dom";
 import type { History } from "history";
-import CreateButton from "../../components/buttons/CreateButton";
 
 type Props = {
   page: number,

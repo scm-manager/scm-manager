@@ -1,11 +1,11 @@
 // @flow
-import { apiClient } from "../../apiclient";
+import { apiClient } from "@scm-manager/ui-components";
 import * as types from "../../modules/types";
-import type { Action } from "../../types/Action";
+import type { Action } from "@scm-manager/ui-types";
 import { isPending } from "../../modules/pending";
 import { getFailure } from "../../modules/failure";
 import { Dispatch } from "redux";
-import type { Config } from "../types/Config";
+import type { Config } from "@scm-manager/ui-types";
 
 export const FETCH_CONFIG = "scm/config/FETCH_CONFIG";
 export const FETCH_CONFIG_PENDING = `${FETCH_CONFIG}_${types.PENDING_SUFFIX}`;

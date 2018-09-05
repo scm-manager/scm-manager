@@ -1,7 +1,7 @@
 //@flow
 import React from "react";
 import { translate } from "react-i18next";
-import { RemoveEntryOfTableButton } from "../../components/buttons";
+import { RemoveEntryOfTableButton } from "@scm-manager/ui-components";
 
 type Props = {
   members: string[],

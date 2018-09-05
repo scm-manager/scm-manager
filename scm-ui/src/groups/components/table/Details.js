@@ -1,9 +1,9 @@
 //@flow
 import React from "react";
-import type { Group } from "../../types/Group";
+import type { Group } from "@scm-manager/ui-types";
 import { translate } from "react-i18next";
 import GroupMember from "./GroupMember";
-import DateFromNow from "../../../components/DateFromNow";
+import { DateFromNow } from "@scm-manager/ui-components";
 
 type Props = {
   group: Group,

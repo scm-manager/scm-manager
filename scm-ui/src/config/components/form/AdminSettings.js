@@ -1,10 +1,9 @@
 // @flow
 import React from "react";
 import { translate } from "react-i18next";
-import Subtitle from "../../../components/layout/Subtitle";
+import { Subtitle, AddEntryToTableField } from "@scm-manager/ui-components";
 import AdminGroupTable from "../table/AdminGroupTable";
 import AdminUserTable from "../table/AdminUserTable";
-import AddEntryToTableField from "../../../components/forms/AddEntryToTableField";
 
 type Props = {
   adminGroups: string[],
