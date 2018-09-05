@@ -58,16 +58,6 @@
       <plugin>
         <groupId>com.github.sdorra</groupId>
         <artifactId>buildfrontend-maven-plugin</artifactId>
-        <version>2.1.0</version>
-        <configuration>
-          <node>
-            <version>8.11.4</version>
-          </node>
-          <pkgManager>
-            <type>YARN</type>
-            <version>1.9.4</version>
-          </pkgManager>
-        </configuration>
         <executions>
           <execution>
             <id>link-ui-types</id>
