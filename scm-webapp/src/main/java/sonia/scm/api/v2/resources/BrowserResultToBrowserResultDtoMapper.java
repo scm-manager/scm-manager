@@ -41,7 +41,7 @@ public class BrowserResultToBrowserResultDtoMapper {
       path = "";
     }
     if (browserResult.getRevision() == null) {
-      dto.add(Links.linkingTo().self(resourceLinks.source().selfWithoutRevision(namespaceAndName.getNamespace(), namespaceAndName.getName())).build());
+      throw new IllegalStateException("missing revision in browser result for repository " + namespaceAndName + " and path " + path);
     } else {
       dto.add(Links.linkingTo().self(resourceLinks.source().sourceWithPath(namespaceAndName.getNamespace(), namespaceAndName.getName(), browserResult.getRevision(), path)).build());
     }
