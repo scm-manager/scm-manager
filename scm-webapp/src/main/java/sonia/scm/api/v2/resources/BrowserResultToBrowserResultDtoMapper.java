@@ -20,8 +20,6 @@ public class BrowserResultToBrowserResultDtoMapper {
   public BrowserResultDto map(BrowserResult browserResult, NamespaceAndName namespaceAndName, String path) {
     BrowserResultDto browserResultDto = new BrowserResultDto();
 
-    browserResultDto.setTag(browserResult.getTag());
-    browserResultDto.setBranch(browserResult.getBranch());
     browserResultDto.setRevision(browserResult.getRevision());
 
     List<FileObjectDto> fileObjectDtoList = new ArrayList<>();
@@ -48,6 +46,4 @@ public class BrowserResultToBrowserResultDtoMapper {
       dto.add(Links.linkingTo().self(resourceLinks.source().sourceWithPath(namespaceAndName.getNamespace(), namespaceAndName.getName(), browserResult.getRevision(), path)).build());
     }
   }
-
-
 }
