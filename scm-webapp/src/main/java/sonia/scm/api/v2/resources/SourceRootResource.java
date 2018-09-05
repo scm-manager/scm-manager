@@ -1,5 +1,6 @@
 package sonia.scm.api.v2.resources;
 
+import sonia.scm.NotFoundException;
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.RepositoryNotFoundException;
@@ -46,7 +47,7 @@ public class SourceRootResource {
   @GET
   @Produces(VndMediaType.SOURCE)
   @Path("{revision}/{path: .*}")
-  public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision, @PathParam("path") String path) throws RevisionNotFoundException, RepositoryNotFoundException, IOException {
+  public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision, @PathParam("path") String path) throws NotFoundException, IOException {
     return getSource(namespace, name, path, revision);
   }
 
