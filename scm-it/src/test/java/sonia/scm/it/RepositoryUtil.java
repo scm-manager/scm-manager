@@ -3,6 +3,8 @@ package sonia.scm.it;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 import org.apache.http.HttpStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.client.api.ClientCommand;
@@ -14,6 +16,8 @@ import java.io.IOException;
 import java.util.UUID;
 
 public class RepositoryUtil {
+
+  private static final Logger LOG = LoggerFactory.getLogger(RepositoryUtil.class);
 
   private static final RepositoryClientFactory REPOSITORY_CLIENT_FACTORY = new RepositoryClientFactory();
 
@@ -58,6 +62,7 @@ public class RepositoryUtil {
   }
 
   static Changeset commit(RepositoryClient repositoryClient, String username, String message) throws IOException {
+    LOG.info("user: {} try to commit with message:  {}", username, message);
     Changeset changeset = repositoryClient.getCommitCommand().commit(new Person(username, username + "@scm-manager.org"), message);
     if (repositoryClient.isCommandSupported(ClientCommand.PUSH)) {
       repositoryClient.getPushCommand().push();

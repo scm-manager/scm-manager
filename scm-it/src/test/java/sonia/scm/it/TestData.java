@@ -33,6 +33,7 @@ public class TestData {
   }
 
   public static void cleanup() {
+    LOG.info("start to clean up to integration tests");
     cleanupRepositories();
     cleanupGroups();
     cleanupUsers();
@@ -43,6 +44,7 @@ public class TestData {
   }
 
   public static void createUser(String username, String password) {
+    LOG.info("create user with username: {}", username);
     given(VndMediaType.USER)
       .when()
       .content(" {\n" +
@@ -64,6 +66,8 @@ public class TestData {
 
 
   public static void createUserPermission(String name, PermissionType permissionType, String repositoryType) {
+    String defaultPermissionUrl = TestData.getDefaultPermissionUrl(USER_SCM_ADMIN, USER_SCM_ADMIN, repositoryType);
+    LOG.info("create permission with name {} and type: {} using the endpoint: {}", name, permissionType, defaultPermissionUrl);
     given(VndMediaType.PERMISSION)
       .when()
       .content("{\n" +
@@ -72,7 +76,7 @@ public class TestData {
         "\t\"groupPermission\": false\n" +
         "\t\n" +
         "}")
-      .post(TestData.getDefaultPermissionUrl(USER_SCM_ADMIN, USER_SCM_ADMIN, repositoryType))
+      .post(defaultPermissionUrl)
       .then()
       .statusCode(HttpStatus.SC_CREATED)
     ;
@@ -114,6 +118,7 @@ public class TestData {
 
 
   private static void cleanupRepositories() {
+    LOG.info("clean up repository");
     List<String> repositories = given(VndMediaType.REPOSITORY_COLLECTION)
       .when()
       .get(createResourceUrl("repositories"))
@@ -160,6 +165,7 @@ public class TestData {
   }
 
   private static void createDefaultRepositories() {
+    LOG.info("create default repositories");
     for (String repositoryType : availableScmTypes()) {
       String url = given(VndMediaType.REPOSITORY)
         .body(repositoryJson(repositoryType))
@@ -171,6 +177,7 @@ public class TestData {
         .statusCode(HttpStatus.SC_CREATED)
         .extract()
         .header("location");
+      LOG.info("a {} repository is created: {}", repositoryType, url);
       DEFAULT_REPOSITORIES.put(repositoryType, url);
     }
   }
