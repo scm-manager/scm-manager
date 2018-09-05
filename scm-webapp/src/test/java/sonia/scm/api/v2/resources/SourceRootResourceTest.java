@@ -29,12 +29,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
+import static sonia.scm.api.v2.resources.DispatcherMock.createDispatcher;
 
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class SourceRootResourceTest {
 
-  private final Dispatcher dispatcher = MockDispatcherFactory.createDispatcher();
+  private Dispatcher dispatcher;
   private final URI baseUri = URI.create("/");
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
 
@@ -75,9 +76,7 @@ public class SourceRootResourceTest {
         null,
         null)),
         null);
-
-    dispatcher.getRegistry().addSingletonResource(repositoryRootResource);
-    dispatcher.getProviderFactory().registerProvider(NotFoundExceptionMapper.class);
+    dispatcher = createDispatcher(repositoryRootResource);
   }
 
   @Test
