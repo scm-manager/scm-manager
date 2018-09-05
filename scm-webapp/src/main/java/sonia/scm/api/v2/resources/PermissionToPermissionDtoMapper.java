@@ -12,9 +12,11 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryPermissions;
 
 import javax.inject.Inject;
+import java.util.Optional;
 
 import static de.otto.edison.hal.Link.link;
 import static de.otto.edison.hal.Links.linkingTo;
+import static sonia.scm.api.v2.resources.PermissionDto.GROUP_PREFIX;
 
 @Mapper
 public abstract class PermissionToPermissionDtoMapper {
@@ -39,11 +41,14 @@ public abstract class PermissionToPermissionDtoMapper {
    */
   @AfterMapping
   void appendLinks(@MappingTarget PermissionDto target, @Context Repository repository) {
+    String permissionName = Optional.of(target.getName())
+      .filter(p -> !target.isGroupPermission())
+      .orElse(GROUP_PREFIX + target.getName());
     Links.Builder linksBuilder = linkingTo()
-      .self(resourceLinks.permission().self(repository.getNamespace(), repository.getName(), target.getName()));
+      .self(resourceLinks.permission().self(repository.getNamespace(), repository.getName(), permissionName));
     if (RepositoryPermissions.permissionWrite(repository).isPermitted()) {
-      linksBuilder.single(link("update", resourceLinks.permission().update(repository.getNamespace(), repository.getName(), target.getName())));
-      linksBuilder.single(link("delete", resourceLinks.permission().delete(repository.getNamespace(), repository.getName(), target.getName())));
+      linksBuilder.single(link("update", resourceLinks.permission().update(repository.getNamespace(), repository.getName(), permissionName)));
+      linksBuilder.single(link("delete", resourceLinks.permission().delete(repository.getNamespace(), repository.getName(), permissionName)));
     }
     target.add(linksBuilder.build());
   }
