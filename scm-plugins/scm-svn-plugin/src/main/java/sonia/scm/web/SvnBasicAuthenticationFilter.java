@@ -34,30 +34,24 @@ package sonia.scm.web;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
-
-import sonia.scm.Priority;
 import sonia.scm.config.ScmConfiguration;
-import sonia.scm.filter.Filters;
-import sonia.scm.filter.WebElement;
 import sonia.scm.repository.SvnUtil;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.web.filter.AuthenticationFilter;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
-
-import java.util.Set;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Set;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@Priority(Filters.PRIORITY_AUTHENTICATION)
-@WebElement(value = SvnServletModule.PATTERN_SVN)
+//@Priority(Filters.PRIORITY_AUTHENTICATION)
+//@WebElement(value = SvnServletModule.PATTERN_SVN)
 public class SvnBasicAuthenticationFilter extends AuthenticationFilter
 {
 

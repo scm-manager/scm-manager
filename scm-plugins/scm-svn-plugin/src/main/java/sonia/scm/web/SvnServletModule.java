@@ -70,8 +70,8 @@ public class SvnServletModule extends ServletModule
   protected void configureServlets()
   {
     filter(PATTERN_SVN).through(SvnGZipFilter.class);
-    filter(PATTERN_SVN).through(SvnBasicAuthenticationFilter.class);
-    filter(PATTERN_SVN).through(SvnPermissionFilter.class);
+//    filter(PATTERN_SVN).through(SvnBasicAuthenticationFilter.class);
+//    filter(PATTERN_SVN).through(SvnPermissionFilter.class);
 
     bind(SvnConfigDtoToSvnConfigMapper.class).to(Mappers.getMapper(SvnConfigDtoToSvnConfigMapper.class).getClass());
     bind(SvnConfigToSvnConfigDtoMapper.class).to(Mappers.getMapper(SvnConfigToSvnConfigDtoMapper.class).getClass());
@@ -80,6 +80,5 @@ public class SvnServletModule extends ServletModule
 
     parameters.put(PARAMETER_SVN_PARENTPATH,
       System.getProperty("java.io.tmpdir"));
-    serve(PATTERN_SVN).with(SvnDAVServlet.class, parameters);
   }
 }

@@ -35,10 +35,10 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
-
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.SvnRepositoryHandler;
+import sonia.scm.web.SvnScmProtocolProviderWrapper;
 
 /**
  *
@@ -58,11 +58,13 @@ public class SvnRepositoryServiceResolver implements RepositoryServiceResolver
    *
    *
    * @param handler
+   * @param httpScmProtocol
    */
   @Inject
-  public SvnRepositoryServiceResolver(SvnRepositoryHandler handler)
+  public SvnRepositoryServiceResolver(SvnRepositoryHandler handler, SvnScmProtocolProviderWrapper httpScmProtocol)
   {
     this.handler = handler;
+    this.httpScmProtocol = httpScmProtocol;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -82,7 +84,7 @@ public class SvnRepositoryServiceResolver implements RepositoryServiceResolver
 
     if (TYPE.equalsIgnoreCase(repository.getType()))
     {
-      provider = new SvnRepositoryServiceProvider(handler, repository);
+      provider = new SvnRepositoryServiceProvider(handler, repository, httpScmProtocol);
     }
 
     return provider;
@@ -92,4 +94,6 @@ public class SvnRepositoryServiceResolver implements RepositoryServiceResolver
 
   /** Field description */
   private SvnRepositoryHandler handler;
+
+  private final HttpScmProtocol httpScmProtocol;
 }

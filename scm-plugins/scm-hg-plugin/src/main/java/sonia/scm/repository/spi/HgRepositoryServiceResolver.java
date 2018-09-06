@@ -36,11 +36,11 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
-
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.HgHookManager;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
+import sonia.scm.web.HgScmProtocolProviderWrapper;
 
 /**
  *
@@ -65,10 +65,11 @@ public class HgRepositoryServiceResolver implements RepositoryServiceResolver
    */
   @Inject
   public HgRepositoryServiceResolver(HgRepositoryHandler handler,
-    HgHookManager hookManager)
+    HgHookManager hookManager, HgScmProtocolProviderWrapper httpScmProtocol)
   {
     this.handler = handler;
     this.hookManager = hookManager;
+    this.httpScmProtocol = httpScmProtocol;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -89,7 +90,7 @@ public class HgRepositoryServiceResolver implements RepositoryServiceResolver
     if (TYPE.equalsIgnoreCase(repository.getType()))
     {
       provider = new HgRepositoryServiceProvider(handler, hookManager,
-        repository);
+        repository, httpScmProtocol);
     }
 
     return provider;
@@ -102,4 +103,6 @@ public class HgRepositoryServiceResolver implements RepositoryServiceResolver
 
   /** Field description */
   private HgHookManager hookManager;
+
+  private final HttpScmProtocol httpScmProtocol;
 }

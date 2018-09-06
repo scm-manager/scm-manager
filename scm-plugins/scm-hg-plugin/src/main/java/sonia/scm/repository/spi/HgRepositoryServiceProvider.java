@@ -42,7 +42,6 @@ import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.ScmProtocol;
-import sonia.scm.web.HgCGIServlet;
 
 import java.io.File;
 import java.io.IOException;
@@ -87,16 +86,17 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
    *
    *
    *
-   *
+   *  @param handler
    * @param hookManager
-   * @param handler
    * @param repository
+   * @param httpScmProtocol
    */
   HgRepositoryServiceProvider(HgRepositoryHandler handler,
-    HgHookManager hookManager, Repository repository)
+    HgHookManager hookManager, Repository repository, HttpScmProtocol httpScmProtocol)
   {
     this.repository = repository;
     this.handler = handler;
+    this.httpScmProtocol = httpScmProtocol;
     this.repositoryDirectory = handler.getDirectory(repository);
     this.context = new HgCommandContext(hookManager, handler, repository,
       repositoryDirectory);
@@ -276,7 +276,7 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
 
   @Override
   public Set<ScmProtocol> getSupportedProtocols() {
-    return Collections.singleton(new HgCGIServlet(null, null, null, null, null, null));
+    return Collections.singleton(httpScmProtocol);
   }
 
   //~--- fields ---------------------------------------------------------------
@@ -292,4 +292,6 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
 
   /** Field description */
   private File repositoryDirectory;
+
+  private final HttpScmProtocol httpScmProtocol;
 }

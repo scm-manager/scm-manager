@@ -28,7 +28,8 @@ public abstract class InitializingHttpScmProtocolWrapper implements HttpScmProto
     if (!isInitialized) {
       synchronized (this) {
         if (!isInitialized) {
-          delegateProvider.get().init(config);
+          HttpServlet httpServlet = delegateProvider.get();
+          httpServlet.init(config);
           isInitialized = true;
         }
       }

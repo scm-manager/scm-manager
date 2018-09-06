@@ -25,6 +25,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static java.lang.Math.max;
+
 @Singleton
 @WebElement(value = HttpProtocolServlet.PATTERN)
 @Slf4j
@@ -79,7 +81,8 @@ public class HttpProtocolServlet extends HttpServlet {
     }
 
     String namespace = uri.substring(0, uri.indexOf(HttpUtil.SEPARATOR_PATH));
-    String name = uri.substring(uri.indexOf(HttpUtil.SEPARATOR_PATH) + 1, uri.indexOf(HttpUtil.SEPARATOR_PATH, uri.indexOf(HttpUtil.SEPARATOR_PATH) + 1));
+    int endIndex = uri.indexOf(HttpUtil.SEPARATOR_PATH, uri.indexOf(HttpUtil.SEPARATOR_PATH) + 1);
+    String name = uri.substring(uri.indexOf(HttpUtil.SEPARATOR_PATH) + 1, max(endIndex, uri.length()));
 
     return new NamespaceAndName(namespace, name);
   }

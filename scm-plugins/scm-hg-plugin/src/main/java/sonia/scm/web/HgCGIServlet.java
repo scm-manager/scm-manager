@@ -139,19 +139,6 @@ public class HgCGIServlet extends HttpServlet implements HttpScmProtocol
    * Method description
    *
    *
-   * @throws ServletException
-   */
-  @Override
-  public void init() throws ServletException
-  {
-
-    super.init();
-  }
-
-  /**
-   * Method description
-   *
-   *
    * @param request
    * @param response
    *

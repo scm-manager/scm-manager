@@ -81,8 +81,5 @@ public class HgServletModule extends ServletModule
 
     // bind servlets
     serve(MAPPING_HOOK).with(HgHookCallbackServlet.class);
-
-    // register hg cgi servlet
-    serve(MAPPING_HG).with(HgCGIServlet.class);
   }
 }
