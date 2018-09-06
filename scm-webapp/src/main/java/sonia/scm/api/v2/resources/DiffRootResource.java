@@ -4,8 +4,6 @@ import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.NamespaceAndName;
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
