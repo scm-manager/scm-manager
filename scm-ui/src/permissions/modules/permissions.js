@@ -224,6 +224,8 @@ export function createPermission(
   callback?: () => void
 ) {
   return function(dispatch: Dispatch) {
+    console.log("createPermission aufruf");
+    console.log(callback);
     dispatch(createPermissionPending(permission, namespace, repoName));
     return apiClient
       .post(
@@ -232,7 +234,9 @@ export function createPermission(
         CONTENT_TYPE
       )
       .then(() => {
+        console.log("then Pfad");
         dispatch(createPermissionSuccess(permission, namespace, repoName));
+        console.log(callback);
         if (callback) {
           callback();
         }
@@ -424,7 +428,8 @@ export default function reducer(
         }
       };
     case CREATE_PERMISSION_SUCCESS:
-      const position = action.payload.position;
+      return state;
+    /*  const position = action.payload.position;
       const permissions = state[action.payload.position].entries;
       permissions.push(action.payload.permission);
       return {
@@ -433,7 +438,7 @@ export default function reducer(
           ...state[position],
           entries: permissions
         }
-      };
+      };*/
     case DELETE_PERMISSION_SUCCESS:
       const permissionPosition = action.payload.position;
       const new_Permissions = deletePermissionFromState(

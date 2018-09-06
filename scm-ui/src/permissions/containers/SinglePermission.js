@@ -13,7 +13,7 @@ import {
   isDeletePermissionPending,
   deletePermissionReset
 } from "../modules/permissions";
-import connect from "react-redux/es/connect/connect";
+import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import type { History } from "history";
 import ErrorNotification from "../../components/ErrorNotification";
@@ -223,4 +223,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(translate("permissions")(withRouter(SinglePermission)));
+)(translate("permissions")(SinglePermission));

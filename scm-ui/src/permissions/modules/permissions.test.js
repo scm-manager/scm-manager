@@ -235,7 +235,6 @@ describe("permission fetch", () => {
       status: 204
     });
 
-    // after create, the users are fetched again
     fetchMock.getOnce(
       REPOS_URL + "/hitchhiker/puzzle42",
       hitchhiker_puzzle42RepoPermissions
