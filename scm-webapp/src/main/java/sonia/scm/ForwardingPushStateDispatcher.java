@@ -1,5 +1,7 @@
 package sonia.scm;
 
+import sonia.scm.util.HttpUtil;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -14,7 +16,8 @@ import java.io.IOException;
 public class ForwardingPushStateDispatcher implements PushStateDispatcher {
   @Override
   public void dispatch(HttpServletRequest request, HttpServletResponse response, String uri) throws IOException {
-    RequestDispatcher dispatcher = request.getRequestDispatcher("/index.html");
+    String path = HttpUtil.append(request.getContextPath(), "index.html");
+    RequestDispatcher dispatcher = request.getRequestDispatcher(path);
     try {
       dispatcher.forward(request, response);
     } catch (ServletException e) {

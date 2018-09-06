@@ -33,7 +33,18 @@ public class ForwardingPushStateDispatcherTest {
 
   @Test
   public void testDispatch() throws ServletException, IOException {
+    when(request.getContextPath()).thenReturn("");
     when(request.getRequestDispatcher("/index.html")).thenReturn(requestDispatcher);
+
+    dispatcher.dispatch(request, response, "/something");
+
+    verify(requestDispatcher).forward(request, response);
+  }
+
+  @Test
+  public void testDispatchWithContextPath() throws ServletException, IOException {
+    when(request.getContextPath()).thenReturn("/scm");
+    when(request.getRequestDispatcher("/scm/index.html")).thenReturn(requestDispatcher);
 
     dispatcher.dispatch(request, response, "/something");
 
@@ -42,6 +53,7 @@ public class ForwardingPushStateDispatcherTest {
 
   @Test(expected = IOException.class)
   public void testWrapServletException() throws ServletException, IOException {
+    when(request.getContextPath()).thenReturn("");
     when(request.getRequestDispatcher("/index.html")).thenReturn(requestDispatcher);
     doThrow(ServletException.class).when(requestDispatcher).forward(request, response);
 
