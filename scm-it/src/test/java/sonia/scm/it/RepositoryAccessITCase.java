@@ -182,7 +182,8 @@ public class RepositoryAccessITCase {
       .then()
       .statusCode(HttpStatus.SC_OK)
       .extract()
-      .path("files.find{it.name=='a.txt'}._links.self.href");
+      .path("_embedded.files.find{it.name=='a.txt'}._links.self.href");
+
     given()
       .when()
       .get(rootContentUrl)
@@ -196,16 +197,22 @@ public class RepositoryAccessITCase {
       .then()
       .statusCode(HttpStatus.SC_OK)
       .extract()
-      .path("files.find{it.name=='subfolder'}._links.self.href");
-
-    String subfolderContentUrl= given()
+      .path("_embedded.files.find{it.name=='subfolder'}._links.self.href");
+    String selfOfSubfolderUrl = given()
       .when()
       .get(subfolderSourceUrl)
       .then()
       .statusCode(HttpStatus.SC_OK)
       .extract()
-      .path("files[0]._links.self.href");
-
+      .path("_links.self.href");
+    assertThat(subfolderSourceUrl).isEqualTo(selfOfSubfolderUrl);
+    String subfolderContentUrl = given()
+      .when()
+      .get(subfolderSourceUrl)
+      .then()
+      .statusCode(HttpStatus.SC_OK)
+      .extract()
+      .path("_embedded.files[0]._links.self.href");
     given()
       .when()
       .get(subfolderContentUrl)

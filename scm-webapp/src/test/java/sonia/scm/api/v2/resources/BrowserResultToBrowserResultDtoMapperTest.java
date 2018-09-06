@@ -18,8 +18,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class BrowserResultToBrowserResultDtoMapperTest {
@@ -60,6 +63,9 @@ public class BrowserResultToBrowserResultDtoMapperTest {
     fileObject2.setPath("/path/object/2");
     fileObject2.setDescription("description of file object 2");
     fileObject2.setDirectory(true);
+
+    when(fileObjectToFileObjectDtoMapper.map(any(FileObject.class), any(NamespaceAndName.class), anyString()))
+      .thenReturn(new FileObjectDto());
   }
 
   @After
@@ -71,7 +77,7 @@ public class BrowserResultToBrowserResultDtoMapperTest {
   public void shouldMapAttributesCorrectly() {
     BrowserResult browserResult = createBrowserResult();
 
-    BrowserResultDto dto = mapper.map(browserResult, new NamespaceAndName("foo", "bar"));
+    BrowserResultDto dto = mapper.map(browserResult, new NamespaceAndName("foo", "bar"), "path");
 
     assertEqualAttributes(browserResult, dto);
   }
@@ -81,17 +87,25 @@ public class BrowserResultToBrowserResultDtoMapperTest {
     BrowserResult browserResult = createBrowserResult();
     NamespaceAndName namespaceAndName = new NamespaceAndName("foo", "bar");
 
-    BrowserResultDto dto = mapper.map(browserResult, namespaceAndName);
+    BrowserResultDto dto = mapper.map(browserResult, namespaceAndName, "path");
 
     verify(fileObjectToFileObjectDtoMapper).map(fileObject1, namespaceAndName, "Revision");
     verify(fileObjectToFileObjectDtoMapper).map(fileObject2, namespaceAndName, "Revision");
   }
 
+  @Test
+  public void shouldSetLinksCorrectly() {
+    BrowserResult browserResult = createBrowserResult();
+    NamespaceAndName namespaceAndName = new NamespaceAndName("foo", "bar");
+
+    BrowserResultDto dto = mapper.map(browserResult, namespaceAndName, "path");
+
+    assertThat(dto.getLinks().getLinkBy("self").get().getHref()).contains("path");
+  }
+
   private BrowserResult createBrowserResult() {
     BrowserResult browserResult = new BrowserResult();
-    browserResult.setTag("Tag");
     browserResult.setRevision("Revision");
-    browserResult.setBranch("Branch");
     browserResult.setFiles(createFileObjects());
 
     return browserResult;
@@ -106,8 +120,6 @@ public class BrowserResultToBrowserResultDtoMapperTest {
   }
 
   private void assertEqualAttributes(BrowserResult browserResult, BrowserResultDto dto) {
-    assertThat(dto.getTag()).isEqualTo(browserResult.getTag());
-    assertThat(dto.getBranch()).isEqualTo(browserResult.getBranch());
     assertThat(dto.getRevision()).isEqualTo(browserResult.getRevision());
   }
 
