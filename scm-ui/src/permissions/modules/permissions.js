@@ -224,8 +224,6 @@ export function createPermission(
   callback?: () => void
 ) {
   return function(dispatch: Dispatch) {
-    console.log("createPermission aufruf");
-    console.log(callback);
     dispatch(createPermissionPending(permission, namespace, repoName));
     return apiClient
       .post(
@@ -234,9 +232,7 @@ export function createPermission(
         CONTENT_TYPE
       )
       .then(() => {
-        console.log("then Pfad");
         dispatch(createPermissionSuccess(permission, namespace, repoName));
-        console.log(callback);
         if (callback) {
           callback();
         }
