@@ -307,6 +307,23 @@ class ResourceLinks {
     }
   }
 
+  public FileHistoryLinks fileHistory() {
+    return new FileHistoryLinks(uriInfoStore.get());
+  }
+
+  static class FileHistoryLinks {
+    private final LinkBuilder fileHistoryLinkBuilder;
+
+    FileHistoryLinks(UriInfo uriInfo) {
+      fileHistoryLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, FileHistoryRootResource.class);
+    }
+
+    String self(String namespace, String name, String changesetId, String path) {
+      return fileHistoryLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("history").parameters().method("getAll").parameters(changesetId, path).href();
+    }
+
+  }
+
   public SourceLinks source() {
     return new SourceLinks(uriInfoStore.get());
   }
