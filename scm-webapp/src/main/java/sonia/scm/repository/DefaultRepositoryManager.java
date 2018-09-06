@@ -34,7 +34,6 @@ package sonia.scm.repository;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.github.sdorra.ssp.PermissionActionCheck;
-import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.inject.Inject;
@@ -43,7 +42,6 @@ import org.apache.shiro.concurrent.SubjectAwareExecutorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.AlreadyExistsException;
-import sonia.scm.ArgumentIsInvalidException;
 import sonia.scm.ConfigurationException;
 import sonia.scm.HandlerEventType;
 import sonia.scm.ManagerDaoAdapter;
@@ -332,52 +330,12 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
       uri = uri.substring(1);
     }
 
-    int typeSeparator = uri.indexOf(HttpUtil.SEPARATOR_PATH);
     Repository repository = null;
 
-    if (typeSeparator > 0) {
-      String type = uri.substring(0, typeSeparator);
+    String namespace = uri.substring(0, uri.indexOf(HttpUtil.SEPARATOR_PATH));
+    String name = uri.substring(uri.indexOf(HttpUtil.SEPARATOR_PATH) + 1, uri.indexOf(HttpUtil.SEPARATOR_PATH, uri.indexOf(HttpUtil.SEPARATOR_PATH) + 1));
 
-      uri = uri.substring(typeSeparator + 1);
-      repository = getFromTypeAndUri(type, uri);
-    }
-
-    return repository;
-  }
-
-  private Repository getFromTypeAndUri(String type, String uri) {
-    if (Strings.isNullOrEmpty(type)) {
-      throw new ArgumentIsInvalidException("argument type is required");
-    }
-
-    if (Strings.isNullOrEmpty(uri)) {
-      throw new ArgumentIsInvalidException("argument uri is required");
-    }
-
-    // remove ;jsessionid, jetty bug?
-    uri = HttpUtil.removeMatrixParameter(uri);
-
-    Repository repository = null;
-
-    if (handlerMap.containsKey(type)) {
-      Collection<Repository> repositories = repositoryDAO.getAll();
-
-      PermissionActionCheck<Repository> check = RepositoryPermissions.read();
-
-      for (Repository r : repositories) {
-        if (repositoryMatcher.matches(r, type, uri)) {
-          check.check(r);
-          repository = r.clone();
-
-          break;
-        }
-      }
-    }
-
-    if ((repository == null) && logger.isDebugEnabled()) {
-      logger.debug("could not find repository with type {} and uri {}", type,
-        uri);
-    }
+    repository = get(new NamespaceAndName(namespace, name));
 
     return repository;
   }

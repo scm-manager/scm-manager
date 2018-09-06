@@ -75,8 +75,5 @@ public class GitServletModule extends ServletModule
 
     bind(GitConfigDtoToGitConfigMapper.class).to(Mappers.getMapper(GitConfigDtoToGitConfigMapper.class).getClass());
     bind(GitConfigToGitConfigDtoMapper.class).to(Mappers.getMapper(GitConfigToGitConfigDtoMapper.class).getClass());
-
-    // serlvelts and filters
-    serve(PATTERN_GIT).with(ScmGitServlet.class);
   }
 }
