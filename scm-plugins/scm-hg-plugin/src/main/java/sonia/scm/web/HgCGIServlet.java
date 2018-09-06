@@ -59,6 +59,7 @@ import sonia.scm.web.cgi.CGIExecutor;
 import sonia.scm.web.cgi.CGIExecutorFactory;
 import sonia.scm.web.cgi.EnvList;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -363,7 +364,7 @@ public class HgCGIServlet extends HttpServlet implements HttpScmProtocol
   }
 
   @Override
-  public void serve(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+  public void serve(HttpServletRequest request, HttpServletResponse response, ServletConfig config) throws ServletException, IOException {
     service(request, response);
   }
 

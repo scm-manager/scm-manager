@@ -66,7 +66,7 @@ public class HttpProtocolServlet extends HttpServlet {
       try (RepositoryService repositoryService = serviceFactory.create(namespaceAndName)) {
         requestProvider.get().setAttribute(DefaultRepositoryProvider.ATTRIBUTE_NAME, repositoryService.getRepository());
         HttpScmProtocol protocol = repositoryService.getProtocol(HttpScmProtocol.class);
-        protocol.serve(req, resp);
+        protocol.serve(req, resp, getServletConfig());
       } catch (RepositoryNotFoundException e) {
         resp.setStatus(404);
       }

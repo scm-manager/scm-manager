@@ -49,6 +49,7 @@ import sonia.scm.repository.spi.HttpScmProtocol;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.HttpUtil;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
@@ -287,7 +288,7 @@ public class SvnDAVServlet extends DAVServlet implements HttpScmProtocol
   }
 
   @Override
-  public void serve(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+  public void serve(HttpServletRequest request, HttpServletResponse response, ServletConfig config) throws ServletException, IOException {
     service(request, response);
   }
 

@@ -40,9 +40,7 @@ import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.ScmProtocol;
-import sonia.scm.web.ScmGitServlet;
 
-import javax.inject.Provider;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Set;
@@ -76,11 +74,11 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
   //~--- constructors ---------------------------------------------------------
 
   public GitRepositoryServiceProvider(GitRepositoryHandler handler,
-    Repository repository, Provider<ScmGitServlet> servletProvider)
+    Repository repository, HttpScmProtocol httpScmProtocol)
   {
     this.handler = handler;
     this.repository = repository;
-    this.servletProvider = servletProvider;
+    this.httpScmProtocol = httpScmProtocol;
     this.context = new GitContext(handler.getDirectory(repository));
   }
 
@@ -246,7 +244,7 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
 
   @Override
   public Set<ScmProtocol> getSupportedProtocols() {
-    return Collections.singleton(servletProvider.get());
+    return Collections.singleton(httpScmProtocol);
   }
 
   //~--- fields ---------------------------------------------------------------
@@ -260,5 +258,5 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
   /** Field description */
   private Repository repository;
 
-  private final Provider<ScmGitServlet> servletProvider;
+  private final HttpScmProtocol httpScmProtocol;
 }

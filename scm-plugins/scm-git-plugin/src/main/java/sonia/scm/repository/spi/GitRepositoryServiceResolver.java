@@ -38,9 +38,7 @@ import com.google.inject.Inject;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.Repository;
-import sonia.scm.web.ScmGitServlet;
-
-import javax.inject.Provider;
+import sonia.scm.web.GitScmProtocolProviderWrapper;
 
 /**
  *
@@ -56,7 +54,7 @@ public class GitRepositoryServiceResolver implements RepositoryServiceResolver
   //~--- constructors ---------------------------------------------------------
 
   @Inject
-  public GitRepositoryServiceResolver(GitRepositoryHandler handler, Provider<ScmGitServlet> servletProvider)
+  public GitRepositoryServiceResolver(GitRepositoryHandler handler, GitScmProtocolProviderWrapper servletProvider)
   {
     this.handler = handler;
     this.servletProvider = servletProvider;
@@ -89,5 +87,5 @@ public class GitRepositoryServiceResolver implements RepositoryServiceResolver
 
   /** Field description */
   private final GitRepositoryHandler handler;
-  private final Provider<ScmGitServlet> servletProvider;
+  private final HttpScmProtocol servletProvider;
 }

@@ -5,6 +5,7 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.spi.HttpScmProtocol;
 import sonia.scm.repository.spi.RepositoryServiceProvider;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.UriInfo;
@@ -60,7 +61,7 @@ public class RepositoryServiceTest {
     }
 
     @Override
-    public void serve(HttpServletRequest request, HttpServletResponse response) {
+    public void serve(HttpServletRequest request, HttpServletResponse response, ServletConfig config) {
     }
   }
 }
