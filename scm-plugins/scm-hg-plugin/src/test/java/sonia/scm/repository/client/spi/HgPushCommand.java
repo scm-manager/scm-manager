@@ -32,8 +32,9 @@ package sonia.scm.repository.client.spi;
 
 import com.aragost.javahg.Repository;
 import com.aragost.javahg.commands.ExecutionException;
-import java.io.IOException;
 import sonia.scm.repository.client.api.RepositoryClientException;
+
+import java.io.IOException;
 
 /**
  * Mercurial implementation of the {@link PushCommand}.
@@ -63,5 +64,10 @@ public class HgPushCommand implements PushCommand
       throw new RepositoryClientException("push to repository failed", ex);
     }
   }
-  
+
+  @Override
+  public void pushTags() throws IOException {
+    push();
+  }
+
 }

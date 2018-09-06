@@ -11,6 +11,7 @@ import sonia.scm.repository.Tag;
 
 import javax.inject.Inject;
 
+import static de.otto.edison.hal.Link.link;
 import static de.otto.edison.hal.Links.linkingTo;
 
 @Mapper
@@ -25,7 +26,9 @@ public abstract class TagToTagDtoMapper {
   @AfterMapping
   void appendLinks(@MappingTarget TagDto target, @Context NamespaceAndName namespaceAndName) {
     Links.Builder linksBuilder = linkingTo()
-      .self(resourceLinks.tag().self(namespaceAndName.getNamespace(), namespaceAndName.getName(), target.getName()));
+      .self(resourceLinks.tag().self(namespaceAndName.getNamespace(), namespaceAndName.getName(), target.getName()))
+      .single(link("sources", resourceLinks.source().self(namespaceAndName.getNamespace(), namespaceAndName.getName(), target.getRevision())))
+      .single(link("changesets", resourceLinks.changeset().self(namespaceAndName.getNamespace(), namespaceAndName.getName(), target.getRevision())));
     target.add(linksBuilder.build());
   }
 }
