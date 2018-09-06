@@ -109,8 +109,7 @@ public class RepositoryAccessITCase {
     assertThat(response.body()).isNotNull();
     assertThat(response.body().asString())
       .isNotNull()
-      .isNotBlank()
-    ;
+      .isNotBlank();
 
     RepositoryUtil.addTag(repositoryClient, changeset.getId(), tagName);
     response = given(VndMediaType.TAG_COLLECTION, ADMIN_USERNAME, ADMIN_PASSWORD)
@@ -118,48 +117,46 @@ public class RepositoryAccessITCase {
       .get(tagsUrl)
       .then()
       .statusCode(HttpStatus.SC_OK)
-      .extract()
-    ;
+      .extract();
 
     assertThat(response).isNotNull();
     assertThat(response.body()).isNotNull();
     assertThat(response.body().asString())
       .isNotNull()
-      .isNotBlank()
-    ;
+      .isNotBlank();
+
     assertThat(response.body().jsonPath().getString("_links.self.href"))
       .as("assert tags self link")
       .isNotNull()
-      .contains(repositoryUrl + "/tags/")
-    ;
+      .contains(repositoryUrl + "/tags/");
+
     assertThat(response.body().jsonPath().getList("_embedded.tags"))
       .as("assert tag size")
       .isNotNull()
       .size()
-      .isGreaterThan(0)
-    ;
+      .isGreaterThan(0);
+
     assertThat(response.body().jsonPath().getMap("_embedded.tags.find{it.name=='" + tagName + "'}"))
       .as("assert tag name and revision")
       .isNotNull()
       .hasSize(3)
       .containsEntry("name", tagName)
-      .containsEntry("revision", changeset.getId())
-    ;
+      .containsEntry("revision", changeset.getId());
+
     assertThat(response.body().jsonPath().getString("_embedded.tags.find{it.name=='" + tagName + "'}._links.self.href"))
       .as("assert single tag self link")
       .isNotNull()
-      .contains(String.format("%s/tags/%s", repositoryUrl, tagName))
-    ;
+      .contains(String.format("%s/tags/%s", repositoryUrl, tagName));
+
     assertThat(response.body().jsonPath().getString("_embedded.tags.find{it.name=='" + tagName + "'}._links.sources.href"))
       .as("assert single tag source link")
       .isNotNull()
-      .contains(String.format("%s/sources/%s", repositoryUrl, changeset.getId()))
-    ;
+      .contains(String.format("%s/sources/%s", repositoryUrl, changeset.getId()));
+
     assertThat(response.body().jsonPath().getString("_embedded.tags.find{it.name=='" + tagName + "'}._links.changesets.href"))
       .as("assert single tag changesets link")
       .isNotNull()
-      .contains(String.format("%s/changesets/%s", repositoryUrl, changeset.getId()))
-    ;
+      .contains(String.format("%s/changesets/%s", repositoryUrl, changeset.getId()));
   }
 
   @Test
@@ -200,6 +197,7 @@ public class RepositoryAccessITCase {
       .statusCode(HttpStatus.SC_OK)
       .extract()
       .path("files.find{it.name=='subfolder'}._links.self.href");
+
     String subfolderContentUrl= given()
       .when()
       .get(subfolderSourceUrl)
@@ -207,6 +205,7 @@ public class RepositoryAccessITCase {
       .statusCode(HttpStatus.SC_OK)
       .extract()
       .path("files[0]._links.self.href");
+
     given()
       .when()
       .get(subfolderContentUrl)

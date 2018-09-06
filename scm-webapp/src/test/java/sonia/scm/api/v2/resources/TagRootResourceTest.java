@@ -121,9 +121,7 @@ public class TagRootResourceTest {
     assertThat(response).isNotNull();
     assertThat(response.getContentAsString())
       .isNotBlank()
-      .contains("_links")
-    ;
-
+      .contains("_links");
   }
 
   @Test
