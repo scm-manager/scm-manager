@@ -15,8 +15,8 @@ import { InputField } from "../components/forms";
 import { SubmitButton } from "../components/buttons";
 
 import classNames from "classnames";
-import Avatar from "../images/blib.jpg";
 import ErrorNotification from "../components/ErrorNotification";
+import Image from "../components/Image";
 
 const styles = {
   avatar: {
@@ -106,9 +106,9 @@ class Login extends React.Component<Props, State> {
               <p className="subtitle">{t("login.subtitle")}</p>
               <div className={classNames("box", classes.avatarSpacing)}>
                 <figure className={classes.avatar}>
-                  <img
+                  <Image
                     className={classes.avatarImage}
-                    src={Avatar}
+                    src="/images/blib.jpg"
                     alt={t("login.logo-alt")}
                   />
                 </figure>

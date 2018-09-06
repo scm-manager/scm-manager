@@ -1,0 +1,13 @@
+{
+  "name": "@scm-manager/scm-git-plugin",
+  "main": "src/main/js/index.js",
+  "scripts": {
+    "build": "ui-bundler plugin"
+  },
+  "dependencies": {
+    "@scm-manager/ui-extensions": "^0.0.7"
+  },
+  "devDependencies": {
+    "@scm-manager/ui-bundler": "^0.0.7"
+  }
+}

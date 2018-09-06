@@ -35,17 +35,16 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import org.junit.Test;
-
 import sonia.scm.repository.BlameLine;
 import sonia.scm.repository.BlameResult;
-import sonia.scm.repository.RepositoryException;
-
-import static org.junit.Assert.*;
-
-//~--- JDK imports ------------------------------------------------------------
+import sonia.scm.repository.GitConstants;
 
 import java.io.IOException;
-import sonia.scm.repository.GitConstants;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Unit tests for {@link GitBlameCommand}.
@@ -59,10 +58,10 @@ public class GitBlameCommandTest extends AbstractGitCommandTestBase
    * Tests blame command with default branch.
    * 
    * @throws IOException
-   * @throws RepositoryException 
+   * @
    */
   @Test
-  public void testDefaultBranch() throws IOException, RepositoryException {
+  public void testDefaultBranch() throws IOException {
     // without default branch, the repository head should be used
     BlameCommandRequest request = new BlameCommandRequest();
     request.setPath("a.txt");
@@ -89,7 +88,7 @@ public class GitBlameCommandTest extends AbstractGitCommandTestBase
    * @throws RepositoryException
    */
   @Test
-  public void testGetBlameResult() throws IOException, RepositoryException
+  public void testGetBlameResult() throws IOException
   {
     BlameCommandRequest request = new BlameCommandRequest();
 
@@ -124,7 +123,7 @@ public class GitBlameCommandTest extends AbstractGitCommandTestBase
    */
   @Test
   public void testGetBlameResultWithRevision()
-          throws IOException, RepositoryException
+          throws IOException
   {
     BlameCommandRequest request = new BlameCommandRequest();
 

@@ -34,14 +34,12 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.Tag;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
-
 import java.util.List;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -57,7 +55,6 @@ public interface TagsCommand
    * @return
    *
    * @throws IOException
-   * @throws RepositoryException
    */
-  public List<Tag> getTags() throws RepositoryException, IOException;
+  public List<Tag> getTags() throws IOException;
 }

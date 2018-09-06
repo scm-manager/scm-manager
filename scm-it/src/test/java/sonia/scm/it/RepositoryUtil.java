@@ -3,6 +3,8 @@ package sonia.scm.it;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 import org.apache.http.HttpStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.client.api.ClientCommand;
@@ -14,6 +16,8 @@ import java.io.IOException;
 import java.util.UUID;
 
 public class RepositoryUtil {
+
+  private static final Logger LOG = LoggerFactory.getLogger(RepositoryUtil.class);
 
   private static final RepositoryClientFactory REPOSITORY_CLIENT_FACTORY = new RepositoryClientFactory();
 
@@ -37,12 +41,28 @@ public class RepositoryUtil {
   }
 
   static void createAndCommitFile(RepositoryClient repositoryClient, String username, String fileName, String content) throws IOException {
-    Files.write(content, new File(repositoryClient.getWorkingCopy(), fileName), Charsets.UTF_8);
-    repositoryClient.getAddCommand().add(fileName);
+    File file = new File(repositoryClient.getWorkingCopy(), fileName);
+    Files.write(content, file, Charsets.UTF_8);
+    addWithParentDirectories(repositoryClient, file);
     commit(repositoryClient, username, "added " + fileName);
   }
 
+  private static String addWithParentDirectories(RepositoryClient repositoryClient, File file) throws IOException {
+    File parent = file.getParentFile();
+    String thisName = file.getName();
+    String path;
+    if (!repositoryClient.getWorkingCopy().equals(parent)) {
+      addWithParentDirectories(repositoryClient, parent);
+      path = addWithParentDirectories(repositoryClient, parent) + File.separator + thisName;
+    } else {
+      path = thisName;
+    }
+    repositoryClient.getAddCommand().add(path);
+    return path;
+  }
+
   static Changeset commit(RepositoryClient repositoryClient, String username, String message) throws IOException {
+    LOG.info("user: {} try to commit with message:  {}", username, message);
     Changeset changeset = repositoryClient.getCommitCommand().commit(new Person(username, username + "@scm-manager.org"), message);
     if (repositoryClient.isCommandSupported(ClientCommand.PUSH)) {
       repositoryClient.getPushCommand().push();

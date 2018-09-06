@@ -34,12 +34,13 @@ package sonia.scm;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -97,7 +98,7 @@ public class ClassOverride implements Validateable
   public String toString()
   {
     //J-
-    return Objects.toStringHelper(this)
+    return MoreObjects.toStringHelper(this)
             .add("bind", bind)
             .add("to", to)
             .toString();

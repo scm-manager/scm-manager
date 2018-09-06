@@ -34,25 +34,21 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.io.Files;
-
 import org.junit.Test;
-
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.io.SVNRepository;
 import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
-
-import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.SvnUtil;
 import sonia.scm.repository.api.UnbundleResponse;
 
-import static org.hamcrest.Matchers.*;
-
-import static org.junit.Assert.*;
-
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.File;
 import java.io.IOException;
+
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assert.assertThat;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -61,17 +57,9 @@ import java.io.IOException;
 public class SvnUnbundleCommandTest extends AbstractSvnCommandTestBase
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   * @throws SVNException
-   */
   @Test
   public void testUnbundle()
-    throws IOException, RepositoryException, SVNException
+    throws IOException, SVNException
   {
     File bundle = bundle();
     SvnContext ctx = createEmptyContext();
@@ -95,16 +83,7 @@ public class SvnUnbundleCommandTest extends AbstractSvnCommandTestBase
     SvnUtil.closeSession(repo);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
-  private File bundle() throws IOException, RepositoryException
+  private File bundle() throws IOException
   {
     File file = tempFolder.newFile();
 

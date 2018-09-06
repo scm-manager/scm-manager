@@ -35,11 +35,11 @@ package sonia.scm.security;
 
 import com.google.common.base.Objects;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Secure key can be used for singing messages and tokens.

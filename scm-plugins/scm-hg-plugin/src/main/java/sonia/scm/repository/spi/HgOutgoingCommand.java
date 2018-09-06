@@ -35,20 +35,18 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.aragost.javahg.commands.ExecutionException;
-
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.HgRepositoryHandler;
+import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.spi.javahg.HgOutgoingChangesetCommand;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.File;
-
 import java.util.Collections;
 import java.util.List;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -80,21 +78,10 @@ public class HgOutgoingCommand extends AbstractCommand
 
   //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   *
-   * @throws RepositoryException
-   */
   @Override
   @SuppressWarnings("unchecked")
   public ChangesetPagingResult getOutgoingChangesets(
     OutgoingCommandRequest request)
-    throws RepositoryException
   {
     File remoteRepository = handler.getDirectory(request.getRemoteRepository());
 
@@ -116,7 +103,7 @@ public class HgOutgoingCommand extends AbstractCommand
       }
       else
       {
-        throw new RepositoryException("could not execute outgoing command", ex);
+        throw new InternalRepositoryException("could not execute outgoing command", ex);
       }
     }
 

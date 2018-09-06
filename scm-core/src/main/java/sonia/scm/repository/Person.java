@@ -36,18 +36,16 @@ package sonia.scm.repository;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Objects;
-
 import sonia.scm.Validateable;
 import sonia.scm.util.Util;
 import sonia.scm.util.ValidationUtil;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.Serializable;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.io.Serializable;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * The {@link Person} (author) of a changeset.
@@ -251,9 +249,11 @@ public class Person implements Validateable, Serializable
 
   //~--- fields ---------------------------------------------------------------
 
-  /** name of the person */
+  /** mail address of the person */
   private String mail;
 
-  /** mail address of the person */
+  /**
+   * name of the person
+   */
   private String name;
 }

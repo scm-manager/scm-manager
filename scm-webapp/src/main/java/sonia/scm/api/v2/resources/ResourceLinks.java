@@ -207,7 +207,7 @@ class ResourceLinks {
   }
 
 
-  public TagCollectionLinks tagCollection() {
+  public TagCollectionLinks tag() {
     return new TagCollectionLinks(uriInfoStore.get());
   }
 
@@ -215,11 +215,35 @@ class ResourceLinks {
     private final LinkBuilder tagLinkBuilder;
 
     TagCollectionLinks(UriInfo uriInfo) {
-      tagLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, TagRootResource.class, TagCollectionResource.class);
+      tagLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, TagRootResource.class);
     }
 
-    String self(String namespace, String name) {
-      return tagLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("tags").parameters().method("getTagCollectionResource").parameters().method("getAll").parameters().href();
+    String self(String namespace, String name, String id) {
+      return tagLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("tags").parameters().method("get").parameters(id).href();
+    }
+
+    String all(String namespace, String name) {
+      return tagLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("tags").parameters().method("getAll").parameters().href();
+    }
+  }
+
+  public DiffLinks diff() {
+    return new DiffLinks(uriInfoStore.get());
+  }
+
+  static class DiffLinks {
+    private final LinkBuilder diffLinkBuilder;
+
+    DiffLinks(UriInfo uriInfo) {
+      diffLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, DiffRootResource.class);
+    }
+
+    String self(String namespace, String name, String id) {
+      return diffLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("diff").parameters().method("get").parameters(id).href();
+    }
+
+    String all(String namespace, String name) {
+      return diffLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("diff").parameters().method("getAll").parameters().href();
     }
   }
 
@@ -270,7 +294,11 @@ class ResourceLinks {
       changesetLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, ChangesetRootResource.class);
     }
 
-    String self(String namespace, String name) {
+    String self(String namespace, String name, String changesetId) {
+      return changesetLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("changesets").parameters().method("get").parameters(changesetId).href();
+    }
+
+    String all(String namespace, String name) {
       return changesetLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("changesets").parameters().method("getAll").parameters().href();
     }
 
@@ -290,12 +318,28 @@ class ResourceLinks {
       sourceLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, SourceRootResource.class);
     }
 
-    String self(String namespace, String name) {
-      return sourceLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("sources").parameters().method("getAll").parameters().href();
+    String self(String namespace, String name, String revision) {
+      return sourceLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("sources").parameters().method("getAll").parameters(revision).href();
+    }
+
+    String selfWithoutRevision(String namespace, String name) {
+      return sourceLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("sources").parameters().method("getAllWithoutRevision").parameters().href();
     }
 
     public String source(String namespace, String name, String revision) {
       return sourceLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("sources").parameters().method("get").parameters(revision).href();
+    }
+
+    public String sourceWithPath(String namespace, String name, String revision, String path) {
+      if (revision == null) {
+        return sourceLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("sources").parameters().method("get").parameters(null, path).href();
+      } else {
+        return sourceLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("sources").parameters().method("get").parameters(revision, path).href();
+      }
+    }
+
+    public String content(String namespace, String name, String revision, String path) {
+      return sourceLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("content").parameters().method("get").parameters(revision, path).href();
     }
   }
   public PermissionLinks permission() {
@@ -331,6 +375,39 @@ class ResourceLinks {
 
     private String getLink(String repositoryNamespace, String repositoryName, String permissionName, String methodName) {
       return permissionLinkBuilder.method("getRepositoryResource").parameters(repositoryNamespace, repositoryName).method("permissions").parameters().method(methodName).parameters(permissionName).href();
+    }
+  }
+
+
+  public UIPluginLinks uiPlugin() {
+    return new UIPluginLinks(uriInfoStore.get());
+  }
+
+  static class UIPluginLinks {
+    private final LinkBuilder uiPluginLinkBuilder;
+
+    UIPluginLinks(UriInfo uriInfo) {
+      uiPluginLinkBuilder = new LinkBuilder(uriInfo, UIRootResource.class, UIPluginResource.class);
+    }
+
+    String self(String id) {
+      return uiPluginLinkBuilder.method("plugins").parameters().method("getInstalledPlugin").parameters(id).href();
+    }
+  }
+
+  public UIPluginCollectionLinks uiPluginCollection() {
+    return new UIPluginCollectionLinks(uriInfoStore.get());
+  }
+
+  static class UIPluginCollectionLinks {
+    private final LinkBuilder uiPluginCollectionLinkBuilder;
+
+    UIPluginCollectionLinks(UriInfo uriInfo) {
+      uiPluginCollectionLinkBuilder = new LinkBuilder(uriInfo, UIRootResource.class, UIPluginResource.class);
+    }
+
+    String self() {
+      return uiPluginCollectionLinkBuilder.method("plugins").parameters().method("getInstalledPlugins").parameters().href();
     }
   }
 }

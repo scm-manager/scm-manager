@@ -37,6 +37,7 @@ package sonia.scm.group;
 
 import com.github.sdorra.ssp.PermissionObject;
 import com.github.sdorra.ssp.StaticPermissions;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 import sonia.scm.BasicPropertiesAware;
@@ -259,7 +260,7 @@ public class Group extends BasicPropertiesAware
   public String toString()
   {
     //J-
-    return Objects.toStringHelper(this)
+    return MoreObjects.toStringHelper(this)
              .add("name", name)
              .add("description", description)
              .add("members", members)

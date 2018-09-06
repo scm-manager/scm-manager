@@ -6,7 +6,9 @@ import de.otto.edison.hal.Links;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.Pattern;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +20,9 @@ public class GroupDto extends HalRepresentation {
   private String description;
   @JsonInclude(JsonInclude.Include.NON_NULL)
   private Instant lastModified;
+  @Pattern(regexp = "^[A-z0-9\\.\\-_@]|[^ ]([A-z0-9\\.\\-_@ ]*[A-z0-9\\.\\-_@]|[^ ])?$")
   private String name;
+  @NotEmpty
   private String type;
   private Map<String, String> properties;
   private List<String> members;

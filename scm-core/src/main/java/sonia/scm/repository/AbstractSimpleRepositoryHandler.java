@@ -38,6 +38,7 @@ import com.google.common.base.Throwables;
 import com.google.common.io.Resources;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.AlreadyExistsException;
 import sonia.scm.ConfigurationException;
 import sonia.scm.io.CommandResult;
 import sonia.scm.io.ExtendedCommand;
@@ -80,12 +81,11 @@ public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig
   }
 
   @Override
-  public Repository create(Repository repository)
-    throws RepositoryException {
+  public Repository create(Repository repository) throws AlreadyExistsException {
     File directory = getDirectory(repository);
 
     if (directory.exists()) {
-      throw RepositoryAlreadyExistsException.create(repository);
+      throw new AlreadyExistsException();
     }
 
     checkPath(directory);
@@ -105,7 +105,7 @@ public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig
         }
       }
 
-      Throwables.propagateIfPossible(ex, RepositoryException.class);
+      Throwables.propagateIfPossible(ex, AlreadyExistsException.class);
       // This point will never be reached
       return null;
     }
@@ -121,15 +121,14 @@ public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig
   }
 
   @Override
-  public void delete(Repository repository)
-    throws RepositoryException {
+  public void delete(Repository repository) {
     File directory = getDirectory(repository);
 
     if (directory.exists()) {
       try {
         fileSystem.destroy(directory);
       } catch (IOException e) {
-        throw new RepositoryException("could not delete repository", e);
+        throw new InternalRepositoryException("could not delete repository directory", e);
       }
       cleanupEmptyDirectories(config.getRepositoryDirectory(),
         directory.getParentFile());
@@ -202,17 +201,12 @@ public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig
   }
 
   protected void create(Repository repository, File directory)
-    throws RepositoryException, IOException {
+    throws IOException, AlreadyExistsException {
     ExtendedCommand cmd = buildCreateCommand(repository, directory);
     CommandResult result = cmd.execute();
 
     if (!result.isSuccessfull()) {
-      StringBuilder msg = new StringBuilder("command exit with error ");
-
-      msg.append(result.getReturnCode()).append(" and message: '");
-      msg.append(result.getOutput()).append("'");
-
-      throw new RepositoryException(msg.toString());
+      throw new IOException(("command exit with error " + result.getReturnCode() + " and message: '" + result.getOutput() + "'"));
     }
   }
 
@@ -221,7 +215,7 @@ public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig
   }
 
   protected void postCreate(Repository repository, File directory)
-    throws IOException, RepositoryException {
+    throws IOException {
   }
 
   /**
@@ -262,9 +256,9 @@ public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig
    * Check path for existing repositories
    *
    * @param directory repository target directory
-   * @throws RepositoryAlreadyExistsException
+   * @throws AlreadyExistsException
    */
-  private void checkPath(File directory) throws RepositoryAlreadyExistsException {
+  private void checkPath(File directory) throws AlreadyExistsException {
     File repositoryDirectory = config.getRepositoryDirectory();
     File parent = directory.getParentFile();
 
@@ -274,9 +268,7 @@ public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig
       if (isRepository(parent)) {
         logger.error("parent path {} is a repository", parent);
 
-        StringBuilder buffer = new StringBuilder("repository with name ");
-        buffer.append(directory.getName()).append(" already exists");
-        throw new RepositoryAlreadyExistsException(buffer.toString());
+        throw new AlreadyExistsException();
       }
 
       parent = parent.getParentFile();

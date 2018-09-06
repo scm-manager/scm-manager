@@ -30,8 +30,7 @@
  */
 package sonia.scm.selenium.page;
 
-import com.google.common.base.Objects;
-import java.util.List;
+import com.google.common.base.MoreObjects;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NotFoundException;
@@ -40,6 +39,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import sonia.scm.repository.Repository;
+
+import java.util.List;
 
 /**
  * Page object for scm-manager's repository creation page.
@@ -130,7 +131,7 @@ public class RepositoriesAddPage extends BasePage<RepositoriesAddPage> {
       String script = "Sonia.repository.getTypeByName('" + type + "').displayName;";
       displayName = (String) ((JavascriptExecutor)driver).executeScript(script);
     }    
-    return Objects.firstNonNull(displayName, type);
+    return MoreObjects.firstNonNull(displayName, type);
   }
   
 }

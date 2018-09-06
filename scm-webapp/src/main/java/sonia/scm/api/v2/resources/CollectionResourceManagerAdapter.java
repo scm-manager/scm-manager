@@ -1,6 +1,7 @@
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.HalRepresentation;
+import sonia.scm.AlreadyExistsException;
 import sonia.scm.Manager;
 import sonia.scm.ModelObject;
 import sonia.scm.PageResult;
@@ -22,16 +23,14 @@ import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
  *
  * @param <MODEL_OBJECT> The type of the model object, eg. {@link sonia.scm.user.User}.
  * @param <DTO> The corresponding transport object, eg. {@link UserDto}.
- * @param <EXCEPTION> The exception type for the model object, eg. {@link sonia.scm.user.UserException}.
  *
  * @see SingleResourceManagerAdapter
  */
 @SuppressWarnings("squid:S00119") // "MODEL_OBJECT" is much more meaningful than "M", right?
 class CollectionResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
-                             DTO extends HalRepresentation,
-                             EXCEPTION extends Exception> extends AbstractManagerResource<MODEL_OBJECT, EXCEPTION> {
+                             DTO extends HalRepresentation> extends AbstractManagerResource<MODEL_OBJECT> {
 
-  CollectionResourceManagerAdapter(Manager<MODEL_OBJECT, EXCEPTION> manager, Class<MODEL_OBJECT> type) {
+  CollectionResourceManagerAdapter(Manager<MODEL_OBJECT> manager, Class<MODEL_OBJECT> type) {
     super(manager, type);
   }
 
@@ -48,7 +47,7 @@ class CollectionResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
    * Creates a model object for the given dto and returns a corresponding http response.
    * This handles all corner cases, eg. no conflicts or missing privileges.
    */
-  public Response create(DTO dto, Supplier<MODEL_OBJECT> modelObjectSupplier, Function<MODEL_OBJECT, String> uriCreator) throws EXCEPTION {
+  public Response create(DTO dto, Supplier<MODEL_OBJECT> modelObjectSupplier, Function<MODEL_OBJECT, String> uriCreator) throws AlreadyExistsException {
     if (dto == null) {
       return Response.status(BAD_REQUEST).build();
     }

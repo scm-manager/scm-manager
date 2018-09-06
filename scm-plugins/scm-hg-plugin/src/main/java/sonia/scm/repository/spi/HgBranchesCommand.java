@@ -36,19 +36,14 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.aragost.javahg.Changeset;
-
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
-
 import sonia.scm.repository.Branch;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryException;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
 
 import java.util.List;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -72,18 +67,8 @@ public class HgBranchesCommand extends AbstractCommand
 
   //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Override
-  public List<Branch> getBranches() throws RepositoryException, IOException
-  {
+  public List<Branch> getBranches() {
     List<com.aragost.javahg.commands.Branch> hgBranches =
       com.aragost.javahg.commands.BranchesCommand.on(open()).execute();
 

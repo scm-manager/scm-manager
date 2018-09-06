@@ -1,20 +1,27 @@
 package sonia.scm.api.v2.resources;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Response;
 
 public class TagRootResource {
 
-  private final Provider<TagCollectionResource> tagCollectionResource;
 
-  @Inject
-  public TagRootResource(Provider<TagCollectionResource> tagCollectionResource) {
-    this.tagCollectionResource = tagCollectionResource;
-  }
-
+  @GET
   @Path("")
-  public TagCollectionResource getTagCollectionResource() {
-    return tagCollectionResource.get();
+  public Response getAll(@DefaultValue("0") @QueryParam("page") int page,
+                         @DefaultValue("10") @QueryParam("pageSize") int pageSize,
+                         @QueryParam("sortBy") String sortBy,
+                         @DefaultValue("false") @QueryParam("desc") boolean desc) {
+    throw new UnsupportedOperationException();
   }
+
+  @GET
+  @Path("{id}")
+  public Response get(String id) {
+    throw new UnsupportedOperationException();
+  }
+
 }

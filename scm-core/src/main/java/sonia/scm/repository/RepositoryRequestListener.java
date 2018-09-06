@@ -37,12 +37,11 @@ package sonia.scm.repository;
 
 import sonia.scm.plugin.ExtensionPoint;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Listener before a repository request is executed. Repository request are
@@ -68,10 +67,6 @@ public interface RepositoryRequestListener
    *
    * @return false to abort the request
    * @throws IOException
-   * @throws RepositoryException
    */
-  public boolean handleRequest(HttpServletRequest request,
-                               HttpServletResponse response,
-                               Repository repository)
-          throws IOException, RepositoryException;
+  boolean handleRequest(HttpServletRequest request, HttpServletResponse response, Repository repository) throws IOException;
 }

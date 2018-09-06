@@ -34,6 +34,7 @@ package sonia.scm.repository;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.Sets;
+import sonia.scm.AlreadyExistsException;
 import sonia.scm.io.DefaultFileSystem;
 import sonia.scm.store.ConfigurationStoreFactory;
 
@@ -70,10 +71,10 @@ public class DummyRepositoryHandler
 
 
   @Override
-  protected void create(Repository repository, File directory) throws RepositoryException {
+  protected void create(Repository repository, File directory) throws AlreadyExistsException {
     String key = repository.getNamespace() + "/" + repository.getName();
     if (existingRepoNames.contains(key)) {
-      throw new RepositoryAlreadyExistsException("Repo exists");
+      throw new AlreadyExistsException();
     } else {
       existingRepoNames.add(key);
     }

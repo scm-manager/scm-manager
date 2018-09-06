@@ -35,12 +35,11 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.api.BundleResponse;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Service provider implementation for the bundle command.
@@ -60,8 +59,7 @@ public interface BundleCommand
    * @return bundle response
    *
    * @throws IOException
-   * @throws RepositoryException
    */
   public BundleResponse bundle(BundleCommandRequest request)
-    throws IOException, RepositoryException;
+    throws IOException;
 }

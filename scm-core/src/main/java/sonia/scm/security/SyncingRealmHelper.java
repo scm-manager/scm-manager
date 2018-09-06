@@ -30,17 +30,18 @@ package sonia.scm.security;
 
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
-import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.subject.SimplePrincipalCollection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sonia.scm.AlreadyExistsException;
+import sonia.scm.NotFoundException;
 import sonia.scm.group.Group;
-import sonia.scm.group.GroupException;
 import sonia.scm.group.GroupManager;
 import sonia.scm.group.GroupNames;
 import sonia.scm.plugin.Extension;
 import sonia.scm.user.User;
-import sonia.scm.user.UserException;
 import sonia.scm.user.UserManager;
 import sonia.scm.web.security.AdministrationContext;
 
@@ -55,6 +56,8 @@ import java.util.Collection;
  */
 @Extension
 public final class SyncingRealmHelper {
+
+  private static final Logger LOG = LoggerFactory.getLogger(SyncingRealmHelper.class);
 
   private final AdministrationContext ctx;
   
@@ -121,16 +124,18 @@ public final class SyncingRealmHelper {
    */
   public void store(final Group group) {
     ctx.runAsAdmin(() -> {
-      try {
-        if (groupManager.get(group.getId()) != null) {
+      if (groupManager.get(group.getId()) != null) {
+        try {
           groupManager.modify(group);
+        } catch (NotFoundException e) {
+          throw new IllegalStateException("got NotFoundException though group " + group.getName() + " could be loaded", e);
         }
-        else {
+      } else {
+        try {
           groupManager.create(group);
+        } catch (AlreadyExistsException e) {
+          throw new IllegalStateException("got AlreadyExistsException though group " + group.getName() + " could not be loaded", e);
         }
-      }
-      catch (GroupException ex) {
-        throw new AuthenticationException("could not store group", ex);
       }
     });
   }
@@ -142,17 +147,20 @@ public final class SyncingRealmHelper {
    */
   public void store(final User user) {
     ctx.runAsAdmin(() -> {
-      try {
-        if (userManager.contains(user.getName())) {
+      if (userManager.contains(user.getName())) {
+        try {
           userManager.modify(user);
+        } catch (NotFoundException e) {
+          throw new IllegalStateException("got NotFoundException though user " + user.getName() + " could be loaded", e);
         }
-        else {
+      } else {
+        try {
           userManager.create(user);
+        } catch (AlreadyExistsException e) {
+          throw new IllegalStateException("got AlreadyExistsException though user " + user.getName() + " could not be loaded", e);
+
         }
       }
-      catch (UserException ex) {
-        throw new AuthenticationException("could not store user", ex);
-      }
-    });
+      });
+    }
   }
-}

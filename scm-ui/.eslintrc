@@ -1,3 +1,3 @@
 {
-  "extends": "react-app" 
+  "extends": "@scm-manager/eslint-config"
 }

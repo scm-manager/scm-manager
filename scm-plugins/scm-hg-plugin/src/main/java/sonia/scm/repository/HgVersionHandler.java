@@ -44,15 +44,6 @@ import java.io.IOException;
 public class HgVersionHandler extends AbstractHgHandler
 {
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param handler
-   * @param jaxbContext
-   * @param context
-   * @param directory
-   */
   public HgVersionHandler(HgRepositoryHandler handler, HgContext context,
                           File directory)
   {
@@ -61,17 +52,7 @@ public class HgVersionHandler extends AbstractHgHandler
 
   //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
-  public HgVersion getVersion() throws IOException, RepositoryException
-  {
+  public HgVersion getVersion() throws IOException {
     return getResultFromScript(HgVersion.class, HgPythonScript.VERSION);
   }
 }

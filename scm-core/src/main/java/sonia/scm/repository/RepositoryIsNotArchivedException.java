@@ -38,7 +38,7 @@ package sonia.scm.repository;
  *
  * @since 1.14
  */
-public class RepositoryIsNotArchivedException extends RepositoryException {
+public class RepositoryIsNotArchivedException extends RuntimeException {
 
   private static final long serialVersionUID = 7728748133123987511L;
 

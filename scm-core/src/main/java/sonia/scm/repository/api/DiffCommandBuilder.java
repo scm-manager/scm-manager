@@ -36,20 +36,18 @@ package sonia.scm.repository.api;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Preconditions;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import sonia.scm.repository.RepositoryException;
+import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.repository.spi.DiffCommand;
 import sonia.scm.repository.spi.DiffCommandRequest;
 import sonia.scm.util.IOUtil;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Shows differences between revisions for a specified file or
@@ -87,9 +85,7 @@ public final class DiffCommandBuilder
    * Constructs a new {@link DiffCommandBuilder}, this constructor should
    * only be called from the {@link RepositoryService}.
    *
-   * @param implementation of {@link DiffCommand}
-   *
-   * @param diffCommand
+   * @param diffCommand implementation of {@link DiffCommand}
    */
   DiffCommandBuilder(DiffCommand diffCommand)
   {
@@ -107,11 +103,8 @@ public final class DiffCommandBuilder
    * @return {@code this}
    *
    * @throws IOException
-   * @throws RepositoryException
    */
-  public DiffCommandBuilder retriveContent(OutputStream outputStream)
-    throws IOException, RepositoryException
-  {
+  public DiffCommandBuilder retriveContent(OutputStream outputStream) throws IOException, RevisionNotFoundException {
     getDiffResult(outputStream);
 
     return this;
@@ -125,10 +118,8 @@ public final class DiffCommandBuilder
    * @return content of the difference
    *
    * @throws IOException
-   * @throws RepositoryException
    */
-  public String getContent() throws IOException, RepositoryException
-  {
+  public String getContent() throws IOException, RevisionNotFoundException {
     String content = null;
     ByteArrayOutputStream baos = null;
 
@@ -205,14 +196,10 @@ public final class DiffCommandBuilder
    *
    *
    * @param outputStream
-   * @param path
    *
    * @throws IOException
-   * @throws RepositoryException
    */
-  private void getDiffResult(OutputStream outputStream)
-    throws IOException, RepositoryException
-  {
+  private void getDiffResult(OutputStream outputStream) throws IOException, RevisionNotFoundException {
     Preconditions.checkNotNull(outputStream, "OutputStream is required");
     Preconditions.checkArgument(request.isValid(),
       "path and/or revision is required");

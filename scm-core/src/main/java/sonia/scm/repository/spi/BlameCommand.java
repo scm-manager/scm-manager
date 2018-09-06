@@ -36,11 +36,10 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.repository.BlameResult;
-import sonia.scm.repository.RepositoryException;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -59,8 +58,6 @@ public interface BlameCommand
    * @return
    *
    * @throws IOException
-   * @throws RepositoryException
    */
-  public BlameResult getBlameResult(BlameCommandRequest request)
-          throws IOException, RepositoryException;
+  BlameResult getBlameResult(BlameCommandRequest request) throws IOException;
 }

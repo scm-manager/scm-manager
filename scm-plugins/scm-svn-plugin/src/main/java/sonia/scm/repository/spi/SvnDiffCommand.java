@@ -36,10 +36,8 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Preconditions;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.tmatesoft.svn.core.SVNDepth;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNURL;
@@ -48,17 +46,16 @@ import org.tmatesoft.svn.core.wc.ISVNDiffGenerator;
 import org.tmatesoft.svn.core.wc.SVNClientManager;
 import org.tmatesoft.svn.core.wc.SVNDiffClient;
 import org.tmatesoft.svn.core.wc.SVNRevision;
-
+import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryException;
+import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.repository.SvnUtil;
 import sonia.scm.repository.api.DiffFormat;
 import sonia.scm.util.Util;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
 import java.io.OutputStream;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -73,38 +70,13 @@ public class SvnDiffCommand extends AbstractSvnCommand implements DiffCommand
   private static final Logger logger =
     LoggerFactory.getLogger(SvnDiffCommand.class);
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   *
-   * @param context
-   * @param repository
-   * @param repositoryDirectory
-   */
   public SvnDiffCommand(SvnContext context, Repository repository)
   {
     super(context, repository);
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param output
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Override
-  public void getDiffResult(DiffCommandRequest request, OutputStream output)
-    throws IOException, RepositoryException
-  {
+  public void getDiffResult(DiffCommandRequest request, OutputStream output) throws RevisionNotFoundException {
     if (logger.isDebugEnabled())
     {
       logger.debug("create diff for {}", request);
@@ -149,7 +121,7 @@ public class SvnDiffCommand extends AbstractSvnCommand implements DiffCommand
     }
     catch (SVNException ex)
     {
-      throw new RepositoryException("could not create diff", ex);
+      throw new InternalRepositoryException("could not create diff", ex);
     }
     finally
     {

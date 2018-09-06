@@ -43,15 +43,14 @@ import org.tmatesoft.svn.core.SVNProperties;
 import org.tmatesoft.svn.core.io.SVNRepository;
 import org.tmatesoft.svn.core.wc.SVNClientManager;
 import org.tmatesoft.svn.core.wc.admin.SVNLookClient;
+import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.PathNotFoundException;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.repository.SvnUtil;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -72,15 +71,6 @@ public class SvnCatCommand extends AbstractSvnCommand implements CatCommand
 
   //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   *
-   *
-   * @param context
-   * @param repository
-   * @param repositoryDirectory
-   */
   SvnCatCommand(SvnContext context, Repository repository)
   {
     super(context, repository);
@@ -88,20 +78,8 @@ public class SvnCatCommand extends AbstractSvnCommand implements CatCommand
 
   //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param output
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Override
-  public void getCatResult(CatCommandRequest request, OutputStream output)
-    throws IOException, RepositoryException
-  {
+  public void getCatResult(CatCommandRequest request, OutputStream output) throws RevisionNotFoundException, PathNotFoundException {
     if (logger.isDebugEnabled())
     {
       logger.debug("try to get content for {}", request);
@@ -125,7 +103,7 @@ public class SvnCatCommand extends AbstractSvnCommand implements CatCommand
   }
 
   @Override
-  public InputStream getCatResultStream(CatCommandRequest request) throws IOException, RepositoryException {
+  public InputStream getCatResultStream(CatCommandRequest request) throws RevisionNotFoundException, PathNotFoundException {
     // There seems to be no method creating an input stream as a result, so
     // we have no other possibility then to copy the content into a buffer and
     // stream it from there.
@@ -134,20 +112,7 @@ public class SvnCatCommand extends AbstractSvnCommand implements CatCommand
     return new ByteArrayInputStream(output.toByteArray());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param output
-   * @param revision
-   *
-   * @throws RepositoryException
-   */
-  private void getCatFromRevision(CatCommandRequest request,
-    OutputStream output, long revision)
-    throws RepositoryException
-  {
+  private void getCatFromRevision(CatCommandRequest request, OutputStream output, long revision) throws PathNotFoundException, RevisionNotFoundException {
     logger.debug("try to read content from revision {} and path {}", revision,
       request.getPath());
 
@@ -164,31 +129,18 @@ public class SvnCatCommand extends AbstractSvnCommand implements CatCommand
     }
   }
 
-  private void handleSvnException(CatCommandRequest request, SVNException ex) throws RepositoryException {
+  private void handleSvnException(CatCommandRequest request, SVNException ex) throws PathNotFoundException, RevisionNotFoundException {
     int svnErrorCode = ex.getErrorMessage().getErrorCode().getCode();
     if (SVNErrorCode.FS_NOT_FOUND.getCode() == svnErrorCode) {
       throw new PathNotFoundException(request.getPath());
     } else if (SVNErrorCode.FS_NO_SUCH_REVISION.getCode() == svnErrorCode) {
       throw new RevisionNotFoundException(request.getRevision());
     } else {
-      throw new RepositoryException("could not get content from revision", ex);
+      throw new InternalRepositoryException("could not get content from revision", ex);
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param output
-   * @param txn
-   *
-   * @throws RepositoryException
-   */
-  private void getCatFromTransaction(CatCommandRequest request,
-    OutputStream output, String txn)
-    throws RepositoryException
-  {
+  private void getCatFromTransaction(CatCommandRequest request, OutputStream output, String txn) {
     logger.debug("try to read content from transaction {} and path {}", txn,
       request.getPath());
 
@@ -204,8 +156,7 @@ public class SvnCatCommand extends AbstractSvnCommand implements CatCommand
     }
     catch (SVNException ex)
     {
-      throw new RepositoryException("could not get content from transaction",
-        ex);
+      throw new InternalRepositoryException("could not get content from transaction", ex);
     }
     finally
     {

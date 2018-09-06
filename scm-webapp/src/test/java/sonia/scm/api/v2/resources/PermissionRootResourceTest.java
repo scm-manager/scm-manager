@@ -14,10 +14,10 @@ import org.apache.shiro.util.ThreadContext;
 import org.apache.shiro.util.ThreadState;
 import org.assertj.core.util.Lists;
 import org.jboss.resteasy.core.Dispatcher;
-import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.jboss.resteasy.spi.HttpRequest;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -27,8 +27,11 @@ import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import sonia.scm.api.rest.AuthorizationExceptionMapper;
-import sonia.scm.repository.*;
+import sonia.scm.repository.NamespaceAndName;
+import sonia.scm.repository.Permission;
+import sonia.scm.repository.PermissionType;
+import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryManager;
 import sonia.scm.web.VndMediaType;
 
 import java.io.IOException;
@@ -36,6 +39,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -46,8 +50,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static sonia.scm.api.v2.resources.DispatcherMock.createDispatcher;
+import static sonia.scm.api.v2.resources.PermissionDto.GROUP_PREFIX;
 
 @Slf4j
 @SubjectAware(
@@ -98,7 +107,7 @@ public class PermissionRootResourceTest {
     .content(PERMISSION_TEST_PAYLOAD)
     .path(PATH_OF_ONE_PERMISSION);
 
-  private final Dispatcher dispatcher = MockDispatcherFactory.createDispatcher();
+  private Dispatcher dispatcher;
 
   @Rule
   public ShiroRule shiro = new ShiroRule();
@@ -129,14 +138,15 @@ public class PermissionRootResourceTest {
     permissionCollectionToDtoMapper = new PermissionCollectionToDtoMapper(permissionToPermissionDtoMapper, resourceLinks);
     permissionRootResource = new PermissionRootResource(permissionDtoToPermissionMapper, permissionToPermissionDtoMapper, permissionCollectionToDtoMapper, resourceLinks, repositoryManager);
     RepositoryRootResource repositoryRootResource = new RepositoryRootResource(MockProvider
-      .of(new RepositoryResource(null, null, null, null, null, null, null, null, MockProvider.of(permissionRootResource))), null);
+      .of(new RepositoryResource(null, null, null, null, null, null, null, null, MockProvider.of(permissionRootResource), null)), null);
+    dispatcher = createDispatcher(repositoryRootResource);
     subjectThreadState.bind();
     ThreadContext.bind(subject);
-    dispatcher.getRegistry().addSingletonResource(repositoryRootResource);
-    dispatcher.getProviderFactory().registerProvider(RepositoryNotFoundExceptionMapper.class);
-    dispatcher.getProviderFactory().registerProvider(PermissionNotFoundExceptionMapper.class);
-    dispatcher.getProviderFactory().registerProvider(PermissionAlreadyExistsExceptionMapper.class);
-    dispatcher.getProviderFactory().registerProvider(AuthorizationExceptionMapper.class);
+  }
+
+  @After
+  public void unbind() {
+    ThreadContext.unbindSubject();
   }
 
   @TestFactory
@@ -245,7 +255,7 @@ public class PermissionRootResourceTest {
     createUserWithRepositoryAndPermissions(TEST_PERMISSIONS, PERMISSION_WRITE);
     Permission newPermission = TEST_PERMISSIONS.get(0);
     assertExpectedRequest(requestPOSTPermission
-      .content("{\"name\" : \"" + newPermission.getName() + "\" , \"type\" : \"WRITE\" , \"groupPermission\" : true}")
+      .content("{\"name\" : \"" + newPermission.getName() + "\" , \"type\" : \"WRITE\" , \"groupPermission\" : false}")
       .expectedResponseStatus(409)
     );
   }
@@ -350,7 +360,10 @@ public class PermissionRootResourceTest {
     result.setName(permission.getName());
     result.setGroupPermission(permission.isGroupPermission());
     result.setType(permission.getType().name());
-    String permissionHref = "/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + PATH_OF_ALL_PERMISSIONS + permission.getName();
+    String permissionName = Optional.of(permission.getName())
+      .filter(p -> !permission.isGroupPermission())
+      .orElse(GROUP_PREFIX + permission.getName());
+    String permissionHref = "/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + PATH_OF_ALL_PERMISSIONS + permissionName;
     if (PERMISSION_READ.equals(userPermission)) {
       result.add(linkingTo()
         .self(permissionHref)

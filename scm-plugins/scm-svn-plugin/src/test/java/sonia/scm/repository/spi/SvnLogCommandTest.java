@@ -35,17 +35,17 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import org.junit.Test;
-
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.Modifications;
-import sonia.scm.repository.RepositoryException;
+import sonia.scm.repository.RevisionNotFoundException;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 //~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
 
 /**
  *
@@ -54,16 +54,8 @@ import java.io.IOException;
 public class SvnLogCommandTest extends AbstractSvnCommandTestBase
 {
 
-  /**
-   *   Method description
-   *
-   *
-   *   @throws IOException
-   * @throws RepositoryException
-   */
   @Test
-  public void testGetAll() throws IOException, RepositoryException
-  {
+  public void testGetAll() throws RevisionNotFoundException {
     ChangesetPagingResult result =
       createCommand().getChangesets(new LogCommandRequest());
 
@@ -72,16 +64,8 @@ public class SvnLogCommandTest extends AbstractSvnCommandTestBase
     assertEquals(6, result.getChangesets().size());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test
-  public void testGetAllByPath() throws IOException, RepositoryException
-  {
+  public void testGetAllByPath() throws RevisionNotFoundException {
     LogCommandRequest request = new LogCommandRequest();
 
     request.setPath("a.txt");
@@ -96,16 +80,8 @@ public class SvnLogCommandTest extends AbstractSvnCommandTestBase
     assertEquals("1", result.getChangesets().get(2).getId());
   }
 
-  /**
-   *  Method description
-   *
-   *
-   *  @throws IOException
-   * @throws RepositoryException
-   */
   @Test
-  public void testGetAllWithLimit() throws IOException, RepositoryException
-  {
+  public void testGetAllWithLimit() throws RevisionNotFoundException {
     LogCommandRequest request = new LogCommandRequest();
 
     request.setPagingLimit(2);
@@ -127,16 +103,8 @@ public class SvnLogCommandTest extends AbstractSvnCommandTestBase
     assertEquals("4", c2.getId());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test
-  public void testGetAllWithPaging() throws IOException, RepositoryException
-  {
+  public void testGetAllWithPaging() throws RevisionNotFoundException {
     LogCommandRequest request = new LogCommandRequest();
 
     request.setPagingStart(1);
@@ -159,16 +127,8 @@ public class SvnLogCommandTest extends AbstractSvnCommandTestBase
     assertEquals("3", c2.getId());
   }
 
-  /**
-   *  Method description
-   *
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test
-  public void testGetCommit() throws IOException, RepositoryException
-  {
+  public void testGetCommit() throws RevisionNotFoundException {
     Changeset c = createCommand().getChangeset("3");
 
     assertNotNull(c);
@@ -188,16 +148,8 @@ public class SvnLogCommandTest extends AbstractSvnCommandTestBase
     assertEquals("b.txt", mods.getRemoved().get(0));
   }
 
-  /**
-   *  Method description
-   *
-   *
-   *  @throws IOException
-   * @throws RepositoryException
-   */
   @Test
-  public void testGetRange() throws IOException, RepositoryException
-  {
+  public void testGetRange() throws RevisionNotFoundException {
     LogCommandRequest request = new LogCommandRequest();
 
     request.setStartChangeset("2");

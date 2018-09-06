@@ -34,7 +34,6 @@ package sonia.scm.repository.spi;
 
 import org.junit.Test;
 import sonia.scm.repository.PathNotFoundException;
-import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RevisionNotFoundException;
 
 import java.io.ByteArrayOutputStream;
@@ -48,7 +47,7 @@ import static org.junit.Assert.assertEquals;
 public class SvnCatCommandTest extends AbstractSvnCommandTestBase {
 
   @Test
-  public void testCat() throws IOException, RepositoryException {
+  public void testCat() throws PathNotFoundException, RevisionNotFoundException {
     CatCommandRequest request = new CatCommandRequest();
 
     request.setPath("a.txt");
@@ -57,7 +56,7 @@ public class SvnCatCommandTest extends AbstractSvnCommandTestBase {
   }
 
   @Test
-  public void testSimpleCat() throws IOException, RepositoryException {
+  public void testSimpleCat() throws PathNotFoundException, RevisionNotFoundException {
     CatCommandRequest request = new CatCommandRequest();
 
     request.setPath("c/d.txt");
@@ -65,7 +64,7 @@ public class SvnCatCommandTest extends AbstractSvnCommandTestBase {
   }
 
   @Test(expected = PathNotFoundException.class)
-  public void testUnknownFile() throws IOException, RepositoryException {
+  public void testUnknownFile() throws PathNotFoundException, RevisionNotFoundException {
     CatCommandRequest request = new CatCommandRequest();
 
     request.setPath("unknown");
@@ -75,7 +74,7 @@ public class SvnCatCommandTest extends AbstractSvnCommandTestBase {
   }
 
   @Test(expected = RevisionNotFoundException.class)
-  public void testUnknownRevision() throws IOException, RepositoryException {
+  public void testUnknownRevision() throws PathNotFoundException, RevisionNotFoundException {
     CatCommandRequest request = new CatCommandRequest();
 
     request.setPath("a.txt");
@@ -85,7 +84,7 @@ public class SvnCatCommandTest extends AbstractSvnCommandTestBase {
   }
 
   @Test
-  public void testSimpleStream() throws IOException, RepositoryException {
+  public void testSimpleStream() throws IOException, PathNotFoundException, RevisionNotFoundException {
     CatCommandRequest request = new CatCommandRequest();
     request.setPath("a.txt");
     request.setRevision("1");
@@ -99,7 +98,7 @@ public class SvnCatCommandTest extends AbstractSvnCommandTestBase {
     catResultStream.close();
   }
 
-  private String execute(CatCommandRequest request) throws IOException, RepositoryException {
+  private String execute(CatCommandRequest request) throws PathNotFoundException, RevisionNotFoundException {
     String content = null;
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
 

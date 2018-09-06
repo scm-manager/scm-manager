@@ -35,6 +35,7 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.NotFoundException;
 import sonia.scm.util.Util;
 
 /**
@@ -42,7 +43,7 @@ import sonia.scm.util.Util;
  *
  * @author Sebastian Sdorra
  */
-public class PathNotFoundException extends RepositoryException
+public class PathNotFoundException extends NotFoundException
 {
 
   /** Field description */
@@ -59,7 +60,7 @@ public class PathNotFoundException extends RepositoryException
    */
   public PathNotFoundException(String path)
   {
-    super("path \"".concat(Util.nonNull(path)).concat("\" not found"));
+    super("path", Util.nonNull(path));
     this.path = Util.nonNull(path);
   }
 

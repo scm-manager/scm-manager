@@ -38,10 +38,8 @@ package sonia.scm.repository;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.ConfigurationException;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.installer.HgInstaller;
@@ -55,23 +53,21 @@ import sonia.scm.io.INIConfigurationWriter;
 import sonia.scm.io.INISection;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.spi.HgRepositoryServiceProvider;
+import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.SystemUtil;
 import sonia.scm.util.Util;
 
-//~--- JDK imports ------------------------------------------------------------
-
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
 import java.text.MessageFormat;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import sonia.scm.store.ConfigurationStoreFactory;
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -430,11 +426,10 @@ public class HgRepositoryHandler
    * @param directory
    *
    * @throws IOException
-   * @throws RepositoryException
    */
   @Override
   protected void postCreate(Repository repository, File directory)
-    throws IOException, RepositoryException
+    throws IOException
   {
     File hgrcFile = new File(directory, PATH_HGRC);
     INIConfiguration hgrc = new INIConfiguration();

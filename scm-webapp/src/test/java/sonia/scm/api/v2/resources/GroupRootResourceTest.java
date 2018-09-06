@@ -4,7 +4,6 @@ import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.io.Resources;
 import org.jboss.resteasy.core.Dispatcher;
-import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.Before;
@@ -14,8 +13,9 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import sonia.scm.PageResult;
+import sonia.scm.api.rest.JSONContextResolver;
+import sonia.scm.api.rest.ObjectMapperProvider;
 import sonia.scm.group.Group;
-import sonia.scm.group.GroupException;
 import sonia.scm.group.GroupManager;
 import sonia.scm.web.VndMediaType;
 
@@ -27,12 +27,15 @@ import java.net.URL;
 import java.util.Collections;
 
 import static java.util.Collections.singletonList;
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static sonia.scm.api.v2.resources.DispatcherMock.createDispatcher;
 
 @SubjectAware(
   username = "trillian",
@@ -44,7 +47,7 @@ public class GroupRootResourceTest {
   @Rule
   public ShiroRule shiro = new ShiroRule();
 
-  private Dispatcher dispatcher = MockDispatcherFactory.createDispatcher();
+  private Dispatcher dispatcher;
 
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(URI.create("/"));
 
@@ -58,7 +61,7 @@ public class GroupRootResourceTest {
   private ArgumentCaptor<Group> groupCaptor = ArgumentCaptor.forClass(Group.class);
 
   @Before
-  public void prepareEnvironment() throws IOException, GroupException {
+  public void prepareEnvironment() throws Exception {
     initMocks(this);
     when(groupManager.create(groupCaptor.capture())).thenAnswer(invocation -> invocation.getArguments()[0]);
     doNothing().when(groupManager).modify(groupCaptor.capture());
@@ -72,7 +75,8 @@ public class GroupRootResourceTest {
     GroupResource groupResource = new GroupResource(groupManager, groupToDtoMapper, dtoToGroupMapper);
     GroupRootResource groupRootResource = new GroupRootResource(MockProvider.of(groupCollectionResource), MockProvider.of(groupResource));
 
-    dispatcher.getRegistry().addSingletonResource(groupRootResource);
+    dispatcher = createDispatcher(groupRootResource);
+    dispatcher.getProviderFactory().registerProviderInstance(new JSONContextResolver(new ObjectMapperProvider().get()));
   }
 
   @Test
@@ -118,10 +122,10 @@ public class GroupRootResourceTest {
     MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
-    Group capturedGroup = groupCaptor.getValue();
 
     assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
 
+    Group capturedGroup = groupCaptor.getValue();
     assertEquals("Updated description", capturedGroup.getDescription());
   }
 
@@ -140,6 +144,40 @@ public class GroupRootResourceTest {
     dispatcher.invoke(request, response);
 
     assertEquals(HttpServletResponse.SC_NOT_FOUND, response.getStatus());
+  }
+
+  @Test
+  public void updateShouldFailOnConcurrentModification_oldModificationDate() throws URISyntaxException, IOException {
+    URL url = Resources.getResource("sonia/scm/api/v2/group-test-update-concurrent-modification.json");
+    byte[] groupJson = Resources.toByteArray(url);
+
+    MockHttpRequest request = MockHttpRequest
+      .put("/" + GroupRootResource.GROUPS_PATH_V2 + "admin")
+      .contentType(VndMediaType.GROUP)
+      .content(groupJson);
+
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_CONFLICT, response.getStatus());
+  }
+
+  @Test
+  public void updateShouldFailOnConcurrentModification_unsetModificationDate() throws URISyntaxException, IOException {
+    URL url = Resources.getResource("sonia/scm/api/v2/group-test-update-concurrent-modification_null_date.json");
+    byte[] groupJson = Resources.toByteArray(url);
+
+    MockHttpRequest request = MockHttpRequest
+      .put("/" + GroupRootResource.GROUPS_PATH_V2 + "admin")
+      .contentType(VndMediaType.GROUP)
+      .content(groupJson);
+
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_CONFLICT, response.getStatus());
   }
 
   @Test
@@ -215,6 +253,7 @@ public class GroupRootResourceTest {
     group.setName("admin");
     group.setCreationDate(0L);
     group.setMembers(Collections.singletonList("user"));
+    group.setLastModified(3600000L);
     return group;
   }
 }

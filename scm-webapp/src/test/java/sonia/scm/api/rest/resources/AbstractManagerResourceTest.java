@@ -24,13 +24,13 @@ import static org.mockito.Mockito.when;
 public class AbstractManagerResourceTest {
 
   @Mock
-  private Manager<Simple, Exception> manager;
+  private Manager<Simple> manager;
   @Mock
   private Request request;
   @Captor
   private ArgumentCaptor<Comparator<Simple>> comparatorCaptor;
 
-  private AbstractManagerResource<Simple, Exception> abstractManagerResource;
+  private AbstractManagerResource<Simple> abstractManagerResource;
 
   @Before
   public void captureComparator() {
@@ -60,7 +60,7 @@ public class AbstractManagerResourceTest {
   }
 
 
-  private class SimpleManagerResource extends AbstractManagerResource<Simple, Exception> {
+  private class SimpleManagerResource extends AbstractManagerResource<Simple> {
 
     {
       disableCache = true;

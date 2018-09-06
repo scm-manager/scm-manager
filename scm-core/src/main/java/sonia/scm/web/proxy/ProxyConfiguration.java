@@ -34,20 +34,19 @@ package sonia.scm.web.proxy;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.net.URL;
-
-import java.util.Collections;
-import java.util.Set;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.net.URL;
+import java.util.Collections;
+import java.util.Set;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -144,7 +143,7 @@ public class ProxyConfiguration
   public String toString()
   {
     //J-
-    return Objects.toStringHelper(this)
+    return MoreObjects.toStringHelper(this)
                   .add("url", url)
                   .add("copyRequestHeaders", copyRequestHeaders)
                   .add("requestHeaderExcludes", requestHeaderExcludes)

@@ -36,10 +36,10 @@ package sonia.scm.api.rest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -90,6 +90,8 @@ public class StatusExceptionMapper<E extends Throwable>
       logger.debug(msg.toString());
     }
 
-    return Response.status(status).build();
+    return Response.status(status)
+      .entity(exception.getMessage())
+      .build();
   }
 }

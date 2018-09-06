@@ -36,11 +36,11 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.repository.BrowserResult;
-import sonia.scm.repository.RepositoryException;
-
-//~--- JDK imports ------------------------------------------------------------
+import sonia.scm.repository.RevisionNotFoundException;
 
 import java.io.IOException;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -59,8 +59,5 @@ public interface BrowseCommand
    * @return
    *
    * @throws IOException
-   * @throws RepositoryException
    */
-  public BrowserResult getBrowserResult(BrowseCommandRequest request)
-          throws IOException, RepositoryException;
-}
+  BrowserResult getBrowserResult(BrowseCommandRequest request) throws IOException, RevisionNotFoundException;}

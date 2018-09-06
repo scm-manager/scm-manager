@@ -35,12 +35,11 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.api.UnbundleResponse;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Service provider implementation for the unbundle command.
@@ -60,8 +59,7 @@ public interface UnbundleCommand
    * @return unbundle response
    *
    * @throws IOException
-   * @throws RepositoryException
    */
   public UnbundleResponse unbundle(UnbundleCommandRequest request)
-    throws IOException, RepositoryException;
+    throws IOException;
 }

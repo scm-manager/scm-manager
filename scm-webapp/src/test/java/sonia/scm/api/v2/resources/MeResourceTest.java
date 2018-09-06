@@ -2,10 +2,6 @@ package sonia.scm.api.v2.resources;
 
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
-import com.google.common.io.Resources;
-import org.apache.shiro.authc.credential.PasswordService;
-import org.apache.shiro.subject.PrincipalCollection;
-import org.apache.shiro.subject.Subject;
 import org.jboss.resteasy.core.Dispatcher;
 import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.mock.MockHttpRequest;
@@ -16,26 +12,19 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import sonia.scm.PageResult;
 import sonia.scm.user.User;
-import sonia.scm.user.UserException;
 import sonia.scm.user.UserManager;
 import sonia.scm.web.VndMediaType;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.UriInfo;
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 
-import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 @SubjectAware(
@@ -64,7 +53,7 @@ public class MeResourceTest {
   private ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
 
   @Before
-  public void prepareEnvironment() throws IOException, UserException {
+  public void prepareEnvironment() throws Exception {
     initMocks(this);
     createDummyUser("trillian");
     when(userManager.create(userCaptor.capture())).thenAnswer(invocation -> invocation.getArguments()[0]);

@@ -39,34 +39,27 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.common.hash.Hashing;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.plugin.ExplodedSmp.PathTransformer;
 
-//~--- JDK imports ------------------------------------------------------------
-
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-
 import java.net.URL;
-
 import java.nio.file.DirectoryStream;
 import java.nio.file.DirectoryStream.Filter;
 import java.nio.file.Files;
 import java.nio.file.Path;
-
 import java.text.SimpleDateFormat;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -370,9 +363,10 @@ public final class PluginProcessor
 
     if (Files.exists(libDir))
     {
-      for (Path f : Files.newDirectoryStream(libDir, GLOB_JAR))
-      {
-        urls.add(f.toUri().toURL());
+      try (DirectoryStream<Path> pathDirectoryStream = Files.newDirectoryStream(libDir, GLOB_JAR)) {
+        for (Path f : pathDirectoryStream) {
+          urls.add(f.toUri().toURL());
+        }
       }
     }
 
@@ -656,7 +650,7 @@ public final class PluginProcessor
         break;
       }
     }
-    
+
     logger.debug("move installed archive to {}", installed);
 
     Files.move(archive, installed);

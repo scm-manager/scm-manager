@@ -12,6 +12,7 @@ import auth from "./modules/auth";
 import pending from "./modules/pending";
 import failure from "./modules/failure";
 import permissions from "./permissions/modules/permissions";
+import config from "./config/modules/config";
 
 import type { BrowserHistory } from "history/createBrowserHistory";
 
@@ -28,7 +29,8 @@ function createReduxStore(history: BrowserHistory) {
     repositoryTypes,
     permissions,
     groups,
-    auth
+    auth,
+    config
   });
 
   return createStore(

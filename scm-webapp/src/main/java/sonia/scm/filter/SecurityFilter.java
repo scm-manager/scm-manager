@@ -62,7 +62,8 @@ import javax.servlet.http.HttpServletResponse;
  * @author Sebastian Sdorra
  */
 @Priority(Filters.PRIORITY_AUTHORIZATION)
-@WebElement(value = Filters.PATTERN_RESTAPI, morePatterns = { Filters.PATTERN_DEBUG })
+// TODO find a better way for unprotected resources
+@WebElement(value = "/api/rest/(?!v2/ui).*", regex = true)
 public class SecurityFilter extends HttpFilter
 {
 

@@ -30,8 +30,8 @@
  */
 package sonia.scm.template;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-
 
 /**
  * A viewable holds the path to a template and the context object which is used to render the template. Viewables can
@@ -81,7 +81,7 @@ public final class Viewable {
 
   @Override
   public String toString() {
-    return Objects.toStringHelper(this)
+    return MoreObjects.toStringHelper(this)
             .add("path", path)
             .add("context", context)
             .toString();

@@ -167,9 +167,7 @@ public final class RepositoryServiceFactory
    * @throws ScmSecurityException if current user has not read permissions
    *         for that repository
    */
-  public RepositoryService create(String repositoryId)
-    throws RepositoryNotFoundException
-  {
+  public RepositoryService create(String repositoryId) throws RepositoryNotFoundException {
     Preconditions.checkArgument(!Strings.isNullOrEmpty(repositoryId),
       "a non empty repositoryId is required");
 
@@ -328,7 +326,6 @@ public final class RepositoryServiceFactory
     /**
      * Clear caches on repository delete event.
      *
-     * @param repository changed repository
      * @param event repository event
      */
     @Subscribe(referenceType = ReferenceType.STRONG)
