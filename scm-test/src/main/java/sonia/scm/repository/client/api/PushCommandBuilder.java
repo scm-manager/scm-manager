@@ -36,12 +36,11 @@ package sonia.scm.repository.client.api;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.repository.client.spi.PushCommand;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -86,6 +85,14 @@ public final class PushCommandBuilder
     }
 
     command.push();
+  }
+
+  public void pushTags() throws IOException {
+    if (logger.isDebugEnabled()) {
+      logger.debug("push tag changes back to main repository");
+    }
+
+    command.pushTags();
   }
 
   //~--- fields ---------------------------------------------------------------

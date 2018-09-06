@@ -88,8 +88,6 @@ public class SourceRootResourceTest {
     dispatcher.invoke(request, response);
     assertThat(response.getStatus()).isEqualTo(200);
     assertThat(response.getContentAsString()).contains("\"revision\":\"revision\"");
-    assertThat(response.getContentAsString()).contains("\"tag\":\"tag\"");
-    assertThat(response.getContentAsString()).contains("\"branch\":\"branch\"");
     assertThat(response.getContentAsString()).contains("\"files\":");
   }
 
@@ -106,9 +104,7 @@ public class SourceRootResourceTest {
   @Test
   public void shouldGetResultForSingleFile() throws URISyntaxException, IOException, RevisionNotFoundException {
     BrowserResult browserResult = new BrowserResult();
-    browserResult.setBranch("abc");
     browserResult.setRevision("revision");
-    browserResult.setTag("tag");
     FileObject fileObject = new FileObject();
     fileObject.setName("File Object!");
 
