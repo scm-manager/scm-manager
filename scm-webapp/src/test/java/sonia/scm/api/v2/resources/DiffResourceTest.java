@@ -72,6 +72,7 @@ public class DiffResourceTest {
     when(service.getRepository()).thenReturn(new Repository("repoId", "git", "space", "repo"));
     dispatcher.getProviderFactory().registerProvider(NotFoundExceptionMapper.class);
     dispatcher.getProviderFactory().registerProvider(AuthorizationExceptionMapper.class);
+    dispatcher.getProviderFactory().registerProvider(CRLFInjectionExceptionMapper.class);
     when(service.getDiffCommand()).thenReturn(diffCommandBuilder);
     subjectThreadState.bind();
     ThreadContext.bind(subject);
@@ -129,5 +130,20 @@ public class DiffResourceTest {
     dispatcher.invoke(request, response);
     assertEquals(404, response.getStatus());
   }
+
+  @Test
+  public void shouldGet400OnCrlfInjection() throws Exception {
+    when(diffCommandBuilder.setRevision(anyString())).thenReturn(diffCommandBuilder);
+    when(diffCommandBuilder.retriveContent(any())).thenThrow(RevisionNotFoundException.class);
+
+    MockHttpRequest request = MockHttpRequest
+      .get(DIFF_URL + "ny%0D%0ASet-cookie:%20Tamper=3079675143472450634")
+      .accept(VndMediaType.DIFF);
+    MockHttpResponse response = new MockHttpResponse();
+    dispatcher.invoke(request, response);
+    assertEquals(400, response.getStatus());
+  }
+
+
 
 }

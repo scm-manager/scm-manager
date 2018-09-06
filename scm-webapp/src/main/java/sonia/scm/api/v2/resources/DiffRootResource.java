@@ -31,6 +31,16 @@ public class DiffRootResource {
     this.serviceFactory = serviceFactory;
   }
 
+
+  /**
+   * Get the repository diff of a revision
+   *
+   * @param namespace repository namespace
+   * @param name repository name
+   * @param revision the revision
+   * @return the dif of the revision
+   * @throws NotFoundException if the repository is not found
+   */
   @GET
   @Path("{revision}")
   @Produces(VndMediaType.DIFF)
@@ -45,8 +55,6 @@ public class DiffRootResource {
   public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision) throws NotFoundException {
     HttpUtil.checkForCRLFInjection(revision);
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
-      Repository repository = repositoryService.getRepository();
-      RepositoryPermissions.read(repository).check();
       StreamingOutput responseEntry = output -> {
         try {
           repositoryService.getDiffCommand()
