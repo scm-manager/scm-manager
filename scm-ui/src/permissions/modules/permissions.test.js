@@ -94,13 +94,14 @@ const hitchhiker_puzzle42RepoPermissions = {
   },
   _links: {
     create: {
-      link: "link"
+      href:
+        "http://localhost:8081/scm/api/rest/v2/repositories/hitchhiker/puzzle42/permissions"
     }
   }
 };
 
 describe("permission fetch", () => {
-  const REPOS_URL = "/scm/api/rest/v2/repositories";
+  const REPOS_URL = "/api/rest/v2/repositories";
   const mockStore = configureMockStore([thunk]);
 
   afterEach(() => {
@@ -118,7 +119,7 @@ describe("permission fetch", () => {
       {
         type: FETCH_PERMISSIONS_PENDING,
         payload: {
-          namespace: namespace,
+          namespace: "hitchhiker",
           repoName: "puzzle42"
         },
         itemId: "hitchhiker/puzzle42"
@@ -236,7 +237,7 @@ describe("permission fetch", () => {
     });
 
     fetchMock.getOnce(
-      REPOS_URL + "/hitchhiker/puzzle42",
+      REPOS_URL + "/hitchhiker/puzzle42/permissions",
       hitchhiker_puzzle42RepoPermissions
     );
 
