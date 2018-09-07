@@ -471,7 +471,8 @@ describe("permissions reducer", () => {
     );
   });
 
-  /*it("should add permission", () => { //changing state had to be removed because of errors
+  it("should add permission", () => {
+    //changing state had to be removed because of errors
     const oldState = {
       "hitchhiker/puzzle42": {
         entries: [hitchhiker_puzzle42Permission_user_eins]
@@ -496,7 +497,7 @@ describe("permissions reducer", () => {
     expect(newState["hitchhiker/puzzle42"]).toEqual(
       expectedState["hitchhiker/puzzle42"]
     );
-  });*/
+  });
 });
 
 describe("permissions selectors", () => {

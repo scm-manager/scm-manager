@@ -424,8 +424,8 @@ export default function reducer(
         }
       };
     case CREATE_PERMISSION_SUCCESS:
-      return state;
-    /*  const position = action.payload.position;
+      // return state;
+      const position = action.payload.position;
       const permissions = state[action.payload.position].entries;
       permissions.push(action.payload.permission);
       return {
@@ -434,7 +434,7 @@ export default function reducer(
           ...state[position],
           entries: permissions
         }
-      };*/
+      };
     case DELETE_PERMISSION_SUCCESS:
       const permissionPosition = action.payload.position;
       const new_Permissions = deletePermissionFromState(

@@ -90,7 +90,7 @@ class SinglePermission extends React.Component<Props, State> {
   render() {
     const { permission } = this.state;
     const { loading, error, namespace, repoName } = this.props;
-    const typeSelector = this.props.permission._links.update ? (
+    const typeSelector = this.props.permission._links && this.props.permission._links.update ? (
       <td>
         <TypeSelector
           handleTypeChange={this.handleTypeChange}
