@@ -36,7 +36,8 @@ import reducer, {
   CREATE_PERMISSION,
   createPermissionSuccess,
   getCreatePermissionFailure,
-  isCreatePermissionPending
+  isCreatePermissionPending,
+  getDeletePermissionsFailure
 } from "./permissions";
 import type { Permission, PermissionCollection } from "../types/Permissions";
 
@@ -642,6 +643,26 @@ describe("permissions selectors", () => {
     expect(
       getDeletePermissionFailure({}, "hitchhiker", "puzzle42", "user_eins")
     ).toBe(undefined);
+  });
+
+  it("should return error when one of the delete permissions did fail", () => {
+    const state = {
+      permissions: {
+        "hitchhiker/puzzle42": { entries: hitchhiker_puzzle42Permissions }
+      },
+      failure: {
+        [DELETE_PERMISSION + "/hitchhiker/puzzle42/user_eins"]: error
+      }
+    };
+    expect(
+      getDeletePermissionsFailure(state, "hitchhiker", "puzzle42")
+    ).toEqual(error);
+  });
+
+  it("should return undefined when no delete permissions did not fail", () => {
+    expect(getDeletePermissionsFailure({}, "hitchhiker", "puzzle42")).toBe(
+      undefined
+    );
   });
 
   it("should return true, when create permission is pending", () => {

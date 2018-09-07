@@ -558,3 +558,32 @@ export function getDeletePermissionFailure(
     namespace + "/" + repoName + "/" + permissionname
   );
 }
+
+export function getDeletePermissionsFailure(
+  state: Object,
+  namespace: string,
+  repoName: string
+) {
+  const permissions =
+    state.permissions && state.permissions[namespace + "/" + repoName]
+      ? state.permissions[namespace + "/" + repoName].entries
+      : null;
+  if (permissions == null) return undefined;
+  for (let i = 0; i < permissions.length; i++) {
+    if (
+      getDeletePermissionFailure(
+        state,
+        namespace,
+        repoName,
+        permissions[i].name
+      )
+    ) {
+      return getFailure(
+        state,
+        DELETE_PERMISSION,
+        namespace + "/" + repoName + "/" + permissions[i].name
+      );
+    }
+  }
+  return null;
+}

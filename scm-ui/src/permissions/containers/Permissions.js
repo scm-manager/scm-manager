@@ -11,7 +11,8 @@ import {
   createPermission,
   isCreatePermissionPending,
   getCreatePermissionFailure,
-  createPermissionReset
+  createPermissionReset,
+  getDeletePermissionsFailure
 } from "../modules/permissions";
 import Loading from "../../components/Loading";
 import ErrorPage from "../../components/ErrorPage";
@@ -143,7 +144,7 @@ const mapStateToProps = (state, ownProps) => {
   const repoName = ownProps.repoName;
   const error =
     getFetchPermissionsFailure(state, namespace, repoName) ||
-    getCreatePermissionFailure(state, namespace, repoName);
+    getCreatePermissionFailure(state, namespace, repoName); //||    getDeletePermissionsFailure(state, namespace, repoName);
   const loading = isFetchPermissionsPending(state, namespace, repoName);
   const permissions = getPermissionsOfRepo(state, namespace, repoName);
   const loadingCreatePermission = isCreatePermissionPending(
