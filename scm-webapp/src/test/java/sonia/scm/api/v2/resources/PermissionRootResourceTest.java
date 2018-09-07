@@ -39,6 +39,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -55,6 +56,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static sonia.scm.api.v2.resources.DispatcherMock.createDispatcher;
+import static sonia.scm.api.v2.resources.PermissionDto.GROUP_PREFIX;
 
 @Slf4j
 @SubjectAware(
@@ -136,7 +138,7 @@ public class PermissionRootResourceTest {
     permissionCollectionToDtoMapper = new PermissionCollectionToDtoMapper(permissionToPermissionDtoMapper, resourceLinks);
     permissionRootResource = new PermissionRootResource(permissionDtoToPermissionMapper, permissionToPermissionDtoMapper, permissionCollectionToDtoMapper, resourceLinks, repositoryManager);
     RepositoryRootResource repositoryRootResource = new RepositoryRootResource(MockProvider
-      .of(new RepositoryResource(null, null, null, null, null, null, null, null, MockProvider.of(permissionRootResource))), null);
+      .of(new RepositoryResource(null, null, null, null, null, null, null, null, MockProvider.of(permissionRootResource), null)), null);
     dispatcher = createDispatcher(repositoryRootResource);
     subjectThreadState.bind();
     ThreadContext.bind(subject);
@@ -253,7 +255,7 @@ public class PermissionRootResourceTest {
     createUserWithRepositoryAndPermissions(TEST_PERMISSIONS, PERMISSION_WRITE);
     Permission newPermission = TEST_PERMISSIONS.get(0);
     assertExpectedRequest(requestPOSTPermission
-      .content("{\"name\" : \"" + newPermission.getName() + "\" , \"type\" : \"WRITE\" , \"groupPermission\" : true}")
+      .content("{\"name\" : \"" + newPermission.getName() + "\" , \"type\" : \"WRITE\" , \"groupPermission\" : false}")
       .expectedResponseStatus(409)
     );
   }
@@ -358,7 +360,10 @@ public class PermissionRootResourceTest {
     result.setName(permission.getName());
     result.setGroupPermission(permission.isGroupPermission());
     result.setType(permission.getType().name());
-    String permissionHref = "/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + PATH_OF_ALL_PERMISSIONS + permission.getName();
+    String permissionName = Optional.of(permission.getName())
+      .filter(p -> !permission.isGroupPermission())
+      .orElse(GROUP_PREFIX + permission.getName());
+    String permissionHref = "/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + PATH_OF_ALL_PERMISSIONS + permissionName;
     if (PERMISSION_READ.equals(userPermission)) {
       result.add(linkingTo()
         .self(permissionHref)

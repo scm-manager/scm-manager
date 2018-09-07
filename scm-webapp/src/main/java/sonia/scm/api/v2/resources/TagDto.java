@@ -6,12 +6,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @Getter
 @Setter
 @NoArgsConstructor
-public class BrowserResultDto extends HalRepresentation {
+public class TagDto extends HalRepresentation {
+
+  private String name;
+
   private String revision;
 
   @Override
@@ -20,7 +21,4 @@ public class BrowserResultDto extends HalRepresentation {
     return super.add(links);
   }
 
-  public void setFiles(List<FileObjectDto> files) {
-    this.withEmbedded("files", files);
-  }
 }

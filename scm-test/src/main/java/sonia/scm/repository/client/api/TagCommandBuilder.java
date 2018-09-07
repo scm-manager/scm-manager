@@ -36,14 +36,13 @@ package sonia.scm.repository.client.api;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.repository.Tag;
 import sonia.scm.repository.client.spi.TagCommand;
 import sonia.scm.repository.client.spi.TagRequest;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -84,9 +83,10 @@ public final class TagCommandBuilder
    *
    * @throws IOException
    */
-  public Tag tag(String name) throws IOException
+  public Tag tag(String name, String username) throws IOException
   {
     request.setName(name);
+    request.setUsername(username);
 
     if (logger.isDebugEnabled())
     {

@@ -5,14 +5,18 @@ import de.otto.edison.hal.Links;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.List;
+import lombok.ToString;
 
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
-public class BrowserResultDto extends HalRepresentation {
-  private String revision;
+public class ParentChangesetDto extends HalRepresentation {
+
+  /**
+   * the id of the parent changeset
+   */
+  private String id;
 
   @Override
   @SuppressWarnings("squid:S1185") // We want to have this method available in this package
@@ -20,7 +24,4 @@ public class BrowserResultDto extends HalRepresentation {
     return super.add(links);
   }
 
-  public void setFiles(List<FileObjectDto> files) {
-    this.withEmbedded("files", files);
-  }
 }

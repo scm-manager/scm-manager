@@ -249,9 +249,11 @@ public class Person implements Validateable, Serializable
 
   //~--- fields ---------------------------------------------------------------
 
-  /** name of the person */
+  /** mail address of the person */
   private String mail;
 
-  /** mail address of the person */
+  /**
+   * name of the person
+   */
   private String name;
 }
