@@ -41,9 +41,6 @@ import sonia.scm.api.v2.resources.SvnConfigDtoToSvnConfigMapper;
 import sonia.scm.api.v2.resources.SvnConfigToSvnConfigDtoMapper;
 import sonia.scm.plugin.Extension;
 
-import java.util.HashMap;
-import java.util.Map;
-
 //~--- JDK imports ------------------------------------------------------------
 
 /**
@@ -75,10 +72,5 @@ public class SvnServletModule extends ServletModule
 
     bind(SvnConfigDtoToSvnConfigMapper.class).to(Mappers.getMapper(SvnConfigDtoToSvnConfigMapper.class).getClass());
     bind(SvnConfigToSvnConfigDtoMapper.class).to(Mappers.getMapper(SvnConfigToSvnConfigDtoMapper.class).getClass());
-
-    Map<String, String> parameters = new HashMap<String, String>();
-
-    parameters.put(PARAMETER_SVN_PARENTPATH,
-      System.getProperty("java.io.tmpdir"));
   }
 }

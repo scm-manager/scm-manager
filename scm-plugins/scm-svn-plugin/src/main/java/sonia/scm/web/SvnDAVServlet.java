@@ -294,7 +294,7 @@ public class SvnDAVServlet extends DAVServlet implements HttpScmProtocol
 
   @Override
   public String getUrl(Repository repository, UriInfo uriInfo) {
-    return uriInfo.getBaseUri().resolve(URI.create("../../svn/" + repository.getNamespace() + "/" + repository.getName())).toASCIIString();
+    return uriInfo.getBaseUri().resolve(URI.create("../../repo/" + repository.getNamespace() + "/" + repository.getName())).toASCIIString();
   }
 
 
