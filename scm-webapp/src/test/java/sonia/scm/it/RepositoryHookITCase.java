@@ -196,7 +196,7 @@ public class RepositoryHookITCase extends AbstractAdminITCaseBase
   private RepositoryClient createRepositoryClient() throws IOException 
   {
     return REPOSITORY_CLIENT_FACTORY.create(repositoryType, 
-      IntegrationTestUtil.BASE_URL + repositoryType + "/" + repository.getNamespace() + "/" + repository.getName(),
+      IntegrationTestUtil.BASE_URL + "repo/" + repository.getNamespace() + "/" + repository.getName(),
       IntegrationTestUtil.ADMIN_USERNAME, IntegrationTestUtil.ADMIN_PASSWORD, workingCopy
     );
   }
