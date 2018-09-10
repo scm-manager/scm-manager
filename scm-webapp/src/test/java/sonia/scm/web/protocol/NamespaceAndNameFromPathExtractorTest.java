@@ -25,6 +25,15 @@ public class NamespaceAndNameFromPathExtractorTest {
     ).map(this::createCorrectTest);
   }
 
+  @TestFactory
+  Stream<DynamicNode> shouldHandleTrailingDotSomethings() {
+    return Stream.of(
+      "/space/repo.git",
+      "/space/repo.and.more",
+      "/space/repo."
+    ).map(this::createCorrectTest);
+  }
+
   private DynamicTest createCorrectTest(String path) {
     return dynamicTest(
       "should extract correct namespace and name for path " + path,

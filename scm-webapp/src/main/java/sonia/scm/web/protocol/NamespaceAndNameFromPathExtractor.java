@@ -28,6 +28,11 @@ class NamespaceAndNameFromPathExtractor {
 
     String name = uri.substring(endOfNamespace + 1, nameIndex);
 
-    return of(new NamespaceAndName(namespace, name));
+    int nameDotIndex = name.indexOf('.');
+    if (nameDotIndex >= 0) {
+      return of(new NamespaceAndName(namespace, name.substring(0, nameDotIndex)));
+    } else {
+      return of(new NamespaceAndName(namespace, name));
+    }
   }
 }
