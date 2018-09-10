@@ -10,8 +10,7 @@ import {
   isLogoutPending,
   getLogoutFailure
 } from "../modules/auth";
-import ErrorPage from "../components/ErrorPage";
-import Loading from "../components/Loading";
+import { Loading, ErrorPage } from "@scm-manager/ui-components";
 
 type Props = {
   authenticated: boolean,

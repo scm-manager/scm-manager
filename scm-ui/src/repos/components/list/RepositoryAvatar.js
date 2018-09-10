@@ -1,8 +1,8 @@
 //@flow
 import React from "react";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
-import type { Repository } from "../../types/Repositories";
-import Image from "../../../components/Image";
+import type { Repository } from "@scm-manager/ui-types";
+import { Image } from "@scm-manager/ui-components";
 
 type Props = {
   repository: Repository

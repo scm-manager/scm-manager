@@ -1,9 +1,8 @@
 // @flow
 import React from "react";
 import { translate } from "react-i18next";
-import type { Group } from "../../types/Group";
-import { confirmAlert } from "../../../components/modals/ConfirmAlert";
-import { NavAction } from "../../../components/navigation";
+import type { Group } from "@scm-manager/ui-types";
+import { NavAction, confirmAlert } from "@scm-manager/ui-components";
 
 type Props = {
   group: Group,

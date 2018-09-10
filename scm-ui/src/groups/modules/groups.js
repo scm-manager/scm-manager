@@ -1,12 +1,10 @@
 // @flow
-import { apiClient } from "../../apiclient";
+import { apiClient } from "@scm-manager/ui-components";
 import { isPending } from "../../modules/pending";
 import { getFailure } from "../../modules/failure";
 import * as types from "../../modules/types";
 import { combineReducers, Dispatch } from "redux";
-import type { Action } from "../../types/Action";
-import type { PagedCollection } from "../../types/Collection";
-import type { Group } from "../types/Group";
+import type { Action, PagedCollection, Group } from "@scm-manager/ui-types";
 
 export const FETCH_GROUPS = "scm/groups/FETCH_GROUPS";
 export const FETCH_GROUPS_PENDING = `${FETCH_GROUPS}_${types.PENDING_SUFFIX}`;

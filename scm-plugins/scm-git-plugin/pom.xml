@@ -61,6 +61,33 @@
         </executions>
       </plugin>
 
+      <plugin>
+        <groupId>com.github.sdorra</groupId>
+        <artifactId>buildfrontend-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>link-ui-types</id>
+            <phase>process-sources</phase>
+            <goals>
+              <goal>install-link</goal>
+            </goals>
+            <configuration>
+              <pkg>@scm-manager/ui-types</pkg>
+            </configuration>
+          </execution>
+          <execution>
+            <id>link-ui-components</id>
+            <phase>process-sources</phase>
+            <goals>
+              <goal>install-link</goal>
+            </goals>
+            <configuration>
+              <pkg>@scm-manager/ui-components</pkg>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
     </plugins>
   </build>
 

@@ -1,6 +1,8 @@
 // @flow
 
-import { isNameValid, isMailValid } from "../../components/validation";
+import { validation } from "@scm-manager/ui-components";
+
+const { isNameValid, isMailValid } = validation;
 
 export { isNameValid, isMailValid };
 

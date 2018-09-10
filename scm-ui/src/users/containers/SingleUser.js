@@ -1,11 +1,18 @@
 //@flow
 import React from "react";
 import { connect } from "react-redux";
-import { Page } from "../../components/layout";
+import {
+  Page,
+  Loading,
+  Navigation,
+  Section,
+  NavLink,
+  ErrorPage
+} from "@scm-manager/ui-components";
 import { Route } from "react-router";
 import { Details } from "./../components/table";
 import EditUser from "./EditUser";
-import type { User } from "../types/User";
+import type { User } from "@scm-manager/ui-types";
 import type { History } from "history";
 import {
   fetchUser,
@@ -16,11 +23,8 @@ import {
   isDeleteUserPending,
   getDeleteUserFailure
 } from "../modules/users";
-import Loading from "../../components/Loading";
 
-import { Navigation, Section, NavLink } from "../../components/navigation";
 import { DeleteUserNavLink, EditUserNavLink } from "./../components/navLinks";
-import ErrorPage from "../../components/ErrorPage";
 import { translate } from "react-i18next";
 
 type Props = {

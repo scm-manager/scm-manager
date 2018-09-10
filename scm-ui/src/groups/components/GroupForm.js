@@ -1,14 +1,16 @@
 //@flow
 import React from "react";
-
-import InputField from "../../components/forms/InputField";
-import { SubmitButton } from "../../components/buttons";
 import { translate } from "react-i18next";
-import type { Group } from "../types/Group";
+import {
+  InputField,
+  SubmitButton,
+  Textarea,
+  AddEntryToTableField
+} from "@scm-manager/ui-components";
+import type { Group } from "@scm-manager/ui-types";
+
 import * as validator from "./groupValidation";
 import MemberNameTable from "./MemberNameTable";
-import Textarea from "../../components/forms/Textarea";
-import AddEntryToTableField from "../../components/forms/AddEntryToTableField";
 
 type Props = {
   t: string => string,

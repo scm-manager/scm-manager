@@ -1,9 +1,11 @@
 // @flow
 import React from "react";
 import { translate } from "react-i18next";
-import { InputField } from "../../../components/forms/index";
-import Subtitle from "../../../components/layout/Subtitle";
-import * as validator from "../../../components/validation";
+import {
+  InputField,
+  Subtitle,
+  validation as validator
+} from "@scm-manager/ui-components";
 
 type Props = {
   loginAttemptLimit: number,

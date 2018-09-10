@@ -1,7 +1,7 @@
 // @flow
 import React from "react";
 import { Link } from "react-router-dom";
-import type { Group } from "../../types/Group";
+import type { Group } from "@scm-manager/ui-types";
 
 type Props = {
   group: Group

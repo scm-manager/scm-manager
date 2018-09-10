@@ -4,8 +4,11 @@ import "../../../tests/enzyme";
 import "../../../tests/i18n";
 import DeleteGroupNavLink from "./DeleteGroupNavLink";
 
-import { confirmAlert } from "../../../components/modals/ConfirmAlert";
-jest.mock("../../../components/modals/ConfirmAlert");
+import { confirmAlert } from "@scm-manager/ui-components";
+jest.mock("@scm-manager/ui-components", () => ({
+  confirmAlert: jest.fn(),
+  NavAction: require.requireActual("@scm-manager/ui-components").NavAction
+}));
 
 describe("DeleteGroupNavLink", () => {
   it("should render nothing, if the delete link is missing", () => {
@@ -67,7 +70,7 @@ describe("DeleteGroupNavLink", () => {
 
     const navLink = mount(
       <DeleteGroupNavLink
-      group={group}
+        group={group}
         confirmDialog={false}
         deleteGroup={capture}
       />

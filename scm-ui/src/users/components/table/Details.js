@@ -1,10 +1,8 @@
 //@flow
 import React from "react";
-import type { User } from "../../types/User";
+import type { User } from "@scm-manager/ui-types";
 import { translate } from "react-i18next";
-import { Checkbox } from "../../../components/forms";
-import MailLink from "../../../components/MailLink";
-import DateFromNow from "../../../components/DateFromNow";
+import { Checkbox, MailLink, DateFromNow } from "@scm-manager/ui-components";
 
 type Props = {
   user: User,

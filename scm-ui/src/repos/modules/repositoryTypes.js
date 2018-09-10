@@ -1,12 +1,12 @@
 // @flow
 
 import * as types from "../../modules/types";
-import type { Action } from "../../types/Action";
 import type {
+  Action,
   RepositoryType,
   RepositoryTypeCollection
-} from "../types/RepositoryTypes";
-import { apiClient } from "../../apiclient";
+} from "@scm-manager/ui-types";
+import { apiClient } from "@scm-manager/ui-components";
 import { isPending } from "../../modules/pending";
 import { getFailure } from "../../modules/failure";
 

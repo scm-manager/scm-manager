@@ -9,7 +9,7 @@ import Login from "../containers/Login";
 import Logout from "../containers/Logout";
 
 import { Switch } from "react-router-dom";
-import ProtectedRoute from "../components/ProtectedRoute";
+import { ProtectedRoute } from "@scm-manager/ui-components";
 import AddUser from "../users/containers/AddUser";
 import SingleUser from "../users/containers/SingleUser";
 import RepositoryRoot from "../repos/containers/RepositoryRoot";

@@ -2,12 +2,11 @@
 import React from "react";
 import { connect } from "react-redux";
 import { translate } from "react-i18next";
-import type { Group } from "../types/Group.js";
-import type { PagedCollection } from "../../types/Collection";
+import type { Group } from "@scm-manager/ui-types";
+import type { PagedCollection } from "@scm-manager/ui-types";
 import type { History } from "history";
-import { Page } from "../../components/layout";
+import { Page, Paginator } from "@scm-manager/ui-components";
 import { GroupTable } from "./../components/table";
-import Paginator from "../../components/Paginator";
 import CreateGroupButton from "../components/buttons/CreateGroupButton";
 
 import {

@@ -11,12 +11,13 @@ import {
 } from "../modules/auth";
 import { connect } from "react-redux";
 
-import { InputField } from "../components/forms";
-import { SubmitButton } from "../components/buttons";
-
+import {
+  InputField,
+  SubmitButton,
+  ErrorNotification,
+  Image
+} from "@scm-manager/ui-components";
 import classNames from "classnames";
-import ErrorNotification from "../components/ErrorNotification";
-import Image from "../components/Image";
 
 const styles = {
   avatar: {

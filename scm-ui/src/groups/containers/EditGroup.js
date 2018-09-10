@@ -5,9 +5,9 @@ import GroupForm from "../components/GroupForm";
 import { modifyGroup, fetchGroup } from "../modules/groups";
 import type { History } from "history";
 import { withRouter } from "react-router-dom";
-import type { Group } from "../types/Group";
+import type { Group } from "@scm-manager/ui-types";
 import { isModifyGroupPending, getModifyGroupFailure } from "../modules/groups";
-import ErrorNotification from "../../components/ErrorNotification";
+import { ErrorNotification } from "@scm-manager/ui-components";
 
 type Props = {
   group: Group,
