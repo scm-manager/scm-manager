@@ -52,11 +52,9 @@ import sonia.scm.config.ScmConfiguration;
 import sonia.scm.security.KeyGenerator;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.CollectionAppender;
-import sonia.scm.util.HttpUtil;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -313,31 +311,6 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
     }
 
     return validTypes;
-  }
-
-  @Override
-  public Repository getFromRequest(HttpServletRequest request) {
-    AssertUtil.assertIsNotNull(request);
-
-    return getFromUri(HttpUtil.getStrippedURI(request));
-  }
-
-  @Override
-  public Repository getFromUri(String uri) {
-    AssertUtil.assertIsNotEmpty(uri);
-
-    if (uri.startsWith(HttpUtil.SEPARATOR_PATH)) {
-      uri = uri.substring(1);
-    }
-
-    Repository repository = null;
-
-    String namespace = uri.substring(0, uri.indexOf(HttpUtil.SEPARATOR_PATH));
-    String name = uri.substring(uri.indexOf(HttpUtil.SEPARATOR_PATH) + 1, uri.indexOf(HttpUtil.SEPARATOR_PATH, uri.indexOf(HttpUtil.SEPARATOR_PATH) + 1));
-
-    repository = get(new NamespaceAndName(namespace, name));
-
-    return repository;
   }
 
   @Override

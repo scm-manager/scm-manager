@@ -54,9 +54,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
-import java.net.URI;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -291,12 +289,6 @@ public class SvnDAVServlet extends DAVServlet implements HttpScmProtocol
   public void serve(HttpServletRequest request, HttpServletResponse response, ServletConfig config) throws ServletException, IOException {
     service(request, response);
   }
-
-  @Override
-  public String getUrl(Repository repository, UriInfo uriInfo) {
-    return uriInfo.getBaseUri().resolve(URI.create("../../repo/" + repository.getNamespace() + "/" + repository.getName())).toASCIIString();
-  }
-
 
   //~--- fields ---------------------------------------------------------------
 

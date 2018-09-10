@@ -8,7 +8,6 @@ import sonia.scm.repository.spi.RepositoryServiceProvider;
 import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.UriInfo;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -34,16 +33,6 @@ public class RepositoryServiceTest {
   }
 
   @Test
-  public void shouldFindProtocolFromProvider() {
-    when(provider.getSupportedProtocols()).thenReturn(Collections.singleton(new DummyHttpProtocol()));
-
-    RepositoryService repositoryService = new RepositoryService(null, provider, repository, null);
-    HttpScmProtocol protocol = repositoryService.getProtocol(HttpScmProtocol.class);
-
-    assertThat(protocol.getUrl(repository, null)).isEqualTo("dummy");
-  }
-
-  @Test
   public void shouldFailForUnknownProtocol() {
     when(provider.getSupportedProtocols()).thenReturn(Collections.emptySet());
 
@@ -55,11 +44,6 @@ public class RepositoryServiceTest {
   }
 
   private static class DummyHttpProtocol implements HttpScmProtocol {
-    @Override
-    public String getUrl(Repository repository, UriInfo uriInfo) {
-      return "dummy";
-    }
-
     @Override
     public void serve(HttpServletRequest request, HttpServletResponse response, ServletConfig config) {
     }

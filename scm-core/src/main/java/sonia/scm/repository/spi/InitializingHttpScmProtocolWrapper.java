@@ -1,16 +1,12 @@
 package sonia.scm.repository.spi;
 
-import sonia.scm.repository.Repository;
-
 import javax.inject.Provider;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
-import java.net.URI;
 
 public abstract class InitializingHttpScmProtocolWrapper implements HttpScmProtocol {
 
@@ -39,11 +35,5 @@ public abstract class InitializingHttpScmProtocolWrapper implements HttpScmProto
 
   protected void initializeServlet(ServletConfig config, HttpServlet httpServlet) throws ServletException {
     httpServlet.init(config);
-  }
-
-
-  @Override
-  public String getUrl(Repository repository, UriInfo uriInfo) {
-    return uriInfo.getBaseUri().resolve(URI.create("../../repo/" + repository.getNamespace() + "/" + repository.getName())).toASCIIString();
   }
 }

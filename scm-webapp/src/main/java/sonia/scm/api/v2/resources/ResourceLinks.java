@@ -4,6 +4,7 @@ import sonia.scm.repository.NamespaceAndName;
 
 import javax.inject.Inject;
 import javax.ws.rs.core.UriInfo;
+import java.net.URI;
 
 class ResourceLinks {
 

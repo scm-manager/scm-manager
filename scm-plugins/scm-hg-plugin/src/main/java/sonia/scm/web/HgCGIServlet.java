@@ -65,10 +65,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.ws.rs.core.UriInfo;
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 import java.util.Base64;
 import java.util.Enumeration;
 
@@ -352,11 +350,6 @@ public class HgCGIServlet extends HttpServlet implements HttpScmProtocol
   @Override
   public void serve(HttpServletRequest request, HttpServletResponse response, ServletConfig config)  {
     service(request, response);
-  }
-
-  @Override
-  public String getUrl(Repository repository, UriInfo uriInfo) {
-    return uriInfo.getBaseUri().resolve(URI.create("../../hg/" + repository.getNamespace() + "/" + repository.getName())).toASCIIString();
   }
 
   //~--- fields ---------------------------------------------------------------
