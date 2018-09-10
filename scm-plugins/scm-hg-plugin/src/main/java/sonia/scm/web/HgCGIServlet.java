@@ -148,7 +148,6 @@ public class HgCGIServlet extends HttpServlet implements HttpScmProtocol
   @Override
   protected void service(HttpServletRequest request,
     HttpServletResponse response)
-    throws ServletException, IOException
   {
     Repository repository = repositoryProvider.get();
 
@@ -351,7 +350,7 @@ public class HgCGIServlet extends HttpServlet implements HttpScmProtocol
   }
 
   @Override
-  public void serve(HttpServletRequest request, HttpServletResponse response, ServletConfig config) throws ServletException, IOException {
+  public void serve(HttpServletRequest request, HttpServletResponse response, ServletConfig config)  {
     service(request, response);
   }
 
