@@ -1,5 +1,6 @@
 package sonia.scm.repository.spi;
 
+import sonia.scm.api.v2.resources.UriInfoStore;
 import sonia.scm.repository.Repository;
 
 import javax.inject.Provider;
@@ -13,12 +14,14 @@ import java.io.IOException;
 public abstract class InitializingHttpScmProtocolWrapper {
 
   private final Provider<? extends HttpServlet> delegateProvider;
+  private final Provider<UriInfoStore> uriInfoStore;
 
   private volatile boolean isInitialized = false;
 
 
-  protected InitializingHttpScmProtocolWrapper(Provider<? extends HttpServlet> delegateProvider) {
+  protected InitializingHttpScmProtocolWrapper(Provider<? extends HttpServlet> delegateProvider, Provider<UriInfoStore> uriInfoStore) {
     this.delegateProvider = delegateProvider;
+    this.uriInfoStore = uriInfoStore;
   }
 
   protected void initializeServlet(ServletConfig config, HttpServlet httpServlet) throws ServletException {
@@ -32,7 +35,7 @@ public abstract class InitializingHttpScmProtocolWrapper {
   private class ProtocolWrapper extends HttpScmProtocol {
 
     public ProtocolWrapper(Repository repository) {
-      super(repository);
+      super(repository, uriInfoStore.get().get());
     }
 
     @Override
