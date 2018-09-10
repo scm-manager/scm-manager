@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import sonia.scm.repository.Changeset;
 import sonia.scm.repository.client.api.ClientCommand;
 import sonia.scm.repository.client.api.RepositoryClient;
 
@@ -16,10 +17,12 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static java.lang.Thread.sleep;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertNotNull;
+import static sonia.scm.it.RestUtil.ADMIN_PASSWORD;
+import static sonia.scm.it.RestUtil.ADMIN_USERNAME;
 import static sonia.scm.it.RestUtil.given;
 import static sonia.scm.it.ScmTypes.availableScmTypes;
 
@@ -31,6 +34,7 @@ public class RepositoryAccessITCase {
 
   private final String repositoryType;
   private File folder;
+  private RepositoryRequests.AppliedRepositoryGetRequest repositoryGetRequest;
 
   public RepositoryAccessITCase(String repositoryType) {
     this.repositoryType = repositoryType;
@@ -42,9 +46,15 @@ public class RepositoryAccessITCase {
   }
 
   @Before
-  public void initClient() {
+  public void init() {
     TestData.createDefault();
     folder = tempFolder.getRoot();
+    repositoryGetRequest = RepositoryRequests.start()
+      .given()
+      .url(TestData.getDefaultRepositoryUrl(repositoryType))
+      .usernameAndPassword(ADMIN_USERNAME, ADMIN_PASSWORD)
+      .get()
+      .assertStatusCode(HttpStatus.SC_OK);
   }
 
   @Test
@@ -151,6 +161,29 @@ public class RepositoryAccessITCase {
       .path("_embedded.changesets.id");
 
     assertThat(changesets).size().isBetween(2, 3); // svn has an implicit root revision '0' that is extra to the two commits
+  }
+
+  @Test
+  @SuppressWarnings("unchecked")
+  public void shouldFindFileHistory() throws IOException {
+    RepositoryClient repositoryClient = RepositoryUtil.createRepositoryClient(repositoryType, folder);
+
+    String fileName_1 = "a.txt";
+    Changeset changeset_1 = RepositoryUtil.createAndCommitFile(repositoryClient, ADMIN_USERNAME, fileName_1, "a");
+
+    repositoryGetRequest
+      .usingRepositoryResponse()
+      .requestSources()
+      .usingSourcesResponse()
+      .requestFileHistory(fileName_1)
+      .assertStatusCode(HttpStatus.SC_OK)
+      .usingChangesetsResponse()
+      .assertChangesets(changesets -> {
+          assertThat(changesets).hasSize(1);
+          assertThat(changesets.get(0)).containsEntry("id", changeset_1.getId());
+          assertThat(changesets.get(0)).containsEntry("description", changeset_1.getDescription());
+        }
+      );
   }
 }
 

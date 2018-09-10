@@ -40,11 +40,11 @@ public class RepositoryUtil {
     return name;
   }
 
-  static void createAndCommitFile(RepositoryClient repositoryClient, String username, String fileName, String content) throws IOException {
+  static Changeset createAndCommitFile(RepositoryClient repositoryClient, String username, String fileName, String content) throws IOException {
     File file = new File(repositoryClient.getWorkingCopy(), fileName);
     Files.write(content, file, Charsets.UTF_8);
     addWithParentDirectories(repositoryClient, file);
-    commit(repositoryClient, username, "added " + fileName);
+    return commit(repositoryClient, username, "added " + fileName);
   }
 
   private static String addWithParentDirectories(RepositoryClient repositoryClient, File file) throws IOException {

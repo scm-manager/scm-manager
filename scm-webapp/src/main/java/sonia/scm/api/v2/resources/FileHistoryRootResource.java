@@ -40,6 +40,20 @@ public class FileHistoryRootResource {
     this.fileHistoryCollectionToDtoMapper = fileHistoryCollectionToDtoMapper;
   }
 
+  /**
+   * Get all changesets related to the given file starting with the given revision
+   *
+   * @param namespace the repository namespace
+   * @param name      the repository name
+   * @param revision  the revision
+   * @param path      the path of the file
+   * @param page      pagination
+   * @param pageSize  pagination
+   * @return all changesets related to the given file starting with the given revision
+   * @throws IOException                 on io error
+   * @throws RevisionNotFoundException   on missing revision
+   * @throws RepositoryNotFoundException on missing repository
+   */
   @GET
   @Path("{revision}/{path: .*}")
   @StatusCodes({
