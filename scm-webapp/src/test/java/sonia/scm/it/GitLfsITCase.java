@@ -52,6 +52,7 @@ import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
 import sonia.scm.user.User;
 import sonia.scm.user.UserTestData;
+import sonia.scm.util.HttpUtil;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -221,7 +222,7 @@ public class GitLfsITCase {
     LfsResponseBody response = request(client, request);
 
     String uploadURL = response.objects[0].actions.upload.href;
-    client.resource(uploadURL).put(data);
+    client.resource(uploadURL).header(HttpUtil.HEADER_USERAGENT, "git-lfs/z").put(data);
 
     return lfsObject;
   }
@@ -233,13 +234,14 @@ public class GitLfsITCase {
     String json = client
       .resource(batchUrl)
       .accept("application/vnd.git-lfs+json")
+      .header(HttpUtil.HEADER_USERAGENT, "git-lfs/z")
       .header("Content-Type", "application/vnd.git-lfs+json")
       .post(String.class, requestAsString);
     return new ObjectMapperProvider().get().readValue(json, LfsResponseBody.class);
   }
 
   private String createBatchUrl() {
-    String url = BASE_URL + "git/" + repository.getNamespace() + "/" + repository.getName();
+    String url = BASE_URL + "repo/" + repository.getNamespace() + "/" + repository.getName();
     return url + "/info/lfs/objects/batch";
   }
 
@@ -248,7 +250,7 @@ public class GitLfsITCase {
     LfsResponseBody response = request(client, request);
 
     String downloadUrl = response.objects[0].actions.download.href;
-    return client.resource(downloadUrl).get(byte[].class);
+    return client.resource(downloadUrl).header(HttpUtil.HEADER_USERAGENT, "git-lfs/z").get(byte[].class);
   }
 
   private LfsObject createLfsObject(byte[] data) {
