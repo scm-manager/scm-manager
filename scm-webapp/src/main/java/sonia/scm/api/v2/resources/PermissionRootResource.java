@@ -210,8 +210,9 @@ public class PermissionRootResource {
    * @throws RepositoryNotFoundException if the repository does not exists
    */
   private Repository load(String namespace, String name) throws RepositoryNotFoundException {
-    return Optional.ofNullable(manager.get(new NamespaceAndName(namespace, name)))
-      .orElseThrow(() -> new RepositoryNotFoundException(name));
+    NamespaceAndName namespaceAndName = new NamespaceAndName(namespace, name);
+    return Optional.ofNullable(manager.get(namespaceAndName))
+      .orElseThrow(() -> new RepositoryNotFoundException(namespaceAndName));
   }
 
   /**

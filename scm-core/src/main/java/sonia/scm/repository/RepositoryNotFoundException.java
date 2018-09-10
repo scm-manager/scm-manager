@@ -61,4 +61,8 @@ public class RepositoryNotFoundException extends NotFoundException
   public RepositoryNotFoundException(String repositoryId) {
     super("repository", repositoryId);
   }
+
+  public RepositoryNotFoundException(NamespaceAndName namespaceAndName) {
+    super("repository", namespaceAndName.toString());
+  }
 }

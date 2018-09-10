@@ -208,9 +208,7 @@ public final class RepositoryServiceFactory
 
     if (repository == null)
     {
-      String msg = "could not find a repository with namespace/name " + namespaceAndName;
-
-      throw new RepositoryNotFoundException(msg);
+      throw new RepositoryNotFoundException(namespaceAndName);
     }
 
     return create(repository);
