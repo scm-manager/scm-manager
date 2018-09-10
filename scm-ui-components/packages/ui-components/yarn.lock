@@ -728,9 +728,9 @@
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/@scm-manager/eslint-config/-/eslint-config-0.0.2.tgz#94cc8c3fb4f51f870b235893dc134fc6c423ae85"
 
-"@scm-manager/ui-bundler@^0.0.14":
-  version "0.0.14"
-  resolved "https://registry.yarnpkg.com/@scm-manager/ui-bundler/-/ui-bundler-0.0.14.tgz#f5a2f0a5b0a4e527c60e38ec53ce40ce7d3b4c6f"
+"@scm-manager/ui-bundler@^0.0.15":
+  version "0.0.15"
+  resolved "https://registry.yarnpkg.com/@scm-manager/ui-bundler/-/ui-bundler-0.0.15.tgz#8ed4a557d5ae38d6b99493b29608fd6a4c9cd917"
   dependencies:
     "@babel/core" "^7.0.0"
     "@babel/plugin-proposal-class-properties" "^7.0.0"
@@ -761,6 +761,7 @@
     gulp-uglify "^3.0.1"
     jest "^23.5.0"
     jest-junit "^5.1.0"
+    mustache "^2.3.2"
     node-mkdirs "^0.0.1"
     pom-parser "^1.1.1"
     prettier "^1.14.2"
@@ -5528,6 +5529,10 @@ multipipe@^0.1.2:
   resolved "https://registry.yarnpkg.com/multipipe/-/multipipe-0.1.2.tgz#2a8f2ddf70eed564dff2d57f1e1a137d9f05078b"
   dependencies:
     duplexer2 "0.0.2"
+
+mustache@^2.3.2:
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/mustache/-/mustache-2.3.2.tgz#a6d4d9c3f91d13359ab889a812954f9230a3d0c5"
 
 mute-stream@0.0.7:
   version "0.0.7"
