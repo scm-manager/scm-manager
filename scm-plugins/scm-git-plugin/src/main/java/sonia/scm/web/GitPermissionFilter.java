@@ -43,7 +43,6 @@ import sonia.scm.Priority;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.filter.Filters;
 import sonia.scm.repository.GitUtil;
-import sonia.scm.repository.RepositoryProvider;
 import sonia.scm.web.filter.ProviderPermissionFilter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -78,11 +77,10 @@ public class GitPermissionFilter extends ProviderPermissionFilter
    * Constructs a new instance of the GitPermissionFilter.
    *
    * @param configuration scm main configuration
-   * @param repositoryProvider repository provider
    */
   @Inject
-  public GitPermissionFilter(ScmConfiguration configuration, RepositoryProvider repositoryProvider) {
-    super(configuration, repositoryProvider);
+  public GitPermissionFilter(ScmConfiguration configuration) {
+    super(configuration);
   }
 
   @Override

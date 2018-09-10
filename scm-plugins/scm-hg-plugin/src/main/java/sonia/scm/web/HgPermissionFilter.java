@@ -38,7 +38,6 @@ package sonia.scm.web;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
 import sonia.scm.config.ScmConfiguration;
-import sonia.scm.repository.RepositoryProvider;
 import sonia.scm.web.filter.ProviderPermissionFilter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -62,13 +61,11 @@ public class HgPermissionFilter extends ProviderPermissionFilter
    * Constructs a new instance.
    *
    * @param configuration scm configuration
-   * @param repositoryProvider repository provider
    */
   @Inject
-  public HgPermissionFilter(ScmConfiguration configuration,
-    RepositoryProvider repositoryProvider)
+  public HgPermissionFilter(ScmConfiguration configuration)
   {
-    super(configuration, repositoryProvider);
+    super(configuration);
   }
 
   //~--- get methods ----------------------------------------------------------

@@ -51,7 +51,6 @@ import sonia.scm.security.ScmSecurityException;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 
-import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -65,7 +64,7 @@ import java.util.Iterator;
  *
  * @author Sebastian Sdorra
  */
-public abstract class PermissionFilter extends HttpFilter
+public abstract class PermissionFilter
 {
 
   /** the logger for PermissionFilter */
@@ -81,22 +80,12 @@ public abstract class PermissionFilter extends HttpFilter
    *
    * @since 1.21
    */
-  public PermissionFilter(ScmConfiguration configuration)
+  protected PermissionFilter(ScmConfiguration configuration)
   {
     this.configuration = configuration;
   }
 
   //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Returns the requested repository.
-   *
-   *
-   * @param request current http request
-   *
-   * @return requested repository
-   */
-  protected abstract Repository getRepository(HttpServletRequest request);
 
   /**
    * Returns true if the current request is a write request.
@@ -106,7 +95,7 @@ public abstract class PermissionFilter extends HttpFilter
    *
    * @return returns true if the current request is a write request
    */
-  public abstract boolean isWriteRequest(HttpServletRequest request);
+  protected abstract boolean isWriteRequest(HttpServletRequest request);
 
   //~--- methods --------------------------------------------------------------
 
@@ -117,48 +106,35 @@ public abstract class PermissionFilter extends HttpFilter
    *
    * @param request http request
    * @param response http response
-   * @param chain filter chain
    *
    * @throws IOException
    * @throws ServletException
    */
-  @Override
-  protected void doFilter(HttpServletRequest request,
-    HttpServletResponse response, FilterChain chain)
+  public void executeIfPermitted(HttpServletRequest request,
+    HttpServletResponse response, Repository repository, ContinuationServlet continuation)
     throws IOException, ServletException
   {
     Subject subject = SecurityUtils.getSubject();
 
     try
     {
-      Repository repository = getRepository(request);
+      boolean writeRequest = isWriteRequest(request);
 
-      if (repository != null)
+      if (hasPermission(repository, writeRequest))
       {
-        boolean writeRequest = isWriteRequest(request);
+        logger.trace("{} access to repository {} for user {} granted",
+          getActionAsString(writeRequest), repository.getName(),
+          getUserName(subject));
 
-        if (hasPermission(repository, writeRequest))
-        {
-          logger.trace("{} access to repository {} for user {} granted",
-            getActionAsString(writeRequest), repository.getName(),
-            getUserName(subject));
-
-          chain.doFilter(request, response);
-        }
-        else
-        {
-          logger.info("{} access to repository {} for user {} denied",
-            getActionAsString(writeRequest), repository.getName(),
-            getUserName(subject));
-          
-          sendAccessDenied(request, response, subject);
-        }
+        continuation.serve();
       }
       else
       {
-        logger.debug("repository not found");
+        logger.info("{} access to repository {} for user {} denied",
+          getActionAsString(writeRequest), repository.getName(),
+          getUserName(subject));
 
-        response.sendError(HttpServletResponse.SC_NOT_FOUND);
+        sendAccessDenied(request, response, subject);
       }
     }
     catch (ArgumentIsInvalidException ex)
@@ -249,7 +225,7 @@ public abstract class PermissionFilter extends HttpFilter
    *
    * @throws IOException
    */
-  public void sendAccessDenied(HttpServletRequest request,
+  private void sendAccessDenied(HttpServletRequest request,
     HttpServletResponse response, Subject subject)
     throws IOException
   {
@@ -328,7 +304,7 @@ public abstract class PermissionFilter extends HttpFilter
    *
    * @return true if the current user has the required permissions
    */
-  public boolean hasPermission(Repository repository, boolean writeRequest)
+  private boolean hasPermission(Repository repository, boolean writeRequest)
   {
     boolean permitted;
 
@@ -348,4 +324,9 @@ public abstract class PermissionFilter extends HttpFilter
 
   /** scm-manager global configuration */
   private final ScmConfiguration configuration;
+
+  @FunctionalInterface
+  public interface ContinuationServlet {
+    void serve() throws ServletException, IOException;
+  }
 }

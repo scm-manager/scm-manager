@@ -35,21 +35,11 @@ package sonia.scm.web.filter;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.base.Throwables;
-import com.google.inject.ProvisionException;
-
-import org.apache.shiro.authz.AuthorizationException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.config.ScmConfiguration;
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryProvider;
 
 //~--- JDK imports ------------------------------------------------------------
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -72,47 +62,10 @@ public abstract class ProviderPermissionFilter extends PermissionFilter
    *
    *
    * @param configuration
-   * @param repositoryProvider
    * @since 1.21
    */
-  public ProviderPermissionFilter(ScmConfiguration configuration,
-    RepositoryProvider repositoryProvider)
+  public ProviderPermissionFilter(ScmConfiguration configuration)
   {
     super(configuration);
-    this.repositoryProvider = repositoryProvider;
   }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   */
-  @Override
-  protected Repository getRepository(HttpServletRequest request)
-  {
-    Repository repository = null;
-
-    try
-    {
-      repository = repositoryProvider.get();
-    }
-    catch (ProvisionException ex)
-    {
-      Throwables.propagateIfPossible(ex.getCause(),
-        IllegalStateException.class, AuthorizationException.class);
-      logger.error("could not get repository from request", ex);
-    }
-
-    return repository;
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final RepositoryProvider repositoryProvider;
 }

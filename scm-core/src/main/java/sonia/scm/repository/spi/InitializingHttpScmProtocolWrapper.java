@@ -1,12 +1,9 @@
 package sonia.scm.repository.spi;
 
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.api.v2.resources.UriInfoStore;
 import sonia.scm.repository.Repository;
-import sonia.scm.web.filter.PermissionFilter;
 import sonia.scm.web.filter.ProviderPermissionFilter;
 
 import javax.inject.Provider;
@@ -61,32 +58,11 @@ public abstract class InitializingHttpScmProtocolWrapper {
         }
       }
 
-      if (getRepository() != null)
-      {
-        Subject subject = SecurityUtils.getSubject();
-
-        PermissionFilter permissionFilter = permissionFilterProvider.get();
-        boolean writeRequest = permissionFilter.isWriteRequest(request);
-
-        if (permissionFilter.hasPermission(getRepository(), writeRequest))
-        {
-//          logger.trace("{} access to repository {} for user {} granted",
-//            getActionAsString(writeRequest), repository.getName(),
-//            getUserName(subject));
-
-          delegateProvider.get().service(request, response);
-        }
-        else
-        {
-//          logger.info("{} access to repository {} for user {} denied",
-//            getActionAsString(writeRequest), repository.getName(),
-//            getUserName(subject));
-
-          permissionFilter.sendAccessDenied(request, response, subject);
-        }
-      }
-
+      permissionFilterProvider.get().executeIfPermitted(
+        request,
+        response,
+        getRepository(),
+        () -> delegateProvider.get().service(request, response));
     }
   }
-
 }

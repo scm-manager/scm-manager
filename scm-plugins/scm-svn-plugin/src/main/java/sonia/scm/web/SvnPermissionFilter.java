@@ -39,7 +39,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
 import sonia.scm.ClientMessages;
 import sonia.scm.config.ScmConfiguration;
-import sonia.scm.repository.RepositoryProvider;
 import sonia.scm.repository.ScmSvnErrorCode;
 import sonia.scm.repository.SvnUtil;
 import sonia.scm.web.filter.ProviderPermissionFilter;
@@ -71,13 +70,11 @@ public class SvnPermissionFilter extends ProviderPermissionFilter
    * Constructs ...
    *
    * @param configuration
-   * @param repository
    */
   @Inject
-  public SvnPermissionFilter(ScmConfiguration configuration,
-    RepositoryProvider repository)
+  public SvnPermissionFilter(ScmConfiguration configuration)
   {
-    super(configuration, repository);
+    super(configuration);
   }
 
   //~--- methods --------------------------------------------------------------
