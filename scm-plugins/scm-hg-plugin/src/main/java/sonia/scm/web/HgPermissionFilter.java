@@ -74,7 +74,7 @@ public class HgPermissionFilter extends ProviderPermissionFilter
   //~--- get methods ----------------------------------------------------------
 
   @Override
-  protected boolean isWriteRequest(HttpServletRequest request)
+  public boolean isWriteRequest(HttpServletRequest request)
   {
     return !READ_METHODS.contains(request.getMethod());
   }

@@ -1,7 +1,13 @@
 package sonia.scm.repository.spi;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.api.v2.resources.UriInfoStore;
 import sonia.scm.repository.Repository;
+import sonia.scm.web.filter.PermissionFilter;
+import sonia.scm.web.filter.ProviderPermissionFilter;
 
 import javax.inject.Provider;
 import javax.servlet.ServletConfig;
@@ -13,14 +19,19 @@ import java.io.IOException;
 
 public abstract class InitializingHttpScmProtocolWrapper {
 
+  private static final Logger logger =
+    LoggerFactory.getLogger(InitializingHttpScmProtocolWrapper.class);
+
   private final Provider<? extends HttpServlet> delegateProvider;
+  private final Provider<? extends ProviderPermissionFilter> permissionFilterProvider;
   private final Provider<UriInfoStore> uriInfoStore;
 
   private volatile boolean isInitialized = false;
 
 
-  protected InitializingHttpScmProtocolWrapper(Provider<? extends HttpServlet> delegateProvider, Provider<UriInfoStore> uriInfoStore) {
+  protected InitializingHttpScmProtocolWrapper(Provider<? extends HttpServlet> delegateProvider, Provider<? extends ProviderPermissionFilter> permissionFilterProvider, Provider<UriInfoStore> uriInfoStore) {
     this.delegateProvider = delegateProvider;
+    this.permissionFilterProvider = permissionFilterProvider;
     this.uriInfoStore = uriInfoStore;
   }
 
@@ -49,7 +60,33 @@ public abstract class InitializingHttpScmProtocolWrapper {
           }
         }
       }
-      delegateProvider.get().service(request, response);
+
+      if (getRepository() != null)
+      {
+        Subject subject = SecurityUtils.getSubject();
+
+        PermissionFilter permissionFilter = permissionFilterProvider.get();
+        boolean writeRequest = permissionFilter.isWriteRequest(request);
+
+        if (permissionFilter.hasPermission(getRepository(), writeRequest))
+        {
+//          logger.trace("{} access to repository {} for user {} granted",
+//            getActionAsString(writeRequest), repository.getName(),
+//            getUserName(subject));
+
+          delegateProvider.get().service(request, response);
+        }
+        else
+        {
+//          logger.info("{} access to repository {} for user {} denied",
+//            getActionAsString(writeRequest), repository.getName(),
+//            getUserName(subject));
+
+          permissionFilter.sendAccessDenied(request, response, subject);
+        }
+      }
+
     }
   }
+
 }

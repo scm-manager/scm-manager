@@ -32,4 +32,8 @@ public abstract class HttpScmProtocol implements ScmProtocol {
   }
 
   public abstract void serve(HttpServletRequest request, HttpServletResponse response, ServletConfig config) throws ServletException, IOException;
+
+  Repository getRepository() {
+    return repository;
+  }
 }

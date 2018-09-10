@@ -106,7 +106,7 @@ public abstract class PermissionFilter extends HttpFilter
    *
    * @return returns true if the current request is a write request
    */
-  protected abstract boolean isWriteRequest(HttpServletRequest request);
+  public abstract boolean isWriteRequest(HttpServletRequest request);
 
   //~--- methods --------------------------------------------------------------
 
@@ -249,7 +249,7 @@ public abstract class PermissionFilter extends HttpFilter
    *
    * @throws IOException
    */
-  private void sendAccessDenied(HttpServletRequest request,
+  public void sendAccessDenied(HttpServletRequest request,
     HttpServletResponse response, Subject subject)
     throws IOException
   {
@@ -328,7 +328,7 @@ public abstract class PermissionFilter extends HttpFilter
    *
    * @return true if the current user has the required permissions
    */
-  private boolean hasPermission(Repository repository, boolean writeRequest)
+  public boolean hasPermission(Repository repository, boolean writeRequest)
   {
     boolean permitted;
 

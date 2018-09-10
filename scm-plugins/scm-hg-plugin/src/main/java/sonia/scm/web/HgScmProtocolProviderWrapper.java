@@ -10,7 +10,7 @@ import javax.inject.Singleton;
 @Singleton
 public class HgScmProtocolProviderWrapper extends InitializingHttpScmProtocolWrapper {
   @Inject
-  public HgScmProtocolProviderWrapper(Provider<HgCGIServlet> servletProvider, Provider<UriInfoStore> uriInfoStore) {
-    super(servletProvider, uriInfoStore);
+  public HgScmProtocolProviderWrapper(Provider<HgCGIServlet> servletProvider, Provider<HgPermissionFilter> permissionFilter, Provider<UriInfoStore> uriInfoStore) {
+    super(servletProvider, permissionFilter, uriInfoStore);
   }
 }

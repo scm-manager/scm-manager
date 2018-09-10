@@ -98,7 +98,7 @@ public class GitPermissionFilter extends ProviderPermissionFilter
   }
 
   @Override
-  protected boolean isWriteRequest(HttpServletRequest request) {
+  public boolean isWriteRequest(HttpServletRequest request) {
     return isReceivePackRequest(request) ||
         isReceiveServiceRequest(request) ||
         isLfsFileUpload(request);

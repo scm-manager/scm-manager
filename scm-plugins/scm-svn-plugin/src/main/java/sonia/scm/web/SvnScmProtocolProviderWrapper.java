@@ -17,8 +17,8 @@ import static sonia.scm.web.SvnServletModule.PARAMETER_SVN_PARENTPATH;
 @Singleton
 public class SvnScmProtocolProviderWrapper extends InitializingHttpScmProtocolWrapper {
   @Inject
-  public SvnScmProtocolProviderWrapper(Provider<SvnDAVServlet> servletProvider, Provider<UriInfoStore> uriInfoStore) {
-    super(servletProvider, uriInfoStore);
+  public SvnScmProtocolProviderWrapper(Provider<SvnDAVServlet> servletProvider, Provider<SvnPermissionFilter> permissionFilter, Provider<UriInfoStore> uriInfoStore) {
+    super(servletProvider, permissionFilter, uriInfoStore);
   }
 
   @Override

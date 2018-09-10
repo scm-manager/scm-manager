@@ -10,7 +10,7 @@ import javax.inject.Singleton;
 @Singleton
 public class GitScmProtocolProviderWrapper extends InitializingHttpScmProtocolWrapper {
   @Inject
-  public GitScmProtocolProviderWrapper(Provider<ScmGitServlet> servletProvider, Provider<UriInfoStore> uriInfoStore) {
-    super(servletProvider, uriInfoStore);
+  public GitScmProtocolProviderWrapper(Provider<ScmGitServlet> servletProvider, Provider<GitPermissionFilter> permissionFilter, Provider<UriInfoStore> uriInfoStore) {
+    super(servletProvider, permissionFilter, uriInfoStore);
   }
 }

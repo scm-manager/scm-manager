@@ -126,7 +126,7 @@ public class SvnPermissionFilter extends ProviderPermissionFilter
    * @return
    */
   @Override
-  protected boolean isWriteRequest(HttpServletRequest request)
+  public boolean isWriteRequest(HttpServletRequest request)
   {
     return WRITEMETHOD_SET.contains(request.getMethod().toUpperCase());
   }
