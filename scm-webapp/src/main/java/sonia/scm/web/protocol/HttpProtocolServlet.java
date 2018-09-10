@@ -1,31 +1,27 @@
 package sonia.scm.web.protocol;
 
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
+import org.apache.http.HttpStatus;
 import sonia.scm.PushStateDispatcher;
 import sonia.scm.filter.WebElement;
 import sonia.scm.repository.DefaultRepositoryProvider;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.RepositoryNotFoundException;
-import sonia.scm.repository.RepositoryProvider;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.repository.spi.HttpScmProtocol;
-import sonia.scm.util.HttpUtil;
 import sonia.scm.web.UserAgent;
 import sonia.scm.web.UserAgentParser;
 
+import javax.inject.Provider;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-
-import static java.lang.Math.max;
+import java.util.Optional;
 
 @Singleton
 @WebElement(value = HttpProtocolServlet.PATTERN)
@@ -34,7 +30,6 @@ public class HttpProtocolServlet extends HttpServlet {
 
   public static final String PATTERN = "/repo/*";
 
-  private final RepositoryProvider repositoryProvider;
   private final RepositoryServiceFactory serviceFactory;
 
   private final Provider<HttpServletRequest> requestProvider;
@@ -42,48 +37,43 @@ public class HttpProtocolServlet extends HttpServlet {
   private final PushStateDispatcher dispatcher;
   private final UserAgentParser userAgentParser;
 
+  private final NamespaceAndNameFromPathExtractor namespaceAndNameFromPathExtractor;
+
   @Inject
-  public HttpProtocolServlet(RepositoryProvider repositoryProvider, RepositoryServiceFactory serviceFactory, Provider<HttpServletRequest> requestProvider, PushStateDispatcher dispatcher, UserAgentParser userAgentParser) {
-    this.repositoryProvider = repositoryProvider;
+  public HttpProtocolServlet(RepositoryServiceFactory serviceFactory, Provider<HttpServletRequest> requestProvider, PushStateDispatcher dispatcher, UserAgentParser userAgentParser, NamespaceAndNameFromPathExtractor namespaceAndNameFromPathExtractor) {
     this.serviceFactory = serviceFactory;
     this.requestProvider = requestProvider;
     this.dispatcher = dispatcher;
     this.userAgentParser = userAgentParser;
+    this.namespaceAndNameFromPathExtractor = namespaceAndNameFromPathExtractor;
   }
 
   @Override
-  protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    Subject subject = SecurityUtils.getSubject();
-
-
-    UserAgent userAgent = userAgentParser.parse(req);
+  protected void service(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    UserAgent userAgent = userAgentParser.parse(request);
     if (userAgent.isBrowser()) {
       log.trace("dispatch browser request for user agent {}", userAgent);
-      dispatcher.dispatch(req, resp, req.getRequestURI());
+      dispatcher.dispatch(request, response, request.getRequestURI());
     } else {
-
-
-      String pathInfo = req.getPathInfo();
-      NamespaceAndName namespaceAndName = fromUri(pathInfo);
-      try (RepositoryService repositoryService = serviceFactory.create(namespaceAndName)) {
-        requestProvider.get().setAttribute(DefaultRepositoryProvider.ATTRIBUTE_NAME, repositoryService.getRepository());
-        HttpScmProtocol protocol = repositoryService.getProtocol(HttpScmProtocol.class);
-        protocol.serve(req, resp, getServletConfig());
-      } catch (RepositoryNotFoundException e) {
-        resp.setStatus(404);
+      String pathInfo = request.getPathInfo();
+      Optional<NamespaceAndName> namespaceAndName = namespaceAndNameFromPathExtractor.fromUri(pathInfo);
+      if (namespaceAndName.isPresent()) {
+        service(request, response, namespaceAndName.get());
+      } else {
+        log.debug("namespace and name not found in request path {}", pathInfo);
+        response.setStatus(HttpStatus.SC_BAD_REQUEST);
       }
     }
   }
 
-  private NamespaceAndName fromUri(String uri) {
-    if (uri.startsWith(HttpUtil.SEPARATOR_PATH)) {
-      uri = uri.substring(1);
+  private void service(HttpServletRequest req, HttpServletResponse resp, NamespaceAndName namespaceAndName) throws IOException, ServletException {
+    try (RepositoryService repositoryService = serviceFactory.create(namespaceAndName)) {
+      requestProvider.get().setAttribute(DefaultRepositoryProvider.ATTRIBUTE_NAME, repositoryService.getRepository());
+      HttpScmProtocol protocol = repositoryService.getProtocol(HttpScmProtocol.class);
+      protocol.serve(req, resp, getServletConfig());
+    } catch (RepositoryNotFoundException e) {
+      log.debug("Repository not found for namespace and name {}", namespaceAndName, e);
+      resp.setStatus(HttpStatus.SC_NOT_FOUND);
     }
-
-    String namespace = uri.substring(0, uri.indexOf(HttpUtil.SEPARATOR_PATH));
-    int endIndex = uri.indexOf(HttpUtil.SEPARATOR_PATH, uri.indexOf(HttpUtil.SEPARATOR_PATH) + 1);
-    String name = uri.substring(uri.indexOf(HttpUtil.SEPARATOR_PATH) + 1, max(endIndex, uri.length()));
-
-    return new NamespaceAndName(namespace, name);
   }
 }
