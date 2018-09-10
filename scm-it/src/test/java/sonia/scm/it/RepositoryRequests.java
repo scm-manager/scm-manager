@@ -223,7 +223,11 @@ public class RepositoryRequests {
     }
 
     AppliedGetChangesetsRequest requestFileHistory(String fileName) {
-      return new AppliedGetChangesetsRequest(getResponseFromLink(sourcesResponse, "files.find{it.name=='" + fileName + "'}._links.history.href"));
+      return new AppliedGetChangesetsRequest(getResponseFromLink(sourcesResponse, "_embedded.files.find{it.name=='" + fileName + "'}._links.history.href"));
+    }
+
+    AppliedGetSourcesRequest requestSelf(String fileName) {
+      return new AppliedGetSourcesRequest(getResponseFromLink(sourcesResponse, "_embedded.files.find{it.name=='" + fileName + "'}._links.self.href"));
     }
   }
 

@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Person;
+import sonia.scm.repository.Tag;
 import sonia.scm.repository.client.api.ClientCommand;
 import sonia.scm.repository.client.api.RepositoryClient;
 import sonia.scm.repository.client.api.RepositoryClientFactory;
@@ -42,6 +43,7 @@ public class RepositoryUtil {
 
   static Changeset createAndCommitFile(RepositoryClient repositoryClient, String username, String fileName, String content) throws IOException {
     File file = new File(repositoryClient.getWorkingCopy(), fileName);
+    Files.createParentDirs(file);
     Files.write(content, file, Charsets.UTF_8);
     addWithParentDirectories(repositoryClient, file);
     return commit(repositoryClient, username, "added " + fileName);
@@ -52,7 +54,6 @@ public class RepositoryUtil {
     String thisName = file.getName();
     String path;
     if (!repositoryClient.getWorkingCopy().equals(parent)) {
-      addWithParentDirectories(repositoryClient, parent);
       path = addWithParentDirectories(repositoryClient, parent) + File.separator + thisName;
     } else {
       path = thisName;
@@ -68,5 +69,17 @@ public class RepositoryUtil {
       repositoryClient.getPushCommand().push();
     }
     return changeset;
+  }
+
+  static Tag addTag(RepositoryClient repositoryClient, String revision, String tagName) throws IOException {
+    if (repositoryClient.isCommandSupported(ClientCommand.TAG)) {
+      Tag tag = repositoryClient.getTagCommand().setRevision(revision).tag(tagName, TestData.USER_SCM_ADMIN);
+      if (repositoryClient.isCommandSupported(ClientCommand.PUSH)) {
+        repositoryClient.getPushCommand().pushTags();
+      }
+      return tag;
+    }
+
+    return null;
   }
 }

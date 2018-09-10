@@ -74,7 +74,7 @@ Maven setupMavenBuild() {
 
 void analyzeWith(Maven mvn) {
 
-  withSonarQubeEnv('sonarcloud.io') {
+  withSonarQubeEnv('sonarcloud.io-scm') {
 
     String mvnArgs = "${env.SONAR_MAVEN_GOAL} " +
       "-Dsonar.host.url=${env.SONAR_HOST_URL} " +

@@ -10,7 +10,6 @@ import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.SubRepository;
 
 import javax.inject.Inject;
-import java.net.URI;
 
 import static de.otto.edison.hal.Link.link;
 
@@ -29,18 +28,13 @@ public abstract class FileObjectToFileObjectDtoMapper extends BaseMapper<FileObj
     String path = removeFirstSlash(fileObject.getPath());
     Links.Builder links = Links.linkingTo();
     if (dto.isDirectory()) {
-      links.self(addPath(resourceLinks.source().sourceWithPath(namespaceAndName.getNamespace(), namespaceAndName.getName(), revision, ""), path));
+      links.self(resourceLinks.source().sourceWithPath(namespaceAndName.getNamespace(), namespaceAndName.getName(), revision, path));
     } else {
-      links.self(addPath(resourceLinks.source().content(namespaceAndName.getNamespace(), namespaceAndName.getName(), revision, ""), path));
+      links.self(resourceLinks.source().content(namespaceAndName.getNamespace(), namespaceAndName.getName(), revision, path));
       links.single(link("history", resourceLinks.fileHistory().self(namespaceAndName.getNamespace(), namespaceAndName.getName(), revision, path)));
     }
 
     dto.add(links.build());
-  }
-
-  // we have to add the file path using URI, so that path separators (aka '/') will not be encoded as '%2F'
-  private String addPath(String sourceWithPath, String path) {
-    return URI.create(sourceWithPath).resolve(path).toASCIIString();
   }
 
   private String removeFirstSlash(String source) {
