@@ -2,7 +2,7 @@ package sonia.scm.repository.api;
 
 import sonia.scm.repository.Repository;
 
-import javax.ws.rs.core.UriInfo;
+import java.net.URI;
 
 /**
  * An ScmProtocol represents a concrete protocol provided by the SCM-Manager instance
@@ -19,5 +19,5 @@ public interface ScmProtocol {
   /**
    * The URL to access the repository providing this protocol.
    */
-  String getUrl(Repository repository, UriInfo uriInfo);
+  String getUrl(Repository repository, URI baseUri);
 }

@@ -3,7 +3,7 @@ package sonia.scm.api.v2.resources;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.ScmProtocol;
 
-import javax.ws.rs.core.UriInfo;
+import java.net.URI;
 
 class MockScmProtocol implements ScmProtocol {
   private final String type;
@@ -20,7 +20,7 @@ class MockScmProtocol implements ScmProtocol {
   }
 
   @Override
-  public String getUrl(Repository repository, UriInfo uriInfo) {
+  public String getUrl(Repository repository, URI baseUri) {
     return protocol;
   }
 }

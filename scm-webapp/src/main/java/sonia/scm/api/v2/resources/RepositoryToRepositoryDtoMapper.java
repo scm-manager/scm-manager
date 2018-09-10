@@ -67,6 +67,6 @@ public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Reposit
   }
 
   private Link createProtocolLink(ScmProtocol protocol, Repository repository) {
-    return Link.linkBuilder("protocol", protocol.getUrl(repository, uriInfoStore.get())).withName(protocol.getType()).build();
+    return Link.linkBuilder("protocol", protocol.getUrl(repository, uriInfoStore.get().getBaseUri().resolve("../.."))).withName(protocol.getType()).build();
   }
 }

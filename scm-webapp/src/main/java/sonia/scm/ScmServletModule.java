@@ -114,6 +114,7 @@ import sonia.scm.web.cgi.CGIExecutorFactory;
 import sonia.scm.web.cgi.DefaultCGIExecutorFactory;
 import sonia.scm.web.filter.AuthenticationFilter;
 import sonia.scm.web.filter.LoggingFilter;
+import sonia.scm.web.protocol.HttpProtocolServlet;
 import sonia.scm.web.security.AdministrationContext;
 import sonia.scm.web.security.DefaultAdministrationContext;
 
@@ -322,7 +323,7 @@ public class ScmServletModule extends ServletModule
     bind(TemplateEngineFactory.class);
     bind(ObjectMapper.class).toProvider(ObjectMapperProvider.class);
 
-    filter("/repo/*").through(AuthenticationFilter.class);
+    filter(HttpProtocolServlet.PATTERN).through(AuthenticationFilter.class);
 
     // bind events
     // bind(LastModifiedUpdateListener.class);

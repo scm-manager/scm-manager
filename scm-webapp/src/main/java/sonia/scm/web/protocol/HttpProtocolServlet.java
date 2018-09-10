@@ -28,7 +28,8 @@ import java.util.Optional;
 @Slf4j
 public class HttpProtocolServlet extends HttpServlet {
 
-  public static final String PATTERN = "/repo/*";
+  public static final String PATH = "/repo";
+  public static final String PATTERN = PATH + "/*";
 
   private final RepositoryServiceFactory serviceFactory;
 
