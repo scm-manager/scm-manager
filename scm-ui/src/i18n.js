@@ -2,9 +2,9 @@ import i18n from "i18next";
 import Backend from "i18next-fetch-backend";
 import LanguageDetector from "i18next-browser-languagedetector";
 import { reactI18nextModule } from "react-i18next";
-import { withContextPath } from "./urls";
+import { urls } from "@scm-manager/ui-components";
 
-const loadPath = withContextPath("/locales/{{lng}}/{{ns}}.json");
+const loadPath = urls.withContextPath("/locales/{{lng}}/{{ns}}.json");
 
 // TODO load locales for moment
 

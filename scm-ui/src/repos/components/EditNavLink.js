@@ -1,8 +1,8 @@
 //@flow
 import React from "react";
-import { NavLink } from "../../components/navigation";
+import { NavLink } from "@scm-manager/ui-components";
 import { translate } from "react-i18next";
-import type { Repository } from "../types/Repositories";
+import type { Repository } from "@scm-manager/ui-types";
 
 type Props = { editUrl: string, t: string => string, repository: Repository };
 

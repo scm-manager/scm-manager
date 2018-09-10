@@ -1,7 +1,7 @@
 // @flow
 import React from "react";
 import { translate } from "react-i18next";
-import Title from "../../components/layout/Title";
+import { Title, ErrorPage, Loading } from "@scm-manager/ui-components";
 import {
   fetchConfig,
   getFetchConfigFailure,
@@ -14,10 +14,8 @@ import {
   modifyConfigReset
 } from "../modules/config";
 import { connect } from "react-redux";
-import ErrorPage from "../../components/ErrorPage";
-import type { Config } from "../types/Config";
+import type { Config } from "@scm-manager/ui-types";
 import ConfigForm from "../components/form/ConfigForm";
-import Loading from "../../components/Loading";
 
 type Props = {
   loading: boolean,

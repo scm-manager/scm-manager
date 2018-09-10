@@ -69,6 +69,7 @@
     <module>scm-annotation-processor</module>
     <module>scm-core</module>
     <module>scm-test</module>
+    <module>scm-ui-components</module>
     <module>scm-plugins</module>
     <module>scm-dao-xml</module>
     <module>scm-ui</module>
@@ -359,6 +360,11 @@
 
     <pluginManagement>
       <plugins>
+        <plugin>
+          <groupId>com.github.sdorra</groupId>
+          <artifactId>buildfrontend-maven-plugin</artifactId>
+          <version>2.1.1</version>
+        </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
@@ -767,6 +773,10 @@
     <!-- util libraries -->
     <guava.version>26.0-jre</guava.version>
     <quartz.version>2.2.3</quartz.version>
+
+    <!-- frontend -->
+    <nodejs.version>8.11.4</nodejs.version>
+    <yarn.version>1.9.4</yarn.version>
 
     <!-- build properties -->
     <project.build.javaLevel>1.8</project.build.javaLevel>

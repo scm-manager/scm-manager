@@ -1,12 +1,17 @@
 //@flow
 import React from "react";
 
-import Page from "../../components/layout/Page";
+import { Page } from "@scm-manager/ui-components";
 import { translate } from "react-i18next";
 import GroupForm from "../components/GroupForm";
 import { connect } from "react-redux";
-import { createGroup, isCreateGroupPending, getCreateGroupFailure, createGroupReset } from "../modules/groups";
-import type { Group } from "../types/Group";
+import {
+  createGroup,
+  isCreateGroupPending,
+  getCreateGroupFailure,
+  createGroupReset
+} from "../modules/groups";
+import type { Group } from "@scm-manager/ui-types";
 import type { History } from "history";
 
 type Props = {
@@ -15,22 +20,28 @@ type Props = {
   history: History,
   loading?: boolean,
   error?: Error,
-  resetForm: () => void,
+  resetForm: () => void
 };
 
 type State = {};
 
 class AddGroup extends React.Component<Props, State> {
-
   componentDidMount() {
     this.props.resetForm();
   }
   render() {
     const { t, loading, error } = this.props;
     return (
-      <Page title={t("add-group.title")} subtitle={t("add-group.subtitle")} error={error}>
+      <Page
+        title={t("add-group.title")}
+        subtitle={t("add-group.subtitle")}
+        error={error}
+      >
         <div>
-          <GroupForm submitForm={group => this.createGroup(group)} loading={loading}/>
+          <GroupForm
+            submitForm={group => this.createGroup(group)}
+            loading={loading}
+          />
         </div>
       </Page>
     );
@@ -48,9 +59,9 @@ const mapDispatchToProps = dispatch => {
   return {
     createGroup: (group: Group, callback?: () => void) =>
       dispatch(createGroup(group, callback)),
-      resetForm: () => {
-        dispatch(createGroupReset());
-      }
+    resetForm: () => {
+      dispatch(createGroupReset());
+    }
   };
 };
 

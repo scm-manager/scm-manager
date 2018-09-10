@@ -2,7 +2,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import UserForm from "../components/UserForm";
-import type { User } from "../types/User";
+import type { User } from "@scm-manager/ui-types";
 import type { History } from "history";
 import {
   createUser,
@@ -10,7 +10,7 @@ import {
   isCreateUserPending,
   getCreateUserFailure
 } from "../modules/users";
-import { Page } from "../../components/layout";
+import { Page } from "@scm-manager/ui-components";
 import { translate } from "react-i18next";
 
 type Props = {

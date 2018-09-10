@@ -255,6 +255,41 @@ public class RepositoryAccessITCase {
   }
 
   @Test
+  public void shouldFindDiffs() throws IOException {
+    RepositoryClient repositoryClient = RepositoryUtil.createRepositoryClient(repositoryType, folder);
+
+    RepositoryUtil.createAndCommitFile(repositoryClient, "scmadmin", "a.txt", "a");
+    RepositoryUtil.createAndCommitFile(repositoryClient, "scmadmin", "b.txt", "b");
+
+    String changesetsUrl = given()
+      .when()
+      .get(TestData.getDefaultRepositoryUrl(repositoryType))
+      .then()
+      .statusCode(HttpStatus.SC_OK)
+      .extract()
+      .path("_links.changesets.href");
+
+    String diffUrl = given()
+      .when()
+      .get(changesetsUrl)
+      .then()
+      .statusCode(HttpStatus.SC_OK)
+      .extract()
+      .path("_embedded.changesets[0]._links.diff.href");
+
+    given()
+      .when()
+      .get(diffUrl)
+      .then()
+      .statusCode(HttpStatus.SC_OK)
+      .extract()
+      .body()
+      .asString()
+      .contains("diff");
+
+  }
+
+  @Test
   @SuppressWarnings("unchecked")
   public void shouldFindFileHistory() throws IOException {
     RepositoryClient repositoryClient = RepositoryUtil.createRepositoryClient(repositoryType, folder);

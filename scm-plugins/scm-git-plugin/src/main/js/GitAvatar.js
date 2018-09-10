@@ -1,5 +1,6 @@
 //@flow
-import React from 'react';
+import React from "react";
+import { Image } from "@scm-manager/ui-components";
 
 type Props = {
 };
@@ -7,8 +8,7 @@ type Props = {
 class GitAvatar extends React.Component<Props> {
 
   render() {
-    // TODO we have to use Image from ui-components
-    return <img src="/scm/images/git-logo.png" alt="Git Logo" />;
+    return <Image src="/images/git-logo.png" alt="Git Logo" />;
   }
 
 }

@@ -1,8 +1,8 @@
 // @flow
-import type { Me } from "../types/Me";
+import type { Me } from "@scm-manager/ui-components";
 import * as types from "./types";
 
-import { apiClient, UNAUTHORIZED_ERROR } from "../apiclient";
+import { apiClient, UNAUTHORIZED_ERROR } from "@scm-manager/ui-components";
 import { isPending } from "./pending";
 import { getFailure } from "./failure";
 

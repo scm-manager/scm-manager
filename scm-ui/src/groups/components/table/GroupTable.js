@@ -2,7 +2,7 @@
 import React from "react";
 import { translate } from "react-i18next";
 import GroupRow from "./GroupRow";
-import type { Group } from "../../types/Group";
+import type { Group } from "@scm-manager/ui-types";
 
 type Props = {
   t: string => string,
