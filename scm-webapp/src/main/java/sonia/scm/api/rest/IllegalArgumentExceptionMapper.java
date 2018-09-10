@@ -45,7 +45,8 @@ import javax.ws.rs.ext.Provider;
  * @author Sebastian Sdorra
  * @since 1.36
  */
-@Provider @Slf4j
+@Provider
+@Slf4j
 public class IllegalArgumentExceptionMapper
   implements ExceptionMapper<IllegalArgumentException>
 {
