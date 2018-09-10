@@ -344,8 +344,7 @@ public final class HttpUtil
         "parameter \"{}\" contains a character which could be an indicator for a crlf injection",
         parameter);
 
-      throw new IllegalArgumentException(
-        "parameter contains an illegal character");
+      throw new CRLFInjectionException("parameter contains an illegal character");
     }
   }
 

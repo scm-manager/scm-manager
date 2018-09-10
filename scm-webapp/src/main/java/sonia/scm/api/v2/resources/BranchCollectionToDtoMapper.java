@@ -26,8 +26,11 @@ public class BranchCollectionToDtoMapper {
   }
 
   public HalRepresentation map(String namespace, String name, Collection<Branch> branches) {
-    List<BranchDto> dtos = branches.stream().map(branch -> branchToDtoMapper.map(branch, new NamespaceAndName(namespace, name))).collect(toList());
-    return new HalRepresentation(createLinks(namespace, name), embedDtos(dtos));
+    return new HalRepresentation(createLinks(namespace, name), embedDtos(getBranchDtoList(namespace, name, branches)));
+  }
+
+  public List<BranchDto> getBranchDtoList(String namespace, String name, Collection<Branch> branches) {
+    return branches.stream().map(branch -> branchToDtoMapper.map(branch, new NamespaceAndName(namespace, name))).collect(toList());
   }
 
   private Links createLinks(String namespace, String name) {

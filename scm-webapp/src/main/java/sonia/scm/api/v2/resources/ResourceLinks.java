@@ -207,7 +207,7 @@ class ResourceLinks {
   }
 
 
-  public TagCollectionLinks tagCollection() {
+  public TagCollectionLinks tag() {
     return new TagCollectionLinks(uriInfoStore.get());
   }
 
@@ -215,11 +215,35 @@ class ResourceLinks {
     private final LinkBuilder tagLinkBuilder;
 
     TagCollectionLinks(UriInfo uriInfo) {
-      tagLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, TagRootResource.class, TagCollectionResource.class);
+      tagLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, TagRootResource.class);
     }
 
-    String self(String namespace, String name) {
-      return tagLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("tags").parameters().method("getTagCollectionResource").parameters().method("getAll").parameters().href();
+    String self(String namespace, String name, String tagName) {
+      return tagLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("tags").parameters().method("get").parameters(tagName).href();
+    }
+
+    String all(String namespace, String name) {
+      return tagLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("tags").parameters().method("getAll").parameters().href();
+    }
+  }
+
+  public DiffLinks diff() {
+    return new DiffLinks(uriInfoStore.get());
+  }
+
+  static class DiffLinks {
+    private final LinkBuilder diffLinkBuilder;
+
+    DiffLinks(UriInfo uriInfo) {
+      diffLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, DiffRootResource.class);
+    }
+
+    String self(String namespace, String name, String id) {
+      return diffLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("diff").parameters().method("get").parameters(id).href();
+    }
+
+    String all(String namespace, String name) {
+      return diffLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("diff").parameters().method("getAll").parameters().href();
     }
   }
 
@@ -270,7 +294,11 @@ class ResourceLinks {
       changesetLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, ChangesetRootResource.class);
     }
 
-    String self(String namespace, String name) {
+    String self(String namespace, String name, String changesetId) {
+      return changesetLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("changesets").parameters().method("get").parameters(changesetId).href();
+    }
+
+    String all(String namespace, String name) {
       return changesetLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("changesets").parameters().method("getAll").parameters().href();
     }
 
@@ -303,15 +331,16 @@ class ResourceLinks {
     }
 
     public String sourceWithPath(String namespace, String name, String revision, String path) {
-      if (revision == null) {
-        return sourceLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("sources").parameters().method("get").parameters(null, path).href();
-      } else {
-        return sourceLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("sources").parameters().method("get").parameters(revision, path).href();
-      }
+      return addPath(sourceLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("sources").parameters().method("get").parameters(revision, "").href(), path);
     }
 
     public String content(String namespace, String name, String revision, String path) {
-      return sourceLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("content").parameters().method("get").parameters(revision, path).href();
+      return addPath(sourceLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("content").parameters().method("get").parameters(revision, "").href(), path);
+    }
+
+    // we have to add the file path using URI, so that path separators (aka '/') will not be encoded as '%2F'
+    private String addPath(String sourceWithPath, String path) {
+      return URI.create(sourceWithPath).resolve(path).toASCIIString();
     }
   }
   public PermissionLinks permission() {

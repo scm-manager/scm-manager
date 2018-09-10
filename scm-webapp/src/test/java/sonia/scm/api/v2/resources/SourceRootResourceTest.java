@@ -1,7 +1,6 @@
 package sonia.scm.api.v2.resources;
 
 import org.jboss.resteasy.core.Dispatcher;
-import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.Before;
@@ -29,12 +28,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
+import static sonia.scm.api.v2.resources.DispatcherMock.createDispatcher;
 
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class SourceRootResourceTest {
 
-  private final Dispatcher dispatcher = MockDispatcherFactory.createDispatcher();
+  private Dispatcher dispatcher;
   private final URI baseUri = URI.create("/");
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
 
@@ -72,10 +72,10 @@ public class SourceRootResourceTest {
         null,
         MockProvider.of(sourceRootResource),
         null,
+        null,
         null)),
         null);
-
-    dispatcher.getRegistry().addSingletonResource(repositoryRootResource);
+    dispatcher = createDispatcher(repositoryRootResource);
   }
 
   @Test
@@ -88,8 +88,6 @@ public class SourceRootResourceTest {
     dispatcher.invoke(request, response);
     assertThat(response.getStatus()).isEqualTo(200);
     assertThat(response.getContentAsString()).contains("\"revision\":\"revision\"");
-    assertThat(response.getContentAsString()).contains("\"tag\":\"tag\"");
-    assertThat(response.getContentAsString()).contains("\"branch\":\"branch\"");
     assertThat(response.getContentAsString()).contains("\"files\":");
   }
 
@@ -106,9 +104,7 @@ public class SourceRootResourceTest {
   @Test
   public void shouldGetResultForSingleFile() throws URISyntaxException, IOException, RevisionNotFoundException {
     BrowserResult browserResult = new BrowserResult();
-    browserResult.setBranch("abc");
     browserResult.setRevision("revision");
-    browserResult.setTag("tag");
     FileObject fileObject = new FileObject();
     fileObject.setName("File Object!");
 

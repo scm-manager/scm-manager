@@ -32,7 +32,6 @@ package sonia.scm.repository.client.spi;
 
 import com.aragost.javahg.Repository;
 import com.google.common.base.Strings;
-import java.io.IOException;
 import sonia.scm.repository.Tag;
 
 /**
@@ -51,13 +50,16 @@ public class HgTagCommand implements TagCommand
   }
 
   @Override
-  public Tag tag(TagRequest request) throws IOException
+  public Tag tag(TagRequest request)
   {
     String rev = request.getRevision();
     if ( Strings.isNullOrEmpty(rev) ){
       rev = repository.tip().getNode();
     }
-    com.aragost.javahg.commands.TagCommand.on(repository).rev(rev).execute(request.getName());
+    com.aragost.javahg.commands.TagCommand.on(repository)
+      .rev(rev)
+      .user(request.getUserName())
+      .execute(request.getName());
     return new Tag(request.getName(), rev);
   }
   

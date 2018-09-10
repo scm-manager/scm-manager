@@ -35,21 +35,19 @@ package sonia.scm.repository.client.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Strings;
-
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.revwalk.RevObject;
 import org.eclipse.jgit.revwalk.RevWalk;
-
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.Tag;
 import sonia.scm.repository.client.api.RepositoryClientException;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -119,7 +117,11 @@ public class GitTagCommand implements TagCommand
         ref = git.tag().setObjectId(revObject).call();
       }
 
-      tag = new Tag(request.getName(), ref.getPeeledObjectId().toString());
+      if (ref.isPeeled()) {
+        tag = new Tag(request.getName(), ref.getPeeledObjectId().toString());
+      } else {
+        tag = new Tag(request.getName(), ref.getObjectId().toString());
+      }
 
     }
     catch (GitAPIException ex)

@@ -90,6 +90,8 @@ public class StatusExceptionMapper<E extends Throwable>
       logger.debug(msg.toString());
     }
 
-    return Response.status(status).build();
+    return Response.status(status)
+      .entity(exception.getMessage())
+      .build();
   }
 }
