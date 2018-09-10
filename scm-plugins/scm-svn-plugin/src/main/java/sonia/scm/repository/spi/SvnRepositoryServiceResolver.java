@@ -58,13 +58,13 @@ public class SvnRepositoryServiceResolver implements RepositoryServiceResolver
    *
    *
    * @param handler
-   * @param httpScmProtocol
+   * @param protocolWrapper
    */
   @Inject
-  public SvnRepositoryServiceResolver(SvnRepositoryHandler handler, SvnScmProtocolProviderWrapper httpScmProtocol)
+  public SvnRepositoryServiceResolver(SvnRepositoryHandler handler, SvnScmProtocolProviderWrapper protocolWrapper)
   {
     this.handler = handler;
-    this.httpScmProtocol = httpScmProtocol;
+    this.protocolWrapper = protocolWrapper;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -84,7 +84,7 @@ public class SvnRepositoryServiceResolver implements RepositoryServiceResolver
 
     if (TYPE.equalsIgnoreCase(repository.getType()))
     {
-      provider = new SvnRepositoryServiceProvider(handler, repository, httpScmProtocol);
+      provider = new SvnRepositoryServiceProvider(handler, repository, protocolWrapper.get(repository));
     }
 
     return provider;
@@ -95,5 +95,5 @@ public class SvnRepositoryServiceResolver implements RepositoryServiceResolver
   /** Field description */
   private SvnRepositoryHandler handler;
 
-  private final HttpScmProtocol httpScmProtocol;
+  private final InitializingHttpScmProtocolWrapper protocolWrapper;
 }

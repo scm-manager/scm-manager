@@ -24,7 +24,7 @@ public class RepositoryServiceTest {
 
   @Test
   public void shouldReturnProtocolsFromProvider() {
-    when(provider.getSupportedProtocols()).thenReturn(Collections.singleton(new DummyHttpProtocol()));
+    when(provider.getSupportedProtocols()).thenReturn(Collections.singleton(new DummyHttpProtocol(repository)));
 
     RepositoryService repositoryService = new RepositoryService(null, provider, repository, null);
     Collection<ScmProtocol> supportedProtocols = repositoryService.getSupportedProtocols();
@@ -43,7 +43,11 @@ public class RepositoryServiceTest {
     });
   }
 
-  private static class DummyHttpProtocol implements HttpScmProtocol {
+  private static class DummyHttpProtocol extends HttpScmProtocol {
+    public DummyHttpProtocol(Repository repository) {
+      super(repository);
+    }
+
     @Override
     public void serve(HttpServletRequest request, HttpServletResponse response, ServletConfig config) {
     }

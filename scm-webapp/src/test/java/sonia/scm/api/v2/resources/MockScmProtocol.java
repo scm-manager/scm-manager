@@ -1,6 +1,5 @@
 package sonia.scm.api.v2.resources;
 
-import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.ScmProtocol;
 
 import java.net.URI;
@@ -20,7 +19,7 @@ class MockScmProtocol implements ScmProtocol {
   }
 
   @Override
-  public String getUrl(Repository repository, URI baseUri) {
+  public String getUrl(URI baseUri) {
     return protocol;
   }
 }

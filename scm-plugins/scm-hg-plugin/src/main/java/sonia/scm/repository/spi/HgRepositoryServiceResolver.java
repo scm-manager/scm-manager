@@ -65,11 +65,11 @@ public class HgRepositoryServiceResolver implements RepositoryServiceResolver
    */
   @Inject
   public HgRepositoryServiceResolver(HgRepositoryHandler handler,
-    HgHookManager hookManager, HgScmProtocolProviderWrapper httpScmProtocol)
+    HgHookManager hookManager, HgScmProtocolProviderWrapper providerWrapper)
   {
     this.handler = handler;
     this.hookManager = hookManager;
-    this.httpScmProtocol = httpScmProtocol;
+    this.providerWrapper = providerWrapper;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -90,7 +90,7 @@ public class HgRepositoryServiceResolver implements RepositoryServiceResolver
     if (TYPE.equalsIgnoreCase(repository.getType()))
     {
       provider = new HgRepositoryServiceProvider(handler, hookManager,
-        repository, httpScmProtocol);
+        repository, providerWrapper.get(repository));
     }
 
     return provider;
@@ -104,5 +104,5 @@ public class HgRepositoryServiceResolver implements RepositoryServiceResolver
   /** Field description */
   private HgHookManager hookManager;
 
-  private final HttpScmProtocol httpScmProtocol;
+  private final HgScmProtocolProviderWrapper providerWrapper;
 }

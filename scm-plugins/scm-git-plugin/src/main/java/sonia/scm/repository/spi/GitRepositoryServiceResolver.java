@@ -54,10 +54,10 @@ public class GitRepositoryServiceResolver implements RepositoryServiceResolver
   //~--- constructors ---------------------------------------------------------
 
   @Inject
-  public GitRepositoryServiceResolver(GitRepositoryHandler handler, GitScmProtocolProviderWrapper servletProvider)
+  public GitRepositoryServiceResolver(GitRepositoryHandler handler, GitScmProtocolProviderWrapper providerWrapper)
   {
     this.handler = handler;
-    this.servletProvider = servletProvider;
+    this.providerWrapper = providerWrapper;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -77,7 +77,7 @@ public class GitRepositoryServiceResolver implements RepositoryServiceResolver
 
     if (TYPE.equalsIgnoreCase(repository.getType()))
     {
-      provider = new GitRepositoryServiceProvider(handler, repository, servletProvider);
+      provider = new GitRepositoryServiceProvider(handler, repository, providerWrapper.get(repository));
     }
 
     return provider;
@@ -87,5 +87,5 @@ public class GitRepositoryServiceResolver implements RepositoryServiceResolver
 
   /** Field description */
   private final GitRepositoryHandler handler;
-  private final HttpScmProtocol servletProvider;
+  private final GitScmProtocolProviderWrapper providerWrapper;
 }

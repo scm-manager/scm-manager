@@ -51,7 +51,6 @@ import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryProvider;
 import sonia.scm.repository.RepositoryRequestListenerUtil;
-import sonia.scm.repository.spi.HttpScmProtocol;
 import sonia.scm.security.CipherUtil;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.HttpUtil;
@@ -77,7 +76,7 @@ import java.util.Enumeration;
  * @author Sebastian Sdorra
  */
 @Singleton
-public class HgCGIServlet extends HttpServlet implements HttpScmProtocol
+public class HgCGIServlet extends HttpServlet
 {
 
   /** Field description */
@@ -347,7 +346,7 @@ public class HgCGIServlet extends HttpServlet implements HttpScmProtocol
     return python;
   }
 
-  @Override
+//  @Override
   public void serve(HttpServletRequest request, HttpServletResponse response, ServletConfig config)  {
     service(request, response);
   }

@@ -10,16 +10,23 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
 
-public interface HttpScmProtocol extends ScmProtocol {
+public abstract class HttpScmProtocol implements ScmProtocol {
+
+  private final Repository repository;
+
+  public HttpScmProtocol(Repository repository) {
+    this.repository = repository;
+  }
+
   @Override
-  default String getType() {
+  public String getType() {
     return "http";
   }
 
   @Override
-  default String getUrl(Repository repository, URI baseUri) {
-    return baseUri.resolve(URI.create("/repo" + "/" + repository.getNamespace() + "/" + repository.getName())).toASCIIString();
+  public String getUrl(URI baseUri) {
+    return baseUri.resolve(URI.create("repo" + "/" + repository.getNamespace() + "/" + repository.getName())).toASCIIString();
   }
 
-  void serve(HttpServletRequest request, HttpServletResponse response, ServletConfig config) throws ServletException, IOException;
+  public abstract void serve(HttpServletRequest request, HttpServletResponse response, ServletConfig config) throws ServletException, IOException;
 }

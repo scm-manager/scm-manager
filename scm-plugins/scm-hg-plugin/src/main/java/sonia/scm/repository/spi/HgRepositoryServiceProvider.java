@@ -81,16 +81,6 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
 
   //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   *
-   *
-   *  @param handler
-   * @param hookManager
-   * @param repository
-   * @param httpScmProtocol
-   */
   HgRepositoryServiceProvider(HgRepositoryHandler handler,
     HgHookManager hookManager, Repository repository, HttpScmProtocol httpScmProtocol)
   {

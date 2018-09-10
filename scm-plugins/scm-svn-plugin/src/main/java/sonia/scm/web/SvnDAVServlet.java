@@ -45,7 +45,6 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryProvider;
 import sonia.scm.repository.RepositoryRequestListenerUtil;
 import sonia.scm.repository.SvnRepositoryHandler;
-import sonia.scm.repository.spi.HttpScmProtocol;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.HttpUtil;
 
@@ -63,7 +62,7 @@ import java.io.IOException;
  * @author Sebastian Sdorra
  */
 @Singleton
-public class SvnDAVServlet extends DAVServlet implements HttpScmProtocol
+public class SvnDAVServlet extends DAVServlet
 {
 
   /** Field description */
@@ -285,7 +284,7 @@ public class SvnDAVServlet extends DAVServlet implements HttpScmProtocol
     private final RepositoryProvider repositoryProvider;
   }
 
-  @Override
+//  @Override
   public void serve(HttpServletRequest request, HttpServletResponse response, ServletConfig config) throws ServletException, IOException {
     service(request, response);
   }
