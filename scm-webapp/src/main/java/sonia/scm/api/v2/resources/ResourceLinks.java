@@ -213,8 +213,8 @@ class ResourceLinks {
       tagLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, TagRootResource.class);
     }
 
-    String self(String namespace, String name, String id) {
-      return tagLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("tags").parameters().method("get").parameters(id).href();
+    String self(String namespace, String name, String tagName) {
+      return tagLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("tags").parameters().method("get").parameters(tagName).href();
     }
 
     String all(String namespace, String name) {
@@ -326,15 +326,16 @@ class ResourceLinks {
     }
 
     public String sourceWithPath(String namespace, String name, String revision, String path) {
-      if (revision == null) {
-        return sourceLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("sources").parameters().method("get").parameters(null, path).href();
-      } else {
-        return sourceLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("sources").parameters().method("get").parameters(revision, path).href();
-      }
+      return addPath(sourceLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("sources").parameters().method("get").parameters(revision, "").href(), path);
     }
 
     public String content(String namespace, String name, String revision, String path) {
-      return sourceLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("content").parameters().method("get").parameters(revision, path).href();
+      return addPath(sourceLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("content").parameters().method("get").parameters(revision, "").href(), path);
+    }
+
+    // we have to add the file path using URI, so that path separators (aka '/') will not be encoded as '%2F'
+    private String addPath(String sourceWithPath, String path) {
+      return URI.create(sourceWithPath).resolve(path).toASCIIString();
     }
   }
   public PermissionLinks permission() {
