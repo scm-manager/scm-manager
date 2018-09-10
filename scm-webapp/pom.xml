@@ -239,6 +239,12 @@
 
     <dependency>
       <groupId>com.github.sdorra</groupId>
+      <artifactId>web-resources</artifactId>
+      <version>1.0.1</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.github.sdorra</groupId>
       <artifactId>spotter-core</artifactId>
       <version>1.1.0</version>
     </dependency>
@@ -248,6 +254,7 @@
       <artifactId>tika-core</artifactId>
       <version>1.18</version>
     </dependency>
+
     <!-- test scope -->
 
     <dependency>
