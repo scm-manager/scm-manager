@@ -56,6 +56,7 @@ public class HttpProtocolServlet extends HttpServlet {
       log.trace("dispatch browser request for user agent {}", userAgent);
       dispatcher.dispatch(request, response, request.getRequestURI());
     } else {
+
       String pathInfo = request.getPathInfo();
       Optional<NamespaceAndName> namespaceAndName = namespaceAndNameFromPathExtractor.fromUri(pathInfo);
       if (namespaceAndName.isPresent()) {

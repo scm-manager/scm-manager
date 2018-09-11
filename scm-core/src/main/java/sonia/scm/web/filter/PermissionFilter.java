@@ -33,7 +33,6 @@
 
 package sonia.scm.web.filter;
 
-import com.google.common.base.Splitter;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.subject.Subject;
@@ -46,13 +45,11 @@ import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.security.Role;
 import sonia.scm.security.ScmSecurityException;
 import sonia.scm.util.HttpUtil;
-import sonia.scm.util.Util;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Iterator;
 
 /**
  * Abstract http filter to check repository permissions.
@@ -121,7 +118,7 @@ public abstract class PermissionFilter
           getActionAsString(writeRequest), repository.getName(),
           getUserName(subject));
 
-        continuation.serve();
+        continuation.doService();
       }
       else
       {
@@ -170,29 +167,6 @@ public abstract class PermissionFilter
     throws IOException
   {
     HttpUtil.sendUnauthorized(response, configuration.getRealmDescription());
-  }
-
-  /**
-   * Extracts the type of the repositroy from url.
-   *
-   *
-   * @param request http request
-   *
-   * @return type of repository
-   */
-  private String extractType(HttpServletRequest request)
-  {
-    Iterator<String> it = Splitter.on(
-                            HttpUtil.SEPARATOR_PATH).omitEmptyStrings().split(
-                            request.getRequestURI()).iterator();
-    String type = it.next();
-
-    if (Util.isNotEmpty(request.getContextPath()))
-    {
-      type = it.next();
-    }
-
-    return type;
   }
 
   /**
@@ -287,6 +261,6 @@ public abstract class PermissionFilter
 
   @FunctionalInterface
   public interface ContinuationServlet {
-    void serve() throws ServletException, IOException;
+    void doService() throws ServletException, IOException;
   }
 }
