@@ -33,8 +33,6 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.common.io.Closeables;
 import sonia.scm.repository.Feature;
 import sonia.scm.repository.HgHookManager;
@@ -48,8 +46,6 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Set;
-
-//~--- JDK imports ------------------------------------------------------------
 
 /**
  *

@@ -33,30 +33,24 @@
 
 package sonia.scm.web;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
 import sonia.scm.ClientMessages;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.ScmSvnErrorCode;
 import sonia.scm.repository.SvnUtil;
-import sonia.scm.web.filter.ProviderPermissionFilter;
+import sonia.scm.web.filter.PermissionFilter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Set;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  *
  * @author Sebastian Sdorra
  */
-//@Priority(Filters.PRIORITY_AUTHORIZATION)
-//@WebElement(value = SvnServletModule.PATTERN_SVN)
-public class SvnPermissionFilter extends ProviderPermissionFilter
+public class SvnPermissionFilter extends PermissionFilter
 {
 
   /** Field description */

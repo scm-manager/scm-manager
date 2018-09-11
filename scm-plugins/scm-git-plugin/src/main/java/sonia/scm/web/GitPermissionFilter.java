@@ -33,32 +33,24 @@
 
 package sonia.scm.web;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.common.annotations.VisibleForTesting;
 import com.google.inject.Inject;
 import org.eclipse.jgit.http.server.GitSmartHttpTools;
 import sonia.scm.ClientMessages;
-import sonia.scm.Priority;
 import sonia.scm.config.ScmConfiguration;
-import sonia.scm.filter.Filters;
 import sonia.scm.repository.GitUtil;
-import sonia.scm.web.filter.ProviderPermissionFilter;
+import sonia.scm.web.filter.PermissionFilter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-
-//~--- JDK imports ------------------------------------------------------------
 
 /**
  * GitPermissionFilter decides if a git request requires write or read privileges.
  * 
  * @author Sebastian Sdorra
  */
-@Priority(Filters.PRIORITY_AUTHORIZATION)
-//@WebElement(value = GitServletModule.PATTERN_GIT)
-public class GitPermissionFilter extends ProviderPermissionFilter
+public class GitPermissionFilter extends PermissionFilter
 {
 
   private static final String PARAMETER_SERVICE = "service";

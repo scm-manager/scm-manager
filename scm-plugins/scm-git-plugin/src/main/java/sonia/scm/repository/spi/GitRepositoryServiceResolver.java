@@ -45,47 +45,27 @@ import sonia.scm.web.GitScmProtocolProviderWrapper;
  * @author Sebastian Sdorra
  */
 @Extension
-public class GitRepositoryServiceResolver implements RepositoryServiceResolver
-{
+public class GitRepositoryServiceResolver implements RepositoryServiceResolver {
 
-  /** Field description */
   public static final String TYPE = "git";
 
-  //~--- constructors ---------------------------------------------------------
-
   @Inject
-  public GitRepositoryServiceResolver(GitRepositoryHandler handler, GitScmProtocolProviderWrapper providerWrapper)
-  {
+  public GitRepositoryServiceResolver(GitRepositoryHandler handler, GitScmProtocolProviderWrapper providerWrapper) {
     this.handler = handler;
     this.providerWrapper = providerWrapper;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   */
   @Override
-  public GitRepositoryServiceProvider resolve(Repository repository)
-  {
+  public GitRepositoryServiceProvider resolve(Repository repository) {
     GitRepositoryServiceProvider provider = null;
 
-    if (TYPE.equalsIgnoreCase(repository.getType()))
-    {
+    if (TYPE.equalsIgnoreCase(repository.getType())) {
       provider = new GitRepositoryServiceProvider(handler, repository, providerWrapper.get(repository));
     }
 
     return provider;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
   private final GitRepositoryHandler handler;
   private final GitScmProtocolProviderWrapper providerWrapper;
 }

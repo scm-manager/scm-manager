@@ -33,8 +33,6 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.inject.Inject;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.HgHookManager;

@@ -32,67 +32,34 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.inject.Inject;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.SvnRepositoryHandler;
 import sonia.scm.web.SvnScmProtocolProviderWrapper;
 
-/**
- *
- * @author Sebastian Sdorra
- */
 @Extension
-public class SvnRepositoryServiceResolver implements RepositoryServiceResolver
-{
+public class SvnRepositoryServiceResolver implements RepositoryServiceResolver {
 
-  /** Field description */
   public static final String TYPE = "svn";
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param handler
-   * @param protocolWrapper
-   */
   @Inject
-  public SvnRepositoryServiceResolver(SvnRepositoryHandler handler, SvnScmProtocolProviderWrapper protocolWrapper)
-  {
+  public SvnRepositoryServiceResolver(SvnRepositoryHandler handler, SvnScmProtocolProviderWrapper protocolWrapper) {
     this.handler = handler;
     this.protocolWrapper = protocolWrapper;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   */
   @Override
-  public SvnRepositoryServiceProvider resolve(Repository repository)
-  {
+  public SvnRepositoryServiceProvider resolve(Repository repository) {
     SvnRepositoryServiceProvider provider = null;
 
-    if (TYPE.equalsIgnoreCase(repository.getType()))
-    {
+    if (TYPE.equalsIgnoreCase(repository.getType())) {
       provider = new SvnRepositoryServiceProvider(handler, repository, protocolWrapper.get(repository));
     }
 
     return provider;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
   private SvnRepositoryHandler handler;
 
   private final InitializingHttpScmProtocolWrapper protocolWrapper;

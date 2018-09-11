@@ -33,8 +33,6 @@
 
 package sonia.scm.api.rest.resources;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.common.base.Function;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Maps;
@@ -58,8 +56,6 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-
-//~--- JDK imports ------------------------------------------------------------
 
 /**
  *

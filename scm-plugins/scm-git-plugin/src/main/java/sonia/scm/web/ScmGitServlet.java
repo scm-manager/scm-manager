@@ -33,8 +33,6 @@
 
 package sonia.scm.web;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.common.annotations.VisibleForTesting;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -57,8 +55,6 @@ import java.util.regex.Pattern;
 import static org.eclipse.jgit.lfs.lib.Constants.CONTENT_TYPE_GIT_LFS_JSON;
 import static org.slf4j.LoggerFactory.getLogger;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  *
  * @author Sebastian Sdorra
@@ -67,7 +63,8 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class ScmGitServlet extends GitServlet implements ScmProviderHttpServlet
 {
 
-  /** Field description */
+  public static final String REPO_PATH = "/repo";
+
   public static final Pattern REGEX_GITHTTPBACKEND = Pattern.compile(
     "(?x)^/repo/(.*/(HEAD|info/refs|objects/(info/[^/]+|[0-9a-f]{2}/[0-9a-f]{38}|pack/pack-[0-9a-f]{40}\\.(pack|idx))|git-(upload|receive)-pack))$"
   );
@@ -172,7 +169,7 @@ public class ScmGitServlet extends GitServlet implements ScmProviderHttpServlet
    * @throws IOException
    * @throws ServletException
    */
-  private void handleBrowserRequest(HttpServletRequest request, HttpServletResponse response, Repository repository) throws ServletException, IOException {
+  private void handleBrowserRequest(HttpServletRequest request, HttpServletResponse response, Repository repository) throws ServletException {
     try {
       repositoryViewer.handleRequest(request, response, repository);
     } catch (IOException ex) {
@@ -191,7 +188,7 @@ public class ScmGitServlet extends GitServlet implements ScmProviderHttpServlet
    */
   private static boolean isLfsFileTransferRequest(HttpServletRequest request, String repository) {
 
-    String regex = String.format("^%s%s/%s(\\.git)?/info/lfs/objects/[a-z0-9]{64}$", request.getContextPath(), GitServletModule.GIT_PATH, repository);
+    String regex = String.format("^%s%s/%s(\\.git)?/info/lfs/objects/[a-z0-9]{64}$", request.getContextPath(), REPO_PATH, repository);
     boolean pathMatches = request.getRequestURI().matches(regex);
 
     boolean methodMatches = request.getMethod().equals("PUT") || request.getMethod().equals("GET");
@@ -210,7 +207,7 @@ public class ScmGitServlet extends GitServlet implements ScmProviderHttpServlet
    */
   private static boolean isLfsBatchApiRequest(HttpServletRequest request, String repository) {
 
-    String regex = String.format("^%s%s/%s(\\.git)?/info/lfs/objects/batch$", request.getContextPath(), GitServletModule.GIT_PATH, repository);
+    String regex = String.format("^%s%s/%s(\\.git)?/info/lfs/objects/batch$", request.getContextPath(), REPO_PATH, repository);
     boolean pathMatches = request.getRequestURI().matches(regex);
 
     boolean methodMatches = "POST".equals(request.getMethod());

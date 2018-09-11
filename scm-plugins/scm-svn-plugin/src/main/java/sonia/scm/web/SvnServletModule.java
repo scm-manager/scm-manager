@@ -33,43 +33,21 @@
 
 package sonia.scm.web;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.inject.servlet.ServletModule;
 import org.mapstruct.factory.Mappers;
 import sonia.scm.api.v2.resources.SvnConfigDtoToSvnConfigMapper;
 import sonia.scm.api.v2.resources.SvnConfigToSvnConfigDtoMapper;
 import sonia.scm.plugin.Extension;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  *
  * @author Sebastian Sdorra
  */
 @Extension
-public class SvnServletModule extends ServletModule
-{
+public class SvnServletModule extends ServletModule {
 
-  /** Field description */
-  public static final String PARAMETER_SVN_PARENTPATH = "SVNParentPath";
-
-  /** Field description */
-  public static final String PATTERN_SVN = "/svn/*";
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   */
   @Override
-  protected void configureServlets()
-  {
-    filter(PATTERN_SVN).through(SvnGZipFilter.class);
-//    filter(PATTERN_SVN).through(SvnBasicAuthenticationFilter.class);
-//    filter(PATTERN_SVN).through(SvnPermissionFilter.class);
-
+  protected void configureServlets() {
     bind(SvnConfigDtoToSvnConfigMapper.class).to(Mappers.getMapper(SvnConfigDtoToSvnConfigMapper.class).getClass());
     bind(SvnConfigToSvnConfigDtoMapper.class).to(Mappers.getMapper(SvnConfigToSvnConfigDtoMapper.class).getClass());
   }

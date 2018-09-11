@@ -33,16 +33,11 @@
 
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.servlet.RequestScoped;
-import sonia.scm.security.ScmSecurityException;
 
 import javax.servlet.http.HttpServletRequest;
-
-//~--- JDK imports ------------------------------------------------------------
 
 @RequestScoped
 public class DefaultRepositoryProvider implements RepositoryProvider {
@@ -50,13 +45,14 @@ public class DefaultRepositoryProvider implements RepositoryProvider {
   public static final String ATTRIBUTE_NAME = "scm.request.repository";
 
   private final Provider<HttpServletRequest> requestProvider;
+
   @Inject
   public DefaultRepositoryProvider(Provider<HttpServletRequest> requestProvider) {
     this.requestProvider = requestProvider;
   }
 
   @Override
-  public Repository get() throws ScmSecurityException {
+  public Repository get() {
     HttpServletRequest request = requestProvider.get();
 
     if (request != null) {

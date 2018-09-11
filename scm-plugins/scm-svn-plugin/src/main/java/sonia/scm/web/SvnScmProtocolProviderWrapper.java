@@ -12,10 +12,11 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import java.util.Enumeration;
 
-import static sonia.scm.web.SvnServletModule.PARAMETER_SVN_PARENTPATH;
-
 @Singleton
 public class SvnScmProtocolProviderWrapper extends InitializingHttpScmProtocolWrapper {
+
+  public static final String PARAMETER_SVN_PARENTPATH = "SVNParentPath";
+
   @Inject
   public SvnScmProtocolProviderWrapper(Provider<SvnDAVServlet> servletProvider, Provider<SvnPermissionFilter> permissionFilter, Provider<UriInfoStore> uriInfoStore) {
     super(servletProvider, permissionFilter, uriInfoStore);
@@ -24,14 +25,14 @@ public class SvnScmProtocolProviderWrapper extends InitializingHttpScmProtocolWr
   @Override
   protected void initializeServlet(ServletConfig config, ScmProviderHttpServlet httpServlet) throws ServletException {
 
-    super.initializeServlet(new X(config), httpServlet);
+    super.initializeServlet(new SvnConfigEnhancer(config), httpServlet);
   }
 
-  private static class X implements ServletConfig {
+  private static class SvnConfigEnhancer implements ServletConfig {
 
     private final ServletConfig originalConfig;
 
-    private X(ServletConfig originalConfig) {
+    private SvnConfigEnhancer(ServletConfig originalConfig) {
       this.originalConfig = originalConfig;
     }
 

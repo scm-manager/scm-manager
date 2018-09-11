@@ -33,8 +33,6 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import sonia.scm.repository.Feature;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.CommandNotSupportedException;
@@ -44,8 +42,6 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Set;
-
-//~--- JDK imports ------------------------------------------------------------
 
 /**
  *

@@ -31,8 +31,6 @@
 
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.github.sdorra.ssp.PermissionActionCheck;
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
@@ -66,8 +64,6 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
-
-//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Default implementation of {@link RepositoryManager}.

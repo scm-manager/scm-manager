@@ -33,8 +33,6 @@
 
 package sonia.scm;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Provider;
 import com.google.inject.multibindings.Multibinder;
@@ -121,8 +119,6 @@ import sonia.scm.web.security.DefaultAdministrationContext;
 import javax.net.ssl.SSLContext;
 import javax.servlet.ServletContext;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  *
  * @author Sebastian Sdorra
@@ -188,14 +184,6 @@ public class ScmServletModule extends ServletModule
 
   //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param servletContext
-   * @param pluginLoader
-   * @param overrides
-   */
   ScmServletModule(ServletContext servletContext, DefaultPluginLoader pluginLoader, ClassOverrides overrides)
   {
     this.servletContext = servletContext;

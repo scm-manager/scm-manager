@@ -51,18 +51,6 @@ import sonia.scm.web.lfs.LfsBlobStoreFactory;
 public class GitServletModule extends ServletModule
 {
 
-  public static final String GIT_PATH = "/repo";
-
-  /** Field description */
-  public static final String PATTERN_GIT = GIT_PATH + "/*";
-
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   */
   @Override
   protected void configureServlets()
   {

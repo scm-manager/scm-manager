@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.api.v2.resources.UriInfoStore;
 import sonia.scm.repository.Repository;
-import sonia.scm.web.filter.ProviderPermissionFilter;
+import sonia.scm.web.filter.PermissionFilter;
 
 import javax.inject.Provider;
 import javax.servlet.ServletConfig;
@@ -19,13 +19,13 @@ public abstract class InitializingHttpScmProtocolWrapper {
     LoggerFactory.getLogger(InitializingHttpScmProtocolWrapper.class);
 
   private final Provider<? extends ScmProviderHttpServlet> delegateProvider;
-  private final Provider<? extends ProviderPermissionFilter> permissionFilterProvider;
+  private final Provider<? extends PermissionFilter> permissionFilterProvider;
   private final Provider<UriInfoStore> uriInfoStore;
 
   private volatile boolean isInitialized = false;
 
 
-  protected InitializingHttpScmProtocolWrapper(Provider<? extends ScmProviderHttpServlet> delegateProvider, Provider<? extends ProviderPermissionFilter> permissionFilterProvider, Provider<UriInfoStore> uriInfoStore) {
+  protected InitializingHttpScmProtocolWrapper(Provider<? extends ScmProviderHttpServlet> delegateProvider, Provider<? extends PermissionFilter> permissionFilterProvider, Provider<UriInfoStore> uriInfoStore) {
     this.delegateProvider = delegateProvider;
     this.permissionFilterProvider = permissionFilterProvider;
     this.uriInfoStore = uriInfoStore;

@@ -33,8 +33,6 @@
 
 package sonia.scm.web;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.common.base.Stopwatch;
 import com.google.common.base.Strings;
 import com.google.inject.Inject;
@@ -67,8 +65,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Base64;
 import java.util.Enumeration;
-
-//~--- JDK imports ------------------------------------------------------------
 
 /**
  *

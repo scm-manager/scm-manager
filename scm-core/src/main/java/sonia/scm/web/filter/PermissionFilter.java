@@ -33,15 +33,12 @@
 
 package sonia.scm.web.filter;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.common.base.Splitter;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.ArgumentIsInvalidException;
 import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.Repository;
@@ -56,8 +53,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Iterator;
-
-//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Abstract http filter to check repository permissions.
@@ -136,22 +131,6 @@ public abstract class PermissionFilter
 
         sendAccessDenied(request, response, subject);
       }
-    }
-    catch (ArgumentIsInvalidException ex)
-    {
-      if (logger.isTraceEnabled())
-      {
-        logger.trace(
-          "wrong request at ".concat(request.getRequestURI()).concat(
-            " send redirect"), ex);
-      }
-      else if (logger.isWarnEnabled())
-      {
-        logger.warn("wrong request at {} send redirect",
-          request.getRequestURI());
-      }
-
-      response.sendRedirect(getRepositoryRootHelpUrl(request));
     }
     catch (ScmSecurityException | AuthorizationException ex)
     {
@@ -254,25 +233,6 @@ public abstract class PermissionFilter
     return writeRequest
       ? "write"
       : "read";
-  }
-
-  /**
-   * Returns the repository root help url.
-   *
-   *
-   * @param request current http request
-   *
-   * @return repository root help url
-   */
-  private String getRepositoryRootHelpUrl(HttpServletRequest request)
-  {
-    String type = extractType(request);
-    String helpUrl = HttpUtil.getCompleteUrl(request,
-                       "/api/rest/help/repository-root/");
-
-    helpUrl = helpUrl.concat(type).concat(".html");
-
-    return helpUrl;
   }
 
   /**

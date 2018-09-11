@@ -33,8 +33,6 @@
 
 package sonia.scm;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.common.base.Throwables;
 import com.google.common.collect.Lists;
 import com.google.inject.Injector;
@@ -62,8 +60,6 @@ import javax.servlet.ServletContextEvent;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-
-//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
