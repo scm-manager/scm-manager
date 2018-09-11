@@ -42,9 +42,6 @@ import reducer, {
 } from "./permissions";
 import type { Permission, PermissionCollection } from "../types/Permissions";
 
-const namespace = "hitchhiker";
-const repoName = "puzzle42";
-
 const hitchhiker_puzzle42Permission_user_eins: Permission = {
   name: "user_eins",
   type: "READ",
@@ -237,7 +234,7 @@ describe("permission fetch", () => {
     fetchMock.postOnce(REPOS_URL + "/hitchhiker/puzzle42/permissions", {
       status: 204,
       headers: {
-        location: "/hitchhiker/puzzle42/permissions/user_eins"
+        location: REPOS_URL + "/hitchhiker/puzzle42/permissions/user_eins"
       }
     });
 
@@ -289,7 +286,7 @@ describe("permission fetch", () => {
     fetchMock.postOnce(REPOS_URL + "/hitchhiker/puzzle42/permissions", {
       status: 204,
       headers: {
-        location: "/hitchhiker/puzzle42/permissions/user_eins"
+        location: REPOS_URL + "/hitchhiker/puzzle42/permissions/user_eins"
       }
     });
 
