@@ -3,6 +3,7 @@ import React from "react";
 import type { Repository } from "@scm-manager/ui-types";
 import RepositoryDetailTable from "./RepositoryDetailTable";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import Changesets from "../../changesets/components/Changesets";
 
 type Props = {
   repository: Repository
@@ -20,6 +21,7 @@ class RepositoryDetails extends React.Component<Props> {
             renderAll={true}
             props={{ repository }}
           />
+          <Changesets repository={repository}/>
         </div>
       </div>
     );

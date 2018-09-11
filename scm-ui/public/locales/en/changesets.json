@@ -1,0 +1,12 @@
+{
+  "changeset": {
+    "id": "ID",
+    "description": "Description",
+    "contact": "Contact",
+    "date": "Date"
+  },
+  "author": {
+    "name": "Author",
+    "mail": "Mail"
+  }
+}

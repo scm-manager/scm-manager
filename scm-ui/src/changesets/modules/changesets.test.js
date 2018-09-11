@@ -1,14 +1,13 @@
 // @flow
 
-
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 import fetchMock from "fetch-mock";
 import {
   FETCH_CHANGESETS_PENDING,
   FETCH_CHANGESETS_SUCCESS,
-  fetchChangesets,
-  fetchChangesetsSuccess
+  fetchChangesetsByNamespaceAndName,
+  fetchChangesetsSuccess, getChangesetsForNameAndNamespaceFromState
 } from "./changesets";
 import reducer from "./changesets";
 
@@ -27,15 +26,15 @@ describe("fetching of changesets", () => {
     fetchMock.getOnce(URL, "{}");
 
     const expectedActions = [
-      { type: FETCH_CHANGESETS_PENDING },
+      {type: FETCH_CHANGESETS_PENDING, payload: {namespace: "foo", name: "bar"}},
       {
         type: FETCH_CHANGESETS_SUCCESS,
-        payload: collection
+        payload: {collection, namespace: "foo", name: "bar"}
       }
     ];
 
     const store = mockStore({});
-    return store.dispatch(fetchChangesets("foo", "bar")).then(() => {
+    return store.dispatch(fetchChangesetsByNamespaceAndName("foo", "bar")).then(() => {
       expect(store.getActions()).toEqual(expectedActions);
     });
   })
@@ -45,9 +44,9 @@ describe("changesets reducer", () => {
   const responseBody = {
     _embedded: {
       changesets: [
-        {id: "changeset1", author: { mail: "z@phod.com", name: "zaphod"}},
-        {id: "changeset2"},
-        {id: "changeset3"},
+        {id: "changeset1", author: {mail: "z@phod.com", name: "zaphod"}},
+        {id: "changeset2", description: "foo"},
+        {id: "changeset3", description: "bar"},
       ],
       _embedded: {
         tags: [],
@@ -56,11 +55,56 @@ describe("changesets reducer", () => {
       }
     }
   };
-  it("should set state correctly", () => {
-    const newState = reducer({}, fetchChangesetsSuccess(responseBody));
-    expect(newState.byIds["changeset1"]).toBeDefined();
-    expect(newState.byIds["changeset1"].author.mail).toEqual("z@phod.com");
-    expect(newState.byIds["changeset2"]).toBeDefined();
-    expect(newState.byIds["changeset3"]).toBeDefined();
+
+  it("should set state to received changesets", () => {
+    const newState = reducer({}, fetchChangesetsSuccess(responseBody, "foo", "bar"));
+    expect(newState).toBeDefined();
+    expect(newState["foo/bar"].byId["changeset1"].author.mail).toEqual("z@phod.com");
+    expect(newState["foo/bar"].byId["changeset2"].description).toEqual("foo");
+    expect(newState["foo/bar"].byId["changeset3"].description).toEqual("bar");
+  });
+
+  it("should not delete existing changesets from state", () => {
+    const responseBody = {
+      _embedded: {
+        changesets: [
+          {id: "changeset1", author: {mail: "z@phod.com", name: "zaphod"}},
+        ],
+        _embedded: {
+          tags: [],
+          branches: [],
+          parents: []
+        }
+      }
+    };
+    const newState = reducer({
+      "foo/bar": {
+        byId: {
+          ["changeset2"]: {
+            id: "changeset2",
+            author: {mail: "mail@author.com", name: "author"}
+          }
+        }
+      }
+    }, fetchChangesetsSuccess(responseBody, "foo", "bar"));
+    expect(newState["foo/bar"].byId["changeset2"]).toBeDefined();
+    expect(newState["foo/bar"].byId["changeset1"]).toBeDefined();
+  })
+});
+
+describe("changeset selectors", () => {
+  it("should get all changesets for a given namespace and name", () => {
+    const state = {
+      changesets: {
+        ["foo/bar"]: {
+          byId: {
+            "id1": {id: "id1"},
+            "id2": {id: "id2"}
+          }
+        }
+      }
+    };
+    const result = getChangesetsForNameAndNamespaceFromState("foo", "bar", state);
+    expect(result).toContainEqual({id: "id1"})
   })
 });
