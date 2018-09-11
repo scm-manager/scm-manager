@@ -10,7 +10,7 @@ import {
 } from "../modules/permissions";
 import { connect } from "react-redux";
 import type { History } from "history";
-import { Checkbox } from "@scm-manager/ui-components";
+import { Checkbox } from "../../../../../scm-ui-components/packages/ui-components/src/index";
 import DeletePermissionButton from "../components/buttons/DeletePermissionButton";
 import TypeSelector from "../components/TypeSelector";
 

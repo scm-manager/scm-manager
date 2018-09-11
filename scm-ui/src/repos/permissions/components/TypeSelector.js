@@ -3,7 +3,7 @@ import React from "react";
 import { translate } from "react-i18next";
 import {
   Select
-} from "@scm-manager/ui-components";
+} from "../../../../../scm-ui-components/packages/ui-components/src/index";
 
 type Props = {
   t: string => string,

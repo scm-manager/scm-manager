@@ -5,7 +5,7 @@ import type { Permission } from "../../types/Permissions";
 import {
   confirmAlert,
   DeleteButton
-} from "@scm-manager/ui-components";
+} from "../../../../../../scm-ui-components/packages/ui-components/src/index";
 
 type Props = {
   permission: Permission,

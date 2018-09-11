@@ -22,7 +22,7 @@ import { translate } from "react-i18next";
 import RepositoryDetails from "../components/RepositoryDetails";
 import DeleteNavAction from "../components/DeleteNavAction";
 import Edit from "../containers/Edit";
-import Permissions from "../../permissions/containers/Permissions";
+import Permissions from "../permissions/containers/Permissions";
 
 import type { History } from "history";
 import EditNavLink from "../components/EditNavLink";

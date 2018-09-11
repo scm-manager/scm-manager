@@ -17,7 +17,7 @@ import {
   modifyPermissionReset,
   deletePermissionReset
 } from "../modules/permissions";
-import { Loading, ErrorPage } from "@scm-manager/ui-components";
+import { Loading, ErrorPage } from "../../../../../scm-ui-components/packages/ui-components/src/index";
 import type {
   Permission,
   PermissionCollection,
