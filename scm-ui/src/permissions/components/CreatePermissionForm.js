@@ -1,11 +1,7 @@
 // @flow
 import React from "react";
 import { translate } from "react-i18next";
-import {
-  Checkbox,
-  InputField,
-  SubmitButton
-} from "@scm-manager/ui-components";
+import { Checkbox, InputField, SubmitButton } from "@scm-manager/ui-components";
 import TypeSelector from "./TypeSelector";
 import type {
   PermissionCollection,
@@ -112,6 +108,15 @@ class CreatePermissionForm extends React.Component<Props, State> {
       name: this.state.name,
       type: this.state.type,
       groupPermission: this.state.groupPermission
+    });
+    this.removeState();
+  };
+
+  removeState = () => {
+    this.setState({
+      name: "",
+      type: "READ",
+      groupPermission: false
     });
   };
 

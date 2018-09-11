@@ -233,8 +233,13 @@ export function createPermission(
         CONTENT_TYPE
       )
       .then(response => {
+        console.log(response);
         const location = response.headers.Location;
-        return apiClient.get(location);
+        return apiClient.get(
+          `${REPOS_URL}/${namespace}/${repoName}/${PERMISSIONS_URL}/${
+            permission.name
+          }`
+        );
       })
       .then(response => response.json())
       .then(createdPermission => {

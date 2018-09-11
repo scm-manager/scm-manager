@@ -39,7 +39,7 @@ type Props = {
     permission: PermissionEntry,
     namespace: string,
     repoName: string,
-    callback: () => void
+    callback?: () => void
   ) => void,
   createPermissionReset: (string, string) => void,
 
@@ -62,20 +62,11 @@ class Permissions extends React.Component<Props> {
     fetchPermissions(namespace, repoName);
   }
 
-  permissionCreated = () => {
-    const { namespace, repoName, history } = this.props;
-    console.log("fetch permissions!");
-    //history.push(`/repo/${namespace}/${repoName}/permissions`);
-    this.props.fetchPermissions(namespace, repoName);
-  };
-
   createPermission = (permission: Permission) => {
-    console.log("create Permission");
     this.props.createPermission(
       permission,
       this.props.namespace,
-      this.props.repoName,
-      this.permissionCreated
+      this.props.repoName
     );
   };
 
@@ -175,7 +166,7 @@ const mapDispatchToProps = dispatch => {
       permission: PermissionEntry,
       namespace: string,
       repoName: string,
-      callback: () => void
+      callback?: () => void
     ) => {
       dispatch(createPermission(permission, namespace, repoName, callback));
     },
