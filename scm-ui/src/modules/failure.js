@@ -13,6 +13,20 @@ function extractIdentifierFromFailure(action: Action) {
   return identifier;
 }
 
+function removeAllEntriesOfIdentifierFromState(
+  state: Object,
+  payload: any,
+  identifier: string
+) {
+  const newState = {};
+  for (let failureType in state) {
+    if (failureType !== identifier && !failureType.startsWith(identifier)) {
+      newState[failureType] = state[failureType];
+    }
+  }
+  return newState;
+}
+
 function removeFromState(state: Object, identifier: string) {
   const newState = {};
   for (let failureType in state) {
@@ -47,7 +61,9 @@ export default function reducer(
       if (action.itemId) {
         identifier += "/" + action.itemId;
       }
-      return removeFromState(state, identifier);
+      if (action.payload)
+        return removeAllEntriesOfIdentifierFromState(state, action.payload, identifier);
+      else return removeFromState(state, identifier);
     }
   }
   return state;

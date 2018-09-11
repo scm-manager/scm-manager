@@ -5,10 +5,8 @@ import { translate } from "react-i18next";
 import {
   modifyPermission,
   isModifyPermissionPending,
-  modifyPermissionReset,
   deletePermission,
-  isDeletePermissionPending,
-  deletePermissionReset
+  isDeletePermissionPending
 } from "../modules/permissions";
 import { connect } from "react-redux";
 import type { History } from "history";
@@ -26,8 +24,6 @@ type Props = {
   match: any,
   history: History,
   loading: boolean,
-  permissionReset: (string, string, string) => void,
-  deletePermissionReset: (string, string, string) => void,
   deletePermission: (Permission, string, string) => void,
   deleteLoading: boolean
 };
@@ -52,16 +48,6 @@ class SinglePermission extends React.Component<Props, State> {
 
   componentDidMount() {
     const { permission } = this.props;
-    this.props.permissionReset(
-      this.props.namespace,
-      this.props.repoName,
-      permission.name
-    );
-    this.props.deletePermissionReset(
-      this.props.namespace,
-      this.props.repoName,
-      permission.name
-    );
     if (permission) {
       this.setState({
         permission: {
@@ -175,26 +161,12 @@ const mapDispatchToProps = dispatch => {
     ) => {
       dispatch(modifyPermission(permission, namespace, repoName));
     },
-    permissionReset: (
-      namespace: string,
-      repoName: string,
-      permissionname: string
-    ) => {
-      dispatch(modifyPermissionReset(namespace, repoName, permissionname));
-    },
     deletePermission: (
       permission: Permission,
       namespace: string,
       repoName: string
     ) => {
       dispatch(deletePermission(permission, namespace, repoName));
-    },
-    deletePermissionReset: (
-      namespace: string,
-      repoName: string,
-      permissionname: string
-    ) => {
-      dispatch(deletePermissionReset(namespace, repoName, permissionname));
     }
   };
 };

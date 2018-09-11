@@ -206,14 +206,14 @@ function newPermissions(
   }
 }
 
-export function modifyPermissionReset(
-  namespace: string,
-  repoName: string,
-  permissionname: string
-) {
+export function modifyPermissionReset(namespace: string, repoName: string) {
   return {
     type: MODIFY_PERMISSION_RESET,
-    itemId: namespace + "/" + repoName + "/" + permissionname
+    payload: {
+      namespace,
+      repoName
+    },
+    itemId: namespace + "/" + repoName
   };
 }
 
@@ -377,14 +377,14 @@ export function deletePermissionFailure(
   };
 }
 
-export function deletePermissionReset(
-  namespace: string,
-  repoName: string,
-  permissionname: string
-) {
+export function deletePermissionReset(namespace: string, repoName: string) {
   return {
     type: DELETE_PERMISSION_RESET,
-    itemId: namespace + "/" + repoName + "/" + permissionname
+    payload: {
+      namespace,
+      repoName
+    },
+    itemId: namespace + "/" + repoName
   };
 }
 function deletePermissionFromState(
@@ -408,7 +408,6 @@ export default function reducer(
   if (!action.payload) {
     return state;
   }
-
   switch (action.type) {
     case FETCH_PERMISSIONS_SUCCESS:
       return {

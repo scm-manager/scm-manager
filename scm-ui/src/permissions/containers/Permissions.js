@@ -12,7 +12,10 @@ import {
   isCreatePermissionPending,
   getCreatePermissionFailure,
   createPermissionReset,
-  getDeletePermissionsFailure, getModifyPermissionsFailure
+  getDeletePermissionsFailure,
+  getModifyPermissionsFailure,
+  modifyPermissionReset,
+  deletePermissionReset
 } from "../modules/permissions";
 import { Loading, ErrorPage } from "@scm-manager/ui-components";
 import type {
@@ -42,7 +45,8 @@ type Props = {
     callback?: () => void
   ) => void,
   createPermissionReset: (string, string) => void,
-
+  modifyPermissionReset: (string, string) => void,
+  deletePermissionReset: (string, string) => void,
   // context props
   t: string => string,
   match: any,
@@ -55,10 +59,14 @@ class Permissions extends React.Component<Props> {
       fetchPermissions,
       namespace,
       repoName,
-      createPermissionReset
+      modifyPermissionReset,
+      createPermissionReset,
+      deletePermissionReset
     } = this.props;
 
     createPermissionReset(namespace, repoName);
+    modifyPermissionReset(namespace, repoName);
+    deletePermissionReset(namespace, repoName);
     fetchPermissions(namespace, repoName);
   }
 
@@ -174,6 +182,12 @@ const mapDispatchToProps = dispatch => {
     },
     createPermissionReset: (namespace: string, repoName: string) => {
       dispatch(createPermissionReset(namespace, repoName));
+    },
+    modifyPermissionReset: (namespace: string, repoName: string) => {
+      dispatch(modifyPermissionReset(namespace, repoName));
+    },
+    deletePermissionReset: (namespace: string, repoName: string) => {
+      dispatch(deletePermissionReset(namespace, repoName));
     }
   };
 };
