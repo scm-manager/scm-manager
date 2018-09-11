@@ -2,9 +2,7 @@
 
 import { apiClient } from "@scm-manager/ui-components";
 import * as types from "../../modules/types";
-import type {
-  Action
-} from "@scm-manager/ui-types";
+import type { Action } from "@scm-manager/ui-types";
 import type {
   PermissionCollection,
   Permission,
@@ -234,8 +232,15 @@ export function createPermission(
         permission,
         CONTENT_TYPE
       )
-      .then(() => {
-        dispatch(createPermissionSuccess(permission, namespace, repoName));
+      .then(response => {
+        const location = response.headers.Location;
+        return apiClient.get(location);
+      })
+      .then(response => response.json())
+      .then(createdPermission => {
+        dispatch(
+          createPermissionSuccess(createdPermission, namespace, repoName)
+        );
         if (callback) {
           callback();
         }

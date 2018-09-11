@@ -14,10 +14,7 @@ import {
   createPermissionReset,
   getDeletePermissionsFailure
 } from "../modules/permissions";
-import {
-  Loading,
-  ErrorPage
-} from "@scm-manager/ui-components";
+import { Loading, ErrorPage } from "@scm-manager/ui-components";
 import type {
   Permission,
   PermissionCollection,
@@ -66,11 +63,14 @@ class Permissions extends React.Component<Props> {
   }
 
   permissionCreated = () => {
-    const { namespace, repoName } = this.props;
+    const { namespace, repoName, history } = this.props;
+    console.log("fetch permissions!");
+    //history.push(`/repo/${namespace}/${repoName}/permissions`);
     this.props.fetchPermissions(namespace, repoName);
   };
 
   createPermission = (permission: Permission) => {
+    console.log("create Permission");
     this.props.createPermission(
       permission,
       this.props.namespace,
