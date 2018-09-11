@@ -1,7 +1,5 @@
 package sonia.scm.repository.spi;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import sonia.scm.api.v2.resources.UriInfoStore;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.Repository;
@@ -15,9 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public abstract class InitializingHttpScmProtocolWrapper {
-
-  private static final Logger logger =
-    LoggerFactory.getLogger(InitializingHttpScmProtocolWrapper.class);
 
   private final Provider<? extends ScmProviderHttpServlet> delegateProvider;
   private final Provider<? extends PermissionFilter> permissionFilterProvider;
@@ -43,7 +38,7 @@ public abstract class InitializingHttpScmProtocolWrapper {
   }
 
   private String computeBasePath() {
-    if (uriInfoStore.get() != null) {
+    if (uriInfoStore.get() != null && uriInfoStore.get().get() != null) {
       return uriInfoStore.get().get().getBaseUri().resolve("../..").toASCIIString();
     } else {
       return scmConfiguration.getBaseUrl();
