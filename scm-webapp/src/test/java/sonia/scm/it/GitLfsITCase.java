@@ -51,7 +51,6 @@ import sonia.scm.api.v2.resources.RepositoryDto;
 import sonia.scm.api.v2.resources.UserDto;
 import sonia.scm.api.v2.resources.UserToUserDtoMapperImpl;
 import sonia.scm.repository.PermissionType;
-import sonia.scm.repository.Repository;
 import sonia.scm.user.User;
 import sonia.scm.user.UserTestData;
 import sonia.scm.util.HttpUtil;
@@ -117,7 +116,6 @@ public class GitLfsITCase {
   }
 
   @Test
-//  @Ignore("permissions not yet implemented")
   public void testLfsAPIWithOwnerPermissions() throws IOException {
     uploadAndDownloadAsUser(PermissionType.OWNER);
   }
@@ -128,9 +126,6 @@ public class GitLfsITCase {
     createUser(trillian);
 
     try {
-      // TODO enable when permissions are implemented in v2
-//      repository.getPermissions().add(new Permission(trillian.getId(), permissionType));
-//      modifyRepository(repository);
       String permissionsUrl = repository.getLinks().getLinkBy("permissions").get().getHref();
       IntegrationTestUtil.createResource(adminClient, URI.create(permissionsUrl))
         .accept("*/*")
@@ -146,7 +141,6 @@ public class GitLfsITCase {
   }
 
   @Test
-//  @Ignore("permissions not yet implemented")
   public void testLfsAPIWithWritePermissions() throws IOException {
     uploadAndDownloadAsUser(PermissionType.WRITE);
   }
@@ -163,16 +157,11 @@ public class GitLfsITCase {
       .post(ClientResponse.class, dto);
   }
 
-  private void modifyRepository(Repository repository) {
-    adminClient.resource(REST_BASE_URL + "repositories/" + repository.getId() + ".json").put(repository);
-  }
-
   private void removeUser(User user) {
-    adminClient.resource(REST_BASE_URL + "users/" + user.getId() + ".json").delete();
+    adminClient.resource(REST_BASE_URL + "users/" + user.getId()).delete();
   }
 
   @Test
-//  @Ignore("permissions not yet implemented")
   public void testLfsAPIWithoutWritePermissions() throws IOException {
     User trillian = UserTestData.createTrillian();
     trillian.setPassword("secret123");
@@ -183,9 +172,6 @@ public class GitLfsITCase {
 
 
     try {
-      // TODO enable when permissions are implemented in v2
-//      repository.getPermissions().add(new Permission(trillian.getId(), PermissionType.READ));
-//      modifyRepository(repository);
       String permissionsUrl = repository.getLinks().getLinkBy("permissions").get().getHref();
       IntegrationTestUtil.createResource(adminClient, URI.create(permissionsUrl))
         .accept("*/*")
@@ -200,7 +186,6 @@ public class GitLfsITCase {
   }
 
   @Test
-//  @Ignore("permissions not yet implemented")
   public void testLfsDownloadWithReadPermissions() throws IOException {
     User trillian = UserTestData.createTrillian();
     trillian.setPassword("secret123");
@@ -208,9 +193,6 @@ public class GitLfsITCase {
 
 
     try {
-      // TODO enable when permissions are implemented in v2
-//      repository.getPermissions().add(new Permission(trillian.getId(), PermissionType.READ));
-//      modifyRepository(repository);
       String permissionsUrl = repository.getLinks().getLinkBy("permissions").get().getHref();
       IntegrationTestUtil.createResource(adminClient, URI.create(permissionsUrl))
         .accept("*/*")
