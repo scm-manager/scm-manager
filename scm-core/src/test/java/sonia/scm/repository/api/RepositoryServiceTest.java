@@ -8,7 +8,6 @@ import sonia.scm.repository.spi.RepositoryServiceProvider;
 import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.UriInfo;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -46,7 +45,7 @@ public class RepositoryServiceTest {
 
   private static class DummyHttpProtocol extends HttpScmProtocol {
     public DummyHttpProtocol(Repository repository) {
-      super(repository, mock(UriInfo.class));
+      super(repository, "");
     }
 
     @Override

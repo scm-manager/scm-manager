@@ -1,6 +1,7 @@
 package sonia.scm.web;
 
 import sonia.scm.api.v2.resources.UriInfoStore;
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.spi.InitializingHttpScmProtocolWrapper;
 import sonia.scm.repository.spi.ScmProviderHttpServlet;
 
@@ -18,8 +19,8 @@ public class SvnScmProtocolProviderWrapper extends InitializingHttpScmProtocolWr
   public static final String PARAMETER_SVN_PARENTPATH = "SVNParentPath";
 
   @Inject
-  public SvnScmProtocolProviderWrapper(Provider<SvnDAVServlet> servletProvider, Provider<SvnPermissionFilter> permissionFilter, Provider<UriInfoStore> uriInfoStore) {
-    super(servletProvider, permissionFilter, uriInfoStore);
+  public SvnScmProtocolProviderWrapper(Provider<SvnDAVServlet> servletProvider, Provider<SvnPermissionFilter> permissionFilter, Provider<UriInfoStore> uriInfoStore, ScmConfiguration scmConfiguration) {
+    super(servletProvider, permissionFilter, uriInfoStore, scmConfiguration);
   }
 
   @Override

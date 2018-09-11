@@ -3,6 +3,7 @@ package sonia.scm.repository.spi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.api.v2.resources.UriInfoStore;
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.Repository;
 import sonia.scm.web.filter.PermissionFilter;
 
@@ -21,14 +22,16 @@ public abstract class InitializingHttpScmProtocolWrapper {
   private final Provider<? extends ScmProviderHttpServlet> delegateProvider;
   private final Provider<? extends PermissionFilter> permissionFilterProvider;
   private final Provider<UriInfoStore> uriInfoStore;
+  private final ScmConfiguration scmConfiguration;
 
   private volatile boolean isInitialized = false;
 
 
-  protected InitializingHttpScmProtocolWrapper(Provider<? extends ScmProviderHttpServlet> delegateProvider, Provider<? extends PermissionFilter> permissionFilterProvider, Provider<UriInfoStore> uriInfoStore) {
+  protected InitializingHttpScmProtocolWrapper(Provider<? extends ScmProviderHttpServlet> delegateProvider, Provider<? extends PermissionFilter> permissionFilterProvider, Provider<UriInfoStore> uriInfoStore, ScmConfiguration scmConfiguration) {
     this.delegateProvider = delegateProvider;
     this.permissionFilterProvider = permissionFilterProvider;
     this.uriInfoStore = uriInfoStore;
+    this.scmConfiguration = scmConfiguration;
   }
 
   protected void initializeServlet(ServletConfig config, ScmProviderHttpServlet httpServlet) throws ServletException {
@@ -39,10 +42,18 @@ public abstract class InitializingHttpScmProtocolWrapper {
     return new ProtocolWrapper(repository);
   }
 
+  private String computeBasePath() {
+    if (uriInfoStore.get() != null) {
+      return uriInfoStore.get().get().getBaseUri().resolve("../..").toASCIIString();
+    } else {
+      return scmConfiguration.getBaseUrl();
+    }
+  }
+
   private class ProtocolWrapper extends HttpScmProtocol {
 
     public ProtocolWrapper(Repository repository) {
-      super(repository, uriInfoStore.get().get());
+      super(repository, computeBasePath());
     }
 
     @Override
@@ -63,5 +74,6 @@ public abstract class InitializingHttpScmProtocolWrapper {
         repository,
         () -> delegateProvider.get().service(request, response, repository));
     }
+
   }
 }

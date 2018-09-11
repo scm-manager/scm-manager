@@ -7,18 +7,17 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.net.URI;
 
 public abstract class HttpScmProtocol implements ScmProtocol {
 
   private final Repository repository;
-  private final UriInfo uriInfo;
+  private final String basePath;
 
-  public HttpScmProtocol(Repository repository, UriInfo uriInfo) {
+  public HttpScmProtocol(Repository repository, String basePath) {
     this.repository = repository;
-    this.uriInfo = uriInfo;
+    this.basePath = basePath;
   }
 
   @Override
@@ -28,7 +27,7 @@ public abstract class HttpScmProtocol implements ScmProtocol {
 
   @Override
   public String getUrl() {
-    return uriInfo.getBaseUri().resolve(URI.create("../../repo/" + repository.getNamespace() + "/" + repository.getName())).toASCIIString();
+      return URI.create(basePath + "/").resolve("repo/" + repository.getNamespace() + "/" + repository.getName()).toASCIIString();
   }
 
   public final void serve(HttpServletRequest request, HttpServletResponse response, ServletConfig config) throws ServletException, IOException {
