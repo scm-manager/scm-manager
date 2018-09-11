@@ -2,10 +2,7 @@
 import React from "react";
 import { translate } from "react-i18next";
 import type { Permission } from "../../types/Permissions";
-import {
-  confirmAlert,
-  DeleteButton
-} from "../../../../../../scm-ui-components/packages/ui-components/src/index";
+import { confirmAlert, DeleteButton } from "@scm-manager/ui-components";
 
 type Props = {
   permission: Permission,

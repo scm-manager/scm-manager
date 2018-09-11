@@ -1,7 +1,11 @@
 // @flow
 import React from "react";
 import { translate } from "react-i18next";
-import { Checkbox, InputField, SubmitButton } from "../../../../../scm-ui-components/packages/ui-components/src/index";
+import {
+  Checkbox,
+  InputField,
+  SubmitButton
+} from "../../../../../scm-ui-components/packages/ui-components/src/index";
 import TypeSelector from "./TypeSelector";
 import type {
   PermissionCollection,
@@ -41,45 +45,30 @@ class CreatePermissionForm extends React.Component<Props, State> {
         <h2 className="subtitle">
           {t("add-permission.add-permission-heading")}
         </h2>
-        <table className="table">
-          <tbody>
-            <tr>
-              <td>{t("permission.name")}</td>
-              <td>
-                <InputField
-                  value={name ? name : ""}
-                  onChange={this.handleNameChange}
-                  validationError={this.currentPermissionIncludeName()}
-                  errorMessage={t("add-permission.name-input-invalid")}
-                />
-              </td>
-            </tr>
-            <tr>
-              <td>{t("permission.group-permission")}</td>
-              <td>
-                <Checkbox
-                  checked={groupPermission ? groupPermission : false}
-                  onChange={this.handleGroupPermissionChange}
-                />
-              </td>
-            </tr>
-            <tr>
-              <td>{t("permission.type")}</td>
-              <td>
-                <TypeSelector
-                  handleTypeChange={this.handleTypeChange}
-                  type={type ? type : "READ"}
-                />
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <SubmitButton
-          label={t("add-permission.submit-button")}
-          action={this.submit}
-          loading={loading}
-          disabled={this.isValid()}
-        />
+        <form onSubmit={this.submit}>
+          <InputField
+            label={t("permission.name")}
+            value={name ? name : ""}
+            onChange={this.handleNameChange}
+            validationError={this.currentPermissionIncludeName()}
+            errorMessage={t("add-permission.name-input-invalid")}
+          />
+          <Checkbox
+            label={t("permission.group-permission")}
+            checked={groupPermission ? groupPermission : false}
+            onChange={this.handleGroupPermissionChange}
+          />
+          <TypeSelector
+            label={t("permission.type")}
+            handleTypeChange={this.handleTypeChange}
+            type={type ? type : "READ"}
+          />
+          <SubmitButton
+            label={t("add-permission.submit-button")}
+            loading={loading}
+            disabled={this.isValid()}
+          />
+        </form>
       </div>
     );
   }

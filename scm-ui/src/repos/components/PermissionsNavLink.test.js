@@ -4,7 +4,11 @@ import "../../tests/enzyme";
 import "../../tests/i18n";
 import PermissionsNavLink from "./PermissionsNavLink";
 
-xdescribe("PermissionsNavLink", () => {
+jest.mock("@scm-manager/ui-components", () => ({
+  NavAction: require.requireActual("@scm-manager/ui-components").NavAction
+}));
+
+describe("PermissionsNavLink", () => {
   it("should render nothing, if the modify link is missing", () => {
     const repository = {
       _links: {}
