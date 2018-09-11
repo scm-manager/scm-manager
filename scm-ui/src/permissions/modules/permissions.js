@@ -233,13 +233,8 @@ export function createPermission(
         CONTENT_TYPE
       )
       .then(response => {
-        console.log(response);
-        const location = response.headers.Location;
-        return apiClient.get(
-          `${REPOS_URL}/${namespace}/${repoName}/${PERMISSIONS_URL}/${
-            permission.name
-          }`
-        );
+        const location = response.headers.get("Location");
+        return apiClient.get(location);
       })
       .then(response => response.json())
       .then(createdPermission => {
@@ -594,6 +589,35 @@ export function getDeletePermissionsFailure(
       return getFailure(
         state,
         DELETE_PERMISSION,
+        namespace + "/" + repoName + "/" + permissions[i].name
+      );
+    }
+  }
+  return null;
+}
+
+export function getModifyPermissionsFailure(
+  state: Object,
+  namespace: string,
+  repoName: string
+) {
+  const permissions =
+    state.permissions && state.permissions[namespace + "/" + repoName]
+      ? state.permissions[namespace + "/" + repoName].entries
+      : null;
+  if (permissions == null) return undefined;
+  for (let i = 0; i < permissions.length; i++) {
+    if (
+      getModifyPermissionFailure(
+        state,
+        namespace,
+        repoName,
+        permissions[i].name
+      )
+    ) {
+      return getFailure(
+        state,
+        MODIFY_PERMISSION,
         namespace + "/" + repoName + "/" + permissions[i].name
       );
     }

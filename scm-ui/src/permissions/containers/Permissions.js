@@ -12,7 +12,7 @@ import {
   isCreatePermissionPending,
   getCreatePermissionFailure,
   createPermissionReset,
-  getDeletePermissionsFailure
+  getDeletePermissionsFailure, getModifyPermissionsFailure
 } from "../modules/permissions";
 import { Loading, ErrorPage } from "@scm-manager/ui-components";
 import type {
@@ -137,7 +137,9 @@ const mapStateToProps = (state, ownProps) => {
   const repoName = ownProps.repoName;
   const error =
     getFetchPermissionsFailure(state, namespace, repoName) ||
-    getCreatePermissionFailure(state, namespace, repoName); //||    getDeletePermissionsFailure(state, namespace, repoName);
+    getCreatePermissionFailure(state, namespace, repoName) ||
+    getDeletePermissionsFailure(state, namespace, repoName) ||
+    getModifyPermissionsFailure(state, namespace, repoName);
   const loading = isFetchPermissionsPending(state, namespace, repoName);
   const permissions = getPermissionsOfRepo(state, namespace, repoName);
   const loadingCreatePermission = isCreatePermissionPending(

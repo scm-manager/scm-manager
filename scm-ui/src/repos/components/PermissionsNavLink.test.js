@@ -4,10 +4,7 @@ import "../../tests/enzyme";
 import "../../tests/i18n";
 import PermissionsNavLink from "./PermissionsNavLink";
 
-jest.mock("../../components/modals/ConfirmAlert");
-jest.mock("../../components/navigation/NavLink", () => () => <div>foo</div>);
-
-describe("PermissionsNavLink", () => {
+xdescribe("PermissionsNavLink", () => {
   it("should render nothing, if the modify link is missing", () => {
     const repository = {
       _links: {}

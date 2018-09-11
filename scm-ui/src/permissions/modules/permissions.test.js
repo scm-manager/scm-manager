@@ -18,6 +18,7 @@ import reducer, {
   deletePermissionSuccess,
   getDeletePermissionFailure,
   isDeletePermissionPending,
+  getModifyPermissionsFailure,
   MODIFY_PERMISSION_FAILURE,
   MODIFY_PERMISSION_PENDING,
   FETCH_PERMISSIONS,
@@ -234,12 +235,15 @@ describe("permission fetch", () => {
   it("should add a permission successfully", () => {
     // unmatched
     fetchMock.postOnce(REPOS_URL + "/hitchhiker/puzzle42/permissions", {
-      status: 204
+      status: 204,
+      headers: {
+        location: "/hitchhiker/puzzle42/permissions/user_eins"
+      }
     });
 
     fetchMock.getOnce(
-      REPOS_URL + "/hitchhiker/puzzle42/permissions",
-      hitchhiker_puzzle42RepoPermissions
+      REPOS_URL + "/hitchhiker/puzzle42/permissions/user_eins",
+      hitchhiker_puzzle42Permission_user_eins
     );
 
     const store = mockStore({});
@@ -283,9 +287,16 @@ describe("permission fetch", () => {
   it("should call the callback after permission successfully created", () => {
     // unmatched
     fetchMock.postOnce(REPOS_URL + "/hitchhiker/puzzle42/permissions", {
-      status: 204
+      status: 204,
+      headers: {
+        location: "/hitchhiker/puzzle42/permissions/user_eins"
+      }
     });
 
+    fetchMock.getOnce(
+      REPOS_URL + "/hitchhiker/puzzle42/permissions/user_eins",
+      hitchhiker_puzzle42Permission_user_eins
+    );
     let callMe = "not yet";
 
     const callback = () => {
@@ -566,13 +577,13 @@ describe("permissions selectors", () => {
     ).toEqual(true);
   });
 
-  it("should return false, when modify permissions is not pending", () => {
+  it("should return false, when modify permission is not pending", () => {
     expect(
       isModifyPermissionPending({}, "hitchiker", "puzzle42", "user_eins")
     ).toEqual(false);
   });
 
-  it("should return error when modify permissions did fail", () => {
+  it("should return error when modify permission did fail", () => {
     const state = {
       failure: {
         [MODIFY_PERMISSION + "/hitchhiker/puzzle42/user_eins"]: error
@@ -583,10 +594,30 @@ describe("permissions selectors", () => {
     ).toEqual(error);
   });
 
-  it("should return undefined when modify permissions did not fail", () => {
+  it("should return undefined when modify permission did not fail", () => {
     expect(
       getModifyPermissionFailure({}, "hitchhiker", "puzzle42", "user_eins")
     ).toBe(undefined);
+  });
+
+  it("should return error when one of the modify permissions did fail", () => {
+    const state = {
+      permissions: {
+        "hitchhiker/puzzle42": { entries: hitchhiker_puzzle42Permissions }
+      },
+      failure: {
+        [MODIFY_PERMISSION + "/hitchhiker/puzzle42/user_eins"]: error
+      }
+    };
+    expect(
+      getModifyPermissionsFailure(state, "hitchhiker", "puzzle42")
+    ).toEqual(error);
+  });
+
+  it("should return undefined when no modify permissions did not fail", () => {
+    expect(getModifyPermissionsFailure({}, "hitchhiker", "puzzle42")).toBe(
+      undefined
+    );
   });
 
   it("should return true, when createPermission is true", () => {
@@ -622,13 +653,13 @@ describe("permissions selectors", () => {
     ).toEqual(true);
   });
 
-  it("should return false, when delete permissions is not pending", () => {
+  it("should return false, when delete permission is not pending", () => {
     expect(
       isDeletePermissionPending({}, "hitchiker", "puzzle42", "user_eins")
     ).toEqual(false);
   });
 
-  it("should return error when delete permissions did fail", () => {
+  it("should return error when delete permission did fail", () => {
     const state = {
       failure: {
         [DELETE_PERMISSION + "/hitchhiker/puzzle42/user_eins"]: error
@@ -639,7 +670,7 @@ describe("permissions selectors", () => {
     ).toEqual(error);
   });
 
-  it("should return undefined when delete permissions did not fail", () => {
+  it("should return undefined when delete permission did not fail", () => {
     expect(
       getDeletePermissionFailure({}, "hitchhiker", "puzzle42", "user_eins")
     ).toBe(undefined);
