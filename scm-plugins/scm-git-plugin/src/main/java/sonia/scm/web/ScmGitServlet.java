@@ -42,8 +42,8 @@ import org.eclipse.jgit.http.server.GitServlet;
 import org.eclipse.jgit.lfs.lib.Constants;
 import org.slf4j.Logger;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryProvider;
 import sonia.scm.repository.RepositoryRequestListenerUtil;
+import sonia.scm.repository.spi.ScmProviderHttpServlet;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.web.lfs.servlet.LfsServletFactory;
 
@@ -64,7 +64,7 @@ import static org.slf4j.LoggerFactory.getLogger;
  * @author Sebastian Sdorra
  */
 @Singleton
-public class ScmGitServlet extends GitServlet
+public class ScmGitServlet extends GitServlet implements ScmProviderHttpServlet
 {
 
   /** Field description */
@@ -88,7 +88,6 @@ public class ScmGitServlet extends GitServlet
    * @param repositoryResolver
    * @param receivePackFactory
    * @param repositoryViewer
-   * @param repositoryProvider
    * @param repositoryRequestListenerUtil
    * @param lfsServletFactory
    */
@@ -96,11 +95,9 @@ public class ScmGitServlet extends GitServlet
   public ScmGitServlet(GitRepositoryResolver repositoryResolver,
                        GitReceivePackFactory receivePackFactory,
                        GitRepositoryViewer repositoryViewer,
-                       RepositoryProvider repositoryProvider,
                        RepositoryRequestListenerUtil repositoryRequestListenerUtil,
                        LfsServletFactory lfsServletFactory)
   {
-    this.repositoryProvider = repositoryProvider;
     this.repositoryViewer = repositoryViewer;
     this.repositoryRequestListenerUtil = repositoryRequestListenerUtil;
     this.lfsServletFactory = lfsServletFactory;
@@ -122,44 +119,9 @@ public class ScmGitServlet extends GitServlet
    * @throws ServletException
    */
   @Override
-  protected void service(HttpServletRequest request,
-    HttpServletResponse response)
+  public void service(HttpServletRequest request, HttpServletResponse response, Repository repository)
     throws ServletException, IOException
   {    
-    Repository repository = repositoryProvider.get();
-    if (repository != null) {
-      handleRequest(request, response, repository);
-    } else {
-      // logger
-      response.sendError(HttpServletResponse.SC_NOT_FOUND);
-    }
-  }
-  
-  /**
-   * Decides the type request being currently made and delegates it accordingly.
-   * <ul>
-   * <li>Batch API:</li>
-   * <ul>
-   * <li>used to provide the client with information on how handle the large files of a repository.</li>
-   * <li>response contains the information where to perform the actual upload and download of the large objects.</li>
-   * </ul>
-   * <li>Transfer API:</li>
-   * <ul>
-   * <li>receives and provides the actual large objects (resolves the pointer placed in the file of the working copy).</li>
-   * <li>invoked only after the Batch API has been questioned about what to do with the large files</li>
-   * </ul>
-   * <li>Regular Git Http API:</li>
-   * <ul>
-   * <li>regular git http wire protocol, use by normal git clients.</li>
-   * </ul>
-   * <li>Browser Overview:<li>
-   * <ul>
-   * <li>short repository overview for browser clients.</li>
-   * </ul>
-   * </li>
-   * </ul>
-   */
-  private void handleRequest(HttpServletRequest request, HttpServletResponse response, Repository repository) throws ServletException, IOException {
     String repoPath = repository.getNamespace() + "/" + repository.getName();
     logger.trace("handle git repository at {}", repoPath);
     if (isLfsBatchApiRequest(request, repoPath)) {
@@ -285,9 +247,6 @@ public class ScmGitServlet extends GitServlet
   }
 
   //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final RepositoryProvider repositoryProvider;
 
   /** Field description */
   private final RepositoryRequestListenerUtil repositoryRequestListenerUtil;

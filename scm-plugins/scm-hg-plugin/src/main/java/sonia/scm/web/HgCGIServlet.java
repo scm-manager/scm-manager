@@ -49,8 +49,8 @@ import sonia.scm.repository.HgHookManager;
 import sonia.scm.repository.HgPythonScript;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryProvider;
 import sonia.scm.repository.RepositoryRequestListenerUtil;
+import sonia.scm.repository.spi.ScmProviderHttpServlet;
 import sonia.scm.security.CipherUtil;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.HttpUtil;
@@ -58,7 +58,6 @@ import sonia.scm.web.cgi.CGIExecutor;
 import sonia.scm.web.cgi.CGIExecutorFactory;
 import sonia.scm.web.cgi.EnvList;
 
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -76,7 +75,7 @@ import java.util.Enumeration;
  * @author Sebastian Sdorra
  */
 @Singleton
-public class HgCGIServlet extends HttpServlet
+public class HgCGIServlet extends HttpServlet implements ScmProviderHttpServlet
 {
 
   /** Field description */
@@ -109,20 +108,18 @@ public class HgCGIServlet extends HttpServlet
    *
    * @param cgiExecutorFactory
    * @param configuration
-   * @param repositoryProvider
    * @param handler
    * @param hookManager
    * @param requestListenerUtil
    */
   @Inject
   public HgCGIServlet(CGIExecutorFactory cgiExecutorFactory,
-    ScmConfiguration configuration, RepositoryProvider repositoryProvider,
+    ScmConfiguration configuration,
     HgRepositoryHandler handler, HgHookManager hookManager,
     RepositoryRequestListenerUtil requestListenerUtil)
   {
     this.cgiExecutorFactory = cgiExecutorFactory;
     this.configuration = configuration;
-    this.repositoryProvider = repositoryProvider;
     this.handler = handler;
     this.hookManager = hookManager;
     this.requestListenerUtil = requestListenerUtil;
@@ -132,32 +129,11 @@ public class HgCGIServlet extends HttpServlet
 
   //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param response
-   *
-   * @throws IOException
-   * @throws ServletException
-   */
   @Override
-  protected void service(HttpServletRequest request,
-    HttpServletResponse response)
+  public void service(HttpServletRequest request,
+    HttpServletResponse response, Repository repository)
   {
-    Repository repository = repositoryProvider.get();
-
-    if (repository == null)
-    {
-      if (logger.isDebugEnabled())
-      {
-        logger.debug("no hg repository found at {}", request.getRequestURI());
-      }
-
-      response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-    }
-    else if (!handler.isConfigured())
+    if (!handler.isConfigured())
     {
       exceptionHandler.sendFormattedError(request, response,
         HgCGIExceptionHandler.ERROR_NOT_CONFIGURED);
@@ -346,11 +322,6 @@ public class HgCGIServlet extends HttpServlet
     return python;
   }
 
-//  @Override
-  public void serve(HttpServletRequest request, HttpServletResponse response, ServletConfig config)  {
-    service(request, response);
-  }
-
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
@@ -370,9 +341,6 @@ public class HgCGIServlet extends HttpServlet
 
   /** Field description */
   private final HgHookManager hookManager;
-
-  /** Field description */
-  private final RepositoryProvider repositoryProvider;
 
   /** Field description */
   private final RepositoryRequestListenerUtil requestListenerUtil;

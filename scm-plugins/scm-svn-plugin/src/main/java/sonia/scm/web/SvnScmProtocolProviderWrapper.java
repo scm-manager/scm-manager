@@ -2,6 +2,7 @@ package sonia.scm.web;
 
 import sonia.scm.api.v2.resources.UriInfoStore;
 import sonia.scm.repository.spi.InitializingHttpScmProtocolWrapper;
+import sonia.scm.repository.spi.ScmProviderHttpServlet;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -9,7 +10,6 @@ import javax.inject.Singleton;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import java.util.Enumeration;
 
 import static sonia.scm.web.SvnServletModule.PARAMETER_SVN_PARENTPATH;
@@ -22,7 +22,7 @@ public class SvnScmProtocolProviderWrapper extends InitializingHttpScmProtocolWr
   }
 
   @Override
-  protected void initializeServlet(ServletConfig config, HttpServlet httpServlet) throws ServletException {
+  protected void initializeServlet(ServletConfig config, ScmProviderHttpServlet httpServlet) throws ServletException {
 
     super.initializeServlet(new X(config), httpServlet);
   }

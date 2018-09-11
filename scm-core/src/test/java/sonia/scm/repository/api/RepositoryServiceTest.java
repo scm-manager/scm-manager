@@ -50,7 +50,7 @@ public class RepositoryServiceTest {
     }
 
     @Override
-    public void serve(HttpServletRequest request, HttpServletResponse response, ServletConfig config) {
+    public void serve(HttpServletRequest request, HttpServletResponse response, Repository repository, ServletConfig config) {
     }
   }
 }
