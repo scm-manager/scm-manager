@@ -1,7 +1,6 @@
 // @flow
 import React from "react";
 import type { Permission } from "../types/Permissions";
-import { Checkbox } from "../../components/forms/index";
 import { translate } from "react-i18next";
 import {
   modifyPermission,
@@ -14,9 +13,11 @@ import {
   deletePermissionReset
 } from "../modules/permissions";
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
 import type { History } from "history";
-import ErrorNotification from "../../components/ErrorNotification";
+import {
+  ErrorNotification,
+  Checkbox
+} from "@scm-manager/ui-components";
 import DeletePermissionButton from "../components/buttons/DeletePermissionButton";
 import TypeSelector from "../components/TypeSelector";
 

@@ -1,7 +1,7 @@
 // @flow
 import React from "react";
 import { translate } from "react-i18next";
-import { Checkbox, InputField } from "../../../components/forms/index";
+import { Checkbox, InputField } from "@scm-manager/ui-components";
 
 type Props = {
   realmDescription: string,

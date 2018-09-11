@@ -14,8 +14,10 @@ import {
   createPermissionReset,
   getDeletePermissionsFailure
 } from "../modules/permissions";
-import Loading from "../../components/Loading";
-import ErrorPage from "../../components/ErrorPage";
+import {
+  Loading,
+  ErrorPage
+} from "@scm-manager/ui-components";
 import type {
   Permission,
   PermissionCollection,

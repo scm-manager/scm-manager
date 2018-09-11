@@ -1,5 +1,5 @@
 // @flow
-import type { Repository, RepositoryGroup } from "../../types/Repositories";
+import type { Repository, RepositoryGroup } from "@scm-manager/ui-types";
 
 export default function groupByNamespace(
   repositories: Repository[]

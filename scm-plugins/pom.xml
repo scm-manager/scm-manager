@@ -139,14 +139,13 @@
       <plugin>
         <groupId>com.github.sdorra</groupId>
         <artifactId>buildfrontend-maven-plugin</artifactId>
-        <version>2.0.1</version>
         <configuration>
           <node>
-            <version>8.11.3</version>
+            <version>${nodejs.version}</version>
           </node>
           <pkgManager>
             <type>YARN</type>
-            <version>1.7.0</version>
+            <version>${yarn.version}</version>
           </pkgManager>
           <failOnMissingPackageJson>false</failOnMissingPackageJson>
           <script>build</script>

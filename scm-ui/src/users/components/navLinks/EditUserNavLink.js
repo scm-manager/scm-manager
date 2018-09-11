@@ -1,8 +1,8 @@
 //@flow
 import React from "react";
 import { translate } from "react-i18next";
-import type { User } from "../../types/User";
-import { NavLink } from "../../../components/navigation";
+import type { User } from "@scm-manager/ui-types";
+import { NavLink } from "@scm-manager/ui-components";
 
 type Props = {
   t: string => string,

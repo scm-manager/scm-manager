@@ -1,10 +1,13 @@
 // @flow
 import React from "react";
 import { translate } from "react-i18next";
-import { Checkbox, InputField } from "../../../components/forms/index";
-import Subtitle from "../../../components/layout/Subtitle";
+import {
+  Checkbox,
+  InputField,
+  Subtitle,
+  AddEntryToTableField
+} from "@scm-manager/ui-components";
 import ProxyExcludesTable from "../table/ProxyExcludesTable";
-import AddEntryToTableField from "../../../components/forms/AddEntryToTableField";
 
 type Props = {
   proxyPassword: string,

@@ -1,0 +1,12 @@
+{
+  "name": "scm-ui-components",
+  "description": "Lerna root for SCM-Manager UI Components",
+  "private": true,
+  "scripts": {
+    "bootstrap": "lerna bootstrap",
+    "link": "lerna exec -- yarn link"
+  },
+  "devDependencies": {
+    "lerna": "^3.2.1"
+  }
+}

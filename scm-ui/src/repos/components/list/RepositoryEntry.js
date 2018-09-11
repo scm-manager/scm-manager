@@ -2,8 +2,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import injectSheet from "react-jss";
-import type { Repository } from "../../types/Repositories";
-import DateFromNow from "../../../components/DateFromNow";
+import type { Repository } from "@scm-manager/ui-types";
+import { DateFromNow } from "@scm-manager/ui-components";
 import RepositoryEntryLink from "./RepositoryEntryLink";
 import classNames from "classnames";
 import RepositoryAvatar from "./RepositoryAvatar";

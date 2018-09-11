@@ -1,10 +1,14 @@
 //@flow
 import React from "react";
-import { NavLink } from "../../components/navigation";
+import { NavLink } from "@scm-manager/ui-components";
 import { translate } from "react-i18next";
-import type { Repository } from "../types/Repositories";
+import type { Repository } from "@scm-manager/ui-types";
 
-type Props = { permissionUrl: string, t: string => string, repository: Repository };
+type Props = {
+  permissionUrl: string,
+  t: string => string,
+  repository: Repository
+};
 
 class PermissionsNavLink extends React.Component<Props> {
   hasPermissionsLink = () => {
@@ -15,8 +19,9 @@ class PermissionsNavLink extends React.Component<Props> {
       return null;
     }
     const { permissionUrl, t } = this.props;
-    return <NavLink to={permissionUrl} label={t("repository-root.permissions")}
-    />;
+    return (
+      <NavLink to={permissionUrl} label={t("repository-root.permissions")} />
+    );
   }
 }
 

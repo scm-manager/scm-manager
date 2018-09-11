@@ -1,7 +1,10 @@
 // @flow
-import { apiClient } from "../../apiclient";
+
+import { apiClient } from "@scm-manager/ui-components";
 import * as types from "../../modules/types";
-import type { Action } from "../../types/Action";
+import type {
+  Action
+} from "@scm-manager/ui-types";
 import type {
   PermissionCollection,
   Permission,

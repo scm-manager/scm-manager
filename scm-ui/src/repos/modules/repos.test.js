@@ -47,7 +47,7 @@ import reducer, {
   getModifyRepoFailure,
   modifyRepoSuccess
 } from "./repos";
-import type { Repository, RepositoryCollection } from "../types/Repositories";
+import type { Repository, RepositoryCollection } from "@scm-manager/ui-types";
 
 const hitchhikerPuzzle42: Repository = {
   contact: "fourtytwo@hitchhiker.com",

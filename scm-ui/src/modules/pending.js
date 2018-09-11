@@ -1,5 +1,5 @@
 // @flow
-import type { Action } from "../types/Action";
+import type { Action } from "@scm-manager/ui-types";
 import * as types from "./types";
 
 const PENDING_SUFFIX = "_" + types.PENDING_SUFFIX;

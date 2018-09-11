@@ -3,14 +3,14 @@ import React from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import UserForm from "./../components/UserForm";
-import type { User } from "../types/User";
+import type { User } from "@scm-manager/ui-types";
 import {
   modifyUser,
   isModifyUserPending,
   getModifyUserFailure
 } from "../modules/users";
 import type { History } from "history";
-import ErrorNotification from "../../components/ErrorNotification";
+import { ErrorNotification } from "@scm-manager/ui-components";
 
 type Props = {
   loading: boolean,
