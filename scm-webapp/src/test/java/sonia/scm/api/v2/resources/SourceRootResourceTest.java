@@ -73,6 +73,7 @@ public class SourceRootResourceTest {
         MockProvider.of(sourceRootResource),
         null,
         null,
+        null,
         null)),
         null);
     dispatcher = createDispatcher(repositoryRootResource);
