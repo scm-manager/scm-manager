@@ -2,7 +2,6 @@ package sonia.scm.api.v2.resources;
 
 import org.junit.Test;
 
-import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
 import static org.junit.Assert.assertSame;
@@ -15,22 +14,22 @@ public class ScmPathInfoStoreTest {
   public void shouldReturnSetInfo() {
     URI someUri = URI.create("/anything");
 
-    UriInfo uriInfo = mock(UriInfo.class);
+    ScmPathInfo uriInfo = mock(ScmPathInfo.class);
     ScmPathInfoStore scmPathInfoStore = new ScmPathInfoStore();
 
-    when(uriInfo.getBaseUri()).thenReturn(someUri);
+    when(uriInfo.getApiRestUri()).thenReturn(someUri);
 
-    scmPathInfoStore.setFromRestRequest(uriInfo);
+    scmPathInfoStore.set(uriInfo);
 
     assertSame(someUri, scmPathInfoStore.get().getApiRestUri());
   }
 
   @Test(expected = IllegalStateException.class)
   public void shouldFailIfSetTwice() {
-    UriInfo uriInfo = mock(UriInfo.class);
+    ScmPathInfo uriInfo = mock(ScmPathInfo.class);
     ScmPathInfoStore scmPathInfoStore = new ScmPathInfoStore();
 
-    scmPathInfoStore.setFromRestRequest(uriInfo);
-    scmPathInfoStore.setFromRestRequest(uriInfo);
+    scmPathInfoStore.set(uriInfo);
+    scmPathInfoStore.set(uriInfo);
   }
 }

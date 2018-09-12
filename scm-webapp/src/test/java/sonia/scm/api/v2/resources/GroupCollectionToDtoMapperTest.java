@@ -11,7 +11,6 @@ import org.junit.Test;
 import sonia.scm.PageResult;
 import sonia.scm.group.Group;
 
-import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
@@ -28,7 +27,7 @@ import static sonia.scm.PageResult.createPage;
 
 public class GroupCollectionToDtoMapperTest {
 
-  private final UriInfo uriInfo = mock(UriInfo.class);
+  private final ScmPathInfo uriInfo = mock(ScmPathInfo.class);
   private final ScmPathInfoStore scmPathInfoStore = new ScmPathInfoStore();
   private final ResourceLinks resourceLinks = new ResourceLinks(scmPathInfoStore);
   private final GroupToGroupDtoMapper groupToDtoMapper = mock(GroupToGroupDtoMapper.class);
@@ -41,10 +40,10 @@ public class GroupCollectionToDtoMapperTest {
 
   @Before
   public void init() throws URISyntaxException {
-    scmPathInfoStore.setFromRestRequest(uriInfo);
+    scmPathInfoStore.set(uriInfo);
     URI baseUri = new URI("http://example.com/base/");
     expectedBaseUri = baseUri.resolve(GroupRootResource.GROUPS_PATH_V2 + "/");
-    when(uriInfo.getBaseUri()).thenReturn(baseUri);
+    when(uriInfo.getApiRestUri()).thenReturn(baseUri);
     subjectThreadState.bind();
     ThreadContext.bind(subject);
   }
