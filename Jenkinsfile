@@ -11,46 +11,49 @@ node() { // No specific label
 
   properties([
     // Keep only the last 10 build to preserve space
-    buildDiscarder(logRotator(numToKeepStr: '10')),
+    buildDiscarder(logRotator(numToKeepStr: '10'))
   ])
 
-  catchError {
+  timeout(activity: true, time: 20, unit: 'MINUTES') {
 
-    Maven mvn = setupMavenBuild()
+    catchError {
 
-    stage('Checkout') {
-      checkout scm
-    }
+      Maven mvn = setupMavenBuild()
 
-    stage('Build') {
-      mvn 'clean install -DskipTests'
-    }
+      stage('Checkout') {
+        checkout scm
+      }
 
-    stage('Unit Test') {
-      mvn 'test -Dsonia.scm.test.skip.hg=true -Dmaven.test.failure.ignore=true'
-    }
+      stage('Build') {
+        mvn 'clean install -DskipTests'
+      }
 
-    stage('Integration Test') {
-      mvn 'verify -Pit -pl :scm-webapp,:scm-it  -Dmaven.test.failure.ignore=true'
-    }
+      stage('Unit Test') {
+        mvn 'test -Dsonia.scm.test.skip.hg=true -Dmaven.test.failure.ignore=true'
+      }
 
-    stage('SonarQube') {
+      stage('Integration Test') {
+        mvn 'verify -Pit -pl :scm-webapp,:scm-it  -Dmaven.test.failure.ignore=true'
+      }
 
-      analyzeWith(mvn)
+      stage('SonarQube') {
 
-      if (!waitForQualityGateWebhookToBeCalled()) {
-        currentBuild.result = 'UNSTABLE'
+        analyzeWith(mvn)
+
+        if (!waitForQualityGateWebhookToBeCalled()) {
+          currentBuild.result = 'UNSTABLE'
+        }
       }
     }
+
+    // Archive Unit and integration test results, if any
+    junit allowEmptyResults: true, testResults: '**/target/failsafe-reports/TEST-*.xml,**/target/surefire-reports/TEST-*.xml,**/target/jest-reports/TEST-*.xml'
+
+    // Find maven warnings and visualize in job
+    warnings consoleParsers: [[parserName: 'Maven']], canRunOnFailed: true
+
+    mailIfStatusChanged(commitAuthorEmail)
   }
-
-  // Archive Unit and integration test results, if any
-  junit allowEmptyResults: true, testResults: '**/target/failsafe-reports/TEST-*.xml,**/target/surefire-reports/TEST-*.xml,**/target/jest-reports/TEST-*.xml'
-
-  // Find maven warnings and visualize in job
-  warnings consoleParsers: [[parserName: 'Maven']], canRunOnFailed: true
-
-  mailIfStatusChanged(commitAuthorEmail)
 }
 
 String mainBranch
