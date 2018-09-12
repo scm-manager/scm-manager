@@ -1,6 +1,7 @@
 package sonia.scm.api.v2.resources;
 
 
+import com.google.inject.util.Providers;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.support.SubjectThreadState;
@@ -18,7 +19,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import sonia.scm.MockProvider;
 import sonia.scm.api.rest.AuthorizationExceptionMapper;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
@@ -80,9 +80,9 @@ public class ChangesetRootResourceTest {
   public void prepareEnvironment() throws Exception {
     changesetCollectionToDtoMapper = new ChangesetCollectionToDtoMapper(changesetToChangesetDtoMapper, resourceLinks);
     changesetRootResource = new ChangesetRootResource(serviceFactory, changesetCollectionToDtoMapper, changesetToChangesetDtoMapper);
-    RepositoryRootResource repositoryRootResource = new RepositoryRootResource(MockProvider
+    RepositoryRootResource repositoryRootResource = new RepositoryRootResource(Providers
       .of(new RepositoryResource(null, null, null, null, null,
-        MockProvider.of(changesetRootResource), null, null, null, null)), null);
+        Providers.of(changesetRootResource), null, null, null, null)), null);
     dispatcher.getRegistry().addSingletonResource(repositoryRootResource);
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(repositoryService);
     when(serviceFactory.create(any(Repository.class))).thenReturn(repositoryService);

@@ -1,12 +1,12 @@
 package sonia.scm.repository.spi;
 
 import com.google.inject.ProvisionException;
+import com.google.inject.util.Providers;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.stubbing.Answer;
 import org.mockito.stubbing.OngoingStubbing;
-import sonia.scm.MockProvider;
 import sonia.scm.api.v2.resources.ScmPathInfo;
 import sonia.scm.api.v2.resources.ScmPathInfoStore;
 import sonia.scm.config.ScmConfiguration;
@@ -26,6 +26,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -58,8 +59,10 @@ public class InitializingHttpScmProtocolWrapperTest {
   @Before
   public void init() {
     initMocks(this);
-    pathInfoStoreProvider = MockProvider.of(pathInfoStore);
-    wrapper = new InitializingHttpScmProtocolWrapper(MockProvider.of(this.delegateServlet), MockProvider.of(permissionFilter), pathInfoStoreProvider, scmConfiguration) {};
+    pathInfoStoreProvider = mock(Provider.class);
+    when(pathInfoStoreProvider.get()).thenReturn(pathInfoStore);
+
+    wrapper = new InitializingHttpScmProtocolWrapper(Providers.of(this.delegateServlet), Providers.of(permissionFilter), pathInfoStoreProvider, scmConfiguration) {};
     when(scmConfiguration.getBaseUrl()).thenReturn("http://example.com/scm");
   }
 

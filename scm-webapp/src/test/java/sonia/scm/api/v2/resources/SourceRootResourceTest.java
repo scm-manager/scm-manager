@@ -1,5 +1,6 @@
 package sonia.scm.api.v2.resources;
 
+import com.google.inject.util.Providers;
 import org.jboss.resteasy.core.Dispatcher;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
@@ -9,7 +10,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import sonia.scm.MockProvider;
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.FileObject;
 import sonia.scm.repository.NamespaceAndName;
@@ -65,13 +65,13 @@ public class SourceRootResourceTest {
     when(fileObjectToFileObjectDtoMapper.map(any(FileObject.class), any(NamespaceAndName.class), anyString())).thenReturn(dto);
     SourceRootResource sourceRootResource = new SourceRootResource(serviceFactory, browserResultToBrowserResultDtoMapper);
     RepositoryRootResource repositoryRootResource =
-      new RepositoryRootResource(MockProvider.of(new RepositoryResource(null,
+      new RepositoryRootResource(Providers.of(new RepositoryResource(null,
         null,
         null,
         null,
         null,
         null,
-        MockProvider.of(sourceRootResource),
+        Providers.of(sourceRootResource),
         null,
         null,
         null)),

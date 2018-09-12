@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.collect.ImmutableList;
+import com.google.inject.util.Providers;
 import de.otto.edison.hal.HalRepresentation;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +28,6 @@ import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import sonia.scm.MockProvider;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Permission;
 import sonia.scm.repository.PermissionType;
@@ -138,8 +138,8 @@ public class PermissionRootResourceTest {
     initMocks(this);
     permissionCollectionToDtoMapper = new PermissionCollectionToDtoMapper(permissionToPermissionDtoMapper, resourceLinks);
     permissionRootResource = new PermissionRootResource(permissionDtoToPermissionMapper, permissionToPermissionDtoMapper, permissionCollectionToDtoMapper, resourceLinks, repositoryManager);
-    RepositoryRootResource repositoryRootResource = new RepositoryRootResource(MockProvider
-      .of(new RepositoryResource(null, null, null, null, null, null, null, null, MockProvider.of(permissionRootResource), null)), null);
+    RepositoryRootResource repositoryRootResource = new RepositoryRootResource(Providers
+      .of(new RepositoryResource(null, null, null, null, null, null, null, null, Providers.of(permissionRootResource), null)), null);
     dispatcher = createDispatcher(repositoryRootResource);
     subjectThreadState.bind();
     ThreadContext.bind(subject);
