@@ -1,14 +1,23 @@
 package sonia.scm;
 
+import com.google.inject.util.Providers;
 import org.assertj.core.api.Assertions;
 import org.junit.After;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
+import sonia.scm.template.TemplateEngine;
 
-import static org.junit.Assert.*;
-
+@RunWith(MockitoJUnitRunner.class)
 public class PushStateDispatcherProviderTest {
 
-  private PushStateDispatcherProvider provider = new PushStateDispatcherProvider();
+  @Mock
+  private TemplateEngine templateEngine;
+
+  private PushStateDispatcherProvider provider = new PushStateDispatcherProvider(
+    Providers.of(new TemplatingPushStateDispatcher(templateEngine))
+  );
 
   @Test
   public void testGetProxyPushStateWithPropertySet() {
@@ -20,7 +29,7 @@ public class PushStateDispatcherProviderTest {
   @Test
   public void testGetProxyPushStateWithoutProperty() {
     PushStateDispatcher dispatcher = provider.get();
-    Assertions.assertThat(dispatcher).isInstanceOf(ForwardingPushStateDispatcher.class);
+    Assertions.assertThat(dispatcher).isInstanceOf(TemplatingPushStateDispatcher.class);
   }
 
   @After

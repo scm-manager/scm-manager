@@ -8,7 +8,7 @@ type Props = {
 class SvnAvatar extends React.Component<Props> {
 
   render() {
-    return <Image src="/scm/images/svn-logo.gif" alt="Subversion Logo" />;
+    return <Image src="/images/svn-logo.gif" alt="Subversion Logo" />;
   }
 
 }
