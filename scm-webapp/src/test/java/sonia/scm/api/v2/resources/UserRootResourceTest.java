@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import sonia.scm.MockProvider;
 import sonia.scm.PageResult;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;

@@ -27,6 +27,7 @@ import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import sonia.scm.MockProvider;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Permission;
 import sonia.scm.repository.PermissionType;
