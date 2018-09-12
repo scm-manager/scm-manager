@@ -20,7 +20,7 @@ public class ScmPathInfoStoreTest {
 
     when(uriInfo.getBaseUri()).thenReturn(someUri);
 
-    scmPathInfoStore.set(uriInfo);
+    scmPathInfoStore.setFromRestRequest(uriInfo);
 
     assertSame(someUri, scmPathInfoStore.get().getApiRestUri());
   }
@@ -30,7 +30,7 @@ public class ScmPathInfoStoreTest {
     UriInfo uriInfo = mock(UriInfo.class);
     ScmPathInfoStore scmPathInfoStore = new ScmPathInfoStore();
 
-    scmPathInfoStore.set(uriInfo);
-    scmPathInfoStore.set(uriInfo);
+    scmPathInfoStore.setFromRestRequest(uriInfo);
+    scmPathInfoStore.setFromRestRequest(uriInfo);
   }
 }

@@ -4,17 +4,17 @@ import javax.ws.rs.core.UriInfo;
 
 public class ScmPathInfoStore {
 
-  private UriInfo uriInfo;
+  private ScmPathInfo pathInfo;
 
   public ScmPathInfo get() {
-    return () -> uriInfo.getBaseUri();
+    return pathInfo;
   }
 
-  public void set(UriInfo uriInfo) {
-    if (this.uriInfo != null) {
+  public void setFromRestRequest(UriInfo uriInfo) {
+    if (this.pathInfo != null) {
       throw new IllegalStateException("UriInfo already set");
     }
-    this.uriInfo = uriInfo;
+    this.pathInfo = uriInfo::getBaseUri;
   }
 
 }

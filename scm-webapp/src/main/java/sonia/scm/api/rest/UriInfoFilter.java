@@ -19,6 +19,6 @@ public class UriInfoFilter implements ContainerRequestFilter {
 
   @Override
   public void filter(ContainerRequestContext requestContext) {
-    storeProvider.get().set(requestContext.getUriInfo());
+    storeProvider.get().setFromRestRequest(requestContext.getUriInfo());
   }
 }
