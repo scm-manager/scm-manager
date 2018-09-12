@@ -57,7 +57,7 @@ public class HgConfigPackageResourceTest {
   private final URI baseUri = java.net.URI.create("/");
 
   @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-  private UriInfoStore uriInfoStore;
+  private ScmPathInfoStore scmPathInfoStore;
 
   @InjectMocks
   private HgConfigPackagesToDtoMapperImpl mapper;
@@ -81,7 +81,7 @@ public class HgConfigPackageResourceTest {
   public void prepareEnvironment() {
     setupResources();
 
-    when(uriInfoStore.get().getApiRestUri()).thenReturn(baseUri);
+    when(scmPathInfoStore.get().getApiRestUri()).thenReturn(baseUri);
 
     when(hgPackageReader.getPackages().getPackages()).thenReturn(createPackages());
   }

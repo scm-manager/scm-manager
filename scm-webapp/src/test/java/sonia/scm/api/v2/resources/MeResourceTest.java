@@ -41,7 +41,7 @@ public class MeResourceTest {
   @Mock
   private ScmPathInfo uriInfo;
   @Mock
-  private UriInfoStore uriInfoStore;
+  private ScmPathInfoStore scmPathInfoStore;
 
   @Mock
   private UserManager userManager;
@@ -62,7 +62,7 @@ public class MeResourceTest {
     MeResource meResource = new MeResource(userToDtoMapper, userManager);
     dispatcher.getRegistry().addSingletonResource(meResource);
     when(uriInfo.getApiRestUri()).thenReturn(URI.create("/"));
-    when(uriInfoStore.get()).thenReturn(uriInfo);
+    when(scmPathInfoStore.get()).thenReturn(uriInfo);
   }
 
   @Test

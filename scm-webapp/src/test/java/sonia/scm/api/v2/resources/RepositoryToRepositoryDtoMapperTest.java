@@ -48,7 +48,7 @@ public class RepositoryToRepositoryDtoMapperTest {
   @Mock
   private RepositoryService repositoryService;
   @Mock
-  private UriInfoStore uriInfoStore;
+  private ScmPathInfoStore scmPathInfoStore;
   @Mock
   private ScmPathInfo uriInfo;
 
@@ -61,7 +61,7 @@ public class RepositoryToRepositoryDtoMapperTest {
     when(serviceFactory.create(any(Repository.class))).thenReturn(repositoryService);
     when(repositoryService.isSupported(any(Command.class))).thenReturn(true);
     when(repositoryService.getSupportedProtocols()).thenReturn(emptySet());
-    when(uriInfoStore.get()).thenReturn(uriInfo);
+    when(scmPathInfoStore.get()).thenReturn(uriInfo);
     when(uriInfo.getApiRestUri()).thenReturn(URI.create("/x/y"));
   }
 

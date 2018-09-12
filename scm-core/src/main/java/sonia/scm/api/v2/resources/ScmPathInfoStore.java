@@ -2,7 +2,7 @@ package sonia.scm.api.v2.resources;
 
 import javax.ws.rs.core.UriInfo;
 
-public class UriInfoStore {
+public class ScmPathInfoStore {
 
   private UriInfo uriInfo;
 

@@ -31,7 +31,7 @@ public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Reposit
   @Inject
   private RepositoryServiceFactory serviceFactory;
   @Inject
-  private UriInfoStore uriInfoStore;
+  private ScmPathInfoStore scmPathInfoStore;
 
   abstract HealthCheckFailureDto toDto(HealthCheckFailure failure);
 

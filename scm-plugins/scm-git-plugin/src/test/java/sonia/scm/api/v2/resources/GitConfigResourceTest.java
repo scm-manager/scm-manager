@@ -53,7 +53,7 @@ public class GitConfigResourceTest {
   private GitConfigDtoToGitConfigMapperImpl dtoToConfigMapper;
 
   @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-  private UriInfoStore uriInfoStore;
+  private ScmPathInfoStore scmPathInfoStore;
 
   @InjectMocks
   private GitConfigToGitConfigDtoMapperImpl configToDtoMapper;
@@ -67,7 +67,7 @@ public class GitConfigResourceTest {
     when(repositoryHandler.getConfig()).thenReturn(gitConfig);
     GitConfigResource gitConfigResource = new GitConfigResource(dtoToConfigMapper, configToDtoMapper, repositoryHandler);
     dispatcher.getRegistry().addSingletonResource(gitConfigResource);
-    when(uriInfoStore.get().getApiRestUri()).thenReturn(baseUri);
+    when(scmPathInfoStore.get().getApiRestUri()).thenReturn(baseUri);
   }
 
   @Test

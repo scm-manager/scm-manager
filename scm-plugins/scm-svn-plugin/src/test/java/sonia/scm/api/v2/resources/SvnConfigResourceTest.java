@@ -53,7 +53,7 @@ public class SvnConfigResourceTest {
   private SvnConfigDtoToSvnConfigMapperImpl dtoToConfigMapper;
 
   @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-  private UriInfoStore uriInfoStore;
+  private ScmPathInfoStore scmPathInfoStore;
 
   @InjectMocks
   private SvnConfigToSvnConfigDtoMapperImpl configToDtoMapper;
@@ -67,7 +67,7 @@ public class SvnConfigResourceTest {
     when(repositoryHandler.getConfig()).thenReturn(gitConfig);
     SvnConfigResource gitConfigResource = new SvnConfigResource(dtoToConfigMapper, configToDtoMapper, repositoryHandler);
     dispatcher.getRegistry().addSingletonResource(gitConfigResource);
-    when(uriInfoStore.get().getApiRestUri()).thenReturn(baseUri);
+    when(scmPathInfoStore.get().getApiRestUri()).thenReturn(baseUri);
   }
 
   @Test

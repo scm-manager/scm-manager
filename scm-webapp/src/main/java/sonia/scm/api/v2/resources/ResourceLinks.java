@@ -7,16 +7,16 @@ import java.net.URI;
 
 class ResourceLinks {
 
-  private final UriInfoStore uriInfoStore;
+  private final ScmPathInfoStore scmPathInfoStore;
 
   @Inject
-  ResourceLinks(UriInfoStore uriInfoStore) {
-    this.uriInfoStore = uriInfoStore;
+  ResourceLinks(ScmPathInfoStore scmPathInfoStore) {
+    this.scmPathInfoStore = scmPathInfoStore;
   }
 
 
   GroupLinks group() {
-    return new GroupLinks(uriInfoStore.get());
+    return new GroupLinks(scmPathInfoStore.get());
   }
 
   static class GroupLinks {
@@ -40,7 +40,7 @@ class ResourceLinks {
   }
 
   GroupCollectionLinks groupCollection() {
-    return new GroupCollectionLinks(uriInfoStore.get());
+    return new GroupCollectionLinks(scmPathInfoStore.get());
   }
 
   static class GroupCollectionLinks {
@@ -60,7 +60,7 @@ class ResourceLinks {
   }
 
   UserLinks user() {
-    return new UserLinks(uriInfoStore.get());
+    return new UserLinks(scmPathInfoStore.get());
   }
 
   static class UserLinks {
@@ -84,7 +84,7 @@ class ResourceLinks {
   }
 
   UserCollectionLinks userCollection() {
-    return new UserCollectionLinks(uriInfoStore.get());
+    return new UserCollectionLinks(scmPathInfoStore.get());
   }
 
   static class UserCollectionLinks {
@@ -104,7 +104,7 @@ class ResourceLinks {
   }
 
   ConfigLinks config() {
-    return new ConfigLinks(uriInfoStore.get());
+    return new ConfigLinks(scmPathInfoStore.get());
   }
 
   static class ConfigLinks {
@@ -124,7 +124,7 @@ class ResourceLinks {
   }
 
   public RepositoryLinks repository() {
-    return new RepositoryLinks(uriInfoStore.get());
+    return new RepositoryLinks(scmPathInfoStore.get());
   }
 
   static class RepositoryLinks {
@@ -150,7 +150,7 @@ class ResourceLinks {
   }
 
   RepositoryCollectionLinks repositoryCollection() {
-    return new RepositoryCollectionLinks(uriInfoStore.get());
+    return new RepositoryCollectionLinks(scmPathInfoStore.get());
   }
 
   static class RepositoryCollectionLinks {
@@ -170,7 +170,7 @@ class ResourceLinks {
   }
 
   public RepositoryTypeLinks repositoryType() {
-    return new RepositoryTypeLinks(uriInfoStore.get());
+    return new RepositoryTypeLinks(scmPathInfoStore.get());
   }
 
   static class RepositoryTypeLinks {
@@ -186,7 +186,7 @@ class ResourceLinks {
   }
 
   public RepositoryTypeCollectionLinks repositoryTypeCollection() {
-    return new RepositoryTypeCollectionLinks(uriInfoStore.get());
+    return new RepositoryTypeCollectionLinks(scmPathInfoStore.get());
   }
 
   static class RepositoryTypeCollectionLinks {
@@ -203,7 +203,7 @@ class ResourceLinks {
 
 
   public TagCollectionLinks tag() {
-    return new TagCollectionLinks(uriInfoStore.get());
+    return new TagCollectionLinks(scmPathInfoStore.get());
   }
 
   static class TagCollectionLinks {
@@ -223,7 +223,7 @@ class ResourceLinks {
   }
 
   public DiffLinks diff() {
-    return new DiffLinks(uriInfoStore.get());
+    return new DiffLinks(scmPathInfoStore.get());
   }
 
   static class DiffLinks {
@@ -243,7 +243,7 @@ class ResourceLinks {
   }
 
   public BranchLinks branch() {
-    return new BranchLinks(uriInfoStore.get());
+    return new BranchLinks(scmPathInfoStore.get());
   }
 
   static class BranchLinks {
@@ -263,7 +263,7 @@ class ResourceLinks {
   }
 
   public BranchCollectionLinks branchCollection() {
-    return new BranchCollectionLinks(uriInfoStore.get());
+    return new BranchCollectionLinks(scmPathInfoStore.get());
   }
 
   static class BranchCollectionLinks {
@@ -279,7 +279,7 @@ class ResourceLinks {
   }
 
   public ChangesetLinks changeset() {
-    return new ChangesetLinks(uriInfoStore.get());
+    return new ChangesetLinks(scmPathInfoStore.get());
   }
 
   static class ChangesetLinks {
@@ -303,7 +303,7 @@ class ResourceLinks {
   }
 
   public SourceLinks source() {
-    return new SourceLinks(uriInfoStore.get());
+    return new SourceLinks(scmPathInfoStore.get());
   }
 
   static class SourceLinks {
@@ -339,7 +339,7 @@ class ResourceLinks {
     }
   }
   public PermissionLinks permission() {
-    return new PermissionLinks(uriInfoStore.get());
+    return new PermissionLinks(scmPathInfoStore.get());
   }
 
   static class PermissionLinks {
@@ -376,7 +376,7 @@ class ResourceLinks {
 
 
   public UIPluginLinks uiPlugin() {
-    return new UIPluginLinks(uriInfoStore.get());
+    return new UIPluginLinks(scmPathInfoStore.get());
   }
 
   static class UIPluginLinks {
@@ -392,7 +392,7 @@ class ResourceLinks {
   }
 
   public UIPluginCollectionLinks uiPluginCollection() {
-    return new UIPluginCollectionLinks(uriInfoStore.get());
+    return new UIPluginCollectionLinks(scmPathInfoStore.get());
   }
 
   static class UIPluginCollectionLinks {

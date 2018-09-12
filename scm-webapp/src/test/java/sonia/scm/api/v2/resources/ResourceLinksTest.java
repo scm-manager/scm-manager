@@ -17,7 +17,7 @@ public class ResourceLinksTest {
   private static final String BASE_URL = "http://example.com/";
 
   @Mock
-  private UriInfoStore uriInfoStore;
+  private ScmPathInfoStore scmPathInfoStore;
   @Mock
   private ScmPathInfo uriInfo;
 
@@ -176,7 +176,7 @@ public class ResourceLinksTest {
   @Before
   public void initUriInfo() {
     initMocks(this);
-    when(uriInfoStore.get()).thenReturn(uriInfo);
+    when(scmPathInfoStore.get()).thenReturn(uriInfo);
     when(uriInfo.getApiRestUri()).thenReturn(URI.create(BASE_URL));
   }
 }

@@ -70,7 +70,7 @@ public class RepositoryRootResourceTest {
   @Mock
   private RepositoryService service;
   @Mock
-  private UriInfoStore uriInfoStore;
+  private ScmPathInfoStore scmPathInfoStore;
   @Mock
   private ScmPathInfo uriInfo;
 
@@ -91,7 +91,7 @@ public class RepositoryRootResourceTest {
     RepositoryCollectionResource repositoryCollectionResource = new RepositoryCollectionResource(repositoryManager, repositoryCollectionToDtoMapper, dtoToRepositoryMapper, resourceLinks);
     RepositoryRootResource repositoryRootResource = new RepositoryRootResource(MockProvider.of(repositoryResource), MockProvider.of(repositoryCollectionResource));
     when(serviceFactory.create(any(Repository.class))).thenReturn(service);
-    when(uriInfoStore.get()).thenReturn(uriInfo);
+    when(scmPathInfoStore.get()).thenReturn(uriInfo);
     when(uriInfo.getApiRestUri()).thenReturn(URI.create("/x/y"));
     dispatcher = createDispatcher(repositoryRootResource);
   }
