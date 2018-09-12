@@ -39,7 +39,7 @@ public abstract class InitializingHttpScmProtocolWrapper {
 
   private String computeBasePath() {
     if (uriInfoStore.get() != null && uriInfoStore.get().get() != null) {
-      return uriInfoStore.get().get().getBaseUri().resolve("../..").toASCIIString();
+      return uriInfoStore.get().get().getApiRestUri().resolve("../..").toASCIIString();
     } else {
       return scmConfiguration.getBaseUrl();
     }

@@ -61,7 +61,7 @@ public class HgConfigInstallationsResourceTest {
       new HgConfigResource(null, null, null, null,
                            null, resourceProvider));
 
-    when(uriInfoStore.get().getBaseUri()).thenReturn(baseUri);
+    when(uriInfoStore.get().getApiRestUri()).thenReturn(baseUri);
   }
 
   @Test

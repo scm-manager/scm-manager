@@ -67,7 +67,7 @@ public class GitConfigResourceTest {
     when(repositoryHandler.getConfig()).thenReturn(gitConfig);
     GitConfigResource gitConfigResource = new GitConfigResource(dtoToConfigMapper, configToDtoMapper, repositoryHandler);
     dispatcher.getRegistry().addSingletonResource(gitConfigResource);
-    when(uriInfoStore.get().getBaseUri()).thenReturn(baseUri);
+    when(uriInfoStore.get().getApiRestUri()).thenReturn(baseUri);
   }
 
   @Test

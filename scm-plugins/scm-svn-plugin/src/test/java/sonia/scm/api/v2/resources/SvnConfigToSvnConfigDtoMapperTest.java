@@ -42,7 +42,7 @@ public class SvnConfigToSvnConfigDtoMapperTest {
 
   @Before
   public void init() {
-    when(uriInfoStore.get().getBaseUri()).thenReturn(baseUri);
+    when(uriInfoStore.get().getApiRestUri()).thenReturn(baseUri);
     expectedBaseUri = baseUri.resolve(SvnConfigResource.SVN_CONFIG_PATH_V2);
     subjectThreadState.bind();
     ThreadContext.bind(subject);

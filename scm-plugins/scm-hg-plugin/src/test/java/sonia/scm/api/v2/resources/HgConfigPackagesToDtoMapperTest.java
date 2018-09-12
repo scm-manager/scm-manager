@@ -1,6 +1,5 @@
 package sonia.scm.api.v2.resources;
 
-import de.otto.edison.hal.HalRepresentation;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,12 +12,10 @@ import sonia.scm.installer.HgPackages;
 
 import java.net.URI;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 import static sonia.scm.api.v2.resources.HgConfigTests.assertEqualsPackage;
 import static sonia.scm.api.v2.resources.HgConfigTests.createPackage;
@@ -38,7 +35,7 @@ public class HgConfigPackagesToDtoMapperTest {
 
   @Before
   public void init() {
-    when(uriInfoStore.get().getBaseUri()).thenReturn(baseUri);
+    when(uriInfoStore.get().getApiRestUri()).thenReturn(baseUri);
     expectedBaseUri = baseUri.resolve(HgConfigResource.HG_CONFIG_PATH_V2 + "/packages");
   }
 

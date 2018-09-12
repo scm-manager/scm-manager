@@ -41,7 +41,7 @@ public class HgConfigToHgConfigDtoMapperTest {
 
   @Before
   public void init() {
-    when(uriInfoStore.get().getBaseUri()).thenReturn(baseUri);
+    when(uriInfoStore.get().getApiRestUri()).thenReturn(baseUri);
     expectedBaseUri = baseUri.resolve(HgConfigResource.HG_CONFIG_PATH_V2);
     subjectThreadState.bind();
     ThreadContext.bind(subject);

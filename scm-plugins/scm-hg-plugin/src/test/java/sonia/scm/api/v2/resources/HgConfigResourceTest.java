@@ -79,7 +79,7 @@ public class HgConfigResourceTest {
       new HgConfigResource(dtoToConfigMapper, configToDtoMapper, repositoryHandler, packagesResource,
                            autoconfigResource, installationsResource);
     dispatcher.getRegistry().addSingletonResource(gitConfigResource);
-    when(uriInfoStore.get().getBaseUri()).thenReturn(baseUri);
+    when(uriInfoStore.get().getApiRestUri()).thenReturn(baseUri);
   }
 
   @Test

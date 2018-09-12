@@ -4,19 +4,26 @@ import org.junit.Test;
 
 import javax.ws.rs.core.UriInfo;
 
+import java.net.URI;
+
 import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class UriInfoStoreTest {
 
   @Test
   public void shouldReturnSetInfo() {
+    URI someUri = URI.create("/anything");
+
     UriInfo uriInfo = mock(UriInfo.class);
     UriInfoStore uriInfoStore = new UriInfoStore();
 
+    when(uriInfo.getBaseUri()).thenReturn(someUri);
+
     uriInfoStore.set(uriInfo);
 
-    assertSame(uriInfo, uriInfoStore.get());
+    assertSame(someUri, uriInfoStore.get().getApiRestUri());
   }
 
   @Test(expected = IllegalStateException.class)

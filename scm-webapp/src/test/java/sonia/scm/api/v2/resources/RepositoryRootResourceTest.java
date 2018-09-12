@@ -24,7 +24,6 @@ import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.web.VndMediaType;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -73,7 +72,7 @@ public class RepositoryRootResourceTest {
   @Mock
   private UriInfoStore uriInfoStore;
   @Mock
-  private UriInfo uriInfo;
+  private ScmPathInfo uriInfo;
 
 
   private final URI baseUri = URI.create("/");
@@ -93,7 +92,7 @@ public class RepositoryRootResourceTest {
     RepositoryRootResource repositoryRootResource = new RepositoryRootResource(MockProvider.of(repositoryResource), MockProvider.of(repositoryCollectionResource));
     when(serviceFactory.create(any(Repository.class))).thenReturn(service);
     when(uriInfoStore.get()).thenReturn(uriInfo);
-    when(uriInfo.getBaseUri()).thenReturn(URI.create("/x/y"));
+    when(uriInfo.getApiRestUri()).thenReturn(URI.create("/x/y"));
     dispatcher = createDispatcher(repositoryRootResource);
   }
 

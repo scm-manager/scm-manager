@@ -81,7 +81,7 @@ public class HgConfigPackageResourceTest {
   public void prepareEnvironment() {
     setupResources();
 
-    when(uriInfoStore.get().getBaseUri()).thenReturn(baseUri);
+    when(uriInfoStore.get().getApiRestUri()).thenReturn(baseUri);
 
     when(hgPackageReader.getPackages().getPackages()).thenReturn(createPackages());
   }

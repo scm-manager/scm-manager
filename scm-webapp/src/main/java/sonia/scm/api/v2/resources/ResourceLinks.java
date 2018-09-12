@@ -3,7 +3,6 @@ package sonia.scm.api.v2.resources;
 import sonia.scm.repository.NamespaceAndName;
 
 import javax.inject.Inject;
-import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
 class ResourceLinks {
@@ -23,7 +22,7 @@ class ResourceLinks {
   static class GroupLinks {
     private final LinkBuilder groupLinkBuilder;
 
-    GroupLinks(UriInfo uriInfo) {
+    GroupLinks(ScmPathInfo uriInfo) {
       groupLinkBuilder = new LinkBuilder(uriInfo, GroupRootResource.class, GroupResource.class);
     }
 
@@ -47,7 +46,7 @@ class ResourceLinks {
   static class GroupCollectionLinks {
     private final LinkBuilder collectionLinkBuilder;
 
-    GroupCollectionLinks(UriInfo uriInfo) {
+    GroupCollectionLinks(ScmPathInfo uriInfo) {
       collectionLinkBuilder = new LinkBuilder(uriInfo, GroupRootResource.class, GroupCollectionResource.class);
     }
 
@@ -67,7 +66,7 @@ class ResourceLinks {
   static class UserLinks {
     private final LinkBuilder userLinkBuilder;
 
-    UserLinks(UriInfo uriInfo) {
+    UserLinks(ScmPathInfo uriInfo) {
       userLinkBuilder = new LinkBuilder(uriInfo, UserRootResource.class, UserResource.class);
     }
 
@@ -91,7 +90,7 @@ class ResourceLinks {
   static class UserCollectionLinks {
     private final LinkBuilder collectionLinkBuilder;
 
-    UserCollectionLinks(UriInfo uriInfo) {
+    UserCollectionLinks(ScmPathInfo uriInfo) {
       collectionLinkBuilder = new LinkBuilder(uriInfo, UserRootResource.class, UserCollectionResource.class);
     }
 
@@ -111,7 +110,7 @@ class ResourceLinks {
   static class ConfigLinks {
     private final LinkBuilder configLinkBuilder;
 
-    ConfigLinks(UriInfo uriInfo) {
+    ConfigLinks(ScmPathInfo uriInfo) {
       configLinkBuilder = new LinkBuilder(uriInfo, ConfigResource.class);
     }
 
@@ -130,9 +129,9 @@ class ResourceLinks {
 
   static class RepositoryLinks {
     private final LinkBuilder repositoryLinkBuilder;
-    private final UriInfo uriInfo;
+    private final ScmPathInfo uriInfo;
 
-    RepositoryLinks(UriInfo uriInfo) {
+    RepositoryLinks(ScmPathInfo uriInfo) {
       repositoryLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class);
       this.uriInfo = uriInfo;
     }
@@ -157,7 +156,7 @@ class ResourceLinks {
   static class RepositoryCollectionLinks {
     private final LinkBuilder collectionLinkBuilder;
 
-    RepositoryCollectionLinks(UriInfo uriInfo) {
+    RepositoryCollectionLinks(ScmPathInfo uriInfo) {
       collectionLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryCollectionResource.class);
     }
 
@@ -177,7 +176,7 @@ class ResourceLinks {
   static class RepositoryTypeLinks {
     private final LinkBuilder repositoryTypeLinkBuilder;
 
-    RepositoryTypeLinks(UriInfo uriInfo) {
+    RepositoryTypeLinks(ScmPathInfo uriInfo) {
       repositoryTypeLinkBuilder = new LinkBuilder(uriInfo, RepositoryTypeRootResource.class, RepositoryTypeResource.class);
     }
 
@@ -193,7 +192,7 @@ class ResourceLinks {
   static class RepositoryTypeCollectionLinks {
     private final LinkBuilder collectionLinkBuilder;
 
-    RepositoryTypeCollectionLinks(UriInfo uriInfo) {
+    RepositoryTypeCollectionLinks(ScmPathInfo uriInfo) {
       collectionLinkBuilder = new LinkBuilder(uriInfo, RepositoryTypeRootResource.class, RepositoryTypeCollectionResource.class);
     }
 
@@ -210,7 +209,7 @@ class ResourceLinks {
   static class TagCollectionLinks {
     private final LinkBuilder tagLinkBuilder;
 
-    TagCollectionLinks(UriInfo uriInfo) {
+    TagCollectionLinks(ScmPathInfo uriInfo) {
       tagLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, TagRootResource.class);
     }
 
@@ -230,7 +229,7 @@ class ResourceLinks {
   static class DiffLinks {
     private final LinkBuilder diffLinkBuilder;
 
-    DiffLinks(UriInfo uriInfo) {
+    DiffLinks(ScmPathInfo uriInfo) {
       diffLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, DiffRootResource.class);
     }
 
@@ -250,7 +249,7 @@ class ResourceLinks {
   static class BranchLinks {
     private final LinkBuilder branchLinkBuilder;
 
-    BranchLinks(UriInfo uriInfo) {
+    BranchLinks(ScmPathInfo uriInfo) {
       branchLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, BranchRootResource.class);
     }
 
@@ -270,7 +269,7 @@ class ResourceLinks {
   static class BranchCollectionLinks {
     private final LinkBuilder branchLinkBuilder;
 
-    BranchCollectionLinks(UriInfo uriInfo) {
+    BranchCollectionLinks(ScmPathInfo uriInfo) {
       branchLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, BranchRootResource.class);
     }
 
@@ -286,7 +285,7 @@ class ResourceLinks {
   static class ChangesetLinks {
     private final LinkBuilder changesetLinkBuilder;
 
-    ChangesetLinks(UriInfo uriInfo) {
+    ChangesetLinks(ScmPathInfo uriInfo) {
       changesetLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, ChangesetRootResource.class);
     }
 
@@ -310,7 +309,7 @@ class ResourceLinks {
   static class SourceLinks {
     private final LinkBuilder sourceLinkBuilder;
 
-    SourceLinks(UriInfo uriInfo) {
+    SourceLinks(ScmPathInfo uriInfo) {
       sourceLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, SourceRootResource.class);
     }
 
@@ -346,7 +345,7 @@ class ResourceLinks {
   static class PermissionLinks {
     private final LinkBuilder permissionLinkBuilder;
 
-    PermissionLinks(UriInfo uriInfo) {
+    PermissionLinks(ScmPathInfo uriInfo) {
       permissionLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, PermissionRootResource.class);
     }
 
@@ -383,7 +382,7 @@ class ResourceLinks {
   static class UIPluginLinks {
     private final LinkBuilder uiPluginLinkBuilder;
 
-    UIPluginLinks(UriInfo uriInfo) {
+    UIPluginLinks(ScmPathInfo uriInfo) {
       uiPluginLinkBuilder = new LinkBuilder(uriInfo, UIRootResource.class, UIPluginResource.class);
     }
 
@@ -399,7 +398,7 @@ class ResourceLinks {
   static class UIPluginCollectionLinks {
     private final LinkBuilder uiPluginCollectionLinkBuilder;
 
-    UIPluginCollectionLinks(UriInfo uriInfo) {
+    UIPluginCollectionLinks(ScmPathInfo uriInfo) {
       uiPluginCollectionLinkBuilder = new LinkBuilder(uriInfo, UIRootResource.class, UIPluginResource.class);
     }
 

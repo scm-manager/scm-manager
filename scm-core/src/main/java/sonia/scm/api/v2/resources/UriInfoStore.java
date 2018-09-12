@@ -6,8 +6,8 @@ public class UriInfoStore {
 
   private UriInfo uriInfo;
 
-  public UriInfo get() {
-    return uriInfo;
+  public ScmPathInfo get() {
+    return () -> uriInfo.getBaseUri();
   }
 
   public void set(UriInfo uriInfo) {
@@ -16,4 +16,5 @@ public class UriInfoStore {
     }
     this.uriInfo = uriInfo;
   }
+
 }

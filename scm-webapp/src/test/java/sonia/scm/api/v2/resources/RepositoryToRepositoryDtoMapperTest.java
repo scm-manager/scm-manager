@@ -18,7 +18,6 @@ import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.repository.api.ScmProtocol;
 
-import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
 import static java.util.Arrays.asList;
@@ -51,7 +50,7 @@ public class RepositoryToRepositoryDtoMapperTest {
   @Mock
   private UriInfoStore uriInfoStore;
   @Mock
-  private UriInfo uriInfo;
+  private ScmPathInfo uriInfo;
 
   @InjectMocks
   private RepositoryToRepositoryDtoMapperImpl mapper;
@@ -63,7 +62,7 @@ public class RepositoryToRepositoryDtoMapperTest {
     when(repositoryService.isSupported(any(Command.class))).thenReturn(true);
     when(repositoryService.getSupportedProtocols()).thenReturn(emptySet());
     when(uriInfoStore.get()).thenReturn(uriInfo);
-    when(uriInfo.getBaseUri()).thenReturn(URI.create("/x/y"));
+    when(uriInfo.getApiRestUri()).thenReturn(URI.create("/x/y"));
   }
 
   @After

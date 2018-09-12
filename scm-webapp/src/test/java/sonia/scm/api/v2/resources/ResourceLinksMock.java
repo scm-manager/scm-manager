@@ -1,6 +1,5 @@
 package sonia.scm.api.v2.resources;
 
-import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
 import static org.mockito.Mockito.mock;
@@ -10,8 +9,8 @@ public class ResourceLinksMock {
   public static ResourceLinks createMock(URI baseUri) {
     ResourceLinks resourceLinks = mock(ResourceLinks.class);
 
-    UriInfo uriInfo = mock(UriInfo.class);
-    when(uriInfo.getBaseUri()).thenReturn(baseUri);
+    ScmPathInfo uriInfo = mock(ScmPathInfo.class);
+    when(uriInfo.getApiRestUri()).thenReturn(baseUri);
 
     when(resourceLinks.user()).thenReturn(new ResourceLinks.UserLinks(uriInfo));
     when(resourceLinks.userCollection()).thenReturn(new ResourceLinks.UserCollectionLinks(uriInfo));

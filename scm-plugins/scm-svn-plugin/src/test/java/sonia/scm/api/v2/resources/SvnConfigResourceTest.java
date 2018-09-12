@@ -67,7 +67,7 @@ public class SvnConfigResourceTest {
     when(repositoryHandler.getConfig()).thenReturn(gitConfig);
     SvnConfigResource gitConfigResource = new SvnConfigResource(dtoToConfigMapper, configToDtoMapper, repositoryHandler);
     dispatcher.getRegistry().addSingletonResource(gitConfigResource);
-    when(uriInfoStore.get().getBaseUri()).thenReturn(baseUri);
+    when(uriInfoStore.get().getApiRestUri()).thenReturn(baseUri);
   }
 
   @Test
