@@ -119,6 +119,8 @@ import sonia.scm.web.security.DefaultAdministrationContext;
 import javax.net.ssl.SSLContext;
 import javax.servlet.ServletContext;
 
+import static sonia.scm.api.v2.resources.ScmPathInfo.REST_API_PATH;
+
 /**
  *
  * @author Sebastian Sdorra
@@ -128,14 +130,14 @@ public class ScmServletModule extends ServletModule
 
   /** Field description */
   public static final String[] PATTERN_ADMIN = new String[] {
-                                                 "/api/rest/groups*",
-    "/api/rest/users*", "/api/rest/plguins*" };
+                                                 REST_API_PATH + "/groups*",
+    REST_API_PATH + "/users*", REST_API_PATH + "/plguins*" };
 
   /** Field description */
   public static final String PATTERN_ALL = "/*";
 
   /** Field description */
-  public static final String PATTERN_CONFIG = "/api/rest/config*";
+  public static final String PATTERN_CONFIG = REST_API_PATH + "/config*";
 
   /** Field description */
   public static final String PATTERN_DEBUG = "/debug.html";
