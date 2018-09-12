@@ -17,34 +17,29 @@ node() { // No specific label
   catchError {
 
     Maven mvn = setupMavenBuild()
-    // Maven build specified it must be 1.8.0-101 or newer
-    def javaHome = tool 'JDK-1.8.0-101+'
 
-    withEnv(["JAVA_HOME=${javaHome}", "PATH=${env.JAVA_HOME}/bin:${env.PATH}"]) {
+    stage('Checkout') {
+      checkout scm
+    }
 
-      stage('Checkout') {
-        checkout scm
-      }
+    stage('Build') {
+      mvn 'clean install -DskipTests'
+    }
 
-      stage('Build') {
-        mvn 'clean install -DskipTests'
-      }
+    stage('Unit Test') {
+      mvn 'test -Dsonia.scm.test.skip.hg=true -Dmaven.test.failure.ignore=true'
+    }
 
-      stage('Unit Test') {
-        mvn 'test -Dsonia.scm.test.skip.hg=true -Dmaven.test.failure.ignore=true'
-      }
+    stage('Integration Test') {
+      mvn 'verify -Pit -pl :scm-webapp,:scm-it  -Dmaven.test.failure.ignore=true'
+    }
 
-      stage('Integration Test') {
-        mvn 'verify -Pit -pl :scm-webapp,:scm-it  -Dmaven.test.failure.ignore=true'
-      }
+    stage('SonarQube') {
 
-      stage('SonarQube') {
+      analyzeWith(mvn)
 
-        analyzeWith(mvn)
-
-        if (!waitForQualityGateWebhookToBeCalled()) {
-          currentBuild.result = 'UNSTABLE'
-        }
+      if (!waitForQualityGateWebhookToBeCalled()) {
+        currentBuild.result = 'UNSTABLE'
       }
     }
   }
@@ -61,7 +56,8 @@ node() { // No specific label
 String mainBranch
 
 Maven setupMavenBuild() {
-  Maven mvn = new MavenWrapper(this)
+  // Keep this version number in sync with .mvn/maven-wrapper.properties
+  Maven mvn = new MavenInDocker(this, "3.5.2-jdk-8")
 
   if (mainBranch.equals(env.BRANCH_NAME)) {
     // Release starts javadoc, which takes very long, so do only for certain branches
