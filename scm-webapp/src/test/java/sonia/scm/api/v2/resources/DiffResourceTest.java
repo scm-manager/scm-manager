@@ -65,7 +65,7 @@ public class DiffResourceTest {
     diffRootResource = new DiffRootResource(serviceFactory);
     RepositoryRootResource repositoryRootResource = new RepositoryRootResource(MockProvider
       .of(new RepositoryResource(null, null, null, null, null,
-        null, null, null, null, MockProvider.of(diffRootResource))), null);
+        null, null, null, null, MockProvider.of(diffRootResource),null)), null);
     dispatcher.getRegistry().addSingletonResource(repositoryRootResource);
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(service);
     when(serviceFactory.create(any(Repository.class))).thenReturn(service);

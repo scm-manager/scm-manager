@@ -11,6 +11,8 @@ import sonia.scm.repository.SubRepository;
 
 import javax.inject.Inject;
 
+import static de.otto.edison.hal.Link.link;
+
 @Mapper
 public abstract class FileObjectToFileObjectDtoMapper extends BaseMapper<FileObject, FileObjectDto> {
 
@@ -29,6 +31,7 @@ public abstract class FileObjectToFileObjectDtoMapper extends BaseMapper<FileObj
       links.self(resourceLinks.source().sourceWithPath(namespaceAndName.getNamespace(), namespaceAndName.getName(), revision, path));
     } else {
       links.self(resourceLinks.source().content(namespaceAndName.getNamespace(), namespaceAndName.getName(), revision, path));
+      links.single(link("history", resourceLinks.fileHistory().self(namespaceAndName.getNamespace(), namespaceAndName.getName(), revision, path)));
     }
 
     dto.add(links.build());

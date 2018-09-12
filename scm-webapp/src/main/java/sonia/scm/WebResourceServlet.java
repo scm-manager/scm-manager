@@ -1,7 +1,7 @@
 package sonia.scm;
 
+import com.github.sdorra.webresources.WebResourceSender;
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.io.Resources;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.filter.WebElement;
@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.URL;
 
 /**
@@ -27,6 +26,7 @@ import java.net.URL;
 @WebElement(value = WebResourceServlet.PATTERN, regex = true)
 public class WebResourceServlet extends HttpServlet {
 
+
   /**
    * exclude api requests and the old frontend servlets.
    *
@@ -36,6 +36,11 @@ public class WebResourceServlet extends HttpServlet {
   static final String PATTERN = "/(?!api/|git/|hg/|svn/|hook/).*";
 
   private static final Logger LOG = LoggerFactory.getLogger(WebResourceServlet.class);
+
+  private final WebResourceSender sender = WebResourceSender.create()
+    .withGZIP()
+    .withGZIPMinLength(512)
+    .withBufferSize(16384);
 
   private final UberWebResourceLoader webResourceLoader;
   private final PushStateDispatcher pushStateDispatcher;
@@ -53,7 +58,7 @@ public class WebResourceServlet extends HttpServlet {
     LOG.trace("try to load {}", uri);
     URL url = webResourceLoader.getResource(uri);
     if (url != null) {
-      serveResource(response, url);
+      serveResource(request, response, url);
     } else {
       dispatch(request, response, uri);
     }
@@ -72,10 +77,9 @@ public class WebResourceServlet extends HttpServlet {
     return HttpUtil.getStrippedURI(request);
   }
 
-  private void serveResource(HttpServletResponse response, URL url) {
-    // TODO lastModifiedDate, if-... ???
-    try (OutputStream output = response.getOutputStream()) {
-      Resources.copy(url, output);
+  private void serveResource(HttpServletRequest request, HttpServletResponse response, URL url) {
+    try {
+      sender.resource(url).send(request, response);
     } catch (IOException ex) {
       LOG.warn("failed to serve resource: {}", url);
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

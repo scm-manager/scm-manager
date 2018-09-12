@@ -37,6 +37,7 @@ public class RepositoryAccessITCase {
 
   private final String repositoryType;
   private File folder;
+  private RepositoryRequests.AppliedRepositoryGetRequest repositoryGetRequest;
 
   public RepositoryAccessITCase(String repositoryType) {
     this.repositoryType = repositoryType;
@@ -48,9 +49,15 @@ public class RepositoryAccessITCase {
   }
 
   @Before
-  public void initClient() {
+  public void init() {
     TestData.createDefault();
     folder = tempFolder.getRoot();
+    repositoryGetRequest = RepositoryRequests.start()
+      .given()
+      .url(TestData.getDefaultRepositoryUrl(repositoryType))
+      .usernameAndPassword(ADMIN_USERNAME, ADMIN_PASSWORD)
+      .get()
+      .assertStatusCode(HttpStatus.SC_OK);
   }
 
   @Test
@@ -280,6 +287,30 @@ public class RepositoryAccessITCase {
       .asString()
       .contains("diff");
 
+  }
+
+  @Test
+  @SuppressWarnings("unchecked")
+  public void shouldFindFileHistory() throws IOException {
+    RepositoryClient repositoryClient = RepositoryUtil.createRepositoryClient(repositoryType, folder);
+    Changeset changeset = RepositoryUtil.createAndCommitFile(repositoryClient, ADMIN_USERNAME, "folder/subfolder/a.txt", "a");
+    repositoryGetRequest
+      .usingRepositoryResponse()
+      .requestSources()
+      .usingSourcesResponse()
+      .requestSelf("folder")
+      .usingSourcesResponse()
+      .requestSelf("subfolder")
+      .usingSourcesResponse()
+      .requestFileHistory("a.txt")
+      .assertStatusCode(HttpStatus.SC_OK)
+      .usingChangesetsResponse()
+      .assertChangesets(changesets -> {
+          assertThat(changesets).hasSize(1);
+          assertThat(changesets.get(0)).containsEntry("id", changeset.getId());
+          assertThat(changesets.get(0)).containsEntry("description", changeset.getDescription());
+        }
+      );
   }
 }
 
