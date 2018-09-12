@@ -53,7 +53,7 @@ public abstract class InitializingHttpScmProtocolWrapper {
     try {
       ScmPathInfoStore scmPathInfoStore = uriInfoStore.get();
       if (scmPathInfoStore != null && scmPathInfoStore.get() != null) {
-        return of(scmPathInfoStore.get().getApiRestUri().resolve("../..").toASCIIString());
+        return of(scmPathInfoStore.get().getRootUri().toASCIIString());
       }
     } catch (Exception e) {
       logger.debug("could not get ScmPathInfoStore from context", e);
