@@ -4,10 +4,11 @@ import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 import fetchMock from "fetch-mock";
 import {
+  FETCH_CHANGESETS, FETCH_CHANGESETS_FAILURE,
   FETCH_CHANGESETS_PENDING,
   FETCH_CHANGESETS_SUCCESS,
   fetchChangesetsByNamespaceAndName,
-  fetchChangesetsSuccess, getChangesetsForNameAndNamespaceFromState
+  fetchChangesetsSuccess, getChangesetsForNameAndNamespaceFromState, getFetchChangesetsFailure, isFetchChangesetsPending
 } from "./changesets";
 import reducer from "./changesets";
 
@@ -26,16 +27,39 @@ describe("fetching of changesets", () => {
     fetchMock.getOnce(URL, "{}");
 
     const expectedActions = [
-      {type: FETCH_CHANGESETS_PENDING, payload: {namespace: "foo", name: "bar"}},
+      {type: FETCH_CHANGESETS_PENDING, payload: {namespace: "foo", name: "bar"},
+      itemId: "foo/bar"},
       {
         type: FETCH_CHANGESETS_SUCCESS,
-        payload: {collection, namespace: "foo", name: "bar"}
+        payload: {collection, namespace: "foo", name: "bar"},
+        itemId: "foo/bar"
       }
     ];
 
     const store = mockStore({});
     return store.dispatch(fetchChangesetsByNamespaceAndName("foo", "bar")).then(() => {
       expect(store.getActions()).toEqual(expectedActions);
+    });
+  });
+
+  it("should fail fetching changesets on error", () => {
+    fetchMock.getOnce(URL, 500);
+
+    const expectedActions = [
+      {type: FETCH_CHANGESETS_PENDING, payload: {namespace: "foo", name: "bar"},
+        itemId: "foo/bar"},
+      {
+        type: FETCH_CHANGESETS_SUCCESS,
+        payload: {collection, namespace: "foo", name: "bar"},
+        itemId: "foo/bar"
+      }
+    ];
+
+    const store = mockStore({});
+    return store.dispatch(fetchChangesetsByNamespaceAndName("foo", "bar")).then(() => {
+      expect(store.getActions()[0]).toEqual(expectedActions[0]);
+      expect(store.getActions()[1].type).toEqual(FETCH_CHANGESETS_FAILURE);
+      expect(store.getActions()[1].payload).toBeDefined();
     });
   })
 });
@@ -93,6 +117,8 @@ describe("changesets reducer", () => {
 });
 
 describe("changeset selectors", () => {
+  const error = new Error("Something went wrong");
+
   it("should get all changesets for a given namespace and name", () => {
     const state = {
       changesets: {
@@ -106,5 +132,34 @@ describe("changeset selectors", () => {
     };
     const result = getChangesetsForNameAndNamespaceFromState("foo", "bar", state);
     expect(result).toContainEqual({id: "id1"})
+  });
+
+  it("should return true, when fetching changesets is pending", () => {
+    const state = {
+      pending: {
+        [FETCH_CHANGESETS + "/foo/bar"]: true
+      }
+    };
+
+    expect(isFetchChangesetsPending(state, "foo", "bar")).toBeTruthy();
+  });
+
+  it("should return false, when fetching changesets is not pending", () => {
+    expect(isFetchChangesetsPending({}, "foo", "bar")).toEqual(false);
+  });
+
+  it("should return error if fetching changesets failed", () => {
+    const state = {
+      failure: {
+        [FETCH_CHANGESETS + "/foo/bar"]: error
+      }
+    };
+
+    expect(getFetchChangesetsFailure(state, "foo", "bar")).toEqual(error);
+  });
+
+  it("should return false if fetching changesets did not fail", () => {
+    expect(getFetchChangesetsFailure({}, "foo", "bar")).toBeUndefined();
   })
+
 });

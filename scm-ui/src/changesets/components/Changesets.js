@@ -22,13 +22,9 @@ class Changesets extends React.Component<Props> {
     if (!changesets) {
       return null;
     }
-    return <table className="table is-hoverable is-fullwidth">
+    return <table className="table is-hoverable is-fullwidth is-striped is-bordered">
       <thead>
-      <tr>
-        <th>{t("author.name")}</th>
-        <th>{t("changeset.description")}</th>
-        <th className="is-hidden-mobile">{t("changeset.date")}</th>
-      </tr>
+      <tr>Changesets</tr>
       </thead>
       <tbody>
       {changesets.map((changeset, index) => {

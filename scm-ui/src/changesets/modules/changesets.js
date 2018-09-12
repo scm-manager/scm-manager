@@ -2,6 +2,8 @@
 
 import {FAILURE_SUFFIX, PENDING_SUFFIX, SUCCESS_SUFFIX} from "../../modules/types";
 import {apiClient} from "@scm-manager/ui-components";
+import {isPending} from "../../modules/pending";
+import {getFailure} from "../../modules/failure";
 
 export const FETCH_CHANGESETS = "scm/repos/FETCH_CHANGESETS";
 export const FETCH_CHANGESETS_PENDING = `${FETCH_CHANGESETS}_${PENDING_SUFFIX}`;
@@ -19,7 +21,7 @@ export function fetchChangesetsByNamespaceAndName(namespace: string, name: strin
       .then(data => {
         dispatch(fetchChangesetsSuccess(data, namespace, name))
       }).catch(cause => {
-        dispatch(fetchChangesetsFailure(link, cause))
+        dispatch(fetchChangesetsFailure(namespace, name, cause))
       })
   }
 }
@@ -30,14 +32,16 @@ export function fetchChangesetsPending(namespace: string, name: string): Action 
     payload: {
       namespace,
       name
-    }
+    },
+    itemId: namespace + "/" + name
   }
 }
 
 export function fetchChangesetsSuccess(collection: any, namespace: string, name: string): Action {
   return {
     type: FETCH_CHANGESETS_SUCCESS,
-    payload: {collection, namespace, name}
+    payload: {collection, namespace, name},
+    itemId: namespace + "/" + name
   }
 }
 
@@ -48,7 +52,8 @@ function fetchChangesetsFailure(namespace: string, name: string, error: Error): 
       namespace,
       name,
       error
-    }
+    },
+    itemId: namespace + "/" + name
   }
 }
 
@@ -85,10 +90,19 @@ function extractChangesetsByIds(data: any, oldChangesetsByIds: any) {
 }
 
 //selectors
-export function getChangesetsForNameAndNamespaceFromState(namespace: string, name: string, state: any) {
+export function getChangesetsForNameAndNamespaceFromState(namespace: string, name: string, state: Object) {
   const key = namespace + "/" + name;
   if (!state.changesets[key]) {
     return null;
   }
   return Object.values(state.changesets[key].byId);
 }
+
+export function isFetchChangesetsPending( state: Object, namespace: string, name: string) {
+  return isPending(state, FETCH_CHANGESETS, namespace + "/" + name)
+}
+
+export function getFetchChangesetsFailure( state: Object, namespace: string, name: string) {
+  return getFailure(state, FETCH_CHANGESETS, namespace + "/" + name);
+}
+

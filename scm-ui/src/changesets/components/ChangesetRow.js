@@ -1,5 +1,6 @@
 import React from "react"
 import type { Changeset } from "@scm-manager/ui-types"
+import {ExtensionPoint} from "@scm-manager/ui-extensions";
 
 type Props = {
   changeset: Changeset
@@ -7,13 +8,19 @@ type Props = {
 
 class ChangesetRow extends React.Component<Props> {
 
-  // Todo: Add extension point to author field
   render() {
-    const {changeset} = this.props;
+    const { changeset } = this.props;
+    // todo: i18n
     return <tr>
-      <td>{ changeset.author.name }</td>
-      <td>{ changeset.description }</td>
-      <td>{ changeset.date }</td>
+      <td>
+        <ExtensionPoint
+          name="repos.changeset-table.information"
+          renderAll={true}
+          props={{ changeset }}
+        />
+        <p>{changeset.description}</p>
+        <p className="is-size-7">Changeset { changeset.id } commited at { changeset.date }</p>
+        <p className="is-size-7">{changeset.author.name} <a href={"mailto:" + changeset.author.mail}>&lt;{changeset.author.mail}&gt;</a></p></td>
     </tr>
   }
 }
