@@ -1,6 +1,6 @@
 //@flow
 import React from "react";
-import { RemoveEntryOfTableButton } from "../../../components/buttons";
+import { RemoveEntryOfTableButton } from "@scm-manager/ui-components";
 
 type Props = {
   items: string[],

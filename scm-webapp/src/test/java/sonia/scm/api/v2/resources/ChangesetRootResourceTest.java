@@ -82,7 +82,7 @@ public class ChangesetRootResourceTest {
     changesetRootResource = new ChangesetRootResource(serviceFactory, changesetCollectionToDtoMapper, changesetToChangesetDtoMapper);
     RepositoryRootResource repositoryRootResource = new RepositoryRootResource(Providers
       .of(new RepositoryResource(null, null, null, null, null,
-        Providers.of(changesetRootResource), null, null, null, null)), null);
+        Providers.of(changesetRootResource), null, null, null, null, null)), null);
     dispatcher.getRegistry().addSingletonResource(repositoryRootResource);
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(repositoryService);
     when(serviceFactory.create(any(Repository.class))).thenReturn(repositoryService);
@@ -126,7 +126,6 @@ public class ChangesetRootResourceTest {
     assertTrue(response.getContentAsString().contains(String.format("\"name\":\"%s\"", authorName)));
     assertTrue(response.getContentAsString().contains(String.format("\"mail\":\"%s\"", authorEmail)));
     assertTrue(response.getContentAsString().contains(String.format("\"description\":\"%s\"", commit)));
-    assertTrue(response.getContentAsString().contains(String.format("\"description\":\"%s\"", commit)));
   }
 
   @Test
@@ -155,7 +154,6 @@ public class ChangesetRootResourceTest {
     assertTrue(response.getContentAsString().contains(String.format("\"id\":\"%s\"", id)));
     assertTrue(response.getContentAsString().contains(String.format("\"name\":\"%s\"", authorName)));
     assertTrue(response.getContentAsString().contains(String.format("\"mail\":\"%s\"", authorEmail)));
-    assertTrue(response.getContentAsString().contains(String.format("\"description\":\"%s\"", commit)));
     assertTrue(response.getContentAsString().contains(String.format("\"description\":\"%s\"", commit)));
   }
 

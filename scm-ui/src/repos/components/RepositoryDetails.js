@@ -1,6 +1,6 @@
 //@flow
 import React from "react";
-import type { Repository } from "../types/Repositories";
+import type { Repository } from "@scm-manager/ui-types";
 import RepositoryDetailTable from "./RepositoryDetailTable";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 

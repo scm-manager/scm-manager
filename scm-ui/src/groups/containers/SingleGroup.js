@@ -1,11 +1,18 @@
 //@flow
 import React from "react";
 import { connect } from "react-redux";
-import { Page } from "../../components/layout";
+import {
+  Page,
+  ErrorPage,
+  Loading,
+  Navigation,
+  Section,
+  NavLink
+} from "@scm-manager/ui-components";
 import { Route } from "react-router";
 import { Details } from "./../components/table";
 import { DeleteGroupNavLink, EditGroupNavLink } from "./../components/navLinks";
-import type { Group } from "../types/Group";
+import type { Group } from "@scm-manager/ui-types";
 import type { History } from "history";
 import {
   deleteGroup,
@@ -14,12 +21,9 @@ import {
   isFetchGroupPending,
   getFetchGroupFailure,
   getDeleteGroupFailure,
-  isDeleteGroupPending,
+  isDeleteGroupPending
 } from "../modules/groups";
-import Loading from "../../components/Loading";
 
-import { Navigation, Section, NavLink } from "../../components/navigation";
-import ErrorPage from "../../components/ErrorPage";
 import { translate } from "react-i18next";
 import EditGroup from "./EditGroup";
 
@@ -86,8 +90,16 @@ class SingleGroup extends React.Component<Props> {
       <Page title={group.name}>
         <div className="columns">
           <div className="column is-three-quarters">
-            <Route path={url} exact component={() => <Details group={group} />} />
-            <Route path={`${url}/edit`} exact component={() => <EditGroup group={group} />} />
+            <Route
+              path={url}
+              exact
+              component={() => <Details group={group} />}
+            />
+            <Route
+              path={`${url}/edit`}
+              exact
+              component={() => <EditGroup group={group} />}
+            />
           </div>
           <div className="column">
             <Navigation>
@@ -98,8 +110,11 @@ class SingleGroup extends React.Component<Props> {
                 />
               </Section>
               <Section label={t("single-group.actions-label")}>
-                <DeleteGroupNavLink group={group} deleteGroup={this.deleteGroup} />
-                <EditGroupNavLink group={group} editUrl={`${url}/edit`}/>
+                <DeleteGroupNavLink
+                  group={group}
+                  deleteGroup={this.deleteGroup}
+                />
+                <EditGroupNavLink group={group} editUrl={`${url}/edit`} />
                 <NavLink to="/groups" label={t("single-group.back-label")} />
               </Section>
             </Navigation>

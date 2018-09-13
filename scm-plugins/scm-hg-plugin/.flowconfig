@@ -1,0 +1,8 @@
+[ignore]
+.*/node_modules/module-deps/.*
+
+[include]
+
+[libs]
+
+[options]

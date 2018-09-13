@@ -1,9 +1,8 @@
 //@flow
 import React from "react";
 import { translate } from "react-i18next";
-import { confirmAlert } from "../../components/modals/ConfirmAlert";
-import { NavAction } from "../../components/navigation";
-import type { Repository } from "../types/Repositories";
+import { NavAction, confirmAlert } from "@scm-manager/ui-components";
+import type { Repository } from "@scm-manager/ui-types";
 
 type Props = {
   repository: Repository,

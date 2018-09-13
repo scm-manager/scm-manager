@@ -14,11 +14,9 @@ import {
   getFetchUsersFailure
 } from "../modules/users";
 
-import { Page } from "../../components/layout";
+import { Page, Paginator } from "@scm-manager/ui-components";
 import { UserTable } from "./../components/table";
-import type { User } from "../types/User";
-import type { PagedCollection } from "../../types/Collection";
-import Paginator from "../../components/Paginator";
+import type { User, PagedCollection } from "@scm-manager/ui-types";
 import CreateUserButton from "../components/buttons/CreateUserButton";
 
 type Props = {

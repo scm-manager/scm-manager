@@ -74,6 +74,7 @@ public class SourceRootResourceTest {
         Providers.of(sourceRootResource),
         null,
         null,
+        null,
         null)),
         null);
     dispatcher = createDispatcher(repositoryRootResource);

@@ -139,7 +139,7 @@ public class PermissionRootResourceTest {
     permissionCollectionToDtoMapper = new PermissionCollectionToDtoMapper(permissionToPermissionDtoMapper, resourceLinks);
     permissionRootResource = new PermissionRootResource(permissionDtoToPermissionMapper, permissionToPermissionDtoMapper, permissionCollectionToDtoMapper, resourceLinks, repositoryManager);
     RepositoryRootResource repositoryRootResource = new RepositoryRootResource(Providers
-      .of(new RepositoryResource(null, null, null, null, null, null, null, null, Providers.of(permissionRootResource), null)), null);
+      .of(new RepositoryResource(null, null, null, null, null, null, null, null, Providers.of(permissionRootResource), null, null)), null);
     dispatcher = createDispatcher(repositoryRootResource);
     subjectThreadState.bind();
     ThreadContext.bind(subject);

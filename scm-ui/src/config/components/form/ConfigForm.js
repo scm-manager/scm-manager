@@ -1,13 +1,12 @@
 // @flow
 import React from "react";
 import { translate } from "react-i18next";
-import { SubmitButton } from "../../../components/buttons/index";
-import type { Config } from "../../types/Config";
+import { SubmitButton, Notification } from "@scm-manager/ui-components";
+import type { Config } from "@scm-manager/ui-types";
 import ProxySettings from "./ProxySettings";
 import GeneralSettings from "./GeneralSettings";
 import BaseUrlSettings from "./BaseUrlSettings";
 import AdminSettings from "./AdminSettings";
-import Notification from "../../../components/Notification";
 import LoginAttempt from "./LoginAttempt";
 
 type Props = {

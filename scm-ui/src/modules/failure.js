@@ -1,5 +1,5 @@
 // @flow
-import type { Action } from "../types/Action";
+import type { Action } from "@scm-manager/ui-types";
 
 const FAILURE_SUFFIX = "_FAILURE";
 const RESET_PATTERN = /^(.*)_(SUCCESS|RESET)$/;

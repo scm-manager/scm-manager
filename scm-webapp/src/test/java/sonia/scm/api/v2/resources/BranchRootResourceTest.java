@@ -93,7 +93,7 @@ public class BranchRootResourceTest {
     changesetCollectionToDtoMapper = new ChangesetCollectionToDtoMapper(changesetToChangesetDtoMapper, resourceLinks);
     BranchCollectionToDtoMapper branchCollectionToDtoMapper = new BranchCollectionToDtoMapper(branchToDtoMapper, resourceLinks);
     branchRootResource = new BranchRootResource(serviceFactory, branchToDtoMapper, branchCollectionToDtoMapper, changesetCollectionToDtoMapper);
-    RepositoryRootResource repositoryRootResource = new RepositoryRootResource(Providers.of(new RepositoryResource(null, null, null, null, Providers.of(branchRootResource), null, null, null, null, null)), null);
+    RepositoryRootResource repositoryRootResource = new RepositoryRootResource(Providers.of(new RepositoryResource(null, null, null, null, Providers.of(branchRootResource), null, null, null, null, null, null)), null);
     dispatcher.getRegistry().addSingletonResource(repositoryRootResource);
 
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(service);

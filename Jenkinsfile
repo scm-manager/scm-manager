@@ -11,16 +11,14 @@ node() { // No specific label
 
   properties([
     // Keep only the last 10 build to preserve space
-    buildDiscarder(logRotator(numToKeepStr: '10')),
+    buildDiscarder(logRotator(numToKeepStr: '10'))
   ])
 
-  catchError {
+  timeout(activity: true, time: 20, unit: 'MINUTES') {
 
-    Maven mvn = setupMavenBuild()
-    // Maven build specified it must be 1.8.0-101 or newer
-    def javaHome = tool 'JDK-1.8.0-101+'
+    catchError {
 
-    withEnv(["JAVA_HOME=${javaHome}", "PATH=${env.JAVA_HOME}/bin:${env.PATH}"]) {
+      Maven mvn = setupMavenBuild()
 
       stage('Checkout') {
         checkout scm
@@ -47,21 +45,22 @@ node() { // No specific label
         }
       }
     }
+
+    // Archive Unit and integration test results, if any
+    junit allowEmptyResults: true, testResults: '**/target/failsafe-reports/TEST-*.xml,**/target/surefire-reports/TEST-*.xml,**/target/jest-reports/TEST-*.xml'
+
+    // Find maven warnings and visualize in job
+    warnings consoleParsers: [[parserName: 'Maven']], canRunOnFailed: true
+
+    mailIfStatusChanged(commitAuthorEmail)
   }
-
-  // Archive Unit and integration test results, if any
-  junit allowEmptyResults: true, testResults: '**/target/failsafe-reports/TEST-*.xml,**/target/surefire-reports/TEST-*.xml,**/target/jest-reports/TEST-*.xml'
-
-  // Find maven warnings and visualize in job
-  warnings consoleParsers: [[parserName: 'Maven']], canRunOnFailed: true
-
-  mailIfStatusChanged(commitAuthorEmail)
 }
 
 String mainBranch
 
 Maven setupMavenBuild() {
-  Maven mvn = new MavenWrapper(this)
+  // Keep this version number in sync with .mvn/maven-wrapper.properties
+  Maven mvn = new MavenInDocker(this, "3.5.2-jdk-8")
 
   if (mainBranch.equals(env.BRANCH_NAME)) {
     // Release starts javadoc, which takes very long, so do only for certain branches

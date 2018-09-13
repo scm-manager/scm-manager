@@ -40,6 +40,7 @@ public class RepositoryResource {
   private final Provider<ContentResource> contentResource;
   private final Provider<PermissionRootResource> permissionRootResource;
   private final Provider<DiffRootResource> diffRootResource;
+  private final Provider<FileHistoryRootResource> fileHistoryRootResource;
 
   @Inject
   public RepositoryResource(
@@ -50,7 +51,8 @@ public class RepositoryResource {
     Provider<ChangesetRootResource> changesetRootResource,
     Provider<SourceRootResource> sourceRootResource, Provider<ContentResource> contentResource,
     Provider<PermissionRootResource> permissionRootResource,
-    Provider<DiffRootResource> diffRootResource) {
+    Provider<DiffRootResource> diffRootResource,
+    Provider<FileHistoryRootResource> fileHistoryRootResource) {
     this.dtoToRepositoryMapper = dtoToRepositoryMapper;
     this.manager = manager;
     this.repositoryToDtoMapper = repositoryToDtoMapper;
@@ -62,6 +64,7 @@ public class RepositoryResource {
     this.contentResource = contentResource;
     this.permissionRootResource = permissionRootResource;
     this.diffRootResource = diffRootResource;
+    this.fileHistoryRootResource = fileHistoryRootResource;
   }
 
   /**
@@ -163,6 +166,11 @@ public class RepositoryResource {
   @Path("changesets/")
   public ChangesetRootResource changesets() {
     return changesetRootResource.get();
+  }
+
+  @Path("history/")
+  public FileHistoryRootResource history() {
+    return fileHistoryRootResource.get();
   }
 
   @Path("sources/")

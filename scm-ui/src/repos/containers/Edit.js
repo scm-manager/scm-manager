@@ -3,7 +3,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { translate } from "react-i18next";
 import RepositoryForm from "../components/form";
-import type { Repository } from "../types/Repositories";
+import type { Repository } from "@scm-manager/ui-types";
 import {
   modifyRepo,
   isModifyRepoPending,
@@ -11,7 +11,7 @@ import {
 } from "../modules/repos";
 import { withRouter } from "react-router-dom";
 import type { History } from "history";
-import ErrorNotification from "../../components/ErrorNotification";
+import { ErrorNotification } from "@scm-manager/ui-components";
 
 type Props = {
   repository: Repository,

@@ -3,8 +3,7 @@ import React from "react";
 import { translate } from "react-i18next";
 import { Route } from "react-router";
 
-import { Page } from "../../components/layout";
-import { Navigation, NavLink, Section } from "../../components/navigation";
+import { Page, Navigation, NavLink, Section } from "@scm-manager/ui-components";
 import GlobalConfig from "./GlobalConfig";
 import type { History } from "history";
 

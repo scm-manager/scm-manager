@@ -1,19 +1,22 @@
 import React from "react";
-import { mount, shallow } from "enzyme";
+import { shallow, mount } from "enzyme";
 import "../../tests/enzyme";
 import "../../tests/i18n";
+import ReactRouterEnzymeContext from "react-router-enzyme-context";
 import EditNavLink from "./EditNavLink";
 
-jest.mock("../../components/modals/ConfirmAlert");
-jest.mock("../../components/navigation/NavLink", () => () => <div>foo</div>);
-
 describe("EditNavLink", () => {
+  const options = new ReactRouterEnzymeContext();
+
   it("should render nothing, if the modify link is missing", () => {
     const repository = {
       _links: {}
     };
 
-    const navLink = shallow(<EditNavLink repository={repository} editUrl="" />);
+    const navLink = shallow(
+      <EditNavLink repository={repository} editUrl="" />,
+      options.get()
+    );
     expect(navLink.text()).toBe("");
   });
 
@@ -26,7 +29,10 @@ describe("EditNavLink", () => {
       }
     };
 
-    const navLink = mount(<EditNavLink repository={repository} editUrl="" />);
-    expect(navLink.text()).toBe("foo");
+    const navLink = mount(
+      <EditNavLink repository={repository} editUrl="" />,
+      options.get()
+    );
+    expect(navLink.text()).toBe("edit-nav-link.label");
   });
 });

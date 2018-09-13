@@ -1,8 +1,7 @@
 //@flow
 import React from "react";
-import type { Repository } from "../types/Repositories";
-import MailLink from "../../components/MailLink";
-import DateFromNow from "../../components/DateFromNow";
+import type { Repository } from "@scm-manager/ui-types";
+import { MailLink, DateFromNow } from "@scm-manager/ui-components";
 import { translate } from "react-i18next";
 
 type Props = {
