@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.api.v2.resources.ScmPathInfoStore;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.api.ScmProtocolProvider;
 import sonia.scm.web.filter.PermissionFilter;
 
 import javax.inject.Provider;
@@ -18,7 +19,7 @@ import java.util.Optional;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
-public abstract class InitializingHttpScmProtocolWrapper {
+public abstract class InitializingHttpScmProtocolWrapper implements ScmProtocolProvider {
 
   private static final Logger logger = LoggerFactory.getLogger(InitializingHttpScmProtocolWrapper.class);
 
@@ -41,7 +42,11 @@ public abstract class InitializingHttpScmProtocolWrapper {
     httpServlet.init(config);
   }
 
+  @Override
   public HttpScmProtocol get(Repository repository) {
+    if (!repository.getType().equals(getType())) {
+      throw new IllegalArgumentException("cannot handle repository with type " + repository.getType() + " with protocol for type " + getType());
+    }
     return new ProtocolWrapper(repository);
   }
 

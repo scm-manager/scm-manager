@@ -38,10 +38,8 @@ import com.google.common.io.Closeables;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.SvnRepositoryHandler;
 import sonia.scm.repository.api.Command;
-import sonia.scm.repository.api.ScmProtocol;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -61,18 +59,10 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
 
   //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   *  @param handler
-   * @param repository
-   * @param httpScmProtocol
-   */
   SvnRepositoryServiceProvider(SvnRepositoryHandler handler,
-    Repository repository, HttpScmProtocol httpScmProtocol)
+    Repository repository)
   {
     this.repository = repository;
-    this.httpScmProtocol = httpScmProtocol;
     this.context = new SvnContext(handler.getDirectory(repository));
   }
 
@@ -188,11 +178,6 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
     return new SvnUnbundleCommand(context, repository);
   }
 
-  @Override
-  public Set<ScmProtocol> getSupportedProtocols() {
-    return Collections.singleton(httpScmProtocol);
-  }
-
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
@@ -200,6 +185,4 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
 
   /** Field description */
   private final Repository repository;
-
-  private final HttpScmProtocol httpScmProtocol;
 }

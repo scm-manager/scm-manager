@@ -36,7 +36,6 @@ package sonia.scm.repository.spi;
 import sonia.scm.repository.Feature;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.CommandNotSupportedException;
-import sonia.scm.repository.api.ScmProtocol;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -240,6 +239,4 @@ public abstract class RepositoryServiceProvider implements Closeable
   {
     throw new CommandNotSupportedException(Command.UNBUNDLE);
   }
-
-  public abstract Set<ScmProtocol> getSupportedProtocols();
 }

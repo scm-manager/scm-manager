@@ -62,7 +62,12 @@ public class InitializingHttpScmProtocolWrapperTest {
     pathInfoStoreProvider = mock(Provider.class);
     when(pathInfoStoreProvider.get()).thenReturn(pathInfoStore);
 
-    wrapper = new InitializingHttpScmProtocolWrapper(Providers.of(this.delegateServlet), Providers.of(permissionFilter), pathInfoStoreProvider, scmConfiguration) {};
+    wrapper = new InitializingHttpScmProtocolWrapper(Providers.of(this.delegateServlet), Providers.of(permissionFilter), pathInfoStoreProvider, scmConfiguration) {
+      @Override
+      public String getType() {
+        return "git";
+      }
+    };
     when(scmConfiguration.getBaseUrl()).thenReturn("http://example.com/scm");
   }
 
@@ -127,6 +132,11 @@ public class InitializingHttpScmProtocolWrapperTest {
     verify(delegateServlet, times(2)).service(request, response, REPOSITORY);
   }
 
+  @Test(expected = IllegalArgumentException.class)
+  public void shouldFailForIllegalScmType() {
+    HttpScmProtocol httpScmProtocol = wrapper.get(new Repository("", "other", "space", "name"));
+  }
+
   private Answer proceedInvocation() {
     return invocation -> {
       ((PermissionFilter.ContinuationServlet) invocation.getArgument(3)).doService();
@@ -135,12 +145,7 @@ public class InitializingHttpScmProtocolWrapperTest {
   }
 
   private OngoingStubbing<ScmPathInfo> mockSetPathInfo() {
-    return when(pathInfoStore.get()).thenReturn(new ScmPathInfo() {
-      @Override
-      public URI getApiRestUri() {
-        return URI.create("http://example.com/scm/api/rest/");
-      }
-    });
+    return when(pathInfoStore.get()).thenReturn(() -> URI.create("http://example.com/scm/api/rest/"));
   }
 
 }

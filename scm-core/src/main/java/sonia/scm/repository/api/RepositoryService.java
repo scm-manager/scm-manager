@@ -42,7 +42,8 @@ import sonia.scm.repository.spi.RepositoryServiceProvider;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.util.Collection;
+import java.util.Set;
+import java.util.stream.Stream;
 
 /**
  * From the {@link RepositoryService} it is possible to access all commands for
@@ -80,29 +81,30 @@ import java.util.Collection;
  * @since 1.17
  */
 public final class RepositoryService implements Closeable {
-  private CacheManager cacheManager;
-  private PreProcessorUtil preProcessorUtil;
-  private RepositoryServiceProvider provider;
-  private Repository repository;
-  private static final Logger logger =
-    LoggerFactory.getLogger(RepositoryService.class);
+
+  private static final Logger logger = LoggerFactory.getLogger(RepositoryService.class);
+
+  private final CacheManager cacheManager;
+  private final PreProcessorUtil preProcessorUtil;
+  private final RepositoryServiceProvider provider;
+  private final Repository repository;
+  private final Set<ScmProtocolProvider> protocolProviders;
 
   /**
    * Constructs a new {@link RepositoryService}. This constructor should only
    * be called from the {@link RepositoryServiceFactory}.
-   *
-   * @param cacheManager     cache manager
+   *  @param cacheManager     cache manager
    * @param provider         implementation for {@link RepositoryServiceProvider}
    * @param repository       the repository
-   * @param preProcessorUtil
    */
   RepositoryService(CacheManager cacheManager,
-                    RepositoryServiceProvider provider, Repository repository,
-                    PreProcessorUtil preProcessorUtil) {
+    RepositoryServiceProvider provider, Repository repository,
+    PreProcessorUtil preProcessorUtil, Set<ScmProtocolProvider> protocolProviders) {
     this.cacheManager = cacheManager;
     this.provider = provider;
     this.repository = repository;
     this.preProcessorUtil = preProcessorUtil;
+    this.protocolProviders = protocolProviders;
   }
 
   /**
@@ -359,16 +361,18 @@ public final class RepositoryService implements Closeable {
   }
 
 
-  public Collection<ScmProtocol> getSupportedProtocols() {
-    return provider.getSupportedProtocols();
+  public Stream<ScmProtocol> getSupportedProtocols() {
+    return protocolProviders.stream().filter(provider -> provider.getType().equals(getRepository().getType())).map(this::createProviderInstanceForRepository);
+  }
+
+  private ScmProtocol createProviderInstanceForRepository(ScmProtocolProvider protocolProvider) {
+    return protocolProvider.get(repository);
   }
 
   public <T extends ScmProtocol> T getProtocol(Class<T> clazz) {
-    for (ScmProtocol scmProtocol : getSupportedProtocols()) {
-      if (clazz.isAssignableFrom(scmProtocol.getClass())) {
-        return (T) scmProtocol;
-      }
-    }
-    throw new IllegalArgumentException("no implementation for " + clazz.getName() + " and repository type " + getRepository().getType());
+    return (T) getSupportedProtocols()
+      .filter(scmProtocol -> clazz.isAssignableFrom(scmProtocol.getClass()))
+      .findFirst()
+      .orElseThrow(() -> new IllegalArgumentException("no implementation for " + clazz.getName() + " and repository type " + getRepository().getType()));
   }
 }

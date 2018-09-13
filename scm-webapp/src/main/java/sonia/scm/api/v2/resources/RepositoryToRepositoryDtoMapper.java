@@ -14,7 +14,6 @@ import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.repository.api.ScmProtocol;
 
-import java.util.Collection;
 import java.util.List;
 
 import static de.otto.edison.hal.Link.link;
@@ -47,9 +46,7 @@ public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Reposit
     }
     try (RepositoryService repositoryService = serviceFactory.create(repository)) {
       if (RepositoryPermissions.pull(repository).isPermitted()) {
-        Collection<ScmProtocol> supportedProtocols = repositoryService.getSupportedProtocols();
-        List<Link> protocolLinks = supportedProtocols
-          .stream()
+        List<Link> protocolLinks = repositoryService.getSupportedProtocols()
           .map(protocol -> createProtocolLink(protocol, repository))
           .collect(toList());
         linksBuilder.array(protocolLinks);

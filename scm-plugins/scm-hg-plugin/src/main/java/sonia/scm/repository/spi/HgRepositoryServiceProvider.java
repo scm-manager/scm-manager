@@ -39,11 +39,9 @@ import sonia.scm.repository.HgHookManager;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.Command;
-import sonia.scm.repository.api.ScmProtocol;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Set;
 
@@ -78,11 +76,10 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
   //~--- constructors ---------------------------------------------------------
 
   HgRepositoryServiceProvider(HgRepositoryHandler handler,
-    HgHookManager hookManager, Repository repository, HttpScmProtocol httpScmProtocol)
+    HgHookManager hookManager, Repository repository)
   {
     this.repository = repository;
     this.handler = handler;
-    this.httpScmProtocol = httpScmProtocol;
     this.repositoryDirectory = handler.getDirectory(repository);
     this.context = new HgCommandContext(hookManager, handler, repository,
       repositoryDirectory);
@@ -260,11 +257,6 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
     return new HgTagsCommand(context, repository);
   }
 
-  @Override
-  public Set<ScmProtocol> getSupportedProtocols() {
-    return Collections.singleton(httpScmProtocol);
-  }
-
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
@@ -278,6 +270,4 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
 
   /** Field description */
   private File repositoryDirectory;
-
-  private final HttpScmProtocol httpScmProtocol;
 }

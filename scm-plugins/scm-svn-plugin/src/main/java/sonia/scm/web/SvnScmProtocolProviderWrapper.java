@@ -2,6 +2,7 @@ package sonia.scm.web;
 
 import sonia.scm.api.v2.resources.ScmPathInfoStore;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.plugin.Extension;
 import sonia.scm.repository.spi.InitializingHttpScmProtocolWrapper;
 import sonia.scm.repository.spi.ScmProviderHttpServlet;
 
@@ -14,9 +15,15 @@ import javax.servlet.ServletException;
 import java.util.Enumeration;
 
 @Singleton
+@Extension
 public class SvnScmProtocolProviderWrapper extends InitializingHttpScmProtocolWrapper {
 
   public static final String PARAMETER_SVN_PARENTPATH = "SVNParentPath";
+
+  @Override
+  public String getType() {
+    return "svn";
+  }
 
   @Inject
   public SvnScmProtocolProviderWrapper(Provider<SvnDAVServlet> servletProvider, Provider<SvnPermissionFilter> permissionFilter, Provider<ScmPathInfoStore> uriInfoStore, ScmConfiguration scmConfiguration) {

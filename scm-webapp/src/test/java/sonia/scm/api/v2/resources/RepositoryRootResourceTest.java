@@ -30,8 +30,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static java.util.stream.Stream.of;
 import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
@@ -281,7 +281,7 @@ public class RepositoryRootResourceTest {
   @Test
   public void shouldCreateArrayOfProtocolUrls() throws Exception {
     mockRepository("space", "repo");
-    when(service.getSupportedProtocols()).thenReturn(asList(new MockScmProtocol("http", "http://"), new MockScmProtocol("ssh", "ssh://")));
+    when(service.getSupportedProtocols()).thenReturn(of(new MockScmProtocol("http", "http://"), new MockScmProtocol("ssh", "ssh://")));
 
     MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo");
     MockHttpResponse response = new MockHttpResponse();

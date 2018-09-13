@@ -38,7 +38,6 @@ import sonia.scm.plugin.Extension;
 import sonia.scm.repository.HgHookManager;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
-import sonia.scm.web.HgScmProtocolProviderWrapper;
 
 /**
  *
@@ -48,59 +47,27 @@ import sonia.scm.web.HgScmProtocolProviderWrapper;
 public class HgRepositoryServiceResolver implements RepositoryServiceResolver
 {
 
-  /** Field description */
   private static final String TYPE = "hg";
 
-  //~--- constructors ---------------------------------------------------------
+  private HgRepositoryHandler handler;
+  private HgHookManager hookManager;
 
-  /**
-   * Constructs ...
-   *
-   *
-   *
-   * @param hookManager
-   * @param handler
-   */
   @Inject
   public HgRepositoryServiceResolver(HgRepositoryHandler handler,
-    HgHookManager hookManager, HgScmProtocolProviderWrapper providerWrapper)
+    HgHookManager hookManager)
   {
     this.handler = handler;
     this.hookManager = hookManager;
-    this.providerWrapper = providerWrapper;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   */
   @Override
-  public HgRepositoryServiceProvider resolve(Repository repository)
-  {
+  public HgRepositoryServiceProvider resolve(Repository repository) {
     HgRepositoryServiceProvider provider = null;
 
-    if (TYPE.equalsIgnoreCase(repository.getType()))
-    {
-      provider = new HgRepositoryServiceProvider(handler, hookManager,
-        repository, providerWrapper.get(repository));
+    if (TYPE.equalsIgnoreCase(repository.getType())) {
+      provider = new HgRepositoryServiceProvider(handler, hookManager, repository);
     }
 
     return provider;
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private HgRepositoryHandler handler;
-
-  /** Field description */
-  private HgHookManager hookManager;
-
-  private final HgScmProtocolProviderWrapper providerWrapper;
 }

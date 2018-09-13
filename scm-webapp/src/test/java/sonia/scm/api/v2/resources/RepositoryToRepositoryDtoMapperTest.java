@@ -20,9 +20,8 @@ import sonia.scm.repository.api.ScmProtocol;
 
 import java.net.URI;
 
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptySet;
 import static java.util.Collections.singletonList;
+import static java.util.stream.Stream.of;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -60,7 +59,7 @@ public class RepositoryToRepositoryDtoMapperTest {
     initMocks(this);
     when(serviceFactory.create(any(Repository.class))).thenReturn(repositoryService);
     when(repositoryService.isSupported(any(Command.class))).thenReturn(true);
-    when(repositoryService.getSupportedProtocols()).thenReturn(emptySet());
+    when(repositoryService.getSupportedProtocols()).thenReturn(of());
     when(scmPathInfoStore.get()).thenReturn(uriInfo);
     when(uriInfo.getApiRestUri()).thenReturn(URI.create("/x/y"));
   }
@@ -182,7 +181,7 @@ public class RepositoryToRepositoryDtoMapperTest {
   @Test
   public void shouldCreateCorrectProtocolLinks() {
     when(repositoryService.getSupportedProtocols()).thenReturn(
-      asList(mockProtocol("http", "http://scm"), mockProtocol("other", "some://protocol"))
+      of(mockProtocol("http", "http://scm"), mockProtocol("other", "some://protocol"))
     );
 
     RepositoryDto dto = mapper.map(createTestRepository());
@@ -194,7 +193,7 @@ public class RepositoryToRepositoryDtoMapperTest {
   @SubjectAware(username = "community")
   public void shouldCreateProtocolLinksForPullPermission() {
     when(repositoryService.getSupportedProtocols()).thenReturn(
-      asList(mockProtocol("http", "http://scm"), mockProtocol("other", "some://protocol"))
+      of(mockProtocol("http", "http://scm"), mockProtocol("other", "some://protocol"))
     );
 
     RepositoryDto dto = mapper.map(createTestRepository());
@@ -205,7 +204,7 @@ public class RepositoryToRepositoryDtoMapperTest {
   @SubjectAware(username = "unpriv")
   public void shouldNotCreateProtocolLinksWithoutPullPermission() {
     when(repositoryService.getSupportedProtocols()).thenReturn(
-      asList(mockProtocol("http", "http://scm"), mockProtocol("other", "some://protocol"))
+      of(mockProtocol("http", "http://scm"), mockProtocol("other", "some://protocol"))
     );
 
     RepositoryDto dto = mapper.map(createTestRepository());

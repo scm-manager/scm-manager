@@ -37,10 +37,8 @@ import com.google.common.collect.ImmutableSet;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.Command;
-import sonia.scm.repository.api.ScmProtocol;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -69,12 +67,9 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
 
   //~--- constructors ---------------------------------------------------------
 
-  public GitRepositoryServiceProvider(GitRepositoryHandler handler,
-    Repository repository, HttpScmProtocol httpScmProtocol)
-  {
+  public GitRepositoryServiceProvider(GitRepositoryHandler handler, Repository repository) {
     this.handler = handler;
     this.repository = repository;
-    this.httpScmProtocol = httpScmProtocol;
     this.context = new GitContext(handler.getDirectory(repository));
   }
 
@@ -238,11 +233,6 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
     return new GitTagsCommand(context, repository);
   }
 
-  @Override
-  public Set<ScmProtocol> getSupportedProtocols() {
-    return Collections.singleton(httpScmProtocol);
-  }
-
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
@@ -253,6 +243,4 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
 
   /** Field description */
   private Repository repository;
-
-  private final HttpScmProtocol httpScmProtocol;
 }

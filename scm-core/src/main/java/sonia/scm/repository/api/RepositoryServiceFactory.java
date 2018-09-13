@@ -137,13 +137,15 @@ public final class RepositoryServiceFactory
   @Inject
   public RepositoryServiceFactory(ScmConfiguration configuration,
     CacheManager cacheManager, RepositoryManager repositoryManager,
-    Set<RepositoryServiceResolver> resolvers, PreProcessorUtil preProcessorUtil)
+    Set<RepositoryServiceResolver> resolvers, PreProcessorUtil preProcessorUtil,
+    Set<ScmProtocolProvider> protocolProviders)
   {
     this.configuration = configuration;
     this.cacheManager = cacheManager;
     this.repositoryManager = repositoryManager;
     this.resolvers = resolvers;
     this.preProcessorUtil = preProcessorUtil;
+    this.protocolProviders = protocolProviders;
 
     ScmEventBus.getInstance().register(new CacheClearHook(cacheManager));
   }
@@ -252,7 +254,7 @@ public final class RepositoryServiceFactory
         }
 
         service = new RepositoryService(cacheManager, provider, repository,
-          preProcessorUtil);
+          preProcessorUtil, protocolProviders);
 
         break;
       }
@@ -367,4 +369,6 @@ public final class RepositoryServiceFactory
 
   /** service resolvers */
   private final Set<RepositoryServiceResolver> resolvers;
+
+  private Set<ScmProtocolProvider> protocolProviders;
 }
