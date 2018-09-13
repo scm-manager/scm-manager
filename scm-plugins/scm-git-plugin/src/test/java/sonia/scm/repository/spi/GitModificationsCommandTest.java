@@ -53,7 +53,7 @@ public class GitModificationsCommandTest extends AbstractRemoteCommandTestBase {
     commit(outgoing, "add file");
     File file = new File(outgoingDirectory, fileName);
     file.delete();
-    outgoing.add().setUpdate(true).addFilepattern(".").call();
+    outgoing.rm().addFilepattern(fileName).call();
     RevCommit removedFileCommit = commit(outgoing, "remove file");
     String revision = removedFileCommit.getName();
     Consumer<Modifications> assertModifications = assertRemovedFiles(fileName);
