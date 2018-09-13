@@ -20,7 +20,7 @@ class TypeSelector extends React.Component<Props> {
     return (
       <Select
         onChange={handleTypeChange}
-        value={type ? type : ""}
+        value={type ? type : "READ"}
         options={this.createSelectOptions(types)}
         loading={loading}
       />
