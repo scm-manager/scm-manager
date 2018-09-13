@@ -362,7 +362,9 @@ public final class RepositoryService implements Closeable {
 
 
   public Stream<ScmProtocol> getSupportedProtocols() {
-    return protocolProviders.stream().filter(provider -> provider.getType().equals(getRepository().getType())).map(this::createProviderInstanceForRepository);
+    return protocolProviders.stream()
+      .filter(provider -> provider.getType().equals(getRepository().getType()))
+      .map(this::createProviderInstanceForRepository);
   }
 
   private ScmProtocol createProviderInstanceForRepository(ScmProtocolProvider protocolProvider) {
