@@ -234,7 +234,7 @@ describe("permission fetch", () => {
     fetchMock.postOnce(REPOS_URL + "/hitchhiker/puzzle42/permissions", {
       status: 204,
       headers: {
-        location: REPOS_URL + "/hitchhiker/puzzle42/permissions/user_eins"
+        location: "repositories/hitchhiker/puzzle42/permissions/user_eins"
       }
     });
 
@@ -286,7 +286,7 @@ describe("permission fetch", () => {
     fetchMock.postOnce(REPOS_URL + "/hitchhiker/puzzle42/permissions", {
       status: 204,
       headers: {
-        location: REPOS_URL + "/hitchhiker/puzzle42/permissions/user_eins"
+        location: "repositories/hitchhiker/puzzle42/permissions/user_eins"
       }
     });
 
