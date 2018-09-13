@@ -2,20 +2,21 @@ import React from "react";
 import { mount, shallow } from "enzyme";
 import "../../tests/enzyme";
 import "../../tests/i18n";
+import ReactRouterEnzymeContext from "react-router-enzyme-context";
 import PermissionsNavLink from "./PermissionsNavLink";
-
-jest.mock("@scm-manager/ui-components", () => ({
-  NavAction: require.requireActual("@scm-manager/ui-components").NavAction
-}));
+import EditNavLink from "./EditNavLink";
 
 describe("PermissionsNavLink", () => {
+  const options = new ReactRouterEnzymeContext();
+
   it("should render nothing, if the modify link is missing", () => {
     const repository = {
       _links: {}
     };
 
     const navLink = shallow(
-      <PermissionsNavLink repository={repository} permissionUrl="" />
+      <PermissionsNavLink repository={repository} permissionUrl="" />,
+      options.get()
     );
     expect(navLink.text()).toBe("");
   });
@@ -30,8 +31,9 @@ describe("PermissionsNavLink", () => {
     };
 
     const navLink = mount(
-      <PermissionsNavLink repository={repository} permissionUrl="" />
+      <PermissionsNavLink repository={repository} permissionUrl="" />,
+      options.get()
     );
-    expect(navLink.text()).toBe("foo");
+    expect(navLink.text()).toBe("repository-root.permissions");
   });
 });
