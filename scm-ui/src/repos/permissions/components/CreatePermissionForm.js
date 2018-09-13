@@ -88,13 +88,14 @@ class CreatePermissionForm extends React.Component<Props, State> {
     return false;
   };
 
-  submit = () => {
+  submit = e => {
     this.props.createPermission({
       name: this.state.name,
       type: this.state.type,
       groupPermission: this.state.groupPermission
     });
     this.removeState();
+    e.preventDefault();
   };
 
   removeState = () => {
