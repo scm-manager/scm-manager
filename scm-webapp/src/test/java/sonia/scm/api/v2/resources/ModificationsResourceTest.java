@@ -39,7 +39,7 @@ import static org.mockito.Mockito.when;
 
 @Slf4j
 @RunWith(MockitoJUnitRunner.Silent.class)
-public class ModificationsResourceTest {
+public class ModificationsResourceTest extends BaseRepositoryTest {
 
 
   public static final String MODIFICATIONS_PATH = "space/repo/modifications/";
@@ -71,10 +71,8 @@ public class ModificationsResourceTest {
   @Before
   public void prepareEnvironment() throws Exception {
     modificationsRootResource = new ModificationsRootResource(serviceFactory, modificationsToDtoMapper);
-    RepositoryRootResource repositoryRootResource = new RepositoryRootResource(MockProvider
-      .of(new RepositoryResource(null, null, null, null, null,
-        null, null, null, null, null, MockProvider.of(modificationsRootResource))), null);
-    dispatcher.getRegistry().addSingletonResource(repositoryRootResource);
+    super.modificationsRootResource = MockProvider.of(modificationsRootResource);
+    dispatcher.getRegistry().addSingletonResource(getRepositoryRootResource());
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(repositoryService);
     when(serviceFactory.create(any(Repository.class))).thenReturn(repositoryService);
     when(repositoryService.getRepository()).thenReturn(new Repository("repoId", "git", "space", "repo"));

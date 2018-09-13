@@ -12,6 +12,8 @@ public class VndMediaType {
   private static final String SUBTYPE_PREFIX = "vnd.scmm-";
   public static final String PREFIX = TYPE + "/" + SUBTYPE_PREFIX;
   public static final String SUFFIX = "+json;v=" + VERSION;
+  public static final String PLAIN_TEXT_PREFIX = "text/" + SUBTYPE_PREFIX;
+  public static final String PLAIN_TEXT_SUFFIX = "+plain;v=" + VERSION;
 
   public static final String USER = PREFIX + "user" + SUFFIX;
   public static final String GROUP = PREFIX + "group" + SUFFIX;
@@ -23,6 +25,7 @@ public class VndMediaType {
   public static final String TAG = PREFIX + "tag" + SUFFIX;
   public static final String TAG_COLLECTION = PREFIX + "tagCollection" + SUFFIX;
   public static final String BRANCH = PREFIX + "branch" + SUFFIX;
+  public static final String DIFF = PLAIN_TEXT_PREFIX + "diff" + PLAIN_TEXT_SUFFIX;
   public static final String USER_COLLECTION = PREFIX + "userCollection" + SUFFIX;
   public static final String GROUP_COLLECTION = PREFIX + "groupCollection" + SUFFIX;
   public static final String REPOSITORY_COLLECTION = PREFIX + "repositoryCollection" + SUFFIX;

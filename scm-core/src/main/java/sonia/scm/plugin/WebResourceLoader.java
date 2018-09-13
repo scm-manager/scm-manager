@@ -33,9 +33,8 @@ package sonia.scm.plugin;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.net.URL;
-
 import javax.servlet.ServletContext;
+import java.net.URL;
 
 /**
  * The WebResourceLoader is able to load web resources. The resources are loaded
@@ -53,9 +52,11 @@ public interface WebResourceLoader
    * Returns a {@link URL} for the given path. The method will return null if no
    * resources could be found for the given path.
    *
+   * Note: The path is a web path and uses "/" as path separator
+   *
    * @param path resource path
    *
    * @return url object for the given path or null
    */
-  public URL getResource(String path);
+  URL getResource(String path);
 }

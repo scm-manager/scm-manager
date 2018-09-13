@@ -1,6 +1,5 @@
 package sonia.scm.api.v2.resources;
 
-
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.support.SubjectThreadState;
@@ -21,15 +20,19 @@ import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.api.rest.AuthorizationExceptionMapper;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
+import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryNotFoundException;
+import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.repository.api.LogCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.web.VndMediaType;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
@@ -38,17 +41,16 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 @Slf4j
-public class ChangesetRootResourceTest extends BaseRepositoryTest{
+public class FileHistoryResourceTest extends BaseRepositoryTest {
 
-
-  public static final String CHANGESET_PATH = "space/repo/changesets/";
-  public static final String CHANGESET_URL = "/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + CHANGESET_PATH;
+  public static final String FILE_HISTORY_PATH = "space/repo/history/";
+  public static final String FILE_HISTORY_URL = "/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + FILE_HISTORY_PATH;
   private final Dispatcher dispatcher = MockDispatcherFactory.createDispatcher();
 
   private final URI baseUri = URI.create("/");
@@ -58,17 +60,17 @@ public class ChangesetRootResourceTest extends BaseRepositoryTest{
   private RepositoryServiceFactory serviceFactory;
 
   @Mock
-  private RepositoryService repositoryService;
+  private RepositoryService service;
 
   @Mock
   private LogCommandBuilder logCommandBuilder;
 
-  private ChangesetCollectionToDtoMapper changesetCollectionToDtoMapper;
+  private FileHistoryCollectionToDtoMapper fileHistoryCollectionToDtoMapper;
 
   @InjectMocks
   private ChangesetToChangesetDtoMapperImpl changesetToChangesetDtoMapper;
 
-  private ChangesetRootResource changesetRootResource;
+  private FileHistoryRootResource fileHistoryRootResource;
 
 
   private final Subject subject = mock(Subject.class);
@@ -77,16 +79,17 @@ public class ChangesetRootResourceTest extends BaseRepositoryTest{
 
   @Before
   public void prepareEnvironment() throws Exception {
-    changesetCollectionToDtoMapper = new ChangesetCollectionToDtoMapper(changesetToChangesetDtoMapper, resourceLinks);
-    changesetRootResource = new ChangesetRootResource(serviceFactory, changesetCollectionToDtoMapper, changesetToChangesetDtoMapper);
-    super.changesetRootResource = MockProvider.of(changesetRootResource);
+    fileHistoryCollectionToDtoMapper = new FileHistoryCollectionToDtoMapper(changesetToChangesetDtoMapper, resourceLinks);
+    fileHistoryRootResource = new FileHistoryRootResource(serviceFactory, fileHistoryCollectionToDtoMapper);
+    super.fileHistoryRootResource = MockProvider.of(fileHistoryRootResource);
     dispatcher.getRegistry().addSingletonResource(getRepositoryRootResource());
-    when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(repositoryService);
-    when(serviceFactory.create(any(Repository.class))).thenReturn(repositoryService);
-    when(repositoryService.getRepository()).thenReturn(new Repository("repoId", "git", "space", "repo"));
+    when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(service);
+    when(serviceFactory.create(any(Repository.class))).thenReturn(service);
+    when(service.getRepository()).thenReturn(new Repository("repoId", "git", "space", "repo"));
     dispatcher.getProviderFactory().registerProvider(NotFoundExceptionMapper.class);
     dispatcher.getProviderFactory().registerProvider(AuthorizationExceptionMapper.class);
-    when(repositoryService.getLogCommand()).thenReturn(logCommandBuilder);
+    dispatcher.getProviderFactory().registerProvider(InternalRepositoryExceptionMapper.class);
+    when(service.getLogCommand()).thenReturn(logCommandBuilder);
     subjectThreadState.bind();
     ThreadContext.bind(subject);
     when(subject.isPermitted(any(String.class))).thenReturn(true);
@@ -98,8 +101,9 @@ public class ChangesetRootResourceTest extends BaseRepositoryTest{
   }
 
   @Test
-  public void shouldGetChangeSets() throws Exception {
+  public void shouldGetFileHistory() throws Exception {
     String id = "revision_123";
+    String path = "root_dir/sub_dir/file-to-inspect.txt";
     Instant creationDate = Instant.now();
     String authorName = "name";
     String authorEmail = "em@i.l";
@@ -110,10 +114,11 @@ public class ChangesetRootResourceTest extends BaseRepositoryTest{
     when(changesetPagingResult.getTotal()).thenReturn(1);
     when(logCommandBuilder.setPagingStart(anyInt())).thenReturn(logCommandBuilder);
     when(logCommandBuilder.setPagingLimit(anyInt())).thenReturn(logCommandBuilder);
-    when(logCommandBuilder.setBranch(anyString())).thenReturn(logCommandBuilder);
+    when(logCommandBuilder.setStartChangeset(eq(id))).thenReturn(logCommandBuilder);
+    when(logCommandBuilder.setPath(eq(path))).thenReturn(logCommandBuilder);
     when(logCommandBuilder.getChangesets()).thenReturn(changesetPagingResult);
     MockHttpRequest request = MockHttpRequest
-      .get(CHANGESET_URL)
+      .get(FILE_HISTORY_URL + id + "/" + path)
       .accept(VndMediaType.CHANGESET_COLLECTION);
     MockHttpResponse response = new MockHttpResponse();
     dispatcher.invoke(request, response);
@@ -125,33 +130,72 @@ public class ChangesetRootResourceTest extends BaseRepositoryTest{
     assertTrue(response.getContentAsString().contains(String.format("\"description\":\"%s\"", commit)));
   }
 
+
   @Test
-  public void shouldGetChangeSet() throws Exception {
-    String id = "revision_123";
-    Instant creationDate = Instant.now();
-    String authorName = "name";
-    String authorEmail = "em@i.l";
-    String commit = "my branch commit";
-    ChangesetPagingResult changesetPagingResult = mock(ChangesetPagingResult.class);
-    List<Changeset> changesetList = Lists.newArrayList(new Changeset(id, Date.from(creationDate).getTime(), new Person(authorName, authorEmail), commit));
-    when(changesetPagingResult.getChangesets()).thenReturn(changesetList);
-    when(changesetPagingResult.getTotal()).thenReturn(1);
-    when(logCommandBuilder.setPagingStart(anyInt())).thenReturn(logCommandBuilder);
-    when(logCommandBuilder.setPagingLimit(anyInt())).thenReturn(logCommandBuilder);
-    when(logCommandBuilder.setEndChangeset(anyString())).thenReturn(logCommandBuilder);
-    when(logCommandBuilder.setStartChangeset(anyString())).thenReturn(logCommandBuilder);
-    when(logCommandBuilder.getChangesets()).thenReturn(changesetPagingResult);
+  public void shouldGet404OnMissingRepository() throws URISyntaxException, RepositoryNotFoundException {
+    when(serviceFactory.create(any(NamespaceAndName.class))).thenThrow(RepositoryNotFoundException.class);
     MockHttpRequest request = MockHttpRequest
-      .get(CHANGESET_URL + "id")
-      .accept(VndMediaType.CHANGESET);
+      .get(FILE_HISTORY_URL + "revision/a.txt")
+      .accept(VndMediaType.CHANGESET_COLLECTION);
     MockHttpResponse response = new MockHttpResponse();
     dispatcher.invoke(request, response);
-    assertEquals(200, response.getStatus());
-    log.info("Response :{}", response.getContentAsString());
-    assertTrue(response.getContentAsString().contains(String.format("\"id\":\"%s\"", id)));
-    assertTrue(response.getContentAsString().contains(String.format("\"name\":\"%s\"", authorName)));
-    assertTrue(response.getContentAsString().contains(String.format("\"mail\":\"%s\"", authorEmail)));
-    assertTrue(response.getContentAsString().contains(String.format("\"description\":\"%s\"", commit)));
+    assertEquals(404, response.getStatus());
   }
 
+  @Test
+  public void shouldGet404OnMissingRevision() throws Exception {
+    String id = "revision_123";
+    String path = "root_dir/sub_dir/file-to-inspect.txt";
+
+    when(logCommandBuilder.setPagingStart(anyInt())).thenReturn(logCommandBuilder);
+    when(logCommandBuilder.setPagingLimit(anyInt())).thenReturn(logCommandBuilder);
+    when(logCommandBuilder.setStartChangeset(eq(id))).thenReturn(logCommandBuilder);
+    when(logCommandBuilder.setPath(eq(path))).thenReturn(logCommandBuilder);
+    when(logCommandBuilder.getChangesets()).thenThrow(RevisionNotFoundException.class);
+
+    MockHttpRequest request = MockHttpRequest
+      .get(FILE_HISTORY_URL + id + "/" + path)
+      .accept(VndMediaType.CHANGESET_COLLECTION);
+    MockHttpResponse response = new MockHttpResponse();
+    dispatcher.invoke(request, response);
+    assertEquals(404, response.getStatus());
+  }
+
+  @Test
+  public void shouldGet500OnInternalRepositoryException() throws Exception {
+    String id = "revision_123";
+    String path = "root_dir/sub_dir/file-to-inspect.txt";
+
+    when(logCommandBuilder.setPagingStart(anyInt())).thenReturn(logCommandBuilder);
+    when(logCommandBuilder.setPagingLimit(anyInt())).thenReturn(logCommandBuilder);
+    when(logCommandBuilder.setStartChangeset(eq(id))).thenReturn(logCommandBuilder);
+    when(logCommandBuilder.setPath(eq(path))).thenReturn(logCommandBuilder);
+    when(logCommandBuilder.getChangesets()).thenThrow(InternalRepositoryException.class);
+
+    MockHttpRequest request = MockHttpRequest
+      .get(FILE_HISTORY_URL + id + "/" + path)
+      .accept(VndMediaType.CHANGESET_COLLECTION);
+    MockHttpResponse response = new MockHttpResponse();
+    dispatcher.invoke(request, response);
+    assertEquals(500, response.getStatus());
+  }
+
+  @Test
+  public void shouldGet500OnNullChangesets() throws Exception {
+    String id = "revision_123";
+    String path = "root_dir/sub_dir/file-to-inspect.txt";
+
+    when(logCommandBuilder.setPagingStart(anyInt())).thenReturn(logCommandBuilder);
+    when(logCommandBuilder.setPagingLimit(anyInt())).thenReturn(logCommandBuilder);
+    when(logCommandBuilder.setStartChangeset(eq(id))).thenReturn(logCommandBuilder);
+    when(logCommandBuilder.setPath(eq(path))).thenReturn(logCommandBuilder);
+    when(logCommandBuilder.getChangesets()).thenReturn(null);
+
+    MockHttpRequest request = MockHttpRequest
+      .get(FILE_HISTORY_URL + id + "/" + path)
+      .accept(VndMediaType.CHANGESET_COLLECTION);
+    MockHttpResponse response = new MockHttpResponse();
+    dispatcher.invoke(request, response);
+    assertEquals(500, response.getStatus());
+  }
 }

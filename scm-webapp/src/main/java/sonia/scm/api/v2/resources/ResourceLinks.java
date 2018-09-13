@@ -15,6 +15,10 @@ class ResourceLinks {
     this.uriInfoStore = uriInfoStore;
   }
 
+  // we have to add the file path using URI, so that path separators (aka '/') will not be encoded as '%2F'
+  private static String addPath(String sourceWithPath, String path) {
+    return URI.create(sourceWithPath).resolve(path).toASCIIString();
+  }
 
   GroupLinks group() {
     return new GroupLinks(uriInfoStore.get());
@@ -322,6 +326,23 @@ class ResourceLinks {
     }
   }
 
+  public FileHistoryLinks fileHistory() {
+    return new FileHistoryLinks(uriInfoStore.get());
+  }
+
+  static class FileHistoryLinks {
+    private final LinkBuilder fileHistoryLinkBuilder;
+
+    FileHistoryLinks(UriInfo uriInfo) {
+      fileHistoryLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, FileHistoryRootResource.class);
+    }
+
+    String self(String namespace, String name, String changesetId, String path) {
+      return addPath(fileHistoryLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("history").parameters().method("getAll").parameters(changesetId, "").href(), path);
+    }
+
+  }
+
   public SourceLinks source() {
     return new SourceLinks(uriInfoStore.get());
   }
@@ -353,10 +374,7 @@ class ResourceLinks {
       return addPath(sourceLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("content").parameters().method("get").parameters(revision, "").href(), path);
     }
 
-    // we have to add the file path using URI, so that path separators (aka '/') will not be encoded as '%2F'
-    private String addPath(String sourceWithPath, String path) {
-      return URI.create(sourceWithPath).resolve(path).toASCIIString();
-    }
+
   }
   public PermissionLinks permission() {
     return new PermissionLinks(uriInfoStore.get());

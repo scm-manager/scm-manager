@@ -37,6 +37,7 @@ public class RepositoryAccessITCase {
 
   private final String repositoryType;
   private File folder;
+  private RepositoryRequests.AppliedRepositoryGetRequest repositoryGetRequest;
 
   public RepositoryAccessITCase(String repositoryType) {
     this.repositoryType = repositoryType;
@@ -48,9 +49,15 @@ public class RepositoryAccessITCase {
   }
 
   @Before
-  public void initClient() {
+  public void init() {
     TestData.createDefault();
     folder = tempFolder.getRoot();
+    repositoryGetRequest = RepositoryRequests.start()
+      .given()
+      .url(TestData.getDefaultRepositoryUrl(repositoryType))
+      .usernameAndPassword(ADMIN_USERNAME, ADMIN_PASSWORD)
+      .get()
+      .assertStatusCode(HttpStatus.SC_OK);
   }
 
   @Test
@@ -245,6 +252,65 @@ public class RepositoryAccessITCase {
       .path("_embedded.changesets.id");
 
     assertThat(changesets).size().isBetween(2, 3); // svn has an implicit root revision '0' that is extra to the two commits
+  }
+
+  @Test
+  public void shouldFindDiffs() throws IOException {
+    RepositoryClient repositoryClient = RepositoryUtil.createRepositoryClient(repositoryType, folder);
+
+    RepositoryUtil.createAndCommitFile(repositoryClient, "scmadmin", "a.txt", "a");
+    RepositoryUtil.createAndCommitFile(repositoryClient, "scmadmin", "b.txt", "b");
+
+    String changesetsUrl = given()
+      .when()
+      .get(TestData.getDefaultRepositoryUrl(repositoryType))
+      .then()
+      .statusCode(HttpStatus.SC_OK)
+      .extract()
+      .path("_links.changesets.href");
+
+    String diffUrl = given()
+      .when()
+      .get(changesetsUrl)
+      .then()
+      .statusCode(HttpStatus.SC_OK)
+      .extract()
+      .path("_embedded.changesets[0]._links.diff.href");
+
+    given()
+      .when()
+      .get(diffUrl)
+      .then()
+      .statusCode(HttpStatus.SC_OK)
+      .extract()
+      .body()
+      .asString()
+      .contains("diff");
+
+  }
+
+  @Test
+  @SuppressWarnings("unchecked")
+  public void shouldFindFileHistory() throws IOException {
+    RepositoryClient repositoryClient = RepositoryUtil.createRepositoryClient(repositoryType, folder);
+    Changeset changeset = RepositoryUtil.createAndCommitFile(repositoryClient, ADMIN_USERNAME, "folder/subfolder/a.txt", "a");
+    repositoryGetRequest
+      .usingRepositoryResponse()
+      .requestSources()
+      .usingSourcesResponse()
+      .requestSelf("folder")
+      .usingSourcesResponse()
+      .requestSelf("subfolder")
+      .usingSourcesResponse()
+      .requestFileHistory("a.txt")
+      .assertStatusCode(HttpStatus.SC_OK)
+      .usingChangesetsResponse()
+      .assertChangesets(changesets -> {
+          assertThat(changesets).hasSize(1);
+          assertThat(changesets.get(0)).containsEntry("id", changeset.getId());
+          assertThat(changesets.get(0)).containsEntry("description", changeset.getDescription());
+        }
+      );
   }
 }
 

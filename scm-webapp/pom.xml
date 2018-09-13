@@ -239,6 +239,12 @@
 
     <dependency>
       <groupId>com.github.sdorra</groupId>
+      <artifactId>web-resources</artifactId>
+      <version>1.0.2</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.github.sdorra</groupId>
       <artifactId>spotter-core</artifactId>
       <version>1.1.0</version>
     </dependency>
@@ -515,7 +521,7 @@
             </systemProperty>
             <systemProperty>
               <name>sonia.scm.ui.proxy</name>
-              <value>http://localhost:3000</value>
+              <value>${livereload.proxy}</value>
             </systemProperty>
           </systemProperties>
           <webApp>
@@ -546,7 +552,42 @@
   </properties>
 
   <profiles>
-  
+
+    <profile>
+      <id>livereload</id>
+
+      <activation>
+        <property>
+          <name>livereload</name>
+        </property>
+      </activation>
+
+      <properties>
+        <livereload.proxy>http://localhost:3000</livereload.proxy>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>ui-overlay</id>
+
+      <activation>
+        <property>
+          <name>!livereload</name>
+        </property>
+      </activation>
+
+      <dependencies>
+
+        <dependency>
+          <groupId>sonia.scm</groupId>
+          <artifactId>scm-ui</artifactId>
+          <version>2.0.0-SNAPSHOT</version>
+          <type>war</type>
+        </dependency>
+
+      </dependencies>
+    </profile>
+
     <profile>
       <id>release</id>
 

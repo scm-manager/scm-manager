@@ -32,7 +32,7 @@ import static sonia.scm.api.v2.resources.DispatcherMock.createDispatcher;
 
 
 @RunWith(MockitoJUnitRunner.Silent.class)
-public class SourceRootResourceTest {
+public class SourceRootResourceTest extends BaseRepositoryTest {
 
   private Dispatcher dispatcher;
   private final URI baseUri = URI.create("/");
@@ -63,20 +63,8 @@ public class SourceRootResourceTest {
 
     when(fileObjectToFileObjectDtoMapper.map(any(FileObject.class), any(NamespaceAndName.class), anyString())).thenReturn(dto);
     SourceRootResource sourceRootResource = new SourceRootResource(serviceFactory, browserResultToBrowserResultDtoMapper);
-    RepositoryRootResource repositoryRootResource =
-      new RepositoryRootResource(MockProvider.of(new RepositoryResource(null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        MockProvider.of(sourceRootResource),
-        null,
-        null,
-        null,
-        null)),
-        null);
-    dispatcher = createDispatcher(repositoryRootResource);
+    super.sourceRootResource = MockProvider.of(sourceRootResource);
+    dispatcher = createDispatcher(getRepositoryRootResource());
   }
 
   @Test

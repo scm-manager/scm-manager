@@ -430,7 +430,9 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>animal-sniffer-maven-plugin</artifactId>
-        <version>1.17</version>
+        <!-- Note: 1.17 seems to have problems with JDK8. When updating, use > 1.17, if available!
+             https://github.com/mojohaus/animal-sniffer/issues/53 -->
+        <version>1.16</version>
         <configuration>
           <signature>
             <groupId>org.codehaus.mojo.signature</groupId>
