@@ -74,7 +74,7 @@ public class TagRootResourceTest {
     tagRootResource = new TagRootResource(serviceFactory, tagCollectionToDtoMapper, tagToTagDtoMapper);
     RepositoryRootResource repositoryRootResource = new RepositoryRootResource(MockProvider
       .of(new RepositoryResource(null, null, null, MockProvider.of(tagRootResource), null,
-        null, null, null, null, null)), null);
+        null, null, null, null, null, null)), null);
     dispatcher.getRegistry().addSingletonResource(repositoryRootResource);
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(repositoryService);
     when(serviceFactory.create(any(Repository.class))).thenReturn(repositoryService);

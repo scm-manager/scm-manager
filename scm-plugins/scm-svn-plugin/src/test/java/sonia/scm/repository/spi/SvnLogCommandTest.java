@@ -40,6 +40,8 @@ import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.Modifications;
 import sonia.scm.repository.RevisionNotFoundException;
 
+import java.io.IOException;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -128,7 +130,7 @@ public class SvnLogCommandTest extends AbstractSvnCommandTestBase
   }
 
   @Test
-  public void testGetCommit() throws RevisionNotFoundException {
+  public void testGetCommit() throws RevisionNotFoundException, IOException {
     Changeset c = createCommand().getChangeset("3");
 
     assertNotNull(c);
@@ -137,15 +139,15 @@ public class SvnLogCommandTest extends AbstractSvnCommandTestBase
     checkDate(c.getDate());
     assertEquals("perfect", c.getAuthor().getName());
     assertNull("douglas.adams@hitchhiker.com", c.getAuthor().getMail());
+    SvnModificationsCommand modificationsCommand = new SvnModificationsCommand(createContext(), repository);
+    Modifications modifications = modificationsCommand.getModifications("3");
 
-    Modifications mods = c.getModifications();
-
-    assertNotNull(mods);
-    assertEquals(1, mods.getModified().size());
-    assertEquals(1, mods.getRemoved().size());
-    assertTrue("added list should be empty", mods.getAdded().isEmpty());
-    assertEquals("a.txt", mods.getModified().get(0));
-    assertEquals("b.txt", mods.getRemoved().get(0));
+    assertNotNull(modifications);
+    assertEquals(1, modifications.getModified().size());
+    assertEquals(1, modifications.getRemoved().size());
+    assertTrue("added list should be empty", modifications.getAdded().isEmpty());
+    assertEquals("a.txt", modifications.getModified().get(0));
+    assertEquals("b.txt", modifications.getRemoved().get(0));
   }
 
   @Test

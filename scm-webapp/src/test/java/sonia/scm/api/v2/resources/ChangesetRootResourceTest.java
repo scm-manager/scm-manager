@@ -81,7 +81,7 @@ public class ChangesetRootResourceTest {
     changesetRootResource = new ChangesetRootResource(serviceFactory, changesetCollectionToDtoMapper, changesetToChangesetDtoMapper);
     RepositoryRootResource repositoryRootResource = new RepositoryRootResource(MockProvider
       .of(new RepositoryResource(null, null, null, null, null,
-        MockProvider.of(changesetRootResource), null, null, null, null)), null);
+        MockProvider.of(changesetRootResource), null, null, null, null, null)), null);
     dispatcher.getRegistry().addSingletonResource(repositoryRootResource);
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(repositoryService);
     when(serviceFactory.create(any(Repository.class))).thenReturn(repositoryService);

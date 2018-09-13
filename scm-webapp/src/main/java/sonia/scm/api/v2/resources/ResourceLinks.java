@@ -307,6 +307,21 @@ class ResourceLinks {
     }
   }
 
+  public ModificationsLinks modifications() {
+    return new ModificationsLinks(uriInfoStore.get());
+  }
+
+  static class ModificationsLinks {
+    private final LinkBuilder modificationsLinkBuilder;
+
+    ModificationsLinks(UriInfo uriInfo) {
+      modificationsLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, ModificationsRootResource.class);
+    }
+    String self(String namespace, String name, String revision) {
+      return modificationsLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("modifications").parameters().method("get").parameters(revision).href();
+    }
+  }
+
   public SourceLinks source() {
     return new SourceLinks(uriInfoStore.get());
   }

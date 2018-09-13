@@ -41,20 +41,17 @@ import com.aragost.javahg.internals.AbstractCommand;
 import com.aragost.javahg.internals.HgInputStream;
 import com.aragost.javahg.internals.RuntimeIOException;
 import com.aragost.javahg.internals.Utils;
-
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
-
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.HgConfig;
 import sonia.scm.repository.Modifications;
 import sonia.scm.repository.Person;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
-
 import java.util.List;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -251,38 +248,49 @@ public abstract class AbstractChangesetCommand extends AbstractCommand
       changeset.getProperties().put(PROPERTY_CLOSE, "true");
     }
 
-    Modifications modifications = changeset.getModifications();
-
     String line = in.textUpTo('\n');
-
-    while (line.length() > 0)
-    {
-
-      if (line.startsWith("a "))
-      {
-        modifications.getAdded().add(line.substring(2));
-      }
-      else if (line.startsWith("m "))
-      {
-        modifications.getModified().add(line.substring(2));
-      }
-      else if (line.startsWith("d "))
-      {
-        modifications.getRemoved().add(line.substring(2));
-      }
-      else if (line.startsWith("t "))
+    while (line.length() > 0) {
+      if (line.startsWith("t "))
       {
         changeset.getTags().add(line.substring(2));
       }
-
       line = in.textUpTo('\n');
     }
-
     String message = in.textUpTo('\0');
 
     changeset.setDescription(message);
 
     return changeset;
+  }
+
+  protected Modifications readModificationsFromStream(HgInputStream in) {
+    try {
+      boolean found = in.find(CHANGESET_PATTERN);
+      if (found) {
+        while (!in.match(CHANGESET_PATTERN)) {
+          return extractModifications(in);
+        }
+      }
+    } catch (IOException e) {
+      throw new RuntimeIOException(e);
+    }
+    return null;
+  }
+
+  private Modifications extractModifications(HgInputStream in) throws IOException {
+    Modifications modifications = new Modifications();
+    String line = in.textUpTo('\n');
+    while (line.length() > 0) {
+      if (line.startsWith("a ")) {
+        modifications.getAdded().add(line.substring(2));
+      } else if (line.startsWith("m ")) {
+        modifications.getModified().add(line.substring(2));
+      } else if (line.startsWith("d ")) {
+        modifications.getRemoved().add(line.substring(2));
+      }
+      line = in.textUpTo('\n');
+    }
+    return modifications;
   }
 
   /**
