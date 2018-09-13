@@ -7,7 +7,7 @@ import DeletePermissionButton from "./DeletePermissionButton";
 import { confirmAlert } from "@scm-manager/ui-components";
 jest.mock("@scm-manager/ui-components", () => ({
   confirmAlert: jest.fn(),
-  NavAction: require.requireActual("@scm-manager/ui-components").NavAction
+  DeleteButton: require.requireActual("@scm-manager/ui-components").DeleteButton
 }));
 
 describe("DeletePermissionButton", () => {
