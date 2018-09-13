@@ -1,17 +1,11 @@
 //@flow
 import React from "react";
 
-type Props = {
-
-}
+type Props = {};
 
 class ChangesetView extends React.Component<Props> {
   render() {
-    return (
-      <div>
-Hallo! Changesets here!
-      </div>
-    );
+    return <div>Hallo! Changesets here!</div>;
   }
 }
 
