@@ -1,16 +1,12 @@
 // @flow
 import React from "react";
 import { translate } from "react-i18next";
-import {
-  Checkbox,
-  InputField,
-  SubmitButton
-} from "../../../../../scm-ui-components/packages/ui-components/src/index";
+import { Checkbox, InputField, SubmitButton } from "@scm-manager/ui-components";
 import TypeSelector from "./TypeSelector";
 import type {
   PermissionCollection,
   PermissionEntry
-} from "../types/Permissions";
+} from "@scm-manager/ui-types";
 
 type Props = {
   t: string => string,

@@ -1,6 +1,6 @@
 // @flow
 import React from "react";
-import type { Permission } from "../types/Permissions";
+import type { Permission } from "@scm-manager/ui-types";
 import { translate } from "react-i18next";
 import {
   modifyPermission,
@@ -10,7 +10,7 @@ import {
 } from "../modules/permissions";
 import { connect } from "react-redux";
 import type { History } from "history";
-import { Checkbox } from "../../../../../scm-ui-components/packages/ui-components/src/index";
+import { Checkbox } from "@scm-manager/ui-components";
 import DeletePermissionButton from "../components/buttons/DeletePermissionButton";
 import TypeSelector from "../components/TypeSelector";
 

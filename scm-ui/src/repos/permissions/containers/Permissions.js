@@ -17,12 +17,12 @@ import {
   modifyPermissionReset,
   deletePermissionReset
 } from "../modules/permissions";
-import { Loading, ErrorPage } from "../../../../../scm-ui-components/packages/ui-components/src/index";
+import { Loading, ErrorPage } from "@scm-manager/ui-components";
 import type {
   Permission,
   PermissionCollection,
   PermissionEntry
-} from "../types/Permissions";
+} from "@scm-manager/ui-types";
 import SinglePermission from "./SinglePermission";
 import CreatePermissionForm from "../components/CreatePermissionForm";
 import type { History } from "history";

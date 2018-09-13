@@ -1,13 +1,13 @@
 // @flow
 
-import { apiClient } from "../../../../../scm-ui-components/packages/ui-components/src/index";
+import { apiClient } from "@scm-manager/ui-components";
 import * as types from "../../../modules/types";
-import type { Action } from "../../../../../scm-ui-components/packages/ui-types/src/index";
+import type { Action } from "@scm-manager/ui-components";
 import type {
   PermissionCollection,
   Permission,
   PermissionEntry
-} from "../types/Permissions";
+} from "@scm-manager/ui-types";
 import { isPending } from "../../../modules/pending";
 import { getFailure } from "../../../modules/failure";
 import { Dispatch } from "redux";

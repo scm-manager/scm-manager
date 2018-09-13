@@ -1,11 +1,11 @@
 //@flow
-import type { Links } from "../../types/hal";
+import type { Links } from "./hal";
 
 export type Permission = {
   name: string,
   type: string,
   groupPermission: boolean,
-  _links: Links
+  _links?: Links
 };
 
 export type PermissionEntry = {

@@ -40,7 +40,7 @@ import reducer, {
   isCreatePermissionPending,
   getDeletePermissionsFailure
 } from "./permissions";
-import type { Permission, PermissionCollection } from "../types/Permissions";
+import type { Permission, PermissionCollection } from "@scm-manager/ui-types";
 
 const hitchhiker_puzzle42Permission_user_eins: Permission = {
   name: "user_eins",
