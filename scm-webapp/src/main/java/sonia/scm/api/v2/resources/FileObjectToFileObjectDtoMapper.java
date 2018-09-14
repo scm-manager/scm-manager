@@ -14,7 +14,7 @@ import javax.inject.Inject;
 import static de.otto.edison.hal.Link.link;
 
 @Mapper
-public abstract class FileObjectToFileObjectDtoMapper extends BaseMapper<FileObject, FileObjectDto> {
+public abstract class FileObjectToFileObjectDtoMapper implements InstantAttributeMapper {
 
   @Inject
   private ResourceLinks resourceLinks;

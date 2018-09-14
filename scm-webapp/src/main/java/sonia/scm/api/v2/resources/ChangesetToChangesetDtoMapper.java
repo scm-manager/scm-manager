@@ -23,7 +23,7 @@ import static de.otto.edison.hal.Link.link;
 import static de.otto.edison.hal.Links.linkingTo;
 
 @Mapper
-public abstract class ChangesetToChangesetDtoMapper extends BaseMapper<Changeset, ChangesetDto> {
+public abstract class ChangesetToChangesetDtoMapper implements InstantAttributeMapper {
 
   @Inject
   private RepositoryServiceFactory serviceFactory;
