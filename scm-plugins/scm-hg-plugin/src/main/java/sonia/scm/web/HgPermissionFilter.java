@@ -34,8 +34,8 @@
 package sonia.scm.web;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.inject.Inject;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.repository.spi.ScmProviderHttpServlet;
 import sonia.scm.web.filter.PermissionFilter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -51,10 +51,9 @@ public class HgPermissionFilter extends PermissionFilter
   
   private static final Set<String> READ_METHODS = ImmutableSet.of("GET", "HEAD", "OPTIONS", "TRACE");
 
-  @Inject
-  public HgPermissionFilter(ScmConfiguration configuration)
+  public HgPermissionFilter(ScmConfiguration configuration, ScmProviderHttpServlet delegate)
   {
-    super(configuration);
+    super(configuration, delegate);
   }
 
   @Override

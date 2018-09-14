@@ -5,13 +5,11 @@ import com.google.inject.util.Providers;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.stubbing.Answer;
 import org.mockito.stubbing.OngoingStubbing;
 import sonia.scm.api.v2.resources.ScmPathInfo;
 import sonia.scm.api.v2.resources.ScmPathInfoStore;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.Repository;
-import sonia.scm.web.filter.PermissionFilter;
 
 import javax.inject.Provider;
 import javax.servlet.ServletConfig;
@@ -22,12 +20,7 @@ import java.io.IOException;
 import java.net.URI;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.same;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -39,8 +32,6 @@ public class InitializingHttpScmProtocolWrapperTest {
 
   @Mock
   private ScmProviderHttpServlet delegateServlet;
-  @Mock
-  private PermissionFilter permissionFilter;
   @Mock
   private ScmPathInfoStore pathInfoStore;
   @Mock
@@ -62,7 +53,7 @@ public class InitializingHttpScmProtocolWrapperTest {
     pathInfoStoreProvider = mock(Provider.class);
     when(pathInfoStoreProvider.get()).thenReturn(pathInfoStore);
 
-    wrapper = new InitializingHttpScmProtocolWrapper(Providers.of(this.delegateServlet), Providers.of(permissionFilter), pathInfoStoreProvider, scmConfiguration) {
+    wrapper = new InitializingHttpScmProtocolWrapper(Providers.of(this.delegateServlet), pathInfoStoreProvider, scmConfiguration) {
       @Override
       public String getType() {
         return "git";
@@ -98,8 +89,6 @@ public class InitializingHttpScmProtocolWrapperTest {
 
   @Test
   public void shouldInitializeAndDelegateRequestThroughFilter() throws ServletException, IOException {
-    doAnswer(proceedInvocation()).
-      when(permissionFilter).executeIfPermitted(same(request), same(response), same(REPOSITORY), any());
     HttpScmProtocol httpScmProtocol = wrapper.get(REPOSITORY);
 
     httpScmProtocol.serve(request, response, servletConfig);
@@ -109,20 +98,7 @@ public class InitializingHttpScmProtocolWrapperTest {
   }
 
   @Test
-  public void shouldNotDelegateRequestWhenFilterBlocks() throws ServletException, IOException {
-    doNothing().
-      when(permissionFilter).executeIfPermitted(same(request), same(response), same(REPOSITORY), any());
-    HttpScmProtocol httpScmProtocol = wrapper.get(REPOSITORY);
-
-    httpScmProtocol.serve(request, response, servletConfig);
-
-    verify(delegateServlet, never()).service(request, response, REPOSITORY);
-  }
-
-  @Test
   public void shouldInitializeOnlyOnce() throws ServletException, IOException {
-    doAnswer(proceedInvocation()).
-      when(permissionFilter).executeIfPermitted(same(request), same(response), same(REPOSITORY), any());
     HttpScmProtocol httpScmProtocol = wrapper.get(REPOSITORY);
 
     httpScmProtocol.serve(request, response, servletConfig);
@@ -135,13 +111,6 @@ public class InitializingHttpScmProtocolWrapperTest {
   @Test(expected = IllegalArgumentException.class)
   public void shouldFailForIllegalScmType() {
     HttpScmProtocol httpScmProtocol = wrapper.get(new Repository("", "other", "space", "name"));
-  }
-
-  private Answer proceedInvocation() {
-    return invocation -> {
-      ((PermissionFilter.ContinuationServlet) invocation.getArgument(3)).doService();
-      return null;
-    };
   }
 
   private OngoingStubbing<ScmPathInfo> mockSetPathInfo() {

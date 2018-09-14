@@ -42,6 +42,8 @@ import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryPermissions;
+import sonia.scm.repository.spi.ScmProviderHttpServlet;
+import sonia.scm.repository.spi.ScmProviderHttpServletDecorator;
 import sonia.scm.security.Role;
 import sonia.scm.security.ScmSecurityException;
 import sonia.scm.util.HttpUtil;
@@ -56,7 +58,7 @@ import java.io.IOException;
  *
  * @author Sebastian Sdorra
  */
-public abstract class PermissionFilter
+public abstract class PermissionFilter extends ScmProviderHttpServletDecorator
 {
 
   /** the logger for PermissionFilter */
@@ -72,8 +74,9 @@ public abstract class PermissionFilter
    *
    * @since 1.21
    */
-  protected PermissionFilter(ScmConfiguration configuration)
+  protected PermissionFilter(ScmConfiguration configuration, ScmProviderHttpServlet delegate)
   {
+    super(delegate);
     this.configuration = configuration;
   }
 
@@ -102,8 +105,9 @@ public abstract class PermissionFilter
    * @throws IOException
    * @throws ServletException
    */
-  public void executeIfPermitted(HttpServletRequest request,
-    HttpServletResponse response, Repository repository, ContinuationServlet continuation)
+  @Override
+  public void service(HttpServletRequest request,
+    HttpServletResponse response, Repository repository)
     throws IOException, ServletException
   {
     Subject subject = SecurityUtils.getSubject();
@@ -118,7 +122,7 @@ public abstract class PermissionFilter
           getActionAsString(writeRequest), repository.getName(),
           getUserName(subject));
 
-        continuation.doService();
+        super.service(request, response, repository);
       }
       else
       {
@@ -258,9 +262,4 @@ public abstract class PermissionFilter
 
   /** scm-manager global configuration */
   private final ScmConfiguration configuration;
-
-  @FunctionalInterface
-  public interface ContinuationServlet {
-    void doService() throws ServletException, IOException;
-  }
 }

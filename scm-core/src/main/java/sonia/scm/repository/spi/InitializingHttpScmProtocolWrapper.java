@@ -6,7 +6,6 @@ import sonia.scm.api.v2.resources.ScmPathInfoStore;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.ScmProtocolProvider;
-import sonia.scm.web.filter.PermissionFilter;
 
 import javax.inject.Provider;
 import javax.servlet.ServletConfig;
@@ -24,16 +23,14 @@ public abstract class InitializingHttpScmProtocolWrapper implements ScmProtocolP
   private static final Logger logger = LoggerFactory.getLogger(InitializingHttpScmProtocolWrapper.class);
 
   private final Provider<? extends ScmProviderHttpServlet> delegateProvider;
-  private final Provider<? extends PermissionFilter> permissionFilterProvider;
   private final Provider<ScmPathInfoStore> uriInfoStore;
   private final ScmConfiguration scmConfiguration;
 
   private volatile boolean isInitialized = false;
 
 
-  protected InitializingHttpScmProtocolWrapper(Provider<? extends ScmProviderHttpServlet> delegateProvider, Provider<? extends PermissionFilter> permissionFilterProvider, Provider<ScmPathInfoStore> uriInfoStore, ScmConfiguration scmConfiguration) {
+  protected InitializingHttpScmProtocolWrapper(Provider<? extends ScmProviderHttpServlet> delegateProvider, Provider<ScmPathInfoStore> uriInfoStore, ScmConfiguration scmConfiguration) {
     this.delegateProvider = delegateProvider;
-    this.permissionFilterProvider = permissionFilterProvider;
     this.uriInfoStore = uriInfoStore;
     this.scmConfiguration = scmConfiguration;
   }
@@ -89,11 +86,7 @@ public abstract class InitializingHttpScmProtocolWrapper implements ScmProtocolP
         }
       }
 
-      permissionFilterProvider.get().executeIfPermitted(
-        request,
-        response,
-        repository,
-        () -> delegateProvider.get().service(request, response, repository));
+      delegateProvider.get().service(request, response, repository);
     }
 
   }

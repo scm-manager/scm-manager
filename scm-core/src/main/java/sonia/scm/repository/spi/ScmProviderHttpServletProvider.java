@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import sonia.scm.util.Decorators;
 
 import javax.inject.Provider;
+import java.util.List;
 import java.util.Set;
 
 import static java.util.stream.Collectors.toList;
@@ -21,7 +22,11 @@ public abstract class ScmProviderHttpServletProvider implements Provider<ScmProv
 
   @Override
   public ScmProviderHttpServlet get() {
-    return Decorators.decorate(getRootServlet(), decoratorFactories.stream().filter(d -> d.handlesScmType(type)).collect(toList()));
+    return Decorators.decorate(getRootServlet(), getDecoratorsForType());
+  }
+
+  private List<ScmProviderHttpServletDecoratorFactory> getDecoratorsForType() {
+    return decoratorFactories.stream().filter(d -> d.handlesScmType(type)).collect(toList());
   }
 
   protected abstract ScmProviderHttpServlet getRootServlet();

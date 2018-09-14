@@ -34,11 +34,11 @@
 package sonia.scm.web;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.inject.Inject;
 import org.eclipse.jgit.http.server.GitSmartHttpTools;
 import sonia.scm.ClientMessages;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.GitUtil;
+import sonia.scm.repository.spi.ScmProviderHttpServlet;
 import sonia.scm.web.filter.PermissionFilter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -70,9 +70,8 @@ public class GitPermissionFilter extends PermissionFilter
    *
    * @param configuration scm main configuration
    */
-  @Inject
-  public GitPermissionFilter(ScmConfiguration configuration) {
-    super(configuration);
+  public GitPermissionFilter(ScmConfiguration configuration, ScmProviderHttpServlet delegate) {
+    super(configuration, delegate);
   }
 
   @Override

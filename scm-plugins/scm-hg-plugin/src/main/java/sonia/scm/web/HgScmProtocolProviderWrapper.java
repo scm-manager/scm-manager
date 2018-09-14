@@ -14,8 +14,8 @@ import javax.inject.Singleton;
 @Extension
 public class HgScmProtocolProviderWrapper extends InitializingHttpScmProtocolWrapper {
   @Inject
-  public HgScmProtocolProviderWrapper(@Hg Provider<ScmProviderHttpServlet> servletProvider, Provider<HgPermissionFilter> permissionFilter, Provider<ScmPathInfoStore> uriInfoStore, ScmConfiguration scmConfiguration) {
-    super(servletProvider, permissionFilter, uriInfoStore, scmConfiguration);
+  public HgScmProtocolProviderWrapper(@Hg Provider<ScmProviderHttpServlet> servletProvider, Provider<ScmPathInfoStore> uriInfoStore, ScmConfiguration scmConfiguration) {
+    super(servletProvider, uriInfoStore, scmConfiguration);
   }
 
   @Override
