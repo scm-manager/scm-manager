@@ -26,39 +26,61 @@ export function fetchChangesetsByNamespaceAndName(namespace: string, name: strin
   }
 }
 
-export function fetchChangesetsPending(namespace: string, name: string): Action {
+export function fetchChangesetsByNamespaceNameAndBranch(namespace: string, name: string, branch: string) {
+  return function (dispatch: any) {
+    dispatch(fetchChangesetsPending(namespace, name, branch));
+    return apiClient.get(REPO_URL + "/" + namespace + "/" + name + "/branches/" + branch + "/changesets").then(response => response.json())
+      .then(data => {
+        dispatch(fetchChangesetsSuccess(data, namespace, name, branch))
+      }).catch(cause => {
+        dispatch(fetchChangesetsFailure(namespace, name, branch, cause))
+      })
+  }
+}
+
+export function fetchChangesetsPending(namespace: string, name: string, branch?: string): Action {
   return {
     type: FETCH_CHANGESETS_PENDING,
     payload: {
       namespace,
-      name
+      name,
+      branch
     },
-    itemId: namespace + "/" + name
+    itemId: createItemId(namespace, name, branch)
   }
 }
 
-export function fetchChangesetsSuccess(collection: any, namespace: string, name: string): Action {
+export function fetchChangesetsSuccess(collection: any, namespace: string, name: string, branch?: string): Action {
   return {
     type: FETCH_CHANGESETS_SUCCESS,
-    payload: {collection, namespace, name},
-    itemId: namespace + "/" + name
+    payload: {collection, namespace, name, branch},
+    itemId: createItemId(namespace, name, branch)
   }
 }
 
-function fetchChangesetsFailure(namespace: string, name: string, error: Error): Action {
+function fetchChangesetsFailure(namespace: string, name: string, branch?: string, error: Error): Action {
   return {
     type: FETCH_CHANGESETS_FAILURE,
     payload: {
       namespace,
       name,
+      branch,
       error
     },
-    itemId: namespace + "/" + name
+    itemId: createItemId(namespace, name, branch)
   }
 }
 
+function createItemId(namespace: string, name: string, branch?: string): string {
+  let itemId = namespace + "/" + name;
+  if (branch && branch !== "") {
+    itemId = itemId + "/" + branch;
+  }
+  return itemId;
+}
+
 // reducer
-export default function reducer(state: any = {}, action: any = {}) {
+export default function reducer(state: any = {}, action: Action = {type: "UNKNOWN"}): Object {
   switch (action.type) {
     case FETCH_CHANGESETS_SUCCESS:
       const {namespace, name} = action.payload;
@@ -90,7 +112,7 @@ function extractChangesetsByIds(data: any, oldChangesetsByIds: any) {
 }
 
 //selectors
-export function getChangesetsForNameAndNamespaceFromState(namespace: string, name: string, state: Object) {
+export function getChangesetsForNamespaceAndNameFromState(namespace: string, name: string, state: Object) {
   const key = namespace + "/" + name;
   if (!state.changesets[key]) {
     return null;
@@ -98,11 +120,19 @@ export function getChangesetsForNameAndNamespaceFromState(namespace: string, nam
   return Object.values(state.changesets[key].byId);
 }
 
-export function isFetchChangesetsPending( state: Object, namespace: string, name: string) {
-  return isPending(state, FETCH_CHANGESETS, namespace + "/" + name)
+export function getChangesets(namespace: string, name: string, branch: string, state: Object) {
+  const key = createItemId(namespace, name, branch);
+  if (!state.changesets[key]) {
+    return null;
+  }
+  return Object.values(state.changesets[key].byId);
 }
 
-export function getFetchChangesetsFailure( state: Object, namespace: string, name: string) {
-  return getFailure(state, FETCH_CHANGESETS, namespace + "/" + name);
+export function isFetchChangesetsPending(state: Object, namespace: string, name: string, branch?: string) {
+  return isPending(state, FETCH_CHANGESETS, createItemId(namespace, name, branch))
+}
+
+export function getFetchChangesetsFailure(state: Object, namespace: string, name: string, branch?: string) {
+  return getFailure(state, FETCH_CHANGESETS, createItemId(namespace, name, branch));
 }
 

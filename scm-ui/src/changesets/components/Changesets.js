@@ -3,8 +3,12 @@ import { connect } from "react-redux";
 import ChangesetRow from "./ChangesetRow";
 import type {Changeset} from "@scm-manager/ui-types";
 
-import { fetchChangesetsByNamespaceAndName, getChangesetsForNameAndNamespaceFromState } from "../modules/changesets";
+import {
+  fetchChangesetsByNamespaceAndName,
+  getChangesets,
+} from "../modules/changesets";
 import { translate } from "react-i18next";
+import {fetchBranchesByNamespaceAndName} from "../../repos/modules/branches";
 
 type Props = {
   changesets: Changeset[],
@@ -15,6 +19,7 @@ class Changesets extends React.Component<Props> {
   componentDidMount() {
     const {namespace, name} = this.props.repository;
     this.props.fetchChangesetsByNamespaceAndName(namespace, name);
+    this.props.fetchBranchesByNamespaceAndName(namespace, name);
   }
 
   render() {
@@ -24,7 +29,7 @@ class Changesets extends React.Component<Props> {
     }
     return <table className="table is-hoverable is-fullwidth is-striped is-bordered">
       <thead>
-      <tr>Changesets</tr>
+      <th>Changesets</th>
       </thead>
       <tbody>
       {changesets.map((changeset, index) => {
@@ -36,15 +41,20 @@ class Changesets extends React.Component<Props> {
 }
 
 const mapStateToProps = (state, ownProps) => {
+  const {namespace, name} = ownProps.repository;
   return {
-    changesets: getChangesetsForNameAndNamespaceFromState(ownProps.repository.namespace, ownProps.repository.name, state)
+    changesets: getChangesets(namespace, name, "", state)
   }
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     fetchChangesetsByNamespaceAndName: (namespace: string, name: string) => {
-      dispatch(fetchChangesetsByNamespaceAndName(namespace, name))
+      dispatch(fetchChangesetsByNamespaceAndName(namespace, name));
+    },
+
+    fetchBranchesByNamespaceAndName: (namespace: string, name: string) => {
+      dispatch(fetchBranchesByNamespaceAndName(namespace, name));
     }
   }
 };

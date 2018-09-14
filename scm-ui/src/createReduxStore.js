@@ -15,6 +15,7 @@ import failure from "./modules/failure";
 import config from "./config/modules/config";
 
 import type { BrowserHistory } from "history/createBrowserHistory";
+import branches from "./repos/modules/branches";
 
 function createReduxStore(history: BrowserHistory) {
   const composeEnhancers =
@@ -28,6 +29,7 @@ function createReduxStore(history: BrowserHistory) {
     repos,
     repositoryTypes,
     changesets,
+    branches,
     groups,
     auth,
     config
