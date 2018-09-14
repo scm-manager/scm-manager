@@ -38,7 +38,7 @@ import static sonia.scm.api.v2.resources.DispatcherMock.createDispatcher;
 
 @Slf4j
 @RunWith(MockitoJUnitRunner.Silent.class)
-public class TagRootResourceTestBase extends RepositoryTestBase {
+public class TagRootResourceTest extends RepositoryTestBase {
 
   public static final String TAG_PATH = "space/repo/tags/";
   public static final String TAG_URL = "/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + TAG_PATH;

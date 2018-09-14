@@ -32,7 +32,7 @@ import static sonia.scm.api.v2.resources.DispatcherMock.createDispatcher;
 
 
 @RunWith(MockitoJUnitRunner.Silent.class)
-public class SourceRootResourceTestBase extends RepositoryTestBase {
+public class SourceRootResourceTest extends RepositoryTestBase {
 
   private Dispatcher dispatcher;
   private final URI baseUri = URI.create("/");

@@ -39,7 +39,7 @@ import static org.mockito.Mockito.when;
 
 @Slf4j
 @RunWith(MockitoJUnitRunner.Silent.class)
-public class ModificationsResourceTestBase extends RepositoryTestBase {
+public class ModificationsResourceTest extends RepositoryTestBase {
 
 
   public static final String MODIFICATIONS_PATH = "space/repo/modifications/";

@@ -47,7 +47,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 @Slf4j
-public class FileHistoryResourceTestBase extends RepositoryTestBase {
+public class FileHistoryResourceTest extends RepositoryTestBase {
 
   public static final String FILE_HISTORY_PATH = "space/repo/history/";
   public static final String FILE_HISTORY_URL = "/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + FILE_HISTORY_PATH;
