@@ -65,7 +65,8 @@ public abstract class ChangesetToChangesetDtoMapper implements InstantAttributeM
 
     Links.Builder linksBuilder = linkingTo()
       .self(resourceLinks.changeset().self(repository.getNamespace(), repository.getName(), target.getId()))
-      .single(link("diff", resourceLinks.diff().self(namespace, name, target.getId())));
+      .single(link("diff", resourceLinks.diff().self(namespace, name, target.getId())))
+      .single(link("modifications", resourceLinks.modifications().self(namespace, name, target.getId())));
     target.add(linksBuilder.build());
   }
 

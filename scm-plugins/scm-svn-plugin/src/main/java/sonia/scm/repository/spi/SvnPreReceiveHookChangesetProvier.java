@@ -37,21 +37,18 @@ package sonia.scm.repository.spi;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.tmatesoft.svn.core.SVNLogEntry;
 import org.tmatesoft.svn.core.wc.ISVNOptions;
 import org.tmatesoft.svn.core.wc.SVNClientManager;
 import org.tmatesoft.svn.core.wc.SVNWCUtil;
 import org.tmatesoft.svn.core.wc.admin.SVNLookClient;
-
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.RepositoryHookType;
-import sonia.scm.repository.SvnModificationHandler;
 import sonia.scm.repository.SvnUtil;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.File;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -123,10 +120,6 @@ public class SvnPreReceiveHookChangesetProvier
       {
         changeset = SvnUtil.createChangeset(entry);
         changeset.setId(SvnUtil.createTransactionEntryId(transaction));
-
-        clientManager.doGetChanged(repositoryDirectory, transaction,
-          new SvnModificationHandler(changeset), true);
-
       }
       else if (logger.isWarnEnabled())
       {

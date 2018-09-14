@@ -78,7 +78,7 @@ public class GitOutgoingCommandTest extends AbstractRemoteCommandTestBase
     GitOutgoingCommand cmd = createCommand();
     OutgoingCommandRequest request = new OutgoingCommandRequest();
 
-    request.setRemoteRepository(incomgingRepository);
+    request.setRemoteRepository(incomingRepository);
 
     ChangesetPagingResult cpr = cmd.getOutgoingChangesets(request);
 
@@ -98,7 +98,7 @@ public class GitOutgoingCommandTest extends AbstractRemoteCommandTestBase
    * @throws RepositoryException
    */
   @Test
-  public void testGetOutgoingChangesetsWithAllreadyPushedChanges()
+  public void testGetOutgoingChangesetsWithAlreadyPushedChanges()
     throws IOException, GitAPIException
   {
     write(outgoing, outgoingDirectory, "a.txt", "content of a.txt");
@@ -110,7 +110,7 @@ public class GitOutgoingCommandTest extends AbstractRemoteCommandTestBase
                             outgoingRepository);
     PushCommandRequest req = new PushCommandRequest();
 
-    req.setRemoteRepository(incomgingRepository);
+    req.setRemoteRepository(incomingRepository);
     push.push(req);
 
     write(outgoing, outgoingDirectory, "b.txt", "content of b.txt");
@@ -120,7 +120,7 @@ public class GitOutgoingCommandTest extends AbstractRemoteCommandTestBase
     GitOutgoingCommand cmd = createCommand();
     OutgoingCommandRequest request = new OutgoingCommandRequest();
 
-    request.setRemoteRepository(incomgingRepository);
+    request.setRemoteRepository(incomingRepository);
 
     ChangesetPagingResult cpr = cmd.getOutgoingChangesets(request);
 
@@ -144,7 +144,7 @@ public class GitOutgoingCommandTest extends AbstractRemoteCommandTestBase
     GitOutgoingCommand cmd = createCommand();
     OutgoingCommandRequest request = new OutgoingCommandRequest();
 
-    request.setRemoteRepository(incomgingRepository);
+    request.setRemoteRepository(incomingRepository);
 
     ChangesetPagingResult cpr = cmd.getOutgoingChangesets(request);
 

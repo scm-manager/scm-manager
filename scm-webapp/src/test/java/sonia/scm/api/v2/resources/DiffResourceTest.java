@@ -37,7 +37,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 @Slf4j
-public class DiffResourceTest {
+public class DiffResourceTest extends RepositoryTestBase {
 
 
   public static final String DIFF_PATH = "space/repo/diff/";
@@ -63,10 +63,8 @@ public class DiffResourceTest {
   @Before
   public void prepareEnvironment() throws Exception {
     diffRootResource = new DiffRootResource(serviceFactory);
-    RepositoryRootResource repositoryRootResource = new RepositoryRootResource(MockProvider
-      .of(new RepositoryResource(null, null, null, null, null,
-        null, null, null, null, MockProvider.of(diffRootResource),null)), null);
-    dispatcher.getRegistry().addSingletonResource(repositoryRootResource);
+    super.diffRootResource = MockProvider.of(diffRootResource);
+    dispatcher.getRegistry().addSingletonResource(getRepositoryRootResource());
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(service);
     when(serviceFactory.create(any(Repository.class))).thenReturn(service);
     when(service.getRepository()).thenReturn(new Repository("repoId", "git", "space", "repo"));

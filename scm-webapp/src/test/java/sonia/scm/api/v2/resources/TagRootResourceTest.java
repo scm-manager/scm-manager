@@ -7,7 +7,6 @@ import org.apache.shiro.util.ThreadContext;
 import org.apache.shiro.util.ThreadState;
 import org.assertj.core.util.Lists;
 import org.jboss.resteasy.core.Dispatcher;
-import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.After;
@@ -35,14 +34,15 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static sonia.scm.api.v2.resources.DispatcherMock.createDispatcher;
 
 @Slf4j
 @RunWith(MockitoJUnitRunner.Silent.class)
-public class TagRootResourceTest {
+public class TagRootResourceTest extends RepositoryTestBase {
 
   public static final String TAG_PATH = "space/repo/tags/";
   public static final String TAG_URL = "/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + TAG_PATH;
-  private final Dispatcher dispatcher = MockDispatcherFactory.createDispatcher();
+  private Dispatcher dispatcher ;
 
   private final URI baseUri = URI.create("/");
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
@@ -55,7 +55,6 @@ public class TagRootResourceTest {
 
   @Mock
   private TagsCommandBuilder tagsCommandBuilder;
-
   private TagCollectionToDtoMapper tagCollectionToDtoMapper;
 
   @InjectMocks
@@ -72,10 +71,8 @@ public class TagRootResourceTest {
   public void prepareEnvironment() throws Exception {
     tagCollectionToDtoMapper = new TagCollectionToDtoMapper(resourceLinks, tagToTagDtoMapper);
     tagRootResource = new TagRootResource(serviceFactory, tagCollectionToDtoMapper, tagToTagDtoMapper);
-    RepositoryRootResource repositoryRootResource = new RepositoryRootResource(MockProvider
-      .of(new RepositoryResource(null, null, null, MockProvider.of(tagRootResource), null,
-        null, null, null, null, null, null)), null);
-    dispatcher.getRegistry().addSingletonResource(repositoryRootResource);
+    super.tagRootResource = MockProvider.of(tagRootResource);
+    dispatcher = createDispatcher(getRepositoryRootResource());
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(repositoryService);
     when(serviceFactory.create(any(Repository.class))).thenReturn(repositoryService);
     when(repositoryService.getRepository()).thenReturn(new Repository("repoId", "git", "space", "repo"));
