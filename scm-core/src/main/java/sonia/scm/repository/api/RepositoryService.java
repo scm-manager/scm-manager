@@ -254,6 +254,18 @@ public final class RepositoryService implements Closeable {
   }
 
   /**
+   * The modification command shows file modifications in a revision.
+   *
+   * @return instance of {@link ModificationsCommandBuilder}
+   * @throws CommandNotSupportedException if the command is not supported
+   *                                      by the implementation of the repository service provider.
+   */
+  public ModificationsCommandBuilder getModificationsCommand() {
+    logger.debug("create modifications command for repository {}",repository.getNamespaceAndName());
+    return new ModificationsCommandBuilder(provider.getModificationsCommand(),repository, cacheManager.getCache(ModificationsCommandBuilder.CACHE_NAME), preProcessorUtil);
+  }
+
+  /**
    * The outgoing command show {@link Changeset}s not found in a remote repository.
    *
    * @return instance of {@link OutgoingCommandBuilder}

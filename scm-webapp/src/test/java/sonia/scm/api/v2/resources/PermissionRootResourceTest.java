@@ -65,7 +65,7 @@ import static sonia.scm.api.v2.resources.PermissionDto.GROUP_PREFIX;
   password = "secret",
   configuration = "classpath:sonia/scm/repository/shiro.ini"
 )
-public class PermissionRootResourceTest {
+public class PermissionRootResourceTest extends RepositoryTestBase {
   private static final String REPOSITORY_NAMESPACE = "repo_namespace";
   private static final String REPOSITORY_NAME = "repo";
   private static final String PERMISSION_WRITE = "repository:permissionWrite:" + REPOSITORY_NAME;
@@ -138,9 +138,8 @@ public class PermissionRootResourceTest {
     initMocks(this);
     permissionCollectionToDtoMapper = new PermissionCollectionToDtoMapper(permissionToPermissionDtoMapper, resourceLinks);
     permissionRootResource = new PermissionRootResource(permissionDtoToPermissionMapper, permissionToPermissionDtoMapper, permissionCollectionToDtoMapper, resourceLinks, repositoryManager);
-    RepositoryRootResource repositoryRootResource = new RepositoryRootResource(Providers
-      .of(new RepositoryResource(null, null, null, null, null, null, null, null, Providers.of(permissionRootResource), null, null)), null);
-    dispatcher = createDispatcher(repositoryRootResource);
+    super.permissionRootResource = Providers.of(permissionRootResource);
+    dispatcher = createDispatcher(getRepositoryRootResource());
     subjectThreadState.bind();
     ThreadContext.bind(subject);
   }

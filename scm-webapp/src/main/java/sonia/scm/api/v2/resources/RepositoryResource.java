@@ -40,6 +40,7 @@ public class RepositoryResource {
   private final Provider<ContentResource> contentResource;
   private final Provider<PermissionRootResource> permissionRootResource;
   private final Provider<DiffRootResource> diffRootResource;
+  private final Provider<ModificationsRootResource> modificationsRootResource;
   private final Provider<FileHistoryRootResource> fileHistoryRootResource;
 
   @Inject
@@ -52,7 +53,9 @@ public class RepositoryResource {
     Provider<SourceRootResource> sourceRootResource, Provider<ContentResource> contentResource,
     Provider<PermissionRootResource> permissionRootResource,
     Provider<DiffRootResource> diffRootResource,
-    Provider<FileHistoryRootResource> fileHistoryRootResource) {
+    Provider<ModificationsRootResource> modificationsRootResource,
+    Provider<FileHistoryRootResource> fileHistoryRootResource
+  ) {
     this.dtoToRepositoryMapper = dtoToRepositoryMapper;
     this.manager = manager;
     this.repositoryToDtoMapper = repositoryToDtoMapper;
@@ -64,6 +67,7 @@ public class RepositoryResource {
     this.contentResource = contentResource;
     this.permissionRootResource = permissionRootResource;
     this.diffRootResource = diffRootResource;
+    this.modificationsRootResource = modificationsRootResource;
     this.fileHistoryRootResource = fileHistoryRootResource;
   }
 
@@ -187,6 +191,9 @@ public class RepositoryResource {
   public PermissionRootResource permissions() {
     return permissionRootResource.get();
   }
+
+ @Path("modifications/")
+  public ModificationsRootResource modifications() {return modificationsRootResource.get(); }
 
   private Optional<Response> handleNotArchived(Throwable throwable) {
     if (throwable instanceof RepositoryIsNotArchivedException) {

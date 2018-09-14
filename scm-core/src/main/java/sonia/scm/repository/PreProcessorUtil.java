@@ -36,16 +36,14 @@ package sonia.scm.repository;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.util.Util;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.util.Collection;
 import java.util.Set;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -73,14 +71,18 @@ public class PreProcessorUtil
    * @param fileObjectPreProcessorFactorySet
    * @param blameLinePreProcessorSet
    * @param blameLinePreProcessorFactorySet
+   * @param modificationsPreProcessorFactorySet
+   * @param modificationsPreProcessorSet
    */
   @Inject
   public PreProcessorUtil(Set<ChangesetPreProcessor> changesetPreProcessorSet,
-    Set<ChangesetPreProcessorFactory> changesetPreProcessorFactorySet,
-    Set<FileObjectPreProcessor> fileObjectPreProcessorSet,
-    Set<FileObjectPreProcessorFactory> fileObjectPreProcessorFactorySet,
-    Set<BlameLinePreProcessor> blameLinePreProcessorSet,
-    Set<BlameLinePreProcessorFactory> blameLinePreProcessorFactorySet)
+                          Set<ChangesetPreProcessorFactory> changesetPreProcessorFactorySet,
+                          Set<FileObjectPreProcessor> fileObjectPreProcessorSet,
+                          Set<FileObjectPreProcessorFactory> fileObjectPreProcessorFactorySet,
+                          Set<BlameLinePreProcessor> blameLinePreProcessorSet,
+                          Set<BlameLinePreProcessorFactory> blameLinePreProcessorFactorySet,
+                          Set<ModificationsPreProcessorFactory> modificationsPreProcessorFactorySet,
+                          Set<ModificationsPreProcessor> modificationsPreProcessorSet)
   {
     this.changesetPreProcessorSet = changesetPreProcessorSet;
     this.changesetPreProcessorFactorySet = changesetPreProcessorFactorySet;
@@ -88,6 +90,8 @@ public class PreProcessorUtil
     this.fileObjectPreProcessorFactorySet = fileObjectPreProcessorFactorySet;
     this.blameLinePreProcessorSet = blameLinePreProcessorSet;
     this.blameLinePreProcessorFactorySet = blameLinePreProcessorFactorySet;
+    this.modificationsPreProcessorFactorySet = modificationsPreProcessorFactorySet;
+    this.modificationsPreProcessorSet = modificationsPreProcessorSet;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -108,13 +112,7 @@ public class PreProcessorUtil
     }
 
     EscapeUtil.escape(blameLine);
-
-    PreProcessorHandler<BlameLine> handler =
-      new PreProcessorHandler<BlameLine>(blameLinePreProcessorFactorySet,
-        blameLinePreProcessorSet, repository);
-
-    handler.callPreProcessors(blameLine);
-    handler.callPreProcessorFactories(blameLine);
+    handlePreProcess(repository,blameLine,blameLinePreProcessorFactorySet, blameLinePreProcessorSet);
   }
 
   /**
@@ -152,13 +150,7 @@ public class PreProcessorUtil
     {
       EscapeUtil.escape(blameResult);
     }
-
-    PreProcessorHandler<BlameLine> handler =
-      new PreProcessorHandler<BlameLine>(blameLinePreProcessorFactorySet,
-        blameLinePreProcessorSet, repository);
-
-    handler.callPreProcessors(blameResult.getBlameLines());
-    handler.callPreProcessorFactories(blameResult.getBlameLines());
+    handlePreProcessForIterable(repository, blameResult.getBlameLines(),blameLinePreProcessorFactorySet, blameLinePreProcessorSet);
   }
 
   /**
@@ -183,26 +175,20 @@ public class PreProcessorUtil
    *
    * @since 1.35
    */
-  public void prepareForReturn(Repository repository, Changeset changeset,
-    boolean escape)
-  {
-    if (logger.isTraceEnabled())
-    {
-      logger.trace("prepare changeset {} of repository {} for return",
-        changeset.getId(), repository.getName());
-    }
-
-    if (escape)
-    {
+  public void prepareForReturn(Repository repository, Changeset changeset, boolean escape){
+    logger.trace("prepare changeset {} of repository {} for return", changeset.getId(), repository.getName());
+    if (escape) {
       EscapeUtil.escape(changeset);
     }
+    handlePreProcess(repository, changeset, changesetPreProcessorFactorySet, changesetPreProcessorSet);
+  }
 
-    PreProcessorHandler<Changeset> handler =
-      new PreProcessorHandler<Changeset>(changesetPreProcessorFactorySet,
-        changesetPreProcessorSet, repository);
-
-    handler.callPreProcessors(changeset);
-    handler.callPreProcessorFactories(changeset);
+  public void prepareForReturn(Repository repository, Modifications modifications, boolean escape) {
+    logger.trace("prepare modifications {} of repository {} for return", modifications, repository.getName());
+    if (escape) {
+      EscapeUtil.escape(modifications);
+    }
+    handlePreProcess(repository, modifications, modificationsPreProcessorFactorySet, modificationsPreProcessorSet);
   }
 
   /**
@@ -240,13 +226,7 @@ public class PreProcessorUtil
     {
       EscapeUtil.escape(result);
     }
-
-    PreProcessorHandler<FileObject> handler =
-      new PreProcessorHandler<FileObject>(fileObjectPreProcessorFactorySet,
-        fileObjectPreProcessorSet, repository);
-
-    handler.callPreProcessors(result);
-    handler.callPreProcessorFactories(result);
+    handlePreProcessForIterable(repository, result,fileObjectPreProcessorFactorySet, fileObjectPreProcessorSet);
   }
 
   /**
@@ -272,13 +252,7 @@ public class PreProcessorUtil
     {
       EscapeUtil.escape(result);
     }
-
-    PreProcessorHandler<Changeset> handler =
-      new PreProcessorHandler<Changeset>(changesetPreProcessorFactorySet,
-        changesetPreProcessorSet, repository);
-
-    handler.callPreProcessors(result);
-    handler.callPreProcessorFactories(result);
+    handlePreProcessForIterable(repository,result,changesetPreProcessorFactorySet, changesetPreProcessorSet);
   }
 
   /**
@@ -292,6 +266,23 @@ public class PreProcessorUtil
     ChangesetPagingResult result)
   {
     prepareForReturn(repository, result, true);
+  }
+
+
+  private <T, F extends PreProcessorFactory<T>, P extends PreProcessor<T>> void handlePreProcess(Repository repository, T processedObject,
+                                                                                                 Collection<F> factories,
+                                                                                                 Collection<P> preProcessors) {
+    PreProcessorHandler<T> handler = new PreProcessorHandler<T>(factories, preProcessors, repository);
+    handler.callPreProcessors(processedObject);
+    handler.callPreProcessorFactories(processedObject);
+  }
+
+  private <T, I extends Iterable<T>, F extends PreProcessorFactory<T>, P extends PreProcessor<T>> void handlePreProcessForIterable(Repository repository, I processedObjects,
+                                                                                                 Collection<F> factories,
+                                                                                                 Collection<P> preProcessors) {
+    PreProcessorHandler<T> handler = new PreProcessorHandler<T>(factories, preProcessors, repository);
+    handler.callPreProcessors(processedObjects);
+    handler.callPreProcessorFactories(processedObjects);
   }
 
   //~--- inner classes --------------------------------------------------------
@@ -453,6 +444,10 @@ public class PreProcessorUtil
 
   /** Field description */
   private final Collection<ChangesetPreProcessor> changesetPreProcessorSet;
+
+  private final Collection<ModificationsPreProcessorFactory> modificationsPreProcessorFactorySet;
+
+  private final Collection<ModificationsPreProcessor> modificationsPreProcessorSet;
 
   /** Field description */
   private final Collection<FileObjectPreProcessorFactory> fileObjectPreProcessorFactorySet;

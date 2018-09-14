@@ -154,6 +154,10 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
     return new SvnLogCommand(context, repository);
   }
 
+  public ModificationsCommand getModificationsCommand() {
+    return new SvnModificationsCommand(context, repository);
+  }
+
   /**
    * Method description
    *

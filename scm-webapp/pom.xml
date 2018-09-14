@@ -254,7 +254,6 @@
       <artifactId>tika-core</artifactId>
       <version>1.18</version>
     </dependency>
-
     <!-- test scope -->
 
     <dependency>

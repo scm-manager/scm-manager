@@ -41,6 +41,8 @@ import sonia.scm.repository.api.Command;
 import java.io.IOException;
 import java.util.Set;
 
+//~--- JDK imports ------------------------------------------------------------
+
 /**
  *
  * @author Sebastian Sdorra
@@ -171,6 +173,11 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
   public LogCommand getLogCommand()
   {
     return new GitLogCommand(context, repository);
+  }
+
+  @Override
+  public ModificationsCommand getModificationsCommand() {
+    return new GitModificationsCommand(context,repository);
   }
 
   /**

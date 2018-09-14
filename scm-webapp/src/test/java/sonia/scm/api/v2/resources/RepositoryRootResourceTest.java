@@ -57,7 +57,7 @@ import static sonia.scm.api.v2.resources.DispatcherMock.createDispatcher;
   password = "secret",
   configuration = "classpath:sonia/scm/repository/shiro.ini"
 )
-public class RepositoryRootResourceTest {
+public class RepositoryRootResourceTest extends RepositoryTestBase {
 
   private Dispatcher dispatcher;
 
@@ -87,14 +87,15 @@ public class RepositoryRootResourceTest {
   @Before
   public void prepareEnvironment() {
     initMocks(this);
-    RepositoryResource repositoryResource = new RepositoryResource(repositoryToDtoMapper, dtoToRepositoryMapper, repositoryManager, null, null, null, null, null, null, null, null);
+    super.repositoryToDtoMapper = repositoryToDtoMapper;
+    super.dtoToRepositoryMapper = dtoToRepositoryMapper;
+    super.manager = repositoryManager;
     RepositoryCollectionToDtoMapper repositoryCollectionToDtoMapper = new RepositoryCollectionToDtoMapper(repositoryToDtoMapper, resourceLinks);
-    RepositoryCollectionResource repositoryCollectionResource = new RepositoryCollectionResource(repositoryManager, repositoryCollectionToDtoMapper, dtoToRepositoryMapper, resourceLinks);
-    RepositoryRootResource repositoryRootResource = new RepositoryRootResource(Providers.of(repositoryResource), Providers.of(repositoryCollectionResource));
+    super.repositoryCollectionResource = Providers.of(new RepositoryCollectionResource(repositoryManager, repositoryCollectionToDtoMapper, dtoToRepositoryMapper, resourceLinks));
+    dispatcher = createDispatcher(getRepositoryRootResource());
     when(serviceFactory.create(any(Repository.class))).thenReturn(service);
     when(scmPathInfoStore.get()).thenReturn(uriInfo);
     when(uriInfo.getApiRestUri()).thenReturn(URI.create("/x/y"));
-    dispatcher = createDispatcher(repositoryRootResource);
   }
 
   @Test

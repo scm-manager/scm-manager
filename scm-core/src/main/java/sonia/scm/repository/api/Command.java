@@ -61,5 +61,11 @@ public enum Command
   /**
    * @since 1.43
    */
-  BUNDLE, UNBUNDLE;
+  BUNDLE, UNBUNDLE,
+
+  /**
+   * @since 2.0
+   */
+  MODIFICATIONS
+
 }

@@ -48,7 +48,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 @Slf4j
-public class FileHistoryResourceTest {
+public class FileHistoryResourceTest extends RepositoryTestBase {
 
   public static final String FILE_HISTORY_PATH = "space/repo/history/";
   public static final String FILE_HISTORY_URL = "/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + FILE_HISTORY_PATH;
@@ -82,10 +82,8 @@ public class FileHistoryResourceTest {
   public void prepareEnvironment() throws Exception {
     fileHistoryCollectionToDtoMapper = new FileHistoryCollectionToDtoMapper(changesetToChangesetDtoMapper, resourceLinks);
     fileHistoryRootResource = new FileHistoryRootResource(serviceFactory, fileHistoryCollectionToDtoMapper);
-    RepositoryRootResource repositoryRootResource = new RepositoryRootResource(Providers
-      .of(new RepositoryResource(null, null, null, null, null,
-        null, null, null, null, null, Providers.of(fileHistoryRootResource))), null);
-    dispatcher.getRegistry().addSingletonResource(repositoryRootResource);
+    super.fileHistoryRootResource = Providers.of(fileHistoryRootResource);
+    dispatcher.getRegistry().addSingletonResource(getRepositoryRootResource());
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(service);
     when(serviceFactory.create(any(Repository.class))).thenReturn(service);
     when(service.getRepository()).thenReturn(new Repository("repoId", "git", "space", "repo"));

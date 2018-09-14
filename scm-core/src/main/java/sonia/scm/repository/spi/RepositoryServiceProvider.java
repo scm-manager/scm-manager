@@ -42,6 +42,8 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Set;
 
+//~--- JDK imports ------------------------------------------------------------
+
 /**
  *
  * @author Sebastian Sdorra
@@ -166,6 +168,16 @@ public abstract class RepositoryServiceProvider implements Closeable
   public LogCommand getLogCommand()
   {
     throw new CommandNotSupportedException(Command.LOG);
+  }
+
+  /**
+   * Get the corresponding {@link ModificationsCommand} implemented from the Plugins
+   *
+   * @return the corresponding {@link ModificationsCommand} implemented from the Plugins
+   * @throws CommandNotSupportedException if there is no Implementation
+   */
+  public ModificationsCommand getModificationsCommand() {
+    throw new CommandNotSupportedException(Command.MODIFICATIONS);
   }
 
   /**

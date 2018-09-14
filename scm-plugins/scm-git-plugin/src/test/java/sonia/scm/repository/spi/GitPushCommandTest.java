@@ -78,7 +78,7 @@ public class GitPushCommandTest extends AbstractRemoteCommandTestBase
     GitPushCommand cmd = createCommand();
     PushCommandRequest request = new PushCommandRequest();
 
-    request.setRemoteRepository(incomgingRepository);
+    request.setRemoteRepository(incomingRepository);
 
     PushResponse response = cmd.push(request);
 
