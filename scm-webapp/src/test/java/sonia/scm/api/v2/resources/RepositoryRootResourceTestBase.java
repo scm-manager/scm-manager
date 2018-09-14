@@ -55,7 +55,7 @@ import static sonia.scm.api.v2.resources.DispatcherMock.createDispatcher;
   password = "secret",
   configuration = "classpath:sonia/scm/repository/shiro.ini"
 )
-public class RepositoryRootResourceTest extends BaseRepositoryTest {
+public class RepositoryRootResourceTestBase extends RepositoryTestBase {
 
   private Dispatcher dispatcher;
 

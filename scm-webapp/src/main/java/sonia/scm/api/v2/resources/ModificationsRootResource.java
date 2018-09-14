@@ -34,20 +34,12 @@ public class ModificationsRootResource {
   /**
    * Get the file modifications related to a revision.
    * file modifications are for example: Modified, Added or Removed.
-   *
-   * @param namespace
-   * @param name
-   * @param revision
-   * @return
-   * @throws IOException
-   * @throws RevisionNotFoundException
-   * @throws RepositoryNotFoundException
    */
   @GET
   @StatusCodes({
     @ResponseCode(code = 200, condition = "success"),
     @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
-    @ResponseCode(code = 403, condition = "not authorized, the current user has no privileges to read the changeset"),
+    @ResponseCode(code = 403, condition = "not authorized, the current user has no privileges to read the modifications"),
     @ResponseCode(code = 404, condition = "not found, no changeset with the specified id is available in the repository"),
     @ResponseCode(code = 500, condition = "internal server error")
   })

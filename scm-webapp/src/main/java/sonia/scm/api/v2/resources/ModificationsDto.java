@@ -36,10 +36,4 @@ public class ModificationsDto extends HalRepresentation {
     return super.add(links);
   }
 
-  @SuppressWarnings("squid:S1185") // We want to have this method available in this package
-  protected HalRepresentation withEmbedded(String rel, List<? extends HalRepresentation> halRepresentations) {
-    return super.withEmbedded(rel, halRepresentations);
-  }
-
-
 }

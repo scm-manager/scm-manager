@@ -4,7 +4,7 @@ import sonia.scm.repository.RepositoryManager;
 
 import javax.inject.Provider;
 
-public class BaseRepositoryTest {
+public abstract class RepositoryTestBase {
 
 
   protected RepositoryToRepositoryDtoMapper repositoryToDtoMapper;

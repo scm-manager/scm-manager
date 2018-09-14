@@ -14,7 +14,7 @@ import javax.inject.Inject;
 import static de.otto.edison.hal.Links.linkingTo;
 
 @Mapper
-public abstract class ModificationsToDtoMapper extends BaseMapper<Modifications, ModificationsDto> {
+public abstract class ModificationsToDtoMapper {
 
   @Inject
   private ResourceLinks resourceLinks;

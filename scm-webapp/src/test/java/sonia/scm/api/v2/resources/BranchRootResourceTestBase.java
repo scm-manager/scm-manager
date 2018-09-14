@@ -44,7 +44,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 @Slf4j
-public class BranchRootResourceTest extends BaseRepositoryTest {
+public class BranchRootResourceTestBase extends RepositoryTestBase {
 
   public static final String BRANCH_PATH = "space/repo/branches/master";
   public static final String BRANCH_URL = "/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + BRANCH_PATH;

@@ -37,7 +37,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 @Slf4j
-public class DiffResourceTest extends BaseRepositoryTest {
+public class DiffResourceTestBase extends RepositoryTestBase {
 
 
   public static final String DIFF_PATH = "space/repo/diff/";

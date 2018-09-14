@@ -64,7 +64,7 @@ import static sonia.scm.api.v2.resources.PermissionDto.GROUP_PREFIX;
   password = "secret",
   configuration = "classpath:sonia/scm/repository/shiro.ini"
 )
-public class PermissionRootResourceTest extends BaseRepositoryTest {
+public class PermissionRootResourceTestBase extends RepositoryTestBase {
   private static final String REPOSITORY_NAMESPACE = "repo_namespace";
   private static final String REPOSITORY_NAME = "repo";
   private static final String PERMISSION_WRITE = "repository:permissionWrite:" + REPOSITORY_NAME;

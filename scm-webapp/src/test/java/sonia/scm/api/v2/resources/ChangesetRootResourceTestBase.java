@@ -44,7 +44,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 @Slf4j
-public class ChangesetRootResourceTest extends BaseRepositoryTest{
+public class ChangesetRootResourceTestBase extends RepositoryTestBase {
 
 
   public static final String CHANGESET_PATH = "space/repo/changesets/";

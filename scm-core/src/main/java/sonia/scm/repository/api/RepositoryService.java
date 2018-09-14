@@ -258,7 +258,7 @@ public final class RepositoryService implements Closeable {
    *                                      by the implementation of the repository service provider.
    */
   public ModificationsCommandBuilder getModificationsCommand() {
-    logger.debug("create modifications command for repository {}", repository.getName());
+    logger.debug("create modifications command for repository {}",repository.getNamespaceAndName());
     return new ModificationsCommandBuilder(provider.getModificationsCommand(),repository, cacheManager.getCache(ModificationsCommandBuilder.CACHE_NAME), preProcessorUtil);
   }
 

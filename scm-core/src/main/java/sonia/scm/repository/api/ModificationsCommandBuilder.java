@@ -28,7 +28,6 @@ import java.io.IOException;
  * @since 2.0
  */
 @Slf4j
-@AllArgsConstructor
 @RequiredArgsConstructor
 @Accessors(fluent = true)
 public final class ModificationsCommandBuilder {
