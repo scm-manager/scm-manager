@@ -54,7 +54,7 @@ public class TagRootResourceTest extends RepositoryTestBase {
   private RepositoryService repositoryService;
 
   @Mock
-  private TagsCommandBuilder tagsCommandBuilder
+  private TagsCommandBuilder tagsCommandBuilder;
   private TagCollectionToDtoMapper tagCollectionToDtoMapper;
 
   @InjectMocks
