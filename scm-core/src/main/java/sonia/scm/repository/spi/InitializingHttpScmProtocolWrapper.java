@@ -44,7 +44,7 @@ public abstract class InitializingHttpScmProtocolWrapper implements ScmProtocolP
     if (!repository.getType().equals(getType())) {
       throw new IllegalArgumentException("cannot handle repository with type " + repository.getType() + " with protocol for type " + getType());
     }
-    return new ProtocolWrapper(repository);
+    return new ProtocolWrapper(repository, computeBasePath());
   }
 
   private String computeBasePath() {
@@ -70,8 +70,8 @@ public abstract class InitializingHttpScmProtocolWrapper implements ScmProtocolP
 
   private class ProtocolWrapper extends HttpScmProtocol {
 
-    public ProtocolWrapper(Repository repository) {
-      super(repository, computeBasePath());
+    public ProtocolWrapper(Repository repository, String basePath) {
+      super(repository, basePath);
     }
 
     @Override

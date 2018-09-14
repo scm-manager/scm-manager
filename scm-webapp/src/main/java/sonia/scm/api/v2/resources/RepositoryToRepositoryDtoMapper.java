@@ -29,8 +29,6 @@ public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Reposit
   private ResourceLinks resourceLinks;
   @Inject
   private RepositoryServiceFactory serviceFactory;
-  @Inject
-  private ScmPathInfoStore scmPathInfoStore;
 
   abstract HealthCheckFailureDto toDto(HealthCheckFailure failure);
 
@@ -47,7 +45,7 @@ public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Reposit
     try (RepositoryService repositoryService = serviceFactory.create(repository)) {
       if (RepositoryPermissions.pull(repository).isPermitted()) {
         List<Link> protocolLinks = repositoryService.getSupportedProtocols()
-          .map(protocol -> createProtocolLink(protocol, repository))
+          .map(this::createProtocolLink)
           .collect(toList());
         linksBuilder.array(protocolLinks);
       }
@@ -63,7 +61,7 @@ public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Reposit
     target.add(linksBuilder.build());
   }
 
-  private Link createProtocolLink(ScmProtocol protocol, Repository repository) {
+  private Link createProtocolLink(ScmProtocol protocol) {
     return Link.linkBuilder("protocol", protocol.getUrl()).withName(protocol.getType()).build();
   }
 }
