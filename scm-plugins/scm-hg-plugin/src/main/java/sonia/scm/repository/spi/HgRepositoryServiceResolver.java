@@ -47,8 +47,6 @@ import sonia.scm.repository.Repository;
 public class HgRepositoryServiceResolver implements RepositoryServiceResolver
 {
 
-  private static final String TYPE = "hg";
-
   private HgRepositoryHandler handler;
   private HgHookManager hookManager;
 
@@ -64,7 +62,7 @@ public class HgRepositoryServiceResolver implements RepositoryServiceResolver
   public HgRepositoryServiceProvider resolve(Repository repository) {
     HgRepositoryServiceProvider provider = null;
 
-    if (TYPE.equalsIgnoreCase(repository.getType())) {
+    if (HgRepositoryHandler.TYPE_NAME.equalsIgnoreCase(repository.getType())) {
       provider = new HgRepositoryServiceProvider(handler, hookManager, repository);
     }
 

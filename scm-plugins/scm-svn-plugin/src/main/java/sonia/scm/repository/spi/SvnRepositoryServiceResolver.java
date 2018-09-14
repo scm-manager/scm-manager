@@ -40,8 +40,6 @@ import sonia.scm.repository.SvnRepositoryHandler;
 @Extension
 public class SvnRepositoryServiceResolver implements RepositoryServiceResolver {
 
-  public static final String TYPE = "svn";
-
   private SvnRepositoryHandler handler;
 
   @Inject
@@ -53,7 +51,7 @@ public class SvnRepositoryServiceResolver implements RepositoryServiceResolver {
   public SvnRepositoryServiceProvider resolve(Repository repository) {
     SvnRepositoryServiceProvider provider = null;
 
-    if (TYPE.equalsIgnoreCase(repository.getType())) {
+    if (SvnRepositoryHandler.TYPE_NAME.equalsIgnoreCase(repository.getType())) {
       provider = new SvnRepositoryServiceProvider(handler, repository);
     }
 

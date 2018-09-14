@@ -46,8 +46,6 @@ import sonia.scm.repository.Repository;
 @Extension
 public class GitRepositoryServiceResolver implements RepositoryServiceResolver {
 
-  public static final String TYPE = "git";
-
   private final GitRepositoryHandler handler;
 
   @Inject
@@ -59,7 +57,7 @@ public class GitRepositoryServiceResolver implements RepositoryServiceResolver {
   public GitRepositoryServiceProvider resolve(Repository repository) {
     GitRepositoryServiceProvider provider = null;
 
-    if (TYPE.equalsIgnoreCase(repository.getType())) {
+    if (GitRepositoryHandler.TYPE_NAME.equalsIgnoreCase(repository.getType())) {
       provider = new GitRepositoryServiceProvider(handler, repository);
     }
 

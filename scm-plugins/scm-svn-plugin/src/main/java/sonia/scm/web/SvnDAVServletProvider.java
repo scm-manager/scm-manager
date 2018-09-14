@@ -1,6 +1,7 @@
 package sonia.scm.web;
 
 import com.google.inject.Inject;
+import sonia.scm.repository.SvnRepositoryHandler;
 import sonia.scm.repository.spi.ScmProviderHttpServlet;
 import sonia.scm.repository.spi.ScmProviderHttpServletProvider;
 
@@ -12,7 +13,7 @@ public class SvnDAVServletProvider extends ScmProviderHttpServletProvider {
   private Provider<SvnDAVServlet> servletProvider;
 
   public SvnDAVServletProvider() {
-    super("svn");
+    super(SvnRepositoryHandler.TYPE_NAME);
   }
 
   @Override

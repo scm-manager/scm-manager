@@ -2,6 +2,7 @@ package sonia.scm.web;
 
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.plugin.Extension;
+import sonia.scm.repository.SvnRepositoryHandler;
 import sonia.scm.repository.spi.ScmProviderHttpServlet;
 import sonia.scm.repository.spi.ScmProviderHttpServletDecoratorFactory;
 
@@ -19,7 +20,7 @@ public class SvnPermissionFilterFactory implements ScmProviderHttpServletDecorat
 
   @Override
   public boolean handlesScmType(String type) {
-    return "svn".equals(type);
+    return SvnRepositoryHandler.TYPE_NAME.equals(type);
   }
 
   @Override

@@ -2,6 +2,7 @@ package sonia.scm.web;
 
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.plugin.Extension;
+import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.spi.ScmProviderHttpServlet;
 import sonia.scm.repository.spi.ScmProviderHttpServletDecoratorFactory;
 
@@ -19,7 +20,7 @@ public class GitPermissionFilterFactory implements ScmProviderHttpServletDecorat
 
   @Override
   public boolean handlesScmType(String type) {
-    return "git".equals(type);
+    return GitRepositoryHandler.TYPE_NAME.equals(type);
   }
 
   @Override

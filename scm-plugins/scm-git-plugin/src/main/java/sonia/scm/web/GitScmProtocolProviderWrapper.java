@@ -3,6 +3,7 @@ package sonia.scm.web;
 import sonia.scm.api.v2.resources.ScmPathInfoStore;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.plugin.Extension;
+import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.spi.InitializingHttpScmProtocolWrapper;
 import sonia.scm.repository.spi.ScmProviderHttpServlet;
 
@@ -20,6 +21,6 @@ public class GitScmProtocolProviderWrapper extends InitializingHttpScmProtocolWr
 
   @Override
   public String getType() {
-    return "git";
+    return GitRepositoryHandler.TYPE_NAME;
   }
 }

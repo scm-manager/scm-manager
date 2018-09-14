@@ -3,6 +3,7 @@ package sonia.scm.web;
 import sonia.scm.api.v2.resources.ScmPathInfoStore;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.plugin.Extension;
+import sonia.scm.repository.SvnRepositoryHandler;
 import sonia.scm.repository.spi.InitializingHttpScmProtocolWrapper;
 import sonia.scm.repository.spi.ScmProviderHttpServlet;
 
@@ -22,7 +23,7 @@ public class SvnScmProtocolProviderWrapper extends InitializingHttpScmProtocolWr
 
   @Override
   public String getType() {
-    return "svn";
+    return SvnRepositoryHandler.TYPE_NAME;
   }
 
   @Inject

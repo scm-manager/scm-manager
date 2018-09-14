@@ -1,6 +1,7 @@
 package sonia.scm.web;
 
 import com.google.inject.Inject;
+import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.spi.ScmProviderHttpServlet;
 import sonia.scm.repository.spi.ScmProviderHttpServletProvider;
 
@@ -12,7 +13,7 @@ public class HgCGIServletProvider extends ScmProviderHttpServletProvider {
   private Provider<HgCGIServlet> servletProvider;
 
   public HgCGIServletProvider() {
-    super("hg");
+    super(HgRepositoryHandler.TYPE_NAME);
   }
 
   @Override

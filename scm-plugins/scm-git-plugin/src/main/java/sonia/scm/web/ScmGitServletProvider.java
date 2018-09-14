@@ -1,6 +1,7 @@
 package sonia.scm.web;
 
 import com.google.inject.Inject;
+import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.spi.ScmProviderHttpServlet;
 import sonia.scm.repository.spi.ScmProviderHttpServletProvider;
 
@@ -12,7 +13,7 @@ public class ScmGitServletProvider extends ScmProviderHttpServletProvider {
   private Provider<ScmGitServlet> servletProvider;
 
   public ScmGitServletProvider() {
-    super("git");
+    super(GitRepositoryHandler.TYPE_NAME);
   }
 
   @Override
