@@ -4,6 +4,7 @@ import sonia.scm.api.v2.resources.ScmPathInfoStore;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.spi.InitializingHttpScmProtocolWrapper;
+import sonia.scm.repository.spi.ScmProviderHttpServlet;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -13,7 +14,7 @@ import javax.inject.Singleton;
 @Extension
 public class HgScmProtocolProviderWrapper extends InitializingHttpScmProtocolWrapper {
   @Inject
-  public HgScmProtocolProviderWrapper(Provider<HgCGIServlet> servletProvider, Provider<HgPermissionFilter> permissionFilter, Provider<ScmPathInfoStore> uriInfoStore, ScmConfiguration scmConfiguration) {
+  public HgScmProtocolProviderWrapper(@Hg Provider<ScmProviderHttpServlet> servletProvider, Provider<HgPermissionFilter> permissionFilter, Provider<ScmPathInfoStore> uriInfoStore, ScmConfiguration scmConfiguration) {
     super(servletProvider, permissionFilter, uriInfoStore, scmConfiguration);
   }
 

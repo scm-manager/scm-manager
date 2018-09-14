@@ -6,13 +6,13 @@ import sonia.scm.repository.spi.ScmProviderHttpServletProvider;
 
 import javax.inject.Provider;
 
-public class ScmGitServletProvider extends ScmProviderHttpServletProvider {
+public class HgCGIServletProvider extends ScmProviderHttpServletProvider {
 
   @Inject
-  private Provider<ScmGitServlet> servletProvider;
+  private Provider<HgCGIServlet> servletProvider;
 
-  public ScmGitServletProvider() {
-    super("git");
+  public HgCGIServletProvider() {
+    super("hg");
   }
 
   @Override

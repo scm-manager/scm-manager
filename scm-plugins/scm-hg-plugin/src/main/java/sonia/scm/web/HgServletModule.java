@@ -46,6 +46,7 @@ import sonia.scm.plugin.Extension;
 import sonia.scm.repository.HgContext;
 import sonia.scm.repository.HgContextProvider;
 import sonia.scm.repository.HgHookManager;
+import sonia.scm.repository.spi.ScmProviderHttpServlet;
 
 /**
  *
@@ -78,6 +79,8 @@ public class HgServletModule extends ServletModule
     bind(HgConfigToHgConfigDtoMapper.class).to(Mappers.getMapper(HgConfigToHgConfigDtoMapper.class).getClass());
     bind(HgConfigPackagesToDtoMapper.class).to(Mappers.getMapper(HgConfigPackagesToDtoMapper.class).getClass());
     bind(HgConfigInstallationsToDtoMapper.class);
+
+    bind(ScmProviderHttpServlet.class).annotatedWith(Hg.class).toProvider(HgCGIServletProvider.class);
 
     // bind servlets
     serve(MAPPING_HOOK).with(HgHookCallbackServlet.class);

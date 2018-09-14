@@ -38,6 +38,7 @@ import org.mapstruct.factory.Mappers;
 import sonia.scm.api.v2.resources.SvnConfigDtoToSvnConfigMapper;
 import sonia.scm.api.v2.resources.SvnConfigToSvnConfigDtoMapper;
 import sonia.scm.plugin.Extension;
+import sonia.scm.repository.spi.ScmProviderHttpServlet;
 
 /**
  *
@@ -50,5 +51,7 @@ public class SvnServletModule extends ServletModule {
   protected void configureServlets() {
     bind(SvnConfigDtoToSvnConfigMapper.class).to(Mappers.getMapper(SvnConfigDtoToSvnConfigMapper.class).getClass());
     bind(SvnConfigToSvnConfigDtoMapper.class).to(Mappers.getMapper(SvnConfigToSvnConfigDtoMapper.class).getClass());
+
+    bind(ScmProviderHttpServlet.class).annotatedWith(Svn.class).toProvider(SvnDAVServletProvider.class);
   }
 }
