@@ -59,6 +59,7 @@ public class MeResourceTest {
     when(userManager.create(userCaptor.capture())).thenAnswer(invocation -> invocation.getArguments()[0]);
     doNothing().when(userManager).modify(userCaptor.capture());
     doNothing().when(userManager).delete(userCaptor.capture());
+    when(userManager.getDefaultType()).thenReturn("xml");
     userToDtoMapper.setResourceLinks(resourceLinks);
     MeResource meResource = new MeResource(userToDtoMapper, userManager);
     dispatcher.getRegistry().addSingletonResource(meResource);
