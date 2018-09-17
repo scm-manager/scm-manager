@@ -21,6 +21,7 @@ public class VndMediaType {
   public static final String PERMISSION = PREFIX + "permission" + SUFFIX;
   public static final String CHANGESET = PREFIX + "changeset" + SUFFIX;
   public static final String CHANGESET_COLLECTION = PREFIX + "changesetCollection" + SUFFIX;
+  public static final String MODIFICATIONS = PREFIX + "modifications" + SUFFIX;;
   public static final String TAG = PREFIX + "tag" + SUFFIX;
   public static final String TAG_COLLECTION = PREFIX + "tagCollection" + SUFFIX;
   public static final String BRANCH = PREFIX + "branch" + SUFFIX;

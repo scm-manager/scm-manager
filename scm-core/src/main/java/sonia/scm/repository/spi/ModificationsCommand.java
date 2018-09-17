@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2010, Sebastian Sdorra
  * All rights reserved.
  *
@@ -29,60 +29,25 @@
  *
  */
 
+package sonia.scm.repository.spi;
 
+import sonia.scm.repository.Modifications;
+import sonia.scm.repository.RevisionNotFoundException;
 
-package sonia.scm.repository;
-
-//~--- non-JDK imports --------------------------------------------------------
-
-import org.tmatesoft.svn.core.SVNException;
-import org.tmatesoft.svn.core.wc.admin.ISVNChangeEntryHandler;
-import org.tmatesoft.svn.core.wc.admin.SVNChangeEntry;
+import java.io.IOException;
 
 /**
+ * Command to get the modifications applied to files in a revision.
  *
- * @author Sebastian Sdorra
+ * Modifications are for example: Add, Update, Delete
+ *
+ * @author Mohamed Karray
+ * @since 2.0
  */
-public class SvnModificationHandler implements ISVNChangeEntryHandler
-{
+public interface ModificationsCommand {
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param changeset
-   */
-  public SvnModificationHandler(Changeset changeset)
-  {
-    this.changeset = changeset;
-  }
+  Modifications getModifications(String revision) throws IOException, RevisionNotFoundException;
 
-  //~--- methods --------------------------------------------------------------
+  Modifications getModifications(ModificationsCommandRequest request) throws IOException, RevisionNotFoundException;
 
-  /**
-   * Method description
-   *
-   *
-   * @param entry
-   *
-   * @throws SVNException
-   */
-  @Override
-  public void handleEntry(SVNChangeEntry entry) throws SVNException
-  {
-    Modifications modification = changeset.getModifications();
-
-    if (modification == null)
-    {
-      modification = new Modifications();
-      changeset.setModifications(modification);
-    }
-
-    SvnUtil.appendModification(modification, entry);
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private Changeset changeset;
 }

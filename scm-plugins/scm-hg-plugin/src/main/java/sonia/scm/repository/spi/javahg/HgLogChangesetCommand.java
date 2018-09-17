@@ -38,13 +38,13 @@ package sonia.scm.repository.spi.javahg;
 import com.aragost.javahg.Repository;
 import com.aragost.javahg.internals.HgInputStream;
 import com.aragost.javahg.internals.Utils;
-
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.HgConfig;
-
-//~--- JDK imports ------------------------------------------------------------
+import sonia.scm.repository.Modifications;
 
 import java.util.List;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -106,11 +106,22 @@ public class HgLogChangesetCommand extends AbstractChangesetCommand
    */
   public List<Changeset> execute(String... files)
   {
-    cmdAppend("--style", CHANGESET_EAGER_STYLE_PATH);
+    return readListFromStream(getHgInputStream(files, CHANGESET_EAGER_STYLE_PATH));
+  }
 
-    HgInputStream stream = launchStream(files);
+  /**
+   * Extract Modifications from the Repository files
+   *
+   * @param files repo files
+   * @return modifications
+   */
+  public Modifications extractModifications(String... files) {
+    return readModificationsFromStream(getHgInputStream(files, CHANGESET_EAGER_STYLE_PATH));
+  }
 
-    return readListFromStream(stream);
+  HgInputStream getHgInputStream(String[] files, String changesetStylePath) {
+    cmdAppend("--style", changesetStylePath);
+    return launchStream(files);
   }
 
   /**
@@ -138,11 +149,7 @@ public class HgLogChangesetCommand extends AbstractChangesetCommand
    */
   public List<Integer> loadRevisions(String... files)
   {
-    cmdAppend("--style", CHANGESET_LAZY_STYLE_PATH);
-
-    HgInputStream stream = launchStream(files);
-
-    return loadRevisionsFromStream(stream);
+    return loadRevisionsFromStream(getHgInputStream(files, CHANGESET_LAZY_STYLE_PATH));
   }
 
   /**

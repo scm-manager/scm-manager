@@ -85,14 +85,14 @@ public class AbstractRemoteCommandTestBase
     outgoingDirectory = tempFolder.newFile("outgoing");
     outgoingDirectory.delete();
 
-    incomgingRepository = new Repository("1", "git", "space", "incoming");
+    incomingRepository = new Repository("1", "git", "space", "incoming");
     outgoingRepository = new Repository("2", "git", "space", "outgoing");
 
     incoming = Git.init().setDirectory(incomingDirectory).setBare(false).call();
     outgoing = Git.init().setDirectory(outgoingDirectory).setBare(false).call();
 
     handler = mock(GitRepositoryHandler.class);
-    when(handler.getDirectory(incomgingRepository)).thenReturn(
+    when(handler.getDirectory(incomingRepository)).thenReturn(
       incomingDirectory);
     when(handler.getDirectory(outgoingRepository)).thenReturn(
       outgoingDirectory);
@@ -211,7 +211,7 @@ public class AbstractRemoteCommandTestBase
   protected GitRepositoryHandler handler;
 
   /** Field description */
-  protected Repository incomgingRepository;
+  protected Repository incomingRepository;
 
   /** Field description */
   protected Git incoming;

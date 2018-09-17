@@ -168,21 +168,23 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
     Changeset c = command.getChangeset("435df2f061add3589cb3");
 
     assertNotNull(c);
-    assertEquals("435df2f061add3589cb326cc64be9b9c3897ceca", c.getId());
+    String revision = "435df2f061add3589cb326cc64be9b9c3897ceca";
+    assertEquals(revision, c.getId());
     assertEquals("added a and b files", c.getDescription());
     checkDate(c.getDate());
     assertEquals("Douglas Adams", c.getAuthor().getName());
     assertEquals("douglas.adams@hitchhiker.com", c.getAuthor().getMail());
     assertEquals("added a and b files", c.getDescription());
 
-    Modifications mods = c.getModifications();
+    GitModificationsCommand gitModificationsCommand = new GitModificationsCommand(createContext(), repository);
+    Modifications modifications = gitModificationsCommand.getModifications(revision);
 
-    assertNotNull(mods);
-    assertTrue("modified list should be empty", mods.getModified().isEmpty());
-    assertTrue("removed list should be empty", mods.getRemoved().isEmpty());
-    assertFalse("added list should not be empty", mods.getAdded().isEmpty());
-    assertEquals(2, mods.getAdded().size());
-    assertThat(mods.getAdded(), contains("a.txt", "b.txt"));
+    assertNotNull(modifications);
+    assertTrue("modified list should be empty", modifications.getModified().isEmpty());
+    assertTrue("removed list should be empty", modifications.getRemoved().isEmpty());
+    assertFalse("added list should not be empty", modifications.getAdded().isEmpty());
+    assertEquals(2, modifications.getAdded().size());
+    assertThat(modifications.getAdded(), contains("a.txt", "b.txt"));
   }
 
   @Test

@@ -70,13 +70,15 @@ class SvnChangeWorker {
       SVNWCClient wClient = client.getWCClient();
 
       // add files
-      try {
-        wClient.doAdd(addedFiles.toArray(new File[0]), true, false, false,
-          SVNDepth.INFINITY, false, false, false);
-        addedFiles.clear();
+      if (!addedFiles.isEmpty()){
+        try {
+          wClient.doAdd(addedFiles.toArray(new File[0]), true, false, false,
+            SVNDepth.INFINITY, false, false, false);
+          addedFiles.clear();
 
-      } catch (SVNException ex) {
-        throw new RepositoryClientException("failed to add files", ex);
+        } catch (SVNException ex) {
+          throw new RepositoryClientException("failed to add files", ex);
+        }
       }
 
       // remove files

@@ -42,6 +42,7 @@ import sonia.scm.repository.HgHookManager;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.Command;
+import sonia.scm.repository.api.CommandNotSupportedException;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -199,6 +200,16 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
   public HgLogCommand getLogCommand()
   {
     return new HgLogCommand(context, repository);
+  }
+
+  /**
+   * Get the corresponding {@link ModificationsCommand} implemented from the Plugins
+   *
+   * @return the corresponding {@link ModificationsCommand} implemented from the Plugins
+   * @throws CommandNotSupportedException if there is no Implementation
+   */
+  public ModificationsCommand getModificationsCommand() {
+    return new HgModificationsCommand(context,repository);
   }
 
   /**
