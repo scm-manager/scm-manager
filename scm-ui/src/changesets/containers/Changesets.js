@@ -51,7 +51,7 @@ class Changesets extends React.Component<State, Props> {
   }
 
   branchChanged = (branchName: string) => {
-    this.props.history.push("./history/" + branchName)
+    this.props.history.push(branchName)
   };
 }
 
