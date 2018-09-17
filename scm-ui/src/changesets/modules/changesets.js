@@ -83,14 +83,13 @@ function createItemId(namespace: string, name: string, branch?: string): string 
 export default function reducer(state: any = {}, action: Action = {type: "UNKNOWN"}): Object {
   switch (action.type) {
     case FETCH_CHANGESETS_SUCCESS:
-      const {namespace, name} = action.payload;
-      const key = namespace + "/" + name;
-
+      const {namespace, name, branch} = action.payload;
+      const key = createItemId(namespace, name, branch);
       let oldChangesets = {[key]: {}};
       if (state[key] !== undefined) {
         oldChangesets[key] = state[key]
       }
-      return {[key]: {byId: extractChangesetsByIds(action.payload.collection, oldChangesets[key].byId)}};
+      return {...state, [key]: {byId: extractChangesetsByIds(action.payload.collection, oldChangesets[key].byId)}};
     default:
       return state;
   }
@@ -122,6 +121,7 @@ export function getChangesetsForNamespaceAndNameFromState(namespace: string, nam
 
 export function getChangesets(namespace: string, name: string, branch: string, state: Object) {
   const key = createItemId(namespace, name, branch);
+  console.log("getChangesets for key " + key);
   if (!state.changesets[key]) {
     return null;
   }

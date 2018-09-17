@@ -5,7 +5,7 @@ import {
   FETCH_BRANCHES_FAILURE,
   FETCH_BRANCHES_PENDING,
   FETCH_BRANCHES_SUCCESS,
-  fetchBranchesByNamespaceAndName, getBranchesForNamespaceAndNameFromState
+  fetchBranchesByNamespaceAndName, getBranchesForNamespaceAndNameFromState, getBranchNames
 } from "./branches";
 import reducer from "./branches";
 
@@ -128,6 +128,25 @@ describe("branch selectors", () => {
         }
       }
     };
-    getBranchesForNamespaceAndNameFromState(namespace, name, state);
-  })
+    const branches = getBranchesForNamespaceAndNameFromState(namespace, name, state);
+    expect(branches.length).toEqual(1);
+    expect(branches[0]).toEqual(branch1);
+  });
+
+  it("should return branches names", () => {
+    const state = {
+      branches: {
+        [key]: {
+          byNames: {
+            "branch1": branch1,
+            "branch2": branch2
+          }
+        }
+      }
+    };
+    const names = getBranchNames(namespace, name, state);
+    expect(names.length).toEqual(2);
+    expect(names).toContain("branch1");
+    expect(names).toContain("branch2");
+  });
 });

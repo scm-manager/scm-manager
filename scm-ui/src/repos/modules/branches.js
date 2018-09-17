@@ -92,3 +92,11 @@ export function getBranchesForNamespaceAndNameFromState(namespace: string, name:
   }
   return Object.values(state.branches[key].byNames);
 }
+
+export function getBranchNames(namespace: string, name: string, state: Object) {
+  const key = namespace + "/" + name;
+  if (!state.branches[key]) {
+    return null;
+  }
+  return Object.keys(state.branches[key].byNames);
+}
