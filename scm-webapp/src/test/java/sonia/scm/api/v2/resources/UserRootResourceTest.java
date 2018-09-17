@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.text.MessageFormat;
 
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
@@ -60,21 +61,23 @@ public class UserRootResourceTest {
   private UserToUserDtoMapperImpl userToDtoMapper;
 
   private ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
+  private User originalUser;
 
   @Before
   public void prepareEnvironment() throws Exception {
     initMocks(this);
-    User dummyUser = createDummyUser("Neo");
+    originalUser = createDummyUser("Neo");
     when(userManager.create(userCaptor.capture())).thenAnswer(invocation -> invocation.getArguments()[0]);
     doNothing().when(userManager).modify(userCaptor.capture());
     doNothing().when(userManager).delete(userCaptor.capture());
+    when(userManager.getDefaultType()).thenReturn("xml");
 
     UserCollectionToDtoMapper userCollectionToDtoMapper = new UserCollectionToDtoMapper(userToDtoMapper, resourceLinks);
     UserCollectionResource userCollectionResource = new UserCollectionResource(userManager, dtoToUserMapper,
-       userCollectionToDtoMapper, resourceLinks);
-    UserResource userResource = new UserResource(dtoToUserMapper, userToDtoMapper, userManager);
+      userCollectionToDtoMapper, resourceLinks, passwordService);
+    UserResource userResource = new UserResource(dtoToUserMapper, userToDtoMapper, userManager, passwordService);
     UserRootResource userRootResource = new UserRootResource(MockProvider.of(userCollectionResource),
-                                                             MockProvider.of(userResource));
+      MockProvider.of(userResource));
 
     dispatcher = createDispatcher(userRootResource);
   }
@@ -88,7 +91,7 @@ public class UserRootResourceTest {
 
     assertEquals(HttpServletResponse.SC_OK, response.getStatus());
     assertTrue(response.getContentAsString().contains("\"name\":\"Neo\""));
-    assertTrue(response.getContentAsString().contains("\"password\":\"__dummypassword__\""));
+    assertTrue(response.getContentAsString().contains("\"password\":null"));
     assertTrue(response.getContentAsString().contains("\"self\":{\"href\":\"/v2/users/Neo\"}"));
     assertTrue(response.getContentAsString().contains("\"delete\":{\"href\":\"/v2/users/Neo\"}"));
   }
@@ -103,13 +106,49 @@ public class UserRootResourceTest {
 
     assertEquals(HttpServletResponse.SC_OK, response.getStatus());
     assertTrue(response.getContentAsString().contains("\"name\":\"Neo\""));
-    assertTrue(response.getContentAsString().contains("\"password\":\"__dummypassword__\""));
+    assertTrue(response.getContentAsString().contains("\"password\":null"));
     assertTrue(response.getContentAsString().contains("\"self\":{\"href\":\"/v2/users/Neo\"}"));
     assertFalse(response.getContentAsString().contains("\"delete\":{\"href\":\"/v2/users/Neo\"}"));
   }
 
   @Test
-  public void shouldCreateNewUserWithEncryptedPassword() throws Exception {
+  public void shouldEncryptPasswordBeforeChanging() throws Exception {
+    String newPassword = "pwd123";
+    String content = MessageFormat.format("'{'\"newPassword\": \"{0}\"'}'", newPassword);
+    MockHttpRequest request = MockHttpRequest
+      .put("/" + UserRootResource.USERS_PATH_V2 + "Neo/password")
+      .contentType(VndMediaType.PASSWORD_CHANGE)
+      .content(content.getBytes());
+    MockHttpResponse response = new MockHttpResponse();
+    when(passwordService.encryptPassword(newPassword)).thenReturn("encrypted123");
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
+    verify(userManager).modify(any(User.class));
+    User updatedUser = userCaptor.getValue();
+    assertEquals("encrypted123", updatedUser.getPassword());
+  }
+
+  @Test
+  public void shouldGet400OnChangePasswordOfUserWithNonDefaultType() throws Exception {
+    originalUser.setType("not an xml type");
+    String newPassword = "pwd123";
+    String content = MessageFormat.format("'{'\"newPassword\": \"{0}\"'}'", newPassword);
+    MockHttpRequest request = MockHttpRequest
+      .put("/" + UserRootResource.USERS_PATH_V2 + "Neo/password")
+      .contentType(VndMediaType.PASSWORD_CHANGE)
+      .content(content.getBytes());
+    MockHttpResponse response = new MockHttpResponse();
+    when(passwordService.encryptPassword(newPassword)).thenReturn("encrypted123");
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_BAD_REQUEST, response.getStatus());
+  }
+
+  @Test
+  public void shouldEncryptPasswordBeforeCreatingUser() throws Exception {
     URL url = Resources.getResource("sonia/scm/api/v2/user-test-create.json");
     byte[] userJson = Resources.toByteArray(url);
 
@@ -129,7 +168,7 @@ public class UserRootResourceTest {
   }
 
   @Test
-  public void shouldUpdateChangedUserWithEncryptedPassword() throws Exception {
+  public void shouldIgnoreGivenPasswordOnUpdatingUser() throws Exception {
     URL url = Resources.getResource("sonia/scm/api/v2/user-test-update.json");
     byte[] userJson = Resources.toByteArray(url);
 
@@ -138,14 +177,13 @@ public class UserRootResourceTest {
       .contentType(VndMediaType.USER)
       .content(userJson);
     MockHttpResponse response = new MockHttpResponse();
-    when(passwordService.encryptPassword("pwd123")).thenReturn("encrypted123");
 
     dispatcher.invoke(request, response);
 
     assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
     verify(userManager).modify(any(User.class));
     User updatedUser = userCaptor.getValue();
-    assertEquals("encrypted123", updatedUser.getPassword());
+    assertEquals(originalUser.getPassword(), updatedUser.getPassword());
   }
 
   @Test
@@ -153,7 +191,7 @@ public class UserRootResourceTest {
     MockHttpRequest request = MockHttpRequest
       .post("/" + UserRootResource.USERS_PATH_V2)
       .contentType(VndMediaType.USER)
-      .content(new byte[] {});
+      .content(new byte[]{});
     MockHttpResponse response = new MockHttpResponse();
     when(passwordService.encryptPassword("pwd123")).thenReturn("encrypted123");
 
@@ -264,6 +302,7 @@ public class UserRootResourceTest {
   private User createDummyUser(String name) {
     User user = new User();
     user.setName(name);
+    user.setType("xml");
     user.setPassword("redpill");
     user.setCreationDate(System.currentTimeMillis());
     when(userManager.get(name)).thenReturn(user);

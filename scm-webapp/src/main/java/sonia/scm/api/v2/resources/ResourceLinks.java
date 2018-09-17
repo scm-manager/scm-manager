@@ -86,6 +86,10 @@ class ResourceLinks {
     String update(String name) {
       return userLinkBuilder.method("getUserResource").parameters(name).method("update").parameters().href();
     }
+
+    public String passwordChange(String name) {
+      return userLinkBuilder.method("getUserResource").parameters(name).method("changePassword").parameters().href();
+    }
   }
 
   UserCollectionLinks userCollection() {

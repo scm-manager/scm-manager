@@ -77,7 +77,7 @@ public class MeResourceTest {
 
     assertEquals(HttpServletResponse.SC_OK, response.getStatus());
     assertTrue(response.getContentAsString().contains("\"name\":\"trillian\""));
-    assertTrue(response.getContentAsString().contains("\"password\":\"__dummypassword__\""));
+    assertTrue(response.getContentAsString().contains("\"password\":null"));
     assertTrue(response.getContentAsString().contains("\"self\":{\"href\":\"/v2/users/trillian\"}"));
     assertTrue(response.getContentAsString().contains("\"delete\":{\"href\":\"/v2/users/trillian\"}"));
   }

@@ -10,7 +10,9 @@ import sonia.scm.user.UserManager;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
@@ -49,6 +51,23 @@ public class MeResource {
   })
   public Response get(@Context Request request, @Context UriInfo uriInfo) throws NotFoundException {
 
+    String id = (String) SecurityUtils.getSubject().getPrincipals().getPrimaryPrincipal();
+    return adapter.get(id, userToDtoMapper::map);
+  }
+
+  /**
+   * Change password of the current user
+   */
+  @PUT
+  @Path("password")
+  @StatusCodes({
+    @ResponseCode(code = 204, condition = "update success"),
+    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
+  @TypeHint(TypeHint.NO_CONTENT.class)
+  @Consumes(VndMediaType.PASSWORD_CHANGE)
+  public Response changePassword(PasswordChangeDto passwordChange) throws NotFoundException {
     String id = (String) SecurityUtils.getSubject().getPrincipals().getPrimaryPrincipal();
     return adapter.get(id, userToDtoMapper::map);
   }

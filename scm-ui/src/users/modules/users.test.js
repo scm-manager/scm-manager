@@ -56,7 +56,7 @@ const userZaphod = {
   displayName: "Z. Beeblebrox",
   mail: "president@heartofgold.universe",
   name: "zaphod",
-  password: "__dummypassword__",
+  password: "",
   type: "xml",
   properties: {},
   _links: {
@@ -79,7 +79,7 @@ const userFord = {
   displayName: "F. Prefect",
   mail: "ford@prefect.universe",
   name: "ford",
-  password: "__dummypassword__",
+  password: "",
   type: "xml",
   properties: {},
   _links: {
