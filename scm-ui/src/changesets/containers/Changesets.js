@@ -1,9 +1,10 @@
 import React from "react"
 import {connect} from "react-redux";
+import {Loading} from "@scm-manager/ui-components";
 
 import {
   fetchChangesetsByNamespaceAndName, fetchChangesetsByNamespaceNameAndBranch,
-  getChangesets,
+  getChangesets, isFetchChangesetsPending,
 } from "../modules/changesets";
 import type { History } from "history";
 import {fetchBranchesByNamespaceAndName, getBranchNames} from "../../repos/modules/branches";
@@ -39,10 +40,10 @@ class Changesets extends React.Component<State, Props> {
   }
 
   render() {
-    const {changesets, branchNames} = this.props;
+    const {changesets, branchNames, loading} = this.props;
     const branch = this.props.match.params.branch;
-    if (changesets === null) {
-      return null
+    if (loading || !changesets) {
+      return <Loading />
     }
     if (branchNames) {
       return <div>
@@ -65,7 +66,8 @@ class Changesets extends React.Component<State, Props> {
 const mapStateToProps = (state, ownProps: Props) => {
   const {namespace, name} = ownProps.repository;
   return {
-    changesets: getChangesets(namespace, name, ownProps.match.params.branch, state),
+    loading: isFetchChangesetsPending(namespace, name, state),
+    changesets: getChangesets(state, namespace, name, ownProps.match.params.branch),
     branchNames: getBranchNames(namespace, name, state)
   }
 };
