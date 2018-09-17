@@ -103,13 +103,9 @@ class RepositoryRoot extends React.Component<Props> {
               component={() => <Edit repository={repository}/>}
             />
             <Route
-              path={`${url}/history`}
-              component={() => <Changesets repository={repository} branchName={"master"} history={this.props.history}/>}
+              path={`${url}/history/:branch`}
+              component={() => <Changesets repository={repository}/>}
             />
-            {/*<Route*/}
-              {/*path={`${url}/history/:branchName`}*/}
-              {/*component={() => <Changesets repository={repository} branchName={} history={this.props.history}/>}*/}
-            {/*/>*/}
           </div>
           <div className="column">
             <Navigation>

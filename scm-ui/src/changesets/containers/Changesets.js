@@ -5,11 +5,12 @@ import {
   fetchChangesetsByNamespaceAndName, fetchChangesetsByNamespaceNameAndBranch,
   getChangesets,
 } from "../modules/changesets";
-import {translate} from "react-i18next";
+import type { History } from "history";
 import {fetchBranchesByNamespaceAndName, getBranchNames} from "../../repos/modules/branches";
 import type {Repository} from "@scm-manager/ui-types";
 import ChangesetTable from "../components/ChangesetTable";
 import DropDown from "../components/DropDown";
+import {withRouter} from "react-router-dom";
 
 type Props = {
   repository: Repository,
@@ -18,30 +19,34 @@ type Props = {
   fetchChangesetsByNamespaceNameAndBranch: (namespace: string, name: string, branch: string) => void
 }
 
-type State = {
-  branchName: string
-}
 
 class Changesets extends React.Component<State, Props> {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+    };
   }
 
   componentDidMount() {
     const {namespace, name} = this.props.repository;
-    this.props.fetchChangesetsByNamespaceNameAndBranch(namespace, name, this.props.branchName);
+    const branchName = this.props.match.params.branch;
+    if (branchName) {
+      this.props.fetchChangesetsByNamespaceNameAndBranch(namespace, name, branchName);
+    } else {
+      this.props.fetchChangesetsByNamespaceAndName(namespace, name);
+    }
     this.props.fetchBranchesByNamespaceAndName(namespace, name);
   }
 
   render() {
     const {changesets, branchNames} = this.props;
+    const branch = this.props.match.params.branch;
     if (changesets === null) {
       return null
     }
     if (branchNames) {
       return <div>
-        <DropDown options={branchNames} optionSelected={this.branchChanged}/>
+        <DropDown options={branchNames} preselectedOption={branch} optionSelected={branch => this.branchChanged(branch)}/>
         <ChangesetTable changesets={changesets}/>
       </div>;
     } else {
@@ -51,16 +56,16 @@ class Changesets extends React.Component<State, Props> {
   }
 
   branchChanged = (branchName: string) => {
-    this.props.history.push(branchName)
+    const { history, repository } = this.props;
+    history.push(`/repo/${repository.namespace}/${repository.name}/history/${branchName}`);
   };
 }
 
 
 const mapStateToProps = (state, ownProps: Props) => {
-  console.log("mapStateToProps ownProps: ", ownProps);
   const {namespace, name} = ownProps.repository;
   return {
-    changesets: getChangesets(namespace, name, ownProps.branchName, state),
+    changesets: getChangesets(namespace, name, ownProps.match.params.branch, state),
     branchNames: getBranchNames(namespace, name, state)
   }
 };
@@ -79,7 +84,7 @@ const mapDispatchToProps = dispatch => {
   }
 };
 
-export default connect(
+export default withRouter(connect(
   mapStateToProps,
   mapDispatchToProps
-)(Changesets);
+)(Changesets));
