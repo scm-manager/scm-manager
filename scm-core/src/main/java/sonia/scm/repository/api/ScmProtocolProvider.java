@@ -4,9 +4,9 @@ import sonia.scm.plugin.ExtensionPoint;
 import sonia.scm.repository.Repository;
 
 @ExtensionPoint(multi = true)
-public interface ScmProtocolProvider {
+public interface ScmProtocolProvider<T extends ScmProtocol> {
 
   String getType();
 
-  ScmProtocol get(Repository repository);
+  T get(Repository repository);
 }

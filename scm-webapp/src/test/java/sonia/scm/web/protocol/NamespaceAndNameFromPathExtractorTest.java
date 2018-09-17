@@ -38,7 +38,7 @@ public class NamespaceAndNameFromPathExtractorTest {
     return dynamicTest(
       "should extract correct namespace and name for path " + path,
       () -> {
-        Optional<NamespaceAndName> namespaceAndName = new NamespaceAndNameFromPathExtractor().fromUri(path);
+        Optional<NamespaceAndName> namespaceAndName = NamespaceAndNameFromPathExtractor.fromUri(path);
 
         assertThat(namespaceAndName.get()).isEqualTo(new NamespaceAndName("space", "repo"));
       }
@@ -59,7 +59,7 @@ public class NamespaceAndNameFromPathExtractorTest {
     return dynamicTest(
       "should not fail for wrong path " + path,
       () -> {
-        Optional<NamespaceAndName> namespaceAndName = new NamespaceAndNameFromPathExtractor().fromUri(path);
+        Optional<NamespaceAndName> namespaceAndName = NamespaceAndNameFromPathExtractor.fromUri(path);
 
         assertThat(namespaceAndName.isPresent()).isFalse();
       }

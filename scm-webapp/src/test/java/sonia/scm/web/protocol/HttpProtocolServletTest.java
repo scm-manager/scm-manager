@@ -20,20 +20,16 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Optional;
 
-import static java.util.Optional.of;
 import static org.mockito.AdditionalMatchers.not;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class HttpProtocolServletTest {
 
-  private static final NamespaceAndName EXISTING_REPO = new NamespaceAndName("space", "repo");
 
   @Mock
   private RepositoryServiceFactory serviceFactory;
@@ -43,8 +39,6 @@ public class HttpProtocolServletTest {
   private PushStateDispatcher dispatcher;
   @Mock
   private UserAgentParser userAgentParser;
-  @Mock
-  private NamespaceAndNameFromPathExtractor namespaceAndNameFromPathExtractor;
   @Mock
   private Provider<HttpServletRequest> requestProvider;
 
@@ -68,8 +62,9 @@ public class HttpProtocolServletTest {
     initMocks(this);
     when(userAgentParser.parse(request)).thenReturn(userAgent);
     when(userAgent.isBrowser()).thenReturn(false);
-    when(serviceFactory.create(not(eq(EXISTING_REPO)))).thenThrow(RepositoryNotFoundException.class);
-    when(serviceFactory.create(EXISTING_REPO)).thenReturn(repositoryService);
+    NamespaceAndName existingRepo = new NamespaceAndName("space", "repo");
+    when(serviceFactory.create(not(eq(existingRepo)))).thenThrow(RepositoryNotFoundException.class);
+    when(serviceFactory.create(existingRepo)).thenReturn(repositoryService);
     when(requestProvider.get()).thenReturn(httpServletRequest);
   }
 
@@ -85,8 +80,7 @@ public class HttpProtocolServletTest {
 
   @Test
   public void shouldHandleBadPaths() throws IOException, ServletException {
-    when(request.getPathInfo()).thenReturn("/space/name");
-    when(namespaceAndNameFromPathExtractor.fromUri("/space/name")).thenReturn(Optional.empty());
+    when(request.getPathInfo()).thenReturn("/illegal");
 
     servlet.service(request, response);
 
@@ -94,11 +88,8 @@ public class HttpProtocolServletTest {
   }
 
   @Test
-  public void shouldHandleNotExistingRepository() throws RepositoryNotFoundException, IOException, ServletException {
-    when(request.getPathInfo()).thenReturn("/space/name");
-    NamespaceAndName namespaceAndName = new NamespaceAndName("space", "name");
-    when(namespaceAndNameFromPathExtractor.fromUri("/space/name")).thenReturn(of(namespaceAndName));
-    doThrow(new RepositoryNotFoundException(namespaceAndName)).when(serviceFactory).create(namespaceAndName);
+  public void shouldHandleNotExistingRepository() throws IOException, ServletException {
+    when(request.getPathInfo()).thenReturn("/not/exists");
 
     servlet.service(request, response);
 
@@ -109,7 +100,6 @@ public class HttpProtocolServletTest {
   public void shouldDelegateToProvider() throws RepositoryNotFoundException, IOException, ServletException {
     when(request.getPathInfo()).thenReturn("/space/name");
     NamespaceAndName namespaceAndName = new NamespaceAndName("space", "name");
-    when(namespaceAndNameFromPathExtractor.fromUri("/space/name")).thenReturn(of(namespaceAndName));
     doReturn(repositoryService).when(serviceFactory).create(namespaceAndName);
     Repository repository = new Repository();
     when(repositoryService.getRepository()).thenReturn(repository);

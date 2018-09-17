@@ -251,8 +251,7 @@ public class GitLfsITCase {
   }
 
   private String createBatchUrl() {
-    String url = BASE_URL + "repo/" + repository.getNamespace() + "/" + repository.getName();
-    return url + "/info/lfs/objects/batch";
+    return String.format("%srepo/%s/%s/info/lfs/objects/batch", BASE_URL, repository.getNamespace(), repository.getName());
   }
 
   private byte[] download(ScmClient client, LfsObject lfsObject) throws IOException {

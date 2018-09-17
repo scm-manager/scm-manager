@@ -31,6 +31,7 @@
 
 package sonia.scm.repository.api;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.cache.CacheManager;
@@ -80,6 +81,7 @@ import java.util.stream.Stream;
  * @apiviz.uses sonia.scm.repository.api.UnbundleCommandBuilder
  * @since 1.17
  */
+@Slf4j
 public final class RepositoryService implements Closeable {
 
   private static final Logger logger = LoggerFactory.getLogger(RepositoryService.class);
@@ -128,7 +130,7 @@ public final class RepositoryService implements Closeable {
     try {
       provider.close();
     } catch (IOException ex) {
-      logger.error("Could not close repository service provider", ex);
+      log.error("Could not close repository service provider", ex);
     }
   }
 
@@ -141,7 +143,7 @@ public final class RepositoryService implements Closeable {
    */
   public BlameCommandBuilder getBlameCommand() {
     logger.debug("create blame command for repository {}",
-      repository.getName());
+      repository.getNamespaceAndName());
 
     return new BlameCommandBuilder(cacheManager, provider.getBlameCommand(),
       repository, preProcessorUtil);
@@ -156,7 +158,7 @@ public final class RepositoryService implements Closeable {
    */
   public BranchesCommandBuilder getBranchesCommand() {
     logger.debug("create branches command for repository {}",
-      repository.getName());
+      repository.getNamespaceAndName());
 
     return new BranchesCommandBuilder(cacheManager,
       provider.getBranchesCommand(), repository);
@@ -171,7 +173,7 @@ public final class RepositoryService implements Closeable {
    */
   public BrowseCommandBuilder getBrowseCommand() {
     logger.debug("create browse command for repository {}",
-      repository.getName());
+      repository.getNamespaceAndName());
 
     return new BrowseCommandBuilder(cacheManager, provider.getBrowseCommand(),
       repository, preProcessorUtil);
@@ -187,7 +189,7 @@ public final class RepositoryService implements Closeable {
    */
   public BundleCommandBuilder getBundleCommand() {
     logger.debug("create bundle command for repository {}",
-      repository.getName());
+      repository.getNamespaceAndName());
 
     return new BundleCommandBuilder(provider.getBundleCommand(), repository);
   }
@@ -201,7 +203,7 @@ public final class RepositoryService implements Closeable {
    */
   public CatCommandBuilder getCatCommand() {
     logger.debug("create cat command for repository {}",
-      repository.getName());
+      repository.getNamespaceAndName());
 
     return new CatCommandBuilder(provider.getCatCommand());
   }
@@ -216,7 +218,7 @@ public final class RepositoryService implements Closeable {
    */
   public DiffCommandBuilder getDiffCommand() {
     logger.debug("create diff command for repository {}",
-      repository.getName());
+      repository.getNamespaceAndName());
 
     return new DiffCommandBuilder(provider.getDiffCommand());
   }
@@ -232,7 +234,7 @@ public final class RepositoryService implements Closeable {
    */
   public IncomingCommandBuilder getIncomingCommand() {
     logger.debug("create incoming command for repository {}",
-      repository.getName());
+      repository.getNamespaceAndName());
 
     return new IncomingCommandBuilder(cacheManager,
       provider.getIncomingCommand(), repository, preProcessorUtil);
@@ -247,7 +249,7 @@ public final class RepositoryService implements Closeable {
    */
   public LogCommandBuilder getLogCommand() {
     logger.debug("create log command for repository {}",
-      repository.getName());
+      repository.getNamespaceAndName());
 
     return new LogCommandBuilder(cacheManager, provider.getLogCommand(),
       repository, preProcessorUtil);
@@ -261,7 +263,7 @@ public final class RepositoryService implements Closeable {
    *                                      by the implementation of the repository service provider.
    */
   public ModificationsCommandBuilder getModificationsCommand() {
-    logger.debug("create modifications command for repository {}",repository.getNamespaceAndName());
+    logger.debug("create modifications command for repository {}", repository.getNamespaceAndName());
     return new ModificationsCommandBuilder(provider.getModificationsCommand(),repository, cacheManager.getCache(ModificationsCommandBuilder.CACHE_NAME), preProcessorUtil);
   }
 
@@ -275,7 +277,7 @@ public final class RepositoryService implements Closeable {
    */
   public OutgoingCommandBuilder getOutgoingCommand() {
     logger.debug("create outgoing command for repository {}",
-      repository.getName());
+      repository.getNamespaceAndName());
 
     return new OutgoingCommandBuilder(cacheManager,
       provider.getOutgoingCommand(), repository, preProcessorUtil);
@@ -291,7 +293,7 @@ public final class RepositoryService implements Closeable {
    */
   public PullCommandBuilder getPullCommand() {
     logger.debug("create pull command for repository {}",
-      repository.getName());
+      repository.getNamespaceAndName());
 
     return new PullCommandBuilder(provider.getPullCommand(), repository);
   }
@@ -306,7 +308,7 @@ public final class RepositoryService implements Closeable {
    */
   public PushCommandBuilder getPushCommand() {
     logger.debug("create push command for repository {}",
-      repository.getName());
+      repository.getNamespaceAndName());
 
     return new PushCommandBuilder(provider.getPushCommand());
   }
@@ -329,7 +331,7 @@ public final class RepositoryService implements Closeable {
    */
   public TagsCommandBuilder getTagsCommand() {
     logger.debug("create tags command for repository {}",
-      repository.getName());
+      repository.getNamespaceAndName());
 
     return new TagsCommandBuilder(cacheManager, provider.getTagsCommand(),
       repository);
@@ -345,7 +347,7 @@ public final class RepositoryService implements Closeable {
    */
   public UnbundleCommandBuilder getUnbundleCommand() {
     logger.debug("create unbundle command for repository {}",
-      repository.getName());
+      repository.getNamespaceAndName());
 
     return new UnbundleCommandBuilder(provider.getUnbundleCommand(),
       repository);
@@ -372,21 +374,20 @@ public final class RepositoryService implements Closeable {
     return provider.getSupportedFeatures().contains(feature);
   }
 
-
-  public Stream<ScmProtocol> getSupportedProtocols() {
+  public <T extends ScmProtocol> Stream<T> getSupportedProtocols() {
     return protocolProviders.stream()
       .filter(protocolProvider -> protocolProvider.getType().equals(getRepository().getType()))
-      .map(this::createProviderInstanceForRepository);
+      .map(this::<T>createProviderInstanceForRepository);
   }
 
-  private ScmProtocol createProviderInstanceForRepository(ScmProtocolProvider protocolProvider) {
+  private <T extends ScmProtocol> T createProviderInstanceForRepository(ScmProtocolProvider<T> protocolProvider) {
     return protocolProvider.get(repository);
   }
 
   public <T extends ScmProtocol> T getProtocol(Class<T> clazz) {
-    return (T) getSupportedProtocols()
+    return this.<T>getSupportedProtocols()
       .filter(scmProtocol -> clazz.isAssignableFrom(scmProtocol.getClass()))
       .findFirst()
-      .orElseThrow(() -> new IllegalArgumentException("no implementation for " + clazz.getName() + " and repository type " + getRepository().getType()));
+      .orElseThrow(() -> new IllegalArgumentException(String.format("no implementation for %s and repository type %s", clazz.getName(),getRepository().getType())));
   }
 }

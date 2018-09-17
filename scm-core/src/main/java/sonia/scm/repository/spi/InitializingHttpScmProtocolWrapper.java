@@ -1,7 +1,6 @@
 package sonia.scm.repository.spi;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import sonia.scm.api.v2.resources.ScmPathInfoStore;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.Repository;
@@ -18,20 +17,19 @@ import java.util.Optional;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
-public abstract class InitializingHttpScmProtocolWrapper implements ScmProtocolProvider {
-
-  private static final Logger logger = LoggerFactory.getLogger(InitializingHttpScmProtocolWrapper.class);
+@Slf4j
+public abstract class InitializingHttpScmProtocolWrapper implements ScmProtocolProvider<HttpScmProtocol> {
 
   private final Provider<? extends ScmProviderHttpServlet> delegateProvider;
-  private final Provider<ScmPathInfoStore> uriInfoStore;
+  private final Provider<ScmPathInfoStore> pathInfoStore;
   private final ScmConfiguration scmConfiguration;
 
   private volatile boolean isInitialized = false;
 
 
-  protected InitializingHttpScmProtocolWrapper(Provider<? extends ScmProviderHttpServlet> delegateProvider, Provider<ScmPathInfoStore> uriInfoStore, ScmConfiguration scmConfiguration) {
+  protected InitializingHttpScmProtocolWrapper(Provider<? extends ScmProviderHttpServlet> delegateProvider, Provider<ScmPathInfoStore> pathInfoStore, ScmConfiguration scmConfiguration) {
     this.delegateProvider = delegateProvider;
-    this.uriInfoStore = uriInfoStore;
+    this.pathInfoStore = pathInfoStore;
     this.scmConfiguration = scmConfiguration;
   }
 
@@ -42,7 +40,7 @@ public abstract class InitializingHttpScmProtocolWrapper implements ScmProtocolP
   @Override
   public HttpScmProtocol get(Repository repository) {
     if (!repository.getType().equals(getType())) {
-      throw new IllegalArgumentException("cannot handle repository with type " + repository.getType() + " with protocol for type " + getType());
+      throw new IllegalArgumentException(String.format("cannot handle repository with type %s with protocol for type %s", repository.getType(), getType()));
     }
     return new ProtocolWrapper(repository, computeBasePath());
   }
@@ -53,18 +51,18 @@ public abstract class InitializingHttpScmProtocolWrapper implements ScmProtocolP
 
   private Optional<String> getPathFromScmPathInfoIfAvailable() {
     try {
-      ScmPathInfoStore scmPathInfoStore = uriInfoStore.get();
+      ScmPathInfoStore scmPathInfoStore = pathInfoStore.get();
       if (scmPathInfoStore != null && scmPathInfoStore.get() != null) {
         return of(scmPathInfoStore.get().getRootUri().toASCIIString());
       }
     } catch (Exception e) {
-      logger.debug("could not get ScmPathInfoStore from context", e);
+      log.debug("could not get ScmPathInfoStore from context", e);
     }
     return empty();
   }
 
   private String getPathFromConfiguration() {
-    logger.debug("using base path from configuration: {}", scmConfiguration.getBaseUrl());
+    log.debug("using base path from configuration: {}", scmConfiguration.getBaseUrl());
     return scmConfiguration.getBaseUrl();
   }
 

@@ -8,8 +8,11 @@ import java.util.Optional;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
-class NamespaceAndNameFromPathExtractor {
-  Optional<NamespaceAndName> fromUri(String uri) {
+final class NamespaceAndNameFromPathExtractor {
+
+  private NamespaceAndNameFromPathExtractor() {}
+
+  static Optional<NamespaceAndName> fromUri(String uri) {
     if (uri.startsWith(HttpUtil.SEPARATOR_PATH)) {
       uri = uri.substring(1);
     }

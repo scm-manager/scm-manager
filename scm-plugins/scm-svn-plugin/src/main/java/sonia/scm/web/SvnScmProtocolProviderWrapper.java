@@ -56,6 +56,9 @@ public class SvnScmProtocolProviderWrapper extends InitializingHttpScmProtocolWr
     }
 
     @Override
+    /**
+     * Overridden to return the systems temp directory for the key {@link PARAMETER_SVN_PARENTPATH}.
+     */
     public String getInitParameter(String key) {
       if (PARAMETER_SVN_PARENTPATH.equals(key)) {
         return System.getProperty("java.io.tmpdir");

@@ -38,15 +38,13 @@ public class HttpProtocolServlet extends HttpServlet {
   private final PushStateDispatcher dispatcher;
   private final UserAgentParser userAgentParser;
 
-  private final NamespaceAndNameFromPathExtractor namespaceAndNameFromPathExtractor;
 
   @Inject
-  public HttpProtocolServlet(RepositoryServiceFactory serviceFactory, Provider<HttpServletRequest> requestProvider, PushStateDispatcher dispatcher, UserAgentParser userAgentParser, NamespaceAndNameFromPathExtractor namespaceAndNameFromPathExtractor) {
+  public HttpProtocolServlet(RepositoryServiceFactory serviceFactory, Provider<HttpServletRequest> requestProvider, PushStateDispatcher dispatcher, UserAgentParser userAgentParser) {
     this.serviceFactory = serviceFactory;
     this.requestProvider = requestProvider;
     this.dispatcher = dispatcher;
     this.userAgentParser = userAgentParser;
-    this.namespaceAndNameFromPathExtractor = namespaceAndNameFromPathExtractor;
   }
 
   @Override
@@ -58,7 +56,7 @@ public class HttpProtocolServlet extends HttpServlet {
     } else {
 
       String pathInfo = request.getPathInfo();
-      Optional<NamespaceAndName> namespaceAndName = namespaceAndNameFromPathExtractor.fromUri(pathInfo);
+      Optional<NamespaceAndName> namespaceAndName = NamespaceAndNameFromPathExtractor.fromUri(pathInfo);
       if (namespaceAndName.isPresent()) {
         service(request, response, namespaceAndName.get());
       } else {

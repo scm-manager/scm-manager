@@ -42,7 +42,7 @@ public class RepositoryToRepositoryDtoMapperTest {
   private final URI baseUri = URI.create("http://example.com/base/");
   @SuppressWarnings("unused") // Is injected
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
-  @Mock//(answer = Answers.RETURNS_DEEP_STUBS)
+  @Mock
   private RepositoryServiceFactory serviceFactory;
   @Mock
   private RepositoryService repositoryService;
