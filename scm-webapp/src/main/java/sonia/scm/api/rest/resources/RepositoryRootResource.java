@@ -42,7 +42,6 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryTypePredicate;
 import sonia.scm.template.Viewable;
-import sonia.scm.util.HttpUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
@@ -98,13 +97,12 @@ public class RepositoryRootResource
   @Produces(MediaType.TEXT_HTML)
   public Viewable renderRepositoriesRoot(@Context HttpServletRequest request, @PathParam("type") final String type)
   {
-    String baseUrl = HttpUtil.getCompleteUrl(request);
     //J-
     Collection<RepositoryTemplateElement> unsortedRepositories =
       Collections2.transform( 
         Collections2.filter(
             repositoryManager.getAll(), new RepositoryTypePredicate(type))
-        , new RepositoryTransformFunction(baseUrl)
+        , new RepositoryTransformFunction()
       );
     
     List<RepositoryTemplateElement> repositories = Ordering.from(
@@ -130,17 +128,9 @@ public class RepositoryRootResource
   public static class RepositoryTemplateElement
   {
 
-    /**
-     * Constructs ...
-     *
-     *
-     * @param repository
-     * @param baseUrl
-     */
-    public RepositoryTemplateElement(Repository repository, String baseUrl)
+    public RepositoryTemplateElement(Repository repository)
     {
       this.repository = repository;
-      this.baseUrl = baseUrl;
     }
 
     //~--- get methods --------------------------------------------------------
@@ -168,9 +158,6 @@ public class RepositoryRootResource
     }
 
     //~--- fields -------------------------------------------------------------
-
-    /** Field description */
-    private String baseUrl;
 
     /** Field description */
     private Repository repository;
@@ -217,31 +204,10 @@ public class RepositoryRootResource
   private static class RepositoryTransformFunction
     implements Function<Repository, RepositoryTemplateElement>
   {
-
-    public RepositoryTransformFunction(String baseUrl)
-    {
-      this.baseUrl = baseUrl;
-    }
-
-    //~--- methods ------------------------------------------------------------
-
-    /**
-     * Method description
-     *
-     *
-     * @param repository
-     *
-     * @return
-     */
     @Override
     public RepositoryTemplateElement apply(Repository repository)
     {
-      return new RepositoryTemplateElement(repository, baseUrl);
+      return new RepositoryTemplateElement(repository);
     }
-
-    //~--- fields -------------------------------------------------------------
-
-    /** Field description */
-    private String baseUrl;
   }
 }

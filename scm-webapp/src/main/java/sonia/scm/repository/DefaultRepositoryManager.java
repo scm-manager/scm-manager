@@ -82,7 +82,6 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
   private final KeyGenerator keyGenerator;
   private final RepositoryDAO repositoryDAO;
   private final Set<Type> types;
-  private RepositoryMatcher repositoryMatcher;
   private NamespaceStrategy namespaceStrategy;
   private final ManagerDaoAdapter<Repository> managerDaoAdapter;
 
@@ -91,12 +90,10 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
   public DefaultRepositoryManager(ScmConfiguration configuration,
                                   SCMContextProvider contextProvider, KeyGenerator keyGenerator,
                                   RepositoryDAO repositoryDAO, Set<RepositoryHandler> handlerSet,
-                                  RepositoryMatcher repositoryMatcher,
                                   NamespaceStrategy namespaceStrategy) {
     this.configuration = configuration;
     this.keyGenerator = keyGenerator;
     this.repositoryDAO = repositoryDAO;
-    this.repositoryMatcher = repositoryMatcher;
     this.namespaceStrategy = namespaceStrategy;
 
     ThreadFactory factory = new ThreadFactoryBuilder()

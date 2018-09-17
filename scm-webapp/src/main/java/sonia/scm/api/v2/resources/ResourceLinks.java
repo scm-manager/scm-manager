@@ -26,8 +26,8 @@ class ResourceLinks {
   static class GroupLinks {
     private final LinkBuilder groupLinkBuilder;
 
-    GroupLinks(ScmPathInfo uriInfo) {
-      groupLinkBuilder = new LinkBuilder(uriInfo, GroupRootResource.class, GroupResource.class);
+    GroupLinks(ScmPathInfo pathInfo) {
+      groupLinkBuilder = new LinkBuilder(pathInfo, GroupRootResource.class, GroupResource.class);
     }
 
     String self(String name) {
@@ -50,8 +50,8 @@ class ResourceLinks {
   static class GroupCollectionLinks {
     private final LinkBuilder collectionLinkBuilder;
 
-    GroupCollectionLinks(ScmPathInfo uriInfo) {
-      collectionLinkBuilder = new LinkBuilder(uriInfo, GroupRootResource.class, GroupCollectionResource.class);
+    GroupCollectionLinks(ScmPathInfo pathInfo) {
+      collectionLinkBuilder = new LinkBuilder(pathInfo, GroupRootResource.class, GroupCollectionResource.class);
     }
 
     String self() {
@@ -70,8 +70,8 @@ class ResourceLinks {
   static class UserLinks {
     private final LinkBuilder userLinkBuilder;
 
-    UserLinks(ScmPathInfo uriInfo) {
-      userLinkBuilder = new LinkBuilder(uriInfo, UserRootResource.class, UserResource.class);
+    UserLinks(ScmPathInfo pathInfo) {
+      userLinkBuilder = new LinkBuilder(pathInfo, UserRootResource.class, UserResource.class);
     }
 
     String self(String name) {
@@ -94,8 +94,8 @@ class ResourceLinks {
   static class UserCollectionLinks {
     private final LinkBuilder collectionLinkBuilder;
 
-    UserCollectionLinks(ScmPathInfo uriInfo) {
-      collectionLinkBuilder = new LinkBuilder(uriInfo, UserRootResource.class, UserCollectionResource.class);
+    UserCollectionLinks(ScmPathInfo pathInfo) {
+      collectionLinkBuilder = new LinkBuilder(pathInfo, UserRootResource.class, UserCollectionResource.class);
     }
 
     String self() {
@@ -114,8 +114,8 @@ class ResourceLinks {
   static class ConfigLinks {
     private final LinkBuilder configLinkBuilder;
 
-    ConfigLinks(ScmPathInfo uriInfo) {
-      configLinkBuilder = new LinkBuilder(uriInfo, ConfigResource.class);
+    ConfigLinks(ScmPathInfo pathInfo) {
+      configLinkBuilder = new LinkBuilder(pathInfo, ConfigResource.class);
     }
 
     String self() {
@@ -133,11 +133,9 @@ class ResourceLinks {
 
   static class RepositoryLinks {
     private final LinkBuilder repositoryLinkBuilder;
-    private final ScmPathInfo uriInfo;
 
-    RepositoryLinks(ScmPathInfo uriInfo) {
-      repositoryLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class);
-      this.uriInfo = uriInfo;
+    RepositoryLinks(ScmPathInfo pathInfo) {
+      repositoryLinkBuilder = new LinkBuilder(pathInfo, RepositoryRootResource.class, RepositoryResource.class);
     }
 
     String self(String namespace, String name) {
@@ -160,8 +158,8 @@ class ResourceLinks {
   static class RepositoryCollectionLinks {
     private final LinkBuilder collectionLinkBuilder;
 
-    RepositoryCollectionLinks(ScmPathInfo uriInfo) {
-      collectionLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryCollectionResource.class);
+    RepositoryCollectionLinks(ScmPathInfo pathInfo) {
+      collectionLinkBuilder = new LinkBuilder(pathInfo, RepositoryRootResource.class, RepositoryCollectionResource.class);
     }
 
     String self() {
@@ -180,8 +178,8 @@ class ResourceLinks {
   static class RepositoryTypeLinks {
     private final LinkBuilder repositoryTypeLinkBuilder;
 
-    RepositoryTypeLinks(ScmPathInfo uriInfo) {
-      repositoryTypeLinkBuilder = new LinkBuilder(uriInfo, RepositoryTypeRootResource.class, RepositoryTypeResource.class);
+    RepositoryTypeLinks(ScmPathInfo pathInfo) {
+      repositoryTypeLinkBuilder = new LinkBuilder(pathInfo, RepositoryTypeRootResource.class, RepositoryTypeResource.class);
     }
 
     String self(String name) {
@@ -196,8 +194,8 @@ class ResourceLinks {
   static class RepositoryTypeCollectionLinks {
     private final LinkBuilder collectionLinkBuilder;
 
-    RepositoryTypeCollectionLinks(ScmPathInfo uriInfo) {
-      collectionLinkBuilder = new LinkBuilder(uriInfo, RepositoryTypeRootResource.class, RepositoryTypeCollectionResource.class);
+    RepositoryTypeCollectionLinks(ScmPathInfo pathInfo) {
+      collectionLinkBuilder = new LinkBuilder(pathInfo, RepositoryTypeRootResource.class, RepositoryTypeCollectionResource.class);
     }
 
     String self() {
@@ -213,8 +211,8 @@ class ResourceLinks {
   static class TagCollectionLinks {
     private final LinkBuilder tagLinkBuilder;
 
-    TagCollectionLinks(ScmPathInfo uriInfo) {
-      tagLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, TagRootResource.class);
+    TagCollectionLinks(ScmPathInfo pathInfo) {
+      tagLinkBuilder = new LinkBuilder(pathInfo, RepositoryRootResource.class, RepositoryResource.class, TagRootResource.class);
     }
 
     String self(String namespace, String name, String tagName) {
@@ -233,8 +231,8 @@ class ResourceLinks {
   static class DiffLinks {
     private final LinkBuilder diffLinkBuilder;
 
-    DiffLinks(ScmPathInfo uriInfo) {
-      diffLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, DiffRootResource.class);
+    DiffLinks(ScmPathInfo pathInfo) {
+      diffLinkBuilder = new LinkBuilder(pathInfo, RepositoryRootResource.class, RepositoryResource.class, DiffRootResource.class);
     }
 
     String self(String namespace, String name, String id) {
@@ -253,8 +251,8 @@ class ResourceLinks {
   static class BranchLinks {
     private final LinkBuilder branchLinkBuilder;
 
-    BranchLinks(ScmPathInfo uriInfo) {
-      branchLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, BranchRootResource.class);
+    BranchLinks(ScmPathInfo pathInfo) {
+      branchLinkBuilder = new LinkBuilder(pathInfo, RepositoryRootResource.class, RepositoryResource.class, BranchRootResource.class);
     }
 
     String self(NamespaceAndName namespaceAndName, String branch) {
@@ -273,8 +271,8 @@ class ResourceLinks {
   static class BranchCollectionLinks {
     private final LinkBuilder branchLinkBuilder;
 
-    BranchCollectionLinks(ScmPathInfo uriInfo) {
-      branchLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, BranchRootResource.class);
+    BranchCollectionLinks(ScmPathInfo pathInfo) {
+      branchLinkBuilder = new LinkBuilder(pathInfo, RepositoryRootResource.class, RepositoryResource.class, BranchRootResource.class);
     }
 
     String self(String namespace, String name) {
@@ -289,8 +287,8 @@ class ResourceLinks {
   static class ChangesetLinks {
     private final LinkBuilder changesetLinkBuilder;
 
-    ChangesetLinks(ScmPathInfo uriInfo) {
-      changesetLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, ChangesetRootResource.class);
+    ChangesetLinks(ScmPathInfo pathInfo) {
+      changesetLinkBuilder = new LinkBuilder(pathInfo, RepositoryRootResource.class, RepositoryResource.class, ChangesetRootResource.class);
     }
 
     String self(String namespace, String name, String changesetId) {
@@ -313,8 +311,8 @@ class ResourceLinks {
   static class ModificationsLinks {
     private final LinkBuilder modificationsLinkBuilder;
 
-    ModificationsLinks(ScmPathInfo uriInfo) {
-      modificationsLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, ModificationsRootResource.class);
+    ModificationsLinks(ScmPathInfo pathInfo) {
+      modificationsLinkBuilder = new LinkBuilder(pathInfo, RepositoryRootResource.class, RepositoryResource.class, ModificationsRootResource.class);
     }
     String self(String namespace, String name, String revision) {
       return modificationsLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("modifications").parameters().method("get").parameters(revision).href();
@@ -328,8 +326,8 @@ class ResourceLinks {
   static class FileHistoryLinks {
     private final LinkBuilder fileHistoryLinkBuilder;
 
-    FileHistoryLinks(ScmPathInfo uriInfo) {
-      fileHistoryLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, FileHistoryRootResource.class);
+    FileHistoryLinks(ScmPathInfo pathInfo) {
+      fileHistoryLinkBuilder = new LinkBuilder(pathInfo, RepositoryRootResource.class, RepositoryResource.class, FileHistoryRootResource.class);
     }
 
     String self(String namespace, String name, String changesetId, String path) {
@@ -345,8 +343,8 @@ class ResourceLinks {
   static class SourceLinks {
     private final LinkBuilder sourceLinkBuilder;
 
-    SourceLinks(ScmPathInfo uriInfo) {
-      sourceLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, SourceRootResource.class);
+    SourceLinks(ScmPathInfo pathInfo) {
+      sourceLinkBuilder = new LinkBuilder(pathInfo, RepositoryRootResource.class, RepositoryResource.class, SourceRootResource.class);
     }
 
     String self(String namespace, String name, String revision) {
@@ -378,8 +376,8 @@ class ResourceLinks {
   static class PermissionLinks {
     private final LinkBuilder permissionLinkBuilder;
 
-    PermissionLinks(ScmPathInfo uriInfo) {
-      permissionLinkBuilder = new LinkBuilder(uriInfo, RepositoryRootResource.class, RepositoryResource.class, PermissionRootResource.class);
+    PermissionLinks(ScmPathInfo pathInfo) {
+      permissionLinkBuilder = new LinkBuilder(pathInfo, RepositoryRootResource.class, RepositoryResource.class, PermissionRootResource.class);
     }
 
     String all(String namespace, String name) {
@@ -415,8 +413,8 @@ class ResourceLinks {
   static class UIPluginLinks {
     private final LinkBuilder uiPluginLinkBuilder;
 
-    UIPluginLinks(ScmPathInfo uriInfo) {
-      uiPluginLinkBuilder = new LinkBuilder(uriInfo, UIRootResource.class, UIPluginResource.class);
+    UIPluginLinks(ScmPathInfo pathInfo) {
+      uiPluginLinkBuilder = new LinkBuilder(pathInfo, UIRootResource.class, UIPluginResource.class);
     }
 
     String self(String id) {
@@ -431,8 +429,8 @@ class ResourceLinks {
   static class UIPluginCollectionLinks {
     private final LinkBuilder uiPluginCollectionLinkBuilder;
 
-    UIPluginCollectionLinks(ScmPathInfo uriInfo) {
-      uiPluginCollectionLinkBuilder = new LinkBuilder(uriInfo, UIRootResource.class, UIPluginResource.class);
+    UIPluginCollectionLinks(ScmPathInfo pathInfo) {
+      uiPluginCollectionLinkBuilder = new LinkBuilder(pathInfo, UIRootResource.class, UIPluginResource.class);
     }
 
     String self() {

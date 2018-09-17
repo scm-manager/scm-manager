@@ -61,7 +61,6 @@ import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.store.JAXBConfigurationStoreFactory;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
@@ -441,7 +440,7 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
     when(namespaceStrategy.createNamespace(Mockito.any(Repository.class))).thenAnswer(invocation -> mockedNamespace);
 
     return new DefaultRepositoryManager(configuration, contextProvider,
-      keyGenerator, repositoryDAO, handlerSet, createRepositoryMatcher(), namespaceStrategy);
+      keyGenerator, repositoryDAO, handlerSet, namespaceStrategy);
   }
 
   private void createRepository(RepositoryManager m, Repository repository) throws AlreadyExistsException {
@@ -465,10 +464,6 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
     assertEquals(repo.getContact(), other.getContact());
     assertEquals(repo.getCreationDate(), other.getCreationDate());
     assertEquals(repo.getLastModified(), other.getLastModified());
-  }
-
-  private RepositoryMatcher createRepositoryMatcher() {
-    return new RepositoryMatcher(Collections.<RepositoryPathMatcher>emptySet());
   }
 
   private Repository createRepository(Repository repository) throws AlreadyExistsException {

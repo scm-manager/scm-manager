@@ -13,7 +13,7 @@ import java.util.Arrays;
  * builder for each method.
  *
  * <pre>
- * LinkBuilder builder = new LinkBuilder(uriInfo, MainResource.class, SubResource.class);
+ * LinkBuilder builder = new LinkBuilder(pathInfo, MainResource.class, SubResource.class);
  * Link link = builder
  *     .method("sub")
  *     .parameters("param")
@@ -24,16 +24,16 @@ import java.util.Arrays;
  */
 @SuppressWarnings("WeakerAccess") // Non-public will result in IllegalAccessError for plugins
 public class LinkBuilder {
-  private final ScmPathInfo uriInfo;
+  private final ScmPathInfo pathInfo;
   private final Class[] classes;
   private final ImmutableList<Call> calls;
 
-  public LinkBuilder(ScmPathInfo uriInfo, Class... classes) {
-    this(uriInfo, classes, ImmutableList.of());
+  public LinkBuilder(ScmPathInfo pathInfo, Class... classes) {
+    this(pathInfo, classes, ImmutableList.of());
   }
 
-  private LinkBuilder(ScmPathInfo uriInfo, Class[] classes, ImmutableList<Call> calls) {
-    this.uriInfo = uriInfo;
+  private LinkBuilder(ScmPathInfo pathInfo, Class[] classes, ImmutableList<Call> calls) {
+    this.pathInfo = pathInfo;
     this.classes = classes;
     this.calls = calls;
   }
@@ -50,7 +50,7 @@ public class LinkBuilder {
       throw new IllegalStateException("not enough methods for all classes");
     }
 
-    URI baseUri = uriInfo.getApiRestUri();
+    URI baseUri = pathInfo.getApiRestUri();
     URI relativeUri = createRelativeUri();
     return baseUri.resolve(relativeUri);
   }
@@ -60,7 +60,7 @@ public class LinkBuilder {
   }
 
   private LinkBuilder add(String method, String[] parameters) {
-    return new LinkBuilder(uriInfo, classes, appendNewCall(method, parameters));
+    return new LinkBuilder(pathInfo, classes, appendNewCall(method, parameters));
   }
 
   private ImmutableList<Call> appendNewCall(String method, String[] parameters) {

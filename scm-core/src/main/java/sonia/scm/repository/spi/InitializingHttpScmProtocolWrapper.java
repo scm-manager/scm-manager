@@ -64,7 +64,7 @@ public abstract class InitializingHttpScmProtocolWrapper implements ScmProtocolP
   }
 
   private String getPathFromConfiguration() {
-    logger.debug("using base path from configuration: " + scmConfiguration.getBaseUrl());
+    logger.debug("using base path from configuration: {}", scmConfiguration.getBaseUrl());
     return scmConfiguration.getBaseUrl();
   }
 
