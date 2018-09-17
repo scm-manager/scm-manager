@@ -103,6 +103,12 @@ class RepositoryRoot extends React.Component<Props> {
               component={() => <Edit repository={repository}/>}
             />
             <Route
+              exact
+              path={`${url}/history`}
+              component={() => <Changesets repository={repository}/>}
+            />
+            <Route
+              exact
               path={`${url}/history/:branch`}
               component={() => <Changesets repository={repository}/>}
             />
@@ -111,6 +117,7 @@ class RepositoryRoot extends React.Component<Props> {
             <Navigation>
               <Section label={t("repository-root.navigation-label")}>
                 <NavLink to={url} label={t("repository-root.information")}/>
+                <NavLink activeOnlyWhenExact={false} to={`${url}/history`} label={t("repository-root.history")}/>
                 <EditNavLink repository={repository} editUrl={`${url}/edit`}/>
               </Section>
               <Section label={t("repository-root.actions-label")}>
