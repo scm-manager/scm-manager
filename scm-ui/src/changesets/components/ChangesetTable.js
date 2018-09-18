@@ -13,12 +13,7 @@ class ChangesetTable extends React.Component<Props> {
     const content = changesets.map((changeset, index) => {
       return <ChangesetRow key={index} changeset={changeset} />;
     });
-    return (
-      <div>
-        <hr />
-        {content}
-      </div>
-    );
+    return <div>{content}</div>;
   }
 }
 
