@@ -11,13 +11,15 @@ type Props = {
 class DropDown extends React.Component<Props> {
   render() {
     const {options, preselectedOption} = this.props;
-    return <select value={preselectedOption} onChange={this.change}>
-      <option key=""> </option>
+    return <div className="select">
+      <select value={preselectedOption} onChange={this.change}>
+      <option key=""></option>
       {options.map(option => {
         return <option key={option}
                        value={option}>{option}</option>
       })}
     </select>
+    </div>
   }
 
   change = (event) => {
