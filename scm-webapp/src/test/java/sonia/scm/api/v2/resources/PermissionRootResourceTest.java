@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.collect.ImmutableList;
+import com.google.inject.util.Providers;
 import de.otto.edison.hal.HalRepresentation;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -137,7 +138,7 @@ public class PermissionRootResourceTest extends RepositoryTestBase {
     initMocks(this);
     permissionCollectionToDtoMapper = new PermissionCollectionToDtoMapper(permissionToPermissionDtoMapper, resourceLinks);
     permissionRootResource = new PermissionRootResource(permissionDtoToPermissionMapper, permissionToPermissionDtoMapper, permissionCollectionToDtoMapper, resourceLinks, repositoryManager);
-    super.permissionRootResource = MockProvider.of(permissionRootResource);
+    super.permissionRootResource = Providers.of(permissionRootResource);
     dispatcher = createDispatcher(getRepositoryRootResource());
     subjectThreadState.bind();
     ThreadContext.bind(subject);

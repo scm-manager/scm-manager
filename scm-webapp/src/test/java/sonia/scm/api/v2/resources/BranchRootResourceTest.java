@@ -1,5 +1,6 @@
 package sonia.scm.api.v2.resources;
 
+import com.google.inject.util.Providers;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.support.SubjectThreadState;
@@ -92,7 +93,7 @@ public class BranchRootResourceTest extends RepositoryTestBase {
     changesetCollectionToDtoMapper = new ChangesetCollectionToDtoMapper(changesetToChangesetDtoMapper, resourceLinks);
     BranchCollectionToDtoMapper branchCollectionToDtoMapper = new BranchCollectionToDtoMapper(branchToDtoMapper, resourceLinks);
     branchRootResource = new BranchRootResource(serviceFactory, branchToDtoMapper, branchCollectionToDtoMapper, changesetCollectionToDtoMapper);
-    super.branchRootResource = MockProvider.of(branchRootResource);
+    super.branchRootResource = Providers.of(branchRootResource);
     dispatcher.getRegistry().addSingletonResource(getRepositoryRootResource());
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(service);
     when(serviceFactory.create(any(Repository.class))).thenReturn(service);

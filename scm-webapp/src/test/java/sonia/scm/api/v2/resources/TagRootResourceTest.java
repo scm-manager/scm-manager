@@ -1,5 +1,6 @@
 package sonia.scm.api.v2.resources;
 
+import com.google.inject.util.Providers;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.support.SubjectThreadState;
@@ -71,7 +72,7 @@ public class TagRootResourceTest extends RepositoryTestBase {
   public void prepareEnvironment() throws Exception {
     tagCollectionToDtoMapper = new TagCollectionToDtoMapper(resourceLinks, tagToTagDtoMapper);
     tagRootResource = new TagRootResource(serviceFactory, tagCollectionToDtoMapper, tagToTagDtoMapper);
-    super.tagRootResource = MockProvider.of(tagRootResource);
+    super.tagRootResource = Providers.of(tagRootResource);
     dispatcher = createDispatcher(getRepositoryRootResource());
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(repositoryService);
     when(serviceFactory.create(any(Repository.class))).thenReturn(repositoryService);

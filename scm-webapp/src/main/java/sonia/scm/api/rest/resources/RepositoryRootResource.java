@@ -33,37 +33,28 @@
 
 package sonia.scm.api.rest.resources;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.common.base.Function;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Ordering;
 import com.google.inject.Inject;
-
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryTypePredicate;
-import sonia.scm.util.HttpUtil;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
-
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import sonia.scm.template.Viewable;
 
 import javax.servlet.http.HttpServletRequest;
-
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import sonia.scm.template.Viewable;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -106,13 +97,12 @@ public class RepositoryRootResource
   @Produces(MediaType.TEXT_HTML)
   public Viewable renderRepositoriesRoot(@Context HttpServletRequest request, @PathParam("type") final String type)
   {
-    String baseUrl = HttpUtil.getCompleteUrl(request);
     //J-
     Collection<RepositoryTemplateElement> unsortedRepositories =
       Collections2.transform( 
         Collections2.filter(
             repositoryManager.getAll(), new RepositoryTypePredicate(type))
-        , new RepositoryTransformFunction(baseUrl)
+        , new RepositoryTransformFunction()
       );
     
     List<RepositoryTemplateElement> repositories = Ordering.from(
@@ -138,17 +128,9 @@ public class RepositoryRootResource
   public static class RepositoryTemplateElement
   {
 
-    /**
-     * Constructs ...
-     *
-     *
-     * @param repository
-     * @param baseUrl
-     */
-    public RepositoryTemplateElement(Repository repository, String baseUrl)
+    public RepositoryTemplateElement(Repository repository)
     {
       this.repository = repository;
-      this.baseUrl = baseUrl;
     }
 
     //~--- get methods --------------------------------------------------------
@@ -175,21 +157,7 @@ public class RepositoryRootResource
       return repository;
     }
 
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
-    public String getUrl()
-    {
-      return repository.createUrl(baseUrl);
-    }
-
     //~--- fields -------------------------------------------------------------
-
-    /** Field description */
-    private String baseUrl;
 
     /** Field description */
     private Repository repository;
@@ -236,31 +204,10 @@ public class RepositoryRootResource
   private static class RepositoryTransformFunction
     implements Function<Repository, RepositoryTemplateElement>
   {
-
-    public RepositoryTransformFunction(String baseUrl)
-    {
-      this.baseUrl = baseUrl;
-    }
-
-    //~--- methods ------------------------------------------------------------
-
-    /**
-     * Method description
-     *
-     *
-     * @param repository
-     *
-     * @return
-     */
     @Override
     public RepositoryTemplateElement apply(Repository repository)
     {
-      return new RepositoryTemplateElement(repository, baseUrl);
+      return new RepositoryTemplateElement(repository);
     }
-
-    //~--- fields -------------------------------------------------------------
-
-    /** Field description */
-    private String baseUrl;
   }
 }
