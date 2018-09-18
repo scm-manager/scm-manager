@@ -95,7 +95,7 @@ export function getBranchesForNamespaceAndNameFromState(namespace: string, name:
 
 export function getBranchNames(namespace: string, name: string, state: Object) {
   const key = namespace + "/" + name;
-  if (!state.branches[key]) {
+  if (!state.branches[key] || !state.branches[key].byNames) {
     return null;
   }
   return Object.keys(state.branches[key].byNames);

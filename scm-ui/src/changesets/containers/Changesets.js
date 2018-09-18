@@ -30,18 +30,19 @@ class Changesets extends React.Component<State, Props> {
   componentDidMount() {
     const {namespace, name} = this.props.repository;
     const branchName = this.props.match.params.branch;
+    const {fetchChangesetsByNamespaceNameAndBranch, fetchChangesetsByNamespaceAndName, fetchBranchesByNamespaceAndName} = this.props;
     if (branchName) {
-      this.props.fetchChangesetsByNamespaceNameAndBranch(namespace, name, branchName);
+      fetchChangesetsByNamespaceNameAndBranch(namespace, name, branchName);
     } else {
-      this.props.fetchChangesetsByNamespaceAndName(namespace, name);
+      fetchChangesetsByNamespaceAndName(namespace, name);
     }
-    this.props.fetchBranchesByNamespaceAndName(namespace, name);
+    fetchBranchesByNamespaceAndName(namespace, name);
   }
 
   render() {
     const {changesets, loading, error} = this.props;
     if (loading || !changesets) {
-      return <Loading/>
+      return <Loading />
     }
     return <div>
       <ErrorNotification error={error}/>
@@ -54,9 +55,9 @@ class Changesets extends React.Component<State, Props> {
     const branch = this.props.match.params.branch;
     const {changesets, branchNames} = this.props;
 
-    if (branchNames) {
+    if (branchNames && branchNames.length > 0) {
       return <div>
-        <DropDown options={branchNames} preselectedOption={branch}
+        <label className="label">Branch: </label><DropDown options={branchNames} preselectedOption={branch}
                   optionSelected={branch => this.branchChanged(branch)}/>
         <ChangesetTable changesets={changesets}/>
       </div>;
