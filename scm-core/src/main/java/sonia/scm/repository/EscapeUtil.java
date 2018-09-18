@@ -36,14 +36,12 @@ package sonia.scm.repository;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.Lists;
-
 import org.apache.commons.lang.StringEscapeUtils;
-
 import sonia.scm.util.Util;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.List;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -199,5 +197,11 @@ public final class EscapeUtil
     }
 
     return values;
+  }
+
+  public static void escape(Modifications modifications) {
+    modifications.setAdded(escapeList(modifications.getAdded()));
+    modifications.setModified(escapeList(modifications.getModified()));
+    modifications.setRemoved(escapeList(modifications.getRemoved()));
   }
 }

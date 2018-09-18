@@ -8,11 +8,11 @@ import static de.otto.edison.hal.Links.linkingTo;
 
 public class HgConfigInstallationsToDtoMapper {
 
-  private UriInfoStore uriInfoStore;
+  private ScmPathInfoStore scmPathInfoStore;
 
   @Inject
-  public HgConfigInstallationsToDtoMapper(UriInfoStore uriInfoStore) {
-    this.uriInfoStore = uriInfoStore;
+  public HgConfigInstallationsToDtoMapper(ScmPathInfoStore scmPathInfoStore) {
+    this.scmPathInfoStore = scmPathInfoStore;
   }
 
   public HgConfigInstallationsDto map(List<String> installations, String path) {
@@ -20,7 +20,7 @@ public class HgConfigInstallationsToDtoMapper {
   }
 
   private String createSelfLink(String path) {
-    LinkBuilder linkBuilder = new LinkBuilder(uriInfoStore.get(), HgConfigResource.class);
+    LinkBuilder linkBuilder = new LinkBuilder(scmPathInfoStore.get(), HgConfigResource.class);
     return linkBuilder.method("getInstallationsResource").parameters().href() + '/' + path;
   }
 }

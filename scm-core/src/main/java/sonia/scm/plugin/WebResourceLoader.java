@@ -33,9 +33,8 @@ package sonia.scm.plugin;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.net.URL;
-
 import javax.servlet.ServletContext;
+import java.net.URL;
 
 /**
  * The WebResourceLoader is able to load web resources. The resources are loaded

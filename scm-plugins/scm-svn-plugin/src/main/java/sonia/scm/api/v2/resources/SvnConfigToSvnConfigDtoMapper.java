@@ -18,7 +18,7 @@ import static de.otto.edison.hal.Links.linkingTo;
 public abstract class SvnConfigToSvnConfigDtoMapper extends BaseMapper<SvnConfig, SvnConfigDto> {
 
   @Inject
-  private UriInfoStore uriInfoStore;
+  private ScmPathInfoStore scmPathInfoStore;
 
   @AfterMapping
   void appendLinks(SvnConfig config, @MappingTarget SvnConfigDto target) {
@@ -30,12 +30,12 @@ public abstract class SvnConfigToSvnConfigDtoMapper extends BaseMapper<SvnConfig
   }
 
   private String self() {
-    LinkBuilder linkBuilder = new LinkBuilder(uriInfoStore.get(), SvnConfigResource.class);
+    LinkBuilder linkBuilder = new LinkBuilder(scmPathInfoStore.get(), SvnConfigResource.class);
     return linkBuilder.method("get").parameters().href();
   }
 
   private String update() {
-    LinkBuilder linkBuilder = new LinkBuilder(uriInfoStore.get(), SvnConfigResource.class);
+    LinkBuilder linkBuilder = new LinkBuilder(scmPathInfoStore.get(), SvnConfigResource.class);
     return linkBuilder.method("update").parameters().href();
   }
 }

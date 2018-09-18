@@ -100,7 +100,7 @@ public class GitRepositoryPathMatcherITCase {
   // tests end
 
   private String createUrl() {
-    return BASE_URL + "git/" + repository.getNamespace() + "/" + repository.getName();
+    return BASE_URL + "repo/" + repository.getNamespace() + "/" + repository.getName();
   }
 
   private void cloneAndPush( String url ) throws IOException {

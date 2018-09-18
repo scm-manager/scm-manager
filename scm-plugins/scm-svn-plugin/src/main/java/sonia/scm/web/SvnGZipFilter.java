@@ -34,38 +34,34 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.filter.GZipFilter;
+import sonia.scm.repository.Repository;
 import sonia.scm.repository.SvnRepositoryHandler;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
+import sonia.scm.repository.spi.ScmProviderHttpServlet;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@Singleton
-public class SvnGZipFilter extends GZipFilter
+public class SvnGZipFilter extends GZipFilter implements ScmProviderHttpServlet
 {
 
-  /**
-   * the logger for SvnGZipFilter
-   */
-  private static final Logger logger =
-    LoggerFactory.getLogger(SvnGZipFilter.class);
+  private static final Logger logger = LoggerFactory.getLogger(SvnGZipFilter.class);
+
+  private final SvnRepositoryHandler handler;
+  private final ScmProviderHttpServlet delegate;
 
   //~--- constructors ---------------------------------------------------------
 
@@ -75,10 +71,10 @@ public class SvnGZipFilter extends GZipFilter
    *
    * @param handler
    */
-  @Inject
-  public SvnGZipFilter(SvnRepositoryHandler handler)
+  public SvnGZipFilter(SvnRepositoryHandler handler, ScmProviderHttpServlet delegate)
   {
     this.handler = handler;
+    this.delegate = delegate;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -134,8 +130,30 @@ public class SvnGZipFilter extends GZipFilter
     }
   }
 
-  //~--- fields ---------------------------------------------------------------
+  @Override
+  public void service(HttpServletRequest request, HttpServletResponse response, Repository repository) throws ServletException, IOException {
+    if (handler.getConfig().isEnabledGZip())
+    {
+      if (logger.isTraceEnabled())
+      {
+        logger.trace("encode svn request with gzip");
+      }
 
-  /** Field description */
-  private SvnRepositoryHandler handler;
+      super.doFilter(request, response, (servletRequest, servletResponse) -> delegate.service((HttpServletRequest) servletRequest, (HttpServletResponse) servletResponse, repository));
+    }
+    else
+    {
+      if (logger.isTraceEnabled())
+      {
+        logger.trace("skip gzip encoding");
+      }
+
+      delegate.service(request, response, repository);
+    }
+  }
+
+  @Override
+  public void init(ServletConfig config) throws ServletException {
+    delegate.init(config);
+  }
 }

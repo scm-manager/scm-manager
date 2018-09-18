@@ -14,6 +14,8 @@ import sonia.scm.repository.client.api.RepositoryClientFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class RepositoryUtil {
@@ -29,7 +31,7 @@ public class RepositoryUtil {
   static RepositoryClient createRepositoryClient(String repositoryType, File folder, String username, String password) throws IOException {
     String httpProtocolUrl = TestData.callRepository(username, password, repositoryType, HttpStatus.SC_OK)
       .extract()
-      .path("_links.httpProtocol.href");
+      .path("_links.protocol.find{it.name=='http'}.href");
 
     return REPOSITORY_CLIENT_FACTORY.create(repositoryType, httpProtocolUrl, username, password, folder);
   }
@@ -42,11 +44,53 @@ public class RepositoryUtil {
   }
 
   static Changeset createAndCommitFile(RepositoryClient repositoryClient, String username, String fileName, String content) throws IOException {
+    writeAndAddFile(repositoryClient, fileName, content);
+    return commit(repositoryClient, username, "added " + fileName);
+  }
+
+  /**
+   * Bundle multiple File modification in one changeset
+   *
+   * @param repositoryClient
+   * @param username
+   * @param addedFiles       map.key: path of the file, value: the file content
+   * @param modifiedFiles    map.key: path of the file, value: the file content
+   * @param removedFiles     list of file paths to be removed
+   * @return the changeset with all modifications
+   * @throws IOException
+   */
+  static Changeset commitMultipleFileModifications(RepositoryClient repositoryClient, String username, Map<String, String> addedFiles, Map<String, String> modifiedFiles, List<String> removedFiles) throws IOException {
+    for (String fileName : addedFiles.keySet()) {
+      writeAndAddFile(repositoryClient, fileName, addedFiles.get(fileName));
+    }
+    for (String fileName : modifiedFiles.keySet()) {
+      writeAndAddFile(repositoryClient, fileName, modifiedFiles.get(fileName));
+    }
+    for (String fileName : removedFiles) {
+      deleteFileAndApplyRemoveCommand(repositoryClient, fileName);
+    }
+    return commit(repositoryClient, username, "multiple file modifications" );
+  }
+
+  private static File writeAndAddFile(RepositoryClient repositoryClient, String fileName, String content) throws IOException {
     File file = new File(repositoryClient.getWorkingCopy(), fileName);
     Files.createParentDirs(file);
     Files.write(content, file, Charsets.UTF_8);
     addWithParentDirectories(repositoryClient, file);
-    return commit(repositoryClient, username, "added " + fileName);
+    return file;
+  }
+
+  static Changeset removeAndCommitFile(RepositoryClient repositoryClient, String username, String fileName) throws IOException {
+    deleteFileAndApplyRemoveCommand(repositoryClient, fileName);
+    return commit(repositoryClient, username, "removed " + fileName);
+  }
+
+  private static void deleteFileAndApplyRemoveCommand(RepositoryClient repositoryClient, String fileName) throws IOException {
+    File file = new File(repositoryClient.getWorkingCopy(), fileName);
+    if (repositoryClient.isCommandSupported(ClientCommand.REMOVE)) {
+      repositoryClient.getRemoveCommand().remove(fileName);
+    }
+    file.delete();
   }
 
   private static String addWithParentDirectories(RepositoryClient repositoryClient, File file) throws IOException {

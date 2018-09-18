@@ -33,86 +33,32 @@
 
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.servlet.RequestScoped;
 
-import sonia.scm.security.ScmSecurityException;
-
-//~--- JDK imports ------------------------------------------------------------
-
 import javax.servlet.http.HttpServletRequest;
 
-/**
- *
- * @author Sebastian Sdorra
- */
 @RequestScoped
-public class DefaultRepositoryProvider implements RepositoryProvider
-{
+public class DefaultRepositoryProvider implements RepositoryProvider {
 
-  /** Field description */
   public static final String ATTRIBUTE_NAME = "scm.request.repository";
 
-  //~--- constructors ---------------------------------------------------------
+  private final Provider<HttpServletRequest> requestProvider;
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param requestProvider
-   * @param manager
-   */
   @Inject
-  public DefaultRepositoryProvider(
-          Provider<HttpServletRequest> requestProvider,
-          RepositoryManager manager)
-  {
+  public DefaultRepositoryProvider(Provider<HttpServletRequest> requestProvider) {
     this.requestProvider = requestProvider;
-    this.manager = manager;
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   *
-   * @throws ScmSecurityException
-   */
   @Override
-  public Repository get() throws ScmSecurityException
-  {
-    Repository repository = null;
+  public Repository get() {
     HttpServletRequest request = requestProvider.get();
 
-    if (request != null)
-    {
-      repository = (Repository) request.getAttribute(ATTRIBUTE_NAME);
-
-      if (repository == null)
-      {
-        repository = manager.getFromRequest(request);
-
-        if (repository != null)
-        {
-          request.setAttribute(ATTRIBUTE_NAME, repository);
-        }
-      }
+    if (request != null) {
+      return (Repository) request.getAttribute(ATTRIBUTE_NAME);
     }
 
-    return repository;
+    throw new IllegalStateException("request not found");
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final RepositoryManager manager;
-
-  /** Field description */
-  private final Provider<HttpServletRequest> requestProvider;
 }

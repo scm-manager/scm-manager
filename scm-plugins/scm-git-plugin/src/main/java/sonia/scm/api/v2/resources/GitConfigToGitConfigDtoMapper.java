@@ -18,7 +18,7 @@ import static de.otto.edison.hal.Links.linkingTo;
 public abstract class GitConfigToGitConfigDtoMapper extends BaseMapper<GitConfig, GitConfigDto> {
 
   @Inject
-  private UriInfoStore uriInfoStore;
+  private ScmPathInfoStore scmPathInfoStore;
 
   @AfterMapping
   void appendLinks(GitConfig config, @MappingTarget GitConfigDto target) {
@@ -30,12 +30,12 @@ public abstract class GitConfigToGitConfigDtoMapper extends BaseMapper<GitConfig
   }
 
   private String self() {
-    LinkBuilder linkBuilder = new LinkBuilder(uriInfoStore.get(), GitConfigResource.class);
+    LinkBuilder linkBuilder = new LinkBuilder(scmPathInfoStore.get(), GitConfigResource.class);
     return linkBuilder.method("get").parameters().href();
   }
 
   private String update() {
-    LinkBuilder linkBuilder = new LinkBuilder(uriInfoStore.get(), GitConfigResource.class);
+    LinkBuilder linkBuilder = new LinkBuilder(scmPathInfoStore.get(), GitConfigResource.class);
     return linkBuilder.method("update").parameters().href();
   }
 }

@@ -3,6 +3,7 @@ package sonia.scm.api.v2.resources;
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.io.Resources;
+import com.google.inject.util.Providers;
 import org.apache.shiro.authc.credential.PasswordService;
 import org.jboss.resteasy.core.Dispatcher;
 import org.jboss.resteasy.mock.MockHttpRequest;
@@ -73,8 +74,8 @@ public class UserRootResourceTest {
     UserCollectionResource userCollectionResource = new UserCollectionResource(userManager, dtoToUserMapper,
        userCollectionToDtoMapper, resourceLinks);
     UserResource userResource = new UserResource(dtoToUserMapper, userToDtoMapper, userManager);
-    UserRootResource userRootResource = new UserRootResource(MockProvider.of(userCollectionResource),
-                                                             MockProvider.of(userResource));
+    UserRootResource userRootResource = new UserRootResource(Providers.of(userCollectionResource),
+                                                             Providers.of(userResource));
 
     dispatcher = createDispatcher(userRootResource);
   }
