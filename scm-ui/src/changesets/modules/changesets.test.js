@@ -12,7 +12,6 @@ import {
   fetchChangesetsByNamespaceNameAndBranch,
   fetchChangesetsSuccess,
   getChangesets,
-  getChangesetsForNamespaceAndNameFromState,
   getFetchChangesetsFailure,
   isFetchChangesetsPending
 } from "./changesets";
@@ -186,8 +185,7 @@ describe("changesets", () => {
           }
         }
       };
-      // const result = getChangesetsForNamespaceAndNameFromState("foo", "bar", state);
-      const result = getChangesets("foo", "bar", "", state);
+      const result = getChangesets(state, "foo", "bar" );
       expect(result).toContainEqual({id: "id1"})
     });
 

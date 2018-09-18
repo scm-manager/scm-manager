@@ -111,15 +111,7 @@ function extractChangesetsByIds(data: any, oldChangesetsByIds: any) {
 }
 
 //selectors
-export function getChangesetsForNamespaceAndNameFromState(namespace: string, name: string, state: Object) {
-  const key = createItemId(namespace, name);
-  if (!state.changesets[key]) {
-    return null;
-  }
-  return Object.values(state.changesets[key].byId);
-}
-
-export function getChangesets(state: Object, namespace: string, name: string, branch: string) {
+export function getChangesets(state: Object, namespace: string, name: string, branch?: string) {
   const key = createItemId(namespace, name, branch);
   if (!state.changesets[key]) {
     return null;
