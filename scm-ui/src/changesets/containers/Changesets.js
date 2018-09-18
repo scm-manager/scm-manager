@@ -1,12 +1,12 @@
 import React from "react"
 import {connect} from "react-redux";
-import {Loading} from "@scm-manager/ui-components";
+import {ErrorNotification, Loading} from "@scm-manager/ui-components";
 
 import {
   fetchChangesetsByNamespaceAndName, fetchChangesetsByNamespaceNameAndBranch,
-  getChangesets, isFetchChangesetsPending,
+  getChangesets, getFetchChangesetsFailure, isFetchChangesetsPending,
 } from "../modules/changesets";
-import type { History } from "history";
+import type {History} from "history";
 import {fetchBranchesByNamespaceAndName, getBranchNames} from "../../repos/modules/branches";
 import type {Repository} from "@scm-manager/ui-types";
 import ChangesetTable from "../components/ChangesetTable";
@@ -24,8 +24,7 @@ type Props = {
 class Changesets extends React.Component<State, Props> {
   constructor(props) {
     super(props);
-    this.state = {
-    };
+    this.state = {};
   }
 
   componentDidMount() {
@@ -40,24 +39,35 @@ class Changesets extends React.Component<State, Props> {
   }
 
   render() {
-    const {changesets, branchNames, loading} = this.props;
-    const branch = this.props.match.params.branch;
+    const {changesets, loading, error} = this.props;
     if (loading || !changesets) {
-      return <Loading />
+      return <Loading/>
     }
-    if (branchNames) {
-      return <div>
-        <DropDown options={branchNames} preselectedOption={branch} optionSelected={branch => this.branchChanged(branch)}/>
-        <ChangesetTable changesets={changesets}/>
-      </div>;
-    } else {
-      return <ChangesetTable changesets={changesets}/>
-    }
+    return <div>
+      <ErrorNotification error={error}/>
+      {this.renderContent()}
+    </div>
 
   }
 
+  renderContent = () => {
+    const branch = this.props.match.params.branch;
+    const {changesets, branchNames} = this.props;
+
+    if (branchNames) {
+      return <div>
+        <DropDown options={branchNames} preselectedOption={branch}
+                  optionSelected={branch => this.branchChanged(branch)}/>
+        <ChangesetTable changesets={changesets}/>
+      </div>;
+    }
+
+    return <ChangesetTable changesets={changesets}/>
+  };
+
+
   branchChanged = (branchName: string) => {
-    const { history, repository } = this.props;
+    const {history, repository} = this.props;
     history.push(`/repo/${repository.namespace}/${repository.name}/history/${branchName}`);
   };
 }
@@ -68,7 +78,8 @@ const mapStateToProps = (state, ownProps: Props) => {
   return {
     loading: isFetchChangesetsPending(namespace, name, state),
     changesets: getChangesets(state, namespace, name, ownProps.match.params.branch),
-    branchNames: getBranchNames(namespace, name, state)
+    branchNames: getBranchNames(namespace, name, state),
+    error: getFetchChangesetsFailure(state, namespace, name, ownProps.match.params.branch)
   }
 };
 

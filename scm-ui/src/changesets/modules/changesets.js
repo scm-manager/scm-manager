@@ -119,7 +119,7 @@ export function getChangesetsForNamespaceAndNameFromState(namespace: string, nam
   return Object.values(state.changesets[key].byId);
 }
 
-export function getChangesets(namespace: string, name: string, branch: string, state: Object) {
+export function getChangesets(state: Object, namespace: string, name: string, branch: string) {
   const key = createItemId(namespace, name, branch);
   if (!state.changesets[key]) {
     return null;
