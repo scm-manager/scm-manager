@@ -67,10 +67,7 @@ class RepositoryEntry extends React.Component<Props> {
   renderModifyLink = (repository: Repository, repositoryLink: string) => {
     if (repository._links["update"]) {
       return (
-        <RepositoryEntryLink
-          iconClass="fa-cog"
-          to={repositoryLink + "/modify"}
-        />
+        <RepositoryEntryLink iconClass="fa-cog" to={repositoryLink + "/edit"} />
       );
     }
     return null;
