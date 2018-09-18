@@ -7,6 +7,7 @@ import { routerReducer, routerMiddleware } from "react-router-redux";
 import users from "./users/modules/users";
 import repos from "./repos/modules/repos";
 import repositoryTypes from "./repos/modules/repositoryTypes";
+import changesets from "./changesets/modules/changesets";
 import groups from "./groups/modules/groups";
 import auth from "./modules/auth";
 import pending from "./modules/pending";
@@ -14,6 +15,7 @@ import failure from "./modules/failure";
 import config from "./config/modules/config";
 
 import type { BrowserHistory } from "history/createBrowserHistory";
+import branches from "./repos/modules/branches";
 
 function createReduxStore(history: BrowserHistory) {
   const composeEnhancers =
@@ -26,6 +28,8 @@ function createReduxStore(history: BrowserHistory) {
     users,
     repos,
     repositoryTypes,
+    changesets,
+    branches,
     groups,
     auth,
     config
