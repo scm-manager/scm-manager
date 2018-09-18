@@ -1,8 +1,8 @@
 //@flow
 import React from "react";
-import type { Changeset } from "@scm-manager/ui-types";
+import type {Changeset} from "@scm-manager/ui-types";
 import classNames from "classnames";
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 import ChangesetAvatar from "./ChangesetAvatar";
 import injectSheet from "react-jss";
 
@@ -22,7 +22,7 @@ type Props = {
 
 class ChangesetRow extends React.Component<Props> {
   createLink = (changeset: Changeset) => {
-    return `/repo/${changeset.description}/changeset/${changeset.id}`;
+    return `/repo/changeset/${changeset.id}`;
   };
 
   render() {
