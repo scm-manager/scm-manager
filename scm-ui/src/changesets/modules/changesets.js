@@ -39,21 +39,18 @@ export function fetchChangesetsByNamespaceNameAndBranch(namespace: string, name:
 }
 
 export function fetchChangesetsPending(namespace: string, name: string, branch?: string): Action {
+  const itemId = createItemId(namespace, name, branch);
   return {
     type: FETCH_CHANGESETS_PENDING,
-    payload: {
-      namespace,
-      name,
-      branch
-    },
-    itemId: createItemId(namespace, name, branch)
+    payload: itemId,
+    itemId
   }
 }
 
-export function fetchChangesetsSuccess(collection: any, namespace: string, name: string, branch?: string): Action {
+export function fetchChangesetsSuccess(changesets: any, namespace: string, name: string, branch?: string): Action {
   return {
     type: FETCH_CHANGESETS_SUCCESS,
-    payload: {collection, namespace, name, branch},
+    payload: changesets,
     itemId: createItemId(namespace, name, branch)
   }
 }
@@ -83,13 +80,12 @@ function createItemId(namespace: string, name: string, branch?: string): string 
 export default function reducer(state: any = {}, action: Action = {type: "UNKNOWN"}): Object {
   switch (action.type) {
     case FETCH_CHANGESETS_SUCCESS:
-      const {namespace, name, branch} = action.payload;
-      const key = createItemId(namespace, name, branch);
+      const key = action.itemId
       let oldChangesets = {[key]: {}};
       if (state[key] !== undefined) {
         oldChangesets[key] = state[key]
       }
-      return {...state, [key]: {byId: extractChangesetsByIds(action.payload.collection, oldChangesets[key].byId)}};
+      return {...state, [key]: {byId: extractChangesetsByIds(action.payload, oldChangesets[key].byId)}};
     default:
       return state;
   }
