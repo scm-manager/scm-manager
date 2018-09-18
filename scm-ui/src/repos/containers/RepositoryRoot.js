@@ -7,15 +7,9 @@ import {
   getRepository,
   isFetchRepoPending
 } from "../modules/repos";
-<<<<<<< working copy
 import { connect } from "react-redux";
 import { Route, Switch } from "react-router-dom";
 import type { Repository } from "@scm-manager/ui-types";
-=======
-import {connect} from "react-redux";
-import {Route} from "react-router-dom";
-import type {Repository} from "@scm-manager/ui-types";
->>>>>>> merge rev
 import {
   Page,
   Loading,
@@ -31,11 +25,8 @@ import Edit from "../containers/Edit";
 
 import type {History} from "history";
 import EditNavLink from "../components/EditNavLink";
-<<<<<<< working copy
 import ChangesetView from "../changesets/containers/ChangesetView";
-=======
 import Changesets from "../../changesets/containers/Changesets";
->>>>>>> merge rev
 
 type Props = {
   namespace: string,
