@@ -11,7 +11,8 @@ import {fetchBranchesByNamespaceAndName, getBranchNames} from "../../repos/modul
 import type {Repository} from "@scm-manager/ui-types";
 import ChangesetTable from "../components/ChangesetTable";
 import DropDown from "../components/DropDown";
-import {withRouter} from "react-router-dom";
+import {Route, withRouter} from "react-router-dom";
+import ChangesetView from "../../repos/changesets/containers/ChangesetView";
 
 type Props = {
   repository: Repository,
@@ -38,18 +39,52 @@ class Changesets extends React.Component<State, Props> {
     this.props.fetchBranchesByNamespaceAndName(namespace, name);
   }
 
+  matchedUrl = () => {
+    return this.props.match.url;
+  };
   render() {
-    const {changesets, loading, error} = this.props;
+    const url = this.matchedUrl();
+
+    const {changesets, loading, error, repository} = this.props;
     if (loading || !changesets) {
       return <Loading/>
     }
-    return <div>
-      <ErrorNotification error={error}/>
-      {this.renderContent()}
-    </div>
+    return(
+      <div className="column is-three-quarters">
+          <Route
+            exact
+            path={url}
+            render={this.renderChangesets}
+          />
+          <Route
+            exact
+            path={`${url}/:branch`}
+            render={this.renderChangesets}
+          />
+          <Route
+            exact
+            path={`${url}/:branch/:id`}
+            component={() => <ChangesetView repository={repository}/>}
+          />
+          <Route
+            exact
+            path={`${url}/:id`}
+            component={() => <ChangesetView repository={repository}/>}
+          />
+        </div>
+      )
+
 
   }
 
+  renderChangesets = () => {
+    return(
+      <div>
+      <ErrorNotification error={this.props.error}/>
+      {this.renderContent()}
+    </div>
+    )
+  }
   renderContent = () => {
     const branch = this.props.match.params.branch;
     const {changesets, branchNames} = this.props;
