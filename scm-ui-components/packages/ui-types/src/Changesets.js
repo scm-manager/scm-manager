@@ -1,6 +1,8 @@
 //@flow
-import type { Links } from "./hal";
-import type { Tag } from "./Tags";
+import type {Links} from "./hal";
+import type {Tag} from "./Tags";
+import type {Branch} from "./Branch";
+
 export type Changeset = {
   id: string,
   date: Date,
@@ -8,11 +10,16 @@ export type Changeset = {
     name: string,
     mail: string
   },
-  description: string
+  description: string,
   _links: Links,
   _embedded: {
-    tags: Tag[]
-    branches: any, //todo: Add correct type
-    parents: any //todo: Add correct type
+    tags: Tag[],
+    branches: Branch[],
+    parents: ParentChangeset[]
   };
+}
+
+export type ParentChangeset = {
+  id: string,
+  _links: Links
 }
