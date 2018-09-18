@@ -27,7 +27,7 @@ public class SvnScmProtocolProviderWrapper extends InitializingHttpScmProtocolWr
   }
 
   @Inject
-  public SvnScmProtocolProviderWrapper(@Svn Provider<ScmProviderHttpServlet> servletProvider, Provider<ScmPathInfoStore> uriInfoStore, ScmConfiguration scmConfiguration) {
+  public SvnScmProtocolProviderWrapper(SvnDAVServletProvider servletProvider, Provider<ScmPathInfoStore> uriInfoStore, ScmConfiguration scmConfiguration) {
     super(servletProvider, uriInfoStore, scmConfiguration);
   }
 
