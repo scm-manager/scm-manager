@@ -17,7 +17,7 @@ import {
 } from "./changesets";
 import reducer from "./changesets";
 
-const collection = {};
+const changesets = {};
 
 describe("changesets", () => {
   describe("fetching of changesets", () => {
@@ -35,12 +35,12 @@ describe("changesets", () => {
 
       const expectedActions = [
         {
-          type: FETCH_CHANGESETS_PENDING, payload: {namespace: "foo", name: "bar"},
+          type: FETCH_CHANGESETS_PENDING, payload: "foo/bar",
           itemId: "foo/bar"
         },
         {
           type: FETCH_CHANGESETS_SUCCESS,
-          payload: {collection, namespace: "foo", name: "bar"},
+          payload: changesets,
           itemId: "foo/bar"
         }
       ];
@@ -52,17 +52,18 @@ describe("changesets", () => {
     });
 
     it("should fetch changesets for specific branch", () => {
+      const itemId = "foo/bar/specific";
       fetchMock.getOnce(SPECIFIC_BRANCH_URL, "{}");
 
       const expectedActions = [
         {
-          type: FETCH_CHANGESETS_PENDING, payload: {namespace: "foo", name: "bar", branch: "specific"},
-          itemId: "foo/bar/specific"
+          type: FETCH_CHANGESETS_PENDING, payload: itemId,
+          itemId
         },
         {
           type: FETCH_CHANGESETS_SUCCESS,
-          payload: {collection, namespace: "foo", name: "bar", branch: "specific"},
-          itemId: "foo/bar/specific"
+          payload: changesets,
+          itemId
         }
       ];
 
@@ -73,17 +74,13 @@ describe("changesets", () => {
     });
 
     it("should fail fetching changesets on error", () => {
+      const itemId = "foo/bar";
       fetchMock.getOnce(DEFAULT_BRANCH_URL, 500);
 
       const expectedActions = [
         {
-          type: FETCH_CHANGESETS_PENDING, payload: {namespace: "foo", name: "bar"},
-          itemId: "foo/bar"
-        },
-        {
-          type: FETCH_CHANGESETS_SUCCESS,
-          payload: {collection, namespace: "foo", name: "bar"},
-          itemId: "foo/bar"
+          type: FETCH_CHANGESETS_PENDING, payload: itemId,
+          itemId
         }
       ];
 
@@ -96,17 +93,13 @@ describe("changesets", () => {
     })
 
     it("should fail fetching changesets for specific branch on error", () => {
+      const itemId = "foo/bar/specific";
       fetchMock.getOnce(SPECIFIC_BRANCH_URL, 500);
 
       const expectedActions = [
         {
-          type: FETCH_CHANGESETS_PENDING, payload: {namespace: "foo", name: "bar", branch: "specific"},
-          itemId: "foo/bar/specific"
-        },
-        {
-          type: FETCH_CHANGESETS_SUCCESS,
-          payload: {collection, namespace: "foo", name: "bar", branch: "specific"},
-          itemId: "foo/bar/specific"
+          type: FETCH_CHANGESETS_PENDING, payload: itemId,
+          itemId
         }
       ];
 
