@@ -26,7 +26,7 @@ class ChangesetRow extends React.Component<Props> {
               renderAll={true}
               props={{ changeset }}
             />
-            <p> <NavLink to={`${this.props.location.pathname}/${changeset.id}`} label={changeset.description}/></p>
+            <p> <NavLink to={`${this.props.location.pathname}/commit/${changeset.id}`} label={changeset.description}/></p>
             <p className="is-size-7">Changeset { changeset.id } commited at { changeset.date }</p>
             <p className="is-size-7">{changeset.author.name} <a href={"mailto:" + changeset.author.mail}>&lt;{changeset.author.mail}&gt;</a></p></td>
         </tr>

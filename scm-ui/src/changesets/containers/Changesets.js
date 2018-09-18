@@ -63,12 +63,12 @@ class Changesets extends React.Component<State, Props> {
           />
           <Route
             exact
-            path={`${url}/:branch/:id`}
+            path={`${url}/:branch/commit/:id`}
             component={() => <ChangesetView repository={repository}/>}
           />
           <Route
             exact
-            path={`${url}/:id`}
+            path={`${url}/commit/:id`}
             component={() => <ChangesetView repository={repository}/>}
           />
         </div>
@@ -90,11 +90,11 @@ class Changesets extends React.Component<State, Props> {
     const {changesets, branchNames} = this.props;
 
     if (branchNames) {
-      return <div>
+      return (<div>
         <DropDown options={branchNames} preselectedOption={branch}
                   optionSelected={branch => this.branchChanged(branch)}/>
         <ChangesetTable changesets={changesets}/>
-      </div>;
+      </div>);
     }
 
     return <ChangesetTable changesets={changesets}/>
