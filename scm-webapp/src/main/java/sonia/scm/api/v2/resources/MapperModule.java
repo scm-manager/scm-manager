@@ -34,11 +34,12 @@ public class MapperModule extends AbstractModule {
     bind(TagToTagDtoMapper.class).to(Mappers.getMapper(TagToTagDtoMapper.class).getClass());
 
     bind(FileObjectToFileObjectDtoMapper.class).to(Mappers.getMapper(FileObjectToFileObjectDtoMapper.class).getClass());
+    bind(ModificationsToDtoMapper.class).to(Mappers.getMapper(ModificationsToDtoMapper.class).getClass());
 
     // no mapstruct required
     bind(UIPluginDtoMapper.class);
     bind(UIPluginDtoCollectionMapper.class);
 
-    bind(UriInfoStore.class).in(ServletScopes.REQUEST);
+    bind(ScmPathInfoStore.class).in(ServletScopes.REQUEST);
   }
 }

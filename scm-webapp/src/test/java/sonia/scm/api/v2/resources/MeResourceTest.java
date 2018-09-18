@@ -17,7 +17,6 @@ import sonia.scm.user.UserManager;
 import sonia.scm.web.VndMediaType;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -40,9 +39,9 @@ public class MeResourceTest {
 
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(URI.create("/"));
   @Mock
-  private UriInfo uriInfo;
+  private ScmPathInfo uriInfo;
   @Mock
-  private UriInfoStore uriInfoStore;
+  private ScmPathInfoStore scmPathInfoStore;
 
   @Mock
   private UserManager userManager;
@@ -62,8 +61,8 @@ public class MeResourceTest {
     userToDtoMapper.setResourceLinks(resourceLinks);
     MeResource meResource = new MeResource(userToDtoMapper, userManager);
     dispatcher.getRegistry().addSingletonResource(meResource);
-    when(uriInfo.getBaseUri()).thenReturn(URI.create("/"));
-    when(uriInfoStore.get()).thenReturn(uriInfo);
+    when(uriInfo.getApiRestUri()).thenReturn(URI.create("/"));
+    when(scmPathInfoStore.get()).thenReturn(uriInfo);
   }
 
   @Test

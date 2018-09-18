@@ -28,7 +28,7 @@ public class GitConfigToGitConfigDtoMapperTest {
   private URI baseUri = URI.create("http://example.com/base/");
 
   @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-  private UriInfoStore uriInfoStore;
+  private ScmPathInfoStore scmPathInfoStore;
 
   @InjectMocks
   private GitConfigToGitConfigDtoMapperImpl mapper;
@@ -40,7 +40,7 @@ public class GitConfigToGitConfigDtoMapperTest {
 
   @Before
   public void init() {
-    when(uriInfoStore.get().getBaseUri()).thenReturn(baseUri);
+    when(scmPathInfoStore.get().getApiRestUri()).thenReturn(baseUri);
     expectedBaseUri = baseUri.resolve(GitConfigResource.GIT_CONFIG_PATH_V2);
     subjectThreadState.bind();
     ThreadContext.bind(subject);

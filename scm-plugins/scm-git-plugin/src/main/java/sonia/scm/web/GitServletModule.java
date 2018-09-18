@@ -51,18 +51,6 @@ import sonia.scm.web.lfs.LfsBlobStoreFactory;
 public class GitServletModule extends ServletModule
 {
 
-  public static final String GIT_PATH = "/git";
-
-  /** Field description */
-  public static final String PATTERN_GIT = GIT_PATH + "/*";
-
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   */
   @Override
   protected void configureServlets()
   {
@@ -75,8 +63,5 @@ public class GitServletModule extends ServletModule
 
     bind(GitConfigDtoToGitConfigMapper.class).to(Mappers.getMapper(GitConfigDtoToGitConfigMapper.class).getClass());
     bind(GitConfigToGitConfigDtoMapper.class).to(Mappers.getMapper(GitConfigToGitConfigDtoMapper.class).getClass());
-
-    // serlvelts and filters
-    serve(PATTERN_GIT).with(ScmGitServlet.class);
   }
 }

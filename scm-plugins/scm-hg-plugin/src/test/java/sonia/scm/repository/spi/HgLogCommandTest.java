@@ -39,6 +39,9 @@ import org.junit.Test;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.Modifications;
+import sonia.scm.repository.RevisionNotFoundException;
+
+import java.io.IOException;
 
 import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.assertEquals;
@@ -133,27 +136,28 @@ public class HgLogCommandTest extends AbstractHgCommandTestBase
   }
 
   @Test
-  public void testGetCommit() {
+  public void testGetCommit() throws IOException, RevisionNotFoundException {
     HgLogCommand command = createComamnd();
+    String revision = "a9bacaf1b7fa0cebfca71fed4e59ed69a6319427";
     Changeset c =
-      command.getChangeset("a9bacaf1b7fa0cebfca71fed4e59ed69a6319427");
+      command.getChangeset(revision);
 
     assertNotNull(c);
-    assertEquals("a9bacaf1b7fa0cebfca71fed4e59ed69a6319427", c.getId());
+    assertEquals(revision, c.getId());
     assertEquals("added a and b files", c.getDescription());
     checkDate(c.getDate());
     assertEquals("Douglas Adams", c.getAuthor().getName());
     assertEquals("douglas.adams@hitchhiker.com", c.getAuthor().getMail());
     assertEquals("added a and b files", c.getDescription());
+    ModificationsCommand modificationsCommand = new HgModificationsCommand(cmdContext, repository);
+    Modifications modifications = modificationsCommand.getModifications(revision);
 
-    Modifications mods = c.getModifications();
-
-    assertNotNull(mods);
-    assertTrue("modified list should be empty", mods.getModified().isEmpty());
-    assertTrue("removed list should be empty", mods.getRemoved().isEmpty());
-    assertFalse("added list should not be empty", mods.getAdded().isEmpty());
-    assertEquals(2, mods.getAdded().size());
-    assertThat(mods.getAdded(), contains("a.txt", "b.txt"));
+    assertNotNull(modifications);
+    assertTrue("modified list should be empty", modifications.getModified().isEmpty());
+    assertTrue("removed list should be empty", modifications.getRemoved().isEmpty());
+    assertFalse("added list should not be empty", modifications.getAdded().isEmpty());
+    assertEquals(2, modifications.getAdded().size());
+    assertThat(modifications.getAdded(), contains("a.txt", "b.txt"));
   }
 
   @Test

@@ -38,7 +38,6 @@ package sonia.scm.repository;
 import sonia.scm.AlreadyExistsException;
 import sonia.scm.TypeManager;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Collection;
 
@@ -98,29 +97,6 @@ public interface RepositoryManager
    * @return all configured repository types
    */
   public Collection<RepositoryType> getConfiguredTypes();
-
-  /**
-   * Returns the {@link Repository} associated to the request uri.
-   *
-   *
-   * @param request the current http request
-   *
-   * @return associated to the request uri
-   * @since 1.9
-   */
-  public Repository getFromRequest(HttpServletRequest request);
-
-  /**
-   * Returns the {@link Repository} associated to the request uri.
-   *
-   *
-   *
-   * @param uri request uri without context path
-   *
-   * @return  associated to the request uri
-   * @since 1.9
-   */
-  public Repository getFromUri(String uri);
 
   /**
    * Returns a {@link RepositoryHandler} by the given type (hg, git, svn ...).

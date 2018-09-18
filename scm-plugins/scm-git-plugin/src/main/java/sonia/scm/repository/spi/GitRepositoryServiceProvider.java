@@ -33,19 +33,15 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.common.collect.ImmutableSet;
-
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.Command;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
-
 import java.util.Set;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -73,19 +69,10 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
 
   //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param handler
-   * @param repository
-   */
-  public GitRepositoryServiceProvider(GitRepositoryHandler handler,
-    Repository repository)
-  {
+  public GitRepositoryServiceProvider(GitRepositoryHandler handler, Repository repository) {
     this.handler = handler;
     this.repository = repository;
-    context = new GitContext(handler.getDirectory(repository));
+    this.context = new GitContext(handler.getDirectory(repository));
   }
 
   //~--- methods --------------------------------------------------------------
@@ -186,6 +173,11 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
   public LogCommand getLogCommand()
   {
     return new GitLogCommand(context, repository);
+  }
+
+  @Override
+  public ModificationsCommand getModificationsCommand() {
+    return new GitModificationsCommand(context,repository);
   }
 
   /**

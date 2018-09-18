@@ -54,7 +54,7 @@ public class HgConfigResourceTest {
   private HgConfigDtoToHgConfigMapperImpl dtoToConfigMapper;
 
   @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-  private UriInfoStore uriInfoStore;
+  private ScmPathInfoStore scmPathInfoStore;
 
   @InjectMocks
   private HgConfigToHgConfigDtoMapperImpl configToDtoMapper;
@@ -79,7 +79,7 @@ public class HgConfigResourceTest {
       new HgConfigResource(dtoToConfigMapper, configToDtoMapper, repositoryHandler, packagesResource,
                            autoconfigResource, installationsResource);
     dispatcher.getRegistry().addSingletonResource(gitConfigResource);
-    when(uriInfoStore.get().getBaseUri()).thenReturn(baseUri);
+    when(scmPathInfoStore.get().getApiRestUri()).thenReturn(baseUri);
   }
 
   @Test

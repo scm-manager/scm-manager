@@ -16,7 +16,7 @@ import static de.otto.edison.hal.Link.link;
 import static de.otto.edison.hal.Links.linkingTo;
 
 @Mapper
-public abstract class ChangesetToParentDtoMapper extends BaseMapper<Changeset, ParentChangesetDto> {
+public abstract class ChangesetToParentDtoMapper {
 
   @Inject
   private ResourceLinks resourceLinks;

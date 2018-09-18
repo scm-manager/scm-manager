@@ -39,7 +39,6 @@ import sonia.scm.AlreadyExistsException;
 import sonia.scm.ManagerDecorator;
 import sonia.scm.Type;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Collection;
 
@@ -118,34 +117,6 @@ public class RepositoryManagerDecorator
   public RepositoryManager getDecorated()
   {
     return decorated;
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @param request
-   *
-   * @return
-   */
-  @Override
-  public Repository getFromRequest(HttpServletRequest request)
-  {
-    return decorated.getFromRequest(request);
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @param uri
-   *
-   * @return
-   */
-  @Override
-  public Repository getFromUri(String uri)
-  {
-    return decorated.getFromUri(uri);
   }
 
   /**

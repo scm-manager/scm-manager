@@ -1,6 +1,7 @@
 package sonia.scm.api.v2.resources;
 
 
+import com.google.inject.util.Providers;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.support.SubjectThreadState;
@@ -44,7 +45,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 @Slf4j
-public class ChangesetRootResourceTest {
+public class ChangesetRootResourceTest extends RepositoryTestBase {
 
 
   public static final String CHANGESET_PATH = "space/repo/changesets/";
@@ -79,10 +80,8 @@ public class ChangesetRootResourceTest {
   public void prepareEnvironment() throws Exception {
     changesetCollectionToDtoMapper = new ChangesetCollectionToDtoMapper(changesetToChangesetDtoMapper, resourceLinks);
     changesetRootResource = new ChangesetRootResource(serviceFactory, changesetCollectionToDtoMapper, changesetToChangesetDtoMapper);
-    RepositoryRootResource repositoryRootResource = new RepositoryRootResource(MockProvider
-      .of(new RepositoryResource(null, null, null, null, null,
-        MockProvider.of(changesetRootResource), null, null, null, null, null)), null);
-    dispatcher.getRegistry().addSingletonResource(repositoryRootResource);
+    super.changesetRootResource = Providers.of(changesetRootResource);
+    dispatcher.getRegistry().addSingletonResource(getRepositoryRootResource());
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(repositoryService);
     when(serviceFactory.create(any(Repository.class))).thenReturn(repositoryService);
     when(repositoryService.getRepository()).thenReturn(new Repository("repoId", "git", "space", "repo"));

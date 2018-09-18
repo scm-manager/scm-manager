@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2010, Sebastian Sdorra
  * All rights reserved.
  *
@@ -29,57 +29,25 @@
  *
  */
 
+package sonia.scm.repository.spi;
 
-package sonia.scm;
+import sonia.scm.repository.Modifications;
+import sonia.scm.repository.RevisionNotFoundException;
+
+import java.io.IOException;
 
 /**
+ * Command to get the modifications applied to files in a revision.
  *
- * @author Sebastian Sdorra
- * @since 1.17
+ * Modifications are for example: Add, Update, Delete
+ *
+ * @author Mohamed Karray
+ * @since 2.0
  */
-public class ArgumentIsInvalidException extends IllegalStateException
-{
+public interface ModificationsCommand {
 
-  /**
-   * Constructs ...
-   *
-   */
-  public ArgumentIsInvalidException()
-  {
-    super();
-  }
+  Modifications getModifications(String revision) throws IOException, RevisionNotFoundException;
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param s
-   */
-  public ArgumentIsInvalidException(String s)
-  {
-    super(s);
-  }
+  Modifications getModifications(ModificationsCommandRequest request) throws IOException, RevisionNotFoundException;
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param cause
-   */
-  public ArgumentIsInvalidException(Throwable cause)
-  {
-    super(cause);
-  }
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param message
-   * @param cause
-   */
-  public ArgumentIsInvalidException(String message, Throwable cause)
-  {
-    super(message, cause);
-  }
 }

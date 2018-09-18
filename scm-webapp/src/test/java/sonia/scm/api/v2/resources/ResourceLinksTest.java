@@ -6,7 +6,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import sonia.scm.repository.NamespaceAndName;
 
-import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
 import static org.junit.Assert.assertEquals;
@@ -18,9 +17,9 @@ public class ResourceLinksTest {
   private static final String BASE_URL = "http://example.com/";
 
   @Mock
-  private UriInfoStore uriInfoStore;
+  private ScmPathInfoStore scmPathInfoStore;
   @Mock
-  private UriInfo uriInfo;
+  private ScmPathInfo uriInfo;
 
   @InjectMocks
   private ResourceLinks resourceLinks;
@@ -177,7 +176,7 @@ public class ResourceLinksTest {
   @Before
   public void initUriInfo() {
     initMocks(this);
-    when(uriInfoStore.get()).thenReturn(uriInfo);
-    when(uriInfo.getBaseUri()).thenReturn(URI.create(BASE_URL));
+    when(scmPathInfoStore.get()).thenReturn(uriInfo);
+    when(uriInfo.getApiRestUri()).thenReturn(URI.create(BASE_URL));
   }
 }
