@@ -54,6 +54,8 @@ import sonia.scm.util.Util;
 import java.util.Collection;
 import java.util.List;
 
+import static sonia.scm.repository.SvnUtil.parseRevision;
+
 //~--- JDK imports ------------------------------------------------------------
 
 public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
@@ -144,25 +146,6 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
     return changesets;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  private long parseRevision(String v) throws RevisionNotFoundException {
-    long result = -1l;
-
-    if (!Strings.isNullOrEmpty(v))
-    {
-      try
-      {
-        result = Long.parseLong(v);
-      }
-      catch (NumberFormatException ex)
-      {
-        throw new RevisionNotFoundException(v);
-      }
-    }
-
-    return result;
-  }
 
   //~--- get methods ----------------------------------------------------------
 

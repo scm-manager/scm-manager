@@ -49,7 +49,6 @@ import org.tmatesoft.svn.core.internal.util.SVNEncodingUtil;
 import org.tmatesoft.svn.core.internal.util.SVNXMLUtil;
 import org.tmatesoft.svn.core.io.SVNRepository;
 import org.tmatesoft.svn.core.wc.SVNClientManager;
-import org.tmatesoft.svn.core.wc.admin.SVNChangeEntry;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 
@@ -103,30 +102,37 @@ public final class SvnUtil
 
   //~--- methods --------------------------------------------------------------
 
-  /**
-   * TODO: type replaced
-   *
-   *
-   * @param modifications
-   * @param entry
-   */
-  public static void appendModification(Modifications modifications,
-    SVNLogEntryPath entry)
-  {
-    appendModification(modifications, entry.getType(), entry.getPath());
+  public static long parseRevision(String v) throws RevisionNotFoundException {
+    long result = -1l;
+
+    if (!Strings.isNullOrEmpty(v))
+    {
+      try
+      {
+        result = Long.parseLong(v);
+      }
+      catch (NumberFormatException ex)
+      {
+        throw new RevisionNotFoundException(v);
+      }
+    }
+
+    return result;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param modifications
-   * @param entry
-   */
-  public static void appendModification(Modifications modifications,
-    SVNChangeEntry entry)
-  {
-    appendModification(modifications, entry.getType(), entry.getPath());
+
+  public static Modifications createModifications(SVNLogEntry entry, String revision) {
+    Modifications modifications = new Modifications();
+    modifications.setRevision(revision);
+    Map<String, SVNLogEntryPath> changeMap = entry.getChangedPaths();
+
+    if (Util.isNotEmpty(changeMap)) {
+
+      for (SVNLogEntryPath e : changeMap.values()) {
+        appendModification(modifications, e.getType(), e.getPath());
+      }
+    }
+    return modifications;
   }
 
   /**
@@ -210,19 +216,6 @@ public final class SvnUtil
     {
       changeset.getParents().add(String.valueOf(revision - 1));
     }
-
-    Map<String, SVNLogEntryPath> changeMap = entry.getChangedPaths();
-
-    if (Util.isNotEmpty(changeMap))
-    {
-      Modifications modifications = changeset.getModifications();
-
-      for (SVNLogEntryPath e : changeMap.values())
-      {
-        appendModification(modifications, e);
-      }
-    }
-
     return changeset;
   }
 

@@ -8,14 +8,14 @@ import javax.inject.Inject;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-public class ChangesetCollectionToDtoMapper extends BasicCollectionToDtoMapper<Changeset, ChangesetDto, ChangesetToChangesetDtoMapper> {
+public class ChangesetCollectionToDtoMapper extends PagedCollectionToDtoMapper<Changeset, ChangesetDto> {
 
   private final ChangesetToChangesetDtoMapper changesetToChangesetDtoMapper;
   protected final ResourceLinks resourceLinks;
 
   @Inject
   public ChangesetCollectionToDtoMapper(ChangesetToChangesetDtoMapper changesetToChangesetDtoMapper, ResourceLinks resourceLinks) {
-    super("changesets", changesetToChangesetDtoMapper);
+    super("changesets");
     this.changesetToChangesetDtoMapper = changesetToChangesetDtoMapper;
     this.resourceLinks = resourceLinks;
   }
@@ -32,3 +32,4 @@ public class ChangesetCollectionToDtoMapper extends BasicCollectionToDtoMapper<C
     return resourceLinks.changeset().all(repository.getNamespace(), repository.getName());
   }
 }
+

@@ -67,7 +67,8 @@ public class Modifications implements Serializable
    * Constructs ...
    *
    */
-  public Modifications() {}
+  public Modifications() {
+  }
 
   /**
    * Constructs ...
@@ -218,6 +219,10 @@ public class Modifications implements Serializable
     return removed;
   }
 
+  public String getRevision() {
+    return revision;
+  }
+
   //~--- set methods ----------------------------------------------------------
 
   /**
@@ -253,7 +258,13 @@ public class Modifications implements Serializable
     this.removed = removed;
   }
 
+  public void setRevision(String revision) {
+    this.revision = revision;
+  }
+
   //~--- fields ---------------------------------------------------------------
+
+  private String revision;
 
   /** list of added files */
   @XmlElement(name = "added")

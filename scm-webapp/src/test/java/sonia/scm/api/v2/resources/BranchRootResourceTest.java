@@ -44,7 +44,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 @Slf4j
-public class BranchRootResourceTest {
+public class BranchRootResourceTest extends RepositoryTestBase {
 
   public static final String BRANCH_PATH = "space/repo/branches/master";
   public static final String BRANCH_URL = "/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + BRANCH_PATH;
@@ -92,9 +92,8 @@ public class BranchRootResourceTest {
     changesetCollectionToDtoMapper = new ChangesetCollectionToDtoMapper(changesetToChangesetDtoMapper, resourceLinks);
     BranchCollectionToDtoMapper branchCollectionToDtoMapper = new BranchCollectionToDtoMapper(branchToDtoMapper, resourceLinks);
     branchRootResource = new BranchRootResource(serviceFactory, branchToDtoMapper, branchCollectionToDtoMapper, changesetCollectionToDtoMapper);
-    RepositoryRootResource repositoryRootResource = new RepositoryRootResource(MockProvider.of(new RepositoryResource(null, null, null, null, MockProvider.of(branchRootResource), null, null, null, null, null, null)), null);
-    dispatcher.getRegistry().addSingletonResource(repositoryRootResource);
-
+    super.branchRootResource = MockProvider.of(branchRootResource);
+    dispatcher.getRegistry().addSingletonResource(getRepositoryRootResource());
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(service);
     when(serviceFactory.create(any(Repository.class))).thenReturn(service);
     when(service.getRepository()).thenReturn(new Repository("repoId", "git", "space", "repo"));
