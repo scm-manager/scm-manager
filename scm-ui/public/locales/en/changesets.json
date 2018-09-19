@@ -4,7 +4,7 @@
     "description": "Description",
     "contact": "Contact",
     "date": "Date",
-    "summary": "Changeset {{id}} committed at {{time}}"
+    "summary": "Changeset {{id}} committed {{time}}"
   },
   "author": {
     "name": "Author",

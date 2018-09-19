@@ -1,11 +1,13 @@
 //@flow
 import React from "react";
-import type { Changeset } from "@scm-manager/ui-types";
+import type { Changeset, Repository } from "@scm-manager/ui-types";
 import classNames from "classnames";
 import { translate, Interpolate } from "react-i18next";
 import ChangesetAvatar from "./ChangesetAvatar";
+import ChangesetId from "./ChangesetId";
 import injectSheet from "react-jss";
 import { DateFromNow } from "@scm-manager/ui-components";
+import ChangesetAuthor from "./ChangesetAuthor";
 
 const styles = {
   pointer: {
@@ -13,10 +15,14 @@ const styles = {
   },
   changesetGroup: {
     marginBottom: "1em"
+  },
+  withOverflow: {
+    overflow: "auto"
   }
 };
 
 type Props = {
+  repository: Repository,
   changeset: Changeset,
   t: any,
   classes: any
@@ -24,32 +30,21 @@ type Props = {
 
 class ChangesetRow extends React.Component<Props> {
   createLink = (changeset: Changeset) => {
-    return <a href={`/repo/changeset/${changeset.id}`}>{changeset.id}</a>;
+    const { repository } = this.props;
+    return <ChangesetId changeset={changeset} repository={repository} />;
   };
 
   render() {
-    const { changeset, t, classes } = this.props;
+    const { changeset, classes } = this.props;
     const changesetLink = this.createLink(changeset);
     const dateFromNow = <DateFromNow date={changeset.date} />;
-    const authorLine = (
-      <>
-        {changeset.author.name}{" "}
-        <a
-          className="is-hidden-mobile"
-          href={"mailto:" + changeset.author.mail}
-        >
-          &lt;
-          {changeset.author.mail}
-          &gt;
-        </a>
-      </>
-    );
+    const authorLine = <ChangesetAuthor changeset={changeset}/>;
     return (
       <article className={classNames("media", classes.inner)}>
         <figure className="media-left">
           <ChangesetAvatar changeset={changeset} />
         </figure>
-        <div className="media-content">
+        <div className={classNames("media-content", classes.withOverflow)}>
           <div className="content">
             <p className="is-ellipsis-overflow">
               {changeset.description}
