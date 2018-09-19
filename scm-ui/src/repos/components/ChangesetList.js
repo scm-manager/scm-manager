@@ -9,7 +9,7 @@ type Props = {
   changesets: Changeset[]
 };
 
-class ChangesetTable extends React.Component<Props> {
+class ChangesetList extends React.Component<Props> {
   render() {
     const { repository, changesets } = this.props;
     const content = changesets.map((changeset, index) => {
@@ -19,4 +19,4 @@ class ChangesetTable extends React.Component<Props> {
   }
 }
 
-export default ChangesetTable;
+export default ChangesetList;

@@ -21,7 +21,7 @@ import {
   getBranchNames
 } from "../../repos/modules/branches";
 import type { PagedCollection, Repository } from "@scm-manager/ui-types";
-import ChangesetTable from "../components/ChangesetTable";
+import ChangesetList from "../components/ChangesetList";
 import DropDown from "../components/DropDown";
 import { withRouter } from "react-router-dom";
 
@@ -43,8 +43,7 @@ class Changesets extends React.Component<State, Props> {
     this.state = {};
   }
 
-  onPageChange = (link: string) => {
-  };
+  onPageChange = (link: string) => {};
   componentDidMount() {
     const { namespace, name } = this.props.repository;
     const branchName = this.props.match.params.branch;
@@ -88,12 +87,12 @@ class Changesets extends React.Component<State, Props> {
             preselectedOption={branch}
             optionSelected={branch => this.branchChanged(branch)}
           />
-          <ChangesetTable repository={repository} changesets={changesets} />
+          <ChangesetList repository={repository} changesets={changesets} />
         </div>
       );
     }
 
-    return <ChangesetTable changesets={changesets} />;
+    return <ChangesetList changesets={changesets} />;
   };
 
   renderPaginator() {
