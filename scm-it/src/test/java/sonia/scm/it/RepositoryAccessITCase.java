@@ -165,7 +165,7 @@ public class RepositoryAccessITCase {
       .isNotNull()
       .contains(String.format("%s/sources/%s", repositoryUrl, changeset.getId()));
 
-    assertThat(response.body().jsonPath().getString("_embedded.tags.find{it.name=='" + tagName + "'}._links.changesets.href"))
+    assertThat(response.body().jsonPath().getString("_embedded.tags.find{it.name=='" + tagName + "'}._links.changeset.href"))
       .as("assert single tag changesets link")
       .isNotNull()
       .contains(String.format("%s/changesets/%s", repositoryUrl, changeset.getId()));
