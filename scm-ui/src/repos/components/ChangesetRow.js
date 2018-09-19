@@ -36,7 +36,7 @@ class ChangesetRow extends React.Component<Props> {
           changeset.id
         }`}
       >
-        {changeset.id}
+        {changeset.id.substr(0, 7)}
       </Link>
     );
   };
