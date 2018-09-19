@@ -43,6 +43,8 @@ class Changesets extends React.Component<State, Props> {
     this.state = {};
   }
 
+  onPageChange = (link: string) => {
+  };
   componentDidMount() {
     const { namespace, name } = this.props.repository;
     const branchName = this.props.match.params.branch;
@@ -112,7 +114,12 @@ class Changesets extends React.Component<State, Props> {
 
 const mapStateToProps = (state, ownProps: Props) => {
   const { namespace, name } = ownProps.repository;
-  const loading = isFetchChangesetsPending(namespace, name, state);
+  const loading = isFetchChangesetsPending(
+    state,
+    namespace,
+    name,
+    ownProps.match.params.branch
+  );
   const changesets = getChangesets(
     state,
     namespace,
