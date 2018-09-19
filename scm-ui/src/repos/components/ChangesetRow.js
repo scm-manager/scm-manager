@@ -1,8 +1,8 @@
 //@flow
 import React from "react";
-import type {Changeset} from "@scm-manager/ui-types";
+import type { Changeset } from "@scm-manager/ui-types";
 import classNames from "classnames";
-import {translate} from "react-i18next";
+import { translate } from "react-i18next";
 import ChangesetAvatar from "./ChangesetAvatar";
 import injectSheet from "react-jss";
 
@@ -44,24 +44,24 @@ class ChangesetRow extends React.Component<Props> {
     );
     // todo: i18n
     return (
-        <article className={classNames("media", classes.inner)}>
-          <figure className="media-left">
-            <ChangesetAvatar changeset={changeset} />
-          </figure>
-          <div className="media-content">
-            <div className="content">
-              <p className="is-ellipsis-overflow">
-                {changeset.description}
-                <br />
-                {t("changeset.summary", {
-                  id: changeset.id,
-                  time: changeset.date
-                })}
-              </p>
-              <p className="is-size-7">{authorLine}</p>
-            </div>
+      <article className={classNames("media", classes.inner)}>
+        <figure className="media-left">
+          <ChangesetAvatar changeset={changeset} />
+        </figure>
+        <div className="media-content">
+          <div className="content">
+            <p className="is-ellipsis-overflow">
+              {changeset.description}
+              <br />
+              {t("changeset.summary", {
+                id: changeset.id,
+                time: changeset.date
+              })}
+            </p>
+            <p className="is-size-7">{authorLine}</p>
           </div>
-        </article>
+        </div>
+      </article>
     );
   }
 }

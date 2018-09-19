@@ -25,7 +25,7 @@ import Edit from "../containers/Edit";
 
 import type {History} from "history";
 import EditNavLink from "../components/EditNavLink";
-import Changesets from "../../changesets/containers/Changesets";
+import Changesets from "./Changesets";
 
 type Props = {
   namespace: string,
