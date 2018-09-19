@@ -44,9 +44,6 @@ public final class ModificationsCommandBuilder {
   private final PreProcessorUtil preProcessorUtil;
 
   @Setter
-  private boolean disableEscaping = false;
-
-  @Setter
   private boolean disableCache = false;
 
   @Setter
@@ -90,7 +87,7 @@ public final class ModificationsCommandBuilder {
       }
     }
     if (!disablePreProcessors && (modifications != null)) {
-      preProcessorUtil.prepareForReturn(repository, modifications, !disableEscaping);
+      preProcessorUtil.prepareForReturn(repository, modifications);
     }
     return modifications;
   }
