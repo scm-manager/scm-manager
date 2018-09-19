@@ -9,7 +9,8 @@ import { apiClient } from "@scm-manager/ui-components";
 import { isPending } from "../../modules/pending";
 import { getFailure } from "../../modules/failure";
 import { combineReducers } from "redux";
-import type { Action, PagedCollection } from "@scm-manager/ui-types";
+import type { Action, Changeset, PagedCollection } from "@scm-manager/ui-types";
+import ChangesetAvatar from "../components/ChangesetAvatar";
 
 export const FETCH_CHANGESETS = "scm/repos/FETCH_CHANGESETS";
 export const FETCH_CHANGESETS_PENDING = `${FETCH_CHANGESETS}_${PENDING_SUFFIX}`;
@@ -19,6 +20,26 @@ export const FETCH_CHANGESETS_FAILURE = `${FETCH_CHANGESETS}_${FAILURE_SUFFIX}`;
 const REPO_URL = "repositories";
 //TODO: Content type
 // actions
+
+export function fetchChangesetsByLink(
+  namespace: string,
+  name: string,
+  link: string,
+  branch?: string
+) {
+  return function(dispatch: any) {
+    // dispatch(fetchChangesetsPending(namespace, name, branch));
+    return apiClient
+      .get(link)
+      .then(response => response.json())
+      .then(data => {
+        dispatch(fetchChangesetsSuccess(data, namespace, name, branch));
+      })
+      .catch(cause => {
+        dispatch(fetchChangesetsFailure(namespace, name, cause, branch));
+      });
+  };
+}
 
 export function fetchChangesetsWithOptions(
   namespace: string,
@@ -140,36 +161,25 @@ function byKeyReducer(
 ): Object {
   switch (action.type) {
     case FETCH_CHANGESETS_SUCCESS:
+      const changesets = action.payload._embedded.changesets;
+      const changesetIds = changesets.map(c => c.id);
       const key = action.itemId;
       let oldChangesets = { [key]: {} };
       if (state[key] !== undefined) {
         oldChangesets[key] = state[key];
       }
+      const byIds = extractChangesetsByIds(changesets, oldChangesets[key].byId);
       return {
-        ...state,
         [key]: {
-          byId: extractChangesetsByIds(action.payload, oldChangesets[key].byId)
-        }
-      };
-    default:
-      return state;
-  }
-}
-
-function listReducer(
-  state: any = {},
-  action: Action = { type: "UNKNOWN" }
-): Object {
-  switch (action.type) {
-    case FETCH_CHANGESETS_SUCCESS:
-      const changesets = action.payload._embedded.changesets;
-      const changesetIds = changesets.map(c => c.id);
-      return {
-        entries: changesetIds,
-        entry: {
-          page: action.payload.page,
-          pageTotal: action.payload.pageTotal,
-          _links: action.payload._links
+          byId: { ...byIds },
+          list: {
+            entries: changesetIds,
+            entry: {
+              page: action.payload.page,
+              pageTotal: action.payload.pageTotal,
+              _links: action.payload._links
+            }
+          }
         }
       };
     default:
@@ -178,12 +188,10 @@ function listReducer(
 }
 
 export default combineReducers({
-  list: listReducer,
   byKey: byKeyReducer
 });
 
-function extractChangesetsByIds(data: any, oldChangesetsByIds: any) {
-  const changesets = data._embedded.changesets;
+function extractChangesetsByIds(changesets: any, oldChangesetsByIds: any) {
   const changesetsByIds = {};
 
   for (let changeset of changesets) {
@@ -237,21 +245,38 @@ export function getFetchChangesetsFailure(
   );
 }
 
-const selectList = (state: Object) => {
-  if (state.changesets && state.changesets.list) {
-    return state.changesets.list;
+const selectList = (state: Object, key: string) => {
+  if (state.changesets.byKey[key] && state.changesets.byKey[key].list) {
+    return state.changesets.byKey[key].list;
   }
   return {};
 };
 
-const selectListEntry = (state: Object): Object => {
-  const list = selectList(state);
+const selectListEntry = (state: Object, key: string): Object => {
+  const list = selectList(state, key);
   if (list.entry) {
     return list.entry;
   }
   return {};
 };
 
-export const selectListAsCollection = (state: Object): PagedCollection => {
-  return selectListEntry(state);
+export const selectListAsCollection = (
+  state: Object,
+  key: string
+): PagedCollection => {
+  return selectListEntry(state, key);
 };
+
+export function getChangesetsFromState(state: Object, key: string) {
+  const changesetIds = selectList(state, key).entries;
+  if (!changesetIds) {
+    return null;
+  }
+  const changesetEntries: Changeset[] = [];
+
+  for (let id of changesetIds) {
+    changesetEntries.push(state.changesets.byKey[key].byId[id]);
+  }
+
+  return changesetEntries;
+}

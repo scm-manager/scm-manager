@@ -207,7 +207,7 @@ describe("changesets", () => {
       expect(newState.byKey["foo/bar"].byId["changeset3"].description).toEqual(
         "bar"
       );
-      expect(newState.list).toEqual({
+      expect(newState.byKey["foo/bar"].list).toEqual({
         entry: {
           page: 1,
           pageTotal: 10,

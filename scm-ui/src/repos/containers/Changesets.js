@@ -10,10 +10,11 @@ import {
 import {
   fetchChangesets,
   fetchChangesetsByNamespaceNameAndBranch,
-  getChangesets,
   getFetchChangesetsFailure,
   isFetchChangesetsPending,
-  selectListAsCollection
+  selectListAsCollection,
+  fetchChangesetsByLink,
+  getChangesetsFromState
 } from "../modules/changesets";
 import type { History } from "history";
 import {
@@ -34,7 +35,9 @@ type Props = {
     name: string,
     branch: string
   ) => void,
-  list: PagedCollection
+  list: PagedCollection,
+  fetchChangesetsByLink: string => void,
+  page: number
 };
 
 class Changesets extends React.Component<State, Props> {
@@ -44,7 +47,11 @@ class Changesets extends React.Component<State, Props> {
   }
 
   onPageChange = (link: string) => {
+    const { namespace, name } = this.props.repository;
+    const branch = this.props.match.params.branch;
+    this.props.fetchChangesetsByLink(namespace, name, link, branch);
   };
+
   componentDidMount() {
     const { namespace, name } = this.props.repository;
     const branchName = this.props.match.params.branch;
@@ -112,28 +119,27 @@ class Changesets extends React.Component<State, Props> {
   };
 }
 
+const createKey = (
+  namespace: string,
+  name: string,
+  branch?: string
+): string => {
+  let key = `${namespace}/${name}`;
+  if (branch) {
+    key = key + `/${branch}`;
+  }
+  return key;
+};
+
 const mapStateToProps = (state, ownProps: Props) => {
   const { namespace, name } = ownProps.repository;
-  const loading = isFetchChangesetsPending(
-    state,
-    namespace,
-    name,
-    ownProps.match.params.branch
-  );
-  const changesets = getChangesets(
-    state,
-    namespace,
-    name,
-    ownProps.match.params.branch
-  );
+  const { branch } = ownProps.match.params;
+  const key = createKey(namespace, name, branch);
+  const loading = isFetchChangesetsPending(state, namespace, name, branch);
+  const changesets = getChangesetsFromState(state, key);
   const branchNames = getBranchNames(namespace, name, state);
-  const error = getFetchChangesetsFailure(
-    state,
-    namespace,
-    name,
-    ownProps.match.params.branch
-  );
-  const list = selectListAsCollection(state);
+  const error = getFetchChangesetsFailure(state, namespace, name, branch);
+  const list = selectListAsCollection(state, key);
 
   return {
     loading,
@@ -160,6 +166,14 @@ const mapDispatchToProps = dispatch => {
     },
     fetchBranchesByNamespaceAndName: (namespace: string, name: string) => {
       dispatch(fetchBranchesByNamespaceAndName(namespace, name));
+    },
+    fetchChangesetsByLink: (
+      namespace: string,
+      name: string,
+      link: string,
+      branch?: string
+    ) => {
+      dispatch(fetchChangesetsByLink(namespace, name, link, branch));
     }
   };
 };
