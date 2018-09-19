@@ -1,11 +1,12 @@
 //@flow
 import React from "react";
-import type { Changeset } from "@scm-manager/ui-types";
+import type { Changeset, Repository } from "@scm-manager/ui-types";
 import classNames from "classnames";
 import { translate, Interpolate } from "react-i18next";
 import ChangesetAvatar from "./ChangesetAvatar";
 import injectSheet from "react-jss";
 import { DateFromNow } from "@scm-manager/ui-components";
+import { Link } from "react-router-dom";
 
 const styles = {
   pointer: {
@@ -20,6 +21,7 @@ const styles = {
 };
 
 type Props = {
+  repository: Repository,
   changeset: Changeset,
   t: any,
   classes: any
@@ -27,7 +29,16 @@ type Props = {
 
 class ChangesetRow extends React.Component<Props> {
   createLink = (changeset: Changeset) => {
-    return <a href={`/repo/changeset/${changeset.id}`}>{changeset.id}</a>;
+    const { repository } = this.props;
+    return (
+      <Link
+        to={`/repo/${repository.namespace}/${repository.name}/changeset/${
+          changeset.id
+        }`}
+      >
+        {changeset.id}
+      </Link>
+    );
   };
 
   render() {

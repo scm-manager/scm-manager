@@ -77,7 +77,7 @@ class Changesets extends React.Component<State, Props> {
 
   renderTable = () => {
     const branch = this.props.match.params.branch;
-    const { changesets, branchNames } = this.props;
+    const { repository, changesets, branchNames } = this.props;
 
     if (branchNames && branchNames.length > 0) {
       return (
@@ -88,7 +88,7 @@ class Changesets extends React.Component<State, Props> {
             preselectedOption={branch}
             optionSelected={branch => this.branchChanged(branch)}
           />
-          <ChangesetTable changesets={changesets} />
+          <ChangesetTable repository={repository} changesets={changesets} />
         </div>
       );
     }
