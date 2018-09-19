@@ -7,6 +7,7 @@ import ChangesetAvatar from "./ChangesetAvatar";
 import ChangesetId from "./ChangesetId";
 import injectSheet from "react-jss";
 import { DateFromNow } from "@scm-manager/ui-components";
+import ChangesetAuthor from "./ChangesetAuthor";
 
 const styles = {
   pointer: {
@@ -37,19 +38,7 @@ class ChangesetRow extends React.Component<Props> {
     const { changeset, classes } = this.props;
     const changesetLink = this.createLink(changeset);
     const dateFromNow = <DateFromNow date={changeset.date} />;
-    const authorLine = (
-      <>
-        {changeset.author.name}{" "}
-        <a
-          className="is-hidden-mobile"
-          href={"mailto:" + changeset.author.mail}
-        >
-          &lt;
-          {changeset.author.mail}
-          &gt;
-        </a>
-      </>
-    );
+    const authorLine = <ChangesetAuthor changeset={changeset}/>;
     return (
       <article className={classNames("media", classes.inner)}>
         <figure className="media-left">
