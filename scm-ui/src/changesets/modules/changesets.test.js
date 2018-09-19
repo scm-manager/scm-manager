@@ -8,8 +8,10 @@ import {
   FETCH_CHANGESETS_FAILURE,
   FETCH_CHANGESETS_PENDING,
   FETCH_CHANGESETS_SUCCESS,
-  fetchChangesetsByNamespaceAndName,
+  fetchChangesets,
+  fetchChangesetsByBranchAndPage,
   fetchChangesetsByNamespaceNameAndBranch,
+  fetchChangesetsByPage,
   fetchChangesetsSuccess,
   getChangesets,
   getFetchChangesetsFailure,
@@ -22,7 +24,8 @@ const changesets = {};
 describe("changesets", () => {
   describe("fetching of changesets", () => {
     const DEFAULT_BRANCH_URL = "/api/rest/v2/repositories/foo/bar/changesets";
-    const SPECIFIC_BRANCH_URL = "/api/rest/v2/repositories/foo/bar/branches/specific/changesets";
+    const SPECIFIC_BRANCH_URL =
+      "/api/rest/v2/repositories/foo/bar/branches/specific/changesets";
     const mockStore = configureMockStore([thunk]);
 
     afterEach(() => {
@@ -35,7 +38,8 @@ describe("changesets", () => {
 
       const expectedActions = [
         {
-          type: FETCH_CHANGESETS_PENDING, payload: "foo/bar",
+          type: FETCH_CHANGESETS_PENDING,
+          payload: "foo/bar",
           itemId: "foo/bar"
         },
         {
@@ -46,7 +50,7 @@ describe("changesets", () => {
       ];
 
       const store = mockStore({});
-      return store.dispatch(fetchChangesetsByNamespaceAndName("foo", "bar")).then(() => {
+      return store.dispatch(fetchChangesets("foo", "bar")).then(() => {
         expect(store.getActions()).toEqual(expectedActions);
       });
     });
@@ -57,7 +61,8 @@ describe("changesets", () => {
 
       const expectedActions = [
         {
-          type: FETCH_CHANGESETS_PENDING, payload: itemId,
+          type: FETCH_CHANGESETS_PENDING,
+          payload: itemId,
           itemId
         },
         {
@@ -68,9 +73,13 @@ describe("changesets", () => {
       ];
 
       const store = mockStore({});
-      return store.dispatch(fetchChangesetsByNamespaceNameAndBranch("foo", "bar", "specific")).then(() => {
-        expect(store.getActions()).toEqual(expectedActions);
-      });
+      return store
+        .dispatch(
+          fetchChangesetsByNamespaceNameAndBranch("foo", "bar", "specific")
+        )
+        .then(() => {
+          expect(store.getActions()).toEqual(expectedActions);
+        });
     });
 
     it("should fail fetching changesets on error", () => {
@@ -79,18 +88,19 @@ describe("changesets", () => {
 
       const expectedActions = [
         {
-          type: FETCH_CHANGESETS_PENDING, payload: itemId,
+          type: FETCH_CHANGESETS_PENDING,
+          payload: itemId,
           itemId
         }
       ];
 
       const store = mockStore({});
-      return store.dispatch(fetchChangesetsByNamespaceAndName("foo", "bar")).then(() => {
+      return store.dispatch(fetchChangesets("foo", "bar")).then(() => {
         expect(store.getActions()[0]).toEqual(expectedActions[0]);
         expect(store.getActions()[1].type).toEqual(FETCH_CHANGESETS_FAILURE);
         expect(store.getActions()[1].payload).toBeDefined();
       });
-    })
+    });
 
     it("should fail fetching changesets for specific branch on error", () => {
       const itemId = "foo/bar/specific";
@@ -98,27 +108,81 @@ describe("changesets", () => {
 
       const expectedActions = [
         {
-          type: FETCH_CHANGESETS_PENDING, payload: itemId,
+          type: FETCH_CHANGESETS_PENDING,
+          payload: itemId,
           itemId
         }
       ];
 
       const store = mockStore({});
-      return store.dispatch(fetchChangesetsByNamespaceNameAndBranch("foo", "bar", "specific")).then(() => {
-        expect(store.getActions()[0]).toEqual(expectedActions[0]);
-        expect(store.getActions()[1].type).toEqual(FETCH_CHANGESETS_FAILURE);
-        expect(store.getActions()[1].payload).toBeDefined();
+      return store
+        .dispatch(
+          fetchChangesetsByNamespaceNameAndBranch("foo", "bar", "specific")
+        )
+        .then(() => {
+          expect(store.getActions()[0]).toEqual(expectedActions[0]);
+          expect(store.getActions()[1].type).toEqual(FETCH_CHANGESETS_FAILURE);
+          expect(store.getActions()[1].payload).toBeDefined();
+        });
+    });
+
+    it("should fetch changesets by page", () => {
+      fetchMock.getOnce(DEFAULT_BRANCH_URL + "?page=5", "{}");
+
+      const expectedActions = [
+        {
+          type: FETCH_CHANGESETS_PENDING,
+          payload: "foo/bar",
+          itemId: "foo/bar"
+        },
+        {
+          type: FETCH_CHANGESETS_SUCCESS,
+          payload: changesets,
+          itemId: "foo/bar"
+        }
+      ];
+
+      const store = mockStore({});
+      return store.dispatch(fetchChangesetsByPage("foo", "bar", 5)).then(() => {
+        expect(store.getActions()).toEqual(expectedActions);
       });
-    })
+    });
+
+    it("should fetch changesets by branch and page", () => {
+      fetchMock.getOnce(SPECIFIC_BRANCH_URL + "?page=5", "{}");
+
+      const expectedActions = [
+        {
+          type: FETCH_CHANGESETS_PENDING,
+          payload: "foo/bar/specific",
+          itemId: "foo/bar/specific"
+        },
+        {
+          type: FETCH_CHANGESETS_SUCCESS,
+          payload: changesets,
+          itemId: "foo/bar/specific"
+        }
+      ];
+
+      const store = mockStore({});
+      return store
+        .dispatch(fetchChangesetsByBranchAndPage("foo", "bar", "specific", 5))
+        .then(() => {
+          expect(store.getActions()).toEqual(expectedActions);
+        });
+    });
   });
 
   describe("changesets reducer", () => {
     const responseBody = {
+      page: 1,
+      pageTotal: 10,
+      _links: {},
       _embedded: {
         changesets: [
-          {id: "changeset1", author: {mail: "z@phod.com", name: "zaphod"}},
-          {id: "changeset2", description: "foo"},
-          {id: "changeset3", description: "bar"},
+          { id: "changeset1", author: { mail: "z@phod.com", name: "zaphod" } },
+          { id: "changeset2", description: "foo" },
+          { id: "changeset3", description: "bar" }
         ],
         _embedded: {
           tags: [],
@@ -129,18 +193,35 @@ describe("changesets", () => {
     };
 
     it("should set state to received changesets", () => {
-      const newState = reducer({}, fetchChangesetsSuccess(responseBody, "foo", "bar"));
+      const newState = reducer(
+        {},
+        fetchChangesetsSuccess(responseBody, "foo", "bar")
+      );
       expect(newState).toBeDefined();
-      expect(newState["foo/bar"].byId["changeset1"].author.mail).toEqual("z@phod.com");
-      expect(newState["foo/bar"].byId["changeset2"].description).toEqual("foo");
-      expect(newState["foo/bar"].byId["changeset3"].description).toEqual("bar");
+      expect(newState.byKey["foo/bar"].byId["changeset1"].author.mail).toEqual(
+        "z@phod.com"
+      );
+      expect(newState.byKey["foo/bar"].byId["changeset2"].description).toEqual(
+        "foo"
+      );
+      expect(newState.byKey["foo/bar"].byId["changeset3"].description).toEqual(
+        "bar"
+      );
+      expect(newState.list).toEqual({
+        entry: {
+          page: 1,
+          pageTotal: 10,
+          _links: {}
+        },
+        entries: ["changeset1", "changeset2", "changeset3"]
+      });
     });
 
     it("should not delete existing changesets from state", () => {
       const responseBody = {
         _embedded: {
           changesets: [
-            {id: "changeset1", author: {mail: "z@phod.com", name: "zaphod"}},
+            { id: "changeset1", author: { mail: "z@phod.com", name: "zaphod" } }
           ],
           _embedded: {
             tags: [],
@@ -149,19 +230,24 @@ describe("changesets", () => {
           }
         }
       };
-      const newState = reducer({
-        "foo/bar": {
-          byId: {
-            ["changeset2"]: {
-              id: "changeset2",
-              author: {mail: "mail@author.com", name: "author"}
+      const newState = reducer(
+        {
+          byKey: {
+            "foo/bar": {
+              byId: {
+                ["changeset2"]: {
+                  id: "changeset2",
+                  author: { mail: "mail@author.com", name: "author" }
+                }
+              }
             }
           }
-        }
-      }, fetchChangesetsSuccess(responseBody, "foo", "bar"));
-      expect(newState["foo/bar"].byId["changeset2"]).toBeDefined();
-      expect(newState["foo/bar"].byId["changeset1"]).toBeDefined();
-    })
+        },
+        fetchChangesetsSuccess(responseBody, "foo", "bar")
+      );
+      expect(newState.byKey["foo/bar"].byId["changeset2"]).toBeDefined();
+      expect(newState.byKey["foo/bar"].byId["changeset1"]).toBeDefined();
+    });
   });
 
   describe("changeset selectors", () => {
@@ -170,16 +256,18 @@ describe("changesets", () => {
     it("should get all changesets for a given namespace and name", () => {
       const state = {
         changesets: {
-          ["foo/bar"]: {
-            byId: {
-              "id1": {id: "id1"},
-              "id2": {id: "id2"}
+          byKey: {
+            "foo/bar": {
+              byId: {
+                id1: { id: "id1" },
+                id2: { id: "id2" }
+              }
             }
           }
         }
       };
-      const result = getChangesets(state, "foo", "bar" );
-      expect(result).toContainEqual({id: "id1"})
+      const result = getChangesets(state, "foo", "bar");
+      expect(result).toContainEqual({ id: "id1" });
     });
 
     it("should return true, when fetching changesets is pending", () => {
@@ -208,7 +296,6 @@ describe("changesets", () => {
 
     it("should return false if fetching changesets did not fail", () => {
       expect(getFetchChangesetsFailure({}, "foo", "bar")).toBeUndefined();
-    })
-
+    });
   });
 });

@@ -1,20 +1,26 @@
+// @flow
 import React from "react";
 import { connect } from "react-redux";
-import { ErrorNotification, Loading } from "@scm-manager/ui-components";
+import {
+  ErrorNotification,
+  Loading,
+  Paginator
+} from "@scm-manager/ui-components";
 
 import {
-  fetchChangesetsByNamespaceAndName,
+  fetchChangesets,
   fetchChangesetsByNamespaceNameAndBranch,
   getChangesets,
   getFetchChangesetsFailure,
-  isFetchChangesetsPending
+  isFetchChangesetsPending,
+  selectListAsCollection
 } from "../modules/changesets";
 import type { History } from "history";
 import {
   fetchBranchesByNamespaceAndName,
   getBranchNames
 } from "../../repos/modules/branches";
-import type { Repository } from "@scm-manager/ui-types";
+import type { PagedCollection, Repository } from "@scm-manager/ui-types";
 import ChangesetTable from "../components/ChangesetTable";
 import DropDown from "../components/DropDown";
 import { withRouter } from "react-router-dom";
@@ -27,7 +33,8 @@ type Props = {
     namespace: string,
     name: string,
     branch: string
-  ) => void
+  ) => void,
+  list: PagedCollection
 };
 
 class Changesets extends React.Component<State, Props> {
@@ -60,12 +67,13 @@ class Changesets extends React.Component<State, Props> {
     return (
       <div>
         <ErrorNotification error={error} />
-        {this.renderContent()}
+        {this.renderTable()}
+        {this.renderPaginator()}
       </div>
     );
   }
 
-  renderContent = () => {
+  renderTable = () => {
     const branch = this.props.match.params.branch;
     const { changesets, branchNames } = this.props;
 
@@ -78,7 +86,6 @@ class Changesets extends React.Component<State, Props> {
             preselectedOption={branch}
             optionSelected={branch => this.branchChanged(branch)}
           />
-          <hr />
           <ChangesetTable changesets={changesets} />
         </div>
       );
@@ -87,7 +94,15 @@ class Changesets extends React.Component<State, Props> {
     return <ChangesetTable changesets={changesets} />;
   };
 
-  branchChanged = (branchName: string) => {
+  renderPaginator() {
+    const { list } = this.props;
+    if (list) {
+      return <Paginator collection={list} onPageChange={this.onPageChange} />;
+    }
+    return null;
+  }
+
+  branchChanged = (branchName: string): void => {
     const { history, repository } = this.props;
     history.push(
       `/repo/${repository.namespace}/${repository.name}/history/${branchName}`
@@ -97,28 +112,35 @@ class Changesets extends React.Component<State, Props> {
 
 const mapStateToProps = (state, ownProps: Props) => {
   const { namespace, name } = ownProps.repository;
+  const loading = isFetchChangesetsPending(namespace, name, state);
+  const changesets = getChangesets(
+    state,
+    namespace,
+    name,
+    ownProps.match.params.branch
+  );
+  const branchNames = getBranchNames(namespace, name, state);
+  const error = getFetchChangesetsFailure(
+    state,
+    namespace,
+    name,
+    ownProps.match.params.branch
+  );
+  const list = selectListAsCollection(state);
+
   return {
-    loading: isFetchChangesetsPending(namespace, name, state),
-    changesets: getChangesets(
-      state,
-      namespace,
-      name,
-      ownProps.match.params.branch
-    ),
-    branchNames: getBranchNames(namespace, name, state),
-    error: getFetchChangesetsFailure(
-      state,
-      namespace,
-      name,
-      ownProps.match.params.branch
-    )
+    loading,
+    changesets,
+    branchNames,
+    error,
+    list
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     fetchChangesetsByNamespaceAndName: (namespace: string, name: string) => {
-      dispatch(fetchChangesetsByNamespaceAndName(namespace, name));
+      dispatch(fetchChangesets(namespace, name));
     },
     fetchChangesetsByNamespaceNameAndBranch: (
       namespace: string,
