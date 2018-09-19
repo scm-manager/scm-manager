@@ -13,6 +13,9 @@ const styles = {
   },
   changesetGroup: {
     marginBottom: "1em"
+  },
+  withOverflow: {
+    overflow: "auto"
   }
 };
 
@@ -49,7 +52,7 @@ class ChangesetRow extends React.Component<Props> {
         <figure className="media-left">
           <ChangesetAvatar changeset={changeset} />
         </figure>
-        <div className="media-content">
+        <div className={classNames("media-content", classes.withOverflow)}>
           <div className="content">
             <p className="is-ellipsis-overflow">
               {changeset.description}
