@@ -2,7 +2,7 @@
 import React from "react";
 import type {Changeset} from "@scm-manager/ui-types";
 import classNames from "classnames";
-import {Link} from "react-router-dom";
+import {translate} from "react-i18next";
 import ChangesetAvatar from "./ChangesetAvatar";
 import injectSheet from "react-jss";
 
@@ -17,6 +17,7 @@ const styles = {
 
 type Props = {
   changeset: Changeset,
+  t: any,
   classes: any
 };
 
@@ -26,38 +27,43 @@ class ChangesetRow extends React.Component<Props> {
   };
 
   render() {
-    const { changeset, classes } = this.props;
+    const { changeset, t, classes } = this.props;
     const changesetLink = this.createLink(changeset);
+    const authorLine = (
+      <>
+        {changeset.author.name}{" "}
+        <a
+          className="is-hidden-mobile"
+          href={"mailto:" + changeset.author.mail}
+        >
+          &lt;
+          {changeset.author.mail}
+          &gt;
+        </a>
+      </>
+    );
     // todo: i18n
     return (
-      <div className={classNames("box", "box-link-shadow", classes.outer)}>
-        <Link className={classes.overlay} to={changesetLink} />
         <article className={classNames("media", classes.inner)}>
           <figure className="media-left">
             <ChangesetAvatar changeset={changeset} />
           </figure>
           <div className="media-content">
             <div className="content">
-              <p>
-                <p className="is-size-7">
-                  Changeset {changeset.id} commited at {changeset.date}
-                </p>
-                <p className="is-size-7">
-                  {changeset.author.name}{" "}
-                  <a href={"mailto:" + changeset.author.mail}>
-                    &lt;
-                    {changeset.author.mail}
-                    &gt;
-                  </a>
-                </p>
-                <p>{changeset.description}</p>
+              <p className="is-ellipsis-overflow">
+                {changeset.description}
+                <br />
+                {t("changeset.summary", {
+                  id: changeset.id,
+                  time: changeset.date
+                })}
               </p>
+              <p className="is-size-7">{authorLine}</p>
             </div>
           </div>
         </article>
-      </div>
     );
   }
 }
 
-export default injectSheet(styles)(ChangesetRow);
+export default injectSheet(styles)(translate("changesets")(ChangesetRow));

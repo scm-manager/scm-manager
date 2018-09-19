@@ -1,7 +1,8 @@
 // @flow
 import ChangesetRow from "./ChangesetRow";
 import React from "react";
-import type {Changeset} from "@scm-manager/ui-types";
+import type { Changeset } from "@scm-manager/ui-types";
+import classNames from "classnames";
 
 type Props = {
   changesets: Changeset[]
@@ -13,7 +14,7 @@ class ChangesetTable extends React.Component<Props> {
     const content = changesets.map((changeset, index) => {
       return <ChangesetRow key={index} changeset={changeset} />;
     });
-    return <div>{content}</div>;
+    return <div className={classNames("box")}>{content}</div>;
   }
 }
 
