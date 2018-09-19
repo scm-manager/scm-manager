@@ -92,6 +92,37 @@ class ResourceLinks {
     }
   }
 
+  MeLinks me() {
+    return new MeLinks(uriInfoStore.get(), this.user());
+  }
+
+  static class MeLinks {
+    private final LinkBuilder meLinkBuilder;
+    private UserLinks userLinks;
+
+    MeLinks(UriInfo uriInfo, UserLinks user) {
+      meLinkBuilder = new LinkBuilder(uriInfo, MeResource.class);
+      userLinks = user;
+    }
+
+    String self() {
+      return meLinkBuilder.method("get").parameters().href();
+    }
+
+    String delete(String name) {
+      return userLinks.delete(name);
+    }
+
+    String update(String name) {
+      return userLinks.update(name);
+    }
+
+    public String passwordChange() {
+      return meLinkBuilder.method("changePassword").parameters().href();
+    }
+  }
+
+
   UserCollectionLinks userCollection() {
     return new UserCollectionLinks(uriInfoStore.get());
   }

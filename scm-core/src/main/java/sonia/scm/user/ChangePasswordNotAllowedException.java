@@ -1,4 +1,4 @@
-package sonia.scm.api.v2.resources;
+package sonia.scm.user;
 
 public class ChangePasswordNotAllowedException extends RuntimeException {
 

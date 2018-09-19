@@ -20,8 +20,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
-import java.text.MessageFormat;
-import java.util.function.Consumer;
 
 public class UserResource {
 
@@ -130,18 +128,7 @@ public class UserResource {
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
   public Response changePassword(@PathParam("id") String name, @Valid PasswordChangeDto passwordChangeDto) throws NotFoundException, ConcurrentModificationException {
-    return adapter.update(name, user -> user.changePassword(passwordService.encryptPassword(passwordChangeDto.getNewPassword())), getUserTypeChecker());
+    return adapter.update(name, user -> user.changePassword(passwordService.encryptPassword(passwordChangeDto.getNewPassword())), userManager.getUserTypeChecker());
   }
 
-
-  /**
-   * Only account of the default type "xml" can change their password
-   */
-  private Consumer<User> getUserTypeChecker() {
-    return user -> {
-      if (!userManager.getDefaultType().equals(user.getType())) {
-        throw new ChangePasswordNotAllowedException(MessageFormat.format("It is not possible to change password for User of type {0}", user.getType()));
-      }
-    };
-  }
 }

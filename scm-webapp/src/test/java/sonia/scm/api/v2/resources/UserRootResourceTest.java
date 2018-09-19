@@ -68,6 +68,8 @@ public class UserRootResourceTest {
     initMocks(this);
     originalUser = createDummyUser("Neo");
     when(userManager.create(userCaptor.capture())).thenAnswer(invocation -> invocation.getArguments()[0]);
+    when(userManager.isTypeDefault(userCaptor.capture())).thenCallRealMethod();
+    when(userManager.getUserTypeChecker()).thenCallRealMethod();
     doNothing().when(userManager).modify(userCaptor.capture());
     doNothing().when(userManager).delete(userCaptor.capture());
     when(userManager.getDefaultType()).thenReturn("xml");
@@ -114,7 +116,7 @@ public class UserRootResourceTest {
   @Test
   public void shouldEncryptPasswordBeforeChanging() throws Exception {
     String newPassword = "pwd123";
-    String content = MessageFormat.format("'{'\"newPassword\": \"{0}\"'}'", newPassword);
+    String content = String.format("{\"newPassword\": \"%s\"}", newPassword);
     MockHttpRequest request = MockHttpRequest
       .put("/" + UserRootResource.USERS_PATH_V2 + "Neo/password")
       .contentType(VndMediaType.PASSWORD_CHANGE)
@@ -134,7 +136,7 @@ public class UserRootResourceTest {
   public void shouldGet400OnChangePasswordOfUserWithNonDefaultType() throws Exception {
     originalUser.setType("not an xml type");
     String newPassword = "pwd123";
-    String content = MessageFormat.format("'{'\"newPassword\": \"{0}\"'}'", newPassword);
+    String content = String.format("{\"newPassword\": \"%s\"}", newPassword);
     MockHttpRequest request = MockHttpRequest
       .put("/" + UserRootResource.USERS_PATH_V2 + "Neo/password")
       .contentType(VndMediaType.PASSWORD_CHANGE)

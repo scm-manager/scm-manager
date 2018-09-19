@@ -1,4 +1,4 @@
-package sonia.scm.it;
+package sonia.scm.it.utils;
 
 import io.restassured.RestAssured;
 import io.restassured.specification.RequestSpecification;

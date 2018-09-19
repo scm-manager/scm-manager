@@ -18,6 +18,7 @@ import java.time.Instant;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -67,12 +68,17 @@ public class UserToUserDtoMapperTest {
   public void shouldGetPasswordLinkOnlyForDefaultUserType() {
     User user = createDefaultUser();
     when(subject.isPermitted("user:modify:abc")).thenReturn(true);
-    user.setType("xml");
+    when(userManager.isTypeDefault(eq(user))).thenReturn(true);
 
     UserDto userDto = mapper.map(user);
 
-    assertEquals("expected password link", expectedBaseUri.resolve("abc/password").toString(), userDto.getLinks().getLinkBy("password").get().getHref());
-    user.setType("db");
+    assertEquals("expected password link with modify permission", expectedBaseUri.resolve("abc/password").toString(), userDto.getLinks().getLinkBy("password").get().getHref());
+
+    when(subject.isPermitted("user:modify:abc")).thenReturn(false);
+    userDto = mapper.map(user);
+    assertEquals("expected password link on mission modify permission", expectedBaseUri.resolve("abc/password").toString(), userDto.getLinks().getLinkBy("password").get().getHref());
+
+    when(userManager.isTypeDefault(eq(user))).thenReturn(false);
 
     userDto = mapper.map(user);
 

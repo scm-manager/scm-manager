@@ -38,6 +38,9 @@ package sonia.scm.user;
 import sonia.scm.Manager;
 import sonia.scm.search.Searchable;
 
+import java.text.MessageFormat;
+import java.util.function.Consumer;
+
 /**
  * The central class for managing {@link User} objects.
  * This class is a singleton and is available via injection.
@@ -68,4 +71,22 @@ public interface UserManager
    * @since 1.14
    */
   public String getDefaultType();
+
+
+  /**
+   * Only account of the default type "xml" can change their password
+   */
+  default Consumer<User> getUserTypeChecker() {
+    return user -> {
+      if (!isTypeDefault(user)) {
+        throw new ChangePasswordNotAllowedException(MessageFormat.format("It is not possible to change password for User of type {0}", user.getType()));
+      }
+    };
+  }
+
+  default boolean isTypeDefault(User user) {
+    return getDefaultType().equals(user.getType());
+  }
+
+
 }

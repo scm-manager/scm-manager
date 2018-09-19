@@ -4,7 +4,10 @@ import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.credential.PasswordService;
+import sonia.scm.ConcurrentModificationException;
 import sonia.scm.NotFoundException;
+import sonia.scm.user.InvalidPasswordException;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
 import sonia.scm.web.VndMediaType;
@@ -19,6 +22,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import java.util.function.Consumer;
 
 
 /**
@@ -26,15 +30,20 @@ import javax.ws.rs.core.UriInfo;
  */
 @Path(MeResource.ME_PATH_V2)
 public class MeResource {
-  static final String ME_PATH_V2 = "v2/me/";
+  public static final String ME_PATH_V2 = "v2/me/";
 
-  private final UserToUserDtoMapper userToDtoMapper;
+  private final MeToUserDtoMapper meToUserDtoMapper;
 
   private final IdResourceManagerAdapter<User, UserDto> adapter;
+  private final PasswordService passwordService;
+  private final UserManager userManager;
+
   @Inject
-  public MeResource(UserToUserDtoMapper userToDtoMapper, UserManager manager) {
-    this.userToDtoMapper = userToDtoMapper;
+  public MeResource(MeToUserDtoMapper meToUserDtoMapper, UserManager manager, PasswordService passwordService) {
+    this.meToUserDtoMapper = meToUserDtoMapper;
     this.adapter = new IdResourceManagerAdapter<>(manager, User.class);
+    this.passwordService = passwordService;
+    this.userManager = manager;
   }
 
   /**
@@ -52,7 +61,7 @@ public class MeResource {
   public Response get(@Context Request request, @Context UriInfo uriInfo) throws NotFoundException {
 
     String id = (String) SecurityUtils.getSubject().getPrincipals().getPrimaryPrincipal();
-    return adapter.get(id, userToDtoMapper::map);
+    return adapter.get(id, meToUserDtoMapper::map);
   }
 
   /**
@@ -67,8 +76,19 @@ public class MeResource {
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
   @Consumes(VndMediaType.PASSWORD_CHANGE)
-  public Response changePassword(PasswordChangeDto passwordChange) throws NotFoundException {
-    String id = (String) SecurityUtils.getSubject().getPrincipals().getPrimaryPrincipal();
-    return adapter.get(id, userToDtoMapper::map);
+  public Response changePassword(PasswordChangeDto passwordChangeDto) throws NotFoundException, ConcurrentModificationException {
+    String name = (String) SecurityUtils.getSubject().getPrincipals().getPrimaryPrincipal();
+    return adapter.update(name, user -> user.changePassword(passwordService.encryptPassword(passwordChangeDto.getNewPassword())), userManager.getUserTypeChecker().andThen(getOldOriginalPasswordChecker(passwordChangeDto.getOldPassword())));
+  }
+
+  /**
+   * Match given old password from the dto with the stored password before updating
+   */
+  private Consumer<User> getOldOriginalPasswordChecker(String oldPassword) {
+    return user -> {
+      if (!user.getPassword().equals(passwordService.encryptPassword(oldPassword))) {
+        throw new InvalidPasswordException("The password is invalid");
+      }
+    };
   }
 }

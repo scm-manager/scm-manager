@@ -1,5 +1,7 @@
 package sonia.scm.api.v2.resources;
 
+import sonia.scm.user.ChangePasswordNotAllowedException;
+
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;

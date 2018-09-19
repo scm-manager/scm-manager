@@ -8,6 +8,7 @@ public class MapperModule extends AbstractModule {
   @Override
   protected void configure() {
     bind(UserDtoToUserMapper.class).to(Mappers.getMapper(UserDtoToUserMapper.class).getClass());
+    bind(MeToUserDtoMapper.class).to(Mappers.getMapper(MeToUserDtoMapper.class).getClass());
     bind(UserToUserDtoMapper.class).to(Mappers.getMapper(UserToUserDtoMapper.class).getClass());
     bind(UserCollectionToDtoMapper.class);
 

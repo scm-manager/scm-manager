@@ -45,7 +45,7 @@ public abstract class UserToUserDtoMapper extends BaseMapper<User, UserDto> {
     if (UserPermissions.modify(user).isPermitted()) {
       linksBuilder.single(link("update", resourceLinks.user().update(target.getName())));
     }
-    if (userManager.getDefaultType().equals(user.getType())) {
+    if (userManager.isTypeDefault(user)) {
       linksBuilder.single(link("password", resourceLinks.user().passwordChange(target.getName())));
     }
     target.add(linksBuilder.build());

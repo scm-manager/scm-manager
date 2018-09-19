@@ -13,7 +13,9 @@ public class ResourceLinksMock {
     UriInfo uriInfo = mock(UriInfo.class);
     when(uriInfo.getBaseUri()).thenReturn(baseUri);
 
-    when(resourceLinks.user()).thenReturn(new ResourceLinks.UserLinks(uriInfo));
+    ResourceLinks.UserLinks userLinks = new ResourceLinks.UserLinks(uriInfo);
+    when(resourceLinks.user()).thenReturn(userLinks);
+    when(resourceLinks.me()).thenReturn(new ResourceLinks.MeLinks(uriInfo,userLinks));
     when(resourceLinks.userCollection()).thenReturn(new ResourceLinks.UserCollectionLinks(uriInfo));
     when(resourceLinks.group()).thenReturn(new ResourceLinks.GroupLinks(uriInfo));
     when(resourceLinks.groupCollection()).thenReturn(new ResourceLinks.GroupCollectionLinks(uriInfo));
