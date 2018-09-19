@@ -264,7 +264,7 @@ public final class LogCommandBuilder
 
     if (!disablePreProcessors && (cpr != null))
     {
-      preProcessorUtil.prepareForReturn(repository, cpr, !disableEscaping);
+      preProcessorUtil.prepareForReturn(repository, cpr);
     }
 
     return cpr;
@@ -302,24 +302,6 @@ public final class LogCommandBuilder
   public LogCommandBuilder setDisableCache(boolean disableCache)
   {
     this.disableCache = disableCache;
-
-    return this;
-  }
-
-  /**
-   * Disable html escaping for the returned changesets. By default all
-   * changesets are html escaped.
-   *
-   *
-   * @param disableEscaping true to disable the html escaping
-   *
-   * @return {@code this}
-   *
-   * @since 1.35
-   */
-  public LogCommandBuilder setDisableEscaping(boolean disableEscaping)
-  {
-    this.disableEscaping = disableEscaping;
 
     return this;
   }
@@ -544,9 +526,6 @@ public final class LogCommandBuilder
 
   /** repository to query */
   private final Repository repository;
-
-  /** disable escaping */
-  private boolean disableEscaping = false;
 
   /** disable cache */
   private boolean disableCache = false;
