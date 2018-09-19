@@ -61,8 +61,7 @@ public final class HealthChecker {
     Repository repository = repositoryManager.get(id);
 
     if (repository == null) {
-      throw new RepositoryNotFoundException(
-        "could not find repository with id ".concat(id));
+      throw new RepositoryNotFoundException(id);
     }
 
     doCheck(repository);

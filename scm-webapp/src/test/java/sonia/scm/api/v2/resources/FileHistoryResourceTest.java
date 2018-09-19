@@ -1,5 +1,6 @@
 package sonia.scm.api.v2.resources;
 
+import com.google.inject.util.Providers;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.support.SubjectThreadState;
@@ -81,7 +82,7 @@ public class FileHistoryResourceTest extends RepositoryTestBase {
   public void prepareEnvironment() throws Exception {
     fileHistoryCollectionToDtoMapper = new FileHistoryCollectionToDtoMapper(changesetToChangesetDtoMapper, resourceLinks);
     fileHistoryRootResource = new FileHistoryRootResource(serviceFactory, fileHistoryCollectionToDtoMapper);
-    super.fileHistoryRootResource = MockProvider.of(fileHistoryRootResource);
+    super.fileHistoryRootResource = Providers.of(fileHistoryRootResource);
     dispatcher.getRegistry().addSingletonResource(getRepositoryRootResource());
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(service);
     when(serviceFactory.create(any(Repository.class))).thenReturn(service);

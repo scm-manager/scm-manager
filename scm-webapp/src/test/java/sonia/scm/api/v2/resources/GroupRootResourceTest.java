@@ -3,6 +3,7 @@ package sonia.scm.api.v2.resources;
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.io.Resources;
+import com.google.inject.util.Providers;
 import org.jboss.resteasy.core.Dispatcher;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
@@ -73,7 +74,7 @@ public class GroupRootResourceTest {
     GroupCollectionToDtoMapper groupCollectionToDtoMapper = new GroupCollectionToDtoMapper(groupToDtoMapper, resourceLinks);
     GroupCollectionResource groupCollectionResource = new GroupCollectionResource(groupManager, dtoToGroupMapper, groupCollectionToDtoMapper, resourceLinks);
     GroupResource groupResource = new GroupResource(groupManager, groupToDtoMapper, dtoToGroupMapper);
-    GroupRootResource groupRootResource = new GroupRootResource(MockProvider.of(groupCollectionResource), MockProvider.of(groupResource));
+    GroupRootResource groupRootResource = new GroupRootResource(Providers.of(groupCollectionResource), Providers.of(groupResource));
 
     dispatcher = createDispatcher(groupRootResource);
     dispatcher.getProviderFactory().registerProviderInstance(new JSONContextResolver(new ObjectMapperProvider().get()));

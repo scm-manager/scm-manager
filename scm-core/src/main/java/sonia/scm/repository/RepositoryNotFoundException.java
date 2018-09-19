@@ -44,8 +44,8 @@ import sonia.scm.NotFoundException;
 public class RepositoryNotFoundException extends NotFoundException
 {
 
-  /** Field description */
   private static final long serialVersionUID = -6583078808900520166L;
+  private static final String TYPE_REPOSITORY = "repository";
 
   //~--- constructors ---------------------------------------------------------
 
@@ -55,10 +55,14 @@ public class RepositoryNotFoundException extends NotFoundException
    *
    */
   public RepositoryNotFoundException(Repository repository) {
-    super("repository", repository.getName() + "/"  + repository.getNamespace());
+    super(TYPE_REPOSITORY, repository.getName() + "/"  + repository.getNamespace());
   }
 
   public RepositoryNotFoundException(String repositoryId) {
-    super("repository", repositoryId);
+    super(TYPE_REPOSITORY, repositoryId);
+  }
+
+  public RepositoryNotFoundException(NamespaceAndName namespaceAndName) {
+    super(TYPE_REPOSITORY, namespaceAndName.toString());
   }
 }

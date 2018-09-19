@@ -40,7 +40,6 @@ import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 import sonia.scm.BasicPropertiesAware;
 import sonia.scm.ModelObject;
-import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 import sonia.scm.util.ValidationUtil;
 
@@ -347,17 +346,6 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
     repository.setArchived(archived);
 
     // do not copy health check results
-  }
-
-  /**
-   * Creates the url of the repository.
-   *
-   * @param baseUrl base url of the server including the context path
-   * @return url of the repository
-   * @since 1.17
-   */
-  public String createUrl(String baseUrl) {
-    return HttpUtil.concatenate(baseUrl, type, namespace, name);
   }
 
   /**

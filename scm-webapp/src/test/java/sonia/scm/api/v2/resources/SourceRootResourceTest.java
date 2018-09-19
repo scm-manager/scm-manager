@@ -1,5 +1,6 @@
 package sonia.scm.api.v2.resources;
 
+import com.google.inject.util.Providers;
 import org.jboss.resteasy.core.Dispatcher;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
@@ -63,7 +64,7 @@ public class SourceRootResourceTest extends RepositoryTestBase {
 
     when(fileObjectToFileObjectDtoMapper.map(any(FileObject.class), any(NamespaceAndName.class), anyString())).thenReturn(dto);
     SourceRootResource sourceRootResource = new SourceRootResource(serviceFactory, browserResultToBrowserResultDtoMapper);
-    super.sourceRootResource = MockProvider.of(sourceRootResource);
+    super.sourceRootResource = Providers.of(sourceRootResource);
     dispatcher = createDispatcher(getRepositoryRootResource());
   }
 

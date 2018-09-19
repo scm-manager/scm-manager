@@ -24,7 +24,7 @@ public class RepositoryDto extends HalRepresentation {
   @JsonInclude(JsonInclude.Include.NON_NULL)
   private Instant lastModified;
   private String namespace;
-  @Pattern(regexp = "(?!^\\.\\.$)(?!^\\.$)(?!.*[\\\\\\[\\]])^[A-z0-9\\.][A-z0-9\\.\\-_/]*$")
+  @Pattern(regexp = "^[A-z0-9\\-_]+$")
   private String name;
   private boolean archived = false;
   @NotEmpty

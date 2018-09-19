@@ -172,7 +172,7 @@ public class RepositoryHookITCase extends AbstractAdminITCaseBase
     Thread.sleep(WAIT_TIME);
     
     // check debug servlet that only one commit is present
-    WebResource.Builder wr = createResource(client, "../debug/" + repository.getNamespace() + "/" + repository.getName() + "/post-receive/last");
+    WebResource.Builder wr = createResource(client, String.format("../debug/%s/%s/post-receive/last", repository.getNamespace(), repository.getName()));
     DebugHookData data = wr.get(DebugHookData.class);
     assertNotNull(data);
     assertThat(data.getChangesets(), allOf(
@@ -195,8 +195,8 @@ public class RepositoryHookITCase extends AbstractAdminITCaseBase
   
   private RepositoryClient createRepositoryClient() throws IOException 
   {
-    return REPOSITORY_CLIENT_FACTORY.create(repositoryType, 
-      IntegrationTestUtil.BASE_URL + repositoryType + "/" + repository.getNamespace() + "/" + repository.getName(),
+    return REPOSITORY_CLIENT_FACTORY.create(repositoryType,
+      String.format("%srepo/%s/%s", IntegrationTestUtil.BASE_URL, repository.getNamespace(), repository.getName()),
       IntegrationTestUtil.ADMIN_USERNAME, IntegrationTestUtil.ADMIN_PASSWORD, workingCopy
     );
   }

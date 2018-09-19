@@ -54,7 +54,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.SCMContextProvider;
-import sonia.scm.Type;
 import sonia.scm.cache.GuavaCacheManager;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.security.AuthorizationCollector;
@@ -120,7 +119,6 @@ public class DefaultRepositoryManagerPerfTest {
       keyGenerator, 
       repositoryDAO,
       handlerSet, 
-      repositoryMatcher,
       namespaceStrategy
     );
     

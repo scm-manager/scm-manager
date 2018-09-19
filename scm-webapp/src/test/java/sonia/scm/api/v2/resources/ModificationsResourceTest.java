@@ -1,5 +1,6 @@
 package sonia.scm.api.v2.resources;
 
+import com.google.inject.util.Providers;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.support.SubjectThreadState;
@@ -71,7 +72,7 @@ public class ModificationsResourceTest extends RepositoryTestBase {
   @Before
   public void prepareEnvironment() throws Exception {
     modificationsRootResource = new ModificationsRootResource(serviceFactory, modificationsToDtoMapper);
-    super.modificationsRootResource = MockProvider.of(modificationsRootResource);
+    super.modificationsRootResource = Providers.of(modificationsRootResource);
     dispatcher.getRegistry().addSingletonResource(getRepositoryRootResource());
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(repositoryService);
     when(serviceFactory.create(any(Repository.class))).thenReturn(repositoryService);

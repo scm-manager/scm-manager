@@ -24,7 +24,7 @@ public abstract class MeToUserDtoMapper extends UserToUserDtoMapper{
 
 
   @AfterMapping
-  void appendLinks(User user, @MappingTarget UserDto target) {
+  protected void appendLinks(User user, @MappingTarget UserDto target) {
     Links.Builder linksBuilder = linkingTo().self(resourceLinks.me().self());
     if (UserPermissions.delete(user).isPermitted()) {
       linksBuilder.single(link("delete", resourceLinks.me().delete(target.getName())));

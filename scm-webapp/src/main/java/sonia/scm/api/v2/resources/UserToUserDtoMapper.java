@@ -37,7 +37,7 @@ public abstract class UserToUserDtoMapper extends BaseMapper<User, UserDto> {
   }
 
   @AfterMapping
-  void appendLinks(User user, @MappingTarget UserDto target) {
+  protected void appendLinks(User user, @MappingTarget UserDto target) {
     Links.Builder linksBuilder = linkingTo().self(resourceLinks.user().self(target.getName()));
     if (UserPermissions.delete(user).isPermitted()) {
       linksBuilder.single(link("delete", resourceLinks.user().delete(target.getName())));

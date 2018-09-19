@@ -1,6 +1,7 @@
 package sonia.scm.api.v2.resources;
 
 
+import com.google.inject.util.Providers;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.support.SubjectThreadState;
@@ -79,7 +80,7 @@ public class ChangesetRootResourceTest extends RepositoryTestBase {
   public void prepareEnvironment() throws Exception {
     changesetCollectionToDtoMapper = new ChangesetCollectionToDtoMapper(changesetToChangesetDtoMapper, resourceLinks);
     changesetRootResource = new ChangesetRootResource(serviceFactory, changesetCollectionToDtoMapper, changesetToChangesetDtoMapper);
-    super.changesetRootResource = MockProvider.of(changesetRootResource);
+    super.changesetRootResource = Providers.of(changesetRootResource);
     dispatcher.getRegistry().addSingletonResource(getRepositoryRootResource());
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(repositoryService);
     when(serviceFactory.create(any(Repository.class))).thenReturn(repositoryService);

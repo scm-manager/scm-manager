@@ -31,7 +31,7 @@ public class RepositoryUtil {
   public static RepositoryClient createRepositoryClient(String repositoryType, File folder, String username, String password) throws IOException {
     String httpProtocolUrl = TestData.callRepository(username, password, repositoryType, HttpStatus.SC_OK)
       .extract()
-      .path("_links.httpProtocol.href");
+      .path("_links.protocol.find{it.name=='http'}.href");
 
     return REPOSITORY_CLIENT_FACTORY.create(repositoryType, httpProtocolUrl, username, password, folder);
   }
