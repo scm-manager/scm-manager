@@ -4,9 +4,9 @@ import type { Changeset, Repository } from "@scm-manager/ui-types";
 import classNames from "classnames";
 import { translate, Interpolate } from "react-i18next";
 import ChangesetAvatar from "./ChangesetAvatar";
+import ChangesetId from "./ChangesetId";
 import injectSheet from "react-jss";
 import { DateFromNow } from "@scm-manager/ui-components";
-import { Link } from "react-router-dom";
 
 const styles = {
   pointer: {
@@ -30,19 +30,11 @@ type Props = {
 class ChangesetRow extends React.Component<Props> {
   createLink = (changeset: Changeset) => {
     const { repository } = this.props;
-    return (
-      <Link
-        to={`/repo/${repository.namespace}/${repository.name}/changeset/${
-          changeset.id
-        }`}
-      >
-        {changeset.id.substr(0, 7)}
-      </Link>
-    );
+    return <ChangesetId changeset={changeset} repository={repository} />;
   };
 
   render() {
-    const { changeset, t, classes } = this.props;
+    const { changeset, classes } = this.props;
     const changesetLink = this.createLink(changeset);
     const dateFromNow = <DateFromNow date={changeset.date} />;
     const authorLine = (
