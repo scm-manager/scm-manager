@@ -2,9 +2,10 @@
 import React from "react";
 import type { Changeset } from "@scm-manager/ui-types";
 import classNames from "classnames";
-import { translate } from "react-i18next";
+import { translate, Interpolate } from "react-i18next";
 import ChangesetAvatar from "./ChangesetAvatar";
 import injectSheet from "react-jss";
+import { DateFromNow } from "@scm-manager/ui-components";
 
 const styles = {
   pointer: {
@@ -23,12 +24,13 @@ type Props = {
 
 class ChangesetRow extends React.Component<Props> {
   createLink = (changeset: Changeset) => {
-    return `/repo/changeset/${changeset.id}`;
+    return <a href={`/repo/changeset/${changeset.id}`}>{changeset.id}</a>;
   };
 
   render() {
     const { changeset, t, classes } = this.props;
     const changesetLink = this.createLink(changeset);
+    const dateFromNow = <DateFromNow date={changeset.date} />;
     const authorLine = (
       <>
         {changeset.author.name}{" "}
@@ -42,7 +44,6 @@ class ChangesetRow extends React.Component<Props> {
         </a>
       </>
     );
-    // todo: i18n
     return (
       <article className={classNames("media", classes.inner)}>
         <figure className="media-left">
@@ -53,11 +54,12 @@ class ChangesetRow extends React.Component<Props> {
             <p className="is-ellipsis-overflow">
               {changeset.description}
               <br />
-              {t("changeset.summary", {
-                id: changeset.id,
-                time: changeset.date
-              })}
-            </p>
+              <Interpolate
+                i18nKey="changeset.summary"
+                id={changesetLink}
+                time={dateFromNow}
+              />
+            </p>{" "}
             <p className="is-size-7">{authorLine}</p>
           </div>
         </div>
