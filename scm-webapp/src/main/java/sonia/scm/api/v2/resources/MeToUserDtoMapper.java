@@ -23,6 +23,7 @@ public abstract class MeToUserDtoMapper extends UserToUserDtoMapper{
   private ResourceLinks resourceLinks;
 
 
+  @Override
   @AfterMapping
   protected void appendLinks(User user, @MappingTarget UserDto target) {
     Links.Builder linksBuilder = linkingTo().self(resourceLinks.me().self());

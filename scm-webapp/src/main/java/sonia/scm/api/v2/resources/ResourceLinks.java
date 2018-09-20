@@ -100,8 +100,8 @@ class ResourceLinks {
     private final LinkBuilder meLinkBuilder;
     private UserLinks userLinks;
 
-    MeLinks(ScmPathInfo uriInfo, UserLinks user) {
-      meLinkBuilder = new LinkBuilder(uriInfo, MeResource.class);
+    MeLinks(ScmPathInfo pathInfo, UserLinks user) {
+      meLinkBuilder = new LinkBuilder(pathInfo, MeResource.class);
       userLinks = user;
     }
 

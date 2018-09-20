@@ -17,12 +17,15 @@ public class UserITCase {
 
   @Test
   public void adminShouldChangeOwnPassword() {
-    String newPassword = TestData.USER_SCM_ADMIN + "1";
+    String newUser = "user";
+    String password = "pass";
+    TestData.createUser(newUser, password, true, "xml");
+    String newPassword = "new_password";
     // admin change the own password
     ScmRequests.start()
       .given()
-      .url(TestData.getUserUrl(TestData.USER_SCM_ADMIN))
-      .usernameAndPassword(TestData.USER_SCM_ADMIN, TestData.USER_SCM_ADMIN)
+      .url(TestData.getUserUrl(newUser))
+      .usernameAndPassword(newUser, password)
       .getUserResource()
       .assertStatusCode(200)
       .usingUserResponse()
@@ -30,18 +33,16 @@ public class UserITCase {
       .assertPassword(Assert::assertNull)
       .requestChangePassword(newPassword) // the oldPassword is not needed in the user resource
       .assertStatusCode(204);
-    // assert password is changed -> login with the new Password than undo changes
+    // assert password is changed -> login with the new Password
     ScmRequests.start()
       .given()
-      .url(TestData.getUserUrl(TestData.USER_SCM_ADMIN))
-      .usernameAndPassword(TestData.USER_SCM_ADMIN, newPassword)
+      .url(TestData.getUserUrl(newUser))
+      .usernameAndPassword(newUser, newPassword)
       .getUserResource()
       .assertStatusCode(200)
       .usingUserResponse()
-      .assertAdmin(aBoolean -> assertThat(aBoolean).isEqualTo(Boolean.TRUE))
-      .assertPassword(Assert::assertNull)
-      .requestChangePassword(TestData.USER_SCM_ADMIN)
-      .assertStatusCode(204);
+      .assertAdmin(isAdmin -> assertThat(isAdmin).isEqualTo(Boolean.TRUE))
+      .assertPassword(Assert::assertNull);
 
   }
 

@@ -24,6 +24,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.util.function.Consumer;
 
+import static sonia.scm.user.InvalidPasswordException.PASSWORD_NOT_MATCHED;
+
 
 /**
  * RESTful Web Service Resource to get currently logged in users.
@@ -87,7 +89,7 @@ public class MeResource {
   private Consumer<User> getOldOriginalPasswordChecker(String oldPassword) {
     return user -> {
       if (!user.getPassword().equals(passwordService.encryptPassword(oldPassword))) {
-        throw new InvalidPasswordException("The password is invalid");
+        throw new InvalidPasswordException(PASSWORD_NOT_MATCHED);
       }
     };
   }

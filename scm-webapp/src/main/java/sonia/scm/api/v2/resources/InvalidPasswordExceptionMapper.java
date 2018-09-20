@@ -10,7 +10,7 @@ import javax.ws.rs.ext.Provider;
 public class InvalidPasswordExceptionMapper implements ExceptionMapper<InvalidPasswordException> {
   @Override
   public Response toResponse(InvalidPasswordException exception) {
-    return Response.status(Response.Status.UNAUTHORIZED)
+    return Response.status(Response.Status.BAD_REQUEST)
       .entity(exception.getMessage())
       .build();
   }

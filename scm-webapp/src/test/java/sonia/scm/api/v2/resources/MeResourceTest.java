@@ -70,7 +70,6 @@ public class MeResourceTest {
     when(userManager.isTypeDefault(userCaptor.capture())).thenCallRealMethod();
     when(userManager.getUserTypeChecker()).thenCallRealMethod();
     when(userManager.getDefaultType()).thenReturn("xml");
-    userToDtoMapper.setResourceLinks(resourceLinks);
     MeResource meResource = new MeResource(userToDtoMapper, userManager, passwordService);
     when(uriInfo.getApiRestUri()).thenReturn(URI.create("/"));
     when(scmPathInfoStore.get()).thenReturn(uriInfo);
@@ -138,7 +137,7 @@ public class MeResourceTest {
 
   @Test
   @SubjectAware(username = "trillian", password = "secret")
-  public void shouldGet401OnChangePasswordIfOldPasswordDoesNotMatchOriginalPassword() throws Exception {
+  public void shouldGet400OnChangePasswordIfOldPasswordDoesNotMatchOriginalPassword() throws Exception {
     String newPassword = "pwd123";
     String oldPassword = "notEncriptedSecret";
     String content = String.format("{ \"oldPassword\": \"%s\" , \"newPassword\": \"%s\" }", oldPassword, newPassword);
@@ -152,7 +151,7 @@ public class MeResourceTest {
 
     dispatcher.invoke(request, response);
 
-    assertEquals(HttpServletResponse.SC_UNAUTHORIZED, response.getStatus());
+    assertEquals(HttpServletResponse.SC_BAD_REQUEST, response.getStatus());
   }
 
 

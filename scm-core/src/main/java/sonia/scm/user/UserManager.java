@@ -41,6 +41,8 @@ import sonia.scm.search.Searchable;
 import java.text.MessageFormat;
 import java.util.function.Consumer;
 
+import static sonia.scm.user.ChangePasswordNotAllowedException.WRON_USER_TYPE;
+
 /**
  * The central class for managing {@link User} objects.
  * This class is a singleton and is available via injection.
@@ -79,7 +81,7 @@ public interface UserManager
   default Consumer<User> getUserTypeChecker() {
     return user -> {
       if (!isTypeDefault(user)) {
-        throw new ChangePasswordNotAllowedException(MessageFormat.format("It is not possible to change password for User of type {0}", user.getType()));
+        throw new ChangePasswordNotAllowedException(MessageFormat.format(WRON_USER_TYPE, user.getType()));
       }
     };
   }

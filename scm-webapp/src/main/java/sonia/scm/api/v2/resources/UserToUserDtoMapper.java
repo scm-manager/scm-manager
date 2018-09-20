@@ -31,11 +31,6 @@ public abstract class UserToUserDtoMapper extends BaseMapper<User, UserDto> {
   @Inject
   private ResourceLinks resourceLinks;
 
-  @VisibleForTesting
-  void setResourceLinks(ResourceLinks resourceLinks) {
-    this.resourceLinks = resourceLinks;
-  }
-
   @AfterMapping
   protected void appendLinks(User user, @MappingTarget UserDto target) {
     Links.Builder linksBuilder = linkingTo().self(resourceLinks.user().self(target.getName()));

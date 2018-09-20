@@ -120,7 +120,7 @@ public class UserResource {
   @Consumes(VndMediaType.PASSWORD_CHANGE)
   @StatusCodes({
     @ResponseCode(code = 204, condition = "update success"),
-    @ResponseCode(code = 400, condition = "Invalid body, e.g. illegal change of id/user name"),
+    @ResponseCode(code = 400, condition = "Invalid body, e.g. the user type is not xml or the given oldPassword do not match the stored one"),
     @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
     @ResponseCode(code = 403, condition = "not authorized, the current user does not have the \"user\" privilege"),
     @ResponseCode(code = 404, condition = "not found, no user with the specified id/name available"),
