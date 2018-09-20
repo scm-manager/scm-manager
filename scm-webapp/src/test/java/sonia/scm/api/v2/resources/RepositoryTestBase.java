@@ -1,5 +1,6 @@
 package sonia.scm.api.v2.resources;
 
+import com.google.inject.util.Providers;
 import sonia.scm.repository.RepositoryManager;
 
 import javax.inject.Provider;
@@ -23,7 +24,7 @@ public abstract class RepositoryTestBase {
 
 
   RepositoryRootResource getRepositoryRootResource() {
-    return new RepositoryRootResource(MockProvider.of(new RepositoryResource(
+    return new RepositoryRootResource(Providers.of(new RepositoryResource(
       repositoryToDtoMapper,
       dtoToRepositoryMapper,
       manager,

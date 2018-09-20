@@ -5,7 +5,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.config.ScmConfiguration;
-import sonia.scm.repository.RepositoryProvider;
+import sonia.scm.repository.spi.ScmProviderHttpServlet;
 import sonia.scm.util.HttpUtil;
 
 import javax.servlet.ServletOutputStream;
@@ -29,12 +29,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class GitPermissionFilterTest {
 
-  @Mock
-  private RepositoryProvider repositoryProvider;
-  
-  private final GitPermissionFilter permissionFilter = new GitPermissionFilter(
-    new ScmConfiguration(), repositoryProvider
-  );
+  private final GitPermissionFilter permissionFilter = new GitPermissionFilter(new ScmConfiguration(), mock(ScmProviderHttpServlet.class));
   
   @Mock
   private HttpServletResponse response;

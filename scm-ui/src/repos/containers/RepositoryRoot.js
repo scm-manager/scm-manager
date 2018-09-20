@@ -26,7 +26,7 @@ import Edit from "../containers/Edit";
 import type { History } from "history";
 import EditNavLink from "../components/EditNavLink";
 import ChangesetView from "../changesets/containers/ChangesetView";
-import Changesets from "../../changesets/containers/Changesets";
+import Changesets from "./Changesets";
 
 type Props = {
   namespace: string,
@@ -110,6 +110,10 @@ class RepositoryRoot extends React.Component<Props> {
             <Route
               path={`${url}/history/:branch`}
               component={() => <Changesets repository={repository} />}
+            />
+            <Route
+              path={`${url}/changesets/:id`}
+              component={() => <ChangesetView repository={repository} />}
             />
           </div>
           <div className="column">

@@ -31,6 +31,8 @@
 
 package sonia.scm.filter;
 
+import static sonia.scm.api.v2.resources.ScmPathInfo.REST_API_PATH;
+
 /**
  * Useful constants for filter implementations.
  *
@@ -44,26 +46,26 @@ public final class Filters
   public static final String PATTERN_ALL = "/*";
 
   /** Field description */
-  public static final String PATTERN_CONFIG = "/api/rest/config*";
+  public static final String PATTERN_CONFIG = REST_API_PATH + "/config*";
 
   /** Field description */
   public static final String PATTERN_DEBUG = "/debug.html";
 
   /** Field description */
-  public static final String PATTERN_GROUPS = "/api/rest/groups*";
+  public static final String PATTERN_GROUPS = REST_API_PATH + "/groups*";
 
   /** Field description */
-  public static final String PATTERN_PLUGINS = "/api/rest/plugins*";
+  public static final String PATTERN_PLUGINS = REST_API_PATH + "/plugins*";
 
   /** Field description */
   public static final String PATTERN_RESOURCE_REGEX =
     "^/(?:resources|api|plugins|index)[\\./].*(?:html|\\.css|\\.js|\\.xml|\\.json|\\.txt)";
 
   /** Field description */
-  public static final String PATTERN_RESTAPI = "/api/rest/*";
+  public static final String PATTERN_RESTAPI = REST_API_PATH + "/*";
 
   /** Field description */
-  public static final String PATTERN_USERS = "/api/rest/users*";
+  public static final String PATTERN_USERS = REST_API_PATH + "/users*";
 
   /** authentication priority */
   public static final int PRIORITY_AUTHENTICATION = 5000;

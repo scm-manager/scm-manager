@@ -33,10 +33,7 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.common.io.Closeables;
-
 import sonia.scm.repository.Feature;
 import sonia.scm.repository.HgHookManager;
 import sonia.scm.repository.HgRepositoryHandler;
@@ -44,11 +41,8 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.CommandNotSupportedException;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.File;
 import java.io.IOException;
-
 import java.util.EnumSet;
 import java.util.Set;
 
@@ -82,16 +76,6 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
 
   //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   *
-   *
-   *
-   * @param hookManager
-   * @param handler
-   * @param repository
-   */
   HgRepositoryServiceProvider(HgRepositoryHandler handler,
     HgHookManager hookManager, Repository repository)
   {

@@ -1,6 +1,7 @@
 package sonia.scm.api.v2.resources;
 
 
+import com.google.inject.util.Providers;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.support.SubjectThreadState;
@@ -63,7 +64,7 @@ public class DiffResourceTest extends RepositoryTestBase {
   @Before
   public void prepareEnvironment() throws Exception {
     diffRootResource = new DiffRootResource(serviceFactory);
-    super.diffRootResource = MockProvider.of(diffRootResource);
+    super.diffRootResource = Providers.of(diffRootResource);
     dispatcher.getRegistry().addSingletonResource(getRepositoryRootResource());
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(service);
     when(serviceFactory.create(any(Repository.class))).thenReturn(service);

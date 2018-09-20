@@ -278,7 +278,6 @@ public class GitRepositoryViewer
       {
         //J-
         ChangesetPagingResult cpr = service.getLogCommand()
-                                           .setDisableEscaping(true)
                                            .setBranch(name)
                                            .setPagingLimit(CHANGESET_PER_BRANCH)
                                            .getChangesets();

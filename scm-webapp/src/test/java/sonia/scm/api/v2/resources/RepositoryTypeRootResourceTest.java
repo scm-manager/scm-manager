@@ -2,6 +2,7 @@ package sonia.scm.api.v2.resources;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.google.inject.util.Providers;
 import org.jboss.resteasy.core.Dispatcher;
 import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.mock.MockHttpRequest;
@@ -22,8 +23,10 @@ import java.util.List;
 
 import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
-import static org.junit.Assert.*;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalToIgnoringCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
@@ -52,7 +55,7 @@ public class RepositoryTypeRootResourceTest {
     RepositoryTypeCollectionToDtoMapper collectionMapper = new RepositoryTypeCollectionToDtoMapper(mapper, resourceLinks);
     RepositoryTypeCollectionResource collectionResource = new RepositoryTypeCollectionResource(repositoryManager, collectionMapper);
     RepositoryTypeResource resource = new RepositoryTypeResource(repositoryManager, mapper);
-    RepositoryTypeRootResource rootResource = new RepositoryTypeRootResource(MockProvider.of(collectionResource), MockProvider.of(resource));
+    RepositoryTypeRootResource rootResource = new RepositoryTypeRootResource(Providers.of(collectionResource), Providers.of(resource));
     dispatcher.getRegistry().addSingletonResource(rootResource);
   }
 

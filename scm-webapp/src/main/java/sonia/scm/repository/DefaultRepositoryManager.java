@@ -31,10 +31,7 @@
 
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.github.sdorra.ssp.PermissionActionCheck;
-import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.inject.Inject;
@@ -43,7 +40,6 @@ import org.apache.shiro.concurrent.SubjectAwareExecutorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.AlreadyExistsException;
-import sonia.scm.ArgumentIsInvalidException;
 import sonia.scm.ConfigurationException;
 import sonia.scm.HandlerEventType;
 import sonia.scm.ManagerDaoAdapter;
@@ -54,11 +50,9 @@ import sonia.scm.config.ScmConfiguration;
 import sonia.scm.security.KeyGenerator;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.CollectionAppender;
-import sonia.scm.util.HttpUtil;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -70,8 +64,6 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
-
-//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Default implementation of {@link RepositoryManager}.
@@ -90,7 +82,6 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
   private final KeyGenerator keyGenerator;
   private final RepositoryDAO repositoryDAO;
   private final Set<Type> types;
-  private RepositoryMatcher repositoryMatcher;
   private NamespaceStrategy namespaceStrategy;
   private final ManagerDaoAdapter<Repository> managerDaoAdapter;
 
@@ -99,12 +90,10 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
   public DefaultRepositoryManager(ScmConfiguration configuration,
                                   SCMContextProvider contextProvider, KeyGenerator keyGenerator,
                                   RepositoryDAO repositoryDAO, Set<RepositoryHandler> handlerSet,
-                                  RepositoryMatcher repositoryMatcher,
                                   NamespaceStrategy namespaceStrategy) {
     this.configuration = configuration;
     this.keyGenerator = keyGenerator;
     this.repositoryDAO = repositoryDAO;
-    this.repositoryMatcher = repositoryMatcher;
     this.namespaceStrategy = namespaceStrategy;
 
     ThreadFactory factory = new ThreadFactoryBuilder()
@@ -315,71 +304,6 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
     }
 
     return validTypes;
-  }
-
-  @Override
-  public Repository getFromRequest(HttpServletRequest request) {
-    AssertUtil.assertIsNotNull(request);
-
-    return getFromUri(HttpUtil.getStrippedURI(request));
-  }
-
-  @Override
-  public Repository getFromUri(String uri) {
-    AssertUtil.assertIsNotEmpty(uri);
-
-    if (uri.startsWith(HttpUtil.SEPARATOR_PATH)) {
-      uri = uri.substring(1);
-    }
-
-    int typeSeparator = uri.indexOf(HttpUtil.SEPARATOR_PATH);
-    Repository repository = null;
-
-    if (typeSeparator > 0) {
-      String type = uri.substring(0, typeSeparator);
-
-      uri = uri.substring(typeSeparator + 1);
-      repository = getFromTypeAndUri(type, uri);
-    }
-
-    return repository;
-  }
-
-  private Repository getFromTypeAndUri(String type, String uri) {
-    if (Strings.isNullOrEmpty(type)) {
-      throw new ArgumentIsInvalidException("argument type is required");
-    }
-
-    if (Strings.isNullOrEmpty(uri)) {
-      throw new ArgumentIsInvalidException("argument uri is required");
-    }
-
-    // remove ;jsessionid, jetty bug?
-    uri = HttpUtil.removeMatrixParameter(uri);
-
-    Repository repository = null;
-
-    if (handlerMap.containsKey(type)) {
-      Collection<Repository> repositories = repositoryDAO.getAll();
-
-      PermissionActionCheck<Repository> check = RepositoryPermissions.read();
-
-      for (Repository r : repositories) {
-        if (repositoryMatcher.matches(r, type, uri)) {
-          check.check(r);
-          repository = r.clone();
-
-          break;
-        }
-      }
-    }
-
-    if ((repository == null) && logger.isDebugEnabled()) {
-      logger.debug("could not find repository with type {} and uri {}", type,
-        uri);
-    }
-
-    return repository;
   }
 
   @Override

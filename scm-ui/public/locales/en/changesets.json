@@ -3,7 +3,8 @@
     "id": "ID",
     "description": "Description",
     "contact": "Contact",
-    "date": "Date"
+    "date": "Date",
+    "summary": "Changeset {{id}} committed {{time}}"
   },
   "author": {
     "name": "Author",

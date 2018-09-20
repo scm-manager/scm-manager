@@ -33,8 +33,6 @@
 
 package sonia.scm;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Provider;
 import com.google.inject.multibindings.Multibinder;
@@ -56,17 +54,48 @@ import sonia.scm.group.xml.XmlGroupDAO;
 import sonia.scm.io.DefaultFileSystem;
 import sonia.scm.io.FileSystem;
 import sonia.scm.net.SSLContextProvider;
-import sonia.scm.net.ahc.*;
-import sonia.scm.plugin.*;
-import sonia.scm.repository.*;
+import sonia.scm.net.ahc.AdvancedHttpClient;
+import sonia.scm.net.ahc.ContentTransformer;
+import sonia.scm.net.ahc.DefaultAdvancedHttpClient;
+import sonia.scm.net.ahc.JsonContentTransformer;
+import sonia.scm.net.ahc.XmlContentTransformer;
+import sonia.scm.plugin.DefaultPluginLoader;
+import sonia.scm.plugin.DefaultPluginManager;
+import sonia.scm.plugin.PluginLoader;
+import sonia.scm.plugin.PluginManager;
+import sonia.scm.repository.DefaultRepositoryManager;
+import sonia.scm.repository.DefaultRepositoryProvider;
+import sonia.scm.repository.HealthCheckContextListener;
+import sonia.scm.repository.NamespaceStrategy;
+import sonia.scm.repository.NamespaceStrategyProvider;
+import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryDAO;
+import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.RepositoryManagerProvider;
+import sonia.scm.repository.RepositoryProvider;
 import sonia.scm.repository.api.HookContextFactory;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.repository.spi.HookEventFacade;
 import sonia.scm.repository.xml.XmlRepositoryDAO;
 import sonia.scm.schedule.QuartzScheduler;
 import sonia.scm.schedule.Scheduler;
-import sonia.scm.security.*;
-import sonia.scm.store.*;
+import sonia.scm.security.AuthorizationChangedEventProducer;
+import sonia.scm.security.CipherHandler;
+import sonia.scm.security.CipherUtil;
+import sonia.scm.security.ConfigurableLoginAttemptHandler;
+import sonia.scm.security.DefaultKeyGenerator;
+import sonia.scm.security.DefaultSecuritySystem;
+import sonia.scm.security.KeyGenerator;
+import sonia.scm.security.LoginAttemptHandler;
+import sonia.scm.security.SecuritySystem;
+import sonia.scm.store.BlobStoreFactory;
+import sonia.scm.store.ConfigurationEntryStoreFactory;
+import sonia.scm.store.ConfigurationStoreFactory;
+import sonia.scm.store.DataStoreFactory;
+import sonia.scm.store.FileBlobStoreFactory;
+import sonia.scm.store.JAXBConfigurationEntryStoreFactory;
+import sonia.scm.store.JAXBConfigurationStoreFactory;
+import sonia.scm.store.JAXBDataStoreFactory;
 import sonia.scm.template.MustacheTemplateEngine;
 import sonia.scm.template.TemplateEngine;
 import sonia.scm.template.TemplateEngineFactory;
@@ -81,14 +110,16 @@ import sonia.scm.util.ScmConfigurationUtil;
 import sonia.scm.web.UserAgentParser;
 import sonia.scm.web.cgi.CGIExecutorFactory;
 import sonia.scm.web.cgi.DefaultCGIExecutorFactory;
+import sonia.scm.web.filter.AuthenticationFilter;
 import sonia.scm.web.filter.LoggingFilter;
+import sonia.scm.web.protocol.HttpProtocolServlet;
 import sonia.scm.web.security.AdministrationContext;
 import sonia.scm.web.security.DefaultAdministrationContext;
 
 import javax.net.ssl.SSLContext;
 import javax.servlet.ServletContext;
 
-//~--- JDK imports ------------------------------------------------------------
+import static sonia.scm.api.v2.resources.ScmPathInfo.REST_API_PATH;
 
 /**
  *
@@ -99,14 +130,14 @@ public class ScmServletModule extends ServletModule
 
   /** Field description */
   public static final String[] PATTERN_ADMIN = new String[] {
-                                                 "/api/rest/groups*",
-    "/api/rest/users*", "/api/rest/plguins*" };
+                                                 REST_API_PATH + "/groups*",
+    REST_API_PATH + "/users*", REST_API_PATH + "/plguins*" };
 
   /** Field description */
   public static final String PATTERN_ALL = "/*";
 
   /** Field description */
-  public static final String PATTERN_CONFIG = "/api/rest/config*";
+  public static final String PATTERN_CONFIG = REST_API_PATH + "/config*";
 
   /** Field description */
   public static final String PATTERN_DEBUG = "/debug.html";
@@ -155,22 +186,11 @@ public class ScmServletModule extends ServletModule
 
   //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param servletContext
-   * @param pluginLoader
-   * @param overrides
-   * @param extensionProcessor
-   */
-  ScmServletModule(ServletContext servletContext,
-    DefaultPluginLoader pluginLoader, ClassOverrides overrides, ExtensionProcessor extensionProcessor)
+  ScmServletModule(ServletContext servletContext, DefaultPluginLoader pluginLoader, ClassOverrides overrides)
   {
     this.servletContext = servletContext;
     this.pluginLoader = pluginLoader;
     this.overrides = overrides;
-    this.extensionProcessor = extensionProcessor;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -293,6 +313,8 @@ public class ScmServletModule extends ServletModule
     bind(TemplateEngineFactory.class);
     bind(ObjectMapper.class).toProvider(ObjectMapperProvider.class);
 
+    filter(HttpProtocolServlet.PATTERN).through(AuthenticationFilter.class);
+
     // bind events
     // bind(LastModifiedUpdateListener.class);
 
@@ -389,11 +411,6 @@ public class ScmServletModule extends ServletModule
 
   /**
    * Load ScmConfiguration with JAXB
-   *
-   *
-   * @param context
-   *
-   * @return
    */
   private ScmConfiguration getScmConfiguration()
   {
@@ -414,6 +431,4 @@ public class ScmServletModule extends ServletModule
 
   /** Field description */
   private final ServletContext servletContext;
-
-  private final ExtensionProcessor extensionProcessor;
 }

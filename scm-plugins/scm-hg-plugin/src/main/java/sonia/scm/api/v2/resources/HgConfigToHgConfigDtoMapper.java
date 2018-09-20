@@ -18,7 +18,7 @@ import static de.otto.edison.hal.Links.linkingTo;
 public abstract class HgConfigToHgConfigDtoMapper extends BaseMapper<HgConfig, HgConfigDto> {
 
   @Inject
-  private UriInfoStore uriInfoStore;
+  private ScmPathInfoStore scmPathInfoStore;
 
   @AfterMapping
   void appendLinks(HgConfig config, @MappingTarget HgConfigDto target) {
@@ -30,12 +30,12 @@ public abstract class HgConfigToHgConfigDtoMapper extends BaseMapper<HgConfig, H
   }
 
   private String self() {
-    LinkBuilder linkBuilder = new LinkBuilder(uriInfoStore.get(), HgConfigResource.class);
+    LinkBuilder linkBuilder = new LinkBuilder(scmPathInfoStore.get(), HgConfigResource.class);
     return linkBuilder.method("get").parameters().href();
   }
 
   private String update() {
-    LinkBuilder linkBuilder = new LinkBuilder(uriInfoStore.get(), HgConfigResource.class);
+    LinkBuilder linkBuilder = new LinkBuilder(scmPathInfoStore.get(), HgConfigResource.class);
     return linkBuilder.method("update").parameters().href();
   }
 }

@@ -70,7 +70,7 @@ public class LfsServletFactory {
    */
   @VisibleForTesting
   static String buildBaseUri(Repository repository, HttpServletRequest request) {
-    return String.format("%s/git/%s/%s.git/info/lfs/objects/", HttpUtil.getCompleteUrl(request), repository.getNamespace(), repository.getName());
+    return String.format("%s/repo/%s/%s.git/info/lfs/objects/", HttpUtil.getCompleteUrl(request), repository.getNamespace(), repository.getName());
   }
 
 }

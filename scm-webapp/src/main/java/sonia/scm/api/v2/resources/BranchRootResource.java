@@ -100,9 +100,10 @@ public class BranchRootResource {
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
       Repository repository = repositoryService.getRepository();
       RepositoryPermissions.read(repository).check();
-      ChangesetPagingResult changesets = repositoryService.getLogCommand()
-        .setPagingStart(page)
-        .setPagingLimit(pageSize)
+      ChangesetPagingResult changesets = new PagedLogCommandBuilder(repositoryService)
+        .page(page)
+        .pageSize(pageSize)
+        .create()
         .setBranch(branchName)
         .getChangesets();
       if (changesets != null && changesets.getChangesets() != null) {
