@@ -10,7 +10,6 @@ import { isPending } from "../../modules/pending";
 import { getFailure } from "../../modules/failure";
 import { combineReducers } from "redux";
 import type { Action, Changeset, PagedCollection } from "@scm-manager/ui-types";
-import ChangesetAvatar from "../components/ChangesetAvatar";
 
 export const FETCH_CHANGESETS = "scm/repos/FETCH_CHANGESETS";
 export const FETCH_CHANGESETS_PENDING = `${FETCH_CHANGESETS}_${PENDING_SUFFIX}`;
@@ -28,7 +27,7 @@ export function fetchChangesetsByLink(
   branch?: string
 ) {
   return function(dispatch: any) {
-    // dispatch(fetchChangesetsPending(namespace, name, branch));
+    dispatch(fetchChangesetsPending(namespace, name, branch));
     return apiClient
       .get(link)
       .then(response => response.json())
@@ -55,6 +54,7 @@ export function fetchChangesetsWithOptions(
   if (suffix) {
     link = link + `${suffix}`;
   }
+
   return function(dispatch: any) {
     dispatch(fetchChangesetsPending(namespace, name, branch));
     return apiClient
@@ -78,7 +78,7 @@ export function fetchChangesetsByPage(
   name: string,
   page: number
 ) {
-  return fetchChangesetsWithOptions(namespace, name, "", `?page=${page}`);
+  return fetchChangesetsWithOptions(namespace, name, "", `?page=${page - 1}`);
 }
 
 export function fetchChangesetsByBranchAndPage(
@@ -87,7 +87,12 @@ export function fetchChangesetsByBranchAndPage(
   branch: string,
   page: number
 ) {
-  return fetchChangesetsWithOptions(namespace, name, branch, `?page=${page}`);
+  return fetchChangesetsWithOptions(
+    namespace,
+    name,
+    branch,
+    `?page=${page - 1}`
+  );
 }
 
 export function fetchChangesetsByNamespaceNameAndBranch(

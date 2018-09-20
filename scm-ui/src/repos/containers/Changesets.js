@@ -4,17 +4,18 @@ import { connect } from "react-redux";
 import {
   ErrorNotification,
   Loading,
+  Page,
   Paginator
 } from "@scm-manager/ui-components";
 
 import {
-  fetchChangesets,
-  fetchChangesetsByNamespaceNameAndBranch,
   getFetchChangesetsFailure,
   isFetchChangesetsPending,
   selectListAsCollection,
   fetchChangesetsByLink,
-  getChangesetsFromState
+  getChangesetsFromState,
+  fetchChangesetsByPage,
+  fetchChangesetsByBranchAndPage
 } from "../modules/changesets";
 import type { History } from "history";
 import {
@@ -40,7 +41,7 @@ type Props = {
   page: number
 };
 
-class Changesets extends React.Component<State, Props> {
+class Changesets extends React.PureComponent<State, Props> {
   constructor(props) {
     super(props);
     this.state = {};
@@ -56,26 +57,57 @@ class Changesets extends React.Component<State, Props> {
     const { namespace, name } = this.props.repository;
     const branchName = this.props.match.params.branch;
     const {
-      fetchChangesetsByNamespaceNameAndBranch,
-      fetchChangesetsByNamespaceAndName,
-      fetchBranchesByNamespaceAndName
+      fetchBranchesByNamespaceAndName,
+      fetchChangesetsByPage,
+      fetchChangesetsByBranchAndPage
     } = this.props;
     if (branchName) {
-      fetchChangesetsByNamespaceNameAndBranch(namespace, name, branchName);
+      fetchChangesetsByBranchAndPage(
+        namespace,
+        name,
+        branchName,
+        this.props.page
+      );
     } else {
-      fetchChangesetsByNamespaceAndName(namespace, name);
+      fetchChangesetsByPage(namespace, name, this.props.page);
     }
     fetchBranchesByNamespaceAndName(namespace, name);
   }
 
+  componentDidUpdate() {
+    const { page, list, repository, match } = this.props;
+    const { namespace, name } = repository;
+    const branch = match.params.branch;
+
+    if (list && (list.page || list.page === 0)) {
+      // backend starts paging at 0
+      const statePage: number = list.page + 1;
+      if (page !== statePage) {
+        if (branch) {
+          this.props.history.push(
+            `/repo/${namespace}/${name}/${branch}/history/${statePage}`
+          );
+        } else {
+          this.props.history.push(
+            `/repo/${namespace}/${name}/history/${statePage}`
+          );
+        }
+      }
+    }
+  }
+
   render() {
     const { changesets, loading, error } = this.props;
+
     if (loading || !changesets) {
       return <Loading />;
     }
+
+    if (error) {
+      return <ErrorNotification error={error} />;
+    }
     return (
       <div>
-        <ErrorNotification error={error} />
         {this.renderTable()}
         {this.renderPaginator()}
       </div>
@@ -114,7 +146,7 @@ class Changesets extends React.Component<State, Props> {
   branchChanged = (branchName: string): void => {
     const { history, repository } = this.props;
     history.push(
-      `/repo/${repository.namespace}/${repository.name}/history/${branchName}`
+      `/repo/${repository.namespace}/${repository.name}/${branchName}/history`
     );
   };
 }
@@ -131,6 +163,16 @@ const createKey = (
   return key;
 };
 
+const getPageFromProps = props => {
+  let page = props.match.params.page;
+  if (page) {
+    page = parseInt(page, 10);
+  } else {
+    page = 1;
+  }
+  return page;
+};
+
 const mapStateToProps = (state, ownProps: Props) => {
   const { namespace, name } = ownProps.repository;
   const { branch } = ownProps.match.params;
@@ -140,32 +182,33 @@ const mapStateToProps = (state, ownProps: Props) => {
   const branchNames = getBranchNames(namespace, name, state);
   const error = getFetchChangesetsFailure(state, namespace, name, branch);
   const list = selectListAsCollection(state, key);
+  const page = getPageFromProps(ownProps);
 
   return {
     loading,
     changesets,
     branchNames,
     error,
-    list
+    list,
+    page
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchChangesetsByNamespaceAndName: (namespace: string, name: string) => {
-      dispatch(fetchChangesets(namespace, name));
-    },
-    fetchChangesetsByNamespaceNameAndBranch: (
-      namespace: string,
-      name: string,
-      branch: string
-    ) => {
-      dispatch(
-        fetchChangesetsByNamespaceNameAndBranch(namespace, name, branch)
-      );
-    },
     fetchBranchesByNamespaceAndName: (namespace: string, name: string) => {
       dispatch(fetchBranchesByNamespaceAndName(namespace, name));
+    },
+    fetchChangesetsByPage: (namespace: string, name: string, page: number) => {
+      dispatch(fetchChangesetsByPage(namespace, name, page));
+    },
+    fetchChangesetsByBranchAndPage: (
+      namespace: string,
+      name: string,
+      branch: string,
+      page: number
+    ) => {
+      dispatch(fetchChangesetsByBranchAndPage(namespace, name, branch, page));
     },
     fetchChangesetsByLink: (
       namespace: string,
