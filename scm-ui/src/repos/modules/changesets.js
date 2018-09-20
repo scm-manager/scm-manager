@@ -16,51 +16,47 @@ export const FETCH_CHANGESETS_PENDING = `${FETCH_CHANGESETS}_${PENDING_SUFFIX}`;
 export const FETCH_CHANGESETS_SUCCESS = `${FETCH_CHANGESETS}_${SUCCESS_SUFFIX}`;
 export const FETCH_CHANGESETS_FAILURE = `${FETCH_CHANGESETS}_${FAILURE_SUFFIX}`;
 
-//added for detailed view of changesets
+//********added for detailed view of changesets
 
 export const FETCH_CHANGESET = "scm/repos/FETCH_CHANGESET";
 export const FETCH_CHANGESET_PENDING = `${FETCH_CHANGESET}_${PENDING_SUFFIX}`;
 export const FETCH_CHANGESET_SUCCESS = `${FETCH_CHANGESET}_${SUCCESS_SUFFIX}`;
 export const FETCH_CHANGESET_FAILURE = `${FETCH_CHANGESET}_${FAILURE_SUFFIX}`;
 
-// end of detailed view add
+//********end of detailed view add
 
 // actions
 const REPO_URL = "repositories";
 //TODO: Content type
 
-//added for detailed view of changesets
+//********added for detailed view of changesets
 
-function fetchChangesetIfNeeded(
+export function fetchChangesetIfNeeded(
   state: Object,
   namespace: string,
   repoName: string,
   id: string
 ) {
-  return function(dispatch) {
+  return function(dispatch: any) {
     if (shouldFetchChangeset(state, namespace, repoName, id)) {
-      dispatch(fetchChangeset(url));
+      return dispatch(fetchChangeset(namespace, repoName, id));
     }
   };
 }
 
-export function shouldFetchChangeset(
-  state: Object,
+export function fetchChangeset(
   namespace: string,
   repoName: string,
   id: string
 ) {
-  // decide if changeset should be fetched here
-  return true;
-}
-
-function fetchChangeset(namespace: string, repoName: string, id: string) {
-  return function(dispatch) {
+  return function(dispatch: any) {
     dispatch(fetchChangesetPending(namespace, repoName, id));
     return apiClient
-      .get(url)
+      .get(REPO_URL + `/${namespace}/${repoName}/changesets/${id}`)
       .then(response => response.json())
-      .then(json => dispatch(fetchChangesetSuccess(namespace, repoName, id)))
+      .then(data =>
+        dispatch(fetchChangesetSuccess(data, namespace, repoName, id))
+      )
       .catch(err => {
         dispatch(fetchChangesetFailure(namespace, repoName, id, err));
       });
@@ -79,25 +75,26 @@ export function fetchChangesetPending(
       repoName,
       id
     },
-    itemId: createItemId(namespace, repoName) + "/" + id
+    itemId: createItemId(namespace, repoName, id)
   };
 }
 
 export function fetchChangesetSuccess(
+  changeset: any,
   namespace: string,
   repoName: string,
   id: string
 ): Action {
   return {
     type: FETCH_CHANGESET_SUCCESS,
-    payload: { namespace, repoName, id },
-    itemId: createItemId(namespace, repoName) + "/" + id
+    payload: { changeset, namespace, repoName, id },
+    itemId: createItemId(namespace, repoName, id)
   };
 }
 
 function fetchChangesetFailure(
   namespace: string,
-  name: string,
+  repoName: string,
   id: string,
   error: Error
 ): Action {
@@ -105,15 +102,14 @@ function fetchChangesetFailure(
     type: FETCH_CHANGESET_FAILURE,
     payload: {
       namespace,
-      name,
+      repoName,
       id,
       error
     },
-    itemId: createItemId(namespace, repoName) + "/" + id
+    itemId: createItemId(namespace, repoName, id)
   };
 }
-
-// end of detailed view add
+//********end of detailed view add
 
 export function fetchChangesetsWithOptions(
   namespace: string,
@@ -234,6 +230,26 @@ function byKeyReducer(
   action: Action = { type: "UNKNOWN" }
 ): Object {
   switch (action.type) {
+    //********added for detailed view of changesets
+    case FETCH_CHANGESET_SUCCESS:
+      const _key = createItemId(
+        action.payload.namespace,
+        action.payload.repoName
+      );
+      let _oldChangesets = { [_key]: {} };
+      if (state[_key] !== undefined) {
+        _oldChangesets[_key] = state[_key];
+      }
+      return {
+        ...state,
+        [_key]: {
+          byId: addChangesetToChangesets(
+            action.payload.changeset,
+            _oldChangesets[_key].byId
+          )
+        }
+      };
+    //********end of added for detailed view of changesets
     case FETCH_CHANGESETS_SUCCESS:
       const key = action.itemId;
       let oldChangesets = { [key]: {} };
@@ -256,6 +272,18 @@ function listReducer(
   action: Action = { type: "UNKNOWN" }
 ): Object {
   switch (action.type) {
+    //********added for detailed view of changesets
+    case FETCH_CHANGESET_SUCCESS:
+      const changesetId = action.payload.changeset.id;
+      const stateEntries = state.entries;
+      stateEntries.push(changesetId);
+      return {
+        entries: stateEntries,
+        entry: {
+          ...state.entry
+        }
+      };
+    //********end of added for detailed view of changesets
     case FETCH_CHANGESETS_SUCCESS:
       const changesets = action.payload._embedded.changesets;
       const changesetIds = changesets.map(c => c.id);
@@ -291,6 +319,21 @@ function extractChangesetsByIds(data: any, oldChangesetsByIds: any) {
 
   return changesetsByIds;
 }
+//********added for detailed view of changesets
+
+function addChangesetToChangesets(data: any, oldChangesetsByIds: any) {
+  const changeset = data;
+  const changesetsByIds = {};
+
+  changesetsByIds[changeset.id] = changeset;
+
+  for (let id in oldChangesetsByIds) {
+    changesetsByIds[id] = oldChangesetsByIds[id];
+  }
+
+  return changesetsByIds;
+}
+//********end of added for detailed view of changesets
 
 //selectors
 export function getChangesets(
@@ -305,6 +348,53 @@ export function getChangesets(
   }
   return Object.values(state.changesets.byKey[key].byId);
 }
+
+//********added for detailed view of changesets
+export function getChangeset(
+  state: Object,
+  namespace: string,
+  name: string,
+  id: string,
+  branch?: string
+) {
+  const key = createItemId(namespace, name, branch);
+  const changesets = state.changesets.byKey[key].byId;
+  if (changesets != null && changesets[id]) {
+    return changesets[id];
+  }
+  return null;
+}
+
+export function shouldFetchChangeset(
+  state: Object,
+  namespace: string,
+  repoName: string,
+  id: string
+) {
+  if (getChangeset(state, namespace, repoName, id)) {
+    return false;
+  }
+  return true;
+}
+
+export function isFetchChangesetPending(
+  state: Object,
+  namespace: string,
+  name: string,
+  id: string
+) {
+  return isPending(state, FETCH_CHANGESET, createItemId(namespace, name, id));
+}
+
+export function getFetchChangesetFailure(
+  state: Object,
+  namespace: string,
+  name: string,
+  id: string
+) {
+  return getFailure(state, FETCH_CHANGESET, createItemId(namespace, name, id));
+}
+//********end of added for detailed view of changesets
 
 export function isFetchChangesetsPending(
   state: Object,
