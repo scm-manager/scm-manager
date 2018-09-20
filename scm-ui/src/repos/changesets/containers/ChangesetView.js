@@ -1,12 +1,40 @@
 //@flow
 import React from "react";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 
-type Props = {};
+type Props = {
+  id: string
+};
 
-class ChangesetView extends React.Component<Props> {
+class ChangesetView extends React.Component<State, Props> {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  componentDidMount() {
+    const id = this.props.match.params.id;
+  }
+
   render() {
-    return <div>Hallo! Changesets here!</div>;
+    const id = this.props.match.params.id;
+
+    return <div>Hallo! Changesets here! {id}</div>;
   }
 }
 
-export default ChangesetView;
+const mapStateToProps = (state, ownProps: Props) => {
+  return null;
+};
+
+const mapDispatchToProps = dispatch => {
+  return null;
+};
+
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(ChangesetView)
+);
