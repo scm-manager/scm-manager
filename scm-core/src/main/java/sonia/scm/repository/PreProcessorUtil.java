@@ -111,7 +111,6 @@ public class PreProcessorUtil
         blameLine.getLineNumber(), repository.getName());
     }
 
-    EscapeUtil.escape(blameLine);
     handlePreProcess(repository,blameLine,blameLinePreProcessorFactorySet, blameLinePreProcessorSet);
   }
 
@@ -124,32 +123,12 @@ public class PreProcessorUtil
    */
   public void prepareForReturn(Repository repository, BlameResult blameResult)
   {
-    prepareForReturn(repository, blameResult, true);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   * @param blameResult
-   * @param escape
-   *
-   * @since 1.35
-   */
-  public void prepareForReturn(Repository repository, BlameResult blameResult,
-    boolean escape)
-  {
     if (logger.isTraceEnabled())
     {
       logger.trace("prepare blame result of repository {} for return",
         repository.getName());
     }
 
-    if (escape)
-    {
-      EscapeUtil.escape(blameResult);
-    }
     handlePreProcessForIterable(repository, blameResult.getBlameLines(),blameLinePreProcessorFactorySet, blameLinePreProcessorSet);
   }
 
@@ -162,32 +141,12 @@ public class PreProcessorUtil
    */
   public void prepareForReturn(Repository repository, Changeset changeset)
   {
-    prepareForReturn(repository, changeset, true);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   * @param changeset
-   * @param escape
-   *
-   * @since 1.35
-   */
-  public void prepareForReturn(Repository repository, Changeset changeset, boolean escape){
     logger.trace("prepare changeset {} of repository {} for return", changeset.getId(), repository.getName());
-    if (escape) {
-      EscapeUtil.escape(changeset);
-    }
     handlePreProcess(repository, changeset, changesetPreProcessorFactorySet, changesetPreProcessorSet);
   }
 
-  public void prepareForReturn(Repository repository, Modifications modifications, boolean escape) {
+  public void prepareForReturn(Repository repository, Modifications modifications) {
     logger.trace("prepare modifications {} of repository {} for return", modifications, repository.getName());
-    if (escape) {
-      EscapeUtil.escape(modifications);
-    }
     handlePreProcess(repository, modifications, modificationsPreProcessorFactorySet, modificationsPreProcessorSet);
   }
 
@@ -200,32 +159,12 @@ public class PreProcessorUtil
    */
   public void prepareForReturn(Repository repository, BrowserResult result)
   {
-    prepareForReturn(repository, result, true);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   * @param result
-   * @param escape
-   *
-   * @since 1.35
-   */
-  public void prepareForReturn(Repository repository, BrowserResult result,
-    boolean escape)
-  {
     if (logger.isTraceEnabled())
     {
       logger.trace("prepare browser result of repository {} for return",
         repository.getName());
     }
 
-    if (escape)
-    {
-      EscapeUtil.escape(result);
-    }
     handlePreProcessForIterable(repository, result,fileObjectPreProcessorFactorySet, fileObjectPreProcessorSet);
   }
 
@@ -235,12 +174,8 @@ public class PreProcessorUtil
    *
    * @param repository
    * @param result
-   * @param escape
-   *
-   * @since 1.35
    */
-  public void prepareForReturn(Repository repository,
-    ChangesetPagingResult result, boolean escape)
+  public void prepareForReturn(Repository repository, ChangesetPagingResult result)
   {
     if (logger.isTraceEnabled())
     {
@@ -248,26 +183,8 @@ public class PreProcessorUtil
         repository.getName());
     }
 
-    if (escape)
-    {
-      EscapeUtil.escape(result);
-    }
     handlePreProcessForIterable(repository,result,changesetPreProcessorFactorySet, changesetPreProcessorSet);
   }
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   * @param result
-   */
-  public void prepareForReturn(Repository repository,
-    ChangesetPagingResult result)
-  {
-    prepareForReturn(repository, result, true);
-  }
-
 
   private <T, F extends PreProcessorFactory<T>, P extends PreProcessor<T>> void handlePreProcess(Repository repository, T processedObject,
                                                                                                  Collection<F> factories,
