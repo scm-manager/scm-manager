@@ -26,6 +26,7 @@ public class UserDto extends HalRepresentation {
   private String mail;
   @Pattern(regexp = "^[A-z0-9\\.\\-_@]|[^ ]([A-z0-9\\.\\-_@ ]*[A-z0-9\\.\\-_@]|[^ ])?$")
   private String name;
+  @JsonInclude(JsonInclude.Include.NON_NULL)
   private String password;
   private String type;
   private Map<String, String> properties;

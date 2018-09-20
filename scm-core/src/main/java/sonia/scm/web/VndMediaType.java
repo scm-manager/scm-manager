@@ -21,7 +21,7 @@ public class VndMediaType {
   public static final String PERMISSION = PREFIX + "permission" + SUFFIX;
   public static final String CHANGESET = PREFIX + "changeset" + SUFFIX;
   public static final String CHANGESET_COLLECTION = PREFIX + "changesetCollection" + SUFFIX;
-  public static final String MODIFICATIONS = PREFIX + "modifications" + SUFFIX;;
+  public static final String MODIFICATIONS = PREFIX + "modifications" + SUFFIX;
   public static final String TAG = PREFIX + "tag" + SUFFIX;
   public static final String TAG_COLLECTION = PREFIX + "tagCollection" + SUFFIX;
   public static final String BRANCH = PREFIX + "branch" + SUFFIX;
@@ -35,6 +35,7 @@ public class VndMediaType {
   public static final String REPOSITORY_TYPE = PREFIX + "repositoryType" + SUFFIX;
   public static final String UI_PLUGIN = PREFIX + "uiPlugin" + SUFFIX;
   public static final String UI_PLUGIN_COLLECTION = PREFIX + "uiPluginCollection" + SUFFIX;
+  @SuppressWarnings("squid:S2068")
   public static final String PASSWORD_CHANGE = PREFIX + "passwordChange" + SUFFIX;
 
   public static final String ME = PREFIX + "me" + SUFFIX;
