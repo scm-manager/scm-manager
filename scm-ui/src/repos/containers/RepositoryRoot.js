@@ -18,12 +18,12 @@ import {
   NavLink,
   Section
 } from "@scm-manager/ui-components";
-import {translate} from "react-i18next";
+import { translate } from "react-i18next";
 import RepositoryDetails from "../components/RepositoryDetails";
 import DeleteNavAction from "../components/DeleteNavAction";
 import Edit from "../containers/Edit";
 
-import type {History} from "history";
+import type { History } from "history";
 import EditNavLink from "../components/EditNavLink";
 import ChangesetView from "../changesets/containers/ChangesetView";
 import Changesets from "../../changesets/containers/Changesets";
@@ -47,7 +47,7 @@ type Props = {
 
 class RepositoryRoot extends React.Component<Props> {
   componentDidMount() {
-    const {fetchRepo, namespace, name} = this.props;
+    const { fetchRepo, namespace, name } = this.props;
 
     fetchRepo(namespace, name);
   }
@@ -72,7 +72,7 @@ class RepositoryRoot extends React.Component<Props> {
   };
 
   render() {
-    const {loading, error, repository, t} = this.props;
+    const { loading, error, repository, t } = this.props;
 
     if (error) {
       return (
@@ -85,7 +85,7 @@ class RepositoryRoot extends React.Component<Props> {
     }
 
     if (!repository || loading) {
-      return <Loading/>;
+      return <Loading />;
     }
 
     const url = this.matchedUrl();
@@ -97,27 +97,35 @@ class RepositoryRoot extends React.Component<Props> {
             <Route
               path={url}
               exact
-              component={() => <RepositoryDetails repository={repository}/>}
+              component={() => <RepositoryDetails repository={repository} />}
             />
             <Route
               path={`${url}/edit`}
-              component={() => <Edit repository={repository}/>}
+              component={() => <Edit repository={repository} />}
             />
             <Route
               path={`${url}/history`}
-              component={() => <Changesets repository={repository}/>}
+              component={() => <Changesets repository={repository} />}
+            />
+            <Route
+              path={`${url}/history/:branch`}
+              component={() => <Changesets repository={repository} />}
             />
           </div>
           <div className="column">
             <Navigation>
               <Section label={t("repository-root.navigation-label")}>
-                <NavLink to={url} label={t("repository-root.information")}/>
-                <NavLink activeOnlyWhenExact={false} to={`${url}/history`} label={t("repository-root.history")}/>
-                <EditNavLink repository={repository} editUrl={`${url}/edit`}/>
+                <NavLink to={url} label={t("repository-root.information")} />
+                <NavLink
+                  activeOnlyWhenExact={false}
+                  to={`${url}/history`}
+                  label={t("repository-root.history")}
+                />
+                <EditNavLink repository={repository} editUrl={`${url}/edit`} />
               </Section>
               <Section label={t("repository-root.actions-label")}>
-                <DeleteNavAction repository={repository} delete={this.delete}/>
-                <NavLink to="/repos" label={t("repository-root.back-label")}/>
+                <DeleteNavAction repository={repository} delete={this.delete} />
+                <NavLink to="/repos" label={t("repository-root.back-label")} />
               </Section>
             </Navigation>
           </div>
@@ -128,7 +136,7 @@ class RepositoryRoot extends React.Component<Props> {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const {namespace, name} = ownProps.match.params;
+  const { namespace, name } = ownProps.match.params;
   const repository = getRepository(state, namespace, name);
   const loading = isFetchRepoPending(state, namespace, name);
   const error = getFetchRepoFailure(state, namespace, name);

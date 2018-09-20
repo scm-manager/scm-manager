@@ -1,26 +1,35 @@
-import React from "react"
-import {connect} from "react-redux";
-import {ErrorNotification, Loading} from "@scm-manager/ui-components";
+import React from "react";
+import { connect } from "react-redux";
+import { ErrorNotification, Loading } from "@scm-manager/ui-components";
 
 import {
-  fetchChangesetsByNamespaceAndName, fetchChangesetsByNamespaceNameAndBranch,
-  getChangesets, getFetchChangesetsFailure, isFetchChangesetsPending,
+  fetchChangesetsByNamespaceAndName,
+  fetchChangesetsByNamespaceNameAndBranch,
+  getChangesets,
+  getFetchChangesetsFailure,
+  isFetchChangesetsPending
 } from "../modules/changesets";
-import type {History} from "history";
-import {fetchBranchesByNamespaceAndName, getBranchNames} from "../../repos/modules/branches";
-import type {Repository} from "@scm-manager/ui-types";
+import type { History } from "history";
+import {
+  fetchBranchesByNamespaceAndName,
+  getBranchNames
+} from "../../repos/modules/branches";
+import type { Repository } from "@scm-manager/ui-types";
 import ChangesetTable from "../components/ChangesetTable";
 import DropDown from "../components/DropDown";
-import {Route, withRouter} from "react-router-dom";
+import { Route, withRouter } from "react-router-dom";
 import ChangesetView from "../../repos/changesets/containers/ChangesetView";
 
 type Props = {
   repository: Repository,
   branchName: string,
   history: History,
-  fetchChangesetsByNamespaceNameAndBranch: (namespace: string, name: string, branch: string) => void
-}
-
+  fetchChangesetsByNamespaceNameAndBranch: (
+    namespace: string,
+    name: string,
+    branch: string
+  ) => void
+};
 
 class Changesets extends React.Component<State, Props> {
   constructor(props) {
@@ -29,10 +38,14 @@ class Changesets extends React.Component<State, Props> {
   }
 
   componentDidMount() {
-    const {namespace, name} = this.props.repository;
+    const { namespace, name } = this.props.repository;
     const branchName = this.props.match.params.branch;
     if (branchName) {
-      this.props.fetchChangesetsByNamespaceNameAndBranch(namespace, name, branchName);
+      this.props.fetchChangesetsByNamespaceNameAndBranch(
+        namespace,
+        name,
+        branchName
+      );
     } else {
       this.props.fetchChangesetsByNamespaceAndName(namespace, name);
     }
@@ -45,77 +58,76 @@ class Changesets extends React.Component<State, Props> {
   render() {
     const url = this.matchedUrl();
 
-    const {changesets, loading, error, repository} = this.props;
+    const { changesets, loading, error, repository } = this.props;
     if (loading || !changesets) {
-      return <Loading/>
+      return <Loading />;
     }
-    return(
+    return (
       <div className="column is-three-quarters">
-          <Route
-            exact
-            path={url}
-            render={this.renderChangesets}
-          />
-          <Route
-            exact
-            path={`${url}/:branch`}
-            render={this.renderChangesets}
-          />
-          <Route
-            exact
-            path={`${url}/:branch/commit/:id`}
-            component={() => <ChangesetView repository={repository}/>}
-          />
-          <Route
-            exact
-            path={`${url}/commit/:id`}
-            component={() => <ChangesetView repository={repository}/>}
-          />
-        </div>
-      )
-
-
+        <Route exact path={url} render={this.renderChangesets} />
+        <Route
+          exact
+          path={`${url}/commit/:id`}
+          component={() => <ChangesetView repository={repository} />}
+        />
+      </div>
+    );
   }
 
   renderChangesets = () => {
-    return(
+    return (
       <div>
-      <ErrorNotification error={this.props.error}/>
-      {this.renderContent()}
-    </div>
-    )
-  }
+        <ErrorNotification error={this.props.error} />
+        {this.renderContent()}
+      </div>
+    );
+  };
   renderContent = () => {
     const branch = this.props.match.params.branch;
-    const {changesets, branchNames} = this.props;
+    const { changesets, branchNames } = this.props;
 
     if (branchNames) {
-      return (<div>
-        <DropDown options={branchNames} preselectedOption={branch}
-                  optionSelected={branch => this.branchChanged(branch)}/>
-        <ChangesetTable changesets={changesets}/>
-      </div>);
+      return (
+        <div>
+          <DropDown
+            options={branchNames}
+            preselectedOption={branch}
+            optionSelected={branch => this.branchChanged(branch)}
+          />
+          <ChangesetTable changesets={changesets} />
+        </div>
+      );
     }
 
-    return <ChangesetTable changesets={changesets}/>
+    return <ChangesetTable changesets={changesets} />;
   };
 
-
   branchChanged = (branchName: string) => {
-    const {history, repository} = this.props;
-    history.push(`/repo/${repository.namespace}/${repository.name}/history/${branchName}`);
+    const { history, repository } = this.props;
+    history.push(
+      `/repo/${repository.namespace}/${repository.name}/history/${branchName}`
+    );
   };
 }
 
-
 const mapStateToProps = (state, ownProps: Props) => {
-  const {namespace, name} = ownProps.repository;
+  const { namespace, name } = ownProps.repository;
   return {
     loading: isFetchChangesetsPending(namespace, name, state),
-    changesets: getChangesets(state, namespace, name, ownProps.match.params.branch),
+    changesets: getChangesets(
+      state,
+      namespace,
+      name,
+      ownProps.match.params.branch
+    ),
     branchNames: getBranchNames(namespace, name, state),
-    error: getFetchChangesetsFailure(state, namespace, name, ownProps.match.params.branch)
-  }
+    error: getFetchChangesetsFailure(
+      state,
+      namespace,
+      name,
+      ownProps.match.params.branch
+    )
+  };
 };
 
 const mapDispatchToProps = dispatch => {
@@ -123,16 +135,24 @@ const mapDispatchToProps = dispatch => {
     fetchChangesetsByNamespaceAndName: (namespace: string, name: string) => {
       dispatch(fetchChangesetsByNamespaceAndName(namespace, name));
     },
-    fetchChangesetsByNamespaceNameAndBranch: (namespace: string, name: string, branch: string) => {
-      dispatch(fetchChangesetsByNamespaceNameAndBranch(namespace, name, branch));
+    fetchChangesetsByNamespaceNameAndBranch: (
+      namespace: string,
+      name: string,
+      branch: string
+    ) => {
+      dispatch(
+        fetchChangesetsByNamespaceNameAndBranch(namespace, name, branch)
+      );
     },
     fetchBranchesByNamespaceAndName: (namespace: string, name: string) => {
       dispatch(fetchBranchesByNamespaceAndName(namespace, name));
     }
-  }
+  };
 };
 
-export default withRouter(connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Changesets));
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(Changesets)
+);
