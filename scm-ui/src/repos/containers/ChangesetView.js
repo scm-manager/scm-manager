@@ -2,9 +2,20 @@
 import React from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
+import type { Changeset } from "@scm-manager/ui-types";
+import { fetchChangesetIfNeeded } from "../modules/changesets";
 
 type Props = {
-  id: string
+  id: string,
+  changeset: Changeset,
+  repository: Repository,
+  repositories: Repository[],
+  fetchChangesetIfNeeded: (
+    state: Object,
+    namespace: string,
+    repoName: string,
+    id: string
+  ) => void
 };
 
 class ChangesetView extends React.Component<State, Props> {
@@ -14,7 +25,10 @@ class ChangesetView extends React.Component<State, Props> {
   }
 
   componentDidMount() {
+    const { fetchChangesetIfNeeded, repository } = this.props;
     const id = this.props.match.params.id;
+    //state macht keinen Sinn?! repositories holen!
+    fetchChangesetIfNeeded(repository.namespace, repository.name, id);
   }
 
   render() {
@@ -29,7 +43,16 @@ const mapStateToProps = (state, ownProps: Props) => {
 };
 
 const mapDispatchToProps = dispatch => {
-  return null;
+  return {
+    fetchChangesetIfNeeded: (
+      state: Object,
+      namespace: string,
+      repoName: string,
+      id: string
+    ) => {
+      dispatch(fetchChangesetIfNeeded(state, namespace, repoName, id));
+    }
+  };
 };
 
 export default withRouter(

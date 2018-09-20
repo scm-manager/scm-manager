@@ -37,8 +37,9 @@ export function fetchChangesetIfNeeded(
   repoName: string,
   id: string
 ) {
-  return function(dispatch: any) {
-    if (shouldFetchChangeset(state, namespace, repoName, id)) {
+  return function(dispatch: any, getState) {
+    console.log(getState());
+    if (shouldFetchChangeset(getState(), namespace, repoName, id)) {
       return dispatch(fetchChangeset(namespace, repoName, id));
     }
   };
