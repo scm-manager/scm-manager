@@ -24,7 +24,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.util.function.Consumer;
 
-import static sonia.scm.user.InvalidPasswordException.PWD_NOT_MATCHED;
+import static sonia.scm.user.InvalidPasswordException.INVALID_MATCHING;
 
 
 /**
@@ -89,7 +89,7 @@ public class MeResource {
   private Consumer<User> getOldOriginalPasswordChecker(String oldPassword) {
     return user -> {
       if (!user.getPassword().equals(passwordService.encryptPassword(oldPassword))) {
-        throw new InvalidPasswordException(PWD_NOT_MATCHED);
+        throw new InvalidPasswordException(INVALID_MATCHING);
       }
     };
   }
