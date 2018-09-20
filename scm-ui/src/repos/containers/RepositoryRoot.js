@@ -8,7 +8,7 @@ import {
   isFetchRepoPending
 } from "../modules/repos";
 import { connect } from "react-redux";
-import { Route, Switch } from "react-router-dom";
+import { Route } from "react-router-dom";
 import type { Repository } from "@scm-manager/ui-types";
 import {
   Page,
@@ -25,8 +25,8 @@ import Edit from "../containers/Edit";
 
 import type { History } from "history";
 import EditNavLink from "../components/EditNavLink";
-import ChangesetView from "../changesets/containers/ChangesetView";
 import Changesets from "./Changesets";
+import ChangesetView from "./ChangesetView";
 
 type Props = {
   namespace: string,
@@ -104,15 +104,18 @@ class RepositoryRoot extends React.Component<Props> {
               component={() => <Edit repository={repository} />}
             />
             <Route
+              exact
               path={`${url}/history`}
               component={() => <Changesets repository={repository} />}
             />
             <Route
+              exact
               path={`${url}/history/:branch`}
               component={() => <Changesets repository={repository} />}
             />
             <Route
-              path={`${url}/changesets/:id`}
+              exact
+              path={`${url}/changeset/:id`}
               component={() => <ChangesetView repository={repository} />}
             />
           </div>

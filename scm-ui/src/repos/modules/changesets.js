@@ -16,9 +16,104 @@ export const FETCH_CHANGESETS_PENDING = `${FETCH_CHANGESETS}_${PENDING_SUFFIX}`;
 export const FETCH_CHANGESETS_SUCCESS = `${FETCH_CHANGESETS}_${SUCCESS_SUFFIX}`;
 export const FETCH_CHANGESETS_FAILURE = `${FETCH_CHANGESETS}_${FAILURE_SUFFIX}`;
 
+//added for detailed view of changesets
+
+export const FETCH_CHANGESET = "scm/repos/FETCH_CHANGESET";
+export const FETCH_CHANGESET_PENDING = `${FETCH_CHANGESET}_${PENDING_SUFFIX}`;
+export const FETCH_CHANGESET_SUCCESS = `${FETCH_CHANGESET}_${SUCCESS_SUFFIX}`;
+export const FETCH_CHANGESET_FAILURE = `${FETCH_CHANGESET}_${FAILURE_SUFFIX}`;
+
+// end of detailed view add
+
+// actions
 const REPO_URL = "repositories";
 //TODO: Content type
-// actions
+
+//added for detailed view of changesets
+
+function fetchChangesetIfNeeded(
+  state: Object,
+  namespace: string,
+  repoName: string,
+  id: string
+) {
+  return function(dispatch) {
+    if (shouldFetchChangeset(state, namespace, repoName, id)) {
+      dispatch(fetchChangeset(url));
+    }
+  };
+}
+
+export function shouldFetchChangeset(
+  state: Object,
+  namespace: string,
+  repoName: string,
+  id: string
+) {
+  // decide if changeset should be fetched here
+  return true;
+}
+
+function fetchChangeset(namespace: string, repoName: string, id: string) {
+  return function(dispatch) {
+    dispatch(fetchChangesetPending(namespace, repoName, id));
+    return apiClient
+      .get(url)
+      .then(response => response.json())
+      .then(json => dispatch(fetchChangesetSuccess(namespace, repoName, id)))
+      .catch(err => {
+        dispatch(fetchChangesetFailure(namespace, repoName, id, err));
+      });
+  };
+}
+
+export function fetchChangesetPending(
+  namespace: string,
+  repoName: string,
+  id: string
+): Action {
+  return {
+    type: FETCH_CHANGESET_PENDING,
+    payload: {
+      namespace,
+      repoName,
+      id
+    },
+    itemId: createItemId(namespace, repoName) + "/" + id
+  };
+}
+
+export function fetchChangesetSuccess(
+  namespace: string,
+  repoName: string,
+  id: string
+): Action {
+  return {
+    type: FETCH_CHANGESET_SUCCESS,
+    payload: { namespace, repoName, id },
+    itemId: createItemId(namespace, repoName) + "/" + id
+  };
+}
+
+function fetchChangesetFailure(
+  namespace: string,
+  name: string,
+  id: string,
+  error: Error
+): Action {
+  return {
+    type: FETCH_CHANGESET_FAILURE,
+    payload: {
+      namespace,
+      name,
+      id,
+      error
+    },
+    itemId: createItemId(namespace, repoName) + "/" + id
+  };
+}
+
+// end of detailed view add
 
 export function fetchChangesetsWithOptions(
   namespace: string,

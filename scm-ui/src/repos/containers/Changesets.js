@@ -92,7 +92,7 @@ class Changesets extends React.Component<State, Props> {
       );
     }
 
-    return <ChangesetList changesets={changesets} />;
+    return <ChangesetList repository={repository} changesets={changesets} />;
   };
 
   renderPaginator() {
