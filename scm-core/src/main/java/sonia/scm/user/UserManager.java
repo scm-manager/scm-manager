@@ -41,7 +41,7 @@ import sonia.scm.search.Searchable;
 import java.text.MessageFormat;
 import java.util.function.Consumer;
 
-import static sonia.scm.user.ChangePasswordNotAllowedException.WRON_USER_TYPE;
+import static sonia.scm.user.ChangePasswordNotAllowedException.WRONG_USER_TYPE;
 
 /**
  * The central class for managing {@link User} objects.
@@ -81,7 +81,7 @@ public interface UserManager
   default Consumer<User> getUserTypeChecker() {
     return user -> {
       if (!isTypeDefault(user)) {
-        throw new ChangePasswordNotAllowedException(MessageFormat.format(WRON_USER_TYPE, user.getType()));
+        throw new ChangePasswordNotAllowedException(MessageFormat.format(WRONG_USER_TYPE, user.getType()));
       }
     };
   }
