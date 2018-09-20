@@ -4,9 +4,10 @@ import com.google.common.annotations.VisibleForTesting;
 import de.otto.edison.hal.Links;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-import sonia.scm.api.rest.resources.UserResource;
 import sonia.scm.user.User;
+import sonia.scm.user.UserManager;
 import sonia.scm.user.UserPermissions;
 
 import javax.inject.Inject;
@@ -20,17 +21,15 @@ import static de.otto.edison.hal.Links.linkingTo;
 public abstract class UserToUserDtoMapper extends BaseMapper<User, UserDto> {
 
   @Inject
+  private UserManager userManager;
+
+  @Override
+  @Mapping(target = "attributes", ignore = true)
+  @Mapping(target = "password", ignore = true)
+  public abstract UserDto map(User modelObject);
+
+  @Inject
   private ResourceLinks resourceLinks;
-
-  @VisibleForTesting
-  void setResourceLinks(ResourceLinks resourceLinks) {
-    this.resourceLinks = resourceLinks;
-  }
-
-  @AfterMapping
-  void removePassword(@MappingTarget UserDto target) {
-    target.setPassword(UserResource.DUMMY_PASSWORT);
-  }
 
   @AfterMapping
   protected void appendLinks(User user, @MappingTarget UserDto target) {
@@ -40,6 +39,9 @@ public abstract class UserToUserDtoMapper extends BaseMapper<User, UserDto> {
     }
     if (UserPermissions.modify(user).isPermitted()) {
       linksBuilder.single(link("update", resourceLinks.user().update(target.getName())));
+    }
+    if (userManager.isTypeDefault(user)) {
+      linksBuilder.single(link("password", resourceLinks.user().passwordChange(target.getName())));
     }
     target.add(linksBuilder.build());
   }

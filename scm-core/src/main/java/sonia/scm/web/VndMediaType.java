@@ -35,6 +35,7 @@ public class VndMediaType {
   public static final String REPOSITORY_TYPE = PREFIX + "repositoryType" + SUFFIX;
   public static final String UI_PLUGIN = PREFIX + "uiPlugin" + SUFFIX;
   public static final String UI_PLUGIN_COLLECTION = PREFIX + "uiPluginCollection" + SUFFIX;
+  public static final String PASSWORD_CHANGE = PREFIX + "passwordChange" + SUFFIX;
 
   public static final String ME = PREFIX + "me" + SUFFIX;
   public static final String SOURCE = PREFIX + "source" + SUFFIX;

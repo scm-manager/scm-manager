@@ -15,6 +15,8 @@ public class DispatcherMock {
     dispatcher.getProviderFactory().registerProvider(AuthorizationExceptionMapper.class);
     dispatcher.getProviderFactory().registerProvider(ConcurrentModificationExceptionMapper.class);
     dispatcher.getProviderFactory().registerProvider(InternalRepositoryExceptionMapper.class);
+    dispatcher.getProviderFactory().registerProvider(ChangePasswordNotAllowedExceptionMapper.class);
+    dispatcher.getProviderFactory().registerProvider(InvalidPasswordExceptionMapper.class);
     return dispatcher;
   }
 }

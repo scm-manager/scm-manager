@@ -5,6 +5,7 @@ import com.webcohesion.enunciate.metadata.rs.ResponseHeader;
 import com.webcohesion.enunciate.metadata.rs.ResponseHeaders;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
+import org.apache.shiro.authc.credential.PasswordService;
 import sonia.scm.AlreadyExistsException;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
@@ -29,14 +30,16 @@ public class UserCollectionResource {
   private final ResourceLinks resourceLinks;
 
   private final IdResourceManagerAdapter<User, UserDto> adapter;
+  private final PasswordService passwordService;
 
   @Inject
   public UserCollectionResource(UserManager manager, UserDtoToUserMapper dtoToUserMapper,
-    UserCollectionToDtoMapper userCollectionToDtoMapper, ResourceLinks resourceLinks) {
+                                UserCollectionToDtoMapper userCollectionToDtoMapper, ResourceLinks resourceLinks, PasswordService passwordService) {
     this.dtoToUserMapper = dtoToUserMapper;
     this.userCollectionToDtoMapper = userCollectionToDtoMapper;
     this.adapter = new IdResourceManagerAdapter<>(manager, User.class);
     this.resourceLinks = resourceLinks;
+    this.passwordService = passwordService;
   }
 
   /**
@@ -89,8 +92,6 @@ public class UserCollectionResource {
   @TypeHint(TypeHint.NO_CONTENT.class)
   @ResponseHeaders(@ResponseHeader(name = "Location", description = "uri to the created user"))
   public Response create(@Valid UserDto userDto) throws AlreadyExistsException {
-    return adapter.create(userDto,
-                          () -> dtoToUserMapper.map(userDto, ""),
-      user -> resourceLinks.user().self(user.getName()));
+    return adapter.create(userDto, () -> dtoToUserMapper.map(userDto, passwordService.encryptPassword(userDto.getPassword())), user -> resourceLinks.user().self(user.getName()));
   }
 }

@@ -42,6 +42,8 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+import sonia.scm.it.utils.RepositoryUtil;
+import sonia.scm.it.utils.TestData;
 import sonia.scm.repository.client.api.RepositoryClient;
 import sonia.scm.web.VndMediaType;
 
@@ -53,11 +55,11 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertEquals;
-import static sonia.scm.it.RegExMatcher.matchesPattern;
-import static sonia.scm.it.RestUtil.createResourceUrl;
-import static sonia.scm.it.RestUtil.given;
-import static sonia.scm.it.ScmTypes.availableScmTypes;
-import static sonia.scm.it.TestData.repositoryJson;
+import static sonia.scm.it.utils.RegExMatcher.matchesPattern;
+import static sonia.scm.it.utils.RestUtil.createResourceUrl;
+import static sonia.scm.it.utils.RestUtil.given;
+import static sonia.scm.it.utils.ScmTypes.availableScmTypes;
+import static sonia.scm.it.utils.TestData.repositoryJson;
 
 @RunWith(Parameterized.class)
 public class RepositoriesITCase {

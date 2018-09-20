@@ -274,6 +274,10 @@ User extends BasicPropertiesAware implements Principal, ModelObject, PermissionO
     //J+
   }
 
+  public User changePassword(String password){
+    setPassword(password);
+    return this;
+  }
   //~--- get methods ----------------------------------------------------------
 
   /**
