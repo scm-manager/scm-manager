@@ -105,7 +105,7 @@ public class GitIncomingCommandTest
 
     commit(outgoing, "added a");
     
-    GitPullCommand pull = new GitPullCommand(handler, new GitContext(incomingDirectory), incomgingRepository);
+    GitPullCommand pull = new GitPullCommand(handler, new GitContext(incomingDirectory), incomingRepository);
     PullCommandRequest req = new PullCommandRequest();
     req.setRemoteRepository(outgoingRepository);
     pull.pull(req);
@@ -192,6 +192,6 @@ public class GitIncomingCommandTest
   private GitIncomingCommand createCommand()
   {
     return new GitIncomingCommand(handler, new GitContext(incomingDirectory),
-      incomgingRepository);
+      incomingRepository);
   }
 }

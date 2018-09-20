@@ -41,7 +41,6 @@ import sonia.scm.util.ValidationUtil;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.Date;
@@ -83,12 +82,6 @@ public class Changeset extends BasicPropertiesAware implements ModelObject {
    * The changeset identification string
    */
   private String id;
-
-  /**
-   * List of files changed by this changeset
-   */
-  @XmlElement(name = "modifications")
-  private Modifications modifications;
 
   /**
    * parent changeset ids
@@ -137,7 +130,6 @@ public class Changeset extends BasicPropertiesAware implements ModelObject {
            && Objects.equal(parents, other.parents)
            && Objects.equal(tags, other.tags)
            && Objects.equal(branches, other.branches)
-           && Objects.equal(modifications, other.modifications)
            && Objects.equal(properties, other.properties);
     //J+
   }
@@ -152,7 +144,7 @@ public class Changeset extends BasicPropertiesAware implements ModelObject {
   public int hashCode()
   {
     return Objects.hashCode(id, date, author, description, parents, tags,
-                            branches, modifications, properties);
+                            branches,  properties);
   }
 
   /**
@@ -183,11 +175,6 @@ public class Changeset extends BasicPropertiesAware implements ModelObject {
     out.append("desc:").append(description).append("\n");
     out.append("branches: ").append(Util.toString(branches)).append("\n");
     out.append("tags: ").append(Util.toString(tags)).append("\n");
-
-    if (modifications != null)
-    {
-      out.append("modifications: \n").append(modifications);
-    }
 
     return out.toString();
   }
@@ -285,21 +272,6 @@ public class Changeset extends BasicPropertiesAware implements ModelObject {
   }
 
 
-  /**
-   * Returns the file modifications, which was done with this changeset.
-   *
-   *
-   * @return file modifications
-   */
-  public Modifications getModifications()
-  {
-    if (modifications == null)
-    {
-      modifications = new Modifications();
-    }
-
-    return modifications;
-  }
 
   /**
    * Return the ids of the parent changesets.
@@ -400,17 +372,6 @@ public class Changeset extends BasicPropertiesAware implements ModelObject {
   public void setId(String id)
   {
     this.id = id;
-  }
-
-  /**
-   * Sets the file modification of the changeset.
-   *
-   *
-   * @param modifications file modifications
-   */
-  public void setModifications(Modifications modifications)
-  {
-    this.modifications = modifications;
   }
 
   /**

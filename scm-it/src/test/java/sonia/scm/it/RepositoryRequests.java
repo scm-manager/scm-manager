@@ -156,7 +156,7 @@ public class RepositoryRequests {
       return new AppliedGetSourcesRequest(getResponseFromLink(repositoryResponse, "_links.sources.href"));
     }
 
-    AppliedGetChangesetsRequest requestChangesets(String fileName) {
+    AppliedGetChangesetsRequest requestChangesets() {
       return new AppliedGetChangesetsRequest(getResponseFromLink(repositoryResponse, "_links.changesets.href"));
     }
   }
@@ -189,6 +189,9 @@ public class RepositoryRequests {
       return new AppliedGetDiffRequest(getResponseFromLink(changesetsResponse, "_embedded.changesets.find{it.id=='" + revision + "'}._links.diff.href"));
     }
 
+    public AppliedGetModificationsRequest requestModifications(String revision) {
+      return new AppliedGetModificationsRequest(getResponseFromLink(changesetsResponse, "_embedded.changesets.find{it.id=='" + revision + "'}._links.modifications.href"));
+    }
   }
 
   class AppliedGetSourcesRequest extends AppliedGetRequest<AppliedGetSourcesRequest> {
@@ -245,5 +248,46 @@ public class RepositoryRequests {
       setPassword(password);
       return new GivenWithUrlAndAuth();
     }
+  }
+
+  class AppliedGetModificationsRequest extends AppliedGetRequest<AppliedGetModificationsRequest> {
+    public AppliedGetModificationsRequest(Response response) { super(response); }
+    ModificationsResponse usingModificationsResponse() {
+      return new ModificationsResponse(super.response);
+    }
+
+  }
+
+  class ModificationsResponse {
+    private Response resource;
+
+    public ModificationsResponse(Response resource) {
+      this.resource = resource;
+    }
+
+    ModificationsResponse assertRevision(Consumer<String> assertRevision) {
+      String revision = resource.then().extract().path("revision");
+      assertRevision.accept(revision);
+      return this;
+    }
+
+    ModificationsResponse assertAdded(Consumer<List<String>> assertAdded) {
+      List<String > added  = resource.then().extract().path("added");
+      assertAdded.accept(added);
+      return this;
+    }
+
+    ModificationsResponse assertRemoved(Consumer<List<String>> assertRemoved) {
+      List<String > removed  = resource.then().extract().path("removed");
+      assertRemoved.accept(removed);
+      return this;
+    }
+
+    ModificationsResponse assertModified(Consumer<List<String>> assertModified) {
+      List<String > modified  = resource.then().extract().path("modified");
+      assertModified.accept(modified);
+      return this;
+    }
+
   }
 }

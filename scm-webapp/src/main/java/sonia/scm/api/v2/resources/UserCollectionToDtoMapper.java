@@ -10,8 +10,6 @@ import java.util.Optional;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
-// Mapstruct does not support parameterized (i.e. non-default) constructors. Thus, we need to use field injection.
-@SuppressWarnings("squid:S3306")
 public class UserCollectionToDtoMapper extends BasicCollectionToDtoMapper<User, UserDto, UserToUserDtoMapper> {
 
   private final ResourceLinks resourceLinks;
