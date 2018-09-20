@@ -7,6 +7,7 @@ import org.jboss.resteasy.core.Dispatcher;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -87,7 +88,6 @@ public class MeResourceTest {
 
     assertEquals(HttpServletResponse.SC_OK, response.getStatus());
     assertTrue(response.getContentAsString().contains("\"name\":\"trillian\""));
-    assertTrue(response.getContentAsString().contains("\"password\":null"));
     assertTrue(response.getContentAsString().contains("\"self\":{\"href\":\"/v2/me/\"}"));
     assertTrue(response.getContentAsString().contains("\"delete\":{\"href\":\"/v2/users/trillian\"}"));
   }
