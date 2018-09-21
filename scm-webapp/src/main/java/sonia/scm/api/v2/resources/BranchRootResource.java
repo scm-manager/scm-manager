@@ -106,7 +106,7 @@ public class BranchRootResource {
         .stream()
         .anyMatch(branch -> branchName.equals(branch.getName()));
       if (!branchExists){
-        throw new NotFoundException(MessageFormat.format("The branch {0} is not found", branchName));
+        throw new NotFoundException("branch", branchName);
       }
       Repository repository = repositoryService.getRepository();
       RepositoryPermissions.read(repository).check();
