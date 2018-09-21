@@ -6,18 +6,21 @@ import sonia.scm.repository.Repository;
 
 import javax.inject.Inject;
 
-public class BranchChangesetCollectionToDtoMapper extends ChangesetCollectionToDtoMapper {
+public class BranchChangesetCollectionToDtoMapper extends ChangesetCollectionToDtoMapperBase {
+
+  private final ResourceLinks resourceLinks;
 
   @Inject
   public BranchChangesetCollectionToDtoMapper(ChangesetToChangesetDtoMapper changesetToChangesetDtoMapper, ResourceLinks resourceLinks) {
-    super(changesetToChangesetDtoMapper, resourceLinks);
+    super(changesetToChangesetDtoMapper);
+    this.resourceLinks = resourceLinks;
   }
 
   public CollectionDto map(int pageNumber, int pageSize, PageResult<Changeset> pageResult, Repository repository, String branch) {
     return this.map(pageNumber, pageSize, pageResult, repository, () -> createSelfLink(repository, branch));
   }
 
-  protected String createSelfLink(Repository repository, String branch) {
+  private String createSelfLink(Repository repository, String branch) {
     return resourceLinks.branch().history(repository.getNamespaceAndName(), branch);
   }
 }
