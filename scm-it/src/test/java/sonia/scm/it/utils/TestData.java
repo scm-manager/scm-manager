@@ -1,4 +1,4 @@
-package sonia.scm.it;
+package sonia.scm.it.utils;
 
 import io.restassured.response.ValidatableResponse;
 import org.apache.http.HttpStatus;
@@ -8,14 +8,16 @@ import sonia.scm.repository.PermissionType;
 import sonia.scm.web.VndMediaType;
 
 import javax.json.Json;
+import javax.json.JsonObjectBuilder;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static java.util.Arrays.asList;
-import static sonia.scm.it.RestUtil.createResourceUrl;
-import static sonia.scm.it.RestUtil.given;
-import static sonia.scm.it.ScmTypes.availableScmTypes;
+import static sonia.scm.it.utils.RestUtil.createResourceUrl;
+import static sonia.scm.it.utils.RestUtil.given;
+import static sonia.scm.it.utils.ScmTypes.availableScmTypes;
 
 public class TestData {
 
@@ -26,6 +28,7 @@ public class TestData {
   private static final List<String> PROTECTED_USERS = asList(USER_SCM_ADMIN, USER_ANONYMOUS);
 
   private static Map<String, String> DEFAULT_REPOSITORIES = new HashMap<>();
+  public static final JsonObjectBuilder JSON_BUILDER = NullAwareJsonObjectBuilder.wrap(Json.createObjectBuilder());
 
   public static void createDefault() {
     cleanup();
@@ -44,26 +47,30 @@ public class TestData {
   }
 
   public static void createUser(String username, String password) {
+     createUser(username, password, false, "xml");
+  }
+
+  public static void createUser(String username, String password, boolean isAdmin, String type) {
     LOG.info("create user with username: {}", username);
+    String admin = isAdmin ? "true" : "false";
     given(VndMediaType.USER)
       .when()
-      .content(" {\n" +
-        "                \"active\": true,\n" +
-        "                \"admin\": false,\n" +
-        "                \"creationDate\": \"2018-08-21T12:26:46.084Z\",\n" +
-        "                \"displayName\": \"" + username + "\",\n" +
-        "                \"mail\": \"user1@scm-manager.org\",\n" +
-        "                \"name\": \"" + username + "\",\n" +
-        "                \"password\": \"" + password + "\",\n" +
-        "                \"type\": \"xml\"\n" +
-        "               \n" +
-        "            }")
-      .post(createResourceUrl("users"))
+      .content(new StringBuilder()
+        .append(" {\n")
+        .append("    \"active\": true,\n")
+        .append("    \"admin\": ").append(admin).append(",\n")
+        .append("    \"creationDate\": \"2018-08-21T12:26:46.084Z\",\n")
+        .append("    \"displayName\": \"").append(username).append("\",\n")
+        .append("    \"mail\": \"user1@scm-manager.org\",\n")
+        .append("    \"name\": \"").append(username).append("\",\n")
+        .append("    \"password\": \"").append(password).append("\",\n")
+        .append("    \"type\": \"").append(type).append("\"\n")
+        .append("  }").toString())
+      .post(getUsersUrl())
       .then()
       .statusCode(HttpStatus.SC_CREATED)
     ;
   }
-
 
   public static void createUserPermission(String name, PermissionType permissionType, String repositoryType) {
     String defaultPermissionUrl = TestData.getDefaultPermissionUrl(USER_SCM_ADMIN, USER_SCM_ADMIN, repositoryType);
@@ -183,12 +190,35 @@ public class TestData {
   }
 
   public static String repositoryJson(String repositoryType) {
-    return Json.createObjectBuilder()
+    return JSON_BUILDER
       .add("contact", "zaphod.beeblebrox@hitchhiker.com")
       .add("description", "Heart of Gold")
       .add("name", "HeartOfGold-" + repositoryType)
       .add("archived", false)
       .add("type", repositoryType)
+      .build().toString();
+  }
+
+  public static URI getMeUrl() {
+    return RestUtil.createResourceUrl("me/");
+
+  }
+
+  public static URI getUsersUrl() {
+    return RestUtil.createResourceUrl("users/");
+
+  }
+
+  public static URI getUserUrl(String username) {
+    return getUsersUrl().resolve(username);
+
+  }
+
+
+  public static String createPasswordChangeJson(String oldPassword, String newPassword) {
+    return JSON_BUILDER
+      .add("oldPassword", oldPassword)
+      .add("newPassword", newPassword)
       .build().toString();
   }
 

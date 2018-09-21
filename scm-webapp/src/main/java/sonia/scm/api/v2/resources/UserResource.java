@@ -3,6 +3,7 @@ package sonia.scm.api.v2.resources;
 import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
+import org.apache.shiro.authc.credential.PasswordService;
 import sonia.scm.ConcurrentModificationException;
 import sonia.scm.NotFoundException;
 import sonia.scm.user.User;
@@ -26,12 +27,16 @@ public class UserResource {
   private final UserToUserDtoMapper userToDtoMapper;
 
   private final IdResourceManagerAdapter<User, UserDto> adapter;
+  private final UserManager userManager;
+  private final PasswordService passwordService;
 
   @Inject
-  public UserResource(UserDtoToUserMapper dtoToUserMapper, UserToUserDtoMapper userToDtoMapper, UserManager manager) {
+  public UserResource(UserDtoToUserMapper dtoToUserMapper, UserToUserDtoMapper userToDtoMapper, UserManager manager, PasswordService passwordService) {
     this.dtoToUserMapper = dtoToUserMapper;
     this.userToDtoMapper = userToDtoMapper;
     this.adapter = new IdResourceManagerAdapter<>(manager, User.class);
+    this.userManager = manager;
+    this.passwordService = passwordService;
   }
 
   /**
@@ -40,7 +45,6 @@ public class UserResource {
    * <strong>Note:</strong> This method requires "user" privilege.
    *
    * @param id the id/name of the user
-   *
    */
   @GET
   @Path("")
@@ -63,7 +67,6 @@ public class UserResource {
    * <strong>Note:</strong> This method requires "user" privilege.
    *
    * @param name the name of the user to delete.
-   *
    */
   @DELETE
   @Path("")
@@ -80,10 +83,11 @@ public class UserResource {
 
   /**
    * Modifies the given user.
+   * The given Password in the payload will be ignored. To Change Password use the changePassword endpoint
    *
    * <strong>Note:</strong> This method requires "user" privilege.
    *
-   * @param name name of the user to be modified
+   * @param name    name of the user to be modified
    * @param userDto user object to modify
    */
   @PUT
@@ -101,4 +105,30 @@ public class UserResource {
   public Response update(@PathParam("id") String name, @Valid UserDto userDto) throws NotFoundException, ConcurrentModificationException {
     return adapter.update(name, existing -> dtoToUserMapper.map(userDto, existing.getPassword()));
   }
+
+  /**
+   * This Endpoint is for Admin user to modify a user password.
+   * The oldPassword property of the DTO is not needed here. it will be ignored.
+   * The oldPassword property is needed in the MeResources when the actual user change the own password.
+   *
+   * <strong>Note:</strong> This method requires "user:modify" privilege.
+   * @param name              name of the user to be modified
+   * @param passwordChangeDto change password object to modify password. the old password is here not required
+   */
+  @PUT
+  @Path("password")
+  @Consumes(VndMediaType.PASSWORD_CHANGE)
+  @StatusCodes({
+    @ResponseCode(code = 204, condition = "update success"),
+    @ResponseCode(code = 400, condition = "Invalid body, e.g. the user type is not xml or the given oldPassword do not match the stored one"),
+    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
+    @ResponseCode(code = 403, condition = "not authorized, the current user does not have the \"user\" privilege"),
+    @ResponseCode(code = 404, condition = "not found, no user with the specified id/name available"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
+  @TypeHint(TypeHint.NO_CONTENT.class)
+  public Response changePassword(@PathParam("id") String name, @Valid PasswordChangeDto passwordChangeDto) throws NotFoundException, ConcurrentModificationException {
+    return adapter.update(name, user -> user.changePassword(passwordService.encryptPassword(passwordChangeDto.getNewPassword())), userManager.getUserTypeChecker());
+  }
+
 }
