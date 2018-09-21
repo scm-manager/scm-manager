@@ -4,7 +4,6 @@ import sonia.scm.PageResult;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Repository;
 
-import javax.inject.Inject;
 import java.util.Optional;
 import java.util.function.Supplier;
 
