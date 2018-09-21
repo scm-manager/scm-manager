@@ -94,7 +94,6 @@ public class UserRootResourceTest {
 
     assertEquals(HttpServletResponse.SC_OK, response.getStatus());
     assertTrue(response.getContentAsString().contains("\"name\":\"Neo\""));
-    assertTrue(response.getContentAsString().contains("\"password\":null"));
     assertTrue(response.getContentAsString().contains("\"self\":{\"href\":\"/v2/users/Neo\"}"));
     assertTrue(response.getContentAsString().contains("\"delete\":{\"href\":\"/v2/users/Neo\"}"));
   }
@@ -109,7 +108,6 @@ public class UserRootResourceTest {
 
     assertEquals(HttpServletResponse.SC_OK, response.getStatus());
     assertTrue(response.getContentAsString().contains("\"name\":\"Neo\""));
-    assertTrue(response.getContentAsString().contains("\"password\":null"));
     assertTrue(response.getContentAsString().contains("\"self\":{\"href\":\"/v2/users/Neo\"}"));
     assertFalse(response.getContentAsString().contains("\"delete\":{\"href\":\"/v2/users/Neo\"}"));
   }
