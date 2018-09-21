@@ -11,7 +11,8 @@ node() { // No specific label
 
   properties([
     // Keep only the last 10 build to preserve space
-    buildDiscarder(logRotator(numToKeepStr: '10'))
+    buildDiscarder(logRotator(numToKeepStr: '10')),
+    disableConcurrentBuilds()
   ])
 
   timeout(activity: true, time: 20, unit: 'MINUTES') {
