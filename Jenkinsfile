@@ -4,7 +4,7 @@
 @Library('github.com/cloudogu/ces-build-lib@59d3e94')
 import com.cloudogu.ces.cesbuildlib.*
 
-node() { // No specific label
+node('docker') {
 
   // Change this as when we go back to default - necessary for proper SonarQube analysis
   mainBranch = "2.0.0-m3"
