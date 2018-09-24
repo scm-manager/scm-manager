@@ -44,6 +44,14 @@ node() { // No specific label
           currentBuild.result = 'UNSTABLE'
         }
       }
+
+      stage('Build Docker Image') {
+        // TODO only on mainBranch
+        def image = docker.build("cloudogu/scm-manger:2.0.0-dev-b${BUILD_NUMBER}")
+        withRegistry('index.docker.io', 'hub.docker.com-cesmarvin') {
+          image.push()
+        }
+      }
     }
 
     // Archive Unit and integration test results, if any
