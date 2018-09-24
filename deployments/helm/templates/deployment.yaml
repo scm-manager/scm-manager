@@ -9,6 +9,8 @@ metadata:
     heritage: {{ .Release.Service }}
 spec:
   replicas: 1 # could not be scaled
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: {{ include "scm-manager.name" . }}
