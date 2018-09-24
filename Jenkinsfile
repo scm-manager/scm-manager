@@ -47,8 +47,8 @@ node() { // No specific label
 
       stage('Build Docker Image') {
         // TODO only on mainBranch
-        def image = docker.build("cloudogu/scm-manger:2.0.0-dev-b${BUILD_NUMBER}")
-        withRegistry('index.docker.io', 'hub.docker.com-cesmarvin') {
+        def image = docker.build("cloudogu/scm-manager:2.0.0-dev-b${BUILD_NUMBER}")
+        docker.withRegistry('', 'hub.docker.com-cesmarvin') {
           image.push()
         }
       }
