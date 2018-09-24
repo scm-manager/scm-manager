@@ -45,13 +45,23 @@ node('docker') {
         }
       }
 
+      def commitHash = getCommitHash()
+      def dockerImageTag = "2.0.0-dev-${commitHash.substring(0,7)}-${BUILD_NUMBER}"
+
       stage('Docker') {
         // TODO only on mainBranch
         def image = docker.build('cloudogu/scm-manager')
         docker.withRegistry('', 'hub.docker.com-cesmarvin') {
-          image.push("2.0.0-dev-b${BUILD_NUMBER}")
+          image.push(dockerImageTag)
           image.push('latest')
         }
+      }
+
+      stage('Deployment') {
+        build job: 'scm-manager/next-scm.cloudogu.com', propagate: false, wait: false, parameters: [
+          string(name: 'changeset', value: commitHash), 
+          string(name: 'imageTag', value: dockerImageTag)
+        ]
       }
     }
 
@@ -121,6 +131,10 @@ boolean waitForQualityGateWebhookToBeCalled() {
 
 String getCommitAuthorComplete() {
   new Sh(this).returnStdOut 'hg log --branch . --limit 1 --template "{author}"'
+}
+
+String getCommitHash() {
+  new Sh(this).returnStdOut 'hg log --branch . --limit 1 --template "{node}"'
 }
 
 String getCommitAuthorEmail() {
