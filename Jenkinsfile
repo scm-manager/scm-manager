@@ -45,7 +45,7 @@ node('docker') {
         }
       }
 
-      stage('Build Docker Image') {
+      stage('Docker') {
         // TODO only on mainBranch
         def image = docker.build('cloudogu/scm-manager')
         docker.withRegistry('', 'hub.docker.com-cesmarvin') {
