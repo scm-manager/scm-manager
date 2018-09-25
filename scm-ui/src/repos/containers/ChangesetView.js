@@ -28,7 +28,7 @@ class ChangesetView extends React.Component<State, Props> {
     const { fetchChangesetIfNeeded, repository } = this.props;
     const id = this.props.match.params.id;
     //state macht keinen Sinn?! repositories holen!
-    fetchChangesetIfNeeded(repository.namespace, repository.name, id);
+    fetchChangesetIfNeeded(null, repository.namespace, repository.name, id);
   }
 
   render() {
