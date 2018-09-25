@@ -82,7 +82,11 @@ class CreatePermissionForm extends React.Component<Props, State> {
 
   currentPermissionIncludeName = () => {
     for (let i = 0; i < this.props.currentPermissions.length; i++) {
-      if (this.props.currentPermissions[i].name === this.state.name)
+      if (
+        this.props.currentPermissions[i].name === this.state.name &&
+        this.props.currentPermissions[i].groupPermission ==
+          this.state.groupPermission
+      )
         return true;
     }
     return false;

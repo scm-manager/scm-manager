@@ -24,6 +24,6 @@
   "add-permission": {
     "add-permission-heading": "Add new Permission",
     "submit-button": "Submit",
-    "name-input-invalid": "Permission for name already exists!"
+    "name-input-invalid": "Permission already exists!"
   }
 }
