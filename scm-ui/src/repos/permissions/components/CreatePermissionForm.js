@@ -27,7 +27,7 @@ class CreatePermissionForm extends React.Component<Props, State> {
 
     this.state = {
       name: "",
-      type: "",
+      type: "READ",
       groupPermission: false
     };
   }
