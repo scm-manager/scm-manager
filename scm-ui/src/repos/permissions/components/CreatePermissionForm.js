@@ -46,7 +46,10 @@ class CreatePermissionForm extends React.Component<Props, State> {
             label={t("permission.name")}
             value={name ? name : ""}
             onChange={this.handleNameChange}
-            validationError={this.currentPermissionIncludeName()}
+            validationError={
+              this.currentPermissionIncludeName() ||
+              this.state.name.startsWith("@")
+            }
             errorMessage={t("add-permission.name-input-invalid")}
           />
           <Checkbox
@@ -73,7 +76,8 @@ class CreatePermissionForm extends React.Component<Props, State> {
     if (
       this.state.name === null ||
       this.state.name === "" ||
-      this.currentPermissionIncludeName()
+      this.currentPermissionIncludeName() ||
+      this.state.name.startsWith("@")
     ) {
       return true;
     }

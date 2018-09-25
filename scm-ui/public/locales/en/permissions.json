@@ -24,6 +24,6 @@
   "add-permission": {
     "add-permission-heading": "Add new Permission",
     "submit-button": "Submit",
-    "name-input-invalid": "Permission already exists!"
+    "name-input-invalid": "Permission is not allowed to start with an '@' or it already exists!"
   }
 }
