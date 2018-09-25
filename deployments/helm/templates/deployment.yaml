@@ -50,6 +50,8 @@ spec:
           volumeMounts:
           - name: data
             mountPath: /var/lib/scm
+          - name: config
+            mountPath: /opt/scm-server/conf
       volumes:
       - name: data
       {{- if .Values.persistence.enabled }}
@@ -58,6 +60,9 @@ spec:
       {{- else }}
         emptyDir: {}
       {{- end }}
+      - name: config
+        configMap: 
+          name: {{ include "scm-manager.fullname" . }}
     {{- with .Values.nodeSelector }}
       nodeSelector:
 {{ toYaml . | indent 8 }}
