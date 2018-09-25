@@ -4,21 +4,30 @@ import type { Changeset } from "@scm-manager/ui-types";
 import { translate } from "react-i18next";
 import { MailLink, DateFromNow } from "@scm-manager/ui-components";
 import ChangesetAvatar from "./ChangesetAvatar";
+import classNames from "classnames";
+import injectSheet from "react-jss";
+
+const styles = {
+  floatLeft: {
+    float: "left"
+  }
+};
 
 type Props = {
   changeset: Changeset,
-  t: string => string
+  t: string => string,
+  classes: any
 };
 
 class ChangesetDetails extends React.Component<Props> {
   render() {
-    const { changeset, t } = this.props;
+    const { changeset, t, classes } = this.props;
     return (
       <div>
-        <figure className="media-left">
+        <figure className={classNames(classes.floatLeft)}>
           <ChangesetAvatar changeset={changeset} />
         </figure>
-        <table className="table">
+        <table className={classNames("table")}>
           <tbody>
             <tr>
               <td>{t("changeset.id")}</td>
@@ -51,4 +60,4 @@ class ChangesetDetails extends React.Component<Props> {
   }
 }
 
-export default translate("changesets")(ChangesetDetails);
+export default injectSheet(styles)(translate("changesets")(ChangesetDetails));
