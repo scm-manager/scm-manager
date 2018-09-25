@@ -162,7 +162,7 @@ export function modifyPermissionPending(
   return {
     type: MODIFY_PERMISSION_PENDING,
     payload: permission,
-    itemId: namespace + "/" + repoName + "/" + permission.name
+    itemId: createItemId(permission, namespace, repoName)
   };
 }
 
@@ -177,7 +177,7 @@ export function modifyPermissionSuccess(
       permission,
       position: namespace + "/" + repoName
     },
-    itemId: namespace + "/" + repoName + "/" + permission.name
+    itemId: createItemId(permission, namespace, repoName)
   };
 }
 
@@ -190,7 +190,7 @@ export function modifyPermissionFailure(
   return {
     type: MODIFY_PERMISSION_FAILURE,
     payload: { error, permission },
-    itemId: namespace + "/" + repoName + "/" + permission.name
+    itemId: createItemId(permission, namespace, repoName)
   };
 }
 
@@ -342,7 +342,7 @@ export function deletePermissionPending(
   return {
     type: DELETE_PERMISSION_PENDING,
     payload: permission,
-    itemId: namespace + "/" + repoName + "/" + permission.name
+    itemId: createItemId(permission, namespace, repoName)
   };
 }
 
@@ -357,7 +357,7 @@ export function deletePermissionSuccess(
       permission,
       position: namespace + "/" + repoName
     },
-    itemId: namespace + "/" + repoName + "/" + permission.name
+    itemId: createItemId(permission, namespace, repoName)
   };
 }
 
@@ -373,7 +373,7 @@ export function deletePermissionFailure(
       error,
       permission
     },
-    itemId: namespace + "/" + repoName + "/" + permission.name
+    itemId: createItemId(permission, namespace, repoName)
   };
 }
 
@@ -398,6 +398,15 @@ function deletePermissionFromState(
     }
   }
   return newPermission;
+}
+
+function createItemId(
+  permission: Permission,
+  namespace: string,
+  repoName: string
+) {
+  let groupPermission = permission.groupPermission ? "@" : "";
+  return namespace + "/" + repoName + "/" + groupPermission + permission.name;
 }
 
 // reducer
@@ -493,12 +502,12 @@ export function isModifyPermissionPending(
   state: Object,
   namespace: string,
   repoName: string,
-  permissionname: string
+  permission: Permission
 ) {
   return isPending(
     state,
     MODIFY_PERMISSION,
-    namespace + "/" + repoName + "/" + permissionname
+    createItemId(permission, namespace, repoName)
   );
 }
 
@@ -506,12 +515,12 @@ export function getModifyPermissionFailure(
   state: Object,
   namespace: string,
   repoName: string,
-  permissionname: string
+  permission: Permission
 ) {
   return getFailure(
     state,
     MODIFY_PERMISSION,
-    namespace + "/" + repoName + "/" + permissionname
+    createItemId(permission, namespace, repoName)
   );
 }
 
@@ -544,12 +553,12 @@ export function isDeletePermissionPending(
   state: Object,
   namespace: string,
   repoName: string,
-  permissionname: string
+  permission: Permission
 ) {
   return isPending(
     state,
     DELETE_PERMISSION,
-    namespace + "/" + repoName + "/" + permissionname
+    createItemId(permission, namespace, repoName)
   );
 }
 
@@ -557,12 +566,12 @@ export function getDeletePermissionFailure(
   state: Object,
   namespace: string,
   repoName: string,
-  permissionname: string
+  permission: Permission
 ) {
   return getFailure(
     state,
     DELETE_PERMISSION,
-    namespace + "/" + repoName + "/" + permissionname
+    createItemId(permission, namespace, repoName)
   );
 }
 
@@ -578,17 +587,12 @@ export function getDeletePermissionsFailure(
   if (permissions == null) return undefined;
   for (let i = 0; i < permissions.length; i++) {
     if (
-      getDeletePermissionFailure(
-        state,
-        namespace,
-        repoName,
-        permissions[i].name
-      )
+      getDeletePermissionFailure(state, namespace, repoName, permissions[i])
     ) {
       return getFailure(
         state,
         DELETE_PERMISSION,
-        namespace + "/" + repoName + "/" + permissions[i].name
+        createItemId(permissions[i], namespace, repoName)
       );
     }
   }
@@ -607,17 +611,12 @@ export function getModifyPermissionsFailure(
   if (permissions == null) return undefined;
   for (let i = 0; i < permissions.length; i++) {
     if (
-      getModifyPermissionFailure(
-        state,
-        namespace,
-        repoName,
-        permissions[i].name
-      )
+      getModifyPermissionFailure(state, namespace, repoName, permissions[i])
     ) {
       return getFailure(
         state,
         MODIFY_PERMISSION,
-        namespace + "/" + repoName + "/" + permissions[i].name
+        createItemId(permissions[i], namespace, repoName)
       );
     }
   }

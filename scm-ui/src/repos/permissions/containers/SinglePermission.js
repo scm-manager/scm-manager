@@ -140,13 +140,13 @@ const mapStateToProps = (state, ownProps) => {
     state,
     ownProps.namespace,
     ownProps.repoName,
-    permission.name
+    permission
   );
   const deleteLoading = isDeletePermissionPending(
     state,
     ownProps.namespace,
     ownProps.repoName,
-    permission.name
+    permission
   );
 
   return { loading, deleteLoading };

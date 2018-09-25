@@ -45,7 +45,7 @@ import type { Permission, PermissionCollection } from "@scm-manager/ui-types";
 const hitchhiker_puzzle42Permission_user_eins: Permission = {
   name: "user_eins",
   type: "READ",
-  groupPermission: true,
+  groupPermission: false,
   _links: {
     self: {
       href:
@@ -570,13 +570,23 @@ describe("permissions selectors", () => {
       }
     };
     expect(
-      isModifyPermissionPending(state, "hitchhiker", "puzzle42", "user_eins")
+      isModifyPermissionPending(
+        state,
+        "hitchhiker",
+        "puzzle42",
+        hitchhiker_puzzle42Permission_user_eins
+      )
     ).toEqual(true);
   });
 
   it("should return false, when modify permission is not pending", () => {
     expect(
-      isModifyPermissionPending({}, "hitchiker", "puzzle42", "user_eins")
+      isModifyPermissionPending(
+        {},
+        "hitchiker",
+        "puzzle42",
+        hitchhiker_puzzle42Permission_user_eins
+      )
     ).toEqual(false);
   });
 
@@ -587,13 +597,23 @@ describe("permissions selectors", () => {
       }
     };
     expect(
-      getModifyPermissionFailure(state, "hitchhiker", "puzzle42", "user_eins")
+      getModifyPermissionFailure(
+        state,
+        "hitchhiker",
+        "puzzle42",
+        hitchhiker_puzzle42Permission_user_eins
+      )
     ).toEqual(error);
   });
 
   it("should return undefined when modify permission did not fail", () => {
     expect(
-      getModifyPermissionFailure({}, "hitchhiker", "puzzle42", "user_eins")
+      getModifyPermissionFailure(
+        {},
+        "hitchhiker",
+        "puzzle42",
+        hitchhiker_puzzle42Permission_user_eins
+      )
     ).toBe(undefined);
   });
 
@@ -646,13 +666,23 @@ describe("permissions selectors", () => {
       }
     };
     expect(
-      isDeletePermissionPending(state, "hitchhiker", "puzzle42", "user_eins")
+      isDeletePermissionPending(
+        state,
+        "hitchhiker",
+        "puzzle42",
+        hitchhiker_puzzle42Permission_user_eins
+      )
     ).toEqual(true);
   });
 
   it("should return false, when delete permission is not pending", () => {
     expect(
-      isDeletePermissionPending({}, "hitchiker", "puzzle42", "user_eins")
+      isDeletePermissionPending(
+        {},
+        "hitchiker",
+        "puzzle42",
+        hitchhiker_puzzle42Permission_user_eins
+      )
     ).toEqual(false);
   });
 
@@ -663,13 +693,23 @@ describe("permissions selectors", () => {
       }
     };
     expect(
-      getDeletePermissionFailure(state, "hitchhiker", "puzzle42", "user_eins")
+      getDeletePermissionFailure(
+        state,
+        "hitchhiker",
+        "puzzle42",
+        hitchhiker_puzzle42Permission_user_eins
+      )
     ).toEqual(error);
   });
 
   it("should return undefined when delete permission did not fail", () => {
     expect(
-      getDeletePermissionFailure({}, "hitchhiker", "puzzle42", "user_eins")
+      getDeletePermissionFailure(
+        {},
+        "hitchhiker",
+        "puzzle42",
+        hitchhiker_puzzle42Permission_user_eins
+      )
     ).toBe(undefined);
   });
 

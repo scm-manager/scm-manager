@@ -127,7 +127,7 @@ class Permissions extends React.Component<Props> {
             {permissions.map(permission => {
               return (
                 <SinglePermission
-                  key={permission.name}
+                  key={permission.name + permission.groupPermission.toString()}
                   namespace={namespace}
                   repoName={repoName}
                   permission={permission}
