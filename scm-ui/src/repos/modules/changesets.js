@@ -32,13 +32,11 @@ const REPO_URL = "repositories";
 //********added for detailed view of changesets
 
 export function fetchChangesetIfNeeded(
-  state: Object,
   namespace: string,
   repoName: string,
   id: string
 ) {
   return (dispatch: any, getState: any) => {
-    console.log(getState());
     if (shouldFetchChangeset(getState(), namespace, repoName, id)) {
       return dispatch(fetchChangeset(namespace, repoName, id));
     }
@@ -59,6 +57,7 @@ export function fetchChangeset(
         dispatch(fetchChangesetSuccess(data, namespace, repoName, id))
       )
       .catch(err => {
+        console.log(err);
         dispatch(fetchChangesetFailure(namespace, repoName, id, err));
       });
   };
@@ -276,7 +275,7 @@ function listReducer(
     //********added for detailed view of changesets
     case FETCH_CHANGESET_SUCCESS:
       const changesetId = action.payload.changeset.id;
-      const stateEntries = state.entries;
+      const stateEntries = state.entries ? state.entries : [];
       stateEntries.push(changesetId);
       return {
         entries: stateEntries,
@@ -359,7 +358,10 @@ export function getChangeset(
   branch?: string
 ) {
   const key = createItemId(namespace, name, branch);
-  const changesets = state.changesets.byKey[key].byId;
+  const changesets =
+    state.changesets && state.changesets.byKey && state.changesets.byKey[key]
+      ? state.changesets.byKey[key].byId
+      : null;
   if (changesets != null && changesets[id]) {
     return changesets[id];
   }

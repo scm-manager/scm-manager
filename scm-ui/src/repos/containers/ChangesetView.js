@@ -11,7 +11,6 @@ type Props = {
   repository: Repository,
   repositories: Repository[],
   fetchChangesetIfNeeded: (
-    state: Object,
     namespace: string,
     repoName: string,
     id: string
@@ -28,7 +27,7 @@ class ChangesetView extends React.Component<State, Props> {
     const { fetchChangesetIfNeeded, repository } = this.props;
     const id = this.props.match.params.id;
     //state macht keinen Sinn?! repositories holen!
-    fetchChangesetIfNeeded(null, repository.namespace, repository.name, id);
+    fetchChangesetIfNeeded(repository.namespace, repository.name, id);
   }
 
   render() {
@@ -45,12 +44,11 @@ const mapStateToProps = (state, ownProps: Props) => {
 const mapDispatchToProps = dispatch => {
   return {
     fetchChangesetIfNeeded: (
-      state: Object,
       namespace: string,
       repoName: string,
       id: string
     ) => {
-      dispatch(fetchChangesetIfNeeded(state, namespace, repoName, id));
+      dispatch(fetchChangesetIfNeeded(namespace, repoName, id));
     }
   };
 };

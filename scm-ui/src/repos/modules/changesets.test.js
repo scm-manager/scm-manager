@@ -145,7 +145,7 @@ describe("changesets", () => {
 
       const store = mockStore({});
       return store
-        .dispatch(fetchChangesetIfNeeded(state, "foo", "bar", "id3"))
+        .dispatch(fetchChangesetIfNeeded("foo", "bar", "id3"))
         .then(() => {
           expect(store.getActions()).toEqual(expectedActions);
         });
@@ -169,9 +169,9 @@ describe("changesets", () => {
 
       const expectedActions = [];
 
-      const store = mockStore({});
+      const store = mockStore(state);
       return expect(
-        store.dispatch(fetchChangesetIfNeeded(state, "foo", "bar", "id1"))
+        store.dispatch(fetchChangesetIfNeeded("foo", "bar", "id1"))
       ).toEqual(undefined);
     });
 
