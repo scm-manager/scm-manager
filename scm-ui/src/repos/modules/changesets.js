@@ -11,7 +11,6 @@ import { getFailure } from "../../modules/failure";
 import { combineReducers } from "redux";
 import type { Action, PagedCollection } from "@scm-manager/ui-types";
 import * as types from "../../modules/types";
-import { CREATE_USER_RESET } from "../../users/modules/users";
 
 export const FETCH_CHANGESETS = "scm/repos/FETCH_CHANGESETS";
 export const FETCH_CHANGESETS_PENDING = `${FETCH_CHANGESETS}_${PENDING_SUFFIX}`;
