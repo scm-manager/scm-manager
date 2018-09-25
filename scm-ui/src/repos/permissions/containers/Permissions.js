@@ -117,8 +117,10 @@ class Permissions extends React.Component<Props> {
           <thead>
             <tr>
               <th>{t("permission.name")}</th>
-              <th className="is-hidden-mobile">{t("permission.type")}</th>
-              <th>{t("permission.group-permission")}</th>
+              <th className="is-hidden-mobile">
+                {t("permission.group-permission")}
+              </th>
+              <th>{t("permission.type")}</th>
             </tr>
           </thead>
           <tbody>

@@ -4,7 +4,7 @@
     "error-subtitle": "Unknown permissions error"
   },
   "permission": {
-    "name": "Name",
+    "name": "User or Group",
     "type": "Type",
     "group-permission": "Group Permission"
   },
