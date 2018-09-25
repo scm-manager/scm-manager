@@ -9,5 +9,9 @@
   "author": {
     "name": "Author",
     "mail": "Mail"
+  },
+  "changeset-error": {
+    "title": "Error",
+    "subtitle": "Unknown changeset error"
   }
 }

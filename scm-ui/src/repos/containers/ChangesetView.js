@@ -2,43 +2,68 @@
 import React from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import type { Changeset } from "@scm-manager/ui-types";
-import { fetchChangesetIfNeeded } from "../modules/changesets";
+import type { Changeset, Repository } from "@scm-manager/ui-types";
+import {
+  fetchChangesetIfNeeded,
+  fetchChangesetReset,
+  getChangeset,
+  getFetchChangesetFailure,
+  isFetchChangesetPending
+} from "../modules/changesets";
+import ChangesetDetails from "../components/ChangesetDetails";
+import { translate } from "react-i18next";
+import { Loading, ErrorPage } from "@scm-manager/ui-components";
 
 type Props = {
   id: string,
   changeset: Changeset,
   repository: Repository,
-  repositories: Repository[],
+  loading: boolean,
+  error: Error,
   fetchChangesetIfNeeded: (
     namespace: string,
     repoName: string,
     id: string
-  ) => void
+  ) => void,
+  resetForm: (namespace: string, repoName: string, id: string) => void,
+  match: any,
+  t: string => string
 };
 
-class ChangesetView extends React.Component<State, Props> {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
+class ChangesetView extends React.Component<Props> {
   componentDidMount() {
     const { fetchChangesetIfNeeded, repository } = this.props;
     const id = this.props.match.params.id;
-    //state macht keinen Sinn?! repositories holen!
     fetchChangesetIfNeeded(repository.namespace, repository.name, id);
+    this.props.resetForm(repository.namespace, repository.name, id);
   }
 
   render() {
-    const id = this.props.match.params.id;
+    const { changeset, loading, error, t } = this.props;
 
-    return <div>Hallo! Changesets here! {id}</div>;
+    if (error) {
+      return (
+        <ErrorPage
+          title={t("changeset-error.title")}
+          subtitle={t("changeset-error.subtitle")}
+          error={error}
+        />
+      );
+    }
+
+    if (!changeset || loading) return <Loading />;
+
+    return <ChangesetDetails changeset={changeset} />;
   }
 }
 
 const mapStateToProps = (state, ownProps: Props) => {
-  return null;
+  const { namespace, name } = ownProps.repository;
+  const id = ownProps.match.params.id;
+  const changeset = getChangeset(state, namespace, name, id);
+  const loading = isFetchChangesetPending(state, namespace, name, id);
+  const error = getFetchChangesetFailure(state, namespace, name, id);
+  return { changeset, error, loading };
 };
 
 const mapDispatchToProps = dispatch => {
@@ -49,6 +74,9 @@ const mapDispatchToProps = dispatch => {
       id: string
     ) => {
       dispatch(fetchChangesetIfNeeded(namespace, repoName, id));
+    },
+    resetForm: (namespace: string, repoName: string, id: string) => {
+      dispatch(fetchChangesetReset(namespace, repoName, id));
     }
   };
 };
@@ -57,5 +85,5 @@ export default withRouter(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )(ChangesetView)
+  )(translate("changesets")(ChangesetView))
 );

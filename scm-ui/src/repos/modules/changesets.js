@@ -10,6 +10,8 @@ import { isPending } from "../../modules/pending";
 import { getFailure } from "../../modules/failure";
 import { combineReducers } from "redux";
 import type { Action, PagedCollection } from "@scm-manager/ui-types";
+import * as types from "../../modules/types";
+import { CREATE_USER_RESET } from "../../users/modules/users";
 
 export const FETCH_CHANGESETS = "scm/repos/FETCH_CHANGESETS";
 export const FETCH_CHANGESETS_PENDING = `${FETCH_CHANGESETS}_${PENDING_SUFFIX}`;
@@ -22,6 +24,7 @@ export const FETCH_CHANGESET = "scm/repos/FETCH_CHANGESET";
 export const FETCH_CHANGESET_PENDING = `${FETCH_CHANGESET}_${PENDING_SUFFIX}`;
 export const FETCH_CHANGESET_SUCCESS = `${FETCH_CHANGESET}_${SUCCESS_SUFFIX}`;
 export const FETCH_CHANGESET_FAILURE = `${FETCH_CHANGESET}_${FAILURE_SUFFIX}`;
+export const FETCH_CHANGESET_RESET = `${FETCH_CHANGESET}_${types.RESET_SUFFIX}`;
 
 //********end of detailed view add
 
@@ -57,7 +60,6 @@ export function fetchChangeset(
         dispatch(fetchChangesetSuccess(data, namespace, repoName, id))
       )
       .catch(err => {
-        console.log(err);
         dispatch(fetchChangesetFailure(namespace, repoName, id, err));
       });
   };
@@ -106,6 +108,17 @@ function fetchChangesetFailure(
       id,
       error
     },
+    itemId: createItemId(namespace, repoName, id)
+  };
+}
+
+export function fetchChangesetReset(
+  namespace: string,
+  repoName: string,
+  id: string
+) {
+  return {
+    type: FETCH_CHANGESET_RESET,
     itemId: createItemId(namespace, repoName, id)
   };
 }
