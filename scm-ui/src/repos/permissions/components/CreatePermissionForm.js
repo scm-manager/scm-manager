@@ -101,7 +101,7 @@ class CreatePermissionForm extends React.Component<Props, State> {
   removeState = () => {
     this.setState({
       name: "",
-      type: "",
+      type: "READ",
       groupPermission: false
     });
   };
