@@ -16,6 +16,7 @@ import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -70,7 +71,7 @@ public class PermissionRootResource {
   @TypeHint(TypeHint.NO_CONTENT.class)
   @Consumes(VndMediaType.PERMISSION)
   @Path("")
-  public Response create(@PathParam("namespace") String namespace, @PathParam("name") String name, PermissionDto permission) throws Exception {
+  public Response create(@PathParam("namespace") String namespace, @PathParam("name") String name,@Valid PermissionDto permission) throws Exception {
     log.info("try to add new permission: {}", permission);
     Repository repository = load(namespace, name);
     RepositoryPermissions.permissionWrite(repository).check();
@@ -156,7 +157,7 @@ public class PermissionRootResource {
   public Response update(@PathParam("namespace") String namespace,
                          @PathParam("name") String name,
                          @PathParam("permission-name") String permissionName,
-                         PermissionDto permission) throws NotFoundException, AlreadyExistsException {
+                         @Valid PermissionDto permission) throws NotFoundException, AlreadyExistsException {
     log.info("try to update the permission with name: {}. the modified permission is: {}", permissionName, permission);
     Repository repository = load(namespace, name);
     RepositoryPermissions.permissionWrite(repository).check();

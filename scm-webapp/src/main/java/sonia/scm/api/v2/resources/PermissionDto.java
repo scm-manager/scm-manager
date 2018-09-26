@@ -4,15 +4,20 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Links;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Getter @Setter @ToString
+import javax.validation.constraints.Pattern;
+
+import static sonia.scm.api.v2.ValidationConstraints.USER_GROUP_PATTERN;
+
+@Getter @Setter @ToString @NoArgsConstructor
 public class PermissionDto extends HalRepresentation {
 
   public static final String GROUP_PREFIX = "@";
 
-  @JsonInclude(JsonInclude.Include.NON_NULL)
+  @Pattern(regexp = USER_GROUP_PATTERN)
   private String name;
 
   /**
@@ -27,9 +32,6 @@ public class PermissionDto extends HalRepresentation {
 
 
   private boolean groupPermission = false;
-
-  public PermissionDto() {
-  }
 
   public PermissionDto(String permissionName, boolean groupPermission) {
     name = permissionName;
