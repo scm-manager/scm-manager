@@ -34,7 +34,6 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
 import org.eclipse.jgit.lib.Repository;
 
@@ -97,7 +96,15 @@ public class AbstractGitCommand
     }
     return commit;
   }
-  
+
+  protected String getBranchNameOrDefault(String requestedBranch) {
+    if ( Strings.isNullOrEmpty(requestedBranch) ) {
+      return getDefaultBranchName();
+    } else {
+      return requestedBranch;
+    }
+  }
+
   protected ObjectId getBranchOrDefault(Repository gitRepository, String requestedBranch) throws IOException {
     ObjectId head;
     if ( Strings.isNullOrEmpty(requestedBranch) ) {
@@ -107,7 +114,16 @@ public class AbstractGitCommand
     }
     return head;
   }
-  
+
+  protected String getDefaultBranchName() {
+    String defaultBranchName = repository.getProperty(GitConstants.PROPERTY_DEFAULT_BRANCH);
+    if (!Strings.isNullOrEmpty(defaultBranchName)) {
+      return defaultBranchName;
+    } else {
+      return null;
+    }
+  }
+
   protected ObjectId getDefaultBranch(Repository gitRepository) throws IOException {
     ObjectId head;
     String defaultBranchName = repository.getProperty(GitConstants.PROPERTY_DEFAULT_BRANCH);

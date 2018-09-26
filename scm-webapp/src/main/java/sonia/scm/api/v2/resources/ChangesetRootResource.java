@@ -65,7 +65,11 @@ public class ChangesetRootResource {
         .getChangesets();
       if (changesets != null && changesets.getChangesets() != null) {
         PageResult<Changeset> pageResult = new PageResult<>(changesets.getChangesets(), changesets.getTotal());
-        return Response.ok(changesetCollectionToDtoMapper.map(page, pageSize, pageResult, repository)).build();
+        if (changesets.getBranchName() != null) {
+          return Response.ok(changesetCollectionToDtoMapper.map(page, pageSize, pageResult, repository, changesets.getBranchName())).build();
+        } else {
+          return Response.ok(changesetCollectionToDtoMapper.map(page, pageSize, pageResult, repository)).build();
+        }
       } else {
         return Response.ok().build();
       }

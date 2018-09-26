@@ -170,8 +170,8 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
     GitChangesetConverter converter = null;
     RevWalk revWalk = null;
 
-    try (org.eclipse.jgit.lib.Repository gr = open()) {
-      if (!gr.getAllRefs().isEmpty()) {
+    try (org.eclipse.jgit.lib.Repository repository = open()) {
+      if (!repository.getAllRefs().isEmpty()) {
         int counter = 0;
         int start = request.getPagingStart();
 
@@ -188,18 +188,18 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
         ObjectId startId = null;
 
         if (!Strings.isNullOrEmpty(request.getStartChangeset())) {
-          startId = gr.resolve(request.getStartChangeset());
+          startId = repository.resolve(request.getStartChangeset());
         }
 
         ObjectId endId = null;
 
         if (!Strings.isNullOrEmpty(request.getEndChangeset())) {
-          endId = gr.resolve(request.getEndChangeset());
+          endId = repository.resolve(request.getEndChangeset());
         }
 
-        revWalk = new RevWalk(gr);
+        revWalk = new RevWalk(repository);
 
-        converter = new GitChangesetConverter(gr, revWalk);
+        converter = new GitChangesetConverter(repository, revWalk);
 
         if (!Strings.isNullOrEmpty(request.getPath())) {
           revWalk.setTreeFilter(
@@ -207,7 +207,8 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
               PathFilter.create(request.getPath()), TreeFilter.ANY_DIFF));
         }
 
-        ObjectId head = getBranchOrDefault(gr, request.getBranch());
+        ObjectId head = getBranchOrDefault(repository, request.getBranch());
+        String branch = getBranchNameOrDefault(request.getBranch());
 
         if (head != null) {
           if (startId != null) {
@@ -234,10 +235,14 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
           }
         }
 
-        changesets = new ChangesetPagingResult(counter, changesetList);
+        if (branch != null) {
+          changesets = new ChangesetPagingResult(counter, changesetList, branch);
+        } else {
+          changesets = new ChangesetPagingResult(counter, changesetList);
+        }
       } else if (logger.isWarnEnabled()) {
         logger.warn("the repository {} seems to be empty",
-          repository.getName());
+          this.repository.getName());
 
         changesets = new ChangesetPagingResult(0, Collections.EMPTY_LIST);
       }

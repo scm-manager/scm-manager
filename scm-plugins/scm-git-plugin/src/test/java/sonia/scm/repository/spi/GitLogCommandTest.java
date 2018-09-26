@@ -45,6 +45,7 @@ import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -72,6 +73,8 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
     assertEquals("86a6645eceefe8b9a247db5eb16e3d89a7e6e6d1", result.getChangesets().get(1).getId());
     assertEquals("592d797cd36432e591416e8b2b98154f4f163411", result.getChangesets().get(2).getId());
     assertEquals("435df2f061add3589cb326cc64be9b9c3897ceca", result.getChangesets().get(3).getId());
+    assertNull(result.getBranchName());
+    assertTrue(result.getChangesets().stream().allMatch(r -> r.getBranches().isEmpty()));
 
     // set default branch and fetch again
     repository.setProperty(GitConstants.PROPERTY_DEFAULT_BRANCH, "test-branch");
@@ -83,6 +86,8 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
     assertEquals("3f76a12f08a6ba0dc988c68b7f0b2cd190efc3c4", result.getChangesets().get(0).getId());
     assertEquals("592d797cd36432e591416e8b2b98154f4f163411", result.getChangesets().get(1).getId());
     assertEquals("435df2f061add3589cb326cc64be9b9c3897ceca", result.getChangesets().get(2).getId());
+    assertEquals("test-branch", result.getBranchName());
+    assertTrue(result.getChangesets().stream().allMatch(r -> r.getBranches().isEmpty()));
   }
 
   @Test
