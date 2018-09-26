@@ -3,7 +3,6 @@ package sonia.scm.api.v2.resources;
 import sonia.scm.repository.NamespaceAndName;
 
 import javax.inject.Inject;
-import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
 class ResourceLinks {
@@ -471,6 +470,30 @@ class ResourceLinks {
 
     String self() {
       return uiPluginCollectionLinkBuilder.method("plugins").parameters().method("getInstalledPlugins").parameters().href();
+    }
+  }
+
+  public AuthenticationLinks authentication() {
+    return new AuthenticationLinks(scmPathInfoStore.get());
+  }
+
+  static class AuthenticationLinks {
+    private final LinkBuilder loginLinkBuilder;
+
+    AuthenticationLinks(ScmPathInfo pathInfo) {
+      this.loginLinkBuilder = new LinkBuilder(pathInfo, AuthenticationResource.class);
+    }
+
+    String formLogin() {
+      return loginLinkBuilder.method("authenticateViaForm").parameters().href();
+    }
+
+    String jsonLogin() {
+      return loginLinkBuilder.method("authenticateViaJSONBody").parameters().href();
+    }
+
+    String logout() {
+      return loginLinkBuilder.method("logout").parameters().href();
     }
   }
 }

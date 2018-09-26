@@ -1,0 +1,44 @@
+package sonia.scm.api.v2.resources;
+
+import com.github.sdorra.shiro.ShiroRule;
+import com.github.sdorra.shiro.SubjectAware;
+import org.assertj.core.api.Assertions;
+import org.junit.Rule;
+import org.junit.Test;
+
+import java.net.URI;
+import java.util.Optional;
+
+@SubjectAware(configuration = "classpath:sonia/scm/shiro-001.ini")
+public class IndexResourceTest {
+
+  @Rule
+  public final ShiroRule shiroRule = new ShiroRule();
+
+  private final IndexDtoGenerator indexDtoGenerator = new IndexDtoGenerator(ResourceLinksMock.createMock(URI.create("/")));
+  private final IndexResource indexResource = new IndexResource(indexDtoGenerator);
+
+  @Test
+  public void shouldRenderLoginUrlsForUnauthenticatedRequest() {
+    IndexDto index = indexResource.getIndex();
+
+    Assertions.assertThat(index.getLinks().getLinkBy("formLogin")).matches(Optional::isPresent);
+    Assertions.assertThat(index.getLinks().getLinkBy("jsonLogin")).matches(Optional::isPresent);
+  }
+
+  @Test
+  @SubjectAware(username = "trillian", password = "secret")
+  public void shouldRenderMeUrlForAuthenticatedRequest() {
+    IndexDto index = indexResource.getIndex();
+
+    Assertions.assertThat(index.getLinks().getLinkBy("me")).matches(Optional::isPresent);
+  }
+
+  @Test
+  @SubjectAware(username = "trillian", password = "secret")
+  public void shouldRenderLogoutUrlForAuthenticatedRequest() {
+    IndexDto index = indexResource.getIndex();
+
+    Assertions.assertThat(index.getLinks().getLinkBy("logout")).matches(Optional::isPresent);
+  }
+}
