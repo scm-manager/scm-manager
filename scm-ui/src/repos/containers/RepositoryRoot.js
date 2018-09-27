@@ -71,6 +71,11 @@ class RepositoryRoot extends React.Component<Props> {
     this.props.deleteRepo(repository, this.deleted);
   };
 
+  matchChangeset = (route: any) => {
+    const url = this.matchedUrl();
+    return route.location.pathname.match(`${url}/changeset/`);
+  };
+
   render() {
     const { loading, error, repository, t } = this.props;
 
@@ -127,6 +132,7 @@ class RepositoryRoot extends React.Component<Props> {
                   activeOnlyWhenExact={false}
                   to={`${url}/history`}
                   label={t("repository-root.history")}
+                  otherLocation={this.matchChangeset}
                 />
                 <EditNavLink repository={repository} editUrl={`${url}/edit`} />
               </Section>
