@@ -15,10 +15,9 @@ class ChangesetAvatar extends React.Component<Props> {
     return (
       <p className="image is-64x64">
         <ExtensionPoint
-          name="repos.changeset-table.information"
+          name="repos.changeset.gravatar"
           props={{ changeset, repository }}
-        >
-        </ExtensionPoint>
+        />
       </p>
     );
   }
