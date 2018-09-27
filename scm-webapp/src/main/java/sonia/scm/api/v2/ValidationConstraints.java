@@ -1,6 +1,8 @@
 package sonia.scm.api.v2;
 
-public class ValidationConstraints {
+public final class ValidationConstraints {
+
+  private ValidationConstraints() {}
 
   /**
    * A user or group name should not start with the @ character
