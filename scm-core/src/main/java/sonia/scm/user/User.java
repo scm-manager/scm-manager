@@ -55,7 +55,7 @@ import java.security.Principal;
  *
  * @author Sebastian Sdorra
  */
-@StaticPermissions("user")
+@StaticPermissions(value = "user", globalPermissions = {"create", "list"})
 @XmlRootElement(name = "users")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class

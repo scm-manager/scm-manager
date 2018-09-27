@@ -22,7 +22,7 @@ import com.github.sdorra.ssp.StaticPermissions;
 @StaticPermissions(
   value = "configuration",
   permissions = {"read", "write"},
-  globalPermissions = {}
+  globalPermissions = {"list"}
 )
 public interface Configuration extends PermissionObject {
 }
