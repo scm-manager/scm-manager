@@ -4,7 +4,7 @@
 @Library('github.com/cloudogu/ces-build-lib@59d3e94')
 import com.cloudogu.ces.cesbuildlib.*
 
-node() { // No specific label
+node('docker') {
 
   // Change this as when we go back to default - necessary for proper SonarQube analysis
   mainBranch = "2.0.0-m3"
@@ -44,6 +44,26 @@ node() { // No specific label
           currentBuild.result = 'UNSTABLE'
         }
       }
+
+      def commitHash = getCommitHash()
+      def dockerImageTag = "2.0.0-dev-${commitHash.substring(0,7)}-${BUILD_NUMBER}"
+
+      if (isMainBranch()) {
+        stage('Docker') {
+          def image = docker.build('cloudogu/scm-manager')
+          docker.withRegistry('', 'hub.docker.com-cesmarvin') {
+            image.push(dockerImageTag)
+            image.push('latest')
+          }
+        }
+
+        stage('Deployment') {
+          build job: 'scm-manager/next-scm.cloudogu.com', propagate: false, wait: false, parameters: [
+            string(name: 'changeset', value: commitHash),
+            string(name: 'imageTag', value: dockerImageTag)
+          ]
+        }
+      }
     }
 
     // Archive Unit and integration test results, if any
@@ -62,7 +82,7 @@ Maven setupMavenBuild() {
   // Keep this version number in sync with .mvn/maven-wrapper.properties
   Maven mvn = new MavenInDocker(this, "3.5.2-jdk-8")
 
-  if (mainBranch.equals(env.BRANCH_NAME)) {
+  if (isMainBranch()) {
     // Release starts javadoc, which takes very long, so do only for certain branches
     mvn.additionalArgs += ' -DperformRelease'
     // JDK8 is more strict, we should fix this before the next release. Right now, this is just not the focus, yet.
@@ -89,13 +109,17 @@ void analyzeWith(Maven mvn) {
         "-Dsonar.pullrequest.bitbucketcloud.repository=scm-manager "
     } else {
       mvnArgs += " -Dsonar.branch.name=${env.BRANCH_NAME} "
-      if (!mainBranch.equals(env.BRANCH_NAME)) {
+      if (!isMainBranch()) {
         // Avoid exception "The main branch must not have a target" on main branch
         mvnArgs += " -Dsonar.branch.target=${mainBranch} "
       }
     }
     mvn "${mvnArgs}"
   }
+}
+
+boolean isMainBranch() {
+  return mainBranch.equals(env.BRANCH_NAME)
 }
 
 boolean waitForQualityGateWebhookToBeCalled() {
@@ -112,6 +136,10 @@ boolean waitForQualityGateWebhookToBeCalled() {
 
 String getCommitAuthorComplete() {
   new Sh(this).returnStdOut 'hg log --branch . --limit 1 --template "{author}"'
+}
+
+String getCommitHash() {
+  new Sh(this).returnStdOut 'hg log --branch . --limit 1 --template "{node}"'
 }
 
 String getCommitAuthorEmail() {
