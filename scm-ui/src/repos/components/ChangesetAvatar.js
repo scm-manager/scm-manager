@@ -1,24 +1,23 @@
 //@flow
 import React from "react";
-import {ExtensionPoint} from "@scm-manager/ui-extensions";
-import type {Changeset} from "@scm-manager/ui-types";
-import {Image} from "@scm-manager/ui-components";
+import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import type { Changeset, Repository } from "@scm-manager/ui-types";
+import { Image } from "@scm-manager/ui-components";
 
 type Props = {
-  changeset: Changeset
+  changeset: Changeset,
+  repository: Repository
 };
 
 class ChangesetAvatar extends React.Component<Props> {
   render() {
-    const { changeset } = this.props;
+    const { changeset, repository } = this.props;
     return (
       <p className="image is-64x64">
         <ExtensionPoint
           name="repos.changeset-table.information"
-          renderAll={true}
-          props={{ changeset }}
+          props={{ changeset, repository }}
         >
-          <Image src="/images/blib.jpg" alt="Logo" />
         </ExtensionPoint>
       </p>
     );

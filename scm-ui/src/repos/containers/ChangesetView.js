@@ -39,7 +39,7 @@ class ChangesetView extends React.Component<Props> {
   }
 
   render() {
-    const { changeset, loading, error, t } = this.props;
+    const { changeset, loading, error, t, repository } = this.props;
 
     if (error) {
       return (
@@ -53,7 +53,7 @@ class ChangesetView extends React.Component<Props> {
 
     if (!changeset || loading) return <Loading />;
 
-    return <ChangesetDetails changeset={changeset} />;
+    return <ChangesetDetails changeset={changeset} repository={repository}/>;
   }
 }
 

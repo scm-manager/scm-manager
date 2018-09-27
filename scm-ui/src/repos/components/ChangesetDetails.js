@@ -1,6 +1,6 @@
 //@flow
 import React from "react";
-import type { Changeset } from "@scm-manager/ui-types";
+import type { Changeset, Repository } from "@scm-manager/ui-types";
 import { translate } from "react-i18next";
 import { MailLink, DateFromNow } from "@scm-manager/ui-components";
 import ChangesetAvatar from "./ChangesetAvatar";
@@ -15,19 +15,17 @@ const styles = {
 
 type Props = {
   changeset: Changeset,
+  repository: Repository,
   t: string => string,
   classes: any
 };
 
 class ChangesetDetails extends React.Component<Props> {
   render() {
-    const { changeset, t, classes } = this.props;
+    const { changeset, repository, t, classes } = this.props;
     return (
       <div>
-        <figure className={classNames(classes.floatLeft)}>
-          <ChangesetAvatar changeset={changeset} />
-        </figure>
-        <table className={classNames("table")}>
+        <table className={classNames("table", classes.floatLeft)}>
           <tbody>
             <tr>
               <td>{t("changeset.id")}</td>
@@ -55,6 +53,9 @@ class ChangesetDetails extends React.Component<Props> {
             </tr>
           </tbody>
         </table>
+        <figure className={classNames(classes.floatLeft)}>
+          <ChangesetAvatar changeset={changeset} repository={repository} />
+        </figure>
       </div>
     );
   }
