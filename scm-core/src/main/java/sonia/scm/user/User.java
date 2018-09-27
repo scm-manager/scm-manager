@@ -58,8 +58,7 @@ import java.security.Principal;
 @StaticPermissions(value = "user", globalPermissions = {"create", "list"})
 @XmlRootElement(name = "users")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class
-User extends BasicPropertiesAware implements Principal, ModelObject, PermissionObject
+public class User extends BasicPropertiesAware implements Principal, ModelObject, PermissionObject
 {
 
   /** Field description */
