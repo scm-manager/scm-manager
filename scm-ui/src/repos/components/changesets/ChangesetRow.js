@@ -1,12 +1,15 @@
 //@flow
 import React from "react";
-import type { Changeset, Repository } from "@scm-manager/ui-types";
+import type {
+  Changeset,
+  Repository
+} from "../../../../../scm-ui-components/packages/ui-types/src/index";
 import classNames from "classnames";
 import { translate, Interpolate } from "react-i18next";
 import ChangesetAvatar from "./ChangesetAvatar";
 import ChangesetId from "./ChangesetId";
 import injectSheet from "react-jss";
-import { DateFromNow } from "@scm-manager/ui-components";
+import { DateFromNow } from "../../../../../scm-ui-components/packages/ui-components/src/index";
 import ChangesetAuthor from "./ChangesetAuthor";
 
 const styles = {
@@ -38,7 +41,7 @@ class ChangesetRow extends React.Component<Props> {
     const { changeset, classes } = this.props;
     const changesetLink = this.createLink(changeset);
     const dateFromNow = <DateFromNow date={changeset.date} />;
-    const authorLine = <ChangesetAuthor changeset={changeset}/>;
+    const authorLine = <ChangesetAuthor changeset={changeset} />;
     return (
       <article className={classNames("media", classes.inner)}>
         <figure className="media-left">
@@ -50,7 +53,7 @@ class ChangesetRow extends React.Component<Props> {
               {changeset.description}
               <br />
               <Interpolate
-                i18nKey="changeset.summary"
+                i18nKey="changesets.changeset.summary"
                 id={changesetLink}
                 time={dateFromNow}
               />
@@ -63,4 +66,4 @@ class ChangesetRow extends React.Component<Props> {
   }
 }
 
-export default injectSheet(styles)(translate("changesets")(ChangesetRow));
+export default injectSheet(styles)(translate("repos")(ChangesetRow));

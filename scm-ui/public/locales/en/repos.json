@@ -43,5 +43,19 @@
       "submit": "Yes",
       "cancel": "No"
     }
+  },
+  "changesets": {
+    "changeset": {
+      "id": "ID",
+      "description": "Description",
+      "contact": "Contact",
+      "date": "Date",
+      "summary": "Changeset {{id}} committed {{time}}"
+    },
+    "author": {
+      "name": "Author",
+      "mail": "Mail"
+    },
+    "branchselector-label": "Branch:"
   }
 }

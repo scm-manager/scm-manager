@@ -1,7 +1,7 @@
 // @flow
 import ChangesetRow from "./ChangesetRow";
 import React from "react";
-import type { Changeset, Repository } from "@scm-manager/ui-types";
+import type { Changeset, Repository } from "../../../../../scm-ui-components/packages/ui-types/src/index";
 import classNames from "classnames";
 
 type Props = {

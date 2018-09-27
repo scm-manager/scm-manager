@@ -11,7 +11,7 @@ export default class ChangesetAuthor extends React.Component<Props> {
   render() {
     const { changeset } = this.props;
     return (
-      <>
+      <div>
         {changeset.author.name}{" "}
         <a
           className="is-hidden-mobile"
@@ -21,7 +21,7 @@ export default class ChangesetAuthor extends React.Component<Props> {
           {changeset.author.mail}
           &gt;
         </a>
-      </>
+      </div>
     );
   }
 }

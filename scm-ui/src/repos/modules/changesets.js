@@ -140,8 +140,8 @@ function fetchChangesetsFailure(
     payload: {
       namespace,
       name,
-      branch,
-      error
+      error,
+      branch
     },
     itemId: createItemId(namespace, name, branch)
   };

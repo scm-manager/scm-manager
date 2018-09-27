@@ -127,7 +127,7 @@ describe("changesets", () => {
     });
 
     it("should fetch changesets by page", () => {
-      fetchMock.getOnce(DEFAULT_BRANCH_URL + "?page=5", "{}");
+      fetchMock.getOnce(DEFAULT_BRANCH_URL + "?page=4", "{}");
 
       const expectedActions = [
         {
@@ -149,7 +149,7 @@ describe("changesets", () => {
     });
 
     it("should fetch changesets by branch and page", () => {
-      fetchMock.getOnce(SPECIFIC_BRANCH_URL + "?page=5", "{}");
+      fetchMock.getOnce(SPECIFIC_BRANCH_URL + "?page=4", "{}");
 
       const expectedActions = [
         {

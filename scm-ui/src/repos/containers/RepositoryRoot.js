@@ -105,22 +105,22 @@ class RepositoryRoot extends React.Component<Props> {
             <Route
               exact
               path={`${url}/history`}
-              component={() => <Changesets repository={repository} />}
+              render={() => <Changesets repository={repository} />}
             />
             <Route
               exact
               path={`${url}/history/:page`}
-              component={() => <Changesets repository={repository} />}
+              render={() => <Changesets repository={repository} />}
             />
             <Route
               exact
               path={`${url}/:branch/history`}
-              component={() => <Changesets repository={repository} />}
+              render={() => <Changesets repository={repository} />}
             />
             <Route
               exact
               path={`${url}/:branch/history/:page`}
-              component={() => <Changesets repository={repository} />}
+              render={() => <Changesets repository={repository} />}
             />
           </div>
           <div className="column">
