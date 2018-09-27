@@ -7,7 +7,8 @@ import { Route, Link } from "react-router-dom";
 type Props = {
   to: string,
   label: string,
-  activeOnlyWhenExact?: boolean
+  activeOnlyWhenExact?: boolean,
+  otherLocation: (route: any) => boolean
 };
 
 class NavLink extends React.Component<Props> {
@@ -16,10 +17,10 @@ class NavLink extends React.Component<Props> {
   };
 
   renderLink = (route: any) => {
-    const { to, label } = this.props;
+    const { to, label, otherLocation } = this.props;
     return (
       <li>
-        <Link className={route.match ? "is-active" : ""} to={to}>
+        <Link className={route.match || (otherLocation && otherLocation(route)) ? "is-active" : ""} to={to}>
           {label}
         </Link>
       </li>
