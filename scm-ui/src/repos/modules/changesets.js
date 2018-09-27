@@ -23,7 +23,6 @@ export const FETCH_CHANGESET = "scm/repos/FETCH_CHANGESET";
 export const FETCH_CHANGESET_PENDING = `${FETCH_CHANGESET}_${PENDING_SUFFIX}`;
 export const FETCH_CHANGESET_SUCCESS = `${FETCH_CHANGESET}_${SUCCESS_SUFFIX}`;
 export const FETCH_CHANGESET_FAILURE = `${FETCH_CHANGESET}_${FAILURE_SUFFIX}`;
-export const FETCH_CHANGESET_RESET = `${FETCH_CHANGESET}_${types.RESET_SUFFIX}`;
 
 //********end of detailed view add
 
@@ -111,16 +110,6 @@ function fetchChangesetFailure(
   };
 }
 
-export function fetchChangesetReset(
-  namespace: string,
-  repoName: string,
-  id: string
-) {
-  return {
-    type: FETCH_CHANGESET_RESET,
-    itemId: createItemId(namespace, repoName, id)
-  };
-}
 //********end of detailed view add
 
 export function fetchChangesetsWithOptions(
