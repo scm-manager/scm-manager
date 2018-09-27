@@ -3,7 +3,13 @@ import React from "react";
 import { translate } from "react-i18next";
 import { Route } from "react-router";
 
-import { Page, Navigation, NavLink, Section } from "@scm-manager/ui-components";
+import {
+  Page,
+  Navigation,
+  NavLink,
+  Section,
+  Help
+} from "@scm-manager/ui-components";
 import GlobalConfig from "./GlobalConfig";
 import type { History } from "history";
 
@@ -33,6 +39,7 @@ class Config extends React.Component<Props> {
 
     return (
       <Page>
+        <Help message={"Hallo"} />
         <div className="columns">
           <div className="column is-three-quarters">
             <Route path={url} exact component={GlobalConfig} />

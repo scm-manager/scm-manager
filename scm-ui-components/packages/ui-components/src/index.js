@@ -16,6 +16,8 @@ export { default as MailLink } from "./MailLink.js";
 export { default as Notification } from "./Notification.js";
 export { default as Paginator } from "./Paginator.js";
 export { default as ProtectedRoute } from "./ProtectedRoute.js";
+export { default as Help } from "./Help.js";
+
 
 export { apiClient, NOT_FOUND_ERROR, UNAUTHORIZED_ERROR } from "./apiclient.js";
 
