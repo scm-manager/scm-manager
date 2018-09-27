@@ -25,6 +25,8 @@ import Edit from "../containers/Edit";
 
 import type { History } from "history";
 import EditNavLink from "../components/EditNavLink";
+import Sources from "../sources/containers/Sources";
+import RepositoryNavLink from "../components/RepositoryNavLink";
 
 type Props = {
   namespace: string,
@@ -101,12 +103,22 @@ class RepositoryRoot extends React.Component<Props> {
               path={`${url}/edit`}
               component={() => <Edit repository={repository} />}
             />
+            <Route
+              path={`${url}/sources`}
+              component={() => <Sources repository={repository} />}
+            />
           </div>
           <div className="column">
             <Navigation>
               <Section label={t("repository-root.navigation-label")}>
                 <NavLink to={url} label={t("repository-root.information")} />
                 <EditNavLink repository={repository} editUrl={`${url}/edit`} />
+                <RepositoryNavLink
+                  repository={repository}
+                  linkName="sources"
+                  to={`${url}/sources`}
+                  label={t("repository-root.sources")}
+                />
               </Section>
               <Section label={t("repository-root.actions-label")}>
                 <DeleteNavAction repository={repository} delete={this.delete} />

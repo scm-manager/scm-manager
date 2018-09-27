@@ -22,7 +22,8 @@
     "actions-label": "Actions",
     "back-label": "Back",
     "navigation-label": "Navigation",
-    "information": "Information"
+    "information": "Information",
+    "sources": "Sources"
   },
   "create": {
     "title": "Create Repository",
@@ -41,6 +42,14 @@
       "message": "Do you really want to delete the repository?",
       "submit": "Yes",
       "cancel": "No"
+    }
+  },
+  "sources": {
+    "file-tree": {
+      "name": "Name",
+      "length": "Length",
+      "lastModified": "Last modified",
+      "description": "Description"
     }
   }
 }

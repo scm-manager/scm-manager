@@ -7,6 +7,7 @@ import { routerReducer, routerMiddleware } from "react-router-redux";
 import users from "./users/modules/users";
 import repos from "./repos/modules/repos";
 import repositoryTypes from "./repos/modules/repositoryTypes";
+import sources from "./repos/sources/modules/sources";
 import groups from "./groups/modules/groups";
 import auth from "./modules/auth";
 import pending from "./modules/pending";
@@ -28,7 +29,8 @@ function createReduxStore(history: BrowserHistory) {
     repositoryTypes,
     groups,
     auth,
-    config
+    config,
+    sources
   });
 
   return createStore(

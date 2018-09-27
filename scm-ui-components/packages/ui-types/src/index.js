@@ -10,3 +10,5 @@ export type { Repository, RepositoryCollection, RepositoryGroup } from "./Reposi
 export type { RepositoryType, RepositoryTypeCollection } from "./RepositoryTypes";
 
 export type { Config } from "./Config";
+
+export type { SubRepository, File, SourcesCollection } from "./Sources";
