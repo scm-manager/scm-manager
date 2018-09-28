@@ -525,11 +525,13 @@ public final class GitUtil
           foundRef = of(e.getValue().getTarget());
           break;
         }
-      } else if (key.startsWith(REF_HEAD_PREFIX) && REF_MASTER.equals(key.substring(REF_HEAD_PREFIX.length()))) {
-        foundRef = of(e.getValue());
-        break;
-      } else {
-        lastHeadRef = e.getValue();
+      } else if (key.startsWith(REF_HEAD_PREFIX)) {
+        if (REF_MASTER.equals(key.substring(REF_HEAD_PREFIX.length()))) {
+          foundRef = of(e.getValue());
+          break;
+        } else {
+          lastHeadRef = e.getValue();
+        }
       }
     }
 
