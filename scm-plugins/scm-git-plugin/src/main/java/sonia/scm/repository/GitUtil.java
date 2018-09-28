@@ -66,6 +66,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
+import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static java.util.Optional.ofNullable;
 
@@ -507,35 +508,13 @@ public final class GitUtil
     return getRepositoryHeadRef(repo).map(GitUtil::getBranch).orElse(null);
   }
 
-  public static ObjectId getRepositoryHead(org.eclipse.jgit.lib.Repository repo)
-    throws IOException
-  {
-    Optional<Ref> headRef = getRepositoryHeadRef(repo);
-
-    String head = headRef.map(GitUtil::getBranch).orElse(null);
-    ObjectId id = headRef.map(Ref::getObjectId).orElse(repo.resolve(Constants.HEAD));
-
-    if (logger.isDebugEnabled())
-    {
-      if ((head != null) && (id != null))
-      {
-        logger.debug("use {}:{} as repository head", head, id.name());
-      }
-      else if (id != null)
-      {
-        logger.debug("use {} as repository head", id.name());
-      }
-      else
-      {
-        logger.warn("could not find repository head");
-      }
-    }
-
-    return id;
+  public static ObjectId getRepositoryHead(org.eclipse.jgit.lib.Repository repo) {
+    return getRepositoryHeadRef(repo).map(Ref::getObjectId).orElse(null);
   }
 
   public static Optional<Ref> getRepositoryHeadRef(org.eclipse.jgit.lib.Repository repo) {
     Map<String, Ref> refs = repo.getAllRefs();
+    Optional<Ref> foundRef = empty();
     Ref lastHeadRef = null;
 
     for (Map.Entry<String, Ref> e : refs.entrySet()) {
@@ -543,18 +522,33 @@ public final class GitUtil
 
       if (REF_HEAD.equals(key)) {
         if (e.getValue().isSymbolic() && isBranch(e.getValue().getTarget().getName())) {
-          return of(e.getValue().getTarget());
+          foundRef = of(e.getValue().getTarget());
+          break;
         }
-      } else if (key.startsWith(REF_HEAD_PREFIX)) {
-        if (REF_MASTER.equals(key.substring(REF_HEAD_PREFIX.length()))) {
-          return of(e.getValue());
-        } else {
-          lastHeadRef = e.getValue();
-        }
+      } else if (key.startsWith(REF_HEAD_PREFIX) && REF_MASTER.equals(key.substring(REF_HEAD_PREFIX.length()))) {
+        foundRef = of(e.getValue());
+        break;
+      } else {
+        lastHeadRef = e.getValue();
       }
     }
 
-    return ofNullable(lastHeadRef);
+    if (!foundRef.isPresent()) {
+      foundRef = ofNullable(lastHeadRef);
+    }
+
+    if (foundRef.isPresent()) {
+      if (logger.isDebugEnabled()) {
+        logger.debug("use {}:{} as repository head for directory {}",
+          foundRef.map(GitUtil::getBranch).orElse(null),
+          foundRef.map(Ref::getObjectId).orElse(null).name(),
+          repo.getDirectory());
+      }
+    } else {
+      logger.warn("could not find repository head in directory {}", repo.getDirectory());
+    }
+
+    return foundRef;
   }
 
   /**
