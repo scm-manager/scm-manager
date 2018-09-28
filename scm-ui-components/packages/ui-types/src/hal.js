@@ -1,9 +1,10 @@
 // @flow
 export type Link = {
-  href: string
+  href: string,
+  name?: string
 };
 
-export type Links = { [string]: Link };
+export type Links = { [string]: Link | Link[] };
 
 export type Collection = {
   _embedded: Object,
