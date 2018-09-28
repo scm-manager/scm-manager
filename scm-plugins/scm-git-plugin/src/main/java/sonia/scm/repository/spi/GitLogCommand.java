@@ -208,7 +208,7 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
         }
 
         ObjectId head = getBranchOrDefault(repository, request.getBranch());
-        String branch = getBranchNameOrDefault(request.getBranch());
+        String branch = getBranchNameOrDefault(repository,request.getBranch());
 
         if (head != null) {
           if (startId != null) {

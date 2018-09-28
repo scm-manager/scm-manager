@@ -97,9 +97,9 @@ public class AbstractGitCommand
     return commit;
   }
 
-  protected String getBranchNameOrDefault(String requestedBranch) {
+  protected String getBranchNameOrDefault(Repository gitRepository, String requestedBranch) {
     if ( Strings.isNullOrEmpty(requestedBranch) ) {
-      return getDefaultBranchName();
+      return getDefaultBranchName(gitRepository);
     } else {
       return requestedBranch;
     }
@@ -115,12 +115,12 @@ public class AbstractGitCommand
     return head;
   }
 
-  protected String getDefaultBranchName() {
+  protected String getDefaultBranchName(Repository gitRepository) {
     String defaultBranchName = repository.getProperty(GitConstants.PROPERTY_DEFAULT_BRANCH);
     if (!Strings.isNullOrEmpty(defaultBranchName)) {
       return defaultBranchName;
     } else {
-      return null;
+      return GitUtil.getRepositoryHeadBranchName(gitRepository);
     }
   }
 

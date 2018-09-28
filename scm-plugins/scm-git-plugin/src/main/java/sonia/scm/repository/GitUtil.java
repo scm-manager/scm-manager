@@ -499,6 +499,33 @@ public final class GitUtil
     return ref;
   }
 
+  public static String getRepositoryHeadBranchName(org.eclipse.jgit.lib.Repository repo) {
+    Map<String, Ref> refs = repo.getAllRefs();
+    Ref lastHeadRef = null;
+
+    for (Map.Entry<String, Ref> e : refs.entrySet()) {
+      String key = e.getKey();
+
+      if (REF_HEAD.equals(key)) {
+        if (e.getValue().isSymbolic() && isBranch(e.getValue().getTarget().getName())) {
+          return getBranch(e.getValue().getTarget());
+        }
+      } else if (key.startsWith(REF_HEAD_PREFIX)) {
+        if (REF_MASTER.equals(key.substring(REF_HEAD_PREFIX.length()))) {
+          return REF_MASTER;
+        } else {
+          lastHeadRef = e.getValue();
+        }
+      }
+    }
+
+    if (lastHeadRef == null) {
+      return null;
+    } else {
+      return getBranch(lastHeadRef);
+    }
+  }
+
   /**
    * Method description
    *
@@ -648,7 +675,7 @@ public final class GitUtil
 
     return tagName;
   }
-  
+
   /**
    * Method description
    *
