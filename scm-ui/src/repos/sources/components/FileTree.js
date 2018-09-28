@@ -13,6 +13,7 @@ const styles = {
 
 type Props = {
   tree: SourcesCollection,
+  revision: string,
   path: string,
   baseUrl: string,
 
@@ -35,8 +36,14 @@ export function findParent(path: string) {
 
 class FileTree extends React.Component<Props> {
   render() {
-    const { tree, path, baseUrl, classes, t } = this.props;
-    const baseUrlWithRevision = baseUrl + "/" + tree.revision;
+    const { tree, revision, path, baseUrl, classes, t } = this.props;
+
+    let baseUrlWithRevision = baseUrl;
+    if (revision) {
+      baseUrlWithRevision += "/" + revision;
+    } else {
+      baseUrlWithRevision += "/" + tree.revision;
+    }
 
     const files = [];
     if (path) {

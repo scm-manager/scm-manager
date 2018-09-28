@@ -37,7 +37,7 @@ class Sources extends React.Component<Props> {
   }
 
   render() {
-    const { sources, path, baseUrl, loading, error } = this.props;
+    const { sources, revision, path, baseUrl, loading, error } = this.props;
 
     if (error) {
       return <ErrorNotification error={error} />;
@@ -47,7 +47,14 @@ class Sources extends React.Component<Props> {
       return <Loading />;
     }
 
-    return <FileTree tree={sources} path={path} baseUrl={baseUrl} />;
+    return (
+      <FileTree
+        tree={sources}
+        revision={revision}
+        path={path}
+        baseUrl={baseUrl}
+      />
+    );
   }
 }
 

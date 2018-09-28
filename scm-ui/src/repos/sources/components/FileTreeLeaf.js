@@ -21,13 +21,24 @@ type Props = {
   classes: any
 };
 
+export function createLink(base: string, file: File) {
+  let link = base;
+  if (file.path) {
+    let path = file.path;
+    if (path.startsWith("/")) {
+      path = path.substring(1);
+    }
+    link += "/" + path;
+  }
+  if (!link.endsWith("/")) {
+    link += "/";
+  }
+  return link;
+}
+
 class FileTreeLeaf extends React.Component<Props> {
   createLink = (file: File) => {
-    let link = this.props.baseUrl;
-    if (file.path) {
-      link += "/" + file.path + "/";
-    }
-    return link;
+    return createLink(this.props.baseUrl, file);
   };
 
   createFileIcon = (file: File) => {
