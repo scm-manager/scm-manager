@@ -541,7 +541,7 @@ public final class GitUtil
       if (logger.isDebugEnabled()) {
         logger.debug("use {}:{} as repository head for directory {}",
           foundRef.map(GitUtil::getBranch).orElse(null),
-          foundRef.map(Ref::getObjectId).orElse(null).name(),
+          foundRef.map(Ref::getObjectId).map(ObjectId::name).orElse(null),
           repo.getDirectory());
       }
     } else {
