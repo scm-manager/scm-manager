@@ -2,8 +2,9 @@
 
 import * as validation from "./validation.js";
 import * as urls from "./urls";
+import * as repositories from "./repositories.js";
 
-export { validation, urls };
+export { validation, urls, repositories };
 
 export { default as DateFromNow } from "./DateFromNow.js";
 export { default as ErrorNotification } from "./ErrorNotification.js";
@@ -17,6 +18,8 @@ export { default as Paginator } from "./Paginator.js";
 export { default as ProtectedRoute } from "./ProtectedRoute.js";
 
 export { apiClient, NOT_FOUND_ERROR, UNAUTHORIZED_ERROR } from "./apiclient.js";
+
+
 
 export * from "./buttons";
 export * from "./forms";
