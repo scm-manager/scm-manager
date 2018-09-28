@@ -13,7 +13,8 @@ import {
   getFetchSourcesFailure,
   isFetchSourcesPending,
   default as reducer,
-  getSources
+  getSources,
+  fetchSourcesSuccess
 } from "./sources";
 
 const sourcesUrl =
@@ -128,9 +129,11 @@ describe("reducer tests", () => {
 
   it("should store the collection", () => {
     const expectedState = {
-      "scm/core": repository
+      "scm/core": collection
     };
-    expect(reducer({}, fetchSources(repository))).toEqual(expectedState);
+    expect(reducer({}, fetchSourcesSuccess(repository, collection))).toEqual(
+      expectedState
+    );
   });
 });
 
