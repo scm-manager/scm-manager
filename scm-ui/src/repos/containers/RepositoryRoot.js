@@ -8,7 +8,7 @@ import {
   isFetchRepoPending
 } from "../modules/repos";
 import { connect } from "react-redux";
-import { Route } from "react-router-dom";
+import { Route, withRouter } from "react-router-dom";
 import type { Repository } from "@scm-manager/ui-types";
 import {
   Page,
@@ -105,7 +105,24 @@ class RepositoryRoot extends React.Component<Props> {
             />
             <Route
               path={`${url}/sources`}
-              component={() => <Sources repository={repository} />}
+              exact={true}
+              component={props => (
+                <Sources
+                  {...props}
+                  repository={repository}
+                  baseUrl={`${url}/sources`}
+                />
+              )}
+            />
+            <Route
+              path={`${url}/sources/:revision/:path*`}
+              component={props => (
+                <Sources
+                  {...props}
+                  repository={repository}
+                  baseUrl={`${url}/sources`}
+                />
+              )}
             />
           </div>
           <div className="column">
@@ -118,6 +135,7 @@ class RepositoryRoot extends React.Component<Props> {
                   linkName="sources"
                   to={`${url}/sources`}
                   label={t("repository-root.sources")}
+                  activeOnlyWhenExact={false}
                 />
               </Section>
               <Section label={t("repository-root.actions-label")}>

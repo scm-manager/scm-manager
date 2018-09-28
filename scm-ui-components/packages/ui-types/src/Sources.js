@@ -21,6 +21,7 @@ export type File = {
 };
 
 export type SourcesCollection = Collection & {
+  revision: string,
   _embedded: {
     files: File[]
   }

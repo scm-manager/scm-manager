@@ -16,20 +16,28 @@ type Props = {
   sources: SourcesCollection,
   loading: boolean,
   error: Error,
+  revision: string,
+  path: string,
+  baseUrl: string,
 
   // dispatch props
-  fetchSources: (repository: Repository) => void
+  fetchSources: (
+    repository: Repository,
+    revision: string,
+    path: string
+  ) => void,
+  match: any
 };
 
 class Sources extends React.Component<Props> {
   componentDidMount() {
-    const { fetchSources, repository } = this.props;
+    const { fetchSources, repository, revision, path } = this.props;
 
-    fetchSources(repository);
+    fetchSources(repository, revision, path);
   }
 
   render() {
-    const { sources, loading, error } = this.props;
+    const { sources, path, baseUrl, loading, error } = this.props;
 
     if (error) {
       return <ErrorNotification error={error} />;
@@ -39,29 +47,31 @@ class Sources extends React.Component<Props> {
       return <Loading />;
     }
 
-    return <FileTree tree={sources} />;
+    return <FileTree tree={sources} path={path} baseUrl={baseUrl} />;
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
   const { repository } = ownProps;
-  const loading = isFetchSourcesPending(state, repository);
-  const error = getFetchSourcesFailure(state, repository);
-  const sources = getSources(state, repository);
+  const { revision, path } = ownProps.match.params;
 
-  console.log(sources);
+  const loading = isFetchSourcesPending(state, repository, revision, path);
+  const error = getFetchSourcesFailure(state, repository, revision, path);
+  const sources = getSources(state, repository, revision, path);
 
   return {
     loading,
     error,
-    sources
+    sources,
+    revision,
+    path
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchSources: (repository: Repository) => {
-      dispatch(fetchSources(repository));
+    fetchSources: (repository: Repository, revision: string, path: string) => {
+      dispatch(fetchSources(repository, revision, path));
     }
   };
 };

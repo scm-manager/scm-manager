@@ -13,17 +13,40 @@ const styles = {
 
 type Props = {
   tree: SourcesCollection,
+  path: string,
+  baseUrl: string,
 
   // context props
   classes: any,
   t: string => string
 };
 
+export function findParent(path: string) {
+  if (path.endsWith("/")) {
+    path = path.substring(path, path.length - 1);
+  }
+
+  const index = path.lastIndexOf("/");
+  if (index > 0) {
+    return path.substring(0, index);
+  }
+  return "";
+}
+
 class FileTree extends React.Component<Props> {
   render() {
-    const { tree, classes, t } = this.props;
+    const { tree, path, baseUrl, classes, t } = this.props;
+    const baseUrlWithRevision = baseUrl + "/" + tree.revision;
 
-    const files = tree._embedded.files;
+    const files = [];
+    if (path) {
+      files.push({
+        name: "..",
+        path: findParent(path),
+        directory: true
+      });
+    }
+    files.push(...tree._embedded.files);
 
     return (
       <table className="table table-hover table-sm is-fullwidth">
@@ -38,7 +61,11 @@ class FileTree extends React.Component<Props> {
         </thead>
         <tbody>
           {files.map(file => (
-            <FileTreeLeaf key={file.name} file={file} />
+            <FileTreeLeaf
+              key={file.name}
+              file={file}
+              baseUrl={baseUrlWithRevision}
+            />
           ))}
         </tbody>
       </table>

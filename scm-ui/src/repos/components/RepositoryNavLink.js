@@ -7,7 +7,8 @@ type Props = {
   repository: Repository,
   to: string,
   label: string,
-  linkName: string
+  linkName: string,
+  activeOnlyWhenExact: boolean
 };
 
 /**
@@ -15,13 +16,19 @@ type Props = {
  */
 class RepositoryNavLink extends React.Component<Props> {
   render() {
-    const { linkName, to, label, repository } = this.props;
+    const { linkName, to, label, repository, activeOnlyWhenExact } = this.props;
 
     if (!repository._links[linkName]) {
       return null;
     }
 
-    return <NavLink to={to} label={label} />;
+    return (
+      <NavLink
+        to={to}
+        label={label}
+        activeOnlyWhenExact={activeOnlyWhenExact}
+      />
+    );
   }
 }
 
