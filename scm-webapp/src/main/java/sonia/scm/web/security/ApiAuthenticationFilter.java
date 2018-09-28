@@ -99,7 +99,7 @@ public class ApiAuthenticationFilter extends AuthenticationFilter
     throws IOException, ServletException
   {
     // skip filter on login resource
-    if (SecurityRequests.isAuthenticationRequest(request))
+    if (SecurityRequests.isAuthenticationRequest(request) || SecurityRequests.isIndexRequest(request))
     {
       chain.doFilter(request, response);
     }
