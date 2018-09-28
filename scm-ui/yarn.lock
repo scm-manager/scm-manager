@@ -1915,7 +1915,7 @@ class-utils@^0.3.5:
     isobject "^3.0.0"
     static-extend "^0.1.1"
 
-classnames@^2.2.5:
+classnames@^2.2.5, classnames@^2.2.6:
   version "2.2.6"
   resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.2.6.tgz#43935bffdd291f326dad0a205309b38d00f650ce"
 
@@ -3540,6 +3540,10 @@ getpass@^0.1.1:
   resolved "https://registry.yarnpkg.com/getpass/-/getpass-0.1.7.tgz#5eff8e3e684d569ae4cb2b1282604e8ba62149fa"
   dependencies:
     assert-plus "^1.0.0"
+
+gitdiff-parser@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/gitdiff-parser/-/gitdiff-parser-0.1.0.tgz#a8f4396e3dd61a8fc274040a2aa02bcf8d952f92"
 
 glob-base@^0.3.0:
   version "0.3.0"
@@ -5369,6 +5373,10 @@ lodash.escape@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/lodash.escape/-/lodash.escape-4.0.1.tgz#c9044690c21e04294beaa517712fded1fa88de98"
 
+lodash.findlastindex@^4.6.0:
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/lodash.findlastindex/-/lodash.findlastindex-4.6.0.tgz#b8375ac0f02e9b926375cdf8dc3ea814abf9c6ac"
+
 lodash.flattendeep@^4.4.0:
   version "4.4.0"
   resolved "https://registry.yarnpkg.com/lodash.flattendeep/-/lodash.flattendeep-4.4.0.tgz#fb030917f86a3134e5bc9bec0d69e0013ddfedb2"
@@ -5400,6 +5408,10 @@ lodash.keys@^3.0.0:
     lodash._getnative "^3.0.0"
     lodash.isarguments "^3.0.0"
     lodash.isarray "^3.0.0"
+
+lodash.mapvalues@^4.6.0:
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/lodash.mapvalues/-/lodash.mapvalues-4.6.0.tgz#1bafa5005de9dd6f4f26668c30ca37230cc9689c"
 
 lodash.memoize@~3.0.3:
   version "3.0.4"
@@ -6715,6 +6727,18 @@ rc@^1.2.7:
     ini "~1.3.0"
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
+
+react-diff-view@^1.7.0:
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/react-diff-view/-/react-diff-view-1.7.0.tgz#80c0c13aa1e77ddf71698b75b9aa9ef7cccb02a5"
+  dependencies:
+    classnames "^2.2.6"
+    gitdiff-parser "^0.1.0"
+    leven "^2.1.0"
+    lodash.escape "^4.0.1"
+    lodash.findlastindex "^4.6.0"
+    lodash.mapvalues "^4.6.0"
+    warning "^4.0.1"
 
 react-dom@^16.4.2:
   version "16.4.2"

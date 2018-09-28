@@ -25,6 +25,7 @@ import Edit from "../containers/Edit";
 
 import type { History } from "history";
 import EditNavLink from "../components/EditNavLink";
+import ScmDiff from "./ScmDiff";
 
 type Props = {
   namespace: string,
@@ -101,6 +102,16 @@ class RepositoryRoot extends React.Component<Props> {
               path={`${url}/edit`}
               component={() => <Edit repository={repository} />}
             />
+            <Route
+              path={`${url}/diff`}
+              component={() => (
+                <ScmDiff
+                  namespace={"scmadmin"}
+                  name={"foo"}
+                  revision={"4c18735d4c3bd89242284ed3eac52592637024b6"}
+                />
+              )}
+            />
           </div>
           <div className="column">
             <Navigation>
@@ -111,6 +122,9 @@ class RepositoryRoot extends React.Component<Props> {
               <Section label={t("repository-root.actions-label")}>
                 <DeleteNavAction repository={repository} delete={this.delete} />
                 <NavLink to="/repos" label={t("repository-root.back-label")} />
+              </Section>
+              <Section label="Diff">
+                <NavLink to={`${url}/diff`} label="Diff" />
               </Section>
             </Navigation>
           </div>
