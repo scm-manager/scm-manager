@@ -26,7 +26,7 @@ public final class SecurityRequests {
 
   public static boolean isIndexRequest(HttpServletRequest request) {
     String uri = request.getRequestURI().substring(request.getContextPath().length());
-    return isAuthenticationRequest(uri);
+    return isIndexRequest(uri);
   }
 
   public static boolean isIndexRequest(String uri) {
