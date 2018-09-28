@@ -63,7 +63,11 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+
+import static java.util.Optional.of;
+import static java.util.Optional.ofNullable;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -500,76 +504,16 @@ public final class GitUtil
   }
 
   public static String getRepositoryHeadBranchName(org.eclipse.jgit.lib.Repository repo) {
-    Map<String, Ref> refs = repo.getAllRefs();
-    Ref lastHeadRef = null;
-
-    for (Map.Entry<String, Ref> e : refs.entrySet()) {
-      String key = e.getKey();
-
-      if (REF_HEAD.equals(key)) {
-        if (e.getValue().isSymbolic() && isBranch(e.getValue().getTarget().getName())) {
-          return getBranch(e.getValue().getTarget());
-        }
-      } else if (key.startsWith(REF_HEAD_PREFIX)) {
-        if (REF_MASTER.equals(key.substring(REF_HEAD_PREFIX.length()))) {
-          return REF_MASTER;
-        } else {
-          lastHeadRef = e.getValue();
-        }
-      }
-    }
-
-    if (lastHeadRef == null) {
-      return null;
-    } else {
-      return getBranch(lastHeadRef);
-    }
+    return getRepositoryHeadRef(repo).map(GitUtil::getBranch).orElse(null);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param repo
-   *
-   * @return
-   *
-   * @throws IOException
-   */
   public static ObjectId getRepositoryHead(org.eclipse.jgit.lib.Repository repo)
     throws IOException
   {
-    ObjectId id = null;
-    String head = null;
-    Map<String, Ref> refs = repo.getAllRefs();
+    Optional<Ref> headRef = getRepositoryHeadRef(repo);
 
-    for (Map.Entry<String, Ref> e : refs.entrySet())
-    {
-      String key = e.getKey();
-
-      if (REF_HEAD.equals(key))
-      {
-        head = REF_HEAD;
-        id = e.getValue().getObjectId();
-
-        break;
-      }
-      else if (key.startsWith(REF_HEAD_PREFIX))
-      {
-        id = e.getValue().getObjectId();
-        head = key.substring(REF_HEAD_PREFIX.length());
-
-        if (REF_MASTER.equals(head))
-        {
-          break;
-        }
-      }
-    }
-
-    if (id == null)
-    {
-      id = repo.resolve(Constants.HEAD);
-    }
+    String head = headRef.map(GitUtil::getBranch).orElse(null);
+    ObjectId id = headRef.map(Ref::getObjectId).orElse(repo.resolve(Constants.HEAD));
 
     if (logger.isDebugEnabled())
     {
@@ -588,6 +532,29 @@ public final class GitUtil
     }
 
     return id;
+  }
+
+  public static Optional<Ref> getRepositoryHeadRef(org.eclipse.jgit.lib.Repository repo) {
+    Map<String, Ref> refs = repo.getAllRefs();
+    Ref lastHeadRef = null;
+
+    for (Map.Entry<String, Ref> e : refs.entrySet()) {
+      String key = e.getKey();
+
+      if (REF_HEAD.equals(key)) {
+        if (e.getValue().isSymbolic() && isBranch(e.getValue().getTarget().getName())) {
+          return of(e.getValue().getTarget());
+        }
+      } else if (key.startsWith(REF_HEAD_PREFIX)) {
+        if (REF_MASTER.equals(key.substring(REF_HEAD_PREFIX.length()))) {
+          return of(e.getValue());
+        } else {
+          lastHeadRef = e.getValue();
+        }
+      }
+    }
+
+    return ofNullable(lastHeadRef);
   }
 
   /**
