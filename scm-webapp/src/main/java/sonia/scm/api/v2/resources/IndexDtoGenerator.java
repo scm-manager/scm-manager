@@ -32,7 +32,7 @@ public class IndexDtoGenerator {
         builder.single(Link.link("groups", resourceLinks.groupCollection().self()));
       }
       if (ConfigurationPermissions.list().isPermitted()) {
-        builder.single(Link.link("configuration", resourceLinks.config().self()));
+        builder.single(Link.link("config", resourceLinks.config().self()));
       }
       builder.single(Link.link("repositories", resourceLinks.repositoryCollection().self()));
     } else {
