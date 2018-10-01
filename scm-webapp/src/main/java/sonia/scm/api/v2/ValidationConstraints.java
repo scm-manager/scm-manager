@@ -5,10 +5,10 @@ public final class ValidationConstraints {
   private ValidationConstraints() {}
 
   /**
-   * A user or group name should not start with the @ character
+   * A user or group name should not start with <code>@</code> or a whitespace
    * and it not contains whitespaces
-   * the characters: . - _ are allowed
+   * and the characters: . - _ @ are allowed
    */
-  public static final String USER_GROUP_PATTERN = "^[^@][A-z0-9\\.\\-_]|([A-z0-9\\.\\-_]*[A-z0-9\\.\\-_])?$";
+  public static final String USER_GROUP_PATTERN = "^[^@\\s][A-z0-9\\.\\-_@]+$";
 
 }

@@ -225,6 +225,32 @@ public class GroupRootResourceTest {
   }
 
   @Test
+  public void shouldGet400OnCreatingNewGroupWithNotAllowedCharacters() throws URISyntaxException {
+    // the @ character at the begin of the name is not allowed
+    String groupJson = "{ \"name\": \"@grpname\", \"type\": \"admin\" }";
+    MockHttpRequest request = MockHttpRequest
+      .post("/" + GroupRootResource.GROUPS_PATH_V2)
+      .contentType(VndMediaType.GROUP)
+      .content(groupJson.getBytes());
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(400, response.getStatus());
+
+    // the whitespace at the begin opf the name is not allowed
+    groupJson = "{ \"name\": \" grpname\", \"type\": \"admin\" }";
+    request = MockHttpRequest
+      .post("/" + GroupRootResource.GROUPS_PATH_V2)
+      .contentType(VndMediaType.GROUP)
+      .content(groupJson.getBytes());
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(400, response.getStatus());
+  }
+
+  @Test
   public void shouldFailForMissingContent() throws URISyntaxException {
     MockHttpRequest request = MockHttpRequest
       .post("/" + GroupRootResource.GROUPS_PATH_V2)
