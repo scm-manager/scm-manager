@@ -71,7 +71,7 @@ public class PermissionRootResource {
   @TypeHint(TypeHint.NO_CONTENT.class)
   @Consumes(VndMediaType.PERMISSION)
   @Path("")
-  public Response create(@PathParam("namespace") String namespace, @PathParam("name") String name,@Valid PermissionDto permission) throws Exception {
+  public Response create(@PathParam("namespace") String namespace, @PathParam("name") String name,@Valid PermissionDto permission) throws AlreadyExistsException, NotFoundException {
     log.info("try to add new permission: {}", permission);
     Repository repository = load(namespace, name);
     RepositoryPermissions.permissionWrite(repository).check();
