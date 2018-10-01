@@ -27,12 +27,12 @@ public class HgConfigInIndexResource extends JsonEnricherBase {
   @Override
   public void enrich(JsonEnricherContext context) {
     if (resultHasMediaType(INDEX, context) && ConfigurationPermissions.list().isPermitted()) {
-      String gitConfigUrl = new LinkBuilder(scmPathInfoStore.get().get(), HgConfigResource.class)
+      String hgConfigUrl = new LinkBuilder(scmPathInfoStore.get().get(), HgConfigResource.class)
         .method("get")
         .parameters()
         .href();
 
-      JsonNode hgConfigRefNode = createObject(singletonMap("href", value(gitConfigUrl)));
+      JsonNode hgConfigRefNode = createObject(singletonMap("href", value(hgConfigUrl)));
 
       addPropertyNode(context.getResponseEntity().get("_links"), "hgConfig", hgConfigRefNode);
     }

@@ -14,6 +14,7 @@ import javax.ws.rs.core.MediaType;
 import java.net.URI;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 @SubjectAware(configuration = "classpath:sonia/scm/configuration/shiro.ini")
 public class SvnConfigInIndexResourceTest {
@@ -39,7 +40,6 @@ public class SvnConfigInIndexResourceTest {
 
     svnConfigInIndexResource.enrich(context);
 
-    System.out.println(root);
     assertEquals("/v2/config/svn", root.get("_links").get("svnConfig").get("href").asText());
   }
 
@@ -50,7 +50,7 @@ public class SvnConfigInIndexResourceTest {
 
     svnConfigInIndexResource.enrich(context);
 
-    System.out.println(root);
+    assertFalse(root.get("_links").iterator().hasNext());
   }
 
   @Test
@@ -59,6 +59,6 @@ public class SvnConfigInIndexResourceTest {
 
     svnConfigInIndexResource.enrich(context);
 
-    System.out.println(root);
+    assertFalse(root.get("_links").iterator().hasNext());
   }
 }

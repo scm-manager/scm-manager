@@ -18,8 +18,8 @@ public abstract class JsonEnricherBase implements JsonEnricher {
     return mediaType.equals(context.getResponseMediaType().toString());
   }
 
-  protected JsonNode value(Object gitConfigUrl) {
-    return objectMapper.convertValue(gitConfigUrl, JsonNode.class);
+  protected JsonNode value(Object object) {
+    return objectMapper.convertValue(object, JsonNode.class);
   }
 
   protected ObjectNode createObject() {

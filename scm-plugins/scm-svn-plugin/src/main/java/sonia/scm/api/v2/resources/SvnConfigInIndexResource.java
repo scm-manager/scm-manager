@@ -27,14 +27,14 @@ public class SvnConfigInIndexResource extends JsonEnricherBase {
   @Override
   public void enrich(JsonEnricherContext context) {
     if (resultHasMediaType(INDEX, context) && ConfigurationPermissions.list().isPermitted()) {
-      String gitConfigUrl = new LinkBuilder(scmPathInfoStore.get().get(), SvnConfigResource.class)
+      String svnConfigUrl = new LinkBuilder(scmPathInfoStore.get().get(), SvnConfigResource.class)
         .method("get")
         .parameters()
         .href();
 
-      JsonNode gitConfigRefNode = createObject(singletonMap("href", value(gitConfigUrl)));
+      JsonNode svnConfigRefNode = createObject(singletonMap("href", value(svnConfigUrl)));
 
-      addPropertyNode(context.getResponseEntity().get("_links"), "svnConfig", gitConfigRefNode);
+      addPropertyNode(context.getResponseEntity().get("_links"), "svnConfig", svnConfigRefNode);
     }
   }
 }
