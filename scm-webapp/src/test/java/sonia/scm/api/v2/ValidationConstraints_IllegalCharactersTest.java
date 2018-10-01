@@ -41,7 +41,7 @@ public class ValidationConstraints_IllegalCharactersTest {
   }
 
   @Test
-  public void shouldNotAcceptCharactersBetween_Z_and_a() {
+  public void shouldNotAcceptSpecialCharacters() {
     assertFalse(userGroupPattern.matcher(expression).matches());
   }
 }
