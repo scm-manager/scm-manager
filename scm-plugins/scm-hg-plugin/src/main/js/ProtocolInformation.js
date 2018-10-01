@@ -1,5 +1,6 @@
 //@flow
 import React from "react";
+import { repositories } from "@scm-manager/ui-components";
 import type { Repository } from "@scm-manager/ui-types";
 
 type Props = {
@@ -10,14 +11,15 @@ class ProtocolInformation extends React.Component<Props> {
 
   render() {
     const { repository } = this.props;
-    if (!repository._links.httpProtocol) {
+    const href = repositories.getProtocolLinkByType(repository, "http");
+    if (!href) {
       return null;
     }
     return (
       <div>
         <h4>Clone the repository</h4>
         <pre>
-          <code>hg clone {repository._links.httpProtocol.href}</code>
+          <code>hg clone {href}</code>
         </pre>
         <h4>Create a new repository</h4>
         <pre>
@@ -26,7 +28,7 @@ class ProtocolInformation extends React.Component<Props> {
             <br />
             echo "[paths]" > .hg/hgrc
             <br />
-            echo "default = {repository._links.httpProtocol.href}" > .hg/hgrc
+            echo "default = {href}" > .hg/hgrc
             <br />
             echo "# {repository.name}" > README.md
             <br />
@@ -44,7 +46,7 @@ class ProtocolInformation extends React.Component<Props> {
           <code>
             # add the repository url as default to your .hg/hgrc e.g:
             <br />
-            default = {repository._links.httpProtocol.href}
+            default = {href}
             <br />
             # push to remote repository
             <br />
