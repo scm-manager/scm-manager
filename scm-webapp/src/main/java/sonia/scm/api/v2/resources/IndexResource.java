@@ -20,6 +20,7 @@ public class IndexResource {
   }
 
   @GET
+  @Path("")
   @Produces(VndMediaType.INDEX)
   @TypeHint(IndexDto.class)
   public IndexDto getIndex() {

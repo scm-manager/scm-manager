@@ -27,6 +27,36 @@ public class IndexResourceTest {
   }
 
   @Test
+  public void shouldRenderSelfLinkForUnauthenticatedRequest() {
+    IndexDto index = indexResource.getIndex();
+
+    Assertions.assertThat(index.getLinks().getLinkBy("self")).matches(Optional::isPresent);
+  }
+
+  @Test
+  public void shouldRenderUiPluginsLinkForUnauthenticatedRequest() {
+    IndexDto index = indexResource.getIndex();
+
+    Assertions.assertThat(index.getLinks().getLinkBy("uiPlugins")).matches(Optional::isPresent);
+  }
+
+  @Test
+  @SubjectAware(username = "trillian", password = "secret")
+  public void shouldRenderSelfLinkForAuthenticatedRequest() {
+    IndexDto index = indexResource.getIndex();
+
+    Assertions.assertThat(index.getLinks().getLinkBy("self")).matches(Optional::isPresent);
+  }
+
+  @Test
+  @SubjectAware(username = "trillian", password = "secret")
+  public void shouldRenderUiPluginsLinkForAuthenticatedRequest() {
+    IndexDto index = indexResource.getIndex();
+
+    Assertions.assertThat(index.getLinks().getLinkBy("uiPlugins")).matches(Optional::isPresent);
+  }
+
+  @Test
   @SubjectAware(username = "trillian", password = "secret")
   public void shouldRenderMeUrlForAuthenticatedRequest() {
     IndexDto index = indexResource.getIndex();

@@ -440,7 +440,6 @@ class ResourceLinks {
     }
   }
 
-
   public UIPluginLinks uiPlugin() {
     return new UIPluginLinks(scmPathInfoStore.get());
   }
@@ -496,4 +495,21 @@ class ResourceLinks {
       return loginLinkBuilder.method("logout").parameters().href();
     }
   }
+
+  public IndexLinks index() {
+    return new IndexLinks(scmPathInfoStore.get());
+  }
+
+  static class IndexLinks {
+    private final LinkBuilder indexLinkBuilder;
+
+    IndexLinks(ScmPathInfo pathInfo) {
+      indexLinkBuilder = new LinkBuilder(pathInfo, IndexResource.class);
+    }
+
+    String self() {
+      return indexLinkBuilder.method("getIndex").parameters().href();
+    }
+  }
+
 }
