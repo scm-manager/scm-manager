@@ -41,7 +41,7 @@ public class IndexITCase {
       .then()
       .statusCode(HttpStatus.SC_OK)
       .body(
-        "_links.formLogin.href", matchesPattern(".+/auth/.+")
+        "_links.login.href", matchesPattern(".+/auth/.+")
       );
   }
 
