@@ -22,8 +22,7 @@ public class IndexResourceTest {
   public void shouldRenderLoginUrlsForUnauthenticatedRequest() {
     IndexDto index = indexResource.getIndex();
 
-    Assertions.assertThat(index.getLinks().getLinkBy("formLogin")).matches(Optional::isPresent);
-    Assertions.assertThat(index.getLinks().getLinkBy("jsonLogin")).matches(Optional::isPresent);
+    Assertions.assertThat(index.getLinks().getLinkBy("login")).matches(Optional::isPresent);
   }
 
   @Test

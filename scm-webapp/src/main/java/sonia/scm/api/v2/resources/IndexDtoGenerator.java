@@ -39,10 +39,7 @@ public class IndexDtoGenerator {
       }
       builder.single(link("repositories", resourceLinks.repositoryCollection().self()));
     } else {
-      builder.single(
-        link("formLogin", resourceLinks.authentication().formLogin()),
-        link("jsonLogin", resourceLinks.authentication().jsonLogin())
-      );
+      builder.single(link("login", resourceLinks.authentication().jsonLogin()));
     }
 
     return new IndexDto(builder.build());
