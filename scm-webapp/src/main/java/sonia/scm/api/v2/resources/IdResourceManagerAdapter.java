@@ -10,6 +10,7 @@ import sonia.scm.PageResult;
 
 import javax.ws.rs.core.Response;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -35,6 +36,15 @@ class IdResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
 
   Response get(String id, Function<MODEL_OBJECT, DTO> mapToDto) throws NotFoundException {
     return singleAdapter.get(loadBy(id), mapToDto);
+  }
+
+  public Response update(String id, Function<MODEL_OBJECT, MODEL_OBJECT> applyChanges, Consumer<MODEL_OBJECT> checker) throws NotFoundException, ConcurrentModificationException {
+    return singleAdapter.update(
+      loadBy(id),
+      applyChanges,
+      idStaysTheSame(id),
+      checker
+    );
   }
 
   public Response update(String id, Function<MODEL_OBJECT, MODEL_OBJECT> applyChanges) throws NotFoundException, ConcurrentModificationException {

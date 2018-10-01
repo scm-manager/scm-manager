@@ -1,4 +1,4 @@
-package sonia.scm.it;
+package sonia.scm.it.utils;
 
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
@@ -6,7 +6,7 @@ import org.hamcrest.Matcher;
 
 import java.util.regex.Pattern;
 
-class RegExMatcher extends BaseMatcher<String> {
+public class RegExMatcher extends BaseMatcher<String> {
   public static Matcher<String> matchesPattern(String pattern) {
     return new RegExMatcher(pattern);
   }

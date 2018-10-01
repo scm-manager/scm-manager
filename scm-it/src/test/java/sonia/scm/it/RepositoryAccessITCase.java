@@ -4,7 +4,6 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.apache.http.HttpStatus;
 import org.assertj.core.util.Lists;
-import org.assertj.core.util.Maps;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Rule;
@@ -12,6 +11,9 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import sonia.scm.it.utils.RepositoryUtil;
+import sonia.scm.it.utils.ScmRequests;
+import sonia.scm.it.utils.TestData;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.client.api.ClientCommand;
 import sonia.scm.repository.client.api.RepositoryClient;
@@ -29,10 +31,10 @@ import static java.lang.Thread.sleep;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertNotNull;
-import static sonia.scm.it.RestUtil.ADMIN_PASSWORD;
-import static sonia.scm.it.RestUtil.ADMIN_USERNAME;
-import static sonia.scm.it.RestUtil.given;
-import static sonia.scm.it.ScmTypes.availableScmTypes;
+import static sonia.scm.it.utils.RestUtil.ADMIN_PASSWORD;
+import static sonia.scm.it.utils.RestUtil.ADMIN_USERNAME;
+import static sonia.scm.it.utils.RestUtil.given;
+import static sonia.scm.it.utils.ScmTypes.availableScmTypes;
 
 @RunWith(Parameterized.class)
 public class RepositoryAccessITCase {
@@ -42,7 +44,7 @@ public class RepositoryAccessITCase {
 
   private final String repositoryType;
   private File folder;
-  private RepositoryRequests.AppliedRepositoryGetRequest repositoryGetRequest;
+  private ScmRequests.AppliedRepositoryRequest repositoryGetRequest;
 
   public RepositoryAccessITCase(String repositoryType) {
     this.repositoryType = repositoryType;
@@ -57,12 +59,17 @@ public class RepositoryAccessITCase {
   public void init() {
     TestData.createDefault();
     folder = tempFolder.getRoot();
-    repositoryGetRequest = RepositoryRequests.start()
+    repositoryGetRequest = ScmRequests.start()
       .given()
       .url(TestData.getDefaultRepositoryUrl(repositoryType))
       .usernameAndPassword(ADMIN_USERNAME, ADMIN_PASSWORD)
-      .get()
+      .getRepositoryResource()
       .assertStatusCode(HttpStatus.SC_OK);
+    ScmRequests.AppliedMeRequest meGetRequest = ScmRequests.start()
+      .given()
+      .url(TestData.getMeUrl())
+      .usernameAndPassword(ADMIN_USERNAME, ADMIN_PASSWORD)
+      .getMeResource();
   }
 
   @Test
@@ -165,7 +172,7 @@ public class RepositoryAccessITCase {
       .isNotNull()
       .contains(String.format("%s/sources/%s", repositoryUrl, changeset.getId()));
 
-    assertThat(response.body().jsonPath().getString("_embedded.tags.find{it.name=='" + tagName + "'}._links.changesets.href"))
+    assertThat(response.body().jsonPath().getString("_embedded.tags.find{it.name=='" + tagName + "'}._links.changeset.href"))
       .as("assert single tag changesets link")
       .isNotNull()
       .contains(String.format("%s/changesets/%s", repositoryUrl, changeset.getId()));

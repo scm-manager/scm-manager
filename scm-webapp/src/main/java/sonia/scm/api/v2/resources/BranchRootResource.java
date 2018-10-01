@@ -3,6 +3,7 @@ package sonia.scm.api.v2.resources;
 import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
+import sonia.scm.NotFoundException;
 import sonia.scm.PageResult;
 import sonia.scm.repository.Branches;
 import sonia.scm.repository.Changeset;
@@ -32,14 +33,14 @@ public class BranchRootResource {
   private final BranchToBranchDtoMapper branchToDtoMapper;
   private final BranchCollectionToDtoMapper branchCollectionToDtoMapper;
 
-  private final ChangesetCollectionToDtoMapper changesetCollectionToDtoMapper;
+  private final BranchChangesetCollectionToDtoMapper branchChangesetCollectionToDtoMapper;
 
   @Inject
-  public BranchRootResource(RepositoryServiceFactory serviceFactory, BranchToBranchDtoMapper branchToDtoMapper, BranchCollectionToDtoMapper branchCollectionToDtoMapper, ChangesetCollectionToDtoMapper changesetCollectionToDtoMapper) {
+  public BranchRootResource(RepositoryServiceFactory serviceFactory, BranchToBranchDtoMapper branchToDtoMapper, BranchCollectionToDtoMapper branchCollectionToDtoMapper, BranchChangesetCollectionToDtoMapper changesetCollectionToDtoMapper) {
     this.serviceFactory = serviceFactory;
     this.branchToDtoMapper = branchToDtoMapper;
     this.branchCollectionToDtoMapper = branchCollectionToDtoMapper;
-    this.changesetCollectionToDtoMapper = changesetCollectionToDtoMapper;
+    this.branchChangesetCollectionToDtoMapper = changesetCollectionToDtoMapper;
   }
 
   /**
@@ -98,6 +99,14 @@ public class BranchRootResource {
                           @DefaultValue("0") @QueryParam("page") int page,
                           @DefaultValue("10") @QueryParam("pageSize") int pageSize) throws Exception {
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
+      boolean branchExists = repositoryService.getBranchesCommand()
+        .getBranches()
+        .getBranches()
+        .stream()
+        .anyMatch(branch -> branchName.equals(branch.getName()));
+      if (!branchExists){
+        throw new NotFoundException("branch", branchName);
+      }
       Repository repository = repositoryService.getRepository();
       RepositoryPermissions.read(repository).check();
       ChangesetPagingResult changesets = new PagedLogCommandBuilder(repositoryService)
@@ -108,7 +117,7 @@ public class BranchRootResource {
         .getChangesets();
       if (changesets != null && changesets.getChangesets() != null) {
         PageResult<Changeset> pageResult = new PageResult<>(changesets.getChangesets(), changesets.getTotal());
-        return Response.ok(changesetCollectionToDtoMapper.map(page, pageSize, pageResult, repository)).build();
+        return Response.ok(branchChangesetCollectionToDtoMapper.map(page, pageSize, pageResult, repository, branchName)).build();
       } else {
         return Response.ok().build();
       }

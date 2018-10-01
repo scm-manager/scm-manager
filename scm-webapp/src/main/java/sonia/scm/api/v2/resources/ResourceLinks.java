@@ -3,6 +3,7 @@ package sonia.scm.api.v2.resources;
 import sonia.scm.repository.NamespaceAndName;
 
 import javax.inject.Inject;
+import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
 class ResourceLinks {
@@ -85,7 +86,42 @@ class ResourceLinks {
     String update(String name) {
       return userLinkBuilder.method("getUserResource").parameters(name).method("update").parameters().href();
     }
+
+    public String passwordChange(String name) {
+      return userLinkBuilder.method("getUserResource").parameters(name).method("changePassword").parameters().href();
+    }
   }
+
+  MeLinks me() {
+    return new MeLinks(scmPathInfoStore.get(), this.user());
+  }
+
+  static class MeLinks {
+    private final LinkBuilder meLinkBuilder;
+    private UserLinks userLinks;
+
+    MeLinks(ScmPathInfo pathInfo, UserLinks user) {
+      meLinkBuilder = new LinkBuilder(pathInfo, MeResource.class);
+      userLinks = user;
+    }
+
+    String self() {
+      return meLinkBuilder.method("get").parameters().href();
+    }
+
+    String delete(String name) {
+      return userLinks.delete(name);
+    }
+
+    String update(String name) {
+      return userLinks.update(name);
+    }
+
+    public String passwordChange() {
+      return meLinkBuilder.method("changePassword").parameters().href();
+    }
+  }
+
 
   UserCollectionLinks userCollection() {
     return new UserCollectionLinks(scmPathInfoStore.get());
