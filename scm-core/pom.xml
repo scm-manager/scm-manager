@@ -160,14 +160,13 @@
       <scope>provided</scope>
     </dependency>
 
-    <!-- TODO replace by proper version from maven central (group: com.github.sdorra) once its there. -->
     <dependency>
-      <groupId>com.github.sdorra.shiro-static-permissions</groupId>
+      <groupId>com.github.sdorra</groupId>
       <artifactId>ssp-lib</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>com.github.sdorra.shiro-static-permissions</groupId>
+      <groupId>com.github.sdorra</groupId>
       <artifactId>ssp-processor</artifactId>
       <optional>true</optional>
     </dependency>
