@@ -5,9 +5,13 @@ import com.github.sdorra.shiro.SubjectAware;
 import org.assertj.core.api.Assertions;
 import org.junit.Rule;
 import org.junit.Test;
+import sonia.scm.SCMContextProvider;
 
 import java.net.URI;
 import java.util.Optional;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @SubjectAware(configuration = "classpath:sonia/scm/shiro-001.ini")
 public class IndexResourceTest {
@@ -15,7 +19,8 @@ public class IndexResourceTest {
   @Rule
   public final ShiroRule shiroRule = new ShiroRule();
 
-  private final IndexDtoGenerator indexDtoGenerator = new IndexDtoGenerator(ResourceLinksMock.createMock(URI.create("/")));
+  private final SCMContextProvider scmContextProvider = mock(SCMContextProvider.class);
+  private final IndexDtoGenerator indexDtoGenerator = new IndexDtoGenerator(ResourceLinksMock.createMock(URI.create("/")), scmContextProvider);
   private final IndexResource indexResource = new IndexResource(indexDtoGenerator);
 
   @Test
@@ -97,5 +102,14 @@ public class IndexResourceTest {
     Assertions.assertThat(index.getLinks().getLinkBy("users")).matches(Optional::isPresent);
     Assertions.assertThat(index.getLinks().getLinkBy("groups")).matches(Optional::isPresent);
     Assertions.assertThat(index.getLinks().getLinkBy("config")).matches(Optional::isPresent);
+  }
+
+  @Test
+  public void shouldGenerateVersion() {
+    when(scmContextProvider.getVersion()).thenReturn("v1");
+
+    IndexDto index = indexResource.getIndex();
+
+    Assertions.assertThat(index.getVersion()).isEqualTo("v1");
   }
 }
