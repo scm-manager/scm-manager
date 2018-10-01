@@ -9,6 +9,6 @@ public final class ValidationConstraints {
    * and it not contains whitespaces
    * and the characters: . - _ @ are allowed
    */
-  public static final String USER_GROUP_PATTERN = "^[^@\\s][A-z0-9\\.\\-_@]+$";
+  public static final String USER_GROUP_PATTERN = "^[^@\\s][A-Za-z0-9\\.\\-_@]+$";
 
 }

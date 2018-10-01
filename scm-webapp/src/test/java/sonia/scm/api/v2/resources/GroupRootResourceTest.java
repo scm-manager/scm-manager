@@ -238,7 +238,7 @@ public class GroupRootResourceTest {
 
     assertEquals(400, response.getStatus());
 
-    // the whitespace at the begin opf the name is not allowed
+    // the whitespace at the begin of the name is not allowed
     groupJson = "{ \"name\": \" grpname\", \"type\": \"admin\" }";
     request = MockHttpRequest
       .post("/" + GroupRootResource.GROUPS_PATH_V2)
@@ -248,6 +248,38 @@ public class GroupRootResourceTest {
     dispatcher.invoke(request, response);
 
     assertEquals(400, response.getStatus());
+
+    // the characters {[ are not allowed
+    groupJson = "{ \"name\": \"grp{name}\", \"type\": \"admin\" }";
+    request = MockHttpRequest
+      .post("/" + GroupRootResource.GROUPS_PATH_V2)
+      .contentType(VndMediaType.GROUP)
+      .content(groupJson.getBytes());
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(400, response.getStatus());
+
+    groupJson = "{ \"name\": \"grp[name]\", \"type\": \"admin\" }";
+    request = MockHttpRequest
+      .post("/" + GroupRootResource.GROUPS_PATH_V2)
+      .contentType(VndMediaType.GROUP)
+      .content(groupJson.getBytes());
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(400, response.getStatus());
+
+    groupJson = "{ \"name\": \"grp/name\", \"type\": \"admin\" }";
+    request = MockHttpRequest
+      .post("/" + GroupRootResource.GROUPS_PATH_V2)
+      .contentType(VndMediaType.GROUP)
+      .content(groupJson.getBytes());
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(400, response.getStatus());
+
   }
 
   @Test
