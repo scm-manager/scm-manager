@@ -3,14 +3,11 @@ package sonia.scm.api.v2.resources;
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
 import org.assertj.core.api.Assertions;
-import org.assertj.core.api.Condition;
 import org.junit.Rule;
 import org.junit.Test;
 
 import java.net.URI;
 import java.util.Optional;
-
-import static org.mockito.AdditionalMatchers.not;
 
 @SubjectAware(configuration = "classpath:sonia/scm/shiro-001.ini")
 public class IndexResourceTest {
@@ -55,21 +52,21 @@ public class IndexResourceTest {
 
   @Test
   @SubjectAware(username = "trillian", password = "secret")
-  public void shouldNotRenderUserCollectionIfNotAuthorized() {
+  public void shouldNotRenderAdminLinksIfNotAuthorized() {
     IndexDto index = indexResource.getIndex();
 
     Assertions.assertThat(index.getLinks().getLinkBy("users")).matches(o -> !o.isPresent());
     Assertions.assertThat(index.getLinks().getLinkBy("groups")).matches(o -> !o.isPresent());
-    Assertions.assertThat(index.getLinks().getLinkBy("configuration")).matches(o -> !o.isPresent());
+    Assertions.assertThat(index.getLinks().getLinkBy("config")).matches(o -> !o.isPresent());
   }
 
   @Test
   @SubjectAware(username = "dent", password = "secret")
-  public void shouldRenderUserCollectionIfAuthorized() {
+  public void shouldRenderAdminLinksIfAuthorized() {
     IndexDto index = indexResource.getIndex();
 
     Assertions.assertThat(index.getLinks().getLinkBy("users")).matches(Optional::isPresent);
     Assertions.assertThat(index.getLinks().getLinkBy("groups")).matches(Optional::isPresent);
-    Assertions.assertThat(index.getLinks().getLinkBy("configuration")).matches(Optional::isPresent);
+    Assertions.assertThat(index.getLinks().getLinkBy("config")).matches(Optional::isPresent);
   }
 }
