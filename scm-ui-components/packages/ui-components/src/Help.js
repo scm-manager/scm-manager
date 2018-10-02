@@ -15,15 +15,16 @@ const styles = {
 };
 
 type Props = {
-  message?: string,
+  message: string,
   classes: any
 };
 
 class Help extends React.Component<Props> {
   render() {
     const { message, classes } = this.props;
+    const multiline = message.length > 60 ? "is-tooltip-multiline" : "";
     return (
-        <div className={classNames("tooltip is-tooltip-right is-tooltip-multiline", classes.q)}
+        <div className={classNames("tooltip is-tooltip-right", multiline, classes.q)}
              data-tooltip={message}>
         <i className={classNames("fa fa-question has-text-info", classes.img)}></i>
         </div>
