@@ -1,0 +1,3 @@
+# ignore everything except scm-server.tar.gz
+**
+!scm-server/target/*.tar.gz

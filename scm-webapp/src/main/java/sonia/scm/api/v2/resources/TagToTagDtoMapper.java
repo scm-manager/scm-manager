@@ -28,7 +28,7 @@ public abstract class TagToTagDtoMapper {
     Links.Builder linksBuilder = linkingTo()
       .self(resourceLinks.tag().self(namespaceAndName.getNamespace(), namespaceAndName.getName(), target.getName()))
       .single(link("sources", resourceLinks.source().self(namespaceAndName.getNamespace(), namespaceAndName.getName(), target.getRevision())))
-      .single(link("changesets", resourceLinks.changeset().self(namespaceAndName.getNamespace(), namespaceAndName.getName(), target.getRevision())));
+      .single(link("changeset", resourceLinks.changeset().self(namespaceAndName.getNamespace(), namespaceAndName.getName(), target.getRevision())));
     target.add(linksBuilder.build());
   }
 }

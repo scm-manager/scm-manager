@@ -5,31 +5,22 @@ import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Repository;
 
 import javax.inject.Inject;
-import java.util.Optional;
-import java.util.function.Supplier;
 
-public class ChangesetCollectionToDtoMapper extends PagedCollectionToDtoMapper<Changeset, ChangesetDto> {
+public class ChangesetCollectionToDtoMapper extends ChangesetCollectionToDtoMapperBase {
 
-  private final ChangesetToChangesetDtoMapper changesetToChangesetDtoMapper;
-  protected final ResourceLinks resourceLinks;
+  private final ResourceLinks resourceLinks;
 
   @Inject
   public ChangesetCollectionToDtoMapper(ChangesetToChangesetDtoMapper changesetToChangesetDtoMapper, ResourceLinks resourceLinks) {
-    super("changesets");
-    this.changesetToChangesetDtoMapper = changesetToChangesetDtoMapper;
+    super(changesetToChangesetDtoMapper);
     this.resourceLinks = resourceLinks;
   }
 
   public CollectionDto map(int pageNumber, int pageSize, PageResult<Changeset> pageResult, Repository repository) {
-    return this.map(pageNumber, pageSize, pageResult, repository, () -> createSelfLink(repository));
+    return super.map(pageNumber, pageSize, pageResult, repository, () -> createSelfLink(repository));
   }
 
-  public CollectionDto map(int pageNumber, int pageSize, PageResult<Changeset> pageResult, Repository repository, Supplier<String> selfLinkSupplier) {
-    return super.map(pageNumber, pageSize, pageResult, selfLinkSupplier.get(), Optional.empty(), changeset -> changesetToChangesetDtoMapper.map(changeset, repository));
-  }
-
-  protected String createSelfLink(Repository repository) {
+  private String createSelfLink(Repository repository) {
     return resourceLinks.changeset().all(repository.getNamespace(), repository.getName());
   }
 }
-

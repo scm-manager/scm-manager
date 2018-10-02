@@ -67,7 +67,7 @@ public class BranchRootResourceTest extends RepositoryTestBase {
   @InjectMocks
   private BranchToBranchDtoMapperImpl branchToDtoMapper;
 
-  private ChangesetCollectionToDtoMapper changesetCollectionToDtoMapper;
+  private BranchChangesetCollectionToDtoMapper changesetCollectionToDtoMapper;
 
   private BranchRootResource branchRootResource;
 
@@ -90,7 +90,7 @@ public class BranchRootResourceTest extends RepositoryTestBase {
 
   @Before
   public void prepareEnvironment() throws Exception {
-    changesetCollectionToDtoMapper = new ChangesetCollectionToDtoMapper(changesetToChangesetDtoMapper, resourceLinks);
+    changesetCollectionToDtoMapper = new BranchChangesetCollectionToDtoMapper(changesetToChangesetDtoMapper, resourceLinks);
     BranchCollectionToDtoMapper branchCollectionToDtoMapper = new BranchCollectionToDtoMapper(branchToDtoMapper, resourceLinks);
     branchRootResource = new BranchRootResource(serviceFactory, branchToDtoMapper, branchCollectionToDtoMapper, changesetCollectionToDtoMapper);
     super.branchRootResource = Providers.of(branchRootResource);
@@ -152,6 +152,10 @@ public class BranchRootResourceTest extends RepositoryTestBase {
     when(logCommandBuilder.setPagingLimit(anyInt())).thenReturn(logCommandBuilder);
     when(logCommandBuilder.setBranch(anyString())).thenReturn(logCommandBuilder);
     when(logCommandBuilder.getChangesets()).thenReturn(changesetPagingResult);
+    Branches branches = mock(Branches.class);
+    List<Branch> branchList = Lists.newArrayList(new Branch("master",id));
+    when(branches.getBranches()).thenReturn(branchList);
+    when(branchesCommandBuilder.getBranches()).thenReturn(branches);
     MockHttpRequest request = MockHttpRequest.get(BRANCH_URL + "/changesets/");
     MockHttpResponse response = new MockHttpResponse();
     dispatcher.invoke(request, response);
@@ -160,7 +164,6 @@ public class BranchRootResourceTest extends RepositoryTestBase {
     assertTrue(response.getContentAsString().contains(String.format("\"id\":\"%s\"", id)));
     assertTrue(response.getContentAsString().contains(String.format("\"name\":\"%s\"", authorName)));
     assertTrue(response.getContentAsString().contains(String.format("\"mail\":\"%s\"", authorEmail)));
-    assertTrue(response.getContentAsString().contains(String.format("\"description\":\"%s\"", commit)));
     assertTrue(response.getContentAsString().contains(String.format("\"description\":\"%s\"", commit)));
   }
 }

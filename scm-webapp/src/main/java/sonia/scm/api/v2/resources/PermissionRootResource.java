@@ -162,7 +162,7 @@ public class PermissionRootResource {
     RepositoryPermissions.permissionWrite(repository).check();
     String extractedPermissionName = getPermissionName(permissionName);
     if (!isPermissionExist(new PermissionDto(extractedPermissionName, isGroupPermission(permissionName)), repository)) {
-      throw new NotFoundException("the permission " + extractedPermissionName + " does not exist");
+      throw new NotFoundException("permission", extractedPermissionName);
     }
     permission.setGroupPermission(isGroupPermission(permissionName));
     if (!extractedPermissionName.equals(permission.getName())) {
