@@ -84,7 +84,7 @@ public class SecurityFilter extends HttpFilter
     HttpServletResponse response, FilterChain chain)
     throws IOException, ServletException
   {
-    if (!SecurityRequests.isAuthenticationRequest(request))
+    if (!SecurityRequests.isAuthenticationRequest(request) && !SecurityRequests.isIndexRequest(request))
     {
       Subject subject = SecurityUtils.getSubject();
       if (hasPermission(subject))
