@@ -31,7 +31,7 @@ class CreatePermissionForm extends React.Component<Props, State> {
       name: "",
       type: "READ",
       groupPermission: false,
-      valid: false
+      valid: true
     };
   }
 
@@ -65,7 +65,7 @@ class CreatePermissionForm extends React.Component<Props, State> {
           <SubmitButton
             label={t("permission.add-permission.submit-button")}
             loading={loading}
-            disabled={!this.state.valid}
+            disabled={!this.state.valid || this.state.name == ""}
           />
         </form>
       </div>
@@ -87,7 +87,7 @@ class CreatePermissionForm extends React.Component<Props, State> {
       name: "",
       type: "READ",
       groupPermission: false,
-      valid: validator.isNameValid("")
+      valid: true
     });
   };
 
