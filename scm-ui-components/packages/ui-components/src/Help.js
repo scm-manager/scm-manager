@@ -21,7 +21,7 @@ class Help extends React.Component<Props> {
   render() {
     const { message, classes } = this.props;
     return (
-        <div className={classNames("tooltip", classes.q)}
+        <div className={classNames("tooltip is-tooltip-right", classes.q)}
              data-tooltip={message}>
         <i className={classNames("fa fa-question has-text-info", classes.img)}></i>
         </div>
