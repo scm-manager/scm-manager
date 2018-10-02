@@ -1,5 +1,6 @@
 //@flow
 import React from "react";
+import {Help} from "../index";
 
 export type SelectItem = {
   value: string,
@@ -10,7 +11,8 @@ type Props = {
   label?: string,
   options: SelectItem[],
   value?: SelectItem,
-  onChange: string => void
+  onChange: string => void,
+  helpText?: string
 };
 
 class Select extends React.Component<Props> {
@@ -36,12 +38,25 @@ class Select extends React.Component<Props> {
     return "";
   };
 
+  renderHelp = () => {
+    const helpText = this.props.helpText;
+    if(helpText){
+      return (
+        <div className="control columns is-vcentered">
+          <Help message={helpText} />
+        </div>);
+    }
+    else
+      return null;
+  };
+
   render() {
     const { options, value } = this.props;
 
     return (
       <div className="field">
         {this.renderLabel()}
+        <div className="field is-grouped">
         <div className="control select">
           <select
             ref={input => {
@@ -58,6 +73,8 @@ class Select extends React.Component<Props> {
               );
             })}
           </select>
+        </div>
+          {this.renderHelp()}
         </div>
       </div>
     );
