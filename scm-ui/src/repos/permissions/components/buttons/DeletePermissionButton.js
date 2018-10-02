@@ -34,15 +34,15 @@ class DeletePermissionButton extends React.Component<Props> {
   confirmDelete = () => {
     const { t } = this.props;
     confirmAlert({
-      title: t("delete-permission-button.confirm-alert.title"),
-      message: t("delete-permission-button.confirm-alert.message"),
+      title: t("permission.delete-permission-button.confirm-alert.title"),
+      message: t("permission.delete-permission-button.confirm-alert.message"),
       buttons: [
         {
-          label: t("delete-permission-button.confirm-alert.submit"),
+          label: t("permission.delete-permission-button.confirm-alert.submit"),
           onClick: () => this.deletePermission()
         },
         {
-          label: t("delete-permission-button.confirm-alert.cancel"),
+          label: t("permission.delete-permission-button.confirm-alert.cancel"),
           onClick: () => null
         }
       ]
@@ -62,7 +62,7 @@ class DeletePermissionButton extends React.Component<Props> {
     }
     return (
       <DeleteButton
-        label={t("delete-permission-button.label")}
+        label={t("permission.delete-permission-button.label")}
         action={action}
         loading={loading}
       />
@@ -70,4 +70,4 @@ class DeletePermissionButton extends React.Component<Props> {
   }
 }
 
-export default translate("permissions")(DeletePermissionButton);
+export default translate("repos")(DeletePermissionButton);

@@ -43,5 +43,30 @@
       "submit": "Yes",
       "cancel": "No"
     }
-  }
+  },
+  "permission": {
+      "error-title": "Error",
+      "error-subtitle": "Unknown permissions error",
+      "name": "User or Group",
+      "type": "Type",
+      "group-permission": "Group Permission",
+      "edit-permission": {
+        "delete-button": "Delete",
+        "save-button": "Save Changes"
+      },
+      "delete-permission-button": {
+        "label": "Delete",
+        "confirm-alert": {
+          "title": "Delete permission",
+          "message": "Do you really want to delete the permission?",
+          "submit": "Yes",
+          "cancel": "No"
+        }
+      },
+      "add-permission": {
+        "add-permission-heading": "Add new Permission",
+        "submit-button": "Submit",
+        "name-input-invalid": "Permission is not allowed to be empty! If it is not empty, your input name is invalid or it already exists!"
+      }
+    }
 }

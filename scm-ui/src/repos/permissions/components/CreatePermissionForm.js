@@ -7,6 +7,7 @@ import type {
   PermissionCollection,
   PermissionEntry
 } from "@scm-manager/ui-types";
+import * as validator from "./permissionValidation";
 
 type Props = {
   t: string => string,
@@ -18,7 +19,8 @@ type Props = {
 type State = {
   name: string,
   type: string,
-  groupPermission: boolean
+  groupPermission: boolean,
+  valid: boolean
 };
 
 class CreatePermissionForm extends React.Component<Props, State> {
@@ -28,7 +30,8 @@ class CreatePermissionForm extends React.Component<Props, State> {
     this.state = {
       name: "",
       type: "READ",
-      groupPermission: false
+      groupPermission: false,
+      valid: false
     };
   }
 
@@ -39,18 +42,15 @@ class CreatePermissionForm extends React.Component<Props, State> {
     return (
       <div>
         <h2 className="subtitle">
-          {t("add-permission.add-permission-heading")}
+          {t("permission.add-permission.add-permission-heading")}
         </h2>
         <form onSubmit={this.submit}>
           <InputField
             label={t("permission.name")}
             value={name ? name : ""}
             onChange={this.handleNameChange}
-            validationError={
-              this.currentPermissionIncludeName() ||
-              this.state.name.startsWith("@")
-            }
-            errorMessage={t("add-permission.name-input-invalid")}
+            validationError={!this.state.valid}
+            errorMessage={t("permission.add-permission.name-input-invalid")}
           />
           <Checkbox
             label={t("permission.group-permission")}
@@ -63,38 +63,14 @@ class CreatePermissionForm extends React.Component<Props, State> {
             type={type ? type : "READ"}
           />
           <SubmitButton
-            label={t("add-permission.submit-button")}
+            label={t("permission.add-permission.submit-button")}
             loading={loading}
-            disabled={this.isValid()}
+            disabled={!this.state.valid}
           />
         </form>
       </div>
     );
   }
-
-  isValid = () => {
-    if (
-      this.state.name === null ||
-      this.state.name === "" ||
-      this.currentPermissionIncludeName() ||
-      this.state.name.startsWith("@")
-    ) {
-      return true;
-    }
-    return false;
-  };
-
-  currentPermissionIncludeName = () => {
-    for (let i = 0; i < this.props.currentPermissions.length; i++) {
-      if (
-        this.props.currentPermissions[i].name === this.state.name &&
-        this.props.currentPermissions[i].groupPermission ==
-          this.state.groupPermission
-      )
-        return true;
-    }
-    return false;
-  };
 
   submit = e => {
     this.props.createPermission({
@@ -110,7 +86,8 @@ class CreatePermissionForm extends React.Component<Props, State> {
     this.setState({
       name: "",
       type: "READ",
-      groupPermission: false
+      groupPermission: false,
+      valid: validator.isNameValid("")
     });
   };
 
@@ -122,14 +99,24 @@ class CreatePermissionForm extends React.Component<Props, State> {
 
   handleNameChange = (name: string) => {
     this.setState({
-      name: name
+      name: name,
+      valid: validator.isPermissionValid(
+        name,
+        this.state.groupPermission,
+        this.props.currentPermissions
+      )
     });
   };
   handleGroupPermissionChange = (groupPermission: boolean) => {
     this.setState({
-      groupPermission: groupPermission
+      groupPermission: groupPermission,
+      valid: validator.isPermissionValid(
+        this.state.name,
+        groupPermission,
+        this.props.currentPermissions
+      )
     });
   };
 }
 
-export default translate("permissions")(CreatePermissionForm);
+export default translate("repos")(CreatePermissionForm);

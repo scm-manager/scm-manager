@@ -173,4 +173,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(translate("permissions")(SinglePermission));
+)(translate("repos")(SinglePermission));

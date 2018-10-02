@@ -92,8 +92,8 @@ class Permissions extends React.Component<Props> {
     if (error) {
       return (
         <ErrorPage
-          title={t("permissions.error-title")}
-          subtitle={t("permissions.error-subtitle")}
+          title={t("permission.error-title")}
+          subtitle={t("permission.error-subtitle")}
           error={error}
         />
       );
@@ -198,4 +198,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(translate("permissions")(Permissions));
+)(translate("repos")(Permissions));
