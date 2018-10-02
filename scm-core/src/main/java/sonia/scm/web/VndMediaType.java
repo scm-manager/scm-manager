@@ -15,6 +15,7 @@ public class VndMediaType {
   public static final String PLAIN_TEXT_PREFIX = "text/" + SUBTYPE_PREFIX;
   public static final String PLAIN_TEXT_SUFFIX = "+plain;v=" + VERSION;
 
+  public static final String INDEX = PREFIX + "index" + SUFFIX;
   public static final String USER = PREFIX + "user" + SUFFIX;
   public static final String GROUP = PREFIX + "group" + SUFFIX;
   public static final String REPOSITORY = PREFIX + "repository" + SUFFIX;
