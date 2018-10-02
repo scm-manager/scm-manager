@@ -83,11 +83,11 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
     result = createCommand().getChangesets(new LogCommandRequest());
 
     assertNotNull(result);
+    assertEquals("test-branch", result.getBranchName());
     assertEquals(3, result.getTotal());
     assertEquals("3f76a12f08a6ba0dc988c68b7f0b2cd190efc3c4", result.getChangesets().get(0).getId());
     assertEquals("592d797cd36432e591416e8b2b98154f4f163411", result.getChangesets().get(1).getId());
     assertEquals("435df2f061add3589cb326cc64be9b9c3897ceca", result.getChangesets().get(2).getId());
-    assertEquals("test-branch", result.getBranchName());
     assertTrue(result.getChangesets().stream().allMatch(r -> r.getBranches().isEmpty()));
   }
 

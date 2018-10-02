@@ -39,6 +39,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
@@ -207,7 +208,7 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
               PathFilter.create(request.getPath()), TreeFilter.ANY_DIFF));
         }
 
-        BranchWithId branch = getBranchOrDefault(repository,request.getBranch());
+        Ref branch = getBranchOrDefault(repository,request.getBranch());
 
         if (branch != null) {
           if (startId != null) {
@@ -235,7 +236,7 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
         }
 
         if (branch != null) {
-          changesets = new ChangesetPagingResult(counter, changesetList, branch.getName());
+          changesets = new ChangesetPagingResult(counter, changesetList, GitUtil.getBranch(branch.getName()));
         } else {
           changesets = new ChangesetPagingResult(counter, changesetList);
         }

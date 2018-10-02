@@ -350,12 +350,11 @@ public final class GitUtil
    *
    * @throws IOException
    */
-  public static ObjectId getBranchId(org.eclipse.jgit.lib.Repository repo,
+  public static Ref getBranchId(org.eclipse.jgit.lib.Repository repo,
     String branchName)
     throws IOException
   {
-    ObjectId branchId = null;
-
+    Ref ref = null;
     if (!branchName.startsWith(REF_HEAD))
     {
       branchName = PREFIX_HEADS.concat(branchName);
@@ -365,24 +364,19 @@ public final class GitUtil
 
     try
     {
-      Ref ref = repo.findRef(branchName);
+      ref = repo.findRef(branchName);
 
-      if (ref != null)
-      {
-        branchId = ref.getObjectId();
-      }
-      else if (logger.isWarnEnabled())
+      if (ref == null)
       {
         logger.warn("could not find branch for {}", branchName);
       }
-
     }
     catch (IOException ex)
     {
       logger.warn("error occured during resolve of branch id", ex);
     }
 
-    return branchId;
+    return ref;
   }
 
   /**
@@ -528,7 +522,7 @@ public final class GitUtil
   private static Optional<Ref> findMostAppropriateHead(Map<String, Ref> refs) {
     Ref refHead = refs.get(REF_HEAD);
     if (refHead != null && refHead.isSymbolic() && isBranch(refHead.getTarget().getName())) {
-      return of(refHead);
+      return of(refHead.getTarget());
     }
 
     Ref master = refs.get(REF_HEAD_PREFIX + REF_MASTER);

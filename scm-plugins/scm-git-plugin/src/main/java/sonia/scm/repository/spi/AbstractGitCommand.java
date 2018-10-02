@@ -102,12 +102,17 @@ public class AbstractGitCommand
     return commit;
   }
 
-  protected BranchWithId getBranchOrDefault(Repository gitRepository, String requestedBranch) throws IOException {
+  protected Ref getBranchOrDefault(Repository gitRepository, String requestedBranch) throws IOException {
     if ( Strings.isNullOrEmpty(requestedBranch) ) {
-      Optional<Ref> repositoryHeadRef = GitUtil.getRepositoryHeadRef(gitRepository);
-      return repositoryHeadRef.map(r -> new BranchWithId(GitUtil.getBranch(r), r.getObjectId())).orElse(null);
+      String defaultBranchName = repository.getProperty(GitConstants.PROPERTY_DEFAULT_BRANCH);
+      if (!Strings.isNullOrEmpty(defaultBranchName)) {
+        return GitUtil.getBranchId(gitRepository, defaultBranchName);
+      } else {
+        Optional<Ref> repositoryHeadRef = GitUtil.getRepositoryHeadRef(gitRepository);
+        return repositoryHeadRef.orElse(null);
+      }
     } else {
-      return new BranchWithId(requestedBranch, GitUtil.getBranchId(gitRepository, requestedBranch));
+      return GitUtil.getBranchId(gitRepository, requestedBranch);
     }
   }
 
@@ -115,7 +120,8 @@ public class AbstractGitCommand
     ObjectId head;
     String defaultBranchName = repository.getProperty(GitConstants.PROPERTY_DEFAULT_BRANCH);
     if (!Strings.isNullOrEmpty(defaultBranchName)) {
-      head = GitUtil.getBranchId(gitRepository, defaultBranchName);
+      Ref ref = GitUtil.getBranchId(gitRepository, defaultBranchName);
+      head = ref == null? null: ref.getObjectId();
     } else {
       logger.trace("no default branch configured, use repository head as default");
       head = GitUtil.getRepositoryHead(gitRepository);
@@ -130,10 +136,4 @@ public class AbstractGitCommand
 
   /** Field description */
   protected sonia.scm.repository.Repository repository;
-
-  @Getter @AllArgsConstructor
-  static class BranchWithId {
-    private final String name;
-    private final ObjectId objectId;
-  }
 }
