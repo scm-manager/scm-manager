@@ -35,6 +35,6 @@ public abstract class JsonEnricherBase implements JsonEnricher {
   }
 
   protected void addPropertyNode(JsonNode parent, String newKey, JsonNode child) {
-    ((ObjectNode) parent).put(newKey, child);
+    ((ObjectNode) parent).set(newKey, child);
   }
 }
