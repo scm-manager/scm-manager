@@ -1,6 +1,7 @@
 //@flow
 import React from "react";
 import classNames from "classnames";
+import {Help, Page} from "../index";
 
 type Props = {
   label?: string,
@@ -12,7 +13,8 @@ type Props = {
   onReturnPressed?: () => void,
   validationError: boolean,
   errorMessage: string,
-  disabled?: boolean
+  disabled?: boolean,
+  helpText?: string
 };
 
 class InputField extends React.Component<Props> {
@@ -41,6 +43,17 @@ class InputField extends React.Component<Props> {
     return "";
   };
 
+  renderHelp = () => {
+    const helpText = this.props.helpText;
+    if(helpText){
+      return (
+        <div className="control columns is-vcentered">
+          <Help message={helpText} />
+        </div>);
+    }
+    else
+      return null;
+  }
 
   handleKeyPress = (event: SyntheticKeyboardEvent<HTMLInputElement>) => {
     const onReturnPressed = this.props.onReturnPressed;
@@ -71,19 +84,22 @@ class InputField extends React.Component<Props> {
     return (
       <div className="field">
         {this.renderLabel()}
-        <div className="control">
-          <input
-            ref={input => {
-              this.field = input;
-            }}
-            className={classNames("input", errorView)}
-            type={type}
-            placeholder={placeholder}
-            value={value}
-            onChange={this.handleInput}
-            onKeyPress={this.handleKeyPress}
-            disabled={disabled}
-          />
+        <div className="field is-grouped">
+          <div className="control is-expanded">
+            <input
+              ref={input => {
+                this.field = input;
+              }}
+              className={classNames("input", errorView)}
+              type={type}
+              placeholder={placeholder}
+              value={value}
+              onChange={this.handleInput}
+              onKeyPress={this.handleKeyPress}
+              disabled={disabled}
+            />
+          </div>
+          {this.renderHelp()}
         </div>
         {helper}
       </div>

@@ -8,7 +8,8 @@ const styles = {
     display: "block"
   },
   q: {
-  float: "left"
+    float: "left",
+    paddingLeft: "3px"
   }
 };
 

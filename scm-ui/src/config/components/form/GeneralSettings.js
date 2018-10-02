@@ -41,6 +41,7 @@ class GeneralSettings extends React.Component<Props> {
           onChange={this.handleRealmDescriptionChange}
           value={realmDescription}
           disabled={!hasUpdatePermission}
+          helpText={"hallo"}
         />
         <InputField
           label={t("general-settings.date-format")}

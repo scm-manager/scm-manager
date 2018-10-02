@@ -39,7 +39,6 @@ class Config extends React.Component<Props> {
 
     return (
       <Page>
-        <Help message={"Hallo"} />
         <div className="columns">
           <div className="column is-three-quarters">
             <Route path={url} exact component={GlobalConfig} />
