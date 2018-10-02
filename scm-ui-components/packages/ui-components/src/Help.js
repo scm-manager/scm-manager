@@ -9,8 +9,9 @@ const styles = {
   },
   q: {
     float: "left",
-    paddingLeft: "3px"
-  }
+    paddingLeft: "3px",
+    float: "right"
+}
 };
 
 type Props = {
@@ -22,7 +23,7 @@ class Help extends React.Component<Props> {
   render() {
     const { message, classes } = this.props;
     return (
-        <div className={classNames("tooltip is-tooltip-right", classes.q)}
+        <div className={classNames("tooltip is-tooltip-right is-tooltip-multiline", classes.q)}
              data-tooltip={message}>
         <i className={classNames("fa fa-question has-text-info", classes.img)}></i>
         </div>

@@ -31,7 +31,7 @@ class Checkbox extends React.Component<Props> {
   render() {
     return (
       <div className="field is-grouped">
-        <div className="control is-expanded">
+        <div className="control">
           <label className="checkbox" disabled={this.props.disabled}>
             <input
               type="checkbox"

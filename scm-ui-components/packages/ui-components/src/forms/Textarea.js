@@ -47,9 +47,13 @@ class Textarea extends React.Component<Props> {
 
     return (
       <div className="field">
-        {this.renderLabel()}
         <div className="field is-grouped">
-        <div className="control is-expanded">
+          <div className="control">
+            {this.renderLabel()}
+          </div>
+          {this.renderHelp()}
+        </div>
+        <div className="control">
           <textarea
             className="textarea"
             ref={input => {
@@ -59,8 +63,6 @@ class Textarea extends React.Component<Props> {
             onChange={this.handleInput}
             value={value}
           />
-        </div>
-          {this.renderHelp()}
         </div>
       </div>
     );

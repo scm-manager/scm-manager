@@ -82,10 +82,14 @@ class InputField extends React.Component<Props> {
       ""
     );
     return (
-      <div className="field">
-        {this.renderLabel()}
-        <div className="field is-grouped">
-          <div className="control is-expanded">
+        <div className="field">
+          <div className="field is-grouped">
+            <div className="control">
+              {this.renderLabel()}
+            </div>
+            {this.renderHelp()}
+          </div>
+          <div className="control">
             <input
               ref={input => {
                 this.field = input;
@@ -99,9 +103,7 @@ class InputField extends React.Component<Props> {
               disabled={disabled}
             />
           </div>
-          {this.renderHelp()}
-        </div>
-        {helper}
+          {helper}
       </div>
     );
   }
