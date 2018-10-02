@@ -80,6 +80,7 @@ class GroupForm extends React.Component<Props, State> {
           onChange={this.handleGroupNameChange}
           value={group.name}
           validationError={this.state.nameValidationError}
+          helpText={t("group-form.help.nameHelpText")}
         />
       );
     }
@@ -93,6 +94,7 @@ class GroupForm extends React.Component<Props, State> {
           onChange={this.handleDescriptionChange}
           value={group.description}
           validationError={false}
+          helpText={t("group-form.help.descriptionHelpText")}
         />
         <MemberNameTable
           members={this.state.group.members}

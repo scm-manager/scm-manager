@@ -3,13 +3,15 @@ import React from "react";
 
 import { AddButton } from "../buttons";
 import InputField from "./InputField";
+import { translate } from "react-i18next";
 
 type Props = {
   addEntry: string => void,
   disabled: boolean,
   buttonLabel: string,
   fieldLabel: string,
-  errorMessage: string
+  errorMessage: string,
+  t: string => string,
 };
 
 type State = {
@@ -25,7 +27,7 @@ class AddEntryToTableField extends React.Component<Props, State> {
   }
 
   render() {
-    const { disabled, buttonLabel, fieldLabel, errorMessage } = this.props;
+    const { disabled, buttonLabel, fieldLabel, errorMessage, t } = this.props;
     return (
       <div className="field">
         <InputField
@@ -36,6 +38,7 @@ class AddEntryToTableField extends React.Component<Props, State> {
           value={this.state.entryToAdd}
           onReturnPressed={this.appendEntry}
           disabled={disabled}
+          helpText={t("group-form.help.membersHelpText")}
         />
         <AddButton
           label={buttonLabel}
@@ -65,4 +68,4 @@ class AddEntryToTableField extends React.Component<Props, State> {
   };
 }
 
-export default AddEntryToTableField;
+export default translate("groups")(AddEntryToTableField);
