@@ -106,7 +106,6 @@ class GroupForm extends React.Component<Props, State> {
           buttonLabel={t("add-member-button.label")}
           fieldLabel={t("add-member-textfield.label")}
           errorMessage={t("add-member-textfield.error")}
-          helpText={t("group-form.help.membersHelpText")}
         />
         <SubmitButton
           disabled={!this.isValid()}

@@ -1,7 +1,7 @@
 //@flow
 import React from "react";
 import classNames from "classnames";
-import {Help, Page} from "../index";
+import {LabelWithHelpIcon} from "../index";
 
 type Props = {
   label?: string,
@@ -35,26 +35,6 @@ class InputField extends React.Component<Props> {
     this.props.onChange(event.target.value);
   };
 
-  renderLabel = () => {
-    const label = this.props.label;
-    if (label) {
-      return <label className="label">{label}</label>;
-    }
-    return "";
-  };
-
-  renderHelp = () => {
-    const helpText = this.props.helpText;
-    if(helpText){
-      return (
-        <div className="control columns is-vcentered">
-          <Help message={helpText} />
-        </div>);
-    }
-    else
-      return null;
-  };
-
   handleKeyPress = (event: SyntheticKeyboardEvent<HTMLInputElement>) => {
     const onReturnPressed = this.props.onReturnPressed;
     if (!onReturnPressed) {
@@ -73,7 +53,9 @@ class InputField extends React.Component<Props> {
       value,
       validationError,
       errorMessage,
-      disabled
+      disabled,
+      label,
+      helpText
     } = this.props;
     const errorView = validationError ? "is-danger" : "";
     const helper = validationError ? (
@@ -83,12 +65,10 @@ class InputField extends React.Component<Props> {
     );
     return (
         <div className="field">
-          <div className="field is-grouped">
-            <div className="control">
-              {this.renderLabel()}
-            </div>
-            {this.renderHelp()}
-          </div>
+          <LabelWithHelpIcon
+            label={label}
+            helpText={helpText}
+          />
           <div className="control">
             <input
               ref={input => {

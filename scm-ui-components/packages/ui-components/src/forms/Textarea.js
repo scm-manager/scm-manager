@@ -1,6 +1,6 @@
 //@flow
 import React from "react";
-import {Help} from "../index";
+import {LabelWithHelpIcon} from "../index";
 
 export type SelectItem = {
   value: string,
@@ -22,37 +22,15 @@ class Textarea extends React.Component<Props> {
     this.props.onChange(event.target.value);
   };
 
-  renderLabel = () => {
-    const label = this.props.label;
-    if (label) {
-      return <label className="label">{label}</label>;
-    }
-    return "";
-  };
-
-  renderHelp = () => {
-    const helpText = this.props.helpText;
-    if(helpText){
-      return (
-        <div className="control columns is-vcentered">
-          <Help message={helpText} />
-        </div>);
-    }
-    else
-      return null;
-  };
-
   render() {
-    const { placeholder, value } = this.props;
+    const { placeholder, value, label, helpText } = this.props;
 
     return (
       <div className="field">
-        <div className="field is-grouped">
-          <div className="control">
-            {this.renderLabel()}
-          </div>
-          {this.renderHelp()}
-        </div>
+        <LabelWithHelpIcon
+          label={label}
+          helpText={helpText}
+        />
         <div className="control">
           <textarea
             className="textarea"
