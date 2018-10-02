@@ -265,7 +265,7 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
   }
 
   private String canReadOwnUser(User user) {
-    return "user:" + UserPermissions.ACTION_READ + ":" + user.getName();
+    return UserPermissions.read(user.getName()).asShiroString();
   }
 
   //~--- get methods ----------------------------------------------------------
