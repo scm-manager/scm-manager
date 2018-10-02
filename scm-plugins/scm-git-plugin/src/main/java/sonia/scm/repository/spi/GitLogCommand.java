@@ -207,14 +207,13 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
               PathFilter.create(request.getPath()), TreeFilter.ANY_DIFF));
         }
 
-        ObjectId head = getBranchOrDefault(repository, request.getBranch());
-        String branch = getBranchNameOrDefault(repository,request.getBranch());
+        BranchWithId branch = getBranchOrDefault(repository,request.getBranch());
 
-        if (head != null) {
+        if (branch != null) {
           if (startId != null) {
             revWalk.markStart(revWalk.lookupCommit(startId));
           } else {
-            revWalk.markStart(revWalk.lookupCommit(head));
+            revWalk.markStart(revWalk.lookupCommit(branch.getObjectId()));
           }
 
           Iterator<RevCommit> iterator = revWalk.iterator();
@@ -236,7 +235,7 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
         }
 
         if (branch != null) {
-          changesets = new ChangesetPagingResult(counter, changesetList, branch);
+          changesets = new ChangesetPagingResult(counter, changesetList, branch.getName());
         } else {
           changesets = new ChangesetPagingResult(counter, changesetList);
         }

@@ -35,11 +35,16 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Strings;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
+import java.util.Optional;
+
 import org.eclipse.jgit.lib.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -97,30 +102,12 @@ public class AbstractGitCommand
     return commit;
   }
 
-  protected String getBranchNameOrDefault(Repository gitRepository, String requestedBranch) {
+  protected BranchWithId getBranchOrDefault(Repository gitRepository, String requestedBranch) throws IOException {
     if ( Strings.isNullOrEmpty(requestedBranch) ) {
-      return getDefaultBranchName(gitRepository);
+      Optional<Ref> repositoryHeadRef = GitUtil.getRepositoryHeadRef(gitRepository);
+      return repositoryHeadRef.map(r -> new BranchWithId(GitUtil.getBranch(r), r.getObjectId())).orElse(null);
     } else {
-      return requestedBranch;
-    }
-  }
-
-  protected ObjectId getBranchOrDefault(Repository gitRepository, String requestedBranch) throws IOException {
-    ObjectId head;
-    if ( Strings.isNullOrEmpty(requestedBranch) ) {
-      head = getDefaultBranch(gitRepository);
-    } else {
-      head = GitUtil.getBranchId(gitRepository, requestedBranch);
-    }
-    return head;
-  }
-
-  protected String getDefaultBranchName(Repository gitRepository) {
-    String defaultBranchName = repository.getProperty(GitConstants.PROPERTY_DEFAULT_BRANCH);
-    if (!Strings.isNullOrEmpty(defaultBranchName)) {
-      return defaultBranchName;
-    } else {
-      return GitUtil.getRepositoryHeadBranchName(gitRepository);
+      return new BranchWithId(requestedBranch, GitUtil.getBranchId(gitRepository, requestedBranch));
     }
   }
 
@@ -143,4 +130,10 @@ public class AbstractGitCommand
 
   /** Field description */
   protected sonia.scm.repository.Repository repository;
+
+  @Getter @AllArgsConstructor
+  static class BranchWithId {
+    private final String name;
+    private final ObjectId objectId;
+  }
 }

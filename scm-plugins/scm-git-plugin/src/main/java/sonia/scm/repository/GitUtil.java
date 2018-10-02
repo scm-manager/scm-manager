@@ -39,6 +39,8 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.eclipse.jgit.api.FetchCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -66,9 +68,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
-import static java.util.Optional.empty;
 import static java.util.Optional.of;
-import static java.util.Optional.ofNullable;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -504,40 +504,12 @@ public final class GitUtil
     return ref;
   }
 
-  public static String getRepositoryHeadBranchName(org.eclipse.jgit.lib.Repository repo) {
-    return getRepositoryHeadRef(repo).map(GitUtil::getBranch).orElse(null);
-  }
-
   public static ObjectId getRepositoryHead(org.eclipse.jgit.lib.Repository repo) {
     return getRepositoryHeadRef(repo).map(Ref::getObjectId).orElse(null);
   }
 
   public static Optional<Ref> getRepositoryHeadRef(org.eclipse.jgit.lib.Repository repo) {
-    Map<String, Ref> refs = repo.getAllRefs();
-    Optional<Ref> foundRef = empty();
-    Ref lastHeadRef = null;
-
-    for (Map.Entry<String, Ref> e : refs.entrySet()) {
-      String key = e.getKey();
-
-      if (REF_HEAD.equals(key)) {
-        if (e.getValue().isSymbolic() && isBranch(e.getValue().getTarget().getName())) {
-          foundRef = of(e.getValue().getTarget());
-          break;
-        }
-      } else if (key.startsWith(REF_HEAD_PREFIX)) {
-        if (REF_MASTER.equals(key.substring(REF_HEAD_PREFIX.length()))) {
-          foundRef = of(e.getValue());
-          break;
-        } else {
-          lastHeadRef = e.getValue();
-        }
-      }
-    }
-
-    if (!foundRef.isPresent()) {
-      foundRef = ofNullable(lastHeadRef);
-    }
+    Optional<Ref> foundRef = findMostAppropriateHead(repo.getAllRefs());
 
     if (foundRef.isPresent()) {
       if (logger.isDebugEnabled()) {
@@ -551,6 +523,29 @@ public final class GitUtil
     }
 
     return foundRef;
+  }
+
+  private static Optional<Ref> findMostAppropriateHead(Map<String, Ref> refs) {
+    Ref refHead = refs.get(REF_HEAD);
+    if (refHead != null && refHead.isSymbolic() && isBranch(refHead.getTarget().getName())) {
+      return of(refHead);
+    }
+
+    Ref master = refs.get(REF_HEAD_PREFIX + REF_MASTER);
+    if (master != null) {
+      return of(master);
+    }
+
+    Ref defaultBranch = refs.get(REF_HEAD_PREFIX + "default");
+    if (defaultBranch != null) {
+      return of(defaultBranch);
+    }
+
+    return refs.entrySet()
+      .stream()
+      .filter(e -> e.getKey().startsWith(REF_HEAD_PREFIX))
+      .map(Map.Entry::getValue)
+      .findFirst();
   }
 
   /**
