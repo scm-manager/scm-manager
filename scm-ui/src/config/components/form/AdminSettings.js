@@ -33,6 +33,7 @@ class AdminSettings extends React.Component<Props> {
           buttonLabel={t("admin-settings.add-group-button")}
           fieldLabel={t("admin-settings.add-group-textfield")}
           errorMessage={t("admin-settings.add-group-error")}
+          helpText={t("help.adminGroupsHelpText")}
         />
         <AdminUserTable
           adminUsers={adminUsers}
@@ -47,6 +48,7 @@ class AdminSettings extends React.Component<Props> {
           buttonLabel={t("admin-settings.add-user-button")}
           fieldLabel={t("admin-settings.add-user-textfield")}
           errorMessage={t("admin-settings.add-user-error")}
+          helpText={t("help.adminUsersHelpText")}
         />
       </div>
     );

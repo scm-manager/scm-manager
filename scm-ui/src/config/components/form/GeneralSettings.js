@@ -41,19 +41,21 @@ class GeneralSettings extends React.Component<Props> {
           onChange={this.handleRealmDescriptionChange}
           value={realmDescription}
           disabled={!hasUpdatePermission}
-          helpText={"hallo"}
+          helpText={t("help.realmDescriptionHelpText")}
         />
         <InputField
           label={t("general-settings.date-format")}
           onChange={this.handleDateFormatChange}
           value={dateFormat}
           disabled={!hasUpdatePermission}
+          helpText={t("help.dateFormatHelpText")}
         />
         <InputField
           label={t("general-settings.plugin-url")}
           onChange={this.handlePluginUrlChange}
           value={pluginUrl}
           disabled={!hasUpdatePermission}
+          helpText={t("help.pluginRepositoryHelpText")}
         />
         <InputField
           label={t("general-settings.default-namespace-strategy")}
@@ -66,31 +68,35 @@ class GeneralSettings extends React.Component<Props> {
           label={t("general-settings.enabled-xsrf-protection")}
           onChange={this.handleEnabledXsrfProtectionChange}
           disabled={!hasUpdatePermission}
-          helpText={"hey"}
+          helpText={t("help.enableXsrfProtectionHelpText")}
         />
         <Checkbox
           checked={enableRepositoryArchive}
           label={t("general-settings.enable-repository-archive")}
           onChange={this.handleEnableRepositoryArchiveChange}
           disabled={!hasUpdatePermission}
+          helpText={t("help.enableRepositoryArchiveHelpText")}
         />
         <Checkbox
           checked={disableGroupingGrid}
           label={t("general-settings.disable-grouping-grid")}
           onChange={this.handleDisableGroupingGridChange}
           disabled={!hasUpdatePermission}
+          helpText={t("help.disableGroupingGridHelpText")}
         />
         <Checkbox
           checked={anonymousAccessEnabled}
           label={t("general-settings.anonymous-access-enabled")}
           onChange={this.handleAnonymousAccessEnabledChange}
           disabled={!hasUpdatePermission}
+          helpText={t("help.allowAnonymousAccessHelpText")}
         />
         <Checkbox
           checked={skipFailedAuthenticators}
           label={t("general-settings.skip-failed-authenticators")}
           onChange={this.handleSkipFailedAuthenticatorsChange}
           disabled={!hasUpdatePermission}
+          helpText={t("help.skipFailedAuthenticatorsHelpText")}
         />
       </div>
     );

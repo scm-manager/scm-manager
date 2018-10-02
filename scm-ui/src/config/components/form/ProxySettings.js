@@ -42,6 +42,7 @@ class ProxySettings extends React.Component<Props> {
           label={t("proxy-settings.enable-proxy")}
           onChange={this.handleEnableProxyChange}
           disabled={!hasUpdatePermission}
+          helpText={t("help.enableProxyHelpText")}
         />
         <InputField
           label={t("proxy-settings.proxy-password")}
@@ -49,24 +50,28 @@ class ProxySettings extends React.Component<Props> {
           value={proxyPassword}
           type="password"
           disabled={!enableProxy || !hasUpdatePermission}
+          helpText={t("help.proxyPasswordHelpText")}
         />
         <InputField
           label={t("proxy-settings.proxy-port")}
           value={proxyPort}
           onChange={this.handleProxyPortChange}
           disabled={!enableProxy || !hasUpdatePermission}
+          helpText={t("help.proxyPortHelpText")}
         />
         <InputField
           label={t("proxy-settings.proxy-server")}
           value={proxyServer}
           onChange={this.handleProxyServerChange}
           disabled={!enableProxy || !hasUpdatePermission}
+          helpText={t("help.proxyServerHelpText")}
         />
         <InputField
           label={t("proxy-settings.proxy-user")}
           value={proxyUser}
           onChange={this.handleProxyUserChange}
           disabled={!enableProxy || !hasUpdatePermission}
+          helpText={t("help.proxyUserHelpText")}
         />
         <ProxyExcludesTable
           proxyExcludes={proxyExcludes}
@@ -81,6 +86,7 @@ class ProxySettings extends React.Component<Props> {
           buttonLabel={t("proxy-settings.add-proxy-exclude-button")}
           fieldLabel={t("proxy-settings.add-proxy-exclude-textfield")}
           errorMessage={t("proxy-settings.add-proxy-exclude-error")}
+          helpText={t("help.proxyExcludesHelpText")}
         />
       </div>
     );
