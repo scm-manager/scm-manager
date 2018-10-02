@@ -99,6 +99,32 @@ public class UserRootResourceTest {
   }
 
   @Test
+  public void shouldGet400OnCreatingNewUserWithNotAllowedCharacters() throws URISyntaxException {
+    // the @ character at the begin of the name is not allowed
+    String userJson = "{ \"name\": \"@user\", \"type\": \"db\" }";
+    MockHttpRequest request = MockHttpRequest
+      .post("/" + UserRootResource.USERS_PATH_V2)
+      .contentType(VndMediaType.USER)
+      .content(userJson.getBytes());
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(400, response.getStatus());
+
+    // the whitespace at the begin opf the name is not allowed
+    userJson = "{ \"name\": \" user\", \"type\": \"db\" }";
+    request = MockHttpRequest
+      .post("/" + UserRootResource.USERS_PATH_V2)
+      .contentType(VndMediaType.USER)
+      .content(userJson.getBytes());
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(400, response.getStatus());
+  }
+
+  @Test
   @SubjectAware(username = "unpriv")
   public void shouldCreateLimitedResponseForSimpleUser() throws URISyntaxException {
     MockHttpRequest request = MockHttpRequest.get("/" + UserRootResource.USERS_PATH_V2 + "Neo");
