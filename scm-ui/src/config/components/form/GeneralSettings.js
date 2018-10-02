@@ -62,6 +62,7 @@ class GeneralSettings extends React.Component<Props> {
           onChange={this.handleDefaultNamespaceStrategyChange}
           value={defaultNamespaceStrategy}
           disabled={!hasUpdatePermission}
+          helpText={t("help.defaultNameSpaceStrategyHelpText")}
         />
         <Checkbox
           checked={enabledXsrfProtection}

@@ -21,7 +21,7 @@ class MemberNameTable extends React.Component<Props, State> {
       <div>
         <LabelWithHelpIcon
           label={t("group.members")}
-          helpText={t("group-form.help.membersHelpText")}
+          helpText={t("group-form.help.memberHelpText")}
         />
         <table className="table is-hoverable is-fullwidth">
           <tbody>
