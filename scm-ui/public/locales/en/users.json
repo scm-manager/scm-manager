@@ -51,5 +51,14 @@
     "password-invalid": "Password has to be between 6 and 32 characters",
     "passwordValidation-invalid": "Passwords have to be the same",
     "validatePassword": "Please validate password here"
+  },
+  "help": {
+    "usernameHelpText": "Unique name of the user.",
+    "displayNameHelpText": "Display name of the user.",
+    "mailHelpText": "Email address of the user.",
+    "passwordHelpText": "Plain text password of the user.",
+    "passwordConfirmHelpText": "Repeat the password for validation.",
+    "adminHelpText": "An administrator is able to create, modify and delete repositories, groups and users.",
+    "activeHelpText": "Activate or deactive the user."
   }
 }
