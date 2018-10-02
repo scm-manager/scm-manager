@@ -53,7 +53,7 @@ class InputField extends React.Component<Props> {
     }
     else
       return null;
-  }
+  };
 
   handleKeyPress = (event: SyntheticKeyboardEvent<HTMLInputElement>) => {
     const onReturnPressed = this.props.onReturnPressed;

@@ -66,6 +66,7 @@ class GeneralSettings extends React.Component<Props> {
           label={t("general-settings.enabled-xsrf-protection")}
           onChange={this.handleEnabledXsrfProtectionChange}
           disabled={!hasUpdatePermission}
+          helpText={"hey"}
         />
         <Checkbox
           checked={enableRepositoryArchive}

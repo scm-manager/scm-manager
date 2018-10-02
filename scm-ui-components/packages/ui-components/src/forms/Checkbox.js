@@ -1,11 +1,13 @@
 //@flow
 import React from "react";
+import {Help} from "../index";
 
 type Props = {
   label?: string,
   checked: boolean,
   onChange?: boolean => void,
-  disabled?: boolean
+  disabled?: boolean,
+  helpText?: string
 };
 class Checkbox extends React.Component<Props> {
   onCheckboxChange = (event: SyntheticInputEvent<HTMLInputElement>) => {
@@ -14,10 +16,22 @@ class Checkbox extends React.Component<Props> {
     }
   };
 
+  renderHelp = () => {
+    const helpText = this.props.helpText;
+    if(helpText){
+      return (
+        <div className="control columns is-vcentered">
+          <Help message={helpText} />
+        </div>);
+    }
+    else
+      return null;
+  };
+
   render() {
     return (
-      <div className="field">
-        <div className="control">
+      <div className="field is-grouped">
+        <div className="control is-expanded">
           <label className="checkbox" disabled={this.props.disabled}>
             <input
               type="checkbox"
@@ -28,6 +42,7 @@ class Checkbox extends React.Component<Props> {
             {this.props.label}
           </label>
         </div>
+        {this.renderHelp()}
       </div>
     );
   }
