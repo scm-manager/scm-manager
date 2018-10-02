@@ -33,21 +33,16 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.common.io.Closeables;
-
 import sonia.scm.repository.Feature;
 import sonia.scm.repository.HgHookManager;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.Command;
-
-//~--- JDK imports ------------------------------------------------------------
+import sonia.scm.repository.api.CommandNotSupportedException;
 
 import java.io.File;
 import java.io.IOException;
-
 import java.util.EnumSet;
 import java.util.Set;
 
@@ -81,16 +76,6 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
 
   //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   *
-   *
-   *
-   * @param hookManager
-   * @param handler
-   * @param repository
-   */
   HgRepositoryServiceProvider(HgRepositoryHandler handler,
     HgHookManager hookManager, Repository repository)
   {
@@ -199,6 +184,16 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
   public HgLogCommand getLogCommand()
   {
     return new HgLogCommand(context, repository);
+  }
+
+  /**
+   * Get the corresponding {@link ModificationsCommand} implemented from the Plugins
+   *
+   * @return the corresponding {@link ModificationsCommand} implemented from the Plugins
+   * @throws CommandNotSupportedException if there is no Implementation
+   */
+  public ModificationsCommand getModificationsCommand() {
+    return new HgModificationsCommand(context,repository);
   }
 
   /**

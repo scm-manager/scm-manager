@@ -37,10 +37,8 @@ package sonia.scm.filter;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.inject.Inject;
-
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
-
 import sonia.scm.Priority;
 import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
@@ -48,14 +46,15 @@ import sonia.scm.security.SecurityRequests;
 import sonia.scm.web.filter.HttpFilter;
 import sonia.scm.web.filter.SecurityHttpServletRequestWrapper;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
-
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+import static sonia.scm.api.v2.resources.ScmPathInfo.REST_API_PATH;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -63,7 +62,8 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Priority(Filters.PRIORITY_AUTHORIZATION)
 // TODO find a better way for unprotected resources
-@WebElement(value = "/api/rest/(?!v2/ui).*", regex = true)
+@WebElement(value = REST_API_PATH + "" +
+  "/(?!v2/ui).*", regex = true)
 public class SecurityFilter extends HttpFilter
 {
 
@@ -84,7 +84,7 @@ public class SecurityFilter extends HttpFilter
     HttpServletResponse response, FilterChain chain)
     throws IOException, ServletException
   {
-    if (!SecurityRequests.isAuthenticationRequest(request))
+    if (!SecurityRequests.isAuthenticationRequest(request) && !SecurityRequests.isIndexRequest(request))
     {
       Subject subject = SecurityUtils.getSubject();
       if (hasPermission(subject))

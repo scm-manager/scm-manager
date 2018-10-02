@@ -125,8 +125,9 @@ public class GitRepositoryResolver implements RepositoryResolver<HttpServletRequ
         throw new ServiceNotEnabledException();
       }
     }
-    catch (RuntimeException | IOException e)
+    catch (IOException e)
     {
+      // REVIEW
       throw new RepositoryNotFoundException(repositoryName, e);
     }
   }

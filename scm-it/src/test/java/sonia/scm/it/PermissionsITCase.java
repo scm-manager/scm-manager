@@ -39,6 +39,8 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+import sonia.scm.it.utils.RepositoryUtil;
+import sonia.scm.it.utils.TestData;
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.client.api.RepositoryClient;
 import sonia.scm.repository.client.api.RepositoryClientException;
@@ -51,11 +53,11 @@ import java.util.Objects;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static sonia.scm.it.RepositoryUtil.addAndCommitRandomFile;
-import static sonia.scm.it.RestUtil.given;
-import static sonia.scm.it.ScmTypes.availableScmTypes;
-import static sonia.scm.it.TestData.USER_SCM_ADMIN;
-import static sonia.scm.it.TestData.callRepository;
+import static sonia.scm.it.utils.RepositoryUtil.addAndCommitRandomFile;
+import static sonia.scm.it.utils.RestUtil.given;
+import static sonia.scm.it.utils.ScmTypes.availableScmTypes;
+import static sonia.scm.it.utils.TestData.USER_SCM_ADMIN;
+import static sonia.scm.it.utils.TestData.callRepository;
 
 @RunWith(Parameterized.class)
 public class PermissionsITCase {

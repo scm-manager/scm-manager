@@ -55,11 +55,10 @@ import java.security.Principal;
  *
  * @author Sebastian Sdorra
  */
-@StaticPermissions("user")
+@StaticPermissions(value = "user", globalPermissions = {"create", "list"})
 @XmlRootElement(name = "users")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class
-User extends BasicPropertiesAware implements Principal, ModelObject, PermissionObject
+public class User extends BasicPropertiesAware implements Principal, ModelObject, PermissionObject
 {
 
   /** Field description */
@@ -274,6 +273,10 @@ User extends BasicPropertiesAware implements Principal, ModelObject, PermissionO
     //J+
   }
 
+  public User changePassword(String password){
+    setPassword(password);
+    return this;
+  }
   //~--- get methods ----------------------------------------------------------
 
   /**

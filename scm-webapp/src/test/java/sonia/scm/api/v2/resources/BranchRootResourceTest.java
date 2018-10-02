@@ -1,5 +1,6 @@
 package sonia.scm.api.v2.resources;
 
+import com.google.inject.util.Providers;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.support.SubjectThreadState;
@@ -44,7 +45,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 @Slf4j
-public class BranchRootResourceTest {
+public class BranchRootResourceTest extends RepositoryTestBase {
 
   public static final String BRANCH_PATH = "space/repo/branches/master";
   public static final String BRANCH_URL = "/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + BRANCH_PATH;
@@ -66,7 +67,7 @@ public class BranchRootResourceTest {
   @InjectMocks
   private BranchToBranchDtoMapperImpl branchToDtoMapper;
 
-  private ChangesetCollectionToDtoMapper changesetCollectionToDtoMapper;
+  private BranchChangesetCollectionToDtoMapper changesetCollectionToDtoMapper;
 
   private BranchRootResource branchRootResource;
 
@@ -89,12 +90,11 @@ public class BranchRootResourceTest {
 
   @Before
   public void prepareEnvironment() throws Exception {
-    changesetCollectionToDtoMapper = new ChangesetCollectionToDtoMapper(changesetToChangesetDtoMapper, resourceLinks);
+    changesetCollectionToDtoMapper = new BranchChangesetCollectionToDtoMapper(changesetToChangesetDtoMapper, resourceLinks);
     BranchCollectionToDtoMapper branchCollectionToDtoMapper = new BranchCollectionToDtoMapper(branchToDtoMapper, resourceLinks);
     branchRootResource = new BranchRootResource(serviceFactory, branchToDtoMapper, branchCollectionToDtoMapper, changesetCollectionToDtoMapper);
-    RepositoryRootResource repositoryRootResource = new RepositoryRootResource(MockProvider.of(new RepositoryResource(null, null, null, null, MockProvider.of(branchRootResource), null, null, null, null, null)), null);
-    dispatcher.getRegistry().addSingletonResource(repositoryRootResource);
-
+    super.branchRootResource = Providers.of(branchRootResource);
+    dispatcher.getRegistry().addSingletonResource(getRepositoryRootResource());
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(service);
     when(serviceFactory.create(any(Repository.class))).thenReturn(service);
     when(service.getRepository()).thenReturn(new Repository("repoId", "git", "space", "repo"));
@@ -152,6 +152,10 @@ public class BranchRootResourceTest {
     when(logCommandBuilder.setPagingLimit(anyInt())).thenReturn(logCommandBuilder);
     when(logCommandBuilder.setBranch(anyString())).thenReturn(logCommandBuilder);
     when(logCommandBuilder.getChangesets()).thenReturn(changesetPagingResult);
+    Branches branches = mock(Branches.class);
+    List<Branch> branchList = Lists.newArrayList(new Branch("master",id));
+    when(branches.getBranches()).thenReturn(branchList);
+    when(branchesCommandBuilder.getBranches()).thenReturn(branches);
     MockHttpRequest request = MockHttpRequest.get(BRANCH_URL + "/changesets/");
     MockHttpResponse response = new MockHttpResponse();
     dispatcher.invoke(request, response);
@@ -160,7 +164,6 @@ public class BranchRootResourceTest {
     assertTrue(response.getContentAsString().contains(String.format("\"id\":\"%s\"", id)));
     assertTrue(response.getContentAsString().contains(String.format("\"name\":\"%s\"", authorName)));
     assertTrue(response.getContentAsString().contains(String.format("\"mail\":\"%s\"", authorEmail)));
-    assertTrue(response.getContentAsString().contains(String.format("\"description\":\"%s\"", commit)));
     assertTrue(response.getContentAsString().contains(String.format("\"description\":\"%s\"", commit)));
   }
 }

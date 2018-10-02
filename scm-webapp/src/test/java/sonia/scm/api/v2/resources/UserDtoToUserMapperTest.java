@@ -23,18 +23,9 @@ public class UserDtoToUserMapperTest {
   @Test
   public void shouldMapFields() {
     UserDto dto = createDefaultDto();
-    User user = mapper.map(dto, "original password");
+    User user = mapper.map(dto, "used password");
     assertEquals("abc" , user.getName());
-  }
-
-  @Test
-  public void shouldEncodePassword() {
-    when(passwordService.encryptPassword("unencrypted")).thenReturn("encrypted");
-
-    UserDto dto = createDefaultDto();
-    dto.setPassword("unencrypted");
-    User user = mapper.map(dto, "original password");
-    assertEquals("encrypted" , user.getPassword());
+    assertEquals("used password" , user.getPassword());
   }
 
   @Before

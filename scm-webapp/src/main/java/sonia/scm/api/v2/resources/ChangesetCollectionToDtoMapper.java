@@ -5,22 +5,19 @@ import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Repository;
 
 import javax.inject.Inject;
-import java.util.Optional;
 
-public class ChangesetCollectionToDtoMapper extends BasicCollectionToDtoMapper<Changeset, ChangesetDto, ChangesetToChangesetDtoMapper> {
+public class ChangesetCollectionToDtoMapper extends ChangesetCollectionToDtoMapperBase {
 
-  private final ChangesetToChangesetDtoMapper changesetToChangesetDtoMapper;
   private final ResourceLinks resourceLinks;
 
   @Inject
   public ChangesetCollectionToDtoMapper(ChangesetToChangesetDtoMapper changesetToChangesetDtoMapper, ResourceLinks resourceLinks) {
-    super("changesets", changesetToChangesetDtoMapper);
-    this.changesetToChangesetDtoMapper = changesetToChangesetDtoMapper;
+    super(changesetToChangesetDtoMapper);
     this.resourceLinks = resourceLinks;
   }
 
   public CollectionDto map(int pageNumber, int pageSize, PageResult<Changeset> pageResult, Repository repository) {
-    return super.map(pageNumber, pageSize, pageResult, createSelfLink(repository), Optional.empty(), changeset -> changesetToChangesetDtoMapper.map(changeset, repository));
+    return super.map(pageNumber, pageSize, pageResult, repository, () -> createSelfLink(repository));
   }
 
   private String createSelfLink(Repository repository) {

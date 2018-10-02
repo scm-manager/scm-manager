@@ -179,7 +179,7 @@ public final class BrowseCommandBuilder
 
     if (!disablePreProcessors && (result != null))
     {
-      preProcessorUtil.prepareForReturn(repository, result, !disableEscaping);
+      preProcessorUtil.prepareForReturn(repository, result);
 
       List<FileObject> fileObjects = result.getFiles();
 
@@ -212,24 +212,6 @@ public final class BrowseCommandBuilder
     return this;
   }
   
-  /**
-   * Disable html escaping for the returned file objects. By default all
-   * file objects are html escaped.
-   *
-   *
-   * @param disableEscaping true to disable the html escaping
-   *
-   * @return {@code this}
-   *
-   * @since 1.35
-   */
-  public BrowseCommandBuilder setDisableEscaping(boolean disableEscaping)
-  {
-    this.disableEscaping = disableEscaping;
-
-    return this;
-  }
-
   /**
    * Disabling the last commit means that every call to
    * {@link FileObject#getDescription()} and
@@ -433,9 +415,6 @@ public final class BrowseCommandBuilder
   /** cache */
   private final Cache<CacheKey, BrowserResult> cache;
 
-  /** disable escaping */
-  private boolean disableEscaping = false;
-  
   /** disables the cache */
   private boolean disableCache = false;
 

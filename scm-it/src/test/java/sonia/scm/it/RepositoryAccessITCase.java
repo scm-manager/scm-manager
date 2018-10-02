@@ -3,6 +3,7 @@ package sonia.scm.it;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.apache.http.HttpStatus;
+import org.assertj.core.util.Lists;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Rule;
@@ -10,6 +11,9 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import sonia.scm.it.utils.RepositoryUtil;
+import sonia.scm.it.utils.ScmRequests;
+import sonia.scm.it.utils.TestData;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.client.api.ClientCommand;
 import sonia.scm.repository.client.api.RepositoryClient;
@@ -17,17 +21,20 @@ import sonia.scm.web.VndMediaType;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static java.lang.Thread.sleep;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertNotNull;
-import static sonia.scm.it.RestUtil.ADMIN_PASSWORD;
-import static sonia.scm.it.RestUtil.ADMIN_USERNAME;
-import static sonia.scm.it.RestUtil.given;
-import static sonia.scm.it.ScmTypes.availableScmTypes;
+import static sonia.scm.it.utils.RestUtil.ADMIN_PASSWORD;
+import static sonia.scm.it.utils.RestUtil.ADMIN_USERNAME;
+import static sonia.scm.it.utils.RestUtil.given;
+import static sonia.scm.it.utils.ScmTypes.availableScmTypes;
 
 @RunWith(Parameterized.class)
 public class RepositoryAccessITCase {
@@ -37,6 +44,7 @@ public class RepositoryAccessITCase {
 
   private final String repositoryType;
   private File folder;
+  private ScmRequests.AppliedRepositoryRequest repositoryGetRequest;
 
   public RepositoryAccessITCase(String repositoryType) {
     this.repositoryType = repositoryType;
@@ -48,9 +56,20 @@ public class RepositoryAccessITCase {
   }
 
   @Before
-  public void initClient() {
+  public void init() {
     TestData.createDefault();
     folder = tempFolder.getRoot();
+    repositoryGetRequest = ScmRequests.start()
+      .given()
+      .url(TestData.getDefaultRepositoryUrl(repositoryType))
+      .usernameAndPassword(ADMIN_USERNAME, ADMIN_PASSWORD)
+      .getRepositoryResource()
+      .assertStatusCode(HttpStatus.SC_OK);
+    ScmRequests.AppliedMeRequest meGetRequest = ScmRequests.start()
+      .given()
+      .url(TestData.getMeUrl())
+      .usernameAndPassword(ADMIN_USERNAME, ADMIN_PASSWORD)
+      .getMeResource();
   }
 
   @Test
@@ -153,7 +172,7 @@ public class RepositoryAccessITCase {
       .isNotNull()
       .contains(String.format("%s/sources/%s", repositoryUrl, changeset.getId()));
 
-    assertThat(response.body().jsonPath().getString("_embedded.tags.find{it.name=='" + tagName + "'}._links.changesets.href"))
+    assertThat(response.body().jsonPath().getString("_embedded.tags.find{it.name=='" + tagName + "'}._links.changeset.href"))
       .as("assert single tag changesets link")
       .isNotNull()
       .contains(String.format("%s/changesets/%s", repositoryUrl, changeset.getId()));
@@ -280,6 +299,188 @@ public class RepositoryAccessITCase {
       .asString()
       .contains("diff");
 
+  }
+
+  @Test
+  @SuppressWarnings("unchecked")
+  public void shouldFindFileHistory() throws IOException {
+    RepositoryClient repositoryClient = RepositoryUtil.createRepositoryClient(repositoryType, folder);
+    Changeset changeset = RepositoryUtil.createAndCommitFile(repositoryClient, ADMIN_USERNAME, "folder/subfolder/a.txt", "a");
+    repositoryGetRequest
+      .usingRepositoryResponse()
+      .requestSources()
+      .usingSourcesResponse()
+      .requestSelf("folder")
+      .usingSourcesResponse()
+      .requestSelf("subfolder")
+      .usingSourcesResponse()
+      .requestFileHistory("a.txt")
+      .assertStatusCode(HttpStatus.SC_OK)
+      .usingChangesetsResponse()
+      .assertChangesets(changesets -> {
+          assertThat(changesets).hasSize(1);
+          assertThat(changesets.get(0)).containsEntry("id", changeset.getId());
+          assertThat(changesets.get(0)).containsEntry("description", changeset.getDescription());
+        }
+      );
+  }
+
+  @Test
+  @SuppressWarnings("unchecked")
+  public void shouldFindAddedModifications() throws IOException {
+    RepositoryClient repositoryClient = RepositoryUtil.createRepositoryClient(repositoryType, folder);
+    String fileName = "a.txt";
+    Changeset changeset = RepositoryUtil.createAndCommitFile(repositoryClient, ADMIN_USERNAME, fileName, "a");
+    String revision = changeset.getId();
+    repositoryGetRequest
+      .usingRepositoryResponse()
+      .requestChangesets()
+      .assertStatusCode(HttpStatus.SC_OK)
+      .usingChangesetsResponse()
+      .requestModifications(revision)
+      .assertStatusCode(HttpStatus.SC_OK)
+      .usingModificationsResponse()
+      .assertRevision(actualRevision -> assertThat(actualRevision).isEqualTo(revision))
+      .assertAdded(addedFiles -> assertThat(addedFiles)
+        .hasSize(1)
+        .containsExactly(fileName))
+      .assertRemoved(removedFiles -> assertThat(removedFiles)
+        .hasSize(0))
+      .assertModified(files -> assertThat(files)
+        .hasSize(0));
+  }
+
+  @Test
+  @SuppressWarnings("unchecked")
+  public void shouldFindRemovedModifications() throws IOException {
+    RepositoryClient repositoryClient = RepositoryUtil.createRepositoryClient(repositoryType, folder);
+    String fileName = "a.txt";
+    RepositoryUtil.createAndCommitFile(repositoryClient, ADMIN_USERNAME, fileName, "a");
+    Changeset changeset = RepositoryUtil.removeAndCommitFile(repositoryClient, ADMIN_USERNAME, fileName);
+
+    String revision = changeset.getId();
+    repositoryGetRequest
+      .usingRepositoryResponse()
+      .requestChangesets()
+      .assertStatusCode(HttpStatus.SC_OK)
+      .usingChangesetsResponse()
+      .requestModifications(revision)
+      .assertStatusCode(HttpStatus.SC_OK)
+      .usingModificationsResponse()
+      .assertRevision(actualRevision -> assertThat(actualRevision).isEqualTo(revision))
+      .assertRemoved(removedFiles -> assertThat(removedFiles)
+        .hasSize(1)
+        .containsExactly(fileName))
+      .assertAdded(addedFiles -> assertThat(addedFiles)
+        .hasSize(0))
+      .assertModified(files -> assertThat(files)
+        .hasSize(0));
+  }
+
+  @Test
+  @SuppressWarnings("unchecked")
+  public void shouldFindUpdateModifications() throws IOException {
+    RepositoryClient repositoryClient = RepositoryUtil.createRepositoryClient(repositoryType, folder);
+    String fileName = "a.txt";
+    RepositoryUtil.createAndCommitFile(repositoryClient, ADMIN_USERNAME, fileName, "a");
+    Changeset changeset = RepositoryUtil.createAndCommitFile(repositoryClient, ADMIN_USERNAME, fileName, "new Content");
+
+    String revision = changeset.getId();
+    repositoryGetRequest
+      .usingRepositoryResponse()
+      .requestChangesets()
+      .assertStatusCode(HttpStatus.SC_OK)
+      .usingChangesetsResponse()
+      .requestModifications(revision)
+      .assertStatusCode(HttpStatus.SC_OK)
+      .usingModificationsResponse()
+      .assertRevision(actualRevision -> assertThat(actualRevision).isEqualTo(revision))
+      .assertModified(modifiedFiles -> assertThat(modifiedFiles)
+        .hasSize(1)
+        .containsExactly(fileName))
+      .assertRemoved(removedFiles -> assertThat(removedFiles)
+        .hasSize(0))
+      .assertAdded(addedFiles -> assertThat(addedFiles)
+        .hasSize(0));
+  }
+
+  @Test
+  @SuppressWarnings("unchecked")
+  public void shouldFindMultipleModifications() throws IOException {
+    RepositoryClient repositoryClient = RepositoryUtil.createRepositoryClient(repositoryType, folder);
+    RepositoryUtil.createAndCommitFile(repositoryClient, ADMIN_USERNAME, "b.txt", "b");
+    RepositoryUtil.createAndCommitFile(repositoryClient, ADMIN_USERNAME, "c.txt", "c");
+    RepositoryUtil.createAndCommitFile(repositoryClient, ADMIN_USERNAME, "d.txt", "d");
+    Map<String, String> addedFiles = new HashMap<String, String>()
+    {{
+      put("a.txt", "bla bla");
+    }};
+    Map<String, String> modifiedFiles = new HashMap<String, String>()
+    {{
+      put("b.txt", "new content");
+    }};
+    ArrayList<String> removedFiles = Lists.newArrayList("c.txt", "d.txt");
+    Changeset changeset = RepositoryUtil.commitMultipleFileModifications(repositoryClient, ADMIN_USERNAME, addedFiles, modifiedFiles, removedFiles);
+
+    String revision = changeset.getId();
+    repositoryGetRequest
+      .usingRepositoryResponse()
+      .requestChangesets()
+      .assertStatusCode(HttpStatus.SC_OK)
+      .usingChangesetsResponse()
+      .requestModifications(revision)
+      .assertStatusCode(HttpStatus.SC_OK)
+      .usingModificationsResponse()
+      .assertRevision(actualRevision -> assertThat(actualRevision).isEqualTo(revision))
+      .assertAdded(a -> assertThat(a)
+        .hasSize(1)
+        .containsExactly("a.txt"))
+      .assertModified(m-> assertThat(m)
+        .hasSize(1)
+        .containsExactly("b.txt"))
+      .assertRemoved(r -> assertThat(r)
+        .hasSize(2)
+        .containsExactly("c.txt", "d.txt"));
+  }
+
+  @Test
+  @SuppressWarnings("unchecked")
+  public void svnShouldCreateOneModificationPerFolder() throws IOException {
+    Assume.assumeThat(repositoryType, equalTo("svn"));
+    RepositoryClient repositoryClient = RepositoryUtil.createRepositoryClient(repositoryType, folder);
+    RepositoryUtil.createAndCommitFile(repositoryClient, ADMIN_USERNAME, "bbb/bb/b.txt", "b");
+    RepositoryUtil.createAndCommitFile(repositoryClient, ADMIN_USERNAME, "ccc/cc/c.txt", "c");
+    RepositoryUtil.createAndCommitFile(repositoryClient, ADMIN_USERNAME, "ddd/dd/d.txt", "d");
+    Map<String, String> addedFiles = new HashMap<String, String>()
+    {{
+      put("aaa/aa/a.txt", "bla bla");
+    }};
+    Map<String, String> modifiedFiles = new HashMap<String, String>()
+    {{
+      put("bbb/bb/b.txt", "new content");
+    }};
+    ArrayList<String> removedFiles = Lists.newArrayList("ccc/cc/c.txt", "ddd/dd/d.txt");
+    Changeset changeset = RepositoryUtil.commitMultipleFileModifications(repositoryClient, ADMIN_USERNAME, addedFiles, modifiedFiles, removedFiles);
+
+    String revision = changeset.getId();
+    repositoryGetRequest
+      .usingRepositoryResponse()
+      .requestChangesets()
+      .assertStatusCode(HttpStatus.SC_OK)
+      .usingChangesetsResponse()
+      .requestModifications(revision)
+      .assertStatusCode(HttpStatus.SC_OK)
+      .usingModificationsResponse()
+      .assertRevision(actualRevision -> assertThat(actualRevision).isEqualTo(revision))
+      .assertAdded(a -> assertThat(a)
+        .hasSize(3)
+        .containsExactly("aaa/aa/a.txt", "aaa", "aaa/aa"))
+      .assertModified(m-> assertThat(m)
+        .hasSize(1)
+        .containsExactly("bbb/bb/b.txt"))
+      .assertRemoved(r -> assertThat(r)
+        .hasSize(2)
+        .containsExactly("ccc/cc/c.txt", "ddd/dd/d.txt"));
   }
 }
 

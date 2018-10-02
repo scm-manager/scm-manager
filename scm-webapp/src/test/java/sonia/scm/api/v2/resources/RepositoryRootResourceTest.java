@@ -3,13 +3,13 @@ package sonia.scm.api.v2.resources;
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.io.Resources;
+import com.google.inject.util.Providers;
 import org.jboss.resteasy.core.Dispatcher;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.mockito.Answers;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -20,6 +20,7 @@ import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryIsNotArchivedException;
 import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.web.VndMediaType;
 
@@ -30,6 +31,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 
 import static java.util.Collections.singletonList;
+import static java.util.stream.Stream.of;
 import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
@@ -55,7 +57,7 @@ import static sonia.scm.api.v2.resources.DispatcherMock.createDispatcher;
   password = "secret",
   configuration = "classpath:sonia/scm/repository/shiro.ini"
 )
-public class RepositoryRootResourceTest {
+public class RepositoryRootResourceTest extends RepositoryTestBase {
 
   private Dispatcher dispatcher;
 
@@ -64,8 +66,14 @@ public class RepositoryRootResourceTest {
 
   @Mock
   private RepositoryManager repositoryManager;
-  @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+  @Mock
   private RepositoryServiceFactory serviceFactory;
+  @Mock
+  private RepositoryService service;
+  @Mock
+  private ScmPathInfoStore scmPathInfoStore;
+  @Mock
+  private ScmPathInfo uriInfo;
 
 
   private final URI baseUri = URI.create("/");
@@ -79,11 +87,15 @@ public class RepositoryRootResourceTest {
   @Before
   public void prepareEnvironment() {
     initMocks(this);
-    RepositoryResource repositoryResource = new RepositoryResource(repositoryToDtoMapper, dtoToRepositoryMapper, repositoryManager, null, null, null, null, null, null, null);
+    super.repositoryToDtoMapper = repositoryToDtoMapper;
+    super.dtoToRepositoryMapper = dtoToRepositoryMapper;
+    super.manager = repositoryManager;
     RepositoryCollectionToDtoMapper repositoryCollectionToDtoMapper = new RepositoryCollectionToDtoMapper(repositoryToDtoMapper, resourceLinks);
-    RepositoryCollectionResource repositoryCollectionResource = new RepositoryCollectionResource(repositoryManager, repositoryCollectionToDtoMapper, dtoToRepositoryMapper, resourceLinks);
-    RepositoryRootResource repositoryRootResource = new RepositoryRootResource(MockProvider.of(repositoryResource), MockProvider.of(repositoryCollectionResource));
-    dispatcher = createDispatcher(repositoryRootResource);
+    super.repositoryCollectionResource = Providers.of(new RepositoryCollectionResource(repositoryManager, repositoryCollectionToDtoMapper, dtoToRepositoryMapper, resourceLinks));
+    dispatcher = createDispatcher(getRepositoryRootResource());
+    when(serviceFactory.create(any(Repository.class))).thenReturn(service);
+    when(scmPathInfoStore.get()).thenReturn(uriInfo);
+    when(uriInfo.getApiRestUri()).thenReturn(URI.create("/x/y"));
   }
 
   @Test
@@ -265,6 +277,20 @@ public class RepositoryRootResourceTest {
     dispatcher.invoke(request, response);
 
     assertFalse(modifiedRepositoryCaptor.getValue().getPermissions().isEmpty());
+  }
+
+  @Test
+  public void shouldCreateArrayOfProtocolUrls() throws Exception {
+    mockRepository("space", "repo");
+    when(service.getSupportedProtocols()).thenReturn(of(new MockScmProtocol("http", "http://"), new MockScmProtocol("ssh", "ssh://")));
+
+    MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo");
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(SC_OK, response.getStatus());
+    assertTrue(response.getContentAsString().contains("\"protocol\":[{\"href\":\"http://\",\"name\":\"http\"},{\"href\":\"ssh://\",\"name\":\"ssh\"}]"));
   }
 
   private PageResult<Repository> createSingletonPageResult(Repository repository) {

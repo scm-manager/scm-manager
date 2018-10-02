@@ -20,7 +20,7 @@ import static de.otto.edison.hal.Links.linkingTo;
 public abstract class HgConfigPackagesToDtoMapper  {
 
   @Inject
-  private UriInfoStore uriInfoStore;
+  private ScmPathInfoStore scmPathInfoStore;
 
   public HgConfigPackagesDto map(HgPackages hgpackages) {
     return map(new HgPackagesNonIterable(hgpackages));
@@ -40,7 +40,7 @@ public abstract class HgConfigPackagesToDtoMapper  {
   }
 
   private String createSelfLink() {
-    LinkBuilder linkBuilder = new LinkBuilder(uriInfoStore.get(), HgConfigResource.class);
+    LinkBuilder linkBuilder = new LinkBuilder(scmPathInfoStore.get(), HgConfigResource.class);
     return linkBuilder.method("getPackagesResource").parameters().href();
   }
 

@@ -11,6 +11,7 @@ import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -52,6 +53,11 @@ class SingleResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
       .map(Response::ok)
       .map(Response.ResponseBuilder::build)
       .orElseThrow(NotFoundException::new);
+  }
+  public Response update(Supplier<Optional<MODEL_OBJECT>> reader, Function<MODEL_OBJECT, MODEL_OBJECT> applyChanges, Predicate<MODEL_OBJECT> hasSameKey, Consumer<MODEL_OBJECT> checker) throws NotFoundException, ConcurrentModificationException {
+    MODEL_OBJECT existingModelObject = reader.get().orElseThrow(NotFoundException::new);
+    checker.accept(existingModelObject);
+    return update(reader,applyChanges,hasSameKey);
   }
 
   /**

@@ -23,7 +23,7 @@ public class HgConfigInstallationsToDtoMapperTest {
   private URI baseUri = URI.create("http://example.com/base/");
 
   @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-  private UriInfoStore uriInfoStore;
+  private ScmPathInfoStore scmPathInfoStore;
 
   @InjectMocks
   private HgConfigInstallationsToDtoMapper mapper;
@@ -34,7 +34,7 @@ public class HgConfigInstallationsToDtoMapperTest {
 
   @Before
   public void init() {
-    when(uriInfoStore.get().getBaseUri()).thenReturn(baseUri);
+    when(scmPathInfoStore.get().getApiRestUri()).thenReturn(baseUri);
     expectedBaseUri = baseUri.resolve(HgConfigResource.HG_CONFIG_PATH_V2 + "/installations/" + expectedPath);
   }
 

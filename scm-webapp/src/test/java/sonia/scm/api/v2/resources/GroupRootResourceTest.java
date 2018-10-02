@@ -3,6 +3,7 @@ package sonia.scm.api.v2.resources;
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.io.Resources;
+import com.google.inject.util.Providers;
 import org.jboss.resteasy.core.Dispatcher;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
@@ -73,7 +74,7 @@ public class GroupRootResourceTest {
     GroupCollectionToDtoMapper groupCollectionToDtoMapper = new GroupCollectionToDtoMapper(groupToDtoMapper, resourceLinks);
     GroupCollectionResource groupCollectionResource = new GroupCollectionResource(groupManager, dtoToGroupMapper, groupCollectionToDtoMapper, resourceLinks);
     GroupResource groupResource = new GroupResource(groupManager, groupToDtoMapper, dtoToGroupMapper);
-    GroupRootResource groupRootResource = new GroupRootResource(MockProvider.of(groupCollectionResource), MockProvider.of(groupResource));
+    GroupRootResource groupRootResource = new GroupRootResource(Providers.of(groupCollectionResource), Providers.of(groupResource));
 
     dispatcher = createDispatcher(groupRootResource);
     dispatcher.getProviderFactory().registerProviderInstance(new JSONContextResolver(new ObjectMapperProvider().get()));
@@ -221,6 +222,64 @@ public class GroupRootResourceTest {
     assertNotNull(createdGroup);
     assertEquals(2, createdGroup.getMembers().size());
     assertEquals("user1", createdGroup.getMembers().get(0));
+  }
+
+  @Test
+  public void shouldGet400OnCreatingNewGroupWithNotAllowedCharacters() throws URISyntaxException {
+    // the @ character at the begin of the name is not allowed
+    String groupJson = "{ \"name\": \"@grpname\", \"type\": \"admin\" }";
+    MockHttpRequest request = MockHttpRequest
+      .post("/" + GroupRootResource.GROUPS_PATH_V2)
+      .contentType(VndMediaType.GROUP)
+      .content(groupJson.getBytes());
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(400, response.getStatus());
+
+    // the whitespace at the begin of the name is not allowed
+    groupJson = "{ \"name\": \" grpname\", \"type\": \"admin\" }";
+    request = MockHttpRequest
+      .post("/" + GroupRootResource.GROUPS_PATH_V2)
+      .contentType(VndMediaType.GROUP)
+      .content(groupJson.getBytes());
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(400, response.getStatus());
+
+    // the characters {[ are not allowed
+    groupJson = "{ \"name\": \"grp{name}\", \"type\": \"admin\" }";
+    request = MockHttpRequest
+      .post("/" + GroupRootResource.GROUPS_PATH_V2)
+      .contentType(VndMediaType.GROUP)
+      .content(groupJson.getBytes());
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(400, response.getStatus());
+
+    groupJson = "{ \"name\": \"grp[name]\", \"type\": \"admin\" }";
+    request = MockHttpRequest
+      .post("/" + GroupRootResource.GROUPS_PATH_V2)
+      .contentType(VndMediaType.GROUP)
+      .content(groupJson.getBytes());
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(400, response.getStatus());
+
+    groupJson = "{ \"name\": \"grp/name\", \"type\": \"admin\" }";
+    request = MockHttpRequest
+      .post("/" + GroupRootResource.GROUPS_PATH_V2)
+      .contentType(VndMediaType.GROUP)
+      .content(groupJson.getBytes());
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(400, response.getStatus());
+
   }
 
   @Test

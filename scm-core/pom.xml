@@ -32,6 +32,13 @@
       <artifactId>scm-annotations</artifactId>
       <version>2.0.0-SNAPSHOT</version>
     </dependency>
+
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
     
     <!-- logging -->
 
@@ -85,6 +92,12 @@
     <dependency>
       <groupId>javax.ws.rs</groupId>
       <artifactId>javax.ws.rs-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>resteasy-jaxrs</artifactId>
+      <scope>test</scope>
     </dependency>
 
     <!-- json -->
@@ -153,14 +166,13 @@
       <scope>provided</scope>
     </dependency>
 
-    <!-- TODO replace by proper version from maven central (group: com.github.sdorra) once its there. -->
     <dependency>
-      <groupId>com.github.sdorra.shiro-static-permissions</groupId>
+      <groupId>com.github.sdorra</groupId>
       <artifactId>ssp-lib</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>com.github.sdorra.shiro-static-permissions</groupId>
+      <groupId>com.github.sdorra</groupId>
       <artifactId>ssp-processor</artifactId>
       <optional>true</optional>
     </dependency>

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.collect.ImmutableList;
+import com.google.inject.util.Providers;
 import de.otto.edison.hal.HalRepresentation;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -47,6 +48,7 @@ import java.util.stream.Stream;
 import static de.otto.edison.hal.Link.link;
 import static de.otto.edison.hal.Links.linkingTo;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.mockito.Matchers.any;
@@ -64,7 +66,7 @@ import static sonia.scm.api.v2.resources.PermissionDto.GROUP_PREFIX;
   password = "secret",
   configuration = "classpath:sonia/scm/repository/shiro.ini"
 )
-public class PermissionRootResourceTest {
+public class PermissionRootResourceTest extends RepositoryTestBase {
   private static final String REPOSITORY_NAMESPACE = "repo_namespace";
   private static final String REPOSITORY_NAME = "repo";
   private static final String PERMISSION_WRITE = "repository:permissionWrite:" + REPOSITORY_NAME;
@@ -137,9 +139,8 @@ public class PermissionRootResourceTest {
     initMocks(this);
     permissionCollectionToDtoMapper = new PermissionCollectionToDtoMapper(permissionToPermissionDtoMapper, resourceLinks);
     permissionRootResource = new PermissionRootResource(permissionDtoToPermissionMapper, permissionToPermissionDtoMapper, permissionCollectionToDtoMapper, resourceLinks, repositoryManager);
-    RepositoryRootResource repositoryRootResource = new RepositoryRootResource(MockProvider
-      .of(new RepositoryResource(null, null, null, null, null, null, null, null, MockProvider.of(permissionRootResource), null)), null);
-    dispatcher = createDispatcher(repositoryRootResource);
+    super.permissionRootResource = Providers.of(permissionRootResource);
+    dispatcher = createDispatcher(getRepositoryRootResource());
     subjectThreadState.bind();
     ThreadContext.bind(subject);
   }
@@ -231,6 +232,35 @@ public class PermissionRootResourceTest {
         }
       })
     );
+  }
+
+
+  @Test
+  public void shouldGet400OnCreatingNewPermissionWithNotAllowedCharacters() throws URISyntaxException {
+    // the @ character at the begin of the name is not allowed
+    createUserWithRepository("user");
+    String permissionJson = "{ \"name\": \"@permission\", \"type\": \"OWNER\" }";
+    MockHttpRequest request = MockHttpRequest
+      .post("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + PATH_OF_ALL_PERMISSIONS)
+      .content(permissionJson.getBytes())
+      .contentType(VndMediaType.PERMISSION);
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(400, response.getStatus());
+
+    // the whitespace at the begin opf the name is not allowed
+    permissionJson = "{ \"name\": \" permission\", \"type\": \"OWNER\" }";
+    request = MockHttpRequest
+      .post("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + PATH_OF_ALL_PERMISSIONS)
+      .content(permissionJson.getBytes())
+      .contentType(VndMediaType.PERMISSION);
+    response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(400, response.getStatus());
   }
 
   @Test

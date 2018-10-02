@@ -132,8 +132,7 @@ public final class HookChangesetBuilder
           try
           {
             copy = DeepCopy.copy(c);
-            preProcessorUtil.prepareForReturn(repository, copy,
-              !disableEscaping);
+            preProcessorUtil.prepareForReturn(repository, copy);
           }
           catch (IOException ex)
           {
@@ -157,24 +156,6 @@ public final class HookChangesetBuilder
   //~--- set methods ----------------------------------------------------------
 
   /**
-   * Disable html escaping for the returned changesets. By default all
-   * changesets are html escaped.
-   *
-   *
-   * @param disableEscaping true to disable the html escaping
-   *
-   * @return {@code this}
-   *
-   * @since 1.35
-   */
-  public HookChangesetBuilder setDisableEscaping(boolean disableEscaping)
-  {
-    this.disableEscaping = disableEscaping;
-
-    return this;
-  }
-
-  /**
    * Disable the execution of pre processors.
    *
    *
@@ -191,9 +172,6 @@ public final class HookChangesetBuilder
   }
 
   //~--- fields ---------------------------------------------------------------
-
-  /** disable escaping */
-  private boolean disableEscaping = false;
 
   /** disable pre processors marker */
   private boolean disablePreProcessors = false;

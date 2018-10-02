@@ -60,7 +60,7 @@ import java.util.List;
  *
  * @author Sebastian Sdorra
  */
-@StaticPermissions("group")
+@StaticPermissions(value = "group", globalPermissions = {"create", "list"})
 @XmlRootElement(name = "groups")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Group extends BasicPropertiesAware

@@ -33,19 +33,13 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Closeables;
-
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.SvnRepositoryHandler;
 import sonia.scm.repository.api.Command;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
-
 import java.util.Set;
 
 /**
@@ -65,13 +59,6 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
 
   //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param handler
-   * @param repository
-   */
   SvnRepositoryServiceProvider(SvnRepositoryHandler handler,
     Repository repository)
   {
@@ -165,6 +152,10 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
   public SvnLogCommand getLogCommand()
   {
     return new SvnLogCommand(context, repository);
+  }
+
+  public ModificationsCommand getModificationsCommand() {
+    return new SvnModificationsCommand(context, repository);
   }
 
   /**

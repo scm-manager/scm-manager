@@ -38,6 +38,7 @@ import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import org.apache.shiro.authz.UnauthorizedException;
+import org.apache.shiro.util.ThreadContext;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -61,7 +62,6 @@ import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.store.JAXBConfigurationStoreFactory;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
@@ -94,6 +94,10 @@ import static org.mockito.Mockito.when;
   configuration = "classpath:sonia/scm/repository/shiro.ini"
 )
 public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
+
+  {
+    ThreadContext.unbindSubject();
+  }
 
   @Rule
   public ShiroRule shiro = new ShiroRule();
@@ -384,69 +388,6 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
   }
 
   @Test
-  public void getRepositoryFromRequestUri_withoutLeadingSlash() throws AlreadyExistsException {
-    RepositoryManager m = createManager();
-    m.init(contextProvider);
-
-    createUriTestRepositories(m);
-
-    assertEquals("scm-test", m.getFromUri("hg/namespace/scm-test").getName());
-    assertEquals("namespace", m.getFromUri("hg/namespace/scm-test").getNamespace());
-  }
-
-  @Test
-  public void getRepositoryFromRequestUri_withLeadingSlash() throws AlreadyExistsException {
-    RepositoryManager m = createManager();
-    m.init(contextProvider);
-
-    createUriTestRepositories(m);
-
-    assertEquals("scm-test", m.getFromUri("/hg/namespace/scm-test").getName());
-    assertEquals("namespace", m.getFromUri("/hg/namespace/scm-test").getNamespace());
-  }
-
-  @Test
-  public void getRepositoryFromRequestUri_withPartialName() throws AlreadyExistsException {
-    RepositoryManager m = createManager();
-    m.init(contextProvider);
-
-    createUriTestRepositories(m);
-
-    assertEquals("scm", m.getFromUri("hg/namespace/scm").getName());
-    assertEquals("namespace", m.getFromUri("hg/namespace/scm").getNamespace());
-  }
-
-  @Test
-  public void getRepositoryFromRequestUri_withTrailingFilePath() throws AlreadyExistsException {
-    RepositoryManager m = createManager();
-    m.init(contextProvider);
-
-    createUriTestRepositories(m);
-
-    assertEquals("test-1", m.getFromUri("/git/namespace/test-1/ka/some/path").getName());
-  }
-
-  @Test
-  public void getRepositoryFromRequestUri_forNotExistingRepositoryName() throws AlreadyExistsException {
-    RepositoryManager m = createManager();
-    m.init(contextProvider);
-
-    createUriTestRepositories(m);
-
-    assertNull(m.getFromUri("/git/namespace/test-3/ka/some/path"));
-  }
-
-  @Test
-  public void getRepositoryFromRequestUri_forWrongNamespace() throws AlreadyExistsException {
-    RepositoryManager m = createManager();
-    m.init(contextProvider);
-
-    createUriTestRepositories(m);
-
-    assertNull(m.getFromUri("/git/other/other/test-2"));
-  }
-
-  @Test
   public void shouldSetNamespace() throws AlreadyExistsException {
     Repository repository = new Repository(null, "hg", null, "scm");
     manager.create(repository);
@@ -504,7 +445,7 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
     when(namespaceStrategy.createNamespace(Mockito.any(Repository.class))).thenAnswer(invocation -> mockedNamespace);
 
     return new DefaultRepositoryManager(configuration, contextProvider,
-      keyGenerator, repositoryDAO, handlerSet, createRepositoryMatcher(), namespaceStrategy);
+      keyGenerator, repositoryDAO, handlerSet, namespaceStrategy);
   }
 
   private void createRepository(RepositoryManager m, Repository repository) throws AlreadyExistsException {
@@ -528,10 +469,6 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
     assertEquals(repo.getContact(), other.getContact());
     assertEquals(repo.getCreationDate(), other.getCreationDate());
     assertEquals(repo.getLastModified(), other.getLastModified());
-  }
-
-  private RepositoryMatcher createRepositoryMatcher() {
-    return new RepositoryMatcher(Collections.<RepositoryPathMatcher>emptySet());
   }
 
   private Repository createRepository(Repository repository) throws AlreadyExistsException {
