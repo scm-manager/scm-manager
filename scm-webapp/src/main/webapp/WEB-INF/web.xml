@@ -59,7 +59,7 @@
   
   <context-param>
     <param-name>resteasy.servlet.mapping.prefix</param-name>
-    <param-value>/api/rest</param-value>
+    <param-value>/api</param-value>
   </context-param>
 
   <servlet>
@@ -71,7 +71,7 @@
 
   <servlet-mapping>
     <servlet-name>Resteasy</servlet-name>
-    <url-pattern>/api/rest/*</url-pattern>
+    <url-pattern>/api/*</url-pattern>
   </servlet-mapping>
   
   <!-- capture sessions -->

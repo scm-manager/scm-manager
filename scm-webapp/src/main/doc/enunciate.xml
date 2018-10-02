@@ -62,7 +62,7 @@
   <modules>
     
     <jaxrs datatype-detection="local">
-      <application path="/api/rest" />
+      <application path="/api" />
     </jaxrs>
     
     <docs disableResourceLinks="true" includeApplicationPath="true" />
