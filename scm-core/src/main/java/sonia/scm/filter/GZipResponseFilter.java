@@ -17,6 +17,7 @@ public class GZipResponseFilter implements ContainerResponseFilter {
     if (WebUtil.isGzipSupported(requestContext::getHeaderString)) {
       log.trace("compress output with gzip");
       GZIPOutputStream wrappedResponse = new GZIPOutputStream(responseContext.getEntityStream());
+      responseContext.getHeaders().add("Content-Encoding", "gzip");
       responseContext.setEntityStream(wrappedResponse);
     }
   }
