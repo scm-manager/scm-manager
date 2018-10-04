@@ -9,7 +9,12 @@ import { apiClient } from "@scm-manager/ui-components";
 import { isPending } from "../../modules/pending";
 import { getFailure } from "../../modules/failure";
 import { combineReducers } from "redux";
-import type { Action, Changeset, PagedCollection } from "@scm-manager/ui-types";
+import type {
+  Action,
+  Changeset,
+  PagedCollection,
+  Repository
+} from "@scm-manager/ui-types";
 
 export const FETCH_CHANGESETS = "scm/repos/FETCH_CHANGESETS";
 export const FETCH_CHANGESETS_PENDING = `${FETCH_CHANGESETS}_${PENDING_SUFFIX}`;
@@ -21,137 +26,122 @@ const REPO_URL = "repositories";
 // actions
 
 export function fetchChangesetsByLink(
-  namespace: string,
-  name: string,
+  repository: Repository,
   link: string,
   branch?: string
 ) {
   return function(dispatch: any) {
-    dispatch(fetchChangesetsPending(namespace, name, branch));
+    dispatch(fetchChangesetsPending(repository, branch));
     return apiClient
       .get(link)
       .then(response => response.json())
       .then(data => {
-        dispatch(fetchChangesetsSuccess(data, namespace, name, branch));
+        dispatch(fetchChangesetsSuccess(data, repository, branch));
       })
       .catch(cause => {
-        dispatch(fetchChangesetsFailure(namespace, name, cause, branch));
+        dispatch(fetchChangesetsFailure(repository, cause, branch));
       });
   };
 }
 
 export function fetchChangesetsWithOptions(
-  namespace: string,
-  name: string,
+  repository: Repository,
   branch?: string,
   suffix?: string
 ) {
-  let link = REPO_URL + `/${namespace}/${name}`;
+  let link = repository._links.changesets.href;
+
   if (branch && branch !== "") {
-    link = link + `/branches/${branch}`;
+    const halBranch = repository._links.branches.find(b => b.name === branch);
+    link = halBranch._links.history.href;
   }
-  link = link + "/changesets";
+
   if (suffix) {
     link = link + `${suffix}`;
   }
-
   return function(dispatch: any) {
-    dispatch(fetchChangesetsPending(namespace, name, branch));
+    dispatch(fetchChangesetsPending(repository, branch));
     return apiClient
       .get(link)
       .then(response => response.json())
       .then(data => {
-        dispatch(fetchChangesetsSuccess(data, namespace, name, branch));
+        dispatch(fetchChangesetsSuccess(data, repository, branch));
       })
       .catch(cause => {
-        dispatch(fetchChangesetsFailure(namespace, name, cause, branch));
+        dispatch(fetchChangesetsFailure(repository, cause, branch));
       });
   };
 }
 
-export function fetchChangesets(namespace: string, name: string) {
-  return fetchChangesetsWithOptions(namespace, name);
+export function fetchChangesets(repository: Repository) {
+  return fetchChangesetsWithOptions(repository);
 }
 
-export function fetchChangesetsByPage(
-  namespace: string,
-  name: string,
-  page: number
-) {
-  return fetchChangesetsWithOptions(namespace, name, "", `?page=${page - 1}`);
+export function fetchChangesetsByPage(repository: Repository, page: number) {
+  return fetchChangesetsWithOptions(repository, "", `?page=${page - 1}`);
 }
 
+// TODO: Rewrite code to fetch changesets by branches, adjust tests and let BranchChooser fetch branches
 export function fetchChangesetsByBranchAndPage(
-  namespace: string,
-  name: string,
+  repository: Repository,
   branch: string,
   page: number
 ) {
-  return fetchChangesetsWithOptions(
-    namespace,
-    name,
-    branch,
-    `?page=${page - 1}`
-  );
+  return fetchChangesetsWithOptions(repository, branch, `?page=${page - 1}`);
 }
 
-export function fetchChangesetsByNamespaceNameAndBranch(
-  namespace: string,
-  name: string,
+export function fetchChangesetsByBranch(
+  repository: Repository,
   branch: string
 ) {
-  return fetchChangesetsWithOptions(namespace, name, branch);
+  return fetchChangesetsWithOptions(repository, branch);
 }
 
 export function fetchChangesetsPending(
-  namespace: string,
-  name: string,
+  repository: Repository,
   branch?: string
 ): Action {
-  const itemId = createItemId(namespace, name, branch);
+  const itemId = createItemId(repository, branch);
+  if (!branch) {
+    branch = "";
+  }
   return {
     type: FETCH_CHANGESETS_PENDING,
-    payload: itemId,
+    payload: { repository, branch },
     itemId
   };
 }
 
 export function fetchChangesetsSuccess(
   changesets: any,
-  namespace: string,
-  name: string,
+  repository: Repository,
   branch?: string
 ): Action {
   return {
     type: FETCH_CHANGESETS_SUCCESS,
     payload: changesets,
-    itemId: createItemId(namespace, name, branch)
+    itemId: createItemId(repository, branch)
   };
 }
 
 function fetchChangesetsFailure(
-  namespace: string,
-  name: string,
+  repository: Repository,
   error: Error,
   branch?: string
 ): Action {
   return {
     type: FETCH_CHANGESETS_FAILURE,
     payload: {
-      namespace,
-      name,
+      repository,
       error,
       branch
     },
-    itemId: createItemId(namespace, name, branch)
+    itemId: createItemId(repository, branch)
   };
 }
 
-function createItemId(
-  namespace: string,
-  name: string,
-  branch?: string
-): string {
+function createItemId(repository: Repository, branch?: string): string {
+  const { namespace, name } = repository;
   let itemId = namespace + "/" + name;
   if (branch && branch !== "") {
     itemId = itemId + "/" + branch;
@@ -211,13 +201,8 @@ function extractChangesetsByIds(changesets: any, oldChangesetsByIds: any) {
 }
 
 //selectors
-export function getChangesets(
-  state: Object,
-  namespace: string,
-  name: string,
-  branch?: string
-) {
-  const key = createItemId(namespace, name, branch);
+export function getChangesets(state: Object, repository, branch?: string) {
+  const key = createItemId(repository, branch);
   if (!state.changesets.byKey[key]) {
     return null;
   }
@@ -226,28 +211,18 @@ export function getChangesets(
 
 export function isFetchChangesetsPending(
   state: Object,
-  namespace: string,
-  name: string,
+  repository: Repository,
   branch?: string
 ) {
-  return isPending(
-    state,
-    FETCH_CHANGESETS,
-    createItemId(namespace, name, branch)
-  );
+  return isPending(state, FETCH_CHANGESETS, createItemId(repository, branch));
 }
 
 export function getFetchChangesetsFailure(
   state: Object,
-  namespace: string,
-  name: string,
+  repository: Repository,
   branch?: string
 ) {
-  return getFailure(
-    state,
-    FETCH_CHANGESETS,
-    createItemId(namespace, name, branch)
-  );
+  return getFailure(state, FETCH_CHANGESETS, createItemId(repository, branch));
 }
 
 const selectList = (state: Object, key: string) => {

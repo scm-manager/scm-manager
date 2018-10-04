@@ -58,7 +58,7 @@ class ChangesetRow extends React.Component<Props> {
                 time={dateFromNow}
               />
             </p>{" "}
-            <p className="is-size-7">{authorLine}</p>
+            <div className="is-size-7">{authorLine}</div>
           </div>
         </div>
       </article>

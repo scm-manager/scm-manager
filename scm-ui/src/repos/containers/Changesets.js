@@ -15,17 +15,15 @@ import {
   fetchChangesetsByLink,
   getChangesetsFromState,
   fetchChangesetsByPage,
-  fetchChangesetsByBranchAndPage
+  fetchChangesetsByBranchAndPage,
+  fetchChangesets
 } from "../modules/changesets";
 import type { History } from "history";
-import {
-  fetchBranchesByNamespaceAndName,
-  getBranchNames
-} from "../../repos/modules/branches";
 import type { PagedCollection, Repository } from "@scm-manager/ui-types";
 import ChangesetList from "../components/changesets/ChangesetList";
 import DropDown from "../components/DropDown";
 import { withRouter } from "react-router-dom";
+import { fetchBranches, getBranchNames } from "../modules/branches";
 
 type Props = {
   repository: Repository,
@@ -53,9 +51,9 @@ class Changesets extends React.PureComponent<State, Props> {
   }
 
   onPageChange = (link: string) => {
-    const { namespace, name } = this.props.repository;
+    const { repository } = this.props;
     const branch = this.props.match.params.branch;
-    this.props.fetchChangesetsByLink(namespace, name, link, branch);
+    this.props.fetchChangesetsByLink(repository, link, branch);
   };
 
   componentDidMount() {
@@ -63,24 +61,20 @@ class Changesets extends React.PureComponent<State, Props> {
   }
 
   updateContent() {
-    const { namespace, name } = this.props.repository;
+    const { repository } = this.props;
+
     const branchName = this.props.match.params.branch;
     const {
-      fetchBranchesByNamespaceAndName,
       fetchChangesetsByPage,
-      fetchChangesetsByBranchAndPage
+      fetchChangesetsByBranchAndPage,
+      fetchBranches
     } = this.props;
     if (branchName) {
-      fetchChangesetsByBranchAndPage(
-        namespace,
-        name,
-        branchName,
-        this.props.page
-      );
+      fetchChangesetsByBranchAndPage(repository, branchName, this.props.page);
     } else {
-      fetchChangesetsByPage(namespace, name, this.props.page);
+      fetchChangesetsByPage(repository, this.props.page);
     }
-    fetchBranchesByNamespaceAndName(namespace, name);
+    fetchBranches(repository);
   }
 
   componentDidUpdate(prevProps: Props, prevState: State, snapshot: any) {
@@ -149,7 +143,7 @@ class Changesets extends React.PureComponent<State, Props> {
       );
     }
 
-    return <ChangesetList changesets={changesets} />;
+    return <ChangesetList repository={repository} changesets={changesets} />;
   };
 
   renderPaginator() {
@@ -195,13 +189,14 @@ const getPageFromProps = props => {
 };
 
 const mapStateToProps = (state, ownProps: Props) => {
+  const { repository } = ownProps;
   const { namespace, name } = ownProps.repository;
   const { branch } = ownProps.match.params;
   const key = createKey(namespace, name, branch);
-  const loading = isFetchChangesetsPending(state, namespace, name, branch);
+  const loading = isFetchChangesetsPending(state, repository, branch);
   const changesets = getChangesetsFromState(state, key);
-  const branchNames = getBranchNames(namespace, name, state);
-  const error = getFetchChangesetsFailure(state, namespace, name, branch);
+  const branchNames = getBranchNames(state, repository);
+  const error = getFetchChangesetsFailure(state, repository, branch);
   const list = selectListAsCollection(state, key);
   const page = getPageFromProps(ownProps);
 
@@ -217,27 +212,28 @@ const mapStateToProps = (state, ownProps: Props) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchBranchesByNamespaceAndName: (namespace: string, name: string) => {
-      dispatch(fetchBranchesByNamespaceAndName(namespace, name));
+    fetchBranches: (repository: Repository) => {
+      dispatch(fetchBranches(repository));
     },
-    fetchChangesetsByPage: (namespace: string, name: string, page: number) => {
-      dispatch(fetchChangesetsByPage(namespace, name, page));
+    fetchChangesets: (repository: Repository) => {
+      dispatch(fetchChangesets(repository));
+    },
+    fetchChangesetsByPage: (repository, page: number) => {
+      dispatch(fetchChangesetsByPage(repository, page));
     },
     fetchChangesetsByBranchAndPage: (
-      namespace: string,
-      name: string,
+      repository,
       branch: string,
       page: number
     ) => {
-      dispatch(fetchChangesetsByBranchAndPage(namespace, name, branch, page));
+      dispatch(fetchChangesetsByBranchAndPage(repository, branch, page));
     },
     fetchChangesetsByLink: (
-      namespace: string,
-      name: string,
+      repository: Repository,
       link: string,
       branch?: string
     ) => {
-      dispatch(fetchChangesetsByLink(namespace, name, link, branch));
+      dispatch(fetchChangesetsByLink(repository, link, branch));
     }
   };
 };
