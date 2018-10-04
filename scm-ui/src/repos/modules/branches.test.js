@@ -141,5 +141,13 @@ describe("branches", () => {
       expect(names).toContain("branch1");
       expect(names).toContain("branch2");
     });
+
+    it("should return branches", () => {
+      const state = {
+        branches: {
+          [key]: {}
+        }
+      };
+    });
   });
 });

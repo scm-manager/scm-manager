@@ -24,23 +24,6 @@ export function fetchBranches(repository: Repository) {
       });
   };
 }
-// export function fetchBranchesByNamespaceAndName(
-//   namespace: string,
-//   name: string
-// ) {
-//   return function(dispatch: any) {
-//     dispatch(fetchBranchesPending(namespace, name));
-//     return apiClient
-//       .get(REPO_URL + "/" + namespace + "/" + name + "/branches")
-//       .then(response => response.json())
-//       .then(data => {
-//         dispatch(fetchBranchesSuccess(data, namespace, name));
-//       })
-//       .catch(error => {
-//         dispatch(fetchBranchesFailure(namespace, name, error));
-//       });
-//   };
-// }
 
 // Action creators
 export function fetchBranchesPending(repository: Repository) {
@@ -132,4 +115,8 @@ export function getBranchNames(state: Object, repository: Repository) {
     return null;
   }
   return Object.keys(state.branches[key].byNames);
+}
+
+export function getBranches(state: Object, repository: Repository) {
+  return null;
 }
