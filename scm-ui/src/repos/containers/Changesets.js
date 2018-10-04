@@ -9,17 +9,21 @@ import {
 } from "@scm-manager/ui-components";
 
 import {
+  fetchChangesets,
+  fetchChangesetsByBranchAndPage,
+  fetchChangesetsByLink,
+  fetchChangesetsByPage,
+  getChangesetsFromState,
   getFetchChangesetsFailure,
   isFetchChangesetsPending,
-  selectListAsCollection,
-  fetchChangesetsByLink,
-  getChangesetsFromState,
-  fetchChangesetsByPage,
-  fetchChangesetsByBranchAndPage,
-  fetchChangesets
+  selectListAsCollection
 } from "../modules/changesets";
 import type { History } from "history";
-import type { PagedCollection, Repository } from "@scm-manager/ui-types";
+import type {
+  Changeset,
+  PagedCollection,
+  Repository
+} from "@scm-manager/ui-types";
 import ChangesetList from "../components/changesets/ChangesetList";
 import DropDown from "../components/DropDown";
 import { withRouter } from "react-router-dom";
@@ -28,6 +32,7 @@ import { fetchBranches, getBranchNames } from "../modules/branches";
 type Props = {
   repository: Repository,
   branchName: string,
+  branchNames: string[],
   history: History,
   fetchChangesetsByNamespaceNameAndBranch: (
     namespace: string,
@@ -35,19 +40,28 @@ type Props = {
     branch: string
   ) => void,
   list: PagedCollection,
-  fetchChangesetsByLink: string => void,
+  fetchChangesetsByLink: (Repository, string, string) => void,
+  fetchChangesetsByPage: (Repository, number) => void,
+  fetchChangesetsByBranchAndPage: (Repository, string, number) => void,
+  fetchBranches: Repository => void,
   page: number,
-  t: string => string
+  t: string => string,
+  match: any,
+  changesets: Changeset[],
+  loading: boolean,
+  error: boolean
 };
 
 type State = {
   branch: string
 };
 
-class Changesets extends React.PureComponent<State, Props> {
+class Changesets extends React.PureComponent<Props, State> {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      branch: ""
+    };
   }
 
   onPageChange = (link: string) => {
