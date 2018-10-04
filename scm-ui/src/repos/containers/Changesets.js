@@ -136,14 +136,16 @@ class Changesets extends React.PureComponent<State, Props> {
     if (branchNames && branchNames.length > 0) {
       return (
         <>
-          <label className="label">
-            {t("changesets.branchselector-label")}
-          </label>
-          <DropDown
-            options={branchNames}
-            preselectedOption={branch}
-            optionSelected={branch => this.branchChanged(branch)}
-          />
+          <div className={"box"}>
+            <label className="label">
+              {t("changesets.branchselector-label")}
+            </label>
+            <DropDown
+              options={branchNames}
+              preselectedOption={branch}
+              optionSelected={branch => this.branchChanged(branch)}
+            />
+          </div>
           <ChangesetList repository={repository} changesets={changesets} />
         </>
       );
