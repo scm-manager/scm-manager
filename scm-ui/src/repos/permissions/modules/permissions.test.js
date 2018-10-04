@@ -100,7 +100,7 @@ const hitchhiker_puzzle42RepoPermissions = {
 };
 
 describe("permission fetch", () => {
-  const REPOS_URL = "/api/rest/v2/repositories";
+  const REPOS_URL = "/api/v2/repositories";
   const mockStore = configureMockStore([thunk]);
 
   afterEach(() => {

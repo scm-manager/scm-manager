@@ -114,7 +114,7 @@ public class InitializingHttpScmProtocolWrapperTest {
   }
 
   private OngoingStubbing<ScmPathInfo> mockSetPathInfo() {
-    return when(pathInfoStore.get()).thenReturn(() -> URI.create("http://example.com/scm/api/rest/"));
+    return when(pathInfoStore.get()).thenReturn(() -> URI.create("http://example.com/scm/api/"));
   }
 
 }
