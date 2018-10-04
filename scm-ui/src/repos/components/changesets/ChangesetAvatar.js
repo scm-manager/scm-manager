@@ -12,15 +12,18 @@ class ChangesetAvatar extends React.Component<Props> {
   render() {
     const { changeset } = this.props;
     return (
-      <div className="image is-64x64">
-        <ExtensionPoint
-          name="repos.changeset-table.information"
-          renderAll={true}
-          props={{ changeset }}
-        >
-          <Image src="/images/blib.jpg" alt="Logo" />
-        </ExtensionPoint>
-      </div>
+      <ExtensionPoint
+        name="repos.changeset-table.information"
+        renderAll={true}
+        props={{ changeset }}
+      >
+        {/* extension should render something like this:  */}
+        {/* <div className="image is-64x64">              */}
+        {/*   <figure className="media-left">             */}
+        {/*    <Image src="/some/image.jpg" alt="Logo" /> */}
+        {/*   </figure>                                   */}
+        {/* </div>                                        */}
+      </ExtensionPoint>
     );
   }
 }

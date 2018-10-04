@@ -44,9 +44,7 @@ class ChangesetRow extends React.Component<Props> {
     const authorLine = <ChangesetAuthor changeset={changeset} />;
     return (
       <article className={classNames("media", classes.inner)}>
-        <figure className="media-left">
-          <ChangesetAvatar changeset={changeset} />
-        </figure>
+        <ChangesetAvatar changeset={changeset} />
         <div className={classNames("media-content", classes.withOverflow)}>
           <div className="content">
             <p className="is-ellipsis-overflow">
