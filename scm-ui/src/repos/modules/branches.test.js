@@ -1,14 +1,13 @@
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 import fetchMock from "fetch-mock";
-import {
+import reducer, {
   FETCH_BRANCHES_FAILURE,
   FETCH_BRANCHES_PENDING,
   FETCH_BRANCHES_SUCCESS,
   fetchBranches,
   getBranchNames
 } from "./branches";
-import reducer from "./branches";
 
 const namespace = "foo";
 const name = "bar";
@@ -96,8 +95,7 @@ describe("branches", () => {
     const action = {
       type: FETCH_BRANCHES_SUCCESS,
       payload: {
-        namespace,
-        name,
+        repository,
         data: branches
       }
     };
@@ -120,7 +118,6 @@ describe("branches", () => {
       };
 
       const newState = reducer(oldState, action);
-      console.log(newState);
       expect(newState[key].byNames["branch1"]).toEqual(branch1);
       expect(newState[key].byNames["branch2"]).toEqual(branch2);
       expect(newState[key].byNames["branch3"]).toEqual(branch3);
@@ -128,25 +125,6 @@ describe("branches", () => {
   });
 
   describe("branch selectors", () => {
-    it("should get branches for namespace and name", () => {
-      const state = {
-        branches: {
-          [key]: {
-            byNames: {
-              branch1: branch1
-            }
-          }
-        }
-      };
-      const branches = getBranchesForNamespaceAndNameFromState(
-        namespace,
-        name,
-        state
-      );
-      expect(branches.length).toEqual(1);
-      expect(branches[0]).toEqual(branch1);
-    });
-
     it("should return branches names", () => {
       const state = {
         branches: {

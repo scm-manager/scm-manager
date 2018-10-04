@@ -1,11 +1,7 @@
 // @flow
-import {
-  FAILURE_SUFFIX,
-  PENDING_SUFFIX,
-  SUCCESS_SUFFIX
-} from "../../modules/types";
-import { apiClient } from "@scm-manager/ui-components";
-import type { Repository } from "@scm-manager/ui-types";
+import {FAILURE_SUFFIX, PENDING_SUFFIX, SUCCESS_SUFFIX} from "../../modules/types";
+import {apiClient} from "@scm-manager/ui-components";
+import type {Repository} from "@scm-manager/ui-types";
 
 export const FETCH_BRANCHES = "scm/repos/FETCH_BRANCHES";
 export const FETCH_BRANCHES_PENDING = `${FETCH_BRANCHES}_${PENDING_SUFFIX}`;
@@ -82,7 +78,8 @@ export default function reducer(
 ): Object {
   switch (action.type) {
     case FETCH_BRANCHES_SUCCESS:
-      const key = action.itemId;
+      const { namespace, name } = action.payload.repository;
+      const key = `${namespace}/${name}`;
       let oldBranchesByNames = { [key]: {} };
       if (state[key] !== undefined) {
         oldBranchesByNames[key] = state[key];
