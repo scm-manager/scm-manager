@@ -26,7 +26,13 @@ class AddEntryToTableField extends React.Component<Props, State> {
   }
 
   render() {
-    const { disabled, buttonLabel, fieldLabel, errorMessage, helpText} = this.props;
+    const {
+      disabled,
+      buttonLabel,
+      fieldLabel,
+      errorMessage,
+      helpText
+    } = this.props;
     return (
       <div className="field">
         <InputField

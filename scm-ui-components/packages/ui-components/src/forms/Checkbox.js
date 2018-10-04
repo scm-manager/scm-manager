@@ -1,6 +1,6 @@
 //@flow
 import React from "react";
-import {Help} from "../index";
+import { Help } from "../index";
 
 type Props = {
   label?: string,
@@ -18,14 +18,13 @@ class Checkbox extends React.Component<Props> {
 
   renderHelp = () => {
     const helpText = this.props.helpText;
-    if(helpText){
+    if (helpText) {
       return (
         <div className="control columns is-vcentered">
           <Help message={helpText} />
-        </div>);
-    }
-    else
-      return null;
+        </div>
+      );
+    } else return null;
   };
 
   render() {

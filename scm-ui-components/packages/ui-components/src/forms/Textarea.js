@@ -1,6 +1,6 @@
 //@flow
 import React from "react";
-import {LabelWithHelpIcon} from "../index";
+import { LabelWithHelpIcon } from "../index";
 
 export type SelectItem = {
   value: string,
@@ -27,10 +27,7 @@ class Textarea extends React.Component<Props> {
 
     return (
       <div className="field">
-        <LabelWithHelpIcon
-          label={label}
-          helpText={helpText}
-        />
+        <LabelWithHelpIcon label={label} helpText={helpText} />
         <div className="control">
           <textarea
             className="textarea"

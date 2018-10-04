@@ -1,6 +1,6 @@
 //@flow
 import React from "react";
-import {Help} from "./index";
+import { Help } from "./index";
 
 type Props = {
   label: string,
@@ -8,7 +8,6 @@ type Props = {
 };
 
 class LabelWithHelpIcon extends React.Component<Props> {
-
   renderLabel = () => {
     const label = this.props.label;
     if (label) {
@@ -19,35 +18,28 @@ class LabelWithHelpIcon extends React.Component<Props> {
 
   renderHelp = () => {
     const helpText = this.props.helpText;
-    if(helpText){
+    if (helpText) {
       return (
         <div className="control columns is-vcentered">
           <Help message={helpText} />
-        </div>);
-    }
-    else
-      return null;
+        </div>
+      );
+    } else return null;
   };
 
   renderLabelWithHelpIcon = () => {
-    if(this.props.label){
-      return(
+    if (this.props.label) {
+      return (
         <div className="field is-grouped">
-        <div className="control">
-          {this.renderLabel()}
+          <div className="control">{this.renderLabel()}</div>
+          {this.renderHelp()}
         </div>
-        {this.renderHelp()}
-      </div>
-      )
-    }
-    else
-      return null;
+      );
+    } else return null;
   };
 
   render() {
-    return (
-      this.renderLabelWithHelpIcon()
-    );
+    return this.renderLabelWithHelpIcon();
   }
 }
 

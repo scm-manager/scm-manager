@@ -1,7 +1,7 @@
 //@flow
 import React from "react";
 import classNames from "classnames";
-import {LabelWithHelpIcon} from "../index";
+import { LabelWithHelpIcon } from "../index";
 
 type Props = {
   label?: string,
@@ -64,26 +64,23 @@ class InputField extends React.Component<Props> {
       ""
     );
     return (
-        <div className="field">
-          <LabelWithHelpIcon
-            label={label}
-            helpText={helpText}
+      <div className="field">
+        <LabelWithHelpIcon label={label} helpText={helpText} />
+        <div className="control">
+          <input
+            ref={input => {
+              this.field = input;
+            }}
+            className={classNames("input", errorView)}
+            type={type}
+            placeholder={placeholder}
+            value={value}
+            onChange={this.handleInput}
+            onKeyPress={this.handleKeyPress}
+            disabled={disabled}
           />
-          <div className="control">
-            <input
-              ref={input => {
-                this.field = input;
-              }}
-              className={classNames("input", errorView)}
-              type={type}
-              placeholder={placeholder}
-              value={value}
-              onChange={this.handleInput}
-              onKeyPress={this.handleKeyPress}
-              disabled={disabled}
-            />
-          </div>
-          {helper}
+        </div>
+        {helper}
       </div>
     );
   }
