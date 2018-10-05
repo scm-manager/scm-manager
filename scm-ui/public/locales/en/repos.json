@@ -68,5 +68,11 @@
         "submit-button": "Submit",
         "name-input-invalid": "Permission is not allowed to be empty! If it is not empty, your input name is invalid or it already exists!"
       }
-    }
+    },
+  "help": {
+    "nameHelpText": "The name of the repository. This name will be part of the repository url.",
+    "typeHelpText": "The type of the repository (e.g. Mercurial, Git or Subversion).",
+    "contactHelpText": "Email address of the person who is responsible for this repository.",
+    "descriptionHelpText": "A short description of the repository."
+  }
 }

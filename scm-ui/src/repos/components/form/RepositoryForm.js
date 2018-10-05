@@ -90,12 +90,14 @@ class RepositoryForm extends React.Component<Props, State> {
           value={repository ? repository.contact : ""}
           validationError={this.state.contactValidationError}
           errorMessage={t("validation.contact-invalid")}
+          helpText={t("help.contactHelpText")}
         />
 
         <Textarea
           label={t("repository.description")}
           onChange={this.handleDescriptionChange}
           value={repository ? repository.description : ""}
+          helpText={t("help.descriptionHelpText")}
         />
         <SubmitButton
           disabled={!this.isValid()}
@@ -129,12 +131,14 @@ class RepositoryForm extends React.Component<Props, State> {
           value={repository ? repository.name : ""}
           validationError={this.state.nameValidationError}
           errorMessage={t("validation.name-invalid")}
+          helpText={t("help.nameHelpText")}
         />
         <Select
           label={t("repository.type")}
           onChange={this.handleTypeChange}
           value={repository ? repository.type : ""}
           options={this.createSelectOptions(repositoryTypes)}
+          helpText={t("help.typeHelpText")}
         />
       </div>
     );
