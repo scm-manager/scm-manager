@@ -6,7 +6,20 @@ import reducer, {
   FETCH_INDEXRESOURCES_SUCCESS,
   FETCH_INDEXRESOURCES_FAILURE,
   fetchIndexResources,
-  fetchIndexResourcesSuccess
+  fetchIndexResourcesSuccess,
+  FETCH_INDEXRESOURCES,
+  isFetchIndexResourcesPending,
+  getFetchIndexResourcesFailure,
+  getUiPluginsLink,
+  getMeLink,
+  getLogoutLink,
+  getLoginLink,
+  getUsersLink,
+  getConfigLink,
+  getRepositoriesLink,
+  getHgConfigLink,
+  getGitConfigLink,
+  getSvnConfigLink
 } from "./indexResource";
 
 const indexResourcesUnauthenticated = {
@@ -142,5 +155,262 @@ describe("index resources reducer", () => {
       fetchIndexResourcesSuccess(indexResourcesAuthenticated)
     );
     expect(newState.links).toBe(indexResourcesAuthenticated._links);
+  });
+});
+
+describe("index resources selectors", () => {
+  const error = new Error("something goes wrong");
+
+  it("should return true, when fetch index resources is pending", () => {
+    const state = {
+      pending: {
+        [FETCH_INDEXRESOURCES]: true
+      }
+    };
+    expect(isFetchIndexResourcesPending(state)).toEqual(true);
+  });
+
+  it("should return false, when fetch index resources is not pending", () => {
+    expect(isFetchIndexResourcesPending({})).toEqual(false);
+  });
+
+  it("should return error when fetch index resources did fail", () => {
+    const state = {
+      failure: {
+        [FETCH_INDEXRESOURCES]: error
+      }
+    };
+    expect(getFetchIndexResourcesFailure(state)).toEqual(error);
+  });
+
+  it("should return undefined when fetch index resources did not fail", () => {
+    expect(getFetchIndexResourcesFailure({})).toBe(undefined);
+  });
+
+  // ui plugins link
+  it("should return ui plugins link when authenticated and has permission to see it", () => {
+    const state = {
+      indexResources: {
+        links: indexResourcesAuthenticated._links
+      }
+    };
+    expect(getUiPluginsLink(state)).toBe(
+      "http://localhost:8081/scm/api/v2/ui/plugins"
+    );
+  });
+
+  it("should return ui plugins links when unauthenticated and has permission to see it", () => {
+    const state = {
+      indexResources: {
+        links: indexResourcesUnauthenticated._links
+      }
+    };
+    expect(getUiPluginsLink(state)).toBe(
+      "http://localhost:8081/scm/api/v2/ui/plugins"
+    );
+  });
+
+  // me link
+  it("should return me link when authenticated and has permission to see it", () => {
+    const state = {
+      indexResources: {
+        links: indexResourcesAuthenticated._links
+      }
+    };
+    expect(getMeLink(state)).toBe("http://localhost:8081/scm/api/v2/me/");
+  });
+
+  it("should return undefined for me link when unauthenticated or has not permission to see it", () => {
+    const state = {
+      indexResources: {
+        links: indexResourcesUnauthenticated._links
+      }
+    };
+    expect(getMeLink(state)).toBe(undefined);
+  });
+
+  // logout link
+  it("should return logout link when authenticated and has permission to see it", () => {
+    const state = {
+      indexResources: {
+        links: indexResourcesAuthenticated._links
+      }
+    };
+    expect(getLogoutLink(state)).toBe(
+      "http://localhost:8081/scm/api/v2/auth/access_token"
+    );
+  });
+
+  it("should return undefined for logout link when unauthenticated or has not permission to see it", () => {
+    const state = {
+      indexResources: {
+        links: indexResourcesUnauthenticated._links
+      }
+    };
+    expect(getLogoutLink(state)).toBe(undefined);
+  });
+
+  // login link
+  it("should return login link when unauthenticated and has permission to see it", () => {
+    const state = {
+      indexResources: {
+        links: indexResourcesUnauthenticated._links
+      }
+    };
+    expect(getLoginLink(state)).toBe(
+      "http://localhost:8081/scm/api/v2/auth/access_token"
+    );
+  });
+
+  it("should return undefined for login link when authenticated or has not permission to see it", () => {
+    const state = {
+      indexResources: {
+        links: indexResourcesAuthenticated._links
+      }
+    };
+    expect(getLoginLink(state)).toBe(undefined);
+  });
+
+  // users link
+  it("should return users link when authenticated and has permission to see it", () => {
+    const state = {
+      indexResources: {
+        links: indexResourcesAuthenticated._links
+      }
+    };
+    expect(getUsersLink(state)).toBe("http://localhost:8081/scm/api/v2/users/");
+  });
+
+  it("should return undefined for users link when unauthenticated or has not permission to see it", () => {
+    const state = {
+      indexResources: {
+        links: indexResourcesUnauthenticated._links
+      }
+    };
+    expect(getUsersLink(state)).toBe(undefined);
+  });
+
+  // groups link
+  it("should return groups link when authenticated and has permission to see it", () => {
+    const state = {
+      indexResources: {
+        links: indexResourcesAuthenticated._links
+      }
+    };
+    expect(getUsersLink(state)).toBe("http://localhost:8081/scm/api/v2/users/");
+  });
+
+  it("should return undefined for groups link when unauthenticated or has not permission to see it", () => {
+    const state = {
+      indexResources: {
+        links: indexResourcesUnauthenticated._links
+      }
+    };
+    expect(getUsersLink(state)).toBe(undefined);
+  });
+
+  // config link
+  it("should return config link when authenticated and has permission to see it", () => {
+    const state = {
+      indexResources: {
+        links: indexResourcesAuthenticated._links
+      }
+    };
+    expect(getConfigLink(state)).toBe(
+      "http://localhost:8081/scm/api/v2/config"
+    );
+  });
+
+  it("should return undefined for config link when unauthenticated or has not permission to see it", () => {
+    const state = {
+      indexResources: {
+        links: indexResourcesUnauthenticated._links
+      }
+    };
+    expect(getConfigLink(state)).toBe(undefined);
+  });
+
+  // repositories link
+  it("should return repositories link when authenticated and has permission to see it", () => {
+    const state = {
+      indexResources: {
+        links: indexResourcesAuthenticated._links
+      }
+    };
+    expect(getRepositoriesLink(state)).toBe(
+      "http://localhost:8081/scm/api/v2/repositories/"
+    );
+  });
+
+  it("should return config for repositories link when unauthenticated or has not permission to see it", () => {
+    const state = {
+      indexResources: {
+        links: indexResourcesUnauthenticated._links
+      }
+    };
+    expect(getRepositoriesLink(state)).toBe(undefined);
+  });
+
+  // hgConfig link
+  it("should return hgConfig link when authenticated and has permission to see it", () => {
+    const state = {
+      indexResources: {
+        links: indexResourcesAuthenticated._links
+      }
+    };
+    expect(getHgConfigLink(state)).toBe(
+      "http://localhost:8081/scm/api/v2/config/hg"
+    );
+  });
+
+  it("should return config for hgConfig link when unauthenticated or has not permission to see it", () => {
+    const state = {
+      indexResources: {
+        links: indexResourcesUnauthenticated._links
+      }
+    };
+    expect(getHgConfigLink(state)).toBe(undefined);
+  });
+
+  // gitConfig link
+  it("should return gitConfig link when authenticated and has permission to see it", () => {
+    const state = {
+      indexResources: {
+        links: indexResourcesAuthenticated._links
+      }
+    };
+    expect(getGitConfigLink(state)).toBe(
+      "http://localhost:8081/scm/api/v2/config/git"
+    );
+  });
+
+  it("should return config for gitConfig link when unauthenticated or has not permission to see it", () => {
+    const state = {
+      indexResources: {
+        links: indexResourcesUnauthenticated._links
+      }
+    };
+    expect(getGitConfigLink(state)).toBe(undefined);
+  });
+
+  // svnConfig link
+  it("should return svnConfig link when authenticated and has permission to see it", () => {
+    const state = {
+      indexResources: {
+        links: indexResourcesAuthenticated._links
+      }
+    };
+    expect(getSvnConfigLink(state)).toBe(
+      "http://localhost:8081/scm/api/v2/config/svn"
+    );
+  });
+
+  it("should return config for svnConfig link when unauthenticated or has not permission to see it", () => {
+    const state = {
+      indexResources: {
+        links: indexResourcesUnauthenticated._links
+      }
+    };
+    expect(getSvnConfigLink(state)).toBe(undefined);
   });
 });
