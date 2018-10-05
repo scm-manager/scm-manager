@@ -19,10 +19,15 @@ import {
   Footer,
   Header
 } from "@scm-manager/ui-components";
-import type { Me, IndexResources } from "@scm-manager/ui-types";
+import type { Me, Link } from "@scm-manager/ui-types";
 import {
   fetchIndexResources,
+  getConfigLink,
   getFetchIndexResourcesFailure,
+  getGroupsLink,
+  getLogoutLink,
+  getRepositoriesLink,
+  getUsersLink,
   isFetchIndexResourcesPending
 } from "../modules/indexResource";
 
@@ -31,7 +36,11 @@ type Props = {
   authenticated: boolean,
   error: Error,
   loading: boolean,
-  indexResources: IndexResources,
+  repositoriesLink: Link,
+  usersLink: Link,
+  groupsLink: Link,
+  configLink: Link,
+  logoutLink: Link,
 
   // dispatcher functions
   fetchMe: () => void,
@@ -48,10 +57,31 @@ class App extends Component<Props> {
   }
 
   render() {
-    const { me, loading, error, authenticated, t } = this.props;
+    const {
+      me,
+      loading,
+      error,
+      authenticated,
+      t,
+      repositoriesLink,
+      usersLink,
+      groupsLink,
+      configLink,
+      logoutLink
+    } = this.props;
 
     let content;
-    const navigation = authenticated ? <PrimaryNavigation /> : "";
+    const navigation = authenticated ? (
+      <PrimaryNavigation
+        repositoriesLink={repositoriesLink}
+        usersLink={usersLink}
+        groupsLink={groupsLink}
+        configLink={configLink}
+        logoutLink={logoutLink}
+      />
+    ) : (
+      ""
+    );
 
     if (loading) {
       content = <Loading />;
@@ -90,11 +120,21 @@ const mapStateToProps = state => {
     isFetchMePending(state) || isFetchIndexResourcesPending(state);
   const error =
     getFetchMeFailure(state) || getFetchIndexResourcesFailure(state);
+  const repositoriesLink = getRepositoriesLink(state);
+  const usersLink = getUsersLink(state);
+  const groupsLink = getGroupsLink(state);
+  const configLink = getConfigLink(state);
+  const logoutLink = getLogoutLink(state);
   return {
     authenticated,
     me,
     loading,
-    error
+    error,
+    repositoriesLink,
+    usersLink,
+    groupsLink,
+    configLink,
+    logoutLink
   };
 };
 

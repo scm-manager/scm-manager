@@ -86,70 +86,72 @@ export function getFetchIndexResourcesFailure(state: Object) {
   return getFailure(state, FETCH_INDEXRESOURCES);
 }
 
-export function getLinks(state: Object){
+export function getLinks(state: Object) {
   return state.indexResources.links;
 }
 
 export function getUiPluginsLink(state: Object) {
-  return state.indexResources.links["uiPlugins"].href;
+  if (state.indexResources.links && state.indexResources.links["uiPlugins"])
+    return state.indexResources.links["uiPlugins"].href;
+  return undefined;
 }
 
 export function getMeLink(state: Object) {
-  if (state.indexResources.links["me"])
+  if (state.indexResources.links && state.indexResources.links["me"])
     return state.indexResources.links["me"].href;
   return undefined;
 }
 
 export function getLogoutLink(state: Object) {
-  if (state.indexResources.links["logout"])
+  if (state.indexResources.links && state.indexResources.links["logout"])
     return state.indexResources.links["logout"].href;
   return undefined;
 }
 
 export function getLoginLink(state: Object) {
-  if (state.indexResources.links["login"])
+  if (state.indexResources.links && state.indexResources.links["login"])
     return state.indexResources.links["login"].href;
   return undefined;
 }
 
 export function getUsersLink(state: Object) {
-  if (state.indexResources.links["users"])
+  if (state.indexResources.links && state.indexResources.links["users"])
     return state.indexResources.links["users"].href;
   return undefined;
 }
 
 export function getGroupsLink(state: Object) {
-  if (state.indexResources.links["groups"])
+  if (state.indexResources.links && state.indexResources.links["groups"])
     return state.indexResources.links["groups"].href;
   return undefined;
 }
 
 export function getConfigLink(state: Object) {
-  if (state.indexResources.links["config"])
+  if (state.indexResources.links && state.indexResources.links["config"])
     return state.indexResources.links["config"].href;
   return undefined;
 }
 
 export function getRepositoriesLink(state: Object) {
-  if (state.indexResources.links["repositories"])
+  if (state.indexResources.links && state.indexResources.links["repositories"])
     return state.indexResources.links["repositories"].href;
   return undefined;
 }
 
 export function getHgConfigLink(state: Object) {
-  if (state.indexResources.links["hgConfig"])
+  if (state.indexResources.links && state.indexResources.links["hgConfig"])
     return state.indexResources.links["hgConfig"].href;
   return undefined;
 }
 
 export function getGitConfigLink(state: Object) {
-  if (state.indexResources.links["gitConfig"])
+  if (state.indexResources.links && state.indexResources.links["gitConfig"])
     return state.indexResources.links["gitConfig"].href;
   return undefined;
 }
 
 export function getSvnConfigLink(state: Object) {
-  if (state.indexResources.links["svnConfig"])
+  if (state.indexResources.links && state.indexResources.links["svnConfig"])
     return state.indexResources.links["svnConfig"].href;
   return undefined;
 }

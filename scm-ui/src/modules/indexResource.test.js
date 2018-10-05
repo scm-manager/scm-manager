@@ -20,7 +20,7 @@ import reducer, {
   getHgConfigLink,
   getGitConfigLink,
   getSvnConfigLink,
-  getLinks
+  getLinks, getGroupsLink
 } from "./indexResource";
 
 const indexResourcesUnauthenticated = {
@@ -307,7 +307,7 @@ describe("index resources selectors", () => {
         links: indexResourcesAuthenticated._links
       }
     };
-    expect(getUsersLink(state)).toBe("http://localhost:8081/scm/api/v2/users/");
+    expect(getGroupsLink(state)).toBe("http://localhost:8081/scm/api/v2/groups/");
   });
 
   it("should return undefined for groups link when unauthenticated or has not permission to see it", () => {
@@ -316,7 +316,7 @@ describe("index resources selectors", () => {
         links: indexResourcesUnauthenticated._links
       }
     };
-    expect(getUsersLink(state)).toBe(undefined);
+    expect(getGroupsLink(state)).toBe(undefined);
   });
 
   // config link

@@ -2,40 +2,62 @@
 import React from "react";
 import { translate } from "react-i18next";
 import PrimaryNavigationLink from "./PrimaryNavigationLink";
+import type {Link} from "@scm-manager/ui-types";
 
 type Props = {
-  t: string => string
+  t: string => string,
+  repositoriesLink: Link,
+  usersLink: Link,
+  groupsLink: Link,
+  configLink: Link,
+  logoutLink: Link
 };
 
 class PrimaryNavigation extends React.Component<Props> {
   render() {
-    const { t } = this.props;
+    const { t, repositoriesLink, usersLink, groupsLink, configLink, logoutLink } = this.props;
+
+    const _repositoriesLink = repositoriesLink ? (
+      <PrimaryNavigationLink
+      to="/repos"
+      match="/(repo|repos)"
+      label={t("primary-navigation.repositories")}
+    />): null;
+
+    const _usersLink = usersLink ? (
+      <PrimaryNavigationLink
+      to="/users"
+      match="/(user|users)"
+      label={t("primary-navigation.users")}
+    />) : null;
+
+    const _groupsLink = groupsLink ? (
+      <PrimaryNavigationLink
+      to="/groups"
+      match="/(group|groups)"
+      label={t("primary-navigation.groups")}
+    />) : null;
+
+    const _configLink = configLink ? (
+      <PrimaryNavigationLink
+      to="/config"
+      label={t("primary-navigation.config")}
+    />) : null;
+
+    const _logoutLink = logoutLink ? (
+      <PrimaryNavigationLink
+      to="/logout"
+      label={t("primary-navigation.logout")}
+    />) : null;
+
     return (
       <nav className="tabs is-boxed">
         <ul>
-          <PrimaryNavigationLink
-            to="/repos"
-            match="/(repo|repos)"
-            label={t("primary-navigation.repositories")}
-          />
-          <PrimaryNavigationLink
-            to="/users"
-            match="/(user|users)"
-            label={t("primary-navigation.users")}
-          />
-          <PrimaryNavigationLink
-            to="/groups"
-            match="/(group|groups)"
-            label={t("primary-navigation.groups")}
-          />
-          <PrimaryNavigationLink
-            to="/config"
-            label={t("primary-navigation.config")}
-          />
-          <PrimaryNavigationLink
-            to="/logout"
-            label={t("primary-navigation.logout")}
-          />
+          {_repositoriesLink}
+          {_usersLink}
+          {_groupsLink}
+          {_configLink}
+          {_logoutLink}
         </ul>
       </nav>
     );
