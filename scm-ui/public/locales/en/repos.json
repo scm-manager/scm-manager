@@ -42,5 +42,11 @@
       "submit": "Yes",
       "cancel": "No"
     }
+  },
+  "help": {
+    "nameHelpText": "The name of the repository. This name will be part of the repository url.",
+    "typeHelpText": "The type of the repository (e.g. Mercurial, Git or Subversion).",
+    "contactHelpText": "Email address of the person who is responsible for this repository.",
+    "descriptionHelpText": "A short description of the repository."
   }
 }

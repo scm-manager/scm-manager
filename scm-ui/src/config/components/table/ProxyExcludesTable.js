@@ -22,6 +22,7 @@ class ProxyExcludesTable extends React.Component<Props, State> {
         removeLabel={t("proxy-settings.remove-proxy-exclude-button")}
         onRemove={this.removeEntry}
         disabled={disabled}
+        helpText={t("help.proxyExcludesHelpText")}
       />
     );
   }

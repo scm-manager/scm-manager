@@ -22,6 +22,7 @@ class AdminUserTable extends React.Component<Props> {
         removeLabel={t("admin-settings.remove-user-button")}
         onRemove={this.removeEntry}
         disabled={disabled}
+        helpText={t("help.adminUsersHelpText")}
       />
     );
   }

@@ -97,6 +97,7 @@ class UserForm extends React.Component<Props, State> {
           value={user ? user.name : ""}
           validationError={this.state.nameValidationError}
           errorMessage={t("validation.name-invalid")}
+          helpText={t("help.usernameHelpText")}
         />
       );
     }
@@ -109,6 +110,7 @@ class UserForm extends React.Component<Props, State> {
           value={user ? user.displayName : ""}
           validationError={this.state.displayNameValidationError}
           errorMessage={t("validation.displayname-invalid")}
+          helpText={t("help.displayNameHelpText")}
         />
         <InputField
           label={t("user.mail")}
@@ -116,6 +118,7 @@ class UserForm extends React.Component<Props, State> {
           value={user ? user.mail : ""}
           validationError={this.state.mailValidationError}
           errorMessage={t("validation.mail-invalid")}
+          helpText={t("help.mailHelpText")}
         />
         <InputField
           label={t("user.password")}
@@ -124,6 +127,7 @@ class UserForm extends React.Component<Props, State> {
           value={user ? user.password : ""}
           validationError={this.state.validatePasswordError}
           errorMessage={t("validation.password-invalid")}
+          helpText={t("help.passwordHelpText")}
         />
         <InputField
           label={t("validation.validatePassword")}
@@ -132,16 +136,19 @@ class UserForm extends React.Component<Props, State> {
           value={this.state ? this.state.validatePassword : ""}
           validationError={this.state.passwordValidationError}
           errorMessage={t("validation.passwordValidation-invalid")}
+          helpText={t("help.passwordConfirmHelpText")}
         />
         <Checkbox
           label={t("user.admin")}
           onChange={this.handleAdminChange}
           checked={user ? user.admin : false}
+          helpText={t("help.adminHelpText")}
         />
         <Checkbox
           label={t("user.active")}
           onChange={this.handleActiveChange}
           checked={user ? user.active : false}
+          helpText={t("help.activeHelpText")}
         />
         <SubmitButton
           disabled={!this.isValid()}

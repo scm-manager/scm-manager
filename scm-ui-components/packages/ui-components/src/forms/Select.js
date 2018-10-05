@@ -1,5 +1,6 @@
 //@flow
 import React from "react";
+import { LabelWithHelpIcon } from "../index";
 
 export type SelectItem = {
   value: string,
@@ -10,7 +11,8 @@ type Props = {
   label?: string,
   options: SelectItem[],
   value?: SelectItem,
-  onChange: string => void
+  onChange: string => void,
+  helpText?: string
 };
 
 class Select extends React.Component<Props> {
@@ -28,20 +30,12 @@ class Select extends React.Component<Props> {
     this.props.onChange(event.target.value);
   };
 
-  renderLabel = () => {
-    const label = this.props.label;
-    if (label) {
-      return <label className="label">{label}</label>;
-    }
-    return "";
-  };
-
   render() {
-    const { options, value } = this.props;
+    const { options, value, label, helpText } = this.props;
 
     return (
       <div className="field">
-        {this.renderLabel()}
+        <LabelWithHelpIcon label={label} helpText={helpText} />
         <div className="control select">
           <select
             ref={input => {
