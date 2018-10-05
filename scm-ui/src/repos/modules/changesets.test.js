@@ -18,6 +18,15 @@ import {
   isFetchChangesetsPending
 } from "./changesets";
 import reducer from "./changesets";
+const branch = {
+  name: "specific",
+  _links: {
+    history: {
+      href:
+        "http://scm/api/rest/v2/repositories/foo/bar/branches/specific/changesets"
+    }
+  }
+};
 
 const repository = {
   namespace: "foo",
@@ -29,17 +38,7 @@ const repository = {
     changesets: {
       href: "http://scm/api/rest/v2/repositories/foo/bar/changesets"
     },
-    branches: [
-      {
-        name: "specific",
-        _links: {
-          history: {
-            href:
-              "http://scm/api/rest/v2/repositories/foo/bar/branches/specific/changesets"
-          }
-        }
-      }
-    ]
+    branches: [branch]
   }
 };
 
@@ -87,7 +86,7 @@ describe("changesets", () => {
       const expectedActions = [
         {
           type: FETCH_CHANGESETS_PENDING,
-          payload: { repository, branch: "specific" },
+          payload: { repository, branch },
           itemId
         },
         {
@@ -99,7 +98,7 @@ describe("changesets", () => {
 
       const store = mockStore({});
       return store
-        .dispatch(fetchChangesetsByBranch(repository, "specific"))
+        .dispatch(fetchChangesetsByBranch(repository, branch))
         .then(() => {
           expect(store.getActions()).toEqual(expectedActions);
         });
@@ -132,14 +131,14 @@ describe("changesets", () => {
       const expectedActions = [
         {
           type: FETCH_CHANGESETS_PENDING,
-          payload: { repository, branch: "specific" },
+          payload: { repository, branch },
           itemId
         }
       ];
 
       const store = mockStore({});
       return store
-        .dispatch(fetchChangesetsByBranch(repository, "specific"))
+        .dispatch(fetchChangesetsByBranch(repository, branch))
         .then(() => {
           expect(store.getActions()[0]).toEqual(expectedActions[0]);
           expect(store.getActions()[1].type).toEqual(FETCH_CHANGESETS_FAILURE);
@@ -175,7 +174,7 @@ describe("changesets", () => {
       const expectedActions = [
         {
           type: FETCH_CHANGESETS_PENDING,
-          payload: { repository, branch: "specific" },
+          payload: { repository, branch },
           itemId: "foo/bar/specific"
         },
         {
@@ -187,7 +186,7 @@ describe("changesets", () => {
 
       const store = mockStore({});
       return store
-        .dispatch(fetchChangesetsByBranchAndPage(repository, "specific", 5))
+        .dispatch(fetchChangesetsByBranchAndPage(repository, branch, 5))
         .then(() => {
           expect(store.getActions()).toEqual(expectedActions);
         });

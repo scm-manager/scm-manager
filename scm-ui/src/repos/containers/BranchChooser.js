@@ -33,13 +33,17 @@ class BranchChooser extends React.Component<Props, State> {
 
   render() {
     const { branches } = this.props;
-    return (
-      <DropDown
-        options={branches.map(b => b.name)}
-        preselectedOption={this.state.selectedBranchName}
-        optionSelected={branch => this.branchChanged(branch)}
-      />
-    );
+    if (branches) {
+      return (
+        <DropDown
+          options={branches.map(b => b.name)}
+          preselectedOption={this.state.selectedBranchName}
+          optionSelected={branch => this.branchChanged(branch)}
+        />
+      );
+    }
+
+    return null;
   }
 
   branchChanged = (branchName: string) => {

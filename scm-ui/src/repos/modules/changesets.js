@@ -28,7 +28,7 @@ const REPO_URL = "repositories";
 export function fetchChangesetsByLink(
   repository: Repository,
   link: string,
-  branch?: string
+  branch?: Branch
 ) {
   return function(dispatch: any) {
     dispatch(fetchChangesetsPending(repository, branch));
@@ -46,19 +46,19 @@ export function fetchChangesetsByLink(
 
 export function fetchChangesetsWithOptions(
   repository: Repository,
-  branch?: string,
+  branch?: Branch,
   suffix?: string
 ) {
   let link = repository._links.changesets.href;
 
-  if (branch && branch !== "") {
-    const halBranch = repository._links.branches.find(b => b.name === branch);
-    link = halBranch._links.history.href;
+  if (branch) {
+    link = branch._links.history.href;
   }
 
   if (suffix) {
     link = link + `${suffix}`;
   }
+
   return function(dispatch: any) {
     dispatch(fetchChangesetsPending(repository, branch));
     return apiClient
@@ -84,7 +84,7 @@ export function fetchChangesetsByPage(repository: Repository, page: number) {
 // TODO: Rewrite code to fetch changesets by branches, adjust tests and let BranchChooser fetch branches
 export function fetchChangesetsByBranchAndPage(
   repository: Repository,
-  branch: string,
+  branch: Branch,
   page: number
 ) {
   return fetchChangesetsWithOptions(repository, branch, `?page=${page - 1}`);
@@ -92,14 +92,14 @@ export function fetchChangesetsByBranchAndPage(
 
 export function fetchChangesetsByBranch(
   repository: Repository,
-  branch: string
+  branch: Branch
 ) {
   return fetchChangesetsWithOptions(repository, branch);
 }
 
 export function fetchChangesetsPending(
   repository: Repository,
-  branch?: string
+  branch?: Branch
 ): Action {
   const itemId = createItemId(repository, branch);
   if (!branch) {
@@ -115,7 +115,7 @@ export function fetchChangesetsPending(
 export function fetchChangesetsSuccess(
   changesets: any,
   repository: Repository,
-  branch?: string
+  branch?: Branch
 ): Action {
   return {
     type: FETCH_CHANGESETS_SUCCESS,
@@ -127,7 +127,7 @@ export function fetchChangesetsSuccess(
 function fetchChangesetsFailure(
   repository: Repository,
   error: Error,
-  branch?: string
+  branch?: Branch
 ): Action {
   return {
     type: FETCH_CHANGESETS_FAILURE,
@@ -140,11 +140,11 @@ function fetchChangesetsFailure(
   };
 }
 
-function createItemId(repository: Repository, branch?: string): string {
+function createItemId(repository: Repository, branch?: Branch): string {
   const { namespace, name } = repository;
   let itemId = namespace + "/" + name;
   if (branch && branch !== "") {
-    itemId = itemId + "/" + branch;
+    itemId = itemId + "/" + branch.name;
   }
   return itemId;
 }

@@ -25,9 +25,8 @@ import type {
   Repository
 } from "@scm-manager/ui-types";
 import ChangesetList from "../components/changesets/ChangesetList";
-import DropDown from "../components/DropDown";
 import { withRouter } from "react-router-dom";
-import { fetchBranches, getBranchNames } from "../modules/branches";
+import { fetchBranches, getBranch, getBranchNames } from "../modules/branches";
 import BranchChooser from "./BranchChooser";
 
 type Props = {
@@ -41,7 +40,7 @@ type Props = {
     branch: string
   ) => void,
   list: PagedCollection,
-  fetchChangesetsByLink: (Repository, string, string) => void,
+  fetchChangesetsByLink: (Repository, string, Branch) => void,
   fetchChangesetsByPage: (Repository, number) => void,
   fetchChangesetsByBranchAndPage: (Repository, string, number) => void,
   fetchBranches: Repository => void,
@@ -50,7 +49,8 @@ type Props = {
   match: any,
   changesets: Changeset[],
   loading: boolean,
-  error: boolean
+  error: boolean,
+  branch: Branch
 };
 
 type State = {
@@ -58,7 +58,7 @@ type State = {
 };
 
 class Changesets extends React.PureComponent<Props, State> {
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
     this.state = {
       branch: ""
@@ -66,8 +66,7 @@ class Changesets extends React.PureComponent<Props, State> {
   }
 
   onPageChange = (link: string) => {
-    const { repository } = this.props;
-    const branch = this.props.match.params.branch;
+    const { repository, branch } = this.props;
     this.props.fetchChangesetsByLink(repository, link, branch);
   };
 
@@ -76,20 +75,18 @@ class Changesets extends React.PureComponent<Props, State> {
   }
 
   updateContent() {
-    const { repository } = this.props;
-
-    const branchName = this.props.match.params.branch;
     const {
+      repository,
+      branch,
+      page,
       fetchChangesetsByPage,
-      fetchChangesetsByBranchAndPage,
-      fetchBranches
+      fetchChangesetsByBranchAndPage
     } = this.props;
-    if (branchName) {
-      fetchChangesetsByBranchAndPage(repository, branchName, this.props.page);
+    if (branch) {
+      fetchChangesetsByBranchAndPage(repository, branch, page);
     } else {
-      fetchChangesetsByPage(repository, this.props.page);
+      fetchChangesetsByPage(repository, page);
     }
-    fetchBranches(repository);
   }
 
   componentDidUpdate(prevProps: Props, prevState: State, snapshot: any) {
@@ -121,7 +118,6 @@ class Changesets extends React.PureComponent<Props, State> {
 
   render() {
     const { changesets, loading, error } = this.props;
-
     if (error) {
       return <ErrorNotification error={error} />;
     }
@@ -140,27 +136,23 @@ class Changesets extends React.PureComponent<Props, State> {
 
   renderList = () => {
     const branch = this.props.match.params.branch;
-    const { repository, changesets, branchNames, t } = this.props;
+    const { repository, changesets, t } = this.props;
 
-    if (branchNames && branchNames.length > 0) {
-      return (
-        <>
-          <div className={"box"}>
-            <label className="label">
-              {t("changesets.branchselector-label")}
-            </label>
-            <BranchChooser
-              repository={repository}
-              selectedBranchName={branch}
-              callback={branch => this.branchChanged(branch.name)}
-            />
-          </div>
-          <ChangesetList repository={repository} changesets={changesets} />
-        </>
-      );
-    }
-
-    return <ChangesetList repository={repository} changesets={changesets} />;
+    return (
+      <>
+        <div className={"box"}>
+          <label className="label">
+            {t("changesets.branchselector-label")}
+          </label>
+          <BranchChooser
+            repository={repository}
+            selectedBranchName={branch}
+            callback={branch => this.branchChanged(branch)}
+          />
+        </div>
+        <ChangesetList repository={repository} changesets={changesets} />
+      </>
+    );
   };
 
   renderPaginator() {
@@ -171,29 +163,19 @@ class Changesets extends React.PureComponent<Props, State> {
     return null;
   }
 
-  branchChanged = (branchName: string): void => {
+  branchChanged = (branch: Branch): void => {
     const { history, repository } = this.props;
-    if (branchName === undefined || branchName === "") {
+    if (branch === undefined) {
       history.push(`/repo/${repository.namespace}/${repository.name}/history`);
     } else {
+      const branchName = branch.name;
+      this.setState({ branch: branchName });
       history.push(
         `/repo/${repository.namespace}/${repository.name}/${branchName}/history`
       );
     }
   };
 }
-
-const createKey = (
-  namespace: string,
-  name: string,
-  branch?: string
-): string => {
-  let key = `${namespace}/${name}`;
-  if (branch) {
-    key = key + `/${branch}`;
-  }
-  return key;
-};
 
 const getPageFromProps = props => {
   let page = props.match.params.page;
@@ -207,9 +189,9 @@ const getPageFromProps = props => {
 
 const mapStateToProps = (state, ownProps: Props) => {
   const { repository } = ownProps;
-  const { namespace, name } = ownProps.repository;
-  const { branch } = ownProps.match.params;
-  const key = createKey(namespace, name, branch);
+  const branchName = ownProps.match.params.branch;
+  const branch = getBranch(state, repository, branchName);
+  const key = createKey(repository, branch);
   const loading = isFetchChangesetsPending(state, repository, branch);
   const changesets = getChangesetsFromState(state, key);
   const branchNames = getBranchNames(state, repository);
@@ -223,8 +205,18 @@ const mapStateToProps = (state, ownProps: Props) => {
     branchNames,
     error,
     list,
-    page
+    page,
+    branch
   };
+};
+
+const createKey = (repository: Repository, branch?: Branch): string => {
+  const { namespace, name } = repository;
+  let key = `${namespace}/${name}`;
+  if (branch && branch.name) {
+    key = key + `/${branch.name}`;
+  }
+  return key;
 };
 
 const mapDispatchToProps = dispatch => {

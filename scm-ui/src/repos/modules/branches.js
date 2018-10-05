@@ -106,12 +106,21 @@ export function getBranchNames(state: Object, repository: Repository) {
 
 export function getBranches(state: Object, repository: Repository) {
   const key = createKey(repository);
-  return Object.values(state.branches[key].byNames);
+  if (state.branches[key]) {
+    if (state.branches[key].byNames) {
+      return Object.values(state.branches[key].byNames);
+    }
+  }
 }
 
 export function getBranch(state: Object, repository: Repository, name: string) {
   const key = createKey(repository);
-  return state.branches[key].byNames[name];
+  if (state.branches[key]) {
+    if (state.branches[key].byNames[name]) {
+      return state.branches[key].byNames[name];
+    }
+  }
+  return undefined;
 }
 
 function createKey(repository: Repository) {
