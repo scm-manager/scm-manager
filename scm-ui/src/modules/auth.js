@@ -5,6 +5,7 @@ import * as types from "./types";
 import { apiClient, UNAUTHORIZED_ERROR } from "@scm-manager/ui-components";
 import { isPending } from "./pending";
 import { getFailure } from "./failure";
+import { getMeLink } from "./indexResource";
 
 // Action
 
