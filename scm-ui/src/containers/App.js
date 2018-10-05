@@ -36,11 +36,11 @@ type Props = {
   authenticated: boolean,
   error: Error,
   loading: boolean,
-  repositoriesLink: Link,
-  usersLink: Link,
-  groupsLink: Link,
-  configLink: Link,
-  logoutLink: Link,
+  repositoriesLink: String,
+  usersLink: String,
+  groupsLink: String,
+  configLink: String,
+  logoutLink: String,
 
   // dispatcher functions
   fetchMe: () => void,

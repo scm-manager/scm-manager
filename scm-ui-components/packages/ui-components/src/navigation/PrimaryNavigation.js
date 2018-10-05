@@ -2,15 +2,14 @@
 import React from "react";
 import { translate } from "react-i18next";
 import PrimaryNavigationLink from "./PrimaryNavigationLink";
-import type {Link} from "@scm-manager/ui-types";
 
 type Props = {
   t: string => string,
-  repositoriesLink: Link,
-  usersLink: Link,
-  groupsLink: Link,
-  configLink: Link,
-  logoutLink: Link
+  repositoriesLink: String,
+  usersLink: String,
+  groupsLink: String,
+  configLink: String,
+  logoutLink: String
 };
 
 class PrimaryNavigation extends React.Component<Props> {
