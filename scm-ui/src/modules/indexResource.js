@@ -53,3 +53,23 @@ export function fetchIndexResourcesFailure(err: Error): Action {
     payload: err
   };
 }
+
+// reducer
+export default function reducer(
+  state: Object = {},
+  action: Action = { type: "UNKNOWN" }
+): Object {
+  if (!action.payload) {
+    return state;
+  }
+
+  switch (action.type) {
+    case FETCH_INDEXRESOURCES_SUCCESS:
+      return {
+        ...state,
+        indexResources: action.payload
+      };
+    default:
+      return state;
+  }
+}

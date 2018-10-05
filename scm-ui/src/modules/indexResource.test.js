@@ -1,11 +1,12 @@
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 import fetchMock from "fetch-mock";
-import {
+import reducer, {
   FETCH_INDEXRESOURCES_PENDING,
   FETCH_INDEXRESOURCES_SUCCESS,
   FETCH_INDEXRESOURCES_FAILURE,
-  fetchIndexResources
+  fetchIndexResources,
+  fetchIndexResourcesSuccess
 } from "./indexResource";
 
 const indexResourcesUnauthenticated = {
@@ -117,5 +118,29 @@ describe("fetch index resource", () => {
       expect(actions[1].type).toEqual(FETCH_INDEXRESOURCES_FAILURE);
       expect(actions[1].payload).toBeDefined();
     });
+  });
+});
+
+describe("index resources reducer", () => {
+  it("should return empty object, if state and action is undefined", () => {
+    expect(reducer()).toEqual({});
+  });
+
+  it("should return the same state, if the action is undefined", () => {
+    const state = { x: true };
+    expect(reducer(state)).toBe(state);
+  });
+
+  it("should return the same state, if the action is unknown to the reducer", () => {
+    const state = { x: true };
+    expect(reducer(state, { type: "EL_SPECIALE" })).toBe(state);
+  });
+
+  it("should store the index resources on FETCH_INDEXRESOURCES_SUCCESS", () => {
+    const newState = reducer(
+      {},
+      fetchIndexResourcesSuccess(indexResourcesAuthenticated)
+    );
+    expect(newState.indexResources).toBe(indexResourcesAuthenticated);
   });
 });
