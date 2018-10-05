@@ -141,6 +141,6 @@ describe("index resources reducer", () => {
       {},
       fetchIndexResourcesSuccess(indexResourcesAuthenticated)
     );
-    expect(newState.indexResources).toBe(indexResourcesAuthenticated);
+    expect(newState.links).toBe(indexResourcesAuthenticated._links);
   });
 });

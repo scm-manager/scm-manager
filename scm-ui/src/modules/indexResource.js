@@ -67,7 +67,7 @@ export default function reducer(
     case FETCH_INDEXRESOURCES_SUCCESS:
       return {
         ...state,
-        indexResources: action.payload
+        links: action.payload._links
       };
     default:
       return state;
