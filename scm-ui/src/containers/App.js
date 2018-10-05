@@ -19,16 +19,23 @@ import {
   Footer,
   Header
 } from "@scm-manager/ui-components";
-import type { Me } from "@scm-manager/ui-types";
+import type { Me, IndexResources } from "@scm-manager/ui-types";
+import {
+  fetchIndexResources,
+  getFetchIndexResourcesFailure,
+  isFetchIndexResourcesPending
+} from "../modules/indexResource";
 
 type Props = {
   me: Me,
   authenticated: boolean,
   error: Error,
   loading: boolean,
+  indexResources: IndexResources,
 
   // dispatcher functions
   fetchMe: () => void,
+  fetchIndexResources: () => void,
 
   // context props
   t: string => string
@@ -36,6 +43,7 @@ type Props = {
 
 class App extends Component<Props> {
   componentDidMount() {
+    this.props.fetchIndexResources();
     this.props.fetchMe();
   }
 
@@ -70,15 +78,18 @@ class App extends Component<Props> {
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    fetchMe: () => dispatch(fetchMe())
+    fetchMe: () => dispatch(fetchMe()),
+    fetchIndexResources: () => dispatch(fetchIndexResources())
   };
 };
 
 const mapStateToProps = state => {
   const authenticated = isAuthenticated(state);
   const me = getMe(state);
-  const loading = isFetchMePending(state);
-  const error = getFetchMeFailure(state);
+  const loading =
+    isFetchMePending(state) || isFetchIndexResourcesPending(state);
+  const error =
+    getFetchMeFailure(state) || getFetchIndexResourcesFailure(state);
   return {
     authenticated,
     me,

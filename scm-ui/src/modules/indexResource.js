@@ -8,7 +8,7 @@ import { getFailure } from "./failure";
 
 // Action
 
-export const FETCH_INDEXRESOURCES = "scm/indexResource";
+export const FETCH_INDEXRESOURCES = "scm/INDEXRESOURCES";
 export const FETCH_INDEXRESOURCES_PENDING = `${FETCH_INDEXRESOURCES}_${
   types.PENDING_SUFFIX
 }`;
@@ -84,6 +84,10 @@ export function isFetchIndexResourcesPending(state: Object) {
 
 export function getFetchIndexResourcesFailure(state: Object) {
   return getFailure(state, FETCH_INDEXRESOURCES);
+}
+
+export function getLinks(state: Object){
+  return state.indexResources.links;
 }
 
 export function getUiPluginsLink(state: Object) {

@@ -19,7 +19,8 @@ import reducer, {
   getRepositoriesLink,
   getHgConfigLink,
   getGitConfigLink,
-  getSvnConfigLink
+  getSvnConfigLink,
+  getLinks
 } from "./indexResource";
 
 const indexResourcesUnauthenticated = {
@@ -185,6 +186,15 @@ describe("index resources selectors", () => {
 
   it("should return undefined when fetch index resources did not fail", () => {
     expect(getFetchIndexResourcesFailure({})).toBe(undefined);
+  });
+
+  it("should return all links", () => {
+    const state = {
+      indexResources: {
+        links: indexResourcesAuthenticated._links
+      }
+    };
+    expect(getLinks(state)).toBe(indexResourcesAuthenticated._links);
   });
 
   // ui plugins link
