@@ -9,7 +9,8 @@ type Props = {
   disabled: boolean,
   buttonLabel: string,
   fieldLabel: string,
-  errorMessage: string
+  errorMessage: string,
+  helpText?: string
 };
 
 type State = {
@@ -25,7 +26,13 @@ class AddEntryToTableField extends React.Component<Props, State> {
   }
 
   render() {
-    const { disabled, buttonLabel, fieldLabel, errorMessage } = this.props;
+    const {
+      disabled,
+      buttonLabel,
+      fieldLabel,
+      errorMessage,
+      helpText
+    } = this.props;
     return (
       <div className="field">
         <InputField
@@ -36,6 +43,7 @@ class AddEntryToTableField extends React.Component<Props, State> {
           value={this.state.entryToAdd}
           onReturnPressed={this.appendEntry}
           disabled={disabled}
+          helpText={helpText}
         />
         <AddButton
           label={buttonLabel}
