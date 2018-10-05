@@ -28,6 +28,7 @@ import ChangesetList from "../components/changesets/ChangesetList";
 import DropDown from "../components/DropDown";
 import { withRouter } from "react-router-dom";
 import { fetchBranches, getBranchNames } from "../modules/branches";
+import BranchChooser from "./BranchChooser";
 
 type Props = {
   repository: Repository,
@@ -148,10 +149,10 @@ class Changesets extends React.PureComponent<Props, State> {
             <label className="label">
               {t("changesets.branchselector-label")}
             </label>
-            <DropDown
-              options={branchNames}
-              preselectedOption={branch}
-              optionSelected={branch => this.branchChanged(branch)}
+            <BranchChooser
+              repository={repository}
+              selectedBranchName={branch}
+              callback={branch => this.branchChanged(branch.name)}
             />
           </div>
           <ChangesetList repository={repository} changesets={changesets} />

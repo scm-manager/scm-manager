@@ -1,9 +1,9 @@
 // @flow
 
 import React from "react";
-import type {Repository} from "@scm-manager/ui-types";
-import {connect} from "react-redux";
-import {fetchBranches} from "../modules/branches";
+import type { Repository } from "@scm-manager/ui-types";
+import { connect } from "react-redux";
+import { fetchBranches, getBranch, getBranches } from "../modules/branches";
 import DropDown from "../components/DropDown";
 
 type Props = {
@@ -14,30 +14,46 @@ type Props = {
   selectedBranchName: string
 };
 
-type State = {};
+type State = {
+  selectedBranchName: string
+};
 
 class BranchChooser extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      selectedBranchName: props.selectedBranchName
+    };
+  }
+
   componentDidMount() {
     const { repository, fetchBranches } = this.props;
     fetchBranches(repository);
   }
 
   render() {
-    const { selectedBranchName, branches } = this.props;
+    const { branches } = this.props;
     return (
       <DropDown
         options={branches.map(b => b.name)}
-        preselectedOption={selectedBranchName}
+        preselectedOption={this.state.selectedBranchName}
         optionSelected={branch => this.branchChanged(branch)}
       />
     );
   }
 
-  branchChanged = (branchName: string) => {};
+  branchChanged = (branchName: string) => {
+    const { callback } = this.props;
+    this.setState({ ...this.state, selectedBranchName: branchName });
+    const branch = this.props.branches.find(b => b.name === branchName);
+    callback(branch);
+  };
 }
 
-const mapStateToProps = (state: State) => {
-  return {};
+const mapStateToProps = (state: State, ownProps: Props) => {
+  return {
+    branches: getBranches(state, ownProps.repository)
+  };
 };
 
 const mapDispatchToProps = (dispatch: any) => {

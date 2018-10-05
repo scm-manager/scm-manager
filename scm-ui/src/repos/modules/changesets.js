@@ -201,7 +201,11 @@ function extractChangesetsByIds(changesets: any, oldChangesetsByIds: any) {
 }
 
 //selectors
-export function getChangesets(state: Object, repository, branch?: string) {
+export function getChangesets(
+  state: Object,
+  repository: Repository,
+  branch?: string
+) {
   const key = createItemId(repository, branch);
   if (!state.changesets.byKey[key]) {
     return null;

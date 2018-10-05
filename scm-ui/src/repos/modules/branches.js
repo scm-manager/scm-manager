@@ -1,7 +1,11 @@
 // @flow
-import {FAILURE_SUFFIX, PENDING_SUFFIX, SUCCESS_SUFFIX} from "../../modules/types";
-import {apiClient} from "@scm-manager/ui-components";
-import type {Repository} from "@scm-manager/ui-types";
+import {
+  FAILURE_SUFFIX,
+  PENDING_SUFFIX,
+  SUCCESS_SUFFIX
+} from "../../modules/types";
+import { apiClient } from "@scm-manager/ui-components";
+import type { Repository } from "@scm-manager/ui-types";
 
 export const FETCH_BRANCHES = "scm/repos/FETCH_BRANCHES";
 export const FETCH_BRANCHES_PENDING = `${FETCH_BRANCHES}_${PENDING_SUFFIX}`;
@@ -27,29 +31,26 @@ export function fetchBranches(repository: Repository) {
 
 // Action creators
 export function fetchBranchesPending(repository: Repository) {
-  const { namespace, name } = repository;
   return {
     type: FETCH_BRANCHES_PENDING,
     payload: { repository },
-    itemId: namespace + "/" + name
+    itemId: createKey(repository)
   };
 }
 
 export function fetchBranchesSuccess(data: string, repository: Repository) {
-  const { namespace, name } = repository;
   return {
     type: FETCH_BRANCHES_SUCCESS,
     payload: { data, repository },
-    itemId: namespace + "/" + name
+    itemId: createKey(repository)
   };
 }
 
 export function fetchBranchesFailure(repository: Repository, error: Error) {
-  const { namespace, name } = repository;
   return {
     type: FETCH_BRANCHES_FAILURE,
     payload: { error, repository },
-    itemId: namespace + "/" + name
+    itemId: createKey(repository)
   };
 }
 
@@ -61,8 +62,7 @@ export default function reducer(
 ): Object {
   switch (action.type) {
     case FETCH_BRANCHES_SUCCESS:
-      const { namespace, name } = action.payload.repository;
-      const key = `${namespace}/${name}`;
+      const key = createKey(action.payload.repository);
       let oldBranchesByNames = { [key]: {} };
       if (state[key] !== undefined) {
         oldBranchesByNames[key] = state[key];
@@ -96,21 +96,8 @@ function extractBranchesByNames(data: any, oldBranchesByNames: any): Branch[] {
 
 // Selectors
 
-export function getBranchesForNamespaceAndNameFromState(
-  namespace: string,
-  name: string,
-  state: Object
-) {
-  const key = namespace + "/" + name;
-  if (!state.branches[key]) {
-    return null;
-  }
-  return Object.values(state.branches[key].byNames);
-}
-
 export function getBranchNames(state: Object, repository: Repository) {
-  const { namespace, name } = repository;
-  const key = namespace + "/" + name;
+  const key = createKey(repository);
   if (!state.branches[key] || !state.branches[key].byNames) {
     return null;
   }
@@ -118,5 +105,16 @@ export function getBranchNames(state: Object, repository: Repository) {
 }
 
 export function getBranches(state: Object, repository: Repository) {
-  return null;
+  const key = createKey(repository);
+  return Object.values(state.branches[key].byNames);
+}
+
+export function getBranch(state: Object, repository: Repository, name: string) {
+  const key = createKey(repository);
+  return state.branches[key].byNames[name];
+}
+
+function createKey(repository: Repository) {
+  const { namespace, name } = repository;
+  return `${namespace}/${name}`;
 }

@@ -6,6 +6,8 @@ import reducer, {
   FETCH_BRANCHES_PENDING,
   FETCH_BRANCHES_SUCCESS,
   fetchBranches,
+  getBranch,
+  getBranches,
   getBranchNames
 } from "./branches";
 
@@ -125,17 +127,18 @@ describe("branches", () => {
   });
 
   describe("branch selectors", () => {
-    it("should return branches names", () => {
-      const state = {
-        branches: {
-          [key]: {
-            byNames: {
-              branch1: branch1,
-              branch2: branch2
-            }
+    const state = {
+      branches: {
+        [key]: {
+          byNames: {
+            branch1,
+            branch2
           }
         }
-      };
+      }
+    };
+
+    it("should return branches names", () => {
       const names = getBranchNames(state, repository);
       expect(names.length).toEqual(2);
       expect(names).toContain("branch1");
@@ -143,11 +146,20 @@ describe("branches", () => {
     });
 
     it("should return branches", () => {
-      const state = {
-        branches: {
-          [key]: {}
-        }
-      };
+      const branches = getBranches(state, repository);
+      expect(branches.length).toEqual(2);
+      expect(branches).toContain(branch1);
+      expect(branches).toContain(branch2);
+    });
+
+    it("should return single branch by name", () => {
+      const branch = getBranch(state, repository, "branch1");
+      expect(branch).toEqual(branch1);
+    });
+
+    it("should return undefined if branch does not exist", () => {
+      const branch = getBranch(state, repository, "branch42");
+      expect(branch).toBeUndefined();
     });
   });
 });
