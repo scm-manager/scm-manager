@@ -86,7 +86,6 @@ class ProxySettings extends React.Component<Props> {
           buttonLabel={t("proxy-settings.add-proxy-exclude-button")}
           fieldLabel={t("proxy-settings.add-proxy-exclude-textfield")}
           errorMessage={t("proxy-settings.add-proxy-exclude-error")}
-          helpText={t("help.proxyExcludesHelpText")}
         />
       </div>
     );
