@@ -67,7 +67,7 @@
   },
   "help": {
     "realmDescriptionHelpText": "Enter authentication realm description",
-    "dateFormatHelpText": "Moments date format. Please have a look at http://momentjs.com/docs/#/displaying/format/. Note: {0} - is replaced by a `time ago` string (e.g. 2 hours ago).",
+    "dateFormatHelpText": "Moments date format. Please have a look at the momentjs documentation.",
     "pluginRepositoryHelpText": "The url of the plugin repository. Explanation of the placeholders: version = SCM-Manager Version; os = Operation System; arch = Architecture",
     "enableForwardingHelpText": "Enbale mod_proxy port forwarding.",
     "enableRepositoryArchiveHelpText": "Enable repository archives. A complete page reload is required after a change of this value.",
