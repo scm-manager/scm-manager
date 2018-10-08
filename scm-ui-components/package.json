@@ -5,7 +5,7 @@
   "scripts": {
     "bootstrap": "lerna bootstrap",
     "link": "lerna exec -- yarn link",
-    "unlink": "lerna exec --no-bail -- yarn unlink"
+    "unlink": "lerna exec --bail=false -- yarn unlink"
   },
   "devDependencies": {
     "lerna": "^3.2.1"
