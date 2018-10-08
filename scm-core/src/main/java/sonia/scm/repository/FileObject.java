@@ -37,6 +37,7 @@ package sonia.scm.repository;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
+import com.google.common.base.Strings;
 import sonia.scm.LastModifiedAware;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -44,6 +45,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -182,6 +185,22 @@ public class FileObject implements LastModifiedAware, Serializable
   }
 
   /**
+   * Returns the parent path of the file.
+   *
+   * @return parent path
+   */
+  public String getParentPath() {
+    if (Strings.isNullOrEmpty(path)) {
+      return null;
+    }
+    int index = path.lastIndexOf('/');
+    if (index > 0) {
+      return path.substring(0, index);
+    }
+    return "";
+  }
+
+  /**
    * Return sub repository informations or null if the file is not 
    * sub repository.
    *
@@ -284,6 +303,22 @@ public class FileObject implements LastModifiedAware, Serializable
     this.subRepository = subRepository;
   }
 
+  public List<FileObject> getChildren() {
+    return children;
+  }
+
+  public void setChildren(List<FileObject> children) {
+    this.children = children;
+  }
+
+  public void addChild(FileObject child) {
+    this.children.add(child);
+  }
+
+  public boolean hasChildren() {
+    return !children.isEmpty();
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** file description */
@@ -307,4 +342,6 @@ public class FileObject implements LastModifiedAware, Serializable
   /** sub repository informations */
   @XmlElement(name = "subrepository")
   private SubRepository subRepository;
+
+  private List<FileObject> children = new ArrayList<>();
 }

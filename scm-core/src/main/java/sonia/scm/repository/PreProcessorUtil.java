@@ -161,11 +161,21 @@ public class PreProcessorUtil
   {
     if (logger.isTraceEnabled())
     {
-      logger.trace("prepare browser result of repository {} for return",
-        repository.getName());
+      logger.trace("prepare browser result of repository {} for return", repository.getName());
     }
 
-    handlePreProcessForIterable(repository, result,fileObjectPreProcessorFactorySet, fileObjectPreProcessorSet);
+    PreProcessorHandler<FileObject> handler = new PreProcessorHandler<>(fileObjectPreProcessorFactorySet, fileObjectPreProcessorSet, repository);
+    handlePreProcessorForFileObject(handler, result.getFile());
+  }
+
+  private void handlePreProcessorForFileObject(PreProcessorHandler<FileObject> handler, FileObject fileObject) {
+    if (fileObject.isDirectory()) {
+      for (FileObject child : fileObject.getChildren()) {
+        handlePreProcessorForFileObject(handler, child);
+      }
+    }
+    handler.callPreProcessorFactories(fileObject);
+    handler.callPreProcessors(fileObject);
   }
 
   /**
