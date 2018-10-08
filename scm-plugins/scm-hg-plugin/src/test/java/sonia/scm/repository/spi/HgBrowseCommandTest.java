@@ -54,8 +54,17 @@ import static org.junit.Assert.assertTrue;
  *
  * @author Sebastian Sdorra
  */
-public class HgBrowseCommandTest extends AbstractHgCommandTestBase
-{
+public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
+
+  @Test
+  public void testBrowseWithFilePath() throws IOException {
+    BrowseCommandRequest request = new BrowseCommandRequest();
+    request.setPath("a.txt");
+    FileObject file = new HgBrowseCommand(cmdContext, repository).getBrowserResult(request).getFile();
+    assertEquals("a.txt", file.getName());
+    assertFalse(file.isDirectory());
+    assertTrue(file.getChildren().isEmpty());
+  }
 
   @Test
   public void testBrowse() throws IOException {
@@ -85,7 +94,9 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase
 
     assertNotNull(result);
 
-    List<FileObject> foList = result.getFiles();
+    FileObject c = result.getFile();
+    assertEquals("c", c.getName());
+    List<FileObject> foList = c.getChildren();
 
     assertNotNull(foList);
     assertFalse(foList.isEmpty());
@@ -147,11 +158,16 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase
 
     assertNotNull(result);
 
-    List<FileObject> foList = result.getFiles();
+    FileObject root = result.getFile();
+    List<FileObject> foList = root.getChildren();
 
     assertNotNull(foList);
     assertFalse(foList.isEmpty());
-    assertEquals(5, foList.size());
+    assertEquals(4, foList.size());
+
+    FileObject c = getFileObject(foList, "c");
+    assertTrue(c.isDirectory());
+    assertEquals(2, c.getChildren().size());
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -190,7 +206,8 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase
 
     assertNotNull(result);
 
-    List<FileObject> foList = result.getFiles();
+    FileObject root = result.getFile();
+    List<FileObject> foList = root.getChildren();
 
     assertNotNull(foList);
     assertFalse(foList.isEmpty());
