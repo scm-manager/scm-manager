@@ -6,6 +6,7 @@ import {
 } from "../../modules/types";
 import { apiClient } from "@scm-manager/ui-components";
 import type { Repository } from "@scm-manager/ui-types";
+import { isPending } from "../../modules/pending";
 
 export const FETCH_BRANCHES = "scm/repos/FETCH_BRANCHES";
 export const FETCH_BRANCHES_PENDING = `${FETCH_BRANCHES}_${PENDING_SUFFIX}`;
@@ -121,6 +122,10 @@ export function getBranch(state: Object, repository: Repository, name: string) {
     }
   }
   return undefined;
+}
+
+export function isFetchBranchesPending(state: Object, repository: Repository) {
+  return isPending(state, FETCH_BRANCHES, createKey(repository));
 }
 
 function createKey(repository: Repository) {

@@ -2,13 +2,15 @@ import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 import fetchMock from "fetch-mock";
 import reducer, {
+  FETCH_BRANCHES,
   FETCH_BRANCHES_FAILURE,
   FETCH_BRANCHES_PENDING,
   FETCH_BRANCHES_SUCCESS,
   fetchBranches,
   getBranch,
   getBranches,
-  getBranchNames
+  getBranchNames,
+  isFetchBranchesPending
 } from "./branches";
 
 const namespace = "foo";
@@ -137,6 +139,16 @@ describe("branches", () => {
         }
       }
     };
+
+    it("should return true, when fetching branches is pending", () => {
+      const state = {
+        pending: {
+          [FETCH_BRANCHES + "/foo/bar"]: true
+        }
+      };
+
+      expect(isFetchBranchesPending(state, repository)).toBeTruthy();
+    });
 
     it("should return branches names", () => {
       const names = getBranchNames(state, repository);

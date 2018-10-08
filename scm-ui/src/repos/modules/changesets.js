@@ -1,20 +1,11 @@
 // @flow
 
-import {
-  FAILURE_SUFFIX,
-  PENDING_SUFFIX,
-  SUCCESS_SUFFIX
-} from "../../modules/types";
-import { apiClient } from "@scm-manager/ui-components";
-import { isPending } from "../../modules/pending";
-import { getFailure } from "../../modules/failure";
-import { combineReducers } from "redux";
-import type {
-  Action,
-  Changeset,
-  PagedCollection,
-  Repository
-} from "@scm-manager/ui-types";
+import {FAILURE_SUFFIX, PENDING_SUFFIX, SUCCESS_SUFFIX} from "../../modules/types";
+import {apiClient} from "@scm-manager/ui-components";
+import {isPending} from "../../modules/pending";
+import {getFailure} from "../../modules/failure";
+import {combineReducers} from "redux";
+import type {Action, Changeset, PagedCollection, Repository} from "@scm-manager/ui-types";
 
 export const FETCH_CHANGESETS = "scm/repos/FETCH_CHANGESETS";
 export const FETCH_CHANGESETS_PENDING = `${FETCH_CHANGESETS}_${PENDING_SUFFIX}`;
@@ -165,6 +156,7 @@ function byKeyReducer(
       }
       const byIds = extractChangesetsByIds(changesets, oldChangesets[key].byId);
       return {
+        ...state,
         [key]: {
           byId: { ...byIds },
           list: {

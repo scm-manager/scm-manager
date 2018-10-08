@@ -1,9 +1,11 @@
 // @flow
 
 import React from "react";
-import type { Repository } from "@scm-manager/ui-types";
-import { connect } from "react-redux";
-import { fetchBranches, getBranch, getBranches } from "../modules/branches";
+import type {Repository} from "@scm-manager/ui-types";
+import {connect} from "react-redux";
+import {fetchBranches, getBranches, isFetchBranchesPending} from "../modules/branches";
+
+import {Loading} from "@scm-manager/ui-components";
 import DropDown from "../components/DropDown";
 
 type Props = {
@@ -11,7 +13,8 @@ type Props = {
   fetchBranches: Repository => void,
   callback: Branch => void, //TODO use correct branch type
   branches: Branch[], //TODO use correct branch type
-  selectedBranchName: string
+  selectedBranchName: string,
+  loading: boolean
 };
 
 type State = {
@@ -32,8 +35,11 @@ class BranchChooser extends React.Component<Props, State> {
   }
 
   render() {
-    const { branches } = this.props;
-    if (branches) {
+    const { branches, loading } = this.props;
+    if (loading) {
+      return <Loading />;
+    }
+    if (branches && branches.length > 0) {
       return (
         <DropDown
           options={branches.map(b => b.name)}
@@ -56,7 +62,8 @@ class BranchChooser extends React.Component<Props, State> {
 
 const mapStateToProps = (state: State, ownProps: Props) => {
   return {
-    branches: getBranches(state, ownProps.repository)
+    branches: getBranches(state, ownProps.repository),
+    loading: isFetchBranchesPending(state, ownProps.repository)
   };
 };
 

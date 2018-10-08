@@ -1,12 +1,8 @@
 // @flow
 import React from "react";
-import { connect } from "react-redux";
-import { translate } from "react-i18next";
-import {
-  ErrorNotification,
-  Loading,
-  Paginator
-} from "@scm-manager/ui-components";
+import {connect} from "react-redux";
+import {translate} from "react-i18next";
+import {ErrorNotification, Loading, Paginator} from "@scm-manager/ui-components";
 
 import {
   fetchChangesets,
@@ -18,15 +14,11 @@ import {
   isFetchChangesetsPending,
   selectListAsCollection
 } from "../modules/changesets";
-import type { History } from "history";
-import type {
-  Changeset,
-  PagedCollection,
-  Repository
-} from "@scm-manager/ui-types";
+import type {History} from "history";
+import type {Changeset, PagedCollection, Repository} from "@scm-manager/ui-types";
 import ChangesetList from "../components/changesets/ChangesetList";
-import { withRouter } from "react-router-dom";
-import { fetchBranches, getBranch, getBranchNames } from "../modules/branches";
+import {withRouter} from "react-router-dom";
+import {fetchBranches, getBranch, getBranchNames} from "../modules/branches";
 import BranchChooser from "./BranchChooser";
 
 type Props = {
@@ -94,23 +86,25 @@ class Changesets extends React.PureComponent<Props, State> {
     const { namespace, name } = repository;
     const branch = match.params.branch;
 
-    if (branch !== prevState.branch) {
-      this.updateContent();
-      this.setState({ branch });
-    }
+    if (!this.props.loading) {
+      if (prevProps.branch !== this.props.branch) {
+        this.updateContent();
+        this.setState({ branch });
+      }
 
-    if (list && (list.page || list.page === 0)) {
-      // backend starts paging at 0
-      const statePage: number = list.page + 1;
-      if (page !== statePage) {
-        if (branch) {
-          this.props.history.push(
-            `/repo/${namespace}/${name}/${branch}/history/${statePage}`
-          );
-        } else {
-          this.props.history.push(
-            `/repo/${namespace}/${name}/history/${statePage}`
-          );
+      if (list && (list.page || list.page === 0)) {
+        // backend starts paging at 0
+        const statePage: number = list.page + 1;
+        if (page !== statePage) {
+          if (branch) {
+            this.props.history.push(
+              `/repo/${namespace}/${name}/${branch}/history/${statePage}`
+            );
+          } else {
+            this.props.history.push(
+              `/repo/${namespace}/${name}/history/${statePage}`
+            );
+          }
         }
       }
     }
