@@ -59,6 +59,16 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase
 {
 
   @Test
+  public void testBrowseWithFilePath() throws RevisionNotFoundException {
+    BrowseCommandRequest request = new BrowseCommandRequest();
+    request.setPath("a.txt");
+    FileObject file = createCommand().getBrowserResult(request).getFile();
+    assertEquals("a.txt", file.getName());
+    assertFalse(file.isDirectory());
+    assertTrue(file.getChildren().isEmpty());
+  }
+
+  @Test
   public void testBrowse() throws RevisionNotFoundException {
     List<FileObject> foList = getRootFromTip(new BrowseCommandRequest());
 
@@ -92,7 +102,7 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase
 
     assertNotNull(result);
 
-    List<FileObject> foList = result.getFiles();
+    List<FileObject> foList = result.getFile().getChildren();
 
     assertNotNull(foList);
     assertFalse(foList.isEmpty());
@@ -151,15 +161,16 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase
 
     assertNotNull(result);
 
-    List<FileObject> foList = result.getFiles();
+    List<FileObject> foList = result.getFile().getChildren();
 
     assertNotNull(foList);
     assertFalse(foList.isEmpty());
-    assertEquals(4, foList.size());
-    
-    for ( FileObject fo : foList ){
-      System.out.println(fo);
-    }
+    assertEquals(2, foList.size());
+
+    FileObject c = getFileObject(foList, "c");
+    assertEquals("c", c.getName());
+    assertTrue(c.isDirectory());
+    assertEquals(2, c.getChildren().size());
   }
 
   /**
@@ -208,7 +219,7 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase
 
     assertNotNull(result);
 
-    List<FileObject> foList = result.getFiles();
+    List<FileObject> foList = result.getFile().getChildren();
 
     assertNotNull(foList);
     assertFalse(foList.isEmpty());
