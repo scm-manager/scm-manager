@@ -24,7 +24,6 @@ public class GroupDto extends HalRepresentation {
   private Instant lastModified;
   @Pattern(regexp = USER_GROUP_PATTERN)
   private String name;
-  @NotEmpty
   private String type;
   private Map<String, String> properties;
   private List<String> members;

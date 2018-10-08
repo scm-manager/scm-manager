@@ -152,7 +152,7 @@ public class ScmServletModule extends ServletModule
   public static final String PATTERN_PLUGIN_SCRIPT = "/plugins/resources/js/*";
 
   /** Field description */
-  public static final String PATTERN_RESTAPI = "/api/rest/*";
+  public static final String PATTERN_RESTAPI = "/api/*";
 
   /** Field description */
   public static final String PATTERN_SCRIPT = "*.js";

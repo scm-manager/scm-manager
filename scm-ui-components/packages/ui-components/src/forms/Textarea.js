@@ -1,5 +1,6 @@
 //@flow
 import React from "react";
+import { LabelWithHelpIcon } from "../index";
 
 export type SelectItem = {
   value: string,
@@ -10,7 +11,8 @@ type Props = {
   label?: string,
   placeholder?: SelectItem[],
   value?: string,
-  onChange: string => void
+  onChange: string => void,
+  helpText?: string
 };
 
 class Textarea extends React.Component<Props> {
@@ -20,20 +22,12 @@ class Textarea extends React.Component<Props> {
     this.props.onChange(event.target.value);
   };
 
-  renderLabel = () => {
-    const label = this.props.label;
-    if (label) {
-      return <label className="label">{label}</label>;
-    }
-    return "";
-  };
-
   render() {
-    const { placeholder, value } = this.props;
+    const { placeholder, value, label, helpText } = this.props;
 
     return (
       <div className="field">
-        {this.renderLabel()}
+        <LabelWithHelpIcon label={label} helpText={helpText} />
         <div className="control">
           <textarea
             className="textarea"

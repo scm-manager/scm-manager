@@ -78,7 +78,8 @@ public class PermissionRootResource {
     checkPermissionAlreadyExists(permission, repository);
     repository.getPermissions().add(dtoToModelMapper.map(permission));
     manager.modify(repository);
-    return Response.created(URI.create(resourceLinks.permission().self(namespace, name, permission.getName()))).build();
+    String urlPermissionName = modelToDtoMapper.getUrlPermissionName(permission);
+    return Response.created(URI.create(resourceLinks.permission().self(namespace, name, urlPermissionName))).build();
   }
 
 

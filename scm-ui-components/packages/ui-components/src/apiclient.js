@@ -32,7 +32,7 @@ export function createUrl(url: string) {
   if (url.indexOf("/") !== 0) {
     urlWithStartingSlash = "/" + urlWithStartingSlash;
   }
-  return `${contextPath}/api/rest/v2${urlWithStartingSlash}`;
+  return `${contextPath}/api/v2${urlWithStartingSlash}`;
 }
 
 class ApiClient {

@@ -1,6 +1,7 @@
 //@flow
 import React from "react";
 import classNames from "classnames";
+import { LabelWithHelpIcon } from "../index";
 
 type Props = {
   label?: string,
@@ -12,7 +13,8 @@ type Props = {
   onReturnPressed?: () => void,
   validationError: boolean,
   errorMessage: string,
-  disabled?: boolean
+  disabled?: boolean,
+  helpText?: string
 };
 
 class InputField extends React.Component<Props> {
@@ -33,15 +35,6 @@ class InputField extends React.Component<Props> {
     this.props.onChange(event.target.value);
   };
 
-  renderLabel = () => {
-    const label = this.props.label;
-    if (label) {
-      return <label className="label">{label}</label>;
-    }
-    return "";
-  };
-
-
   handleKeyPress = (event: SyntheticKeyboardEvent<HTMLInputElement>) => {
     const onReturnPressed = this.props.onReturnPressed;
     if (!onReturnPressed) {
@@ -60,7 +53,9 @@ class InputField extends React.Component<Props> {
       value,
       validationError,
       errorMessage,
-      disabled
+      disabled,
+      label,
+      helpText
     } = this.props;
     const errorView = validationError ? "is-danger" : "";
     const helper = validationError ? (
@@ -70,7 +65,7 @@ class InputField extends React.Component<Props> {
     );
     return (
       <div className="field">
-        {this.renderLabel()}
+        <LabelWithHelpIcon label={label} helpText={helpText} />
         <div className="control">
           <input
             ref={input => {
