@@ -58,6 +58,15 @@ import static org.junit.Assert.assertTrue;
  */
 public class GitBrowseCommandTest extends AbstractGitCommandTestBase
 {
+
+  @Test
+  public void testGetFile() throws IOException, RevisionNotFoundException {
+    BrowseCommandRequest request = new BrowseCommandRequest();
+    request.setPath("a.txt");
+    BrowserResult result = createCommand().getBrowserResult(request);
+    FileObject fileObject = result.getFile();
+    assertEquals("a.txt", fileObject.getName());
+  }
   
   /**
    * Test browse command with default branch.
@@ -65,12 +74,13 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase
   @Test
   public void testDefaultBranch() throws IOException, RevisionNotFoundException {
     // without default branch, the repository head should be used
-    BrowserResult result = createCommand().getBrowserResult(new BrowseCommandRequest());
-    assertNotNull(result);
+    FileObject root = createCommand().getBrowserResult(new BrowseCommandRequest()).getFile();
+    assertNotNull(root);
 
-    List<FileObject> foList = result.getFiles(); 
+    List<FileObject> foList = root.getChildren();
     assertNotNull(foList);
     assertFalse(foList.isEmpty());
+
     assertEquals(4, foList.size());
     
     assertEquals("a.txt", foList.get(0).getName());
@@ -80,10 +90,11 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase
     
     // set default branch and fetch again
     repository.setProperty(GitConstants.PROPERTY_DEFAULT_BRANCH, "test-branch");
-    result = createCommand().getBrowserResult(new BrowseCommandRequest());
-    assertNotNull(result);
 
-    foList = result.getFiles(); 
+    root = createCommand().getBrowserResult(new BrowseCommandRequest()).getFile();
+    assertNotNull(root);
+
+    foList = root.getChildren();
     assertNotNull(foList);
     assertFalse(foList.isEmpty());
     assertEquals(2, foList.size());
@@ -94,12 +105,10 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase
 
   @Test
   public void testBrowse() throws IOException, RevisionNotFoundException {
-    BrowserResult result =
-      createCommand().getBrowserResult(new BrowseCommandRequest());
+    FileObject root = createCommand().getBrowserResult(new BrowseCommandRequest()).getFile();
+    assertNotNull(root);
 
-    assertNotNull(result);
-
-    List<FileObject> foList = result.getFiles();
+    List<FileObject> foList = root.getChildren();
 
     assertNotNull(foList);
     assertFalse(foList.isEmpty());
@@ -139,11 +148,11 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase
 
     request.setPath("c");
 
-    BrowserResult result = createCommand().getBrowserResult(request);
+    FileObject root = createCommand().getBrowserResult(request).getFile();
+    assertNotNull(root);
 
-    assertNotNull(result);
 
-    List<FileObject> foList = result.getFiles();
+    List<FileObject> foList = root.getChildren();
 
     assertNotNull(foList);
     assertFalse(foList.isEmpty());
@@ -181,20 +190,31 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase
   }
 
   @Test
-  public void testRecusive() throws IOException, RevisionNotFoundException {
+  public void testRecursive() throws IOException, RevisionNotFoundException {
     BrowseCommandRequest request = new BrowseCommandRequest();
 
     request.setRecursive(true);
 
-    BrowserResult result = createCommand().getBrowserResult(request);
+    FileObject root = createCommand().getBrowserResult(request).getFile();
+    assertNotNull(root);
 
-    assertNotNull(result);
 
-    List<FileObject> foList = result.getFiles();
+    List<FileObject> foList = root.getChildren();
 
     assertNotNull(foList);
     assertFalse(foList.isEmpty());
-    assertEquals(5, foList.size());
+
+    assertEquals(4, foList.size());
+
+    assertEquals("a.txt", foList.get(0).getName());
+    assertEquals("b.txt", foList.get(1).getName());
+    FileObject c = foList.get(2);
+    assertEquals("c", c.getName());
+    assertEquals("f.txt", foList.get(3).getName());
+
+    List<FileObject> cChilds = c.getChildren();
+    assertEquals("d.txt", cChilds.get(0).getName());
+    assertEquals("e.txt", cChilds.get(1).getName());
   }
 
   /**
