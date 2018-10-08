@@ -55,6 +55,7 @@
               <goal>run</goal>
             </goals>
             <configuration>
+              <skip>true</skip>
               <script>unlink</script>
             </configuration>
           </execution>
