@@ -9,19 +9,25 @@ type Props = {
 
 export default class ChangesetAuthor extends React.Component<Props> {
   render() {
-    const { changeset } = this.props;
+    const { name } = this.props.changeset.author;
+
     return (
       <>
-        {changeset.author.name}{" "}
-        <a
-          className="is-hidden-mobile"
-          href={"mailto:" + changeset.author.mail}
-        >
-          &lt;
-          {changeset.author.mail}
-          &gt;
-        </a>
+        {name} {this.renderMail()}
       </>
     );
+  }
+
+  renderMail() {
+    const { mail } = this.props.changeset.author;
+    if (mail) {
+      return (
+        <a className="is-hidden-mobile" href={"mailto:" + mail}>
+          &lt;
+          {mail}
+          &gt;
+        </a>
+      );
+    }
   }
 }

@@ -5,7 +5,7 @@ import {
   SUCCESS_SUFFIX
 } from "../../modules/types";
 import { apiClient } from "@scm-manager/ui-components";
-import type { Repository } from "@scm-manager/ui-types";
+import type { Repository, Action, Branch } from "@scm-manager/ui-types";
 import { isPending } from "../../modules/pending";
 
 export const FETCH_BRANCHES = "scm/repos/FETCH_BRANCHES";
@@ -16,6 +16,14 @@ export const FETCH_BRANCHES_FAILURE = `${FETCH_BRANCHES}_${FAILURE_SUFFIX}`;
 // Fetching branches
 
 export function fetchBranches(repository: Repository) {
+  if (!repository._links.branches) {
+    return {
+      type: FETCH_BRANCHES_SUCCESS,
+      payload: { repository, data: {} },
+      itemId: createKey(repository)
+    };
+  }
+
   return function(dispatch: any) {
     dispatch(fetchBranchesPending(repository));
     return apiClient
@@ -81,7 +89,10 @@ export default function reducer(
   }
 }
 
-function extractBranchesByNames(data: any, oldBranchesByNames: any): Branch[] {
+function extractBranchesByNames(data: any, oldBranchesByNames: any): ?Object {
+  if (!data._embedded || !data._embedded.branches) {
+    return {};
+  }
   const branches = data._embedded.branches;
   const branchesByNames = {};
 
@@ -97,10 +108,13 @@ function extractBranchesByNames(data: any, oldBranchesByNames: any): Branch[] {
 
 // Selectors
 
-export function getBranchNames(state: Object, repository: Repository) {
+export function getBranchNames(
+  state: Object,
+  repository: Repository
+): ?Array<Branch> {
   const key = createKey(repository);
   if (!state.branches[key] || !state.branches[key].byNames) {
-    return null;
+    return [];
   }
   return Object.keys(state.branches[key].byNames);
 }
@@ -114,7 +128,11 @@ export function getBranches(state: Object, repository: Repository) {
   }
 }
 
-export function getBranch(state: Object, repository: Repository, name: string) {
+export function getBranch(
+  state: Object,
+  repository: Repository,
+  name: string
+): ?Branch {
   const key = createKey(repository);
   if (state.branches[key]) {
     if (state.branches[key].byNames[name]) {
@@ -124,11 +142,14 @@ export function getBranch(state: Object, repository: Repository, name: string) {
   return undefined;
 }
 
-export function isFetchBranchesPending(state: Object, repository: Repository) {
+export function isFetchBranchesPending(
+  state: Object,
+  repository: Repository
+): boolean {
   return isPending(state, FETCH_BRANCHES, createKey(repository));
 }
 
-function createKey(repository: Repository) {
+function createKey(repository: Repository): string {
   const { namespace, name } = repository;
   return `${namespace}/${name}`;
 }

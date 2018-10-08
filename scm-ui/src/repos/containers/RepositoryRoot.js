@@ -104,22 +104,22 @@ class RepositoryRoot extends React.Component<Props> {
             />
             <Route
               exact
-              path={`${url}/history`}
+              path={`${url}/changesets`}
               render={() => <Changesets repository={repository} />}
             />
             <Route
               exact
-              path={`${url}/history/:page`}
+              path={`${url}/changesets/:page`}
               render={() => <Changesets repository={repository} />}
             />
             <Route
               exact
-              path={`${url}/:branch/history`}
+              path={`${url}/:branch/changesets`}
               render={() => <Changesets repository={repository} />}
             />
             <Route
               exact
-              path={`${url}/:branch/history/:page`}
+              path={`${url}/:branch/changesets/:page`}
               render={() => <Changesets repository={repository} />}
             />
           </div>
@@ -129,7 +129,7 @@ class RepositoryRoot extends React.Component<Props> {
                 <NavLink to={url} label={t("repository-root.information")} />
                 <NavLink
                   activeOnlyWhenExact={false}
-                  to={`${url}/history`}
+                  to={`${url}/changesets`}
                   label={t("repository-root.history")}
                 />
                 <EditNavLink repository={repository} editUrl={`${url}/edit`} />

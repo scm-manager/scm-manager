@@ -1,18 +1,22 @@
 // @flow
 
 import React from "react";
-import type {Repository} from "@scm-manager/ui-types";
-import {connect} from "react-redux";
-import {fetchBranches, getBranches, isFetchBranchesPending} from "../modules/branches";
+import type { Repository, Branch } from "@scm-manager/ui-types";
+import { connect } from "react-redux";
+import {
+  fetchBranches,
+  getBranches,
+  isFetchBranchesPending
+} from "../modules/branches";
 
-import {Loading} from "@scm-manager/ui-components";
+import { Loading } from "@scm-manager/ui-components";
 import DropDown from "../components/DropDown";
 
 type Props = {
   repository: Repository,
   fetchBranches: Repository => void,
-  callback: Branch => void, //TODO use correct branch type
-  branches: Branch[], //TODO use correct branch type
+  callback: (?Branch) => void,
+  branches: Branch[],
   selectedBranchName: string,
   loading: boolean
 };

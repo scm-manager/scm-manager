@@ -20,6 +20,7 @@ import {
 import reducer from "./changesets";
 const branch = {
   name: "specific",
+  revision: "123",
   _links: {
     history: {
       href:
@@ -31,6 +32,7 @@ const branch = {
 const repository = {
   namespace: "foo",
   name: "bar",
+  type: "GIT",
   _links: {
     self: {
       href: "http://scm/api/rest/v2/repositories/foo/bar"
@@ -63,7 +65,7 @@ describe("changesets", () => {
       const expectedActions = [
         {
           type: FETCH_CHANGESETS_PENDING,
-          payload: { repository, branch: "" },
+          payload: { repository },
           itemId: "foo/bar"
         },
         {
@@ -111,7 +113,7 @@ describe("changesets", () => {
       const expectedActions = [
         {
           type: FETCH_CHANGESETS_PENDING,
-          payload: { repository, branch: "" },
+          payload: { repository },
           itemId
         }
       ];
@@ -152,7 +154,7 @@ describe("changesets", () => {
       const expectedActions = [
         {
           type: FETCH_CHANGESETS_PENDING,
-          payload: { repository, branch: "" },
+          payload: { repository },
           itemId: "foo/bar"
         },
         {

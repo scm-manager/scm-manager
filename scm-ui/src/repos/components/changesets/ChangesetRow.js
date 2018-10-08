@@ -1,15 +1,12 @@
 //@flow
 import React from "react";
-import type {
-  Changeset,
-  Repository
-} from "../../../../../scm-ui-components/packages/ui-types/src/index";
+import type { Changeset, Repository } from "@scm-manager/ui-types";
 import classNames from "classnames";
 import { translate, Interpolate } from "react-i18next";
 import ChangesetAvatar from "./ChangesetAvatar";
 import ChangesetId from "./ChangesetId";
 import injectSheet from "react-jss";
-import { DateFromNow } from "../../../../../scm-ui-components/packages/ui-components/src/index";
+import { DateFromNow } from "@scm-manager/ui-components";
 import ChangesetAuthor from "./ChangesetAuthor";
 
 const styles = {

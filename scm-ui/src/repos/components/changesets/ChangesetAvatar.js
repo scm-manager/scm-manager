@@ -1,8 +1,7 @@
 //@flow
 import React from "react";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
-import type { Changeset } from "../../../../../scm-ui-components/packages/ui-types/src/index";
-import { Image } from "../../../../../scm-ui-components/packages/ui-components/src/index";
+import type { Changeset } from "@scm-manager/ui-types";
 
 type Props = {
   changeset: Changeset

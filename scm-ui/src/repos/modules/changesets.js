@@ -1,11 +1,21 @@
 // @flow
 
-import {FAILURE_SUFFIX, PENDING_SUFFIX, SUCCESS_SUFFIX} from "../../modules/types";
-import {apiClient} from "@scm-manager/ui-components";
-import {isPending} from "../../modules/pending";
-import {getFailure} from "../../modules/failure";
-import {combineReducers} from "redux";
-import type {Action, Changeset, PagedCollection, Repository} from "@scm-manager/ui-types";
+import {
+  FAILURE_SUFFIX,
+  PENDING_SUFFIX,
+  SUCCESS_SUFFIX
+} from "../../modules/types";
+import { apiClient } from "@scm-manager/ui-components";
+import { isPending } from "../../modules/pending";
+import { getFailure } from "../../modules/failure";
+import { combineReducers } from "redux";
+import type {
+  Action,
+  Changeset,
+  PagedCollection,
+  Repository,
+  Branch
+} from "@scm-manager/ui-types";
 
 export const FETCH_CHANGESETS = "scm/repos/FETCH_CHANGESETS";
 export const FETCH_CHANGESETS_PENDING = `${FETCH_CHANGESETS}_${PENDING_SUFFIX}`;
@@ -69,7 +79,7 @@ export function fetchChangesets(repository: Repository) {
 }
 
 export function fetchChangesetsByPage(repository: Repository, page: number) {
-  return fetchChangesetsWithOptions(repository, "", `?page=${page - 1}`);
+  return fetchChangesetsWithOptions(repository, undefined, `?page=${page - 1}`);
 }
 
 // TODO: Rewrite code to fetch changesets by branches, adjust tests and let BranchChooser fetch branches
@@ -93,9 +103,7 @@ export function fetchChangesetsPending(
   branch?: Branch
 ): Action {
   const itemId = createItemId(repository, branch);
-  if (!branch) {
-    branch = "";
-  }
+
   return {
     type: FETCH_CHANGESETS_PENDING,
     payload: { repository, branch },
@@ -150,8 +158,13 @@ function byKeyReducer(
       const changesets = action.payload._embedded.changesets;
       const changesetIds = changesets.map(c => c.id);
       const key = action.itemId;
+
+      if (!key) {
+        return state;
+      }
+
       let oldChangesets = { [key]: {} };
-      if (state[key] !== undefined) {
+      if (state[key]) {
         oldChangesets[key] = state[key];
       }
       const byIds = extractChangesetsByIds(changesets, oldChangesets[key].byId);
@@ -196,7 +209,7 @@ function extractChangesetsByIds(changesets: any, oldChangesetsByIds: any) {
 export function getChangesets(
   state: Object,
   repository: Repository,
-  branch?: string
+  branch?: Branch
 ) {
   const key = createItemId(repository, branch);
   if (!state.changesets.byKey[key]) {
@@ -208,7 +221,7 @@ export function getChangesets(
 export function isFetchChangesetsPending(
   state: Object,
   repository: Repository,
-  branch?: string
+  branch?: Branch
 ) {
   return isPending(state, FETCH_CHANGESETS, createItemId(repository, branch));
 }
@@ -216,20 +229,21 @@ export function isFetchChangesetsPending(
 export function getFetchChangesetsFailure(
   state: Object,
   repository: Repository,
-  branch?: string
+  branch?: Branch
 ) {
   return getFailure(state, FETCH_CHANGESETS, createItemId(repository, branch));
 }
 
-const selectList = (state: Object, key: string) => {
-  if (state.changesets.byKey[key] && state.changesets.byKey[key].list) {
-    return state.changesets.byKey[key].list;
+const selectList = (state: Object, repository: Repository) => {
+  const itemId = createItemId(repository);
+  if (state.changesets.byKey[itemId] && state.changesets.byKey[itemId].list) {
+    return state.changesets.byKey[itemId].list;
   }
   return {};
 };
 
-const selectListEntry = (state: Object, key: string): Object => {
-  const list = selectList(state, key);
+const selectListEntry = (state: Object, repository: Repository): Object => {
+  const list = selectList(state, repository);
   if (list.entry) {
     return list.entry;
   }
@@ -238,20 +252,21 @@ const selectListEntry = (state: Object, key: string): Object => {
 
 export const selectListAsCollection = (
   state: Object,
-  key: string
+  repository: Repository
 ): PagedCollection => {
-  return selectListEntry(state, key);
+  return selectListEntry(state, repository);
 };
 
-export function getChangesetsFromState(state: Object, key: string) {
-  const changesetIds = selectList(state, key).entries;
+export function getChangesetsFromState(state: Object, repository: Repository) {
+  const itemId = createItemId(repository);
+  const changesetIds = selectList(state, repository).entries;
   if (!changesetIds) {
     return null;
   }
   const changesetEntries: Changeset[] = [];
 
   for (let id of changesetIds) {
-    changesetEntries.push(state.changesets.byKey[key].byId[id]);
+    changesetEntries.push(state.changesets.byKey[itemId].byId[id]);
   }
 
   return changesetEntries;
