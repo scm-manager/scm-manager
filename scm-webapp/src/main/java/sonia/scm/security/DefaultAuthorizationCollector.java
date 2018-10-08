@@ -52,9 +52,11 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.group.GroupNames;
+import sonia.scm.group.GroupPermissions;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryDAO;
+import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.user.User;
 import sonia.scm.user.UserPermissions;
 import sonia.scm.util.Util;
@@ -256,12 +258,27 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
       collectGlobalPermissions(builder, user, groups);
       collectRepositoryPermissions(builder, user, groups);
       builder.add(canReadOwnUser(user));
+      builder.add(getUserAutocompletePermission());
+      builder.add(getGroupAutocompletePermission());
+      builder.add(getRepoAutocompletePermission());
       permissions = builder.build();
     }
 
     SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(roles);
     info.addStringPermissions(permissions);
     return info;
+  }
+
+  private String getRepoAutocompletePermission() {
+    return RepositoryPermissions.autocomplete().asShiroString();
+  }
+
+  private String getGroupAutocompletePermission() {
+    return GroupPermissions.autocomplete().asShiroString();
+  }
+
+  private String getUserAutocompletePermission() {
+    return UserPermissions.autocomplete().asShiroString();
   }
 
   private String canReadOwnUser(User user) {

@@ -55,12 +55,12 @@ import java.util.List;
 
 /**
  * Organizes users into a group for easier permissions management.
- * 
+ *
  * TODO for 2.0: Use a set instead of a list for members
  *
  * @author Sebastian Sdorra
  */
-@StaticPermissions(value = "group", globalPermissions = {"create", "list"})
+@StaticPermissions(value = "group", globalPermissions = {"create", "list", "autocomplete"})
 @XmlRootElement(name = "groups")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Group extends BasicPropertiesAware
@@ -307,6 +307,11 @@ public class Group extends BasicPropertiesAware
   public String getId()
   {
     return name;
+  }
+
+  @Override
+  public String getDisplayName() {
+    return description;
   }
 
   /**

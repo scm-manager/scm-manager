@@ -60,11 +60,12 @@ import java.util.List;
  */
 @StaticPermissions(
   value = "repository",
-  permissions = {"read", "modify", "delete", "healthCheck", "pull", "push", "permissionRead", "permissionWrite"}
+  permissions = {"read", "modify", "delete", "healthCheck", "pull", "push", "permissionRead", "permissionWrite"},
+  globalPermissions = {"create", "autocomplete"}
 )
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "repositories")
-public class Repository extends BasicPropertiesAware implements ModelObject, PermissionObject {
+public class Repository extends BasicPropertiesAware implements ModelObject, PermissionObject{
 
 
   private static final long serialVersionUID = 3486560714961909711L;
@@ -181,6 +182,11 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
   @Override
   public String getId() {
     return id;
+  }
+
+  @Override
+  public String getDisplayName() {
+    return getNamespaceAndName().toString();
   }
 
   @Override

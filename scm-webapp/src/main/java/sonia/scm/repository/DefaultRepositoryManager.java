@@ -244,6 +244,12 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
   }
 
   @Override
+  public Collection<Repository> getFiltered(String filter, int limit) {
+    RepositoryPermissions.autocomplete().check();
+    return repositoryDAO.getFiltered(filter, limit);
+  }
+
+  @Override
   public Collection<Repository> getAll(Comparator<Repository> comparator) {
     List<Repository> repositories = Lists.newArrayList();
 

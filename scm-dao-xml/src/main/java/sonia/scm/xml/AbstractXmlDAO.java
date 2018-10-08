@@ -41,11 +41,13 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.GenericDAO;
 import sonia.scm.ModelObject;
 import sonia.scm.group.xml.XmlGroupDAO;
-
-//~--- JDK imports ------------------------------------------------------------
+import sonia.scm.store.ConfigurationStore;
+import sonia.scm.util.AssertUtil;
 
 import java.util.Collection;
-import sonia.scm.store.ConfigurationStore;
+import java.util.stream.Collectors;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -232,6 +234,16 @@ public abstract class AbstractXmlDAO<I extends ModelObject,
   {
     // avoid concurrent modification exceptions
     return ImmutableList.copyOf(db.values());
+  }
+
+  @Override
+  public Collection<I> getFiltered(String searched, int limit) {
+    int size = db.values().size();
+    AssertUtil.assertIsNotEmpty(searched);
+    return ImmutableList.copyOf(db.values().stream()
+      .filter(item -> item.getId().contains(searched) || (item.getDisplayName() != null && item.getDisplayName().contains(searched)))
+      .limit(limit <= 0 ? size : limit)
+      .collect(Collectors.toList()));
   }
 
   /**

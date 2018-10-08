@@ -114,4 +114,13 @@ public interface GenericDAO<T>
    * @return all items
    */
   public Collection<T> getAll();
+
+  /**
+   * Returns items containing the searched string
+   *
+   * @param searched the search character
+   * @param limit the max count of the result entities. if limit is <= 0 return all filtered entities
+   * @return searched items
+   */
+  Collection<T> getFiltered(String searched, int limit);
 }

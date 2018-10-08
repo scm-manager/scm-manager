@@ -300,6 +300,12 @@ public class DefaultUserManager extends AbstractUserManager
     return getAll(null);
   }
 
+  @Override
+  public Collection<User> getFiltered(String filter, int limit) {
+    UserPermissions.autocomplete().check();
+    return userDAO.getFiltered(filter, limit);
+  }
+
   /**
    * Method description
    *

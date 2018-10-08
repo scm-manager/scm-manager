@@ -44,7 +44,7 @@ import java.io.Serializable;
  */
 public interface ModelObject
         extends TypedObject, LastModifiedAware, Cloneable, Validateable,
-                Serializable
+                Serializable, ReducedModelObject
 {
 
   /**

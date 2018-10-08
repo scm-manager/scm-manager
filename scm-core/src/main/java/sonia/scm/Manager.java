@@ -78,6 +78,15 @@ public interface Manager<T extends ModelObject>
   Collection<T> getAll();
 
   /**
+   * Returns a {@link java.util.Collection} of filtered objects
+   *
+   * @param filter the searched string
+   * @param limit the max count of the result entities. if limit is <= 0 return all filtered entities
+   * @return all object in the store
+   */
+  Collection<T> getFiltered(String filter, int limit);
+
+  /**
    * Returns all object of the store sorted by the given {@link java.util.Comparator}
    *
    *

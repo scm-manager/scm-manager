@@ -92,6 +92,11 @@ public class ManagerDecorator<T extends ModelObject> implements Manager<T> {
   }
 
   @Override
+  public Collection<T> getFiltered(String filter, int limit) {
+    return decorated.getFiltered(filter, limit);
+  }
+
+  @Override
   public T get(String id)
   {
     return decorated.get(id);

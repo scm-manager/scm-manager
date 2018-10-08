@@ -79,6 +79,11 @@ public class ManagerTest {
     }
 
     @Override
+    public Collection getFiltered(String filter, int limit) {
+      return null;
+    }
+
+    @Override
     public Collection getAll(Comparator comparator) { return getAll(); }
 
     @Override

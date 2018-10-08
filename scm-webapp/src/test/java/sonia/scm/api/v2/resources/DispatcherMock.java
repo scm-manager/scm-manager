@@ -17,6 +17,7 @@ public class DispatcherMock {
     dispatcher.getProviderFactory().registerProvider(InternalRepositoryExceptionMapper.class);
     dispatcher.getProviderFactory().registerProvider(ChangePasswordNotAllowedExceptionMapper.class);
     dispatcher.getProviderFactory().registerProvider(InvalidPasswordExceptionMapper.class);
+    dispatcher.getProviderFactory().registerProvider(AutoCompleteBadParamExceptionMapper.class);
     return dispatcher;
   }
 }
