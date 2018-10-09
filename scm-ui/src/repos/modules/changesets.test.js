@@ -34,9 +34,9 @@ const changesets = {};
 
 describe("changesets", () => {
   describe("fetching of changesets", () => {
-    const DEFAULT_BRANCH_URL = "/api/rest/v2/repositories/foo/bar/changesets";
+    const DEFAULT_BRANCH_URL = "/api/v2/repositories/foo/bar/changesets";
     const SPECIFIC_BRANCH_URL =
-      "/api/rest/v2/repositories/foo/bar/branches/specific/changesets";
+      "/api/v2/repositories/foo/bar/branches/specific/changesets";
     const mockStore = configureMockStore([thunk]);
 
     afterEach(() => {
