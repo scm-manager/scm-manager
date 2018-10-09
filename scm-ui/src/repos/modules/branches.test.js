@@ -171,7 +171,7 @@ describe("branches", () => {
 
     it("should return undefined if branch does not exist", () => {
       const branch = getBranch(state, repository, "branch42");
-      expect(branch).toBeUndefined();
+      expect(branch).toBeFalsy();
     });
   });
 });
