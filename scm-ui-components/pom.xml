@@ -49,24 +49,23 @@
             </configuration>
           </execution>
           <execution>
-            <id>unlink</id>
-            <phase>package</phase>
-            <goals>
-              <goal>run</goal>
-            </goals>
-            <configuration>
-              <skip>true</skip>
-              <script>unlink</script>
-            </configuration>
-          </execution>
-          <execution>
             <id>link</id>
             <phase>package</phase>
             <goals>
               <goal>run</goal>
             </goals>
             <configuration>
-              <script>link</script>
+              <script>unlink</script>
+            </configuration>
+          </execution>
+          <execution>
+            <id>unlink</id>
+            <phase>clean</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <script>unlink</script>
             </configuration>
           </execution>
         </executions>
