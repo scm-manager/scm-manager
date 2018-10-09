@@ -257,11 +257,6 @@ public class Changeset extends BasicPropertiesAware implements ModelObject {
   }
 
   @Override
-  public String getDisplayName() {
-    return id;
-  }
-
-  @Override
   public void setLastModified(Long timestamp) {
     throw new UnsupportedOperationException("changesets are immutable");
   }

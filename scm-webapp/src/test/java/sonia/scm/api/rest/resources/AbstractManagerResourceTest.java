@@ -106,11 +106,6 @@ public class AbstractManagerResourceTest {
     }
 
     @Override
-    public String getDisplayName() {
-      return id;
-    }
-
-    @Override
     public void setLastModified(Long timestamp) {
 
     }

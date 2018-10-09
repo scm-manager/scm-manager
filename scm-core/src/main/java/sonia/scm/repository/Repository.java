@@ -60,8 +60,7 @@ import java.util.List;
  */
 @StaticPermissions(
   value = "repository",
-  permissions = {"read", "modify", "delete", "healthCheck", "pull", "push", "permissionRead", "permissionWrite"},
-  globalPermissions = {"create", "autocomplete"}
+  permissions = {"read", "modify", "delete", "healthCheck", "pull", "push", "permissionRead", "permissionWrite"}
 )
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "repositories")
@@ -182,11 +181,6 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
   @Override
   public String getId() {
     return id;
-  }
-
-  @Override
-  public String getDisplayName() {
-    return getNamespace() + "/" + getName();
   }
 
   @Override

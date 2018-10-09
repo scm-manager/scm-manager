@@ -237,16 +237,6 @@ public abstract class AbstractXmlDAO<I extends ModelObject,
     return ImmutableList.copyOf(db.values());
   }
 
-  @Override
-  public Collection<I> getFiltered(String searched, int limit) {
-    int size = db.values().size();
-    AssertUtil.assertIsNotEmpty(searched);
-    return ImmutableList.copyOf(db.values().stream()
-      .filter(item -> StringUtils.containsIgnoreCase(item.getId(), searched) || (item.getDisplayName() != null && StringUtils.containsIgnoreCase(item.getDisplayName() , searched)))
-      .limit(limit <= 0 ? size : limit)
-      .collect(Collectors.toList()));
-  }
-
   /**
    * Method description
    *

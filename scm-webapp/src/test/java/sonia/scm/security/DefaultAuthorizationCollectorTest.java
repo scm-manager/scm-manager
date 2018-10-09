@@ -161,8 +161,8 @@ public class DefaultAuthorizationCollectorTest {
     
     AuthorizationInfo authInfo = collector.collect();
     assertThat(authInfo.getRoles(), Matchers.contains(Role.USER));
-    assertThat(authInfo.getStringPermissions(), hasSize(4));
-    assertThat(authInfo.getStringPermissions(), containsInAnyOrder("user:autocomplete", "group:autocomplete", "repository:autocomplete", "user:read:trillian"));
+    assertThat(authInfo.getStringPermissions(), hasSize(3));
+    assertThat(authInfo.getStringPermissions(), containsInAnyOrder("user:autocomplete", "group:autocomplete", "user:read:trillian"));
     assertThat(authInfo.getObjectPermissions(), nullValue());
   }
   
@@ -209,7 +209,7 @@ public class DefaultAuthorizationCollectorTest {
     AuthorizationInfo authInfo = collector.collect();
     assertThat(authInfo.getRoles(), Matchers.containsInAnyOrder(Role.USER));
     assertThat(authInfo.getObjectPermissions(), nullValue());
-    assertThat(authInfo.getStringPermissions(), containsInAnyOrder("user:autocomplete", "group:autocomplete","repository:autocomplete", "repository:read,pull:one", "repository:read,pull,push:two", "user:read:trillian"));
+    assertThat(authInfo.getStringPermissions(), containsInAnyOrder("user:autocomplete", "group:autocomplete", "repository:read,pull:one", "repository:read,pull,push:two", "user:read:trillian"));
   }
   
   /**
@@ -230,7 +230,7 @@ public class DefaultAuthorizationCollectorTest {
     AuthorizationInfo authInfo = collector.collect();
     assertThat(authInfo.getRoles(), Matchers.containsInAnyOrder(Role.USER));
     assertThat(authInfo.getObjectPermissions(), nullValue());
-    assertThat(authInfo.getStringPermissions(), containsInAnyOrder("one:one", "two:two", "user:read:trillian", "user:autocomplete" , "group:autocomplete", "repository:autocomplete"));
+    assertThat(authInfo.getStringPermissions(), containsInAnyOrder("one:one", "two:two", "user:read:trillian", "user:autocomplete" , "group:autocomplete" ));
   }
   
   private void authenticate(User user, String group, String... groups) {

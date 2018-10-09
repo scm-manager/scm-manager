@@ -260,17 +260,12 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
       builder.add(canReadOwnUser(user));
       builder.add(getUserAutocompletePermission());
       builder.add(getGroupAutocompletePermission());
-      builder.add(getRepoAutocompletePermission());
       permissions = builder.build();
     }
 
     SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(roles);
     info.addStringPermissions(permissions);
     return info;
-  }
-
-  private String getRepoAutocompletePermission() {
-    return RepositoryPermissions.autocomplete().asShiroString();
   }
 
   private String getGroupAutocompletePermission() {

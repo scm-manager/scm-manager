@@ -39,6 +39,7 @@ import sonia.scm.Manager;
 import sonia.scm.search.Searchable;
 
 import java.text.MessageFormat;
+import java.util.Collection;
 import java.util.function.Consumer;
 
 import static sonia.scm.user.ChangePasswordNotAllowedException.WRONG_USER_TYPE;
@@ -89,6 +90,14 @@ public interface UserManager
   default boolean isTypeDefault(User user) {
     return getDefaultType().equals(user.getType());
   }
+
+  /**
+   * Returns a {@link java.util.Collection} of filtered objects
+   *
+   * @param filter the searched string
+   * @return filtered object from the store
+   */
+  Collection<User> autocomplete(String filter);
 
 
 }

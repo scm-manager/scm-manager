@@ -42,6 +42,7 @@ import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 import sonia.scm.BasicPropertiesAware;
 import sonia.scm.ModelObject;
+import sonia.scm.ReducedModelObject;
 import sonia.scm.util.Util;
 import sonia.scm.util.ValidationUtil;
 
@@ -64,7 +65,7 @@ import java.util.List;
 @XmlRootElement(name = "groups")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Group extends BasicPropertiesAware
-  implements ModelObject, PermissionObject
+  implements ModelObject, PermissionObject, ReducedModelObject
 {
 
   /** Field description */
