@@ -23,6 +23,16 @@ type Props = {
 class ChangesetDetails extends React.Component<Props> {
   render() {
     const { changeset, repository, t, classes } = this.props;
+
+    const mailadress = changeset.author.mail ? (
+      <tr>
+        <td>{t("author.mail")}</td>
+        <td>
+          <MailLink address={changeset.author.mail} />
+        </td>
+      </tr>
+    ) : null;
+
     return (
       <div>
         <table className={classNames("table", classes.floatLeft)}>
@@ -35,12 +45,7 @@ class ChangesetDetails extends React.Component<Props> {
               <td>{t("author.name")}</td>
               <td>{changeset.author.name}</td>
             </tr>
-            <tr>
-              <td>{t("author.mail")}</td>
-              <td>
-                <MailLink address={changeset.author.mail} />
-              </td>
-            </tr>
+            {mailadress}
             <tr>
               <td>{t("changeset.description")}</td>
               <td>{changeset.description}</td>
