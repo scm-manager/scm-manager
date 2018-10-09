@@ -8,6 +8,6 @@
     "unlink": "lerna exec --no-bail -- yarn unlink"
   },
   "devDependencies": {
-    "lerna": "^3.2.1"
+    "lerna": "3.2.1"
   }
 }
