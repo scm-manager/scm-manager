@@ -5,7 +5,6 @@ import { withRouter } from "react-router-dom";
 import type { Changeset, Repository } from "@scm-manager/ui-types";
 import {
   fetchChangesetIfNeeded,
-  fetchChangesetReset,
   getChangeset,
   getFetchChangesetFailure,
   isFetchChangesetPending
@@ -52,7 +51,7 @@ class ChangesetView extends React.Component<Props> {
 
     if (!changeset || loading) return <Loading />;
 
-    return <ChangesetDetails changeset={changeset} repository={repository}/>;
+    return <ChangesetDetails changeset={changeset} repository={repository} />;
   }
 }
 
@@ -73,9 +72,6 @@ const mapDispatchToProps = dispatch => {
       id: string
     ) => {
       dispatch(fetchChangesetIfNeeded(namespace, repoName, id));
-    },
-    resetForm: (namespace: string, repoName: string, id: string) => {
-      dispatch(fetchChangesetReset(namespace, repoName, id));
     }
   };
 };

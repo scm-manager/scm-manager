@@ -9,7 +9,7 @@ import { apiClient } from "@scm-manager/ui-components";
 import { isPending } from "../../modules/pending";
 import { getFailure } from "../../modules/failure";
 import { combineReducers } from "redux";
-import type { Action, PagedCollection } from "@scm-manager/ui-types";
+import type { Action, PagedCollection, Repository } from "@scm-manager/ui-types";
 import * as types from "../../modules/types";
 
 export const FETCH_CHANGESETS = "scm/repos/FETCH_CHANGESETS";
@@ -33,80 +33,73 @@ const REPO_URL = "repositories";
 //********added for detailed view of changesets
 
 export function fetchChangesetIfNeeded(
-  namespace: string,
-  repoName: string,
+  repository: Repository,
   id: string
 ) {
   return (dispatch: any, getState: any) => {
-    if (shouldFetchChangeset(getState(), namespace, repoName, id)) {
-      return dispatch(fetchChangeset(namespace, repoName, id));
+    if (shouldFetchChangeset(getState(), repository, id)) {
+      return dispatch(fetchChangeset(repository, id));
     }
   };
 }
 
 export function fetchChangeset(
-  namespace: string,
-  repoName: string,
+  repository: Repository,
   id: string
 ) {
   return function(dispatch: any) {
-    dispatch(fetchChangesetPending(namespace, repoName, id));
+    dispatch(fetchChangesetPending(repository, id));
     return apiClient
-      .get(REPO_URL + `/${namespace}/${repoName}/changesets/${id}`)
+      .get(REPO_URL + `/${repository.namespace}/${repository.name}/changesets/${id}`)
       .then(response => response.json())
       .then(data =>
-        dispatch(fetchChangesetSuccess(data, namespace, repoName, id))
+        dispatch(fetchChangesetSuccess(data, repository, id))
       )
       .catch(err => {
-        dispatch(fetchChangesetFailure(namespace, repoName, id, err));
+        dispatch(fetchChangesetFailure(repository, id, err));
       });
   };
 }
 
 export function fetchChangesetPending(
-  namespace: string,
-  repoName: string,
+  repository: Repository,
   id: string
 ): Action {
   return {
     type: FETCH_CHANGESET_PENDING,
     payload: {
-      namespace,
-      repoName,
+      repository,
       id
     },
-    itemId: createItemId(namespace, repoName, id)
+    itemId: createItemId(repository.namespace, repository.name, id)
   };
 }
 
 export function fetchChangesetSuccess(
   changeset: any,
-  namespace: string,
-  repoName: string,
+  repository: Repository,
   id: string
 ): Action {
   return {
     type: FETCH_CHANGESET_SUCCESS,
-    payload: { changeset, namespace, repoName, id },
-    itemId: createItemId(namespace, repoName, id)
+    payload: { changeset, repository, id },
+    itemId: createItemId(repository.namespace, repository.name, id)
   };
 }
 
 function fetchChangesetFailure(
-  namespace: string,
-  repoName: string,
+  repository: Repository,
   id: string,
   error: Error
 ): Action {
   return {
     type: FETCH_CHANGESET_FAILURE,
     payload: {
-      namespace,
-      repoName,
+      repository,
       id,
       error
     },
-    itemId: createItemId(namespace, repoName, id)
+    itemId: createItemId(repository.namespace, repository.name, id)
   };
 }
 
@@ -234,8 +227,8 @@ function byKeyReducer(
     //********added for detailed view of changesets
     case FETCH_CHANGESET_SUCCESS:
       const _key = createItemId(
-        action.payload.namespace,
-        action.payload.repoName
+        action.payload.repository.namespace,
+        action.payload.repository.name
       );
       let _oldChangesets = { [_key]: {} };
       if (state[_key] !== undefined) {
@@ -353,12 +346,11 @@ export function getChangesets(
 //********added for detailed view of changesets
 export function getChangeset(
   state: Object,
-  namespace: string,
-  name: string,
+  repository: Repository,
   id: string,
   branch?: string
 ) {
-  const key = createItemId(namespace, name, branch);
+  const key = createItemId(repository.namespace, repository.name, branch);
   const changesets =
     state.changesets && state.changesets.byKey && state.changesets.byKey[key]
       ? state.changesets.byKey[key].byId
@@ -371,11 +363,10 @@ export function getChangeset(
 
 export function shouldFetchChangeset(
   state: Object,
-  namespace: string,
-  repoName: string,
+  repository: Repository,
   id: string
 ) {
-  if (getChangeset(state, namespace, repoName, id)) {
+  if (getChangeset(state, repository, id)) {
     return false;
   }
   return true;
@@ -383,20 +374,18 @@ export function shouldFetchChangeset(
 
 export function isFetchChangesetPending(
   state: Object,
-  namespace: string,
-  name: string,
+  repository: Repository,
   id: string
 ) {
-  return isPending(state, FETCH_CHANGESET, createItemId(namespace, name, id));
+  return isPending(state, FETCH_CHANGESET, createItemId(repository.namespace, repository.name, id));
 }
 
 export function getFetchChangesetFailure(
   state: Object,
-  namespace: string,
-  name: string,
+  repository: Repository,
   id: string
 ) {
-  return getFailure(state, FETCH_CHANGESET, createItemId(namespace, name, id));
+  return getFailure(state, FETCH_CHANGESET, createItemId(repository.namespace, repository.name, id));
 }
 //********end of added for detailed view of changesets
 

@@ -31,6 +31,12 @@ import {
 import reducer from "./changesets";
 
 const changesets = {};
+//********added for detailed view of changesets
+const repository = {
+  namespace: "foo",
+  name: "bar"
+};
+//********end of added for detailed view of changesets
 
 describe("changesets", () => {
   describe("fetching of changesets", () => {
@@ -55,8 +61,10 @@ describe("changesets", () => {
           type: FETCH_CHANGESET_PENDING,
           payload: {
             id: changesetId,
-            namespace: "foo",
-            repoName: "bar"
+            repository: {
+              name: "bar",
+              namespace: "foo"
+            }
           },
           itemId: "foo/bar/" + changesetId
         },
@@ -65,8 +73,10 @@ describe("changesets", () => {
           payload: {
             changeset: {},
             id: changesetId,
-            namespace: "foo",
-            repoName: "bar"
+            repository: {
+              name: "bar",
+              namespace: "foo"
+            }
           },
           itemId: "foo/bar/" + changesetId
         }
@@ -74,7 +84,7 @@ describe("changesets", () => {
 
       const store = mockStore({});
       return store
-        .dispatch(fetchChangeset("foo", "bar", changesetId))
+        .dispatch(fetchChangeset(repository, changesetId))
         .then(() => {
           expect(store.getActions()).toEqual(expectedActions);
         });
@@ -88,8 +98,10 @@ describe("changesets", () => {
           type: FETCH_CHANGESET_PENDING,
           payload: {
             id: changesetId,
-            namespace: "foo",
-            repoName: "bar"
+            repository: {
+              name: "bar",
+              namespace: "foo"
+            }
           },
           itemId: "foo/bar/" + changesetId
         }
@@ -97,7 +109,7 @@ describe("changesets", () => {
 
       const store = mockStore({});
       return store
-        .dispatch(fetchChangeset("foo", "bar", changesetId))
+        .dispatch(fetchChangeset(repository, changesetId))
         .then(() => {
           expect(store.getActions()[0]).toEqual(expectedActions[0]);
           expect(store.getActions()[1].type).toEqual(FETCH_CHANGESET_FAILURE);
@@ -126,8 +138,10 @@ describe("changesets", () => {
           type: FETCH_CHANGESET_PENDING,
           payload: {
             id: "id3",
-            namespace: "foo",
-            repoName: "bar"
+            repository: {
+              name: "bar",
+              namespace: "foo"
+            }
           },
           itemId: "foo/bar/" + "id3"
         },
@@ -136,8 +150,10 @@ describe("changesets", () => {
           payload: {
             changeset: {},
             id: "id3",
-            namespace: "foo",
-            repoName: "bar"
+            repository: {
+              name: "bar",
+              namespace: "foo"
+            }
           },
           itemId: "foo/bar/" + "id3"
         }
@@ -145,7 +161,7 @@ describe("changesets", () => {
 
       const store = mockStore({});
       return store
-        .dispatch(fetchChangesetIfNeeded("foo", "bar", "id3"))
+        .dispatch(fetchChangesetIfNeeded(repository, "id3"))
         .then(() => {
           expect(store.getActions()).toEqual(expectedActions);
         });
@@ -171,7 +187,7 @@ describe("changesets", () => {
 
       const store = mockStore(state);
       return expect(
-        store.dispatch(fetchChangesetIfNeeded("foo", "bar", "id1"))
+        store.dispatch(fetchChangesetIfNeeded(repository, "id1"))
       ).toEqual(undefined);
     });
 
@@ -431,7 +447,7 @@ describe("changesets", () => {
             entries: ["id2"]
           }
         },
-        fetchChangesetSuccess(responseBodySingleChangeset, "foo", "bar", "id3")
+        fetchChangesetSuccess(responseBodySingleChangeset, repository, "id3")
       );
       expect(newState).toBeDefined();
       expect(newState.byKey["foo/bar"].byId["id3"].description).toEqual(
@@ -472,7 +488,7 @@ describe("changesets", () => {
           }
         }
       };
-      const result = getChangeset(state, "foo", "bar", "id1");
+      const result = getChangeset(state, repository, "id1");
       expect(result).toEqual({ id: "id1" });
     });
 
@@ -489,7 +505,7 @@ describe("changesets", () => {
           }
         }
       };
-      const result = getChangeset(state, "foo", "bar", "id3");
+      const result = getChangeset(state, repository, "id3");
       expect(result).toEqual(null);
     });
 
@@ -506,7 +522,7 @@ describe("changesets", () => {
           }
         }
       };
-      const result = shouldFetchChangeset(state, "foo", "bar", "id3");
+      const result = shouldFetchChangeset(state, repository, "id3");
       expect(result).toEqual(true);
     });
 
@@ -523,7 +539,7 @@ describe("changesets", () => {
           }
         }
       };
-      const result = shouldFetchChangeset(state, "foo", "bar", "id2");
+      const result = shouldFetchChangeset(state, repository, "id2");
       expect(result).toEqual(false);
     });
 
@@ -534,11 +550,11 @@ describe("changesets", () => {
         }
       };
 
-      expect(isFetchChangesetPending(state, "foo", "bar", "id1")).toBeTruthy();
+      expect(isFetchChangesetPending(state, repository, "id1")).toBeTruthy();
     });
 
     it("should return false, when fetching changeset is not pending", () => {
-      expect(isFetchChangesetPending({}, "foo", "bar", "id1")).toEqual(false);
+      expect(isFetchChangesetPending({}, repository, "id1")).toEqual(false);
     });
 
     it("should return error if fetching changeset failed", () => {
@@ -548,13 +564,11 @@ describe("changesets", () => {
         }
       };
 
-      expect(getFetchChangesetFailure(state, "foo", "bar", "id1")).toEqual(
-        error
-      );
+      expect(getFetchChangesetFailure(state, repository, "id1")).toEqual(error);
     });
 
     it("should return false if fetching changeset did not fail", () => {
-      expect(getFetchChangesetFailure({}, "foo", "bar", "id1")).toBeUndefined();
+      expect(getFetchChangesetFailure({}, repository, "id1")).toBeUndefined();
     });
     //********end of added for detailed view of changesets
 
