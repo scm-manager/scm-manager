@@ -132,7 +132,11 @@ public class HgLogCommand extends AbstractCommand implements LogCommand
         List<Changeset> changesets = on(repository).rev(start + ":"
                                        + end).execute();
 
-        result = new ChangesetPagingResult(total, changesets);
+        if (request.getBranch() == null) {
+          result = new ChangesetPagingResult(total, changesets);
+        } else {
+          result = new ChangesetPagingResult(total, changesets, request.getBranch());
+        }
       }
       else
       {
