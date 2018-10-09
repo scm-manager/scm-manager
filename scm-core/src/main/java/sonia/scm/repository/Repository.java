@@ -186,7 +186,7 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
 
   @Override
   public String getDisplayName() {
-    return getNamespaceAndName().toString();
+    return getNamespace() + "/" + getName();
   }
 
   @Override

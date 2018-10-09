@@ -35,6 +35,7 @@ package sonia.scm.xml;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.ImmutableList;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -241,7 +242,7 @@ public abstract class AbstractXmlDAO<I extends ModelObject,
     int size = db.values().size();
     AssertUtil.assertIsNotEmpty(searched);
     return ImmutableList.copyOf(db.values().stream()
-      .filter(item -> item.getId().contains(searched) || (item.getDisplayName() != null && item.getDisplayName().contains(searched)))
+      .filter(item -> StringUtils.containsIgnoreCase(item.getId(), searched) || (item.getDisplayName() != null && StringUtils.containsIgnoreCase(item.getDisplayName() , searched)))
       .limit(limit <= 0 ? size : limit)
       .collect(Collectors.toList()));
   }
