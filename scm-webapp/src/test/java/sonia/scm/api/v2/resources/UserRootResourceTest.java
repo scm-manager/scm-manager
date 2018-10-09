@@ -23,7 +23,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.text.MessageFormat;
 
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;

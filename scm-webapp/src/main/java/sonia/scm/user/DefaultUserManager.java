@@ -300,6 +300,12 @@ public class DefaultUserManager extends AbstractUserManager
     return getAll(null);
   }
 
+  @Override
+  public Collection<User> autocomplete(String filter) {
+    UserPermissions.autocomplete().check();
+    return search(new SearchRequest(filter,true, DEFAULT_LIMIT));
+  }
+
   /**
    * Method description
    *

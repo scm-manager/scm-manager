@@ -70,6 +70,12 @@ public class SearchRequest
     this.ignoreCase = ignoreCase;
   }
 
+  public SearchRequest(String query, boolean ignoreCase, int maxResults) {
+    this.query = query;
+    this.ignoreCase = ignoreCase;
+    this.maxResults = maxResults;
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**
