@@ -99,16 +99,13 @@ const hitchhikerRestatend: Repository = {
   type: "git",
   _links: {
     self: {
-      href:
-        "http://localhost:8081/api/v2/repositories/hitchhiker/restatend"
+      href: "http://localhost:8081/api/v2/repositories/hitchhiker/restatend"
     },
     delete: {
-      href:
-        "http://localhost:8081/api/v2/repositories/hitchhiker/restatend"
+      href: "http://localhost:8081/api/v2/repositories/hitchhiker/restatend"
     },
     update: {
-      href:
-        "http://localhost:8081/api/v2/repositories/hitchhiker/restatend"
+      href: "http://localhost:8081/api/v2/repositories/hitchhiker/restatend"
     },
     permissions: {
       href:
@@ -158,16 +155,14 @@ const slartiFjords: Repository = {
       href: "http://localhost:8081/api/v2/repositories/slarti/fjords/tags/"
     },
     branches: {
-      href:
-        "http://localhost:8081/api/v2/repositories/slarti/fjords/branches/"
+      href: "http://localhost:8081/api/v2/repositories/slarti/fjords/branches/"
     },
     changesets: {
       href:
         "http://localhost:8081/api/v2/repositories/slarti/fjords/changesets/"
     },
     sources: {
-      href:
-        "http://localhost:8081/api/v2/repositories/slarti/fjords/sources/"
+      href: "http://localhost:8081/api/v2/repositories/slarti/fjords/sources/"
     }
   }
 };
@@ -221,6 +216,7 @@ const repositoryCollectionWithNames: RepositoryCollection = {
 };
 
 describe("repos fetch", () => {
+  const URL = "repositories";
   const REPOS_URL = "/api/v2/repositories";
   const SORT = "sortBy=namespaceAndName";
   const REPOS_URL_WITH_SORT = REPOS_URL + "?" + SORT;
@@ -243,7 +239,7 @@ describe("repos fetch", () => {
     ];
 
     const store = mockStore({});
-    return store.dispatch(fetchRepos()).then(() => {
+    return store.dispatch(fetchRepos(URL)).then(() => {
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
@@ -262,7 +258,7 @@ describe("repos fetch", () => {
 
     const store = mockStore({});
 
-    return store.dispatch(fetchReposByPage(43)).then(() => {
+    return store.dispatch(fetchReposByPage(URL, 43)).then(() => {
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
@@ -318,7 +314,7 @@ describe("repos fetch", () => {
     });
 
     const store = mockStore({});
-    return store.dispatch(fetchRepos()).then(() => {
+    return store.dispatch(fetchRepos(URL)).then(() => {
       const actions = store.getActions();
       expect(actions[0].type).toEqual(FETCH_REPOS_PENDING);
       expect(actions[1].type).toEqual(FETCH_REPOS_FAILURE);

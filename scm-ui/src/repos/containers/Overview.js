@@ -18,6 +18,7 @@ import { CreateButton, Page, Paginator } from "@scm-manager/ui-components";
 import RepositoryList from "../components/list";
 import { withRouter } from "react-router-dom";
 import type { History } from "history";
+import { getRepositoriesLink } from "../../modules/indexResource";
 
 type Props = {
   page: number,
@@ -25,10 +26,11 @@ type Props = {
   loading: boolean,
   error: Error,
   showCreateButton: boolean,
+  reposLink: string,
 
   // dispatched functions
-  fetchRepos: () => void,
-  fetchReposByPage: number => void,
+  fetchRepos: string => void,
+  fetchReposByPage: (string, number) => void,
   fetchReposByLink: string => void,
 
   // context props
@@ -38,7 +40,7 @@ type Props = {
 
 class Overview extends React.Component<Props> {
   componentDidMount() {
-    this.props.fetchReposByPage(this.props.page);
+    this.props.fetchReposByPage(this.props.reposLink, this.props.page);
   }
 
   /**
@@ -113,7 +115,9 @@ const mapStateToProps = (state, ownProps) => {
   const loading = isFetchReposPending(state);
   const error = getFetchReposFailure(state);
   const showCreateButton = isAbleToCreateRepos(state);
+  const reposLink = getRepositoriesLink(state);
   return {
+    reposLink,
     page,
     collection,
     loading,
@@ -124,11 +128,11 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchRepos: () => {
-      dispatch(fetchRepos());
+    fetchRepos: (link: string) => {
+      dispatch(fetchRepos(link));
     },
-    fetchReposByPage: (page: number) => {
-      dispatch(fetchReposByPage(page));
+    fetchReposByPage: (link: string, page: number) => {
+      dispatch(fetchReposByPage(link, page));
     },
     fetchReposByLink: (link: string) => {
       dispatch(fetchReposByLink(link));

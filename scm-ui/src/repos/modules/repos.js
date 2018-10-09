@@ -43,12 +43,12 @@ const CONTENT_TYPE = "application/vnd.scmm-repository+json;v=2";
 
 const SORT_BY = "sortBy=namespaceAndName";
 
-export function fetchRepos() {
-  return fetchReposByLink(REPOS_URL);
+export function fetchRepos(link: string) {
+  return fetchReposByLink(link);
 }
 
-export function fetchReposByPage(page: number) {
-  return fetchReposByLink(`${REPOS_URL}?page=${page - 1}`);
+export function fetchReposByPage(link: string, page: number) {
+  return fetchReposByLink(`${link}?page=${page - 1}`);
 }
 
 function appendSortByLink(url: string) {
