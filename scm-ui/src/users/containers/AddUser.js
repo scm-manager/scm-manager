@@ -12,13 +12,15 @@ import {
 } from "../modules/users";
 import { Page } from "@scm-manager/ui-components";
 import { translate } from "react-i18next";
+import {getUsersLink} from "../../modules/indexResource";
 
 type Props = {
   loading?: boolean,
   error?: Error,
+  usersLink: string,
 
   // dispatcher functions
-  addUser: (user: User, callback?: () => void) => void,
+  addUser: (link: string, user: User, callback?: () => void) => void,
   resetForm: () => void,
 
   // context objects
@@ -37,7 +39,7 @@ class AddUser extends React.Component<Props> {
   };
 
   createUser = (user: User) => {
-    this.props.addUser(user, this.userCreated);
+    this.props.addUser(this.props.usersLink, user, this.userCreated);
   };
 
   render() {
@@ -61,8 +63,8 @@ class AddUser extends React.Component<Props> {
 
 const mapDispatchToProps = dispatch => {
   return {
-    addUser: (user: User, callback?: () => void) => {
-      dispatch(createUser(user, callback));
+    addUser: (link: string, user: User, callback?: () => void) => {
+      dispatch(createUser(link, user, callback));
     },
     resetForm: () => {
       dispatch(createUserReset());
@@ -73,7 +75,9 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = (state, ownProps) => {
   const loading = isCreateUserPending(state);
   const error = getCreateUserFailure(state);
+  const usersLink = getUsersLink(state);
   return {
+    usersLink,
     loading,
     error
   };
