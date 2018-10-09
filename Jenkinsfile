@@ -125,7 +125,7 @@ boolean isMainBranch() {
 
 boolean waitForQualityGateWebhookToBeCalled() {
   boolean isQualityGateSucceeded = true
-  timeout(time: 2, unit: 'MINUTES') { // Needed when there is no webhook for example
+  timeout(time: 5, unit: 'MINUTES') { // Needed when there is no webhook for example
     def qGate = waitForQualityGate()
     echo "SonarQube Quality Gate status: ${qGate.status}"
     if (qGate.status != 'OK') {
