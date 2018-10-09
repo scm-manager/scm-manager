@@ -8,14 +8,17 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
-import sonia.scm.api.rest.resources.UserResource;
+import org.mockito.Mock;
 import sonia.scm.user.User;
+import sonia.scm.user.UserManager;
 
 import java.net.URI;
 import java.time.Instant;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -25,6 +28,9 @@ public class UserToUserDtoMapperTest {
   private final URI baseUri = URI.create("http://example.com/base/");
   @SuppressWarnings("unused") // Is injected
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
+
+  @Mock
+  private UserManager userManager;
 
   @InjectMocks
   private UserToUserDtoMapperImpl mapper;
@@ -37,6 +43,7 @@ public class UserToUserDtoMapperTest {
   @Before
   public void init() {
     initMocks(this);
+    when(userManager.getDefaultType()).thenReturn("xml");
     expectedBaseUri = baseUri.resolve(UserRootResource.USERS_PATH_V2 + "/");
     subjectThreadState.bind();
     ThreadContext.bind(subject);
@@ -53,9 +60,40 @@ public class UserToUserDtoMapperTest {
     when(subject.isPermitted("user:modify:abc")).thenReturn(true);
 
     UserDto userDto = mapper.map(user);
-
-    assertEquals("expected self link",   expectedBaseUri.resolve("abc").toString(), userDto.getLinks().getLinkBy("self").get().getHref());
+    assertEquals("expected self link", expectedBaseUri.resolve("abc").toString(), userDto.getLinks().getLinkBy("self").get().getHref());
     assertEquals("expected update link", expectedBaseUri.resolve("abc").toString(), userDto.getLinks().getLinkBy("update").get().getHref());
+  }
+
+  @Test
+  public void shouldGetPasswordLinkOnlyForDefaultUserType() {
+    User user = createDefaultUser();
+    when(subject.isPermitted("user:modify:abc")).thenReturn(true);
+    when(userManager.isTypeDefault(eq(user))).thenReturn(true);
+
+    UserDto userDto = mapper.map(user);
+
+    assertEquals("expected password link with modify permission", expectedBaseUri.resolve("abc/password").toString(), userDto.getLinks().getLinkBy("password").get().getHref());
+
+    when(subject.isPermitted("user:modify:abc")).thenReturn(false);
+    userDto = mapper.map(user);
+    assertEquals("expected password link on mission modify permission", expectedBaseUri.resolve("abc/password").toString(), userDto.getLinks().getLinkBy("password").get().getHref());
+
+    when(userManager.isTypeDefault(eq(user))).thenReturn(false);
+
+    userDto = mapper.map(user);
+
+    assertFalse("expected no password link", userDto.getLinks().getLinkBy("password").isPresent());
+  }
+
+  @Test
+  public void shouldGetEmptyPasswordProperty() {
+    User user = createDefaultUser();
+    user.setPassword("myHighSecurePassword");
+    when(subject.isPermitted("user:modify:abc")).thenReturn(true);
+
+    UserDto userDto = mapper.map(user);
+
+    assertThat(userDto.getPassword()).isBlank();
   }
 
   @Test
@@ -65,7 +103,7 @@ public class UserToUserDtoMapperTest {
 
     UserDto userDto = mapper.map(user);
 
-    assertEquals("expected self link",   expectedBaseUri.resolve("abc").toString(), userDto.getLinks().getLinkBy("self").get().getHref());
+    assertEquals("expected self link", expectedBaseUri.resolve("abc").toString(), userDto.getLinks().getLinkBy("self").get().getHref());
     assertEquals("expected delete link", expectedBaseUri.resolve("abc").toString(), userDto.getLinks().getLinkBy("delete").get().getHref());
   }
 
@@ -95,16 +133,6 @@ public class UserToUserDtoMapperTest {
     UserDto userDto = mapper.map(user);
 
     assertEquals("abc", userDto.getName());
-  }
-
-  @Test
-  public void shouldRemovePassword() {
-    User user = createDefaultUser();
-    user.setPassword("password");
-
-    UserDto userDto = mapper.map(user);
-
-    assertEquals(UserResource.DUMMY_PASSWORT, userDto.getPassword());
   }
 
   @Test

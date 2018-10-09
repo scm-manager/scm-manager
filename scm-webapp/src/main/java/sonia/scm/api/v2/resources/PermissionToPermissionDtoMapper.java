@@ -41,9 +41,7 @@ public abstract class PermissionToPermissionDtoMapper {
    */
   @AfterMapping
   void appendLinks(@MappingTarget PermissionDto target, @Context Repository repository) {
-    String permissionName = Optional.of(target.getName())
-      .filter(p -> !target.isGroupPermission())
-      .orElse(GROUP_PREFIX + target.getName());
+    String permissionName = getUrlPermissionName(target);
     Links.Builder linksBuilder = linkingTo()
       .self(resourceLinks.permission().self(repository.getNamespace(), repository.getName(), permissionName));
     if (RepositoryPermissions.permissionWrite(repository).isPermitted()) {
@@ -51,5 +49,11 @@ public abstract class PermissionToPermissionDtoMapper {
       linksBuilder.single(link("delete", resourceLinks.permission().delete(repository.getNamespace(), repository.getName(), permissionName)));
     }
     target.add(linksBuilder.build());
+  }
+
+  public String getUrlPermissionName(PermissionDto permissionDto) {
+    return Optional.of(permissionDto.getName())
+      .filter(p -> !permissionDto.isGroupPermission())
+      .orElse(GROUP_PREFIX + permissionDto.getName());
   }
 }

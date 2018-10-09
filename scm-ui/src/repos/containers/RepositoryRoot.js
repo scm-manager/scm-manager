@@ -22,11 +22,13 @@ import { translate } from "react-i18next";
 import RepositoryDetails from "../components/RepositoryDetails";
 import DeleteNavAction from "../components/DeleteNavAction";
 import Edit from "../containers/Edit";
+import Permissions from "../permissions/containers/Permissions";
 
 import type { History } from "history";
 import EditNavLink from "../components/EditNavLink";
 import Changesets from "./Changesets";
 import ChangesetView from "./ChangesetView";
+import PermissionsNavLink from "../components/PermissionsNavLink";
 
 type Props = {
   namespace: string,
@@ -123,6 +125,15 @@ class RepositoryRoot extends React.Component<Props> {
               path={`${url}/changeset/:id`}
               render={() => <ChangesetView repository={repository} />}
             />
+            <Route
+              path={`${url}/permissions`}
+              render={props => (
+                <Permissions
+                  namespace={this.props.repository.namespace}
+                  repoName={this.props.repository.name}
+                />
+              )}
+            />
           </div>
           <div className="column">
             <Navigation>
@@ -133,6 +144,10 @@ class RepositoryRoot extends React.Component<Props> {
                   to={`${url}/history`}
                   label={t("repository-root.history")}
                   otherLocation={this.matchChangeset}
+                />
+                <PermissionsNavLink
+                  permissionUrl={`${url}/permissions`}
+                  repository={repository}
                 />
                 <EditNavLink repository={repository} editUrl={`${url}/edit`} />
               </Section>

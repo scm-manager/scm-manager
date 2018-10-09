@@ -2,8 +2,9 @@
 
 import * as validation from "./validation.js";
 import * as urls from "./urls";
+import * as repositories from "./repositories.js";
 
-export { validation, urls };
+export { validation, urls, repositories };
 
 export { default as DateFromNow } from "./DateFromNow.js";
 export { default as ErrorNotification } from "./ErrorNotification.js";
@@ -15,6 +16,8 @@ export { default as MailLink } from "./MailLink.js";
 export { default as Notification } from "./Notification.js";
 export { default as Paginator } from "./Paginator.js";
 export { default as ProtectedRoute } from "./ProtectedRoute.js";
+export { default as Help } from "./Help.js";
+export { default as LabelWithHelpIcon } from "./LabelWithHelpIcon.js";
 
 export { apiClient, NOT_FOUND_ERROR, UNAUTHORIZED_ERROR } from "./apiclient.js";
 

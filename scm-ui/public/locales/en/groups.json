@@ -42,7 +42,12 @@
   "group-form": {
     "submit": "Submit",
     "name-error": "Group name is invalid",
-    "description-error": "Description is invalid"
+    "description-error": "Description is invalid",
+    "help": {
+      "nameHelpText": "Unique name of the group",
+      "descriptionHelpText": "A short description of the group",
+      "memberHelpText": "Usernames of the group members"
+    }
   },
   "delete-group-button": {
     "label": "Delete",

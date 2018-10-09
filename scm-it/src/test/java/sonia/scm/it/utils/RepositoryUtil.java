@@ -1,4 +1,4 @@
-package sonia.scm.it;
+package sonia.scm.it.utils;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
@@ -24,11 +24,11 @@ public class RepositoryUtil {
 
   private static final RepositoryClientFactory REPOSITORY_CLIENT_FACTORY = new RepositoryClientFactory();
 
-  static RepositoryClient createRepositoryClient(String repositoryType, File folder) throws IOException {
+  public static RepositoryClient createRepositoryClient(String repositoryType, File folder) throws IOException {
     return createRepositoryClient(repositoryType, folder, "scmadmin", "scmadmin");
   }
 
-  static RepositoryClient createRepositoryClient(String repositoryType, File folder, String username, String password) throws IOException {
+  public static RepositoryClient createRepositoryClient(String repositoryType, File folder, String username, String password) throws IOException {
     String httpProtocolUrl = TestData.callRepository(username, password, repositoryType, HttpStatus.SC_OK)
       .extract()
       .path("_links.protocol.find{it.name=='http'}.href");
@@ -36,14 +36,14 @@ public class RepositoryUtil {
     return REPOSITORY_CLIENT_FACTORY.create(repositoryType, httpProtocolUrl, username, password, folder);
   }
 
-  static String addAndCommitRandomFile(RepositoryClient client, String username) throws IOException {
+  public static String addAndCommitRandomFile(RepositoryClient client, String username) throws IOException {
     String uuid = UUID.randomUUID().toString();
     String name = "file-" + uuid + ".uuid";
     createAndCommitFile(client, username, name, uuid);
     return name;
   }
 
-  static Changeset createAndCommitFile(RepositoryClient repositoryClient, String username, String fileName, String content) throws IOException {
+  public static Changeset createAndCommitFile(RepositoryClient repositoryClient, String username, String fileName, String content) throws IOException {
     writeAndAddFile(repositoryClient, fileName, content);
     return commit(repositoryClient, username, "added " + fileName);
   }
@@ -59,7 +59,7 @@ public class RepositoryUtil {
    * @return the changeset with all modifications
    * @throws IOException
    */
-  static Changeset commitMultipleFileModifications(RepositoryClient repositoryClient, String username, Map<String, String> addedFiles, Map<String, String> modifiedFiles, List<String> removedFiles) throws IOException {
+  public static Changeset commitMultipleFileModifications(RepositoryClient repositoryClient, String username, Map<String, String> addedFiles, Map<String, String> modifiedFiles, List<String> removedFiles) throws IOException {
     for (String fileName : addedFiles.keySet()) {
       writeAndAddFile(repositoryClient, fileName, addedFiles.get(fileName));
     }
@@ -80,7 +80,7 @@ public class RepositoryUtil {
     return file;
   }
 
-  static Changeset removeAndCommitFile(RepositoryClient repositoryClient, String username, String fileName) throws IOException {
+  public static Changeset removeAndCommitFile(RepositoryClient repositoryClient, String username, String fileName) throws IOException {
     deleteFileAndApplyRemoveCommand(repositoryClient, fileName);
     return commit(repositoryClient, username, "removed " + fileName);
   }
@@ -115,7 +115,7 @@ public class RepositoryUtil {
     return changeset;
   }
 
-  static Tag addTag(RepositoryClient repositoryClient, String revision, String tagName) throws IOException {
+  public static Tag addTag(RepositoryClient repositoryClient, String revision, String tagName) throws IOException {
     if (repositoryClient.isCommandSupported(ClientCommand.TAG)) {
       Tag tag = repositoryClient.getTagCommand().setRevision(revision).tag(tagName, TestData.USER_SCM_ADMIN);
       if (repositoryClient.isCommandSupported(ClientCommand.PUSH)) {

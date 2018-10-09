@@ -1,7 +1,10 @@
 //@flow
 import React from "react";
 import { translate } from "react-i18next";
-import { RemoveEntryOfTableButton } from "@scm-manager/ui-components";
+import {
+  RemoveEntryOfTableButton,
+  LabelWithHelpIcon
+} from "@scm-manager/ui-components";
 
 type Props = {
   members: string[],
@@ -16,7 +19,10 @@ class MemberNameTable extends React.Component<Props, State> {
     const { t } = this.props;
     return (
       <div>
-        <label className="label">{t("group.members")}</label>
+        <LabelWithHelpIcon
+          label={t("group.members")}
+          helpText={t("group-form.help.memberHelpText")}
+        />
         <table className="table is-hoverable is-fullwidth">
           <tbody>
             {this.props.members.map(member => {

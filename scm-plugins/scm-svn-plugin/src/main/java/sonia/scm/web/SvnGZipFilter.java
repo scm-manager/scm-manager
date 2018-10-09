@@ -32,122 +32,45 @@
 
 package sonia.scm.web;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.filter.GZipFilter;
+import sonia.scm.filter.GZipFilterConfig;
+import sonia.scm.filter.GZipResponseWrapper;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.SvnRepositoryHandler;
 import sonia.scm.repository.spi.ScmProviderHttpServlet;
+import sonia.scm.util.WebUtil;
 
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-//~--- JDK imports ------------------------------------------------------------
-
-/**
- *
- * @author Sebastian Sdorra
- */
-public class SvnGZipFilter extends GZipFilter implements ScmProviderHttpServlet
-{
+class SvnGZipFilter implements ScmProviderHttpServlet {
 
   private static final Logger logger = LoggerFactory.getLogger(SvnGZipFilter.class);
 
   private final SvnRepositoryHandler handler;
   private final ScmProviderHttpServlet delegate;
 
-  //~--- constructors ---------------------------------------------------------
+  private GZipFilterConfig config = new GZipFilterConfig();
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param handler
-   */
-  public SvnGZipFilter(SvnRepositoryHandler handler, ScmProviderHttpServlet delegate)
-  {
+  SvnGZipFilter(SvnRepositoryHandler handler, ScmProviderHttpServlet delegate) {
     this.handler = handler;
     this.delegate = delegate;
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param filterConfig
-   *
-   * @throws ServletException
-   */
-  @Override
-  public void init(FilterConfig filterConfig) throws ServletException
-  {
-    super.init(filterConfig);
-    getConfig().setBufferResponse(false);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param response
-   * @param chain
-   *
-   * @throws IOException
-   * @throws ServletException
-   */
-  @Override
-  protected void doFilter(HttpServletRequest request,
-                          HttpServletResponse response, FilterChain chain)
-          throws IOException, ServletException
-  {
-    if (handler.getConfig().isEnabledGZip())
-    {
-      if (logger.isTraceEnabled())
-      {
-        logger.trace("encode svn request with gzip");
-      }
-
-      super.doFilter(request, response, chain);
-    }
-    else
-    {
-      if (logger.isTraceEnabled())
-      {
-        logger.trace("skip gzip encoding");
-      }
-
-      chain.doFilter(request, response);
-    }
+    config.setBufferResponse(false);
   }
 
   @Override
   public void service(HttpServletRequest request, HttpServletResponse response, Repository repository) throws ServletException, IOException {
-    if (handler.getConfig().isEnabledGZip())
-    {
-      if (logger.isTraceEnabled())
-      {
-        logger.trace("encode svn request with gzip");
-      }
-
-      super.doFilter(request, response, (servletRequest, servletResponse) -> delegate.service((HttpServletRequest) servletRequest, (HttpServletResponse) servletResponse, repository));
-    }
-    else
-    {
-      if (logger.isTraceEnabled())
-      {
-        logger.trace("skip gzip encoding");
-      }
-
+    if (handler.getConfig().isEnabledGZip() && WebUtil.isGzipSupported(request)) {
+      logger.trace("compress svn response with gzip");
+      GZipResponseWrapper wrappedResponse = new GZipResponseWrapper(response, config);
+      delegate.service(request, wrappedResponse, repository);
+      wrappedResponse.finishResponse();
+    } else {
+      logger.trace("skip gzip encoding");
       delegate.service(request, response, repository);
     }
   }

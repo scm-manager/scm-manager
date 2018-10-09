@@ -85,7 +85,42 @@ class ResourceLinks {
     String update(String name) {
       return userLinkBuilder.method("getUserResource").parameters(name).method("update").parameters().href();
     }
+
+    public String passwordChange(String name) {
+      return userLinkBuilder.method("getUserResource").parameters(name).method("changePassword").parameters().href();
+    }
   }
+
+  MeLinks me() {
+    return new MeLinks(scmPathInfoStore.get(), this.user());
+  }
+
+  static class MeLinks {
+    private final LinkBuilder meLinkBuilder;
+    private UserLinks userLinks;
+
+    MeLinks(ScmPathInfo pathInfo, UserLinks user) {
+      meLinkBuilder = new LinkBuilder(pathInfo, MeResource.class);
+      userLinks = user;
+    }
+
+    String self() {
+      return meLinkBuilder.method("get").parameters().href();
+    }
+
+    String delete(String name) {
+      return userLinks.delete(name);
+    }
+
+    String update(String name) {
+      return userLinks.update(name);
+    }
+
+    public String passwordChange() {
+      return meLinkBuilder.method("changePassword").parameters().href();
+    }
+  }
+
 
   UserCollectionLinks userCollection() {
     return new UserCollectionLinks(scmPathInfoStore.get());
@@ -405,7 +440,6 @@ class ResourceLinks {
     }
   }
 
-
   public UIPluginLinks uiPlugin() {
     return new UIPluginLinks(scmPathInfoStore.get());
   }
@@ -437,4 +471,45 @@ class ResourceLinks {
       return uiPluginCollectionLinkBuilder.method("plugins").parameters().method("getInstalledPlugins").parameters().href();
     }
   }
+
+  public AuthenticationLinks authentication() {
+    return new AuthenticationLinks(scmPathInfoStore.get());
+  }
+
+  static class AuthenticationLinks {
+    private final LinkBuilder loginLinkBuilder;
+
+    AuthenticationLinks(ScmPathInfo pathInfo) {
+      this.loginLinkBuilder = new LinkBuilder(pathInfo, AuthenticationResource.class);
+    }
+
+    String formLogin() {
+      return loginLinkBuilder.method("authenticateViaForm").parameters().href();
+    }
+
+    String jsonLogin() {
+      return loginLinkBuilder.method("authenticateViaJSONBody").parameters().href();
+    }
+
+    String logout() {
+      return loginLinkBuilder.method("logout").parameters().href();
+    }
+  }
+
+  public IndexLinks index() {
+    return new IndexLinks(scmPathInfoStore.get());
+  }
+
+  static class IndexLinks {
+    private final LinkBuilder indexLinkBuilder;
+
+    IndexLinks(ScmPathInfo pathInfo) {
+      indexLinkBuilder = new LinkBuilder(pathInfo, IndexResource.class);
+    }
+
+    String self() {
+      return indexLinkBuilder.method("getIndex").parameters().href();
+    }
+  }
+
 }

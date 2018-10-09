@@ -1,5 +1,6 @@
 //@flow
 import React from "react";
+import { repositories } from "@scm-manager/ui-components";
 import type { Repository } from "@scm-manager/ui-types";
 
 type Props = {
@@ -10,14 +11,16 @@ class ProtocolInformation extends React.Component<Props> {
 
   render() {
     const { repository } = this.props;
-    if (!repository._links.httpProtocol) {
+    const href = repositories.getProtocolLinkByType(repository, "http");
+    if (!href) {
       return null;
     }
+
     return (
       <div>
         <h4>Clone the repository</h4>
         <pre>
-          <code>git clone {repository._links.httpProtocol.href}</code>
+          <code>git clone {href}</code>
         </pre>
         <h4>Create a new repository</h4>
         <pre>
@@ -30,7 +33,7 @@ class ProtocolInformation extends React.Component<Props> {
             <br />
             git commit -m "added readme"
             <br />
-            git remote add origin {repository._links.httpProtocol.href}
+            git remote add origin {href}
             <br />
             git push -u origin master
             <br />
@@ -39,7 +42,7 @@ class ProtocolInformation extends React.Component<Props> {
         <h4>Push an existing repository</h4>
         <pre>
           <code>
-            git remote add origin {repository._links.httpProtocol.href}
+            git remote add origin {href}
             <br />
             git push -u origin master
             <br />
