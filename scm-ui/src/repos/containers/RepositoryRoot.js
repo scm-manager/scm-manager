@@ -1,31 +1,18 @@
 //@flow
 import React from "react";
-import {
-  deleteRepo,
-  fetchRepo,
-  getFetchRepoFailure,
-  getRepository,
-  isFetchRepoPending
-} from "../modules/repos";
-import { connect } from "react-redux";
-import { Route } from "react-router-dom";
-import type { Repository } from "@scm-manager/ui-types";
-import {
-  Page,
-  Loading,
-  ErrorPage,
-  Navigation,
-  NavLink,
-  Section
-} from "@scm-manager/ui-components";
-import { translate } from "react-i18next";
+import {deleteRepo, fetchRepo, getFetchRepoFailure, getRepository, isFetchRepoPending} from "../modules/repos";
+import {connect} from "react-redux";
+import {Route} from "react-router-dom";
+import type {Repository} from "@scm-manager/ui-types";
+import {ErrorPage, Loading, Navigation, NavLink, Page, Section} from "@scm-manager/ui-components";
+import {translate} from "react-i18next";
 import RepositoryDetails from "../components/RepositoryDetails";
 import DeleteNavAction from "../components/DeleteNavAction";
 import Edit from "../containers/Edit";
 
-import type { History } from "history";
+import type {History} from "history";
 import EditNavLink from "../components/EditNavLink";
-import Changesets from "./Changesets";
+import BranchChangesets from "./BranchChangesets";
 
 type Props = {
   namespace: string,
@@ -94,7 +81,7 @@ class RepositoryRoot extends React.Component<Props> {
     }
 
     const url = this.matchedUrl();
-
+    // TODO: Changesets need to be adjusted (i.e. sub-routes need to be handled in sub-components)
     return (
       <Page title={repository.namespace + "/" + repository.name}>
         <div className="columns">
@@ -108,25 +95,34 @@ class RepositoryRoot extends React.Component<Props> {
               path={`${url}/edit`}
               component={() => <Edit repository={repository} />}
             />
+
             <Route
               exact
               path={`${url}/changesets`}
-              render={() => <Changesets repository={repository} />}
+              render={() => (
+                <BranchChangesets repository={repository} label={"Branches"} />
+              )}
             />
             <Route
               exact
               path={`${url}/changesets/:page`}
-              render={() => <Changesets repository={repository} />}
+              render={() => (
+                <BranchChangesets repository={repository} label={"Branches"} />
+              )}
             />
             <Route
               exact
-              path={`${url}/:branch/changesets`}
-              render={() => <Changesets repository={repository} />}
+              path={`${url}/branches/:branch/changesets`}
+              render={() => (
+                <BranchChangesets repository={repository} label={"Branches"} />
+              )}
             />
             <Route
               exact
-              path={`${url}/:branch/changesets/:page`}
-              render={() => <Changesets repository={repository} />}
+              path={`${url}/branches/:branch/changesets/:page`}
+              render={() => (
+                <BranchChangesets repository={repository} label={"Branches"} />
+              )}
             />
           </div>
           <div className="column">
