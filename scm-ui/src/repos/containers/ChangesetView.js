@@ -19,12 +19,7 @@ type Props = {
   repository: Repository,
   loading: boolean,
   error: Error,
-  fetchChangesetIfNeeded: (
-    namespace: string,
-    repoName: string,
-    id: string
-  ) => void,
-  resetForm: (namespace: string, repoName: string, id: string) => void,
+  fetchChangesetIfNeeded: (repository: Repository, id: string) => void,
   match: any,
   t: string => string
 };
@@ -33,7 +28,7 @@ class ChangesetView extends React.Component<Props> {
   componentDidMount() {
     const { fetchChangesetIfNeeded, repository } = this.props;
     const id = this.props.match.params.id;
-    fetchChangesetIfNeeded(repository.namespace, repository.name, id);
+    fetchChangesetIfNeeded(repository, id);
   }
 
   render() {
@@ -56,22 +51,18 @@ class ChangesetView extends React.Component<Props> {
 }
 
 const mapStateToProps = (state, ownProps: Props) => {
-  const { namespace, name } = ownProps.repository;
+  const repository = ownProps.repository;
   const id = ownProps.match.params.id;
-  const changeset = getChangeset(state, namespace, name, id);
-  const loading = isFetchChangesetPending(state, namespace, name, id);
-  const error = getFetchChangesetFailure(state, namespace, name, id);
+  const changeset = getChangeset(state, repository, id);
+  const loading = isFetchChangesetPending(state, repository, id);
+  const error = getFetchChangesetFailure(state, repository, id);
   return { changeset, error, loading };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchChangesetIfNeeded: (
-      namespace: string,
-      repoName: string,
-      id: string
-    ) => {
-      dispatch(fetchChangesetIfNeeded(namespace, repoName, id));
+    fetchChangesetIfNeeded: (repository: Repository, id: string) => {
+      dispatch(fetchChangesetIfNeeded(repository, id));
     }
   };
 };
