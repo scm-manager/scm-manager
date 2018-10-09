@@ -50,7 +50,7 @@ public class SourceRootResourceTest extends RepositoryTestBase {
   private FileObjectToFileObjectDtoMapper fileObjectToFileObjectDtoMapper;
 
   @InjectMocks
-  private BrowserResultToBrowserResultDtoMapper browserResultToBrowserResultDtoMapper;
+  private BrowserResultToFileObjectDtoMapper browserResultToFileObjectDtoMapper;
 
 
   @Before
@@ -63,7 +63,7 @@ public class SourceRootResourceTest extends RepositoryTestBase {
     dto.setLength(1024);
 
     when(fileObjectToFileObjectDtoMapper.map(any(FileObject.class), any(NamespaceAndName.class), anyString())).thenReturn(dto);
-    SourceRootResource sourceRootResource = new SourceRootResource(serviceFactory, browserResultToBrowserResultDtoMapper);
+    SourceRootResource sourceRootResource = new SourceRootResource(serviceFactory, browserResultToFileObjectDtoMapper);
     super.sourceRootResource = Providers.of(sourceRootResource);
     dispatcher = createDispatcher(getRepositoryRootResource());
   }
@@ -93,12 +93,9 @@ public class SourceRootResourceTest extends RepositoryTestBase {
 
   @Test
   public void shouldGetResultForSingleFile() throws URISyntaxException, IOException, RevisionNotFoundException {
-    BrowserResult browserResult = new BrowserResult();
-    browserResult.setRevision("revision");
     FileObject fileObject = new FileObject();
     fileObject.setName("File Object!");
-
-    browserResult.setFiles(Arrays.asList(fileObject));
+    BrowserResult browserResult = new BrowserResult("revision", fileObject);
 
     when(browseCommandBuilder.getBrowserResult()).thenReturn(browserResult);
     MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/sources/revision/fileabc");
@@ -121,10 +118,15 @@ public class SourceRootResourceTest extends RepositoryTestBase {
   }
 
   private BrowserResult createBrowserResult() {
-    return new BrowserResult("revision", "tag", "branch", createFileObjects());
+    return new BrowserResult("revision", createFileObject());
   }
 
-  private List<FileObject> createFileObjects() {
+  private FileObject createFileObject() {
+    FileObject parent = new FileObject();
+    parent.setName("bar");
+    parent.setPath("/foo/bar");
+    parent.setDirectory(true);
+
     FileObject fileObject1 = new FileObject();
     fileObject1.setName("FO 1");
     fileObject1.setDirectory(false);
@@ -132,6 +134,7 @@ public class SourceRootResourceTest extends RepositoryTestBase {
     fileObject1.setPath("/foo/bar/fo1");
     fileObject1.setLength(1024L);
     fileObject1.setLastModified(0L);
+    parent.addChild(fileObject1);
 
     FileObject fileObject2 = new FileObject();
     fileObject2.setName("FO 2");
@@ -140,7 +143,8 @@ public class SourceRootResourceTest extends RepositoryTestBase {
     fileObject2.setPath("/foo/bar/fo2");
     fileObject2.setLength(4096L);
     fileObject2.setLastModified(1234L);
+    parent.addChild(fileObject2);
 
-    return Arrays.asList(fileObject1, fileObject2);
+    return parent;
   }
 }

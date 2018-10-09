@@ -12,6 +12,9 @@ import sonia.scm.repository.SubRepository;
 
 import javax.inject.Inject;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static de.otto.edison.hal.Link.link;
 
 @Mapper
@@ -37,6 +40,13 @@ public abstract class FileObjectToFileObjectDtoMapper implements InstantAttribut
     }
 
     dto.add(links.build());
+    if (fileObject.isDirectory() && fileObject.hasChildren()) {
+      List<FileObjectDto> children = fileObject.getChildren()
+        .stream()
+        .map(fo -> map(fo, namespaceAndName, revision))
+        .collect(Collectors.toList());
+      dto.setChildren(children);
+    }
   }
 
   private String removeFirstSlash(String source) {
