@@ -144,16 +144,12 @@ class Changesets extends React.PureComponent<Props, State> {
 
     return (
       <>
-        <div className={"box"}>
-          <label className="label">
-            {t("changesets.branchselector-label")}
-          </label>
-          <BranchChooser
-            repository={repository}
-            selectedBranchName={branch}
-            callback={branch => this.branchChanged(branch)}
-          />
-        </div>
+        <BranchChooser
+          repository={repository}
+          selectedBranchName={branch}
+          label={t("changesets.branchselector-label")}
+          callback={branch => this.branchChanged(branch)}
+        />
         <ChangesetList repository={repository} changesets={changesets} />
       </>
     );

@@ -18,7 +18,8 @@ type Props = {
   callback: (?Branch) => void,
   branches: Branch[],
   selectedBranchName: string,
-  loading: boolean
+  loading: boolean,
+  label: string
 };
 
 type State = {
@@ -39,17 +40,20 @@ class BranchChooser extends React.Component<Props, State> {
   }
 
   render() {
-    const { branches, loading } = this.props;
+    const { branches, loading, label } = this.props;
     if (loading) {
       return <Loading />;
     }
     if (branches && branches.length > 0) {
       return (
-        <DropDown
-          options={branches.map(b => b.name)}
-          preselectedOption={this.state.selectedBranchName}
-          optionSelected={branch => this.branchChanged(branch)}
-        />
+        <div className={"box"}>
+          <label className="label">{label}</label>
+          <DropDown
+            options={branches.map(b => b.name)}
+            preselectedOption={this.state.selectedBranchName}
+            optionSelected={branch => this.branchChanged(branch)}
+          />
+        </div>
       );
     }
 
