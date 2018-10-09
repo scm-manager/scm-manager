@@ -12,3 +12,4 @@ export type { RepositoryType, RepositoryTypeCollection } from "./RepositoryTypes
 export type { Config } from "./Config";
 
 export type {IndexResources} from "./IndexResources";
+export type { Permission, PermissionEntry, PermissionCollection } from "./RepositoryPermissions";
