@@ -32,17 +32,16 @@ export const DELETE_GROUP_PENDING = `${DELETE_GROUP}_${types.PENDING_SUFFIX}`;
 export const DELETE_GROUP_SUCCESS = `${DELETE_GROUP}_${types.SUCCESS_SUFFIX}`;
 export const DELETE_GROUP_FAILURE = `${DELETE_GROUP}_${types.FAILURE_SUFFIX}`;
 
-const GROUPS_URL = "groups";
 const CONTENT_TYPE_GROUP = "application/vnd.scmm-group+json;v=2";
 
 // fetch groups
-export function fetchGroups() {
-  return fetchGroupsByLink(GROUPS_URL);
+export function fetchGroups(link: string) {
+  return fetchGroupsByLink(link);
 }
 
-export function fetchGroupsByPage(page: number) {
+export function fetchGroupsByPage(link: string, page: number) {
   // backend start counting by 0
-  return fetchGroupsByLink(GROUPS_URL + "?page=" + (page - 1));
+  return fetchGroupsByLink(link + "?page=" + (page - 1));
 }
 
 export function fetchGroupsByLink(link: string) {
@@ -56,7 +55,7 @@ export function fetchGroupsByLink(link: string) {
       })
       .catch(cause => {
         const error = new Error(`could not fetch groups: ${cause.message}`);
-        dispatch(fetchGroupsFailure(GROUPS_URL, error));
+        dispatch(fetchGroupsFailure(link, error));
       });
   };
 }
@@ -85,8 +84,8 @@ export function fetchGroupsFailure(url: string, error: Error): Action {
 }
 
 //fetch group
-export function fetchGroup(name: string) {
-  const groupUrl = GROUPS_URL + "/" + name;
+export function fetchGroup(link: string, name: string) {
+  const groupUrl = link.endsWith("/") ? link + name : link + "/" + name;
   return function(dispatch: any) {
     dispatch(fetchGroupPending(name));
     return apiClient
@@ -132,11 +131,11 @@ export function fetchGroupFailure(name: string, error: Error): Action {
 }
 
 //create group
-export function createGroup(group: Group, callback?: () => void) {
+export function createGroup(link: string, group: Group, callback?: () => void) {
   return function(dispatch: Dispatch) {
     dispatch(createGroupPending());
     return apiClient
-      .post(GROUPS_URL, group, CONTENT_TYPE_GROUP)
+      .post(link, group, CONTENT_TYPE_GROUP)
       .then(() => {
         dispatch(createGroupSuccess());
         if (callback) {
@@ -409,6 +408,12 @@ export const isPermittedToCreateGroups = (state: Object): boolean => {
   }
   return false;
 };
+
+export function getCreateGroupLink(state: Object) {
+  if (state.groups.list.entry && state.groups.list.entry._links)
+    return state.groups.list.entry._links.create.href;
+  return undefined;
+}
 
 export function getGroupsFromState(state: Object) {
   const groupNames = selectList(state).entries;

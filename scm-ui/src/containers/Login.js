@@ -18,6 +18,7 @@ import {
   Image
 } from "@scm-manager/ui-components";
 import classNames from "classnames";
+import { fetchIndexResources } from "../modules/indexResource";
 
 const styles = {
   avatar: {
@@ -44,6 +45,7 @@ type Props = {
 
   // dispatcher props
   login: (username: string, password: string) => void,
+  fetchIndexResources: () => void,
 
   // context props
   t: string => string,
@@ -87,6 +89,7 @@ class Login extends React.Component<Props, State> {
   }
 
   renderRedirect = () => {
+    this.props.fetchIndexResources();
     const { from } = this.props.location.state || { from: { pathname: "/" } };
     return <Redirect to={from} />;
   };
@@ -155,7 +158,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     login: (username: string, password: string) =>
-      dispatch(login(username, password))
+      dispatch(login(username, password)),
+    fetchIndexResources: () => dispatch(fetchIndexResources())
   };
 };
 

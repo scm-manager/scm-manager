@@ -6,7 +6,6 @@ import { isPending } from "../../modules/pending";
 import { getFailure } from "../../modules/failure";
 import { Dispatch } from "redux";
 import type { Config } from "@scm-manager/ui-types";
-import { getConfigLink } from "../../modules/indexResource";
 
 export const FETCH_CONFIG = "scm/config/FETCH_CONFIG";
 export const FETCH_CONFIG_PENDING = `${FETCH_CONFIG}_${types.PENDING_SUFFIX}`;
@@ -22,11 +21,11 @@ export const MODIFY_CONFIG_RESET = `${MODIFY_CONFIG}_${types.RESET_SUFFIX}`;
 const CONTENT_TYPE_CONFIG = "application/vnd.scmm-config+json;v=2";
 
 //fetch config
-export function fetchConfig() {
-  return function(dispatch: any, getState: any) {
+export function fetchConfig(link: string) {
+  return function(dispatch: any) {
     dispatch(fetchConfigPending());
     return apiClient
-      .get(getConfigLink(getState()))
+      .get(link)
       .then(response => {
         return response.json();
       })

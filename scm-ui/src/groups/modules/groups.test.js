@@ -42,9 +42,11 @@ import reducer, {
   modifyGroup,
   MODIFY_GROUP_PENDING,
   MODIFY_GROUP_SUCCESS,
-  MODIFY_GROUP_FAILURE
+  MODIFY_GROUP_FAILURE,
+  getCreateGroupLink
 } from "./groups";
 const GROUPS_URL = "/api/v2/groups";
+const URL = "/groups";
 
 const error = new Error("You have an error!");
 
@@ -63,7 +65,7 @@ const humanGroup = {
       href: "http://localhost:8081/api/v2/groups/humanGroup"
     },
     update: {
-      href:"http://localhost:8081/api/v2/groups/humanGroup"
+      href: "http://localhost:8081/api/v2/groups/humanGroup"
     }
   },
   _embedded: {
@@ -95,7 +97,7 @@ const emptyGroup = {
       href: "http://localhost:8081/api/v2/groups/emptyGroup"
     },
     update: {
-      href:"http://localhost:8081/api/v2/groups/emptyGroup"
+      href: "http://localhost:8081/api/v2/groups/emptyGroup"
     }
   },
   _embedded: {
@@ -150,7 +152,7 @@ describe("groups fetch()", () => {
 
     const store = mockStore({});
 
-    return store.dispatch(fetchGroups()).then(() => {
+    return store.dispatch(fetchGroups(URL)).then(() => {
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
@@ -161,7 +163,7 @@ describe("groups fetch()", () => {
     });
 
     const store = mockStore({});
-    return store.dispatch(fetchGroups()).then(() => {
+    return store.dispatch(fetchGroups(URL)).then(() => {
       const actions = store.getActions();
       expect(actions[0].type).toEqual(FETCH_GROUPS_PENDING);
       expect(actions[1].type).toEqual(FETCH_GROUPS_FAILURE);
@@ -173,7 +175,7 @@ describe("groups fetch()", () => {
     fetchMock.getOnce(GROUPS_URL + "/humanGroup", humanGroup);
 
     const store = mockStore({});
-    return store.dispatch(fetchGroup("humanGroup")).then(() => {
+    return store.dispatch(fetchGroup(URL, "humanGroup")).then(() => {
       const actions = store.getActions();
       expect(actions[0].type).toEqual(FETCH_GROUP_PENDING);
       expect(actions[1].type).toEqual(FETCH_GROUP_SUCCESS);
@@ -187,7 +189,7 @@ describe("groups fetch()", () => {
     });
 
     const store = mockStore({});
-    return store.dispatch(fetchGroup("humanGroup")).then(() => {
+    return store.dispatch(fetchGroup(URL, "humanGroup")).then(() => {
       const actions = store.getActions();
       expect(actions[0].type).toEqual(FETCH_GROUP_PENDING);
       expect(actions[1].type).toEqual(FETCH_GROUP_FAILURE);
@@ -195,14 +197,13 @@ describe("groups fetch()", () => {
     });
   });
 
-
   it("should successfully create group", () => {
     fetchMock.postOnce(GROUPS_URL, {
       status: 201
     });
 
     const store = mockStore({});
-    return store.dispatch(createGroup(humanGroup)).then(() => {
+    return store.dispatch(createGroup(URL, humanGroup)).then(() => {
       const actions = store.getActions();
       expect(actions[0].type).toEqual(CREATE_GROUP_PENDING);
       expect(actions[1].type).toEqual(CREATE_GROUP_SUCCESS);
@@ -219,14 +220,13 @@ describe("groups fetch()", () => {
       called = true;
     };
     const store = mockStore({});
-    return store.dispatch(createGroup(humanGroup, callMe)).then(() => {
+    return store.dispatch(createGroup(URL, humanGroup, callMe)).then(() => {
       const actions = store.getActions();
       expect(actions[0].type).toEqual(CREATE_GROUP_PENDING);
       expect(actions[1].type).toEqual(CREATE_GROUP_SUCCESS);
       expect(called).toEqual(true);
     });
   });
-  
 
   it("should fail creating group on HTTP 500", () => {
     fetchMock.postOnce(GROUPS_URL, {
@@ -234,7 +234,7 @@ describe("groups fetch()", () => {
     });
 
     const store = mockStore({});
-    return store.dispatch(createGroup(humanGroup)).then(() => {
+    return store.dispatch(createGroup(URL, humanGroup)).then(() => {
       const actions = store.getActions();
       expect(actions[0].type).toEqual(CREATE_GROUP_PENDING);
       expect(actions[1].type).toEqual(CREATE_GROUP_FAILURE);
@@ -248,7 +248,7 @@ describe("groups fetch()", () => {
       status: 204
     });
 
-    const store = mockStore({}); 
+    const store = mockStore({});
 
     return store.dispatch(modifyGroup(humanGroup)).then(() => {
       const actions = store.getActions();
@@ -267,7 +267,7 @@ describe("groups fetch()", () => {
     const callback = () => {
       called = true;
     };
-    const store = mockStore({}); 
+    const store = mockStore({});
 
     return store.dispatch(modifyGroup(humanGroup, callback)).then(() => {
       const actions = store.getActions();
@@ -282,7 +282,7 @@ describe("groups fetch()", () => {
       status: 500
     });
 
-    const store = mockStore({}); 
+    const store = mockStore({});
 
     return store.dispatch(modifyGroup(humanGroup)).then(() => {
       const actions = store.getActions();
@@ -337,13 +337,10 @@ describe("groups fetch()", () => {
       expect(actions[1].payload).toBeDefined();
     });
   });
-
 });
 
 describe("groups reducer", () => {
-
   it("should update state correctly according to FETCH_GROUPS_SUCCESS action", () => {
-
     const newState = reducer({}, fetchGroupsSuccess(responseBody));
 
     expect(newState.list).toEqual({
@@ -391,7 +388,6 @@ describe("groups reducer", () => {
     expect(newState.byNames["humanGroup"]).toBeTruthy();
   });
 
-
   it("should update state according to FETCH_GROUP_SUCCESS action", () => {
     const newState = reducer({}, fetchGroupSuccess(emptyGroup));
     expect(newState.byNames["emptyGroup"]).toBe(emptyGroup);
@@ -426,7 +422,6 @@ describe("groups reducer", () => {
     expect(newState.byNames["emptyGroup"]).toBeFalsy();
     expect(newState.list.entries).toEqual(["humanGroup"]);
   });
-
 });
 
 describe("selector tests", () => {
@@ -476,6 +471,23 @@ describe("selector tests", () => {
     expect(isPermittedToCreateGroups(state)).toBe(true);
   });
 
+  it("should return create Group link", () => {
+    const state = {
+      groups: {
+        list: {
+          entry: {
+            _links: {
+              create: {
+                href: "/create"
+              }
+            }
+          }
+        }
+      }
+    };
+    expect(getCreateGroupLink(state)).toBe("/create");
+  });
+
   it("should get groups from state", () => {
     const state = {
       groups: {
@@ -488,7 +500,7 @@ describe("selector tests", () => {
         }
       }
     };
-    
+
     expect(getGroupsFromState(state)).toEqual([{ name: "a" }, { name: "b" }]);
   });
 
@@ -560,9 +572,13 @@ describe("selector tests", () => {
   });
 
   it("should return true if create group is pending", () => {
-    expect(isCreateGroupPending({pending: {
-      [CREATE_GROUP]: true
-    }})).toBeTruthy();
+    expect(
+      isCreateGroupPending({
+        pending: {
+          [CREATE_GROUP]: true
+        }
+      })
+    ).toBeTruthy();
   });
 
   it("should return false if create group is not pending", () => {
@@ -570,17 +586,18 @@ describe("selector tests", () => {
   });
 
   it("should return error if creating group failed", () => {
-    expect(getCreateGroupFailure({
-      failure: {
-        [CREATE_GROUP]: error
-      }
-    })).toEqual(error);
+    expect(
+      getCreateGroupFailure({
+        failure: {
+          [CREATE_GROUP]: error
+        }
+      })
+    ).toEqual(error);
   });
 
   it("should return undefined if creating group did not fail", () => {
     expect(getCreateGroupFailure({})).toBeUndefined();
   });
-
 
   it("should return true, when delete group humanGroup is pending", () => {
     const state = {

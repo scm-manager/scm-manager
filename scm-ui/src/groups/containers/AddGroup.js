@@ -9,18 +9,21 @@ import {
   createGroup,
   isCreateGroupPending,
   getCreateGroupFailure,
-  createGroupReset
+  createGroupReset,
+  getCreateGroupLink
 } from "../modules/groups";
 import type { Group } from "@scm-manager/ui-types";
 import type { History } from "history";
+import { getGroupsLink } from "../../modules/indexResource";
 
 type Props = {
   t: string => string,
-  createGroup: (group: Group, callback?: () => void) => void,
+  createGroup: (link: string, group: Group, callback?: () => void) => void,
   history: History,
   loading?: boolean,
   error?: Error,
-  resetForm: () => void
+  resetForm: () => void,
+  createLink: string
 };
 
 type State = {};
@@ -51,14 +54,14 @@ class AddGroup extends React.Component<Props, State> {
     this.props.history.push("/groups");
   };
   createGroup = (group: Group) => {
-    this.props.createGroup(group, this.groupCreated);
+    this.props.createGroup(this.props.createLink, group, this.groupCreated);
   };
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    createGroup: (group: Group, callback?: () => void) =>
-      dispatch(createGroup(group, callback)),
+    createGroup: (link: string, group: Group, callback?: () => void) =>
+      dispatch(createGroup(link, group, callback)),
     resetForm: () => {
       dispatch(createGroupReset());
     }
@@ -68,7 +71,9 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => {
   const loading = isCreateGroupPending(state);
   const error = getCreateGroupFailure(state);
+  const createLink = getGroupsLink(state);
   return {
+    createLink,
     loading,
     error
   };

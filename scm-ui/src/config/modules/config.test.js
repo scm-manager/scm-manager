@@ -125,7 +125,7 @@ describe("config fetch()", () => {
       }
     });
 
-    return store.dispatch(fetchConfig()).then(() => {
+    return store.dispatch(fetchConfig(CONFIG_URL)).then(() => {
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
@@ -144,7 +144,7 @@ describe("config fetch()", () => {
         }
       }
     });
-    return store.dispatch(fetchConfig()).then(() => {
+    return store.dispatch(fetchConfig(CONFIG_URL)).then(() => {
       const actions = store.getActions();
       expect(actions[0].type).toEqual(FETCH_CONFIG_PENDING);
       expect(actions[1].type).toEqual(FETCH_CONFIG_FAILURE);
