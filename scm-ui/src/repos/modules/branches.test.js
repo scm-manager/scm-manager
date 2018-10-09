@@ -5,30 +5,28 @@ import {
   FETCH_BRANCHES_FAILURE,
   FETCH_BRANCHES_PENDING,
   FETCH_BRANCHES_SUCCESS,
-  fetchBranchesByNamespaceAndName, getBranchesForNamespaceAndNameFromState, getBranchNames
+  fetchBranchesByNamespaceAndName,
+  getBranchesForNamespaceAndNameFromState,
+  getBranchNames
 } from "./branches";
 import reducer from "./branches";
-
 
 const namespace = "foo";
 const name = "bar";
 const key = namespace + "/" + name;
 
-const branch1 = {name: "branch1", revision: "revision1"};
-const branch2 = {name: "branch2", revision: "revision2"};
-const branch3 = {name: "branch3", revision: "revision3"};
-
+const branch1 = { name: "branch1", revision: "revision1" };
+const branch2 = { name: "branch2", revision: "revision2" };
+const branch3 = { name: "branch3", revision: "revision3" };
 
 describe("fetch branches", () => {
-  const URL = "/api/rest/v2/repositories/foo/bar/branches";
+  const URL = "/api/v2/repositories/foo/bar/branches";
   const mockStore = configureMockStore([thunk]);
-
 
   afterEach(() => {
     fetchMock.reset();
     fetchMock.restore();
   });
-
 
   it("should fetch branches", () => {
     const collection = {};
@@ -37,20 +35,23 @@ describe("fetch branches", () => {
 
     const expectedActions = [
       {
-        type: FETCH_BRANCHES_PENDING, payload: {namespace, name},
+        type: FETCH_BRANCHES_PENDING,
+        payload: { namespace, name },
         itemId: key
       },
       {
         type: FETCH_BRANCHES_SUCCESS,
-        payload: {data: collection, namespace, name},
+        payload: { data: collection, namespace, name },
         itemId: key
       }
     ];
 
     const store = mockStore({});
-    return store.dispatch(fetchBranchesByNamespaceAndName(namespace, name)).then(() => {
-      expect(store.getActions()).toEqual(expectedActions);
-    });
+    return store
+      .dispatch(fetchBranchesByNamespaceAndName(namespace, name))
+      .then(() => {
+        expect(store.getActions()).toEqual(expectedActions);
+      });
   });
 
   it("should fail fetching branches on HTTP 500", () => {
@@ -60,26 +61,28 @@ describe("fetch branches", () => {
 
     const expectedActions = [
       {
-        type: FETCH_BRANCHES_PENDING, payload: {namespace, name},
+        type: FETCH_BRANCHES_PENDING,
+        payload: { namespace, name },
         itemId: key
       },
       {
         type: FETCH_BRANCHES_FAILURE,
-        payload: {error: collection, namespace, name},
+        payload: { error: collection, namespace, name },
         itemId: key
       }
     ];
 
     const store = mockStore({});
-    return store.dispatch(fetchBranchesByNamespaceAndName(namespace, name)).then(() => {
-      expect(store.getActions()[0]).toEqual(expectedActions[0]);
-      expect(store.getActions()[1].type).toEqual(FETCH_BRANCHES_FAILURE);
-    });
-  })
+    return store
+      .dispatch(fetchBranchesByNamespaceAndName(namespace, name))
+      .then(() => {
+        expect(store.getActions()[0]).toEqual(expectedActions[0]);
+        expect(store.getActions()[1].type).toEqual(FETCH_BRANCHES_FAILURE);
+      });
+  });
 });
 
 describe("branches reducer", () => {
-
   const branches = {
     _embedded: {
       branches: [branch1, branch2]
@@ -104,9 +107,11 @@ describe("branches reducer", () => {
 
   it("should not delete existing branches from state", () => {
     const oldState = {
-      "foo/bar": { byNames: {
-        "branch3": branch3
-        }}
+      "foo/bar": {
+        byNames: {
+          branch3: branch3
+        }
+      }
     };
 
     const newState = reducer(oldState, action);
@@ -123,12 +128,16 @@ describe("branch selectors", () => {
       branches: {
         [key]: {
           byNames: {
-            "branch1": branch1
+            branch1: branch1
           }
         }
       }
     };
-    const branches = getBranchesForNamespaceAndNameFromState(namespace, name, state);
+    const branches = getBranchesForNamespaceAndNameFromState(
+      namespace,
+      name,
+      state
+    );
     expect(branches.length).toEqual(1);
     expect(branches[0]).toEqual(branch1);
   });
@@ -138,8 +147,8 @@ describe("branch selectors", () => {
       branches: {
         [key]: {
           byNames: {
-            "branch1": branch1,
-            "branch2": branch2
+            branch1: branch1,
+            branch2: branch2
           }
         }
       }
