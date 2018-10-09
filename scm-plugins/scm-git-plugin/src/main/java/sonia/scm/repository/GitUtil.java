@@ -528,9 +528,9 @@ public final class GitUtil
       return of(master);
     }
 
-    Ref defaultBranch = refs.get(REF_HEAD_PREFIX + "default");
-    if (defaultBranch != null) {
-      return of(defaultBranch);
+    Ref develop = refs.get(REF_HEAD_PREFIX + "develop");
+    if (develop != null) {
+      return of(develop);
     }
 
     return refs.entrySet()
