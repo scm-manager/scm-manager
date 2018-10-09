@@ -12,10 +12,13 @@ public class ChangesetCollectionToDtoMapper extends ChangesetCollectionToDtoMapp
 
   @Inject
   public ChangesetCollectionToDtoMapper(ChangesetToChangesetDtoMapper changesetToChangesetDtoMapper, ResourceLinks resourceLinks) {
-    super(changesetToChangesetDtoMapper);
+    super(changesetToChangesetDtoMapper, resourceLinks);
     this.resourceLinks = resourceLinks;
   }
 
+  public CollectionDto map(int pageNumber, int pageSize, PageResult<Changeset> pageResult, Repository repository, String branchName) {
+    return super.map(pageNumber, pageSize, pageResult, repository, () -> createSelfLink(repository), branchName);
+  }
   public CollectionDto map(int pageNumber, int pageSize, PageResult<Changeset> pageResult, Repository repository) {
     return super.map(pageNumber, pageSize, pageResult, repository, () -> createSelfLink(repository));
   }

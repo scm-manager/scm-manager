@@ -13,5 +13,5 @@ export const isDisplayNameValid = (displayName: string) => {
   return false;
 };
 export const isPasswordValid = (password: string) => {
-  return password.length > 6 && password.length < 32;
+  return password.length >= 6 && password.length < 32;
 };

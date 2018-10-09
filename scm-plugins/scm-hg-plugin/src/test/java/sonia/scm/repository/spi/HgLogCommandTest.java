@@ -89,6 +89,21 @@ public class HgLogCommandTest extends AbstractHgCommandTestBase
   }
 
   @Test
+  public void testGetDefaultBranchInfo() {
+    LogCommandRequest request = new LogCommandRequest();
+
+    request.setPath("a.txt");
+
+    ChangesetPagingResult result = createComamnd().getChangesets(request);
+
+    assertNotNull(result);
+    assertEquals(1,
+      result.getChangesets().get(0).getBranches().size());
+    assertEquals("default",
+      result.getChangesets().get(0).getBranches().get(0));
+  }
+
+  @Test
   public void testGetAllWithLimit() {
     LogCommandRequest request = new LogCommandRequest();
 

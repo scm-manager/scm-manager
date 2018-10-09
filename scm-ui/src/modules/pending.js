@@ -19,6 +19,20 @@ function removeFromState(state: Object, identifier: string) {
   return newState;
 }
 
+function removeAllEntriesOfIdentifierFromState(
+  state: Object,
+  payload: any,
+  identifier: string
+) {
+  const newState = {};
+  for (let childType in state) {
+    if (childType !== identifier && !childType.startsWith(identifier)) {
+      newState[childType] = state[childType];
+    }
+  }
+  return newState;
+}
+
 function extractIdentifierFromPending(action: Action) {
   const type = action.type;
   let identifier = type.substring(0, type.length - PENDING_SUFFIX.length);
@@ -48,7 +62,10 @@ export default function reducer(
         if (action.itemId) {
           identifier += "/" + action.itemId;
         }
-        return removeFromState(state, identifier);
+        if (action.payload)
+          return removeAllEntriesOfIdentifierFromState(state, action.payload, identifier);
+        else
+          return removeFromState(state, identifier);
       }
     }
   }

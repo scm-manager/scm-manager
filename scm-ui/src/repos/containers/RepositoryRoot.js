@@ -22,9 +22,11 @@ import { translate } from "react-i18next";
 import RepositoryDetails from "../components/RepositoryDetails";
 import DeleteNavAction from "../components/DeleteNavAction";
 import Edit from "../containers/Edit";
+import Permissions from "../permissions/containers/Permissions";
 
 import type { History } from "history";
 import EditNavLink from "../components/EditNavLink";
+import PermissionsNavLink from "../components/PermissionsNavLink";
 import ScmDiff from "./ScmDiff";
 
 type Props = {
@@ -112,11 +114,24 @@ class RepositoryRoot extends React.Component<Props> {
                 />
               )}
             />
+            <Route
+              path={`${url}/permissions`}
+              render={props => (
+                <Permissions
+                  namespace={this.props.repository.namespace}
+                  repoName={this.props.repository.name}
+                />
+              )}
+            />
           </div>
           <div className="column">
             <Navigation>
               <Section label={t("repository-root.navigation-label")}>
                 <NavLink to={url} label={t("repository-root.information")} />
+                <PermissionsNavLink
+                  permissionUrl={`${url}/permissions`}
+                  repository={repository}
+                />
                 <EditNavLink repository={repository} editUrl={`${url}/edit`} />
               </Section>
               <Section label={t("repository-root.actions-label")}>

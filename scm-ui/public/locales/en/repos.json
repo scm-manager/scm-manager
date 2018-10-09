@@ -22,7 +22,8 @@
     "actions-label": "Actions",
     "back-label": "Back",
     "navigation-label": "Navigation",
-    "information": "Information"
+    "information": "Information",
+    "permissions": "Permissions"
   },
   "create": {
     "title": "Create Repository",
@@ -42,5 +43,36 @@
       "submit": "Yes",
       "cancel": "No"
     }
+  },
+  "permission": {
+      "error-title": "Error",
+      "error-subtitle": "Unknown permissions error",
+      "name": "User or Group",
+      "type": "Type",
+      "group-permission": "Group Permission",
+      "edit-permission": {
+        "delete-button": "Delete",
+        "save-button": "Save Changes"
+      },
+      "delete-permission-button": {
+        "label": "Delete",
+        "confirm-alert": {
+          "title": "Delete permission",
+          "message": "Do you really want to delete the permission?",
+          "submit": "Yes",
+          "cancel": "No"
+        }
+      },
+      "add-permission": {
+        "add-permission-heading": "Add new Permission",
+        "submit-button": "Submit",
+        "name-input-invalid": "Permission is not allowed to be empty! If it is not empty, your input name is invalid or it already exists!"
+      }
+    },
+  "help": {
+    "nameHelpText": "The name of the repository. This name will be part of the repository url.",
+    "typeHelpText": "The type of the repository (e.g. Mercurial, Git or Subversion).",
+    "contactHelpText": "Email address of the person who is responsible for this repository.",
+    "descriptionHelpText": "A short description of the repository."
   }
 }

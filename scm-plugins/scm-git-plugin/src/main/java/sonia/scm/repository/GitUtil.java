@@ -63,7 +63,10 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+
+import static java.util.Optional.of;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -345,12 +348,11 @@ public final class GitUtil
    *
    * @throws IOException
    */
-  public static ObjectId getBranchId(org.eclipse.jgit.lib.Repository repo,
+  public static Ref getBranchId(org.eclipse.jgit.lib.Repository repo,
     String branchName)
     throws IOException
   {
-    ObjectId branchId = null;
-
+    Ref ref = null;
     if (!branchName.startsWith(REF_HEAD))
     {
       branchName = PREFIX_HEADS.concat(branchName);
@@ -360,24 +362,19 @@ public final class GitUtil
 
     try
     {
-      Ref ref = repo.findRef(branchName);
+      ref = repo.findRef(branchName);
 
-      if (ref != null)
-      {
-        branchId = ref.getObjectId();
-      }
-      else if (logger.isWarnEnabled())
+      if (ref == null)
       {
         logger.warn("could not find branch for {}", branchName);
       }
-
     }
     catch (IOException ex)
     {
       logger.warn("error occured during resolve of branch id", ex);
     }
 
-    return branchId;
+    return ref;
   }
 
   /**
@@ -499,68 +496,48 @@ public final class GitUtil
     return ref;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param repo
-   *
-   * @return
-   *
-   * @throws IOException
-   */
-  public static ObjectId getRepositoryHead(org.eclipse.jgit.lib.Repository repo)
-    throws IOException
-  {
-    ObjectId id = null;
-    String head = null;
-    Map<String, Ref> refs = repo.getAllRefs();
+  public static ObjectId getRepositoryHead(org.eclipse.jgit.lib.Repository repo) {
+    return getRepositoryHeadRef(repo).map(Ref::getObjectId).orElse(null);
+  }
 
-    for (Map.Entry<String, Ref> e : refs.entrySet())
-    {
-      String key = e.getKey();
+  public static Optional<Ref> getRepositoryHeadRef(org.eclipse.jgit.lib.Repository repo) {
+    Optional<Ref> foundRef = findMostAppropriateHead(repo.getAllRefs());
 
-      if (REF_HEAD.equals(key))
-      {
-        head = REF_HEAD;
-        id = e.getValue().getObjectId();
-
-        break;
+    if (foundRef.isPresent()) {
+      if (logger.isDebugEnabled()) {
+        logger.debug("use {}:{} as repository head for directory {}",
+          foundRef.map(GitUtil::getBranch).orElse(null),
+          foundRef.map(Ref::getObjectId).map(ObjectId::name).orElse(null),
+          repo.getDirectory());
       }
-      else if (key.startsWith(REF_HEAD_PREFIX))
-      {
-        id = e.getValue().getObjectId();
-        head = key.substring(REF_HEAD_PREFIX.length());
-
-        if (REF_MASTER.equals(head))
-        {
-          break;
-        }
-      }
+    } else {
+      logger.warn("could not find repository head in directory {}", repo.getDirectory());
     }
 
-    if (id == null)
-    {
-      id = repo.resolve(Constants.HEAD);
+    return foundRef;
+  }
+
+  private static Optional<Ref> findMostAppropriateHead(Map<String, Ref> refs) {
+    Ref refHead = refs.get(REF_HEAD);
+    if (refHead != null && refHead.isSymbolic() && isBranch(refHead.getTarget().getName())) {
+      return of(refHead.getTarget());
     }
 
-    if (logger.isDebugEnabled())
-    {
-      if ((head != null) && (id != null))
-      {
-        logger.debug("use {}:{} as repository head", head, id.name());
-      }
-      else if (id != null)
-      {
-        logger.debug("use {} as repository head", id.name());
-      }
-      else
-      {
-        logger.warn("could not find repository head");
-      }
+    Ref master = refs.get(REF_HEAD_PREFIX + REF_MASTER);
+    if (master != null) {
+      return of(master);
     }
 
-    return id;
+    Ref develop = refs.get(REF_HEAD_PREFIX + "develop");
+    if (develop != null) {
+      return of(develop);
+    }
+
+    return refs.entrySet()
+      .stream()
+      .filter(e -> e.getKey().startsWith(REF_HEAD_PREFIX))
+      .map(Map.Entry::getValue)
+      .findFirst();
   }
 
   /**
@@ -648,7 +625,7 @@ public final class GitUtil
 
     return tagName;
   }
-  
+
   /**
    * Method description
    *

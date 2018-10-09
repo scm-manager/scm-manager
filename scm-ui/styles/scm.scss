@@ -36,6 +36,7 @@ $blue: #33B2E8;
 
 // 6. Import the rest of Bulma
 @import "bulma/bulma";
+@import "bulma-tooltip/dist/css/bulma-tooltip";
 
 // import at the end, because we need a lot of stuff from bulma/bulma
 .box-link-shadow {

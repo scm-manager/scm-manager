@@ -1,5 +1,7 @@
 //@flow
 import React from "react";
+import classNames from "classnames";
+import { LabelWithHelpIcon } from "../index";
 
 export type SelectItem = {
   value: string,
@@ -10,7 +12,9 @@ type Props = {
   label?: string,
   options: SelectItem[],
   value?: SelectItem,
-  onChange: string => void
+  onChange: string => void,
+  loading?: boolean,
+  helpText?: string
 };
 
 class Select extends React.Component<Props> {
@@ -28,21 +32,18 @@ class Select extends React.Component<Props> {
     this.props.onChange(event.target.value);
   };
 
-  renderLabel = () => {
-    const label = this.props.label;
-    if (label) {
-      return <label className="label">{label}</label>;
-    }
-    return "";
-  };
-
   render() {
-    const { options, value } = this.props;
+    const { options, value, label, helpText, loading } = this.props;
+    const loadingClass = loading ? "is-loading" : "";
+
 
     return (
       <div className="field">
-        {this.renderLabel()}
-        <div className="control select">
+        <LabelWithHelpIcon label={label} helpText={helpText} />
+    <div className={classNames(
+      "control select",
+      loadingClass
+    )}>
           <select
             ref={input => {
               this.field = input;
