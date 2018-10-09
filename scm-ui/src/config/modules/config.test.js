@@ -22,8 +22,10 @@ import reducer, {
   getConfig,
   getConfigUpdatePermission
 } from "./config";
+import { getConfigLink } from "../../modules/indexResource";
 
-const CONFIG_URL = "/api/v2/config";
+const CONFIG_URL = "/config";
+const URL = "/api/v2" + CONFIG_URL;
 
 const error = new Error("You have an error!");
 
@@ -103,7 +105,7 @@ describe("config fetch()", () => {
   });
 
   it("should successfully fetch config", () => {
-    fetchMock.getOnce(CONFIG_URL, response);
+    fetchMock.getOnce(URL, response);
 
     const expectedActions = [
       { type: FETCH_CONFIG_PENDING },
@@ -113,7 +115,15 @@ describe("config fetch()", () => {
       }
     ];
 
-    const store = mockStore({});
+    const store = mockStore({
+      indexResources: {
+        links: {
+          config: {
+            href: CONFIG_URL
+          }
+        }
+      }
+    });
 
     return store.dispatch(fetchConfig()).then(() => {
       expect(store.getActions()).toEqual(expectedActions);
@@ -121,11 +131,19 @@ describe("config fetch()", () => {
   });
 
   it("should fail getting config on HTTP 500", () => {
-    fetchMock.getOnce(CONFIG_URL, {
+    fetchMock.getOnce(URL, {
       status: 500
     });
 
-    const store = mockStore({});
+    const store = mockStore({
+      indexResources: {
+        links: {
+          config: {
+            href: CONFIG_URL
+          }
+        }
+      }
+    });
     return store.dispatch(fetchConfig()).then(() => {
       const actions = store.getActions();
       expect(actions[0].type).toEqual(FETCH_CONFIG_PENDING);
