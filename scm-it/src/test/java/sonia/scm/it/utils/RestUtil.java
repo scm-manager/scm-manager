@@ -10,7 +10,7 @@ import static java.net.URI.create;
 public class RestUtil {
 
   public static final URI BASE_URL = create("http://localhost:8081/scm/");
-  public static final URI REST_BASE_URL = BASE_URL.resolve("api/rest/v2/");
+  public static final URI REST_BASE_URL = BASE_URL.resolve("api/v2/");
 
   public static URI createResourceUrl(String path) {
     return REST_BASE_URL.resolve(path);

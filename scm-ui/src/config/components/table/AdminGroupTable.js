@@ -24,6 +24,7 @@ class AdminGroupTable extends React.Component<Props, State> {
         removeLabel={t("admin-settings.remove-group-button")}
         onRemove={this.removeEntry}
         disabled={disabled}
+        helpText={t("help.adminGroupsHelpText")}
       />
     );
   }

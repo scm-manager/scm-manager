@@ -93,21 +93,4 @@ public class UserITCase {
       .assertType(s -> assertThat(s).isEqualTo(type))
       .assertPasswordLinkDoesNotExists();
   }
-
-  @Test
-  public void shouldGet403IfUserIsNotAdmin() {
-    String newUser = "user";
-    String password = "pass";
-    String type = "xml";
-    TestData.createUser(newUser, password, false, type);
-    ScmRequests.start()
-      .given()
-      .url(TestData.getMeUrl())
-      .usernameAndPassword(newUser, password)
-      .getUserResource()
-      .assertStatusCode(403);
-  }
-
-
-
 }

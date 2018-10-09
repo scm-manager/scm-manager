@@ -107,7 +107,7 @@ public class SecurityFilterTest {
    */
   @Test
   public void testDoOnAuthenticationUrlV1() throws IOException, ServletException {
-    checkIfAuthenticationUrlIsPassedThrough("/scm/api/rest/auth/access_token");
+    checkIfAuthenticationUrlIsPassedThrough("/scm/api/auth/access_token");
   }
 
   /**
@@ -118,7 +118,7 @@ public class SecurityFilterTest {
    */
   @Test
   public void testDoOnAuthenticationUrlV2() throws IOException, ServletException {
-    checkIfAuthenticationUrlIsPassedThrough("/scm/api/rest/v2/auth/access_token");
+    checkIfAuthenticationUrlIsPassedThrough("/scm/api/v2/auth/access_token");
   }
 
   private void checkIfAuthenticationUrlIsPassedThrough(String uri) throws IOException, ServletException {

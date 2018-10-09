@@ -78,7 +78,7 @@ public final class IntegrationTestUtil
   public static final String BASE_URL = "http://localhost:8081/scm/";
 
   /** scm-manager base url for the rest api */
-  public static final String REST_BASE_URL = BASE_URL.concat("api/rest/v2/");
+  public static final String REST_BASE_URL = BASE_URL.concat("api/v2/");
 
   //~--- constructors ---------------------------------------------------------
 

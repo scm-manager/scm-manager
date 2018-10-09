@@ -216,10 +216,7 @@ public abstract class AbstractChangesetCommand extends AbstractCommand
 
     String branch = in.textUpTo('\n');
 
-    if (!BRANCH_DEFAULT.equals(branch))
-    {
-      changeset.getBranches().add(branch);
-    }
+    changeset.getBranches().add(branch);
 
     String p1 = readId(in, changeset, PROPERTY_PARENT1_REVISION);
 
