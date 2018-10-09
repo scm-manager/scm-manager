@@ -132,7 +132,7 @@ export function getBranch(
   state: Object,
   repository: Repository,
   name: string
-): Branch {
+): ?Branch {
   const key = createKey(repository);
   if (state.branches[key]) {
     if (state.branches[key].byNames[name]) {

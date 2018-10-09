@@ -13,6 +13,7 @@ import {
   fetchChangesetsByBranchAndPage,
   fetchChangesetsByLink,
   fetchChangesetsByPage,
+  getChangesets,
   getChangesetsFromState,
   getFetchChangesetsFailure,
   isFetchChangesetsPending,
@@ -54,16 +55,11 @@ type Props = {
   branch: Branch
 };
 
-type State = {
-  branch: string
-};
+type State = {};
 
 class Changesets extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = {
-      branch: ""
-    };
   }
 
   onPageChange = (link: string) => {
@@ -95,16 +91,18 @@ class Changesets extends React.PureComponent<Props, State> {
   componentDidUpdate(prevProps: Props) {
     const { page, list, repository, match } = this.props;
     const { namespace, name } = repository;
-    const branch = decodeURIComponent(match.params.branch);
+    const branch = match.params.branch;
+
     if (!this.props.loading) {
       if (prevProps.branch !== this.props.branch) {
-        this.setState({ branch });
         this.updateContent();
       }
 
       if (list && (list.page || list.page === 0)) {
+        console.log(list);
         // backend starts paging at 0
         const statePage: number = list.page + 1;
+        console.log(`page: ${page} - statePage: ${statePage}`);
         if (page !== statePage) {
           if (branch) {
             this.props.history.push(
@@ -194,9 +192,9 @@ const getPageFromProps = props => {
 const mapStateToProps = (state, ownProps: Props) => {
   const { repository } = ownProps;
   const branchName = ownProps.match.params.branch;
-  const branch = getBranch(state, repository, branchName);
+  const branch = getBranch(state, repository, decodeURIComponent(branchName));
   const loading = isFetchChangesetsPending(state, repository, branch);
-  const changesets = getChangesetsFromState(state, repository);
+  const changesets = getChangesets(state, repository, branch);
   const branchNames = getBranchNames(state, repository);
   const error = getFetchChangesetsFailure(state, repository, branch);
   const list = selectListAsCollection(state, repository);

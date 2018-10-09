@@ -82,7 +82,6 @@ export function fetchChangesetsByPage(repository: Repository, page: number) {
   return fetchChangesetsWithOptions(repository, undefined, `?page=${page - 1}`);
 }
 
-// TODO: Rewrite code to fetch changesets by branches, adjust tests and let BranchChooser fetch branches
 export function fetchChangesetsByBranchAndPage(
   repository: Repository,
   branch: Branch,
@@ -171,7 +170,7 @@ function byKeyReducer(
       return {
         ...state,
         [key]: {
-          byId: { ...byIds },
+          byId: byIds,
           list: {
             entries: changesetIds,
             entry: {
