@@ -1,249 +1,121 @@
 // @flow
-import React from "react";
-import { connect } from "react-redux";
-import { translate } from "react-i18next";
-import {
-  ErrorNotification,
-  Loading,
-  Paginator
-} from "@scm-manager/ui-components";
 
+import React from "react";
+import {withRouter} from "react-router-dom";
+import type {Branch, Changeset, PagedCollection, Repository} from "@scm-manager/ui-types";
 import {
-  fetchChangesets,
+  fetchChangesetsByBranch,
   fetchChangesetsByBranchAndPage,
-  fetchChangesetsByLink,
-  fetchChangesetsByPage,
-  getChangesetsFromState,
+  getChangesets,
   getFetchChangesetsFailure,
   isFetchChangesetsPending,
   selectListAsCollection
 } from "../modules/changesets";
-import type { History } from "history";
-import type {
-  Changeset,
-  PagedCollection,
-  Repository,
-  Branch
-} from "@scm-manager/ui-types";
+import {connect} from "react-redux";
 import ChangesetList from "../components/changesets/ChangesetList";
-import { withRouter } from "react-router-dom";
-import { fetchBranches, getBranch, getBranchNames } from "../modules/branches";
-import BranchChooser from "./BranchChooser";
+import {ErrorPage, LinkPaginator, Loading} from "@scm-manager/ui-components";
 
 type Props = {
-  repository: Repository,
-  branchName: string,
-  branchNames: string[],
-  history: History,
-  fetchChangesetsByNamespaceNameAndBranch: (
-    namespace: string,
-    name: string,
-    branch: string
-  ) => void,
-  list: PagedCollection,
-  fetchChangesetsByLink: (Repository, string, Branch) => void,
-  fetchChangesetsByPage: (Repository, number) => void,
+  fetchChangesetsByBranch: (Repository, Branch) => void,
   fetchChangesetsByBranchAndPage: (Repository, Branch, number) => void,
-  fetchBranches: Repository => void,
-  page: number,
-  t: string => string,
-  match: any,
+  repository: Repository, //TODO: Do we really need/want this here?
+  branch: Branch,
   changesets: Changeset[],
   loading: boolean,
-  error: boolean,
-  branch: Branch
+  match: any,
+  list: PagedCollection,
+  error: Error
 };
 
-type State = {
-  branch: string
-};
+type State = {};
 
-class Changesets extends React.PureComponent<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      branch: ""
-    };
-  }
-
-  onPageChange = (link: string) => {
-    const { repository, branch } = this.props;
-    this.props.fetchChangesetsByLink(repository, link, branch);
-  };
-
+class ChangesetContainer extends React.Component<Props, State> {
   componentDidMount() {
-    if (!this.props.loading) {
-      this.updateContent();
-    }
-  }
-
-  updateContent() {
+    console.log("Component did mount");
     const {
+      fetchChangesetsByBranch,
+      fetchChangesetsByBranchAndPage,
       repository,
       branch,
-      page,
-      fetchChangesetsByPage,
-      fetchChangesetsByBranchAndPage
+      match
     } = this.props;
-    if (branch) {
-      fetchChangesetsByBranchAndPage(repository, branch, page);
+    const { page } = match.params;
+    if (!page) {
+      fetchChangesetsByBranch(repository, branch);
     } else {
-      fetchChangesetsByPage(repository, page);
-    }
-  }
-
-  componentDidUpdate(prevProps: Props) {
-    const { page, list, repository, match } = this.props;
-    const { namespace, name } = repository;
-    const branch = decodeURIComponent(match.params.branch);
-    if (!this.props.loading) {
-      if (prevProps.branch !== this.props.branch) {
-        this.setState({ branch });
-        this.updateContent();
-      }
-
-      if (list && (list.page || list.page === 0)) {
-        // backend starts paging at 0
-        const statePage: number = list.page + 1;
-        if (page !== statePage) {
-          if (branch) {
-            this.props.history.push(
-              `/repo/${namespace}/${name}/${branch}/changesets/${statePage}`
-            );
-          } else {
-            this.props.history.push(
-              `/repo/${namespace}/${name}/changesets/${statePage}`
-            );
-          }
-        }
-      }
+      fetchChangesetsByBranchAndPage(repository, branch, page);
     }
   }
 
   render() {
     const { changesets, loading, error } = this.props;
+
+    // TODO: i18n
     if (error) {
-      return <ErrorNotification error={error} />;
+      return (
+        <ErrorPage
+          title={"Failed loading branches"}
+          subtitle={"Somethin went wrong"}
+          error={error}
+        />
+      );
     }
 
-    if (loading || !changesets) {
+    if (loading) {
       return <Loading />;
     }
-
+    if (!changesets || changesets.length === 0) {
+      return null;
+    }
     return (
-      <div>
+      <>
         {this.renderList()}
         {this.renderPaginator()}
-      </div>
+      </>
     );
   }
 
   renderList = () => {
-    const branch = decodeURIComponent(this.props.match.params.branch);
-    const { repository, changesets, t } = this.props;
-
-    return (
-      <>
-        <BranchChooser
-          repository={repository}
-          selectedBranchName={branch}
-          label={t("changesets.branchselector-label")}
-          callback={branch => this.branchChanged(branch)}
-        />
-        <ChangesetList repository={repository} changesets={changesets} />
-      </>
-    );
+    const { repository, changesets } = this.props;
+    return <ChangesetList repository={repository} changesets={changesets} />;
   };
 
-  renderPaginator() {
+  renderPaginator = () => {
     const { list } = this.props;
+    console.log(list);
     if (list) {
-      return <Paginator collection={list} onPageChange={this.onPageChange} />;
+      return <LinkPaginator collection={list} />;
     }
     return null;
-  }
-
-  branchChanged = (branch: Branch): void => {
-    const { history, repository } = this.props;
-    if (branch === undefined) {
-      history.push(
-        `/repo/${repository.namespace}/${repository.name}/changesets`
-      );
-    } else {
-      const branchName = encodeURIComponent(branch.name);
-      this.setState({ branch: branchName });
-      history.push(
-        `/repo/${repository.namespace}/${
-          repository.name
-        }/${branchName}/changesets`
-      );
-    }
   };
 }
 
-const getPageFromProps = props => {
-  let page = props.match.params.page;
-  if (page) {
-    page = parseInt(page, 10);
-  } else {
-    page = 1;
-  }
-  return page;
-};
-
-const mapStateToProps = (state, ownProps: Props) => {
-  const { repository } = ownProps;
-  const branchName = ownProps.match.params.branch;
-  const branch = getBranch(state, repository, branchName);
-  const loading = isFetchChangesetsPending(state, repository, branch);
-  const changesets = getChangesetsFromState(state, repository);
-  const branchNames = getBranchNames(state, repository);
-  const error = getFetchChangesetsFailure(state, repository, branch);
-  const list = selectListAsCollection(state, repository);
-  const page = getPageFromProps(ownProps);
-
-  return {
-    loading,
-    changesets,
-    branchNames,
-    error,
-    list,
-    page,
-    branch
-  };
-};
-
 const mapDispatchToProps = dispatch => {
   return {
-    fetchBranches: (repository: Repository) => {
-      dispatch(fetchBranches(repository));
-    },
-    fetchChangesets: (repository: Repository) => {
-      dispatch(fetchChangesets(repository));
-    },
-    fetchChangesetsByPage: (repository, page: number) => {
-      dispatch(fetchChangesetsByPage(repository, page));
+    fetchChangesetsByBranch: (repo: Repository, branch: Branch) => {
+      dispatch(fetchChangesetsByBranch(repo, branch));
     },
     fetchChangesetsByBranchAndPage: (
-      repository,
+      repo: Repository,
       branch: Branch,
       page: number
     ) => {
-      dispatch(fetchChangesetsByBranchAndPage(repository, branch, page));
-    },
-    fetchChangesetsByLink: (
-      repository: Repository,
-      link: string,
-      branch?: Branch
-    ) => {
-      dispatch(fetchChangesetsByLink(repository, link, branch));
+      dispatch(fetchChangesetsByBranchAndPage(repo, branch, page));
     }
   };
 };
 
+const mapStateToProps = (state: any, ownProps: Props) => {
+  const { repository, branch } = ownProps;
+  const changesets = getChangesets(state, repository, branch);
+  const loading = isFetchChangesetsPending(state, repository, branch);
+  const error = getFetchChangesetsFailure(state, repository, branch);
+  const list = selectListAsCollection(state, repository, branch);
+  return { changesets, list, loading, error };
+};
 export default withRouter(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )(translate("repos")(Changesets))
+  )(ChangesetContainer)
 );

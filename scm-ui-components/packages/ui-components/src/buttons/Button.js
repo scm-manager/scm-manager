@@ -1,7 +1,7 @@
 //@flow
 import React from "react";
 import classNames from "classnames";
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 
 export type ButtonProps = {
   label: string,
@@ -59,7 +59,7 @@ class Button extends React.Component<Props> {
   render() {
     const { link } = this.props;
     if (link) {
-      return <Link to={link}>{this.renderButton()}</Link>;
+      return <Link to={link}>{this.renderButton()}</Link>; // TODO: className does only apply to button, not the Link
     } else {
       return this.renderButton();
     }

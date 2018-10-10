@@ -1,21 +1,11 @@
 // @flow
 
-import {
-  FAILURE_SUFFIX,
-  PENDING_SUFFIX,
-  SUCCESS_SUFFIX
-} from "../../modules/types";
-import { apiClient } from "@scm-manager/ui-components";
-import { isPending } from "../../modules/pending";
-import { getFailure } from "../../modules/failure";
-import { combineReducers } from "redux";
-import type {
-  Action,
-  Changeset,
-  PagedCollection,
-  Repository,
-  Branch
-} from "@scm-manager/ui-types";
+import {FAILURE_SUFFIX, PENDING_SUFFIX, SUCCESS_SUFFIX} from "../../modules/types";
+import {apiClient} from "@scm-manager/ui-components";
+import {isPending} from "../../modules/pending";
+import {getFailure} from "../../modules/failure";
+import {combineReducers} from "redux";
+import type {Action, Branch, Changeset, PagedCollection, Repository} from "@scm-manager/ui-types";
 
 export const FETCH_CHANGESETS = "scm/repos/FETCH_CHANGESETS";
 export const FETCH_CHANGESETS_PENDING = `${FETCH_CHANGESETS}_${PENDING_SUFFIX}`;
@@ -82,7 +72,6 @@ export function fetchChangesetsByPage(repository: Repository, page: number) {
   return fetchChangesetsWithOptions(repository, undefined, `?page=${page - 1}`);
 }
 
-// TODO: Rewrite code to fetch changesets by branches, adjust tests and let BranchChooser fetch branches
 export function fetchChangesetsByBranchAndPage(
   repository: Repository,
   branch: Branch,
@@ -167,11 +156,11 @@ function byKeyReducer(
       if (state[key]) {
         oldChangesets[key] = state[key];
       }
-      const byIds = extractChangesetsByIds(changesets, oldChangesets[key].byId);
+      const byIds = extractChangesetsByIds(changesets);
       return {
         ...state,
         [key]: {
-          byId: { ...byIds },
+          byId: byIds,
           list: {
             entries: changesetIds,
             entry: {
@@ -191,15 +180,11 @@ export default combineReducers({
   byKey: byKeyReducer
 });
 
-function extractChangesetsByIds(changesets: any, oldChangesetsByIds: any) {
+function extractChangesetsByIds(changesets: any) {
   const changesetsByIds = {};
 
   for (let changeset of changesets) {
     changesetsByIds[changeset.id] = changeset;
-  }
-
-  for (let id in oldChangesetsByIds) {
-    changesetsByIds[id] = oldChangesetsByIds[id];
   }
 
   return changesetsByIds;
@@ -234,16 +219,20 @@ export function getFetchChangesetsFailure(
   return getFailure(state, FETCH_CHANGESETS, createItemId(repository, branch));
 }
 
-const selectList = (state: Object, repository: Repository) => {
-  const itemId = createItemId(repository);
+const selectList = (state: Object, repository: Repository, branch?: Branch) => {
+  const itemId = createItemId(repository, branch);
   if (state.changesets.byKey[itemId] && state.changesets.byKey[itemId].list) {
     return state.changesets.byKey[itemId].list;
   }
   return {};
 };
 
-const selectListEntry = (state: Object, repository: Repository): Object => {
-  const list = selectList(state, repository);
+const selectListEntry = (
+  state: Object,
+  repository: Repository,
+  branch?: Branch
+): Object => {
+  const list = selectList(state, repository, branch);
   if (list.entry) {
     return list.entry;
   }
@@ -252,9 +241,10 @@ const selectListEntry = (state: Object, repository: Repository): Object => {
 
 export const selectListAsCollection = (
   state: Object,
-  repository: Repository
+  repository: Repository,
+  branch?: Branch
 ): PagedCollection => {
-  return selectListEntry(state, repository);
+  return selectListEntry(state, repository, branch);
 };
 
 export function getChangesetsFromState(state: Object, repository: Repository) {

@@ -15,6 +15,7 @@ export { default as Logo } from "./Logo.js";
 export { default as MailLink } from "./MailLink.js";
 export { default as Notification } from "./Notification.js";
 export { default as Paginator } from "./Paginator.js";
+export { default as LinkPaginator } from "./LinkPaginator.js";
 export { default as ProtectedRoute } from "./ProtectedRoute.js";
 
 export { apiClient, NOT_FOUND_ERROR, UNAUTHORIZED_ERROR } from "./apiclient.js";

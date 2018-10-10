@@ -3,21 +3,21 @@
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 import fetchMock from "fetch-mock";
-import {
+import reducer, {
   FETCH_CHANGESETS,
   FETCH_CHANGESETS_FAILURE,
   FETCH_CHANGESETS_PENDING,
   FETCH_CHANGESETS_SUCCESS,
   fetchChangesets,
-  fetchChangesetsByBranchAndPage,
   fetchChangesetsByBranch,
+  fetchChangesetsByBranchAndPage,
   fetchChangesetsByPage,
   fetchChangesetsSuccess,
   getChangesets,
   getFetchChangesetsFailure,
   isFetchChangesetsPending
 } from "./changesets";
-import reducer from "./changesets";
+
 const branch = {
   name: "specific",
   revision: "123",
@@ -40,7 +40,10 @@ const repository = {
     changesets: {
       href: "http://scm/api/rest/v2/repositories/foo/bar/changesets"
     },
-    branches: [branch]
+    branches: {
+      href:
+        "http://scm/api/rest/v2/repositories/foo/bar/branches/specific/branches"
+    }
   }
 };
 
@@ -237,38 +240,6 @@ describe("changesets", () => {
         },
         entries: ["changeset1", "changeset2", "changeset3"]
       });
-    });
-
-    it("should not delete existing changesets from state", () => {
-      const responseBody = {
-        _embedded: {
-          changesets: [
-            { id: "changeset1", author: { mail: "z@phod.com", name: "zaphod" } }
-          ],
-          _embedded: {
-            tags: [],
-            branches: [],
-            parents: []
-          }
-        }
-      };
-      const newState = reducer(
-        {
-          byKey: {
-            "foo/bar": {
-              byId: {
-                ["changeset2"]: {
-                  id: "changeset2",
-                  author: { mail: "mail@author.com", name: "author" }
-                }
-              }
-            }
-          }
-        },
-        fetchChangesetsSuccess(responseBody, repository)
-      );
-      expect(newState.byKey["foo/bar"].byId["changeset2"]).toBeDefined();
-      expect(newState.byKey["foo/bar"].byId["changeset1"]).toBeDefined();
     });
   });
 

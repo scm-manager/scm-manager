@@ -10,6 +10,7 @@ import reducer, {
   getBranch,
   getBranches,
   getBranchNames,
+  getFetchBranchesFailure,
   isFetchBranchesPending
 } from "./branches";
 
@@ -129,6 +130,8 @@ describe("branches", () => {
   });
 
   describe("branch selectors", () => {
+    const error = new Error("Something went wrong");
+
     const state = {
       branches: {
         [key]: {
@@ -172,6 +175,19 @@ describe("branches", () => {
     it("should return undefined if branch does not exist", () => {
       const branch = getBranch(state, repository, "branch42");
       expect(branch).toBeFalsy();
+    });
+    it("should return error if fetching branches failed", () => {
+      const state = {
+        failure: {
+          [FETCH_BRANCHES + "/foo/bar"]: error
+        }
+      };
+
+      expect(getFetchBranchesFailure(state, repository)).toEqual(error);
+    });
+
+    it("should return false if fetching branches did not fail", () => {
+      expect(getFetchBranchesFailure({}, repository)).toBeUndefined();
     });
   });
 });
