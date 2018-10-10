@@ -7,8 +7,12 @@ import javax.inject.Inject;
 
 public class BrowserResultToFileObjectDtoMapper {
 
+  private final FileObjectToFileObjectDtoMapper fileObjectToFileObjectDtoMapper;
+
   @Inject
-  private FileObjectToFileObjectDtoMapper fileObjectToFileObjectDtoMapper;
+  public BrowserResultToFileObjectDtoMapper(FileObjectToFileObjectDtoMapper fileObjectToFileObjectDtoMapper) {
+    this.fileObjectToFileObjectDtoMapper = fileObjectToFileObjectDtoMapper;
+  }
 
   public FileObjectDto map(BrowserResult browserResult, NamespaceAndName namespaceAndName, String path) {
     FileObjectDto fileObjectDto = fileObjectToFileObjectDtoMapper.map(browserResult.getFile(), namespaceAndName, browserResult.getRevision());

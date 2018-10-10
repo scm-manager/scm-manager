@@ -24,8 +24,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static sonia.scm.api.v2.resources.DispatcherMock.createDispatcher;
 
@@ -44,23 +42,18 @@ public class SourceRootResourceTest extends RepositoryTestBase {
   @Mock
   private BrowseCommandBuilder browseCommandBuilder;
 
-  @Mock
-  private FileObjectToFileObjectDtoMapper fileObjectToFileObjectDtoMapper;
-
   @InjectMocks
+  private FileObjectToFileObjectDtoMapperImpl fileObjectToFileObjectDtoMapper;
+
   private BrowserResultToFileObjectDtoMapper browserResultToFileObjectDtoMapper;
 
 
   @Before
   public void prepareEnvironment() throws Exception {
+    browserResultToFileObjectDtoMapper = new BrowserResultToFileObjectDtoMapper(fileObjectToFileObjectDtoMapper);
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(service);
     when(service.getBrowseCommand()).thenReturn(browseCommandBuilder);
 
-    FileObjectDto dto = new FileObjectDto();
-    dto.setName("name");
-    dto.setLength(1024);
-
-    when(fileObjectToFileObjectDtoMapper.map(any(FileObject.class), any(NamespaceAndName.class), anyString())).thenReturn(dto);
     SourceRootResource sourceRootResource = new SourceRootResource(serviceFactory, browserResultToFileObjectDtoMapper);
     super.sourceRootResource = Providers.of(sourceRootResource);
     dispatcher = createDispatcher(getRepositoryRootResource());
@@ -75,8 +68,9 @@ public class SourceRootResourceTest extends RepositoryTestBase {
 
     dispatcher.invoke(request, response);
     assertThat(response.getStatus()).isEqualTo(200);
+    System.out.println(response.getContentAsString());
     assertThat(response.getContentAsString()).contains("\"revision\":\"revision\"");
-    assertThat(response.getContentAsString()).contains("\"files\":");
+    assertThat(response.getContentAsString()).contains("\"children\":");
   }
 
   @Test
@@ -93,6 +87,7 @@ public class SourceRootResourceTest extends RepositoryTestBase {
   public void shouldGetResultForSingleFile() throws URISyntaxException, IOException, NotFoundException {
     FileObject fileObject = new FileObject();
     fileObject.setName("File Object!");
+    fileObject.setPath("/");
     BrowserResult browserResult = new BrowserResult("revision", fileObject);
 
     when(browseCommandBuilder.getBrowserResult()).thenReturn(browserResult);
