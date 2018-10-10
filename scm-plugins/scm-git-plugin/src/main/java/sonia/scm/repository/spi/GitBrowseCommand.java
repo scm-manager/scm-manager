@@ -168,67 +168,52 @@ public class GitBrowseCommand extends AbstractGitCommand
   private FileObject createFileObject(org.eclipse.jgit.lib.Repository repo,
     BrowseCommandRequest request, ObjectId revId, TreeWalk treeWalk)
     throws IOException, RevisionNotFoundException {
-    FileObject file;
 
-    try
+    FileObject file = new FileObject();
+
+    String path = treeWalk.getPathString();
+
+    file.setName(treeWalk.getNameString());
+    file.setPath(path);
+
+    SubRepository sub = null;
+
+    if (!request.isDisableSubRepositoryDetection())
     {
-      file = new FileObject();
+      sub = getSubRepository(repo, revId, path);
+    }
 
-      String path = treeWalk.getPathString();
+    if (sub != null)
+    {
+      logger.trace("{} seems to be a sub repository", path);
+      file.setDirectory(true);
+      file.setSubRepository(sub);
+    }
+    else
+    {
+      ObjectLoader loader = repo.open(treeWalk.getObjectId(0));
 
-      file.setName(treeWalk.getNameString());
-      file.setPath(path);
+      file.setDirectory(loader.getType() == Constants.OBJ_TREE);
+      file.setLength(loader.getSize());
 
-      SubRepository sub = null;
-
-      if (!request.isDisableSubRepositoryDetection())
+      // don't show message and date for directories to improve performance
+      if (!file.isDirectory() &&!request.isDisableLastCommit())
       {
-        sub = getSubRepository(repo, revId, path);
-      }
+        logger.trace("fetch last commit for {} at {}", path, revId.getName());
+        RevCommit commit = getLatestCommit(repo, revId, path);
 
-      if (sub != null)
-      {
-        logger.trace("{} seems to be a sub repository", path);
-        file.setDirectory(true);
-        file.setSubRepository(sub);
-      }
-      else
-      {
-        ObjectLoader loader = repo.open(treeWalk.getObjectId(0));
-
-        file.setDirectory(loader.getType() == Constants.OBJ_TREE);
-        file.setLength(loader.getSize());
-
-        // don't show message and date for directories to improve performance
-        if (!file.isDirectory() &&!request.isDisableLastCommit())
+        if (commit != null)
         {
-          logger.trace("fetch last commit for {} at {}", path, revId.getName());
-          RevCommit commit = getLatestCommit(repo, revId, path);
-
-          if (commit != null)
-          {
-            file.setLastModified(GitUtil.getCommitTime(commit));
-            file.setDescription(commit.getShortMessage());
-          }
-          else if (logger.isWarnEnabled())
-          {
-            logger.warn("could not find latest commit for {} on {}", path,
-              revId);
-          }
+          file.setLastModified(GitUtil.getCommitTime(commit));
+          file.setDescription(commit.getShortMessage());
+        }
+        else if (logger.isWarnEnabled())
+        {
+          logger.warn("could not find latest commit for {} on {}", path,
+            revId);
         }
       }
     }
-    catch (MissingObjectException ex)
-    {
-      file = null;
-      logger.error("could not fetch object for id {}", revId);
-
-      if (logger.isTraceEnabled())
-      {
-        logger.trace("could not fetch object", ex);
-      }
-    }
-
     return file;
   }
 
@@ -331,21 +316,17 @@ public class GitBrowseCommand extends AbstractGitCommand
     while (treeWalk.next())
     {
 
-      FileObject fo = createFileObject(repo, request, revId, treeWalk);
-      if (!fo.getPath().startsWith(parent.getPath())) {
+      FileObject fileObject = createFileObject(repo, request, revId, treeWalk);
+      if (!fileObject.getPath().startsWith(parent.getPath())) {
         parent.setChildren(files);
-        return fo;
+        return fileObject;
       }
 
+      files.add(fileObject);
 
-      if (fo != null)
-      {
-        files.add(fo);
-      }
-
-      if (request.isRecursive() && fo.isDirectory()) {
+      if (request.isRecursive() && fileObject.isDirectory()) {
         treeWalk.enterSubtree();
-        FileObject rc = findChildren(fo, repo, request, revId, treeWalk);
+        FileObject rc = findChildren(fileObject, repo, request, revId, treeWalk);
         if (rc != null) {
           files.add(rc);
         }
