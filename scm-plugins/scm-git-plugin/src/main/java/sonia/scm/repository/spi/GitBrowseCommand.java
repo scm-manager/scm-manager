@@ -286,7 +286,7 @@ public class GitBrowseCommand extends AbstractGitCommand
       logger.debug("load repository browser for revision {}", revId.name());
 
       treeWalk = new TreeWalk(repo);
-      if (!Strings.isNullOrEmpty(request.getPath())) {
+      if (!Strings.isNullOrEmpty(request.getPath()) && !"/".equals(request.getPath())) {
         treeWalk.setFilter(PathFilter.create(request.getPath()));
       }
       revWalk = new RevWalk(repo);
