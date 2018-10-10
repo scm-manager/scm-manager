@@ -17,7 +17,10 @@ export type File = {
   length: number,
   lastModified?: string,
   subRepository?: SubRepository, // TODO
-  _links: Links
+  _links: Links,
+  _embedded: {
+    children: File[]
+  }
 };
 
 export type SourcesCollection = Collection & {
