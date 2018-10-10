@@ -52,10 +52,13 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.group.GroupNames;
+import sonia.scm.group.GroupPermissions;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryDAO;
+import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.user.User;
+import sonia.scm.user.UserPermissions;
 import sonia.scm.util.Util;
 
 import java.util.List;
@@ -74,7 +77,7 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
 
   // TODO move to util class
   private static final String SEPARATOR = System.getProperty("line.separator", "\n");
-  
+
   /** Field description */
   private static final String ADMIN_PERMISSION = "*";
 
@@ -88,7 +91,7 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
     LoggerFactory.getLogger(DefaultAuthorizationCollector.class);
 
   //~--- constructors ---------------------------------------------------------
-  
+
   /**
    * Constructs ...
    *
@@ -209,7 +212,7 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
           String perm = permission.getType().getPermissionPrefix().concat(repository.getId());
           if (logger.isTraceEnabled())
           {
-            logger.trace("add repository permission {} for user {} at repository {}", 
+            logger.trace("add repository permission {} for user {} at repository {}",
               perm, user.getName(), repository.getName());
           }
 
@@ -254,12 +257,27 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
 
       collectGlobalPermissions(builder, user, groups);
       collectRepositoryPermissions(builder, user, groups);
+      builder.add(canReadOwnUser(user));
+      builder.add(getUserAutocompletePermission());
+      builder.add(getGroupAutocompletePermission());
       permissions = builder.build();
     }
 
     SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(roles);
     info.addStringPermissions(permissions);
     return info;
+  }
+
+  private String getGroupAutocompletePermission() {
+    return GroupPermissions.autocomplete().asShiroString();
+  }
+
+  private String getUserAutocompletePermission() {
+    return UserPermissions.autocomplete().asShiroString();
+  }
+
+  private String canReadOwnUser(User user) {
+    return UserPermissions.read(user.getName()).asShiroString();
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -272,7 +290,7 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
       || ((!perm.isGroupPermission()) && user.getName().equals(perm.getName()));
     //J+
   }
-  
+
   @Subscribe
   public void invalidateCache(AuthorizationChangedEvent event) {
     if (event.isEveryUserAffected()) {
@@ -281,12 +299,12 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
       invalidateCache();
     }
   }
-  
+
   private void invalidateUserCache(final String username) {
     logger.info("invalidate cache for user {}, because of a received authorization event", username);
     cache.removeAll((CacheKey item) -> username.equalsIgnoreCase(item.username));
   }
-  
+
   private void invalidateCache() {
     logger.info("invalidate cache, because of a received authorization event");
     cache.clear();

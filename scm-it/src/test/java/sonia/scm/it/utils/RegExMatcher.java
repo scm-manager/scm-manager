@@ -24,6 +24,6 @@ public class RegExMatcher extends BaseMatcher<String> {
 
   @Override
   public boolean matches(Object o) {
-    return Pattern.compile(pattern).matcher(o.toString()).matches();
+    return o != null && Pattern.compile(pattern).matcher(o.toString()).matches();
   }
 }

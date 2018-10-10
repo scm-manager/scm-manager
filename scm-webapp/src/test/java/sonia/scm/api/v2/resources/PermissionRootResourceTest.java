@@ -48,6 +48,7 @@ import java.util.stream.Stream;
 import static de.otto.edison.hal.Link.link;
 import static de.otto.edison.hal.Links.linkingTo;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.mockito.Matchers.any;
@@ -231,6 +232,35 @@ public class PermissionRootResourceTest extends RepositoryTestBase {
         }
       })
     );
+  }
+
+
+  @Test
+  public void shouldGet400OnCreatingNewPermissionWithNotAllowedCharacters() throws URISyntaxException {
+    // the @ character at the begin of the name is not allowed
+    createUserWithRepository("user");
+    String permissionJson = "{ \"name\": \"@permission\", \"type\": \"OWNER\" }";
+    MockHttpRequest request = MockHttpRequest
+      .post("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + PATH_OF_ALL_PERMISSIONS)
+      .content(permissionJson.getBytes())
+      .contentType(VndMediaType.PERMISSION);
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(400, response.getStatus());
+
+    // the whitespace at the begin opf the name is not allowed
+    permissionJson = "{ \"name\": \" permission\", \"type\": \"OWNER\" }";
+    request = MockHttpRequest
+      .post("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + PATH_OF_ALL_PERMISSIONS)
+      .content(permissionJson.getBytes())
+      .contentType(VndMediaType.PERMISSION);
+    response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(400, response.getStatus());
   }
 
   @Test

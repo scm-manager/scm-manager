@@ -23,12 +23,14 @@ class BaseUrlSettings extends React.Component<Props> {
           label={t("base-url-settings.force-base-url")}
           onChange={this.handleForceBaseUrlChange}
           disabled={!hasUpdatePermission}
+          helpText={t("help.forceBaseUrlHelpText")}
         />
         <InputField
           label={t("base-url-settings.base-url")}
           onChange={this.handleBaseUrlChange}
           value={baseUrl}
           disabled={!hasUpdatePermission}
+          helpText={t("help.baseUrlHelpText")}
         />
       </div>
     );

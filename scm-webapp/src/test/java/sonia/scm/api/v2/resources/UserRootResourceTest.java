@@ -23,7 +23,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.text.MessageFormat;
 
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
@@ -96,6 +95,32 @@ public class UserRootResourceTest {
     assertTrue(response.getContentAsString().contains("\"name\":\"Neo\""));
     assertTrue(response.getContentAsString().contains("\"self\":{\"href\":\"/v2/users/Neo\"}"));
     assertTrue(response.getContentAsString().contains("\"delete\":{\"href\":\"/v2/users/Neo\"}"));
+  }
+
+  @Test
+  public void shouldGet400OnCreatingNewUserWithNotAllowedCharacters() throws URISyntaxException {
+    // the @ character at the begin of the name is not allowed
+    String userJson = "{ \"name\": \"@user\", \"type\": \"db\" }";
+    MockHttpRequest request = MockHttpRequest
+      .post("/" + UserRootResource.USERS_PATH_V2)
+      .contentType(VndMediaType.USER)
+      .content(userJson.getBytes());
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(400, response.getStatus());
+
+    // the whitespace at the begin opf the name is not allowed
+    userJson = "{ \"name\": \" user\", \"type\": \"db\" }";
+    request = MockHttpRequest
+      .post("/" + UserRootResource.USERS_PATH_V2)
+      .contentType(VndMediaType.USER)
+      .content(userJson.getBytes());
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(400, response.getStatus());
   }
 
   @Test

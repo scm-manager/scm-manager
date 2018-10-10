@@ -22,9 +22,11 @@ import { translate } from "react-i18next";
 import RepositoryDetails from "../components/RepositoryDetails";
 import DeleteNavAction from "../components/DeleteNavAction";
 import Edit from "../containers/Edit";
+import Permissions from "../permissions/containers/Permissions";
 
 import type { History } from "history";
 import EditNavLink from "../components/EditNavLink";
+import PermissionsNavLink from "../components/PermissionsNavLink";
 import Sources from "../sources/containers/Sources";
 import RepositoryNavLink from "../components/RepositoryNavLink";
 
@@ -104,6 +106,15 @@ class RepositoryRoot extends React.Component<Props> {
               component={() => <Edit repository={repository} />}
             />
             <Route
+              path={`${url}/permissions`}
+              render={props => (
+                <Permissions
+                  namespace={this.props.repository.namespace}
+                  repoName={this.props.repository.name}
+                />
+              )}
+            />
+            <Route
               path={`${url}/sources`}
               exact={true}
               component={props => (
@@ -129,6 +140,10 @@ class RepositoryRoot extends React.Component<Props> {
             <Navigation>
               <Section label={t("repository-root.navigation-label")}>
                 <NavLink to={url} label={t("repository-root.information")} />
+                <PermissionsNavLink
+                  permissionUrl={`${url}/permissions`}
+                  repository={repository}
+                />
                 <EditNavLink repository={repository} editUrl={`${url}/edit`} />
                 <RepositoryNavLink
                   repository={repository}

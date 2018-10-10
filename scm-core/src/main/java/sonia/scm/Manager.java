@@ -47,6 +47,9 @@ public interface Manager<T extends ModelObject>
         extends HandlerBase<T>, LastModifiedAware
 {
 
+  int DEFAULT_LIMIT = 5;
+
+
   /**
    * Reloads a object from store and overwrites all changes.
    *

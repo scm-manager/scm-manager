@@ -34,6 +34,8 @@ public class ResourceLinksMock {
     when(resourceLinks.repositoryTypeCollection()).thenReturn(new ResourceLinks.RepositoryTypeCollectionLinks(uriInfo));
     when(resourceLinks.uiPluginCollection()).thenReturn(new ResourceLinks.UIPluginCollectionLinks(uriInfo));
     when(resourceLinks.uiPlugin()).thenReturn(new ResourceLinks.UIPluginLinks(uriInfo));
+    when(resourceLinks.authentication()).thenReturn(new ResourceLinks.AuthenticationLinks(uriInfo));
+    when(resourceLinks.index()).thenReturn(new ResourceLinks.IndexLinks(uriInfo));
 
     return resourceLinks;
   }

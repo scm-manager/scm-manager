@@ -49,6 +49,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.function.Function;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -266,7 +267,12 @@ public final class WebUtil
    */
   public static boolean isGzipSupported(HttpServletRequest request)
   {
-    String enc = request.getHeader(HEADER_ACCEPTENCODING);
+    return isGzipSupported(request::getHeader);
+  }
+
+  public static boolean isGzipSupported(Function<String, String> headerResolver)
+  {
+    String enc = headerResolver.apply(HEADER_ACCEPTENCODING);
 
     return (enc != null) && enc.contains("gzip");
   }

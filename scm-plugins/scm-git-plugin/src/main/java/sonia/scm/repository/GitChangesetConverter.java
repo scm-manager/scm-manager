@@ -39,7 +39,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.PersonIdent;
-import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.treewalk.TreeWalk;
@@ -51,8 +50,8 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -130,27 +129,9 @@ public class GitChangesetConverter implements Closeable
    *
    * @throws IOException
    */
-  public Changeset createChangeset(RevCommit commit) throws IOException
+  public Changeset createChangeset(RevCommit commit)
   {
-    List<String> branches = Lists.newArrayList();
-    Set<Ref> refs = repository.getAllRefsByPeeledObjectId().get(commit.getId());
-
-    if (Util.isNotEmpty(refs))
-    {
-
-      for (Ref ref : refs)
-      {
-        String branch = GitUtil.getBranch(ref);
-
-        if (branch != null)
-        {
-          branches.add(branch);
-        }
-      }
-
-    }
-
-    return createChangeset(commit, branches);
+    return createChangeset(commit, Collections.emptyList());
   }
 
   /**
@@ -165,7 +146,6 @@ public class GitChangesetConverter implements Closeable
    * @throws IOException
    */
   public Changeset createChangeset(RevCommit commit, String branch)
-    throws IOException
   {
     return createChangeset(commit, Lists.newArrayList(branch));
   }
@@ -183,7 +163,6 @@ public class GitChangesetConverter implements Closeable
    * @throws IOException
    */
   public Changeset createChangeset(RevCommit commit, List<String> branches)
-    throws IOException
   {
     String id = commit.getId().name();
     List<String> parentList = null;
