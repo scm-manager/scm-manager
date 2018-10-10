@@ -201,7 +201,7 @@ public class RepositoryAccessITCase {
       .then()
       .statusCode(HttpStatus.SC_OK)
       .extract()
-      .path("_embedded.files.find{it.name=='a.txt'}._links.self.href");
+      .path("_embedded.children.find{it.name=='a.txt'}._links.self.href");
 
     given()
       .when()
@@ -216,7 +216,7 @@ public class RepositoryAccessITCase {
       .then()
       .statusCode(HttpStatus.SC_OK)
       .extract()
-      .path("_embedded.files.find{it.name=='subfolder'}._links.self.href");
+      .path("_embedded.children.find{it.name=='subfolder'}._links.self.href");
     String selfOfSubfolderUrl = given()
       .when()
       .get(subfolderSourceUrl)
@@ -231,7 +231,7 @@ public class RepositoryAccessITCase {
       .then()
       .statusCode(HttpStatus.SC_OK)
       .extract()
-      .path("_embedded.files[0]._links.self.href");
+      .path("_embedded.children[0]._links.self.href");
     given()
       .when()
       .get(subfolderContentUrl)

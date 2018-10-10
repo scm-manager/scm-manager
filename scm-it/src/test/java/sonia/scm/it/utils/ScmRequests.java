@@ -2,6 +2,8 @@ package sonia.scm.it.utils;
 
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.web.VndMediaType;
 
 import java.net.URI;
@@ -25,6 +27,8 @@ import static sonia.scm.it.utils.TestData.createPasswordChangeJson;
  */
 public class ScmRequests {
 
+  private static final Logger LOG = LoggerFactory.getLogger(ScmRequests.class);
+
   private String url;
   private String username;
   private String password;
@@ -46,10 +50,12 @@ public class ScmRequests {
    * @return the response of the GET request using the given link
    */
   private Response applyGETRequestFromLink(Response response, String linkPropertyName) {
-    return applyGETRequest(response
+    String result = response
       .then()
       .extract()
-      .path(linkPropertyName));
+      .path(linkPropertyName);
+    LOG.info("Extracted result {} from response: {}", linkPropertyName, result);
+    return applyGETRequest(result);
   }
 
 
@@ -267,24 +273,12 @@ public class ScmRequests {
       this.sourcesResponse = sourcesResponse;
     }
 
-    public SourcesResponse assertRevision(Consumer<String> assertRevision) {
-      String revision = sourcesResponse.then().extract().path("revision");
-      assertRevision.accept(revision);
-      return this;
-    }
-
-    public SourcesResponse assertFiles(Consumer<List> assertFiles) {
-      List files = sourcesResponse.then().extract().path("files");
-      assertFiles.accept(files);
-      return this;
-    }
-
     public AppliedChangesetsRequest requestFileHistory(String fileName) {
-      return new AppliedChangesetsRequest(applyGETRequestFromLink(sourcesResponse, "_embedded.files.find{it.name=='" + fileName + "'}._links.history.href"));
+      return new AppliedChangesetsRequest(applyGETRequestFromLink(sourcesResponse, "_embedded.children.find{it.name=='" + fileName + "'}._links.history.href"));
     }
 
     public AppliedSourcesRequest requestSelf(String fileName) {
-      return new AppliedSourcesRequest(applyGETRequestFromLink(sourcesResponse, "_embedded.files.find{it.name=='" + fileName + "'}._links.self.href"));
+      return new AppliedSourcesRequest(applyGETRequestFromLink(sourcesResponse, "_embedded.children.find{it.name=='" + fileName + "'}._links.self.href"));
     }
   }
 
