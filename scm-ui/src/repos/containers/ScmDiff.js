@@ -1,8 +1,8 @@
 // @flow
 
 import React from "react";
-import { Diff, Hunk, parseDiff } from "react-diff-view";
-import { apiClient } from "@scm-manager/ui-components";
+import {Diff, Hunk, parseDiff} from "react-diff-view";
+import {apiClient} from "@scm-manager/ui-components";
 
 type Props = {
   namespace: string,
@@ -17,13 +17,13 @@ class ScmDiff extends React.Component<Props> {
   }
 
   componentDidMount() {
-    const { namespace, name, revision } = this.props;
-    const url = `http://localhost:8081/scm/api/rest/v2/repositories/${namespace}/${name}/diff/${revision}`;
+    const {namespace, name, revision} = this.props;
+    const url = `/repositories/${namespace}/${name}/diff/${revision}`;
     apiClient
       .get(url)
       .then(response => response.text())
-      .then(text => this.setState({ diff: text }))
-      .catch(error => this.setState({ error }));
+      .then(text => this.setState({diff: text}))
+      .catch(error => this.setState({error}));
   }
 
   render() {
@@ -31,11 +31,18 @@ class ScmDiff extends React.Component<Props> {
       return null;
     }
     const files = parseDiff(this.state.diff);
+
+    const renderFile = ({newPath, oldRevision, newRevision, type, hunks}) => (
+      <div>
+        <div> File: {newPath} </div>
+        <Diff key={oldRevision + '-' + newRevision}  diffType={type} hunks={hunks} viewType="split">
+        </Diff>
+      </div>
+    );
+
     return (
       <div>
-        {files.map(({ hunks }, i) => (
-          <Diff key={i} hunks={hunks} viewType="unified" />
-        ))}
+        {files.map(renderFile)}
       </div>
     );
   }

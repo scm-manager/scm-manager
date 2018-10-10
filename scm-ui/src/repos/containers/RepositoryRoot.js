@@ -105,21 +105,21 @@ class RepositoryRoot extends React.Component<Props> {
               component={() => <Edit repository={repository} />}
             />
             <Route
-              path={`${url}/diff`}
-              component={() => (
-                <ScmDiff
-                  namespace={"scmadmin"}
-                  name={"foo"}
-                  revision={"4c18735d4c3bd89242284ed3eac52592637024b6"}
-                />
-              )}
-            />
-            <Route
               path={`${url}/permissions`}
               render={props => (
                 <Permissions
                   namespace={this.props.repository.namespace}
                   repoName={this.props.repository.name}
+                />
+              )}
+            />
+            <Route
+              path={`${url}/diff`}
+              component={() => (
+                <ScmDiff
+                  namespace={repository.namespace}
+                  name={repository.name}
+                  revision={"db64ca5992ad8e327c7687d49f5297bef7b29893"}
                 />
               )}
             />
