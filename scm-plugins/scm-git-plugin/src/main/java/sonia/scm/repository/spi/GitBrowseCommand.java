@@ -286,7 +286,7 @@ public class GitBrowseCommand extends AbstractGitCommand
       logger.debug("load repository browser for revision {}", revId.name());
 
       treeWalk = new TreeWalk(repo);
-      if (!Strings.isNullOrEmpty(request.getPath()) && !"/".equals(request.getPath())) {
+      if (!isRootRequest(request)) {
         treeWalk.setFilter(PathFilter.create(request.getPath()));
       }
       revWalk = new RevWalk(repo);
@@ -303,7 +303,7 @@ public class GitBrowseCommand extends AbstractGitCommand
         logger.error("could not find tree for {}", revId.name());
       }
 
-      if (Strings.isNullOrEmpty(request.getPath())) {
+      if (isRootRequest(request)) {
         result = createEmtpyRoot();
         findChildren(result, repo, request, revId, treeWalk);
       } else {
@@ -322,6 +322,10 @@ public class GitBrowseCommand extends AbstractGitCommand
     }
 
     return result;
+  }
+
+  private boolean isRootRequest(BrowseCommandRequest request) {
+    return Strings.isNullOrEmpty(request.getPath()) || "/".equals(request.getPath());
   }
 
   private FileObject findChildren(FileObject parent, org.eclipse.jgit.lib.Repository repo, BrowseCommandRequest request, ObjectId revId, TreeWalk treeWalk) throws IOException, RevisionNotFoundException {
