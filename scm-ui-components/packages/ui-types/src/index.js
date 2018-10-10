@@ -13,4 +13,4 @@ export type { Config } from "./Config";
 
 export type { Permission, PermissionEntry, PermissionCollection } from "./RepositoryPermissions";
 
-export type { SubRepository, File, SourcesCollection } from "./Sources";
+export type { SubRepository, File } from "./Sources";

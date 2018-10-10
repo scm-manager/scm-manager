@@ -1,11 +1,7 @@
 // @flow
 
 import * as types from "../../../modules/types";
-import type {
-  Repository,
-  SourcesCollection,
-  Action
-} from "@scm-manager/ui-types";
+import type { Repository, File, Action } from "@scm-manager/ui-types";
 import { apiClient } from "@scm-manager/ui-components";
 import { isPending } from "../../../modules/pending";
 import { getFailure } from "../../../modules/failure";
@@ -61,7 +57,7 @@ export function fetchSourcesSuccess(
   repository: Repository,
   revision: string,
   path: string,
-  sources: SourcesCollection
+  sources: File
 ) {
   return {
     type: FETCH_SOURCES_SUCCESS,
@@ -111,7 +107,7 @@ export function getSources(
   repository: Repository,
   revision: string,
   path: string
-): ?SourcesCollection {
+): ?File {
   if (state.sources) {
     return state.sources[createItemId(repository, revision, path)];
   }

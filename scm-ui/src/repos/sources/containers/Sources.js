@@ -1,7 +1,7 @@
 // @flow
 import React from "react";
 import { connect } from "react-redux";
-import type { Repository, SourcesCollection } from "@scm-manager/ui-types";
+import type { Repository, File } from "@scm-manager/ui-types";
 import FileTree from "../components/FileTree";
 import { ErrorNotification, Loading } from "@scm-manager/ui-components";
 import {
@@ -13,7 +13,7 @@ import {
 
 type Props = {
   repository: Repository,
-  sources: SourcesCollection,
+  sources: File,
   loading: boolean,
   error: Error,
   revision: string,

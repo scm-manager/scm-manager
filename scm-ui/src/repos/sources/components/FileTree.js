@@ -3,7 +3,7 @@ import React from "react";
 import { translate } from "react-i18next";
 import injectSheet from "react-jss";
 import FileTreeLeaf from "./FileTreeLeaf";
-import type { SourcesCollection } from "@scm-manager/ui-types";
+import type { File } from "@scm-manager/ui-types";
 
 const styles = {
   iconColumn: {
@@ -12,7 +12,7 @@ const styles = {
 };
 
 type Props = {
-  tree: SourcesCollection,
+  tree: File,
   revision: string,
   path: string,
   baseUrl: string,
@@ -53,7 +53,7 @@ class FileTree extends React.Component<Props> {
         directory: true
       });
     }
-    files.push(...tree._embedded.files);
+    files.push(...tree._embedded.children);
 
     return (
       <table className="table table-hover table-sm is-fullwidth">
