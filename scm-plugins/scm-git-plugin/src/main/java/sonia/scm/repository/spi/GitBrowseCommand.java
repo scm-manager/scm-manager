@@ -35,9 +35,7 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.eclipse.jgit.errors.MissingObjectException;
@@ -53,6 +51,7 @@ import org.eclipse.jgit.treewalk.filter.PathFilter;
 import org.eclipse.jgit.treewalk.filter.TreeFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.NotFoundException;
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.FileObject;
 import sonia.scm.repository.GitSubModuleParser;
@@ -64,7 +63,6 @@ import sonia.scm.repository.SubRepository;
 import sonia.scm.util.Util;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
@@ -107,7 +105,7 @@ public class GitBrowseCommand extends AbstractGitCommand
   @Override
   @SuppressWarnings("unchecked")
   public BrowserResult getBrowserResult(BrowseCommandRequest request)
-    throws IOException, RevisionNotFoundException {
+    throws IOException, NotFoundException {
     logger.debug("try to create browse result for {}", request);
 
     BrowserResult result;
@@ -276,7 +274,7 @@ public class GitBrowseCommand extends AbstractGitCommand
     return result;
   }
 
-  private FileObject getEntry(org.eclipse.jgit.lib.Repository repo, BrowseCommandRequest request, ObjectId revId) throws IOException, RevisionNotFoundException {
+  private FileObject getEntry(org.eclipse.jgit.lib.Repository repo, BrowseCommandRequest request, ObjectId revId) throws IOException, NotFoundException {
     RevWalk revWalk = null;
     TreeWalk treeWalk = null;
 
@@ -328,7 +326,7 @@ public class GitBrowseCommand extends AbstractGitCommand
     return Strings.isNullOrEmpty(request.getPath()) || "/".equals(request.getPath());
   }
 
-  private FileObject findChildren(FileObject parent, org.eclipse.jgit.lib.Repository repo, BrowseCommandRequest request, ObjectId revId, TreeWalk treeWalk) throws IOException, RevisionNotFoundException {
+  private FileObject findChildren(FileObject parent, org.eclipse.jgit.lib.Repository repo, BrowseCommandRequest request, ObjectId revId, TreeWalk treeWalk) throws IOException, NotFoundException {
     List<FileObject> files = Lists.newArrayList();
     while (treeWalk.next())
     {
@@ -360,11 +358,26 @@ public class GitBrowseCommand extends AbstractGitCommand
   }
 
   private FileObject first(org.eclipse.jgit.lib.Repository repo,
-                        BrowseCommandRequest request, ObjectId revId, TreeWalk treeWalk) throws IOException, RevisionNotFoundException {
-    if (!treeWalk.next()) {
-      throw new IOException("tree seams to be empty");
+                        BrowseCommandRequest request, ObjectId revId, TreeWalk treeWalk) throws IOException, NotFoundException {
+    String[] parts = request.getPath().split("/");
+    int current = 0;
+    int limit = parts.length;
+
+    while (treeWalk.next()) {
+      String name = treeWalk.getNameString();
+
+      if (name.equalsIgnoreCase(parts[current])) {
+        current++;
+
+        if (current >= limit) {
+          return createFileObject(repo, request, revId, treeWalk);
+        } else {
+          treeWalk.enterSubtree();
+        }
+      }
     }
-    return createFileObject(repo, request, revId, treeWalk);
+
+    throw new NotFoundException("file", request.getPath());
   }
 
   @SuppressWarnings("unchecked")

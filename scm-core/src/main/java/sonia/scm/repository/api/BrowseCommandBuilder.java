@@ -38,6 +38,7 @@ package sonia.scm.repository.api;
 import com.google.common.base.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.NotFoundException;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.repository.BrowserResult;
@@ -135,7 +136,7 @@ public final class BrowseCommandBuilder
    *
    * @throws IOException
    */
-  public BrowserResult getBrowserResult() throws IOException, RevisionNotFoundException {
+  public BrowserResult getBrowserResult() throws IOException, NotFoundException {
     BrowserResult result = null;
 
     if (disableCache)

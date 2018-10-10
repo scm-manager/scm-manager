@@ -10,11 +10,11 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import sonia.scm.NotFoundException;
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.FileObject;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.RepositoryNotFoundException;
-import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.repository.api.BrowseCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
@@ -22,8 +22,6 @@ import sonia.scm.repository.api.RepositoryServiceFactory;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Arrays;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -69,7 +67,7 @@ public class SourceRootResourceTest extends RepositoryTestBase {
   }
 
   @Test
-  public void shouldReturnSources() throws URISyntaxException, IOException, RevisionNotFoundException {
+  public void shouldReturnSources() throws URISyntaxException, IOException, NotFoundException {
     BrowserResult result = createBrowserResult();
     when(browseCommandBuilder.getBrowserResult()).thenReturn(result);
     MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/sources");
@@ -92,7 +90,7 @@ public class SourceRootResourceTest extends RepositoryTestBase {
   }
 
   @Test
-  public void shouldGetResultForSingleFile() throws URISyntaxException, IOException, RevisionNotFoundException {
+  public void shouldGetResultForSingleFile() throws URISyntaxException, IOException, NotFoundException {
     FileObject fileObject = new FileObject();
     fileObject.setName("File Object!");
     BrowserResult browserResult = new BrowserResult("revision", fileObject);
