@@ -45,7 +45,8 @@ import reducer, {
   MODIFY_REPO,
   isModifyRepoPending,
   getModifyRepoFailure,
-  modifyRepoSuccess
+  modifyRepoSuccess,
+  getPermissionsLink
 } from "./repos";
 import type { Repository, RepositoryCollection } from "@scm-manager/ui-types";
 
@@ -643,6 +644,21 @@ describe("repos selectors", () => {
 
     const repository = getRepository(state, "slarti", "fjords");
     expect(repository).toEqual(slartiFjords);
+  });
+
+  it("should return permissions link", () => {
+    const state = {
+      repos: {
+        byNames: {
+          "slarti/fjords": slartiFjords
+        }
+      }
+    };
+
+    const link = getPermissionsLink(state, "slarti", "fjords");
+    expect(link).toEqual(
+      "http://localhost:8081/api/v2/repositories/slarti/fjords/permissions/"
+    );
   });
 
   it("should return true, when fetch repo is pending", () => {

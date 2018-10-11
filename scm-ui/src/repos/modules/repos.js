@@ -153,7 +153,11 @@ export function fetchRepoFailure(
 
 // create repo
 
-export function createRepo(link: string, repository: Repository, callback?: () => void) {
+export function createRepo(
+  link: string,
+  repository: Repository,
+  callback?: () => void
+) {
   return function(dispatch: any) {
     dispatch(createRepoPending());
     return apiClient
@@ -446,4 +450,13 @@ export function getDeleteRepoFailure(
   name: string
 ) {
   return getFailure(state, DELETE_REPO, namespace + "/" + name);
+}
+
+export function getPermissionsLink(
+  state: Object,
+  namespace: string,
+  name: string
+) {
+  const repo = getRepository(state, namespace, name);
+  return repo && repo._links ? repo._links.permissions.href : undefined;
 }
