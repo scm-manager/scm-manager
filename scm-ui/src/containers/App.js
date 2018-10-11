@@ -46,7 +46,6 @@ type Props = {
 
   // dispatcher functions
   fetchMe: (link: string) => void,
-  fetchIndexResources: () => void,
 
   // context props
   t: string => string
@@ -54,7 +53,6 @@ type Props = {
 
 class App extends Component<Props> {
   componentDidMount() {
-    //this.props.fetchIndexResources();
     if (this.props.meLink) this.props.fetchMe(this.props.meLink);
   }
 
@@ -110,8 +108,7 @@ class App extends Component<Props> {
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    fetchMe: (link: string) => dispatch(fetchMe(link)),
-    fetchIndexResources: () => dispatch(fetchIndexResources())
+    fetchMe: (link: string) => dispatch(fetchMe(link))
   };
 };
 

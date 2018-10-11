@@ -21,12 +21,16 @@ export const FETCH_INDEXRESOURCES_FAILURE = `${FETCH_INDEXRESOURCES}_${
 
 const INDEX_RESOURCES_LINK = "/";
 
+export const callFetchIndexResources = (): Promise<IndexResources> => {
+  return apiClient.get(INDEX_RESOURCES_LINK).then(response => {
+    return response.json();
+  });
+};
+
 export function fetchIndexResources() {
   return function(dispatch: any) {
     dispatch(fetchIndexResourcesPending());
-    return apiClient
-      .get(INDEX_RESOURCES_LINK)
-      .then(response => response.json())
+    return callFetchIndexResources()
       .then(resources => {
         dispatch(fetchIndexResourcesSuccess(resources));
       })

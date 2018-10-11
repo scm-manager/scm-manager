@@ -93,6 +93,14 @@ describe("auth actions", () => {
       headers: { "content-type": "application/json" }
     });
 
+    fetchMock.getOnce("/api/v2/", {
+      _links: {
+        me: {
+          href: "/me"
+        }
+      }
+    });
+
     const expectedActions = [
       { type: LOGIN_PENDING },
       { type: LOGIN_SUCCESS, payload: me }

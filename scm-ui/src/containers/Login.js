@@ -98,6 +98,7 @@ class Login extends React.Component<Props, State> {
   }
 
   renderRedirect = () => {
+    this.props.fetchIndexResources();
     const { from } = this.props.location.state || { from: { pathname: "/" } };
     return <Redirect to={from} />;
   };
@@ -167,8 +168,13 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    login: (link: string, username: string, password: string) =>
-      dispatch(login(link, username, password))
+    login: (
+      loginLink: string,
+      meLink: string,
+      username: string,
+      password: string
+    ) => dispatch(login(loginLink, meLink, username, password)),
+    fetchIndexResources: () => dispatch(fetchIndexResources())
   };
 };
 

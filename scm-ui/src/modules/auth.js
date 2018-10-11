@@ -5,7 +5,7 @@ import * as types from "./types";
 import { apiClient, UNAUTHORIZED_ERROR } from "@scm-manager/ui-components";
 import { isPending } from "./pending";
 import { getFailure } from "./failure";
-import { fetchIndexResources, getMeLink } from "./indexResource";
+import { callFetchIndexResources } from "./indexResource";
 
 // Action
 
@@ -122,14 +122,9 @@ export const fetchMeFailure = (error: Error) => {
   };
 };
 
-// urls
-
-const ME_URL = "/me";
-
 // side effects
 
 const callFetchMe = (link: string): Promise<Me> => {
-  console.log(link);
   return apiClient
     .get(link)
     .then(response => {
@@ -156,11 +151,11 @@ export const login = (
     return apiClient
       .post(loginLink, login_data)
       .then(response => {
-        return dispatch(fetchIndexResources());
+        return callFetchIndexResources();
       })
       .then(response => {
         const meLink = response._links.me.href;
-        return dispatch(callFetchMe(meLink));
+        return callFetchMe(meLink);
       })
       .then(me => {
         dispatch(loginSuccess(me));
