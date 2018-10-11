@@ -33,8 +33,6 @@
 
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Strings;
@@ -46,9 +44,10 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
-//~--- JDK imports ------------------------------------------------------------
+import static java.util.Collections.unmodifiableCollection;
 
 /**
  * The FileObject represents a file or a directory in a repository.
@@ -303,12 +302,12 @@ public class FileObject implements LastModifiedAware, Serializable
     this.subRepository = subRepository;
   }
 
-  public List<FileObject> getChildren() {
-    return children;
+  public Collection<FileObject> getChildren() {
+    return unmodifiableCollection(children);
   }
 
   public void setChildren(List<FileObject> children) {
-    this.children = children;
+    this.children = new ArrayList<>(children);
   }
 
   public void addChild(FileObject child) {
@@ -343,5 +342,5 @@ public class FileObject implements LastModifiedAware, Serializable
   @XmlElement(name = "subrepository")
   private SubRepository subRepository;
 
-  private List<FileObject> children = new ArrayList<>();
+  private Collection<FileObject> children = new ArrayList<>();
 }
