@@ -47,6 +47,11 @@ class File_Collector:
     self.recursive = recursive
     self.structure = defaultdict(dict, ((FILE_MARKER, []),))
 
+  def collect(self, paths, path = "", dir_only = False):
+    for p in paths:
+      if p.startswith(path):
+        self.attach(self.extract_name_without_parent(path, p), self.structure, dir_only)
+
   def attach(self, branch, trunk, dir_only = False):
     parts = branch.split('/', 1)
     if len(parts) == 1:  # branch is a file
@@ -61,18 +66,13 @@ class File_Collector:
       if self.recursive:
         self.attach(others, trunk[node], dir_only)
 
-  def create_path(self, parent, path):
+  def extract_name_without_parent(self, parent, name_with_parent):
     if len(parent) > 0:
-      newPath = path[len(parent):]
-      if newPath.startswith("/"):
-          newPath = newPath[1:]
-      return newPath
-    return path
-
-  def collect(self, paths, path = "", dir_only = False):
-    for p in paths:
-      if p.startswith(path):
-        self.attach(self.create_path(path, p), self.structure, dir_only)
+      name_without_parent = name_with_parent[len(parent):]
+      if name_without_parent.startswith("/"):
+          name_without_parent = name_without_parent[1:]
+      return name_without_parent
+    return name_with_parent
 
 class File_Object:
   def __init__(self, directory, path):
