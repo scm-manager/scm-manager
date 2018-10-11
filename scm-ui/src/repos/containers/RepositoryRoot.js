@@ -27,6 +27,7 @@ import Permissions from "../permissions/containers/Permissions";
 import type { History } from "history";
 import EditNavLink from "../components/EditNavLink";
 import PermissionsNavLink from "../components/PermissionsNavLink";
+import { getRepositoriesLink } from "../../modules/indexResource";
 
 type Props = {
   namespace: string,
@@ -34,9 +35,10 @@ type Props = {
   repository: Repository,
   loading: boolean,
   error: Error,
+  repoLink: string,
 
   // dispatch functions
-  fetchRepo: (namespace: string, name: string) => void,
+  fetchRepo: (link: string, namespace: string, name: string) => void,
   deleteRepo: (repository: Repository, () => void) => void,
 
   // context props
@@ -47,9 +49,9 @@ type Props = {
 
 class RepositoryRoot extends React.Component<Props> {
   componentDidMount() {
-    const { fetchRepo, namespace, name } = this.props;
+    const { fetchRepo, namespace, name, repoLink } = this.props;
 
-    fetchRepo(namespace, name);
+    fetchRepo(repoLink, namespace, name);
   }
 
   stripEndingSlash = (url: string) => {
@@ -140,19 +142,21 @@ const mapStateToProps = (state, ownProps) => {
   const repository = getRepository(state, namespace, name);
   const loading = isFetchRepoPending(state, namespace, name);
   const error = getFetchRepoFailure(state, namespace, name);
+  const repoLink = getRepositoriesLink(state);
   return {
     namespace,
     name,
     repository,
     loading,
-    error
+    error,
+    repoLink
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchRepo: (namespace: string, name: string) => {
-      dispatch(fetchRepo(namespace, name));
+    fetchRepo: (link: string, namespace: string, name: string) => {
+      dispatch(fetchRepo(link, namespace, name));
     },
     deleteRepo: (repository: Repository, callback: () => void) => {
       dispatch(deleteRepo(repository, callback));

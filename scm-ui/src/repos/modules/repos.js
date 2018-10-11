@@ -35,8 +35,6 @@ export const DELETE_REPO_PENDING = `${DELETE_REPO}_${types.PENDING_SUFFIX}`;
 export const DELETE_REPO_SUCCESS = `${DELETE_REPO}_${types.SUCCESS_SUFFIX}`;
 export const DELETE_REPO_FAILURE = `${DELETE_REPO}_${types.FAILURE_SUFFIX}`;
 
-const REPOS_URL = "repositories";
-
 const CONTENT_TYPE = "application/vnd.scmm-repository+json;v=2";
 
 // fetch repos
@@ -102,11 +100,12 @@ export function fetchReposFailure(err: Error): Action {
 
 // fetch repo
 
-export function fetchRepo(namespace: string, name: string) {
+export function fetchRepo(link: string, namespace: string, name: string) {
+  const repoUrl = link.endsWith("/") ? link : link + "/";
   return function(dispatch: any) {
     dispatch(fetchRepoPending(namespace, name));
     return apiClient
-      .get(`${REPOS_URL}/${namespace}/${name}`)
+      .get(`${repoUrl}${namespace}/${name}`)
       .then(response => response.json())
       .then(repository => {
         dispatch(fetchRepoSuccess(repository));
@@ -154,11 +153,11 @@ export function fetchRepoFailure(
 
 // create repo
 
-export function createRepo(repository: Repository, callback?: () => void) {
+export function createRepo(link: string, repository: Repository, callback?: () => void) {
   return function(dispatch: any) {
     dispatch(createRepoPending());
     return apiClient
-      .post(REPOS_URL, repository, CONTENT_TYPE)
+      .post(link, repository, CONTENT_TYPE)
       .then(() => {
         dispatch(createRepoSuccess());
         if (callback) {
