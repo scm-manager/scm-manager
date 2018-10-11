@@ -1,15 +1,10 @@
 // @flow
 import * as React from "react";
 import { apiClient, Loading } from "@scm-manager/ui-components";
-import {
-  callFetchIndexResources,
-  getUiPluginsLink
-} from "../modules/indexResource";
-import { connect } from "react-redux";
+import { callFetchIndexResources } from "../modules/indexResource";
 
 type Props = {
-  children: React.Node,
-  link: string
+  children: React.Node
 };
 
 type State = {
@@ -42,8 +37,8 @@ class PluginLoader extends React.Component<Props, State> {
     });
   }
 
-  getPlugins = (link: string) => {
-    apiClient
+  getPlugins = (link: string): Promise<any> => {
+    return apiClient
       .get(link)
       .then(response => response.text())
       .then(JSON.parse)
@@ -101,14 +96,4 @@ class PluginLoader extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = state => {
-  const link = getUiPluginsLink(state);
-  return {
-    link
-  };
-};
-
-export default connect(
-  mapStateToProps,
-  null
-)(PluginLoader);
+export default PluginLoader;
