@@ -46,7 +46,6 @@ type Props = {
 
   // dispatcher props
   login: (link: string, username: string, password: string) => void,
-  fetchIndexResources: () => void,
 
   // context props
   t: string => string,
@@ -94,7 +93,6 @@ class Login extends React.Component<Props, State> {
   }
 
   renderRedirect = () => {
-    this.props.fetchIndexResources();
     const { from } = this.props.location.state || { from: { pathname: "/" } };
     return <Redirect to={from} />;
   };
@@ -165,8 +163,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     login: (loginLink: string, username: string, password: string) =>
-      dispatch(login(loginLink, username, password)),
-    fetchIndexResources: () => dispatch(fetchIndexResources())
+      dispatch(login(loginLink, username, password))
   };
 };
 

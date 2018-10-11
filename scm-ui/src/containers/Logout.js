@@ -18,7 +18,6 @@ type Props = {
   loading: boolean,
   error: Error,
   logoutLink: string,
-  fetchIndexResources: () => void,
 
   // dispatcher functions
   logout: (link: string) => void,
@@ -30,7 +29,6 @@ type Props = {
 class Logout extends React.Component<Props> {
   componentDidMount() {
     this.props.logout(this.props.logoutLink);
-    this.props.fetchIndexResources();
   }
 
   render() {
@@ -66,8 +64,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    logout: (link: string) => dispatch(logout(link)),
-    fetchIndexResources: () => dispatch(fetchIndexResources())
+    logout: (link: string) => dispatch(logout(link))
   };
 };
 

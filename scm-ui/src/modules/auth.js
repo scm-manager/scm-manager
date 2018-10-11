@@ -5,7 +5,7 @@ import * as types from "./types";
 import { apiClient, UNAUTHORIZED_ERROR } from "@scm-manager/ui-components";
 import { isPending } from "./pending";
 import { getFailure } from "./failure";
-import { callFetchIndexResources } from "./indexResource";
+import { callFetchIndexResources, fetchIndexResources } from "./indexResource";
 
 // Action
 
@@ -160,6 +160,9 @@ export const login = (
       .then(me => {
         dispatch(loginSuccess(me));
       })
+      .then(() => {
+        dispatch(fetchIndexResources());
+      })
       .catch(err => {
         dispatch(loginFailure(err));
       });
@@ -190,6 +193,9 @@ export const logout = (link: string) => {
       .delete(link)
       .then(() => {
         dispatch(logoutSuccess());
+      })
+      .then(() => {
+        dispatch(fetchIndexResources());
       })
       .catch(error => {
         dispatch(logoutFailure(error));
