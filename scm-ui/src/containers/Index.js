@@ -4,14 +4,8 @@ import App from "./App";
 import { connect } from "react-redux";
 import { translate } from "react-i18next";
 import { withRouter } from "react-router-dom";
-import {
-  fetchMe
-} from "../modules/auth";
 
-import {
-  Loading,
-  ErrorPage,
-} from "@scm-manager/ui-components";
+import { Loading, ErrorPage } from "@scm-manager/ui-components";
 import {
   fetchIndexResources,
   getFetchIndexResourcesFailure,
@@ -35,11 +29,7 @@ class Index extends Component<Props> {
   }
 
   render() {
-    const {
-      loading,
-      error,
-      t,
-    } = this.props;
+    const { loading, error, t } = this.props;
 
     if (loading) {
       return <Loading />;
@@ -59,7 +49,6 @@ class Index extends Component<Props> {
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    fetchMe: (link: string) => dispatch(fetchMe(link)),
     fetchIndexResources: () => dispatch(fetchIndexResources())
   };
 };
