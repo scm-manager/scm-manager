@@ -180,11 +180,11 @@ export const fetchMe = () => {
   };
 };
 
-export const logout = () => {
+export const logout = (link: string) => {
   return function(dispatch: any) {
     dispatch(logoutPending());
     return apiClient
-      .delete(LOGIN_URL)
+      .delete(link)
       .then(() => {
         dispatch(logoutSuccess());
       })

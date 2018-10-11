@@ -188,7 +188,7 @@ describe("auth actions", () => {
 
     const store = mockStore({});
 
-    return store.dispatch(logout()).then(() => {
+    return store.dispatch(logout("/auth/access_token")).then(() => {
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
@@ -199,7 +199,7 @@ describe("auth actions", () => {
     });
 
     const store = mockStore({});
-    return store.dispatch(logout()).then(() => {
+    return store.dispatch(logout("/auth/access_token")).then(() => {
       const actions = store.getActions();
       expect(actions[0].type).toEqual(LOGOUT_PENDING);
       expect(actions[1].type).toEqual(LOGOUT_FAILURE);
