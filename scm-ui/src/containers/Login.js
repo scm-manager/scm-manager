@@ -18,11 +18,7 @@ import {
   Image
 } from "@scm-manager/ui-components";
 import classNames from "classnames";
-import {
-  fetchIndexResources,
-  getLoginLink,
-  getMeLink
-} from "../modules/indexResource";
+import { fetchIndexResources, getLoginLink } from "../modules/indexResource";
 
 const styles = {
   avatar: {
@@ -168,12 +164,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    login: (
-      loginLink: string,
-      meLink: string,
-      username: string,
-      password: string
-    ) => dispatch(login(loginLink, meLink, username, password)),
+    login: (loginLink: string, username: string, password: string) =>
+      dispatch(login(loginLink, username, password)),
     fetchIndexResources: () => dispatch(fetchIndexResources())
   };
 };
