@@ -11,13 +11,14 @@ import {
   getLogoutFailure
 } from "../modules/auth";
 import { Loading, ErrorPage } from "@scm-manager/ui-components";
-import { getLogoutLink } from "../modules/indexResource";
+import { fetchIndexResources, getLogoutLink } from "../modules/indexResource";
 
 type Props = {
   authenticated: boolean,
   loading: boolean,
   error: Error,
   logoutLink: string,
+  fetchIndexResources: () => void,
 
   // dispatcher functions
   logout: (link: string) => void,
@@ -29,6 +30,7 @@ type Props = {
 class Logout extends React.Component<Props> {
   componentDidMount() {
     this.props.logout(this.props.logoutLink);
+    this.props.fetchIndexResources();
   }
 
   render() {
@@ -64,7 +66,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    logout: (link: string) => dispatch(logout(link))
+    logout: (link: string) => dispatch(logout(link)),
+    fetchIndexResources: () => dispatch(fetchIndexResources())
   };
 };
 
