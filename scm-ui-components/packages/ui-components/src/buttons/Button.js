@@ -1,7 +1,7 @@
 //@flow
 import React from "react";
 import classNames from "classnames";
-import {Link} from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 
 export type ButtonProps = {
   label: string,
@@ -16,7 +16,9 @@ export type ButtonProps = {
 
 type Props = ButtonProps & {
   type: string,
-  color: string
+  color: string,
+  // context prop
+  history: History
 };
 
 class Button extends React.Component<Props> {
@@ -25,14 +27,22 @@ class Button extends React.Component<Props> {
     color: "default"
   };
 
-  renderButton = () => {
+  onClick = (event: Event) => {
+    const { action, link, history } = this.props;
+    if (action) {
+      action(event);
+    } else if (link) {
+      history.push(link);
+    }
+  };
+
+  render() {
     const {
       label,
       loading,
       disabled,
       type,
       color,
-      action,
       fullWidth,
       className
     } = this.props;
@@ -42,7 +52,7 @@ class Button extends React.Component<Props> {
       <button
         type={type}
         disabled={disabled}
-        onClick={action ? action : (event: Event) => {}}
+        onClick={this.onClick}
         className={classNames(
           "button",
           "is-" + color,
@@ -56,14 +66,6 @@ class Button extends React.Component<Props> {
     );
   };
 
-  render() {
-    const { link } = this.props;
-    if (link) {
-      return <Link to={link}>{this.renderButton()}</Link>; // TODO: className does only apply to button, not the Link
-    } else {
-      return this.renderButton();
-    }
-  }
 }
 
-export default Button;
+export default withRouter(Button);

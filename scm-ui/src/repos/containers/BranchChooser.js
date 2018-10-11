@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import {
   fetchBranches,
   getBranch,
+  getBranches,
   getBranchNames,
   getFetchBranchesFailure,
   isFetchBranchesPending
@@ -13,11 +14,11 @@ import DropDown from "../components/DropDown";
 import type { History } from "history";
 import { withRouter } from "react-router-dom";
 import { ErrorPage, Loading } from "@scm-manager/ui-components";
+import { translate } from "react-i18next";
 
 type Props = {
   repository: Repository,
   branches: Branch[],
-  branchNames: string[],
   fetchBranches: Repository => void,
   history: History,
   match: any,
@@ -26,24 +27,34 @@ type Props = {
   loading: boolean,
   branchSelected: string => void,
   error: Error,
-  children: React.Node
+  children: React.Node,
+  t: string => string
 };
-type State = {};
+type State = {
+  selectedBranch?: Branch
+};
 
 class BranchChooser extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = {};
+  }
+
   componentDidMount() {
+    console.log("BC CDM");
     this.props.fetchBranches(this.props.repository);
   }
 
   render() {
-    const { selectedBranch, loading, error } = this.props;
+    console.log("Branch chooser render");
 
-    // TODO: i18n
+    const { loading, error, t } = this.props;
+
     if (error) {
       return (
         <ErrorPage
-          title={"Failed loading branches"}
-          subtitle={"Somethin went wrong"}
+          title={t("branch-chooser.error-title")}
+          subtitle={t("branch-chooser.error-subtitle")}
           error={error}
         />
       );
@@ -52,6 +63,8 @@ class BranchChooser extends React.Component<Props, State> {
     if (loading) {
       return <Loading />;
     }
+
+    const { selectedBranch } = this.state;
 
     const childrenWithBranch = React.Children.map(
       this.props.children,
@@ -71,10 +84,11 @@ class BranchChooser extends React.Component<Props, State> {
   }
 
   renderBranchChooser() {
-    const { branchNames, label, branchSelected, match } = this.props;
-    const selectedBranchName = match.params.branch;
+    const { label, match, branches } = this.props;
+    const selectedBranchName = "";
+    // const selectedBranchName = match.params.branch;
 
-    if (!branchNames || branchNames.length === 0) {
+    if (!branches || branches.length === 0) {
       return null;
     }
 
@@ -82,13 +96,23 @@ class BranchChooser extends React.Component<Props, State> {
       <div className={"box"}>
         <label className="label">{label}</label>
         <DropDown
-          options={branchNames}
+          options={branches.map(b => b.name)}
           preselectedOption={selectedBranchName}
-          optionSelected={branch => branchSelected(branch)}
+          optionSelected={this.branchSelected}
         />
       </div>
     );
   }
+
+  branchSelected = (branch: string) => {
+    for (let b of this.props.branches) {
+      if (b.name === branch) {
+        this.setState({ selectedBranch: b });
+        this.props.branchSelected(b.name);
+        break;
+      }
+    }
+  };
 }
 
 const mapDispatchToProps = dispatch => {
@@ -103,23 +127,22 @@ const mapStateToProps = (state: any, ownProps: Props) => {
   const { repository, match } = ownProps;
   const loading = isFetchBranchesPending(state, repository);
   const error = getFetchBranchesFailure(state, repository);
-  const branchNames = getBranchNames(state, repository);
-  const selectedBranch = getBranch(
-    state,
-    repository,
-    decodeURIComponent(match.params.branch)
-  );
+  // const selectedBranch = getBranch(
+  //   state,
+  //   repository,
+  //   decodeURIComponent(match.params.branch)
+  // );
+  const selectedBranch = "";
+  const branches = getBranches(state, repository);
   return {
-    loading,
-    branchNames,
+    // loading,
     selectedBranch,
-    error
+    // error,
+    branches
   };
 };
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(BranchChooser)
-);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(translate("repos")(BranchChooser));

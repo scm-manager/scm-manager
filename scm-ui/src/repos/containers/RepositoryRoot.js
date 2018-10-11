@@ -27,6 +27,7 @@ import type { History } from "history";
 import EditNavLink from "../components/EditNavLink";
 import BranchChooser from "./BranchChooser";
 import Changesets from "./Changesets";
+import BranchRoot from "./BranchRoot";
 
 type Props = {
   namespace: string,
@@ -73,19 +74,10 @@ class RepositoryRoot extends React.Component<Props> {
 
   matches = (route: any) => {
     const url = this.matchedUrl();
-    const regex = new RegExp(`${url}/?[a-zA-Z0-9_%]*/changesets?.*`);
+    const regex = new RegExp(
+      `${url}(/branches)?/?[a-zA-Z0-9_%]*/changesets?.*`
+    );
     return route.location.pathname.match(regex);
-  };
-
-  branchSelected = (branchName: string) => {
-    const url = this.matchedUrl();
-    if (branchName === "") {
-      this.props.history.push(`${url}/changesets/`);
-    } else {
-      this.props.history.push(
-        `${url}/branches/${encodeURIComponent(branchName)}/changesets/`
-      );
-    }
   };
 
   render() {
@@ -120,31 +112,21 @@ class RepositoryRoot extends React.Component<Props> {
               path={`${url}/edit`}
               component={() => <Edit repository={repository} />}
             />
-
+            {/*<Route*/}
+            {/*path={`${url}/changesets/:page?`}*/}
+            {/*component={() => (*/}
+            {/*<BranchChooser*/}
+            {/*repository={repository}*/}
+            {/*label={"Branches"}*/}
+            {/*branchSelected={this.branchSelected}*/}
+            {/*>*/}
+            {/*<Changesets repository={repository} />*/}
+            {/*</BranchChooser>*/}
+            {/*)}*/}
+            {/*/>*/}
             <Route
-              path={`${url}/changesets/:page?`}
-              component={() => (
-                <BranchChooser
-                  repository={repository}
-                  label={"Branches"}
-                  branchSelected={this.branchSelected}
-                >
-                  <Changesets repository={repository} />
-                </BranchChooser>
-              )}
-            />
-
-            <Route
-              path={`${url}/branches/:branch/changesets/:page?`}
-              component={() => (
-                <BranchChooser
-                  repository={repository}
-                  label={"Branches"}
-                  branchSelected={this.branchSelected}
-                >
-                  <Changesets repository={repository} />
-                </BranchChooser>
-              )}
+              path={`${url}/branches`}
+              render={() => <BranchRoot repository={repository} />}
             />
           </div>
           <div className="column">

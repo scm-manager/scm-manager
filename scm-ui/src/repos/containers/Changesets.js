@@ -19,6 +19,7 @@ import {
 import { connect } from "react-redux";
 import ChangesetList from "../components/changesets/ChangesetList";
 import { ErrorPage, LinkPaginator, Loading } from "@scm-manager/ui-components";
+import { translate } from "react-i18next";
 
 type Props = {
   fetchChangesetsByBranch: (Repository, Branch) => void,
@@ -29,7 +30,8 @@ type Props = {
   loading: boolean,
   match: any,
   list: PagedCollection,
-  error: Error
+  error: Error,
+  t: string => string
 };
 
 type State = {};
@@ -52,14 +54,13 @@ class ChangesetContainer extends React.Component<Props, State> {
   }
 
   render() {
-    const { changesets, loading, error } = this.props;
+    const { changesets, loading, error, t } = this.props;
 
-    // TODO: i18n
     if (error) {
       return (
         <ErrorPage
-          title={"Failed loading branches"}
-          subtitle={"Somethin went wrong"}
+          title={t("changesets.error-title")}
+          subtitle={t("changesets.error-title")}
           error={error}
         />
       );
@@ -120,5 +121,5 @@ export default withRouter(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )(ChangesetContainer)
+  )(translate("repos")(ChangesetContainer))
 );

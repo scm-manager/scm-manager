@@ -12,6 +12,8 @@ type Props = {
 };
 
 class LinkPaginator extends React.Component<Props> {
+  //TODO: HATEOAS-Links verwenden
+
   renderFirstButton() {
     return (
       <Button

@@ -45,6 +45,8 @@
     }
   },
   "changesets": {
+    "error-title": "Error",
+    "error-subtitle": "Could not fetch changesets",
     "changeset": {
       "id": "ID",
       "description": "Description",
@@ -55,7 +57,10 @@
     "author": {
       "name": "Author",
       "mail": "Mail"
-    },
-    "branchselector-label": "Branch:"
+    }
+  },
+  "branch-chooser": {
+    "error-title": "Error",
+    "error-subtitle": "Could not fetch branches"
   }
 }
