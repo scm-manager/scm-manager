@@ -121,6 +121,7 @@ class Permissions extends React.Component<Props> {
                 {t("permission.group-permission")}
               </th>
               <th>{t("permission.type")}</th>
+              <th />
             </tr>
           </thead>
           <tbody>
