@@ -100,9 +100,11 @@ describe("auth actions", () => {
 
     const store = mockStore({});
 
-    return store.dispatch(login("tricia", "secret123")).then(() => {
-      expect(store.getActions()).toEqual(expectedActions);
-    });
+    return store
+      .dispatch(login("/auth/access_token", "tricia", "secret123"))
+      .then(() => {
+        expect(store.getActions()).toEqual(expectedActions);
+      });
   });
 
   it("should dispatch login failure", () => {
@@ -111,12 +113,14 @@ describe("auth actions", () => {
     });
 
     const store = mockStore({});
-    return store.dispatch(login("tricia", "secret123")).then(() => {
-      const actions = store.getActions();
-      expect(actions[0].type).toEqual(LOGIN_PENDING);
-      expect(actions[1].type).toEqual(LOGIN_FAILURE);
-      expect(actions[1].payload).toBeDefined();
-    });
+    return store
+      .dispatch(login("/auth/access_token", "tricia", "secret123"))
+      .then(() => {
+        const actions = store.getActions();
+        expect(actions[0].type).toEqual(LOGIN_PENDING);
+        expect(actions[1].type).toEqual(LOGIN_FAILURE);
+        expect(actions[1].payload).toBeDefined();
+      });
   });
 
   it("should dispatch fetch me success", () => {

@@ -125,7 +125,6 @@ export const fetchMeFailure = (error: Error) => {
 // urls
 
 const ME_URL = "/me";
-const LOGIN_URL = "/auth/access_token";
 
 // side effects
 
@@ -140,7 +139,7 @@ const callFetchMe = (): Promise<Me> => {
     });
 };
 
-export const login = (username: string, password: string) => {
+export const login = (link: string, username: string, password: string) => {
   const login_data = {
     cookie: true,
     grant_type: "password",
@@ -150,7 +149,7 @@ export const login = (username: string, password: string) => {
   return function(dispatch: any) {
     dispatch(loginPending());
     return apiClient
-      .post(LOGIN_URL, login_data)
+      .post(link, login_data)
       .then(response => {
         return callFetchMe();
       })
