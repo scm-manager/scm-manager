@@ -5,7 +5,7 @@ import * as types from "./types";
 import { apiClient, UNAUTHORIZED_ERROR } from "@scm-manager/ui-components";
 import { isPending } from "./pending";
 import { getFailure } from "./failure";
-import { getMeLink } from "./indexResource";
+import { fetchIndexResources, getMeLink } from "./indexResource";
 
 // Action
 
@@ -128,9 +128,10 @@ const ME_URL = "/me";
 
 // side effects
 
-const callFetchMe = (): Promise<Me> => {
+const callFetchMe = (link: string): Promise<Me> => {
+  console.log(link);
   return apiClient
-    .get(ME_URL)
+    .get(link)
     .then(response => {
       return response.json();
     })
@@ -139,7 +140,11 @@ const callFetchMe = (): Promise<Me> => {
     });
 };
 
-export const login = (link: string, username: string, password: string) => {
+export const login = (
+  loginLink: string,
+  username: string,
+  password: string
+) => {
   const login_data = {
     cookie: true,
     grant_type: "password",
@@ -149,9 +154,13 @@ export const login = (link: string, username: string, password: string) => {
   return function(dispatch: any) {
     dispatch(loginPending());
     return apiClient
-      .post(link, login_data)
+      .post(loginLink, login_data)
       .then(response => {
-        return callFetchMe();
+        return dispatch(fetchIndexResources());
+      })
+      .then(response => {
+        const meLink = response._links.me.href;
+        return dispatch(callFetchMe(meLink));
       })
       .then(me => {
         dispatch(loginSuccess(me));
@@ -162,10 +171,10 @@ export const login = (link: string, username: string, password: string) => {
   };
 };
 
-export const fetchMe = () => {
+export const fetchMe = (link: string) => {
   return function(dispatch: any) {
     dispatch(fetchMePending());
-    return callFetchMe()
+    return callFetchMe(link)
       .then(me => {
         dispatch(fetchMeSuccess(me));
       })

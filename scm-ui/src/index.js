@@ -1,7 +1,7 @@
 // @flow
 import React from "react";
 import ReactDOM from "react-dom";
-import App from "./containers/App";
+import Index from "./containers/Index";
 import registerServiceWorker from "./registerServiceWorker";
 
 import { I18nextProvider } from "react-i18next";
@@ -38,7 +38,7 @@ ReactDOM.render(
       {/* ConnectedRouter will use the store from Provider automatically */}
       <ConnectedRouter history={history}>
         <PluginLoader>
-          <App />
+          <Index />
         </PluginLoader>
       </ConnectedRouter>
     </I18nextProvider>

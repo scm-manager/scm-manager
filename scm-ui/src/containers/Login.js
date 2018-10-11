@@ -18,7 +18,11 @@ import {
   Image
 } from "@scm-manager/ui-components";
 import classNames from "classnames";
-import { fetchIndexResources, getLoginLink } from "../modules/indexResource";
+import {
+  fetchIndexResources,
+  getLoginLink,
+  getMeLink
+} from "../modules/indexResource";
 
 const styles = {
   avatar: {
@@ -42,7 +46,7 @@ type Props = {
   authenticated: boolean,
   loading: boolean,
   error: Error,
-  loginLink: string,
+  link: string,
 
   // dispatcher props
   login: (link: string, username: string, password: string) => void,
@@ -78,7 +82,7 @@ class Login extends React.Component<Props, State> {
     event.preventDefault();
     if (this.isValid()) {
       this.props.login(
-        this.props.loginLink,
+        this.props.link,
         this.state.username,
         this.state.password
       );
@@ -94,7 +98,6 @@ class Login extends React.Component<Props, State> {
   }
 
   renderRedirect = () => {
-    this.props.fetchIndexResources();
     const { from } = this.props.location.state || { from: { pathname: "/" } };
     return <Redirect to={from} />;
   };
@@ -153,20 +156,19 @@ const mapStateToProps = state => {
   const authenticated = isAuthenticated(state);
   const loading = isLoginPending(state);
   const error = getLoginFailure(state);
-  const loginLink = getLoginLink(state);
+  const link = getLoginLink(state);
   return {
     authenticated,
     loading,
     error,
-    loginLink
+    link
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     login: (link: string, username: string, password: string) =>
-      dispatch(login(link, username, password)),
-    fetchIndexResources: () => dispatch(fetchIndexResources())
+      dispatch(login(link, username, password))
   };
 };
 

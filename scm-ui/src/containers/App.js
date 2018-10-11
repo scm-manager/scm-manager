@@ -26,6 +26,7 @@ import {
   getFetchIndexResourcesFailure,
   getGroupsLink,
   getLogoutLink,
+  getMeLink,
   getRepositoriesLink,
   getUsersLink,
   isFetchIndexResourcesPending
@@ -36,14 +37,15 @@ type Props = {
   authenticated: boolean,
   error: Error,
   loading: boolean,
-  repositoriesLink: String,
-  usersLink: String,
-  groupsLink: String,
-  configLink: String,
-  logoutLink: String,
+  repositoriesLink: string,
+  usersLink: string,
+  groupsLink: string,
+  configLink: string,
+  logoutLink: string,
+  meLink: string,
 
   // dispatcher functions
-  fetchMe: () => void,
+  fetchMe: (link: string) => void,
   fetchIndexResources: () => void,
 
   // context props
@@ -52,8 +54,8 @@ type Props = {
 
 class App extends Component<Props> {
   componentDidMount() {
-    this.props.fetchIndexResources();
-    this.props.fetchMe();
+    //this.props.fetchIndexResources();
+    if (this.props.meLink) this.props.fetchMe(this.props.meLink);
   }
 
   render() {
@@ -108,7 +110,7 @@ class App extends Component<Props> {
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    fetchMe: () => dispatch(fetchMe()),
+    fetchMe: (link: string) => dispatch(fetchMe(link)),
     fetchIndexResources: () => dispatch(fetchIndexResources())
   };
 };
@@ -125,6 +127,7 @@ const mapStateToProps = state => {
   const groupsLink = getGroupsLink(state);
   const configLink = getConfigLink(state);
   const logoutLink = getLogoutLink(state);
+  const meLink = getMeLink(state);
   return {
     authenticated,
     me,
@@ -134,7 +137,8 @@ const mapStateToProps = state => {
     usersLink,
     groupsLink,
     configLink,
-    logoutLink
+    logoutLink,
+    meLink
   };
 };
 

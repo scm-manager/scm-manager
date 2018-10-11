@@ -139,7 +139,7 @@ describe("auth actions", () => {
 
     const store = mockStore({});
 
-    return store.dispatch(fetchMe()).then(() => {
+    return store.dispatch(fetchMe("me")).then(() => {
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
@@ -150,7 +150,7 @@ describe("auth actions", () => {
     });
 
     const store = mockStore({});
-    return store.dispatch(fetchMe()).then(() => {
+    return store.dispatch(fetchMe("me")).then(() => {
       const actions = store.getActions();
       expect(actions[0].type).toEqual(FETCH_ME_PENDING);
       expect(actions[1].type).toEqual(FETCH_ME_FAILURE);
@@ -170,7 +170,7 @@ describe("auth actions", () => {
 
     const store = mockStore({});
 
-    return store.dispatch(fetchMe()).then(() => {
+    return store.dispatch(fetchMe("me")).then(() => {
       // return of async actions
       expect(store.getActions()).toEqual(expectedActions);
     });
