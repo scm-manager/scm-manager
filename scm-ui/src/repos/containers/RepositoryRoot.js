@@ -11,11 +11,11 @@ import { connect } from "react-redux";
 import { Route } from "react-router-dom";
 import type { Repository } from "@scm-manager/ui-types";
 import {
-  Page,
-  Loading,
   ErrorPage,
+  Loading,
   Navigation,
   NavLink,
+  Page,
   Section
 } from "@scm-manager/ui-components";
 import { translate } from "react-i18next";
@@ -25,6 +25,7 @@ import Edit from "../containers/Edit";
 
 import type { History } from "history";
 import EditNavLink from "../components/EditNavLink";
+import BranchChooser from "./BranchChooser";
 import Changesets from "./Changesets";
 
 type Props = {
@@ -76,6 +77,17 @@ class RepositoryRoot extends React.Component<Props> {
     return route.location.pathname.match(regex);
   };
 
+  branchSelected = (branchName: string) => {
+    const url = this.matchedUrl();
+    if (branchName === "") {
+      this.props.history.push(`${url}/changesets/`);
+    } else {
+      this.props.history.push(
+        `${url}/branches/${encodeURIComponent(branchName)}/changesets/`
+      );
+    }
+  };
+
   render() {
     const { loading, error, repository, t } = this.props;
 
@@ -94,7 +106,7 @@ class RepositoryRoot extends React.Component<Props> {
     }
 
     const url = this.matchedUrl();
-
+    // TODO: Changesets need to be adjusted (i.e. sub-routes need to be handled in sub-components)
     return (
       <Page title={repository.namespace + "/" + repository.name}>
         <div className="columns">
@@ -108,25 +120,31 @@ class RepositoryRoot extends React.Component<Props> {
               path={`${url}/edit`}
               component={() => <Edit repository={repository} />}
             />
+
             <Route
-              exact
-              path={`${url}/changesets`}
-              render={() => <Changesets repository={repository} />}
+              path={`${url}/changesets/:page?`}
+              component={() => (
+                <BranchChooser
+                  repository={repository}
+                  label={"Branches"}
+                  branchSelected={this.branchSelected}
+                >
+                  <Changesets repository={repository} />
+                </BranchChooser>
+              )}
             />
+
             <Route
-              exact
-              path={`${url}/changesets/:page`}
-              render={() => <Changesets repository={repository} />}
-            />
-            <Route
-              exact
-              path={`${url}/:branch/changesets`}
-              render={() => <Changesets repository={repository} />}
-            />
-            <Route
-              exact
-              path={`${url}/:branch/changesets/:page`}
-              render={() => <Changesets repository={repository} />}
+              path={`${url}/branches/:branch/changesets/:page?`}
+              component={() => (
+                <BranchChooser
+                  repository={repository}
+                  label={"Branches"}
+                  branchSelected={this.branchSelected}
+                >
+                  <Changesets repository={repository} />
+                </BranchChooser>
+              )}
             />
           </div>
           <div className="column">
@@ -135,7 +153,7 @@ class RepositoryRoot extends React.Component<Props> {
                 <NavLink to={url} label={t("repository-root.information")} />
                 <NavLink
                   activeOnlyWhenExact={false}
-                  to={`${url}/changesets`}
+                  to={`${url}/changesets/`}
                   label={t("repository-root.history")}
                   activeWhenMatch={this.matches}
                 />

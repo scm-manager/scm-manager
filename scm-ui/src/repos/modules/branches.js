@@ -5,8 +5,9 @@ import {
   SUCCESS_SUFFIX
 } from "../../modules/types";
 import { apiClient } from "@scm-manager/ui-components";
-import type { Repository, Action, Branch } from "@scm-manager/ui-types";
+import type { Action, Branch, Repository } from "@scm-manager/ui-types";
 import { isPending } from "../../modules/pending";
+import { getFailure } from "../../modules/failure";
 
 export const FETCH_BRANCHES = "scm/repos/FETCH_BRANCHES";
 export const FETCH_BRANCHES_PENDING = `${FETCH_BRANCHES}_${PENDING_SUFFIX}`;
@@ -113,7 +114,7 @@ export function getBranchNames(
   repository: Repository
 ): ?Array<Branch> {
   const key = createKey(repository);
-  if (!state.branches[key] || !state.branches[key].byNames) {
+  if (!state.branches || !state.branches[key] || !state.branches[key].byNames) {
     return [];
   }
   return Object.keys(state.branches[key].byNames);
@@ -147,6 +148,10 @@ export function isFetchBranchesPending(
   repository: Repository
 ): boolean {
   return isPending(state, FETCH_BRANCHES, createKey(repository));
+}
+
+export function getFetchBranchesFailure(state: Object, repository: Repository) {
+  return getFailure(state, FETCH_BRANCHES, createKey(repository));
 }
 
 function createKey(repository: Repository): string {

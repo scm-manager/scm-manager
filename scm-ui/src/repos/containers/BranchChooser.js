@@ -1,89 +1,125 @@
 // @flow
-
-import React from "react";
-import type { Repository, Branch } from "@scm-manager/ui-types";
+import * as React from "react";
+import type { Branch, Repository } from "@scm-manager/ui-types";
 import { connect } from "react-redux";
 import {
   fetchBranches,
-  getBranches,
+  getBranch,
+  getBranchNames,
+  getFetchBranchesFailure,
   isFetchBranchesPending
 } from "../modules/branches";
-
-import { Loading } from "@scm-manager/ui-components";
 import DropDown from "../components/DropDown";
+import type { History } from "history";
+import { withRouter } from "react-router-dom";
+import { ErrorPage, Loading } from "@scm-manager/ui-components";
 
 type Props = {
   repository: Repository,
-  fetchBranches: Repository => void,
-  callback: (?Branch) => void,
   branches: Branch[],
-  selectedBranchName: string,
+  branchNames: string[],
+  fetchBranches: Repository => void,
+  history: History,
+  match: any,
+  selectedBranch?: Branch,
+  label: string, //TODO: Should this be here?
   loading: boolean,
-  label: string
+  branchSelected: string => void,
+  error: Error,
+  children: React.Node
 };
-
-type State = {
-  selectedBranchName: string
-};
+type State = {};
 
 class BranchChooser extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      selectedBranchName: props.selectedBranchName
-    };
-  }
-
   componentDidMount() {
-    const { repository, fetchBranches } = this.props;
-    fetchBranches(repository);
+    this.props.fetchBranches(this.props.repository);
   }
 
   render() {
-    const { branches, loading, label } = this.props;
-    if (loading) {
-      return <Loading />;
-    }
-    if (branches && branches.length > 0) {
+    const { selectedBranch, loading, error } = this.props;
+
+    // TODO: i18n
+    if (error) {
       return (
-        <div className={"box"}>
-          <label className="label">{label}</label>
-          <DropDown
-            options={branches.map(b => b.name)}
-            preselectedOption={this.state.selectedBranchName}
-            optionSelected={branch => this.branchChanged(branch)}
-          />
-        </div>
+        <ErrorPage
+          title={"Failed loading branches"}
+          subtitle={"Somethin went wrong"}
+          error={error}
+        />
       );
     }
 
-    return null;
+    if (loading) {
+      return <Loading />;
+    }
+
+    const childrenWithBranch = React.Children.map(
+      this.props.children,
+      child => {
+        return React.cloneElement(child, {
+          branch: selectedBranch
+        });
+      }
+    );
+
+    return (
+      <>
+        {this.renderBranchChooser()}
+        {childrenWithBranch}
+      </>
+    );
   }
 
-  branchChanged = (branchName: string) => {
-    const { callback } = this.props;
-    this.setState({ ...this.state, selectedBranchName: branchName });
-    const branch = this.props.branches.find(b => b.name === branchName);
-    callback(branch);
-  };
+  renderBranchChooser() {
+    const { branchNames, label, branchSelected, match } = this.props;
+    const selectedBranchName = match.params.branch;
+
+    if (!branchNames || branchNames.length === 0) {
+      return null;
+    }
+
+    return (
+      <div className={"box"}>
+        <label className="label">{label}</label>
+        <DropDown
+          options={branchNames}
+          preselectedOption={selectedBranchName}
+          optionSelected={branch => branchSelected(branch)}
+        />
+      </div>
+    );
+  }
 }
 
-const mapStateToProps = (state: State, ownProps: Props) => {
+const mapDispatchToProps = dispatch => {
   return {
-    branches: getBranches(state, ownProps.repository),
-    loading: isFetchBranchesPending(state, ownProps.repository)
-  };
-};
-
-const mapDispatchToProps = (dispatch: any) => {
-  return {
-    fetchBranches: (repository: Repository) => {
-      dispatch(fetchBranches(repository));
+    fetchBranches: (repo: Repository) => {
+      dispatch(fetchBranches(repo));
     }
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(BranchChooser);
+const mapStateToProps = (state: any, ownProps: Props) => {
+  const { repository, match } = ownProps;
+  const loading = isFetchBranchesPending(state, repository);
+  const error = getFetchBranchesFailure(state, repository);
+  const branchNames = getBranchNames(state, repository);
+  const selectedBranch = getBranch(
+    state,
+    repository,
+    decodeURIComponent(match.params.branch)
+  );
+  return {
+    loading,
+    branchNames,
+    selectedBranch,
+    error
+  };
+};
+
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(BranchChooser)
+);
