@@ -49,7 +49,7 @@ public class MeITCase {
     String newUser = "user";
     String password = "pass";
     String type = "not XML Type";
-    TestData.createUser(newUser, password, true, type);
+    TestData.createUser(newUser, password, true, type, "user@scm-manager.org");
     ScmRequests.start()
       .given()
       .url(TestData.getMeUrl())

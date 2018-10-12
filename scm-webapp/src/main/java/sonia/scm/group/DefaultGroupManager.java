@@ -50,6 +50,7 @@ import sonia.scm.SCMContextProvider;
 import sonia.scm.TransformFilter;
 import sonia.scm.search.SearchRequest;
 import sonia.scm.search.SearchUtil;
+import sonia.scm.user.UserPermissions;
 import sonia.scm.util.CollectionAppender;
 import sonia.scm.util.Util;
 
@@ -244,8 +245,9 @@ public class DefaultGroupManager extends AbstractGroupManager
 
   @Override
   public Collection<Group> autocomplete(String filter) {
-    GroupPermissions.autocomplete().check();
-    return search(new SearchRequest(filter,true, DEFAULT_LIMIT));
+    UserPermissions.autocomplete().check();
+    SearchRequest searchRequest = new SearchRequest(filter, true, DEFAULT_LIMIT);
+    return SearchUtil.search(searchRequest, groupDAO.getAll(), group -> matches(searchRequest,group)?group:null);
   }
 
   /**

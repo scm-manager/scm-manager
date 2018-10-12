@@ -88,7 +88,7 @@ public class AutoCompleteResourceTest {
   @Test
   public void shouldGet400OnFailedParameterForUserSearch() throws Exception {
     MockHttpRequest request = MockHttpRequest
-      .get("/" + AutoCompleteResource.PATH + "user")
+      .get("/" + AutoCompleteResource.PATH + "users")
       .contentType(VndMediaType.AUTOCOMPLETE)
       .accept(VndMediaType.AUTOCOMPLETE);
     MockHttpResponse response = new MockHttpResponse();
@@ -101,7 +101,7 @@ public class AutoCompleteResourceTest {
   @Test
   public void shouldGet400IfParameterLengthLessThan2CharsForUserSearch() throws Exception {
     MockHttpRequest request = MockHttpRequest
-      .get("/" + AutoCompleteResource.PATH + "user?filter=a")
+      .get("/" + AutoCompleteResource.PATH + "users?q=a")
       .contentType(VndMediaType.AUTOCOMPLETE)
       .accept(VndMediaType.AUTOCOMPLETE);
     MockHttpResponse response = new MockHttpResponse();
@@ -117,7 +117,7 @@ public class AutoCompleteResourceTest {
     String searched = "user";
     when(xmlDB.values()).thenReturn(users);
     MockHttpRequest request = MockHttpRequest
-      .get("/" + AutoCompleteResource.PATH + "user?filter=" + searched)
+      .get("/" + AutoCompleteResource.PATH + "users?q=" + searched)
       .contentType(VndMediaType.AUTOCOMPLETE)
       .accept(VndMediaType.AUTOCOMPLETE);
     MockHttpResponse response = new MockHttpResponse();
@@ -138,7 +138,7 @@ public class AutoCompleteResourceTest {
     List<User> userList = IntStream.range(0, 10).boxed().map(i -> createMockUser("user" + i, "User " + i)).collect(Collectors.toList());
     when(xmlDB.values()).thenReturn(userList);
     MockHttpRequest request = MockHttpRequest
-      .get("/" + AutoCompleteResource.PATH + "user?filter=user")
+      .get("/" + AutoCompleteResource.PATH + "users?q=user")
       .contentType(VndMediaType.AUTOCOMPLETE)
       .accept(VndMediaType.AUTOCOMPLETE);
     MockHttpResponse response = new MockHttpResponse();
@@ -152,7 +152,7 @@ public class AutoCompleteResourceTest {
   @Test
   public void shouldGet400OnFailedParameterForGroupSearch() throws Exception {
     MockHttpRequest request = MockHttpRequest
-      .get("/" + AutoCompleteResource.PATH + "group")
+      .get("/" + AutoCompleteResource.PATH + "groups")
       .contentType(VndMediaType.AUTOCOMPLETE)
       .accept(VndMediaType.AUTOCOMPLETE);
     MockHttpResponse response = new MockHttpResponse();
@@ -165,7 +165,7 @@ public class AutoCompleteResourceTest {
   @Test
   public void shouldGet400IfParameterLengthLessThan2CharsForGroupSearch() throws Exception {
     MockHttpRequest request = MockHttpRequest
-      .get("/" + AutoCompleteResource.PATH + "group?filter=a")
+      .get("/" + AutoCompleteResource.PATH + "groups?q=a")
       .contentType(VndMediaType.AUTOCOMPLETE)
       .accept(VndMediaType.AUTOCOMPLETE);
     MockHttpResponse response = new MockHttpResponse();
@@ -181,7 +181,7 @@ public class AutoCompleteResourceTest {
     String searched = "group";
     when(xmlDB.values()).thenReturn(groups);
     MockHttpRequest request = MockHttpRequest
-      .get("/" + AutoCompleteResource.PATH + "group?filter=" + searched)
+      .get("/" + AutoCompleteResource.PATH + "groups?q=" + searched)
       .contentType(VndMediaType.AUTOCOMPLETE)
       .accept(VndMediaType.AUTOCOMPLETE);
     MockHttpResponse response = new MockHttpResponse();
@@ -201,7 +201,7 @@ public class AutoCompleteResourceTest {
     List<Group> groups = IntStream.range(0, 10).boxed().map(i -> createMockGroup("group_" + i)).collect(Collectors.toList());
     when(xmlDB.values()).thenReturn(groups);
     MockHttpRequest request = MockHttpRequest
-      .get("/" + AutoCompleteResource.PATH + "group?filter=group")
+      .get("/" + AutoCompleteResource.PATH + "groups?q=group")
       .contentType(VndMediaType.AUTOCOMPLETE)
       .accept(VndMediaType.AUTOCOMPLETE);
     MockHttpResponse response = new MockHttpResponse();

@@ -229,6 +229,13 @@ public class DefaultUserManager extends AbstractUserManager
     fresh.copyProperties(user);
   }
 
+  @Override
+  public Collection<User> autocomplete(String filter) {
+    UserPermissions.autocomplete().check();
+    SearchRequest searchRequest = new SearchRequest(filter, true, DEFAULT_LIMIT);
+    return SearchUtil.search(searchRequest, userDAO.getAll(), user -> matches(searchRequest,user)?user:null);
+  }
+
   /**
    * Method description
    *
@@ -258,7 +265,7 @@ public class DefaultUserManager extends AbstractUserManager
       }
     });
   }
-  
+
   private boolean matches(SearchRequest searchRequest, User user) {
     return SearchUtil.matchesOne(searchRequest, user.getName(), user.getDisplayName(), user.getMail());
   }
@@ -277,7 +284,7 @@ public class DefaultUserManager extends AbstractUserManager
   public User get(String id)
   {
     UserPermissions.read().check(id);
-    
+
     User user = userDAO.get(id);
 
     if (user != null)
@@ -298,12 +305,6 @@ public class DefaultUserManager extends AbstractUserManager
   public Collection<User> getAll()
   {
     return getAll(null);
-  }
-
-  @Override
-  public Collection<User> autocomplete(String filter) {
-    UserPermissions.autocomplete().check();
-    return search(new SearchRequest(filter,true, DEFAULT_LIMIT));
   }
 
   /**

@@ -41,7 +41,7 @@ public class AutoCompleteResource {
   }
 
   @GET
-  @Path("user")
+  @Path("users")
   @Produces(VndMediaType.AUTOCOMPLETE)
   @StatusCodes({
     @ResponseCode(code = 200, condition = "success"),
@@ -50,12 +50,12 @@ public class AutoCompleteResource {
     @ResponseCode(code = 403, condition = "not authorized, the current user does not have the \"user:autocomplete\" privilege"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
-  public Response searchUser(@NotEmpty(message = PARAMETER_IS_REQUIRED) @Size(min = MIN_SEARCHED_CHARS, message = INVALID_PARAMETER_LENGTH) @QueryParam("filter") String filter) {
+  public Response searchUser(@NotEmpty(message = PARAMETER_IS_REQUIRED) @Size(min = MIN_SEARCHED_CHARS, message = INVALID_PARAMETER_LENGTH) @QueryParam("q") String filter) {
     return map(userManager.autocomplete(filter));
   }
 
   @GET
-  @Path("group")
+  @Path("groups")
   @Produces(VndMediaType.AUTOCOMPLETE)
   @StatusCodes({
     @ResponseCode(code = 200, condition = "success"),
@@ -64,7 +64,7 @@ public class AutoCompleteResource {
     @ResponseCode(code = 403, condition = "not authorized, the current user does not have the \"group:autocomplete\" privilege"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
-  public Response searchGroup(@NotEmpty(message = PARAMETER_IS_REQUIRED) @Size(min = MIN_SEARCHED_CHARS, message = INVALID_PARAMETER_LENGTH) @QueryParam("filter") String filter) {
+  public Response searchGroup(@NotEmpty(message = PARAMETER_IS_REQUIRED) @Size(min = MIN_SEARCHED_CHARS, message = INVALID_PARAMETER_LENGTH) @QueryParam("q") String filter) {
     return map(groupManager.autocomplete(filter));
   }
 

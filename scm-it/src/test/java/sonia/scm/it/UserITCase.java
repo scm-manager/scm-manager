@@ -19,7 +19,7 @@ public class UserITCase {
   public void adminShouldChangeOwnPassword() {
     String newUser = "user";
     String password = "pass";
-    TestData.createUser(newUser, password, true, "xml");
+    TestData.createUser(newUser, password, true, "xml", "user@scm-manager.org");
     String newPassword = "new_password";
     // admin change the own password
     ScmRequests.start()
@@ -50,7 +50,7 @@ public class UserITCase {
   public void adminShouldChangePasswordOfOtherUser() {
     String newUser = "user";
     String password = "pass";
-    TestData.createUser(newUser, password, true, "xml");
+    TestData.createUser(newUser, password, true, "xml", "user@scm-manager.org");
     String newPassword = "new_password";
     // admin change the password of the user
     ScmRequests.start()
@@ -80,7 +80,7 @@ public class UserITCase {
     String newUser = "user";
     String password = "pass";
     String type = "not XML Type";
-    TestData.createUser(newUser, password, true, type);
+    TestData.createUser(newUser, password, true, type, "user@scm-manager.org");
     ScmRequests.start()
       .given()
       .url(TestData.getMeUrl())

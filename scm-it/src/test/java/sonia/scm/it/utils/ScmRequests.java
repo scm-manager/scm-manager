@@ -154,6 +154,12 @@ public class ScmRequests {
         applyGETRequest(url)
       );
     }
+
+    public AppliedAutoCompleteRequest getAutoCompleteResource() {
+      return new AppliedAutoCompleteRequest(
+        applyGETRequest(url)
+      );
+    }
   }
 
   public class AppliedRequest<SELF extends AppliedRequest> {
@@ -459,6 +465,31 @@ public class ScmRequests {
 
     public UserResponse usingUserResponse() {
       return new UserResponse(super.response);
+    }
+
+  }
+
+  public class AppliedAutoCompleteRequest extends AppliedRequest<AppliedAutoCompleteRequest> {
+    public AppliedAutoCompleteRequest(Response response) {
+      super(response);
+    }
+
+    public AutoCompleteResponse usingAutoCompleteResponse() {
+      return new AutoCompleteResponse(super.response);
+    }
+
+  }
+
+  public class AutoCompleteResponse extends ModelResponse<AutoCompleteResponse>{
+
+    public AutoCompleteResponse(Response response) {
+      super(response);
+    }
+
+    public AutoCompleteResponse assertAutoCompleteResults(Consumer<List<Map>> checker){
+      List<Map> result = response.then().extract().path("");
+      checker.accept(result);
+      return this;
     }
 
   }
