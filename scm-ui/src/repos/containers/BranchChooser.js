@@ -48,7 +48,7 @@ class BranchChooser extends React.Component<Props, State> {
   render() {
     console.log("Branch chooser render");
 
-    const { loading, error, t } = this.props;
+    const { loading, error, t, repository } = this.props;
 
     if (error) {
       return (
@@ -58,6 +58,10 @@ class BranchChooser extends React.Component<Props, State> {
           error={error}
         />
       );
+    }
+
+    if (!repository) {
+      return null;
     }
 
     if (loading) {
@@ -85,8 +89,7 @@ class BranchChooser extends React.Component<Props, State> {
 
   renderBranchChooser() {
     const { label, match, branches } = this.props;
-    const selectedBranchName = "";
-    // const selectedBranchName = match.params.branch;
+    const selectedBranchName = match.params.branch;
 
     if (!branches || branches.length === 0) {
       return null;
@@ -127,12 +130,11 @@ const mapStateToProps = (state: any, ownProps: Props) => {
   const { repository, match } = ownProps;
   const loading = isFetchBranchesPending(state, repository);
   const error = getFetchBranchesFailure(state, repository);
-  // const selectedBranch = getBranch(
-  //   state,
-  //   repository,
-  //   decodeURIComponent(match.params.branch)
-  // );
-  const selectedBranch = "";
+  const selectedBranch = getBranch(
+    state,
+    repository,
+    decodeURIComponent(match.params.branch)
+  );
   const branches = getBranches(state, repository);
   return {
     // loading,
@@ -142,7 +144,9 @@ const mapStateToProps = (state: any, ownProps: Props) => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(translate("repos")(BranchChooser));
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(translate("repos")(BranchChooser))
+);

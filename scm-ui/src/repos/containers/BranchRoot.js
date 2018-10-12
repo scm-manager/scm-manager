@@ -1,7 +1,7 @@
 // @flow
 
 import React from "react";
-import type { Repository } from "@scm-manager/ui-types";
+import type { Repository, Branch } from "@scm-manager/ui-types";
 import BranchChooser from "./BranchChooser";
 import { Route, withRouter } from "react-router-dom";
 import Changesets from "./Changesets";
@@ -36,28 +36,48 @@ class BranchRoot extends React.Component<Props> {
   };
 
   render() {
+    const { repository } = this.props;
     const url = this.matchedUrl();
-
+    if (!repository) {
+      return null;
+    }
     return (
       <BranchChooser
         repository={this.props.repository}
         label={"Branches"}
         branchSelected={this.branchSelected}
       >
-        <Changesets repository={this.props.repository} />
-        {/*<RouteDelegate repository={this.props.repository} url={url} />*/}
+        <RouteDelegate repository={this.props.repository} url={url} />
       </BranchChooser>
     );
   }
 }
 
-function RouteDelegate(props) {
-  return (
-    <Route
-      path={`${props.url}/:branch/changesets/:page?`}
-      component={() => <Changesets repository={props.repository} {...props} />}
-    />
-  );
+type RDProps = {
+  repository: Repository,
+  branch: Branch,
+  url: string
+};
+
+class RouteDelegate extends React.Component<RDProps> {
+  shouldComponentUpdate(nextProps: RDProps, nextState: any) {
+    return (
+      nextProps.repository !== this.props.repository ||
+      nextProps.branch !== this.props.branch ||
+      nextProps.url !== this.props.url
+    );
+  }
+
+  render() {
+    const { url, repository, branch } = this.props;
+    return (
+      <Route
+        exact
+        path={`${url}/:branch/changesets/:page?`}
+        component={() => <Changesets repository={repository} branch={branch} />}
+      />
+    );
+  }
 }
 
 export default withRouter(BranchRoot);

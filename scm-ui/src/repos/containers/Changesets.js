@@ -36,7 +36,7 @@ type Props = {
 
 type State = {};
 
-class ChangesetContainer extends React.Component<Props, State> {
+class Changesets extends React.Component<Props, State> {
   componentDidMount() {
     const {
       fetchChangesetsByBranch,
@@ -45,6 +45,9 @@ class ChangesetContainer extends React.Component<Props, State> {
       branch,
       match
     } = this.props;
+
+    console.log("branch");
+    console.log(branch);
     const { page } = match.params;
     if (!page) {
       fetchChangesetsByBranch(repository, branch);
@@ -54,7 +57,11 @@ class ChangesetContainer extends React.Component<Props, State> {
   }
 
   render() {
-    const { changesets, loading, error, t } = this.props;
+    const { repository, branch, changesets, loading, error, t } = this.props;
+
+    if (!repository || !branch) {
+      return null;
+    }
 
     if (error) {
       return (
@@ -121,5 +128,5 @@ export default withRouter(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )(translate("repos")(ChangesetContainer))
+  )(translate("repos")(Changesets))
 );
