@@ -74,6 +74,33 @@ public class UserITCase {
 
   }
 
+  @Test
+  public void nonAdminUserShouldChangeOwnPassword() {
+    String newUser = "user";
+    String password = "pass";
+    TestData.createUser(newUser, password, false, "xml");
+    String newPassword = "new_password";
+    ScmRequests.start()
+      .given()
+      .url(TestData.getUserUrl(newUser))
+      .usernameAndPassword(newUser, password)
+      .getUserResource()
+      .assertStatusCode(200)
+      .usingUserResponse()
+      .assertAdmin(aBoolean -> assertThat(aBoolean).isEqualTo(Boolean.FALSE))
+      .requestChangePassword(newPassword) // the oldPassword is not needed in the user resource
+      .assertStatusCode(204);
+    // assert password is changed -> login with the new Password
+    ScmRequests.start()
+      .given()
+      .url(TestData.getUserUrl(newUser))
+      .usernameAndPassword(newUser, newPassword)
+      .getUserResource()
+      .assertStatusCode(200)
+      .usingUserResponse()
+      .assertAdmin(isAdmin -> assertThat(isAdmin).isEqualTo(Boolean.FALSE))
+      .assertPassword(Assert::assertNull);
+  }
 
   @Test
   public void shouldHidePasswordLinkIfUserTypeIsNotXML() {

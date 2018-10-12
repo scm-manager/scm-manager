@@ -1,5 +1,6 @@
 package sonia.scm.api.v2.resources;
 
+import com.github.sdorra.ssp.PermissionCheck;
 import de.otto.edison.hal.HalRepresentation;
 import sonia.scm.AlreadyExistsException;
 import sonia.scm.ConcurrentModificationException;
@@ -7,6 +8,10 @@ import sonia.scm.Manager;
 import sonia.scm.ModelObject;
 import sonia.scm.NotFoundException;
 import sonia.scm.PageResult;
+import sonia.scm.user.User;
+import sonia.scm.user.UserPermissions;
+import sonia.scm.util.AssertUtil;
+import sonia.scm.util.AuthenticationUtil;
 
 import javax.ws.rs.core.Response;
 import java.util.Optional;
@@ -38,13 +43,31 @@ class IdResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
     return singleAdapter.get(loadBy(id), mapToDto);
   }
 
-  public Response update(String id, Function<MODEL_OBJECT, MODEL_OBJECT> applyChanges, Consumer<MODEL_OBJECT> checker) throws NotFoundException, ConcurrentModificationException {
-    return singleAdapter.update(
+
+  /**
+   * If the authenticated user is the same user that want to change password than return the changeOwnPassword verification function
+   * if the authenticated user is different he should have the modify permission to be able to modify passwords of other users
+   *
+   * @param usernameToChangePassword the user name of the user we want to change password
+   * @return function to verify permission
+   */
+  public Function<User, PermissionCheck> getChangePasswordPermission(String usernameToChangePassword) {
+    AssertUtil.assertIsNotEmpty(usernameToChangePassword);
+    return user -> {
+      if (usernameToChangePassword.equals(AuthenticationUtil.getAuthenticatedUsername())) {
+        return UserPermissions.changeOwnPassword();
+      }
+      return UserPermissions.modify(user);
+    };
+  }
+
+  public Response changePassword(String id, Function<MODEL_OBJECT, MODEL_OBJECT> applyChanges, Consumer<MODEL_OBJECT> checker, Function<MODEL_OBJECT, PermissionCheck> permissionCheck) throws NotFoundException, ConcurrentModificationException {
+    return singleAdapter.changePassword(
       loadBy(id),
       applyChanges,
       idStaysTheSame(id),
-      checker
-    );
+      checker,
+      permissionCheck);
   }
 
   public Response update(String id, Function<MODEL_OBJECT, MODEL_OBJECT> applyChanges) throws NotFoundException, ConcurrentModificationException {

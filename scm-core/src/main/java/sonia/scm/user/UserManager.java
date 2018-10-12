@@ -77,10 +77,15 @@ public interface UserManager
 
 
   /**
-   * Only account of the default type "xml" can change their password
+   * Check if a user can modify the password
+   *
+   * 1 - the permission changeOwnPassword should be checked
+   * 2 - Only account of the default type "xml" can change their password
+   *
    */
-  default Consumer<User> getUserTypeChecker() {
+  default Consumer<User> getChangePasswordChecker() {
     return user -> {
+      UserPermissions.changeOwnPassword().check();
       if (!isTypeDefault(user)) {
         throw new ChangePasswordNotAllowedException(MessageFormat.format(WRONG_USER_TYPE, user.getType()));
       }

@@ -36,6 +36,7 @@ package sonia.scm.user;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.github.sdorra.ssp.PermissionActionCheck;
+import com.github.sdorra.ssp.PermissionCheck;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.slf4j.Logger;
@@ -63,6 +64,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Function;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -194,11 +196,15 @@ public class DefaultUserManager extends AbstractUserManager
    */
   @Override
   public void modify(User user) throws NotFoundException {
-    logger.info("modify user {} of type {}", user.getName(), user.getType());
+    modify(user,UserPermissions::modify);
+  }
 
+  @Override
+  public void modify(User user, Function<User, PermissionCheck> permissionChecker) throws NotFoundException {
+    logger.info("modify user {} of type {}", user.getName(), user.getType());
     managerDaoAdapter.modify(
       user,
-      UserPermissions::modify,
+      permissionChecker,
       notModified -> fireEvent(HandlerEventType.BEFORE_MODIFY, user, notModified),
       notModified -> fireEvent(HandlerEventType.MODIFY, user, notModified));
   }

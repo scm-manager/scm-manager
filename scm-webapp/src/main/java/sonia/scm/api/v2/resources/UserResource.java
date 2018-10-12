@@ -111,7 +111,9 @@ public class UserResource {
    * The oldPassword property of the DTO is not needed here. it will be ignored.
    * The oldPassword property is needed in the MeResources when the actual user change the own password.
    *
-   * <strong>Note:</strong> This method requires "user:modify" privilege.
+   * <strong>Note:</strong> This method requires "user:modify" privilege to modify the password of other users.
+   * <strong>Note:</strong> This method requires "user:changeOwnPassword" privilege to modify the own password.
+   *
    * @param name              name of the user to be modified
    * @param passwordChangeDto change password object to modify password. the old password is here not required
    */
@@ -128,7 +130,7 @@ public class UserResource {
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
   public Response changePassword(@PathParam("id") String name, @Valid PasswordChangeDto passwordChangeDto) throws NotFoundException, ConcurrentModificationException {
-    return adapter.update(name, user -> user.changePassword(passwordService.encryptPassword(passwordChangeDto.getNewPassword())), userManager.getUserTypeChecker());
+    return adapter.changePassword(name, user -> user.changePassword(passwordService.encryptPassword(passwordChangeDto.getNewPassword())), userManager.getChangePasswordChecker(), adapter.getChangePasswordPermission(name));
   }
 
 }

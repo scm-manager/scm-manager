@@ -10,6 +10,7 @@ import sonia.scm.NotFoundException;
 import sonia.scm.user.InvalidPasswordException;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
+import sonia.scm.user.UserPermissions;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
@@ -80,7 +81,7 @@ public class MeResource {
   @Consumes(VndMediaType.PASSWORD_CHANGE)
   public Response changePassword(PasswordChangeDto passwordChangeDto) throws NotFoundException, ConcurrentModificationException {
     String name = (String) SecurityUtils.getSubject().getPrincipals().getPrimaryPrincipal();
-    return adapter.update(name, user -> user.changePassword(passwordService.encryptPassword(passwordChangeDto.getNewPassword())), userManager.getUserTypeChecker().andThen(getOldOriginalPasswordChecker(passwordChangeDto.getOldPassword())));
+    return adapter.changePassword(name, user -> user.clone().changePassword(passwordService.encryptPassword(passwordChangeDto.getNewPassword())), userManager.getChangePasswordChecker().andThen(getOldOriginalPasswordChecker(passwordChangeDto.getOldPassword())), user ->  UserPermissions.changeOwnPassword());
   }
 
   /**
