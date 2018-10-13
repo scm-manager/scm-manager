@@ -35,6 +35,7 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -237,23 +238,18 @@ public final class RepositoryUtil
   public static String getRepositoryName(File baseDirectory, File directory)
     throws IOException
   {
-    String name = null;
     String path = directory.getCanonicalPath();
-    int directoryLength = baseDirectory.getCanonicalPath().length();
+    String basePath = baseDirectory.getCanonicalPath();
 
-    if (directoryLength < path.length())
-    {
-      name = IOUtil.trimSeperatorChars(path.substring(directoryLength));
+    Preconditions.checkArgument(
+      path.startsWith(basePath),
+      "repository path %s is not in the main repository path %s", path, basePath
+    );
 
-      // replace windows path seperator
-      name = name.replaceAll("\\\\", "/");
-    }
-    else if (logger.isWarnEnabled())
-    {
-      logger.warn("path is shorter as the main repository path");
-    }
+    String name = IOUtil.trimSeperatorChars(path.substring(basePath.length()));
 
-    return name;
+    // replace windows path seperator
+    return name.replaceAll("\\\\", "/");
   }
 
   /**
