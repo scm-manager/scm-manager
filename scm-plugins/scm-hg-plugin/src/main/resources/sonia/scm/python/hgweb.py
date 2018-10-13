@@ -36,7 +36,12 @@ from mercurial.hgweb import hgweb, wsgicgi
 
 demandimport.enable()
 
-u = uimod.ui()
+# uimod.ui.load() is not available in older mercurial installations
+# Issue 997: https://bitbucket.org/sdorra/scm-manager/issues/997/since-the-fix-for-issue-970-etc-mercurial
+if hasattr(uimod.ui, 'load'):
+  u = uimod.ui.load()
+else:
+  u = uimod.ui()
 
 # pass SCM_HTTP_POST_ARGS to enable experimental httppostargs protocol of mercurial
 # SCM_HTTP_POST_ARGS is set by HgCGIServlet
