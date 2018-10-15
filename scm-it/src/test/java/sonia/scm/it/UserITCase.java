@@ -23,27 +23,21 @@ public class UserITCase {
     String newPassword = "new_password";
     // admin change the own password
     ScmRequests.start()
-      .given()
-      .url(TestData.getUserUrl(newUser))
-      .usernameAndPassword(newUser, password)
-      .getUserResource()
+      .requestIndexResource(newUser, password)
       .assertStatusCode(200)
-      .usingUserResponse()
+      .requestUser(newUser)
+      .assertStatusCode(200)
       .assertAdmin(aBoolean -> assertThat(aBoolean).isEqualTo(Boolean.TRUE))
       .assertPassword(Assert::assertNull)
       .requestChangePassword(newPassword) // the oldPassword is not needed in the user resource
       .assertStatusCode(204);
     // assert password is changed -> login with the new Password
     ScmRequests.start()
-      .given()
-      .url(TestData.getUserUrl(newUser))
-      .usernameAndPassword(newUser, newPassword)
-      .getUserResource()
+      .requestIndexResource(newUser, newPassword)
       .assertStatusCode(200)
-      .usingUserResponse()
+      .requestUser(newUser)
       .assertAdmin(isAdmin -> assertThat(isAdmin).isEqualTo(Boolean.TRUE))
       .assertPassword(Assert::assertNull);
-
   }
 
   @Test
@@ -54,22 +48,19 @@ public class UserITCase {
     String newPassword = "new_password";
     // admin change the password of the user
     ScmRequests.start()
-      .given()
-      .url(TestData.getUserUrl(newUser))// the admin get the user object
-      .usernameAndPassword(TestData.USER_SCM_ADMIN, TestData.USER_SCM_ADMIN)
-      .getUserResource()
+      .requestIndexResource(TestData.USER_SCM_ADMIN, TestData.USER_SCM_ADMIN)
       .assertStatusCode(200)
-      .usingUserResponse()
+      .requestUser(newUser)
+      .assertStatusCode(200)
       .assertAdmin(aBoolean -> assertThat(aBoolean).isEqualTo(Boolean.TRUE)) // the user anonymous is not an admin
       .assertPassword(Assert::assertNull)
       .requestChangePassword(newPassword) // the oldPassword is not needed in the user resource
       .assertStatusCode(204);
     // assert password is changed
     ScmRequests.start()
-      .given()
-      .url(TestData.getUserUrl(newUser))
-      .usernameAndPassword(newUser, newPassword)
-      .getUserResource()
+      .requestIndexResource(newUser, newPassword)
+      .assertStatusCode(200)
+      .requestUser(newUser)
       .assertStatusCode(200);
 
   }
@@ -82,12 +73,10 @@ public class UserITCase {
     String type = "not XML Type";
     TestData.createUser(newUser, password, true, type, "user@scm-manager.org");
     ScmRequests.start()
-      .given()
-      .url(TestData.getMeUrl())
-      .usernameAndPassword(newUser, password)
-      .getUserResource()
+      .requestIndexResource(newUser, password)
       .assertStatusCode(200)
-      .usingUserResponse()
+      .requestUser(newUser)
+      .assertStatusCode(200)
       .assertAdmin(aBoolean -> assertThat(aBoolean).isEqualTo(Boolean.TRUE))
       .assertPassword(Assert::assertNull)
       .assertType(s -> assertThat(s).isEqualTo(type))

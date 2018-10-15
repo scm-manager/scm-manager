@@ -4,7 +4,6 @@ import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import sonia.scm.web.VndMediaType;
 
-import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -33,8 +32,10 @@ public class ScmRequests {
     return new ScmRequests();
   }
 
-  public Given given() {
-    return new Given();
+  public IndexResponse requestIndexResource(String username, String password) {
+    setUsername(username);
+    setPassword(password);
+    return new IndexResponse(applyGETRequest(RestUtil.REST_BASE_URL.toString()));
   }
 
 
@@ -54,28 +55,28 @@ public class ScmRequests {
    *
    * @param linkPropertyName the property name of link
    * @param response         the response containing the link
-   * @param queryParams query params eg. ?q=xyz&count=12
+   * @param params           query params eg. ?q=xyz&count=12 or path params eg. namespace/name
    * @return the response of the GET request using the given link
    */
-  private Response applyGETRequestFromLinkWithParams(Response response, String linkPropertyName, String queryParams) {
+  private Response applyGETRequestFromLinkWithParams(Response response, String linkPropertyName, String params) {
     return applyGETRequestWithQueryParams(response
       .then()
       .extract()
-      .path(linkPropertyName), queryParams);
+      .path(linkPropertyName), params);
   }
 
   /**
    * Apply a GET Request to the given <code>url</code> and return the response.
    *
-   * @param url             the url of the GET request
-   * @param htmlQueryParams query params eg. ?q=xyz&count=12
+   * @param url    the url of the GET request
+   * @param params query params eg. ?q=xyz&count=12 or path params eg. namespace/name
    * @return the response of the GET request using the given <code>url</code>
    */
-  private Response applyGETRequestWithQueryParams(String url, String htmlQueryParams) {
+  private Response applyGETRequestWithQueryParams(String url, String params) {
     return RestAssured.given()
       .auth().preemptive().basic(username, password)
       .when()
-      .get(url + htmlQueryParams);
+      .get(url + params);
   }
 
   /**
@@ -123,11 +124,6 @@ public class ScmRequests {
       .put(url);
   }
 
-
-  private void setUrl(String url) {
-    this.url = url;
-  }
-
   private void setUsername(String username) {
     this.username = username;
   }
@@ -136,308 +132,185 @@ public class ScmRequests {
     this.password = password;
   }
 
-  private String getUrl() {
-    return url;
-  }
 
-  private String getUsername() {
-    return username;
-  }
+  public class IndexResponse extends ModelResponse<IndexResponse, IndexResponse> {
+    public static final String LINK_AUTOCOMPLETE_USERS = "_links.autocomplete.find{it.name=='users'}.href";
+    public static final String LINK_AUTOCOMPLETE_GROUPS = "_links.autocomplete.find{it.name=='groups'}.href";
+    public static final String LINK_REPOSITORIES = "_links.repositories.href";
+    private static final String LINK_ME = "_links.me.href";
+    private static final String LINK_USERS = "_links.users.href";
 
-  private String getPassword() {
-    return password;
-  }
-
-  public class Given {
-
-    public GivenUrl url(String url) {
-      setUrl(url);
-      return new GivenUrl();
+    public IndexResponse(Response response) {
+      super(response, null);
     }
 
-    public AppliedIndexResource requestIndexResource(String username, String password) {
-      setUsername(username);
-      setPassword(password);
-      return new AppliedIndexResource(applyGETRequest(RestUtil.REST_BASE_URL.toString()));
+    public AutoCompleteResponse<IndexResponse> requestAutoCompleteUsers(String q) {
+      return new AutoCompleteResponse<>(applyGETRequestFromLinkWithParams(response, LINK_AUTOCOMPLETE_USERS, "?q=" + q), this);
     }
 
-    public GivenUrl url(URI url) {
-      setUrl(url.toString());
-      return new GivenUrl();
+    public AutoCompleteResponse<IndexResponse> requestAutoCompleteGroups(String q) {
+      return new AutoCompleteResponse<>(applyGETRequestFromLinkWithParams(response, LINK_AUTOCOMPLETE_GROUPS, "?q=" + q), this);
     }
 
-  }
-
-  public class GivenWithUrlAndAuth {
-    public AppliedMeRequest getMeResource() {
-      return new AppliedMeRequest(applyGETRequest(url));
+    public RepositoryResponse<IndexResponse> requestRepository(String namespace, String name) {
+      return new RepositoryResponse<>(applyGETRequestFromLinkWithParams(response, LINK_REPOSITORIES, namespace + "/" + name), this);
     }
 
-    public AppliedUserRequest getUserResource() {
-      return new AppliedUserRequest(applyGETRequest(url));
+    public MeResponse<IndexResponse> requestMe() {
+      return new MeResponse<>(applyGETRequestFromLink(response, LINK_ME), this);
     }
 
-    public AppliedRepositoryRequest getRepositoryResource() {
-      return new AppliedRepositoryRequest(
-        applyGETRequest(url)
-      );
-    }
-
-    public AppliedAutoCompleteRequest getAutoCompleteResource() {
-      return new AppliedAutoCompleteRequest(
-        applyGETRequest(url)
-      );
-    }
-  }
-
-  public class AppliedRequest<SELF extends AppliedRequest> {
-    private Response response;
-
-    public AppliedRequest(Response response) {
-      this.response = response;
-    }
-
-    /**
-     * apply custom assertions to the actual response
-     *
-     * @param consumer consume the response in order to assert the content. the header, the payload etc..
-     * @return the self object
-     */
-    public SELF assertResponse(Consumer<Response> consumer) {
-      consumer.accept(response);
-      return (SELF) this;
-    }
-
-    /**
-     * special assertion of the status code
-     *
-     * @param expectedStatusCode the expected status code
-     * @return the self object
-     */
-    public SELF assertStatusCode(int expectedStatusCode) {
-      this.response.then().assertThat().statusCode(expectedStatusCode);
-      return (SELF) this;
+    public UserResponse<IndexResponse> requestUser(String username) {
+      return new UserResponse<>(applyGETRequestFromLinkWithParams(response, LINK_USERS, username), this);
     }
 
   }
 
-  public class AppliedRepositoryRequest extends AppliedRequest<AppliedRepositoryRequest> {
+  public class RepositoryResponse<PREV extends ModelResponse> extends ModelResponse<RepositoryResponse<PREV>, PREV> {
 
-    public AppliedRepositoryRequest(Response response) {
-      super(response);
+
+    public static final String LINKS_SOURCES = "_links.sources.href";
+    public static final String LINKS_CHANGESETS = "_links.changesets.href";
+
+    public RepositoryResponse(Response response, PREV previousResponse) {
+      super(response, previousResponse);
     }
 
-    public RepositoryResponse usingRepositoryResponse() {
-      return new RepositoryResponse(super.response);
+    public SourcesResponse<RepositoryResponse> requestSources() {
+      return new SourcesResponse<>(applyGETRequestFromLink(response, LINKS_SOURCES), this);
     }
+
+    public ChangesetsResponse<RepositoryResponse> requestChangesets() {
+      return new ChangesetsResponse<>(applyGETRequestFromLink(response, LINKS_CHANGESETS), this);
+    }
+
   }
 
-  public class RepositoryResponse {
+  public class ChangesetsResponse<PREV extends ModelResponse> extends ModelResponse<ChangesetsResponse<PREV>, PREV> {
 
-    private Response repositoryResponse;
-
-    public RepositoryResponse(Response repositoryResponse) {
-      this.repositoryResponse = repositoryResponse;
-    }
-
-    public AppliedSourcesRequest requestSources() {
-      return new AppliedSourcesRequest(applyGETRequestFromLink(repositoryResponse, "_links.sources.href"));
-    }
-
-    public AppliedChangesetsRequest requestChangesets() {
-      return new AppliedChangesetsRequest(applyGETRequestFromLink(repositoryResponse, "_links.changesets.href"));
-    }
-  }
-
-  public class AppliedChangesetsRequest extends AppliedRequest<AppliedChangesetsRequest> {
-
-    public AppliedChangesetsRequest(Response response) {
-      super(response);
-    }
-
-    public ChangesetsResponse usingChangesetsResponse() {
-      return new ChangesetsResponse(super.response);
-    }
-  }
-
-  public class ChangesetsResponse {
-    private Response changesetsResponse;
-
-    public ChangesetsResponse(Response changesetsResponse) {
-      this.changesetsResponse = changesetsResponse;
+    public ChangesetsResponse(Response response, PREV previousResponse) {
+      super(response, previousResponse);
     }
 
     public ChangesetsResponse assertChangesets(Consumer<List<Map>> changesetsConsumer) {
-      List<Map> changesets = changesetsResponse.then().extract().path("_embedded.changesets");
+      List<Map> changesets = response.then().extract().path("_embedded.changesets");
       changesetsConsumer.accept(changesets);
       return this;
     }
 
-    public AppliedDiffRequest requestDiff(String revision) {
-      return new AppliedDiffRequest(applyGETRequestFromLink(changesetsResponse, "_embedded.changesets.find{it.id=='" + revision + "'}._links.diff.href"));
+    public DiffResponse<ChangesetsResponse> requestDiff(String revision) {
+      return new DiffResponse<>(applyGETRequestFromLink(response, "_embedded.changesets.find{it.id=='" + revision + "'}._links.diff.href"), this);
     }
 
-    public AppliedModificationsRequest requestModifications(String revision) {
-      return new AppliedModificationsRequest(applyGETRequestFromLink(changesetsResponse, "_embedded.changesets.find{it.id=='" + revision + "'}._links.modifications.href"));
-    }
-  }
-
-  public class AppliedSourcesRequest extends AppliedRequest<AppliedSourcesRequest> {
-
-    public AppliedSourcesRequest(Response sourcesResponse) {
-      super(sourcesResponse);
-    }
-
-    public SourcesResponse usingSourcesResponse() {
-      return new SourcesResponse(super.response);
+    public ModificationsResponse<ChangesetsResponse> requestModifications(String revision) {
+      return new ModificationsResponse<>(applyGETRequestFromLink(response, "_embedded.changesets.find{it.id=='" + revision + "'}._links.modifications.href"), this);
     }
   }
 
-  public class SourcesResponse {
 
-    private Response sourcesResponse;
+  public class SourcesResponse<PREV extends ModelResponse> extends ModelResponse<SourcesResponse<PREV>, PREV> {
 
-    public SourcesResponse(Response sourcesResponse) {
-      this.sourcesResponse = sourcesResponse;
+    public SourcesResponse(Response response, PREV previousResponse) {
+      super(response, previousResponse);
     }
 
     public SourcesResponse assertRevision(Consumer<String> assertRevision) {
-      String revision = sourcesResponse.then().extract().path("revision");
+      String revision = response.then().extract().path("revision");
       assertRevision.accept(revision);
       return this;
     }
 
     public SourcesResponse assertFiles(Consumer<List> assertFiles) {
-      List files = sourcesResponse.then().extract().path("files");
+      List files = response.then().extract().path("files");
       assertFiles.accept(files);
       return this;
     }
 
-    public AppliedChangesetsRequest requestFileHistory(String fileName) {
-      return new AppliedChangesetsRequest(applyGETRequestFromLink(sourcesResponse, "_embedded.files.find{it.name=='" + fileName + "'}._links.history.href"));
+    public ChangesetsResponse<SourcesResponse> requestFileHistory(String fileName) {
+      return new ChangesetsResponse<>(applyGETRequestFromLink(response, "_embedded.files.find{it.name=='" + fileName + "'}._links.history.href"), this);
     }
 
-    public AppliedSourcesRequest requestSelf(String fileName) {
-      return new AppliedSourcesRequest(applyGETRequestFromLink(sourcesResponse, "_embedded.files.find{it.name=='" + fileName + "'}._links.self.href"));
-    }
-  }
-
-  public class AppliedDiffRequest extends AppliedRequest<AppliedDiffRequest> {
-
-    public AppliedDiffRequest(Response response) {
-      super(response);
+    public SourcesResponse<SourcesResponse> requestSelf(String fileName) {
+      return new SourcesResponse<>(applyGETRequestFromLink(response, "_embedded.files.find{it.name=='" + fileName + "'}._links.self.href"), this);
     }
   }
 
-  public class GivenUrl {
+  public class ModificationsResponse<PREV extends ModelResponse> extends ModelResponse<ModificationsResponse<PREV>, PREV> {
 
-    public GivenWithUrlAndAuth usernameAndPassword(String username, String password) {
-      setUsername(username);
-      setPassword(password);
-      return new GivenWithUrlAndAuth();
-    }
-  }
-
-  public class AppliedModificationsRequest extends AppliedRequest<AppliedModificationsRequest> {
-    public AppliedModificationsRequest(Response response) {
-      super(response);
+    public ModificationsResponse(Response response, PREV previousResponse) {
+      super(response, previousResponse);
     }
 
-    public ModificationsResponse usingModificationsResponse() {
-      return new ModificationsResponse(super.response);
-    }
-
-  }
-
-  public class ModificationsResponse {
-    private Response resource;
-
-    public ModificationsResponse(Response resource) {
-      this.resource = resource;
-    }
-
-    public ModificationsResponse assertRevision(Consumer<String> assertRevision) {
-      String revision = resource.then().extract().path("revision");
+    public ModificationsResponse<PREV> assertRevision(Consumer<String> assertRevision) {
+      String revision = response.then().extract().path("revision");
       assertRevision.accept(revision);
       return this;
     }
 
-    public ModificationsResponse assertAdded(Consumer<List<String>> assertAdded) {
-      List<String> added = resource.then().extract().path("added");
+    public ModificationsResponse<PREV> assertAdded(Consumer<List<String>> assertAdded) {
+      List<String> added = response.then().extract().path("added");
       assertAdded.accept(added);
       return this;
     }
 
-    public ModificationsResponse assertRemoved(Consumer<List<String>> assertRemoved) {
-      List<String> removed = resource.then().extract().path("removed");
+    public ModificationsResponse<PREV> assertRemoved(Consumer<List<String>> assertRemoved) {
+      List<String> removed = response.then().extract().path("removed");
       assertRemoved.accept(removed);
       return this;
     }
 
-    public ModificationsResponse assertModified(Consumer<List<String>> assertModified) {
-      List<String> modified = resource.then().extract().path("modified");
+    public ModificationsResponse<PREV> assertModified(Consumer<List<String>> assertModified) {
+      List<String> modified = response.then().extract().path("modified");
       assertModified.accept(modified);
       return this;
     }
 
   }
 
-  public class AppliedMeRequest extends AppliedRequest<AppliedMeRequest> {
-
-    public AppliedMeRequest(Response response) {
-      super(response);
-    }
-
-    public MeResponse usingMeResponse() {
-      return new MeResponse(super.response);
-    }
-
-  }
-
-  public class MeResponse extends UserResponse<MeResponse> {
+  public class MeResponse<PREV extends ModelResponse> extends UserResponse<PREV> {
 
 
-    public MeResponse(Response response) {
-      super(response);
-    }
-
-    public AppliedChangePasswordRequest requestChangePassword(String oldPassword, String newPassword) {
-      return new AppliedChangePasswordRequest(applyPUTRequestFromLink(super.response, "_links.password.href", VndMediaType.PASSWORD_CHANGE, createPasswordChangeJson(oldPassword, newPassword)));
+    public MeResponse(Response response, PREV previousResponse) {
+      super(response, previousResponse);
     }
 
 
   }
 
-  public class UserResponse<SELF extends UserResponse> extends ModelResponse<SELF> {
+  public class UserResponse<PREV extends ModelResponse> extends ModelResponse<UserResponse<PREV>, PREV> {
 
     public static final String LINKS_PASSWORD_HREF = "_links.password.href";
 
-    public UserResponse(Response response) {
-      super(response);
+    public UserResponse(Response response, PREV previousResponse) {
+      super(response, previousResponse);
     }
 
-    public SELF assertPassword(Consumer<String> assertPassword) {
+    public UserResponse<PREV> assertPassword(Consumer<String> assertPassword) {
       return super.assertSingleProperty(assertPassword, "password");
     }
 
-    public SELF assertType(Consumer<String> assertType) {
+    public UserResponse<PREV> assertType(Consumer<String> assertType) {
       return assertSingleProperty(assertType, "type");
     }
 
-    public SELF assertAdmin(Consumer<Boolean> assertAdmin) {
+    public UserResponse<PREV> assertAdmin(Consumer<Boolean> assertAdmin) {
       return assertSingleProperty(assertAdmin, "admin");
     }
 
-    public SELF assertPasswordLinkDoesNotExists() {
+    public UserResponse<PREV> assertPasswordLinkDoesNotExists() {
       return assertPropertyPathDoesNotExists(LINKS_PASSWORD_HREF);
     }
 
-    public SELF assertPasswordLinkExists() {
+    public UserResponse<PREV> assertPasswordLinkExists() {
       return assertPropertyPathExists(LINKS_PASSWORD_HREF);
     }
 
-    public AppliedChangePasswordRequest requestChangePassword(String newPassword) {
-      return new AppliedChangePasswordRequest(applyPUTRequestFromLink(super.response, LINKS_PASSWORD_HREF, VndMediaType.PASSWORD_CHANGE, createPasswordChangeJson(null, newPassword)));
+    public ChangePasswordResponse<UserResponse> requestChangePassword(String newPassword) {
+      return requestChangePassword(null, newPassword);
+    }
+
+    public ChangePasswordResponse<UserResponse> requestChangePassword(String oldPassword, String newPassword) {
+      return new ChangePasswordResponse<>(applyPUTRequestFromLink(super.response, LINKS_PASSWORD_HREF, VndMediaType.PASSWORD_CHANGE, createPasswordChangeJson(oldPassword, newPassword)), this);
     }
 
   }
@@ -446,12 +319,18 @@ public class ScmRequests {
   /**
    * encapsulate standard assertions over model properties
    */
-  public class ModelResponse<SELF extends ModelResponse> {
+  public class ModelResponse<SELF extends ModelResponse<SELF, PREV>, PREV extends ModelResponse> {
 
+    protected PREV previousResponse;
     protected Response response;
 
-    public ModelResponse(Response response) {
+    public ModelResponse(Response response, PREV previousResponse) {
       this.response = response;
+      this.previousResponse = previousResponse;
+    }
+
+    public PREV returnToPrevious() {
+      return previousResponse;
     }
 
     public <T> SELF assertSingleProperty(Consumer<T> assertSingleProperty, String propertyJsonPath) {
@@ -475,46 +354,26 @@ public class ScmRequests {
       assertProperties.accept(properties);
       return (SELF) this;
     }
+
+    /**
+     * special assertion of the status code
+     *
+     * @param expectedStatusCode the expected status code
+     * @return the self object
+     */
+    public SELF assertStatusCode(int expectedStatusCode) {
+      this.response.then().assertThat().statusCode(expectedStatusCode);
+      return (SELF) this;
+    }
   }
 
-  public class AppliedChangePasswordRequest extends AppliedRequest<AppliedChangePasswordRequest> {
+  public class AutoCompleteResponse<PREV extends ModelResponse> extends ModelResponse<AutoCompleteResponse<PREV>, PREV> {
 
-    public AppliedChangePasswordRequest(Response response) {
-      super(response);
+    public AutoCompleteResponse(Response response, PREV previousResponse) {
+      super(response, previousResponse);
     }
 
-  }
-
-  public class AppliedUserRequest extends AppliedRequest<AppliedUserRequest> {
-
-    public AppliedUserRequest(Response response) {
-      super(response);
-    }
-
-    public UserResponse usingUserResponse() {
-      return new UserResponse(super.response);
-    }
-
-  }
-
-  public class AppliedAutoCompleteRequest extends AppliedRequest<AppliedAutoCompleteRequest> {
-    public AppliedAutoCompleteRequest(Response response) {
-      super(response);
-    }
-
-    public AutoCompleteResponse usingAutoCompleteResponse() {
-      return new AutoCompleteResponse(super.response);
-    }
-
-  }
-
-  public class AutoCompleteResponse extends ModelResponse<AutoCompleteResponse> {
-
-    public AutoCompleteResponse(Response response) {
-      super(response);
-    }
-
-    public AutoCompleteResponse assertAutoCompleteResults(Consumer<List<Map>> checker) {
+    public AutoCompleteResponse<PREV> assertAutoCompleteResults(Consumer<List<Map>> checker) {
       List<Map> result = response.then().extract().path("");
       checker.accept(result);
       return this;
@@ -522,31 +381,18 @@ public class ScmRequests {
 
   }
 
-  public class AppliedIndexResource extends AppliedRequest<AppliedIndexResource> {
-    public AppliedIndexResource(Response response) {
-      super(response);
-    }
 
-    public IndexResponse usingIndexResponse() {
-      return new IndexResponse(super.response);
-    }
+  public class DiffResponse<PREV extends ModelResponse> extends ModelResponse<DiffResponse<PREV>, PREV> {
 
+    public DiffResponse(Response response, PREV previousResponse) {
+      super(response, previousResponse);
+    }
   }
 
-  public class IndexResponse extends ModelResponse<IndexResponse> {
-    public static final String AUTOCOMPLETE_USERS = "_links.autocomplete.find{it.name=='users'}.href";
-    public static final String AUTOCOMPLETE_GROUPS = "_links.autocomplete.find{it.name=='groups'}.href";
+  public class ChangePasswordResponse<PREV extends ModelResponse> extends ModelResponse<ChangePasswordResponse<PREV>, PREV> {
 
-    public IndexResponse(Response response) {
-      super(response);
-    }
-
-    public AppliedAutoCompleteRequest requestAutoCompleteUsers(String q) {
-      return new AppliedAutoCompleteRequest(applyGETRequestFromLinkWithParams(response, AUTOCOMPLETE_USERS, "?q="+q));
-    }
-
-    public AppliedAutoCompleteRequest applyAutoCompleteGroups(String q) {
-      return new AppliedAutoCompleteRequest(applyGETRequestFromLinkWithParams(response, AUTOCOMPLETE_GROUPS, "?q="+q));
+    public ChangePasswordResponse(Response response, PREV previousResponse) {
+      super(response, previousResponse);
     }
   }
 }

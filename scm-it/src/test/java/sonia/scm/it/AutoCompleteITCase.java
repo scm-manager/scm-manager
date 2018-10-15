@@ -24,65 +24,31 @@ public class AutoCompleteITCase {
   }
 
   @Test
-  public void adminShouldAutoCompleteUsers() {
-    createUsers();
-    ScmRequests.start()
-      .given()
-      .requestIndexResource(TestData.USER_SCM_ADMIN,TestData.USER_SCM_ADMIN)
-      .assertStatusCode(200)
-      .usingIndexResponse()
-      .requestAutoCompleteUsers("user*")
-      .assertStatusCode(200)
-      .usingAutoCompleteResponse()
-      .assertAutoCompleteResults(assertAutoCompleteResult(CREATED_USER_PREFIX));
+  public void adminShouldAutoComplete() {
+    shouldAutocomplete(TestData.USER_SCM_ADMIN, TestData.USER_SCM_ADMIN);
   }
 
   @Test
-  public void userShouldAutoCompleteUsersWithoutAdminPermission() {
+  public void userShouldAutoComplete() {
     String username = "nonAdmin";
     String password = "pass";
     TestData.createUser(username, password, false, "xml", "email@e.de");
+    shouldAutocomplete(username, password);
+  }
+
+  public void shouldAutocomplete(String username, String password) {
     createUsers();
+    createGroups();
     ScmRequests.start()
-      .given()
-      .requestIndexResource(username,password)
+      .requestIndexResource(username, password)
       .assertStatusCode(200)
-      .usingIndexResponse()
+      .requestAutoCompleteGroups("group*")
+      .assertStatusCode(200)
+      .assertAutoCompleteResults(assertAutoCompleteResult(CREATED_GROUP_PREFIX))
+      .returnToPrevious()
       .requestAutoCompleteUsers("user*")
       .assertStatusCode(200)
-      .usingAutoCompleteResponse()
       .assertAutoCompleteResults(assertAutoCompleteResult(CREATED_USER_PREFIX));
-  }
-
-  @Test
-  public void adminShouldAutoCompleteGroups() {
-    createGroups();
-    ScmRequests.start()
-      .given()
-      .requestIndexResource(TestData.USER_SCM_ADMIN,TestData.USER_SCM_ADMIN)
-      .assertStatusCode(200)
-      .usingIndexResponse()
-      .applyAutoCompleteGroups("group*")
-      .assertStatusCode(200)
-      .usingAutoCompleteResponse()
-      .assertAutoCompleteResults(assertAutoCompleteResult(CREATED_GROUP_PREFIX));
-  }
-
-  @Test
-  public void userShouldAutoCompleteGroupsWithoutAdminPermission() {
-    String username = "nonAdminUser";
-    String password = "pass";
-    TestData.createNotAdminUser(username, password);
-    createGroups();
-    ScmRequests.start()
-      .given()
-      .requestIndexResource(username,password)
-      .assertStatusCode(200)
-      .usingIndexResponse()
-      .applyAutoCompleteGroups("group*")
-      .assertStatusCode(200)
-      .usingAutoCompleteResponse()
-      .assertAutoCompleteResults(assertAutoCompleteResult(CREATED_GROUP_PREFIX));
   }
 
   @SuppressWarnings("unchecked")

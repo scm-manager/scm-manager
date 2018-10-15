@@ -203,10 +203,14 @@ public class TestData {
     return JSON_BUILDER
       .add("contact", "zaphod.beeblebrox@hitchhiker.com")
       .add("description", "Heart of Gold")
-      .add("name", "HeartOfGold-" + repositoryType)
+      .add("name", getDefaultRepoName(repositoryType))
       .add("archived", false)
       .add("type", repositoryType)
       .build().toString();
+  }
+
+  public static String getDefaultRepoName(String repositoryType) {
+    return "HeartOfGold-" + repositoryType;
   }
 
   public static String getGroupJson(String groupname , String desc) {
@@ -216,28 +220,12 @@ public class TestData {
       .build().toString();
   }
 
-  public static URI getMeUrl() {
-    return RestUtil.createResourceUrl("me/");
-  }
-
   public static URI getGroupsUrl() {
     return RestUtil.createResourceUrl("groups/");
   }
 
   public static URI getUsersUrl() {
     return RestUtil.createResourceUrl("users/");
-  }
-
-  public static URI getUserUrl(String username) {
-    return getUsersUrl().resolve(username);
-  }
-
-  public static URI getUsersAutoCompleteUrl(String query ) {
-    return RestUtil.createResourceUrl("autocomplete/users?q="+query);
-  }
-
-  public static URI getGroupsAutoCompleteUrl(String query ) {
-    return RestUtil.createResourceUrl("autocomplete/groups?q="+query);
   }
 
   public static String createPasswordChangeJson(String oldPassword, String newPassword) {
