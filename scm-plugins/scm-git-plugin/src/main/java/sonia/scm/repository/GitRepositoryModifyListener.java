@@ -32,7 +32,6 @@ package sonia.scm.repository;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Objects;
-import com.google.common.base.Strings;
 import com.google.common.eventbus.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,12 +57,10 @@ public class GitRepositoryModifyListener {
    */
   private static final Logger logger = LoggerFactory.getLogger(GitRepositoryModifyListener.class);
 
-  private final GitHeadResolver headResolver;
   private final GitHeadModifier headModifier;
 
   @Inject
-  public GitRepositoryModifyListener(GitHeadResolver headResolver, GitHeadModifier headModifier) {
-    this.headResolver = headResolver;
+  public GitRepositoryModifyListener(GitHeadModifier headModifier) {
     this.headModifier = headModifier;
   }
 
@@ -85,8 +82,8 @@ public class GitRepositoryModifyListener {
       }
 
       String defaultBranch = repository.getProperty(GitConstants.PROPERTY_DEFAULT_BRANCH);
-      if (defaultBranch != null && ! defaultBranch.equals(headResolver.resolve(repository))) {
-        headModifier.modify(repository, defaultBranch);
+      if (defaultBranch != null) {
+        headModifier.ensure(repository, defaultBranch);
       }
     }
   }

@@ -53,9 +53,6 @@ import sonia.scm.HandlerEvent;
 public class GitRepositoryModifyListenerTest {
 
   @Mock
-  private GitHeadResolver headResolver;
-
-  @Mock
   private GitHeadModifier headModifier;
 
   @InjectMocks
@@ -162,34 +159,19 @@ public class GitRepositoryModifyListenerTest {
     Repository current = RepositoryTestData.createHeartOfGold("git");
     current.setProperty(GitConstants.PROPERTY_DEFAULT_BRANCH, "develop");
 
-    when(headResolver.resolve(current)).thenReturn("master");
-
     RepositoryModificationEvent event = new RepositoryModificationEvent(current, old, HandlerEvent.MODIFY);
     repositoryModifyListener.handleEvent(event);
 
-    verify(headModifier).modify(current, "develop");
+    verify(headModifier).ensure(current, "develop");
   }
 
-  @Test
-  public void testWithEqualHeads() {
-    Repository old = RepositoryTestData.createHeartOfGold("git");
-    Repository current = RepositoryTestData.createHeartOfGold("git");
-    current.setProperty(GitConstants.PROPERTY_DEFAULT_BRANCH, "develop");
-
-    when(headResolver.resolve(current)).thenReturn("develop");
-
-    RepositoryModificationEvent event = new RepositoryModificationEvent(current, old, HandlerEvent.MODIFY);
-    repositoryModifyListener.handleEvent(event);
-
-    verify(headModifier, never()).modify(current, "develop");
-  }
 
   private static class GitRepositoryModifyTestListener extends GitRepositoryModifyListener {
 
     private Repository repository;
 
-    public GitRepositoryModifyTestListener(GitHeadResolver headResolver, GitHeadModifier headModifier) {
-      super(headResolver, headModifier);
+    public GitRepositoryModifyTestListener(GitHeadModifier headModifier) {
+      super(headModifier);
     }
 
     @Override
