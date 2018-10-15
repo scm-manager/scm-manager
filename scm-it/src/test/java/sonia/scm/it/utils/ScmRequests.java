@@ -534,9 +534,8 @@ public class ScmRequests {
   }
 
   public class IndexResponse extends ModelResponse<IndexResponse> {
-
-    public static final String AUTOCOMPLETE_USERS = "_links.autocompleteUsers.href";
-    public static final String AUTOCOMPLETE_GROUPS = "_links.autocompleteGroups.href";
+    public static final String AUTOCOMPLETE_USERS = "_links.autocomplete.find{it.name=='users'}.href";
+    public static final String AUTOCOMPLETE_GROUPS = "_links.autocomplete.find{it.name=='groups'}.href";
 
     public IndexResponse(Response response) {
       super(response);

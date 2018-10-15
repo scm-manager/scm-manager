@@ -99,8 +99,9 @@ public class IndexResourceTest {
   public void shouldRenderAutoCompleteLinks() {
     IndexDto index = indexResource.getIndex();
 
-    Assertions.assertThat(index.getLinks().getLinkBy("autocompleteUsers")).matches(Optional::isPresent);
-    Assertions.assertThat(index.getLinks().getLinkBy("autocompleteGroups")).matches(Optional::isPresent);
+    Assertions.assertThat(index.getLinks().getLinksBy("autocomplete"))
+      .extracting("name")
+      .containsExactlyInAnyOrder("users", "groups");
   }
 
   @Test
@@ -108,8 +109,9 @@ public class IndexResourceTest {
   public void userWithoutAutocompletePermissionShouldNotSeeAutoCompleteLinks() {
     IndexDto index = indexResource.getIndex();
 
-    Assertions.assertThat(index.getLinks().getLinkBy("autocompleteUsers")).matches(o -> !o.isPresent());
-    Assertions.assertThat(index.getLinks().getLinkBy("autocompleteGroups")).matches(o -> !o.isPresent());
+    Assertions.assertThat(index.getLinks().getLinksBy("autocomplete"))
+      .extracting("name")
+      .doesNotContainSequence("users", "groups");
   }
 
   @Test
