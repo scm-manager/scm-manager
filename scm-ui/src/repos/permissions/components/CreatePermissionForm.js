@@ -61,6 +61,7 @@ class CreatePermissionForm extends React.Component<Props, State> {
           />
           <TypeSelector
             label={t("permission.type")}
+            helpText={t("permission.help.typeHelpText")}
             handleTypeChange={this.handleTypeChange}
             type={type ? type : "READ"}
           />
