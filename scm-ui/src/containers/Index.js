@@ -13,11 +13,12 @@ import {
   isFetchIndexResourcesPending
 } from "../modules/indexResource";
 import PluginLoader from "./PluginLoader";
+import type { IndexResources } from "@scm-manager/ui-types";
 
 type Props = {
   error: Error,
   loading: boolean,
-  indexResources: any,
+  indexResources: IndexResources,
 
   // dispatcher functions
   fetchIndexResources: () => void,
@@ -34,7 +35,7 @@ class Index extends Component<Props> {
   render() {
     const { indexResources, loading, error, t } = this.props;
 
-  if (error) {
+    if (error) {
       return (
         <ErrorPage
           title={t("app.error.title")}
@@ -42,10 +43,9 @@ class Index extends Component<Props> {
           error={error}
         />
       );
-    }
-    else if (loading || !indexResources) {
+    } else if (loading || !indexResources) {
       return <Loading />;
-    }  else {
+    } else {
       return (
         <PluginLoader>
           <App />

@@ -18,7 +18,7 @@ import {
   Image
 } from "@scm-manager/ui-components";
 import classNames from "classnames";
-import { fetchIndexResources, getLoginLink } from "../modules/indexResource";
+import { getLoginLink } from "../modules/indexResource";
 
 const styles = {
   avatar: {

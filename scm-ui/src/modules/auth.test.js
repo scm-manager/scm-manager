@@ -97,16 +97,20 @@ describe("auth actions", () => {
       headers: { "content-type": "application/json" }
     });
 
-    fetchMock.getOnce("/api/v2/", {
-      _links: {
-        me: {
-          href: "/me"
-        }
+    const meLink = {
+      me: {
+        href: "/me"
       }
+    };
+
+    fetchMock.getOnce("/api/v2/", {
+      _links: meLink
     });
 
     const expectedActions = [
       { type: LOGIN_PENDING },
+      { type: FETCH_INDEXRESOURCES_PENDING },
+      { type: FETCH_INDEXRESOURCES_SUCCESS, payload: { _links: meLink } },
       { type: LOGIN_SUCCESS, payload: me }
     ];
 
@@ -208,8 +212,7 @@ describe("auth actions", () => {
     const expectedActions = [
       { type: LOGOUT_PENDING },
       { type: LOGOUT_SUCCESS },
-      { type: FETCH_INDEXRESOURCES_PENDING },
-      { type: FETCH_INDEXRESOURCES_SUCCESS }
+      { type: FETCH_INDEXRESOURCES_PENDING }
     ];
 
     const store = mockStore({});

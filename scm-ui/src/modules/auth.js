@@ -8,7 +8,7 @@ import { getFailure } from "./failure";
 import {
   callFetchIndexResources,
   FETCH_INDEXRESOURCES_SUCCESS,
-  fetchIndexResources,
+  fetchIndexResources, fetchIndexResourcesPending,
   fetchIndexResourcesSuccess
 } from "./indexResource";
 
@@ -156,6 +156,7 @@ export const login = (
     return apiClient
       .post(loginLink, login_data)
       .then(response => {
+        dispatch(fetchIndexResourcesPending())
         return callFetchIndexResources();
       })
       .then(response => {
