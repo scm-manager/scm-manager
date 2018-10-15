@@ -48,6 +48,10 @@ class ApiClient {
     return this.httpRequestWithJSONBody("PUT", url, contentType, payload);
   }
 
+  head(url: string, payload: any, contentType: string = "application/json") {
+    return this.httpRequestWithJSONBody("HEAD", url, contentType, payload);
+  }
+
   delete(url: string): Promise<Response> {
     let options: RequestOptions = {
       method: "DELETE"
