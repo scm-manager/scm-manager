@@ -5,7 +5,12 @@ import * as types from "./types";
 import { apiClient, UNAUTHORIZED_ERROR } from "@scm-manager/ui-components";
 import { isPending } from "./pending";
 import { getFailure } from "./failure";
-import { callFetchIndexResources, fetchIndexResources } from "./indexResource";
+import {
+  callFetchIndexResources,
+  FETCH_INDEXRESOURCES_SUCCESS,
+  fetchIndexResources,
+  fetchIndexResourcesSuccess
+} from "./indexResource";
 
 // Action
 
@@ -154,14 +159,12 @@ export const login = (
         return callFetchIndexResources();
       })
       .then(response => {
+        dispatch(fetchIndexResourcesSuccess(response));
         const meLink = response._links.me.href;
         return callFetchMe(meLink);
       })
       .then(me => {
         dispatch(loginSuccess(me));
-      })
-      .then(() => {
-        dispatch(fetchIndexResources());
       })
       .catch(err => {
         dispatch(loginFailure(err));

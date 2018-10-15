@@ -9,12 +9,15 @@ import { Loading, ErrorPage } from "@scm-manager/ui-components";
 import {
   fetchIndexResources,
   getFetchIndexResourcesFailure,
+  getLinks,
   isFetchIndexResourcesPending
 } from "../modules/indexResource";
+import PluginLoader from "./PluginLoader";
 
 type Props = {
   error: Error,
   loading: boolean,
+  indexResources: any,
 
   // dispatcher functions
   fetchIndexResources: () => void,
@@ -29,11 +32,9 @@ class Index extends Component<Props> {
   }
 
   render() {
-    const { loading, error, t } = this.props;
+    const { indexResources, loading, error, t } = this.props;
 
-    if (loading) {
-      return <Loading />;
-    } else if (error) {
+  if (error) {
       return (
         <ErrorPage
           title={t("app.error.title")}
@@ -41,8 +42,15 @@ class Index extends Component<Props> {
           error={error}
         />
       );
-    } else {
-      return <App />;
+    }
+    else if (loading || !indexResources) {
+      return <Loading />;
+    }  else {
+      return (
+        <PluginLoader>
+          <App />
+        </PluginLoader>
+      );
     }
   }
 }
@@ -56,9 +64,11 @@ const mapDispatchToProps = (dispatch: any) => {
 const mapStateToProps = state => {
   const loading = isFetchIndexResourcesPending(state);
   const error = getFetchIndexResourcesFailure(state);
+  const indexResources = getLinks(state);
   return {
     loading,
-    error
+    error,
+    indexResources
   };
 };
 

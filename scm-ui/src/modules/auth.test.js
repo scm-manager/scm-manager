@@ -32,6 +32,10 @@ import reducer, {
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 import fetchMock from "fetch-mock";
+import {
+  FETCH_INDEXRESOURCES_PENDING,
+  FETCH_INDEXRESOURCES_SUCCESS
+} from "./indexResource";
 
 const me = { name: "tricia", displayName: "Tricia McMillian" };
 
@@ -193,9 +197,19 @@ describe("auth actions", () => {
       status: 401
     });
 
+    fetchMock.getOnce("/api/v2/", {
+      _links: {
+        login: {
+          login: "/login"
+        }
+      }
+    });
+
     const expectedActions = [
       { type: LOGOUT_PENDING },
-      { type: LOGOUT_SUCCESS }
+      { type: LOGOUT_SUCCESS },
+      { type: FETCH_INDEXRESOURCES_PENDING },
+      { type: FETCH_INDEXRESOURCES_SUCCESS }
     ];
 
     const store = mockStore({});

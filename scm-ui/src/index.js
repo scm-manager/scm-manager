@@ -37,9 +37,7 @@ ReactDOM.render(
     <I18nextProvider i18n={i18n}>
       {/* ConnectedRouter will use the store from Provider automatically */}
       <ConnectedRouter history={history}>
-        <PluginLoader>
           <Index />
-        </PluginLoader>
       </ConnectedRouter>
     </I18nextProvider>
   </Provider>,
