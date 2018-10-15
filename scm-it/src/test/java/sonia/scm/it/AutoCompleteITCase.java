@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class AutoCompleteITCase {
 
 
-  public static final String CREATED_USER_PREFIX = "user";
+  public static final String CREATED_USER_PREFIX = "user_";
   public static final String CREATED_GROUP_PREFIX = "group_";
 
   @Before
@@ -28,9 +28,10 @@ public class AutoCompleteITCase {
     createUsers();
     ScmRequests.start()
       .given()
-      .url(TestData.getUsersAutoCompleteUrl("user*"))
-      .usernameAndPassword(TestData.USER_SCM_ADMIN, TestData.USER_SCM_ADMIN)
-      .getAutoCompleteResource()
+      .requestIndexResource(TestData.USER_SCM_ADMIN,TestData.USER_SCM_ADMIN)
+      .assertStatusCode(200)
+      .usingIndexResponse()
+      .requestAutoCompleteUsers("user*")
       .assertStatusCode(200)
       .usingAutoCompleteResponse()
       .assertAutoCompleteResults(assertAutoCompleteResult(CREATED_USER_PREFIX));
@@ -44,9 +45,10 @@ public class AutoCompleteITCase {
     createUsers();
     ScmRequests.start()
       .given()
-      .url(TestData.getUsersAutoCompleteUrl("user*"))
-      .usernameAndPassword(username, password)
-      .getAutoCompleteResource()
+      .requestIndexResource(username,password)
+      .assertStatusCode(200)
+      .usingIndexResponse()
+      .requestAutoCompleteUsers("user*")
       .assertStatusCode(200)
       .usingAutoCompleteResponse()
       .assertAutoCompleteResults(assertAutoCompleteResult(CREATED_USER_PREFIX));
@@ -57,9 +59,10 @@ public class AutoCompleteITCase {
     createGroups();
     ScmRequests.start()
       .given()
-      .url(TestData.getGroupsAutoCompleteUrl("group*"))
-      .usernameAndPassword(TestData.USER_SCM_ADMIN, TestData.USER_SCM_ADMIN)
-      .getAutoCompleteResource()
+      .requestIndexResource(TestData.USER_SCM_ADMIN,TestData.USER_SCM_ADMIN)
+      .assertStatusCode(200)
+      .usingIndexResponse()
+      .applyAutoCompleteGroups("group*")
       .assertStatusCode(200)
       .usingAutoCompleteResponse()
       .assertAutoCompleteResults(assertAutoCompleteResult(CREATED_GROUP_PREFIX));
@@ -73,9 +76,10 @@ public class AutoCompleteITCase {
     createGroups();
     ScmRequests.start()
       .given()
-      .url(TestData.getGroupsAutoCompleteUrl("group*"))
-      .usernameAndPassword(username, password)
-      .getAutoCompleteResource()
+      .requestIndexResource(username,password)
+      .assertStatusCode(200)
+      .usingIndexResponse()
+      .applyAutoCompleteGroups("group*")
       .assertStatusCode(200)
       .usingAutoCompleteResponse()
       .assertAutoCompleteResults(assertAutoCompleteResult(CREATED_GROUP_PREFIX));

@@ -46,24 +46,46 @@ public class ScmRequests {
    * @return the response of the GET request using the given link
    */
   private Response applyGETRequestFromLink(Response response, String linkPropertyName) {
-    return applyGETRequest(response
-      .then()
-      .extract()
-      .path(linkPropertyName));
+    return applyGETRequestFromLinkWithParams(response, linkPropertyName, "");
   }
 
+  /**
+   * Apply a GET Request to the extracted url from the given link
+   *
+   * @param linkPropertyName the property name of link
+   * @param response         the response containing the link
+   * @param queryParams query params eg. ?q=xyz&count=12
+   * @return the response of the GET request using the given link
+   */
+  private Response applyGETRequestFromLinkWithParams(Response response, String linkPropertyName, String queryParams) {
+    return applyGETRequestWithQueryParams(response
+      .then()
+      .extract()
+      .path(linkPropertyName), queryParams);
+  }
+
+  /**
+   * Apply a GET Request to the given <code>url</code> and return the response.
+   *
+   * @param url             the url of the GET request
+   * @param htmlQueryParams query params eg. ?q=xyz&count=12
+   * @return the response of the GET request using the given <code>url</code>
+   */
+  private Response applyGETRequestWithQueryParams(String url, String htmlQueryParams) {
+    return RestAssured.given()
+      .auth().preemptive().basic(username, password)
+      .when()
+      .get(url + htmlQueryParams);
+  }
 
   /**
    * Apply a GET Request to the given <code>url</code> and return the response.
    *
    * @param url the url of the GET request
    * @return the response of the GET request using the given <code>url</code>
-   */
+   **/
   private Response applyGETRequest(String url) {
-    return RestAssured.given()
-      .auth().preemptive().basic(username, password)
-      .when()
-      .get(url);
+    return applyGETRequestWithQueryParams(url, "");
   }
 
 
@@ -131,6 +153,12 @@ public class ScmRequests {
     public GivenUrl url(String url) {
       setUrl(url);
       return new GivenUrl();
+    }
+
+    public AppliedIndexResource requestIndexResource(String username, String password) {
+      setUsername(username);
+      setPassword(password);
+      return new AppliedIndexResource(applyGETRequest(RestUtil.REST_BASE_URL.toString()));
     }
 
     public GivenUrl url(URI url) {
@@ -480,17 +508,46 @@ public class ScmRequests {
 
   }
 
-  public class AutoCompleteResponse extends ModelResponse<AutoCompleteResponse>{
+  public class AutoCompleteResponse extends ModelResponse<AutoCompleteResponse> {
 
     public AutoCompleteResponse(Response response) {
       super(response);
     }
 
-    public AutoCompleteResponse assertAutoCompleteResults(Consumer<List<Map>> checker){
+    public AutoCompleteResponse assertAutoCompleteResults(Consumer<List<Map>> checker) {
       List<Map> result = response.then().extract().path("");
       checker.accept(result);
       return this;
     }
 
+  }
+
+  public class AppliedIndexResource extends AppliedRequest<AppliedIndexResource> {
+    public AppliedIndexResource(Response response) {
+      super(response);
+    }
+
+    public IndexResponse usingIndexResponse() {
+      return new IndexResponse(super.response);
+    }
+
+  }
+
+  public class IndexResponse extends ModelResponse<IndexResponse> {
+
+    public static final String AUTOCOMPLETE_USERS = "_links.autocompleteUsers.href";
+    public static final String AUTOCOMPLETE_GROUPS = "_links.autocompleteGroups.href";
+
+    public IndexResponse(Response response) {
+      super(response);
+    }
+
+    public AppliedAutoCompleteRequest requestAutoCompleteUsers(String q) {
+      return new AppliedAutoCompleteRequest(applyGETRequestFromLinkWithParams(response, AUTOCOMPLETE_USERS, "?q="+q));
+    }
+
+    public AppliedAutoCompleteRequest applyAutoCompleteGroups(String q) {
+      return new AppliedAutoCompleteRequest(applyGETRequestFromLinkWithParams(response, AUTOCOMPLETE_GROUPS, "?q="+q));
+    }
   }
 }

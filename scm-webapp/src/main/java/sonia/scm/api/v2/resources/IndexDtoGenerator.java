@@ -34,6 +34,12 @@ public class IndexDtoGenerator {
       if (UserPermissions.list().isPermitted()) {
         builder.single(link("users", resourceLinks.userCollection().self()));
       }
+      if (UserPermissions.autocomplete().isPermitted()) {
+        builder.single(link("autocompleteUsers", resourceLinks.autoComplete().users()));
+      }
+      if (GroupPermissions.autocomplete().isPermitted()) {
+        builder.single(link("autocompleteGroups", resourceLinks.autoComplete().groups()));
+      }
       if (GroupPermissions.list().isPermitted()) {
         builder.single(link("groups", resourceLinks.groupCollection().self()));
       }

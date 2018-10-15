@@ -14,8 +14,8 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Response;
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 
@@ -50,7 +50,7 @@ public class AutoCompleteResource {
     @ResponseCode(code = 403, condition = "not authorized, the current user does not have the \"user:autocomplete\" privilege"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
-  public Response searchUser(@NotEmpty(message = PARAMETER_IS_REQUIRED) @Size(min = MIN_SEARCHED_CHARS, message = INVALID_PARAMETER_LENGTH) @QueryParam("q") String filter) {
+  public List<ReducedObjectModelDto> searchUser(@NotEmpty(message = PARAMETER_IS_REQUIRED) @Size(min = MIN_SEARCHED_CHARS, message = INVALID_PARAMETER_LENGTH) @QueryParam("q") String filter) {
     return map(userManager.autocomplete(filter));
   }
 
@@ -64,16 +64,15 @@ public class AutoCompleteResource {
     @ResponseCode(code = 403, condition = "not authorized, the current user does not have the \"group:autocomplete\" privilege"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
-  public Response searchGroup(@NotEmpty(message = PARAMETER_IS_REQUIRED) @Size(min = MIN_SEARCHED_CHARS, message = INVALID_PARAMETER_LENGTH) @QueryParam("q") String filter) {
+  public List<ReducedObjectModelDto> searchGroup(@NotEmpty(message = PARAMETER_IS_REQUIRED) @Size(min = MIN_SEARCHED_CHARS, message = INVALID_PARAMETER_LENGTH) @QueryParam("q") String filter) {
     return map(groupManager.autocomplete(filter));
   }
 
-  private <T extends ReducedModelObject> Response map(Collection<T> autocomplete) {
-    return Response.ok(autocomplete
+  private <T extends ReducedModelObject> List<ReducedObjectModelDto> map(Collection<T> autocomplete) {
+    return autocomplete
       .stream()
       .map(mapper::map)
-      .collect(Collectors.toList()))
-      .build();
+      .collect(Collectors.toList());
   }
 
 
