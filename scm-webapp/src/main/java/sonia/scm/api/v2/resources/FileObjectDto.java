@@ -32,6 +32,9 @@ public class FileObjectDto extends HalRepresentation {
   }
 
   public void setChildren(List<FileObjectDto> children) {
-    this.withEmbedded("children", children);
+    if (!children.isEmpty()) {
+      // prevent empty embedded attribute in json
+      this.withEmbedded("children", children);
+    }
   }
 }
