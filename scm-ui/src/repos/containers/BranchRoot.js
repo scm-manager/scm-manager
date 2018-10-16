@@ -1,12 +1,12 @@
 // @flow
 
 import React from "react";
-import type { Repository, Branch } from "@scm-manager/ui-types";
-import { Route, Switch, withRouter } from "react-router-dom";
+import type { Branch, Repository } from "@scm-manager/ui-types";
+import { Route, withRouter } from "react-router-dom";
 import Changesets from "./Changesets";
 import BranchSelector from "./BranchSelector";
 import { connect } from "react-redux";
-import { ErrorPage, Loading } from "@scm-manager/ui-components";
+import { Loading } from "@scm-manager/ui-components";
 import {
   fetchBranches,
   getBranches,
@@ -35,13 +35,14 @@ type State = {
   selectedBranch?: Branch
 };
 
-class BranchRoot extends React.PureComponent<Props, State> {
+class BranchRoot extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {};
   }
 
   componentDidMount() {
+    console.log("BR did mount");
     this.props.fetchBranches(this.props.repository);
   }
 
@@ -75,22 +76,21 @@ class BranchRoot extends React.PureComponent<Props, State> {
   branchSelected = (branch: Branch) => {
     const url = this.matchedUrl();
     this.props.history.push(
-      `${url}/${encodeURIComponent(branch.name)}/changesets/`
+      `${url}/${encodeURIComponent(branch.name)}/changesets`
     );
   };
 
   render() {
+    console.log("BR render");
     const { repository, match, branches, loading } = this.props;
     const url = this.stripEndingSlash(match.url);
 
     if (loading) {
       return <Loading />;
     }
-
     if (!repository || !branches) {
       return null;
     }
-
 
     return (
       <>
@@ -109,12 +109,10 @@ class BranchRoot extends React.PureComponent<Props, State> {
             />
           )}
         />
-
       </>
     );
   }
 }
-
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -138,9 +136,9 @@ const mapStateToProps = (state: any, ownProps: Props) => {
 };
 
 export default compose(
+  withRouter,
   connect(
     mapStateToProps,
     mapDispatchToProps
-  ),
-  withRouter
+  )
 )(BranchRoot);

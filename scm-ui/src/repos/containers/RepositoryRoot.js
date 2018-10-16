@@ -1,32 +1,17 @@
 //@flow
 import React from "react";
-import {
-  deleteRepo,
-  fetchRepo,
-  getFetchRepoFailure,
-  getRepository,
-  isFetchRepoPending
-} from "../modules/repos";
-import { connect } from "react-redux";
-import { Route, Switch } from "react-router-dom";
-import type { Repository } from "@scm-manager/ui-types";
-import {
-  ErrorPage,
-  Loading,
-  Navigation,
-  NavLink,
-  Page,
-  Section
-} from "@scm-manager/ui-components";
-import { translate } from "react-i18next";
+import {deleteRepo, fetchRepo, getFetchRepoFailure, getRepository, isFetchRepoPending} from "../modules/repos";
+import {connect} from "react-redux";
+import {Route, Switch} from "react-router-dom";
+import type {Repository} from "@scm-manager/ui-types";
+import {ErrorPage, Loading, Navigation, NavLink, Page, Section} from "@scm-manager/ui-components";
+import {translate} from "react-i18next";
 import RepositoryDetails from "../components/RepositoryDetails";
 import DeleteNavAction from "../components/DeleteNavAction";
 import Edit from "../containers/Edit";
 
-import type { History } from "history";
+import type {History} from "history";
 import EditNavLink from "../components/EditNavLink";
-import BranchChooser from "./BranchChooser";
-import Changesets from "./Changesets";
 import BranchRoot from "./BranchRoot";
 
 type Props = {
