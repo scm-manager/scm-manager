@@ -148,13 +148,15 @@ public class BootstrapContextListener implements ServletContextListener
   {
     context = sce.getServletContext();
 
-    PluginIndex index = readCorePluginIndex(context);
-
     File pluginDirectory = getPluginDirectory();
 
     try
     {
-      extractCorePlugins(context, pluginDirectory, index);
+      if (!isCorePluginExtractionDisabled()) {
+        extractCorePlugins(context, pluginDirectory);
+      } else {
+        logger.info("core plugin extraction is disabled");
+      }
 
       ClassLoader cl =
         ClassLoaders.getContextClassLoader(BootstrapContextListener.class);
@@ -179,6 +181,10 @@ public class BootstrapContextListener implements ServletContextListener
       ScmEventBus.getInstance().register(this);
       registered = true;
     }
+  }
+
+  private boolean isCorePluginExtractionDisabled() {
+    return Boolean.getBoolean("sonia.scm.boot.disable-core-plugin-extraction");
   }
 
   /**
@@ -269,16 +275,14 @@ public class BootstrapContextListener implements ServletContextListener
    *
    * @param context
    * @param pluginDirectory
-   * @param lines
-   * @param index
    *
    * @throws IOException
    */
-  private void extractCorePlugins(ServletContext context, File pluginDirectory,
-    PluginIndex index)
-    throws IOException
+  private void extractCorePlugins(ServletContext context, File pluginDirectory) throws IOException
   {
     IOUtil.mkdirs(pluginDirectory);
+
+    PluginIndex index = readCorePluginIndex(context);
 
     for (PluginIndexEntry entry : index)
     {
