@@ -31,7 +31,7 @@ public class UserITCase {
       .usingUserResponse()
       .assertAdmin(aBoolean -> assertThat(aBoolean).isEqualTo(Boolean.TRUE))
       .assertPassword(Assert::assertNull)
-      .requestChangePassword(newPassword) // the oldPassword is not needed in the user resource
+      .requestChangePassword(password, newPassword) // the oldPassword is needed when the own password should be changed
       .assertStatusCode(204);
     // assert password is changed -> login with the new Password
     ScmRequests.start()
@@ -60,7 +60,7 @@ public class UserITCase {
       .getUserResource()
       .assertStatusCode(200)
       .usingUserResponse()
-      .assertAdmin(aBoolean -> assertThat(aBoolean).isEqualTo(Boolean.TRUE)) // the user anonymous is not an admin
+      .assertAdmin(aBoolean -> assertThat(aBoolean).isEqualTo(Boolean.TRUE))
       .assertPassword(Assert::assertNull)
       .requestChangePassword(newPassword) // the oldPassword is not needed in the user resource
       .assertStatusCode(204);
@@ -75,6 +75,21 @@ public class UserITCase {
   }
 
   @Test
+  public void nonAdminUserShouldNotChangePasswordOfOtherUser() {
+    String user = "user";
+    String password = "pass";
+    TestData.createUser(user, password, false, "xml");
+    String user2 = "user2";
+    TestData.createUser(user2, password, false, "xml");
+    ScmRequests.start()
+      .given()
+      .url(TestData.getUserUrl(user2))
+      .usernameAndPassword(user, password)
+      .getUserResource()
+      .assertStatusCode(403);
+  }
+
+    @Test
   public void nonAdminUserShouldChangeOwnPassword() {
     String newUser = "user";
     String password = "pass";
@@ -88,7 +103,7 @@ public class UserITCase {
       .assertStatusCode(200)
       .usingUserResponse()
       .assertAdmin(aBoolean -> assertThat(aBoolean).isEqualTo(Boolean.FALSE))
-      .requestChangePassword(newPassword) // the oldPassword is not needed in the user resource
+      .requestChangePassword(password, newPassword) // the oldPassword is needed when the own password should be changed
       .assertStatusCode(204);
     // assert password is changed -> login with the new Password
     ScmRequests.start()

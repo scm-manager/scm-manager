@@ -46,14 +46,14 @@ class SingleResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
    * Reads the model object for the given id, transforms it to a dto and returns a corresponding http response.
    * This handles all corner cases, eg. no matching object for the id or missing privileges.
    */
-  Response get(Supplier<Optional<MODEL_OBJECT>> reader, Function<MODEL_OBJECT, DTO> mapToDto) throws NotFoundException {
+  Response get(Supplier<Optional<MODEL_OBJECT>> reader, Function<MODEL_OBJECT, DTO> mapToDto) {
     return reader.get()
       .map(mapToDto)
       .map(Response::ok)
       .map(Response.ResponseBuilder::build)
       .orElseThrow(NotFoundException::new);
   }
-  public Response changePassword(Supplier<Optional<MODEL_OBJECT>> reader, Function<MODEL_OBJECT, MODEL_OBJECT> applyChanges, Predicate<MODEL_OBJECT> hasSameKey, Consumer<MODEL_OBJECT> checker, Function<MODEL_OBJECT, PermissionCheck> permissionCheck) throws NotFoundException, ConcurrentModificationException {
+  public Response changePassword(Supplier<Optional<MODEL_OBJECT>> reader, Function<MODEL_OBJECT, MODEL_OBJECT> applyChanges, Predicate<MODEL_OBJECT> hasSameKey, Consumer<MODEL_OBJECT> checker, Function<MODEL_OBJECT, PermissionCheck> permissionCheck) throws ConcurrentModificationException {
     MODEL_OBJECT existingModelObject = reader.get().orElseThrow(NotFoundException::new);
     MODEL_OBJECT changedModelObject = applyChanges.apply(existingModelObject);
     checkForUpdate(hasSameKey, existingModelObject, changedModelObject);
@@ -65,7 +65,7 @@ class SingleResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
    * Update the model object for the given id according to the given function and returns a corresponding http response.
    * This handles all corner cases, eg. no matching object for the id or missing privileges.
    */
-  public Response update(Supplier<Optional<MODEL_OBJECT>> reader, Function<MODEL_OBJECT, MODEL_OBJECT> applyChanges, Predicate<MODEL_OBJECT> hasSameKey) throws NotFoundException, ConcurrentModificationException {
+  public Response update(Supplier<Optional<MODEL_OBJECT>> reader, Function<MODEL_OBJECT, MODEL_OBJECT> applyChanges, Predicate<MODEL_OBJECT> hasSameKey) throws ConcurrentModificationException {
     MODEL_OBJECT existingModelObject = reader.get().orElseThrow(NotFoundException::new);
     MODEL_OBJECT changedModelObject = applyChanges.apply(existingModelObject);
     checkForUpdate(hasSameKey, existingModelObject, changedModelObject);

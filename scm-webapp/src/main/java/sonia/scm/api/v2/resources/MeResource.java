@@ -6,11 +6,10 @@ import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.credential.PasswordService;
 import sonia.scm.ConcurrentModificationException;
-import sonia.scm.NotFoundException;
+import sonia.scm.user.ChangePasswordNotAllowedException;
 import sonia.scm.user.InvalidPasswordException;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
-import sonia.scm.user.UserPermissions;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
@@ -61,7 +60,7 @@ public class MeResource {
     @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
-  public Response get(@Context Request request, @Context UriInfo uriInfo) throws NotFoundException {
+  public Response get(@Context Request request, @Context UriInfo uriInfo) {
 
     String id = (String) SecurityUtils.getSubject().getPrincipals().getPrimaryPrincipal();
     return adapter.get(id, meToUserDtoMapper::map);
@@ -79,8 +78,11 @@ public class MeResource {
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
   @Consumes(VndMediaType.PASSWORD_CHANGE)
-  public Response changePassword(PasswordChangeDto passwordChangeDto) throws NotFoundException, ConcurrentModificationException {
+  public Response changePassword(PasswordChangeDto passwordChangeDto) throws ConcurrentModificationException {
     String name = (String) SecurityUtils.getSubject().getPrincipals().getPrimaryPrincipal();
+    if (passwordChangeDto.getOldPassword() == null){
+      throw new ChangePasswordNotAllowedException(ChangePasswordNotAllowedException.OLD_PASSWORD_REQUIRED);
+    }
     return adapter.changePassword(name, user -> user.clone().changePassword(passwordService.encryptPassword(passwordChangeDto.getNewPassword())), userManager.getChangePasswordChecker().andThen(getOldOriginalPasswordChecker(passwordChangeDto.getOldPassword())));
   }
 

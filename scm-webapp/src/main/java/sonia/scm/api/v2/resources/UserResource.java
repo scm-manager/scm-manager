@@ -3,9 +3,10 @@ package sonia.scm.api.v2.resources;
 import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.credential.PasswordService;
 import sonia.scm.ConcurrentModificationException;
-import sonia.scm.NotFoundException;
+import sonia.scm.user.ChangePasswordNotAllowedException;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
 import sonia.scm.web.VndMediaType;
@@ -57,7 +58,7 @@ public class UserResource {
     @ResponseCode(code = 404, condition = "not found, no user with the specified id/name available"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
-  public Response get(@PathParam("id") String id) throws NotFoundException {
+  public Response get(@PathParam("id") String id) {
     return adapter.get(id, userToDtoMapper::map);
   }
 
@@ -102,7 +103,7 @@ public class UserResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
-  public Response update(@PathParam("id") String name, @Valid UserDto userDto) throws NotFoundException, ConcurrentModificationException {
+  public Response update(@PathParam("id") String name, @Valid UserDto userDto) throws ConcurrentModificationException {
     return adapter.update(name, existing -> dtoToUserMapper.map(userDto, existing.getPassword()));
   }
 
@@ -129,7 +130,11 @@ public class UserResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
-  public Response changePassword(@PathParam("id") String name, @Valid PasswordChangeDto passwordChangeDto) throws NotFoundException, ConcurrentModificationException {
+  public Response changePassword(@PathParam("id") String name, @Valid PasswordChangeDto passwordChangeDto) throws ConcurrentModificationException {
+    String currentUserName = (String) SecurityUtils.getSubject().getPrincipals().getPrimaryPrincipal();
+    if (currentUserName.equals(name) && passwordChangeDto.getOldPassword() == null){
+      throw new ChangePasswordNotAllowedException(ChangePasswordNotAllowedException.OLD_PASSWORD_REQUIRED);
+    }
     return adapter.changePassword(name, user -> user.changePassword(passwordService.encryptPassword(passwordChangeDto.getNewPassword())), userManager.getChangePasswordChecker());
   }
 

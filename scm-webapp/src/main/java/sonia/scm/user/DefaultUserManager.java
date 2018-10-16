@@ -159,7 +159,7 @@ public class DefaultUserManager extends AbstractUserManager
   }
 
   @Override
-  public void delete(User user) throws NotFoundException {
+  public void delete(User user) {
     logger.info("delete user {} of type {}", user.getName(), user.getType());
     managerDaoAdapter.delete(
       user,
@@ -195,12 +195,12 @@ public class DefaultUserManager extends AbstractUserManager
    * @throws IOException
    */
   @Override
-  public void modify(User user) throws NotFoundException {
+  public void modify(User user) {
     modify(user,UserPermissions::modify);
   }
 
   @Override
-  public void modify(User user, Function<User, PermissionCheck> permissionChecker) throws NotFoundException {
+  public void modify(User user, Function<User, PermissionCheck> permissionChecker) {
     logger.info("modify user {} of type {}", user.getName(), user.getType());
     managerDaoAdapter.modify(
       user,
@@ -218,7 +218,7 @@ public class DefaultUserManager extends AbstractUserManager
    * @throws IOException
    */
   @Override
-  public void refresh(User user) throws NotFoundException {
+  public void refresh(User user) {
     if (logger.isInfoEnabled())
     {
       logger.info("refresh user {} of type {}", user.getName(), user.getType());

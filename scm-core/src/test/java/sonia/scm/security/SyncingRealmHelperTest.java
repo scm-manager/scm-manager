@@ -154,7 +154,7 @@ public class SyncingRealmHelperTest {
    * Tests {@link SyncingRealmHelper#store(Group)} with an existing group.
    */
   @Test
-  public void testStoreGroupModify() throws NotFoundException {
+  public void testStoreGroupModify(){
     Group group = new Group("unit-test", "heartOfGold");
 
     when(groupManager.get("heartOfGold")).thenReturn(group);
@@ -191,7 +191,7 @@ public class SyncingRealmHelperTest {
    * Tests {@link SyncingRealmHelper#store(User)} with an existing user.
    */
   @Test
-  public void testStoreUserModify() throws NotFoundException {
+  public void testStoreUserModify(){
     when(userManager.contains("tricia")).thenReturn(Boolean.TRUE);
 
     User user = new User("tricia");

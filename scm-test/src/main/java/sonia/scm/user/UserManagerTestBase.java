@@ -196,7 +196,7 @@ public abstract class UserManagerTestBase extends ManagerTestBase<User> {
   }
 
   @Test(expected = NotFoundException.class)
-  public void testModifyNotExisting() throws NotFoundException, ConcurrentModificationException {
+  public void testModifyNotExisting() {
     manager.modify(UserTestData.createZaphod());
   }
 
@@ -249,7 +249,7 @@ public abstract class UserManagerTestBase extends ManagerTestBase<User> {
   }
 
   @Test(expected = NotFoundException.class)
-  public void testRefreshNotFound() throws NotFoundException {
+  public void testRefreshNotFound(){
     manager.refresh(UserTestData.createDent());
   }
 

@@ -39,7 +39,7 @@ class IdResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
     collectionAdapter = new CollectionResourceManagerAdapter<>(manager, type);
   }
 
-  Response get(String id, Function<MODEL_OBJECT, DTO> mapToDto) throws NotFoundException {
+  Response get(String id, Function<MODEL_OBJECT, DTO> mapToDto) {
     return singleAdapter.get(loadBy(id), mapToDto);
   }
 
@@ -62,7 +62,7 @@ class IdResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
     };
   }
 
-  public Response changePassword(String id, Function<MODEL_OBJECT, MODEL_OBJECT> applyChanges, Consumer<MODEL_OBJECT> checker ) throws NotFoundException, ConcurrentModificationException {
+  public Response changePassword(String id, Function<MODEL_OBJECT, MODEL_OBJECT> applyChanges, Consumer<MODEL_OBJECT> checker ) throws ConcurrentModificationException {
     return singleAdapter.changePassword(
       loadBy(id),
       applyChanges,
@@ -71,7 +71,7 @@ class IdResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
       getChangePasswordPermission(id));
   }
 
-  public Response update(String id, Function<MODEL_OBJECT, MODEL_OBJECT> applyChanges) throws NotFoundException, ConcurrentModificationException {
+  public Response update(String id, Function<MODEL_OBJECT, MODEL_OBJECT> applyChanges) throws ConcurrentModificationException {
     return singleAdapter.update(
       loadBy(id),
       applyChanges,

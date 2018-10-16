@@ -53,7 +53,7 @@ public class GroupResource {
     @ResponseCode(code = 404, condition = "not found, no group with the specified id/name available"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
-  public Response get(@PathParam("id") String id) throws NotFoundException {
+  public Response get(@PathParam("id") String id){
     return adapter.get(id, groupToGroupDtoMapper::map);
   }
 
@@ -98,7 +98,7 @@ public class GroupResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
-  public Response update(@PathParam("id") String name, @Valid GroupDto groupDto) throws NotFoundException, ConcurrentModificationException {
+  public Response update(@PathParam("id") String name, @Valid GroupDto groupDto) throws ConcurrentModificationException {
     return adapter.update(name, existing -> dtoToGroupMapper.map(groupDto));
   }
 }

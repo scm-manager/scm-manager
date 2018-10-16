@@ -406,6 +406,10 @@ public class ScmRequests {
       return new AppliedChangePasswordRequest(applyPUTRequestFromLink(super.response, LINKS_PASSWORD_HREF, VndMediaType.PASSWORD_CHANGE, createPasswordChangeJson(null, newPassword)));
     }
 
+    public AppliedChangePasswordRequest requestChangePassword(String oldPassword , String newPassword) {
+      return new AppliedChangePasswordRequest(applyPUTRequestFromLink(super.response, LINKS_PASSWORD_HREF, VndMediaType.PASSWORD_CHANGE, createPasswordChangeJson(oldPassword, newPassword)));
+    }
+
   }
 
 
