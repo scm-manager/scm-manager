@@ -87,13 +87,13 @@ public class PermissionsITCase {
   @Before
   public void prepareEnvironment() {
     TestData.createDefault();
-    TestData.createUser(USER_READ, USER_PASS);
+    TestData.createNotAdminUser(USER_READ, USER_PASS);
     TestData.createUserPermission(USER_READ, PermissionType.READ, repositoryType);
-    TestData.createUser(USER_WRITE, USER_PASS);
+    TestData.createNotAdminUser(USER_WRITE, USER_PASS);
     TestData.createUserPermission(USER_WRITE, PermissionType.WRITE, repositoryType);
-    TestData.createUser(USER_OWNER, USER_PASS);
+    TestData.createNotAdminUser(USER_OWNER, USER_PASS);
     TestData.createUserPermission(USER_OWNER, PermissionType.OWNER, repositoryType);
-    TestData.createUser(USER_OTHER, USER_PASS);
+    TestData.createNotAdminUser(USER_OTHER, USER_PASS);
     createdPermissions = 3;
   }
 

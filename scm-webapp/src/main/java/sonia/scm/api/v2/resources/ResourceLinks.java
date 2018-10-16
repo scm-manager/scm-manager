@@ -142,6 +142,26 @@ class ResourceLinks {
     }
   }
 
+  AutoCompleteLinks autoComplete() {
+    return new AutoCompleteLinks (scmPathInfoStore.get());
+  }
+
+  static class AutoCompleteLinks  {
+    private final LinkBuilder linkBuilder;
+
+    AutoCompleteLinks (ScmPathInfo pathInfo) {
+      linkBuilder = new LinkBuilder(pathInfo, AutoCompleteResource.class);
+    }
+
+    String users() {
+      return linkBuilder.method("searchUser").parameters().href();
+    }
+
+    String groups() {
+      return linkBuilder.method("searchGroup").parameters().href();
+    }
+  }
+
   ConfigLinks config() {
     return new ConfigLinks(scmPathInfoStore.get());
   }

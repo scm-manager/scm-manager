@@ -135,7 +135,7 @@ public class UserResource {
     if (currentUserName.equals(name) && passwordChangeDto.getOldPassword() == null){
       throw new ChangePasswordNotAllowedException(ChangePasswordNotAllowedException.OLD_PASSWORD_REQUIRED);
     }
-    return adapter.changePassword(name, user -> user.changePassword(passwordService.encryptPassword(passwordChangeDto.getNewPassword())), userManager.getChangePasswordChecker());
+    return adapter.changePassword(name, user -> user.changePassword(passwordService.encryptPassword(passwordChangeDto.getNewPassword())));
   }
 
 }

@@ -20,12 +20,9 @@ public class MeITCase {
     String newPassword = TestData.USER_SCM_ADMIN + "1";
     // admin change the own password
     ScmRequests.start()
-      .given()
-      .url(TestData.getMeUrl())
-      .usernameAndPassword(TestData.USER_SCM_ADMIN, TestData.USER_SCM_ADMIN)
-      .getMeResource()
+      .requestIndexResource(TestData.USER_SCM_ADMIN, TestData.USER_SCM_ADMIN)
+      .requestMe()
       .assertStatusCode(200)
-      .usingMeResponse()
       .assertAdmin(aBoolean -> assertThat(aBoolean).isEqualTo(Boolean.TRUE))
       .assertPassword(Assert::assertNull)
       .assertType(s -> assertThat(s).isEqualTo("xml"))
@@ -33,12 +30,9 @@ public class MeITCase {
       .assertStatusCode(204);
     // assert password is changed -> login with the new Password than undo changes
     ScmRequests.start()
-      .given()
-      .url(TestData.getUserUrl(TestData.USER_SCM_ADMIN))
-      .usernameAndPassword(TestData.USER_SCM_ADMIN, newPassword)
-      .getMeResource()
+      .requestIndexResource(TestData.USER_SCM_ADMIN, newPassword)
+      .requestMe()
       .assertStatusCode(200)
-      .usingMeResponse()
       .assertAdmin(aBoolean -> assertThat(aBoolean).isEqualTo(Boolean.TRUE))// still admin
       .requestChangePassword(newPassword, TestData.USER_SCM_ADMIN)
       .assertStatusCode(204);
@@ -49,15 +43,12 @@ public class MeITCase {
     String newPassword = "pass1";
     String username = "user1";
     String password = "pass";
-    TestData.createUser(username, password,false,"xml");
+    TestData.createUser(username, password,false,"xml", "em@l.de");
     // user change the own password
     ScmRequests.start()
-      .given()
-      .url(TestData.getMeUrl())
-      .usernameAndPassword(username, password)
-      .getMeResource()
+      .requestIndexResource(username, password)
+      .requestMe()
       .assertStatusCode(200)
-      .usingMeResponse()
       .assertAdmin(aBoolean -> assertThat(aBoolean).isEqualTo(Boolean.FALSE))
       .assertPassword(Assert::assertNull)
       .assertType(s -> assertThat(s).isEqualTo("xml"))
@@ -65,10 +56,8 @@ public class MeITCase {
       .assertStatusCode(204);
     // assert password is changed -> login with the new Password than undo changes
     ScmRequests.start()
-      .given()
-      .url(TestData.getMeUrl())
-      .usernameAndPassword(username, newPassword)
-      .getMeResource()
+      .requestIndexResource(username, newPassword)
+      .requestMe()
       .assertStatusCode(200);
 
   }
@@ -78,14 +67,11 @@ public class MeITCase {
     String newUser = "user";
     String password = "pass";
     String type = "not XML Type";
-    TestData.createUser(newUser, password, true, type);
+    TestData.createUser(newUser, password, true, type, "user@scm-manager.org");
     ScmRequests.start()
-      .given()
-      .url(TestData.getMeUrl())
-      .usernameAndPassword(newUser, password)
-      .getMeResource()
+      .requestIndexResource(newUser, password)
+      .requestMe()
       .assertStatusCode(200)
-      .usingMeResponse()
       .assertAdmin(aBoolean -> assertThat(aBoolean).isEqualTo(Boolean.TRUE))
       .assertPassword(Assert::assertNull)
       .assertType(s -> assertThat(s).isEqualTo(type))

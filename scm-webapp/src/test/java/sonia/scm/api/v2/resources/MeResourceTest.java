@@ -70,7 +70,6 @@ public class MeResourceTest {
     doNothing().when(userManager).modify(userCaptor.capture());
     doNothing().when(userManager).delete(userCaptor.capture());
     when(userManager.isTypeDefault(userCaptor.capture())).thenCallRealMethod();
-    when(userManager.getChangePasswordChecker()).thenCallRealMethod();
     when(userManager.getDefaultType()).thenReturn("xml");
     MeResource meResource = new MeResource(userToDtoMapper, userManager, passwordService);
     when(uriInfo.getApiRestUri()).thenReturn(URI.create("/"));

@@ -83,17 +83,7 @@ public class MeResource {
     if (passwordChangeDto.getOldPassword() == null){
       throw new ChangePasswordNotAllowedException(ChangePasswordNotAllowedException.OLD_PASSWORD_REQUIRED);
     }
-    return adapter.changePassword(name, user -> user.clone().changePassword(passwordService.encryptPassword(passwordChangeDto.getNewPassword())), userManager.getChangePasswordChecker().andThen(getOldOriginalPasswordChecker(passwordChangeDto.getOldPassword())));
+    return adapter.changePassword(name, user -> user.clone().changePassword(passwordService.encryptPassword(passwordChangeDto.getNewPassword()), passwordService.encryptPassword(passwordChangeDto.getOldPassword())));
   }
 
-  /**
-   * Match given old password from the dto with the stored password before updating
-   */
-  private Consumer<User> getOldOriginalPasswordChecker(String oldPassword) {
-    return user -> {
-      if (!user.getPassword().equals(passwordService.encryptPassword(oldPassword))) {
-        throw new InvalidPasswordException(INVALID_MATCHING);
-      }
-    };
-  }
 }

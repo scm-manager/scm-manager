@@ -69,7 +69,6 @@ public class UserRootResourceTest {
     originalUser = createDummyUser("Neo");
     when(userManager.create(userCaptor.capture())).thenAnswer(invocation -> invocation.getArguments()[0]);
     when(userManager.isTypeDefault(userCaptor.capture())).thenCallRealMethod();
-    when(userManager.getChangePasswordChecker()).thenCallRealMethod();
     doNothing().when(userManager).modify(userCaptor.capture());
     doNothing().when(userManager).delete(userCaptor.capture());
     when(userManager.getDefaultType()).thenReturn("xml");

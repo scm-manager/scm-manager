@@ -6,19 +6,23 @@ import sonia.scm.AlreadyExistsException;
 import sonia.scm.ConcurrentModificationException;
 import sonia.scm.Manager;
 import sonia.scm.ModelObject;
-import sonia.scm.NotFoundException;
 import sonia.scm.PageResult;
+import sonia.scm.user.ChangePasswordNotAllowedException;
 import sonia.scm.user.User;
+import sonia.scm.user.UserManager;
 import sonia.scm.user.UserPermissions;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.AuthenticationUtil;
 
 import javax.ws.rs.core.Response;
+import java.text.MessageFormat;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+
+import static sonia.scm.user.ChangePasswordNotAllowedException.WRONG_USER_TYPE;
 
 /**
  * Facade for {@link SingleResourceManagerAdapter} and {@link CollectionResourceManagerAdapter}
@@ -51,7 +55,7 @@ class IdResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
    * @param usernameToChangePassword the user name of the user we want to change password
    * @return function to verify permission
    */
-  public Function<MODEL_OBJECT, PermissionCheck> getChangePasswordPermission(String usernameToChangePassword) {
+  private Function<MODEL_OBJECT, PermissionCheck> getChangePasswordPermission(String usernameToChangePassword) {
     AssertUtil.assertIsNotEmpty(usernameToChangePassword);
     return model -> {
       User user = (User) model;
@@ -62,12 +66,32 @@ class IdResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
     };
   }
 
-  public Response changePassword(String id, Function<MODEL_OBJECT, MODEL_OBJECT> applyChanges, Consumer<MODEL_OBJECT> checker ) throws ConcurrentModificationException {
+
+  /**
+   * Check if a user can modify the password
+   *
+   * 1 - the permission changeOwnPassword should be checked
+   * 2 - Only account of the default type "xml" can change their password
+   *
+   */
+  private Consumer<MODEL_OBJECT> getChangePasswordChecker() {
+    return model -> {
+      User user = (User) model;
+      UserPermissions.changeOwnPassword().check();
+      UserManager  userManager = (UserManager) manager;
+      if (!userManager.isTypeDefault(user)) {
+        throw new ChangePasswordNotAllowedException(MessageFormat.format(WRONG_USER_TYPE, user.getType()));
+      }
+    };
+  }
+
+
+  public Response changePassword(String id, Function<MODEL_OBJECT, MODEL_OBJECT> applyChanges ) throws ConcurrentModificationException {
     return singleAdapter.changePassword(
       loadBy(id),
       applyChanges,
       idStaysTheSame(id),
-      checker,
+      getChangePasswordChecker(),
       getChangePasswordPermission(id));
   }
 

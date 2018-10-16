@@ -245,7 +245,8 @@ public class DefaultGroupManager extends AbstractGroupManager
   @Override
   public Collection<Group> autocomplete(String filter) {
     GroupPermissions.autocomplete().check();
-    return search(new SearchRequest(filter,true, DEFAULT_LIMIT));
+    SearchRequest searchRequest = new SearchRequest(filter, true, DEFAULT_LIMIT);
+    return SearchUtil.search(searchRequest, groupDAO.getAll(), group -> matches(searchRequest,group)?group:null);
   }
 
   /**
