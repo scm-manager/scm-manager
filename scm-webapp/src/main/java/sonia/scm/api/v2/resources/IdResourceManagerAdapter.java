@@ -51,9 +51,10 @@ class IdResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
    * @param usernameToChangePassword the user name of the user we want to change password
    * @return function to verify permission
    */
-  public Function<User, PermissionCheck> getChangePasswordPermission(String usernameToChangePassword) {
+  public Function<MODEL_OBJECT, PermissionCheck> getChangePasswordPermission(String usernameToChangePassword) {
     AssertUtil.assertIsNotEmpty(usernameToChangePassword);
-    return user -> {
+    return model -> {
+      User user = (User) model;
       if (usernameToChangePassword.equals(AuthenticationUtil.getAuthenticatedUsername())) {
         return UserPermissions.changeOwnPassword();
       }
@@ -61,13 +62,13 @@ class IdResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
     };
   }
 
-  public Response changePassword(String id, Function<MODEL_OBJECT, MODEL_OBJECT> applyChanges, Consumer<MODEL_OBJECT> checker, Function<MODEL_OBJECT, PermissionCheck> permissionCheck) throws NotFoundException, ConcurrentModificationException {
+  public Response changePassword(String id, Function<MODEL_OBJECT, MODEL_OBJECT> applyChanges, Consumer<MODEL_OBJECT> checker ) throws NotFoundException, ConcurrentModificationException {
     return singleAdapter.changePassword(
       loadBy(id),
       applyChanges,
       idStaysTheSame(id),
       checker,
-      permissionCheck);
+      getChangePasswordPermission(id));
   }
 
   public Response update(String id, Function<MODEL_OBJECT, MODEL_OBJECT> applyChanges) throws NotFoundException, ConcurrentModificationException {

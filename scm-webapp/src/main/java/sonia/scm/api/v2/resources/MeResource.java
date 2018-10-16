@@ -81,7 +81,7 @@ public class MeResource {
   @Consumes(VndMediaType.PASSWORD_CHANGE)
   public Response changePassword(PasswordChangeDto passwordChangeDto) throws NotFoundException, ConcurrentModificationException {
     String name = (String) SecurityUtils.getSubject().getPrincipals().getPrimaryPrincipal();
-    return adapter.changePassword(name, user -> user.clone().changePassword(passwordService.encryptPassword(passwordChangeDto.getNewPassword())), userManager.getChangePasswordChecker().andThen(getOldOriginalPasswordChecker(passwordChangeDto.getOldPassword())), user ->  UserPermissions.changeOwnPassword());
+    return adapter.changePassword(name, user -> user.clone().changePassword(passwordService.encryptPassword(passwordChangeDto.getNewPassword())), userManager.getChangePasswordChecker().andThen(getOldOriginalPasswordChecker(passwordChangeDto.getOldPassword())));
   }
 
   /**

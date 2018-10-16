@@ -130,7 +130,7 @@ public class UserResource {
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
   public Response changePassword(@PathParam("id") String name, @Valid PasswordChangeDto passwordChangeDto) throws NotFoundException, ConcurrentModificationException {
-    return adapter.changePassword(name, user -> user.changePassword(passwordService.encryptPassword(passwordChangeDto.getNewPassword())), userManager.getChangePasswordChecker(), adapter.getChangePasswordPermission(name));
+    return adapter.changePassword(name, user -> user.changePassword(passwordService.encryptPassword(passwordChangeDto.getNewPassword())), userManager.getChangePasswordChecker());
   }
 
 }
