@@ -17,10 +17,12 @@ public class FileObjectDto extends HalRepresentation {
   private String name;
   private String path;
   private boolean directory;
+  @JsonInclude(JsonInclude.Include.NON_EMPTY)
   private String description;
   private long length;
   @JsonInclude(JsonInclude.Include.NON_EMPTY)
   private Instant lastModified;
+  @JsonInclude(JsonInclude.Include.NON_EMPTY)
   private SubRepositoryDto subRepository;
   @JsonInclude(JsonInclude.Include.NON_EMPTY)
   private String revision;
