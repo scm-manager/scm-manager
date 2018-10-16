@@ -60,4 +60,5 @@ public interface BrowseCommand
    *
    * @throws IOException
    */
-  BrowserResult getBrowserResult(BrowseCommandRequest request) throws IOException, NotFoundException;}
+  BrowserResult getBrowserResult(BrowseCommandRequest request) throws IOException, NotFoundException;
+}
