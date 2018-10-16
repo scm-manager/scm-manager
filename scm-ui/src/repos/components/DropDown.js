@@ -5,7 +5,7 @@ import React from "react";
 type Props = {
   options: string[],
   optionSelected: string => void,
-  preselectedOption: string
+  preselectedOption?: string
 };
 
 class DropDown extends React.Component<Props> {
@@ -13,7 +13,10 @@ class DropDown extends React.Component<Props> {
     const { options, preselectedOption } = this.props;
     return (
       <div className="select">
-        <select value={preselectedOption} onChange={this.change}>
+        <select
+          value={preselectedOption ? preselectedOption : ""}
+          onChange={this.change}
+        >
           <option key="" />
           {options.map(option => {
             return (
@@ -27,7 +30,7 @@ class DropDown extends React.Component<Props> {
     );
   }
 
-  change = event => {
+  change = (event: Event) => {
     this.props.optionSelected(event.target.value);
   };
 }

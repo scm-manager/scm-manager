@@ -4,30 +4,31 @@ import type { Branch, Repository } from "@scm-manager/ui-types";
 import { connect } from "react-redux";
 import {
   fetchBranches,
-  getBranch,
   getBranches,
-  getBranchNames,
   getFetchBranchesFailure,
   isFetchBranchesPending
 } from "../modules/branches";
 import DropDown from "../components/DropDown";
 import type { History } from "history";
-import { withRouter } from "react-router-dom";
 import { ErrorPage, Loading } from "@scm-manager/ui-components";
 import { translate } from "react-i18next";
 
 type Props = {
   repository: Repository,
-  branches: Branch[],
-  fetchBranches: Repository => void,
-  history: History,
-  match: any,
-  selectedBranch?: Branch,
   label: string, //TODO: Should this be here?
-  loading: boolean,
-  branchSelected: string => void,
-  error: Error,
+  onChange: string => void,
   children: React.Node,
+  selected?: string,
+
+  // State props
+  branches: Branch[],
+  error: Error,
+  loading: boolean,
+
+  // Dispatch props
+  fetchBranches: Repository => void,
+
+  // Context props
   t: string => string
 };
 type State = {
@@ -41,12 +42,10 @@ class BranchChooser extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    console.log("BC CDM");
     this.props.fetchBranches(this.props.repository);
   }
 
   render() {
-    console.log("Branch chooser render");
 
     const { loading, error, t, repository } = this.props;
 
@@ -88,8 +87,7 @@ class BranchChooser extends React.Component<Props, State> {
   }
 
   renderBranchChooser() {
-    const { label, match, branches } = this.props;
-    const selectedBranchName = match.params.branch;
+    const { label, branches, selected } = this.props;
 
     if (!branches || branches.length === 0) {
       return null;
@@ -100,21 +98,44 @@ class BranchChooser extends React.Component<Props, State> {
         <label className="label">{label}</label>
         <DropDown
           options={branches.map(b => b.name)}
-          preselectedOption={selectedBranchName}
-          optionSelected={this.branchSelected}
+          preselectedOption={
+            this.state.selectedBranch
+              ? this.state.selectedBranch.name
+              : selected
+          }
+          optionSelected={(branchName: string) => {
+            this.branchSelected(branchName, true);
+          }}
         />
       </div>
     );
   }
 
-  branchSelected = (branch: string) => {
+  branchSelected = (branch: string, changed: boolean) => {
     for (let b of this.props.branches) {
       if (b.name === branch) {
-        this.setState({ selectedBranch: b });
-        this.props.branchSelected(b.name);
+        this.updateBranch(branch, b, changed);
         break;
       }
     }
+  };
+
+  updateBranch = (branchName: string, branch: Branch, changed: boolean) => {
+    this.setState(
+      prevState => {
+        if (
+          !prevState.selectedBranch ||
+          branchName !== prevState.selectedBranch.name
+        ) {
+          return { selectedBranch: branch };
+        }
+      },
+      () => {
+        if (changed) {
+          this.props.onChange(branch.name);
+        }
+      }
+    );
   };
 }
 
@@ -127,26 +148,19 @@ const mapDispatchToProps = dispatch => {
 };
 
 const mapStateToProps = (state: any, ownProps: Props) => {
-  const { repository, match } = ownProps;
+  const { repository } = ownProps;
   const loading = isFetchBranchesPending(state, repository);
   const error = getFetchBranchesFailure(state, repository);
-  const selectedBranch = getBranch(
-    state,
-    repository,
-    decodeURIComponent(match.params.branch)
-  );
+
   const branches = getBranches(state, repository);
   return {
-    // loading,
-    selectedBranch,
-    // error,
+    loading,
+    error,
     branches
   };
 };
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(translate("repos")(BranchChooser))
-);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(translate("repos")(BranchChooser));

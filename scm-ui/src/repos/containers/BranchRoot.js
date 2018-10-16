@@ -2,82 +2,145 @@
 
 import React from "react";
 import type { Repository, Branch } from "@scm-manager/ui-types";
-import BranchChooser from "./BranchChooser";
-import { Route, withRouter } from "react-router-dom";
+import { Route, Switch, withRouter } from "react-router-dom";
 import Changesets from "./Changesets";
+import BranchSelector from "./BranchSelector";
+import { connect } from "react-redux";
+import { ErrorPage, Loading } from "@scm-manager/ui-components";
+import {
+  fetchBranches,
+  getBranches,
+  getFetchBranchesFailure,
+  isFetchBranchesPending
+} from "../modules/branches";
+import { compose } from "redux";
 
 type Props = {
   repository: Repository,
+  baseUrl: string,
+
+  // State props
+  branches: Branch[],
+  loading: boolean,
+
+  // Dispatch props
+  fetchBranches: Repository => void,
+
+  // Context props
   history: History,
   match: any
 };
 
-class BranchRoot extends React.Component<Props> {
+type State = {
+  selectedBranch?: Branch
+};
+
+class BranchRoot extends React.PureComponent<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = {};
+  }
+
+  componentDidMount() {
+    this.props.fetchBranches(this.props.repository);
+  }
+
+  componentDidUpdate(prevProps: Props) {
+    const { branches, match, loading } = this.props;
+    console.log("BR did update");
+    const branchName = decodeURIComponent(match.params.branch);
+    if (branches) {
+      if (
+        (!loading && prevProps.loading) ||
+        match.url !== prevProps.match.url
+      ) {
+        this.setState({
+          selectedBranch: branches.find(b => b.name === branchName)
+        });
+      }
+    }
+  }
+
   stripEndingSlash = (url: string) => {
     if (url.endsWith("/")) {
-      return url.substring(0, url.length - 2);
+      return url.substring(0, url.length - 1);
     }
     return url;
   };
 
   matchedUrl = () => {
-    return this.stripEndingSlash(this.props.match.url);
+    return this.stripEndingSlash(this.props.baseUrl);
   };
 
-  branchSelected = (branchName: string) => {
+  branchSelected = (branch: Branch) => {
     const url = this.matchedUrl();
-    if (branchName === "") {
-      this.props.history.push(`${url}/changesets/`);
-    } else {
-      this.props.history.push(
-        `${url}/${encodeURIComponent(branchName)}/changesets/`
-      );
-    }
+    this.props.history.push(
+      `${url}/${encodeURIComponent(branch.name)}/changesets/`
+    );
   };
 
   render() {
-    const { repository } = this.props;
-    const url = this.matchedUrl();
-    if (!repository) {
+    const { repository, match, branches, loading } = this.props;
+    const url = this.stripEndingSlash(match.url);
+
+    if (loading) {
+      return <Loading />;
+    }
+
+    if (!repository || !branches) {
       return null;
     }
+
+
     return (
-      <BranchChooser
-        repository={this.props.repository}
-        label={"Branches"}
-        branchSelected={this.branchSelected}
-      >
-        <RouteDelegate repository={this.props.repository} url={url} />
-      </BranchChooser>
+      <>
+        <BranchSelector
+          branches={branches}
+          selected={(b: Branch) => {
+            this.branchSelected(b);
+          }}
+        />
+        <Route
+          path={`${url}/changesets/:page?`}
+          component={() => (
+            <Changesets
+              repository={repository}
+              branch={this.state.selectedBranch}
+            />
+          )}
+        />
+
+      </>
     );
   }
 }
 
-type RDProps = {
-  repository: Repository,
-  branch: Branch,
-  url: string
+
+const mapDispatchToProps = dispatch => {
+  return {
+    fetchBranches: (repo: Repository) => {
+      dispatch(fetchBranches(repo));
+    }
+  };
 };
 
-class RouteDelegate extends React.Component<RDProps> {
-  shouldComponentUpdate(nextProps: RDProps, nextState: any) {
-    return (
-      nextProps.repository !== this.props.repository ||
-      nextProps.branch !== this.props.branch ||
-      nextProps.url !== this.props.url
-    );
-  }
+const mapStateToProps = (state: any, ownProps: Props) => {
+  const { repository } = ownProps;
+  const loading = isFetchBranchesPending(state, repository);
+  const error = getFetchBranchesFailure(state, repository);
 
-  render() {
-    const { url, repository, branch } = this.props;
-    return (
-      <Route
-        exact
-        path={`${url}/:branch/changesets/:page?`}
-        component={() => <Changesets repository={repository} branch={branch} />}
-      />
-    );
-  }
-}
+  const branches = getBranches(state, repository);
+  return {
+    loading,
+    error,
+    branches
+  };
+};
 
-export default withRouter(BranchRoot);
+export default compose(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  ),
+  withRouter
+)(BranchRoot);

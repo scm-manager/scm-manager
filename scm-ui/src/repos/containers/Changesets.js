@@ -46,9 +46,31 @@ class Changesets extends React.Component<Props, State> {
       match
     } = this.props;
 
-    console.log("branch");
-    console.log(branch);
     const { page } = match.params;
+    if (!branch) {
+      return;
+    }
+    if (!page) {
+      fetchChangesetsByBranch(repository, branch);
+    } else {
+      fetchChangesetsByBranchAndPage(repository, branch, page);
+    }
+  }
+
+  componentDidUpdate(prevProps: Props) {
+    const {
+      match,
+      repository,
+      branch,
+      fetchChangesetsByBranch,
+      fetchChangesetsByBranchAndPage
+    } = this.props;
+    const { page } = match.params;
+
+    if (branch === prevProps.branch) {
+      return;
+    }
+
     if (!page) {
       fetchChangesetsByBranch(repository, branch);
     } else {
@@ -57,11 +79,7 @@ class Changesets extends React.Component<Props, State> {
   }
 
   render() {
-    const { repository, branch, changesets, loading, error, t } = this.props;
-
-    if (!repository || !branch) {
-      return null;
-    }
+    const { changesets, loading, error, t } = this.props;
 
     if (error) {
       return (

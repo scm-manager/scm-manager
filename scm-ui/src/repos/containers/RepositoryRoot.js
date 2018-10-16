@@ -8,7 +8,7 @@ import {
   isFetchRepoPending
 } from "../modules/repos";
 import { connect } from "react-redux";
-import { Route } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 import type { Repository } from "@scm-manager/ui-types";
 import {
   ErrorPage,
@@ -98,36 +98,32 @@ class RepositoryRoot extends React.Component<Props> {
     }
 
     const url = this.matchedUrl();
-    // TODO: Changesets need to be adjusted (i.e. sub-routes need to be handled in sub-components)
+    // todo: default branch
     return (
       <Page title={repository.namespace + "/" + repository.name}>
         <div className="columns">
           <div className="column is-three-quarters">
-            <Route
-              path={url}
-              exact
-              component={() => <RepositoryDetails repository={repository} />}
-            />
-            <Route
-              path={`${url}/edit`}
-              component={() => <Edit repository={repository} />}
-            />
-            {/*<Route*/}
-            {/*path={`${url}/changesets/:page?`}*/}
-            {/*component={() => (*/}
-            {/*<BranchChooser*/}
-            {/*repository={repository}*/}
-            {/*label={"Branches"}*/}
-            {/*branchSelected={this.branchSelected}*/}
-            {/*>*/}
-            {/*<Changesets repository={repository} />*/}
-            {/*</BranchChooser>*/}
-            {/*)}*/}
-            {/*/>*/}
-            <Route
-              path={`${url}/branches`}
-              render={() => <BranchRoot repository={repository} />}
-            />
+            <Switch>
+              <Route
+                path={url}
+                exact
+                component={() => <RepositoryDetails repository={repository} />}
+              />
+              <Route
+                path={`${url}/edit`}
+                component={() => <Edit repository={repository} />}
+              />
+
+              <Route
+                path={`${url}/branches/:branch`}
+                render={() => (
+                  <BranchRoot
+                    repository={repository}
+                    baseUrl={`${url}/branches`}
+                  />
+                )}
+              />
+            </Switch>
           </div>
           <div className="column">
             <Navigation>
