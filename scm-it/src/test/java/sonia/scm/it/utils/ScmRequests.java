@@ -77,15 +77,10 @@ public class ScmRequests {
    * @return the response of the GET request using the given <code>url</code>
    */
   private Response applyGETRequestWithQueryParams(String url, String params) {
-    try {
-      return RestAssured.given()
-        .auth().preemptive().basic(username, password)
-        .when()
-        .get(url + params);
-    } catch (Exception e) {
-      e.printStackTrace();
-      throw new RuntimeException(e);
-    }
+    return RestAssured.given()
+      .auth().preemptive().basic(username, password)
+      .when()
+      .get(url + params);
   }
 
   /**
