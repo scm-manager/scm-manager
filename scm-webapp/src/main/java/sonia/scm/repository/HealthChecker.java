@@ -83,7 +83,7 @@ public final class HealthChecker {
       if (check.isPermitted(repository)) {
         try {
           check(repository);
-        } catch (ConcurrentModificationException | NotFoundException ex) {
+        } catch (NotFoundException ex) {
           logger.error("health check ends with exception", ex);
         }
       } else {
