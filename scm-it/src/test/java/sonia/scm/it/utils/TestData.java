@@ -46,11 +46,11 @@ public class TestData {
     return DEFAULT_REPOSITORIES.get(repositoryType);
   }
 
-  public static void createUser(String username, String password) {
-     createUser(username, password, false, "xml");
+  public static void createNotAdminUser(String username, String password) {
+     createUser(username, password, false, "xml", "user1@scm-manager.org");
   }
 
-  public static void createUser(String username, String password, boolean isAdmin, String type) {
+  public static void createUser(String username, String password, boolean isAdmin, String type, final String email) {
     LOG.info("create user with username: {}", username);
     String admin = isAdmin ? "true" : "false";
     given(VndMediaType.USER)
@@ -61,12 +61,22 @@ public class TestData {
         .append("    \"admin\": ").append(admin).append(",\n")
         .append("    \"creationDate\": \"2018-08-21T12:26:46.084Z\",\n")
         .append("    \"displayName\": \"").append(username).append("\",\n")
-        .append("    \"mail\": \"user1@scm-manager.org\",\n")
+        .append("    \"mail\": \"" + email + "\",\n")
         .append("    \"name\": \"").append(username).append("\",\n")
         .append("    \"password\": \"").append(password).append("\",\n")
         .append("    \"type\": \"").append(type).append("\"\n")
         .append("  }").toString())
       .post(getUsersUrl())
+      .then()
+      .statusCode(HttpStatus.SC_CREATED)
+    ;
+  }
+  public static void createGroup(String groupName, String desc) {
+    LOG.info("create group with group name: {} and description {}", groupName, desc);
+    given(VndMediaType.GROUP)
+      .when()
+      .content(getGroupJson(groupName,desc))
+      .post(getGroupsUrl())
       .then()
       .statusCode(HttpStatus.SC_CREATED)
     ;
@@ -193,27 +203,30 @@ public class TestData {
     return JSON_BUILDER
       .add("contact", "zaphod.beeblebrox@hitchhiker.com")
       .add("description", "Heart of Gold")
-      .add("name", "HeartOfGold-" + repositoryType)
+      .add("name", getDefaultRepoName(repositoryType))
       .add("archived", false)
       .add("type", repositoryType)
       .build().toString();
   }
 
-  public static URI getMeUrl() {
-    return RestUtil.createResourceUrl("me/");
+  public static String getDefaultRepoName(String repositoryType) {
+    return "HeartOfGold-" + repositoryType;
+  }
 
+  public static String getGroupJson(String groupname , String desc) {
+    return JSON_BUILDER
+      .add("name", groupname)
+      .add("description", desc)
+      .build().toString();
+  }
+
+  public static URI getGroupsUrl() {
+    return RestUtil.createResourceUrl("groups/");
   }
 
   public static URI getUsersUrl() {
     return RestUtil.createResourceUrl("users/");
-
   }
-
-  public static URI getUserUrl(String username) {
-    return getUsersUrl().resolve(username);
-
-  }
-
 
   public static String createPasswordChangeJson(String oldPassword, String newPassword) {
     return JSON_BUILDER
@@ -225,4 +238,5 @@ public class TestData {
   public static void main(String[] args) {
     cleanup();
   }
+
 }

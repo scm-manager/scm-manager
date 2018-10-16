@@ -44,7 +44,7 @@ public class RepositoryAccessITCase {
 
   private final String repositoryType;
   private File folder;
-  private ScmRequests.AppliedRepositoryRequest repositoryGetRequest;
+  private ScmRequests.RepositoryResponse<ScmRequests.IndexResponse> repositoryResponse;
 
   public RepositoryAccessITCase(String repositoryType) {
     this.repositoryType = repositoryType;
@@ -59,17 +59,13 @@ public class RepositoryAccessITCase {
   public void init() {
     TestData.createDefault();
     folder = tempFolder.getRoot();
-    repositoryGetRequest = ScmRequests.start()
-      .given()
-      .url(TestData.getDefaultRepositoryUrl(repositoryType))
-      .usernameAndPassword(ADMIN_USERNAME, ADMIN_PASSWORD)
-      .getRepositoryResource()
+    String namespace = ADMIN_USERNAME;
+    String repo = TestData.getDefaultRepoName(repositoryType);
+    repositoryResponse =
+      ScmRequests.start()
+      .requestIndexResource(ADMIN_USERNAME, ADMIN_PASSWORD)
+      .requestRepository(namespace, repo)
       .assertStatusCode(HttpStatus.SC_OK);
-    ScmRequests.AppliedMeRequest meGetRequest = ScmRequests.start()
-      .given()
-      .url(TestData.getMeUrl())
-      .usernameAndPassword(ADMIN_USERNAME, ADMIN_PASSWORD)
-      .getMeResource();
   }
 
   @Test
@@ -306,17 +302,12 @@ public class RepositoryAccessITCase {
   public void shouldFindFileHistory() throws IOException {
     RepositoryClient repositoryClient = RepositoryUtil.createRepositoryClient(repositoryType, folder);
     Changeset changeset = RepositoryUtil.createAndCommitFile(repositoryClient, ADMIN_USERNAME, "folder/subfolder/a.txt", "a");
-    repositoryGetRequest
-      .usingRepositoryResponse()
+    repositoryResponse
       .requestSources()
-      .usingSourcesResponse()
       .requestSelf("folder")
-      .usingSourcesResponse()
       .requestSelf("subfolder")
-      .usingSourcesResponse()
       .requestFileHistory("a.txt")
       .assertStatusCode(HttpStatus.SC_OK)
-      .usingChangesetsResponse()
       .assertChangesets(changesets -> {
           assertThat(changesets).hasSize(1);
           assertThat(changesets.get(0)).containsEntry("id", changeset.getId());
@@ -332,14 +323,11 @@ public class RepositoryAccessITCase {
     String fileName = "a.txt";
     Changeset changeset = RepositoryUtil.createAndCommitFile(repositoryClient, ADMIN_USERNAME, fileName, "a");
     String revision = changeset.getId();
-    repositoryGetRequest
-      .usingRepositoryResponse()
+    repositoryResponse
       .requestChangesets()
       .assertStatusCode(HttpStatus.SC_OK)
-      .usingChangesetsResponse()
       .requestModifications(revision)
       .assertStatusCode(HttpStatus.SC_OK)
-      .usingModificationsResponse()
       .assertRevision(actualRevision -> assertThat(actualRevision).isEqualTo(revision))
       .assertAdded(addedFiles -> assertThat(addedFiles)
         .hasSize(1)
@@ -359,14 +347,11 @@ public class RepositoryAccessITCase {
     Changeset changeset = RepositoryUtil.removeAndCommitFile(repositoryClient, ADMIN_USERNAME, fileName);
 
     String revision = changeset.getId();
-    repositoryGetRequest
-      .usingRepositoryResponse()
+    repositoryResponse
       .requestChangesets()
       .assertStatusCode(HttpStatus.SC_OK)
-      .usingChangesetsResponse()
       .requestModifications(revision)
       .assertStatusCode(HttpStatus.SC_OK)
-      .usingModificationsResponse()
       .assertRevision(actualRevision -> assertThat(actualRevision).isEqualTo(revision))
       .assertRemoved(removedFiles -> assertThat(removedFiles)
         .hasSize(1)
@@ -386,14 +371,11 @@ public class RepositoryAccessITCase {
     Changeset changeset = RepositoryUtil.createAndCommitFile(repositoryClient, ADMIN_USERNAME, fileName, "new Content");
 
     String revision = changeset.getId();
-    repositoryGetRequest
-      .usingRepositoryResponse()
+    repositoryResponse
       .requestChangesets()
       .assertStatusCode(HttpStatus.SC_OK)
-      .usingChangesetsResponse()
       .requestModifications(revision)
       .assertStatusCode(HttpStatus.SC_OK)
-      .usingModificationsResponse()
       .assertRevision(actualRevision -> assertThat(actualRevision).isEqualTo(revision))
       .assertModified(modifiedFiles -> assertThat(modifiedFiles)
         .hasSize(1)
@@ -423,14 +405,11 @@ public class RepositoryAccessITCase {
     Changeset changeset = RepositoryUtil.commitMultipleFileModifications(repositoryClient, ADMIN_USERNAME, addedFiles, modifiedFiles, removedFiles);
 
     String revision = changeset.getId();
-    repositoryGetRequest
-      .usingRepositoryResponse()
+    repositoryResponse
       .requestChangesets()
       .assertStatusCode(HttpStatus.SC_OK)
-      .usingChangesetsResponse()
       .requestModifications(revision)
       .assertStatusCode(HttpStatus.SC_OK)
-      .usingModificationsResponse()
       .assertRevision(actualRevision -> assertThat(actualRevision).isEqualTo(revision))
       .assertAdded(a -> assertThat(a)
         .hasSize(1)
@@ -463,14 +442,11 @@ public class RepositoryAccessITCase {
     Changeset changeset = RepositoryUtil.commitMultipleFileModifications(repositoryClient, ADMIN_USERNAME, addedFiles, modifiedFiles, removedFiles);
 
     String revision = changeset.getId();
-    repositoryGetRequest
-      .usingRepositoryResponse()
+    repositoryResponse
       .requestChangesets()
       .assertStatusCode(HttpStatus.SC_OK)
-      .usingChangesetsResponse()
       .requestModifications(revision)
       .assertStatusCode(HttpStatus.SC_OK)
-      .usingModificationsResponse()
       .assertRevision(actualRevision -> assertThat(actualRevision).isEqualTo(revision))
       .assertAdded(a -> assertThat(a)
         .hasSize(3)
