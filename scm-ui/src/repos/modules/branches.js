@@ -72,12 +72,16 @@ export default function reducer(
   state: State = {},
   action: Action = { type: "UNKNOWN" }
 ): State {
+  if (!action.payload) {
+    return state;
+  }
+  const payload = action.payload;
   switch (action.type) {
     case FETCH_BRANCHES_SUCCESS:
-      const key = createKey(action.payload.repository);
+      const key = createKey(payload.repository);
       return {
         ...state,
-        [key]: extractBranchesFromPayload(action.payload.data)
+        [key]: extractBranchesFromPayload(payload.data)
       };
     default:
       return state;
@@ -104,7 +108,7 @@ export function getBranches(state: Object, repository: Repository) {
 }
 
 export function getBranch(
-  state: State,
+  state: Object,
   repository: Repository,
   name: string
 ): ?Branch {

@@ -1,3 +1,4 @@
+// @flow
 import { getPageFromMatch } from "./Changesets";
 
 describe("tests for getPageFromMatch", () => {

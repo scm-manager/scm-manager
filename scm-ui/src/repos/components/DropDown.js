@@ -32,7 +32,7 @@ class DropDown extends React.Component<Props> {
     );
   }
 
-  change = (event: Event) => {
+  change = (event: SyntheticInputEvent<HTMLSelectElement>) => {
     this.props.optionSelected(event.target.value);
   };
 }

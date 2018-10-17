@@ -31,16 +31,11 @@ type Props = {
   fetchBranches: Repository => void,
 
   // Context props
-  history: History,
+  history: any, // TODO flow type
   match: any
 };
 
 class BranchRoot extends React.Component<Props> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {};
-  }
-
   componentDidMount() {
     this.props.fetchBranches(this.props.repository);
   }

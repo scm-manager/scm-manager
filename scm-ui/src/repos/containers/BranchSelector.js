@@ -16,7 +16,7 @@ const styles = {
 
 type Props = {
   branches: Branch[], // TODO: Use generics?
-  selected?: Branch => void,
+  selected: (branch?: Branch) => void,
 
   // context props
   classes: Object,

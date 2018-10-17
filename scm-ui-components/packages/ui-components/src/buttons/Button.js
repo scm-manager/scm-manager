@@ -1,7 +1,7 @@
 //@flow
 import React from "react";
 import classNames from "classnames";
-import { Link, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 
 export type ButtonProps = {
   label: string,
@@ -17,8 +17,9 @@ export type ButtonProps = {
 type Props = ButtonProps & {
   type: string,
   color: string,
+
   // context prop
-  history: History
+  history: any
 };
 
 class Button extends React.Component<Props> {

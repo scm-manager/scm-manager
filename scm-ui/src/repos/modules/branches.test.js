@@ -9,7 +9,6 @@ import reducer, {
   fetchBranches,
   getBranch,
   getBranches,
-  getBranchNames,
   getFetchBranchesFailure,
   isFetchBranchesPending
 } from "./branches";

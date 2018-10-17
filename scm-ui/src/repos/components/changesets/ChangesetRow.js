@@ -1,6 +1,6 @@
 //@flow
 import React from "react";
-import type { Changeset, Repository } from "@scm-manager/ui-types";
+import type { Changeset, Repository, Tag } from "@scm-manager/ui-types";
 import classNames from "classnames";
 import { translate, Interpolate } from "react-i18next";
 import ChangesetAvatar from "./ChangesetAvatar";

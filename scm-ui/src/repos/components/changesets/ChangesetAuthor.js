@@ -9,8 +9,12 @@ type Props = {
 
 export default class ChangesetAuthor extends React.Component<Props> {
   render() {
-    const { name } = this.props.changeset.author;
+    const { changeset } = this.props;
+    if (!changeset.author) {
+      return null;
+    }
 
+    const { name } = changeset.author;
     return (
       <>
         {name} {this.renderMail()}

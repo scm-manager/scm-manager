@@ -23,7 +23,6 @@ import {
   LinkPaginator,
   Loading
 } from "@scm-manager/ui-components";
-import { translate } from "react-i18next";
 import { compose } from "redux";
 
 type Props = {
@@ -40,8 +39,8 @@ type Props = {
   // Dispatch props
   fetchChangesets: (Repository, Branch, number) => void,
 
-  // Context Props
-  t: string => string
+  // context props
+  match: any
 };
 
 class Changesets extends React.Component<Props> {
@@ -52,7 +51,7 @@ class Changesets extends React.Component<Props> {
   }
 
   render() {
-    const { changesets, loading, error, t } = this.props;
+    const { changesets, loading, error } = this.props;
 
     if (error) {
       return <ErrorNotification error={error} />;
@@ -96,7 +95,7 @@ const mapDispatchToProps = dispatch => {
 };
 
 export function getPageFromMatch(match: any) {
-  let page = parseInt(match.params.page);
+  let page = parseInt(match.params.page, 10);
   if (isNaN(page) || !page) {
     page = 1;
   }
@@ -119,6 +118,5 @@ export default compose(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  ),
-  translate("repos")
+  )
 )(Changesets);

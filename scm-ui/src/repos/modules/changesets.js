@@ -8,11 +8,9 @@ import {
 import { apiClient } from "@scm-manager/ui-components";
 import { isPending } from "../../modules/pending";
 import { getFailure } from "../../modules/failure";
-import { combineReducers } from "redux";
 import type {
   Action,
   Branch,
-  Changeset,
   PagedCollection,
   Repository
 } from "@scm-manager/ui-types";
@@ -28,7 +26,7 @@ export const FETCH_CHANGESETS_FAILURE = `${FETCH_CHANGESETS}_${FAILURE_SUFFIX}`;
 export function fetchChangesets(
   repository: Repository,
   branch?: Branch,
-  page: number
+  page?: number
 ) {
   const link = createChangesetsLink(repository, branch, page);
 
@@ -49,7 +47,7 @@ export function fetchChangesets(
 function createChangesetsLink(
   repository: Repository,
   branch?: Branch,
-  page: number
+  page?: number
 ) {
   let link = repository._links.changesets.href;
 
@@ -117,9 +115,13 @@ export default function reducer(
   state: any = {},
   action: Action = { type: "UNKNOWN" }
 ): Object {
+  if (!action.payload) {
+    return state;
+  }
+  const payload = action.payload;
   switch (action.type) {
     case FETCH_CHANGESETS_SUCCESS:
-      const changesets = action.payload._embedded.changesets;
+      const changesets = payload._embedded.changesets;
       const changesetIds = changesets.map(c => c.id);
       const key = action.itemId;
 
@@ -139,9 +141,9 @@ export default function reducer(
           list: {
             entries: changesetIds,
             entry: {
-              page: action.payload.page,
-              pageTotal: action.payload.pageTotal,
-              _links: action.payload._links
+              page: payload.page,
+              pageTotal: payload.pageTotal,
+              _links: payload._links
             }
           }
         }
