@@ -109,23 +109,20 @@ describe("branches", () => {
       const newState = reducer({}, action);
       expect(newState).toBeDefined();
       expect(newState[key]).toBeDefined();
-      expect(newState[key].byNames["branch1"]).toEqual(branch1);
-      expect(newState[key].byNames["branch2"]).toEqual(branch2);
+      expect(newState[key]).toContain(branch1);
+      expect(newState[key]).toContain(branch2);
     });
 
     it("should not delete existing branches from state", () => {
       const oldState = {
-        "foo/bar": {
-          byNames: {
-            branch3: branch3
-          }
-        }
+        "hitchhiker/heartOfGold": [branch3]
       };
 
       const newState = reducer(oldState, action);
-      expect(newState[key].byNames["branch1"]).toEqual(branch1);
-      expect(newState[key].byNames["branch2"]).toEqual(branch2);
-      expect(newState[key].byNames["branch3"]).toEqual(branch3);
+      expect(newState[key]).toContain(branch1);
+      expect(newState[key]).toContain(branch2);
+
+      expect(newState["hitchhiker/heartOfGold"]).toContain(branch3);
     });
   });
 
@@ -134,12 +131,7 @@ describe("branches", () => {
 
     const state = {
       branches: {
-        [key]: {
-          byNames: {
-            branch1,
-            branch2
-          }
-        }
+        [key]: [branch1, branch2]
       }
     };
 
@@ -153,13 +145,6 @@ describe("branches", () => {
       expect(isFetchBranchesPending(state, repository)).toBeTruthy();
     });
 
-    it("should return branches names", () => {
-      const names = getBranchNames(state, repository);
-      expect(names.length).toEqual(2);
-      expect(names).toContain("branch1");
-      expect(names).toContain("branch2");
-    });
-
     it("should return branches", () => {
       const branches = getBranches(state, repository);
       expect(branches.length).toEqual(2);
@@ -167,15 +152,28 @@ describe("branches", () => {
       expect(branches).toContain(branch2);
     });
 
+    it("should return always the same reference for branches", () => {
+      const one = getBranches(state, repository);
+      const two = getBranches(state, repository);
+      expect(one).toBe(two);
+    });
+
     it("should return single branch by name", () => {
       const branch = getBranch(state, repository, "branch1");
       expect(branch).toEqual(branch1);
     });
 
+    it("should return same reference for single branch by name", () => {
+      const one = getBranch(state, repository, "branch1");
+      const two = getBranch(state, repository, "branch1");
+      expect(one).toBe(two);
+    });
+
     it("should return undefined if branch does not exist", () => {
       const branch = getBranch(state, repository, "branch42");
-      expect(branch).toBeFalsy();
+      expect(branch).toBeUndefined();
     });
+
     it("should return error if fetching branches failed", () => {
       const state = {
         failure: {

@@ -18,6 +18,7 @@ import { compose } from "redux";
 type Props = {
   repository: Repository,
   baseUrl: string,
+  selected: string,
 
   // State props
   branches: Branch[],
@@ -31,35 +32,14 @@ type Props = {
   match: any
 };
 
-type State = {
-  selectedBranch?: Branch
-};
-
-class BranchRoot extends React.Component<Props, State> {
+class BranchRoot extends React.Component<Props> {
   constructor(props: Props) {
     super(props);
     this.state = {};
   }
 
   componentDidMount() {
-    console.log("BR did mount");
     this.props.fetchBranches(this.props.repository);
-  }
-
-  componentDidUpdate(prevProps: Props) {
-    const { branches, match, loading } = this.props;
-    console.log("BR did update");
-    const branchName = decodeURIComponent(match.params.branch);
-    if (branches) {
-      if (
-        (!loading && prevProps.loading) ||
-        match.url !== prevProps.match.url
-      ) {
-        this.setState({
-          selectedBranch: branches.find(b => b.name === branchName)
-        });
-      }
-    }
   }
 
   stripEndingSlash = (url: string) => {
@@ -80,9 +60,14 @@ class BranchRoot extends React.Component<Props, State> {
     );
   };
 
+  findSelectedBranch = () => {
+    const { selected, branches } = this.props;
+    return branches.find((branch: Branch) => branch.name === selected);
+  };
+
   render() {
-    console.log("BR render");
-    const { repository, match, branches, loading } = this.props;
+    // TODO error???
+    const { repository, loading, match, branches } = this.props;
     const url = this.stripEndingSlash(match.url);
 
     if (loading) {
@@ -92,6 +77,9 @@ class BranchRoot extends React.Component<Props, State> {
       return null;
     }
 
+    const branch = this.findSelectedBranch();
+    const changesets = <Changesets repository={repository} branch={branch} />;
+
     return (
       <>
         <BranchSelector
@@ -100,15 +88,7 @@ class BranchRoot extends React.Component<Props, State> {
             this.branchSelected(b);
           }}
         />
-        <Route
-          path={`${url}/changesets/:page?`}
-          component={() => (
-            <Changesets
-              repository={repository}
-              branch={this.state.selectedBranch}
-            />
-          )}
-        />
+        <Route path={`${url}/:page?`} component={() => changesets} />
       </>
     );
   }
@@ -123,15 +103,17 @@ const mapDispatchToProps = dispatch => {
 };
 
 const mapStateToProps = (state: any, ownProps: Props) => {
-  const { repository } = ownProps;
+  const { repository, match } = ownProps;
   const loading = isFetchBranchesPending(state, repository);
   const error = getFetchBranchesFailure(state, repository);
-
   const branches = getBranches(state, repository);
+  const selected = decodeURIComponent(match.params.branch);
+
   return {
     loading,
     error,
-    branches
+    branches,
+    selected
   };
 };
 

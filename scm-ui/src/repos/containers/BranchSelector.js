@@ -10,13 +10,16 @@ type Props = {
 };
 
 type State = { selectedBranch?: Branch };
+
 class BranchSelector extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {};
   }
+
   render() {
     const { branches } = this.props;
+
     if (branches) {
       return (
         <>

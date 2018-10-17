@@ -66,79 +66,51 @@ export function fetchBranchesFailure(repository: Repository, error: Error) {
 
 // Reducers
 
+type State = { [string]: Branch[] };
+
 export default function reducer(
-  state: Object = {},
+  state: State = {},
   action: Action = { type: "UNKNOWN" }
-): Object {
+): State {
   switch (action.type) {
     case FETCH_BRANCHES_SUCCESS:
       const key = createKey(action.payload.repository);
-      let oldBranchesByNames = { [key]: {} };
-      if (state[key] !== undefined) {
-        oldBranchesByNames[key] = state[key];
-      }
       return {
-        [key]: {
-          byNames: extractBranchesByNames(
-            action.payload.data,
-            oldBranchesByNames[key].byNames
-          )
-        }
+        ...state,
+        [key]: extractBranchesFromPayload(action.payload.data)
       };
     default:
       return state;
   }
 }
 
-function extractBranchesByNames(data: any, oldBranchesByNames: any): ?Object {
-  if (!data._embedded || !data._embedded.branches) {
-    return {};
+function extractBranchesFromPayload(payload: any) {
+  if (payload._embedded && payload._embedded.branches) {
+    return payload._embedded.branches;
   }
-  const branches = data._embedded.branches;
-  const branchesByNames = {};
-
-  for (let branch of branches) {
-    branchesByNames[branch.name] = branch;
-  }
-
-  for (let name in oldBranchesByNames) {
-    branchesByNames[name] = oldBranchesByNames[name];
-  }
-  return branchesByNames;
+  return [];
 }
 
 // Selectors
 
-export function getBranchNames(
-  state: Object,
-  repository: Repository
-): ?Array<Branch> {
-  const key = createKey(repository);
-  if (!state.branches || !state.branches[key] || !state.branches[key].byNames) {
-    return [];
-  }
-  return Object.keys(state.branches[key].byNames);
-}
+const empty = [];
 
 export function getBranches(state: Object, repository: Repository) {
   const key = createKey(repository);
   if (state.branches[key]) {
-    if (state.branches[key].byNames) {
-      return Object.values(state.branches[key].byNames);
-    }
+    return state.branches[key];
   }
+  return empty;
 }
 
 export function getBranch(
-  state: Object,
+  state: State,
   repository: Repository,
   name: string
 ): ?Branch {
   const key = createKey(repository);
   if (state.branches[key]) {
-    if (state.branches[key].byNames[name]) {
-      return state.branches[key].byNames[name];
-    }
+    return state.branches[key].find((b: Branch) => b.name === name);
   }
   return null;
 }

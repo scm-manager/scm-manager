@@ -1,8 +1,13 @@
 // @flow
 
 import React from "react";
-import {withRouter} from "react-router-dom";
-import type {Branch, Changeset, PagedCollection, Repository} from "@scm-manager/ui-types";
+import { withRouter } from "react-router-dom";
+import type {
+  Branch,
+  Changeset,
+  PagedCollection,
+  Repository
+} from "@scm-manager/ui-types";
 import {
   fetchChangesetsByBranch,
   fetchChangesetsByBranchAndPage,
@@ -11,10 +16,10 @@ import {
   isFetchChangesetsPending,
   selectListAsCollection
 } from "../modules/changesets";
-import {connect} from "react-redux";
+import { connect } from "react-redux";
 import ChangesetList from "../components/changesets/ChangesetList";
-import {ErrorPage, LinkPaginator, Loading} from "@scm-manager/ui-components";
-import {translate} from "react-i18next";
+import { ErrorPage, LinkPaginator, Loading } from "@scm-manager/ui-components";
+import { translate } from "react-i18next";
 
 type Props = {
   repository: Repository, //TODO: Do we really need/want this here?
@@ -39,7 +44,6 @@ type State = {};
 
 class Changesets extends React.Component<Props, State> {
   componentDidMount() {
-    console.log("CDM");
     const {
       fetchChangesetsByBranch,
       fetchChangesetsByBranchAndPage,
