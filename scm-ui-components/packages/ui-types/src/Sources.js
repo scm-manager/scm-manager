@@ -14,6 +14,7 @@ export type File = {
   path: string,
   directory: boolean,
   description?: string,
+  revision: string,
   length: number,
   lastModified?: string,
   subRepository?: SubRepository, // TODO

@@ -45,6 +45,22 @@ class FileTree extends React.Component<Props> {
       baseUrlWithRevision += "/" + tree.revision;
     }
 
+    const compareFiles = function(f1: File, f2: File): number {
+      if (f1.directory) {
+        if (f2.directory) {
+          return f1.name.localeCompare(f2.name);
+        } else {
+          return -1;
+        }
+      } else {
+        if (f2.directory) {
+          return 1;
+        } else {
+          return f1.name.localeCompare(f2.name);
+        }
+      }
+    };
+
     const files = [];
     if (path) {
       files.push({
@@ -53,7 +69,8 @@ class FileTree extends React.Component<Props> {
         directory: true
       });
     }
-    files.push(...tree._embedded.children);
+
+    files.push(...tree._embedded.children.sort(compareFiles));
 
     return (
       <table className="table table-hover table-sm is-fullwidth">
@@ -79,4 +96,5 @@ class FileTree extends React.Component<Props> {
     );
   }
 }
+
 export default injectSheet(styles)(translate("repos")(FileTree));
