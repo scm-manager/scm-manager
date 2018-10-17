@@ -64,7 +64,7 @@ import java.util.List;
 )
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "repositories")
-public class Repository extends BasicPropertiesAware implements ModelObject, PermissionObject {
+public class Repository extends BasicPropertiesAware implements ModelObject, PermissionObject{
 
 
   private static final long serialVersionUID = 3486560714961909711L;

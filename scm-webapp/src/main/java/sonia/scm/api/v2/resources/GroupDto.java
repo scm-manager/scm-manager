@@ -13,6 +13,8 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
+import static sonia.scm.api.v2.ValidationConstraints.USER_GROUP_PATTERN;
+
 @Getter @Setter @NoArgsConstructor
 public class GroupDto extends HalRepresentation {
 
@@ -20,7 +22,7 @@ public class GroupDto extends HalRepresentation {
   private String description;
   @JsonInclude(JsonInclude.Include.NON_NULL)
   private Instant lastModified;
-  @Pattern(regexp = "^[A-z0-9\\.\\-_@]|[^ ]([A-z0-9\\.\\-_@ ]*[A-z0-9\\.\\-_@]|[^ ])?$")
+  @Pattern(regexp = USER_GROUP_PATTERN)
   private String name;
   private String type;
   private Map<String, String> properties;

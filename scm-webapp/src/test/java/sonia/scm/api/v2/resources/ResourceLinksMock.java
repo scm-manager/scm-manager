@@ -16,6 +16,7 @@ public class ResourceLinksMock {
     when(resourceLinks.user()).thenReturn(userLinks);
     when(resourceLinks.me()).thenReturn(new ResourceLinks.MeLinks(uriInfo,userLinks));
     when(resourceLinks.userCollection()).thenReturn(new ResourceLinks.UserCollectionLinks(uriInfo));
+    when(resourceLinks.autoComplete()).thenReturn(new ResourceLinks.AutoCompleteLinks(uriInfo));
     when(resourceLinks.group()).thenReturn(new ResourceLinks.GroupLinks(uriInfo));
     when(resourceLinks.groupCollection()).thenReturn(new ResourceLinks.GroupCollectionLinks(uriInfo));
     when(resourceLinks.repository()).thenReturn(new ResourceLinks.RepositoryLinks(uriInfo));
@@ -34,6 +35,8 @@ public class ResourceLinksMock {
     when(resourceLinks.repositoryTypeCollection()).thenReturn(new ResourceLinks.RepositoryTypeCollectionLinks(uriInfo));
     when(resourceLinks.uiPluginCollection()).thenReturn(new ResourceLinks.UIPluginCollectionLinks(uriInfo));
     when(resourceLinks.uiPlugin()).thenReturn(new ResourceLinks.UIPluginLinks(uriInfo));
+    when(resourceLinks.authentication()).thenReturn(new ResourceLinks.AuthenticationLinks(uriInfo));
+    when(resourceLinks.index()).thenReturn(new ResourceLinks.IndexLinks(uriInfo));
 
     return resourceLinks;
   }

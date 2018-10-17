@@ -58,8 +58,10 @@ public class WebResourceServlet extends HttpServlet {
     LOG.trace("try to load {}", uri);
     URL url = webResourceLoader.getResource(uri);
     if (url != null) {
+      LOG.trace("found {} -- serve as resource {}", uri, url);
       serveResource(request, response, url);
     } else {
+      LOG.trace("could not find {} -- dispatch", uri);
       dispatch(request, response, uri);
     }
   }
@@ -79,6 +81,7 @@ public class WebResourceServlet extends HttpServlet {
 
   private void serveResource(HttpServletRequest request, HttpServletResponse response, URL url) {
     try {
+      LOG.debug("using sender to serve {}", request.getRequestURI());
       sender.resource(url).send(request, response);
     } catch (IOException ex) {
       LOG.warn("failed to serve resource: {}", url);

@@ -5,6 +5,7 @@ describe("test name validation", () => {
   it("should return false", () => {
     // invalid names taken from ValidationUtilTest.java
     const invalidNames = [
+      "@test",
       " test 123",
       " test 123 ",
       "test 123 ",
@@ -35,10 +36,9 @@ describe("test name validation", () => {
       "Test123-git",
       "Test_user-123.git",
       "test@scm-manager.de",
-      "test 123",
+      "test123",
       "tt",
       "t",
-
       "valid_name",
       "another1",
       "stillValid",

@@ -47,6 +47,7 @@ class LoginAttempt extends React.Component<Props, State> {
           disabled={!hasUpdatePermission}
           validationError={this.state.loginAttemptLimitError}
           errorMessage={t("validation.login-attempt-limit-invalid")}
+          helpText={t("help.loginAttemptLimitHelpText")}
         />
         <InputField
           label={t("login-attempt.login-attempt-limit-timeout")}
@@ -55,6 +56,7 @@ class LoginAttempt extends React.Component<Props, State> {
           disabled={!hasUpdatePermission}
           validationError={this.state.loginAttemptLimitTimeoutError}
           errorMessage={t("validation.login-attempt-limit-timeout-invalid")}
+          helpText={t("help.loginAttemptLimitTimeoutHelpText")}
         />
       </div>
     );

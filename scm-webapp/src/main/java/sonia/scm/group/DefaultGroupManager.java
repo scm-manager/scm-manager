@@ -242,6 +242,13 @@ public class DefaultGroupManager extends AbstractGroupManager
     return group;
   }
 
+  @Override
+  public Collection<Group> autocomplete(String filter) {
+    GroupPermissions.autocomplete().check();
+    SearchRequest searchRequest = new SearchRequest(filter, true, DEFAULT_LIMIT);
+    return SearchUtil.search(searchRequest, groupDAO.getAll(), group -> matches(searchRequest,group)?group:null);
+  }
+
   /**
    * Method description
    *

@@ -42,6 +42,7 @@ import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 import sonia.scm.BasicPropertiesAware;
 import sonia.scm.ModelObject;
+import sonia.scm.ReducedModelObject;
 import sonia.scm.util.Util;
 import sonia.scm.util.ValidationUtil;
 
@@ -55,16 +56,16 @@ import java.util.List;
 
 /**
  * Organizes users into a group for easier permissions management.
- * 
+ *
  * TODO for 2.0: Use a set instead of a list for members
  *
  * @author Sebastian Sdorra
  */
-@StaticPermissions("group")
+@StaticPermissions(value = "group", globalPermissions = {"create", "list", "autocomplete"})
 @XmlRootElement(name = "groups")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Group extends BasicPropertiesAware
-  implements ModelObject, PermissionObject
+  implements ModelObject, PermissionObject, ReducedModelObject
 {
 
   /** Field description */
@@ -307,6 +308,11 @@ public class Group extends BasicPropertiesAware
   public String getId()
   {
     return name;
+  }
+
+  @Override
+  public String getDisplayName() {
+    return description;
   }
 
   /**

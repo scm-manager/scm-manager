@@ -9,7 +9,7 @@ describe("create url", () => {
   });
 
   it("should add prefix for api", () => {
-    expect(createUrl("/users")).toBe("/api/rest/v2/users");
-    expect(createUrl("users")).toBe("/api/rest/v2/users");
+    expect(createUrl("/users")).toBe("/api/v2/users");
+    expect(createUrl("users")).toBe("/api/v2/users");
   });
 });

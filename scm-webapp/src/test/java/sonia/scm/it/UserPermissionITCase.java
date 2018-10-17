@@ -37,6 +37,7 @@ package sonia.scm.it;
 
 import com.sun.jersey.api.client.ClientResponse;
 import de.otto.edison.hal.HalRepresentation;
+import org.junit.Assume;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import sonia.scm.api.rest.ObjectMapperProvider;
@@ -158,6 +159,7 @@ public class UserPermissionITCase extends AbstractPermissionITCaseBase<User>
   @Override
   protected void checkGetAllResponse(ClientResponse response)
   {
+    Assume.assumeTrue(credentials.getUsername() == null);
     if (!credentials.isAnonymous())
     {
       assertNotNull(response);

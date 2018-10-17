@@ -1,21 +1,22 @@
 //@flow
 import React from "react";
-import { RemoveEntryOfTableButton } from "@scm-manager/ui-components";
+import { RemoveEntryOfTableButton, LabelWithHelpIcon } from "@scm-manager/ui-components";
 
 type Props = {
   items: string[],
   label: string,
   removeLabel: string,
   onRemove: (string[], string) => void,
-  disabled: boolean
+  disabled: boolean,
+  helpText: string
 };
 
 class ArrayConfigTable extends React.Component<Props> {
   render() {
-    const { label, disabled, removeLabel, items } = this.props;
+    const { label, disabled, removeLabel, items, helpText } = this.props;
     return (
       <div>
-        <label className="label">{label}</label>
+        <LabelWithHelpIcon label={label} helpText={helpText}/>
         <table className="table is-hoverable is-fullwidth">
           <tbody>
             {items.map(item => {

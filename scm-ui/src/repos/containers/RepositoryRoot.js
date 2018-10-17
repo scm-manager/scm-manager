@@ -22,10 +22,12 @@ import { translate } from "react-i18next";
 import RepositoryDetails from "../components/RepositoryDetails";
 import DeleteNavAction from "../components/DeleteNavAction";
 import Edit from "../containers/Edit";
+import Permissions from "../permissions/containers/Permissions";
 
 import type { History } from "history";
 import EditNavLink from "../components/EditNavLink";
 import BranchRoot from "./BranchRoot";
+import PermissionsNavLink from "../components/PermissionsNavLink";
 
 type Props = {
   namespace: string,
@@ -109,6 +111,15 @@ class RepositoryRoot extends React.Component<Props> {
                 component={() => <Edit repository={repository} />}
               />
               <Route
+                path={`${url}/permissions`}
+                render={props => (
+                  <Permissions
+                    namespace={this.props.repository.namespace}
+                    repoName={this.props.repository.name}
+                  />
+                )}
+              />
+              <Route
                 path={`${url}/changesets`}
                 render={() => (
                   <BranchRoot
@@ -141,6 +152,10 @@ class RepositoryRoot extends React.Component<Props> {
                   activeWhenMatch={this.matches}
                 />
                 <EditNavLink repository={repository} editUrl={`${url}/edit`} />
+                <PermissionsNavLink
+                  permissionUrl={`${url}/permissions`}
+                  repository={repository}
+                />
               </Section>
               <Section label={t("repository-root.actions-label")}>
                 <DeleteNavAction repository={repository} delete={this.delete} />

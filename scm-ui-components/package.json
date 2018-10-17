@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "bootstrap": "lerna bootstrap",
-    "link": "lerna exec -- yarn link"
+    "link": "lerna exec -- yarn link",
+    "unlink": "lerna exec --no-bail -- yarn unlink || true"
   },
   "devDependencies": {
     "lerna": "^3.2.1"

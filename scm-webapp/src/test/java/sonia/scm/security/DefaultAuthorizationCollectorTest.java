@@ -57,6 +57,7 @@ import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.user.User;
 import sonia.scm.user.UserTestData;
 
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.nullValue;
@@ -160,7 +161,8 @@ public class DefaultAuthorizationCollectorTest {
     
     AuthorizationInfo authInfo = collector.collect();
     assertThat(authInfo.getRoles(), Matchers.contains(Role.USER));
-    assertThat(authInfo.getStringPermissions(), hasSize(0));
+    assertThat(authInfo.getStringPermissions(), hasSize(3));
+    assertThat(authInfo.getStringPermissions(), containsInAnyOrder("user:autocomplete", "group:autocomplete", "user:read:trillian"));
     assertThat(authInfo.getObjectPermissions(), nullValue());
   }
   
@@ -207,7 +209,7 @@ public class DefaultAuthorizationCollectorTest {
     AuthorizationInfo authInfo = collector.collect();
     assertThat(authInfo.getRoles(), Matchers.containsInAnyOrder(Role.USER));
     assertThat(authInfo.getObjectPermissions(), nullValue());
-    assertThat(authInfo.getStringPermissions(), containsInAnyOrder("repository:read,pull:one", "repository:read,pull,push:two"));
+    assertThat(authInfo.getStringPermissions(), containsInAnyOrder("user:autocomplete", "group:autocomplete", "repository:read,pull:one", "repository:read,pull,push:two", "user:read:trillian"));
   }
   
   /**
@@ -228,7 +230,7 @@ public class DefaultAuthorizationCollectorTest {
     AuthorizationInfo authInfo = collector.collect();
     assertThat(authInfo.getRoles(), Matchers.containsInAnyOrder(Role.USER));
     assertThat(authInfo.getObjectPermissions(), nullValue());
-    assertThat(authInfo.getStringPermissions(), containsInAnyOrder("one:one", "two:two"));
+    assertThat(authInfo.getStringPermissions(), containsInAnyOrder("one:one", "two:two", "user:read:trillian", "user:autocomplete" , "group:autocomplete" ));
   }
   
   private void authenticate(User user, String group, String... groups) {
