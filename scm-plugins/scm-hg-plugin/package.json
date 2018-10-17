@@ -9,6 +9,6 @@
     "@scm-manager/ui-extensions": "^0.0.7"
   },
   "devDependencies": {
-    "@scm-manager/ui-bundler": "^0.0.15"
+    "@scm-manager/ui-bundler": "^0.0.17"
   }
 }
