@@ -22,33 +22,34 @@ export const FETCH_CHANGESETS_PENDING = `${FETCH_CHANGESETS}_${PENDING_SUFFIX}`;
 export const FETCH_CHANGESETS_SUCCESS = `${FETCH_CHANGESETS}_${SUCCESS_SUFFIX}`;
 export const FETCH_CHANGESETS_FAILURE = `${FETCH_CHANGESETS}_${FAILURE_SUFFIX}`;
 
-const REPO_URL = "repositories";
 //TODO: Content type
 // actions
 
-export function fetchChangesetsByLink(
+export function fetchChangesets(
   repository: Repository,
-  link: string,
-  branch?: Branch
+  branch?: Branch,
+  page: number
 ) {
+  const link = createChangesetsLink(repository, branch, page);
+
   return function(dispatch: any) {
     dispatch(fetchChangesetsPending(repository, branch));
     return apiClient
       .get(link)
       .then(response => response.json())
       .then(data => {
-        dispatch(fetchChangesetsSuccess(data, repository, branch));
+        dispatch(fetchChangesetsSuccess(repository, branch, data));
       })
       .catch(cause => {
-        dispatch(fetchChangesetsFailure(repository, cause, branch));
+        dispatch(fetchChangesetsFailure(repository, branch, cause));
       });
   };
 }
 
-export function fetchChangesetsWithOptions(
+function createChangesetsLink(
   repository: Repository,
   branch?: Branch,
-  suffix?: string
+  page: number
 ) {
   let link = repository._links.changesets.href;
 
@@ -56,45 +57,10 @@ export function fetchChangesetsWithOptions(
     link = branch._links.history.href;
   }
 
-  if (suffix) {
-    link = link + `${suffix}`;
+  if (page) {
+    link = link + `?page=${page - 1}`;
   }
-
-  return function(dispatch: any) {
-    dispatch(fetchChangesetsPending(repository, branch));
-    return apiClient
-      .get(link)
-      .then(response => response.json())
-      .then(data => {
-        dispatch(fetchChangesetsSuccess(data, repository, branch));
-      })
-      .catch(cause => {
-        dispatch(fetchChangesetsFailure(repository, cause, branch));
-      });
-  };
-}
-
-export function fetchChangesets(repository: Repository) {
-  return fetchChangesetsWithOptions(repository);
-}
-
-export function fetchChangesetsByPage(repository: Repository, page: number) {
-  return fetchChangesetsWithOptions(repository, undefined, `?page=${page - 1}`);
-}
-
-export function fetchChangesetsByBranchAndPage(
-  repository: Repository,
-  branch: Branch,
-  page: number
-) {
-  return fetchChangesetsWithOptions(repository, branch, `?page=${page - 1}`);
-}
-
-export function fetchChangesetsByBranch(
-  repository: Repository,
-  branch: Branch
-) {
-  return fetchChangesetsWithOptions(repository, branch);
+  return link;
 }
 
 export function fetchChangesetsPending(
@@ -105,15 +71,14 @@ export function fetchChangesetsPending(
 
   return {
     type: FETCH_CHANGESETS_PENDING,
-    payload: { repository, branch },
     itemId
   };
 }
 
 export function fetchChangesetsSuccess(
-  changesets: any,
   repository: Repository,
-  branch?: Branch
+  branch?: Branch,
+  changesets: any
 ): Action {
   return {
     type: FETCH_CHANGESETS_SUCCESS,
@@ -124,8 +89,8 @@ export function fetchChangesetsSuccess(
 
 function fetchChangesetsFailure(
   repository: Repository,
-  error: Error,
-  branch?: Branch
+  branch?: Branch,
+  error: Error
 ): Action {
   return {
     type: FETCH_CHANGESETS_FAILURE,
@@ -141,14 +106,14 @@ function fetchChangesetsFailure(
 function createItemId(repository: Repository, branch?: Branch): string {
   const { namespace, name } = repository;
   let itemId = namespace + "/" + name;
-  if (branch && branch !== "") {
+  if (branch) {
     itemId = itemId + "/" + branch.name;
   }
   return itemId;
 }
 
 // reducer
-function byKeyReducer(
+export default function reducer(
   state: any = {},
   action: Action = { type: "UNKNOWN" }
 ): Object {
@@ -186,10 +151,6 @@ function byKeyReducer(
   }
 }
 
-export default combineReducers({
-  byKey: byKeyReducer
-});
-
 function extractChangesetsByIds(changesets: any) {
   const changesetsByIds = {};
 
@@ -207,10 +168,10 @@ export function getChangesets(
   branch?: Branch
 ) {
   const key = createItemId(repository, branch);
-  if (!state.changesets.byKey[key]) {
+  if (!state.changesets[key]) {
     return null;
   }
-  return Object.values(state.changesets.byKey[key].byId);
+  return Object.values(state.changesets[key].byId);
 }
 
 export function isFetchChangesetsPending(
@@ -231,8 +192,8 @@ export function getFetchChangesetsFailure(
 
 const selectList = (state: Object, repository: Repository, branch?: Branch) => {
   const itemId = createItemId(repository, branch);
-  if (state.changesets.byKey[itemId] && state.changesets.byKey[itemId].list) {
-    return state.changesets.byKey[itemId].list;
+  if (state.changesets[itemId] && state.changesets[itemId].list) {
+    return state.changesets[itemId].list;
   }
   return {};
 };
@@ -256,18 +217,3 @@ export const selectListAsCollection = (
 ): PagedCollection => {
   return selectListEntry(state, repository, branch);
 };
-
-export function getChangesetsFromState(state: Object, repository: Repository) {
-  const itemId = createItemId(repository);
-  const changesetIds = selectList(state, repository).entries;
-  if (!changesetIds) {
-    return null;
-  }
-  const changesetEntries: Changeset[] = [];
-
-  for (let id of changesetIds) {
-    changesetEntries.push(state.changesets.byKey[itemId].byId[id]);
-  }
-
-  return changesetEntries;
-}

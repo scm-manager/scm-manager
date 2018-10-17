@@ -9,13 +9,13 @@ import type {
   Repository
 } from "@scm-manager/ui-types";
 import {
-  fetchChangesetsByBranch,
-  fetchChangesetsByBranchAndPage,
+  fetchChangesets,
   getChangesets,
   getFetchChangesetsFailure,
   isFetchChangesetsPending,
   selectListAsCollection
 } from "../modules/changesets";
+
 import { connect } from "react-redux";
 import ChangesetList from "../components/changesets/ChangesetList";
 import { ErrorPage, LinkPaginator, Loading } from "@scm-manager/ui-components";
@@ -24,65 +24,27 @@ import { translate } from "react-i18next";
 type Props = {
   repository: Repository, //TODO: Do we really need/want this here?
   branch: Branch,
+  page: number,
 
   // State props
   changesets: Changeset[],
-  loading: boolean,
   list: PagedCollection,
+  loading: boolean,
   error: Error,
 
   // Dispatch props
-  fetchChangesetsByBranch: (Repository, Branch) => void,
-  fetchChangesetsByBranchAndPage: (Repository, Branch, number) => void,
+  fetchChangesets: (Repository, Branch, number) => void,
 
   // Context Props
-  match: any,
   t: string => string
 };
 
-type State = {};
-
-class Changesets extends React.Component<Props, State> {
+class Changesets extends React.Component<Props> {
   componentDidMount() {
-    const {
-      fetchChangesetsByBranch,
-      fetchChangesetsByBranchAndPage,
-      repository,
-      branch,
-      match
-    } = this.props;
+    const { fetchChangesets, repository, branch, page } = this.props;
 
-    const { page } = match.params;
-    if (!branch) {
-      return;
-    }
-    if (!page) {
-      fetchChangesetsByBranch(repository, branch);
-    } else {
-      fetchChangesetsByBranchAndPage(repository, branch, page);
-    }
+    fetchChangesets(repository, branch, page);
   }
-
-  // componentDidUpdate(prevProps: Props) {
-  //   const {
-  //     match,
-  //     repository,
-  //     branch,
-  //     fetchChangesetsByBranch,
-  //     fetchChangesetsByBranchAndPage
-  //   } = this.props;
-  //   const { page } = match.params;
-  //
-  //   if (branch === prevProps.branch) {
-  //     return;
-  //   }
-  //
-  //   if (!page) {
-  //     fetchChangesetsByBranch(repository, branch);
-  //   } else {
-  //     fetchChangesetsByBranchAndPage(repository, branch, page);
-  //   }
-  // }
 
   render() {
     const { changesets, loading, error, t } = this.props;
@@ -127,27 +89,25 @@ class Changesets extends React.Component<Props, State> {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchChangesetsByBranch: (repo: Repository, branch: Branch) => {
-      dispatch(fetchChangesetsByBranch(repo, branch));
-    },
-    fetchChangesetsByBranchAndPage: (
-      repo: Repository,
-      branch: Branch,
-      page: number
-    ) => {
-      dispatch(fetchChangesetsByBranchAndPage(repo, branch, page));
+    fetchChangesets: (repo: Repository, branch: Branch, page: number) => {
+      dispatch(fetchChangesets(repo, branch, page));
     }
   };
 };
 
 const mapStateToProps = (state: any, ownProps: Props) => {
-  const { repository, branch } = ownProps;
+  const { repository, branch, match } = ownProps;
   const changesets = getChangesets(state, repository, branch);
   const loading = isFetchChangesetsPending(state, repository, branch);
   const error = getFetchChangesetsFailure(state, repository, branch);
   const list = selectListAsCollection(state, repository, branch);
-  return { changesets, list, loading, error };
+
+  // TODO
+  const page = parseInt(match.params.page || "1");
+
+  return { changesets, list, page, loading, error };
 };
+
 export default withRouter(
   connect(
     mapStateToProps,
