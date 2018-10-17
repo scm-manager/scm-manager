@@ -38,7 +38,6 @@ package sonia.scm.repository.spi;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectLoader;
@@ -282,15 +281,14 @@ public class GitBrowseCommand extends AbstractGitCommand
       }
       else
       {
-        // TODO throw exception
-        logger.error("could not find tree for {}", revId.name());
+        throw new IllegalStateException("could not find tree for " + revId.name());
       }
 
       if (isRootRequest(request)) {
         result = createEmtpyRoot();
         findChildren(result, repo, request, revId, treeWalk);
       } else {
-        result = first(repo, request, revId, treeWalk);
+        result = findFirstMatch(repo, request, revId, treeWalk);
         if ( result.isDirectory() ) {
           treeWalk.enterSubtree();
           findChildren(result, repo, request, revId, treeWalk);
@@ -338,19 +336,19 @@ public class GitBrowseCommand extends AbstractGitCommand
     return null;
   }
 
-  private FileObject first(org.eclipse.jgit.lib.Repository repo,
+  private FileObject findFirstMatch(org.eclipse.jgit.lib.Repository repo,
                         BrowseCommandRequest request, ObjectId revId, TreeWalk treeWalk) throws IOException, NotFoundException {
-    String[] parts = request.getPath().split("/");
-    int current = 0;
-    int limit = parts.length;
+    String[] pathElements = request.getPath().split("/");
+    int currentDepth = 0;
+    int limit = pathElements.length;
 
     while (treeWalk.next()) {
       String name = treeWalk.getNameString();
 
-      if (name.equalsIgnoreCase(parts[current])) {
-        current++;
+      if (name.equalsIgnoreCase(pathElements[currentDepth])) {
+        currentDepth++;
 
-        if (current >= limit) {
+        if (currentDepth >= limit) {
           return createFileObject(repo, request, revId, treeWalk);
         } else {
           treeWalk.enterSubtree();
