@@ -5,14 +5,12 @@ import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.credential.PasswordService;
-import sonia.scm.ConcurrentModificationException;
-import sonia.scm.user.ChangePasswordNotAllowedException;
-import sonia.scm.user.InvalidPasswordException;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -22,9 +20,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import java.util.function.Consumer;
-
-import static sonia.scm.user.InvalidPasswordException.INVALID_MATCHING;
 
 
 /**
@@ -78,12 +73,8 @@ public class MeResource {
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
   @Consumes(VndMediaType.PASSWORD_CHANGE)
-  public Response changePassword(PasswordChangeDto passwordChangeDto) throws ConcurrentModificationException {
-    String name = (String) SecurityUtils.getSubject().getPrincipals().getPrimaryPrincipal();
-    if (passwordChangeDto.getOldPassword() == null){
-      throw new ChangePasswordNotAllowedException(ChangePasswordNotAllowedException.OLD_PASSWORD_REQUIRED);
-    }
-    return adapter.changePassword(name, user -> user.clone().changePassword(passwordService.encryptPassword(passwordChangeDto.getNewPassword()), passwordService.encryptPassword(passwordChangeDto.getOldPassword())));
+  public Response changePassword(@Valid PasswordChangeDto passwordChangeDto) {
+    userManager.changePasswordForLoggedInUser(passwordService.encryptPassword(passwordChangeDto.getOldPassword()), passwordService.encryptPassword(passwordChangeDto.getNewPassword()));
+    return Response.noContent().build();
   }
-
 }

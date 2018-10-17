@@ -2,6 +2,8 @@ package sonia.scm.it.utils;
 
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.web.VndMediaType;
 
 import java.util.List;
@@ -24,7 +26,8 @@ import static sonia.scm.it.utils.TestData.createPasswordChangeJson;
  */
 public class ScmRequests {
 
-  private String url;
+  private static final Logger LOG = LoggerFactory.getLogger(ScmRequests.class);
+
   private String username;
   private String password;
 
@@ -47,7 +50,7 @@ public class ScmRequests {
   public ChangePasswordResponse<ChangePasswordResponse> requestUserChangePassword(String username, String password, String userPathParam, String newPassword) {
     setUsername(username);
     setPassword(password);
-    return new ChangePasswordResponse<>(applyPUTRequest(RestUtil.REST_BASE_URL.resolve("users/"+userPathParam+"/password").toString(), VndMediaType.PASSWORD_CHANGE, TestData.createPasswordChangeJson(password,newPassword)), null);
+    return new ChangePasswordResponse<>(applyPUTRequest(RestUtil.REST_BASE_URL.resolve("users/"+userPathParam+"/password").toString(), VndMediaType.PASSWORD_OVERWRITE, TestData.createPasswordChangeJson(password,newPassword)), null);
 
   }
 
@@ -85,6 +88,7 @@ public class ScmRequests {
    * @return the response of the GET request using the given <code>url</code>
    */
   private Response applyGETRequestWithQueryParams(String url, String params) {
+    LOG.info("GET {}", url);
     return RestAssured.given()
       .auth().preemptive().basic(username, password)
       .when()
@@ -127,6 +131,7 @@ public class ScmRequests {
    * @return the response of the PUT request using the given <code>url</code>
    */
   private Response applyPUTRequest(String url, String mediaType, String body) {
+    LOG.info("PUT {}", url);
     return RestAssured.given()
       .auth().preemptive().basic(username, password)
       .when()
@@ -143,8 +148,6 @@ public class ScmRequests {
   private void setPassword(String password) {
     this.password = password;
   }
-
-
 
   public class IndexResponse extends ModelResponse<IndexResponse, IndexResponse> {
     public static final String LINK_AUTOCOMPLETE_USERS = "_links.autocomplete.find{it.name=='users'}.href";
@@ -292,7 +295,9 @@ public class ScmRequests {
       super(response, previousResponse);
     }
 
-
+    public ChangePasswordResponse<UserResponse> requestChangePassword(String oldPassword, String newPassword) {
+      return new ChangePasswordResponse<>(applyPUTRequestFromLink(super.response, LINKS_PASSWORD_HREF, VndMediaType.PASSWORD_CHANGE, createPasswordChangeJson(oldPassword, newPassword)), this);
+    }
   }
 
   public class UserResponse<PREV extends ModelResponse> extends ModelResponse<UserResponse<PREV>, PREV> {
@@ -328,7 +333,7 @@ public class ScmRequests {
     }
 
     public ChangePasswordResponse<UserResponse> requestChangePassword(String oldPassword, String newPassword) {
-      return new ChangePasswordResponse<>(applyPUTRequestFromLink(super.response, LINKS_PASSWORD_HREF, VndMediaType.PASSWORD_CHANGE, createPasswordChangeJson(oldPassword, newPassword)), this);
+      return new ChangePasswordResponse<>(applyPUTRequestFromLink(super.response, LINKS_PASSWORD_HREF, VndMediaType.PASSWORD_OVERWRITE, createPasswordChangeJson(oldPassword, newPassword)), this);
     }
 
   }

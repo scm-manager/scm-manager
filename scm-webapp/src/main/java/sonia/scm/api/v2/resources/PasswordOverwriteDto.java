@@ -8,11 +8,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 @Getter
 @Setter
 @ToString
-public class PasswordChangeDto {
-
-  @NotEmpty
-  private String oldPassword;
-
+public class PasswordOverwriteDto {
   @NotEmpty
   private String newPassword;
 }

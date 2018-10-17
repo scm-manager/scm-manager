@@ -260,7 +260,7 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
       builder.add(canReadOwnUser(user));
       builder.add(getUserAutocompletePermission());
       builder.add(getGroupAutocompletePermission());
-      builder.add(getChangeOwnPasswordPermission());
+      builder.add(getChangeOwnPasswordPermission(user));
       permissions = builder.build();
     }
 
@@ -273,8 +273,8 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
     return GroupPermissions.autocomplete().asShiroString();
   }
 
-  private String getChangeOwnPasswordPermission() {
-    return UserPermissions.changeOwnPassword().asShiroString();
+  private String getChangeOwnPasswordPermission(User user) {
+    return UserPermissions.changePassword(user).asShiroString();
   }
 
   private String getUserAutocompletePermission() {

@@ -14,7 +14,9 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import sonia.scm.NotFoundException;
 import sonia.scm.PageResult;
+import sonia.scm.user.ChangePasswordNotAllowedException;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
 import sonia.scm.web.VndMediaType;
@@ -31,6 +33,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -142,7 +145,7 @@ public class UserRootResourceTest {
     String content = String.format("{\"newPassword\": \"%s\"}", newPassword);
     MockHttpRequest request = MockHttpRequest
       .put("/" + UserRootResource.USERS_PATH_V2 + "Neo/password")
-      .contentType(VndMediaType.PASSWORD_CHANGE)
+      .contentType(VndMediaType.PASSWORD_OVERWRITE)
       .content(content.getBytes());
     MockHttpResponse response = new MockHttpResponse();
     when(passwordService.encryptPassword(newPassword)).thenReturn("encrypted123");
@@ -150,26 +153,61 @@ public class UserRootResourceTest {
     dispatcher.invoke(request, response);
 
     assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
-    verify(userManager).modify(any(), any());
-    User updatedUser = userCaptor.getValue();
-    assertEquals("encrypted123", updatedUser.getPassword());
+    verify(userManager).overwritePassword("Neo", "encrypted123");
   }
 
   @Test
-  public void shouldGet400OnChangePasswordOfUserWithNonDefaultType() throws Exception {
+  public void shouldGet400OnOverwritePasswordWhenManagerThrowsNotAllowed() throws Exception {
     originalUser.setType("not an xml type");
     String newPassword = "pwd123";
     String content = String.format("{\"newPassword\": \"%s\"}", newPassword);
     MockHttpRequest request = MockHttpRequest
       .put("/" + UserRootResource.USERS_PATH_V2 + "Neo/password")
-      .contentType(VndMediaType.PASSWORD_CHANGE)
+      .contentType(VndMediaType.PASSWORD_OVERWRITE)
+      .content(content.getBytes());
+    MockHttpResponse response = new MockHttpResponse();
+
+    doThrow(ChangePasswordNotAllowedException.class).when(userManager).overwritePassword(any(), any());
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_BAD_REQUEST, response.getStatus());
+  }
+
+  @Test
+  public void shouldGet404OnOverwritePasswordWhenNotFound() throws Exception {
+    originalUser.setType("not an xml type");
+    String newPassword = "pwd123";
+    String content = String.format("{\"newPassword\": \"%s\"}", newPassword);
+    MockHttpRequest request = MockHttpRequest
+      .put("/" + UserRootResource.USERS_PATH_V2 + "Neo/password")
+      .contentType(VndMediaType.PASSWORD_OVERWRITE)
+      .content(content.getBytes());
+    MockHttpResponse response = new MockHttpResponse();
+
+    doThrow(NotFoundException.class).when(userManager).overwritePassword(any(), any());
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_NOT_FOUND, response.getStatus());
+  }
+
+  @Test
+  public void shouldEncryptPasswordOnOverwritePassword() throws Exception {
+    originalUser.setType("not an xml type");
+    String newPassword = "pwd123";
+    String content = String.format("{\"newPassword\": \"%s\"}", newPassword);
+    MockHttpRequest request = MockHttpRequest
+      .put("/" + UserRootResource.USERS_PATH_V2 + "Neo/password")
+      .contentType(VndMediaType.PASSWORD_OVERWRITE)
       .content(content.getBytes());
     MockHttpResponse response = new MockHttpResponse();
     when(passwordService.encryptPassword(newPassword)).thenReturn("encrypted123");
 
     dispatcher.invoke(request, response);
 
-    assertEquals(HttpServletResponse.SC_BAD_REQUEST, response.getStatus());
+    assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
+    verify(userManager).overwritePassword("Neo", "encrypted123");
   }
 
   @Test

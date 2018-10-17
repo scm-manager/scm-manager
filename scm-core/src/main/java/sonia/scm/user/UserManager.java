@@ -38,11 +38,7 @@ package sonia.scm.user;
 import sonia.scm.Manager;
 import sonia.scm.search.Searchable;
 
-import java.text.MessageFormat;
 import java.util.Collection;
-import java.util.function.Consumer;
-
-import static sonia.scm.user.ChangePasswordNotAllowedException.WRONG_USER_TYPE;
 
 /**
  * The central class for managing {@link User} objects.
@@ -87,5 +83,17 @@ public interface UserManager
    */
   Collection<User> autocomplete(String filter);
 
+  /**
+   * Changes the password of the logged in user.
+   * @param oldPassword The current encrypted password of the user.
+   * @param newPassword The new encrypted password of the user.
+   */
+  void changePasswordForLoggedInUser(String oldPassword, String newPassword);
 
+  /**
+   * Overwrites the password for the given user id. This needs user write privileges.
+   * @param userId The id of the user to change the password for.
+   * @param newPassword The new encrypted password.
+   */
+  void overwritePassword(String userId, String newPassword);
 }

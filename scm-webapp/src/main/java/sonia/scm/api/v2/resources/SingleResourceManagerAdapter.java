@@ -1,6 +1,5 @@
 package sonia.scm.api.v2.resources;
 
-import com.github.sdorra.ssp.PermissionCheck;
 import de.otto.edison.hal.HalRepresentation;
 import sonia.scm.ConcurrentModificationException;
 import sonia.scm.Manager;
@@ -16,6 +15,8 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+
+import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 
 /**
  * Adapter from resource http endpoints to managers, for Single resources (e.g. {@code /user/name}).
@@ -53,32 +54,26 @@ class SingleResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
       .map(Response.ResponseBuilder::build)
       .orElseThrow(NotFoundException::new);
   }
-  public Response changePassword(Supplier<Optional<MODEL_OBJECT>> reader, Function<MODEL_OBJECT, MODEL_OBJECT> applyChanges, Predicate<MODEL_OBJECT> hasSameKey, Consumer<MODEL_OBJECT> checker, Function<MODEL_OBJECT, PermissionCheck> permissionCheck) throws ConcurrentModificationException {
+  public Response update(Supplier<Optional<MODEL_OBJECT>> reader, Function<MODEL_OBJECT, MODEL_OBJECT> applyChanges, Predicate<MODEL_OBJECT> hasSameKey, Consumer<MODEL_OBJECT> checker) throws NotFoundException, ConcurrentModificationException {
     MODEL_OBJECT existingModelObject = reader.get().orElseThrow(NotFoundException::new);
-    MODEL_OBJECT changedModelObject = applyChanges.apply(existingModelObject);
-    checkForUpdate(hasSameKey, existingModelObject, changedModelObject);
     checker.accept(existingModelObject);
-    return update(changedModelObject, permissionCheck);
+    return update(reader,applyChanges,hasSameKey);
   }
 
   /**
    * Update the model object for the given id according to the given function and returns a corresponding http response.
    * This handles all corner cases, eg. no matching object for the id or missing privileges.
    */
-  public Response update(Supplier<Optional<MODEL_OBJECT>> reader, Function<MODEL_OBJECT, MODEL_OBJECT> applyChanges, Predicate<MODEL_OBJECT> hasSameKey) throws ConcurrentModificationException {
+  public Response update(Supplier<Optional<MODEL_OBJECT>> reader, Function<MODEL_OBJECT, MODEL_OBJECT> applyChanges, Predicate<MODEL_OBJECT> hasSameKey) throws NotFoundException, ConcurrentModificationException {
     MODEL_OBJECT existingModelObject = reader.get().orElseThrow(NotFoundException::new);
     MODEL_OBJECT changedModelObject = applyChanges.apply(existingModelObject);
-    checkForUpdate(hasSameKey, existingModelObject, changedModelObject);
-    return update(getId(existingModelObject), changedModelObject);
-  }
-
-  public void checkForUpdate(Predicate<MODEL_OBJECT> hasSameKey, MODEL_OBJECT existingModelObject, MODEL_OBJECT changedModelObject) throws ConcurrentModificationException {
     if (!hasSameKey.test(changedModelObject)) {
-      throw new IllegalArgumentException("illegal change of id");
+      return Response.status(BAD_REQUEST).entity("illegal change of id").build();
     }
     else if (modelObjectWasModifiedConcurrently(existingModelObject, changedModelObject)) {
       throw new ConcurrentModificationException();
     }
+    return update(getId(existingModelObject), changedModelObject);
   }
 
   private boolean modelObjectWasModifiedConcurrently(MODEL_OBJECT existing, MODEL_OBJECT updated) {

@@ -50,15 +50,16 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.security.Principal;
 
-import static sonia.scm.user.InvalidPasswordException.INVALID_MATCHING;
-
 //~--- JDK imports ------------------------------------------------------------
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@StaticPermissions(value = "user", globalPermissions = {"create", "list", "autocomplete", "changeOwnPassword"})
+@StaticPermissions(
+  value = "user",
+  globalPermissions = {"create", "list", "autocomplete"},
+  permissions = {"read", "modify", "delete", "changePassword"})
 @XmlRootElement(name = "users")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class User extends BasicPropertiesAware implements Principal, ModelObject, PermissionObject, ReducedModelObject
@@ -276,25 +277,6 @@ public class User extends BasicPropertiesAware implements Principal, ModelObject
     //J+
   }
 
-  public User changePassword(String password){
-    setPassword(password);
-    return this;
-  }
-
-  /**
-   * Match given old password from the dto with the stored password before updating
-   *
-   * @param newPassword the new password
-   * @param oldPassword the old password
-   * @return this
-   */
-  public User changePassword(String newPassword, String oldPassword){
-    if (!getPassword().equals(oldPassword)) {
-      throw new InvalidPasswordException(INVALID_MATCHING);
-    }
-    setPassword(newPassword);
-    return this;
-  }
   //~--- get methods ----------------------------------------------------------
 
   /**

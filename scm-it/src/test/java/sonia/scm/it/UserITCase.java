@@ -85,30 +85,6 @@ public class UserITCase {
       .assertStatusCode(403);
   }
 
-    @Test
-  public void nonAdminUserShouldChangeOwnPassword() {
-    String newUser = "user1";
-    String password = "pass";
-    TestData.createUser(newUser, password, false, "xml", "em@l.de");
-    String newPassword = "new_password";
-    ScmRequests.start()
-      .requestIndexResource(newUser, password)
-      .assertUsersLinkDoesNotExists();
-    // use the users/password endpoint bypassed the index resource
-    ScmRequests.start()
-      .requestUser(newUser, password, newUser)
-      .assertStatusCode(200)
-      .assertAdmin(aBoolean -> assertThat(aBoolean).isEqualTo(Boolean.FALSE))
-      .requestChangePassword(password, newPassword) // the oldPassword is needed when the own password should be changed
-      .assertStatusCode(204);
-//    // assert password is changed -> login with the new Password
-    ScmRequests.start()
-      .requestUser(newUser, newPassword, newUser)
-      .assertStatusCode(200)
-      .assertAdmin(isAdmin -> assertThat(isAdmin).isEqualTo(Boolean.FALSE))
-      .assertPassword(Assert::assertNull);
-  }
-
   @Test
   public void shouldHidePasswordLinkIfUserTypeIsNotXML() {
     String newUser = "user";

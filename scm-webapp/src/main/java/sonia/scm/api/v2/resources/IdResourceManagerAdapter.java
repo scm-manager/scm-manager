@@ -47,54 +47,6 @@ class IdResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
     return singleAdapter.get(loadBy(id), mapToDto);
   }
 
-
-  /**
-   * If the authenticated user is the same user that want to change password than return the changeOwnPassword verification function
-   * if the authenticated user is different he should have the modify permission to be able to modify passwords of other users
-   *
-   * @param usernameToChangePassword the user name of the user we want to change password
-   * @return function to verify permission
-   */
-  private Function<MODEL_OBJECT, PermissionCheck> getChangePasswordPermission(String usernameToChangePassword) {
-    AssertUtil.assertIsNotEmpty(usernameToChangePassword);
-    return model -> {
-      User user = (User) model;
-      if (usernameToChangePassword.equals(AuthenticationUtil.getAuthenticatedUsername())) {
-        return UserPermissions.changeOwnPassword();
-      }
-      return UserPermissions.modify(user);
-    };
-  }
-
-
-  /**
-   * Check if a user can modify the password
-   *
-   * 1 - the permission changeOwnPassword should be checked
-   * 2 - Only account of the default type "xml" can change their password
-   *
-   */
-  private Consumer<MODEL_OBJECT> getChangePasswordChecker() {
-    return model -> {
-      User user = (User) model;
-      UserPermissions.changeOwnPassword().check();
-      UserManager  userManager = (UserManager) manager;
-      if (!userManager.isTypeDefault(user)) {
-        throw new ChangePasswordNotAllowedException(MessageFormat.format(WRONG_USER_TYPE, user.getType()));
-      }
-    };
-  }
-
-
-  public Response changePassword(String id, Function<MODEL_OBJECT, MODEL_OBJECT> applyChanges ) throws ConcurrentModificationException {
-    return singleAdapter.changePassword(
-      loadBy(id),
-      applyChanges,
-      idStaysTheSame(id),
-      getChangePasswordChecker(),
-      getChangePasswordPermission(id));
-  }
-
   public Response update(String id, Function<MODEL_OBJECT, MODEL_OBJECT> applyChanges) throws ConcurrentModificationException {
     return singleAdapter.update(
       loadBy(id),

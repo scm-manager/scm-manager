@@ -35,7 +35,6 @@ package sonia.scm.api.rest.resources;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.github.sdorra.ssp.PermissionCheck;
 import org.apache.commons.beanutils.BeanComparator;
 import org.apache.shiro.authz.AuthorizationException;
 import org.slf4j.Logger;
@@ -64,8 +63,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -199,24 +196,27 @@ public abstract class AbstractManagerResource<T extends ModelObject> {
     return response;
   }
 
-  public Response update(T item, Function<T, PermissionCheck> permissionChecker ){
-    Consumer<Manager> updateAction = mng -> mng.modify(item, permissionChecker);
-    return applyUpdate(item, updateAction);
-  }
-
-  public Response update(String name, T item) {
-    Consumer<Manager> updateAction = mng -> mng.modify(item);
-    return applyUpdate(item, updateAction);
-  }
-
-  public Response applyUpdate(T item, Consumer<Manager> updateAction) {
+  /**
+   *  Method description
+   *
+   *
+   *
+   *
+   *  @param name
+   *  @param item
+   *
+   *
+   * @return
+   */
+  public Response update(String name, T item)
+  {
     Response response = null;
 
     preUpdate(item);
 
     try
     {
-      updateAction.accept(manager);
+      manager.modify(item);
       response = Response.noContent().build();
     }
     catch (AuthorizationException ex)

@@ -3,10 +3,8 @@ package sonia.scm.api.v2.resources;
 import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.credential.PasswordService;
 import sonia.scm.ConcurrentModificationException;
-import sonia.scm.user.ChangePasswordNotAllowedException;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
 import sonia.scm.web.VndMediaType;
@@ -116,11 +114,11 @@ public class UserResource {
    * <strong>Note:</strong> This method requires "user:changeOwnPassword" privilege to modify the own password.
    *
    * @param name              name of the user to be modified
-   * @param passwordChangeDto change password object to modify password. the old password is here not required
+   * @param passwordOverwriteDto change password object to modify password. the old password is here not required
    */
   @PUT
   @Path("password")
-  @Consumes(VndMediaType.PASSWORD_CHANGE)
+  @Consumes(VndMediaType.PASSWORD_OVERWRITE)
   @StatusCodes({
     @ResponseCode(code = 204, condition = "update success"),
     @ResponseCode(code = 400, condition = "Invalid body, e.g. the user type is not xml or the given oldPassword do not match the stored one"),
@@ -130,12 +128,8 @@ public class UserResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
-  public Response changePassword(@PathParam("id") String name, @Valid PasswordChangeDto passwordChangeDto) throws ConcurrentModificationException {
-    String currentUserName = (String) SecurityUtils.getSubject().getPrincipals().getPrimaryPrincipal();
-    if (currentUserName.equals(name) && passwordChangeDto.getOldPassword() == null){
-      throw new ChangePasswordNotAllowedException(ChangePasswordNotAllowedException.OLD_PASSWORD_REQUIRED);
-    }
-    return adapter.changePassword(name, user -> user.changePassword(passwordService.encryptPassword(passwordChangeDto.getNewPassword())));
+  public Response overwritePassword(@PathParam("id") String name, @Valid PasswordOverwriteDto passwordOverwriteDto) {
+    userManager.overwritePassword(name, passwordService.encryptPassword(passwordOverwriteDto.getNewPassword()));
+    return Response.noContent().build();
   }
-
 }
