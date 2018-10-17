@@ -35,11 +35,8 @@ package sonia.scm;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import com.github.sdorra.ssp.PermissionCheck;
-
 import java.io.Closeable;
 import java.io.IOException;
-import java.util.function.Function;
 
 /**
  * The base class of all handlers.
@@ -78,15 +75,4 @@ public interface HandlerBase<T extends TypedObject>
    * @throws IOException
    */
   void modify(T object) throws NotFoundException;
-
-  /**
-   * Modifies a persistent object after checking with the given permission checker.
-   *
-   * @param object to modify
-   * @param permissionChecker check permission before to modify
-   * @throws IOException
-   */
-  default void modify(T object, Function<T, PermissionCheck> permissionChecker) throws NotFoundException{
-    modify(object);
-  }
 }

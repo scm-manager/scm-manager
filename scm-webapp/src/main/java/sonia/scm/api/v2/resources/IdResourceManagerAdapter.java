@@ -1,28 +1,17 @@
 package sonia.scm.api.v2.resources;
 
-import com.github.sdorra.ssp.PermissionCheck;
 import de.otto.edison.hal.HalRepresentation;
 import sonia.scm.AlreadyExistsException;
 import sonia.scm.ConcurrentModificationException;
 import sonia.scm.Manager;
 import sonia.scm.ModelObject;
 import sonia.scm.PageResult;
-import sonia.scm.user.ChangePasswordNotAllowedException;
-import sonia.scm.user.User;
-import sonia.scm.user.UserManager;
-import sonia.scm.user.UserPermissions;
-import sonia.scm.util.AssertUtil;
-import sonia.scm.util.AuthenticationUtil;
 
 import javax.ws.rs.core.Response;
-import java.text.MessageFormat;
 import java.util.Optional;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
-
-import static sonia.scm.user.ChangePasswordNotAllowedException.WRONG_USER_TYPE;
 
 /**
  * Facade for {@link SingleResourceManagerAdapter} and {@link CollectionResourceManagerAdapter}

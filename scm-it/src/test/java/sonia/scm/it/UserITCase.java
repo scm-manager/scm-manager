@@ -29,7 +29,7 @@ public class UserITCase {
       .assertStatusCode(200)
       .assertAdmin(aBoolean -> assertThat(aBoolean).isEqualTo(Boolean.TRUE))
       .assertPassword(Assert::assertNull)
-      .requestChangePassword(password, newPassword) // the oldPassword is needed when the own password should be changed
+      .requestChangePassword(newPassword)
       .assertStatusCode(204);
     // assert password is changed -> login with the new Password
     ScmRequests.start()
