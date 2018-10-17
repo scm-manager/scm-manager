@@ -94,7 +94,6 @@ class RepositoryRoot extends React.Component<Props> {
     }
 
     const url = this.matchedUrl();
-    // todo: default branch
     return (
       <Page title={repository.namespace + "/" + repository.name}>
         <div className="columns">

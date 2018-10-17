@@ -18,11 +18,16 @@ import {
 
 import { connect } from "react-redux";
 import ChangesetList from "../components/changesets/ChangesetList";
-import { ErrorPage, LinkPaginator, Loading } from "@scm-manager/ui-components";
+import {
+  ErrorNotification,
+  LinkPaginator,
+  Loading
+} from "@scm-manager/ui-components";
 import { translate } from "react-i18next";
+import { compose } from "redux";
 
 type Props = {
-  repository: Repository, //TODO: Do we really need/want this here?
+  repository: Repository,
   branch: Branch,
   page: number,
 
@@ -50,18 +55,13 @@ class Changesets extends React.Component<Props> {
     const { changesets, loading, error, t } = this.props;
 
     if (error) {
-      return (
-        <ErrorPage
-          title={t("changesets.error-title")}
-          subtitle={t("changesets.error-title")}
-          error={error}
-        />
-      );
+      return <ErrorNotification error={error} />;
     }
 
     if (loading) {
       return <Loading />;
     }
+
     if (!changesets || changesets.length === 0) {
       return null;
     }
@@ -95,22 +95,30 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
+export function getPageFromMatch(match: any) {
+  let page = parseInt(match.params.page);
+  if (isNaN(page) || !page) {
+    page = 1;
+  }
+  return page;
+}
+
 const mapStateToProps = (state: any, ownProps: Props) => {
   const { repository, branch, match } = ownProps;
   const changesets = getChangesets(state, repository, branch);
   const loading = isFetchChangesetsPending(state, repository, branch);
   const error = getFetchChangesetsFailure(state, repository, branch);
   const list = selectListAsCollection(state, repository, branch);
-
-  // TODO
-  const page = parseInt(match.params.page || "1");
+  const page = getPageFromMatch(match);
 
   return { changesets, list, page, loading, error };
 };
 
-export default withRouter(
+export default compose(
+  withRouter,
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )(translate("repos")(Changesets))
-);
+  ),
+  translate("repos")
+)(Changesets);

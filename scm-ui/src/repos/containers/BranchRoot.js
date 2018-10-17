@@ -6,7 +6,7 @@ import { Route, withRouter } from "react-router-dom";
 import Changesets from "./Changesets";
 import BranchSelector from "./BranchSelector";
 import { connect } from "react-redux";
-import { Loading } from "@scm-manager/ui-components";
+import { ErrorNotification, Loading } from "@scm-manager/ui-components";
 import {
   fetchBranches,
   getBranches,
@@ -25,6 +25,7 @@ type Props = {
   // State props
   branches: Branch[],
   loading: boolean,
+  error: Error,
 
   // Dispatch props
   fetchBranches: Repository => void,
@@ -69,17 +70,21 @@ class BranchRoot extends React.Component<Props> {
   };
 
   render() {
-    // TODO error???
-    const { repository, loading, match, branches } = this.props;
-    const url = this.stripEndingSlash(match.url);
+    const { repository, error, loading, match, branches } = this.props;
+
+    if (error) {
+      return <ErrorNotification error={error} />;
+    }
 
     if (loading) {
       return <Loading />;
     }
+
     if (!repository || !branches) {
       return null;
     }
 
+    const url = this.stripEndingSlash(match.url);
     const branch = this.findSelectedBranch();
     const changesets = <Changesets repository={repository} branch={branch} />;
 
