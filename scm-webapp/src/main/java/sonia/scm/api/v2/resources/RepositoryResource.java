@@ -91,7 +91,7 @@ public class RepositoryResource {
     @ResponseCode(code = 404, condition = "not found, no repository with the specified name available in the namespace"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
-  public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name) throws NotFoundException {
+  public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name){
     return adapter.get(loadBy(namespace, name), repositoryToDtoMapper::map);
   }
 
@@ -138,7 +138,7 @@ public class RepositoryResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
-  public Response update(@PathParam("namespace") String namespace, @PathParam("name") String name, @Valid RepositoryDto repositoryDto) throws NotFoundException, ConcurrentModificationException {
+  public Response update(@PathParam("namespace") String namespace, @PathParam("name") String name, @Valid RepositoryDto repositoryDto) throws ConcurrentModificationException {
     return adapter.update(
       loadBy(namespace, name),
       existing -> processUpdate(repositoryDto, existing),

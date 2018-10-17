@@ -152,7 +152,7 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
   }
 
   @Test(expected = NotFoundException.class)
-  public void testDeleteNotFound() throws NotFoundException {
+  public void testDeleteNotFound(){
     manager.delete(createRepositoryWithId());
   }
 
@@ -304,7 +304,7 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
   }
 
   @Test
-  public void testModify() throws NotFoundException, AlreadyExistsException {
+  public void testModify() throws AlreadyExistsException {
     Repository heartOfGold = createTestRepository();
 
     heartOfGold.setDescription("prototype ship");
@@ -328,12 +328,12 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
   }
 
   @Test(expected = NotFoundException.class)
-  public void testModifyNotFound() throws NotFoundException {
+  public void testModifyNotFound(){
     manager.modify(createRepositoryWithId());
   }
 
   @Test
-  public void testRefresh() throws NotFoundException, AlreadyExistsException {
+  public void testRefresh() throws AlreadyExistsException {
     Repository heartOfGold = createTestRepository();
     String description = heartOfGold.getDescription();
 
@@ -354,7 +354,7 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
   }
 
   @Test(expected = RepositoryNotFoundException.class)
-  public void testRefreshNotFound() throws NotFoundException {
+  public void testRefreshNotFound(){
     manager.refresh(createRepositoryWithId());
   }
 
@@ -495,7 +495,7 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
     return createRepository(RepositoryTestData.createHeartOfGold());
   }
 
-  private void delete(Manager<Repository> manager, Repository repository) throws NotFoundException {
+  private void delete(Manager<Repository> manager, Repository repository){
 
     String id = repository.getId();
 

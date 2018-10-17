@@ -151,7 +151,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
   }
 
   @Override
-  public void delete(Repository repository) throws NotFoundException {
+  public void delete(Repository repository){
     logger.info("delete repository {}/{} of type {}", repository.getNamespace(), repository.getName(), repository.getType());
     managerDaoAdapter.delete(
       repository,
@@ -179,7 +179,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
   }
 
   @Override
-  public void modify(Repository repository) throws NotFoundException {
+  public void modify(Repository repository){
     logger.info("modify repository {}/{} of type {}", repository.getNamespace(), repository.getName(), repository.getType());
 
     managerDaoAdapter.modify(

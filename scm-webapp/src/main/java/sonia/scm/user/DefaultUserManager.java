@@ -33,11 +33,10 @@
 
 package sonia.scm.user;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.github.sdorra.ssp.PermissionActionCheck;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.AlreadyExistsException;
@@ -63,8 +62,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
-//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -157,7 +154,7 @@ public class DefaultUserManager extends AbstractUserManager
   }
 
   @Override
-  public void delete(User user) throws NotFoundException {
+  public void delete(User user) {
     logger.info("delete user {} of type {}", user.getName(), user.getType());
     managerDaoAdapter.delete(
       user,
@@ -193,9 +190,8 @@ public class DefaultUserManager extends AbstractUserManager
    * @throws IOException
    */
   @Override
-  public void modify(User user) throws NotFoundException {
+  public void modify(User user) {
     logger.info("modify user {} of type {}", user.getName(), user.getType());
-
     managerDaoAdapter.modify(
       user,
       UserPermissions::modify,
@@ -212,7 +208,7 @@ public class DefaultUserManager extends AbstractUserManager
    * @throws IOException
    */
   @Override
-  public void refresh(User user) throws NotFoundException {
+  public void refresh(User user) {
     if (logger.isInfoEnabled())
     {
       logger.info("refresh user {} of type {}", user.getName(), user.getType());
@@ -401,6 +397,36 @@ public class DefaultUserManager extends AbstractUserManager
   }
 
   //~--- methods --------------------------------------------------------------
+
+  @Override
+  public void changePasswordForLoggedInUser(String oldPassword, String newPassword) {
+    User user = get((String) SecurityUtils.getSubject().getPrincipals().getPrimaryPrincipal());
+
+    if (!user.getPassword().equals(oldPassword)) {
+      throw new InvalidPasswordException();
+    }
+
+    user.setPassword(newPassword);
+
+    managerDaoAdapter.modify(
+      user,
+      UserPermissions::changePassword,
+      notModified -> fireEvent(HandlerEventType.BEFORE_MODIFY, user, notModified),
+      notModified -> fireEvent(HandlerEventType.MODIFY, user, notModified));
+  }
+
+  @Override
+  public void overwritePassword(String userId, String newPassword) {
+    User user = get(userId);
+    if (user == null) {
+      throw new NotFoundException();
+    }
+    if (!isTypeDefault(user)) {
+      throw new ChangePasswordNotAllowedException(user.getType());
+    }
+    user.setPassword(newPassword);
+    this.modify(user);
+  }
 
   /**
    * Method description

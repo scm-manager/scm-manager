@@ -47,7 +47,7 @@ class SingleResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
    * Reads the model object for the given id, transforms it to a dto and returns a corresponding http response.
    * This handles all corner cases, eg. no matching object for the id or missing privileges.
    */
-  Response get(Supplier<Optional<MODEL_OBJECT>> reader, Function<MODEL_OBJECT, DTO> mapToDto) throws NotFoundException {
+  Response get(Supplier<Optional<MODEL_OBJECT>> reader, Function<MODEL_OBJECT, DTO> mapToDto) {
     return reader.get()
       .map(mapToDto)
       .map(Response::ok)

@@ -39,6 +39,30 @@ public class MeITCase {
   }
 
   @Test
+  public void nonAdminUserShouldChangeOwnPassword() {
+    String newPassword = "pass1";
+    String username = "user1";
+    String password = "pass";
+    TestData.createUser(username, password,false,"xml", "em@l.de");
+    // user change the own password
+    ScmRequests.start()
+      .requestIndexResource(username, password)
+      .requestMe()
+      .assertStatusCode(200)
+      .assertAdmin(aBoolean -> assertThat(aBoolean).isEqualTo(Boolean.FALSE))
+      .assertPassword(Assert::assertNull)
+      .assertType(s -> assertThat(s).isEqualTo("xml"))
+      .requestChangePassword(password, newPassword)
+      .assertStatusCode(204);
+    // assert password is changed -> login with the new Password than undo changes
+    ScmRequests.start()
+      .requestIndexResource(username, newPassword)
+      .requestMe()
+      .assertStatusCode(200);
+
+  }
+
+  @Test
   public void shouldHidePasswordLinkIfUserTypeIsNotXML() {
     String newUser = "user";
     String password = "pass";

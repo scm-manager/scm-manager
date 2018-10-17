@@ -13,10 +13,12 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import sonia.scm.user.InvalidPasswordException;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
 import sonia.scm.web.VndMediaType;
 
+import javax.lang.model.util.Types;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -26,6 +28,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -69,7 +72,6 @@ public class MeResourceTest {
     doNothing().when(userManager).modify(userCaptor.capture());
     doNothing().when(userManager).delete(userCaptor.capture());
     when(userManager.isTypeDefault(userCaptor.capture())).thenCallRealMethod();
-    when(userManager.getUserTypeChecker()).thenCallRealMethod();
     when(userManager.getDefaultType()).thenReturn("xml");
     MeResource meResource = new MeResource(userToDtoMapper, userManager, passwordService);
     when(uriInfo.getApiRestUri()).thenReturn(URI.create("/"));
@@ -97,38 +99,40 @@ public class MeResourceTest {
   public void shouldEncryptPasswordBeforeChanging() throws Exception {
     String newPassword = "pwd123";
     String encryptedNewPassword = "encrypted123";
-    String oldPassword = "notEncriptedSecret";
+    String encryptedOldPassword = "encryptedOld";
+    String oldPassword = "secret";
     String content = String.format("{ \"oldPassword\": \"%s\" , \"newPassword\": \"%s\" }", oldPassword, newPassword);
     MockHttpRequest request = MockHttpRequest
       .put("/" + MeResource.ME_PATH_V2 + "password")
       .contentType(VndMediaType.PASSWORD_CHANGE)
       .content(content.getBytes());
     MockHttpResponse response = new MockHttpResponse();
-    when(passwordService.encryptPassword(eq(newPassword))).thenReturn(encryptedNewPassword);
-    when(passwordService.encryptPassword(eq(oldPassword))).thenReturn("secret");
+
+    when(passwordService.encryptPassword(newPassword)).thenReturn(encryptedNewPassword);
+    when(passwordService.encryptPassword(oldPassword)).thenReturn(encryptedOldPassword);
+
+    ArgumentCaptor<String> encryptedOldPasswordCaptor = ArgumentCaptor.forClass(String.class);
+    ArgumentCaptor<String> encryptedNewPasswordCaptor = ArgumentCaptor.forClass(String.class);
+    doNothing().when(userManager).changePasswordForLoggedInUser(encryptedOldPasswordCaptor.capture(), encryptedNewPasswordCaptor.capture());
 
     dispatcher.invoke(request, response);
 
     assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
-    verify(userManager).modify(any(User.class));
-    User updatedUser = userCaptor.getValue();
-    assertEquals(encryptedNewPassword, updatedUser.getPassword());
+    assertEquals(encryptedNewPassword, encryptedNewPasswordCaptor.getValue());
+    assertEquals(encryptedOldPassword, encryptedOldPasswordCaptor.getValue());
   }
 
   @Test
   @SubjectAware(username = "trillian", password = "secret")
-  public void shouldGet400OnChangePasswordOfUserWithNonDefaultType() throws Exception {
+  public void shouldGet400OnMissingOldPassword() throws Exception {
     originalUser.setType("not an xml type");
     String newPassword = "pwd123";
-    String oldPassword = "notEncriptedSecret";
-    String content = String.format("{ \"oldPassword\": \"%s\" , \"newPassword\": \"%s\" }", oldPassword, newPassword);
+    String content = String.format("{ \"newPassword\": \"%s\" }", newPassword);
     MockHttpRequest request = MockHttpRequest
       .put("/" + MeResource.ME_PATH_V2 + "password")
       .contentType(VndMediaType.PASSWORD_CHANGE)
       .content(content.getBytes());
     MockHttpResponse response = new MockHttpResponse();
-    when(passwordService.encryptPassword(newPassword)).thenReturn("encrypted123");
-    when(passwordService.encryptPassword(eq(oldPassword))).thenReturn("secret");
 
     dispatcher.invoke(request, response);
 
@@ -137,17 +141,34 @@ public class MeResourceTest {
 
   @Test
   @SubjectAware(username = "trillian", password = "secret")
-  public void shouldGet400OnChangePasswordIfOldPasswordDoesNotMatchOriginalPassword() throws Exception {
+  public void shouldGet400OnMissingEmptyPassword() throws Exception {
     String newPassword = "pwd123";
-    String oldPassword = "notEncriptedSecret";
+    String oldPassword = "";
     String content = String.format("{ \"oldPassword\": \"%s\" , \"newPassword\": \"%s\" }", oldPassword, newPassword);
     MockHttpRequest request = MockHttpRequest
       .put("/" + MeResource.ME_PATH_V2 + "password")
       .contentType(VndMediaType.PASSWORD_CHANGE)
       .content(content.getBytes());
     MockHttpResponse response = new MockHttpResponse();
-    when(passwordService.encryptPassword(newPassword)).thenReturn("encrypted123");
-    when(passwordService.encryptPassword(eq(oldPassword))).thenReturn("differentThanSecret");
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_BAD_REQUEST, response.getStatus());
+  }
+
+  @Test
+  @SubjectAware(username = "trillian", password = "secret")
+  public void shouldMapExceptionFromManager() throws Exception {
+    String newPassword = "pwd123";
+    String oldPassword = "secret";
+    String content = String.format("{ \"oldPassword\": \"%s\" , \"newPassword\": \"%s\" }", oldPassword, newPassword);
+    MockHttpRequest request = MockHttpRequest
+      .put("/" + MeResource.ME_PATH_V2 + "password")
+      .contentType(VndMediaType.PASSWORD_CHANGE)
+      .content(content.getBytes());
+    MockHttpResponse response = new MockHttpResponse();
+
+    doThrow(InvalidPasswordException.class).when(userManager).changePasswordForLoggedInUser(any(), any());
 
     dispatcher.invoke(request, response);
 

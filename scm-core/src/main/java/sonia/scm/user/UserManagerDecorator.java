@@ -126,7 +126,16 @@ public class UserManagerDecorator extends ManagerDecorator<User>
     return decorated.autocomplete(filter);
   }
 
-  //~--- fields ---------------------------------------------------------------
+  @Override
+  public void changePasswordForLoggedInUser(String oldPassword, String newPassword) {
+    decorated.changePasswordForLoggedInUser(oldPassword, newPassword);
+  }
+
+  @Override
+  public void overwritePassword(String userId, String newPassword) {
+    decorated.overwritePassword(userId, newPassword);
+  }
+//~--- fields ---------------------------------------------------------------
 
   /** Field description */
   private final UserManager decorated;

@@ -99,14 +99,14 @@ public interface Manager<T extends ModelObject>
    * @param limit parameter
    *
    * @since 1.4
-   * @return objects from the store which are starts at the given 
+   * @return objects from the store which are starts at the given
    *         start parameter
    */
   Collection<T> getAll(int start, int limit);
 
   /**
    * Returns objects from the store which are starts at the given start
-   * parameter sorted by the given {@link java.util.Comparator}. 
+   * parameter sorted by the given {@link java.util.Comparator}.
    * The objects returned are limited by the limit parameter.
    *
    *
@@ -115,7 +115,7 @@ public interface Manager<T extends ModelObject>
    * @param limit parameter
    *
    * @since 1.4
-   * @return objects from the store which are starts at the given 
+   * @return objects from the store which are starts at the given
    *         start parameter
    */
   Collection<T> getAll(Comparator<T> comparator, int start, int limit);

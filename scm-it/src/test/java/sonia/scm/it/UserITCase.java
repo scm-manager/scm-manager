@@ -29,7 +29,7 @@ public class UserITCase {
       .assertStatusCode(200)
       .assertAdmin(aBoolean -> assertThat(aBoolean).isEqualTo(Boolean.TRUE))
       .assertPassword(Assert::assertNull)
-      .requestChangePassword(newPassword) // the oldPassword is not needed in the user resource
+      .requestChangePassword(newPassword)
       .assertStatusCode(204);
     // assert password is changed -> login with the new Password
     ScmRequests.start()
@@ -65,6 +65,25 @@ public class UserITCase {
 
   }
 
+  @Test
+  public void nonAdminUserShouldNotChangePasswordOfOtherUser() {
+    String user = "user";
+    String password = "pass";
+    TestData.createUser(user, password, false, "xml", "em@l.de");
+    String user2 = "user2";
+    TestData.createUser(user2, password, false, "xml", "em@l.de");
+    ScmRequests.start()
+      .requestIndexResource(user, password)
+      .assertUsersLinkDoesNotExists();
+    // use the users/ endpoint bypassed the index resource
+    ScmRequests.start()
+      .requestUser(user, password, user2)
+      .assertStatusCode(403);
+    // use the users/password endpoint bypassed the index and users resources
+    ScmRequests.start()
+      .requestUserChangePassword(user, password, user2, "newPassword")
+      .assertStatusCode(403);
+  }
 
   @Test
   public void shouldHidePasswordLinkIfUserTypeIsNotXML() {
