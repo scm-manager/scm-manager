@@ -1,9 +1,9 @@
 //@flow
 import React from "react";
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 import injectSheet from "react-jss";
-import type { Repository } from "@scm-manager/ui-types";
-import { DateFromNow } from "@scm-manager/ui-components";
+import type {Repository} from "@scm-manager/ui-types";
+import {DateFromNow} from "@scm-manager/ui-components";
 import RepositoryEntryLink from "./RepositoryEntryLink";
 import classNames from "classnames";
 import RepositoryAvatar from "./RepositoryAvatar";
@@ -45,7 +45,7 @@ class RepositoryEntry extends React.Component<Props> {
       return (
         <RepositoryEntryLink
           iconClass="fa-code-branch"
-          to={repositoryLink + "/changesets"}
+          to={repositoryLink + "/history"}
         />
       );
     }
@@ -67,10 +67,7 @@ class RepositoryEntry extends React.Component<Props> {
   renderModifyLink = (repository: Repository, repositoryLink: string) => {
     if (repository._links["update"]) {
       return (
-        <RepositoryEntryLink
-          iconClass="fa-cog"
-          to={repositoryLink + "/modify"}
-        />
+        <RepositoryEntryLink iconClass="fa-cog" to={repositoryLink + "/edit"} />
       );
     }
     return null;

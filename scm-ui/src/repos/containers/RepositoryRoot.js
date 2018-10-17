@@ -8,14 +8,14 @@ import {
   isFetchRepoPending
 } from "../modules/repos";
 import { connect } from "react-redux";
-import { Route } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 import type { Repository } from "@scm-manager/ui-types";
 import {
-  Page,
-  Loading,
   ErrorPage,
+  Loading,
   Navigation,
   NavLink,
+  Page,
   Section
 } from "@scm-manager/ui-components";
 import { translate } from "react-i18next";
@@ -26,6 +26,7 @@ import Permissions from "../permissions/containers/Permissions";
 
 import type { History } from "history";
 import EditNavLink from "../components/EditNavLink";
+import BranchRoot from "./BranchRoot";
 import PermissionsNavLink from "../components/PermissionsNavLink";
 
 type Props = {
@@ -71,6 +72,12 @@ class RepositoryRoot extends React.Component<Props> {
     this.props.deleteRepo(repository, this.deleted);
   };
 
+  matches = (route: any) => {
+    const url = this.matchedUrl();
+    const regex = new RegExp(`${url}(/branches)?/?[^/]*/changesets?.*`);
+    return route.location.pathname.match(regex);
+  };
+
   render() {
     const { loading, error, repository, t } = this.props;
 
@@ -89,39 +96,66 @@ class RepositoryRoot extends React.Component<Props> {
     }
 
     const url = this.matchedUrl();
-
     return (
       <Page title={repository.namespace + "/" + repository.name}>
         <div className="columns">
           <div className="column is-three-quarters">
-            <Route
-              path={url}
-              exact
-              component={() => <RepositoryDetails repository={repository} />}
-            />
-            <Route
-              path={`${url}/edit`}
-              component={() => <Edit repository={repository} />}
-            />
-            <Route
-              path={`${url}/permissions`}
-              render={props => (
-                <Permissions
-                  namespace={this.props.repository.namespace}
-                  repoName={this.props.repository.name}
-                />
-              )}
-            />
+            <Switch>
+              <Route
+                path={url}
+                exact
+                component={() => <RepositoryDetails repository={repository} />}
+              />
+              <Route
+                path={`${url}/edit`}
+                component={() => <Edit repository={repository} />}
+              />
+              <Route
+                path={`${url}/permissions`}
+                render={props => (
+                  <Permissions
+                    namespace={this.props.repository.namespace}
+                    repoName={this.props.repository.name}
+                  />
+                )}
+              />
+              <Route
+                path={`${url}/changesets`}
+                render={() => (
+                  <BranchRoot
+                    repository={repository}
+                    baseUrlWithBranch={`${url}/branches`}
+                    baseUrlWithoutBranch={`${url}/changesets`}
+                  />
+                )}
+              />
+              <Route
+                path={`${url}/branches/:branch/changesets`}
+                render={() => (
+                  <BranchRoot
+                    repository={repository}
+                    baseUrlWithBranch={`${url}/branches`}
+                    baseUrlWithoutBranch={`${url}/changesets`}
+                  />
+                )}
+              />
+            </Switch>
           </div>
           <div className="column">
             <Navigation>
               <Section label={t("repository-root.navigation-label")}>
                 <NavLink to={url} label={t("repository-root.information")} />
+                <NavLink
+                  activeOnlyWhenExact={false}
+                  to={`${url}/changesets/`}
+                  label={t("repository-root.history")}
+                  activeWhenMatch={this.matches}
+                />
+                <EditNavLink repository={repository} editUrl={`${url}/edit`} />
                 <PermissionsNavLink
                   permissionUrl={`${url}/permissions`}
                   repository={repository}
                 />
-                <EditNavLink repository={repository} editUrl={`${url}/edit`} />
               </Section>
               <Section label={t("repository-root.actions-label")}>
                 <DeleteNavAction repository={repository} delete={this.delete} />

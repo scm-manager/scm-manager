@@ -73,9 +73,10 @@ public class FileHistoryRootResource {
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
       log.info("Get changesets of the file {} and revision {}", path, revision);
       Repository repository = repositoryService.getRepository();
-      ChangesetPagingResult changesets = repositoryService.getLogCommand()
-        .setPagingStart(page)
-        .setPagingLimit(pageSize)
+      ChangesetPagingResult changesets = new PagedLogCommandBuilder(repositoryService)
+        .page(page)
+        .pageSize(pageSize)
+        .create()
         .setPath(path)
         .setStartChangeset(revision)
         .getChangesets();

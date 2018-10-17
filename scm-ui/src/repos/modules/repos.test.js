@@ -405,7 +405,7 @@ describe("repos fetch", () => {
     });
   });
 
-  it("should disapatch failure if server returns status code 500", () => {
+  it("should dispatch failure if server returns status code 500", () => {
     fetchMock.postOnce(REPOS_URL, {
       status: 500
     });

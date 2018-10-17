@@ -1,7 +1,7 @@
 // @flow
 
 import type { Repository } from "@scm-manager/ui-types";
-import { getProtocolLinkByType, getTypePredicate } from "./repositories";
+import { getProtocolLinkByType } from "./repositories";
 
 describe("getProtocolLinkByType tests", () => {
 

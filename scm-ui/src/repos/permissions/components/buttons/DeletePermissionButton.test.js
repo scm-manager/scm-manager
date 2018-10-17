@@ -5,12 +5,15 @@ import "../../../../tests/i18n";
 import DeletePermissionButton from "./DeletePermissionButton";
 
 import { confirmAlert } from "@scm-manager/ui-components";
+import ReactRouterEnzymeContext from "react-router-enzyme-context";
 jest.mock("@scm-manager/ui-components", () => ({
   confirmAlert: jest.fn(),
   DeleteButton: require.requireActual("@scm-manager/ui-components").DeleteButton
 }));
 
 describe("DeletePermissionButton", () => {
+  const options = new ReactRouterEnzymeContext();
+
   it("should render nothing, if the delete link is missing", () => {
     const permission = {
       _links: {}
@@ -20,7 +23,8 @@ describe("DeletePermissionButton", () => {
       <DeletePermissionButton
         permission={permission}
         deletePermission={() => {}}
-      />
+      />,
+      options.get()
     );
     expect(navLink.text()).toBe("");
   });
@@ -38,7 +42,8 @@ describe("DeletePermissionButton", () => {
       <DeletePermissionButton
         permission={permission}
         deletePermission={() => {}}
-      />
+      />,
+      options.get()
     );
     expect(navLink.text()).not.toBe("");
   });
@@ -56,7 +61,8 @@ describe("DeletePermissionButton", () => {
       <DeletePermissionButton
         permission={permission}
         deletePermission={() => {}}
-      />
+      />,
+      options.get()
     );
     button.find("button").simulate("click");
 
@@ -82,7 +88,8 @@ describe("DeletePermissionButton", () => {
         permission={permission}
         confirmDialog={false}
         deletePermission={capture}
-      />
+      />,
+      options.get()
     );
     button.find("button").simulate("click");
 
