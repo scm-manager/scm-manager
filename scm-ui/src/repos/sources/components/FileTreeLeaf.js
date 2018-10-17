@@ -62,13 +62,13 @@ class FileTreeLeaf extends React.Component<Props> {
   render() {
     const { file, classes } = this.props;
 
+    const fileSize = file.directory ? "" : <FileSize bytes={file.length} />;
+
     return (
       <tr>
         <td className={classes.iconColumn}>{this.createFileIcon(file)}</td>
         <td>{this.createFileName(file)}</td>
-        <td>
-          <FileSize bytes={file.length} />
-        </td>
+        <td>{fileSize}</td>
         <td>
           <DateFromNow date={file.lastModified} />
         </td>

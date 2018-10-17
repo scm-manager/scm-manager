@@ -6,9 +6,9 @@ type Props = {
 };
 
 class FileSize extends React.Component<Props> {
-  static format(bytes) {
+  static format(bytes: number) {
     if (!bytes) {
-      return "";
+      return "0 B";
     }
 
     const units = ["B", "K", "M", "G", "T", "P", "E", "Z", "Y"];
