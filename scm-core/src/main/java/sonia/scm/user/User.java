@@ -56,7 +56,10 @@ import java.security.Principal;
  *
  * @author Sebastian Sdorra
  */
-@StaticPermissions(value = "user", globalPermissions = {"create", "list", "autocomplete"})
+@StaticPermissions(
+  value = "user",
+  globalPermissions = {"create", "list", "autocomplete"},
+  permissions = {"read", "modify", "delete", "changePassword"})
 @XmlRootElement(name = "users")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class User extends BasicPropertiesAware implements Principal, ModelObject, PermissionObject, ReducedModelObject
@@ -274,10 +277,6 @@ public class User extends BasicPropertiesAware implements Principal, ModelObject
     //J+
   }
 
-  public User changePassword(String password){
-    setPassword(password);
-    return this;
-  }
   //~--- get methods ----------------------------------------------------------
 
   /**

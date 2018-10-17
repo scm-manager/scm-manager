@@ -2,6 +2,9 @@ package sonia.scm.it.utils;
 
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sonia.scm.user.User;
 import sonia.scm.web.VndMediaType;
 
 import java.util.List;
@@ -24,7 +27,8 @@ import static sonia.scm.it.utils.TestData.createPasswordChangeJson;
  */
 public class ScmRequests {
 
-  private String url;
+  private static final Logger LOG = LoggerFactory.getLogger(ScmRequests.class);
+
   private String username;
   private String password;
 
@@ -38,6 +42,18 @@ public class ScmRequests {
     return new IndexResponse(applyGETRequest(RestUtil.REST_BASE_URL.toString()));
   }
 
+  public <SELF extends UserResponse<SELF, T>, T extends ModelResponse> UserResponse<SELF,T> requestUser(String username, String password, String pathParam) {
+    setUsername(username);
+    setPassword(password);
+    return new UserResponse<>(applyGETRequest(RestUtil.REST_BASE_URL.resolve("users/"+pathParam).toString()), null);
+  }
+
+  public ChangePasswordResponse<ChangePasswordResponse> requestUserChangePassword(String username, String password, String userPathParam, String newPassword) {
+    setUsername(username);
+    setPassword(password);
+    return new ChangePasswordResponse<>(applyPUTRequest(RestUtil.REST_BASE_URL.resolve("users/"+userPathParam+"/password").toString(), VndMediaType.PASSWORD_OVERWRITE, TestData.createPasswordChangeJson(password,newPassword)), null);
+
+  }
 
   /**
    * Apply a GET Request to the extracted url from the given link
@@ -73,6 +89,7 @@ public class ScmRequests {
    * @return the response of the GET request using the given <code>url</code>
    */
   private Response applyGETRequestWithQueryParams(String url, String params) {
+    LOG.info("GET {}", url);
     return RestAssured.given()
       .auth().preemptive().basic(username, password)
       .when()
@@ -115,6 +132,7 @@ public class ScmRequests {
    * @return the response of the PUT request using the given <code>url</code>
    */
   private Response applyPUTRequest(String url, String mediaType, String body) {
+    LOG.info("PUT {}", url);
     return RestAssured.given()
       .auth().preemptive().basic(username, password)
       .when()
@@ -131,7 +149,6 @@ public class ScmRequests {
   private void setPassword(String password) {
     this.password = password;
   }
-
 
   public class IndexResponse extends ModelResponse<IndexResponse, IndexResponse> {
     public static final String LINK_AUTOCOMPLETE_USERS = "_links.autocomplete.find{it.name=='users'}.href";
@@ -160,9 +177,14 @@ public class ScmRequests {
       return new MeResponse<>(applyGETRequestFromLink(response, LINK_ME), this);
     }
 
-    public UserResponse<IndexResponse> requestUser(String username) {
+    public UserResponse<? extends UserResponse, IndexResponse> requestUser(String username) {
       return new UserResponse<>(applyGETRequestFromLinkWithParams(response, LINK_USERS, username), this);
     }
+
+    public IndexResponse assertUsersLinkDoesNotExists() {
+      return super.assertPropertyPathDoesNotExists(LINK_USERS);
+    }
+
 
   }
 
@@ -267,17 +289,19 @@ public class ScmRequests {
 
   }
 
-  public class MeResponse<PREV extends ModelResponse> extends UserResponse<PREV> {
+  public class MeResponse<PREV extends ModelResponse> extends UserResponse<MeResponse<PREV>, PREV> {
 
 
     public MeResponse(Response response, PREV previousResponse) {
       super(response, previousResponse);
     }
 
-
+    public ChangePasswordResponse<UserResponse> requestChangePassword(String oldPassword, String newPassword) {
+      return new ChangePasswordResponse<>(applyPUTRequestFromLink(super.response, LINKS_PASSWORD_HREF, VndMediaType.PASSWORD_CHANGE, createPasswordChangeJson(oldPassword, newPassword)), this);
+    }
   }
 
-  public class UserResponse<PREV extends ModelResponse> extends ModelResponse<UserResponse<PREV>, PREV> {
+  public class UserResponse<SELF extends UserResponse<SELF, PREV>, PREV extends ModelResponse> extends ModelResponse<SELF, PREV> {
 
     public static final String LINKS_PASSWORD_HREF = "_links.password.href";
 
@@ -285,34 +309,29 @@ public class ScmRequests {
       super(response, previousResponse);
     }
 
-    public UserResponse<PREV> assertPassword(Consumer<String> assertPassword) {
+    public SELF assertPassword(Consumer<String> assertPassword) {
       return super.assertSingleProperty(assertPassword, "password");
     }
 
-    public UserResponse<PREV> assertType(Consumer<String> assertType) {
+    public SELF assertType(Consumer<String> assertType) {
       return assertSingleProperty(assertType, "type");
     }
 
-    public UserResponse<PREV> assertAdmin(Consumer<Boolean> assertAdmin) {
+    public SELF assertAdmin(Consumer<Boolean> assertAdmin) {
       return assertSingleProperty(assertAdmin, "admin");
     }
 
-    public UserResponse<PREV> assertPasswordLinkDoesNotExists() {
+    public SELF assertPasswordLinkDoesNotExists() {
       return assertPropertyPathDoesNotExists(LINKS_PASSWORD_HREF);
     }
 
-    public UserResponse<PREV> assertPasswordLinkExists() {
+    public SELF assertPasswordLinkExists() {
       return assertPropertyPathExists(LINKS_PASSWORD_HREF);
     }
 
     public ChangePasswordResponse<UserResponse> requestChangePassword(String newPassword) {
-      return requestChangePassword(null, newPassword);
+      return new ChangePasswordResponse<>(applyPUTRequestFromLink(super.response, LINKS_PASSWORD_HREF, VndMediaType.PASSWORD_OVERWRITE, createPasswordChangeJson(null, newPassword)), this);
     }
-
-    public ChangePasswordResponse<UserResponse> requestChangePassword(String oldPassword, String newPassword) {
-      return new ChangePasswordResponse<>(applyPUTRequestFromLink(super.response, LINKS_PASSWORD_HREF, VndMediaType.PASSWORD_CHANGE, createPasswordChangeJson(oldPassword, newPassword)), this);
-    }
-
   }
 
 

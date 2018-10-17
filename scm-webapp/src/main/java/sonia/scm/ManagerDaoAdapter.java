@@ -15,7 +15,7 @@ public class ManagerDaoAdapter<T extends ModelObject> {
     this.dao = dao;
   }
 
-  public void modify(T object, Function<T, PermissionCheck> permissionCheck, AroundHandler<T> beforeUpdate, AroundHandler<T> afterUpdate) throws NotFoundException {
+  public void modify(T object, Function<T, PermissionCheck> permissionCheck, AroundHandler<T> beforeUpdate, AroundHandler<T> afterUpdate) {
     T notModified = dao.get(object.getId());
     if (notModified != null) {
       permissionCheck.apply(notModified).check();
@@ -51,7 +51,7 @@ public class ManagerDaoAdapter<T extends ModelObject> {
     return newObject;
   }
 
-  public void delete(T toDelete, Supplier<PermissionCheck> permissionCheck, AroundHandler<T> beforeDelete, AroundHandler<T> afterDelete) throws NotFoundException {
+  public void delete(T toDelete, Supplier<PermissionCheck> permissionCheck, AroundHandler<T> beforeDelete, AroundHandler<T> afterDelete) {
     permissionCheck.get().check();
     if (dao.contains(toDelete)) {
       beforeDelete.handle(toDelete);
