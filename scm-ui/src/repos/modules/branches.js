@@ -97,14 +97,12 @@ function extractBranchesFromPayload(payload: any) {
 
 // Selectors
 
-const empty = [];
-
 export function getBranches(state: Object, repository: Repository) {
   const key = createKey(repository);
   if (state.branches[key]) {
     return state.branches[key];
   }
-  return empty;
+  return null;
 }
 
 export function getBranch(

@@ -157,6 +157,11 @@ describe("branches", () => {
       expect(one).toBe(two);
     });
 
+    it("should return null, if no branches for the repository available", () => {
+      const branches = getBranches({ branches: {} }, repository);
+      expect(branches).toBeNull();
+    });
+
     it("should return single branch by name", () => {
       const branch = getBranch(state, repository, "branch1");
       expect(branch).toEqual(branch1);
