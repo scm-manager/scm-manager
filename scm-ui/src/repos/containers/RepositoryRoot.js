@@ -112,11 +112,22 @@ class RepositoryRoot extends React.Component<Props> {
                 component={() => <Edit repository={repository} />}
               />
               <Route
+                path={`${url}/changesets`}
+                render={() => (
+                  <BranchRoot
+                    repository={repository}
+                    baseUrlWithBranch={`${url}/branches`}
+                    baseUrlWithoutBranch={`${url}/changesets`}
+                  />
+                )}
+              />
+              <Route
                 path={`${url}/branches/:branch/changesets`}
                 render={() => (
                   <BranchRoot
                     repository={repository}
-                    baseUrl={`${url}/branches`}
+                    baseUrlWithBranch={`${url}/branches`}
+                    baseUrlWithoutBranch={`${url}/changesets`}
                   />
                 )}
               />
@@ -128,7 +139,7 @@ class RepositoryRoot extends React.Component<Props> {
                 <NavLink to={url} label={t("repository-root.information")} />
                 <NavLink
                   activeOnlyWhenExact={false}
-                  to={`${url}/branches/master/changesets/1`}
+                  to={`${url}/changesets/`}
                   label={t("repository-root.history")}
                   activeWhenMatch={this.matches}
                 />

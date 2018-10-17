@@ -19,6 +19,8 @@ type Props = {
   repository: Repository,
   baseUrl: string,
   selected: string,
+  baseUrlWithBranch: string,
+  baseUrlWithoutBranch: string,
 
   // State props
   branches: Branch[],
@@ -49,15 +51,16 @@ class BranchRoot extends React.Component<Props> {
     return url;
   };
 
-  matchedUrl = () => {
-    return this.stripEndingSlash(this.props.baseUrl);
-  };
-
-  branchSelected = (branch: Branch) => {
-    const url = this.matchedUrl();
-    this.props.history.push(
-      `${url}/${encodeURIComponent(branch.name)}/changesets/`
-    );
+  branchSelected = (branch?: Branch) => {
+    let url;
+    if (branch) {
+      url = `${this.props.baseUrlWithBranch}/${encodeURIComponent(
+        branch.name
+      )}/changesets/`;
+    } else {
+      url = `${this.props.baseUrlWithoutBranch}/`;
+    }
+    this.props.history.push(url);
   };
 
   findSelectedBranch = () => {

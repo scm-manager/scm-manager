@@ -3,16 +3,16 @@ import React from "react";
 import {translate} from "react-i18next";
 import type {PagedCollection} from "@scm-manager/ui-types";
 import {Button} from "./buttons";
-import {withRouter} from "react-router-dom";
 
 type Props = {
   collection: PagedCollection,
-  t: string => string,
-  match: any
+  page: number,
+
+  // context props
+  t: string => string
 };
 
 class LinkPaginator extends React.Component<Props> {
-  //TODO: HATEOAS-Links verwenden
 
   renderFirstButton() {
     return (
@@ -26,30 +26,32 @@ class LinkPaginator extends React.Component<Props> {
   }
 
   renderPreviousButton(label?: string) {
-    const { match } = this.props;
-    const page = parseInt(match.params.page) || 1;
+    const { page } = this.props;
     const previousPage = page - 1;
 
     return (
       <Button
         className={"pagination-previous"}
         label={label ? label : previousPage.toString()}
-        disabled={previousPage < 1}
+        disabled={!this.hasLink("prev")}
         link={`${previousPage}`}
       />
     );
   }
 
-  renderNextButton(label?: string) {
-    const { match, collection } = this.props;
-    let page = parseInt(match.params.page) || 1;
+  hasLink(name: string) {
+    const { collection } = this.props;
+    return collection._links[name];
+  }
 
+  renderNextButton(label?: string) {
+    const { page } = this.props;
     const nextPage = page + 1;
     return (
       <Button
         className={"pagination-next"}
         label={label ? label : nextPage.toString()}
-        disabled={nextPage >= collection.pageTotal + 1}
+        disabled={!this.hasLink("next")}
         link={`${nextPage}`}
       />
     );
@@ -128,4 +130,4 @@ class LinkPaginator extends React.Component<Props> {
   }
 }
 
-export default withRouter(translate("commons")(LinkPaginator));
+export default translate("commons")(LinkPaginator);

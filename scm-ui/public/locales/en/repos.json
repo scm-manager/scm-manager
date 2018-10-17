@@ -59,6 +59,9 @@
       "mail": "Mail"
     }
   },
+  "branch-selector": {
+    "label": "Branches"
+  },
   "branch-chooser": {
     "error-title": "Error",
     "error-subtitle": "Could not fetch branches"

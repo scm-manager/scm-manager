@@ -1,18 +1,20 @@
 // @flow
 
 import React from "react";
+import classNames from "classnames";
 
 type Props = {
   options: string[],
   optionSelected: string => void,
-  preselectedOption?: string
+  preselectedOption?: string,
+  className: any
 };
 
 class DropDown extends React.Component<Props> {
   render() {
-    const { options, preselectedOption } = this.props;
+    const { options, preselectedOption, className } = this.props;
     return (
-      <div className="select">
+      <div className={classNames(className, "select")}>
         <select
           value={preselectedOption ? preselectedOption : ""}
           onChange={this.change}
