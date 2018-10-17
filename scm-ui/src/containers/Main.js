@@ -1,14 +1,14 @@
 //@flow
 import React from "react";
 
-import {Redirect, Route, Switch, withRouter} from "react-router-dom";
+import { Redirect, Route, Switch, withRouter } from "react-router-dom";
 
 import Overview from "../repos/containers/Overview";
 import Users from "../users/containers/Users";
 import Login from "../containers/Login";
 import Logout from "../containers/Logout";
 
-import {ProtectedRoute} from "@scm-manager/ui-components";
+import { ProtectedRoute } from "@scm-manager/ui-components";
 import AddUser from "../users/containers/AddUser";
 import SingleUser from "../users/containers/SingleUser";
 import RepositoryRoot from "../repos/containers/RepositoryRoot";

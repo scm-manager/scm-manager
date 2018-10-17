@@ -1,5 +1,5 @@
 // @flow
-import { getPageFromMatch } from "./Changesets";
+import { getPageFromMatch } from "./urls";
 
 describe("tests for getPageFromMatch", () => {
   function createMatch(page: string) {

@@ -21,7 +21,8 @@ import ChangesetList from "../components/changesets/ChangesetList";
 import {
   ErrorNotification,
   LinkPaginator,
-  Loading
+  Loading,
+  getPageFromMatch
 } from "@scm-manager/ui-components";
 import { compose } from "redux";
 
@@ -93,14 +94,6 @@ const mapDispatchToProps = dispatch => {
     }
   };
 };
-
-export function getPageFromMatch(match: any) {
-  let page = parseInt(match.params.page, 10);
-  if (isNaN(page) || !page) {
-    page = 1;
-  }
-  return page;
-}
 
 const mapStateToProps = (state: any, ownProps: Props) => {
   const { repository, branch, match } = ownProps;
