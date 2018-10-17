@@ -8,6 +8,7 @@ import ChangesetId from "./ChangesetId";
 import injectSheet from "react-jss";
 import { DateFromNow } from "@scm-manager/ui-components";
 import ChangesetAuthor from "./ChangesetAuthor";
+import ChangesetTag from "./ChangesetTag";
 
 const styles = {
   pointer: {
@@ -34,11 +35,17 @@ class ChangesetRow extends React.Component<Props> {
     return <ChangesetId changeset={changeset} repository={repository} />;
   };
 
+  getTags = () => {
+    const { changeset } = this.props;
+    return changeset._embedded.tags || [];
+  };
+
   render() {
     const { changeset, classes } = this.props;
     const changesetLink = this.createLink(changeset);
     const dateFromNow = <DateFromNow date={changeset.date} />;
     const authorLine = <ChangesetAuthor changeset={changeset} />;
+
     return (
       <article className={classNames("media", classes.inner)}>
         <ChangesetAvatar changeset={changeset} />
@@ -56,9 +63,24 @@ class ChangesetRow extends React.Component<Props> {
             <div className="is-size-7">{authorLine}</div>
           </div>
         </div>
+        {this.renderTags()}
       </article>
     );
   }
+
+  renderTags = () => {
+    const tags = this.getTags();
+    if (tags.length > 0) {
+      return (
+        <div className="media-right">
+          {tags.map((tag: Tag) => {
+            return <ChangesetTag tag={tag} />;
+          })}
+        </div>
+      );
+    }
+    return null;
+  };
 }
 
 export default injectSheet(styles)(translate("repos")(ChangesetRow));
