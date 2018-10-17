@@ -224,6 +224,35 @@ describe("changesets", () => {
         entries: ["changeset1", "changeset2", "changeset3"]
       });
     });
+
+    it("should not remove existing changesets", () => {
+      const state = {
+        "foo/bar": {
+          byId: {
+            id2: { id: "id2" },
+            id1: { id: "id1" }
+          },
+          list: {
+            entries: ["id1", "id2"]
+          }
+        }
+      };
+
+      const newState = reducer(
+        state,
+        fetchChangesetsSuccess(repository, undefined, responseBody)
+      );
+
+      const fooBar = newState["foo/bar"];
+
+      expect(fooBar.list.entries).toEqual([
+        "changeset1",
+        "changeset2",
+        "changeset3"
+      ]);
+      expect(fooBar.byId["id2"]).toEqual({ id: "id2" });
+      expect(fooBar.byId["id1"]).toEqual({ id: "id1" });
+    });
   });
 
   describe("changeset selectors", () => {
@@ -234,14 +263,17 @@ describe("changesets", () => {
         changesets: {
           "foo/bar": {
             byId: {
-              id1: { id: "id1" },
-              id2: { id: "id2" }
+              id2: { id: "id2" },
+              id1: { id: "id1" }
+            },
+            list: {
+              entries: ["id1", "id2"]
             }
           }
         }
       };
       const result = getChangesets(state, repository);
-      expect(result).toContainEqual({ id: "id1" });
+      expect(result).toEqual([{ id: "id1" }, { id: "id2" }]);
     });
 
     it("should return true, when fetching changesets is pending", () => {

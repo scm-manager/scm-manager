@@ -129,15 +129,20 @@ export default function reducer(
         return state;
       }
 
-      let oldChangesets = { [key]: {} };
-      if (state[key]) {
-        oldChangesets[key] = state[key];
+      let oldByIds = {};
+      if (state[key] && state[key].byId) {
+        oldByIds = state[key].byId;
       }
+
       const byIds = extractChangesetsByIds(changesets);
+
       return {
         ...state,
         [key]: {
-          byId: byIds,
+          byId: {
+            ...oldByIds,
+            ...byIds
+          },
           list: {
             entries: changesetIds,
             entry: {
@@ -170,10 +175,14 @@ export function getChangesets(
   branch?: Branch
 ) {
   const key = createItemId(repository, branch);
-  if (!state.changesets[key]) {
+
+  const changesets = state.changesets[key];
+  if (!changesets) {
     return null;
   }
-  return Object.values(state.changesets[key].byId);
+  return changesets.list.entries.map((id: string) => {
+    return changesets.byId[id];
+  });
 }
 
 export function isFetchChangesetsPending(
