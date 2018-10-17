@@ -85,16 +85,26 @@ class BranchRoot extends React.Component<Props> {
 
     return (
       <>
+        {this.renderBranchSelector()}
+        <Route path={`${url}/:page?`} component={() => changesets} />
+      </>
+    );
+  }
+
+  renderBranchSelector = () => {
+    const { repository, branches } = this.props;
+    if (repository._links.branches) {
+      return (
         <BranchSelector
           branches={branches}
           selected={(b: Branch) => {
             this.branchSelected(b);
           }}
         />
-        <Route path={`${url}/:page?`} component={() => changesets} />
-      </>
-    );
-  }
+      );
+    }
+    return null;
+  };
 }
 
 const mapDispatchToProps = dispatch => {
