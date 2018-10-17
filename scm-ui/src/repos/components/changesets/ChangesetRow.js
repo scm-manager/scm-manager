@@ -9,6 +9,7 @@ import injectSheet from "react-jss";
 import { DateFromNow } from "@scm-manager/ui-components";
 import ChangesetAuthor from "./ChangesetAuthor";
 import ChangesetTag from "./ChangesetTag";
+import { compose } from "redux";
 
 const styles = {
   pointer: {
@@ -74,7 +75,7 @@ class ChangesetRow extends React.Component<Props> {
       return (
         <div className="media-right">
           {tags.map((tag: Tag) => {
-            return <ChangesetTag tag={tag} />;
+            return <ChangesetTag key={tag.name} tag={tag} />;
           })}
         </div>
       );
@@ -83,4 +84,7 @@ class ChangesetRow extends React.Component<Props> {
   };
 }
 
-export default injectSheet(styles)(translate("repos")(ChangesetRow));
+export default compose(
+  injectSheet(styles),
+  translate("repos")
+)(ChangesetRow);

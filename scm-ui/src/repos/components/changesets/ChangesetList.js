@@ -12,10 +12,10 @@ type Props = {
 class ChangesetList extends React.Component<Props> {
   render() {
     const { repository, changesets } = this.props;
-    const content = changesets.map((changeset, index) => {
+    const content = changesets.map(changeset => {
       return (
         <ChangesetRow
-          key={index}
+          key={changeset.id}
           repository={repository}
           changeset={changeset}
         />
