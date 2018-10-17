@@ -79,9 +79,9 @@ class Changesets extends React.Component<Props> {
   };
 
   renderPaginator = () => {
-    const { list } = this.props;
+    const { page, list } = this.props;
     if (list) {
-      return <LinkPaginator collection={list} />;
+      return <LinkPaginator page={page} collection={list} />;
     }
     return null;
   };

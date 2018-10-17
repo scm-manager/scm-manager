@@ -56,7 +56,7 @@ class BranchRoot extends React.Component<Props> {
   branchSelected = (branch: Branch) => {
     const url = this.matchedUrl();
     this.props.history.push(
-      `${url}/${encodeURIComponent(branch.name)}/changesets`
+      `${url}/${encodeURIComponent(branch.name)}/changesets/`
     );
   };
 
