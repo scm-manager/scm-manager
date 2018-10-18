@@ -3,13 +3,15 @@ import React from "react";
 import type { Changeset, Repository, Tag } from "@scm-manager/ui-types";
 import classNames from "classnames";
 import { translate, Interpolate } from "react-i18next";
-import ChangesetAvatar from "./ChangesetAvatar";
 import ChangesetId from "./ChangesetId";
 import injectSheet from "react-jss";
 import { DateFromNow } from "@scm-manager/ui-components";
 import ChangesetAuthor from "./ChangesetAuthor";
 import ChangesetTag from "./ChangesetTag";
 import { compose } from "redux";
+import { parseDescription } from "./changesets";
+import AvatarWrapper from "./AvatarWrapper";
+import AvatarImage from "./AvatarImage";
 
 const styles = {
   pointer: {
@@ -46,14 +48,23 @@ class ChangesetRow extends React.Component<Props> {
     const changesetLink = this.createLink(changeset);
     const dateFromNow = <DateFromNow date={changeset.date} />;
     const authorLine = <ChangesetAuthor changeset={changeset} />;
+    const description = parseDescription(changeset.description);
 
     return (
       <article className={classNames("media", classes.inner)}>
-        <ChangesetAvatar changeset={changeset} />
+        <AvatarWrapper>
+          <div>
+            <figure className="media-left">
+              <p className="image is-64x64">
+                <AvatarImage changeset={changeset} />
+              </p>
+            </figure>
+          </div>
+        </AvatarWrapper>
         <div className={classNames("media-content", classes.withOverflow)}>
           <div className="content">
             <p className="is-ellipsis-overflow">
-              {changeset.description}
+              <strong>{description.title}</strong>
               <br />
               <Interpolate
                 i18nKey="changesets.changeset.summary"

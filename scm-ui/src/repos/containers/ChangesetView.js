@@ -9,7 +9,7 @@ import {
   getFetchChangesetFailure,
   isFetchChangesetPending
 } from "../modules/changesets";
-import ChangesetDetails from "../components/ChangesetDetails";
+import ChangesetDetails from "../components/changesets/ChangesetDetails";
 import { translate } from "react-i18next";
 import { Loading, ErrorPage } from "@scm-manager/ui-components";
 
