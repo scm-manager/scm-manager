@@ -63,6 +63,6 @@ public class IllegalArgumentExceptionMapper
   public Response toResponse(IllegalArgumentException exception)
   {
     log.info("caught IllegalArgumentException -- mapping to bad request", exception);
-    return Response.status(Status.BAD_REQUEST).build();
+    return Response.status(Status.BAD_REQUEST).entity(exception.getMessage()).build();
   }
 }

@@ -55,7 +55,7 @@ public final class HealthChecker {
     this.repositoryManager = repositoryManager;
   }
 
-  public void check(String id) throws NotFoundException {
+  public void check(String id){
     RepositoryPermissions.healthCheck(id).check();
 
     Repository repository = repositoryManager.get(id);
@@ -68,7 +68,7 @@ public final class HealthChecker {
   }
 
   public void check(Repository repository)
-    throws NotFoundException, ConcurrentModificationException {
+  {
     RepositoryPermissions.healthCheck(repository).check();
 
     doCheck(repository);
@@ -83,7 +83,7 @@ public final class HealthChecker {
       if (check.isPermitted(repository)) {
         try {
           check(repository);
-        } catch (ConcurrentModificationException | NotFoundException ex) {
+        } catch (NotFoundException ex) {
           logger.error("health check ends with exception", ex);
         }
       } else {
@@ -94,7 +94,7 @@ public final class HealthChecker {
     }
   }
 
-  private void doCheck(Repository repository) throws NotFoundException {
+  private void doCheck(Repository repository){
     logger.info("start health check for repository {}", repository.getName());
 
     HealthCheckResult result = HealthCheckResult.healthy();

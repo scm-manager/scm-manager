@@ -87,7 +87,7 @@ class ResourceLinks {
     }
 
     public String passwordChange(String name) {
-      return userLinkBuilder.method("getUserResource").parameters(name).method("changePassword").parameters().href();
+      return userLinkBuilder.method("getUserResource").parameters(name).method("overwritePassword").parameters().href();
     }
   }
 

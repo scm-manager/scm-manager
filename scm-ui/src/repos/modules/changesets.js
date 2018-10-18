@@ -8,9 +8,12 @@ import {
 import { apiClient } from "@scm-manager/ui-components";
 import { isPending } from "../../modules/pending";
 import { getFailure } from "../../modules/failure";
-import { combineReducers } from "redux";
-import type { Action, PagedCollection, Repository } from "@scm-manager/ui-types";
-import * as types from "../../modules/types";
+import type {
+  Action,
+  Branch,
+  PagedCollection,
+  Repository
+} from "@scm-manager/ui-types";
 
 export const FETCH_CHANGESETS = "scm/repos/FETCH_CHANGESETS";
 export const FETCH_CHANGESETS_PENDING = `${FETCH_CHANGESETS}_${PENDING_SUFFIX}`;
@@ -27,15 +30,11 @@ export const FETCH_CHANGESET_FAILURE = `${FETCH_CHANGESET}_${FAILURE_SUFFIX}`;
 //********end of detailed view add
 
 // actions
-const REPO_URL = "repositories";
 //TODO: Content type
 
 //********added for detailed view of changesets
 
-export function fetchChangesetIfNeeded(
-  repository: Repository,
-  id: string
-) {
+export function fetchChangesetIfNeeded(repository: Repository, id: string) {
   return (dispatch: any, getState: any) => {
     if (shouldFetchChangeset(getState(), repository, id)) {
       return dispatch(fetchChangeset(repository, id));
@@ -43,18 +42,13 @@ export function fetchChangesetIfNeeded(
   };
 }
 
-export function fetchChangeset(
-  repository: Repository,
-  id: string
-) {
+export function fetchChangeset(repository: Repository, id: string) {
   return function(dispatch: any) {
     dispatch(fetchChangesetPending(repository, id));
     return apiClient
-      .get(REPO_URL + `/${repository.namespace}/${repository.name}/changesets/${id}`)
+      .get(repository._links.changesets.href + id)
       .then(response => response.json())
-      .then(data =>
-        dispatch(fetchChangesetSuccess(data, repository, id))
-      )
+      .then(data => dispatch(fetchChangesetSuccess(data, repository, id)))
       .catch(err => {
         dispatch(fetchChangesetFailure(repository, id, err));
       });
@@ -67,11 +61,7 @@ export function fetchChangesetPending(
 ): Action {
   return {
     type: FETCH_CHANGESET_PENDING,
-    payload: {
-      repository,
-      id
-    },
-    itemId: createItemId(repository.namespace, repository.name, id)
+    itemId: createChangesetItemId(repository, id)
   };
 }
 
@@ -83,7 +73,7 @@ export function fetchChangesetSuccess(
   return {
     type: FETCH_CHANGESET_SUCCESS,
     payload: { changeset, repository, id },
-    itemId: createItemId(repository.namespace, repository.name, id)
+    itemId: createChangesetItemId(repository, id)
   };
 }
 
@@ -99,161 +89,167 @@ function fetchChangesetFailure(
       id,
       error
     },
-    itemId: createItemId(repository.namespace, repository.name, id)
+    itemId: createChangesetItemId(repository, id)
   };
 }
 
 //********end of detailed view add
 
-export function fetchChangesetsWithOptions(
-  namespace: string,
-  name: string,
-  branch?: string,
-  suffix?: string
+export function fetchChangesets(
+  repository: Repository,
+  branch?: Branch,
+  page?: number
 ) {
-  let link = REPO_URL + `/${namespace}/${name}`;
-  if (branch && branch !== "") {
-    link = link + `/branches/${branch}`;
-  }
-  link = link + "/changesets";
-  if (suffix) {
-    link = link + `${suffix}`;
-  }
+  const link = createChangesetsLink(repository, branch, page);
+
   return function(dispatch: any) {
-    dispatch(fetchChangesetsPending(namespace, name, branch));
+    dispatch(fetchChangesetsPending(repository, branch));
     return apiClient
       .get(link)
       .then(response => response.json())
       .then(data => {
-        dispatch(fetchChangesetsSuccess(data, namespace, name, branch));
+        dispatch(fetchChangesetsSuccess(repository, branch, data));
       })
       .catch(cause => {
-        dispatch(fetchChangesetsFailure(namespace, name, cause, branch));
+        dispatch(fetchChangesetsFailure(repository, branch, cause));
       });
   };
 }
 
-export function fetchChangesets(namespace: string, name: string) {
-  return fetchChangesetsWithOptions(namespace, name);
-}
-
-export function fetchChangesetsByPage(
-  namespace: string,
-  name: string,
-  page: number
+function createChangesetsLink(
+  repository: Repository,
+  branch?: Branch,
+  page?: number
 ) {
-  return fetchChangesetsWithOptions(namespace, name, "", `?page=${page}`);
-}
+  let link = repository._links.changesets.href;
 
-export function fetchChangesetsByBranchAndPage(
-  namespace: string,
-  name: string,
-  branch: string,
-  page: number
-) {
-  return fetchChangesetsWithOptions(namespace, name, branch, `?page=${page}`);
-}
+  if (branch) {
+    link = branch._links.history.href;
+  }
 
-export function fetchChangesetsByNamespaceNameAndBranch(
-  namespace: string,
-  name: string,
-  branch: string
-) {
-  return fetchChangesetsWithOptions(namespace, name, branch);
+  if (page) {
+    link = link + `?page=${page - 1}`;
+  }
+  return link;
 }
 
 export function fetchChangesetsPending(
-  namespace: string,
-  name: string,
-  branch?: string
+  repository: Repository,
+  branch?: Branch
 ): Action {
-  const itemId = createItemId(namespace, name, branch);
+  const itemId = createItemId(repository, branch);
+
   return {
     type: FETCH_CHANGESETS_PENDING,
-    payload: itemId,
     itemId
   };
 }
 
 export function fetchChangesetsSuccess(
-  changesets: any,
-  namespace: string,
-  name: string,
-  branch?: string
+  repository: Repository,
+  branch?: Branch,
+  changesets: any
 ): Action {
   return {
     type: FETCH_CHANGESETS_SUCCESS,
     payload: changesets,
-    itemId: createItemId(namespace, name, branch)
+    itemId: createItemId(repository, branch)
   };
 }
 
 function fetchChangesetsFailure(
-  namespace: string,
-  name: string,
-  error: Error,
-  branch?: string
+  repository: Repository,
+  branch?: Branch,
+  error: Error
 ): Action {
   return {
     type: FETCH_CHANGESETS_FAILURE,
     payload: {
-      namespace,
-      name,
-      branch,
-      error
+      repository,
+      error,
+      branch
     },
-    itemId: createItemId(namespace, name, branch)
+    itemId: createItemId(repository, branch)
   };
 }
 
-function createItemId(
-  namespace: string,
-  name: string,
-  branch?: string
-): string {
+function createChangesetItemId(repository: Repository, id: string) {
+  const { namespace, name } = repository;
+  return namespace + "/" + name + "/" + id;
+}
+
+function createItemId(repository: Repository, branch?: Branch): string {
+  const { namespace, name } = repository;
   let itemId = namespace + "/" + name;
-  if (branch && branch !== "") {
-    itemId = itemId + "/" + branch;
+  if (branch) {
+    itemId = itemId + "/" + branch.name;
   }
   return itemId;
 }
 
 // reducer
-function byKeyReducer(
+export default function reducer(
   state: any = {},
   action: Action = { type: "UNKNOWN" }
 ): Object {
+  if (!action.payload) {
+    return state;
+  }
+
+  const payload = action.payload;
   switch (action.type) {
-    //********added for detailed view of changesets
     case FETCH_CHANGESET_SUCCESS:
-      const _key = createItemId(
-        action.payload.repository.namespace,
-        action.payload.repository.name
-      );
-      let _oldChangesets = { [_key]: {} };
-      if (state[_key] !== undefined) {
-        _oldChangesets[_key] = state[_key];
+      const _key = createItemId(payload.repository);
+
+      let _oldByIds = {};
+      if (state[_key] && state[_key].byId) {
+        _oldByIds = state[_key].byId;
       }
+
+      const changeset = payload.changeset;
+
       return {
         ...state,
         [_key]: {
-          byId: addChangesetToChangesets(
-            action.payload.changeset,
-            _oldChangesets[_key].byId
-          )
+          ...state[_key],
+          byId: {
+            ..._oldByIds,
+            [changeset.id]: changeset
+          }
         }
       };
-    //********end of added for detailed view of changesets
+
     case FETCH_CHANGESETS_SUCCESS:
+      const changesets = payload._embedded.changesets;
+      const changesetIds = changesets.map(c => c.id);
       const key = action.itemId;
-      let oldChangesets = { [key]: {} };
-      if (state[key] !== undefined) {
-        oldChangesets[key] = state[key];
+
+      if (!key) {
+        return state;
       }
+
+      let oldByIds = {};
+      if (state[key] && state[key].byId) {
+        oldByIds = state[key].byId;
+      }
+
+      const byIds = extractChangesetsByIds(changesets);
+
       return {
         ...state,
         [key]: {
-          byId: extractChangesetsByIds(action.payload, oldChangesets[key].byId)
+          byId: {
+            ...oldByIds,
+            ...byIds
+          },
+          list: {
+            entries: changesetIds,
+            entry: {
+              page: payload.page,
+              pageTotal: payload.pageTotal,
+              _links: payload._links
+            }
+          }
         }
       };
     default:
@@ -261,54 +257,11 @@ function byKeyReducer(
   }
 }
 
-function listReducer(
-  state: any = {},
-  action: Action = { type: "UNKNOWN" }
-): Object {
-  switch (action.type) {
-    //********added for detailed view of changesets
-    case FETCH_CHANGESET_SUCCESS:
-      const changesetId = action.payload.changeset.id;
-      const stateEntries = state.entries ? state.entries : [];
-      stateEntries.push(changesetId);
-      return {
-        entries: stateEntries,
-        entry: {
-          ...state.entry
-        }
-      };
-    //********end of added for detailed view of changesets
-    case FETCH_CHANGESETS_SUCCESS:
-      const changesets = action.payload._embedded.changesets;
-      const changesetIds = changesets.map(c => c.id);
-      return {
-        entries: changesetIds,
-        entry: {
-          page: action.payload.page,
-          pageTotal: action.payload.pageTotal,
-          _links: action.payload._links
-        }
-      };
-    default:
-      return state;
-  }
-}
-
-export default combineReducers({
-  list: listReducer,
-  byKey: byKeyReducer
-});
-
-function extractChangesetsByIds(data: any, oldChangesetsByIds: any) {
-  const changesets = data._embedded.changesets;
+function extractChangesetsByIds(changesets: any) {
   const changesetsByIds = {};
 
   for (let changeset of changesets) {
     changesetsByIds[changeset.id] = changeset;
-  }
-
-  for (let id in oldChangesetsByIds) {
-    changesetsByIds[id] = oldChangesetsByIds[id];
   }
 
   return changesetsByIds;
@@ -332,28 +285,30 @@ function addChangesetToChangesets(data: any, oldChangesetsByIds: any) {
 //selectors
 export function getChangesets(
   state: Object,
-  namespace: string,
-  name: string,
-  branch?: string
+  repository: Repository,
+  branch?: Branch
 ) {
-  const key = createItemId(namespace, name, branch);
-  if (!state.changesets.byKey[key]) {
+  const key = createItemId(repository, branch);
+
+  const changesets = state.changesets[key];
+  if (!changesets) {
     return null;
   }
-  return Object.values(state.changesets.byKey[key].byId);
+  return changesets.list.entries.map((id: string) => {
+    return changesets.byId[id];
+  });
 }
 
 //********added for detailed view of changesets
 export function getChangeset(
   state: Object,
   repository: Repository,
-  id: string,
-  branch?: string
+  id: string
 ) {
-  const key = createItemId(repository.namespace, repository.name, branch);
+  const key = createItemId(repository);
   const changesets =
-    state.changesets && state.changesets.byKey && state.changesets.byKey[key]
-      ? state.changesets.byKey[key].byId
+    state.changesets && state.changesets[key]
+      ? state.changesets[key].byId
       : null;
   if (changesets != null && changesets[id]) {
     return changesets[id];
@@ -377,7 +332,11 @@ export function isFetchChangesetPending(
   repository: Repository,
   id: string
 ) {
-  return isPending(state, FETCH_CHANGESET, createItemId(repository.namespace, repository.name, id));
+  return isPending(
+    state,
+    FETCH_CHANGESET,
+    createChangesetItemId(repository, id)
+  );
 }
 
 export function getFetchChangesetFailure(
@@ -385,51 +344,54 @@ export function getFetchChangesetFailure(
   repository: Repository,
   id: string
 ) {
-  return getFailure(state, FETCH_CHANGESET, createItemId(repository.namespace, repository.name, id));
+  return getFailure(
+    state,
+    FETCH_CHANGESET,
+    createChangesetItemId(repository, id)
+  );
 }
 //********end of added for detailed view of changesets
 
 export function isFetchChangesetsPending(
   state: Object,
-  namespace: string,
-  name: string,
-  branch?: string
+  repository: Repository,
+  branch?: Branch
 ) {
-  return isPending(
-    state,
-    FETCH_CHANGESETS,
-    createItemId(namespace, name, branch)
-  );
+  return isPending(state, FETCH_CHANGESETS, createItemId(repository, branch));
 }
 
 export function getFetchChangesetsFailure(
   state: Object,
-  namespace: string,
-  name: string,
-  branch?: string
+  repository: Repository,
+  branch?: Branch
 ) {
-  return getFailure(
-    state,
-    FETCH_CHANGESETS,
-    createItemId(namespace, name, branch)
-  );
+  return getFailure(state, FETCH_CHANGESETS, createItemId(repository, branch));
 }
 
-const selectList = (state: Object) => {
-  if (state.changesets && state.changesets.list) {
-    return state.changesets.list;
+const selectList = (state: Object, repository: Repository, branch?: Branch) => {
+  const itemId = createItemId(repository, branch);
+  if (state.changesets[itemId] && state.changesets[itemId].list) {
+    return state.changesets[itemId].list;
   }
   return {};
 };
 
-const selectListEntry = (state: Object): Object => {
-  const list = selectList(state);
+const selectListEntry = (
+  state: Object,
+  repository: Repository,
+  branch?: Branch
+): Object => {
+  const list = selectList(state, repository, branch);
   if (list.entry) {
     return list.entry;
   }
   return {};
 };
 
-export const selectListAsCollection = (state: Object): PagedCollection => {
-  return selectListEntry(state);
+export const selectListAsCollection = (
+  state: Object,
+  repository: Repository,
+  branch?: Branch
+): PagedCollection => {
+  return selectListEntry(state, repository, branch);
 };

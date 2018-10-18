@@ -1,9 +1,7 @@
 // @flow
 import React from "react";
 import { translate } from "react-i18next";
-import {
-  Select
-} from "@scm-manager/ui-components";
+import { Select } from "@scm-manager/ui-components";
 
 type Props = {
   t: string => string,
@@ -15,7 +13,7 @@ type Props = {
 class TypeSelector extends React.Component<Props> {
   render() {
     const { type, handleTypeChange, loading } = this.props;
-    const types = ["READ", "OWNER", "WRITE"];
+    const types = ["READ", "WRITE", "OWNER"];
 
     return (
       <Select

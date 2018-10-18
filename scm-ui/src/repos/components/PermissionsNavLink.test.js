@@ -4,7 +4,6 @@ import "../../tests/enzyme";
 import "../../tests/i18n";
 import ReactRouterEnzymeContext from "react-router-enzyme-context";
 import PermissionsNavLink from "./PermissionsNavLink";
-import EditNavLink from "./EditNavLink";
 
 describe("PermissionsNavLink", () => {
   const options = new ReactRouterEnzymeContext();

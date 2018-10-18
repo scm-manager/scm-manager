@@ -71,7 +71,7 @@ public class ManagerDecorator<T extends ModelObject> implements Manager<T> {
   }
 
   @Override
-  public void delete(T object) throws NotFoundException {
+  public void delete(T object){
     decorated.delete(object);
   }
 
@@ -82,12 +82,12 @@ public class ManagerDecorator<T extends ModelObject> implements Manager<T> {
   }
 
   @Override
-  public void modify(T object) throws NotFoundException {
+  public void modify(T object){
     decorated.modify(object);
   }
 
   @Override
-  public void refresh(T object) throws NotFoundException {
+  public void refresh(T object){
     decorated.refresh(object);
   }
 
