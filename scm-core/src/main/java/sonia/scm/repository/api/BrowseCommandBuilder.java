@@ -46,7 +46,6 @@ import sonia.scm.repository.FileObjectNameComparator;
 import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryCacheKey;
-import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.repository.spi.BrowseCommand;
 import sonia.scm.repository.spi.BrowseCommandRequest;
 
@@ -138,7 +137,7 @@ public final class BrowseCommandBuilder
    *
    * @throws IOException
    */
-  public BrowserResult getBrowserResult() throws IOException, RevisionNotFoundException {
+  public BrowserResult getBrowserResult() throws IOException {
     BrowserResult result = null;
 
     if (disableCache)

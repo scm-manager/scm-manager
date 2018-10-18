@@ -39,7 +39,6 @@ import org.junit.Test;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.Modifications;
-import sonia.scm.repository.RevisionNotFoundException;
 
 import java.io.IOException;
 
@@ -151,7 +150,7 @@ public class HgLogCommandTest extends AbstractHgCommandTestBase
   }
 
   @Test
-  public void testGetCommit() throws IOException, RevisionNotFoundException {
+  public void testGetCommit() throws IOException {
     HgLogCommand command = createComamnd();
     String revision = "a9bacaf1b7fa0cebfca71fed4e59ed69a6319427";
     Changeset c =

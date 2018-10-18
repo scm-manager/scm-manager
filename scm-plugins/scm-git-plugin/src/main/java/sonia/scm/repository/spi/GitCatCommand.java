@@ -44,9 +44,8 @@ import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.treewalk.filter.PathFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.NotFoundException;
 import sonia.scm.repository.GitUtil;
-import sonia.scm.repository.PathNotFoundException;
-import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.util.Util;
 
 import java.io.Closeable;
@@ -65,7 +64,7 @@ public class GitCatCommand extends AbstractGitCommand implements CatCommand {
   }
 
   @Override
-  public void getCatResult(CatCommandRequest request, OutputStream output) throws IOException, PathNotFoundException, RevisionNotFoundException {
+  public void getCatResult(CatCommandRequest request, OutputStream output) throws IOException {
     logger.debug("try to read content for {}", request);
     try (ClosableObjectLoaderContainer closableObjectLoaderContainer = getLoader(request)) {
       closableObjectLoaderContainer.objectLoader.copyTo(output);
@@ -73,24 +72,24 @@ public class GitCatCommand extends AbstractGitCommand implements CatCommand {
   }
 
   @Override
-  public InputStream getCatResultStream(CatCommandRequest request) throws IOException, PathNotFoundException, RevisionNotFoundException {
+  public InputStream getCatResultStream(CatCommandRequest request) throws IOException {
     logger.debug("try to read content for {}", request);
     return new InputStreamWrapper(getLoader(request));
   }
 
-  void getContent(org.eclipse.jgit.lib.Repository repo, ObjectId revId, String path, OutputStream output) throws IOException, PathNotFoundException, RevisionNotFoundException {
+  void getContent(org.eclipse.jgit.lib.Repository repo, ObjectId revId, String path, OutputStream output) throws IOException {
     try (ClosableObjectLoaderContainer closableObjectLoaderContainer = getLoader(repo, revId, path)) {
       closableObjectLoaderContainer.objectLoader.copyTo(output);
     }
   }
 
-  private ClosableObjectLoaderContainer getLoader(CatCommandRequest request) throws IOException, PathNotFoundException, RevisionNotFoundException {
+  private ClosableObjectLoaderContainer getLoader(CatCommandRequest request) throws IOException {
     org.eclipse.jgit.lib.Repository repo = open();
     ObjectId revId = getCommitOrDefault(repo, request.getRevision());
     return getLoader(repo, revId, request.getPath());
   }
 
-  private ClosableObjectLoaderContainer getLoader(Repository repo, ObjectId revId, String path) throws IOException, PathNotFoundException, RevisionNotFoundException {
+  private ClosableObjectLoaderContainer getLoader(Repository repo, ObjectId revId, String path) throws IOException {
     TreeWalk treeWalk = new TreeWalk(repo);
     treeWalk.setRecursive(Util.nonNull(path).contains("/"));
 
@@ -102,7 +101,7 @@ public class GitCatCommand extends AbstractGitCommand implements CatCommand {
     try {
       entry = revWalk.parseCommit(revId);
     } catch (MissingObjectException e) {
-      throw new RevisionNotFoundException(revId.getName());
+      throw NotFoundException.notFound("Revision", revId.getName()).in(repository).build();
     }
     RevTree revTree = entry.getTree();
 
@@ -120,7 +119,7 @@ public class GitCatCommand extends AbstractGitCommand implements CatCommand {
 
       return new ClosableObjectLoaderContainer(loader, treeWalk, revWalk);
     } else {
-      throw new PathNotFoundException(path);
+      throw NotFoundException.notFound("Path", path).in("Revision", revId.getName()).in(repository).build();
     }
   }
 

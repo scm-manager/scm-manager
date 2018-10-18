@@ -32,18 +32,20 @@ package sonia.scm.api.v2.resources;
 
 
 import sonia.scm.NotFoundException;
-import sonia.scm.api.rest.StatusExceptionMapper;
+import sonia.scm.web.VndMediaType;
 
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 /**
  * @since 2.0.0
  */
 @Provider
-public class NotFoundExceptionMapper extends StatusExceptionMapper<NotFoundException> {
-
-  public NotFoundExceptionMapper() {
-    super(NotFoundException.class, Response.Status.NOT_FOUND);
+public class NotFoundExceptionMapper implements ExceptionMapper<NotFoundException> {
+  @Override
+  public Response toResponse(NotFoundException exception) {
+    return Response.status(Response.Status.NOT_FOUND).entity(ErrorDto.from(exception)).type(VndMediaType.ERROR_TYPE).build();
   }
 }

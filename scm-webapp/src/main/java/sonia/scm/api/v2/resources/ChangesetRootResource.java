@@ -11,8 +11,6 @@ import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.repository.RepositoryPermissions;
-import sonia.scm.repository.RevisionNotFoundException;
-import sonia.scm.repository.api.LogCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.web.VndMediaType;
@@ -56,7 +54,7 @@ public class ChangesetRootResource {
   @Produces(VndMediaType.CHANGESET_COLLECTION)
   @TypeHint(CollectionDto.class)
   public Response getAll(@PathParam("namespace") String namespace, @PathParam("name") String name, @DefaultValue("0") @QueryParam("page") int page,
-                         @DefaultValue("10") @QueryParam("pageSize") int pageSize) throws IOException, RevisionNotFoundException, RepositoryNotFoundException {
+                         @DefaultValue("10") @QueryParam("pageSize") int pageSize) throws IOException {
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
       Repository repository = repositoryService.getRepository();
       RepositoryPermissions.read(repository).check();
@@ -89,7 +87,7 @@ public class ChangesetRootResource {
   @Produces(VndMediaType.CHANGESET)
   @TypeHint(ChangesetDto.class)
   @Path("{id}")
-  public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("id") String id) throws IOException, RevisionNotFoundException, RepositoryNotFoundException {
+  public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("id") String id) throws IOException {
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
       Repository repository = repositoryService.getRepository();
       RepositoryPermissions.read(repository).check();

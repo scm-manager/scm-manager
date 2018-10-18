@@ -39,7 +39,6 @@ import org.junit.Test;
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.FileObject;
 import sonia.scm.repository.GitConstants;
-import sonia.scm.repository.RevisionNotFoundException;
 
 import java.io.IOException;
 import java.util.List;
@@ -63,7 +62,7 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase
    * Test browse command with default branch.
    */
   @Test
-  public void testDefaultBranch() throws IOException, RevisionNotFoundException {
+  public void testDefaultBranch() throws IOException {
     // without default branch, the repository head should be used
     BrowserResult result = createCommand().getBrowserResult(new BrowseCommandRequest());
     assertNotNull(result);
@@ -93,7 +92,7 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase
   }
 
   @Test
-  public void testBrowse() throws IOException, RevisionNotFoundException {
+  public void testBrowse() throws IOException {
     BrowserResult result =
       createCommand().getBrowserResult(new BrowseCommandRequest());
 
@@ -134,7 +133,7 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase
   }
 
   @Test
-  public void testBrowseSubDirectory() throws IOException, RevisionNotFoundException {
+  public void testBrowseSubDirectory() throws IOException {
     BrowseCommandRequest request = new BrowseCommandRequest();
 
     request.setPath("c");
@@ -181,7 +180,7 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase
   }
 
   @Test
-  public void testRecusive() throws IOException, RevisionNotFoundException {
+  public void testRecusive() throws IOException {
     BrowseCommandRequest request = new BrowseCommandRequest();
 
     request.setRecursive(true);

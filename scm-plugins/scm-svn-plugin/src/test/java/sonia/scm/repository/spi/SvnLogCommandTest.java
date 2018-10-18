@@ -38,7 +38,6 @@ import org.junit.Test;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.Modifications;
-import sonia.scm.repository.RevisionNotFoundException;
 
 import java.io.IOException;
 
@@ -57,7 +56,7 @@ public class SvnLogCommandTest extends AbstractSvnCommandTestBase
 {
 
   @Test
-  public void testGetAll() throws RevisionNotFoundException {
+  public void testGetAll() {
     ChangesetPagingResult result =
       createCommand().getChangesets(new LogCommandRequest());
 
@@ -67,7 +66,7 @@ public class SvnLogCommandTest extends AbstractSvnCommandTestBase
   }
 
   @Test
-  public void testGetAllByPath() throws RevisionNotFoundException {
+  public void testGetAllByPath() {
     LogCommandRequest request = new LogCommandRequest();
 
     request.setPath("a.txt");
@@ -83,7 +82,7 @@ public class SvnLogCommandTest extends AbstractSvnCommandTestBase
   }
 
   @Test
-  public void testGetAllWithLimit() throws RevisionNotFoundException {
+  public void testGetAllWithLimit() {
     LogCommandRequest request = new LogCommandRequest();
 
     request.setPagingLimit(2);
@@ -106,7 +105,7 @@ public class SvnLogCommandTest extends AbstractSvnCommandTestBase
   }
 
   @Test
-  public void testGetAllWithPaging() throws RevisionNotFoundException {
+  public void testGetAllWithPaging() {
     LogCommandRequest request = new LogCommandRequest();
 
     request.setPagingStart(1);
@@ -130,7 +129,7 @@ public class SvnLogCommandTest extends AbstractSvnCommandTestBase
   }
 
   @Test
-  public void testGetCommit() throws RevisionNotFoundException, IOException {
+  public void testGetCommit() {
     Changeset c = createCommand().getChangeset("3");
 
     assertNotNull(c);
@@ -151,7 +150,7 @@ public class SvnLogCommandTest extends AbstractSvnCommandTestBase
   }
 
   @Test
-  public void testGetRange() throws RevisionNotFoundException {
+  public void testGetRange() {
     LogCommandRequest request = new LogCommandRequest();
 
     request.setStartChangeset("2");

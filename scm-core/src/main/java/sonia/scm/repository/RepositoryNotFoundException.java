@@ -45,7 +45,7 @@ public class RepositoryNotFoundException extends NotFoundException
 {
 
   private static final long serialVersionUID = -6583078808900520166L;
-  private static final String TYPE_REPOSITORY = "repository";
+  private static final String TYPE_REPOSITORY = "Repository";
 
   //~--- constructors ---------------------------------------------------------
 
@@ -55,7 +55,7 @@ public class RepositoryNotFoundException extends NotFoundException
    *
    */
   public RepositoryNotFoundException(Repository repository) {
-    super(TYPE_REPOSITORY, repository.getName() + "/"  + repository.getNamespace());
+    super(Repository.class, repository.getNamespaceAndName().logString());
   }
 
   public RepositoryNotFoundException(String repositoryId) {
@@ -63,6 +63,6 @@ public class RepositoryNotFoundException extends NotFoundException
   }
 
   public RepositoryNotFoundException(NamespaceAndName namespaceAndName) {
-    super(TYPE_REPOSITORY, namespaceAndName.toString());
+    super(Repository.class, namespaceAndName.logString());
   }
 }

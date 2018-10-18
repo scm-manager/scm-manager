@@ -48,12 +48,12 @@ import org.eclipse.jgit.treewalk.filter.PathFilter;
 import org.eclipse.jgit.treewalk.filter.TreeFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.NotFoundException;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.GitChangesetConverter;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.InternalRepositoryException;
-import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.util.IOUtil;
 
 import java.io.IOException;
@@ -85,7 +85,6 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
    *
    * @param context
    * @param repository
-   * @param repositoryDirectory
    */
   GitLogCommand(GitContext context, sonia.scm.repository.Repository repository)
   {
@@ -162,7 +161,7 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
    */
   @Override
   @SuppressWarnings("unchecked")
-  public ChangesetPagingResult getChangesets(LogCommandRequest request) throws RevisionNotFoundException {
+  public ChangesetPagingResult getChangesets(LogCommandRequest request) {
     if (logger.isDebugEnabled()) {
       logger.debug("fetch changesets for request: {}", request);
     }
@@ -249,7 +248,7 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
     }
     catch (MissingObjectException e)
     {
-      throw new RevisionNotFoundException(e.getObjectId().name());
+      throw NotFoundException.notFound("Revision", e.getObjectId().getName()).in(repository).build();
     }
     catch (Exception ex)
     {

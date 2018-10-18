@@ -48,7 +48,6 @@ import org.tmatesoft.svn.core.wc.SVNDiffClient;
 import org.tmatesoft.svn.core.wc.SVNRevision;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.repository.SvnUtil;
 import sonia.scm.repository.api.DiffFormat;
 import sonia.scm.util.Util;
@@ -76,7 +75,7 @@ public class SvnDiffCommand extends AbstractSvnCommand implements DiffCommand
   }
 
   @Override
-  public void getDiffResult(DiffCommandRequest request, OutputStream output) throws RevisionNotFoundException {
+  public void getDiffResult(DiffCommandRequest request, OutputStream output) {
     if (logger.isDebugEnabled())
     {
       logger.debug("create diff for {}", request);
@@ -111,7 +110,7 @@ public class SvnDiffCommand extends AbstractSvnCommand implements DiffCommand
       diffGenerator.setDiffDeleted(true);
       diffClient.setDiffGenerator(diffGenerator);
 
-      long currentRev = SvnUtil.getRevisionNumber(request.getRevision());
+      long currentRev = SvnUtil.getRevisionNumber(request.getRevision(), repository);
 
       diffClient.setGitDiffFormat(request.getFormat() == DiffFormat.GIT);
 

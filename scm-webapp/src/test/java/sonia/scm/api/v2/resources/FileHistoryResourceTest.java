@@ -18,6 +18,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import sonia.scm.NotFoundException;
 import sonia.scm.api.rest.AuthorizationExceptionMapper;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
@@ -26,7 +27,6 @@ import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryNotFoundException;
-import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.repository.api.LogCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
@@ -79,7 +79,7 @@ public class FileHistoryResourceTest extends RepositoryTestBase {
 
 
   @Before
-  public void prepareEnvironment() throws Exception {
+  public void prepareEnvironment() {
     fileHistoryCollectionToDtoMapper = new FileHistoryCollectionToDtoMapper(changesetToChangesetDtoMapper, resourceLinks);
     fileHistoryRootResource = new FileHistoryRootResource(serviceFactory, fileHistoryCollectionToDtoMapper);
     super.fileHistoryRootResource = Providers.of(fileHistoryRootResource);
@@ -134,7 +134,7 @@ public class FileHistoryResourceTest extends RepositoryTestBase {
 
   @Test
   public void shouldGet404OnMissingRepository() throws URISyntaxException, RepositoryNotFoundException {
-    when(serviceFactory.create(any(NamespaceAndName.class))).thenThrow(RepositoryNotFoundException.class);
+    when(serviceFactory.create(any(NamespaceAndName.class))).thenThrow(new NotFoundException("Text", "x"));
     MockHttpRequest request = MockHttpRequest
       .get(FILE_HISTORY_URL + "revision/a.txt")
       .accept(VndMediaType.CHANGESET_COLLECTION);
@@ -152,7 +152,7 @@ public class FileHistoryResourceTest extends RepositoryTestBase {
     when(logCommandBuilder.setPagingLimit(anyInt())).thenReturn(logCommandBuilder);
     when(logCommandBuilder.setStartChangeset(eq(id))).thenReturn(logCommandBuilder);
     when(logCommandBuilder.setPath(eq(path))).thenReturn(logCommandBuilder);
-    when(logCommandBuilder.getChangesets()).thenThrow(RevisionNotFoundException.class);
+    when(logCommandBuilder.getChangesets()).thenThrow(new NotFoundException("Text", "x"));
 
     MockHttpRequest request = MockHttpRequest
       .get(FILE_HISTORY_URL + id + "/" + path)

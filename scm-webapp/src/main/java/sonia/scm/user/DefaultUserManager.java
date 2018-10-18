@@ -219,7 +219,7 @@ public class DefaultUserManager extends AbstractUserManager
 
     if (fresh == null)
     {
-      throw new NotFoundException();
+      throw new NotFoundException(User.class, user.getName());
     }
 
     fresh.copyProperties(user);
@@ -419,7 +419,7 @@ public class DefaultUserManager extends AbstractUserManager
   public void overwritePassword(String userId, String newPassword) {
     User user = get(userId);
     if (user == null) {
-      throw new NotFoundException();
+      throw new NotFoundException(User.class, userId);
     }
     if (!isTypeDefault(user)) {
       throw new ChangePasswordNotAllowedException(user.getType());

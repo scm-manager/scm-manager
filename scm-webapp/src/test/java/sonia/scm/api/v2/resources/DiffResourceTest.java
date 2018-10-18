@@ -17,11 +17,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import sonia.scm.NotFoundException;
 import sonia.scm.api.rest.AuthorizationExceptionMapper;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryNotFoundException;
-import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.repository.api.DiffCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
@@ -62,7 +62,7 @@ public class DiffResourceTest extends RepositoryTestBase {
 
 
   @Before
-  public void prepareEnvironment() throws Exception {
+  public void prepareEnvironment() {
     diffRootResource = new DiffRootResource(serviceFactory);
     super.diffRootResource = Providers.of(diffRootResource);
     dispatcher.getRegistry().addSingletonResource(getRepositoryRootResource());
@@ -108,7 +108,7 @@ public class DiffResourceTest extends RepositoryTestBase {
 
   @Test
   public void shouldGet404OnMissingRepository() throws URISyntaxException, RepositoryNotFoundException {
-    when(serviceFactory.create(any(NamespaceAndName.class))).thenThrow(RepositoryNotFoundException.class);
+    when(serviceFactory.create(any(NamespaceAndName.class))).thenThrow(new NotFoundException("Text", "x"));
     MockHttpRequest request = MockHttpRequest
       .get(DIFF_URL + "revision")
       .accept(VndMediaType.DIFF);
@@ -120,20 +120,22 @@ public class DiffResourceTest extends RepositoryTestBase {
   @Test
   public void shouldGet404OnMissingRevision() throws Exception {
     when(diffCommandBuilder.setRevision(anyString())).thenReturn(diffCommandBuilder);
-    when(diffCommandBuilder.retriveContent(any())).thenThrow(RevisionNotFoundException.class);
+    when(diffCommandBuilder.retriveContent(any())).thenThrow(new NotFoundException("Text", "x"));
 
     MockHttpRequest request = MockHttpRequest
       .get(DIFF_URL + "revision")
       .accept(VndMediaType.DIFF);
     MockHttpResponse response = new MockHttpResponse();
+
     dispatcher.invoke(request, response);
+
     assertEquals(404, response.getStatus());
   }
 
   @Test
   public void shouldGet400OnCrlfInjection() throws Exception {
     when(diffCommandBuilder.setRevision(anyString())).thenReturn(diffCommandBuilder);
-    when(diffCommandBuilder.retriveContent(any())).thenThrow(RevisionNotFoundException.class);
+    when(diffCommandBuilder.retriveContent(any())).thenThrow(new NotFoundException("Text", "x"));
 
     MockHttpRequest request = MockHttpRequest
       .get(DIFF_URL + "ny%0D%0ASet-cookie:%20Tamper=3079675143472450634")

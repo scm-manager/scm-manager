@@ -5,6 +5,7 @@ import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import sonia.scm.NotFoundException;
 import sonia.scm.PageResult;
+import sonia.scm.repository.Branch;
 import sonia.scm.repository.Branches;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
@@ -105,7 +106,7 @@ public class BranchRootResource {
         .stream()
         .anyMatch(branch -> branchName.equals(branch.getName()));
       if (!branchExists){
-        throw new NotFoundException("branch", branchName);
+        throw NotFoundException.notFound(Branch.class, branchName).in(Repository.class, namespace + "/" + name).build();
       }
       Repository repository = repositoryService.getRepository();
       RepositoryPermissions.read(repository).check();

@@ -30,7 +30,7 @@ public class ManagerDaoAdapter<T extends ModelObject> {
 
       afterUpdate.handle(notModified);
     } else {
-      throw new NotFoundException();
+      throw new NotFoundException(object.getClass(), object.getId());
     }
   }
 
@@ -58,7 +58,7 @@ public class ManagerDaoAdapter<T extends ModelObject> {
       dao.delete(toDelete);
       afterDelete.handle(toDelete);
     } else {
-      throw new NotFoundException();
+      throw new NotFoundException(toDelete.getClass(), toDelete.getId());
     }
   }
 

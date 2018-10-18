@@ -185,7 +185,7 @@ public class UserRootResourceTest {
       .content(content.getBytes());
     MockHttpResponse response = new MockHttpResponse();
 
-    doThrow(NotFoundException.class).when(userManager).overwritePassword(any(), any());
+    doThrow(new NotFoundException("Test", "x")).when(userManager).overwritePassword(any(), any());
 
     dispatcher.invoke(request, response);
 

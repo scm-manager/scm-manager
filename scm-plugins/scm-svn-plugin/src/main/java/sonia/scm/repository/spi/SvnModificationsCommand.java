@@ -7,11 +7,9 @@ import org.tmatesoft.svn.core.io.SVNRepository;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Modifications;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.repository.SvnUtil;
 import sonia.scm.util.Util;
 
-import java.io.IOException;
 import java.util.Collection;
 
 @Slf4j
@@ -24,11 +22,11 @@ public class SvnModificationsCommand extends AbstractSvnCommand implements Modif
 
   @Override
   @SuppressWarnings("unchecked")
-  public Modifications getModifications(String revision) throws IOException, RevisionNotFoundException {
+  public Modifications getModifications(String revision) {
     Modifications modifications = null;
     log.debug("get modifications {}", revision);
     try {
-      long revisionNumber = SvnUtil.parseRevision(revision);
+      long revisionNumber = SvnUtil.parseRevision(revision, repository);
       SVNRepository repo = open();
       Collection<SVNLogEntry> entries = repo.log(null, null, revisionNumber,
         revisionNumber, true, true);
@@ -42,7 +40,7 @@ public class SvnModificationsCommand extends AbstractSvnCommand implements Modif
   }
 
   @Override
-  public Modifications getModifications(ModificationsCommandRequest request) throws IOException, RevisionNotFoundException {
+  public Modifications getModifications(ModificationsCommandRequest request) {
     return getModifications(request.getRevision());
   }
 

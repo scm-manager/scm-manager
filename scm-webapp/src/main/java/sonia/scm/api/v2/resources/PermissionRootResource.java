@@ -109,7 +109,7 @@ public class PermissionRootResource {
         .filter(filterPermission(permissionName))
         .map(permission -> modelToDtoMapper.map(permission, repository))
         .findFirst()
-        .orElseThrow(NotFoundException::new)
+        .orElseThrow(() -> NotFoundException.notFound(Permission.class, namespace).in(Repository.class, namespace + "/" + name).build())
     ).build();
   }
 
@@ -164,7 +164,7 @@ public class PermissionRootResource {
     RepositoryPermissions.permissionWrite(repository).check();
     String extractedPermissionName = getPermissionName(permissionName);
     if (!isPermissionExist(new PermissionDto(extractedPermissionName, isGroupPermission(permissionName)), repository)) {
-      throw new NotFoundException("permission", extractedPermissionName);
+      throw NotFoundException.notFound(Permission.class, namespace).in(Repository.class, namespace + "/" + name).build();
     }
     permission.setGroupPermission(isGroupPermission(permissionName));
     if (!extractedPermissionName.equals(permission.getName())) {
@@ -174,7 +174,7 @@ public class PermissionRootResource {
       .stream()
       .filter(filterPermission(permissionName))
       .findFirst()
-      .orElseThrow(NotFoundException::new);
+      .orElseThrow(() -> NotFoundException.notFound(Permission.class, namespace).in(Repository.class, namespace + "/" + name).build());
     dtoToModelMapper.modify(existingPermission, permission);
     manager.modify(repository);
     log.info("the permission with name: {} is updated.", permissionName);

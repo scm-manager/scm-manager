@@ -50,13 +50,12 @@ import org.eclipse.jgit.treewalk.filter.PathFilter;
 import org.eclipse.jgit.treewalk.filter.TreeFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.NotFoundException;
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.FileObject;
 import sonia.scm.repository.GitSubModuleParser;
 import sonia.scm.repository.GitUtil;
-import sonia.scm.repository.PathNotFoundException;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.repository.SubRepository;
 import sonia.scm.util.Util;
 
@@ -103,7 +102,7 @@ public class GitBrowseCommand extends AbstractGitCommand
   @Override
   @SuppressWarnings("unchecked")
   public BrowserResult getBrowserResult(BrowseCommandRequest request)
-    throws IOException, RevisionNotFoundException {
+    throws IOException {
     logger.debug("try to create browse result for {}", request);
 
     BrowserResult result;
@@ -157,7 +156,7 @@ public class GitBrowseCommand extends AbstractGitCommand
    */
   private FileObject createFileObject(org.eclipse.jgit.lib.Repository repo,
     BrowseCommandRequest request, ObjectId revId, TreeWalk treeWalk)
-    throws IOException, RevisionNotFoundException {
+    throws IOException {
     FileObject file;
 
     try
@@ -267,7 +266,7 @@ public class GitBrowseCommand extends AbstractGitCommand
 
   private BrowserResult getResult(org.eclipse.jgit.lib.Repository repo,
     BrowseCommandRequest request, ObjectId revId)
-    throws IOException, RevisionNotFoundException {
+    throws IOException {
     BrowserResult result = null;
     RevWalk revWalk = null;
     TreeWalk treeWalk = null;
@@ -364,7 +363,7 @@ public class GitBrowseCommand extends AbstractGitCommand
   private Map<String,
     SubRepository> getSubRepositories(org.eclipse.jgit.lib.Repository repo,
       ObjectId revision)
-    throws IOException, RevisionNotFoundException {
+    throws IOException {
     if (logger.isDebugEnabled())
     {
       logger.debug("read submodules of {} at {}", repository.getName(),
@@ -378,7 +377,7 @@ public class GitBrowseCommand extends AbstractGitCommand
         PATH_MODULES, baos);
       subRepositories = GitSubModuleParser.parse(baos.toString());
     }
-    catch (PathNotFoundException ex)
+    catch (NotFoundException ex)
     {
       logger.trace("could not find .gitmodules", ex);
       subRepositories = Collections.EMPTY_MAP;
@@ -389,7 +388,7 @@ public class GitBrowseCommand extends AbstractGitCommand
 
   private SubRepository getSubRepository(org.eclipse.jgit.lib.Repository repo,
     ObjectId revId, String path)
-    throws IOException, RevisionNotFoundException {
+    throws IOException {
     Map<String, SubRepository> subRepositories = subrepositoryCache.get(revId);
 
     if (subRepositories == null)

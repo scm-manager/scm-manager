@@ -14,7 +14,6 @@ import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.FileObject;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.RepositoryNotFoundException;
-import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.repository.api.BrowseCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
@@ -69,7 +68,7 @@ public class SourceRootResourceTest extends RepositoryTestBase {
   }
 
   @Test
-  public void shouldReturnSources() throws URISyntaxException, IOException, RevisionNotFoundException {
+  public void shouldReturnSources() throws URISyntaxException, IOException {
     BrowserResult result = createBrowserResult();
     when(browseCommandBuilder.getBrowserResult()).thenReturn(result);
     MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/sources");
@@ -83,7 +82,7 @@ public class SourceRootResourceTest extends RepositoryTestBase {
 
   @Test
   public void shouldReturn404IfRepoNotFound() throws URISyntaxException, RepositoryNotFoundException {
-    when(serviceFactory.create(new NamespaceAndName("idont", "exist"))).thenThrow(RepositoryNotFoundException.class);
+    when(serviceFactory.create(new NamespaceAndName("idont", "exist"))).thenThrow(new RepositoryNotFoundException("abc"));
     MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "idont/exist/sources");
     MockHttpResponse response = new MockHttpResponse();
 
@@ -92,7 +91,7 @@ public class SourceRootResourceTest extends RepositoryTestBase {
   }
 
   @Test
-  public void shouldGetResultForSingleFile() throws URISyntaxException, IOException, RevisionNotFoundException {
+  public void shouldGetResultForSingleFile() throws URISyntaxException, IOException {
     BrowserResult browserResult = new BrowserResult();
     browserResult.setRevision("revision");
     FileObject fileObject = new FileObject();
@@ -111,7 +110,7 @@ public class SourceRootResourceTest extends RepositoryTestBase {
 
   @Test
   public void shouldGet404ForSingleFileIfRepoNotFound() throws URISyntaxException, RepositoryNotFoundException {
-    when(serviceFactory.create(new NamespaceAndName("idont", "exist"))).thenThrow(RepositoryNotFoundException.class);
+    when(serviceFactory.create(new NamespaceAndName("idont", "exist"))).thenThrow(new RepositoryNotFoundException("abc"));
 
     MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "idont/exist/sources/revision/fileabc");
     MockHttpResponse response = new MockHttpResponse();

@@ -156,37 +156,6 @@ public final class RepositoryServiceFactory
    * Creates a new RepositoryService for the given repository.
    *
    *
-   * @param repositoryId id of the repository
-   *
-   * @return a implementation of RepositoryService
-   *         for the given type of repository
-   *
-   * @throws RepositoryNotFoundException if no repository
-   *         with the given id is available
-   * @throws RepositoryServiceNotFoundException if no repository service
-   *         implementation for this kind of repository is available
-   * @throws IllegalArgumentException if the repository id is null or empty
-   * @throws ScmSecurityException if current user has not read permissions
-   *         for that repository
-   */
-  public RepositoryService create(String repositoryId) throws RepositoryNotFoundException {
-    Preconditions.checkArgument(!Strings.isNullOrEmpty(repositoryId),
-      "a non empty repositoryId is required");
-
-    Repository repository = repositoryManager.get(repositoryId);
-
-    if (repository == null)
-    {
-      throw new RepositoryNotFoundException(repositoryId);
-    }
-
-    return create(repository);
-  }
-
-  /**
-   * Creates a new RepositoryService for the given repository.
-   *
-   *
    * @param namespaceAndName namespace and name of the repository
    *
    * @return a implementation of RepositoryService

@@ -63,7 +63,7 @@ public class HttpProtocolServletTest {
     when(userAgentParser.parse(request)).thenReturn(userAgent);
     when(userAgent.isBrowser()).thenReturn(false);
     NamespaceAndName existingRepo = new NamespaceAndName("space", "repo");
-    when(serviceFactory.create(not(eq(existingRepo)))).thenThrow(RepositoryNotFoundException.class);
+    when(serviceFactory.create(not(eq(existingRepo)))).thenThrow(new RepositoryNotFoundException("x"));
     when(serviceFactory.create(existingRepo)).thenReturn(repositoryService);
     when(requestProvider.get()).thenReturn(httpServletRequest);
   }

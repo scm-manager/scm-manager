@@ -32,7 +32,6 @@
 package sonia.scm.repository.spi;
 
 import sonia.scm.repository.Modifications;
-import sonia.scm.repository.RevisionNotFoundException;
 
 import java.io.IOException;
 
@@ -46,8 +45,8 @@ import java.io.IOException;
  */
 public interface ModificationsCommand {
 
-  Modifications getModifications(String revision) throws IOException, RevisionNotFoundException;
+  Modifications getModifications(String revision) throws IOException;
 
-  Modifications getModifications(ModificationsCommandRequest request) throws IOException, RevisionNotFoundException;
+  Modifications getModifications(ModificationsCommandRequest request) throws IOException;
 
 }

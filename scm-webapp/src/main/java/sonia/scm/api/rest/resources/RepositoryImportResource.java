@@ -50,6 +50,7 @@ import sonia.scm.NotFoundException;
 import sonia.scm.NotSupportedFeatuerException;
 import sonia.scm.Type;
 import sonia.scm.api.rest.RestActionUploadResult;
+import sonia.scm.api.v2.resources.RepositoryResource;
 import sonia.scm.repository.*;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.RepositoryService;

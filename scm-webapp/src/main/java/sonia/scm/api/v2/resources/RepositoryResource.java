@@ -203,8 +203,8 @@ public class RepositoryResource {
     }
   }
 
-  private Supplier<Optional<Repository>> loadBy(String namespace, String name) {
-    return () -> Optional.ofNullable(manager.get(new NamespaceAndName(namespace, name)));
+  private Supplier<Repository> loadBy(String namespace, String name) {
+    return () -> Optional.ofNullable(manager.get(new NamespaceAndName(namespace, name))).orElseThrow(() -> new NotFoundException(Repository.class, namespace + "/" + name));
   }
 
   private Predicate<Repository> nameAndNamespaceStaysTheSame(String namespace, String name) {

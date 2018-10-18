@@ -32,10 +32,13 @@
 
 package sonia.scm.repository.spi;
 
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import sonia.scm.NotFoundException;
 import sonia.scm.repository.GitConstants;
-import sonia.scm.repository.PathNotFoundException;
-import sonia.scm.repository.RevisionNotFoundException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -51,9 +54,12 @@ import static org.junit.Assert.assertEquals;
  * @author Sebastian Sdorra
  */
 public class GitCatCommandTest extends AbstractGitCommandTestBase {
-  
+
+  @Rule
+  public final ExpectedException expectedException = ExpectedException.none();
+
   @Test
-  public void testDefaultBranch() throws IOException, PathNotFoundException, RevisionNotFoundException {
+  public void testDefaultBranch() throws IOException {
     // without default branch, the repository head should be used
     CatCommandRequest request = new CatCommandRequest();
     request.setPath("a.txt");
@@ -66,7 +72,7 @@ public class GitCatCommandTest extends AbstractGitCommandTestBase {
   }
 
   @Test
-  public void testCat() throws IOException, PathNotFoundException, RevisionNotFoundException {
+  public void testCat() throws IOException {
     CatCommandRequest request = new CatCommandRequest();
 
     request.setPath("a.txt");
@@ -75,32 +81,58 @@ public class GitCatCommandTest extends AbstractGitCommandTestBase {
   }
 
   @Test
-  public void testSimpleCat() throws IOException, PathNotFoundException, RevisionNotFoundException {
+  public void testSimpleCat() throws IOException {
     CatCommandRequest request = new CatCommandRequest();
 
     request.setPath("b.txt");
     assertEquals("b", execute(request));
   }
 
-  @Test(expected = PathNotFoundException.class)
-  public void testUnknownFile() throws IOException, PathNotFoundException, RevisionNotFoundException {
+  @Test
+  public void testUnknownFile() throws IOException {
     CatCommandRequest request = new CatCommandRequest();
 
     request.setPath("unknown");
-    execute(request);
-  }
 
-  @Test(expected = RevisionNotFoundException.class)
-  public void testUnknownRevision() throws IOException, PathNotFoundException, RevisionNotFoundException {
-    CatCommandRequest request = new CatCommandRequest();
+    expectedException.expect(new BaseMatcher<Object>() {
+      @Override
+      public void describeTo(Description description) {
+        description.appendText("expected NotFoundException for path");
+      }
 
-    request.setRevision("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-    request.setPath("a.txt");
+      @Override
+      public boolean matches(Object item) {
+        return "Path".equals(((NotFoundException)item).getContext().get(0).getType());
+      }
+    });
+
     execute(request);
   }
 
   @Test
-  public void testSimpleStream() throws IOException, PathNotFoundException, RevisionNotFoundException {
+  public void testUnknownRevision() throws IOException {
+    CatCommandRequest request = new CatCommandRequest();
+
+    request.setRevision("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+    request.setPath("a.txt");
+
+    expectedException.expect(new BaseMatcher<Object>() {
+      @Override
+      public void describeTo(Description description) {
+        description.appendText("expected NotFoundException for revision");
+      }
+
+      @Override
+      public boolean matches(Object item) {
+        return "Revision".equals(((NotFoundException)item).getContext().get(0).getType());
+      }
+    });
+
+    execute(request);
+  }
+
+  @Test
+  public void testSimpleStream() throws IOException {
     CatCommandRequest request = new CatCommandRequest();
     request.setPath("b.txt");
 
@@ -113,7 +145,7 @@ public class GitCatCommandTest extends AbstractGitCommandTestBase {
     catResultStream.close();
   }
 
-  private String execute(CatCommandRequest request) throws IOException, PathNotFoundException, RevisionNotFoundException {
+  private String execute(CatCommandRequest request) throws IOException {
     String content = null;
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
 

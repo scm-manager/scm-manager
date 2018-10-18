@@ -6,10 +6,9 @@ import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.NotFoundException;
 import sonia.scm.repository.NamespaceAndName;
-import sonia.scm.repository.PathNotFoundException;
 import sonia.scm.repository.RepositoryNotFoundException;
-import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.util.IOUtil;
@@ -64,8 +63,8 @@ public class ContentResource {
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
       Response.ResponseBuilder responseBuilder = Response.ok(stream);
       return createContentHeader(namespace, name, revision, path, repositoryService, responseBuilder);
-    } catch (RepositoryNotFoundException e) {
-      LOG.debug("path '{}' not found in repository {}/{}", path, namespace, name, e);
+    } catch (NotFoundException e) {
+      LOG.debug(e.getMessage());
       return Response.status(Status.NOT_FOUND).build();
     }
   }
@@ -75,14 +74,8 @@ public class ContentResource {
       try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
         repositoryService.getCatCommand().setRevision(revision).retriveContent(os, path);
         os.close();
-      } catch (RepositoryNotFoundException e) {
-        LOG.debug("repository {}/{} not found", path, namespace, name, e);
-        throw new WebApplicationException(Status.NOT_FOUND);
-      } catch (PathNotFoundException e) {
-        LOG.debug("path '{}' not found in repository {}/{}", path, namespace, name, e);
-        throw new WebApplicationException(Status.NOT_FOUND);
-      } catch (RevisionNotFoundException e) {
-        LOG.debug("revision '{}' not found in repository {}/{}", revision, namespace, name, e);
+      } catch (NotFoundException e) {
+        LOG.debug(e.getMessage());
         throw new WebApplicationException(Status.NOT_FOUND);
       }
     };
@@ -111,8 +104,8 @@ public class ContentResource {
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
       Response.ResponseBuilder responseBuilder = Response.ok();
       return createContentHeader(namespace, name, revision, path, repositoryService, responseBuilder);
-    } catch (RepositoryNotFoundException e) {
-      LOG.debug("path '{}' not found in repository {}/{}", path, namespace, name, e);
+    } catch (NotFoundException e) {
+      LOG.debug(e.getMessage());
       return Response.status(Status.NOT_FOUND).build();
     }
   }
@@ -120,12 +113,6 @@ public class ContentResource {
   private Response createContentHeader(String namespace, String name, String revision, String path, RepositoryService repositoryService, Response.ResponseBuilder responseBuilder) {
     try {
       appendContentHeader(path, getHead(revision, path, repositoryService), responseBuilder);
-    } catch (PathNotFoundException e) {
-      LOG.debug("path '{}' not found in repository {}/{}", path, namespace, name, e);
-      return Response.status(Status.NOT_FOUND).build();
-    } catch (RevisionNotFoundException e) {
-      LOG.debug("revision '{}' not found in repository {}/{}", revision, namespace, name, e);
-      return Response.status(Status.NOT_FOUND).build();
     } catch (IOException e) {
       LOG.info("error reading repository resource {} from {}/{}", path, namespace, name, e);
       return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
@@ -139,7 +126,7 @@ public class ContentResource {
     contentType.getLanguage().ifPresent(language -> responseBuilder.header("Language", language));
   }
 
-  private byte[] getHead(String revision, String path, RepositoryService repositoryService) throws IOException, PathNotFoundException, RevisionNotFoundException {
+  private byte[] getHead(String revision, String path, RepositoryService repositoryService) throws IOException {
     InputStream stream = repositoryService.getCatCommand().setRevision(revision).getStream(path);
     try {
       byte[] buffer = new byte[HEAD_BUFFER_SIZE];

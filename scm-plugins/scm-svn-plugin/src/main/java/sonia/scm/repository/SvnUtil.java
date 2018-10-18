@@ -49,6 +49,7 @@ import org.tmatesoft.svn.core.internal.util.SVNEncodingUtil;
 import org.tmatesoft.svn.core.internal.util.SVNXMLUtil;
 import org.tmatesoft.svn.core.io.SVNRepository;
 import org.tmatesoft.svn.core.wc.SVNClientManager;
+import sonia.scm.NotFoundException;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 
@@ -102,7 +103,7 @@ public final class SvnUtil
 
   //~--- methods --------------------------------------------------------------
 
-  public static long parseRevision(String v) throws RevisionNotFoundException {
+  public static long parseRevision(String v, Repository repository) {
     long result = -1l;
 
     if (!Strings.isNullOrEmpty(v))
@@ -113,7 +114,7 @@ public final class SvnUtil
       }
       catch (NumberFormatException ex)
       {
-        throw new RevisionNotFoundException(v);
+        throw NotFoundException.notFound("Revision", v).in(repository).build();
       }
     }
 
@@ -339,7 +340,7 @@ public final class SvnUtil
     }
   }
 
-  public static long getRevisionNumber(String revision) throws RevisionNotFoundException {
+  public static long getRevisionNumber(String revision, Repository repository) {
     // REVIEW Bei SVN wird ohne Revision die -1 genommen, was zu einem Fehler führt
     long revisionNumber = -1;
 
@@ -351,7 +352,7 @@ public final class SvnUtil
       }
       catch (NumberFormatException ex)
       {
-        throw new RevisionNotFoundException(revision);
+        throw NotFoundException.notFound("Revision", revision).in(repository).build();
       }
     }
 

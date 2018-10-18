@@ -47,7 +47,6 @@ import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.repository.SvnUtil;
 import sonia.scm.util.Util;
 
@@ -76,7 +75,7 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
 
   @Override
   @SuppressWarnings("unchecked")
-  public Changeset getChangeset(String revision) throws RevisionNotFoundException {
+  public Changeset getChangeset(String revision) {
     Changeset changeset = null;
 
     if (logger.isDebugEnabled())
@@ -86,7 +85,7 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
 
     try
     {
-      long revisioNumber = parseRevision(revision);
+      long revisioNumber = parseRevision(revision, repository);
       SVNRepository repo = open();
       Collection<SVNLogEntry> entries = repo.log(null, null, revisioNumber,
                                           revisioNumber, true, true);
@@ -106,7 +105,7 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
 
   @Override
   @SuppressWarnings("unchecked")
-  public ChangesetPagingResult getChangesets(LogCommandRequest request) throws RevisionNotFoundException {
+  public ChangesetPagingResult getChangesets(LogCommandRequest request) {
     if (logger.isDebugEnabled())
     {
       logger.debug("fetch changesets for {}", request);
@@ -115,8 +114,8 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
     ChangesetPagingResult changesets = null;
     int start = request.getPagingStart();
     int limit = request.getPagingLimit();
-    long startRevision = parseRevision(request.getStartChangeset());
-    long endRevision = parseRevision(request.getEndChangeset());
+    long startRevision = parseRevision(request.getStartChangeset(), repository);
+    long endRevision = parseRevision(request.getEndChangeset(), repository);
     String[] pathArray = null;
 
     if (!Strings.isNullOrEmpty(request.getPath()))

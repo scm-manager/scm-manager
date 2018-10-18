@@ -11,7 +11,6 @@ import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryNotFoundException;
-import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.web.VndMediaType;
@@ -51,8 +50,6 @@ public class FileHistoryRootResource {
    * @param pageSize  pagination
    * @return all changesets related to the given file starting with the given revision
    * @throws IOException                 on io error
-   * @throws RevisionNotFoundException   on missing revision
-   * @throws RepositoryNotFoundException on missing repository
    */
   @GET
   @Path("{revision}/{path: .*}")
@@ -69,7 +66,7 @@ public class FileHistoryRootResource {
                          @PathParam("revision") String revision,
                          @PathParam("path") String path,
                          @DefaultValue("0") @QueryParam("page") int page,
-                         @DefaultValue("10") @QueryParam("pageSize") int pageSize) throws IOException, RevisionNotFoundException, RepositoryNotFoundException {
+                         @DefaultValue("10") @QueryParam("pageSize") int pageSize) throws IOException {
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
       log.info("Get changesets of the file {} and revision {}", path, revision);
       Repository repository = repositoryService.getRepository();

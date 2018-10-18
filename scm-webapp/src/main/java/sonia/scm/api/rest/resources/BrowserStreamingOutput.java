@@ -2,8 +2,6 @@ package sonia.scm.api.rest.resources;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.repository.PathNotFoundException;
-import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.repository.api.CatCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.util.IOUtil;
@@ -34,18 +32,6 @@ public class BrowserStreamingOutput implements StreamingOutput {
   public void write(OutputStream output) throws IOException {
     try {
       builder.retriveContent(output, path);
-    } catch (PathNotFoundException ex) {
-      if (logger.isWarnEnabled()) {
-        logger.warn("could not find path {}", ex.getPath());
-      }
-
-      throw new WebApplicationException(Response.Status.NOT_FOUND);
-    } catch (RevisionNotFoundException ex) {
-      if (logger.isWarnEnabled()) {
-        logger.warn("could not find revision {}", ex.getRevision());
-      }
-
-      throw new WebApplicationException(Response.Status.NOT_FOUND);
     } finally {
       IOUtil.close(repositoryService);
     }

@@ -5,6 +5,7 @@ import sonia.scm.AlreadyExistsException;
 import sonia.scm.ConcurrentModificationException;
 import sonia.scm.Manager;
 import sonia.scm.ModelObject;
+import sonia.scm.NotFoundException;
 import sonia.scm.PageResult;
 
 import javax.ws.rs.core.Response;
@@ -22,6 +23,7 @@ class IdResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
                              DTO extends HalRepresentation> {
 
   private final Manager<MODEL_OBJECT> manager;
+  private final String type;
 
   private final SingleResourceManagerAdapter<MODEL_OBJECT, DTO> singleAdapter;
   private final CollectionResourceManagerAdapter<MODEL_OBJECT, DTO> collectionAdapter;
@@ -30,6 +32,7 @@ class IdResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
     this.manager = manager;
     singleAdapter = new SingleResourceManagerAdapter<>(manager, type);
     collectionAdapter = new CollectionResourceManagerAdapter<>(manager, type);
+    this.type = type.getSimpleName();
   }
 
   Response get(String id, Function<MODEL_OBJECT, DTO> mapToDto) {
@@ -56,8 +59,8 @@ class IdResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
     return singleAdapter.delete(id);
   }
 
-  private Supplier<Optional<MODEL_OBJECT>> loadBy(String id) {
-    return () -> Optional.ofNullable(manager.get(id));
+  private Supplier<MODEL_OBJECT> loadBy(String id) {
+    return () -> Optional.ofNullable(manager.get(id)).orElseThrow(() -> new NotFoundException(type, id));
   }
 
   private Predicate<MODEL_OBJECT> idStaysTheSame(String id) {
