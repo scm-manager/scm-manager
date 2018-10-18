@@ -34,18 +34,19 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
-import org.eclipse.jgit.lib.Repository;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
 import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.lib.Repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.GitConstants;
 import sonia.scm.repository.GitUtil;
+
+import java.io.IOException;
+import java.util.Optional;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -97,27 +98,29 @@ public class AbstractGitCommand
     }
     return commit;
   }
-  
-  protected ObjectId getBranchOrDefault(Repository gitRepository, String requestedBranch) throws IOException {
-    ObjectId head;
-    if ( Strings.isNullOrEmpty(requestedBranch) ) {
-      head = getDefaultBranch(gitRepository);
-    } else {
-      head = GitUtil.getBranchId(gitRepository, requestedBranch);
-    }
-    return head;
-  }
-  
+
   protected ObjectId getDefaultBranch(Repository gitRepository) throws IOException {
-    ObjectId head;
-    String defaultBranchName = repository.getProperty(GitConstants.PROPERTY_DEFAULT_BRANCH);
-    if (!Strings.isNullOrEmpty(defaultBranchName)) {
-      head = GitUtil.getBranchId(gitRepository, defaultBranchName);
+    Ref ref = getBranchOrDefault(gitRepository, null);
+    if (ref == null) {
+      return null;
     } else {
-      logger.trace("no default branch configured, use repository head as default");
-      head = GitUtil.getRepositoryHead(gitRepository);
+      return ref.getObjectId();
     }
-    return head;
+  }
+
+  protected Ref getBranchOrDefault(Repository gitRepository, String requestedBranch) throws IOException {
+    if ( Strings.isNullOrEmpty(requestedBranch) ) {
+      String defaultBranchName = repository.getProperty(GitConstants.PROPERTY_DEFAULT_BRANCH);
+      if (!Strings.isNullOrEmpty(defaultBranchName)) {
+        return GitUtil.getBranchId(gitRepository, defaultBranchName);
+      } else {
+        logger.trace("no default branch configured, use repository head as default");
+        Optional<Ref> repositoryHeadRef = GitUtil.getRepositoryHeadRef(gitRepository);
+        return repositoryHeadRef.orElse(null);
+      }
+    } else {
+      return GitUtil.getBranchId(gitRepository, requestedBranch);
+    }
   }
 
   //~--- fields ---------------------------------------------------------------

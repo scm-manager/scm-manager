@@ -13,7 +13,7 @@ import java.util.Optional;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@SubjectAware(configuration = "classpath:sonia/scm/shiro-001.ini")
+@SubjectAware(configuration = "classpath:sonia/scm/shiro-002.ini")
 public class IndexResourceTest {
 
   @Rule
@@ -92,6 +92,26 @@ public class IndexResourceTest {
     Assertions.assertThat(index.getLinks().getLinkBy("users")).matches(o -> !o.isPresent());
     Assertions.assertThat(index.getLinks().getLinkBy("groups")).matches(o -> !o.isPresent());
     Assertions.assertThat(index.getLinks().getLinkBy("config")).matches(o -> !o.isPresent());
+  }
+
+  @Test
+  @SubjectAware(username = "trillian", password = "secret")
+  public void shouldRenderAutoCompleteLinks() {
+    IndexDto index = indexResource.getIndex();
+
+    Assertions.assertThat(index.getLinks().getLinksBy("autocomplete"))
+      .extracting("name")
+      .containsExactlyInAnyOrder("users", "groups");
+  }
+
+  @Test
+  @SubjectAware(username = "user_without_autocomplete_permission", password = "secret")
+  public void userWithoutAutocompletePermissionShouldNotSeeAutoCompleteLinks() {
+    IndexDto index = indexResource.getIndex();
+
+    Assertions.assertThat(index.getLinks().getLinksBy("autocomplete"))
+      .extracting("name")
+      .doesNotContainSequence("users", "groups");
   }
 
   @Test

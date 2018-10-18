@@ -15,4 +15,9 @@ class CollectionDto extends HalRepresentation {
   CollectionDto(Links links, Embedded embedded) {
     super(links, embedded);
   }
+
+  @Override
+  protected HalRepresentation withEmbedded(String rel, HalRepresentation embeddedItem) {
+    return super.withEmbedded(rel, embeddedItem);
+  }
 }

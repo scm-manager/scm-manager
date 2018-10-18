@@ -121,6 +121,11 @@ public class UserManagerDecorator extends ManagerDecorator<User>
     return decorated.getDefaultType();
   }
 
+  @Override
+  public Collection<User> autocomplete(String filter) {
+    return decorated.autocomplete(filter);
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
