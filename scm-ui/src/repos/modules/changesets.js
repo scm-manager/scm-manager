@@ -5,7 +5,7 @@ import {
   PENDING_SUFFIX,
   SUCCESS_SUFFIX
 } from "../../modules/types";
-import { apiClient } from "@scm-manager/ui-components";
+import { apiClient, urls } from "@scm-manager/ui-components";
 import { isPending } from "../../modules/pending";
 import { getFailure } from "../../modules/failure";
 import type {
@@ -20,19 +20,13 @@ export const FETCH_CHANGESETS_PENDING = `${FETCH_CHANGESETS}_${PENDING_SUFFIX}`;
 export const FETCH_CHANGESETS_SUCCESS = `${FETCH_CHANGESETS}_${SUCCESS_SUFFIX}`;
 export const FETCH_CHANGESETS_FAILURE = `${FETCH_CHANGESETS}_${FAILURE_SUFFIX}`;
 
-//********added for detailed view of changesets
-
 export const FETCH_CHANGESET = "scm/repos/FETCH_CHANGESET";
 export const FETCH_CHANGESET_PENDING = `${FETCH_CHANGESET}_${PENDING_SUFFIX}`;
 export const FETCH_CHANGESET_SUCCESS = `${FETCH_CHANGESET}_${SUCCESS_SUFFIX}`;
 export const FETCH_CHANGESET_FAILURE = `${FETCH_CHANGESET}_${FAILURE_SUFFIX}`;
 
-//********end of detailed view add
-
 // actions
 //TODO: Content type
-
-//********added for detailed view of changesets
 
 export function fetchChangesetIfNeeded(repository: Repository, id: string) {
   return (dispatch: any, getState: any) => {
@@ -46,13 +40,17 @@ export function fetchChangeset(repository: Repository, id: string) {
   return function(dispatch: any) {
     dispatch(fetchChangesetPending(repository, id));
     return apiClient
-      .get(repository._links.changesets.href + id)
+      .get(createChangesetUrl(repository, id))
       .then(response => response.json())
       .then(data => dispatch(fetchChangesetSuccess(data, repository, id)))
       .catch(err => {
         dispatch(fetchChangesetFailure(repository, id, err));
       });
   };
+}
+
+function createChangesetUrl(repository: Repository, id: string) {
+  return urls.concat(repository._links.changesets.href, id);
 }
 
 export function fetchChangesetPending(
@@ -92,8 +90,6 @@ function fetchChangesetFailure(
     itemId: createChangesetItemId(repository, id)
   };
 }
-
-//********end of detailed view add
 
 export function fetchChangesets(
   repository: Repository,
@@ -266,21 +262,6 @@ function extractChangesetsByIds(changesets: any) {
 
   return changesetsByIds;
 }
-//********added for detailed view of changesets
-
-function addChangesetToChangesets(data: any, oldChangesetsByIds: any) {
-  const changeset = data;
-  const changesetsByIds = {};
-
-  changesetsByIds[changeset.id] = changeset;
-
-  for (let id in oldChangesetsByIds) {
-    changesetsByIds[id] = oldChangesetsByIds[id];
-  }
-
-  return changesetsByIds;
-}
-//********end of added for detailed view of changesets
 
 //selectors
 export function getChangesets(
@@ -291,15 +272,15 @@ export function getChangesets(
   const key = createItemId(repository, branch);
 
   const changesets = state.changesets[key];
-  if (!changesets) {
+  if (!changesets || !changesets.list) {
     return null;
   }
+
   return changesets.list.entries.map((id: string) => {
     return changesets.byId[id];
   });
 }
 
-//********added for detailed view of changesets
 export function getChangeset(
   state: Object,
   repository: Repository,
@@ -350,7 +331,6 @@ export function getFetchChangesetFailure(
     createChangesetItemId(repository, id)
   );
 }
-//********end of added for detailed view of changesets
 
 export function isFetchChangesetsPending(
   state: Object,

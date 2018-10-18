@@ -152,12 +152,10 @@ describe("changesets", () => {
 
       const state = {
         changesets: {
-          byKey: {
-            "foo/bar": {
-              byId: {
-                id1: { id: "id1" },
-                id2: { id: "id2" }
-              }
+          "foo/bar": {
+            byId: {
+              id1: { id: "id1" },
+              id2: { id: "id2" }
             }
           }
         }
@@ -427,12 +425,10 @@ describe("changesets", () => {
     it("should return changeset", () => {
       const state = {
         changesets: {
-          byKey: {
-            "foo/bar": {
-              byId: {
-                id1: { id: "id1" },
-                id2: { id: "id2" }
-              }
+          "foo/bar": {
+            byId: {
+              id1: { id: "id1" },
+              id2: { id: "id2" }
             }
           }
         }
@@ -478,12 +474,10 @@ describe("changesets", () => {
     it("should return false if changeset exists", () => {
       const state = {
         changesets: {
-          byKey: {
-            "foo/bar": {
-              byId: {
-                id1: { id: "id1" },
-                id2: { id: "id2" }
-              }
+          "foo/bar": {
+            byId: {
+              id1: { id: "id1" },
+              id2: { id: "id2" }
             }
           }
         }
