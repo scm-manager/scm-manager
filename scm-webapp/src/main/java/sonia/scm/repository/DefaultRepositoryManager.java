@@ -198,7 +198,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
   }
 
   @Override
-  public void refresh(Repository repository) throws RepositoryNotFoundException {
+  public void refresh(Repository repository) {
     AssertUtil.assertIsNotNull(repository);
     RepositoryPermissions.read(repository).check();
 
@@ -207,7 +207,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
     if (fresh != null) {
       fresh.copyProperties(repository);
     } else {
-      throw new RepositoryNotFoundException(repository);
+      throw NotFoundException.notFound(repository).build();
     }
   }
 

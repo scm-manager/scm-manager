@@ -11,7 +11,6 @@ import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Permission;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
-import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.web.VndMediaType;
 
@@ -131,7 +130,7 @@ public class PermissionRootResource {
   @Produces(VndMediaType.PERMISSION)
   @TypeHint(PermissionDto.class)
   @Path("")
-  public Response getAll(@PathParam("namespace") String namespace, @PathParam("name") String name) throws RepositoryNotFoundException {
+  public Response getAll(@PathParam("namespace") String namespace, @PathParam("name") String name) {
     Repository repository = load(namespace, name);
     RepositoryPermissions.permissionRead(repository).check();
     return Response.ok(permissionCollectionToDtoMapper.map(repository)).build();
@@ -237,12 +236,12 @@ public class PermissionRootResource {
    * @param namespace the repository namespace
    * @param name      the repository name
    * @return the repository if the user is permitted
-   * @throws RepositoryNotFoundException if the repository does not exists
+   * @throws NotFoundException if the repository does not exists
    */
-  private Repository load(String namespace, String name) throws RepositoryNotFoundException {
+  private Repository load(String namespace, String name) {
     NamespaceAndName namespaceAndName = new NamespaceAndName(namespace, name);
     return Optional.ofNullable(manager.get(namespaceAndName))
-      .orElseThrow(() -> new RepositoryNotFoundException(namespaceAndName));
+      .orElseThrow(() -> NotFoundException.notFound(namespaceAndName).build());
   }
 
   /**

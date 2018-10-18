@@ -26,7 +26,6 @@ import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.repository.api.LogCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
@@ -133,7 +132,7 @@ public class FileHistoryResourceTest extends RepositoryTestBase {
 
 
   @Test
-  public void shouldGet404OnMissingRepository() throws URISyntaxException, RepositoryNotFoundException {
+  public void shouldGet404OnMissingRepository() throws URISyntaxException {
     when(serviceFactory.create(any(NamespaceAndName.class))).thenThrow(new NotFoundException("Text", "x"));
     MockHttpRequest request = MockHttpRequest
       .get(FILE_HISTORY_URL + "revision/a.txt")

@@ -4,11 +4,11 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
+import sonia.scm.NotFoundException;
 import sonia.scm.PushStateDispatcher;
 import sonia.scm.filter.WebElement;
 import sonia.scm.repository.DefaultRepositoryProvider;
 import sonia.scm.repository.NamespaceAndName;
-import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.repository.spi.HttpScmProtocol;
@@ -71,8 +71,8 @@ public class HttpProtocolServlet extends HttpServlet {
       requestProvider.get().setAttribute(DefaultRepositoryProvider.ATTRIBUTE_NAME, repositoryService.getRepository());
       HttpScmProtocol protocol = repositoryService.getProtocol(HttpScmProtocol.class);
       protocol.serve(req, resp, getServletConfig());
-    } catch (RepositoryNotFoundException e) {
-      log.debug("Repository not found for namespace and name {}", namespaceAndName, e);
+    } catch (NotFoundException e) {
+      log.debug(e.getMessage());
       resp.setStatus(HttpStatus.SC_NOT_FOUND);
     }
   }

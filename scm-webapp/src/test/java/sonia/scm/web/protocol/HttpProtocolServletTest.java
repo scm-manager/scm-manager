@@ -4,11 +4,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import sonia.scm.NotFoundException;
 import sonia.scm.PushStateDispatcher;
 import sonia.scm.repository.DefaultRepositoryProvider;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.repository.spi.HttpScmProtocol;
@@ -58,12 +58,12 @@ public class HttpProtocolServletTest {
   private HttpScmProtocol protocol;
 
   @Before
-  public void init() throws RepositoryNotFoundException {
+  public void init() {
     initMocks(this);
     when(userAgentParser.parse(request)).thenReturn(userAgent);
     when(userAgent.isBrowser()).thenReturn(false);
     NamespaceAndName existingRepo = new NamespaceAndName("space", "repo");
-    when(serviceFactory.create(not(eq(existingRepo)))).thenThrow(new RepositoryNotFoundException("x"));
+    when(serviceFactory.create(not(eq(existingRepo)))).thenThrow(new NotFoundException("Test", "a"));
     when(serviceFactory.create(existingRepo)).thenReturn(repositoryService);
     when(requestProvider.get()).thenReturn(httpServletRequest);
   }
@@ -97,7 +97,7 @@ public class HttpProtocolServletTest {
   }
 
   @Test
-  public void shouldDelegateToProvider() throws RepositoryNotFoundException, IOException, ServletException {
+  public void shouldDelegateToProvider() throws IOException, ServletException {
     when(request.getPathInfo()).thenReturn("/space/name");
     NamespaceAndName namespaceAndName = new NamespaceAndName("space", "name");
     doReturn(repositoryService).when(serviceFactory).create(namespaceAndName);

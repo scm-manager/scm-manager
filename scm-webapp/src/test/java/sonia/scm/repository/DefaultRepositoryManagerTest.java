@@ -353,7 +353,7 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
     manager.refresh(heartOfGold);
   }
 
-  @Test(expected = RepositoryNotFoundException.class)
+  @Test(expected = NotFoundException.class)
   public void testRefreshNotFound(){
     manager.refresh(createRepositoryWithId());
   }
@@ -383,7 +383,7 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
     RepositoryManager repoManager = createRepositoryManager(false);
     Repository repository = spy(createTestRepository());
     repository.setName("Testrepo");
-    ((DefaultRepositoryManager) repoManager).create(repository);
+    repoManager.create(repository);
     assertEquals("default_namespace", repository.getNamespace());
   }
 

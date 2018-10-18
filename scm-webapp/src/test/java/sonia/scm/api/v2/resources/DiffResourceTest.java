@@ -21,7 +21,6 @@ import sonia.scm.NotFoundException;
 import sonia.scm.api.rest.AuthorizationExceptionMapper;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.repository.api.DiffCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
@@ -107,7 +106,7 @@ public class DiffResourceTest extends RepositoryTestBase {
   }
 
   @Test
-  public void shouldGet404OnMissingRepository() throws URISyntaxException, RepositoryNotFoundException {
+  public void shouldGet404OnMissingRepository() throws URISyntaxException {
     when(serviceFactory.create(any(NamespaceAndName.class))).thenThrow(new NotFoundException("Text", "x"));
     MockHttpRequest request = MockHttpRequest
       .get(DIFF_URL + "revision")

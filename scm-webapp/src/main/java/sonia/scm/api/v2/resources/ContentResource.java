@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.NamespaceAndName;
-import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.util.IOUtil;

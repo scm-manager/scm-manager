@@ -6,7 +6,6 @@ import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.Tag;
 import sonia.scm.repository.Tags;

@@ -1,5 +1,6 @@
 package sonia.scm;
 
+import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 
 import java.util.Collections;
@@ -25,14 +26,20 @@ public class NotFoundException extends RuntimeException {
     this.context = context;
   }
 
+  public static NotFoundExceptionBuilder notFound(Repository repository) {
+    return new NotFoundExceptionBuilder().in(repository);
+  }
+
+  public static NotFoundExceptionBuilder notFound(NamespaceAndName namespaceAndName) {
+    return new NotFoundExceptionBuilder().in(namespaceAndName);
+  }
+
   public static NotFoundExceptionBuilder notFound(Class type, String id) {
-    NotFoundExceptionBuilder builder = new NotFoundExceptionBuilder();
-    return builder.in(type, id);
+    return new NotFoundExceptionBuilder().in(type, id);
   }
 
   public static NotFoundExceptionBuilder notFound(String type, String id) {
-    NotFoundExceptionBuilder builder = new NotFoundExceptionBuilder();
-    return builder.in(type, id);
+    return new NotFoundExceptionBuilder().in(type, id);
   }
 
   public List<ContextEntry> getContext() {
@@ -50,17 +57,20 @@ public class NotFoundException extends RuntimeException {
     private final List<ContextEntry> context = new LinkedList<>();
 
     public NotFoundExceptionBuilder in(Repository repository) {
-      this.in(Repository.class, repository.getNamespaceAndName().logString());
-      return this;
+      return in(repository.getNamespaceAndName());
+    }
+
+    public NotFoundExceptionBuilder in(NamespaceAndName namespaceAndName) {
+      return this.in(Repository.class, namespaceAndName.logString());
     }
 
     public NotFoundExceptionBuilder in(Class type, String id) {
-      this.context.add(new ContextEntry(type, id));
+      context.add(new ContextEntry(type, id));
       return this;
     }
 
     public NotFoundExceptionBuilder in(String type, String id) {
-      this.context.add(new ContextEntry(type, id));
+      context.add(new ContextEntry(type, id));
       return this;
     }
 

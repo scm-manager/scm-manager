@@ -2,7 +2,6 @@ package sonia.scm.api.v2.resources;
 
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.NamespaceAndName;
-import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.repository.api.BrowseCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
