@@ -19,13 +19,14 @@
     "flow-bin": "^0.79.1",
     "flow-typed": "^2.5.1",
     "jest": "^23.5.0",
-    "raf": "^3.4.0"
+    "raf": "^3.4.0",
+    "react-router-enzyme-context": "^1.2.0"
   },
   "dependencies": {
     "classnames": "^2.2.6",
     "moment": "^2.22.2",
-    "react": "^16.4.2",
-    "react-dom": "^16.4.2",
+    "react": "^16.5.2",
+    "react-dom": "^16.5.2",
     "react-i18next": "^7.11.0",
     "react-jss": "^8.6.1",
     "react-router-dom": "^4.3.1",
