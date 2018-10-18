@@ -53,7 +53,5 @@ $blue: #33B2E8;
 @import "@fortawesome/fontawesome-free/scss/fontawesome.scss";
 $fa-font-path: "webfonts";
 @import "@fortawesome/fontawesome-free/scss/solid.scss";
-@import "react-diff-view/src/Change";
-@import "react-diff-view/src/Diff";
-@import "react-diff-view/src/Hunk";
-@import "react-diff-view/src/Widget";
+
+@import "diff2html/dist/diff2html";

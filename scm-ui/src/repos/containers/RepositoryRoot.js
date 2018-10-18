@@ -113,7 +113,7 @@ class RepositoryRoot extends React.Component<Props> {
               />
               <Route
                 path={`${url}/permissions`}
-                render={props => (
+                render={() => (
                   <Permissions
                     namespace={this.props.repository.namespace}
                     repoName={this.props.repository.name}
@@ -144,9 +144,9 @@ class RepositoryRoot extends React.Component<Props> {
                 path={`${url}/diff`}
                 component={() => (
                   <ScmDiff
-                    namespace={repository.namespace}
-                    name={repository.name}
-                    revision={"db64ca5992ad8e327c7687d49f5297bef7b29893"}
+                    repository={repository}
+                    revision={"2"} // TODO: this is hardcoded only for dev purposes.
+                    sideBySide={false}
                   />
                 )}
               />
