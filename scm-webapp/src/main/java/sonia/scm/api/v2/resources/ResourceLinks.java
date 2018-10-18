@@ -87,7 +87,7 @@ class ResourceLinks {
     }
 
     public String passwordChange(String name) {
-      return userLinkBuilder.method("getUserResource").parameters(name).method("changePassword").parameters().href();
+      return userLinkBuilder.method("getUserResource").parameters(name).method("overwritePassword").parameters().href();
     }
   }
 
@@ -139,6 +139,26 @@ class ResourceLinks {
 
     String create() {
       return collectionLinkBuilder.method("getUserCollectionResource").parameters().method("create").parameters().href();
+    }
+  }
+
+  AutoCompleteLinks autoComplete() {
+    return new AutoCompleteLinks (scmPathInfoStore.get());
+  }
+
+  static class AutoCompleteLinks  {
+    private final LinkBuilder linkBuilder;
+
+    AutoCompleteLinks (ScmPathInfo pathInfo) {
+      linkBuilder = new LinkBuilder(pathInfo, AutoCompleteResource.class);
+    }
+
+    String users() {
+      return linkBuilder.method("searchUser").parameters().href();
+    }
+
+    String groups() {
+      return linkBuilder.method("searchGroup").parameters().href();
     }
   }
 

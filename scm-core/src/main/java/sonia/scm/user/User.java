@@ -41,6 +41,7 @@ import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import sonia.scm.BasicPropertiesAware;
 import sonia.scm.ModelObject;
+import sonia.scm.ReducedModelObject;
 import sonia.scm.util.Util;
 import sonia.scm.util.ValidationUtil;
 
@@ -55,10 +56,13 @@ import java.security.Principal;
  *
  * @author Sebastian Sdorra
  */
-@StaticPermissions(value = "user", globalPermissions = {"create", "list"})
+@StaticPermissions(
+  value = "user",
+  globalPermissions = {"create", "list", "autocomplete"},
+  permissions = {"read", "modify", "delete", "changePassword"})
 @XmlRootElement(name = "users")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class User extends BasicPropertiesAware implements Principal, ModelObject, PermissionObject
+public class User extends BasicPropertiesAware implements Principal, ModelObject, PermissionObject, ReducedModelObject
 {
 
   /** Field description */
@@ -273,10 +277,6 @@ public class User extends BasicPropertiesAware implements Principal, ModelObject
     //J+
   }
 
-  public User changePassword(String password){
-    setPassword(password);
-    return this;
-  }
   //~--- get methods ----------------------------------------------------------
 
   /**

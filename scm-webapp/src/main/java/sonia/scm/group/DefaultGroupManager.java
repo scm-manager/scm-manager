@@ -125,7 +125,7 @@ public class DefaultGroupManager extends AbstractGroupManager
   }
 
   @Override
-  public void delete(Group group) throws NotFoundException {
+  public void delete(Group group){
     logger.info("delete group {} of type {}", group.getName(), group.getType());
     managerDaoAdapter.delete(
       group,
@@ -145,7 +145,7 @@ public class DefaultGroupManager extends AbstractGroupManager
   public void init(SCMContextProvider context) {}
 
   @Override
-  public void modify(Group group) throws NotFoundException {
+  public void modify(Group group){
     logger.info("modify group {} of type {}", group.getName(), group.getType());
 
     managerDaoAdapter.modify(
@@ -160,7 +160,7 @@ public class DefaultGroupManager extends AbstractGroupManager
   }
 
   @Override
-  public void refresh(Group group) throws NotFoundException {
+  public void refresh(Group group){
     String name = group.getName();
     if (logger.isInfoEnabled())
     {
@@ -240,6 +240,13 @@ public class DefaultGroupManager extends AbstractGroupManager
     }
 
     return group;
+  }
+
+  @Override
+  public Collection<Group> autocomplete(String filter) {
+    GroupPermissions.autocomplete().check();
+    SearchRequest searchRequest = new SearchRequest(filter, true, DEFAULT_LIMIT);
+    return SearchUtil.search(searchRequest, groupDAO.getAll(), group -> matches(searchRequest,group)?group:null);
   }
 
   /**

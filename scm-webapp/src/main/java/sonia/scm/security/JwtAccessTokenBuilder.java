@@ -64,7 +64,7 @@ public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
   
   private String subject;
   private String issuer;
-  private long expiresIn = 10l;
+  private long expiresIn = 60l;
   private TimeUnit expiresInUnit = TimeUnit.MINUTES;
   private Scope scope = Scope.empty();
   

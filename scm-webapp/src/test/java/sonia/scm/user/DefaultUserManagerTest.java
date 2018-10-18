@@ -39,9 +39,13 @@ import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.collect.Lists;
 
+import org.assertj.core.api.Assertions;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import org.mockito.ArgumentCaptor;
+import sonia.scm.NotFoundException;
 import sonia.scm.store.JAXBConfigurationStoreFactory;
 import sonia.scm.user.xml.XmlUserDAO;
 import sonia.scm.util.MockUtil;
@@ -70,6 +74,10 @@ public class DefaultUserManagerTest extends UserManagerTestBase
   @Rule
   public ShiroRule shiro = new ShiroRule();
 
+
+  private UserDAO userDAO = mock(UserDAO.class);
+  private User trillian;
+
   /**
    * Method description
    *
@@ -82,6 +90,16 @@ public class DefaultUserManagerTest extends UserManagerTestBase
     return new DefaultUserManager(createXmlUserDAO());
   }
 
+  @Before
+  public void initDao() {
+    trillian = UserTestData.createTrillian();
+    trillian.setPassword("oldEncrypted");
+
+    userDAO = mock(UserDAO.class);
+    when(userDAO.getType()).thenReturn("xml");
+    when(userDAO.get("trillian")).thenReturn(trillian);
+  }
+
   /**
    * Method description
    *
@@ -89,7 +107,6 @@ public class DefaultUserManagerTest extends UserManagerTestBase
   @Test
   public void testDefaultAccountAfterFristStart()
   {
-    UserDAO userDAO = mock(UserDAO.class);
     List<User> users = Lists.newArrayList(new User("tuser"));
 
     when(userDAO.getAll()).thenReturn(users);
@@ -108,14 +125,61 @@ public class DefaultUserManagerTest extends UserManagerTestBase
   @SuppressWarnings("unchecked")
   public void testDefaultAccountCreation()
   {
-    UserDAO userDAO = mock(UserDAO.class);
-
     when(userDAO.getAll()).thenReturn(Collections.EMPTY_LIST);
 
     UserManager userManager = new DefaultUserManager(userDAO);
 
     userManager.init(contextProvider);
     verify(userDAO, times(2)).add(any(User.class));
+  }
+
+  @Test(expected = InvalidPasswordException.class)
+  public void shouldFailChangePasswordForWrongOldPassword() {
+    UserManager userManager = new DefaultUserManager(userDAO);
+
+    userManager.changePasswordForLoggedInUser("wrongPassword", "---");
+  }
+
+  @Test
+  public void shouldSucceedChangePassword() {
+    ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
+
+    doNothing().when(userDAO).modify(userCaptor.capture());
+
+    UserManager userManager = new DefaultUserManager(userDAO);
+
+    userManager.changePasswordForLoggedInUser("oldEncrypted", "newEncrypted");
+
+    Assertions.assertThat(userCaptor.getValue().getPassword()).isEqualTo("newEncrypted");
+  }
+
+  @Test(expected = ChangePasswordNotAllowedException.class)
+  public void shouldFailOverwritePasswordForWrongType() {
+    trillian.setType("wrongType");
+
+    UserManager userManager = new DefaultUserManager(userDAO);
+
+    userManager.overwritePassword("trillian", "---");
+  }
+
+  @Test(expected = NotFoundException.class)
+  public void shouldFailOverwritePasswordForMissingUser() {
+    UserManager userManager = new DefaultUserManager(userDAO);
+
+    userManager.overwritePassword("notExisting", "---");
+  }
+
+  @Test
+  public void shouldSucceedOverwritePassword() {
+    ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
+
+    doNothing().when(userDAO).modify(userCaptor.capture());
+
+    UserManager userManager = new DefaultUserManager(userDAO);
+
+    userManager.overwritePassword("trillian", "newEncrypted");
+
+    Assertions.assertThat(userCaptor.getValue().getPassword()).isEqualTo("newEncrypted");
   }
 
   //~--- methods --------------------------------------------------------------

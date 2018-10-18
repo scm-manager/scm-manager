@@ -61,4 +61,14 @@ public interface GroupManager
    * @return all groups assigned to the given member
    */
   public Collection<Group> getGroupsForMember(String member);
+
+
+  /**
+   * Returns a {@link java.util.Collection} of filtered objects
+   *
+   * @param filter the searched string
+   * @return filtered object from the store
+   */
+  Collection<Group> autocomplete(String filter);
+
 }
