@@ -415,7 +415,7 @@ describe("changesets", () => {
         {
           "foo/bar": {
             byId: {
-              ["id2"]: {
+              "id2": {
                 id: "id2",
                 author: { mail: "mail@author.com", name: "author" }
               }

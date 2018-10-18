@@ -12,7 +12,7 @@ export function withEndingSlash(url: string) {
   return url + "/";
 }
 
-export function concat(base: string, ...parts: string) {
+export function concat(base: string, ...parts: string[]) {
   let url = base;
   for ( let p of parts) {
     url = withEndingSlash(url) + p;

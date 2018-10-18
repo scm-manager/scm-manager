@@ -1,6 +1,9 @@
 //@flow
 import React from "react";
-import type { Changeset, Repository } from "../../../../../scm-ui-components/packages/ui-types/src/index";
+import type {
+  Changeset,
+  Repository
+} from "../../../../../scm-ui-components/packages/ui-types/src/index";
 import { Interpolate, translate } from "react-i18next";
 import injectSheet from "react-jss";
 import ChangesetTag from "./ChangesetTag";
@@ -11,6 +14,7 @@ import AvatarWrapper from "./AvatarWrapper";
 import AvatarImage from "./AvatarImage";
 import classNames from "classnames";
 import ChangesetId from "./ChangesetId";
+import type { Tag } from "@scm-manager/ui-types";
 
 const styles = {
   spacing: {
@@ -27,7 +31,7 @@ type Props = {
 
 class ChangesetDetails extends React.Component<Props> {
   render() {
-    const { changeset, repository, t, classes } = this.props;
+    const { changeset, repository, classes } = this.props;
 
     const description = parseDescription(changeset.description);
 
