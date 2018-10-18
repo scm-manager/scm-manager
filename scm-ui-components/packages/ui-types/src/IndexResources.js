@@ -2,6 +2,6 @@
 import type { Links } from "./hal";
 
 export type IndexResources = {
-  version: String,
+  version: string,
   _links: Links
 };

@@ -53,7 +53,9 @@ type Props = {
 
 class App extends Component<Props> {
   componentDidMount() {
-    if (this.props.meLink) this.props.fetchMe(this.props.meLink);
+    if (this.props.meLink) {
+      this.props.fetchMe(this.props.meLink);
+    }
   }
 
   render() {

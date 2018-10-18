@@ -5,11 +5,11 @@ import PrimaryNavigationLink from "./PrimaryNavigationLink";
 
 type Props = {
   t: string => string,
-  repositoriesLink: String,
-  usersLink: String,
-  groupsLink: String,
-  configLink: String,
-  logoutLink: String
+  repositoriesLink: string,
+  usersLink: string,
+  groupsLink: string,
+  configLink: string,
+  logoutLink: string
 };
 
 class PrimaryNavigation extends React.Component<Props> {
