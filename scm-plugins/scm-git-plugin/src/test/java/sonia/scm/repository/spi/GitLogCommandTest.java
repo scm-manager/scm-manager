@@ -1,3 +1,4 @@
+
 /**
  * Copyright (c) 2010, Sebastian Sdorra
  * All rights reserved.
@@ -33,22 +34,23 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
+import com.google.common.io.Files;
 import org.junit.Test;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.GitConstants;
 import sonia.scm.repository.Modifications;
 
+import java.io.File;
+import java.io.IOException;
+
+import static java.nio.charset.Charset.defaultCharset;
 import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-
-//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Unit tests for {@link GitLogCommand}.
@@ -72,6 +74,8 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
     assertEquals("86a6645eceefe8b9a247db5eb16e3d89a7e6e6d1", result.getChangesets().get(1).getId());
     assertEquals("592d797cd36432e591416e8b2b98154f4f163411", result.getChangesets().get(2).getId());
     assertEquals("435df2f061add3589cb326cc64be9b9c3897ceca", result.getChangesets().get(3).getId());
+    assertEquals("master", result.getBranchName());
+    assertTrue(result.getChangesets().stream().allMatch(r -> r.getBranches().isEmpty()));
 
     // set default branch and fetch again
     repository.setProperty(GitConstants.PROPERTY_DEFAULT_BRANCH, "test-branch");
@@ -79,10 +83,12 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
     result = createCommand().getChangesets(new LogCommandRequest());
 
     assertNotNull(result);
+    assertEquals("test-branch", result.getBranchName());
     assertEquals(3, result.getTotal());
     assertEquals("3f76a12f08a6ba0dc988c68b7f0b2cd190efc3c4", result.getChangesets().get(0).getId());
     assertEquals("592d797cd36432e591416e8b2b98154f4f163411", result.getChangesets().get(1).getId());
     assertEquals("435df2f061add3589cb326cc64be9b9c3897ceca", result.getChangesets().get(2).getId());
+    assertTrue(result.getChangesets().stream().allMatch(r -> r.getBranches().isEmpty()));
   }
 
   @Test
@@ -208,6 +214,32 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
     assertEquals("592d797cd36432e591416e8b2b98154f4f163411", c1.getId());
     assertNotNull(c2);
     assertEquals("435df2f061add3589cb326cc64be9b9c3897ceca", c2.getId());
+  }
+
+  @Test
+  public void shouldFindDefaultBranchFromHEAD() throws Exception {
+    setRepositoryHeadReference("ref: refs/heads/test-branch");
+
+    ChangesetPagingResult changesets = createCommand().getChangesets(new LogCommandRequest());
+
+    assertEquals("test-branch", changesets.getBranchName());
+  }
+
+  @Test
+  public void shouldFindMasterBranchWhenHEADisNoRef() throws Exception {
+    setRepositoryHeadReference("592d797cd36432e591416e8b2b98154f4f163411");
+
+    ChangesetPagingResult changesets = createCommand().getChangesets(new LogCommandRequest());
+
+    assertEquals("master", changesets.getBranchName());
+  }
+
+  private void setRepositoryHeadReference(String s) throws IOException {
+    Files.write(s, repositoryHeadReferenceFile(), defaultCharset());
+  }
+
+  private File repositoryHeadReferenceFile() {
+    return new File(repositoryDirectory, "HEAD");
   }
 
   private GitLogCommand createCommand()

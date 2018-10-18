@@ -114,4 +114,5 @@ public interface GenericDAO<T>
    * @return all items
    */
   public Collection<T> getAll();
+
 }

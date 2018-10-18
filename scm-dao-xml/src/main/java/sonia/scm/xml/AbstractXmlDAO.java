@@ -35,17 +35,20 @@ package sonia.scm.xml;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.ImmutableList;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.GenericDAO;
 import sonia.scm.ModelObject;
 import sonia.scm.group.xml.XmlGroupDAO;
-
-//~--- JDK imports ------------------------------------------------------------
+import sonia.scm.store.ConfigurationStore;
+import sonia.scm.util.AssertUtil;
 
 import java.util.Collection;
-import sonia.scm.store.ConfigurationStore;
+import java.util.stream.Collectors;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *

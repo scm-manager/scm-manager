@@ -12,12 +12,12 @@ public class BranchChangesetCollectionToDtoMapper extends ChangesetCollectionToD
 
   @Inject
   public BranchChangesetCollectionToDtoMapper(ChangesetToChangesetDtoMapper changesetToChangesetDtoMapper, ResourceLinks resourceLinks) {
-    super(changesetToChangesetDtoMapper);
+    super(changesetToChangesetDtoMapper, resourceLinks);
     this.resourceLinks = resourceLinks;
   }
 
   public CollectionDto map(int pageNumber, int pageSize, PageResult<Changeset> pageResult, Repository repository, String branch) {
-    return this.map(pageNumber, pageSize, pageResult, repository, () -> createSelfLink(repository, branch));
+    return this.map(pageNumber, pageSize, pageResult, repository, () -> createSelfLink(repository, branch), branch);
   }
 
   private String createSelfLink(Repository repository, String branch) {

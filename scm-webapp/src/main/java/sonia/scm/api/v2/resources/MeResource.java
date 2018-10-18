@@ -5,14 +5,12 @@ import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.credential.PasswordService;
-import sonia.scm.ConcurrentModificationException;
-import sonia.scm.NotFoundException;
-import sonia.scm.user.InvalidPasswordException;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -22,9 +20,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import java.util.function.Consumer;
-
-import static sonia.scm.user.InvalidPasswordException.INVALID_MATCHING;
 
 
 /**
@@ -60,7 +55,7 @@ public class MeResource {
     @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
-  public Response get(@Context Request request, @Context UriInfo uriInfo) throws NotFoundException {
+  public Response get(@Context Request request, @Context UriInfo uriInfo) {
 
     String id = (String) SecurityUtils.getSubject().getPrincipals().getPrimaryPrincipal();
     return adapter.get(id, meToUserDtoMapper::map);
@@ -78,19 +73,8 @@ public class MeResource {
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
   @Consumes(VndMediaType.PASSWORD_CHANGE)
-  public Response changePassword(PasswordChangeDto passwordChangeDto) throws NotFoundException, ConcurrentModificationException {
-    String name = (String) SecurityUtils.getSubject().getPrincipals().getPrimaryPrincipal();
-    return adapter.update(name, user -> user.changePassword(passwordService.encryptPassword(passwordChangeDto.getNewPassword())), userManager.getUserTypeChecker().andThen(getOldOriginalPasswordChecker(passwordChangeDto.getOldPassword())));
-  }
-
-  /**
-   * Match given old password from the dto with the stored password before updating
-   */
-  private Consumer<User> getOldOriginalPasswordChecker(String oldPassword) {
-    return user -> {
-      if (!user.getPassword().equals(passwordService.encryptPassword(oldPassword))) {
-        throw new InvalidPasswordException(INVALID_MATCHING);
-      }
-    };
+  public Response changePassword(@Valid PasswordChangeDto passwordChangeDto) {
+    userManager.changePasswordForLoggedInUser(passwordService.encryptPassword(passwordChangeDto.getOldPassword()), passwordService.encryptPassword(passwordChangeDto.getNewPassword()));
+    return Response.noContent().build();
   }
 }

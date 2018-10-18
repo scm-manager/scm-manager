@@ -38,10 +38,7 @@ package sonia.scm.user;
 import sonia.scm.Manager;
 import sonia.scm.search.Searchable;
 
-import java.text.MessageFormat;
-import java.util.function.Consumer;
-
-import static sonia.scm.user.ChangePasswordNotAllowedException.WRONG_USER_TYPE;
+import java.util.Collection;
 
 /**
  * The central class for managing {@link User} objects.
@@ -74,21 +71,29 @@ public interface UserManager
    */
   public String getDefaultType();
 
-
-  /**
-   * Only account of the default type "xml" can change their password
-   */
-  default Consumer<User> getUserTypeChecker() {
-    return user -> {
-      if (!isTypeDefault(user)) {
-        throw new ChangePasswordNotAllowedException(MessageFormat.format(WRONG_USER_TYPE, user.getType()));
-      }
-    };
-  }
-
   default boolean isTypeDefault(User user) {
     return getDefaultType().equals(user.getType());
   }
 
+  /**
+   * Returns a {@link java.util.Collection} of filtered objects
+   *
+   * @param filter the searched string
+   * @return filtered object from the store
+   */
+  Collection<User> autocomplete(String filter);
 
+  /**
+   * Changes the password of the logged in user.
+   * @param oldPassword The current encrypted password of the user.
+   * @param newPassword The new encrypted password of the user.
+   */
+  void changePasswordForLoggedInUser(String oldPassword, String newPassword);
+
+  /**
+   * Overwrites the password for the given user id. This needs user write privileges.
+   * @param userId The id of the user to change the password for.
+   * @param newPassword The new encrypted password.
+   */
+  void overwritePassword(String userId, String newPassword);
 }

@@ -14,7 +14,7 @@ type Props = {
 
 class TypeSelector extends React.Component<Props> {
   render() {
-    const { t, type, handleTypeChange, loading, label, helpText } = this.props;
+    const { type, handleTypeChange, loading, label, helpText } = this.props;
     const types = ["READ", "OWNER", "WRITE"];
 
     return (

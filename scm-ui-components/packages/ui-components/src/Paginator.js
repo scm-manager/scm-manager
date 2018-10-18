@@ -18,8 +18,10 @@ class Paginator extends React.Component<Props> {
   createAction = (linkType: string) => () => {
     const { collection, onPageChange } = this.props;
     if (onPageChange) {
-      const link = collection._links[linkType].href;
-      onPageChange(link);
+      const link = collection._links[linkType];
+      if (link && link.href) {
+        onPageChange(link.href);
+      }
     }
   };
 

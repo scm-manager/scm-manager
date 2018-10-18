@@ -47,7 +47,7 @@ public class SourceRootResource {
   @GET
   @Produces(VndMediaType.SOURCE)
   @Path("{revision}/{path: .*}")
-  public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision, @PathParam("path") String path) throws NotFoundException, IOException {
+  public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision, @PathParam("path") String path) throws IOException {
     return getSource(namespace, name, path, revision);
   }
 
