@@ -16,47 +16,46 @@ class PrimaryNavigation extends React.Component<Props> {
   render() {
     const { t, repositoriesLink, usersLink, groupsLink, configLink, logoutLink } = this.props;
 
-    const _repositoriesLink = repositoriesLink ? (
-      <PrimaryNavigationLink
-      to="/repos"
-      match="/(repo|repos)"
-      label={t("primary-navigation.repositories")}
-    />): null;
-
-    const _usersLink = usersLink ? (
-      <PrimaryNavigationLink
-      to="/users"
-      match="/(user|users)"
-      label={t("primary-navigation.users")}
-    />) : null;
-
-    const _groupsLink = groupsLink ? (
-      <PrimaryNavigationLink
-      to="/groups"
-      match="/(group|groups)"
-      label={t("primary-navigation.groups")}
-    />) : null;
-
-    const _configLink = configLink ? (
-      <PrimaryNavigationLink
-      to="/config"
-      label={t("primary-navigation.config")}
-    />) : null;
-
-    const _logoutLink = logoutLink ? (
-      <PrimaryNavigationLink
-      to="/logout"
-      label={t("primary-navigation.logout")}
-    />) : null;
+    const links = [
+      repositoriesLink ? (
+        <PrimaryNavigationLink
+          to="/repos"
+          match="/(repo|repos)"
+          label={t("primary-navigation.repositories")}
+          key={"repositoriesLink"}
+        />): null,
+      usersLink ? (
+        <PrimaryNavigationLink
+          to="/users"
+          match="/(user|users)"
+          label={t("primary-navigation.users")}
+          key={"usersLink"}
+        />) : null,
+      groupsLink ? (
+        <PrimaryNavigationLink
+          to="/groups"
+          match="/(group|groups)"
+          label={t("primary-navigation.groups")}
+          key={"groupsLink"}
+        />) : null,
+      configLink ? (
+        <PrimaryNavigationLink
+          to="/config"
+          label={t("primary-navigation.config")}
+          key={"configLink"}
+        />) : null,
+      logoutLink ? (
+        <PrimaryNavigationLink
+          to="/logout"
+          label={t("primary-navigation.logout")}
+          key={"logoutLink"}
+        />) : null
+    ];
 
     return (
       <nav className="tabs is-boxed">
         <ul>
-          {_repositoriesLink}
-          {_usersLink}
-          {_groupsLink}
-          {_configLink}
-          {_logoutLink}
+          {links}
         </ul>
       </nav>
     );
