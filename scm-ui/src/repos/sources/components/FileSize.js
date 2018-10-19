@@ -14,7 +14,7 @@ class FileSize extends React.Component<Props> {
     const units = ["B", "K", "M", "G", "T", "P", "E", "Z", "Y"];
     const i = Math.floor(Math.log(bytes) / Math.log(1024));
 
-    const size = (bytes / 1024 ** i).toFixed(2);
+    const size = i === 0 ? bytes : (bytes / 1024 ** i).toFixed(2);
     return `${size} ${units[i]}`;
   }
 
