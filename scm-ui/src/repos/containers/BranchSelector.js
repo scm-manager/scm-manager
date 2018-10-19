@@ -60,6 +60,8 @@ class BranchSelector extends React.Component<Props, State> {
           </div>
         </div>
       );
+    } else {
+      return null;
     }
   }
 

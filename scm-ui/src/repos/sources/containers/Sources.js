@@ -1,7 +1,7 @@
 // @flow
 import React from "react";
 import { connect } from "react-redux";
-import type { Repository, File } from "@scm-manager/ui-types";
+import type { Repository, Branch, File } from "@scm-manager/ui-types";
 import FileTree from "../components/FileTree";
 import { ErrorNotification, Loading } from "@scm-manager/ui-components";
 import {
@@ -10,6 +10,8 @@ import {
   getSources,
   isFetchSourcesPending
 } from "../modules/sources";
+import BranchSelector from "../../containers/BranchSelector";
+import { getBranches } from "../../modules/branches";
 
 type Props = {
   repository: Repository,
@@ -19,6 +21,8 @@ type Props = {
   revision: string,
   path: string,
   baseUrl: string,
+  branches: Branch[],
+  selectedBranch: string,
 
   // dispatch props
   fetchSources: (
@@ -26,6 +30,9 @@ type Props = {
     revision: string,
     path: string
   ) => void,
+
+  // Context props
+  history: any,
   match: any
 };
 
@@ -35,6 +42,16 @@ class Sources extends React.Component<Props> {
 
     fetchSources(repository, revision, path);
   }
+
+  branchSelected = (branch?: Branch) => {
+    let url;
+    if (branch) {
+      url = `${this.props.baseUrl}/${branch.revision}`;
+    } else {
+      url = `${this.props.baseUrl}/`;
+    }
+    this.props.history.push(url);
+  };
 
   render() {
     const { sources, revision, path, baseUrl, loading, error } = this.props;
@@ -48,14 +65,32 @@ class Sources extends React.Component<Props> {
     }
 
     return (
-      <FileTree
-        tree={sources}
-        revision={revision}
-        path={path}
-        baseUrl={baseUrl}
-      />
+      <>
+        {this.renderBranchSelector()}
+        <FileTree
+          tree={sources}
+          revision={revision}
+          path={path}
+          baseUrl={baseUrl}
+        />
+      </>
     );
   }
+
+  renderBranchSelector = () => {
+    const { repository, branches } = this.props;
+    if (repository._links.branches) {
+      return (
+        <BranchSelector
+          branches={branches}
+          selected={(b: Branch) => {
+            this.branchSelected(b);
+          }}
+        />
+      );
+    }
+    return null;
+  };
 }
 
 const mapStateToProps = (state, ownProps) => {
@@ -64,6 +99,7 @@ const mapStateToProps = (state, ownProps) => {
 
   const loading = isFetchSourcesPending(state, repository, revision, path);
   const error = getFetchSourcesFailure(state, repository, revision, path);
+  const branches = getBranches(state, repository);
   const sources = getSources(state, repository, revision, path);
 
   return {
@@ -71,7 +107,8 @@ const mapStateToProps = (state, ownProps) => {
     error,
     sources,
     revision,
-    path
+    path,
+    branches
   };
 };
 
