@@ -173,6 +173,30 @@ public class ResourceLinksTest {
     assertEquals(BASE_URL + ConfigResource.CONFIG_PATH_V2, url);
   }
 
+  @Test
+  public void shouldHandleSpacesInPaths() {
+    String url = resourceLinks.source().content("space", "name", "rev", "name with spaces");
+    assertEquals(BASE_URL + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/name/content/rev/name%20with%20spaces", url);
+  }
+
+  @Test
+  public void shouldHandleBackslashInPaths() {
+    String url = resourceLinks.source().content("space", "name", "rev", "name_with_\\");
+    assertEquals(BASE_URL + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/name/content/rev/name_with_%5C", url);
+  }
+
+  @Test
+  public void shouldHandleNewLineInPaths() {
+    String url = resourceLinks.source().content("space", "name", "rev", "name_with\nnew_line");
+    assertEquals(BASE_URL + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/name/content/rev/name_with%0Anew_line", url);
+  }
+
+  @Test
+  public void shouldKeepSlashesInInPaths() {
+    String url = resourceLinks.source().content("space", "name", "rev", "some/dir/somewhere");
+    assertEquals(BASE_URL + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/name/content/rev/some/dir/somewhere", url);
+  }
+
   @Before
   public void initUriInfo() {
     initMocks(this);
