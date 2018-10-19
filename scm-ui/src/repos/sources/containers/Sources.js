@@ -46,7 +46,7 @@ class Sources extends React.Component<Props> {
       path
     } = this.props;
 
-    fetchBranches(this.props.repository);
+    fetchBranches(repository);
     fetchSources(repository, revision, path);
   }
 
