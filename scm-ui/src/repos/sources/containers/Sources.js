@@ -11,7 +11,7 @@ import {
   isFetchSourcesPending
 } from "../modules/sources";
 import BranchSelector from "../../containers/BranchSelector";
-import { getBranches } from "../../modules/branches";
+import { fetchBranches, getBranches } from "../../modules/branches";
 
 type Props = {
   repository: Repository,
@@ -22,9 +22,9 @@ type Props = {
   path: string,
   baseUrl: string,
   branches: Branch[],
-  selectedBranch: string,
 
   // dispatch props
+  fetchBranches: Repository => void,
   fetchSources: (
     repository: Repository,
     revision: string,
@@ -38,19 +38,31 @@ type Props = {
 
 class Sources extends React.Component<Props> {
   componentDidMount() {
-    const { fetchSources, repository, revision, path } = this.props;
+    const {
+      fetchSources,
+      fetchBranches,
+      repository,
+      revision,
+      path
+    } = this.props;
 
+    fetchBranches(this.props.repository);
     fetchSources(repository, revision, path);
   }
 
   branchSelected = (branch?: Branch) => {
     let url;
     if (branch) {
-      url = `${this.props.baseUrl}/${branch.revision}`;
+      url = `${this.props.baseUrl}/${branch.name}`;
     } else {
       url = `${this.props.baseUrl}/`;
     }
     this.props.history.push(url);
+  };
+
+  findSelectedBranch = () => {
+    const { revision, branches } = this.props;
+    return branches.find((branch: Branch) => branch.name === revision);
   };
 
   render() {
@@ -94,8 +106,8 @@ class Sources extends React.Component<Props> {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { repository } = ownProps;
-  const { revision, path } = ownProps.match.params;
+  const { repository, match } = ownProps;
+  const { revision, path } = match.params;
 
   const loading = isFetchSourcesPending(state, repository, revision, path);
   const error = getFetchSourcesFailure(state, repository, revision, path);
@@ -116,6 +128,9 @@ const mapDispatchToProps = dispatch => {
   return {
     fetchSources: (repository: Repository, revision: string, path: string) => {
       dispatch(fetchSources(repository, revision, path));
+    },
+    fetchBranches: (repository: Repository) => {
+      dispatch(fetchBranches(repository));
     }
   };
 };
