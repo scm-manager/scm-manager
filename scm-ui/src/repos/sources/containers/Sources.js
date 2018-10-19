@@ -51,13 +51,18 @@ class Sources extends React.Component<Props> {
   }
 
   branchSelected = (branch?: Branch) => {
+    const { path, baseUrl, history } = this.props;
     let url;
     if (branch) {
-      url = `${this.props.baseUrl}/${branch.name}`;
+      if (path) {
+        url = `${baseUrl}/${branch.name}/${path}`;
+      } else {
+        url = `${baseUrl}/${branch.name}`;
+      }
     } else {
-      url = `${this.props.baseUrl}/`;
+      url = `${baseUrl}/`;
     }
-    this.props.history.push(url);
+    history.push(url);
   };
 
   findSelectedBranch = () => {
