@@ -1,31 +1,27 @@
 //@flow
 import React from "react";
-import { connect } from "react-redux";
-import { translate } from "react-i18next";
+import {connect} from "react-redux";
+import {translate} from "react-i18next";
 import {
+  createPermission,
+  createPermissionReset,
+  deletePermissionReset,
   fetchPermissions,
+  getCreatePermissionFailure,
+  getDeletePermissionsFailure,
   getFetchPermissionsFailure,
-  isFetchPermissionsPending,
+  getModifyPermissionsFailure,
   getPermissionsOfRepo,
   hasCreatePermission,
-  createPermission,
   isCreatePermissionPending,
-  getCreatePermissionFailure,
-  createPermissionReset,
-  getDeletePermissionsFailure,
-  getModifyPermissionsFailure,
-  modifyPermissionReset,
-  deletePermissionReset
+  isFetchPermissionsPending,
+  modifyPermissionReset
 } from "../modules/permissions";
-import { Loading, ErrorPage } from "@scm-manager/ui-components";
-import type {
-  Permission,
-  PermissionCollection,
-  PermissionEntry
-} from "@scm-manager/ui-types";
+import {ErrorPage, Loading} from "@scm-manager/ui-components";
+import type {Permission, PermissionCollection, PermissionCreateEntry} from "@scm-manager/ui-types";
 import SinglePermission from "./SinglePermission";
 import CreatePermissionForm from "../components/CreatePermissionForm";
-import type { History } from "history";
+import type {History} from "history";
 
 type Props = {
   namespace: string,
@@ -39,7 +35,7 @@ type Props = {
   //dispatch functions
   fetchPermissions: (namespace: string, repoName: string) => void,
   createPermission: (
-    permission: PermissionEntry,
+    permission: PermissionCreateEntry,
     namespace: string,
     repoName: string,
     callback?: () => void
@@ -176,7 +172,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(fetchPermissions(namespace, repoName));
     },
     createPermission: (
-      permission: PermissionEntry,
+      permission: PermissionCreateEntry,
       namespace: string,
       repoName: string,
       callback?: () => void

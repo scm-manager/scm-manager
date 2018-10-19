@@ -1,17 +1,14 @@
 // @flow
 import React from "react";
-import { translate } from "react-i18next";
-import { Checkbox, InputField, SubmitButton } from "@scm-manager/ui-components";
+import {translate} from "react-i18next";
+import {Checkbox, InputField, SubmitButton} from "@scm-manager/ui-components";
 import TypeSelector from "./TypeSelector";
-import type {
-  PermissionCollection,
-  PermissionEntry
-} from "@scm-manager/ui-types";
+import type {PermissionCollection, PermissionCreateEntry} from "@scm-manager/ui-types";
 import * as validator from "./permissionValidation";
 
 type Props = {
   t: string => string,
-  createPermission: (permission: PermissionEntry) => void,
+  createPermission: (permission: PermissionCreateEntry) => void,
   loading: boolean,
   currentPermissions: PermissionCollection
 };
@@ -65,7 +62,7 @@ class CreatePermissionForm extends React.Component<Props, State> {
           <SubmitButton
             label={t("permission.add-permission.submit-button")}
             loading={loading}
-            disabled={!this.state.valid || this.state.name == ""}
+            disabled={!this.state.valid || this.state.name === ""}
           />
         </form>
       </div>

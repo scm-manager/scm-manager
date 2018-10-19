@@ -1,32 +1,23 @@
 //@flow
 import React from "react";
-import {
-  deleteRepo,
-  fetchRepo,
-  getFetchRepoFailure,
-  getRepository,
-  isFetchRepoPending
-} from "../modules/repos";
-import { connect } from "react-redux";
-import { Route, Switch } from "react-router-dom";
-import type { Repository } from "@scm-manager/ui-types";
-import {
-  ErrorPage,
-  Loading,
-  Navigation,
-  NavLink,
-  Page,
-  Section
-} from "@scm-manager/ui-components";
-import { translate } from "react-i18next";
+import {deleteRepo, fetchRepo, getFetchRepoFailure, getRepository, isFetchRepoPending} from "../modules/repos";
+
+import {connect} from "react-redux";
+import {Route, Switch} from "react-router-dom";
+import type {Repository} from "@scm-manager/ui-types";
+
+import {ErrorPage, Loading, Navigation, NavLink, Page, Section} from "@scm-manager/ui-components";
+import {translate} from "react-i18next";
 import RepositoryDetails from "../components/RepositoryDetails";
 import DeleteNavAction from "../components/DeleteNavAction";
 import Edit from "../containers/Edit";
 import Permissions from "../permissions/containers/Permissions";
 
-import type { History } from "history";
+import type {History} from "history";
 import EditNavLink from "../components/EditNavLink";
+
 import BranchRoot from "./BranchRoot";
+import ChangesetView from "./ChangesetView";
 import PermissionsNavLink from "../components/PermissionsNavLink";
 import ScmDiff from "./ScmDiff";
 
@@ -71,6 +62,11 @@ class RepositoryRoot extends React.Component<Props> {
 
   delete = (repository: Repository) => {
     this.props.deleteRepo(repository, this.deleted);
+  };
+
+  matchChangeset = (route: any) => {
+    const url = this.matchedUrl();
+    return route.location.pathname.match(`${url}/changeset/`);
   };
 
   matches = (route: any) => {
@@ -121,6 +117,11 @@ class RepositoryRoot extends React.Component<Props> {
                 )}
               />
               <Route
+                exact
+                path={`${url}/changeset/:id`}
+                render={() => <ChangesetView repository={repository} />}
+              />
+              <Route
                 path={`${url}/changesets`}
                 render={() => (
                   <BranchRoot
@@ -145,7 +146,7 @@ class RepositoryRoot extends React.Component<Props> {
                 component={() => (
                   <ScmDiff
                     repository={repository}
-                    revision={"2"} // TODO: this is hardcoded only for dev purposes.
+                    revision={"a801749dc445d9d71e3fe4c50241433a2adfba6a"} // TODO: this is hardcoded only for dev purposes.
                     sideBySide={false}
                   />
                 )}

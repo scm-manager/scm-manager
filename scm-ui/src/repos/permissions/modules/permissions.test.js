@@ -3,44 +3,44 @@ import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 import fetchMock from "fetch-mock";
 import reducer, {
-  fetchPermissions,
-  fetchPermissionsSuccess,
-  getPermissionsOfRepo,
-  isFetchPermissionsPending,
-  getFetchPermissionsFailure,
-  modifyPermission,
-  modifyPermissionSuccess,
-  getModifyPermissionFailure,
-  isModifyPermissionPending,
-  createPermission,
-  hasCreatePermission,
-  deletePermission,
-  deletePermissionSuccess,
-  getDeletePermissionFailure,
-  isDeletePermissionPending,
-  getModifyPermissionsFailure,
-  MODIFY_PERMISSION_FAILURE,
-  MODIFY_PERMISSION_PENDING,
-  FETCH_PERMISSIONS,
-  FETCH_PERMISSIONS_PENDING,
-  FETCH_PERMISSIONS_SUCCESS,
-  FETCH_PERMISSIONS_FAILURE,
-  MODIFY_PERMISSION_SUCCESS,
-  MODIFY_PERMISSION,
+  CREATE_PERMISSION,
+  CREATE_PERMISSION_FAILURE,
   CREATE_PERMISSION_PENDING,
   CREATE_PERMISSION_SUCCESS,
-  CREATE_PERMISSION_FAILURE,
+  createPermission,
+  createPermissionSuccess,
   DELETE_PERMISSION,
+  DELETE_PERMISSION_FAILURE,
   DELETE_PERMISSION_PENDING,
   DELETE_PERMISSION_SUCCESS,
-  DELETE_PERMISSION_FAILURE,
-  CREATE_PERMISSION,
-  createPermissionSuccess,
+  deletePermission,
+  deletePermissionSuccess,
+  FETCH_PERMISSIONS,
+  FETCH_PERMISSIONS_FAILURE,
+  FETCH_PERMISSIONS_PENDING,
+  FETCH_PERMISSIONS_SUCCESS,
+  fetchPermissions,
+  fetchPermissionsSuccess,
   getCreatePermissionFailure,
+  getDeletePermissionFailure,
+  getDeletePermissionsFailure,
+  getFetchPermissionsFailure,
+  getModifyPermissionFailure,
+  getModifyPermissionsFailure,
+  getPermissionsOfRepo,
+  hasCreatePermission,
   isCreatePermissionPending,
-  getDeletePermissionsFailure
+  isDeletePermissionPending,
+  isFetchPermissionsPending,
+  isModifyPermissionPending,
+  MODIFY_PERMISSION,
+  MODIFY_PERMISSION_FAILURE,
+  MODIFY_PERMISSION_PENDING,
+  MODIFY_PERMISSION_SUCCESS,
+  modifyPermission,
+  modifyPermissionSuccess
 } from "./permissions";
-import type { Permission, PermissionCollection } from "@scm-manager/ui-types";
+import type {Permission, PermissionCollection} from "@scm-manager/ui-types";
 
 const hitchhiker_puzzle42Permission_user_eins: Permission = {
   name: "user_eins",
@@ -640,7 +640,7 @@ describe("permissions selectors", () => {
   it("should return true, when createPermission is true", () => {
     const state = {
       permissions: {
-        ["hitchhiker/puzzle42"]: {
+        "hitchhiker/puzzle42": {
           createPermission: true
         }
       }
@@ -651,7 +651,7 @@ describe("permissions selectors", () => {
   it("should return false, when createPermission is false", () => {
     const state = {
       permissions: {
-        ["hitchhiker/puzzle42"]: {
+        "hitchhiker/puzzle42": {
           createPermission: false
         }
       }

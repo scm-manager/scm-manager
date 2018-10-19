@@ -5,7 +5,6 @@ import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.RevisionNotFoundException;
-import sonia.scm.repository.api.DiffFormat;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.util.HttpUtil;
@@ -58,7 +57,7 @@ public class DiffRootResource {
         try {
           repositoryService.getDiffCommand()
             .setRevision(revision)
-            .setFormat(DiffFormat.GIT) // TODO: Configure this at request time. Maybe as a query param?
+//            .setFormat(DiffFormat.GIT) // TODO: Configure this at request time. Maybe as a query param?
             .retriveContent(output);
         } catch (RevisionNotFoundException e) {
           throw new WebApplicationException(Response.Status.NOT_FOUND);

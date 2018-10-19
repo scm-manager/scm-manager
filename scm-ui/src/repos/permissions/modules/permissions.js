@@ -1,16 +1,12 @@
 // @flow
 
-import { apiClient } from "@scm-manager/ui-components";
+import type {Action} from "@scm-manager/ui-components";
+import {apiClient} from "@scm-manager/ui-components";
 import * as types from "../../../modules/types";
-import type { Action } from "@scm-manager/ui-components";
-import type {
-  PermissionCollection,
-  Permission,
-  PermissionEntry
-} from "@scm-manager/ui-types";
-import { isPending } from "../../../modules/pending";
-import { getFailure } from "../../../modules/failure";
-import { Dispatch } from "redux";
+import type {Permission, PermissionCollection, PermissionCreateEntry} from "@scm-manager/ui-types";
+import {isPending} from "../../../modules/pending";
+import {getFailure} from "../../../modules/failure";
+import {Dispatch} from "redux";
 
 export const FETCH_PERMISSIONS = "scm/permissions/FETCH_PERMISSIONS";
 export const FETCH_PERMISSIONS_PENDING = `${FETCH_PERMISSIONS}_${
@@ -219,7 +215,7 @@ export function modifyPermissionReset(namespace: string, repoName: string) {
 
 // create permission
 export function createPermission(
-  permission: PermissionEntry,
+  permission: PermissionCreateEntry,
   namespace: string,
   repoName: string,
   callback?: () => void
@@ -260,7 +256,7 @@ export function createPermission(
 }
 
 export function createPermissionPending(
-  permission: PermissionEntry,
+  permission: PermissionCreateEntry,
   namespace: string,
   repoName: string
 ): Action {
@@ -272,7 +268,7 @@ export function createPermissionPending(
 }
 
 export function createPermissionSuccess(
-  permission: PermissionEntry,
+  permission: PermissionCreateEntry,
   namespace: string,
   repoName: string
 ): Action {
