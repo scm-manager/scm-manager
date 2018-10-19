@@ -19,7 +19,6 @@ import EditNavLink from "../components/EditNavLink";
 import BranchRoot from "./BranchRoot";
 import ChangesetView from "./ChangesetView";
 import PermissionsNavLink from "../components/PermissionsNavLink";
-import ScmDiff from "./ScmDiff";
 
 type Props = {
   namespace: string,
@@ -62,11 +61,6 @@ class RepositoryRoot extends React.Component<Props> {
 
   delete = (repository: Repository) => {
     this.props.deleteRepo(repository, this.deleted);
-  };
-
-  matchChangeset = (route: any) => {
-    const url = this.matchedUrl();
-    return route.location.pathname.match(`${url}/changeset/`);
   };
 
   matches = (route: any) => {
@@ -141,16 +135,6 @@ class RepositoryRoot extends React.Component<Props> {
                   />
                 )}
               />
-              <Route
-                path={`${url}/diff`}
-                component={() => (
-                  <ScmDiff
-                    repository={repository}
-                    revision={"a801749dc445d9d71e3fe4c50241433a2adfba6a"} // TODO: this is hardcoded only for dev purposes.
-                    sideBySide={false}
-                  />
-                )}
-              />
             </Switch>
           </div>
           <div className="column">
@@ -172,9 +156,6 @@ class RepositoryRoot extends React.Component<Props> {
               <Section label={t("repository-root.actions-label")}>
                 <DeleteNavAction repository={repository} delete={this.delete} />
                 <NavLink to="/repos" label={t("repository-root.back-label")} />
-              </Section>
-              <Section label="Diff">
-                <NavLink to={`${url}/diff`} label="Diff" />
               </Section>
             </Navigation>
           </div>

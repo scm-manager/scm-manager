@@ -1,15 +1,12 @@
 // @flow
 
 import React from "react";
-import { Diff, Hunk, parseDiff } from "react-diff-view";
 import { apiClient } from "@scm-manager/ui-components";
-import type { Repository } from "@scm-manager/ui-types";
+import type { Changeset } from "@scm-manager/ui-types";
 import { Diff2Html } from "diff2html";
 
 type Props = {
-  //TODO: Actually, we want the Changeset here
-  repository: Repository,
-  revision: string,
+  changeset: Changeset,
   sideBySide: boolean
 };
 
@@ -25,9 +22,8 @@ class ScmDiff extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    const { repository, revision } = this.props;
-    const { namespace, name } = repository;
-    const url = `/repositories/${namespace}/${name}/diff/${revision}`; //TODO: use HATEOAS link from changeset
+    const { changeset } = this.props;
+    const url = changeset._links.diff.href;
     apiClient
       .get(url)
       .then(response => response.text())
@@ -49,25 +45,6 @@ class ScmDiff extends React.Component<Props, State> {
       // eslint-disable-next-line react/no-danger
       <div dangerouslySetInnerHTML={{ __html: outputHtml }} />
     );
-    // if (!this.state.diff) {
-    //   return null;
-    // }
-    //
-    // const files = parseDiff(this.state.diff);
-    //
-    // const renderFile = ({ newPath, oldRevision, newRevision, type, hunks }) => (
-    //   <div>
-    //     <div> File: {newPath} </div>
-    //     <Diff
-    //       key={oldRevision + "-" + newRevision}
-    //       diffType={type}
-    //       hunks={hunks}
-    //       viewType="unified"
-    //     />
-    //   </div>
-    // );
-    //
-    // return <div>{files.map(renderFile)}</div>;
   }
 }
 

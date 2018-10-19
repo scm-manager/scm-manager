@@ -12,6 +12,7 @@ import AvatarImage from "./AvatarImage";
 import classNames from "classnames";
 import ChangesetId from "./ChangesetId";
 import type {Tag} from "@scm-manager/ui-types";
+import DiffView from "../../containers/DiffView";
 
 const styles = {
   spacing: {
@@ -70,6 +71,8 @@ class ChangesetDetails extends React.Component<Props> {
             );
           })}
         </p>
+
+        <DiffView changeset={changeset} sideBySide={false} />
       </div>
     );
   }
