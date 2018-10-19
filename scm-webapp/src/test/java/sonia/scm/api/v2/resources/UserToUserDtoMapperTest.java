@@ -65,7 +65,7 @@ public class UserToUserDtoMapperTest {
   }
 
   @Test
-  public void shouldGetPasswordLinkOnlyForDefaultUserType() {
+  public void shouldGetPasswordLinkForAdmin() {
     User user = createDefaultUser();
     when(subject.isPermitted("user:modify:abc")).thenReturn(true);
     when(userManager.isTypeDefault(eq(user))).thenReturn(true);
@@ -73,14 +73,15 @@ public class UserToUserDtoMapperTest {
     UserDto userDto = mapper.map(user);
 
     assertEquals("expected password link with modify permission", expectedBaseUri.resolve("abc/password").toString(), userDto.getLinks().getLinkBy("password").get().getHref());
+  }
 
-    when(subject.isPermitted("user:modify:abc")).thenReturn(false);
-    userDto = mapper.map(user);
-    assertEquals("expected password link on mission modify permission", expectedBaseUri.resolve("abc/password").toString(), userDto.getLinks().getLinkBy("password").get().getHref());
-
+  @Test
+  public void shouldGetPasswordLinkOnlyForDefaultUserType() {
+    User user = createDefaultUser();
+    when(subject.isPermitted("user:modify:abc")).thenReturn(true);
     when(userManager.isTypeDefault(eq(user))).thenReturn(false);
 
-    userDto = mapper.map(user);
+    UserDto userDto = mapper.map(user);
 
     assertFalse("expected no password link", userDto.getLinks().getLinkBy("password").isPresent());
   }

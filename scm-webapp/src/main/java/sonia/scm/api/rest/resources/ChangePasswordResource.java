@@ -109,7 +109,7 @@ public class ChangePasswordResource
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-  public Response changePassword(@FormParam("old-password") String oldPassword, @FormParam("new-password") String newPassword) throws NotFoundException, ConcurrentModificationException {
+  public Response changePassword(@FormParam("old-password") String oldPassword, @FormParam("new-password") String newPassword) {
     AssertUtil.assertIsNotEmpty(oldPassword);
     AssertUtil.assertIsNotEmpty(newPassword);
 

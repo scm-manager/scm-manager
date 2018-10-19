@@ -10,6 +10,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 @ToString
 public class PasswordChangeDto {
 
+  @NotEmpty
   private String oldPassword;
 
   @NotEmpty

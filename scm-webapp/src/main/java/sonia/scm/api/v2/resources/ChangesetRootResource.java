@@ -12,6 +12,7 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.RevisionNotFoundException;
+import sonia.scm.repository.api.LogCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.web.VndMediaType;
@@ -59,9 +60,10 @@ public class ChangesetRootResource {
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
       Repository repository = repositoryService.getRepository();
       RepositoryPermissions.read(repository).check();
-      ChangesetPagingResult changesets = repositoryService.getLogCommand()
-        .setPagingStart(page)
-        .setPagingLimit(pageSize)
+      ChangesetPagingResult changesets = new PagedLogCommandBuilder(repositoryService)
+        .page(page)
+        .pageSize(pageSize)
+        .create()
         .getChangesets();
       if (changesets != null && changesets.getChangesets() != null) {
         PageResult<Changeset> pageResult = new PageResult<>(changesets.getChangesets(), changesets.getTotal());
