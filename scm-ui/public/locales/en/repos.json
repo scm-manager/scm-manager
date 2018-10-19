@@ -62,7 +62,7 @@
       "description": "Description",
       "contact": "Contact",
       "date": "Date",
-      "summary": "Changeset {{id}} committed {{time}}"
+      "summary": "Changeset {{id}} was committed {{time}}"
     },
     "author": {
       "name": "Author",

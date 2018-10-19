@@ -7,9 +7,11 @@ import {
   getRepository,
   isFetchRepoPending
 } from "../modules/repos";
+
 import { connect } from "react-redux";
 import { Route, Switch } from "react-router-dom";
 import type { Repository } from "@scm-manager/ui-types";
+
 import {
   ErrorPage,
   Loading,
@@ -26,7 +28,9 @@ import Permissions from "../permissions/containers/Permissions";
 
 import type { History } from "history";
 import EditNavLink from "../components/EditNavLink";
+
 import BranchRoot from "./BranchRoot";
+import ChangesetView from "./ChangesetView";
 import PermissionsNavLink from "../components/PermissionsNavLink";
 import Sources from "../sources/containers/Sources";
 import RepositoryNavLink from "../components/RepositoryNavLink";
@@ -72,6 +76,11 @@ class RepositoryRoot extends React.Component<Props> {
 
   delete = (repository: Repository) => {
     this.props.deleteRepo(repository, this.deleted);
+  };
+
+  matchChangeset = (route: any) => {
+    const url = this.matchedUrl();
+    return route.location.pathname.match(`${url}/changeset/`);
   };
 
   matches = (route: any) => {
@@ -120,6 +129,11 @@ class RepositoryRoot extends React.Component<Props> {
                     repoName={this.props.repository.name}
                   />
                 )}
+              />
+              <Route
+                exact
+                path={`${url}/changeset/:id`}
+                render={() => <ChangesetView repository={repository} />}
               />
               <Route
                 path={`${url}/sources`}
