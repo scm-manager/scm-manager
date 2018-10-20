@@ -1,5 +1,9 @@
 {
-  "hg": {
-    "description": "die hg repo ist super "
+  "scm-hg-plugin": {
+    "information": {
+      "clone" : "Repository Klonen",
+      "create" : "Neue Repository erstellen",
+      "replace" : "Eine existierende Repository aktualisieren"
+    }
   }
 }

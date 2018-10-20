@@ -1,5 +1,7 @@
 {
-  "svn": {
-    "description": "die svn repo ist super "
+  "scm-svn-plugin": {
+    "information": {
+      "checkout" : "Repository auschecken"
+    }
   }
 }

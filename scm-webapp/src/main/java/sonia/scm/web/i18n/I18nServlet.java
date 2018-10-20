@@ -4,7 +4,6 @@ package sonia.scm.web.i18n;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.legman.Subscribe;
 import com.google.inject.Singleton;
-import com.sun.org.apache.regexp.internal.RE;
 import lombok.extern.slf4j.Slf4j;
 import sonia.scm.NotFoundException;
 import sonia.scm.SCMContext;
@@ -34,7 +33,7 @@ import java.util.function.Function;
 
 
 /**
- * Collect
+ * Collect the plugin translations.
  */
 @Singleton
 @WebElement(value = I18nServlet.PATTERN, regex = true)
@@ -47,9 +46,8 @@ public class I18nServlet extends HttpServlet {
   public static final String CACHE_NAME = "sonia.cache.plugins.translations";
 
   private final UberClassLoader uberClassLoader;
-  private final Cache<String, HashMap<String, String>> cache;
-  private RE languagePathPostfix = new RE(".*(\\-[A-Z]+)/.*");
-  private ObjectMapper objectMapper = new ObjectMapper();
+  private final Cache<String, Map> cache;
+  private static ObjectMapper objectMapper = new ObjectMapper();
 
 
   @Inject
@@ -58,18 +56,18 @@ public class I18nServlet extends HttpServlet {
     this.cache = cacheManager.getCache(CACHE_NAME);
   }
 
-  @Subscribe
+  @Subscribe(async = false)
   public void handleRestartEvent(RestartEvent event) {
-    log.info("clear cache on restart event with reason {}", event.getReason());
+    log.info("Clear cache on restart event with reason {}", event.getReason());
     cache.clear();
   }
 
-  public Map<String, String> getCollectedJson(String path,
-                                              Function<String, Optional<HashMap<String, String>>> jsonFileProvider,
-                                              BiConsumer<String, HashMap<String, String>> createdJsonFileConsumer) throws NotFoundException {
+  private Map getCollectedJson(String path,
+                               Function<String, Optional<Map>> jsonFileProvider,
+                               BiConsumer<String, Map> createdJsonFileConsumer) {
     return Optional.ofNullable(jsonFileProvider.apply(path)
       .orElseGet(() -> {
-          Optional<HashMap<String, String>> createdFile = collectJsonFile(path);
+          Optional<Map> createdFile = collectJsonFile(path);
           createdFile.ifPresent(map -> createdJsonFileConsumer.accept(path, map));
           return createdFile.orElse(null);
         }
@@ -82,9 +80,9 @@ public class I18nServlet extends HttpServlet {
       response.setContentType("application/json");
       PrintWriter out = response.getWriter();
       String path = req.getServletPath();
-      Function<String, Optional<HashMap<String, String>>> jsonFileProvider = usedPath -> Optional.empty();
-      BiConsumer<String, HashMap<String, String>> createdJsonFileConsumer = (usedPath, foundJsonMap) -> log.info("A json File is created from the path {}", usedPath);
-      if (SCMContext.getContext().getStage() == Stage.PRODUCTION) {
+      Function<String, Optional<Map>> jsonFileProvider = usedPath -> Optional.empty();
+      BiConsumer<String, Map> createdJsonFileConsumer = (usedPath, foundJsonMap) -> log.info("A json File is created from the path {}", usedPath);
+      if (isProductionStage()) {
         log.info("In Production Stage get the plugin translations from the cache");
         jsonFileProvider = usedPath -> Optional.ofNullable(
           cache.get(usedPath));
@@ -94,58 +92,40 @@ public class I18nServlet extends HttpServlet {
       }
       out.write(objectMapper.writeValueAsString(getCollectedJson(path, jsonFileProvider, createdJsonFileConsumer)));
     } catch (IOException e) {
-      log.error("error on getting the translation of the plugins", e);
+      log.error("Error on getting the translation of the plugins", e);
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     } catch (NotFoundException e) {
       log.error("Plugin translations are not found", e);
       response.setStatus(HttpServletResponse.SC_NOT_FOUND);
     }
-//    ScmEventBus.getInstance().post(new RestartEvent(I18nServlet.class,"einfach so"));
+  }
+
+  protected boolean isProductionStage() {
+    return SCMContext.getContext().getStage() == Stage.PRODUCTION;
   }
 
   /**
-   * Return a collected Json File as map with the given path from all plugins in the class path
+   * Return a collected Json File as map from the given path from all plugins in the class path
    *
    * @param path the searched resource path
-   * @return a collected Json File as map with the given path from all plugins in the class path
+   * @return a collected Json File as map from the given path from all plugins in the class path
    */
-  private Optional<HashMap<String, String>> collectJsonFile(String path) {
+  protected Optional<Map> collectJsonFile(String path) {
     log.info("Collect plugin translations from path {} for every plugin", path);
-    HashMap<String, String> result = null;
+    Map result = null;
     try {
       Enumeration<URL> resources = uberClassLoader.getResources(path.replaceFirst("/", ""));
       if (resources.hasMoreElements()) {
-        result = new HashMap<>();
+        result = new HashMap();
         while (resources.hasMoreElements()) {
           URL url = resources.nextElement();
-          result.putAll(mergeJSONs(objectMapper, url));
+          result.putAll(objectMapper.readValue(Files.readAllBytes(Paths.get(url.getPath())), Map.class));
         }
       }
     } catch (IOException e) {
       log.error("Error on loading sources from {}", path, e);
+      return Optional.empty();
     }
     return Optional.ofNullable(result);
-  }
-
-  private boolean hasLanguagePostfix(String path) {
-    return languagePathPostfix.match(path);
-  }
-
-  /**
-   * remove the -DE from the path locales/de-DE/plugins
-   *
-   * @param servletPath
-   * @return
-   * @throws IOException
-   */
-  private String removeLanguagePostfix(String servletPath) {
-    return servletPath.replace(languagePathPostfix.getParen(1), "");
-  }
-
-  // TODO simplify
-  private HashMap<String, String> mergeJSONs(ObjectMapper objectMapper, URL url) throws IOException {
-    byte[] src = Files.readAllBytes(Paths.get(url.getPath()));
-    Map<String, String> json = objectMapper.readValue(src, HashMap.class);
-    return objectMapper.readerForUpdating(json).readValue(src);
   }
 }

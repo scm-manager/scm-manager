@@ -2,9 +2,11 @@
 import React from "react";
 import { repositories } from "@scm-manager/ui-components";
 import type { Repository } from "@scm-manager/ui-types";
+import { translate } from "react-i18next";
 
 type Props = {
-  repository: Repository
+  repository: Repository,
+  t: string => string
 }
 
 class ProtocolInformation extends React.Component<Props> {
@@ -18,11 +20,11 @@ class ProtocolInformation extends React.Component<Props> {
 
     return (
       <div>
-        <h4>Clone the repository</h4>
+        <h4>{t("scm-git-plugin.information.clone")}</h4>
         <pre>
           <code>git clone {href}</code>
         </pre>
-        <h4>Create a new repository</h4>
+        <h4>{t("scm-git-plugin.information.create")}</h4>
         <pre>
           <code>
             git init {repository.name}
@@ -39,7 +41,7 @@ class ProtocolInformation extends React.Component<Props> {
             <br />
           </code>
         </pre>
-        <h4>Push an existing repository</h4>
+        <h4>{t("scm-git-plugin.information.replace")}</h4>
         <pre>
           <code>
             git remote add origin {href}
@@ -54,4 +56,4 @@ class ProtocolInformation extends React.Component<Props> {
 
 }
 
-export default ProtocolInformation;
+export default translate("plugins")(ProtocolInformation);

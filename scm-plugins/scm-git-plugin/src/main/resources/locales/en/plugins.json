@@ -1,5 +1,9 @@
 {
-  "git": {
-    "description": "the git repo is great "
+  "scm-git-plugin": {
+    "information": {
+      "clone" : "Clone the repository",
+      "create" : "Create a new repository",
+      "replace" : "Push an existing repository"
+    }
   }
 }
