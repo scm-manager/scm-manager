@@ -41,7 +41,11 @@ class Sources extends React.Component<Props> {
     const { baseUrl, history, path } = this.props;
     let url;
     if (branch) {
-      url = `${baseUrl}/${branch.name}/${path}`;
+      if (path) {
+        url = `${baseUrl}/${branch.name}/${path}`;
+      } else {
+        url = `${baseUrl}/${branch.name}/`;
+      }
     } else {
       url = `${baseUrl}/`;
     }
