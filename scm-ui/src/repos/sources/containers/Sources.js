@@ -1,8 +1,8 @@
 // @flow
 import React from "react";
 import { connect } from "react-redux";
-import { Route, withRouter } from "react-router-dom";
-import type { Repository, Branch, File } from "@scm-manager/ui-types";
+import { Route, Switch, withRouter } from "react-router-dom";
+import type { Repository, Branch } from "@scm-manager/ui-types";
 import FileTree from "../components/FileTree";
 import { ErrorNotification, Loading } from "@scm-manager/ui-components";
 import BranchSelector from "../../containers/BranchSelector";
@@ -61,12 +61,20 @@ class Sources extends React.Component<Props> {
     return (
       <>
         {this.renderBranchSelector()}
-        <Route
-          path={`${baseUrl}/:revision/:path*`}
-          component={() => (
-            <FileTree repository={repository} baseUrl={baseUrl} />
-          )}
-        />
+        <Switch>
+          <Route
+            path={`${baseUrl}/:revision/:path*`}
+            component={() => (
+              <FileTree repository={repository} baseUrl={baseUrl} />
+            )}
+          />
+          <Route
+            path={`${baseUrl}`}
+            component={() => (
+              <FileTree repository={repository} baseUrl={baseUrl} />
+            )}
+          />
+        </Switch>
       </>
     );
   }

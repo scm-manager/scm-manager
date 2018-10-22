@@ -67,13 +67,6 @@ class FileTree extends React.Component<Props> {
       t
     } = this.props;
 
-    let baseUrlWithRevision = baseUrl;
-    if (revision) {
-      baseUrlWithRevision += "/" + revision;
-    } else {
-      baseUrlWithRevision += "/" + tree.revision;
-    }
-
     const compareFiles = function(f1: File, f2: File): number {
       if (f1.directory) {
         if (f2.directory) {
@@ -111,6 +104,13 @@ class FileTree extends React.Component<Props> {
     }
 
     files.push(...tree._embedded.children.sort(compareFiles));
+
+    let baseUrlWithRevision = baseUrl;
+    if (revision) {
+      baseUrlWithRevision += "/" + revision;
+    } else {
+      baseUrlWithRevision += "/" + tree.revision;
+    }
 
     return (
       <table className="table table-hover table-sm is-fullwidth">
