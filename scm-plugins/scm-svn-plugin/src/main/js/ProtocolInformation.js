@@ -12,7 +12,7 @@ type Props = {
 class ProtocolInformation extends React.Component<Props> {
 
   render() {
-    const { repository } = this.props;
+    const { repository, t } = this.props;
     const href = repositories.getProtocolLinkByType(repository, "http");
     if (!href) {
       return null;
