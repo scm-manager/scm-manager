@@ -1,6 +1,7 @@
 package sonia.scm.web.i18n;
 
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.legman.Subscribe;
 import com.google.inject.Singleton;
@@ -13,7 +14,7 @@ import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.filter.WebElement;
 import sonia.scm.plugin.PluginLoader;
-import sonia.scm.plugin.UberClassLoader;
+import sonia.scm.util.JacksonUtils;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServlet;
@@ -22,11 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -45,29 +42,29 @@ public class I18nServlet extends HttpServlet {
   public static final String PATTERN = PATH + "/[a-z\\-A-Z]*/" + PLUGINS_JSON;
   public static final String CACHE_NAME = "sonia.cache.plugins.translations";
 
-  private final UberClassLoader uberClassLoader;
-  private final Cache<String, Map> cache;
+  private final ClassLoader classLoader;
+  private final Cache<String, JsonNode> cache;
   private static ObjectMapper objectMapper = new ObjectMapper();
 
 
   @Inject
   public I18nServlet(PluginLoader pluginLoader, CacheManager cacheManager) {
-    this.uberClassLoader = (UberClassLoader) pluginLoader.getUberClassLoader();
+    this.classLoader = pluginLoader.getUberClassLoader();
     this.cache = cacheManager.getCache(CACHE_NAME);
   }
 
   @Subscribe(async = false)
   public void handleRestartEvent(RestartEvent event) {
-    log.info("Clear cache on restart event with reason {}", event.getReason());
+    log.debug("Clear cache on restart event with reason {}", event.getReason());
     cache.clear();
   }
 
-  private Map getCollectedJson(String path,
-                               Function<String, Optional<Map>> jsonFileProvider,
-                               BiConsumer<String, Map> createdJsonFileConsumer) {
+  private JsonNode getCollectedJson(String path,
+                                    Function<String, Optional<JsonNode>> jsonFileProvider,
+                                    BiConsumer<String, JsonNode> createdJsonFileConsumer) {
     return Optional.ofNullable(jsonFileProvider.apply(path)
       .orElseGet(() -> {
-          Optional<Map> createdFile = collectJsonFile(path);
+          Optional<JsonNode> createdFile = collectJsonFile(path);
           createdFile.ifPresent(map -> createdJsonFileConsumer.accept(path, map));
           return createdFile.orElse(null);
         }
@@ -76,21 +73,20 @@ public class I18nServlet extends HttpServlet {
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse response) {
-    try {
+    try (PrintWriter out = response.getWriter()) {
       response.setContentType("application/json");
-      PrintWriter out = response.getWriter();
       String path = req.getServletPath();
-      Function<String, Optional<Map>> jsonFileProvider = usedPath -> Optional.empty();
-      BiConsumer<String, Map> createdJsonFileConsumer = (usedPath, foundJsonMap) -> log.info("A json File is created from the path {}", usedPath);
+      Function<String, Optional<JsonNode>> jsonFileProvider = usedPath -> Optional.empty();
+      BiConsumer<String, JsonNode> createdJsonFileConsumer = (usedPath, jsonNode) -> log.debug("A json File is created from the path {}", usedPath);
       if (isProductionStage()) {
-        log.info("In Production Stage get the plugin translations from the cache");
+        log.debug("In Production Stage get the plugin translations from the cache");
         jsonFileProvider = usedPath -> Optional.ofNullable(
           cache.get(usedPath));
         createdJsonFileConsumer = createdJsonFileConsumer
-          .andThen((usedPath, map) -> log.info("Put the created json File in the cache with the key {}", usedPath))
+          .andThen((usedPath, jsonNode) -> log.debug("Put the created json File in the cache with the key {}", usedPath))
           .andThen(cache::put);
       }
-      out.write(objectMapper.writeValueAsString(getCollectedJson(path, jsonFileProvider, createdJsonFileConsumer)));
+      objectMapper.writeValue(out, getCollectedJson(path, jsonFileProvider, createdJsonFileConsumer));
     } catch (IOException e) {
       log.error("Error on getting the translation of the plugins", e);
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -105,27 +101,29 @@ public class I18nServlet extends HttpServlet {
   }
 
   /**
-   * Return a collected Json File as map from the given path from all plugins in the class path
+   * Return a collected Json File as JsonNode from the given path from all plugins in the class path
    *
    * @param path the searched resource path
-   * @return a collected Json File as map from the given path from all plugins in the class path
+   * @return a collected Json File as JsonNode from the given path from all plugins in the class path
    */
-  protected Optional<Map> collectJsonFile(String path) {
-    log.info("Collect plugin translations from path {} for every plugin", path);
-    Map result = null;
+  protected Optional<JsonNode> collectJsonFile(String path) {
+    log.debug("Collect plugin translations from path {} for every plugin", path);
+    JsonNode mergedJsonNode = null;
     try {
-      Enumeration<URL> resources = uberClassLoader.getResources(path.replaceFirst("/", ""));
-      if (resources.hasMoreElements()) {
-        result = new HashMap();
-        while (resources.hasMoreElements()) {
-          URL url = resources.nextElement();
-          result.putAll(objectMapper.readValue(Files.readAllBytes(Paths.get(url.getPath())), Map.class));
+      Enumeration<URL> resources = classLoader.getResources(path.replaceFirst("/", ""));
+      while (resources.hasMoreElements()) {
+        URL url = resources.nextElement();
+        JsonNode jsonNode = objectMapper.readTree(url);
+        if (mergedJsonNode != null) {
+          JacksonUtils.merge(mergedJsonNode, jsonNode);
+        } else {
+          mergedJsonNode = jsonNode;
         }
       }
     } catch (IOException e) {
       log.error("Error on loading sources from {}", path, e);
       return Optional.empty();
     }
-    return Optional.ofNullable(result);
+    return Optional.ofNullable(mergedJsonNode);
   }
 }

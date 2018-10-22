@@ -1,17 +1,18 @@
 package sonia.scm.web.i18n;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
+import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.util.Lists;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockSettings;
 import org.mockito.internal.creation.MockSettingsImpl;
@@ -22,23 +23,23 @@ import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.plugin.PluginLoader;
-import sonia.scm.plugin.UberClassLoader;
+import sonia.scm.util.JacksonUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.Enumeration;
-import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -60,7 +61,7 @@ public class I18nServletTest {
     "      \"replace\" : \"Push\"\n" +
     "    }\n" +
     "  }\n" +
-    "}\n";
+    "}";
   private static final String HG_PLUGIN_JSON = "{\n" +
     "  \"scm-hg-plugin\": {\n" +
     "    \"information\": {\n" +
@@ -69,14 +70,14 @@ public class I18nServletTest {
     "      \"replace\" : \"Push\"\n" +
     "    }\n" +
     "  }\n" +
-    "}\n";
+    "}";
   private static String SVN_PLUGIN_JSON = "{\n" +
     "  \"scm-svn-plugin\": {\n" +
     "    \"information\": {\n" +
     "      \"checkout\" : \"Checkout\"\n" +
     "    }\n" +
     "  }\n" +
-    "}\n";
+    "}";
 
   @Rule
   public TemporaryFolder temporaryFolder = new TemporaryFolder();
@@ -88,7 +89,7 @@ public class I18nServletTest {
   CacheManager cacheManager;
 
   @Mock
-  UberClassLoader uberClassLoader;
+  ClassLoader classLoader;
 
   I18nServlet servlet;
 
@@ -104,7 +105,7 @@ public class I18nServletTest {
       createFileFromString(GIT_PLUGIN_JSON).toURL(),
       createFileFromString(HG_PLUGIN_JSON).toURL()
     ));
-    when(pluginLoader.getUberClassLoader()).thenReturn(uberClassLoader);
+    when(pluginLoader.getUberClassLoader()).thenReturn(classLoader);
     when(cacheManager.getCache(I18nServlet.CACHE_NAME)).thenReturn(cache);
     MockSettings settings = new MockSettingsImpl<>();
     settings.useConstructor(pluginLoader, cacheManager);
@@ -130,7 +131,7 @@ public class I18nServletTest {
     PrintWriter writer = mock(PrintWriter.class);
     when(response.getWriter()).thenReturn(writer);
     when(request.getServletPath()).thenReturn(path);
-    when(uberClassLoader.getResources("locales/de/plugins.json")).thenThrow(IOException.class);
+    when(classLoader.getResources("locales/de/plugins.json")).thenThrow(IOException.class);
 
     servlet.doGet(request, response);
 
@@ -140,14 +141,9 @@ public class I18nServletTest {
   @Test
   @SuppressWarnings("unchecked")
   public void shouldFailWith500OnIOException() throws IOException {
-    String path = "/locales/de/plugins.json";
     HttpServletRequest request = mock(HttpServletRequest.class);
     HttpServletResponse response = mock(HttpServletResponse.class);
-    PrintWriter writer = mock(PrintWriter.class);
-    when(response.getWriter()).thenReturn(writer);
-    when(request.getServletPath()).thenReturn(path);
-    when(uberClassLoader.getResources("locales/de/plugins.json")).thenReturn(resources);
-    doThrow(IOException.class).when(writer).write(any(String.class));
+    doThrow(IOException.class).when(response).getWriter();
 
     servlet.doGet(request, response);
 
@@ -161,16 +157,16 @@ public class I18nServletTest {
     when(servlet.isProductionStage()).thenReturn(false);
     HttpServletRequest request = mock(HttpServletRequest.class);
     HttpServletResponse response = mock(HttpServletResponse.class);
-    PrintWriter writer = mock(PrintWriter.class);
+    File file = temporaryFolder.newFile();
+    PrintWriter writer = new PrintWriter(new FileOutputStream(file));
     when(response.getWriter()).thenReturn(writer);
     when(request.getServletPath()).thenReturn(path);
-    when(uberClassLoader.getResources("locales/de/plugins.json")).thenReturn(resources);
-    ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
-    doCallRealMethod().when(writer).write(captor.capture());
+    when(classLoader.getResources("locales/de/plugins.json")).thenReturn(resources);
 
     servlet.doGet(request, response);
 
-    assertJsonMap(jsonStringToMap(captor.getValue()));
+    String json = Files.readLines(file, Charset.defaultCharset()).get(0);
+    assertJson(json);
     verify(cache, never()).get(any());
   }
 
@@ -181,16 +177,16 @@ public class I18nServletTest {
     when(servlet.isProductionStage()).thenReturn(true);
     HttpServletRequest request = mock(HttpServletRequest.class);
     HttpServletResponse response = mock(HttpServletResponse.class);
-    PrintWriter writer = mock(PrintWriter.class);
+    File file = temporaryFolder.newFile();
+    PrintWriter writer = new PrintWriter(new FileOutputStream(file));
     when(response.getWriter()).thenReturn(writer);
     when(request.getServletPath()).thenReturn(path);
-    when(uberClassLoader.getResources("locales/de/plugins.json")).thenReturn(resources);
-    ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
-    doCallRealMethod().when(writer).write(captor.capture());
+    when(classLoader.getResources("locales/de/plugins.json")).thenReturn(resources);
 
     servlet.doGet(request, response);
 
-    assertJsonMap(jsonStringToMap(captor.getValue()));
+    String json = Files.readLines(file, Charset.defaultCharset()).get(0);
+    assertJson(json);
     verify(cache).get(path);
     verify(cache).put(eq(path), any());
   }
@@ -202,52 +198,53 @@ public class I18nServletTest {
     when(servlet.isProductionStage()).thenReturn(true);
     HttpServletRequest request = mock(HttpServletRequest.class);
     HttpServletResponse response = mock(HttpServletResponse.class);
-    PrintWriter writer = mock(PrintWriter.class);
+    File file = temporaryFolder.newFile();
+    PrintWriter writer = new PrintWriter(new FileOutputStream(file));
     when(response.getWriter()).thenReturn(writer);
     when(request.getServletPath()).thenReturn(path);
-    when(uberClassLoader.getResources("locales/de/plugins.json")).thenReturn(resources);
-    ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
-    doCallRealMethod().when(writer).write(captor.capture());
-    Map cachedMap = jsonStringToMap(GIT_PLUGIN_JSON);
-    cachedMap.putAll(jsonStringToMap(HG_PLUGIN_JSON));
-    cachedMap.putAll(jsonStringToMap(SVN_PLUGIN_JSON));
-    when(cache.get(path)).thenReturn(cachedMap);
+    when(classLoader.getResources("locales/de/plugins.json")).thenReturn(resources);
+    ObjectMapper objectMapper = new ObjectMapper();
+    JsonNode node = objectMapper.readTree(GIT_PLUGIN_JSON);
+    node = JacksonUtils.merge(node, objectMapper.readTree(HG_PLUGIN_JSON));
+    node = JacksonUtils.merge(node, objectMapper.readTree(SVN_PLUGIN_JSON));
+    when(cache.get(path)).thenReturn(node);
+
     servlet.doGet(request, response);
+
+    String json = Files.readLines(file, Charset.defaultCharset()).get(0);
     verify(servlet, never()).collectJsonFile(path);
     verify(cache, never()).put(eq(path), any());
     verify(cache).get(path);
-    assertJsonMap(jsonStringToMap(captor.getValue()));
+    assertJson(json);
   }
 
   @Test
   @SuppressWarnings("unchecked")
   public void shouldCollectJsonFile() throws IOException {
     String path = "locales/de/plugins.json";
+    when(classLoader.getResources(path)).thenReturn(resources);
 
-    when(uberClassLoader.getResources(path)).thenReturn(resources);
-    Optional<Map> mapOptional = servlet.collectJsonFile("/" + path);
+    Optional<JsonNode> jsonNodeOptional = servlet.collectJsonFile("/" + path);
 
-    assertJsonMap(mapOptional.orElse(null));
+    assertJson(jsonNodeOptional.orElse(null));
   }
 
-  @SuppressWarnings("unchecked")
-  public void assertJsonMap(Map actual) throws IOException {
+  public void assertJson(JsonNode actual) throws IOException {
+    assertJson(actual.toString());
+  }
+
+  public void assertJson(String actual) throws IOException {
     assertThat(actual)
       .isNotEmpty()
-      .containsAllEntriesOf(jsonStringToMap(GIT_PLUGIN_JSON))
-      .containsAllEntriesOf(jsonStringToMap(HG_PLUGIN_JSON))
-      .containsAllEntriesOf(jsonStringToMap(SVN_PLUGIN_JSON));
+      .contains(StringUtils.deleteWhitespace(GIT_PLUGIN_JSON.substring(1, GIT_PLUGIN_JSON.length() - 1)))
+      .contains(StringUtils.deleteWhitespace(HG_PLUGIN_JSON.substring(1, HG_PLUGIN_JSON.length() - 1)))
+      .contains(StringUtils.deleteWhitespace(SVN_PLUGIN_JSON.substring(1, SVN_PLUGIN_JSON.length() - 1)));
   }
 
   public File createFileFromString(String json) throws IOException {
     File file = temporaryFolder.newFile();
     Files.write(json.getBytes(Charsets.UTF_8), file);
     return file;
-  }
-
-  private Map jsonStringToMap(String fileAsString) throws IOException {
-    ObjectMapper mapper = new ObjectMapper();
-    return mapper.readValue(fileAsString, Map.class);
   }
 
 }
