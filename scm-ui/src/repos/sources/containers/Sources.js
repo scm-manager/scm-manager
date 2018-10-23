@@ -44,9 +44,9 @@ class Sources extends React.Component<Props> {
     let url;
     if (branch) {
       if (path) {
-        url = `${baseUrl}/${branch.name}/${path}`;
+        url = `${baseUrl}/${encodeURIComponent(branch.name)}/${path}`;
       } else {
-        url = `${baseUrl}/${branch.name}/`;
+        url = `${baseUrl}/${encodeURIComponent(branch.name)}/`;
       }
     } else {
       url = `${baseUrl}/`;
@@ -98,6 +98,7 @@ class Sources extends React.Component<Props> {
 const mapStateToProps = (state, ownProps) => {
   const { repository, match } = ownProps;
   const { revision, path } = match.params;
+  const decodedRevision = revision ? decodeURIComponent(revision) : undefined;
 
   const loading = isFetchBranchesPending(state, repository);
   const error = getFetchBranchesFailure(state, repository);
@@ -105,7 +106,7 @@ const mapStateToProps = (state, ownProps) => {
 
   return {
     repository,
-    revision,
+    revision: decodedRevision,
     path,
     loading,
     error,

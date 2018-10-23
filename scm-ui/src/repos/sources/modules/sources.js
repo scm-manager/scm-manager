@@ -39,7 +39,7 @@ function createUrl(repository: Repository, revision: string, path: string) {
 
   // TODO handle trailing slash
   const pathDefined = path ? path : "";
-  return `${base}${revision}/${pathDefined}`;
+  return `${base}${encodeURIComponent(revision)}/${pathDefined}`;
 }
 
 export function fetchSourcesPending(
