@@ -29,7 +29,7 @@ import Permissions from "../permissions/containers/Permissions";
 import type { History } from "history";
 import EditNavLink from "../components/EditNavLink";
 
-import BranchRoot from "./BranchRoot";
+import BranchRoot from "./ChangesetsRoot";
 import ChangesetView from "./ChangesetView";
 import PermissionsNavLink from "../components/PermissionsNavLink";
 import Sources from "../sources/containers/Sources";
