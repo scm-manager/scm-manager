@@ -188,39 +188,11 @@ public class BootstrapContextListener implements ServletContextListener
   }
 
   /**
-   * Restart the whole webapp context.
-   *
-   *
-   * @param event restart event
-   */
-  @Subscribe
-  public void handleRestartEvent(RestartEvent event)
-  {
-    logger.warn("received restart event from {} with reason: {}",
-      event.getCause(), event.getReason());
-
-    if (context == null)
-    {
-      logger.error("context is null, scm-manager is not initialized");
-    }
-    else
-    {
-      ServletContextEvent sce = new ServletContextEvent(context);
-
-      logger.warn("destroy context, because of a received restart event");
-      contextDestroyed(sce);
-      logger.warn("reinitialize context, because of a received restart event");
-      contextInitialized(sce);
-    }
-  }
-
-  /**
    * Method description
    *
    *
    * @param context
    * @param pluginDirectory
-   * @param name
    * @param entry
    *
    * @throws IOException
