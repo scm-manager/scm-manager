@@ -55,6 +55,13 @@ class FileTree extends React.Component<Props> {
     fetchSources(repository, revision, path);
   }
 
+  componentDidUpdate(prevProps) {
+    const { fetchSources, repository, revision, path } = this.props;
+    if (prevProps.revision !== revision || prevProps.path !== path) {
+      fetchSources(repository, revision, path);
+    }
+  }
+
   render() {
     const {
       error,
@@ -138,18 +145,17 @@ class FileTree extends React.Component<Props> {
 }
 
 const mapStateToProps = (state: any, ownProps: Props) => {
-  const { repository, match } = ownProps;
-  const { revision, path } = match.params;
+  const { repository, revision, path } = ownProps;
 
   const loading = isFetchSourcesPending(state, repository, revision, path);
   const error = getFetchSourcesFailure(state, repository, revision, path);
   const tree = getSources(state, repository, revision, path);
 
   return {
-    loading,
-    error,
     revision,
     path,
+    loading,
+    error,
     tree
   };
 };

@@ -20,6 +20,7 @@ type Props = {
   error: Error,
   baseUrl: string,
   branches: Branch[],
+  revision: string,
   path: string,
 
   // dispatch props
@@ -39,6 +40,7 @@ class Sources extends React.Component<Props> {
 
   branchSelected = (branch?: Branch) => {
     const { baseUrl, history, path } = this.props;
+
     let url;
     if (branch) {
       if (path) {
@@ -53,7 +55,7 @@ class Sources extends React.Component<Props> {
   };
 
   render() {
-    const { repository, baseUrl, loading, error } = this.props;
+    const { repository, baseUrl, loading, error, revision, path } = this.props;
 
     if (error) {
       return <ErrorNotification error={error} />;
@@ -66,7 +68,12 @@ class Sources extends React.Component<Props> {
     return (
       <>
         {this.renderBranchSelector()}
-        <FileTree repository={repository} baseUrl={baseUrl} />
+        <FileTree
+          repository={repository}
+          revision={revision}
+          path={path}
+          baseUrl={baseUrl}
+        />
       </>
     );
   }
@@ -89,7 +96,7 @@ class Sources extends React.Component<Props> {
 
 const mapStateToProps = (state, ownProps) => {
   const { repository, match } = ownProps;
-  const { path } = match.params;
+  const { revision, path } = match.params;
 
   const loading = isFetchBranchesPending(state, repository);
   const error = getFetchBranchesFailure(state, repository);
@@ -97,6 +104,7 @@ const mapStateToProps = (state, ownProps) => {
 
   return {
     repository,
+    revision,
     path,
     loading,
     error,
