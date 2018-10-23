@@ -79,11 +79,12 @@ class Sources extends React.Component<Props> {
   }
 
   renderBranchSelector = () => {
-    const { repository, branches } = this.props;
+    const { repository, branches, revision } = this.props;
     if (repository._links.branches) {
       return (
         <BranchSelector
           branches={branches}
+          selectedBranch={revision}
           selected={(b: Branch) => {
             this.branchSelected(b);
           }}
