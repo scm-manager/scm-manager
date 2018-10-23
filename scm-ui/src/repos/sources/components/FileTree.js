@@ -102,6 +102,7 @@ class FileTree extends React.Component<Props> {
     }
 
     const files = [];
+
     if (path) {
       files.push({
         name: "..",
@@ -110,7 +111,9 @@ class FileTree extends React.Component<Props> {
       });
     }
 
-    files.push(...tree._embedded.children.sort(compareFiles));
+    if (tree._embedded) {
+      files.push(...tree._embedded.children.sort(compareFiles));
+    }
 
     let baseUrlWithRevision = baseUrl;
     if (revision) {
