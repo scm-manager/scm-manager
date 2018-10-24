@@ -6,7 +6,7 @@ import type { Action } from "@scm-manager/ui-components";
 import type {
   PermissionCollection,
   Permission,
-  PermissionEntry
+  PermissionCreateEntry
 } from "@scm-manager/ui-types";
 import { isPending } from "../../../modules/pending";
 import { getFailure } from "../../../modules/failure";
@@ -222,7 +222,7 @@ export function modifyPermissionReset(namespace: string, repoName: string) {
 // create permission
 export function createPermission(
   link: string,
-  permission: PermissionEntry,
+  permission: PermissionCreateEntry,
   namespace: string,
   repoName: string,
   callback?: () => void
@@ -259,7 +259,7 @@ export function createPermission(
 }
 
 export function createPermissionPending(
-  permission: PermissionEntry,
+  permission: PermissionCreateEntry,
   namespace: string,
   repoName: string
 ): Action {
@@ -271,7 +271,7 @@ export function createPermissionPending(
 }
 
 export function createPermissionSuccess(
-  permission: PermissionEntry,
+  permission: PermissionCreateEntry,
   namespace: string,
   repoName: string
 ): Action {

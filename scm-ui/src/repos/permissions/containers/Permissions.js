@@ -21,7 +21,7 @@ import { Loading, ErrorPage } from "@scm-manager/ui-components";
 import type {
   Permission,
   PermissionCollection,
-  PermissionEntry
+  PermissionCreateEntry
 } from "@scm-manager/ui-types";
 import SinglePermission from "./SinglePermission";
 import CreatePermissionForm from "../components/CreatePermissionForm";
@@ -42,7 +42,7 @@ type Props = {
   fetchPermissions: (link: string, namespace: string, repoName: string) => void,
   createPermission: (
     link: string,
-    permission: PermissionEntry,
+    permission: PermissionCreateEntry,
     namespace: string,
     repoName: string,
     callback?: () => void
@@ -184,7 +184,7 @@ const mapDispatchToProps = dispatch => {
     },
     createPermission: (
       link: string,
-      permission: PermissionEntry,
+      permission: PermissionCreateEntry,
       namespace: string,
       repoName: string,
       callback?: () => void

@@ -10,11 +10,11 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import sonia.scm.NotFoundException;
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.FileObject;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.RepositoryNotFoundException;
-import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.repository.api.BrowseCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
@@ -22,12 +22,8 @@ import sonia.scm.repository.api.RepositoryServiceFactory;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Arrays;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static sonia.scm.api.v2.resources.DispatcherMock.createDispatcher;
 
@@ -46,30 +42,25 @@ public class SourceRootResourceTest extends RepositoryTestBase {
   @Mock
   private BrowseCommandBuilder browseCommandBuilder;
 
-  @Mock
-  private FileObjectToFileObjectDtoMapper fileObjectToFileObjectDtoMapper;
-
   @InjectMocks
-  private BrowserResultToBrowserResultDtoMapper browserResultToBrowserResultDtoMapper;
+  private FileObjectToFileObjectDtoMapperImpl fileObjectToFileObjectDtoMapper;
+
+  private BrowserResultToFileObjectDtoMapper browserResultToFileObjectDtoMapper;
 
 
   @Before
   public void prepareEnvironment() throws Exception {
+    browserResultToFileObjectDtoMapper = new BrowserResultToFileObjectDtoMapper(fileObjectToFileObjectDtoMapper);
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(service);
     when(service.getBrowseCommand()).thenReturn(browseCommandBuilder);
 
-    FileObjectDto dto = new FileObjectDto();
-    dto.setName("name");
-    dto.setLength(1024);
-
-    when(fileObjectToFileObjectDtoMapper.map(any(FileObject.class), any(NamespaceAndName.class), anyString())).thenReturn(dto);
-    SourceRootResource sourceRootResource = new SourceRootResource(serviceFactory, browserResultToBrowserResultDtoMapper);
+    SourceRootResource sourceRootResource = new SourceRootResource(serviceFactory, browserResultToFileObjectDtoMapper);
     super.sourceRootResource = Providers.of(sourceRootResource);
     dispatcher = createDispatcher(getRepositoryRootResource());
   }
 
   @Test
-  public void shouldReturnSources() throws URISyntaxException, IOException, RevisionNotFoundException {
+  public void shouldReturnSources() throws URISyntaxException, IOException, NotFoundException {
     BrowserResult result = createBrowserResult();
     when(browseCommandBuilder.getBrowserResult()).thenReturn(result);
     MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/sources");
@@ -77,8 +68,9 @@ public class SourceRootResourceTest extends RepositoryTestBase {
 
     dispatcher.invoke(request, response);
     assertThat(response.getStatus()).isEqualTo(200);
+    System.out.println(response.getContentAsString());
     assertThat(response.getContentAsString()).contains("\"revision\":\"revision\"");
-    assertThat(response.getContentAsString()).contains("\"files\":");
+    assertThat(response.getContentAsString()).contains("\"children\":");
   }
 
   @Test
@@ -92,13 +84,11 @@ public class SourceRootResourceTest extends RepositoryTestBase {
   }
 
   @Test
-  public void shouldGetResultForSingleFile() throws URISyntaxException, IOException, RevisionNotFoundException {
-    BrowserResult browserResult = new BrowserResult();
-    browserResult.setRevision("revision");
+  public void shouldGetResultForSingleFile() throws URISyntaxException, IOException, NotFoundException {
     FileObject fileObject = new FileObject();
     fileObject.setName("File Object!");
-
-    browserResult.setFiles(Arrays.asList(fileObject));
+    fileObject.setPath("/");
+    BrowserResult browserResult = new BrowserResult("revision", fileObject);
 
     when(browseCommandBuilder.getBrowserResult()).thenReturn(browserResult);
     MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/sources/revision/fileabc");
@@ -121,10 +111,15 @@ public class SourceRootResourceTest extends RepositoryTestBase {
   }
 
   private BrowserResult createBrowserResult() {
-    return new BrowserResult("revision", "tag", "branch", createFileObjects());
+    return new BrowserResult("revision", createFileObject());
   }
 
-  private List<FileObject> createFileObjects() {
+  private FileObject createFileObject() {
+    FileObject parent = new FileObject();
+    parent.setName("bar");
+    parent.setPath("/foo/bar");
+    parent.setDirectory(true);
+
     FileObject fileObject1 = new FileObject();
     fileObject1.setName("FO 1");
     fileObject1.setDirectory(false);
@@ -132,6 +127,7 @@ public class SourceRootResourceTest extends RepositoryTestBase {
     fileObject1.setPath("/foo/bar/fo1");
     fileObject1.setLength(1024L);
     fileObject1.setLastModified(0L);
+    parent.addChild(fileObject1);
 
     FileObject fileObject2 = new FileObject();
     fileObject2.setName("FO 2");
@@ -140,7 +136,8 @@ public class SourceRootResourceTest extends RepositoryTestBase {
     fileObject2.setPath("/foo/bar/fo2");
     fileObject2.setLength(4096L);
     fileObject2.setLastModified(1234L);
+    parent.addChild(fileObject2);
 
-    return Arrays.asList(fileObject1, fileObject2);
+    return parent;
   }
 }

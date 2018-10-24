@@ -8,11 +8,23 @@ import reducer, {
   FETCH_CHANGESETS_FAILURE,
   FETCH_CHANGESETS_PENDING,
   FETCH_CHANGESETS_SUCCESS,
+  FETCH_CHANGESET,
+  FETCH_CHANGESET_FAILURE,
+  FETCH_CHANGESET_PENDING,
+  FETCH_CHANGESET_SUCCESS,
   fetchChangesets,
   fetchChangesetsSuccess,
   getChangesets,
   getFetchChangesetsFailure,
-  isFetchChangesetsPending
+  isFetchChangesetsPending,
+  fetchChangeset,
+  getChangeset,
+  fetchChangesetIfNeeded,
+  shouldFetchChangeset,
+  isFetchChangesetPending,
+  getFetchChangesetFailure,
+  fetchChangesetSuccess,
+  selectListAsCollection
 } from "./changesets";
 
 const branch = {
@@ -21,7 +33,7 @@ const branch = {
   _links: {
     history: {
       href:
-        "http://scm/api/rest/v2/repositories/foo/bar/branches/specific/changesets"
+        "http://scm.hitchhicker.com/api/v2/repositories/foo/bar/branches/specific/changesets"
     }
   }
 };
@@ -32,14 +44,14 @@ const repository = {
   type: "GIT",
   _links: {
     self: {
-      href: "http://scm/api/rest/v2/repositories/foo/bar"
+      href: "http://scm.hitchhicker.com/api/v2/repositories/foo/bar"
     },
     changesets: {
-      href: "http://scm/api/rest/v2/repositories/foo/bar/changesets"
+      href: "http://scm.hitchhicker.com/api/v2/repositories/foo/bar/changesets"
     },
     branches: {
       href:
-        "http://scm/api/rest/v2/repositories/foo/bar/branches/specific/branches"
+        "http://scm.hitchhicker.com/api/v2/repositories/foo/bar/branches/specific/branches"
     }
   }
 };
@@ -49,14 +61,111 @@ const changesets = {};
 describe("changesets", () => {
   describe("fetching of changesets", () => {
     const DEFAULT_BRANCH_URL =
-      "http://scm/api/rest/v2/repositories/foo/bar/changesets";
+      "http://scm.hitchhicker.com/api/v2/repositories/foo/bar/changesets";
     const SPECIFIC_BRANCH_URL =
-      "http://scm/api/rest/v2/repositories/foo/bar/branches/specific/changesets";
+      "http://scm.hitchhicker.com/api/v2/repositories/foo/bar/branches/specific/changesets";
+
     const mockStore = configureMockStore([thunk]);
 
     afterEach(() => {
       fetchMock.reset();
       fetchMock.restore();
+    });
+
+    const changesetId = "aba876c0625d90a6aff1494f3d161aaa7008b958";
+
+    it("should fetch changeset", () => {
+      fetchMock.getOnce(DEFAULT_BRANCH_URL + "/" + changesetId, "{}");
+
+      const expectedActions = [
+        {
+          type: FETCH_CHANGESET_PENDING,
+          itemId: "foo/bar/" + changesetId
+        },
+        {
+          type: FETCH_CHANGESET_SUCCESS,
+          payload: {
+            changeset: {},
+            id: changesetId,
+            repository: repository
+          },
+          itemId: "foo/bar/" + changesetId
+        }
+      ];
+
+      const store = mockStore({});
+      return store
+        .dispatch(fetchChangeset(repository, changesetId))
+        .then(() => {
+          expect(store.getActions()).toEqual(expectedActions);
+        });
+    });
+
+    it("should fail fetching changeset on error", () => {
+      fetchMock.getOnce(DEFAULT_BRANCH_URL + "/" + changesetId, 500);
+
+      const expectedActions = [
+        {
+          type: FETCH_CHANGESET_PENDING,
+          itemId: "foo/bar/" + changesetId
+        }
+      ];
+
+      const store = mockStore({});
+      return store
+        .dispatch(fetchChangeset(repository, changesetId))
+        .then(() => {
+          expect(store.getActions()[0]).toEqual(expectedActions[0]);
+          expect(store.getActions()[1].type).toEqual(FETCH_CHANGESET_FAILURE);
+          expect(store.getActions()[1].payload).toBeDefined();
+        });
+    });
+
+    it("should fetch changeset if needed", () => {
+      fetchMock.getOnce(DEFAULT_BRANCH_URL + "/id3", "{}");
+
+      const expectedActions = [
+        {
+          type: FETCH_CHANGESET_PENDING,
+          itemId: "foo/bar/id3"
+        },
+        {
+          type: FETCH_CHANGESET_SUCCESS,
+          payload: {
+            changeset: {},
+            id: "id3",
+            repository: repository
+          },
+          itemId: "foo/bar/id3"
+        }
+      ];
+
+      const store = mockStore({});
+      return store
+        .dispatch(fetchChangesetIfNeeded(repository, "id3"))
+        .then(() => {
+          expect(store.getActions()).toEqual(expectedActions);
+        });
+    });
+
+    it("should not fetch changeset if not needed", () => {
+      fetchMock.getOnce(DEFAULT_BRANCH_URL + "/id1", 500);
+
+      const state = {
+        changesets: {
+          "foo/bar": {
+            byId: {
+              id1: { id: "id1" },
+              id2: { id: "id2" }
+            }
+          }
+        }
+      };
+
+      const store = mockStore(state);
+      return expect(
+        store.dispatch(fetchChangesetIfNeeded(repository, "id1"))
+      ).toEqual(undefined);
     });
 
     it("should fetch changesets for default branch", () => {
@@ -69,7 +178,11 @@ describe("changesets", () => {
         },
         {
           type: FETCH_CHANGESETS_SUCCESS,
-          payload: changesets,
+          payload: {
+            repository,
+            undefined,
+            changesets
+          },
           itemId: "foo/bar"
         }
       ];
@@ -91,7 +204,11 @@ describe("changesets", () => {
         },
         {
           type: FETCH_CHANGESETS_SUCCESS,
-          payload: changesets,
+          payload: {
+            repository,
+            branch,
+            changesets
+          },
           itemId
         }
       ];
@@ -150,7 +267,11 @@ describe("changesets", () => {
         },
         {
           type: FETCH_CHANGESETS_SUCCESS,
-          payload: changesets,
+          payload: {
+            repository,
+            undefined,
+            changesets
+          },
           itemId: "foo/bar"
         }
       ];
@@ -173,7 +294,11 @@ describe("changesets", () => {
         },
         {
           type: FETCH_CHANGESETS_SUCCESS,
-          payload: changesets,
+          payload: {
+            repository,
+            branch,
+            changesets
+          },
           itemId: "foo/bar/specific"
         }
       ];
@@ -215,7 +340,7 @@ describe("changesets", () => {
       );
       expect(newState["foo/bar"].byId["changeset2"].description).toEqual("foo");
       expect(newState["foo/bar"].byId["changeset3"].description).toEqual("bar");
-      expect(newState["foo/bar"].list).toEqual({
+      expect(newState["foo/bar"].byBranch[""]).toEqual({
         entry: {
           page: 1,
           pageTotal: 10,
@@ -225,6 +350,20 @@ describe("changesets", () => {
       });
     });
 
+    it("should store the changeset list to branch", () => {
+      const newState = reducer(
+        {},
+        fetchChangesetsSuccess(repository, branch, responseBody)
+      );
+
+      expect(newState["foo/bar"].byId["changeset1"]).toBeDefined();
+      expect(newState["foo/bar"].byBranch["specific"].entries).toEqual([
+        "changeset1",
+        "changeset2",
+        "changeset3"
+      ]);
+    });
+
     it("should not remove existing changesets", () => {
       const state = {
         "foo/bar": {
@@ -232,8 +371,10 @@ describe("changesets", () => {
             id2: { id: "id2" },
             id1: { id: "id1" }
           },
-          list: {
-            entries: ["id1", "id2"]
+          byBranch: {
+            "": {
+              entries: ["id1", "id2"]
+            }
           }
         }
       };
@@ -245,7 +386,7 @@ describe("changesets", () => {
 
       const fooBar = newState["foo/bar"];
 
-      expect(fooBar.list.entries).toEqual([
+      expect(fooBar.byBranch[""].entries).toEqual([
         "changeset1",
         "changeset2",
         "changeset3"
@@ -253,10 +394,153 @@ describe("changesets", () => {
       expect(fooBar.byId["id2"]).toEqual({ id: "id2" });
       expect(fooBar.byId["id1"]).toEqual({ id: "id1" });
     });
+
+    const responseBodySingleChangeset = {
+      id: "id3",
+      author: {
+        mail: "z@phod.com",
+        name: "zaphod"
+      },
+      date: "2018-09-13T08:46:22Z",
+      description: "added testChangeset",
+      _links: {},
+      _embedded: {
+        tags: [],
+        branches: []
+      }
+    };
+
+    it("should add changeset to state", () => {
+      const newState = reducer(
+        {
+          "foo/bar": {
+            byId: {
+              "id2": {
+                id: "id2",
+                author: { mail: "mail@author.com", name: "author" }
+              }
+            },
+            list: {
+              entry: {
+                page: 1,
+                pageTotal: 10,
+                _links: {}
+              },
+              entries: ["id2"]
+            }
+          }
+        },
+        fetchChangesetSuccess(responseBodySingleChangeset, repository, "id3")
+      );
+
+      expect(newState).toBeDefined();
+      expect(newState["foo/bar"].byId["id3"].description).toEqual(
+        "added testChangeset"
+      );
+      expect(newState["foo/bar"].byId["id3"].author.mail).toEqual("z@phod.com");
+      expect(newState["foo/bar"].byId["id2"]).toBeDefined();
+      expect(newState["foo/bar"].byId["id3"]).toBeDefined();
+      expect(newState["foo/bar"].list).toEqual({
+        entry: {
+          page: 1,
+          pageTotal: 10,
+          _links: {}
+        },
+        entries: ["id2"]
+      });
+    });
   });
 
   describe("changeset selectors", () => {
     const error = new Error("Something went wrong");
+
+    it("should return changeset", () => {
+      const state = {
+        changesets: {
+          "foo/bar": {
+            byId: {
+              id1: { id: "id1" },
+              id2: { id: "id2" }
+            }
+          }
+        }
+      };
+      const result = getChangeset(state, repository, "id1");
+      expect(result).toEqual({ id: "id1" });
+    });
+
+    it("should return null if changeset does not exist", () => {
+      const state = {
+        changesets: {
+          "foo/bar": {
+            byId: {
+              id1: { id: "id1" },
+              id2: { id: "id2" }
+            }
+          }
+        }
+      };
+      const result = getChangeset(state, repository, "id3");
+      expect(result).toEqual(null);
+    });
+
+    it("should return true if changeset does not exist", () => {
+      const state = {
+        changesets: {
+          "foo/bar": {
+            byId: {
+              id1: { id: "id1" },
+              id2: { id: "id2" }
+            }
+          }
+        }
+      };
+      const result = shouldFetchChangeset(state, repository, "id3");
+      expect(result).toEqual(true);
+    });
+
+    it("should return false if changeset exists", () => {
+      const state = {
+        changesets: {
+          "foo/bar": {
+            byId: {
+              id1: { id: "id1" },
+              id2: { id: "id2" }
+            }
+          }
+        }
+      };
+      const result = shouldFetchChangeset(state, repository, "id2");
+      expect(result).toEqual(false);
+    });
+
+    it("should return true, when fetching changeset is pending", () => {
+      const state = {
+        pending: {
+          [FETCH_CHANGESET + "/foo/bar/id1"]: true
+        }
+      };
+
+      expect(isFetchChangesetPending(state, repository, "id1")).toBeTruthy();
+    });
+
+    it("should return false, when fetching changeset is not pending", () => {
+      expect(isFetchChangesetPending({}, repository, "id1")).toEqual(false);
+    });
+
+    it("should return error if fetching changeset failed", () => {
+      const state = {
+        failure: {
+          [FETCH_CHANGESET + "/foo/bar/id1"]: error
+        }
+      };
+
+      expect(getFetchChangesetFailure(state, repository, "id1")).toEqual(error);
+    });
+
+    it("should return false if fetching changeset did not fail", () => {
+      expect(getFetchChangesetFailure({}, repository, "id1")).toBeUndefined();
+    });
 
     it("should get all changesets for a given repository", () => {
       const state = {
@@ -266,8 +550,10 @@ describe("changesets", () => {
               id2: { id: "id2" },
               id1: { id: "id1" }
             },
-            list: {
-              entries: ["id1", "id2"]
+            byBranch: {
+              "": {
+                entries: ["id1", "id2"]
+              }
             }
           }
         }
@@ -302,6 +588,33 @@ describe("changesets", () => {
 
     it("should return false if fetching changesets did not fail", () => {
       expect(getFetchChangesetsFailure({}, repository)).toBeUndefined();
+    });
+
+    it("should return list as collection for the default branch", () => {
+      const state = {
+        changesets: {
+          "foo/bar": {
+            byId: {
+              id2: { id: "id2" },
+              id1: { id: "id1" }
+            },
+            byBranch: {
+              "": {
+                entry: {
+                  page: 1,
+                  pageTotal: 10,
+                  _links: {}
+                },
+                entries: ["id1", "id2"]
+              }
+            }
+          }
+        }
+      };
+
+      const collection = selectListAsCollection(state, repository);
+      expect(collection.page).toBe(1);
+      expect(collection.pageTotal).toBe(10);
     });
   });
 });

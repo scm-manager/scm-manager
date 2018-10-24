@@ -17,5 +17,8 @@ export type { Tag } from "./Tags";
 
 export type { Config } from "./Config";
 
-export type {IndexResources} from "./IndexResources";
-export type { Permission, PermissionEntry, PermissionCollection } from "./RepositoryPermissions";
+export type { IndexResources } from "./IndexResources";
+
+export type { Permission, PermissionCreateEntry, PermissionCollection } from "./RepositoryPermissions";
+
+export type { SubRepository, File } from "./Sources";

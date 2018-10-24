@@ -656,7 +656,7 @@ describe("permissions selectors", () => {
   it("should return true, when createPermission is true", () => {
     const state = {
       permissions: {
-        ["hitchhiker/puzzle42"]: {
+        "hitchhiker/puzzle42": {
           createPermission: true
         }
       }
@@ -667,7 +667,7 @@ describe("permissions selectors", () => {
   it("should return false, when createPermission is false", () => {
     const state = {
       permissions: {
-        ["hitchhiker/puzzle42"]: {
+        "hitchhiker/puzzle42": {
           createPermission: false
         }
       }

@@ -8,34 +8,26 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.FileObject;
 import sonia.scm.repository.NamespaceAndName;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-public class BrowserResultToBrowserResultDtoMapperTest {
+public class BrowserResultToFileObjectDtoMapperTest {
 
   private final URI baseUri = URI.create("http://example.com/base/");
   @SuppressWarnings("unused") // Is injected
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
 
-  @Mock
-  private FileObjectToFileObjectDtoMapper fileObjectToFileObjectDtoMapper;
-
   @InjectMocks
-  private BrowserResultToBrowserResultDtoMapper mapper;
+  private FileObjectToFileObjectDtoMapperImpl fileObjectToFileObjectDtoMapper;
+
+  private BrowserResultToFileObjectDtoMapper mapper;
 
   private final Subject subject = mock(Subject.class);
   private final ThreadState subjectThreadState = new SubjectThreadState(subject);
@@ -47,6 +39,7 @@ public class BrowserResultToBrowserResultDtoMapperTest {
   @Before
   public void init() {
     initMocks(this);
+    mapper = new BrowserResultToFileObjectDtoMapper(fileObjectToFileObjectDtoMapper);
     subjectThreadState.bind();
     ThreadContext.bind(subject);
 
@@ -63,9 +56,6 @@ public class BrowserResultToBrowserResultDtoMapperTest {
     fileObject2.setPath("/path/object/2");
     fileObject2.setDescription("description of file object 2");
     fileObject2.setDirectory(true);
-
-    when(fileObjectToFileObjectDtoMapper.map(any(FileObject.class), any(NamespaceAndName.class), anyString()))
-      .thenReturn(new FileObjectDto());
   }
 
   @After
@@ -77,7 +67,7 @@ public class BrowserResultToBrowserResultDtoMapperTest {
   public void shouldMapAttributesCorrectly() {
     BrowserResult browserResult = createBrowserResult();
 
-    BrowserResultDto dto = mapper.map(browserResult, new NamespaceAndName("foo", "bar"), "path");
+    FileObjectDto dto = mapper.map(browserResult, new NamespaceAndName("foo", "bar"));
 
     assertEqualAttributes(browserResult, dto);
   }
@@ -87,10 +77,9 @@ public class BrowserResultToBrowserResultDtoMapperTest {
     BrowserResult browserResult = createBrowserResult();
     NamespaceAndName namespaceAndName = new NamespaceAndName("foo", "bar");
 
-    BrowserResultDto dto = mapper.map(browserResult, namespaceAndName, "path");
+    FileObjectDto dto = mapper.map(browserResult, namespaceAndName);
 
-    verify(fileObjectToFileObjectDtoMapper).map(fileObject1, namespaceAndName, "Revision");
-    verify(fileObjectToFileObjectDtoMapper).map(fileObject2, namespaceAndName, "Revision");
+    assertThat(dto.getEmbedded().getItemsBy("children")).hasSize(2);
   }
 
   @Test
@@ -98,28 +87,27 @@ public class BrowserResultToBrowserResultDtoMapperTest {
     BrowserResult browserResult = createBrowserResult();
     NamespaceAndName namespaceAndName = new NamespaceAndName("foo", "bar");
 
-    BrowserResultDto dto = mapper.map(browserResult, namespaceAndName, "path");
+    FileObjectDto dto = mapper.map(browserResult, namespaceAndName);
 
     assertThat(dto.getLinks().getLinkBy("self").get().getHref()).contains("path");
   }
 
   private BrowserResult createBrowserResult() {
-    BrowserResult browserResult = new BrowserResult();
-    browserResult.setRevision("Revision");
-    browserResult.setFiles(createFileObjects());
-
-    return browserResult;
+    return new BrowserResult("Revision", createFileObject());
   }
 
-  private List<FileObject> createFileObjects() {
-    List<FileObject> fileObjects = new ArrayList<>();
+  private FileObject createFileObject() {
+    FileObject file = new FileObject();
+    file.setName("");
+    file.setPath("/path");
+    file.setDirectory(true);
 
-    fileObjects.add(fileObject1);
-    fileObjects.add(fileObject2);
-    return fileObjects;
+    file.addChild(fileObject1);
+    file.addChild(fileObject2);
+    return file;
   }
 
-  private void assertEqualAttributes(BrowserResult browserResult, BrowserResultDto dto) {
+  private void assertEqualAttributes(BrowserResult browserResult, FileObjectDto dto) {
     assertThat(dto.getRevision()).isEqualTo(browserResult.getRevision());
   }
 
