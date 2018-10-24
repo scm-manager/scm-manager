@@ -29,9 +29,11 @@ import Permissions from "../permissions/containers/Permissions";
 import type { History } from "history";
 import EditNavLink from "../components/EditNavLink";
 
-import BranchRoot from "./BranchRoot";
+import BranchRoot from "./ChangesetsRoot";
 import ChangesetView from "./ChangesetView";
 import PermissionsNavLink from "../components/PermissionsNavLink";
+import Sources from "../sources/containers/Sources";
+import RepositoryNavLink from "../components/RepositoryNavLink";
 
 type Props = {
   namespace: string,
@@ -134,6 +136,19 @@ class RepositoryRoot extends React.Component<Props> {
                 render={() => <ChangesetView repository={repository} />}
               />
               <Route
+                path={`${url}/sources`}
+                exact={true}
+                render={() => (
+                  <Sources repository={repository} baseUrl={`${url}/sources`} />
+                )}
+              />
+              <Route
+                path={`${url}/sources/:revision/:path*`}
+                render={() => (
+                  <Sources repository={repository} baseUrl={`${url}/sources`} />
+                )}
+              />
+              <Route
                 path={`${url}/changesets`}
                 render={() => (
                   <BranchRoot
@@ -159,11 +174,20 @@ class RepositoryRoot extends React.Component<Props> {
             <Navigation>
               <Section label={t("repository-root.navigation-label")}>
                 <NavLink to={url} label={t("repository-root.information")} />
-                <NavLink
-                  activeOnlyWhenExact={false}
+                <RepositoryNavLink
+                  repository={repository}
+                  linkName="changesets"
                   to={`${url}/changesets/`}
                   label={t("repository-root.history")}
                   activeWhenMatch={this.matches}
+                  activeOnlyWhenExact={false}
+                />
+                <RepositoryNavLink
+                  repository={repository}
+                  linkName="sources"
+                  to={`${url}/sources`}
+                  label={t("repository-root.sources")}
+                  activeOnlyWhenExact={false}
                 />
                 <EditNavLink repository={repository} editUrl={`${url}/edit`} />
                 <PermissionsNavLink

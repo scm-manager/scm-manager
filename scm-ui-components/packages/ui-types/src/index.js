@@ -18,3 +18,5 @@ export type { Tag } from "./Tags";
 export type { Config } from "./Config";
 
 export type { Permission, PermissionCreateEntry, PermissionCollection } from "./RepositoryPermissions";
+
+export type { SubRepository, File } from "./Sources";

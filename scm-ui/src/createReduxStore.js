@@ -8,6 +8,7 @@ import users from "./users/modules/users";
 import repos from "./repos/modules/repos";
 import repositoryTypes from "./repos/modules/repositoryTypes";
 import changesets from "./repos/modules/changesets";
+import sources from "./repos/sources/modules/sources";
 import groups from "./groups/modules/groups";
 import auth from "./modules/auth";
 import pending from "./modules/pending";
@@ -34,7 +35,8 @@ function createReduxStore(history: BrowserHistory) {
     permissions,
     groups,
     auth,
-    config
+    config,
+    sources
   });
 
   return createStore(

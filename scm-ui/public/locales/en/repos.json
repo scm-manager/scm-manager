@@ -24,7 +24,8 @@
     "navigation-label": "Navigation",
     "history": "Commits",
     "information": "Information",
-    "permissions": "Permissions"
+    "permissions": "Permissions",
+    "sources": "Sources"
   },
   "create": {
     "title": "Create Repository",
@@ -43,6 +44,14 @@
       "message": "Do you really want to delete the repository?",
       "submit": "Yes",
       "cancel": "No"
+    }
+  },
+  "sources": {
+    "file-tree": {
+      "name": "Name",
+      "length": "Length",
+      "lastModified": "Last modified",
+      "description": "Description"
     }
   },
   "changesets": {
