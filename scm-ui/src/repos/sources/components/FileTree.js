@@ -117,9 +117,9 @@ class FileTree extends React.Component<Props> {
 
     let baseUrlWithRevision = baseUrl;
     if (revision) {
-      baseUrlWithRevision += "/" + revision;
+      baseUrlWithRevision += "/" + encodeURIComponent(revision);
     } else {
-      baseUrlWithRevision += "/" + tree.revision;
+      baseUrlWithRevision += "/" + encodeURIComponent(tree.revision);
     }
 
     return (
