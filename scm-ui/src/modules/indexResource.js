@@ -94,68 +94,52 @@ export function getLinks(state: Object) {
   return state.indexResources.links;
 }
 
+export function getLink(state: Object, name: string) {
+  if (state.indexResources.links && state.indexResources.links[name]) {
+    return state.indexResources.links[name].href;
+  }
+}
+
 export function getUiPluginsLink(state: Object) {
-  if (state.indexResources.links && state.indexResources.links["uiPlugins"])
-    return state.indexResources.links["uiPlugins"].href;
-  return undefined;
+  return getLink(state, "uiPlugins");
 }
 
 export function getMeLink(state: Object) {
-  if (state.indexResources.links && state.indexResources.links["me"])
-    return state.indexResources.links["me"].href;
-  return undefined;
+  return getLink(state, "me");
 }
 
 export function getLogoutLink(state: Object) {
-  if (state.indexResources.links && state.indexResources.links["logout"])
-    return state.indexResources.links["logout"].href;
-  return undefined;
+  return getLink(state, "logout");
 }
 
 export function getLoginLink(state: Object) {
-  if (state.indexResources.links && state.indexResources.links["login"])
-    return state.indexResources.links["login"].href;
-  return undefined;
+  return getLink(state, "login");
 }
 
 export function getUsersLink(state: Object) {
-  if (state.indexResources.links && state.indexResources.links["users"])
-    return state.indexResources.links["users"].href;
-  return undefined;
+  return getLink(state, "users");
 }
 
 export function getGroupsLink(state: Object) {
-  if (state.indexResources.links && state.indexResources.links["groups"])
-    return state.indexResources.links["groups"].href;
-  return undefined;
+  return getLink(state, "groups");
 }
 
 export function getConfigLink(state: Object) {
-  if (state.indexResources.links && state.indexResources.links["config"])
-    return state.indexResources.links["config"].href;
-  return undefined;
+  return getLink(state, "config");
 }
 
 export function getRepositoriesLink(state: Object) {
-  if (state.indexResources.links && state.indexResources.links["repositories"])
-    return state.indexResources.links["repositories"].href;
-  return undefined;
+  return getLink(state, "repositories");
 }
 
 export function getHgConfigLink(state: Object) {
-  if (state.indexResources.links && state.indexResources.links["hgConfig"])
-    return state.indexResources.links["hgConfig"].href;
-  return undefined;
+  return getLink(state, "hgConfig");
 }
 
 export function getGitConfigLink(state: Object) {
-  if (state.indexResources.links && state.indexResources.links["gitConfig"])
-    return state.indexResources.links["gitConfig"].href;
-  return undefined;
+  return getLink(state, "gitConfig");
 }
 
 export function getSvnConfigLink(state: Object) {
-  if (state.indexResources.links && state.indexResources.links["svnConfig"])
-    return state.indexResources.links["svnConfig"].href;
-  return undefined;
+  return getLink(state, "svnConfig");
 }
