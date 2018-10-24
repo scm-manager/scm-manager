@@ -15,6 +15,7 @@ import pending from "./modules/pending";
 import failure from "./modules/failure";
 import permissions from "./repos/permissions/modules/permissions";
 import config from "./config/modules/config";
+import indexResources from "./modules/indexResource";
 
 import type { BrowserHistory } from "history/createBrowserHistory";
 import branches from "./repos/modules/branches";
@@ -27,6 +28,7 @@ function createReduxStore(history: BrowserHistory) {
     router: routerReducer,
     pending,
     failure,
+    indexResources,
     users,
     repos,
     repositoryTypes,

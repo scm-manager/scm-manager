@@ -7,13 +7,15 @@ type Props = {
   t: string => string,
   handleTypeChange: string => void,
   type: string,
+  label?: string,
+  helpText?: string,
   loading?: boolean
 };
 
 class TypeSelector extends React.Component<Props> {
   render() {
-    const { type, handleTypeChange, loading } = this.props;
-    const types = ["READ", "WRITE", "OWNER"];
+    const { type, handleTypeChange, loading, label, helpText } = this.props;
+    const types = ["READ", "OWNER", "WRITE"];
 
     return (
       <Select
@@ -21,6 +23,8 @@ class TypeSelector extends React.Component<Props> {
         value={type ? type : "READ"}
         options={this.createSelectOptions(types)}
         loading={loading}
+        label={label}
+        helpText={helpText}
       />
     );
   }
@@ -35,4 +39,4 @@ class TypeSelector extends React.Component<Props> {
   }
 }
 
-export default translate("permissions")(TypeSelector);
+export default translate("repos")(TypeSelector);

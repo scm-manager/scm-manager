@@ -51,14 +51,17 @@ class CreatePermissionForm extends React.Component<Props, State> {
             onChange={this.handleNameChange}
             validationError={!this.state.valid}
             errorMessage={t("permission.add-permission.name-input-invalid")}
+            helpText={t("permission.help.nameHelpText")}
           />
           <Checkbox
             label={t("permission.group-permission")}
             checked={groupPermission ? groupPermission : false}
             onChange={this.handleGroupPermissionChange}
+            helpText={t("permission.help.groupPermissionHelpText")}
           />
           <TypeSelector
             label={t("permission.type")}
+            helpText={t("permission.help.typeHelpText")}
             handleTypeChange={this.handleTypeChange}
             type={type ? type : "READ"}
           />
