@@ -54,7 +54,12 @@ public class ScmRequests {
     setUsername(username);
     setPassword(password);
     return new ChangePasswordResponse<>(applyPUTRequest(RestUtil.REST_BASE_URL.resolve("users/"+userPathParam+"/password").toString(), VndMediaType.PASSWORD_OVERWRITE, TestData.createPasswordChangeJson(password,newPassword)), null);
+  }
 
+  @SuppressWarnings("unchecked")
+  public ModelResponse requestPluginTranslations(String language) {
+    Response response = applyGETRequest(RestUtil.BASE_URL.resolve("locales/" + language + "/plugins.json").toString());
+    return new ModelResponse(response, null);
   }
 
   /**
@@ -94,6 +99,11 @@ public class ScmRequests {
    */
   private Response applyGETRequestWithQueryParams(String url, String params) {
     LOG.info("GET {}", url);
+    if (username == null || password == null){
+      return RestAssured.given()
+        .when()
+        .get(url + params);
+    }
     return RestAssured.given()
       .auth().preemptive().basic(username, password)
       .when()

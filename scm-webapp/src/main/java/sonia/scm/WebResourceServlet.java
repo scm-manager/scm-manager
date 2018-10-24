@@ -23,6 +23,7 @@ import java.net.URL;
  * @since 2.0.0
  */
 @Singleton
+@Priority(WebResourceServlet.PRIORITY)
 @WebElement(value = WebResourceServlet.PATTERN, regex = true)
 public class WebResourceServlet extends HttpServlet {
 
@@ -34,6 +35,9 @@ public class WebResourceServlet extends HttpServlet {
    */
   @VisibleForTesting
   static final String PATTERN = "/(?!api/|git/|hg/|svn/|hook/|repo/).*";
+
+  // Be sure that this servlet is the last one in the servlet chain.
+  static final int PRIORITY = Integer.MAX_VALUE;
 
   private static final Logger LOG = LoggerFactory.getLogger(WebResourceServlet.class);
 
