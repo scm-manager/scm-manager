@@ -10,7 +10,9 @@ class FileIcon extends React.Component<Props> {
   render() {
     const { file } = this.props;
     let icon = "file";
-    if (file.directory) {
+    if (file.subRepository) {
+      icon = "folder-plus";
+    } else if (file.directory) {
       icon = "folder";
     }
     return <i className={`fa fa-${icon}`} />;
