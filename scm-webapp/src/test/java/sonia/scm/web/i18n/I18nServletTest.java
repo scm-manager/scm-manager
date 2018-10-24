@@ -39,11 +39,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 @SubjectAware(configuration = "classpath:sonia/scm/shiro-001.ini")
@@ -52,31 +48,41 @@ public class I18nServletTest {
   @Rule
   public ShiroRule shiro = new ShiroRule();
 
-  private static final String GIT_PLUGIN_JSON = "{\n" +
-    "  \"scm-git-plugin\": {\n" +
-    "    \"information\": {\n" +
-    "      \"clone\" : \"Clone\",\n" +
-    "      \"create\" : \"Create\",\n" +
-    "      \"replace\" : \"Push\"\n" +
-    "    }\n" +
-    "  }\n" +
-    "}";
-  private static final String HG_PLUGIN_JSON = "{\n" +
-    "  \"scm-hg-plugin\": {\n" +
-    "    \"information\": {\n" +
-    "      \"clone\" : \"Clone\",\n" +
-    "      \"create\" : \"Create\",\n" +
-    "      \"replace\" : \"Push\"\n" +
-    "    }\n" +
-    "  }\n" +
-    "}";
-  private static String SVN_PLUGIN_JSON = "{\n" +
-    "  \"scm-svn-plugin\": {\n" +
-    "    \"information\": {\n" +
-    "      \"checkout\" : \"Checkout\"\n" +
-    "    }\n" +
-    "  }\n" +
-    "}";
+  private static final String GIT_PLUGIN_JSON = json(
+    "{",
+      "'scm-git-plugin': {",
+        "'information': {",
+          "'clone' : 'Clone',",
+          "'create' : 'Create',",
+          "'replace' : 'Push'",
+        "}",
+      "}",
+    "}"
+  );
+  private static final String HG_PLUGIN_JSON = json(
+    "{",
+      "'scm-hg-plugin': {",
+        "'information': {",
+          "'clone' : 'Clone',",
+          "'create' : 'Create',",
+          "'replace' : 'Push'",
+        "}",
+      "}",
+    "}"
+  );
+  private static String SVN_PLUGIN_JSON = json(
+    "{",
+      "'scm-svn-plugin': {",
+        "'information': {",
+          "'checkout' : 'Checkout'",
+        "}",
+      "}",
+    "}"
+  );
+
+  private static String json(String... parts) {
+    return String.join("\n", parts ).replaceAll("'", "\"");
+  }
 
   @Rule
   public TemporaryFolder temporaryFolder = new TemporaryFolder();
