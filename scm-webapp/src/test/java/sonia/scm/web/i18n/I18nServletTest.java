@@ -23,7 +23,6 @@ import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.plugin.PluginLoader;
-import sonia.scm.util.JacksonUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -205,8 +204,8 @@ public class I18nServletTest {
     when(classLoader.getResources("locales/de/plugins.json")).thenReturn(resources);
     ObjectMapper objectMapper = new ObjectMapper();
     JsonNode node = objectMapper.readTree(GIT_PLUGIN_JSON);
-    node = JacksonUtils.merge(node, objectMapper.readTree(HG_PLUGIN_JSON));
-    node = JacksonUtils.merge(node, objectMapper.readTree(SVN_PLUGIN_JSON));
+    node = servlet.merge(node, objectMapper.readTree(HG_PLUGIN_JSON));
+    node = servlet.merge(node, objectMapper.readTree(SVN_PLUGIN_JSON));
     when(cache.get(path)).thenReturn(node);
 
     servlet.doGet(request, response);

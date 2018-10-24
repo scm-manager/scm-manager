@@ -3,7 +3,9 @@ package sonia.scm.web.i18n;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.legman.Subscribe;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import sonia.scm.NotFoundException;
@@ -14,7 +16,6 @@ import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.filter.WebElement;
 import sonia.scm.plugin.PluginLoader;
-import sonia.scm.util.JacksonUtils;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServlet;
@@ -24,6 +25,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -37,9 +39,8 @@ import java.util.function.Function;
 @Slf4j
 public class I18nServlet extends HttpServlet {
 
-  public static final String PATH = "/locales";
   public static final String PLUGINS_JSON = "plugins.json";
-  public static final String PATTERN = PATH + "/[a-z\\-A-Z]*/" + PLUGINS_JSON;
+  public static final String PATTERN = "/locales/[a-z\\-A-Z]*/" + PLUGINS_JSON;
   public static final String CACHE_NAME = "sonia.cache.plugins.translations";
 
   private final ClassLoader classLoader;
@@ -71,6 +72,7 @@ public class I18nServlet extends HttpServlet {
       )).orElseThrow(NotFoundException::new);
   }
 
+  @VisibleForTesting
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse response) {
     try (PrintWriter out = response.getWriter()) {
@@ -96,6 +98,7 @@ public class I18nServlet extends HttpServlet {
     }
   }
 
+  @VisibleForTesting
   protected boolean isProductionStage() {
     return SCMContext.getContext().getStage() == Stage.PRODUCTION;
   }
@@ -106,6 +109,7 @@ public class I18nServlet extends HttpServlet {
    * @param path the searched resource path
    * @return a collected Json File as JsonNode from the given path from all plugins in the class path
    */
+  @VisibleForTesting
   protected Optional<JsonNode> collectJsonFile(String path) {
     log.debug("Collect plugin translations from path {} for every plugin", path);
     JsonNode mergedJsonNode = null;
@@ -115,7 +119,7 @@ public class I18nServlet extends HttpServlet {
         URL url = resources.nextElement();
         JsonNode jsonNode = objectMapper.readTree(url);
         if (mergedJsonNode != null) {
-          JacksonUtils.merge(mergedJsonNode, jsonNode);
+          merge(mergedJsonNode, jsonNode);
         } else {
           mergedJsonNode = jsonNode;
         }
@@ -126,4 +130,59 @@ public class I18nServlet extends HttpServlet {
     }
     return Optional.ofNullable(mergedJsonNode);
   }
+
+
+  /**
+   * Merge the <code>updateNode</code> into the <code>mainNode</code> and return it.
+   *
+   * This is not a deep merge.
+   *
+   * @param mainNode the main node
+   * @param updateNode the update node
+   * @return the merged mainNode
+   */
+  @VisibleForTesting
+  protected JsonNode merge(JsonNode mainNode, JsonNode updateNode) {
+    Iterator<String> fieldNames = updateNode.fieldNames();
+
+    while (fieldNames.hasNext()) {
+
+      String fieldName = fieldNames.next();
+      JsonNode jsonNode = mainNode.get(fieldName);
+
+      if (jsonNode != null) {
+        mergeNode(updateNode, fieldName, jsonNode);
+      } else {
+        mergeField(mainNode, updateNode, fieldName);
+      }
+    }
+    return mainNode;
+  }
+
+  private void mergeField(JsonNode mainNode, JsonNode updateNode, String fieldName) {
+    if (mainNode instanceof ObjectNode) {
+      JsonNode value = updateNode.get(fieldName);
+      if (value.isNull()) {
+        return;
+      }
+      if (value.isIntegralNumber() && value.toString().equals("0")) {
+        return;
+      }
+      if (value.isFloatingPointNumber() && value.toString().equals("0.0")) {
+        return;
+      }
+      ((ObjectNode) mainNode).set(fieldName, value);
+    }
+  }
+
+  private void mergeNode(JsonNode updateNode, String fieldName, JsonNode jsonNode) {
+    if (jsonNode.isObject()) {
+      merge(jsonNode, updateNode.get(fieldName));
+    } else if (jsonNode.isArray()) {
+      for (int i = 0; i < jsonNode.size(); i++) {
+        merge(jsonNode.get(i), updateNode.get(fieldName).get(i));
+      }
+    }
+  }
+
 }
