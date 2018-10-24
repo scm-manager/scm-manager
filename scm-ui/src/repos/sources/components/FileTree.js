@@ -128,8 +128,12 @@ class FileTree extends React.Component<Props> {
           <tr>
             <th className={classes.iconColumn} />
             <th>{t("sources.file-tree.name")}</th>
-            <th>{t("sources.file-tree.length")}</th>
-            <th>{t("sources.file-tree.lastModified")}</th>
+            <th className="is-hidden-mobile">
+              {t("sources.file-tree.length")}
+            </th>
+            <th className="is-hidden-mobile">
+              {t("sources.file-tree.lastModified")}
+            </th>
             <th>{t("sources.file-tree.description")}</th>
           </tr>
         </thead>

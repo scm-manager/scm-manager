@@ -68,8 +68,8 @@ class FileTreeLeaf extends React.Component<Props> {
       <tr>
         <td className={classes.iconColumn}>{this.createFileIcon(file)}</td>
         <td>{this.createFileName(file)}</td>
-        <td>{fileSize}</td>
-        <td>
+        <td className="is-hidden-mobile">{fileSize}</td>
+        <td className="is-hidden-mobile">
           <DateFromNow date={file.lastModified} />
         </td>
         <td>{file.description}</td>
