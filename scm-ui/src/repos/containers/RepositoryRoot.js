@@ -174,16 +174,13 @@ class RepositoryRoot extends React.Component<Props> {
             <Navigation>
               <Section label={t("repository-root.navigation-label")}>
                 <NavLink to={url} label={t("repository-root.information")} />
-                <NavLink
-                  activeOnlyWhenExact={false}
+                <RepositoryNavLink
+                  repository={repository}
+                  linkName="changesets"
                   to={`${url}/changesets/`}
                   label={t("repository-root.history")}
                   activeWhenMatch={this.matches}
-                />
-                <EditNavLink repository={repository} editUrl={`${url}/edit`} />
-                <PermissionsNavLink
-                  permissionUrl={`${url}/permissions`}
-                  repository={repository}
+                  activeOnlyWhenExact={false}
                 />
                 <RepositoryNavLink
                   repository={repository}
@@ -191,6 +188,11 @@ class RepositoryRoot extends React.Component<Props> {
                   to={`${url}/sources`}
                   label={t("repository-root.sources")}
                   activeOnlyWhenExact={false}
+                />
+                <EditNavLink repository={repository} editUrl={`${url}/edit`} />
+                <PermissionsNavLink
+                  permissionUrl={`${url}/permissions`}
+                  repository={repository}
                 />
               </Section>
               <Section label={t("repository-root.actions-label")}>
