@@ -23,14 +23,14 @@ class Content extends React.Component<Props, State> {
   componentDidMount() {}
 
   render() {
-    return null;
+    return "Hallo here is content";
   }
 }
 
 export function getContentType(url: string) {
   return apiClient
     .head(url)
-    .then(response => response)
+    .then(response => response.headers.get("Content-Type"))
     .catch(err => {
       return null;
     });

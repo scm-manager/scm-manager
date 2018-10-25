@@ -10,13 +10,17 @@ describe("get content type", () => {
     fetchMock.restore();
   });
 
-  xit("should return content", done => {
+  it("should return content", done => {
+    let headers = {
+      "Content-Type": "application/text"
+    };
+
     fetchMock.head("/api/v2" + CONTENT_URL, {
-      "Content-Type": "text/plain"
+      headers
     });
 
     getContentType(CONTENT_URL).then(content => {
-      expect(content).toBe("This is a testContent");
+      expect(content).toBe("application/text");
       done();
     });
   });
