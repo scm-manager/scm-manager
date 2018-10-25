@@ -1,11 +1,20 @@
 // @flow
 import React from "react";
 import { translate } from "react-i18next";
-import { apiClient } from "@scm-manager/ui-components";
-import { getSources } from "../../sources/modules/sources";
-import type { Repository, File } from "@scm-manager/ui-types";
-import { ErrorNotification, Loading } from "@scm-manager/ui-components";
+import { apiClient } from "../../../../../scm-ui-components/packages/ui-components/src/index";
+import { getSources } from "../modules/sources";
+import type {
+  Repository,
+  File
+} from "../../../../../scm-ui-components/packages/ui-types/src/index";
+import {
+  ErrorNotification,
+  Loading
+} from "../../../../../scm-ui-components/packages/ui-components/src/index";
 import { connect } from "react-redux";
+import ImageViewer from "../components/content/ImageViewer";
+import SourcecodeViewer from "../components/content/SourcecodeViewer";
+import DownloadViewer from "../components/content/DownloadViewer";
 
 type Props = {
   t: string => string,
@@ -49,8 +58,15 @@ class Content extends React.Component<Props, State> {
     if (!file) {
       return <Loading />;
     }
+    if (contentType.startsWith("image")) {
+      return <ImageViewer />;
+    }
 
-    return this.state.contentType;
+    if (contentType.startsWith("text")) {
+      return <SourcecodeViewer />;
+    }
+
+    return <DownloadViewer />;
   }
 }
 

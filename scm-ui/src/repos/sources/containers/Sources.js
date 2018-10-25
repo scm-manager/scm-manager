@@ -13,7 +13,7 @@ import {
   isFetchBranchesPending
 } from "../../modules/branches";
 import { compose } from "redux";
-import Content from "../../content/components/Content";
+import Content from "./Content";
 import { fetchSources, isDirectory } from "../modules/sources";
 
 type Props = {

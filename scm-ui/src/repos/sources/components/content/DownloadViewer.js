@@ -22,7 +22,7 @@ class DownloadViewer extends React.Component<Props, State> {
   componentDidMount() {}
 
   render() {
-    return null;
+    return "DownloadViewer";
   }
 }
 

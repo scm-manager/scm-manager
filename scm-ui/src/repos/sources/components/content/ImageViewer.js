@@ -22,7 +22,7 @@ class ImageViewer extends React.Component<Props, State> {
   componentDidMount() {}
 
   render() {
-    return null;
+    return "ImageViewer";
   }
 }
 

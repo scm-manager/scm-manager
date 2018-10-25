@@ -1,7 +1,7 @@
 // @flow
 import React from "react";
 import { translate } from "react-i18next";
-import { apiClient } from "@scm-manager/ui-components";
+import { apiClient } from "../../../../../../scm-ui-components/packages/ui-components/src/index";
 
 type Props = {
   t: string => string
@@ -23,7 +23,7 @@ class SourcecodeViewer extends React.Component<Props, State> {
   componentDidMount() {}
 
   render() {
-    return null;
+    return "sourceCodeViewer";
   }
 }
 
