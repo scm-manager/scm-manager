@@ -18,6 +18,7 @@ import { Page, Paginator } from "@scm-manager/ui-components";
 import { UserTable } from "./../components/table";
 import type { User, PagedCollection } from "@scm-manager/ui-types";
 import CreateUserButton from "../components/buttons/CreateUserButton";
+import { getUsersLink } from "../../modules/indexResource";
 
 type Props = {
   users: User[],
@@ -26,19 +27,20 @@ type Props = {
   canAddUsers: boolean,
   list: PagedCollection,
   page: number,
+  usersLink: string,
 
   // context objects
   t: string => string,
   history: History,
 
   // dispatch functions
-  fetchUsersByPage: (page: number) => void,
+  fetchUsersByPage: (link: string, page: number) => void,
   fetchUsersByLink: (link: string) => void
 };
 
 class Users extends React.Component<Props> {
   componentDidMount() {
-    this.props.fetchUsersByPage(this.props.page);
+    this.props.fetchUsersByPage(this.props.usersLink, this.props.page);
   }
 
   onPageChange = (link: string) => {
@@ -107,6 +109,8 @@ const mapStateToProps = (state, ownProps) => {
   const loading = isFetchUsersPending(state);
   const error = getFetchUsersFailure(state);
 
+  const usersLink = getUsersLink(state);
+
   const page = getPageFromProps(ownProps);
   const canAddUsers = isPermittedToCreateUsers(state);
   const list = selectListAsCollection(state);
@@ -117,14 +121,15 @@ const mapStateToProps = (state, ownProps) => {
     error,
     canAddUsers,
     list,
-    page
+    page,
+    usersLink
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchUsersByPage: (page: number) => {
-      dispatch(fetchUsersByPage(page));
+    fetchUsersByPage: (link: string, page: number) => {
+      dispatch(fetchUsersByPage(link, page));
     },
     fetchUsersByLink: (link: string) => {
       dispatch(fetchUsersByLink(link));

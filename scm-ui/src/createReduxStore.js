@@ -7,14 +7,18 @@ import { routerReducer, routerMiddleware } from "react-router-redux";
 import users from "./users/modules/users";
 import repos from "./repos/modules/repos";
 import repositoryTypes from "./repos/modules/repositoryTypes";
+import changesets from "./repos/modules/changesets";
+import sources from "./repos/sources/modules/sources";
 import groups from "./groups/modules/groups";
 import auth from "./modules/auth";
 import pending from "./modules/pending";
 import failure from "./modules/failure";
 import permissions from "./repos/permissions/modules/permissions";
 import config from "./config/modules/config";
+import indexResources from "./modules/indexResource";
 
 import type { BrowserHistory } from "history/createBrowserHistory";
+import branches from "./repos/modules/branches";
 
 function createReduxStore(history: BrowserHistory) {
   const composeEnhancers =
@@ -24,13 +28,17 @@ function createReduxStore(history: BrowserHistory) {
     router: routerReducer,
     pending,
     failure,
+    indexResources,
     users,
     repos,
     repositoryTypes,
+    changesets,
+    branches,
     permissions,
     groups,
     auth,
-    config
+    config,
+    sources
   });
 
   return createStore(

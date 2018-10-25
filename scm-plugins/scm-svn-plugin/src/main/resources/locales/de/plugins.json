@@ -1,0 +1,7 @@
+{
+  "scm-svn-plugin": {
+    "information": {
+      "checkout" : "Repository auschecken"
+    }
+  }
+}

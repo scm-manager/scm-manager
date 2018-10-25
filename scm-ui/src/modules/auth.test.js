@@ -32,6 +32,10 @@ import reducer, {
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 import fetchMock from "fetch-mock";
+import {
+  FETCH_INDEXRESOURCES_PENDING,
+  FETCH_INDEXRESOURCES_SUCCESS
+} from "./indexResource";
 
 const me = { name: "tricia", displayName: "Tricia McMillian" };
 
@@ -93,16 +97,30 @@ describe("auth actions", () => {
       headers: { "content-type": "application/json" }
     });
 
+    const meLink = {
+      me: {
+        href: "/me"
+      }
+    };
+
+    fetchMock.getOnce("/api/v2/", {
+      _links: meLink
+    });
+
     const expectedActions = [
       { type: LOGIN_PENDING },
+      { type: FETCH_INDEXRESOURCES_PENDING },
+      { type: FETCH_INDEXRESOURCES_SUCCESS, payload: { _links: meLink } },
       { type: LOGIN_SUCCESS, payload: me }
     ];
 
     const store = mockStore({});
 
-    return store.dispatch(login("tricia", "secret123")).then(() => {
-      expect(store.getActions()).toEqual(expectedActions);
-    });
+    return store
+      .dispatch(login("/auth/access_token", "tricia", "secret123"))
+      .then(() => {
+        expect(store.getActions()).toEqual(expectedActions);
+      });
   });
 
   it("should dispatch login failure", () => {
@@ -111,12 +129,14 @@ describe("auth actions", () => {
     });
 
     const store = mockStore({});
-    return store.dispatch(login("tricia", "secret123")).then(() => {
-      const actions = store.getActions();
-      expect(actions[0].type).toEqual(LOGIN_PENDING);
-      expect(actions[1].type).toEqual(LOGIN_FAILURE);
-      expect(actions[1].payload).toBeDefined();
-    });
+    return store
+      .dispatch(login("/auth/access_token", "tricia", "secret123"))
+      .then(() => {
+        const actions = store.getActions();
+        expect(actions[0].type).toEqual(LOGIN_PENDING);
+        expect(actions[1].type).toEqual(LOGIN_FAILURE);
+        expect(actions[1].payload).toBeDefined();
+      });
   });
 
   it("should dispatch fetch me success", () => {
@@ -135,7 +155,7 @@ describe("auth actions", () => {
 
     const store = mockStore({});
 
-    return store.dispatch(fetchMe()).then(() => {
+    return store.dispatch(fetchMe("me")).then(() => {
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
@@ -146,7 +166,7 @@ describe("auth actions", () => {
     });
 
     const store = mockStore({});
-    return store.dispatch(fetchMe()).then(() => {
+    return store.dispatch(fetchMe("me")).then(() => {
       const actions = store.getActions();
       expect(actions[0].type).toEqual(FETCH_ME_PENDING);
       expect(actions[1].type).toEqual(FETCH_ME_FAILURE);
@@ -166,7 +186,7 @@ describe("auth actions", () => {
 
     const store = mockStore({});
 
-    return store.dispatch(fetchMe()).then(() => {
+    return store.dispatch(fetchMe("me")).then(() => {
       // return of async actions
       expect(store.getActions()).toEqual(expectedActions);
     });
@@ -181,14 +201,23 @@ describe("auth actions", () => {
       status: 401
     });
 
+    fetchMock.getOnce("/api/v2/", {
+      _links: {
+        login: {
+          login: "/login"
+        }
+      }
+    });
+
     const expectedActions = [
       { type: LOGOUT_PENDING },
-      { type: LOGOUT_SUCCESS }
+      { type: LOGOUT_SUCCESS },
+      { type: FETCH_INDEXRESOURCES_PENDING }
     ];
 
     const store = mockStore({});
 
-    return store.dispatch(logout()).then(() => {
+    return store.dispatch(logout("/auth/access_token")).then(() => {
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
@@ -199,7 +228,7 @@ describe("auth actions", () => {
     });
 
     const store = mockStore({});
-    return store.dispatch(logout()).then(() => {
+    return store.dispatch(logout("/auth/access_token")).then(() => {
       const actions = store.getActions();
       expect(actions[0].type).toEqual(LOGOUT_PENDING);
       expect(actions[1].type).toEqual(LOGOUT_FAILURE);

@@ -100,7 +100,7 @@ public class PermissionRootResource {
   @Produces(VndMediaType.PERMISSION)
   @TypeHint(PermissionDto.class)
   @Path("{permission-name}")
-  public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("permission-name") String permissionName) throws NotFoundException {
+  public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("permission-name") String permissionName) {
     Repository repository = load(namespace, name);
     RepositoryPermissions.permissionRead(repository).check();
     return Response.ok(
@@ -158,7 +158,7 @@ public class PermissionRootResource {
   public Response update(@PathParam("namespace") String namespace,
                          @PathParam("name") String name,
                          @PathParam("permission-name") String permissionName,
-                         @Valid PermissionDto permission) throws NotFoundException, AlreadyExistsException {
+                         @Valid PermissionDto permission) throws AlreadyExistsException {
     log.info("try to update the permission with name: {}. the modified permission is: {}", permissionName, permission);
     Repository repository = load(namespace, name);
     RepositoryPermissions.permissionWrite(repository).check();
@@ -198,7 +198,7 @@ public class PermissionRootResource {
   @Path("{permission-name}")
   public Response delete(@PathParam("namespace") String namespace,
                          @PathParam("name") String name,
-                         @PathParam("permission-name") String permissionName) throws NotFoundException {
+                         @PathParam("permission-name") String permissionName) {
     log.info("try to delete the permission with name: {}.", permissionName);
     Repository repository = load(namespace, name);
     RepositoryPermissions.modify(repository).check();

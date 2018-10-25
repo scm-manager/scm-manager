@@ -5,6 +5,7 @@ import org.jboss.resteasy.mock.MockDispatcherFactory;
 import sonia.scm.api.rest.AlreadyExistsExceptionMapper;
 import sonia.scm.api.rest.AuthorizationExceptionMapper;
 import sonia.scm.api.rest.ConcurrentModificationExceptionMapper;
+import sonia.scm.api.rest.IllegalArgumentExceptionMapper;
 
 public class DispatcherMock {
   public static Dispatcher createDispatcher(Object resource) {
@@ -17,6 +18,7 @@ public class DispatcherMock {
     dispatcher.getProviderFactory().registerProvider(InternalRepositoryExceptionMapper.class);
     dispatcher.getProviderFactory().registerProvider(ChangePasswordNotAllowedExceptionMapper.class);
     dispatcher.getProviderFactory().registerProvider(InvalidPasswordExceptionMapper.class);
+    dispatcher.getProviderFactory().registerProvider(IllegalArgumentExceptionMapper.class);
     return dispatcher;
   }
 }

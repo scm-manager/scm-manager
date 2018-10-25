@@ -26,16 +26,18 @@ import {
 
 import { translate } from "react-i18next";
 import EditGroup from "./EditGroup";
+import { getGroupsLink } from "../../modules/indexResource";
 
 type Props = {
   name: string,
   group: Group,
   loading: boolean,
   error: Error,
+  groupLink: string,
 
   // dispatcher functions
   deleteGroup: (group: Group, callback?: () => void) => void,
-  fetchGroup: string => void,
+  fetchGroup: (string, string) => void,
 
   // context objects
   t: string => string,
@@ -45,7 +47,7 @@ type Props = {
 
 class SingleGroup extends React.Component<Props> {
   componentDidMount() {
-    this.props.fetchGroup(this.props.name);
+    this.props.fetchGroup(this.props.groupLink, this.props.name);
   }
 
   stripEndingSlash = (url: string) => {
@@ -132,19 +134,21 @@ const mapStateToProps = (state, ownProps) => {
     isFetchGroupPending(state, name) || isDeleteGroupPending(state, name);
   const error =
     getFetchGroupFailure(state, name) || getDeleteGroupFailure(state, name);
+  const groupLink = getGroupsLink(state);
 
   return {
     name,
     group,
     loading,
-    error
+    error,
+    groupLink
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchGroup: (name: string) => {
-      dispatch(fetchGroup(name));
+    fetchGroup: (link: string, name: string) => {
+      dispatch(fetchGroup(link, name));
     },
     deleteGroup: (group: Group, callback?: () => void) => {
       dispatch(deleteGroup(group, callback));

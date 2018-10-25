@@ -5,7 +5,6 @@ import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import org.apache.shiro.authc.credential.PasswordService;
 import sonia.scm.ConcurrentModificationException;
-import sonia.scm.NotFoundException;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
 import sonia.scm.web.VndMediaType;
@@ -57,7 +56,7 @@ public class UserResource {
     @ResponseCode(code = 404, condition = "not found, no user with the specified id/name available"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
-  public Response get(@PathParam("id") String id) throws NotFoundException {
+  public Response get(@PathParam("id") String id) {
     return adapter.get(id, userToDtoMapper::map);
   }
 
@@ -102,7 +101,7 @@ public class UserResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
-  public Response update(@PathParam("id") String name, @Valid UserDto userDto) throws NotFoundException, ConcurrentModificationException {
+  public Response update(@PathParam("id") String name, @Valid UserDto userDto) throws ConcurrentModificationException {
     return adapter.update(name, existing -> dtoToUserMapper.map(userDto, existing.getPassword()));
   }
 
@@ -111,13 +110,15 @@ public class UserResource {
    * The oldPassword property of the DTO is not needed here. it will be ignored.
    * The oldPassword property is needed in the MeResources when the actual user change the own password.
    *
-   * <strong>Note:</strong> This method requires "user:modify" privilege.
+   * <strong>Note:</strong> This method requires "user:modify" privilege to modify the password of other users.
+   * <strong>Note:</strong> This method requires "user:changeOwnPassword" privilege to modify the own password.
+   *
    * @param name              name of the user to be modified
-   * @param passwordChangeDto change password object to modify password. the old password is here not required
+   * @param passwordOverwriteDto change password object to modify password. the old password is here not required
    */
   @PUT
   @Path("password")
-  @Consumes(VndMediaType.PASSWORD_CHANGE)
+  @Consumes(VndMediaType.PASSWORD_OVERWRITE)
   @StatusCodes({
     @ResponseCode(code = 204, condition = "update success"),
     @ResponseCode(code = 400, condition = "Invalid body, e.g. the user type is not xml or the given oldPassword do not match the stored one"),
@@ -127,8 +128,8 @@ public class UserResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
-  public Response changePassword(@PathParam("id") String name, @Valid PasswordChangeDto passwordChangeDto) throws NotFoundException, ConcurrentModificationException {
-    return adapter.update(name, user -> user.changePassword(passwordService.encryptPassword(passwordChangeDto.getNewPassword())), userManager.getUserTypeChecker());
+  public Response overwritePassword(@PathParam("id") String name, @Valid PasswordOverwriteDto passwordOverwriteDto) {
+    userManager.overwritePassword(name, passwordService.encryptPassword(passwordOverwriteDto.getNewPassword()));
+    return Response.noContent().build();
   }
-
 }

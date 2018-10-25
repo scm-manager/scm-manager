@@ -122,6 +122,7 @@ const response = {
   responseBody
 };
 
+const URL = "users";
 const USERS_URL = "/api/v2/users";
 
 const error = new Error("KAPUTT");
@@ -146,7 +147,7 @@ describe("users fetch()", () => {
 
     const store = mockStore({});
 
-    return store.dispatch(fetchUsers()).then(() => {
+    return store.dispatch(fetchUsers(URL)).then(() => {
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
@@ -157,7 +158,7 @@ describe("users fetch()", () => {
     });
 
     const store = mockStore({});
-    return store.dispatch(fetchUsers()).then(() => {
+    return store.dispatch(fetchUsers(URL)).then(() => {
       const actions = store.getActions();
       expect(actions[0].type).toEqual(FETCH_USERS_PENDING);
       expect(actions[1].type).toEqual(FETCH_USERS_FAILURE);
@@ -169,7 +170,7 @@ describe("users fetch()", () => {
     fetchMock.getOnce(USERS_URL + "/zaphod", userZaphod);
 
     const store = mockStore({});
-    return store.dispatch(fetchUser("zaphod")).then(() => {
+    return store.dispatch(fetchUser(URL, "zaphod")).then(() => {
       const actions = store.getActions();
       expect(actions[0].type).toEqual(FETCH_USER_PENDING);
       expect(actions[1].type).toEqual(FETCH_USER_SUCCESS);
@@ -183,7 +184,7 @@ describe("users fetch()", () => {
     });
 
     const store = mockStore({});
-    return store.dispatch(fetchUser("zaphod")).then(() => {
+    return store.dispatch(fetchUser(URL, "zaphod")).then(() => {
       const actions = store.getActions();
       expect(actions[0].type).toEqual(FETCH_USER_PENDING);
       expect(actions[1].type).toEqual(FETCH_USER_FAILURE);
@@ -201,7 +202,7 @@ describe("users fetch()", () => {
     fetchMock.getOnce(USERS_URL, response);
 
     const store = mockStore({});
-    return store.dispatch(createUser(userZaphod)).then(() => {
+    return store.dispatch(createUser(URL, userZaphod)).then(() => {
       const actions = store.getActions();
       expect(actions[0].type).toEqual(CREATE_USER_PENDING);
       expect(actions[1].type).toEqual(CREATE_USER_SUCCESS);
@@ -214,7 +215,7 @@ describe("users fetch()", () => {
     });
 
     const store = mockStore({});
-    return store.dispatch(createUser(userZaphod)).then(() => {
+    return store.dispatch(createUser(URL, userZaphod)).then(() => {
       const actions = store.getActions();
       expect(actions[0].type).toEqual(CREATE_USER_PENDING);
       expect(actions[1].type).toEqual(CREATE_USER_FAILURE);
@@ -235,7 +236,7 @@ describe("users fetch()", () => {
     };
 
     const store = mockStore({});
-    return store.dispatch(createUser(userZaphod, callback)).then(() => {
+    return store.dispatch(createUser(URL, userZaphod, callback)).then(() => {
       expect(callMe).toBe("yeah");
     });
   });

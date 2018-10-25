@@ -1,16 +1,16 @@
 package sonia.scm.api.v2.resources;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.shiro.subject.Subject;
-import org.apache.shiro.subject.support.SubjectThreadState;
+import com.github.sdorra.shiro.ShiroRule;
+import com.github.sdorra.shiro.SubjectAware;
 import org.apache.shiro.util.ThreadContext;
-import org.apache.shiro.util.ThreadState;
 import org.assertj.core.util.Lists;
 import org.jboss.resteasy.core.Dispatcher;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -43,15 +43,16 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static sonia.scm.api.v2.resources.DispatcherMock.createDispatcher;
 
+@SubjectAware(configuration = "classpath:sonia/scm/shiro-002.ini")
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class AutoCompleteResourceTest {
+
+  @Rule
+  public final ShiroRule shiroRule = new ShiroRule();
 
   public static final String URL = "/" + AutoCompleteResource.PATH;
   private final Integer defaultLimit = Manager.DEFAULT_LIMIT;
   private Dispatcher dispatcher;
-
-  private final Subject subject = mock(Subject.class);
-  private final ThreadState subjectThreadState = new SubjectThreadState(subject);
 
   private XmlUserDAO userDao;
   private XmlGroupDAO groupDao;
@@ -75,9 +76,6 @@ public class AutoCompleteResourceTest {
     GroupManager groupManager = new DefaultGroupManager(groupDao);
     AutoCompleteResource autoCompleteResource = new AutoCompleteResource(mapper, userManager, groupManager);
     dispatcher = createDispatcher(autoCompleteResource);
-    subjectThreadState.bind();
-    ThreadContext.bind(subject);
-    when(subject.isPermitted(any(String.class))).thenReturn(true);
   }
 
   @After
@@ -86,22 +84,9 @@ public class AutoCompleteResourceTest {
   }
 
   @Test
-  public void shouldGet400OnFailedParameterForUserSearch() throws Exception {
-    MockHttpRequest request = MockHttpRequest
-      .get("/" + AutoCompleteResource.PATH + "user")
-      .contentType(VndMediaType.AUTOCOMPLETE)
-      .accept(VndMediaType.AUTOCOMPLETE);
-    MockHttpResponse response = new MockHttpResponse();
-
-    dispatcher.invoke(request, response);
-
-    assertEquals(400, response.getStatus());
-  }
-
-  @Test
   public void shouldGet400IfParameterLengthLessThan2CharsForUserSearch() throws Exception {
     MockHttpRequest request = MockHttpRequest
-      .get("/" + AutoCompleteResource.PATH + "user?filter=a")
+      .get("/" + AutoCompleteResource.PATH + "users?q=a")
       .contentType(VndMediaType.AUTOCOMPLETE)
       .accept(VndMediaType.AUTOCOMPLETE);
     MockHttpResponse response = new MockHttpResponse();
@@ -112,12 +97,27 @@ public class AutoCompleteResourceTest {
   }
 
   @Test
+  @SubjectAware(username = "trillian", password = "secret")
+  public void shouldGet400OnFailedParameterForUserSearch() throws Exception {
+    MockHttpRequest request = MockHttpRequest
+      .get("/" + AutoCompleteResource.PATH + "users")
+      .contentType(VndMediaType.AUTOCOMPLETE)
+      .accept(VndMediaType.AUTOCOMPLETE);
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(400, response.getStatus());
+  }
+
+  @Test
+  @SubjectAware(username = "trillian", password = "secret")
   public void shouldSearchUsers() throws Exception {
     ArrayList<User> users = Lists.newArrayList(createMockUser("YuCantFindMe", "ha ha"), createMockUser("user1", "User 1"), createMockUser("user2", "User 2"));
     String searched = "user";
     when(xmlDB.values()).thenReturn(users);
     MockHttpRequest request = MockHttpRequest
-      .get("/" + AutoCompleteResource.PATH + "user?filter=" + searched)
+      .get("/" + AutoCompleteResource.PATH + "users?q=" + searched)
       .contentType(VndMediaType.AUTOCOMPLETE)
       .accept(VndMediaType.AUTOCOMPLETE);
     MockHttpResponse response = new MockHttpResponse();
@@ -134,11 +134,27 @@ public class AutoCompleteResourceTest {
   }
 
   @Test
+  @SubjectAware(username = "user_without_autocomplete_permission", password = "secret")
+  public void shouldGet403OnAutoCompleteUsers() throws Exception {
+    MockHttpRequest request = MockHttpRequest
+      .get("/" + AutoCompleteResource.PATH + "users?q=user" )
+      .contentType(VndMediaType.AUTOCOMPLETE)
+      .accept(VndMediaType.AUTOCOMPLETE);
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_FORBIDDEN, response.getStatus());
+  }
+
+
+  @Test
+  @SubjectAware(username = "trillian", password = "secret")
   public void shouldSearchUsersWithDefaultLimitLength() throws Exception {
     List<User> userList = IntStream.range(0, 10).boxed().map(i -> createMockUser("user" + i, "User " + i)).collect(Collectors.toList());
     when(xmlDB.values()).thenReturn(userList);
     MockHttpRequest request = MockHttpRequest
-      .get("/" + AutoCompleteResource.PATH + "user?filter=user")
+      .get("/" + AutoCompleteResource.PATH + "users?q=user")
       .contentType(VndMediaType.AUTOCOMPLETE)
       .accept(VndMediaType.AUTOCOMPLETE);
     MockHttpResponse response = new MockHttpResponse();
@@ -150,9 +166,10 @@ public class AutoCompleteResourceTest {
   }
 
   @Test
+  @SubjectAware(username = "trillian", password = "secret")
   public void shouldGet400OnFailedParameterForGroupSearch() throws Exception {
     MockHttpRequest request = MockHttpRequest
-      .get("/" + AutoCompleteResource.PATH + "group")
+      .get("/" + AutoCompleteResource.PATH + "groups")
       .contentType(VndMediaType.AUTOCOMPLETE)
       .accept(VndMediaType.AUTOCOMPLETE);
     MockHttpResponse response = new MockHttpResponse();
@@ -163,9 +180,10 @@ public class AutoCompleteResourceTest {
   }
 
   @Test
+  @SubjectAware(username = "trillian", password = "secret")
   public void shouldGet400IfParameterLengthLessThan2CharsForGroupSearch() throws Exception {
     MockHttpRequest request = MockHttpRequest
-      .get("/" + AutoCompleteResource.PATH + "group?filter=a")
+      .get("/" + AutoCompleteResource.PATH + "groups?q=a")
       .contentType(VndMediaType.AUTOCOMPLETE)
       .accept(VndMediaType.AUTOCOMPLETE);
     MockHttpResponse response = new MockHttpResponse();
@@ -176,12 +194,13 @@ public class AutoCompleteResourceTest {
   }
 
   @Test
+  @SubjectAware(username = "trillian", password = "secret")
   public void shouldSearchGroups() throws Exception {
     ArrayList<Group> groups = Lists.newArrayList(createMockGroup("YuCantFindMe"), createMockGroup("group_1"), createMockGroup("group_2"));
     String searched = "group";
     when(xmlDB.values()).thenReturn(groups);
     MockHttpRequest request = MockHttpRequest
-      .get("/" + AutoCompleteResource.PATH + "group?filter=" + searched)
+      .get("/" + AutoCompleteResource.PATH + "groups?q=" + searched)
       .contentType(VndMediaType.AUTOCOMPLETE)
       .accept(VndMediaType.AUTOCOMPLETE);
     MockHttpResponse response = new MockHttpResponse();
@@ -197,11 +216,26 @@ public class AutoCompleteResourceTest {
   }
 
   @Test
+  @SubjectAware(username = "user_without_autocomplete_permission", password = "secret")
+  public void shouldGet403OnAutoCompleteGroups() throws Exception {
+    MockHttpRequest request = MockHttpRequest
+      .get("/" + AutoCompleteResource.PATH + "groups?q=user" )
+      .contentType(VndMediaType.AUTOCOMPLETE)
+      .accept(VndMediaType.AUTOCOMPLETE);
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_FORBIDDEN, response.getStatus());
+  }
+
+  @Test
+  @SubjectAware(username = "trillian", password = "secret")
   public void shouldSearchGroupsWithDefaultLimitLength() throws Exception {
     List<Group> groups = IntStream.range(0, 10).boxed().map(i -> createMockGroup("group_" + i)).collect(Collectors.toList());
     when(xmlDB.values()).thenReturn(groups);
     MockHttpRequest request = MockHttpRequest
-      .get("/" + AutoCompleteResource.PATH + "group?filter=group")
+      .get("/" + AutoCompleteResource.PATH + "groups?q=group")
       .contentType(VndMediaType.AUTOCOMPLETE)
       .accept(VndMediaType.AUTOCOMPLETE);
     MockHttpResponse response = new MockHttpResponse();

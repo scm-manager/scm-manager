@@ -1,0 +1,9 @@
+{
+  "scm-hg-plugin": {
+    "information": {
+      "clone" : "Repository Klonen",
+      "create" : "Neue Repository erstellen",
+      "replace" : "Eine existierende Repository aktualisieren"
+    }
+  }
+}
