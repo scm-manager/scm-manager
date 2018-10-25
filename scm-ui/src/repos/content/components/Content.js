@@ -45,9 +45,11 @@ class Content extends React.Component<Props, State> {
 
   render() {
     const { file } = this.props;
+    const contentType = this.state.contentType;
     if (!file) {
       return <Loading />;
     }
+
     return this.state.contentType;
   }
 }

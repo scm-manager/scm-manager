@@ -14,7 +14,7 @@ import {
 } from "../../modules/branches";
 import { compose } from "redux";
 import Content from "../../content/components/Content";
-import {fetchSources, isDirectory} from "../modules/sources";
+import { fetchSources, isDirectory } from "../modules/sources";
 
 type Props = {
   repository: Repository,
@@ -102,11 +102,9 @@ class Sources extends React.Component<Props> {
         </>
       );
     } else {
-      return <Content
-        repository={repository}
-        revision={revision}
-        path={path}
-      />;
+      return (
+        <Content repository={repository} revision={revision} path={path} />
+      );
     }
   }
 
@@ -135,7 +133,9 @@ const mapStateToProps = (state, ownProps) => {
   const loading = isFetchBranchesPending(state, repository);
   const error = getFetchBranchesFailure(state, repository);
   const branches = getBranches(state, repository);
-  const currentFileIsDirectory = isDirectory(state, repository, revision, path);
+  const currentFileIsDirectory = decodedRevision
+    ? isDirectory(state, repository, decodedRevision, path)
+    : isDirectory(state, repository, revision, path);
 
   return {
     repository,
@@ -144,7 +144,7 @@ const mapStateToProps = (state, ownProps) => {
     loading,
     error,
     branches,
-    currentFileIsDirectory,
+    currentFileIsDirectory
   };
 };
 
