@@ -2,6 +2,7 @@ package sonia.scm.api.v2.resources;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
+import org.slf4j.MDC;
 import sonia.scm.ContextEntry;
 import sonia.scm.NotFoundException;
 
@@ -29,6 +30,6 @@ public class ErrorDto {
   }
 
   static ErrorDto from(NotFoundException notFoundException) {
-    return new ErrorDto("todo", "todo", notFoundException.getContext(), notFoundException.getMessage());
+    return new ErrorDto(MDC.get("transaction_id"), "todo", notFoundException.getContext(), notFoundException.getMessage());
   }
 }
