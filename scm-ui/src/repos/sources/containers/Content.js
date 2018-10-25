@@ -1,16 +1,16 @@
 // @flow
 import React from "react";
 import { translate } from "react-i18next";
-import { apiClient } from "../../../../../scm-ui-components/packages/ui-components/src/index";
+import { apiClient } from "@scm-manager/ui-components";
 import { getSources } from "../modules/sources";
 import type {
   Repository,
   File
-} from "../../../../../scm-ui-components/packages/ui-types/src/index";
+} from "@scm-manager/ui-types";
 import {
   ErrorNotification,
   Loading
-} from "../../../../../scm-ui-components/packages/ui-components/src/index";
+} from "@scm-manager/ui-components";
 import { connect } from "react-redux";
 import ImageViewer from "../components/content/ImageViewer";
 import SourcecodeViewer from "../components/content/SourcecodeViewer";
@@ -87,7 +87,7 @@ class Content extends React.Component<Props, State> {
       return <SourcecodeViewer />;
     }
 
-    return <DownloadViewer />;
+    return <DownloadViewer file={file}/>;
   }
 }
 
