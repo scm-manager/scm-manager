@@ -34,7 +34,6 @@ package sonia.scm.filter;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.inject.Singleton;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -65,11 +64,11 @@ public class MDCFilter extends HttpFilter
 
   /** Field description */
   @VisibleForTesting
-  static final String MDC_CLIEN_HOST = "client_host";
+  static final String MDC_CLIENT_HOST = "client_host";
 
   /** Field description */
   @VisibleForTesting
-  static final String MDC_CLIEN_IP = "client_ip";
+  static final String MDC_CLIENT_IP = "client_ip";
   
   /** url of the current request */
   @VisibleForTesting
@@ -102,8 +101,8 @@ public class MDCFilter extends HttpFilter
     throws IOException, ServletException
   {
     MDC.put(MDC_USERNAME, getUsername());
-    MDC.put(MDC_CLIEN_IP, request.getRemoteAddr());
-    MDC.put(MDC_CLIEN_HOST, request.getRemoteHost());
+    MDC.put(MDC_CLIENT_IP, request.getRemoteAddr());
+    MDC.put(MDC_CLIENT_HOST, request.getRemoteHost());
     MDC.put(MDC_REQUEST_METHOD, request.getMethod());
     MDC.put(MDC_REQUEST_URI, request.getRequestURI());
 
@@ -114,8 +113,8 @@ public class MDCFilter extends HttpFilter
     finally
     {
       MDC.remove(MDC_USERNAME);
-      MDC.remove(MDC_CLIEN_IP);
-      MDC.remove(MDC_CLIEN_HOST);
+      MDC.remove(MDC_CLIENT_IP);
+      MDC.remove(MDC_CLIENT_HOST);
       MDC.remove(MDC_REQUEST_METHOD);
       MDC.remove(MDC_REQUEST_URI);
     }
