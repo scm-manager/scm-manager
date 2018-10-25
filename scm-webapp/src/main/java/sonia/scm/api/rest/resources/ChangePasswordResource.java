@@ -44,8 +44,6 @@ import org.apache.shiro.authc.credential.PasswordService;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.ConcurrentModificationException;
-import sonia.scm.NotFoundException;
 import sonia.scm.api.rest.RestActionResult;
 import sonia.scm.security.Role;
 import sonia.scm.security.ScmSecurityException;

@@ -49,7 +49,6 @@ import org.tmatesoft.svn.core.internal.util.SVNEncodingUtil;
 import org.tmatesoft.svn.core.internal.util.SVNXMLUtil;
 import org.tmatesoft.svn.core.io.SVNRepository;
 import org.tmatesoft.svn.core.wc.SVNClientManager;
-import sonia.scm.NotFoundException;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 
@@ -59,6 +58,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
+
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import static sonia.scm.NotFoundException.notFound;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -114,7 +116,7 @@ public final class SvnUtil
       }
       catch (NumberFormatException ex)
       {
-        throw NotFoundException.notFound("Revision", v).in(repository).build();
+        throw notFound(entity("Revision", v).in(repository));
       }
     }
 
@@ -352,7 +354,7 @@ public final class SvnUtil
       }
       catch (NumberFormatException ex)
       {
-        throw NotFoundException.notFound("Revision", revision).in(repository).build();
+        throw notFound(entity("Revision", revision).in(repository));
       }
     }
 

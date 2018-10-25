@@ -307,7 +307,7 @@ public class GitBrowseCommand extends AbstractGitCommand
     return Strings.isNullOrEmpty(request.getPath()) || "/".equals(request.getPath());
   }
 
-  private FileObject findChildren(FileObject parent, org.eclipse.jgit.lib.Repository repo, BrowseCommandRequest request, ObjectId revId, TreeWalk treeWalk) throws IOException, NotFoundException {
+  private FileObject findChildren(FileObject parent, org.eclipse.jgit.lib.Repository repo, BrowseCommandRequest request, ObjectId revId, TreeWalk treeWalk) throws IOException {
     List<FileObject> files = Lists.newArrayList();
     while (treeWalk.next())
     {
@@ -335,7 +335,7 @@ public class GitBrowseCommand extends AbstractGitCommand
   }
 
   private FileObject findFirstMatch(org.eclipse.jgit.lib.Repository repo,
-                        BrowseCommandRequest request, ObjectId revId, TreeWalk treeWalk) throws IOException, NotFoundException {
+                        BrowseCommandRequest request, ObjectId revId, TreeWalk treeWalk) throws IOException {
     String[] pathElements = request.getPath().split("/");
     int currentDepth = 0;
     int limit = pathElements.length;

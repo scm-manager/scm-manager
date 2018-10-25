@@ -27,6 +27,9 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import static sonia.scm.NotFoundException.notFound;
+
 public class BranchRootResource {
 
   private final RepositoryServiceFactory serviceFactory;
@@ -105,7 +108,7 @@ public class BranchRootResource {
         .stream()
         .anyMatch(branch -> branchName.equals(branch.getName()));
       if (!branchExists){
-        throw NotFoundException.notFound(Branch.class, branchName).in(Repository.class, namespace + "/" + name).build();
+        throw notFound(entity(Branch.class, branchName).in(Repository.class, namespace + "/" + name));
       }
       Repository repository = repositoryService.getRepository();
       RepositoryPermissions.read(repository).check();

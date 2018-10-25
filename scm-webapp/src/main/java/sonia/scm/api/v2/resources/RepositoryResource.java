@@ -3,8 +3,6 @@ package sonia.scm.api.v2.resources;
 import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
-import sonia.scm.ConcurrentModificationException;
-import sonia.scm.NotFoundException;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryIsNotArchivedException;
@@ -25,6 +23,9 @@ import javax.ws.rs.core.Response;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import static sonia.scm.NotFoundException.notFound;
 
 public class RepositoryResource {
 
@@ -205,7 +206,7 @@ public class RepositoryResource {
 
   private Supplier<Repository> loadBy(String namespace, String name) {
     NamespaceAndName namespaceAndName = new NamespaceAndName(namespace, name);
-    return () -> Optional.ofNullable(manager.get(namespaceAndName)).orElseThrow(() -> NotFoundException.notFound(namespaceAndName).build());
+    return () -> Optional.ofNullable(manager.get(namespaceAndName)).orElseThrow(() -> notFound(entity(namespaceAndName)));
   }
 
   private Predicate<Repository> nameAndNamespaceStaysTheSame(String namespace, String name) {

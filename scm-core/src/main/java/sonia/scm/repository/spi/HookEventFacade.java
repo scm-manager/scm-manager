@@ -35,7 +35,6 @@ package sonia.scm.repository.spi;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import sonia.scm.NotFoundException;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryHookEvent;
@@ -43,6 +42,9 @@ import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.api.HookContext;
 import sonia.scm.repository.api.HookContextFactory;
+
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import static sonia.scm.NotFoundException.notFound;
 
 /**
  *
@@ -82,7 +84,7 @@ public final class HookEventFacade
   public HookEventHandler handle(Repository repository) {
     if (repository == null)
     {
-      throw NotFoundException.notFound(repository).build();
+      throw notFound(entity(repository));
     }
 
     return new HookEventHandler(repositoryManagerProvider.get(),

@@ -28,13 +28,13 @@
  */
 
 
-package sonia.scm.api.v2.resources;
+package sonia.scm.api.v2;
 
 
 import sonia.scm.NotFoundException;
+import sonia.scm.api.v2.resources.ErrorDto;
 import sonia.scm.web.VndMediaType;
 
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;

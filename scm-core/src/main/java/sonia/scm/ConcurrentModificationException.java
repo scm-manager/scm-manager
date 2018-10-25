@@ -6,7 +6,7 @@ import java.util.List;
 import static java.util.Collections.unmodifiableList;
 import static java.util.stream.Collectors.joining;
 
-public class ConcurrentModificationException extends RuntimeException {
+public class ConcurrentModificationException extends RuntimeException implements ExceptionWithContext {
   private final List<ContextEntry> context;
 
   public ConcurrentModificationException(Class type, String id) {

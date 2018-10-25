@@ -71,10 +71,10 @@ public class DummyRepositoryHandler
 
 
   @Override
-  protected void create(Repository repository, File directory) throws AlreadyExistsException {
+  protected void create(Repository repository, File directory) {
     String key = repository.getNamespace() + "/" + repository.getName();
     if (existingRepoNames.contains(key)) {
-      throw new AlreadyExistsException();
+      throw new AlreadyExistsException(repository);
     } else {
       existingRepoNames.add(key);
     }

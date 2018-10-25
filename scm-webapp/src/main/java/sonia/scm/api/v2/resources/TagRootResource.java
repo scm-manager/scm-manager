@@ -21,6 +21,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import static sonia.scm.NotFoundException.notFound;
+
 public class TagRootResource {
 
   private final RepositoryServiceFactory serviceFactory;
@@ -91,7 +94,7 @@ public class TagRootResource {
   }
 
   private NotFoundException createNotFoundException(String namespace, String name, String tagName) {
-    return NotFoundException.notFound("Tag", tagName).in("Repository", namespace + "/" + name).build();
+    return notFound(entity("Tag", tagName).in("Repository", namespace + "/" + name));
   }
 
   private Tags getTags(RepositoryService repositoryService) throws IOException {

@@ -6,7 +6,6 @@ import com.webcohesion.enunciate.metadata.rs.ResponseHeaders;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import org.apache.shiro.authc.credential.PasswordService;
-import sonia.scm.AlreadyExistsException;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
 import sonia.scm.web.VndMediaType;
@@ -91,7 +90,7 @@ public class UserCollectionResource {
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
   @ResponseHeaders(@ResponseHeader(name = "Location", description = "uri to the created user"))
-  public Response create(@Valid UserDto userDto) throws AlreadyExistsException {
+  public Response create(@Valid UserDto userDto) {
     return adapter.create(userDto, () -> dtoToUserMapper.map(userDto, passwordService.encryptPassword(userDto.getPassword())), user -> resourceLinks.user().self(user.getName()));
   }
 }

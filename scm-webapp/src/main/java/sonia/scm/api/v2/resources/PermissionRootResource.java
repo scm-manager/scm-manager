@@ -29,6 +29,9 @@ import java.net.URI;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+import static sonia.scm.AlreadyExistsException.alreadyExists;
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import static sonia.scm.NotFoundException.notFound;
 import static sonia.scm.api.v2.resources.PermissionDto.GROUP_PREFIX;
 
 @Slf4j
@@ -70,7 +73,7 @@ public class PermissionRootResource {
   @TypeHint(TypeHint.NO_CONTENT.class)
   @Consumes(VndMediaType.PERMISSION)
   @Path("")
-  public Response create(@PathParam("namespace") String namespace, @PathParam("name") String name,@Valid PermissionDto permission) throws AlreadyExistsException, NotFoundException {
+  public Response create(@PathParam("namespace") String namespace, @PathParam("name") String name,@Valid PermissionDto permission) {
     log.info("try to add new permission: {}", permission);
     Repository repository = load(namespace, name);
     RepositoryPermissions.permissionWrite(repository).check();
@@ -108,7 +111,7 @@ public class PermissionRootResource {
         .filter(filterPermission(permissionName))
         .map(permission -> modelToDtoMapper.map(permission, repository))
         .findFirst()
-        .orElseThrow(() -> NotFoundException.notFound(Permission.class, namespace).in(Repository.class, namespace + "/" + name).build())
+        .orElseThrow(() -> notFound(entity(Permission.class, namespace).in(Repository.class, namespace + "/" + name)))
     ).build();
   }
 
@@ -157,23 +160,23 @@ public class PermissionRootResource {
   public Response update(@PathParam("namespace") String namespace,
                          @PathParam("name") String name,
                          @PathParam("permission-name") String permissionName,
-                         @Valid PermissionDto permission) throws AlreadyExistsException {
+                         @Valid PermissionDto permission) {
     log.info("try to update the permission with name: {}. the modified permission is: {}", permissionName, permission);
     Repository repository = load(namespace, name);
     RepositoryPermissions.permissionWrite(repository).check();
     String extractedPermissionName = getPermissionName(permissionName);
     if (!isPermissionExist(new PermissionDto(extractedPermissionName, isGroupPermission(permissionName)), repository)) {
-      throw NotFoundException.notFound(Permission.class, namespace).in(Repository.class, namespace + "/" + name).build();
+      throw notFound(entity(Permission.class, namespace).in(Repository.class, namespace + "/" + name));
     }
     permission.setGroupPermission(isGroupPermission(permissionName));
     if (!extractedPermissionName.equals(permission.getName())) {
-      checkPermissionAlreadyExists(permission, repository, "target permission " + permission.getName() + " already exists");
+      checkPermissionAlreadyExists(permission, repository);
     }
     Permission existingPermission = repository.getPermissions()
       .stream()
       .filter(filterPermission(permissionName))
       .findFirst()
-      .orElseThrow(() -> NotFoundException.notFound(Permission.class, namespace).in(Repository.class, namespace + "/" + name).build());
+      .orElseThrow(() -> notFound(entity(Permission.class, namespace).in(Repository.class, namespace + "/" + name)));
     dtoToModelMapper.modify(existingPermission, permission);
     manager.modify(repository);
     log.info("the permission with name: {} is updated.", permissionName);
@@ -241,7 +244,7 @@ public class PermissionRootResource {
   private Repository load(String namespace, String name) {
     NamespaceAndName namespaceAndName = new NamespaceAndName(namespace, name);
     return Optional.ofNullable(manager.get(namespaceAndName))
-      .orElseThrow(() -> NotFoundException.notFound(namespaceAndName).build());
+      .orElseThrow(() -> notFound(entity(namespaceAndName)));
   }
 
   /**
@@ -249,12 +252,11 @@ public class PermissionRootResource {
    *
    * @param permission the searched permission
    * @param repository the repository to be inspected
-   * @param errorMessage error message
    * @throws AlreadyExistsException if the permission already exists in the repository
    */
-  private void checkPermissionAlreadyExists(PermissionDto permission, Repository repository, String errorMessage) throws AlreadyExistsException {
+  private void checkPermissionAlreadyExists(PermissionDto permission, Repository repository) {
     if (isPermissionExist(permission, repository)) {
-      throw new AlreadyExistsException(errorMessage);
+      throw alreadyExists(entity("permission", permission.getName()).in(repository));
     }
   }
 
@@ -262,10 +264,6 @@ public class PermissionRootResource {
     return repository.getPermissions()
       .stream()
       .anyMatch(p -> p.getName().equals(permission.getName()) && p.isGroupPermission() == permission.isGroupPermission());
-  }
-
-  private void checkPermissionAlreadyExists(PermissionDto permission, Repository repository) throws AlreadyExistsException {
-    checkPermissionAlreadyExists(permission, repository, "the permission " + permission.getName() + " already exist.");
   }
 }
 

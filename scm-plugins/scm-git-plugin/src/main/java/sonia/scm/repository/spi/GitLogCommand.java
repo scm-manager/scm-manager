@@ -48,7 +48,6 @@ import org.eclipse.jgit.treewalk.filter.PathFilter;
 import org.eclipse.jgit.treewalk.filter.TreeFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.NotFoundException;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.GitChangesetConverter;
@@ -60,6 +59,9 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import static sonia.scm.NotFoundException.notFound;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -248,7 +250,7 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
     }
     catch (MissingObjectException e)
     {
-      throw NotFoundException.notFound("Revision", e.getObjectId().getName()).in(repository).build();
+      throw notFound(entity("Revision", e.getObjectId().getName()).in(repository));
     }
     catch (Exception ex)
     {

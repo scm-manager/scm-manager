@@ -164,10 +164,7 @@ public class PermissionRootResourceTest extends RepositoryTestBase {
   @TestFactory
   @DisplayName("test endpoints on missing permissions and user is Admin")
   Stream<DynamicTest> missedPermissionTestFactory() {
-    Repository mockRepository = mock(Repository.class);
-    when(mockRepository.getId()).thenReturn(REPOSITORY_NAME);
-    when(mockRepository.getNamespace()).thenReturn(REPOSITORY_NAMESPACE);
-    when(mockRepository.getName()).thenReturn(REPOSITORY_NAME);
+    Repository mockRepository = new Repository(REPOSITORY_NAME, "git", REPOSITORY_NAMESPACE, REPOSITORY_NAME);
     when(repositoryManager.get(any(NamespaceAndName.class))).thenReturn(mockRepository);
     return createDynamicTestsToAssertResponses(
       requestGETPermission.expectedResponseStatus(404),
@@ -180,10 +177,6 @@ public class PermissionRootResourceTest extends RepositoryTestBase {
   @TestFactory
   @DisplayName("test endpoints on missing permissions and user is not Admin")
   Stream<DynamicTest> missedPermissionUserForbiddenTestFactory() {
-    Repository mockRepository = mock(Repository.class);
-    when(mockRepository.getId()).thenReturn(REPOSITORY_NAME);
-    when(mockRepository.getNamespace()).thenReturn(REPOSITORY_NAMESPACE);
-    when(mockRepository.getName()).thenReturn(REPOSITORY_NAME);
     doThrow(AuthorizationException.class).when(repositoryManager).get(any(NamespaceAndName.class));
     return createDynamicTestsToAssertResponses(
       requestGETPermission.expectedResponseStatus(403),
@@ -413,6 +406,7 @@ public class PermissionRootResourceTest extends RepositoryTestBase {
     when(mockRepository.getId()).thenReturn(REPOSITORY_NAME);
     when(mockRepository.getNamespace()).thenReturn(REPOSITORY_NAMESPACE);
     when(mockRepository.getName()).thenReturn(REPOSITORY_NAME);
+    when(mockRepository.getNamespaceAndName()).thenReturn(new NamespaceAndName(REPOSITORY_NAMESPACE, REPOSITORY_NAME));
     when(repositoryManager.get(any(NamespaceAndName.class))).thenReturn(mockRepository);
     when(subject.isPermitted(userPermission != null ? eq(userPermission) : any(String.class))).thenReturn(true);
     return mockRepository;

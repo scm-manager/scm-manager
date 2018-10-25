@@ -65,6 +65,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import static sonia.scm.NotFoundException.notFound;
+
 /**
  * Default implementation of {@link RepositoryManager}.
  *
@@ -122,11 +125,11 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
   }
 
   @Override
-  public Repository create(Repository repository) throws AlreadyExistsException {
+  public Repository create(Repository repository) {
     return create(repository, true);
   }
 
-  public Repository create(Repository repository, boolean initRepository) throws AlreadyExistsException {
+  public Repository create(Repository repository, boolean initRepository) {
     repository.setId(keyGenerator.createKey());
     repository.setNamespace(namespaceStrategy.createNamespace(repository));
 
@@ -170,7 +173,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
   }
 
   @Override
-  public void importRepository(Repository repository) throws AlreadyExistsException {
+  public void importRepository(Repository repository) {
     create(repository, false);
   }
 
@@ -207,7 +210,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
     if (fresh != null) {
       fresh.copyProperties(repository);
     } else {
-      throw NotFoundException.notFound(repository).build();
+      throw notFound(entity(repository));
     }
   }
 

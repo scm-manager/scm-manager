@@ -39,12 +39,10 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.junit.Test;
 import sonia.scm.AlreadyExistsException;
-import sonia.scm.ConcurrentModificationException;
 import sonia.scm.Manager;
 import sonia.scm.ManagerTestBase;
 import sonia.scm.NotFoundException;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -63,7 +61,7 @@ public abstract class UserManagerTestBase extends ManagerTestBase<User> {
   public static final int THREAD_COUNT = 10;
 
   @Test
-  public void testCreate() throws AlreadyExistsException {
+  public void testCreate() {
     User zaphod = UserTestData.createZaphod();
 
     manager.create(zaphod);
@@ -75,7 +73,7 @@ public abstract class UserManagerTestBase extends ManagerTestBase<User> {
   }
 
   @Test(expected = AlreadyExistsException.class)
-  public void testCreateExisting() throws AlreadyExistsException {
+  public void testCreateExisting() {
     User zaphod = UserTestData.createZaphod();
 
     manager.create(zaphod);
@@ -87,7 +85,7 @@ public abstract class UserManagerTestBase extends ManagerTestBase<User> {
   }
 
   @Test
-  public void testDelete() throws Exception {
+  public void testDelete() {
     User zaphod = UserTestData.createZaphod();
 
     manager.create(zaphod);
@@ -102,7 +100,7 @@ public abstract class UserManagerTestBase extends ManagerTestBase<User> {
   }
 
   @Test
-  public void testGet() throws AlreadyExistsException {
+  public void testGet() {
     User zaphod = UserTestData.createZaphod();
 
     manager.create(zaphod);
@@ -116,7 +114,7 @@ public abstract class UserManagerTestBase extends ManagerTestBase<User> {
   }
 
   @Test
-  public void testGetAll() throws AlreadyExistsException {
+  public void testGetAll() {
     User zaphod = UserTestData.createZaphod();
 
     manager.create(zaphod);
@@ -181,7 +179,7 @@ public abstract class UserManagerTestBase extends ManagerTestBase<User> {
   }
 
   @Test
-  public void testModify() throws AlreadyExistsException {
+  public void testModify() {
     User zaphod = UserTestData.createZaphod();
 
     manager.create(zaphod);
@@ -238,7 +236,7 @@ public abstract class UserManagerTestBase extends ManagerTestBase<User> {
   }
 
   @Test
-  public void testRefresh() throws AlreadyExistsException {
+  public void testRefresh() {
     User zaphod = UserTestData.createZaphod();
 
     manager.create(zaphod);
@@ -289,7 +287,7 @@ public abstract class UserManagerTestBase extends ManagerTestBase<User> {
       finished = true;
     }
 
-    private User createUser() throws AlreadyExistsException {
+    private User createUser() {
       String id = UUID.randomUUID().toString();
       User user = new User(id, id.concat(" displayName"),
                     id.concat("@mail.com"));

@@ -4,7 +4,6 @@ import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import org.apache.shiro.authc.credential.PasswordService;
-import sonia.scm.ConcurrentModificationException;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
 import sonia.scm.web.VndMediaType;

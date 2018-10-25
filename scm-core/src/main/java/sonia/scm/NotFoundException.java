@@ -10,7 +10,7 @@ import java.util.List;
 import static java.util.Collections.unmodifiableList;
 import static java.util.stream.Collectors.joining;
 
-public class NotFoundException extends RuntimeException {
+public class NotFoundException extends RuntimeException implements ExceptionWithContext {
 
   private final List<ContextEntry> context;
 
@@ -22,25 +22,13 @@ public class NotFoundException extends RuntimeException {
     this(Collections.singletonList(new ContextEntry(type, id)));
   }
 
+  public static NotFoundException notFound(ContextEntry.ContextBuilder contextBuilder) {
+    return new NotFoundException(contextBuilder.build());
+  }
+
   private NotFoundException(List<ContextEntry> context) {
     super(createMessage(context));
     this.context = context;
-  }
-
-  public static NotFoundExceptionBuilder notFound(Repository repository) {
-    return new NotFoundExceptionBuilder().in(repository);
-  }
-
-  public static NotFoundExceptionBuilder notFound(NamespaceAndName namespaceAndName) {
-    return new NotFoundExceptionBuilder().in(namespaceAndName);
-  }
-
-  public static NotFoundExceptionBuilder notFound(Class type, String id) {
-    return new NotFoundExceptionBuilder().in(type, id);
-  }
-
-  public static NotFoundExceptionBuilder notFound(String type, String id) {
-    return new NotFoundExceptionBuilder().in(type, id);
   }
 
   public List<ContextEntry> getContext() {
@@ -52,31 +40,4 @@ public class NotFoundException extends RuntimeException {
       .map(c -> c.getType().toLowerCase() + " with id " + c.getId())
       .collect(joining(" in ", "could not find ", ""));
   }
-
-  public static class NotFoundExceptionBuilder {
-    private final List<ContextEntry> context = new LinkedList<>();
-
-    public NotFoundExceptionBuilder in(Repository repository) {
-      return in(repository.getNamespaceAndName());
-    }
-
-    public NotFoundExceptionBuilder in(NamespaceAndName namespaceAndName) {
-      return this.in(Repository.class, namespaceAndName.logString());
-    }
-
-    public NotFoundExceptionBuilder in(Class type, String id) {
-      context.add(new ContextEntry(type, id));
-      return this;
-    }
-
-    public NotFoundExceptionBuilder in(String type, String id) {
-      context.add(new ContextEntry(type, id));
-      return this;
-    }
-
-    public NotFoundException build() {
-      return new NotFoundException(context);
-    }
-  }
-
 }

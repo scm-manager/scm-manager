@@ -1,8 +1,6 @@
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.HalRepresentation;
-import sonia.scm.AlreadyExistsException;
-import sonia.scm.ConcurrentModificationException;
 import sonia.scm.Manager;
 import sonia.scm.ModelObject;
 import sonia.scm.NotFoundException;
@@ -51,7 +49,7 @@ class IdResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
     return collectionAdapter.getAll(page, pageSize, sortBy, desc, mapToDto);
   }
 
-  public Response create(DTO dto, Supplier<MODEL_OBJECT> modelObjectSupplier, Function<MODEL_OBJECT, String> uriCreator) throws AlreadyExistsException {
+  public Response create(DTO dto, Supplier<MODEL_OBJECT> modelObjectSupplier, Function<MODEL_OBJECT, String> uriCreator) {
     return collectionAdapter.create(dto, modelObjectSupplier, uriCreator);
   }
 

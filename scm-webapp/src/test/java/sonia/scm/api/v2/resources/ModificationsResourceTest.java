@@ -19,6 +19,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.api.rest.AuthorizationExceptionMapper;
+import sonia.scm.api.v2.NotFoundExceptionMapper;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Modifications;
 import sonia.scm.repository.NamespaceAndName;

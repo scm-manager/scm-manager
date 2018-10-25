@@ -38,7 +38,6 @@ package sonia.scm.repository.api;
 import com.google.common.base.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.NotFoundException;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.repository.BrowserResult;

@@ -44,7 +44,6 @@ import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.treewalk.filter.PathFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.NotFoundException;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.util.Util;
 
@@ -53,6 +52,9 @@ import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import static sonia.scm.NotFoundException.notFound;
 
 
 public class GitCatCommand extends AbstractGitCommand implements CatCommand {
@@ -101,7 +103,7 @@ public class GitCatCommand extends AbstractGitCommand implements CatCommand {
     try {
       entry = revWalk.parseCommit(revId);
     } catch (MissingObjectException e) {
-      throw NotFoundException.notFound("Revision", revId.getName()).in(repository).build();
+      throw notFound(entity("Revision", revId.getName()).in(repository));
     }
     RevTree revTree = entry.getTree();
 
@@ -119,7 +121,7 @@ public class GitCatCommand extends AbstractGitCommand implements CatCommand {
 
       return new ClosableObjectLoaderContainer(loader, treeWalk, revWalk);
     } else {
-      throw NotFoundException.notFound("Path", path).in("Revision", revId.getName()).in(repository).build();
+      throw notFound(entity("Path", path).in("Revision", revId.getName()).in(repository));
     }
   }
 

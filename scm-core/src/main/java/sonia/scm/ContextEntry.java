@@ -1,6 +1,12 @@
 package sonia.scm;
 
+import sonia.scm.repository.NamespaceAndName;
+import sonia.scm.repository.Repository;
 import sonia.scm.util.AssertUtil;
+
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 public class ContextEntry {
   private final String type;
@@ -11,17 +17,60 @@ public class ContextEntry {
   }
 
   ContextEntry(String type, String id) {
-      AssertUtil.assertIsNotEmpty(type);
-      AssertUtil.assertIsNotEmpty(id);
-      this.type = type;
-      this.id = id;
+    AssertUtil.assertIsNotEmpty(type);
+    AssertUtil.assertIsNotEmpty(id);
+    this.type = type;
+    this.id = id;
+  }
+
+  public String getType() {
+    return type;
+  }
+
+  public String getId() {
+    return id;
+  }
+
+
+  public static class ContextBuilder {
+    private final List<ContextEntry> context = new LinkedList<>();
+
+    public static ContextBuilder entity(Repository repository) {
+      return new ContextBuilder().in(repository.getNamespaceAndName());
     }
 
-    public String getType () {
-      return type;
+    public static ContextBuilder entity(NamespaceAndName namespaceAndName) {
+      return new ContextBuilder().in(Repository.class, namespaceAndName.logString());
     }
 
-    public String getId () {
-      return id;
+    public static ContextBuilder entity(Class type, String id) {
+      return new ContextBuilder().in(type, id);
+    }
+
+    public static ContextBuilder entity(String type, String id) {
+      return new ContextBuilder().in(type, id);
+    }
+
+    public ContextBuilder in(Repository repository) {
+      return in(repository.getNamespaceAndName());
+    }
+
+    public ContextBuilder in(NamespaceAndName namespaceAndName) {
+      return this.in(Repository.class, namespaceAndName.logString());
+    }
+
+    public ContextBuilder in(Class type, String id) {
+      context.add(new ContextEntry(type, id));
+      return this;
+    }
+
+    public ContextBuilder in(String type, String id) {
+      context.add(new ContextEntry(type, id));
+      return this;
+    }
+
+    public List<ContextEntry> build() {
+      return Collections.unmodifiableList(context);
     }
   }
+}

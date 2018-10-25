@@ -43,7 +43,6 @@ import org.tmatesoft.svn.core.SVNProperties;
 import org.tmatesoft.svn.core.io.SVNRepository;
 import org.tmatesoft.svn.core.wc.SVNClientManager;
 import org.tmatesoft.svn.core.wc.admin.SVNLookClient;
-import sonia.scm.NotFoundException;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.SvnUtil;
@@ -52,6 +51,9 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import static sonia.scm.NotFoundException.notFound;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -131,9 +133,9 @@ public class SvnCatCommand extends AbstractSvnCommand implements CatCommand
   private void handleSvnException(CatCommandRequest request, SVNException ex) {
     int svnErrorCode = ex.getErrorMessage().getErrorCode().getCode();
     if (SVNErrorCode.FS_NOT_FOUND.getCode() == svnErrorCode) {
-      throw NotFoundException.notFound("Path", request.getPath()).in("Revision", request.getRevision()).in(repository).build();
+      throw notFound(entity("Path", request.getPath()).in("Revision", request.getRevision()).in(repository));
     } else if (SVNErrorCode.FS_NO_SUCH_REVISION.getCode() == svnErrorCode) {
-      throw NotFoundException.notFound("Revision", request.getRevision()).in(repository).build();
+      throw notFound(entity("Revision", request.getRevision()).in(repository));
     } else {
       throw new InternalRepositoryException("could not get content from revision", ex);
     }

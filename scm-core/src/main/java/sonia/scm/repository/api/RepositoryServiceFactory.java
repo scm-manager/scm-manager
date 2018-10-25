@@ -64,6 +64,9 @@ import sonia.scm.security.ScmSecurityException;
 
 import java.util.Set;
 
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import static sonia.scm.NotFoundException.notFound;
+
 //~--- JDK imports ------------------------------------------------------------
 
 /**
@@ -177,7 +180,7 @@ public final class RepositoryServiceFactory
 
     if (repository == null)
     {
-      throw NotFoundException.notFound(namespaceAndName).build();
+      throw notFound(entity(namespaceAndName));
     }
 
     return create(repository);

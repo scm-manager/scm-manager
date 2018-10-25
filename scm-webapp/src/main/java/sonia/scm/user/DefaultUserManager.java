@@ -39,7 +39,6 @@ import com.google.inject.Singleton;
 import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.AlreadyExistsException;
 import sonia.scm.EagerSingleton;
 import sonia.scm.HandlerEventType;
 import sonia.scm.ManagerDaoAdapter;
@@ -137,7 +136,7 @@ public class DefaultUserManager extends AbstractUserManager
    * @throws IOException
    */
   @Override
-  public User create(User user) throws AlreadyExistsException {
+  public User create(User user) {
     String type = user.getType();
     if (Util.isEmpty(type)) {
       user.setType(userDAO.getType());

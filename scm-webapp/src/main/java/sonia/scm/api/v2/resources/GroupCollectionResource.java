@@ -5,7 +5,6 @@ import com.webcohesion.enunciate.metadata.rs.ResponseHeader;
 import com.webcohesion.enunciate.metadata.rs.ResponseHeaders;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
-import sonia.scm.AlreadyExistsException;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupManager;
 import sonia.scm.web.VndMediaType;
@@ -86,7 +85,7 @@ public class GroupCollectionResource {
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
   @ResponseHeaders(@ResponseHeader(name = "Location", description = "uri to the created group"))
-  public Response create(@Valid GroupDto groupDto) throws AlreadyExistsException {
+  public Response create(@Valid GroupDto groupDto) {
     return adapter.create(groupDto,
                           () -> dtoToGroupMapper.map(groupDto),
                           group -> resourceLinks.group().self(group.getName()));

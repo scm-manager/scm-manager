@@ -45,7 +45,6 @@ import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.AlreadyExistsException;
 import sonia.scm.NotFoundException;
 import sonia.scm.NotSupportedFeatuerException;
 import sonia.scm.Type;
@@ -515,13 +514,6 @@ public class RepositoryImportResource
       // TODO #8783
 //      repository = new Repository(null, type, name);
       manager.create(repository);
-    }
-    catch (AlreadyExistsException ex)
-    {
-      logger.warn("a {} repository with the name {} already exists", type,
-        name);
-
-      throw new WebApplicationException(Response.Status.CONFLICT);
     }
     catch (InternalRepositoryException ex)
     {

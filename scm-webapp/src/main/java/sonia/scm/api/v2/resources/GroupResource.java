@@ -3,8 +3,6 @@ package sonia.scm.api.v2.resources;
 import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
-import sonia.scm.ConcurrentModificationException;
-import sonia.scm.NotFoundException;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupManager;
 import sonia.scm.web.VndMediaType;

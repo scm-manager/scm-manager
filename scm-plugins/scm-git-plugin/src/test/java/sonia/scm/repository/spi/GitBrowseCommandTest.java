@@ -32,7 +32,6 @@
 package sonia.scm.repository.spi;
 
 import org.junit.Test;
-import sonia.scm.NotFoundException;
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.FileObject;
 import sonia.scm.repository.GitConstants;
@@ -63,7 +62,7 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
   }
 
   @Test
-  public void testDefaultDefaultBranch() throws IOException, NotFoundException {
+  public void testDefaultDefaultBranch() throws IOException {
     // without default branch, the repository head should be used
     FileObject root = createCommand().getBrowserResult(new BrowseCommandRequest()).getFile();
     assertNotNull(root);
@@ -78,7 +77,7 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
   }
 
   @Test
-  public void testExplicitDefaultBranch() throws IOException, NotFoundException {
+  public void testExplicitDefaultBranch() throws IOException {
     repository.setProperty(GitConstants.PROPERTY_DEFAULT_BRANCH, "test-branch");
 
     FileObject root = createCommand().getBrowserResult(new BrowseCommandRequest()).getFile();
