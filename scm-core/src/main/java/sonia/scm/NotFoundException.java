@@ -12,6 +12,8 @@ import static java.util.stream.Collectors.joining;
 
 public class NotFoundException extends RuntimeException implements ExceptionWithContext {
 
+  private static final String CODE = "AGR7UzkhA1";
+
   private final List<ContextEntry> context;
 
   public NotFoundException(Class type, String id) {
@@ -33,6 +35,11 @@ public class NotFoundException extends RuntimeException implements ExceptionWith
 
   public List<ContextEntry> getContext() {
     return unmodifiableList(context);
+  }
+
+  @Override
+  public String getCode() {
+    return CODE;
   }
 
   private static String createMessage(List<ContextEntry> context) {

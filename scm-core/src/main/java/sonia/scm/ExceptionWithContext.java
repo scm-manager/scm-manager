@@ -6,4 +6,6 @@ public interface ExceptionWithContext {
   List<ContextEntry> getContext();
 
   String getMessage();
+
+  String getCode();
 }

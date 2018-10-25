@@ -8,6 +8,8 @@ import static java.util.stream.Collectors.joining;
 
 public class AlreadyExistsException extends RuntimeException implements ExceptionWithContext {
 
+  private static final String CODE = "FtR7UznKU1";
+
   private final List<ContextEntry> context;
 
   public AlreadyExistsException(ModelObject object) {
@@ -25,6 +27,11 @@ public class AlreadyExistsException extends RuntimeException implements Exceptio
 
   public List<ContextEntry> getContext() {
     return unmodifiableList(context);
+  }
+
+  @Override
+  public String getCode() {
+    return CODE;
   }
 
   private static String createMessage(List<ContextEntry> context) {

@@ -7,6 +7,9 @@ import static java.util.Collections.unmodifiableList;
 import static java.util.stream.Collectors.joining;
 
 public class ConcurrentModificationException extends RuntimeException implements ExceptionWithContext {
+
+  private static final String CODE = "2wR7UzpPG1";
+
   private final List<ContextEntry> context;
 
   public ConcurrentModificationException(Class type, String id) {
@@ -24,6 +27,11 @@ public class ConcurrentModificationException extends RuntimeException implements
 
   public List<ContextEntry> getContext() {
     return unmodifiableList(context);
+  }
+
+  @Override
+  public String getCode() {
+    return CODE;
   }
 
   private static String createMessage(List<ContextEntry> context) {

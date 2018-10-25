@@ -30,6 +30,6 @@ public class ErrorDto {
   }
 
   public static ErrorDto from(ExceptionWithContext exception) {
-    return new ErrorDto(MDC.get("transaction_id"), "todo", exception.getContext(), exception.getMessage());
+    return new ErrorDto(MDC.get("transaction_id"), exception.getCode(), exception.getContext(), exception.getMessage());
   }
 }
