@@ -587,8 +587,9 @@ public class SCMSvnDiffGenerator implements ISvnDiffGenerator {
   private String getHeaderString(SvnTarget target, String displayPath, boolean deleted, boolean added, SvnDiffCallback.OperationKind operation, String copyFromPath) throws SVNException {
     final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
     try {
-      boolean stopDisplaying = displayHeader(byteArrayOutputStream, displayPath, deleted, added, operation);
-      if (useGitFormat) {
+      if (!useGitFormat) {
+        displayHeader(byteArrayOutputStream, displayPath, deleted, added, operation);
+      } else {
         displayGitDiffHeader(byteArrayOutputStream, operation,
           getRelativeToRootPath(target, originalTarget1),
           getRelativeToRootPath(target, originalTarget2),
@@ -887,7 +888,7 @@ public class SCMSvnDiffGenerator implements ISvnDiffGenerator {
       displayString(outputStream, " ");
       displaySecondGitPath(outputStream, path2);
       displayEOL(outputStream);
-      displayString(outputStream, "new file mode 10644");
+      displayString(outputStream, "new file mode 100644");
       displayEOL(outputStream);
     } catch (IOException e) {
       wrapException(e);
@@ -901,7 +902,7 @@ public class SCMSvnDiffGenerator implements ISvnDiffGenerator {
       displayString(outputStream, " ");
       displaySecondGitPath(outputStream, path2);
       displayEOL(outputStream);
-      displayString(outputStream, "deleted file mode 10644");
+      displayString(outputStream, "deleted file mode 100644");
       displayEOL(outputStream);
     } catch (IOException e) {
       wrapException(e);
@@ -1011,6 +1012,9 @@ public class SCMSvnDiffGenerator implements ISvnDiffGenerator {
   }
 
   protected String getLabel(String path, String revToken) {
+    if (useGitFormat){
+      return path;
+    }
     revToken = revToken == null ? WC_REVISION_LABEL : revToken;
     return path + "\t" + revToken;
   }
