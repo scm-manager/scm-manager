@@ -97,7 +97,7 @@ public abstract class UserManagerTestBase extends ManagerTestBase<User> {
   }
 
   @Test(expected = NotFoundException.class)
-  public void testDeleteNotFound() throws Exception {
+  public void testDeleteNotFound() {
     manager.delete(UserTestData.createDent());
   }
 
@@ -181,7 +181,7 @@ public abstract class UserManagerTestBase extends ManagerTestBase<User> {
   }
 
   @Test
-  public void testModify() throws AlreadyExistsException, NotFoundException, ConcurrentModificationException {
+  public void testModify() throws AlreadyExistsException {
     User zaphod = UserTestData.createZaphod();
 
     manager.create(zaphod);
@@ -238,7 +238,7 @@ public abstract class UserManagerTestBase extends ManagerTestBase<User> {
   }
 
   @Test
-  public void testRefresh() throws AlreadyExistsException, NotFoundException {
+  public void testRefresh() throws AlreadyExistsException {
     User zaphod = UserTestData.createZaphod();
 
     manager.create(zaphod);
@@ -299,7 +299,7 @@ public abstract class UserManagerTestBase extends ManagerTestBase<User> {
       return user;
     }
 
-    private void modifyAndDeleteUser(User user) throws IOException, NotFoundException, ConcurrentModificationException {
+    private void modifyAndDeleteUser(User user) {
       String name = user.getName();
       String nd = name.concat(" new displayname");
 

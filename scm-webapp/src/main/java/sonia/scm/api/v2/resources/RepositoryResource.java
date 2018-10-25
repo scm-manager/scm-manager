@@ -138,7 +138,7 @@ public class RepositoryResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
-  public Response update(@PathParam("namespace") String namespace, @PathParam("name") String name, @Valid RepositoryDto repositoryDto) throws ConcurrentModificationException {
+  public Response update(@PathParam("namespace") String namespace, @PathParam("name") String name, @Valid RepositoryDto repositoryDto) {
     return adapter.update(
       loadBy(namespace, name),
       existing -> processUpdate(repositoryDto, existing),
@@ -204,7 +204,8 @@ public class RepositoryResource {
   }
 
   private Supplier<Repository> loadBy(String namespace, String name) {
-    return () -> Optional.ofNullable(manager.get(new NamespaceAndName(namespace, name))).orElseThrow(() -> new NotFoundException(Repository.class, namespace + "/" + name));
+    NamespaceAndName namespaceAndName = new NamespaceAndName(namespace, name);
+    return () -> Optional.ofNullable(manager.get(namespaceAndName)).orElseThrow(() -> NotFoundException.notFound(namespaceAndName).build());
   }
 
   private Predicate<Repository> nameAndNamespaceStaysTheSame(String namespace, String name) {

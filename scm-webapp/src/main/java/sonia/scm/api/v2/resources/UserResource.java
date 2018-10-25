@@ -101,7 +101,7 @@ public class UserResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
-  public Response update(@PathParam("id") String name, @Valid UserDto userDto) throws ConcurrentModificationException {
+  public Response update(@PathParam("id") String name, @Valid UserDto userDto) {
     return adapter.update(name, existing -> dtoToUserMapper.map(userDto, existing.getPassword()));
   }
 

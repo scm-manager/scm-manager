@@ -15,14 +15,15 @@ public class NotFoundException extends RuntimeException {
   private final List<ContextEntry> context;
 
   public NotFoundException(Class type, String id) {
-    this.context = Collections.singletonList(new ContextEntry(type, id));
+    this(Collections.singletonList(new ContextEntry(type, id)));
   }
 
   public NotFoundException(String type, String id) {
-    this.context = Collections.singletonList(new ContextEntry(type, id));
+    this(Collections.singletonList(new ContextEntry(type, id)));
   }
 
   private NotFoundException(List<ContextEntry> context) {
+    super(createMessage(context));
     this.context = context;
   }
 
@@ -46,8 +47,7 @@ public class NotFoundException extends RuntimeException {
     return unmodifiableList(context);
   }
 
-  @Override
-  public String getMessage() {
+  private static String createMessage(List<ContextEntry> context) {
     return context.stream()
       .map(c -> c.getType().toLowerCase() + " with id " + c.getId())
       .collect(joining(" in ", "could not find ", ""));

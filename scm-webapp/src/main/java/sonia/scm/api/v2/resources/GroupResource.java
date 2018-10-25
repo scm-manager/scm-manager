@@ -98,7 +98,7 @@ public class GroupResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
-  public Response update(@PathParam("id") String name, @Valid GroupDto groupDto) throws ConcurrentModificationException {
+  public Response update(@PathParam("id") String name, @Valid GroupDto groupDto) {
     return adapter.update(name, existing -> dtoToGroupMapper.map(groupDto));
   }
 }

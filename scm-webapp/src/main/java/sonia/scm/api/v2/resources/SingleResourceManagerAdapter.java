@@ -33,6 +33,7 @@ class SingleResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
                              DTO extends HalRepresentation> extends AbstractManagerResource<MODEL_OBJECT> {
 
   private final Function<Throwable, Optional<Response>> errorHandler;
+  private final Class<MODEL_OBJECT> type;
 
   SingleResourceManagerAdapter(Manager<MODEL_OBJECT> manager, Class<MODEL_OBJECT> type) {
     this(manager, type, e -> Optional.empty());
@@ -44,6 +45,7 @@ class SingleResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
     Function<Throwable, Optional<Response>> errorHandler) {
     super(manager, type);
     this.errorHandler = errorHandler;
+    this.type = type;
   }
 
   /**
@@ -58,14 +60,14 @@ class SingleResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
    * Update the model object for the given id according to the given function and returns a corresponding http response.
    * This handles all corner cases, eg. no matching object for the id or missing privileges.
    */
-  Response update(Supplier<MODEL_OBJECT> reader, Function<MODEL_OBJECT, MODEL_OBJECT> applyChanges, Predicate<MODEL_OBJECT> hasSameKey) throws ConcurrentModificationException {
+  Response update(Supplier<MODEL_OBJECT> reader, Function<MODEL_OBJECT, MODEL_OBJECT> applyChanges, Predicate<MODEL_OBJECT> hasSameKey) {
     MODEL_OBJECT existingModelObject = reader.get();
     MODEL_OBJECT changedModelObject = applyChanges.apply(existingModelObject);
     if (!hasSameKey.test(changedModelObject)) {
       return Response.status(BAD_REQUEST).entity("illegal change of id").build();
     }
     else if (modelObjectWasModifiedConcurrently(existingModelObject, changedModelObject)) {
-      throw new ConcurrentModificationException();
+      throw new ConcurrentModificationException(type, existingModelObject.getId());
     }
     return update(getId(existingModelObject), changedModelObject);
   }

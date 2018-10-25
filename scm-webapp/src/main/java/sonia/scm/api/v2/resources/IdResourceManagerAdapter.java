@@ -39,7 +39,7 @@ class IdResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
     return singleAdapter.get(loadBy(id), mapToDto);
   }
 
-  public Response update(String id, Function<MODEL_OBJECT, MODEL_OBJECT> applyChanges) throws ConcurrentModificationException {
+  public Response update(String id, Function<MODEL_OBJECT, MODEL_OBJECT> applyChanges) {
     return singleAdapter.update(
       loadBy(id),
       applyChanges,
