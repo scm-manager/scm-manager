@@ -68,7 +68,7 @@ class Content extends React.Component<Props, State> {
   }
 
   render() {
-    const { file } = this.props;
+    const { file, revision } = this.props;
     const contentType = this.state.contentType;
     const error = this.state.error;
     const hasError = this.state.hasError;
@@ -87,7 +87,7 @@ class Content extends React.Component<Props, State> {
       return <SourcecodeViewer />;
     }
 
-    return <DownloadViewer file={file}/>;
+    return <DownloadViewer file={file} revision={revision}/>;
   }
 }
 
