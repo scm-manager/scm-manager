@@ -31,7 +31,9 @@ type Props = {
 };
 
 type State = {
-  contentType: string
+  contentType: string,
+  error: Error,
+  hasError: boolean
 };
 
 class Content extends React.Component<Props, State> {
@@ -39,24 +41,43 @@ class Content extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      contentType: ""
+      contentType: "",
+      error: new Error(),
+      hasError: false
     };
   }
 
   componentDidMount() {
     const { file } = this.props;
-    getContentType(file._links.self.href).then(result => {
-      this.setState({
-        contentType: result
-      });
-    });
+    getContentType(file._links.self.href)
+      .then(result => {
+        if (result.error) {
+          this.setState({
+            ...this.state,
+            hasError: true,
+            error: result.error
+          });
+        } else {
+          this.setState({
+            ...this.state,
+            contentType: result.type
+          });
+        }
+      })
+      .catch(err => {});
   }
 
   render() {
     const { file } = this.props;
     const contentType = this.state.contentType;
+    const error = this.state.error;
+    const hasError = this.state.hasError;
+
     if (!file) {
       return <Loading />;
+    }
+    if (hasError) {
+      return <ErrorNotification error={error} />;
     }
     if (contentType.startsWith("image")) {
       return <ImageViewer />;
@@ -74,10 +95,10 @@ export function getContentType(url: string, state: any) {
   return apiClient
     .head(url)
     .then(response => {
-      return response.headers.get("Content-Type");
+      return { type: response.headers.get("Content-Type") };
     })
     .catch(err => {
-      return null;
+      return { error: err };
     });
 }
 
