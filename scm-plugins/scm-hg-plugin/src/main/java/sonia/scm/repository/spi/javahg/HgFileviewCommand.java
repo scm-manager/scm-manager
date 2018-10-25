@@ -50,35 +50,31 @@ import sonia.scm.repository.SubRepository;
 
 import java.io.IOException;
 
+import java.util.Deque;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
+ * Mercurial command to list files of a repository.
  *
  * @author Sebastian Sdorra
  */
 public class HgFileviewCommand extends AbstractCommand
 {
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param repository
-   */
-  public HgFileviewCommand(Repository repository)
+  private boolean disableLastCommit = false;
+
+  private HgFileviewCommand(Repository repository)
   {
     super(repository);
   }
 
-  //~--- methods --------------------------------------------------------------
-
   /**
-   * Method description
+   * Create command for the given repository.
    *
+   * @param repository repository
    *
-   * @param repository
-   *
-   * @return
+   * @return fileview command
    */
   public static HgFileviewCommand on(Repository repository)
   {
@@ -86,13 +82,11 @@ public class HgFileviewCommand extends AbstractCommand
   }
 
   /**
-   * Method description
+   * Disable last commit fetching for file objects.
    *
-   *
-   * @return
+   * @return {@code this}
    */
-  public HgFileviewCommand disableLastCommit()
-  {
+  public HgFileviewCommand disableLastCommit() {
     disableLastCommit = true;
     cmdAppend("-d");
 
@@ -100,132 +94,128 @@ public class HgFileviewCommand extends AbstractCommand
   }
 
   /**
-   * Method description
+   * Disables sub repository detection
    *
-   *
-   * @return
+   * @return {@code this}
    */
-  public HgFileviewCommand disableSubRepositoryDetection()
-  {
+  public HgFileviewCommand disableSubRepositoryDetection() {
     cmdAppend("-s");
 
     return this;
   }
 
   /**
-   * Method description
+   * Start file object fetching at the given path.
    *
    *
-   * @return
+   * @param path path to start fetching
    *
-   * @throws IOException
+   * @return {@code this}
    */
-  public List<FileObject> execute() throws IOException
-  {
-    cmdAppend("-t");
-
-    List<FileObject> files = Lists.newArrayList();
-
-    HgInputStream stream = launchStream();
-
-    while (stream.peek() != -1)
-    {
-      FileObject file = null;
-      char type = (char) stream.read();
-
-      if (type == 'd')
-      {
-        file = readDirectory(stream);
-      }
-      else if (type == 'f')
-      {
-        file = readFile(stream);
-      }
-      else if (type == 's')
-      {
-        file = readSubRepository(stream);
-      }
-
-      if (file != null)
-      {
-        files.add(file);
-      }
-    }
-
-    return files;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param path
-   *
-   * @return
-   */
-  public HgFileviewCommand path(String path)
-  {
+  public HgFileviewCommand path(String path) {
     cmdAppend("-p", path);
 
     return this;
   }
 
   /**
-   * Method description
+   * Fetch file objects recursive.
    *
    *
-   * @return
+   * @return {@code this}
    */
-  public HgFileviewCommand recursive()
-  {
+  public HgFileviewCommand recursive() {
     cmdAppend("-c");
 
     return this;
   }
 
   /**
-   * Method description
+   * Use given revision for file view.
    *
+   * @param revision revision id, hash, tag or branch
    *
-   * @param revision
-   *
-   * @return
+   * @return {@code this}
    */
-  public HgFileviewCommand rev(String revision)
-  {
+  public HgFileviewCommand rev(String revision) {
     cmdAppend("-r", revision);
 
     return this;
   }
 
-  //~--- get methods ----------------------------------------------------------
-
   /**
-   * Method description
+   * Executes the mercurial command and parses the output.
    *
-   *
-   * @return
-   */
-  @Override
-  public String getCommandName()
-  {
-    return HgFileviewExtension.NAME;
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param stream
-   *
-   * @return
+   * @return file object
    *
    * @throws IOException
    */
-  private FileObject readDirectory(HgInputStream stream) throws IOException
+  public FileObject execute() throws IOException
   {
+    cmdAppend("-t");
+
+    Deque<FileObject> stack = new LinkedList<>();
+
+    HgInputStream stream = launchStream();
+
+    FileObject last = null;
+    while (stream.peek() != -1) {
+      FileObject file = read(stream);
+
+      while (!stack.isEmpty()) {
+        FileObject current = stack.peek();
+        if (isParent(current, file)) {
+          current.addChild(file);
+          break;
+        } else {
+          stack.pop();
+        }
+      }
+
+      if (file.isDirectory()) {
+        stack.push(file);
+      }
+      last = file;
+    }
+
+    if (stack.isEmpty()) {
+      // if the stack is empty, the requested path is probably a file
+      return last;
+    } else {
+      // if the stack is not empty, the requested path is a directory
+      return stack.getLast();
+    }
+  }
+
+  private FileObject read(HgInputStream stream) throws IOException {
+    char type = (char) stream.read();
+
+    FileObject file;
+    switch (type) {
+      case 'd':
+        file = readDirectory(stream);
+        break;
+      case 'f':
+        file = readFile(stream);
+        break;
+      case 's':
+        file = readSubRepository(stream);
+        break;
+      default:
+        throw new IOException("unknown file object type: " + type);
+    }
+    return file;
+  }
+
+  private boolean isParent(FileObject parent, FileObject child) {
+    String parentPath = parent.getPath();
+    if (parentPath.equals("")) {
+      return true;
+    }
+    return child.getParentPath().equals(parentPath);
+  }
+
+  private FileObject readDirectory(HgInputStream stream) throws IOException {
     FileObject directory = new FileObject();
     String path = removeTrailingSlash(stream.textUpTo('\0'));
 
@@ -236,18 +226,7 @@ public class HgFileviewCommand extends AbstractCommand
     return directory;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param stream
-   *
-   * @return
-   *
-   * @throws IOException
-   */
-  private FileObject readFile(HgInputStream stream) throws IOException
-  {
+  private FileObject readFile(HgInputStream stream) throws IOException {
     FileObject file = new FileObject();
     String path = removeTrailingSlash(stream.textUpTo('\n'));
 
@@ -259,8 +238,7 @@ public class HgFileviewCommand extends AbstractCommand
     DateTime timestamp = stream.dateTimeUpTo(' ');
     String description = stream.textUpTo('\0');
 
-    if (!disableLastCommit)
-    {
+    if (!disableLastCommit) {
       file.setLastModified(timestamp.getDate().getTime());
       file.setDescription(description);
     }
@@ -268,18 +246,7 @@ public class HgFileviewCommand extends AbstractCommand
     return file;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param stream
-   *
-   * @return
-   *
-   * @throws IOException
-   */
-  private FileObject readSubRepository(HgInputStream stream) throws IOException
-  {
+  private FileObject readSubRepository(HgInputStream stream) throws IOException {
     FileObject directory = new FileObject();
     String path = removeTrailingSlash(stream.textUpTo('\n'));
 
@@ -292,8 +259,7 @@ public class HgFileviewCommand extends AbstractCommand
 
     SubRepository subRepository = new SubRepository(url);
 
-    if (!Strings.isNullOrEmpty(revision))
-    {
+    if (!Strings.isNullOrEmpty(revision)) {
       subRepository.setRevision(revision);
     }
 
@@ -302,48 +268,33 @@ public class HgFileviewCommand extends AbstractCommand
     return directory;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param path
-   *
-   * @return
-   */
-  private String removeTrailingSlash(String path)
-  {
-    if (path.endsWith("/"))
-    {
+  private String removeTrailingSlash(String path) {
+    if (path.endsWith("/")) {
       path = path.substring(0, path.length() - 1);
     }
 
     return path;
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param path
-   *
-   * @return
-   */
-  private String getNameFromPath(String path)
-  {
+  private String getNameFromPath(String path) {
     int index = path.lastIndexOf('/');
 
-    if (index > 0)
-    {
+    if (index > 0) {
       path = path.substring(index + 1);
     }
 
     return path;
   }
 
-  //~--- fields ---------------------------------------------------------------
+  /**
+   * Returns the name of the mercurial command.
+   *
+   * @return command name
+   */
+  @Override
+  public String getCommandName()
+  {
+    return HgFileviewExtension.NAME;
+  }
 
-  /** Field description */
-  private boolean disableLastCommit = false;
 }

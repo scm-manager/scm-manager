@@ -45,7 +45,8 @@ import reducer, {
   MODIFY_REPO,
   isModifyRepoPending,
   getModifyRepoFailure,
-  modifyRepoSuccess
+  modifyRepoSuccess,
+  getPermissionsLink
 } from "./repos";
 import type { Repository, RepositoryCollection } from "@scm-manager/ui-types";
 
@@ -99,16 +100,13 @@ const hitchhikerRestatend: Repository = {
   type: "git",
   _links: {
     self: {
-      href:
-        "http://localhost:8081/api/v2/repositories/hitchhiker/restatend"
+      href: "http://localhost:8081/api/v2/repositories/hitchhiker/restatend"
     },
     delete: {
-      href:
-        "http://localhost:8081/api/v2/repositories/hitchhiker/restatend"
+      href: "http://localhost:8081/api/v2/repositories/hitchhiker/restatend"
     },
     update: {
-      href:
-        "http://localhost:8081/api/v2/repositories/hitchhiker/restatend"
+      href: "http://localhost:8081/api/v2/repositories/hitchhiker/restatend"
     },
     permissions: {
       href:
@@ -158,16 +156,14 @@ const slartiFjords: Repository = {
       href: "http://localhost:8081/api/v2/repositories/slarti/fjords/tags/"
     },
     branches: {
-      href:
-        "http://localhost:8081/api/v2/repositories/slarti/fjords/branches/"
+      href: "http://localhost:8081/api/v2/repositories/slarti/fjords/branches/"
     },
     changesets: {
       href:
         "http://localhost:8081/api/v2/repositories/slarti/fjords/changesets/"
     },
     sources: {
-      href:
-        "http://localhost:8081/api/v2/repositories/slarti/fjords/sources/"
+      href: "http://localhost:8081/api/v2/repositories/slarti/fjords/sources/"
     }
   }
 };
@@ -221,6 +217,7 @@ const repositoryCollectionWithNames: RepositoryCollection = {
 };
 
 describe("repos fetch", () => {
+  const URL = "repositories";
   const REPOS_URL = "/api/v2/repositories";
   const SORT = "sortBy=namespaceAndName";
   const REPOS_URL_WITH_SORT = REPOS_URL + "?" + SORT;
@@ -243,7 +240,7 @@ describe("repos fetch", () => {
     ];
 
     const store = mockStore({});
-    return store.dispatch(fetchRepos()).then(() => {
+    return store.dispatch(fetchRepos(URL)).then(() => {
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
@@ -262,7 +259,7 @@ describe("repos fetch", () => {
 
     const store = mockStore({});
 
-    return store.dispatch(fetchReposByPage(43)).then(() => {
+    return store.dispatch(fetchReposByPage(URL, 43)).then(() => {
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
@@ -318,7 +315,7 @@ describe("repos fetch", () => {
     });
 
     const store = mockStore({});
-    return store.dispatch(fetchRepos()).then(() => {
+    return store.dispatch(fetchRepos(URL)).then(() => {
       const actions = store.getActions();
       expect(actions[0].type).toEqual(FETCH_REPOS_PENDING);
       expect(actions[1].type).toEqual(FETCH_REPOS_FAILURE);
@@ -346,7 +343,7 @@ describe("repos fetch", () => {
     ];
 
     const store = mockStore({});
-    return store.dispatch(fetchRepo("slarti", "fjords")).then(() => {
+    return store.dispatch(fetchRepo(URL, "slarti", "fjords")).then(() => {
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
@@ -357,7 +354,7 @@ describe("repos fetch", () => {
     });
 
     const store = mockStore({});
-    return store.dispatch(fetchRepo("slarti", "fjords")).then(() => {
+    return store.dispatch(fetchRepo(URL, "slarti", "fjords")).then(() => {
       const actions = store.getActions();
       expect(actions[0].type).toEqual(FETCH_REPO_PENDING);
       expect(actions[1].type).toEqual(FETCH_REPO_FAILURE);
@@ -383,7 +380,7 @@ describe("repos fetch", () => {
     ];
 
     const store = mockStore({});
-    return store.dispatch(createRepo(slartiFjords)).then(() => {
+    return store.dispatch(createRepo(URL, slartiFjords)).then(() => {
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
@@ -400,7 +397,7 @@ describe("repos fetch", () => {
     };
 
     const store = mockStore({});
-    return store.dispatch(createRepo(slartiFjords, callback)).then(() => {
+    return store.dispatch(createRepo(URL, slartiFjords, callback)).then(() => {
       expect(callMe).toBe("yeah");
     });
   });
@@ -411,7 +408,7 @@ describe("repos fetch", () => {
     });
 
     const store = mockStore({});
-    return store.dispatch(createRepo(slartiFjords)).then(() => {
+    return store.dispatch(createRepo(URL, slartiFjords)).then(() => {
       const actions = store.getActions();
       expect(actions[0].type).toEqual(CREATE_REPO_PENDING);
       expect(actions[1].type).toEqual(CREATE_REPO_FAILURE);
@@ -647,6 +644,21 @@ describe("repos selectors", () => {
 
     const repository = getRepository(state, "slarti", "fjords");
     expect(repository).toEqual(slartiFjords);
+  });
+
+  it("should return permissions link", () => {
+    const state = {
+      repos: {
+        byNames: {
+          "slarti/fjords": slartiFjords
+        }
+      }
+    };
+
+    const link = getPermissionsLink(state, "slarti", "fjords");
+    expect(link).toEqual(
+      "http://localhost:8081/api/v2/repositories/slarti/fjords/permissions/"
+    );
   });
 
   it("should return true, when fetch repo is pending", () => {

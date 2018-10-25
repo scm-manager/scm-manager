@@ -33,22 +33,18 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import org.junit.Test;
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.FileObject;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Collection;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-
-//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -58,8 +54,18 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase
 {
 
   @Test
+  public void testBrowseWithFilePath() {
+    BrowseCommandRequest request = new BrowseCommandRequest();
+    request.setPath("a.txt");
+    FileObject file = createCommand().getBrowserResult(request).getFile();
+    assertEquals("a.txt", file.getName());
+    assertFalse(file.isDirectory());
+    assertTrue(file.getChildren().isEmpty());
+  }
+
+  @Test
   public void testBrowse() {
-    List<FileObject> foList = getRootFromTip(new BrowseCommandRequest());
+    Collection<FileObject> foList = getRootFromTip(new BrowseCommandRequest());
 
     FileObject a = getFileObject(foList, "a.txt");
     FileObject c = getFileObject(foList, "c");
@@ -91,7 +97,7 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase
 
     assertNotNull(result);
 
-    List<FileObject> foList = result.getFiles();
+    Collection<FileObject> foList = result.getFile().getChildren();
 
     assertNotNull(foList);
     assertFalse(foList.isEmpty());
@@ -134,7 +140,7 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase
 
     request.setDisableLastCommit(true);
 
-    List<FileObject> foList = getRootFromTip(request);
+    Collection<FileObject> foList = getRootFromTip(request);
 
     FileObject a = getFileObject(foList, "a.txt");
 
@@ -150,15 +156,16 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase
 
     assertNotNull(result);
 
-    List<FileObject> foList = result.getFiles();
+    Collection<FileObject> foList = result.getFile().getChildren();
 
     assertNotNull(foList);
     assertFalse(foList.isEmpty());
-    assertEquals(4, foList.size());
-    
-    for ( FileObject fo : foList ){
-      System.out.println(fo);
-    }
+    assertEquals(2, foList.size());
+
+    FileObject c = getFileObject(foList, "c");
+    assertEquals("c", c.getName());
+    assertTrue(c.isDirectory());
+    assertEquals(2, c.getChildren().size());
   }
 
   /**
@@ -183,31 +190,20 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase
    *
    * @return
    */
-  private FileObject getFileObject(List<FileObject> foList, String name)
+  private FileObject getFileObject(Collection<FileObject> foList, String name)
   {
-    FileObject a = null;
-
-    for (FileObject f : foList)
-    {
-      if (name.equals(f.getName()))
-      {
-        a = f;
-
-        break;
-      }
-    }
-
-    assertNotNull(a);
-
-    return a;
+    return foList.stream()
+      .filter(f -> name.equals(f.getName()))
+      .findFirst()
+      .orElseThrow(() -> new AssertionError("file " + name + " not found"));
   }
 
-  private List<FileObject> getRootFromTip(BrowseCommandRequest request) {
+  private Collection<FileObject> getRootFromTip(BrowseCommandRequest request) {
     BrowserResult result = createCommand().getBrowserResult(request);
 
     assertNotNull(result);
 
-    List<FileObject> foList = result.getFiles();
+    Collection<FileObject> foList = result.getFile().getChildren();
 
     assertNotNull(foList);
     assertFalse(foList.isEmpty());

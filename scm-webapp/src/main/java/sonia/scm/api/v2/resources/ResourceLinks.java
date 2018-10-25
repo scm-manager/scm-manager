@@ -4,6 +4,7 @@ import sonia.scm.repository.NamespaceAndName;
 
 import javax.inject.Inject;
 import java.net.URI;
+import java.net.URISyntaxException;
 
 class ResourceLinks {
 
@@ -16,7 +17,11 @@ class ResourceLinks {
 
   // we have to add the file path using URI, so that path separators (aka '/') will not be encoded as '%2F'
   private static String addPath(String sourceWithPath, String path) {
-    return URI.create(sourceWithPath).resolve(path).toASCIIString();
+    try {
+      return new URI(sourceWithPath).resolve(new URI(null, null, path, null)).toASCIIString();
+    } catch (URISyntaxException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   GroupLinks group() {

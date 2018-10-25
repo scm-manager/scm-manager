@@ -18,6 +18,7 @@ import {
   isPermittedToCreateGroups,
   selectListAsCollection
 } from "../modules/groups";
+import { getGroupsLink } from "../../modules/indexResource";
 
 type Props = {
   groups: Group[],
@@ -26,19 +27,20 @@ type Props = {
   canAddGroups: boolean,
   list: PagedCollection,
   page: number,
+  groupLink: string,
 
   // context objects
   t: string => string,
   history: History,
 
   // dispatch functions
-  fetchGroupsByPage: (page: number) => void,
+  fetchGroupsByPage: (link: string, page: number) => void,
   fetchGroupsByLink: (link: string) => void
 };
 
 class Groups extends React.Component<Props> {
   componentDidMount() {
-    this.props.fetchGroupsByPage(this.props.page);
+    this.props.fetchGroupsByPage(this.props.groupLink, this.props.page);
   }
 
   onPageChange = (link: string) => {
@@ -111,20 +113,23 @@ const mapStateToProps = (state, ownProps) => {
   const canAddGroups = isPermittedToCreateGroups(state);
   const list = selectListAsCollection(state);
 
+  const groupLink = getGroupsLink(state);
+
   return {
     groups,
     loading,
     error,
     canAddGroups,
     list,
-    page
+    page,
+    groupLink
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchGroupsByPage: (page: number) => {
-      dispatch(fetchGroupsByPage(page));
+    fetchGroupsByPage: (link: string, page: number) => {
+      dispatch(fetchGroupsByPage(link, page));
     },
     fetchGroupsByLink: (link: string) => {
       dispatch(fetchGroupsByLink(link));

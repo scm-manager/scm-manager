@@ -5,13 +5,13 @@ import { Checkbox, InputField, SubmitButton } from "@scm-manager/ui-components";
 import TypeSelector from "./TypeSelector";
 import type {
   PermissionCollection,
-  PermissionEntry
+  PermissionCreateEntry
 } from "@scm-manager/ui-types";
 import * as validator from "./permissionValidation";
 
 type Props = {
   t: string => string,
-  createPermission: (permission: PermissionEntry) => void,
+  createPermission: (permission: PermissionCreateEntry) => void,
   loading: boolean,
   currentPermissions: PermissionCollection
 };
@@ -51,21 +51,24 @@ class CreatePermissionForm extends React.Component<Props, State> {
             onChange={this.handleNameChange}
             validationError={!this.state.valid}
             errorMessage={t("permission.add-permission.name-input-invalid")}
+            helpText={t("permission.help.nameHelpText")}
           />
           <Checkbox
             label={t("permission.group-permission")}
             checked={groupPermission ? groupPermission : false}
             onChange={this.handleGroupPermissionChange}
+            helpText={t("permission.help.groupPermissionHelpText")}
           />
           <TypeSelector
             label={t("permission.type")}
+            helpText={t("permission.help.typeHelpText")}
             handleTypeChange={this.handleTypeChange}
             type={type ? type : "READ"}
           />
           <SubmitButton
             label={t("permission.add-permission.submit-button")}
             loading={loading}
-            disabled={!this.state.valid || this.state.name == ""}
+            disabled={!this.state.valid || this.state.name === ""}
           />
         </form>
       </div>

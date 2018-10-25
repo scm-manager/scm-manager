@@ -19,16 +19,33 @@ import {
   Footer,
   Header
 } from "@scm-manager/ui-components";
-import type { Me } from "@scm-manager/ui-types";
+import type { Me, Link } from "@scm-manager/ui-types";
+import {
+  fetchIndexResources,
+  getConfigLink,
+  getFetchIndexResourcesFailure,
+  getGroupsLink,
+  getLogoutLink,
+  getMeLink,
+  getRepositoriesLink,
+  getUsersLink,
+  isFetchIndexResourcesPending
+} from "../modules/indexResource";
 
 type Props = {
   me: Me,
   authenticated: boolean,
   error: Error,
   loading: boolean,
+  repositoriesLink: string,
+  usersLink: string,
+  groupsLink: string,
+  configLink: string,
+  logoutLink: string,
+  meLink: string,
 
   // dispatcher functions
-  fetchMe: () => void,
+  fetchMe: (link: string) => void,
 
   // context props
   t: string => string
@@ -36,14 +53,37 @@ type Props = {
 
 class App extends Component<Props> {
   componentDidMount() {
-    this.props.fetchMe();
+    if (this.props.meLink) {
+      this.props.fetchMe(this.props.meLink);
+    }
   }
 
   render() {
-    const { me, loading, error, authenticated, t } = this.props;
+    const {
+      me,
+      loading,
+      error,
+      authenticated,
+      t,
+      repositoriesLink,
+      usersLink,
+      groupsLink,
+      configLink,
+      logoutLink
+    } = this.props;
 
     let content;
-    const navigation = authenticated ? <PrimaryNavigation /> : "";
+    const navigation = authenticated ? (
+      <PrimaryNavigation
+        repositoriesLink={repositoriesLink}
+        usersLink={usersLink}
+        groupsLink={groupsLink}
+        configLink={configLink}
+        logoutLink={logoutLink}
+      />
+    ) : (
+      ""
+    );
 
     if (loading) {
       content = <Loading />;
@@ -70,20 +110,34 @@ class App extends Component<Props> {
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    fetchMe: () => dispatch(fetchMe())
+    fetchMe: (link: string) => dispatch(fetchMe(link))
   };
 };
 
 const mapStateToProps = state => {
   const authenticated = isAuthenticated(state);
   const me = getMe(state);
-  const loading = isFetchMePending(state);
-  const error = getFetchMeFailure(state);
+  const loading =
+    isFetchMePending(state) || isFetchIndexResourcesPending(state);
+  const error =
+    getFetchMeFailure(state) || getFetchIndexResourcesFailure(state);
+  const repositoriesLink = getRepositoriesLink(state);
+  const usersLink = getUsersLink(state);
+  const groupsLink = getGroupsLink(state);
+  const configLink = getConfigLink(state);
+  const logoutLink = getLogoutLink(state);
+  const meLink = getMeLink(state);
   return {
     authenticated,
     me,
     loading,
-    error
+    error,
+    repositoriesLink,
+    usersLink,
+    groupsLink,
+    configLink,
+    logoutLink,
+    meLink
   };
 };
 

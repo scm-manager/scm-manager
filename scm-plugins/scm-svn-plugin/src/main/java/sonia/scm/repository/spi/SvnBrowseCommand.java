@@ -35,6 +35,7 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,11 +79,11 @@ public class SvnBrowseCommand extends AbstractSvnCommand
   @Override
   @SuppressWarnings("unchecked")
   public BrowserResult getBrowserResult(BrowseCommandRequest request) {
-    String path = request.getPath();
+    String path = Strings.nullToEmpty(request.getPath());
     long revisionNumber = SvnUtil.getRevisionNumber(request.getRevision(), repository);
 
     if (logger.isDebugEnabled()) {
-      logger.debug("browser repository {} in path {} at revision {}", repository.getName(), path, revisionNumber);
+      logger.debug("browser repository {} in path \"{}\" at revision {}", repository.getName(), path, revisionNumber);
     }
 
     BrowserResult result = null;
@@ -90,34 +91,21 @@ public class SvnBrowseCommand extends AbstractSvnCommand
     try
     {
       SVNRepository svnRepository = open();
-      Collection<SVNDirEntry> entries =
-        svnRepository.getDir(Util.nonNull(path), revisionNumber, null,
-          (Collection) null);
-      List<FileObject> children = Lists.newArrayList();
-      String basePath = createBasePath(path);
-
-      if (request.isRecursive())
-      {
-        browseRecursive(svnRepository, revisionNumber, request, children,
-          entries, basePath);
-      }
-      else
-      {
-        for (SVNDirEntry entry : entries)
-        {
-          children.add(createFileObject(request, svnRepository, revisionNumber,
-            entry, basePath));
-
-        }
-      }
 
       if (revisionNumber == -1) {
         revisionNumber = svnRepository.getLatestRevision();
       }
 
-      result = new BrowserResult();
-      result.setRevision(String.valueOf(revisionNumber));
-      result.setFiles(children);
+      SVNDirEntry rootEntry = svnRepository.info(path, revisionNumber);
+      FileObject root = createFileObject(request, svnRepository, revisionNumber, rootEntry, path);
+      root.setPath(path);
+
+      if (root.isDirectory()) {
+        traverse(svnRepository, revisionNumber, request, root, createBasePath(path));
+      }
+
+
+      result = new BrowserResult(String.valueOf(revisionNumber), root);
     }
     catch (SVNException ex)
     {
@@ -129,52 +117,24 @@ public class SvnBrowseCommand extends AbstractSvnCommand
 
   //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param svnRepository
-   * @param revisionNumber
-   * @param request
-   * @param children
-   * @param entries
-   * @param basePath
-   *
-   * @throws SVNException
-   */
   @SuppressWarnings("unchecked")
-  private void browseRecursive(SVNRepository svnRepository,
-    long revisionNumber, BrowseCommandRequest request,
-    List<FileObject> children, Collection<SVNDirEntry> entries, String basePath)
+  private void traverse(SVNRepository svnRepository, long revisionNumber, BrowseCommandRequest request,
+    FileObject parent, String basePath)
     throws SVNException
   {
+    Collection<SVNDirEntry> entries = svnRepository.getDir(parent.getPath(), revisionNumber, null, (Collection) null);
     for (SVNDirEntry entry : entries)
     {
-      FileObject fo = createFileObject(request, svnRepository, revisionNumber,
-                        entry, basePath);
+      FileObject child = createFileObject(request, svnRepository, revisionNumber, entry, basePath);
 
-      children.add(fo);
+      parent.addChild(child);
 
-      if (fo.isDirectory())
-      {
-        Collection<SVNDirEntry> subEntries =
-          svnRepository.getDir(Util.nonNull(fo.getPath()), revisionNumber,
-            null, (Collection) null);
-
-        browseRecursive(svnRepository, revisionNumber, request, children,
-          subEntries, createBasePath(fo.getPath()));
+      if (child.isDirectory() && request.isRecursive()) {
+        traverse(svnRepository, revisionNumber, request, child, createBasePath(child.getPath()));
       }
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param path
-   *
-   * @return
-   */
   private String createBasePath(String path)
   {
     String basePath = Util.EMPTY_STRING;
@@ -192,20 +152,6 @@ public class SvnBrowseCommand extends AbstractSvnCommand
     return basePath;
   }
 
-  /**
-   * Method description
-   *
-   *
-   *
-   *
-   * @param request
-   * @param repository
-   * @param revision
-   * @param entry
-   * @param path
-   *
-   * @return
-   */
   private FileObject createFileObject(BrowseCommandRequest request,
     SVNRepository repository, long revision, SVNDirEntry entry, String path)
   {
@@ -236,15 +182,6 @@ public class SvnBrowseCommand extends AbstractSvnCommand
     return fileObject;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   * @param revision
-   * @param entry
-   * @param fileObject
-   */
   private void fetchExternalsProperty(SVNRepository repository, long revision,
     SVNDirEntry entry, FileObject fileObject)
   {

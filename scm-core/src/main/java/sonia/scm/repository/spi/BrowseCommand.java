@@ -35,6 +35,7 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.NotFoundException;
 import sonia.scm.repository.BrowserResult;
 
 import java.io.IOException;

@@ -26,16 +26,18 @@ import {
 
 import { DeleteUserNavLink, EditUserNavLink } from "./../components/navLinks";
 import { translate } from "react-i18next";
+import { getUsersLink } from "../../modules/indexResource";
 
 type Props = {
   name: string,
   user: User,
   loading: boolean,
   error: Error,
+  usersLink: string,
 
   // dispatcher functions
   deleteUser: (user: User, callback?: () => void) => void,
-  fetchUser: string => void,
+  fetchUser: (string, string) => void,
 
   // context objects
   t: string => string,
@@ -45,7 +47,7 @@ type Props = {
 
 class SingleUser extends React.Component<Props> {
   componentDidMount() {
-    this.props.fetchUser(this.props.name);
+    this.props.fetchUser(this.props.usersLink, this.props.name);
   }
 
   userDeleted = () => {
@@ -124,8 +126,9 @@ const mapStateToProps = (state, ownProps) => {
     isFetchUserPending(state, name) || isDeleteUserPending(state, name);
   const error =
     getFetchUserFailure(state, name) || getDeleteUserFailure(state, name);
-
+  const usersLink = getUsersLink(state);
   return {
+    usersLink,
     name,
     user,
     loading,
@@ -135,8 +138,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchUser: (name: string) => {
-      dispatch(fetchUser(name));
+    fetchUser: (link: string, name: string) => {
+      dispatch(fetchUser(link, name));
     },
     deleteUser: (user: User, callback?: () => void) => {
       dispatch(deleteUser(user, callback));

@@ -35,9 +35,9 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectLoader;
@@ -106,6 +106,7 @@ public class GitBrowseCommand extends AbstractGitCommand
     logger.debug("try to create browse result for {}", request);
 
     BrowserResult result;
+
     org.eclipse.jgit.lib.Repository repo = open();
     ObjectId revId;
 
@@ -120,7 +121,7 @@ public class GitBrowseCommand extends AbstractGitCommand
 
     if (revId != null)
     {
-      result = getResult(repo, request, revId);
+      result = new BrowserResult(revId.getName(), getEntry(repo, request, revId));
     }
     else
     {
@@ -133,14 +134,21 @@ public class GitBrowseCommand extends AbstractGitCommand
         logger.warn("coul not find head of repository, empty?");
       }
 
-      result = new BrowserResult(Constants.HEAD, null, null,
-        Collections.EMPTY_LIST);
+      result = new BrowserResult(Constants.HEAD, createEmtpyRoot());
     }
 
     return result;
   }
 
   //~--- methods --------------------------------------------------------------
+
+  private FileObject createEmtpyRoot() {
+    FileObject fileObject = new FileObject();
+    fileObject.setName("");
+    fileObject.setPath("");
+    fileObject.setDirectory(true);
+    return fileObject;
+  }
 
   /**
    * Method description
@@ -157,68 +165,52 @@ public class GitBrowseCommand extends AbstractGitCommand
   private FileObject createFileObject(org.eclipse.jgit.lib.Repository repo,
     BrowseCommandRequest request, ObjectId revId, TreeWalk treeWalk)
     throws IOException {
-    FileObject file;
 
-    try
+    FileObject file = new FileObject();
+
+    String path = treeWalk.getPathString();
+
+    file.setName(treeWalk.getNameString());
+    file.setPath(path);
+
+    SubRepository sub = null;
+
+    if (!request.isDisableSubRepositoryDetection())
     {
-      file = new FileObject();
+      sub = getSubRepository(repo, revId, path);
+    }
 
-      String path = treeWalk.getPathString();
+    if (sub != null)
+    {
+      logger.trace("{} seems to be a sub repository", path);
+      file.setDirectory(true);
+      file.setSubRepository(sub);
+    }
+    else
+    {
+      ObjectLoader loader = repo.open(treeWalk.getObjectId(0));
 
-      file.setName(treeWalk.getNameString());
-      file.setPath(path);
+      file.setDirectory(loader.getType() == Constants.OBJ_TREE);
+      file.setLength(loader.getSize());
 
-      SubRepository sub = null;
-
-      if (!request.isDisableSubRepositoryDetection())
+      // don't show message and date for directories to improve performance
+      if (!file.isDirectory() &&!request.isDisableLastCommit())
       {
-        sub = getSubRepository(repo, revId, path);
-      }
+        logger.trace("fetch last commit for {} at {}", path, revId.getName());
+        RevCommit commit = getLatestCommit(repo, revId, path);
 
-      if (sub != null)
-      {
-        logger.trace("{} seems to be a sub repository", path);
-        file.setDirectory(true);
-        file.setSubRepository(sub);
-      }
-      else
-      {
-        ObjectLoader loader = repo.open(treeWalk.getObjectId(0));
-
-        file.setDirectory(loader.getType() == Constants.OBJ_TREE);
-        file.setLength(loader.getSize());
-
-        // don't show message and date for directories to improve performance
-        if (!file.isDirectory() &&!request.isDisableLastCommit())
+        if (commit != null)
         {
-          logger.trace("fetch last commit for {} at {}", path, revId.getName());
-
-          RevCommit commit = getLatestCommit(repo, revId, path);
-
-          if (commit != null)
-          {
-            file.setLastModified(GitUtil.getCommitTime(commit));
-            file.setDescription(commit.getShortMessage());
-          }
-          else if (logger.isWarnEnabled())
-          {
-            logger.warn("could not find latest commit for {} on {}", path,
-              revId);
-          }
+          file.setLastModified(GitUtil.getCommitTime(commit));
+          file.setDescription(commit.getShortMessage());
+        }
+        else if (logger.isWarnEnabled())
+        {
+          logger.warn("could not find latest commit for {} on {}", path,
+            revId);
         }
       }
     }
-    catch (MissingObjectException ex)
-    {
-      file = null;
-      logger.error("could not fetch object for id {}", revId);
-
-      if (logger.isTraceEnabled())
-      {
-        logger.trace("could not fetch object", ex);
-      }
-    }
-
     return file;
   }
 
@@ -264,22 +256,19 @@ public class GitBrowseCommand extends AbstractGitCommand
     return result;
   }
 
-  private BrowserResult getResult(org.eclipse.jgit.lib.Repository repo,
-    BrowseCommandRequest request, ObjectId revId)
-    throws IOException {
-    BrowserResult result = null;
+  private FileObject getEntry(org.eclipse.jgit.lib.Repository repo, BrowseCommandRequest request, ObjectId revId) throws IOException {
     RevWalk revWalk = null;
     TreeWalk treeWalk = null;
 
-    try
-    {
-      if (logger.isDebugEnabled())
-      {
-        logger.debug("load repository browser for revision {}", revId.name());
-      }
+    FileObject result;
+
+    try {
+      logger.debug("load repository browser for revision {}", revId.name());
 
       treeWalk = new TreeWalk(repo);
-      treeWalk.setRecursive(request.isRecursive());
+      if (!isRootRequest(request)) {
+        treeWalk.setFilter(PathFilter.create(request.getPath()));
+      }
       revWalk = new RevWalk(repo);
 
       RevTree tree = revWalk.parseTree(revId);
@@ -290,65 +279,20 @@ public class GitBrowseCommand extends AbstractGitCommand
       }
       else
       {
-        logger.error("could not find tree for {}", revId.name());
+        throw new IllegalStateException("could not find tree for " + revId.name());
       }
 
-      result = new BrowserResult();
-
-      List<FileObject> files = Lists.newArrayList();
-
-      String path = request.getPath();
-
-      if (Util.isEmpty(path))
-      {
-        while (treeWalk.next())
-        {
-          FileObject fo = createFileObject(repo, request, revId, treeWalk);
-
-          if (fo != null)
-          {
-            files.add(fo);
-          }
-        }
-      }
-      else
-      {
-        String[] parts = path.split("/");
-        int current = 0;
-        int limit = parts.length;
-
-        while (treeWalk.next())
-        {
-          String name = treeWalk.getNameString();
-
-          if (current >= limit)
-          {
-            String p = treeWalk.getPathString();
-
-            if (p.split("/").length > limit)
-            {
-              FileObject fo = createFileObject(repo, request, revId, treeWalk);
-
-              if (fo != null)
-              {
-                files.add(fo);
-              }
-            }
-          }
-          else if (name.equalsIgnoreCase(parts[current]))
-          {
-            current++;
-
-            if (!request.isRecursive())
-            {
-              treeWalk.enterSubtree();
-            }
-          }
+      if (isRootRequest(request)) {
+        result = createEmtpyRoot();
+        findChildren(result, repo, request, revId, treeWalk);
+      } else {
+        result = findFirstMatch(repo, request, revId, treeWalk);
+        if ( result.isDirectory() ) {
+          treeWalk.enterSubtree();
+          findChildren(result, repo, request, revId, treeWalk);
         }
       }
 
-      result.setFiles(files);
-      result.setRevision(revId.getName());
     }
     finally
     {
@@ -357,6 +301,60 @@ public class GitBrowseCommand extends AbstractGitCommand
     }
 
     return result;
+  }
+
+  private boolean isRootRequest(BrowseCommandRequest request) {
+    return Strings.isNullOrEmpty(request.getPath()) || "/".equals(request.getPath());
+  }
+
+  private FileObject findChildren(FileObject parent, org.eclipse.jgit.lib.Repository repo, BrowseCommandRequest request, ObjectId revId, TreeWalk treeWalk) throws IOException, NotFoundException {
+    List<FileObject> files = Lists.newArrayList();
+    while (treeWalk.next())
+    {
+
+      FileObject fileObject = createFileObject(repo, request, revId, treeWalk);
+      if (!fileObject.getPath().startsWith(parent.getPath())) {
+        parent.setChildren(files);
+        return fileObject;
+      }
+
+      files.add(fileObject);
+
+      if (request.isRecursive() && fileObject.isDirectory()) {
+        treeWalk.enterSubtree();
+        FileObject rc = findChildren(fileObject, repo, request, revId, treeWalk);
+        if (rc != null) {
+          files.add(rc);
+        }
+      }
+    }
+
+    parent.setChildren(files);
+
+    return null;
+  }
+
+  private FileObject findFirstMatch(org.eclipse.jgit.lib.Repository repo,
+                        BrowseCommandRequest request, ObjectId revId, TreeWalk treeWalk) throws IOException, NotFoundException {
+    String[] pathElements = request.getPath().split("/");
+    int currentDepth = 0;
+    int limit = pathElements.length;
+
+    while (treeWalk.next()) {
+      String name = treeWalk.getNameString();
+
+      if (name.equalsIgnoreCase(pathElements[currentDepth])) {
+        currentDepth++;
+
+        if (currentDepth >= limit) {
+          return createFileObject(repo, request, revId, treeWalk);
+        } else {
+          treeWalk.enterSubtree();
+        }
+      }
+    }
+
+    throw new NotFoundException("file", request.getPath());
   }
 
   @SuppressWarnings("unchecked")

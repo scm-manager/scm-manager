@@ -18,13 +18,13 @@ import java.io.IOException;
 public class SourceRootResource {
 
   private final RepositoryServiceFactory serviceFactory;
-  private final BrowserResultToBrowserResultDtoMapper browserResultToBrowserResultDtoMapper;
+  private final BrowserResultToFileObjectDtoMapper browserResultToFileObjectDtoMapper;
 
 
   @Inject
-  public SourceRootResource(RepositoryServiceFactory serviceFactory, BrowserResultToBrowserResultDtoMapper browserResultToBrowserResultDtoMapper) {
+  public SourceRootResource(RepositoryServiceFactory serviceFactory, BrowserResultToFileObjectDtoMapper browserResultToFileObjectDtoMapper) {
     this.serviceFactory = serviceFactory;
-    this.browserResultToBrowserResultDtoMapper = browserResultToBrowserResultDtoMapper;
+    this.browserResultToFileObjectDtoMapper = browserResultToFileObjectDtoMapper;
   }
 
   @GET
@@ -56,10 +56,11 @@ public class SourceRootResource {
       if (revision != null && !revision.isEmpty()) {
         browseCommand.setRevision(revision);
       }
+      browseCommand.setDisableCache(true);
       BrowserResult browserResult = browseCommand.getBrowserResult();
 
       if (browserResult != null) {
-        return Response.ok(browserResultToBrowserResultDtoMapper.map(browserResult, namespaceAndName, path)).build();
+        return Response.ok(browserResultToFileObjectDtoMapper.map(browserResult, namespaceAndName)).build();
       } else {
         return Response.status(Response.Status.NOT_FOUND).build();
       }

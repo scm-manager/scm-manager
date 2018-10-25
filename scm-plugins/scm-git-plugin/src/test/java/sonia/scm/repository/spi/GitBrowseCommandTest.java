@@ -6,13 +6,13 @@
  * modification, are permitted provided that the following conditions are met:
  *
  * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
+ * this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
  * 3. Neither the name of SCM-Manager; nor the names of its
- *    contributors may be used to endorse or promote products derived from this
- *    software without specific prior written permission.
+ * contributors may be used to endorse or promote products derived from this
+ * software without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -26,107 +26,87 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * http://bitbucket.org/sdorra/scm-manager
- *
  */
-
 
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import org.junit.Test;
+import sonia.scm.NotFoundException;
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.FileObject;
 import sonia.scm.repository.GitConstants;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Collection;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  * Unit tests for {@link GitBrowseCommand}.
- * 
+ *
  * @author Sebastian Sdorra
  */
-public class GitBrowseCommandTest extends AbstractGitCommandTestBase
-{
-  
-  /**
-   * Test browse command with default branch.
-   */
+public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
+
   @Test
   public void testDefaultBranch() throws IOException {
+    BrowseCommandRequest request = new BrowseCommandRequest();
+    request.setPath("a.txt");
+    BrowserResult result = createCommand().getBrowserResult(request);
+    FileObject fileObject = result.getFile();
+    assertEquals("a.txt", fileObject.getName());
+  }
+
+  @Test
+  public void testDefaultDefaultBranch() throws IOException, NotFoundException {
     // without default branch, the repository head should be used
-    BrowserResult result = createCommand().getBrowserResult(new BrowseCommandRequest());
-    assertNotNull(result);
+    FileObject root = createCommand().getBrowserResult(new BrowseCommandRequest()).getFile();
+    assertNotNull(root);
 
-    List<FileObject> foList = result.getFiles(); 
+    Collection<FileObject> foList = root.getChildren();
     assertNotNull(foList);
     assertFalse(foList.isEmpty());
-    assertEquals(4, foList.size());
-    
-    assertEquals("a.txt", foList.get(0).getName());
-    assertEquals("b.txt", foList.get(1).getName());
-    assertEquals("c", foList.get(2).getName());
-    assertEquals("f.txt", foList.get(3).getName());
-    
-    // set default branch and fetch again
+
+    assertThat(foList)
+      .extracting("name")
+      .containsExactly("a.txt", "b.txt", "c", "f.txt");
+  }
+
+  @Test
+  public void testExplicitDefaultBranch() throws IOException, NotFoundException {
     repository.setProperty(GitConstants.PROPERTY_DEFAULT_BRANCH, "test-branch");
-    result = createCommand().getBrowserResult(new BrowseCommandRequest());
-    assertNotNull(result);
 
-    foList = result.getFiles(); 
-    assertNotNull(foList);
-    assertFalse(foList.isEmpty());
-    assertEquals(2, foList.size());
-    
-    assertEquals("a.txt", foList.get(0).getName());
-    assertEquals("c", foList.get(1).getName());
+    FileObject root = createCommand().getBrowserResult(new BrowseCommandRequest()).getFile();
+    assertNotNull(root);
+
+    Collection<FileObject> foList = root.getChildren();
+    assertThat(foList)
+      .extracting("name")
+      .containsExactly("a.txt", "c");
   }
 
   @Test
   public void testBrowse() throws IOException {
-    BrowserResult result =
-      createCommand().getBrowserResult(new BrowseCommandRequest());
+    FileObject root = createCommand().getBrowserResult(new BrowseCommandRequest()).getFile();
+    assertNotNull(root);
 
-    assertNotNull(result);
+    Collection<FileObject> foList = root.getChildren();
 
-    List<FileObject> foList = result.getFiles();
+    FileObject a = findFile(foList, "a.txt");
+    FileObject c = findFile(foList, "c");
 
-    assertNotNull(foList);
-    assertFalse(foList.isEmpty());
-    assertEquals(4, foList.size());
-
-    FileObject a = null;
-    FileObject c = null;
-
-    for (FileObject f : foList)
-    {
-      if ("a.txt".equals(f.getName()))
-      {
-        a = f;
-      }
-      else if ("c".equals(f.getName()))
-      {
-        c = f;
-      }
-    }
-
-    assertNotNull(a);
     assertFalse(a.isDirectory());
     assertEquals("a.txt", a.getName());
     assertEquals("a.txt", a.getPath());
     assertEquals("added new line for blame", a.getDescription());
     assertTrue(a.getLength() > 0);
     checkDate(a.getLastModified());
-    assertNotNull(c);
+
     assertTrue(c.isDirectory());
     assertEquals("c", c.getName());
     assertEquals("c", c.getPath());
@@ -138,39 +118,22 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase
 
     request.setPath("c");
 
-    BrowserResult result = createCommand().getBrowserResult(request);
+    FileObject root = createCommand().getBrowserResult(request).getFile();
 
-    assertNotNull(result);
+    Collection<FileObject> foList = root.getChildren();
 
-    List<FileObject> foList = result.getFiles();
+    assertThat(foList).hasSize(2);
 
-    assertNotNull(foList);
-    assertFalse(foList.isEmpty());
-    assertEquals(2, foList.size());
+    FileObject d = findFile(foList, "d.txt");
+    FileObject e = findFile(foList, "e.txt");
 
-    FileObject d = null;
-    FileObject e = null;
-
-    for (FileObject f : foList)
-    {
-      if ("d.txt".equals(f.getName()))
-      {
-        d = f;
-      }
-      else if ("e.txt".equals(f.getName()))
-      {
-        e = f;
-      }
-    }
-
-    assertNotNull(d);
     assertFalse(d.isDirectory());
     assertEquals("d.txt", d.getName());
     assertEquals("c/d.txt", d.getPath());
     assertEquals("added file d and e in folder c", d.getDescription());
     assertTrue(d.getLength() > 0);
     checkDate(d.getLastModified());
-    assertNotNull(e);
+
     assertFalse(e.isDirectory());
     assertEquals("e.txt", e.getName());
     assertEquals("c/e.txt", e.getPath());
@@ -185,25 +148,30 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase
 
     request.setRecursive(true);
 
-    BrowserResult result = createCommand().getBrowserResult(request);
+    FileObject root = createCommand().getBrowserResult(request).getFile();
 
-    assertNotNull(result);
+    Collection<FileObject> foList = root.getChildren();
 
-    List<FileObject> foList = result.getFiles();
+    assertThat(foList)
+      .extracting("name")
+      .containsExactly("a.txt", "b.txt", "c", "f.txt");
 
-    assertNotNull(foList);
-    assertFalse(foList.isEmpty());
-    assertEquals(5, foList.size());
+    FileObject c = findFile(foList, "c");
+
+    Collection<FileObject> cChildren = c.getChildren();
+    assertThat(cChildren)
+      .extracting("name")
+      .containsExactly("d.txt", "e.txt");
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  private GitBrowseCommand createCommand()
-  {
+  private FileObject findFile(Collection<FileObject> foList, String name) {
+    return foList.stream()
+      .filter(f -> name.equals(f.getName()))
+      .findFirst()
+      .orElseThrow(() -> new AssertionError("file " + name + " not found"));
+  }
+
+  private GitBrowseCommand createCommand() {
     return new GitBrowseCommand(createContext(), repository);
   }
 }
