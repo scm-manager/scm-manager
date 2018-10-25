@@ -14,7 +14,7 @@ import {
 } from "../../modules/branches";
 import { compose } from "redux";
 import Content from "../../content/components/Content";
-import { fetchSources, isDirectory } from "../modules/sources";
+import {fetchSources, isDirectory} from "../modules/sources";
 
 type Props = {
   repository: Repository,
@@ -102,7 +102,11 @@ class Sources extends React.Component<Props> {
         </>
       );
     } else {
-      return <Content />;
+      return <Content
+        repository={repository}
+        revision={revision}
+        path={path}
+      />;
     }
   }
 
@@ -140,7 +144,7 @@ const mapStateToProps = (state, ownProps) => {
     loading,
     error,
     branches,
-    currentFileIsDirectory
+    currentFileIsDirectory,
   };
 };
 
