@@ -39,6 +39,7 @@ import com.google.inject.Singleton;
 import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.ContextEntry;
 import sonia.scm.EagerSingleton;
 import sonia.scm.HandlerEventType;
 import sonia.scm.ManagerDaoAdapter;
@@ -402,7 +403,7 @@ public class DefaultUserManager extends AbstractUserManager
     User user = get((String) SecurityUtils.getSubject().getPrincipals().getPrimaryPrincipal());
 
     if (!user.getPassword().equals(oldPassword)) {
-      throw new InvalidPasswordException();
+      throw new InvalidPasswordException(ContextEntry.ContextBuilder.entity("passwordChange", "-").in(User.class, user.getName()));
     }
 
     user.setPassword(newPassword);
