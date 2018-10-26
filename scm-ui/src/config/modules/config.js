@@ -18,15 +18,14 @@ export const MODIFY_CONFIG_SUCCESS = `${MODIFY_CONFIG}_${types.SUCCESS_SUFFIX}`;
 export const MODIFY_CONFIG_FAILURE = `${MODIFY_CONFIG}_${types.FAILURE_SUFFIX}`;
 export const MODIFY_CONFIG_RESET = `${MODIFY_CONFIG}_${types.RESET_SUFFIX}`;
 
-const CONFIG_URL = "config";
 const CONTENT_TYPE_CONFIG = "application/vnd.scmm-config+json;v=2";
 
 //fetch config
-export function fetchConfig() {
+export function fetchConfig(link: string) {
   return function(dispatch: any) {
     dispatch(fetchConfigPending());
     return apiClient
-      .get(CONFIG_URL)
+      .get(link)
       .then(response => {
         return response.json();
       })

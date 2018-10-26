@@ -5,6 +5,12 @@ import * as types from "./types";
 import { apiClient, UNAUTHORIZED_ERROR } from "@scm-manager/ui-components";
 import { isPending } from "./pending";
 import { getFailure } from "./failure";
+import {
+  callFetchIndexResources,
+  FETCH_INDEXRESOURCES_SUCCESS,
+  fetchIndexResources, fetchIndexResourcesPending,
+  fetchIndexResourcesSuccess
+} from "./indexResource";
 
 // Action
 
@@ -121,16 +127,11 @@ export const fetchMeFailure = (error: Error) => {
   };
 };
 
-// urls
-
-const ME_URL = "/me";
-const LOGIN_URL = "/auth/access_token";
-
 // side effects
 
-const callFetchMe = (): Promise<Me> => {
+const callFetchMe = (link: string): Promise<Me> => {
   return apiClient
-    .get(ME_URL)
+    .get(link)
     .then(response => {
       return response.json();
     })
@@ -139,7 +140,11 @@ const callFetchMe = (): Promise<Me> => {
     });
 };
 
-export const login = (username: string, password: string) => {
+export const login = (
+  loginLink: string,
+  username: string,
+  password: string
+) => {
   const login_data = {
     cookie: true,
     grant_type: "password",
@@ -149,9 +154,15 @@ export const login = (username: string, password: string) => {
   return function(dispatch: any) {
     dispatch(loginPending());
     return apiClient
-      .post(LOGIN_URL, login_data)
+      .post(loginLink, login_data)
       .then(response => {
-        return callFetchMe();
+        dispatch(fetchIndexResourcesPending())
+        return callFetchIndexResources();
+      })
+      .then(response => {
+        dispatch(fetchIndexResourcesSuccess(response));
+        const meLink = response._links.me.href;
+        return callFetchMe(meLink);
       })
       .then(me => {
         dispatch(loginSuccess(me));
@@ -162,10 +173,10 @@ export const login = (username: string, password: string) => {
   };
 };
 
-export const fetchMe = () => {
+export const fetchMe = (link: string) => {
   return function(dispatch: any) {
     dispatch(fetchMePending());
-    return callFetchMe()
+    return callFetchMe(link)
       .then(me => {
         dispatch(fetchMeSuccess(me));
       })
@@ -179,13 +190,16 @@ export const fetchMe = () => {
   };
 };
 
-export const logout = () => {
+export const logout = (link: string) => {
   return function(dispatch: any) {
     dispatch(logoutPending());
     return apiClient
-      .delete(LOGIN_URL)
+      .delete(link)
       .then(() => {
         dispatch(logoutSuccess());
+      })
+      .then(() => {
+        dispatch(fetchIndexResources());
       })
       .catch(error => {
         dispatch(logoutFailure(error));

@@ -13,7 +13,7 @@ public class FileHistoryCollectionToDtoMapper extends ChangesetCollectionToDtoMa
 
   @Inject
   public FileHistoryCollectionToDtoMapper(ChangesetToChangesetDtoMapper changesetToChangesetDtoMapper, ResourceLinks resourceLinks) {
-    super(changesetToChangesetDtoMapper);
+    super(changesetToChangesetDtoMapper, resourceLinks);
     this.resourceLinks = resourceLinks;
   }
 

@@ -1,19 +1,19 @@
 /**
  * Copyright (c) 2010, Sebastian Sdorra
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * <p>
  * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
+ * this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
  * 3. Neither the name of SCM-Manager; nor the names of its
- *    contributors may be used to endorse or promote products derived from this
- *    software without specific prior written permission.
- *
+ * contributors may be used to endorse or promote products derived from this
+ * software without specific prior written permission.
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,11 +24,9 @@
  * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * <p>
  * http://bitbucket.org/sdorra/scm-manager
- *
  */
-
 
 
 package sonia.scm.repository;
@@ -40,12 +38,8 @@ import com.google.common.base.Objects;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
-import java.util.Iterator;
-import java.util.List;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -56,224 +50,56 @@ import java.util.List;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "browser-result")
-public class BrowserResult implements Iterable<FileObject>, Serializable
-{
+public class BrowserResult implements Serializable {
 
-  /** Field description */
-  private static final long serialVersionUID = 2818662048045182761L;
+  private String revision;
+  private FileObject file;
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   */
-  public BrowserResult() {}
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param revision
-   * @param tag
-   * @param branch
-   * @param files
-   */
-  public BrowserResult(String revision, String tag, String branch,
-                       List<FileObject> files)
-  {
-    this.revision = revision;
-    this.tag = tag;
-    this.branch = branch;
-    this.files = files;
+  public BrowserResult() {
   }
 
-  //~--- methods --------------------------------------------------------------
+  public BrowserResult(String revision, FileObject file) {
+    this.revision = revision;
+    this.file = file;
+  }
 
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @param obj
-   *
-   * @return
-   */
+  public String getRevision() {
+    return revision;
+  }
+
+  public FileObject getFile() {
+    return file;
+  }
+
   @Override
-  public boolean equals(Object obj)
-  {
-    if (obj == null)
-    {
+  public boolean equals(Object obj) {
+    if (obj == null) {
       return false;
     }
 
-    if (getClass() != obj.getClass())
-    {
+    if (getClass() != obj.getClass()) {
       return false;
     }
 
     final BrowserResult other = (BrowserResult) obj;
 
     return Objects.equal(revision, other.revision)
-           && Objects.equal(tag, other.tag)
-           && Objects.equal(branch, other.branch)
-           && Objects.equal(files, other.files);
+      && Objects.equal(file, other.file);
   }
 
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @return
-   */
   @Override
-  public int hashCode()
-  {
-    return Objects.hashCode(revision, tag, branch, files);
+  public int hashCode() {
+    return Objects.hashCode(revision, file);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+
   @Override
-  public Iterator<FileObject> iterator()
-  {
-    Iterator<FileObject> it = null;
-
-    if (files != null)
-    {
-      it = files.iterator();
-    }
-
-    return it;
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @return
-   */
-  @Override
-  public String toString()
-  {
-    //J-
+  public String toString() {
     return MoreObjects.toStringHelper(this)
-            .add("revision", revision)
-            .add("tag", tag)
-            .add("branch", branch)
-            .add("files", files)
-            .toString();
-    //J+
+      .add("revision", revision)
+      .add("files", file)
+      .toString();
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getBranch()
-  {
-    return branch;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public List<FileObject> getFiles()
-  {
-    return files;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getRevision()
-  {
-    return revision;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getTag()
-  {
-    return tag;
-  }
-
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param branch
-   */
-  public void setBranch(String branch)
-  {
-    this.branch = branch;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param files
-   */
-  public void setFiles(List<FileObject> files)
-  {
-    this.files = files;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param revision
-   */
-  public void setRevision(String revision)
-  {
-    this.revision = revision;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param tag
-   */
-  public void setTag(String tag)
-  {
-    this.tag = tag;
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private String branch;
-
-  /** Field description */
-  @XmlElement(name = "file")
-  @XmlElementWrapper(name = "files")
-  private List<FileObject> files;
-
-  /** Field description */
-  private String revision;
-
-  /** Field description */
-  private String tag;
 }

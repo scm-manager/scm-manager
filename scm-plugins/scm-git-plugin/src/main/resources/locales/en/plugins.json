@@ -1,0 +1,9 @@
+{
+  "scm-git-plugin": {
+    "information": {
+      "clone" : "Clone the repository",
+      "create" : "Create a new repository",
+      "replace" : "Push an existing repository"
+    }
+  }
+}

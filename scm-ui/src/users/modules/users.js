@@ -32,21 +32,19 @@ export const DELETE_USER_PENDING = `${DELETE_USER}_${types.PENDING_SUFFIX}`;
 export const DELETE_USER_SUCCESS = `${DELETE_USER}_${types.SUCCESS_SUFFIX}`;
 export const DELETE_USER_FAILURE = `${DELETE_USER}_${types.FAILURE_SUFFIX}`;
 
-const USERS_URL = "users";
-
 const CONTENT_TYPE_USER = "application/vnd.scmm-user+json;v=2";
 
 // TODO i18n for error messages
 
 // fetch users
 
-export function fetchUsers() {
-  return fetchUsersByLink(USERS_URL);
+export function fetchUsers(link: string) {
+  return fetchUsersByLink(link);
 }
 
-export function fetchUsersByPage(page: number) {
+export function fetchUsersByPage(link: string, page: number) {
   // backend start counting by 0
-  return fetchUsersByLink(USERS_URL + "?page=" + (page - 1));
+  return fetchUsersByLink(link + "?page=" + (page - 1));
 }
 
 export function fetchUsersByLink(link: string) {
@@ -60,7 +58,7 @@ export function fetchUsersByLink(link: string) {
       })
       .catch(cause => {
         const error = new Error(`could not fetch users: ${cause.message}`);
-        dispatch(fetchUsersFailure(USERS_URL, error));
+        dispatch(fetchUsersFailure(link, error));
       });
   };
 }
@@ -89,8 +87,8 @@ export function fetchUsersFailure(url: string, error: Error): Action {
 }
 
 //fetch user
-export function fetchUser(name: string) {
-  const userUrl = USERS_URL + "/" + name;
+export function fetchUser(link: string, name: string) {
+  const userUrl = link.endsWith("/") ? link + name : link + "/" + name;
   return function(dispatch: any) {
     dispatch(fetchUserPending(name));
     return apiClient
@@ -137,11 +135,11 @@ export function fetchUserFailure(name: string, error: Error): Action {
 
 //create user
 
-export function createUser(user: User, callback?: () => void) {
+export function createUser(link: string, user: User, callback?: () => void) {
   return function(dispatch: Dispatch) {
     dispatch(createUserPending(user));
     return apiClient
-      .post(USERS_URL, user, CONTENT_TYPE_USER)
+      .post(link, user, CONTENT_TYPE_USER)
       .then(() => {
         dispatch(createUserSuccess());
         if (callback) {

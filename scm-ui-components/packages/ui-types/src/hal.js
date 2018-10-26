@@ -4,10 +4,14 @@ export type Link = {
   name?: string
 };
 
-export type Links = { [string]: Link | Link[] };
+type LinkValue = Link | Link[];
+
+// TODO use LinkValue
+export type Links = { [string]: any };
 
 export type Collection = {
   _embedded: Object,
+  // $FlowFixMe
   _links: Links
 };
 

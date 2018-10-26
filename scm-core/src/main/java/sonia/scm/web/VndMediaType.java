@@ -18,6 +18,7 @@ public class VndMediaType {
   public static final String INDEX = PREFIX + "index" + SUFFIX;
   public static final String USER = PREFIX + "user" + SUFFIX;
   public static final String GROUP = PREFIX + "group" + SUFFIX;
+  public static final String AUTOCOMPLETE =  PREFIX + "autocomplete" + SUFFIX;
   public static final String REPOSITORY = PREFIX + "repository" + SUFFIX;
   public static final String PERMISSION = PREFIX + "permission" + SUFFIX;
   public static final String CHANGESET = PREFIX + "changeset" + SUFFIX;
@@ -38,6 +39,8 @@ public class VndMediaType {
   public static final String UI_PLUGIN_COLLECTION = PREFIX + "uiPluginCollection" + SUFFIX;
   @SuppressWarnings("squid:S2068")
   public static final String PASSWORD_CHANGE = PREFIX + "passwordChange" + SUFFIX;
+  @SuppressWarnings("squid:S2068")
+  public static final String PASSWORD_OVERWRITE = PREFIX + "passwordOverwrite" + SUFFIX;
 
   public static final String ME = PREFIX + "me" + SUFFIX;
   public static final String SOURCE = PREFIX + "source" + SUFFIX;

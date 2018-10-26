@@ -109,6 +109,11 @@ public class GroupManagerDecorator
     return decorated.getGroupsForMember(member);
   }
 
+  @Override
+  public Collection<Group> autocomplete(String filter) {
+    return decorated.autocomplete(filter);
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
