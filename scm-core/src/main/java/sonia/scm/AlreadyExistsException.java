@@ -3,14 +3,11 @@ package sonia.scm;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
-import static java.util.Collections.unmodifiableList;
 import static java.util.stream.Collectors.joining;
 
-public class AlreadyExistsException extends RuntimeException implements ExceptionWithContext {
+public class AlreadyExistsException extends ExceptionWithContext {
 
   private static final String CODE = "FtR7UznKU1";
-
-  private final List<ContextEntry> context;
 
   public AlreadyExistsException(ModelObject object) {
     this(singletonList(new ContextEntry(object.getClass(), object.getId())));
@@ -21,12 +18,7 @@ public class AlreadyExistsException extends RuntimeException implements Exceptio
   }
 
   private AlreadyExistsException(List<ContextEntry> context) {
-    super(createMessage(context));
-    this.context = context;
-  }
-
-  public List<ContextEntry> getContext() {
-    return unmodifiableList(context);
+    super(context, createMessage(context));
   }
 
   @Override

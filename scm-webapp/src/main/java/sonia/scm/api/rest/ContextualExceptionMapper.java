@@ -1,6 +1,5 @@
 package sonia.scm.api.rest;
 
-import com.google.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.ExceptionWithContext;
@@ -10,7 +9,7 @@ import sonia.scm.web.VndMediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 
-public class ContextualExceptionMapper<E extends Throwable & ExceptionWithContext> implements ExceptionMapper<E> {
+public class ContextualExceptionMapper<E extends ExceptionWithContext> implements ExceptionMapper<E> {
 
   private static final Logger logger = LoggerFactory.getLogger(ContextualExceptionMapper.class);
 

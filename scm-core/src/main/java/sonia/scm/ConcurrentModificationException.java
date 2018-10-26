@@ -3,14 +3,11 @@ package sonia.scm;
 import java.util.Collections;
 import java.util.List;
 
-import static java.util.Collections.unmodifiableList;
 import static java.util.stream.Collectors.joining;
 
-public class ConcurrentModificationException extends RuntimeException implements ExceptionWithContext {
+public class ConcurrentModificationException extends ExceptionWithContext {
 
   private static final String CODE = "2wR7UzpPG1";
-
-  private final List<ContextEntry> context;
 
   public ConcurrentModificationException(Class type, String id) {
     this(Collections.singletonList(new ContextEntry(type, id)));
@@ -21,12 +18,7 @@ public class ConcurrentModificationException extends RuntimeException implements
   }
 
   private ConcurrentModificationException(List<ContextEntry> context) {
-    super(createMessage(context));
-    this.context = context;
-  }
-
-  public List<ContextEntry> getContext() {
-    return unmodifiableList(context);
+    super(context, createMessage(context));
   }
 
   @Override

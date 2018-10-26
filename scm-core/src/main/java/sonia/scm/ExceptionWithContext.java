@@ -2,10 +2,20 @@ package sonia.scm;
 
 import java.util.List;
 
-public interface ExceptionWithContext {
-  List<ContextEntry> getContext();
+import static java.util.Collections.unmodifiableList;
 
-  String getMessage();
+public abstract class ExceptionWithContext extends RuntimeException {
 
-  String getCode();
+  private final List<ContextEntry> context;
+
+  public ExceptionWithContext(List<ContextEntry> context, String message) {
+    super(message);
+    this.context = context;
+  }
+
+  public List<ContextEntry> getContext() {
+    return unmodifiableList(context);
+  }
+
+  public abstract String getCode();
 }

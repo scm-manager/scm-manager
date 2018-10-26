@@ -1,20 +1,13 @@
 package sonia.scm;
 
-import sonia.scm.repository.NamespaceAndName;
-import sonia.scm.repository.Repository;
-
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
-import static java.util.Collections.unmodifiableList;
 import static java.util.stream.Collectors.joining;
 
-public class NotFoundException extends RuntimeException implements ExceptionWithContext {
+public class NotFoundException extends ExceptionWithContext {
 
   private static final String CODE = "AGR7UzkhA1";
-
-  private final List<ContextEntry> context;
 
   public NotFoundException(Class type, String id) {
     this(Collections.singletonList(new ContextEntry(type, id)));
@@ -29,12 +22,7 @@ public class NotFoundException extends RuntimeException implements ExceptionWith
   }
 
   private NotFoundException(List<ContextEntry> context) {
-    super(createMessage(context));
-    this.context = context;
-  }
-
-  public List<ContextEntry> getContext() {
-    return unmodifiableList(context);
+    super(context, createMessage(context));
   }
 
   @Override
