@@ -18,7 +18,7 @@ public class ErrorDto {
   @JsonInclude(JsonInclude.Include.NON_NULL)
   private final String url;
 
-  private ErrorDto(String transactionId, String errorCode, List<ContextEntry> context, String message) {
+  protected ErrorDto(String transactionId, String errorCode, List<ContextEntry> context, String message) {
     this(transactionId, errorCode, context, message, null);
   }
   private ErrorDto(String transactionId, String errorCode, List<ContextEntry> context, String message, String url) {
