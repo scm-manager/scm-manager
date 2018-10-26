@@ -5,16 +5,17 @@ export type Description = {
 };
 
 export function parseDescription(description: string): Description {
-  const lineBreak = description.indexOf("\n");
-
-  let title;
+  let title = "";
   let message = "";
 
-  if (lineBreak > 0) {
-    title = description.substring(0, lineBreak);
-    message = description.substring(lineBreak + 1);
-  } else {
-    title = description;
+  if (description != null) {
+    const lineBreak = description.indexOf("\n");
+    if (lineBreak > 0) {
+      title = description.substring(0, lineBreak);
+      message = description.substring(lineBreak + 1);
+    } else {
+      title = description;
+    }
   }
 
   return {

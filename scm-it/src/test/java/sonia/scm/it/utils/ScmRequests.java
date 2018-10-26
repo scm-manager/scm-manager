@@ -220,8 +220,8 @@ public class ScmRequests {
       return this;
     }
 
-    public DiffResponse<ChangesetsResponse> requestDiff(String revision) {
-      return new DiffResponse<>(applyGETRequestFromLink(response, "_embedded.changesets.find{it.id=='" + revision + "'}._links.diff.href"), this);
+    public DiffResponse<ChangesetsResponse> requestDiffInGitFormat(String revision) {
+      return new DiffResponse<>(applyGETRequestFromLinkWithParams(response, "_embedded.changesets.find{it.id=='" + revision + "'}._links.diff.href", "?format=GIT"), this);
     }
 
     public ModificationsResponse<ChangesetsResponse> requestModifications(String revision) {
@@ -346,6 +346,10 @@ public class ScmRequests {
     public ModelResponse(Response response, PREV previousResponse) {
       this.response = response;
       this.previousResponse = previousResponse;
+    }
+
+    public Response getResponse(){
+      return response;
     }
 
     public PREV returnToPrevious() {

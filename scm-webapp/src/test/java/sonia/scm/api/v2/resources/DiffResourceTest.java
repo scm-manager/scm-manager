@@ -18,6 +18,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.api.rest.AuthorizationExceptionMapper;
+import sonia.scm.api.rest.IllegalArgumentExceptionMapper;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryNotFoundException;
@@ -72,6 +73,7 @@ public class DiffResourceTest extends RepositoryTestBase {
     dispatcher.getProviderFactory().registerProvider(NotFoundExceptionMapper.class);
     dispatcher.getProviderFactory().registerProvider(AuthorizationExceptionMapper.class);
     dispatcher.getProviderFactory().registerProvider(CRLFInjectionExceptionMapper.class);
+    dispatcher.getProviderFactory().registerProvider(IllegalArgumentExceptionMapper.class);
     when(service.getDiffCommand()).thenReturn(diffCommandBuilder);
     subjectThreadState.bind();
     ThreadContext.bind(subject);
@@ -86,19 +88,17 @@ public class DiffResourceTest extends RepositoryTestBase {
   @Test
   public void shouldGetDiffs() throws Exception {
     when(diffCommandBuilder.setRevision(anyString())).thenReturn(diffCommandBuilder);
+    when(diffCommandBuilder.setFormat(any())).thenReturn(diffCommandBuilder);
     when(diffCommandBuilder.retriveContent(any())).thenReturn(diffCommandBuilder);
-
     MockHttpRequest request = MockHttpRequest
       .get(DIFF_URL + "revision")
       .accept(VndMediaType.DIFF);
     MockHttpResponse response = new MockHttpResponse();
+
     dispatcher.invoke(request, response);
-    assertEquals(200, response.getStatus());
-    log.info("Response :{}", response.getContentAsString());
+
     assertThat(response.getStatus())
       .isEqualTo(200);
-    assertThat(response.getContentAsString())
-      .isNotNull();
     String expectedHeader = "Content-Disposition";
     String expectedValue = "attachment; filename=\"repo-revision.diff\"; filename*=utf-8''repo-revision.diff";
     assertThat(response.getOutputHeaders().containsKey(expectedHeader)).isTrue();
@@ -120,6 +120,7 @@ public class DiffResourceTest extends RepositoryTestBase {
   @Test
   public void shouldGet404OnMissingRevision() throws Exception {
     when(diffCommandBuilder.setRevision(anyString())).thenReturn(diffCommandBuilder);
+    when(diffCommandBuilder.setFormat(any())).thenReturn(diffCommandBuilder);
     when(diffCommandBuilder.retriveContent(any())).thenThrow(RevisionNotFoundException.class);
 
     MockHttpRequest request = MockHttpRequest
@@ -133,6 +134,7 @@ public class DiffResourceTest extends RepositoryTestBase {
   @Test
   public void shouldGet400OnCrlfInjection() throws Exception {
     when(diffCommandBuilder.setRevision(anyString())).thenReturn(diffCommandBuilder);
+    when(diffCommandBuilder.setFormat(any())).thenReturn(diffCommandBuilder);
     when(diffCommandBuilder.retriveContent(any())).thenThrow(RevisionNotFoundException.class);
 
     MockHttpRequest request = MockHttpRequest
@@ -143,6 +145,17 @@ public class DiffResourceTest extends RepositoryTestBase {
     assertEquals(400, response.getStatus());
   }
 
+  @Test
+  public void shouldGet400OnUnknownFormat() throws Exception {
+    when(diffCommandBuilder.setRevision(anyString())).thenReturn(diffCommandBuilder);
+    when(diffCommandBuilder.setFormat(any())).thenReturn(diffCommandBuilder);
+    when(diffCommandBuilder.retriveContent(any())).thenThrow(RevisionNotFoundException.class);
 
-
+    MockHttpRequest request = MockHttpRequest
+      .get(DIFF_URL + "revision?format=Unknown")
+      .accept(VndMediaType.DIFF);
+    MockHttpResponse response = new MockHttpResponse();
+    dispatcher.invoke(request, response);
+    assertEquals(400, response.getStatus());
+  }
 }

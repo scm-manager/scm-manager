@@ -1,5 +1,6 @@
 package sonia.scm.it;
 
+import groovy.util.logging.Slf4j;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.apache.http.HttpStatus;
@@ -37,6 +38,7 @@ import static sonia.scm.it.utils.RestUtil.given;
 import static sonia.scm.it.utils.ScmTypes.availableScmTypes;
 
 @RunWith(Parameterized.class)
+@Slf4j
 public class RepositoryAccessITCase {
 
   @Rule
@@ -63,9 +65,9 @@ public class RepositoryAccessITCase {
     String repo = TestData.getDefaultRepoName(repositoryType);
     repositoryResponse =
       ScmRequests.start()
-      .requestIndexResource(ADMIN_USERNAME, ADMIN_PASSWORD)
-      .requestRepository(namespace, repo)
-      .assertStatusCode(HttpStatus.SC_OK);
+        .requestIndexResource(ADMIN_USERNAME, ADMIN_PASSWORD)
+        .requestRepository(namespace, repo)
+        .assertStatusCode(HttpStatus.SC_OK);
   }
 
   @Test
@@ -175,6 +177,7 @@ public class RepositoryAccessITCase {
   }
 
   @Test
+  @SuppressWarnings("squid:S2925")
   public void shouldReadContent() throws IOException, InterruptedException {
     RepositoryClient repositoryClient = RepositoryUtil.createRepositoryClient(repositoryType, folder);
     RepositoryUtil.createAndCommitFile(repositoryClient, "scmadmin", "a.txt", "a");
@@ -262,40 +265,6 @@ public class RepositoryAccessITCase {
     assertThat(changesets).size().isBetween(2, 3); // svn has an implicit root revision '0' that is extra to the two commits
   }
 
-  @Test
-  public void shouldFindDiffs() throws IOException {
-    RepositoryClient repositoryClient = RepositoryUtil.createRepositoryClient(repositoryType, folder);
-
-    RepositoryUtil.createAndCommitFile(repositoryClient, "scmadmin", "a.txt", "a");
-    RepositoryUtil.createAndCommitFile(repositoryClient, "scmadmin", "b.txt", "b");
-
-    String changesetsUrl = given()
-      .when()
-      .get(TestData.getDefaultRepositoryUrl(repositoryType))
-      .then()
-      .statusCode(HttpStatus.SC_OK)
-      .extract()
-      .path("_links.changesets.href");
-
-    String diffUrl = given()
-      .when()
-      .get(changesetsUrl)
-      .then()
-      .statusCode(HttpStatus.SC_OK)
-      .extract()
-      .path("_embedded.changesets[0]._links.diff.href");
-
-    given()
-      .when()
-      .get(diffUrl)
-      .then()
-      .statusCode(HttpStatus.SC_OK)
-      .extract()
-      .body()
-      .asString()
-      .contains("diff");
-
-  }
 
   @Test
   @SuppressWarnings("unchecked")
@@ -393,12 +362,10 @@ public class RepositoryAccessITCase {
     RepositoryUtil.createAndCommitFile(repositoryClient, ADMIN_USERNAME, "b.txt", "b");
     RepositoryUtil.createAndCommitFile(repositoryClient, ADMIN_USERNAME, "c.txt", "c");
     RepositoryUtil.createAndCommitFile(repositoryClient, ADMIN_USERNAME, "d.txt", "d");
-    Map<String, String> addedFiles = new HashMap<String, String>()
-    {{
+    Map<String, String> addedFiles = new HashMap<String, String>() {{
       put("a.txt", "bla bla");
     }};
-    Map<String, String> modifiedFiles = new HashMap<String, String>()
-    {{
+    Map<String, String> modifiedFiles = new HashMap<String, String>() {{
       put("b.txt", "new content");
     }};
     ArrayList<String> removedFiles = Lists.newArrayList("c.txt", "d.txt");
@@ -414,7 +381,7 @@ public class RepositoryAccessITCase {
       .assertAdded(a -> assertThat(a)
         .hasSize(1)
         .containsExactly("a.txt"))
-      .assertModified(m-> assertThat(m)
+      .assertModified(m -> assertThat(m)
         .hasSize(1)
         .containsExactly("b.txt"))
       .assertRemoved(r -> assertThat(r)

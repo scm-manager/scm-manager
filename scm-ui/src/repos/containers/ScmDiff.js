@@ -23,7 +23,7 @@ class ScmDiff extends React.Component<Props, State> {
 
   componentDidMount() {
     const { changeset } = this.props;
-    const url = changeset._links.diff.href;
+    const url = changeset._links.diff.href+"?format=GIT";
     apiClient
       .get(url)
       .then(response => response.text())
@@ -35,7 +35,7 @@ class ScmDiff extends React.Component<Props, State> {
     const options = {
       inputFormat: "diff",
       outputFormat: this.props.sideBySide ? "side-by-side" : "line-by-line",
-      showFiles: true,
+      showFiles: false,
       matching: "lines"
     };
 

@@ -43,26 +43,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-/**
- * This is a copy of the SvnDiffGenerator class from the patched SVNKit library used in SCM-Manager
- * (a fork of SVNKit from TMate Software (http://svnkit.com/)).
- *
- * The original class can be found here: https://bitbucket.org/sdorra/svnkit/src/default/svnkit/src/main/java/org/tmatesoft/svn/core/internal/wc2/ng/SvnDiffGenerator.java
- *
- * The folowing modifications are applied when using the git format
- * <ul>
- *     <il>
- *         remove the svn header
- *     </il>
- *     <il>
- *         use the git diff code 100644 on the new file and deleted file actions
- *     </il>
- *     <il>
- *         remove the labels in the added and deleted file headers eg. [+++ a/a.txt (revision 4)] will replaced with [+++ a/a.txt]
- *     </il>
- * </ul>
- */
-@SuppressWarnings("all")
 public class SCMSvnDiffGenerator implements ISvnDiffGenerator {
 
   protected static final String WC_REVISION_LABEL = "(working copy)";
@@ -459,21 +439,20 @@ public class SCMSvnDiffGenerator implements ISvnDiffGenerator {
     }
 
     if (!forcedBinaryDiff && (leftIsBinary || rightIsBinary)) {
-      boolean shouldStopDisplaying = false;
-      if (!useGitFormat) {
-        shouldStopDisplaying =  displayHeader(outputStream, displayPath, rightFile == null, leftFile == null, operation);
-      } else {
-        String path1 = getRelativeToRootPath(target, originalTarget1);
-        String path2 = getRelativeToRootPath(target, originalTarget2);
-        displayGitDiffHeader(outputStream, operation,path1,path2,null);
+      boolean shouldStopDisplaying = displayHeader(outputStream, displayPath, rightFile == null, leftFile == null, operation);
+      if (useGitFormat) {
+        displayGitDiffHeader(outputStream, operation,
+          getRelativeToRootPath(target, originalTarget1),
+          getRelativeToRootPath(target, originalTarget2),
+          null);
       }
       visitedPaths.add(displayPath);
       if (shouldStopDisplaying) {
         return;
       }
-      if (!useGitFormat){
-        displayBinary(mimeType1, mimeType2, outputStream, leftIsBinary, rightIsBinary);
-      }
+
+
+      displayBinary(mimeType1, mimeType2, outputStream, leftIsBinary, rightIsBinary);
 
       return;
     }
@@ -609,7 +588,6 @@ public class SCMSvnDiffGenerator implements ISvnDiffGenerator {
     final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
     try {
       if (!useGitFormat) {
-        // display the svn header only if the git format is not required
         displayHeader(byteArrayOutputStream, displayPath, deleted, added, operation);
       } else {
         displayGitDiffHeader(byteArrayOutputStream, operation,
@@ -910,7 +888,6 @@ public class SCMSvnDiffGenerator implements ISvnDiffGenerator {
       displayString(outputStream, " ");
       displaySecondGitPath(outputStream, path2);
       displayEOL(outputStream);
-      // 100644 is the mode code used from git for new and deleted file mode
       displayString(outputStream, "new file mode 100644");
       displayEOL(outputStream);
     } catch (IOException e) {
@@ -925,7 +902,6 @@ public class SCMSvnDiffGenerator implements ISvnDiffGenerator {
       displayString(outputStream, " ");
       displaySecondGitPath(outputStream, path2);
       displayEOL(outputStream);
-      // 100644 is the mode code used from git for new and deleted file mode
       displayString(outputStream, "deleted file mode 100644");
       displayEOL(outputStream);
     } catch (IOException e) {
@@ -982,11 +958,11 @@ public class SCMSvnDiffGenerator implements ISvnDiffGenerator {
   }
 
   private void displayFirstGitPath(OutputStream outputStream, String path1) throws IOException {
-    displayGitPath(outputStream, path1, "a/");
+    displayGitPath(outputStream, path1, "a/", false);
   }
 
   private void displaySecondGitPath(OutputStream outputStream, String path2) throws IOException {
-    displayGitPath(outputStream, path2, "b/");
+    displayGitPath(outputStream, path2, "b/", false);
   }
 
   private void displayFirstGitLabelPath(OutputStream outputStream, String path1, String revision1, SvnDiffCallback.OperationKind operation) throws IOException {
@@ -995,7 +971,7 @@ public class SCMSvnDiffGenerator implements ISvnDiffGenerator {
       path1 = "/dev/null";
       pathPrefix = "";
     }
-    displayGitPath(outputStream, getLabel(path1, revision1), pathPrefix);
+    displayGitPath(outputStream, getLabel(path1, revision1), pathPrefix, true);
   }
 
   private void displaySecondGitLabelPath(OutputStream outputStream, String path2, String revision2, SvnDiffCallback.OperationKind operation) throws IOException {
@@ -1004,12 +980,16 @@ public class SCMSvnDiffGenerator implements ISvnDiffGenerator {
       path2 = "/dev/null";
       pathPrefix = "";
     }
-    displayGitPath(outputStream, getLabel(path2, revision2), pathPrefix);
+    displayGitPath(outputStream, getLabel(path2, revision2), pathPrefix, true);
   }
 
-  private void displayGitPath(OutputStream outputStream, String path1, String pathPrefix) throws IOException {
+  private void displayGitPath(OutputStream outputStream, String path1, String pathPrefix, boolean label) throws IOException {
+//        if (!label && path1.length() == 0) {
+//            displayString(outputStream, ".");
+//        } else {
     displayString(outputStream, pathPrefix);
     displayString(outputStream, path1);
+//        }
   }
 
   private String getAdjustedPathWithLabel(String displayPath, String path, String revision, String commonAncestor) {
@@ -1033,7 +1013,6 @@ public class SCMSvnDiffGenerator implements ISvnDiffGenerator {
 
   protected String getLabel(String path, String revToken) {
     if (useGitFormat){
-    // the label in the git format contains only the path
       return path;
     }
     revToken = revToken == null ? WC_REVISION_LABEL : revToken;
