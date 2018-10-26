@@ -11,6 +11,7 @@ import sonia.scm.user.UserManager;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
@@ -90,7 +91,7 @@ public class UserCollectionResource {
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
   @ResponseHeaders(@ResponseHeader(name = "Location", description = "uri to the created user"))
-  public Response create(@Valid UserDto userDto) {
+  public Response create(@Valid @Named("user") UserDto userDto) {
     return adapter.create(userDto, () -> dtoToUserMapper.map(userDto, passwordService.encryptPassword(userDto.getPassword())), user -> resourceLinks.user().self(user.getName()));
   }
 }

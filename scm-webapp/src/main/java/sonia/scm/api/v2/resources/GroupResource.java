@@ -8,6 +8,7 @@ import sonia.scm.group.GroupManager;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -96,7 +97,7 @@ public class GroupResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
-  public Response update(@PathParam("id") String name, @Valid GroupDto groupDto) {
+  public Response update(@PathParam("id") String name, @Valid @Named("group") GroupDto groupDto) {
     return adapter.update(name, existing -> dtoToGroupMapper.map(groupDto));
   }
 }

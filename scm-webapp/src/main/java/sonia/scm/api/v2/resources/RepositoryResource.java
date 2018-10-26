@@ -10,6 +10,7 @@ import sonia.scm.repository.RepositoryManager;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Provider;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
@@ -139,7 +140,7 @@ public class RepositoryResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
-  public Response update(@PathParam("namespace") String namespace, @PathParam("name") String name, @Valid RepositoryDto repositoryDto) {
+  public Response update(@PathParam("namespace") String namespace, @PathParam("name") String name, @Valid @Named("repository") RepositoryDto repositoryDto) {
     return adapter.update(
       loadBy(namespace, name),
       existing -> processUpdate(repositoryDto, existing),
