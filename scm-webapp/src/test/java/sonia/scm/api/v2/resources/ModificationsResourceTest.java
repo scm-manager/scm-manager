@@ -46,7 +46,8 @@ public class ModificationsResourceTest extends RepositoryTestBase {
 
   public static final String MODIFICATIONS_PATH = "space/repo/modifications/";
   public static final String MODIFICATIONS_URL = "/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + MODIFICATIONS_PATH;
-  private final Dispatcher dispatcher = MockDispatcherFactory.createDispatcher();
+
+  private Dispatcher dispatcher;
 
   private final URI baseUri = URI.create("/");
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
@@ -74,13 +75,10 @@ public class ModificationsResourceTest extends RepositoryTestBase {
   public void prepareEnvironment() throws Exception {
     modificationsRootResource = new ModificationsRootResource(serviceFactory, modificationsToDtoMapper);
     super.modificationsRootResource = Providers.of(modificationsRootResource);
-    dispatcher.getRegistry().addSingletonResource(getRepositoryRootResource());
+    dispatcher = DispatcherMock.createDispatcher(getRepositoryRootResource());
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(repositoryService);
     when(serviceFactory.create(any(Repository.class))).thenReturn(repositoryService);
     when(repositoryService.getRepository()).thenReturn(new Repository("repoId", "git", "space", "repo"));
-    dispatcher.getProviderFactory().registerProvider(NotFoundExceptionMapper.class);
-    dispatcher.getProviderFactory().registerProvider(AuthorizationExceptionMapper.class);
-    dispatcher.getProviderFactory().registerProvider(InternalRepositoryExceptionMapper.class);
     when(repositoryService.getModificationsCommand()).thenReturn(modificationsCommandBuilder);
     subjectThreadState.bind();
     ThreadContext.bind(subject);

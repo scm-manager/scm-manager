@@ -12,10 +12,11 @@ public class DispatcherMock {
   public static Dispatcher createDispatcher(Object resource) {
     Dispatcher dispatcher = MockDispatcherFactory.createDispatcher();
     dispatcher.getRegistry().addSingletonResource(resource);
-    dispatcher.getProviderFactory().registerProvider(NotFoundExceptionMapper.class);
-    dispatcher.getProviderFactory().registerProvider(AlreadyExistsExceptionMapper.class);
+    ExceptionWithContextToErrorDtoMapperImpl mapper = new ExceptionWithContextToErrorDtoMapperImpl();
+    dispatcher.getProviderFactory().register(new NotFoundExceptionMapper(mapper));
+    dispatcher.getProviderFactory().register(new AlreadyExistsExceptionMapper(mapper));
+    dispatcher.getProviderFactory().register(new ConcurrentModificationExceptionMapper(mapper));
     dispatcher.getProviderFactory().registerProvider(AuthorizationExceptionMapper.class);
-    dispatcher.getProviderFactory().registerProvider(ConcurrentModificationExceptionMapper.class);
     dispatcher.getProviderFactory().registerProvider(InternalRepositoryExceptionMapper.class);
     dispatcher.getProviderFactory().registerProvider(ChangePasswordNotAllowedExceptionMapper.class);
     dispatcher.getProviderFactory().registerProvider(InvalidPasswordExceptionMapper.class);

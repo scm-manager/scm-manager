@@ -12,15 +12,15 @@ import javax.ws.rs.ext.ExceptionMapper;
 
 public class ContextualExceptionMapper<E extends Throwable & ExceptionWithContext> implements ExceptionMapper<E> {
 
-  @Inject
-  private ExceptionWithContextToErrorDtoMapper mapper;
-
   private static final Logger logger = LoggerFactory.getLogger(ContextualExceptionMapper.class);
+
+  private ExceptionWithContextToErrorDtoMapper mapper;
 
   private final Response.Status status;
   private final Class<E> type;
 
-  public ContextualExceptionMapper(Class<E> type, Response.Status status) {
+  public ContextualExceptionMapper(Class<E> type, Response.Status status, ExceptionWithContextToErrorDtoMapper mapper) {
+    this.mapper = mapper;
     this.type = type;
     this.status = status;
   }

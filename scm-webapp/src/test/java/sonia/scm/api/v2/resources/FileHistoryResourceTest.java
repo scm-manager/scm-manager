@@ -52,7 +52,6 @@ public class FileHistoryResourceTest extends RepositoryTestBase {
 
   public static final String FILE_HISTORY_PATH = "space/repo/history/";
   public static final String FILE_HISTORY_URL = "/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + FILE_HISTORY_PATH;
-  private final Dispatcher dispatcher = MockDispatcherFactory.createDispatcher();
 
   private final URI baseUri = URI.create("/");
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
@@ -73,23 +72,21 @@ public class FileHistoryResourceTest extends RepositoryTestBase {
 
   private FileHistoryRootResource fileHistoryRootResource;
 
+  private Dispatcher dispatcher;
 
   private final Subject subject = mock(Subject.class);
   private final ThreadState subjectThreadState = new SubjectThreadState(subject);
-
 
   @Before
   public void prepareEnvironment() {
     fileHistoryCollectionToDtoMapper = new FileHistoryCollectionToDtoMapper(changesetToChangesetDtoMapper, resourceLinks);
     fileHistoryRootResource = new FileHistoryRootResource(serviceFactory, fileHistoryCollectionToDtoMapper);
     super.fileHistoryRootResource = Providers.of(fileHistoryRootResource);
-    dispatcher.getRegistry().addSingletonResource(getRepositoryRootResource());
+    dispatcher = DispatcherMock.createDispatcher(getRepositoryRootResource());
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(service);
     when(serviceFactory.create(any(Repository.class))).thenReturn(service);
     when(service.getRepository()).thenReturn(new Repository("repoId", "git", "space", "repo"));
-    dispatcher.getProviderFactory().registerProvider(NotFoundExceptionMapper.class);
-    dispatcher.getProviderFactory().registerProvider(AuthorizationExceptionMapper.class);
-    dispatcher.getProviderFactory().registerProvider(InternalRepositoryExceptionMapper.class);
+    ExceptionWithContextToErrorDtoMapperImpl mapper = new ExceptionWithContextToErrorDtoMapperImpl();
     when(service.getLogCommand()).thenReturn(logCommandBuilder);
     subjectThreadState.bind();
     ThreadContext.bind(subject);

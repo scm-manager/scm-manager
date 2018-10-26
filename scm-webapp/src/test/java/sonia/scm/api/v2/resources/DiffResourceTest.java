@@ -19,6 +19,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.NotFoundException;
 import sonia.scm.api.rest.AuthorizationExceptionMapper;
+import sonia.scm.api.rest.ContextualExceptionMapper;
 import sonia.scm.api.v2.NotFoundExceptionMapper;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
@@ -69,7 +70,8 @@ public class DiffResourceTest extends RepositoryTestBase {
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(service);
     when(serviceFactory.create(any(Repository.class))).thenReturn(service);
     when(service.getRepository()).thenReturn(new Repository("repoId", "git", "space", "repo"));
-    dispatcher.getProviderFactory().registerProvider(NotFoundExceptionMapper.class);
+    ExceptionWithContextToErrorDtoMapperImpl mapper = new ExceptionWithContextToErrorDtoMapperImpl();
+    dispatcher.getProviderFactory().register(new NotFoundExceptionMapper(mapper));
     dispatcher.getProviderFactory().registerProvider(AuthorizationExceptionMapper.class);
     dispatcher.getProviderFactory().registerProvider(CRLFInjectionExceptionMapper.class);
     when(service.getDiffCommand()).thenReturn(diffCommandBuilder);
