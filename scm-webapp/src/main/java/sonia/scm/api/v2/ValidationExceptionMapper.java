@@ -1,9 +1,9 @@
 package sonia.scm.api.v2;
 
-import com.google.inject.Inject;
 import org.jboss.resteasy.api.validation.ResteasyViolationException;
 import sonia.scm.api.v2.resources.ViolationExceptionToErrorDtoMapper;
 
+import javax.inject.Inject;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
@@ -12,8 +12,12 @@ import javax.ws.rs.ext.Provider;
 @Provider
 public class ValidationExceptionMapper implements ExceptionMapper<ResteasyViolationException> {
 
+  private final ViolationExceptionToErrorDtoMapper mapper;
+
   @Inject
-  private ViolationExceptionToErrorDtoMapper mapper;
+  public ValidationExceptionMapper(ViolationExceptionToErrorDtoMapper mapper) {
+    this.mapper = mapper;
+  }
 
   @Override
   public Response toResponse(ResteasyViolationException exception) {
