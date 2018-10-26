@@ -38,7 +38,7 @@ package sonia.scm;
  * @author Sebastian Sdorra
  * @version 1.6
  */
-public class NotSupportedFeatuerException extends Exception
+public class NotSupportedFeatureException extends Exception
 {
 
   /** Field description */
@@ -50,7 +50,7 @@ public class NotSupportedFeatuerException extends Exception
    * Constructs ...
    *
    */
-  public NotSupportedFeatuerException() {}
+  public NotSupportedFeatureException() {}
 
   /**
    * Constructs ...
@@ -58,7 +58,7 @@ public class NotSupportedFeatuerException extends Exception
    *
    * @param message
    */
-  public NotSupportedFeatuerException(String message)
+  public NotSupportedFeatureException(String message)
   {
     super(message);
   }

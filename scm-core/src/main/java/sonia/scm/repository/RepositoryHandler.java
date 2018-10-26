@@ -36,7 +36,7 @@ package sonia.scm.repository;
 //~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.Handler;
-import sonia.scm.NotSupportedFeatuerException;
+import sonia.scm.NotSupportedFeatureException;
 import sonia.scm.plugin.ExtensionPoint;
 
 /**
@@ -70,9 +70,9 @@ public interface RepositoryHandler
    * @return {@link ImportHandler} for the repository type of this handler
    * @since 1.12
    *
-   * @throws NotSupportedFeatuerException
+   * @throws NotSupportedFeatureException
    */
-  public ImportHandler getImportHandler() throws NotSupportedFeatuerException;
+  public ImportHandler getImportHandler() throws NotSupportedFeatureException;
 
   /**
    * Returns informations about the version of the RepositoryHandler.
