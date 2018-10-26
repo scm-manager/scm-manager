@@ -7,8 +7,8 @@ public class InvalidPasswordException extends ExceptionWithContext {
 
   private static final String CODE = "8YR7aawFW1";
 
-  public InvalidPasswordException(ContextEntry.ContextBuilder passwordChange) {
-    super(passwordChange.build(), "The given old password does not match with the stored one.");
+  public InvalidPasswordException(ContextEntry.ContextBuilder context) {
+    super(context.build(), "The given old password does not match with the stored one.");
   }
 
   @Override
