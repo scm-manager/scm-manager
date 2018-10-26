@@ -1,27 +1,32 @@
 //@flow
 import React from "react";
-import {connect} from "react-redux";
-import {translate} from "react-i18next";
+import { connect } from "react-redux";
+import { translate } from "react-i18next";
 import {
-  createPermission,
-  createPermissionReset,
-  deletePermissionReset,
   fetchPermissions,
-  getCreatePermissionFailure,
-  getDeletePermissionsFailure,
   getFetchPermissionsFailure,
-  getModifyPermissionsFailure,
+  isFetchPermissionsPending,
   getPermissionsOfRepo,
   hasCreatePermission,
+  createPermission,
   isCreatePermissionPending,
-  isFetchPermissionsPending,
-  modifyPermissionReset
+  getCreatePermissionFailure,
+  createPermissionReset,
+  getDeletePermissionsFailure,
+  getModifyPermissionsFailure,
+  modifyPermissionReset,
+  deletePermissionReset
 } from "../modules/permissions";
-import {ErrorPage, Loading} from "@scm-manager/ui-components";
-import type {Permission, PermissionCollection, PermissionCreateEntry} from "@scm-manager/ui-types";
+import { Loading, ErrorPage } from "@scm-manager/ui-components";
+import type {
+  Permission,
+  PermissionCollection,
+  PermissionCreateEntry
+} from "@scm-manager/ui-types";
 import SinglePermission from "./SinglePermission";
 import CreatePermissionForm from "../components/CreatePermissionForm";
-import type {History} from "history";
+import type { History } from "history";
+import { getPermissionsLink } from "../../modules/repos";
 
 type Props = {
   namespace: string,
@@ -31,10 +36,12 @@ type Props = {
   permissions: PermissionCollection,
   hasPermissionToCreate: boolean,
   loadingCreatePermission: boolean,
+  permissionsLink: string,
 
   //dispatch functions
-  fetchPermissions: (namespace: string, repoName: string) => void,
+  fetchPermissions: (link: string, namespace: string, repoName: string) => void,
   createPermission: (
+    link: string,
     permission: PermissionCreateEntry,
     namespace: string,
     repoName: string,
@@ -57,17 +64,19 @@ class Permissions extends React.Component<Props> {
       repoName,
       modifyPermissionReset,
       createPermissionReset,
-      deletePermissionReset
+      deletePermissionReset,
+      permissionsLink
     } = this.props;
 
     createPermissionReset(namespace, repoName);
     modifyPermissionReset(namespace, repoName);
     deletePermissionReset(namespace, repoName);
-    fetchPermissions(namespace, repoName);
+    fetchPermissions(permissionsLink, namespace, repoName);
   }
 
   createPermission = (permission: Permission) => {
     this.props.createPermission(
+      this.props.permissionsLink,
       permission,
       this.props.namespace,
       this.props.repoName
@@ -155,6 +164,7 @@ const mapStateToProps = (state, ownProps) => {
     repoName
   );
   const hasPermissionToCreate = hasCreatePermission(state, namespace, repoName);
+  const permissionsLink = getPermissionsLink(state, namespace, repoName);
   return {
     namespace,
     repoName,
@@ -162,22 +172,24 @@ const mapStateToProps = (state, ownProps) => {
     loading,
     permissions,
     hasPermissionToCreate,
-    loadingCreatePermission
+    loadingCreatePermission,
+    permissionsLink
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchPermissions: (namespace: string, repoName: string) => {
-      dispatch(fetchPermissions(namespace, repoName));
+    fetchPermissions: (link: string, namespace: string, repoName: string) => {
+      dispatch(fetchPermissions(link, namespace, repoName));
     },
     createPermission: (
+      link: string,
       permission: PermissionCreateEntry,
       namespace: string,
       repoName: string,
       callback?: () => void
     ) => {
-      dispatch(createPermission(permission, namespace, repoName, callback));
+      dispatch(createPermission(link, permission, namespace, repoName, callback));
     },
     createPermissionReset: (namespace: string, repoName: string) => {
       dispatch(createPermissionReset(namespace, repoName));

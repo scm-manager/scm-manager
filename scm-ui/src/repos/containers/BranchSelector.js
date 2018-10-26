@@ -17,6 +17,7 @@ const styles = {
 type Props = {
   branches: Branch[], // TODO: Use generics?
   selected: (branch?: Branch) => void,
+  selectedBranch: string,
 
   // context props
   classes: Object,
@@ -29,6 +30,12 @@ class BranchSelector extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {};
+  }
+
+  componentDidMount() {
+    this.props.branches
+      .filter(branch => branch.name === this.props.selectedBranch)
+      .forEach(branch => this.setState({ selectedBranch: branch }));
   }
 
   render() {
@@ -60,6 +67,8 @@ class BranchSelector extends React.Component<Props, State> {
           </div>
         </div>
       );
+    } else {
+      return null;
     }
   }
 

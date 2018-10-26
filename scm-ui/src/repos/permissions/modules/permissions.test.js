@@ -101,6 +101,7 @@ const hitchhiker_puzzle42RepoPermissions = {
 
 describe("permission fetch", () => {
   const REPOS_URL = "/api/v2/repositories";
+  const URL = "repositories";
   const mockStore = configureMockStore([thunk]);
 
   afterEach(() => {
@@ -132,7 +133,13 @@ describe("permission fetch", () => {
 
     const store = mockStore({});
     return store
-      .dispatch(fetchPermissions("hitchhiker", "puzzle42"))
+      .dispatch(
+        fetchPermissions(
+          URL + "/hitchhiker/puzzle42/permissions",
+          "hitchhiker",
+          "puzzle42"
+        )
+      )
       .then(() => {
         expect(store.getActions()).toEqual(expectedActions);
       });
@@ -145,7 +152,13 @@ describe("permission fetch", () => {
 
     const store = mockStore({});
     return store
-      .dispatch(fetchPermissions("hitchhiker", "puzzle42"))
+      .dispatch(
+        fetchPermissions(
+          URL + "/hitchhiker/puzzle42/permissions",
+          "hitchhiker",
+          "puzzle42"
+        )
+      )
       .then(() => {
         const actions = store.getActions();
         expect(actions[0].type).toEqual(FETCH_PERMISSIONS_PENDING);
@@ -247,6 +260,7 @@ describe("permission fetch", () => {
     return store
       .dispatch(
         createPermission(
+          URL + "/hitchhiker/puzzle42/permissions",
           hitchhiker_puzzle42Permission_user_eins,
           "hitchhiker",
           "puzzle42"
@@ -268,6 +282,7 @@ describe("permission fetch", () => {
     return store
       .dispatch(
         createPermission(
+          URL + "/hitchhiker/puzzle42/permissions",
           hitchhiker_puzzle42Permission_user_eins,
           "hitchhiker",
           "puzzle42"
@@ -304,6 +319,7 @@ describe("permission fetch", () => {
     return store
       .dispatch(
         createPermission(
+          URL + "/hitchhiker/puzzle42/permissions",
           hitchhiker_puzzle42Permission_user_eins,
           "hitchhiker",
           "puzzle42",

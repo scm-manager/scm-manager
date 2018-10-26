@@ -35,20 +35,18 @@ export const DELETE_REPO_PENDING = `${DELETE_REPO}_${types.PENDING_SUFFIX}`;
 export const DELETE_REPO_SUCCESS = `${DELETE_REPO}_${types.SUCCESS_SUFFIX}`;
 export const DELETE_REPO_FAILURE = `${DELETE_REPO}_${types.FAILURE_SUFFIX}`;
 
-const REPOS_URL = "repositories";
-
 const CONTENT_TYPE = "application/vnd.scmm-repository+json;v=2";
 
 // fetch repos
 
 const SORT_BY = "sortBy=namespaceAndName";
 
-export function fetchRepos() {
-  return fetchReposByLink(REPOS_URL);
+export function fetchRepos(link: string) {
+  return fetchReposByLink(link);
 }
 
-export function fetchReposByPage(page: number) {
-  return fetchReposByLink(`${REPOS_URL}?page=${page - 1}`);
+export function fetchReposByPage(link: string, page: number) {
+  return fetchReposByLink(`${link}?page=${page - 1}`);
 }
 
 function appendSortByLink(url: string) {
@@ -102,11 +100,12 @@ export function fetchReposFailure(err: Error): Action {
 
 // fetch repo
 
-export function fetchRepo(namespace: string, name: string) {
+export function fetchRepo(link: string, namespace: string, name: string) {
+  const repoUrl = link.endsWith("/") ? link : link + "/";
   return function(dispatch: any) {
     dispatch(fetchRepoPending(namespace, name));
     return apiClient
-      .get(`${REPOS_URL}/${namespace}/${name}`)
+      .get(`${repoUrl}${namespace}/${name}`)
       .then(response => response.json())
       .then(repository => {
         dispatch(fetchRepoSuccess(repository));
@@ -154,11 +153,15 @@ export function fetchRepoFailure(
 
 // create repo
 
-export function createRepo(repository: Repository, callback?: () => void) {
+export function createRepo(
+  link: string,
+  repository: Repository,
+  callback?: () => void
+) {
   return function(dispatch: any) {
     dispatch(createRepoPending());
     return apiClient
-      .post(REPOS_URL, repository, CONTENT_TYPE)
+      .post(link, repository, CONTENT_TYPE)
       .then(() => {
         dispatch(createRepoSuccess());
         if (callback) {
@@ -447,4 +450,13 @@ export function getDeleteRepoFailure(
   name: string
 ) {
   return getFailure(state, DELETE_REPO, namespace + "/" + name);
+}
+
+export function getPermissionsLink(
+  state: Object,
+  namespace: string,
+  name: string
+) {
+  const repo = getRepository(state, namespace, name);
+  return repo && repo._links ? repo._links.permissions.href : undefined;
 }

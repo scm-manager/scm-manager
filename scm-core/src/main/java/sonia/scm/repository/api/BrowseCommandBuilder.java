@@ -38,11 +38,11 @@ package sonia.scm.repository.api;
 import com.google.common.base.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.NotFoundException;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.FileObject;
-import sonia.scm.repository.FileObjectNameComparator;
 import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryCacheKey;
@@ -52,8 +52,6 @@ import sonia.scm.repository.spi.BrowseCommandRequest;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.Collections;
-import java.util.List;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -138,7 +136,7 @@ public final class BrowseCommandBuilder
    *
    * @throws IOException
    */
-  public BrowserResult getBrowserResult() throws IOException, RevisionNotFoundException {
+  public BrowserResult getBrowserResult() throws IOException, NotFoundException {
     BrowserResult result = null;
 
     if (disableCache)
@@ -180,14 +178,6 @@ public final class BrowseCommandBuilder
     if (!disablePreProcessors && (result != null))
     {
       preProcessorUtil.prepareForReturn(repository, result);
-
-      List<FileObject> fileObjects = result.getFiles();
-
-      if (fileObjects != null)
-      {
-        Collections.sort(fileObjects, FileObjectNameComparator.instance);
-        result.setFiles(fileObjects);
-      }
     }
 
     return result;

@@ -92,11 +92,12 @@ class BranchRoot extends React.Component<Props> {
   }
 
   renderBranchSelector = () => {
-    const { repository, branches } = this.props;
+    const { repository, branches, selected } = this.props;
     if (repository._links.branches) {
       return (
         <BranchSelector
           branches={branches}
+          selectedBranch={selected}
           selected={(b: Branch) => {
             this.branchSelected(b);
           }}

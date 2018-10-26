@@ -14,18 +14,20 @@ import {
   modifyConfigReset
 } from "../modules/config";
 import { connect } from "react-redux";
-import type { Config } from "@scm-manager/ui-types";
+import type { Config, Link } from "@scm-manager/ui-types";
 import ConfigForm from "../components/form/ConfigForm";
+import { getConfigLink } from "../../modules/indexResource";
 
 type Props = {
   loading: boolean,
   error: Error,
   config: Config,
   configUpdatePermission: boolean,
+  configLink: string,
 
   // dispatch functions
   modifyConfig: (config: Config, callback?: () => void) => void,
-  fetchConfig: void => void,
+  fetchConfig: (link: string) => void,
   configReset: void => void,
 
   // context objects
@@ -35,7 +37,7 @@ type Props = {
 class GlobalConfig extends React.Component<Props> {
   componentDidMount() {
     this.props.configReset();
-    this.props.fetchConfig();
+    this.props.fetchConfig(this.props.configLink);
   }
 
   modifyConfig = (config: Config) => {
@@ -75,8 +77,8 @@ class GlobalConfig extends React.Component<Props> {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchConfig: () => {
-      dispatch(fetchConfig());
+    fetchConfig: (link: string) => {
+      dispatch(fetchConfig(link));
     },
     modifyConfig: (config: Config, callback?: () => void) => {
       dispatch(modifyConfig(config, callback));
@@ -92,12 +94,14 @@ const mapStateToProps = state => {
   const error = getFetchConfigFailure(state) || getModifyConfigFailure(state);
   const config = getConfig(state);
   const configUpdatePermission = getConfigUpdatePermission(state);
+  const configLink = getConfigLink(state);
 
   return {
     loading,
     error,
     config,
-    configUpdatePermission
+    configUpdatePermission,
+    configLink
   };
 };
 

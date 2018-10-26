@@ -18,16 +18,18 @@ import {
   isCreateRepoPending
 } from "../modules/repos";
 import type { History } from "history";
+import { getRepositoriesLink } from "../../modules/indexResource";
 
 type Props = {
   repositoryTypes: RepositoryType[],
   typesLoading: boolean,
   createLoading: boolean,
   error: Error,
+  repoLink: string,
 
   // dispatch functions
   fetchRepositoryTypesIfNeeded: () => void,
-  createRepo: (Repository, callback: () => void) => void,
+  createRepo: (link: string, Repository, callback: () => void) => void,
   resetForm: () => void,
 
   // context props
@@ -55,7 +57,7 @@ class Create extends React.Component<Props> {
       error
     } = this.props;
 
-    const { t } = this.props;
+    const { t, repoLink } = this.props;
     return (
       <Page
         title={t("create.title")}
@@ -68,7 +70,7 @@ class Create extends React.Component<Props> {
           repositoryTypes={repositoryTypes}
           loading={createLoading}
           submitForm={repo => {
-            createRepo(repo, this.repoCreated);
+            createRepo(repoLink, repo, this.repoCreated);
           }}
         />
       </Page>
@@ -82,11 +84,13 @@ const mapStateToProps = state => {
   const createLoading = isCreateRepoPending(state);
   const error =
     getFetchRepositoryTypesFailure(state) || getCreateRepoFailure(state);
+  const repoLink = getRepositoriesLink(state);
   return {
     repositoryTypes,
     typesLoading,
     createLoading,
-    error
+    error,
+    repoLink
   };
 };
 
@@ -95,8 +99,12 @@ const mapDispatchToProps = dispatch => {
     fetchRepositoryTypesIfNeeded: () => {
       dispatch(fetchRepositoryTypesIfNeeded());
     },
-    createRepo: (repository: Repository, callback: () => void) => {
-      dispatch(createRepo(repository, callback));
+    createRepo: (
+      link: string,
+      repository: Repository,
+      callback: () => void
+    ) => {
+      dispatch(createRepo(link, repository, callback));
     },
     resetForm: () => {
       dispatch(createRepoReset());

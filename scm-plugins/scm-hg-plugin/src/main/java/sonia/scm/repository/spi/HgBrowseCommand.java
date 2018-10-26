@@ -35,8 +35,10 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Strings;
 import sonia.scm.repository.BrowserResult;
+import sonia.scm.repository.FileObject;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.spi.javahg.HgFileviewCommand;
 
@@ -45,6 +47,7 @@ import java.io.IOException;
 //~--- JDK imports ------------------------------------------------------------
 
 /**
+ * Utilizes the mercurial fileview extension in order to support mercurial repository browsing.
  *
  * @author Sebastian Sdorra
  */
@@ -94,16 +97,7 @@ public class HgBrowseCommand extends AbstractCommand implements BrowseCommand
       cmd.disableSubRepositoryDetection();
     }
 
-    BrowserResult result = new BrowserResult();
-
-    result.setFiles(cmd.execute());
-
-    if (!Strings.isNullOrEmpty(request.getRevision())) {
-      result.setRevision(request.getRevision());
-    } else {
-      result.setRevision("tip");
-    }
-
-    return result;
+    FileObject file = cmd.execute();
+    return new BrowserResult(MoreObjects.firstNonNull(request.getRevision(), "tip"), file);
   }
 }

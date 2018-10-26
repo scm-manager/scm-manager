@@ -2,11 +2,13 @@ package sonia.scm.it.utils;
 
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
+import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.user.User;
 import sonia.scm.web.VndMediaType;
 
+import java.net.ConnectException;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -52,7 +54,12 @@ public class ScmRequests {
     setUsername(username);
     setPassword(password);
     return new ChangePasswordResponse<>(applyPUTRequest(RestUtil.REST_BASE_URL.resolve("users/"+userPathParam+"/password").toString(), VndMediaType.PASSWORD_OVERWRITE, TestData.createPasswordChangeJson(password,newPassword)), null);
+  }
 
+  @SuppressWarnings("unchecked")
+  public ModelResponse requestPluginTranslations(String language) {
+    Response response = applyGETRequest(RestUtil.BASE_URL.resolve("locales/" + language + "/plugins.json").toString());
+    return new ModelResponse(response, null);
   }
 
   /**
@@ -75,10 +82,12 @@ public class ScmRequests {
    * @return the response of the GET request using the given link
    */
   private Response applyGETRequestFromLinkWithParams(Response response, String linkPropertyName, String params) {
-    return applyGETRequestWithQueryParams(response
+    String url = response
       .then()
       .extract()
-      .path(linkPropertyName), params);
+      .path(linkPropertyName);
+    Assert.assertNotNull("no url found for link " + linkPropertyName, url);
+    return applyGETRequestWithQueryParams(url, params);
   }
 
   /**
@@ -90,6 +99,11 @@ public class ScmRequests {
    */
   private Response applyGETRequestWithQueryParams(String url, String params) {
     LOG.info("GET {}", url);
+    if (username == null || password == null){
+      return RestAssured.given()
+        .when()
+        .get(url + params);
+    }
     return RestAssured.given()
       .auth().preemptive().basic(username, password)
       .when()
@@ -249,11 +263,11 @@ public class ScmRequests {
     }
 
     public ChangesetsResponse<SourcesResponse> requestFileHistory(String fileName) {
-      return new ChangesetsResponse<>(applyGETRequestFromLink(response, "_embedded.files.find{it.name=='" + fileName + "'}._links.history.href"), this);
+      return new ChangesetsResponse<>(applyGETRequestFromLink(response, "_embedded.children.find{it.name=='" + fileName + "'}._links.history.href"), this);
     }
 
     public SourcesResponse<SourcesResponse> requestSelf(String fileName) {
-      return new SourcesResponse<>(applyGETRequestFromLink(response, "_embedded.files.find{it.name=='" + fileName + "'}._links.self.href"), this);
+      return new SourcesResponse<>(applyGETRequestFromLink(response, "_embedded.children.find{it.name=='" + fileName + "'}._links.self.href"), this);
     }
   }
 

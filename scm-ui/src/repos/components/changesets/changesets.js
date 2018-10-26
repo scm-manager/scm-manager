@@ -4,18 +4,18 @@ export type Description = {
   message: string
 };
 
-export function parseDescription(description: string): Description {
-  let title = "";
+export function parseDescription(description?: string): Description {
+  const desc = description ? description : "";
+  const lineBreak = desc.indexOf("\n");
+
+  let title;
   let message = "";
 
-  if (description != null) {
-    const lineBreak = description.indexOf("\n");
-    if (lineBreak > 0) {
-      title = description.substring(0, lineBreak);
-      message = description.substring(lineBreak + 1);
-    } else {
-      title = description;
-    }
+  if (lineBreak > 0) {
+    title = desc.substring(0, lineBreak);
+    message = desc.substring(lineBreak + 1);
+  } else {
+    title = desc;
   }
 
   return {

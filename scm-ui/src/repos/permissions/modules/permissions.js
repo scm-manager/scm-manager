@@ -58,17 +58,19 @@ export const DELETE_PERMISSION_RESET = `${DELETE_PERMISSION}_${
   types.RESET_SUFFIX
 }`;
 
-const REPOS_URL = "repositories";
-const PERMISSIONS_URL = "permissions";
 const CONTENT_TYPE = "application/vnd.scmm-permission+json";
 
 // fetch permissions
 
-export function fetchPermissions(namespace: string, repoName: string) {
+export function fetchPermissions(
+  link: string,
+  namespace: string,
+  repoName: string
+) {
   return function(dispatch: any) {
     dispatch(fetchPermissionsPending(namespace, repoName));
     return apiClient
-      .get(`${REPOS_URL}/${namespace}/${repoName}/${PERMISSIONS_URL}`)
+      .get(link)
       .then(response => response.json())
       .then(permissions => {
         dispatch(fetchPermissionsSuccess(permissions, namespace, repoName));
@@ -215,6 +217,7 @@ export function modifyPermissionReset(namespace: string, repoName: string) {
 
 // create permission
 export function createPermission(
+  link: string,
   permission: PermissionCreateEntry,
   namespace: string,
   repoName: string,
@@ -223,11 +226,7 @@ export function createPermission(
   return function(dispatch: Dispatch) {
     dispatch(createPermissionPending(permission, namespace, repoName));
     return apiClient
-      .post(
-        `${REPOS_URL}/${namespace}/${repoName}/${PERMISSIONS_URL}`,
-        permission,
-        CONTENT_TYPE
-      )
+      .post(link, permission, CONTENT_TYPE)
       .then(response => {
         const location = response.headers.get("Location");
         return apiClient.get(location);
