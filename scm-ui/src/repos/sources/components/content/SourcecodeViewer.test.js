@@ -2,8 +2,7 @@
 import fetchMock from "fetch-mock";
 import {
   getContent,
-  getLanguage,
-  getProgrammingLanguage
+  getLanguage
 } from "./SourcecodeViewer";
 
 describe("get content", () => {
@@ -19,21 +18,6 @@ describe("get content", () => {
 
     getContent(CONTENT_URL).then(content => {
       expect(content).toBe("This is a testContent");
-      done();
-    });
-  });
-
-  it("should return language", done => {
-    let headers = {
-      "X-Programming-Language": "JAVA"
-    };
-
-    fetchMock.head("/api/v2" + CONTENT_URL, {
-      headers
-    });
-
-    getProgrammingLanguage(CONTENT_URL).then(content => {
-      expect(content.language).toBe("JAVA");
       done();
     });
   });

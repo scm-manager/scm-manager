@@ -33,8 +33,10 @@ type Props = {
 
 type State = {
   contentType: string,
+  language: string,
   error: Error,
-  hasError: boolean
+  hasError: boolean,
+  loaded: boolean
 };
 
 const styles = {
@@ -49,8 +51,10 @@ class Content extends React.Component<Props, State> {
 
     this.state = {
       contentType: "",
+      language: "",
       error: new Error(),
-      hasError: false
+      hasError: false,
+      loaded: false
     };
   }
 
@@ -62,12 +66,15 @@ class Content extends React.Component<Props, State> {
           this.setState({
             ...this.state,
             hasError: true,
-            error: result.error
+            error: result.error,
+            loaded: true
           });
         } else {
           this.setState({
             ...this.state,
-            contentType: result.type
+            contentType: result.type,
+            language: result.language,
+            loaded: true
           });
         }
       })
@@ -108,17 +115,15 @@ class Content extends React.Component<Props, State> {
   }
 
   showContent() {
-    const { file, revision } = this.props;
+    const { file } = this.props;
     const contentType = this.state.contentType;
-    if (contentType.startsWith("image")) {
+    const language = this.state.language;
+    if (contentType.startsWith("image/")) {
       return <ImageViewer file={file} />;
-    } else if (
-      contentType.startsWith("text") ||
-      contentType.startsWith("application")
-    ) {
-      return <SourcecodeViewer file={file} contentType={contentType} />;
+    } else if (language) {
+      return <SourcecodeViewer file={file} language={language}/>;
     } else {
-      return <DownloadViewer file={file} revision={revision} />;
+      return <DownloadViewer file={file} />;
     }
   }
 
@@ -126,8 +131,9 @@ class Content extends React.Component<Props, State> {
     const { file, classes } = this.props;
     const error = this.state.error;
     const hasError = this.state.hasError;
+    const loaded = this.state.loaded;
 
-    if (!file) {
+    if (!file || !loaded) {
       return <Loading />;
     }
     if (hasError) {
@@ -159,7 +165,10 @@ export function getContentType(url: string, state: any) {
   return apiClient
     .head(url)
     .then(response => {
-      return { type: response.headers.get("Content-Type") };
+      return {
+        type: response.headers.get("Content-Type"),
+        language: response.headers.get("X-Programming-Language")
+      };
     })
     .catch(err => {
       return { error: err };

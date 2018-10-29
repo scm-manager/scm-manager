@@ -10,12 +10,11 @@ import { arduinoLight } from "react-syntax-highlighter/styles/hljs";
 type Props = {
   t: string => string,
   file: File,
-  contentType: string
+  language: string
 };
 
 type State = {
   content: string,
-  language: string,
   error: Error,
   hasError: boolean,
   loaded: boolean
@@ -27,7 +26,6 @@ class SourcecodeViewer extends React.Component<Props, State> {
 
     this.state = {
       content: "",
-      language: "",
       error: new Error(),
       hasError: false,
       loaded: false
@@ -36,22 +34,6 @@ class SourcecodeViewer extends React.Component<Props, State> {
 
   componentDidMount() {
     const { file } = this.props;
-    getProgrammingLanguage(file._links.self.href)
-      .then(result => {
-        if (result.error) {
-          this.setState({
-            ...this.state,
-            hasError: true,
-            error: result.error
-          });
-        } else {
-          this.setState({
-            ...this.state,
-            language: result.language
-          });
-        }
-      })
-      .catch(err => {});
     getContent(file._links.self.href)
       .then(result => {
         if (result.error) {
@@ -77,7 +59,7 @@ class SourcecodeViewer extends React.Component<Props, State> {
     const error = this.state.error;
     const hasError = this.state.hasError;
     const loaded = this.state.loaded;
-    const language = this.state.language;
+    const language = this.props.language;
 
     if (hasError) {
       return <ErrorNotification error={error} />;
@@ -105,17 +87,6 @@ class SourcecodeViewer extends React.Component<Props, State> {
 
 export function getLanguage(language: string) {
   return language.toLowerCase();
-}
-
-export function getProgrammingLanguage(url: string) {
-  return apiClient
-    .head(url)
-    .then(response => {
-      return { language: response.headers.get("X-Programming-Language") };
-    })
-    .catch(err => {
-      return { error: err };
-    });
 }
 
 export function getContent(url: string) {

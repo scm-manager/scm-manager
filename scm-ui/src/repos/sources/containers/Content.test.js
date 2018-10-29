@@ -12,7 +12,8 @@ describe("get content type", () => {
 
   it("should return content", done => {
     let headers = {
-      "Content-Type": "application/text"
+      "Content-Type": "application/text",
+      "X-Programming-Language": "JAVA"
     };
 
     fetchMock.head("/api/v2" + CONTENT_URL, {
@@ -21,6 +22,7 @@ describe("get content type", () => {
 
     getContentType(CONTENT_URL).then(content => {
       expect(content.type).toBe("application/text");
+      expect(content.language).toBe("JAVA");
       done();
     });
   });
