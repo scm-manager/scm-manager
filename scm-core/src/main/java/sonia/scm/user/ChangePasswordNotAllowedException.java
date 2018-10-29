@@ -1,11 +1,19 @@
 package sonia.scm.user;
 
-public class ChangePasswordNotAllowedException extends RuntimeException {
+import sonia.scm.ContextEntry;
+import sonia.scm.ExceptionWithContext;
 
-  public static final String WRONG_USER_TYPE = "User of type %s are not allowed to change password";
+public class ChangePasswordNotAllowedException extends ExceptionWithContext {
 
-  public ChangePasswordNotAllowedException(String type) {
-    super(String.format(WRONG_USER_TYPE, type));
+  private static final String CODE = "9BR7qpDAe1";
+  public static final String WRONG_USER_TYPE = "User of given type are not allowed to change password";
+
+  public ChangePasswordNotAllowedException(ContextEntry.ContextBuilder context) {
+    super(context.build(), WRONG_USER_TYPE);
   }
 
+  @Override
+  public String getCode() {
+    return CODE;
+  }
 }
