@@ -16,6 +16,7 @@ import DownloadViewer from "../components/content/DownloadViewer";
 import FileSize from "../components/FileSize";
 import injectSheet from "react-jss";
 import classNames from "classnames";
+import RepositoryEntry from "../../components/list/RepositoryEntry";
 
 type Props = {
   t: string => string,
@@ -36,12 +37,16 @@ type State = {
   language: string,
   error: Error,
   hasError: boolean,
-  loaded: boolean
+  loaded: boolean,
+  collapsed: boolean
 };
 
 const styles = {
   toCenterContent: {
     display: "block"
+  },
+  pointer: {
+    cursor: "pointer"
   }
 };
 
@@ -54,7 +59,8 @@ class Content extends React.Component<Props, State> {
       language: "",
       error: new Error(),
       hasError: false,
-      loaded: false
+      loaded: false,
+      collapsed: false
     };
   }
 
@@ -81,8 +87,15 @@ class Content extends React.Component<Props, State> {
       .catch(err => {});
   }
 
+  toggleCollapse = () => {
+    this.setState(prevState => ({
+      collapsed: !prevState.collapsed
+    }));
+  };
+
   showHeader() {
-    const { file, revision } = this.props;
+    const { file, revision, classes } = this.props;
+    const collapsed = this.state.collapsed;
     const date = <DateFromNow date={file.lastModified} />;
     const description = file.description ? (
       <p>
@@ -97,21 +110,34 @@ class Content extends React.Component<Props, State> {
       </p>
     ) : null;
     const branch = "[" + revision + "]";
+    const icon = collapsed ? "fa-angle-right" : "fa-angle-down";
 
     return (
-      <div className="content">
-        <div className="columns">
-          <div className="column is-narrow">
-            <h4>{file.name}</h4>
-          </div>
-          <div className="column">{branch}</div>
-        </div>
+      <span className={classes.pointer} onClick={this.toggleCollapse}>
         <article className="media">
-          <div className="media-content">{description}</div>
-          <div className="media-right">{date}</div>
+          <div className="media-left">
+            <i className={classNames("fa", icon)} />
+          </div>
+          <div className="media-content">
+            <div className="content">{file.name}</div>
+          </div>
+          <div className="media-right">{date} + Size</div>
         </article>
-      </div>
+      </span>
     );
+  }
+
+  showMoreInformation() {
+    const collapsed = this.state.collapsed;
+    const { classes } = this.props;
+    if (!collapsed) {
+      return (
+        <div className={classNames("panel-block", classes.toCenterContent)}>
+          "Filename": ... "Path": ... "Branch" ...
+        </div>
+      );
+    }
+    return null;
   }
 
   showContent() {
@@ -121,7 +147,7 @@ class Content extends React.Component<Props, State> {
     if (contentType.startsWith("image/")) {
       return <ImageViewer file={file} />;
     } else if (language) {
-      return <SourcecodeViewer file={file} language={language}/>;
+      return <SourcecodeViewer file={file} language={language} />;
     } else {
       return <DownloadViewer file={file} />;
     }
@@ -142,16 +168,14 @@ class Content extends React.Component<Props, State> {
 
     const header = this.showHeader();
     const content = this.showContent();
+    const moreInformation = this.showMoreInformation();
     const fileSize = file.directory ? "" : <FileSize bytes={file.length} />;
 
     return (
       <div>
-        {header}
         <nav className="panel">
-          <article className="panel-heading media">
-            <div className="media-content">{file.name}</div>
-            <div className="media-right">{fileSize}</div>
-          </article>
+          <article className="panel-heading">{header}</article>
+          {moreInformation}
           <div className={classNames("panel-block", classes.toCenterContent)}>
             {content}
           </div>
