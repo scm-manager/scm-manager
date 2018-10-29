@@ -1,20 +1,23 @@
 // @flow
 import React from "react";
-import { translate } from "react-i18next";
+import { Interpolate, translate } from "react-i18next";
 import { apiClient } from "@scm-manager/ui-components";
 import { getSources } from "../modules/sources";
-import type {
-  Repository,
-  File
-} from "@scm-manager/ui-types";
+import type { Repository, File } from "@scm-manager/ui-types";
 import {
   ErrorNotification,
-  Loading
+  Loading,
+  DateFromNow
 } from "@scm-manager/ui-components";
 import { connect } from "react-redux";
 import ImageViewer from "../components/content/ImageViewer";
 import SourcecodeViewer from "../components/content/SourcecodeViewer";
 import DownloadViewer from "../components/content/DownloadViewer";
+import FileSize from "../components/FileSize";
+import AvatarWrapper from "../../components/changesets/AvatarWrapper";
+import classNames from "classnames";
+import AvatarImage from "../../components/changesets/AvatarImage";
+import ChangesetAuthor from "../../components/changesets/ChangesetAuthor";
 
 type Props = {
   t: string => string,
@@ -67,9 +70,47 @@ class Content extends React.Component<Props, State> {
       .catch(err => {});
   }
 
-  render() {
+  showHeader() {
+    const { file, revision, t } = this.props;
+    const date = <DateFromNow date={file.lastModified} />;
+    const fileSize = file.directory ? "" : <FileSize bytes={file.length} />;
+
+    return (
+      <div className="content">
+        <h4>{file.name}</h4>
+        <article className="media">
+          <div className="media-content">
+            <p>
+              {file.description.split("\n").map((item, key) => {
+                return (
+                  <span key={key}>
+                    {item}
+                    <br />
+                  </span>
+                );
+              })}
+            </p>
+          </div>
+          <div className="media-right">{date}</div>
+        </article>
+      </div>
+    );
+  }
+
+  showContent() {
     const { file, revision } = this.props;
     const contentType = this.state.contentType;
+    if (contentType.startsWith("image")) {
+      return <ImageViewer />;
+    } else if (contentType.startsWith("text")) {
+      return <SourcecodeViewer />;
+    } else {
+      return <DownloadViewer file={file} revision={revision} />;
+    }
+  }
+
+  render() {
+    const { file } = this.props;
     const error = this.state.error;
     const hasError = this.state.hasError;
 
@@ -79,15 +120,23 @@ class Content extends React.Component<Props, State> {
     if (hasError) {
       return <ErrorNotification error={error} />;
     }
-    if (contentType.startsWith("image")) {
-      return <ImageViewer />;
-    }
 
-    if (contentType.startsWith("text")) {
-      return <SourcecodeViewer />;
-    }
+    const header = this.showHeader();
+    const content = this.showContent();
+    const fileSize = file.directory ? "" : <FileSize bytes={file.length} />;
 
-    return <DownloadViewer file={file} revision={revision}/>;
+    return (
+      <div>
+        {header}
+        <nav className="panel">
+          <article className="panel-heading media">
+            <div className="media-content">{file.name}</div>
+            <div className="media-right">{fileSize}</div>
+          </article>
+          <div className="panel-block">{content}</div>
+        </nav>
+      </div>
+    );
   }
 }
 
