@@ -77,23 +77,24 @@ class Content extends React.Component<Props, State> {
   showHeader() {
     const { file } = this.props;
     const date = <DateFromNow date={file.lastModified} />;
+    const description = file.description ? (
+      <p>
+        {file.description.split("\n").map((item, key) => {
+          return (
+            <span key={key}>
+              {item}
+              <br />
+            </span>
+          );
+        })}
+      </p>
+    ) : null;
 
     return (
       <div className="content">
         <h4>{file.name}</h4>
         <article className="media">
-          <div className="media-content">
-            <p>
-              {file.description.split("\n").map((item, key) => {
-                return (
-                  <span key={key}>
-                    {item}
-                    <br />
-                  </span>
-                );
-              })}
-            </p>
-          </div>
+          <div className="media-content">{description}</div>
           <div className="media-right">{date}</div>
         </article>
       </div>
