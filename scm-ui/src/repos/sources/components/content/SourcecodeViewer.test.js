@@ -20,11 +20,20 @@ describe("get content", () => {
   });
 });
 
-describe("get correct language Type", () => {
+describe("get correct language type", () => {
   it("should return javascript", () => {
     expect(getLanguage("application/javascript")).toBe("javascript");
   });
   it("should return text", () => {
     expect(getLanguage("text/plain")).toBe("plain");
+  });
+  it("should return go", () => {
+    expect(getLanguage("text/x-go")).toBe("go");
+  });
+  it("should return java", () => {
+    expect(getLanguage("text/x-java-source")).toBe("java");
+  });
+  it("should return markdown", () => {
+    expect(getLanguage("text/x-web-markdown")).toBe("markdown");
   });
 });

@@ -86,10 +86,29 @@ class SourcecodeViewer extends React.Component<Props, State> {
 }
 
 export function getLanguage(contentType: string) {
-  return contentType.substring(
+  const language = contentType.substring(
     contentType.indexOf("/") + 1,
     contentType.length
   );
+
+  let languageType;
+
+  switch (language) {
+    case "x-go":
+      languageType = "go";
+      break;
+    case "x-java-source":
+      languageType = "java";
+      break;
+    case "x-web-markdown":
+      languageType = "markdown";
+      break;
+    default:
+      languageType = language;
+  }
+
+  console.log(languageType);
+  return languageType;
 }
 
 export function getContent(url: string) {
