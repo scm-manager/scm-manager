@@ -7,14 +7,15 @@ import { DownloadButton } from "@scm-manager/ui-components";
 type Props = {
   t: string => string,
   file: File,
-  revision: string
+  revision: string,
+  classes: any
 };
 
 class DownloadViewer extends React.Component<Props> {
   render() {
     const { t, file } = this.props;
     return (
-      <div>
+      <div className="has-text-centered">
         <DownloadButton
           url={file._links.self.href}
           displayName={t("sources.content.downloadButton")}

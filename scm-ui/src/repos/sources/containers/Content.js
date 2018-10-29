@@ -14,10 +14,8 @@ import ImageViewer from "../components/content/ImageViewer";
 import SourcecodeViewer from "../components/content/SourcecodeViewer";
 import DownloadViewer from "../components/content/DownloadViewer";
 import FileSize from "../components/FileSize";
-import AvatarWrapper from "../../components/changesets/AvatarWrapper";
+import injectSheet from "react-jss";
 import classNames from "classnames";
-import AvatarImage from "../../components/changesets/AvatarImage";
-import ChangesetAuthor from "../../components/changesets/ChangesetAuthor";
 
 type Props = {
   t: string => string,
@@ -37,6 +35,12 @@ type State = {
   contentType: string,
   error: Error,
   hasError: boolean
+};
+
+const styles = {
+  toCenterContent: {
+    display: "block"
+  }
 };
 
 class Content extends React.Component<Props, State> {
@@ -71,9 +75,8 @@ class Content extends React.Component<Props, State> {
   }
 
   showHeader() {
-    const { file, revision, t } = this.props;
+    const { file } = this.props;
     const date = <DateFromNow date={file.lastModified} />;
-    const fileSize = file.directory ? "" : <FileSize bytes={file.length} />;
 
     return (
       <div className="content">
@@ -110,7 +113,7 @@ class Content extends React.Component<Props, State> {
   }
 
   render() {
-    const { file } = this.props;
+    const { file, classes } = this.props;
     const error = this.state.error;
     const hasError = this.state.hasError;
 
@@ -133,7 +136,9 @@ class Content extends React.Component<Props, State> {
             <div className="media-content">{file.name}</div>
             <div className="media-right">{fileSize}</div>
           </article>
-          <div className="panel-block">{content}</div>
+          <div className={classNames("panel-block", classes.toCenterContent)}>
+            {content}
+          </div>
         </nav>
       </div>
     );
@@ -161,4 +166,6 @@ const mapStateToProps = (state: any, ownProps: Props) => {
   };
 };
 
-export default connect(mapStateToProps)(translate("repos")(Content));
+export default injectSheet(styles)(
+  connect(mapStateToProps)(translate("repos")(Content))
+);
