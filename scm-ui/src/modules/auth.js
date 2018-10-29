@@ -7,8 +7,8 @@ import { isPending } from "./pending";
 import { getFailure } from "./failure";
 import {
   callFetchIndexResources,
-  FETCH_INDEXRESOURCES_SUCCESS,
-  fetchIndexResources, fetchIndexResourcesPending,
+  fetchIndexResources,
+  fetchIndexResourcesPending,
   fetchIndexResourcesSuccess
 } from "./indexResource";
 
@@ -156,7 +156,7 @@ export const login = (
     return apiClient
       .post(loginLink, login_data)
       .then(response => {
-        dispatch(fetchIndexResourcesPending())
+        dispatch(fetchIndexResourcesPending());
         return callFetchIndexResources();
       })
       .then(response => {

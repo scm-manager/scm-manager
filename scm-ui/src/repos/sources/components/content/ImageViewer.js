@@ -14,7 +14,7 @@ class ImageViewer extends React.Component<Props> {
     return (
       <div className="has-text-centered">
         <figure>
-          <img src={file._links.self.href} />
+          <img src={file._links.self.href} alt={file._links.self.href} />
         </figure>
       </div>
     );

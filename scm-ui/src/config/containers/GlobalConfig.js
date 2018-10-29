@@ -14,7 +14,7 @@ import {
   modifyConfigReset
 } from "../modules/config";
 import { connect } from "react-redux";
-import type { Config, Link } from "@scm-manager/ui-types";
+import type { Config } from "@scm-manager/ui-types";
 import ConfigForm from "../components/form/ConfigForm";
 import { getConfigLink } from "../../modules/indexResource";
 

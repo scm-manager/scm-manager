@@ -107,7 +107,6 @@ export function getLanguage(contentType: string) {
       languageType = language;
   }
 
-  console.log(languageType);
   return languageType;
 }
 

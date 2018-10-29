@@ -95,27 +95,6 @@ const noDirectory: File = {
   _embedded: collection
 };
 
-const directory: File = {
-  name: "package.json",
-  path: "package.json",
-  directory: false,
-  description: "bump version",
-  length: 780,
-  lastModified: "2017-07-31T11:17:19Z",
-  revision: "abc",
-  _links: {
-    self: {
-      href:
-        "http://localhost:8081/scm/rest/api/v2/repositories/scm/core/content/76aae4bb4ceacf0e88938eb5b6832738b7d537b4/package.json"
-    },
-    history: {
-      href:
-        "http://localhost:8081/scm/rest/api/v2/repositories/scm/core/sources/history/76aae4bb4ceacf0e88938eb5b6832738b7d537b4/package.json"
-    }
-  },
-  _embedded: {}
-};
-
 describe("sources fetch", () => {
   const mockStore = configureMockStore([thunk]);
 

@@ -152,7 +152,6 @@ export function getContentType(url: string, state: any) {
   return apiClient
     .head(url)
     .then(response => {
-      console.log(response.headers.get("Content-Type"));
       return { type: response.headers.get("Content-Type") };
     })
     .catch(err => {
