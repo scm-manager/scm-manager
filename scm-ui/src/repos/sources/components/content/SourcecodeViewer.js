@@ -15,6 +15,7 @@ type Props = {
 
 type State = {
   content: string,
+  language: string,
   error: Error,
   hasError: boolean,
   loaded: boolean
@@ -26,6 +27,7 @@ class SourcecodeViewer extends React.Component<Props, State> {
 
     this.state = {
       content: "",
+      language: "",
       error: new Error(),
       hasError: false,
       loaded: false
@@ -34,6 +36,22 @@ class SourcecodeViewer extends React.Component<Props, State> {
 
   componentDidMount() {
     const { file } = this.props;
+    getProgrammingLanguage(file._links.self.href)
+      .then(result => {
+        if (result.error) {
+          this.setState({
+            ...this.state,
+            hasError: true,
+            error: result.error
+          });
+        } else {
+          this.setState({
+            ...this.state,
+            language: result.language
+          });
+        }
+      })
+      .catch(err => {});
     getContent(file._links.self.href)
       .then(result => {
         if (result.error) {
@@ -59,7 +77,7 @@ class SourcecodeViewer extends React.Component<Props, State> {
     const error = this.state.error;
     const hasError = this.state.hasError;
     const loaded = this.state.loaded;
-    const { contentType } = this.props;
+    const language = this.state.language;
 
     if (hasError) {
       return <ErrorNotification error={error} />;
@@ -76,7 +94,7 @@ class SourcecodeViewer extends React.Component<Props, State> {
     return (
       <SyntaxHighlighter
         showLineNumbers="true"
-        language={getLanguage(contentType)}
+        language={getLanguage(language)}
         style={arduinoLight}
       >
         {content}
@@ -85,37 +103,27 @@ class SourcecodeViewer extends React.Component<Props, State> {
   }
 }
 
-export function getLanguage(contentType: string) {
-  const language = contentType.substring(
-    contentType.indexOf("/") + 1,
-    contentType.length
-  );
+export function getLanguage(language: string) {
+  return language.toLowerCase();
+}
 
-  let languageType;
-
-  switch (language) {
-    case "x-go":
-      languageType = "go";
-      break;
-    case "x-java-source":
-      languageType = "java";
-      break;
-    case "x-web-markdown":
-      languageType = "markdown";
-      break;
-    default:
-      languageType = language;
-  }
-
-  return languageType;
+export function getProgrammingLanguage(url: string) {
+  return apiClient
+    .head(url)
+    .then(response => {
+      return { language: response.headers.get("Language") };
+    })
+    .catch(err => {
+      return { error: err };
+    });
 }
 
 export function getContent(url: string) {
   return apiClient
     .get(url)
     .then(response => response.text())
-    .then(content => {
-      return content;
+    .then(response => {
+      return response;
     })
     .catch(err => {
       return { error: err };

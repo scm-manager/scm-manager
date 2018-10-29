@@ -1,6 +1,10 @@
 //@flow
 import fetchMock from "fetch-mock";
-import { getContent, getLanguage } from "./SourcecodeViewer";
+import {
+  getContent,
+  getLanguage,
+  getProgrammingLanguage
+} from "./SourcecodeViewer";
 
 describe("get content", () => {
   const CONTENT_URL = "/repositories/scmadmin/TestRepo/content/testContent";
@@ -18,22 +22,28 @@ describe("get content", () => {
       done();
     });
   });
+
+  it("should return language", done => {
+    let headers = {
+      Language: "JAVA"
+    };
+
+    fetchMock.head("/api/v2" + CONTENT_URL, {
+      headers
+    });
+
+    getProgrammingLanguage(CONTENT_URL).then(content => {
+      expect(content.language).toBe("JAVA");
+      done();
+    });
+  });
 });
 
 describe("get correct language type", () => {
   it("should return javascript", () => {
-    expect(getLanguage("application/javascript")).toBe("javascript");
+    expect(getLanguage("JAVASCRIPT")).toBe("javascript");
   });
-  it("should return text", () => {
-    expect(getLanguage("text/plain")).toBe("plain");
-  });
-  it("should return go", () => {
-    expect(getLanguage("text/x-go")).toBe("go");
-  });
-  it("should return java", () => {
-    expect(getLanguage("text/x-java-source")).toBe("java");
-  });
-  it("should return markdown", () => {
-    expect(getLanguage("text/x-web-markdown")).toBe("markdown");
+  it("should return nothing for plain text", () => {
+    expect(getLanguage("")).toBe("");
   });
 });
