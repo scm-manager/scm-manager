@@ -1,6 +1,6 @@
 // @flow
 import React from "react";
-import { Interpolate, translate } from "react-i18next";
+import { translate } from "react-i18next";
 import { apiClient } from "@scm-manager/ui-components";
 import { getSources } from "../modules/sources";
 import type { Repository, File } from "@scm-manager/ui-types";
@@ -105,8 +105,11 @@ class Content extends React.Component<Props, State> {
     const contentType = this.state.contentType;
     if (contentType.startsWith("image")) {
       return <ImageViewer file={file} />;
-    } else if (contentType.startsWith("text")) {
-      return <SourcecodeViewer />;
+    } else if (
+      contentType.startsWith("text") ||
+      contentType.startsWith("application")
+    ) {
+      return <SourcecodeViewer file={file} contentType={contentType} />;
     } else {
       return <DownloadViewer file={file} revision={revision} />;
     }

@@ -20,7 +20,7 @@ describe("get content type", () => {
     });
 
     getContentType(CONTENT_URL).then(content => {
-      expect(content).toBe("application/text");
+      expect(content.type).toBe("application/text");
       done();
     });
   });
