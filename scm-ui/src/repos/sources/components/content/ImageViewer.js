@@ -1,28 +1,23 @@
 // @flow
 import React from "react";
 import { translate } from "react-i18next";
+import type { File } from "@scm-manager/ui-types";
 
 type Props = {
-  t: string => string
+  t: string => string,
+  file: File
 };
 
-type State = {
-  content: string
-};
-
-class ImageViewer extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-
-    this.state = {
-      content: ""
-    };
-  }
-
-  componentDidMount() {}
-
+class ImageViewer extends React.Component<Props> {
   render() {
-    return "ImageViewer";
+    const { file } = this.props;
+    return (
+      <div className="has-text-centered">
+        <figure>
+          <img src={file._links.self.href} />
+        </figure>
+      </div>
+    );
   }
 }
 

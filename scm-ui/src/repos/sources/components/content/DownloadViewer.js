@@ -6,9 +6,7 @@ import { DownloadButton } from "@scm-manager/ui-components";
 
 type Props = {
   t: string => string,
-  file: File,
-  revision: string,
-  classes: any
+  file: File
 };
 
 class DownloadViewer extends React.Component<Props> {

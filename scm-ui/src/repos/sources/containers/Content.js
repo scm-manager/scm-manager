@@ -104,7 +104,7 @@ class Content extends React.Component<Props, State> {
     const { file, revision } = this.props;
     const contentType = this.state.contentType;
     if (contentType.startsWith("image")) {
-      return <ImageViewer />;
+      return <ImageViewer file={file} />;
     } else if (contentType.startsWith("text")) {
       return <SourcecodeViewer />;
     } else {
