@@ -75,7 +75,7 @@ class Content extends React.Component<Props, State> {
   }
 
   showHeader() {
-    const { file } = this.props;
+    const { file, revision } = this.props;
     const date = <DateFromNow date={file.lastModified} />;
     const description = file.description ? (
       <p>
@@ -89,10 +89,16 @@ class Content extends React.Component<Props, State> {
         })}
       </p>
     ) : null;
+    const branch = "[" + revision + "]";
 
     return (
       <div className="content">
-        <h4>{file.name}</h4>
+        <div className="columns">
+          <div className="column is-narrow">
+            <h4>{file.name}</h4>
+          </div>
+          <div className="column">{branch}</div>
+        </div>
         <article className="media">
           <div className="media-content">{description}</div>
           <div className="media-right">{date}</div>
