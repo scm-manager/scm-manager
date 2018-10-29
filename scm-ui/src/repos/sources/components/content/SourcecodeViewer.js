@@ -111,7 +111,7 @@ export function getProgrammingLanguage(url: string) {
   return apiClient
     .head(url)
     .then(response => {
-      return { language: response.headers.get("Language") };
+      return { language: response.headers.get("X-Programming-Language") };
     })
     .catch(err => {
       return { error: err };

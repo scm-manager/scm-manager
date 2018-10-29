@@ -25,7 +25,7 @@ describe("get content", () => {
 
   it("should return language", done => {
     let headers = {
-      Language: "JAVA"
+      "X-Programming-Language": "JAVA"
     };
 
     fetchMock.head("/api/v2" + CONTENT_URL, {
