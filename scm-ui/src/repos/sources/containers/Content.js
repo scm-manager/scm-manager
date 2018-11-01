@@ -32,10 +32,9 @@ type Props = {
 type State = {
   contentType: string,
   language: string,
-  error: Error,
-  hasError: boolean,
   loaded: boolean,
-  collapsed: boolean
+  collapsed: boolean,
+  error?: Error,
 };
 
 const styles = {
@@ -54,8 +53,6 @@ class Content extends React.Component<Props, State> {
     this.state = {
       contentType: "",
       language: "",
-      error: new Error(),
-      hasError: false,
       loaded: false,
       collapsed: true
     };
@@ -68,7 +65,6 @@ class Content extends React.Component<Props, State> {
         if (result.error) {
           this.setState({
             ...this.state,
-            hasError: true,
             error: result.error,
             loaded: true
           });
@@ -179,13 +175,12 @@ class Content extends React.Component<Props, State> {
   render() {
     const { file, classes } = this.props;
     const error = this.state.error;
-    const hasError = this.state.hasError;
     const loaded = this.state.loaded;
 
     if (!file || !loaded) {
       return <Loading />;
     }
-    if (hasError) {
+    if (error) {
       return <ErrorNotification error={error} />;
     }
 
