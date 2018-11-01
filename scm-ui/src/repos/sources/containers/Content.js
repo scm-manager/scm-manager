@@ -1,7 +1,6 @@
 // @flow
 import React from "react";
 import { translate } from "react-i18next";
-import { apiClient } from "@scm-manager/ui-components";
 import { getSources } from "../modules/sources";
 import type { Repository, File } from "@scm-manager/ui-types";
 import {
@@ -17,19 +16,17 @@ import FileSize from "../components/FileSize";
 import injectSheet from "react-jss";
 import classNames from "classnames";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import { getContentType } from "./contentType";
 
 type Props = {
-  t: string => string,
   loading: boolean,
   error: Error,
   file: File,
   repository: Repository,
   revision: string,
   path: string,
-  // context props
   classes: any,
-  t: string => string,
-  match: any
+  t: string => string
 };
 
 type State = {
@@ -210,19 +207,6 @@ class Content extends React.Component<Props, State> {
   }
 }
 
-export function getContentType(url: string, state: any) {
-  return apiClient
-    .head(url)
-    .then(response => {
-      return {
-        type: response.headers.get("Content-Type"),
-        language: response.headers.get("X-Programming-Language")
-      };
-    })
-    .catch(err => {
-      return { error: err };
-    });
-}
 
 const mapStateToProps = (state: any, ownProps: Props) => {
   const { repository, revision, path } = ownProps;

@@ -1,6 +1,6 @@
 //@flow
 import fetchMock from "fetch-mock";
-import { getContentType } from "./Content";
+import { getContentType } from "./contentType";
 
 describe("get content type", () => {
   const CONTENT_URL = "/repositories/scmadmin/TestRepo/content/testContent";
