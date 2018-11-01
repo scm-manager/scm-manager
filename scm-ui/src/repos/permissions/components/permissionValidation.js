@@ -1,6 +1,7 @@
 // @flow
-import { validation } from "@scm-manager/ui-components";
-import type { PermissionCollection } from "@scm-manager/ui-types";
+import {validation} from "@scm-manager/ui-components";
+import type {PermissionCollection} from "@scm-manager/ui-types";
+
 const isNameValid = validation.isNameValid;
 
 export { isNameValid };

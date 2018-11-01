@@ -1,12 +1,9 @@
 // @flow
 import React from "react";
-import { translate } from "react-i18next";
-import { Checkbox, InputField, SubmitButton } from "@scm-manager/ui-components";
+import {translate} from "react-i18next";
+import {Checkbox, InputField, SubmitButton} from "@scm-manager/ui-components";
 import TypeSelector from "./TypeSelector";
-import type {
-  PermissionCollection,
-  PermissionCreateEntry
-} from "@scm-manager/ui-types";
+import type {PermissionCollection, PermissionCreateEntry} from "@scm-manager/ui-types";
 import * as validator from "./permissionValidation";
 
 type Props = {

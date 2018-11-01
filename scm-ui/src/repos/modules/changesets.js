@@ -1,19 +1,10 @@
 // @flow
 
-import {
-  FAILURE_SUFFIX,
-  PENDING_SUFFIX,
-  SUCCESS_SUFFIX
-} from "../../modules/types";
-import { apiClient, urls } from "@scm-manager/ui-components";
-import { isPending } from "../../modules/pending";
-import { getFailure } from "../../modules/failure";
-import type {
-  Action,
-  Branch,
-  PagedCollection,
-  Repository
-} from "@scm-manager/ui-types";
+import {FAILURE_SUFFIX, PENDING_SUFFIX, SUCCESS_SUFFIX} from "../../modules/types";
+import {apiClient, urls} from "@scm-manager/ui-components";
+import {isPending} from "../../modules/pending";
+import {getFailure} from "../../modules/failure";
+import type {Action, Branch, PagedCollection, Repository} from "@scm-manager/ui-types";
 
 export const FETCH_CHANGESETS = "scm/repos/FETCH_CHANGESETS";
 export const FETCH_CHANGESETS_PENDING = `${FETCH_CHANGESETS}_${PENDING_SUFFIX}`;

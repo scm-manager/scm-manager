@@ -1,8 +1,8 @@
 //@flow
 
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 import React from "react";
-import type { Repository, Changeset } from "@scm-manager/ui-types";
+import type {Changeset, Repository} from "@scm-manager/ui-types";
 
 type Props = {
   repository: Repository,
