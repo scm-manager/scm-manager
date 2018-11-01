@@ -24,14 +24,17 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.repository.api.DiffCommandBuilder;
+import sonia.scm.repository.api.DiffFormat;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.web.VndMediaType;
 
 import java.net.URISyntaxException;
+import java.util.Arrays;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -157,5 +160,35 @@ public class DiffResourceTest extends RepositoryTestBase {
     MockHttpResponse response = new MockHttpResponse();
     dispatcher.invoke(request, response);
     assertEquals(400, response.getStatus());
+  }
+
+  @Test
+  public void shouldAcceptDiffFormats() throws Exception {
+    when(diffCommandBuilder.setRevision(anyString())).thenReturn(diffCommandBuilder);
+    when(diffCommandBuilder.setFormat(any())).thenReturn(diffCommandBuilder);
+    when(diffCommandBuilder.retriveContent(any())).thenReturn(diffCommandBuilder);
+
+    Arrays.stream(DiffFormat.values()).map(DiffFormat::name).forEach(
+      this::assertRequestOk
+    );
+  }
+
+  private void assertRequestOk(String format) {
+    MockHttpRequest request = null;
+    try {
+      request = MockHttpRequest
+        .get(DIFF_URL + "revision?format=" + format)
+        .accept(VndMediaType.DIFF);
+    } catch (URISyntaxException e) {
+      e.printStackTrace();
+      fail("got exception: " + e);
+    }
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertThat(response.getStatus())
+      .withFailMessage("diff format from DiffFormat enum must be accepted: " + format)
+      .isEqualTo(200);
   }
 }

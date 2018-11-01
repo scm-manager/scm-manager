@@ -12,6 +12,7 @@ import sonia.scm.util.HttpUtil;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
+import javax.validation.constraints.Pattern;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -25,6 +26,9 @@ import javax.ws.rs.core.StreamingOutput;
 public class DiffRootResource {
 
   public static final String HEADER_CONTENT_DISPOSITION = "Content-Disposition";
+
+  private static final String DIFF_FORMAT_VALUES_REGEX = "NATIVE|GIT|UNIFIED";
+
   private final RepositoryServiceFactory serviceFactory;
 
   @Inject
@@ -53,7 +57,7 @@ public class DiffRootResource {
     @ResponseCode(code = 404, condition = "not found, no revision with the specified param for the repository available or repository not found"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
-  public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision , @DefaultValue("NATIVE") @QueryParam("format") String format ){
+  public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision , @Pattern(regexp = DIFF_FORMAT_VALUES_REGEX) @DefaultValue("NATIVE") @QueryParam("format") String format ){
     HttpUtil.checkForCRLFInjection(revision);
     DiffFormat diffFormat = DiffFormat.valueOf(format);
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
