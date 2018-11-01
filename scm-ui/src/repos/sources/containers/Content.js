@@ -16,7 +16,6 @@ import DownloadViewer from "../components/content/DownloadViewer";
 import FileSize from "../components/FileSize";
 import injectSheet from "react-jss";
 import classNames from "classnames";
-import RepositoryEntry from "../../components/list/RepositoryEntry";
 
 type Props = {
   t: string => string,

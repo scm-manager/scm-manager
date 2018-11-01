@@ -93,7 +93,7 @@ public class ContentResourceTest {
     Response response = contentResource.get(NAMESPACE, REPO_NAME, REV, "SomeGoCode.go");
     assertEquals(200, response.getStatus());
 
-    assertEquals("GO", response.getHeaderString("Language"));
+    assertEquals("GO", response.getHeaderString("X-Programming-Language"));
     assertEquals("text/x-go", response.getHeaderString("Content-Type"));
   }
 
@@ -104,7 +104,7 @@ public class ContentResourceTest {
     Response response = contentResource.get(NAMESPACE, REPO_NAME, REV, "Dockerfile");
     assertEquals(200, response.getStatus());
 
-    assertEquals("DOCKERFILE", response.getHeaderString("Language"));
+    assertEquals("DOCKERFILE", response.getHeaderString("X-Programming-Language"));
     assertEquals("text/plain", response.getHeaderString("Content-Type"));
   }
 
