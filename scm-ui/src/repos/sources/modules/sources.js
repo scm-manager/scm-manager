@@ -102,6 +102,20 @@ export default function reducer(
 
 // selectors
 
+export function isDirectory(
+  state: any,
+  repository: Repository,
+  revision: string,
+  path: string
+): boolean {
+  const currentFile = getSources(state, repository, revision, path);
+  if (currentFile && !currentFile.directory) {
+    return false;
+  } else {
+    return true; //also return true if no currentFile is found since it is the "default" path
+  }
+}
+
 export function getSources(
   state: any,
   repository: Repository,

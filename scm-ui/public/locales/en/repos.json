@@ -51,7 +51,11 @@
       "name": "Name",
       "length": "Length",
       "lastModified": "Last modified",
-      "description": "Description"
+      "description": "Description",
+      "branch": "Branch"
+    },
+    "content": {
+      "downloadButton": "Download"
     }
   },
   "changesets": {

@@ -22,7 +22,6 @@ import reducer, {
   getConfig,
   getConfigUpdatePermission
 } from "./config";
-import { getConfigLink } from "../../modules/indexResource";
 
 const CONFIG_URL = "/config";
 const URL = "/api/v2" + CONFIG_URL;

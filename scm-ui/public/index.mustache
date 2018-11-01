@@ -36,5 +36,9 @@
     </script>
     <script src="{{ contextPath }}/vendor.bundle.js"></script>
     <script src="{{ contextPath }}/scm-ui.bundle.js"></script>
+
+    {{#liveReloadURL}}
+    <script src="{{liveReloadURL}}"></script>
+    {{/liveReloadURL}}
   </body>
 </html>

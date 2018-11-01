@@ -1,6 +1,6 @@
 // @flow
 
-import type { Repository } from "@scm-manager/ui-types";
+import type { Repository, File } from "@scm-manager/ui-types";
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 import fetchMock from "fetch-mock";
@@ -14,7 +14,8 @@ import {
   isFetchSourcesPending,
   default as reducer,
   getSources,
-  fetchSourcesSuccess
+  fetchSourcesSuccess,
+  isDirectory
 } from "./sources";
 
 const sourcesUrl =
@@ -77,6 +78,21 @@ const collection = {
       }
     ]
   }
+};
+
+const noDirectory: File = {
+  name: "src",
+  path: "src",
+  directory: true,
+  length: 176,
+  revision: "abc",
+  _links: {
+    self: {
+      href:
+        "http://localhost:8081/scm/rest/api/v2/repositories/scm/core/sources/76aae4bb4ceacf0e88938eb5b6832738b7d537b4/src"
+    }
+  },
+  _embedded: collection
 };
 
 describe("sources fetch", () => {
@@ -168,6 +184,28 @@ describe("reducer tests", () => {
 });
 
 describe("selector tests", () => {
+  it("should return false if it is no directory", () => {
+    const state = {
+      sources: {
+        "scm/core/abc/src/main/package.json": {
+          noDirectory
+        }
+      }
+    };
+    expect(
+      isDirectory(state, repository, "abc", "src/main/package.json")
+    ).toBeFalsy();
+  });
+
+  it("should return true if it is directory", () => {
+    const state = {
+      sources: {
+        "scm/core/abc/src": noDirectory
+      }
+    };
+    expect(isDirectory(state, repository, "abc", "src")).toBe(true);
+  });
+
   it("should return null", () => {
     expect(getSources({}, repository)).toBeFalsy();
   });
@@ -181,7 +219,7 @@ describe("selector tests", () => {
     expect(getSources(state, repository)).toBe(collection);
   });
 
-  it("should return the source collection without revision and path", () => {
+  it("should return the source collection with revision and path", () => {
     const state = {
       sources: {
         "scm/core/abc/src/main": collection

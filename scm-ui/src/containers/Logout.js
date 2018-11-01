@@ -11,7 +11,7 @@ import {
   getLogoutFailure
 } from "../modules/auth";
 import { Loading, ErrorPage } from "@scm-manager/ui-components";
-import { fetchIndexResources, getLogoutLink } from "../modules/indexResource";
+import { getLogoutLink } from "../modules/indexResource";
 
 type Props = {
   authenticated: boolean,
