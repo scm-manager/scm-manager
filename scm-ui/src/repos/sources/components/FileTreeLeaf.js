@@ -49,14 +49,18 @@ class FileTreeLeaf extends React.Component<Props> {
         </Link>
       );
     }
-    return <FileIcon file={file} />;
+    return (
+      <Link to={this.createLink(file)}>
+        <FileIcon file={file} />
+      </Link>
+    );
   };
 
   createFileName = (file: File) => {
     if (file.directory) {
       return <Link to={this.createLink(file)}>{file.name}</Link>;
     }
-    return file.name;
+    return <Link to={this.createLink(file)}>{file.name}</Link>;
   };
 
   render() {

@@ -48,6 +48,14 @@ class ApiClient {
     return this.httpRequestWithJSONBody("PUT", url, contentType, payload);
   }
 
+  head(url: string) {
+    let options: RequestOptions = {
+      method: "HEAD"
+    };
+    options = Object.assign(options, fetchOptions);
+    return fetch(createUrl(url), options).then(handleStatusCode);
+  }
+
   delete(url: string): Promise<Response> {
     let options: RequestOptions = {
       method: "DELETE"
