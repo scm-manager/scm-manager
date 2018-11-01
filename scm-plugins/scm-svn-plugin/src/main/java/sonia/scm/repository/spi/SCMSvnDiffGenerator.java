@@ -51,15 +51,16 @@ import java.util.TreeMap;
  *
  * The folowing modifications are applied when using the git format
  * <ul>
- *     <il>
+ *     <li>
  *         remove the svn header
- *     </il>
- *     <il>
- *         use the git diff code 100644 on the new file and deleted file actions
- *     </il>
- *     <il>
- *         remove the labels in the added and deleted file headers eg. [+++ a/a.txt (revision 4)] will replaced with [+++ a/a.txt]
- *     </il>
+ *     </li>
+ *     <li>
+ *         use the git diff code 100644 on new file and deleted file actions
+ *     </li>
+ *     <li>
+ *         remove the labels in the added and deleted file headers, eg. <code>[+++ a/a.txt (revision 4)]</code> is
+ *         replaced with <code>[+++ a/a.txt]</code>
+ *     </li>
  * </ul>
  */
 @SuppressWarnings("all")
