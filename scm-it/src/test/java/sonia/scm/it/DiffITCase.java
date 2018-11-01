@@ -158,7 +158,7 @@ public class DiffITCase {
     RepositoryUtil.createAndCommitFile(svnRepositoryClient, ADMIN_USERNAME, fileName, "");
     RepositoryUtil.createAndCommitFile(gitRepositoryClient, ADMIN_USERNAME, fileName, "");
 
-    String fileContent = getFileContent("/diff/largefile/original/SvnDiffGenerator_forTest.java");
+    String fileContent = getFileContent("/diff/largefile/original/SvnDiffGenerator_forTest");
     String svnDiff = getDiff(RepositoryUtil.updateAndCommitFile(svnRepositoryClient, ADMIN_USERNAME, fileName, fileContent), svnRepositoryResponse);
     String gitDiff = getDiff(RepositoryUtil.updateAndCommitFile(gitRepositoryClient, ADMIN_USERNAME, fileName, fileContent), gitRepositoryResponse);
     assertThat(svnDiff)
