@@ -126,6 +126,7 @@ public class ScmContextListener extends GuiceResteasyBootstrapServletContextList
     ClassOverrides overrides = ClassOverrides.findOverrides(pluginLoader.getUberClassLoader());
     List<Module> moduleList = Lists.newArrayList();
 
+    moduleList.add(new ResteasyModule());
     moduleList.add(new ScmInitializerModule());
     moduleList.add(new ScmEventBusModule());
     moduleList.add(new EagerSingletonModule());

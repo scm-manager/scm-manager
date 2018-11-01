@@ -17,6 +17,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -45,6 +46,23 @@ public class TemplatingPushStateDispatcherTest {
 
   @Test
   public void testDispatch() throws IOException {
+    TemplatingPushStateDispatcher.IndexHtmlModel model = dispatch();
+    assertEquals("/scm", model.getContextPath());
+    assertNull(model.getLiveReloadURL());
+  }
+
+  @Test
+  public void testDispatchWithLiveReloadURL() throws IOException {
+    System.setProperty("livereload.url", "/livereload.js");
+    try {
+      TemplatingPushStateDispatcher.IndexHtmlModel model = dispatch();
+      assertEquals("/livereload.js", model.getLiveReloadURL());
+    } finally {
+      System.clearProperty("livereload.url");
+    }
+  }
+
+  private TemplatingPushStateDispatcher.IndexHtmlModel dispatch() throws IOException {
     when(request.getContextPath()).thenReturn("/scm");
     when(templateEngine.getTemplate(TemplatingPushStateDispatcher.TEMPLATE)).thenReturn(template);
 
@@ -59,8 +77,7 @@ public class TemplatingPushStateDispatcherTest {
 
     verify(template).execute(any(Writer.class), captor.capture());
 
-    TemplatingPushStateDispatcher.IndexHtmlModel model = (TemplatingPushStateDispatcher.IndexHtmlModel) captor.getValue();
-    assertEquals("/scm", model.getContextPath());
+    return (TemplatingPushStateDispatcher.IndexHtmlModel) captor.getValue();
   }
 
 }

@@ -57,5 +57,9 @@ public class TemplatingPushStateDispatcher implements PushStateDispatcher {
       return request.getContextPath();
     }
 
+    public String getLiveReloadURL() {
+      return System.getProperty("livereload.url");
+    }
+
   }
 }
