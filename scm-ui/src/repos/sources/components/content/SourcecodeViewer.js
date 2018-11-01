@@ -15,8 +15,7 @@ type Props = {
 
 type State = {
   content: string,
-  error: Error,
-  hasError: boolean,
+  error?: Error,
   loaded: boolean
 };
 
@@ -26,8 +25,6 @@ class SourcecodeViewer extends React.Component<Props, State> {
 
     this.state = {
       content: "",
-      error: new Error(),
-      hasError: false,
       loaded: false
     };
   }
@@ -39,7 +36,6 @@ class SourcecodeViewer extends React.Component<Props, State> {
         if (result.error) {
           this.setState({
             ...this.state,
-            hasError: true,
             error: result.error,
             loaded: true
           });
@@ -55,13 +51,10 @@ class SourcecodeViewer extends React.Component<Props, State> {
   }
 
   render() {
-    const content = this.state.content;
-    const error = this.state.error;
-    const hasError = this.state.hasError;
-    const loaded = this.state.loaded;
+    const { content, error, loaded } = this.state;
     const language = this.props.language;
 
-    if (hasError) {
+    if (error) {
       return <ErrorNotification error={error} />;
     }
 
