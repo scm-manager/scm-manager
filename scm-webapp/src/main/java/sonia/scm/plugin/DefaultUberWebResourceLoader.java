@@ -81,9 +81,9 @@ public class DefaultUberWebResourceLoader implements UberWebResourceLoader
     this.cache = createCache(stage);
   }
 
-  private final Cache<String, URL> createCache(Stage stage) {
+  private Cache<String, URL> createCache(Stage stage) {
     if (stage == Stage.DEVELOPMENT) {
-      return null;
+      return CacheBuilder.newBuilder().maximumSize(0).build(); // Disable caching
     }
     return CacheBuilder.newBuilder().build();
   }
@@ -121,16 +121,11 @@ public class DefaultUberWebResourceLoader implements UberWebResourceLoader
   }
 
   private URL getFromCache(String path) {
-    if (cache != null) {
-      return cache.getIfPresent(path);
-    }
-    return null;
+    return cache.getIfPresent(path);
   }
 
   private void addToCache(String path, URL url) {
-    if (cache != null) {
-      cache.put(path, url);
-    }
+    cache.put(path, url);
   }
 
   /**
