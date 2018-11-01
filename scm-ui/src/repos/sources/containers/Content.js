@@ -34,7 +34,7 @@ type State = {
   language: string,
   loaded: boolean,
   collapsed: boolean,
-  error?: Error,
+  error?: Error
 };
 
 const styles = {
@@ -129,20 +129,20 @@ class Content extends React.Component<Props, State> {
           <table className="table">
             <tbody>
               <tr>
-                <th>Path</th>
-                <th>{file.path}</th>
+                <td>Path</td>
+                <td>{file.path}</td>
               </tr>
               <tr>
-                <th>Branch</th>
-                <th>{revision}</th>
+                <td>Branch</td>
+                <td>{revision}</td>
               </tr>
               <tr>
-                <th>Last modified</th>
-                <th>{date}</th>
+                <td>Last modified</td>
+                <td>{date}</td>
               </tr>
               <tr>
-                <th>Description</th>
-                <th>{description}</th>
+                <td>Description</td>
+                <td>{description}</td>
               </tr>
             </tbody>
           </table>
@@ -154,12 +154,13 @@ class Content extends React.Component<Props, State> {
 
   showContent() {
     const { file, revision } = this.props;
-    const contentType = this.state.contentType;
-    const language = this.state.language;
+    const { contentType, language } = this.state;
     if (contentType.startsWith("image/")) {
       return <ImageViewer file={file} />;
     } else if (language) {
       return <SourcecodeViewer file={file} language={language} />;
+    } else if (contentType.startsWith("text/")) {
+      return <SourcecodeViewer file={file} language="none" />;
     } else {
       return (
         <ExtensionPoint
@@ -174,8 +175,7 @@ class Content extends React.Component<Props, State> {
 
   render() {
     const { file, classes } = this.props;
-    const error = this.state.error;
-    const loaded = this.state.loaded;
+    const { loaded, error } = this.state;
 
     if (!file || !loaded) {
       return <Loading />;
@@ -201,7 +201,6 @@ class Content extends React.Component<Props, State> {
     );
   }
 }
-
 
 const mapStateToProps = (state: any, ownProps: Props) => {
   const { repository, revision, path } = ownProps;
