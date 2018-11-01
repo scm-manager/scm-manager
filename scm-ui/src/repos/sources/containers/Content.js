@@ -16,7 +16,7 @@ import DownloadViewer from "../components/content/DownloadViewer";
 import FileSize from "../components/FileSize";
 import injectSheet from "react-jss";
 import classNames from "classnames";
-import { ExtensionPoint, binder } from "@scm-manager/ui-extensions";
+import { ExtensionPoint } from "@scm-manager/ui-extensions";
 
 type Props = {
   t: string => string,
@@ -68,7 +68,6 @@ class Content extends React.Component<Props, State> {
     const { file } = this.props;
     getContentType(file._links.self.href)
       .then(result => {
-        console.log(result);
         if (result.error) {
           this.setState({
             ...this.state,
