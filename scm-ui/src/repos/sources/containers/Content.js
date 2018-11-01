@@ -16,6 +16,7 @@ import DownloadViewer from "../components/content/DownloadViewer";
 import FileSize from "../components/FileSize";
 import injectSheet from "react-jss";
 import classNames from "classnames";
+import { ExtensionPoint, binder } from "@scm-manager/ui-extensions";
 
 type Props = {
   t: string => string,
@@ -67,6 +68,7 @@ class Content extends React.Component<Props, State> {
     const { file } = this.props;
     getContentType(file._links.self.href)
       .then(result => {
+        console.log(result);
         if (result.error) {
           this.setState({
             ...this.state,
@@ -95,8 +97,6 @@ class Content extends React.Component<Props, State> {
   showHeader() {
     const { file, classes } = this.props;
     const collapsed = this.state.collapsed;
-    const date = <DateFromNow date={file.lastModified} />;
-
     const icon = collapsed ? "fa-angle-right" : "fa-angle-down";
     const fileSize = file.directory ? "" : <FileSize bytes={file.length} />;
 
@@ -161,7 +161,7 @@ class Content extends React.Component<Props, State> {
   }
 
   showContent() {
-    const { file } = this.props;
+    const { file, revision } = this.props;
     const contentType = this.state.contentType;
     const language = this.state.language;
     if (contentType.startsWith("image/")) {
@@ -169,7 +169,14 @@ class Content extends React.Component<Props, State> {
     } else if (language) {
       return <SourcecodeViewer file={file} language={language} />;
     } else {
-      return <DownloadViewer file={file} />;
+      return (
+        <ExtensionPoint
+          name="repos.sources.view"
+          props={{ file, contentType, revision }}
+        >
+          <DownloadViewer file={file} />
+        </ExtensionPoint>
+      );
     }
   }
 
