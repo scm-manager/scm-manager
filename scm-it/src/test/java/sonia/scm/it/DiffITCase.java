@@ -154,7 +154,7 @@ public class DiffITCase {
 
   @Test
   public void svnLargeChangesDiffShouldBeConvertedToGitDiff() throws IOException, URISyntaxException {
-    String fileName = "SvnDiffGenerator_forTest.java";
+    String fileName = "SvnDiffGenerator_forTest";
     RepositoryUtil.createAndCommitFile(svnRepositoryClient, ADMIN_USERNAME, fileName, "");
     RepositoryUtil.createAndCommitFile(gitRepositoryClient, ADMIN_USERNAME, fileName, "");
 
@@ -164,13 +164,13 @@ public class DiffITCase {
     assertThat(svnDiff)
       .isEqualTo(getGitDiffWithoutIndexLine(gitDiff));
 
-    fileContent = getFileContent("/diff/largefile/modified/v1/SvnDiffGenerator_forTest.java");
+    fileContent = getFileContent("/diff/largefile/modified/v1/SvnDiffGenerator_forTest");
     svnDiff = getDiff(RepositoryUtil.updateAndCommitFile(svnRepositoryClient, ADMIN_USERNAME, fileName, fileContent), svnRepositoryResponse);
     gitDiff = getDiff(RepositoryUtil.updateAndCommitFile(gitRepositoryClient, ADMIN_USERNAME, fileName, fileContent), gitRepositoryResponse);
     assertThat(svnDiff)
       .isEqualTo(getGitDiffWithoutIndexLine(gitDiff));
 
-    fileContent = getFileContent("/diff/largefile/modified/v2/SvnDiffGenerator_forTest.java");
+    fileContent = getFileContent("/diff/largefile/modified/v2/SvnDiffGenerator_forTest");
     svnDiff = getDiff(RepositoryUtil.updateAndCommitFile(svnRepositoryClient, ADMIN_USERNAME, fileName, fileContent), svnRepositoryResponse);
     gitDiff = getDiff(RepositoryUtil.updateAndCommitFile(gitRepositoryClient, ADMIN_USERNAME, fileName, fileContent), gitRepositoryResponse);
     assertThat(svnDiff)
