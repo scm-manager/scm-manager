@@ -59,7 +59,7 @@ class Content extends React.Component<Props, State> {
       error: new Error(),
       hasError: false,
       loaded: false,
-      collapsed: false
+      collapsed: true
     };
   }
 
@@ -93,8 +93,31 @@ class Content extends React.Component<Props, State> {
   };
 
   showHeader() {
-    const { file, revision, classes } = this.props;
+    const { file, classes } = this.props;
     const collapsed = this.state.collapsed;
+    const date = <DateFromNow date={file.lastModified} />;
+
+    const icon = collapsed ? "fa-angle-right" : "fa-angle-down";
+    const fileSize = file.directory ? "" : <FileSize bytes={file.length} />;
+
+    return (
+      <span className={classes.pointer} onClick={this.toggleCollapse}>
+        <article className="media">
+          <div className="media-left">
+            <i className={classNames("fa", icon)} />
+          </div>
+          <div className="media-content">
+            <div className="content">{file.name}</div>
+          </div>
+          <p className="media-right">{fileSize}</p>
+        </article>
+      </span>
+    );
+  }
+
+  showMoreInformation() {
+    const collapsed = this.state.collapsed;
+    const { classes, file, revision } = this.props;
     const date = <DateFromNow date={file.lastModified} />;
     const description = file.description ? (
       <p>
@@ -108,31 +131,29 @@ class Content extends React.Component<Props, State> {
         })}
       </p>
     ) : null;
-    const branch = "[" + revision + "]";
-    const icon = collapsed ? "fa-angle-right" : "fa-angle-down";
-
-    return (
-      <span className={classes.pointer} onClick={this.toggleCollapse}>
-        <article className="media">
-          <div className="media-left">
-            <i className={classNames("fa", icon)} />
-          </div>
-          <div className="media-content">
-            <div className="content">{file.name}</div>
-          </div>
-          <div className="media-right">{date} + Size</div>
-        </article>
-      </span>
-    );
-  }
-
-  showMoreInformation() {
-    const collapsed = this.state.collapsed;
-    const { classes } = this.props;
     if (!collapsed) {
       return (
         <div className={classNames("panel-block", classes.toCenterContent)}>
-          "Filename": ... "Path": ... "Branch" ...
+          <table className="table">
+            <tbody>
+              <tr>
+                <th>Path</th>
+                <th>{file.path}</th>
+              </tr>
+              <tr>
+                <th>Branch</th>
+                <th>{revision}</th>
+              </tr>
+              <tr>
+                <th>Last modified</th>
+                <th>{date}</th>
+              </tr>
+              <tr>
+                <th>Description</th>
+                <th>{description}</th>
+              </tr>
+            </tbody>
+          </table>
         </div>
       );
     }
@@ -168,7 +189,6 @@ class Content extends React.Component<Props, State> {
     const header = this.showHeader();
     const content = this.showContent();
     const moreInformation = this.showMoreInformation();
-    const fileSize = file.directory ? "" : <FileSize bytes={file.length} />;
 
     return (
       <div>
