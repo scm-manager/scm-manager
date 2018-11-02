@@ -170,8 +170,7 @@ public abstract class AbstractRepositoryHandler<C extends RepositoryConfig>
   @Override
   public ImportHandler getImportHandler() throws NotSupportedFeatureException
   {
-    throw new NotSupportedFeatureException(
-      "import handler is not supported by this repository handler");
+    throw new NotSupportedFeatureException("import");
   }
 
   /**
