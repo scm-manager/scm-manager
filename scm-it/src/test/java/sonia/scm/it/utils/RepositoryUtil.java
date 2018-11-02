@@ -80,6 +80,11 @@ public class RepositoryUtil {
     return file;
   }
 
+  public static Changeset updateAndCommitFile(RepositoryClient repositoryClient, String username, String fileName, String content) throws IOException {
+     writeAndAddFile(repositoryClient, fileName, content);
+    return commit(repositoryClient, username, "updated " + fileName);
+  }
+
   public static Changeset removeAndCommitFile(RepositoryClient repositoryClient, String username, String fileName) throws IOException {
     deleteFileAndApplyRemoveCommand(repositoryClient, fileName);
     return commit(repositoryClient, username, "removed " + fileName);
@@ -102,11 +107,21 @@ public class RepositoryUtil {
     } else {
       path = thisName;
     }
-    repositoryClient.getAddCommand().add(path);
+    addFile(repositoryClient, path);
     return path;
   }
 
-  static Changeset commit(RepositoryClient repositoryClient, String username, String message) throws IOException {
+  public static Changeset addFileAndCommit(RepositoryClient repositoryClient, String path, String username, String message) throws IOException {
+    repositoryClient.getAddCommand().add(path);
+    return commit(repositoryClient, username, message);
+  }
+
+
+  public static void addFile(RepositoryClient repositoryClient, String path) throws IOException {
+    repositoryClient.getAddCommand().add(path);
+  }
+
+  public static Changeset commit(RepositoryClient repositoryClient, String username, String message) throws IOException {
     LOG.info("user: {} try to commit with message:  {}", username, message);
     Changeset changeset = repositoryClient.getCommitCommand().commit(new Person(username, username + "@scm-manager.org"), message);
     if (repositoryClient.isCommandSupported(ClientCommand.PUSH)) {

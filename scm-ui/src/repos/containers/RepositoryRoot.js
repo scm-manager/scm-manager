@@ -1,32 +1,19 @@
 //@flow
 import React from "react";
-import {
-  deleteRepo,
-  fetchRepo,
-  getFetchRepoFailure,
-  getRepository,
-  isFetchRepoPending
-} from "../modules/repos";
+import {deleteRepo, fetchRepo, getFetchRepoFailure, getRepository, isFetchRepoPending} from "../modules/repos";
 
-import { connect } from "react-redux";
-import { Route, Switch } from "react-router-dom";
-import type { Repository } from "@scm-manager/ui-types";
+import {connect} from "react-redux";
+import {Route, Switch} from "react-router-dom";
+import type {Repository} from "@scm-manager/ui-types";
 
-import {
-  ErrorPage,
-  Loading,
-  Navigation,
-  NavLink,
-  Page,
-  Section
-} from "@scm-manager/ui-components";
-import { translate } from "react-i18next";
+import {ErrorPage, Loading, Navigation, NavLink, Page, Section} from "@scm-manager/ui-components";
+import {translate} from "react-i18next";
 import RepositoryDetails from "../components/RepositoryDetails";
 import DeleteNavAction from "../components/DeleteNavAction";
 import Edit from "../containers/Edit";
 import Permissions from "../permissions/containers/Permissions";
 
-import type { History } from "history";
+import type {History} from "history";
 import EditNavLink from "../components/EditNavLink";
 
 import BranchRoot from "./ChangesetsRoot";
@@ -80,11 +67,6 @@ class RepositoryRoot extends React.Component<Props> {
     this.props.deleteRepo(repository, this.deleted);
   };
 
-  matchChangeset = (route: any) => {
-    const url = this.matchedUrl();
-    return route.location.pathname.match(`${url}/changeset/`);
-  };
-
   matches = (route: any) => {
     const url = this.matchedUrl();
     const regex = new RegExp(`${url}(/branches)?/?[^/]*/changesets?.*`);
@@ -125,7 +107,7 @@ class RepositoryRoot extends React.Component<Props> {
               />
               <Route
                 path={`${url}/permissions`}
-                render={props => (
+                render={() => (
                   <Permissions
                     namespace={this.props.repository.namespace}
                     repoName={this.props.repository.name}

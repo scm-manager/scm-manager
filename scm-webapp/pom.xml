@@ -103,7 +103,6 @@
       <groupId>javax</groupId>
       <artifactId>javaee-api</artifactId>
       <version>7.0</version>
-      <scope>test</scope>
     </dependency>
 
     <!-- rest api -->

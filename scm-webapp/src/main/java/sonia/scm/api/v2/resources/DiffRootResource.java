@@ -4,22 +4,29 @@ import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.NamespaceAndName;
+import sonia.scm.repository.api.DiffFormat;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
+import javax.validation.constraints.Pattern;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 
 public class DiffRootResource {
 
   public static final String HEADER_CONTENT_DISPOSITION = "Content-Disposition";
+
+  private static final String DIFF_FORMAT_VALUES_REGEX = "NATIVE|GIT|UNIFIED";
+
   private final RepositoryServiceFactory serviceFactory;
 
   @Inject
@@ -48,12 +55,14 @@ public class DiffRootResource {
     @ResponseCode(code = 404, condition = "not found, no revision with the specified param for the repository available or repository not found"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
-  public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision){
+  public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision , @Pattern(regexp = DIFF_FORMAT_VALUES_REGEX) @DefaultValue("NATIVE") @QueryParam("format") String format ){
     HttpUtil.checkForCRLFInjection(revision);
+    DiffFormat diffFormat = DiffFormat.valueOf(format);
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
       StreamingOutput responseEntry = output -> {
         repositoryService.getDiffCommand()
           .setRevision(revision)
+            .setFormat(diffFormat)
           .retriveContent(output);
       };
       return Response.ok(responseEntry)

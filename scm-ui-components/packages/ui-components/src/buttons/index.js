@@ -7,4 +7,4 @@ export { default as DeleteButton } from "./DeleteButton.js";
 export { default as EditButton } from "./EditButton.js";
 export { default as RemoveEntryOfTableButton } from "./RemoveEntryOfTableButton.js";
 export { default as SubmitButton } from "./SubmitButton.js";
-
+export {default as DownloadButton} from "./DownloadButton.js";

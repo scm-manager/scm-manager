@@ -1,6 +1,7 @@
 @import "bulma/sass/utilities/initial-variables";
 @import "bulma/sass/utilities/functions";
 
+
 $blue: #33B2E8;
 
 // $footer-background-color
@@ -52,3 +53,5 @@ $blue: #33B2E8;
 @import "@fortawesome/fontawesome-free/scss/fontawesome.scss";
 $fa-font-path: "webfonts";
 @import "@fortawesome/fontawesome-free/scss/solid.scss";
+
+@import "diff2html/dist/diff2html";

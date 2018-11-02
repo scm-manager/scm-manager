@@ -1,16 +1,12 @@
 // @flow
 
-import { apiClient } from "@scm-manager/ui-components";
+import type {Action} from "@scm-manager/ui-components";
+import {apiClient} from "@scm-manager/ui-components";
 import * as types from "../../../modules/types";
-import type { Action } from "@scm-manager/ui-components";
-import type {
-  PermissionCollection,
-  Permission,
-  PermissionCreateEntry
-} from "@scm-manager/ui-types";
-import { isPending } from "../../../modules/pending";
-import { getFailure } from "../../../modules/failure";
-import { Dispatch } from "redux";
+import type {Permission, PermissionCollection, PermissionCreateEntry} from "@scm-manager/ui-types";
+import {isPending} from "../../../modules/pending";
+import {getFailure} from "../../../modules/failure";
+import {Dispatch} from "redux";
 
 export const FETCH_PERMISSIONS = "scm/permissions/FETCH_PERMISSIONS";
 export const FETCH_PERMISSIONS_PENDING = `${FETCH_PERMISSIONS}_${

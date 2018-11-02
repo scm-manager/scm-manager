@@ -1,6 +1,6 @@
 //@flow
 import * as React from "react";
-import { Route, Link } from "react-router-dom";
+import {Link, Route} from "react-router-dom";
 
 // TODO mostly copy of PrimaryNavigationLink
 

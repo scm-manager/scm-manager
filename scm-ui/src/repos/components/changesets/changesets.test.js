@@ -1,6 +1,6 @@
 // @flow
 
-import { parseDescription } from "./changesets";
+import {parseDescription} from "./changesets";
 
 describe("parseDescription tests", () => {
   it("should return a description with title and message", () => {

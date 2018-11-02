@@ -1,6 +1,6 @@
 //@flow
 import * as React from "react";
-import { binder } from "@scm-manager/ui-extensions";
+import {binder} from "@scm-manager/ui-extensions";
 
 type Props = {
   children: React.Node

@@ -1,5 +1,5 @@
 //@flow
-import type { Links } from "./hal";
+import type {Links} from "./hal";
 
 export type Permission = PermissionCreateEntry & {
   _links: Links

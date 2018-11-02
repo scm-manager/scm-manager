@@ -13,6 +13,8 @@ import {
   isFetchBranchesPending
 } from "../../modules/branches";
 import { compose } from "redux";
+import Content from "./Content";
+import { fetchSources, isDirectory } from "../modules/sources";
 
 type Props = {
   repository: Repository,
@@ -22,9 +24,11 @@ type Props = {
   branches: Branch[],
   revision: string,
   path: string,
+  currentFileIsDirectory: boolean,
 
   // dispatch props
   fetchBranches: Repository => void,
+  fetchSources: (Repository, string, string) => void,
 
   // Context props
   history: any,
@@ -33,14 +37,26 @@ type Props = {
 
 class Sources extends React.Component<Props> {
   componentDidMount() {
-    const { fetchBranches, repository } = this.props;
+    const {
+      fetchBranches,
+      repository,
+      revision,
+      path,
+      fetchSources
+    } = this.props;
 
     fetchBranches(repository);
+    fetchSources(repository, revision, path);
+  }
+  componentDidUpdate(prevProps) {
+    const { fetchSources, repository, revision, path } = this.props;
+    if (prevProps.revision !== revision || prevProps.path !== path) {
+      fetchSources(repository, revision, path);
+    }
   }
 
   branchSelected = (branch?: Branch) => {
     const { baseUrl, history, path } = this.props;
-
     let url;
     if (branch) {
       if (path) {
@@ -55,7 +71,15 @@ class Sources extends React.Component<Props> {
   };
 
   render() {
-    const { repository, baseUrl, loading, error, revision, path } = this.props;
+    const {
+      repository,
+      baseUrl,
+      loading,
+      error,
+      revision,
+      path,
+      currentFileIsDirectory
+    } = this.props;
 
     if (error) {
       return <ErrorNotification error={error} />;
@@ -65,21 +89,28 @@ class Sources extends React.Component<Props> {
       return <Loading />;
     }
 
-    return (
-      <>
-        {this.renderBranchSelector()}
-        <FileTree
-          repository={repository}
-          revision={revision}
-          path={path}
-          baseUrl={baseUrl}
-        />
-      </>
-    );
+    if (currentFileIsDirectory) {
+      return (
+        <>
+          {this.renderBranchSelector()}
+          <FileTree
+            repository={repository}
+            revision={revision}
+            path={path}
+            baseUrl={baseUrl}
+          />
+        </>
+      );
+    } else {
+      return (
+        <Content repository={repository} revision={revision} path={path} />
+      );
+    }
   }
 
   renderBranchSelector = () => {
     const { repository, branches, revision } = this.props;
+
     if (repository._links.branches) {
       return (
         <BranchSelector
@@ -99,10 +130,12 @@ const mapStateToProps = (state, ownProps) => {
   const { repository, match } = ownProps;
   const { revision, path } = match.params;
   const decodedRevision = revision ? decodeURIComponent(revision) : undefined;
-
   const loading = isFetchBranchesPending(state, repository);
   const error = getFetchBranchesFailure(state, repository);
   const branches = getBranches(state, repository);
+  const currentFileIsDirectory = decodedRevision
+    ? isDirectory(state, repository, decodedRevision, path)
+    : isDirectory(state, repository, revision, path);
 
   return {
     repository,
@@ -110,7 +143,8 @@ const mapStateToProps = (state, ownProps) => {
     path,
     loading,
     error,
-    branches
+    branches,
+    currentFileIsDirectory
   };
 };
 
@@ -118,6 +152,9 @@ const mapDispatchToProps = dispatch => {
   return {
     fetchBranches: (repository: Repository) => {
       dispatch(fetchBranches(repository));
+    },
+    fetchSources: (repository: Repository, revision: string, path: string) => {
+      dispatch(fetchSources(repository, revision, path));
     }
   };
 };

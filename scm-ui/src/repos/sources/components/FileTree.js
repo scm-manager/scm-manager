@@ -7,7 +7,6 @@ import FileTreeLeaf from "./FileTreeLeaf";
 import type { Repository, File } from "@scm-manager/ui-types";
 import { ErrorNotification, Loading } from "@scm-manager/ui-components";
 import {
-  fetchSources,
   getFetchSourcesFailure,
   isFetchSourcesPending,
   getSources
@@ -29,7 +28,6 @@ type Props = {
   revision: string,
   path: string,
   baseUrl: string,
-  fetchSources: (Repository, string, string) => void,
   // context props
   classes: any,
   t: string => string,
@@ -49,19 +47,6 @@ export function findParent(path: string) {
 }
 
 class FileTree extends React.Component<Props> {
-  componentDidMount() {
-    const { fetchSources, repository, revision, path } = this.props;
-
-    fetchSources(repository, revision, path);
-  }
-
-  componentDidUpdate(prevProps) {
-    const { fetchSources, repository, revision, path } = this.props;
-    if (prevProps.revision !== revision || prevProps.path !== path) {
-      fetchSources(repository, revision, path);
-    }
-  }
-
   render() {
     const {
       error,
@@ -167,18 +152,7 @@ const mapStateToProps = (state: any, ownProps: Props) => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    fetchSources: (repository: Repository, revision: string, path: string) => {
-      dispatch(fetchSources(repository, revision, path));
-    }
-  };
-};
-
 export default compose(
   withRouter,
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
+  connect(mapStateToProps)
 )(injectSheet(styles)(translate("repos")(FileTree)));

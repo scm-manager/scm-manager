@@ -9,8 +9,7 @@ import {
   createGroup,
   isCreateGroupPending,
   getCreateGroupFailure,
-  createGroupReset,
-  getCreateGroupLink
+  createGroupReset
 } from "../modules/groups";
 import type { Group } from "@scm-manager/ui-types";
 import type { History } from "history";
