@@ -6,7 +6,9 @@ import sonia.scm.api.v2.resources.ExceptionWithContextToErrorDtoMapper;
 
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.Provider;
 
+@Provider
 public class NotSupportedFeatureExceptionMapper extends ContextualExceptionMapper<NotSupportedFeatureException> {
   @Inject
   public NotSupportedFeatureExceptionMapper(ExceptionWithContextToErrorDtoMapper mapper) {
