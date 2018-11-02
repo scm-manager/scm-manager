@@ -13,7 +13,7 @@ public class ContextualExceptionMapper<E extends ExceptionWithContext> implement
 
   private static final Logger logger = LoggerFactory.getLogger(ContextualExceptionMapper.class);
 
-  private ExceptionWithContextToErrorDtoMapper mapper;
+  private final ExceptionWithContextToErrorDtoMapper mapper;
 
   private final Response.Status status;
   private final Class<E> type;

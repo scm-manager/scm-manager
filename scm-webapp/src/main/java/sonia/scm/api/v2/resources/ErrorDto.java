@@ -17,7 +17,7 @@ public class ErrorDto {
   private List<ContextEntry> context;
   private String message;
 
-  @XmlElement(name = "violation")
+  @JsonInclude(JsonInclude.Include.NON_NULL)
   @XmlElementWrapper(name = "violations")
   private List<ConstraintViolationDto> violations;
 
