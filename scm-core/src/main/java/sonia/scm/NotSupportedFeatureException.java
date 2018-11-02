@@ -38,26 +38,10 @@ package sonia.scm;
  * @author Sebastian Sdorra
  * @version 1.6
  */
-public class NotSupportedFeatureException extends Exception
-{
+public class NotSupportedFeatureException extends Exception {
 
-  /** Field description */
   private static final long serialVersionUID = 256498734456613496L;
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   */
-  public NotSupportedFeatureException() {}
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param message
-   */
   public NotSupportedFeatureException(String message)
   {
     super(message);
