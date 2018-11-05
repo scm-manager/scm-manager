@@ -4,7 +4,8 @@ import type { User } from "@scm-manager/ui-types";
 import {
   InputField,
   SubmitButton,
-  Notification
+  Notification,
+  ErrorNotification
 } from "@scm-manager/ui-components";
 import * as userValidator from "./userValidation";
 import { translate } from "react-i18next";
@@ -45,28 +46,46 @@ class SetUserPassword extends React.Component<Props, State> {
     );
   };
 
+  setLoadingState = () => {
+    this.setState({
+      ...this.state,
+      loading: true
+    });
+  };
+
+  setErrorState = (error: Error) => {
+    this.setState({
+      ...this.state,
+      error: error,
+      loading: false
+    });
+  };
+
+  setSuccessfulState = () => {
+    this.setState({
+      ...this.state,
+      loading: false,
+      passwordChanged: true,
+      password: "",
+      validatePassword: "",
+      validatePasswordError: false,
+      passwordValidationError: false
+    });
+  };
+
   submit = (event: Event) => {
     //TODO: set loading
     event.preventDefault();
     if (this.isValid()) {
       const { user } = this.props;
       const { password } = this.state;
+      this.setLoadingState();
       updatePassword(user._links.password.href, password)
         .then(result => {
-          if (result.error || result.status !== 204) {
-            this.setState({
-              ...this.state,
-              error: result.error,
-              loading: false
-            });
+          if (result.error) {
+            this.setErrorState(result.error);
           } else {
-            this.setState({
-              ...this.state,
-              loading: false,
-              passwordChanged: true,
-              password: "",
-              validatePassword: ""
-            });
+            this.setSuccessfulState();
           }
         })
         .catch(err => {});
@@ -74,24 +93,26 @@ class SetUserPassword extends React.Component<Props, State> {
   };
 
   render() {
-    const { user, t } = this.props;
-    const { loading, passwordChanged } = this.state;
+    const { t } = this.props;
+    const { loading, passwordChanged, error } = this.state;
 
-    let passwordChangedSuccessful = null;
+    let message = null;
 
     if (passwordChanged) {
-      passwordChangedSuccessful = (
+      message = (
         <Notification
           type={"success"}
           children={t("password.set-password-successful")}
           onClose={() => this.onClose()}
         />
       );
+    } else if (error) {
+      message = <ErrorNotification error={error} />;
     }
 
     return (
       <form onSubmit={this.submit}>
-        {passwordChangedSuccessful}
+        {message}
         <InputField
           label={t("user.password")}
           type="password"

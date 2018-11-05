@@ -6,9 +6,7 @@ export function updatePassword(url: string, password: string) {
   return apiClient
     .put(url, { newPassword: password }, CONTENT_TYPE_USER)
     .then(response => {
-      return {
-        status: response.status
-      };
+      return response;
     })
     .catch(err => {
       return { error: err };
