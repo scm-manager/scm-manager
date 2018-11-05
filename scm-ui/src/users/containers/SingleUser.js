@@ -24,9 +24,14 @@ import {
   getDeleteUserFailure
 } from "../modules/users";
 
-import { DeleteUserNavLink, EditUserNavLink } from "./../components/navLinks";
+import {
+  DeleteUserNavLink,
+  EditUserNavLink,
+  SetPasswordNavLink
+} from "./../components/navLinks";
 import { translate } from "react-i18next";
 import { getUsersLink } from "../../modules/indexResource";
+import SetUserPassword from "../components/SetUserPassword";
 
 type Props = {
   name: string,
@@ -97,6 +102,10 @@ class SingleUser extends React.Component<Props> {
               path={`${url}/edit`}
               component={() => <EditUser user={user} />}
             />
+            <Route
+              path={`${url}/password`}
+              component={() => <SetUserPassword user={user} />}
+            />
           </div>
           <div className="column">
             <Navigation>
@@ -106,6 +115,10 @@ class SingleUser extends React.Component<Props> {
                   label={t("single-user.information-label")}
                 />
                 <EditUserNavLink user={user} editUrl={`${url}/edit`} />
+                <SetPasswordNavLink
+                  user={user}
+                  passwordUrl={`${url}/password`}
+                />
               </Section>
               <Section label={t("single-user.actions-label")}>
                 <DeleteUserNavLink user={user} deleteUser={this.deleteUser} />

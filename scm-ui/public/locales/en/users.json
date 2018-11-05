@@ -29,6 +29,9 @@
   "edit-user-button": {
     "label": "Edit"
   },
+  "set-password-button": {
+    "label": "Set password"
+  },
   "user-form": {
     "submit": "Submit"
   },
