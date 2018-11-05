@@ -20,7 +20,8 @@ import reducer, {
   FETCH_USERS_FAILURE,
   FETCH_USERS_PENDING,
   FETCH_USERS_SUCCESS,
-  fetchUser,
+  fetchUserByLink,
+  fetchUserByName,
   fetchUserSuccess,
   getFetchUserFailure,
   fetchUsers,
@@ -166,11 +167,37 @@ describe("users fetch()", () => {
     });
   });
 
-  it("should sucessfully fetch single user", () => {
+  it("should sucessfully fetch single user by name", () => {
     fetchMock.getOnce(USERS_URL + "/zaphod", userZaphod);
 
     const store = mockStore({});
-    return store.dispatch(fetchUser(URL, "zaphod")).then(() => {
+    return store.dispatch(fetchUserByName(URL, "zaphod")).then(() => {
+      const actions = store.getActions();
+      expect(actions[0].type).toEqual(FETCH_USER_PENDING);
+      expect(actions[1].type).toEqual(FETCH_USER_SUCCESS);
+      expect(actions[1].payload).toBeDefined();
+    });
+  });
+
+  it("should fail fetching single user by name on HTTP 500", () => {
+    fetchMock.getOnce(USERS_URL + "/zaphod", {
+      status: 500
+    });
+
+    const store = mockStore({});
+    return store.dispatch(fetchUserByName(URL, "zaphod")).then(() => {
+      const actions = store.getActions();
+      expect(actions[0].type).toEqual(FETCH_USER_PENDING);
+      expect(actions[1].type).toEqual(FETCH_USER_FAILURE);
+      expect(actions[1].payload).toBeDefined();
+    });
+  });
+
+  it("should sucessfully fetch single user", () => {
+    fetchMock.getOnce("http://localhost:8081/api/v2/users/zaphod", userZaphod);
+
+    const store = mockStore({});
+    return store.dispatch(fetchUserByLink(userZaphod)).then(() => {
       const actions = store.getActions();
       expect(actions[0].type).toEqual(FETCH_USER_PENDING);
       expect(actions[1].type).toEqual(FETCH_USER_SUCCESS);
@@ -179,12 +206,12 @@ describe("users fetch()", () => {
   });
 
   it("should fail fetching single user on HTTP 500", () => {
-    fetchMock.getOnce(USERS_URL + "/zaphod", {
+    fetchMock.getOnce("http://localhost:8081/api/v2/users/zaphod", {
       status: 500
     });
 
     const store = mockStore({});
-    return store.dispatch(fetchUser(URL, "zaphod")).then(() => {
+    return store.dispatch(fetchUserByLink(userZaphod)).then(() => {
       const actions = store.getActions();
       expect(actions[0].type).toEqual(FETCH_USER_PENDING);
       expect(actions[1].type).toEqual(FETCH_USER_FAILURE);
@@ -245,13 +272,15 @@ describe("users fetch()", () => {
     fetchMock.putOnce("http://localhost:8081/api/v2/users/zaphod", {
       status: 204
     });
+    fetchMock.getOnce("http://localhost:8081/api/v2/users/zaphod", userZaphod);
 
     const store = mockStore({});
     return store.dispatch(modifyUser(userZaphod)).then(() => {
       const actions = store.getActions();
-      expect(actions.length).toBe(2);
+      expect(actions.length).toBe(3);
       expect(actions[0].type).toEqual(MODIFY_USER_PENDING);
       expect(actions[1].type).toEqual(MODIFY_USER_SUCCESS);
+      expect(actions[2].type).toEqual(FETCH_USER_PENDING);
     });
   });
 

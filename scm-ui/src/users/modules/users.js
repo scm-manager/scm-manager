@@ -87,12 +87,20 @@ export function fetchUsersFailure(url: string, error: Error): Action {
 }
 
 //fetch user
-export function fetchUser(link: string, name: string) {
+export function fetchUserByName(link: string, name: string) {
   const userUrl = link.endsWith("/") ? link + name : link + "/" + name;
+  return fetchUser(userUrl, name);
+}
+
+export function fetchUserByLink(user: User) {
+  return fetchUser(user._links.self.href, user.name);
+}
+
+function fetchUser(link: string, name: string) {
   return function(dispatch: any) {
     dispatch(fetchUserPending(name));
     return apiClient
-      .get(userUrl)
+      .get(link)
       .then(response => {
         return response.json();
       })
@@ -194,6 +202,9 @@ export function modifyUser(user: User, callback?: () => void) {
         if (callback) {
           callback();
         }
+      })
+      .then(() => {
+        dispatch(fetchUserByLink(user));
       })
       .catch(err => {
         dispatch(modifyUserFailure(user, err));
