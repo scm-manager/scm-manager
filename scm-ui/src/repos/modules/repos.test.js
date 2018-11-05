@@ -15,7 +15,8 @@ import reducer, {
   fetchReposByLink,
   fetchReposByPage,
   FETCH_REPO,
-  fetchRepo,
+  fetchRepoByLink,
+  fetchRepoByName,
   FETCH_REPO_PENDING,
   FETCH_REPO_SUCCESS,
   FETCH_REPO_FAILURE,
@@ -323,7 +324,7 @@ describe("repos fetch", () => {
     });
   });
 
-  it("should successfully fetch repo slarti/fjords", () => {
+  it("should successfully fetch repo slarti/fjords by name", () => {
     fetchMock.getOnce(REPOS_URL + "/slarti/fjords", slartiFjords);
 
     const expectedActions = [
@@ -343,18 +344,66 @@ describe("repos fetch", () => {
     ];
 
     const store = mockStore({});
-    return store.dispatch(fetchRepo(URL, "slarti", "fjords")).then(() => {
+    return store.dispatch(fetchRepoByName(URL, "slarti", "fjords")).then(() => {
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
 
-  it("should dispatch FETCH_REPO_FAILURE, it the request for slarti/fjords fails", () => {
+  it("should dispatch FETCH_REPO_FAILURE, if the request for slarti/fjords by name fails", () => {
     fetchMock.getOnce(REPOS_URL + "/slarti/fjords", {
       status: 500
     });
 
     const store = mockStore({});
-    return store.dispatch(fetchRepo(URL, "slarti", "fjords")).then(() => {
+    return store.dispatch(fetchRepoByName(URL, "slarti", "fjords")).then(() => {
+      const actions = store.getActions();
+      expect(actions[0].type).toEqual(FETCH_REPO_PENDING);
+      expect(actions[1].type).toEqual(FETCH_REPO_FAILURE);
+      expect(actions[1].payload.namespace).toBe("slarti");
+      expect(actions[1].payload.name).toBe("fjords");
+      expect(actions[1].payload.error).toBeDefined();
+      expect(actions[1].itemId).toBe("slarti/fjords");
+    });
+  });
+
+  it("should successfully fetch repo slarti/fjords", () => {
+    fetchMock.getOnce(
+      "http://localhost:8081/api/v2/repositories/slarti/fjords",
+      slartiFjords
+    );
+
+    const expectedActions = [
+      {
+        type: FETCH_REPO_PENDING,
+        payload: {
+          namespace: "slarti",
+          name: "fjords"
+        },
+        itemId: "slarti/fjords"
+      },
+      {
+        type: FETCH_REPO_SUCCESS,
+        payload: slartiFjords,
+        itemId: "slarti/fjords"
+      }
+    ];
+
+    const store = mockStore({});
+    return store.dispatch(fetchRepoByLink(slartiFjords)).then(() => {
+      expect(store.getActions()).toEqual(expectedActions);
+    });
+  });
+
+  it("should dispatch FETCH_REPO_FAILURE, it the request for slarti/fjords fails", () => {
+    fetchMock.getOnce(
+      "http://localhost:8081/api/v2/repositories/slarti/fjords",
+      {
+        status: 500
+      }
+    );
+
+    const store = mockStore({});
+    return store.dispatch(fetchRepoByLink(slartiFjords)).then(() => {
       const actions = store.getActions();
       expect(actions[0].type).toEqual(FETCH_REPO_PENDING);
       expect(actions[1].type).toEqual(FETCH_REPO_FAILURE);
@@ -485,6 +534,12 @@ describe("repos fetch", () => {
     fetchMock.putOnce(slartiFjords._links.update.href, {
       status: 204
     });
+    fetchMock.getOnce(
+      "http://localhost:8081/api/v2/repositories/slarti/fjords",
+      {
+        status: 500
+      }
+    );
 
     let editedFjords = { ...slartiFjords };
     editedFjords.description = "coast of africa";
@@ -495,6 +550,7 @@ describe("repos fetch", () => {
       const actions = store.getActions();
       expect(actions[0].type).toEqual(MODIFY_REPO_PENDING);
       expect(actions[1].type).toEqual(MODIFY_REPO_SUCCESS);
+      expect(actions[2].type).toEqual(FETCH_REPO_PENDING);
     });
   });
 
@@ -502,6 +558,12 @@ describe("repos fetch", () => {
     fetchMock.putOnce(slartiFjords._links.update.href, {
       status: 204
     });
+    fetchMock.getOnce(
+      "http://localhost:8081/api/v2/repositories/slarti/fjords",
+      {
+        status: 500
+      }
+    );
 
     let editedFjords = { ...slartiFjords };
     editedFjords.description = "coast of africa";
@@ -517,6 +579,7 @@ describe("repos fetch", () => {
       const actions = store.getActions();
       expect(actions[0].type).toEqual(MODIFY_REPO_PENDING);
       expect(actions[1].type).toEqual(MODIFY_REPO_SUCCESS);
+      expect(actions[2].type).toEqual(FETCH_REPO_PENDING);
       expect(called).toBe(true);
     });
   });

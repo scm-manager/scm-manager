@@ -2,7 +2,7 @@
 import React from "react";
 import {
   deleteRepo,
-  fetchRepo,
+  fetchRepoByName,
   getFetchRepoFailure,
   getRepository,
   isFetchRepoPending
@@ -45,7 +45,7 @@ type Props = {
   repoLink: string,
 
   // dispatch functions
-  fetchRepo: (link: string, namespace: string, name: string) => void,
+  fetchRepoByName: (link: string, namespace: string, name: string) => void,
   deleteRepo: (repository: Repository, () => void) => void,
 
   // context props
@@ -56,9 +56,9 @@ type Props = {
 
 class RepositoryRoot extends React.Component<Props> {
   componentDidMount() {
-    const { fetchRepo, namespace, name, repoLink } = this.props;
+    const { fetchRepoByName, namespace, name, repoLink } = this.props;
 
-    fetchRepo(repoLink, namespace, name);
+    fetchRepoByName(repoLink, namespace, name);
   }
 
   stripEndingSlash = (url: string) => {
@@ -227,8 +227,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchRepo: (link: string, namespace: string, name: string) => {
-      dispatch(fetchRepo(link, namespace, name));
+    fetchRepoByName: (link: string, namespace: string, name: string) => {
+      dispatch(fetchRepoByName(link, namespace, name));
     },
     deleteRepo: (repository: Repository, callback: () => void) => {
       dispatch(deleteRepo(repository, callback));
