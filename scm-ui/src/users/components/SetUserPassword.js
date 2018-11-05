@@ -1,9 +1,14 @@
 // @flow
 import React from "react";
 import type { User } from "@scm-manager/ui-types";
-import { InputField, SubmitButton } from "@scm-manager/ui-components";
+import {
+  InputField,
+  SubmitButton,
+  Notification
+} from "@scm-manager/ui-components";
 import * as userValidator from "./userValidation";
 import { translate } from "react-i18next";
+import { updatePassword } from "./updatePassword";
 
 type Props = {
   user: User,
@@ -15,7 +20,9 @@ type State = {
   loading: boolean,
   passwordValidationError: boolean,
   validatePasswordError: boolean,
-  validatePassword: string
+  validatePassword: string,
+  error?: Error,
+  passwordChanged: boolean
 };
 
 class SetUserPassword extends React.Component<Props, State> {
@@ -27,7 +34,8 @@ class SetUserPassword extends React.Component<Props, State> {
       loading: false,
       passwordValidationError: false,
       validatePasswordError: false,
-      validatePassword: ""
+      validatePassword: "",
+      passwordChanged: false
     };
   }
 
@@ -38,22 +46,57 @@ class SetUserPassword extends React.Component<Props, State> {
   };
 
   submit = (event: Event) => {
+    //TODO: set loading
     event.preventDefault();
     if (this.isValid()) {
-      //TODO:hier update pw!
+      const { user } = this.props;
+      const { password } = this.state;
+      updatePassword(user._links.password.href, password)
+        .then(result => {
+          if (result.error || result.status !== 204) {
+            this.setState({
+              ...this.state,
+              error: result.error,
+              loading: false
+            });
+          } else {
+            this.setState({
+              ...this.state,
+              loading: false,
+              passwordChanged: true,
+              password: "",
+              validatePassword: ""
+            });
+          }
+        })
+        .catch(err => {});
     }
   };
 
   render() {
     const { user, t } = this.props;
-    const { loading } = this.state;
+    const { loading, passwordChanged } = this.state;
+
+    let passwordChangedSuccessful = null;
+
+    if (passwordChanged) {
+      passwordChangedSuccessful = (
+        <Notification
+          type={"success"}
+          children={t("password.set-password-successful")}
+          onClose={() => this.onClose()}
+        />
+      );
+    }
+
     return (
       <form onSubmit={this.submit}>
+        {passwordChangedSuccessful}
         <InputField
           label={t("user.password")}
           type="password"
           onChange={this.handlePasswordChange}
-          value={user ? user.password : ""}
+          value={this.state.password ? this.state.password : ""}
           validationError={this.state.validatePasswordError}
           errorMessage={t("validation.password-invalid")}
           helpText={t("help.passwordHelpText")}
@@ -101,6 +144,13 @@ class SetUserPassword extends React.Component<Props, State> {
 
   checkPasswords = (password1: string, password2: string) => {
     return password1 === password2;
+  };
+
+  onClose = () => {
+    this.setState({
+      ...this.state,
+      passwordChanged: false
+    });
   };
 }
 
