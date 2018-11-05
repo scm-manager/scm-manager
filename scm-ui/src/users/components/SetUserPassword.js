@@ -74,7 +74,6 @@ class SetUserPassword extends React.Component<Props, State> {
   };
 
   submit = (event: Event) => {
-    //TODO: set loading
     event.preventDefault();
     if (this.isValid()) {
       const { user } = this.props;
