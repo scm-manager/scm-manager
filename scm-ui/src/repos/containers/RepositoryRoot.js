@@ -80,11 +80,6 @@ class RepositoryRoot extends React.Component<Props> {
     this.props.deleteRepo(repository, this.deleted);
   };
 
-  matchChangeset = (route: any) => {
-    const url = this.matchedUrl();
-    return route.location.pathname.match(`${url}/changeset/`);
-  };
-
   matches = (route: any) => {
     const url = this.matchedUrl();
     const regex = new RegExp(`${url}(/branches)?/?[^/]*/changesets?.*`);
@@ -125,7 +120,7 @@ class RepositoryRoot extends React.Component<Props> {
               />
               <Route
                 path={`${url}/permissions`}
-                render={props => (
+                render={() => (
                   <Permissions
                     namespace={this.props.repository.namespace}
                     repoName={this.props.repository.name}

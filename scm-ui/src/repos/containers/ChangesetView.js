@@ -11,7 +11,7 @@ import {
 } from "../modules/changesets";
 import ChangesetDetails from "../components/changesets/ChangesetDetails";
 import { translate } from "react-i18next";
-import { Loading, ErrorPage } from "@scm-manager/ui-components";
+import { ErrorPage, Loading } from "@scm-manager/ui-components";
 
 type Props = {
   id: string,

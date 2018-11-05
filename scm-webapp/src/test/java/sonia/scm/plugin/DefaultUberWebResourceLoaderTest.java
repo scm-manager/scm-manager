@@ -42,6 +42,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import sonia.scm.Stage;
 
 import javax.servlet.ServletContext;
 import java.io.File;
@@ -96,20 +97,27 @@ public class DefaultUberWebResourceLoaderTest extends WebResourceLoaderTestBase
    * Method description
    *
    *
-   * @throws MalformedURLException
    */
   @Test
-  public void testGetResourceFromCache() throws MalformedURLException
-  {
+  public void testGetResourceFromCache() {
     DefaultUberWebResourceLoader resourceLoader =
       new DefaultUberWebResourceLoader(servletContext,
-        new ArrayList<PluginWrapper>());
+        new ArrayList<PluginWrapper>(), Stage.PRODUCTION);
 
     resourceLoader.getCache().put("/myresource", GITHUB);
 
     URL resource = resourceLoader.getResource("/myresource");
 
     assertSame(GITHUB, resource);
+  }
+
+  @Test
+  public void testGetResourceCacheIsDisableInStageDevelopment() throws MalformedURLException {
+    DefaultUberWebResourceLoader resourceLoader = new DefaultUberWebResourceLoader(servletContext, new ArrayList<>(), Stage.DEVELOPMENT);
+    when(servletContext.getResource("/scm")).thenAnswer(invocation -> new URL("https://scm-manager.org"));
+    URL url = resourceLoader.getResource("/scm");
+    URL secondUrl = resourceLoader.getResource("/scm");
+    assertNotSame(url, secondUrl);
   }
 
   /**

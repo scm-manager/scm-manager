@@ -34,21 +34,18 @@ package sonia.scm.boot;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.github.legman.Subscribe;
-
 import com.google.inject.servlet.GuiceFilter;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.SCMContext;
 import sonia.scm.Stage;
 import sonia.scm.event.ScmEventBus;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletException;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -64,6 +61,8 @@ public class BootstrapContextFilter extends GuiceFilter
     LoggerFactory.getLogger(BootstrapContextFilter.class);
 
   //~--- methods --------------------------------------------------------------
+
+  private final BootstrapContextListener listener = new BootstrapContextListener();
 
   /**
    * Restart the whole webapp context.
@@ -85,35 +84,39 @@ public class BootstrapContextFilter extends GuiceFilter
     }
     else
     {
-
-      logger.warn(
-        "destroy filter pipeline, because of a received restart event");
+      logger.warn("destroy filter pipeline, because of a received restart event");
       destroy();
-      logger.warn(
-        "reinitialize filter pipeline, because of a received restart event");
-      super.init(filterConfig);
+
+      logger.warn("reinitialize filter pipeline, because of a received restart event");
+      initGuice();
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param filterConfig
-   *
-   * @throws ServletException
-   */
   @Override
   public void init(FilterConfig filterConfig) throws ServletException
   {
     this.filterConfig = filterConfig;
-    super.init(filterConfig);
+
+    initGuice();
 
     if (SCMContext.getContext().getStage() == Stage.DEVELOPMENT)
     {
       logger.info("register for restart events");
       ScmEventBus.getInstance().register(this);
     }
+  }
+
+  public void initGuice() throws ServletException {
+    super.init(filterConfig);
+
+    listener.contextInitialized(new ServletContextEvent(filterConfig.getServletContext()));
+  }
+
+  @Override
+  public void destroy() {
+    super.destroy();
+    listener.contextDestroyed(new ServletContextEvent(filterConfig.getServletContext()));
+    ServletContextCleaner.cleanup(filterConfig.getServletContext());
   }
 
   //~--- fields ---------------------------------------------------------------

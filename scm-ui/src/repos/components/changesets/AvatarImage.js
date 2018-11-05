@@ -1,8 +1,8 @@
 //@flow
 import React from "react";
-import { binder } from "@scm-manager/ui-extensions";
-import type { Changeset } from "@scm-manager/ui-types";
-import { Image } from "@scm-manager/ui-components";
+import {binder} from "@scm-manager/ui-extensions";
+import type {Changeset} from "@scm-manager/ui-types";
+import {Image} from "@scm-manager/ui-components";
 
 type Props = {
   changeset: Changeset

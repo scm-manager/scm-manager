@@ -1,5 +1,5 @@
 // @flow
-import { concat, getPageFromMatch, withEndingSlash } from "./urls";
+import {concat, getPageFromMatch, withEndingSlash} from "./urls";
 
 describe("tests for withEndingSlash", () => {
 
