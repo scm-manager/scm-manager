@@ -15,7 +15,8 @@ import reducer, {
   getFetchGroupsFailure,
   isFetchGroupsPending,
   selectListAsCollection,
-  fetchGroup,
+  fetchGroupByLink,
+  fetchGroupByName,
   FETCH_GROUP_PENDING,
   FETCH_GROUP_SUCCESS,
   FETCH_GROUP_FAILURE,
@@ -171,11 +172,40 @@ describe("groups fetch()", () => {
     });
   });
 
-  it("should sucessfully fetch single group", () => {
+  it("should sucessfully fetch single group by name", () => {
     fetchMock.getOnce(GROUPS_URL + "/humanGroup", humanGroup);
 
     const store = mockStore({});
-    return store.dispatch(fetchGroup(URL, "humanGroup")).then(() => {
+    return store.dispatch(fetchGroupByName(URL, "humanGroup")).then(() => {
+      const actions = store.getActions();
+      expect(actions[0].type).toEqual(FETCH_GROUP_PENDING);
+      expect(actions[1].type).toEqual(FETCH_GROUP_SUCCESS);
+      expect(actions[1].payload).toBeDefined();
+    });
+  });
+
+  it("should fail fetching single group by name on HTTP 500", () => {
+    fetchMock.getOnce(GROUPS_URL + "/humanGroup", {
+      status: 500
+    });
+
+    const store = mockStore({});
+    return store.dispatch(fetchGroupByName(URL, "humanGroup")).then(() => {
+      const actions = store.getActions();
+      expect(actions[0].type).toEqual(FETCH_GROUP_PENDING);
+      expect(actions[1].type).toEqual(FETCH_GROUP_FAILURE);
+      expect(actions[1].payload).toBeDefined();
+    });
+  });
+
+  it("should sucessfully fetch single group", () => {
+    fetchMock.getOnce(
+      "http://localhost:8081/api/v2/groups/humanGroup",
+      humanGroup
+    );
+
+    const store = mockStore({});
+    return store.dispatch(fetchGroupByLink(humanGroup)).then(() => {
       const actions = store.getActions();
       expect(actions[0].type).toEqual(FETCH_GROUP_PENDING);
       expect(actions[1].type).toEqual(FETCH_GROUP_SUCCESS);
@@ -184,12 +214,12 @@ describe("groups fetch()", () => {
   });
 
   it("should fail fetching single group on HTTP 500", () => {
-    fetchMock.getOnce(GROUPS_URL + "/humanGroup", {
+    fetchMock.getOnce("http://localhost:8081/api/v2/groups/humanGroup", {
       status: 500
     });
 
     const store = mockStore({});
-    return store.dispatch(fetchGroup(URL, "humanGroup")).then(() => {
+    return store.dispatch(fetchGroupByLink(humanGroup)).then(() => {
       const actions = store.getActions();
       expect(actions[0].type).toEqual(FETCH_GROUP_PENDING);
       expect(actions[1].type).toEqual(FETCH_GROUP_FAILURE);
@@ -247,6 +277,10 @@ describe("groups fetch()", () => {
     fetchMock.putOnce("http://localhost:8081/api/v2/groups/humanGroup", {
       status: 204
     });
+    fetchMock.getOnce(
+      "http://localhost:8081/api/v2/groups/humanGroup",
+      humanGroup
+    );
 
     const store = mockStore({});
 
@@ -254,6 +288,7 @@ describe("groups fetch()", () => {
       const actions = store.getActions();
       expect(actions[0].type).toEqual(MODIFY_GROUP_PENDING);
       expect(actions[1].type).toEqual(MODIFY_GROUP_SUCCESS);
+      expect(actions[2].type).toEqual(FETCH_GROUP_PENDING);
       expect(actions[1].payload).toEqual(humanGroup);
     });
   });
@@ -262,6 +297,10 @@ describe("groups fetch()", () => {
     fetchMock.putOnce("http://localhost:8081/api/v2/groups/humanGroup", {
       status: 204
     });
+    fetchMock.getOnce(
+      "http://localhost:8081/api/v2/groups/humanGroup",
+      humanGroup
+    );
 
     let called = false;
     const callback = () => {
@@ -273,6 +312,7 @@ describe("groups fetch()", () => {
       const actions = store.getActions();
       expect(actions[0].type).toEqual(MODIFY_GROUP_PENDING);
       expect(actions[1].type).toEqual(MODIFY_GROUP_SUCCESS);
+      expect(actions[2].type).toEqual(FETCH_GROUP_PENDING);
       expect(called).toBe(true);
     });
   });
