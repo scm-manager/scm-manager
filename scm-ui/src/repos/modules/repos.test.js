@@ -46,7 +46,6 @@ import reducer, {
   MODIFY_REPO,
   isModifyRepoPending,
   getModifyRepoFailure,
-  modifyRepoSuccess,
   getPermissionsLink
 } from "./repos";
 import type { Repository, RepositoryCollection } from "@scm-manager/ui-types";
@@ -636,18 +635,6 @@ describe("repos reducer", () => {
   it("should store the repo at byNames", () => {
     const newState = reducer({}, fetchRepoSuccess(slartiFjords));
     expect(newState.byNames["slarti/fjords"]).toBe(slartiFjords);
-  });
-
-  it("should update reposByNames", () => {
-    const oldState = {
-      byNames: {
-        "slarti/fjords": slartiFjords
-      }
-    };
-    let slartiFjordsEdited = { ...slartiFjords };
-    slartiFjordsEdited.description = "I bless the rains down in Africa";
-    const newState = reducer(oldState, modifyRepoSuccess(slartiFjordsEdited));
-    expect(newState.byNames["slarti/fjords"]).toEqual(slartiFjordsEdited);
   });
 });
 

@@ -34,7 +34,6 @@ import reducer, {
   MODIFY_USER_PENDING,
   MODIFY_USER_SUCCESS,
   modifyUser,
-  modifyUserSuccess,
   getUsersFromState,
   FETCH_USERS,
   getFetchUsersFailure,
@@ -288,6 +287,7 @@ describe("users fetch()", () => {
     fetchMock.putOnce("http://localhost:8081/api/v2/users/zaphod", {
       status: 204
     });
+    fetchMock.getOnce("http://localhost:8081/api/v2/users/zaphod", userZaphod);
 
     let called = false;
     const callMe = () => {
