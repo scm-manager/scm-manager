@@ -444,20 +444,6 @@ describe("users reducer", () => {
     expect(newState.byNames["ford"]).toBe(userFord);
     expect(newState.list.entries).toEqual(["zaphod"]);
   });
-
-  it("should update state according to MODIFY_USER_SUCCESS action", () => {
-    const newState = reducer(
-      {
-        byNames: {
-          ford: {
-            name: "ford"
-          }
-        }
-      },
-      modifyUserSuccess(userFord)
-    );
-    expect(newState.byNames["ford"]).toBe(userFord);
-  });
 });
 
 describe("selector tests", () => {
