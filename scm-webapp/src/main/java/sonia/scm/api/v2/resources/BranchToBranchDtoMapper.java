@@ -28,6 +28,7 @@ public abstract class BranchToBranchDtoMapper {
     Links.Builder linksBuilder = linkingTo()
       .self(resourceLinks.branch().self(namespaceAndName, target.getName()))
       .single(linkBuilder("history", resourceLinks.branch().history(namespaceAndName, target.getName())).build())
+      .single(linkBuilder("changesetDiff", resourceLinks.branch().changesetDiff(namespaceAndName, target.getName())).build())
       .single(linkBuilder("changeset", resourceLinks.changeset().changeset(namespaceAndName.getNamespace(), namespaceAndName.getName(), target.getRevision())).build())
       .single(linkBuilder("source", resourceLinks.source().self(namespaceAndName.getNamespace(), namespaceAndName.getName(), target.getRevision())).build());
     target.add(linksBuilder.build());
