@@ -376,9 +376,6 @@ function byNamesReducer(state: any = {}, action: any = {}) {
     case FETCH_USER_SUCCESS:
       return reducerByName(state, action.payload.name, action.payload);
 
-    case MODIFY_USER_SUCCESS:
-      return reducerByName(state, action.payload.name, action.payload);
-
     case DELETE_USER_SUCCESS:
       const newUserByNames = deleteUserInUsersByNames(
         state,
