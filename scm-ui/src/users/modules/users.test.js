@@ -124,6 +124,7 @@ const response = {
 
 const URL = "users";
 const USERS_URL = "/api/v2/users";
+const USER_ZAPHOD_URL = "http://localhost:8081/api/v2/users/zaphod";
 
 const error = new Error("KAPUTT");
 
@@ -193,7 +194,7 @@ describe("users fetch()", () => {
   });
 
   it("should sucessfully fetch single user", () => {
-    fetchMock.getOnce("http://localhost:8081/api/v2/users/zaphod", userZaphod);
+    fetchMock.getOnce(USER_ZAPHOD_URL, userZaphod);
 
     const store = mockStore({});
     return store.dispatch(fetchUserByLink(userZaphod)).then(() => {
@@ -205,7 +206,7 @@ describe("users fetch()", () => {
   });
 
   it("should fail fetching single user on HTTP 500", () => {
-    fetchMock.getOnce("http://localhost:8081/api/v2/users/zaphod", {
+    fetchMock.getOnce(USER_ZAPHOD_URL, {
       status: 500
     });
 
@@ -268,10 +269,10 @@ describe("users fetch()", () => {
   });
 
   it("successfully update user", () => {
-    fetchMock.putOnce("http://localhost:8081/api/v2/users/zaphod", {
+    fetchMock.putOnce(USER_ZAPHOD_URL, {
       status: 204
     });
-    fetchMock.getOnce("http://localhost:8081/api/v2/users/zaphod", userZaphod);
+    fetchMock.getOnce(USER_ZAPHOD_URL, userZaphod);
 
     const store = mockStore({});
     return store.dispatch(modifyUser(userZaphod)).then(() => {
@@ -284,10 +285,10 @@ describe("users fetch()", () => {
   });
 
   it("should call callback, after successful modified user", () => {
-    fetchMock.putOnce("http://localhost:8081/api/v2/users/zaphod", {
+    fetchMock.putOnce(USER_ZAPHOD_URL, {
       status: 204
     });
-    fetchMock.getOnce("http://localhost:8081/api/v2/users/zaphod", userZaphod);
+    fetchMock.getOnce(USER_ZAPHOD_URL, userZaphod);
 
     let called = false;
     const callMe = () => {
