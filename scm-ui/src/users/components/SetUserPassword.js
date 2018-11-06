@@ -40,7 +40,7 @@ class SetUserPassword extends React.Component<Props, State> {
     };
   }
 
-  isValid = () => {
+  passwordIsValid = () => {
     return !(
       this.state.validatePasswordError || this.state.passwordValidationError
     );
@@ -74,9 +74,8 @@ class SetUserPassword extends React.Component<Props, State> {
   };
 
   submit = (event: Event) => {
-    //TODO: set loading
     event.preventDefault();
-    if (this.isValid()) {
+    if (this.passwordIsValid()) {
       const { user } = this.props;
       const { password } = this.state;
       this.setLoadingState();
@@ -132,7 +131,7 @@ class SetUserPassword extends React.Component<Props, State> {
           helpText={t("help.passwordConfirmHelpText")}
         />
         <SubmitButton
-          disabled={!this.isValid()}
+          disabled={!this.passwordIsValid()}
           loading={loading}
           label={t("user-form.submit")}
         />
