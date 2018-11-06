@@ -7,7 +7,8 @@ import type { Repository } from "@scm-manager/ui-types";
 import {
   modifyRepo,
   isModifyRepoPending,
-  getModifyRepoFailure
+  getModifyRepoFailure,
+  modifyRepoReset
 } from "../modules/repos";
 import { withRouter } from "react-router-dom";
 import type { History } from "history";
@@ -16,6 +17,7 @@ import { ErrorNotification } from "@scm-manager/ui-components";
 type Props = {
   repository: Repository,
   modifyRepo: (Repository, () => void) => void,
+  modifyRepoReset: Repository => void,
   loading: boolean,
   error: Error,
 
@@ -25,6 +27,10 @@ type Props = {
 };
 
 class Edit extends React.Component<Props> {
+  componentDidMount() {
+    const { modifyRepoReset, repository } = this.props;
+    modifyRepoReset(repository);
+  }
   repoModified = () => {
     const { history, repository } = this.props;
     history.push(`/repo/${repository.namespace}/${repository.name}`);
@@ -61,6 +67,9 @@ const mapDispatchToProps = dispatch => {
   return {
     modifyRepo: (repo: Repository, callback: () => void) => {
       dispatch(modifyRepo(repo, callback));
+    },
+    modifyRepoReset: (repo: Repository) => {
+      dispatch(modifyRepoReset(repo));
     }
   };
 };
