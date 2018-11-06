@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/scm-git-plugin",
-  "license" : "BSD-3-Clause",
+  "license": "BSD-3-Clause",
   "main": "src/main/js/index.js",
   "scripts": {
     "build": "ui-bundler plugin",
