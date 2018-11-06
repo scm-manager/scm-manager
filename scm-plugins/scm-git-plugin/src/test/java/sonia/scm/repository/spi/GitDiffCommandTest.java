@@ -44,6 +44,23 @@ public class GitDiffCommandTest extends AbstractGitCommandTestBase {
   }
 
   @Test
+  public void diffForPathShouldCreateLimitedDiff() {
+    GitDiffCommand gitDiffCommand = new GitDiffCommand(createContext(), repository);
+    DiffCommandRequest diffCommandRequest = new DiffCommandRequest();
+    diffCommandRequest.setRevision("test-branch");
+    diffCommandRequest.setPath("a.txt");
+    ByteArrayOutputStream output = new ByteArrayOutputStream();
+    gitDiffCommand.getDiffResult(diffCommandRequest, output);
+    assertEquals("diff --git a/a.txt b/a.txt\n" +
+      "index 7898192..1dc60c7 100644\n" +
+      "--- a/a.txt\n" +
+      "+++ b/a.txt\n" +
+      "@@ -1 +1 @@\n" +
+      "-a\n" +
+      "+a and b\n", output.toString());
+  }
+
+  @Test
   public void diffBetweenTwoBranchesShouldCreateDiff() {
     GitDiffCommand gitDiffCommand = new GitDiffCommand(createContext(), repository);
     DiffCommandRequest diffCommandRequest = new DiffCommandRequest();
@@ -65,5 +82,23 @@ public class GitDiffCommandTest extends AbstractGitCommandTestBase {
       "+++ b/f.txt\n" +
       "@@ -0,0 +1 @@\n" +
       "+f\n", output.toString());
+  }
+
+  @Test
+  public void diffBetweenTwoBranchesForPathShouldCreateLimitedDiff() {
+    GitDiffCommand gitDiffCommand = new GitDiffCommand(createContext(), repository);
+    DiffCommandRequest diffCommandRequest = new DiffCommandRequest();
+    diffCommandRequest.setRevision("master");
+    diffCommandRequest.setAncestorChangeset("test-branch");
+    diffCommandRequest.setPath("a.txt");
+    ByteArrayOutputStream output = new ByteArrayOutputStream();
+    gitDiffCommand.getDiffResult(diffCommandRequest, output);
+    assertEquals("diff --git a/a.txt b/a.txt\n" +
+      "index 7898192..2f8bc28 100644\n" +
+      "--- a/a.txt\n" +
+      "+++ b/a.txt\n" +
+      "@@ -1 +1,2 @@\n" +
+      " a\n" +
+      "+line for blame\n", output.toString());
   }
 }
