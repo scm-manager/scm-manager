@@ -40,6 +40,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.AlreadyExistsException;
 import sonia.scm.ConfigurationException;
+import sonia.scm.ContextEntry;
 import sonia.scm.io.CommandResult;
 import sonia.scm.io.ExtendedCommand;
 import sonia.scm.io.FileSystem;
@@ -128,7 +129,7 @@ public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig
       try {
         fileSystem.destroy(directory);
       } catch (IOException e) {
-        throw new InternalRepositoryException("could not delete repository directory", e);
+        throw new InternalRepositoryException(ContextEntry.ContextBuilder.entity("directory", directory.toString()).in(repository), "could not delete repository directory", e);
       }
       cleanupEmptyDirectories(config.getRepositoryDirectory(),
         directory.getParentFile());

@@ -254,7 +254,7 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
     }
     catch (Exception ex)
     {
-      throw new InternalRepositoryException("could not create change log", ex);
+      throw new InternalRepositoryException(repository, "could not create change log", ex);
     }
     finally
     {

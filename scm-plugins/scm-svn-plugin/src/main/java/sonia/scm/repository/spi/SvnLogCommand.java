@@ -97,7 +97,7 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
     }
     catch (SVNException ex)
     {
-      throw new InternalRepositoryException("could not open repository", ex);
+      throw new InternalRepositoryException(repository, "could not open repository", ex);
     }
 
     return changeset;
@@ -139,7 +139,7 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
     }
     catch (SVNException ex)
     {
-      throw new InternalRepositoryException("could not open repository", ex);
+      throw new InternalRepositoryException(repository, "could not open repository", ex);
     }
 
     return changesets;

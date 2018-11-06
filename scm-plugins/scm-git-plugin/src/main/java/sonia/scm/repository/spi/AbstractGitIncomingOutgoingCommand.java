@@ -160,7 +160,7 @@ public abstract class AbstractGitIncomingOutgoingCommand
       }
       catch (Exception ex)
       {
-        throw new InternalRepositoryException("could not execute incoming command", ex);
+        throw new InternalRepositoryException(repository, "could not execute incoming command", ex);
       }
       finally
       {
@@ -200,13 +200,7 @@ public abstract class AbstractGitIncomingOutgoingCommand
         {
           if (e.getKey().startsWith(prefix))
           {
-            if (ref != null)
-            {
-              throw new InternalRepositoryException("could not find remote branch");
-            }
-
             ref = e.getValue();
-
             break;
           }
         }

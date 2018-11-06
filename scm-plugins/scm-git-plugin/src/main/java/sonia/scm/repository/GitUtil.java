@@ -55,6 +55,7 @@ import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.util.FS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.ContextEntry;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 import sonia.scm.web.GitUserAgentProvider;
@@ -203,7 +204,7 @@ public final class GitUtil
     }
     catch (GitAPIException ex)
     {
-      throw new InternalRepositoryException("could not fetch", ex);
+      throw new InternalRepositoryException(ContextEntry.ContextBuilder.entity("remote", directory.toString()).in(remoteRepository), "could not fetch", ex);
     }
   }
 

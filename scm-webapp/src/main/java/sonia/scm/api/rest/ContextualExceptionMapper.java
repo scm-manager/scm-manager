@@ -26,7 +26,7 @@ public class ContextualExceptionMapper<E extends ExceptionWithContext> implement
 
   @Override
   public Response toResponse(E exception) {
-    logger.debug("map {} to status code {}", type.getSimpleName(), status.getStatusCode());
+    logger.debug("map {} to status code {}", type.getSimpleName(), status.getStatusCode(), exception);
     return Response.status(status)
       .entity(mapper.map(exception))
       .type(VndMediaType.ERROR_TYPE)

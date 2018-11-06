@@ -272,7 +272,7 @@ public class AbstractHgHandler
     } catch (JAXBException ex) {
       logger.error("could not parse result", ex);
 
-      throw new InternalRepositoryException("could not parse result", ex);
+      throw new InternalRepositoryException(repository, "could not parse result", ex);
     }
   }
 

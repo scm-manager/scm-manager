@@ -8,7 +8,6 @@ import org.apache.shiro.util.ThreadContext;
 import org.apache.shiro.util.ThreadState;
 import org.assertj.core.util.Lists;
 import org.jboss.resteasy.core.Dispatcher;
-import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.After;
@@ -18,8 +17,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import sonia.scm.api.rest.AuthorizationExceptionMapper;
-import sonia.scm.api.v2.NotFoundExceptionMapper;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Modifications;
 import sonia.scm.repository.NamespaceAndName;
@@ -38,6 +35,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static sonia.scm.ContextEntry.ContextBuilder.noContext;
 
 @Slf4j
 @RunWith(MockitoJUnitRunner.Silent.class)
@@ -72,7 +70,7 @@ public class ModificationsResourceTest extends RepositoryTestBase {
 
 
   @Before
-  public void prepareEnvironment() throws Exception {
+  public void prepareEnvironment() {
     modificationsRootResource = new ModificationsRootResource(serviceFactory, modificationsToDtoMapper);
     super.modificationsRootResource = Providers.of(modificationsRootResource);
     dispatcher = DispatcherMock.createDispatcher(getRepositoryRootResource());
@@ -106,7 +104,7 @@ public class ModificationsResourceTest extends RepositoryTestBase {
   @Test
   public void shouldGet500OnModificationsCommandError() throws Exception {
     when(modificationsCommandBuilder.revision(any())).thenReturn(modificationsCommandBuilder);
-    when(modificationsCommandBuilder.getModifications()).thenThrow(InternalRepositoryException.class);
+    when(modificationsCommandBuilder.getModifications()).thenThrow(new InternalRepositoryException(noContext(), "", new RuntimeException()));
 
     MockHttpRequest request = MockHttpRequest
       .get(MODIFICATIONS_URL + "revision")

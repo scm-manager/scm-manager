@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import sonia.scm.PageResult;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
-import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.RepositoryService;
@@ -23,6 +22,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import static sonia.scm.NotFoundException.notFound;
 
 @Slf4j
 public class FileHistoryRootResource {
@@ -66,7 +68,8 @@ public class FileHistoryRootResource {
                          @PathParam("path") String path,
                          @DefaultValue("0") @QueryParam("page") int page,
                          @DefaultValue("10") @QueryParam("pageSize") int pageSize) throws IOException {
-    try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
+    NamespaceAndName namespaceAndName = new NamespaceAndName(namespace, name);
+    try (RepositoryService repositoryService = serviceFactory.create(namespaceAndName)) {
       log.info("Get changesets of the file {} and revision {}", path, revision);
       Repository repository = repositoryService.getRepository();
       ChangesetPagingResult changesets = new PagedLogCommandBuilder(repositoryService)
@@ -80,9 +83,9 @@ public class FileHistoryRootResource {
         PageResult<Changeset> pageResult = new PageResult<>(changesets.getChangesets(), changesets.getTotal());
         return Response.ok(fileHistoryCollectionToDtoMapper.map(page, pageSize, pageResult, repository, revision, path)).build();
       } else {
-        String message = String.format("for the revision %s and the file %s there is no changesets", revision, path);
+        String message = String.format("for the revision %s and the file %s there are no changesets", revision, path);
         log.error(message);
-        throw new InternalRepositoryException(message);
+        throw notFound(entity("path", path).in("revision", revision).in(namespaceAndName));
       }
     }
   }

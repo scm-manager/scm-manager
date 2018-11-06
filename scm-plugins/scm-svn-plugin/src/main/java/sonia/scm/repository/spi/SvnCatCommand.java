@@ -137,7 +137,7 @@ public class SvnCatCommand extends AbstractSvnCommand implements CatCommand
     } else if (SVNErrorCode.FS_NO_SUCH_REVISION.getCode() == svnErrorCode) {
       throw notFound(entity("Revision", request.getRevision()).in(repository));
     } else {
-      throw new InternalRepositoryException("could not get content from revision", ex);
+      throw new InternalRepositoryException(repository, "could not get content from revision", ex);
     }
   }
 
@@ -157,7 +157,7 @@ public class SvnCatCommand extends AbstractSvnCommand implements CatCommand
     }
     catch (SVNException ex)
     {
-      throw new InternalRepositoryException("could not get content from transaction", ex);
+      throw new InternalRepositoryException(repository, "could not get content from transaction", ex);
     }
     finally
     {

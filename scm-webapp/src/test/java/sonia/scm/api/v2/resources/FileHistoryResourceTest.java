@@ -8,7 +8,6 @@ import org.apache.shiro.util.ThreadContext;
 import org.apache.shiro.util.ThreadState;
 import org.assertj.core.util.Lists;
 import org.jboss.resteasy.core.Dispatcher;
-import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.After;
@@ -18,9 +17,8 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import sonia.scm.ContextEntry;
 import sonia.scm.NotFoundException;
-import sonia.scm.api.rest.AuthorizationExceptionMapper;
-import sonia.scm.api.v2.NotFoundExceptionMapper;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.InternalRepositoryException;
@@ -168,7 +166,7 @@ public class FileHistoryResourceTest extends RepositoryTestBase {
     when(logCommandBuilder.setPagingLimit(anyInt())).thenReturn(logCommandBuilder);
     when(logCommandBuilder.setStartChangeset(eq(id))).thenReturn(logCommandBuilder);
     when(logCommandBuilder.setPath(eq(path))).thenReturn(logCommandBuilder);
-    when(logCommandBuilder.getChangesets()).thenThrow(InternalRepositoryException.class);
+    when(logCommandBuilder.getChangesets()).thenThrow(new InternalRepositoryException(ContextEntry.ContextBuilder.noContext(), "", new RuntimeException()));
 
     MockHttpRequest request = MockHttpRequest
       .get(FILE_HISTORY_URL + id + "/" + path)
@@ -179,7 +177,7 @@ public class FileHistoryResourceTest extends RepositoryTestBase {
   }
 
   @Test
-  public void shouldGet500OnNullChangesets() throws Exception {
+  public void shouldGet404OnNullChangesets() throws Exception {
     String id = "revision_123";
     String path = "root_dir/sub_dir/file-to-inspect.txt";
 
@@ -194,6 +192,6 @@ public class FileHistoryResourceTest extends RepositoryTestBase {
       .accept(VndMediaType.CHANGESET_COLLECTION);
     MockHttpResponse response = new MockHttpResponse();
     dispatcher.invoke(request, response);
-    assertEquals(500, response.getStatus());
+    assertEquals(404, response.getStatus());
   }
 }

@@ -34,7 +34,7 @@ public class SvnModificationsCommand extends AbstractSvnCommand implements Modif
         modifications = SvnUtil.createModifications(entries.iterator().next(), revision);
       }
     } catch (SVNException ex) {
-      throw new InternalRepositoryException("could not open repository", ex);
+      throw new InternalRepositoryException(repository, "could not open repository", ex);
     }
     return modifications;
   }

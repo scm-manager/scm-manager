@@ -120,7 +120,7 @@ public class SvnDiffCommand extends AbstractSvnCommand implements DiffCommand
     }
     catch (SVNException ex)
     {
-      throw new InternalRepositoryException("could not create diff", ex);
+      throw new InternalRepositoryException(repository, "could not create diff", ex);
     }
     finally
     {

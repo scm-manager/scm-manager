@@ -13,6 +13,11 @@ public abstract class ExceptionWithContext extends RuntimeException {
     this.context = context;
   }
 
+  public ExceptionWithContext(List<ContextEntry> context, String message, Exception cause) {
+    super(message, cause);
+    this.context = context;
+  }
+
   public List<ContextEntry> getContext() {
     return unmodifiableList(context);
   }

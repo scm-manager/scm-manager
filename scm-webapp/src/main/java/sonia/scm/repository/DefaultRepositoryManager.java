@@ -143,7 +143,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
           try {
             getHandler(newRepository).create(newRepository);
           } catch (AlreadyExistsException e) {
-            throw new InternalRepositoryException("directory for repository does already exist", e);
+            throw new InternalRepositoryException(repository, "directory for repository does already exist", e);
           }
         }
         fireEvent(HandlerEventType.BEFORE_CREATE, newRepository);
@@ -353,9 +353,9 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
     RepositoryHandler handler = handlerMap.get(type);
 
     if (handler == null) {
-      throw new InternalRepositoryException("could not find handler for " + type);
+      throw new InternalRepositoryException(entity(repository), "could not find handler for " + type);
     } else if (!handler.isConfigured()) {
-      throw new InternalRepositoryException("handler is not configured for type " + type);
+      throw new InternalRepositoryException(entity(repository), "handler is not configured for type " + type);
     }
 
     return handler;

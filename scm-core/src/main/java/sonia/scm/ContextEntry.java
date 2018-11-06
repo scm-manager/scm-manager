@@ -35,6 +35,14 @@ public class ContextEntry {
   public static class ContextBuilder {
     private final List<ContextEntry> context = new LinkedList<>();
 
+    public static List<ContextEntry> noContext() {
+      return new ContextBuilder().build();
+    }
+
+    public static List<ContextEntry> only(String type, String id) {
+      return new ContextBuilder().in(type, id).build();
+    }
+
     public static ContextBuilder entity(Repository repository) {
       return new ContextBuilder().in(repository.getNamespaceAndName());
     }
