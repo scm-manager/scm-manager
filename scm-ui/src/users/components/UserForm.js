@@ -22,7 +22,7 @@ type State = {
   mailValidationError: boolean,
   nameValidationError: boolean,
   displayNameValidationError: boolean,
-  passwordValidationError: boolean,
+  passwordConfirmationError: boolean,
   validatePasswordError: boolean,
   validatePassword: string
 };
@@ -44,7 +44,7 @@ class UserForm extends React.Component<Props, State> {
       mailValidationError: false,
       displayNameValidationError: false,
       nameValidationError: false,
-      passwordValidationError: false,
+      passwordConfirmationError: false,
       validatePasswordError: false,
       validatePassword: ""
     };
@@ -70,7 +70,7 @@ class UserForm extends React.Component<Props, State> {
       this.state.validatePasswordError ||
       this.state.nameValidationError ||
       this.state.mailValidationError ||
-      this.state.passwordValidationError ||
+      this.state.passwordConfirmationError ||
       this.state.displayNameValidationError ||
       this.isFalsy(user.name) ||
       this.isFalsy(user.displayName)
@@ -89,6 +89,7 @@ class UserForm extends React.Component<Props, State> {
     const user = this.state.user;
 
     let nameField = null;
+    let passwordFields = null;
     if (!this.props.user) {
       nameField = (
         <InputField
@@ -99,6 +100,28 @@ class UserForm extends React.Component<Props, State> {
           errorMessage={t("validation.name-invalid")}
           helpText={t("help.usernameHelpText")}
         />
+      );
+      passwordFields = (
+        <>
+          <InputField
+            label={t("user.password")}
+            type="password"
+            onChange={this.handlePasswordChange}
+            value={user ? user.password : ""}
+            validationError={this.state.validatePasswordError}
+            errorMessage={t("validation.password-invalid")}
+            helpText={t("help.passwordHelpText")}
+          />
+          <InputField
+            label={t("validation.validatePassword")}
+            type="password"
+            onChange={this.handlePasswordValidationChange}
+            value={this.state ? this.state.validatePassword : ""}
+            validationError={this.state.passwordConfirmationError}
+            errorMessage={t("validation.passwordValidation-invalid")}
+            helpText={t("help.passwordConfirmHelpText")}
+          />
+        </>
       );
     }
     return (
@@ -120,24 +143,7 @@ class UserForm extends React.Component<Props, State> {
           errorMessage={t("validation.mail-invalid")}
           helpText={t("help.mailHelpText")}
         />
-        <InputField
-          label={t("user.password")}
-          type="password"
-          onChange={this.handlePasswordChange}
-          value={user ? user.password : ""}
-          validationError={this.state.validatePasswordError}
-          errorMessage={t("validation.password-invalid")}
-          helpText={t("help.passwordHelpText")}
-        />
-        <InputField
-          label={t("validation.validatePassword")}
-          type="password"
-          onChange={this.handlePasswordValidationChange}
-          value={this.state ? this.state.validatePassword : ""}
-          validationError={this.state.passwordValidationError}
-          errorMessage={t("validation.passwordValidation-invalid")}
-          helpText={t("help.passwordConfirmHelpText")}
-        />
+        {passwordFields}
         <Checkbox
           label={t("user.admin")}
           onChange={this.handleAdminChange}
@@ -189,7 +195,7 @@ class UserForm extends React.Component<Props, State> {
     );
     this.setState({
       validatePasswordError: !userValidator.isPasswordValid(password),
-      passwordValidationError: validatePasswordError,
+      passwordConfirmationError: validatePasswordError,
       user: { ...this.state.user, password }
     });
   };
@@ -201,7 +207,7 @@ class UserForm extends React.Component<Props, State> {
     );
     this.setState({
       validatePassword,
-      passwordValidationError: !validatePasswordError
+      passwordConfirmationError: !validatePasswordError
     });
   };
 
