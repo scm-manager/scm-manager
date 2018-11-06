@@ -148,13 +148,15 @@ public class BootstrapContextListener implements ServletContextListener
   {
     context = sce.getServletContext();
 
-    PluginIndex index = readCorePluginIndex(context);
-
     File pluginDirectory = getPluginDirectory();
 
     try
     {
-      extractCorePlugins(context, pluginDirectory, index);
+      if (!isCorePluginExtractionDisabled()) {
+        extractCorePlugins(context, pluginDirectory);
+      } else {
+        logger.info("core plugin extraction is disabled");
+      }
 
       ClassLoader cl =
         ClassLoaders.getContextClassLoader(BootstrapContextListener.class);
@@ -181,31 +183,8 @@ public class BootstrapContextListener implements ServletContextListener
     }
   }
 
-  /**
-   * Restart the whole webapp context.
-   *
-   *
-   * @param event restart event
-   */
-  @Subscribe
-  public void handleRestartEvent(RestartEvent event)
-  {
-    logger.warn("received restart event from {} with reason: {}",
-      event.getCause(), event.getReason());
-
-    if (context == null)
-    {
-      logger.error("context is null, scm-manager is not initialized");
-    }
-    else
-    {
-      ServletContextEvent sce = new ServletContextEvent(context);
-
-      logger.warn("destroy context, because of a received restart event");
-      contextDestroyed(sce);
-      logger.warn("reinitialize context, because of a received restart event");
-      contextInitialized(sce);
-    }
+  private boolean isCorePluginExtractionDisabled() {
+    return Boolean.getBoolean("sonia.scm.boot.disable-core-plugin-extraction");
   }
 
   /**
@@ -214,7 +193,6 @@ public class BootstrapContextListener implements ServletContextListener
    *
    * @param context
    * @param pluginDirectory
-   * @param name
    * @param entry
    *
    * @throws IOException
@@ -269,16 +247,14 @@ public class BootstrapContextListener implements ServletContextListener
    *
    * @param context
    * @param pluginDirectory
-   * @param lines
-   * @param index
    *
    * @throws IOException
    */
-  private void extractCorePlugins(ServletContext context, File pluginDirectory,
-    PluginIndex index)
-    throws IOException
+  private void extractCorePlugins(ServletContext context, File pluginDirectory) throws IOException
   {
     IOUtil.mkdirs(pluginDirectory);
+
+    PluginIndex index = readCorePluginIndex(context);
 
     for (PluginIndexEntry entry : index)
     {

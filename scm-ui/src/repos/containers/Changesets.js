@@ -1,13 +1,8 @@
 // @flow
 
 import React from "react";
-import { withRouter } from "react-router-dom";
-import type {
-  Branch,
-  Changeset,
-  PagedCollection,
-  Repository
-} from "@scm-manager/ui-types";
+import {withRouter} from "react-router-dom";
+import type {Branch, Changeset, PagedCollection, Repository} from "@scm-manager/ui-types";
 import {
   fetchChangesets,
   getChangesets,
@@ -16,15 +11,10 @@ import {
   selectListAsCollection
 } from "../modules/changesets";
 
-import { connect } from "react-redux";
+import {connect} from "react-redux";
 import ChangesetList from "../components/changesets/ChangesetList";
-import {
-  ErrorNotification,
-  LinkPaginator,
-  Loading,
-  getPageFromMatch
-} from "@scm-manager/ui-components";
-import { compose } from "redux";
+import {ErrorNotification, getPageFromMatch, LinkPaginator, Loading} from "@scm-manager/ui-components";
+import {compose} from "redux";
 
 type Props = {
   repository: Repository,

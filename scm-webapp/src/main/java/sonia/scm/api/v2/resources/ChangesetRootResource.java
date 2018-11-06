@@ -23,6 +23,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.util.Optional;
 
 
 @Slf4j
@@ -94,8 +95,12 @@ public class ChangesetRootResource {
         .setStartChangeset(id)
         .setEndChangeset(id)
         .getChangesets();
-      if (changesets != null && changesets.getChangesets() != null && changesets.getChangesets().size() == 1) {
-        return Response.ok(changesetToChangesetDtoMapper.map(changesets.getChangesets().get(0), repository)).build();
+      if (changesets != null && changesets.getChangesets() != null && !changesets.getChangesets().isEmpty()) {
+        Optional<Changeset> changeset = changesets.getChangesets().stream().filter(ch -> ch.getId().equals(id)).findFirst();
+        if (!changeset.isPresent()) {
+          return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        return Response.ok(changesetToChangesetDtoMapper.map(changeset.get(), repository)).build();
       } else {
         return Response.status(Response.Status.NOT_FOUND).build();
       }

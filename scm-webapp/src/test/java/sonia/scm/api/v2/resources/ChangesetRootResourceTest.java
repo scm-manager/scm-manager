@@ -169,7 +169,7 @@ public class ChangesetRootResourceTest extends RepositoryTestBase {
     when(logCommandBuilder.setStartChangeset(anyString())).thenReturn(logCommandBuilder);
     when(logCommandBuilder.getChangesets()).thenReturn(changesetPagingResult);
     MockHttpRequest request = MockHttpRequest
-      .get(CHANGESET_URL + "id")
+      .get(CHANGESET_URL + id)
       .accept(VndMediaType.CHANGESET);
     MockHttpResponse response = new MockHttpResponse();
     dispatcher.invoke(request, response);

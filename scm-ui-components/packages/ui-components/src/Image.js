@@ -1,6 +1,6 @@
 //@flow
 import React from "react";
-import { withContextPath } from "./urls";
+import {withContextPath} from "./urls";
 
 type Props = {
   src: string,

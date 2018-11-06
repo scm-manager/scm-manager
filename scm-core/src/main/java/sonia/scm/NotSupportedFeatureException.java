@@ -33,33 +33,30 @@
 
 package sonia.scm;
 
+import java.util.Collections;
+
 /**
  *
  * @author Sebastian Sdorra
  * @version 1.6
  */
-public class NotSupportedFeatureException extends Exception
-{
+public class NotSupportedFeatureException extends ExceptionWithContext {
 
-  /** Field description */
   private static final long serialVersionUID = 256498734456613496L;
 
-  //~--- constructors ---------------------------------------------------------
+  private static final String CODE = "9SR8G0kmU1";
 
-  /**
-   * Constructs ...
-   *
-   */
-  public NotSupportedFeatureException() {}
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param message
-   */
-  public NotSupportedFeatureException(String message)
+  public NotSupportedFeatureException(String feature)
   {
-    super(message);
+    super(Collections.emptyList(),createMessage(feature));
+  }
+
+  @Override
+  public String getCode() {
+    return CODE;
+  }
+
+  private static String createMessage(String feature) {
+    return "feature " + feature + " is not supported by this repository";
   }
 }

@@ -113,92 +113,35 @@
       <plugin>
         <groupId>sonia.scm.maven</groupId>
         <artifactId>smp-maven-plugin</artifactId>
-        <version>1.0.0-alpha-2</version>
+        <version>1.0.0-alpha-3</version>
         <extensions>true</extensions>
         <configuration>
-          <disableCompression>true</disableCompression>
+          <links>
+            <link>@scm-manager/ui-types</link>
+            <link>@scm-manager/ui-components</link>
+          </links>
         </configuration>
-        <executions>
-          <execution>
-            <id>fix-descriptor</id>
-            <phase>process-resources</phase>
-            <goals>
-              <goal>fix-descriptor</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>append-dependencies</id>
-            <phase>process-classes</phase>
-            <goals>
-              <goal>append-dependencies</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
 
-      <plugin>
-        <groupId>com.github.sdorra</groupId>
-        <artifactId>buildfrontend-maven-plugin</artifactId>
-        <configuration>
-          <node>
-            <version>${nodejs.version}</version>
-          </node>
-          <pkgManager>
-            <type>YARN</type>
-            <version>${yarn.version}</version>
-          </pkgManager>
-          <failOnMissingPackageJson>false</failOnMissingPackageJson>
-          <script>build</script>
-        </configuration>
-        <executions>
-          <execution>
-            <id>install</id>
-            <phase>process-resources</phase>
-            <goals>
-              <goal>install</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>build</id>
-            <phase>compile</phase>
-            <goals>
-              <goal>run</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
+    <plugin>
+      <groupId>com.github.sdorra</groupId>
+      <artifactId>buildfrontend-maven-plugin</artifactId>
+      <configuration>
+        <node>
+          <version>${nodejs.version}</version>
+        </node>
+        <pkgManager>
+          <type>YARN</type>
+          <version>${yarn.version}</version>
+        </pkgManager>
+        <failOnMissingPackageJson>false</failOnMissingPackageJson>
+      </configuration>
+    </plugin>
 
     </plugins>
   </build>
 
   <profiles>
-    <profile>
-      <id>release</id>
-      <build>
-        <plugins>
-
-          <plugin>
-            <groupId>sonia.maven</groupId>
-            <artifactId>web-compressor</artifactId>
-            <version>1.4</version>
-            <executions>
-              <execution>
-                <phase>compile</phase>
-                <goals>
-                  <goal>compress-directory</goal>
-                </goals>
-              </execution>
-            </executions>
-            <configuration>
-              <replace>true</replace>
-              <baseDirectory>${project.build.directory}/classes</baseDirectory>
-            </configuration>
-          </plugin>
-
-        </plugins>
-      </build>
-    </profile>
-
     <profile>
       <id>doc</id>
 

@@ -122,7 +122,7 @@ public class ContentResource {
   private void appendContentHeader(String path, byte[] head, Response.ResponseBuilder responseBuilder) {
     ContentType contentType = ContentTypes.detect(path, head);
     responseBuilder.header("Content-Type", contentType.getRaw());
-    contentType.getLanguage().ifPresent(language -> responseBuilder.header("Language", language));
+    contentType.getLanguage().ifPresent(language -> responseBuilder.header("X-Programming-Language", language));
   }
 
   private byte[] getHead(String revision, String path, RepositoryService repositoryService) throws IOException {
