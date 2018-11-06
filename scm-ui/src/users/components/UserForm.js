@@ -22,7 +22,7 @@ type State = {
   mailValidationError: boolean,
   nameValidationError: boolean,
   displayNameValidationError: boolean,
-  passwordValidationError: boolean,
+  passwordConfirmationError: boolean,
   validatePasswordError: boolean,
   validatePassword: string
 };
@@ -44,7 +44,7 @@ class UserForm extends React.Component<Props, State> {
       mailValidationError: false,
       displayNameValidationError: false,
       nameValidationError: false,
-      passwordValidationError: false,
+      passwordConfirmationError: false,
       validatePasswordError: false,
       validatePassword: ""
     };
@@ -70,7 +70,7 @@ class UserForm extends React.Component<Props, State> {
       this.state.validatePasswordError ||
       this.state.nameValidationError ||
       this.state.mailValidationError ||
-      this.state.passwordValidationError ||
+      this.state.passwordConfirmationError ||
       this.state.displayNameValidationError ||
       this.isFalsy(user.name) ||
       this.isFalsy(user.displayName)
@@ -117,7 +117,7 @@ class UserForm extends React.Component<Props, State> {
             type="password"
             onChange={this.handlePasswordValidationChange}
             value={this.state ? this.state.validatePassword : ""}
-            validationError={this.state.passwordValidationError}
+            validationError={this.state.passwordConfirmationError}
             errorMessage={t("validation.passwordValidation-invalid")}
             helpText={t("help.passwordConfirmHelpText")}
           />
@@ -195,7 +195,7 @@ class UserForm extends React.Component<Props, State> {
     );
     this.setState({
       validatePasswordError: !userValidator.isPasswordValid(password),
-      passwordValidationError: validatePasswordError,
+      passwordConfirmationError: validatePasswordError,
       user: { ...this.state.user, password }
     });
   };
@@ -207,7 +207,7 @@ class UserForm extends React.Component<Props, State> {
     );
     this.setState({
       validatePassword,
-      passwordValidationError: !validatePasswordError
+      passwordConfirmationError: !validatePasswordError
     });
   };
 

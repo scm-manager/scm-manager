@@ -19,7 +19,7 @@ type Props = {
 type State = {
   password: string,
   loading: boolean,
-  passwordValidationError: boolean,
+  passwordConfirmationError: boolean,
   validatePasswordError: boolean,
   validatePassword: string,
   error?: Error,
@@ -33,7 +33,7 @@ class SetUserPassword extends React.Component<Props, State> {
     this.state = {
       password: "",
       loading: false,
-      passwordValidationError: false,
+      passwordConfirmationError: false,
       validatePasswordError: false,
       validatePassword: "",
       passwordChanged: false
@@ -42,7 +42,7 @@ class SetUserPassword extends React.Component<Props, State> {
 
   passwordIsValid = () => {
     return !(
-      this.state.validatePasswordError || this.state.passwordValidationError
+      this.state.validatePasswordError || this.state.passwordConfirmationError
     );
   };
 
@@ -69,7 +69,7 @@ class SetUserPassword extends React.Component<Props, State> {
       password: "",
       validatePassword: "",
       validatePasswordError: false,
-      passwordValidationError: false
+      passwordConfirmationError: false
     });
   };
 
@@ -126,7 +126,7 @@ class SetUserPassword extends React.Component<Props, State> {
           type="password"
           onChange={this.handlePasswordValidationChange}
           value={this.state ? this.state.validatePassword : ""}
-          validationError={this.state.passwordValidationError}
+          validationError={this.state.passwordConfirmationError}
           errorMessage={t("validation.passwordValidation-invalid")}
           helpText={t("help.passwordConfirmHelpText")}
         />
@@ -146,19 +146,19 @@ class SetUserPassword extends React.Component<Props, State> {
     );
     this.setState({
       validatePasswordError: !userValidator.isPasswordValid(password),
-      passwordValidationError: validatePasswordError,
+      passwordConfirmationError: validatePasswordError,
       password: password
     });
   };
 
   handlePasswordValidationChange = (validatePassword: string) => {
-    const validatePasswordError = this.checkPasswords(
+    const passwordConfirmed = this.checkPasswords(
       this.state.password,
       validatePassword
     );
     this.setState({
       validatePassword,
-      passwordValidationError: !validatePasswordError
+      passwordConfirmationError: !passwordConfirmed
     });
   };
 
