@@ -93,7 +93,7 @@ public class DiffStreamingOutput implements StreamingOutput
   public void write(OutputStream output) throws IOException {
     try
     {
-      builder.retriveContent(output);
+      builder.retrieveContent(output);
     }
     catch (RevisionNotFoundException ex)
     {

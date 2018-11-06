@@ -15,7 +15,7 @@ import EditUser from "./EditUser";
 import type { User } from "@scm-manager/ui-types";
 import type { History } from "history";
 import {
-  fetchUser,
+  fetchUserByName,
   deleteUser,
   getUserByName,
   isFetchUserPending,
@@ -42,7 +42,7 @@ type Props = {
 
   // dispatcher functions
   deleteUser: (user: User, callback?: () => void) => void,
-  fetchUser: (string, string) => void,
+  fetchUserByName: (string, string) => void,
 
   // context objects
   t: string => string,
@@ -52,7 +52,7 @@ type Props = {
 
 class SingleUser extends React.Component<Props> {
   componentDidMount() {
-    this.props.fetchUser(this.props.usersLink, this.props.name);
+    this.props.fetchUserByName(this.props.usersLink, this.props.name);
   }
 
   userDeleted = () => {
@@ -151,8 +151,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchUser: (link: string, name: string) => {
-      dispatch(fetchUser(link, name));
+    fetchUserByName: (link: string, name: string) => {
+      dispatch(fetchUserByName(link, name));
     },
     deleteUser: (user: User, callback?: () => void) => {
       dispatch(deleteUser(user, callback));
