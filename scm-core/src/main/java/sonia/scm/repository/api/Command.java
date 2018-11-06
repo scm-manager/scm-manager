@@ -71,5 +71,10 @@ public enum Command
   /**
    * @since 2.0
    */
-  MERGE
+  MERGE,
+
+  /**
+   * @since 2.0
+   */
+  MERGE_DRY_RUN
 }
