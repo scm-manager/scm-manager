@@ -1,19 +1,32 @@
 //@flow
 import React from "react";
-import {deleteRepo, fetchRepo, getFetchRepoFailure, getRepository, isFetchRepoPending} from "../modules/repos";
+import {
+  deleteRepo,
+  fetchRepoByName,
+  getFetchRepoFailure,
+  getRepository,
+  isFetchRepoPending
+} from "../modules/repos";
 
-import {connect} from "react-redux";
-import {Route, Switch} from "react-router-dom";
-import type {Repository} from "@scm-manager/ui-types";
+import { connect } from "react-redux";
+import { Route, Switch } from "react-router-dom";
+import type { Repository } from "@scm-manager/ui-types";
 
-import {ErrorPage, Loading, Navigation, NavLink, Page, Section} from "@scm-manager/ui-components";
-import {translate} from "react-i18next";
+import {
+  ErrorPage,
+  Loading,
+  Navigation,
+  NavLink,
+  Page,
+  Section
+} from "@scm-manager/ui-components";
+import { translate } from "react-i18next";
 import RepositoryDetails from "../components/RepositoryDetails";
 import DeleteNavAction from "../components/DeleteNavAction";
 import Edit from "../containers/Edit";
 import Permissions from "../permissions/containers/Permissions";
 
-import type {History} from "history";
+import type { History } from "history";
 import EditNavLink from "../components/EditNavLink";
 
 import BranchRoot from "./ChangesetsRoot";
@@ -32,7 +45,7 @@ type Props = {
   repoLink: string,
 
   // dispatch functions
-  fetchRepo: (link: string, namespace: string, name: string) => void,
+  fetchRepoByName: (link: string, namespace: string, name: string) => void,
   deleteRepo: (repository: Repository, () => void) => void,
 
   // context props
@@ -43,9 +56,9 @@ type Props = {
 
 class RepositoryRoot extends React.Component<Props> {
   componentDidMount() {
-    const { fetchRepo, namespace, name, repoLink } = this.props;
+    const { fetchRepoByName, namespace, name, repoLink } = this.props;
 
-    fetchRepo(repoLink, namespace, name);
+    fetchRepoByName(repoLink, namespace, name);
   }
 
   stripEndingSlash = (url: string) => {
@@ -209,8 +222,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchRepo: (link: string, namespace: string, name: string) => {
-      dispatch(fetchRepo(link, namespace, name));
+    fetchRepoByName: (link: string, namespace: string, name: string) => {
+      dispatch(fetchRepoByName(link, namespace, name));
     },
     deleteRepo: (repository: Repository, callback: () => void) => {
       dispatch(deleteRepo(repository, callback));
