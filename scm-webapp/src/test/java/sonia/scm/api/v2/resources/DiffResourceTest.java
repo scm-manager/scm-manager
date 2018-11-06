@@ -92,7 +92,7 @@ public class DiffResourceTest extends RepositoryTestBase {
   public void shouldGetDiffs() throws Exception {
     when(diffCommandBuilder.setRevision(anyString())).thenReturn(diffCommandBuilder);
     when(diffCommandBuilder.setFormat(any())).thenReturn(diffCommandBuilder);
-    when(diffCommandBuilder.retriveContent(any())).thenReturn(diffCommandBuilder);
+    when(diffCommandBuilder.retrieveContent(any())).thenReturn(diffCommandBuilder);
     MockHttpRequest request = MockHttpRequest
       .get(DIFF_URL + "revision")
       .accept(VndMediaType.DIFF);
@@ -124,7 +124,7 @@ public class DiffResourceTest extends RepositoryTestBase {
   public void shouldGet404OnMissingRevision() throws Exception {
     when(diffCommandBuilder.setRevision(anyString())).thenReturn(diffCommandBuilder);
     when(diffCommandBuilder.setFormat(any())).thenReturn(diffCommandBuilder);
-    when(diffCommandBuilder.retriveContent(any())).thenThrow(RevisionNotFoundException.class);
+    when(diffCommandBuilder.retrieveContent(any())).thenThrow(RevisionNotFoundException.class);
 
     MockHttpRequest request = MockHttpRequest
       .get(DIFF_URL + "revision")
@@ -138,7 +138,7 @@ public class DiffResourceTest extends RepositoryTestBase {
   public void shouldGet400OnCrlfInjection() throws Exception {
     when(diffCommandBuilder.setRevision(anyString())).thenReturn(diffCommandBuilder);
     when(diffCommandBuilder.setFormat(any())).thenReturn(diffCommandBuilder);
-    when(diffCommandBuilder.retriveContent(any())).thenThrow(RevisionNotFoundException.class);
+    when(diffCommandBuilder.retrieveContent(any())).thenThrow(RevisionNotFoundException.class);
 
     MockHttpRequest request = MockHttpRequest
       .get(DIFF_URL + "ny%0D%0ASet-cookie:%20Tamper=3079675143472450634")
@@ -152,7 +152,7 @@ public class DiffResourceTest extends RepositoryTestBase {
   public void shouldGet400OnUnknownFormat() throws Exception {
     when(diffCommandBuilder.setRevision(anyString())).thenReturn(diffCommandBuilder);
     when(diffCommandBuilder.setFormat(any())).thenReturn(diffCommandBuilder);
-    when(diffCommandBuilder.retriveContent(any())).thenThrow(RevisionNotFoundException.class);
+    when(diffCommandBuilder.retrieveContent(any())).thenThrow(RevisionNotFoundException.class);
 
     MockHttpRequest request = MockHttpRequest
       .get(DIFF_URL + "revision?format=Unknown")
@@ -166,7 +166,7 @@ public class DiffResourceTest extends RepositoryTestBase {
   public void shouldAcceptDiffFormats() throws Exception {
     when(diffCommandBuilder.setRevision(anyString())).thenReturn(diffCommandBuilder);
     when(diffCommandBuilder.setFormat(any())).thenReturn(diffCommandBuilder);
-    when(diffCommandBuilder.retriveContent(any())).thenReturn(diffCommandBuilder);
+    when(diffCommandBuilder.retrieveContent(any())).thenReturn(diffCommandBuilder);
 
     Arrays.stream(DiffFormat.values()).map(DiffFormat::name).forEach(
       this::assertRequestOk
