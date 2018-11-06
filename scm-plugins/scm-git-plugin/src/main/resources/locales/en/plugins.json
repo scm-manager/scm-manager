@@ -4,6 +4,17 @@
       "clone" : "Clone the repository",
       "create" : "Create a new repository",
       "replace" : "Push an existing repository"
+    },
+    "config": {
+      "link": "Git",
+      "title": "Git Configuration",
+      "directory": "Repository Directory",
+      "directoryHelpText": "Location of the Git repositories.",
+      "gcExpression": "GC Cron Expression",
+      "gcExpressionHelpText": "Use Quartz Cron Expressions (SECOND MINUTE HOUR DAYOFMONTH MONTH DAYOFWEEK) to run git gc in intervals.",
+      "disabled": "Disabled",
+      "disabledHelpText": "Enable or disable the Git plugin",
+      "submit": "Submit"
     }
   }
 }

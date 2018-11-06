@@ -116,17 +116,17 @@ public class GitRepositoryHandler
   public void init(SCMContextProvider context)
   {
     super.init(context);
-    scheduleGc();
+    scheduleGc(getConfig().getGcExpression());
   }
 
   @Override
   public void setConfig(GitConfig config)
   {
+    scheduleGc(config.getGcExpression());
     super.setConfig(config);
-    scheduleGc();
   }
   
-  private void scheduleGc()
+  private void scheduleGc(String expression)
   {
     synchronized (LOCK){
       if ( task != null ){
@@ -134,11 +134,10 @@ public class GitRepositoryHandler
         task.cancel();
         task = null;
       }
-      String exp = getConfig().getGcExpression();
-      if (!Strings.isNullOrEmpty(exp))
+      if (!Strings.isNullOrEmpty(expression))
       {
-        logger.info("schedule git gc task with expression {}", exp);
-        task = scheduler.schedule(exp, GitGcTask.class);
+        logger.info("schedule git gc task with expression {}", expression);
+        task = scheduler.schedule(expression, GitGcTask.class);
       }
     }
   }

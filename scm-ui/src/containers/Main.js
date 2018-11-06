@@ -101,7 +101,6 @@ class Main extends React.Component<Props> {
             authenticated={authenticated}
           />
           <ProtectedRoute
-            exact
             path="/config"
             component={Config}
             authenticated={authenticated}

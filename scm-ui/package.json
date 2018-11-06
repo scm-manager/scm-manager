@@ -48,7 +48,7 @@
     "pre-commit": "jest && flow && eslint src"
   },
   "devDependencies": {
-    "@scm-manager/ui-bundler": "^0.0.19",
+    "@scm-manager/ui-bundler": "^0.0.21",
     "copyfiles": "^2.0.0",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
