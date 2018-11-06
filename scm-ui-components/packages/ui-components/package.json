@@ -3,10 +3,12 @@
   "version": "0.0.1",
   "description": "UI Components for SCM-Manager and its plugins",
   "main": "src/index.js",
-  "files": ["src"],
+  "files": [
+    "src"
+  ],
   "repository": "https://bitbucket.org/sdorra/scm-manager",
   "author": "Sebastian Sdorra <sebastian.sdorra@cloudogu.com>",
-  "license" : "BSD-3-Clause",
+  "license": "BSD-3-Clause",
   "scripts": {
     "update-index": "create-index -r src",
     "eslint-fix": "eslint src --fix"
@@ -23,23 +25,32 @@
     "react-router-enzyme-context": "^1.2.0"
   },
   "dependencies": {
+    "@scm-manager/ui-extensions": "^0.0.7",
+    "@scm-manager/ui-types": "0.0.1",
     "classnames": "^2.2.6",
     "moment": "^2.22.2",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "react-i18next": "^7.11.0",
     "react-jss": "^8.6.1",
-    "react-router-dom": "^4.3.1",
-    "@scm-manager/ui-types": "0.0.1"
+    "react-router-dom": "^4.3.1"
   },
   "browserify": {
     "transform": [
-      ["browserify-css"],
+      [
+        "browserify-css"
+      ],
       [
         "babelify",
         {
-          "plugins": ["@babel/plugin-proposal-class-properties"],
-          "presets": ["@babel/preset-env", "@babel/preset-flow", "@babel/preset-react"]
+          "plugins": [
+            "@babel/plugin-proposal-class-properties"
+          ],
+          "presets": [
+            "@babel/preset-env",
+            "@babel/preset-flow",
+            "@babel/preset-react"
+          ]
         }
       ]
     ]

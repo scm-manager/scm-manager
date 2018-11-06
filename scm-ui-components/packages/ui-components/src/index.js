@@ -24,6 +24,7 @@ export { getPageFromMatch } from "./urls";
 export { apiClient, NOT_FOUND_ERROR, UNAUTHORIZED_ERROR } from "./apiclient.js";
 
 export * from "./buttons";
+export * from "./config";
 export * from "./forms";
 export * from "./layout";
 export * from "./modals";
