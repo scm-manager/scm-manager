@@ -9,7 +9,7 @@ import {
 } from "@scm-manager/ui-components";
 import * as userValidator from "./userValidation";
 import { translate } from "react-i18next";
-import { updatePassword } from "./updatePassword";
+import { setPassword } from "./changePassword";
 
 type Props = {
   user: User,
@@ -79,7 +79,7 @@ class SetUserPassword extends React.Component<Props, State> {
       const { user } = this.props;
       const { password } = this.state;
       this.setLoadingState();
-      updatePassword(user._links.password.href, password)
+      setPassword(user._links.password.href, password)
         .then(result => {
           if (result.error) {
             this.setErrorState(result.error);
