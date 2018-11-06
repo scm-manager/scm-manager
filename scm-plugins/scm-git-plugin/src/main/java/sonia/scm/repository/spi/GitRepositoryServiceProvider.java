@@ -63,7 +63,8 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
     Command.INCOMING,
     Command.OUTGOING,
     Command.PUSH,
-    Command.PULL
+    Command.PULL,
+    Command.MERGE_DRY_RUN
   );
   //J+
 
@@ -240,7 +241,11 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
     return new GitTagsCommand(context, repository);
   }
 
-  //~--- fields ---------------------------------------------------------------
+  @Override
+  public MergeDryRunCommand getMergeDryRunCommand() {
+    return new GitMergeDryRunCommand(context, repository);
+  }
+//~--- fields ---------------------------------------------------------------
 
   /** Field description */
   private GitContext context;
