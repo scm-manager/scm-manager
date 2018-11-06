@@ -90,6 +90,8 @@ public class GitRepositoryHandler
   private static final Object LOCK = new Object();
   
   private final Scheduler scheduler;
+
+  private final GitWorkdirPool workdirPool;
   
   private Task task;
   
@@ -104,10 +106,11 @@ public class GitRepositoryHandler
    * @param scheduler
    */
   @Inject
-  public GitRepositoryHandler(ConfigurationStoreFactory storeFactory, FileSystem fileSystem, Scheduler scheduler)
+  public GitRepositoryHandler(ConfigurationStoreFactory storeFactory, FileSystem fileSystem, Scheduler scheduler, GitWorkdirPool workdirPool)
   {
     super(storeFactory, fileSystem);
     this.scheduler = scheduler;
+    this.workdirPool = workdirPool;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -234,5 +237,9 @@ public class GitRepositoryHandler
   protected boolean isRepository(File directory)
   {
     return new File(directory, DIRECTORY_REFS).exists();
+  }
+
+  public GitWorkdirPool getWorkdirPool() {
+    return workdirPool;
   }
 }
