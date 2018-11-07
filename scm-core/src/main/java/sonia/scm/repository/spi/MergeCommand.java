@@ -1,5 +1,10 @@
 package sonia.scm.repository.spi;
 
+import sonia.scm.repository.api.MergeCommandResult;
+import sonia.scm.repository.api.MergeDryRunCommandResult;
+
 public interface MergeCommand {
-  boolean merge(MergeCommandRequest request);
+  MergeCommandResult merge(MergeCommandRequest request);
+
+  MergeDryRunCommandResult dryRun(MergeCommandRequest request);
 }

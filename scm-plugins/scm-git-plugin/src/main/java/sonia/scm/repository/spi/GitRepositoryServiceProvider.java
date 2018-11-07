@@ -242,11 +242,6 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
   }
 
   @Override
-  public MergeDryRunCommand getMergeDryRunCommand() {
-    return new GitMergeDryRunCommand(context, repository);
-  }
-
-  @Override
   public MergeCommand getMergeCommand() {
     return new GitMergeCommand(context, repository, handler.getWorkdirPool());
   }

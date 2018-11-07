@@ -28,8 +28,13 @@ public class MergeCommandBuilder {
     return this;
   }
 
-  public boolean execute() {
+  public MergeCommandResult executeMerge() {
     Preconditions.checkArgument(request.isValid(), "revision to merge and target revision is required");
     return mergeCommand.merge(request);
+  }
+
+  public MergeDryRunCommandResult dryRun() {
+    Preconditions.checkArgument(request.isValid(), "revision to merge and target revision is required");
+    return mergeCommand.dryRun(request);
   }
 }
