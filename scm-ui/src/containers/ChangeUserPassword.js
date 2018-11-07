@@ -1,6 +1,5 @@
 // @flow
 import React from "react";
-import type { User } from "../../../scm-ui-components/packages/ui-types/src/index";
 import {
   SubmitButton,
   Notification,
@@ -8,11 +7,12 @@ import {
   InputField
 } from "../../../scm-ui-components/packages/ui-components/src/index";
 import { translate } from "react-i18next";
-import { setPassword, updatePassword } from "../users/components/changePassword";
+import { updatePassword } from "../users/components/changePassword";
 import PasswordConfirmation from "../users/components/PasswordConfirmation";
+import type { Me } from "@scm-manager/ui-types";
 
 type Props = {
-  user: User,
+  me: Me,
   t: string => string
 };
 
@@ -69,11 +69,7 @@ class ChangeUserPassword extends React.Component<Props, State> {
     if (this.state.password) {
       const { oldPassword, password } = this.state;
       this.setLoadingState();
-      updatePassword(
-        "http://localhost:8081/scm/api/v2/me/password", // TODO: Change this, as soon we have a profile component
-        oldPassword,
-        password
-      )
+      updatePassword(this.props.me._links.password.href, oldPassword, password)
         .then(result => {
           if (result.error) {
             this.setErrorState(result.error);

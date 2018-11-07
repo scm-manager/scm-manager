@@ -79,7 +79,6 @@ class SetUserPassword extends React.Component<Props, State> {
   };
 
   render() {
-    console.log("RENDER");
     const { t } = this.props;
     const { loading, passwordChanged, error } = this.state;
 

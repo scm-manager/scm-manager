@@ -60,8 +60,7 @@ class Profile extends React.Component<Props, State> {
             <Route path={url} exact render={() => <ProfileInfo me={me} />} />
             <Route
               path={`${url}/password`}
-              exact
-              component={ChangeUserPassword}
+              render={() => <ChangeUserPassword me={me} />}
             />
           </div>
           <div className="column">

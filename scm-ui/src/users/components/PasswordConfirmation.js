@@ -14,7 +14,6 @@ type State = {
 };
 type Props = {
   passwordChanged: string => void,
-  password: string,
   // Context props
   t: string => string
 };
