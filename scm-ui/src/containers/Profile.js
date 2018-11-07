@@ -7,14 +7,15 @@ import {
   Navigation,
   Section,
   MailLink
-} from "@scm-manager/ui-components";
+} from "../../../scm-ui-components/packages/ui-components/src/index";
 import { NavLink } from "react-router-dom";
-import { getMe } from "../../modules/auth";
+import { getMe } from "../modules/auth";
 import { compose } from "redux";
 import { connect } from "react-redux";
 import { translate } from "react-i18next";
-import type { Me } from "@scm-manager/ui-types";
-import AvatarWrapper from "../../repos/components/changesets/AvatarWrapper";
+import type { Me } from "../../../scm-ui-components/packages/ui-types/src/index";
+import AvatarWrapper from "../repos/components/changesets/AvatarWrapper";
+import { ErrorPage } from "@scm-manager/ui-components";
 
 type Props = {
   me: Me,
@@ -28,8 +29,14 @@ class Profile extends React.Component<Props, State> {
   render() {
     const { me, t } = this.props;
 
-    if (!me) {
-      return null;
+    if (me) {
+      return (
+        <ErrorPage
+          title={t("profile.error-title")}
+          subtitle={t("profile.error-subtitle")}
+          error={{ name: "Error", message: "'me' is undefined" }}
+        />
+      );
     }
     return (
       <Page title={me.displayName}>
@@ -41,7 +48,6 @@ class Profile extends React.Component<Props, State> {
                   {
                     // TODO: add avatar
                   }
-                  }
                 </p>
               </figure>
             </div>
@@ -50,15 +56,15 @@ class Profile extends React.Component<Props, State> {
             <table className="table">
               <tbody>
                 <tr>
-                  <td>{t("user.name")}</td>
+                  <td>{t("profile.username")}</td>
                   <td>{me.name}</td>
                 </tr>
                 <tr>
-                  <td>{t("user.displayName")}</td>
+                  <td>{t("profile.displayName")}</td>
                   <td>{me.displayName}</td>
                 </tr>
                 <tr>
-                  <td>{t("user.mail")}</td>
+                  <td>{t("profile.mail")}</td>
                   <td>
                     <MailLink address={me.mail} />
                   </td>
@@ -68,8 +74,10 @@ class Profile extends React.Component<Props, State> {
           </div>
           <div className="column is-one-quarter">
             <Navigation>
-              <Section label={t("single-user.actions-label")} />
-              <NavLink to={"me/password"}>{t("profile.change-pw")}</NavLink>
+              <Section label={t("profile.actions-label")} />
+              <NavLink to={"me/password"}>
+                {t("profile.change-password")}
+              </NavLink>
             </Navigation>
           </div>
         </div>
@@ -85,6 +93,6 @@ const mapStateToProps = state => {
 };
 
 export default compose(
-  translate("users"),
+  translate("commons"),
   connect(mapStateToProps)
 )(Profile);

@@ -19,7 +19,7 @@ import SingleGroup from "../groups/containers/SingleGroup";
 import AddGroup from "../groups/containers/AddGroup";
 
 import Config from "../config/containers/Config";
-import Profile from "../users/containers/Profile";
+import Profile from "./Profile";
 
 type Props = {
   authenticated?: boolean
