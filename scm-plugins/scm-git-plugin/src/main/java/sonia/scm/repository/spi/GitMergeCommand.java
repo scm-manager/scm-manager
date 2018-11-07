@@ -1,9 +1,12 @@
 package sonia.scm.repository.spi;
 
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.MergeResult;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.merge.MergeStrategy;
 import org.eclipse.jgit.merge.ResolveMerger;
-import org.eclipse.jgit.lib.Repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.GitWorkdirFactory;
@@ -47,28 +50,41 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
 
   private static class MergeWorker {
 
-    private final Repository clone;
+    private final Git clone;
     private MergeWorker(Repository clone) {
-      this.clone = clone;
+      this.clone = new Git(clone);
     }
 
     private MergeCommandResult merge(MergeCommandRequest request) throws IOException {
-      ResolveMerger merger = (ResolveMerger) MergeStrategy.RECURSIVE.newMerger(clone);
-      boolean mergeResult = merger.merge(
-        resolveRevision(clone, request.getTargetBranch()),
-        resolveRevision(clone, request.getBranchToMerge())
-      );
-      if (mergeResult) {
-        logger.info("Merged branch {} into {}", request.getBranchToMerge(), request.getTargetBranch());
-        // TODO commit, push and verify push was successful
+      try {
+        clone.checkout().setName(request.getTargetBranch()).call();
+      } catch (GitAPIException e) {
+        throw new InternalRepositoryException("could not checkout target branch " + request.getTargetBranch(), e);
       }
-      return new MergeCommandResult(mergeResult);
+      MergeResult result;
+      try {
+        result = clone.merge().include(request.getBranchToMerge(), resolveRevision(request.getBranchToMerge())).setCommit(true).call();
+      } catch (GitAPIException e) {
+        throw new InternalRepositoryException("could not merge branch " + request.getBranchToMerge() + " into " + request.getTargetBranch(), e);
+      }
+      if (result.getMergeStatus().isSuccessful()) {
+        logger.info("Merged branch {} into {}", request.getBranchToMerge(), request.getTargetBranch());
+        try {
+          clone.push().call();
+        } catch (GitAPIException e) {
+          throw new InternalRepositoryException("could not push merged branch " + request.getBranchToMerge() + " to origin", e);
+        }
+        return new MergeCommandResult(true);
+      } else {
+        logger.info("Could not merged branch {} into {}", request.getBranchToMerge(), request.getTargetBranch());
+        return new MergeCommandResult(false);
+      }
     }
 
-    private ObjectId resolveRevision(Repository repository, String branchToMerge) throws IOException {
-      ObjectId resolved = repository.resolve(branchToMerge);
+    private ObjectId resolveRevision(String branchToMerge) throws IOException {
+      ObjectId resolved = clone.getRepository().resolve(branchToMerge);
       if (resolved == null) {
-        return repository.resolve("origin/" + branchToMerge);
+        return clone.getRepository().resolve("origin/" + branchToMerge);
       } else {
         return resolved;
       }
