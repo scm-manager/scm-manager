@@ -64,7 +64,7 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
     Command.OUTGOING,
     Command.PUSH,
     Command.PULL,
-    Command.MERGE_DRY_RUN
+    Command.MERGE
   );
   //J+
 
