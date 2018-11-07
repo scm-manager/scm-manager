@@ -2,22 +2,33 @@
 import React from "react";
 import { connect } from "react-redux";
 import GroupForm from "../components/GroupForm";
-import { modifyGroup } from "../modules/groups";
+import {
+  modifyGroup,
+  modifyGroupReset,
+  isModifyGroupPending,
+  getModifyGroupFailure
+} from "../modules/groups";
 import type { History } from "history";
 import { withRouter } from "react-router-dom";
 import type { Group } from "@scm-manager/ui-types";
-import { isModifyGroupPending, getModifyGroupFailure } from "../modules/groups";
 import { ErrorNotification } from "@scm-manager/ui-components";
 
 type Props = {
   group: Group,
   modifyGroup: (group: Group, callback?: () => void) => void,
+  modifyGroupReset: Group => void,
+  fetchGroup: (name: string) => void,
   history: History,
   loading?: boolean,
   error: Error
 };
 
 class EditGroup extends React.Component<Props> {
+  componentDidMount() {
+    const { group, modifyGroupReset } = this.props;
+    modifyGroupReset(group);
+  }
+
   groupModified = (group: Group) => () => {
     this.props.history.push(`/group/${group.name}`);
   };
@@ -56,6 +67,9 @@ const mapDispatchToProps = dispatch => {
   return {
     modifyGroup: (group: Group, callback?: () => void) => {
       dispatch(modifyGroup(group, callback));
+    },
+    modifyGroupReset: (group: Group) => {
+      dispatch(modifyGroupReset(group));
     }
   };
 };
