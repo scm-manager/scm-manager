@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/scm-git-plugin",
-  "license" : "BSD-3-Clause",
+  "license": "BSD-3-Clause",
   "main": "src/main/js/index.js",
   "scripts": {
     "build": "ui-bundler plugin",
@@ -9,9 +9,9 @@
     "flow": "flow check"
   },
   "dependencies": {
-    "@scm-manager/ui-extensions": "^0.0.7"
+    "@scm-manager/ui-extensions": "^0.1.1"
   },
   "devDependencies": {
-    "@scm-manager/ui-bundler": "^0.0.19"
+    "@scm-manager/ui-bundler": "^0.0.21"
   }
 }
