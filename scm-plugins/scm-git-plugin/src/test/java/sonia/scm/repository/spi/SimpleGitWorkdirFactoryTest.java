@@ -66,7 +66,7 @@ public class SimpleGitWorkdirFactoryTest extends AbstractGitCommandTestBase {
 
     File directory;
     try (WorkingCopy workingCopy = factory.createWorkingCopy(createContext())) {
-      directory = workingCopy.get().getDirectory();
+      directory = workingCopy.get().getWorkTree();
     }
     assertThat(directory).doesNotExist();
   }

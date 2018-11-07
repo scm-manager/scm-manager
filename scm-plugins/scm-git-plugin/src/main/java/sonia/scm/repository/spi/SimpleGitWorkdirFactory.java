@@ -11,13 +11,11 @@ import sonia.scm.repository.InternalRepositoryException;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Random;
 
 public class SimpleGitWorkdirFactory implements GitWorkdirFactory {
 
   private static final Logger logger = LoggerFactory.getLogger(SimpleGitWorkdirFactory.class);
 
-  private final Random random = new Random();
   private final File poolDirectory;
 
   public SimpleGitWorkdirFactory() {
@@ -30,11 +28,20 @@ public class SimpleGitWorkdirFactory implements GitWorkdirFactory {
 
   public WorkingCopy createWorkingCopy(GitContext gitContext) {
     try {
-      Repository clone = cloneRepository(gitContext.getDirectory(), new File(poolDirectory, Long.toString(random.nextLong())));
+      Repository clone = cloneRepository(gitContext.getDirectory(), createNewWorkdir());
       return new WorkingCopy(clone, this::close);
     } catch (GitAPIException e) {
       throw new InternalRepositoryException("could not clone working copy of repository", e);
+    } catch (IOException e) {
+      throw new InternalRepositoryException("could not create temporary directory for copy of repository", e);
     }
+  }
+
+  private File createNewWorkdir() throws IOException {
+    File workdir = File.createTempFile("workdir", "", poolDirectory);
+    workdir.delete();
+    workdir.mkdir();
+    return workdir;
   }
 
   protected Repository cloneRepository(File bareRepository, File target) throws GitAPIException {
@@ -48,9 +55,9 @@ public class SimpleGitWorkdirFactory implements GitWorkdirFactory {
   private void close(Repository repository) {
     repository.close();
     try {
-      FileUtils.delete(repository.getDirectory(), FileUtils.RECURSIVE);
+      FileUtils.delete(repository.getWorkTree(), FileUtils.RECURSIVE);
     } catch (IOException e) {
-      logger.warn("could not delete temporary git workdir '{}'", repository.getDirectory(), e);
+      logger.warn("could not delete temporary git workdir '{}'", repository.getWorkTree(), e);
     }
   }
 }
