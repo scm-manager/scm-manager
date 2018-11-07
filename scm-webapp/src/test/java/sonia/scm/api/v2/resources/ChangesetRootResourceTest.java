@@ -9,7 +9,6 @@ import org.apache.shiro.util.ThreadContext;
 import org.apache.shiro.util.ThreadState;
 import org.assertj.core.util.Lists;
 import org.jboss.resteasy.core.Dispatcher;
-import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.After;
@@ -19,8 +18,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import sonia.scm.api.rest.AuthorizationExceptionMapper;
-import sonia.scm.api.v2.NotFoundExceptionMapper;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.NamespaceAndName;
@@ -39,7 +36,6 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -79,7 +75,7 @@ public class ChangesetRootResourceTest extends RepositoryTestBase {
 
 
   @Before
-  public void prepareEnvironment() throws Exception {
+  public void prepareEnvironment() {
     changesetCollectionToDtoMapper = new ChangesetCollectionToDtoMapper(changesetToChangesetDtoMapper, resourceLinks);
     changesetRootResource = new ChangesetRootResource(serviceFactory, changesetCollectionToDtoMapper, changesetToChangesetDtoMapper);
     super.changesetRootResource = Providers.of(changesetRootResource);

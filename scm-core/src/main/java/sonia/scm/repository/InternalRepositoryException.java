@@ -15,6 +15,10 @@ public class InternalRepositoryException extends ExceptionWithContext {
     this(context.build(), message, cause);
   }
 
+  public InternalRepositoryException(Repository repository, String message) {
+    this(ContextEntry.ContextBuilder.entity(repository), message, null);
+  }
+
   public InternalRepositoryException(Repository repository, String message, Exception cause) {
     this(ContextEntry.ContextBuilder.entity(repository), message, cause);
   }
