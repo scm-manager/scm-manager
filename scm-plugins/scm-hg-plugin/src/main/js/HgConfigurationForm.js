@@ -52,11 +52,10 @@ class HgConfigurationForm extends React.Component<Props, State> {
     this.setState({
       validationErrors
     });
+
+    return validationErrors.length === 0;
   };
 
-  isValid = () => {
-    return this.state.validationErrors.length === 0;
-  };
 
   hasValidationError = (name: string) => {
     return this.state.validationErrors.indexOf(name) >= 0;
@@ -65,10 +64,7 @@ class HgConfigurationForm extends React.Component<Props, State> {
   handleChange = (value: any, name: string) => {
     this.setState({
       [name]: value
-    }, () => {
-      this.updateValidationStatus();
-      this.props.onConfigurationChange(this.state, this.isValid());
-    });
+    }, () => this.props.onConfigurationChange(this.state, this.updateValidationStatus()));
   };
 
   inputField = (name: string) => {
