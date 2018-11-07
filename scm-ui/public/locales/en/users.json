@@ -56,14 +56,16 @@
     "validatePassword": "Confirm password"
   },
   "password": {
+    "current-password": "Current password",
     "set-password-successful": "Password successfully set"
   },
   "help": {
     "usernameHelpText": "Unique name of the user.",
     "displayNameHelpText": "Display name of the user.",
     "mailHelpText": "Email address of the user.",
+    "currentPasswordHelpText": "Enter your current password",
     "passwordHelpText": "Plain text password of the user.",
-    "passwordConfirmHelpText": "Repeat the password for validation.",
+    "passwordConfirmHelpText": "Repeat the password for confirmation.",
     "adminHelpText": "An administrator is able to create, modify and delete repositories, groups and users.",
     "activeHelpText": "Activate or deactive the user."
   }

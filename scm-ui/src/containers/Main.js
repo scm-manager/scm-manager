@@ -19,6 +19,7 @@ import SingleGroup from "../groups/containers/SingleGroup";
 import AddGroup from "../groups/containers/AddGroup";
 
 import Config from "../config/containers/Config";
+import ChangeUserPassword from "../users/components/ChangeUserPassword";
 
 type Props = {
   authenticated?: boolean
@@ -77,6 +78,11 @@ class Main extends React.Component<Props> {
             authenticated={authenticated}
             path="/user/:name"
             component={SingleUser}
+          />
+          <ProtectedRoute
+            authenticated={authenticated}
+            path={"/me/password"}
+            component={ChangeUserPassword}
           />
           <ProtectedRoute
             exact
