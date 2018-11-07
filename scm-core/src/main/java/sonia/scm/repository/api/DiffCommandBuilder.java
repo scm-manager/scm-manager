@@ -104,7 +104,7 @@ public final class DiffCommandBuilder
    *
    * @throws IOException
    */
-  public DiffCommandBuilder retriveContent(OutputStream outputStream) throws IOException, RevisionNotFoundException {
+  public DiffCommandBuilder retrieveContent(OutputStream outputStream) throws IOException, RevisionNotFoundException {
     getDiffResult(outputStream);
 
     return this;

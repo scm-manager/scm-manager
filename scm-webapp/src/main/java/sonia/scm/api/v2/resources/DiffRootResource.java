@@ -66,7 +66,7 @@ public class DiffRootResource {
           repositoryService.getDiffCommand()
             .setRevision(revision)
             .setFormat(diffFormat)
-            .retriveContent(output);
+            .retrieveContent(output);
         } catch (RevisionNotFoundException e) {
           throw new WebApplicationException(Response.Status.NOT_FOUND);
         }

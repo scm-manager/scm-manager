@@ -5,7 +5,6 @@ import GroupForm from "../components/GroupForm";
 import {
   modifyGroup,
   modifyGroupReset,
-  fetchGroup,
   isModifyGroupPending,
   getModifyGroupFailure
 } from "../modules/groups";
@@ -29,13 +28,13 @@ class EditGroup extends React.Component<Props> {
     const { group, modifyGroupReset } = this.props;
     modifyGroupReset(group);
   }
-  groupModified = () => () => {
-    const { group, history } = this.props;
-    history.push(`/group/${group.name}`);
+
+  groupModified = (group: Group) => () => {
+    this.props.history.push(`/group/${group.name}`);
   };
 
   modifyGroup = (group: Group) => {
-    this.props.modifyGroup(group, this.groupModified());
+    this.props.modifyGroup(group, this.groupModified(group));
   };
 
   render() {

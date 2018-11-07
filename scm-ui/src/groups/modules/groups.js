@@ -85,12 +85,20 @@ export function fetchGroupsFailure(url: string, error: Error): Action {
 }
 
 //fetch group
-export function fetchGroup(link: string, name: string) {
+export function fetchGroupByLink(group: Group) {
+  return fetchGroup(group._links.self.href, group.name);
+}
+
+export function fetchGroupByName(link: string, name: string) {
   const groupUrl = link.endsWith("/") ? link + name : link + "/" + name;
+  return fetchGroup(groupUrl, name);
+}
+
+function fetchGroup(link: string, name: string) {
   return function(dispatch: any) {
     dispatch(fetchGroupPending(name));
     return apiClient
-      .get(groupUrl)
+      .get(link)
       .then(response => {
         return response.json();
       })
@@ -189,6 +197,9 @@ export function modifyGroup(group: Group, callback?: () => void) {
         if (callback) {
           callback();
         }
+      })
+      .then(() => {
+        dispatch(fetchGroupByLink(group));
       })
       .catch(cause => {
         dispatch(
@@ -368,8 +379,6 @@ function byNamesReducer(state: any = {}, action: any = {}) {
         ...byNames
       };
     case FETCH_GROUP_SUCCESS:
-      return reducerByName(state, action.payload.name, action.payload);
-    case MODIFY_GROUP_SUCCESS:
       return reducerByName(state, action.payload.name, action.payload);
     case DELETE_GROUP_SUCCESS:
       const newGroupByNames = deleteGroupInGroupsByNames(
