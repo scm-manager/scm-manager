@@ -63,7 +63,7 @@ public class DiffRootResource {
         repositoryService.getDiffCommand()
           .setRevision(revision)
             .setFormat(diffFormat)
-          .retriveContent(output);
+          .retrieveContent(output);
       };
       return Response.ok(responseEntry)
         .header(HEADER_CONTENT_DISPOSITION, HttpUtil.createContentDispositionAttachmentHeader(String.format("%s-%s.diff", name, revision)))

@@ -99,13 +99,20 @@ export function fetchReposFailure(err: Error): Action {
 }
 
 // fetch repo
+export function fetchRepoByLink(repo: Repository) {
+  return fetchRepo(repo._links.self.href, repo.namespace, repo.name);
+}
 
-export function fetchRepo(link: string, namespace: string, name: string) {
+export function fetchRepoByName(link: string, namespace: string, name: string) {
   const repoUrl = link.endsWith("/") ? link : link + "/";
+  return fetchRepo(`${repoUrl}${namespace}/${name}`, namespace, name);
+}
+
+function fetchRepo(link: string, namespace: string, name: string) {
   return function(dispatch: any) {
     dispatch(fetchRepoPending(namespace, name));
     return apiClient
-      .get(`${repoUrl}${namespace}/${name}`)
+      .get(link)
       .then(response => response.json())
       .then(repository => {
         dispatch(fetchRepoSuccess(repository));
@@ -212,6 +219,9 @@ export function modifyRepo(repository: Repository, callback?: () => void) {
         if (callback) {
           callback();
         }
+      })
+      .then(() => {
+        dispatch(fetchRepoByLink(repository));
       })
       .catch(cause => {
         const error = new Error(`failed to modify repo: ${cause.message}`);
@@ -347,8 +357,6 @@ export default function reducer(
   switch (action.type) {
     case FETCH_REPOS_SUCCESS:
       return normalizeByNamespaceAndName(action.payload);
-    case MODIFY_REPO_SUCCESS:
-      return reducerByNames(state, action.payload);
     case FETCH_REPO_SUCCESS:
       return reducerByNames(state, action.payload);
     default:

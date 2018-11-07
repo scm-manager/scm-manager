@@ -103,7 +103,7 @@ public final class DiffCommandBuilder
    *
    * @throws IOException
    */
-  public DiffCommandBuilder retriveContent(OutputStream outputStream) throws IOException {
+  public DiffCommandBuilder retrieveContent(OutputStream outputStream) throws IOException {
     getDiffResult(outputStream);
 
     return this;

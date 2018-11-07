@@ -38,5 +38,14 @@
   "paginator": {
     "next": "Next",
     "previous": "Previous"
+  },
+  "profile": {
+    "actions-label": "Actions",
+    "username": "Username",
+    "displayName": "Display Name",
+    "mail": "E-Mail",
+    "change-password": "Change password",
+    "error-title": "Error",
+    "error-subtitle": "Cannot display profile"
   }
 }
