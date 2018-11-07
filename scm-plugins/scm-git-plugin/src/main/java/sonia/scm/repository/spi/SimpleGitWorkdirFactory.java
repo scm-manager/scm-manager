@@ -24,6 +24,7 @@ public class SimpleGitWorkdirFactory implements GitWorkdirFactory {
 
   public SimpleGitWorkdirFactory(File poolDirectory) {
     this.poolDirectory = poolDirectory;
+    poolDirectory.mkdirs();
   }
 
   public WorkingCopy createWorkingCopy(GitContext gitContext) {
@@ -33,7 +34,7 @@ public class SimpleGitWorkdirFactory implements GitWorkdirFactory {
     } catch (GitAPIException e) {
       throw new InternalRepositoryException("could not clone working copy of repository", e);
     } catch (IOException e) {
-      throw new InternalRepositoryException("could not create temporary directory for copy of repository", e);
+      throw new InternalRepositoryException("could not create temporary directory for clone of repository", e);
     }
   }
 
