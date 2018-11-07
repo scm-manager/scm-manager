@@ -2,14 +2,13 @@
 import React from "react";
 import type { User } from "@scm-manager/ui-types";
 import {
-  InputField,
   SubmitButton,
   Notification,
   ErrorNotification
 } from "@scm-manager/ui-components";
-import * as userValidator from "./userValidation";
 import { translate } from "react-i18next";
 import { setPassword } from "./changePassword";
+import PasswordConfirmation from "./PasswordConfirmation";
 
 type Props = {
   user: User,
@@ -19,9 +18,6 @@ type Props = {
 type State = {
   password: string,
   loading: boolean,
-  passwordConfirmationError: boolean,
-  validatePasswordError: boolean,
-  validatePassword: string,
   error?: Error,
   passwordChanged: boolean
 };
@@ -39,12 +35,6 @@ class SetUserPassword extends React.Component<Props, State> {
       passwordChanged: false
     };
   }
-
-  passwordIsValid = () => {
-    return !(
-      this.state.validatePasswordError || this.state.passwordConfirmationError
-    );
-  };
 
   setLoadingState = () => {
     this.setState({
@@ -66,16 +56,13 @@ class SetUserPassword extends React.Component<Props, State> {
       ...this.state,
       loading: false,
       passwordChanged: true,
-      password: "",
-      validatePassword: "",
-      validatePasswordError: false,
-      passwordConfirmationError: false
+      password: ""
     });
   };
 
   submit = (event: Event) => {
     event.preventDefault();
-    if (this.passwordIsValid()) {
+    if (this.state.password) {
       const { user } = this.props;
       const { password } = this.state;
       this.setLoadingState();
@@ -92,6 +79,7 @@ class SetUserPassword extends React.Component<Props, State> {
   };
 
   render() {
+    console.log("RENDER");
     const { t } = this.props;
     const { loading, passwordChanged, error } = this.state;
 
@@ -112,26 +100,12 @@ class SetUserPassword extends React.Component<Props, State> {
     return (
       <form onSubmit={this.submit}>
         {message}
-        <InputField
-          label={t("user.password")}
-          type="password"
-          onChange={this.handlePasswordChange}
-          value={this.state.password ? this.state.password : ""}
-          validationError={this.state.validatePasswordError}
-          errorMessage={t("validation.password-invalid")}
-          helpText={t("help.passwordHelpText")}
-        />
-        <InputField
-          label={t("validation.validatePassword")}
-          type="password"
-          onChange={this.handlePasswordValidationChange}
-          value={this.state ? this.state.validatePassword : ""}
-          validationError={this.state.passwordConfirmationError}
-          errorMessage={t("validation.passwordValidation-invalid")}
-          helpText={t("help.passwordConfirmHelpText")}
+        <PasswordConfirmation
+          passwordChanged={this.passwordChanged}
+          key={this.state.passwordChanged ? "changed" : "unchanged"}
         />
         <SubmitButton
-          disabled={!this.passwordIsValid()}
+          disabled={!this.state.password}
           loading={loading}
           label={t("user-form.submit")}
         />
@@ -139,31 +113,8 @@ class SetUserPassword extends React.Component<Props, State> {
     );
   }
 
-  handlePasswordChange = (password: string) => {
-    const validatePasswordError = !this.checkPasswords(
-      password,
-      this.state.validatePassword
-    );
-    this.setState({
-      validatePasswordError: !userValidator.isPasswordValid(password),
-      passwordConfirmationError: validatePasswordError,
-      password: password
-    });
-  };
-
-  handlePasswordValidationChange = (validatePassword: string) => {
-    const passwordConfirmed = this.checkPasswords(
-      this.state.password,
-      validatePassword
-    );
-    this.setState({
-      validatePassword,
-      passwordConfirmationError: !passwordConfirmed
-    });
-  };
-
-  checkPasswords = (password1: string, password2: string) => {
-    return password1 === password2;
+  passwordChanged = (password: string) => {
+    this.setState({ ...this.state, password });
   };
 
   onClose = () => {
