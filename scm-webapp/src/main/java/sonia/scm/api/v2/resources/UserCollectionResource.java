@@ -92,6 +92,6 @@ public class UserCollectionResource {
   @TypeHint(TypeHint.NO_CONTENT.class)
   @ResponseHeaders(@ResponseHeader(name = "Location", description = "uri to the created user"))
   public Response create(@Valid UserDto user) {
-    return adapter.create(user, () -> dtoToUserMapper.map(user, passwordService.encryptPassword(user.getPassword())), user -> resourceLinks.user().self(user.getName()));
+    return adapter.create(user, () -> dtoToUserMapper.map(user, passwordService.encryptPassword(user.getPassword())), u -> resourceLinks.user().self(u.getName()));
   }
 }

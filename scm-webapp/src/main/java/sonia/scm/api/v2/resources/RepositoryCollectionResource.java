@@ -90,6 +90,6 @@ public class RepositoryCollectionResource {
   public Response create(@Valid RepositoryDto repository) {
     return adapter.create(repository,
       () -> dtoToRepositoryMapper.map(repository, null),
-      repository -> resourceLinks.repository().self(repository.getNamespace(), repository.getName()));
+      r -> resourceLinks.repository().self(r.getNamespace(), r.getName()));
   }
 }

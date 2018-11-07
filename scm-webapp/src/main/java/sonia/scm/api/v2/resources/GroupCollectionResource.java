@@ -89,6 +89,6 @@ public class GroupCollectionResource {
   public Response create(@Valid GroupDto group) {
     return adapter.create(group,
                           () -> dtoToGroupMapper.map(group),
-                          group -> resourceLinks.group().self(group.getName()));
+                          g -> resourceLinks.group().self(g.getName()));
   }
 }

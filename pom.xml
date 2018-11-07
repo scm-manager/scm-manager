@@ -758,7 +758,7 @@
     <guice.version>4.0</guice.version>
 
     <!-- event bus -->
-    <legman.version>1.4.1</legman.version>
+    <legman.version>1.4.2</legman.version>
 
     <!-- webserver -->
     <jetty.version>9.2.10.v20150310</jetty.version>
