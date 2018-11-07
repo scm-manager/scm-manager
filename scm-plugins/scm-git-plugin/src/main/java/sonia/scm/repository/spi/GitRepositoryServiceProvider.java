@@ -243,7 +243,7 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
 
   @Override
   public MergeCommand getMergeCommand() {
-    return new GitMergeCommand(context, repository, handler.getWorkdirPool());
+    return new GitMergeCommand(context, repository, handler.getWorkdirFactory());
   }
 
 //~--- fields ---------------------------------------------------------------

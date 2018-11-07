@@ -91,7 +91,7 @@ public class GitRepositoryHandler
   
   private final Scheduler scheduler;
 
-  private final GitWorkdirPool workdirPool;
+  private final GitWorkdirFactory workdirFactory;
   
   private Task task;
   
@@ -106,11 +106,11 @@ public class GitRepositoryHandler
    * @param scheduler
    */
   @Inject
-  public GitRepositoryHandler(ConfigurationStoreFactory storeFactory, FileSystem fileSystem, Scheduler scheduler, GitWorkdirPool workdirPool)
+  public GitRepositoryHandler(ConfigurationStoreFactory storeFactory, FileSystem fileSystem, Scheduler scheduler, GitWorkdirFactory workdirFactory)
   {
     super(storeFactory, fileSystem);
     this.scheduler = scheduler;
-    this.workdirPool = workdirPool;
+    this.workdirFactory = workdirFactory;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -239,7 +239,7 @@ public class GitRepositoryHandler
     return new File(directory, DIRECTORY_REFS).exists();
   }
 
-  public GitWorkdirPool getWorkdirPool() {
-    return workdirPool;
+  public GitWorkdirFactory getWorkdirFactory() {
+    return workdirFactory;
   }
 }
