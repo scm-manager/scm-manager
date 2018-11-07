@@ -91,7 +91,7 @@ export default function reducer(
   state: any = {},
   action: Action = { type: "UNKNOWN" }
 ): any {
-  if (action.type === FETCH_SOURCES_SUCCESS) {
+  if (action.itemId && action.type === FETCH_SOURCES_SUCCESS) {
     return {
       [action.itemId]: action.payload,
       ...state

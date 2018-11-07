@@ -1,6 +1,6 @@
 // @flow
 
-import type { Collection, Links } from "./hal";
+import type { Links } from "./hal";
 
 // TODO ?? check ?? links
 export type SubRepository = {
@@ -20,6 +20,6 @@ export type File = {
   subRepository?: SubRepository, // TODO
   _links: Links,
   _embedded: {
-    children: File[]
+    children: ?File[]
   }
 };
