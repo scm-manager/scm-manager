@@ -79,6 +79,7 @@ import java.util.stream.Stream;
  * @apiviz.uses sonia.scm.repository.api.PushCommandBuilder
  * @apiviz.uses sonia.scm.repository.api.BundleCommandBuilder
  * @apiviz.uses sonia.scm.repository.api.UnbundleCommandBuilder
+ * @apiviz.uses sonia.scm.repository.api.MergeCommandBuilder
  * @since 1.17
  */
 @Slf4j
@@ -351,6 +352,22 @@ public final class RepositoryService implements Closeable {
 
     return new UnbundleCommandBuilder(provider.getUnbundleCommand(),
       repository);
+  }
+
+  /**
+   * The merge command executes a merge of two branches. It is possible to do a dry run to check, whether the given
+   * branches can be merged without conflicts.
+   *
+   * @return instance of {@link MergeCommandBuilder}
+   * @throws CommandNotSupportedException if the command is not supported
+   *                                      by the implementation of the repository service provider.
+   * @since 2.0.0
+   */
+  public MergeCommandBuilder gerMergeCommand() {
+    logger.debug("create unbundle command for repository {}",
+      repository.getNamespaceAndName());
+
+    return new MergeCommandBuilder(provider.getMergeCommand());
   }
 
   /**
