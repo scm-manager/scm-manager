@@ -61,6 +61,9 @@ public class GitRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
   @Mock
   private ConfigurationStoreFactory factory;
 
+  @Mock
+  private GitWorkdirPool gitWorkdirPool;
+
   @Override
   protected void checkDirectory(File directory) {
     File head = new File(directory, "HEAD");
@@ -84,7 +87,7 @@ public class GitRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
   protected RepositoryHandler createRepositoryHandler(ConfigurationStoreFactory factory,
                                                       File directory) {
     GitRepositoryHandler repositoryHandler = new GitRepositoryHandler(factory,
-      new DefaultFileSystem(), scheduler);
+      new DefaultFileSystem(), scheduler, gitWorkdirPool);
 
     repositoryHandler.init(contextProvider);
 
@@ -100,7 +103,7 @@ public class GitRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
   @Test
   public void getDirectory() {
     GitRepositoryHandler repositoryHandler = new GitRepositoryHandler(factory,
-      new DefaultFileSystem(), scheduler);
+      new DefaultFileSystem(), scheduler, gitWorkdirPool);
 
     GitConfig gitConfig = new GitConfig();
     gitConfig.setRepositoryDirectory(new File("/path"));
