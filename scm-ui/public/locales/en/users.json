@@ -44,9 +44,6 @@
     "information-label": "Information",
     "back-label": "Back"
   },
-  "profile": {
-    "change-pw": "Change Password"
-  },
   "validation": {
     "mail-invalid": "This email is invalid",
     "name-invalid": "This name is invalid",
