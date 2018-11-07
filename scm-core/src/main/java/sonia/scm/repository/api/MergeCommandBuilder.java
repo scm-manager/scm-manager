@@ -1,6 +1,7 @@
 package sonia.scm.repository.api;
 
 import com.google.common.base.Preconditions;
+import sonia.scm.repository.Person;
 import sonia.scm.repository.spi.MergeCommand;
 import sonia.scm.repository.spi.MergeCommandRequest;
 
@@ -20,6 +21,11 @@ public class MergeCommandBuilder {
 
   public MergeCommandBuilder setTargetBranch(String targetBranch) {
     request.setTargetBranch(targetBranch);
+    return this;
+  }
+
+  public MergeCommandBuilder setAuthor(Person author) {
+    request.setAuthor(author);
     return this;
   }
 

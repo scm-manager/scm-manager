@@ -71,8 +71,7 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
       MergeResult result;
       try {
         result = clone.merge()
-          .setCommit(true)
-          .setMessage(String.format(MERGE_COMMIT_MESSAGE_TEMPLATE, toMerge, target))
+          .setCommit(false) // we want to set the author manually
           .include(toMerge, resolveRevision(toMerge))
           .call();
       } catch (GitAPIException e) {
@@ -80,6 +79,14 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
       }
       if (result.getMergeStatus().isSuccessful()) {
         logger.debug("merged branch {} into {}", toMerge, target);
+        try {
+          clone.commit()
+            .setAuthor(request.getAuthor().getName(), request.getAuthor().getMail())
+            .setMessage(String.format(MERGE_COMMIT_MESSAGE_TEMPLATE, toMerge, target))
+            .call();
+        } catch (GitAPIException e) {
+          throw new InternalRepositoryException("could not commit merge between branch " + toMerge + " and " + target, e);
+        }
         try {
           clone.push().call();
         } catch (GitAPIException e) {
