@@ -16,7 +16,7 @@ import type { Group } from "@scm-manager/ui-types";
 import type { History } from "history";
 import {
   deleteGroup,
-  fetchGroup,
+  fetchGroupByName,
   getGroupByName,
   isFetchGroupPending,
   getFetchGroupFailure,
@@ -37,7 +37,7 @@ type Props = {
 
   // dispatcher functions
   deleteGroup: (group: Group, callback?: () => void) => void,
-  fetchGroup: (string, string) => void,
+  fetchGroupByName: (string, string) => void,
 
   // context objects
   t: string => string,
@@ -47,7 +47,7 @@ type Props = {
 
 class SingleGroup extends React.Component<Props> {
   componentDidMount() {
-    this.props.fetchGroup(this.props.groupLink, this.props.name);
+    this.props.fetchGroupByName(this.props.groupLink, this.props.name);
   }
 
   stripEndingSlash = (url: string) => {
@@ -147,8 +147,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchGroup: (link: string, name: string) => {
-      dispatch(fetchGroup(link, name));
+    fetchGroupByName: (link: string, name: string) => {
+      dispatch(fetchGroupByName(link, name));
     },
     deleteGroup: (group: Group, callback?: () => void) => {
       dispatch(deleteGroup(group, callback));
