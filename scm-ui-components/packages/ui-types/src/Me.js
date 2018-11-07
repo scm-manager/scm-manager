@@ -2,5 +2,6 @@
 
 export type Me = {
   name: string,
-  displayName: string
+  displayName: string,
+  mail: string
 };
