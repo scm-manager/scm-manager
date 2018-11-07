@@ -19,6 +19,10 @@ import java.io.IOException;
 public class GitMergeCommand extends AbstractGitCommand implements MergeCommand {
 
   private static final Logger logger = LoggerFactory.getLogger(GitMergeCommand.class);
+  public static final String MERGE_COMMIT_MESSAGE_TEMPLATE =
+    "Merge of branch %s into %s\n" +
+    "\n" +
+    "Automatic merge by SCM-Manager.";
 
   private final GitWorkdirFactory workdirFactory;
 
@@ -56,27 +60,33 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
     }
 
     private MergeCommandResult merge(MergeCommandRequest request) throws IOException {
+      String target = request.getTargetBranch();
+      String toMerge = request.getBranchToMerge();
       try {
-        clone.checkout().setName(request.getTargetBranch()).call();
+        clone.checkout().setName(target).call();
       } catch (GitAPIException e) {
-        throw new InternalRepositoryException("could not checkout target branch " + request.getTargetBranch(), e);
+        throw new InternalRepositoryException("could not checkout target branch " + target, e);
       }
       MergeResult result;
       try {
-        result = clone.merge().include(request.getBranchToMerge(), resolveRevision(request.getBranchToMerge())).setCommit(true).call();
+        result = clone.merge()
+          .setCommit(true)
+          .setMessage(String.format(MERGE_COMMIT_MESSAGE_TEMPLATE, toMerge, target))
+          .include(toMerge, resolveRevision(toMerge))
+          .call();
       } catch (GitAPIException e) {
-        throw new InternalRepositoryException("could not merge branch " + request.getBranchToMerge() + " into " + request.getTargetBranch(), e);
+        throw new InternalRepositoryException("could not merge branch " + toMerge + " into " + target, e);
       }
       if (result.getMergeStatus().isSuccessful()) {
-        logger.info("Merged branch {} into {}", request.getBranchToMerge(), request.getTargetBranch());
+        logger.info("merged branch {} into {}", toMerge, target);
         try {
           clone.push().call();
         } catch (GitAPIException e) {
-          throw new InternalRepositoryException("could not push merged branch " + request.getBranchToMerge() + " to origin", e);
+          throw new InternalRepositoryException("could not push merged branch " + toMerge + " to origin", e);
         }
         return new MergeCommandResult(true);
       } else {
-        logger.info("Could not merged branch {} into {}", request.getBranchToMerge(), request.getTargetBranch());
+        logger.info("could not merged branch {} into {} due to {}", toMerge, target, result.getConflicts().keySet());
         return new MergeCommandResult(false);
       }
     }
