@@ -19,7 +19,8 @@ import SingleGroup from "../groups/containers/SingleGroup";
 import AddGroup from "../groups/containers/AddGroup";
 
 import Config from "../config/containers/Config";
-import ChangeUserPassword from "../users/components/ChangeUserPassword";
+import ChangeUserPassword from "./ChangeUserPassword";
+import Profile from "./Profile";
 
 type Props = {
   authenticated?: boolean
@@ -79,11 +80,7 @@ class Main extends React.Component<Props> {
             path="/user/:name"
             component={SingleUser}
           />
-          <ProtectedRoute
-            authenticated={authenticated}
-            path={"/me/password"}
-            component={ChangeUserPassword}
-          />
+
           <ProtectedRoute
             exact
             path="/groups"
@@ -110,6 +107,11 @@ class Main extends React.Component<Props> {
             exact
             path="/config"
             component={Config}
+            authenticated={authenticated}
+          />
+          <ProtectedRoute
+            path="/me"
+            component={Profile}
             authenticated={authenticated}
           />
         </Switch>

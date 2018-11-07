@@ -1,15 +1,15 @@
 // @flow
 import React from "react";
-import type { User } from "@scm-manager/ui-types";
+import type { User } from "../../../scm-ui-components/packages/ui-types/src/index";
 import {
   SubmitButton,
   Notification,
   ErrorNotification,
   InputField
-} from "@scm-manager/ui-components";
+} from "../../../scm-ui-components/packages/ui-components/src/index";
 import { translate } from "react-i18next";
-import { setPassword, updatePassword } from "./changePassword";
-import PasswordConfirmation from "./PasswordConfirmation";
+import { setPassword, updatePassword } from "../users/components/changePassword";
+import PasswordConfirmation from "../users/components/PasswordConfirmation";
 
 type Props = {
   user: User,
