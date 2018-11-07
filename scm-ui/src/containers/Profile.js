@@ -5,16 +5,14 @@ import React from "react";
 import {
   Page,
   Navigation,
-  Section,
-  MailLink
+  Section
 } from "../../../scm-ui-components/packages/ui-components/src/index";
-import { NavLink, Route } from "react-router-dom";
+import { NavLink, Route, withRouter } from "react-router-dom";
 import { getMe } from "../modules/auth";
 import { compose } from "redux";
 import { connect } from "react-redux";
 import { translate } from "react-i18next";
 import type { Me } from "../../../scm-ui-components/packages/ui-types/src/index";
-import AvatarWrapper from "../repos/components/changesets/AvatarWrapper";
 import { ErrorPage } from "@scm-manager/ui-components";
 import ChangeUserPassword from "./ChangeUserPassword";
 import ProfileInfo from "./ProfileInfo";
@@ -23,12 +21,26 @@ type Props = {
   me: Me,
 
   // Context props
-  t: string => string
+  t: string => string,
+  match: any
 };
 type State = {};
 
 class Profile extends React.Component<Props, State> {
+  stripEndingSlash = (url: string) => {
+    if (url.endsWith("/")) {
+      return url.substring(0, url.length - 2);
+    }
+    return url;
+  };
+
+  matchedUrl = () => {
+    return this.stripEndingSlash(this.props.match.url);
+  };
+
   render() {
+    const url = this.matchedUrl();
+
     const { me, t } = this.props;
 
     if (!me) {
@@ -43,8 +55,24 @@ class Profile extends React.Component<Props, State> {
 
     return (
       <Page title={me.displayName}>
-        <Route path={""} render={() => <ProfileInfo me={me} />} />
-        <Route path={"/password"} component={ChangeUserPassword} />
+        <div className="columns">
+          <div className="column is-three-quarters">
+            <Route path={url} exact render={() => <ProfileInfo me={me} />} />
+            <Route
+              path={`${url}/password`}
+              exact
+              component={ChangeUserPassword}
+            />
+          </div>
+          <div className="column">
+            <Navigation>
+              <Section label={t("profile.actions-label")} />
+              <NavLink to={`${url}/password`}>
+                {t("profile.change-password")}
+              </NavLink>
+            </Navigation>
+          </div>
+        </div>
       </Page>
     );
   }
@@ -58,5 +86,6 @@ const mapStateToProps = state => {
 
 export default compose(
   translate("commons"),
-  connect(mapStateToProps)
+  connect(mapStateToProps),
+  withRouter
 )(Profile);
