@@ -1,9 +1,11 @@
 package sonia.scm.repository.spi;
 
-import org.junit.Assert;
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
+import sonia.scm.repository.api.MergeCommandResult;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
+
 
 public class GitMergeCommandTest extends AbstractGitCommandTestBase {
 
@@ -38,9 +40,9 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
     request.setTargetBranch("master");
     request.setBranchToMerge("mergeable");
 
-    boolean mergeable = command.merge(request).isSuccess();
+    MergeCommandResult mergeCommandResult = command.merge(request);
 
-    assertThat(mergeable).isTrue();
+    assertThat(mergeCommandResult.isSuccess()).isTrue();
   }
 
   @Test
@@ -50,9 +52,10 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
     request.setBranchToMerge("test-branch");
     request.setTargetBranch("master");
 
-    boolean mergeable = command.merge(request).isSuccess();
+    MergeCommandResult mergeCommandResult = command.merge(request);
 
-    assertThat(mergeable).isFalse();
+    assertThat(mergeCommandResult.isSuccess()).isFalse();
+    assertThat(mergeCommandResult.getFilesWithConflict()).containsExactly("a.txt");
   }
 
   private GitMergeCommand createCommand() {

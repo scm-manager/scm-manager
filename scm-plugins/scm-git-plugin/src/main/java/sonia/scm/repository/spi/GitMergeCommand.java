@@ -35,9 +35,10 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
   public MergeCommandResult merge(MergeCommandRequest request) {
     try (WorkingCopy workingCopy = workdirFactory.createWorkingCopy(context)) {
       Repository repository = workingCopy.get();
+      logger.debug("cloned repository to folder {}", repository.getWorkTree());
       return new MergeWorker(repository).merge(request);
     } catch (IOException e) {
-      throw new InternalRepositoryException(e);
+      throw new InternalRepositoryException("could not clone repository for merge", e);
     }
   }
 
@@ -48,7 +49,7 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
       ResolveMerger merger = (ResolveMerger) MergeStrategy.RECURSIVE.newMerger(repository, true);
       return new MergeDryRunCommandResult(merger.merge(repository.resolve(request.getBranchToMerge()), repository.resolve(request.getTargetBranch())));
     } catch (IOException e) {
-      throw new InternalRepositoryException(e);
+      throw new InternalRepositoryException("could not clone repository for merge", e);
     }
   }
 
@@ -65,7 +66,7 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
       try {
         clone.checkout().setName(target).call();
       } catch (GitAPIException e) {
-        throw new InternalRepositoryException("could not checkout target branch " + target, e);
+        throw new InternalRepositoryException("could not checkout target branch for merge: " + target, e);
       }
       MergeResult result;
       try {
@@ -78,16 +79,17 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
         throw new InternalRepositoryException("could not merge branch " + toMerge + " into " + target, e);
       }
       if (result.getMergeStatus().isSuccessful()) {
-        logger.info("merged branch {} into {}", toMerge, target);
+        logger.debug("merged branch {} into {}", toMerge, target);
         try {
           clone.push().call();
         } catch (GitAPIException e) {
           throw new InternalRepositoryException("could not push merged branch " + toMerge + " to origin", e);
         }
-        return new MergeCommandResult(true);
+        logger.debug("pushed merged branch {}", target);
+        return MergeCommandResult.success();
       } else {
-        logger.info("could not merged branch {} into {} due to {}", toMerge, target, result.getConflicts().keySet());
-        return new MergeCommandResult(false);
+        logger.info("could not merged branch {} into {} due to conflict in paths {}", toMerge, target, result.getConflicts().keySet());
+        return MergeCommandResult.failure(result.getConflicts().keySet());
       }
     }
 
