@@ -83,7 +83,7 @@ public class GroupResource {
    * <strong>Note:</strong> This method requires "group" privilege.
    *
    * @param name name of the group to be modified
-   * @param groupDto group object to modify
+   * @param group group object to modify
    */
   @PUT
   @Path("")
@@ -97,7 +97,7 @@ public class GroupResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
-  public Response update(@PathParam("id") String name, @Valid @Named("group") GroupDto groupDto) {
-    return adapter.update(name, existing -> dtoToGroupMapper.map(groupDto));
+  public Response update(@PathParam("id") String name, @Valid GroupDto group) {
+    return adapter.update(name, existing -> dtoToGroupMapper.map(group));
   }
 }

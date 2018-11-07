@@ -485,6 +485,7 @@
           see https://blogs.oracle.com/darcy/entry/bootclasspath_older_source
           -->
           <compilerArgument>-Xlint:unchecked,-options</compilerArgument>
+          <compilerArgument>-parameters</compilerArgument>
         </configuration>
       </plugin>
 
@@ -757,7 +758,7 @@
     <guice.version>4.0</guice.version>
 
     <!-- event bus -->
-    <legman.version>1.4.0</legman.version>
+    <legman.version>1.4.1</legman.version>
 
     <!-- webserver -->
     <jetty.version>9.2.10.v20150310</jetty.version>

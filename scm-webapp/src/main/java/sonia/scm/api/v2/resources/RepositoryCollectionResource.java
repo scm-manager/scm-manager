@@ -72,7 +72,7 @@ public class RepositoryCollectionResource {
    * <strong>Note:</strong> This method requires "repository" privilege. The namespace of the given repository will
    *   be ignored and set by the configured namespace strategy.
    *
-   * @param repositoryDto The repository to be created.
+   * @param repository The repository to be created.
    * @return A response with the link to the new repository (if created successfully).
    */
   @POST
@@ -87,9 +87,9 @@ public class RepositoryCollectionResource {
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
   @ResponseHeaders(@ResponseHeader(name = "Location", description = "uri to the created repository"))
-  public Response create(@Valid @Named("repository") RepositoryDto repositoryDto) {
-    return adapter.create(repositoryDto,
-      () -> dtoToRepositoryMapper.map(repositoryDto, null),
+  public Response create(@Valid RepositoryDto repository) {
+    return adapter.create(repository,
+      () -> dtoToRepositoryMapper.map(repository, null),
       repository -> resourceLinks.repository().self(repository.getNamespace(), repository.getName()));
   }
 }
