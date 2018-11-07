@@ -26,6 +26,7 @@ export const MODIFY_GROUP = "scm/groups/MODIFY_GROUP";
 export const MODIFY_GROUP_PENDING = `${MODIFY_GROUP}_${types.PENDING_SUFFIX}`;
 export const MODIFY_GROUP_SUCCESS = `${MODIFY_GROUP}_${types.SUCCESS_SUFFIX}`;
 export const MODIFY_GROUP_FAILURE = `${MODIFY_GROUP}_${types.FAILURE_SUFFIX}`;
+export const MODIFY_GROUP_RESET = `${MODIFY_GROUP}_${types.RESET_SUFFIX}`;
 
 export const DELETE_GROUP = "scm/groups/DELETE";
 export const DELETE_GROUP_PENDING = `${DELETE_GROUP}_${types.PENDING_SUFFIX}`;
@@ -234,6 +235,13 @@ export function modifyGroupFailure(group: Group, error: Error): Action {
       error,
       group
     },
+    itemId: group.name
+  };
+}
+
+export function modifyGroupReset(group: Group): Action {
+  return {
+    type: MODIFY_GROUP_RESET,
     itemId: group.name
   };
 }

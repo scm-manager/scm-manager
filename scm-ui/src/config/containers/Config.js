@@ -2,12 +2,19 @@
 import React from "react";
 import { translate } from "react-i18next";
 import { Route } from "react-router";
+import { ExtensionPoint } from "@scm-manager/ui-extensions";
 
+import type { Links } from "@scm-manager/ui-types";
 import { Page, Navigation, NavLink, Section } from "@scm-manager/ui-components";
 import GlobalConfig from "./GlobalConfig";
 import type { History } from "history";
+import {connect} from "react-redux";
+import {compose} from "redux";
+import { getLinks } from "../../modules/indexResource";
 
 type Props = {
+  links: Links,
+
   // context objects
   t: string => string,
   match: any,
@@ -27,15 +34,23 @@ class Config extends React.Component<Props> {
   };
 
   render() {
-    const { t } = this.props;
+    const { links, t } = this.props;
 
     const url = this.matchedUrl();
+    const extensionProps = {
+      links,
+      url
+    };
 
     return (
       <Page>
         <div className="columns">
           <div className="column is-three-quarters">
             <Route path={url} exact component={GlobalConfig} />
+            <ExtensionPoint name="config.route"
+                            props={extensionProps}
+                            renderAll={true}
+            />
           </div>
           <div className="column">
             <Navigation>
@@ -43,6 +58,10 @@ class Config extends React.Component<Props> {
                 <NavLink
                   to={`${url}`}
                   label={t("global-config.navigation-label")}
+                />
+                <ExtensionPoint name="config.navigation"
+                                props={extensionProps}
+                                renderAll={true}
                 />
               </Section>
             </Navigation>
@@ -53,4 +72,15 @@ class Config extends React.Component<Props> {
   }
 }
 
-export default translate("config")(Config);
+const mapStateToProps = (state: any) => {
+  const links = getLinks(state);
+  return {
+    links
+  };
+};
+
+export default compose(
+  connect(mapStateToProps),
+  translate("config")
+)(Config);
+

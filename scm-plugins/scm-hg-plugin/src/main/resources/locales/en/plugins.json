@@ -4,6 +4,27 @@
       "clone" : "Clone the repository",
       "create" : "Create a new repository",
       "replace" : "Push an existing repository"
+    },
+    "config": {
+      "link": "Mercurial",
+      "title": "Mercurial Configuration",
+      "hgBinary": "HG Binary",
+      "hgBinaryHelpText": "Location of Mercurial binary.",
+      "pythonBinary": "Python Binary",
+      "pythonBinaryHelpText": "Location of Python binary.",
+      "pythonPath": "Python Module Search Path",
+      "pythonPathHelpText": "Python Module Search Path (PYTHONPATH).",
+      "repositoryDirectory": "Repository directory",
+      "repositoryDirectoryHelpText": "Location of Mercurial repositories.",
+      "encoding": "Encoding",
+      "encodingHelpText": "Repository Encoding.",
+      "useOptimizedBytecode": "Optimized Bytecode (.pyo)",
+      "useOptimizedBytecodeHelpText": "Use the Python '-O' switch.",
+      "showRevisionInId": "Show Revision",
+      "showRevisionInIdHelpText": "Show revision as part of the node id.",
+      "disabled": "Disabled",
+      "disabledHelpText": "Enable or disable the Mercurial plugin.",
+      "required": "This configuration value is required"
     }
   }
 }

@@ -322,6 +322,10 @@ class ResourceLinks {
     public String history(NamespaceAndName namespaceAndName, String branch) {
       return branchLinkBuilder.method("getRepositoryResource").parameters(namespaceAndName.getNamespace(), namespaceAndName.getName()).method("branches").parameters().method("history").parameters(branch).href();
     }
+
+    public String changesetDiff(NamespaceAndName namespaceAndName, String branch) {
+      return branchLinkBuilder.method("getRepositoryResource").parameters(namespaceAndName.getNamespace(), namespaceAndName.getName()).method("branches").parameters().method("changesetDiff").parameters(branch, "").href() + "{otherBranch}";
+    }
   }
 
   public BranchCollectionLinks branchCollection() {

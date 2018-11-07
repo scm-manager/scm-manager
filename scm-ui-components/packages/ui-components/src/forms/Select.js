@@ -9,10 +9,11 @@ export type SelectItem = {
 };
 
 type Props = {
+  name?: string,
   label?: string,
   options: SelectItem[],
-  value?: SelectItem,
-  onChange: string => void,
+  value?: string,
+  onChange: (value: string, name?: string) => void,
   loading?: boolean,
   helpText?: string
 };
@@ -29,7 +30,7 @@ class Select extends React.Component<Props> {
   }
 
   handleInput = (event: SyntheticInputEvent<HTMLSelectElement>) => {
-    this.props.onChange(event.target.value);
+    this.props.onChange(event.target.value, this.props.name);
   };
 
   render() {
@@ -40,10 +41,10 @@ class Select extends React.Component<Props> {
     return (
       <div className="field">
         <LabelWithHelpIcon label={label} helpText={helpText} />
-    <div className={classNames(
-      "control select",
-      loadingClass
-    )}>
+        <div className={classNames(
+          "control select",
+          loadingClass
+        )}>
           <select
             ref={input => {
               this.field = input;

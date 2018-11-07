@@ -29,6 +29,7 @@ export const MODIFY_REPO = "scm/repos/MODIFY_REPO";
 export const MODIFY_REPO_PENDING = `${MODIFY_REPO}_${types.PENDING_SUFFIX}`;
 export const MODIFY_REPO_SUCCESS = `${MODIFY_REPO}_${types.SUCCESS_SUFFIX}`;
 export const MODIFY_REPO_FAILURE = `${MODIFY_REPO}_${types.FAILURE_SUFFIX}`;
+export const MODIFY_REPO_RESET = `${MODIFY_REPO}_${types.RESET_SUFFIX}`;
 
 export const DELETE_REPO = "scm/repos/DELETE_REPO";
 export const DELETE_REPO_PENDING = `${DELETE_REPO}_${types.PENDING_SUFFIX}`;
@@ -253,6 +254,14 @@ export function modifyRepoFailure(
   return {
     type: MODIFY_REPO_FAILURE,
     payload: { error, repository },
+    itemId: createIdentifier(repository)
+  };
+}
+
+export function modifyRepoReset(repository: Repository): Action {
+  return {
+    type: MODIFY_REPO_RESET,
+    payload: { repository },
     itemId: createIdentifier(repository)
   };
 }

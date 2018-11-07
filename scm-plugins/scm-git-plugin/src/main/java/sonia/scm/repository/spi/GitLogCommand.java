@@ -43,6 +43,7 @@ import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
+import org.eclipse.jgit.revwalk.filter.RevFilter;
 import org.eclipse.jgit.treewalk.filter.AndTreeFilter;
 import org.eclipse.jgit.treewalk.filter.PathFilter;
 import org.eclipse.jgit.treewalk.filter.TreeFilter;
@@ -198,6 +199,14 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
           endId = repository.resolve(request.getEndChangeset());
         }
 
+        Ref branch = getBranchOrDefault(repository,request.getBranch());
+
+        ObjectId ancestorId = null;
+
+        if (!Strings.isNullOrEmpty(request.getAncestorChangeset())) {
+          ancestorId = computeCommonAncestor(request, repository, startId, branch);
+        }
+
         revWalk = new RevWalk(repository);
 
         converter = new GitChangesetConverter(repository, revWalk);
@@ -208,8 +217,6 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
               PathFilter.create(request.getPath()), TreeFilter.ANY_DIFF));
         }
 
-        Ref branch = getBranchOrDefault(repository,request.getBranch());
-
         if (branch != null) {
           if (startId != null) {
             revWalk.markStart(revWalk.lookupCommit(startId));
@@ -217,10 +224,15 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
             revWalk.markStart(revWalk.lookupCommit(branch.getObjectId()));
           }
 
+
           Iterator<RevCommit> iterator = revWalk.iterator();
 
           while (iterator.hasNext()) {
             RevCommit commit = iterator.next();
+
+            if (commit.getId().equals(ancestorId)) {
+              break;
+            }
 
             if ((counter >= start)
               && ((limit < 0) || (counter < start + limit))) {
@@ -229,7 +241,7 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
 
             counter++;
 
-            if ((endId != null) && commit.getId().equals(endId)) {
+            if (commit.getId().equals(endId)) {
               break;
             }
           }
@@ -262,5 +274,18 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
     }
 
     return changesets;
+  }
+
+  private ObjectId computeCommonAncestor(LogCommandRequest request, Repository repository, ObjectId startId, Ref branch) throws IOException {
+    try (RevWalk mergeBaseWalk = new RevWalk(repository)) {
+      mergeBaseWalk.setRevFilter(RevFilter.MERGE_BASE);
+      if (startId != null) {
+        mergeBaseWalk.markStart(mergeBaseWalk.lookupCommit(startId));
+      } else {
+        mergeBaseWalk.markStart(mergeBaseWalk.lookupCommit(branch.getObjectId()));
+      }
+      mergeBaseWalk.markStart(mergeBaseWalk.parseCommit(repository.resolve(request.getAncestorChangeset())));
+      return mergeBaseWalk.next().getId();
+    }
   }
 }
