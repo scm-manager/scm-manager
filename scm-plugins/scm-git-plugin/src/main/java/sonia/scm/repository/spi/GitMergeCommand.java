@@ -73,7 +73,7 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
     }
 
     private MergeCommandResult merge() throws IOException {
-      createClone();
+      checkOutTargetBranch();
       MergeResult result = doMergeInClone();
       if (result.getMergeStatus().isSuccessful()) {
         doCommit();
@@ -84,7 +84,7 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
       }
     }
 
-    private void createClone() {
+    private void checkOutTargetBranch() {
       try {
         clone.checkout().setName(target).call();
       } catch (GitAPIException e) {

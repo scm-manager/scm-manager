@@ -10,7 +10,7 @@ import static org.mockito.Mockito.verify;
 public class CloseableWrapperTest {
 
   @Test
-  public void x() {
+  public void shouldExecuteGivenMethodAtClose() {
     Consumer<String> wrapped = new Consumer<String>() {
       // no this cannot be replaced with a lambda because otherwise we could not use Mockito#spy
       @Override
