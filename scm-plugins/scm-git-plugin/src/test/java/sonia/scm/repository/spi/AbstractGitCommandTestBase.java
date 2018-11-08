@@ -65,7 +65,7 @@ public class AbstractGitCommandTestBase extends ZippedRepositoryTestBase
   {
     if (context == null)
     {
-      context = new GitContext(repositoryDirectory);
+      context = new GitContext(repositoryDirectory, repository);
     }
 
     return context;

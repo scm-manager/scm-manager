@@ -106,7 +106,7 @@ public class GitOutgoingCommandTest extends AbstractRemoteCommandTestBase
     commit(outgoing, "added a");
 
     GitPushCommand push = new GitPushCommand(handler,
-                            new GitContext(outgoingDirectory),
+                            new GitContext(outgoingDirectory, null),
                             outgoingRepository);
     PushCommandRequest req = new PushCommandRequest();
 
@@ -161,7 +161,7 @@ public class GitOutgoingCommandTest extends AbstractRemoteCommandTestBase
    */
   private GitOutgoingCommand createCommand()
   {
-    return new GitOutgoingCommand(handler, new GitContext(outgoingDirectory),
+    return new GitOutgoingCommand(handler, new GitContext(outgoingDirectory, null),
       outgoingRepository);
   }
 }

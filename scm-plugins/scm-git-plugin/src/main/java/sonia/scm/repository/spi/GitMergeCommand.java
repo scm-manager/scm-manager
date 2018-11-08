@@ -45,7 +45,7 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
       logger.debug("cloned repository to folder {}", repository.getWorkTree());
       return new MergeWorker(repository, request).merge();
     } catch (IOException e) {
-      throw new InternalRepositoryException("could not clone repository for merge", e);
+      throw new InternalRepositoryException(context.getRepository(), "could not clone repository for merge", e);
     }
   }
 
@@ -56,11 +56,11 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
       ResolveMerger merger = (ResolveMerger) MergeStrategy.RECURSIVE.newMerger(repository, true);
       return new MergeDryRunCommandResult(merger.merge(repository.resolve(request.getBranchToMerge()), repository.resolve(request.getTargetBranch())));
     } catch (IOException e) {
-      throw new InternalRepositoryException("could not clone repository for merge", e);
+      throw new InternalRepositoryException(context.getRepository(), "could not clone repository for merge", e);
     }
   }
 
-  private static class MergeWorker {
+  private class MergeWorker {
 
     private final String target;
     private final String toMerge;
@@ -92,7 +92,7 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
       try {
         clone.checkout().setName(target).call();
       } catch (GitAPIException e) {
-        throw new InternalRepositoryException("could not checkout target branch for merge: " + target, e);
+        throw new InternalRepositoryException(context.getRepository(), "could not checkout target branch for merge: " + target, e);
       }
     }
 
@@ -104,7 +104,7 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
           .include(toMerge, resolveRevision(toMerge))
           .call();
       } catch (GitAPIException e) {
-        throw new InternalRepositoryException("could not merge branch " + toMerge + " into " + target, e);
+        throw new InternalRepositoryException(context.getRepository(), "could not merge branch " + toMerge + " into " + target, e);
       }
       return result;
     }
@@ -118,7 +118,7 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
           .setMessage(MessageFormat.format(determineMessageTemplate(), toMerge, target))
           .call();
       } catch (GitAPIException e) {
-        throw new InternalRepositoryException("could not commit merge between branch " + toMerge + " and " + target, e);
+        throw new InternalRepositoryException(context.getRepository(), "could not commit merge between branch " + toMerge + " and " + target, e);
       }
     }
 
@@ -147,7 +147,7 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
       try {
         clone.push().call();
       } catch (GitAPIException e) {
-        throw new InternalRepositoryException("could not push merged branch " + toMerge + " to origin", e);
+        throw new InternalRepositoryException(context.getRepository(), "could not push merged branch " + toMerge + " to origin", e);
       }
       logger.debug("pushed merged branch {}", target);
     }
