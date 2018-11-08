@@ -106,6 +106,10 @@ public class GitContext implements Closeable
     return repository;
   }
 
+  File getDirectory() {
+    return directory;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
