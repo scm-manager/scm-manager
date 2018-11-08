@@ -46,6 +46,8 @@
     "mail": "E-Mail",
     "change-password": "Change password",
     "error-title": "Error",
-    "error-subtitle": "Cannot display profile"
+    "error-subtitle": "Cannot display profile",
+    "error": "Error",
+    "error-message": "'me' is undefined"
   }
 }

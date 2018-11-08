@@ -2,18 +2,18 @@
 
 import React from "react";
 
-import {
-  Page,
-  Navigation,
-  Section
-} from "../../../scm-ui-components/packages/ui-components/src/index";
 import { NavLink, Route, withRouter } from "react-router-dom";
 import { getMe } from "../modules/auth";
 import { compose } from "redux";
 import { connect } from "react-redux";
 import { translate } from "react-i18next";
-import type { Me } from "../../../scm-ui-components/packages/ui-types/src/index";
-import { ErrorPage } from "@scm-manager/ui-components";
+import type { Me } from "@scm-manager/ui-types";
+import {
+  ErrorPage,
+  Page,
+  Navigation,
+  Section
+} from "@scm-manager/ui-components";
 import ChangeUserPassword from "./ChangeUserPassword";
 import ProfileInfo from "./ProfileInfo";
 
@@ -48,7 +48,10 @@ class Profile extends React.Component<Props, State> {
         <ErrorPage
           title={t("profile.error-title")}
           subtitle={t("profile.error-subtitle")}
-          error={{ name: "Error", message: "'me' is undefined" }}
+          error={{
+            name: t("profile.error"),
+            message: t("profile.error-message")
+          }}
         />
       );
     }
