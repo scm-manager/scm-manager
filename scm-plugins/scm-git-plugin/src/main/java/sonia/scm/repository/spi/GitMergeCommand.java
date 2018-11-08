@@ -23,7 +23,8 @@ import java.io.IOException;
 public class GitMergeCommand extends AbstractGitCommand implements MergeCommand {
 
   private static final Logger logger = LoggerFactory.getLogger(GitMergeCommand.class);
-  public static final String MERGE_COMMIT_MESSAGE_TEMPLATE =
+
+  private static final String MERGE_COMMIT_MESSAGE_TEMPLATE =
     "Merge of branch %s into %s\n" +
     "\n" +
     "Automatic merge by SCM-Manager.";
