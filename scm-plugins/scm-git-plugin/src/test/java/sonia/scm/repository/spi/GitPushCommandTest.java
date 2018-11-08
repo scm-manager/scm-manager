@@ -61,7 +61,6 @@ public class GitPushCommandTest extends AbstractRemoteCommandTestBase
    *
    * @throws GitAPIException
    * @throws IOException
-   * @throws RepositoryException
    */
   @Test
   public void testPush()

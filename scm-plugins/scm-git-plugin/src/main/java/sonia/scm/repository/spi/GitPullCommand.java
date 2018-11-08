@@ -101,7 +101,6 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
    * @return
    *
    * @throws IOException
-   * @throws RepositoryException
    */
   @Override
   public PullResponse pull(PullCommandRequest request)

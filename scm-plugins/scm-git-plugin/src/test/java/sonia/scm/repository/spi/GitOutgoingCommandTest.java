@@ -61,7 +61,6 @@ public class GitOutgoingCommandTest extends AbstractRemoteCommandTestBase
    *
    * @throws GitAPIException
    * @throws IOException
-   * @throws RepositoryException
    */
   @Test
   public void testGetOutgoingChangesets()
@@ -95,7 +94,6 @@ public class GitOutgoingCommandTest extends AbstractRemoteCommandTestBase
    *
    * @throws GitAPIException
    * @throws IOException
-   * @throws RepositoryException
    */
   @Test
   public void testGetOutgoingChangesetsWithAlreadyPushedChanges()
@@ -135,7 +133,6 @@ public class GitOutgoingCommandTest extends AbstractRemoteCommandTestBase
    *
    *
    * @throws IOException
-   * @throws RepositoryException
    */
   @Test
   public void testGetOutgoingChangesetsWithEmptyRepository()

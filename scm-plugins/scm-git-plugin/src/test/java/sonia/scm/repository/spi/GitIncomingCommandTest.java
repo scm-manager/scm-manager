@@ -61,7 +61,6 @@ public class GitIncomingCommandTest
    *
    * @throws GitAPIException
    * @throws IOException
-   * @throws RepositoryException
    */
   @Test
   public void testGetIncomingChangesets()
@@ -95,7 +94,6 @@ public class GitIncomingCommandTest
    *
    * @throws GitAPIException
    * @throws IOException
-   * @throws RepositoryException
    */
   @Test
   public void testGetIncomingChangesetsWithAllreadyPullChangesets()
@@ -132,7 +130,6 @@ public class GitIncomingCommandTest
    *
    *
    * @throws IOException
-   * @throws RepositoryException
    */
   @Test
   public void testGetIncomingChangesetsWithEmptyRepository()
@@ -156,7 +153,6 @@ public class GitIncomingCommandTest
    *
    * @throws GitAPIException
    * @throws IOException
-   * @throws RepositoryException
    */
   @Test
   @Ignore
