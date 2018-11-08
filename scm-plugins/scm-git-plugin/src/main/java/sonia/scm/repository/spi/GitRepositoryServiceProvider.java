@@ -73,7 +73,7 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
   public GitRepositoryServiceProvider(GitRepositoryHandler handler, Repository repository) {
     this.handler = handler;
     this.repository = repository;
-    this.context = new GitContext(handler.getDirectory(repository));
+    this.context = new GitContext(handler.getDirectory(repository), repository);
   }
 
   //~--- methods --------------------------------------------------------------

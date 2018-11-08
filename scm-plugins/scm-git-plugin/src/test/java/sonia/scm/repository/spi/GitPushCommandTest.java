@@ -99,7 +99,7 @@ public class GitPushCommandTest extends AbstractRemoteCommandTestBase
    */
   private GitPushCommand createCommand()
   {
-    return new GitPushCommand(handler, new GitContext(outgoingDirectory),
+    return new GitPushCommand(handler, new GitContext(outgoingDirectory, null),
       outgoingRepository);
   }
 }

@@ -33,9 +33,9 @@ public class SimpleGitWorkdirFactory implements GitWorkdirFactory {
       Repository clone = cloneRepository(gitContext.getDirectory(), createNewWorkdir());
       return new WorkingCopy(clone, this::close);
     } catch (GitAPIException e) {
-      throw new InternalRepositoryException("could not clone working copy of repository", e);
+      throw new InternalRepositoryException(gitContext.getRepository(), "could not clone working copy of repository", e);
     } catch (IOException e) {
-      throw new InternalRepositoryException("could not create temporary directory for clone of repository", e);
+      throw new InternalRepositoryException(gitContext.getRepository(), "could not create temporary directory for clone of repository", e);
     }
   }
 
