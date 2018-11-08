@@ -11,6 +11,7 @@ import sonia.scm.repository.InternalRepositoryException;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 
 public class SimpleGitWorkdirFactory implements GitWorkdirFactory {
 
@@ -39,10 +40,7 @@ public class SimpleGitWorkdirFactory implements GitWorkdirFactory {
   }
 
   private File createNewWorkdir() throws IOException {
-    File workdir = File.createTempFile("workdir", "", poolDirectory);
-    workdir.delete();
-    workdir.mkdir();
-    return workdir;
+    return Files.createTempDirectory(poolDirectory.toPath(),"workdir").toFile();
   }
 
   protected Repository cloneRepository(File bareRepository, File target) throws GitAPIException {
