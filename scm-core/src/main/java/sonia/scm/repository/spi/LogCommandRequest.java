@@ -84,7 +84,8 @@ public final class LogCommandRequest implements Serializable, Resetable
       && Objects.equal(pagingStart, other.pagingStart)
       && Objects.equal(pagingLimit, other.pagingLimit)
       && Objects.equal(path, other.path) 
-      && Objects.equal(branch, other.branch);
+      && Objects.equal(branch, other.branch)
+      && Objects.equal(ancestorChangeset, other.ancestorChangeset);
     //J+
   }
 
@@ -98,7 +99,7 @@ public final class LogCommandRequest implements Serializable, Resetable
   public int hashCode()
   {
     return Objects.hashCode(startChangeset, endChangeset, pagingStart,
-      pagingLimit, path, branch);
+      pagingLimit, path, branch, ancestorChangeset);
   }
 
   /**
@@ -114,6 +115,7 @@ public final class LogCommandRequest implements Serializable, Resetable
     pagingLimit = 20;
     path = null;
     branch = null;
+    ancestorChangeset = null;
   }
 
   /**
@@ -133,6 +135,7 @@ public final class LogCommandRequest implements Serializable, Resetable
                   .add("pagingLimit", pagingLimit)
                   .add("path", path)
                   .add("branch", branch)
+                  .add("ancestorChangeset", ancestorChangeset)
                   .toString();
     //J+
   }
@@ -203,6 +206,10 @@ public final class LogCommandRequest implements Serializable, Resetable
   public void setStartChangeset(String startChangeset)
   {
     this.startChangeset = startChangeset;
+  }
+
+  public void setAncestorChangeset(String ancestorChangeset) {
+    this.ancestorChangeset = ancestorChangeset;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -284,6 +291,10 @@ public final class LogCommandRequest implements Serializable, Resetable
     return pagingLimit < 0;
   }
 
+  public String getAncestorChangeset() {
+    return ancestorChangeset;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
@@ -303,4 +314,6 @@ public final class LogCommandRequest implements Serializable, Resetable
 
   /** Field description */
   private String startChangeset;
+
+  private String ancestorChangeset;
 }

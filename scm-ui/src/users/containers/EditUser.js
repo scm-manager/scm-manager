@@ -7,7 +7,8 @@ import type { User } from "@scm-manager/ui-types";
 import {
   modifyUser,
   isModifyUserPending,
-  getModifyUserFailure
+  getModifyUserFailure,
+  modifyUserReset
 } from "../modules/users";
 import type { History } from "history";
 import { ErrorNotification } from "@scm-manager/ui-components";
@@ -18,6 +19,7 @@ type Props = {
 
   // dispatch functions
   modifyUser: (user: User, callback?: () => void) => void,
+  modifyUserReset: User => void,
 
   // context objects
   user: User,
@@ -25,6 +27,10 @@ type Props = {
 };
 
 class EditUser extends React.Component<Props> {
+  componentDidMount() {
+    const { modifyUserReset, user } = this.props;
+    modifyUserReset(user);
+  }
   userModified = (user: User) => () => {
     this.props.history.push(`/user/${user.name}`);
   };
@@ -52,6 +58,9 @@ const mapDispatchToProps = dispatch => {
   return {
     modifyUser: (user: User, callback?: () => void) => {
       dispatch(modifyUser(user, callback));
+    },
+    modifyUserReset: (user: User) => {
+      dispatch(modifyUserReset(user));
     }
   };
 };

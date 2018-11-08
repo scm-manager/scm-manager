@@ -64,7 +64,7 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
    * Tests log command with the usage of a default branch.
    */
   @Test
-  public void testGetDefaultBranch() throws Exception {
+  public void testGetDefaultBranch() {
     // without default branch, the repository head should be used
     ChangesetPagingResult result = createCommand().getChangesets(new LogCommandRequest());
 
@@ -92,7 +92,7 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
   }
 
   @Test
-  public void testGetAll() throws Exception
+  public void testGetAll()
   {
     ChangesetPagingResult result =
       createCommand().getChangesets(new LogCommandRequest());
@@ -103,7 +103,7 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
   }
 
   @Test
-  public void testGetAllByPath() throws Exception
+  public void testGetAllByPath()
   {
     LogCommandRequest request = new LogCommandRequest();
 
@@ -119,7 +119,7 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
   }
 
   @Test
-  public void testGetAllWithLimit() throws Exception
+  public void testGetAllWithLimit()
   {
     LogCommandRequest request = new LogCommandRequest();
 
@@ -143,7 +143,7 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
   }
 
   @Test
-  public void testGetAllWithPaging() throws Exception
+  public void testGetAllWithPaging()
   {
     LogCommandRequest request = new LogCommandRequest();
 
@@ -194,7 +194,7 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
   }
 
   @Test
-  public void testGetRange() throws Exception
+  public void testGetRange()
   {
     LogCommandRequest request = new LogCommandRequest();
 
@@ -214,6 +214,26 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
     assertEquals("592d797cd36432e591416e8b2b98154f4f163411", c1.getId());
     assertNotNull(c2);
     assertEquals("435df2f061add3589cb326cc64be9b9c3897ceca", c2.getId());
+  }
+
+  @Test
+  public void testGetAncestor()
+  {
+    LogCommandRequest request = new LogCommandRequest();
+
+    request.setBranch("test-branch");
+    request.setAncestorChangeset("master");
+
+    ChangesetPagingResult result = createCommand().getChangesets(request);
+
+    assertNotNull(result);
+    assertEquals(1, result.getTotal());
+    assertEquals(1, result.getChangesets().size());
+
+    Changeset c = result.getChangesets().get(0);
+
+    assertNotNull(c);
+    assertEquals("3f76a12f08a6ba0dc988c68b7f0b2cd190efc3c4", c.getId());
   }
 
   @Test

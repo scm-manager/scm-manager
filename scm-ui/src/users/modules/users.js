@@ -26,6 +26,7 @@ export const MODIFY_USER = "scm/users/MODIFY_USER";
 export const MODIFY_USER_PENDING = `${MODIFY_USER}_${types.PENDING_SUFFIX}`;
 export const MODIFY_USER_SUCCESS = `${MODIFY_USER}_${types.SUCCESS_SUFFIX}`;
 export const MODIFY_USER_FAILURE = `${MODIFY_USER}_${types.FAILURE_SUFFIX}`;
+export const MODIFY_USER_RESET = `${MODIFY_USER}_${types.RESET_SUFFIX}`;
 
 export const DELETE_USER = "scm/users/DELETE";
 export const DELETE_USER_PENDING = `${DELETE_USER}_${types.PENDING_SUFFIX}`;
@@ -87,12 +88,20 @@ export function fetchUsersFailure(url: string, error: Error): Action {
 }
 
 //fetch user
-export function fetchUser(link: string, name: string) {
+export function fetchUserByName(link: string, name: string) {
   const userUrl = link.endsWith("/") ? link + name : link + "/" + name;
+  return fetchUser(userUrl, name);
+}
+
+export function fetchUserByLink(user: User) {
+  return fetchUser(user._links.self.href, user.name);
+}
+
+function fetchUser(link: string, name: string) {
   return function(dispatch: any) {
     dispatch(fetchUserPending(name));
     return apiClient
-      .get(userUrl)
+      .get(link)
       .then(response => {
         return response.json();
       })
@@ -195,6 +204,9 @@ export function modifyUser(user: User, callback?: () => void) {
           callback();
         }
       })
+      .then(() => {
+        dispatch(fetchUserByLink(user));
+      })
       .catch(err => {
         dispatch(modifyUserFailure(user, err));
       });
@@ -224,6 +236,13 @@ export function modifyUserFailure(user: User, error: Error): Action {
       error,
       user
     },
+    itemId: user.name
+  };
+}
+
+export function modifyUserReset(user: User): Action {
+  return {
+    type: MODIFY_USER_RESET,
     itemId: user.name
   };
 }
@@ -363,9 +382,6 @@ function byNamesReducer(state: any = {}, action: any = {}) {
 
     // Fetch single user actions
     case FETCH_USER_SUCCESS:
-      return reducerByName(state, action.payload.name, action.payload);
-
-    case MODIFY_USER_SUCCESS:
       return reducerByName(state, action.payload.name, action.payload);
 
     case DELETE_USER_SUCCESS:

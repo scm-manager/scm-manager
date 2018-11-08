@@ -37,7 +37,11 @@ import {
   FETCH_INDEXRESOURCES_SUCCESS
 } from "./indexResource";
 
-const me = { name: "tricia", displayName: "Tricia McMillian" };
+const me = {
+  name: "tricia",
+  displayName: "Tricia McMillian",
+  mail: "trillian@heartofgold.universe"
+};
 
 describe("auth reducer", () => {
   it("should set me and login on successful fetch of me", () => {

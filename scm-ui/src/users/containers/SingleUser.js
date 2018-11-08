@@ -15,7 +15,7 @@ import EditUser from "./EditUser";
 import type { User } from "@scm-manager/ui-types";
 import type { History } from "history";
 import {
-  fetchUser,
+  fetchUserByName,
   deleteUser,
   getUserByName,
   isFetchUserPending,
@@ -24,9 +24,14 @@ import {
   getDeleteUserFailure
 } from "../modules/users";
 
-import { DeleteUserNavLink, EditUserNavLink } from "./../components/navLinks";
+import {
+  DeleteUserNavLink,
+  EditUserNavLink,
+  SetPasswordNavLink
+} from "./../components/navLinks";
 import { translate } from "react-i18next";
 import { getUsersLink } from "../../modules/indexResource";
+import SetUserPassword from "../components/SetUserPassword";
 
 type Props = {
   name: string,
@@ -37,7 +42,7 @@ type Props = {
 
   // dispatcher functions
   deleteUser: (user: User, callback?: () => void) => void,
-  fetchUser: (string, string) => void,
+  fetchUserByName: (string, string) => void,
 
   // context objects
   t: string => string,
@@ -47,7 +52,7 @@ type Props = {
 
 class SingleUser extends React.Component<Props> {
   componentDidMount() {
-    this.props.fetchUser(this.props.usersLink, this.props.name);
+    this.props.fetchUserByName(this.props.usersLink, this.props.name);
   }
 
   userDeleted = () => {
@@ -97,6 +102,10 @@ class SingleUser extends React.Component<Props> {
               path={`${url}/edit`}
               component={() => <EditUser user={user} />}
             />
+            <Route
+              path={`${url}/password`}
+              component={() => <SetUserPassword user={user} />}
+            />
           </div>
           <div className="column">
             <Navigation>
@@ -106,6 +115,10 @@ class SingleUser extends React.Component<Props> {
                   label={t("single-user.information-label")}
                 />
                 <EditUserNavLink user={user} editUrl={`${url}/edit`} />
+                <SetPasswordNavLink
+                  user={user}
+                  passwordUrl={`${url}/password`}
+                />
               </Section>
               <Section label={t("single-user.actions-label")}>
                 <DeleteUserNavLink user={user} deleteUser={this.deleteUser} />
@@ -138,8 +151,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchUser: (link: string, name: string) => {
-      dispatch(fetchUser(link, name));
+    fetchUserByName: (link: string, name: string) => {
+      dispatch(fetchUserByName(link, name));
     },
     deleteUser: (user: User, callback?: () => void) => {
       dispatch(deleteUser(user, callback));

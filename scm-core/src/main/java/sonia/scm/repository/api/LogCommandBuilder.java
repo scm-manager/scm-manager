@@ -398,6 +398,11 @@ public final class LogCommandBuilder
     return this;
   }
 
+  public LogCommandBuilder setAncestorChangeset(String ancestorChangeset) {
+    request.setAncestorChangeset(ancestorChangeset);
+    return this;
+  }
+
   //~--- inner classes --------------------------------------------------------
 
   /**
