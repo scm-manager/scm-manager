@@ -1,10 +1,8 @@
 // @flow
 
 import React from "react";
-import { InputField } from "@scm-manager/ui-components";
-import { compose } from "redux";
 import { translate } from "react-i18next";
-import * as userValidator from "./userValidation";
+import InputField from "./InputField";
 
 type State = {
   password: string,
@@ -14,6 +12,7 @@ type State = {
 };
 type Props = {
   passwordChanged: string => void,
+  passwordValidator?: string => boolean,
   // Context props
   t: string => string
 };
@@ -43,26 +42,35 @@ class PasswordConfirmation extends React.Component<Props, State> {
     return (
       <>
         <InputField
-          label={t("user.password")}
+          label={t("password.label")}
           type="password"
           onChange={this.handlePasswordChange}
           value={this.state.password ? this.state.password : ""}
           validationError={!this.state.passwordValid}
-          errorMessage={t("validation.password-invalid")}
-          helpText={t("help.passwordHelpText")}
+          errorMessage={t("password.passwordInvalid")}
+          helpText={t("password.passwordHelpText")}
         />
         <InputField
-          label={t("validation.validatePassword")}
+          label={t("password.confirmPassword")}
           type="password"
           onChange={this.handlePasswordValidationChange}
           value={this.state ? this.state.confirmedPassword : ""}
           validationError={this.state.passwordConfirmationFailed}
-          errorMessage={t("validation.passwordValidation-invalid")}
-          helpText={t("help.passwordConfirmHelpText")}
+          errorMessage={t("password.passwordConfirmFailed")}
+          helpText={t("password.passwordConfirmHelpText")}
         />
       </>
     );
   }
+
+  validatePassword = password => {
+    const { passwordValidator } = this.props;
+    if (passwordValidator) {
+      return passwordValidator(password);
+    }
+
+    return password.length >= 6 && password.length < 32;
+  };
 
   handlePasswordValidationChange = (confirmedPassword: string) => {
     const passwordConfirmed = this.state.password === confirmedPassword;
@@ -82,7 +90,7 @@ class PasswordConfirmation extends React.Component<Props, State> {
 
     this.setState(
       {
-        passwordValid: userValidator.isPasswordValid(password),
+        passwordValid: this.validatePassword(password),
         passwordConfirmationFailed,
         password: password
       },
@@ -101,4 +109,4 @@ class PasswordConfirmation extends React.Component<Props, State> {
   };
 }
 
-export default compose(translate("users"))(PasswordConfirmation);
+export default translate("commons")(PasswordConfirmation);

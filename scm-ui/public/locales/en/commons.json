@@ -49,5 +49,13 @@
     "error-subtitle": "Cannot display profile",
     "error": "Error",
     "error-message": "'me' is undefined"
+  },
+  "password": {
+    "label": "Password",
+    "passwordHelpText": "Plain text password of the user.",
+    "passwordConfirmHelpText": "Repeat the password for confirmation.",
+    "confirmPassword": "Confirm password",
+    "passwordInvalid": "Password has to be between 6 and 32 characters",
+    "passwordConfirmFailed": "Passwords have to be identical"
   }
 }

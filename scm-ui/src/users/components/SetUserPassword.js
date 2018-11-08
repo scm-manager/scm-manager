@@ -4,11 +4,11 @@ import type { User } from "@scm-manager/ui-types";
 import {
   SubmitButton,
   Notification,
-  ErrorNotification
+  ErrorNotification,
+  PasswordConfirmation
 } from "@scm-manager/ui-components";
 import { translate } from "react-i18next";
-import { setPassword } from "./changePassword";
-import PasswordConfirmation from "./PasswordConfirmation";
+import { setPassword } from "./setPassword";
 
 type Props = {
   user: User,

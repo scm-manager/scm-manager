@@ -4,12 +4,12 @@ import {
   SubmitButton,
   Notification,
   ErrorNotification,
-  InputField
-} from "../../../scm-ui-components/packages/ui-components/src/index";
+  InputField,
+  PasswordConfirmation
+} from "@scm-manager/ui-components";
 import { translate } from "react-i18next";
-import { updatePassword } from "../users/components/changePassword";
-import PasswordConfirmation from "../users/components/PasswordConfirmation";
 import type { Me } from "@scm-manager/ui-types";
+import { changePassword } from "../modules/changePassword";
 
 type Props = {
   me: Me,
@@ -69,7 +69,7 @@ class ChangeUserPassword extends React.Component<Props, State> {
     if (this.state.password) {
       const { oldPassword, password } = this.state;
       this.setLoadingState();
-      updatePassword(this.props.me._links.password.href, oldPassword, password)
+      changePassword(this.props.me._links.password.href, oldPassword, password)
         .then(result => {
           if (result.error) {
             this.setErrorState(result.error);
