@@ -43,8 +43,7 @@ public class MergeCommandRequest implements Validateable, Resetable, Serializabl
 
   public boolean isValid() {
     return !Strings.isNullOrEmpty(getBranchToMerge())
-      && !Strings.isNullOrEmpty(getTargetBranch())
-      && getAuthor() != null;
+      && !Strings.isNullOrEmpty(getTargetBranch());
   }
 
   public void reset() {

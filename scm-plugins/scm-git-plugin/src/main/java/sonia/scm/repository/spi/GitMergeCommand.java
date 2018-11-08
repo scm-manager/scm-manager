@@ -1,5 +1,7 @@
 package sonia.scm.repository.spi;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.MergeResult;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -14,6 +16,7 @@ import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.api.MergeCommandResult;
 import sonia.scm.repository.api.MergeDryRunCommandResult;
+import sonia.scm.user.User;
 
 import java.io.IOException;
 
@@ -103,13 +106,27 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
 
     private void doCommit() {
       logger.debug("merged branch {} into {}", toMerge, target);
+      Person authorToUse = determineAuthor();
       try {
         clone.commit()
-          .setAuthor(author.getName(), author.getMail())
+          .setAuthor(authorToUse.getName(), authorToUse.getMail())
           .setMessage(String.format(MERGE_COMMIT_MESSAGE_TEMPLATE, toMerge, target))
           .call();
       } catch (GitAPIException e) {
         throw new InternalRepositoryException("could not commit merge between branch " + toMerge + " and " + target, e);
+      }
+    }
+
+    private Person determineAuthor() {
+      if (author == null) {
+        Subject subject = SecurityUtils.getSubject();
+        User user = subject.getPrincipals().oneByType(User.class);
+        String name = user.getDisplayName();
+        String email = user.getMail();
+        logger.debug("no author set; using logged in user: {} <{}>", name, email);
+        return new Person(name, email);
+      } else {
+        return author;
       }
     }
 
