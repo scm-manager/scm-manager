@@ -98,9 +98,10 @@ public class MDCFilterTest extends AbstractTestBase {
     assertNotNull(chain.ctx);
     assertEquals("trillian", chain.ctx.get(MDCFilter.MDC_USERNAME));
     assertEquals("api/v1/repositories", chain.ctx.get(MDCFilter.MDC_REQUEST_URI));
-    assertEquals("127.0.0.1", chain.ctx.get(MDCFilter.MDC_CLIEN_IP));
-    assertEquals("localhost", chain.ctx.get(MDCFilter.MDC_CLIEN_HOST));
+    assertEquals("127.0.0.1", chain.ctx.get(MDCFilter.MDC_CLIENT_IP));
+    assertEquals("localhost", chain.ctx.get(MDCFilter.MDC_CLIENT_HOST));
     assertEquals("GET", chain.ctx.get(MDCFilter.MDC_REQUEST_METHOD));
+    assertNotNull(chain.ctx.get(MDCFilter.MDC_TRANSACTION_ID));
   }
   
   /**

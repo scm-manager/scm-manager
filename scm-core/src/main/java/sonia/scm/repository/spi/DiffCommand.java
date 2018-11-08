@@ -33,8 +33,6 @@
 
 package sonia.scm.repository.spi;
 
-import sonia.scm.repository.RevisionNotFoundException;
-
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -56,5 +54,5 @@ public interface DiffCommand
    * @throws IOException
    * @throws RuntimeException
    */
-  public void getDiffResult(DiffCommandRequest request, OutputStream output) throws IOException, RevisionNotFoundException;
+  public void getDiffResult(DiffCommandRequest request, OutputStream output) throws IOException;
 }

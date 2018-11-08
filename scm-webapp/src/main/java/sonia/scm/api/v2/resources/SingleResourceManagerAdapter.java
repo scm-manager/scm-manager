@@ -11,7 +11,6 @@ import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
 import java.util.Collection;
 import java.util.Optional;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -33,45 +32,41 @@ class SingleResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
                              DTO extends HalRepresentation> extends AbstractManagerResource<MODEL_OBJECT> {
 
   private final Function<Throwable, Optional<Response>> errorHandler;
+  private final Class<MODEL_OBJECT> type;
 
   SingleResourceManagerAdapter(Manager<MODEL_OBJECT> manager, Class<MODEL_OBJECT> type) {
     this(manager, type, e -> Optional.empty());
   }
 
-  SingleResourceManagerAdapter(Manager<MODEL_OBJECT> manager, Class<MODEL_OBJECT> type, Function<Throwable, Optional<Response>> errorHandler) {
+  SingleResourceManagerAdapter(
+    Manager<MODEL_OBJECT> manager,
+    Class<MODEL_OBJECT> type,
+    Function<Throwable, Optional<Response>> errorHandler) {
     super(manager, type);
     this.errorHandler = errorHandler;
+    this.type = type;
   }
 
   /**
    * Reads the model object for the given id, transforms it to a dto and returns a corresponding http response.
    * This handles all corner cases, eg. no matching object for the id or missing privileges.
    */
-  Response get(Supplier<Optional<MODEL_OBJECT>> reader, Function<MODEL_OBJECT, DTO> mapToDto) {
-    return reader.get()
-      .map(mapToDto)
-      .map(Response::ok)
-      .map(Response.ResponseBuilder::build)
-      .orElseThrow(NotFoundException::new);
-  }
-  public Response update(Supplier<Optional<MODEL_OBJECT>> reader, Function<MODEL_OBJECT, MODEL_OBJECT> applyChanges, Predicate<MODEL_OBJECT> hasSameKey, Consumer<MODEL_OBJECT> checker) throws NotFoundException, ConcurrentModificationException {
-    MODEL_OBJECT existingModelObject = reader.get().orElseThrow(NotFoundException::new);
-    checker.accept(existingModelObject);
-    return update(reader,applyChanges,hasSameKey);
+  Response get(Supplier<MODEL_OBJECT> reader, Function<MODEL_OBJECT, DTO> mapToDto) {
+    return Response.ok(mapToDto.apply(reader.get())).build();
   }
 
   /**
    * Update the model object for the given id according to the given function and returns a corresponding http response.
    * This handles all corner cases, eg. no matching object for the id or missing privileges.
    */
-  public Response update(Supplier<Optional<MODEL_OBJECT>> reader, Function<MODEL_OBJECT, MODEL_OBJECT> applyChanges, Predicate<MODEL_OBJECT> hasSameKey) throws NotFoundException, ConcurrentModificationException {
-    MODEL_OBJECT existingModelObject = reader.get().orElseThrow(NotFoundException::new);
+  Response update(Supplier<MODEL_OBJECT> reader, Function<MODEL_OBJECT, MODEL_OBJECT> applyChanges, Predicate<MODEL_OBJECT> hasSameKey) {
+    MODEL_OBJECT existingModelObject = reader.get();
     MODEL_OBJECT changedModelObject = applyChanges.apply(existingModelObject);
     if (!hasSameKey.test(changedModelObject)) {
       return Response.status(BAD_REQUEST).entity("illegal change of id").build();
     }
     else if (modelObjectWasModifiedConcurrently(existingModelObject, changedModelObject)) {
-      throw new ConcurrentModificationException();
+      throw new ConcurrentModificationException(type, existingModelObject.getId());
     }
     return update(getId(existingModelObject), changedModelObject);
   }
@@ -81,11 +76,13 @@ class SingleResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
       && (updated.getLastModified() == null || existing.getLastModified() > updated.getLastModified());
   }
 
-  public Response delete(Supplier<Optional<MODEL_OBJECT>> reader) {
-    return reader.get()
-      .map(MODEL_OBJECT::getId)
-      .map(this::delete)
-      .orElse(null);
+  public Response delete(Supplier<MODEL_OBJECT> reader) {
+    try {
+      return delete(reader.get().getId());
+    } catch (NotFoundException e) {
+      // due to idempotency of delete this does not matter here.
+      return null;
+    }
   }
 
   @Override

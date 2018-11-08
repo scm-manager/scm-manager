@@ -4,12 +4,12 @@ import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import org.apache.shiro.authc.credential.PasswordService;
-import sonia.scm.ConcurrentModificationException;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -101,7 +101,7 @@ public class UserResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
-  public Response update(@PathParam("id") String name, @Valid UserDto userDto) throws ConcurrentModificationException {
+  public Response update(@PathParam("id") String name, @Valid @Named("user") UserDto userDto) {
     return adapter.update(name, existing -> dtoToUserMapper.map(userDto, existing.getPassword()));
   }
 
@@ -128,7 +128,7 @@ public class UserResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
-  public Response overwritePassword(@PathParam("id") String name, @Valid PasswordOverwriteDto passwordOverwriteDto) {
+  public Response overwritePassword(@PathParam("id") String name, @Valid @Named("passwordChange") PasswordOverwriteDto passwordOverwriteDto) {
     userManager.overwritePassword(name, passwordService.encryptPassword(passwordOverwriteDto.getNewPassword()));
     return Response.noContent().build();
   }

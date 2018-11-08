@@ -14,6 +14,7 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import sonia.scm.ContextEntry;
 import sonia.scm.NotFoundException;
 import sonia.scm.PageResult;
 import sonia.scm.user.ChangePasswordNotAllowedException;
@@ -167,7 +168,7 @@ public class UserRootResourceTest {
       .content(content.getBytes());
     MockHttpResponse response = new MockHttpResponse();
 
-    doThrow(ChangePasswordNotAllowedException.class).when(userManager).overwritePassword(any(), any());
+    doThrow(new ChangePasswordNotAllowedException(ContextEntry.ContextBuilder.entity("passwordChange", "-"), "xml")).when(userManager).overwritePassword(any(), any());
 
     dispatcher.invoke(request, response);
 
@@ -185,7 +186,7 @@ public class UserRootResourceTest {
       .content(content.getBytes());
     MockHttpResponse response = new MockHttpResponse();
 
-    doThrow(NotFoundException.class).when(userManager).overwritePassword(any(), any());
+    doThrow(new NotFoundException("Test", "x")).when(userManager).overwritePassword(any(), any());
 
     dispatcher.invoke(request, response);
 

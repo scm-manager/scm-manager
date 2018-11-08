@@ -62,7 +62,7 @@ public class GroupRootResourceTest {
   private ArgumentCaptor<Group> groupCaptor = ArgumentCaptor.forClass(Group.class);
 
   @Before
-  public void prepareEnvironment() throws Exception {
+  public void prepareEnvironment() {
     initMocks(this);
     when(groupManager.create(groupCaptor.capture())).thenAnswer(invocation -> invocation.getArguments()[0]);
     doNothing().when(groupManager).modify(groupCaptor.capture());

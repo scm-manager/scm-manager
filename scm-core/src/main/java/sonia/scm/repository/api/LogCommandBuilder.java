@@ -46,7 +46,6 @@ import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryCacheKey;
-import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.repository.spi.LogCommand;
 import sonia.scm.repository.spi.LogCommandRequest;
 
@@ -165,7 +164,7 @@ public final class LogCommandBuilder
    *
    * @throws IOException
    */
-  public Changeset getChangeset(String id) throws IOException, RevisionNotFoundException {
+  public Changeset getChangeset(String id) throws IOException {
     Changeset changeset;
 
     if (disableCache)
@@ -224,7 +223,7 @@ public final class LogCommandBuilder
    *
    * @throws IOException
    */
-  public ChangesetPagingResult getChangesets() throws IOException, RevisionNotFoundException {
+  public ChangesetPagingResult getChangesets() throws IOException {
     ChangesetPagingResult cpr;
 
     if (disableCache)

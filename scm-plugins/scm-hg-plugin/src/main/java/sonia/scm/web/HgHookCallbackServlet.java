@@ -44,11 +44,11 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.NotFoundException;
 import sonia.scm.repository.HgContext;
 import sonia.scm.repository.HgHookManager;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.RepositoryHookType;
-import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.repository.RepositoryUtil;
 import sonia.scm.repository.api.HgHookMessage;
 import sonia.scm.repository.api.HgHookMessage.Severity;
@@ -275,17 +275,11 @@ public class HgHookCallbackServlet extends HttpServlet
 
       printMessages(response, context);
     }
-    catch (RepositoryNotFoundException ex)
+    catch (NotFoundException ex)
     {
-      if (logger.isErrorEnabled())
-      {
-        logger.error("could not find repository with id {}", id);
+      logger.error(ex.getMessage());
 
-        if (logger.isTraceEnabled())
-        {
-          logger.trace("repository not found", ex);
-        }
-      }
+      logger.trace("repository not found", ex);
 
       response.sendError(HttpServletResponse.SC_NOT_FOUND);
     }

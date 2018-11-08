@@ -35,7 +35,6 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.AlreadyExistsException;
 import sonia.scm.TypeManager;
 
 import java.io.IOException;
@@ -73,7 +72,7 @@ public interface RepositoryManager
    *
    * @throws IOException
    */
-  public void importRepository(Repository repository) throws IOException, AlreadyExistsException;
+  public void importRepository(Repository repository) throws IOException;
 
   //~--- get methods ----------------------------------------------------------
 

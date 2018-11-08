@@ -4,7 +4,6 @@ import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.NamespaceAndName;
-import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.repository.api.DiffFormat;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
@@ -19,7 +18,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 
@@ -62,14 +60,10 @@ public class DiffRootResource {
     DiffFormat diffFormat = DiffFormat.valueOf(format);
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
       StreamingOutput responseEntry = output -> {
-        try {
-          repositoryService.getDiffCommand()
-            .setRevision(revision)
+        repositoryService.getDiffCommand()
+          .setRevision(revision)
             .setFormat(diffFormat)
-            .retrieveContent(output);
-        } catch (RevisionNotFoundException e) {
-          throw new WebApplicationException(Response.Status.NOT_FOUND);
-        }
+          .retrieveContent(output);
       };
       return Response.ok(responseEntry)
         .header(HEADER_CONTENT_DISPOSITION, HttpUtil.createContentDispositionAttachmentHeader(String.format("%s-%s.diff", name, revision)))

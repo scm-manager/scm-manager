@@ -48,7 +48,6 @@ import org.tmatesoft.svn.core.io.SVNRepository;
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.FileObject;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.repository.SubRepository;
 import sonia.scm.repository.SvnUtil;
 import sonia.scm.util.Util;
@@ -79,9 +78,9 @@ public class SvnBrowseCommand extends AbstractSvnCommand
 
   @Override
   @SuppressWarnings("unchecked")
-  public BrowserResult getBrowserResult(BrowseCommandRequest request) throws RevisionNotFoundException {
+  public BrowserResult getBrowserResult(BrowseCommandRequest request) {
     String path = Strings.nullToEmpty(request.getPath());
-    long revisionNumber = SvnUtil.getRevisionNumber(request.getRevision());
+    long revisionNumber = SvnUtil.getRevisionNumber(request.getRevision(), repository);
 
     if (logger.isDebugEnabled()) {
       logger.debug("browser repository {} in path \"{}\" at revision {}", repository.getName(), path, revisionNumber);

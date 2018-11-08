@@ -1,10 +1,9 @@
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.HalRepresentation;
-import sonia.scm.AlreadyExistsException;
-import sonia.scm.ConcurrentModificationException;
 import sonia.scm.Manager;
 import sonia.scm.ModelObject;
+import sonia.scm.NotFoundException;
 import sonia.scm.PageResult;
 
 import javax.ws.rs.core.Response;
@@ -22,6 +21,7 @@ class IdResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
                              DTO extends HalRepresentation> {
 
   private final Manager<MODEL_OBJECT> manager;
+  private final String type;
 
   private final SingleResourceManagerAdapter<MODEL_OBJECT, DTO> singleAdapter;
   private final CollectionResourceManagerAdapter<MODEL_OBJECT, DTO> collectionAdapter;
@@ -30,13 +30,14 @@ class IdResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
     this.manager = manager;
     singleAdapter = new SingleResourceManagerAdapter<>(manager, type);
     collectionAdapter = new CollectionResourceManagerAdapter<>(manager, type);
+    this.type = type.getSimpleName();
   }
 
   Response get(String id, Function<MODEL_OBJECT, DTO> mapToDto) {
     return singleAdapter.get(loadBy(id), mapToDto);
   }
 
-  public Response update(String id, Function<MODEL_OBJECT, MODEL_OBJECT> applyChanges) throws ConcurrentModificationException {
+  public Response update(String id, Function<MODEL_OBJECT, MODEL_OBJECT> applyChanges) {
     return singleAdapter.update(
       loadBy(id),
       applyChanges,
@@ -48,7 +49,7 @@ class IdResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
     return collectionAdapter.getAll(page, pageSize, sortBy, desc, mapToDto);
   }
 
-  public Response create(DTO dto, Supplier<MODEL_OBJECT> modelObjectSupplier, Function<MODEL_OBJECT, String> uriCreator) throws AlreadyExistsException {
+  public Response create(DTO dto, Supplier<MODEL_OBJECT> modelObjectSupplier, Function<MODEL_OBJECT, String> uriCreator) {
     return collectionAdapter.create(dto, modelObjectSupplier, uriCreator);
   }
 
@@ -56,8 +57,8 @@ class IdResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
     return singleAdapter.delete(id);
   }
 
-  private Supplier<Optional<MODEL_OBJECT>> loadBy(String id) {
-    return () -> Optional.ofNullable(manager.get(id));
+  private Supplier<MODEL_OBJECT> loadBy(String id) {
+    return () -> Optional.ofNullable(manager.get(id)).orElseThrow(() -> new NotFoundException(type, id));
   }
 
   private Predicate<MODEL_OBJECT> idStaysTheSame(String id) {

@@ -102,7 +102,7 @@ public class GitBranchesCommand extends AbstractGitCommand
     }
     catch (GitAPIException ex)
     {
-      throw new InternalRepositoryException("could not read branches", ex);
+      throw new InternalRepositoryException(repository, "could not read branches", ex);
     }
 
     return branches;

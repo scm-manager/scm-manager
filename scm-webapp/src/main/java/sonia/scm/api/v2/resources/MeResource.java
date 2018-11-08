@@ -10,6 +10,7 @@ import sonia.scm.user.UserManager;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -73,7 +74,7 @@ public class MeResource {
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
   @Consumes(VndMediaType.PASSWORD_CHANGE)
-  public Response changePassword(@Valid PasswordChangeDto passwordChangeDto) {
+  public Response changePassword(@Valid @Named("passwordChange") PasswordChangeDto passwordChangeDto) {
     userManager.changePasswordForLoggedInUser(passwordService.encryptPassword(passwordChangeDto.getOldPassword()), passwordService.encryptPassword(passwordChangeDto.getNewPassword()));
     return Response.noContent().build();
   }

@@ -54,13 +54,15 @@ import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.GitChangesetConverter;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.InternalRepositoryException;
-import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.util.IOUtil;
 
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import static sonia.scm.NotFoundException.notFound;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -86,7 +88,6 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
    *
    * @param context
    * @param repository
-   * @param repositoryDirectory
    */
   GitLogCommand(GitContext context, sonia.scm.repository.Repository repository)
   {
@@ -163,7 +164,7 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
    */
   @Override
   @SuppressWarnings("unchecked")
-  public ChangesetPagingResult getChangesets(LogCommandRequest request) throws RevisionNotFoundException {
+  public ChangesetPagingResult getChangesets(LogCommandRequest request) {
     if (logger.isDebugEnabled()) {
       logger.debug("fetch changesets for request: {}", request);
     }
@@ -261,11 +262,11 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
     }
     catch (MissingObjectException e)
     {
-      throw new RevisionNotFoundException(e.getObjectId().name());
+      throw notFound(entity("Revision", e.getObjectId().getName()).in(repository));
     }
     catch (Exception ex)
     {
-      throw new InternalRepositoryException("could not create change log", ex);
+      throw new InternalRepositoryException(repository, "could not create change log", ex);
     }
     finally
     {

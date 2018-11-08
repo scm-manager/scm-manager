@@ -33,9 +33,6 @@
 
 package sonia.scm.repository.spi;
 
-import sonia.scm.repository.PathNotFoundException;
-import sonia.scm.repository.RevisionNotFoundException;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -47,7 +44,7 @@ import java.io.OutputStream;
  */
 public interface CatCommand {
 
-  void getCatResult(CatCommandRequest request, OutputStream output) throws IOException, RevisionNotFoundException, PathNotFoundException;
+  void getCatResult(CatCommandRequest request, OutputStream output) throws IOException;
 
-  InputStream getCatResultStream(CatCommandRequest request) throws IOException, RevisionNotFoundException, PathNotFoundException;
+  InputStream getCatResultStream(CatCommandRequest request) throws IOException;
 }

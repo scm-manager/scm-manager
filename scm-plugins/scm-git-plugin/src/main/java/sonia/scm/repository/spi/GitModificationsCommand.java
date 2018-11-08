@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.List;
 
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
+
 
 @Slf4j
 public class GitModificationsCommand extends AbstractGitCommand implements ModificationsCommand {
@@ -26,7 +28,7 @@ public class GitModificationsCommand extends AbstractGitCommand implements Modif
   }
 
   private Modifications createModifications(TreeWalk treeWalk, RevCommit commit, RevWalk revWalk, String revision)
-    throws IOException, UnsupportedModificationTypeException {
+    throws IOException {
     treeWalk.reset();
     treeWalk.setRecursive(true);
     if (commit.getParentCount() > 0) {
@@ -73,12 +75,7 @@ public class GitModificationsCommand extends AbstractGitCommand implements Modif
       }
     } catch (IOException ex) {
       log.error("could not open repository", ex);
-      throw new InternalRepositoryException(ex);
-
-    } catch (UnsupportedModificationTypeException ex) {
-      log.error("Unsupported modification type", ex);
-      throw new InternalRepositoryException(ex);
-
+      throw new InternalRepositoryException(entity(repository), "could not open repository", ex);
     } finally {
       GitUtil.release(revWalk);
       GitUtil.close(gitRepository);
@@ -100,7 +97,7 @@ public class GitModificationsCommand extends AbstractGitCommand implements Modif
     } else if (type == DiffEntry.ChangeType.DELETE) {
       modifications.getRemoved().add(entry.getOldPath());
     } else {
-      throw new UnsupportedModificationTypeException(MessageFormat.format("The modification type: {0} is not supported.", type));
+      throw new UnsupportedModificationTypeException(entity(repository), MessageFormat.format("The modification type: {0} is not supported.", type));
     }
   }
 }

@@ -28,12 +28,14 @@
  */
 
 
-package sonia.scm.api.v2.resources;
+package sonia.scm.api.v2;
 
 
 import sonia.scm.NotFoundException;
-import sonia.scm.api.rest.StatusExceptionMapper;
+import sonia.scm.api.rest.ContextualExceptionMapper;
+import sonia.scm.api.v2.resources.ExceptionWithContextToErrorDtoMapper;
 
+import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 
@@ -41,9 +43,9 @@ import javax.ws.rs.ext.Provider;
  * @since 2.0.0
  */
 @Provider
-public class NotFoundExceptionMapper extends StatusExceptionMapper<NotFoundException> {
-
-  public NotFoundExceptionMapper() {
-    super(NotFoundException.class, Response.Status.NOT_FOUND);
+public class NotFoundExceptionMapper extends ContextualExceptionMapper<NotFoundException> {
+  @Inject
+  public NotFoundExceptionMapper(ExceptionWithContextToErrorDtoMapper mapper) {
+    super(NotFoundException.class, Response.Status.NOT_FOUND, mapper);
   }
 }

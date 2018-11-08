@@ -103,7 +103,7 @@ public class HgIncomingCommand extends AbstractCommand
       }
       else
       {
-        throw new InternalRepositoryException("could not execute incoming command", ex);
+        throw new InternalRepositoryException(getRepository(), "could not execute incoming command", ex);
       }
     }
 

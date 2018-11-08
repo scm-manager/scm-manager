@@ -54,25 +54,21 @@ public interface HandlerBase<T extends TypedObject>
    *
    * @return  The persisted object.
    */
-  T create(T object) throws AlreadyExistsException;
+  T create(T object);
 
   /**
    * Removes a persistent object.
    *
    *
    * @param object to delete
-   *
-   * @throws IOException
    */
-  void delete(T object) throws NotFoundException;
+  void delete(T object);
 
   /**
    * Modifies a persistent object.
    *
    *
    * @param object to modify
-   *
-   * @throws IOException
    */
-  void modify(T object) throws NotFoundException;
+  void modify(T object);
 }

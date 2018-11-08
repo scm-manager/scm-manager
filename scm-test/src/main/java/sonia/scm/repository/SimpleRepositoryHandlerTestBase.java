@@ -35,7 +35,6 @@ package sonia.scm.repository;
 
 import org.junit.Test;
 import sonia.scm.AbstractTestBase;
-import sonia.scm.AlreadyExistsException;
 import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.store.InMemoryConfigurationStoreFactory;
 import sonia.scm.util.IOUtil;
@@ -61,12 +60,12 @@ public abstract class SimpleRepositoryHandlerTestBase extends AbstractTestBase {
     ConfigurationStoreFactory factory, File directory);
 
   @Test
-  public void testCreate() throws AlreadyExistsException {
+  public void testCreate() {
     createRepository();
   }
 
   @Test
-  public void testCreateResourcePath() throws AlreadyExistsException {
+  public void testCreateResourcePath() {
     Repository repository = createRepository();
     String path = handler.createResourcePath(repository);
 
@@ -76,7 +75,7 @@ public abstract class SimpleRepositoryHandlerTestBase extends AbstractTestBase {
   }
 
   @Test
-  public void testDelete() throws Exception {
+  public void testDelete() {
     Repository repository = createRepository();
 
     handler.delete(repository);
@@ -101,7 +100,7 @@ public abstract class SimpleRepositoryHandlerTestBase extends AbstractTestBase {
     }
   }
 
-  private Repository createRepository() throws AlreadyExistsException {
+  private Repository createRepository() {
     Repository repository = RepositoryTestData.createHeartOfGold();
 
     handler.create(repository);

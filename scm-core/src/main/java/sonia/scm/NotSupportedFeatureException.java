@@ -31,53 +31,32 @@
 
 
 
-package sonia.scm.repository;
+package sonia.scm;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import sonia.scm.NotFoundException;
-import sonia.scm.util.Util;
+import java.util.Collections;
 
 /**
- * Signals that the specified revision could be found.
  *
  * @author Sebastian Sdorra
+ * @version 1.6
  */
-public class RevisionNotFoundException extends NotFoundException {
+public class NotSupportedFeatureException extends ExceptionWithContext {
 
-  /** Field description */
-  private static final long serialVersionUID = -5594008535358811998L;
+  private static final long serialVersionUID = 256498734456613496L;
 
-  //~--- constructors ---------------------------------------------------------
+  private static final String CODE = "9SR8G0kmU1";
 
-  /**
-   * Constructs a new {@link RevisionNotFoundException} 
-   * with the specified revision.
-   *
-   *
-   * @param revision revision which could not be found
-   */
-  public RevisionNotFoundException(String revision)
+  public NotSupportedFeatureException(String feature)
   {
-    super("revision", revision);
-    this.revision = Util.nonNull(revision);
+    super(Collections.emptyList(),createMessage(feature));
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Return the revision which could not be found.
-   *
-   *
-   * @return revision which could not be found
-   */
-  public String getRevision()
-  {
-    return revision;
+  @Override
+  public String getCode() {
+    return CODE;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private String revision;
+  private static String createMessage(String feature) {
+    return "feature " + feature + " is not supported by this repository";
+  }
 }

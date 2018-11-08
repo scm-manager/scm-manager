@@ -45,6 +45,7 @@ import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.HandlerEventType;
+import sonia.scm.NotFoundException;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.config.ScmConfiguration;
@@ -57,13 +58,15 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryCacheKeyPredicate;
 import sonia.scm.repository.RepositoryEvent;
 import sonia.scm.repository.RepositoryManager;
-import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.spi.RepositoryServiceProvider;
 import sonia.scm.repository.spi.RepositoryServiceResolver;
 import sonia.scm.security.ScmSecurityException;
 
 import java.util.Set;
+
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import static sonia.scm.NotFoundException.notFound;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -161,7 +164,7 @@ public final class RepositoryServiceFactory
    * @return a implementation of RepositoryService
    *         for the given type of repository
    *
-   * @throws RepositoryNotFoundException if no repository
+   * @throws NotFoundException if no repository
    *         with the given id is available
    * @throws RepositoryServiceNotFoundException if no repository service
    *         implementation for this kind of repository is available
@@ -169,7 +172,7 @@ public final class RepositoryServiceFactory
    * @throws ScmSecurityException if current user has not read permissions
    *         for that repository
    */
-  public RepositoryService create(String repositoryId) throws RepositoryNotFoundException {
+  public RepositoryService create(String repositoryId) {
     Preconditions.checkArgument(!Strings.isNullOrEmpty(repositoryId),
       "a non empty repositoryId is required");
 
@@ -177,7 +180,7 @@ public final class RepositoryServiceFactory
 
     if (repository == null)
     {
-      throw new RepositoryNotFoundException(repositoryId);
+      throw new NotFoundException(Repository.class, repositoryId);
     }
 
     return create(repository);
@@ -192,7 +195,7 @@ public final class RepositoryServiceFactory
    * @return a implementation of RepositoryService
    *         for the given type of repository
    *
-   * @throws RepositoryNotFoundException if no repository
+   * @throws NotFoundException if no repository
    *         with the given id is available
    * @throws RepositoryServiceNotFoundException if no repository service
    *         implementation for this kind of repository is available
@@ -201,7 +204,6 @@ public final class RepositoryServiceFactory
    *         for that repository
    */
   public RepositoryService create(NamespaceAndName namespaceAndName)
-    throws RepositoryNotFoundException
   {
     Preconditions.checkArgument(namespaceAndName != null,
       "a non empty namespace and name is required");
@@ -210,7 +212,7 @@ public final class RepositoryServiceFactory
 
     if (repository == null)
     {
-      throw new RepositoryNotFoundException(namespaceAndName);
+      throw notFound(entity(namespaceAndName));
     }
 
     return create(repository);

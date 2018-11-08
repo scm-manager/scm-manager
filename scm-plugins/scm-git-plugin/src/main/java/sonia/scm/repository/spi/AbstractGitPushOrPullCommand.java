@@ -114,7 +114,7 @@ public abstract class AbstractGitPushOrPullCommand extends AbstractGitCommand
     }
     catch (Exception ex)
     {
-      throw new InternalRepositoryException("could not execute push/pull command", ex);
+      throw new InternalRepositoryException(repository, "could not execute push/pull command", ex);
     }
 
     return counter;

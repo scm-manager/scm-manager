@@ -65,6 +65,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import static sonia.scm.NotFoundException.notFound;
+
 /**
  * Default implementation of {@link RepositoryManager}.
  *
@@ -122,11 +125,11 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
   }
 
   @Override
-  public Repository create(Repository repository) throws AlreadyExistsException {
+  public Repository create(Repository repository) {
     return create(repository, true);
   }
 
-  public Repository create(Repository repository, boolean initRepository) throws AlreadyExistsException {
+  public Repository create(Repository repository, boolean initRepository) {
     repository.setId(keyGenerator.createKey());
     repository.setNamespace(namespaceStrategy.createNamespace(repository));
 
@@ -140,7 +143,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
           try {
             getHandler(newRepository).create(newRepository);
           } catch (AlreadyExistsException e) {
-            throw new InternalRepositoryException("directory for repository does already exist", e);
+            throw new InternalRepositoryException(repository, "directory for repository does already exist", e);
           }
         }
         fireEvent(HandlerEventType.BEFORE_CREATE, newRepository);
@@ -170,7 +173,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
   }
 
   @Override
-  public void importRepository(Repository repository) throws AlreadyExistsException {
+  public void importRepository(Repository repository) {
     create(repository, false);
   }
 
@@ -198,7 +201,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
   }
 
   @Override
-  public void refresh(Repository repository) throws RepositoryNotFoundException {
+  public void refresh(Repository repository) {
     AssertUtil.assertIsNotNull(repository);
     RepositoryPermissions.read(repository).check();
 
@@ -207,7 +210,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
     if (fresh != null) {
       fresh.copyProperties(repository);
     } else {
-      throw new RepositoryNotFoundException(repository);
+      throw notFound(entity(repository));
     }
   }
 
@@ -350,9 +353,9 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
     RepositoryHandler handler = handlerMap.get(type);
 
     if (handler == null) {
-      throw new InternalRepositoryException("could not find handler for " + type);
+      throw new InternalRepositoryException(entity(repository), "could not find handler for " + type);
     } else if (!handler.isConfigured()) {
-      throw new InternalRepositoryException("handler is not configured for type " + type);
+      throw new InternalRepositoryException(entity(repository), "handler is not configured for type " + type);
     }
 
     return handler;

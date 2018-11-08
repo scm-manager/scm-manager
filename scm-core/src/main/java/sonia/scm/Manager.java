@@ -58,7 +58,7 @@ public interface Manager<T extends ModelObject>
    *
    * @throws NotFoundException
    */
-  void refresh(T object) throws NotFoundException;
+  void refresh(T object);
 
   //~--- get methods ----------------------------------------------------------
 

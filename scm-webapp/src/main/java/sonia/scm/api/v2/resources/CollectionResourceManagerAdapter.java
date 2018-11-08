@@ -1,7 +1,6 @@
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.HalRepresentation;
-import sonia.scm.AlreadyExistsException;
 import sonia.scm.Manager;
 import sonia.scm.ModelObject;
 import sonia.scm.PageResult;
@@ -47,7 +46,7 @@ class CollectionResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
    * Creates a model object for the given dto and returns a corresponding http response.
    * This handles all corner cases, eg. no conflicts or missing privileges.
    */
-  public Response create(DTO dto, Supplier<MODEL_OBJECT> modelObjectSupplier, Function<MODEL_OBJECT, String> uriCreator) throws AlreadyExistsException {
+  public Response create(DTO dto, Supplier<MODEL_OBJECT> modelObjectSupplier, Function<MODEL_OBJECT, String> uriCreator) {
     if (dto == null) {
       return Response.status(BAD_REQUEST).build();
     }

@@ -36,7 +36,6 @@ package sonia.scm.repository.spi;
 import org.junit.Test;
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.FileObject;
-import sonia.scm.repository.RevisionNotFoundException;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -55,7 +54,7 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase
 {
 
   @Test
-  public void testBrowseWithFilePath() throws RevisionNotFoundException {
+  public void testBrowseWithFilePath() {
     BrowseCommandRequest request = new BrowseCommandRequest();
     request.setPath("a.txt");
     FileObject file = createCommand().getBrowserResult(request).getFile();
@@ -65,7 +64,7 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase
   }
 
   @Test
-  public void testBrowse() throws RevisionNotFoundException {
+  public void testBrowse() {
     Collection<FileObject> foList = getRootFromTip(new BrowseCommandRequest());
 
     FileObject a = getFileObject(foList, "a.txt");
@@ -89,7 +88,7 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase
    * @throws IOException
    */
   @Test
-  public void testBrowseSubDirectory() throws RevisionNotFoundException {
+  public void testBrowseSubDirectory() {
     BrowseCommandRequest request = new BrowseCommandRequest();
 
     request.setPath("c");
@@ -136,7 +135,7 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase
   }
 
   @Test
-  public void testDisableLastCommit() throws RevisionNotFoundException {
+  public void testDisableLastCommit() {
     BrowseCommandRequest request = new BrowseCommandRequest();
 
     request.setDisableLastCommit(true);
@@ -150,7 +149,7 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase
   }
   
   @Test
-  public void testRecursive() throws RevisionNotFoundException {
+  public void testRecursive() {
     BrowseCommandRequest request = new BrowseCommandRequest();
     request.setRecursive(true);
     BrowserResult result = createCommand().getBrowserResult(request);
@@ -199,7 +198,7 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase
       .orElseThrow(() -> new AssertionError("file " + name + " not found"));
   }
 
-  private Collection<FileObject> getRootFromTip(BrowseCommandRequest request) throws RevisionNotFoundException {
+  private Collection<FileObject> getRootFromTip(BrowseCommandRequest request) {
     BrowserResult result = createCommand().getBrowserResult(request);
 
     assertNotNull(result);

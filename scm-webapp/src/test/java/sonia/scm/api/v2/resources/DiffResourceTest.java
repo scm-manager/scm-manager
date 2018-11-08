@@ -17,12 +17,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import sonia.scm.NotFoundException;
 import sonia.scm.api.rest.AuthorizationExceptionMapper;
+import sonia.scm.api.rest.ContextualExceptionMapper;
 import sonia.scm.api.rest.IllegalArgumentExceptionMapper;
+import sonia.scm.api.v2.NotFoundExceptionMapper;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryNotFoundException;
-import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.repository.api.DiffCommandBuilder;
 import sonia.scm.repository.api.DiffFormat;
 import sonia.scm.repository.api.RepositoryService;
@@ -66,14 +67,15 @@ public class DiffResourceTest extends RepositoryTestBase {
 
 
   @Before
-  public void prepareEnvironment() throws Exception {
+  public void prepareEnvironment() {
     diffRootResource = new DiffRootResource(serviceFactory);
     super.diffRootResource = Providers.of(diffRootResource);
     dispatcher.getRegistry().addSingletonResource(getRepositoryRootResource());
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(service);
     when(serviceFactory.create(any(Repository.class))).thenReturn(service);
     when(service.getRepository()).thenReturn(new Repository("repoId", "git", "space", "repo"));
-    dispatcher.getProviderFactory().registerProvider(NotFoundExceptionMapper.class);
+    ExceptionWithContextToErrorDtoMapperImpl mapper = new ExceptionWithContextToErrorDtoMapperImpl();
+    dispatcher.getProviderFactory().register(new NotFoundExceptionMapper(mapper));
     dispatcher.getProviderFactory().registerProvider(AuthorizationExceptionMapper.class);
     dispatcher.getProviderFactory().registerProvider(CRLFInjectionExceptionMapper.class);
     dispatcher.getProviderFactory().registerProvider(IllegalArgumentExceptionMapper.class);
@@ -110,8 +112,8 @@ public class DiffResourceTest extends RepositoryTestBase {
   }
 
   @Test
-  public void shouldGet404OnMissingRepository() throws URISyntaxException, RepositoryNotFoundException {
-    when(serviceFactory.create(any(NamespaceAndName.class))).thenThrow(RepositoryNotFoundException.class);
+  public void shouldGet404OnMissingRepository() throws URISyntaxException {
+    when(serviceFactory.create(any(NamespaceAndName.class))).thenThrow(new NotFoundException("Text", "x"));
     MockHttpRequest request = MockHttpRequest
       .get(DIFF_URL + "revision")
       .accept(VndMediaType.DIFF);
@@ -124,13 +126,15 @@ public class DiffResourceTest extends RepositoryTestBase {
   public void shouldGet404OnMissingRevision() throws Exception {
     when(diffCommandBuilder.setRevision(anyString())).thenReturn(diffCommandBuilder);
     when(diffCommandBuilder.setFormat(any())).thenReturn(diffCommandBuilder);
-    when(diffCommandBuilder.retrieveContent(any())).thenThrow(RevisionNotFoundException.class);
+    when(diffCommandBuilder.retrieveContent(any())).thenThrow(new NotFoundException("Text", "x"));
 
     MockHttpRequest request = MockHttpRequest
       .get(DIFF_URL + "revision")
       .accept(VndMediaType.DIFF);
     MockHttpResponse response = new MockHttpResponse();
+
     dispatcher.invoke(request, response);
+
     assertEquals(404, response.getStatus());
   }
 
@@ -138,7 +142,7 @@ public class DiffResourceTest extends RepositoryTestBase {
   public void shouldGet400OnCrlfInjection() throws Exception {
     when(diffCommandBuilder.setRevision(anyString())).thenReturn(diffCommandBuilder);
     when(diffCommandBuilder.setFormat(any())).thenReturn(diffCommandBuilder);
-    when(diffCommandBuilder.retrieveContent(any())).thenThrow(RevisionNotFoundException.class);
+    when(diffCommandBuilder.retrieveContent(any())).thenThrow(new NotFoundException("Text", "x"));
 
     MockHttpRequest request = MockHttpRequest
       .get(DIFF_URL + "ny%0D%0ASet-cookie:%20Tamper=3079675143472450634")
@@ -152,7 +156,7 @@ public class DiffResourceTest extends RepositoryTestBase {
   public void shouldGet400OnUnknownFormat() throws Exception {
     when(diffCommandBuilder.setRevision(anyString())).thenReturn(diffCommandBuilder);
     when(diffCommandBuilder.setFormat(any())).thenReturn(diffCommandBuilder);
-    when(diffCommandBuilder.retrieveContent(any())).thenThrow(RevisionNotFoundException.class);
+    when(diffCommandBuilder.retrieveContent(any())).thenThrow(new NotFoundException("Test", "test"));
 
     MockHttpRequest request = MockHttpRequest
       .get(DIFF_URL + "revision?format=Unknown")
