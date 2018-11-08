@@ -60,6 +60,7 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
     private final String toMerge;
     private final Person author;
     private final Git clone;
+
     private MergeWorker(Repository clone, MergeCommandRequest request) {
       this.target = request.getTargetBranch();
       this.toMerge = request.getBranchToMerge();
@@ -70,7 +71,13 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
     private MergeCommandResult merge() throws IOException {
       createClone();
       MergeResult result = doMergeInClone();
-      return analyzeResult(result);
+      if (result.getMergeStatus().isSuccessful()) {
+        doCommit();
+        push();
+        return MergeCommandResult.success();
+      } else {
+        return analyseFailure(result);
+      }
     }
 
     private void createClone() {
@@ -94,28 +101,30 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
       return result;
     }
 
-    private MergeCommandResult analyzeResult(MergeResult result) {
-      if (result.getMergeStatus().isSuccessful()) {
-        logger.debug("merged branch {} into {}", toMerge, target);
-        try {
-          clone.commit()
-            .setAuthor(author.getName(), author.getMail())
-            .setMessage(String.format(MERGE_COMMIT_MESSAGE_TEMPLATE, toMerge, target))
-            .call();
-        } catch (GitAPIException e) {
-          throw new InternalRepositoryException("could not commit merge between branch " + toMerge + " and " + target, e);
-        }
-        try {
-          clone.push().call();
-        } catch (GitAPIException e) {
-          throw new InternalRepositoryException("could not push merged branch " + toMerge + " to origin", e);
-        }
-        logger.debug("pushed merged branch {}", target);
-        return MergeCommandResult.success();
-      } else {
-        logger.info("could not merged branch {} into {} due to conflict in paths {}", toMerge, target, result.getConflicts().keySet());
-        return MergeCommandResult.failure(result.getConflicts().keySet());
+    private void doCommit() {
+      logger.debug("merged branch {} into {}", toMerge, target);
+      try {
+        clone.commit()
+          .setAuthor(author.getName(), author.getMail())
+          .setMessage(String.format(MERGE_COMMIT_MESSAGE_TEMPLATE, toMerge, target))
+          .call();
+      } catch (GitAPIException e) {
+        throw new InternalRepositoryException("could not commit merge between branch " + toMerge + " and " + target, e);
       }
+    }
+
+    private void push() {
+      try {
+        clone.push().call();
+      } catch (GitAPIException e) {
+        throw new InternalRepositoryException("could not push merged branch " + toMerge + " to origin", e);
+      }
+      logger.debug("pushed merged branch {}", target);
+    }
+
+    private MergeCommandResult analyseFailure(MergeResult result) {
+      logger.info("could not merged branch {} into {} due to conflict in paths {}", toMerge, target, result.getConflicts().keySet());
+      return MergeCommandResult.failure(result.getConflicts().keySet());
     }
 
     private ObjectId resolveRevision(String branchToMerge) throws IOException {
