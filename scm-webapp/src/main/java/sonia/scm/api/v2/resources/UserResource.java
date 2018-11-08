@@ -87,7 +87,7 @@ public class UserResource {
    * <strong>Note:</strong> This method requires "user" privilege.
    *
    * @param name    name of the user to be modified
-   * @param userDto user object to modify
+   * @param user user object to modify
    */
   @PUT
   @Path("")
@@ -101,8 +101,8 @@ public class UserResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
-  public Response update(@PathParam("id") String name, @Valid @Named("user") UserDto userDto) {
-    return adapter.update(name, existing -> dtoToUserMapper.map(userDto, existing.getPassword()));
+  public Response update(@PathParam("id") String name, @Valid UserDto user) {
+    return adapter.update(name, existing -> dtoToUserMapper.map(user, existing.getPassword()));
   }
 
   /**
@@ -114,7 +114,7 @@ public class UserResource {
    * <strong>Note:</strong> This method requires "user:changeOwnPassword" privilege to modify the own password.
    *
    * @param name              name of the user to be modified
-   * @param passwordOverwriteDto change password object to modify password. the old password is here not required
+   * @param passwordOverwrite change password object to modify password. the old password is here not required
    */
   @PUT
   @Path("password")
@@ -128,8 +128,8 @@ public class UserResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
-  public Response overwritePassword(@PathParam("id") String name, @Valid @Named("passwordChange") PasswordOverwriteDto passwordOverwriteDto) {
-    userManager.overwritePassword(name, passwordService.encryptPassword(passwordOverwriteDto.getNewPassword()));
+  public Response overwritePassword(@PathParam("id") String name, @Valid PasswordOverwriteDto passwordOverwrite) {
+    userManager.overwritePassword(name, passwordService.encryptPassword(passwordOverwrite.getNewPassword()));
     return Response.noContent().build();
   }
 }

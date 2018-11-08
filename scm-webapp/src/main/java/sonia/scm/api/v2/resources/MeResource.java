@@ -74,8 +74,8 @@ public class MeResource {
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
   @Consumes(VndMediaType.PASSWORD_CHANGE)
-  public Response changePassword(@Valid @Named("passwordChange") PasswordChangeDto passwordChangeDto) {
-    userManager.changePasswordForLoggedInUser(passwordService.encryptPassword(passwordChangeDto.getOldPassword()), passwordService.encryptPassword(passwordChangeDto.getNewPassword()));
+  public Response changePassword(@Valid PasswordChangeDto passwordChange) {
+    userManager.changePasswordForLoggedInUser(passwordService.encryptPassword(passwordChange.getOldPassword()), passwordService.encryptPassword(passwordChange.getNewPassword()));
     return Response.noContent().build();
   }
 }

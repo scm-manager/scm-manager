@@ -126,7 +126,7 @@ public class RepositoryResource {
    *
    * @param namespace the namespace of the repository to be modified
    * @param name the name of the repository to be modified
-   * @param repositoryDto repository object to modify
+   * @param repository repository object to modify
    */
   @PUT
   @Path("")
@@ -140,10 +140,10 @@ public class RepositoryResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
-  public Response update(@PathParam("namespace") String namespace, @PathParam("name") String name, @Valid @Named("repository") RepositoryDto repositoryDto) {
+  public Response update(@PathParam("namespace") String namespace, @PathParam("name") String name, @Valid RepositoryDto repository) {
     return adapter.update(
       loadBy(namespace, name),
-      existing -> processUpdate(repositoryDto, existing),
+      existing -> processUpdate(repository, existing),
       nameAndNamespaceStaysTheSame(namespace, name)
     );
   }
