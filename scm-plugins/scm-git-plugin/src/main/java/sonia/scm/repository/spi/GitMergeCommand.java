@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.GitWorkdirFactory;
 import sonia.scm.repository.InternalRepositoryException;
+import sonia.scm.repository.Person;
 import sonia.scm.repository.api.MergeCommandResult;
 import sonia.scm.repository.api.MergeDryRunCommandResult;
 
@@ -36,7 +37,7 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
     try (WorkingCopy workingCopy = workdirFactory.createWorkingCopy(context)) {
       Repository repository = workingCopy.get();
       logger.debug("cloned repository to folder {}", repository.getWorkTree());
-      return new MergeWorker(repository).merge(request);
+      return new MergeWorker(repository, request).merge();
     } catch (IOException e) {
       throw new InternalRepositoryException("could not clone repository for merge", e);
     }
@@ -55,19 +56,32 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
 
   private static class MergeWorker {
 
+    private final String target;
+    private final String toMerge;
+    private final Person author;
     private final Git clone;
-    private MergeWorker(Repository clone) {
+    private MergeWorker(Repository clone, MergeCommandRequest request) {
+      this.target = request.getTargetBranch();
+      this.toMerge = request.getBranchToMerge();
+      this.author = request.getAuthor();
       this.clone = new Git(clone);
     }
 
-    private MergeCommandResult merge(MergeCommandRequest request) throws IOException {
-      String target = request.getTargetBranch();
-      String toMerge = request.getBranchToMerge();
+    private MergeCommandResult merge() throws IOException {
+      createClone();
+      MergeResult result = doMergeInClone();
+      return analyzeResult(result);
+    }
+
+    private void createClone() {
       try {
         clone.checkout().setName(target).call();
       } catch (GitAPIException e) {
         throw new InternalRepositoryException("could not checkout target branch for merge: " + target, e);
       }
+    }
+
+    private MergeResult doMergeInClone() throws IOException {
       MergeResult result;
       try {
         result = clone.merge()
@@ -77,11 +91,15 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
       } catch (GitAPIException e) {
         throw new InternalRepositoryException("could not merge branch " + toMerge + " into " + target, e);
       }
+      return result;
+    }
+
+    private MergeCommandResult analyzeResult(MergeResult result) {
       if (result.getMergeStatus().isSuccessful()) {
         logger.debug("merged branch {} into {}", toMerge, target);
         try {
           clone.commit()
-            .setAuthor(request.getAuthor().getName(), request.getAuthor().getMail())
+            .setAuthor(author.getName(), author.getMail())
             .setMessage(String.format(MERGE_COMMIT_MESSAGE_TEMPLATE, toMerge, target))
             .call();
         } catch (GitAPIException e) {
