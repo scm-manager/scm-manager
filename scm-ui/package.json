@@ -20,6 +20,7 @@
     "node-sass": "^4.9.3",
     "postcss-easy-import": "^3.0.0",
     "react": "^16.4.2",
+    "react-autosuggest": "^9.4.2",
     "react-diff-view": "^1.7.0",
     "react-dom": "^16.4.2",
     "react-i18next": "^7.9.0",
