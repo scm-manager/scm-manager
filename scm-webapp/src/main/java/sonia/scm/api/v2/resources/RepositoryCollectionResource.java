@@ -5,12 +5,15 @@ import com.webcohesion.enunciate.metadata.rs.ResponseHeader;
 import com.webcohesion.enunciate.metadata.rs.ResponseHeaders;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
+import org.apache.shiro.SecurityUtils;
+import sonia.scm.repository.Permission;
+import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
+import sonia.scm.user.User;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
@@ -20,6 +23,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
+
+import static java.util.Collections.singletonList;
 
 public class RepositoryCollectionResource {
 
@@ -89,7 +94,17 @@ public class RepositoryCollectionResource {
   @ResponseHeaders(@ResponseHeader(name = "Location", description = "uri to the created repository"))
   public Response create(@Valid RepositoryDto repository) {
     return adapter.create(repository,
-      () -> dtoToRepositoryMapper.map(repository, null),
+      () -> createModelObjectFromDto(repository),
       r -> resourceLinks.repository().self(r.getNamespace(), r.getName()));
+  }
+
+  private Repository createModelObjectFromDto(@Valid RepositoryDto repositoryDto) {
+    Repository repository = dtoToRepositoryMapper.map(repositoryDto, null);
+    repository.setPermissions(singletonList(new Permission(currentUser(), PermissionType.OWNER)));
+    return repository;
+  }
+
+  private String currentUser() {
+    return SecurityUtils.getSubject().getPrincipals().oneByType(User.class).getName();
   }
 }
