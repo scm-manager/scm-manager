@@ -1,5 +1,6 @@
 package sonia.scm.repository.spi;
 
+import com.google.common.base.Strings;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.eclipse.jgit.api.Git;
@@ -19,15 +20,16 @@ import sonia.scm.repository.api.MergeDryRunCommandResult;
 import sonia.scm.user.User;
 
 import java.io.IOException;
+import java.text.MessageFormat;
 
 public class GitMergeCommand extends AbstractGitCommand implements MergeCommand {
 
   private static final Logger logger = LoggerFactory.getLogger(GitMergeCommand.class);
 
-  private static final String MERGE_COMMIT_MESSAGE_TEMPLATE =
-    "Merge of branch %s into %s\n" +
-    "\n" +
-    "Automatic merge by SCM-Manager.";
+  private static final String MERGE_COMMIT_MESSAGE_TEMPLATE = String.join("\n",
+    "Merge of branch {0} into {1}",
+    "",
+    "Automatic merge by SCM-Manager.");
 
   private final GitWorkdirFactory workdirFactory;
 
@@ -64,11 +66,13 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
     private final String toMerge;
     private final Person author;
     private final Git clone;
+    private final String messageTemplate;
 
     private MergeWorker(Repository clone, MergeCommandRequest request) {
       this.target = request.getTargetBranch();
       this.toMerge = request.getBranchToMerge();
       this.author = request.getAuthor();
+      this.messageTemplate = request.getMessageTemplate();
       this.clone = new Git(clone);
     }
 
@@ -111,10 +115,18 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
       try {
         clone.commit()
           .setAuthor(authorToUse.getName(), authorToUse.getMail())
-          .setMessage(String.format(MERGE_COMMIT_MESSAGE_TEMPLATE, toMerge, target))
+          .setMessage(MessageFormat.format(determineMessageTemplate(), toMerge, target))
           .call();
       } catch (GitAPIException e) {
         throw new InternalRepositoryException("could not commit merge between branch " + toMerge + " and " + target, e);
+      }
+    }
+
+    private String determineMessageTemplate() {
+      if (Strings.isNullOrEmpty(messageTemplate)) {
+        return MERGE_COMMIT_MESSAGE_TEMPLATE;
+      } else {
+        return messageTemplate;
       }
     }
 

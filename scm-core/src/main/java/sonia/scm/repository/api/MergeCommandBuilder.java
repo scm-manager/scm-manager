@@ -10,8 +10,8 @@ import sonia.scm.repository.spi.MergeCommandRequest;
  * the branches could be merged without conflicts ({@link #dryRun()}). To do so, you have to specify the name of
  * the target branch ({@link #setTargetBranch(String)}) and the name of the branch that should be merged
  * ({@link #setBranchToMerge(String)}). Additionally you can specify an author that should be used for the commit
- * ({@link #setAuthor(Person)}) if you are not doing a dry run only. If no author is specified, the logged in user
- * will be used instead.
+ * ({@link #setAuthor(Person)}) and a message template ({@link #setMessageTemplate(String)}) if you are not doing a dry
+ * run only. If no author is specified, the logged in user and a default message will be used instead.
  *
  * To actually merge <code>feature_branch</code> into <code>integration_branch</code> do this:
  * <pre><code>
@@ -88,6 +88,25 @@ public class MergeCommandBuilder {
    */
   public MergeCommandBuilder setAuthor(Person author) {
     request.setAuthor(author);
+    return this;
+  }
+
+  /**
+   * Use this to set a template for the commit message. If no message is set, a default message will be used.
+   *
+   * You can use the placeholder <code>{0}</code> for the branch to be merged and <code>{1}</code> for the target
+   * branch, eg.:
+   *
+   * <pre><code>
+   * ...setMessageTemplate("Merge of {0} into {1}")...
+   * </code></pre>
+   *
+   * This is optional and for {@link #executeMerge()} only.
+   *
+   * @return This builder instance.
+   */
+  public MergeCommandBuilder setMessageTemplate(String messageTemplate) {
+    request.setMessageTemplate(messageTemplate);
     return this;
   }
 

@@ -16,6 +16,7 @@ public class MergeCommandRequest implements Validateable, Resetable, Serializabl
   private String branchToMerge;
   private String targetBranch;
   private Person author;
+  private String messageTemplate;
 
   public String getBranchToMerge() {
     return branchToMerge;
@@ -39,6 +40,14 @@ public class MergeCommandRequest implements Validateable, Resetable, Serializabl
 
   public void setAuthor(Person author) {
     this.author = author;
+  }
+
+  public String getMessageTemplate() {
+    return messageTemplate;
+  }
+
+  public void setMessageTemplate(String messageTemplate) {
+    this.messageTemplate = messageTemplate;
   }
 
   public boolean isValid() {
