@@ -64,10 +64,15 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
     assertThat(mergeCommandResult.isSuccess()).isTrue();
 
     Repository repository = createContext().open();
-    Iterable<RevCommit> mergeCommit = new Git(repository).log().add(repository.resolve("master")).setMaxCount(1).call();
-    PersonIdent mergeAuthor = mergeCommit.iterator().next().getAuthorIdent();
+    Iterable<RevCommit> commits = new Git(repository).log().add(repository.resolve("master")).setMaxCount(1).call();
+    RevCommit mergeCommit = commits.iterator().next();
+    PersonIdent mergeAuthor = mergeCommit.getAuthorIdent();
     assertThat(mergeAuthor.getName()).isEqualTo("Dirk Gently");
     assertThat(mergeAuthor.getEmailAddress()).isEqualTo("dirk@holistic.det");
+    // We expect the merge result of file b.txt here by looking up the sha hash of its content.
+    // If the file is missing (aka not merged correctly) this will throw a MissingObjectException:
+    byte[] contentOfFileB = repository.open(repository.resolve("9513e9c76e73f3e562fd8e4c909d0607113c77c6")).getBytes();
+    assertThat(new String(contentOfFileB)).isEqualTo("b\ncontent from branch\n");
   }
 
   @Test
