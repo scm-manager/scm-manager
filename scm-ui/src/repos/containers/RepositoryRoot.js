@@ -35,6 +35,7 @@ import PermissionsNavLink from "../components/PermissionsNavLink";
 import Sources from "../sources/containers/Sources";
 import RepositoryNavLink from "../components/RepositoryNavLink";
 import { getRepositoriesLink } from "../../modules/indexResource";
+import {ExtensionPoint} from '@scm-manager/ui-extensions';
 
 type Props = {
   namespace: string,
@@ -104,6 +105,12 @@ class RepositoryRoot extends React.Component<Props> {
     }
 
     const url = this.matchedUrl();
+
+    const extensionProps = {
+      repository,
+      url
+    };
+
     return (
       <Page title={repository.namespace + "/" + repository.name}>
         <div className="columns">
@@ -165,6 +172,10 @@ class RepositoryRoot extends React.Component<Props> {
                   />
                 )}
               />
+              <ExtensionPoint name="repository.route"
+                              props={extensionProps}
+                              renderAll={true}
+              />
             </Switch>
           </div>
           <div className="column">
@@ -186,11 +197,15 @@ class RepositoryRoot extends React.Component<Props> {
                   label={t("repository-root.sources")}
                   activeOnlyWhenExact={false}
                 />
-                <EditNavLink repository={repository} editUrl={`${url}/edit`} />
+                <ExtensionPoint name="repository.navigation"
+                                props={extensionProps}
+                                renderAll={true}
+                />
                 <PermissionsNavLink
                   permissionUrl={`${url}/permissions`}
                   repository={repository}
                 />
+                <EditNavLink repository={repository} editUrl={`${url}/edit`} />
               </Section>
               <Section label={t("repository-root.actions-label")}>
                 <DeleteNavAction repository={repository} delete={this.delete} />
