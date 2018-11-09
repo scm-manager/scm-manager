@@ -1,11 +1,11 @@
 // @flow
 import React from "react";
 import {
-  SubmitButton,
-  Notification,
   ErrorNotification,
   InputField,
-  PasswordConfirmation
+  Notification,
+  PasswordConfirmation,
+  SubmitButton
 } from "@scm-manager/ui-components";
 import { translate } from "react-i18next";
 import type { Me } from "@scm-manager/ui-types";
@@ -77,7 +77,9 @@ class ChangeUserPassword extends React.Component<Props, State> {
             this.setSuccessfulState();
           }
         })
-        .catch(err => {});
+        .catch(err => {
+          this.setErrorState(err);
+        });
     }
   };
 
