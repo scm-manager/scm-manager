@@ -12,8 +12,5 @@ export function changePassword(
     .put(url, { oldPassword, newPassword }, CONTENT_TYPE_PASSWORD_CHANGE)
     .then(response => {
       return response;
-    })
-    .catch(err => {
-      return { error: err };
     });
 }
