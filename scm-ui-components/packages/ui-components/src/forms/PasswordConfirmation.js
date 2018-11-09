@@ -1,7 +1,7 @@
 // @flow
 
 import React from "react";
-import { translate } from "react-i18next";
+import {translate} from "react-i18next";
 import InputField from "./InputField";
 
 type State = {
@@ -42,7 +42,7 @@ class PasswordConfirmation extends React.Component<Props, State> {
     return (
       <>
         <InputField
-          label={t("password.label")}
+          label={t("password.newPassword")}
           type="password"
           onChange={this.handlePasswordChange}
           value={this.state.password ? this.state.password : ""}

@@ -7,9 +7,9 @@ import {
   PasswordConfirmation,
   SubmitButton
 } from "@scm-manager/ui-components";
-import { translate } from "react-i18next";
-import type { Me } from "@scm-manager/ui-types";
-import { changePassword } from "../modules/changePassword";
+import {translate} from "react-i18next";
+import type {Me} from "@scm-manager/ui-types";
+import {changePassword} from "../modules/changePassword";
 
 type Props = {
   me: Me,
@@ -93,7 +93,7 @@ class ChangeUserPassword extends React.Component<Props, State> {
       message = (
         <Notification
           type={"success"}
-          children={t("password.set-password-successful")}
+          children={t("password.changedSuccessfully")}
           onClose={() => this.onClose()}
         />
       );
@@ -105,13 +105,13 @@ class ChangeUserPassword extends React.Component<Props, State> {
       <form onSubmit={this.submit}>
         {message}
         <InputField
-          label={t("password.current-password")}
+          label={t("password.currentPassword")}
           type="password"
           onChange={oldPassword =>
             this.setState({ ...this.state, oldPassword })
           }
           value={this.state.oldPassword ? this.state.oldPassword : ""}
-          helpText={t("help.currentPasswordHelpText")}
+          helpText={t("password.currentPasswordHelpText")}
         />
         <PasswordConfirmation
           passwordChanged={this.passwordChanged}
@@ -120,7 +120,7 @@ class ChangeUserPassword extends React.Component<Props, State> {
         <SubmitButton
           disabled={!this.state.password}
           loading={loading}
-          label={t("user-form.submit")}
+          label={t("password.submit")}
         />
       </form>
     );
@@ -138,4 +138,4 @@ class ChangeUserPassword extends React.Component<Props, State> {
   };
 }
 
-export default translate("users")(ChangeUserPassword);
+export default translate("commons")(ChangeUserPassword);
