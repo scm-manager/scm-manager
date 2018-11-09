@@ -7,13 +7,16 @@ const getSuggestionValue = suggestion => suggestion.displayName;
 const renderSuggestion = suggestion => <div>{suggestion.displayName}</div>;
 
 type Props = {
-  url: string
+  url: string,
+  placeholder: string,
+  timeoutMillis: number
 };
 
 type State = {
   suggestions: any[],
   value: any,
-  isLoading: boolean
+  isLoading: boolean,
+  lastRequestId: any
 };
 
 class Autocomplete extends React.Component<Props, State> {
@@ -23,8 +26,8 @@ class Autocomplete extends React.Component<Props, State> {
     this.state = {
       suggestions: [],
       value: "",
-      users: [],
-      isLoading: false
+      isLoading: false,
+      lastRequestId: undefined
     };
   }
 
@@ -33,27 +36,42 @@ class Autocomplete extends React.Component<Props, State> {
       isLoading: true
     });
 
-    apiClient
-      .get("http://localhost:8081/scm/api/v2/autocomplete/users?q=" + value) //TODO: Do not hardcode URL
-      .then(response => {
-        return response.json();
-      })
-      .then(json => {
-        this.setState({
-          suggestions: [...this.state.suggestions, ...json]
-        });
+    if (this.state.lastRequestId) {
+      clearTimeout(this.state.lastRequestId);
+    }
+
+    const requestId = setTimeout(() => {
+      this.setState({
+        isLoading: true
       });
+
+      apiClient
+        .get(this.props.url + value)
+        .then(response => {
+          return response.json();
+        })
+        .then(json => {
+          this.setState({
+            isLoading: false,
+            suggestions: [...json]
+          });
+        });
+    }, this.props.timeoutMillis);
+
+    this.setState({
+      lastRequestId: requestId
+    });
   };
 
-  onChange = (event, { newValue }) => {
-    // TODO: Flow types
+  // TODO: Flow types
+  onChange = (event: SyntheticInputEvent<HTMLInputElement>, { newValue }) => {
     this.setState({
       value: newValue
     });
   };
 
+  // TODO: Flow types
   onSuggestionsFetchRequested = ({ value }) => {
-    // TODO: Flow types
     this.loadSuggestions(value);
   };
 
@@ -67,12 +85,11 @@ class Autocomplete extends React.Component<Props, State> {
     const { value, suggestions } = this.state;
 
     const inputProps = {
-      placeholder: "placeholder", // TODO: i18n
+      placeholder: this.props.placeholder,
       value,
       onChange: this.onChange
     };
 
-    // Finally, render it!
     return (
       <Autosuggest
         suggestions={suggestions}
