@@ -128,7 +128,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 
 import static com.google.inject.matcher.Matchers.annotatedWith;
-import static com.google.inject.matcher.Matchers.any;
 import static com.google.inject.matcher.Matchers.not;
 import static com.google.inject.matcher.Matchers.subclassesOf;
 import static sonia.scm.api.v2.resources.ScmPathInfo.REST_API_PATH;

@@ -33,29 +33,29 @@ package sonia.scm.filter;
 
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
-import java.io.IOException;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.Subject;
-import org.junit.Test;
-import static org.junit.Assert.*;
-import static org.hamcrest.Matchers.*;
 import org.junit.Before;
 import org.junit.Rule;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import static org.mockito.Mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.user.User;
 import sonia.scm.user.UserTestData;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.verify;
 
 /**
  * Unit tests for {@link SecurityFilter}.
@@ -95,37 +95,6 @@ public class SecurityFilterTest {
   public void setUp(){
     this.configuration = new ScmConfiguration();
     this.securityFilter = new SecurityFilter(configuration);
-    
-    when(request.getContextPath()).thenReturn("/scm");
-  }
-  
-  /**
-   * Tests filter on authentication endpoint v1.
-   *
-   * @throws IOException
-   * @throws ServletException 
-   */
-  @Test
-  public void testDoOnAuthenticationUrlV1() throws IOException, ServletException {
-    checkIfAuthenticationUrlIsPassedThrough("/scm/api/auth/access_token");
-  }
-
-  /**
-   * Tests filter on authentication endpoint v2.
-   *
-   * @throws IOException
-   * @throws ServletException
-   */
-  @Test
-  public void testDoOnAuthenticationUrlV2() throws IOException, ServletException {
-    checkIfAuthenticationUrlIsPassedThrough("/scm/api/v2/auth/access_token");
-  }
-
-  private void checkIfAuthenticationUrlIsPassedThrough(String uri) throws IOException, ServletException {
-    when(request.getRequestURI()).thenReturn(uri);
-    securityFilter.doFilter(request, response, chain);
-    verify(request, never()).setAttribute(Mockito.anyString(), Mockito.any());
-    verify(chain).doFilter(request, response);
   }
   
   /**
@@ -136,7 +105,6 @@ public class SecurityFilterTest {
    */
   @Test
   public void testAnonymous() throws IOException, ServletException {
-    when(request.getRequestURI()).thenReturn("/scm/api");
     securityFilter.doFilter(request, response, chain);
     response.sendError(HttpServletResponse.SC_FORBIDDEN);
   }
@@ -149,7 +117,6 @@ public class SecurityFilterTest {
    */
   @Test
   public void testAnonymousWithAccessEnabled() throws IOException, ServletException {
-    when(request.getRequestURI()).thenReturn("/scm/api");
     configuration.setAnonymousAccessEnabled(true);
     
     // execute
@@ -173,8 +140,7 @@ public class SecurityFilterTest {
   @Test
   public void testAuthenticated() throws IOException, ServletException {
     authenticateUser(UserTestData.createTrillian());
-    when(request.getRequestURI()).thenReturn("/scm/api");
-    
+
     // execute
     securityFilter.doFilter(request, response, chain);
     
@@ -187,42 +153,6 @@ public class SecurityFilterTest {
     assertEquals("trillian", captured.getRemoteUser());
   }
   
-  /**
-   * Tests filter without permissions.
-   * 
-   * @throws IOException
-   * @throws ServletException
-   */
-  @Test
-  public void testForbidden() throws IOException, ServletException {
-    authenticateUser(UserTestData.createTrillian());
-    when(request.getRequestURI()).thenReturn("/scm/api");
-    
-    // execute
-    securityFilter = new AccessForbiddenSecurityFilter(configuration);
-    securityFilter.doFilter(request, response, chain);
-    
-    // assert
-    verify(response).sendError(HttpServletResponse.SC_FORBIDDEN);
-  }
-  
-  /**
-   * Tests filter unauthenticated and without permissions.
-   * 
-   * @throws IOException
-   * @throws ServletException
-   */
-  @Test
-  public void testUnauthorized() throws IOException, ServletException {
-    when(request.getRequestURI()).thenReturn("/scm/api");
-    
-    // execute
-    securityFilter = new AccessForbiddenSecurityFilter(configuration);
-    securityFilter.doFilter(request, response, chain);
-    
-    // assert
-    verify(response).sendError(HttpServletResponse.SC_UNAUTHORIZED);
-  }
 
   private void authenticateUser(User user) {
     SimplePrincipalCollection spc = new SimplePrincipalCollection();
@@ -236,18 +166,4 @@ public class SecurityFilterTest {
     
     shiro.setSubject(subject);
   }
-  
-  private static class AccessForbiddenSecurityFilter extends SecurityFilter {
-    
-    private AccessForbiddenSecurityFilter(ScmConfiguration configuration) {
-      super(configuration);
-    }
-
-    @Override
-    protected boolean hasPermission(Subject subject) {
-      return false;
-    }
-    
-  }
-
 }
