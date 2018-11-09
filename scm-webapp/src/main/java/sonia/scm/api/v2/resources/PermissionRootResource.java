@@ -79,7 +79,7 @@ public class PermissionRootResource {
     Repository repository = load(namespace, name);
     RepositoryPermissions.permissionWrite(repository).check();
     checkPermissionAlreadyExists(permission, repository);
-    repository.getPermissions().add(dtoToModelMapper.map(permission));
+    repository.addPermission(dtoToModelMapper.map(permission));
     manager.modify(repository);
     String urlPermissionName = modelToDtoMapper.getUrlPermissionName(permission);
     return Response.created(URI.create(resourceLinks.permission().self(namespace, name, urlPermissionName))).build();
@@ -209,7 +209,7 @@ public class PermissionRootResource {
       .stream()
       .filter(filterPermission(permissionName))
       .findFirst()
-      .ifPresent(p -> repository.getPermissions().remove(p))
+      .ifPresent(repository::removePermission)
     ;
     manager.modify(repository);
     log.info("the permission with name: {} is updated.", permissionName);
