@@ -115,12 +115,6 @@
         <artifactId>smp-maven-plugin</artifactId>
         <version>1.0.0-alpha-3</version>
         <extensions>true</extensions>
-        <configuration>
-          <links>
-            <link>@scm-manager/ui-types</link>
-            <link>@scm-manager/ui-components</link>
-          </links>
-        </configuration>
       </plugin>
 
     <plugin>

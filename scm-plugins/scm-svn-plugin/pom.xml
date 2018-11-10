@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
-  
+
   <parent>
     <artifactId>scm-plugins</artifactId>
     <groupId>sonia.scm.plugins</groupId>
@@ -28,7 +28,7 @@
         </exclusion>
       </exclusions>
     </dependency>
-    
+
     <dependency>
       <groupId>sonia.svnkit</groupId>
       <artifactId>svnkit-dav</artifactId>
@@ -36,7 +36,7 @@
     </dependency>
 
   </dependencies>
-  
+
   <build>
     <plugins>
 
@@ -45,6 +45,10 @@
         <artifactId>smp-maven-plugin</artifactId>
         <configuration>
           <corePlugin>true</corePlugin>
+          <links>
+            <link>@scm-manager/ui-types</link>
+            <link>@scm-manager/ui-components</link>
+          </links>
         </configuration>
       </plugin>
 
@@ -67,19 +71,19 @@
   </build>
 
   <repositories>
-    
+
     <repository>
       <id>maven.tmatesoft.com</id>
       <name>tmatesoft release repository</name>
       <url>https://maven.tmatesoft.com/content/repositories/releases</url>
     </repository>
-      
+
     <repository>
       <id>maven.scm-manager.org</id>
       <name>scm-manager release repository</name>
       <url>http://maven.scm-manager.org/nexus/content/groups/public</url>
     </repository>
-  
+
   </repositories>
 
 </project>
