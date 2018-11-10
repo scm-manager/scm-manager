@@ -68,6 +68,16 @@
               <script>link</script>
             </configuration>
           </execution>
+          <execution>
+            <id>deploy</id>
+            <phase>deploy</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <script>deploy</script>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
 
