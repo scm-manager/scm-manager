@@ -27,13 +27,32 @@ type Props = {
   t: string => string
 };
 
-class Index extends Component<Props> {
+type State = {
+  pluginsLoaded: boolean
+};
+
+class Index extends Component<Props, State> {
+
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      pluginsLoaded: false
+    };
+  }
+
   componentDidMount() {
     this.props.fetchIndexResources();
   }
 
+  pluginLoaderCallback = () => {
+    this.setState({
+      pluginsLoaded: true
+    });
+  };
+
   render() {
     const { indexResources, loading, error, t } = this.props;
+    const { pluginsLoaded } = this.state;
 
     if (error) {
       return (
@@ -47,7 +66,7 @@ class Index extends Component<Props> {
       return <Loading />;
     } else {
       return (
-        <PluginLoader>
+        <PluginLoader loaded={ pluginsLoaded } callback={ this.pluginLoaderCallback }>
           <App />
         </PluginLoader>
       );
