@@ -45,7 +45,6 @@ import sonia.scm.api.rest.ObjectMapperProvider;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.cache.GuavaCacheManager;
 import sonia.scm.config.ScmConfiguration;
-import sonia.scm.debug.DebugResource;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.group.DefaultGroupManager;
 import sonia.scm.group.GroupDAO;
@@ -88,7 +87,6 @@ import sonia.scm.security.DefaultKeyGenerator;
 import sonia.scm.security.DefaultSecuritySystem;
 import sonia.scm.security.KeyGenerator;
 import sonia.scm.security.LoginAttemptHandler;
-import sonia.scm.security.SecurityInterceptor;
 import sonia.scm.security.SecuritySystem;
 import sonia.scm.store.BlobStoreFactory;
 import sonia.scm.store.ConfigurationEntryStoreFactory;
@@ -120,16 +118,7 @@ import sonia.scm.web.security.DefaultAdministrationContext;
 
 import javax.net.ssl.SSLContext;
 import javax.servlet.ServletContext;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.HEAD;
-import javax.ws.rs.OPTIONS;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 
-import static com.google.inject.matcher.Matchers.annotatedWith;
-import static com.google.inject.matcher.Matchers.not;
-import static com.google.inject.matcher.Matchers.subclassesOf;
 import static sonia.scm.api.v2.resources.ScmPathInfo.REST_API_PATH;
 
 /**
@@ -330,14 +319,6 @@ public class ScmServletModule extends ServletModule
     // bind(LastModifiedUpdateListener.class);
 
     bind(PushStateDispatcher.class).toProvider(PushStateDispatcherProvider.class);
-    bindInterceptor(not(subclassesOf(DebugResource.class)),
-      annotatedWith(GET.class)
-        .or(annotatedWith(POST.class))
-        .or(annotatedWith(HEAD.class))
-        .or(annotatedWith(PUT.class))
-        .or(annotatedWith(DELETE.class))
-        .or(annotatedWith(OPTIONS.class)),
-      new SecurityInterceptor());
   }
 
 
