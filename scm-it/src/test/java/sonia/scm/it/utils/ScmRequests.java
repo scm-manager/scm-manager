@@ -38,6 +38,10 @@ public class ScmRequests {
     return new ScmRequests();
   }
 
+  public IndexResponse requestIndexResource() {
+    return new IndexResponse(applyGETRequest(RestUtil.REST_BASE_URL.toString()));
+  }
+
   public IndexResponse requestIndexResource(String username, String password) {
     setUsername(username);
     setPassword(password);
