@@ -38,37 +38,17 @@ package sonia.scm.web.filter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
-/**
- *
- * @author Sebastian Sdorra
- */
-public class SecurityHttpServletRequestWrapper extends HttpServletRequestWrapper
-{
+public class PropagatePrincipleServletRequestWrapper extends HttpServletRequestWrapper {
 
- /**
-   * Constructs ...
-   *
-   *
-   * @param request
-   * @param principal
-   */
-  public SecurityHttpServletRequestWrapper(HttpServletRequest request,
-    String principal)
-  {
+  private final String principal;
+
+  public PropagatePrincipleServletRequestWrapper(HttpServletRequest request, String principal) {
     super(request);
     this.principal = principal;
   }
 
-  //~--- get methods ----------------------------------------------------------
-
   @Override
-  public String getRemoteUser()
-  {
+  public String getRemoteUser() {
     return principal;
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final String principal;
 }

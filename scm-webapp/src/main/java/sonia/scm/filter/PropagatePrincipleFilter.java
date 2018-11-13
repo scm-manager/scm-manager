@@ -42,9 +42,8 @@ import org.apache.shiro.subject.Subject;
 import sonia.scm.Priority;
 import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
-import sonia.scm.security.SecurityRequests;
 import sonia.scm.web.filter.HttpFilter;
-import sonia.scm.web.filter.SecurityHttpServletRequestWrapper;
+import sonia.scm.web.filter.PropagatePrincipleServletRequestWrapper;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -61,9 +60,8 @@ import static sonia.scm.api.v2.resources.ScmPathInfo.REST_API_PATH;
  * @author Sebastian Sdorra
  */
 @Priority(Filters.PRIORITY_AUTHORIZATION)
-// TODO find a better way for unprotected resources
 @WebElement(value = REST_API_PATH + "/(?!v2/ui).*", regex = true)
-public class SecurityFilter extends HttpFilter
+public class PropagatePrincipleFilter extends HttpFilter
 {
 
   /** name of request attribute for the primary principal */
@@ -73,7 +71,7 @@ public class SecurityFilter extends HttpFilter
   private final ScmConfiguration configuration;
 
   @Inject
-  public SecurityFilter(ScmConfiguration configuration)
+  public PropagatePrincipleFilter(ScmConfiguration configuration)
   {
     this.configuration = configuration;
   }
@@ -92,7 +90,7 @@ public class SecurityFilter extends HttpFilter
       request.setAttribute(ATTRIBUTE_REMOTE_USER, username);
 
       // wrap servlet request to provide authentication information
-      chain.doFilter(new SecurityHttpServletRequestWrapper(request, username), response);
+      chain.doFilter(new PropagatePrincipleServletRequestWrapper(request, username), response);
     }
     else
     {

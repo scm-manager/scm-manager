@@ -58,13 +58,13 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 
 /**
- * Unit tests for {@link SecurityFilter}.
+ * Unit tests for {@link PropagatePrincipleFilter}.
  * 
  * @author Sebastian Sdorra
  */
 @RunWith(MockitoJUnitRunner.class)
 @SubjectAware(configuration = "classpath:sonia/scm/shiro-001.ini")
-public class SecurityFilterTest {
+public class PropagatePrincipleFilterTest {
 
   @Mock
   private HttpServletRequest request;
@@ -83,7 +83,7 @@ public class SecurityFilterTest {
 
   private ScmConfiguration configuration;
   
-  private SecurityFilter securityFilter;
+  private PropagatePrincipleFilter propagatePrincipleFilter;
   
   @Rule
   public ShiroRule shiro = new ShiroRule();
@@ -94,7 +94,7 @@ public class SecurityFilterTest {
   @Before
   public void setUp(){
     this.configuration = new ScmConfiguration();
-    this.securityFilter = new SecurityFilter(configuration);
+    this.propagatePrincipleFilter = new PropagatePrincipleFilter(configuration);
   }
   
   /**
@@ -105,7 +105,7 @@ public class SecurityFilterTest {
    */
   @Test
   public void testAnonymous() throws IOException, ServletException {
-    securityFilter.doFilter(request, response, chain);
+    propagatePrincipleFilter.doFilter(request, response, chain);
     response.sendError(HttpServletResponse.SC_FORBIDDEN);
   }
   
@@ -120,10 +120,10 @@ public class SecurityFilterTest {
     configuration.setAnonymousAccessEnabled(true);
     
     // execute
-    securityFilter.doFilter(request, response, chain);
+    propagatePrincipleFilter.doFilter(request, response, chain);
     
     // verify and capture
-    verify(request).setAttribute(SecurityFilter.ATTRIBUTE_REMOTE_USER, SCMContext.USER_ANONYMOUS);
+    verify(request).setAttribute(PropagatePrincipleFilter.ATTRIBUTE_REMOTE_USER, SCMContext.USER_ANONYMOUS);
     verify(chain).doFilter(requestCaptor.capture(), responseCaptor.capture());
     
     // assert
@@ -142,10 +142,10 @@ public class SecurityFilterTest {
     authenticateUser(UserTestData.createTrillian());
 
     // execute
-    securityFilter.doFilter(request, response, chain);
+    propagatePrincipleFilter.doFilter(request, response, chain);
     
     // verify and capture
-    verify(request).setAttribute(SecurityFilter.ATTRIBUTE_REMOTE_USER, "trillian");
+    verify(request).setAttribute(PropagatePrincipleFilter.ATTRIBUTE_REMOTE_USER, "trillian");
     verify(chain).doFilter(requestCaptor.capture(), responseCaptor.capture());
     
     // assert
