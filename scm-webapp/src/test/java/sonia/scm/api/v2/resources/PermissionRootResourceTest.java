@@ -402,18 +402,17 @@ public class PermissionRootResourceTest extends RepositoryTestBase {
   }
 
   private Repository createUserWithRepository(String userPermission) {
-    Repository mockRepository = mock(Repository.class);
-    when(mockRepository.getId()).thenReturn(REPOSITORY_NAME);
-    when(mockRepository.getNamespace()).thenReturn(REPOSITORY_NAMESPACE);
-    when(mockRepository.getName()).thenReturn(REPOSITORY_NAME);
-    when(mockRepository.getNamespaceAndName()).thenReturn(new NamespaceAndName(REPOSITORY_NAMESPACE, REPOSITORY_NAME));
+    Repository mockRepository = new Repository();
+    mockRepository.setId(REPOSITORY_NAME);
+    mockRepository.setNamespace(REPOSITORY_NAMESPACE);
+    mockRepository.setName(REPOSITORY_NAME);
     when(repositoryManager.get(any(NamespaceAndName.class))).thenReturn(mockRepository);
     when(subject.isPermitted(userPermission != null ? eq(userPermission) : any(String.class))).thenReturn(true);
     return mockRepository;
   }
 
   private void createUserWithRepositoryAndPermissions(ArrayList<Permission> permissions, String userPermission) {
-    when(createUserWithRepository(userPermission).getPermissions()).thenReturn(permissions);
+    createUserWithRepository(userPermission).setPermissions(permissions);
   }
 
   private Stream<DynamicTest> createDynamicTestsToAssertResponses(ExpectedRequest... expectedRequests) {
@@ -421,10 +420,9 @@ public class PermissionRootResourceTest extends RepositoryTestBase {
       .map(entry -> dynamicTest("the endpoint " + entry.description + " should return the status code " + entry.expectedResponseStatus, () -> assertExpectedRequest(entry)));
   }
 
-  private MockHttpResponse assertExpectedRequest(ExpectedRequest entry) throws URISyntaxException {
+  private void assertExpectedRequest(ExpectedRequest entry) throws URISyntaxException {
     MockHttpResponse response = new MockHttpResponse();
-    HttpRequest request = null;
-    request = MockHttpRequest
+    HttpRequest request = MockHttpRequest
       .create(entry.method, "/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + entry.path)
       .content(entry.content)
       .contentType(VndMediaType.PERMISSION);
@@ -436,7 +434,6 @@ public class PermissionRootResourceTest extends RepositoryTestBase {
     if (entry.responseValidator != null) {
       entry.responseValidator.accept(response);
     }
-    return response;
   }
 
   @ToString
@@ -470,12 +467,12 @@ public class PermissionRootResourceTest extends RepositoryTestBase {
       return this;
     }
 
-    public ExpectedRequest expectedResponseStatus(int expectedResponseStatus) {
+    ExpectedRequest expectedResponseStatus(int expectedResponseStatus) {
       this.expectedResponseStatus = expectedResponseStatus;
       return this;
     }
 
-    public ExpectedRequest responseValidator(Consumer<MockHttpResponse> responseValidator) {
+    ExpectedRequest responseValidator(Consumer<MockHttpResponse> responseValidator) {
       this.responseValidator = responseValidator;
       return this;
     }

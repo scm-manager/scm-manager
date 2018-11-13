@@ -32,6 +32,7 @@
 package sonia.scm.it;
 
 import org.apache.http.HttpStatus;
+import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -49,8 +50,10 @@ import sonia.scm.web.VndMediaType;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static sonia.scm.it.utils.RepositoryUtil.addAndCommitRandomFile;
@@ -72,7 +75,7 @@ public class PermissionsITCase {
   public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
   private final String repositoryType;
-  private int createdPermissions;
+  private Collection<String> createdPermissions;
 
 
   public PermissionsITCase(String repositoryType) {
@@ -94,7 +97,7 @@ public class PermissionsITCase {
     TestData.createNotAdminUser(USER_OWNER, USER_PASS);
     TestData.createUserPermission(USER_OWNER, PermissionType.OWNER, repositoryType);
     TestData.createNotAdminUser(USER_OTHER, USER_PASS);
-    createdPermissions = 3;
+    createdPermissions = asList(USER_READ, USER_WRITE, USER_OWNER);
   }
 
   @Test
@@ -131,8 +134,8 @@ public class PermissionsITCase {
 
   @Test
   public void ownerShouldSeePermissions() {
-    List<Object> userPermissions = TestData.getUserPermissions(USER_OWNER, USER_PASS, repositoryType);
-    assertEquals(userPermissions.size(), createdPermissions);
+    List<Map> userPermissions = TestData.getUserPermissions(USER_OWNER, USER_PASS, repositoryType);
+    Assertions.assertThat(userPermissions).extracting(e -> e.get("name")).containsAll(createdPermissions);
   }
 
   @Test

@@ -1,6 +1,6 @@
 //@flow
 import React from "react";
-import { LabelWithHelpIcon } from "../index";
+import LabelWithHelpIcon from "./LabelWithHelpIcon";
 
 export type SelectItem = {
   value: string,
@@ -8,10 +8,11 @@ export type SelectItem = {
 };
 
 type Props = {
+  name?: string,
   label?: string,
   placeholder?: SelectItem[],
   value?: string,
-  onChange: string => void,
+  onChange: (value: string, name?: string) => void,
   helpText?: string
 };
 
@@ -19,7 +20,7 @@ class Textarea extends React.Component<Props> {
   field: ?HTMLTextAreaElement;
 
   handleInput = (event: SyntheticInputEvent<HTMLTextAreaElement>) => {
-    this.props.onChange(event.target.value);
+    this.props.onChange(event.target.value, this.props.name);
   };
 
   render() {
