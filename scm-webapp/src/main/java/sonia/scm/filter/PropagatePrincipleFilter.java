@@ -60,7 +60,6 @@ import static sonia.scm.api.v2.resources.ScmPathInfo.REST_API_PATH;
  * @author Sebastian Sdorra
  */
 @Priority(Filters.PRIORITY_AUTHORIZATION)
-@WebElement(value = REST_API_PATH + "/(?!v2/ui).*", regex = true)
 public class PropagatePrincipleFilter extends HttpFilter
 {
 
