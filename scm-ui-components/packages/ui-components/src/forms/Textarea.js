@@ -1,6 +1,6 @@
 //@flow
 import React from "react";
-import { LabelWithHelpIcon } from "../index";
+import LabelWithHelpIcon from "./LabelWithHelpIcon";
 
 export type SelectItem = {
   value: string,
