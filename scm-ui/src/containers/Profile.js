@@ -2,7 +2,7 @@
 
 import React from "react";
 
-import { NavLink, Route, withRouter } from "react-router-dom";
+import { Route, withRouter } from "react-router-dom";
 import { getMe } from "../modules/auth";
 import { compose } from "redux";
 import { connect } from "react-redux";
@@ -12,7 +12,8 @@ import {
   ErrorPage,
   Page,
   Navigation,
-  Section
+  Section,
+  NavLink
 } from "@scm-manager/ui-components";
 import ChangeUserPassword from "./ChangeUserPassword";
 import ProfileInfo from "./ProfileInfo";
@@ -68,10 +69,15 @@ class Profile extends React.Component<Props, State> {
           </div>
           <div className="column">
             <Navigation>
-              <Section label={t("profile.actions-label")} />
-              <NavLink to={`${url}/password`}>
-                {t("profile.change-password")}
-              </NavLink>
+              <Section label={t("profile.navigation-label")}>
+                <NavLink to={`${url}`} label={t("profile.information")} />
+              </Section>
+              <Section label={t("profile.actions-label")}>
+                <NavLink
+                  to={`${url}/password`}
+                  label={t("profile.change-password")}
+                />
+              </Section>
             </Navigation>
           </div>
         </div>

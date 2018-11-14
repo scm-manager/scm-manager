@@ -7,9 +7,9 @@ import {
   PasswordConfirmation,
   SubmitButton
 } from "@scm-manager/ui-components";
-import {translate} from "react-i18next";
-import type {Me} from "@scm-manager/ui-types";
-import {changePassword} from "../modules/changePassword";
+import { translate } from "react-i18next";
+import type { Me } from "@scm-manager/ui-types";
+import { changePassword } from "../modules/changePassword";
 
 type Props = {
   me: Me,

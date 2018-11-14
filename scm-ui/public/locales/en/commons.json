@@ -40,10 +40,12 @@
     "previous": "Previous"
   },
   "profile": {
+    "navigation-label": "Navigation",
     "actions-label": "Actions",
     "username": "Username",
     "displayName": "Display Name",
     "mail": "E-Mail",
+    "information": "Information",
     "change-password": "Change password",
     "error-title": "Error",
     "error-subtitle": "Cannot display profile",
