@@ -1,5 +1,5 @@
 // @flow
-import { contextPath } from "./urls";
+import {contextPath} from "./urls";
 
 export const NOT_FOUND_ERROR = Error("not found");
 export const UNAUTHORIZED_ERROR = Error("unauthorized");
@@ -11,15 +11,34 @@ const fetchOptions: RequestOptions = {
   }
 };
 
+// TODO: dedup
 function handleStatusCode(response: Response) {
   if (!response.ok) {
     if (response.status === 401) {
-      throw UNAUTHORIZED_ERROR;
+      return response.json().then(
+        json => {
+          throw Error(json.message);
+        },
+        () => {
+          throw UNAUTHORIZED_ERROR;
+        }
+      );
     }
     if (response.status === 404) {
-      throw NOT_FOUND_ERROR;
+      return response.json().then(
+        json => {
+          throw Error(json.message);
+        },
+        () => {
+          throw NOT_FOUND_ERROR;
+        }
+      );
     }
-    throw new Error("server returned status code " + response.status);
+    return response.json().then(json => {
+        throw Error(json.message);
+      }, () => {
+        throw new Error("server returned status code " + response.status);
+      });
   }
   return response;
 }
