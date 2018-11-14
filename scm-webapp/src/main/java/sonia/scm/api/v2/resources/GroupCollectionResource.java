@@ -5,12 +5,12 @@ import com.webcohesion.enunciate.metadata.rs.ResponseHeader;
 import com.webcohesion.enunciate.metadata.rs.ResponseHeaders;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
-import sonia.scm.AlreadyExistsException;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupManager;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
@@ -71,7 +71,7 @@ public class GroupCollectionResource {
 
   /**
    * Creates a new group.
-   * @param groupDto The group to be created.
+   * @param group The group to be created.
    * @return A response with the link to the new group (if created successfully).
    */
   @POST
@@ -86,9 +86,9 @@ public class GroupCollectionResource {
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
   @ResponseHeaders(@ResponseHeader(name = "Location", description = "uri to the created group"))
-  public Response create(@Valid GroupDto groupDto) throws AlreadyExistsException {
-    return adapter.create(groupDto,
-                          () -> dtoToGroupMapper.map(groupDto),
-                          group -> resourceLinks.group().self(group.getName()));
+  public Response create(@Valid GroupDto group) {
+    return adapter.create(group,
+                          () -> dtoToGroupMapper.map(group),
+                          g -> resourceLinks.group().self(g.getName()));
   }
 }

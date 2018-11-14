@@ -50,7 +50,9 @@ public class AbstractGitCommandTestBase extends ZippedRepositoryTestBase
   @After
   public void close()
   {
-    context.close();
+    if (context != null) {
+      context.close();
+    }
   }
 
   /**
@@ -63,7 +65,7 @@ public class AbstractGitCommandTestBase extends ZippedRepositoryTestBase
   {
     if (context == null)
     {
-      context = new GitContext(repositoryDirectory);
+      context = new GitContext(repositoryDirectory, repository);
     }
 
     return context;

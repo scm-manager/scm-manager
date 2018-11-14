@@ -1,17 +1,17 @@
 package sonia.scm.api.v2.resources;
 
+import sonia.scm.api.rest.ContextualExceptionMapper;
 import sonia.scm.user.InvalidPasswordException;
 
+import javax.inject.Inject;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 @Provider
-public class InvalidPasswordExceptionMapper implements ExceptionMapper<InvalidPasswordException> {
-  @Override
-  public Response toResponse(InvalidPasswordException exception) {
-    return Response.status(Response.Status.BAD_REQUEST)
-      .entity(exception.getMessage())
-      .build();
+public class InvalidPasswordExceptionMapper extends ContextualExceptionMapper<InvalidPasswordException> {
+
+  @Inject
+  public InvalidPasswordExceptionMapper(ExceptionWithContextToErrorDtoMapper mapper) {
+    super(InvalidPasswordException.class, Response.Status.BAD_REQUEST, mapper);
   }
 }

@@ -59,6 +59,9 @@ import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
 
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import static sonia.scm.NotFoundException.notFound;
+
 //~--- JDK imports ------------------------------------------------------------
 
 /**
@@ -102,7 +105,7 @@ public final class SvnUtil
 
   //~--- methods --------------------------------------------------------------
 
-  public static long parseRevision(String v) throws RevisionNotFoundException {
+  public static long parseRevision(String v, Repository repository) {
     long result = -1l;
 
     if (!Strings.isNullOrEmpty(v))
@@ -113,7 +116,7 @@ public final class SvnUtil
       }
       catch (NumberFormatException ex)
       {
-        throw new RevisionNotFoundException(v);
+        throw notFound(entity("Revision", v).in(repository));
       }
     }
 
@@ -339,7 +342,7 @@ public final class SvnUtil
     }
   }
 
-  public static long getRevisionNumber(String revision) throws RevisionNotFoundException {
+  public static long getRevisionNumber(String revision, Repository repository) {
     // REVIEW Bei SVN wird ohne Revision die -1 genommen, was zu einem Fehler führt
     long revisionNumber = -1;
 
@@ -351,7 +354,7 @@ public final class SvnUtil
       }
       catch (NumberFormatException ex)
       {
-        throw new RevisionNotFoundException(revision);
+        throw notFound(entity("Revision", revision).in(repository));
       }
     }
 

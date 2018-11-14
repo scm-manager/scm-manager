@@ -61,7 +61,6 @@ public class GitIncomingCommandTest
    *
    * @throws GitAPIException
    * @throws IOException
-   * @throws RepositoryException
    */
   @Test
   public void testGetIncomingChangesets()
@@ -95,7 +94,6 @@ public class GitIncomingCommandTest
    *
    * @throws GitAPIException
    * @throws IOException
-   * @throws RepositoryException
    */
   @Test
   public void testGetIncomingChangesetsWithAllreadyPullChangesets()
@@ -105,7 +103,7 @@ public class GitIncomingCommandTest
 
     commit(outgoing, "added a");
     
-    GitPullCommand pull = new GitPullCommand(handler, new GitContext(incomingDirectory), incomingRepository);
+    GitPullCommand pull = new GitPullCommand(handler, new GitContext(incomingDirectory, null), incomingRepository);
     PullCommandRequest req = new PullCommandRequest();
     req.setRemoteRepository(outgoingRepository);
     pull.pull(req);
@@ -132,7 +130,6 @@ public class GitIncomingCommandTest
    *
    *
    * @throws IOException
-   * @throws RepositoryException
    */
   @Test
   public void testGetIncomingChangesetsWithEmptyRepository()
@@ -156,7 +153,6 @@ public class GitIncomingCommandTest
    *
    * @throws GitAPIException
    * @throws IOException
-   * @throws RepositoryException
    */
   @Test
   @Ignore
@@ -191,7 +187,7 @@ public class GitIncomingCommandTest
    */
   private GitIncomingCommand createCommand()
   {
-    return new GitIncomingCommand(handler, new GitContext(incomingDirectory),
+    return new GitIncomingCommand(handler, new GitContext(incomingDirectory, null),
       incomingRepository);
   }
 }

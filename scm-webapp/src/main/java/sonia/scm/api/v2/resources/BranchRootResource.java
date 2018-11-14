@@ -11,7 +11,6 @@ import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.api.CommandNotSupportedException;
 import sonia.scm.repository.api.RepositoryService;
@@ -28,6 +27,9 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.List;
+
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import static sonia.scm.NotFoundException.notFound;
 
 public class BranchRootResource {
 
@@ -79,7 +81,7 @@ public class BranchRootResource {
         .build();
     } catch (CommandNotSupportedException ex) {
       return Response.status(Response.Status.BAD_REQUEST).build();
-    } catch (RepositoryNotFoundException e) {
+    } catch (NotFoundException e) {
       return Response.status(Response.Status.NOT_FOUND).build();
     }
   }
@@ -99,7 +101,7 @@ public class BranchRootResource {
                           @PathParam("name") String name,
                           @PathParam("branch") String branchName,
                           @DefaultValue("0") @QueryParam("page") int page,
-                          @DefaultValue("10") @QueryParam("pageSize") int pageSize) throws Exception {
+                          @DefaultValue("10") @QueryParam("pageSize") int pageSize) throws IOException {
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
       boolean branchExists = repositoryService.getBranchesCommand()
         .getBranches()
@@ -107,7 +109,7 @@ public class BranchRootResource {
         .stream()
         .anyMatch(branch -> branchName.equals(branch.getName()));
       if (!branchExists){
-        throw new NotFoundException("branch", branchName);
+        throw notFound(entity(Branch.class, branchName).in(Repository.class, namespace + "/" + name));
       }
       Repository repository = repositoryService.getRepository();
       RepositoryPermissions.read(repository).check();
@@ -195,8 +197,6 @@ public class BranchRootResource {
       return Response.ok(branchCollectionToDtoMapper.map(namespace, name, branches.getBranches())).build();
     } catch (CommandNotSupportedException ex) {
       return Response.status(Response.Status.BAD_REQUEST).build();
-    } catch (RepositoryNotFoundException e) {
-      return Response.status(Response.Status.NOT_FOUND).build();
     }
   }
 }

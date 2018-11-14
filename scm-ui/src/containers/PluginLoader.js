@@ -5,12 +5,13 @@ import { getUiPluginsLink } from "../modules/indexResource";
 import { connect } from "react-redux";
 
 type Props = {
+  loaded: boolean,
   children: React.Node,
-  link: string
+  link: string,
+  callback: () => void
 };
 
 type State = {
-  finished: boolean,
   message: string
 };
 
@@ -23,17 +24,19 @@ class PluginLoader extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      finished: false,
       message: "booting"
     };
   }
 
   componentDidMount() {
-    this.setState({
-      message: "loading plugin information"
-    });
-
-    this.getPlugins(this.props.link);
+    const { loaded } = this.props;
+    if (!loaded) {
+      this.setState({
+        message: "loading plugin information"
+      });
+  
+      this.getPlugins(this.props.link);
+    }
   }
 
   getPlugins = (link: string): Promise<any> => {
@@ -43,11 +46,7 @@ class PluginLoader extends React.Component<Props, State> {
       .then(JSON.parse)
       .then(pluginCollection => pluginCollection._embedded.plugins)
       .then(this.loadPlugins)
-      .then(() => {
-        this.setState({
-          finished: true
-        });
-      });
+      .then(this.props.callback);
   };
 
   loadPlugins = (plugins: Plugin[]) => {
@@ -87,8 +86,9 @@ class PluginLoader extends React.Component<Props, State> {
   };
 
   render() {
-    const { message, finished } = this.state;
-    if (finished) {
+    const { loaded } = this.props;
+    const { message } = this.state;
+    if (loaded) {
       return <div>{this.props.children}</div>;
     }
     return <Loading message={message} />;

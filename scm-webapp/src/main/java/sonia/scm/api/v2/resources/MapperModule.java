@@ -39,6 +39,9 @@ public class MapperModule extends AbstractModule {
 
     bind(ReducedObjectModelToDtoMapper.class).to(Mappers.getMapper(ReducedObjectModelToDtoMapper.class).getClass());
 
+    bind(ViolationExceptionToErrorDtoMapper.class).to(Mappers.getMapper(ViolationExceptionToErrorDtoMapper.class).getClass());
+    bind(ExceptionWithContextToErrorDtoMapper.class).to(Mappers.getMapper(ExceptionWithContextToErrorDtoMapper.class).getClass());
+
     // no mapstruct required
     bind(UIPluginDtoMapper.class);
     bind(UIPluginDtoCollectionMapper.class);

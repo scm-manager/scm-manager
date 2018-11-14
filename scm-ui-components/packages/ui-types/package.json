@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/ui-types",
-  "version": "0.0.1",
+  "version": "2.0.0-SNAPSHOT",
   "description": "Flow types for SCM-Manager related Objects",
   "main": "src/index.js",
   "files": [
@@ -8,7 +8,7 @@
   ],
   "repository": "https://bitbucket.org/sdorra/scm-manager",
   "author": "Sebastian Sdorra <sebastian.sdorra@cloudogu.com>",
-  "license" : "BSD-3-Clause",
+  "license": "BSD-3-Clause",
   "scripts": {
     "lint": "ui-bunder lint",
     "check": "flow check"
@@ -21,8 +21,14 @@
       [
         "babelify",
         {
-          "plugins": ["@babel/plugin-proposal-class-properties"],
-          "presets": ["@babel/preset-env", "@babel/preset-flow", "@babel/preset-react"]
+          "plugins": [
+            "@babel/plugin-proposal-class-properties"
+          ],
+          "presets": [
+            "@babel/preset-env",
+            "@babel/preset-flow",
+            "@babel/preset-react"
+          ]
         }
       ]
     ]

@@ -38,7 +38,6 @@ package sonia.scm.repository.api;
 import com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.repository.spi.DiffCommand;
 import sonia.scm.repository.spi.DiffCommandRequest;
 import sonia.scm.util.IOUtil;
@@ -104,7 +103,7 @@ public final class DiffCommandBuilder
    *
    * @throws IOException
    */
-  public DiffCommandBuilder retrieveContent(OutputStream outputStream) throws IOException, RevisionNotFoundException {
+  public DiffCommandBuilder retrieveContent(OutputStream outputStream) throws IOException {
     getDiffResult(outputStream);
 
     return this;
@@ -119,7 +118,7 @@ public final class DiffCommandBuilder
    *
    * @throws IOException
    */
-  public String getContent() throws IOException, RevisionNotFoundException {
+  public String getContent() throws IOException {
     String content = null;
     ByteArrayOutputStream baos = null;
 
@@ -199,7 +198,7 @@ public final class DiffCommandBuilder
    *
    * @throws IOException
    */
-  private void getDiffResult(OutputStream outputStream) throws IOException, RevisionNotFoundException {
+  private void getDiffResult(OutputStream outputStream) throws IOException {
     Preconditions.checkNotNull(outputStream, "OutputStream is required");
     Preconditions.checkArgument(request.isValid(),
       "path and/or revision is required");

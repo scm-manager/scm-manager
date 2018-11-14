@@ -8,7 +8,6 @@ import org.apache.shiro.util.ThreadContext;
 import org.apache.shiro.util.ThreadState;
 import org.assertj.core.util.Lists;
 import org.jboss.resteasy.core.Dispatcher;
-import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.After;
@@ -18,15 +17,14 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import sonia.scm.api.rest.AuthorizationExceptionMapper;
+import sonia.scm.ContextEntry;
+import sonia.scm.NotFoundException;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryNotFoundException;
-import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.repository.api.LogCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
@@ -52,7 +50,6 @@ public class FileHistoryResourceTest extends RepositoryTestBase {
 
   public static final String FILE_HISTORY_PATH = "space/repo/history/";
   public static final String FILE_HISTORY_URL = "/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + FILE_HISTORY_PATH;
-  private final Dispatcher dispatcher = MockDispatcherFactory.createDispatcher();
 
   private final URI baseUri = URI.create("/");
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
@@ -73,23 +70,21 @@ public class FileHistoryResourceTest extends RepositoryTestBase {
 
   private FileHistoryRootResource fileHistoryRootResource;
 
+  private Dispatcher dispatcher;
 
   private final Subject subject = mock(Subject.class);
   private final ThreadState subjectThreadState = new SubjectThreadState(subject);
 
-
   @Before
-  public void prepareEnvironment() throws Exception {
+  public void prepareEnvironment() {
     fileHistoryCollectionToDtoMapper = new FileHistoryCollectionToDtoMapper(changesetToChangesetDtoMapper, resourceLinks);
     fileHistoryRootResource = new FileHistoryRootResource(serviceFactory, fileHistoryCollectionToDtoMapper);
     super.fileHistoryRootResource = Providers.of(fileHistoryRootResource);
-    dispatcher.getRegistry().addSingletonResource(getRepositoryRootResource());
+    dispatcher = DispatcherMock.createDispatcher(getRepositoryRootResource());
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(service);
     when(serviceFactory.create(any(Repository.class))).thenReturn(service);
     when(service.getRepository()).thenReturn(new Repository("repoId", "git", "space", "repo"));
-    dispatcher.getProviderFactory().registerProvider(NotFoundExceptionMapper.class);
-    dispatcher.getProviderFactory().registerProvider(AuthorizationExceptionMapper.class);
-    dispatcher.getProviderFactory().registerProvider(InternalRepositoryExceptionMapper.class);
+    ExceptionWithContextToErrorDtoMapperImpl mapper = new ExceptionWithContextToErrorDtoMapperImpl();
     when(service.getLogCommand()).thenReturn(logCommandBuilder);
     subjectThreadState.bind();
     ThreadContext.bind(subject);
@@ -133,8 +128,8 @@ public class FileHistoryResourceTest extends RepositoryTestBase {
 
 
   @Test
-  public void shouldGet404OnMissingRepository() throws URISyntaxException, RepositoryNotFoundException {
-    when(serviceFactory.create(any(NamespaceAndName.class))).thenThrow(RepositoryNotFoundException.class);
+  public void shouldGet404OnMissingRepository() throws URISyntaxException {
+    when(serviceFactory.create(any(NamespaceAndName.class))).thenThrow(new NotFoundException("Text", "x"));
     MockHttpRequest request = MockHttpRequest
       .get(FILE_HISTORY_URL + "revision/a.txt")
       .accept(VndMediaType.CHANGESET_COLLECTION);
@@ -152,7 +147,7 @@ public class FileHistoryResourceTest extends RepositoryTestBase {
     when(logCommandBuilder.setPagingLimit(anyInt())).thenReturn(logCommandBuilder);
     when(logCommandBuilder.setStartChangeset(eq(id))).thenReturn(logCommandBuilder);
     when(logCommandBuilder.setPath(eq(path))).thenReturn(logCommandBuilder);
-    when(logCommandBuilder.getChangesets()).thenThrow(RevisionNotFoundException.class);
+    when(logCommandBuilder.getChangesets()).thenThrow(new NotFoundException("Text", "x"));
 
     MockHttpRequest request = MockHttpRequest
       .get(FILE_HISTORY_URL + id + "/" + path)
@@ -171,7 +166,7 @@ public class FileHistoryResourceTest extends RepositoryTestBase {
     when(logCommandBuilder.setPagingLimit(anyInt())).thenReturn(logCommandBuilder);
     when(logCommandBuilder.setStartChangeset(eq(id))).thenReturn(logCommandBuilder);
     when(logCommandBuilder.setPath(eq(path))).thenReturn(logCommandBuilder);
-    when(logCommandBuilder.getChangesets()).thenThrow(InternalRepositoryException.class);
+    when(logCommandBuilder.getChangesets()).thenThrow(new InternalRepositoryException(ContextEntry.ContextBuilder.noContext(), "", new RuntimeException()));
 
     MockHttpRequest request = MockHttpRequest
       .get(FILE_HISTORY_URL + id + "/" + path)
@@ -182,7 +177,7 @@ public class FileHistoryResourceTest extends RepositoryTestBase {
   }
 
   @Test
-  public void shouldGet500OnNullChangesets() throws Exception {
+  public void shouldGet404OnNullChangesets() throws Exception {
     String id = "revision_123";
     String path = "root_dir/sub_dir/file-to-inspect.txt";
 
@@ -197,6 +192,6 @@ public class FileHistoryResourceTest extends RepositoryTestBase {
       .accept(VndMediaType.CHANGESET_COLLECTION);
     MockHttpResponse response = new MockHttpResponse();
     dispatcher.invoke(request, response);
-    assertEquals(500, response.getStatus());
+    assertEquals(404, response.getStatus());
   }
 }

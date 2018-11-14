@@ -37,9 +37,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.repository.PathNotFoundException;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.repository.spi.CatCommand;
 import sonia.scm.repository.spi.CatCommandRequest;
 import sonia.scm.util.IOUtil;
@@ -107,7 +105,7 @@ public final class CatCommandBuilder
    * @param outputStream output stream for the content
    * @param path file path
    */
-  public void retriveContent(OutputStream outputStream, String path) throws IOException, PathNotFoundException, RevisionNotFoundException {
+  public void retriveContent(OutputStream outputStream, String path) throws IOException {
     getCatResult(outputStream, path);
   }
 
@@ -116,7 +114,7 @@ public final class CatCommandBuilder
    *
    * @param path file path
    */
-  public InputStream getStream(String path) throws IOException, PathNotFoundException, RevisionNotFoundException {
+  public InputStream getStream(String path) throws IOException {
     Preconditions.checkArgument(!Strings.isNullOrEmpty(path),
       "path is required");
 
@@ -139,7 +137,7 @@ public final class CatCommandBuilder
    *
    * @throws IOException
    */
-  public String getContent(String path) throws IOException, PathNotFoundException, RevisionNotFoundException {
+  public String getContent(String path) throws IOException {
     String content = null;
     ByteArrayOutputStream baos = null;
 
@@ -186,7 +184,7 @@ public final class CatCommandBuilder
    * @throws IOException
    */
   private void getCatResult(OutputStream outputStream, String path)
-    throws IOException, PathNotFoundException, RevisionNotFoundException {
+    throws IOException {
     Preconditions.checkNotNull(outputStream, "OutputStream is required");
     Preconditions.checkArgument(!Strings.isNullOrEmpty(path),
       "path is required");

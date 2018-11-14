@@ -35,7 +35,6 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.AlreadyExistsException;
 import sonia.scm.ManagerDecorator;
 import sonia.scm.Type;
 
@@ -82,7 +81,7 @@ public class RepositoryManagerDecorator
    * {@inheritDoc}
    */
   @Override
-  public void importRepository(Repository repository) throws IOException, AlreadyExistsException {
+  public void importRepository(Repository repository) throws IOException {
     decorated.importRepository(repository);
   }
 

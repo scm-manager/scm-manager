@@ -18,8 +18,8 @@ public class GitModificationsCommandTest extends AbstractRemoteCommandTestBase {
 
   @Before
   public void init() {
-    incomingModificationsCommand = new GitModificationsCommand(new GitContext(incomingDirectory), incomingRepository);
-    outgoingModificationsCommand = new GitModificationsCommand(new GitContext(outgoingDirectory), outgoingRepository);
+    incomingModificationsCommand = new GitModificationsCommand(new GitContext(incomingDirectory, null), incomingRepository);
+    outgoingModificationsCommand = new GitModificationsCommand(new GitContext(outgoingDirectory, null), outgoingRepository);
   }
 
   @Test
@@ -63,12 +63,12 @@ public class GitModificationsCommandTest extends AbstractRemoteCommandTestBase {
   }
 
   void pushOutgoingAndPullIncoming() throws IOException {
-    GitPushCommand cmd = new GitPushCommand(handler, new GitContext(outgoingDirectory),
+    GitPushCommand cmd = new GitPushCommand(handler, new GitContext(outgoingDirectory, null),
       outgoingRepository);
     PushCommandRequest request = new PushCommandRequest();
     request.setRemoteRepository(incomingRepository);
     cmd.push(request);
-    GitPullCommand pullCommand = new GitPullCommand(handler, new GitContext(incomingDirectory),
+    GitPullCommand pullCommand = new GitPullCommand(handler, new GitContext(incomingDirectory, null),
       incomingRepository);
     PullCommandRequest pullRequest = new PullCommandRequest();
     pullRequest.setRemoteRepository(incomingRepository);

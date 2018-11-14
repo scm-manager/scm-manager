@@ -97,7 +97,7 @@ public class HgPullCommand extends AbstractHgPushOrPullCommand
     }
     catch (ExecutionException ex)
     {
-      throw new InternalRepositoryException("could not execute push command", ex);
+      throw new InternalRepositoryException(getRepository(), "could not execute push command", ex);
     }
 
     return new PullResponse(result.size());

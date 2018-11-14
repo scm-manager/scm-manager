@@ -38,6 +38,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.repository.GitUtil;
+import sonia.scm.repository.Repository;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -65,10 +66,12 @@ public class GitContext implements Closeable
    *
    *
    * @param directory
+   * @param repository
    */
-  public GitContext(File directory)
+  public GitContext(File directory, Repository repository)
   {
     this.directory = directory;
+    this.repository = repository;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -82,8 +85,8 @@ public class GitContext implements Closeable
   {
     logger.trace("close git repository {}", directory);
 
-    GitUtil.close(repository);
-    repository = null;
+    GitUtil.close(gitRepository);
+    gitRepository = null;
   }
 
   /**
@@ -96,21 +99,30 @@ public class GitContext implements Closeable
    */
   public org.eclipse.jgit.lib.Repository open() throws IOException
   {
-    if (repository == null)
+    if (gitRepository == null)
     {
       logger.trace("open git repository {}", directory);
 
-      repository = GitUtil.open(directory);
+      gitRepository = GitUtil.open(directory);
     }
 
+    return gitRepository;
+  }
+
+  Repository getRepository() {
     return repository;
+  }
+
+  File getDirectory() {
+    return directory;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
   private final File directory;
+  private final Repository repository;
 
   /** Field description */
-  private org.eclipse.jgit.lib.Repository repository;
+  private org.eclipse.jgit.lib.Repository gitRepository;
 }

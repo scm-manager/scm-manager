@@ -55,9 +55,7 @@ import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.FileObject;
 import sonia.scm.repository.GitSubModuleParser;
 import sonia.scm.repository.GitUtil;
-import sonia.scm.repository.PathNotFoundException;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.repository.SubRepository;
 import sonia.scm.util.Util;
 
@@ -104,7 +102,7 @@ public class GitBrowseCommand extends AbstractGitCommand
   @Override
   @SuppressWarnings("unchecked")
   public BrowserResult getBrowserResult(BrowseCommandRequest request)
-    throws IOException, NotFoundException {
+    throws IOException {
     logger.debug("try to create browse result for {}", request);
 
     BrowserResult result;
@@ -166,7 +164,7 @@ public class GitBrowseCommand extends AbstractGitCommand
    */
   private FileObject createFileObject(org.eclipse.jgit.lib.Repository repo,
     BrowseCommandRequest request, ObjectId revId, TreeWalk treeWalk)
-    throws IOException, RevisionNotFoundException {
+    throws IOException {
 
     FileObject file = new FileObject();
 
@@ -258,7 +256,7 @@ public class GitBrowseCommand extends AbstractGitCommand
     return result;
   }
 
-  private FileObject getEntry(org.eclipse.jgit.lib.Repository repo, BrowseCommandRequest request, ObjectId revId) throws IOException, NotFoundException {
+  private FileObject getEntry(org.eclipse.jgit.lib.Repository repo, BrowseCommandRequest request, ObjectId revId) throws IOException {
     RevWalk revWalk = null;
     TreeWalk treeWalk = null;
 
@@ -309,7 +307,7 @@ public class GitBrowseCommand extends AbstractGitCommand
     return Strings.isNullOrEmpty(request.getPath()) || "/".equals(request.getPath());
   }
 
-  private FileObject findChildren(FileObject parent, org.eclipse.jgit.lib.Repository repo, BrowseCommandRequest request, ObjectId revId, TreeWalk treeWalk) throws IOException, NotFoundException {
+  private FileObject findChildren(FileObject parent, org.eclipse.jgit.lib.Repository repo, BrowseCommandRequest request, ObjectId revId, TreeWalk treeWalk) throws IOException {
     List<FileObject> files = Lists.newArrayList();
     while (treeWalk.next())
     {
@@ -337,7 +335,7 @@ public class GitBrowseCommand extends AbstractGitCommand
   }
 
   private FileObject findFirstMatch(org.eclipse.jgit.lib.Repository repo,
-                        BrowseCommandRequest request, ObjectId revId, TreeWalk treeWalk) throws IOException, NotFoundException {
+                        BrowseCommandRequest request, ObjectId revId, TreeWalk treeWalk) throws IOException {
     String[] pathElements = request.getPath().split("/");
     int currentDepth = 0;
     int limit = pathElements.length;
@@ -363,7 +361,7 @@ public class GitBrowseCommand extends AbstractGitCommand
   private Map<String,
     SubRepository> getSubRepositories(org.eclipse.jgit.lib.Repository repo,
       ObjectId revision)
-    throws IOException, RevisionNotFoundException {
+    throws IOException {
     if (logger.isDebugEnabled())
     {
       logger.debug("read submodules of {} at {}", repository.getName(),
@@ -377,7 +375,7 @@ public class GitBrowseCommand extends AbstractGitCommand
         PATH_MODULES, baos);
       subRepositories = GitSubModuleParser.parse(baos.toString());
     }
-    catch (PathNotFoundException ex)
+    catch (NotFoundException ex)
     {
       logger.trace("could not find .gitmodules", ex);
       subRepositories = Collections.EMPTY_MAP;
@@ -388,7 +386,7 @@ public class GitBrowseCommand extends AbstractGitCommand
 
   private SubRepository getSubRepository(org.eclipse.jgit.lib.Repository repo,
     ObjectId revId, String path)
-    throws IOException, RevisionNotFoundException {
+    throws IOException {
     Map<String, SubRepository> subRepositories = subrepositoryCache.get(revId);
 
     if (subRepositories == null)

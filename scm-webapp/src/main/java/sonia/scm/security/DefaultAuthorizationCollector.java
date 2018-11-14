@@ -54,13 +54,14 @@ import sonia.scm.cache.CacheManager;
 import sonia.scm.group.GroupNames;
 import sonia.scm.group.GroupPermissions;
 import sonia.scm.plugin.Extension;
+import sonia.scm.repository.Permission;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryDAO;
-import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.user.User;
 import sonia.scm.user.UserPermissions;
 import sonia.scm.util.Util;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -198,7 +199,7 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
   private void collectRepositoryPermissions(Builder<String> builder,
     Repository repository, User user, GroupNames groups)
   {
-    List<sonia.scm.repository.Permission> repositoryPermissions
+    Collection<Permission> repositoryPermissions
       = repository.getPermissions();
 
     if (Util.isNotEmpty(repositoryPermissions))

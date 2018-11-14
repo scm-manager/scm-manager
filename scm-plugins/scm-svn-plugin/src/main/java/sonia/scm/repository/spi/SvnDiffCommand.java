@@ -86,7 +86,7 @@ public class SvnDiffCommand extends AbstractSvnCommand implements DiffCommand {
       SVNDiffClient diffClient = clientManager.getDiffClient();
       diffClient.setDiffGenerator(new SvnNewDiffGenerator(new SCMSvnDiffGenerator()));
 
-      long currentRev = SvnUtil.getRevisionNumber(request.getRevision());
+      long currentRev = SvnUtil.getRevisionNumber(request.getRevision(), repository);
 
       diffClient.setGitDiffFormat(request.getFormat() == DiffFormat.GIT);
 
@@ -94,7 +94,7 @@ public class SvnDiffCommand extends AbstractSvnCommand implements DiffCommand {
         SVNRevision.create(currentRev - 1), SVNRevision.create(currentRev),
         SVNDepth.INFINITY, false, output);
     } catch (SVNException ex) {
-      throw new InternalRepositoryException("could not create diff", ex);
+      throw new InternalRepositoryException(repository, "could not create diff", ex);
     } finally {
       SvnUtil.dispose(clientManager);
     }

@@ -5,9 +5,12 @@ import com.webcohesion.enunciate.metadata.rs.ResponseHeader;
 import com.webcohesion.enunciate.metadata.rs.ResponseHeaders;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
-import sonia.scm.AlreadyExistsException;
+import org.apache.shiro.SecurityUtils;
+import sonia.scm.repository.Permission;
+import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
+import sonia.scm.user.User;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
@@ -20,6 +23,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
+
+import static java.util.Collections.singletonList;
 
 public class RepositoryCollectionResource {
 
@@ -72,7 +77,7 @@ public class RepositoryCollectionResource {
    * <strong>Note:</strong> This method requires "repository" privilege. The namespace of the given repository will
    *   be ignored and set by the configured namespace strategy.
    *
-   * @param repositoryDto The repository to be created.
+   * @param repository The repository to be created.
    * @return A response with the link to the new repository (if created successfully).
    */
   @POST
@@ -87,9 +92,19 @@ public class RepositoryCollectionResource {
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
   @ResponseHeaders(@ResponseHeader(name = "Location", description = "uri to the created repository"))
-  public Response create(@Valid RepositoryDto repositoryDto) throws AlreadyExistsException {
-    return adapter.create(repositoryDto,
-      () -> dtoToRepositoryMapper.map(repositoryDto, null),
-      repository -> resourceLinks.repository().self(repository.getNamespace(), repository.getName()));
+  public Response create(@Valid RepositoryDto repository) {
+    return adapter.create(repository,
+      () -> createModelObjectFromDto(repository),
+      r -> resourceLinks.repository().self(r.getNamespace(), r.getName()));
+  }
+
+  private Repository createModelObjectFromDto(@Valid RepositoryDto repositoryDto) {
+    Repository repository = dtoToRepositoryMapper.map(repositoryDto, null);
+    repository.setPermissions(singletonList(new Permission(currentUser(), PermissionType.OWNER)));
+    return repository;
+  }
+
+  private String currentUser() {
+    return SecurityUtils.getSubject().getPrincipals().oneByType(User.class).getName();
   }
 }

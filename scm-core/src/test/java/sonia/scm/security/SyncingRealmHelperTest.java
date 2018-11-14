@@ -43,7 +43,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.AlreadyExistsException;
-import sonia.scm.NotFoundException;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupManager;
 import sonia.scm.group.GroupNames;
@@ -132,7 +131,7 @@ public class SyncingRealmHelperTest {
    * @throws IOException
    */
   @Test
-  public void testStoreGroupCreate() throws AlreadyExistsException {
+  public void testStoreGroupCreate() {
     Group group = new Group("unit-test", "heartOfGold");
 
     helper.store(group);
@@ -143,7 +142,7 @@ public class SyncingRealmHelperTest {
    * Tests {@link SyncingRealmHelper#store(Group)}.
    */
   @Test(expected = IllegalStateException.class)
-  public void testStoreGroupFailure() throws AlreadyExistsException {
+  public void testStoreGroupFailure() {
     Group group = new Group("unit-test", "heartOfGold");
 
     doThrow(AlreadyExistsException.class).when(groupManager).create(group);
@@ -169,7 +168,7 @@ public class SyncingRealmHelperTest {
    * @throws IOException
    */
   @Test
-  public void testStoreUserCreate() throws AlreadyExistsException {
+  public void testStoreUserCreate() {
     User user = new User("tricia");
 
     helper.store(user);
@@ -180,7 +179,7 @@ public class SyncingRealmHelperTest {
    * Tests {@link SyncingRealmHelper#store(User)} with a thrown {@link AlreadyExistsException}.
    */
   @Test(expected = IllegalStateException.class)
-  public void testStoreUserFailure() throws AlreadyExistsException {
+  public void testStoreUserFailure() {
     User user = new User("tricia");
 
     doThrow(AlreadyExistsException.class).when(userManager).create(user);

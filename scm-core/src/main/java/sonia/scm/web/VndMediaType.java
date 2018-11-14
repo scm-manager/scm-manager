@@ -44,6 +44,7 @@ public class VndMediaType {
 
   public static final String ME = PREFIX + "me" + SUFFIX;
   public static final String SOURCE = PREFIX + "source" + SUFFIX;
+  public static final String ERROR_TYPE = PREFIX + "error" + SUFFIX;
 
   private VndMediaType() {
   }

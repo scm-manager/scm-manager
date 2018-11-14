@@ -32,9 +32,12 @@
 
 package sonia.scm.repository.spi;
 
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
+import org.junit.Rule;
 import org.junit.Test;
-import sonia.scm.repository.PathNotFoundException;
-import sonia.scm.repository.RevisionNotFoundException;
+import org.junit.rules.ExpectedException;
+import sonia.scm.NotFoundException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -46,8 +49,11 @@ import static org.junit.Assert.assertEquals;
 
 public class SvnCatCommandTest extends AbstractSvnCommandTestBase {
 
+  @Rule
+  public final ExpectedException expectedException = ExpectedException.none();
+
   @Test
-  public void testCat() throws PathNotFoundException, RevisionNotFoundException {
+  public void testCat() {
     CatCommandRequest request = new CatCommandRequest();
 
     request.setPath("a.txt");
@@ -56,35 +62,59 @@ public class SvnCatCommandTest extends AbstractSvnCommandTestBase {
   }
 
   @Test
-  public void testSimpleCat() throws PathNotFoundException, RevisionNotFoundException {
+  public void testSimpleCat() {
     CatCommandRequest request = new CatCommandRequest();
 
     request.setPath("c/d.txt");
     assertEquals("d", execute(request));
   }
 
-  @Test(expected = PathNotFoundException.class)
-  public void testUnknownFile() throws PathNotFoundException, RevisionNotFoundException {
+  @Test
+  public void testUnknownFile() {
     CatCommandRequest request = new CatCommandRequest();
 
     request.setPath("unknown");
     request.setRevision("1");
 
-    execute(request);
-  }
+    expectedException.expect(new BaseMatcher<Object>() {
+      @Override
+      public void describeTo(Description description) {
+        description.appendText("expected NotFoundException for path");
+      }
 
-  @Test(expected = RevisionNotFoundException.class)
-  public void testUnknownRevision() throws PathNotFoundException, RevisionNotFoundException {
-    CatCommandRequest request = new CatCommandRequest();
-
-    request.setPath("a.txt");
-    request.setRevision("42");
+      @Override
+      public boolean matches(Object item) {
+        return "Path".equals(((NotFoundException)item).getContext().get(0).getType());
+      }
+    });
 
     execute(request);
   }
 
   @Test
-  public void testSimpleStream() throws IOException, PathNotFoundException, RevisionNotFoundException {
+  public void testUnknownRevision() {
+    CatCommandRequest request = new CatCommandRequest();
+
+    request.setPath("a.txt");
+    request.setRevision("42");
+
+    expectedException.expect(new BaseMatcher<Object>() {
+      @Override
+      public void describeTo(Description description) {
+        description.appendText("expected NotFoundException for revision");
+      }
+
+      @Override
+      public boolean matches(Object item) {
+        return "Revision".equals(((NotFoundException)item).getContext().get(0).getType());
+      }
+    });
+
+    execute(request);
+  }
+
+  @Test
+  public void testSimpleStream() throws IOException {
     CatCommandRequest request = new CatCommandRequest();
     request.setPath("a.txt");
     request.setRevision("1");
@@ -98,7 +128,7 @@ public class SvnCatCommandTest extends AbstractSvnCommandTestBase {
     catResultStream.close();
   }
 
-  private String execute(CatCommandRequest request) throws PathNotFoundException, RevisionNotFoundException {
+  private String execute(CatCommandRequest request) {
     String content = null;
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
 

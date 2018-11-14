@@ -56,6 +56,8 @@ import sonia.scm.util.Util;
 
 import java.io.File;
 
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
+
 //~--- JDK imports ------------------------------------------------------------
 
 /**
@@ -173,7 +175,8 @@ public class SvnRepositoryHandler
     }
     catch (SVNException ex)
     {
-      throw new InternalRepositoryException(ex);
+      logger.error("could not create svn repository", ex);
+      throw new InternalRepositoryException(entity(repository), "could not create repository", ex);
     }
     finally
     {

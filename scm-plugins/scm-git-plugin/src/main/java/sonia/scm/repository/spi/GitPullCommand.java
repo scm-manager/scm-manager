@@ -101,7 +101,6 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
    * @return
    *
    * @throws IOException
-   * @throws RepositoryException
    */
   @Override
   public PullResponse pull(PullCommandRequest request)
@@ -249,7 +248,7 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
     }
     catch (GitAPIException ex)
     {
-      throw new InternalRepositoryException("error durring pull", ex);
+      throw new InternalRepositoryException(repository, "error during pull", ex);
     }
 
     return response;

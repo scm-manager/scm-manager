@@ -36,6 +36,9 @@ package sonia.scm.repository.spi;
 import com.aragost.javahg.commands.ExecutionException;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Closeables;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sonia.scm.ContextEntry;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
 import sonia.scm.web.HgUtil;
@@ -45,6 +48,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class HgCatCommand extends AbstractCommand implements CatCommand {
+
+  private static final Logger log = LoggerFactory.getLogger(HgCatCommand.class);
 
   HgCatCommand(HgCommandContext context, Repository repository) {
     super(context, repository);
@@ -70,7 +75,8 @@ public class HgCatCommand extends AbstractCommand implements CatCommand {
     try {
       return cmd.execute(request.getPath());
     } catch (ExecutionException e) {
-      throw new InternalRepositoryException(e);
+      log.error("could not execute cat command", e);
+      throw new InternalRepositoryException(ContextEntry.ContextBuilder.entity(getRepository()), "could not execute cat command", e);
     }
   }
 }

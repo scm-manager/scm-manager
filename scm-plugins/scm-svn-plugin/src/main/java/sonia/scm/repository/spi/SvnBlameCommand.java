@@ -98,7 +98,7 @@ public class SvnBlameCommand extends AbstractSvnCommand implements BlameCommand
     }
     catch (SVNException ex)
     {
-      throw new InternalRepositoryException("could not create blame result", ex);
+      throw new InternalRepositoryException(repository, "could not create blame result", ex);
     }
 
     return new BlameResult(blameLines.size(), blameLines);

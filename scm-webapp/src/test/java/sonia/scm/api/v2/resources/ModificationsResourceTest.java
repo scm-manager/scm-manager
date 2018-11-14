@@ -8,7 +8,6 @@ import org.apache.shiro.util.ThreadContext;
 import org.apache.shiro.util.ThreadState;
 import org.assertj.core.util.Lists;
 import org.jboss.resteasy.core.Dispatcher;
-import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.After;
@@ -18,7 +17,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import sonia.scm.api.rest.AuthorizationExceptionMapper;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Modifications;
 import sonia.scm.repository.NamespaceAndName;
@@ -37,6 +35,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static sonia.scm.ContextEntry.ContextBuilder.noContext;
 
 @Slf4j
 @RunWith(MockitoJUnitRunner.Silent.class)
@@ -45,7 +44,8 @@ public class ModificationsResourceTest extends RepositoryTestBase {
 
   public static final String MODIFICATIONS_PATH = "space/repo/modifications/";
   public static final String MODIFICATIONS_URL = "/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + MODIFICATIONS_PATH;
-  private final Dispatcher dispatcher = MockDispatcherFactory.createDispatcher();
+
+  private Dispatcher dispatcher;
 
   private final URI baseUri = URI.create("/");
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
@@ -70,16 +70,13 @@ public class ModificationsResourceTest extends RepositoryTestBase {
 
 
   @Before
-  public void prepareEnvironment() throws Exception {
+  public void prepareEnvironment() {
     modificationsRootResource = new ModificationsRootResource(serviceFactory, modificationsToDtoMapper);
     super.modificationsRootResource = Providers.of(modificationsRootResource);
-    dispatcher.getRegistry().addSingletonResource(getRepositoryRootResource());
+    dispatcher = DispatcherMock.createDispatcher(getRepositoryRootResource());
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(repositoryService);
     when(serviceFactory.create(any(Repository.class))).thenReturn(repositoryService);
     when(repositoryService.getRepository()).thenReturn(new Repository("repoId", "git", "space", "repo"));
-    dispatcher.getProviderFactory().registerProvider(NotFoundExceptionMapper.class);
-    dispatcher.getProviderFactory().registerProvider(AuthorizationExceptionMapper.class);
-    dispatcher.getProviderFactory().registerProvider(InternalRepositoryExceptionMapper.class);
     when(repositoryService.getModificationsCommand()).thenReturn(modificationsCommandBuilder);
     subjectThreadState.bind();
     ThreadContext.bind(subject);
@@ -107,7 +104,7 @@ public class ModificationsResourceTest extends RepositoryTestBase {
   @Test
   public void shouldGet500OnModificationsCommandError() throws Exception {
     when(modificationsCommandBuilder.revision(any())).thenReturn(modificationsCommandBuilder);
-    when(modificationsCommandBuilder.getModifications()).thenThrow(InternalRepositoryException.class);
+    when(modificationsCommandBuilder.getModifications()).thenThrow(new InternalRepositoryException(noContext(), "", new RuntimeException()));
 
     MockHttpRequest request = MockHttpRequest
       .get(MODIFICATIONS_URL + "revision")
