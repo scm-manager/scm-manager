@@ -63,6 +63,21 @@ public final class Filters
   /** post authentication priority */
   public static final int PRIORITY_POST_AUTHENTICATION = 5500;
 
+  /** pre authorization priority */
+  public static final int PRIORITY_POST_AUTHORIZATION = 6500;
+
+  /** post base url priority */
+  public static final int PRIORITY_POST_BASEURL = 1500;
+
+  /** pre authentication priority */
+  public static final int PRIORITY_PRE_AUTHENTICATION = 4500;
+
+  /** pre authorization priority */
+  public static final int PRIORITY_PRE_AUTHORIZATION = 5500;
+
+  /** pre base url priority */
+  public static final int PRIORITY_PRE_BASEURL = 500;
+
   //~--- constructors ---------------------------------------------------------
 
   /**

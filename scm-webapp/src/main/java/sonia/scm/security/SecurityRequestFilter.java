@@ -24,7 +24,6 @@ public class SecurityRequestFilter  implements ContainerRequestFilter {
   @Override
   public void filter(ContainerRequestContext requestContext) {
     Method resourceMethod = resourceInfo.getResourceMethod();
-    LOG.info("jax-rs method {}", resourceMethod.getName());
     if (hasPermission() || anonymousAccessIsAllowed(resourceMethod)) {
       LOG.debug("allowed unauthenticated request to method {}", resourceMethod);
       // nothing further to do
