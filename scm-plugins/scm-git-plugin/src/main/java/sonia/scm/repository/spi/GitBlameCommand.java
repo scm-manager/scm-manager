@@ -55,6 +55,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
+
 //~--- JDK imports ------------------------------------------------------------
 
 /**
@@ -108,9 +110,8 @@ public class GitBlameCommand extends AbstractGitCommand implements BlameCommand
 
       if (gitBlameResult == null)
       {
-        throw new InternalRepositoryException(
-            "could not create blame result for path ".concat(
-              request.getPath()));
+        throw new InternalRepositoryException(entity("path", request.getPath()).in(repository),
+            "could not create blame result for path");
       }
 
       List<BlameLine> blameLines = new ArrayList<BlameLine>();
@@ -150,7 +151,7 @@ public class GitBlameCommand extends AbstractGitCommand implements BlameCommand
     }
     catch (GitAPIException ex)
     {
-      throw new InternalRepositoryException("could not create blame view", ex);
+      throw new InternalRepositoryException(repository, "could not create blame view", ex);
     }
 
     return result;

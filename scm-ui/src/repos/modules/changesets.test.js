@@ -4,27 +4,27 @@ import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 import fetchMock from "fetch-mock";
 import reducer, {
-  FETCH_CHANGESETS,
-  FETCH_CHANGESETS_FAILURE,
-  FETCH_CHANGESETS_PENDING,
-  FETCH_CHANGESETS_SUCCESS,
   FETCH_CHANGESET,
   FETCH_CHANGESET_FAILURE,
   FETCH_CHANGESET_PENDING,
   FETCH_CHANGESET_SUCCESS,
+  FETCH_CHANGESETS,
+  FETCH_CHANGESETS_FAILURE,
+  FETCH_CHANGESETS_PENDING,
+  FETCH_CHANGESETS_SUCCESS,
+  fetchChangeset,
+  fetchChangesetIfNeeded,
   fetchChangesets,
   fetchChangesetsSuccess,
-  getChangesets,
-  getFetchChangesetsFailure,
-  isFetchChangesetsPending,
-  fetchChangeset,
-  getChangeset,
-  fetchChangesetIfNeeded,
-  shouldFetchChangeset,
-  isFetchChangesetPending,
-  getFetchChangesetFailure,
   fetchChangesetSuccess,
-  selectListAsCollection
+  getChangeset,
+  getChangesets,
+  getFetchChangesetFailure,
+  getFetchChangesetsFailure,
+  isFetchChangesetPending,
+  isFetchChangesetsPending,
+  selectListAsCollection,
+  shouldFetchChangeset
 } from "./changesets";
 
 const branch = {

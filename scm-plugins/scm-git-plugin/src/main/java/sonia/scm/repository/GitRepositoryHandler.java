@@ -90,7 +90,9 @@ public class GitRepositoryHandler
   private static final Object LOCK = new Object();
 
   private final Scheduler scheduler;
-  
+
+  private final GitWorkdirFactory workdirFactory;
+
   private Task task;
   
   //~--- constructors ---------------------------------------------------------
@@ -98,16 +100,18 @@ public class GitRepositoryHandler
   /**
    * Constructs ...
    *
-   *  @param storeFactory
+   *
+   * @param storeFactory
    * @param fileSystem
    * @param scheduler
    * @param repositoryLocationResolver
    */
   @Inject
-  public GitRepositoryHandler(ConfigurationStoreFactory storeFactory, FileSystem fileSystem, Scheduler scheduler, RepositoryLocationResolver repositoryLocationResolver)
+  public GitRepositoryHandler(ConfigurationStoreFactory storeFactory, FileSystem fileSystem, Scheduler scheduler, RepositoryLocationResolver repositoryLocationResolver, GitWorkdirFactory workdirFactory)
   {
     super(storeFactory, fileSystem, repositoryLocationResolver);
     this.scheduler = scheduler;
+    this.workdirFactory = workdirFactory;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -116,17 +120,17 @@ public class GitRepositoryHandler
   public void init(SCMContextProvider context)
   {
     super.init(context);
-    scheduleGc();
+    scheduleGc(getConfig().getGcExpression());
   }
 
   @Override
   public void setConfig(GitConfig config)
   {
+    scheduleGc(config.getGcExpression());
     super.setConfig(config);
-    scheduleGc();
   }
   
-  private void scheduleGc()
+  private void scheduleGc(String expression)
   {
     synchronized (LOCK){
       if ( task != null ){
@@ -134,11 +138,10 @@ public class GitRepositoryHandler
         task.cancel();
         task = null;
       }
-      String exp = getConfig().getGcExpression();
-      if (!Strings.isNullOrEmpty(exp))
+      if (!Strings.isNullOrEmpty(expression))
       {
-        logger.info("schedule git gc task with expression {}", exp);
-        task = scheduler.schedule(exp, GitGcTask.class);
+        logger.info("schedule git gc task with expression {}", expression);
+        task = scheduler.schedule(expression, GitGcTask.class);
       }
     }
   }
@@ -234,5 +237,9 @@ public class GitRepositoryHandler
   protected boolean isRepository(File directory)
   {
     return new File(directory, DIRECTORY_REFS).exists();
+  }
+
+  public GitWorkdirFactory getWorkdirFactory() {
+    return workdirFactory;
   }
 }

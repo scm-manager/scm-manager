@@ -32,7 +32,6 @@
 package sonia.scm.repository.spi;
 
 import org.junit.Test;
-import sonia.scm.NotFoundException;
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.FileObject;
 import sonia.scm.repository.GitConstants;
@@ -54,7 +53,7 @@ import static org.junit.Assert.assertTrue;
 public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
 
   @Test
-  public void testGetFile() throws IOException, NotFoundException {
+  public void testDefaultBranch() throws IOException {
     BrowseCommandRequest request = new BrowseCommandRequest();
     request.setPath("a.txt");
     BrowserResult result = createCommand().getBrowserResult(request);
@@ -63,7 +62,7 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
   }
 
   @Test
-  public void testDefaultDefaultBranch() throws IOException, NotFoundException {
+  public void testDefaultDefaultBranch() throws IOException {
     // without default branch, the repository head should be used
     FileObject root = createCommand().getBrowserResult(new BrowseCommandRequest()).getFile();
     assertNotNull(root);
@@ -78,7 +77,7 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
   }
 
   @Test
-  public void testExplicitDefaultBranch() throws IOException, NotFoundException {
+  public void testExplicitDefaultBranch() throws IOException {
     repository.setProperty(GitConstants.PROPERTY_DEFAULT_BRANCH, "test-branch");
 
     FileObject root = createCommand().getBrowserResult(new BrowseCommandRequest()).getFile();
@@ -91,7 +90,7 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
   }
 
   @Test
-  public void testBrowse() throws IOException, NotFoundException {
+  public void testBrowse() throws IOException {
     FileObject root = createCommand().getBrowserResult(new BrowseCommandRequest()).getFile();
     assertNotNull(root);
 
@@ -113,7 +112,7 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
   }
 
   @Test
-  public void testBrowseSubDirectory() throws IOException, NotFoundException {
+  public void testBrowseSubDirectory() throws IOException {
     BrowseCommandRequest request = new BrowseCommandRequest();
 
     request.setPath("c");
@@ -143,7 +142,7 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
   }
 
   @Test
-  public void testRecursive() throws IOException, NotFoundException {
+  public void testRecusive() throws IOException {
     BrowseCommandRequest request = new BrowseCommandRequest();
 
     request.setRecursive(true);

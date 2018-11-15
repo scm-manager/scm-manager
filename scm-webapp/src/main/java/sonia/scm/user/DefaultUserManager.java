@@ -39,7 +39,7 @@ import com.google.inject.Singleton;
 import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.AlreadyExistsException;
+import sonia.scm.ContextEntry;
 import sonia.scm.EagerSingleton;
 import sonia.scm.HandlerEventType;
 import sonia.scm.ManagerDaoAdapter;
@@ -137,7 +137,7 @@ public class DefaultUserManager extends AbstractUserManager
    * @throws IOException
    */
   @Override
-  public User create(User user) throws AlreadyExistsException {
+  public User create(User user) {
     String type = user.getType();
     if (Util.isEmpty(type)) {
       user.setType(userDAO.getType());
@@ -219,7 +219,7 @@ public class DefaultUserManager extends AbstractUserManager
 
     if (fresh == null)
     {
-      throw new NotFoundException();
+      throw new NotFoundException(User.class, user.getName());
     }
 
     fresh.copyProperties(user);
@@ -403,7 +403,7 @@ public class DefaultUserManager extends AbstractUserManager
     User user = get((String) SecurityUtils.getSubject().getPrincipals().getPrimaryPrincipal());
 
     if (!user.getPassword().equals(oldPassword)) {
-      throw new InvalidPasswordException();
+      throw new InvalidPasswordException(ContextEntry.ContextBuilder.entity("passwordChange", "-").in(User.class, user.getName()));
     }
 
     user.setPassword(newPassword);
@@ -419,10 +419,10 @@ public class DefaultUserManager extends AbstractUserManager
   public void overwritePassword(String userId, String newPassword) {
     User user = get(userId);
     if (user == null) {
-      throw new NotFoundException();
+      throw new NotFoundException(User.class, userId);
     }
     if (!isTypeDefault(user)) {
-      throw new ChangePasswordNotAllowedException(user.getType());
+      throw new ChangePasswordNotAllowedException(ContextEntry.ContextBuilder.entity("passwordChange", "-").in(User.class, user.getName()), user.getType());
     }
     user.setPassword(newPassword);
     this.modify(user);

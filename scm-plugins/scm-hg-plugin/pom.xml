@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-      
+
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -16,7 +16,7 @@
   <description>Plugin for the version control system Mercurial</description>
 
   <dependencies>
-    
+
     <dependency>
       <groupId>com.aragost.javahg</groupId>
       <artifactId>javahg</artifactId>
@@ -30,12 +30,10 @@
     </dependency>
 
   </dependencies>
-  
-  <!-- create test jar -->
-  
+
   <build>
     <plugins>
-      
+
       <plugin>
         <groupId>com.mycila.maven-license-plugin</groupId>
         <artifactId>maven-license-plugin</artifactId>
@@ -54,7 +52,22 @@
           <strictCheck>true</strictCheck>
         </configuration>
       </plugin>
-        
+
+      <plugin>
+        <groupId>sonia.scm.maven</groupId>
+        <artifactId>smp-maven-plugin</artifactId>
+        <extensions>true</extensions>
+        <configuration>
+          <corePlugin>true</corePlugin>
+          <links>
+            <link>@scm-manager/ui-types</link>
+            <link>@scm-manager/ui-components</link>
+          </links>
+        </configuration>
+      </plugin>
+
+      <!-- create test jar -->
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
@@ -68,45 +81,18 @@
         </executions>
       </plugin>
 
-      <plugin>
-        <groupId>com.github.sdorra</groupId>
-        <artifactId>buildfrontend-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>link-ui-types</id>
-            <phase>process-sources</phase>
-            <goals>
-              <goal>install-link</goal>
-            </goals>
-            <configuration>
-              <pkg>@scm-manager/ui-types</pkg>
-            </configuration>
-          </execution>
-          <execution>
-            <id>link-ui-components</id>
-            <phase>process-sources</phase>
-            <goals>
-              <goal>install-link</goal>
-            </goals>
-            <configuration>
-              <pkg>@scm-manager/ui-components</pkg>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
 
     </plugins>
   </build>
-  
+
   <repositories>
-    
+
     <repository>
       <id>maven.scm-manager.org</id>
       <name>scm-manager release repository</name>
       <url>http://maven.scm-manager.org/nexus/content/groups/public</url>
     </repository>
-    
+
     <repository>
       <releases>
         <enabled>false</enabled>
@@ -119,7 +105,7 @@
       <layout>default</layout>
       <url>https://oss.sonatype.org/content/groups/public/</url>
     </repository>
-  
+
   </repositories>
- 
+
 </project>

@@ -26,6 +26,7 @@ export const MODIFY_GROUP = "scm/groups/MODIFY_GROUP";
 export const MODIFY_GROUP_PENDING = `${MODIFY_GROUP}_${types.PENDING_SUFFIX}`;
 export const MODIFY_GROUP_SUCCESS = `${MODIFY_GROUP}_${types.SUCCESS_SUFFIX}`;
 export const MODIFY_GROUP_FAILURE = `${MODIFY_GROUP}_${types.FAILURE_SUFFIX}`;
+export const MODIFY_GROUP_RESET = `${MODIFY_GROUP}_${types.RESET_SUFFIX}`;
 
 export const DELETE_GROUP = "scm/groups/DELETE";
 export const DELETE_GROUP_PENDING = `${DELETE_GROUP}_${types.PENDING_SUFFIX}`;
@@ -84,12 +85,20 @@ export function fetchGroupsFailure(url: string, error: Error): Action {
 }
 
 //fetch group
-export function fetchGroup(link: string, name: string) {
+export function fetchGroupByLink(group: Group) {
+  return fetchGroup(group._links.self.href, group.name);
+}
+
+export function fetchGroupByName(link: string, name: string) {
   const groupUrl = link.endsWith("/") ? link + name : link + "/" + name;
+  return fetchGroup(groupUrl, name);
+}
+
+function fetchGroup(link: string, name: string) {
   return function(dispatch: any) {
     dispatch(fetchGroupPending(name));
     return apiClient
-      .get(groupUrl)
+      .get(link)
       .then(response => {
         return response.json();
       })
@@ -189,6 +198,9 @@ export function modifyGroup(group: Group, callback?: () => void) {
           callback();
         }
       })
+      .then(() => {
+        dispatch(fetchGroupByLink(group));
+      })
       .catch(cause => {
         dispatch(
           modifyGroupFailure(
@@ -223,6 +235,13 @@ export function modifyGroupFailure(group: Group, error: Error): Action {
       error,
       group
     },
+    itemId: group.name
+  };
+}
+
+export function modifyGroupReset(group: Group): Action {
+  return {
+    type: MODIFY_GROUP_RESET,
     itemId: group.name
   };
 }
@@ -360,8 +379,6 @@ function byNamesReducer(state: any = {}, action: any = {}) {
         ...byNames
       };
     case FETCH_GROUP_SUCCESS:
-      return reducerByName(state, action.payload.name, action.payload);
-    case MODIFY_GROUP_SUCCESS:
       return reducerByName(state, action.payload.name, action.payload);
     case DELETE_GROUP_SUCCESS:
       const newGroupByNames = deleteGroupInGroupsByNames(

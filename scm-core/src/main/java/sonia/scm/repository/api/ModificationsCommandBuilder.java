@@ -13,7 +13,6 @@ import sonia.scm.repository.Modifications;
 import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryCacheKey;
-import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.repository.spi.ModificationsCommand;
 import sonia.scm.repository.spi.ModificationsCommandRequest;
 
@@ -67,7 +66,7 @@ public final class ModificationsCommandBuilder {
     return this;
   }
 
-  public Modifications getModifications() throws IOException, RevisionNotFoundException {
+  public Modifications getModifications() throws IOException {
     Modifications modifications;
     if (disableCache) {
       log.info("Get modifications for {} with disabled cache", request);

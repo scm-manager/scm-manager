@@ -19,9 +19,8 @@ import {
   Footer,
   Header
 } from "@scm-manager/ui-components";
-import type { Me, Link } from "@scm-manager/ui-types";
+import type { Me } from "@scm-manager/ui-types";
 import {
-  fetchIndexResources,
   getConfigLink,
   getFetchIndexResourcesFailure,
   getGroupsLink,

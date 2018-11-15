@@ -85,7 +85,6 @@ public class GitPushCommand extends AbstractGitPushOrPullCommand
    * @return
    *
    * @throws IOException
-   * @throws RepositoryException
    */
   @Override
   public PushResponse push(PushCommandRequest request)

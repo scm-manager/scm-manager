@@ -41,6 +41,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.SCMContext;
+import sonia.scm.Stage;
 
 import javax.servlet.ServletContext;
 import java.net.MalformedURLException;
@@ -69,19 +71,21 @@ public class DefaultUberWebResourceLoader implements UberWebResourceLoader
 
   //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param servletContext
-   * @param plugins
-   */
-  public DefaultUberWebResourceLoader(ServletContext servletContext,
-    Iterable<PluginWrapper> plugins)
-  {
+  public DefaultUberWebResourceLoader(ServletContext servletContext, Iterable<PluginWrapper> plugins) {
+    this(servletContext, plugins, SCMContext.getContext().getStage());
+  }
+
+  public DefaultUberWebResourceLoader(ServletContext servletContext, Iterable<PluginWrapper> plugins, Stage stage) {
     this.servletContext = servletContext;
     this.plugins = plugins;
-    this.cache = CacheBuilder.newBuilder().build();
+    this.cache = createCache(stage);
+  }
+
+  private Cache<String, URL> createCache(Stage stage) {
+    if (stage == Stage.DEVELOPMENT) {
+      return CacheBuilder.newBuilder().maximumSize(0).build(); // Disable caching
+    }
+    return CacheBuilder.newBuilder().build();
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -97,7 +101,7 @@ public class DefaultUberWebResourceLoader implements UberWebResourceLoader
   @Override
   public URL getResource(String path)
   {
-    URL resource = cache.getIfPresent(path);
+    URL resource = getFromCache(path);
 
     if (resource == null)
     {
@@ -105,7 +109,7 @@ public class DefaultUberWebResourceLoader implements UberWebResourceLoader
 
       if (resource != null)
       {
-        cache.put(path, resource);
+        addToCache(path, resource);
       }
     }
     else
@@ -114,6 +118,14 @@ public class DefaultUberWebResourceLoader implements UberWebResourceLoader
     }
 
     return resource;
+  }
+
+  private URL getFromCache(String path) {
+    return cache.getIfPresent(path);
+  }
+
+  private void addToCache(String path, URL url) {
+    cache.put(path, url);
   }
 
   /**

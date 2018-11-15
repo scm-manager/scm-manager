@@ -1,5 +1,5 @@
 // @flow
-import type { Me } from "@scm-manager/ui-components";
+import type { Me } from "@scm-manager/ui-types";
 import * as types from "./types";
 
 import { apiClient, UNAUTHORIZED_ERROR } from "@scm-manager/ui-components";
@@ -7,8 +7,8 @@ import { isPending } from "./pending";
 import { getFailure } from "./failure";
 import {
   callFetchIndexResources,
-  FETCH_INDEXRESOURCES_SUCCESS,
-  fetchIndexResources, fetchIndexResourcesPending,
+  fetchIndexResources,
+  fetchIndexResourcesPending,
   fetchIndexResourcesSuccess
 } from "./indexResource";
 
@@ -136,7 +136,11 @@ const callFetchMe = (link: string): Promise<Me> => {
       return response.json();
     })
     .then(json => {
-      return { name: json.name, displayName: json.displayName };
+      return {
+        name: json.name,
+        displayName: json.displayName,
+        mail: json.mail
+      };
     });
 };
 
@@ -156,7 +160,7 @@ export const login = (
     return apiClient
       .post(loginLink, login_data)
       .then(response => {
-        dispatch(fetchIndexResourcesPending())
+        dispatch(fetchIndexResourcesPending());
         return callFetchIndexResources();
       })
       .then(response => {

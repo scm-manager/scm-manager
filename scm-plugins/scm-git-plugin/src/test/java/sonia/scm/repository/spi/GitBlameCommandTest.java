@@ -85,7 +85,6 @@ public class GitBlameCommandTest extends AbstractGitCommandTestBase
    *
    *
    * @throws IOException
-   * @throws RepositoryException
    */
   @Test
   public void testGetBlameResult() throws IOException
@@ -119,7 +118,6 @@ public class GitBlameCommandTest extends AbstractGitCommandTestBase
    *
    *
    * @throws IOException
-   * @throws RepositoryException
    */
   @Test
   public void testGetBlameResultWithRevision()

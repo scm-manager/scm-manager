@@ -18,6 +18,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path(AuthenticationResource.PATH)
+@AllowAnonymousAccess
 public class AuthenticationResource {
 
   private static final Logger LOG = LoggerFactory.getLogger(AuthenticationResource.class);

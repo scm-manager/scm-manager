@@ -40,6 +40,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.AlreadyExistsException;
 import sonia.scm.ConfigurationException;
+import sonia.scm.ContextEntry;
 import sonia.scm.io.CommandResult;
 import sonia.scm.io.ExtendedCommand;
 import sonia.scm.io.FileSystem;
@@ -80,13 +81,13 @@ public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig
   }
 
   @Override
-  public Repository create(Repository repository) throws AlreadyExistsException {
+  public Repository create(Repository repository) {
     File directory = repositoryLocationResolver.getInitialNativeDirectory(repository);
     if (directory != null && directory.exists()) {
-      throw new AlreadyExistsException();
+      throw new AlreadyExistsException(repository);
     }
 
-    checkPath(directory);
+    checkPath(directory, repository);
 
     try {
       fileSystem.create(directory);
@@ -120,15 +121,20 @@ public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig
 
   @Override
   public void delete(Repository repository) {
+    File directory = null;
     try {
-      File directory = repositoryLocationResolver.getRepositoryDirectory(repository);
+      directory = repositoryLocationResolver.getRepositoryDirectory(repository);
+    } catch (IOException e) {
+      throw new InternalRepositoryException(repository, "Cannot get the repository directory");
+    }
+    try {
       if (directory.exists()) {
         fileSystem.destroy(directory);
       } else {
         logger.warn("repository {} not found", repository.getNamespaceAndName());
       }
     } catch (IOException e) {
-      throw new InternalRepositoryException("could not delete repository directory", e);
+      throw new InternalRepositoryException(ContextEntry.ContextBuilder.entity("directory", directory.toString()).in(repository), "could not delete repository directory", e);
     }
   }
 
@@ -178,7 +184,7 @@ public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig
   }
 
   protected void create(Repository repository, File directory)
-    throws IOException, AlreadyExistsException {
+    throws IOException {
     ExtendedCommand cmd = buildCreateCommand(repository, directory);
     CommandResult result = cmd.execute();
 
@@ -233,9 +239,9 @@ public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig
    * Check path for existing repositories
    *
    * @param directory repository target directory
-   * @throws AlreadyExistsException
+   * @throws RuntimeException when the parent directory already is a repository
    */
-  private void checkPath(File directory) throws AlreadyExistsException {
+  private void checkPath(File directory, Repository repository) {
     if (directory == null) {
       return;
     }
@@ -246,9 +252,7 @@ public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig
       logger.trace("check {} for existing repository", parent);
 
       if (isRepository(parent)) {
-        logger.error("parent path {} is a repository", parent);
-
-        throw new AlreadyExistsException();
+      throw new InternalRepositoryException(repository, "parent path" + parent + " is a repository");
       }
 
       parent = parent.getParentFile();

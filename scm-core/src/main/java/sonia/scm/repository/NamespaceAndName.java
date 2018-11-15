@@ -25,9 +25,13 @@ public class NamespaceAndName implements Comparable<NamespaceAndName> {
     return name;
   }
 
+  public String logString() {
+    return getNamespace() + "/" + getName();
+  }
+
   @Override
   public String toString() {
-    return getNamespace() + "/" + getName();
+    return logString();
   }
 
   @Override

@@ -8,9 +8,8 @@ import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import sonia.scm.NotFoundException;
 import sonia.scm.repository.NamespaceAndName;
-import sonia.scm.repository.PathNotFoundException;
-import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.repository.api.CatCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
@@ -58,8 +57,8 @@ public class ContentResourceTest {
     when(catCommand.setRevision(REV)).thenReturn(catCommand);
 
     // defaults for unknown things
-    doThrow(new RepositoryNotFoundException("x")).when(repositoryServiceFactory).create(not(eq(existingNamespaceAndName)));
-    doThrow(new PathNotFoundException("x")).when(catCommand).getStream(any());
+    doThrow(new NotFoundException("Test", "r")).when(repositoryServiceFactory).create(not(eq(existingNamespaceAndName)));
+    doThrow(new NotFoundException("Test", "X")).when(catCommand).getStream(any());
   }
 
   @Test
@@ -93,7 +92,7 @@ public class ContentResourceTest {
     Response response = contentResource.get(NAMESPACE, REPO_NAME, REV, "SomeGoCode.go");
     assertEquals(200, response.getStatus());
 
-    assertEquals("GO", response.getHeaderString("Language"));
+    assertEquals("GO", response.getHeaderString("X-Programming-Language"));
     assertEquals("text/x-go", response.getHeaderString("Content-Type"));
   }
 
@@ -104,7 +103,7 @@ public class ContentResourceTest {
     Response response = contentResource.get(NAMESPACE, REPO_NAME, REV, "Dockerfile");
     assertEquals(200, response.getStatus());
 
-    assertEquals("DOCKERFILE", response.getHeaderString("Language"));
+    assertEquals("DOCKERFILE", response.getHeaderString("X-Programming-Language"));
     assertEquals("text/plain", response.getHeaderString("Content-Type"));
   }
 
@@ -175,7 +174,7 @@ public class ContentResourceTest {
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() {
       closed = true;
     }
 

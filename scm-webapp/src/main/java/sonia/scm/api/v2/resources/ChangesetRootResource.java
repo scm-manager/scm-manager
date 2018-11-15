@@ -9,10 +9,7 @@ import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.repository.RepositoryPermissions;
-import sonia.scm.repository.RevisionNotFoundException;
-import sonia.scm.repository.api.LogCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.web.VndMediaType;
@@ -26,6 +23,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.util.Optional;
 
 
 @Slf4j
@@ -56,7 +54,7 @@ public class ChangesetRootResource {
   @Produces(VndMediaType.CHANGESET_COLLECTION)
   @TypeHint(CollectionDto.class)
   public Response getAll(@PathParam("namespace") String namespace, @PathParam("name") String name, @DefaultValue("0") @QueryParam("page") int page,
-                         @DefaultValue("10") @QueryParam("pageSize") int pageSize) throws IOException, RevisionNotFoundException, RepositoryNotFoundException {
+                         @DefaultValue("10") @QueryParam("pageSize") int pageSize) throws IOException {
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
       Repository repository = repositoryService.getRepository();
       RepositoryPermissions.read(repository).check();
@@ -89,7 +87,7 @@ public class ChangesetRootResource {
   @Produces(VndMediaType.CHANGESET)
   @TypeHint(ChangesetDto.class)
   @Path("{id}")
-  public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("id") String id) throws IOException, RevisionNotFoundException, RepositoryNotFoundException {
+  public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("id") String id) throws IOException {
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
       Repository repository = repositoryService.getRepository();
       RepositoryPermissions.read(repository).check();
@@ -97,8 +95,12 @@ public class ChangesetRootResource {
         .setStartChangeset(id)
         .setEndChangeset(id)
         .getChangesets();
-      if (changesets != null && changesets.getChangesets() != null && changesets.getChangesets().size() == 1) {
-        return Response.ok(changesetToChangesetDtoMapper.map(changesets.getChangesets().get(0), repository)).build();
+      if (changesets != null && changesets.getChangesets() != null && !changesets.getChangesets().isEmpty()) {
+        Optional<Changeset> changeset = changesets.getChangesets().stream().filter(ch -> ch.getId().equals(id)).findFirst();
+        if (!changeset.isPresent()) {
+          return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        return Response.ok(changesetToChangesetDtoMapper.map(changeset.get(), repository)).build();
       } else {
         return Response.status(Response.Status.NOT_FOUND).build();
       }

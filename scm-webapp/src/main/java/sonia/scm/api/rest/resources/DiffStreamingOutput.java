@@ -37,7 +37,6 @@ package sonia.scm.api.rest.resources;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.repository.api.DiffCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.util.IOUtil;
@@ -93,24 +92,8 @@ public class DiffStreamingOutput implements StreamingOutput
   public void write(OutputStream output) throws IOException {
     try
     {
-      builder.retriveContent(output);
+      builder.retrieveContent(output);
     }
-    catch (RevisionNotFoundException ex)
-    {
-      if (logger.isWarnEnabled())
-      {
-        logger.warn("could not find revision {}", ex.getRevision());
-      }
-
-      throw new WebApplicationException(Response.Status.NOT_FOUND);
-    }
-//    catch (RepositoryException ex)
-//    {
-//      logger.error("could not write content to page", ex);
-//
-//      throw new WebApplicationException(ex,
-//        Response.Status.INTERNAL_SERVER_ERROR);
-//    }
     finally
     {
       IOUtil.close(repositoryService);

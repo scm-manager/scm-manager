@@ -66,7 +66,7 @@ public class ManagerDecorator<T extends ModelObject> implements Manager<T> {
   }
 
   @Override
-  public T create(T object) throws AlreadyExistsException {
+  public T create(T object) {
     return decorated.create(object);
   }
 

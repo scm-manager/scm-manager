@@ -2,7 +2,7 @@
 import React from "react";
 import {
   deleteRepo,
-  fetchRepo,
+  fetchRepoByName,
   getFetchRepoFailure,
   getRepository,
   isFetchRepoPending
@@ -35,6 +35,7 @@ import PermissionsNavLink from "../components/PermissionsNavLink";
 import Sources from "../sources/containers/Sources";
 import RepositoryNavLink from "../components/RepositoryNavLink";
 import { getRepositoriesLink } from "../../modules/indexResource";
+import {ExtensionPoint} from '@scm-manager/ui-extensions';
 
 type Props = {
   namespace: string,
@@ -45,7 +46,7 @@ type Props = {
   repoLink: string,
 
   // dispatch functions
-  fetchRepo: (link: string, namespace: string, name: string) => void,
+  fetchRepoByName: (link: string, namespace: string, name: string) => void,
   deleteRepo: (repository: Repository, () => void) => void,
 
   // context props
@@ -56,9 +57,9 @@ type Props = {
 
 class RepositoryRoot extends React.Component<Props> {
   componentDidMount() {
-    const { fetchRepo, namespace, name, repoLink } = this.props;
+    const { fetchRepoByName, namespace, name, repoLink } = this.props;
 
-    fetchRepo(repoLink, namespace, name);
+    fetchRepoByName(repoLink, namespace, name);
   }
 
   stripEndingSlash = (url: string) => {
@@ -78,11 +79,6 @@ class RepositoryRoot extends React.Component<Props> {
 
   delete = (repository: Repository) => {
     this.props.deleteRepo(repository, this.deleted);
-  };
-
-  matchChangeset = (route: any) => {
-    const url = this.matchedUrl();
-    return route.location.pathname.match(`${url}/changeset/`);
   };
 
   matches = (route: any) => {
@@ -109,6 +105,12 @@ class RepositoryRoot extends React.Component<Props> {
     }
 
     const url = this.matchedUrl();
+
+    const extensionProps = {
+      repository,
+      url
+    };
+
     return (
       <Page title={repository.namespace + "/" + repository.name}>
         <div className="columns">
@@ -125,7 +127,7 @@ class RepositoryRoot extends React.Component<Props> {
               />
               <Route
                 path={`${url}/permissions`}
-                render={props => (
+                render={() => (
                   <Permissions
                     namespace={this.props.repository.namespace}
                     repoName={this.props.repository.name}
@@ -170,6 +172,10 @@ class RepositoryRoot extends React.Component<Props> {
                   />
                 )}
               />
+              <ExtensionPoint name="repository.route"
+                              props={extensionProps}
+                              renderAll={true}
+              />
             </Switch>
           </div>
           <div className="column">
@@ -191,11 +197,15 @@ class RepositoryRoot extends React.Component<Props> {
                   label={t("repository-root.sources")}
                   activeOnlyWhenExact={false}
                 />
-                <EditNavLink repository={repository} editUrl={`${url}/edit`} />
+                <ExtensionPoint name="repository.navigation"
+                                props={extensionProps}
+                                renderAll={true}
+                />
                 <PermissionsNavLink
                   permissionUrl={`${url}/permissions`}
                   repository={repository}
                 />
+                <EditNavLink repository={repository} editUrl={`${url}/edit`} />
               </Section>
               <Section label={t("repository-root.actions-label")}>
                 <DeleteNavAction repository={repository} delete={this.delete} />
@@ -227,8 +237,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchRepo: (link: string, namespace: string, name: string) => {
-      dispatch(fetchRepo(link, namespace, name));
+    fetchRepoByName: (link: string, namespace: string, name: string) => {
+      dispatch(fetchRepoByName(link, namespace, name));
     },
     deleteRepo: (repository: Repository, callback: () => void) => {
       dispatch(deleteRepo(repository, callback));

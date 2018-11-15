@@ -3,8 +3,6 @@ package sonia.scm.api.v2.resources;
 import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
-import sonia.scm.ConcurrentModificationException;
-import sonia.scm.NotFoundException;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryIsNotArchivedException;
@@ -12,6 +10,7 @@ import sonia.scm.repository.RepositoryManager;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Provider;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
@@ -25,6 +24,9 @@ import javax.ws.rs.core.Response;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import static sonia.scm.NotFoundException.notFound;
 
 public class RepositoryResource {
 
@@ -124,7 +126,7 @@ public class RepositoryResource {
    *
    * @param namespace the namespace of the repository to be modified
    * @param name the name of the repository to be modified
-   * @param repositoryDto repository object to modify
+   * @param repository repository object to modify
    */
   @PUT
   @Path("")
@@ -138,10 +140,10 @@ public class RepositoryResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
-  public Response update(@PathParam("namespace") String namespace, @PathParam("name") String name, @Valid RepositoryDto repositoryDto) throws ConcurrentModificationException {
+  public Response update(@PathParam("namespace") String namespace, @PathParam("name") String name, @Valid RepositoryDto repository) {
     return adapter.update(
       loadBy(namespace, name),
-      existing -> processUpdate(repositoryDto, existing),
+      existing -> processUpdate(repository, existing),
       nameAndNamespaceStaysTheSame(namespace, name)
     );
   }
@@ -203,8 +205,9 @@ public class RepositoryResource {
     }
   }
 
-  private Supplier<Optional<Repository>> loadBy(String namespace, String name) {
-    return () -> Optional.ofNullable(manager.get(new NamespaceAndName(namespace, name)));
+  private Supplier<Repository> loadBy(String namespace, String name) {
+    NamespaceAndName namespaceAndName = new NamespaceAndName(namespace, name);
+    return () -> Optional.ofNullable(manager.get(namespaceAndName)).orElseThrow(() -> notFound(entity(namespaceAndName)));
   }
 
   private Predicate<Repository> nameAndNamespaceStaysTheSame(String namespace, String name) {

@@ -65,6 +65,9 @@ public class GitRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
   @Mock
   private ConfigurationStoreFactory factory;
 
+  @Mock
+  private GitWorkdirFactory gitWorkdirFactory;
+
   RepositoryLocationResolver repositoryLocationResolver ;
   private Path repoDir;
 
@@ -95,7 +98,7 @@ public class GitRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
     InitialRepositoryLocationResolver initialRepositoryLocationResolver = new InitialRepositoryLocationResolver(contextProvider,fileSystem);
     repositoryLocationResolver = new RepositoryLocationResolver(repoDao, initialRepositoryLocationResolver);
     GitRepositoryHandler repositoryHandler = new GitRepositoryHandler(factory,
-      fileSystem, scheduler, repositoryLocationResolver);
+      fileSystem, scheduler, repositoryLocationResolver, gitWorkdirFactory);
 
     repoDir = directory.toPath();
     when(repoDao.getPath(any())).thenReturn(repoDir);
@@ -112,7 +115,7 @@ public class GitRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
   @Test
   public void getDirectory()  {
     GitRepositoryHandler repositoryHandler = new GitRepositoryHandler(factory,
-      new DefaultFileSystem(), scheduler, repositoryLocationResolver);
+      new DefaultFileSystem(), scheduler, repositoryLocationResolver, gitWorkdirFactory);
     Repository repository = new Repository("id", "git", "Space", "Name");
 
     GitConfig config = new GitConfig();

@@ -30,6 +30,9 @@ import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import static sonia.scm.NotFoundException.notFound;
+
 
 /**
  * Collect the plugin translations.
@@ -69,7 +72,7 @@ public class I18nServlet extends HttpServlet {
           createdFile.ifPresent(map -> createdJsonFileConsumer.accept(path, map));
           return createdFile.orElse(null);
         }
-      )).orElseThrow(NotFoundException::new);
+      )).orElseThrow(() -> notFound(entity("jsonprovider", path)));
   }
 
   @VisibleForTesting

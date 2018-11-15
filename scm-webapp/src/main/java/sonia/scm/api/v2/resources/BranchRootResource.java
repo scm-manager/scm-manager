@@ -5,12 +5,12 @@ import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import sonia.scm.NotFoundException;
 import sonia.scm.PageResult;
+import sonia.scm.repository.Branch;
 import sonia.scm.repository.Branches;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.api.CommandNotSupportedException;
 import sonia.scm.repository.api.RepositoryService;
@@ -26,6 +26,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.util.List;
+
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import static sonia.scm.NotFoundException.notFound;
 
 public class BranchRootResource {
 
@@ -77,7 +81,7 @@ public class BranchRootResource {
         .build();
     } catch (CommandNotSupportedException ex) {
       return Response.status(Response.Status.BAD_REQUEST).build();
-    } catch (RepositoryNotFoundException e) {
+    } catch (NotFoundException e) {
       return Response.status(Response.Status.NOT_FOUND).build();
     }
   }
@@ -97,7 +101,7 @@ public class BranchRootResource {
                           @PathParam("name") String name,
                           @PathParam("branch") String branchName,
                           @DefaultValue("0") @QueryParam("page") int page,
-                          @DefaultValue("10") @QueryParam("pageSize") int pageSize) throws Exception {
+                          @DefaultValue("10") @QueryParam("pageSize") int pageSize) throws IOException {
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
       boolean branchExists = repositoryService.getBranchesCommand()
         .getBranches()
@@ -105,7 +109,7 @@ public class BranchRootResource {
         .stream()
         .anyMatch(branch -> branchName.equals(branch.getName()));
       if (!branchExists){
-        throw new NotFoundException("branch", branchName);
+        throw notFound(entity(Branch.class, branchName).in(Repository.class, namespace + "/" + name));
       }
       Repository repository = repositoryService.getRepository();
       RepositoryPermissions.read(repository).check();
@@ -114,6 +118,49 @@ public class BranchRootResource {
         .pageSize(pageSize)
         .create()
         .setBranch(branchName)
+        .getChangesets();
+      if (changesets != null && changesets.getChangesets() != null) {
+        PageResult<Changeset> pageResult = new PageResult<>(changesets.getChangesets(), changesets.getTotal());
+        return Response.ok(branchChangesetCollectionToDtoMapper.map(page, pageSize, pageResult, repository, branchName)).build();
+      } else {
+        return Response.ok().build();
+      }
+    }
+  }
+
+  @Path("{branch}/diffchangesets/{otherBranchName}")
+  @GET
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
+    @ResponseCode(code = 403, condition = "not authorized, the current user has no privileges to read the changeset"),
+    @ResponseCode(code = 404, condition = "not found, no changesets available in the repository"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
+  @Produces(VndMediaType.CHANGESET_COLLECTION)
+  @TypeHint(CollectionDto.class)
+  public Response changesetDiff(@PathParam("namespace") String namespace,
+                          @PathParam("name") String name,
+                          @PathParam("branch") String branchName,
+                          @PathParam("otherBranchName") String otherBranchName,
+                          @DefaultValue("0") @QueryParam("page") int page,
+                          @DefaultValue("10") @QueryParam("pageSize") int pageSize) throws Exception {
+    try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
+      List<Branch> allBranches = repositoryService.getBranchesCommand().getBranches().getBranches();
+      if (allBranches.stream().noneMatch(branch -> branchName.equals(branch.getName()))) {
+        throw new NotFoundException("branch", branchName);
+      }
+      if (allBranches.stream().noneMatch(branch -> otherBranchName.equals(branch.getName()))) {
+        throw new NotFoundException("branch", otherBranchName);
+      }
+      Repository repository = repositoryService.getRepository();
+      RepositoryPermissions.read(repository).check();
+      ChangesetPagingResult changesets = new PagedLogCommandBuilder(repositoryService)
+        .page(page)
+        .pageSize(pageSize)
+        .create()
+        .setBranch(branchName)
+        .setAncestorChangeset(otherBranchName)
         .getChangesets();
       if (changesets != null && changesets.getChangesets() != null) {
         PageResult<Changeset> pageResult = new PageResult<>(changesets.getChangesets(), changesets.getTotal());
@@ -150,8 +197,6 @@ public class BranchRootResource {
       return Response.ok(branchCollectionToDtoMapper.map(namespace, name, branches.getBranches())).build();
     } catch (CommandNotSupportedException ex) {
       return Response.status(Response.Status.BAD_REQUEST).build();
-    } catch (RepositoryNotFoundException e) {
-      return Response.status(Response.Status.NOT_FOUND).build();
     }
   }
 }

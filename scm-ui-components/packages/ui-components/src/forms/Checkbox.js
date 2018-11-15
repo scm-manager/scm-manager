@@ -4,27 +4,26 @@ import { Help } from "../index";
 
 type Props = {
   label?: string,
+  name?: string,
   checked: boolean,
-  onChange?: boolean => void,
+  onChange?: (value: boolean, name?: string) => void,
   disabled?: boolean,
   helpText?: string
 };
+
 class Checkbox extends React.Component<Props> {
+
   onCheckboxChange = (event: SyntheticInputEvent<HTMLInputElement>) => {
     if (this.props.onChange) {
-      this.props.onChange(event.target.checked);
+      this.props.onChange(event.target.checked, this.props.name);
     }
   };
 
   renderHelp = () => {
     const helpText = this.props.helpText;
     if (helpText) {
-      return (
-        <div className="control columns is-vcentered">
-          <Help message={helpText} />
-        </div>
-      );
-    } else return null;
+      return <Help message={helpText} />;
+    }
   };
 
   render() {
@@ -38,10 +37,11 @@ class Checkbox extends React.Component<Props> {
               onChange={this.onCheckboxChange}
               disabled={this.props.disabled}
             />
+            {" "}
             {this.props.label}
+            {this.renderHelp()}
           </label>
         </div>
-        {this.renderHelp()}
       </div>
     );
   }

@@ -641,9 +641,9 @@
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/@scm-manager/eslint-config/-/eslint-config-0.0.2.tgz#94cc8c3fb4f51f870b235893dc134fc6c423ae85"
 
-"@scm-manager/ui-bundler@^0.0.17":
-  version "0.0.17"
-  resolved "https://registry.yarnpkg.com/@scm-manager/ui-bundler/-/ui-bundler-0.0.17.tgz#949b90ca57e4268be28fcf4975bd9622f60278bb"
+"@scm-manager/ui-bundler@^0.0.21":
+  version "0.0.21"
+  resolved "https://registry.yarnpkg.com/@scm-manager/ui-bundler/-/ui-bundler-0.0.21.tgz#f8b5fa355415cc67b8aaf8744e1701a299dff647"
   dependencies:
     "@babel/core" "^7.0.0"
     "@babel/plugin-proposal-class-properties" "^7.0.0"
@@ -681,9 +681,9 @@
     vinyl-source-stream "^2.0.0"
     watchify "^3.11.0"
 
-"@scm-manager/ui-extensions@^0.0.7":
-  version "0.0.7"
-  resolved "https://registry.yarnpkg.com/@scm-manager/ui-extensions/-/ui-extensions-0.0.7.tgz#a0a657a1410b78838ba0b36096ef631dca7fe27e"
+"@scm-manager/ui-extensions@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@scm-manager/ui-extensions/-/ui-extensions-0.1.1.tgz#966e62d89981e92a14adf7e674e646e76de96d45"
   dependencies:
     react "^16.4.2"
     react-dom "^16.4.2"

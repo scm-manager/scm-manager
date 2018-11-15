@@ -95,7 +95,7 @@ public class GitTagsCommand extends AbstractGitCommand implements TagsCommand
     }
     catch (GitAPIException ex)
     {
-      throw new InternalRepositoryException("could not read tags from repository", ex);
+      throw new InternalRepositoryException(repository, "could not read tags from repository", ex);
     }
     finally
     {

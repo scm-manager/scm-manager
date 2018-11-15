@@ -38,7 +38,6 @@ package sonia.scm.repository.api;
 import com.google.common.base.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.NotFoundException;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.repository.BrowserResult;
@@ -46,7 +45,6 @@ import sonia.scm.repository.FileObject;
 import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryCacheKey;
-import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.repository.spi.BrowseCommand;
 import sonia.scm.repository.spi.BrowseCommandRequest;
 
@@ -136,7 +134,7 @@ public final class BrowseCommandBuilder
    *
    * @throws IOException
    */
-  public BrowserResult getBrowserResult() throws IOException, NotFoundException {
+  public BrowserResult getBrowserResult() throws IOException {
     BrowserResult result = null;
 
     if (disableCache)

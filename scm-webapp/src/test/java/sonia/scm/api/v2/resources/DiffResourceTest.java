@@ -17,20 +17,23 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import sonia.scm.NotFoundException;
 import sonia.scm.api.rest.AuthorizationExceptionMapper;
+import sonia.scm.api.v2.NotFoundExceptionMapper;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryNotFoundException;
-import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.repository.api.DiffCommandBuilder;
+import sonia.scm.repository.api.DiffFormat;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.web.VndMediaType;
 
 import java.net.URISyntaxException;
+import java.util.Arrays;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -62,14 +65,15 @@ public class DiffResourceTest extends RepositoryTestBase {
 
 
   @Before
-  public void prepareEnvironment() throws Exception {
+  public void prepareEnvironment() {
     diffRootResource = new DiffRootResource(serviceFactory);
     super.diffRootResource = Providers.of(diffRootResource);
     dispatcher.getRegistry().addSingletonResource(getRepositoryRootResource());
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(service);
     when(serviceFactory.create(any(Repository.class))).thenReturn(service);
     when(service.getRepository()).thenReturn(new Repository("repoId", "git", "space", "repo"));
-    dispatcher.getProviderFactory().registerProvider(NotFoundExceptionMapper.class);
+    ExceptionWithContextToErrorDtoMapperImpl mapper = new ExceptionWithContextToErrorDtoMapperImpl();
+    dispatcher.getProviderFactory().register(new NotFoundExceptionMapper(mapper));
     dispatcher.getProviderFactory().registerProvider(AuthorizationExceptionMapper.class);
     dispatcher.getProviderFactory().registerProvider(CRLFInjectionExceptionMapper.class);
     when(service.getDiffCommand()).thenReturn(diffCommandBuilder);
@@ -86,19 +90,17 @@ public class DiffResourceTest extends RepositoryTestBase {
   @Test
   public void shouldGetDiffs() throws Exception {
     when(diffCommandBuilder.setRevision(anyString())).thenReturn(diffCommandBuilder);
-    when(diffCommandBuilder.retriveContent(any())).thenReturn(diffCommandBuilder);
-
+    when(diffCommandBuilder.setFormat(any())).thenReturn(diffCommandBuilder);
+    when(diffCommandBuilder.retrieveContent(any())).thenReturn(diffCommandBuilder);
     MockHttpRequest request = MockHttpRequest
       .get(DIFF_URL + "revision")
       .accept(VndMediaType.DIFF);
     MockHttpResponse response = new MockHttpResponse();
+
     dispatcher.invoke(request, response);
-    assertEquals(200, response.getStatus());
-    log.info("Response :{}", response.getContentAsString());
+
     assertThat(response.getStatus())
       .isEqualTo(200);
-    assertThat(response.getContentAsString())
-      .isNotNull();
     String expectedHeader = "Content-Disposition";
     String expectedValue = "attachment; filename=\"repo-revision.diff\"; filename*=utf-8''repo-revision.diff";
     assertThat(response.getOutputHeaders().containsKey(expectedHeader)).isTrue();
@@ -107,8 +109,8 @@ public class DiffResourceTest extends RepositoryTestBase {
   }
 
   @Test
-  public void shouldGet404OnMissingRepository() throws URISyntaxException, RepositoryNotFoundException {
-    when(serviceFactory.create(any(NamespaceAndName.class))).thenThrow(RepositoryNotFoundException.class);
+  public void shouldGet404OnMissingRepository() throws URISyntaxException {
+    when(serviceFactory.create(any(NamespaceAndName.class))).thenThrow(new NotFoundException("Text", "x"));
     MockHttpRequest request = MockHttpRequest
       .get(DIFF_URL + "revision")
       .accept(VndMediaType.DIFF);
@@ -120,20 +122,24 @@ public class DiffResourceTest extends RepositoryTestBase {
   @Test
   public void shouldGet404OnMissingRevision() throws Exception {
     when(diffCommandBuilder.setRevision(anyString())).thenReturn(diffCommandBuilder);
-    when(diffCommandBuilder.retriveContent(any())).thenThrow(RevisionNotFoundException.class);
+    when(diffCommandBuilder.setFormat(any())).thenReturn(diffCommandBuilder);
+    when(diffCommandBuilder.retrieveContent(any())).thenThrow(new NotFoundException("Text", "x"));
 
     MockHttpRequest request = MockHttpRequest
       .get(DIFF_URL + "revision")
       .accept(VndMediaType.DIFF);
     MockHttpResponse response = new MockHttpResponse();
+
     dispatcher.invoke(request, response);
+
     assertEquals(404, response.getStatus());
   }
 
   @Test
   public void shouldGet400OnCrlfInjection() throws Exception {
     when(diffCommandBuilder.setRevision(anyString())).thenReturn(diffCommandBuilder);
-    when(diffCommandBuilder.retriveContent(any())).thenThrow(RevisionNotFoundException.class);
+    when(diffCommandBuilder.setFormat(any())).thenReturn(diffCommandBuilder);
+    when(diffCommandBuilder.retrieveContent(any())).thenThrow(new NotFoundException("Text", "x"));
 
     MockHttpRequest request = MockHttpRequest
       .get(DIFF_URL + "ny%0D%0ASet-cookie:%20Tamper=3079675143472450634")
@@ -143,6 +149,47 @@ public class DiffResourceTest extends RepositoryTestBase {
     assertEquals(400, response.getStatus());
   }
 
+  @Test
+  public void shouldGet400OnUnknownFormat() throws Exception {
+    when(diffCommandBuilder.setRevision(anyString())).thenReturn(diffCommandBuilder);
+    when(diffCommandBuilder.setFormat(any())).thenReturn(diffCommandBuilder);
+    when(diffCommandBuilder.retrieveContent(any())).thenThrow(new NotFoundException("Test", "test"));
 
+    MockHttpRequest request = MockHttpRequest
+      .get(DIFF_URL + "revision?format=Unknown")
+      .accept(VndMediaType.DIFF);
+    MockHttpResponse response = new MockHttpResponse();
+    dispatcher.invoke(request, response);
+    assertEquals(400, response.getStatus());
+  }
 
+  @Test
+  public void shouldAcceptDiffFormats() throws Exception {
+    when(diffCommandBuilder.setRevision(anyString())).thenReturn(diffCommandBuilder);
+    when(diffCommandBuilder.setFormat(any())).thenReturn(diffCommandBuilder);
+    when(diffCommandBuilder.retrieveContent(any())).thenReturn(diffCommandBuilder);
+
+    Arrays.stream(DiffFormat.values()).map(DiffFormat::name).forEach(
+      this::assertRequestOk
+    );
+  }
+
+  private void assertRequestOk(String format) {
+    MockHttpRequest request = null;
+    try {
+      request = MockHttpRequest
+        .get(DIFF_URL + "revision?format=" + format)
+        .accept(VndMediaType.DIFF);
+    } catch (URISyntaxException e) {
+      e.printStackTrace();
+      fail("got exception: " + e);
+    }
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertThat(response.getStatus())
+      .withFailMessage("diff format from DiffFormat enum must be accepted: " + format)
+      .isEqualTo(200);
+  }
 }

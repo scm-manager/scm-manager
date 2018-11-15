@@ -1,15 +1,16 @@
 //@flow
 import React from "react";
 import classNames from "classnames";
-import { LabelWithHelpIcon } from "../index";
+import LabelWithHelpIcon from "./LabelWithHelpIcon";
 
 type Props = {
   label?: string,
+  name?: string,
   placeholder?: string,
   value?: string,
   type?: string,
   autofocus?: boolean,
-  onChange: string => void,
+  onChange: (value: string, name?: string) => void,
   onReturnPressed?: () => void,
   validationError: boolean,
   errorMessage: string,
@@ -32,7 +33,7 @@ class InputField extends React.Component<Props> {
   }
 
   handleInput = (event: SyntheticInputEvent<HTMLInputElement>) => {
-    this.props.onChange(event.target.value);
+    this.props.onChange(event.target.value, this.props.name);
   };
 
   handleKeyPress = (event: SyntheticKeyboardEvent<HTMLInputElement>) => {

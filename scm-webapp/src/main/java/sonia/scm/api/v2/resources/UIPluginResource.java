@@ -5,6 +5,7 @@ import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import sonia.scm.plugin.PluginLoader;
 import sonia.scm.plugin.PluginWrapper;
+import sonia.scm.security.AllowAnonymousAccess;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@AllowAnonymousAccess
 public class UIPluginResource {
 
   private final PluginLoader pluginLoader;

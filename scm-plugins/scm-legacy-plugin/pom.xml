@@ -23,4 +23,19 @@
     </dependency>
     
   </dependencies>
+
+  <build>
+    <plugins>
+
+      <plugin>
+        <groupId>sonia.scm.maven</groupId>
+        <artifactId>smp-maven-plugin</artifactId>
+        <extensions>true</extensions>
+        <configuration>
+          <corePlugin>true</corePlugin>
+        </configuration>
+      </plugin>
+
+    </plugins>
+  </build>
 </project>

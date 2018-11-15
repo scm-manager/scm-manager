@@ -151,7 +151,6 @@ public class GitRepositoryViewer
    * @return
    *
    * @throws IOException
-   * @throws RepositoryException
    */
   private BranchesModel createBranchesModel(Repository repository)
     throws IOException

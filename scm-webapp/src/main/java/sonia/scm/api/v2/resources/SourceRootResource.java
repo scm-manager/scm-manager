@@ -1,6 +1,5 @@
 package sonia.scm.api.v2.resources;
 
-import sonia.scm.NotFoundException;
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.api.BrowseCommandBuilder;
@@ -31,14 +30,14 @@ public class SourceRootResource {
   @GET
   @Produces(VndMediaType.SOURCE)
   @Path("")
-  public Response getAllWithoutRevision(@PathParam("namespace") String namespace, @PathParam("name") String name) throws NotFoundException, IOException {
+  public Response getAllWithoutRevision(@PathParam("namespace") String namespace, @PathParam("name") String name) throws IOException {
     return getSource(namespace, name, "/", null);
   }
 
   @GET
   @Produces(VndMediaType.SOURCE)
   @Path("{revision}")
-  public Response getAll(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision) throws NotFoundException, IOException {
+  public Response getAll(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision) throws IOException {
     return getSource(namespace, name, "/", revision);
   }
 
@@ -49,7 +48,7 @@ public class SourceRootResource {
     return getSource(namespace, name, path, revision);
   }
 
-  private Response getSource(String namespace, String repoName, String path, String revision) throws IOException, NotFoundException {
+  private Response getSource(String namespace, String repoName, String path, String revision) throws IOException {
     NamespaceAndName namespaceAndName = new NamespaceAndName(namespace, repoName);
     try (RepositoryService repositoryService = serviceFactory.create(namespaceAndName)) {
       BrowseCommandBuilder browseCommand = repositoryService.getBrowseCommand();

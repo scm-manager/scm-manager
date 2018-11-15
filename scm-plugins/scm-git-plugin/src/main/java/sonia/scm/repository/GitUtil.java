@@ -48,6 +48,7 @@ import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
+import org.eclipse.jgit.revwalk.filter.RevFilter;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.transport.FetchResult;
 import org.eclipse.jgit.transport.RefSpec;
@@ -55,6 +56,7 @@ import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.util.FS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.ContextEntry;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 import sonia.scm.web.GitUserAgentProvider;
@@ -203,7 +205,7 @@ public final class GitUtil
     }
     catch (GitAPIException ex)
     {
-      throw new InternalRepositoryException("could not fetch", ex);
+      throw new InternalRepositoryException(ContextEntry.ContextBuilder.entity("remote", directory.toString()).in(remoteRepository), "could not fetch", ex);
     }
   }
 
@@ -714,6 +716,18 @@ public final class GitUtil
   public static boolean isValidObjectId(ObjectId id)
   {
     return (id != null) &&!id.equals(ObjectId.zeroId());
+  }
+
+  /**
+   * Computes the first common ancestor of two revisions, aka merge base.
+   */
+  public static ObjectId computeCommonAncestor(org.eclipse.jgit.lib.Repository repository, ObjectId revision1, ObjectId revision2) throws IOException {
+    try (RevWalk mergeBaseWalk = new RevWalk(repository)) {
+      mergeBaseWalk.setRevFilter(RevFilter.MERGE_BASE);
+      mergeBaseWalk.markStart(mergeBaseWalk.lookupCommit(revision1));
+      mergeBaseWalk.markStart(mergeBaseWalk.parseCommit(revision2));
+      return mergeBaseWalk.next().getId();
+    }
   }
 
   //~--- methods --------------------------------------------------------------

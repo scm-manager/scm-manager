@@ -3,11 +3,8 @@ package sonia.scm.api.v2.resources;
 import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
-import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Modifications;
 import sonia.scm.repository.NamespaceAndName;
-import sonia.scm.repository.RepositoryNotFoundException;
-import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.web.VndMediaType;
@@ -46,7 +43,7 @@ public class ModificationsRootResource {
   @Produces(VndMediaType.MODIFICATIONS)
   @TypeHint(ModificationsDto.class)
   @Path("{revision}")
-  public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision) throws IOException, RevisionNotFoundException, RepositoryNotFoundException , InternalRepositoryException {
+  public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision) throws IOException {
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
       Modifications modifications = repositoryService.getModificationsCommand()
         .revision(revision)

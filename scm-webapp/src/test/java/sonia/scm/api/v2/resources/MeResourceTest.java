@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import sonia.scm.ContextEntry;
 import sonia.scm.user.InvalidPasswordException;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
@@ -168,7 +169,8 @@ public class MeResourceTest {
       .content(content.getBytes());
     MockHttpResponse response = new MockHttpResponse();
 
-    doThrow(InvalidPasswordException.class).when(userManager).changePasswordForLoggedInUser(any(), any());
+    doThrow(new InvalidPasswordException(ContextEntry.ContextBuilder.entity("passwortChange", "-")))
+      .when(userManager).changePasswordForLoggedInUser(any(), any());
 
     dispatcher.invoke(request, response);
 

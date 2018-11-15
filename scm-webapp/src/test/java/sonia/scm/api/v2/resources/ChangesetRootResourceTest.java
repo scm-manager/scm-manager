@@ -9,7 +9,6 @@ import org.apache.shiro.util.ThreadContext;
 import org.apache.shiro.util.ThreadState;
 import org.assertj.core.util.Lists;
 import org.jboss.resteasy.core.Dispatcher;
-import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.After;
@@ -19,7 +18,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import sonia.scm.api.rest.AuthorizationExceptionMapper;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.NamespaceAndName;
@@ -38,7 +36,6 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -50,7 +47,8 @@ public class ChangesetRootResourceTest extends RepositoryTestBase {
 
   public static final String CHANGESET_PATH = "space/repo/changesets/";
   public static final String CHANGESET_URL = "/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + CHANGESET_PATH;
-  private final Dispatcher dispatcher = MockDispatcherFactory.createDispatcher();
+
+  private Dispatcher dispatcher;
 
   private final URI baseUri = URI.create("/");
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
@@ -77,16 +75,14 @@ public class ChangesetRootResourceTest extends RepositoryTestBase {
 
 
   @Before
-  public void prepareEnvironment() throws Exception {
+  public void prepareEnvironment() {
     changesetCollectionToDtoMapper = new ChangesetCollectionToDtoMapper(changesetToChangesetDtoMapper, resourceLinks);
     changesetRootResource = new ChangesetRootResource(serviceFactory, changesetCollectionToDtoMapper, changesetToChangesetDtoMapper);
     super.changesetRootResource = Providers.of(changesetRootResource);
-    dispatcher.getRegistry().addSingletonResource(getRepositoryRootResource());
+    dispatcher = DispatcherMock.createDispatcher(getRepositoryRootResource());
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(repositoryService);
     when(serviceFactory.create(any(Repository.class))).thenReturn(repositoryService);
     when(repositoryService.getRepository()).thenReturn(new Repository("repoId", "git", "space", "repo"));
-    dispatcher.getProviderFactory().registerProvider(NotFoundExceptionMapper.class);
-    dispatcher.getProviderFactory().registerProvider(AuthorizationExceptionMapper.class);
     when(repositoryService.getLogCommand()).thenReturn(logCommandBuilder);
     subjectThreadState.bind();
     ThreadContext.bind(subject);
@@ -169,7 +165,7 @@ public class ChangesetRootResourceTest extends RepositoryTestBase {
     when(logCommandBuilder.setStartChangeset(anyString())).thenReturn(logCommandBuilder);
     when(logCommandBuilder.getChangesets()).thenReturn(changesetPagingResult);
     MockHttpRequest request = MockHttpRequest
-      .get(CHANGESET_URL + "id")
+      .get(CHANGESET_URL + id)
       .accept(VndMediaType.CHANGESET);
     MockHttpResponse response = new MockHttpResponse();
     dispatcher.invoke(request, response);

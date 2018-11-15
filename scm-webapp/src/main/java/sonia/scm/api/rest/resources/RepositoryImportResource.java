@@ -45,11 +45,11 @@ import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.AlreadyExistsException;
 import sonia.scm.NotFoundException;
-import sonia.scm.NotSupportedFeatuerException;
+import sonia.scm.NotSupportedFeatureException;
 import sonia.scm.Type;
 import sonia.scm.api.rest.RestActionUploadResult;
+import sonia.scm.api.v2.resources.RepositoryResource;
 import sonia.scm.repository.*;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.RepositoryService;
@@ -394,7 +394,7 @@ public class RepositoryImportResource
 
         response = Response.ok(result).build();
       }
-      catch (NotSupportedFeatuerException ex)
+      catch (NotSupportedFeatureException ex)
       {
         logger
           .warn(
@@ -515,13 +515,6 @@ public class RepositoryImportResource
 //      repository = new Repository(null, type, name);
       manager.create(repository);
     }
-    catch (AlreadyExistsException ex)
-    {
-      logger.warn("a {} repository with the name {} already exists", type,
-        name);
-
-      throw new WebApplicationException(Response.Status.CONFLICT);
-    }
     catch (InternalRepositoryException ex)
     {
       handleGenericCreationFailure(ex, type, name);
@@ -616,7 +609,7 @@ public class RepositoryImportResource
             types.add(t);
           }
         }
-        catch (NotSupportedFeatuerException ex)
+        catch (NotSupportedFeatureException ex)
         {
           if (logger.isTraceEnabled())
           {
@@ -718,7 +711,7 @@ public class RepositoryImportResource
           }
         }
       }
-      catch (NotSupportedFeatuerException ex)
+      catch (NotSupportedFeatureException ex)
       {
         throw new WebApplicationException(ex, Response.Status.BAD_REQUEST);
       }

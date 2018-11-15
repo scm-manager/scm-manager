@@ -30,19 +30,19 @@ public class ManagerDaoAdapter<T extends ModelObject> {
 
       afterUpdate.handle(notModified);
     } else {
-      throw new NotFoundException();
+      throw new NotFoundException(object.getClass(), object.getId());
     }
   }
 
-  public T create(T newObject, Supplier<PermissionCheck> permissionCheck, AroundHandler<T> beforeCreate, AroundHandler<T> afterCreate) throws AlreadyExistsException {
+  public T create(T newObject, Supplier<PermissionCheck> permissionCheck, AroundHandler<T> beforeCreate, AroundHandler<T> afterCreate) {
     return create(newObject, permissionCheck, beforeCreate, afterCreate, dao::contains);
   }
 
-  public T create(T newObject, Supplier<PermissionCheck> permissionCheck, AroundHandler<T> beforeCreate, AroundHandler<T> afterCreate, Predicate<T> existsCheck) throws AlreadyExistsException {
+  public T create(T newObject, Supplier<PermissionCheck> permissionCheck, AroundHandler<T> beforeCreate, AroundHandler<T> afterCreate, Predicate<T> existsCheck) {
     permissionCheck.get().check();
     AssertUtil.assertIsValid(newObject);
     if (existsCheck.test(newObject)) {
-      throw new AlreadyExistsException();
+      throw new AlreadyExistsException(newObject);
     }
     newObject.setCreationDate(System.currentTimeMillis());
     beforeCreate.handle(newObject);
@@ -58,7 +58,7 @@ public class ManagerDaoAdapter<T extends ModelObject> {
       dao.delete(toDelete);
       afterDelete.handle(toDelete);
     } else {
-      throw new NotFoundException();
+      throw new NotFoundException(toDelete.getClass(), toDelete.getId());
     }
   }
 

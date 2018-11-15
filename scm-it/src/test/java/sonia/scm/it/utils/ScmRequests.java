@@ -38,6 +38,10 @@ public class ScmRequests {
     return new ScmRequests();
   }
 
+  public IndexResponse requestIndexResource() {
+    return new IndexResponse(applyGETRequest(RestUtil.REST_BASE_URL.toString()));
+  }
+
   public IndexResponse requestIndexResource(String username, String password) {
     setUsername(username);
     setPassword(password);
@@ -234,8 +238,8 @@ public class ScmRequests {
       return this;
     }
 
-    public DiffResponse<ChangesetsResponse> requestDiff(String revision) {
-      return new DiffResponse<>(applyGETRequestFromLink(response, "_embedded.changesets.find{it.id=='" + revision + "'}._links.diff.href"), this);
+    public DiffResponse<ChangesetsResponse> requestDiffInGitFormat(String revision) {
+      return new DiffResponse<>(applyGETRequestFromLinkWithParams(response, "_embedded.changesets.find{it.id=='" + revision + "'}._links.diff.href", "?format=GIT"), this);
     }
 
     public ModificationsResponse<ChangesetsResponse> requestModifications(String revision) {
@@ -360,6 +364,10 @@ public class ScmRequests {
     public ModelResponse(Response response, PREV previousResponse) {
       this.response = response;
       this.previousResponse = previousResponse;
+    }
+
+    public Response getResponse(){
+      return response;
     }
 
     public PREV returnToPrevious() {

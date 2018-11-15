@@ -6,12 +6,12 @@ import com.webcohesion.enunciate.metadata.rs.ResponseHeaders;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import org.apache.shiro.authc.credential.PasswordService;
-import sonia.scm.AlreadyExistsException;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
@@ -76,7 +76,7 @@ public class UserCollectionResource {
    *
    * <strong>Note:</strong> This method requires "user" privilege.
    *
-   * @param userDto The user to be created.
+   * @param user The user to be created.
    * @return A response with the link to the new user (if created successfully).
    */
   @POST
@@ -91,7 +91,7 @@ public class UserCollectionResource {
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
   @ResponseHeaders(@ResponseHeader(name = "Location", description = "uri to the created user"))
-  public Response create(@Valid UserDto userDto) throws AlreadyExistsException {
-    return adapter.create(userDto, () -> dtoToUserMapper.map(userDto, passwordService.encryptPassword(userDto.getPassword())), user -> resourceLinks.user().self(user.getName()));
+  public Response create(@Valid UserDto user) {
+    return adapter.create(user, () -> dtoToUserMapper.map(user, passwordService.encryptPassword(user.getPassword())), u -> resourceLinks.user().self(u.getName()));
   }
 }

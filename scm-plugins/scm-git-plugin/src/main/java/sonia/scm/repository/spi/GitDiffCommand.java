@@ -34,27 +34,25 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Strings;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffFormatter;
+import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.treewalk.EmptyTreeIterator;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.treewalk.filter.PathFilter;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.util.Util;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.BufferedOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
-
 import java.util.List;
 
 /**
@@ -107,7 +105,8 @@ public class GitDiffCommand extends AbstractGitCommand implements DiffCommand
 
       walk = new RevWalk(gr);
 
-      RevCommit commit = walk.parseCommit(gr.resolve(request.getRevision()));
+      ObjectId revision = gr.resolve(request.getRevision());
+      RevCommit commit = walk.parseCommit(revision);
 
       walk.markStart(commit);
       commit = walk.next();
@@ -120,7 +119,15 @@ public class GitDiffCommand extends AbstractGitCommand implements DiffCommand
         treeWalk.setFilter(PathFilter.create(request.getPath()));
       }
 
-      if (commit.getParentCount() > 0)
+
+      if (!Strings.isNullOrEmpty(request.getAncestorChangeset()))
+      {
+        ObjectId otherRevision = gr.resolve(request.getAncestorChangeset());
+        ObjectId ancestorId = computeCommonAncestor(gr, revision, otherRevision);
+        RevTree tree = walk.parseCommit(ancestorId).getTree();
+        treeWalk.addTree(tree);
+      }
+      else if (commit.getParentCount() > 0)
       {
         RevTree tree = commit.getParent(0).getTree();
 
@@ -156,7 +163,6 @@ public class GitDiffCommand extends AbstractGitCommand implements DiffCommand
     }
     catch (Exception ex)
     {
-
       // TODO throw exception
       logger.error("could not create diff", ex);
     }
@@ -167,4 +173,9 @@ public class GitDiffCommand extends AbstractGitCommand implements DiffCommand
       GitUtil.release(formatter);
     }
   }
+
+  private ObjectId computeCommonAncestor(org.eclipse.jgit.lib.Repository repository, ObjectId revision1, ObjectId revision2) throws IOException {
+    return GitUtil.computeCommonAncestor(repository, revision1, revision2);
+  }
+
 }

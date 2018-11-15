@@ -1,15 +1,15 @@
 //@flow
 import React from "react";
-import type { Changeset, Repository, Tag } from "@scm-manager/ui-types";
+import type {Changeset, Repository, Tag} from "@scm-manager/ui-types";
 import classNames from "classnames";
-import { translate, Interpolate } from "react-i18next";
+import {Interpolate, translate} from "react-i18next";
 import ChangesetId from "./ChangesetId";
 import injectSheet from "react-jss";
-import { DateFromNow } from "@scm-manager/ui-components";
+import {DateFromNow} from "@scm-manager/ui-components";
 import ChangesetAuthor from "./ChangesetAuthor";
 import ChangesetTag from "./ChangesetTag";
-import { compose } from "redux";
-import { parseDescription } from "./changesets";
+import {compose} from "redux";
+import {parseDescription} from "./changesets";
 import AvatarWrapper from "./AvatarWrapper";
 import AvatarImage from "./AvatarImage";
 

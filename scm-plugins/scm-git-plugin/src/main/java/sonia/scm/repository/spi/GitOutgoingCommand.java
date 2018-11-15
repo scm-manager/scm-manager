@@ -77,7 +77,6 @@ public class GitOutgoingCommand extends AbstractGitIncomingOutgoingCommand
    * @return
    *
    * @throws IOException
-   * @throws RepositoryException
    */
   @Override
   public ChangesetPagingResult getOutgoingChangesets(
