@@ -11,36 +11,30 @@ const fetchOptions: RequestOptions = {
   }
 };
 
-// TODO: dedup
 function handleStatusCode(response: Response) {
   if (!response.ok) {
-    if (response.status === 401) {
-      return response.json().then(
-        json => {
-          throw Error(json.message);
-        },
-        () => {
-          throw UNAUTHORIZED_ERROR;
-        }
-      );
+    switch (response.status) {
+      case 401:
+        return throwErrorWithMessage(response, UNAUTHORIZED_ERROR.message);
+      case 404:
+        return throwErrorWithMessage(response, NOT_FOUND_ERROR.message);
+      default:
+        return throwErrorWithMessage(response, "server returned status code " + response.status);
     }
-    if (response.status === 404) {
-      return response.json().then(
-        json => {
-          throw Error(json.message);
-        },
-        () => {
-          throw NOT_FOUND_ERROR;
-        }
-      );
-    }
-    return response.json().then(json => {
-        throw Error(json.message);
-      }, () => {
-        throw new Error("server returned status code " + response.status);
-      });
+
   }
   return response;
+}
+
+function throwErrorWithMessage(response: Response, message: string) {
+  return response.json().then(
+    json => {
+      throw Error(json.message);
+    },
+    () => {
+      throw Error(message);
+    }
+  );
 }
 
 export function createUrl(url: string) {
