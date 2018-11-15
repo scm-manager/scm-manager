@@ -61,6 +61,7 @@ class UserForm extends React.Component<Props, State> {
 
   isValid = () => {
     const user = this.state.user;
+    const passwordValid = this.props.user ? !this.isFalsy(user.password) : true;
     return !(
       this.state.nameValidationError ||
       this.state.mailValidationError ||
@@ -68,7 +69,7 @@ class UserForm extends React.Component<Props, State> {
       this.isFalsy(user.name) ||
       this.isFalsy(user.displayName) ||
       this.isFalsy(user.mail) ||
-      this.isFalsy(user.password)
+      passwordValid
     );
   };
 
@@ -84,6 +85,7 @@ class UserForm extends React.Component<Props, State> {
     const user = this.state.user;
 
     let nameField = null;
+    let passwordChangeField = null;
     if (!this.props.user) {
       nameField = (
         <InputField
@@ -94,6 +96,10 @@ class UserForm extends React.Component<Props, State> {
           errorMessage={t("validation.name-invalid")}
           helpText={t("help.usernameHelpText")}
         />
+      );
+
+      passwordChangeField = (
+        <PasswordConfirmation passwordChanged={this.handlePasswordChange} />
       );
     }
     return (
@@ -115,7 +121,7 @@ class UserForm extends React.Component<Props, State> {
           errorMessage={t("validation.mail-invalid")}
           helpText={t("help.mailHelpText")}
         />
-        <PasswordConfirmation passwordChanged={this.handlePasswordChange} />
+        {passwordChangeField}
         <Checkbox
           label={t("user.admin")}
           onChange={this.handleAdminChange}
