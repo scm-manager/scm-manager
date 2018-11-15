@@ -116,8 +116,6 @@ public class WindowsHgInstaller extends AbstractHgInstaller
   @Override
   public void install(File baseDirectory, HgConfig config) throws IOException
   {
-    super.install(baseDirectory, config);
-
     if (Util.isEmpty(config.getPythonBinary()))
     {
       String pythonBinary = getPythonBinary();

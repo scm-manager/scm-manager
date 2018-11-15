@@ -1,19 +1,19 @@
 /**
  * Copyright (c) 2010, Sebastian Sdorra
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * <p>
  * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
+ * this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
  * 3. Neither the name of SCM-Manager; nor the names of its
- *    contributors may be used to endorse or promote products derived from this
- *    software without specific prior written permission.
- *
+ * contributors may be used to endorse or promote products derived from this
+ * software without specific prior written permission.
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,45 +24,76 @@
  * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * <p>
  * http://bitbucket.org/sdorra/scm-manager
- *
  */
-
 
 
 package sonia.scm.repository.xml;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import sonia.scm.repository.Repository;
+import sonia.scm.store.StoreConstants;
+import sonia.scm.store.StoreException;
+import sonia.scm.util.IOUtil;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
+import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-//~--- JDK imports ------------------------------------------------------------
 
 /**
- *
  * @author Sebastian Sdorra
  */
-public class XmlRepositoryMapAdapter extends XmlAdapter<XmlRepositoryList, Map<String, Repository>> {
+public class XmlRepositoryMapAdapter extends XmlAdapter<XmlRepositoryList, Map<String, RepositoryPath>> {
 
   @Override
-  public XmlRepositoryList marshal(Map<String, Repository> repositoryMap) {
-    return new XmlRepositoryList(repositoryMap);
+  public XmlRepositoryList marshal(Map<String, RepositoryPath> repositoryMap) {
+    XmlRepositoryList repositoryPaths = new XmlRepositoryList(repositoryMap);
+    try {
+      JAXBContext context = JAXBContext.newInstance(Repository.class);
+      Marshaller marshaller = context.createMarshaller();
+
+      marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+
+      // marshall the repo_path/metadata.xml files
+      for (RepositoryPath repositoryPath : repositoryPaths.getRepositoryPaths()) {
+        File dir = new File(repositoryPath.getPath());
+        if (!dir.exists()){
+          IOUtil.mkdirs(dir);
+        }
+        marshaller.marshal(repositoryPath.getRepository(), getRepositoryMetadataFile(dir));
+      }
+    } catch (JAXBException ex) {
+      throw new StoreException("failed to marshall repository database", ex);
+    }
+
+    return repositoryPaths;
+
+  }
+
+  private File getRepositoryMetadataFile(File dir) {
+    return new File(dir, StoreConstants.REPOSITORY_METADATA.concat(StoreConstants.FILE_EXTENSION));
   }
 
   @Override
-  public Map<String, Repository> unmarshal(XmlRepositoryList repositories) {
-    Map<String, Repository> repositoryMap = new LinkedHashMap<>();
-
-    for (Repository repository : repositories) {
-      repositoryMap.put(XmlRepositoryDatabase.createKey(repository),
-                        repository);
+  public Map<String, RepositoryPath> unmarshal(XmlRepositoryList repositories) {
+    Map<String, RepositoryPath> repositoryPathMap = new LinkedHashMap<>();
+    try {
+      JAXBContext context = JAXBContext.newInstance(Repository.class);
+      Unmarshaller unmarshaller = context.createUnmarshaller();
+      for (RepositoryPath repositoryPath : repositories) {
+        Repository repository = (Repository) unmarshaller.unmarshal(getRepositoryMetadataFile(new File(repositoryPath.getPath())));
+        repositoryPath.setRepository(repository);
+        repositoryPathMap.put(XmlRepositoryDatabase.createKey(repository), repositoryPath);
+      }
+    } catch (JAXBException ex) {
+      throw new StoreException("failed to unmarshall object", ex);
     }
-
-    return repositoryMap;
+    return repositoryPathMap;
   }
 }

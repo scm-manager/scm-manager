@@ -6,8 +6,6 @@ import org.mockito.InjectMocks;
 import org.mockito.runners.MockitoJUnitRunner;
 import sonia.scm.repository.GitConfig;
 
-import java.io.File;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
@@ -22,7 +20,6 @@ public class GitConfigDtoToGitConfigMapperTest {
     GitConfigDto dto = createDefaultDto();
     GitConfig config = mapper.map(dto);
     assertEquals("express", config.getGcExpression());
-    assertEquals("repository/directory", config.getRepositoryDirectory().getPath());
     assertFalse(config.isDisabled());
   }
 
@@ -30,7 +27,6 @@ public class GitConfigDtoToGitConfigMapperTest {
     GitConfigDto gitConfigDto = new GitConfigDto();
     gitConfigDto.setGcExpression("express");
     gitConfigDto.setDisabled(false);
-    gitConfigDto.setRepositoryDirectory(new File("repository/directory"));
     return gitConfigDto;
   }
 }

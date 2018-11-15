@@ -81,7 +81,6 @@ public class SvnConfigResourceTest {
     ObjectNode responseJson = new ObjectMapper().readValue(responseString, ObjectNode.class);
 
     assertTrue(responseString.contains("\"disabled\":false"));
-    assertTrue(responseJson.get("repositoryDirectory").asText().endsWith("repository/directory"));
     assertTrue(responseString.contains("\"self\":{\"href\":\"/v2/config/svn"));
     assertTrue(responseString.contains("\"update\":{\"href\":\"/v2/config/svn"));
   }
@@ -150,7 +149,6 @@ public class SvnConfigResourceTest {
   private SvnConfig createConfiguration() {
     SvnConfig config = new SvnConfig();
     config.setDisabled(false);
-    config.setRepositoryDirectory(new File("repository/directory"));
     return config;
   }
 

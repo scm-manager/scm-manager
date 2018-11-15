@@ -44,7 +44,6 @@ import sonia.scm.io.CommandResult;
 import sonia.scm.io.ExtendedCommand;
 import sonia.scm.io.FileSystem;
 import sonia.scm.store.ConfigurationStoreFactory;
-import sonia.scm.util.IOUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -61,8 +60,6 @@ public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig
 
   public static final String DEFAULT_VERSION_INFORMATION = "unknown";
 
-  public static final String DIRECTORY_REPOSITORY = "repositories";
-
   public static final String DOT = ".";
 
   /**
@@ -72,19 +69,20 @@ public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig
     LoggerFactory.getLogger(AbstractSimpleRepositoryHandler.class);
 
   private FileSystem fileSystem;
+  private final RepositoryLocationResolver repositoryLocationResolver;
 
 
   public AbstractSimpleRepositoryHandler(ConfigurationStoreFactory storeFactory,
-                                         FileSystem fileSystem) {
+                                         FileSystem fileSystem, RepositoryLocationResolver repositoryLocationResolver) {
     super(storeFactory);
     this.fileSystem = fileSystem;
+    this.repositoryLocationResolver = repositoryLocationResolver;
   }
 
   @Override
   public Repository create(Repository repository) throws AlreadyExistsException {
-    File directory = getDirectory(repository);
-
-    if (directory.exists()) {
+    File directory = repositoryLocationResolver.getInitialNativeDirectory(repository);
+    if (directory != null && directory.exists()) {
       throw new AlreadyExistsException();
     }
 
@@ -96,7 +94,7 @@ public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig
       postCreate(repository, directory);
       return repository;
     } catch (Exception ex) {
-      if (directory.exists()) {
+      if (directory != null && directory.exists()) {
         logger.warn("delete repository directory {}, because of failed repository creation", directory);
         try {
           fileSystem.destroy(directory);
@@ -122,18 +120,15 @@ public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig
 
   @Override
   public void delete(Repository repository) {
-    File directory = getDirectory(repository);
-
-    if (directory.exists()) {
-      try {
+    try {
+      File directory = repositoryLocationResolver.getRepositoryDirectory(repository);
+      if (directory.exists()) {
         fileSystem.destroy(directory);
-      } catch (IOException e) {
-        throw new InternalRepositoryException("could not delete repository directory", e);
+      } else {
+        logger.warn("repository {} not found", repository.getNamespaceAndName());
       }
-      cleanupEmptyDirectories(config.getRepositoryDirectory(),
-        directory.getParentFile());
-    } else {
-      logger.warn("repository {} not found", repository.getNamespaceAndName());
+    } catch (IOException e) {
+      throw new InternalRepositoryException("could not delete repository directory", e);
     }
   }
 
@@ -143,21 +138,6 @@ public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig
 
     if (config == null) {
       config = createInitialConfig();
-
-      if (config != null) {
-        File repositoryDirectory = config.getRepositoryDirectory();
-
-        if (repositoryDirectory == null) {
-          repositoryDirectory = new File(
-            baseDirectory,
-            DIRECTORY_REPOSITORY.concat(File.separator).concat(
-              getType().getName()));
-          config.setRepositoryDirectory(repositoryDirectory);
-        }
-
-        IOUtil.mkdirs(repositoryDirectory);
-        storeConfig();
-      }
     }
   }
 
@@ -169,25 +149,22 @@ public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig
 
   @Override
   public File getDirectory(Repository repository) {
-    File directory = null;
-
+    File directory;
     if (isConfigured()) {
-      File repositoryDirectory = config.getRepositoryDirectory();
-
-      directory = new File(repositoryDirectory, repository.getId());
-
-      if (!IOUtil.isChild(repositoryDirectory, directory)) {
-        StringBuilder msg = new StringBuilder(directory.getPath());
-
-        msg.append("is not a child of ").append(repositoryDirectory.getPath());
-
-        throw new ConfigurationException(msg.toString());
+      try {
+        directory = repositoryLocationResolver.getNativeDirectory(repository);
+      } catch (IOException e) {
+        throw new ConfigurationException("Error on getting the current repository directory");
       }
     } else {
       throw new ConfigurationException("RepositoryHandler is not configured");
     }
-
     return directory;
+  }
+
+  @Override
+  public File getInitialBaseDirectory() {
+    return repositoryLocationResolver.getInitialBaseDirectory();
   }
 
   @Override
@@ -259,7 +236,10 @@ public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig
    * @throws AlreadyExistsException
    */
   private void checkPath(File directory) throws AlreadyExistsException {
-    File repositoryDirectory = config.getRepositoryDirectory();
+    if (directory == null) {
+      return;
+    }
+    File repositoryDirectory = getInitialBaseDirectory();
     File parent = directory.getParentFile();
 
     while ((parent != null) && !repositoryDirectory.equals(parent)) {
@@ -272,26 +252,6 @@ public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig
       }
 
       parent = parent.getParentFile();
-    }
-  }
-
-  private void cleanupEmptyDirectories(File baseDirectory, File directory) {
-    if (IOUtil.isChild(baseDirectory, directory)) {
-      if (IOUtil.isEmpty(directory)) {
-
-        // TODO use filesystem
-        if (directory.delete()) {
-          logger.info("successfully deleted directory {}", directory);
-          cleanupEmptyDirectories(baseDirectory, directory.getParentFile());
-        } else {
-          logger.warn("could not delete directory {}", directory);
-        }
-
-      } else {
-        logger.debug("could not remove non empty directory {}", directory);
-      }
-    } else {
-      logger.warn("directory {} is not a child of {}", directory, baseDirectory);
     }
   }
 

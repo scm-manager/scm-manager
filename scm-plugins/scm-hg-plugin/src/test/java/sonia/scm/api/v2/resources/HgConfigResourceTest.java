@@ -93,7 +93,6 @@ public class HgConfigResourceTest {
     ObjectNode responseJson = new ObjectMapper().readValue(responseString, ObjectNode.class);
 
     assertTrue(responseString.contains("\"disabled\":false"));
-    assertTrue(responseJson.get("repositoryDirectory").asText().endsWith("repository/directory"));
     assertTrue(responseString.contains("\"self\":{\"href\":\"/v2/config/hg"));
     assertTrue(responseString.contains("\"update\":{\"href\":\"/v2/config/hg"));
   }
@@ -162,7 +161,6 @@ public class HgConfigResourceTest {
   private HgConfig createConfiguration() {
     HgConfig config = new HgConfig();
     config.setDisabled(false);
-    config.setRepositoryDirectory(new File("repository/directory"));
     return config;
   }
 

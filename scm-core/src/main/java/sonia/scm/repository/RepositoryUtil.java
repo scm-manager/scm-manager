@@ -66,16 +66,12 @@ public final class RepositoryUtil {
   }
 
   @SuppressWarnings("squid:S2083") // ignore, because the path is validated at {@link #getRepositoryId(File, File)}
-  public static String getRepositoryId(AbstractRepositoryHandler handler, String directoryPath) throws IOException {
-    return getRepositoryId(handler.getConfig().getRepositoryDirectory(), new File(directoryPath));
+  public static String getRepositoryId(RepositoryDirectoryHandler handler, String directoryPath) throws IOException {
+    return getRepositoryId(handler.getInitialBaseDirectory(), new File(directoryPath));
   }
 
-  public static String getRepositoryId(AbstractRepositoryHandler handler, File directory) throws IOException {
-    return getRepositoryId(handler.getConfig(), directory);
-  }
-
-  public static String getRepositoryId(RepositoryConfig config, File directory) throws IOException {
-    return getRepositoryId(config.getRepositoryDirectory(), directory);
+  public static String getRepositoryId(RepositoryDirectoryHandler handler, File directory) throws IOException {
+    return getRepositoryId(handler.getInitialBaseDirectory(), directory);
   }
 
   public static String getRepositoryId(File baseDirectory, File directory) throws IOException {
@@ -87,7 +83,7 @@ public final class RepositoryUtil {
       "repository path %s is not in the main repository path %s", path, basePath
     );
 
-    String id = IOUtil.trimSeperatorChars(path.substring(basePath.length()));
+    String id = IOUtil.trimSeperatorChars(path.substring(basePath.length()).replace(InitialRepositoryLocationResolver.REPOSITORIES_NATIVE_DIRECTORY, ""));
 
     Preconditions.checkArgument(
       !id.contains("\\") && !id.contains("/"),

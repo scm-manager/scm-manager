@@ -37,12 +37,14 @@ package sonia.scm.store;
  * 
  * @author Sebastian Sdorra
  */
-public interface StoreConstants
+public class StoreConstants
 {
 
-  /** Field description */
-  public static final String CONFIGDIRECTORY_NAME = "config";
+  private StoreConstants() {  }
 
-  /** Field description */
+  public static final String CONFIG_DIRECTORY_NAME = "config";
+
+  public static final String REPOSITORY_METADATA = "metadata";
+
   public static final String FILE_EXTENSION = ".xml";
 }

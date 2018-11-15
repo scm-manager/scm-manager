@@ -41,6 +41,7 @@ import sonia.scm.store.InMemoryConfigurationStoreFactory;
 import sonia.scm.util.IOUtil;
 
 import java.io.File;
+import java.io.IOException;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -58,7 +59,7 @@ public abstract class SimpleRepositoryHandlerTestBase extends AbstractTestBase {
   protected abstract void checkDirectory(File directory);
 
   protected abstract RepositoryHandler createRepositoryHandler(
-    ConfigurationStoreFactory factory, File directory);
+    ConfigurationStoreFactory factory, File directory) throws IOException, RepositoryPathNotFoundException;
 
   @Test
   public void testCreate() throws AlreadyExistsException {
@@ -87,7 +88,7 @@ public abstract class SimpleRepositoryHandlerTestBase extends AbstractTestBase {
   }
 
   @Override
-  protected void postSetUp() {
+  protected void postSetUp() throws IOException, RepositoryPathNotFoundException {
     InMemoryConfigurationStoreFactory storeFactory = new InMemoryConfigurationStoreFactory();
     baseDirectory = new File(contextProvider.getBaseDirectory(), "repositories");
     IOUtil.mkdirs(baseDirectory);
@@ -106,7 +107,7 @@ public abstract class SimpleRepositoryHandlerTestBase extends AbstractTestBase {
 
     handler.create(repository);
 
-    File directory = new File(baseDirectory, repository.getId());
+    File directory = new File(new File(baseDirectory, repository.getId()), InitialRepositoryLocationResolver.REPOSITORIES_NATIVE_DIRECTORY);
 
     assertTrue(directory.exists());
     assertTrue(directory.isDirectory());

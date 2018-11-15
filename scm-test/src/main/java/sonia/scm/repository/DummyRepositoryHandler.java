@@ -46,7 +46,6 @@ import java.util.Set;
 //~--- JDK imports ------------------------------------------------------------
 
 /**
- *
  * @author Sebastian Sdorra
  */
 public class DummyRepositoryHandler
@@ -60,8 +59,8 @@ public class DummyRepositoryHandler
 
   private final Set<String> existingRepoNames = new HashSet<>();
 
-  public DummyRepositoryHandler(ConfigurationStoreFactory storeFactory) {
-    super(storeFactory, new DefaultFileSystem());
+  public DummyRepositoryHandler(ConfigurationStoreFactory storeFactory, RepositoryLocationResolver repositoryLocationResolver) {
+    super(storeFactory, new DefaultFileSystem(), repositoryLocationResolver);
   }
 
   @Override

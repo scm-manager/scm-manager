@@ -21,25 +21,18 @@ public class RepositoryUtilTest {
   public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
   @Mock
-  private AbstractRepositoryHandler<RepositoryConfig> repositoryHandler;
+  private RepositoryDirectoryHandler repositoryHandler;
 
-  private RepositoryConfig repositoryConfig = new RepositoryConfig() {
-    @Override
-    public String getId() {
-      return "repository";
-    }
-  };
+  private File repositoryTypeRoot;
 
   @Before
-  public void setUpMocks() {
-    when(repositoryHandler.getConfig()).thenReturn(repositoryConfig);
+  public void setUpMocks() throws IOException {
+    repositoryTypeRoot = temporaryFolder.newFolder();
+    when(repositoryHandler.getInitialBaseDirectory()).thenReturn(repositoryTypeRoot);
   }
 
   @Test
   public void testGetRepositoryId() throws IOException {
-    File repositoryTypeRoot = temporaryFolder.newFolder();
-    repositoryConfig.setRepositoryDirectory(repositoryTypeRoot);
-
     File repository = new File(repositoryTypeRoot, "abc");
     String id = RepositoryUtil.getRepositoryId(repositoryHandler, repository.getPath());
     assertEquals("abc", id);
@@ -47,9 +40,6 @@ public class RepositoryUtilTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void testGetRepositoryIdWithInvalidPath() throws IOException {
-    File repositoryTypeRoot = temporaryFolder.newFolder();
-    repositoryConfig.setRepositoryDirectory(repositoryTypeRoot);
-
     File repository = new File("/etc/abc");
     String id = RepositoryUtil.getRepositoryId(repositoryHandler, repository.getPath());
     assertEquals("abc", id);
@@ -57,9 +47,6 @@ public class RepositoryUtilTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void testGetRepositoryIdWithInvalidPathButSameLength() throws IOException {
-    File repositoryTypeRoot = temporaryFolder.newFolder();
-    repositoryConfig.setRepositoryDirectory(repositoryTypeRoot);
-
     File repository = new File(temporaryFolder.newFolder(), "abc");
 
     String id = RepositoryUtil.getRepositoryId(repositoryHandler, repository.getPath());
@@ -68,9 +55,6 @@ public class RepositoryUtilTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void testGetRepositoryIdWithInvalidId() throws IOException {
-    File repositoryTypeRoot = temporaryFolder.newFolder();
-    repositoryConfig.setRepositoryDirectory(repositoryTypeRoot);
-
     File repository = new File(repositoryTypeRoot, "abc/123");
     RepositoryUtil.getRepositoryId(repositoryHandler, repository.getPath());
   }

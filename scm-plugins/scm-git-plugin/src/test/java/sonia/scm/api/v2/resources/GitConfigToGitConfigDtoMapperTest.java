@@ -60,7 +60,6 @@ public class GitConfigToGitConfigDtoMapperTest {
 
     assertEquals("express", dto.getGcExpression());
     assertFalse(dto.isDisabled());
-    assertEquals("repository/directory", dto.getRepositoryDirectory().getPath());
     assertEquals(expectedBaseUri.toString(), dto.getLinks().getLinkBy("self").get().getHref());
     assertEquals(expectedBaseUri.toString(), dto.getLinks().getLinkBy("update").get().getHref());
   }
@@ -79,7 +78,6 @@ public class GitConfigToGitConfigDtoMapperTest {
   private GitConfig createConfiguration() {
     GitConfig config = new GitConfig();
     config.setDisabled(false);
-    config.setRepositoryDirectory(new File("repository/directory"));
     config.setGcExpression("express");
     return config;
   }

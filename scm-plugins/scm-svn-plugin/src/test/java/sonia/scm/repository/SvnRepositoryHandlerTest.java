@@ -43,6 +43,7 @@ import sonia.scm.store.ConfigurationStore;
 import sonia.scm.store.ConfigurationStoreFactory;
 
 import java.io.File;
+import java.nio.file.Path;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -72,6 +73,9 @@ public class SvnRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
 
   private HookEventFacade facade = new HookEventFacade(repositoryManagerProvider, hookContextFactory);
 
+  RepositoryLocationResolver repositoryLocationResolver ;
+  private Path repoDir;
+
   @Override
   protected void checkDirectory(File directory) {
     File format = new File(directory, "format");
@@ -87,15 +91,21 @@ public class SvnRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
 
   @Override
   protected RepositoryHandler createRepositoryHandler(ConfigurationStoreFactory factory,
-                                                      File directory) {
-    SvnRepositoryHandler handler = new SvnRepositoryHandler(factory,
-      new DefaultFileSystem(), null);
+                                                      File directory) throws RepositoryPathNotFoundException {
 
+
+    DefaultFileSystem fileSystem = new DefaultFileSystem();
+    PathBasedRepositoryDAO repoDao = mock(PathBasedRepositoryDAO.class);
+
+    repositoryLocationResolver = new RepositoryLocationResolver(repoDao, new InitialRepositoryLocationResolver(contextProvider,fileSystem));
+    SvnRepositoryHandler handler = new SvnRepositoryHandler(factory,
+      new DefaultFileSystem(), null, repositoryLocationResolver);
+
+    repoDir = directory.toPath();
+    when(repoDao.getPath(any())).thenReturn(repoDir);
     handler.init(contextProvider);
 
     SvnConfig config = new SvnConfig();
-
-    config.setRepositoryDirectory(directory);
 
     // TODO fix event bus exception
     handler.setConfig(config);
@@ -107,15 +117,14 @@ public class SvnRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
   public void getDirectory() {
     when(factory.getStore(any(), any())).thenReturn(store);
     SvnRepositoryHandler repositoryHandler = new SvnRepositoryHandler(factory,
-      new DefaultFileSystem(), facade);
+      new DefaultFileSystem(), facade, repositoryLocationResolver);
 
     SvnConfig svnConfig = new SvnConfig();
-    svnConfig.setRepositoryDirectory(new File("/path"));
     repositoryHandler.setConfig(svnConfig);
 
     Repository repository = new Repository("id", "svn", "Space", "Name");
 
     File path = repositoryHandler.getDirectory(repository);
-    assertEquals("/path/id", path.getAbsolutePath());
+    assertEquals(repoDir.toString()+File.separator+InitialRepositoryLocationResolver.REPOSITORIES_NATIVE_DIRECTORY, path.getAbsolutePath());
   }
 }

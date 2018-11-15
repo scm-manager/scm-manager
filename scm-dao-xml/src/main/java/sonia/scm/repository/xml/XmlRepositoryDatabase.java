@@ -44,21 +44,29 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 //~--- JDK imports ------------------------------------------------------------
 
 @XmlRootElement(name = "repository-db")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class XmlRepositoryDatabase implements XmlDatabase<Repository>
-{
+public class XmlRepositoryDatabase implements XmlDatabase<RepositoryPath> {
 
-  public XmlRepositoryDatabase()
-  {
+  private Long creationTime;
+
+  private Long lastModified;
+
+  @XmlJavaTypeAdapter(XmlRepositoryMapAdapter.class)
+  @XmlElement(name = "repositories")
+  private Map<String, RepositoryPath> repositoryPathMap = new LinkedHashMap<>();
+
+
+  public XmlRepositoryDatabase() {
     long c = System.currentTimeMillis();
-
     creationTime = c;
     lastModified = c;
   }
@@ -74,14 +82,14 @@ public class XmlRepositoryDatabase implements XmlDatabase<Repository>
   }
 
   @Override
-  public void add(Repository repository)
+  public void add(RepositoryPath repositoryPath)
   {
-    repositoryMap.put(createKey(repository), repository);
+    repositoryPathMap.put(createKey(repositoryPath.getRepository()), repositoryPath);
   }
 
   public boolean contains(NamespaceAndName namespaceAndName)
   {
-    return repositoryMap.containsKey(createKey(namespaceAndName));
+    return repositoryPathMap.containsKey(createKey(namespaceAndName));
   }
 
   @Override
@@ -92,61 +100,55 @@ public class XmlRepositoryDatabase implements XmlDatabase<Repository>
 
   public boolean contains(Repository repository)
   {
-    return repositoryMap.containsKey(createKey(repository));
+    return repositoryPathMap.containsKey(createKey(repository));
   }
 
   public void remove(Repository repository)
   {
-    repositoryMap.remove(createKey(repository));
+    repositoryPathMap.remove(createKey(repository));
   }
 
   @Override
-  public Repository remove(String id)
+  public RepositoryPath remove(String id)
   {
-    Repository r = get(id);
-
-    remove(r);
-
-    return r;
+    return repositoryPathMap.remove(createKey(get(id).getRepository()));
   }
 
-  @Override
-  public Collection<Repository> values()
-  {
-    return repositoryMap.values();
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  public Repository get(NamespaceAndName namespaceAndName)
-  {
-    return repositoryMap.get(createKey(namespaceAndName));
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   *
-   * @return
-   */
-  @Override
-  public Repository get(String id)
-  {
-    Repository repository = null;
-
-    for (Repository r : values())
-    {
-      if (r.getId().equals(id))
-      {
-        repository = r;
-
-        break;
-      }
+  public Collection<Repository> getRepositories() {
+    List<Repository> repositories = new ArrayList<>();
+    for (RepositoryPath repositoryPath : repositoryPathMap.values()) {
+      Repository repository = repositoryPath.getRepository();
+      repositories.add(repository);
     }
+    return repositories;
+  }
 
-    return repository;
+  @Override
+  public Collection<RepositoryPath> values()
+  {
+    return repositoryPathMap.values();
+  }
+
+  public Collection<RepositoryPath> getPaths() {
+    return repositoryPathMap.values();
+  }
+
+
+  public Repository get(NamespaceAndName namespaceAndName) {
+    RepositoryPath repositoryPath = repositoryPathMap.get(createKey(namespaceAndName));
+    if (repositoryPath != null) {
+      return repositoryPath.getRepository();
+    }
+    return null;
+  }
+
+
+  @Override
+  public RepositoryPath get(String id) {
+    return values().stream()
+      .filter(repoPath -> repoPath.getId().equals(id))
+      .findFirst()
+      .orElse(null);
   }
 
   /**
@@ -198,17 +200,4 @@ public class XmlRepositoryDatabase implements XmlDatabase<Repository>
   {
     this.lastModified = lastModified;
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private Long creationTime;
-
-  /** Field description */
-  private Long lastModified;
-
-  /** Field description */
-  @XmlJavaTypeAdapter(XmlRepositoryMapAdapter.class)
-  @XmlElement(name = "repositories")
-  private Map<String, Repository> repositoryMap = new LinkedHashMap<>();
 }

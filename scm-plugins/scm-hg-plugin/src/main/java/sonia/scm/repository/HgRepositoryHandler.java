@@ -111,16 +111,16 @@ public class HgRepositoryHandler
   /**
    * Constructs ...
    *
-   *
-   * @param storeFactory
+   *  @param storeFactory
    * @param fileSystem
    * @param hgContextProvider
+   * @param repositoryLocationResolver
    */
   @Inject
   public HgRepositoryHandler(ConfigurationStoreFactory storeFactory, FileSystem fileSystem,
-    Provider<HgContext> hgContextProvider)
+                             Provider<HgContext> hgContextProvider, RepositoryLocationResolver repositoryLocationResolver)
   {
-    super(storeFactory, fileSystem);
+    super(storeFactory, fileSystem, repositoryLocationResolver);
     this.hgContextProvider = hgContextProvider;
 
     try
@@ -566,8 +566,7 @@ public class HgRepositoryHandler
 
     if (c != null)
     {
-      File repositoryDirectroy = c.getRepositoryDirectory();
-
+      File repositoryDirectroy = getInitialBaseDirectory();
       if (repositoryDirectroy.exists())
       {
         File lockFile = new File(repositoryDirectroy, PATH_HOOK);

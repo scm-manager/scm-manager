@@ -79,7 +79,7 @@ public class JAXBConfigurationEntryStoreFactory
   {
     this.keyGenerator = keyGenerator;
     directory = new File(context.getBaseDirectory(),
-      StoreConstants.CONFIGDIRECTORY_NAME);
+      StoreConstants.CONFIG_DIRECTORY_NAME);
     IOUtil.mkdirs(directory);
   }
 

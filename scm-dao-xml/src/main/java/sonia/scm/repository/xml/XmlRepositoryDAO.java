@@ -36,80 +36,124 @@ package sonia.scm.repository.xml;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import sonia.scm.repository.InitialRepositoryLocationResolver;
 import sonia.scm.repository.NamespaceAndName;
+import sonia.scm.repository.PathBasedRepositoryDAO;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryDAO;
+import sonia.scm.repository.RepositoryPathNotFoundException;
 import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.xml.AbstractXmlDAO;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Collection;
+import java.util.Optional;
+
 /**
- *
  * @author Sebastian Sdorra
  */
 @Singleton
 public class XmlRepositoryDAO
-        extends AbstractXmlDAO<Repository, XmlRepositoryDatabase>
-        implements RepositoryDAO
-{
+  extends AbstractXmlDAO<Repository, XmlRepositoryDatabase>
+  implements PathBasedRepositoryDAO {
 
-  /** Field description */
+  /**
+   * Field description
+   */
   public static final String STORE_NAME = "repositories";
+  private InitialRepositoryLocationResolver initialRepositoryLocationResolver;
 
   //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
    *
-   *
    * @param storeFactory
    */
   @Inject
-  public XmlRepositoryDAO(ConfigurationStoreFactory storeFactory)
-  {
+  public XmlRepositoryDAO(ConfigurationStoreFactory storeFactory, InitialRepositoryLocationResolver initialRepositoryLocationResolver) {
     super(storeFactory.getStore(XmlRepositoryDatabase.class, STORE_NAME));
+    this.initialRepositoryLocationResolver = initialRepositoryLocationResolver;
   }
 
   //~--- methods --------------------------------------------------------------
 
   @Override
-  public boolean contains(NamespaceAndName namespaceAndName)
-  {
+  public boolean contains(NamespaceAndName namespaceAndName) {
     return db.contains(namespaceAndName);
   }
 
   //~--- get methods ----------------------------------------------------------
 
   @Override
-  public Repository get(NamespaceAndName namespaceAndName)
-  {
+  public Repository get(NamespaceAndName namespaceAndName) {
     return db.get(namespaceAndName);
   }
 
   //~--- methods --------------------------------------------------------------
 
+
+  @Override
+  public void modify(Repository repository) {
+    db.remove(repository.getId());
+    add(repository);
+  }
+
+  @Override
+  public void add(Repository repository) {
+    String path = initialRepositoryLocationResolver.getDirectory(repository).getAbsolutePath();
+    RepositoryPath repositoryPath = new RepositoryPath(path, repository.getId(), repository.clone());
+    synchronized (store) {
+      db.add(repositoryPath);
+      storeDB();
+    }
+  }
+
+  @Override
+  public Repository get(String id) {
+    RepositoryPath repositoryPath = db.get(id);
+    if (repositoryPath != null) {
+      return repositoryPath.getRepository();
+    }
+    return null;
+  }
+
+  @Override
+  public Collection<Repository> getAll() {
+    return db.getRepositories();
+  }
+
   /**
    * Method description
    *
-   *
    * @param repository
-   *
    * @return
    */
   @Override
-  protected Repository clone(Repository repository)
-  {
+  protected Repository clone(Repository repository) {
     return repository.clone();
   }
 
   /**
    * Method description
    *
-   *
    * @return
    */
   @Override
-  protected XmlRepositoryDatabase createNewDatabase()
-  {
+  protected XmlRepositoryDatabase createNewDatabase() {
     return new XmlRepositoryDatabase();
+  }
+
+  @Override
+  public Path getPath(Repository repository) throws RepositoryPathNotFoundException {
+    Optional<RepositoryPath> repositoryPath = db.getPaths().stream()
+      .filter(repoPath -> repoPath.getId().equals(repository.getId()))
+      .findFirst();
+    if (!repositoryPath.isPresent()) {
+      throw new RepositoryPathNotFoundException();
+    } else {
+
+      return Paths.get(repositoryPath.get().getPath());
+    }
   }
 }

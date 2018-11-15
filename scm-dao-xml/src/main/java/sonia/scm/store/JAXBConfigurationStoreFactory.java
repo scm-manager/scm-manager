@@ -42,7 +42,7 @@ import sonia.scm.util.IOUtil;
 import java.io.File;
 
 /**
- * JAXB implementation of {@link JAXBConfigurationStoreFactory}.
+ * JAXB implementation of {@link ConfigurationStoreFactory}.
  *
  * @author Sebastian Sdorra
  */
@@ -63,7 +63,7 @@ public class JAXBConfigurationStoreFactory implements ConfigurationStoreFactory 
    */
   @Inject
   public JAXBConfigurationStoreFactory(SCMContextProvider context) {
-    configDirectory = new File(context.getBaseDirectory(), StoreConstants.CONFIGDIRECTORY_NAME);
+    configDirectory = new File(context.getBaseDirectory(), StoreConstants.CONFIG_DIRECTORY_NAME);
     IOUtil.mkdirs(configDirectory);
   }
 

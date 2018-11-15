@@ -123,8 +123,9 @@ public class HgHookChangesetProvider implements HookChangesetProvider
    */
   private Repository open()
   {
-    File directory = handler.getConfig().getRepositoryDirectory();
-    File repositoryDirectory = new File(directory, id);
+    sonia.scm.repository.Repository repo = new sonia.scm.repository.Repository();
+    repo.setId(id);
+    File repositoryDirectory = handler.getDirectory(repo);
 
     // use HG_PENDING only for pre receive hooks
     boolean pending = type == RepositoryHookType.PRE_RECEIVE;

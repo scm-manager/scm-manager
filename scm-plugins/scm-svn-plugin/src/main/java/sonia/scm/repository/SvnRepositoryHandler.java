@@ -85,9 +85,9 @@ public class SvnRepositoryHandler
 
   @Inject
   public SvnRepositoryHandler(ConfigurationStoreFactory storeFactory, FileSystem fileSystem,
-    HookEventFacade eventFacade)
+                              HookEventFacade eventFacade, RepositoryLocationResolver repositoryLocationResolver)
   {
-    super(storeFactory, fileSystem);
+    super(storeFactory, fileSystem, repositoryLocationResolver);
 
     // register logger
     SVNDebugLog.setDefaultLog(new SVNKitLogger());

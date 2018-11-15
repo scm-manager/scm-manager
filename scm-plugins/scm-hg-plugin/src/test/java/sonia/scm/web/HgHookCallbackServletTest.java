@@ -25,14 +25,15 @@ public class HgHookCallbackServletTest {
     HgHookCallbackServlet servlet = new HgHookCallbackServlet(null, handler, null, null);
     HttpServletRequest request = mock(HttpServletRequest.class);
     HttpServletResponse response = mock(HttpServletResponse.class);
-    HgConfig config = mock(HgConfig.class);
 
     when(request.getContextPath()).thenReturn("http://example.com/scm");
     when(request.getRequestURI()).thenReturn("http://example.com/scm/hook/hg/pretxnchangegroup");
-    when(request.getParameter(PARAM_REPOSITORYPATH)).thenReturn("/tmp/hg/12345");
+    String path = "/tmp/hg/12345";
+    when(request.getParameter(PARAM_REPOSITORYPATH)).thenReturn(path);
 
-    when(handler.getConfig()).thenReturn(config);
-    when(config.getRepositoryDirectory()).thenReturn(new File("/tmp/hg"));
+
+    File file = new File(path);
+    when(handler.getInitialBaseDirectory()).thenReturn(file);
 
     servlet.doPost(request, response);
 

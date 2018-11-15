@@ -37,7 +37,6 @@ package sonia.scm.repository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.AlreadyExistsException;
 import sonia.scm.repository.ImportResult.Builder;
 
 import java.io.File;
@@ -230,48 +229,9 @@ public abstract class AbstactImportHandler implements AdvancedImportHandler
 //    }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param manager
-   * @param repositoryName
-   *
-   *
-   * @return
-   * @throws IOException
-   */
-  private void importRepository(RepositoryManager manager,
-    String repositoryName)
-    throws IOException, AlreadyExistsException {
-    Repository repository =
-      createRepository(getRepositoryDirectory(repositoryName), repositoryName);
 
-    if (logger.isInfoEnabled())
-    {
-      logger.info("import repository {} of type {}", repositoryName,
-        getTypeName());
-    }
-
-    manager.importRepository(repository);
-  }
 
   //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param repositoryName
-   *
-   * @return
-   */
-  private File getRepositoryDirectory(String repositoryName)
-  {
-    return new File(
-      getRepositoryHandler().getConfig().getRepositoryDirectory(),
-      repositoryName);
-  }
 
   /**
    * Method description

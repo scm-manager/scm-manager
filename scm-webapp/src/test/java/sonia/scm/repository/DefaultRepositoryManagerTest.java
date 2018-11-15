@@ -51,6 +51,7 @@ import sonia.scm.ManagerTestBase;
 import sonia.scm.NotFoundException;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.event.ScmEventBus;
+import sonia.scm.io.DefaultFileSystem;
 import sonia.scm.repository.api.HookContext;
 import sonia.scm.repository.api.HookContextFactory;
 import sonia.scm.repository.api.HookFeature;
@@ -419,23 +420,26 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
   }
 
   private DefaultRepositoryManager createRepositoryManager(boolean archiveEnabled, KeyGenerator keyGenerator) {
+    DefaultFileSystem fileSystem = new DefaultFileSystem();
     Set<RepositoryHandler> handlerSet = new HashSet<>();
     ConfigurationStoreFactory factory = new JAXBConfigurationStoreFactory(contextProvider);
-    handlerSet.add(new DummyRepositoryHandler(factory));
-    handlerSet.add(new DummyRepositoryHandler(factory) {
+    InitialRepositoryLocationResolver initialRepositoryLocationResolver = new InitialRepositoryLocationResolver(contextProvider, fileSystem);
+    XmlRepositoryDAO repositoryDAO = new XmlRepositoryDAO(factory, initialRepositoryLocationResolver);
+    RepositoryLocationResolver repositoryLocationResolver = new RepositoryLocationResolver(repositoryDAO, initialRepositoryLocationResolver);
+    handlerSet.add(new DummyRepositoryHandler(factory, repositoryLocationResolver));
+    handlerSet.add(new DummyRepositoryHandler(factory, repositoryLocationResolver) {
       @Override
       public RepositoryType getType() {
         return new RepositoryType("hg", "Mercurial", Sets.newHashSet());
       }
     });
-    handlerSet.add(new DummyRepositoryHandler(factory) {
+    handlerSet.add(new DummyRepositoryHandler(factory, repositoryLocationResolver) {
       @Override
       public RepositoryType getType() {
         return new RepositoryType("git", "Git", Sets.newHashSet());
       }
     });
 
-    XmlRepositoryDAO repositoryDAO = new XmlRepositoryDAO(factory);
 
     this.configuration = new ScmConfiguration();
 

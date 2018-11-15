@@ -46,6 +46,7 @@ import static org.mockito.Mockito.*;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
+import java.nio.file.Path;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -95,19 +96,21 @@ public final class HgTestUtil
    *
    * @return
    */
-  public static HgRepositoryHandler createHandler(File directory)
-  {
+  public static HgRepositoryHandler createHandler(File directory) throws RepositoryPathNotFoundException {
     TempSCMContextProvider context =
       (TempSCMContextProvider) SCMContext.getContext();
 
     context.setBaseDirectory(directory);
 
     FileSystem fileSystem = mock(FileSystem.class);
+    PathBasedRepositoryDAO repoDao = mock(PathBasedRepositoryDAO.class);
 
+    RepositoryLocationResolver repositoryLocationResolver = new RepositoryLocationResolver(repoDao, new InitialRepositoryLocationResolver(context,fileSystem));
     HgRepositoryHandler handler =
       new HgRepositoryHandler(new InMemoryConfigurationStoreFactory(), fileSystem,
-        new HgContextProvider());
-
+        new HgContextProvider(), repositoryLocationResolver);
+    Path repoDir = directory.toPath();
+    when(repoDao.getPath(any())).thenReturn(repoDir);
     handler.init(context);
 
     return handler;

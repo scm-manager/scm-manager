@@ -88,7 +88,7 @@ public class GitRepositoryHandler
                                     GitRepositoryServiceProvider.COMMANDS);
 
   private static final Object LOCK = new Object();
-  
+
   private final Scheduler scheduler;
   
   private Task task;
@@ -98,15 +98,15 @@ public class GitRepositoryHandler
   /**
    * Constructs ...
    *
-   *
-   * @param storeFactory
+   *  @param storeFactory
    * @param fileSystem
    * @param scheduler
+   * @param repositoryLocationResolver
    */
   @Inject
-  public GitRepositoryHandler(ConfigurationStoreFactory storeFactory, FileSystem fileSystem, Scheduler scheduler)
+  public GitRepositoryHandler(ConfigurationStoreFactory storeFactory, FileSystem fileSystem, Scheduler scheduler, RepositoryLocationResolver repositoryLocationResolver)
   {
-    super(storeFactory, fileSystem);
+    super(storeFactory, fileSystem, repositoryLocationResolver);
     this.scheduler = scheduler;
   }
 

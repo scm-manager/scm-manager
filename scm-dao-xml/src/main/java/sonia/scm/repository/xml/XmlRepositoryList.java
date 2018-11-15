@@ -54,7 +54,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "repositories")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class XmlRepositoryList implements Iterable<Repository>
+public class XmlRepositoryList implements Iterable<RepositoryPath>
 {
 
   /**
@@ -70,9 +70,9 @@ public class XmlRepositoryList implements Iterable<Repository>
    *
    * @param repositoryMap
    */
-  public XmlRepositoryList(Map<String, Repository> repositoryMap)
+  public XmlRepositoryList(Map<String, RepositoryPath> repositoryMap)
   {
-    this.repositories = new LinkedList<Repository>(repositoryMap.values());
+    this.repositories = new LinkedList<>(repositoryMap.values());
   }
 
   //~--- methods --------------------------------------------------------------
@@ -84,7 +84,7 @@ public class XmlRepositoryList implements Iterable<Repository>
    * @return
    */
   @Override
-  public Iterator<Repository> iterator()
+  public Iterator<RepositoryPath> iterator()
   {
     return repositories.iterator();
   }
@@ -97,7 +97,7 @@ public class XmlRepositoryList implements Iterable<Repository>
    *
    * @return
    */
-  public LinkedList<Repository> getRepositories()
+  public LinkedList<RepositoryPath> getRepositoryPaths()
   {
     return repositories;
   }
@@ -110,7 +110,7 @@ public class XmlRepositoryList implements Iterable<Repository>
    *
    * @param repositories
    */
-  public void setRepositories(LinkedList<Repository> repositories)
+  public void setRepositories(LinkedList<RepositoryPath> repositories)
   {
     this.repositories = repositories;
   }
@@ -118,6 +118,6 @@ public class XmlRepositoryList implements Iterable<Repository>
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  @XmlElement(name = "repository")
-  private LinkedList<Repository> repositories;
+  @XmlElement(name = "repository-path")
+  private LinkedList<RepositoryPath> repositories;
 }

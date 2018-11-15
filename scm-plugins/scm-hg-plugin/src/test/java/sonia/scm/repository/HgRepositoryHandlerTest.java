@@ -42,9 +42,13 @@ import sonia.scm.io.DefaultFileSystem;
 import sonia.scm.store.ConfigurationStoreFactory;
 
 import java.io.File;
+import java.nio.file.Path;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -60,6 +64,9 @@ public class HgRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
 
   @Mock
   private com.google.inject.Provider<HgContext> provider;
+
+  RepositoryLocationResolver repositoryLocationResolver ;
+  private Path repoDir;
 
   @Override
   protected void checkDirectory(File directory) {
@@ -77,14 +84,17 @@ public class HgRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
 
   @Override
   protected RepositoryHandler createRepositoryHandler(ConfigurationStoreFactory factory,
-                                                      File directory) {
+                                                      File directory) throws RepositoryPathNotFoundException {
+    DefaultFileSystem fileSystem = new DefaultFileSystem();
+    PathBasedRepositoryDAO repoDao = mock(PathBasedRepositoryDAO.class);
+    repositoryLocationResolver = new RepositoryLocationResolver(repoDao, new InitialRepositoryLocationResolver(contextProvider,fileSystem));
     HgRepositoryHandler handler = new HgRepositoryHandler(factory,
       new DefaultFileSystem(),
-      new HgContextProvider());
+      new HgContextProvider(), repositoryLocationResolver);
 
     handler.init(contextProvider);
-    handler.getConfig().setRepositoryDirectory(directory);
-
+    repoDir = directory.toPath();
+    when(repoDao.getPath(any())).thenReturn(repoDir);
     HgTestUtil.checkForSkip(handler);
 
     return handler;
@@ -93,17 +103,15 @@ public class HgRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
   @Test
   public void getDirectory() {
     HgRepositoryHandler repositoryHandler = new HgRepositoryHandler(factory,
-      new DefaultFileSystem(), provider);
+      new DefaultFileSystem(), provider, repositoryLocationResolver);
 
     HgConfig hgConfig = new HgConfig();
-    hgConfig.setRepositoryDirectory(new File("/path"));
     hgConfig.setHgBinary("hg");
     hgConfig.setPythonBinary("python");
     repositoryHandler.setConfig(hgConfig);
 
     Repository repository = new Repository("id", "git", "Space", "Name");
-
     File path = repositoryHandler.getDirectory(repository);
-    assertEquals("/path/id", path.getAbsolutePath());
+    assertEquals(repoDir.toString()+File.separator+InitialRepositoryLocationResolver.REPOSITORIES_NATIVE_DIRECTORY, path.getAbsolutePath());
   }
 }

@@ -166,7 +166,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
       throw new RepositoryIsNotArchivedException();
     }
     fireEvent(HandlerEventType.BEFORE_DELETE, toDelete);
-//    getHandler(toDelete).delete(toDelete);
+    getHandler(toDelete).delete(toDelete);
   }
 
   @Override
