@@ -57,8 +57,7 @@ export function fetchUsersByLink(link: string) {
       .then(data => {
         dispatch(fetchUsersSuccess(data));
       })
-      .catch(cause => {
-        const error = new Error(`could not fetch users: ${cause.message}`);
+      .catch(error => {
         dispatch(fetchUsersFailure(link, error));
       });
   };
@@ -108,8 +107,7 @@ function fetchUser(link: string, name: string) {
       .then(data => {
         dispatch(fetchUserSuccess(data));
       })
-      .catch(cause => {
-        const error = new Error(`could not fetch user: ${cause.message}`);
+      .catch(error => {
         dispatch(fetchUserFailure(name, error));
       });
   };
@@ -155,12 +153,8 @@ export function createUser(link: string, user: User, callback?: () => void) {
           callback();
         }
       })
-      .catch(err =>
-        dispatch(
-          createUserFailure(
-            new Error(`failed to add user ${user.name}: ${err.message}`)
-          )
-        )
+      .catch(error =>
+        dispatch(createUserFailure(error))
       );
   };
 }
@@ -260,10 +254,7 @@ export function deleteUser(user: User, callback?: () => void) {
           callback();
         }
       })
-      .catch(cause => {
-        const error = new Error(
-          `could not delete user ${user.name}: ${cause.message}`
-        );
+      .catch(error => {
         dispatch(deleteUserFailure(user, error));
       });
   };

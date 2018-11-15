@@ -1,8 +1,7 @@
 // @flow
 import { contextPath } from "./urls";
-
-export const NOT_FOUND_ERROR = Error("not found");
-export const UNAUTHORIZED_ERROR = Error("unauthorized");
+import { createBackendError } from "./errors";
+import type { BackendErrorContent } from "./errors";
 
 const fetchOptions: RequestOptions = {
   credentials: "same-origin",
@@ -11,15 +10,21 @@ const fetchOptions: RequestOptions = {
   }
 };
 
-function handleStatusCode(response: Response) {
+
+function isBackendError(response) {
+  return response.headers.get("Content-Type") === "application/vnd.scmm-error+json;v=2";
+}
+
+function handleFailure(response: Response) {
   if (!response.ok) {
-    if (response.status === 401) {
-      throw UNAUTHORIZED_ERROR;
+    if (isBackendError(response)) {
+      return response.json()
+        .then((content: BackendErrorContent) => {
+          throw createBackendError(content, response.status);
+        });
+    } else {
+      throw new Error("server returned status code " + response.status);
     }
-    if (response.status === 404) {
-      throw NOT_FOUND_ERROR;
-    }
-    throw new Error("server returned status code " + response.status);
   }
   return response;
 }
@@ -37,7 +42,7 @@ export function createUrl(url: string) {
 
 class ApiClient {
   get(url: string): Promise<Response> {
-    return fetch(createUrl(url), fetchOptions).then(handleStatusCode);
+    return fetch(createUrl(url), fetchOptions).then(handleFailure);
   }
 
   post(url: string, payload: any, contentType: string = "application/json") {
@@ -53,7 +58,7 @@ class ApiClient {
       method: "HEAD"
     };
     options = Object.assign(options, fetchOptions);
-    return fetch(createUrl(url), options).then(handleStatusCode);
+    return fetch(createUrl(url), options).then(handleFailure);
   }
 
   delete(url: string): Promise<Response> {
@@ -61,7 +66,7 @@ class ApiClient {
       method: "DELETE"
     };
     options = Object.assign(options, fetchOptions);
-    return fetch(createUrl(url), options).then(handleStatusCode);
+    return fetch(createUrl(url), options).then(handleFailure);
   }
 
   httpRequestWithJSONBody(
@@ -78,7 +83,7 @@ class ApiClient {
     // $FlowFixMe
     options.headers["Content-Type"] = contentType;
 
-    return fetch(createUrl(url), options).then(handleStatusCode);
+    return fetch(createUrl(url), options).then(handleFailure);
   }
 }
 

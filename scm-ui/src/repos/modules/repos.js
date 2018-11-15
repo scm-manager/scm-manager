@@ -224,8 +224,7 @@ export function modifyRepo(repository: Repository, callback?: () => void) {
       .then(() => {
         dispatch(fetchRepoByLink(repository));
       })
-      .catch(cause => {
-        const error = new Error(`failed to modify repo: ${cause.message}`);
+      .catch(error => {
         dispatch(modifyRepoFailure(repository, error));
       });
   };

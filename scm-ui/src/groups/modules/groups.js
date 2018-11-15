@@ -54,8 +54,7 @@ export function fetchGroupsByLink(link: string) {
       .then(data => {
         dispatch(fetchGroupsSuccess(data));
       })
-      .catch(cause => {
-        const error = new Error(`could not fetch groups: ${cause.message}`);
+      .catch(error => {
         dispatch(fetchGroupsFailure(link, error));
       });
   };
@@ -105,8 +104,7 @@ function fetchGroup(link: string, name: string) {
       .then(data => {
         dispatch(fetchGroupSuccess(data));
       })
-      .catch(cause => {
-        const error = new Error(`could not fetch group: ${cause.message}`);
+      .catch(error => {
         dispatch(fetchGroupFailure(name, error));
       });
   };
@@ -152,11 +150,7 @@ export function createGroup(link: string, group: Group, callback?: () => void) {
         }
       })
       .catch(error => {
-        dispatch(
-          createGroupFailure(
-            new Error(`Failed to create group ${group.name}: ${error.message}`)
-          )
-        );
+        dispatch(createGroupFailure(error));
       });
   };
 }
@@ -201,13 +195,8 @@ export function modifyGroup(group: Group, callback?: () => void) {
       .then(() => {
         dispatch(fetchGroupByLink(group));
       })
-      .catch(cause => {
-        dispatch(
-          modifyGroupFailure(
-            group,
-            new Error(`could not modify group ${group.name}: ${cause.message}`)
-          )
-        );
+      .catch(error => {
+        dispatch(modifyGroupFailure(group, error));
       });
   };
 }
@@ -259,10 +248,7 @@ export function deleteGroup(group: Group, callback?: () => void) {
           callback();
         }
       })
-      .catch(cause => {
-        const error = new Error(
-          `could not delete group ${group.name}: ${cause.message}`
-        );
+      .catch(error => {
         dispatch(deleteGroupFailure(group, error));
       });
   };
