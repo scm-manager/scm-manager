@@ -15,11 +15,14 @@ i18n
   .init({
     fallbackLng: "en",
 
+    // try to load only "en" and not "en_US"
+    load: "languageOnly",
+
     // have a common namespace used around the full app
     ns: ["commons"],
     defaultNS: "commons",
 
-    debug: true,
+    debug: false,
 
     interpolation: {
       escapeValue: false // not needed for react!!
