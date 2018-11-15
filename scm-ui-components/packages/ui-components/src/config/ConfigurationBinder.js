@@ -27,7 +27,6 @@ class ConfigurationBinder {
       return props.links && props.links[linkName];
     };
 
-    // create NavigationLink with translated label and bind link to extensionPoint
     // create NavigationLink with translated label
     const ConfigNavLink = translate(this.i18nNamespace)(({t}) => {
       return this.navLink("/config" + to, labelI18nKey, t);
