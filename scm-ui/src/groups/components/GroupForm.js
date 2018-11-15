@@ -1,22 +1,19 @@
 //@flow
 import React from "react";
-import { translate } from "react-i18next";
-import {
-  InputField,
-  SubmitButton,
-  Textarea,
-  AddEntryToTableField
-} from "@scm-manager/ui-components";
-import type { Group } from "@scm-manager/ui-types";
+import {translate} from "react-i18next";
+import {InputField, SubmitButton, Textarea} from "@scm-manager/ui-components";
+import type {Group} from "@scm-manager/ui-types";
 
 import * as validator from "./groupValidation";
 import MemberNameTable from "./MemberNameTable";
+import AutocompleteAddEntryToTableField from "./AutocompleteAddEntryToTableField";
 
 type Props = {
   t: string => string,
   submitForm: Group => void,
   loading?: boolean,
-  group?: Group
+  group?: Group,
+  loadUserSuggestions: string => any
 };
 
 type State = {
@@ -100,12 +97,14 @@ class GroupForm extends React.Component<Props, State> {
           members={this.state.group.members}
           memberListChanged={this.memberListChanged}
         />
-        <AddEntryToTableField
+
+        <AutocompleteAddEntryToTableField
           addEntry={this.addMember}
           disabled={false}
           buttonLabel={t("add-member-button.label")}
           fieldLabel={t("add-member-textfield.label")}
           errorMessage={t("add-member-textfield.error")}
+          loadSuggestions={this.props.loadUserSuggestions}
         />
         <SubmitButton
           disabled={!this.isValid()}

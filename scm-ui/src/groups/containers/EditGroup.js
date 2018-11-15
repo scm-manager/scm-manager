@@ -1,17 +1,12 @@
 //@flow
 import React from "react";
-import { connect } from "react-redux";
+import {connect} from "react-redux";
 import GroupForm from "../components/GroupForm";
-import {
-  modifyGroup,
-  modifyGroupReset,
-  isModifyGroupPending,
-  getModifyGroupFailure
-} from "../modules/groups";
-import type { History } from "history";
-import { withRouter } from "react-router-dom";
-import type { Group } from "@scm-manager/ui-types";
-import { ErrorNotification } from "@scm-manager/ui-components";
+import {getModifyGroupFailure, isModifyGroupPending, modifyGroup, modifyGroupReset} from "../modules/groups";
+import type {History} from "history";
+import {withRouter} from "react-router-dom";
+import type {Group} from "@scm-manager/ui-types";
+import {ErrorNotification} from "@scm-manager/ui-components";
 
 type Props = {
   group: Group,
@@ -37,6 +32,20 @@ class EditGroup extends React.Component<Props> {
     this.props.modifyGroup(group, this.groupModified(group));
   };
 
+  loadUserAutocompletion = (inputValue: string) => {
+    const url = "http://localhost:8081/scm/api/v2/autocomplete/users?q=";
+    return fetch(url + inputValue)
+      .then(response => response.json())
+      .then(json => {
+        return json.map(element => {
+          return {
+            value: element,
+            label: `${element.displayName} (${element.id})`
+          };
+        });
+      });
+  };
+
   render() {
     const { group, loading, error } = this.props;
     return (
@@ -48,6 +57,7 @@ class EditGroup extends React.Component<Props> {
             this.modifyGroup(group);
           }}
           loading={loading}
+          loadUserSuggestions={this.loadUserAutocompletion}
         />
       </div>
     );

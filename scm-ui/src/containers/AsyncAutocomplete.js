@@ -1,6 +1,7 @@
 // @flow
 import React from "react";
 import AsyncSelect from "react-select/lib/Async";
+import {LabelWithHelpIcon} from "@scm-manager/ui-components";
 
 type SelectionResult = {
   id: string,
@@ -13,42 +14,39 @@ type SelectValue = {
 };
 
 type Props = {
-  url: string,
-  loadOptions: string => Promise<SelectionResult>,
-  valueSelected: SelectionResult => void
+  loadSuggestions: string => Promise<SelectionResult>,
+  valueSelected: SelectionResult => void,
+  label: string,
+  helpText?: string,
+  value?: any
 };
 
 type State = {
   value: SelectionResult
 };
 
-const URL_QUERY_SUFFIX: string = "?q=";
-
 class AsyncAutocomplete extends React.Component<Props, State> {
-  getOptions = (inputValue: string) => {
-    const { url } = this.props;
-    return fetch(url + URL_QUERY_SUFFIX + inputValue)
-      .then(response => response.json())
-      .then(json => {
-        return json.map(element => {
-          return { value: element, label: element.displayName };
-        });
-      });
-  };
-
   handleInputChange = (newValue: SelectValue) => {
     this.setState({ value: newValue.value });
-    return newValue.value;
+    this.props.valueSelected(newValue.value);
   };
 
   render() {
+    const { label, helpText, value } = this.props;
+    const stringValue = value ? value.id : "";
     return (
-      <AsyncSelect
-        cacheOptions
-        defaultOptions
-        loadOptions={this.getOptions}
-        onChange={this.handleInputChange}
-      />
+      <div className="field">
+        <LabelWithHelpIcon label={label} helpText={helpText} />
+        <div className="control">
+          <AsyncSelect
+            cacheOptions
+            defaultOptions
+            loadOptions={this.props.loadSuggestions}
+            onChange={this.handleInputChange}
+            value={stringValue}
+          />
+        </div>
+      </div>
     );
   }
 }
