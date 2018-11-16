@@ -2,7 +2,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import type { Repository, Branch } from "@scm-manager/ui-types";
+import type { Branch, Repository } from "@scm-manager/ui-types";
 import FileTree from "../components/FileTree";
 import { ErrorNotification, Loading } from "@scm-manager/ui-components";
 import BranchSelector from "../../containers/BranchSelector";
@@ -109,9 +109,9 @@ class Sources extends React.Component<Props> {
   }
 
   renderBranchSelector = () => {
-    const { repository, branches, revision } = this.props;
+    const { branches, revision } = this.props;
 
-    if (repository._links.branches) {
+    if (this.props.branches) {
       return (
         <BranchSelector
           branches={branches}
