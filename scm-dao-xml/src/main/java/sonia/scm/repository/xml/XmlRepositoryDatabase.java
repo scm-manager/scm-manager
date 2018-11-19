@@ -35,36 +35,40 @@ package sonia.scm.repository.xml;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.repository.InitialRepositoryLocationResolver;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.xml.XmlDatabase;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 //~--- JDK imports ------------------------------------------------------------
 
 @XmlRootElement(name = "repository-db")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class XmlRepositoryDatabase implements XmlDatabase<Repository> {
+public class XmlRepositoryDatabase implements XmlDatabase<RepositoryPath> {
 
-  private final InitialRepositoryLocationResolver initialRepositoryLocationResolver;
+  private Long creationTime;
 
-  private final XmlRepositoryDatabasePersistence storage;
+  private Long lastModified;
 
-  public XmlRepositoryDatabase(XmlRepositoryDatabasePersistence storage, InitialRepositoryLocationResolver initialRepositoryLocationResolver) {
-    if (storage == null) {
-      throw new NullPointerException("storage must not be null");
-    }
-    if (initialRepositoryLocationResolver == null) {
-      throw new NullPointerException("resolver must not be null");
-    }
-    this.initialRepositoryLocationResolver = initialRepositoryLocationResolver;
-    this.storage = storage;
+  @XmlJavaTypeAdapter(XmlRepositoryMapAdapter.class)
+  @XmlElement(name = "repositories")
+  private Map<String, RepositoryPath> repositoryPathMap = new LinkedHashMap<>();
 
+
+  public XmlRepositoryDatabase() {
+    long c = System.currentTimeMillis();
+    creationTime = c;
+    lastModified = c;
   }
 
   static String createKey(NamespaceAndName namespaceAndName)
@@ -78,63 +82,71 @@ public class XmlRepositoryDatabase implements XmlDatabase<Repository> {
   }
 
   @Override
-  public void add(Repository repository)
+  public void add(RepositoryPath repositoryPath)
   {
-    String path = initialRepositoryLocationResolver.getDirectory(repository).getAbsolutePath();
-    RepositoryPath repositoryPath = new RepositoryPath(path, repository.getId(), repository.clone());
-    storage.add(repositoryPath);
+    repositoryPathMap.put(createKey(repositoryPath.getRepository()), repositoryPath);
   }
 
   public boolean contains(NamespaceAndName namespaceAndName)
   {
-    return storage.containsKey(createKey(namespaceAndName));
+    return repositoryPathMap.containsKey(createKey(namespaceAndName));
   }
 
   @Override
   public boolean contains(String id)
   {
-    return storage.get(id) != null;
+    return get(id) != null;
   }
 
   public boolean contains(Repository repository)
   {
-    return storage.containsKey(createKey(repository));
+    return repositoryPathMap.containsKey(createKey(repository));
   }
 
   public void remove(Repository repository)
   {
-    storage.remove(createKey(repository));
+    repositoryPathMap.remove(createKey(repository));
   }
 
   @Override
-  public Repository remove(String id)
+  public RepositoryPath remove(String id)
   {
-    return storage.remove(createKey(get(id)));
+    return repositoryPathMap.remove(createKey(get(id).getRepository()));
   }
 
   public Collection<Repository> getRepositories() {
-    return storage.getRepositories();
+    List<Repository> repositories = new ArrayList<>();
+    for (RepositoryPath repositoryPath : repositoryPathMap.values()) {
+      Repository repository = repositoryPath.getRepository();
+      repositories.add(repository);
+    }
+    return repositories;
   }
 
   @Override
-  public Collection<Repository> values()
+  public Collection<RepositoryPath> values()
   {
-    return storage.values();
+    return repositoryPathMap.values();
   }
 
   public Collection<RepositoryPath> getPaths() {
-    return storage.getPaths();
+    return repositoryPathMap.values();
   }
 
 
   public Repository get(NamespaceAndName namespaceAndName) {
-    return storage.get(namespaceAndName);
+    RepositoryPath repositoryPath = repositoryPathMap.get(createKey(namespaceAndName));
+    if (repositoryPath != null) {
+      return repositoryPath.getRepository();
+    }
+    return null;
   }
 
+
   @Override
-  public Repository get(String id) {
+  public RepositoryPath get(String id) {
     return values().stream()
-      .filter(repo -> repo.getId().equals(id))
+      .filter(repoPath -> repoPath.getId().equals(id))
       .findFirst()
       .orElse(null);
   }
@@ -148,7 +160,7 @@ public class XmlRepositoryDatabase implements XmlDatabase<Repository> {
   @Override
   public long getCreationTime()
   {
-    return storage.getCreationTime();
+    return creationTime;
   }
 
   /**
@@ -160,7 +172,7 @@ public class XmlRepositoryDatabase implements XmlDatabase<Repository> {
   @Override
   public long getLastModified()
   {
-    return storage.getLastModified();
+    return lastModified;
   }
 
   //~--- set methods ----------------------------------------------------------
@@ -174,7 +186,7 @@ public class XmlRepositoryDatabase implements XmlDatabase<Repository> {
   @Override
   public void setCreationTime(long creationTime)
   {
-    storage.setCreationTime(creationTime);
+    this.creationTime = creationTime;
   }
 
   /**
@@ -186,6 +198,6 @@ public class XmlRepositoryDatabase implements XmlDatabase<Repository> {
   @Override
   public void setLastModified(long lastModified)
   {
-    storage.setLastModified(lastModified);
+    this.lastModified = lastModified;
   }
 }

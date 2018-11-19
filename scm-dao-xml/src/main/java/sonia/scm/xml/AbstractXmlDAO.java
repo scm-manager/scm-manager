@@ -53,7 +53,7 @@ import java.util.Collection;
  * @param <T>
  */
 public abstract class AbstractXmlDAO<I extends ModelObject,
-      T extends XmlDatabase<I>> implements GenericDAO<I>
+      T extends XmlDatabase> implements GenericDAO<I>
 {
 
   /** Field description */

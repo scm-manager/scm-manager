@@ -41,7 +41,6 @@ import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.PathBasedRepositoryDAO;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryPathNotFoundException;
-import sonia.scm.store.ConfigurationStore;
 import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.xml.AbstractXmlDAO;
 
@@ -62,7 +61,7 @@ public class XmlRepositoryDAO
    * Field description
    */
   public static final String STORE_NAME = "repositories";
-  private final InitialRepositoryLocationResolver initialRepositoryLocationResolver;
+  private InitialRepositoryLocationResolver initialRepositoryLocationResolver;
 
   //~--- constructors ---------------------------------------------------------
 
@@ -73,10 +72,7 @@ public class XmlRepositoryDAO
    */
   @Inject
   public XmlRepositoryDAO(ConfigurationStoreFactory storeFactory, InitialRepositoryLocationResolver initialRepositoryLocationResolver) {
-    super(new SimpleStore(storeFactory.getStore(XmlRepositoryDatabasePersistence.class, STORE_NAME).get(), initialRepositoryLocationResolver));
-    if (initialRepositoryLocationResolver == null) {
-      throw new NullPointerException("resolver must not be null");
-    }
+    super(storeFactory.getStore(XmlRepositoryDatabase.class, STORE_NAME));
     this.initialRepositoryLocationResolver = initialRepositoryLocationResolver;
   }
 
@@ -105,10 +101,21 @@ public class XmlRepositoryDAO
 
   @Override
   public void add(Repository repository) {
+    String path = initialRepositoryLocationResolver.getDirectory(repository).getAbsolutePath();
+    RepositoryPath repositoryPath = new RepositoryPath(path, repository.getId(), repository.clone());
     synchronized (store) {
-      db.add(repository);
+      db.add(repositoryPath);
       storeDB();
     }
+  }
+
+  @Override
+  public Repository get(String id) {
+    RepositoryPath repositoryPath = db.get(id);
+    if (repositoryPath != null) {
+      return repositoryPath.getRepository();
+    }
+    return null;
   }
 
   @Override
@@ -134,7 +141,7 @@ public class XmlRepositoryDAO
    */
   @Override
   protected XmlRepositoryDatabase createNewDatabase() {
-    return new XmlRepositoryDatabase(new XmlRepositoryDatabasePersistence(), initialRepositoryLocationResolver);
+    return new XmlRepositoryDatabase();
   }
 
   @Override
@@ -147,28 +154,6 @@ public class XmlRepositoryDAO
     } else {
 
       return Paths.get(repositoryPath.get().getPath());
-    }
-  }
-
-  private static class SimpleStore implements ConfigurationStore<XmlRepositoryDatabase> {
-    private final XmlRepositoryDatabase xmlRepositoryDatabase;
-
-    public SimpleStore(XmlRepositoryDatabasePersistence xmlRepositoryDatabasePersistence, InitialRepositoryLocationResolver initialRepositoryLocationResolver) {
-      if (xmlRepositoryDatabasePersistence == null) {
-        this.xmlRepositoryDatabase = new XmlRepositoryDatabase(new XmlRepositoryDatabasePersistence(), initialRepositoryLocationResolver);
-      } else {
-        this.xmlRepositoryDatabase = new XmlRepositoryDatabase(xmlRepositoryDatabasePersistence, initialRepositoryLocationResolver);
-      }
-    }
-
-    @Override
-    public XmlRepositoryDatabase get() {
-      return xmlRepositoryDatabase;
-    }
-
-    @Override
-    public void set(XmlRepositoryDatabase obejct) {
-
     }
   }
 }

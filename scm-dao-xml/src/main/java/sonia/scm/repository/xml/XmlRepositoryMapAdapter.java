@@ -92,7 +92,7 @@ public class XmlRepositoryMapAdapter extends XmlAdapter<XmlRepositoryList, Map<S
         repositoryPathMap.put(XmlRepositoryDatabase.createKey(repository), repositoryPath);
       }
     } catch (JAXBException ex) {
-      throw new StoreException("failed to unmarshal object", ex);
+      throw new StoreException("failed to unmarshall object", ex);
     }
     return repositoryPathMap;
   }
