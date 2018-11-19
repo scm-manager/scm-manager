@@ -15,15 +15,18 @@ type Props = {
 };
 
 type State = {
-  entryToAdd: AutocompleteObject
+  entryToAdd?: AutocompleteObject
 };
 
 class AutocompleteAddEntryToTableField extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = { entryToAdd: undefined };
+  }
   render() {
     const { disabled, buttonLabel, fieldLabel, helpText } = this.props;
 
     const { entryToAdd } = this.state;
-
     return (
       <div className="field">
         <Autocomplete
@@ -50,11 +53,15 @@ class AutocompleteAddEntryToTableField extends React.Component<Props, State> {
 
   appendEntry = () => {
     const { entryToAdd } = this.state;
-    this.props.addEntry(entryToAdd.id);
-    this.setState({ ...this.state, entryToAdd: undefined });
+    if (!entryToAdd) {
+      return;
+    }
+    this.setState({ ...this.state, entryToAdd: undefined }, () =>
+      this.props.addEntry(entryToAdd.id)
+    );
   };
 
-  handleAddEntryChange = (selection: any) => {
+  handleAddEntryChange = (selection: AutocompleteObject) => {
     this.setState({
       ...this.state,
       entryToAdd: selection
