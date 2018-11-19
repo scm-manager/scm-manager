@@ -1,8 +1,8 @@
 //@flow
 import React from "react";
-import {translate} from "react-i18next";
-import {InputField, SubmitButton, Textarea} from "@scm-manager/ui-components";
-import type {Group} from "@scm-manager/ui-types";
+import { translate } from "react-i18next";
+import { InputField, SubmitButton, Textarea } from "@scm-manager/ui-components";
+import type { Group } from "@scm-manager/ui-types";
 
 import * as validator from "./groupValidation";
 import MemberNameTable from "./MemberNameTable";

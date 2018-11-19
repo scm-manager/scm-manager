@@ -2,7 +2,8 @@
 import React from "react";
 
 import { AddButton } from "@scm-manager/ui-components";
-import AsyncAutocomplete from "../../containers/AsyncAutocomplete";
+import Autocomplete from "../../containers/Autocomplete";
+import type { AutocompleteObject } from "../../containers/Autocomplete";
 
 type Props = {
   addEntry: string => void,
@@ -10,21 +11,14 @@ type Props = {
   buttonLabel: string,
   fieldLabel: string,
   helpText?: string,
-  loadSuggestions: string => any //TODO: type
+  loadSuggestions: string => Promise<AutocompleteObject>
 };
 
 type State = {
-  entryToAdd: any // TODO: type
+  entryToAdd: AutocompleteObject
 };
 
 class AutocompleteAddEntryToTableField extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      entryToAdd: undefined
-    };
-  }
-
   render() {
     const { disabled, buttonLabel, fieldLabel, helpText } = this.props;
 
@@ -32,12 +26,12 @@ class AutocompleteAddEntryToTableField extends React.Component<Props, State> {
 
     return (
       <div className="field">
-        <AsyncAutocomplete
+        <Autocomplete
           label={fieldLabel}
           loadSuggestions={this.props.loadSuggestions}
           valueSelected={this.handleAddEntryChange}
           helpText={helpText}
-          value={entryToAdd ? entryToAdd.id : ""}
+          value={entryToAdd}
         />
 
         <AddButton

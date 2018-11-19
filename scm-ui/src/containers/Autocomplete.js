@@ -1,31 +1,31 @@
 // @flow
 import React from "react";
 import AsyncSelect from "react-select/lib/Async";
-import {LabelWithHelpIcon} from "@scm-manager/ui-components";
+import { LabelWithHelpIcon } from "@scm-manager/ui-components";
 
-type SelectionResult = {
+export type AutocompleteObject = {
   id: string,
   displayName: string
 };
 
 type SelectValue = {
-  value: SelectionResult,
+  value: AutocompleteObject,
   label: string
 };
 
 type Props = {
-  loadSuggestions: string => Promise<SelectionResult>,
-  valueSelected: SelectionResult => void,
+  loadSuggestions: string => Promise<AutocompleteObject>,
+  valueSelected: AutocompleteObject => void,
   label: string,
   helpText?: string,
-  value?: any
+  value?: AutocompleteObject
 };
 
 type State = {
-  value: SelectionResult
+  value: AutocompleteObject
 };
 
-class AsyncAutocomplete extends React.Component<Props, State> {
+class Autocomplete extends React.Component<Props, State> {
   handleInputChange = (newValue: SelectValue) => {
     this.setState({ value: newValue.value });
     this.props.valueSelected(newValue.value);
@@ -51,4 +51,4 @@ class AsyncAutocomplete extends React.Component<Props, State> {
   }
 }
 
-export default AsyncAutocomplete;
+export default Autocomplete;

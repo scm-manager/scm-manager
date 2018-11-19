@@ -13,7 +13,10 @@ import {
 } from "../modules/groups";
 import type { Group } from "@scm-manager/ui-types";
 import type { History } from "history";
-import { getGroupsLink } from "../../modules/indexResource";
+import {
+  getGroupsLink,
+  getUserAutoCompleteLink
+} from "../../modules/indexResource";
 
 type Props = {
   t: string => string,
@@ -22,7 +25,8 @@ type Props = {
   loading?: boolean,
   error?: Error,
   resetForm: () => void,
-  createLink: string
+  createLink: string,
+  autocompleteLink: string
 };
 
 type State = {};
@@ -31,6 +35,7 @@ class AddGroup extends React.Component<Props, State> {
   componentDidMount() {
     this.props.resetForm();
   }
+
   render() {
     const { t, loading, error } = this.props;
     return (
@@ -43,12 +48,26 @@ class AddGroup extends React.Component<Props, State> {
           <GroupForm
             submitForm={group => this.createGroup(group)}
             loading={loading}
+            loadUserSuggestions={this.loadUserAutocompletion}
           />
         </div>
       </Page>
     );
   }
 
+  loadUserAutocompletion = (inputValue: string) => {
+    const url = this.props.autocompleteLink + "?q=";
+    return fetch(url + inputValue)
+      .then(response => response.json())
+      .then(json => {
+        return json.map(element => {
+          return {
+            value: element,
+            label: `${element.displayName} (${element.id})`
+          };
+        });
+      });
+  };
   groupCreated = () => {
     this.props.history.push("/groups");
   };
@@ -71,10 +90,12 @@ const mapStateToProps = state => {
   const loading = isCreateGroupPending(state);
   const error = getCreateGroupFailure(state);
   const createLink = getGroupsLink(state);
+  const autocompleteLink = getUserAutoCompleteLink(state);
   return {
     createLink,
     loading,
-    error
+    error,
+    autocompleteLink
   };
 };
 
