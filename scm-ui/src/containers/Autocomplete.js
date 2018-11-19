@@ -47,6 +47,7 @@ class Autocomplete extends React.Component<Props, State> {
             onChange={this.handleInputChange}
             value={selectValue}
             placeholder="Start typing..." // TODO: i18n
+            loadingMessage={() => <>Loading...</>} // TODO: i18n
             noOptionsMessage={() => <>No suggestion available</>} // TODO: i18n
           />
         </div>
