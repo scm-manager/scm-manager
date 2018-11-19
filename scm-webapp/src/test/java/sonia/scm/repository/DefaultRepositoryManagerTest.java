@@ -159,12 +159,13 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
 
   @Test
   public void testDeleteWithEnabledArchive() {
-    Repository repository = createTestRepository();
+    manager = createRepositoryManager(true);
+    manager.init(contextProvider);
 
+    Repository repository = createTestRepository();
     repository.setArchived(true);
-    RepositoryManager drm = createRepositoryManager(true);
-    drm.init(contextProvider);
-    delete(drm, repository);
+
+    delete(manager, repository);
   }
 
   @Test
