@@ -29,7 +29,7 @@ class Profile extends React.Component<Props, State> {
   render() {
     const { me, t } = this.props;
 
-    if (me) {
+    if (!me) {
       return (
         <ErrorPage
           title={t("profile.error-title")}
