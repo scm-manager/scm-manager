@@ -7,6 +7,7 @@ import type { Group } from "@scm-manager/ui-types";
 import * as validator from "./groupValidation";
 import MemberNameTable from "./MemberNameTable";
 import AutocompleteAddEntryToTableField from "./AutocompleteAddEntryToTableField";
+import type { SelectValue } from "../../containers/Autocomplete";
 
 type Props = {
   t: string => string,
@@ -94,7 +95,7 @@ class GroupForm extends React.Component<Props, State> {
           helpText={t("group-form.help.descriptionHelpText")}
         />
         <MemberNameTable
-          members={this.state.group.members}
+          members={group.members}
           memberListChanged={this.memberListChanged}
         />
 
@@ -125,8 +126,8 @@ class GroupForm extends React.Component<Props, State> {
     });
   };
 
-  addMember = (membername: string) => {
-    if (this.isMember(membername)) {
+  addMember = (value: SelectValue) => {
+    if (this.isMember(value.value.id)) {
       return;
     }
 
@@ -134,7 +135,7 @@ class GroupForm extends React.Component<Props, State> {
       ...this.state,
       group: {
         ...this.state.group,
-        members: [...this.state.group.members, membername]
+        members: [...this.state.group.members, value.value.id]
       }
     });
   };

@@ -1,54 +1,63 @@
 // @flow
 import React from "react";
-import AsyncSelect from "react-select/lib/Async";
 import { LabelWithHelpIcon } from "@scm-manager/ui-components";
+import { AsyncCreatable } from "react-select";
 
 export type AutocompleteObject = {
   id: string,
   displayName: string
 };
 
-type SelectValue = {
+export type SelectValue = {
   value: AutocompleteObject,
   label: string
 };
 
 type Props = {
   loadSuggestions: string => Promise<AutocompleteObject>,
-  valueSelected: AutocompleteObject => void,
+  valueSelected: SelectValue => void,
   label: string,
   helpText?: string,
-  value?: AutocompleteObject
+  value?: SelectValue
 };
 
 type State = {};
 
 class Autocomplete extends React.Component<Props, State> {
   handleInputChange = (newValue: SelectValue) => {
-    this.props.valueSelected(newValue.value);
+    this.props.valueSelected(newValue);
+  };
+
+  isValidNewOption = (inputValue, selectValue, selectOptions) => {
+    //TODO: types
+    const isNotDuplicated = !selectOptions
+      .map(option => option.label)
+      .includes(inputValue);
+    const isNotEmpty = inputValue !== "";
+    return isNotEmpty && isNotDuplicated;
   };
 
   render() {
     const { label, helpText, value } = this.props;
-    let selectValue = null;
-    if (value) {
-      selectValue = {
-        value,
-        label: value.displayName
-      };
-    }
     return (
       <div className="field">
         <LabelWithHelpIcon label={label} helpText={helpText} />
         <div className="control">
-          <AsyncSelect
+          <AsyncCreatable
             cacheOptions
             loadOptions={this.props.loadSuggestions}
             onChange={this.handleInputChange}
-            value={selectValue}
+            value={value}
             placeholder="Start typing..." // TODO: i18n
             loadingMessage={() => <>Loading...</>} // TODO: i18n
             noOptionsMessage={() => <>No suggestion available</>} // TODO: i18n
+            isValidNewOption={this.isValidNewOption}
+            onCreateOption={value => {
+              this.handleInputChange({
+                label: value,
+                value: { id: value, displayName: value }
+              });
+            }}
           />
         </div>
       </div>

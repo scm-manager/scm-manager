@@ -3,10 +3,13 @@ import React from "react";
 
 import { AddButton } from "@scm-manager/ui-components";
 import Autocomplete from "../../containers/Autocomplete";
-import type { AutocompleteObject } from "../../containers/Autocomplete";
+import type {
+  AutocompleteObject,
+  SelectValue
+} from "../../containers/Autocomplete";
 
 type Props = {
-  addEntry: string => void,
+  addEntry: SelectValue => void,
   disabled: boolean,
   buttonLabel: string,
   fieldLabel: string,
@@ -15,18 +18,18 @@ type Props = {
 };
 
 type State = {
-  entryToAdd?: AutocompleteObject
+  selectedValue?: SelectValue
 };
 
 class AutocompleteAddEntryToTableField extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = { entryToAdd: undefined };
+    this.state = { selectedValue: undefined };
   }
   render() {
     const { disabled, buttonLabel, fieldLabel, helpText } = this.props;
 
-    const { entryToAdd } = this.state;
+    const { selectedValue } = this.state;
     return (
       <div className="field">
         <Autocomplete
@@ -34,7 +37,7 @@ class AutocompleteAddEntryToTableField extends React.Component<Props, State> {
           loadSuggestions={this.props.loadSuggestions}
           valueSelected={this.handleAddEntryChange}
           helpText={helpText}
-          value={entryToAdd}
+          value={selectedValue}
         />
 
         <AddButton
@@ -52,19 +55,20 @@ class AutocompleteAddEntryToTableField extends React.Component<Props, State> {
   };
 
   appendEntry = () => {
-    const { entryToAdd } = this.state;
-    if (!entryToAdd) {
+    const { selectedValue } = this.state;
+    if (!selectedValue) {
       return;
     }
-    this.setState({ ...this.state, entryToAdd: undefined }, () =>
-      this.props.addEntry(entryToAdd.id)
+    // $FlowFixMe null is needed to clear the selection; undefined does not work
+    this.setState({ ...this.state, selectedValue: null }, () =>
+      this.props.addEntry(selectedValue)
     );
   };
 
-  handleAddEntryChange = (selection: AutocompleteObject) => {
+  handleAddEntryChange = (selection: SelectValue) => {
     this.setState({
       ...this.state,
-      entryToAdd: selection
+      selectedValue: selection
     });
   };
 }

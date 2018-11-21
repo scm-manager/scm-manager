@@ -1,23 +1,31 @@
 // @flow
 import React from "react";
-import {translate} from "react-i18next";
-import {Checkbox, InputField, SubmitButton} from "@scm-manager/ui-components";
+import { translate } from "react-i18next";
+import { SubmitButton } from "@scm-manager/ui-components";
 import TypeSelector from "./TypeSelector";
-import type {PermissionCollection, PermissionCreateEntry} from "@scm-manager/ui-types";
+import type {
+  PermissionCollection,
+  PermissionCreateEntry
+} from "@scm-manager/ui-types";
 import * as validator from "./permissionValidation";
+import Autocomplete from "../../../containers/Autocomplete";
+import type { SelectValue } from "../../../containers/Autocomplete";
 
 type Props = {
   t: string => string,
   createPermission: (permission: PermissionCreateEntry) => void,
   loading: boolean,
-  currentPermissions: PermissionCollection
+  currentPermissions: PermissionCollection,
+  groupAutoCompleteLink: string,
+  userAutoCompleteLink: string
 };
 
 type State = {
   name: string,
   type: string,
   groupPermission: boolean,
-  valid: boolean
+  valid: boolean,
+  value?: SelectValue
 };
 
 class CreatePermissionForm extends React.Component<Props, State> {
@@ -28,12 +36,88 @@ class CreatePermissionForm extends React.Component<Props, State> {
       name: "",
       type: "READ",
       groupPermission: false,
-      valid: true
+      valid: true,
+      value: undefined
     };
   }
 
+  permissionScopeChanged = event => {
+    const groupPermission = event.target.value === "GROUP_PERMISSION";
+    this.setState({
+      groupPermission: groupPermission,
+      valid: validator.isPermissionValid(
+        this.state.name,
+        groupPermission,
+        this.props.currentPermissions
+      )
+    });
+    this.setState({ ...this.state, groupPermission });
+  };
+
+  loadUserAutocompletion = (inputValue: string) => {
+    const url = this.props.userAutoCompleteLink + "?q=";
+    return fetch(url + inputValue)
+      .then(response => response.json())
+      .then(json => {
+        return json.map(element => {
+          return {
+            value: element,
+            label: `${element.displayName} (${element.id})`
+          };
+        });
+      });
+  };
+
+  loadGroupAutocompletion = (inputValue: string) => {
+    const url = this.props.groupAutoCompleteLink + "?q=";
+    return fetch(url + inputValue)
+      .then(response => response.json())
+      .then(json => {
+        return json.map(element => {
+          return {
+            value: element,
+            label: `${element.displayName} (${element.id})`
+          };
+        });
+      });
+  };
+  renderAutocompletionField = () => {
+    if (this.state.groupPermission) {
+      return (
+        <Autocomplete
+          loadSuggestions={this.loadGroupAutocompletion}
+          valueSelected={this.groupOrUserSelected}
+          value={this.state.value}
+          label={"Group"}
+        />
+      );
+    }
+    return (
+      <Autocomplete
+        loadSuggestions={this.loadUserAutocompletion}
+        valueSelected={this.groupOrUserSelected}
+        value={this.state.value}
+        label={"User"}
+      />
+    );
+  };
+
+  groupOrUserSelected = (value: SelectValue) => {
+    console.log(value);
+    this.setState({
+      value,
+      name: value.value.id,
+      valid: validator.isPermissionValid(
+        value.value.id,
+        this.state.groupPermission,
+        this.props.currentPermissions
+      )
+    });
+  };
+
   render() {
     const { t, loading } = this.props;
+
     const { name, type, groupPermission } = this.state;
 
     return (
@@ -42,20 +126,30 @@ class CreatePermissionForm extends React.Component<Props, State> {
           {t("permission.add-permission.add-permission-heading")}
         </h2>
         <form onSubmit={this.submit}>
-          <InputField
-            label={t("permission.name")}
-            value={name ? name : ""}
-            onChange={this.handleNameChange}
-            validationError={!this.state.valid}
-            errorMessage={t("permission.add-permission.name-input-invalid")}
-            helpText={t("permission.help.nameHelpText")}
-          />
-          <Checkbox
-            label={t("permission.group-permission")}
-            checked={groupPermission ? groupPermission : false}
-            onChange={this.handleGroupPermissionChange}
-            helpText={t("permission.help.groupPermissionHelpText")}
-          />
+          <div className="control">
+            <label className="radio">
+              <input
+                type="radio"
+                name="permission_scope"
+                checked={!this.state.groupPermission}
+                value="USER_PERMISSION"
+                onChange={this.permissionScopeChanged}
+              />
+              User Permission
+            </label>
+            <label className="radio">
+              <input
+                type="radio"
+                name="permission_scope"
+                value="GROUP_PERMISSION"
+                checked={this.state.groupPermission}
+                onChange={this.permissionScopeChanged}
+              />
+              Group Permission
+            </label>
+          </div>
+          {this.renderAutocompletionField()}
+
           <TypeSelector
             label={t("permission.type")}
             helpText={t("permission.help.typeHelpText")}
@@ -94,27 +188,6 @@ class CreatePermissionForm extends React.Component<Props, State> {
   handleTypeChange = (type: string) => {
     this.setState({
       type: type
-    });
-  };
-
-  handleNameChange = (name: string) => {
-    this.setState({
-      name: name,
-      valid: validator.isPermissionValid(
-        name,
-        this.state.groupPermission,
-        this.props.currentPermissions
-      )
-    });
-  };
-  handleGroupPermissionChange = (groupPermission: boolean) => {
-    this.setState({
-      groupPermission: groupPermission,
-      valid: validator.isPermissionValid(
-        this.state.name,
-        groupPermission,
-        this.props.currentPermissions
-      )
     });
   };
 }

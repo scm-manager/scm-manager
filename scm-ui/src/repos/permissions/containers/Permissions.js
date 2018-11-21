@@ -27,6 +27,10 @@ import SinglePermission from "./SinglePermission";
 import CreatePermissionForm from "../components/CreatePermissionForm";
 import type { History } from "history";
 import { getPermissionsLink } from "../../modules/repos";
+import {
+  getGroupAutoCompleteLink,
+  getUserAutoCompleteLink
+} from "../../../modules/indexResource";
 
 type Props = {
   namespace: string,
@@ -37,6 +41,8 @@ type Props = {
   hasPermissionToCreate: boolean,
   loadingCreatePermission: boolean,
   permissionsLink: string,
+  groupAutoCompleteLink: string,
+  userAutoCompleteLink: string,
 
   //dispatch functions
   fetchPermissions: (link: string, namespace: string, repoName: string) => void,
@@ -92,7 +98,9 @@ class Permissions extends React.Component<Props> {
       namespace,
       repoName,
       loadingCreatePermission,
-      hasPermissionToCreate
+      hasPermissionToCreate,
+      userAutoCompleteLink,
+      groupAutoCompleteLink
     } = this.props;
     if (error) {
       return (
@@ -113,6 +121,8 @@ class Permissions extends React.Component<Props> {
         createPermission={permission => this.createPermission(permission)}
         loading={loadingCreatePermission}
         currentPermissions={permissions}
+        userAutoCompleteLink={userAutoCompleteLink}
+        groupAutoCompleteLink={groupAutoCompleteLink}
       />
     ) : null;
 
@@ -165,6 +175,8 @@ const mapStateToProps = (state, ownProps) => {
   );
   const hasPermissionToCreate = hasCreatePermission(state, namespace, repoName);
   const permissionsLink = getPermissionsLink(state, namespace, repoName);
+  const groupAutoCompleteLink = getGroupAutoCompleteLink(state);
+  const userAutoCompleteLink = getUserAutoCompleteLink(state);
   return {
     namespace,
     repoName,
@@ -173,7 +185,9 @@ const mapStateToProps = (state, ownProps) => {
     permissions,
     hasPermissionToCreate,
     loadingCreatePermission,
-    permissionsLink
+    permissionsLink,
+    groupAutoCompleteLink,
+    userAutoCompleteLink
   };
 };
 
@@ -189,7 +203,9 @@ const mapDispatchToProps = dispatch => {
       repoName: string,
       callback?: () => void
     ) => {
-      dispatch(createPermission(link, permission, namespace, repoName, callback));
+      dispatch(
+        createPermission(link, permission, namespace, repoName, callback)
+      );
     },
     createPermissionReset: (namespace: string, repoName: string) => {
       dispatch(createPermissionReset(namespace, repoName));
