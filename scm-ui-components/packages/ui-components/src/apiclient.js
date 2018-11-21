@@ -1,8 +1,8 @@
 // @flow
 import {contextPath} from "./urls";
 
-export const NOT_FOUND_ERROR = Error("not found");
-export const UNAUTHORIZED_ERROR = Error("unauthorized");
+export const NOT_FOUND_ERROR_MESSAGE = "not found";
+export const UNAUTHORIZED_ERROR_MESSAGE = "unauthorized";
 
 const fetchOptions: RequestOptions = {
   credentials: "same-origin",
@@ -15,9 +15,9 @@ function handleStatusCode(response: Response) {
   if (!response.ok) {
     switch (response.status) {
       case 401:
-        return throwErrorWithMessage(response, UNAUTHORIZED_ERROR.message);
+        return throwErrorWithMessage(response, UNAUTHORIZED_ERROR_MESSAGE);
       case 404:
-        return throwErrorWithMessage(response, NOT_FOUND_ERROR.message);
+        return throwErrorWithMessage(response, NOT_FOUND_ERROR_MESSAGE);
       default:
         return throwErrorWithMessage(response, "server returned status code " + response.status);
     }

@@ -2,7 +2,10 @@
 import type { Me } from "@scm-manager/ui-types";
 import * as types from "./types";
 
-import { apiClient, UNAUTHORIZED_ERROR } from "@scm-manager/ui-components";
+import {
+  apiClient,
+  UNAUTHORIZED_ERROR_MESSAGE
+} from "@scm-manager/ui-components";
 import { isPending } from "./pending";
 import { getFailure } from "./failure";
 import {
@@ -187,7 +190,7 @@ export const fetchMe = (link: string) => {
         dispatch(fetchMeSuccess(me));
       })
       .catch((error: Error) => {
-        if (error === UNAUTHORIZED_ERROR) {
+        if (error.message === UNAUTHORIZED_ERROR_MESSAGE) {
           dispatch(fetchMeUnauthenticated());
         } else {
           dispatch(fetchMeFailure(error));
