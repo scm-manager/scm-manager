@@ -1,7 +1,7 @@
 //@flow
 import React from "react";
 import { translate } from "react-i18next";
-import { Title, GlobalConfiguration } from "@scm-manager/ui-components";
+import { Title, Configuration } from "@scm-manager/ui-components";
 import SvnConfigurationForm from "./SvnConfigurationForm";
 
 type Props = {
@@ -18,7 +18,7 @@ class SvnGlobalConfiguration extends React.Component<Props> {
     return (
       <div>
         <Title title={t("scm-svn-plugin.config.title")}/>
-        <GlobalConfiguration link={link} render={props => <SvnConfigurationForm {...props} />}/>
+        <Configuration link={link} render={props => <SvnConfigurationForm {...props} />}/>
       </div>
     );
   }
