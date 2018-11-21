@@ -2,31 +2,46 @@
 
 import React from "react";
 
-import {
-  Page,
-  Navigation,
-  Section,
-  MailLink
-} from "../../../scm-ui-components/packages/ui-components/src/index";
-import { NavLink } from "react-router-dom";
+import { Route, withRouter } from "react-router-dom";
 import { getMe } from "../modules/auth";
 import { compose } from "redux";
 import { connect } from "react-redux";
 import { translate } from "react-i18next";
-import type { Me } from "../../../scm-ui-components/packages/ui-types/src/index";
-import AvatarWrapper from "../repos/components/changesets/AvatarWrapper";
-import { ErrorPage } from "@scm-manager/ui-components";
+import type { Me } from "@scm-manager/ui-types";
+import {
+  ErrorPage,
+  Page,
+  Navigation,
+  Section,
+  NavLink
+} from "@scm-manager/ui-components";
+import ChangeUserPassword from "./ChangeUserPassword";
+import ProfileInfo from "./ProfileInfo";
 
 type Props = {
   me: Me,
 
   // Context props
-  t: string => string
+  t: string => string,
+  match: any
 };
 type State = {};
 
 class Profile extends React.Component<Props, State> {
+  stripEndingSlash = (url: string) => {
+    if (url.endsWith("/")) {
+      return url.substring(0, url.length - 2);
+    }
+    return url;
+  };
+
+  matchedUrl = () => {
+    return this.stripEndingSlash(this.props.match.url);
+  };
+
   render() {
+    const url = this.matchedUrl();
+
     const { me, t } = this.props;
 
     if (!me) {
@@ -34,50 +49,35 @@ class Profile extends React.Component<Props, State> {
         <ErrorPage
           title={t("profile.error-title")}
           subtitle={t("profile.error-subtitle")}
-          error={{ name: "Error", message: "'me' is undefined" }}
+          error={{
+            name: t("profile.error"),
+            message: t("profile.error-message")
+          }}
         />
       );
     }
+
     return (
       <Page title={me.displayName}>
         <div className="columns">
-          <AvatarWrapper>
-            <div>
-              <figure className="media-left">
-                <p className="image is-64x64">
-                  {
-                    // TODO: add avatar
-                  }
-                </p>
-              </figure>
-            </div>
-          </AvatarWrapper>
-          <div className="column is-two-quarters">
-            <table className="table">
-              <tbody>
-                <tr>
-                  <td>{t("profile.username")}</td>
-                  <td>{me.name}</td>
-                </tr>
-                <tr>
-                  <td>{t("profile.displayName")}</td>
-                  <td>{me.displayName}</td>
-                </tr>
-                <tr>
-                  <td>{t("profile.mail")}</td>
-                  <td>
-                    <MailLink address={me.mail} />
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+          <div className="column is-three-quarters">
+            <Route path={url} exact render={() => <ProfileInfo me={me} />} />
+            <Route
+              path={`${url}/password`}
+              render={() => <ChangeUserPassword me={me} />}
+            />
           </div>
-          <div className="column is-one-quarter">
+          <div className="column">
             <Navigation>
-              <Section label={t("profile.actions-label")} />
-              <NavLink to={"me/password"}>
-                {t("profile.change-password")}
-              </NavLink>
+              <Section label={t("profile.navigation-label")}>
+                <NavLink to={`${url}`} label={t("profile.information")} />
+              </Section>
+              <Section label={t("profile.actions-label")}>
+                <NavLink
+                  to={`${url}/password`}
+                  label={t("profile.change-password")}
+                />
+              </Section>
             </Navigation>
           </div>
         </div>
@@ -94,5 +94,6 @@ const mapStateToProps = state => {
 
 export default compose(
   translate("commons"),
-  connect(mapStateToProps)
+  connect(mapStateToProps),
+  withRouter
 )(Profile);
