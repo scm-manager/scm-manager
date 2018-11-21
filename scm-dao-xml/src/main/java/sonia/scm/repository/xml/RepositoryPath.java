@@ -21,6 +21,9 @@ public class RepositoryPath implements ModelObject {
   @XmlTransient
   private Repository repository;
 
+  @XmlTransient
+  private boolean toBeSynchronized;
+
   /**
    * Needed from JAXB
    */
@@ -86,5 +89,13 @@ public class RepositoryPath implements ModelObject {
   @Override
   public boolean isValid() {
     return StringUtils.isNotEmpty(path);
+  }
+
+  public boolean toBeSynchronized() {
+    return toBeSynchronized;
+  }
+
+  public void setToBeSynchronized(boolean toBeSynchronized) {
+    this.toBeSynchronized = toBeSynchronized;
   }
 }

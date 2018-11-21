@@ -74,7 +74,6 @@ public class SvnRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
   private HookEventFacade facade = new HookEventFacade(repositoryManagerProvider, hookContextFactory);
 
   RepositoryLocationResolver repositoryLocationResolver ;
-  private Path repoDir;
 
   @Override
   protected void checkDirectory(File directory) {
@@ -91,18 +90,12 @@ public class SvnRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
 
   @Override
   protected RepositoryHandler createRepositoryHandler(ConfigurationStoreFactory factory,
-                                                      File directory) throws RepositoryPathNotFoundException {
-
-
+                                                      File directory)  {
     DefaultFileSystem fileSystem = new DefaultFileSystem();
-    PathBasedRepositoryDAO repoDao = mock(PathBasedRepositoryDAO.class);
-
     repositoryLocationResolver = new RepositoryLocationResolver(repoDao, new InitialRepositoryLocationResolver(contextProvider,fileSystem));
     SvnRepositoryHandler handler = new SvnRepositoryHandler(factory,
       new DefaultFileSystem(), null, repositoryLocationResolver);
 
-    repoDir = directory.toPath();
-    when(repoDao.getPath(any())).thenReturn(repoDir);
     handler.init(contextProvider);
 
     SvnConfig config = new SvnConfig();
@@ -122,9 +115,8 @@ public class SvnRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
     SvnConfig svnConfig = new SvnConfig();
     repositoryHandler.setConfig(svnConfig);
 
-    Repository repository = new Repository("id", "svn", "Space", "Name");
-
+    initRepository();
     File path = repositoryHandler.getDirectory(repository);
-    assertEquals(repoDir.toString()+File.separator+InitialRepositoryLocationResolver.REPOSITORIES_NATIVE_DIRECTORY, path.getAbsolutePath());
+    assertEquals(repoPath.toString()+File.separator+InitialRepositoryLocationResolver.REPOSITORIES_NATIVE_DIRECTORY, path.getAbsolutePath());
   }
 }

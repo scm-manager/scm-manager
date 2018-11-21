@@ -82,7 +82,7 @@ public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig
 
   @Override
   public Repository create(Repository repository) {
-    File directory = repositoryLocationResolver.getInitialNativeDirectory(repository);
+    File directory = repositoryLocationResolver.getNativeDirectory(repository);
     if (directory != null && directory.exists()) {
       throw new AlreadyExistsException(repository);
     }
@@ -122,11 +122,7 @@ public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig
   @Override
   public void delete(Repository repository) {
     File directory = null;
-    try {
       directory = repositoryLocationResolver.getRepositoryDirectory(repository);
-    } catch (IOException e) {
-      throw new InternalRepositoryException(repository, "Cannot get the repository directory");
-    }
     try {
       if (directory.exists()) {
         fileSystem.destroy(directory);
@@ -157,11 +153,7 @@ public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig
   public File getDirectory(Repository repository) {
     File directory;
     if (isConfigured()) {
-      try {
         directory = repositoryLocationResolver.getNativeDirectory(repository);
-      } catch (IOException e) {
-        throw new ConfigurationException("Error on getting the current repository directory");
-      }
     } else {
       throw new ConfigurationException("RepositoryHandler is not configured");
     }

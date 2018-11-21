@@ -11,10 +11,10 @@ import java.nio.file.Path;
 public interface PathBasedRepositoryDAO extends RepositoryDAO {
 
   /**
-   * get the current path of the repository
+   * get the current path of the repository or create it
    *
    * @param repository
    * @return the current path of the repository
    */
-  Path getPath(Repository repository) throws RepositoryPathNotFoundException;
+  Path getPath(Repository repository) ;
 }

@@ -1,19 +1,19 @@
 /**
  * Copyright (c) 2010, Sebastian Sdorra
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * <p>
  * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
+ * this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
  * 3. Neither the name of SCM-Manager; nor the names of its
- *    contributors may be used to endorse or promote products derived from this
- *    software without specific prior written permission.
- *
+ * contributors may be used to endorse or promote products derived from this
+ * software without specific prior written permission.
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,9 +24,8 @@
  * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * <p>
  * http://bitbucket.org/sdorra/scm-manager
- *
  */
 
 
@@ -40,14 +39,14 @@ import sonia.scm.repository.InitialRepositoryLocationResolver;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.PathBasedRepositoryDAO;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryPathNotFoundException;
 import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.xml.AbstractXmlDAO;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
-import java.util.Optional;
+import java.util.function.Supplier;
 
 /**
  * @author Sebastian Sdorra
@@ -57,9 +56,6 @@ public class XmlRepositoryDAO
   extends AbstractXmlDAO<Repository, XmlRepositoryDatabase>
   implements PathBasedRepositoryDAO {
 
-  /**
-   * Field description
-   */
   public static final String STORE_NAME = "repositories";
   private InitialRepositoryLocationResolver initialRepositoryLocationResolver;
 
@@ -95,14 +91,23 @@ public class XmlRepositoryDAO
 
   @Override
   public void modify(Repository repository) {
+    String path = getPath(repository).toString();
     db.remove(repository.getId());
-    add(repository);
+    RepositoryPath repositoryPath = new RepositoryPath(path, repository.getId(), repository.clone());
+    repositoryPath.setToBeSynchronized(true);
+    add(repositoryPath);
   }
 
   @Override
   public void add(Repository repository) {
-    String path = initialRepositoryLocationResolver.getDirectory(repository).getAbsolutePath();
+    String path = getPath(repository).toString();
+
     RepositoryPath repositoryPath = new RepositoryPath(path, repository.getId(), repository.clone());
+    repositoryPath.setToBeSynchronized(true);
+    add(repositoryPath);
+  }
+
+  public void add(RepositoryPath repositoryPath) {
     synchronized (store) {
       db.add(repositoryPath);
       storeDB();
@@ -145,15 +150,21 @@ public class XmlRepositoryDAO
   }
 
   @Override
-  public Path getPath(Repository repository) throws RepositoryPathNotFoundException {
-    Optional<RepositoryPath> repositoryPath = db.getPaths().stream()
+  public Path getPath(Repository repository) {
+    return db.getPaths().stream()
       .filter(repoPath -> repoPath.getId().equals(repository.getId()))
-      .findFirst();
-    if (!repositoryPath.isPresent()) {
-      throw new RepositoryPathNotFoundException();
-    } else {
+      .findFirst()
+      .map(RepositoryPath::getPath)
+      .map(relativePath -> Paths.get(new File(initialRepositoryLocationResolver.getBaseDirectory(), relativePath).toURI()))
+      .orElseGet(createRepositoryPath(repository));
+  }
 
-      return Paths.get(repositoryPath.get().getPath());
-    }
+  private Supplier<? extends Path> createRepositoryPath(Repository repository) {
+    return () -> {
+      if (db.getDefaultDirectory() == null) {
+        db.setDefaultDirectory(initialRepositoryLocationResolver.getDefaultRepositoryPath());
+      }
+      return Paths.get(initialRepositoryLocationResolver.getDirectory(db.getDefaultDirectory(), repository).toURI());
+    };
   }
 }

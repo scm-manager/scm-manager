@@ -96,7 +96,7 @@ public final class HgTestUtil
    *
    * @return
    */
-  public static HgRepositoryHandler createHandler(File directory) throws RepositoryPathNotFoundException {
+  public static HgRepositoryHandler createHandler(File directory)  {
     TempSCMContextProvider context =
       (TempSCMContextProvider) SCMContext.getContext();
 

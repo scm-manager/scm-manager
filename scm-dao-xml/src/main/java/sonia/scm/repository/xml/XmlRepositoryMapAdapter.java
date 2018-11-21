@@ -62,11 +62,15 @@ public class XmlRepositoryMapAdapter extends XmlAdapter<XmlRepositoryList, Map<S
 
       // marshall the repo_path/metadata.xml files
       for (RepositoryPath repositoryPath : repositoryPaths.getRepositoryPaths()) {
-        File dir = new File(repositoryPath.getPath());
-        if (!dir.exists()){
-          IOUtil.mkdirs(dir);
+        if (repositoryPath.toBeSynchronized()) {
+
+          File dir = new File(repositoryPath.getPath());
+          if (!dir.exists()) {
+            IOUtil.mkdirs(dir);
+          }
+          marshaller.marshal(repositoryPath.getRepository(), getRepositoryMetadataFile(dir));
+          repositoryPath.setToBeSynchronized(false);
         }
-        marshaller.marshal(repositoryPath.getRepository(), getRepositoryMetadataFile(dir));
       }
     } catch (JAXBException ex) {
       throw new StoreException("failed to marshall repository database", ex);

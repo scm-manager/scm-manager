@@ -39,35 +39,19 @@ public class RepositoryLocationResolver {
    * @return the current repository directory from the dao or the initial directory if the repository does not exists
    * @throws IOException
    */
-  public File getRepositoryDirectory(Repository repository) throws IOException {
+  public File getRepositoryDirectory(Repository repository){
     if (repositoryDAO instanceof PathBasedRepositoryDAO) {
       PathBasedRepositoryDAO pathBasedRepositoryDAO = (PathBasedRepositoryDAO) repositoryDAO;
-      try {
-        return pathBasedRepositoryDAO.getPath(repository).toFile();
-      } catch (RepositoryPathNotFoundException e) {
-        return createInitialDirectory(repository);
-      }
+      return pathBasedRepositoryDAO.getPath(repository).toFile();
     }
-    return createInitialDirectory(repository);
+    return initialRepositoryLocationResolver.createDirectory(repository);
   }
 
   public File getInitialBaseDirectory() {
     return initialRepositoryLocationResolver.getBaseDirectory();
   }
 
-  public File createInitialDirectory(Repository repository) throws IOException {
-    return initialRepositoryLocationResolver.createDirectory(repository);
-  }
-
-  public File getInitialDirectory(Repository repository) {
-    return initialRepositoryLocationResolver.getDirectory(repository);
-  }
-
-  public File getNativeDirectory(Repository repository) throws IOException {
+  public File getNativeDirectory(Repository repository)  {
     return new File (getRepositoryDirectory(repository), REPOSITORIES_NATIVE_DIRECTORY);
-  }
-
-  public File getInitialNativeDirectory(Repository repository) {
-    return new File (getInitialDirectory(repository), REPOSITORIES_NATIVE_DIRECTORY);
   }
 }

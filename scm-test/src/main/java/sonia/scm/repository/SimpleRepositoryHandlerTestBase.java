@@ -41,19 +41,25 @@ import sonia.scm.util.IOUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 //~--- JDK imports ------------------------------------------------------------
 
 /**
- *
  * @author Sebastian Sdorra
  */
 public abstract class SimpleRepositoryHandlerTestBase extends AbstractTestBase {
 
+
+  protected PathBasedRepositoryDAO repoDao = mock(PathBasedRepositoryDAO.class);
+  protected Path repoPath;
+  protected Repository repository;
 
   protected abstract void checkDirectory(File directory);
 
@@ -67,7 +73,8 @@ public abstract class SimpleRepositoryHandlerTestBase extends AbstractTestBase {
 
   @Test
   public void testCreateResourcePath() {
-    Repository repository = createRepository();
+    createRepository();
+
     String path = handler.createResourcePath(repository);
 
     assertNotNull(path);
@@ -77,7 +84,7 @@ public abstract class SimpleRepositoryHandlerTestBase extends AbstractTestBase {
 
   @Test
   public void testDelete() {
-    Repository repository = createRepository();
+    createRepository();
 
     handler.delete(repository);
 
@@ -102,17 +109,24 @@ public abstract class SimpleRepositoryHandlerTestBase extends AbstractTestBase {
   }
 
   private Repository createRepository() {
-    Repository repository = RepositoryTestData.createHeartOfGold();
+    File nativeRepoDirectory = initRepository();
 
     handler.create(repository);
 
-    File directory = new File(new File(baseDirectory, repository.getId()), InitialRepositoryLocationResolver.REPOSITORIES_NATIVE_DIRECTORY);
 
-    assertTrue(directory.exists());
-    assertTrue(directory.isDirectory());
-    checkDirectory(directory);
+    assertTrue(nativeRepoDirectory.exists());
+    assertTrue(nativeRepoDirectory.isDirectory());
+    checkDirectory(nativeRepoDirectory);
 
     return repository;
+  }
+
+  protected File initRepository() {
+    repository = RepositoryTestData.createHeartOfGold();
+    File repoDirectory = new File(baseDirectory, repository.getId());
+    repoPath = repoDirectory.toPath();
+    when(repoDao.getPath(repository)).thenReturn(repoPath);
+    return new File(repoDirectory, InitialRepositoryLocationResolver.REPOSITORIES_NATIVE_DIRECTORY);
   }
 
   protected File baseDirectory;

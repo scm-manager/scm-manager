@@ -60,6 +60,8 @@ public class XmlRepositoryDatabase implements XmlDatabase<RepositoryPath> {
 
   private Long lastModified;
 
+  private String defaultDirectory;
+
   @XmlJavaTypeAdapter(XmlRepositoryMapAdapter.class)
   @XmlElement(name = "repositories")
   private Map<String, RepositoryPath> repositoryPathMap = new LinkedHashMap<>();
@@ -199,5 +201,13 @@ public class XmlRepositoryDatabase implements XmlDatabase<RepositoryPath> {
   public void setLastModified(long lastModified)
   {
     this.lastModified = lastModified;
+  }
+
+  public String getDefaultDirectory() {
+    return defaultDirectory;
+  }
+
+  public void setDefaultDirectory(String defaultDirectory) {
+    this.defaultDirectory = defaultDirectory;
   }
 }
