@@ -73,12 +73,6 @@ public class HgRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
 
     assertTrue(hgDirectory.exists());
     assertTrue(hgDirectory.isDirectory());
-
-    File hgrc = new File(hgDirectory, "hgrc");
-
-    assertTrue(hgrc.exists());
-    assertTrue(hgrc.isFile());
-    assertTrue(hgrc.length() > 0);
   }
 
   @Override
