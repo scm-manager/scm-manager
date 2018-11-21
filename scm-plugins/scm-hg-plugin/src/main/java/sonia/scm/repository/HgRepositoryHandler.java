@@ -179,7 +179,6 @@ public class HgRepositoryHandler
   public void init(SCMContextProvider context)
   {
     super.init(context);
-    registerMissingHooks();
     writePythonScripts(context);
 
     // fix wrong hg.bat from package installation
@@ -299,100 +298,6 @@ public class HgRepositoryHandler
     return version;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param hgrc
-   */
-  void appendHookSection(INIConfiguration hgrc)
-  {
-    INISection hooksSection = new INISection("hooks");
-
-    setHookParameter(hooksSection);
-    hgrc.addSection(hooksSection);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param hgrc
-   */
-  void appendWebSection(INIConfiguration hgrc)
-  {
-    INISection webSection = new INISection("web");
-
-    setWebParameter(webSection);
-    hgrc.addSection(webSection);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param c
-   * @param repositoryName
-   *
-   * @return
-   */
-  boolean registerMissingHook(INIConfiguration c, String repositoryName)
-  {
-    INISection hooks = c.getSection("hooks");
-
-    if (hooks == null)
-    {
-      hooks = new INISection("hooks");
-      c.addSection(hooks);
-    }
-
-    boolean write = false;
-
-    if (appendHook(repositoryName, hooks, "changegroup.scm"))
-    {
-      write = true;
-    }
-
-    if (appendHook(repositoryName, hooks, "pretxnchangegroup.scm"))
-    {
-      write = true;
-    }
-
-    return write;
-  }
-
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param hooksSection
-   */
-  void setHookParameter(INISection hooksSection)
-  {
-    hooksSection.setParameter("changegroup.scm", "python:scmhooks.callback");
-    hooksSection.setParameter("pretxnchangegroup.scm",
-      "python:scmhooks.callback");
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param webSection
-   */
-  void setWebParameter(INISection webSection)
-  {
-    webSection.setParameter("push_ssl", "false");
-    webSection.setParameter("allow_read", "*");
-    webSection.setParameter("allow_push", "*");
-  }
-
-  //~--- methods --------------------------------------------------------------
-
   /**
    * Method description
    *
@@ -431,17 +336,6 @@ public class HgRepositoryHandler
   protected void postCreate(Repository repository, File directory)
     throws IOException
   {
-    File hgrcFile = new File(directory, PATH_HGRC);
-    INIConfiguration hgrc = new INIConfiguration();
-
-    appendWebSection(hgrc);
-
-    // register hooks
-    appendHookSection(hgrc);
-
-    INIConfigurationWriter writer = new INIConfigurationWriter();
-
-    writer.write(hgrc, hgrcFile);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -464,37 +358,6 @@ public class HgRepositoryHandler
    * Method description
    *
    *
-   * @param repositoryName
-   * @param hooks
-   * @param hookName
-   *
-   * @return
-   */
-  private boolean appendHook(String repositoryName, INISection hooks,
-    String hookName)
-  {
-    boolean write = false;
-    String hook = hooks.getParameter(hookName);
-
-    if (Util.isEmpty(hook))
-    {
-      if (logger.isInfoEnabled())
-      {
-        logger.info("register missing {} hook for respository {}", hookName,
-          repositoryName);
-      }
-
-      hooks.setParameter(hookName, "python:scmhooks.callback");
-      write = true;
-    }
-
-    return write;
-  }
-
-  /**
-   * Method description
-   *
-   *
    * @param file
    */
   private void createNewFile(File file)
@@ -509,104 +372,6 @@ public class HgRepositoryHandler
     catch (IOException ex)
     {
       logger.error("could not create file {}".concat(file.getPath()), ex);
-    }
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param repositoryDir
-   *
-   * @return
-   */
-  private boolean registerMissingHook(File repositoryDir)
-  {
-    boolean result = false;
-    File hgrc = new File(repositoryDir, PATH_HGRC);
-
-    if (hgrc.exists())
-    {
-      try
-      {
-        INIConfigurationReader reader = new INIConfigurationReader();
-        INIConfiguration c = reader.read(hgrc);
-        String repositoryName = repositoryDir.getName();
-
-        if (registerMissingHook(c, repositoryName))
-        {
-          if (logger.isDebugEnabled())
-          {
-            logger.debug("rewrite hgrc for repository {}", repositoryName);
-          }
-
-          INIConfigurationWriter writer = new INIConfigurationWriter();
-
-          writer.write(c, hgrc);
-        }
-
-        result = true;
-      }
-      catch (IOException ex)
-      {
-        logger.error("could not register missing hook", ex);
-      }
-    }
-
-    return result;
-  }
-
-  /**
-   * Method description
-   *
-   */
-  private void registerMissingHooks()
-  {
-    HgConfig c = getConfig();
-
-    if (c != null)
-    {
-      File repositoryDirectroy = getInitialBaseDirectory();
-      if (repositoryDirectroy.exists())
-      {
-        File lockFile = new File(repositoryDirectroy, PATH_HOOK);
-
-        if (!lockFile.exists())
-        {
-          File[] dirs =
-            repositoryDirectroy.listFiles(DirectoryFileFilter.instance);
-          boolean success = true;
-
-          if (Util.isNotEmpty(dirs))
-          {
-            for (File dir : dirs)
-            {
-              if (!registerMissingHook(dir))
-              {
-                success = false;
-              }
-            }
-          }
-
-          if (success)
-          {
-            createNewFile(lockFile);
-          }
-        }
-        else if (logger.isDebugEnabled())
-        {
-          logger.debug("hooks allready registered");
-        }
-      }
-      else if (logger.isDebugEnabled())
-      {
-        logger.debug(
-          "repository directory does not exists, could not register missing hooks");
-      }
-    }
-    else if (logger.isDebugEnabled())
-    {
-      logger.debug("config is not available, could not register missing hooks");
     }
   }
 
