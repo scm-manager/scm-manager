@@ -2,11 +2,11 @@
 import React from "react";
 import { translate } from "react-i18next";
 import { getSources } from "../modules/sources";
-import type { Repository, File } from "@scm-manager/ui-types";
+import type { File, Repository } from "@scm-manager/ui-types";
 import {
+  DateFromNow,
   ErrorNotification,
-  Loading,
-  DateFromNow
+  Loading
 } from "@scm-manager/ui-components";
 import { connect } from "react-redux";
 import ImageViewer from "../components/content/ImageViewer";
@@ -87,10 +87,9 @@ class Content extends React.Component<Props, State> {
   };
 
   showHeader() {
-    const { file, classes } = this.props;
+    const { file, classes, t } = this.props;
     const collapsed = this.state.collapsed;
     const icon = collapsed ? "fa-angle-right" : "fa-angle-down";
-    const fileSize = file.directory ? "" : <FileSize bytes={file.length} />;
 
     return (
       <span className={classes.pointer} onClick={this.toggleCollapse}>
@@ -101,7 +100,11 @@ class Content extends React.Component<Props, State> {
           <div className="media-content">
             <div className="content">{file.name}</div>
           </div>
-          <p className="media-right">{fileSize}</p>
+          <p className="media-right">
+            <a className="is-hidden-mobile" href="#">
+              {t("sources.content.historyLink")}
+            </a>
+          </p>
         </article>
       </span>
     );
@@ -109,7 +112,7 @@ class Content extends React.Component<Props, State> {
 
   showMoreInformation() {
     const collapsed = this.state.collapsed;
-    const { classes, file, revision } = this.props;
+    const { classes, file, revision, t } = this.props;
     const date = <DateFromNow date={file.lastModified} />;
     const description = file.description ? (
       <p>
@@ -123,25 +126,30 @@ class Content extends React.Component<Props, State> {
         })}
       </p>
     ) : null;
+    const fileSize = file.directory ? "" : <FileSize bytes={file.length} />;
     if (!collapsed) {
       return (
         <div className={classNames("panel-block", classes.toCenterContent)}>
           <table className="table">
             <tbody>
               <tr>
-                <td>Path</td>
+                <td>{t("sources.content.path")}</td>
                 <td>{file.path}</td>
               </tr>
               <tr>
-                <td>Branch</td>
+                <td>{t("sources.content.branch")}</td>
                 <td>{revision}</td>
               </tr>
               <tr>
-                <td>Last modified</td>
+                <td>{t("sources.content.size")}</td>
+                <td>{fileSize}</td>
+              </tr>
+              <tr>
+                <td>{t("sources.content.lastModified")}</td>
                 <td>{date}</td>
               </tr>
               <tr>
-                <td>Description</td>
+                <td>{t("sources.content.description")}</td>
                 <td>{description}</td>
               </tr>
             </tbody>
