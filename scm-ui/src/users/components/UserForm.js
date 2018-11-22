@@ -5,6 +5,7 @@ import type { User } from "@scm-manager/ui-types";
 import {
   Checkbox,
   InputField,
+  PasswordConfirmation,
   SubmitButton,
   validation as validator
 } from "@scm-manager/ui-components";
@@ -21,10 +22,7 @@ type State = {
   user: User,
   mailValidationError: boolean,
   nameValidationError: boolean,
-  displayNameValidationError: boolean,
-  passwordConfirmationError: boolean,
-  validatePasswordError: boolean,
-  validatePassword: string
+  displayNameValidationError: boolean
 };
 
 class UserForm extends React.Component<Props, State> {
@@ -38,15 +36,12 @@ class UserForm extends React.Component<Props, State> {
         mail: "",
         password: "",
         admin: false,
-        active: false,
+        active: true,
         _links: {}
       },
       mailValidationError: false,
       displayNameValidationError: false,
-      nameValidationError: false,
-      passwordConfirmationError: false,
-      validatePasswordError: false,
-      validatePassword: ""
+      nameValidationError: false
     };
   }
 
@@ -66,14 +61,15 @@ class UserForm extends React.Component<Props, State> {
 
   isValid = () => {
     const user = this.state.user;
+    const passwordValid = this.props.user ? !this.isFalsy(user.password) : true;
     return !(
-      this.state.validatePasswordError ||
       this.state.nameValidationError ||
       this.state.mailValidationError ||
-      this.state.passwordConfirmationError ||
       this.state.displayNameValidationError ||
       this.isFalsy(user.name) ||
-      this.isFalsy(user.displayName)
+      this.isFalsy(user.displayName) ||
+      this.isFalsy(user.mail) ||
+      passwordValid
     );
   };
 
@@ -89,7 +85,7 @@ class UserForm extends React.Component<Props, State> {
     const user = this.state.user;
 
     let nameField = null;
-    let passwordFields = null;
+    let passwordChangeField = null;
     if (!this.props.user) {
       nameField = (
         <InputField
@@ -101,27 +97,9 @@ class UserForm extends React.Component<Props, State> {
           helpText={t("help.usernameHelpText")}
         />
       );
-      passwordFields = (
-        <>
-          <InputField
-            label={t("user.password")}
-            type="password"
-            onChange={this.handlePasswordChange}
-            value={user ? user.password : ""}
-            validationError={this.state.validatePasswordError}
-            errorMessage={t("validation.password-invalid")}
-            helpText={t("help.passwordHelpText")}
-          />
-          <InputField
-            label={t("validation.validatePassword")}
-            type="password"
-            onChange={this.handlePasswordValidationChange}
-            value={this.state ? this.state.validatePassword : ""}
-            validationError={this.state.passwordConfirmationError}
-            errorMessage={t("validation.passwordValidation-invalid")}
-            helpText={t("help.passwordConfirmHelpText")}
-          />
-        </>
+
+      passwordChangeField = (
+        <PasswordConfirmation passwordChanged={this.handlePasswordChange} />
       );
     }
     return (
@@ -143,7 +121,7 @@ class UserForm extends React.Component<Props, State> {
           errorMessage={t("validation.mail-invalid")}
           helpText={t("help.mailHelpText")}
         />
-        {passwordFields}
+        {passwordChangeField}
         <Checkbox
           label={t("user.admin")}
           onChange={this.handleAdminChange}
@@ -189,30 +167,9 @@ class UserForm extends React.Component<Props, State> {
   };
 
   handlePasswordChange = (password: string) => {
-    const validatePasswordError = !this.checkPasswords(
-      password,
-      this.state.validatePassword
-    );
     this.setState({
-      validatePasswordError: !userValidator.isPasswordValid(password),
-      passwordConfirmationError: validatePasswordError,
       user: { ...this.state.user, password }
     });
-  };
-
-  handlePasswordValidationChange = (validatePassword: string) => {
-    const validatePasswordError = this.checkPasswords(
-      this.state.user.password,
-      validatePassword
-    );
-    this.setState({
-      validatePassword,
-      passwordConfirmationError: !validatePasswordError
-    });
-  };
-
-  checkPasswords = (password1: string, password2: string) => {
-    return password1 === password2;
   };
 
   handleAdminChange = (admin: boolean) => {

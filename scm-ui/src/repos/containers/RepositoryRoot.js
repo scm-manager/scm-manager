@@ -35,7 +35,7 @@ import PermissionsNavLink from "../components/PermissionsNavLink";
 import Sources from "../sources/containers/Sources";
 import RepositoryNavLink from "../components/RepositoryNavLink";
 import { getRepositoriesLink } from "../../modules/indexResource";
-import {ExtensionPoint} from '@scm-manager/ui-extensions';
+import {ExtensionPoint} from "@scm-manager/ui-extensions";
 
 type Props = {
   namespace: string,

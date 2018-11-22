@@ -1,6 +1,6 @@
 //@flow
 import React from "react";
-import { Title, GlobalConfiguration } from "@scm-manager/ui-components";
+import { Title, Configuration } from "@scm-manager/ui-components";
 import { translate } from "react-i18next";
 import HgConfigurationForm from "./HgConfigurationForm";
 
@@ -18,7 +18,7 @@ class HgGlobalConfiguration extends React.Component<Props> {
     return (
       <div>
         <Title title={t("scm-hg-plugin.config.title")}/>
-        <GlobalConfiguration link={link} render={props => <HgConfigurationForm {...props} />}/>
+        <Configuration link={link} render={props => <HgConfigurationForm {...props} />}/>
       </div>
     );
   }

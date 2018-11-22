@@ -19,6 +19,7 @@ import SingleGroup from "../groups/containers/SingleGroup";
 import AddGroup from "../groups/containers/AddGroup";
 
 import Config from "../config/containers/Config";
+import ChangeUserPassword from "./ChangeUserPassword";
 import Profile from "./Profile";
 
 type Props = {
@@ -79,6 +80,7 @@ class Main extends React.Component<Props> {
             path="/user/:name"
             component={SingleUser}
           />
+
           <ProtectedRoute
             exact
             path="/groups"
@@ -107,7 +109,6 @@ class Main extends React.Component<Props> {
             authenticated={authenticated}
           />
           <ProtectedRoute
-            exact
             path="/me"
             component={Profile}
             authenticated={authenticated}
