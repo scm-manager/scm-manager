@@ -5,7 +5,6 @@ import { translate } from "react-i18next";
 import { InputField, Checkbox, Select } from "@scm-manager/ui-components";
 
 type Configuration = {
-  repositoryDirectory: string,
   compatibility: string,
   enabledGZip: boolean,
   disabled: boolean,
@@ -31,14 +30,11 @@ class HgConfigurationForm extends React.Component<Props, State> {
     this.state = { ...props.initialConfiguration, validationErrors: [] };
   }
 
-  isValid = () => {
-    return !!this.state.repositoryDirectory;
-  };
 
   handleChange = (value: any, name: string) => {
     this.setState({
       [name]: value
-    }, () => this.props.onConfigurationChange(this.state, this.isValid()));
+    }, () => this.props.onConfigurationChange(this.state, true));
   };
 
   compatibilityOptions = (values: string[]) => {
@@ -64,16 +60,6 @@ class HgConfigurationForm extends React.Component<Props, State> {
 
     return (
       <>
-        <InputField
-          name="repositoryDirectory"
-          label={t("scm-svn-plugin.config.directory")}
-          helpText={t("scm-svn-plugin.config.directoryHelpText")}
-          value={this.state.repositoryDirectory}
-          errorMessage={t("scm-svn-plugin.config.required")}
-          validationError={!this.state.repositoryDirectory}
-          onChange={this.handleChange}
-          disabled={readOnly}
-        />
         <Select
           name="compatibility"
           label={t("scm-svn-plugin.config.compatibility")}

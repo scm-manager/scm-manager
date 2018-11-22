@@ -6,8 +6,6 @@
     "config": {
       "link": "Subversion",
       "title": "Subversion Configuration",
-      "directory": "Repository Directory",
-      "directoryHelpText": "Location of Subversion repositories.",
       "compatibility": "Version Compatibility",
       "compatibilityHelpText": "Specifies with which subversion version repositories are compatible.",
       "compatibility-values": {
