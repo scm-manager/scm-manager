@@ -18,18 +18,30 @@ type Props = {
   valueSelected: SelectValue => void,
   label: string,
   helpText?: string,
-  value?: SelectValue
+  value?: SelectValue,
+  placeholder: string,
+  loadingMessage: string,
+  noOptionsMessage: string
 };
+
 
 type State = {};
 
 class Autocomplete extends React.Component<Props, State> {
+
+
+  static defaultProps = {
+    placeholder: "Type here",
+    loadingMessage: "Loading...",
+    noOptionsMessage: "No suggestion available"
+  }
+
   handleInputChange = (newValue: SelectValue) => {
     this.props.valueSelected(newValue);
   };
 
-  isValidNewOption = (inputValue, selectValue, selectOptions) => {
-    //TODO: types
+  // We overwrite this to avoid running into a bug (https://github.com/JedWatson/react-select/issues/2944)
+  isValidNewOption = (inputValue: string, selectValue: SelectValue, selectOptions: SelectValue[]) => {
     const isNotDuplicated = !selectOptions
       .map(option => option.label)
       .includes(inputValue);
@@ -38,19 +50,19 @@ class Autocomplete extends React.Component<Props, State> {
   };
 
   render() {
-    const { label, helpText, value } = this.props;
+    const { label, helpText, value, placeholder, loadingMessage, noOptionsMessage, loadSuggestions } = this.props;
     return (
       <div className="field">
         <LabelWithHelpIcon label={label} helpText={helpText} />
         <div className="control">
           <AsyncCreatable
             cacheOptions
-            loadOptions={this.props.loadSuggestions}
+            loadOptions={loadSuggestions}
             onChange={this.handleInputChange}
             value={value}
-            placeholder="Start typing..." // TODO: i18n
-            loadingMessage={() => <>Loading...</>} // TODO: i18n
-            noOptionsMessage={() => <>No suggestion available</>} // TODO: i18n
+            placeholder={placeholder}
+            loadingMessage={() => loadingMessage}
+            noOptionsMessage={() => noOptionsMessage}
             isValidNewOption={this.isValidNewOption}
             onCreateOption={value => {
               this.handleInputChange({
@@ -64,5 +76,6 @@ class Autocomplete extends React.Component<Props, State> {
     );
   }
 }
+
 
 export default Autocomplete;
