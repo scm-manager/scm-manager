@@ -29,13 +29,14 @@ import Permissions from "../permissions/containers/Permissions";
 import type { History } from "history";
 import EditNavLink from "../components/EditNavLink";
 
+import FileHistory from "../sources/containers/FileHistory";
 import BranchRoot from "./ChangesetsRoot";
 import ChangesetView from "./ChangesetView";
 import PermissionsNavLink from "../components/PermissionsNavLink";
 import Sources from "../sources/containers/Sources";
 import RepositoryNavLink from "../components/RepositoryNavLink";
 import { getRepositoriesLink } from "../../modules/indexResource";
-import {ExtensionPoint} from "@scm-manager/ui-extensions";
+import { ExtensionPoint } from "@scm-manager/ui-extensions";
 
 type Props = {
   namespace: string,
@@ -153,6 +154,15 @@ class RepositoryRoot extends React.Component<Props> {
                 )}
               />
               <Route
+                path={`${url}/history/:revision/:path*`}
+                render={() => (
+                  <FileHistory
+                    repository={repository}
+                    baseUrl={`${url}/history`}
+                  />
+                )}
+              />
+              <Route
                 path={`${url}/changesets`}
                 render={() => (
                   <BranchRoot
@@ -172,9 +182,10 @@ class RepositoryRoot extends React.Component<Props> {
                   />
                 )}
               />
-              <ExtensionPoint name="repository.route"
-                              props={extensionProps}
-                              renderAll={true}
+              <ExtensionPoint
+                name="repository.route"
+                props={extensionProps}
+                renderAll={true}
               />
             </Switch>
           </div>
@@ -197,9 +208,10 @@ class RepositoryRoot extends React.Component<Props> {
                   label={t("repository-root.sources")}
                   activeOnlyWhenExact={false}
                 />
-                <ExtensionPoint name="repository.navigation"
-                                props={extensionProps}
-                                renderAll={true}
+                <ExtensionPoint
+                  name="repository.navigation"
+                  props={extensionProps}
+                  renderAll={true}
                 />
                 <PermissionsNavLink
                   permissionUrl={`${url}/permissions`}
