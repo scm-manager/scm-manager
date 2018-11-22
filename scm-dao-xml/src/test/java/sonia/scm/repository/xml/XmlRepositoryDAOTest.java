@@ -55,7 +55,7 @@ public class XmlRepositoryDAOTest {
 
     verify(db).add(argThat(repositoryPath -> {
       assertThat(repositoryPath.getId()).isEqualTo("id");
-      assertThat(repositoryPath.getPath()).isEqualTo(initialRepositoryLocationResolver.getDefaultRepositoryPath() + "/id");
+      assertThat(repositoryPath.getPath()).isEqualTo(InitialRepositoryLocationResolver.DEFAULT_REPOSITORY_PATH + "/id");
       return true;
     }));
     verify(store).set(db);
@@ -112,6 +112,6 @@ public class XmlRepositoryDAOTest {
     Repository newRepository = new Repository("id", "new", null, null);
     Path path = dao.getPath(newRepository);
 
-    assertThat(path.toString()).isEqualTo(context.getBaseDirectory().getPath() + "/" + initialRepositoryLocationResolver.getDefaultRepositoryPath() + "/id");
+    assertThat(path.toString()).isEqualTo(context.getBaseDirectory().getPath() + "/" + InitialRepositoryLocationResolver.DEFAULT_REPOSITORY_PATH + "/id");
   }
 }

@@ -21,7 +21,7 @@ import java.io.IOException;
  */
 public class InitialRepositoryLocationResolver {
 
-  private static final String DEFAULT_REPOSITORY_PATH = "repositories";
+  public static final String DEFAULT_REPOSITORY_PATH = "repositories";
   public static final String REPOSITORIES_NATIVE_DIRECTORY = "data";
   private SCMContextProvider context;
   private FileSystem fileSystem;
@@ -49,10 +49,6 @@ public class InitialRepositoryLocationResolver {
   }
 
   public String getRelativeRepositoryPath(Repository repository) {
-    return getDefaultRepositoryPath() + File.separator + repository.getId();
-  }
-
-  public String getDefaultRepositoryPath() {
-    return DEFAULT_REPOSITORY_PATH;
+    return DEFAULT_REPOSITORY_PATH + File.separator + repository.getId();
   }
 }
