@@ -31,6 +31,8 @@
 
 package sonia.scm.repository.xml;
 
+import sonia.scm.SCMContext;
+import sonia.scm.SCMContextProvider;
 import sonia.scm.repository.Repository;
 import sonia.scm.store.StoreConstants;
 import sonia.scm.store.StoreException;
@@ -64,7 +66,7 @@ public class XmlRepositoryMapAdapter extends XmlAdapter<XmlRepositoryList, Map<S
       for (RepositoryPath repositoryPath : repositoryPaths.getRepositoryPaths()) {
         if (repositoryPath.toBeSynchronized()) {
 
-          File dir = new File(repositoryPath.getPath());
+          File dir = new File(repositoryPath.getAbsolutePath());
           if (!dir.exists()) {
             IOUtil.mkdirs(dir);
           }
@@ -85,13 +87,15 @@ public class XmlRepositoryMapAdapter extends XmlAdapter<XmlRepositoryList, Map<S
   }
 
   @Override
-  public Map<String, RepositoryPath> unmarshal(XmlRepositoryList repositories) {
+  public Map<String, RepositoryPath> unmarshal(XmlRepositoryList repositoryPaths) {
     Map<String, RepositoryPath> repositoryPathMap = new LinkedHashMap<>();
     try {
       JAXBContext context = JAXBContext.newInstance(Repository.class);
       Unmarshaller unmarshaller = context.createUnmarshaller();
-      for (RepositoryPath repositoryPath : repositories) {
-        Repository repository = (Repository) unmarshaller.unmarshal(getRepositoryMetadataFile(new File(repositoryPath.getPath())));
+      for (RepositoryPath repositoryPath : repositoryPaths) {
+        SCMContextProvider contextProvider = SCMContext.getContext();
+        File baseDirectory = contextProvider.getBaseDirectory();
+        Repository repository = (Repository) unmarshaller.unmarshal(getRepositoryMetadataFile(new File(baseDirectory, repositoryPath.getPath())));
         repositoryPath.setRepository(repository);
         repositoryPathMap.put(XmlRepositoryDatabase.createKey(repository), repositoryPath);
       }

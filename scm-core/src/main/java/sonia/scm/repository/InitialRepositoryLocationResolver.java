@@ -54,4 +54,8 @@ public final class InitialRepositoryLocationResolver {
   public String getDefaultRepositoryPath() {
     return DEFAULT_REPOSITORY_PATH ;
   }
+
+  public String getRelativePath(String absolutePath) {
+    return absolutePath.replaceFirst(context.getBaseDirectory().getAbsolutePath()+"/", "");
+  }
 }

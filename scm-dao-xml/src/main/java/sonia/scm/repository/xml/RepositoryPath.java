@@ -22,6 +22,9 @@ public class RepositoryPath implements ModelObject {
   private Repository repository;
 
   @XmlTransient
+  private String absolutePath;
+
+  @XmlTransient
   private boolean toBeSynchronized;
 
   /**
@@ -30,8 +33,9 @@ public class RepositoryPath implements ModelObject {
   public RepositoryPath() {
   }
 
-  public RepositoryPath(String path, String id, Repository repository) {
+  public RepositoryPath(String path, String absolutePath, String id, Repository repository) {
     this.path = path;
+    this.absolutePath = absolutePath;
     this.id = id;
     this.repository = repository;
   }
@@ -97,5 +101,13 @@ public class RepositoryPath implements ModelObject {
 
   public void setToBeSynchronized(boolean toBeSynchronized) {
     this.toBeSynchronized = toBeSynchronized;
+  }
+
+  public String getAbsolutePath() {
+    return absolutePath;
+  }
+
+  public void setAbsolutePath(String absolutePath) {
+    this.absolutePath = absolutePath;
   }
 }

@@ -42,18 +42,13 @@ import sonia.scm.io.DefaultFileSystem;
 import sonia.scm.store.ConfigurationStoreFactory;
 
 import java.io.File;
-import java.nio.file.Path;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 //~--- JDK imports ------------------------------------------------------------
 
 /**
- *
  * @author Sebastian Sdorra
  */
 @RunWith(MockitoJUnitRunner.class)
@@ -65,7 +60,7 @@ public class HgRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
   @Mock
   private com.google.inject.Provider<HgContext> provider;
 
-  RepositoryLocationResolver repositoryLocationResolver ;
+  RepositoryLocationResolver repositoryLocationResolver;
 
   @Override
   protected void checkDirectory(File directory) {
@@ -77,9 +72,9 @@ public class HgRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
 
   @Override
   protected RepositoryHandler createRepositoryHandler(ConfigurationStoreFactory factory,
-                                                      File directory)  {
+                                                      File directory) {
     DefaultFileSystem fileSystem = new DefaultFileSystem();
-    repositoryLocationResolver = new RepositoryLocationResolver(repoDao, new InitialRepositoryLocationResolver(contextProvider,fileSystem));
+    repositoryLocationResolver = new RepositoryLocationResolver(repoDao, new InitialRepositoryLocationResolver(contextProvider, fileSystem));
     HgRepositoryHandler handler = new HgRepositoryHandler(factory,
       new DefaultFileSystem(),
       new HgContextProvider(), repositoryLocationResolver);
@@ -102,6 +97,6 @@ public class HgRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
 
     initRepository();
     File path = repositoryHandler.getDirectory(repository);
-    assertEquals(repoPath.toString()+File.separator+InitialRepositoryLocationResolver.REPOSITORIES_NATIVE_DIRECTORY, path.getAbsolutePath());
+    assertEquals(repoPath.toString() + File.separator + InitialRepositoryLocationResolver.REPOSITORIES_NATIVE_DIRECTORY, path.getAbsolutePath());
   }
 }

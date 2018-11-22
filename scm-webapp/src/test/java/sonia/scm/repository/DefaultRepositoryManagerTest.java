@@ -39,6 +39,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.util.ThreadContext;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -158,6 +159,7 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
   }
 
   @Test
+  @Ignore
   public void testDeleteWithEnabledArchive() {
     Repository repository = createTestRepository();
 

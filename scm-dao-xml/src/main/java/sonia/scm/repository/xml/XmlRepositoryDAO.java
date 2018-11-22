@@ -35,6 +35,7 @@ package sonia.scm.repository.xml;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import sonia.scm.SCMContext;
 import sonia.scm.repository.InitialRepositoryLocationResolver;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.PathBasedRepositoryDAO;
@@ -91,18 +92,17 @@ public class XmlRepositoryDAO
 
   @Override
   public void modify(Repository repository) {
-    String path = getPath(repository).toString();
+    String path = getPath(repository).toAbsolutePath().toString();
     db.remove(repository.getId());
-    RepositoryPath repositoryPath = new RepositoryPath(path, repository.getId(), repository.clone());
+    RepositoryPath repositoryPath = new RepositoryPath(initialRepositoryLocationResolver.getRelativePath(path), path, repository.getId(), repository.clone());
     repositoryPath.setToBeSynchronized(true);
     add(repositoryPath);
   }
 
   @Override
   public void add(Repository repository) {
-    String path = getPath(repository).toString();
-
-    RepositoryPath repositoryPath = new RepositoryPath(path, repository.getId(), repository.clone());
+    String path = getPath(repository).toAbsolutePath().toString();
+    RepositoryPath repositoryPath = new RepositoryPath(initialRepositoryLocationResolver.getRelativePath(path),path, repository.getId(), repository.clone());
     repositoryPath.setToBeSynchronized(true);
     add(repositoryPath);
   }
@@ -155,7 +155,7 @@ public class XmlRepositoryDAO
       .filter(repoPath -> repoPath.getId().equals(repository.getId()))
       .findFirst()
       .map(RepositoryPath::getPath)
-      .map(relativePath -> Paths.get(new File(initialRepositoryLocationResolver.getBaseDirectory(), relativePath).toURI()))
+      .map(relativePath -> new File(SCMContext.getContext().getBaseDirectory(), relativePath).toPath())
       .orElseGet(createRepositoryPath(repository));
   }
 

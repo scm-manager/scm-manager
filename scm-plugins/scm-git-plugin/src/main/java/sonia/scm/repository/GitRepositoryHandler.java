@@ -225,20 +225,6 @@ public class GitRepositoryHandler
     return GitConfig.class;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param directory
-   *
-   * @return
-   */
-  @Override
-  protected boolean isRepository(File directory)
-  {
-    return new File(directory, DIRECTORY_REFS).exists();
-  }
-
   public GitWorkdirFactory getWorkdirFactory() {
     return workdirFactory;
   }
