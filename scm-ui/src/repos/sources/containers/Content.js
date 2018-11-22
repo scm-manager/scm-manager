@@ -95,13 +95,17 @@ class Content extends React.Component<Props, State> {
       <span className={classes.pointer} onClick={this.toggleCollapse}>
         <article className="media">
           <div className="media-left">
-            <i className={classNames("fa", icon)} />
+            <i className={classNames("fa", icon)}/>
           </div>
           <div className="media-content">
             <div className="content">{file.name}</div>
           </div>
           <p className="media-right">
             <a className="is-hidden-mobile" href="#">
+              <span className="icon is-medium">
+              <i className="fas fa-history"></i>
+                </span>
+
               {t("sources.content.historyLink")}
             </a>
           </p>
