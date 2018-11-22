@@ -82,6 +82,7 @@
       "name": "User or Group",
       "type": "Type",
       "group-permission": "Group Permission",
+      "user-permission": "User Permission",
       "edit-permission": {
         "delete-button": "Delete",
         "save-button": "Save Changes"

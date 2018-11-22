@@ -103,7 +103,6 @@ class CreatePermissionForm extends React.Component<Props, State> {
   };
 
   groupOrUserSelected = (value: SelectValue) => {
-    console.log(value);
     this.setState({
       value,
       name: value.value.id,
@@ -118,7 +117,7 @@ class CreatePermissionForm extends React.Component<Props, State> {
   render() {
     const { t, loading } = this.props;
 
-    const { name, type, groupPermission } = this.state;
+    const { type } = this.state;
 
     return (
       <div>
@@ -135,7 +134,7 @@ class CreatePermissionForm extends React.Component<Props, State> {
                 value="USER_PERMISSION"
                 onChange={this.permissionScopeChanged}
               />
-              User Permission
+              {t("permission.user-permission")}
             </label>
             <label className="radio">
               <input
@@ -145,7 +144,7 @@ class CreatePermissionForm extends React.Component<Props, State> {
                 checked={this.state.groupPermission}
                 onChange={this.permissionScopeChanged}
               />
-              Group Permission
+              {t("permission.group-permission")}
             </label>
           </div>
           {this.renderAutocompletionField()}
