@@ -35,19 +35,18 @@ package sonia.scm.repository.xml;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import sonia.scm.SCMContext;
+import sonia.scm.SCMContextProvider;
 import sonia.scm.repository.InitialRepositoryLocationResolver;
+import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.PathBasedRepositoryDAO;
 import sonia.scm.repository.Repository;
 import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.xml.AbstractXmlDAO;
 
-import java.io.File;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Collection;
-import java.util.function.Supplier;
+import java.util.Optional;
 
 /**
  * @author Sebastian Sdorra
@@ -59,6 +58,7 @@ public class XmlRepositoryDAO
 
   public static final String STORE_NAME = "repositories";
   private InitialRepositoryLocationResolver initialRepositoryLocationResolver;
+  private final SCMContextProvider context;
 
   //~--- constructors ---------------------------------------------------------
 
@@ -66,11 +66,13 @@ public class XmlRepositoryDAO
    * Constructs ...
    *
    * @param storeFactory
+   * @param context
    */
   @Inject
-  public XmlRepositoryDAO(ConfigurationStoreFactory storeFactory, InitialRepositoryLocationResolver initialRepositoryLocationResolver) {
+  public XmlRepositoryDAO(ConfigurationStoreFactory storeFactory, InitialRepositoryLocationResolver initialRepositoryLocationResolver, SCMContextProvider context) {
     super(storeFactory.getStore(XmlRepositoryDatabase.class, STORE_NAME));
     this.initialRepositoryLocationResolver = initialRepositoryLocationResolver;
+    this.context = context;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -92,22 +94,17 @@ public class XmlRepositoryDAO
 
   @Override
   public void modify(Repository repository) {
-    String path = getPath(repository).toAbsolutePath().toString();
-    db.remove(repository.getId());
-    RepositoryPath repositoryPath = new RepositoryPath(initialRepositoryLocationResolver.getRelativePath(path), path, repository.getId(), repository.clone());
+    RepositoryPath repositoryPath = findExistingRepositoryPath(repository).orElseThrow(() -> new InternalRepositoryException(repository, "path object for repository not found"));
+    repositoryPath.setRepository(repository);
     repositoryPath.setToBeSynchronized(true);
-    add(repositoryPath);
+    storeDB();
   }
 
   @Override
   public void add(Repository repository) {
-    String path = getPath(repository).toAbsolutePath().toString();
-    RepositoryPath repositoryPath = new RepositoryPath(initialRepositoryLocationResolver.getRelativePath(path),path, repository.getId(), repository.clone());
+    String relativeRepositoryPath = initialRepositoryLocationResolver.getRelativeRepositoryPath(repository);
+    RepositoryPath repositoryPath = new RepositoryPath(relativeRepositoryPath, repository.getId(), repository.clone());
     repositoryPath.setToBeSynchronized(true);
-    add(repositoryPath);
-  }
-
-  public void add(RepositoryPath repositoryPath) {
     synchronized (store) {
       db.add(repositoryPath);
       storeDB();
@@ -151,20 +148,15 @@ public class XmlRepositoryDAO
 
   @Override
   public Path getPath(Repository repository) {
-    return db.getPaths().stream()
-      .filter(repoPath -> repoPath.getId().equals(repository.getId()))
-      .findFirst()
-      .map(RepositoryPath::getPath)
-      .map(relativePath -> new File(SCMContext.getContext().getBaseDirectory(), relativePath).toPath())
-      .orElseGet(createRepositoryPath(repository));
+    return context
+      .getBaseDirectory()
+      .toPath()
+      .resolve(findExistingRepositoryPath(repository).map(RepositoryPath::getPath).orElse(initialRepositoryLocationResolver.getRelativeRepositoryPath(repository)));
   }
 
-  private Supplier<? extends Path> createRepositoryPath(Repository repository) {
-    return () -> {
-      if (db.getDefaultDirectory() == null) {
-        db.setDefaultDirectory(initialRepositoryLocationResolver.getDefaultRepositoryPath());
-      }
-      return Paths.get(initialRepositoryLocationResolver.getDirectory(db.getDefaultDirectory(), repository).toURI());
-    };
+  private Optional<RepositoryPath> findExistingRepositoryPath(Repository repository) {
+    return db.getPaths().stream()
+      .filter(repoPath -> repoPath.getId().equals(repository.getId()))
+      .findFirst();
   }
 }

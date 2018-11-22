@@ -19,7 +19,7 @@ import java.io.IOException;
  * @author Mohamed Karray
  * @since 2.0.0
  */
-public final class InitialRepositoryLocationResolver {
+public class InitialRepositoryLocationResolver {
 
   private static final String DEFAULT_REPOSITORY_PATH = "repositories";
   public static final String REPOSITORIES_NATIVE_DIRECTORY = "data";
@@ -38,24 +38,21 @@ public final class InitialRepositoryLocationResolver {
   }
 
   public File createDirectory(Repository repository) {
-    File initialRepoFolder = getDirectory(getDefaultRepositoryPath(), repository);
+    String initialRepoFolder = getRelativeRepositoryPath(repository);
     try {
-      fileSystem.create(initialRepoFolder);
+      File directory = new File(context.getBaseDirectory(), initialRepoFolder);
+      fileSystem.create(directory);
+      return directory;
     } catch (IOException e) {
-      throw new InternalRepositoryException(repository, "Cannot create repository directory for "+repository.getNamespaceAndName(),  e);
+      throw new InternalRepositoryException(repository, "Cannot create repository directory for " + repository.getNamespaceAndName(), e);
     }
-    return initialRepoFolder;
   }
 
-  public File getDirectory(String defaultRepositoryRelativePath, Repository repository) {
-    return new File(context.getBaseDirectory(), defaultRepositoryRelativePath + File.separator + repository.getId());
+  public String getRelativeRepositoryPath(Repository repository) {
+    return getDefaultRepositoryPath() + File.separator + repository.getId();
   }
 
   public String getDefaultRepositoryPath() {
-    return DEFAULT_REPOSITORY_PATH ;
-  }
-
-  public String getRelativePath(String absolutePath) {
-    return absolutePath.replaceFirst(context.getBaseDirectory().getAbsolutePath()+"/", "");
+    return DEFAULT_REPOSITORY_PATH;
   }
 }

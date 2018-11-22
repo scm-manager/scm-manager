@@ -33,10 +33,10 @@ package sonia.scm.repository.xml;
 
 import sonia.scm.SCMContext;
 import sonia.scm.SCMContextProvider;
+import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
 import sonia.scm.store.StoreConstants;
 import sonia.scm.store.StoreException;
-import sonia.scm.util.IOUtil;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -44,6 +44,8 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -66,11 +68,13 @@ public class XmlRepositoryMapAdapter extends XmlAdapter<XmlRepositoryList, Map<S
       for (RepositoryPath repositoryPath : repositoryPaths.getRepositoryPaths()) {
         if (repositoryPath.toBeSynchronized()) {
 
-          File dir = new File(repositoryPath.getAbsolutePath());
-          if (!dir.exists()) {
-            IOUtil.mkdirs(dir);
+          File baseDirectory = SCMContext.getContext().getBaseDirectory();
+          Path dir = baseDirectory.toPath().resolve(repositoryPath.getPath());
+
+          if (!Files.isDirectory(dir)) {
+            throw new InternalRepositoryException(repositoryPath.getRepository(), "repository path not found");
           }
-          marshaller.marshal(repositoryPath.getRepository(), getRepositoryMetadataFile(dir));
+          marshaller.marshal(repositoryPath.getRepository(), getRepositoryMetadataFile(dir.toFile()));
           repositoryPath.setToBeSynchronized(false);
         }
       }
@@ -95,7 +99,8 @@ public class XmlRepositoryMapAdapter extends XmlAdapter<XmlRepositoryList, Map<S
       for (RepositoryPath repositoryPath : repositoryPaths) {
         SCMContextProvider contextProvider = SCMContext.getContext();
         File baseDirectory = contextProvider.getBaseDirectory();
-        Repository repository = (Repository) unmarshaller.unmarshal(getRepositoryMetadataFile(new File(baseDirectory, repositoryPath.getPath())));
+        Repository repository = (Repository) unmarshaller.unmarshal(getRepositoryMetadataFile(baseDirectory.toPath().resolve(repositoryPath.getPath()).toFile()));
+
         repositoryPath.setRepository(repository);
         repositoryPathMap.put(XmlRepositoryDatabase.createKey(repository), repositoryPath);
       }
