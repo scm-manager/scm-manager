@@ -27,14 +27,14 @@ class AutocompleteAddEntryToTableField extends React.Component<Props, State> {
     this.state = { selectedValue: undefined };
   }
   render() {
-    const { disabled, buttonLabel, fieldLabel, helpText } = this.props;
+    const { disabled, buttonLabel, fieldLabel, helpText, loadSuggestions } = this.props;
 
     const { selectedValue } = this.state;
     return (
       <div className="field">
         <Autocomplete
           label={fieldLabel}
-          loadSuggestions={this.props.loadSuggestions}
+          loadSuggestions={loadSuggestions}
           valueSelected={this.handleAddEntryChange}
           helpText={helpText}
           value={selectedValue}

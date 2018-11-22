@@ -68,7 +68,7 @@ class GroupForm extends React.Component<Props, State> {
 
   render() {
     const { t, loading } = this.props;
-    const group = this.state.group;
+    const { group } = this.state;
     let nameField = null;
     if (!this.props.group) {
       nameField = (
