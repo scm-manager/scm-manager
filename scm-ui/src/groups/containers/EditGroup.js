@@ -46,7 +46,7 @@ class EditGroup extends React.Component<Props> {
       .then(json => {
         return json.map(element => {
           return {
-            value: element.id,
+            value: element,
             label: `${element.displayName} (${element.id})`
           };
         });
