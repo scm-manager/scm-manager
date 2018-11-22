@@ -14,7 +14,10 @@ type Props = {
   buttonLabel: string,
   fieldLabel: string,
   helpText?: string,
-  loadSuggestions: string => Promise<AutocompleteObject>
+  loadSuggestions: string => Promise<AutocompleteObject>,
+  placeholder?: string,
+  loadingMessage?: string,
+  noOptionsMessage?: string
 };
 
 type State = {
@@ -27,7 +30,7 @@ class AutocompleteAddEntryToTableField extends React.Component<Props, State> {
     this.state = { selectedValue: undefined };
   }
   render() {
-    const { disabled, buttonLabel, fieldLabel, helpText, loadSuggestions } = this.props;
+    const { disabled, buttonLabel, fieldLabel, helpText, loadSuggestions, placeholder, loadingMessage, noOptionsMessage } = this.props;
 
     const { selectedValue } = this.state;
     return (
@@ -38,6 +41,9 @@ class AutocompleteAddEntryToTableField extends React.Component<Props, State> {
           valueSelected={this.handleAddEntryChange}
           helpText={helpText}
           value={selectedValue}
+          placeholder={placeholder}
+          loadingMessage={loadingMessage}
+          noOptionsMessage={noOptionsMessage}
         />
 
         <AddButton

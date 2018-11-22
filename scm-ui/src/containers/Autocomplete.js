@@ -34,7 +34,7 @@ class Autocomplete extends React.Component<Props, State> {
     placeholder: "Type here",
     loadingMessage: "Loading...",
     noOptionsMessage: "No suggestion available"
-  }
+  };
 
   handleInputChange = (newValue: SelectValue) => {
     this.props.valueSelected(newValue);

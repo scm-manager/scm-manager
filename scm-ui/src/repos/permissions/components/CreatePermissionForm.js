@@ -82,13 +82,17 @@ class CreatePermissionForm extends React.Component<Props, State> {
       });
   };
   renderAutocompletionField = () => {
+    const { t } = this.props;
     if (this.state.groupPermission) {
       return (
         <Autocomplete
           loadSuggestions={this.loadGroupAutocompletion}
           valueSelected={this.groupOrUserSelected}
           value={this.state.value}
-          label={"Group"}
+          label={t("permission.group")}
+          noOptionsMessage={t("permission.autocomplete.no-group-options")}
+          loadingMessage={t("permission.autocomplete.loading")}
+          placeholder={t("permission.autocomplete.group-placeholder")}
         />
       );
     }
@@ -97,7 +101,10 @@ class CreatePermissionForm extends React.Component<Props, State> {
         loadSuggestions={this.loadUserAutocompletion}
         valueSelected={this.groupOrUserSelected}
         value={this.state.value}
-        label={"User"}
+        label={t("permission.user")}
+        noOptionsMessage={t("permission.autocomplete.no-user-options")}
+        loadingMessage={t("permission.autocomplete.loading")}
+        placeholder={t("permission.autocomplete.user-placeholder")}
       />
     );
   };

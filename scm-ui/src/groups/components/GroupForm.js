@@ -106,6 +106,9 @@ class GroupForm extends React.Component<Props, State> {
           fieldLabel={t("add-member-textfield.label")}
           errorMessage={t("add-member-textfield.error")}
           loadSuggestions={this.props.loadUserSuggestions}
+          placeholder={t("add-member-autocomplete.placeholder")}
+          loadingMessage={t("add-member-autocomplete.loading")}
+          noOptionsMessage={t("add-member-autocomplete.no-options")}
         />
         <SubmitButton
           disabled={!this.isValid()}
