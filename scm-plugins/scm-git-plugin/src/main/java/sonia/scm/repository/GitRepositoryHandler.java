@@ -107,9 +107,14 @@ public class GitRepositoryHandler
    * @param repositoryLocationResolver
    */
   @Inject
-  public GitRepositoryHandler(ConfigurationStoreFactory storeFactory, FileSystem fileSystem, Scheduler scheduler, RepositoryLocationResolver repositoryLocationResolver, GitWorkdirFactory workdirFactory)
+  public GitRepositoryHandler(ConfigurationStoreFactory storeFactory,
+                              FileSystem fileSystem,
+                              Scheduler scheduler,
+                              RepositoryLocationResolver repositoryLocationResolver,
+                              InitialRepositoryLocationResolver initialRepositoryLocationResolver,
+                              GitWorkdirFactory workdirFactory)
   {
-    super(storeFactory, fileSystem, repositoryLocationResolver);
+    super(storeFactory, fileSystem, repositoryLocationResolver, initialRepositoryLocationResolver);
     this.scheduler = scheduler;
     this.workdirFactory = workdirFactory;
   }

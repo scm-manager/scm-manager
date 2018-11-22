@@ -4,9 +4,6 @@ import groovy.lang.Singleton;
 
 import javax.inject.Inject;
 import java.io.File;
-import java.io.IOException;
-
-import static sonia.scm.repository.InitialRepositoryLocationResolver.REPOSITORIES_NATIVE_DIRECTORY;
 
 /**
  *
@@ -24,6 +21,7 @@ import static sonia.scm.repository.InitialRepositoryLocationResolver.REPOSITORIE
 @Singleton
 public class RepositoryLocationResolver {
 
+  private static final String REPOSITORIES_NATIVE_DIRECTORY = "data";
   private RepositoryDAO repositoryDAO;
   private InitialRepositoryLocationResolver initialRepositoryLocationResolver;
 
@@ -33,22 +31,12 @@ public class RepositoryLocationResolver {
     this.initialRepositoryLocationResolver = initialRepositoryLocationResolver;
   }
 
-  /**
-   * Get the current repository directory from the dao or create the initial directory if the repository does not exists
-   * @param repository
-   * @return the current repository directory from the dao or the initial directory if the repository does not exists
-   * @throws IOException
-   */
   public File getRepositoryDirectory(Repository repository){
     if (repositoryDAO instanceof PathBasedRepositoryDAO) {
       PathBasedRepositoryDAO pathBasedRepositoryDAO = (PathBasedRepositoryDAO) repositoryDAO;
       return pathBasedRepositoryDAO.getPath(repository).toFile();
     }
-    return initialRepositoryLocationResolver.createDirectory(repository);
-  }
-
-  public File getInitialBaseDirectory() {
-    return initialRepositoryLocationResolver.getBaseDirectory();
+    return initialRepositoryLocationResolver.getDefaultDirectory(repository);
   }
 
   public File getNativeDirectory(Repository repository)  {

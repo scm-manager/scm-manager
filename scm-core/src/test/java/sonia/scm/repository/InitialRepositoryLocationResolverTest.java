@@ -8,7 +8,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.SCMContextProvider;
-import sonia.scm.io.DefaultFileSystem;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,13 +30,12 @@ public class InitialRepositoryLocationResolverTest {
   }
 
   @Test
-  public void x() {
-    InitialRepositoryLocationResolver resolver = new InitialRepositoryLocationResolver(context, new DefaultFileSystem());
+  public void shouldCreateInitialDirectory() {
+    InitialRepositoryLocationResolver resolver = new InitialRepositoryLocationResolver(context);
     Repository repository = new Repository();
     repository.setId("ABC");
-    File directory = resolver.createDirectory(repository);
+    File directory = resolver.getDefaultDirectory(repository);
 
     assertThat(directory).isEqualTo(new File(context.getBaseDirectory(), "repositories/ABC"));
-    assertThat(context.getBaseDirectory().exists()).isTrue();
   }
 }

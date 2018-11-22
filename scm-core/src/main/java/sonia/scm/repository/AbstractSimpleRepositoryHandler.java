@@ -69,15 +69,19 @@ public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig
   private static final Logger logger =
     LoggerFactory.getLogger(AbstractSimpleRepositoryHandler.class);
 
-  private FileSystem fileSystem;
+  private final FileSystem fileSystem;
   private final RepositoryLocationResolver repositoryLocationResolver;
+  private final InitialRepositoryLocationResolver initialRepositoryLocationResolver;
 
 
   public AbstractSimpleRepositoryHandler(ConfigurationStoreFactory storeFactory,
-                                         FileSystem fileSystem, RepositoryLocationResolver repositoryLocationResolver) {
+                                         FileSystem fileSystem,
+                                         RepositoryLocationResolver repositoryLocationResolver,
+                                         InitialRepositoryLocationResolver initialRepositoryLocationResolver) {
     super(storeFactory);
     this.fileSystem = fileSystem;
     this.repositoryLocationResolver = repositoryLocationResolver;
+    this.initialRepositoryLocationResolver = initialRepositoryLocationResolver;
   }
 
   @Override
@@ -159,7 +163,7 @@ public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig
 
   @Override
   public File getInitialBaseDirectory() {
-    return repositoryLocationResolver.getInitialBaseDirectory();
+    return initialRepositoryLocationResolver.getBaseDirectory();
   }
 
   @Override

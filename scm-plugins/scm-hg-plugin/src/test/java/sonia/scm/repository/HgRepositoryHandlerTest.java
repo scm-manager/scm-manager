@@ -60,7 +60,8 @@ public class HgRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
   @Mock
   private com.google.inject.Provider<HgContext> provider;
 
-  RepositoryLocationResolver repositoryLocationResolver;
+  private RepositoryLocationResolver repositoryLocationResolver;
+  private InitialRepositoryLocationResolver initialRepositoryLocationResolver;
 
   @Override
   protected void checkDirectory(File directory) {
@@ -73,11 +74,11 @@ public class HgRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
   @Override
   protected RepositoryHandler createRepositoryHandler(ConfigurationStoreFactory factory,
                                                       File directory) {
-    DefaultFileSystem fileSystem = new DefaultFileSystem();
-    repositoryLocationResolver = new RepositoryLocationResolver(repoDao, new InitialRepositoryLocationResolver(contextProvider, fileSystem));
+    initialRepositoryLocationResolver = new InitialRepositoryLocationResolver(contextProvider);
+    repositoryLocationResolver = new RepositoryLocationResolver(repoDao, initialRepositoryLocationResolver);
     HgRepositoryHandler handler = new HgRepositoryHandler(factory,
       new DefaultFileSystem(),
-      new HgContextProvider(), repositoryLocationResolver);
+      new HgContextProvider(), repositoryLocationResolver, initialRepositoryLocationResolver);
 
     handler.init(contextProvider);
     HgTestUtil.checkForSkip(handler);
@@ -88,7 +89,7 @@ public class HgRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
   @Test
   public void getDirectory() {
     HgRepositoryHandler repositoryHandler = new HgRepositoryHandler(factory,
-      new DefaultFileSystem(), provider, repositoryLocationResolver);
+      new DefaultFileSystem(), provider, repositoryLocationResolver, initialRepositoryLocationResolver);
 
     HgConfig hgConfig = new HgConfig();
     hgConfig.setHgBinary("hg");
@@ -97,6 +98,6 @@ public class HgRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
 
     initRepository();
     File path = repositoryHandler.getDirectory(repository);
-    assertEquals(repoPath.toString() + File.separator + InitialRepositoryLocationResolver.REPOSITORIES_NATIVE_DIRECTORY, path.getAbsolutePath());
+    assertEquals(repoPath.toString() + File.separator + RepositoryLocationResolver.REPOSITORIES_NATIVE_DIRECTORY, path.getAbsolutePath());
   }
 }

@@ -83,7 +83,7 @@ public final class RepositoryUtil {
       "repository path %s is not in the main repository path %s", path, basePath
     );
 
-    String id = IOUtil.trimSeperatorChars(path.substring(basePath.length()).replace(InitialRepositoryLocationResolver.REPOSITORIES_NATIVE_DIRECTORY, ""));
+    String id = IOUtil.trimSeperatorChars(path.substring(basePath.length()).replace(RepositoryLocationResolver.REPOSITORIES_NATIVE_DIRECTORY, ""));
 
     Preconditions.checkArgument(
       !id.contains("\\") && !id.contains("/"),

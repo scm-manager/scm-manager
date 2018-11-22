@@ -434,17 +434,17 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
     DefaultFileSystem fileSystem = new DefaultFileSystem();
     Set<RepositoryHandler> handlerSet = new HashSet<>();
     ConfigurationStoreFactory factory = new JAXBConfigurationStoreFactory(contextProvider);
-    InitialRepositoryLocationResolver initialRepositoryLocationResolver = new InitialRepositoryLocationResolver(contextProvider, fileSystem);
+    InitialRepositoryLocationResolver initialRepositoryLocationResolver = new InitialRepositoryLocationResolver(contextProvider);
     XmlRepositoryDAO repositoryDAO = new XmlRepositoryDAO(factory, initialRepositoryLocationResolver, contextProvider);
     RepositoryLocationResolver repositoryLocationResolver = new RepositoryLocationResolver(repositoryDAO, initialRepositoryLocationResolver);
-    handlerSet.add(new DummyRepositoryHandler(factory, repositoryLocationResolver));
-    handlerSet.add(new DummyRepositoryHandler(factory, repositoryLocationResolver) {
+    handlerSet.add(new DummyRepositoryHandler(factory, repositoryLocationResolver, initialRepositoryLocationResolver));
+    handlerSet.add(new DummyRepositoryHandler(factory, repositoryLocationResolver, initialRepositoryLocationResolver) {
       @Override
       public RepositoryType getType() {
         return new RepositoryType("hg", "Mercurial", Sets.newHashSet());
       }
     });
-    handlerSet.add(new DummyRepositoryHandler(factory, repositoryLocationResolver) {
+    handlerSet.add(new DummyRepositoryHandler(factory, repositoryLocationResolver, initialRepositoryLocationResolver) {
       @Override
       public RepositoryType getType() {
         return new RepositoryType("git", "Git", Sets.newHashSet());

@@ -64,6 +64,7 @@ public class GitRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
   private GitWorkdirFactory gitWorkdirFactory;
 
   RepositoryLocationResolver repositoryLocationResolver;
+  private InitialRepositoryLocationResolver initialRepositoryLocationResolver;
 
 
   @Override
@@ -90,10 +91,10 @@ public class GitRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
                                                       File directory) {
     DefaultFileSystem fileSystem = new DefaultFileSystem();
 
-    InitialRepositoryLocationResolver initialRepositoryLocationResolver = new InitialRepositoryLocationResolver(contextProvider, fileSystem);
+    initialRepositoryLocationResolver = new InitialRepositoryLocationResolver(contextProvider);
     repositoryLocationResolver = new RepositoryLocationResolver(repoDao, initialRepositoryLocationResolver);
     GitRepositoryHandler repositoryHandler = new GitRepositoryHandler(factory,
-      fileSystem, scheduler, repositoryLocationResolver, gitWorkdirFactory);
+      fileSystem, scheduler, repositoryLocationResolver, initialRepositoryLocationResolver, gitWorkdirFactory);
     repositoryHandler.init(contextProvider);
 
     GitConfig config = new GitConfig();
@@ -107,7 +108,7 @@ public class GitRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
   @Test
   public void getDirectory() {
     GitRepositoryHandler repositoryHandler = new GitRepositoryHandler(factory,
-      new DefaultFileSystem(), scheduler, repositoryLocationResolver, gitWorkdirFactory);
+      new DefaultFileSystem(), scheduler, repositoryLocationResolver, initialRepositoryLocationResolver, gitWorkdirFactory);
     GitConfig config = new GitConfig();
     config.setDisabled(false);
     config.setGcExpression("gc exp");
@@ -116,6 +117,6 @@ public class GitRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
 
     initRepository();
     File path = repositoryHandler.getDirectory(repository);
-    assertEquals(repoPath.toString() + File.separator + InitialRepositoryLocationResolver.REPOSITORIES_NATIVE_DIRECTORY, path.getAbsolutePath());
+    assertEquals(repoPath.toString() + File.separator + RepositoryLocationResolver.REPOSITORIES_NATIVE_DIRECTORY, path.getAbsolutePath());
   }
 }

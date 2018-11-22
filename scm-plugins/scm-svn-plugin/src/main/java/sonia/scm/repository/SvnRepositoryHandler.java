@@ -86,10 +86,13 @@ public class SvnRepositoryHandler
     LoggerFactory.getLogger(SvnRepositoryHandler.class);
 
   @Inject
-  public SvnRepositoryHandler(ConfigurationStoreFactory storeFactory, FileSystem fileSystem,
-                              HookEventFacade eventFacade, RepositoryLocationResolver repositoryLocationResolver)
+  public SvnRepositoryHandler(ConfigurationStoreFactory storeFactory,
+                              FileSystem fileSystem,
+                              HookEventFacade eventFacade,
+                              RepositoryLocationResolver repositoryLocationResolver,
+                              InitialRepositoryLocationResolver initialRepositoryLocationResolver)
   {
-    super(storeFactory, fileSystem, repositoryLocationResolver);
+    super(storeFactory, fileSystem, repositoryLocationResolver, initialRepositoryLocationResolver);
 
     // register logger
     SVNDebugLog.setDefaultLog(new SVNKitLogger());

@@ -59,8 +59,8 @@ public class DummyRepositoryHandler
 
   private final Set<String> existingRepoNames = new HashSet<>();
 
-  public DummyRepositoryHandler(ConfigurationStoreFactory storeFactory, RepositoryLocationResolver repositoryLocationResolver) {
-    super(storeFactory, new DefaultFileSystem(), repositoryLocationResolver);
+  public DummyRepositoryHandler(ConfigurationStoreFactory storeFactory, RepositoryLocationResolver repositoryLocationResolver, InitialRepositoryLocationResolver initialRepositoryLocationResolver) {
+    super(storeFactory, new DefaultFileSystem(), repositoryLocationResolver, initialRepositoryLocationResolver);
   }
 
   @Override

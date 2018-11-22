@@ -105,10 +105,11 @@ public final class HgTestUtil
     FileSystem fileSystem = mock(FileSystem.class);
     PathBasedRepositoryDAO repoDao = mock(PathBasedRepositoryDAO.class);
 
-    RepositoryLocationResolver repositoryLocationResolver = new RepositoryLocationResolver(repoDao, new InitialRepositoryLocationResolver(context,fileSystem));
+    InitialRepositoryLocationResolver initialRepositoryLocationResolver = new InitialRepositoryLocationResolver(context);
+    RepositoryLocationResolver repositoryLocationResolver = new RepositoryLocationResolver(repoDao, initialRepositoryLocationResolver);
     HgRepositoryHandler handler =
       new HgRepositoryHandler(new InMemoryConfigurationStoreFactory(), fileSystem,
-        new HgContextProvider(), repositoryLocationResolver);
+        new HgContextProvider(), repositoryLocationResolver, initialRepositoryLocationResolver);
     Path repoDir = directory.toPath();
     when(repoDao.getPath(any())).thenReturn(repoDir);
     handler.init(context);

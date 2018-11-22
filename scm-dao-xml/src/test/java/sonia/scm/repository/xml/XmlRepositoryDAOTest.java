@@ -48,7 +48,7 @@ public class XmlRepositoryDAOTest {
 
   @Test
   public void addShouldCreateNewRepositoryPathWithRelativePath() {
-    InitialRepositoryLocationResolver initialRepositoryLocationResolver = new InitialRepositoryLocationResolver(context, null);
+    InitialRepositoryLocationResolver initialRepositoryLocationResolver = new InitialRepositoryLocationResolver(context);
     XmlRepositoryDAO dao = new XmlRepositoryDAO(storeFactory, initialRepositoryLocationResolver, context);
 
     dao.add(new Repository("id", null, null, null));
@@ -67,7 +67,7 @@ public class XmlRepositoryDAOTest {
     RepositoryPath repositoryPath = new RepositoryPath("/path", "id", oldRepository);
     when(db.getPaths()).thenReturn(asList(repositoryPath));
 
-    XmlRepositoryDAO dao = new XmlRepositoryDAO(storeFactory, new InitialRepositoryLocationResolver(context, null), context);
+    XmlRepositoryDAO dao = new XmlRepositoryDAO(storeFactory, new InitialRepositoryLocationResolver(context), context);
 
     Repository newRepository = new Repository("id", "new", null, null);
     dao.modify(newRepository);
@@ -82,7 +82,7 @@ public class XmlRepositoryDAOTest {
     RepositoryPath repositoryPath = new RepositoryPath("path", "id", existingRepository);
     when(db.getPaths()).thenReturn(asList(repositoryPath));
 
-    XmlRepositoryDAO dao = new XmlRepositoryDAO(storeFactory, new InitialRepositoryLocationResolver(context, null), context);
+    XmlRepositoryDAO dao = new XmlRepositoryDAO(storeFactory, new InitialRepositoryLocationResolver(context), context);
 
     Path path = dao.getPath(existingRepository);
 
@@ -95,7 +95,7 @@ public class XmlRepositoryDAOTest {
     RepositoryPath repositoryPath = new RepositoryPath("/tmp/path", "id", existingRepository);
     when(db.getPaths()).thenReturn(asList(repositoryPath));
 
-    XmlRepositoryDAO dao = new XmlRepositoryDAO(storeFactory, new InitialRepositoryLocationResolver(context, null), context);
+    XmlRepositoryDAO dao = new XmlRepositoryDAO(storeFactory, new InitialRepositoryLocationResolver(context), context);
 
     Path path = dao.getPath(existingRepository);
 
@@ -106,7 +106,7 @@ public class XmlRepositoryDAOTest {
   public void shouldGetPathForNewRepository() {
     when(db.getPaths()).thenReturn(emptyList());
 
-    InitialRepositoryLocationResolver initialRepositoryLocationResolver = new InitialRepositoryLocationResolver(context, null);
+    InitialRepositoryLocationResolver initialRepositoryLocationResolver = new InitialRepositoryLocationResolver(context);
     XmlRepositoryDAO dao = new XmlRepositoryDAO(storeFactory, initialRepositoryLocationResolver, context);
 
     Repository newRepository = new Repository("id", "new", null, null);

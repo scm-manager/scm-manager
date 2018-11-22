@@ -126,7 +126,7 @@ public abstract class SimpleRepositoryHandlerTestBase extends AbstractTestBase {
     File repoDirectory = new File(baseDirectory, repository.getId());
     repoPath = repoDirectory.toPath();
     when(repoDao.getPath(repository)).thenReturn(repoPath);
-    return new File(repoDirectory, InitialRepositoryLocationResolver.REPOSITORIES_NATIVE_DIRECTORY);
+    return new File(repoDirectory, RepositoryLocationResolver.REPOSITORIES_NATIVE_DIRECTORY);
   }
 
   protected File baseDirectory;

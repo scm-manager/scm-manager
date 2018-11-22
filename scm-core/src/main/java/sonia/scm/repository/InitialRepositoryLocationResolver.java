@@ -22,30 +22,21 @@ import java.io.IOException;
 public class InitialRepositoryLocationResolver {
 
   public static final String DEFAULT_REPOSITORY_PATH = "repositories";
-  public static final String REPOSITORIES_NATIVE_DIRECTORY = "data";
-  private SCMContextProvider context;
-  private FileSystem fileSystem;
 
+  private final SCMContextProvider context;
 
   @Inject
-  public InitialRepositoryLocationResolver(SCMContextProvider context, FileSystem fileSystem) {
+  public InitialRepositoryLocationResolver(SCMContextProvider context) {
     this.context = context;
-    this.fileSystem = fileSystem;
   }
 
-  public File getBaseDirectory() {
+  File getBaseDirectory() {
     return new File(context.getBaseDirectory(), DEFAULT_REPOSITORY_PATH);
   }
 
-  public File createDirectory(Repository repository) {
+  File getDefaultDirectory(Repository repository) {
     String initialRepoFolder = getRelativeRepositoryPath(repository);
-    try {
-      File directory = new File(context.getBaseDirectory(), initialRepoFolder);
-      fileSystem.create(directory);
-      return directory;
-    } catch (IOException e) {
-      throw new InternalRepositoryException(repository, "Cannot create repository directory for " + repository.getNamespaceAndName(), e);
-    }
+    return new File(context.getBaseDirectory(), initialRepoFolder);
   }
 
   public String getRelativeRepositoryPath(Repository repository) {
