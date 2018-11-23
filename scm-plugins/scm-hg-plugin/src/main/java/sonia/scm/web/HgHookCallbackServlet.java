@@ -449,6 +449,7 @@ public class HgHookCallbackServlet extends HttpServlet
    *
    * @return
    */
+  @SuppressWarnings("squid:S2083") // we do nothing with the path given, so this should be no issue
   private String getRepositoryId(HttpServletRequest request)
   {
     String id = null;
