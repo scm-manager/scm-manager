@@ -184,10 +184,10 @@ public class XmlRepositoryDAO
   }
 
   @Override
-  public String getIdForDirectory(File path) {
+  public Repository getRepositoryForDirectory(File path) {
     for (RepositoryPath p : db.getPaths()) {
       if (toRealPath(path.toPath()).startsWith(toRealPath(context.getBaseDirectory().toPath().resolve(p.getPath())))) {
-        return p.getId();
+        return p.getRepository();
       }
     }
     throw new NotFoundException("directory", path.getPath());

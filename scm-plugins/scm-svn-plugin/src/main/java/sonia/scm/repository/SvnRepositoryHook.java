@@ -154,10 +154,10 @@ public class SvnRepositoryHook implements FSHook
   {
     try
     {
-      String id = getRepositoryId(directory);
+      Repository repository = getRepositoryId(directory);
 
       //J-
-      hookEventFacade.handle(id)
+      hookEventFacade.handle(repository)
         .fireHookEvent(
           changesetProvider.getType(),
           new SvnHookContextProvider(changesetProvider)
@@ -188,11 +188,11 @@ public class SvnRepositoryHook implements FSHook
    *
    * @throws IOException
    */
-  private String getRepositoryId(File directory)
+  private Repository getRepositoryId(File directory)
   {
     AssertUtil.assertIsNotNull(directory);
 
-    return repositoryDAO.getIdForDirectory(directory);
+    return repositoryDAO.getRepositoryForDirectory(directory);
   }
 
   //~--- fields ---------------------------------------------------------------

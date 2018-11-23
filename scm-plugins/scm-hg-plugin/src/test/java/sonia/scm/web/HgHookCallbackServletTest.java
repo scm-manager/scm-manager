@@ -2,6 +2,7 @@ package sonia.scm.web;
 
 import org.junit.Test;
 import sonia.scm.repository.HgRepositoryHandler;
+import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryDAO;
 
 import javax.servlet.ServletException;
@@ -23,7 +24,7 @@ public class HgHookCallbackServletTest {
   public void shouldExtractCorrectRepositoryId() throws ServletException, IOException {
     HgRepositoryHandler handler = mock(HgRepositoryHandler.class);
     RepositoryDAO repositoryDAO = mock(RepositoryDAO.class);
-    when(repositoryDAO.getIdForDirectory(new File("/tmp/hg/12345"))).thenReturn("12345");
+    when(repositoryDAO.getRepositoryForDirectory(new File("/tmp/hg/12345"))).thenReturn(new Repository("12345", "git", "space", "name"));
     HgHookCallbackServlet servlet = new HgHookCallbackServlet(null, handler, null, null, repositoryDAO);
     HttpServletRequest request = mock(HttpServletRequest.class);
     HttpServletResponse response = mock(HttpServletResponse.class);

@@ -48,6 +48,7 @@ import sonia.scm.NotFoundException;
 import sonia.scm.repository.HgContext;
 import sonia.scm.repository.HgHookManager;
 import sonia.scm.repository.HgRepositoryHandler;
+import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryDAO;
 import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.api.HgHookMessage;
@@ -170,7 +171,7 @@ public class HgHookCallbackServlet extends HttpServlet
 
     if (m.matches())
     {
-      String id = getRepositoryId(request);
+      Repository repository = getRepositoryId(request);
       String type = m.group(1);
       String challenge = request.getParameter(PARAM_CHALLENGE);
 
@@ -187,7 +188,7 @@ public class HgHookCallbackServlet extends HttpServlet
             authenticate(request, credentials);
           }
 
-          hookCallback(response, id, type, challenge, node);
+          hookCallback(response, repository, type, challenge, node);
         }
         else if (logger.isDebugEnabled())
         {
@@ -246,7 +247,7 @@ public class HgHookCallbackServlet extends HttpServlet
     }
   }
 
-  private void fireHook(HttpServletResponse response, String id,
+  private void fireHook(HttpServletResponse response, Repository repository,
     String node, RepositoryHookType type)
     throws IOException
   {
@@ -259,10 +260,10 @@ public class HgHookCallbackServlet extends HttpServlet
         contextProvider.get().setPending(true);
       }
 
-      context = new HgHookContextProvider(handler, id, hookManager,
+      context = new HgHookContextProvider(handler, repository, hookManager,
         node, type);
 
-      hookEventFacade.handle(id).fireHookEvent(type, context);
+      hookEventFacade.handle(repository).fireHookEvent(type, context);
 
       printMessages(response, context);
     }
@@ -280,7 +281,7 @@ public class HgHookCallbackServlet extends HttpServlet
     }
   }
 
-  private void hookCallback(HttpServletResponse response, String id, String typeName, String challenge, String node) throws IOException {
+  private void hookCallback(HttpServletResponse response, Repository repository, String typeName, String challenge, String node) throws IOException {
     if (hookManager.isAcceptAble(challenge))
     {
       RepositoryHookType type = null;
@@ -296,7 +297,7 @@ public class HgHookCallbackServlet extends HttpServlet
 
       if (type != null)
       {
-        fireHook(response, id, node, type);
+        fireHook(response, repository, node, type);
       }
       else
       {
@@ -450,20 +451,20 @@ public class HgHookCallbackServlet extends HttpServlet
    * @return
    */
   @SuppressWarnings("squid:S2083") // we do nothing with the path given, so this should be no issue
-  private String getRepositoryId(HttpServletRequest request)
+  private Repository getRepositoryId(HttpServletRequest request)
   {
-    String id = null;
+    Repository repository = null;
     String path = request.getParameter(PARAM_REPOSITORYPATH);
 
     if (Util.isNotEmpty(path)) {
-      id = repositoryDAO.getIdForDirectory(new File(path));
+      repository = repositoryDAO.getRepositoryForDirectory(new File(path));
     }
     else if (logger.isWarnEnabled())
     {
       logger.warn("no repository path parameter found");
     }
 
-    return id;
+    return repository;
   }
 
   //~--- fields ---------------------------------------------------------------

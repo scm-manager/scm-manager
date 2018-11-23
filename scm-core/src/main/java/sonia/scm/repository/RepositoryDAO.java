@@ -75,7 +75,7 @@ public interface RepositoryDAO extends GenericDAO<Repository>
    * may be the root directory of the repository or any other directory or file
    * inside the root directory.
    *
-   * @throws {@link RuntimeException} when there is no repository for the given path.
+   * @throws {@link sonia.scm.NotFoundException} when there is no repository for the given path.
    */
-  String getIdForDirectory(File path);
+  Repository getRepositoryForDirectory(File path);
 }

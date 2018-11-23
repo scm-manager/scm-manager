@@ -118,14 +118,14 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
     try
     {
       Repository repository = rpack.getRepository();
-      String id = resolveRepositoryId(repository);
+      sonia.scm.repository.Repository scmRepository = resolveRepositoryId(repository);
 
-      logger.trace("resolved repository to id {}", id);
+      logger.trace("resolved repository to {}", scmRepository.getNamespaceAndName());
 
       GitHookContextProvider context = new GitHookContextProvider(rpack,
                                          receiveCommands);
 
-      hookEventFacade.handle(id).fireHookEvent(type, context);
+      hookEventFacade.handle(scmRepository).fireHookEvent(type, context);
 
     }
     catch (Exception ex)
@@ -177,7 +177,7 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
    *
    * @throws IOException
    */
-  private String resolveRepositoryId(Repository repository)
+  private sonia.scm.repository.Repository resolveRepositoryId(Repository repository)
   {
     File directory;
 
@@ -190,7 +190,7 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
       directory = repository.getWorkTree();
     }
 
-    return repositoryDAO.getIdForDirectory(directory);
+    return repositoryDAO.getRepositoryForDirectory(directory);
   }
 
   //~--- fields ---------------------------------------------------------------

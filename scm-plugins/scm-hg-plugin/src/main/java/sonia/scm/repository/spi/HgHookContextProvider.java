@@ -35,6 +35,7 @@ package sonia.scm.repository.spi;
 
 import sonia.scm.repository.HgHookManager;
 import sonia.scm.repository.HgRepositoryHandler;
+import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.api.HgHookBranchProvider;
 import sonia.scm.repository.api.HgHookMessageProvider;
@@ -67,16 +68,16 @@ public class HgHookContextProvider extends HookContextProvider
    * Constructs a new instance.
    *
    * @param handler mercurial repository handler
-   * @param namespaceAndName namespace and name of changed repository
+   * @param repository the changed repository
    * @param hookManager mercurial hook manager
    * @param startRev start revision
    * @param type type of hook
    */
   public HgHookContextProvider(HgRepositoryHandler handler,
-    String id, HgHookManager hookManager, String startRev,
-    RepositoryHookType type)
+                               Repository repository, HgHookManager hookManager, String startRev,
+                               RepositoryHookType type)
   {
-    this.hookChangesetProvider = new HgHookChangesetProvider(handler, id, hookManager, startRev, type);
+    this.hookChangesetProvider = new HgHookChangesetProvider(handler, repository, hookManager, startRev, type);
   }
 
   //~--- get methods ----------------------------------------------------------

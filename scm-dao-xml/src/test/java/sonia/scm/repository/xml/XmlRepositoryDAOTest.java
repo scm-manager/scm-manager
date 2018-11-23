@@ -116,9 +116,9 @@ public class XmlRepositoryDAOTest {
 
     XmlRepositoryDAO dao = new XmlRepositoryDAO(storeFactory, new InitialRepositoryLocationResolver(context), fileSystem, context);
 
-    String id = dao.getIdForDirectory(new File(context.getBaseDirectory(), "relative/path/data"));
+    Repository repository = dao.getRepositoryForDirectory(new File(context.getBaseDirectory(), "relative/path/data"));
 
-    assertThat(id).isEqualTo("id");
+    assertThat(repository).isSameAs(existingRepository);
   }
 
   @Test
@@ -130,9 +130,9 @@ public class XmlRepositoryDAOTest {
 
     XmlRepositoryDAO dao = new XmlRepositoryDAO(storeFactory, new InitialRepositoryLocationResolver(context), fileSystem, context);
 
-    String id = dao.getIdForDirectory(folder);
+    Repository repository = dao.getRepositoryForDirectory(folder);
 
-    assertThat(id).isEqualTo("id");
+    assertThat(repository).isSameAs(existingRepository);
   }
 
   @Test
@@ -146,8 +146,8 @@ public class XmlRepositoryDAOTest {
 
     XmlRepositoryDAO dao = new XmlRepositoryDAO(storeFactory, new InitialRepositoryLocationResolver(context), fileSystem, context);
 
-    String id = dao.getIdForDirectory(folder);
+    Repository repository = dao.getRepositoryForDirectory(folder);
 
-    assertThat(id).isEqualTo("id");
+    assertThat(repository).isSameAs(existingRepository);
   }
 }
