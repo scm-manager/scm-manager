@@ -20,6 +20,7 @@ export { default as ProtectedRoute } from "./ProtectedRoute.js";
 export { default as Help } from "./Help.js";
 export { default as LabelWithHelpIcon } from "./LabelWithHelpIcon.js";
 export { getPageFromMatch } from "./urls";
+export { default as Autocomplete} from "./Autocomplete";
 
 export { apiClient, NOT_FOUND_ERROR, UNAUTHORIZED_ERROR } from "./apiclient.js";
 

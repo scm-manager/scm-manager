@@ -1,12 +1,9 @@
 //@flow
 import React from "react";
 
-import { AddButton } from "@scm-manager/ui-components";
-import Autocomplete from "../../containers/Autocomplete";
-import type {
-  AutocompleteObject,
-  SelectValue
-} from "../../containers/Autocomplete";
+import type { AutocompleteObject, SelectValue } from "@scm-manager/ui-types";
+import Autocomplete from "../Autocomplete";
+import AddButton from "../buttons/AddButton";
 
 type Props = {
   addEntry: SelectValue => void,
@@ -30,7 +27,16 @@ class AutocompleteAddEntryToTableField extends React.Component<Props, State> {
     this.state = { selectedValue: undefined };
   }
   render() {
-    const { disabled, buttonLabel, fieldLabel, helpText, loadSuggestions, placeholder, loadingMessage, noOptionsMessage } = this.props;
+    const {
+      disabled,
+      buttonLabel,
+      fieldLabel,
+      helpText,
+      loadSuggestions,
+      placeholder,
+      loadingMessage,
+      noOptionsMessage
+    } = this.props;
 
     const { selectedValue } = this.state;
     return (

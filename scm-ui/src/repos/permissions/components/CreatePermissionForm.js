@@ -1,15 +1,14 @@
 // @flow
 import React from "react";
 import { translate } from "react-i18next";
-import { SubmitButton } from "@scm-manager/ui-components";
+import { Autocomplete, SubmitButton } from "@scm-manager/ui-components";
 import TypeSelector from "./TypeSelector";
 import type {
   PermissionCollection,
-  PermissionCreateEntry
+  PermissionCreateEntry,
+  SelectValue
 } from "@scm-manager/ui-types";
 import * as validator from "./permissionValidation";
-import Autocomplete from "../../../containers/Autocomplete";
-import type { SelectValue } from "../../../containers/Autocomplete";
 
 type Props = {
   t: string => string,
