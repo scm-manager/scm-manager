@@ -35,6 +35,7 @@ package sonia.scm.repository.xml;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import sonia.scm.NotFoundException;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.io.FileSystem;
 import sonia.scm.repository.InitialRepositoryLocationResolver;
@@ -50,6 +51,8 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Optional;
+
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
 
 /**
  * @author Sebastian Sdorra
@@ -187,7 +190,7 @@ public class XmlRepositoryDAO
         return p.getId();
       }
     }
-    throw new RuntimeException("could not find repository for directory: " + path);
+    throw new NotFoundException("directory", path.getPath());
   }
 
   private Path toRealPath(Path path) {
@@ -196,7 +199,7 @@ public class XmlRepositoryDAO
       // (see issue #82, https://bitbucket.org/sdorra/scm-manager/issues/82/symbolic-link-in-hg-repository-path)
       return path.toRealPath();
     } catch (IOException e) {
-      throw new RuntimeException("could not get Path$toRealPath for path: " + path);
+      throw new InternalRepositoryException(entity("directory", path.toString()), "could not get Path$toRealPath for path: " + path);
     }
   }
 
