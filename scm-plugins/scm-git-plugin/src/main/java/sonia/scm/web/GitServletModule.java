@@ -41,6 +41,8 @@ import org.mapstruct.factory.Mappers;
 import sonia.scm.api.v2.resources.GitConfigDtoToGitConfigMapper;
 import sonia.scm.api.v2.resources.GitConfigToGitConfigDtoMapper;
 import sonia.scm.plugin.Extension;
+import sonia.scm.repository.GitWorkdirFactory;
+import sonia.scm.repository.spi.SimpleGitWorkdirFactory;
 import sonia.scm.web.lfs.LfsBlobStoreFactory;
 
 /**
@@ -63,5 +65,7 @@ public class GitServletModule extends ServletModule
 
     bind(GitConfigDtoToGitConfigMapper.class).to(Mappers.getMapper(GitConfigDtoToGitConfigMapper.class).getClass());
     bind(GitConfigToGitConfigDtoMapper.class).to(Mappers.getMapper(GitConfigToGitConfigDtoMapper.class).getClass());
+
+    bind(GitWorkdirFactory.class).to(SimpleGitWorkdirFactory.class);
   }
 }

@@ -42,9 +42,8 @@ import org.apache.shiro.subject.Subject;
 import sonia.scm.Priority;
 import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
-import sonia.scm.security.SecurityRequests;
 import sonia.scm.web.filter.HttpFilter;
-import sonia.scm.web.filter.SecurityHttpServletRequestWrapper;
+import sonia.scm.web.filter.PropagatePrincipleServletRequestWrapper;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -61,10 +60,7 @@ import static sonia.scm.api.v2.resources.ScmPathInfo.REST_API_PATH;
  * @author Sebastian Sdorra
  */
 @Priority(Filters.PRIORITY_AUTHORIZATION)
-// TODO find a better way for unprotected resources
-@WebElement(value = REST_API_PATH + "" +
-  "/(?!v2/ui).*", regex = true)
-public class SecurityFilter extends HttpFilter
+public class PropagatePrincipleFilter extends HttpFilter
 {
 
   /** name of request attribute for the primary principal */
@@ -74,7 +70,7 @@ public class SecurityFilter extends HttpFilter
   private final ScmConfiguration configuration;
 
   @Inject
-  public SecurityFilter(ScmConfiguration configuration)
+  public PropagatePrincipleFilter(ScmConfiguration configuration)
   {
     this.configuration = configuration;
   }
@@ -84,31 +80,16 @@ public class SecurityFilter extends HttpFilter
     HttpServletResponse response, FilterChain chain)
     throws IOException, ServletException
   {
-    if (!SecurityRequests.isAuthenticationRequest(request) && !SecurityRequests.isIndexRequest(request))
+    Subject subject = SecurityUtils.getSubject();
+    if (hasPermission(subject))
     {
-      Subject subject = SecurityUtils.getSubject();
-      if (hasPermission(subject))
-      {
-        // add primary principal as request attribute
-        // see https://goo.gl/JRjNmf
-        String username = getUsername(subject);
-        request.setAttribute(ATTRIBUTE_REMOTE_USER, username);
+      // add primary principal as request attribute
+      // see https://goo.gl/JRjNmf
+      String username = getUsername(subject);
+      request.setAttribute(ATTRIBUTE_REMOTE_USER, username);
 
-        // wrap servlet request to provide authentication informations
-        chain.doFilter(new SecurityHttpServletRequestWrapper(request, username), response);
-      }
-      else if (subject.isAuthenticated() || subject.isRemembered())
-      {
-        response.sendError(HttpServletResponse.SC_FORBIDDEN);
-      }
-      else if (configuration.isAnonymousAccessEnabled())
-      {
-        response.sendError(HttpServletResponse.SC_FORBIDDEN);
-      }
-      else
-      {
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-      }
+      // wrap servlet request to provide authentication information
+      chain.doFilter(new PropagatePrincipleServletRequestWrapper(request, username), response);
     }
     else
     {
@@ -116,7 +97,7 @@ public class SecurityFilter extends HttpFilter
     }
   }
 
-  protected boolean hasPermission(Subject subject)
+  private boolean hasPermission(Subject subject)
   {
     return ((configuration != null)
       && configuration.isAnonymousAccessEnabled()) || subject.isAuthenticated()
@@ -139,5 +120,4 @@ public class SecurityFilter extends HttpFilter
 
     return username;
   }
-
 }

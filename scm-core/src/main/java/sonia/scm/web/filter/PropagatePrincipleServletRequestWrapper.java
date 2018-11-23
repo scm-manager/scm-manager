@@ -30,59 +30,25 @@
  */
 
 
-package sonia.scm.selenium;
 
-//~--- non-JDK imports --------------------------------------------------------
+package sonia.scm.web.filter;
 
-import sonia.scm.selenium.page.Pages;
-import sonia.scm.selenium.page.MainPage;
-import sonia.scm.selenium.page.LoginPage;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+//~--- JDK imports ------------------------------------------------------------
 
-import sonia.scm.repository.Repository;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 
-/**
- * Repository related selenium integration tests.
- * 
- * @author Sebastian Sdorra
- */
-public class RepositoriesITCase extends SeleniumITCaseBase {
+public class PropagatePrincipleServletRequestWrapper extends HttpServletRequestWrapper {
 
-  private MainPage main;
-  
-  /**
-   * Authenticates admin user, before each test.
-   */
-  @Before
-  public void login() {
-    main = Pages.get(driver, LoginPage.class)
-                .login("scmadmin", "scmadmin");
+  private final String principal;
+
+  public PropagatePrincipleServletRequestWrapper(HttpServletRequest request, String principal) {
+    super(request);
+    this.principal = principal;
   }
 
-  /**
-   * Creates, select and removes a repository. 
-   */
-  @Test
-  public void createRepository() {
-    Repository repository = new Repository();
-    repository.setName("scm");
-    repository.setType("git");
-    repository.setContact("scmadmin@scm-manager.org");
-    repository.setDescription("SCM-Manager");
-    
-    main.repositories()
-        .add(repository)
-        .select(repository.getName())
-        .remove();
-  }
-  
-  /**
-   * Logs the user out, after each test.
-   */
-  @After
-  public void logout() {
-    main.logout();
+  @Override
+  public String getRemoteUser() {
+    return principal;
   }
 }

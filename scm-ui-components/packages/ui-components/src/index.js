@@ -17,8 +17,9 @@ export { default as Notification } from "./Notification.js";
 export { default as Paginator } from "./Paginator.js";
 export { default as LinkPaginator } from "./LinkPaginator.js";
 export { default as ProtectedRoute } from "./ProtectedRoute.js";
-export { default as Help } from "./Help.js";
-export { default as LabelWithHelpIcon } from "./LabelWithHelpIcon.js";
+export { default as Help } from "./Help";
+export { default as HelpIcon } from "./HelpIcon";
+export { default as Tooltip } from "./Tooltip";
 export { getPageFromMatch } from "./urls";
 export { default as Autocomplete} from "./Autocomplete";
 

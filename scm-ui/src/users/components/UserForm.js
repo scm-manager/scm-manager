@@ -38,7 +38,7 @@ class UserForm extends React.Component<Props, State> {
         mail: "",
         password: "",
         admin: false,
-        active: false,
+        active: true,
         _links: {}
       },
       mailValidationError: false,
@@ -73,7 +73,8 @@ class UserForm extends React.Component<Props, State> {
       this.state.passwordConfirmationError ||
       this.state.displayNameValidationError ||
       this.isFalsy(user.name) ||
-      this.isFalsy(user.displayName)
+      this.isFalsy(user.displayName) ||
+      this.isFalsy(user.mail)
     );
   };
 

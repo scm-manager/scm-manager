@@ -301,7 +301,7 @@ public class AuthenticationFilter extends HttpFilter
       }
     }
 
-    chain.doFilter(new SecurityHttpServletRequestWrapper(request, username),
+    chain.doFilter(new PropagatePrincipleServletRequestWrapper(request, username),
       response);
   }
 

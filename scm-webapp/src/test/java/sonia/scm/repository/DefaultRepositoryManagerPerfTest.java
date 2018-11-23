@@ -184,7 +184,7 @@ private long calculateAverage(List<Long> times) {
   
   private Repository createTestRepository(int number) {
     Repository repository = new Repository(keyGenerator.createKey(), REPOSITORY_TYPE, "namespace", "repo-" + number);
-    repository.getPermissions().add(new Permission("trillian", PermissionType.READ));
+    repository.addPermission(new Permission("trillian", PermissionType.READ));
     return repository;
   }
   

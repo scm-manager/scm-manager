@@ -99,10 +99,10 @@ public class TestData {
     ;
   }
 
-  public static List<Object> getUserPermissions(String username, String password, String repositoryType) {
+  public static List<Map> getUserPermissions(String username, String password, String repositoryType) {
     return callUserPermissions(username, password, repositoryType, HttpStatus.SC_OK)
       .extract()
-      .body().jsonPath().getList("_embedded.permissions");
+      .body().jsonPath().<Map>getList("_embedded.permissions");
   }
 
   public static ValidatableResponse callUserPermissions(String username, String password, String repositoryType, int expectedStatusCode) {

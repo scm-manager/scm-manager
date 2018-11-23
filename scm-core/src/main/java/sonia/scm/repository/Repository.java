@@ -37,7 +37,6 @@ import com.github.sdorra.ssp.PermissionObject;
 import com.github.sdorra.ssp.StaticPermissions;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-import com.google.common.collect.Lists;
 import sonia.scm.BasicPropertiesAware;
 import sonia.scm.ModelObject;
 import sonia.scm.util.Util;
@@ -50,8 +49,11 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Source code repository.
@@ -79,7 +81,7 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
   private Long lastModified;
   private String namespace;
   private String name;
-  private List<Permission> permissions;
+  private final Set<Permission> permissions = new HashSet<>();
   @XmlElement(name = "public")
   private boolean publicReadable = false;
   private boolean archived = false;
@@ -127,7 +129,6 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
     this.name = name;
     this.contact = contact;
     this.description = description;
-    this.permissions = Lists.newArrayList();
 
     if (Util.isNotEmpty(permissions)) {
       this.permissions.addAll(Arrays.asList(permissions));
@@ -200,12 +201,8 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
     return new NamespaceAndName(getNamespace(), getName());
   }
 
-  public List<Permission> getPermissions() {
-    if (permissions == null) {
-      permissions = Lists.newArrayList();
-    }
-
-    return permissions;
+  public Collection<Permission> getPermissions() {
+    return Collections.unmodifiableCollection(permissions);
   }
 
   /**
@@ -300,8 +297,17 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
     this.name = name;
   }
 
-  public void setPermissions(List<Permission> permissions) {
-    this.permissions = permissions;
+  public void setPermissions(Collection<Permission> permissions) {
+    this.permissions.clear();
+    this.permissions.addAll(permissions);
+  }
+
+  public void addPermission(Permission newPermission) {
+    this.permissions.add(newPermission);
+  }
+
+  public void removePermission(Permission permission) {
+    this.permissions.remove(permission);
   }
 
   public void setPublicReadable(boolean publicReadable) {

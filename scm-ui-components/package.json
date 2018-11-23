@@ -1,14 +1,16 @@
 {
   "name": "scm-ui-components",
+  "version": "0.0.3",
   "description": "Lerna root for SCM-Manager UI Components",
   "private": true,
   "scripts": {
     "bootstrap": "lerna bootstrap",
     "link": "lerna exec -- yarn link",
-    "unlink": "lerna exec --no-bail -- yarn unlink || true"
+    "unlink": "lerna exec --no-bail -- yarn unlink || true",
+    "deploy": "node ./scripts/publish.js"
   },
   "devDependencies": {
-    "lerna": "^3.2.1"
-  },
-  "dependencies": {}
+    "lerna": "^3.4.3",
+    "xml2js": "^0.4.19"
+  }
 }

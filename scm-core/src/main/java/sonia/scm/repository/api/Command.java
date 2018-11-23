@@ -66,6 +66,10 @@ public enum Command
   /**
    * @since 2.0
    */
-  MODIFICATIONS
+  MODIFICATIONS,
 
+  /**
+   * @since 2.0
+   */
+  MERGE
 }

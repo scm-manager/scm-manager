@@ -124,7 +124,7 @@ class RepositoryForm extends React.Component<Props, State> {
     const { repositoryTypes, t } = this.props;
     const repository = this.state.repository;
     return (
-      <div>
+      <>
         <InputField
           label={t("repository.name")}
           onChange={this.handleNameChange}
@@ -140,7 +140,7 @@ class RepositoryForm extends React.Component<Props, State> {
           options={this.createSelectOptions(repositoryTypes)}
           helpText={t("help.typeHelpText")}
         />
-      </div>
+      </>
     );
   }
 

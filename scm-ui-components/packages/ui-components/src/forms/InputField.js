@@ -1,7 +1,7 @@
 //@flow
 import React from "react";
 import classNames from "classnames";
-import { LabelWithHelpIcon } from "../index";
+import LabelWithHelpIcon from "./LabelWithHelpIcon";
 
 type Props = {
   label?: string,

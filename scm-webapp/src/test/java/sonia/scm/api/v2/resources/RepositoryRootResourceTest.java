@@ -4,6 +4,9 @@ import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.io.Resources;
 import com.google.inject.util.Providers;
+import org.apache.shiro.subject.SimplePrincipalCollection;
+import org.apache.shiro.subject.Subject;
+import org.assertj.core.api.Assertions;
 import org.jboss.resteasy.core.Dispatcher;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
@@ -22,6 +25,7 @@ import sonia.scm.repository.RepositoryIsNotArchivedException;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
+import sonia.scm.user.User;
 import sonia.scm.web.VndMediaType;
 
 import javax.servlet.http.HttpServletResponse;
@@ -37,6 +41,7 @@ import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
 import static javax.servlet.http.HttpServletResponse.SC_PRECONDITION_FAILED;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -58,6 +63,8 @@ import static sonia.scm.api.v2.resources.DispatcherMock.createDispatcher;
   configuration = "classpath:sonia/scm/repository/shiro.ini"
 )
 public class RepositoryRootResourceTest extends RepositoryTestBase {
+
+  private static final String REALM = "AdminRealm";
 
   private Dispatcher dispatcher;
 
@@ -96,6 +103,13 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     when(serviceFactory.create(any(Repository.class))).thenReturn(service);
     when(scmPathInfoStore.get()).thenReturn(uriInfo);
     when(uriInfo.getApiRestUri()).thenReturn(URI.create("/x/y"));
+    SimplePrincipalCollection trillian = new SimplePrincipalCollection("trillian", REALM);
+    trillian.add(new User("trillian"), REALM);
+    shiro.setSubject(
+      new Subject.Builder()
+        .principals(trillian)
+        .authenticated(true)
+        .buildSubject());
   }
 
   @Test
@@ -255,6 +269,34 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     assertEquals(HttpServletResponse.SC_CREATED, response.getStatus());
     assertEquals("/v2/repositories/otherspace/repo", response.getOutputHeaders().get("Location").get(0).toString());
     verify(repositoryManager).create(any(Repository.class));
+  }
+
+  @Test
+  public void shouldSetCurrentUserAsOwner() throws Exception {
+    ArgumentCaptor<Repository> createCaptor = ArgumentCaptor.forClass(Repository.class);
+    when(repositoryManager.create(createCaptor.capture())).thenAnswer(invocation -> {
+      Repository repository = (Repository) invocation.getArguments()[0];
+      repository.setNamespace("otherspace");
+      return repository;
+    });
+
+    URL url = Resources.getResource("sonia/scm/api/v2/repository-test-update.json");
+    byte[] repositoryJson = Resources.toByteArray(url);
+
+    MockHttpRequest request = MockHttpRequest
+      .post("/" + RepositoryRootResource.REPOSITORIES_PATH_V2)
+      .contentType(VndMediaType.REPOSITORY)
+      .content(repositoryJson);
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    Assertions.assertThat(createCaptor.getValue().getPermissions())
+      .hasSize(1)
+      .allSatisfy(p -> {
+        assertThat(p.getName()).isEqualTo("trillian");
+        assertThat(p.getType()).isEqualTo(PermissionType.OWNER);
+      });
   }
 
   @Test
