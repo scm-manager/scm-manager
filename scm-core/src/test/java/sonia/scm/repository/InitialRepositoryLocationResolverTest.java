@@ -34,8 +34,9 @@ public class InitialRepositoryLocationResolverTest {
     InitialRepositoryLocationResolver resolver = new InitialRepositoryLocationResolver(context);
     Repository repository = new Repository();
     repository.setId("ABC");
-    File directory = resolver.getDefaultDirectory(repository);
+    InitialRepositoryLocationResolver.InitialRepositoryLocation directory = resolver.getRelativeRepositoryPath(repository);
 
-    assertThat(directory).isEqualTo(new File(context.getBaseDirectory(), "repositories/ABC"));
+    assertThat(directory.getAbsolutePath()).isEqualTo(new File(context.getBaseDirectory(), "repositories/ABC"));
+    assertThat(directory.getRelativePath()).isEqualTo( "repositories/ABC");
   }
 }

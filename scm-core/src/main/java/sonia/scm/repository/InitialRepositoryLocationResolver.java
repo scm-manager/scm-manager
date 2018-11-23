@@ -10,8 +10,8 @@ import java.io.File;
  * <p>
  * <b>WARNING:</b> The Locations provided with this class may not be used from the plugins to store any plugin specific files.
  * <p>
- * Please use the {@link sonia.scm.store.DataStoreFactory } and the {@link sonia.scm.store.DataStore} classes to store data
- * Please use the {@link sonia.scm.store.BlobStoreFactory } and the {@link sonia.scm.store.BlobStore} classes to store binary files
+ * Please use the {@link sonia.scm.store.DataStoreFactory } and the {@link sonia.scm.store.DataStore} classes to store data<br>
+ * Please use the {@link sonia.scm.store.BlobStoreFactory } and the {@link sonia.scm.store.BlobStore} classes to store binary files<br>
  * Please use the {@link sonia.scm.store.ConfigurationStoreFactory} and the {@link sonia.scm.store.ConfigurationStore} classes  to store configurations
  *
  * @author Mohamed Karray
@@ -28,12 +28,26 @@ public class InitialRepositoryLocationResolver {
     this.context = context;
   }
 
-  public File getDefaultDirectory(Repository repository) {
-    String initialRepoFolder = getRelativeRepositoryPath(repository);
-    return new File(context.getBaseDirectory(), initialRepoFolder);
+  public InitialRepositoryLocation getRelativeRepositoryPath(Repository repository) {
+    String relativePath = DEFAULT_REPOSITORY_PATH + File.separator + repository.getId();
+    return new InitialRepositoryLocation(new File(context.getBaseDirectory(), relativePath), relativePath);
   }
 
-  public String getRelativeRepositoryPath(Repository repository) {
-    return DEFAULT_REPOSITORY_PATH + File.separator + repository.getId();
+  public static class InitialRepositoryLocation {
+    private final File absolutePath;
+    private final String relativePath;
+
+    public InitialRepositoryLocation(File absolutePath, String relativePath) {
+      this.absolutePath = absolutePath;
+      this.relativePath = relativePath;
+    }
+
+    public File getAbsolutePath() {
+      return absolutePath;
+    }
+
+    public String getRelativePath() {
+      return relativePath;
+    }
   }
 }

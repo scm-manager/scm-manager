@@ -39,6 +39,7 @@ import sonia.scm.NotFoundException;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.io.FileSystem;
 import sonia.scm.repository.InitialRepositoryLocationResolver;
+import sonia.scm.repository.InitialRepositoryLocationResolver.InitialRepositoryLocation;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.PathBasedRepositoryDAO;
@@ -111,14 +112,13 @@ public class XmlRepositoryDAO
 
   @Override
   public void add(Repository repository) {
-    File repositoryRootDirectory = initialRepositoryLocationResolver.getDefaultDirectory(repository);
+    InitialRepositoryLocation initialLocation = initialRepositoryLocationResolver.getRelativeRepositoryPath(repository);
     try {
-      fileSystem.create(repositoryRootDirectory);
+      fileSystem.create(initialLocation.getAbsolutePath());
     } catch (IOException e) {
-      throw new InternalRepositoryException(repository, "could not create directory for repository data: " + repositoryRootDirectory, e);
+      throw new InternalRepositoryException(repository, "could not create directory for repository data: " + initialLocation.getAbsolutePath(), e);
     }
-    String relativeRepositoryPath = initialRepositoryLocationResolver.getRelativeRepositoryPath(repository);
-    RepositoryPath repositoryPath = new RepositoryPath(relativeRepositoryPath, repository.getId(), repository.clone());
+    RepositoryPath repositoryPath = new RepositoryPath(initialLocation.getRelativePath(), repository.getId(), repository.clone());
     repositoryPath.setToBeSynchronized(true);
     synchronized (store) {
       db.add(repositoryPath);
