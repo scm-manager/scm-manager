@@ -42,9 +42,8 @@ import org.eclipse.jgit.transport.ReceiveCommand;
 import org.eclipse.jgit.transport.ReceivePack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.repository.GitRepositoryHandler;
+import sonia.scm.repository.RepositoryDAO;
 import sonia.scm.repository.RepositoryHookType;
-import sonia.scm.repository.RepositoryUtil;
 import sonia.scm.repository.spi.GitHookContextProvider;
 import sonia.scm.repository.spi.HookEventFacade;
 
@@ -68,19 +67,10 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
 
   //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   *
-   *
-   * @param hookEventFacade
-   * @param handler
-   */
-  public GitReceiveHook(HookEventFacade hookEventFacade,
-    GitRepositoryHandler handler)
+  public GitReceiveHook(HookEventFacade hookEventFacade, RepositoryDAO repositoryDAO)
   {
     this.hookEventFacade = hookEventFacade;
-    this.handler = handler;
+    this.repositoryDAO = repositoryDAO;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -187,7 +177,7 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
    *
    * @throws IOException
    */
-  private String resolveRepositoryId(Repository repository) throws IOException
+  private String resolveRepositoryId(Repository repository)
   {
     File directory;
 
@@ -200,14 +190,13 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
       directory = repository.getWorkTree();
     }
 
-    return RepositoryUtil.getRepositoryId(handler, directory);
+    return repositoryDAO.getIdForDirectory(directory);
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private GitRepositoryHandler handler;
-
-  /** Field description */
   private HookEventFacade hookEventFacade;
+
+  private final RepositoryDAO repositoryDAO;
 }

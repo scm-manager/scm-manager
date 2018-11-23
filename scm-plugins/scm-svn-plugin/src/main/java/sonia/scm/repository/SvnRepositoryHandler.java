@@ -90,7 +90,8 @@ public class SvnRepositoryHandler
                               FileSystem fileSystem,
                               HookEventFacade eventFacade,
                               RepositoryLocationResolver repositoryLocationResolver,
-                              InitialRepositoryLocationResolver initialRepositoryLocationResolver)
+                              InitialRepositoryLocationResolver initialRepositoryLocationResolver,
+                              RepositoryDAO repositoryDAO)
   {
     super(storeFactory, fileSystem, repositoryLocationResolver, initialRepositoryLocationResolver);
 
@@ -103,7 +104,7 @@ public class SvnRepositoryHandler
     // register hook
     if (eventFacade != null)
     {
-      FSHooks.registerHook(new SvnRepositoryHook(eventFacade, this));
+      FSHooks.registerHook(new SvnRepositoryHook(eventFacade, repositoryDAO));
     }
     else if (logger.isWarnEnabled())
     {

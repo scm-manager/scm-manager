@@ -48,8 +48,8 @@ import sonia.scm.NotFoundException;
 import sonia.scm.repository.HgContext;
 import sonia.scm.repository.HgHookManager;
 import sonia.scm.repository.HgRepositoryHandler;
+import sonia.scm.repository.RepositoryDAO;
 import sonia.scm.repository.RepositoryHookType;
-import sonia.scm.repository.RepositoryUtil;
 import sonia.scm.repository.api.HgHookMessage;
 import sonia.scm.repository.api.HgHookMessage.Severity;
 import sonia.scm.repository.spi.HgHookContextProvider;
@@ -63,6 +63,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -113,25 +114,16 @@ public class HgHookCallbackServlet extends HttpServlet
 
   //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   *
-   *
-   * @param hookEventFacade
-   * @param handler
-   * @param hookManager
-   * @param contextProvider
-   */
   @Inject
   public HgHookCallbackServlet(HookEventFacade hookEventFacade,
-    HgRepositoryHandler handler, HgHookManager hookManager,
-    Provider<HgContext> contextProvider)
+                               HgRepositoryHandler handler, HgHookManager hookManager,
+                               Provider<HgContext> contextProvider, RepositoryDAO repositoryDAO)
   {
     this.hookEventFacade = hookEventFacade;
     this.handler = handler;
     this.hookManager = hookManager;
     this.contextProvider = contextProvider;
+    this.repositoryDAO = repositoryDAO;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -148,7 +140,6 @@ public class HgHookCallbackServlet extends HttpServlet
    */
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException
   {
     String ping = request.getParameter(PARAM_PING);
 
@@ -463,21 +454,12 @@ public class HgHookCallbackServlet extends HttpServlet
     String id = null;
     String path = request.getParameter(PARAM_REPOSITORYPATH);
 
-    if (Util.isNotEmpty(path))
-    {
-
-      /**
+    if (Util.isNotEmpty(path)) {
+      /*
        * use canonical path to fix symbolic links
        * https://bitbucket.org/sdorra/scm-manager/issue/82/symbolic-link-in-hg-repository-path
        */
-      try
-      {
-        id = RepositoryUtil.getRepositoryId(handler, path);
-      }
-      catch (IOException ex)
-      {
-        logger.error("could not find namespace and name of repository", ex);
-      }
+      id = repositoryDAO.getIdForDirectory(new File(path));
     }
     else if (logger.isWarnEnabled())
     {
@@ -500,4 +482,6 @@ public class HgHookCallbackServlet extends HttpServlet
 
   /** Field description */
   private final HgHookManager hookManager;
+
+  private final RepositoryDAO repositoryDAO;
 }

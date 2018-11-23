@@ -70,19 +70,10 @@ public class SvnRepositoryHook implements FSHook
 
   //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   *
-   *
-   * @param hookEventFacade
-   * @param handler
-   */
-  public SvnRepositoryHook(HookEventFacade hookEventFacade,
-    SvnRepositoryHandler handler)
+  public SvnRepositoryHook(HookEventFacade hookEventFacade, RepositoryDAO repositoryDAO)
   {
     this.hookEventFacade = hookEventFacade;
-    this.handler = handler;
+    this.repositoryDAO = repositoryDAO;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -197,18 +188,17 @@ public class SvnRepositoryHook implements FSHook
    *
    * @throws IOException
    */
-  private String getRepositoryId(File directory) throws IOException
+  private String getRepositoryId(File directory)
   {
     AssertUtil.assertIsNotNull(directory);
 
-    return RepositoryUtil.getRepositoryId(handler, directory);
+    return repositoryDAO.getIdForDirectory(directory);
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private SvnRepositoryHandler handler;
-
-  /** Field description */
   private HookEventFacade hookEventFacade;
+
+  private final RepositoryDAO repositoryDAO;
 }

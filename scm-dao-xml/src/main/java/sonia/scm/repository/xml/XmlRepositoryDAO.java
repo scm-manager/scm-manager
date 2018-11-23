@@ -44,7 +44,9 @@ import sonia.scm.repository.Repository;
 import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.xml.AbstractXmlDAO;
 
+import java.io.File;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -154,9 +156,18 @@ public class XmlRepositoryDAO
       .resolve(findExistingRepositoryPath(repository).map(RepositoryPath::getPath).orElse(initialRepositoryLocationResolver.getRelativeRepositoryPath(repository)));
   }
 
+  @Override
+  public String getIdForDirectory(File path) {
+    return db.getPaths().stream()
+      .filter(p -> path.toPath().startsWith(context.getBaseDirectory().toPath().resolve(p.getPath()).toAbsolutePath()))
+      .map(RepositoryPath::getId)
+      .findAny()
+      .orElseThrow(() -> new RuntimeException("could not find repository for directory: " + path));
+  }
+
   private Optional<RepositoryPath> findExistingRepositoryPath(Repository repository) {
     return db.getPaths().stream()
       .filter(repoPath -> repoPath.getId().equals(repository.getId()))
-      .findFirst();
+      .findAny();
   }
 }

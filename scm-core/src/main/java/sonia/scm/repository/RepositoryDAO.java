@@ -36,6 +36,8 @@ package sonia.scm.repository;
 
 import sonia.scm.GenericDAO;
 
+import java.io.File;
+
 /**
  * Data access object for repositories. This class should only used by the
  * {@link RepositoryManager}. Plugins and other classes should use the
@@ -67,4 +69,13 @@ public interface RepositoryDAO extends GenericDAO<Repository>
    * @return repository with the specified namespace and name or null
    */
   Repository get(NamespaceAndName namespaceAndName);
+
+  /**
+   * Returns the repository that is associated with the given path. This path
+   * may be the root directory of the repository or any other directory or file
+   * inside the root directory.
+   *
+   * @throws {@link RuntimeException} when there is no repository for the given path.
+   */
+  String getIdForDirectory(File path);
 }
