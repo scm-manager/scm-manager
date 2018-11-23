@@ -15,6 +15,7 @@ import sonia.scm.store.ConfigurationStoreFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static java.util.Collections.emptyList;
@@ -118,6 +119,7 @@ public class XmlRepositoryDAOTest {
 
   @Test
   public void shouldFindRepositoryForRelativePath() {
+    new File(context.getBaseDirectory(), "relative/path/data").mkdirs();
     Repository existingRepository = new Repository("id", "old", null, null);
     RepositoryPath repositoryPath = new RepositoryPath("relative/path", "id", existingRepository);
     when(db.getPaths()).thenReturn(asList(repositoryPath));
@@ -130,14 +132,31 @@ public class XmlRepositoryDAOTest {
   }
 
   @Test
-  public void shouldFindRepositoryForAbsolutePath() {
+  public void shouldFindRepositoryForAbsolutePath() throws IOException {
     Repository existingRepository = new Repository("id", "old", null, null);
-    RepositoryPath repositoryPath = new RepositoryPath("/tmp/somewhere/else", "id", existingRepository);
+    File folder = temporaryFolder.newFolder("somewhere", "data");
+    RepositoryPath repositoryPath = new RepositoryPath(folder.getParent(), "id", existingRepository);
     when(db.getPaths()).thenReturn(asList(repositoryPath));
 
     XmlRepositoryDAO dao = new XmlRepositoryDAO(storeFactory, new InitialRepositoryLocationResolver(context), context);
 
-    String id = dao.getIdForDirectory(new File("/tmp/somewhere/else/data"));
+    String id = dao.getIdForDirectory(folder);
+
+    assertThat(id).isEqualTo("id");
+  }
+
+  @Test
+  public void shouldFindRepositoryForLinks() throws IOException {
+    Repository existingRepository = new Repository("id", "old", null, null);
+    File folder = temporaryFolder.newFolder("somewhere", "else", "data");
+    File link = new File(folder.getParentFile().getParentFile(), "link");
+    Files.createSymbolicLink(link.toPath(), folder.getParentFile().toPath());
+    RepositoryPath repositoryPath = new RepositoryPath(new File(link, "data").getPath(), "id", existingRepository);
+    when(db.getPaths()).thenReturn(asList(repositoryPath));
+
+    XmlRepositoryDAO dao = new XmlRepositoryDAO(storeFactory, new InitialRepositoryLocationResolver(context), context);
+
+    String id = dao.getIdForDirectory(folder);
 
     assertThat(id).isEqualTo("id");
   }

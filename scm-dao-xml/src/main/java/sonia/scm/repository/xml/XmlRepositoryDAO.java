@@ -45,8 +45,8 @@ import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.xml.AbstractXmlDAO;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -158,11 +158,22 @@ public class XmlRepositoryDAO
 
   @Override
   public String getIdForDirectory(File path) {
-    return db.getPaths().stream()
-      .filter(p -> path.toPath().startsWith(context.getBaseDirectory().toPath().resolve(p.getPath()).toAbsolutePath()))
-      .map(RepositoryPath::getId)
-      .findAny()
-      .orElseThrow(() -> new RuntimeException("could not find repository for directory: " + path));
+    for (RepositoryPath p : db.getPaths()) {
+      if (toRealPath(path.toPath()).startsWith(toRealPath(context.getBaseDirectory().toPath().resolve(p.getPath())))) {
+        return p.getId();
+      }
+    }
+    throw new RuntimeException("could not find repository for directory: " + path);
+  }
+
+  private Path toRealPath(Path path) {
+    try {
+      // resolve links and other indirections
+      // (see issue #82, https://bitbucket.org/sdorra/scm-manager/issues/82/symbolic-link-in-hg-repository-path)
+      return path.toRealPath();
+    } catch (IOException e) {
+      throw new RuntimeException("could not get Path$toRealPath for path: " + path);
+    }
   }
 
   private Optional<RepositoryPath> findExistingRepositoryPath(Repository repository) {

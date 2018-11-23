@@ -455,10 +455,6 @@ public class HgHookCallbackServlet extends HttpServlet
     String path = request.getParameter(PARAM_REPOSITORYPATH);
 
     if (Util.isNotEmpty(path)) {
-      /*
-       * use canonical path to fix symbolic links
-       * https://bitbucket.org/sdorra/scm-manager/issue/82/symbolic-link-in-hg-repository-path
-       */
       id = repositoryDAO.getIdForDirectory(new File(path));
     }
     else if (logger.isWarnEnabled())
