@@ -86,22 +86,23 @@ public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig
 
   @Override
   public Repository create(Repository repository) {
-    File directory = initialRepositoryLocationResolver.getDefaultNativeDirectory(repository);
-    if (directory != null && directory.exists()) {
+    File repositoryRootDirectory = initialRepositoryLocationResolver.getDefaultDirectory(repository);
+    if (repositoryRootDirectory != null && repositoryRootDirectory.exists()) {
       throw new AlreadyExistsException(repository);
     }
     try {
-      fileSystem.create(directory);
-      create(repository, directory);
-      postCreate(repository, directory);
+      fileSystem.create(repositoryRootDirectory);
+      File nativeDirectory = new File(repositoryRootDirectory, RepositoryLocationResolver.REPOSITORIES_NATIVE_DIRECTORY);
+      create(repository, nativeDirectory);
+      postCreate(repository, nativeDirectory);
       return repository;
     } catch (Exception ex) {
-      if (directory != null && directory.exists()) {
-        logger.warn("delete repository directory {}, because of failed repository creation", directory);
+      if (repositoryRootDirectory != null && repositoryRootDirectory.exists()) {
+        logger.warn("delete repository directory {}, because of failed repository creation", repositoryRootDirectory);
         try {
-          fileSystem.destroy(directory);
+          fileSystem.destroy(repositoryRootDirectory);
         } catch (IOException e) {
-          logger.error("Could not destroy directory", e);
+          logger.error("Could not destroy directory: " + repositoryRootDirectory, e);
         }
       }
 
@@ -113,17 +114,12 @@ public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig
 
   @Override
   public String createResourcePath(Repository repository) {
-    StringBuilder path = new StringBuilder("/");
-
-    path.append(getType().getName()).append("/").append(repository.getId());
-
-    return path.toString();
+    return "/" + getType().getName() + "/" + repository.getId();
   }
 
   @Override
   public void delete(Repository repository) {
-    File directory = null;
-      directory = repositoryLocationResolver.getRepositoryDirectory(repository);
+    File directory = repositoryLocationResolver.getRepositoryDirectory(repository);
     try {
       if (directory.exists()) {
         fileSystem.destroy(directory);

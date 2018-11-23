@@ -31,7 +31,7 @@ public class RepositoryLocationResolver {
     this.initialRepositoryLocationResolver = initialRepositoryLocationResolver;
   }
 
-  public File getRepositoryDirectory(Repository repository){
+  File getRepositoryDirectory(Repository repository){
     if (repositoryDAO instanceof PathBasedRepositoryDAO) {
       PathBasedRepositoryDAO pathBasedRepositoryDAO = (PathBasedRepositoryDAO) repositoryDAO;
       return pathBasedRepositoryDAO.getPath(repository).toFile();
@@ -39,7 +39,7 @@ public class RepositoryLocationResolver {
     return initialRepositoryLocationResolver.getDefaultDirectory(repository);
   }
 
-  public File getNativeDirectory(Repository repository)  {
+  File getNativeDirectory(Repository repository)  {
     return new File (getRepositoryDirectory(repository), REPOSITORIES_NATIVE_DIRECTORY);
   }
 }

@@ -30,7 +30,7 @@ public class InitialRepositoryLocationResolverTest {
   }
 
   @Test
-  public void shouldCreateInitialDirectory() {
+  public void shouldComputeInitialDirectory() {
     InitialRepositoryLocationResolver resolver = new InitialRepositoryLocationResolver(context);
     Repository repository = new Repository();
     repository.setId("ABC");
