@@ -48,10 +48,4 @@ public interface RepositoryDirectoryHandler extends RepositoryHandler {
    * @return the current directory of the given repository
    */
   File getDirectory(Repository repository);
-
-  /**
-   * get the initial directory of all repositories
-   * @return the initial directory of all repositories
-   */
-  File getInitialBaseDirectory();
 }

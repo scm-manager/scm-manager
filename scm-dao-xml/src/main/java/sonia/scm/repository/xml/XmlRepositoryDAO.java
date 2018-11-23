@@ -153,7 +153,10 @@ public class XmlRepositoryDAO
     return context
       .getBaseDirectory()
       .toPath()
-      .resolve(findExistingRepositoryPath(repository).map(RepositoryPath::getPath).orElse(initialRepositoryLocationResolver.getRelativeRepositoryPath(repository)));
+      .resolve(
+        findExistingRepositoryPath(repository)
+          .map(RepositoryPath::getPath)
+          .orElseThrow(() -> new InternalRepositoryException(repository, "could not find base directory for repository")));
   }
 
   @Override

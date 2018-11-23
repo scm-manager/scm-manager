@@ -33,10 +33,6 @@ public class HgHookCallbackServletTest {
     String path = "/tmp/hg/12345";
     when(request.getParameter(PARAM_REPOSITORYPATH)).thenReturn(path);
 
-
-    File file = new File(path);
-    when(handler.getInitialBaseDirectory()).thenReturn(file);
-
     servlet.doPost(request, response);
 
     verify(response, never()).sendError(anyInt());

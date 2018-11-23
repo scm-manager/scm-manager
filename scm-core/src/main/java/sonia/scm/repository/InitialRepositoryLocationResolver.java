@@ -30,13 +30,14 @@ public class InitialRepositoryLocationResolver {
     this.context = context;
   }
 
-  File getBaseDirectory() {
-    return new File(context.getBaseDirectory(), DEFAULT_REPOSITORY_PATH);
-  }
-
   File getDefaultDirectory(Repository repository) {
     String initialRepoFolder = getRelativeRepositoryPath(repository);
     return new File(context.getBaseDirectory(), initialRepoFolder);
+  }
+
+  File getDefaultNativeDirectory(Repository repository) {
+    String initialRepoFolder = getRelativeRepositoryPath(repository);
+    return new File(context.getBaseDirectory(), initialRepoFolder + "/data");
   }
 
   public String getRelativeRepositoryPath(Repository repository) {

@@ -105,19 +105,6 @@ public class XmlRepositoryDAOTest {
   }
 
   @Test
-  public void shouldGetPathForNewRepository() {
-    when(db.getPaths()).thenReturn(emptyList());
-
-    InitialRepositoryLocationResolver initialRepositoryLocationResolver = new InitialRepositoryLocationResolver(context);
-    XmlRepositoryDAO dao = new XmlRepositoryDAO(storeFactory, initialRepositoryLocationResolver, context);
-
-    Repository newRepository = new Repository("id", "new", null, null);
-    Path path = dao.getPath(newRepository);
-
-    assertThat(path.toString()).isEqualTo(context.getBaseDirectory().getPath() + "/" + InitialRepositoryLocationResolver.DEFAULT_REPOSITORY_PATH + "/id");
-  }
-
-  @Test
   public void shouldFindRepositoryForRelativePath() {
     new File(context.getBaseDirectory(), "relative/path/data").mkdirs();
     Repository existingRepository = new Repository("id", "old", null, null);

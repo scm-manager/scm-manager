@@ -86,7 +86,7 @@ public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig
 
   @Override
   public Repository create(Repository repository) {
-    File directory = repositoryLocationResolver.getNativeDirectory(repository);
+    File directory = initialRepositoryLocationResolver.getDefaultNativeDirectory(repository);
     if (directory != null && directory.exists()) {
       throw new AlreadyExistsException(repository);
     }
@@ -159,11 +159,6 @@ public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig
       throw new ConfigurationException("RepositoryHandler is not configured");
     }
     return directory;
-  }
-
-  @Override
-  public File getInitialBaseDirectory() {
-    return initialRepositoryLocationResolver.getBaseDirectory();
   }
 
   @Override
