@@ -1,8 +1,8 @@
 // @flow
 import React from "react";
 import { AsyncCreatable } from "react-select";
-import LabelWithHelpIcon from "./LabelWithHelpIcon";
-import type {AutocompleteObject, SelectValue} from "@scm-manager/ui-types";
+import type { AutocompleteObject, SelectValue } from "@scm-manager/ui-types";
+import LabelWithHelpIcon from "./forms/LabelWithHelpIcon";
 
 
 type Props = {
