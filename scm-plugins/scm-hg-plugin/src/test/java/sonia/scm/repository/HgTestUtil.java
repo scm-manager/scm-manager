@@ -36,19 +36,18 @@ package sonia.scm.repository;
 //~--- non-JDK imports --------------------------------------------------------
 
 import org.junit.Assume;
-
 import sonia.scm.SCMContext;
-import sonia.scm.io.FileSystem;
 import sonia.scm.store.InMemoryConfigurationStoreFactory;
 
-import static org.mockito.Mockito.*;
-
-//~--- JDK imports ------------------------------------------------------------
-
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.nio.file.Path;
 
-import javax.servlet.http.HttpServletRequest;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -102,14 +101,11 @@ public final class HgTestUtil
 
     context.setBaseDirectory(directory);
 
-    FileSystem fileSystem = mock(FileSystem.class);
     PathBasedRepositoryDAO repoDao = mock(PathBasedRepositoryDAO.class);
 
-    InitialRepositoryLocationResolver initialRepositoryLocationResolver = new InitialRepositoryLocationResolver(context);
-    RepositoryLocationResolver repositoryLocationResolver = new RepositoryLocationResolver(repoDao, initialRepositoryLocationResolver);
+    RepositoryLocationResolver repositoryLocationResolver = new RepositoryLocationResolver(repoDao, new InitialRepositoryLocationResolver(context));
     HgRepositoryHandler handler =
-      new HgRepositoryHandler(new InMemoryConfigurationStoreFactory(), fileSystem,
-        new HgContextProvider(), repositoryLocationResolver, initialRepositoryLocationResolver);
+      new HgRepositoryHandler(new InMemoryConfigurationStoreFactory(), new HgContextProvider(), repositoryLocationResolver);
     Path repoDir = directory.toPath();
     when(repoDao.getPath(any())).thenReturn(repoDir);
     handler.init(context);

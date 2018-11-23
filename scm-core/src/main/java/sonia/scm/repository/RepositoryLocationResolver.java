@@ -38,8 +38,4 @@ public class RepositoryLocationResolver {
     }
     return initialRepositoryLocationResolver.getDefaultDirectory(repository);
   }
-
-  File getNativeDirectory(Repository repository)  {
-    return new File (getRepositoryDirectory(repository), REPOSITORIES_NATIVE_DIRECTORY);
-  }
 }

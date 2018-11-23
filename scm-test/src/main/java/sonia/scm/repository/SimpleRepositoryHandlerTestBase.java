@@ -43,7 +43,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -80,17 +79,6 @@ public abstract class SimpleRepositoryHandlerTestBase extends AbstractTestBase {
     assertNotNull(path);
     assertTrue(path.trim().length() > 0);
     assertTrue(path.contains(repository.getId()));
-  }
-
-  @Test
-  public void testDelete() {
-    createRepository();
-
-    handler.delete(repository);
-
-    File directory = new File(baseDirectory, repository.getId());
-
-    assertFalse(directory.exists());
   }
 
   @Override

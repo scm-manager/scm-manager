@@ -97,24 +97,13 @@ public class GitRepositoryHandler
   
   //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param storeFactory
-   * @param fileSystem
-   * @param scheduler
-   * @param repositoryLocationResolver
-   */
   @Inject
   public GitRepositoryHandler(ConfigurationStoreFactory storeFactory,
-                              FileSystem fileSystem,
                               Scheduler scheduler,
                               RepositoryLocationResolver repositoryLocationResolver,
-                              InitialRepositoryLocationResolver initialRepositoryLocationResolver,
                               GitWorkdirFactory workdirFactory)
   {
-    super(storeFactory, fileSystem, repositoryLocationResolver, initialRepositoryLocationResolver);
+    super(storeFactory, repositoryLocationResolver);
     this.scheduler = scheduler;
     this.workdirFactory = workdirFactory;
   }

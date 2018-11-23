@@ -8,6 +8,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.SCMContextProvider;
+import sonia.scm.io.DefaultFileSystem;
+import sonia.scm.io.FileSystem;
 import sonia.scm.repository.InitialRepositoryLocationResolver;
 import sonia.scm.repository.Repository;
 import sonia.scm.store.ConfigurationStore;
@@ -18,7 +20,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static org.mockito.ArgumentMatchers.argThat;
@@ -41,6 +42,8 @@ public class XmlRepositoryDAOTest {
   @Rule
   public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
+  private final FileSystem fileSystem = new DefaultFileSystem();
+
   @Before
   public void init() throws IOException {
     when(storeFactory.getStore(XmlRepositoryDatabase.class, STORE_NAME)).thenReturn(store);
@@ -51,7 +54,7 @@ public class XmlRepositoryDAOTest {
   @Test
   public void addShouldCreateNewRepositoryPathWithRelativePath() {
     InitialRepositoryLocationResolver initialRepositoryLocationResolver = new InitialRepositoryLocationResolver(context);
-    XmlRepositoryDAO dao = new XmlRepositoryDAO(storeFactory, initialRepositoryLocationResolver, context);
+    XmlRepositoryDAO dao = new XmlRepositoryDAO(storeFactory, initialRepositoryLocationResolver, fileSystem, context);
 
     dao.add(new Repository("id", null, null, null));
 
@@ -69,7 +72,7 @@ public class XmlRepositoryDAOTest {
     RepositoryPath repositoryPath = new RepositoryPath("/path", "id", oldRepository);
     when(db.getPaths()).thenReturn(asList(repositoryPath));
 
-    XmlRepositoryDAO dao = new XmlRepositoryDAO(storeFactory, new InitialRepositoryLocationResolver(context), context);
+    XmlRepositoryDAO dao = new XmlRepositoryDAO(storeFactory, new InitialRepositoryLocationResolver(context), fileSystem, context);
 
     Repository newRepository = new Repository("id", "new", null, null);
     dao.modify(newRepository);
@@ -84,7 +87,7 @@ public class XmlRepositoryDAOTest {
     RepositoryPath repositoryPath = new RepositoryPath("path", "id", existingRepository);
     when(db.getPaths()).thenReturn(asList(repositoryPath));
 
-    XmlRepositoryDAO dao = new XmlRepositoryDAO(storeFactory, new InitialRepositoryLocationResolver(context), context);
+    XmlRepositoryDAO dao = new XmlRepositoryDAO(storeFactory, new InitialRepositoryLocationResolver(context), fileSystem, context);
 
     Path path = dao.getPath(existingRepository);
 
@@ -97,7 +100,7 @@ public class XmlRepositoryDAOTest {
     RepositoryPath repositoryPath = new RepositoryPath("/tmp/path", "id", existingRepository);
     when(db.getPaths()).thenReturn(asList(repositoryPath));
 
-    XmlRepositoryDAO dao = new XmlRepositoryDAO(storeFactory, new InitialRepositoryLocationResolver(context), context);
+    XmlRepositoryDAO dao = new XmlRepositoryDAO(storeFactory, new InitialRepositoryLocationResolver(context), fileSystem, context);
 
     Path path = dao.getPath(existingRepository);
 
@@ -111,7 +114,7 @@ public class XmlRepositoryDAOTest {
     RepositoryPath repositoryPath = new RepositoryPath("relative/path", "id", existingRepository);
     when(db.getPaths()).thenReturn(asList(repositoryPath));
 
-    XmlRepositoryDAO dao = new XmlRepositoryDAO(storeFactory, new InitialRepositoryLocationResolver(context), context);
+    XmlRepositoryDAO dao = new XmlRepositoryDAO(storeFactory, new InitialRepositoryLocationResolver(context), fileSystem, context);
 
     String id = dao.getIdForDirectory(new File(context.getBaseDirectory(), "relative/path/data"));
 
@@ -125,7 +128,7 @@ public class XmlRepositoryDAOTest {
     RepositoryPath repositoryPath = new RepositoryPath(folder.getParent(), "id", existingRepository);
     when(db.getPaths()).thenReturn(asList(repositoryPath));
 
-    XmlRepositoryDAO dao = new XmlRepositoryDAO(storeFactory, new InitialRepositoryLocationResolver(context), context);
+    XmlRepositoryDAO dao = new XmlRepositoryDAO(storeFactory, new InitialRepositoryLocationResolver(context), fileSystem, context);
 
     String id = dao.getIdForDirectory(folder);
 
@@ -141,7 +144,7 @@ public class XmlRepositoryDAOTest {
     RepositoryPath repositoryPath = new RepositoryPath(new File(link, "data").getPath(), "id", existingRepository);
     when(db.getPaths()).thenReturn(asList(repositoryPath));
 
-    XmlRepositoryDAO dao = new XmlRepositoryDAO(storeFactory, new InitialRepositoryLocationResolver(context), context);
+    XmlRepositoryDAO dao = new XmlRepositoryDAO(storeFactory, new InitialRepositoryLocationResolver(context), fileSystem, context);
 
     String id = dao.getIdForDirectory(folder);
 

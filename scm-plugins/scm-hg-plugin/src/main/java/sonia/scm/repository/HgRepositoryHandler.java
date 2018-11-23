@@ -45,7 +45,6 @@ import sonia.scm.SCMContextProvider;
 import sonia.scm.installer.HgInstaller;
 import sonia.scm.installer.HgInstallerFactory;
 import sonia.scm.io.ExtendedCommand;
-import sonia.scm.io.FileSystem;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.spi.HgRepositoryServiceProvider;
 import sonia.scm.store.ConfigurationStoreFactory;
@@ -102,22 +101,12 @@ public class HgRepositoryHandler
 
   //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   *  @param storeFactory
-   * @param fileSystem
-   * @param hgContextProvider
-   * @param repositoryLocationResolver
-   */
   @Inject
   public HgRepositoryHandler(ConfigurationStoreFactory storeFactory,
-                             FileSystem fileSystem,
                              Provider<HgContext> hgContextProvider,
-                             RepositoryLocationResolver repositoryLocationResolver,
-                             InitialRepositoryLocationResolver initialRepositoryLocationResolver)
+                             RepositoryLocationResolver repositoryLocationResolver)
   {
-    super(storeFactory, fileSystem, repositoryLocationResolver, initialRepositoryLocationResolver);
+    super(storeFactory, repositoryLocationResolver);
     this.hgContextProvider = hgContextProvider;
 
     try

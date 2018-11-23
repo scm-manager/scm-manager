@@ -46,7 +46,6 @@ import org.tmatesoft.svn.core.internal.io.fs.FSRepositoryFactory;
 import org.tmatesoft.svn.core.io.SVNRepository;
 import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
 import org.tmatesoft.svn.util.SVNDebugLog;
-import sonia.scm.io.FileSystem;
 import sonia.scm.logging.SVNKitLogger;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.spi.HookEventFacade;
@@ -87,13 +86,11 @@ public class SvnRepositoryHandler
 
   @Inject
   public SvnRepositoryHandler(ConfigurationStoreFactory storeFactory,
-                              FileSystem fileSystem,
                               HookEventFacade eventFacade,
                               RepositoryLocationResolver repositoryLocationResolver,
-                              InitialRepositoryLocationResolver initialRepositoryLocationResolver,
                               RepositoryDAO repositoryDAO)
   {
-    super(storeFactory, fileSystem, repositoryLocationResolver, initialRepositoryLocationResolver);
+    super(storeFactory, repositoryLocationResolver);
 
     // register logger
     SVNDebugLog.setDefaultLog(new SVNKitLogger());

@@ -1,11 +1,9 @@
 package sonia.scm.repository;
 
 import sonia.scm.SCMContextProvider;
-import sonia.scm.io.FileSystem;
 
 import javax.inject.Inject;
 import java.io.File;
-import java.io.IOException;
 
 /**
  * A Location Resolver for File based Repository Storage.
@@ -30,7 +28,7 @@ public class InitialRepositoryLocationResolver {
     this.context = context;
   }
 
-  File getDefaultDirectory(Repository repository) {
+  public File getDefaultDirectory(Repository repository) {
     String initialRepoFolder = getRelativeRepositoryPath(repository);
     return new File(context.getBaseDirectory(), initialRepoFolder);
   }

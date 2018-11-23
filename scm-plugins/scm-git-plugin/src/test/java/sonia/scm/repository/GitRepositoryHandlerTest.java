@@ -64,7 +64,6 @@ public class GitRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
   private GitWorkdirFactory gitWorkdirFactory;
 
   RepositoryLocationResolver repositoryLocationResolver;
-  private InitialRepositoryLocationResolver initialRepositoryLocationResolver;
 
 
   @Override
@@ -89,12 +88,9 @@ public class GitRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
   @Override
   protected RepositoryHandler createRepositoryHandler(ConfigurationStoreFactory factory,
                                                       File directory) {
-    DefaultFileSystem fileSystem = new DefaultFileSystem();
-
-    initialRepositoryLocationResolver = new InitialRepositoryLocationResolver(contextProvider);
-    repositoryLocationResolver = new RepositoryLocationResolver(repoDao, initialRepositoryLocationResolver);
+    repositoryLocationResolver = new RepositoryLocationResolver(repoDao, new InitialRepositoryLocationResolver(contextProvider));
     GitRepositoryHandler repositoryHandler = new GitRepositoryHandler(factory,
-      fileSystem, scheduler, repositoryLocationResolver, initialRepositoryLocationResolver, gitWorkdirFactory);
+      scheduler, repositoryLocationResolver, gitWorkdirFactory);
     repositoryHandler.init(contextProvider);
 
     GitConfig config = new GitConfig();
@@ -108,7 +104,7 @@ public class GitRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
   @Test
   public void getDirectory() {
     GitRepositoryHandler repositoryHandler = new GitRepositoryHandler(factory,
-      new DefaultFileSystem(), scheduler, repositoryLocationResolver, initialRepositoryLocationResolver, gitWorkdirFactory);
+      scheduler, repositoryLocationResolver, gitWorkdirFactory);
     GitConfig config = new GitConfig();
     config.setDisabled(false);
     config.setGcExpression("gc exp");

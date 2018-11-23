@@ -36,6 +36,7 @@ package sonia.scm.repository.xml;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import sonia.scm.SCMContextProvider;
+import sonia.scm.io.FileSystem;
 import sonia.scm.repository.InitialRepositoryLocationResolver;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.NamespaceAndName;
@@ -59,21 +60,24 @@ public class XmlRepositoryDAO
   implements PathBasedRepositoryDAO {
 
   public static final String STORE_NAME = "repositories";
+
   private InitialRepositoryLocationResolver initialRepositoryLocationResolver;
+  private final FileSystem fileSystem;
   private final SCMContextProvider context;
 
   //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
-   *
-   * @param storeFactory
+   *  @param storeFactory
+   * @param fileSystem
    * @param context
    */
   @Inject
-  public XmlRepositoryDAO(ConfigurationStoreFactory storeFactory, InitialRepositoryLocationResolver initialRepositoryLocationResolver, SCMContextProvider context) {
+  public XmlRepositoryDAO(ConfigurationStoreFactory storeFactory, InitialRepositoryLocationResolver initialRepositoryLocationResolver, FileSystem fileSystem, SCMContextProvider context) {
     super(storeFactory.getStore(XmlRepositoryDatabase.class, STORE_NAME));
     this.initialRepositoryLocationResolver = initialRepositoryLocationResolver;
+    this.fileSystem = fileSystem;
     this.context = context;
   }
 
@@ -104,6 +108,12 @@ public class XmlRepositoryDAO
 
   @Override
   public void add(Repository repository) {
+    File repositoryRootDirectory = initialRepositoryLocationResolver.getDefaultDirectory(repository);
+    try {
+      fileSystem.create(repositoryRootDirectory);
+    } catch (IOException e) {
+      throw new InternalRepositoryException(repository, "could not create directory for repository data: " + repositoryRootDirectory, e);
+    }
     String relativeRepositoryPath = initialRepositoryLocationResolver.getRelativeRepositoryPath(repository);
     RepositoryPath repositoryPath = new RepositoryPath(relativeRepositoryPath, repository.getId(), repository.clone());
     repositoryPath.setToBeSynchronized(true);
@@ -136,6 +146,17 @@ public class XmlRepositoryDAO
   @Override
   protected Repository clone(Repository repository) {
     return repository.clone();
+  }
+
+  @Override
+  public void delete(Repository repository) {
+    Path directory = getPath(repository);
+    super.delete(repository);
+    try {
+        fileSystem.destroy(directory.toFile());
+    } catch (IOException e) {
+      throw new InternalRepositoryException(repository, "could not delete repository directory", e);
+    }
   }
 
   /**

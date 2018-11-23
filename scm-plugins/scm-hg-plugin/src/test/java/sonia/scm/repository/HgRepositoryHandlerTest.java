@@ -38,7 +38,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import sonia.scm.io.DefaultFileSystem;
 import sonia.scm.store.ConfigurationStoreFactory;
 
 import java.io.File;
@@ -61,7 +60,6 @@ public class HgRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
   private com.google.inject.Provider<HgContext> provider;
 
   private RepositoryLocationResolver repositoryLocationResolver;
-  private InitialRepositoryLocationResolver initialRepositoryLocationResolver;
 
   @Override
   protected void checkDirectory(File directory) {
@@ -74,11 +72,9 @@ public class HgRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
   @Override
   protected RepositoryHandler createRepositoryHandler(ConfigurationStoreFactory factory,
                                                       File directory) {
-    initialRepositoryLocationResolver = new InitialRepositoryLocationResolver(contextProvider);
-    repositoryLocationResolver = new RepositoryLocationResolver(repoDao, initialRepositoryLocationResolver);
+    repositoryLocationResolver = new RepositoryLocationResolver(repoDao, new InitialRepositoryLocationResolver(contextProvider));
     HgRepositoryHandler handler = new HgRepositoryHandler(factory,
-      new DefaultFileSystem(),
-      new HgContextProvider(), repositoryLocationResolver, initialRepositoryLocationResolver);
+      new HgContextProvider(), repositoryLocationResolver);
 
     handler.init(contextProvider);
     HgTestUtil.checkForSkip(handler);
@@ -89,7 +85,7 @@ public class HgRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
   @Test
   public void getDirectory() {
     HgRepositoryHandler repositoryHandler = new HgRepositoryHandler(factory,
-      new DefaultFileSystem(), provider, repositoryLocationResolver, initialRepositoryLocationResolver);
+      provider, repositoryLocationResolver);
 
     HgConfig hgConfig = new HgConfig();
     hgConfig.setHgBinary("hg");

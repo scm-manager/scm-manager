@@ -36,7 +36,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import sonia.scm.io.DefaultFileSystem;
 import sonia.scm.repository.api.HookContextFactory;
 import sonia.scm.repository.spi.HookEventFacade;
 import sonia.scm.store.ConfigurationStore;
@@ -76,7 +75,6 @@ public class SvnRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
   private HookEventFacade facade = new HookEventFacade(repositoryManagerProvider, hookContextFactory);
 
   private RepositoryLocationResolver repositoryLocationResolver;
-  private InitialRepositoryLocationResolver initialRepositoryLocationResolver;
 
   @Override
   protected void checkDirectory(File directory) {
@@ -94,9 +92,8 @@ public class SvnRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
   @Override
   protected RepositoryHandler createRepositoryHandler(ConfigurationStoreFactory factory,
                                                       File directory)  {
-    initialRepositoryLocationResolver = new InitialRepositoryLocationResolver(contextProvider);
-    repositoryLocationResolver = new RepositoryLocationResolver(repoDao, initialRepositoryLocationResolver);
-    SvnRepositoryHandler handler = new SvnRepositoryHandler(factory, new DefaultFileSystem(), null, repositoryLocationResolver, initialRepositoryLocationResolver, repositoryDAO);
+    repositoryLocationResolver = new RepositoryLocationResolver(repoDao, new InitialRepositoryLocationResolver(contextProvider));
+    SvnRepositoryHandler handler = new SvnRepositoryHandler(factory, null, repositoryLocationResolver, repositoryDAO);
 
     handler.init(contextProvider);
 
@@ -112,7 +109,7 @@ public class SvnRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
   public void getDirectory() {
     when(factory.getStore(any(), any())).thenReturn(store);
     SvnRepositoryHandler repositoryHandler = new SvnRepositoryHandler(factory,
-      new DefaultFileSystem(), facade, repositoryLocationResolver, initialRepositoryLocationResolver, repositoryDAO);
+      facade, repositoryLocationResolver, repositoryDAO);
 
     SvnConfig svnConfig = new SvnConfig();
     repositoryHandler.setConfig(svnConfig);
