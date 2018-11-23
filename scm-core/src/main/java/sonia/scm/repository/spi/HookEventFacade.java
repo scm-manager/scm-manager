@@ -74,19 +74,24 @@ public final class HookEventFacade
   //~--- methods --------------------------------------------------------------
 
   public HookEventHandler handle(String id) {
-    return handle(repositoryManagerProvider.get().get(id));
+    Repository repository = repositoryManagerProvider.get().get(id);
+    if (repository == null)
+    {
+      throw notFound(entity("repository", id));
+    }
+    return handle(repository);
   }
 
   public HookEventHandler handle(NamespaceAndName namespaceAndName) {
-    return handle(repositoryManagerProvider.get().get(namespaceAndName));
-  }
-
-  public HookEventHandler handle(Repository repository) {
+    Repository repository = repositoryManagerProvider.get().get(namespaceAndName);
     if (repository == null)
     {
-      throw notFound(entity(repository));
+      throw notFound(entity(namespaceAndName));
     }
+    return handle(repository);
+  }
 
+  private HookEventHandler handle(Repository repository) {
     return new HookEventHandler(repositoryManagerProvider.get(),
       hookContextFactory, repository);
   }
