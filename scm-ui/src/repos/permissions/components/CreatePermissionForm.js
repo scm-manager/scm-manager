@@ -55,32 +55,32 @@ class CreatePermissionForm extends React.Component<Props, State> {
   };
 
   loadUserAutocompletion = (inputValue: string) => {
-    const url = this.props.userAutoCompleteLink + "?q=";
-    return fetch(url + inputValue)
-      .then(response => response.json())
-      .then(json => {
-        return json.map(element => {
-          return {
-            value: element,
-            label: `${element.displayName} (${element.id})`
-          };
-        });
-      });
+    return this.loadAutocompletion(this.props.userAutoCompleteLink, inputValue);
   };
 
   loadGroupAutocompletion = (inputValue: string) => {
-    const url = this.props.groupAutoCompleteLink + "?q=";
-    return fetch(url + inputValue)
+    return this.loadAutocompletion(
+      this.props.groupAutoCompleteLink,
+      inputValue
+    );
+  };
+
+  loadAutocompletion(url: string, inputValue: string) {
+    const link = url + "?q=";
+    return fetch(link + inputValue)
       .then(response => response.json())
       .then(json => {
         return json.map(element => {
+          const label = element.displayName
+            ? `${element.displayName} (${element.id})`
+            : element.id;
           return {
             value: element,
-            label: `${element.displayName} (${element.id})`
+            label
           };
         });
       });
-  };
+  }
   renderAutocompletionField = () => {
     const { t } = this.props;
     if (this.state.groupPermission) {
