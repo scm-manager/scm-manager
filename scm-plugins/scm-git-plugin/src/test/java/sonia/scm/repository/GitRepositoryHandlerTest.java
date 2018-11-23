@@ -37,7 +37,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import sonia.scm.io.DefaultFileSystem;
 import sonia.scm.schedule.Scheduler;
 import sonia.scm.store.ConfigurationStoreFactory;
 
@@ -113,6 +112,6 @@ public class GitRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
 
     initRepository();
     File path = repositoryHandler.getDirectory(repository);
-    assertEquals(repoPath.toString() + File.separator + RepositoryLocationResolver.REPOSITORIES_NATIVE_DIRECTORY, path.getAbsolutePath());
+    assertEquals(repoPath.toString() + File.separator + AbstractSimpleRepositoryHandler.REPOSITORIES_NATIVE_DIRECTORY, path.getAbsolutePath());
   }
 }

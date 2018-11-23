@@ -58,6 +58,7 @@ public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig
   public static final String DEFAULT_VERSION_INFORMATION = "unknown";
 
   public static final String DOT = ".";
+  static final String REPOSITORIES_NATIVE_DIRECTORY = "data";
 
   /**
    * the logger for AbstractSimpleRepositoryHandler
@@ -76,7 +77,7 @@ public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig
   @Override
   public Repository create(Repository repository) {
     File repositoryRootDirectory = repositoryLocationResolver.getRepositoryDirectory(repository);
-    File nativeDirectory = new File(repositoryRootDirectory, RepositoryLocationResolver.REPOSITORIES_NATIVE_DIRECTORY);
+    File nativeDirectory = new File(repositoryRootDirectory, REPOSITORIES_NATIVE_DIRECTORY);
     try {
       create(repository, nativeDirectory);
       postCreate(repository, nativeDirectory);
@@ -114,7 +115,7 @@ public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig
   public File getDirectory(Repository repository) {
     File directory;
     if (isConfigured()) {
-      directory = new File(repositoryLocationResolver.getRepositoryDirectory(repository), RepositoryLocationResolver.REPOSITORIES_NATIVE_DIRECTORY);
+      directory = new File(repositoryLocationResolver.getRepositoryDirectory(repository), REPOSITORIES_NATIVE_DIRECTORY);
     } else {
       throw new ConfigurationException("RepositoryHandler is not configured");
     }

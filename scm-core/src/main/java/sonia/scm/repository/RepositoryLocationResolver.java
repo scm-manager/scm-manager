@@ -21,7 +21,6 @@ import java.io.File;
 @Singleton
 public class RepositoryLocationResolver {
 
-  static final String REPOSITORIES_NATIVE_DIRECTORY = "data";
   private RepositoryDAO repositoryDAO;
   private InitialRepositoryLocationResolver initialRepositoryLocationResolver;
 
