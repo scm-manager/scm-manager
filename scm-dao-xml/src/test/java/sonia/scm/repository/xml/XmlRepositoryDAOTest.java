@@ -13,6 +13,7 @@ import sonia.scm.repository.Repository;
 import sonia.scm.store.ConfigurationStore;
 import sonia.scm.store.ConfigurationStoreFactory;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 
@@ -62,7 +63,7 @@ public class XmlRepositoryDAOTest {
   }
 
   @Test
-  public void modifyShould() {
+  public void modifyShouldStoreChangedRepository() {
     Repository oldRepository = new Repository("id", "old", null, null);
     RepositoryPath repositoryPath = new RepositoryPath("/path", "id", oldRepository);
     when(db.getPaths()).thenReturn(asList(repositoryPath));
@@ -113,5 +114,31 @@ public class XmlRepositoryDAOTest {
     Path path = dao.getPath(newRepository);
 
     assertThat(path.toString()).isEqualTo(context.getBaseDirectory().getPath() + "/" + InitialRepositoryLocationResolver.DEFAULT_REPOSITORY_PATH + "/id");
+  }
+
+  @Test
+  public void shouldFindRepositoryForRelativePath() {
+    Repository existingRepository = new Repository("id", "old", null, null);
+    RepositoryPath repositoryPath = new RepositoryPath("relative/path", "id", existingRepository);
+    when(db.getPaths()).thenReturn(asList(repositoryPath));
+
+    XmlRepositoryDAO dao = new XmlRepositoryDAO(storeFactory, new InitialRepositoryLocationResolver(context), context);
+
+    String id = dao.getIdForDirectory(new File(context.getBaseDirectory(), "relative/path/data"));
+
+    assertThat(id).isEqualTo("id");
+  }
+
+  @Test
+  public void shouldFindRepositoryForAbsolutePath() {
+    Repository existingRepository = new Repository("id", "old", null, null);
+    RepositoryPath repositoryPath = new RepositoryPath("/tmp/somewhere/else", "id", existingRepository);
+    when(db.getPaths()).thenReturn(asList(repositoryPath));
+
+    XmlRepositoryDAO dao = new XmlRepositoryDAO(storeFactory, new InitialRepositoryLocationResolver(context), context);
+
+    String id = dao.getIdForDirectory(new File("/tmp/somewhere/else/data"));
+
+    assertThat(id).isEqualTo("id");
   }
 }
