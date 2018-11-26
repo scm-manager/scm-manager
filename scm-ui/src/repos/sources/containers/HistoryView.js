@@ -1,7 +1,16 @@
 // @flow
 import React from "react";
-import type { File, Changeset, Repository } from "@scm-manager/ui-types";
-import { ErrorNotification, Loading } from "@scm-manager/ui-components";
+import type {
+  File,
+  Changeset,
+  Repository,
+  PagedCollection
+} from "@scm-manager/ui-types";
+import {
+  ErrorNotification,
+  Loading,
+  LinkPaginator
+} from "@scm-manager/ui-components";
 import { getHistory } from "./history";
 import ChangesetList from "../../components/changesets/ChangesetList";
 
@@ -13,6 +22,8 @@ type Props = {
 type State = {
   loaded: boolean,
   changesets: Changeset[],
+  page: number,
+  pageCollection?: PagedCollection,
   error?: Error
 };
 
@@ -22,6 +33,7 @@ class HistoryView extends React.Component<Props, State> {
 
     this.state = {
       loaded: false,
+      page: 0,
       changesets: []
     };
   }
@@ -40,7 +52,8 @@ class HistoryView extends React.Component<Props, State> {
           this.setState({
             ...this.state,
             loaded: true,
-            changesets: result.changesets
+            changesets: result.changesets,
+            pageCollection: result.pageCollection
           });
         }
       })
@@ -49,8 +62,13 @@ class HistoryView extends React.Component<Props, State> {
 
   showHistory() {
     const { repository } = this.props;
-    const { changesets } = this.state;
-    return <ChangesetList repository={repository} changesets={changesets} />;
+    const { changesets, page, pageCollection } = this.state;
+    return (
+      <>
+        <ChangesetList repository={repository} changesets={changesets} />
+        <LinkPaginator page={page} collection={pageCollection} />
+      </>
+    );
   }
 
   render() {
@@ -70,4 +88,4 @@ class HistoryView extends React.Component<Props, State> {
   }
 }
 
-export default (HistoryView);
+export default HistoryView;

@@ -7,7 +7,13 @@ export function getHistory(url: string) {
     .then(response => response.json())
     .then(result => {
       return {
-        changesets: result._embedded.changesets
+        changesets: result._embedded.changesets,
+        pageCollection: {
+          _embedded: result._embedded,
+          _links: result._links,
+          page: result.page,
+          pageTotal: result.pageTotal
+        }
       };
     })
     .catch(err => {

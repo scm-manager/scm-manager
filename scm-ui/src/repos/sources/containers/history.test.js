@@ -11,28 +11,31 @@ describe("get content type", () => {
   });
 
   it("should return history", done => {
-    let changesets: {
-      changesets: [
+    fetchMock.get("/api/v2" + FILE_URL, {
+      page: 0,
+      pageTotal: 1,
+      _embedded: {
+        changesets: [
+          {
+            id: "1234"
+          },
+          {
+            id: "2345"
+          }
+        ]
+      }
+    });
+
+    getHistory(FILE_URL).then(content => {
+      expect(content.changesets).toEqual([
         {
           id: "1234"
         },
         {
           id: "2345"
         }
-      ]
-    };
-    let history = {
-      _embedded: {
-        changesets
-      }
-    };
-
-    fetchMock.get("/api/v2" + FILE_URL, {
-      history
-    });
-
-    getHistory(FILE_URL).then(content => {
-      expect(content.changesets).toBe(changesets);
+      ]);
+      expect(content.pageCollection.page).toEqual(0);
       done();
     });
   });
