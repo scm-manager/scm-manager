@@ -69,13 +69,4 @@ public interface RepositoryDAO extends GenericDAO<Repository>
    * @return repository with the specified namespace and name or null
    */
   Repository get(NamespaceAndName namespaceAndName);
-
-  /**
-   * Returns the repository that is associated with the given path. This path
-   * may be the root directory of the repository or any other directory or file
-   * inside the root directory.
-   *
-   * @throws {@link sonia.scm.NotFoundException} when there is no repository for the given path.
-   */
-  Repository getRepositoryForDirectory(File path);
 }

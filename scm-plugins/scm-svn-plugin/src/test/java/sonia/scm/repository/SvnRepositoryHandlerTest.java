@@ -93,7 +93,7 @@ public class SvnRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
   protected RepositoryHandler createRepositoryHandler(ConfigurationStoreFactory factory,
                                                       File directory)  {
     repositoryLocationResolver = new RepositoryLocationResolver(repoDao, new InitialRepositoryLocationResolver(contextProvider));
-    SvnRepositoryHandler handler = new SvnRepositoryHandler(factory, null, repositoryLocationResolver, repositoryDAO);
+    SvnRepositoryHandler handler = new SvnRepositoryHandler(factory, null, repositoryLocationResolver);
 
     handler.init(contextProvider);
 
@@ -109,7 +109,7 @@ public class SvnRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
   public void getDirectory() {
     when(factory.getStore(any(), any())).thenReturn(store);
     SvnRepositoryHandler repositoryHandler = new SvnRepositoryHandler(factory,
-      facade, repositoryLocationResolver, repositoryDAO);
+      facade, repositoryLocationResolver);
 
     SvnConfig svnConfig = new SvnConfig();
     repositoryHandler.setConfig(svnConfig);

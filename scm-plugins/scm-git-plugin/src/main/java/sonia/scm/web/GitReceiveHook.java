@@ -36,18 +36,18 @@ package sonia.scm.web;
 //~--- non-JDK imports --------------------------------------------------------
 
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.lib.StoredConfig;
 import org.eclipse.jgit.transport.PostReceiveHook;
 import org.eclipse.jgit.transport.PreReceiveHook;
 import org.eclipse.jgit.transport.ReceiveCommand;
 import org.eclipse.jgit.transport.ReceivePack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.repository.RepositoryDAO;
+import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.spi.GitHookContextProvider;
 import sonia.scm.repository.spi.HookEventFacade;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
@@ -67,10 +67,19 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
 
   //~--- constructors ---------------------------------------------------------
 
-  public GitReceiveHook(HookEventFacade hookEventFacade, RepositoryDAO repositoryDAO)
+  /**
+   * Constructs ...
+   *
+   *
+   *
+   * @param hookEventFacade
+   * @param handler
+   */
+  public GitReceiveHook(HookEventFacade hookEventFacade,
+    GitRepositoryHandler handler)
   {
     this.hookEventFacade = hookEventFacade;
-    this.repositoryDAO = repositoryDAO;
+    this.handler = handler;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -118,14 +127,14 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
     try
     {
       Repository repository = rpack.getRepository();
-      sonia.scm.repository.Repository scmRepository = resolveRepositoryId(repository);
+      String repositoryId = resolveRepositoryId(repository);
 
-      logger.trace("resolved repository to {}", scmRepository.getNamespaceAndName());
+      logger.trace("resolved repository to {}", repositoryId);
 
       GitHookContextProvider context = new GitHookContextProvider(rpack,
                                          receiveCommands);
 
-      hookEventFacade.handle(scmRepository).fireHookEvent(type, context);
+      hookEventFacade.handle(repositoryId).fireHookEvent(type, context);
 
     }
     catch (Exception ex)
@@ -177,26 +186,17 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
    *
    * @throws IOException
    */
-  private sonia.scm.repository.Repository resolveRepositoryId(Repository repository)
+  private String resolveRepositoryId(Repository repository)
   {
-    File directory;
-
-    if (repository.isBare())
-    {
-      directory = repository.getDirectory();
-    }
-    else
-    {
-      directory = repository.getWorkTree();
-    }
-
-    return repositoryDAO.getRepositoryForDirectory(directory);
+    StoredConfig gitConfig = repository.getConfig();
+    return handler.getRepositoryId(gitConfig);
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private HookEventFacade hookEventFacade;
+  private GitRepositoryHandler handler;
 
-  private final RepositoryDAO repositoryDAO;
+  /** Field description */
+  private HookEventFacade hookEventFacade;
 }

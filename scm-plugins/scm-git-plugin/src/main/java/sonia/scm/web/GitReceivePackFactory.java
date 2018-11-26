@@ -36,18 +36,20 @@ package sonia.scm.web;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
+
 import org.eclipse.jgit.http.server.resolver.DefaultReceivePackFactory;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.ReceivePack;
 import org.eclipse.jgit.transport.resolver.ReceivePackFactory;
 import org.eclipse.jgit.transport.resolver.ServiceNotAuthorizedException;
 import org.eclipse.jgit.transport.resolver.ServiceNotEnabledException;
-import sonia.scm.repository.RepositoryDAO;
+
+import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.spi.HookEventFacade;
 
-import javax.servlet.http.HttpServletRequest;
-
 //~--- JDK imports ------------------------------------------------------------
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -57,10 +59,19 @@ public class GitReceivePackFactory
   implements ReceivePackFactory<HttpServletRequest>
 {
 
+  /**
+   * Constructs ...
+   *
+   *
+   *
+   * @param hookEventFacade
+   * @param handler
+   */
   @Inject
-  public GitReceivePackFactory(HookEventFacade hookEventFacade, RepositoryDAO repositoryDAO)
+  public GitReceivePackFactory(HookEventFacade hookEventFacade,
+    GitRepositoryHandler handler)
   {
-    hook = new GitReceiveHook(hookEventFacade, repositoryDAO);
+    hook = new GitReceiveHook(hookEventFacade, handler);
   }
 
   //~--- methods --------------------------------------------------------------

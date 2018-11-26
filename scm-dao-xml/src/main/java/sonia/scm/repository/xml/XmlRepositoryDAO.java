@@ -183,26 +183,6 @@ public class XmlRepositoryDAO
           .orElseThrow(() -> new InternalRepositoryException(repository, "could not find base directory for repository")));
   }
 
-  @Override
-  public Repository getRepositoryForDirectory(File path) {
-    for (RepositoryPath p : db.values()) {
-      if (toRealPath(path.toPath()).startsWith(toRealPath(context.getBaseDirectory().toPath().resolve(p.getPath())))) {
-        return p.getRepository();
-      }
-    }
-    throw new NotFoundException("directory", path.getPath());
-  }
-
-  private Path toRealPath(Path path) {
-    try {
-      // resolve links and other indirections
-      // (see issue #82, https://bitbucket.org/sdorra/scm-manager/issues/82/symbolic-link-in-hg-repository-path)
-      return path.toRealPath();
-    } catch (IOException e) {
-      throw new InternalRepositoryException(entity("directory", path.toString()), "could not get Path$toRealPath for path: " + path);
-    }
-  }
-
   private Optional<RepositoryPath> findExistingRepositoryPath(Repository repository) {
     return db.values().stream()
       .filter(repoPath -> repoPath.getId().equals(repository.getId()))

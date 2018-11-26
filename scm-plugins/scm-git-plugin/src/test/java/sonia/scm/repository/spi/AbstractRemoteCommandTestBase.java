@@ -127,7 +127,15 @@ public class AbstractRemoteCommandTestBase
       {
         return null;
       }
-    }, null);
+    }, new Provider<GitRepositoryHandler>()
+    {
+
+      @Override
+      public GitRepositoryHandler get()
+      {
+        return null;
+      }
+    });
     Transport.register(proto);
   }
 

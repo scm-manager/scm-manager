@@ -41,10 +41,15 @@ import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.ConfigurationException;
+import sonia.scm.ContextEntry;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.installer.HgInstaller;
 import sonia.scm.installer.HgInstallerFactory;
 import sonia.scm.io.ExtendedCommand;
+import sonia.scm.io.INIConfiguration;
+import sonia.scm.io.INIConfigurationReader;
+import sonia.scm.io.INIConfigurationWriter;
+import sonia.scm.io.INISection;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.spi.HgRepositoryServiceProvider;
 import sonia.scm.store.ConfigurationStoreFactory;
@@ -98,6 +103,8 @@ public class HgRepositoryHandler
   /** Field description */
   public static final String PATH_HGRC =
     ".hg".concat(File.separator).concat("hgrc");
+  private static final String CONFIG_SECTION_SCMM = "scmm";
+  private static final String CONFIG_KEY_REPOSITORY_ID = "repositoryid";
 
   //~--- constructors ---------------------------------------------------------
 
@@ -322,6 +329,26 @@ public class HgRepositoryHandler
   protected void postCreate(Repository repository, File directory)
     throws IOException
   {
+    File hgrcFile = new File(directory, PATH_HGRC);
+    INIConfiguration hgrc = new INIConfiguration();
+
+    INISection iniSection = new INISection(CONFIG_SECTION_SCMM);
+    iniSection.setParameter(CONFIG_KEY_REPOSITORY_ID, repository.getId());
+    INIConfiguration iniConfiguration = new INIConfiguration();
+    iniConfiguration.addSection(iniSection);
+    hgrc.addSection(iniSection);
+
+    INIConfigurationWriter writer = new INIConfigurationWriter();
+
+    writer.write(hgrc, hgrcFile);
+  }
+
+  public String getRepositoryId(File directory) {
+    try {
+      return new INIConfigurationReader().read(new File(directory, PATH_HGRC)).getSection(CONFIG_SECTION_SCMM).getParameter(CONFIG_KEY_REPOSITORY_ID);
+    } catch (IOException e) {
+      throw new InternalRepositoryException(ContextEntry.ContextBuilder.entity("directory", directory.toString()), "could not read scm configuration file", e);
+    }
   }
 
   //~--- get methods ----------------------------------------------------------

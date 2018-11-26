@@ -106,48 +106,4 @@ public class XmlRepositoryDAOTest {
 
     assertThat(path.toString()).isEqualTo("/tmp/path");
   }
-
-  @Test
-  public void shouldFindRepositoryForRelativePath() {
-    new File(context.getBaseDirectory(), "relative/path/data").mkdirs();
-    Repository existingRepository = new Repository("id", "old", null, null);
-    RepositoryPath repositoryPath = new RepositoryPath("relative/path", "id", existingRepository);
-    when(db.values()).thenReturn(asList(repositoryPath));
-
-    XmlRepositoryDAO dao = new XmlRepositoryDAO(storeFactory, new InitialRepositoryLocationResolver(context), fileSystem, context);
-
-    Repository repository = dao.getRepositoryForDirectory(new File(context.getBaseDirectory(), "relative/path/data"));
-
-    assertThat(repository).isSameAs(existingRepository);
-  }
-
-  @Test
-  public void shouldFindRepositoryForAbsolutePath() throws IOException {
-    Repository existingRepository = new Repository("id", "old", null, null);
-    File folder = temporaryFolder.newFolder("somewhere", "data");
-    RepositoryPath repositoryPath = new RepositoryPath(folder.getParent(), "id", existingRepository);
-    when(db.values()).thenReturn(asList(repositoryPath));
-
-    XmlRepositoryDAO dao = new XmlRepositoryDAO(storeFactory, new InitialRepositoryLocationResolver(context), fileSystem, context);
-
-    Repository repository = dao.getRepositoryForDirectory(folder);
-
-    assertThat(repository).isSameAs(existingRepository);
-  }
-
-  @Test
-  public void shouldFindRepositoryForLinks() throws IOException {
-    Repository existingRepository = new Repository("id", "old", null, null);
-    File folder = temporaryFolder.newFolder("somewhere", "else", "data");
-    File link = new File(folder.getParentFile().getParentFile(), "link");
-    Files.createSymbolicLink(link.toPath(), folder.getParentFile().toPath());
-    RepositoryPath repositoryPath = new RepositoryPath(new File(link, "data").getPath(), "id", existingRepository);
-    when(db.values()).thenReturn(asList(repositoryPath));
-
-    XmlRepositoryDAO dao = new XmlRepositoryDAO(storeFactory, new InitialRepositoryLocationResolver(context), fileSystem, context);
-
-    Repository repository = dao.getRepositoryForDirectory(folder);
-
-    assertThat(repository).isSameAs(existingRepository);
-  }
 }

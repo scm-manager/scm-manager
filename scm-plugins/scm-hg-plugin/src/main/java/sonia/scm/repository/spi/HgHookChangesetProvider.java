@@ -62,11 +62,11 @@ public class HgHookChangesetProvider implements HookChangesetProvider
   //~--- constructors ---------------------------------------------------------
 
   public HgHookChangesetProvider(HgRepositoryHandler handler,
-                                 sonia.scm.repository.Repository repository, HgHookManager hookManager, String startRev,
-                                 RepositoryHookType type)
+    File repositoryDirectory, HgHookManager hookManager, String startRev,
+    RepositoryHookType type)
   {
     this.handler = handler;
-    this.repository = repository;
+    this.repositoryDirectory = repositoryDirectory;
     this.hookManager = hookManager;
     this.startRev = startRev;
     this.type = type;
@@ -123,8 +123,6 @@ public class HgHookChangesetProvider implements HookChangesetProvider
    */
   private Repository open()
   {
-    File repositoryDirectory = handler.getDirectory(repository);
-
     // use HG_PENDING only for pre receive hooks
     boolean pending = type == RepositoryHookType.PRE_RECEIVE;
 
@@ -142,7 +140,7 @@ public class HgHookChangesetProvider implements HookChangesetProvider
   private HgHookManager hookManager;
 
   /** Field description */
-  private sonia.scm.repository.Repository repository;
+  private File repositoryDirectory;
 
   /** Field description */
   private HookChangesetResponse response;

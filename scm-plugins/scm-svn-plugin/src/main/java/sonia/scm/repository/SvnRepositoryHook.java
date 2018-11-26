@@ -70,10 +70,10 @@ public class SvnRepositoryHook implements FSHook
 
   //~--- constructors ---------------------------------------------------------
 
-  public SvnRepositoryHook(HookEventFacade hookEventFacade, RepositoryDAO repositoryDAO)
+  public SvnRepositoryHook(HookEventFacade hookEventFacade, SvnRepositoryHandler handler)
   {
     this.hookEventFacade = hookEventFacade;
-    this.repositoryDAO = repositoryDAO;
+    this.handler = handler;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -154,10 +154,10 @@ public class SvnRepositoryHook implements FSHook
   {
     try
     {
-      Repository repository = getRepositoryId(directory);
+      String repositoryId = getRepositoryId(directory);
 
       //J-
-      hookEventFacade.handle(repository)
+      hookEventFacade.handle(repositoryId)
         .fireHookEvent(
           changesetProvider.getType(),
           new SvnHookContextProvider(changesetProvider)
@@ -188,11 +188,10 @@ public class SvnRepositoryHook implements FSHook
    *
    * @throws IOException
    */
-  private Repository getRepositoryId(File directory)
+  private String getRepositoryId(File directory)
   {
     AssertUtil.assertIsNotNull(directory);
-
-    return repositoryDAO.getRepositoryForDirectory(directory);
+    return handler.getRepositoryId(directory);
   }
 
   //~--- fields ---------------------------------------------------------------
@@ -200,5 +199,5 @@ public class SvnRepositoryHook implements FSHook
   /** Field description */
   private HookEventFacade hookEventFacade;
 
-  private final RepositoryDAO repositoryDAO;
+  private final SvnRepositoryHandler handler;
 }

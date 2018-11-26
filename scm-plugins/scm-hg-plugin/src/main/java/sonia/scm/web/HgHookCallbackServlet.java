@@ -44,12 +44,12 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.ContextEntry;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.HgContext;
 import sonia.scm.repository.HgHookManager;
 import sonia.scm.repository.HgRepositoryHandler;
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryDAO;
+import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.api.HgHookMessage;
 import sonia.scm.repository.api.HgHookMessage.Severity;
@@ -118,13 +118,12 @@ public class HgHookCallbackServlet extends HttpServlet
   @Inject
   public HgHookCallbackServlet(HookEventFacade hookEventFacade,
                                HgRepositoryHandler handler, HgHookManager hookManager,
-                               Provider<HgContext> contextProvider, RepositoryDAO repositoryDAO)
+                               Provider<HgContext> contextProvider)
   {
     this.hookEventFacade = hookEventFacade;
     this.handler = handler;
     this.hookManager = hookManager;
     this.contextProvider = contextProvider;
-    this.repositoryDAO = repositoryDAO;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -171,7 +170,7 @@ public class HgHookCallbackServlet extends HttpServlet
 
     if (m.matches())
     {
-      Repository repository = getRepositoryId(request);
+      File repositoryPath = getRepositoryPath(request);
       String type = m.group(1);
       String challenge = request.getParameter(PARAM_CHALLENGE);
 
@@ -188,7 +187,7 @@ public class HgHookCallbackServlet extends HttpServlet
             authenticate(request, credentials);
           }
 
-          hookCallback(response, repository, type, challenge, node);
+          hookCallback(response, repositoryPath, type, challenge, node);
         }
         else if (logger.isDebugEnabled())
         {
@@ -247,8 +246,7 @@ public class HgHookCallbackServlet extends HttpServlet
     }
   }
 
-  private void fireHook(HttpServletResponse response, Repository repository,
-    String node, RepositoryHookType type)
+  private void fireHook(HttpServletResponse response, File repositoryDirectory, String node, RepositoryHookType type)
     throws IOException
   {
     HgHookContextProvider context = null;
@@ -260,10 +258,11 @@ public class HgHookCallbackServlet extends HttpServlet
         contextProvider.get().setPending(true);
       }
 
-      context = new HgHookContextProvider(handler, repository, hookManager,
+      context = new HgHookContextProvider(handler, repositoryDirectory, hookManager,
         node, type);
 
-      hookEventFacade.handle(repository).fireHookEvent(type, context);
+      String repositoryId = getRepositoryId(repositoryDirectory);
+      hookEventFacade.handle(repositoryId).fireHookEvent(type, context);
 
       printMessages(response, context);
     }
@@ -281,7 +280,7 @@ public class HgHookCallbackServlet extends HttpServlet
     }
   }
 
-  private void hookCallback(HttpServletResponse response, Repository repository, String typeName, String challenge, String node) throws IOException {
+  private void hookCallback(HttpServletResponse response, File repositoryDirectory, String typeName, String challenge, String node) throws IOException {
     if (hookManager.isAcceptAble(challenge))
     {
       RepositoryHookType type = null;
@@ -297,7 +296,7 @@ public class HgHookCallbackServlet extends HttpServlet
 
       if (type != null)
       {
-        fireHook(response, repository, node, type);
+        fireHook(response, repositoryDirectory, node, type);
       }
       else
       {
@@ -442,29 +441,21 @@ public class HgHookCallbackServlet extends HttpServlet
 
   //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   */
   @SuppressWarnings("squid:S2083") // we do nothing with the path given, so this should be no issue
-  private Repository getRepositoryId(HttpServletRequest request)
+  private String getRepositoryId(File repositoryPath)
   {
-    Repository repository = null;
+    return handler.getRepositoryId(repositoryPath);
+  }
+
+  private File getRepositoryPath(HttpServletRequest request) {
     String path = request.getParameter(PARAM_REPOSITORYPATH);
-
     if (Util.isNotEmpty(path)) {
-      repository = repositoryDAO.getRepositoryForDirectory(new File(path));
+       return new File(path);
     }
-    else if (logger.isWarnEnabled())
+    else
     {
-      logger.warn("no repository path parameter found");
+      throw new InternalRepositoryException(ContextEntry.ContextBuilder.entity("directory", path), "could not find hgrc in directory");
     }
-
-    return repository;
   }
 
   //~--- fields ---------------------------------------------------------------
@@ -480,6 +471,4 @@ public class HgHookCallbackServlet extends HttpServlet
 
   /** Field description */
   private final HgHookManager hookManager;
-
-  private final RepositoryDAO repositoryDAO;
 }

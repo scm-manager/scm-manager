@@ -23,9 +23,7 @@ public class HgHookCallbackServletTest {
   @Test
   public void shouldExtractCorrectRepositoryId() throws ServletException, IOException {
     HgRepositoryHandler handler = mock(HgRepositoryHandler.class);
-    RepositoryDAO repositoryDAO = mock(RepositoryDAO.class);
-    when(repositoryDAO.getRepositoryForDirectory(new File("/tmp/hg/12345"))).thenReturn(new Repository("12345", "git", "space", "name"));
-    HgHookCallbackServlet servlet = new HgHookCallbackServlet(null, handler, null, null, repositoryDAO);
+    HgHookCallbackServlet servlet = new HgHookCallbackServlet(null, handler, null, null);
     HttpServletRequest request = mock(HttpServletRequest.class);
     HttpServletResponse response = mock(HttpServletResponse.class);
 
