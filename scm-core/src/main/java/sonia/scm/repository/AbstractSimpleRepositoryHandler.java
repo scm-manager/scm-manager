@@ -76,8 +76,7 @@ public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig
 
   @Override
   public Repository create(Repository repository) {
-    File repositoryRootDirectory = repositoryLocationResolver.getRepositoryDirectory(repository);
-    File nativeDirectory = new File(repositoryRootDirectory, REPOSITORIES_NATIVE_DIRECTORY);
+    File nativeDirectory = resolveNativeDirectory(repository);
     try {
       create(repository, nativeDirectory);
       postCreate(repository, nativeDirectory);
@@ -110,7 +109,7 @@ public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig
   public File getDirectory(Repository repository) {
     File directory;
     if (isConfigured()) {
-      directory = new File(repositoryLocationResolver.getRepositoryDirectory(repository), REPOSITORIES_NATIVE_DIRECTORY);
+      directory = resolveNativeDirectory(repository);
     } else {
       throw new ConfigurationException("RepositoryHandler is not configured");
     }
@@ -168,8 +167,7 @@ public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig
     return content;
   }
 
-
-
-
-
+  private File resolveNativeDirectory(Repository repository) {
+    return new File(repositoryLocationResolver.getRepositoryDirectory(repository), REPOSITORIES_NATIVE_DIRECTORY);
+  }
 }
