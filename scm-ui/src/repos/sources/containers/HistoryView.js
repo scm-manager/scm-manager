@@ -33,7 +33,7 @@ class HistoryView extends React.Component<Props, State> {
 
     this.state = {
       loaded: false,
-      page: 0,
+      page: 1,
       changesets: []
     };
   }
@@ -53,7 +53,8 @@ class HistoryView extends React.Component<Props, State> {
             ...this.state,
             loaded: true,
             changesets: result.changesets,
-            pageCollection: result.pageCollection
+            pageCollection: result.pageCollection,
+            page: result.pageCollection.page + 1
           });
         }
       })

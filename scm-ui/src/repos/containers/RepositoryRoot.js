@@ -29,7 +29,6 @@ import Permissions from "../permissions/containers/Permissions";
 import type { History } from "history";
 import EditNavLink from "../components/EditNavLink";
 
-import FileHistory from "../sources/containers/FileHistory";
 import BranchRoot from "./ChangesetsRoot";
 import ChangesetView from "./ChangesetView";
 import PermissionsNavLink from "../components/PermissionsNavLink";
@@ -151,15 +150,6 @@ class RepositoryRoot extends React.Component<Props> {
                 path={`${url}/sources/:revision/:path*`}
                 render={() => (
                   <Sources repository={repository} baseUrl={`${url}/sources`} />
-                )}
-              />
-              <Route
-                path={`${url}/history/:revision/:path*`}
-                render={() => (
-                  <FileHistory
-                    repository={repository}
-                    baseUrl={`${url}/history`}
-                  />
                 )}
               />
               <Route
