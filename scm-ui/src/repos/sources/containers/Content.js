@@ -1,22 +1,16 @@
 // @flow
 import React from "react";
 import { translate } from "react-i18next";
-import { getSources } from "../modules/sources";
 import type { File, Repository } from "@scm-manager/ui-types";
-import {
-  DateFromNow,
-  ErrorNotification,
-  Loading
-} from "@scm-manager/ui-components";
-import { connect } from "react-redux";
-import ImageViewer from "../components/content/ImageViewer";
-import SourcecodeViewer from "../components/content/SourcecodeViewer";
-import DownloadViewer from "../components/content/DownloadViewer";
+import { DateFromNow } from "@scm-manager/ui-components";
 import FileSize from "../components/FileSize";
 import injectSheet from "react-jss";
 import classNames from "classnames";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
-import { getContentType } from "./contentType";
+import ButtonGroup from "../components/content/ButtonGroup";
+import SourcesView from "./SourcesView";
+import HistoryView from "./HistoryView";
+import { getSources } from "../modules/sources";
+import { connect } from "react-redux";
 
 type Props = {
   loading: boolean,
@@ -30,11 +24,8 @@ type Props = {
 };
 
 type State = {
-  contentType: string,
-  language: string,
-  loaded: boolean,
   collapsed: boolean,
-  error?: Error
+  showHistory: boolean
 };
 
 const styles = {
@@ -43,6 +34,9 @@ const styles = {
   },
   pointer: {
     cursor: "pointer"
+  },
+  marginInHeader: {
+    marginRight: "0.5em"
   }
 };
 
@@ -51,33 +45,9 @@ class Content extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      contentType: "",
-      language: "",
-      loaded: false,
-      collapsed: true
+      collapsed: true,
+      showHistory: false
     };
-  }
-
-  componentDidMount() {
-    const { file } = this.props;
-    getContentType(file._links.self.href)
-      .then(result => {
-        if (result.error) {
-          this.setState({
-            ...this.state,
-            error: result.error,
-            loaded: true
-          });
-        } else {
-          this.setState({
-            ...this.state,
-            contentType: result.type,
-            language: result.language,
-            loaded: true
-          });
-        }
-      })
-      .catch(err => {});
   }
 
   toggleCollapse = () => {
@@ -86,30 +56,39 @@ class Content extends React.Component<Props, State> {
     }));
   };
 
+  setShowHistoryState(showHistory: boolean) {
+    this.setState({
+      ...this.state,
+      showHistory
+    });
+  }
+
   showHeader() {
     const { file, classes, t } = this.props;
-    const collapsed = this.state.collapsed;
+    const { showHistory, collapsed } = this.state;
     const icon = collapsed ? "fa-angle-right" : "fa-angle-down";
 
     return (
-      <span className={classes.pointer} onClick={this.toggleCollapse}>
+      <span className={classes.pointer}>
         <article className="media">
-          <div className="media-left">
-            <i className={classNames("fa", icon)} />
+          <div className="media-content" onClick={this.toggleCollapse}>
+            <i
+              className={classNames(
+                "fa is-medium",
+                icon,
+                classes.marginInHeader
+              )}
+            />
+            <span>{file.name}</span>
           </div>
-          <div className="media-content">
-            <div className="content">{file.name}</div>
+          <div className="media-right">
+            <ButtonGroup
+              historyIsSelected={showHistory}
+              showHistory={(changeShowHistory: boolean) =>
+                this.setShowHistoryState(changeShowHistory)
+              }
+            />
           </div>
-          <p className="media-right">
-            <a href="#">
-              <span className="icon is-medium">
-                <i className="fas fa-history" />
-              </span>
-              <span className="is-hidden-mobile">
-                {t("sources.content.historyLink")}
-              </span>
-            </a>
-          </p>
         </article>
       </span>
     );
@@ -165,40 +144,19 @@ class Content extends React.Component<Props, State> {
     return null;
   }
 
-  showContent() {
-    const { file, revision } = this.props;
-    const { contentType, language } = this.state;
-    if (contentType.startsWith("image/")) {
-      return <ImageViewer file={file} />;
-    } else if (language) {
-      return <SourcecodeViewer file={file} language={language} />;
-    } else if (contentType.startsWith("text/")) {
-      return <SourcecodeViewer file={file} language="none" />;
-    } else {
-      return (
-        <ExtensionPoint
-          name="repos.sources.view"
-          props={{ file, contentType, revision }}
-        >
-          <DownloadViewer file={file} />
-        </ExtensionPoint>
-      );
-    }
-  }
-
   render() {
-    const { file, classes } = this.props;
-    const { loaded, error } = this.state;
-
-    if (!file || !loaded) {
-      return <Loading />;
-    }
-    if (error) {
-      return <ErrorNotification error={error} />;
-    }
+    const { file, revision, repository, path, classes } = this.props;
+    const {showHistory} = this.state;
 
     const header = this.showHeader();
-    const content = this.showContent();
+    const content = showHistory ? <HistoryView/> : (
+      <SourcesView
+        revision={revision}
+        file={file}
+        repository={repository}
+        path={path}
+      />
+    );
     const moreInformation = this.showMoreInformation();
 
     return (

@@ -55,7 +55,8 @@
       "branch": "Branch"
     },
     "content": {
-      "historyLink": "History",
+      "historyButton": "History",
+      "sourcesButton": "Sources",
       "downloadButton": "Download",
       "path": "Path",
       "branch": "Branch",
