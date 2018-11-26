@@ -98,16 +98,6 @@ public class XmlRepositoryDatabase implements XmlDatabase<RepositoryPath> {
     return get(id) != null;
   }
 
-  public boolean contains(Repository repository)
-  {
-    return repositoryPathMap.containsKey(createKey(repository));
-  }
-
-  public void remove(Repository repository)
-  {
-    repositoryPathMap.remove(createKey(repository));
-  }
-
   @Override
   public RepositoryPath remove(String id)
   {
@@ -128,11 +118,6 @@ public class XmlRepositoryDatabase implements XmlDatabase<RepositoryPath> {
   {
     return repositoryPathMap.values();
   }
-
-  public Collection<RepositoryPath> getPaths() {
-    return repositoryPathMap.values();
-  }
-
 
   public Repository get(NamespaceAndName namespaceAndName) {
     RepositoryPath repositoryPath = repositoryPathMap.get(createKey(namespaceAndName));

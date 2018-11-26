@@ -79,7 +79,7 @@ public class XmlRepositoryMapAdapter extends XmlAdapter<XmlRepositoryList, Map<S
         }
       }
     } catch (JAXBException ex) {
-      throw new StoreException("failed to marshall repository database", ex);
+      throw new StoreException("failed to marshal repository database", ex);
     }
 
     return repositoryPaths;
@@ -105,7 +105,7 @@ public class XmlRepositoryMapAdapter extends XmlAdapter<XmlRepositoryList, Map<S
         repositoryPathMap.put(XmlRepositoryDatabase.createKey(repository), repositoryPath);
       }
     } catch (JAXBException ex) {
-      throw new StoreException("failed to unmarshall object", ex);
+      throw new StoreException("failed to unmarshal object", ex);
     }
     return repositoryPathMap;
   }

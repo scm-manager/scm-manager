@@ -88,11 +88,6 @@ public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig
   }
 
   @Override
-  public String createResourcePath(Repository repository) {
-    return "/" + getType().getName() + "/" + repository.getId();
-  }
-
-  @Override
   public void delete(Repository repository) {
   }
 

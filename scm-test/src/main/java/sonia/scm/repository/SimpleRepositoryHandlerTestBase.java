@@ -70,17 +70,6 @@ public abstract class SimpleRepositoryHandlerTestBase extends AbstractTestBase {
     createRepository();
   }
 
-  @Test
-  public void testCreateResourcePath() {
-    createRepository();
-
-    String path = handler.createResourcePath(repository);
-
-    assertNotNull(path);
-    assertTrue(path.trim().length() > 0);
-    assertTrue(path.contains(repository.getId()));
-  }
-
   @Override
   protected void postSetUp() throws IOException, RepositoryPathNotFoundException {
     InMemoryConfigurationStoreFactory storeFactory = new InMemoryConfigurationStoreFactory();
@@ -96,7 +85,7 @@ public abstract class SimpleRepositoryHandlerTestBase extends AbstractTestBase {
     }
   }
 
-  private Repository createRepository() {
+  private void createRepository() {
     File nativeRepoDirectory = initRepository();
 
     handler.create(repository);
@@ -105,8 +94,6 @@ public abstract class SimpleRepositoryHandlerTestBase extends AbstractTestBase {
     assertTrue(nativeRepoDirectory.exists());
     assertTrue(nativeRepoDirectory.isDirectory());
     checkDirectory(nativeRepoDirectory);
-
-    return repository;
   }
 
   protected File initRepository() {

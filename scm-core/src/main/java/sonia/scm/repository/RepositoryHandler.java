@@ -50,17 +50,6 @@ public interface RepositoryHandler
         extends Handler<Repository>
 {
 
-  /**
-   * Returns the resource path for the given {@link Repository}.
-   * The resource path is part of the {@link Repository} url.
-   *
-   *
-   *
-   * @param repository given {@link Repository}
-   * @return resource path of the {@link Repository}
-   */
-  public String createResourcePath(Repository repository);
-
   //~--- get methods ----------------------------------------------------------
 
   /**

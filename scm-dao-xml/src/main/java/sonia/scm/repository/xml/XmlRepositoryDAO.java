@@ -185,7 +185,7 @@ public class XmlRepositoryDAO
 
   @Override
   public Repository getRepositoryForDirectory(File path) {
-    for (RepositoryPath p : db.getPaths()) {
+    for (RepositoryPath p : db.values()) {
       if (toRealPath(path.toPath()).startsWith(toRealPath(context.getBaseDirectory().toPath().resolve(p.getPath())))) {
         return p.getRepository();
       }
@@ -204,7 +204,7 @@ public class XmlRepositoryDAO
   }
 
   private Optional<RepositoryPath> findExistingRepositoryPath(Repository repository) {
-    return db.getPaths().stream()
+    return db.values().stream()
       .filter(repoPath -> repoPath.getId().equals(repository.getId()))
       .findAny();
   }
