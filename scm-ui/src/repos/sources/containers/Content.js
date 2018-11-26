@@ -64,7 +64,7 @@ class Content extends React.Component<Props, State> {
   }
 
   showHeader() {
-    const { file, classes, t } = this.props;
+    const { file, classes } = this.props;
     const { showHistory, collapsed } = this.state;
     const icon = collapsed ? "fa-angle-right" : "fa-angle-down";
 
@@ -146,10 +146,12 @@ class Content extends React.Component<Props, State> {
 
   render() {
     const { file, revision, repository, path, classes } = this.props;
-    const {showHistory} = this.state;
+    const { showHistory } = this.state;
 
     const header = this.showHeader();
-    const content = showHistory ? <HistoryView/> : (
+    const content = showHistory ? (
+      <HistoryView file={file} repository={repository} />
+    ) : (
       <SourcesView
         revision={revision}
         file={file}

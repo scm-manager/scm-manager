@@ -1,6 +1,5 @@
 // @flow
 import React from "react";
-import { translate } from "react-i18next";
 
 import SourcecodeViewer from "../components/content/SourcecodeViewer";
 import ImageViewer from "../components/content/ImageViewer";
@@ -14,9 +13,7 @@ type Props = {
   repository: Repository,
   file: File,
   revision: string,
-  path: string,
-  classes: any,
-  t: string => string
+  path: string
 };
 
 type State = {
@@ -81,7 +78,7 @@ class SourcesView extends React.Component<Props, State> {
   }
 
   render() {
-    const { classes, file } = this.props;
+    const { file } = this.props;
     const { loaded, error } = this.state;
 
     if (!file || !loaded) {
@@ -97,4 +94,4 @@ class SourcesView extends React.Component<Props, State> {
   }
 }
 
-export default translate("repos")(SourcesView);
+export default SourcesView;

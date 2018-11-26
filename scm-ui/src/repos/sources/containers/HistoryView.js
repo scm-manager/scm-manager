@@ -1,22 +1,18 @@
 // @flow
 import React from "react";
-import { translate } from "react-i18next";
-
-import { getContentType } from "./contentType";
-import type { File, Repository } from "@scm-manager/ui-types";
+import type { File, Changeset, Repository } from "@scm-manager/ui-types";
 import { ErrorNotification, Loading } from "@scm-manager/ui-components";
+import { getHistory } from "./history";
+import ChangesetList from "../../components/changesets/ChangesetList";
 
 type Props = {
-  repository: Repository,
   file: File,
-  revision: string,
-  path: string,
-  classes: any,
-  t: string => string
+  repository: Repository
 };
 
 type State = {
   loaded: boolean,
+  changesets: Changeset[],
   error?: Error
 };
 
@@ -25,13 +21,14 @@ class HistoryView extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      loaded: false
+      loaded: false,
+      changesets: []
     };
   }
 
   componentDidMount() {
     const { file } = this.props;
-   /* getContentType(file._links.self.href)
+    getHistory(file._links.history.href)
       .then(result => {
         if (result.error) {
           this.setState({
@@ -42,21 +39,22 @@ class HistoryView extends React.Component<Props, State> {
         } else {
           this.setState({
             ...this.state,
-            contentType: result.type,
-            language: result.language,
-            loaded: true
+            loaded: true,
+            changesets: result.changesets
           });
         }
       })
-      .catch(err => {});*/
+      .catch(err => {});
   }
 
   showHistory() {
-    return "Hallo";
+    const { repository } = this.props;
+    const { changesets } = this.state;
+    return <ChangesetList repository={repository} changesets={changesets} />;
   }
 
   render() {
-    const { classes, file } = this.props;
+    const { file } = this.props;
     const { loaded, error } = this.state;
 
     if (!file || !loaded) {
@@ -72,4 +70,4 @@ class HistoryView extends React.Component<Props, State> {
   }
 }
 
-export default translate("repos")(HistoryView);
+export default (HistoryView);
