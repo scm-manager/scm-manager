@@ -32,17 +32,18 @@ package sonia.scm.store;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import sonia.scm.SCMContextProvider;
+import sonia.scm.repository.InternalRepositoryException;
+import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.util.IOUtil;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
- * JAXB implementation of {@link ConfigurationStoreFactory}.
+ * JAXB implementation of {@link StoreFactory}.
  *
  * @author Sebastian Sdorra
  */
@@ -54,33 +55,65 @@ public class JAXBConfigurationStoreFactory implements ConfigurationStoreFactory 
    */
   private static final Logger LOG = LoggerFactory.getLogger(JAXBConfigurationStoreFactory.class);
 
-  private final File configDirectory;
+  private RepositoryLocationResolver repositoryLocationResolver;
 
   /**
    * Constructs a new instance.
    *
-   * @param context scm context
+   * @param repositoryLocationResolver Resolver to get the repository Directory
    */
   @Inject
-  public JAXBConfigurationStoreFactory(SCMContextProvider context) {
-    configDirectory = new File(context.getBaseDirectory(), StoreConstants.CONFIG_DIRECTORY_NAME);
-    IOUtil.mkdirs(configDirectory);
+  public JAXBConfigurationStoreFactory(RepositoryLocationResolver repositoryLocationResolver) {
+    this.repositoryLocationResolver = repositoryLocationResolver;
   }
 
-  @Override
-  public <T> JAXBConfigurationStore<T> getStore(Class<T> type, String name) {
-    if (configDirectory == null) {
-      throw new IllegalStateException("store factory is not initialized");
-    }
+  /**
+   * Get or create the global config directory.
+   *
+   * @return the global config directory.
+   */
+  private File getGlobalConfigDirectory() {
+    File baseDirectory = repositoryLocationResolver.getInitialBaseDirectory();
+    File configDirectory = new File(baseDirectory, StoreConstants.CONFIG_DIRECTORY_NAME);
+    return getOrCreateFile(configDirectory);
+  }
 
+  /**
+   * Get or create the repository specific config directory.
+   *
+   * @return the repository specific config directory.
+   */
+  private File getRepositoryConfigDirectory(Repository repository) {
+    File baseDirectory = null;
+    try {
+      baseDirectory = repositoryLocationResolver.getConfigDirectory(repository);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    File configDirectory = new File(baseDirectory, StoreConstants.CONFIG_DIRECTORY_NAME);
+    return getOrCreateFile(configDirectory);
+  }
+
+  private File getOrCreateFile(File directory) {
+    if (!directory.exists()) {
+      IOUtil.mkdirs(directory);
+    }
+    return directory;
+  }
+
+  private JAXBConfigurationStore getStore(Class type, String name, File configDirectory) {
     File configFile = new File(configDirectory, name.concat(StoreConstants.FILE_EXTENSION));
-
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("create store for {} at {}", type.getName(),
-        configFile.getPath());
-    }
-
+    LOG.debug("create store for {} at {}", type.getName(), configFile.getPath());
     return new JAXBConfigurationStore<>(type, configFile);
   }
 
+  @Override
+  public JAXBConfigurationStore getStore(StoreParameters storeParameters) {
+    try {
+      return getStore(storeParameters.getType(), storeParameters.getName(),repositoryLocationResolver.getRepositoryDirectory(storeParameters.getRepository()));
+    } catch (IOException e) {
+
+      throw new InternalRepositoryException(storeParameters.getRepository(),"Error on getting the store of the repository"+ storeParameters.getRepository().getNamespaceAndName());
+    }
+  }
 }

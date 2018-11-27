@@ -52,6 +52,6 @@ public class FileBlobStoreTest extends BlobStoreTestBase
   @Override
   protected BlobStoreFactory createBlobStoreFactory()
   {
-    return new FileBlobStoreFactory(contextProvider, new UUIDKeyGenerator());
+    return new FileBlobStoreFactory(repositoryLocationResolver, new UUIDKeyGenerator());
   }
 }

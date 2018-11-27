@@ -36,14 +36,18 @@ package sonia.scm.repository.xml;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import sonia.scm.SCMContextProvider;
 import sonia.scm.repository.InitialRepositoryLocationResolver;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.PathBasedRepositoryDAO;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryPathNotFoundException;
-import sonia.scm.store.ConfigurationStoreFactory;
+import sonia.scm.store.JAXBConfigurationStore;
+import sonia.scm.store.StoreConstants;
+import sonia.scm.util.IOUtil;
 import sonia.scm.xml.AbstractXmlDAO;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
@@ -65,14 +69,10 @@ public class XmlRepositoryDAO
 
   //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   * @param storeFactory
-   */
   @Inject
-  public XmlRepositoryDAO(ConfigurationStoreFactory storeFactory, InitialRepositoryLocationResolver initialRepositoryLocationResolver) {
-    super(storeFactory.getStore(XmlRepositoryDatabase.class, STORE_NAME));
+  public XmlRepositoryDAO(InitialRepositoryLocationResolver initialRepositoryLocationResolver, SCMContextProvider context) {
+    super(new JAXBConfigurationStore<>(XmlRepositoryDatabase.class, new File(context.getBaseDirectory(), StoreConstants.CONFIG_DIRECTORY_NAME + File.separator + STORE_NAME + StoreConstants.FILE_EXTENSION)));
+    IOUtil.mkdirs(new File(context.getBaseDirectory(), StoreConstants.CONFIG_DIRECTORY_NAME + File.separator + STORE_NAME + StoreConstants.FILE_EXTENSION));
     this.initialRepositoryLocationResolver = initialRepositoryLocationResolver;
   }
 

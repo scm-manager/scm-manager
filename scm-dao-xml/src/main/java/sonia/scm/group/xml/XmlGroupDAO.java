@@ -39,6 +39,7 @@ import com.google.inject.Singleton;
 
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupDAO;
+import sonia.scm.store.StoreParameters;
 import sonia.scm.xml.AbstractXmlDAO;
 
 import sonia.scm.store.ConfigurationStoreFactory;
@@ -64,9 +65,11 @@ public class XmlGroupDAO extends AbstractXmlDAO<Group, XmlGroupDatabase>
    * @param storeFactory
    */
   @Inject
-  public XmlGroupDAO(ConfigurationStoreFactory storeFactory)
-  {
-    super(storeFactory.getStore(XmlGroupDatabase.class, STORE_NAME));
+  public XmlGroupDAO(ConfigurationStoreFactory storeFactory) {
+    super(storeFactory.getStore(new StoreParameters()
+      .withType(XmlGroupDatabase.class)
+      .withName(STORE_NAME)
+      .build()));
   }
 
   //~--- methods --------------------------------------------------------------

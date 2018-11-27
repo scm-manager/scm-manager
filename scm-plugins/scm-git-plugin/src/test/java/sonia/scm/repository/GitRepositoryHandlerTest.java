@@ -39,9 +39,12 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.io.DefaultFileSystem;
 import sonia.scm.schedule.Scheduler;
+import sonia.scm.store.ConfigurationStore;
 import sonia.scm.store.ConfigurationStoreFactory;
+import sonia.scm.store.StoreFactory;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 
 import static org.junit.Assert.assertEquals;

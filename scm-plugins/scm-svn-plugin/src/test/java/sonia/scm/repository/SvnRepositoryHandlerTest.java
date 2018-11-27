@@ -115,7 +115,7 @@ public class SvnRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
 
   @Test
   public void getDirectory() {
-    when(factory.getStore(any(), any())).thenReturn(store);
+    when(factory.getStore(any())).thenReturn(store);
     SvnRepositoryHandler repositoryHandler = new SvnRepositoryHandler(factory,
       new DefaultFileSystem(), facade, repositoryLocationResolver);
 

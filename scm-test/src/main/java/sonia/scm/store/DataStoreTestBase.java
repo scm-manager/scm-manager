@@ -33,6 +33,13 @@
 
 package sonia.scm.store;
 
+import org.junit.Test;
+import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryTestData;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 /**
  *
  * @author Sebastian Sdorra
@@ -48,17 +55,33 @@ public abstract class DataStoreTestBase extends KeyValueStoreTestBase
    */
   protected abstract DataStoreFactory createDataStoreFactory();
 
+
+    protected StoreParameters getStoreParametersWithRepository(Repository repository) {
+    return new StoreParameters()
+      .withType(StoreObject.class)
+      .withName("test")
+      .forRepository(repository)
+      .build();
+  }
   //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  protected DataStore<StoreObject> getDataStore()
+
+
+
+  @Test
+  // TODO
+  public void shouldStoreRepositorySpecificData()
   {
-    return createDataStoreFactory().getStore(StoreObject.class, "test");
+    StoreFactory<DataStore > dataStoreFactory = createDataStoreFactory();
+    StoreObject obj = new StoreObject("test-1");
+    Repository repository = RepositoryTestData.createHeartOfGold();
+
+    DataStore<StoreObject> store = dataStoreFactory.getStore(getStoreParametersWithRepository(repository));
+
+    String id = store.put(obj);
+
+    assertNotNull(id);
+
+    assertEquals(obj, store.get(id));
   }
 }

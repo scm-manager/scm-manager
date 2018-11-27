@@ -55,6 +55,7 @@ import sonia.scm.event.ScmEventBus;
 import sonia.scm.group.GroupEvent;
 import sonia.scm.store.ConfigurationEntryStore;
 import sonia.scm.store.ConfigurationEntryStoreFactory;
+import sonia.scm.store.StoreParameters;
 import sonia.scm.user.UserEvent;
 import sonia.scm.util.ClassLoaders;
 
@@ -108,9 +109,13 @@ public class DefaultSecuritySystem implements SecuritySystem
    * @param storeFactory
    */
   @Inject
+  @SuppressWarnings("unchecked")
   public DefaultSecuritySystem(ConfigurationEntryStoreFactory storeFactory)
   {
-    store = storeFactory.getStore(AssignedPermission.class, NAME);
+    store = storeFactory.getStore(new StoreParameters()
+    .withType(AssignedPermission.class)
+    .withName(NAME)
+    .build());
     readAvailablePermissions();
   }
 

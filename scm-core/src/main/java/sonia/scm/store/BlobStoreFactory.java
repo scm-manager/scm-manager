@@ -42,16 +42,6 @@ package sonia.scm.store;
  * @apiviz.landmark
  * @apiviz.uses sonia.scm.store.BlobStore
  */
-public interface BlobStoreFactory {
+public interface BlobStoreFactory extends StoreFactory<BlobStore> {
 
-  /**
-   * Returns a {@link BlobStore} with the given name, if the {@link BlobStore}
-   * with the given name does not exists the factory will create a new one.
-   *
-   *
-   * @param name name of the {@link BlobStore}
-   *
-   * @return {@link BlobStore} with the given name
-   */
-  public BlobStore getBlobStore(String name);
 }

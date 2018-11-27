@@ -40,7 +40,7 @@ import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sonia.scm.SCMContextProvider;
+import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.security.KeyGenerator;
 
 /**
@@ -52,54 +52,23 @@ public class JAXBDataStoreFactory extends FileBasedStoreFactory
   implements DataStoreFactory
 {
 
-  /** Field description */
+  private static final Logger logger = LoggerFactory.getLogger(JAXBDataStoreFactory.class);
   private static final String DIRECTORY_NAME = "data";
+  private KeyGenerator keyGenerator;
 
-  /**
-   * the logger for JAXBDataStoreFactory
-   */
-  private static final Logger logger =
-    LoggerFactory.getLogger(JAXBDataStoreFactory.class);
-
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param context
-   * @param keyGenerator
-   */
   @Inject
-  public JAXBDataStoreFactory(SCMContextProvider context,
-    KeyGenerator keyGenerator)
-  {
-    super(context, DIRECTORY_NAME);
+  public JAXBDataStoreFactory(RepositoryLocationResolver repositoryLocationResolver, KeyGenerator keyGenerator) {
+    super(repositoryLocationResolver, DIRECTORY_NAME);
     this.keyGenerator = keyGenerator;
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param type
-   * @param name
-   * @param <T>
-   *
-   * @return
-   */
   @Override
-  public <T> DataStore<T> getStore(Class<T> type, String name)
-  {
-    logger.debug("create new store for type {} with name {}", type, name);
-
-    return new JAXBDataStore<>(keyGenerator, type, getDirectory(name));
+  @SuppressWarnings("unchecked")
+  public DataStore getStore(StoreParameters storeParameters) {
+    logger.debug("create new store for type {} with name {}", storeParameters.getType(), storeParameters.getName());
+    if (storeParameters.getRepository() != null) {
+      return new JAXBDataStore(keyGenerator, storeParameters.getType(), getDirectory(storeParameters.getName(), storeParameters.getRepository()));
+    }
+    return new JAXBDataStore(keyGenerator, storeParameters.getType(), getDirectory(storeParameters.getName()));
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private KeyGenerator keyGenerator;
 }

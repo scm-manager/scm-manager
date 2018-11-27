@@ -6,6 +6,7 @@ import sonia.scm.io.FileSystem;
 import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
+import java.text.MessageFormat;
 
 /**
  *
@@ -44,7 +45,11 @@ public final class InitialRepositoryLocationResolver {
     return new File(context.getBaseDirectory(), REPOSITORIES_DIRECTORY);
   }
 
-  public File createDirectory(Repository repository) throws IOException {
+  File getContextBaseDirectory() {
+    return context.getBaseDirectory();
+  }
+
+  public File createDirectory(Repository repository) throws IOException  {
     File initialRepoFolder = getDirectory(repository);
     fileSystem.create(initialRepoFolder);
     return initialRepoFolder;

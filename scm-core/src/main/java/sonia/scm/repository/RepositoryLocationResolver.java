@@ -24,6 +24,10 @@ import static sonia.scm.repository.InitialRepositoryLocationResolver.REPOSITORIE
 @Singleton
 public class RepositoryLocationResolver {
 
+  private static final String REPOSITORIES_STORES_DIRECTORY = "stores";
+  private static final String REPOSITORIES_CONFIG_DIRECTORY = "config";
+  private static final String GLOBAL_STORE_BASE_DIRECTORY = "var";
+
   private RepositoryDAO repositoryDAO;
   private InitialRepositoryLocationResolver initialRepositoryLocationResolver;
 
@@ -69,5 +73,23 @@ public class RepositoryLocationResolver {
 
   public File getInitialNativeDirectory(Repository repository) {
     return new File (getInitialDirectory(repository), REPOSITORIES_NATIVE_DIRECTORY);
+  }
+
+  /**
+   * Get the store directory of a specific repository
+   * @param repository
+   * @return the store directory of a specific repository
+   */
+  public File getStoresDirectory(Repository repository) throws IOException{
+    return new File (getRepositoryDirectory(repository), REPOSITORIES_STORES_DIRECTORY);
+  }
+
+  public File getConfigDirectory(Repository repository) throws IOException {
+    return new File (getRepositoryDirectory(repository), REPOSITORIES_CONFIG_DIRECTORY);
+  }
+
+  public File getGlobalStoreDirectory() {
+    return new File(initialRepositoryLocationResolver.getContextBaseDirectory(),
+      GLOBAL_STORE_BASE_DIRECTORY.concat(File.separator));
   }
 }

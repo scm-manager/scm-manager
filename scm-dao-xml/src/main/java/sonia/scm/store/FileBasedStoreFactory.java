@@ -31,18 +31,23 @@
 package sonia.scm.store;
 
 //~--- non-JDK imports --------------------------------------------------------
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import sonia.scm.SCMContextProvider;
+import sonia.scm.repository.InternalRepositoryException;
+import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.util.IOUtil;
 
-//~--- JDK imports ------------------------------------------------------------
 import java.io.File;
+import java.io.IOException;
+import java.text.MessageFormat;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Abstract store factory for file based stores.
- * 
+ *
  * @author Sebastian Sdorra
  */
 public abstract class FileBasedStoreFactory {
@@ -51,18 +56,14 @@ public abstract class FileBasedStoreFactory {
    * the logger for FileBasedStoreFactory
    */
   private static final Logger LOG = LoggerFactory.getLogger(FileBasedStoreFactory.class);
-
-  private static final String BASE_DIRECTORY = "var";
-
-  private final SCMContextProvider context;
+  private RepositoryLocationResolver repositoryLocationResolver;
 
   private final String dataDirectoryName;
 
   private File dataDirectory;
 
-  protected FileBasedStoreFactory(SCMContextProvider context,
-    String dataDirectoryName) {
-    this.context = context;
+  protected FileBasedStoreFactory(RepositoryLocationResolver repositoryLocationResolver, String dataDirectoryName) {
+    this.repositoryLocationResolver = repositoryLocationResolver;
     this.dataDirectoryName = dataDirectoryName;
   }
 
@@ -76,11 +77,31 @@ public abstract class FileBasedStoreFactory {
    */
   protected File getDirectory(String name) {
     if (dataDirectory == null) {
-      dataDirectory = new File(context.getBaseDirectory(),
-        BASE_DIRECTORY.concat(File.separator).concat(dataDirectoryName));
-      LOG.debug("create data directory {}", dataDirectory);
+      dataDirectory = new File(repositoryLocationResolver.getGlobalStoreDirectory(), dataDirectoryName);
+      LOG.debug("get data directory {}", dataDirectory);
     }
 
+    File storeDirectory = new File(dataDirectory, name);
+    IOUtil.mkdirs(storeDirectory);
+    return storeDirectory;
+  }
+
+  /**
+   * Returns data directory for given name.
+   *
+   * @param name name of data directory
+   *
+   * @return data directory
+   */
+  protected File getDirectory(String name, Repository repository) {
+    if (dataDirectory == null) {
+      try {
+        dataDirectory = new File(repositoryLocationResolver.getStoresDirectory(repository), dataDirectoryName);
+      } catch (IOException e) {
+        throw new InternalRepositoryException(repository, MessageFormat.format("Error on getting the store directory {0} of the repository {1}", dataDirectory.getAbsolutePath(), repository.getNamespaceAndName()), e);
+      }
+      LOG.debug("create data directory {}", dataDirectory);
+    }
     File storeDirectory = new File(dataDirectory, name);
     IOUtil.mkdirs(storeDirectory);
     return storeDirectory;

@@ -38,6 +38,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import sonia.scm.AbstractTestBase;
+import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryTestData;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -56,13 +58,19 @@ import java.util.Map;
 public abstract class KeyValueStoreTestBase extends AbstractTestBase
 {
 
+  private Repository repository = RepositoryTestData.createHeartOfGold();
+  private DataStore<StoreObject> store;
+  private DataStore<StoreObject> repoStore;
+
   /**
    * Method description
    *
    *
    * @return
    */
-  protected abstract DataStore<StoreObject> getDataStore();
+  protected abstract <STORE_OBJECT> DataStore<STORE_OBJECT> getDataStore(Class<STORE_OBJECT> type , Repository repository);
+  protected abstract <STORE_OBJECT> DataStore<STORE_OBJECT> getDataStore(Class<STORE_OBJECT> type );
+
 
   //~--- methods --------------------------------------------------------------
 
@@ -73,8 +81,10 @@ public abstract class KeyValueStoreTestBase extends AbstractTestBase
   @Before
   public void before()
   {
-    store = getDataStore();
+    store = getDataStore(StoreObject.class);
+    repoStore = getDataStore(StoreObject.class, repository);
     store.clear();
+    repoStore.clear();
   }
 
   /**
@@ -215,8 +225,5 @@ public abstract class KeyValueStoreTestBase extends AbstractTestBase
     assertNull(store.get("2"));
   }
 
-  //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
-  private DataStore<StoreObject> store;
 }

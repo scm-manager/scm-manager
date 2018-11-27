@@ -34,14 +34,14 @@ package sonia.scm.store;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.repository.Repository;
 import sonia.scm.security.UUIDKeyGenerator;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class JAXBDataStoreTest extends DataStoreTestBase
-{
+public class JAXBDataStoreTest extends DataStoreTestBase {
 
   /**
    * Method description
@@ -52,6 +52,25 @@ public class JAXBDataStoreTest extends DataStoreTestBase
   @Override
   protected DataStoreFactory createDataStoreFactory()
   {
-    return new JAXBDataStoreFactory(contextProvider, new UUIDKeyGenerator());
+    return new JAXBDataStoreFactory(repositoryLocationResolver, new UUIDKeyGenerator());
+  }
+
+  @Override
+  protected DataStore getDataStore(Class type, Repository repository) {
+    StoreParameters params = new StoreParameters()
+      .withType(type)
+      .withName("test")
+      .forRepository(repository)
+      .build();
+    return createDataStoreFactory().getStore(params);
+  }
+
+  @Override
+  protected DataStore getDataStore(Class type) {
+    StoreParameters params = new StoreParameters()
+      .withType(type)
+      .withName("test")
+      .build();
+    return createDataStoreFactory().getStore(params);
   }
 }

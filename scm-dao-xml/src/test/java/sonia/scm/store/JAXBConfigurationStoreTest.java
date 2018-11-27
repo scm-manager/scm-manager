@@ -34,7 +34,7 @@ package sonia.scm.store;
 
 /**
  * Unit tests for {@link JAXBConfigurationStore}.
- * 
+ *
  * @author Sebastian Sdorra
  */
 public class JAXBConfigurationStoreTest extends StoreTestBase {
@@ -42,6 +42,6 @@ public class JAXBConfigurationStoreTest extends StoreTestBase {
   @Override
   protected ConfigurationStoreFactory createStoreFactory()
   {
-    return new JAXBConfigurationStoreFactory(contextProvider);
+    return new JAXBConfigurationStoreFactory(repositoryLocationResolver);
   }
 }

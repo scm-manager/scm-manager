@@ -37,24 +37,21 @@ package sonia.scm.store;
 
 import com.google.common.io.Closeables;
 import com.google.common.io.Resources;
-
 import org.junit.Test;
-
 import sonia.scm.security.AssignedPermission;
 import sonia.scm.security.UUIDKeyGenerator;
-
-import static org.junit.Assert.*;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-
 import java.net.URL;
-
 import java.util.UUID;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -132,13 +129,13 @@ public class JAXBConfigurationEntryStoreTest
   public void testStoreAndLoad() throws IOException
   {
     String name = UUID.randomUUID().toString();
-    ConfigurationEntryStore<AssignedPermission> store =
-      createPermissionStore(RESOURCE_FIXED, name);
+    ConfigurationEntryStore<AssignedPermission> store = createPermissionStore(RESOURCE_FIXED, name);
 
     store.put("a45", new AssignedPermission("tuser4", "repository:create"));
-    store =
-      createConfigurationStoreFactory().getStore(AssignedPermission.class,
-        name);
+    store = createConfigurationStoreFactory().getStore(new StoreParameters()
+      .withType(AssignedPermission.class)
+      .withName(name)
+      .build());
 
     AssignedPermission ap = store.get("a45");
 
@@ -154,10 +151,9 @@ public class JAXBConfigurationEntryStoreTest
    * @return
    */
   @Override
-  protected ConfigurationEntryStoreFactory createConfigurationStoreFactory()
+  protected ConfigurationEntryStoreFactory  createConfigurationStoreFactory()
   {
-    return new JAXBConfigurationEntryStoreFactory(new UUIDKeyGenerator(),
-      contextProvider);
+    return new JAXBConfigurationEntryStoreFactory(new UUIDKeyGenerator(), contextProvider);
   }
 
   /**
@@ -225,8 +221,9 @@ public class JAXBConfigurationEntryStoreTest
     }
 
     copy(resource, name);
-
-    return createConfigurationStoreFactory().getStore(AssignedPermission.class,
-      name);
+    return createConfigurationStoreFactory().getStore(new StoreParameters()
+      .withType(AssignedPermission.class)
+      .withName(name)
+      .build());
   }
 }

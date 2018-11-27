@@ -35,21 +35,23 @@ package sonia.scm.store;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.io.ByteStreams;
-
 import org.junit.Before;
 import org.junit.Test;
-
 import sonia.scm.AbstractTestBase;
-
-import static org.junit.Assert.*;
-
-//~--- JDK imports ------------------------------------------------------------
+import sonia.scm.repository.RepositoryTestData;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
 import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -58,12 +60,6 @@ import java.util.List;
 public abstract class BlobStoreTestBase extends AbstractTestBase
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   protected abstract BlobStoreFactory createBlobStoreFactory();
 
   /**
@@ -73,7 +69,12 @@ public abstract class BlobStoreTestBase extends AbstractTestBase
   @Before
   public void createBlobStore()
   {
-    store = createBlobStoreFactory().getBlobStore("test");
+    store = createBlobStoreFactory().getStore(new StoreParameters()
+      .withType(Blob.class)
+      .withName("test")
+      .forRepository(RepositoryTestData.createHeartOfGold())
+      .build()
+    );
     store.clear();
   }
 

@@ -48,6 +48,7 @@ import java.io.File;
 import java.io.IOException;
 import sonia.scm.store.ConfigurationStore;
 import sonia.scm.store.ConfigurationStoreFactory;
+import sonia.scm.store.StoreParameters;
 
 
 /**
@@ -72,9 +73,12 @@ public abstract class AbstractRepositoryHandler<C extends RepositoryConfig>
    *
    * @param storeFactory
    */
-  protected AbstractRepositoryHandler(ConfigurationStoreFactory storeFactory)
-  {
-    this.store = storeFactory.getStore(getConfigClass(), getType().getName());
+  protected AbstractRepositoryHandler(ConfigurationStoreFactory storeFactory) {
+    this.store = storeFactory.getStore(new StoreParameters()
+      .withType(getConfigClass())
+      .withName(getType().getName())
+      .build()
+    );
   }
 
   //~--- get methods ----------------------------------------------------------

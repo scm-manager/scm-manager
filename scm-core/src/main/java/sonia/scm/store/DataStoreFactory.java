@@ -42,17 +42,4 @@ package sonia.scm.store;
  * @apiviz.landmark
  * @apiviz.uses sonia.scm.store.DataStore
  */
-public interface DataStoreFactory {
-
-  /**
-   * Get an existing {@link DataStore} or create a new one.
-   *
-   *
-   * @param type type of the store objects
-   * @param name name of the store
-   * @param <T> type of the store objects
-   *
-   * @return {@link DataStore} with given name and type
-   */
-  public <T> DataStore<T> getStore(Class<T> type, String name);
-}
+public interface DataStoreFactory extends StoreFactory<DataStore>{}

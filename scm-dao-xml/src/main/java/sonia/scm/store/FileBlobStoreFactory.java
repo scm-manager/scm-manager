@@ -37,7 +37,7 @@ import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sonia.scm.SCMContextProvider;
+import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.security.KeyGenerator;
 
 /**
@@ -60,21 +60,21 @@ public class FileBlobStoreFactory extends FileBasedStoreFactory implements BlobS
   /**
    * Constructs a new instance.
    *
-   * @param context scm context
+   * @param repositoryLocationResolver
    * @param keyGenerator key generator
    */
   @Inject
-  public FileBlobStoreFactory(SCMContextProvider context,
-    KeyGenerator keyGenerator) {
-    super(context, DIRECTORY_NAME);
+  public FileBlobStoreFactory(RepositoryLocationResolver repositoryLocationResolver, KeyGenerator keyGenerator) {
+    super(repositoryLocationResolver, DIRECTORY_NAME);
     this.keyGenerator = keyGenerator;
   }
 
   @Override
-  public BlobStore getBlobStore(String name) {
-    LOG.debug("create new blob with name {}", name);
-
-    return new FileBlobStore(keyGenerator, getDirectory(name));
+  public BlobStore getStore(StoreParameters storeParameters) {
+    if (storeParameters.getRepository() != null) {
+      return new FileBlobStore(keyGenerator, getDirectory(storeParameters.getName(), storeParameters.getRepository()));
+    }
+    return new FileBlobStore(keyGenerator, getDirectory(storeParameters.getName()));
   }
 
 }

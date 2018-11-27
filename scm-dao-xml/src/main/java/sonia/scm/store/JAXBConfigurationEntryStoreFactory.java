@@ -42,6 +42,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.SCMContextProvider;
+import sonia.scm.repository.Repository;
 import sonia.scm.security.KeyGenerator;
 import sonia.scm.util.IOUtil;
 
@@ -91,18 +92,16 @@ public class JAXBConfigurationEntryStoreFactory
    *
    * @param type
    * @param name
-   * @param <T>
    *
    * @return
    */
-  @Override
-  public <T> ConfigurationEntryStore<T> getStore(Class<T> type, String name)
+  private ConfigurationEntryStore getStore(Class type, String name)
   {
     logger.debug("create new configuration store for type {} with name {}",
       type, name);
 
     //J-
-    return new JAXBConfigurationEntryStore<T>(
+    return new JAXBConfigurationEntryStore(
       new File(directory,name.concat(StoreConstants.FILE_EXTENSION)), 
       keyGenerator, 
       type
@@ -117,4 +116,17 @@ public class JAXBConfigurationEntryStoreFactory
 
   /** Field description */
   private KeyGenerator keyGenerator;
+
+  @Override
+  public ConfigurationEntryStore getStore(StoreParameters storeParameters) {
+    if (storeParameters.getRepository() != null){
+      return getStore(storeParameters.getType(),storeParameters.getName(),storeParameters.getRepository());
+    }
+    return getStore(storeParameters.getType(),storeParameters.getName());
+  }
+
+  private ConfigurationEntryStore getStore(Class type, String name, Repository repository) {
+    return null;
+  }
+
 }

@@ -37,9 +37,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
+import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.util.MockUtil;
 
 import java.io.IOException;
+
+import static org.mockito.Mockito.mock;
 
 /**
  *
@@ -54,12 +57,14 @@ public abstract class ManagerTestBase<T extends ModelObject>
   public TemporaryFolder tempFolder = new TemporaryFolder();
   
   protected SCMContextProvider contextProvider;
-  
+  protected RepositoryLocationResolver locationResolver;
+
   protected Manager<T> manager;
   
   @Before
   public void setUp() throws IOException {
     contextProvider = MockUtil.getSCMContextProvider(tempFolder.newFolder());
+    locationResolver = mock(RepositoryLocationResolver.class);
     manager = createManager();
     manager.init(contextProvider);
   }

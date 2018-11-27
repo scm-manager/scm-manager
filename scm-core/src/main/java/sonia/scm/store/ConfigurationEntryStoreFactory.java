@@ -34,10 +34,10 @@ package sonia.scm.store;
 
 /**
  * The ConfigurationEntryStoreFactory can be used to create new or get existing
- * {@link ConfigurationEntryStore}s. <b>Note:</b> the default implementation 
- * uses the same location as the {@link StoreFactory}, so be sure that the 
- * store names are unique for all {@link ConfigurationEntryStore}s and 
- * {@link Store}s.
+ * {@link ConfigurationEntryStore}s.
+ *
+ * <b>Note:</b> the default implementation uses the same location as the {@link ConfigurationStoreFactory}, so be sure that the
+ * store names are unique for all {@link ConfigurationEntryStore}s and {@link ConfigurationStore}s.
  * 
  * @author Sebastian Sdorra
  * @since 1.31
@@ -45,18 +45,5 @@ package sonia.scm.store;
  * @apiviz.landmark
  * @apiviz.uses sonia.scm.store.ConfigurationEntryStore
  */
-public interface ConfigurationEntryStoreFactory
-{
-
-  /**
-   * Get an existing {@link ConfigurationEntryStore} or create a new one.
-   *
-   *
-   * @param type type of the store objects
-   * @param name name of the store
-   * @param <T> type of the store objects
-   *
-   * @return {@link ConfigurationEntryStore} with given name and type
-   */
-  public <T> ConfigurationEntryStore<T> getStore(Class<T> type, String name);
+public interface ConfigurationEntryStoreFactory extends StoreFactory<ConfigurationEntryStore> {
 }
