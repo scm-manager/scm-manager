@@ -1,19 +1,22 @@
 package sonia.scm;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
 import static java.util.Collections.unmodifiableCollection;
 
-public class ScmConstraintViolationException extends RuntimeException {
+public class ScmConstraintViolationException extends RuntimeException implements Serializable {
+
+  private static final long serialVersionUID = 6904534307450229887L;
 
   private final Collection<ScmConstraintViolation> violations;
 
-  private final String furtherInformations;
+  private final String furtherInformation;
 
-  private ScmConstraintViolationException(Collection<ScmConstraintViolation> violations, String furtherInformations) {
+  private ScmConstraintViolationException(Collection<ScmConstraintViolation> violations, String furtherInformation) {
     this.violations = violations;
-    this.furtherInformations = furtherInformations;
+    this.furtherInformation = furtherInformation;
   }
 
   public Collection<ScmConstraintViolation> getViolations() {
@@ -21,12 +24,12 @@ public class ScmConstraintViolationException extends RuntimeException {
   }
 
   public String getUrl() {
-    return furtherInformations;
+    return furtherInformation;
   }
 
   public static class Builder {
     private final Collection<ScmConstraintViolation> violations = new ArrayList<>();
-    private String furtherInformations;
+    private String furtherInformation;
 
     public static Builder doThrow() {
       Builder builder = new Builder();
@@ -35,7 +38,7 @@ public class ScmConstraintViolationException extends RuntimeException {
 
     public Builder andThrow() {
       this.violations.clear();
-      this.furtherInformations = null;
+      this.furtherInformation = null;
       return this;
     }
 
@@ -44,19 +47,22 @@ public class ScmConstraintViolationException extends RuntimeException {
       return this;
     }
 
-    public Builder withFurtherInformations(String furtherInformations) {
-      this.furtherInformations = furtherInformations;
+    public Builder withFurtherInformation(String furtherInformation) {
+      this.furtherInformation = furtherInformation;
       return this;
     }
 
     public void when(boolean condition) {
       if (condition && !this.violations.isEmpty()) {
-        throw new ScmConstraintViolationException(violations, furtherInformations);
+        throw new ScmConstraintViolationException(violations, furtherInformation);
       }
     }
   }
 
-  public static class ScmConstraintViolation {
+  public static class ScmConstraintViolation implements Serializable {
+
+    private static final long serialVersionUID = -6900317468157084538L;
+
     private final String message;
     private final String path;
 
