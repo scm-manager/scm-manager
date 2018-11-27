@@ -81,6 +81,9 @@ public class HgCGIServlet extends HttpServlet implements ScmProviderHttpServlet
   public static final String ENV_REPOSITORY_PATH = "SCM_REPOSITORY_PATH";
 
   /** Field description */
+  public static final String ENV_REPOSITORY_ID = "SCM_REPOSITORY_ID";
+
+  /** Field description */
   public static final String ENV_SESSION_PREFIX = "SCM_";
 
   /** Field description */
@@ -261,6 +264,7 @@ public class HgCGIServlet extends HttpServlet implements ScmProviderHttpServlet
     executor.setStatusCodeHandler(exceptionHandler);
     executor.setContentLengthWorkaround(true);
     executor.getEnvironment().set(ENV_REPOSITORY_NAME, repository.getNamespace() + "/" + repository.getName());
+    executor.getEnvironment().set(ENV_REPOSITORY_ID, repository.getId());
     executor.getEnvironment().set(ENV_REPOSITORY_PATH,
       directory.getAbsolutePath());
 

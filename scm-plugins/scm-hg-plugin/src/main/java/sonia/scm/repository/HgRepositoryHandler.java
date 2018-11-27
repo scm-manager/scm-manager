@@ -114,6 +114,7 @@ public class HgRepositoryHandler
                              RepositoryLocationResolver repositoryLocationResolver)
   {
     super(storeFactory, repositoryLocationResolver);
+    this.repositoryLocationResolver = repositoryLocationResolver;
     this.hgContextProvider = hgContextProvider;
 
     try
@@ -427,6 +428,10 @@ public class HgRepositoryHandler
     }
   }
 
+  public File getDirectory(String repositoryId) {
+    return repositoryLocationResolver.getRepositoryDirectory(repositoryId);
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
@@ -434,4 +439,6 @@ public class HgRepositoryHandler
 
   /** Field description */
   private JAXBContext jaxbContext;
+
+  private final RepositoryLocationResolver repositoryLocationResolver;
 }

@@ -29,11 +29,15 @@ public class RepositoryLocationResolver {
     this.initialRepositoryLocationResolver = initialRepositoryLocationResolver;
   }
 
-  File getRepositoryDirectory(Repository repository){
+  public File getRepositoryDirectory(Repository repository){
     if (repositoryDAO instanceof PathBasedRepositoryDAO) {
       PathBasedRepositoryDAO pathBasedRepositoryDAO = (PathBasedRepositoryDAO) repositoryDAO;
       return pathBasedRepositoryDAO.getPath(repository).toFile();
     }
     return initialRepositoryLocationResolver.getRelativeRepositoryPath(repository).getAbsolutePath();
+  }
+
+  public File getRepositoryDirectory(String repositoryId) {
+    return getRepositoryDirectory(repositoryDAO.get(repositoryId));
   }
 }
