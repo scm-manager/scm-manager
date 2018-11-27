@@ -32,8 +32,7 @@ public class ScmConstraintViolationException extends RuntimeException implements
     private String furtherInformation;
 
     public static Builder doThrow() {
-      Builder builder = new Builder();
-      return builder;
+      return new Builder();
     }
 
     public Builder andThrow() {
