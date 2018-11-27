@@ -253,8 +253,7 @@ public class HgCGIServlet extends HttpServlet implements ScmProviderHttpServlet
     HttpServletResponse response, Repository repository)
     throws IOException, ServletException
   {
-    String name = repository.getName();
-    File directory = handler.getDirectory(repository);
+    File directory = handler.getDirectory(repository.getId());
     CGIExecutor executor = cgiExecutorFactory.createExecutor(configuration,
                              getServletContext(), request, response);
 

@@ -89,7 +89,7 @@ public class XmlRepositoryDAOTest {
 
     XmlRepositoryDAO dao = new XmlRepositoryDAO(storeFactory, new InitialRepositoryLocationResolver(context), fileSystem, context);
 
-    Path path = dao.getPath(existingRepository);
+    Path path = dao.getPath(existingRepository.getId());
 
     assertThat(path.toString()).isEqualTo(context.getBaseDirectory().getPath() + "/path");
   }
@@ -102,7 +102,7 @@ public class XmlRepositoryDAOTest {
 
     XmlRepositoryDAO dao = new XmlRepositoryDAO(storeFactory, new InitialRepositoryLocationResolver(context), fileSystem, context);
 
-    Path path = dao.getPath(existingRepository);
+    Path path = dao.getPath(existingRepository.getId());
 
     assertThat(path.toString()).isEqualTo("/tmp/path");
   }

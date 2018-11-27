@@ -28,8 +28,8 @@ public class InitialRepositoryLocationResolver {
     this.context = context;
   }
 
-  public InitialRepositoryLocation getRelativeRepositoryPath(Repository repository) {
-    String relativePath = DEFAULT_REPOSITORY_PATH + File.separator + repository.getId();
+  public InitialRepositoryLocation getRelativeRepositoryPath(String repositoryId) {
+    String relativePath = DEFAULT_REPOSITORY_PATH + File.separator + repositoryId;
     return new InitialRepositoryLocation(new File(context.getBaseDirectory(), relativePath), relativePath);
   }
 

@@ -178,7 +178,7 @@ public abstract class DirectoryHealthCheck implements HealthCheck
       else if (handler instanceof RepositoryDirectoryHandler)
       {
         File directory =
-          ((RepositoryDirectoryHandler) handler).getDirectory(repository);
+          ((RepositoryDirectoryHandler) handler).getDirectory(repository.getId());
 
         if (directory == null)
         {

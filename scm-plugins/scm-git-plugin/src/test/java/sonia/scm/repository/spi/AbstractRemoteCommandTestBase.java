@@ -92,9 +92,9 @@ public class AbstractRemoteCommandTestBase
     outgoing = Git.init().setDirectory(outgoingDirectory).setBare(false).call();
 
     handler = mock(GitRepositoryHandler.class);
-    when(handler.getDirectory(incomingRepository)).thenReturn(
+    when(handler.getDirectory(incomingRepository.getId())).thenReturn(
       incomingDirectory);
-    when(handler.getDirectory(outgoingRepository)).thenReturn(
+    when(handler.getDirectory(outgoingRepository.getId())).thenReturn(
       outgoingDirectory);
   }
 

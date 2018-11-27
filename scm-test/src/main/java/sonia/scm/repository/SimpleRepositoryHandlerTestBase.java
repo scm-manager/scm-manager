@@ -100,7 +100,7 @@ public abstract class SimpleRepositoryHandlerTestBase extends AbstractTestBase {
     repository = RepositoryTestData.createHeartOfGold();
     File repoDirectory = new File(baseDirectory, repository.getId());
     repoPath = repoDirectory.toPath();
-    when(repoDao.getPath(repository)).thenReturn(repoPath);
+    when(repoDao.getPath(repository.getId())).thenReturn(repoPath);
     return new File(repoDirectory, AbstractSimpleRepositoryHandler.REPOSITORIES_NATIVE_DIRECTORY);
   }
 

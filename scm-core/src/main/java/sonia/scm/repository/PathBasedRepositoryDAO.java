@@ -11,7 +11,8 @@ import java.nio.file.Path;
 public interface PathBasedRepositoryDAO extends RepositoryDAO {
 
   /**
-   * Get the current path of the repository. This works for existing repositories only, not for repositories that should be created.
+   * Get the current path of the repository for the given id.
+   * This works for existing repositories only, not for repositories that should be created.
    */
-  Path getPath(Repository repository) ;
+  Path getPath(String repositoryId) ;
 }

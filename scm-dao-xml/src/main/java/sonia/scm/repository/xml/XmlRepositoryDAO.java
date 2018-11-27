@@ -35,7 +35,7 @@ package sonia.scm.repository.xml;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import sonia.scm.NotFoundException;
+import sonia.scm.ContextEntry;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.io.FileSystem;
 import sonia.scm.repository.InitialRepositoryLocationResolver;
@@ -47,13 +47,10 @@ import sonia.scm.repository.Repository;
 import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.xml.AbstractXmlDAO;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Optional;
-
-import static sonia.scm.ContextEntry.ContextBuilder.entity;
 
 /**
  * @author Sebastian Sdorra
@@ -104,7 +101,7 @@ public class XmlRepositoryDAO
 
   @Override
   public void modify(Repository repository) {
-    RepositoryPath repositoryPath = findExistingRepositoryPath(repository).orElseThrow(() -> new InternalRepositoryException(repository, "path object for repository not found"));
+    RepositoryPath repositoryPath = findExistingRepositoryPath(repository.getId()).orElseThrow(() -> new InternalRepositoryException(repository, "path object for repository not found"));
     repositoryPath.setRepository(repository);
     repositoryPath.setToBeSynchronized(true);
     storeDB();
@@ -112,7 +109,7 @@ public class XmlRepositoryDAO
 
   @Override
   public void add(Repository repository) {
-    InitialRepositoryLocation initialLocation = initialRepositoryLocationResolver.getRelativeRepositoryPath(repository);
+    InitialRepositoryLocation initialLocation = initialRepositoryLocationResolver.getRelativeRepositoryPath(repository.getId());
     try {
       fileSystem.create(initialLocation.getAbsolutePath());
     } catch (IOException e) {
@@ -153,7 +150,7 @@ public class XmlRepositoryDAO
 
   @Override
   public void delete(Repository repository) {
-    Path directory = getPath(repository);
+    Path directory = getPath(repository.getId());
     super.delete(repository);
     try {
         fileSystem.destroy(directory.toFile());
@@ -173,19 +170,19 @@ public class XmlRepositoryDAO
   }
 
   @Override
-  public Path getPath(Repository repository) {
+  public Path getPath(String repositoryId) {
     return context
       .getBaseDirectory()
       .toPath()
       .resolve(
-        findExistingRepositoryPath(repository)
+        findExistingRepositoryPath(repositoryId)
           .map(RepositoryPath::getPath)
-          .orElseThrow(() -> new InternalRepositoryException(repository, "could not find base directory for repository")));
+          .orElseThrow(() -> new InternalRepositoryException(ContextEntry.ContextBuilder.entity("repository", repositoryId), "could not find base directory for repository")));
   }
 
-  private Optional<RepositoryPath> findExistingRepositoryPath(Repository repository) {
+  private Optional<RepositoryPath> findExistingRepositoryPath(String repositoryId) {
     return db.values().stream()
-      .filter(repoPath -> repoPath.getId().equals(repository.getId()))
+      .filter(repoPath -> repoPath.getId().equals(repositoryId))
       .findAny();
   }
 }

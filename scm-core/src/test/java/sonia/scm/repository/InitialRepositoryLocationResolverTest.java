@@ -32,9 +32,7 @@ public class InitialRepositoryLocationResolverTest {
   @Test
   public void shouldComputeInitialDirectory() {
     InitialRepositoryLocationResolver resolver = new InitialRepositoryLocationResolver(context);
-    Repository repository = new Repository();
-    repository.setId("ABC");
-    InitialRepositoryLocationResolver.InitialRepositoryLocation directory = resolver.getRelativeRepositoryPath(repository);
+    InitialRepositoryLocationResolver.InitialRepositoryLocation directory = resolver.getRelativeRepositoryPath("ABC");
 
     assertThat(directory.getAbsolutePath()).isEqualTo(new File(context.getBaseDirectory(), "repositories/ABC"));
     assertThat(directory.getRelativePath()).isEqualTo( "repositories/ABC");

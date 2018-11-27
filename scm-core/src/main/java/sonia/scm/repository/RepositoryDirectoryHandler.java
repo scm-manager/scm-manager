@@ -43,9 +43,8 @@ import java.io.File;
 public interface RepositoryDirectoryHandler extends RepositoryHandler {
 
   /**
-   * Get the current directory of the given repository
-   * @param repository
+   * Get the current directory of the repository for the given id.
    * @return the current directory of the given repository
    */
-  File getDirectory(Repository repository);
+  File getDirectory(String repositoryId);
 }

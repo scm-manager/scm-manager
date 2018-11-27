@@ -111,7 +111,7 @@ public class GitRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
     repositoryHandler.setConfig(config);
 
     initRepository();
-    File path = repositoryHandler.getDirectory(repository);
+    File path = repositoryHandler.getDirectory(repository.getId());
     assertEquals(repoPath.toString() + File.separator + AbstractSimpleRepositoryHandler.REPOSITORIES_NATIVE_DIRECTORY, path.getAbsolutePath());
   }
 }

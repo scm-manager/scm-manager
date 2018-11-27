@@ -81,7 +81,7 @@ public class HgIncomingCommand extends AbstractCommand
   @Override
   @SuppressWarnings("unchecked")
   public ChangesetPagingResult getIncomingChangesets(IncomingCommandRequest request) {
-    File remoteRepository = handler.getDirectory(request.getRemoteRepository());
+    File remoteRepository = handler.getDirectory(request.getRemoteRepository().getId());
 
     com.aragost.javahg.Repository repository = open();
 

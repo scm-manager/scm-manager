@@ -106,7 +106,7 @@ public class GitRepositoryResolver implements RepositoryResolver<HttpServletRequ
 
       if (config.isValid())
       {
-        File gitdir = handler.getDirectory(repo);
+        File gitdir = handler.getDirectory(repo.getId());
         if (gitdir == null) {
           throw new RepositoryNotFoundException(repositoryName);
         }

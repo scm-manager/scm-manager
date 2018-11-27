@@ -196,12 +196,12 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
   private PullResponse pullFromScmRepository(Repository sourceRepository)
     throws IOException
   {
-    File sourceDirectory = handler.getDirectory(sourceRepository);
+    File sourceDirectory = handler.getDirectory(sourceRepository.getId());
 
     Preconditions.checkArgument(sourceDirectory.exists(),
       "source repository directory does not exists");
 
-    File targetDirectory = handler.getDirectory(repository);
+    File targetDirectory = handler.getDirectory(repository.getId());
 
     Preconditions.checkArgument(sourceDirectory.exists(),
       "target repository directory does not exists");

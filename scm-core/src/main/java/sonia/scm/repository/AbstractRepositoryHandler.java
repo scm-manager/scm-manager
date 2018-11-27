@@ -168,7 +168,7 @@ public abstract class AbstractRepositoryHandler<C extends RepositoryConfig>
    * @throws NotSupportedFeatureException
    */
   @Override
-  public ImportHandler getImportHandler() throws NotSupportedFeatureException
+  public ImportHandler getImportHandler()
   {
     throw new NotSupportedFeatureException("import");
   }
