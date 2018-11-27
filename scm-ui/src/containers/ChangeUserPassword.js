@@ -1,32 +1,35 @@
 // @flow
 import React from "react";
-import type { User } from "@scm-manager/ui-types";
 import {
-  SubmitButton,
-  Notification,
   ErrorNotification,
-  PasswordConfirmation
+  InputField,
+  Notification,
+  PasswordConfirmation,
+  SubmitButton
 } from "@scm-manager/ui-components";
 import { translate } from "react-i18next";
-import { setPassword } from "./setPassword";
+import type { Me } from "@scm-manager/ui-types";
+import { changePassword } from "../modules/changePassword";
 
 type Props = {
-  user: User,
+  me: Me,
   t: string => string
 };
 
 type State = {
+  oldPassword: string,
   password: string,
   loading: boolean,
   error?: Error,
   passwordChanged: boolean
 };
 
-class SetUserPassword extends React.Component<Props, State> {
+class ChangeUserPassword extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
     this.state = {
+      oldPassword: "",
       password: "",
       loading: false,
       passwordConfirmationError: false,
@@ -56,6 +59,7 @@ class SetUserPassword extends React.Component<Props, State> {
       ...this.state,
       loading: false,
       passwordChanged: true,
+      oldPassword: "",
       password: ""
     });
   };
@@ -63,10 +67,9 @@ class SetUserPassword extends React.Component<Props, State> {
   submit = (event: Event) => {
     event.preventDefault();
     if (this.state.password) {
-      const { user } = this.props;
-      const { password } = this.state;
+      const { oldPassword, password } = this.state;
       this.setLoadingState();
-      setPassword(user._links.password.href, password)
+      changePassword(this.props.me._links.password.href, oldPassword, password)
         .then(result => {
           if (result.error) {
             this.setErrorState(result.error);
@@ -74,7 +77,9 @@ class SetUserPassword extends React.Component<Props, State> {
             this.setSuccessfulState();
           }
         })
-        .catch(err => {});
+        .catch(err => {
+          this.setErrorState(err);
+        });
     }
   };
 
@@ -88,7 +93,7 @@ class SetUserPassword extends React.Component<Props, State> {
       message = (
         <Notification
           type={"success"}
-          children={t("password.set-password-successful")}
+          children={t("password.changedSuccessfully")}
           onClose={() => this.onClose()}
         />
       );
@@ -99,6 +104,15 @@ class SetUserPassword extends React.Component<Props, State> {
     return (
       <form onSubmit={this.submit}>
         {message}
+        <InputField
+          label={t("password.currentPassword")}
+          type="password"
+          onChange={oldPassword =>
+            this.setState({ ...this.state, oldPassword })
+          }
+          value={this.state.oldPassword ? this.state.oldPassword : ""}
+          helpText={t("password.currentPasswordHelpText")}
+        />
         <PasswordConfirmation
           passwordChanged={this.passwordChanged}
           key={this.state.passwordChanged ? "changed" : "unchanged"}
@@ -106,7 +120,7 @@ class SetUserPassword extends React.Component<Props, State> {
         <SubmitButton
           disabled={!this.state.password}
           loading={loading}
-          label={t("user-form.submit")}
+          label={t("password.submit")}
         />
       </form>
     );
@@ -124,4 +138,4 @@ class SetUserPassword extends React.Component<Props, State> {
   };
 }
 
-export default translate("users")(SetUserPassword);
+export default translate("commons")(ChangeUserPassword);

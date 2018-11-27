@@ -11,8 +11,8 @@ import {
 
 type RenderProps = {
   readOnly: boolean,
-  initialConfiguration: Configuration,
-  onConfigurationChange: (Configuration, boolean) => void
+  initialConfiguration: ConfigurationType,
+  onConfigurationChange: (ConfigurationType, boolean) => void
 };
 
 type Props = {
@@ -23,7 +23,7 @@ type Props = {
   t: (string) => string
 };
 
-type Configuration =  {
+type ConfigurationType =  {
   _links: Links
 } & Object;
 
@@ -33,8 +33,8 @@ type State = {
   modifying: boolean,
   contentType?: string,
 
-  configuration?: Configuration,
-  modifiedConfiguration?: Configuration,
+  configuration?: ConfigurationType,
+  modifiedConfiguration?: ConfigurationType,
   valid: boolean
 };
 
@@ -42,7 +42,7 @@ type State = {
  * GlobalConfiguration uses the render prop pattern to encapsulate the logic for
  * synchronizing the configuration with the backend.
  */
-class GlobalConfiguration extends React.Component<Props, State> {
+class Configuration extends React.Component<Props, State> {
 
   constructor(props: Props) {
     super(props);
@@ -84,7 +84,7 @@ class GlobalConfiguration extends React.Component<Props, State> {
     });
   };
 
-  loadConfig = (configuration: Configuration) => {
+  loadConfig = (configuration: ConfigurationType) => {
     this.setState({
       configuration,
       fetching: false,
@@ -107,7 +107,7 @@ class GlobalConfiguration extends React.Component<Props, State> {
     return !modificationUrl;
   };
 
-  configurationChanged = (configuration: Configuration, valid: boolean) => {
+  configurationChanged = (configuration: ConfigurationType, valid: boolean) => {
     this.setState({
       modifiedConfiguration: configuration,
       valid
@@ -159,4 +159,4 @@ class GlobalConfiguration extends React.Component<Props, State> {
 
 }
 
-export default translate("config")(GlobalConfiguration);
+export default translate("config")(Configuration);

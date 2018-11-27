@@ -40,12 +40,29 @@
     "previous": "Previous"
   },
   "profile": {
+    "navigation-label": "Navigation",
     "actions-label": "Actions",
     "username": "Username",
     "displayName": "Display Name",
     "mail": "E-Mail",
+    "information": "Information",
     "change-password": "Change password",
     "error-title": "Error",
-    "error-subtitle": "Cannot display profile"
+    "error-subtitle": "Cannot display profile",
+    "error": "Error",
+    "error-message": "'me' is undefined"
+  },
+  "password": {
+    "label": "Password",
+    "newPassword": "New password",
+    "passwordHelpText": "Plain text password of the user.",
+    "passwordConfirmHelpText": "Repeat the password for confirmation.",
+    "currentPassword": "Current password",
+    "currentPasswordHelpText": "The password currently in use",
+    "confirmPassword": "Confirm password",
+    "passwordInvalid": "Password has to be between 6 and 32 characters",
+    "passwordConfirmFailed": "Passwords have to be identical",
+    "submit": "Submit",
+    "changedSuccessfully": "Pasword successfully changed"
   }
 }

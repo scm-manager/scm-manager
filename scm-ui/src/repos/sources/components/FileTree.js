@@ -96,7 +96,7 @@ class FileTree extends React.Component<Props> {
       });
     }
 
-    if (tree._embedded) {
+    if (tree._embedded && tree._embedded.children) {
       files.push(...tree._embedded.children.sort(compareFiles));
     }
 

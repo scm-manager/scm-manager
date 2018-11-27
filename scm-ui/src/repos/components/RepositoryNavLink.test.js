@@ -11,6 +11,9 @@ describe("RepositoryNavLink", () => {
 
   it("should render nothing, if the sources link is missing", () => {
     const repository = {
+      namespace: "Namespace",
+      name: "Repo",
+      type: "GIT",
       _links: {}
     };
 
@@ -20,6 +23,7 @@ describe("RepositoryNavLink", () => {
         linkName="sources"
         to="/sources"
         label="Sources"
+        activeOnlyWhenExact={true}
       />,
       options.get()
     );
@@ -28,6 +32,9 @@ describe("RepositoryNavLink", () => {
 
   it("should render the navLink", () => {
     const repository = {
+      namespace: "Namespace",
+      name: "Repo",
+      type: "GIT",
       _links: {
         sources: {
           href: "/sources"
@@ -41,6 +48,7 @@ describe("RepositoryNavLink", () => {
         linkName="sources"
         to="/sources"
         label="Sources"
+        activeOnlyWhenExact={true}
       />,
       options.get()
     );

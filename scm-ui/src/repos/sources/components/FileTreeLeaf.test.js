@@ -8,7 +8,13 @@ describe("create link tests", () => {
     return {
       name: "dir",
       path: path,
-      directory: true
+      directory: true,
+      length: 1,
+      revision: "1a",
+      _links: {},
+      _embedded: {
+        children: []
+      }
     };
   }
 
