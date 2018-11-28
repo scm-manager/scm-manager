@@ -67,14 +67,9 @@ public class SvnRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
   @Mock
   private com.google.inject.Provider<RepositoryManager> repositoryManagerProvider;
 
-  @Mock
-  private RepositoryDAO repositoryDAO;
-
   private HookContextFactory hookContextFactory = new HookContextFactory(mock(PreProcessorUtil.class));
 
   private HookEventFacade facade = new HookEventFacade(repositoryManagerProvider, hookContextFactory);
-
-  private RepositoryLocationResolver repositoryLocationResolver;
 
   @Override
   protected void checkDirectory(File directory) {
@@ -91,9 +86,9 @@ public class SvnRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
 
   @Override
   protected RepositoryHandler createRepositoryHandler(ConfigurationStoreFactory factory,
+                                                      RepositoryLocationResolver locationResolver,
                                                       File directory)  {
-    repositoryLocationResolver = new RepositoryLocationResolver(repoDao, new InitialRepositoryLocationResolver(contextProvider));
-    SvnRepositoryHandler handler = new SvnRepositoryHandler(factory, null, repositoryLocationResolver);
+    SvnRepositoryHandler handler = new SvnRepositoryHandler(factory, null, locationResolver);
 
     handler.init(contextProvider);
 
@@ -109,7 +104,7 @@ public class SvnRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
   public void getDirectory() {
     when(factory.getStore(any(), any())).thenReturn(store);
     SvnRepositoryHandler repositoryHandler = new SvnRepositoryHandler(factory,
-      facade, repositoryLocationResolver);
+      facade, locationResolver);
 
     SvnConfig svnConfig = new SvnConfig();
     repositoryHandler.setConfig(svnConfig);

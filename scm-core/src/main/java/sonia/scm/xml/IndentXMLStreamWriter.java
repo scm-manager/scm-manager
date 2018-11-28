@@ -45,7 +45,7 @@ import javax.xml.stream.XMLStreamWriter;
  * @author Sebastian Sdorra
  * @since 1.31
  */
-public final class IndentXMLStreamWriter implements XMLStreamWriter
+public final class IndentXMLStreamWriter implements XMLStreamWriter, AutoCloseable
 {
 
   /** line separator */
@@ -475,7 +475,7 @@ public final class IndentXMLStreamWriter implements XMLStreamWriter
   //~--- fields ---------------------------------------------------------------
 
   /** indent string */
-  private String indent = "    ";
+  private String indent = "  ";
 
   /** current level */
   private int level = 0;

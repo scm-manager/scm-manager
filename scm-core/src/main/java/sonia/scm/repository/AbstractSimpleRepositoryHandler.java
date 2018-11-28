@@ -168,6 +168,6 @@ public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig
   }
 
   private File resolveNativeDirectory(String repositoryId) {
-    return new File(repositoryLocationResolver.getRepositoryDirectory(repositoryId), REPOSITORIES_NATIVE_DIRECTORY);
+    return repositoryLocationResolver.getPath(repositoryId).resolve(REPOSITORIES_NATIVE_DIRECTORY).toFile();
   }
 }

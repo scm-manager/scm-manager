@@ -1,9 +1,11 @@
 package sonia.scm.repository;
 
 import groovy.lang.Singleton;
+import sonia.scm.SCMContextProvider;
 
 import javax.inject.Inject;
 import java.io.File;
+import java.nio.file.Path;
 
 /**
  * A Location Resolver for File based Repository Storage.
@@ -20,20 +22,33 @@ import java.io.File;
 @Singleton
 public class RepositoryLocationResolver {
 
-  private RepositoryDAO repositoryDAO;
-  private InitialRepositoryLocationResolver initialRepositoryLocationResolver;
+  private final SCMContextProvider contextProvider;
+  private final RepositoryDAO repositoryDAO;
+  private final InitialRepositoryLocationResolver initialRepositoryLocationResolver;
 
   @Inject
-  public RepositoryLocationResolver(RepositoryDAO repositoryDAO, InitialRepositoryLocationResolver initialRepositoryLocationResolver) {
+  public RepositoryLocationResolver(SCMContextProvider contextProvider, RepositoryDAO repositoryDAO, InitialRepositoryLocationResolver initialRepositoryLocationResolver) {
+    this.contextProvider = contextProvider;
     this.repositoryDAO = repositoryDAO;
     this.initialRepositoryLocationResolver = initialRepositoryLocationResolver;
   }
 
-  public File getRepositoryDirectory(String repositoryId) {
+  /**
+   * Returns the path to the repository.
+   *
+   * @param repositoryId repository id
+   *
+   * @return path of repository
+   */
+  public Path getPath(String repositoryId) {
+    Path path;
+
     if (repositoryDAO instanceof PathBasedRepositoryDAO) {
-      PathBasedRepositoryDAO pathBasedRepositoryDAO = (PathBasedRepositoryDAO) repositoryDAO;
-      return pathBasedRepositoryDAO.getPath(repositoryId).toFile();
+      path = ((PathBasedRepositoryDAO) repositoryDAO).getPath(repositoryId);
+    } else {
+      path = initialRepositoryLocationResolver.getPath(repositoryId);
     }
-    return initialRepositoryLocationResolver.getRelativeRepositoryPath(repositoryId).getAbsolutePath();
+
+    return contextProvider.resolve(path);
   }
 }

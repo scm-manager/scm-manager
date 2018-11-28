@@ -434,9 +434,9 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
     DefaultFileSystem fileSystem = new DefaultFileSystem();
     Set<RepositoryHandler> handlerSet = new HashSet<>();
     ConfigurationStoreFactory factory = new JAXBConfigurationStoreFactory(contextProvider);
-    InitialRepositoryLocationResolver initialRepositoryLocationResolver = new InitialRepositoryLocationResolver(contextProvider);
-    XmlRepositoryDAO repositoryDAO = new XmlRepositoryDAO(factory, initialRepositoryLocationResolver, fileSystem, contextProvider);
-    RepositoryLocationResolver repositoryLocationResolver = new RepositoryLocationResolver(repositoryDAO, initialRepositoryLocationResolver);
+    InitialRepositoryLocationResolver initialRepositoryLocationResolver = new InitialRepositoryLocationResolver();
+    XmlRepositoryDAO repositoryDAO = new XmlRepositoryDAO(contextProvider, initialRepositoryLocationResolver, fileSystem);
+    RepositoryLocationResolver repositoryLocationResolver = new RepositoryLocationResolver(contextProvider, repositoryDAO, initialRepositoryLocationResolver);
     handlerSet.add(new DummyRepositoryHandler(factory, repositoryLocationResolver));
     handlerSet.add(new DummyRepositoryHandler(factory, repositoryLocationResolver) {
       @Override

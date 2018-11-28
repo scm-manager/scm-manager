@@ -62,8 +62,6 @@ public class GitRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
   @Mock
   private GitWorkdirFactory gitWorkdirFactory;
 
-  RepositoryLocationResolver repositoryLocationResolver;
-
 
   @Override
   protected void checkDirectory(File directory) {
@@ -86,10 +84,10 @@ public class GitRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
 
   @Override
   protected RepositoryHandler createRepositoryHandler(ConfigurationStoreFactory factory,
+                                                      RepositoryLocationResolver locationResolver,
                                                       File directory) {
-    repositoryLocationResolver = new RepositoryLocationResolver(repoDao, new InitialRepositoryLocationResolver(contextProvider));
     GitRepositoryHandler repositoryHandler = new GitRepositoryHandler(factory,
-      scheduler, repositoryLocationResolver, gitWorkdirFactory);
+      scheduler, locationResolver, gitWorkdirFactory);
     repositoryHandler.init(contextProvider);
 
     GitConfig config = new GitConfig();
@@ -103,7 +101,7 @@ public class GitRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
   @Test
   public void getDirectory() {
     GitRepositoryHandler repositoryHandler = new GitRepositoryHandler(factory,
-      scheduler, repositoryLocationResolver, gitWorkdirFactory);
+      scheduler, locationResolver, gitWorkdirFactory);
     GitConfig config = new GitConfig();
     config.setDisabled(false);
     config.setGcExpression("gc exp");

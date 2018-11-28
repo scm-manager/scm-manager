@@ -55,6 +55,7 @@ import static org.mockito.Mockito.*;
 
 import java.io.File;
 
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 
@@ -213,6 +214,10 @@ public final class MockUtil
     SCMContextProvider provider = mock(SCMContextProvider.class);
 
     when(provider.getBaseDirectory()).thenReturn(directory);
+    when(provider.resolve(any(Path.class))).then(ic -> {
+      Path p = ic.getArgument(0);
+      return directory.toPath().resolve(p);
+    });
 
     return provider;
   }

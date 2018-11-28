@@ -35,32 +35,14 @@ package sonia.scm.store;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.base.Charsets;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Maps;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.security.KeyGenerator;
 import sonia.scm.xml.IndentXMLStreamWriter;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.io.Writer;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Map.Entry;
+import sonia.scm.xml.XmlStreams;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -68,11 +50,14 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.namespace.QName;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.XMLStreamWriter;
+import java.io.File;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Map.Entry;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -256,74 +241,6 @@ public class JAXBConfigurationEntryStore<V> implements ConfigurationEntryStore<V
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
-   *
-   *
-   * @param writer
-   */
-  private void close(XMLStreamWriter writer)
-  {
-    if (writer != null)
-    {
-      try
-      {
-        writer.close();
-      }
-      catch (XMLStreamException ex)
-      {
-        logger.error("could not close writer", ex);
-      }
-    }
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param reader
-   */
-  private void close(XMLStreamReader reader)
-  {
-    if (reader != null)
-    {
-      try
-      {
-        reader.close();
-      }
-      catch (XMLStreamException ex)
-      {
-        logger.error("could not close reader", ex);
-      }
-    }
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   *
-   * @throws FileNotFoundException
-   */
-  private Reader createReader() throws FileNotFoundException
-  {
-    return new InputStreamReader(new FileInputStream(file), Charsets.UTF_8);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   *
-   * @throws FileNotFoundException
-   */
-  private Writer createWriter() throws FileNotFoundException
-  {
-    return new OutputStreamWriter(new FileOutputStream(file), Charsets.UTF_8);
-  }
-
-  /**
    *   Method description
    *
    *
@@ -333,15 +250,13 @@ public class JAXBConfigurationEntryStore<V> implements ConfigurationEntryStore<V
   {
     logger.debug("load configuration from {}", file);
 
-    XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-
     XMLStreamReader reader = null;
 
     try
     {
       Unmarshaller u = context.createUnmarshaller();
 
-      reader = xmlInputFactory.createXMLStreamReader(createReader());
+      reader = XmlStreams.createReader(file);
 
       // configuration
       reader.nextTag();
@@ -390,7 +305,7 @@ public class JAXBConfigurationEntryStore<V> implements ConfigurationEntryStore<V
     }
     finally
     {
-      close(reader);
+      XmlStreams.close(reader);
     }
   }
 
@@ -402,17 +317,8 @@ public class JAXBConfigurationEntryStore<V> implements ConfigurationEntryStore<V
   {
     logger.debug("store configuration to {}", file);
 
-    IndentXMLStreamWriter writer = null;
-
-    try
+    try (IndentXMLStreamWriter writer = XmlStreams.createWriter(file))
     {
-      //J-
-      writer = new IndentXMLStreamWriter(
-        XMLOutputFactory.newInstance().createXMLStreamWriter(
-          createWriter()
-        )
-      );
-      //J+
       writer.writeStartDocument();
 
       // configuration start
@@ -452,10 +358,6 @@ public class JAXBConfigurationEntryStore<V> implements ConfigurationEntryStore<V
     catch (Exception ex)
     {
       throw new StoreException("could not store configuration", ex);
-    }
-    finally
-    {
-      close(writer);
     }
   }
 

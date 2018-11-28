@@ -89,7 +89,7 @@ public class IndentXMLStreamWriterTest
     StringBuilder buffer = new StringBuilder("<?xml version=\"1.0\" ?>");
     buffer.append(IndentXMLStreamWriter.LINE_SEPARATOR);
     buffer.append("<root>").append(IndentXMLStreamWriter.LINE_SEPARATOR);
-    buffer.append("    <message>Hello</message>");
+    buffer.append("  <message>Hello</message>");
     buffer.append(IndentXMLStreamWriter.LINE_SEPARATOR);
     buffer.append("</root>").append(IndentXMLStreamWriter.LINE_SEPARATOR);
     
