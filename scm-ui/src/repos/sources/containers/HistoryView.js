@@ -64,14 +64,16 @@ class HistoryView extends React.Component<Props, State> {
 
   updatePage(page: number) {
     const { file } = this.props;
-
-    this.updateHistory(file._links.history.href + "?page=" + page.toString());
+    const internalPage = page - 1;
+    this.updateHistory(
+      file._links.history.href + "?page=" + internalPage.toString()
+    );
   }
 
   showHistory() {
     const { repository } = this.props;
     const { changesets, page, pageCollection } = this.state;
-    const currentPage = page == 0 ? 1 : page;
+    const currentPage = page + 1;
     return (
       <>
         <ChangesetList repository={repository} changesets={changesets} />
