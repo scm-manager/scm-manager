@@ -87,7 +87,6 @@ class HistoryView extends React.Component<Props, State> {
   }
 
   render() {
-    console.log(this.state);
     const { file } = this.props;
     const { loaded, error } = this.state;
 

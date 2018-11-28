@@ -68,6 +68,16 @@ class Content extends React.Component<Props, State> {
     const { showHistory, collapsed } = this.state;
     const icon = collapsed ? "fa-angle-right" : "fa-angle-down";
 
+    const selector = file._links.history ? (
+      <ButtonGroup
+        file={file}
+        historyIsSelected={showHistory}
+        showHistory={(changeShowHistory: boolean) =>
+          this.setShowHistoryState(changeShowHistory)
+        }
+      />
+    ) : null;
+
     return (
       <span className={classes.pointer}>
         <article className="media">
@@ -81,14 +91,7 @@ class Content extends React.Component<Props, State> {
             />
             <span>{file.name}</span>
           </div>
-          <div className="media-right">
-            <ButtonGroup
-              historyIsSelected={showHistory}
-              showHistory={(changeShowHistory: boolean) =>
-                this.setShowHistoryState(changeShowHistory)
-              }
-            />
-          </div>
+          <div className="media-right">{selector}</div>
         </article>
       </span>
     );
@@ -149,16 +152,17 @@ class Content extends React.Component<Props, State> {
     const { showHistory } = this.state;
 
     const header = this.showHeader();
-    const content = showHistory ? (
-      <HistoryView file={file} repository={repository} />
-    ) : (
-      <SourcesView
-        revision={revision}
-        file={file}
-        repository={repository}
-        path={path}
-      />
-    );
+    const content =
+      showHistory && file._links.history ? (
+        <HistoryView file={file} repository={repository} />
+      ) : (
+        <SourcesView
+          revision={revision}
+          file={file}
+          repository={repository}
+          path={path}
+        />
+      );
     const moreInformation = this.showMoreInformation();
 
     return (
