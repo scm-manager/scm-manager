@@ -58,9 +58,11 @@ import java.util.Map;
 public abstract class KeyValueStoreTestBase extends AbstractTestBase
 {
 
-  private Repository repository = RepositoryTestData.createHeartOfGold();
-  private DataStore<StoreObject> store;
-  private DataStore<StoreObject> repoStore;
+  protected Repository repository = RepositoryTestData.createHeartOfGold();
+  protected DataStore<StoreObject> store;
+  protected DataStore<StoreObject> repoStore;
+  protected String repoStoreName = "testRepoStore";
+  protected String storeName = "testStore";
 
   /**
    * Method description

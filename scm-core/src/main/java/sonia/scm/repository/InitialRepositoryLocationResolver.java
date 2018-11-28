@@ -1,63 +1,53 @@
 package sonia.scm.repository;
 
 import sonia.scm.SCMContextProvider;
-import sonia.scm.io.FileSystem;
 
 import javax.inject.Inject;
 import java.io.File;
-import java.io.IOException;
-import java.text.MessageFormat;
 
 /**
- *
  * A Location Resolver for File based Repository Storage.
- *
- * WARNING: The Locations provided with this class may not be used from the plugins to store any plugin specific files.
- *
- * Please use the {@link sonia.scm.store.DataStoreFactory } and the {@link sonia.scm.store.DataStore} classes to store data
- * Please use the {@link sonia.scm.store.BlobStoreFactory } and the {@link sonia.scm.store.BlobStore} classes to store binary files
+ * <p>
+ * <b>WARNING:</b> The Locations provided with this class may not be used from the plugins to store any plugin specific files.
+ * <p>
+ * Please use the {@link sonia.scm.store.DataStoreFactory } and the {@link sonia.scm.store.DataStore} classes to store data<br>
+ * Please use the {@link sonia.scm.store.BlobStoreFactory } and the {@link sonia.scm.store.BlobStore} classes to store binary files<br>
  * Please use the {@link sonia.scm.store.ConfigurationStoreFactory} and the {@link sonia.scm.store.ConfigurationStore} classes  to store configurations
  *
  * @author Mohamed Karray
  * @since 2.0.0
  */
-public final class InitialRepositoryLocationResolver {
+public class InitialRepositoryLocationResolver {
 
-  private static final String REPOSITORIES_DIRECTORY = "repositories";
-  public static final String REPOSITORIES_NATIVE_DIRECTORY = "data";
-  private SCMContextProvider context;
-  private FileSystem fileSystem;
+  public static final String DEFAULT_REPOSITORY_PATH = "repositories";
 
+  private final SCMContextProvider context;
 
   @Inject
-  public InitialRepositoryLocationResolver(SCMContextProvider context, FileSystem fileSystem) {
+  public InitialRepositoryLocationResolver(SCMContextProvider context) {
     this.context = context;
-    this.fileSystem = fileSystem;
   }
 
-  public static File getNativeDirectory(File repositoriesDirectory, String repositoryId) {
-    return new File(repositoriesDirectory, repositoryId
-      .concat(File.separator)
-      .concat(REPOSITORIES_NATIVE_DIRECTORY));
+  public InitialRepositoryLocation getRelativeRepositoryPath(Repository repository) {
+    String relativePath = DEFAULT_REPOSITORY_PATH + File.separator + repository.getId();
+    return new InitialRepositoryLocation(new File(context.getBaseDirectory(), relativePath), relativePath);
   }
 
-  public File getBaseDirectory() {
-    return new File(context.getBaseDirectory(), REPOSITORIES_DIRECTORY);
-  }
+  public static class InitialRepositoryLocation {
+    private final File absolutePath;
+    private final String relativePath;
 
-  File getContextBaseDirectory() {
-    return context.getBaseDirectory();
-  }
+    public InitialRepositoryLocation(File absolutePath, String relativePath) {
+      this.absolutePath = absolutePath;
+      this.relativePath = relativePath;
+    }
 
-  public File createDirectory(Repository repository) throws IOException  {
-    File initialRepoFolder = getDirectory(repository);
-    fileSystem.create(initialRepoFolder);
-    return initialRepoFolder;
-  }
+    public File getAbsolutePath() {
+      return absolutePath;
+    }
 
-  public File getDirectory(Repository repository) {
-    return new File(context.getBaseDirectory(), REPOSITORIES_DIRECTORY
-      .concat(File.separator)
-      .concat(repository.getId()));
+    public String getRelativePath() {
+      return relativePath;
+    }
   }
 }

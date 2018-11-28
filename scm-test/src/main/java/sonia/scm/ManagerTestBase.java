@@ -37,9 +37,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
+import sonia.scm.repository.InitialRepositoryLocationResolver;
+import sonia.scm.repository.RepositoryDAO;
 import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.util.MockUtil;
 
+import java.io.File;
 import java.io.IOException;
 
 import static org.mockito.Mockito.mock;
@@ -60,11 +63,18 @@ public abstract class ManagerTestBase<T extends ModelObject>
   protected RepositoryLocationResolver locationResolver;
 
   protected Manager<T> manager;
-  
+
+  protected File temp ;
+
   @Before
   public void setUp() throws IOException {
-    contextProvider = MockUtil.getSCMContextProvider(tempFolder.newFolder());
-    locationResolver = mock(RepositoryLocationResolver.class);
+    if (temp == null){
+      temp = tempFolder.newFolder();
+    }
+    contextProvider = MockUtil.getSCMContextProvider(temp);
+    InitialRepositoryLocationResolver initialRepositoryLocationResolver = new InitialRepositoryLocationResolver(contextProvider);
+    RepositoryDAO repoDao = mock(RepositoryDAO.class);
+    locationResolver = new RepositoryLocationResolver(repoDao ,initialRepositoryLocationResolver);
     manager = createManager();
     manager.init(contextProvider);
   }

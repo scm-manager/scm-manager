@@ -1,13 +1,11 @@
 package sonia.scm.web;
 
 import org.junit.Test;
-import sonia.scm.repository.HgConfig;
 import sonia.scm.repository.HgRepositoryHandler;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.io.IOException;
 
 import static org.mockito.Matchers.anyInt;
@@ -30,10 +28,6 @@ public class HgHookCallbackServletTest {
     when(request.getRequestURI()).thenReturn("http://example.com/scm/hook/hg/pretxnchangegroup");
     String path = "/tmp/hg/12345";
     when(request.getParameter(PARAM_REPOSITORYPATH)).thenReturn(path);
-
-
-    File file = new File(path);
-    when(handler.getInitialBaseDirectory()).thenReturn(file);
 
     servlet.doPost(request, response);
 

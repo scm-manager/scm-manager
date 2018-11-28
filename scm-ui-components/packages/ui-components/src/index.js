@@ -22,7 +22,7 @@ export { default as HelpIcon } from "./HelpIcon";
 export { default as Tooltip } from "./Tooltip";
 export { getPageFromMatch } from "./urls";
 
-export { apiClient, NOT_FOUND_ERROR, UNAUTHORIZED_ERROR } from "./apiclient.js";
+export { apiClient, NOT_FOUND_ERROR_MESSAGE, UNAUTHORIZED_ERROR_MESSAGE } from "./apiclient.js";
 
 export * from "./buttons";
 export * from "./config";

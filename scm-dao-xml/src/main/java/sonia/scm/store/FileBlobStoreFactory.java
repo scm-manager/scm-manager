@@ -31,14 +31,17 @@
 package sonia.scm.store;
 
 //~--- non-JDK imports --------------------------------------------------------
+
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import sonia.scm.SCMContextProvider;
 import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.security.KeyGenerator;
+import sonia.scm.util.IOUtil;
+
+import java.io.File;
 
 /**
  * File based store factory.
@@ -47,8 +50,6 @@ import sonia.scm.security.KeyGenerator;
  */
 @Singleton
 public class FileBlobStoreFactory extends FileBasedStoreFactory implements BlobStoreFactory {
-
-  private static final String DIRECTORY_NAME = "blob";
 
   /**
    * the logger for FileBlobStoreFactory
@@ -60,21 +61,22 @@ public class FileBlobStoreFactory extends FileBasedStoreFactory implements BlobS
   /**
    * Constructs a new instance.
    *
-   * @param repositoryLocationResolver
+   * @param repositoryLocationResolver location resolver
    * @param keyGenerator key generator
    */
   @Inject
-  public FileBlobStoreFactory(RepositoryLocationResolver repositoryLocationResolver, KeyGenerator keyGenerator) {
-    super(repositoryLocationResolver, DIRECTORY_NAME);
+  public FileBlobStoreFactory(SCMContextProvider contextProvider ,RepositoryLocationResolver repositoryLocationResolver, KeyGenerator keyGenerator) {
+    super(contextProvider, repositoryLocationResolver, Store.BLOB);
     this.keyGenerator = keyGenerator;
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public BlobStore getStore(StoreParameters storeParameters) {
-    if (storeParameters.getRepository() != null) {
-      return new FileBlobStore(keyGenerator, getDirectory(storeParameters.getName(), storeParameters.getRepository()));
-    }
-    return new FileBlobStore(keyGenerator, getDirectory(storeParameters.getName()));
+    File storeLocation = getStoreLocation(storeParameters);
+    IOUtil.mkdirs(storeLocation);
+    return new FileBlobStore(keyGenerator, storeLocation);
   }
+
 
 }

@@ -34,14 +34,12 @@ package sonia.scm.store;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.repository.InternalRepositoryException;
+import sonia.scm.SCMContextProvider;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.util.IOUtil;
 
 import java.io.File;
-import java.io.IOException;
-import java.text.MessageFormat;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -56,55 +54,54 @@ public abstract class FileBasedStoreFactory {
    * the logger for FileBasedStoreFactory
    */
   private static final Logger LOG = LoggerFactory.getLogger(FileBasedStoreFactory.class);
+  private SCMContextProvider contextProvider;
   private RepositoryLocationResolver repositoryLocationResolver;
+  private Store store;
 
-  private final String dataDirectoryName;
+  private File storeDirectory;
 
-  private File dataDirectory;
-
-  protected FileBasedStoreFactory(RepositoryLocationResolver repositoryLocationResolver, String dataDirectoryName) {
+  protected FileBasedStoreFactory(SCMContextProvider contextProvider , RepositoryLocationResolver repositoryLocationResolver, Store store) {
+    this.contextProvider = contextProvider;
     this.repositoryLocationResolver = repositoryLocationResolver;
-    this.dataDirectoryName = dataDirectoryName;
+    this.store = store;
   }
 
-  //~--- get methods ----------------------------------------------------------
-  /**
-   * Returns data directory for given name.
-   *
-   * @param name name of data directory
-   *
-   * @return data directory
-   */
-  protected File getDirectory(String name) {
-    if (dataDirectory == null) {
-      dataDirectory = new File(repositoryLocationResolver.getGlobalStoreDirectory(), dataDirectoryName);
-      LOG.debug("get data directory {}", dataDirectory);
-    }
-
-    File storeDirectory = new File(dataDirectory, name);
-    IOUtil.mkdirs(storeDirectory);
-    return storeDirectory;
+  protected File getStoreLocation(StoreParameters storeParameters) {
+    return getStoreLocation(storeParameters.getName(), storeParameters.getType(), storeParameters.getRepository());
   }
 
-  /**
-   * Returns data directory for given name.
-   *
-   * @param name name of data directory
-   *
-   * @return data directory
-   */
-  protected File getDirectory(String name, Repository repository) {
-    if (dataDirectory == null) {
-      try {
-        dataDirectory = new File(repositoryLocationResolver.getStoresDirectory(repository), dataDirectoryName);
-      } catch (IOException e) {
-        throw new InternalRepositoryException(repository, MessageFormat.format("Error on getting the store directory {0} of the repository {1}", dataDirectory.getAbsolutePath(), repository.getNamespaceAndName()), e);
+  protected File getStoreLocation(String name, Class type, Repository repository) {
+    if (storeDirectory == null) {
+      if (repository != null) {
+        LOG.debug("create store with type :{}, name:{} and repository {}", type, name, repository.getNamespaceAndName());
+        storeDirectory = this.getStoreDirectory(store, repository);
+      } else {
+        LOG.debug("create store with type :{} and name:{} ", type, name);
+        storeDirectory = this.getStoreDirectory(store);
       }
-      LOG.debug("create data directory {}", dataDirectory);
+      IOUtil.mkdirs(storeDirectory);
     }
-    File storeDirectory = new File(dataDirectory, name);
-    IOUtil.mkdirs(storeDirectory);
-    return storeDirectory;
+    return new File(this.storeDirectory, name);
+  }
+
+  /**
+   * Get the store directory of a specific repository
+   * @param store the type of the store
+   * @param repository the repo
+   * @return the store directory of a specific repository
+   */
+  private File getStoreDirectory(Store store, Repository repository) {
+    return new File (repositoryLocationResolver.getRepositoryDirectory(repository), store.getRepositoryStoreDirectory());
+  }
+
+
+  /**
+   * Get the global store directory
+   * @param store the type of the store
+   * @return the global store directory
+   */
+  private File getStoreDirectory(Store store) {
+    return new File(contextProvider.getBaseDirectory(), store.getGlobalStoreDirectory());
   }
 
 }

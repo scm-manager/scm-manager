@@ -31,10 +31,12 @@
 
 package sonia.scm.repository.xml;
 
+import sonia.scm.SCMContext;
+import sonia.scm.SCMContextProvider;
+import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
 import sonia.scm.store.StoreConstants;
 import sonia.scm.store.StoreException;
-import sonia.scm.util.IOUtil;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -42,6 +44,8 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -62,14 +66,20 @@ public class XmlRepositoryMapAdapter extends XmlAdapter<XmlRepositoryList, Map<S
 
       // marshall the repo_path/metadata.xml files
       for (RepositoryPath repositoryPath : repositoryPaths.getRepositoryPaths()) {
-        File dir = new File(repositoryPath.getPath());
-        if (!dir.exists()){
-          IOUtil.mkdirs(dir);
+        if (repositoryPath.toBeSynchronized()) {
+
+          File baseDirectory = SCMContext.getContext().getBaseDirectory();
+          Path dir = baseDirectory.toPath().resolve(repositoryPath.getPath());
+
+          if (!Files.isDirectory(dir)) {
+            throw new InternalRepositoryException(repositoryPath.getRepository(), "repository path not found");
+          }
+          marshaller.marshal(repositoryPath.getRepository(), getRepositoryMetadataFile(dir.toFile()));
+          repositoryPath.setToBeSynchronized(false);
         }
-        marshaller.marshal(repositoryPath.getRepository(), getRepositoryMetadataFile(dir));
       }
     } catch (JAXBException ex) {
-      throw new StoreException("failed to marshall repository database", ex);
+      throw new StoreException("failed to marshal repository database", ex);
     }
 
     return repositoryPaths;
@@ -81,18 +91,21 @@ public class XmlRepositoryMapAdapter extends XmlAdapter<XmlRepositoryList, Map<S
   }
 
   @Override
-  public Map<String, RepositoryPath> unmarshal(XmlRepositoryList repositories) {
+  public Map<String, RepositoryPath> unmarshal(XmlRepositoryList repositoryPaths) {
     Map<String, RepositoryPath> repositoryPathMap = new LinkedHashMap<>();
     try {
       JAXBContext context = JAXBContext.newInstance(Repository.class);
       Unmarshaller unmarshaller = context.createUnmarshaller();
-      for (RepositoryPath repositoryPath : repositories) {
-        Repository repository = (Repository) unmarshaller.unmarshal(getRepositoryMetadataFile(new File(repositoryPath.getPath())));
+      for (RepositoryPath repositoryPath : repositoryPaths) {
+        SCMContextProvider contextProvider = SCMContext.getContext();
+        File baseDirectory = contextProvider.getBaseDirectory();
+        Repository repository = (Repository) unmarshaller.unmarshal(getRepositoryMetadataFile(baseDirectory.toPath().resolve(repositoryPath.getPath()).toFile()));
+
         repositoryPath.setRepository(repository);
         repositoryPathMap.put(XmlRepositoryDatabase.createKey(repository), repositoryPath);
       }
     } catch (JAXBException ex) {
-      throw new StoreException("failed to unmarshall object", ex);
+      throw new StoreException("failed to unmarshal object", ex);
     }
     return repositoryPathMap;
   }

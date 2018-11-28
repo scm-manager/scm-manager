@@ -14,8 +14,6 @@
       "pythonBinaryHelpText": "Location of Python binary.",
       "pythonPath": "Python Module Search Path",
       "pythonPathHelpText": "Python Module Search Path (PYTHONPATH).",
-      "repositoryDirectory": "Repository directory",
-      "repositoryDirectoryHelpText": "Location of Mercurial repositories.",
       "encoding": "Encoding",
       "encodingHelpText": "Repository Encoding.",
       "useOptimizedBytecode": "Optimized Bytecode (.pyo)",

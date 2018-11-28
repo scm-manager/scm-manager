@@ -144,6 +144,16 @@ public class JAXBConfigurationEntryStoreTest
     assertEquals("repository:create", ap.getPermission());
   }
 
+ @Test
+  public void shouldStoreAndLoadInRepository() throws IOException
+  {
+    repoStore.put("abc", new StoreObject("abc_value"));
+    StoreObject storeObject = repoStore.get("abc");
+
+    assertNotNull(storeObject);
+    assertEquals("abc_value", storeObject.getValue());
+  }
+
   /**
    * Method description
    *
@@ -153,7 +163,7 @@ public class JAXBConfigurationEntryStoreTest
   @Override
   protected ConfigurationEntryStoreFactory  createConfigurationStoreFactory()
   {
-    return new JAXBConfigurationEntryStoreFactory(new UUIDKeyGenerator(), contextProvider);
+    return new JAXBConfigurationEntryStoreFactory(contextProvider, repositoryLocationResolver, new UUIDKeyGenerator());
   }
 
   /**

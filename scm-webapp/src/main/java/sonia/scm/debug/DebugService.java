@@ -52,7 +52,7 @@ public final class DebugService
   private final Multimap<NamespaceAndName,DebugHookData> receivedHooks = LinkedListMultimap.create();
 
   /**
-   * Stores {@link DebugHookData} for the given repository.
+   * Store {@link DebugHookData} for the given repository.
    */
   void put(NamespaceAndName namespaceAndName, DebugHookData hookData)
   {

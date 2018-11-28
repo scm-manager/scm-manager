@@ -1,7 +1,7 @@
 //@flow
 import React from "react";
 import { translate } from "react-i18next";
-import { Title, GlobalConfiguration } from "@scm-manager/ui-components";
+import { Title, Configuration } from "@scm-manager/ui-components";
 import GitConfigurationForm from "./GitConfigurationForm";
 
 type Props = {
@@ -22,7 +22,7 @@ class GitGlobalConfiguration extends React.Component<Props> {
     return (
       <div>
         <Title title={t("scm-git-plugin.config.title")}/>
-        <GlobalConfiguration link={link} render={props => <GitConfigurationForm {...props} />}/>
+        <Configuration link={link} render={props => <GitConfigurationForm {...props} />}/>
       </div>
     );
   }

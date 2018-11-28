@@ -34,16 +34,12 @@ package sonia.scm.repository;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Charsets;
-import com.google.common.base.Throwables;
 import com.google.common.io.Resources;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.AlreadyExistsException;
 import sonia.scm.ConfigurationException;
-import sonia.scm.ContextEntry;
 import sonia.scm.io.CommandResult;
 import sonia.scm.io.ExtendedCommand;
-import sonia.scm.io.FileSystem;
 import sonia.scm.store.ConfigurationStoreFactory;
 
 import java.io.File;
@@ -62,6 +58,7 @@ public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig
   public static final String DEFAULT_VERSION_INFORMATION = "unknown";
 
   public static final String DOT = ".";
+  static final String REPOSITORIES_NATIVE_DIRECTORY = "data";
 
   /**
    * the logger for AbstractSimpleRepositoryHandler
@@ -69,73 +66,28 @@ public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig
   private static final Logger logger =
     LoggerFactory.getLogger(AbstractSimpleRepositoryHandler.class);
 
-  private FileSystem fileSystem;
   private final RepositoryLocationResolver repositoryLocationResolver;
 
-
   public AbstractSimpleRepositoryHandler(ConfigurationStoreFactory storeFactory,
-                                         FileSystem fileSystem, RepositoryLocationResolver repositoryLocationResolver) {
+                                         RepositoryLocationResolver repositoryLocationResolver) {
     super(storeFactory);
-    this.fileSystem = fileSystem;
     this.repositoryLocationResolver = repositoryLocationResolver;
   }
 
   @Override
   public Repository create(Repository repository) {
-    File directory = repositoryLocationResolver.getInitialNativeDirectory(repository);
-    if (directory != null && directory.exists()) {
-      throw new AlreadyExistsException(repository);
-    }
-
-    checkPath(directory, repository);
-
+    File nativeDirectory = resolveNativeDirectory(repository);
     try {
-      fileSystem.create(directory);
-      create(repository, directory);
-      postCreate(repository, directory);
-      return repository;
-    } catch (Exception ex) {
-      if (directory != null && directory.exists()) {
-        logger.warn("delete repository directory {}, because of failed repository creation", directory);
-        try {
-          fileSystem.destroy(directory);
-        } catch (IOException e) {
-          logger.error("Could not destroy directory", e);
-        }
-      }
-
-      Throwables.propagateIfPossible(ex, AlreadyExistsException.class);
-      // This point will never be reached
-      return null;
+      create(repository, nativeDirectory);
+      postCreate(repository, nativeDirectory);
+    } catch (IOException e) {
+      throw new InternalRepositoryException(repository, "could not create native repository directory", e);
     }
-  }
-
-  @Override
-  public String createResourcePath(Repository repository) {
-    StringBuilder path = new StringBuilder("/");
-
-    path.append(getType().getName()).append("/").append(repository.getId());
-
-    return path.toString();
+    return repository;
   }
 
   @Override
   public void delete(Repository repository) {
-    File directory = null;
-    try {
-      directory = repositoryLocationResolver.getRepositoryDirectory(repository);
-    } catch (IOException e) {
-      throw new InternalRepositoryException(repository, "Cannot get the repository directory");
-    }
-    try {
-      if (directory.exists()) {
-        fileSystem.destroy(directory);
-      } else {
-        logger.warn("repository {} not found", repository.getNamespaceAndName());
-      }
-    } catch (IOException e) {
-      throw new InternalRepositoryException(ContextEntry.ContextBuilder.entity("directory", directory.toString()).in(repository), "could not delete repository directory", e);
-    }
   }
 
   @Override
@@ -157,20 +109,11 @@ public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig
   public File getDirectory(Repository repository) {
     File directory;
     if (isConfigured()) {
-      try {
-        directory = repositoryLocationResolver.getNativeDirectory(repository);
-      } catch (IOException e) {
-        throw new ConfigurationException("Error on getting the current repository directory");
-      }
+      directory = resolveNativeDirectory(repository);
     } else {
       throw new ConfigurationException("RepositoryHandler is not configured");
     }
     return directory;
-  }
-
-  @Override
-  public File getInitialBaseDirectory() {
-    return repositoryLocationResolver.getInitialBaseDirectory();
   }
 
   @Override
@@ -224,40 +167,7 @@ public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig
     return content;
   }
 
-  /**
-   * Returns true if the directory is a repository.
-   *
-   * @param directory directory to check
-   * @return true if the directory is a repository
-   * @since 1.9
-   */
-  protected boolean isRepository(File directory) {
-    return new File(directory, DOT.concat(getType().getName())).exists();
+  private File resolveNativeDirectory(Repository repository) {
+    return new File(repositoryLocationResolver.getRepositoryDirectory(repository), REPOSITORIES_NATIVE_DIRECTORY);
   }
-
-  /**
-   * Check path for existing repositories
-   *
-   * @param directory repository target directory
-   * @throws RuntimeException when the parent directory already is a repository
-   */
-  private void checkPath(File directory, Repository repository) {
-    if (directory == null) {
-      return;
-    }
-    File repositoryDirectory = getInitialBaseDirectory();
-    File parent = directory.getParentFile();
-
-    while ((parent != null) && !repositoryDirectory.equals(parent)) {
-      logger.trace("check {} for existing repository", parent);
-
-      if (isRepository(parent)) {
-      throw new InternalRepositoryException(repository, "parent path" + parent + " is a repository");
-      }
-
-      parent = parent.getParentFile();
-    }
-  }
-
-
 }

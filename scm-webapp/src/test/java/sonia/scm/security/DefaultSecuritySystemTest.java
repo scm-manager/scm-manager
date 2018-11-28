@@ -70,8 +70,7 @@ public class DefaultSecuritySystemTest extends AbstractTestBase
   public void createSecuritySystem()
   {
     JAXBConfigurationEntryStoreFactory factory =
-      new JAXBConfigurationEntryStoreFactory(new UUIDKeyGenerator(),
-        contextProvider);
+      new JAXBConfigurationEntryStoreFactory(contextProvider , repositoryLocationResolver, new UUIDKeyGenerator() );
 
     securitySystem = new DefaultSecuritySystem(factory);
 

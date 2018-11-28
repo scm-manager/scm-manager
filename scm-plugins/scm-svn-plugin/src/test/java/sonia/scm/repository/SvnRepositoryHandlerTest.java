@@ -36,14 +36,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import sonia.scm.io.DefaultFileSystem;
 import sonia.scm.repository.api.HookContextFactory;
 import sonia.scm.repository.spi.HookEventFacade;
 import sonia.scm.store.ConfigurationStore;
 import sonia.scm.store.ConfigurationStoreFactory;
 
 import java.io.File;
-import java.nio.file.Path;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -69,12 +67,14 @@ public class SvnRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
   @Mock
   private com.google.inject.Provider<RepositoryManager> repositoryManagerProvider;
 
+  @Mock
+  private RepositoryDAO repositoryDAO;
+
   private HookContextFactory hookContextFactory = new HookContextFactory(mock(PreProcessorUtil.class));
 
   private HookEventFacade facade = new HookEventFacade(repositoryManagerProvider, hookContextFactory);
 
-  RepositoryLocationResolver repositoryLocationResolver ;
-  private Path repoDir;
+  private RepositoryLocationResolver repositoryLocationResolver;
 
   @Override
   protected void checkDirectory(File directory) {
@@ -91,18 +91,10 @@ public class SvnRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
 
   @Override
   protected RepositoryHandler createRepositoryHandler(ConfigurationStoreFactory factory,
-                                                      File directory) throws RepositoryPathNotFoundException {
+                                                      File directory)  {
+    repositoryLocationResolver = new RepositoryLocationResolver(repoDao, new InitialRepositoryLocationResolver(contextProvider));
+    SvnRepositoryHandler handler = new SvnRepositoryHandler(factory, null, repositoryLocationResolver);
 
-
-    DefaultFileSystem fileSystem = new DefaultFileSystem();
-    PathBasedRepositoryDAO repoDao = mock(PathBasedRepositoryDAO.class);
-
-    repositoryLocationResolver = new RepositoryLocationResolver(repoDao, new InitialRepositoryLocationResolver(contextProvider,fileSystem));
-    SvnRepositoryHandler handler = new SvnRepositoryHandler(factory,
-      new DefaultFileSystem(), null, repositoryLocationResolver);
-
-    repoDir = directory.toPath();
-    when(repoDao.getPath(any())).thenReturn(repoDir);
     handler.init(contextProvider);
 
     SvnConfig config = new SvnConfig();
@@ -117,14 +109,13 @@ public class SvnRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
   public void getDirectory() {
     when(factory.getStore(any())).thenReturn(store);
     SvnRepositoryHandler repositoryHandler = new SvnRepositoryHandler(factory,
-      new DefaultFileSystem(), facade, repositoryLocationResolver);
+      facade, repositoryLocationResolver);
 
     SvnConfig svnConfig = new SvnConfig();
     repositoryHandler.setConfig(svnConfig);
 
-    Repository repository = new Repository("id", "svn", "Space", "Name");
-
+    initRepository();
     File path = repositoryHandler.getDirectory(repository);
-    assertEquals(repoDir.toString()+File.separator+InitialRepositoryLocationResolver.REPOSITORIES_NATIVE_DIRECTORY, path.getAbsolutePath());
+    assertEquals(repoPath.toString()+File.separator+ AbstractSimpleRepositoryHandler.REPOSITORIES_NATIVE_DIRECTORY, path.getAbsolutePath());
   }
 }

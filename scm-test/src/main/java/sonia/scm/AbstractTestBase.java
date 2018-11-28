@@ -90,7 +90,7 @@ public class AbstractTestBase
     assertTrue(tempDirectory.mkdirs());
     contextProvider = MockUtil.getSCMContextProvider(tempDirectory);
     fileSystem = new DefaultFileSystem();
-    InitialRepositoryLocationResolver initialRepoLocationResolver = new InitialRepositoryLocationResolver(contextProvider,fileSystem);
+    InitialRepositoryLocationResolver initialRepoLocationResolver = new InitialRepositoryLocationResolver(contextProvider);
     repositoryLocationResolver = new RepositoryLocationResolver(repositoryDAO, initialRepoLocationResolver);
     postSetUp();
   }

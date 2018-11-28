@@ -63,7 +63,7 @@ public abstract class AbstractXmlDAO<I extends ModelObject,
    * the logger for XmlGroupDAO
    */
   private static final Logger logger =
-    LoggerFactory.getLogger(XmlGroupDAO.class);
+    LoggerFactory.getLogger(AbstractXmlDAO.class);
 
   //~--- constructors ---------------------------------------------------------
 

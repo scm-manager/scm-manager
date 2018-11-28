@@ -34,8 +34,14 @@ package sonia.scm.store;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.junit.Test;
 import sonia.scm.repository.Repository;
 import sonia.scm.security.UUIDKeyGenerator;
+
+import java.io.IOException;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  *
@@ -52,7 +58,7 @@ public class JAXBDataStoreTest extends DataStoreTestBase {
   @Override
   protected DataStoreFactory createDataStoreFactory()
   {
-    return new JAXBDataStoreFactory(repositoryLocationResolver, new UUIDKeyGenerator());
+    return new JAXBDataStoreFactory(contextProvider, repositoryLocationResolver, new UUIDKeyGenerator());
   }
 
   @Override
@@ -72,5 +78,15 @@ public class JAXBDataStoreTest extends DataStoreTestBase {
       .withName("test")
       .build();
     return createDataStoreFactory().getStore(params);
+  }
+
+  @Test
+  public void shouldStoreAndLoadInRepository() throws IOException
+  {
+    repoStore.put("abc", new StoreObject("abc_value"));
+    StoreObject storeObject = repoStore.get("abc");
+
+    assertNotNull(storeObject);
+    assertEquals("abc_value", storeObject.getValue());
   }
 }

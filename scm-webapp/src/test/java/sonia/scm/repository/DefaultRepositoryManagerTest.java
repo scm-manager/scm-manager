@@ -39,9 +39,11 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.util.ThreadContext;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.rules.TemporaryFolder;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import sonia.scm.AlreadyExistsException;
@@ -49,6 +51,7 @@ import sonia.scm.HandlerEventType;
 import sonia.scm.Manager;
 import sonia.scm.ManagerTestBase;
 import sonia.scm.NotFoundException;
+import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.io.DefaultFileSystem;
@@ -62,6 +65,7 @@ import sonia.scm.security.KeyGenerator;
 import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.store.JAXBConfigurationStoreFactory;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -106,9 +110,17 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
   @Rule
   public ExpectedException thrown = ExpectedException.none();
 
+  @Rule
+  public TemporaryFolder temporaryFolder = new TemporaryFolder();
+
   private ScmConfiguration configuration;
 
   private String mockedNamespace = "default_namespace";
+
+  @Before
+  public void initContext() {
+    ((TempSCMContextProvider)SCMContext.getContext()).setBaseDirectory(temp);
+  }
 
   @Test
   public void testCreate() {
@@ -422,10 +434,10 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
   private DefaultRepositoryManager createRepositoryManager(boolean archiveEnabled, KeyGenerator keyGenerator) {
     DefaultFileSystem fileSystem = new DefaultFileSystem();
     Set<RepositoryHandler> handlerSet = new HashSet<>();
-    InitialRepositoryLocationResolver initialRepositoryLocationResolver = new InitialRepositoryLocationResolver(contextProvider, fileSystem);
-    XmlRepositoryDAO repositoryDAO = new XmlRepositoryDAO(initialRepositoryLocationResolver, contextProvider);
+    InitialRepositoryLocationResolver initialRepositoryLocationResolver = new InitialRepositoryLocationResolver(contextProvider);
+    XmlRepositoryDAO repositoryDAO = new XmlRepositoryDAO(initialRepositoryLocationResolver, fileSystem, contextProvider);
     RepositoryLocationResolver repositoryLocationResolver = new RepositoryLocationResolver(repositoryDAO, initialRepositoryLocationResolver);
-    ConfigurationStoreFactory factory = new JAXBConfigurationStoreFactory(repositoryLocationResolver);
+    ConfigurationStoreFactory factory = new JAXBConfigurationStoreFactory(contextProvider, repositoryLocationResolver);
     handlerSet.add(new DummyRepositoryHandler(factory, repositoryLocationResolver));
     handlerSet.add(new DummyRepositoryHandler(factory, repositoryLocationResolver) {
       @Override

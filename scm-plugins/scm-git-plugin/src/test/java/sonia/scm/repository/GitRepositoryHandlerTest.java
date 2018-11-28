@@ -37,26 +37,17 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import sonia.scm.io.DefaultFileSystem;
 import sonia.scm.schedule.Scheduler;
-import sonia.scm.store.ConfigurationStore;
 import sonia.scm.store.ConfigurationStoreFactory;
-import sonia.scm.store.StoreFactory;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 //~--- JDK imports ------------------------------------------------------------
 
 /**
- *
  * @author Sebastian Sdorra
  */
 @RunWith(MockitoJUnitRunner.class)
@@ -71,8 +62,8 @@ public class GitRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
   @Mock
   private GitWorkdirFactory gitWorkdirFactory;
 
-  RepositoryLocationResolver repositoryLocationResolver ;
-  private Path repoDir;
+  RepositoryLocationResolver repositoryLocationResolver;
+
 
   @Override
   protected void checkDirectory(File directory) {
@@ -95,16 +86,10 @@ public class GitRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
 
   @Override
   protected RepositoryHandler createRepositoryHandler(ConfigurationStoreFactory factory,
-                                                      File directory) throws RepositoryPathNotFoundException {
-    DefaultFileSystem fileSystem = new DefaultFileSystem();
-    PathBasedRepositoryDAO repoDao = mock(PathBasedRepositoryDAO.class);
-    InitialRepositoryLocationResolver initialRepositoryLocationResolver = new InitialRepositoryLocationResolver(contextProvider,fileSystem);
-    repositoryLocationResolver = new RepositoryLocationResolver(repoDao, initialRepositoryLocationResolver);
+                                                      File directory) {
+    repositoryLocationResolver = new RepositoryLocationResolver(repoDao, new InitialRepositoryLocationResolver(contextProvider));
     GitRepositoryHandler repositoryHandler = new GitRepositoryHandler(factory,
-      fileSystem, scheduler, repositoryLocationResolver, gitWorkdirFactory);
-
-    repoDir = directory.toPath();
-    when(repoDao.getPath(any())).thenReturn(repoDir);
+      scheduler, repositoryLocationResolver, gitWorkdirFactory);
     repositoryHandler.init(contextProvider);
 
     GitConfig config = new GitConfig();
@@ -116,18 +101,17 @@ public class GitRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
   }
 
   @Test
-  public void getDirectory()  {
+  public void getDirectory() {
     GitRepositoryHandler repositoryHandler = new GitRepositoryHandler(factory,
-      new DefaultFileSystem(), scheduler, repositoryLocationResolver, gitWorkdirFactory);
-    Repository repository = new Repository("id", "git", "Space", "Name");
-
+      scheduler, repositoryLocationResolver, gitWorkdirFactory);
     GitConfig config = new GitConfig();
     config.setDisabled(false);
     config.setGcExpression("gc exp");
 
     repositoryHandler.setConfig(config);
 
+    initRepository();
     File path = repositoryHandler.getDirectory(repository);
-    assertEquals(repoDir.toString()+File.separator+InitialRepositoryLocationResolver.REPOSITORIES_NATIVE_DIRECTORY, path.getAbsolutePath());
+    assertEquals(repoPath.toString() + File.separator + AbstractSimpleRepositoryHandler.REPOSITORIES_NATIVE_DIRECTORY, path.getAbsolutePath());
   }
 }

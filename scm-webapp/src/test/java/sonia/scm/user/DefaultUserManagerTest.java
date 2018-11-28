@@ -45,6 +45,9 @@ import org.junit.Test;
 
 import org.mockito.ArgumentCaptor;
 import sonia.scm.NotFoundException;
+import sonia.scm.repository.InitialRepositoryLocationResolver;
+import sonia.scm.repository.RepositoryDAO;
+import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.store.JAXBConfigurationStoreFactory;
 import sonia.scm.user.xml.XmlUserDAO;
 
@@ -72,7 +75,7 @@ public class DefaultUserManagerTest extends UserManagerTestBase
   public ShiroRule shiro = new ShiroRule();
 
 
-  private UserDAO userDAO = mock(UserDAO.class);
+  private UserDAO userDAO ;
   private User trillian;
 
   /**
@@ -182,6 +185,6 @@ public class DefaultUserManagerTest extends UserManagerTestBase
   //~--- methods --------------------------------------------------------------
 
   private XmlUserDAO createXmlUserDAO() {
-    return new XmlUserDAO(new JAXBConfigurationStoreFactory(locationResolver));
+    return new XmlUserDAO(new JAXBConfigurationStoreFactory(contextProvider, locationResolver));
   }
 }

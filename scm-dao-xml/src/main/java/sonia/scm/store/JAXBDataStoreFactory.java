@@ -40,8 +40,12 @@ import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.SCMContextProvider;
 import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.security.KeyGenerator;
+import sonia.scm.util.IOUtil;
+
+import java.io.File;
 
 /**
  *
@@ -49,26 +53,22 @@ import sonia.scm.security.KeyGenerator;
  */
 @Singleton
 public class JAXBDataStoreFactory extends FileBasedStoreFactory
-  implements DataStoreFactory
-{
+  implements DataStoreFactory {
 
   private static final Logger logger = LoggerFactory.getLogger(JAXBDataStoreFactory.class);
-  private static final String DIRECTORY_NAME = "data";
   private KeyGenerator keyGenerator;
 
   @Inject
-  public JAXBDataStoreFactory(RepositoryLocationResolver repositoryLocationResolver, KeyGenerator keyGenerator) {
-    super(repositoryLocationResolver, DIRECTORY_NAME);
+  public JAXBDataStoreFactory(SCMContextProvider contextProvider , RepositoryLocationResolver repositoryLocationResolver, KeyGenerator keyGenerator) {
+    super(contextProvider, repositoryLocationResolver, Store.DATA);
     this.keyGenerator = keyGenerator;
   }
 
   @Override
   @SuppressWarnings("unchecked")
   public DataStore getStore(StoreParameters storeParameters) {
-    logger.debug("create new store for type {} with name {}", storeParameters.getType(), storeParameters.getName());
-    if (storeParameters.getRepository() != null) {
-      return new JAXBDataStore(keyGenerator, storeParameters.getType(), getDirectory(storeParameters.getName(), storeParameters.getRepository()));
-    }
-    return new JAXBDataStore(keyGenerator, storeParameters.getType(), getDirectory(storeParameters.getName()));
+    File storeLocation = getStoreLocation(storeParameters);
+    IOUtil.mkdirs(storeLocation);
+    return new JAXBDataStore(keyGenerator, storeParameters.getType(), storeLocation);
   }
 }

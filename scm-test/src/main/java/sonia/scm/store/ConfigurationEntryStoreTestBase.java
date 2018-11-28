@@ -53,7 +53,7 @@ public abstract class ConfigurationEntryStoreTestBase extends KeyValueStoreTestB
   protected ConfigurationEntryStore getDataStore(Class type) {
     StoreParameters params = new StoreParameters()
       .withType(type)
-      .withName("test")
+      .withName(storeName)
       .build();
     return this.createConfigurationStoreFactory().getStore(params);
   }
@@ -62,7 +62,7 @@ public abstract class ConfigurationEntryStoreTestBase extends KeyValueStoreTestB
   protected ConfigurationEntryStore getDataStore(Class type, Repository repository) {
     StoreParameters params = new StoreParameters()
       .withType(type)
-      .withName("test")
+      .withName(repoStoreName)
       .forRepository(repository)
       .build();
     return this.createConfigurationStoreFactory().getStore(params);
