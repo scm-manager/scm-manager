@@ -6,13 +6,10 @@ import type {
   Repository,
   PagedCollection
 } from "@scm-manager/ui-types";
-import {
-  ErrorNotification,
-  Loading,
-  LinkPaginator
-} from "@scm-manager/ui-components";
+import { ErrorNotification, Loading } from "@scm-manager/ui-components";
 import { getHistory } from "./history";
 import ChangesetList from "../../components/changesets/ChangesetList";
+import StatePaginator from "../components/content/StatePaginator";
 
 type Props = {
   file: File,
@@ -40,7 +37,11 @@ class HistoryView extends React.Component<Props, State> {
 
   componentDidMount() {
     const { file } = this.props;
-    getHistory(file._links.history.href)
+    this.updateHistory(file._links.history.href);
+  }
+
+  updateHistory(link: string) {
+    getHistory(link)
       .then(result => {
         if (result.error) {
           this.setState({
@@ -54,25 +55,37 @@ class HistoryView extends React.Component<Props, State> {
             loaded: true,
             changesets: result.changesets,
             pageCollection: result.pageCollection,
-            page: result.pageCollection.page + 1
+            page: result.pageCollection.page
           });
         }
       })
       .catch(err => {});
   }
 
+  updatePage(page: number) {
+    const { file } = this.props;
+
+    this.updateHistory(file._links.history.href + "?page=" + page.toString());
+  }
+
   showHistory() {
     const { repository } = this.props;
     const { changesets, page, pageCollection } = this.state;
+    const currentPage = page == 0 ? 1 : page;
     return (
       <>
         <ChangesetList repository={repository} changesets={changesets} />
-        <LinkPaginator page={page} collection={pageCollection} />
+        <StatePaginator
+          page={currentPage}
+          collection={pageCollection}
+          updatePage={(newPage: number) => this.updatePage(newPage)}
+        />
       </>
     );
   }
 
   render() {
+    console.log(this.state);
     const { file } = this.props;
     const { loaded, error } = this.state;
 
