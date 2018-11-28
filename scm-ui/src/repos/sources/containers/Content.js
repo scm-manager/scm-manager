@@ -37,6 +37,10 @@ const styles = {
   },
   marginInHeader: {
     marginRight: "0.5em"
+  },
+  isVerticalCenter: {
+    display: "flex",
+    alignItems: "center"
   }
 };
 
@@ -80,7 +84,7 @@ class Content extends React.Component<Props, State> {
 
     return (
       <span className={classes.pointer}>
-        <article className="media">
+        <article className={classNames("media", classes.isVerticalCenter)}>
           <div className="media-content" onClick={this.toggleCollapse}>
             <i
               className={classNames(

@@ -6,10 +6,13 @@ import type {
   Repository,
   PagedCollection
 } from "@scm-manager/ui-types";
-import { ErrorNotification, Loading } from "@scm-manager/ui-components";
+import {
+  ErrorNotification,
+  Loading,
+  StatePaginator
+} from "@scm-manager/ui-components";
 import { getHistory } from "./history";
 import ChangesetList from "../../components/changesets/ChangesetList";
-import StatePaginator from "../components/content/StatePaginator";
 
 type Props = {
   file: File,
