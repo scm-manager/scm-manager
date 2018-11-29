@@ -31,7 +31,10 @@
 package sonia.scm.security;
 
 import io.jsonwebtoken.Claims;
+
+import java.util.Collections;
 import java.util.Date;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -76,6 +79,11 @@ public final class JwtAccessToken implements AccessToken {
   }
 
   @Override
+  public Date getRefreshExpiration() {
+    return claims.get("scm-manager.refreshableUntil", Date.class);
+  }
+
+  @Override
   public Scope getScope() {
     return Scopes.fromClaims(claims);
   }
@@ -90,5 +98,9 @@ public final class JwtAccessToken implements AccessToken {
   public String compact() {
     return compact;
   }
-  
+
+  @Override
+  public Map<String, Object> getClaims() {
+    return Collections.unmodifiableMap(claims);
+  }
 }

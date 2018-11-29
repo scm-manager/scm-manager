@@ -39,7 +39,6 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -48,7 +47,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Jwt implementation of {@link AccessTokenBuilder}.
- * 
+ *
  * @author Sebastian Sdorra
  * @since 2.0.0
  */
@@ -58,18 +57,20 @@ public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
    * the logger for JwtAccessTokenBuilder
    */
   private static final Logger LOG = LoggerFactory.getLogger(JwtAccessTokenBuilder.class);
-  
-  private final KeyGenerator keyGenerator; 
-  private final SecureKeyResolver keyResolver; 
-  
+
+  private final KeyGenerator keyGenerator;
+  private final SecureKeyResolver keyResolver;
+
   private String subject;
   private String issuer;
-  private long expiresIn = 60l;
-  private TimeUnit expiresInUnit = TimeUnit.MINUTES;
+  private long expiresIn = 1;
+  private TimeUnit expiresInUnit = TimeUnit.HOURS;
+  private long refreshableFor = 12;
+  private TimeUnit refreshableForUnit = TimeUnit.HOURS;
   private Scope scope = Scope.empty();
-  
+
   private final Map<String,Object> custom = Maps.newHashMap();
-  
+
   JwtAccessTokenBuilder(KeyGenerator keyGenerator, SecureKeyResolver keyResolver)  {
     this.keyGenerator = keyGenerator;
     this.keyResolver = keyResolver;
@@ -81,7 +82,7 @@ public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
     this.subject = subject;
     return this;
   }
-  
+
   @Override
   public JwtAccessTokenBuilder custom(String key, Object value) {
     Preconditions.checkArgument(!Strings.isNullOrEmpty(key), "null or empty value not allowed");
@@ -92,11 +93,11 @@ public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
 
   @Override
   public JwtAccessTokenBuilder scope(Scope scope) {
-    Preconditions.checkArgument(scope != null, "scope can not be null");
+    Preconditions.checkArgument(scope != null, "scope cannot be null");
     this.scope = scope;
     return this;
   }
-  
+
   @Override
   public JwtAccessTokenBuilder issuer(String issuer) {
     Preconditions.checkArgument(!Strings.isNullOrEmpty(issuer), "null or empty value not allowed");
@@ -106,15 +107,26 @@ public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
 
   @Override
   public JwtAccessTokenBuilder expiresIn(long count, TimeUnit unit) {
-    Preconditions.checkArgument(count > 0, "expires in must be greater than 0");
-    Preconditions.checkArgument(unit != null, "unit can not be null");
-    
+    Preconditions.checkArgument(count > 0, "count must be greater than 0");
+    Preconditions.checkArgument(unit != null, "unit cannot be null");
+
     this.expiresIn = count;
     this.expiresInUnit = unit;
-    
+
     return this;
   }
-  
+
+  @Override
+  public JwtAccessTokenBuilder refreshableFor(long count, TimeUnit unit) {
+    Preconditions.checkArgument(count >= 0, "count must be greater or equal to 0");
+    Preconditions.checkArgument(unit != null, "unit cannot be null");
+
+    this.refreshableFor = count;
+    this.refreshableForUnit = unit;
+
+    return this;
+  }
+
   private String getSubject(){
     if (subject == null) {
       Subject currentSubject = SecurityUtils.getSubject();
@@ -130,35 +142,40 @@ public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
     String id = keyGenerator.createKey();
 
     String sub = getSubject();
-    
+
     LOG.trace("create new token {} for user {}", id, subject);
     SecureKey key = keyResolver.getSecureKey(sub);
-    
+
     Map<String,Object> customClaims = new HashMap<>(custom);
-    
+
     // add scope to custom claims
     Scopes.toClaims(customClaims, scope);
-    
+
     Date now = new Date();
     long expiration = expiresInUnit.toMillis(expiresIn);
-    
+
     Claims claims = Jwts.claims(customClaims)
       .setSubject(sub)
       .setId(id)
       .setIssuedAt(now)
       .setExpiration(new Date(now.getTime() + expiration));
-    
+
+    if (refreshableFor > 0) {
+      long refreshExpiration = refreshableForUnit.toMillis(refreshableFor);
+      claims.put("scm-manager.refreshableUntil", new Date(now.getTime() + refreshExpiration).getTime() / 1000);
+    }
+
     if ( issuer != null ) {
       claims.setIssuer(issuer);
     }
-    
+
     // sign token and create compact version
     String compact = Jwts.builder()
         .setClaims(claims)
         .signWith(SignatureAlgorithm.HS256, key.getBytes())
         .compact();
-    
+
     return new JwtAccessToken(claims, compact);
   }
-  
+
 }
