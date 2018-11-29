@@ -13,7 +13,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static sonia.scm.web.HgHookCallbackServlet.PARAM_REPOSITORYPATH;
+import static sonia.scm.web.HgHookCallbackServlet.PARAM_REPOSITORYID;
 
 public class HgHookCallbackServletTest {
 
@@ -27,7 +27,7 @@ public class HgHookCallbackServletTest {
     when(request.getContextPath()).thenReturn("http://example.com/scm");
     when(request.getRequestURI()).thenReturn("http://example.com/scm/hook/hg/pretxnchangegroup");
     String path = "/tmp/hg/12345";
-    when(request.getParameter(PARAM_REPOSITORYPATH)).thenReturn(path);
+    when(request.getParameter(PARAM_REPOSITORYID)).thenReturn(path);
 
     servlet.doPost(request, response);
 

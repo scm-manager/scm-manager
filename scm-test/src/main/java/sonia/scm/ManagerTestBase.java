@@ -72,9 +72,9 @@ public abstract class ManagerTestBase<T extends ModelObject>
       temp = tempFolder.newFolder();
     }
     contextProvider = MockUtil.getSCMContextProvider(temp);
-    InitialRepositoryLocationResolver initialRepositoryLocationResolver = new InitialRepositoryLocationResolver(contextProvider);
+    InitialRepositoryLocationResolver initialRepositoryLocationResolver = new InitialRepositoryLocationResolver();
     RepositoryDAO repoDao = mock(RepositoryDAO.class);
-    locationResolver = new RepositoryLocationResolver(repoDao ,initialRepositoryLocationResolver);
+    locationResolver = new RepositoryLocationResolver(contextProvider, repoDao ,initialRepositoryLocationResolver);
     manager = createManager();
     manager.init(contextProvider);
   }

@@ -91,9 +91,8 @@ public abstract class FileBasedStoreFactory {
    * @return the store directory of a specific repository
    */
   private File getStoreDirectory(Store store, Repository repository) {
-    return new File (repositoryLocationResolver.getRepositoryDirectory(repository), store.getRepositoryStoreDirectory());
+    return new File (repositoryLocationResolver.getPath(repository.getId()).toFile(), store.getRepositoryStoreDirectory());
   }
-
 
   /**
    * Get the global store directory
