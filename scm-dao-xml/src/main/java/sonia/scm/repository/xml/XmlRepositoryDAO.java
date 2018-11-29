@@ -1,19 +1,19 @@
 /**
  * Copyright (c) 2010, Sebastian Sdorra
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * <p>
  * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
+ * this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
  * 3. Neither the name of SCM-Manager; nor the names of its
- *    contributors may be used to endorse or promote products derived from this
- *    software without specific prior written permission.
- *
+ * contributors may be used to endorse or promote products derived from this
+ * software without specific prior written permission.
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,9 +24,8 @@
  * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * <p>
  * http://bitbucket.org/sdorra/scm-manager
- *
  */
 
 
@@ -34,153 +33,229 @@ package sonia.scm.repository.xml;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Inject;
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.ImmutableList;
 import com.google.inject.Singleton;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.io.FileSystem;
 import sonia.scm.repository.InitialRepositoryLocationResolver;
-import sonia.scm.repository.InitialRepositoryLocationResolver.InitialRepositoryLocation;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.PathBasedRepositoryDAO;
 import sonia.scm.repository.Repository;
-import sonia.scm.store.JAXBConfigurationStore;
-import sonia.scm.store.Store;
 import sonia.scm.store.StoreConstants;
-import sonia.scm.xml.AbstractXmlDAO;
 
-import java.io.File;
+import javax.inject.Inject;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Clock;
 import java.util.Collection;
-import java.util.Optional;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Sebastian Sdorra
  */
 @Singleton
-public class XmlRepositoryDAO
-  extends AbstractXmlDAO<Repository, XmlRepositoryDatabase>
-  implements PathBasedRepositoryDAO {
+public class XmlRepositoryDAO implements PathBasedRepositoryDAO {
 
-  public static final String STORE_NAME = "repositories";
+  private static final String STORE_NAME = "repositories";
 
-  private InitialRepositoryLocationResolver initialRepositoryLocationResolver;
-  private final FileSystem fileSystem;
+  private final PathDatabase pathDatabase;
+  private final MetadataStore metadataStore = new MetadataStore();
+
   private final SCMContextProvider context;
+  private final InitialRepositoryLocationResolver locationResolver;
+  private final FileSystem fileSystem;
 
-  //~--- constructors ---------------------------------------------------------
+  @VisibleForTesting
+  Clock clock = Clock.systemUTC();
+
+  private Long creationTime;
+  private Long lastModified;
+
+  private Map<String, Path> pathById;
+  private Map<String, Repository> byId;
+  private Map<NamespaceAndName, Repository> byNamespaceAndName;
 
   @Inject
-  public XmlRepositoryDAO(InitialRepositoryLocationResolver initialRepositoryLocationResolver, FileSystem fileSystem, SCMContextProvider context) {
-    super(new JAXBConfigurationStore<>(XmlRepositoryDatabase.class,
-      new File(context.getBaseDirectory(), Store.CONFIG.getGlobalStoreDirectory()+File.separator+ STORE_NAME + StoreConstants.FILE_EXTENSION)));
-    this.initialRepositoryLocationResolver = initialRepositoryLocationResolver;
-    this.fileSystem = fileSystem;
+  public XmlRepositoryDAO(SCMContextProvider context, InitialRepositoryLocationResolver locationResolver, FileSystem fileSystem) {
     this.context = context;
+    this.locationResolver = locationResolver;
+    this.fileSystem = fileSystem;
+
+    this.creationTime = clock.millis();
+
+    this.pathById = new LinkedHashMap<>();
+    this.byId = new LinkedHashMap<>();
+    this.byNamespaceAndName = new LinkedHashMap<>();
+
+    pathDatabase = new PathDatabase(createStorePath());
+    read();
   }
 
-  //~--- methods --------------------------------------------------------------
+  private void read() {
+    Path storePath = createStorePath();
 
-  @Override
-  public boolean contains(NamespaceAndName namespaceAndName) {
-    return db.contains(namespaceAndName);
+    if (!Files.exists(storePath)) {
+      return;
+    }
+
+    pathDatabase.read(this::loadDates, this::loadRepository);
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  @Override
-  public Repository get(NamespaceAndName namespaceAndName) {
-    return db.get(namespaceAndName);
+  private void loadDates(Long creationTime, Long lastModified) {
+    this.creationTime = creationTime;
+    this.lastModified = lastModified;
   }
 
-  //~--- methods --------------------------------------------------------------
+  private void loadRepository(String id, Path repositoryPath) {
+    Path metadataPath = createMetadataPath(context.resolve(repositoryPath));
 
+    Repository repository = metadataStore.read(metadataPath);
+
+    byId.put(id, repository);
+    byNamespaceAndName.put(repository.getNamespaceAndName(), repository);
+    pathById.put(id, repositoryPath);
+  }
+
+  @VisibleForTesting
+  Path createStorePath() {
+    return context.getBaseDirectory()
+      .toPath()
+      .resolve(StoreConstants.CONFIG_DIRECTORY_NAME)
+      .resolve(STORE_NAME.concat(StoreConstants.FILE_EXTENSION));
+  }
+
+
+  @VisibleForTesting
+  Path createMetadataPath(Path repositoryPath) {
+    return repositoryPath.resolve(StoreConstants.REPOSITORY_METADATA.concat(StoreConstants.FILE_EXTENSION));
+  }
 
   @Override
-  public void modify(Repository repository) {
-    RepositoryPath repositoryPath = findExistingRepositoryPath(repository).orElseThrow(() -> new InternalRepositoryException(repository, "path object for repository not found"));
-    repositoryPath.setRepository(repository);
-    repositoryPath.setToBeSynchronized(true);
-    storeDB();
+  public String getType() {
+    return "xml";
+  }
+
+  @Override
+  public Long getCreationTime() {
+    return creationTime;
+  }
+
+  @Override
+  public Long getLastModified() {
+    return lastModified;
   }
 
   @Override
   public void add(Repository repository) {
-    InitialRepositoryLocation initialLocation = initialRepositoryLocationResolver.getRelativeRepositoryPath(repository);
+    Repository clone = repository.clone();
+
+    Path repositoryPath = locationResolver.getPath(repository.getId());
+    Path resolvedPath = context.resolve(repositoryPath);
+
     try {
-      fileSystem.create(initialLocation.getAbsolutePath());
+      fileSystem.create(resolvedPath.toFile());
+
+      Path metadataPath = createMetadataPath(resolvedPath);
+      metadataStore.write(metadataPath, repository);
+
+      synchronized (this) {
+        pathById.put(repository.getId(), repositoryPath);
+
+        byId.put(repository.getId(), clone);
+        byNamespaceAndName.put(repository.getNamespaceAndName(), clone);
+
+        writePathDatabase();
+      }
+
     } catch (IOException e) {
-      throw new InternalRepositoryException(repository, "could not create directory for repository data: " + initialLocation.getAbsolutePath(), e);
+      throw new InternalRepositoryException(repository, "failed to create filesystem", e);
     }
-    RepositoryPath repositoryPath = new RepositoryPath(initialLocation.getRelativePath(), repository.getId(), repository.clone());
-    repositoryPath.setToBeSynchronized(true);
-    synchronized (store) {
-      db.add(repositoryPath);
-      storeDB();
-    }
+  }
+
+  private void writePathDatabase() {
+    lastModified = clock.millis();
+    pathDatabase.write(creationTime, lastModified, pathById);
+  }
+
+  @Override
+  public boolean contains(Repository repository) {
+    return byId.containsKey(repository.getId());
+  }
+
+  @Override
+  public boolean contains(NamespaceAndName namespaceAndName) {
+    return byNamespaceAndName.containsKey(namespaceAndName);
+  }
+
+  @Override
+  public boolean contains(String id) {
+    return byId.containsKey(id);
+  }
+
+  @Override
+  public Repository get(NamespaceAndName namespaceAndName) {
+    return byNamespaceAndName.get(namespaceAndName);
   }
 
   @Override
   public Repository get(String id) {
-    RepositoryPath repositoryPath = db.get(id);
-    if (repositoryPath != null) {
-      return repositoryPath.getRepository();
-    }
-    return null;
+    return byId.get(id);
   }
 
   @Override
   public Collection<Repository> getAll() {
-    return db.getRepositories();
+    return ImmutableList.copyOf(byNamespaceAndName.values());
   }
 
-  /**
-   * Method description
-   *
-   * @param repository
-   * @return
-   */
   @Override
-  protected Repository clone(Repository repository) {
-    return repository.clone();
+  public void modify(Repository repository) {
+    Repository clone = repository.clone();
+
+    synchronized (this) {
+      // remove old namespaceAndName from map, in case of rename
+      Repository prev = byId.put(clone.getId(), clone);
+      if (prev != null) {
+        byNamespaceAndName.remove(prev.getNamespaceAndName());
+      }
+      byNamespaceAndName.put(clone.getNamespaceAndName(), clone);
+
+      writePathDatabase();
+    }
+
+    Path repositoryPath = context.resolve(getPath(repository.getId()));
+    Path metadataPath = createMetadataPath(repositoryPath);
+    metadataStore.write(metadataPath, clone);
   }
 
   @Override
   public void delete(Repository repository) {
-    Path directory = getPath(repository);
-    super.delete(repository);
+    Path path;
+    synchronized (this) {
+      Repository prev = byId.remove(repository.getId());
+      if (prev != null) {
+        byNamespaceAndName.remove(prev.getNamespaceAndName());
+      }
+
+      path = pathById.remove(repository.getId());
+
+      writePathDatabase();
+    }
+
+    path = context.resolve(path);
+
     try {
-        fileSystem.destroy(directory.toFile());
+      fileSystem.destroy(path.toFile());
     } catch (IOException e) {
-      throw new InternalRepositoryException(repository, "could not delete repository directory", e);
+      throw new InternalRepositoryException(repository, "failed to destroy filesystem", e);
     }
   }
 
-  /**
-   * Method description
-   *
-   * @return
-   */
   @Override
-  protected XmlRepositoryDatabase createNewDatabase() {
-    return new XmlRepositoryDatabase();
-  }
-
-  @Override
-  public Path getPath(Repository repository) {
-    return context
-      .getBaseDirectory()
-      .toPath()
-      .resolve(
-        findExistingRepositoryPath(repository)
-          .map(RepositoryPath::getPath)
-          .orElseThrow(() -> new InternalRepositoryException(repository, "could not find base directory for repository")));
-  }
-
-  private Optional<RepositoryPath> findExistingRepositoryPath(Repository repository) {
-    return db.values().stream()
-      .filter(repoPath -> repoPath.getId().equals(repository.getId()))
-      .findAny();
+  public Path getPath(String repositoryId) {
+    return pathById.get(repositoryId);
   }
 }

@@ -65,7 +65,6 @@ import sonia.scm.security.KeyGenerator;
 import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.store.JAXBConfigurationStoreFactory;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -434,10 +433,10 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
   private DefaultRepositoryManager createRepositoryManager(boolean archiveEnabled, KeyGenerator keyGenerator) {
     DefaultFileSystem fileSystem = new DefaultFileSystem();
     Set<RepositoryHandler> handlerSet = new HashSet<>();
-    InitialRepositoryLocationResolver initialRepositoryLocationResolver = new InitialRepositoryLocationResolver(contextProvider);
-    XmlRepositoryDAO repositoryDAO = new XmlRepositoryDAO(initialRepositoryLocationResolver, fileSystem, contextProvider);
-    RepositoryLocationResolver repositoryLocationResolver = new RepositoryLocationResolver(repositoryDAO, initialRepositoryLocationResolver);
-    ConfigurationStoreFactory factory = new JAXBConfigurationStoreFactory(contextProvider, repositoryLocationResolver);
+    ConfigurationStoreFactory factory = new JAXBConfigurationStoreFactory(contextProvider);
+    InitialRepositoryLocationResolver initialRepositoryLocationResolver = new InitialRepositoryLocationResolver();
+    XmlRepositoryDAO repositoryDAO = new XmlRepositoryDAO(contextProvider, initialRepositoryLocationResolver, fileSystem);
+    RepositoryLocationResolver repositoryLocationResolver = new RepositoryLocationResolver(contextProvider, repositoryDAO, initialRepositoryLocationResolver);
     handlerSet.add(new DummyRepositoryHandler(factory, repositoryLocationResolver));
     handlerSet.add(new DummyRepositoryHandler(factory, repositoryLocationResolver) {
       @Override

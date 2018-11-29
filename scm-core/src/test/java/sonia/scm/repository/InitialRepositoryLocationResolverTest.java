@@ -1,42 +1,23 @@
 package sonia.scm.repository;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-import sonia.scm.SCMContextProvider;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.File;
-import java.io.IOException;
+import java.nio.file.Path;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
-public class InitialRepositoryLocationResolverTest {
-
-  @Mock
-  private SCMContextProvider context;
-
-  @Rule
-  public TemporaryFolder temporaryFolder = new TemporaryFolder();
-
-  @Before
-  public void init() throws IOException {
-    when(context.getBaseDirectory()).thenReturn(temporaryFolder.newFolder());
-  }
+@ExtendWith({MockitoExtension.class})
+class InitialRepositoryLocationResolverTest {
 
   @Test
-  public void shouldComputeInitialDirectory() {
-    InitialRepositoryLocationResolver resolver = new InitialRepositoryLocationResolver(context);
-    Repository repository = new Repository();
-    repository.setId("ABC");
-    InitialRepositoryLocationResolver.InitialRepositoryLocation directory = resolver.getRelativeRepositoryPath(repository);
+  void shouldComputeInitialPath() {
+    InitialRepositoryLocationResolver resolver = new InitialRepositoryLocationResolver();
+    Path path = resolver.getPath("42");
 
-    assertThat(directory.getAbsolutePath()).isEqualTo(new File(context.getBaseDirectory(), "repositories/ABC"));
-    assertThat(directory.getRelativePath()).isEqualTo( "repositories/ABC");
+    assertThat(path).isRelative();
+    assertThat(path.toString()).isEqualTo("repositories" + File.separator + "42");
   }
 }

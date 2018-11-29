@@ -35,6 +35,7 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.io.Closeables;
 import com.google.inject.Inject;
@@ -44,12 +45,10 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.ContextEntry;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.HgContext;
 import sonia.scm.repository.HgHookManager;
 import sonia.scm.repository.HgRepositoryHandler;
-import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.api.HgHookMessage;
 import sonia.scm.repository.api.HgHookMessage.Severity;
@@ -88,7 +87,7 @@ public class HgHookCallbackServlet extends HttpServlet
   public static final String HGHOOK_PRE_RECEIVE = "pretxnchangegroup";
 
   /** Field description */
-  public static final String PARAM_REPOSITORYPATH = "repositoryPath";
+  public static final String PARAM_REPOSITORYID = "repositoryId";
 
   /** Field description */
   private static final String PARAM_CHALLENGE = "challenge";
@@ -170,7 +169,7 @@ public class HgHookCallbackServlet extends HttpServlet
 
     if (m.matches())
     {
-      File repositoryPath = getRepositoryPath(request);
+      String repositoryId = getRepositoryId(request);
       String type = m.group(1);
       String challenge = request.getParameter(PARAM_CHALLENGE);
 
@@ -187,7 +186,7 @@ public class HgHookCallbackServlet extends HttpServlet
             authenticate(request, credentials);
           }
 
-          hookCallback(response, repositoryPath, type, challenge, node);
+          hookCallback(response, type, repositoryId, challenge, node);
         }
         else if (logger.isDebugEnabled())
         {
@@ -246,7 +245,7 @@ public class HgHookCallbackServlet extends HttpServlet
     }
   }
 
-  private void fireHook(HttpServletResponse response, File repositoryDirectory, String node, RepositoryHookType type)
+  private void fireHook(HttpServletResponse response, String repositoryId, String node, RepositoryHookType type)
     throws IOException
   {
     HgHookContextProvider context = null;
@@ -258,10 +257,10 @@ public class HgHookCallbackServlet extends HttpServlet
         contextProvider.get().setPending(true);
       }
 
+      File repositoryDirectory = handler.getDirectory(repositoryId);
       context = new HgHookContextProvider(handler, repositoryDirectory, hookManager,
         node, type);
 
-      String repositoryId = getRepositoryId(repositoryDirectory);
       hookEventFacade.handle(repositoryId).fireHookEvent(type, context);
 
       printMessages(response, context);
@@ -280,7 +279,7 @@ public class HgHookCallbackServlet extends HttpServlet
     }
   }
 
-  private void hookCallback(HttpServletResponse response, File repositoryDirectory, String typeName, String challenge, String node) throws IOException {
+  private void hookCallback(HttpServletResponse response, String typeName, String repositoryId, String challenge, String node) throws IOException {
     if (hookManager.isAcceptAble(challenge))
     {
       RepositoryHookType type = null;
@@ -296,7 +295,7 @@ public class HgHookCallbackServlet extends HttpServlet
 
       if (type != null)
       {
-        fireHook(response, repositoryDirectory, node, type);
+        fireHook(response, repositoryId, node, type);
       }
       else
       {
@@ -441,21 +440,11 @@ public class HgHookCallbackServlet extends HttpServlet
 
   //~--- get methods ----------------------------------------------------------
 
-  @SuppressWarnings("squid:S2083") // we do nothing with the path given, so this should be no issue
-  private String getRepositoryId(File repositoryPath)
+  private String getRepositoryId(HttpServletRequest request)
   {
-    return handler.getRepositoryId(repositoryPath);
-  }
-
-  private File getRepositoryPath(HttpServletRequest request) {
-    String path = request.getParameter(PARAM_REPOSITORYPATH);
-    if (Util.isNotEmpty(path)) {
-       return new File(path);
-    }
-    else
-    {
-      throw new InternalRepositoryException(ContextEntry.ContextBuilder.entity("directory", path), "could not find hgrc in directory");
-    }
+    String id = request.getParameter(PARAM_REPOSITORYID);
+    Preconditions.checkArgument(!Strings.isNullOrEmpty(id), "repository id not found in request");
+    return id;
   }
 
   //~--- fields ---------------------------------------------------------------

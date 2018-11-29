@@ -196,7 +196,7 @@ public abstract class AbstractGitPushOrPullCommand extends AbstractGitCommand
    */
   protected String getRemoteUrl(sonia.scm.repository.Repository repository)
   {
-    return getRemoteUrl(handler.getDirectory(repository));
+    return getRemoteUrl(handler.getDirectory(repository.getId()));
   }
 
   //~--- methods --------------------------------------------------------------

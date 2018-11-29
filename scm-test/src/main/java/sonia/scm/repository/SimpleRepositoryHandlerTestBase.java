@@ -44,6 +44,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -62,7 +63,7 @@ public abstract class SimpleRepositoryHandlerTestBase extends AbstractTestBase {
   protected abstract void checkDirectory(File directory);
 
   protected abstract RepositoryHandler createRepositoryHandler(
-    ConfigurationStoreFactory factory, File directory) throws IOException, RepositoryPathNotFoundException;
+    ConfigurationStoreFactory factory, RepositoryLocationResolver locationResolver, File directory) throws IOException, RepositoryPathNotFoundException;
 
   @Test
   public void testCreate() {
@@ -74,7 +75,15 @@ public abstract class SimpleRepositoryHandlerTestBase extends AbstractTestBase {
     InMemoryConfigurationStoreFactory storeFactory = new InMemoryConfigurationStoreFactory();
     baseDirectory = new File(contextProvider.getBaseDirectory(), "repositories");
     IOUtil.mkdirs(baseDirectory);
-    handler = createRepositoryHandler(storeFactory, baseDirectory);
+
+    locationResolver = mock(RepositoryLocationResolver.class);
+
+    when(locationResolver.getPath(anyString())).then(ic -> {
+      String id = ic.getArgument(0);
+      return baseDirectory.toPath().resolve(id);
+    });
+
+    handler = createRepositoryHandler(storeFactory, locationResolver, baseDirectory);
   }
 
   @Override
@@ -98,11 +107,12 @@ public abstract class SimpleRepositoryHandlerTestBase extends AbstractTestBase {
     repository = RepositoryTestData.createHeartOfGold();
     File repoDirectory = new File(baseDirectory, repository.getId());
     repoPath = repoDirectory.toPath();
-    when(repoDao.getPath(repository)).thenReturn(repoPath);
+    when(repoDao.getPath(repository.getId())).thenReturn(repoPath);
     return new File(repoDirectory, AbstractSimpleRepositoryHandler.REPOSITORIES_NATIVE_DIRECTORY);
   }
 
   protected File baseDirectory;
+  protected RepositoryLocationResolver locationResolver;
 
   private RepositoryHandler handler;
 }

@@ -94,9 +94,9 @@ public abstract class IncomingOutgoingTestBase extends AbstractTestBase
     outgoing = Repository.create(createConfig(temp), outgoingDirectory);
 
     handler = mock(HgRepositoryHandler.class);
-    when(handler.getDirectory(incomingRepository)).thenReturn(
+    when(handler.getDirectory(incomingRepository.getId())).thenReturn(
       incomingDirectory);
-    when(handler.getDirectory(outgoingRepository)).thenReturn(
+    when(handler.getDirectory(outgoingRepository.getId())).thenReturn(
       outgoingDirectory);
     when(handler.getConfig()).thenReturn(temp.getConfig());
     when(handler.getHgContext()).thenReturn(new HgContext());

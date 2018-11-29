@@ -45,6 +45,7 @@ public final class RepositoryTestData {
       .type(type)
       .contact("douglas.adams@hitchhiker.com")
       .name("42Puzzle")
+      .namespace("hitchhiker")
       .description("The 42 Puzzle")
       .build();
   }
@@ -59,6 +60,7 @@ public final class RepositoryTestData {
       .type(type)
       .contact("zaphod.beeblebrox@hitchhiker.com")
       .name("happyVerticalPeopleTransporter")
+      .namespace("hitchhiker")
       .description("Happy Vertical People Transporter")
       .build();
   }
@@ -72,6 +74,7 @@ public final class RepositoryTestData {
       .type(type)
       .contact("zaphod.beeblebrox@hitchhiker.com")
       .name("HeartOfGold")
+      .namespace("hitchhiker")
       .description(
         "Heart of Gold is the first prototype ship to successfully utilise the revolutionary Infinite Improbability Drive")
       .build();
@@ -87,6 +90,7 @@ public final class RepositoryTestData {
       .type(type)
       .contact("douglas.adams@hitchhiker.com")
       .name("RestaurantAtTheEndOfTheUniverse")
+      .namespace("hitchhiker")
       .description("The Restaurant at the End of the Universe")
       .build();
   }

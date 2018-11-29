@@ -119,7 +119,7 @@ public abstract class AbstractGitIncomingOutgoingCommand
 
     Git git = Git.wrap(open());
 
-    GitUtil.fetch(git, handler.getDirectory(remoteRepository), remoteRepository);
+    GitUtil.fetch(git, handler.getDirectory(remoteRepository.getId()), remoteRepository);
 
     ObjectId localId = getDefaultBranch(git.getRepository());
     ObjectId remoteId = null;

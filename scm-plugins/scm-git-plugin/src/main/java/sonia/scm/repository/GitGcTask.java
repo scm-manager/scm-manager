@@ -121,7 +121,7 @@ public class GitGcTask implements Runnable {
   }
 
   private void gc(Repository repository){
-    File file = repositoryHandler.getDirectory(repository);
+    File file = repositoryHandler.getDirectory(repository.getId());
     Git git = null;
     try {
       git = open(file);
