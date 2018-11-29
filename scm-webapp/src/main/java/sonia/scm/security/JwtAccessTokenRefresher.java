@@ -1,6 +1,7 @@
 package sonia.scm.security;
 
-import java.time.Instant;
+import javax.inject.Inject;
+import java.time.Clock;
 import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
@@ -10,10 +11,17 @@ public class JwtAccessTokenRefresher {
 
   private final JwtAccessTokenBuilderFactory builderFactory;
   private final JwtAccessTokenRefreshStrategy refreshStrategy;
+  private final Clock clock;
 
+  @Inject
   public JwtAccessTokenRefresher(JwtAccessTokenBuilderFactory builderFactory, JwtAccessTokenRefreshStrategy refreshStrategy) {
+    this(builderFactory, refreshStrategy, Clock.systemDefaultZone());
+  }
+
+  JwtAccessTokenRefresher(JwtAccessTokenBuilderFactory builderFactory, JwtAccessTokenRefreshStrategy refreshStrategy, Clock clock) {
     this.builderFactory = builderFactory;
     this.refreshStrategy = refreshStrategy;
+    this.clock = clock;
   }
 
   public Optional<JwtAccessToken> refresh(JwtAccessToken oldToken) {
@@ -31,7 +39,7 @@ public class JwtAccessTokenRefresher {
   }
 
   private boolean canBeRefreshed(JwtAccessToken oldToken) {
-    return tokenIsValid(oldToken) || tokenCanBeRefreshed(oldToken);
+    return tokenIsValid(oldToken) && tokenCanBeRefreshed(oldToken);
   }
 
   private boolean shouldBeRefreshed(JwtAccessToken oldToken) {
@@ -40,14 +48,14 @@ public class JwtAccessTokenRefresher {
 
   private boolean tokenCanBeRefreshed(JwtAccessToken oldToken) {
     Date refreshExpiration = oldToken.getRefreshExpiration();
-    return refreshExpiration != null && isBeforeNow(refreshExpiration);
+    return refreshExpiration != null && isAfterNow(refreshExpiration);
   }
 
   private boolean tokenIsValid(JwtAccessToken oldToken) {
-    return isBeforeNow(oldToken.getExpiration());
+    return isAfterNow(oldToken.getExpiration());
   }
 
-  private boolean isBeforeNow(Date expiration) {
-    return expiration.toInstant().isBefore(Instant.now());
+  private boolean isAfterNow(Date expiration) {
+    return expiration.toInstant().isAfter(clock.instant());
   }
 }

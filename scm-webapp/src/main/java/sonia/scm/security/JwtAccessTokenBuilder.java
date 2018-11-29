@@ -162,7 +162,7 @@ public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
 
     if (refreshableFor > 0) {
       long refreshExpiration = refreshableForUnit.toMillis(refreshableFor);
-      claims.put("scm-manager.refreshableUntil", new Date(now.getTime() + refreshExpiration).getTime() / 1000);
+      claims.put("scm-manager.refreshableUntil", new Date(now.getTime() + refreshExpiration).getTime());
     }
 
     if ( issuer != null ) {
