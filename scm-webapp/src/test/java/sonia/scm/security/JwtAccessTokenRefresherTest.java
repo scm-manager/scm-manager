@@ -9,16 +9,21 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.sql.Date;
 import java.time.Clock;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Random;
 
+import static java.time.Duration.ofHours;
 import static java.time.Duration.ofMinutes;
+import static java.time.temporal.ChronoUnit.SECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @SubjectAware(
@@ -29,7 +34,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class JwtAccessTokenRefresherTest {
 
-  private static final Instant NOW = Instant.now();
+  private static final Instant NOW = Instant.now().truncatedTo(SECONDS);
   private static final Instant TOKEN_CREATION = NOW.minus(ofMinutes(1));
 
   @Rule
@@ -41,8 +46,6 @@ public class JwtAccessTokenRefresherTest {
   private JwtAccessTokenRefreshStrategy refreshStrategy;
   @Mock
   private Clock refreshClock;
-  @Mock
-  private Clock creationClock;
 
   private KeyGenerator keyGenerator = () -> "key";
 
@@ -56,10 +59,12 @@ public class JwtAccessTokenRefresherTest {
     SecureKey secureKey = new SecureKey(bytes, System.currentTimeMillis());
     when(keyResolver.getSecureKey(any())).thenReturn(secureKey);
 
-    JwtAccessTokenBuilderFactory builderFactory = new JwtAccessTokenBuilderFactory(keyGenerator, keyResolver, Collections.emptySet(), creationClock);
-    refresher = new JwtAccessTokenRefresher(builderFactory, refreshStrategy, refreshClock);
-    tokenBuilder = builderFactory.create();
+    Clock creationClock = mock(Clock.class);
     when(creationClock.instant()).thenReturn(TOKEN_CREATION);
+    tokenBuilder = new JwtAccessTokenBuilderFactory(keyGenerator, keyResolver, Collections.emptySet(), creationClock).create();
+
+    JwtAccessTokenBuilderFactory refreshBuilderFactory = new JwtAccessTokenBuilderFactory(keyGenerator, keyResolver, Collections.emptySet(), refreshClock);
+    refresher = new JwtAccessTokenRefresher(refreshBuilderFactory, refreshStrategy, refreshClock);
     when(refreshClock.instant()).thenReturn(NOW);
     when(refreshStrategy.shouldBeRefreshed(any())).thenReturn(true);
 
@@ -115,7 +120,7 @@ public class JwtAccessTokenRefresherTest {
   }
 
   @Test
-  public void shouldRefreshTokenWithCorrectClaims() {
+  public void shouldRefreshTokenWithParentId() {
     JwtAccessToken oldToken = tokenBuilder.build();
     when(refreshStrategy.shouldBeRefreshed(oldToken)).thenReturn(true);
 
@@ -124,5 +129,17 @@ public class JwtAccessTokenRefresherTest {
     assertThat(refreshedTokenResult).isNotEmpty();
     JwtAccessToken refreshedToken = refreshedTokenResult.get();
     assertThat(refreshedToken.getParentKey()).get().isEqualTo("key");
+  }
+
+  @Test
+  public void shouldRefreshTokenWithSameExpiration() {
+    JwtAccessToken oldToken = tokenBuilder.build();
+    when(refreshStrategy.shouldBeRefreshed(oldToken)).thenReturn(true);
+
+    Optional<JwtAccessToken> refreshedTokenResult = refresher.refresh(oldToken);
+
+    assertThat(refreshedTokenResult).isNotEmpty();
+    JwtAccessToken refreshedToken = refreshedTokenResult.get();
+    assertThat(refreshedToken.getExpiration()).isEqualTo(Date.from(NOW.plus(ofMinutes(5))));
   }
 }

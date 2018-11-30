@@ -40,12 +40,16 @@ public class JwtAccessTokenRefresher {
         log.warn("no parent token id found in token; could not refresh");
         return Optional.empty();
       }
-      builder.expiresIn(1, TimeUnit.HOURS);
+      builder.expiresIn(computeOldExpirationInMillis(oldToken), TimeUnit.MILLISECONDS);
       builder.parentKey(parentTokenId.get().toString());
       return Optional.of(builder.build());
     } else {
       return Optional.empty();
     }
+  }
+
+  private long computeOldExpirationInMillis(JwtAccessToken oldToken) {
+    return oldToken.getExpiration().getTime() - oldToken.getIssuedAt().getTime();
   }
 
   private boolean canBeRefreshed(JwtAccessToken oldToken) {
