@@ -1,5 +1,6 @@
 package sonia.scm.repository;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -19,5 +20,21 @@ class InitialRepositoryLocationResolverTest {
 
     assertThat(path).isRelative();
     assertThat(path.toString()).isEqualTo("repositories" + File.separator + "42");
+  }
+
+  @Test
+  void shouldThrowIllegalArgumentExceptionIfIdHasASlash() {
+    InitialRepositoryLocationResolver resolver = new InitialRepositoryLocationResolver();
+    Assertions.assertThrows(IllegalArgumentException.class, () -> {
+      resolver.getPath("../../../passwd");
+    });
+  }
+
+  @Test
+  void shouldThrowIllegalArgumentExceptionIfIdHasABackSlash() {
+    InitialRepositoryLocationResolver resolver = new InitialRepositoryLocationResolver();
+    Assertions.assertThrows(IllegalArgumentException.class, () -> {
+      resolver.getPath("..\\..\\..\\users.ntlm");
+    });
   }
 }

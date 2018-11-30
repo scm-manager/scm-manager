@@ -1,7 +1,11 @@
 package sonia.scm.repository;
 
+import com.google.common.base.CharMatcher;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 /**
  * A Location Resolver for File based Repository Storage.
@@ -19,6 +23,8 @@ public class InitialRepositoryLocationResolver {
 
   private static final String DEFAULT_REPOSITORY_PATH = "repositories";
 
+  private static final CharMatcher ID_MATCHER = CharMatcher.anyOf("/\\");
+
   /**
    * Returns the initial path to repository.
    *
@@ -27,6 +33,8 @@ public class InitialRepositoryLocationResolver {
    * @return initial path of repository
    */
   public Path getPath(String repositoryId) {
+    // avoid path traversal attacks
+    checkArgument(ID_MATCHER.matchesNoneOf(repositoryId), "repository id contains invalid characters");
     return Paths.get(DEFAULT_REPOSITORY_PATH, repositoryId);
   }
 
