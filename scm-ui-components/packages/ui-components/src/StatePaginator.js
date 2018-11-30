@@ -1,7 +1,7 @@
 //@flow
 import React from "react";
 import { translate } from "react-i18next";
-import type { PagedCollection } from "../../ui-types/src";
+import type { PagedCollection } from "@scm-manager/ui-types";
 import { Button } from "./index";
 
 type Props = {
