@@ -61,7 +61,8 @@ class PathDatabase {
 
   private void ensureParentDirectoryExists() {
     Path parent = storePath.getParent();
-    if (!Files.exists(parent)) {
+    // Files.exists is slow on java 8
+    if (!parent.toFile().exists()) {
       try {
         Files.createDirectories(parent);
       } catch (IOException ex) {

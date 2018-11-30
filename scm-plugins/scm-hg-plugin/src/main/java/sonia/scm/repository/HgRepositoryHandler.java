@@ -371,27 +371,6 @@ public class HgRepositoryHandler
    * Method description
    *
    *
-   * @param file
-   */
-  private void createNewFile(File file)
-  {
-    try
-    {
-      if (!file.createNewFile() && logger.isErrorEnabled())
-      {
-        logger.error("could not create file {}", file);
-      }
-    }
-    catch (IOException ex)
-    {
-      logger.error("could not create file {}".concat(file.getPath()), ex);
-    }
-  }
-
-  /**
-   * Method description
-   *
-   *
    * @param context
    */
   private void writePythonScripts(SCMContextProvider context)

@@ -36,8 +36,6 @@ package sonia.scm.repository;
 
 import sonia.scm.GenericDAO;
 
-import java.io.File;
-
 /**
  * Data access object for repositories. This class should only used by the
  * {@link RepositoryManager}. Plugins and other classes should use the

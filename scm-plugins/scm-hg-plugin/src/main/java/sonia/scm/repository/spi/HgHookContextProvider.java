@@ -35,7 +35,6 @@ package sonia.scm.repository.spi;
 
 import sonia.scm.repository.HgHookManager;
 import sonia.scm.repository.HgRepositoryHandler;
-import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.api.HgHookBranchProvider;
 import sonia.scm.repository.api.HgHookMessageProvider;

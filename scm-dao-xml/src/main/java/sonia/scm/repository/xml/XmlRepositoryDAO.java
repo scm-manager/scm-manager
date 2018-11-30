@@ -47,7 +47,6 @@ import sonia.scm.store.StoreConstants;
 
 import javax.inject.Inject;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Clock;
 import java.util.Collection;
@@ -98,7 +97,8 @@ public class XmlRepositoryDAO implements PathBasedRepositoryDAO {
   private void read() {
     Path storePath = createStorePath();
 
-    if (!Files.exists(storePath)) {
+    // Files.exists is slow on java 8
+    if (!storePath.toFile().exists()) {
       return;
     }
 
