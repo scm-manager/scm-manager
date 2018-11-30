@@ -83,8 +83,10 @@ import sonia.scm.security.AuthorizationChangedEventProducer;
 import sonia.scm.security.CipherHandler;
 import sonia.scm.security.CipherUtil;
 import sonia.scm.security.ConfigurableLoginAttemptHandler;
+import sonia.scm.security.DefaultJwtAccessTokenRefreshStrategy;
 import sonia.scm.security.DefaultKeyGenerator;
 import sonia.scm.security.DefaultSecuritySystem;
+import sonia.scm.security.JwtAccessTokenRefreshStrategy;
 import sonia.scm.security.KeyGenerator;
 import sonia.scm.security.LoginAttemptHandler;
 import sonia.scm.security.SecuritySystem;
@@ -319,6 +321,8 @@ public class ScmServletModule extends ServletModule
     // bind(LastModifiedUpdateListener.class);
 
     bind(PushStateDispatcher.class).toProvider(PushStateDispatcherProvider.class);
+
+    bind(JwtAccessTokenRefreshStrategy.class).to(DefaultJwtAccessTokenRefreshStrategy.class);
   }
 
 

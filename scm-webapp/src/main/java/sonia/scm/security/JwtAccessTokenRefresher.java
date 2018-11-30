@@ -31,7 +31,7 @@ public class JwtAccessTokenRefresher {
 
   @SuppressWarnings("squid:S3655") // the refresh expiration cannot be null at the time building the new token, because
                                    // we checked this before in tokenCanBeRefreshed
-  Optional<JwtAccessToken> refresh(JwtAccessToken oldToken) {
+  public Optional<JwtAccessToken> refresh(JwtAccessToken oldToken) {
     JwtAccessTokenBuilder builder = builderFactory.create();
     Map<String, Object> claims = oldToken.getClaims();
     claims.forEach(builder::custom);
