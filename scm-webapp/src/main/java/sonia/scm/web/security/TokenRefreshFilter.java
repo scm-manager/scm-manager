@@ -1,6 +1,8 @@
 package sonia.scm.web.security;
 
 import org.apache.shiro.authc.AuthenticationToken;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.Priority;
 import sonia.scm.filter.Filters;
 import sonia.scm.filter.WebElement;
@@ -26,6 +28,8 @@ import java.util.Set;
   morePatterns = { Filters.PATTERN_DEBUG })
 public class TokenRefreshFilter extends HttpFilter {
 
+  private static final Logger LOG = LoggerFactory.getLogger(TokenRefreshFilter.class);
+
   private final Set<WebTokenGenerator> tokenGenerators;
   private final AccessTokenCookieIssuer cookieIssuer;
   private final JwtAccessTokenRefresher refresher;
@@ -48,10 +52,15 @@ public class TokenRefreshFilter extends HttpFilter {
       AccessToken accessToken = resolver.resolve((BearerToken) token);
       if (accessToken instanceof JwtAccessToken) {
         refresher.refresh((JwtAccessToken) accessToken)
-          .ifPresent(jwtAccessToken -> issuer.authenticate(request, response, jwtAccessToken));
+          .ifPresent(jwtAccessToken -> refreshToken(request, response, jwtAccessToken));
       }
     }
     chain.doFilter(request, response);
+  }
+
+  private void refreshToken(HttpServletRequest request, HttpServletResponse response, JwtAccessToken jwtAccessToken) {
+    LOG.debug("refreshing authentication token");
+    issuer.authenticate(request, response, jwtAccessToken);
   }
 
   private AuthenticationToken createToken(HttpServletRequest request) {
