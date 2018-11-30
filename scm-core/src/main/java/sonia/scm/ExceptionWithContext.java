@@ -6,6 +6,8 @@ import static java.util.Collections.unmodifiableList;
 
 public abstract class ExceptionWithContext extends RuntimeException {
 
+  private static final long serialVersionUID = 4327413456580409224L;
+
   private final List<ContextEntry> context;
 
   public ExceptionWithContext(List<ContextEntry> context, String message) {
