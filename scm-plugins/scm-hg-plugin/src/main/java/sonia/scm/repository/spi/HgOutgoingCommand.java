@@ -83,7 +83,7 @@ public class HgOutgoingCommand extends AbstractCommand
   public ChangesetPagingResult getOutgoingChangesets(
     OutgoingCommandRequest request)
   {
-    File remoteRepository = handler.getDirectory(request.getRemoteRepository());
+    File remoteRepository = handler.getDirectory(request.getRemoteRepository().getId());
 
     com.aragost.javahg.Repository repository = open();
 

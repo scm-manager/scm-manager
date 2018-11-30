@@ -229,48 +229,9 @@ public abstract class AbstactImportHandler implements AdvancedImportHandler
 //    }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param manager
-   * @param repositoryName
-   *
-   *
-   * @return
-   * @throws IOException
-   */
-  private void importRepository(RepositoryManager manager,
-    String repositoryName)
-    throws IOException {
-    Repository repository =
-      createRepository(getRepositoryDirectory(repositoryName), repositoryName);
 
-    if (logger.isInfoEnabled())
-    {
-      logger.info("import repository {} of type {}", repositoryName,
-        getTypeName());
-    }
-
-    manager.importRepository(repository);
-  }
 
   //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param repositoryName
-   *
-   * @return
-   */
-  private File getRepositoryDirectory(String repositoryName)
-  {
-    return new File(
-      getRepositoryHandler().getConfig().getRepositoryDirectory(),
-      repositoryName);
-  }
 
   /**
    * Method description

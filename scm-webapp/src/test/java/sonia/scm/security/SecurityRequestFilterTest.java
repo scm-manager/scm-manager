@@ -3,6 +3,7 @@ package sonia.scm.security;
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
 import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.util.ThreadContext;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,6 +29,10 @@ public class SecurityRequestFilterTest {
   private ContainerRequestContext context;
   @InjectMocks
   private SecurityRequestFilter securityRequestFilter;
+
+  {
+    ThreadContext.unbindSubject();
+  }
 
   @Test
   public void shouldAllowUnauthenticatedAccessForAnnotatedMethod() throws NoSuchMethodException {

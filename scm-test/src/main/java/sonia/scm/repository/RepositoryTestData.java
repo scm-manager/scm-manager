@@ -33,6 +33,9 @@ package sonia.scm.repository;
 
 public final class RepositoryTestData {
 
+  public static final String NAMESPACE = "hitchhiker";
+  public static final String MAIL_DOMAIN = "@hitchhiker.com";
+
   private RepositoryTestData() {
   }
 
@@ -43,8 +46,9 @@ public final class RepositoryTestData {
   public static Repository create42Puzzle(String type) {
     return new RepositoryBuilder()
       .type(type)
-      .contact("douglas.adams@hitchhiker.com")
+      .contact("douglas.adams" + MAIL_DOMAIN)
       .name("42Puzzle")
+      .namespace(NAMESPACE)
       .description("The 42 Puzzle")
       .build();
   }
@@ -57,8 +61,9 @@ public final class RepositoryTestData {
   public static Repository createHappyVerticalPeopleTransporter(String type) {
     return new RepositoryBuilder()
       .type(type)
-      .contact("zaphod.beeblebrox@hitchhiker.com")
+      .contact("zaphod.beeblebrox" + MAIL_DOMAIN)
       .name("happyVerticalPeopleTransporter")
+      .namespace(NAMESPACE)
       .description("Happy Vertical People Transporter")
       .build();
   }
@@ -70,8 +75,9 @@ public final class RepositoryTestData {
   public static Repository createHeartOfGold(String type) {
     return new RepositoryBuilder()
       .type(type)
-      .contact("zaphod.beeblebrox@hitchhiker.com")
+      .contact("zaphod.beeblebrox" + MAIL_DOMAIN)
       .name("HeartOfGold")
+      .namespace(NAMESPACE)
       .description(
         "Heart of Gold is the first prototype ship to successfully utilise the revolutionary Infinite Improbability Drive")
       .build();
@@ -85,8 +91,9 @@ public final class RepositoryTestData {
   public static Repository createRestaurantAtTheEndOfTheUniverse(String type) {
     return new RepositoryBuilder()
       .type(type)
-      .contact("douglas.adams@hitchhiker.com")
+      .contact("douglas.adams" + MAIL_DOMAIN)
       .name("RestaurantAtTheEndOfTheUniverse")
+      .namespace(NAMESPACE)
       .description("The Restaurant at the End of the Universe")
       .build();
   }

@@ -35,7 +35,6 @@ package sonia.scm.repository;
 
 import com.google.common.collect.Sets;
 import sonia.scm.AlreadyExistsException;
-import sonia.scm.io.DefaultFileSystem;
 import sonia.scm.store.ConfigurationStoreFactory;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -46,7 +45,6 @@ import java.util.Set;
 //~--- JDK imports ------------------------------------------------------------
 
 /**
- *
  * @author Sebastian Sdorra
  */
 public class DummyRepositoryHandler
@@ -60,8 +58,8 @@ public class DummyRepositoryHandler
 
   private final Set<String> existingRepoNames = new HashSet<>();
 
-  public DummyRepositoryHandler(ConfigurationStoreFactory storeFactory) {
-    super(storeFactory, new DefaultFileSystem());
+  public DummyRepositoryHandler(ConfigurationStoreFactory storeFactory, RepositoryLocationResolver repositoryLocationResolver) {
+    super(storeFactory, repositoryLocationResolver);
   }
 
   @Override

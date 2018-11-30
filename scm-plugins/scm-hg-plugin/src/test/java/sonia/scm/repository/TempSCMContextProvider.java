@@ -41,6 +41,7 @@ import sonia.scm.Stage;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 /**
  *
@@ -134,6 +135,11 @@ public class TempSCMContextProvider implements SCMContextProvider
   public void setBaseDirectory(File baseDirectory)
   {
     this.baseDirectory = baseDirectory;
+  }
+
+  @Override
+  public Path resolve(Path path) {
+    return baseDirectory.toPath().resolve(path);
   }
 
   //~--- fields ---------------------------------------------------------------

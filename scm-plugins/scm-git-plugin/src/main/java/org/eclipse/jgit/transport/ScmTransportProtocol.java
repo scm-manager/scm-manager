@@ -136,7 +136,7 @@ public class ScmTransportProtocol extends TransportProtocol
    */
   @Override
   public Transport open(URIish uri, Repository local, String remoteName)
-    throws NotSupportedException, TransportException
+    throws TransportException
   {
     File localDirectory = local.getDirectory();
     File path = local.getFS().resolve(localDirectory, uri.getPath());
@@ -150,7 +150,7 @@ public class ScmTransportProtocol extends TransportProtocol
     //J-
     return new TransportLocalWithHooks(
       hookEventFacadeProvider.get(),
-      repositoryHandlerProvider.get(), 
+      repositoryHandlerProvider.get(),
       local, uri, gitDir
     );
     //J+

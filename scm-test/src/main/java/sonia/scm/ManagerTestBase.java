@@ -39,6 +39,7 @@ import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
 import sonia.scm.util.MockUtil;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -56,10 +57,12 @@ public abstract class ManagerTestBase<T extends ModelObject>
   protected SCMContextProvider contextProvider;
   
   protected Manager<T> manager;
-  
+  protected File temp;
+
   @Before
   public void setUp() throws IOException {
-    contextProvider = MockUtil.getSCMContextProvider(tempFolder.newFolder());
+    temp = tempFolder.newFolder();
+    contextProvider = MockUtil.getSCMContextProvider(temp);
     manager = createManager();
     manager.init(contextProvider);
   }

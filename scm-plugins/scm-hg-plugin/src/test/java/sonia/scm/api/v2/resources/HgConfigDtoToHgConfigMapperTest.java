@@ -23,7 +23,6 @@ public class HgConfigDtoToHgConfigMapperTest {
     HgConfig config = mapper.map(dto);
 
     assertTrue(config.isDisabled());
-    assertEquals("repository/directory", config.getRepositoryDirectory().getPath());
 
     assertEquals("ABC", config.getEncoding());
     assertEquals("/etc/hg", config.getHgBinary());
@@ -36,7 +35,6 @@ public class HgConfigDtoToHgConfigMapperTest {
   private HgConfigDto createDefaultDto() {
     HgConfigDto configDto = new HgConfigDto();
     configDto.setDisabled(true);
-    configDto.setRepositoryDirectory(new File("repository/directory"));
     configDto.setEncoding("ABC");
     configDto.setHgBinary("/etc/hg");
     configDto.setPythonBinary("/py");

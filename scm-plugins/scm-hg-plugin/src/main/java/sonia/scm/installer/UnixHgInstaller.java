@@ -74,8 +74,6 @@ public class UnixHgInstaller extends AbstractHgInstaller
   @Override
   public void install(File baseDirectory, HgConfig config) throws IOException
   {
-    super.install(baseDirectory, config);
-
     // search mercurial (hg)
     if (Util.isEmpty(config.getHgBinary()))
     {

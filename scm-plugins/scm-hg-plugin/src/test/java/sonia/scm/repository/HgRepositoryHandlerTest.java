@@ -38,7 +38,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import sonia.scm.io.DefaultFileSystem;
 import sonia.scm.store.ConfigurationStoreFactory;
 
 import java.io.File;
@@ -49,10 +48,9 @@ import static org.junit.Assert.assertTrue;
 //~--- JDK imports ------------------------------------------------------------
 
 /**
- *
  * @author Sebastian Sdorra
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class HgRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
 
   @Mock
@@ -67,24 +65,13 @@ public class HgRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
 
     assertTrue(hgDirectory.exists());
     assertTrue(hgDirectory.isDirectory());
-
-    File hgrc = new File(hgDirectory, "hgrc");
-
-    assertTrue(hgrc.exists());
-    assertTrue(hgrc.isFile());
-    assertTrue(hgrc.length() > 0);
   }
 
   @Override
-  protected RepositoryHandler createRepositoryHandler(ConfigurationStoreFactory factory,
-                                                      File directory) {
-    HgRepositoryHandler handler = new HgRepositoryHandler(factory,
-      new DefaultFileSystem(),
-      new HgContextProvider());
+  protected RepositoryHandler createRepositoryHandler(ConfigurationStoreFactory factory, RepositoryLocationResolver locationResolver, File directory) {
+    HgRepositoryHandler handler = new HgRepositoryHandler(factory, new HgContextProvider(), locationResolver);
 
     handler.init(contextProvider);
-    handler.getConfig().setRepositoryDirectory(directory);
-
     HgTestUtil.checkForSkip(handler);
 
     return handler;
@@ -92,18 +79,15 @@ public class HgRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
 
   @Test
   public void getDirectory() {
-    HgRepositoryHandler repositoryHandler = new HgRepositoryHandler(factory,
-      new DefaultFileSystem(), provider);
+    HgRepositoryHandler repositoryHandler = new HgRepositoryHandler(factory, provider, locationResolver);
 
     HgConfig hgConfig = new HgConfig();
-    hgConfig.setRepositoryDirectory(new File("/path"));
     hgConfig.setHgBinary("hg");
     hgConfig.setPythonBinary("python");
     repositoryHandler.setConfig(hgConfig);
 
-    Repository repository = new Repository("id", "git", "Space", "Name");
-
-    File path = repositoryHandler.getDirectory(repository);
-    assertEquals("/path/id", path.getAbsolutePath());
+    initRepository();
+    File path = repositoryHandler.getDirectory(repository.getId());
+    assertEquals(repoPath.toString() + File.separator + AbstractSimpleRepositoryHandler.REPOSITORIES_NATIVE_DIRECTORY, path.getAbsolutePath());
   }
 }

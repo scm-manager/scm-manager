@@ -81,7 +81,7 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
   {
     this.repository = repository;
     this.handler = handler;
-    this.repositoryDirectory = handler.getDirectory(repository);
+    this.repositoryDirectory = handler.getDirectory(repository.getId());
     this.context = new HgCommandContext(hookManager, handler, repository,
       repositoryDirectory);
   }

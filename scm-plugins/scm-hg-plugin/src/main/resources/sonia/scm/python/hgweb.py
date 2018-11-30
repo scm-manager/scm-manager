@@ -31,12 +31,21 @@
 
 
 import os
-from mercurial import demandimport
+from mercurial import demandimport, ui as uimod, hg
 from mercurial.hgweb import hgweb, wsgicgi
-
-repositoryPath = os.environ['SCM_REPOSITORY_PATH']
 
 demandimport.enable()
 
-application = hgweb(repositoryPath)
+u = uimod.ui()
+
+u.setconfig('web', 'push_ssl', 'false')
+u.setconfig('web', 'allow_read', '*')
+u.setconfig('web', 'allow_push', '*')
+
+u.setconfig('hooks', 'changegroup.scm', 'python:scmhooks.callback')
+u.setconfig('hooks', 'pretxnchangegroup.scm', 'python:scmhooks.callback')
+
+
+r = hg.repository(u, os.environ['SCM_REPOSITORY_PATH'])
+application = hgweb(r)
 wsgicgi.launch(application)

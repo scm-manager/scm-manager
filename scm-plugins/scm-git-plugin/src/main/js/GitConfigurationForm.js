@@ -33,29 +33,19 @@ class GitConfigurationForm extends React.Component<Props, State> {
     this.state = { ...props.initialConfiguration };
   }
 
-  isValid = () => {
-    return !!this.state.repositoryDirectory;
-  };
 
   handleChange = (value: any, name: string) => {
     this.setState({
       [name]: value
-    }, () => this.props.onConfigurationChange(this.state, this.isValid()));
+    }, () => this.props.onConfigurationChange(this.state, true));
   };
 
   render() {
-    const { repositoryDirectory, gcExpression, disabled } = this.state;
+    const { gcExpression, disabled } = this.state;
     const { readOnly, t } = this.props;
 
     return (
       <>
-        <InputField name="repositoryDirectory"
-                    label={t("scm-git-plugin.config.directory")}
-                    helpText={t("scm-git-plugin.config.directoryHelpText")}
-                    value={repositoryDirectory}
-                    onChange={this.handleChange}
-                    disabled={readOnly}
-        />
         <InputField name="gcExpression"
                     label={t("scm-git-plugin.config.gcExpression")}
                     helpText={t("scm-git-plugin.config.gcExpressionHelpText")}

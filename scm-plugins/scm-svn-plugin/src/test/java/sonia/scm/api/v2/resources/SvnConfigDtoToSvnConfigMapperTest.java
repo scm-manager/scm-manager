@@ -7,8 +7,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import sonia.scm.repository.Compatibility;
 import sonia.scm.repository.SvnConfig;
 
-import java.io.File;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -24,7 +22,6 @@ public class SvnConfigDtoToSvnConfigMapperTest {
     SvnConfig config = mapper.map(dto);
 
     assertTrue(config.isDisabled());
-    assertEquals("repository/directory", config.getRepositoryDirectory().getPath());
 
     assertEquals(Compatibility.PRE15, config.getCompatibility());
     assertTrue(config.isEnabledGZip());
@@ -33,7 +30,6 @@ public class SvnConfigDtoToSvnConfigMapperTest {
   private SvnConfigDto createDefaultDto() {
     SvnConfigDto configDto = new SvnConfigDto();
     configDto.setDisabled(true);
-    configDto.setRepositoryDirectory(new File("repository/directory"));
     configDto.setCompatibility(Compatibility.PRE15);
     configDto.setEnabledGZip(true);
 

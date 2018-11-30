@@ -39,7 +39,6 @@ import com.google.inject.Singleton;
 import org.apache.shiro.concurrent.SubjectAwareExecutorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.AlreadyExistsException;
 import sonia.scm.ConfigurationException;
 import sonia.scm.HandlerEventType;
 import sonia.scm.ManagerDaoAdapter;
@@ -138,17 +137,18 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
     return managerDaoAdapter.create(
       repository,
       RepositoryPermissions::create,
+      newRepository -> fireEvent(HandlerEventType.BEFORE_CREATE, newRepository),
       newRepository -> {
+        fireEvent(HandlerEventType.CREATE, newRepository);
         if (initRepository) {
           try {
             getHandler(newRepository).create(newRepository);
-          } catch (AlreadyExistsException e) {
-            throw new InternalRepositoryException(repository, "directory for repository does already exist", e);
+          } catch (InternalRepositoryException e) {
+            delete(repository);
+            throw e;
           }
         }
-        fireEvent(HandlerEventType.BEFORE_CREATE, newRepository);
       },
-      newRepository -> fireEvent(HandlerEventType.CREATE, newRepository),
       newRepository -> repositoryDAO.contains(newRepository.getNamespaceAndName())
     );
   }
@@ -169,7 +169,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
       throw new RepositoryIsNotArchivedException();
     }
     fireEvent(HandlerEventType.BEFORE_DELETE, toDelete);
-//    getHandler(toDelete).delete(toDelete);
+    getHandler(toDelete).delete(toDelete);
   }
 
   @Override

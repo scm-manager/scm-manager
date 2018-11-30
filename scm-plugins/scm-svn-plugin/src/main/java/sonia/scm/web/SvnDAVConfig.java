@@ -292,7 +292,7 @@ public class SvnDAVConfig extends DAVConfig
 
     if (repository != null)
     {
-      directory = handler.getDirectory(repository);
+      directory = handler.getDirectory(repository.getId());
     }
 
     return directory;

@@ -94,12 +94,7 @@ public class HgImportHandler extends AbstactImportHandler
       INIConfiguration c = reader.read(hgrc);
       INISection web = c.getSection("web");
 
-      if (web == null)
-      {
-        handler.appendWebSection(c);
-      }
-      else
-      {
+      if (web != null) {
         repository.setDescription(web.getParameter("description"));
 
         String contact = web.getParameter("contact");
@@ -112,16 +107,7 @@ public class HgImportHandler extends AbstactImportHandler
         {
           logger.warn("contact {} is not a valid mail address", contact);
         }
-
-        handler.setWebParameter(web);
       }
-
-      // issue-97
-      handler.registerMissingHook(c, repositoryName);
-
-      INIConfigurationWriter writer = new INIConfigurationWriter();
-
-      writer.write(c, hgrc);
     }
     else
     {

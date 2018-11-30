@@ -40,57 +40,51 @@ import sonia.scm.store.InMemoryConfigurationStoreFactory;
 import sonia.scm.util.IOUtil;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 //~--- JDK imports ------------------------------------------------------------
 
 /**
- *
  * @author Sebastian Sdorra
  */
 public abstract class SimpleRepositoryHandlerTestBase extends AbstractTestBase {
 
 
+  protected PathBasedRepositoryDAO repoDao = mock(PathBasedRepositoryDAO.class);
+  protected Path repoPath;
+  protected Repository repository;
+
   protected abstract void checkDirectory(File directory);
 
   protected abstract RepositoryHandler createRepositoryHandler(
-    ConfigurationStoreFactory factory, File directory);
+    ConfigurationStoreFactory factory, RepositoryLocationResolver locationResolver, File directory) throws IOException, RepositoryPathNotFoundException;
 
   @Test
   public void testCreate() {
     createRepository();
   }
 
-  @Test
-  public void testCreateResourcePath() {
-    Repository repository = createRepository();
-    String path = handler.createResourcePath(repository);
-
-    assertNotNull(path);
-    assertTrue(path.trim().length() > 0);
-    assertTrue(path.contains(repository.getId()));
-  }
-
-  @Test
-  public void testDelete() {
-    Repository repository = createRepository();
-
-    handler.delete(repository);
-
-    File directory = new File(baseDirectory, repository.getId());
-
-    assertFalse(directory.exists());
-  }
-
   @Override
-  protected void postSetUp() {
+  protected void postSetUp() throws IOException, RepositoryPathNotFoundException {
     InMemoryConfigurationStoreFactory storeFactory = new InMemoryConfigurationStoreFactory();
     baseDirectory = new File(contextProvider.getBaseDirectory(), "repositories");
     IOUtil.mkdirs(baseDirectory);
-    handler = createRepositoryHandler(storeFactory, baseDirectory);
+
+    locationResolver = mock(RepositoryLocationResolver.class);
+
+    when(locationResolver.getPath(anyString())).then(ic -> {
+      String id = ic.getArgument(0);
+      return baseDirectory.toPath().resolve(id);
+    });
+
+    handler = createRepositoryHandler(storeFactory, locationResolver, baseDirectory);
   }
 
   @Override
@@ -100,21 +94,27 @@ public abstract class SimpleRepositoryHandlerTestBase extends AbstractTestBase {
     }
   }
 
-  private Repository createRepository() {
-    Repository repository = RepositoryTestData.createHeartOfGold();
+  private void createRepository() {
+    File nativeRepoDirectory = initRepository();
 
     handler.create(repository);
 
-    File directory = new File(baseDirectory, repository.getId());
 
-    assertTrue(directory.exists());
-    assertTrue(directory.isDirectory());
-    checkDirectory(directory);
+    assertTrue(nativeRepoDirectory.exists());
+    assertTrue(nativeRepoDirectory.isDirectory());
+    checkDirectory(nativeRepoDirectory);
+  }
 
-    return repository;
+  protected File initRepository() {
+    repository = RepositoryTestData.createHeartOfGold();
+    File repoDirectory = new File(baseDirectory, repository.getId());
+    repoPath = repoDirectory.toPath();
+    when(repoDao.getPath(repository.getId())).thenReturn(repoPath);
+    return new File(repoDirectory, AbstractSimpleRepositoryHandler.REPOSITORIES_NATIVE_DIRECTORY);
   }
 
   protected File baseDirectory;
+  protected RepositoryLocationResolver locationResolver;
 
   private RepositoryHandler handler;
 }

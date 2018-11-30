@@ -15,7 +15,7 @@ node('docker') {
     disableConcurrentBuilds()
   ])
 
-  timeout(activity: true, time: 20, unit: 'MINUTES') {
+  timeout(activity: true, time: 30, unit: 'MINUTES') {
 
     catchError {
 

@@ -44,6 +44,7 @@ import sonia.scm.repository.api.HookFeature;
 import sonia.scm.repository.api.HookMessageProvider;
 import sonia.scm.repository.api.HookTagProvider;
 
+import java.io.File;
 import java.util.EnumSet;
 import java.util.Set;
 
@@ -67,16 +68,16 @@ public class HgHookContextProvider extends HookContextProvider
    * Constructs a new instance.
    *
    * @param handler mercurial repository handler
-   * @param namespaceAndName namespace and name of changed repository
+   * @param repositoryDirectory the directory of the changed repository
    * @param hookManager mercurial hook manager
    * @param startRev start revision
    * @param type type of hook
    */
   public HgHookContextProvider(HgRepositoryHandler handler,
-    String id, HgHookManager hookManager, String startRev,
-    RepositoryHookType type)
+                               File repositoryDirectory, HgHookManager hookManager, String startRev,
+                               RepositoryHookType type)
   {
-    this.hookChangesetProvider = new HgHookChangesetProvider(handler, id, hookManager, startRev, type);
+    this.hookChangesetProvider = new HgHookChangesetProvider(handler, repositoryDirectory, hookManager, startRev, type);
   }
 
   //~--- get methods ----------------------------------------------------------

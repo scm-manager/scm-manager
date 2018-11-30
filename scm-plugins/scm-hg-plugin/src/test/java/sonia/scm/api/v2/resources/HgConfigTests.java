@@ -16,7 +16,6 @@ class HgConfigTests {
   static HgConfig createConfiguration() {
     HgConfig config = new HgConfig();
     config.setDisabled(true);
-    config.setRepositoryDirectory(new File("repository/directory"));
 
     config.setEncoding("ABC");
     config.setHgBinary("/etc/hg");
@@ -30,7 +29,6 @@ class HgConfigTests {
 
   static void assertEqualsConfiguration(HgConfigDto dto) {
     assertTrue(dto.isDisabled());
-    assertEquals("repository/directory", dto.getRepositoryDirectory().getPath());
 
     assertEquals("ABC", dto.getEncoding());
     assertEquals("/etc/hg", dto.getHgBinary());

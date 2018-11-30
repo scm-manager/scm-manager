@@ -81,7 +81,6 @@ public class GitConfigResourceTest {
     ObjectNode responseJson = new ObjectMapper().readValue(responseString, ObjectNode.class);
 
     assertTrue(responseString.contains("\"disabled\":false"));
-    assertTrue(responseJson.get("repositoryDirectory").asText().endsWith("repository/directory"));
     assertTrue(responseString.contains("\"gcExpression\":\"valid Git GC Cron Expression\""));
     assertTrue(responseString.contains("\"self\":{\"href\":\"/v2/config/git"));
     assertTrue(responseString.contains("\"update\":{\"href\":\"/v2/config/git"));
@@ -152,7 +151,6 @@ public class GitConfigResourceTest {
     GitConfig config = new GitConfig();
     config.setGcExpression("valid Git GC Cron Expression");
     config.setDisabled(false);
-    config.setRepositoryDirectory(new File("repository/directory"));
     return config;
   }
 

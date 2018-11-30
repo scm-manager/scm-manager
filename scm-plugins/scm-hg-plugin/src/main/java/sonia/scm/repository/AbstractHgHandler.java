@@ -124,7 +124,7 @@ public class AbstractHgHandler
   protected AbstractHgHandler(HgRepositoryHandler handler, HgContext context,
     Repository repository)
   {
-    this(handler, context, repository, handler.getDirectory(repository));
+    this(handler, context, repository, handler.getDirectory(repository.getId()));
   }
 
   /**

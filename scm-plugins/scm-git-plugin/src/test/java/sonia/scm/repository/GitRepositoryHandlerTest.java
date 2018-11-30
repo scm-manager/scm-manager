@@ -37,7 +37,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import sonia.scm.io.DefaultFileSystem;
 import sonia.scm.schedule.Scheduler;
 import sonia.scm.store.ConfigurationStoreFactory;
 
@@ -49,7 +48,6 @@ import static org.junit.Assert.assertTrue;
 //~--- JDK imports ------------------------------------------------------------
 
 /**
- *
  * @author Sebastian Sdorra
  */
 @RunWith(MockitoJUnitRunner.class)
@@ -63,6 +61,7 @@ public class GitRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
 
   @Mock
   private GitWorkdirFactory gitWorkdirFactory;
+
 
   @Override
   protected void checkDirectory(File directory) {
@@ -85,15 +84,14 @@ public class GitRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
 
   @Override
   protected RepositoryHandler createRepositoryHandler(ConfigurationStoreFactory factory,
+                                                      RepositoryLocationResolver locationResolver,
                                                       File directory) {
     GitRepositoryHandler repositoryHandler = new GitRepositoryHandler(factory,
-      new DefaultFileSystem(), scheduler, gitWorkdirFactory);
-
+      scheduler, locationResolver, gitWorkdirFactory);
     repositoryHandler.init(contextProvider);
 
     GitConfig config = new GitConfig();
 
-    config.setRepositoryDirectory(directory);
     // TODO fix event bus exception
     repositoryHandler.setConfig(config);
 
@@ -103,15 +101,15 @@ public class GitRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
   @Test
   public void getDirectory() {
     GitRepositoryHandler repositoryHandler = new GitRepositoryHandler(factory,
-      new DefaultFileSystem(), scheduler, gitWorkdirFactory);
+      scheduler, locationResolver, gitWorkdirFactory);
+    GitConfig config = new GitConfig();
+    config.setDisabled(false);
+    config.setGcExpression("gc exp");
 
-    GitConfig gitConfig = new GitConfig();
-    gitConfig.setRepositoryDirectory(new File("/path"));
-    repositoryHandler.setConfig(gitConfig);
+    repositoryHandler.setConfig(config);
 
-    Repository repository = new Repository("id", "git", "Space", "Name");
-
-    File path = repositoryHandler.getDirectory(repository);
-    assertEquals("/path/id", path.getAbsolutePath());
+    initRepository();
+    File path = repositoryHandler.getDirectory(repository.getId());
+    assertEquals(repoPath.toString() + File.separator + AbstractSimpleRepositoryHandler.REPOSITORIES_NATIVE_DIRECTORY, path.getAbsolutePath());
   }
 }
