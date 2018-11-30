@@ -1,5 +1,8 @@
 package sonia.scm.security;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.inject.Inject;
 import java.time.Clock;
 import java.util.Date;
@@ -8,6 +11,8 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 public class JwtAccessTokenRefresher {
+
+  private static final Logger log = LoggerFactory.getLogger(JwtAccessTokenRefresher.class);
 
   private final JwtAccessTokenBuilderFactory builderFactory;
   private final JwtAccessTokenRefreshStrategy refreshStrategy;
@@ -30,8 +35,13 @@ public class JwtAccessTokenRefresher {
     claims.forEach(builder::custom);
 
     if (canBeRefreshed(oldToken) && shouldBeRefreshed(oldToken)) {
+      Optional<Object> parentTokenId = oldToken.getCustom("scm-manager.parentTokenId");
+      if (!parentTokenId.isPresent()) {
+        log.warn("no parent token id found in token; could not refresh");
+        return Optional.empty();
+      }
       builder.expiresIn(1, TimeUnit.HOURS);
-//    builder.custom("scm-manager.parentTokenId")
+      builder.parentKey(parentTokenId.get().toString());
       return Optional.of(builder.build());
     } else {
       return Optional.empty();
@@ -47,8 +57,7 @@ public class JwtAccessTokenRefresher {
   }
 
   private boolean tokenCanBeRefreshed(JwtAccessToken oldToken) {
-    Date refreshExpiration = oldToken.getRefreshExpiration();
-    return refreshExpiration != null && isAfterNow(refreshExpiration);
+    return oldToken.getRefreshExpiration().map(this::isAfterNow).orElse(false);
   }
 
   private boolean tokenIsValid(JwtAccessToken oldToken) {

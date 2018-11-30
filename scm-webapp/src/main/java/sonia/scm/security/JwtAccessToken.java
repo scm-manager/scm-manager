@@ -37,6 +37,8 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 
+import static java.util.Optional.ofNullable;
+
 /**
  * Jwt implementation of {@link AccessToken}.
  * 
@@ -44,7 +46,9 @@ import java.util.Optional;
  * @since 2.0.0
  */
 public final class JwtAccessToken implements AccessToken {
-  
+
+  public static final String REFRESHABLE_UNTIL_CLAIM_KEY = "scm-manager.refreshableUntil";
+  public static final String PARENT_TOKEN_ID_CLAIM_KEY = "scm-manager.parentTokenId";
   private final Claims claims;
   private final String compact;
 
@@ -79,8 +83,8 @@ public final class JwtAccessToken implements AccessToken {
   }
 
   @Override
-  public Date getRefreshExpiration() {
-    return claims.get("scm-manager.refreshableUntil", Date.class);
+  public Optional<Date> getRefreshExpiration() {
+    return ofNullable(claims.get(REFRESHABLE_UNTIL_CLAIM_KEY, Date.class));
   }
 
   @Override

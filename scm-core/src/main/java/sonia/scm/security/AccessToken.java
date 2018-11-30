@@ -80,7 +80,7 @@ public interface AccessToken {
    */
   Date getExpiration();
 
-  Date getRefreshExpiration();
+  Optional<Date> getRefreshExpiration();
 
   /**
    * Returns the scope of the token. The scope is able to reduce the permissions of the subject in the context of this

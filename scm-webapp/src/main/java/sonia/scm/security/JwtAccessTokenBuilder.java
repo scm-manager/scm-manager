@@ -67,6 +67,7 @@ public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
   private TimeUnit expiresInUnit = TimeUnit.HOURS;
   private long refreshableFor = 12;
   private TimeUnit refreshableForUnit = TimeUnit.HOURS;
+  private String parentKeyId;
   private Scope scope = Scope.empty();
 
   private final Map<String,Object> custom = Maps.newHashMap();
@@ -127,6 +128,11 @@ public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
     return this;
   }
 
+  public JwtAccessTokenBuilder parentKey(String parentKeyId) {
+    this.parentKeyId = parentKeyId;
+    return this;
+  }
+
   private String getSubject(){
     if (subject == null) {
       Subject currentSubject = SecurityUtils.getSubject();
@@ -162,7 +168,12 @@ public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
 
     if (refreshableFor > 0) {
       long refreshExpiration = refreshableForUnit.toMillis(refreshableFor);
-      claims.put("scm-manager.refreshableUntil", new Date(now.getTime() + refreshExpiration).getTime());
+      claims.put(JwtAccessToken.REFRESHABLE_UNTIL_CLAIM_KEY, new Date(now.getTime() + refreshExpiration).getTime());
+    }
+    if (parentKeyId == null) {
+      claims.put(JwtAccessToken.PARENT_TOKEN_ID_CLAIM_KEY, id);
+    } else {
+      claims.put(JwtAccessToken.PARENT_TOKEN_ID_CLAIM_KEY, parentKeyId);
     }
 
     if ( issuer != null ) {
