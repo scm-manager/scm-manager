@@ -19,7 +19,6 @@ import SingleGroup from "../groups/containers/SingleGroup";
 import AddGroup from "../groups/containers/AddGroup";
 
 import Config from "../config/containers/Config";
-import ChangeUserPassword from "./ChangeUserPassword";
 import Profile from "./Profile";
 
 type Props = {
