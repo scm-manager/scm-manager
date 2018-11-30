@@ -29,7 +29,7 @@ public class JwtAccessTokenRefresher {
     this.clock = clock;
   }
 
-  public Optional<JwtAccessToken> refresh(JwtAccessToken oldToken) {
+  Optional<JwtAccessToken> refresh(JwtAccessToken oldToken) {
     JwtAccessTokenBuilder builder = builderFactory.create();
     Map<String, Object> claims = oldToken.getClaims();
     claims.forEach(builder::custom);
@@ -42,6 +42,7 @@ public class JwtAccessTokenRefresher {
       }
       builder.expiresIn(computeOldExpirationInMillis(oldToken), TimeUnit.MILLISECONDS);
       builder.parentKey(parentTokenId.get().toString());
+      builder.refreshExpiration(oldToken.getRefreshExpiration().get().toInstant());
       return Optional.of(builder.build());
     } else {
       return Optional.empty();

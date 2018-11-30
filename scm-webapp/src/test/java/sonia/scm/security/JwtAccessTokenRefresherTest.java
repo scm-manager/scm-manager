@@ -142,4 +142,16 @@ public class JwtAccessTokenRefresherTest {
     JwtAccessToken refreshedToken = refreshedTokenResult.get();
     assertThat(refreshedToken.getExpiration()).isEqualTo(Date.from(NOW.plus(ofMinutes(5))));
   }
+
+  @Test
+  public void shouldRefreshTokenWithSameRefreshExpiration() {
+    JwtAccessToken oldToken = tokenBuilder.build();
+    when(refreshStrategy.shouldBeRefreshed(oldToken)).thenReturn(true);
+
+    Optional<JwtAccessToken> refreshedTokenResult = refresher.refresh(oldToken);
+
+    assertThat(refreshedTokenResult).isNotEmpty();
+    JwtAccessToken refreshedToken = refreshedTokenResult.get();
+    assertThat(refreshedToken.getRefreshExpiration()).get().isEqualTo(Date.from(TOKEN_CREATION.plus(ofMinutes(10))));
+  }
 }

@@ -71,6 +71,7 @@ public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
   private TimeUnit expiresInUnit = TimeUnit.HOURS;
   private long refreshableFor = 12;
   private TimeUnit refreshableForUnit = TimeUnit.HOURS;
+  private Instant refreshExpiration;
   private String parentKeyId;
   private Scope scope = Scope.empty();
 
@@ -133,6 +134,12 @@ public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
     return this;
   }
 
+  JwtAccessTokenBuilder refreshExpiration(Instant refreshExpiration) {
+    this.refreshExpiration = refreshExpiration;
+    this.refreshableFor = 0;
+    return this;
+  }
+
   public JwtAccessTokenBuilder parentKey(String parentKeyId) {
     this.parentKeyId = parentKeyId;
     return this;
@@ -175,6 +182,8 @@ public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
     if (refreshableFor > 0) {
       long refreshExpiration = refreshableForUnit.toMillis(refreshableFor);
       claims.put(JwtAccessToken.REFRESHABLE_UNTIL_CLAIM_KEY, new Date(now.toEpochMilli() + refreshExpiration).getTime());
+    } else if (refreshExpiration != null) {
+      claims.put(JwtAccessToken.REFRESHABLE_UNTIL_CLAIM_KEY, Date.from(refreshExpiration));
     }
     if (parentKeyId == null) {
       claims.put(JwtAccessToken.PARENT_TOKEN_ID_CLAIM_KEY, id);

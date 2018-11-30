@@ -47,7 +47,7 @@ import static java.util.Optional.ofNullable;
  */
 public final class JwtAccessToken implements AccessToken {
 
-  public static final String REFRESHABLE_UNTIL_CLAIM_KEY = "scm-manager.refreshableUntil";
+  public static final String REFRESHABLE_UNTIL_CLAIM_KEY = "scm-manager.refreshExpiration";
   public static final String PARENT_TOKEN_ID_CLAIM_KEY = "scm-manager.parentTokenId";
   private final Claims claims;
   private final String compact;
