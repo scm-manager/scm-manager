@@ -47,6 +47,7 @@ public class PercentageJwtAccessTokenRefreshStrategyTest {
     when(creationClock.instant()).thenReturn(TOKEN_CREATION);
 
     tokenBuilder = new JwtAccessTokenBuilderFactory(keyGenerator, keyResolver, Collections.emptySet(), creationClock).create();
+    tokenBuilder.expiresIn(1, HOURS);
     tokenBuilder.refreshableFor(1, HOURS);
 
     refreshStrategy = new PercentageJwtAccessTokenRefreshStrategy(refreshClock, 0.5F);
@@ -61,6 +62,6 @@ public class PercentageJwtAccessTokenRefreshStrategyTest {
   @Test
   public void shouldRefreshWhenTokenIsOld() {
     when(refreshClock.instant()).thenReturn(TOKEN_CREATION.plus(31, MINUTES));
-    assertThat(refreshStrategy.shouldBeRefreshed(tokenBuilder.build())).isFalse();
+    assertThat(refreshStrategy.shouldBeRefreshed(tokenBuilder.build())).isTrue();
   }
 }

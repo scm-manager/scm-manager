@@ -20,6 +20,6 @@ public class PercentageJwtAccessTokenRefreshStrategy implements JwtAccessTokenRe
   public boolean shouldBeRefreshed(JwtAccessToken oldToken) {
     long liveSpan = oldToken.getExpiration().getTime() - oldToken.getIssuedAt().getTime();
     long age = clock.instant().toEpochMilli() - oldToken.getIssuedAt().getTime();
-    return age/liveSpan > refreshPercentage;
+    return (float)age/liveSpan > refreshPercentage;
   }
 }
