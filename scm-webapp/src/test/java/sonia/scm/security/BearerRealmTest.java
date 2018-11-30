@@ -61,7 +61,6 @@ import sonia.scm.user.UserDAO;
 import sonia.scm.user.UserTestData;
 
 import javax.crypto.spec.SecretKeySpec;
-import java.security.SecureRandom;
 import java.util.Date;
 import java.util.Set;
 
@@ -71,6 +70,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
+import static sonia.scm.security.SecureKeyTestUtil.createSecureKey;
 
 /**
  * Unit tests for {@link BearerRealm}.
@@ -256,12 +256,6 @@ private String createCompactToken(String subject, SecureKey key) {
       .compact();
   }
 
-  private SecureKey createSecureKey() {
-    byte[] bytes = new byte[32];
-    random.nextBytes(bytes);
-    return new SecureKey(bytes, System.currentTimeMillis());
-  }
-
   private void resolveKey(SecureKey key) {
     when(
       keyResolver.resolveSigningKey(
@@ -279,9 +273,6 @@ private String createCompactToken(String subject, SecureKey key) {
 
   //~--- fields ---------------------------------------------------------------
   
-  /** Field description */
-  private final SecureRandom random = new SecureRandom();
-
   @InjectMocks
   private DAORealmHelperFactory helperFactory;
   

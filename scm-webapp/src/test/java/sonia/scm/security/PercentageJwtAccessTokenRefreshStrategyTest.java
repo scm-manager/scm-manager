@@ -9,7 +9,6 @@ import org.junit.Test;
 import java.time.Clock;
 import java.time.Instant;
 import java.util.Collections;
-import java.util.Random;
 
 import static java.time.temporal.ChronoUnit.MINUTES;
 import static java.time.temporal.ChronoUnit.SECONDS;
@@ -18,6 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static sonia.scm.security.SecureKeyTestUtil.createSecureKey;
 
 @SubjectAware(
   username = "user",
@@ -41,10 +41,7 @@ public class PercentageJwtAccessTokenRefreshStrategyTest {
   @Before
   public void initToken() {
     SecureKeyResolver keyResolver = mock(SecureKeyResolver.class);
-    byte[] bytes = new byte[256];
-    new Random().nextBytes(bytes);
-    SecureKey secureKey = new SecureKey(bytes, System.currentTimeMillis());
-    when(keyResolver.getSecureKey(any())).thenReturn(secureKey);
+    when(keyResolver.getSecureKey(any())).thenReturn(createSecureKey());
 
     Clock creationClock = mock(Clock.class);
     when(creationClock.instant()).thenReturn(TOKEN_CREATION);
