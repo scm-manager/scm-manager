@@ -3,7 +3,6 @@ package sonia.scm.repository.xml;
 
 import com.google.common.base.Charsets;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junitpioneer.jupiter.TempDirectory;
@@ -19,7 +18,6 @@ import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryTestData;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -68,11 +66,10 @@ class XmlRepositoryDAOTest {
   }
 
   private XmlRepositoryDAO createDAO() {
-    XmlRepositoryDAO dao = new XmlRepositoryDAO(context, locationResolver, fileSystem);
-
     Clock clock = mock(Clock.class);
     when(clock.millis()).then(ic -> atomicClock.incrementAndGet());
-    dao.clock = clock;
+
+    XmlRepositoryDAO dao = new XmlRepositoryDAO(context, locationResolver, fileSystem, clock);
 
     return dao;
   }
@@ -84,8 +81,8 @@ class XmlRepositoryDAOTest {
 
   @Test
   void shouldReturnCreationTimeAfterCreation() {
-    long now = System.currentTimeMillis();
-    assertThat(dao.getCreationTime()).isBetween(now - 200, now + 200);
+    long now = atomicClock.get();
+    assertThat(dao.getCreationTime()).isEqualTo(now);
   }
 
   @Test
@@ -287,7 +284,7 @@ class XmlRepositoryDAOTest {
     Repository heartOfGold = createHeartOfGold();
     dao.add(heartOfGold);
 
-    Path storePath = dao.createStorePath();
+    Path storePath = dao.resolveStorePath();
     assertThat(storePath).isRegularFile();
 
     String content = content(storePath);
@@ -306,7 +303,7 @@ class XmlRepositoryDAOTest {
     dao.add(heartOfGold);
 
     Path repositoryDirectory = getAbsolutePathFromDao(heartOfGold.getId());
-    Path metadataPath = dao.createMetadataPath(repositoryDirectory);
+    Path metadataPath = dao.resolveMetadataPath(repositoryDirectory);
 
     assertThat(metadataPath).isRegularFile();
 
@@ -325,7 +322,7 @@ class XmlRepositoryDAOTest {
     dao.modify(heartOfGold);
 
     Path repositoryDirectory = getAbsolutePathFromDao(heartOfGold.getId());
-    Path metadataPath = dao.createMetadataPath(repositoryDirectory);
+    Path metadataPath = dao.resolveMetadataPath(repositoryDirectory);
 
     String content = content(metadataPath);
     assertThat(content).contains("Awesome Spaceship");
