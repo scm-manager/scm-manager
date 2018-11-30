@@ -272,7 +272,7 @@ private String createCompactToken(String subject, SecureKey key) {
     .thenReturn(
       new SecretKeySpec(
         key.getBytes(), 
-        SignatureAlgorithm.HS256.getValue()
+        SignatureAlgorithm.HS256.getJcaName()
       )
     );
   }

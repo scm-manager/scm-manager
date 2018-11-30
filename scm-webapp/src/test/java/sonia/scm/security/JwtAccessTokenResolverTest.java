@@ -230,7 +230,7 @@ public class JwtAccessTokenResolverTest {
     .thenReturn(
       new SecretKeySpec(
         key.getBytes(), 
-        SignatureAlgorithm.HS256.getValue()
+        SignatureAlgorithm.HS256.getJcaName()
       )
     );
   }
