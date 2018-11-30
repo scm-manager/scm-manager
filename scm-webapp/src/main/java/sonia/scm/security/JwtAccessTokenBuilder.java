@@ -36,6 +36,9 @@ import com.google.common.collect.Maps;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+
+import java.time.Clock;
+import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -60,6 +63,7 @@ public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
 
   private final KeyGenerator keyGenerator;
   private final SecureKeyResolver keyResolver;
+  private final Clock clock;
 
   private String subject;
   private String issuer;
@@ -72,9 +76,10 @@ public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
 
   private final Map<String,Object> custom = Maps.newHashMap();
 
-  JwtAccessTokenBuilder(KeyGenerator keyGenerator, SecureKeyResolver keyResolver)  {
+  JwtAccessTokenBuilder(KeyGenerator keyGenerator, SecureKeyResolver keyResolver, Clock clock)  {
     this.keyGenerator = keyGenerator;
     this.keyResolver = keyResolver;
+    this.clock = clock;
   }
 
   @Override
@@ -157,18 +162,19 @@ public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
     // add scope to custom claims
     Scopes.toClaims(customClaims, scope);
 
-    Date now = new Date();
+    Instant now = clock.instant();
     long expiration = expiresInUnit.toMillis(expiresIn);
 
     Claims claims = Jwts.claims(customClaims)
       .setSubject(sub)
       .setId(id)
-      .setIssuedAt(now)
-      .setExpiration(new Date(now.getTime() + expiration));
+      .setIssuedAt(Date.from(now))
+      .setExpiration(new Date(now.toEpochMilli() + expiration));
+
 
     if (refreshableFor > 0) {
       long refreshExpiration = refreshableForUnit.toMillis(refreshableFor);
-      claims.put(JwtAccessToken.REFRESHABLE_UNTIL_CLAIM_KEY, new Date(now.getTime() + refreshExpiration).getTime());
+      claims.put(JwtAccessToken.REFRESHABLE_UNTIL_CLAIM_KEY, new Date(now.toEpochMilli() + refreshExpiration).getTime());
     }
     if (parentKeyId == null) {
       claims.put(JwtAccessToken.PARENT_TOKEN_ID_CLAIM_KEY, id);

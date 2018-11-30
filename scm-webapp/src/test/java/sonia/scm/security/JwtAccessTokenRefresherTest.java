@@ -29,6 +29,9 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class JwtAccessTokenRefresherTest {
 
+  private static final Instant NOW = Instant.now();
+  private static final Instant TOKEN_CREATION = NOW.minus(ofMinutes(1));
+
   @Rule
   public ShiroRule shiro = new ShiroRule();
 
@@ -37,7 +40,9 @@ public class JwtAccessTokenRefresherTest {
   @Mock
   private JwtAccessTokenRefreshStrategy refreshStrategy;
   @Mock
-  private Clock clock;
+  private Clock refreshClock;
+  @Mock
+  private Clock creationClock;
 
   private KeyGenerator keyGenerator = () -> "key";
 
@@ -51,10 +56,11 @@ public class JwtAccessTokenRefresherTest {
     SecureKey secureKey = new SecureKey(bytes, System.currentTimeMillis());
     when(keyResolver.getSecureKey(any())).thenReturn(secureKey);
 
-    JwtAccessTokenBuilderFactory builderFactory = new JwtAccessTokenBuilderFactory(keyGenerator, keyResolver, Collections.emptySet());
-    refresher = new JwtAccessTokenRefresher(builderFactory, refreshStrategy, clock);
+    JwtAccessTokenBuilderFactory builderFactory = new JwtAccessTokenBuilderFactory(keyGenerator, keyResolver, Collections.emptySet(), creationClock);
+    refresher = new JwtAccessTokenRefresher(builderFactory, refreshStrategy, refreshClock);
     tokenBuilder = builderFactory.create();
-    when(clock.instant()).thenAnswer(invocationOnMock -> Instant.now());
+    when(creationClock.instant()).thenReturn(TOKEN_CREATION);
+    when(refreshClock.instant()).thenReturn(NOW);
     when(refreshStrategy.shouldBeRefreshed(any())).thenReturn(true);
 
     // set default expiration values
@@ -76,8 +82,8 @@ public class JwtAccessTokenRefresherTest {
 
   @Test
   public void shouldNotRefreshTokenWhenTokenExpired() {
-    Instant afterNormalExpiration = Instant.now().plus(ofMinutes(6));
-    when(clock.instant()).thenReturn(afterNormalExpiration);
+    Instant afterNormalExpiration = NOW.plus(ofMinutes(6));
+    when(refreshClock.instant()).thenReturn(afterNormalExpiration);
     JwtAccessToken oldToken = tokenBuilder.build();
 
     Optional<JwtAccessToken> refreshedToken = refresher.refresh(oldToken);
@@ -88,7 +94,7 @@ public class JwtAccessTokenRefresherTest {
   @Test
   public void shouldNotRefreshTokenWhenRefreshExpired() {
     Instant afterRefreshExpiration = Instant.now().plus(ofMinutes(2));
-    when(clock.instant()).thenReturn(afterRefreshExpiration);
+    when(refreshClock.instant()).thenReturn(afterRefreshExpiration);
     JwtAccessToken oldToken = tokenBuilder
       .refreshableFor(1, MINUTES)
       .build();
@@ -109,14 +115,14 @@ public class JwtAccessTokenRefresherTest {
   }
 
   @Test
-  public void shouldRefreshTokenWithEnabledRefresh() {
+  public void shouldRefreshTokenWithCorrectClaims() {
     JwtAccessToken oldToken = tokenBuilder.build();
     when(refreshStrategy.shouldBeRefreshed(oldToken)).thenReturn(true);
 
-    Optional<JwtAccessToken> refreshedToken = refresher.refresh(oldToken);
+    Optional<JwtAccessToken> refreshedTokenResult = refresher.refresh(oldToken);
 
-    assertThat(refreshedToken).isNotEmpty();
-    assertThat(refreshedToken.get().getClaims())
-      .containsEntry(JwtAccessToken.PARENT_TOKEN_ID_CLAIM_KEY, "key");
+    assertThat(refreshedTokenResult).isNotEmpty();
+    JwtAccessToken refreshedToken = refreshedTokenResult.get();
+    assertThat(refreshedToken.getParentKey()).get().isEqualTo("key");
   }
 }
