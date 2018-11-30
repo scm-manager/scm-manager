@@ -12,12 +12,10 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.sql.Date;
 import java.time.Clock;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Random;
 
-import static java.time.Duration.ofHours;
 import static java.time.Duration.ofMinutes;
 import static java.time.temporal.ChronoUnit.SECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
