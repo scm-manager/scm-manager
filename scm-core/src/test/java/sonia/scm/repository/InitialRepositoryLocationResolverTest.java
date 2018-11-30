@@ -13,9 +13,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith({MockitoExtension.class})
 class InitialRepositoryLocationResolverTest {
 
+  private InitialRepositoryLocationResolver resolver = new InitialRepositoryLocationResolver();
+
   @Test
   void shouldComputeInitialPath() {
-    InitialRepositoryLocationResolver resolver = new InitialRepositoryLocationResolver();
     Path path = resolver.getPath("42");
 
     assertThat(path).isRelative();
@@ -24,17 +25,21 @@ class InitialRepositoryLocationResolverTest {
 
   @Test
   void shouldThrowIllegalArgumentExceptionIfIdHasASlash() {
-    InitialRepositoryLocationResolver resolver = new InitialRepositoryLocationResolver();
-    Assertions.assertThrows(IllegalArgumentException.class, () -> {
-      resolver.getPath("../../../passwd");
-    });
+    Assertions.assertThrows(IllegalArgumentException.class, () -> resolver.getPath("../../../passwd"));
   }
 
   @Test
   void shouldThrowIllegalArgumentExceptionIfIdHasABackSlash() {
-    InitialRepositoryLocationResolver resolver = new InitialRepositoryLocationResolver();
-    Assertions.assertThrows(IllegalArgumentException.class, () -> {
-      resolver.getPath("..\\..\\..\\users.ntlm");
-    });
+    Assertions.assertThrows(IllegalArgumentException.class, () -> resolver.getPath("..\\..\\..\\users.ntlm"));
+  }
+
+  @Test
+  void shouldThrowIllegalArgumentExceptionIfIdIsDotDot() {
+    Assertions.assertThrows(IllegalArgumentException.class, () -> resolver.getPath(".."));
+  }
+
+  @Test
+  void shouldThrowIllegalArgumentExceptionIfIdIsDot() {
+    Assertions.assertThrows(IllegalArgumentException.class, () -> resolver.getPath("."));
   }
 }

@@ -23,7 +23,7 @@ public class InitialRepositoryLocationResolver {
 
   private static final String DEFAULT_REPOSITORY_PATH = "repositories";
 
-  private static final CharMatcher ID_MATCHER = CharMatcher.anyOf("/\\");
+  private static final CharMatcher ID_MATCHER = CharMatcher.anyOf("/\\.");
 
   /**
    * Returns the initial path to repository.
