@@ -39,7 +39,8 @@ public class MapperModule extends AbstractModule {
 
     bind(ReducedObjectModelToDtoMapper.class).to(Mappers.getMapper(ReducedObjectModelToDtoMapper.class).getClass());
 
-    bind(ViolationExceptionToErrorDtoMapper.class).to(Mappers.getMapper(ViolationExceptionToErrorDtoMapper.class).getClass());
+    bind(ResteasyViolationExceptionToErrorDtoMapper.class).to(Mappers.getMapper(ResteasyViolationExceptionToErrorDtoMapper.class).getClass());
+    bind(ScmViolationExceptionToErrorDtoMapper.class).to(Mappers.getMapper(ScmViolationExceptionToErrorDtoMapper.class).getClass());
     bind(ExceptionWithContextToErrorDtoMapper.class).to(Mappers.getMapper(ExceptionWithContextToErrorDtoMapper.class).getClass());
 
     // no mapstruct required
