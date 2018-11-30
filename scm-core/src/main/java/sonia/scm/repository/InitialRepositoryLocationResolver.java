@@ -32,6 +32,7 @@ public class InitialRepositoryLocationResolver {
    *
    * @return initial path of repository
    */
+  @SuppressWarnings("squid:S2083") // path traversal is prevented with ID_MATCHER
   public Path getPath(String repositoryId) {
     // avoid path traversal attacks
     checkArgument(ID_MATCHER.matchesNoneOf(repositoryId), "repository id contains invalid characters");
