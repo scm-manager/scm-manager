@@ -21,7 +21,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.Set;
+
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 
 @Priority(Filters.PRIORITY_POST_AUTHENTICATION)
 @WebElement(value = Filters.PATTERN_RESTAPI,
@@ -31,15 +35,13 @@ public class TokenRefreshFilter extends HttpFilter {
   private static final Logger LOG = LoggerFactory.getLogger(TokenRefreshFilter.class);
 
   private final Set<WebTokenGenerator> tokenGenerators;
-  private final AccessTokenCookieIssuer cookieIssuer;
   private final JwtAccessTokenRefresher refresher;
   private final AccessTokenResolver resolver;
   private final AccessTokenCookieIssuer issuer;
 
   @Inject
-  public TokenRefreshFilter(Set<WebTokenGenerator> tokenGenerators, AccessTokenCookieIssuer cookieIssuer, JwtAccessTokenRefresher refresher, AccessTokenResolver resolver, AccessTokenCookieIssuer issuer) {
+  public TokenRefreshFilter(Set<WebTokenGenerator> tokenGenerators, JwtAccessTokenRefresher refresher, AccessTokenResolver resolver, AccessTokenCookieIssuer issuer) {
     this.tokenGenerators = tokenGenerators;
-    this.cookieIssuer = cookieIssuer;
     this.refresher = refresher;
     this.resolver = resolver;
     this.issuer = issuer;
@@ -47,29 +49,30 @@ public class TokenRefreshFilter extends HttpFilter {
 
   @Override
   protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-    AuthenticationToken token = createToken(request);
-    if (token != null && token instanceof BearerToken) {
-      AccessToken accessToken = resolver.resolve((BearerToken) token);
-      if (accessToken instanceof JwtAccessToken) {
-        refresher.refresh((JwtAccessToken) accessToken)
-          .ifPresent(jwtAccessToken -> refreshToken(request, response, jwtAccessToken));
+    extractToken(request).ifPresent(token -> examineToken(request, response, token));
+    chain.doFilter(request, response);
+  }
+
+  private Optional<BearerToken> extractToken(HttpServletRequest request) {
+    for (WebTokenGenerator generator : tokenGenerators) {
+      AuthenticationToken token = generator.createToken(request);
+      if (token instanceof BearerToken) {
+        return of((BearerToken) token);
       }
     }
-    chain.doFilter(request, response);
+    return empty();
+  }
+
+  private void examineToken(HttpServletRequest request, HttpServletResponse response, BearerToken token) {
+    AccessToken accessToken = resolver.resolve(token);
+    if (accessToken instanceof JwtAccessToken) {
+      refresher.refresh((JwtAccessToken) accessToken)
+        .ifPresent(jwtAccessToken -> refreshToken(request, response, jwtAccessToken));
+    }
   }
 
   private void refreshToken(HttpServletRequest request, HttpServletResponse response, JwtAccessToken jwtAccessToken) {
     LOG.debug("refreshing authentication token");
     issuer.authenticate(request, response, jwtAccessToken);
-  }
-
-  private AuthenticationToken createToken(HttpServletRequest request) {
-    for (WebTokenGenerator generator : tokenGenerators) {
-      AuthenticationToken token = generator.createToken(request);
-      if (token != null) {
-        return token;
-      }
-    }
-    return null;
   }
 }
