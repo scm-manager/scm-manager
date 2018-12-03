@@ -126,7 +126,7 @@ public class SecureKeyResolverTest
   {
     ConfigurationEntryStoreFactory factory = mock(ConfigurationEntryStoreFactory.class);
 
-    when(factory.forType(any())).thenCallRealMethod();
+    when(factory.withName(any())).thenCallRealMethod();
     when(factory.getStore(argThat(storeParameters -> {
       assertThat(storeParameters.getName()).isEqualTo(SecureKeyResolver.STORE_NAME);
       assertThat(storeParameters.getType()).isEqualTo(SecureKey.class);

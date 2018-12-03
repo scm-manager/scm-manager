@@ -111,10 +111,10 @@ public class DefaultSecuritySystem implements SecuritySystem
   @SuppressWarnings("unchecked")
   public DefaultSecuritySystem(ConfigurationEntryStoreFactory storeFactory)
   {
-    store = storeFactory.
-      forType(AssignedPermission.class)
-        .withName(NAME)
-        .build();
+    store = storeFactory
+      .withName(NAME)
+      .withType(AssignedPermission.class)
+      .build();
     readAvailablePermissions();
   }
 

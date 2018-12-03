@@ -69,11 +69,10 @@ public abstract class BlobStoreTestBase extends AbstractTestBase
   @Before
   public void createBlobStore()
   {
-    store = createBlobStoreFactory().
-      forType(Blob.class)
-        .withName("test")
-        .forRepository(RepositoryTestData.createHeartOfGold())
-        .build();
+    store = createBlobStoreFactory()
+      .withName("test")
+      .forRepository(RepositoryTestData.createHeartOfGold())
+      .build();
     store.clear();
   }
 

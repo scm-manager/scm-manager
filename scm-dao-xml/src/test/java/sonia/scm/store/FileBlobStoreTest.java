@@ -65,11 +65,11 @@ public class FileBlobStoreTest extends BlobStoreTestBase
   @Test
   @SuppressWarnings("unchecked")
   public void shouldStoreAndLoadInRepository() {
-    BlobStore store = createBlobStoreFactory().
-      forType(StoreObject.class)
-        .withName("test")
-        .forRepository(new Repository("id", "git", "ns", "n"))
-        .build();
+    BlobStore store = createBlobStoreFactory()
+      .withName("test")
+      .withType(StoreObject.class)
+      .forRepository(new Repository("id", "git", "ns", "n"))
+      .build();
 
     Blob createdBlob = store.create("abc");
     List<Blob> storedBlobs = store.getAll();
@@ -78,6 +78,6 @@ public class FileBlobStoreTest extends BlobStoreTestBase
     assertThat(storedBlobs)
       .isNotNull()
       .hasSize(1)
-    .usingElementComparatorOnFields("id").containsExactly(createdBlob);
+      .usingElementComparatorOnFields("id").containsExactly(createdBlob);
   }
 }

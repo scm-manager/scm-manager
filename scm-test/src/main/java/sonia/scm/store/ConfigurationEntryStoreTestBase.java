@@ -51,15 +51,17 @@ public abstract class ConfigurationEntryStoreTestBase extends KeyValueStoreTestB
   //~--- get methods ----------------------------------------------------------
   @Override
   protected ConfigurationEntryStore getDataStore(Class type) {
-    return this.createConfigurationStoreFactory().forType(type)
+    return this.createConfigurationStoreFactory()
       .withName(storeName)
+      .withType(type)
       .build();
   }
 
  @Override
   protected ConfigurationEntryStore getDataStore(Class type, Repository repository) {
-   return this.createConfigurationStoreFactory().forType(type)
+   return this.createConfigurationStoreFactory()
      .withName(repoStoreName)
+     .withType(type)
      .forRepository(repository)
      .build();
   }

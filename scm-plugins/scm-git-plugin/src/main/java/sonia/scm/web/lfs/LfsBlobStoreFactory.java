@@ -76,7 +76,7 @@ public class LfsBlobStoreFactory {
    */
   @SuppressWarnings("unchecked")
   public BlobStore getLfsBlobStore(Repository repository) {
-    return blobStoreFactory.forType(String.class)
+    return blobStoreFactory
         .withName(repository.getId() + GIT_LFS_REPOSITORY_POSTFIX)
         .forRepository(repository)
         .build();

@@ -6,8 +6,8 @@ public interface StoreFactory<STORE>  {
 
   STORE getStore(final StoreParameters storeParameters);
 
-  default FloatingStoreParameters<STORE>.WithType forType(Class type) {
-    return new FloatingStoreParameters<>(this).new WithType(type);
+  default FloatingStoreParameters<STORE>.Builder withName(String name) {
+    return new FloatingStoreParameters<>(this).new Builder(name);
   }
 }
 
@@ -35,36 +35,22 @@ final class FloatingStoreParameters<STORE> implements StoreParameters {
     return repository;
   }
 
-  public class WithType {
+  public class Builder {
 
-    WithType(Class type) {
-      FloatingStoreParameters.this.type = type;
-    }
-
-    public FloatingStoreParameters<STORE>.WithTypeAndName withName(String name){
-      return new WithTypeAndName(name);
-    }
-
-  }
-  public class WithTypeAndName {
-
-    private WithTypeAndName(String name) {
+    Builder(String name) {
       FloatingStoreParameters.this.name = name;
     }
 
-    public FloatingStoreParameters<STORE>.WithTypeNameAndRepository forRepository(Repository repository){
-      return new WithTypeNameAndRepository(repository);
+    public FloatingStoreParameters<STORE>.Builder withType(Class type) {
+      FloatingStoreParameters.this.type = type;
+      return this;
     }
-    public STORE build(){
-      return factory.getStore(FloatingStoreParameters.this);
-    }
-  }
 
-  public class WithTypeNameAndRepository {
-
-    private WithTypeNameAndRepository(Repository repository) {
+    public FloatingStoreParameters<STORE>.Builder forRepository(Repository repository) {
       FloatingStoreParameters.this.repository = repository;
+      return this;
     }
+
     public STORE build(){
       return factory.getStore(FloatingStoreParameters.this);
     }

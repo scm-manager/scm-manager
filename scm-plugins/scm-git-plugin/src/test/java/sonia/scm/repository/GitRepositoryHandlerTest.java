@@ -86,7 +86,7 @@ public class GitRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
 
   @Before
   public void initFactory() {
-    when(factory.forType(any())).thenCallRealMethod();
+    when(factory.withName(any())).thenCallRealMethod();
   }
 
   @Override

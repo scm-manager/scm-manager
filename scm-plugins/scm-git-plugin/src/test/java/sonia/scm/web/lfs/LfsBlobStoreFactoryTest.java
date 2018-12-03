@@ -63,7 +63,7 @@ public class LfsBlobStoreFactoryTest {
    
   @Test
   public void getBlobStore() {
-    when(blobStoreFactory.forType(any())).thenCallRealMethod();
+    when(blobStoreFactory.withName(any())).thenCallRealMethod();
     Repository repository = new Repository("the-id", "GIT", "space", "the-name");
     lfsBlobStoreFactory.getLfsBlobStore(repository);
 

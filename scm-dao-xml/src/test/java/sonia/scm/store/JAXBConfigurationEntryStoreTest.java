@@ -132,10 +132,10 @@ public class JAXBConfigurationEntryStoreTest
     ConfigurationEntryStore<AssignedPermission> store = createPermissionStore(RESOURCE_FIXED, name);
 
     store.put("a45", new AssignedPermission("tuser4", "repository:create"));
-    store = createConfigurationStoreFactory().
-      forType(AssignedPermission.class)
-        .withName(name)
-        .build();
+    store = createConfigurationStoreFactory()
+      .withName(name)
+      .withType(AssignedPermission.class)
+      .build();
 
     AssignedPermission ap = store.get("a45");
 
@@ -231,9 +231,9 @@ public class JAXBConfigurationEntryStoreTest
     }
 
     copy(resource, name);
-    return createConfigurationStoreFactory().
-      forType(AssignedPermission.class)
-        .withName(name)
-        .build();
+    return createConfigurationStoreFactory()
+      .withName(name)
+      .withType(AssignedPermission.class)
+      .build();
   }
 }

@@ -61,16 +61,18 @@ public class JAXBDataStoreTest extends DataStoreTestBase {
 
   @Override
   protected DataStore getDataStore(Class type, Repository repository) {
-    return createDataStoreFactory().forType(type)
+    return createDataStoreFactory()
       .withName("test")
+      .withType(type)
       .forRepository(repository)
       .build();
   }
 
   @Override
   protected DataStore getDataStore(Class type) {
-    return createDataStoreFactory().forType(type)
+    return createDataStoreFactory()
       .withName("test")
+      .withType(type)
       .build();
   }
 

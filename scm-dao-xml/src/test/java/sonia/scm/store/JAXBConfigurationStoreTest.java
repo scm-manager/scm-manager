@@ -56,11 +56,11 @@ public class JAXBConfigurationStoreTest extends StoreTestBase {
   @SuppressWarnings("unchecked")
   public void shouldStoreAndLoadInRepository()
   {
-    ConfigurationStore<StoreObject> store = createStoreFactory().
-      forType(StoreObject.class)
-        .withName("test")
-        .forRepository(new Repository("id", "git", "ns", "n"))
-        .build();
+    ConfigurationStore<StoreObject> store = createStoreFactory()
+      .withName("test")
+      .withType(StoreObject.class)
+      .forRepository(new Repository("id", "git", "ns", "n"))
+      .build();
 
     store.set(new StoreObject("value"));
     StoreObject storeObject = store.get();

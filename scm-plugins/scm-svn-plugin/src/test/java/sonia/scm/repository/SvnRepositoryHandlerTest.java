@@ -107,7 +107,7 @@ public class SvnRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
 
   @Test
   public void getDirectory() {
-    when(factory.forType(any())).thenCallRealMethod();
+    when(factory.withName(any())).thenCallRealMethod();
     SvnRepositoryHandler repositoryHandler = new SvnRepositoryHandler(factory,
       facade, locationResolver);
 

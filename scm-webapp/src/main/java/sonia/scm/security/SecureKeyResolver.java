@@ -90,10 +90,10 @@ public class SecureKeyResolver extends SigningKeyResolverAdapter
   @SuppressWarnings("unchecked")
   public SecureKeyResolver(ConfigurationEntryStoreFactory storeFactory)
   {
-    store = storeFactory.
-      forType(SecureKey.class)
-        .withName(STORE_NAME)
-        .build();
+    store = storeFactory
+      .withName(STORE_NAME)
+      .withType(SecureKey.class)
+      .build();
   }
 
   //~--- methods --------------------------------------------------------------
