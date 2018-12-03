@@ -26,8 +26,8 @@ public class StoreParameters {
     return repository;
   }
 
-  public WithType withType(Class type){
-    return new WithType(type);
+  public static WithType forType(Class type){
+    return new StoreParameters().new WithType(type);
   }
 
   public class WithType {

@@ -39,6 +39,7 @@ import sonia.scm.repository.RepositoryTestData;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static sonia.scm.store.StoreParameters.forType;
 
 /**
  *
@@ -56,9 +57,8 @@ public abstract class DataStoreTestBase extends KeyValueStoreTestBase
   protected abstract DataStoreFactory createDataStoreFactory();
 
 
-    protected StoreParameters getStoreParametersWithRepository(Repository repository) {
-    return new StoreParameters()
-      .withType(StoreObject.class)
+  protected StoreParameters getStoreParametersWithRepository(Repository repository) {
+    return forType(StoreObject.class)
       .withName("test")
       .forRepository(repository)
       .build();

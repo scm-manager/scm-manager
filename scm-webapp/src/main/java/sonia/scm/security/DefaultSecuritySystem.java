@@ -77,6 +77,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import static sonia.scm.store.StoreParameters.forType;
+
 /**
  * TODO add events
  *
@@ -112,10 +114,10 @@ public class DefaultSecuritySystem implements SecuritySystem
   @SuppressWarnings("unchecked")
   public DefaultSecuritySystem(ConfigurationEntryStoreFactory storeFactory)
   {
-    store = storeFactory.getStore(new StoreParameters()
-    .withType(AssignedPermission.class)
-    .withName(NAME)
-    .build());
+    store = storeFactory.getStore(
+      forType(AssignedPermission.class)
+        .withName(NAME)
+        .build());
     readAvailablePermissions();
   }
 

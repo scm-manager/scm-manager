@@ -35,10 +35,10 @@ package sonia.scm.web.lfs;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import sonia.scm.repository.Repository;
-import sonia.scm.store.Blob;
 import sonia.scm.store.BlobStore;
 import sonia.scm.store.BlobStoreFactory;
-import sonia.scm.store.StoreParameters;
+
+import static sonia.scm.store.StoreParameters.forType;
 
 /**
  * Creates {@link BlobStore} objects to store lfs objects.
@@ -78,11 +78,11 @@ public class LfsBlobStoreFactory {
    */
   @SuppressWarnings("unchecked")
   public BlobStore getLfsBlobStore(Repository repository) {
-    return blobStoreFactory.getStore(new StoreParameters()
-      .withType(Blob.class)
-      .withName(repository.getId() + GIT_LFS_REPOSITORY_POSTFIX)
-      .forRepository(repository)
-      .build()
+    return blobStoreFactory.getStore(
+      forType(String.class)
+        .withName(repository.getId() + GIT_LFS_REPOSITORY_POSTFIX)
+        .forRepository(repository)
+        .build()
     );
   }
 }

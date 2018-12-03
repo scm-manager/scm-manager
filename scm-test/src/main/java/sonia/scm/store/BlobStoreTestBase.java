@@ -50,6 +50,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static sonia.scm.store.StoreParameters.forType;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -69,11 +70,11 @@ public abstract class BlobStoreTestBase extends AbstractTestBase
   @Before
   public void createBlobStore()
   {
-    store = createBlobStoreFactory().getStore(new StoreParameters()
-      .withType(Blob.class)
-      .withName("test")
-      .forRepository(RepositoryTestData.createHeartOfGold())
-      .build()
+    store = createBlobStoreFactory().getStore(
+      forType(Blob.class)
+        .withName("test")
+        .forRepository(RepositoryTestData.createHeartOfGold())
+        .build()
     );
     store.clear();
   }

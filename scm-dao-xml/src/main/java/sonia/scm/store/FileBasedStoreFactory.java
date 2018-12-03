@@ -73,10 +73,10 @@ public abstract class FileBasedStoreFactory {
   protected File getStoreLocation(String name, Class type, Repository repository) {
     if (storeDirectory == null) {
       if (repository != null) {
-        LOG.debug("create store with type :{}, name:{} and repository {}", type, name, repository.getNamespaceAndName());
+        LOG.debug("create store with type: {}, name: {} and repository: {}", type, name, repository.getNamespaceAndName());
         storeDirectory = this.getStoreDirectory(store, repository);
       } else {
-        LOG.debug("create store with type :{} and name:{} ", type, name);
+        LOG.debug("create store with type: {} and name: {} ", type, name);
         storeDirectory = this.getStoreDirectory(store);
       }
       IOUtil.mkdirs(storeDirectory);
@@ -91,7 +91,7 @@ public abstract class FileBasedStoreFactory {
    * @return the store directory of a specific repository
    */
   private File getStoreDirectory(Store store, Repository repository) {
-    return new File (repositoryLocationResolver.getPath(repository.getId()).toFile(), store.getRepositoryStoreDirectory());
+    return new File(repositoryLocationResolver.getPath(repository.getId()).toFile(), store.getRepositoryStoreDirectory());
   }
 
   /**

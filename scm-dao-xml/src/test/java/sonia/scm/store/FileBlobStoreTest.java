@@ -42,6 +42,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertNotNull;
+import static sonia.scm.store.StoreParameters.forType;
 
 /**
  *
@@ -65,11 +66,11 @@ public class FileBlobStoreTest extends BlobStoreTestBase
   @Test
   @SuppressWarnings("unchecked")
   public void shouldStoreAndLoadInRepository() {
-    BlobStore store = createBlobStoreFactory().getStore(new StoreParameters()
-      .withType(StoreObject.class)
-      .withName("test")
-      .forRepository(new Repository("id", "git", "ns", "n"))
-      .build());
+    BlobStore store = createBlobStoreFactory().getStore(
+      forType(StoreObject.class)
+        .withName("test")
+        .forRepository(new Repository("id", "git", "ns", "n"))
+        .build());
 
     Blob createdBlob = store.create("abc");
     List<Blob> storedBlobs = store.getAll();

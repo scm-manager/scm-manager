@@ -38,10 +38,9 @@ import org.junit.Test;
 import sonia.scm.repository.Repository;
 import sonia.scm.security.UUIDKeyGenerator;
 
-import java.io.IOException;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static sonia.scm.store.StoreParameters.forType;
 
 /**
  *
@@ -63,25 +62,21 @@ public class JAXBDataStoreTest extends DataStoreTestBase {
 
   @Override
   protected DataStore getDataStore(Class type, Repository repository) {
-    StoreParameters params = new StoreParameters()
-      .withType(type)
+    return createDataStoreFactory().getStore(forType(type)
       .withName("test")
       .forRepository(repository)
-      .build();
-    return createDataStoreFactory().getStore(params);
+      .build());
   }
 
   @Override
   protected DataStore getDataStore(Class type) {
-    StoreParameters params = new StoreParameters()
-      .withType(type)
+    return createDataStoreFactory().getStore(forType(type)
       .withName("test")
-      .build();
-    return createDataStoreFactory().getStore(params);
+      .build());
   }
 
   @Test
-  public void shouldStoreAndLoadInRepository() throws IOException
+  public void shouldStoreAndLoadInRepository()
   {
     repoStore.put("abc", new StoreObject("abc_value"));
     StoreObject storeObject = repoStore.get("abc");

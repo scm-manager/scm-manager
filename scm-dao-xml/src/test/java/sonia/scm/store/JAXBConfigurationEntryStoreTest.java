@@ -50,6 +50,7 @@ import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static sonia.scm.store.StoreParameters.forType;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -132,10 +133,10 @@ public class JAXBConfigurationEntryStoreTest
     ConfigurationEntryStore<AssignedPermission> store = createPermissionStore(RESOURCE_FIXED, name);
 
     store.put("a45", new AssignedPermission("tuser4", "repository:create"));
-    store = createConfigurationStoreFactory().getStore(new StoreParameters()
-      .withType(AssignedPermission.class)
-      .withName(name)
-      .build());
+    store = createConfigurationStoreFactory().getStore(
+      forType(AssignedPermission.class)
+        .withName(name)
+        .build());
 
     AssignedPermission ap = store.get("a45");
 
@@ -231,9 +232,9 @@ public class JAXBConfigurationEntryStoreTest
     }
 
     copy(resource, name);
-    return createConfigurationStoreFactory().getStore(new StoreParameters()
-      .withType(AssignedPermission.class)
-      .withName(name)
-      .build());
+    return createConfigurationStoreFactory().getStore(
+      forType(AssignedPermission.class)
+        .withName(name)
+        .build());
   }
 }
