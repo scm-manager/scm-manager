@@ -55,7 +55,14 @@
       "branch": "Branch"
     },
     "content": {
-      "downloadButton": "Download"
+      "historyButton": "History",
+      "sourcesButton": "Sources",
+      "downloadButton": "Download",
+      "path": "Path",
+      "branch": "Branch",
+      "lastModified": "Last modified",
+      "description": "Description",
+      "size": "Size"
     }
   },
   "changesets": {
