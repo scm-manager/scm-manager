@@ -32,6 +32,7 @@
 package sonia.scm.repository;
 
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -42,12 +43,14 @@ import sonia.scm.store.ConfigurationStore;
 import sonia.scm.store.ConfigurationStoreFactory;
 
 import java.io.File;
+import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -55,14 +58,10 @@ import static org.mockito.Mockito.when;
  *
  * @author Sebastian Sdorra
  */
-@RunWith(MockitoJUnitRunner.class)
 public class SvnRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
 
   @Mock
   private ConfigurationStoreFactory factory;
-
-  @Mock
-  private ConfigurationStore store;
 
   @Mock
   private com.google.inject.Provider<RepositoryManager> repositoryManagerProvider;
@@ -70,6 +69,12 @@ public class SvnRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
   private HookContextFactory hookContextFactory = new HookContextFactory(mock(PreProcessorUtil.class));
 
   private HookEventFacade facade = new HookEventFacade(repositoryManagerProvider, hookContextFactory);
+
+  @Override
+  protected void postSetUp() throws IOException, RepositoryPathNotFoundException {
+    initMocks(this);
+    super.postSetUp();
+  }
 
   @Override
   protected void checkDirectory(File directory) {
@@ -102,7 +107,7 @@ public class SvnRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
 
   @Test
   public void getDirectory() {
-    when(factory.getStore(any())).thenReturn(store);
+    when(factory.forType(any())).thenCallRealMethod();
     SvnRepositoryHandler repositoryHandler = new SvnRepositoryHandler(factory,
       facade, locationResolver);
 

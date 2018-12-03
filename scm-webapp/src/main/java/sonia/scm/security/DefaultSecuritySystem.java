@@ -55,7 +55,6 @@ import sonia.scm.event.ScmEventBus;
 import sonia.scm.group.GroupEvent;
 import sonia.scm.store.ConfigurationEntryStore;
 import sonia.scm.store.ConfigurationEntryStoreFactory;
-import sonia.scm.store.StoreParameters;
 import sonia.scm.user.UserEvent;
 import sonia.scm.util.ClassLoaders;
 
@@ -76,8 +75,6 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-
-import static sonia.scm.store.StoreParameters.forType;
 
 /**
  * TODO add events
@@ -114,10 +111,10 @@ public class DefaultSecuritySystem implements SecuritySystem
   @SuppressWarnings("unchecked")
   public DefaultSecuritySystem(ConfigurationEntryStoreFactory storeFactory)
   {
-    store = storeFactory.getStore(
+    store = storeFactory.
       forType(AssignedPermission.class)
         .withName(NAME)
-        .build());
+        .build();
     readAvailablePermissions();
   }
 

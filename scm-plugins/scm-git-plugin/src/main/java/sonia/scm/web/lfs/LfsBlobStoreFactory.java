@@ -38,8 +38,6 @@ import sonia.scm.repository.Repository;
 import sonia.scm.store.BlobStore;
 import sonia.scm.store.BlobStoreFactory;
 
-import static sonia.scm.store.StoreParameters.forType;
-
 /**
  * Creates {@link BlobStore} objects to store lfs objects.
  * 
@@ -78,11 +76,9 @@ public class LfsBlobStoreFactory {
    */
   @SuppressWarnings("unchecked")
   public BlobStore getLfsBlobStore(Repository repository) {
-    return blobStoreFactory.getStore(
-      forType(String.class)
+    return blobStoreFactory.forType(String.class)
         .withName(repository.getId() + GIT_LFS_REPOSITORY_POSTFIX)
         .forRepository(repository)
-        .build()
-    );
+        .build();
   }
 }

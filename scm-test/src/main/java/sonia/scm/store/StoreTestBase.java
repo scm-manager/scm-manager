@@ -40,7 +40,6 @@ import sonia.scm.AbstractTestBase;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static sonia.scm.store.StoreParameters.forType;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -67,7 +66,7 @@ public abstract class StoreTestBase extends AbstractTestBase
   @Test
   public void testGet()
   {
-    ConfigurationStore<StoreObject> store = createStoreFactory().getStore(forType(StoreObject.class).withName("test").build());
+    ConfigurationStore<StoreObject> store = createStoreFactory().forType(StoreObject.class).withName("test").build();
 
     assertNotNull(store);
 
@@ -83,7 +82,7 @@ public abstract class StoreTestBase extends AbstractTestBase
   @Test
   public void testSet()
   {
-    ConfigurationStore<StoreObject> store = createStoreFactory().getStore(forType(StoreObject.class).withName("test").build());
+    ConfigurationStore<StoreObject> store = createStoreFactory().forType(StoreObject.class).withName("test").build();
 
     assertNotNull(store);
 

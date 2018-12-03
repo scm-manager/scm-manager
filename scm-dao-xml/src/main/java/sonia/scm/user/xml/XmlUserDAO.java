@@ -41,8 +41,6 @@ import sonia.scm.user.User;
 import sonia.scm.user.UserDAO;
 import sonia.scm.xml.AbstractXmlDAO;
 
-import static sonia.scm.store.StoreParameters.forType;
-
 /**
  *
  * @author Sebastian Sdorra
@@ -66,10 +64,9 @@ public class XmlUserDAO extends AbstractXmlDAO<User, XmlUserDatabase>
   @Inject
   public XmlUserDAO(ConfigurationStoreFactory storeFactory)
   {
-    super(storeFactory.getStore(
-      forType(XmlUserDatabase.class)
+    super(storeFactory.forType(XmlUserDatabase.class)
         .withName(STORE_NAME)
-        .build()));
+        .build());
   }
 
   //~--- methods --------------------------------------------------------------

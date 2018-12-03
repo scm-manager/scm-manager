@@ -40,7 +40,6 @@ import sonia.scm.security.UUIDKeyGenerator;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static sonia.scm.store.StoreParameters.forType;
 
 /**
  *
@@ -62,17 +61,17 @@ public class JAXBDataStoreTest extends DataStoreTestBase {
 
   @Override
   protected DataStore getDataStore(Class type, Repository repository) {
-    return createDataStoreFactory().getStore(forType(type)
+    return createDataStoreFactory().forType(type)
       .withName("test")
       .forRepository(repository)
-      .build());
+      .build();
   }
 
   @Override
   protected DataStore getDataStore(Class type) {
-    return createDataStoreFactory().getStore(forType(type)
+    return createDataStoreFactory().forType(type)
       .withName("test")
-      .build());
+      .build();
   }
 
   @Test

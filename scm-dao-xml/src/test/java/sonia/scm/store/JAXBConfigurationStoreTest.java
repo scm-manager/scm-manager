@@ -35,11 +35,8 @@ package sonia.scm.store;
 import org.junit.Test;
 import sonia.scm.repository.Repository;
 
-import java.io.IOException;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static sonia.scm.store.StoreParameters.forType;
 
 /**
  * Unit tests for {@link JAXBConfigurationStore}.
@@ -57,13 +54,13 @@ public class JAXBConfigurationStoreTest extends StoreTestBase {
 
   @Test
   @SuppressWarnings("unchecked")
-  public void shouldStoreAndLoadInRepository() throws IOException
+  public void shouldStoreAndLoadInRepository()
   {
-    ConfigurationStore<StoreObject> store = createStoreFactory().getStore(
+    ConfigurationStore<StoreObject> store = createStoreFactory().
       forType(StoreObject.class)
         .withName("test")
         .forRepository(new Repository("id", "git", "ns", "n"))
-        .build());
+        .build();
 
     store.set(new StoreObject("value"));
     StoreObject storeObject = store.get();

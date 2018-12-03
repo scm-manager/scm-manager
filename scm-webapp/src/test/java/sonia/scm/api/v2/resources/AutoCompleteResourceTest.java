@@ -67,6 +67,7 @@ public class AutoCompleteResourceTest {
     xmlDB = mock(XmlDatabase.class);
     when(storeConfig.get()).thenReturn(xmlDB);
     when(storeFactory.getStore(any())).thenReturn(storeConfig);
+    when(storeFactory.forType(any())).thenCallRealMethod();
     XmlUserDAO userDao = new XmlUserDAO(storeFactory);
     this.userDao = spy(userDao);
     XmlGroupDAO groupDAO = new XmlGroupDAO(storeFactory);

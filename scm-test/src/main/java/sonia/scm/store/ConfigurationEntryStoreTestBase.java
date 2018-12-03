@@ -34,8 +34,6 @@ package sonia.scm.store;
 
 import sonia.scm.repository.Repository;
 
-import static sonia.scm.store.StoreParameters.forType;
-
 /**
  *
  * @author Sebastian Sdorra
@@ -53,18 +51,16 @@ public abstract class ConfigurationEntryStoreTestBase extends KeyValueStoreTestB
   //~--- get methods ----------------------------------------------------------
   @Override
   protected ConfigurationEntryStore getDataStore(Class type) {
-    StoreParameters params = forType(type)
+    return this.createConfigurationStoreFactory().forType(type)
       .withName(storeName)
       .build();
-    return this.createConfigurationStoreFactory().getStore(params);
   }
 
  @Override
   protected ConfigurationEntryStore getDataStore(Class type, Repository repository) {
-    StoreParameters params = forType(type)
-      .withName(repoStoreName)
-      .forRepository(repository)
-      .build();
-    return this.createConfigurationStoreFactory().getStore(params);
+   return this.createConfigurationStoreFactory().forType(type)
+     .withName(repoStoreName)
+     .forRepository(repository)
+     .build();
   }
 }

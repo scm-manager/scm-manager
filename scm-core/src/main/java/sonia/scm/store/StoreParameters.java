@@ -8,11 +8,17 @@ import sonia.scm.repository.Repository;
  * @author Mohamed Karray
  * @since 2.0.0
  */
-public class StoreParameters {
+public class StoreParameters<STORE> {
 
   private Class type;
   private String name;
   private Repository repository;
+
+  private final StoreFactory<STORE> factory;
+
+  StoreParameters(StoreFactory<STORE> factory) {
+    this.factory = factory;
+  }
 
   public Class getType() {
     return type;
@@ -26,17 +32,13 @@ public class StoreParameters {
     return repository;
   }
 
-  public static WithType forType(Class type){
-    return new StoreParameters().new WithType(type);
-  }
-
   public class WithType {
 
-    private WithType(Class type) {
+    WithType(Class type) {
       StoreParameters.this.type = type;
     }
 
-    public WithTypeAndName withName(String name){
+    public StoreParameters<STORE>.WithTypeAndName withName(String name){
       return new WithTypeAndName(name);
     }
 
@@ -47,11 +49,11 @@ public class StoreParameters {
       StoreParameters.this.name = name;
     }
 
-    public WithTypeNameAndRepository forRepository(Repository repository){
+    public StoreParameters<STORE>.WithTypeNameAndRepository forRepository(Repository repository){
       return new WithTypeNameAndRepository(repository);
     }
-    public StoreParameters build(){
-      return StoreParameters.this;
+    public STORE build(){
+      return factory.getStore(StoreParameters.this);
     }
   }
 
@@ -60,8 +62,8 @@ public class StoreParameters {
     private WithTypeNameAndRepository(Repository repository) {
       StoreParameters.this.repository = repository;
     }
-    public StoreParameters build(){
-      return StoreParameters.this;
+    public STORE build(){
+      return factory.getStore(StoreParameters.this);
     }
   }
 }

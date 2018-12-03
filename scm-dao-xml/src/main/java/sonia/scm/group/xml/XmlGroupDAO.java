@@ -43,8 +43,6 @@ import sonia.scm.xml.AbstractXmlDAO;
 
 import sonia.scm.store.ConfigurationStoreFactory;
 
-import static sonia.scm.store.StoreParameters.forType;
-
 /**
  *
  * @author Sebastian Sdorra
@@ -67,10 +65,10 @@ public class XmlGroupDAO extends AbstractXmlDAO<Group, XmlGroupDatabase>
    */
   @Inject
   public XmlGroupDAO(ConfigurationStoreFactory storeFactory) {
-    super(storeFactory.getStore(
+    super(storeFactory.
       forType(XmlGroupDatabase.class)
         .withName(STORE_NAME)
-        .build()));
+        .build());
   }
 
   //~--- methods --------------------------------------------------------------

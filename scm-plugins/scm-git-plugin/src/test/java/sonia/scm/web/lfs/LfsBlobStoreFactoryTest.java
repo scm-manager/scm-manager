@@ -41,9 +41,11 @@ import sonia.scm.repository.Repository;
 import sonia.scm.store.BlobStoreFactory;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 /**
  * Unit tests for {@link LfsBlobStoreFactory}.
@@ -61,6 +63,7 @@ public class LfsBlobStoreFactoryTest {
    
   @Test
   public void getBlobStore() {
+    when(blobStoreFactory.forType(any())).thenCallRealMethod();
     Repository repository = new Repository("the-id", "GIT", "space", "the-name");
     lfsBlobStoreFactory.getLfsBlobStore(repository);
 
@@ -73,7 +76,7 @@ public class LfsBlobStoreFactoryTest {
     }));
 
     // make sure there have been no further usages of the factory
-    verifyNoMoreInteractions(blobStoreFactory);
+    verify(blobStoreFactory, times(1)).getStore(any());
   }
   
 }

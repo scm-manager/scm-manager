@@ -48,6 +48,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -125,6 +126,7 @@ public class SecureKeyResolverTest
   {
     ConfigurationEntryStoreFactory factory = mock(ConfigurationEntryStoreFactory.class);
 
+    when(factory.forType(any())).thenCallRealMethod();
     when(factory.getStore(argThat(storeParameters -> {
       assertThat(storeParameters.getName()).isEqualTo(SecureKeyResolver.STORE_NAME);
       assertThat(storeParameters.getType()).isEqualTo(SecureKey.class);

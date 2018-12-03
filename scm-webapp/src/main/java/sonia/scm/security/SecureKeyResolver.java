@@ -47,7 +47,6 @@ import sonia.scm.store.ConfigurationEntryStore;
 import sonia.scm.store.ConfigurationEntryStoreFactory;
 
 import static com.google.common.base.Preconditions.*;
-import static sonia.scm.store.StoreParameters.forType;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -91,10 +90,10 @@ public class SecureKeyResolver extends SigningKeyResolverAdapter
   @SuppressWarnings("unchecked")
   public SecureKeyResolver(ConfigurationEntryStoreFactory storeFactory)
   {
-    store = storeFactory.getStore(
+    store = storeFactory.
       forType(SecureKey.class)
         .withName(STORE_NAME)
-        .build());
+        .build();
   }
 
   //~--- methods --------------------------------------------------------------
