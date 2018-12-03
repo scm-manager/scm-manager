@@ -321,8 +321,6 @@ public class ScmServletModule extends ServletModule
     // bind(LastModifiedUpdateListener.class);
 
     bind(PushStateDispatcher.class).toProvider(PushStateDispatcherProvider.class);
-
-    bind(JwtAccessTokenRefreshStrategy.class).to(DefaultJwtAccessTokenRefreshStrategy.class);
   }
 
 
