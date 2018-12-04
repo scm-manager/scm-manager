@@ -55,41 +55,23 @@ public interface ConfigurationEntryStoreFactory {
   }
 }
 
-final class TypedFloatingConfigurationEntryStoreParameters<T> implements TypedStoreParameters<T> {
+final class TypedFloatingConfigurationEntryStoreParameters<T> {
 
-  private Class<T> type;
-  private String name;
-  private Repository repository;
-
+  private final TypedStoreParametersImpl<T> parameters = new TypedStoreParametersImpl<>();
   private final ConfigurationEntryStoreFactory factory;
 
   TypedFloatingConfigurationEntryStoreParameters(ConfigurationEntryStoreFactory factory) {
     this.factory = factory;
   }
 
-  @Override
-  public Class<T> getType() {
-    return type;
-  }
-
-  @Override
-  public String getName() {
-    return name;
-  }
-
-  @Override
-  public Repository getRepository() {
-    return repository;
-  }
-
   public class Builder {
 
     Builder(Class<T> type) {
-      TypedFloatingConfigurationEntryStoreParameters.this.type = type;
+      parameters.setType(type);
     }
 
     public OptionalRepositoryBuilder withName(String name) {
-      TypedFloatingConfigurationEntryStoreParameters.this.name = name;
+      parameters.setName(name);
       return new OptionalRepositoryBuilder();
     }
   }
@@ -97,12 +79,12 @@ final class TypedFloatingConfigurationEntryStoreParameters<T> implements TypedSt
   public class OptionalRepositoryBuilder {
 
     public OptionalRepositoryBuilder forRepository(Repository repository) {
-      TypedFloatingConfigurationEntryStoreParameters.this.repository = repository;
+      parameters.setRepository(repository);
       return this;
     }
 
     public ConfigurationEntryStore<T> build(){
-      return factory.getStore(TypedFloatingConfigurationEntryStoreParameters.this);
+      return factory.getStore(parameters);
     }
   }
 }
