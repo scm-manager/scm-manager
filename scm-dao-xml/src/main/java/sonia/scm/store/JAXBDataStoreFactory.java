@@ -55,7 +55,6 @@ import java.io.File;
 public class JAXBDataStoreFactory extends FileBasedStoreFactory
   implements DataStoreFactory {
 
-  private static final Logger logger = LoggerFactory.getLogger(JAXBDataStoreFactory.class);
   private KeyGenerator keyGenerator;
 
   @Inject
@@ -65,10 +64,9 @@ public class JAXBDataStoreFactory extends FileBasedStoreFactory
   }
 
   @Override
-  @SuppressWarnings("unchecked")
-  public DataStore getStore(StoreParameters storeParameters) {
+  public <T> DataStore<T> getStore(TypedStoreParameters<T> storeParameters) {
     File storeLocation = getStoreLocation(storeParameters);
     IOUtil.mkdirs(storeLocation);
-    return new JAXBDataStore(keyGenerator, storeParameters.getType(), storeLocation);
+    return new JAXBDataStore<>(keyGenerator, storeParameters.getType(), storeLocation);
   }
 }

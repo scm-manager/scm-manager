@@ -36,7 +36,7 @@ import sonia.scm.SCMContextProvider;
 import sonia.scm.repository.RepositoryLocationResolver;
 
 /**
- * JAXB implementation of {@link StoreFactory}.
+ * JAXB implementation of {@link ConfigurationStoreFactory}.
  *
  * @author Sebastian Sdorra
  */
@@ -54,8 +54,7 @@ public class JAXBConfigurationStoreFactory extends FileBasedStoreFactory impleme
   }
 
   @Override
-  @SuppressWarnings("unchecked")
-  public JAXBConfigurationStore getStore(StoreParameters storeParameters) {
-    return new JAXBConfigurationStore(storeParameters.getType(), getStoreLocation(storeParameters.getName().concat(StoreConstants.FILE_EXTENSION), storeParameters.getType(), storeParameters.getRepository()));
+  public <T> JAXBConfigurationStore<T> getStore(TypedStoreParameters<T> storeParameters) {
+    return new JAXBConfigurationStore<>(storeParameters.getType(), getStoreLocation(storeParameters.getName().concat(StoreConstants.FILE_EXTENSION), storeParameters.getType(), storeParameters.getRepository()));
   }
 }

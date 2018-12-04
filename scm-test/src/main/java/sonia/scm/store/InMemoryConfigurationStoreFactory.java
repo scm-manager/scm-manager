@@ -43,7 +43,7 @@ package sonia.scm.store;
 public class InMemoryConfigurationStoreFactory implements ConfigurationStoreFactory {
 
   @Override
-  public ConfigurationStore getStore(StoreParameters storeParameters) {
+  public ConfigurationStore getStore(TypedStoreParameters storeParameters) {
     return new InMemoryConfigurationStore<>();
   }
 }

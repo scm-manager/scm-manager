@@ -48,14 +48,14 @@ import sonia.scm.repository.Repository;
  * @apiviz.uses sonia.scm.store.ConfigurationEntryStore
  */
 public interface ConfigurationEntryStoreFactory {
-  <T> ConfigurationEntryStore<T> getStore(final StoreParameters storeParameters);
+  <T> ConfigurationEntryStore<T> getStore(final TypedStoreParameters<T> storeParameters);
 
   default <T> TypedFloatingConfigurationEntryStoreParameters<T>.Builder withType(Class<T> type) {
     return new TypedFloatingConfigurationEntryStoreParameters<T>(this).new Builder(type);
   }
 }
 
-final class TypedFloatingConfigurationEntryStoreParameters<T> implements StoreParameters {
+final class TypedFloatingConfigurationEntryStoreParameters<T> implements TypedStoreParameters<T> {
 
   private Class<T> type;
   private String name;
@@ -67,14 +67,17 @@ final class TypedFloatingConfigurationEntryStoreParameters<T> implements StorePa
     this.factory = factory;
   }
 
+  @Override
   public Class<T> getType() {
     return type;
   }
 
+  @Override
   public String getName() {
     return name;
   }
 
+  @Override
   public Repository getRepository() {
     return repository;
   }

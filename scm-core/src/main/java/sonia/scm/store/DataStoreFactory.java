@@ -45,14 +45,14 @@ import sonia.scm.repository.Repository;
  * @apiviz.uses sonia.scm.store.DataStore
  */
 public interface DataStoreFactory {
-  <T> DataStore<T> getStore(final StoreParameters storeParameters);
+  <T> DataStore<T> getStore(final TypedStoreParameters<T> storeParameters);
 
   default <T> TypedFloatingDataStoreParameters<T>.Builder withType(Class<T> type) {
     return new TypedFloatingDataStoreParameters<T>(this).new Builder(type);
   }
 }
 
-final class TypedFloatingDataStoreParameters<T> implements StoreParameters {
+final class TypedFloatingDataStoreParameters<T> implements TypedStoreParameters<T> {
 
   private Class<T> type;
   private String name;
@@ -64,14 +64,17 @@ final class TypedFloatingDataStoreParameters<T> implements StoreParameters {
     this.factory = factory;
   }
 
+  @Override
   public Class<T> getType() {
     return type;
   }
 
+  @Override
   public String getName() {
     return name;
   }
 
+  @Override
   public Repository getRepository() {
     return repository;
   }

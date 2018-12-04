@@ -64,14 +64,12 @@ final class FloatingStoreParameters implements StoreParameters {
     this.factory = factory;
   }
 
-  public Class getType() {
-    return null;
-  }
-
+  @Override
   public String getName() {
     return name;
   }
 
+  @Override
   public Repository getRepository() {
     return repository;
   }

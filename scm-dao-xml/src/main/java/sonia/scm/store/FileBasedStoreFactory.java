@@ -67,6 +67,10 @@ public abstract class FileBasedStoreFactory {
   }
 
   protected File getStoreLocation(StoreParameters storeParameters) {
+    return getStoreLocation(storeParameters.getName(), null, storeParameters.getRepository());
+  }
+
+  protected File getStoreLocation(TypedStoreParameters storeParameters) {
     return getStoreLocation(storeParameters.getName(), storeParameters.getType(), storeParameters.getRepository());
   }
 

@@ -58,9 +58,8 @@ public class JAXBConfigurationEntryStoreFactory extends FileBasedStoreFactory
   }
 
   @Override
-  @SuppressWarnings("unchecked")
-  public ConfigurationEntryStore getStore(StoreParameters storeParameters) {
-    return new JAXBConfigurationEntryStore(getStoreLocation(storeParameters.getName().concat(StoreConstants.FILE_EXTENSION), storeParameters.getType(), storeParameters.getRepository()), keyGenerator, storeParameters.getType());
+  public <T> ConfigurationEntryStore<T> getStore(TypedStoreParameters<T> storeParameters) {
+    return new JAXBConfigurationEntryStore<>(getStoreLocation(storeParameters.getName().concat(StoreConstants.FILE_EXTENSION), storeParameters.getType(), storeParameters.getRepository()), keyGenerator, storeParameters.getType());
   }
 
 }
