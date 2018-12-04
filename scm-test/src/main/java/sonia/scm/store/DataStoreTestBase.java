@@ -62,7 +62,6 @@ public abstract class DataStoreTestBase extends KeyValueStoreTestBase
 
 
   @Test
-  // TODO
   public void shouldStoreRepositorySpecificData()
   {
     DataStoreFactory dataStoreFactory = createDataStoreFactory();
