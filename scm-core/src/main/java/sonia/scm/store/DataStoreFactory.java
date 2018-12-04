@@ -82,6 +82,7 @@ public interface DataStoreFactory {
   }
 }
 
+@SuppressWarnings("common-java:DuplicatedBlocks")
 final class TypedFloatingDataStoreParameters<T> {
 
   private final TypedStoreParametersImpl<T> parameters = new TypedStoreParametersImpl<>();

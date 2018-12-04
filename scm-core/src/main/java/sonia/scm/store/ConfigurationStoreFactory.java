@@ -85,6 +85,7 @@ public interface ConfigurationStoreFactory  {
   }
 }
 
+@SuppressWarnings("common-java:DuplicatedBlocks")
 final class TypedFloatingConfigurationStoreParameters<T> {
 
   private final TypedStoreParametersImpl<T> parameters = new TypedStoreParametersImpl<>();
