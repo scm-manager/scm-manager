@@ -812,7 +812,7 @@
     <org.mapstruct.version>1.2.0.Final</org.mapstruct.version>
 
     <!-- Sonar exclusions -->
-    <sonar.cpd.exclusions>**/*StoreFactory.java</sonar.cpd.exclusions>
+    <sonar.cpd.exclusions>**/*StoreFactory.java,**/*UserPassword.js</sonar.cpd.exclusions>
 
   </properties>
 
