@@ -72,7 +72,7 @@ public class HgRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
 
   @Before
   public void initFactory() {
-    when(factory.withName(any())).thenCallRealMethod();
+    when(factory.withType(any())).thenCallRealMethod();
   }
 
   @Override

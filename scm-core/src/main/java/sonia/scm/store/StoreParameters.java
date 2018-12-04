@@ -8,9 +8,9 @@ import sonia.scm.repository.Repository;
  * @author Mohamed Karray
  * @since 2.0.0
  */
-public interface StoreParameters{
+public interface StoreParameters<T> {
 
-  Class getType();
+  Class<T> getType();
 
   String getName();
 

@@ -66,8 +66,8 @@ public class XmlGroupDAO extends AbstractXmlDAO<Group, XmlGroupDatabase>
   @Inject
   public XmlGroupDAO(ConfigurationStoreFactory storeFactory) {
     super(storeFactory
-      .withName(STORE_NAME)
       .withType(XmlGroupDatabase.class)
+      .withName(STORE_NAME)
       .build());
   }
 

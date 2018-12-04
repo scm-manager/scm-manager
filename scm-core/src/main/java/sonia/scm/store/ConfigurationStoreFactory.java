@@ -33,6 +33,8 @@
 package sonia.scm.store;
 
 
+import sonia.scm.repository.Repository;
+
 /**
  * The ConfigurationStoreFactory can be used to create new or get existing 
  * {@link ConfigurationStore} objects.
@@ -45,4 +47,59 @@ package sonia.scm.store;
  * @apiviz.landmark
  * @apiviz.uses sonia.scm.store.ConfigurationStore
  */
-public interface ConfigurationStoreFactory extends StoreFactory<ConfigurationStore>{}
+public interface ConfigurationStoreFactory  {
+  <T> ConfigurationStore<T> getStore(final StoreParameters storeParameters);
+
+  default <T> TypedFloatingConfigurationStoreParameters<T>.Builder withType(Class<T> type) {
+    return new TypedFloatingConfigurationStoreParameters<T>(this).new Builder(type);
+  }
+}
+
+final class TypedFloatingConfigurationStoreParameters<T> implements StoreParameters {
+
+  private Class<T> type;
+  private String name;
+  private Repository repository;
+
+  private final ConfigurationStoreFactory factory;
+
+  TypedFloatingConfigurationStoreParameters(ConfigurationStoreFactory factory) {
+    this.factory = factory;
+  }
+
+  public Class<T> getType() {
+    return type;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public Repository getRepository() {
+    return repository;
+  }
+
+  public class Builder {
+
+    Builder(Class<T> type) {
+      TypedFloatingConfigurationStoreParameters.this.type = type;
+    }
+
+    public OptionalRepositoryBuilder withName(String name) {
+      TypedFloatingConfigurationStoreParameters.this.name = name;
+      return new OptionalRepositoryBuilder();
+    }
+  }
+
+  public class OptionalRepositoryBuilder {
+
+    public OptionalRepositoryBuilder forRepository(Repository repository) {
+      TypedFloatingConfigurationStoreParameters.this.repository = repository;
+      return this;
+    }
+
+    public ConfigurationStore<T> build(){
+      return factory.getStore(TypedFloatingConfigurationStoreParameters.this);
+    }
+  }
+}

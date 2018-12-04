@@ -32,6 +32,8 @@
 
 package sonia.scm.store;
 
+import sonia.scm.repository.Repository;
+
 /**
  * The DataStoreFactory can be used to create new or get existing
  * {@link DataStore}s.
@@ -42,4 +44,59 @@ package sonia.scm.store;
  * @apiviz.landmark
  * @apiviz.uses sonia.scm.store.DataStore
  */
-public interface DataStoreFactory extends StoreFactory<DataStore>{}
+public interface DataStoreFactory {
+  <T> DataStore<T> getStore(final StoreParameters storeParameters);
+
+  default <T> TypedFloatingDataStoreParameters<T>.Builder withType(Class<T> type) {
+    return new TypedFloatingDataStoreParameters<T>(this).new Builder(type);
+  }
+}
+
+final class TypedFloatingDataStoreParameters<T> implements StoreParameters {
+
+  private Class<T> type;
+  private String name;
+  private Repository repository;
+
+  private final DataStoreFactory factory;
+
+  TypedFloatingDataStoreParameters(DataStoreFactory factory) {
+    this.factory = factory;
+  }
+
+  public Class<T> getType() {
+    return type;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public Repository getRepository() {
+    return repository;
+  }
+
+  public class Builder {
+
+    Builder(Class<T> type) {
+      TypedFloatingDataStoreParameters.this.type = type;
+    }
+
+    public OptionalRepositoryBuilder withName(String name) {
+      TypedFloatingDataStoreParameters.this.name = name;
+      return new OptionalRepositoryBuilder();
+    }
+  }
+
+  public class OptionalRepositoryBuilder {
+
+    public OptionalRepositoryBuilder forRepository(Repository repository) {
+      TypedFloatingDataStoreParameters.this.repository = repository;
+      return this;
+    }
+
+    public DataStore<T> build(){
+      return factory.getStore(TypedFloatingDataStoreParameters.this);
+    }
+  }
+}

@@ -112,8 +112,8 @@ public class DefaultSecuritySystem implements SecuritySystem
   public DefaultSecuritySystem(ConfigurationEntryStoreFactory storeFactory)
   {
     store = storeFactory
-      .withName(NAME)
       .withType(AssignedPermission.class)
+      .withName(NAME)
       .build();
     readAvailablePermissions();
   }

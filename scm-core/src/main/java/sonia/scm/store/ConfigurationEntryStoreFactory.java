@@ -32,6 +32,8 @@
 
 package sonia.scm.store;
 
+import sonia.scm.repository.Repository;
+
 /**
  * The ConfigurationEntryStoreFactory can be used to create new or get existing
  * {@link ConfigurationEntryStore}s.
@@ -45,5 +47,59 @@ package sonia.scm.store;
  * @apiviz.landmark
  * @apiviz.uses sonia.scm.store.ConfigurationEntryStore
  */
-public interface ConfigurationEntryStoreFactory extends StoreFactory<ConfigurationEntryStore> {
+public interface ConfigurationEntryStoreFactory {
+  <T> ConfigurationEntryStore<T> getStore(final StoreParameters storeParameters);
+
+  default <T> TypedFloatingConfigurationEntryStoreParameters<T>.Builder withType(Class<T> type) {
+    return new TypedFloatingConfigurationEntryStoreParameters<T>(this).new Builder(type);
+  }
+}
+
+final class TypedFloatingConfigurationEntryStoreParameters<T> implements StoreParameters {
+
+  private Class<T> type;
+  private String name;
+  private Repository repository;
+
+  private final ConfigurationEntryStoreFactory factory;
+
+  TypedFloatingConfigurationEntryStoreParameters(ConfigurationEntryStoreFactory factory) {
+    this.factory = factory;
+  }
+
+  public Class<T> getType() {
+    return type;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public Repository getRepository() {
+    return repository;
+  }
+
+  public class Builder {
+
+    Builder(Class<T> type) {
+      TypedFloatingConfigurationEntryStoreParameters.this.type = type;
+    }
+
+    public OptionalRepositoryBuilder withName(String name) {
+      TypedFloatingConfigurationEntryStoreParameters.this.name = name;
+      return new OptionalRepositoryBuilder();
+    }
+  }
+
+  public class OptionalRepositoryBuilder {
+
+    public OptionalRepositoryBuilder forRepository(Repository repository) {
+      TypedFloatingConfigurationEntryStoreParameters.this.repository = repository;
+      return this;
+    }
+
+    public ConfigurationEntryStore<T> build(){
+      return factory.getStore(TypedFloatingConfigurationEntryStoreParameters.this);
+    }
+  }
 }

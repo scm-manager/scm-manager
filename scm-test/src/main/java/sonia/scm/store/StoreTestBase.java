@@ -66,7 +66,7 @@ public abstract class StoreTestBase extends AbstractTestBase
   @Test
   public void testGet()
   {
-    ConfigurationStore<StoreObject> store = createStoreFactory().withName("test").withType(StoreObject.class).build();
+    ConfigurationStore<StoreObject> store = createStoreFactory().withType(StoreObject.class).withName("test").build();
 
     assertNotNull(store);
 
@@ -82,7 +82,7 @@ public abstract class StoreTestBase extends AbstractTestBase
   @Test
   public void testSet()
   {
-    ConfigurationStore<StoreObject> store = createStoreFactory().withName("test").withType(StoreObject.class).build();
+    ConfigurationStore<StoreObject> store = createStoreFactory().withType(StoreObject.class).withName("test").build();
 
     assertNotNull(store);
 

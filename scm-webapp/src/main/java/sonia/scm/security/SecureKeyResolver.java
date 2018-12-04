@@ -91,8 +91,8 @@ public class SecureKeyResolver extends SigningKeyResolverAdapter
   public SecureKeyResolver(ConfigurationEntryStoreFactory storeFactory)
   {
     store = storeFactory
-      .withName(STORE_NAME)
       .withType(SecureKey.class)
+      .withName(STORE_NAME)
       .build();
   }
 

@@ -65,8 +65,8 @@ public class XmlUserDAO extends AbstractXmlDAO<User, XmlUserDatabase>
   public XmlUserDAO(ConfigurationStoreFactory storeFactory)
   {
     super(storeFactory
-      .withName(STORE_NAME)
       .withType(XmlUserDatabase.class)
+      .withName(STORE_NAME)
       .build());
   }
 

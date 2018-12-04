@@ -67,7 +67,6 @@ public class FileBlobStoreTest extends BlobStoreTestBase
   public void shouldStoreAndLoadInRepository() {
     BlobStore store = createBlobStoreFactory()
       .withName("test")
-      .withType(StoreObject.class)
       .forRepository(new Repository("id", "git", "ns", "n"))
       .build();
 

@@ -65,13 +65,13 @@ public abstract class DataStoreTestBase extends KeyValueStoreTestBase
   // TODO
   public void shouldStoreRepositorySpecificData()
   {
-    StoreFactory<DataStore > dataStoreFactory = createDataStoreFactory();
+    DataStoreFactory dataStoreFactory = createDataStoreFactory();
     StoreObject obj = new StoreObject("test-1");
     Repository repository = RepositoryTestData.createHeartOfGold();
 
     DataStore<StoreObject> store = dataStoreFactory
-      .withName("test")
       .withType(StoreObject.class)
+      .withName("test")
       .forRepository(repository)
       .build();
 

@@ -57,8 +57,8 @@ public class JAXBConfigurationStoreTest extends StoreTestBase {
   public void shouldStoreAndLoadInRepository()
   {
     ConfigurationStore<StoreObject> store = createStoreFactory()
-      .withName("test")
       .withType(StoreObject.class)
+      .withName("test")
       .forRepository(new Repository("id", "git", "ns", "n"))
       .build();
 

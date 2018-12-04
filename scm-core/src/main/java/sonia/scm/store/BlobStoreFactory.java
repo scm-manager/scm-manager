@@ -32,6 +32,8 @@
 
 package sonia.scm.store;
 
+import sonia.scm.repository.Repository;
+
 /**
  * The BlobStoreFactory can be used to create new or get existing
  * {@link BlobStore}s.
@@ -42,6 +44,51 @@ package sonia.scm.store;
  * @apiviz.landmark
  * @apiviz.uses sonia.scm.store.BlobStore
  */
-public interface BlobStoreFactory extends StoreFactory<BlobStore> {
+public interface BlobStoreFactory {
 
+  BlobStore getStore(final StoreParameters storeParameters);
+
+  default FloatingStoreParameters.Builder withName(String name) {
+    return new FloatingStoreParameters(this).new Builder(name);
+  }
+}
+
+final class FloatingStoreParameters implements StoreParameters {
+
+  private String name;
+  private Repository repository;
+
+  private final BlobStoreFactory factory;
+
+  FloatingStoreParameters(BlobStoreFactory factory) {
+    this.factory = factory;
+  }
+
+  public Class getType() {
+    return null;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public Repository getRepository() {
+    return repository;
+  }
+
+  public class Builder {
+
+    Builder(String name) {
+      FloatingStoreParameters.this.name = name;
+    }
+
+    public FloatingStoreParameters.Builder forRepository(Repository repository) {
+      FloatingStoreParameters.this.repository = repository;
+      return this;
+    }
+
+    public BlobStore build(){
+      return factory.getStore(FloatingStoreParameters.this);
+    }
+  }
 }
