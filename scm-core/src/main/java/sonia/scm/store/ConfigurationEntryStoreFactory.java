@@ -35,12 +35,28 @@ package sonia.scm.store;
 import sonia.scm.repository.Repository;
 
 /**
- * The ConfigurationEntryStoreFactory can be used to create new or get existing
- * {@link ConfigurationEntryStore}s.
+ * The ConfigurationEntryStoreFactory can be used to create new or get existing {@link ConfigurationEntryStore}s.
+ * <br>
+ * <b>Note:</b> the default implementation uses the same location as the {@link ConfigurationStoreFactory}, so be sure
+ * that the store names are unique for all {@link ConfigurationEntryStore}s and {@link ConfigurationEntryStore}s.
+ * <br>
+ * You can either create a global {@link ConfigurationEntryStore} or a {@link ConfigurationEntryStore} for a specific
+ * repository. To create a global {@link ConfigurationEntryStore} call:
+ * <code><pre>
+ *     configurationEntryStoreFactory
+ *       .withType(PersistedType.class)
+ *       .withName("name")
+ *       .build();
+ * </pre></code>
+ * To create a {@link ConfigurationEntryStore} for a specific repository call:
+ * <code><pre>
+ *     configurationEntryStoreFactory
+ *       .withType(PersistedType.class)
+ *       .withName("name")
+ *       .forRepository(repository)
+ *       .build();
+ * </pre></code>
  *
- * <b>Note:</b> the default implementation uses the same location as the {@link ConfigurationStoreFactory}, so be sure that the
- * store names are unique for all {@link ConfigurationEntryStore}s and {@link ConfigurationStore}s.
- * 
  * @author Sebastian Sdorra
  * @since 1.31
  * 
@@ -48,8 +64,22 @@ import sonia.scm.repository.Repository;
  * @apiviz.uses sonia.scm.store.ConfigurationEntryStore
  */
 public interface ConfigurationEntryStoreFactory {
+
+  /**
+   * Creates a new or gets an existing {@link ConfigurationEntryStore}. Instead of calling this method you should use
+   * the floating API from {@link #withType(Class)}.
+   *
+   * @param storeParameters The parameters for the {@link ConfigurationEntryStore}.
+   * @return A new or an existing {@link ConfigurationEntryStore} for the given parameters.
+   */
   <T> ConfigurationEntryStore<T> getStore(final TypedStoreParameters<T> storeParameters);
 
+  /**
+   * Use this to create a new or get an existing {@link ConfigurationEntryStore} with a floating API.
+   * @param type The type for the {@link ConfigurationEntryStore}.
+   * @return Floating API to set the name and either specify a repository or directly build a global
+   * {@link ConfigurationEntryStore}.
+   */
   default <T> TypedFloatingConfigurationEntryStoreParameters<T>.Builder withType(Class<T> type) {
     return new TypedFloatingConfigurationEntryStoreParameters<T>(this).new Builder(type);
   }
@@ -70,6 +100,11 @@ final class TypedFloatingConfigurationEntryStoreParameters<T> {
       parameters.setType(type);
     }
 
+    /**
+     * Use this to set the name for the {@link ConfigurationEntryStore}.
+     * @param name The name for the {@link ConfigurationEntryStore}.
+     * @return Floating API to either specify a repository or directly build a global {@link ConfigurationEntryStore}.
+     */
     public OptionalRepositoryBuilder withName(String name) {
       parameters.setName(name);
       return new OptionalRepositoryBuilder();
@@ -78,11 +113,21 @@ final class TypedFloatingConfigurationEntryStoreParameters<T> {
 
   public class OptionalRepositoryBuilder {
 
+    /**
+     * Use this to create or get a {@link ConfigurationEntryStore} for a specific repository. This step is optional. If
+     * you want to have a global {@link ConfigurationEntryStore}, omit this.
+     * @param repository The optional repository for the {@link ConfigurationEntryStore}.
+     * @return Floating API to finish the call.
+     */
     public OptionalRepositoryBuilder forRepository(Repository repository) {
       parameters.setRepository(repository);
       return this;
     }
 
+    /**
+     * Creates or gets the {@link ConfigurationEntryStore} with the given name and (if specified) the given repository.
+     * If no repository is given, the {@link ConfigurationEntryStore} will be global.
+     */
     public ConfigurationEntryStore<T> build(){
       return factory.getStore(parameters);
     }

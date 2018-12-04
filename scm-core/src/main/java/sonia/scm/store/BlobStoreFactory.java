@@ -35,8 +35,22 @@ package sonia.scm.store;
 import sonia.scm.repository.Repository;
 
 /**
- * The BlobStoreFactory can be used to create new or get existing
- * {@link BlobStore}s.
+ * The BlobStoreFactory can be used to create a new or get an existing {@link BlobStore}s.
+ * <br>
+ * You can either create a global {@link BlobStore} or a {@link BlobStore} for a specific repository. To create a global
+ * {@link BlobStore} call:
+ * <code><pre>
+ *     blobStoreFactory
+ *       .withName("name")
+ *       .build();
+ * </pre></code>
+ * To create a {@link BlobStore} for a specific repository call:
+ * <code><pre>
+ *     blobStoreFactory
+ *       .withName("name")
+ *       .forRepository(repository)
+ *       .build();
+ * </pre></code>
  *
  * @author Sebastian Sdorra
  * @since 1.23
@@ -46,8 +60,20 @@ import sonia.scm.repository.Repository;
  */
 public interface BlobStoreFactory {
 
+  /**
+   * Creates a new or gets an existing {@link BlobStore}. Instead of calling this method you should use the floating API
+   * from {@link #withName(String)}.
+   *
+   * @param storeParameters The parameters for the blob store.
+   * @return A new or an existing {@link BlobStore} for the given parameters.
+   */
   BlobStore getStore(final StoreParameters storeParameters);
 
+  /**
+   * Use this to create a new or get an existing {@link BlobStore} with a floating API.
+   * @param name The name for the {@link BlobStore}.
+   * @return Floating API to either specify a repository or directly build a global {@link BlobStore}.
+   */
   default FloatingStoreParameters.Builder withName(String name) {
     return new FloatingStoreParameters(this).new Builder(name);
   }
@@ -80,11 +106,21 @@ final class FloatingStoreParameters implements StoreParameters {
       FloatingStoreParameters.this.name = name;
     }
 
+    /**
+     * Use this to create or get a {@link BlobStore} for a specific repository. This step is optional. If you want to
+     * have a global {@link BlobStore}, omit this.
+     * @param repository The optional repository for the {@link BlobStore}.
+     * @return Floating API to finish the call.
+     */
     public FloatingStoreParameters.Builder forRepository(Repository repository) {
       FloatingStoreParameters.this.repository = repository;
       return this;
     }
 
+    /**
+     * Creates or gets the {@link BlobStore} with the given name and (if specified) the given repository. If no
+     * repository is given, the {@link BlobStore} will be global.
+     */
     public BlobStore build(){
       return factory.getStore(FloatingStoreParameters.this);
     }
