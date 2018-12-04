@@ -34,6 +34,7 @@ package sonia.scm.repository;
 //~--- non-JDK imports --------------------------------------------------------
 
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -44,6 +45,8 @@ import java.io.File;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -65,6 +68,11 @@ public class HgRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
 
     assertTrue(hgDirectory.exists());
     assertTrue(hgDirectory.isDirectory());
+  }
+
+  @Before
+  public void initFactory() {
+    when(factory.withType(any())).thenCallRealMethod();
   }
 
   @Override

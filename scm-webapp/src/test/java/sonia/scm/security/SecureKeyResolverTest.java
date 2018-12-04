@@ -36,20 +36,22 @@ package sonia.scm.security;
 //~--- non-JDK imports --------------------------------------------------------
 
 import io.jsonwebtoken.Jwts;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-
 import sonia.scm.store.ConfigurationEntryStore;
 import sonia.scm.store.ConfigurationEntryStoreFactory;
 
-import static org.junit.Assert.*;
-
-import static org.mockito.Mockito.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.argThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  *
@@ -122,11 +124,14 @@ public class SecureKeyResolverTest
   @Before
   public void setUp()
   {
-    ConfigurationEntryStoreFactory factory =
-      mock(ConfigurationEntryStoreFactory.class);
+    ConfigurationEntryStoreFactory factory = mock(ConfigurationEntryStoreFactory.class);
 
-    when(factory.getStore(SecureKey.class,
-      SecureKeyResolver.STORE_NAME)).thenReturn(store);
+    when(factory.withType(any())).thenCallRealMethod();
+    when(factory.<SecureKey>getStore(argThat(storeParameters -> {
+      assertThat(storeParameters.getName()).isEqualTo(SecureKeyResolver.STORE_NAME);
+      assertThat(storeParameters.getType()).isEqualTo(SecureKey.class);
+      return true;
+    }))).thenReturn(store);
     resolver = new SecureKeyResolver(factory);
   }
 

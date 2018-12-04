@@ -107,7 +107,8 @@ void analyzeWith(Maven mvn) {
         "-Dsonar.pullrequest.key=${env.CHANGE_ID} " +
         "-Dsonar.pullrequest.provider=bitbucketcloud " +
         "-Dsonar.pullrequest.bitbucketcloud.owner=sdorra " +
-        "-Dsonar.pullrequest.bitbucketcloud.repository=scm-manager "
+        "-Dsonar.pullrequest.bitbucketcloud.repository=scm-manager " +
+        "-Dsonar.cpd.exclusions=**/*StoreFactory.java,**/*UserPassword.js "
     } else {
       mvnArgs += " -Dsonar.branch.name=${env.BRANCH_NAME} "
       if (!isMainBranch()) {

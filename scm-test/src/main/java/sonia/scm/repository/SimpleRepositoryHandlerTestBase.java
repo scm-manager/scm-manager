@@ -43,7 +43,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -98,7 +97,6 @@ public abstract class SimpleRepositoryHandlerTestBase extends AbstractTestBase {
     File nativeRepoDirectory = initRepository();
 
     handler.create(repository);
-
 
     assertTrue(nativeRepoDirectory.exists());
     assertTrue(nativeRepoDirectory.isDirectory());
