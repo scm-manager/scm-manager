@@ -222,8 +222,4 @@
     </plugins>
   </build>
 
-  <properties>
-    <sonar.cpd.exclusions>**/*StoreFactory.java</sonar.cpd.exclusions>
-  </properties>
-  
 </project>
