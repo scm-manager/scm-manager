@@ -33,27 +33,103 @@
 package sonia.scm.store;
 
 
+import sonia.scm.repository.Repository;
+
 /**
- * The ConfigurationStoreFactory can be used to create new or get existing 
- * {@link ConfigurationStore} objects.
+ * The ConfigurationStoreFactory can be used to create new or get existing {@link ConfigurationStore} objects.
+ * <br>
+ * <b>Note:</b> the default implementation uses the same location as the {@link ConfigurationEntryStoreFactory}, so be
+ * sure that the store names are unique for all {@link ConfigurationEntryStore}s and {@link ConfigurationStore}s.
+ * <br>
+ * You can either create a global {@link ConfigurationStore} or a {@link ConfigurationStore} for a specific repository.
+ * To create a global {@link ConfigurationStore} call:
+ * <code><pre>
+ *     configurationStoreFactory
+ *       .withType(PersistedType.class)
+ *       .withName("name")
+ *       .build();
+ * </pre></code>
+ * To create a {@link ConfigurationStore} for a specific repository call:
+ * <code><pre>
+ *     configurationStoreFactory
+ *       .withType(PersistedType.class)
+ *       .withName("name")
+ *       .forRepository(repository)
+ *       .build();
+ * </pre></code>
  *
  * @author Sebastian Sdorra
  * 
  * @apiviz.landmark
  * @apiviz.uses sonia.scm.store.ConfigurationStore
  */
-public interface ConfigurationStoreFactory
-{
+public interface ConfigurationStoreFactory  {
 
   /**
-   * Get an existing {@link ConfigurationStore} or create a new one.
+   * Creates a new or gets an existing {@link ConfigurationStore}. Instead of calling this method you should use the
+   * floating API from {@link #withType(Class)}.
    *
-   *
-   * @param type type of the store objects
-   * @param name name of the store
-   * @param <T> type of the store objects
-   *
-   * @return {@link ConfigurationStore} of the given type and name
+   * @param storeParameters The parameters for the {@link ConfigurationStore}.
+   * @return A new or an existing {@link ConfigurationStore} for the given parameters.
    */
-  public <T> ConfigurationStore<T> getStore(Class<T> type, String name);
+  <T> ConfigurationStore<T> getStore(final TypedStoreParameters<T> storeParameters);
+
+  /**
+   * Use this to create a new or get an existing {@link ConfigurationStore} with a floating API.
+   * @param type The type for the {@link ConfigurationStore}.
+   * @return Floating API to set the name and either specify a repository or directly build a global
+   * {@link ConfigurationStore}.
+   */
+  default <T> TypedFloatingConfigurationStoreParameters<T>.Builder withType(Class<T> type) {
+    return new TypedFloatingConfigurationStoreParameters<T>(this).new Builder(type);
+  }
+}
+
+final class TypedFloatingConfigurationStoreParameters<T> {
+
+  private final TypedStoreParametersImpl<T> parameters = new TypedStoreParametersImpl<>();
+  private final ConfigurationStoreFactory factory;
+
+  TypedFloatingConfigurationStoreParameters(ConfigurationStoreFactory factory) {
+    this.factory = factory;
+  }
+
+  public class Builder {
+
+    Builder(Class<T> type) {
+      parameters.setType(type);
+    }
+
+    /**
+     * Use this to set the name for the {@link ConfigurationStore}.
+     * @param name The name for the {@link ConfigurationStore}.
+     * @return Floating API to either specify a repository or directly build a global {@link ConfigurationStore}.
+     */
+    public OptionalRepositoryBuilder withName(String name) {
+      parameters.setName(name);
+      return new OptionalRepositoryBuilder();
+    }
+  }
+
+  public class OptionalRepositoryBuilder {
+
+    /**
+     * Use this to create or get a {@link ConfigurationStore} for a specific repository. This step is optional. If you
+     * want to have a global {@link ConfigurationStore}, omit this.
+     * @param repository The optional repository for the {@link ConfigurationStore}.
+     * @return Floating API to finish the call.
+     */
+    public OptionalRepositoryBuilder forRepository(Repository repository) {
+      parameters.setRepository(repository);
+      return this;
+    }
+
+    /**
+     * Creates or gets the {@link ConfigurationStore} with the given name and (if specified) the given repository. If no
+     * repository is given, the {@link ConfigurationStore} will be global.
+     */
+    public ConfigurationStore<T> build(){
+      return factory.getStore(parameters);
+    }
+  }
 }

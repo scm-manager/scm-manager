@@ -31,8 +31,13 @@
 package sonia.scm.security;
 
 import io.jsonwebtoken.Claims;
+
+import java.util.Collections;
 import java.util.Date;
+import java.util.Map;
 import java.util.Optional;
+
+import static java.util.Optional.ofNullable;
 
 /**
  * Jwt implementation of {@link AccessToken}.
@@ -41,7 +46,9 @@ import java.util.Optional;
  * @since 2.0.0
  */
 public final class JwtAccessToken implements AccessToken {
-  
+
+  public static final String REFRESHABLE_UNTIL_CLAIM_KEY = "scm-manager.refreshExpiration";
+  public static final String PARENT_TOKEN_ID_CLAIM_KEY = "scm-manager.parentTokenId";
   private final Claims claims;
   private final String compact;
 
@@ -76,6 +83,15 @@ public final class JwtAccessToken implements AccessToken {
   }
 
   @Override
+  public Optional<Date> getRefreshExpiration() {
+    return ofNullable(claims.get(REFRESHABLE_UNTIL_CLAIM_KEY, Date.class));
+  }
+
+  public Optional<String> getParentKey() {
+    return ofNullable(claims.get(PARENT_TOKEN_ID_CLAIM_KEY).toString());
+  }
+
+  @Override
   public Scope getScope() {
     return Scopes.fromClaims(claims);
   }
@@ -90,5 +106,9 @@ public final class JwtAccessToken implements AccessToken {
   public String compact() {
     return compact;
   }
-  
+
+  @Override
+  public Map<String, Object> getClaims() {
+    return Collections.unmodifiableMap(claims);
+  }
 }

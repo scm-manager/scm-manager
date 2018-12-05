@@ -72,9 +72,11 @@ public abstract class AbstractRepositoryHandler<C extends RepositoryConfig>
    *
    * @param storeFactory
    */
-  protected AbstractRepositoryHandler(ConfigurationStoreFactory storeFactory)
-  {
-    this.store = storeFactory.getStore(getConfigClass(), getType().getName());
+  protected AbstractRepositoryHandler(ConfigurationStoreFactory storeFactory) {
+    this.store = storeFactory
+      .withType(getConfigClass())
+      .withName(getType().getName())
+      .build();
   }
 
   //~--- get methods ----------------------------------------------------------

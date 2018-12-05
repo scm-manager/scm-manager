@@ -108,9 +108,13 @@ public class DefaultSecuritySystem implements SecuritySystem
    * @param storeFactory
    */
   @Inject
+  @SuppressWarnings("unchecked")
   public DefaultSecuritySystem(ConfigurationEntryStoreFactory storeFactory)
   {
-    store = storeFactory.getStore(AssignedPermission.class, NAME);
+    store = storeFactory
+      .withType(AssignedPermission.class)
+      .withName(NAME)
+      .build();
     readAvailablePermissions();
   }
 

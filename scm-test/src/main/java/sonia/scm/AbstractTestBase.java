@@ -46,10 +46,15 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 
+import sonia.scm.io.DefaultFileSystem;
+import sonia.scm.repository.InitialRepositoryLocationResolver;
+import sonia.scm.repository.RepositoryDAO;
+import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.MockUtil;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -66,10 +71,29 @@ import java.util.logging.Logger;
 public class AbstractTestBase
 {
 
-  /** Field description */
   private static ThreadState subjectThreadState;
 
-  //~--- methods --------------------------------------------------------------
+  protected SCMContextProvider contextProvider;
+
+  private File tempDirectory;
+
+  protected DefaultFileSystem fileSystem;
+
+  protected RepositoryDAO repositoryDAO = mock(RepositoryDAO.class);
+  protected RepositoryLocationResolver repositoryLocationResolver;
+
+  @Before
+  public void setUpTest() throws Exception
+  {
+    tempDirectory = new File(System.getProperty("java.io.tmpdir"),
+      UUID.randomUUID().toString());
+    assertTrue(tempDirectory.mkdirs());
+    contextProvider = MockUtil.getSCMContextProvider(tempDirectory);
+    fileSystem = new DefaultFileSystem();
+    InitialRepositoryLocationResolver initialRepoLocationResolver = new InitialRepositoryLocationResolver();
+    repositoryLocationResolver = new RepositoryLocationResolver(contextProvider, repositoryDAO, initialRepoLocationResolver);
+    postSetUp();
+  }
 
   /**
    * Method description
@@ -165,25 +189,6 @@ public class AbstractTestBase
     }
   }
 
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @throws Exception
-   */
-  @Before
-  public void setUpTest() throws Exception
-  {
-    tempDirectory = new File(System.getProperty("java.io.tmpdir"),
-      UUID.randomUUID().toString());
-    assertTrue(tempDirectory.mkdirs());
-    contextProvider = MockUtil.getSCMContextProvider(tempDirectory);
-    postSetUp();
-  }
-
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Clears Shiro's thread state, ensuring the thread remains clean for
@@ -249,12 +254,4 @@ public class AbstractTestBase
     subjectThreadState = createThreadState(subject);
     subjectThreadState.bind();
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  protected SCMContextProvider contextProvider;
-
-  /** Field description */
-  private File tempDirectory;
 }

@@ -41,7 +41,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.SCMContextProvider;
+import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.security.KeyGenerator;
+import sonia.scm.util.IOUtil;
+
+import java.io.File;
 
 /**
  *
@@ -49,57 +53,20 @@ import sonia.scm.security.KeyGenerator;
  */
 @Singleton
 public class JAXBDataStoreFactory extends FileBasedStoreFactory
-  implements DataStoreFactory
-{
+  implements DataStoreFactory {
 
-  /** Field description */
-  private static final String DIRECTORY_NAME = "data";
+  private KeyGenerator keyGenerator;
 
-  /**
-   * the logger for JAXBDataStoreFactory
-   */
-  private static final Logger logger =
-    LoggerFactory.getLogger(JAXBDataStoreFactory.class);
-
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param context
-   * @param keyGenerator
-   */
   @Inject
-  public JAXBDataStoreFactory(SCMContextProvider context,
-    KeyGenerator keyGenerator)
-  {
-    super(context, DIRECTORY_NAME);
+  public JAXBDataStoreFactory(SCMContextProvider contextProvider , RepositoryLocationResolver repositoryLocationResolver, KeyGenerator keyGenerator) {
+    super(contextProvider, repositoryLocationResolver, Store.DATA);
     this.keyGenerator = keyGenerator;
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param type
-   * @param name
-   * @param <T>
-   *
-   * @return
-   */
   @Override
-  public <T> DataStore<T> getStore(Class<T> type, String name)
-  {
-    logger.debug("create new store for type {} with name {}", type, name);
-
-    return new JAXBDataStore<>(keyGenerator, type, getDirectory(name));
+  public <T> DataStore<T> getStore(TypedStoreParameters<T> storeParameters) {
+    File storeLocation = getStoreLocation(storeParameters);
+    IOUtil.mkdirs(storeLocation);
+    return new JAXBDataStore<>(keyGenerator, storeParameters.getType(), storeLocation);
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private KeyGenerator keyGenerator;
 }

@@ -34,7 +34,14 @@ package sonia.scm.store;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.junit.Test;
+import sonia.scm.repository.Repository;
 import sonia.scm.security.UUIDKeyGenerator;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertNotNull;
 
 /**
  *
@@ -52,6 +59,24 @@ public class FileBlobStoreTest extends BlobStoreTestBase
   @Override
   protected BlobStoreFactory createBlobStoreFactory()
   {
-    return new FileBlobStoreFactory(contextProvider, new UUIDKeyGenerator());
+    return new FileBlobStoreFactory(contextProvider, repositoryLocationResolver, new UUIDKeyGenerator());
+  }
+
+  @Test
+  @SuppressWarnings("unchecked")
+  public void shouldStoreAndLoadInRepository() {
+    BlobStore store = createBlobStoreFactory()
+      .withName("test")
+      .forRepository(new Repository("id", "git", "ns", "n"))
+      .build();
+
+    Blob createdBlob = store.create("abc");
+    List<Blob> storedBlobs = store.getAll();
+
+    assertNotNull(createdBlob);
+    assertThat(storedBlobs)
+      .isNotNull()
+      .hasSize(1)
+      .usingElementComparatorOnFields("id").containsExactly(createdBlob);
   }
 }

@@ -810,6 +810,13 @@
     <netbeans.hint.license>SCM-BSD</netbeans.hint.license>
     <jdk.classifier />
     <org.mapstruct.version>1.2.0.Final</org.mapstruct.version>
+
+    <!-- Sonar exclusions -->
+    <!-- *StoreFactory classes are excluded because extracting the floating store parameter classes in a generic -->
+    <!-- common class creates runtime errors (IncompatibleClassChange) -->
+    <!-- *UserPassword JS files are excluded because extraction of common code would not make the code more readable -->
+    <sonar.cpd.exclusions>**/*StoreFactory.java,**/*UserPassword.js</sonar.cpd.exclusions>
+
   </properties>
 
 </project>

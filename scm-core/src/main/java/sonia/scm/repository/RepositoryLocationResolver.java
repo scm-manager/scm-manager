@@ -4,7 +4,6 @@ import groovy.lang.Singleton;
 import sonia.scm.SCMContextProvider;
 
 import javax.inject.Inject;
-import java.io.File;
 import java.nio.file.Path;
 
 /**

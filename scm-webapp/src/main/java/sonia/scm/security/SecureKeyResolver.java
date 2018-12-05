@@ -87,9 +87,13 @@ public class SecureKeyResolver extends SigningKeyResolverAdapter
    * @param storeFactory store factory
    */
   @Inject
+  @SuppressWarnings("unchecked")
   public SecureKeyResolver(ConfigurationEntryStoreFactory storeFactory)
   {
-    this.store = storeFactory.getStore(SecureKey.class, STORE_NAME);
+    store = storeFactory
+      .withType(SecureKey.class)
+      .withName(STORE_NAME)
+      .build();
   }
 
   //~--- methods --------------------------------------------------------------

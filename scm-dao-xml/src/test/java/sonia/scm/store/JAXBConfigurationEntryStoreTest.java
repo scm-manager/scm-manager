@@ -37,24 +37,21 @@ package sonia.scm.store;
 
 import com.google.common.io.Closeables;
 import com.google.common.io.Resources;
-
 import org.junit.Test;
-
 import sonia.scm.security.AssignedPermission;
 import sonia.scm.security.UUIDKeyGenerator;
-
-import static org.junit.Assert.*;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-
 import java.net.URL;
-
 import java.util.UUID;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -132,19 +129,29 @@ public class JAXBConfigurationEntryStoreTest
   public void testStoreAndLoad() throws IOException
   {
     String name = UUID.randomUUID().toString();
-    ConfigurationEntryStore<AssignedPermission> store =
-      createPermissionStore(RESOURCE_FIXED, name);
+    ConfigurationEntryStore<AssignedPermission> store = createPermissionStore(RESOURCE_FIXED, name);
 
     store.put("a45", new AssignedPermission("tuser4", "repository:create"));
-    store =
-      createConfigurationStoreFactory().getStore(AssignedPermission.class,
-        name);
+    store = createConfigurationStoreFactory()
+      .withType(AssignedPermission.class)
+      .withName(name)
+      .build();
 
     AssignedPermission ap = store.get("a45");
 
     assertNotNull(ap);
     assertEquals("tuser4", ap.getName());
     assertEquals("repository:create", ap.getPermission());
+  }
+
+ @Test
+  public void shouldStoreAndLoadInRepository() throws IOException
+  {
+    repoStore.put("abc", new StoreObject("abc_value"));
+    StoreObject storeObject = repoStore.get("abc");
+
+    assertNotNull(storeObject);
+    assertEquals("abc_value", storeObject.getValue());
   }
 
   /**
@@ -154,10 +161,9 @@ public class JAXBConfigurationEntryStoreTest
    * @return
    */
   @Override
-  protected ConfigurationEntryStoreFactory createConfigurationStoreFactory()
+  protected ConfigurationEntryStoreFactory  createConfigurationStoreFactory()
   {
-    return new JAXBConfigurationEntryStoreFactory(new UUIDKeyGenerator(),
-      contextProvider);
+    return new JAXBConfigurationEntryStoreFactory(contextProvider, repositoryLocationResolver, new UUIDKeyGenerator());
   }
 
   /**
@@ -225,8 +231,9 @@ public class JAXBConfigurationEntryStoreTest
     }
 
     copy(resource, name);
-
-    return createConfigurationStoreFactory().getStore(AssignedPermission.class,
-      name);
+    return createConfigurationStoreFactory()
+      .withType(AssignedPermission.class)
+      .withName(name)
+      .build();
   }
 }
