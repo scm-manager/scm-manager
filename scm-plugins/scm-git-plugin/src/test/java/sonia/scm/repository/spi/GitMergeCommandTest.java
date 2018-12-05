@@ -19,7 +19,7 @@ import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SubjectAware(configuration = "classpath:sonia/scm/configuration/shiro.ini")
+@SubjectAware(configuration = "classpath:sonia/scm/configuration/shiro.ini", username = "admin", password = "secret")
 public class GitMergeCommandTest extends AbstractGitCommandTestBase {
 
   private static final String REALM = "AdminRealm";
@@ -111,11 +111,14 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
   }
 
   @Test
-  @SubjectAware(username = "admin", password = "secret")
   public void shouldTakeAuthorFromSubjectIfNotSet() throws IOException, GitAPIException {
+    SimplePrincipalCollection principals = new SimplePrincipalCollection();
+    principals.add("admin", REALM);
+    principals.add( new User("dirk", "Dirk Gently", "dirk@holistic.det"), REALM);
     shiro.setSubject(
       new Subject.Builder()
-        .principals(new SimplePrincipalCollection(new User("dirk", "Dirk Gently", "dirk@holistic.det"), REALM))
+        .principals(principals)
+        .authenticated(true)
         .buildSubject());
     GitMergeCommand command = createCommand();
     MergeCommandRequest request = new MergeCommandRequest();
