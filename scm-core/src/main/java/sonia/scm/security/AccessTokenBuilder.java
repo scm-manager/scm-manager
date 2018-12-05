@@ -74,11 +74,21 @@ public interface AccessTokenBuilder {
    * Sets the expiration for the token.
    * 
    * @param count expiration count
-   * @param unit expirtation unit
+   * @param unit expiration unit
    * 
    * @return {@code this}
    */
   AccessTokenBuilder expiresIn(long count, TimeUnit unit);
+
+  /**
+   * Sets the time how long this token may be refreshed. Set this to 0 (zero) to disable automatic refresh.
+   *
+   * @param count Time unit count. If set to 0, automatic refresh is disabled.
+   * @param unit time unit
+   *
+   * @return {@code this}
+   */
+  AccessTokenBuilder refreshableFor(long count, TimeUnit unit);
   
   /**
    * Reduces the permissions of the token by providing a scope.
