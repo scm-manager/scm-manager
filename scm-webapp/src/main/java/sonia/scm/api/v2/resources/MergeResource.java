@@ -32,6 +32,7 @@ public class MergeResource {
   }
 
   @POST
+  @Path("")
   @Produces(VndMediaType.MERGE_RESULT)
   @Consumes(VndMediaType.MERGE_COMMAND)
   public Response merge(@PathParam("namespace") String namespace, @PathParam("name") String name, @Valid MergeCommandDto mergeCommand) {
