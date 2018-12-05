@@ -41,7 +41,7 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
 
   @Override
   public MergeCommandResult merge(MergeCommandRequest request) {
-    RepositoryPermissions.permissionWrite(context.getRepository().getId()).check();
+    RepositoryPermissions.push(context.getRepository().getId()).check();
 
     try (WorkingCopy workingCopy = workdirFactory.createWorkingCopy(context)) {
       Repository repository = workingCopy.get();
