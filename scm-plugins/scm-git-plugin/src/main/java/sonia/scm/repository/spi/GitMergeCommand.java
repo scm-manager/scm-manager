@@ -116,10 +116,12 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
       logger.debug("merged branch {} into {}", toMerge, target);
       Person authorToUse = determineAuthor();
       try {
-        clone.commit()
-          .setAuthor(authorToUse.getName(), authorToUse.getMail())
-          .setMessage(MessageFormat.format(determineMessageTemplate(), toMerge, target))
-          .call();
+        if (!clone.status().call().isClean()) {
+          clone.commit()
+            .setAuthor(authorToUse.getName(), authorToUse.getMail())
+            .setMessage(MessageFormat.format(determineMessageTemplate(), toMerge, target))
+            .call();
+        }
       } catch (GitAPIException e) {
         throw new InternalRepositoryException(context.getRepository(), "could not commit merge between branch " + toMerge + " and " + target, e);
       }
