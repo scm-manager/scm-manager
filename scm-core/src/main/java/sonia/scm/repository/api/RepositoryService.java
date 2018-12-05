@@ -363,8 +363,8 @@ public final class RepositoryService implements Closeable {
    *                                      by the implementation of the repository service provider.
    * @since 2.0.0
    */
-  public MergeCommandBuilder gerMergeCommand() {
-    logger.debug("create unbundle command for repository {}",
+  public MergeCommandBuilder getMergeCommand() {
+    logger.debug("create merge command for repository {}",
       repository.getNamespaceAndName());
 
     return new MergeCommandBuilder(provider.getMergeCommand());

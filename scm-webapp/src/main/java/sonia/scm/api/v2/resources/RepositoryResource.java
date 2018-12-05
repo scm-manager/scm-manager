@@ -10,7 +10,6 @@ import sonia.scm.repository.RepositoryManager;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.inject.Provider;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
@@ -44,6 +43,7 @@ public class RepositoryResource {
   private final Provider<DiffRootResource> diffRootResource;
   private final Provider<ModificationsRootResource> modificationsRootResource;
   private final Provider<FileHistoryRootResource> fileHistoryRootResource;
+  private final Provider<MergeResource> mergeResource;
 
   @Inject
   public RepositoryResource(
@@ -56,8 +56,8 @@ public class RepositoryResource {
     Provider<PermissionRootResource> permissionRootResource,
     Provider<DiffRootResource> diffRootResource,
     Provider<ModificationsRootResource> modificationsRootResource,
-    Provider<FileHistoryRootResource> fileHistoryRootResource
-  ) {
+    Provider<FileHistoryRootResource> fileHistoryRootResource,
+    Provider<MergeResource> mergeResource) {
     this.dtoToRepositoryMapper = dtoToRepositoryMapper;
     this.manager = manager;
     this.repositoryToDtoMapper = repositoryToDtoMapper;
@@ -71,6 +71,7 @@ public class RepositoryResource {
     this.diffRootResource = diffRootResource;
     this.modificationsRootResource = modificationsRootResource;
     this.fileHistoryRootResource = fileHistoryRootResource;
+    this.mergeResource = mergeResource;
   }
 
   /**
@@ -194,8 +195,11 @@ public class RepositoryResource {
     return permissionRootResource.get();
   }
 
- @Path("modifications/")
+  @Path("modifications/")
   public ModificationsRootResource modifications() {return modificationsRootResource.get(); }
+
+  @Path("merge/")
+  public MergeResource merge() {return mergeResource.get(); }
 
   private Optional<Response> handleNotArchived(Throwable throwable) {
     if (throwable instanceof RepositoryIsNotArchivedException) {
