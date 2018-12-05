@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.repository.GitWorkdirFactory;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Person;
+import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.api.MergeCommandResult;
 import sonia.scm.repository.api.MergeDryRunCommandResult;
 import sonia.scm.user.User;
@@ -40,6 +41,8 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
 
   @Override
   public MergeCommandResult merge(MergeCommandRequest request) {
+    RepositoryPermissions.permissionWrite(context.getRepository().getId()).check();
+
     try (WorkingCopy workingCopy = workdirFactory.createWorkingCopy(context)) {
       Repository repository = workingCopy.get();
       logger.debug("cloned repository to folder {}", repository.getWorkTree());
