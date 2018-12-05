@@ -28,6 +28,7 @@
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.3.1",
     "react-router-redux": "^5.0.0-alpha.9",
+    "react-select": "^2.1.2",
     "react-syntax-highlighter": "^9.0.1",
     "redux": "^4.0.0",
     "redux-devtools-extension": "^2.13.5",
@@ -51,7 +52,7 @@
     "pre-commit": "jest && flow && eslint src"
   },
   "devDependencies": {
-    "@scm-manager/ui-bundler": "^0.0.21",
+    "@scm-manager/ui-bundler": "^0.0.22",
     "concat": "^1.0.3",
     "copyfiles": "^2.0.0",
     "enzyme": "^3.3.0",
