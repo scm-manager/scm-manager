@@ -44,12 +44,16 @@ import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.store.ConfigurationEntryStore;
 import sonia.scm.store.ConfigurationEntryStoreFactory;
 
+import java.util.Random;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.in;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.argThat;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -99,10 +103,11 @@ public class SecureKeyResolverTest
    * Method description
    *
    */
-  @Test(expected = IllegalStateException.class)
+  @Test
   public void testResolveSigningKeyBytesWithoutKey()
   {
-    resolver.resolveSigningKeyBytes(null, Jwts.claims().setSubject("test"));
+    byte[] bytes = resolver.resolveSigningKeyBytes(null, Jwts.claims().setSubject("test"));
+    assertThat(bytes[0]).isEqualTo((byte) 42);
   }
 
   /**
@@ -132,7 +137,9 @@ public class SecureKeyResolverTest
       assertThat(storeParameters.getType()).isEqualTo(SecureKey.class);
       return true;
     }))).thenReturn(store);
-    resolver = new SecureKeyResolver(factory);
+    Random random = mock(Random.class);
+    doAnswer(invocation -> ((byte[]) invocation.getArguments()[0])[0] = 42).when(random).nextBytes(any());
+    resolver = new SecureKeyResolver(factory, random);
   }
 
   //~--- fields ---------------------------------------------------------------
