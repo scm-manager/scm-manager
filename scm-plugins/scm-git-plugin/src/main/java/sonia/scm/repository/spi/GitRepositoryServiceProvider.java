@@ -33,6 +33,7 @@
 
 package sonia.scm.repository.spi;
 
+import com.google.common.collect.ImmutableSet;
 import sonia.scm.repository.Feature;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.Repository;
@@ -53,7 +54,7 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
 
   /** Field description */
   //J-
-  public static final Set<Command> COMMANDS = EnumSet.of(
+  public static final Set<Command> COMMANDS = ImmutableSet.of(
     Command.BLAME,
     Command.BROWSE,
     Command.CAT,
@@ -67,7 +68,7 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
     Command.PULL,
     Command.MERGE
   );
-  public static final Set<Feature> FEATURES = EnumSet.of(Feature.INCOMING_REVISION);
+  protected static final Set<Feature> FEATURES = EnumSet.of(Feature.INCOMING_REVISION);
   //J+
 
   //~--- constructors ---------------------------------------------------------
