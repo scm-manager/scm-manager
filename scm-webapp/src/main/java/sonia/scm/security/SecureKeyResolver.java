@@ -112,7 +112,9 @@ public class SecureKeyResolver extends SigningKeyResolverAdapter
 
     SecureKey key = store.get(subject);
 
-    checkState(key != null, "could not resolve key for subject %s", subject);
+    if (key == null) {
+      return getSecureKey(subject).getBytes();
+    }
 
     return key.getBytes();
   }
