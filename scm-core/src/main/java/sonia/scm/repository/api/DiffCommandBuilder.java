@@ -174,7 +174,8 @@ public final class DiffCommandBuilder
   }
 
   /**
-   * Show the difference only for the given revision.
+   * Show the difference only for the given revision or (using {@link #setAncestorChangeset(String)}) between this
+   * and another revision.
    *
    *
    * @param revision revision for difference
@@ -188,9 +189,9 @@ public final class DiffCommandBuilder
     return this;
   }
   /**
-   * Show the difference between the ancestor changeset and a revision.
-   *
-   * @param revision ancestor revision
+   * Compute the incoming changes of the branch set with {@link #setRevision(String)} in respect to the changeset given
+   * here. In other words: What changes would be new to the ancestor changeset given here when the branch would
+   * be merged into it. Requires feature {@link sonia.scm.repository.Feature#INCOMING}!
    *
    * @return {@code this}
    */

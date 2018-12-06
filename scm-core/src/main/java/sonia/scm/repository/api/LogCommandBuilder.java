@@ -397,6 +397,13 @@ public final class LogCommandBuilder
     return this;
   }
 
+  /**
+   * Compute the incoming changes of the branch set with {@link #setBranch(String)} in respect to the changeset given
+   * here. In other words: What changesets would be new to the ancestor changeset given here when the branch would
+   * be merged into it. Requires feature {@link sonia.scm.repository.Feature#INCOMING}!
+   *
+   * @return {@code this}
+   */
   public LogCommandBuilder setAncestorChangeset(String ancestorChangeset) {
     request.setAncestorChangeset(ancestorChangeset);
     return this;

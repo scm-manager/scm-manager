@@ -196,11 +196,15 @@ public class RepositoryResource {
     return permissionRootResource.get();
   }
 
- @Path("modifications/")
-  public ModificationsRootResource modifications() {return modificationsRootResource.get(); }
+  @Path("modifications/")
+  public ModificationsRootResource modifications() {
+    return modificationsRootResource.get();
+  }
 
- @Path("incoming/")
-  public IncomingRootResource incoming() {return incomingRootResource.get(); }
+  @Path("incoming/")
+  public IncomingRootResource incoming() {
+    return incomingRootResource.get();
+  }
 
   private Optional<Response> handleNotArchived(Throwable throwable) {
     if (throwable instanceof RepositoryIsNotArchivedException) {
