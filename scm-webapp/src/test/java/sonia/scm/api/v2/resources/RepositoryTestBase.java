@@ -21,6 +21,7 @@ public abstract class RepositoryTestBase {
   protected Provider<ModificationsRootResource> modificationsRootResource;
   protected Provider<FileHistoryRootResource> fileHistoryRootResource;
   protected Provider<RepositoryCollectionResource> repositoryCollectionResource;
+  protected Provider<IncomingRootResource> incomingRootResource;
 
 
   RepositoryRootResource getRepositoryRootResource() {
@@ -36,7 +37,8 @@ public abstract class RepositoryTestBase {
       permissionRootResource,
       diffRootResource,
       modificationsRootResource,
-      fileHistoryRootResource)), repositoryCollectionResource);
+      fileHistoryRootResource,
+      incomingRootResource)), repositoryCollectionResource);
   }
 
 

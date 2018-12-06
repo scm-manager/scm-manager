@@ -187,6 +187,19 @@ public final class DiffCommandBuilder
 
     return this;
   }
+  /**
+   * Show the difference between the ancestor changeset and a revision.
+   *
+   * @param revision ancestor revision
+   *
+   * @return {@code this}
+   */
+  public DiffCommandBuilder setAncestorChangeset(String revision)
+  {
+    request.setAncestorChangeset(revision);
+
+    return this;
+  }
 
   //~--- get methods ----------------------------------------------------------
 

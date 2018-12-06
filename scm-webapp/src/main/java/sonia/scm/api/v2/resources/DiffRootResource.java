@@ -25,7 +25,7 @@ public class DiffRootResource {
 
   public static final String HEADER_CONTENT_DISPOSITION = "Content-Disposition";
 
-  private static final String DIFF_FORMAT_VALUES_REGEX = "NATIVE|GIT|UNIFIED";
+  static final String DIFF_FORMAT_VALUES_REGEX = "NATIVE|GIT|UNIFIED";
 
   private final RepositoryServiceFactory serviceFactory;
 

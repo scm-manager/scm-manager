@@ -323,8 +323,34 @@ class ResourceLinks {
       return branchLinkBuilder.method("getRepositoryResource").parameters(namespaceAndName.getNamespace(), namespaceAndName.getName()).method("branches").parameters().method("history").parameters(branch).href();
     }
 
-    public String changesetDiff(NamespaceAndName namespaceAndName, String branch) {
-      return branchLinkBuilder.method("getRepositoryResource").parameters(namespaceAndName.getNamespace(), namespaceAndName.getName()).method("branches").parameters().method("changesetDiff").parameters(branch, "").href() + "{otherBranch}";
+  }
+
+  public IncomingLinks incoming() {
+    return new IncomingLinks(scmPathInfoStore.get());
+  }
+
+  static class IncomingLinks {
+    private final LinkBuilder incomingLinkBuilder;
+
+    IncomingLinks(ScmPathInfo pathInfo) {
+      incomingLinkBuilder = new LinkBuilder(pathInfo, RepositoryRootResource.class, RepositoryResource.class, IncomingRootResource.class);
+    }
+
+    public String changesets(String namespace, String name) {
+      return toTemplateParams(incomingLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("incoming").parameters().method("incomingChangesets").parameters("source","target").href());
+    }
+
+    public String changesets(String namespace, String name, String source, String target) {
+      return incomingLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("incoming").parameters().method("incomingChangesets").parameters(source,target).href();
+    }
+
+    public String diff(String namespace, String name) {
+      return toTemplateParams(incomingLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("incoming").parameters().method("incomingDiff").parameters("source", "target").href());
+
+    }
+
+    public String toTemplateParams(String href) {
+      return href.replace("source", "{source}").replace("target", "{target}");
     }
   }
 
