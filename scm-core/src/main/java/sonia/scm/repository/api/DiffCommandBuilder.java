@@ -38,6 +38,8 @@ package sonia.scm.repository.api;
 import com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.NotSupportedFeatureException;
+import sonia.scm.repository.Feature;
 import sonia.scm.repository.spi.DiffCommand;
 import sonia.scm.repository.spi.DiffCommandRequest;
 import sonia.scm.util.IOUtil;
@@ -45,6 +47,7 @@ import sonia.scm.util.IOUtil;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Set;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -85,10 +88,12 @@ public final class DiffCommandBuilder
    * only be called from the {@link RepositoryService}.
    *
    * @param diffCommand implementation of {@link DiffCommand}
+   * @param supportedFeatures The supported features of the provider
    */
-  DiffCommandBuilder(DiffCommand diffCommand)
+  DiffCommandBuilder(DiffCommand diffCommand, Set<Feature> supportedFeatures)
   {
     this.diffCommand = diffCommand;
+    this.supportedFeatures = supportedFeatures;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -191,12 +196,15 @@ public final class DiffCommandBuilder
   /**
    * Compute the incoming changes of the branch set with {@link #setRevision(String)} in respect to the changeset given
    * here. In other words: What changes would be new to the ancestor changeset given here when the branch would
-   * be merged into it. Requires feature {@link sonia.scm.repository.Feature#INCOMING}!
+   * be merged into it. Requires feature {@link sonia.scm.repository.Feature#INCOMING_REVISION}!
    *
    * @return {@code this}
    */
   public DiffCommandBuilder setAncestorChangeset(String revision)
   {
+    if (!supportedFeatures.contains(Feature.INCOMING_REVISION)) {
+      throw new NotSupportedFeatureException(Feature.INCOMING_REVISION.name());
+    }
     request.setAncestorChangeset(revision);
 
     return this;
@@ -229,6 +237,7 @@ public final class DiffCommandBuilder
 
   /** implementation of the diff command */
   private final DiffCommand diffCommand;
+  private Set<Feature> supportedFeatures;
 
   /** request for the diff command implementation */
   private final DiffCommandRequest request = new DiffCommandRequest();

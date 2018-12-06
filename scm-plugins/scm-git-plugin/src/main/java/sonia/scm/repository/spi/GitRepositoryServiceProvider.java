@@ -67,7 +67,7 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
     Command.PULL,
     Command.MERGE
   );
-  public static final Set<Feature> FEATURES = EnumSet.of(Feature.INCOMING);
+  public static final Set<Feature> FEATURES = EnumSet.of(Feature.INCOMING_REVISION);
   //J+
 
   //~--- constructors ---------------------------------------------------------
