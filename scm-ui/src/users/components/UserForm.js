@@ -22,7 +22,8 @@ type State = {
   user: User,
   mailValidationError: boolean,
   nameValidationError: boolean,
-  displayNameValidationError: boolean
+  displayNameValidationError: boolean,
+  passwordValid: boolean
 };
 
 class UserForm extends React.Component<Props, State> {
@@ -41,7 +42,8 @@ class UserForm extends React.Component<Props, State> {
       },
       mailValidationError: false,
       displayNameValidationError: false,
-      nameValidationError: false
+      nameValidationError: false,
+      passwordValid: false
     };
   }
 
@@ -61,7 +63,6 @@ class UserForm extends React.Component<Props, State> {
 
   isValid = () => {
     const user = this.state.user;
-    const passwordValid = this.props.user ? !this.isFalsy(user.password) : true;
     return !(
       this.state.nameValidationError ||
       this.state.mailValidationError ||
@@ -69,7 +70,7 @@ class UserForm extends React.Component<Props, State> {
       this.isFalsy(user.name) ||
       this.isFalsy(user.displayName) ||
       this.isFalsy(user.mail) ||
-      passwordValid
+      !this.state.passwordValid
     );
   };
 
@@ -166,9 +167,10 @@ class UserForm extends React.Component<Props, State> {
     });
   };
 
-  handlePasswordChange = (password: string) => {
+  handlePasswordChange = (password: string, passwordValid: boolean) => {
     this.setState({
-      user: { ...this.state.user, password }
+      user: { ...this.state.user, password },
+      passwordValid: !this.isFalsy(password) && passwordValid
     });
   };
 
