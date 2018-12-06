@@ -51,6 +51,7 @@ import static com.google.common.base.Preconditions.*;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.security.SecureRandom;
+import java.util.Random;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -88,12 +89,17 @@ public class SecureKeyResolver extends SigningKeyResolverAdapter
    */
   @Inject
   @SuppressWarnings("unchecked")
-  public SecureKeyResolver(ConfigurationEntryStoreFactory storeFactory)
+  public SecureKeyResolver(ConfigurationEntryStoreFactory storeFactory) {
+    this(storeFactory, new SecureRandom());
+  }
+
+  SecureKeyResolver(ConfigurationEntryStoreFactory storeFactory, Random random)
   {
     store = storeFactory
       .withType(SecureKey.class)
       .withName(STORE_NAME)
       .build();
+    this.random = random;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -112,7 +118,9 @@ public class SecureKeyResolver extends SigningKeyResolverAdapter
 
     SecureKey key = store.get(subject);
 
-    checkState(key != null, "could not resolve key for subject %s", subject);
+    if (key == null) {
+      return getSecureKey(subject).getBytes();
+    }
 
     return key.getBytes();
   }
@@ -161,7 +169,7 @@ public class SecureKeyResolver extends SigningKeyResolverAdapter
   //~--- fields ---------------------------------------------------------------
 
   /** secure randon */
-  private final SecureRandom random = new SecureRandom();
+  private final Random random;
 
   /** configuration entry store */
   private final ConfigurationEntryStore<SecureKey> store;

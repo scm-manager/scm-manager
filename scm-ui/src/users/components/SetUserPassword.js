@@ -19,7 +19,8 @@ type State = {
   password: string,
   loading: boolean,
   error?: Error,
-  passwordChanged: boolean
+  passwordChanged: boolean,
+  passwordValid: boolean
 };
 
 class SetUserPassword extends React.Component<Props, State> {
@@ -32,7 +33,8 @@ class SetUserPassword extends React.Component<Props, State> {
       passwordConfirmationError: false,
       validatePasswordError: false,
       validatePassword: "",
-      passwordChanged: false
+      passwordChanged: false,
+      passwordValid: false
     };
   }
 
@@ -104,7 +106,7 @@ class SetUserPassword extends React.Component<Props, State> {
           key={this.state.passwordChanged ? "changed" : "unchanged"}
         />
         <SubmitButton
-          disabled={!this.state.password}
+          disabled={!this.state.passwordValid}
           loading={loading}
           label={t("user-form.submit")}
         />
@@ -112,8 +114,8 @@ class SetUserPassword extends React.Component<Props, State> {
     );
   }
 
-  passwordChanged = (password: string) => {
-    this.setState({ ...this.state, password });
+  passwordChanged = (password: string, passwordValid: boolean) => {
+    this.setState({ ...this.state, password, passwordValid: (!!password && passwordValid) });
   };
 
   onClose = () => {

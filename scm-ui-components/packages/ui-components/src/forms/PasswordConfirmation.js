@@ -11,7 +11,7 @@ type State = {
   passwordConfirmationFailed: boolean
 };
 type Props = {
-  passwordChanged: string => void,
+  passwordChanged: (string, boolean) => void,
   passwordValidator?: string => boolean,
   // Context props
   t: string => string
@@ -98,14 +98,12 @@ class PasswordConfirmation extends React.Component<Props, State> {
     );
   };
 
+  isValid = () => {
+    return this.state.passwordValid && !this.state.passwordConfirmationFailed
+  };
+
   propagateChange = () => {
-    if (
-      this.state.password &&
-      this.state.passwordValid &&
-      !this.state.passwordConfirmationFailed
-    ) {
-      this.props.passwordChanged(this.state.password);
-    }
+    this.props.passwordChanged(this.state.password, this.isValid());
   };
 }
 
