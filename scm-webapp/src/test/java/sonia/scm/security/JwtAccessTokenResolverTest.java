@@ -56,6 +56,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import static org.mockito.Mockito.*;
+import static sonia.scm.security.SecureKeyTestUtil.createSecureKey;
+
 import org.mockito.junit.MockitoJUnitRunner;
 
 /**
@@ -214,12 +216,6 @@ public class JwtAccessTokenResolverTest {
       .compact();
   }
   
-  private SecureKey createSecureKey() {
-    byte[] bytes = new byte[32];
-    random.nextBytes(bytes);
-    return new SecureKey(bytes, System.currentTimeMillis());
-  }
-  
   private void resolveKey(SecureKey key) {
     when(
       keyResolver.resolveSigningKey(
@@ -230,7 +226,7 @@ public class JwtAccessTokenResolverTest {
     .thenReturn(
       new SecretKeySpec(
         key.getBytes(), 
-        SignatureAlgorithm.HS256.getValue()
+        SignatureAlgorithm.HS256.getJcaName()
       )
     );
   }

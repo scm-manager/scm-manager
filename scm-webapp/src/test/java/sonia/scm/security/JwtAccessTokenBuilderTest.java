@@ -44,7 +44,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -56,6 +55,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.when;
+import static sonia.scm.security.SecureKeyTestUtil.createSecureKey;
 
 /**
  * Unit test for {@link JwtAccessTokenBuilder}.
@@ -162,11 +162,4 @@ public class JwtAccessTokenBuilderTest {
     assertEquals("b", token.getCustom("a").get());
     assertEquals("[\"repo:*\"]", token.getScope().toString());
   }
-  
-  private SecureKey createSecureKey() {
-    byte[] bytes = new byte[32];
-    new Random().nextBytes(bytes);
-    return new SecureKey(bytes, System.currentTimeMillis());
-  }
-
 }

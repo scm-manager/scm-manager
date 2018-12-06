@@ -30,6 +30,7 @@
  */
 package sonia.scm.security;
 
+import java.time.Clock;
 import java.util.Set;
 import javax.inject.Inject;
 import sonia.scm.plugin.Extension;
@@ -46,19 +47,25 @@ public final class JwtAccessTokenBuilderFactory implements AccessTokenBuilderFac
   private final KeyGenerator keyGenerator;
   private final SecureKeyResolver keyResolver;
   private final Set<AccessTokenEnricher> enrichers;
+  private final Clock clock;
 
   @Inject
   public JwtAccessTokenBuilderFactory(
-    KeyGenerator keyGenerator, SecureKeyResolver keyResolver, Set<AccessTokenEnricher> enrichers
-  ) {
+    KeyGenerator keyGenerator, SecureKeyResolver keyResolver, Set<AccessTokenEnricher> enrichers) {
+    this(keyGenerator, keyResolver, enrichers, Clock.systemDefaultZone());
+  }
+
+  JwtAccessTokenBuilderFactory(
+    KeyGenerator keyGenerator, SecureKeyResolver keyResolver, Set<AccessTokenEnricher> enrichers, Clock clock) {
     this.keyGenerator = keyGenerator;
     this.keyResolver = keyResolver;
     this.enrichers = enrichers;
+    this.clock = clock;
   }
 
   @Override
   public JwtAccessTokenBuilder create() {
-    JwtAccessTokenBuilder builder = new JwtAccessTokenBuilder(keyGenerator, keyResolver);
+    JwtAccessTokenBuilder builder = new JwtAccessTokenBuilder(keyGenerator, keyResolver, clock);
     
     // enrich access token builder
     enrichers.forEach((enricher) -> {

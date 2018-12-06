@@ -72,8 +72,18 @@
     
     <dependency>
       <groupId>io.jsonwebtoken</groupId>
-      <artifactId>jjwt</artifactId>
-      <version>0.4</version>
+      <artifactId>jjwt-impl</artifactId>
+      <version>${jjwt.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.jsonwebtoken</groupId>
+      <artifactId>jjwt-api</artifactId>
+      <version>${jjwt.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.jsonwebtoken</groupId>
+      <artifactId>jjwt-jackson</artifactId>
+      <version>${jjwt.version}</version>
     </dependency>
 
     <!-- json -->
@@ -540,6 +550,7 @@
     <scm.stage>DEVELOPMENT</scm.stage>
     <scm.home>target/scm-it</scm.home>
     <environment.profile>default</environment.profile>
+    <jjwt.version>0.10.5</jjwt.version>
     <selenium.version>2.53.1</selenium.version>
     <wagon.version>1.0</wagon.version>
     <mustache.version>0.8.17</mustache.version>

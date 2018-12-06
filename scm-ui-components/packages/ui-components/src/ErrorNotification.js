@@ -18,7 +18,7 @@ class ErrorNotification extends React.Component<Props> {
         </Notification>
       );
     }
-    return "";
+    return null;
   }
 }
 
