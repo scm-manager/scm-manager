@@ -6,6 +6,7 @@ import org.apache.shiro.subject.Subject;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.MergeResult;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.merge.MergeStrategy;
@@ -22,6 +23,9 @@ import sonia.scm.user.User;
 
 import java.io.IOException;
 import java.text.MessageFormat;
+
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import static sonia.scm.NotFoundException.notFound;
 
 public class GitMergeCommand extends AbstractGitCommand implements MergeCommand {
 
@@ -94,6 +98,9 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
     private void checkOutTargetBranch() {
       try {
         clone.checkout().setName(target).call();
+      } catch (RefNotFoundException e) {
+        logger.debug("could not checkout target branch {} for merge", target, e);
+        throw notFound(entity("revision", target).in(context.getRepository()));
       } catch (GitAPIException e) {
         throw new InternalRepositoryException(context.getRepository(), "could not checkout target branch for merge: " + target, e);
       }
@@ -102,9 +109,13 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
     private MergeResult doMergeInClone() throws IOException {
       MergeResult result;
       try {
+        ObjectId sourceRevision = resolveRevision(toMerge);
+        if (sourceRevision == null) {
+          throw notFound(entity("revision", toMerge).in(context.getRepository()));
+        }
         result = clone.merge()
           .setCommit(false) // we want to set the author manually
-          .include(toMerge, resolveRevision(toMerge))
+          .include(toMerge, sourceRevision)
           .call();
       } catch (GitAPIException e) {
         throw new InternalRepositoryException(context.getRepository(), "could not merge branch " + toMerge + " into " + target, e);
