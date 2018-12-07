@@ -48,6 +48,7 @@ import org.eclipse.jgit.lib.RepositoryCache;
 
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.spi.HookEventFacade;
+import sonia.scm.web.CollectingPackParserListener;
 import sonia.scm.web.GitReceiveHook;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -234,6 +235,8 @@ public class ScmTransportProtocol extends TransportProtocol
 
         pack.setPreReceiveHook(hook);
         pack.setPostReceiveHook(hook);
+
+        CollectingPackParserListener.set(pack);
       }
 
       return pack;
