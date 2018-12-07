@@ -38,13 +38,15 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
 
   @Rule
   public ShiroRule shiro = new ShiroRule();
+  private GitRepositoryHandler gitRepositoryHandler;
+  private HookEventFacade hookEventFacade;
 
   @Before
   public void bindScmProtocol() {
     HookContextFactory hookContextFactory = new HookContextFactory(mock(PreProcessorUtil.class));
     RepositoryManager repositoryManager = mock(RepositoryManager.class);
-    HookEventFacade hookEventFacade = new HookEventFacade(of(repositoryManager), hookContextFactory);
-    GitRepositoryHandler gitRepositoryHandler = mock(GitRepositoryHandler.class);
+    hookEventFacade = new HookEventFacade(of(repositoryManager), hookContextFactory);
+    gitRepositoryHandler = mock(GitRepositoryHandler.class);
     Transport.register(new ScmTransportProtocol(of(hookEventFacade), of(gitRepositoryHandler)));
 
     when(gitRepositoryHandler.getRepositoryId(any())).thenReturn("1");
@@ -115,6 +117,8 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
 
     Repository repository = createContext().open();
     ObjectId firstMergeCommit = new Git(repository).log().add(repository.resolve("master")).setMaxCount(1).call().iterator().next().getId();
+
+    Transport.register(new ScmTransportProtocol(of(hookEventFacade), of(gitRepositoryHandler)));
 
     MergeCommandResult secondMergeCommandResult = command.merge(request);
 
