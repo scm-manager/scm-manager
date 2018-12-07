@@ -39,7 +39,13 @@
     "label": "Add member",
     "error": "Invalid member name"
   },
-  "group-form": {
+  "add-member-autocomplete": {
+    "placeholder": "Enter member",
+    "loading": "Loading...",
+    "no-options": "No suggestion available"
+    },
+
+"group-form": {
     "submit": "Submit",
     "name-error": "Group name is invalid",
     "description-error": "Description is invalid",

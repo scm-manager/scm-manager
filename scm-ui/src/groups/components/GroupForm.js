@@ -2,12 +2,12 @@
 import React from "react";
 import { translate } from "react-i18next";
 import {
+  AutocompleteAddEntryToTableField,
   InputField,
   SubmitButton,
-  Textarea,
-  AddEntryToTableField
+  Textarea
 } from "@scm-manager/ui-components";
-import type { Group } from "@scm-manager/ui-types";
+import type { Group, SelectValue } from "@scm-manager/ui-types";
 
 import * as validator from "./groupValidation";
 import MemberNameTable from "./MemberNameTable";
@@ -16,7 +16,8 @@ type Props = {
   t: string => string,
   submitForm: Group => void,
   loading?: boolean,
-  group?: Group
+  group?: Group,
+  loadUserSuggestions: string => any
 };
 
 type State = {
@@ -70,7 +71,7 @@ class GroupForm extends React.Component<Props, State> {
 
   render() {
     const { t, loading } = this.props;
-    const group = this.state.group;
+    const { group } = this.state;
     let nameField = null;
     if (!this.props.group) {
       nameField = (
@@ -97,15 +98,20 @@ class GroupForm extends React.Component<Props, State> {
           helpText={t("group-form.help.descriptionHelpText")}
         />
         <MemberNameTable
-          members={this.state.group.members}
+          members={group.members}
           memberListChanged={this.memberListChanged}
         />
-        <AddEntryToTableField
+
+        <AutocompleteAddEntryToTableField
           addEntry={this.addMember}
           disabled={false}
           buttonLabel={t("add-member-button.label")}
           fieldLabel={t("add-member-textfield.label")}
           errorMessage={t("add-member-textfield.error")}
+          loadSuggestions={this.props.loadUserSuggestions}
+          placeholder={t("add-member-autocomplete.placeholder")}
+          loadingMessage={t("add-member-autocomplete.loading")}
+          noOptionsMessage={t("add-member-autocomplete.no-options")}
         />
         <SubmitButton
           disabled={!this.isValid()}
@@ -126,8 +132,8 @@ class GroupForm extends React.Component<Props, State> {
     });
   };
 
-  addMember = (membername: string) => {
-    if (this.isMember(membername)) {
+  addMember = (value: SelectValue) => {
+    if (this.isMember(value.value.id)) {
       return;
     }
 
@@ -135,7 +141,7 @@ class GroupForm extends React.Component<Props, State> {
       ...this.state,
       group: {
         ...this.state.group,
-        members: [...this.state.group.members, membername]
+        members: [...this.state.group.members, value.value.id]
       }
     });
   };
