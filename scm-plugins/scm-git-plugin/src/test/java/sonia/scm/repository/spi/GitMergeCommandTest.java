@@ -12,6 +12,7 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.transport.ScmTransportProtocol;
 import org.eclipse.jgit.transport.Transport;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -38,19 +39,26 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
 
   @Rule
   public ShiroRule shiro = new ShiroRule();
-  private GitRepositoryHandler gitRepositoryHandler;
-  private HookEventFacade hookEventFacade;
+
+  private ScmTransportProtocol scmTransportProtocol;
 
   @Before
   public void bindScmProtocol() {
     HookContextFactory hookContextFactory = new HookContextFactory(mock(PreProcessorUtil.class));
     RepositoryManager repositoryManager = mock(RepositoryManager.class);
-    hookEventFacade = new HookEventFacade(of(repositoryManager), hookContextFactory);
-    gitRepositoryHandler = mock(GitRepositoryHandler.class);
-    Transport.register(new ScmTransportProtocol(of(hookEventFacade), of(gitRepositoryHandler)));
+    HookEventFacade hookEventFacade = new HookEventFacade(of(repositoryManager), hookContextFactory);
+    GitRepositoryHandler gitRepositoryHandler = mock(GitRepositoryHandler.class);
+    scmTransportProtocol = new ScmTransportProtocol(of(hookEventFacade), of(gitRepositoryHandler));
+
+    Transport.register(scmTransportProtocol);
 
     when(gitRepositoryHandler.getRepositoryId(any())).thenReturn("1");
     when(repositoryManager.get("1")).thenReturn(new sonia.scm.repository.Repository());
+  }
+
+  @After
+  public void unregisterScmProtocol() {
+    Transport.unregister(scmTransportProtocol);
   }
 
   @Test
@@ -118,7 +126,7 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
     Repository repository = createContext().open();
     ObjectId firstMergeCommit = new Git(repository).log().add(repository.resolve("master")).setMaxCount(1).call().iterator().next().getId();
 
-    Transport.register(new ScmTransportProtocol(of(hookEventFacade), of(gitRepositoryHandler)));
+//    Transport.register(new ScmTransportProtocol(of(hookEventFacade), of(gitRepositoryHandler)));
 
     MergeCommandResult secondMergeCommandResult = command.merge(request);
 
