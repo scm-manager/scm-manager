@@ -64,10 +64,10 @@ public class ScmTransportProtocol extends TransportProtocol
 {
 
   /** Field description */
-  private static final String NAME = "scm";
+  public static final String NAME = "scm";
 
   /** Field description */
-  private static final Set<String> SCHEMES = ImmutableSet.of("scm");
+  private static final Set<String> SCHEMES = ImmutableSet.of(NAME);
 
   //~--- constructors ---------------------------------------------------------
 
