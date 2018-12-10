@@ -3,7 +3,17 @@
     "information": {
       "clone" : "Clone the repository",
       "create" : "Create a new repository",
-      "replace" : "Push an existing repository"
+      "replace" : "Push an existing repository",
+      "merge": {
+        "heading": "How to merge pull request",
+        "subheading": "Pull Request cannot be merged automatically - please follow these steps:",
+        "clean": "1. Make sure your workspace is clean",
+        "checkout": "2. Checkout target branch",
+        "update": "3. Update workspace",
+        "merge": "4. Merge source branch",
+        "resolve": "5. Resolve merge conflicts and add corrected files to index",
+        "commit": "6. Commit"
+      }
     },
     "config": {
       "link": "Git",
