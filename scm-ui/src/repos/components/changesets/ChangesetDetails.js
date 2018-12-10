@@ -49,7 +49,7 @@ class ChangesetDetails extends React.Component<Props> {
           <article className="media">
             <AvatarWrapper>
               <p className={classNames("image", "is-64x64", classes.spacing)}>
-                <AvatarImage changeset={changeset}/>
+                <AvatarImage person={changeset.author} />
               </p>
             </AvatarWrapper>
             <div className="media-content">

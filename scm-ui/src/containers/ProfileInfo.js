@@ -17,35 +17,35 @@ class ProfileInfo extends React.Component<Props, State> {
   render() {
     const { me, t } = this.props;
     return (
-      <>
+      <div className="media">
         <AvatarWrapper>
-          <div>
-            <figure className="media-left">
-              <p className="image is-64x64">
-                <AvatarImage person={ me }/>
-              </p>
-            </figure>
-          </div>
+          <figure className="media-left">
+            <p className="image is-64x64">
+              <AvatarImage person={ me }/>
+            </p>
+          </figure>
         </AvatarWrapper>
-        <table className="table">
-          <tbody>
-            <tr>
-              <td>{t("profile.username")}</td>
-              <td>{me.name}</td>
-            </tr>
-            <tr>
-              <td>{t("profile.displayName")}</td>
-              <td>{me.displayName}</td>
-            </tr>
-            <tr>
-              <td>{t("profile.mail")}</td>
-              <td>
-                <MailLink address={me.mail} />
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </>
+        <div className="media-left">
+          <table className="table">
+            <tbody>
+              <tr>
+                <td>{t("profile.username")}</td>
+                <td>{me.name}</td>
+              </tr>
+              <tr>
+                <td>{t("profile.displayName")}</td>
+                <td>{me.displayName}</td>
+              </tr>
+              <tr>
+                <td>{t("profile.mail")}</td>
+                <td>
+                  <MailLink address={me.mail} />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     );
   }
 }
