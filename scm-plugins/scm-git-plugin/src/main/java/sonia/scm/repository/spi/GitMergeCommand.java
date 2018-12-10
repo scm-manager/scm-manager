@@ -4,6 +4,7 @@ import com.google.common.base.Strings;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.MergeCommand.FastForwardMode;
 import org.eclipse.jgit.api.MergeResult;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.RefNotFoundException;
@@ -129,6 +130,7 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
           throw notFound(entity("revision", toMerge).in(context.getRepository()));
         }
         result = clone.merge()
+          .setFastForward(FastForwardMode.NO_FF)
           .setCommit(false) // we want to set the author manually
           .include(toMerge, sourceRevision)
           .call();
