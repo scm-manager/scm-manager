@@ -1,9 +1,9 @@
 package sonia.scm.user;
 
+import sonia.scm.BadRequestException;
 import sonia.scm.ContextEntry;
-import sonia.scm.ExceptionWithContext;
 
-public class InvalidPasswordException extends ExceptionWithContext {
+public class InvalidPasswordException extends BadRequestException {
 
   private static final String CODE = "8YR7aawFW1";
 

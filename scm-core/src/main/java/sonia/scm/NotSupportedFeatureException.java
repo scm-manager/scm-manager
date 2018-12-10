@@ -40,7 +40,7 @@ import java.util.Collections;
  * @author Sebastian Sdorra
  * @version 1.6
  */
-public class NotSupportedFeatureException extends ExceptionWithContext {
+public class NotSupportedFeatureException extends BadRequestException {
 
   private static final long serialVersionUID = 256498734456613496L;
 

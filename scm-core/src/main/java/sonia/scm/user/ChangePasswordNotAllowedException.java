@@ -1,9 +1,9 @@
 package sonia.scm.user;
 
+import sonia.scm.BadRequestException;
 import sonia.scm.ContextEntry;
-import sonia.scm.ExceptionWithContext;
 
-public class ChangePasswordNotAllowedException extends ExceptionWithContext {
+public class ChangePasswordNotAllowedException extends BadRequestException {
 
   private static final String CODE = "9BR7qpDAe1";
   public static final String WRONG_USER_TYPE = "User of type %s are not allowed to change password";
