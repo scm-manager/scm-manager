@@ -95,9 +95,10 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
       }
     }
 
-    private void checkOutTargetBranch() {
+    private void checkOutTargetBranch() throws IOException {
       try {
-        clone.checkout().setName(target).call();
+        ObjectId targetRevision = resolveRevision(target);
+        clone.checkout().setName(targetRevision.getName()).call();
       } catch (RefNotFoundException e) {
         logger.debug("could not checkout target branch {} for merge", target, e);
         throw notFound(entity("revision", target).in(context.getRepository()));
