@@ -9,10 +9,10 @@ import type {
 import {
   ErrorNotification,
   Loading,
-  StatePaginator
+  StatePaginator,
+  ChangesetList
 } from "@scm-manager/ui-components";
 import { getHistory } from "./history";
-import ChangesetList from "../../components/changesets/ChangesetList";
 
 type Props = {
   file: File,

@@ -27,9 +27,11 @@ export { default as Autocomplete} from "./Autocomplete";
 
 export { apiClient, NOT_FOUND_ERROR, UNAUTHORIZED_ERROR, CONFLICT_ERROR } from "./apiclient.js";
 
+export * from "./avatar";
 export * from "./buttons";
 export * from "./config";
 export * from "./forms";
 export * from "./layout";
 export * from "./modals";
 export * from "./navigation";
+export * from "./repos";
