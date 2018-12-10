@@ -5,7 +5,7 @@
       "create" : "Create a new repository",
       "replace" : "Push an existing repository",
       "merge": {
-        "heading": "Pull Request cannot be merged automatically - please follow these steps:",
+        "heading": "How to merge source branch into target branch",
         "clean": "1. Make sure your workspace is clean and checkout target branch",
         "update": "2. Update workspace",
         "merge": "3. Merge source branch",
