@@ -97,13 +97,27 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
 
     private void checkOutTargetBranch() throws IOException {
       try {
-        ObjectId targetRevision = resolveRevision(target);
-        clone.checkout().setName(targetRevision.getName()).call();
+        clone.checkout().setName(target).call();
       } catch (RefNotFoundException e) {
-        logger.debug("could not checkout target branch {} for merge", target, e);
-        throw notFound(entity("revision", target).in(context.getRepository()));
+        logger.trace("could not checkout target branch {} for merge directly; trying to create local branch", target, e);
+        checkOutTargetAsNewLocalBranch();
       } catch (GitAPIException e) {
         throw new InternalRepositoryException(context.getRepository(), "could not checkout target branch for merge: " + target, e);
+      }
+    }
+
+    private void checkOutTargetAsNewLocalBranch() throws IOException {
+      try {
+        ObjectId targetRevision = resolveRevision(target);
+        if (targetRevision == null) {
+          throw notFound(entity("revision", target).in(context.getRepository()));
+        }
+        clone.checkout().setStartPoint(targetRevision.getName()).setName(target).setCreateBranch(true).call();
+      } catch (RefNotFoundException e) {
+        logger.debug("could not checkout target branch {} for merge as local branch", target, e);
+        throw notFound(entity("revision", target).in(context.getRepository()));
+      } catch (GitAPIException e) {
+        throw new InternalRepositoryException(context.getRepository(), "could not checkout target branch for merge as local branch: " + target, e);
       }
     }
 
@@ -164,7 +178,7 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
       try {
         clone.push().call();
       } catch (GitAPIException e) {
-        throw new InternalRepositoryException(context.getRepository(), "could not push merged branch " + toMerge + " to origin", e);
+        throw new InternalRepositoryException(context.getRepository(), "could not push merged branch " + target + " to origin", e);
       }
       logger.debug("pushed merged branch {}", target);
     }

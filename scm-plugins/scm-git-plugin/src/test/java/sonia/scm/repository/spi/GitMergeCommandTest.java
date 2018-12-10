@@ -126,8 +126,6 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
     Repository repository = createContext().open();
     ObjectId firstMergeCommit = new Git(repository).log().add(repository.resolve("master")).setMaxCount(1).call().iterator().next().getId();
 
-//    Transport.register(new ScmTransportProtocol(of(hookEventFacade), of(gitRepositoryHandler)));
-
     MergeCommandResult secondMergeCommandResult = command.merge(request);
 
     assertThat(secondMergeCommandResult.isSuccess()).isTrue();
@@ -194,6 +192,32 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
     PersonIdent mergeAuthor = mergeCommit.iterator().next().getAuthorIdent();
     assertThat(mergeAuthor.getName()).isEqualTo("Dirk Gently");
     assertThat(mergeAuthor.getEmailAddress()).isEqualTo("dirk@holistic.det");
+  }
+
+  @Test
+  public void shouldMergeIntoNotDefaultBranch() throws IOException, GitAPIException {
+    GitMergeCommand command = createCommand();
+    MergeCommandRequest request = new MergeCommandRequest();
+    request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
+    request.setTargetBranch("mergeable");
+    request.setBranchToMerge("master");
+
+    MergeCommandResult mergeCommandResult = command.merge(request);
+
+    Repository repository = createContext().open();
+    assertThat(mergeCommandResult.isSuccess()).isTrue();
+
+    Iterable<RevCommit> commits = new Git(repository).log().add(repository.resolve("mergeable")).setMaxCount(1).call();
+    RevCommit mergeCommit = commits.iterator().next();
+    PersonIdent mergeAuthor = mergeCommit.getAuthorIdent();
+    String message = mergeCommit.getFullMessage();
+    assertThat(mergeAuthor.getName()).isEqualTo("Dirk Gently");
+    assertThat(mergeAuthor.getEmailAddress()).isEqualTo("dirk@holistic.det");
+    assertThat(message).contains("master", "mergeable");
+    // We expect the merge result of file b.txt here by looking up the sha hash of its content.
+    // If the file is missing (aka not merged correctly) this will throw a MissingObjectException:
+    byte[] contentOfFileB = repository.open(repository.resolve("9513e9c76e73f3e562fd8e4c909d0607113c77c6")).getBytes();
+    assertThat(new String(contentOfFileB)).isEqualTo("b\ncontent from branch\n");
   }
 
   private GitMergeCommand createCommand() {
