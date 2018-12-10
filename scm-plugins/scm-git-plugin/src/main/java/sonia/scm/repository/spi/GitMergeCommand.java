@@ -4,8 +4,10 @@ import com.google.common.base.Strings;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.MergeCommand.FastForwardMode;
 import org.eclipse.jgit.api.MergeResult;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.merge.MergeStrategy;
@@ -15,12 +17,16 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.repository.GitWorkdirFactory;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Person;
+import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.api.MergeCommandResult;
 import sonia.scm.repository.api.MergeDryRunCommandResult;
 import sonia.scm.user.User;
 
 import java.io.IOException;
 import java.text.MessageFormat;
+
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import static sonia.scm.NotFoundException.notFound;
 
 public class GitMergeCommand extends AbstractGitCommand implements MergeCommand {
 
@@ -40,6 +46,8 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
 
   @Override
   public MergeCommandResult merge(MergeCommandRequest request) {
+    RepositoryPermissions.push(context.getRepository().getId()).check();
+
     try (WorkingCopy workingCopy = workdirFactory.createWorkingCopy(context)) {
       Repository repository = workingCopy.get();
       logger.debug("cloned repository to folder {}", repository.getWorkTree());
@@ -88,20 +96,43 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
       }
     }
 
-    private void checkOutTargetBranch() {
+    private void checkOutTargetBranch() throws IOException {
       try {
         clone.checkout().setName(target).call();
+      } catch (RefNotFoundException e) {
+        logger.trace("could not checkout target branch {} for merge directly; trying to create local branch", target, e);
+        checkOutTargetAsNewLocalBranch();
       } catch (GitAPIException e) {
         throw new InternalRepositoryException(context.getRepository(), "could not checkout target branch for merge: " + target, e);
+      }
+    }
+
+    private void checkOutTargetAsNewLocalBranch() throws IOException {
+      try {
+        ObjectId targetRevision = resolveRevision(target);
+        if (targetRevision == null) {
+          throw notFound(entity("revision", target).in(context.getRepository()));
+        }
+        clone.checkout().setStartPoint(targetRevision.getName()).setName(target).setCreateBranch(true).call();
+      } catch (RefNotFoundException e) {
+        logger.debug("could not checkout target branch {} for merge as local branch", target, e);
+        throw notFound(entity("revision", target).in(context.getRepository()));
+      } catch (GitAPIException e) {
+        throw new InternalRepositoryException(context.getRepository(), "could not checkout target branch for merge as local branch: " + target, e);
       }
     }
 
     private MergeResult doMergeInClone() throws IOException {
       MergeResult result;
       try {
+        ObjectId sourceRevision = resolveRevision(toMerge);
+        if (sourceRevision == null) {
+          throw notFound(entity("revision", toMerge).in(context.getRepository()));
+        }
         result = clone.merge()
+          .setFastForward(FastForwardMode.NO_FF)
           .setCommit(false) // we want to set the author manually
-          .include(toMerge, resolveRevision(toMerge))
+          .include(toMerge, sourceRevision)
           .call();
       } catch (GitAPIException e) {
         throw new InternalRepositoryException(context.getRepository(), "could not merge branch " + toMerge + " into " + target, e);
@@ -113,10 +144,12 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
       logger.debug("merged branch {} into {}", toMerge, target);
       Person authorToUse = determineAuthor();
       try {
-        clone.commit()
-          .setAuthor(authorToUse.getName(), authorToUse.getMail())
-          .setMessage(MessageFormat.format(determineMessageTemplate(), toMerge, target))
-          .call();
+        if (!clone.status().call().isClean()) {
+          clone.commit()
+            .setAuthor(authorToUse.getName(), authorToUse.getMail())
+            .setMessage(MessageFormat.format(determineMessageTemplate(), toMerge, target))
+            .call();
+        }
       } catch (GitAPIException e) {
         throw new InternalRepositoryException(context.getRepository(), "could not commit merge between branch " + toMerge + " and " + target, e);
       }
@@ -147,7 +180,7 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
       try {
         clone.push().call();
       } catch (GitAPIException e) {
-        throw new InternalRepositoryException(context.getRepository(), "could not push merged branch " + toMerge + " to origin", e);
+        throw new InternalRepositoryException(context.getRepository(), "could not push merged branch " + target + " to origin", e);
       }
       logger.debug("pushed merged branch {}", target);
     }

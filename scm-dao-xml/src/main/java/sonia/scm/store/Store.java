@@ -8,6 +8,7 @@ public enum Store {
   BLOB("blob");
 
   private static final String GLOBAL_STORE_BASE_DIRECTORY = "var";
+  private static final String STORE_DIRECTORY = "store";
 
   private String directory;
 
@@ -17,17 +18,17 @@ public enum Store {
   }
 
   /**
-   * Get the relkative store directory path to be stored in the repository root
+   * Get the relative store directory path to be stored in the repository root
    * <p>
    * The repository store directories are:
-   * repo_base_dir/config/
-   * repo_base_dir/blob/
-   * repo_base_dir/data/
+   * repo_base_dir/store/config/
+   * repo_base_dir/store/blob/
+   * repo_base_dir/store/data/
    *
    * @return the relative store directory path to be stored in the repository root
    */
   public String getRepositoryStoreDirectory() {
-    return directory;
+    return STORE_DIRECTORY + File.separator + directory;
   }
 
   /**

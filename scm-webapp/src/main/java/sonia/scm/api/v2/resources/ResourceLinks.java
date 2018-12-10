@@ -567,4 +567,23 @@ class ResourceLinks {
     }
   }
 
+  public MergeLinks merge() {
+    return new MergeLinks(scmPathInfoStore.get());
+  }
+
+  static class MergeLinks {
+    private final LinkBuilder mergeLinkBuilder;
+
+    MergeLinks(ScmPathInfo pathInfo) {
+      this.mergeLinkBuilder = new LinkBuilder(pathInfo, RepositoryRootResource.class, RepositoryResource.class, MergeResource.class);
+    }
+
+    String merge(String namespace, String name) {
+      return mergeLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("merge").parameters().method("merge").parameters().href();
+    }
+
+    String dryRun(String namespace, String name) {
+      return mergeLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("merge").parameters().method("dryRun").parameters().href();
+    }
+  }
 }
