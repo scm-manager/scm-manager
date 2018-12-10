@@ -1,8 +1,7 @@
 // @flow
 import React from "react";
-import AvatarWrapper from "../repos/components/changesets/AvatarWrapper";
 import type { Me } from "@scm-manager/ui-types";
-import { MailLink } from "@scm-manager/ui-components";
+import { MailLink, AvatarWrapper, AvatarImage } from "@scm-manager/ui-components";
 import { compose } from "redux";
 import { translate } from "react-i18next";
 
@@ -23,9 +22,7 @@ class ProfileInfo extends React.Component<Props, State> {
           <div>
             <figure className="media-left">
               <p className="image is-64x64">
-                {
-                  // TODO: add avatar
-                }
+                <AvatarImage person={ me }/>
               </p>
             </figure>
           </div>

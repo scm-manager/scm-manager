@@ -1,17 +1,17 @@
 //@flow
 import React from "react";
-import type {Changeset, Repository, Tag} from "@scm-manager/ui-types";
+import type { Changeset, Repository, Tag } from "@scm-manager/ui-types";
+
 import classNames from "classnames";
 import {Interpolate, translate} from "react-i18next";
 import ChangesetId from "./ChangesetId";
 import injectSheet from "react-jss";
-import {DateFromNow} from "@scm-manager/ui-components";
+import {DateFromNow} from "../..";
 import ChangesetAuthor from "./ChangesetAuthor";
 import ChangesetTag from "./ChangesetTag";
-import {compose} from "redux";
+
 import {parseDescription} from "./changesets";
-import AvatarWrapper from "./AvatarWrapper";
-import AvatarImage from "./AvatarImage";
+import {AvatarWrapper, AvatarImage} from "../../avatar";
 
 const styles = {
   pointer: {
@@ -56,7 +56,7 @@ class ChangesetRow extends React.Component<Props> {
           <div>
             <figure className="media-left">
               <p className="image is-64x64">
-                <AvatarImage changeset={changeset} />
+                <AvatarImage person={changeset.author} />
               </p>
             </figure>
           </div>
@@ -95,7 +95,4 @@ class ChangesetRow extends React.Component<Props> {
   };
 }
 
-export default compose(
-  injectSheet(styles),
-  translate("repos")
-)(ChangesetRow);
+export default injectSheet(styles)(translate("repos")(ChangesetRow));

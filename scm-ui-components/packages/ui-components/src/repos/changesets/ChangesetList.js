@@ -1,8 +1,8 @@
 // @flow
 import ChangesetRow from "./ChangesetRow";
 import React from "react";
+
 import type { Changeset, Repository } from "@scm-manager/ui-types";
-import classNames from "classnames";
 
 type Props = {
   repository: Repository,
@@ -21,7 +21,7 @@ class ChangesetList extends React.Component<Props> {
         />
       );
     });
-    return <div className={classNames("box")}>{content}</div>;
+    return <div className="box">{content}</div>;
   }
 }
 

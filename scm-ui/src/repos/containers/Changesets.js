@@ -12,8 +12,7 @@ import {
 } from "../modules/changesets";
 
 import {connect} from "react-redux";
-import ChangesetList from "../components/changesets/ChangesetList";
-import {ErrorNotification, getPageFromMatch, LinkPaginator, Loading} from "@scm-manager/ui-components";
+import {ErrorNotification, getPageFromMatch, LinkPaginator, ChangesetList, Loading} from "@scm-manager/ui-components";
 import {compose} from "redux";
 
 type Props = {

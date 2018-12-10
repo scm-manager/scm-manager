@@ -1,13 +1,12 @@
 //@flow
-
 import React from "react";
-import type { Changeset } from "@scm-manager/ui-types";
+import type {Changeset} from "@scm-manager/ui-types";
 
 type Props = {
   changeset: Changeset
 };
 
-export default class ChangesetAuthor extends React.Component<Props> {
+class ChangesetAuthor extends React.Component<Props> {
   render() {
     const { changeset } = this.props;
     if (!changeset.author) {
@@ -35,3 +34,5 @@ export default class ChangesetAuthor extends React.Component<Props> {
     }
   }
 }
+
+export default ChangesetAuthor;
