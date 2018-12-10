@@ -25,7 +25,7 @@ class ProfileInfo extends React.Component<Props, State> {
             </p>
           </figure>
         </AvatarWrapper>
-        <div className="media-left">
+        <div className="media-content">
           <table className="table">
             <tbody>
               <tr>
