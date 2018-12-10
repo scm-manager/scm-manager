@@ -44,6 +44,7 @@ public class RepositoryResource {
   private final Provider<ModificationsRootResource> modificationsRootResource;
   private final Provider<FileHistoryRootResource> fileHistoryRootResource;
   private final Provider<MergeResource> mergeResource;
+  private final Provider<IncomingRootResource> incomingRootResource;
 
   @Inject
   public RepositoryResource(
@@ -57,6 +58,7 @@ public class RepositoryResource {
     Provider<DiffRootResource> diffRootResource,
     Provider<ModificationsRootResource> modificationsRootResource,
     Provider<FileHistoryRootResource> fileHistoryRootResource,
+    Provider<IncomingRootResource> incomingRootResource,
     Provider<MergeResource> mergeResource) {
     this.dtoToRepositoryMapper = dtoToRepositoryMapper;
     this.manager = manager;
@@ -72,6 +74,7 @@ public class RepositoryResource {
     this.modificationsRootResource = modificationsRootResource;
     this.fileHistoryRootResource = fileHistoryRootResource;
     this.mergeResource = mergeResource;
+    this.incomingRootResource = incomingRootResource;
   }
 
   /**
@@ -196,7 +199,14 @@ public class RepositoryResource {
   }
 
   @Path("modifications/")
-  public ModificationsRootResource modifications() {return modificationsRootResource.get(); }
+  public ModificationsRootResource modifications() {
+    return modificationsRootResource.get();
+  }
+
+  @Path("incoming/")
+  public IncomingRootResource incoming() {
+    return incomingRootResource.get();
+  }
 
   @Path("merge/")
   public MergeResource merge() {return mergeResource.get(); }

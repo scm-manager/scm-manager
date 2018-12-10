@@ -34,11 +34,13 @@
 package sonia.scm.repository.spi;
 
 import com.google.common.collect.ImmutableSet;
+import sonia.scm.repository.Feature;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.Command;
 
 import java.io.IOException;
+import java.util.EnumSet;
 import java.util.Set;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -66,6 +68,7 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
     Command.PULL,
     Command.MERGE
   );
+  protected static final Set<Feature> FEATURES = EnumSet.of(Feature.INCOMING_REVISION);
   //J+
 
   //~--- constructors ---------------------------------------------------------
@@ -246,6 +249,10 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
     return new GitMergeCommand(context, repository, handler.getWorkdirFactory());
   }
 
+  @Override
+  public Set<Feature> getSupportedFeatures() {
+    return FEATURES;
+  }
 //~--- fields ---------------------------------------------------------------
 
   /** Field description */

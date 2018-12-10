@@ -221,7 +221,7 @@ public final class RepositoryService implements Closeable {
     logger.debug("create diff command for repository {}",
       repository.getNamespaceAndName());
 
-    return new DiffCommandBuilder(provider.getDiffCommand());
+    return new DiffCommandBuilder(provider.getDiffCommand(), provider.getSupportedFeatures());
   }
 
   /**
@@ -253,7 +253,7 @@ public final class RepositoryService implements Closeable {
       repository.getNamespaceAndName());
 
     return new LogCommandBuilder(cacheManager, provider.getLogCommand(),
-      repository, preProcessorUtil);
+      repository, preProcessorUtil, provider.getSupportedFeatures());
   }
 
   /**
