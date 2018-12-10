@@ -48,6 +48,7 @@ import org.eclipse.jgit.lib.RepositoryCache;
 
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.spi.HookEventFacade;
+import sonia.scm.web.CollectingPackParserListener;
 import sonia.scm.web.GitReceiveHook;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -64,10 +65,10 @@ public class ScmTransportProtocol extends TransportProtocol
 {
 
   /** Field description */
-  private static final String NAME = "scm";
+  public static final String NAME = "scm";
 
   /** Field description */
-  private static final Set<String> SCHEMES = ImmutableSet.of("scm");
+  private static final Set<String> SCHEMES = ImmutableSet.of(NAME);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -234,6 +235,8 @@ public class ScmTransportProtocol extends TransportProtocol
 
         pack.setPreReceiveHook(hook);
         pack.setPostReceiveHook(hook);
+
+        CollectingPackParserListener.set(pack);
       }
 
       return pack;

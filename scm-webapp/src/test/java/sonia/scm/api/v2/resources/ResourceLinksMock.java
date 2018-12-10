@@ -37,6 +37,7 @@ public class ResourceLinksMock {
     when(resourceLinks.uiPlugin()).thenReturn(new ResourceLinks.UIPluginLinks(uriInfo));
     when(resourceLinks.authentication()).thenReturn(new ResourceLinks.AuthenticationLinks(uriInfo));
     when(resourceLinks.index()).thenReturn(new ResourceLinks.IndexLinks(uriInfo));
+    when(resourceLinks.merge()).thenReturn(new ResourceLinks.MergeLinks(uriInfo));
 
     return resourceLinks;
   }
