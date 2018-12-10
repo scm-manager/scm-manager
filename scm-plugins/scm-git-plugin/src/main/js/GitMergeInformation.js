@@ -17,8 +17,6 @@ class GitMergeInformation extends React.Component<Props> {
     return (
       <div>
         <h4>{t("scm-git-plugin.information.merge.heading")}</h4>
-        <h5>{t("scm-git-plugin.information.merge.subheading")}</h5>
-        {t("scm-git-plugin.information.merge.clean")}
         {t("scm-git-plugin.information.merge.checkout")}
         <pre>
           <code>git checkout {target}</code>
