@@ -16,28 +16,17 @@ function handleStatusCode(response: Response) {
   if (!response.ok) {
     switch (response.status) {
       case 401:
-        return throwError(response, UNAUTHORIZED_ERROR);
+        throw UNAUTHORIZED_ERROR;
       case 404:
-        return throwError(response, NOT_FOUND_ERROR);
+        throw NOT_FOUND_ERROR;
       case 409:
-        return throwError(response, CONFLICT_ERROR);
+        throw CONFLICT_ERROR;
       default:
-        return throwError(response, new Error("server returned status code " + response.status));
+        throw new Error("server returned status code " + response.status);
     }
 
   }
   return response;
-}
-
-function throwError(response: Response, err: Error) {
-  return response.json().then(
-    json => {
-      throw Error(json.message);
-    },
-    () => {
-      throw err;
-    }
-  );
 }
 
 export function createUrl(url: string) {
