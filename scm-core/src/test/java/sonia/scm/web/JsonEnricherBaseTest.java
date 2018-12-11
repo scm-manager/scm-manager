@@ -24,6 +24,14 @@ public class JsonEnricherBaseTest {
   }
 
   @Test
+  public void testResultHasMediaTypeWithCamelCaseMediaType() {
+    String mediaType = "application/hitchhikersGuideToTheGalaxy";
+    JsonEnricherContext context = new JsonEnricherContext(null, MediaType.valueOf(mediaType), null);
+
+    assertThat(enricher.resultHasMediaType(mediaType, context)).isTrue();
+  }
+
+  @Test
   public void testAppendLink() {
     ObjectNode root = objectMapper.createObjectNode();
     ObjectNode links = objectMapper.createObjectNode();
