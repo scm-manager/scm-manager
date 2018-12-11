@@ -3,6 +3,7 @@ package sonia.scm.user;
 import sonia.scm.BadRequestException;
 import sonia.scm.ContextEntry;
 
+@SuppressWarnings("squid:MaximumInheritanceDepth") // exceptions have a deep inheritance depth themselves; therefore we accept this here
 public class ChangePasswordNotAllowedException extends BadRequestException {
 
   private static final String CODE = "9BR7qpDAe1";
