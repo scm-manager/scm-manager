@@ -45,6 +45,12 @@ class GitMergeInformation extends React.Component<Props> {
             git commit -m "Merge {source} into {target}"
           </code>
         </pre>
+        {t("scm-git-plugin.information.merge.push")}
+        <pre>
+          <code>
+            git push
+          </code>
+        </pre>
       </div>
     );
   }

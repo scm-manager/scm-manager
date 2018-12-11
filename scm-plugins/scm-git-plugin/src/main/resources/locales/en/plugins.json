@@ -6,11 +6,12 @@
       "replace" : "Push an existing repository",
       "merge": {
         "heading": "How to merge source branch into target branch",
-        "clean": "1. Make sure your workspace is clean and checkout target branch",
+        "checkout": "1. Make sure your workspace is clean and checkout target branch",
         "update": "2. Update workspace",
         "merge": "3. Merge source branch",
         "resolve": "4. Resolve merge conflicts and add corrected files to index",
-        "commit": "5. Commit"
+        "commit": "5. Commit",
+        "push": "6. Push your merge"
       }
     },
     "config": {
