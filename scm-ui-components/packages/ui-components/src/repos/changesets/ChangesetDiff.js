@@ -1,29 +1,18 @@
 //@flow
 import React from "react";
 import type { Changeset } from "@scm-manager/ui-types";
-import { apiClient } from "../../apiclient";
-import ErrorNotification from "../../ErrorNotification";
-import Loading from "../../Loading";
-import Diff from "../Diff";
+import LoadingDiff from "../LoadingDiff";
+import Notification from "../../Notification";
+import {translate} from "react-i18next";
 
 type Props = {
-  changeset: Changeset
+  changeset: Changeset,
+
+  // context props
+  t: string => string
 };
 
-type State = {
-  diff?: string,
-  loading: boolean,
-  error?: Error
-};
-
-class ChangesetDiff extends React.Component<Props, State> {
-
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      loading: false
-    };
-  }
+class ChangesetDiff extends React.Component<Props> {
 
   isDiffSupported(changeset: Changeset) {
     return !!changeset._links.diff;
@@ -33,51 +22,16 @@ class ChangesetDiff extends React.Component<Props, State> {
     return changeset._links.diff.href + "?format=GIT";
   }
 
-  loadDiff(changeset: Changeset) {
-    this.setState({
-      loading: true
-    });
-    const url = this.createUrl(changeset);
-    apiClient
-      .get(url)
-      .then(response => response.text())
-      .then(text => {
-        this.setState({
-          loading: false,
-          diff: text
-        });
-      })
-      .catch(error => {
-        this.setState({
-          loading: false,
-          error
-        });
-      });
-  }
-
-  componentDidMount() {
-    const { changeset } = this.props;
-    if (!this.isDiffSupported(changeset)) {
-      this.setState({
-        error: new Error("diff is not supported")
-      });
-    } else {
-      this.loadDiff(changeset);
-    }
-  }
-
-
   render() {
-    const { diff, loading, error } = this.state;
-    if (error) {
-      return <ErrorNotification error={error} />;
-    } else if (loading || !diff) {
-      return <Loading />;
+    const { changeset, t } = this.props;
+    if (!this.isDiffSupported(changeset)) {
+      return <Notification type="danger">{t("changesets.diff.not-supported")}</Notification>;
     } else {
-      return <Diff diff={diff} />;
+      const url = this.createUrl(changeset);
+      return <LoadingDiff url={url} />;
     }
   }
 
 }
 
-export default ChangesetDiff;
+export default translate("repos")(ChangesetDiff);

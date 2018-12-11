@@ -66,6 +66,9 @@
     }
   },
   "changesets": {
+    "diff": {
+      "not-supported": "Diff of changesets is not supported by the type of repository"
+    },
     "error-title": "Error",
     "error-subtitle": "Could not fetch changesets",
     "changeset": {

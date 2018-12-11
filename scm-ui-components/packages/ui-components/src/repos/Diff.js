@@ -2,7 +2,6 @@
 import React from "react";
 import { Diff2Html } from "diff2html";
 
-
 type Props = {
   diff: string,
   sideBySide: boolean
