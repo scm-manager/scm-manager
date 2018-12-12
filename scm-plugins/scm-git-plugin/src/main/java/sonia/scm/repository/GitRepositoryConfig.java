@@ -8,6 +8,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class GitRepositoryConfig {
 
+  public GitRepositoryConfig() {
+  }
+
+  public GitRepositoryConfig(String defaultBranch) {
+    this.defaultBranch = defaultBranch;
+  }
+
   private String defaultBranch;
 
   public String getDefaultBranch() {

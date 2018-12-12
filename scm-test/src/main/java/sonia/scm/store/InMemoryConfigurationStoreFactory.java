@@ -35,15 +35,55 @@ package sonia.scm.store;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+
 /**
  * In memory configuration store factory for testing purposes.
- * 
+ *
  * @author Sebastian Sdorra
  */
 public class InMemoryConfigurationStoreFactory implements ConfigurationStoreFactory {
 
+  private static final Map<Key, InMemoryConfigurationStore> STORES = new HashMap<>();
+
   @Override
   public ConfigurationStore getStore(TypedStoreParameters storeParameters) {
-    return new InMemoryConfigurationStore<>();
+    Key key = new Key(storeParameters.getType(), storeParameters.getName(), storeParameters.getRepository() == null? "-": storeParameters.getRepository().getId());
+    if (STORES.containsKey(key)) {
+      return STORES.get(key);
+    } else {
+      InMemoryConfigurationStore<Object> store = new InMemoryConfigurationStore<>();
+      STORES.put(key, store);
+      return store;
+    }
+  }
+
+  private static class Key {
+    private final Class type;
+    private final String name;
+    private final String id;
+
+    public Key(Class type, String name, String id) {
+      this.type = type;
+      this.name = name;
+      this.id = id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (this == o) return true;
+      if (o == null || getClass() != o.getClass()) return false;
+      Key key = (Key) o;
+      return Objects.equals(type, key.type) &&
+        Objects.equals(name, key.name) &&
+        Objects.equals(id, key.id);
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(type, name, id);
+    }
   }
 }

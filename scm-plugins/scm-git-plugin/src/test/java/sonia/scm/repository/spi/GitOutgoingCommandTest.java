@@ -38,7 +38,9 @@ package sonia.scm.repository.spi;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.junit.Test;
+import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
 import sonia.scm.repository.ChangesetPagingResult;
+import sonia.scm.store.InMemoryConfigurationStoreFactory;
 
 import java.io.IOException;
 
@@ -104,7 +106,7 @@ public class GitOutgoingCommandTest extends AbstractRemoteCommandTestBase
     commit(outgoing, "added a");
 
     GitPushCommand push = new GitPushCommand(handler,
-                            new GitContext(outgoingDirectory, null),
+                            new GitContext(outgoingDirectory, null, null),
                             outgoingRepository);
     PushCommandRequest req = new PushCommandRequest();
 
@@ -158,7 +160,7 @@ public class GitOutgoingCommandTest extends AbstractRemoteCommandTestBase
    */
   private GitOutgoingCommand createCommand()
   {
-    return new GitOutgoingCommand(handler, new GitContext(outgoingDirectory, null),
+    return new GitOutgoingCommand(handler, new GitContext(outgoingDirectory, null, new GitRepositoryConfigStoreProvider(new InMemoryConfigurationStoreFactory())),
       outgoingRepository);
   }
 }

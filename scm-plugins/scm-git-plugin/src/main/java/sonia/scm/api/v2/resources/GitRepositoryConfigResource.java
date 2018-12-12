@@ -1,5 +1,9 @@
 package sonia.scm.api.v2.resources;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sonia.scm.event.ScmEventBus;
+import sonia.scm.repository.ClearRepositoryCacheEvent;
 import sonia.scm.repository.GitRepositoryConfig;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
@@ -22,15 +26,17 @@ import static sonia.scm.NotFoundException.notFound;
 
 public class GitRepositoryConfigResource {
 
+  private static final Logger LOG = LoggerFactory.getLogger(GitRepositoryConfigResource.class);
+
   private final GitRepositoryConfigMapper repositoryConfigMapper;
   private final RepositoryManager repositoryManager;
-  private final ConfigurationStoreFactory configurationStoreFactory;
+  private final GitRepositoryConfigStoreProvider gitRepositoryConfigStoreProvider;
 
   @Inject
-  public GitRepositoryConfigResource(GitRepositoryConfigMapper repositoryConfigMapper, RepositoryManager repositoryManager, ConfigurationStoreFactory configurationStoreFactory) {
+  public GitRepositoryConfigResource(GitRepositoryConfigMapper repositoryConfigMapper, RepositoryManager repositoryManager, GitRepositoryConfigStoreProvider gitRepositoryConfigStoreProvider) {
     this.repositoryConfigMapper = repositoryConfigMapper;
     this.repositoryManager = repositoryManager;
-    this.configurationStoreFactory = configurationStoreFactory;
+    this.gitRepositoryConfigStoreProvider = gitRepositoryConfigStoreProvider;
   }
 
   @GET
@@ -55,7 +61,13 @@ public class GitRepositoryConfigResource {
     ConfigurationStore<GitRepositoryConfig> repositoryConfigStore = getStore(repository);
     GitRepositoryConfig config = repositoryConfigMapper.map(dto);
     repositoryConfigStore.set(config);
+    LOG.info("git default branch of repository {} has changed, sending clear cache event", repository.getNamespaceAndName());
+    sendClearRepositoryCacheEvent(repository);
     return Response.noContent().build();
+  }
+
+  private void sendClearRepositoryCacheEvent(Repository repository) {
+    ScmEventBus.getInstance().post(new ClearRepositoryCacheEvent(repository));
   }
 
   private Repository getRepository(@PathParam("namespace") String namespace, @PathParam("name") String name) {
@@ -68,6 +80,6 @@ public class GitRepositoryConfigResource {
   }
 
   private ConfigurationStore<GitRepositoryConfig> getStore(Repository repository) {
-    return configurationStoreFactory.withType(GitRepositoryConfig.class).withName("gitConfig").forRepository(repository).build();
+    return gitRepositoryConfigStoreProvider.get(repository);
   }
 }
