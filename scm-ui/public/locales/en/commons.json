@@ -20,7 +20,8 @@
     }
   },
   "error-notification": {
-    "prefix": "Error"
+    "prefix": "Error",
+    "timeout": "The session has expired. Please login again."
   },
   "loading": {
     "alt": "Loading ..."
