@@ -52,9 +52,12 @@ class LoadingDiff extends React.Component<Props, State> {
     const { diff, loading, error } = this.state;
     if (error) {
       return <ErrorNotification error={error} />;
-    } else if (loading || !diff) {
+    } else if (loading) {
       return <Loading />;
-    } else {
+    } else if(!diff){
+        return null;
+    }
+    else {
       return <Diff diff={diff} />;
     }
   }
