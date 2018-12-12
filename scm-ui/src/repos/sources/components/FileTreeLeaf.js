@@ -10,6 +10,13 @@ import type { File } from "@scm-manager/ui-types";
 const styles = {
   iconColumn: {
     width: "16px"
+  },
+  wordBreakTable: {
+    WebkitHyphens: "auto",
+    MozHyphens: "auto",
+    MsHyphens: "auto",
+    hyphens: "auto",
+    wordBreak: "auto"
   }
 };
 
@@ -71,7 +78,7 @@ class FileTreeLeaf extends React.Component<Props> {
     return (
       <tr>
         <td className={classes.iconColumn}>{this.createFileIcon(file)}</td>
-        <td>{this.createFileName(file)}</td>
+        <td className={classes.wordBreakTable}>{this.createFileName(file)}</td>
         <td className="is-hidden-mobile">{fileSize}</td>
         <td className="is-hidden-mobile">
           <DateFromNow date={file.lastModified} />
