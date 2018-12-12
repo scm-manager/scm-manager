@@ -1,5 +1,7 @@
 package sonia.scm.api.v2.resources;
 
+import sonia.scm.event.ScmEventBus;
+import sonia.scm.repository.ClearRepositoryCacheEvent;
 import sonia.scm.repository.GitRepositoryConfig;
 import sonia.scm.repository.Repository;
 import sonia.scm.store.ConfigurationStore;
@@ -17,6 +19,32 @@ public class GitRepositoryConfigStoreProvider {
   }
 
   public ConfigurationStore<GitRepositoryConfig> get(Repository repository) {
-    return configurationStoreFactory.withType(GitRepositoryConfig.class).withName("gitConfig").forRepository(repository).build();
+    return new StoreWrapper(configurationStoreFactory.withType(GitRepositoryConfig.class).withName("gitConfig").forRepository(repository).build(), repository);
+  }
+
+  private static class StoreWrapper implements ConfigurationStore<GitRepositoryConfig> {
+
+    private final ConfigurationStore<GitRepositoryConfig> delegate;
+    private final Repository repository;
+
+    private StoreWrapper(ConfigurationStore<GitRepositoryConfig> delegate, Repository repository) {
+      this.delegate = delegate;
+      this.repository = repository;
+    }
+
+    @Override
+    public GitRepositoryConfig get() {
+      return delegate.get();
+    }
+
+    @Override
+    public void set(GitRepositoryConfig object) {
+      delegate.set(object);
+      sendClearRepositoryCacheEvent();
+    }
+
+    private void sendClearRepositoryCacheEvent() {
+      ScmEventBus.getInstance().post(new ClearRepositoryCacheEvent(repository));
+    }
   }
 }

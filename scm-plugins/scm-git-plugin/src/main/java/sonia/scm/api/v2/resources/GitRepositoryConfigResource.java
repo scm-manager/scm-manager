@@ -2,14 +2,11 @@ package sonia.scm.api.v2.resources;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.event.ScmEventBus;
-import sonia.scm.repository.ClearRepositoryCacheEvent;
 import sonia.scm.repository.GitRepositoryConfig;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.store.ConfigurationStore;
-import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.web.GitVndMediaType;
 
 import javax.inject.Inject;
@@ -62,12 +59,7 @@ public class GitRepositoryConfigResource {
     GitRepositoryConfig config = repositoryConfigMapper.map(dto);
     repositoryConfigStore.set(config);
     LOG.info("git default branch of repository {} has changed, sending clear cache event", repository.getNamespaceAndName());
-    sendClearRepositoryCacheEvent(repository);
     return Response.noContent().build();
-  }
-
-  private void sendClearRepositoryCacheEvent(Repository repository) {
-    ScmEventBus.getInstance().post(new ClearRepositoryCacheEvent(repository));
   }
 
   private Repository getRepository(@PathParam("namespace") String namespace, @PathParam("name") String name) {
