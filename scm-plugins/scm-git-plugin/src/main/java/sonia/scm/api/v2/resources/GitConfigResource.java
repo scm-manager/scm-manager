@@ -9,12 +9,16 @@ import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.web.GitVndMediaType;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
+
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
 
 /**
  * RESTful Web Service Resource to manage the configuration of the git plugin.
@@ -26,13 +30,15 @@ public class GitConfigResource {
   private final GitConfigDtoToGitConfigMapper dtoToConfigMapper;
   private final GitConfigToGitConfigDtoMapper configToDtoMapper;
   private final GitRepositoryHandler repositoryHandler;
+  private final Provider<GitRepositoryConfigResource> gitRepositoryConfigResource;
 
   @Inject
   public GitConfigResource(GitConfigDtoToGitConfigMapper dtoToConfigMapper, GitConfigToGitConfigDtoMapper configToDtoMapper,
-                           GitRepositoryHandler repositoryHandler) {
+                           GitRepositoryHandler repositoryHandler, Provider<GitRepositoryConfigResource> gitRepositoryConfigResource) {
     this.dtoToConfigMapper = dtoToConfigMapper;
     this.configToDtoMapper = configToDtoMapper;
     this.repositoryHandler = repositoryHandler;
+    this.gitRepositoryConfigResource = gitRepositoryConfigResource;
   }
 
   /**
@@ -87,5 +93,10 @@ public class GitConfigResource {
     repositoryHandler.storeConfig();
 
     return Response.noContent().build();
+  }
+
+  @Path("{namespace}/{name}")
+  public GitRepositoryConfigResource getRepositoryConfig(@PathParam("namespace") String namespace, @PathParam("name") String name) {
+    return gitRepositoryConfigResource.get();
   }
 }

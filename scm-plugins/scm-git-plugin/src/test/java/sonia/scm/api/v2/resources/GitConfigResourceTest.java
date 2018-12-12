@@ -1,7 +1,5 @@
 package sonia.scm.api.v2.resources;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
 import org.jboss.resteasy.core.Dispatcher;
@@ -18,18 +16,25 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import sonia.scm.repository.GitConfig;
+import sonia.scm.repository.GitRepositoryConfig;
 import sonia.scm.repository.GitRepositoryHandler;
+import sonia.scm.repository.NamespaceAndName;
+import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryManager;
+import sonia.scm.store.ConfigurationStore;
+import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.web.GitVndMediaType;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import static com.google.inject.util.Providers.of;
 import static junit.framework.TestCase.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @SubjectAware(
@@ -55,30 +60,45 @@ public class GitConfigResourceTest {
   @Mock(answer = Answers.RETURNS_DEEP_STUBS)
   private ScmPathInfoStore scmPathInfoStore;
 
+  @Mock
+  private RepositoryManager repositoryManager;
+
   @InjectMocks
   private GitConfigToGitConfigDtoMapperImpl configToDtoMapper;
+  @InjectMocks
+  private GitRepositoryConfigToGitRepositoryConfigDtoMapperImpl repositoryConfigToDtoMapper;
 
   @Mock
   private GitRepositoryHandler repositoryHandler;
+
+  @Mock(answer = Answers.CALLS_REAL_METHODS)
+  private ConfigurationStoreFactory configurationStoreFactory;
+  @Mock
+  private ConfigurationStore configurationStore;
 
   @Before
   public void prepareEnvironment() {
     GitConfig gitConfig = createConfiguration();
     when(repositoryHandler.getConfig()).thenReturn(gitConfig);
-    GitConfigResource gitConfigResource = new GitConfigResource(dtoToConfigMapper, configToDtoMapper, repositoryHandler);
+    GitRepositoryConfigResource gitRepositoryConfigResource = new GitRepositoryConfigResource(repositoryConfigToDtoMapper, repositoryManager, configurationStoreFactory);
+    GitConfigResource gitConfigResource = new GitConfigResource(dtoToConfigMapper, configToDtoMapper, repositoryHandler, of(gitRepositoryConfigResource));
     dispatcher.getRegistry().addSingletonResource(gitConfigResource);
     when(scmPathInfoStore.get().getApiRestUri()).thenReturn(baseUri);
   }
 
+  @Before
+  public void initConfigStore() {
+    when(configurationStoreFactory.getStore(any())).thenReturn(configurationStore);
+  }
+
   @Test
   @SubjectAware(username = "readWrite")
-  public void shouldGetGitConfig() throws URISyntaxException, IOException {
+  public void shouldGetGitConfig() throws URISyntaxException {
     MockHttpResponse response = get();
 
     assertEquals(HttpServletResponse.SC_OK, response.getStatus());
 
     String responseString = response.getContentAsString();
-    ObjectNode responseJson = new ObjectMapper().readValue(responseString, ObjectNode.class);
 
     assertTrue(responseString.contains("\"disabled\":false"));
     assertTrue(responseString.contains("\"gcExpression\":\"valid Git GC Cron Expression\""));
@@ -88,7 +108,7 @@ public class GitConfigResourceTest {
 
   @Test
   @SubjectAware(username = "readWrite")
-  public void shouldGetGitConfigEvenWhenItsEmpty() throws URISyntaxException, IOException {
+  public void shouldGetGitConfigEvenWhenItsEmpty() throws URISyntaxException {
     when(repositoryHandler.getConfig()).thenReturn(null);
 
     MockHttpResponse response = get();
@@ -124,10 +144,62 @@ public class GitConfigResourceTest {
 
   @Test
   @SubjectAware(username = "readOnly")
-  public void shouldNotUpdateConfigWhenNotAuthorized() throws URISyntaxException, IOException {
+  public void shouldNotUpdateConfigWhenNotAuthorized() throws URISyntaxException {
     thrown.expectMessage("Subject does not have permission [configuration:write:git]");
 
     put();
+  }
+
+  @Test
+  @SubjectAware(username = "writeOnly")
+  public void shouldReadDefaultRepositoryConfig() throws URISyntaxException {
+    when(repositoryManager.get(new NamespaceAndName("space", "X"))).thenReturn(new Repository("id", "git", "space", "X"));
+
+    MockHttpRequest request = MockHttpRequest.get("/" + GitConfigResource.GIT_CONFIG_PATH_V2 + "/space/X");
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+    assertThat(response.getContentAsString())
+      .contains("\"defaultBranch\":null")
+      .contains("self")
+      .contains("update");
+  }
+
+  @Test
+  @SubjectAware(username = "readOnly")
+  public void shouldNotHaveUpdateLinkForReadOnlyUser() throws URISyntaxException {
+    when(repositoryManager.get(new NamespaceAndName("space", "X"))).thenReturn(new Repository("id", "git", "space", "X"));
+
+    MockHttpRequest request = MockHttpRequest.get("/" + GitConfigResource.GIT_CONFIG_PATH_V2 + "/space/X");
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+    assertThat(response.getContentAsString())
+      .contains("\"defaultBranch\":null")
+      .contains("self")
+      .doesNotContain("update");
+  }
+
+  @Test
+  @SubjectAware(username = "writeOnly")
+  public void shouldReadStoredRepositoryConfig() throws URISyntaxException {
+    when(repositoryManager.get(new NamespaceAndName("space", "X"))).thenReturn(new Repository("id", "git", "space", "X"));
+    GitRepositoryConfig gitRepositoryConfig = new GitRepositoryConfig();
+    gitRepositoryConfig.setDefaultBranch("test");
+    when(configurationStore.get()).thenReturn(gitRepositoryConfig);
+
+    MockHttpRequest request = MockHttpRequest.get("/" + GitConfigResource.GIT_CONFIG_PATH_V2 + "/space/X");
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+    assertThat(response.getContentAsString())
+      .contains("\"defaultBranch\":\"test\"");
   }
 
   private MockHttpResponse get() throws URISyntaxException {
@@ -153,6 +225,4 @@ public class GitConfigResourceTest {
     config.setDisabled(false);
     return config;
   }
-
 }
-
