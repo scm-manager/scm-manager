@@ -9,14 +9,14 @@ import {
   ChangesetId,
   ChangesetTag,
   ChangesetAuthor,
+  ChangesetDiff,
   AvatarWrapper,
   AvatarImage,
-  changesets
+  changesets,
 } from "@scm-manager/ui-components";
 
 import classNames from "classnames";
 import type { Tag } from "@scm-manager/ui-types";
-import ScmDiff from "../../containers/ScmDiff";
 
 const styles = {
   spacing: {
@@ -78,7 +78,7 @@ class ChangesetDetails extends React.Component<Props> {
           </p>
         </div>
         <div>
-          <ScmDiff changeset={changeset} sideBySide={false}/>
+          <ChangesetDiff changeset={changeset} />
         </div>
       </div>
     );

@@ -14,7 +14,7 @@
     "eslint-fix": "eslint src --fix"
   },
   "devDependencies": {
-    "@scm-manager/ui-bundler": "^0.0.22",
+    "@scm-manager/ui-bundler": "^0.0.24",
     "create-index": "^2.3.0",
     "enzyme": "^3.5.0",
     "enzyme-adapter-react-16": "^1.3.1",
@@ -35,7 +35,8 @@
     "react-i18next": "^7.11.0",
     "react-jss": "^8.6.1",
     "react-router-dom": "^4.3.1",
-    "react-select": "^2.1.2"
+    "react-select": "^2.1.2",
+    "diff2html": "^2.5.0"
   },
   "browserify": {
     "transform": [
