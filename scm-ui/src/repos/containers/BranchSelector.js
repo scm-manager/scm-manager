@@ -11,6 +11,9 @@ import classNames from "classnames";
 const styles = {
   zeroflex: {
     flexGrow: 0
+  },
+  iefixwidth: {
+    minWidth: "4.5rem"
   }
 };
 
@@ -45,7 +48,12 @@ class BranchSelector extends React.Component<Props, State> {
       return (
         <div className="box field is-horizontal">
           <div
-            className={classNames("field-label", "is-normal", classes.zeroflex)}
+            className={classNames(
+              "field-label",
+              "is-normal",
+              classes.zeroflex,
+              classes.iefixwidth
+            )}
           >
             <label className="label">{t("branch-selector.label")}</label>
           </div>
