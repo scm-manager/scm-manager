@@ -17,15 +17,16 @@ import static de.otto.edison.hal.Links.linkingTo;
 // Mapstruct does not support parameterized (i.e. non-default) constructors. Thus, we need to use field injection.
 @SuppressWarnings("squid:S3306")
 @Mapper
-public abstract class GitRepositoryConfigToGitRepositoryConfigDtoMapper {
+public abstract class GitRepositoryConfigMapper {
 
   @Inject
   private ScmPathInfoStore scmPathInfoStore;
 
   public abstract GitRepositoryConfigDto map(GitRepositoryConfig config, @Context Repository repository);
+  public abstract GitRepositoryConfig map(GitRepositoryConfigDto dto);
 
   @AfterMapping
-  void appendLinks(GitRepositoryConfig config, @MappingTarget GitRepositoryConfigDto target, @Context Repository repository) {
+  void appendLinks(@MappingTarget GitRepositoryConfigDto target, @Context Repository repository) {
     Links.Builder linksBuilder = linkingTo().self(self());
     if (RepositoryPermissions.modify(repository).isPermitted()) {
       linksBuilder.single(link("update", update()));

@@ -12,8 +12,11 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Answers;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import sonia.scm.repository.GitConfig;
 import sonia.scm.repository.GitRepositoryConfig;
@@ -35,6 +38,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @SubjectAware(
@@ -66,21 +70,23 @@ public class GitConfigResourceTest {
   @InjectMocks
   private GitConfigToGitConfigDtoMapperImpl configToDtoMapper;
   @InjectMocks
-  private GitRepositoryConfigToGitRepositoryConfigDtoMapperImpl repositoryConfigToDtoMapper;
+  private GitRepositoryConfigMapperImpl repositoryConfigMapper;
 
   @Mock
   private GitRepositoryHandler repositoryHandler;
 
   @Mock(answer = Answers.CALLS_REAL_METHODS)
   private ConfigurationStoreFactory configurationStoreFactory;
-  @Mock
-  private ConfigurationStore configurationStore;
+  @Spy
+  private ConfigurationStore<Object> configurationStore;
+  @Captor
+  private ArgumentCaptor<Object> configurationStoreCaptor;
 
   @Before
   public void prepareEnvironment() {
     GitConfig gitConfig = createConfiguration();
     when(repositoryHandler.getConfig()).thenReturn(gitConfig);
-    GitRepositoryConfigResource gitRepositoryConfigResource = new GitRepositoryConfigResource(repositoryConfigToDtoMapper, repositoryManager, configurationStoreFactory);
+    GitRepositoryConfigResource gitRepositoryConfigResource = new GitRepositoryConfigResource(repositoryConfigMapper, repositoryManager, configurationStoreFactory);
     GitConfigResource gitConfigResource = new GitConfigResource(dtoToConfigMapper, configToDtoMapper, repositoryHandler, of(gitRepositoryConfigResource));
     dispatcher.getRegistry().addSingletonResource(gitConfigResource);
     when(scmPathInfoStore.get().getApiRestUri()).thenReturn(baseUri);
@@ -89,6 +95,7 @@ public class GitConfigResourceTest {
   @Before
   public void initConfigStore() {
     when(configurationStoreFactory.getStore(any())).thenReturn(configurationStore);
+    doNothing().when(configurationStore).set(configurationStoreCaptor.capture());
   }
 
   @Test
@@ -200,6 +207,26 @@ public class GitConfigResourceTest {
     assertEquals(HttpServletResponse.SC_OK, response.getStatus());
     assertThat(response.getContentAsString())
       .contains("\"defaultBranch\":\"test\"");
+  }
+
+  @Test
+  @SubjectAware(username = "writeOnly")
+  public void shouldStoreChangedRepositoryConfig() throws URISyntaxException {
+    when(repositoryManager.get(new NamespaceAndName("space", "X"))).thenReturn(new Repository("id", "git", "space", "X"));
+
+    MockHttpRequest request = MockHttpRequest
+      .put("/" + GitConfigResource.GIT_CONFIG_PATH_V2 + "/space/X")
+      .contentType(GitVndMediaType.GIT_REPOSITORY_CONFIG)
+      .content("{\"defaultBranch\": \"new\"}".getBytes());
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
+    assertThat(configurationStoreCaptor.getValue())
+      .isInstanceOfSatisfying(GitRepositoryConfig.class, x -> { })
+      .extracting("defaultBranch")
+      .containsExactly("new");
   }
 
   private MockHttpResponse get() throws URISyntaxException {

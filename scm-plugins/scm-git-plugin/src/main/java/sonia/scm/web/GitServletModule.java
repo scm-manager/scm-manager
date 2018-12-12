@@ -40,7 +40,7 @@ import org.eclipse.jgit.transport.ScmTransportProtocol;
 import org.mapstruct.factory.Mappers;
 import sonia.scm.api.v2.resources.GitConfigDtoToGitConfigMapper;
 import sonia.scm.api.v2.resources.GitConfigToGitConfigDtoMapper;
-import sonia.scm.api.v2.resources.GitRepositoryConfigToGitRepositoryConfigDtoMapper;
+import sonia.scm.api.v2.resources.GitRepositoryConfigMapper;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.GitWorkdirFactory;
 import sonia.scm.repository.spi.SimpleGitWorkdirFactory;
@@ -66,7 +66,7 @@ public class GitServletModule extends ServletModule
 
     bind(GitConfigDtoToGitConfigMapper.class).to(Mappers.getMapper(GitConfigDtoToGitConfigMapper.class).getClass());
     bind(GitConfigToGitConfigDtoMapper.class).to(Mappers.getMapper(GitConfigToGitConfigDtoMapper.class).getClass());
-    bind(GitRepositoryConfigToGitRepositoryConfigDtoMapper.class).to(Mappers.getMapper(GitRepositoryConfigToGitRepositoryConfigDtoMapper.class).getClass());
+    bind(GitRepositoryConfigMapper.class).to(Mappers.getMapper(GitRepositoryConfigMapper.class).getClass());
 
     bind(GitWorkdirFactory.class).to(SimpleGitWorkdirFactory.class);
   }
