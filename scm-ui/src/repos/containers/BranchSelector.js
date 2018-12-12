@@ -12,7 +12,7 @@ const styles = {
   zeroflex: {
     flexGrow: 0
   },
-  iefixwidth: {
+  minWidthOfLabel: {
     minWidth: "4.5rem"
   }
 };
@@ -52,7 +52,7 @@ class BranchSelector extends React.Component<Props, State> {
               "field-label",
               "is-normal",
               classes.zeroflex,
-              classes.iefixwidth
+              classes.minWidthOfLabel
             )}
           >
             <label className="label">{t("branch-selector.label")}</label>
