@@ -13,7 +13,7 @@ class GroupTable extends React.Component<Props> {
   render() {
     const { groups, t } = this.props;
     return (
-      <table className="table is-hoverable is-fullwidth">
+      <table className="card-table table is-hoverable is-fullwidth">
         <thead>
           <tr>
             <th>{t("group.name")}</th>

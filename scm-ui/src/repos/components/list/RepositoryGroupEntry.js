@@ -7,7 +7,8 @@ import RepositoryEntry from "./RepositoryEntry";
 
 const styles = {
   pointer: {
-    cursor: "pointer"
+    cursor: "pointer",
+    fontSize: "1.5rem"
   },
   repoGroup: {
     marginBottom: "1em"
@@ -58,7 +59,7 @@ class RepositoryGroupEntry extends React.Component<Props, State> {
           </span>
         </h2>
         <hr />
-        {content}
+            {content}
       </div>
     );
   }
