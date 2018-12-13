@@ -43,9 +43,6 @@ public class GitRepositoryConfigResource {
     Repository repository = getRepository(namespace, name);
     ConfigurationStore<GitRepositoryConfig> repositoryConfigStore = getStore(repository);
     GitRepositoryConfig config = repositoryConfigStore.get();
-    if (config == null) {
-      config = new GitRepositoryConfig();
-    }
     GitRepositoryConfigDto dto = repositoryConfigMapper.map(config, repository);
     return Response.ok(dto).build();
   }
