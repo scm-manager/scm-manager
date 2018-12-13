@@ -41,13 +41,13 @@ import java.util.Collections;
  * @version 1.6
  */
 @SuppressWarnings("squid:MaximumInheritanceDepth") // exceptions have a deep inheritance depth themselves; therefore we accept this here
-public class NotSupportedFeatureException extends BadRequestException {
+public class FeatureNotSupportedException extends BadRequestException {
 
   private static final long serialVersionUID = 256498734456613496L;
 
   private static final String CODE = "9SR8G0kmU1";
 
-  public NotSupportedFeatureException(String feature)
+  public FeatureNotSupportedException(String feature)
   {
     super(Collections.emptyList(),createMessage(feature));
   }
