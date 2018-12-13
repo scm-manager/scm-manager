@@ -58,7 +58,7 @@ public interface ConfigurationStore<T>
    * Stores the given configuration object to the store.
    *
    *
-   * @param obejct configuration object to store
+   * @param object configuration object to store
    */
-  public void set(T obejct);
+  public void set(T object);
 }
