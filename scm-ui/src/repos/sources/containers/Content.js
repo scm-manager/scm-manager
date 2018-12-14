@@ -128,7 +128,7 @@ class Content extends React.Component<Props, State> {
     if (!collapsed) {
       return (
         <div className={classNames("panel-block", classes.toCenterContent)}>
-          <table className="table table-hover table-sm is-fullwidth">
+          <table className="table">
             <tbody>
               <tr>
                 <td>{t("sources.content.path")}</td>
