@@ -6,27 +6,28 @@ import org.slf4j.MDC;
 import sonia.scm.api.v2.resources.ErrorDto;
 import sonia.scm.web.VndMediaType;
 
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 import java.util.Collections;
 
 @Provider
-public class FallbackExceptionMapper implements ExceptionMapper<Exception> {
+public class JaxNotFoundExceptionMapper implements ExceptionMapper<NotFoundException> {
 
-  private static final Logger logger = LoggerFactory.getLogger(FallbackExceptionMapper.class);
+  private static final Logger logger = LoggerFactory.getLogger(JaxNotFoundExceptionMapper.class);
 
-  private static final String ERROR_CODE = "CmR8GCJb31";
+  private static final String ERROR_CODE = "92RCCCMHO1";
 
   @Override
-  public Response toResponse(Exception exception) {
-    logger.debug("map exception to status code 500", exception);
+  public Response toResponse(NotFoundException exception) {
+    logger.debug(exception.getMessage());
     ErrorDto errorDto = new ErrorDto();
-    errorDto.setMessage("internal server error");
+    errorDto.setMessage("path not found");
     errorDto.setContext(Collections.emptyList());
     errorDto.setErrorCode(ERROR_CODE);
     errorDto.setTransactionId(MDC.get("transaction_id"));
-    return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+    return Response.status(Response.Status.NOT_FOUND)
       .entity(errorDto)
       .type(VndMediaType.ERROR_TYPE)
       .build();
