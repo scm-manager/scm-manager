@@ -11,12 +11,13 @@ const styles = {
   iconColumn: {
     width: "16px"
   },
-  wordBreakTable: {
+  wordBreakColumn: {
     WebkitHyphens: "auto",
     MozHyphens: "auto",
     MsHyphens: "auto",
     hyphens: "auto",
-    wordBreak: "auto"
+    wordBreak: "break-all",
+    minWidth: "10em"
   }
 };
 
@@ -78,12 +79,12 @@ class FileTreeLeaf extends React.Component<Props> {
     return (
       <tr>
         <td className={classes.iconColumn}>{this.createFileIcon(file)}</td>
-        <td className={classes.wordBreakTable}>{this.createFileName(file)}</td>
+        <td className={classes.wordBreakColumn}>{this.createFileName(file)}</td>
         <td className="is-hidden-mobile">{fileSize}</td>
         <td className="is-hidden-mobile">
           <DateFromNow date={file.lastModified} />
         </td>
-        <td>{file.description}</td>
+        <td className={classes.wordBreakColumn}>{file.description}</td>
       </tr>
     );
   }
