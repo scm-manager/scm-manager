@@ -42,13 +42,12 @@ const styles = {
     display: "flex",
     alignItems: "center"
   },
-  wordBreakColumn: {
+  wordBreak: {
     WebkitHyphens: "auto",
     MozHyphens: "auto",
     MsHyphens: "auto",
     hypens: "auto",
     wordBreak: "break-all",
-    minWidth: "10em"
   }
 };
 
@@ -101,7 +100,7 @@ class Content extends React.Component<Props, State> {
                 classes.marginInHeader
               )}
             />
-            <span className={classes.wordBreakColumn}>{file.name}</span>
+            <span className={classes.wordBreak}>{file.name}</span>
           </div>
           <div className="media-right">{selector}</div>
         </article>
@@ -129,15 +128,15 @@ class Content extends React.Component<Props, State> {
     if (!collapsed) {
       return (
         <div className={classNames("panel-block", classes.toCenterContent)}>
-          <table className="table">
+          <table className="table table-hover table-sm is-fullwidth">
             <tbody>
               <tr>
                 <td>{t("sources.content.path")}</td>
-                <td className={classes.wordBreakColumn}>{file.path}</td>
+                <td className={classes.wordBreak}>{file.path}</td>
               </tr>
               <tr>
                 <td>{t("sources.content.branch")}</td>
-                <td>{revision}</td>
+                <td className={classes.wordBreak}>{revision}</td>
               </tr>
               <tr>
                 <td>{t("sources.content.size")}</td>
@@ -149,7 +148,7 @@ class Content extends React.Component<Props, State> {
               </tr>
               <tr>
                 <td>{t("sources.content.description")}</td>
-                <td className={classes.wordBreakColumn}>{description}</td>
+                <td className={classes.wordBreak}>{description}</td>
               </tr>
             </tbody>
           </table>
