@@ -34,7 +34,7 @@ public abstract class AbstractRepositoryJsonEnricher extends JsonEnricherBase {
   protected abstract void enrichRepositoryNode(JsonNode repositoryNode, String namespace, String name);
 
   protected void addLink(JsonNode repositoryNode, String linkName, String link) {
-    JsonNode newPullRequestNode = createObject(singletonMap("href", value(link)));
-    addPropertyNode(repositoryNode.get("_links"), linkName, newPullRequestNode);
+    JsonNode hrefNode = createObject(singletonMap("href", value(link)));
+    addPropertyNode(repositoryNode.get("_links"), linkName, hrefNode);
   }
 }
