@@ -164,7 +164,7 @@ public class DefaultCipherHandler implements CipherHandler {
     String result = null;
 
     try {
-      byte[] encodedInput = Base64.getDecoder().decode(value);
+      byte[] encodedInput = Base64.getUrlDecoder().decode(value);
       byte[] salt = new byte[SALT_LENGTH];
       byte[] encoded = new byte[encodedInput.length - SALT_LENGTH];
 
@@ -221,7 +221,7 @@ public class DefaultCipherHandler implements CipherHandler {
       System.arraycopy(salt, 0, result, 0, SALT_LENGTH);
       System.arraycopy(encodedInput, 0, result, SALT_LENGTH,
         result.length - SALT_LENGTH);
-      res = new String(Base64.getEncoder().encode(result), ENCODING);
+      res = new String(Base64.getUrlEncoder().encode(result), ENCODING);
     } catch (IOException | GeneralSecurityException ex) {
       throw new CipherException("could not encode string", ex);
     }
