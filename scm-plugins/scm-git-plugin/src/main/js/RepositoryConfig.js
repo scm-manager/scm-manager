@@ -17,7 +17,8 @@ type State = {
   submitPending: boolean,
   error: Error,
   branches: Branch[],
-  selectedBranchName: string
+  selectedBranchName: string,
+  defaultBranchChanged: boolean
 };
 
 const GIT_CONFIG_CONTENT_TYPE = "application/vnd.scmm-gitConfig+json";
@@ -55,8 +56,10 @@ class RepositoryConfig extends React.Component<Props, State> {
   }
 
   branchSelected = (branch: Branch) => {
+    console.log(branch)
     if (!branch) {
       this.setState({ ...this.state, selectedBranchName: null });
+      return;
     }
     this.setState({ ...this.state, selectedBranchName: branch.name });
   };
@@ -75,7 +78,13 @@ class RepositoryConfig extends React.Component<Props, State> {
         newConfig,
         GIT_CONFIG_CONTENT_TYPE
       )
-      .then(() => this.setState({ ...this.state, submitPending: false }))
+      .then(() =>
+        this.setState({
+          ...this.state,
+          submitPending: false,
+          defaultBranchChanged: true
+        })
+      )
       .catch(error => this.setState({ ...this.state, error }));
   };
 
@@ -92,29 +101,47 @@ class RepositoryConfig extends React.Component<Props, State> {
         />
       );
     }
-    if (!(loadingBranches || loadingDefaultBranch)) {
 
+    if (!(loadingBranches || loadingDefaultBranch)) {
       return (
-        <form onSubmit={this.submit}>
-          <BranchSelector
-            label={t("scm-git-plugin.repo-config.default-branch")}
-            branches={this.state.branches}
-            selected={this.branchSelected}
-            selectedBranch={this.state.selectedBranchName}
-          />
-          <SubmitButton
-            label={t("scm-git-plugin.repo-config.submit")}
-            loading={submitPending}
-            disabled={
-              !this.state.selectedBranchName
-            }
-          />
-        </form>
+        <>
+          {this.renderBranchChangedNotification()}
+          <form onSubmit={this.submit}>
+            <BranchSelector
+              label={t("scm-git-plugin.repo-config.default-branch")}
+              branches={this.state.branches}
+              selected={this.branchSelected}
+              selectedBranch={this.state.selectedBranchName}
+            />
+            <SubmitButton
+              label={t("scm-git-plugin.repo-config.submit")}
+              loading={submitPending}
+              disabled={!this.state.selectedBranchName}
+            />
+          </form>
+        </>
       );
     } else {
       return <Loading />;
     }
   }
+
+  renderBranchChangedNotification = () => {
+    if (this.state.defaultBranchChanged) {
+      return (
+        <div className="notification is-primary">
+          <button
+            className="delete"
+            onClick={() =>
+              this.setState({ ...this.state, defaultBranchChanged: false })
+            }
+          />
+          Default branch changed!
+        </div>
+      );
+    }
+    return null;
+  };
 }
 
 export default translate("plugins")(RepositoryConfig);

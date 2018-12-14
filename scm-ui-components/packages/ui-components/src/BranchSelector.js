@@ -79,6 +79,12 @@ class BranchSelector extends React.Component<Props, State> {
 
   branchSelected = (branchName: string) => {
     const { branches, selected } = this.props;
+
+    if (!branchName) {
+      this.setState({ selectedBranch: undefined });
+      selected(undefined);
+      return;
+    }
     const branch = branches.find(b => b.name === branchName);
 
     selected(branch);
