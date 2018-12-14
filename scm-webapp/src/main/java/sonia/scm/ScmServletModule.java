@@ -79,14 +79,14 @@ import sonia.scm.repository.spi.HookEventFacade;
 import sonia.scm.repository.xml.XmlRepositoryDAO;
 import sonia.scm.schedule.QuartzScheduler;
 import sonia.scm.schedule.Scheduler;
+import sonia.scm.security.AccessTokenCookieIssuer;
 import sonia.scm.security.AuthorizationChangedEventProducer;
 import sonia.scm.security.CipherHandler;
 import sonia.scm.security.CipherUtil;
 import sonia.scm.security.ConfigurableLoginAttemptHandler;
-import sonia.scm.security.DefaultJwtAccessTokenRefreshStrategy;
+import sonia.scm.security.DefaultAccessTokenCookieIssuer;
 import sonia.scm.security.DefaultKeyGenerator;
 import sonia.scm.security.DefaultSecuritySystem;
-import sonia.scm.security.JwtAccessTokenRefreshStrategy;
 import sonia.scm.security.KeyGenerator;
 import sonia.scm.security.LoginAttemptHandler;
 import sonia.scm.security.SecuritySystem;
@@ -320,6 +320,7 @@ public class ScmServletModule extends ServletModule
     // bind events
     // bind(LastModifiedUpdateListener.class);
 
+    bind(AccessTokenCookieIssuer.class).to(DefaultAccessTokenCookieIssuer.class);
     bind(PushStateDispatcher.class).toProvider(PushStateDispatcherProvider.class);
   }
 

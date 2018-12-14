@@ -20,11 +20,11 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class AccessTokenCookieIssuerTest {
+public class DefaultAccessTokenCookieIssuerTest {
 
   private ScmConfiguration configuration;
 
-  private AccessTokenCookieIssuer issuer;
+  private DefaultAccessTokenCookieIssuer issuer;
 
   @Mock
   private HttpServletRequest request;
@@ -41,7 +41,7 @@ public class AccessTokenCookieIssuerTest {
   @Before
   public void setUp() {
     configuration = new ScmConfiguration();
-    issuer = new AccessTokenCookieIssuer(configuration);
+    issuer = new DefaultAccessTokenCookieIssuer(configuration);
   }
 
   @Test
