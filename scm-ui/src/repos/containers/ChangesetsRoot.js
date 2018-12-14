@@ -1,19 +1,14 @@
 // @flow
 
 import React from "react";
-import type { Branch, Repository } from "@scm-manager/ui-types";
-import { Route, withRouter } from "react-router-dom";
+import type {Branch, Repository} from "@scm-manager/ui-types";
+import {translate} from "react-i18next";
+import {Route, withRouter} from "react-router-dom";
 import Changesets from "./Changesets";
-import BranchSelector from "./BranchSelector";
-import { connect } from "react-redux";
-import { ErrorNotification, Loading } from "@scm-manager/ui-components";
-import {
-  fetchBranches,
-  getBranches,
-  getFetchBranchesFailure,
-  isFetchBranchesPending
-} from "../modules/branches";
-import { compose } from "redux";
+import {connect} from "react-redux";
+import {BranchSelector, ErrorNotification, Loading} from "@scm-manager/ui-components";
+import {fetchBranches, getBranches, getFetchBranchesFailure, isFetchBranchesPending} from "../modules/branches";
+import {compose} from "redux";
 
 type Props = {
   repository: Repository,
@@ -92,10 +87,11 @@ class BranchRoot extends React.Component<Props> {
   }
 
   renderBranchSelector = () => {
-    const { repository, branches, selected } = this.props;
+    const { repository, branches, selected, t } = this.props;
     if (repository._links.branches) {
       return (
         <BranchSelector
+          label={t("branch-selector.label")}
           branches={branches}
           selectedBranch={selected}
           selected={(b: Branch) => {
@@ -133,6 +129,7 @@ const mapStateToProps = (state: any, ownProps: Props) => {
 
 export default compose(
   withRouter,
+  translate("repos"),
   connect(
     mapStateToProps,
     mapDispatchToProps

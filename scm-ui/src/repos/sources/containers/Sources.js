@@ -1,20 +1,15 @@
 // @flow
 import React from "react";
-import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
-import type { Branch, Repository } from "@scm-manager/ui-types";
+import {connect} from "react-redux";
+import {withRouter} from "react-router-dom";
+import type {Branch, Repository} from "@scm-manager/ui-types";
 import FileTree from "../components/FileTree";
-import { ErrorNotification, Loading } from "@scm-manager/ui-components";
-import BranchSelector from "../../containers/BranchSelector";
-import {
-  fetchBranches,
-  getBranches,
-  getFetchBranchesFailure,
-  isFetchBranchesPending
-} from "../../modules/branches";
-import { compose } from "redux";
+import {ErrorNotification, Loading} from "@scm-manager/ui-components";
+import BranchSelector from "../../../../../scm-ui-components/packages/ui-components/src/BranchSelector";
+import {fetchBranches, getBranches, getFetchBranchesFailure, isFetchBranchesPending} from "../../modules/branches";
+import {compose} from "redux";
 import Content from "./Content";
-import { fetchSources, isDirectory } from "../modules/sources";
+import {fetchSources, isDirectory} from "../modules/sources";
 
 type Props = {
   repository: Repository,

@@ -1,12 +1,10 @@
 // @flow
 
 import React from "react";
-import type { Branch } from "@scm-manager/ui-types";
-import DropDown from "../components/DropDown";
-import { translate } from "react-i18next";
+import type {Branch} from "packages/ui-types/src/index";
 import injectSheet from "react-jss";
-import { compose } from "redux";
 import classNames from "classnames";
+import DropDown from "./forms/DropDown";
 
 const styles = {
   zeroflex: {
@@ -20,11 +18,11 @@ const styles = {
 type Props = {
   branches: Branch[], // TODO: Use generics?
   selected: (branch?: Branch) => void,
-  selectedBranch: string,
+  selectedBranch?: string,
+  label: string,
 
   // context props
-  classes: Object,
-  t: string => string
+  classes: Object
 };
 
 type State = { selectedBranch?: Branch };
@@ -36,13 +34,12 @@ class BranchSelector extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    this.props.branches
-      .filter(branch => branch.name === this.props.selectedBranch)
-      .forEach(branch => this.setState({ selectedBranch: branch }));
+    const selectedBranch = this.props.branches.find(branch => branch.name === this.props.selectedBranch);
+    this.setState({ selectedBranch })
   }
 
   render() {
-    const { branches, classes, t } = this.props;
+    const { branches, classes, label } = this.props;
 
     if (branches) {
       return (
@@ -55,7 +52,7 @@ class BranchSelector extends React.Component<Props, State> {
               classes.minWidthOfLabel
             )}
           >
-            <label className="label">{t("branch-selector.label")}</label>
+            <label className="label">{label}</label>
           </div>
           <div className="field-body">
             <div className="field is-narrow">
@@ -89,7 +86,4 @@ class BranchSelector extends React.Component<Props, State> {
   };
 }
 
-export default compose(
-  injectSheet(styles),
-  translate("repos")
-)(BranchSelector);
+export default injectSheet(styles)(BranchSelector);
