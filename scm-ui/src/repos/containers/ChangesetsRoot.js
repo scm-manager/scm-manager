@@ -1,14 +1,23 @@
 // @flow
 
 import React from "react";
-import type {Branch, Repository} from "@scm-manager/ui-types";
-import {translate} from "react-i18next";
-import {Route, withRouter} from "react-router-dom";
+import type { Branch, Repository } from "@scm-manager/ui-types";
+import { translate } from "react-i18next";
+import { Route, withRouter } from "react-router-dom";
 import Changesets from "./Changesets";
-import {connect} from "react-redux";
-import {BranchSelector, ErrorNotification, Loading} from "@scm-manager/ui-components";
-import {fetchBranches, getBranches, getFetchBranchesFailure, isFetchBranchesPending} from "../modules/branches";
-import {compose} from "redux";
+import { connect } from "react-redux";
+import {
+  BranchSelector,
+  ErrorNotification,
+  Loading
+} from "@scm-manager/ui-components";
+import {
+  fetchBranches,
+  getBranches,
+  getFetchBranchesFailure,
+  isFetchBranchesPending
+} from "../modules/branches";
+import { compose } from "redux";
 
 type Props = {
   repository: Repository,
@@ -27,7 +36,8 @@ type Props = {
 
   // Context props
   history: any, // TODO flow type
-  match: any
+  match: any,
+  t: string => string
 };
 
 class BranchRoot extends React.Component<Props> {

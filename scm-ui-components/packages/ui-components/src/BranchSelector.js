@@ -1,7 +1,7 @@
 // @flow
 
 import React from "react";
-import type {Branch} from "packages/ui-types/src/index";
+import type {Branch} from "@scm-manager/ui-types";
 import injectSheet from "react-jss";
 import classNames from "classnames";
 import DropDown from "./forms/DropDown";
@@ -35,7 +35,7 @@ class BranchSelector extends React.Component<Props, State> {
 
   componentDidMount() {
     const selectedBranch = this.props.branches.find(branch => branch.name === this.props.selectedBranch);
-    this.setState({ selectedBranch })
+    this.setState({ selectedBranch });
   }
 
   render() {

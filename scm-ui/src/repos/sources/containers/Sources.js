@@ -1,15 +1,21 @@
 // @flow
 import React from "react";
-import {connect} from "react-redux";
-import {withRouter} from "react-router-dom";
-import type {Branch, Repository} from "@scm-manager/ui-types";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
+import type { Branch, Repository } from "@scm-manager/ui-types";
 import FileTree from "../components/FileTree";
-import {ErrorNotification, Loading} from "@scm-manager/ui-components";
+import { ErrorNotification, Loading } from "@scm-manager/ui-components";
 import BranchSelector from "../../../../../scm-ui-components/packages/ui-components/src/BranchSelector";
-import {fetchBranches, getBranches, getFetchBranchesFailure, isFetchBranchesPending} from "../../modules/branches";
-import {compose} from "redux";
+import { translate } from "react-i18next";
+import {
+  fetchBranches,
+  getBranches,
+  getFetchBranchesFailure,
+  isFetchBranchesPending
+} from "../../modules/branches";
+import { compose } from "redux";
 import Content from "./Content";
-import {fetchSources, isDirectory} from "../modules/sources";
+import { fetchSources, isDirectory } from "../modules/sources";
 
 type Props = {
   repository: Repository,
@@ -27,7 +33,8 @@ type Props = {
 
   // Context props
   history: any,
-  match: any
+  match: any,
+  t: string => string
 };
 
 class Sources extends React.Component<Props> {
@@ -104,13 +111,14 @@ class Sources extends React.Component<Props> {
   }
 
   renderBranchSelector = () => {
-    const { branches, revision } = this.props;
+    const { branches, revision, t } = this.props;
 
     if (branches) {
       return (
         <BranchSelector
           branches={branches}
           selectedBranch={revision}
+          label={t("branch-selector.label")}
           selected={(b: Branch) => {
             this.branchSelected(b);
           }}
@@ -155,6 +163,7 @@ const mapDispatchToProps = dispatch => {
 };
 
 export default compose(
+  translate("repos"),
   withRouter,
   connect(
     mapStateToProps,
