@@ -80,7 +80,19 @@ public interface AccessToken {
    */
   Date getExpiration();
 
+  /**
+   * Returns refresh expiration of token.
+   *
+   * @return refresh expiration
+   */
   Optional<Date> getRefreshExpiration();
+
+  /**
+   * Returns id of the parent key.
+   *
+   * @return parent key id
+   */
+  Optional<String> getParentKey();
 
   /**
    * Returns the scope of the token. The scope is able to reduce the permissions of the subject in the context of this
