@@ -30,7 +30,8 @@
       "error": {
         "title": "Error",
         "subtitle": "Something went wrong"
-      }
+      },
+      "success": "Default branch changed!"
     }
   }
 }

@@ -8,9 +8,9 @@ import {translate} from "react-i18next";
 
 type Props = {
   repository: Repository,
-
   t: string => string
 };
+
 type State = {
   loadingBranches: boolean,
   loadingDefaultBranch: boolean,
@@ -24,10 +24,6 @@ type State = {
 const GIT_CONFIG_CONTENT_TYPE = "application/vnd.scmm-gitConfig+json";
 
 class RepositoryConfig extends React.Component<Props, State> {
-  state = {
-    branches: []
-  };
-
   componentDidMount() {
     const { repository } = this.props;
     this.setState({ ...this.state, loadingBranches: true });
@@ -56,7 +52,6 @@ class RepositoryConfig extends React.Component<Props, State> {
   }
 
   branchSelected = (branch: Branch) => {
-    console.log(branch)
     if (!branch) {
       this.setState({ ...this.state, selectedBranchName: null });
       return;
@@ -89,8 +84,8 @@ class RepositoryConfig extends React.Component<Props, State> {
   };
 
   render() {
-    const { t, error } = this.props;
-    const { loadingBranches, loadingDefaultBranch, submitPending } = this.state;
+    const { t } = this.props;
+    const { loadingBranches, loadingDefaultBranch, submitPending, error } = this.state;
 
     if (error) {
       return (
@@ -136,7 +131,7 @@ class RepositoryConfig extends React.Component<Props, State> {
               this.setState({ ...this.state, defaultBranchChanged: false })
             }
           />
-          Default branch changed!
+          {this.props.t("scm-git-plugin.repo-config.success")}
         </div>
       );
     }
