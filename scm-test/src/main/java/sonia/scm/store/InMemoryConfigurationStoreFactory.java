@@ -42,8 +42,20 @@ package sonia.scm.store;
  */
 public class InMemoryConfigurationStoreFactory implements ConfigurationStoreFactory {
 
+  private ConfigurationStore store;
+
+  public InMemoryConfigurationStoreFactory() {
+  }
+
+  public InMemoryConfigurationStoreFactory(ConfigurationStore store) {
+    this.store = store;
+  }
+
   @Override
   public ConfigurationStore getStore(TypedStoreParameters storeParameters) {
+    if (store != null) {
+      return store;
+    }
     return new InMemoryConfigurationStore<>();
   }
 }
