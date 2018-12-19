@@ -1,5 +1,6 @@
 package sonia.scm.web.security;
 
+import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,7 +65,13 @@ public class TokenRefreshFilter extends HttpFilter {
   }
 
   private void examineToken(HttpServletRequest request, HttpServletResponse response, BearerToken token) {
-    AccessToken accessToken = resolver.resolve(token);
+    AccessToken accessToken;
+    try {
+      accessToken = resolver.resolve(token);
+    } catch (AuthenticationException e) {
+      LOG.trace("could not resolve token", e);
+      return;
+    }
     if (accessToken instanceof JwtAccessToken) {
       refresher.refresh((JwtAccessToken) accessToken)
         .ifPresent(jwtAccessToken -> refreshToken(request, response, jwtAccessToken));

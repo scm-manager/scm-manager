@@ -1,8 +1,9 @@
 // @flow
 import {contextPath} from "./urls";
 
-export const NOT_FOUND_ERROR_MESSAGE = "not found";
-export const UNAUTHORIZED_ERROR_MESSAGE = "unauthorized";
+export const NOT_FOUND_ERROR = new Error("not found");
+export const UNAUTHORIZED_ERROR = new Error("unauthorized");
+export const CONFLICT_ERROR = new Error("conflict");
 
 const fetchOptions: RequestOptions = {
   credentials: "same-origin",
@@ -15,26 +16,17 @@ function handleStatusCode(response: Response) {
   if (!response.ok) {
     switch (response.status) {
       case 401:
-        return throwErrorWithMessage(response, UNAUTHORIZED_ERROR_MESSAGE);
+        throw UNAUTHORIZED_ERROR;
       case 404:
-        return throwErrorWithMessage(response, NOT_FOUND_ERROR_MESSAGE);
+        throw NOT_FOUND_ERROR;
+      case 409:
+        throw CONFLICT_ERROR;
       default:
-        return throwErrorWithMessage(response, "server returned status code " + response.status);
+        throw new Error("server returned status code " + response.status);
     }
 
   }
   return response;
-}
-
-function throwErrorWithMessage(response: Response, message: string) {
-  return response.json().then(
-    json => {
-      throw Error(json.message);
-    },
-    () => {
-      throw Error(message);
-    }
-  );
 }
 
 export function createUrl(url: string) {

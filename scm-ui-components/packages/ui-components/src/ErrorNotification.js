@@ -2,6 +2,7 @@
 import React from "react";
 import { translate } from "react-i18next";
 import Notification from "./Notification";
+import {UNAUTHORIZED_ERROR} from "./apiclient";
 
 type Props = {
   t: string => string,
@@ -9,16 +10,27 @@ type Props = {
 };
 
 class ErrorNotification extends React.Component<Props> {
+
   render() {
     const { t, error } = this.props;
     if (error) {
-      return (
-        <Notification type="danger">
-          <strong>{t("error-notification.prefix")}:</strong> {error.message}
-        </Notification>
-      );
+      if (error === UNAUTHORIZED_ERROR) {
+        return (
+          <Notification type="danger">
+            <strong>{t("error-notification.prefix")}:</strong> {t("error-notification.timeout")}
+            {" "}
+            <a href="javascript:window.location.reload(true)">{t("error-notification.loginLink")}</a>
+          </Notification>
+        );
+      } else {
+        return (
+          <Notification type="danger">
+            <strong>{t("error-notification.prefix")}:</strong> {error.message}
+          </Notification>
+        );
+      }
     }
-    return "";
+    return null;
   }
 }
 

@@ -1,12 +1,16 @@
 // @flow
 
-import type {Action} from "@scm-manager/ui-components";
-import {apiClient} from "@scm-manager/ui-components";
+import type { Action } from "@scm-manager/ui-components";
+import { apiClient } from "@scm-manager/ui-components";
 import * as types from "../../../modules/types";
-import type {Permission, PermissionCollection, PermissionCreateEntry} from "@scm-manager/ui-types";
-import {isPending} from "../../../modules/pending";
-import {getFailure} from "../../../modules/failure";
-import {Dispatch} from "redux";
+import type {
+  Permission,
+  PermissionCollection,
+  PermissionCreateEntry
+} from "@scm-manager/ui-types";
+import { isPending } from "../../../modules/pending";
+import { getFailure } from "../../../modules/failure";
+import { Dispatch } from "redux";
 
 export const FETCH_PERMISSIONS = "scm/permissions/FETCH_PERMISSIONS";
 export const FETCH_PERMISSIONS_PENDING = `${FETCH_PERMISSIONS}_${
@@ -141,13 +145,8 @@ export function modifyPermission(
           callback();
         }
       })
-      .catch(cause => {
-        const error = new Error(
-          `failed to modify permission: ${cause.message}`
-        );
-        dispatch(
-          modifyPermissionFailure(permission, error, namespace, repoName)
-        );
+      .catch(err => {
+        dispatch(modifyPermissionFailure(permission, err, namespace, repoName));
       });
   };
 }
@@ -241,15 +240,7 @@ export function createPermission(
         }
       })
       .catch(err =>
-        dispatch(
-          createPermissionFailure(
-            new Error(
-              `failed to add permission ${permission.name}: ${err.message}`
-            ),
-            namespace,
-            repoName
-          )
-        )
+        dispatch(createPermissionFailure(err, namespace, repoName))
       );
   };
 }
@@ -318,13 +309,8 @@ export function deletePermission(
           callback();
         }
       })
-      .catch(cause => {
-        const error = new Error(
-          `could not delete permission ${permission.name}: ${cause.message}`
-        );
-        dispatch(
-          deletePermissionFailure(permission, namespace, repoName, error)
-        );
+      .catch(err => {
+        dispatch(deletePermissionFailure(permission, namespace, repoName, err));
       });
   };
 }

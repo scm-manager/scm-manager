@@ -3,16 +3,20 @@ import React from "react";
 import type { Changeset, Repository } from "@scm-manager/ui-types";
 import { Interpolate, translate } from "react-i18next";
 import injectSheet from "react-jss";
-import ChangesetTag from "./ChangesetTag";
-import ChangesetAuthor from "./ChangesetAuthor";
-import { parseDescription } from "./changesets";
-import { DateFromNow } from "@scm-manager/ui-components";
-import AvatarWrapper from "./AvatarWrapper";
-import AvatarImage from "./AvatarImage";
+
+import {
+  DateFromNow,
+  ChangesetId,
+  ChangesetTag,
+  ChangesetAuthor,
+  ChangesetDiff,
+  AvatarWrapper,
+  AvatarImage,
+  changesets,
+} from "@scm-manager/ui-components";
+
 import classNames from "classnames";
-import ChangesetId from "./ChangesetId";
 import type { Tag } from "@scm-manager/ui-types";
-import ScmDiff from "../../containers/ScmDiff";
 
 const styles = {
   spacing: {
@@ -31,12 +35,12 @@ class ChangesetDetails extends React.Component<Props> {
   render() {
     const { changeset, repository, classes } = this.props;
 
-    const description = parseDescription(changeset.description);
+    const description = changesets.parseDescription(changeset.description);
 
     const id = (
-      <ChangesetId repository={repository} changeset={changeset} link={false} />
+      <ChangesetId repository={repository} changeset={changeset} link={false}/>
     );
-    const date = <DateFromNow date={changeset.date} />;
+    const date = <DateFromNow date={changeset.date}/>;
 
     return (
       <div>
@@ -45,12 +49,12 @@ class ChangesetDetails extends React.Component<Props> {
           <article className="media">
             <AvatarWrapper>
               <p className={classNames("image", "is-64x64", classes.spacing)}>
-                <AvatarImage changeset={changeset} />
+                <AvatarImage person={changeset.author} />
               </p>
             </AvatarWrapper>
             <div className="media-content">
               <p>
-                <ChangesetAuthor changeset={changeset} />
+                <ChangesetAuthor changeset={changeset}/>
               </p>
               <p>
                 <Interpolate
@@ -67,14 +71,14 @@ class ChangesetDetails extends React.Component<Props> {
               return (
                 <span key={key}>
                   {item}
-                  <br />
+                  <br/>
                 </span>
               );
             })}
           </p>
         </div>
         <div>
-          <ScmDiff changeset={changeset} sideBySide={false} />
+          <ChangesetDiff changeset={changeset} />
         </div>
       </div>
     );
@@ -91,7 +95,7 @@ class ChangesetDetails extends React.Component<Props> {
       return (
         <div className="level-item">
           {tags.map((tag: Tag) => {
-            return <ChangesetTag key={tag.name} tag={tag} />;
+            return <ChangesetTag key={tag.name} tag={tag}/>;
           })}
         </div>
       );

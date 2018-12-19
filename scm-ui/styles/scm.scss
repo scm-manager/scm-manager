@@ -30,6 +30,14 @@ $mint: #11dfd0;
   padding: 0 0 0 3.8em !important;
 }
 
+.is-word-break {
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  -ms-hyphens: auto;
+  hyphens: auto;
+  word-break: break-all;
+}
+
 .main {
   min-height: calc(100vh - 260px);
 }

@@ -39,10 +39,12 @@ import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.FeatureNotSupportedException;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
+import sonia.scm.repository.Feature;
 import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryCacheKey;
@@ -51,6 +53,7 @@ import sonia.scm.repository.spi.LogCommandRequest;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Set;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -104,19 +107,20 @@ public final class LogCommandBuilder
   /**
    * Constructs a new {@link LogCommandBuilder}, this constructor should
    * only be called from the {@link RepositoryService}.
-   *
-   * @param cacheManager cache manager
+   *  @param cacheManager cache manager
    * @param logCommand implementation of the {@link LogCommand}
    * @param repository repository to query
    * @param preProcessorUtil
+   * @param supportedFeatures The supported features of the provider
    */
   LogCommandBuilder(CacheManager cacheManager, LogCommand logCommand,
-    Repository repository, PreProcessorUtil preProcessorUtil)
+                    Repository repository, PreProcessorUtil preProcessorUtil, Set<Feature> supportedFeatures)
   {
     this.cache = cacheManager.getCache(CACHE_NAME);
     this.logCommand = logCommand;
     this.repository = repository;
     this.preProcessorUtil = preProcessorUtil;
+    this.supportedFeatures = supportedFeatures;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -397,7 +401,17 @@ public final class LogCommandBuilder
     return this;
   }
 
+  /**
+   * Compute the incoming changes of the branch set with {@link #setBranch(String)} in respect to the changeset given
+   * here. In other words: What changesets would be new to the ancestor changeset given here when the branch would
+   * be merged into it. Requires feature {@link sonia.scm.repository.Feature#INCOMING_REVISION}!
+   *
+   * @return {@code this}
+   */
   public LogCommandBuilder setAncestorChangeset(String ancestorChangeset) {
+    if (!supportedFeatures.contains(Feature.INCOMING_REVISION)) {
+      throw new FeatureNotSupportedException(Feature.INCOMING_REVISION.name());
+    }
     request.setAncestorChangeset(ancestorChangeset);
     return this;
   }
@@ -527,6 +541,7 @@ public final class LogCommandBuilder
 
   /** Field description */
   private final PreProcessorUtil preProcessorUtil;
+  private Set<Feature> supportedFeatures;
 
   /** repository to query */
   private final Repository repository;

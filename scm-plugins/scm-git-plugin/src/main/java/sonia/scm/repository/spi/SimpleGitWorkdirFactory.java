@@ -3,6 +3,7 @@ package sonia.scm.repository.spi;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.transport.ScmTransportProtocol;
 import org.eclipse.jgit.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,10 +46,14 @@ public class SimpleGitWorkdirFactory implements GitWorkdirFactory {
 
   protected Repository cloneRepository(File bareRepository, File target) throws GitAPIException {
     return Git.cloneRepository()
-      .setURI(bareRepository.getAbsolutePath())
+      .setURI(createScmTransportProtocolUri(bareRepository))
       .setDirectory(target)
       .call()
       .getRepository();
+  }
+
+  private String createScmTransportProtocolUri(File bareRepository) {
+    return ScmTransportProtocol.NAME + "://" + bareRepository.getAbsolutePath();
   }
 
   private void close(Repository repository) {

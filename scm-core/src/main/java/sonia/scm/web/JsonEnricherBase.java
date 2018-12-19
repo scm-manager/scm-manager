@@ -15,7 +15,7 @@ public abstract class JsonEnricherBase implements JsonEnricher {
   }
 
   protected boolean resultHasMediaType(String mediaType, JsonEnricherContext context) {
-    return mediaType.equals(context.getResponseMediaType().toString());
+    return mediaType.equalsIgnoreCase(context.getResponseMediaType().toString());
   }
 
   protected JsonNode value(Object object) {

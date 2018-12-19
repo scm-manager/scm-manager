@@ -66,6 +66,9 @@
     }
   },
   "changesets": {
+    "diff": {
+      "not-supported": "Diff of changesets is not supported by the type of repository"
+    },
     "error-title": "Error",
     "error-subtitle": "Could not fetch changesets",
     "changeset": {
@@ -84,11 +87,14 @@
     "label": "Branches"
   },
   "permission": {
+      "user": "User",
+      "group": "Group",
       "error-title": "Error",
       "error-subtitle": "Unknown permissions error",
       "name": "User or Group",
       "type": "Type",
       "group-permission": "Group Permission",
+      "user-permission": "User Permission",
       "edit-permission": {
         "delete-button": "Delete",
         "save-button": "Save Changes"
@@ -111,6 +117,13 @@
         "groupPermissionHelpText": "States if a permission is a group permission.",
         "nameHelpText": "Manage permissions for a specific user or group",
         "typeHelpText": "READ = read; WRITE = read and write; OWNER = read, write and also the ability to manage the properties and permissions"
+      },
+      "autocomplete": {
+        "no-group-options": "No group suggestion available",
+        "group-placeholder": "Enter group",
+        "no-user-options": "No user suggestion available",
+        "user-placeholder": "Enter user",
+        "loading": "Loading..."
       }
   },
   "help": {

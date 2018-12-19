@@ -1,12 +1,11 @@
 // @flow
 import React from "react";
-import {mount, shallow} from "enzyme";
+import { mount, shallow } from "enzyme";
 import "./tests/enzyme";
 import "./tests/i18n";
 import ReactRouterEnzymeContext from "react-router-enzyme-context";
 import Paginator from "./Paginator";
 
-// TODO: Fix tests
 xdescribe("paginator rendering tests", () => {
 
   const options = new ReactRouterEnzymeContext();

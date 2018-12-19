@@ -6,6 +6,7 @@ import de.otto.edison.hal.Links;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
+import sonia.scm.repository.Feature;
 import sonia.scm.repository.HealthCheckFailure;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryPermissions;
@@ -54,6 +55,14 @@ public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Reposit
       }
       if (repositoryService.isSupported(Command.BRANCHES)) {
         linksBuilder.single(link("branches", resourceLinks.branchCollection().self(target.getNamespace(), target.getName())));
+      }
+      if (repositoryService.isSupported(Feature.INCOMING_REVISION)) {
+        linksBuilder.single(link("incomingChangesets", resourceLinks.incoming().changesets(target.getNamespace(), target.getName())));
+        linksBuilder.single(link("incomingDiff", resourceLinks.incoming().diff(target.getNamespace(), target.getName())));
+      }
+      if (repositoryService.isSupported(Command.MERGE)) {
+        linksBuilder.single(link("merge", resourceLinks.merge().merge(target.getNamespace(), target.getName())));
+        linksBuilder.single(link("mergeDryRun", resourceLinks.merge().dryRun(target.getNamespace(), target.getName())));
       }
     }
     linksBuilder.single(link("changesets", resourceLinks.changeset().all(target.getNamespace(), target.getName())));

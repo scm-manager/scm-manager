@@ -23,12 +23,15 @@ export { default as Help } from "./Help";
 export { default as HelpIcon } from "./HelpIcon";
 export { default as Tooltip } from "./Tooltip";
 export { getPageFromMatch } from "./urls";
+export { default as Autocomplete} from "./Autocomplete";
 
-export { apiClient, NOT_FOUND_ERROR_MESSAGE, UNAUTHORIZED_ERROR_MESSAGE } from "./apiclient.js";
+export { apiClient, NOT_FOUND_ERROR, UNAUTHORIZED_ERROR, CONFLICT_ERROR } from "./apiclient.js";
 
+export * from "./avatar";
 export * from "./buttons";
 export * from "./config";
 export * from "./forms";
 export * from "./layout";
 export * from "./modals";
 export * from "./navigation";
+export * from "./repos";

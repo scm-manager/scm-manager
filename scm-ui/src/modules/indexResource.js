@@ -2,7 +2,7 @@
 import * as types from "./types";
 
 import { apiClient } from "@scm-manager/ui-components";
-import type { Action, IndexResources } from "@scm-manager/ui-types";
+import type { Action, IndexResources, Link } from "@scm-manager/ui-types";
 import { isPending } from "./pending";
 import { getFailure } from "./failure";
 
@@ -100,6 +100,13 @@ export function getLink(state: Object, name: string) {
   }
 }
 
+export function getLinkCollection(state: Object, name: string): Link[] {
+  if (state.indexResources.links && state.indexResources.links[name]) {
+    return state.indexResources.links[name];
+  }
+  return [];
+}
+
 export function getUiPluginsLink(state: Object) {
   return getLink(state, "uiPlugins");
 }
@@ -142,4 +149,24 @@ export function getGitConfigLink(state: Object) {
 
 export function getSvnConfigLink(state: Object) {
   return getLink(state, "svnConfig");
+}
+
+export function getUserAutoCompleteLink(state: Object): string {
+  const link = getLinkCollection(state, "autocomplete").find(
+    i => i.name === "users"
+  );
+  if (link) {
+    return link.href;
+  }
+  return "";
+}
+
+export function getGroupAutoCompleteLink(state: Object): string {
+  const link = getLinkCollection(state, "autocomplete").find(
+    i => i.name === "groups"
+  );
+  if (link) {
+    return link.href;
+  }
+  return "";
 }

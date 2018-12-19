@@ -43,7 +43,6 @@ import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContextProvider;
-import sonia.scm.io.FileSystem;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.spi.GitRepositoryServiceProvider;
 import sonia.scm.schedule.Scheduler;
@@ -97,7 +96,7 @@ public class GitRepositoryHandler
   private final GitWorkdirFactory workdirFactory;
 
   private Task task;
-  
+
   //~--- constructors ---------------------------------------------------------
 
   @Inject
@@ -126,7 +125,7 @@ public class GitRepositoryHandler
     scheduleGc(config.getGcExpression());
     super.setConfig(config);
   }
-  
+
   private void scheduleGc(String expression)
   {
     synchronized (LOCK){
@@ -142,7 +141,7 @@ public class GitRepositoryHandler
       }
     }
   }
-  
+
   /**
    * Method description
    *

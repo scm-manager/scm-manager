@@ -1,8 +1,7 @@
 // @flow
 import React from "react";
-import AvatarWrapper from "../repos/components/changesets/AvatarWrapper";
 import type { Me } from "@scm-manager/ui-types";
-import { MailLink } from "@scm-manager/ui-components";
+import { MailLink, AvatarWrapper, AvatarImage } from "@scm-manager/ui-components";
 import { compose } from "redux";
 import { translate } from "react-i18next";
 
@@ -18,37 +17,35 @@ class ProfileInfo extends React.Component<Props, State> {
   render() {
     const { me, t } = this.props;
     return (
-      <>
+      <div className="media">
         <AvatarWrapper>
-          <div>
-            <figure className="media-left">
-              <p className="image is-64x64">
-                {
-                  // TODO: add avatar
-                }
-              </p>
-            </figure>
-          </div>
+          <figure className="media-left">
+            <p className="image is-64x64">
+              <AvatarImage person={ me }/>
+            </p>
+          </figure>
         </AvatarWrapper>
-        <table className="table">
-          <tbody>
-            <tr>
-              <td className="has-text-weight-semibold">{t("profile.username")}</td>
-              <td>{me.name}</td>
-            </tr>
-            <tr>
-              <td className="has-text-weight-semibold">{t("profile.displayName")}</td>
-              <td>{me.displayName}</td>
-            </tr>
-            <tr>
-              <td className="has-text-weight-semibold">{t("profile.mail")}</td>
-              <td>
-                <MailLink address={me.mail} />
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </>
+        <div className="media-content">
+          <table className="table">
+            <tbody>
+              <tr>
+                <td className="has-text-weight-semibold">{t("profile.username")}</td>
+                <td>{me.name}</td>
+              </tr>
+              <tr>
+                <td className="has-text-weight-semibold">{t("profile.displayName")}</td>
+                <td>{me.displayName}</td>
+              </tr>
+              <tr>
+                <td className="has-text-weight-semibold">{t("profile.mail")}</td>
+                <td>
+                  <MailLink address={me.mail} />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     );
   }
 }
