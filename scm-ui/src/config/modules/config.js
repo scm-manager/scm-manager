@@ -32,9 +32,8 @@ export function fetchConfig(link: string) {
       .then(data => {
         dispatch(fetchConfigSuccess(data));
       })
-      .catch(cause => {
-        const error = new Error(`could not fetch config: ${cause.message}`);
-        dispatch(fetchConfigFailure(error));
+      .catch(err => {
+        dispatch(fetchConfigFailure(err));
       });
   };
 }
@@ -73,13 +72,8 @@ export function modifyConfig(config: Config, callback?: () => void) {
           callback();
         }
       })
-      .catch(cause => {
-        dispatch(
-          modifyConfigFailure(
-            config,
-            new Error(`could not modify config: ${cause.message}`)
-          )
-        );
+      .catch(err => {
+        dispatch(modifyConfigFailure(config, err));
       });
   };
 }
