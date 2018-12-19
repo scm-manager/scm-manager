@@ -41,6 +41,9 @@ const styles = {
   isVerticalCenter: {
     display: "flex",
     alignItems: "center"
+  },
+  hasBackground: {
+    backgroundColor: "#FBFBFB"
   }
 };
 
@@ -120,8 +123,14 @@ class Content extends React.Component<Props, State> {
     const fileSize = file.directory ? "" : <FileSize bytes={file.length} />;
     if (!collapsed) {
       return (
-        <div className={classNames("panel-block", classes.toCenterContent)}>
-          <table className="table">
+        <div
+          className={classNames(
+            "panel-block",
+            classes.toCenterContent,
+            classes.hasBackground
+          )}
+        >
+          <table className={classNames("table", classes.hasBackground)}>
             <tbody>
               <tr>
                 <td>{t("sources.content.path")}</td>
