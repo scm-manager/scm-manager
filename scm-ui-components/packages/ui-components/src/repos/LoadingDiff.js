@@ -30,6 +30,16 @@ class LoadingDiff extends React.Component<Props, State> {
   }
 
   componentDidMount() {
+   this.fetchDiff();
+  }
+
+  componentDidUpdate(prevProps: Props) {
+    if(prevProps.url !== this.props.url){
+      this.fetchDiff();
+    }
+  }
+
+  fetchDiff = () => {
     const { url } = this.props;
     apiClient
       .get(url)
@@ -46,7 +56,7 @@ class LoadingDiff extends React.Component<Props, State> {
           error
         });
       });
-  }
+  };
 
   render() {
     const { diff, loading, error } = this.state;
