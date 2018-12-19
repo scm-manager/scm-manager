@@ -15,15 +15,28 @@ type State = {
   loadingBranches: boolean,
   loadingDefaultBranch: boolean,
   submitPending: boolean,
-  error: Error,
+  error?: Error,
   branches: Branch[],
-  selectedBranchName: string,
+  selectedBranchName?: string,
   defaultBranchChanged: boolean
 };
 
 const GIT_CONFIG_CONTENT_TYPE = "application/vnd.scmm-gitConfig+json";
 
 class RepositoryConfig extends React.Component<Props, State> {
+
+  constructor(props: Props) {
+    super(props);
+
+    this.state = {
+      loadingBranches: true,
+      loadingDefaultBranch: true,
+      submitPending: false,
+      branches: [],
+      defaultBranchChanged: false
+    };
+  }
+
   componentDidMount() {
     const { repository } = this.props;
     this.setState({ ...this.state, loadingBranches: true });
@@ -53,10 +66,10 @@ class RepositoryConfig extends React.Component<Props, State> {
 
   branchSelected = (branch: Branch) => {
     if (!branch) {
-      this.setState({ ...this.state, selectedBranchName: null });
+      this.setState({ ...this.state, selectedBranchName: null , defaultBranchChanged: false});
       return;
     }
-    this.setState({ ...this.state, selectedBranchName: branch.name });
+    this.setState({ ...this.state, selectedBranchName: branch.name, defaultBranchChanged: false });
   };
 
   submit = (event: Event) => {
