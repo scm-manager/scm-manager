@@ -61,6 +61,123 @@ $fa-font-path: "webfonts";
 
 // NEW STYLES
 
+//typography
+.subtitle {
+    color: #666;
+}
+.has-border-white {
+    border-color: #fff !important;
+}
+// buttons
+.button{
+    padding-left: 1.5em;
+    padding-right: 1.5em;
+    height:2.5rem;
+    
+    &.is-primary {
+    background-color: $mint;
+}
+}
+
+// multiline Columns
+.columns.is-multiline {
+
+    .column.is-half{
+        width: calc(50% - .75rem);
+        
+        &:nth-child(odd){
+            margin-right: 1.5rem;
+        }
+    }
+    @media screen and (max-width:768px) {
+        .column.is-half{
+            width: 100%;
+
+            &:nth-child(odd){
+                margin-right: 0;
+            }
+        }
+        }
+}
+
+// tables
+.table {
+    width: 100%;
+    td {
+        border-color: #eee;
+        padding: 1rem
+    }
+}
+
+// card tables
+.card-table {
+    border-collapse: separate;
+    border-spacing: 0px 5px;
+    
+    tr{
+        a{
+            color: #363636;
+        }
+        &:hover {
+            td {
+                background-color: whitesmoke;
+            &:nth-child(4){
+            background-color: #E1E1E1;
+            }
+            }
+            a{
+            color: $blue;
+            }
+    }
+    }
+    td {
+        border-bottom: 1px solid whitesmoke;
+        background-color: #fafafa;
+        padding: 1em 1.25em;
+        &:first-child{
+            border-left: 3px solid $mint;
+        }
+        &:nth-child(4){
+            background-color: whitesmoke;
+        }
+        
+    }
+    &.is-hoverable tbody tr:not(.is-selected):hover {    
+    background-color: whitesmoke;
+    }
+    thead th {
+        background-color: transparent;
+        border: none;
+    }
+}
+
+// forms
+.field:not(.is-grouped){
+    margin-bottom: 1rem;
+    }
+ .input, .textarea {
+    /*background-color: whitesmoke;*/
+    border-color: #98d8f3;
+    box-shadow: none;
+}
+/*.input[disabled], .textarea[disabled] {
+
+    background-color: #ddd;
+    border-color: #ccc;
+    box-shadow: none;
+    color: #aaa;
+}*/
+
+// pagination
+.pagination-next, .pagination-link, .pagination-ellipsis{
+    padding-left: 1.5em;
+    padding-right: 1.5em;
+    height:2.5rem;
+}
+.pagination-previous, .pagination-next {
+    min-width: 6.75em;
+}
+
 // dark hero colors
 .hero.is-dark {
     background-color: #002e4b;
@@ -77,33 +194,13 @@ $fa-font-path: "webfonts";
     color: #fff;
 }
 }
-// footer colors
+
+
+// footer 
 .footer {
     background-color: whitesmoke;
 }
-//typography
-.subtitle {
-    color: #666;
-}
-// buttons
-.button{
-    padding-left: 1.5em;
-    padding-right: 1.5em;
-    height:2.5rem;
-    
-    &.is-primary {
-    background-color: $mint;
-}
-}
-// pagination
-.pagination-next, .pagination-link, .pagination-ellipsis{
-    padding-left: 1.5em;
-    padding-right: 1.5em;
-    height:2.5rem;
-}
-.pagination-previous, .pagination-next {
-    min-width: 6.75em;
-}
+
 // sidebar menu 
 .aside-background {
 
@@ -150,13 +247,13 @@ $fa-font-path: "webfonts";
     border-right: 1px solid #eee;
         
     &.is-active { 
-    color: #33B2E8;
+    color: $blue;
     background-color: #fff;
     
         &:before{
             position: relative;
             content: " ";
-            background: #33B2E8;
+            background: $blue;
             height: 53px;
             width: 2px;
             display: block;
@@ -173,69 +270,4 @@ $fa-font-path: "webfonts";
     border-bottom: 1px solid #eee;
         }
 }
-// tables
-.table {
-    width: 100%;
-    td {
-        border-color: #eee;
-        padding: 1rem
-    }
-}
-// card tables
-.card-table {
-    border-collapse: separate;
-    border-spacing: 0px 5px;
-    
-    tr{
-        a{
-            color: #363636;
-        }
-        &:hover {
-            td {
-                background-color: whitesmoke;
-            &:nth-child(4){
-            background-color: #E1E1E1;
-            }
-            }
-            a{
-            color: $blue;
-            }
-    }
-    }
-    td {
-        border-bottom: 1px solid whitesmoke;
-        background-color: #fafafa;
-        padding: 1em 1.25em;
-        &:first-child{
-            border-left: 3px solid $mint;
-        }
-        &:nth-child(4){
-            background-color: whitesmoke;
-        }
-        
-    }
-    &.is-hoverable tbody tr:not(.is-selected):hover {    
-    background-color: whitesmoke;
-    }
-    thead th {
-        background-color: transparent;
-        border: none;
-    }
-}
-// forms
-.field:not(.is-grouped){
-    margin-bottom: 1rem;
-    }
- .input, .textarea {
-    background-color: whitesmoke;
-    border-color: #efefef;  
-    box-shadow: none;
-}
-.input[disabled], .textarea[disabled] {
 
-    background-color: #ddd;
-    border-color: #ccc;
-    box-shadow: none;
-    color: #aaa;
-
-}

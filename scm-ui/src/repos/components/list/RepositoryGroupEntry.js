@@ -12,6 +12,12 @@ const styles = {
   },
   repoGroup: {
     marginBottom: "1em"
+  },
+  wrapper: {
+    padding: "0 0.75rem"
+  },
+  clearfix: {
+    clear: "both"
   }
 };
 
@@ -59,7 +65,10 @@ class RepositoryGroupEntry extends React.Component<Props, State> {
           </span>
         </h2>
         <hr />
+        <div className={classNames("columns","is-multiline", classes.wrapper)}>
             {content}
+        </div>
+        <div className={classes.clearfix}></div>
       </div>
     );
   }

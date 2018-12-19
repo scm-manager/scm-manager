@@ -6,7 +6,8 @@ import classNames from "classnames";
 
 const styles = {
   link: {
-    pointerEvents: "all"
+    pointerEvents: "all",
+    marginRight: "1.25rem !important"
   }
 };
 

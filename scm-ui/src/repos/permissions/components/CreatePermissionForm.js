@@ -38,35 +38,47 @@ class CreatePermissionForm extends React.Component<Props, State> {
 
     return (
       <div>
+        <hr />
         <h2 className="subtitle">
           {t("permission.add-permission.add-permission-heading")}
         </h2>
         <form onSubmit={this.submit}>
-          <InputField
-            label={t("permission.name")}
-            value={name ? name : ""}
-            onChange={this.handleNameChange}
-            validationError={!this.state.valid}
-            errorMessage={t("permission.add-permission.name-input-invalid")}
-            helpText={t("permission.help.nameHelpText")}
-          />
-          <Checkbox
-            label={t("permission.group-permission")}
-            checked={groupPermission ? groupPermission : false}
-            onChange={this.handleGroupPermissionChange}
-            helpText={t("permission.help.groupPermissionHelpText")}
-          />
-          <TypeSelector
-            label={t("permission.type")}
-            helpText={t("permission.help.typeHelpText")}
-            handleTypeChange={this.handleTypeChange}
-            type={type ? type : "READ"}
-          />
-          <SubmitButton
-            label={t("permission.add-permission.submit-button")}
-            loading={loading}
-            disabled={!this.state.valid || this.state.name === ""}
-          />
+        <div class="columns">
+            <div class="column is-three-quarters">
+              <InputField
+                label={t("permission.name")}
+                value={name ? name : ""}
+                onChange={this.handleNameChange}
+                validationError={!this.state.valid}
+                errorMessage={t("permission.add-permission.name-input-invalid")}
+                helpText={t("permission.help.nameHelpText")}
+              />
+           
+              <Checkbox
+                label={t("permission.group-permission")}
+                checked={groupPermission ? groupPermission : false}
+                onChange={this.handleGroupPermissionChange}
+                helpText={t("permission.help.groupPermissionHelpText")}
+              />
+            </div>
+            <div class="column is-one-quarter">
+                  <TypeSelector
+                    label={t("permission.type")}
+                    helpText={t("permission.help.typeHelpText")}
+                    handleTypeChange={this.handleTypeChange}
+                    type={type ? type : "READ"}
+                  />
+            </div>
+            </div>
+        <div class="columns">
+            <div class="column">
+              <SubmitButton
+                label={t("permission.add-permission.submit-button")}
+                loading={loading}
+                disabled={!this.state.valid || this.state.name === ""}
+              />
+            </div>
+        </div>
         </form>
       </div>
     );

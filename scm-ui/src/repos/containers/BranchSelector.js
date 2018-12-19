@@ -11,6 +11,11 @@ import classNames from "classnames";
 const styles = {
   zeroflex: {
     flexGrow: 0
+  },
+  wrapper: {
+      padding: "1rem 1.5rem 0.25rem 1.5rem",
+      border: "1px solid #eee",
+      borderRadius: "5px 5px 0 0"
   }
 };
 
@@ -43,10 +48,8 @@ class BranchSelector extends React.Component<Props, State> {
 
     if (branches) {
       return (
-        <div className="box field is-horizontal">
-          <div
-            className={classNames("field-label", "is-normal", classes.zeroflex)}
-          >
+        <div className={classNames("has-background-light field", "is-horizontal", classes.wrapper)}>
+          <div className={classNames("field-label", "is-normal", classes.zeroflex)}>
             <label className="label">{t("branch-selector.label")}</label>
           </div>
           <div className="field-body">

@@ -16,43 +16,43 @@ class Details extends React.Component<Props> {
       <table className="table">
         <tbody>
           <tr>
-            <td>{t("user.name")}</td>
+            <td className="has-text-weight-semibold">{t("user.name")}</td>
             <td>{user.name}</td>
           </tr>
           <tr>
-            <td>{t("user.displayName")}</td>
+            <td className="has-text-weight-semibold">{t("user.displayName")}</td>
             <td>{user.displayName}</td>
           </tr>
           <tr>
-            <td>{t("user.mail")}</td>
+            <td className="has-text-weight-semibold">{t("user.mail")}</td>
             <td>
               <MailLink address={user.mail} />
             </td>
           </tr>
           <tr>
-            <td>{t("user.admin")}</td>
+            <td className="has-text-weight-semibold">{t("user.admin")}</td>
             <td>
               <Checkbox checked={user.admin} />
             </td>
           </tr>
           <tr>
-            <td>{t("user.active")}</td>
+            <td className="has-text-weight-semibold">{t("user.active")}</td>
             <td>
               <Checkbox checked={user.active} />
             </td>
           </tr>
           <tr>
-            <td>{t("user.type")}</td>
+            <td className="has-text-weight-semibold">{t("user.type")}</td>
             <td>{user.type}</td>
           </tr>
           <tr>
-            <td>{t("user.creationDate")}</td>
+            <td className="has-text-weight-semibold">{t("user.creationDate")}</td>
             <td>
               <DateFromNow date={user.creationDate} />
             </td>
           </tr>
           <tr>
-            <td>{t("user.lastModified")}</td>
+            <td className="has-text-weight-semibold">{t("user.lastModified")}</td>
             <td>
               <DateFromNow date={user.lastModified} />
             </td>
