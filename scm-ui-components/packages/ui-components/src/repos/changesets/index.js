@@ -7,3 +7,4 @@ export { default as ChangesetId } from "./ChangesetId";
 export { default as ChangesetList } from "./ChangesetList";
 export { default as ChangesetRow } from "./ChangesetRow";
 export { default as ChangesetTag } from "./ChangesetTag";
+export { default as ChangesetDiff } from "./ChangesetDiff";

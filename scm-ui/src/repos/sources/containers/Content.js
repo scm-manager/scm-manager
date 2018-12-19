@@ -41,6 +41,13 @@ const styles = {
   isVerticalCenter: {
     display: "flex",
     alignItems: "center"
+  },
+  wordBreak: {
+    WebkitHyphens: "auto",
+    MozHyphens: "auto",
+    MsHyphens: "auto",
+    hypens: "auto",
+    wordBreak: "break-all",
   }
 };
 
@@ -93,7 +100,7 @@ class Content extends React.Component<Props, State> {
                 classes.marginInHeader
               )}
             />
-            <span>{file.name}</span>
+            <span className={classes.wordBreak}>{file.name}</span>
           </div>
           <div className="media-right">{selector}</div>
         </article>
@@ -125,11 +132,11 @@ class Content extends React.Component<Props, State> {
             <tbody>
               <tr>
                 <td>{t("sources.content.path")}</td>
-                <td>{file.path}</td>
+                <td className={classes.wordBreak}>{file.path}</td>
               </tr>
               <tr>
                 <td>{t("sources.content.branch")}</td>
-                <td>{revision}</td>
+                <td className={classes.wordBreak}>{revision}</td>
               </tr>
               <tr>
                 <td>{t("sources.content.size")}</td>
@@ -141,7 +148,7 @@ class Content extends React.Component<Props, State> {
               </tr>
               <tr>
                 <td>{t("sources.content.description")}</td>
-                <td>{description}</td>
+                <td className={classes.wordBreak}>{description}</td>
               </tr>
             </tbody>
           </table>

@@ -6,10 +6,14 @@ import FileSize from "./FileSize";
 import FileIcon from "./FileIcon";
 import { Link } from "react-router-dom";
 import type { File } from "@scm-manager/ui-types";
+import classNames from "classnames";
 
 const styles = {
   iconColumn: {
     width: "16px"
+  },
+  wordBreakMinWidth: {
+    minWidth: "10em"
   }
 };
 
@@ -71,12 +75,14 @@ class FileTreeLeaf extends React.Component<Props> {
     return (
       <tr>
         <td className={classes.iconColumn}>{this.createFileIcon(file)}</td>
-        <td>{this.createFileName(file)}</td>
+        <td className={classNames(classes.wordBreakMinWidth, "is-word-break")}>{this.createFileName(file)}</td>
         <td className="is-hidden-mobile">{fileSize}</td>
         <td className="is-hidden-mobile">
           <DateFromNow date={file.lastModified} />
         </td>
-        <td>{file.description}</td>
+        <td className={classNames(classes.wordBreakMinWidth, "is-word-break", "is-hidden-mobile")}>
+          {file.description}
+        </td>
       </tr>
     );
   }

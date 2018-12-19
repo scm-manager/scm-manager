@@ -87,6 +87,7 @@ public final class JwtAccessToken implements AccessToken {
     return ofNullable(claims.get(REFRESHABLE_UNTIL_CLAIM_KEY, Date.class));
   }
 
+  @Override
   public Optional<String> getParentKey() {
     return ofNullable(claims.get(PARENT_TOKEN_ID_CLAIM_KEY).toString());
   }

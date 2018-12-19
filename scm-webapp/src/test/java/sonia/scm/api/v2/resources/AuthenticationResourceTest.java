@@ -18,6 +18,7 @@ import sonia.scm.security.AccessToken;
 import sonia.scm.security.AccessTokenBuilder;
 import sonia.scm.security.AccessTokenBuilderFactory;
 import sonia.scm.security.AccessTokenCookieIssuer;
+import sonia.scm.security.DefaultAccessTokenCookieIssuer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -46,7 +47,7 @@ public class AuthenticationResourceTest {
   @Mock
   private AccessTokenBuilder accessTokenBuilder;
 
-  private AccessTokenCookieIssuer cookieIssuer = new AccessTokenCookieIssuer(mock(ScmConfiguration.class));
+  private AccessTokenCookieIssuer cookieIssuer = new DefaultAccessTokenCookieIssuer(mock(ScmConfiguration.class));
 
   private static final String AUTH_JSON_TRILLIAN = "{\n" +
     "\t\"cookie\": true,\n" +
