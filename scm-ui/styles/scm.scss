@@ -84,6 +84,7 @@ $fa-font-path: "webfonts";
 
     .column.is-half{
         width: calc(50% - .75rem);
+        max-height: 120px;
         
         &:nth-child(odd){
             margin-right: 1.5rem;
@@ -160,13 +161,6 @@ $fa-font-path: "webfonts";
     border-color: #98d8f3;
     box-shadow: none;
 }
-/*.input[disabled], .textarea[disabled] {
-
-    background-color: #ddd;
-    border-color: #ccc;
-    box-shadow: none;
-    color: #aaa;
-}*/
 
 // pagination
 .pagination-next, .pagination-link, .pagination-ellipsis{
