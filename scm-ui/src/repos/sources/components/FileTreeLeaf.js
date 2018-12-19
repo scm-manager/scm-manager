@@ -6,6 +6,7 @@ import FileSize from "./FileSize";
 import FileIcon from "./FileIcon";
 import { Link } from "react-router-dom";
 import type { File } from "@scm-manager/ui-types";
+import classNames from "classnames";
 
 const styles = {
   iconColumn: {
@@ -84,7 +85,9 @@ class FileTreeLeaf extends React.Component<Props> {
         <td className="is-hidden-mobile">
           <DateFromNow date={file.lastModified} />
         </td>
-        <td className={classes.wordBreakColumn}>{file.description}</td>
+        <td className={classNames(classes.wordBreakColumn, "is-hidden-mobile")}>
+          {file.description}
+        </td>
       </tr>
     );
   }
