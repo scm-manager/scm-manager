@@ -38,7 +38,7 @@ package sonia.scm.repository.api;
 import com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.NotSupportedFeatureException;
+import sonia.scm.FeatureNotSupportedException;
 import sonia.scm.repository.Feature;
 import sonia.scm.repository.spi.DiffCommand;
 import sonia.scm.repository.spi.DiffCommandRequest;
@@ -203,7 +203,7 @@ public final class DiffCommandBuilder
   public DiffCommandBuilder setAncestorChangeset(String revision)
   {
     if (!supportedFeatures.contains(Feature.INCOMING_REVISION)) {
-      throw new NotSupportedFeatureException(Feature.INCOMING_REVISION.name());
+      throw new FeatureNotSupportedException(Feature.INCOMING_REVISION.name());
     }
     request.setAncestorChangeset(revision);
 

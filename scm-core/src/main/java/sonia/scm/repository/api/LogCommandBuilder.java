@@ -39,7 +39,7 @@ import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.NotSupportedFeatureException;
+import sonia.scm.FeatureNotSupportedException;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.repository.Changeset;
@@ -410,7 +410,7 @@ public final class LogCommandBuilder
    */
   public LogCommandBuilder setAncestorChangeset(String ancestorChangeset) {
     if (!supportedFeatures.contains(Feature.INCOMING_REVISION)) {
-      throw new NotSupportedFeatureException(Feature.INCOMING_REVISION.name());
+      throw new FeatureNotSupportedException(Feature.INCOMING_REVISION.name());
     }
     request.setAncestorChangeset(ancestorChangeset);
     return this;

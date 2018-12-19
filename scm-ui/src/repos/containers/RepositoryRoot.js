@@ -114,7 +114,7 @@ class RepositoryRoot extends React.Component<Props> {
     return (
       <Page title={repository.namespace + "/" + repository.name}>
         <div className="columns">
-          <div className="column is-three-quarters">
+          <div className="column is-three-quarters is-clipped">
             <Switch>
               <Route
                 path={url}

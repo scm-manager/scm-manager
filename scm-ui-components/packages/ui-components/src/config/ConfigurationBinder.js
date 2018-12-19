@@ -63,8 +63,9 @@ class ConfigurationBinder {
 
 
     // route for global configuration, passes the current repository to component
-    const RepoRoute = ({ url, repository }) => {
-      return this.route(url + to, <RepositoryComponent repository={repository}/>);
+    const RepoRoute = ({url, repository}) => {
+      const link = repository._links[linkName].href
+      return this.route(url + to, <RepositoryComponent repository={repository} link={link}/>);
     };
 
     // bind config route to extension point
