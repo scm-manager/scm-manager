@@ -91,7 +91,7 @@ class Sources extends React.Component<Props> {
 
     if (currentFileIsDirectory) {
       return (
-        <>
+        <div className={"has-border-around"}>
           {this.renderBranchSelector()}
           <FileTree
             repository={repository}
@@ -99,7 +99,7 @@ class Sources extends React.Component<Props> {
             path={path}
             baseUrl={baseUrl}
           />
-        </>
+        </div>
       );
     } else {
       return (
