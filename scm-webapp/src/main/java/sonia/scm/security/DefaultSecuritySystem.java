@@ -36,7 +36,6 @@ package sonia.scm.security;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.github.legman.Subscribe;
-
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
@@ -44,30 +43,16 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
 import org.apache.shiro.SecurityUtils;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.HandlerEventType;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.group.GroupEvent;
+import sonia.scm.plugin.PluginLoader;
 import sonia.scm.store.ConfigurationEntryStore;
 import sonia.scm.store.ConfigurationEntryStoreFactory;
 import sonia.scm.user.UserEvent;
-import sonia.scm.util.ClassLoaders;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
-
-import java.net.URL;
-
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Map.Entry;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -75,6 +60,14 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Map.Entry;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * TODO add events
@@ -99,6 +92,8 @@ public class DefaultSecuritySystem implements SecuritySystem
   private static final Logger logger =
     LoggerFactory.getLogger(DefaultSecuritySystem.class);
 
+  private PluginLoader pluginLoader;
+
   //~--- constructors ---------------------------------------------------------
 
   /**
@@ -109,12 +104,13 @@ public class DefaultSecuritySystem implements SecuritySystem
    */
   @Inject
   @SuppressWarnings("unchecked")
-  public DefaultSecuritySystem(ConfigurationEntryStoreFactory storeFactory)
+  public DefaultSecuritySystem(ConfigurationEntryStoreFactory storeFactory, PluginLoader pluginLoader)
   {
     store = storeFactory
       .withType(AssignedPermission.class)
       .withName(NAME)
       .build();
+    this.pluginLoader = pluginLoader;
     readAvailablePermissions();
   }
 
@@ -409,9 +405,9 @@ public class DefaultSecuritySystem implements SecuritySystem
       JAXBContext context =
         JAXBContext.newInstance(PermissionDescriptors.class);
 
+      // Querying permissions from uberClassLoader returns also the permissions from plugin
       Enumeration<URL> descirptorEnum =
-        ClassLoaders.getContextClassLoader(
-          DefaultSecuritySystem.class).getResources(PERMISSION_DESCRIPTOR);
+        pluginLoader.getUberClassLoader().getResources(PERMISSION_DESCRIPTOR);
 
       while (descirptorEnum.hasMoreElements())
       {

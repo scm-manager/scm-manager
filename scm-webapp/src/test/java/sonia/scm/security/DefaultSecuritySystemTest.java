@@ -35,25 +35,27 @@ package sonia.scm.security;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Predicate;
-
 import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.mgt.DefaultSecurityManager;
 import org.apache.shiro.realm.SimpleAccountRealm;
-
 import org.junit.Before;
 import org.junit.Test;
-
+import org.mockito.InjectMocks;
+import org.mockito.MockitoAnnotations;
 import sonia.scm.AbstractTestBase;
+import sonia.scm.plugin.PluginLoader;
 import sonia.scm.store.JAXBConfigurationEntryStoreFactory;
+import sonia.scm.util.ClassLoaders;
 import sonia.scm.util.MockUtil;
 
-import static org.hamcrest.Matchers.*;
+import java.util.List;
 
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 //~--- JDK imports ------------------------------------------------------------
-
-import java.util.List;
 
 /**
  *
@@ -62,6 +64,12 @@ import java.util.List;
 public class DefaultSecuritySystemTest extends AbstractTestBase
 {
 
+  private JAXBConfigurationEntryStoreFactory jaxbConfigurationEntryStoreFactory;
+  private PluginLoader pluginLoader;
+  @InjectMocks
+  private DefaultSecuritySystem securitySystem;
+
+
   /**
    * Method description
    *
@@ -69,12 +77,12 @@ public class DefaultSecuritySystemTest extends AbstractTestBase
   @Before
   public void createSecuritySystem()
   {
-    JAXBConfigurationEntryStoreFactory factory =
-      new JAXBConfigurationEntryStoreFactory(contextProvider , repositoryLocationResolver, new UUIDKeyGenerator() );
+    jaxbConfigurationEntryStoreFactory =
+      spy(new JAXBConfigurationEntryStoreFactory(contextProvider , repositoryLocationResolver, new UUIDKeyGenerator() ) {});
+    pluginLoader = mock(PluginLoader.class);
+    when(pluginLoader.getUberClassLoader()).thenReturn(ClassLoaders.getContextClassLoader(DefaultSecuritySystem.class));
 
-    securitySystem = new DefaultSecuritySystem(factory);
-
-    // ScmEventBus.getInstance().register(listener);
+    MockitoAnnotations.initMocks(this);
   }
 
   /**
@@ -325,9 +333,4 @@ public class DefaultSecuritySystemTest extends AbstractTestBase
 
     setSubject(MockUtil.createUserSubject(sm));
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private DefaultSecuritySystem securitySystem;
 }
