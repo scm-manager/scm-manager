@@ -70,6 +70,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Sebastian Sdorra
  * @since 2.0.0
  */
+@Singleton
 public class AuthenticationFilter extends HttpFilter
 {
 
