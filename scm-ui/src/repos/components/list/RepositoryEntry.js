@@ -95,7 +95,7 @@ class RepositoryEntry extends React.Component<Props> {
           </figure>
           <div className="media-content">
             <div className="content">
-              <p>
+              <p className="is-marginless">
                 <strong>{repository.name}</strong>
               </p>
               <p className={"shorten-text"}>{repository.description}</p>
