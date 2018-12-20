@@ -1,6 +1,6 @@
 //@flow
 import React from "react";
-import type { RepositoryGroup } from "@scm-manager/ui-types";
+import type { RepositoryGroup, Repository } from "@scm-manager/ui-types";
 import injectSheet from "react-jss";
 import classNames from "classnames";
 import RepositoryEntry from "./RepositoryEntry";
@@ -46,6 +46,18 @@ class RepositoryGroupEntry extends React.Component<Props, State> {
     }));
   };
 
+  isLastEntry = (array: Repository[], index: number) => {
+    return index === array.length - 1;
+  };
+
+  isLengthOdd = (array: Repository[]) => {
+    return array.length % 2 !== 0;
+  };
+
+  isFullSize = (array: Repository[], index: number) => {
+    return this.isLastEntry(array, index) && this.isLengthOdd(array);
+  };
+
   render() {
     const { group, classes } = this.props;
     const { collapsed } = this.state;
@@ -54,7 +66,10 @@ class RepositoryGroupEntry extends React.Component<Props, State> {
     let content = null;
     if (!collapsed) {
       content = group.repositories.map((repository, index) => {
-        return <RepositoryEntry repository={repository} key={index} />;
+        const full = this.isFullSize(group.repositories, index);
+        return (
+          <RepositoryEntry repository={repository} full={full} key={index} />
+        );
       });
     }
     return (
@@ -65,10 +80,10 @@ class RepositoryGroupEntry extends React.Component<Props, State> {
           </span>
         </h2>
         <hr />
-        <div className={classNames("columns","is-multiline", classes.wrapper)}>
-            {content}
+        <div className={classNames("columns", "is-multiline", classes.wrapper)}>
+          {content}
         </div>
-        <div className={classes.clearfix}></div>
+        <div className={classes.clearfix} />
       </div>
     );
   }

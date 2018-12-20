@@ -30,6 +30,7 @@ const styles = {
 
 type Props = {
   repository: Repository,
+  full?: boolean,
   // context props
   classes: any
 };
@@ -76,16 +77,17 @@ class RepositoryEntry extends React.Component<Props> {
   };
 
   render() {
-    const { repository, classes } = this.props;
+    const { repository, classes, full } = this.props;
     const repositoryLink = this.createLink(repository);
-
+    const halfColumn = full ? "is-full" : "is-half";
     return (
       <div
         className={classNames(
           "box",
           "box-link-shadow",
-          "column is-clipped",
-          "is-half"
+          "column",
+          "is-clipped",
+          halfColumn
         )}
       >
         <Link className={classNames(classes.overlay)} to={repositoryLink} />
