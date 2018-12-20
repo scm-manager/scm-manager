@@ -9,15 +9,10 @@ import classNames from "classnames";
 import RepositoryAvatar from "./RepositoryAvatar";
 
 const styles = {
-  outer: {
-    position: "relative"
-  },
   overlay: {
     position: "absolute",
-    left: 0,
-    top: 0,
-    bottom: 0,
-    right: 0
+    height: "calc(120px - 1.5rem)",
+    width: "calc(50% - 3rem)"
   },
   inner: {
     position: "relative",
@@ -26,11 +21,16 @@ const styles = {
   },
   innerLink: {
     pointerEvents: "all"
+  },
+  centerImage: {
+    marginTop: "0.8em",
+    marginLeft: "1em !important"
   }
 };
 
 type Props = {
   repository: Repository,
+  fullColumnWidth?: boolean,
   // context props
   classes: any
 };
@@ -44,7 +44,7 @@ class RepositoryEntry extends React.Component<Props> {
     if (repository._links["changesets"]) {
       return (
         <RepositoryEntryLink
-          iconClass="fa-code-branch"
+          iconClass="fa-code-branch fa-lg"
           to={repositoryLink + "/changesets"}
         />
       );
@@ -56,7 +56,7 @@ class RepositoryEntry extends React.Component<Props> {
     if (repository._links["sources"]) {
       return (
         <RepositoryEntryLink
-          iconClass="fa-code"
+          iconClass="fa-code fa-lg"
           to={repositoryLink + "/sources"}
         />
       );
@@ -67,29 +67,40 @@ class RepositoryEntry extends React.Component<Props> {
   renderModifyLink = (repository: Repository, repositoryLink: string) => {
     if (repository._links["update"]) {
       return (
-        <RepositoryEntryLink iconClass="fa-cog" to={repositoryLink + "/edit"} />
+        <RepositoryEntryLink
+          iconClass="fa-cog fa-lg"
+          to={repositoryLink + "/edit"}
+        />
       );
     }
     return null;
   };
 
   render() {
-    const { repository, classes } = this.props;
+    const { repository, classes, fullColumnWidth } = this.props;
     const repositoryLink = this.createLink(repository);
+    const halfColumn = fullColumnWidth ? "is-full" : "is-half";
     return (
-      <div className={classNames("box", "box-link-shadow", classes.outer)}>
-        <Link className={classes.overlay} to={repositoryLink} />
+      <div
+        className={classNames(
+          "box",
+          "box-link-shadow",
+          "column",
+          "is-clipped",
+          halfColumn
+        )}
+      >
+        <Link className={classNames(classes.overlay)} to={repositoryLink} />
         <article className={classNames("media", classes.inner)}>
-          <figure className="media-left">
+          <figure className={classNames(classes.centerImage, "media-left")}>
             <RepositoryAvatar repository={repository} />
           </figure>
           <div className="media-content">
             <div className="content">
-              <p>
+              <p className="is-marginless">
                 <strong>{repository.name}</strong>
-                <br />
-                {repository.description}
               </p>
+              <p className={"shorten-text"}>{repository.description}</p>
             </div>
             <nav className="level is-mobile">
               <div className="level-left">

@@ -1,8 +1,8 @@
 @import "bulma/sass/utilities/initial-variables";
 @import "bulma/sass/utilities/functions";
 
-
-$blue: #33B2E8;
+$blue: #33b2e8;
+$mint: #11dfd0;
 
 // $footer-background-color
 
@@ -51,15 +51,239 @@ $blue: #33B2E8;
   &:hover,
   &:focus {
     box-shadow: $box-link-hover-shadow;
-  } 
+  }
   &:active {
     box-shadow: $box-link-active-shadow;
   }
 }
-
 
 @import "@fortawesome/fontawesome-free/scss/fontawesome.scss";
 $fa-font-path: "webfonts";
 @import "@fortawesome/fontawesome-free/scss/solid.scss";
 
 @import "diff2html/dist/diff2html";
+
+// NEW STYLES
+
+//typography
+.subtitle {
+  color: #666;
+}
+.has-border-white {
+  border-color: #fff !important;
+}
+// buttons
+.button {
+  padding-left: 1.5em;
+  padding-right: 1.5em;
+  height: 2.5rem;
+
+  &.is-primary {
+    background-color: $mint;
+  }
+}
+
+//border around options
+.has-border-around {
+  border-top: 1px solid #eee;
+  border-left: 1px solid #eee;
+  border-right: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+}
+
+// multiline Columns
+.columns.is-multiline {
+  .column.is-half {
+    width: calc(50% - 0.75rem);
+    max-height: 120px;
+
+    &:nth-child(odd) {
+      margin-right: 1.5rem;
+    }
+  }
+  @media screen and (max-width: 768px) {
+    .column.is-half {
+      width: 100%;
+
+      &:nth-child(odd) {
+        margin-right: 0;
+      }
+    }
+  }
+}
+
+.media {
+  .media-content {
+    width: calc(50% - 0.75rem);
+    max-height: 120px;
+    .shorten-text {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+}
+
+// tables
+.table {
+  width: 100%;
+  td {
+    border-color: #eee;
+    padding: 1rem;
+  }
+}
+
+// card tables
+.card-table {
+  border-collapse: separate;
+  border-spacing: 0px 5px;
+
+  tr {
+    a {
+      color: #363636;
+    }
+    &:hover {
+      td {
+        background-color: whitesmoke;
+        &:nth-child(4) {
+          background-color: #e1e1e1;
+        }
+      }
+      a {
+        color: $blue;
+      }
+    }
+  }
+  td {
+    border-bottom: 1px solid whitesmoke;
+    background-color: #fafafa;
+    padding: 1em 1.25em;
+    &:first-child {
+      border-left: 3px solid $mint;
+    }
+    &:nth-child(4) {
+      background-color: whitesmoke;
+    }
+  }
+  &.is-hoverable tbody tr:not(.is-selected):hover {
+    background-color: whitesmoke;
+  }
+  thead th {
+    background-color: transparent;
+    border: none;
+  }
+}
+
+// forms
+.field:not(.is-grouped) {
+  margin-bottom: 1rem;
+}
+.input,
+.textarea {
+  /*background-color: whitesmoke;*/
+  border-color: #98d8f3;
+  box-shadow: none;
+}
+
+// pagination
+.pagination-next,
+.pagination-link,
+.pagination-ellipsis {
+  padding-left: 1.5em;
+  padding-right: 1.5em;
+  height: 2.5rem;
+}
+.pagination-previous,
+.pagination-next {
+  min-width: 6.75em;
+}
+
+// dark hero colors
+.hero.is-dark {
+  background-color: #002e4b;
+  background-image: url(../images/scmManagerHero.jpg);
+  background-size: cover;
+  background-position: top center;
+
+  .tabs.is-boxed li.is-active a,
+  .tabs.is-boxed li.is-active a:hover,
+  .tabs.is-toggle li.is-active a,
+  .tabs.is-toggle li.is-active a:hover {
+    background-color: #28b1e8;
+    border-color: #28b1e8;
+    color: #fff;
+  }
+}
+
+// footer
+.footer {
+  background-color: whitesmoke;
+}
+
+// sidebar menu
+.aside-background {
+  bottom: 0;
+  left: 50%;
+  position: absolute;
+  right: 0;
+  top: 0;
+  background-color: whitesmoke;
+}
+.menu {
+  div {
+    height: 100%;
+    /*border: 1px solid #eee;*/
+    margin-bottom: 1rem;
+  }
+}
+
+.menu-label {
+  color: #fff;
+  font-size: 1em;
+  font-weight: 600;
+  background-color: #bbb;
+  border-radius: 5px 5px 0 0;
+  padding: 0.5rem 1rem;
+  text-transform: none;
+
+  &:last-child,
+  &:not(:last-child) {
+    margin-bottom: 0;
+  }
+}
+.menu div:first-child .menu-label {
+  background-color: $blue;
+}
+.menu-list {
+  a {
+    border-radius: 0;
+    color: #333;
+    padding: 1rem;
+    border-top: 1px solid #eee;
+    border-left: 1px solid #eee;
+    border-right: 1px solid #eee;
+
+    &.is-active {
+      color: $blue;
+      background-color: #fff;
+
+      &:before {
+        position: relative;
+        content: " ";
+        background: $blue;
+        height: 53px;
+        width: 2px;
+        display: block;
+        left: -17px;
+        float: left;
+        top: -16px;
+      }
+    }
+  }
+  > li:first-child > a {
+    border-top: none;
+  }
+  li:last-child > a {
+    border-bottom: 1px solid #eee;
+  }
+}

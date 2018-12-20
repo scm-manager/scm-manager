@@ -20,34 +20,41 @@ class AdminSettings extends React.Component<Props> {
     return (
       <div>
         <Subtitle subtitle={t("admin-settings.name")} />
-        <AdminGroupTable
-          adminGroups={adminGroups}
-          onChange={(isValid, changedValue, name) =>
-            this.props.onChange(isValid, changedValue, name)
-          }
-          disabled={!hasUpdatePermission}
-        />
-        <AddEntryToTableField
-          addEntry={this.addGroup}
-          disabled={!hasUpdatePermission}
-          buttonLabel={t("admin-settings.add-group-button")}
-          fieldLabel={t("admin-settings.add-group-textfield")}
-          errorMessage={t("admin-settings.add-group-error")}
-        />
-        <AdminUserTable
-          adminUsers={adminUsers}
-          onChange={(isValid, changedValue, name) =>
-            this.props.onChange(isValid, changedValue, name)
-          }
-          disabled={!hasUpdatePermission}
-        />
-        <AddEntryToTableField
-          addEntry={this.addUser}
-          disabled={!hasUpdatePermission}
-          buttonLabel={t("admin-settings.add-user-button")}
-          fieldLabel={t("admin-settings.add-user-textfield")}
-          errorMessage={t("admin-settings.add-user-error")}
-        />
+            <div className="columns">
+              <div className="column is-half">
+                <AdminGroupTable
+                  adminGroups={adminGroups}
+                  onChange={(isValid, changedValue, name) =>
+                    this.props.onChange(isValid, changedValue, name)
+                  }
+                  disabled={!hasUpdatePermission}
+                />
+                    
+                <AddEntryToTableField
+                  addEntry={this.addGroup}
+                  disabled={!hasUpdatePermission}
+                  buttonLabel={t("admin-settings.add-group-button")}
+                  fieldLabel={t("admin-settings.add-group-textfield")}
+                  errorMessage={t("admin-settings.add-group-error")}
+                />
+            </div>
+            <div className="column is-half">
+                <AdminUserTable
+                  adminUsers={adminUsers}
+                  onChange={(isValid, changedValue, name) =>
+                    this.props.onChange(isValid, changedValue, name)
+                  }
+                  disabled={!hasUpdatePermission}
+                />
+                <AddEntryToTableField
+                  addEntry={this.addUser}
+                  disabled={!hasUpdatePermission}
+                  buttonLabel={t("admin-settings.add-user-button")}
+                  fieldLabel={t("admin-settings.add-user-textfield")}
+                  errorMessage={t("admin-settings.add-user-error")}
+                />
+            </div> 
+        </div> 
       </div>
     );
   }
