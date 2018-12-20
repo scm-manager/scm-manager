@@ -37,8 +37,8 @@ class ProxySettings extends React.Component<Props> {
     return (
       <div>
         <Subtitle subtitle={t("proxy-settings.name")} />
-        <div class="columns">
-                <div class="column is-full">
+        <div className="columns">
+                <div className="column is-full">
                     <Checkbox
                       checked={enableProxy}
                       label={t("proxy-settings.enable-proxy")}
@@ -48,8 +48,8 @@ class ProxySettings extends React.Component<Props> {
                     />
                 </div>
             </div>
-            <div class="columns">
-                <div class="column is-half">
+            <div className="columns">
+                <div className="column is-half">
                     <InputField
                       label={t("proxy-settings.proxy-password")}
                       onChange={this.handleProxyPasswordChange}
@@ -59,7 +59,7 @@ class ProxySettings extends React.Component<Props> {
                       helpText={t("help.proxyPasswordHelpText")}
                     />
                 </div>
-                <div class="column is-half">
+                <div className="column is-half">
                     <InputField
                       label={t("proxy-settings.proxy-port")}
                       value={proxyPort}
@@ -69,8 +69,8 @@ class ProxySettings extends React.Component<Props> {
                     />
                 </div>
             </div>
-            <div class="columns">
-                <div class="column is-half">
+            <div className="columns">
+                <div className="column is-half">
                     <InputField
                       label={t("proxy-settings.proxy-server")}
                       value={proxyServer}
@@ -79,7 +79,7 @@ class ProxySettings extends React.Component<Props> {
                       helpText={t("help.proxyServerHelpText")}
                     />
                 </div>
-                <div class="column is-half">
+                <div className="column is-half">
                     <InputField
                       label={t("proxy-settings.proxy-user")}
                       value={proxyUser}
@@ -89,8 +89,8 @@ class ProxySettings extends React.Component<Props> {
                     />
                 </div>
             </div>
-            <div class="columns">                    
-                <div class="column is-full">
+            <div className="columns">
+                <div className="column is-full">
                     <ProxyExcludesTable
                       proxyExcludes={proxyExcludes}
                       onChange={(isValid, changedValue, name) =>

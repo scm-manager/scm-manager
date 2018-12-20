@@ -36,8 +36,8 @@ class GeneralSettings extends React.Component<Props> {
 
     return (
       <div>
-          <div class="columns">
-            <div class="column is-half">
+          <div className="columns">
+            <div className="column is-half">
                 <InputField
                   label={t("general-settings.realm-description")}
                   onChange={this.handleRealmDescriptionChange}
@@ -46,7 +46,7 @@ class GeneralSettings extends React.Component<Props> {
                   helpText={t("help.realmDescriptionHelpText")}
                 />
                 </div>
-                <div class="column is-half">
+                <div className="column is-half">
                 <InputField
                   label={t("general-settings.date-format")}
                   onChange={this.handleDateFormatChange}
@@ -56,8 +56,8 @@ class GeneralSettings extends React.Component<Props> {
                 />
                 </div>
             </div>
-            <div class="columns">
-                <div class="column is-half">
+            <div className="columns">
+                <div className="column is-half">
                 <InputField
                   label={t("general-settings.plugin-url")}
                   onChange={this.handlePluginUrlChange}
@@ -66,7 +66,7 @@ class GeneralSettings extends React.Component<Props> {
                   helpText={t("help.pluginRepositoryHelpText")}
                 />
                 </div>
-                <div class="column is-half">
+                <div className="column is-half">
                 <InputField
                   label={t("general-settings.default-namespace-strategy")}
                   onChange={this.handleDefaultNamespaceStrategyChange}
@@ -76,8 +76,8 @@ class GeneralSettings extends React.Component<Props> {
                 />
                 </div>
             </div>
-            <div class="columns">
-                <div class="column is-half">
+            <div className="columns">
+                <div className="column is-half">
                     <Checkbox
                       checked={enabledXsrfProtection}
                       label={t("general-settings.enabled-xsrf-protection")}
@@ -86,7 +86,7 @@ class GeneralSettings extends React.Component<Props> {
                       helpText={t("help.enableXsrfProtectionHelpText")}
                     />
                 </div>
-                <div class="column is-half">
+                <div className="column is-half">
                     <Checkbox
                       checked={enableRepositoryArchive}
                       label={t("general-settings.enable-repository-archive")}
@@ -96,8 +96,8 @@ class GeneralSettings extends React.Component<Props> {
                     />
                 </div>
             </div>
-            <div class="columns">
-                <div class="column is-half">
+            <div className="columns">
+                <div className="column is-half">
                     <Checkbox
                       checked={disableGroupingGrid}
                       label={t("general-settings.disable-grouping-grid")}
@@ -106,7 +106,7 @@ class GeneralSettings extends React.Component<Props> {
                       helpText={t("help.disableGroupingGridHelpText")}
                     />
                 </div>
-                <div class="column is-half">
+                <div className="column is-half">
                     <Checkbox
                       checked={anonymousAccessEnabled}
                       label={t("general-settings.anonymous-access-enabled")}
@@ -116,8 +116,8 @@ class GeneralSettings extends React.Component<Props> {
                     />
                 </div>
             </div>
-            <div class="columns">
-                <div class="column is-half">
+            <div className="columns">
+                <div className="column is-half">
                     <Checkbox
                       checked={skipFailedAuthenticators}
                       label={t("general-settings.skip-failed-authenticators")}

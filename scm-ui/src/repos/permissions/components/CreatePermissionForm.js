@@ -155,11 +155,11 @@ class CreatePermissionForm extends React.Component<Props, State> {
             </label>
           </div>
 
-        <div class="columns">
-            <div class="column is-three-quarters">
+        <div className="columns">
+            <div className="column is-three-quarters">
                 {this.renderAutocompletionField()}
             </div>
-            <div class="column is-one-quarter">
+            <div className="column is-one-quarter">
                   <TypeSelector
                     label={t("permission.type")}
                     helpText={t("permission.help.typeHelpText")}
@@ -168,8 +168,8 @@ class CreatePermissionForm extends React.Component<Props, State> {
                   />
             </div>
             </div>
-        <div class="columns">
-            <div class="column">
+        <div className="columns">
+            <div className="column">
               <SubmitButton
                 label={t("permission.add-permission.submit-button")}
                 loading={loading}

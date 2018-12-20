@@ -20,8 +20,8 @@ class AdminSettings extends React.Component<Props> {
     return (
       <div>
         <Subtitle subtitle={t("admin-settings.name")} />
-            <div class="columns">
-              <div class="column is-half">
+            <div className="columns">
+              <div className="column is-half">
                 <AdminGroupTable
                   adminGroups={adminGroups}
                   onChange={(isValid, changedValue, name) =>
@@ -38,7 +38,7 @@ class AdminSettings extends React.Component<Props> {
                   errorMessage={t("admin-settings.add-group-error")}
                 />
             </div>
-            <div class="column is-half">
+            <div className="column is-half">
                 <AdminUserTable
                   adminUsers={adminUsers}
                   onChange={(isValid, changedValue, name) =>

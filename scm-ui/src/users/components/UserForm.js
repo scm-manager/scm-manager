@@ -105,54 +105,54 @@ class UserForm extends React.Component<Props, State> {
     }
     return (
       <form onSubmit={this.submit}>
-        <div class="columns">
-            <div class="column is-half">
-                {nameField}
-                <InputField
-                  label={t("user.displayName")}
-                  onChange={this.handleDisplayNameChange}
-                  value={user ? user.displayName : ""}
-                  validationError={this.state.displayNameValidationError}
-                  errorMessage={t("validation.displayname-invalid")}
-                  helpText={t("help.displayNameHelpText")}
-                />
-            </div>
-            <div class="column is-half">
-                <InputField
-                  label={t("user.mail")}
-                  onChange={this.handleEmailChange}
-                  value={user ? user.mail : ""}
-                  validationError={this.state.mailValidationError}
-                  errorMessage={t("validation.mail-invalid")}
-                  helpText={t("help.mailHelpText")}
-                />
-            </div>
+        <div className="columns">
+          <div className="column is-half">
+            {nameField}
+            <InputField
+              label={t("user.displayName")}
+              onChange={this.handleDisplayNameChange}
+              value={user ? user.displayName : ""}
+              validationError={this.state.displayNameValidationError}
+              errorMessage={t("validation.displayname-invalid")}
+              helpText={t("help.displayNameHelpText")}
+            />
+          </div>
+          <div className="column is-half">
+            <InputField
+              label={t("user.mail")}
+              onChange={this.handleEmailChange}
+              value={user ? user.mail : ""}
+              validationError={this.state.mailValidationError}
+              errorMessage={t("validation.mail-invalid")}
+              helpText={t("help.mailHelpText")}
+            />
+          </div>
         </div>
-        <div class="columns">
-            <div class="column">
-                {passwordChangeField}
-                <Checkbox
-                  label={t("user.admin")}
-                  onChange={this.handleAdminChange}
-                  checked={user ? user.admin : false}
-                  helpText={t("help.adminHelpText")}
-                />
-                <Checkbox
-                  label={t("user.active")}
-                  onChange={this.handleActiveChange}
-                  checked={user ? user.active : false}
-                  helpText={t("help.activeHelpText")}
-                />
-            </div>
+        <div className="columns">
+          <div className="column">
+            {passwordChangeField}
+            <Checkbox
+              label={t("user.admin")}
+              onChange={this.handleAdminChange}
+              checked={user ? user.admin : false}
+              helpText={t("help.adminHelpText")}
+            />
+            <Checkbox
+              label={t("user.active")}
+              onChange={this.handleActiveChange}
+              checked={user ? user.active : false}
+              helpText={t("help.activeHelpText")}
+            />
+          </div>
         </div>
-        <div class="columns">
-            <div class="column">
-                <SubmitButton
-                  disabled={!this.isValid()}
-                  loading={loading}
-                  label={t("user-form.submit")}
-                />
-            </div>
+        <div className="columns">
+          <div className="column">
+            <SubmitButton
+              disabled={!this.isValid()}
+              loading={loading}
+              label={t("user-form.submit")}
+            />
+          </div>
         </div>
       </form>
     );

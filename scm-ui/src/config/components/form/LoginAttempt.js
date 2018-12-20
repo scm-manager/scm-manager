@@ -40,30 +40,30 @@ class LoginAttempt extends React.Component<Props, State> {
     return (
       <div>
         <Subtitle subtitle={t("login-attempt.name")} />
-        <div class="columns">
-                <div class="column is-half">
-                    <InputField
-                      label={t("login-attempt.login-attempt-limit")}
-                      onChange={this.handleLoginAttemptLimitChange}
-                      value={loginAttemptLimit}
-                      disabled={!hasUpdatePermission}
-                      validationError={this.state.loginAttemptLimitError}
-                      errorMessage={t("validation.login-attempt-limit-invalid")}
-                      helpText={t("help.loginAttemptLimitHelpText")}
-                    />
-                </div>
-                <div class="column is-half">
-                    <InputField
-                      label={t("login-attempt.login-attempt-limit-timeout")}
-                      onChange={this.handleLoginAttemptLimitTimeoutChange}
-                      value={loginAttemptLimitTimeout}
-                      disabled={!hasUpdatePermission}
-                      validationError={this.state.loginAttemptLimitTimeoutError}
-                      errorMessage={t("validation.login-attempt-limit-timeout-invalid")}
-                      helpText={t("help.loginAttemptLimitTimeoutHelpText")}
-                    />
-              </div>
-            </div>
+        <div className="columns">
+          <div className="column is-half">
+            <InputField
+              label={t("login-attempt.login-attempt-limit")}
+              onChange={this.handleLoginAttemptLimitChange}
+              value={loginAttemptLimit}
+              disabled={!hasUpdatePermission}
+              validationError={this.state.loginAttemptLimitError}
+              errorMessage={t("validation.login-attempt-limit-invalid")}
+              helpText={t("help.loginAttemptLimitHelpText")}
+            />
+          </div>
+          <div className="column is-half">
+            <InputField
+              label={t("login-attempt.login-attempt-limit-timeout")}
+              onChange={this.handleLoginAttemptLimitTimeoutChange}
+              value={loginAttemptLimitTimeout}
+              disabled={!hasUpdatePermission}
+              validationError={this.state.loginAttemptLimitTimeoutError}
+              errorMessage={t("validation.login-attempt-limit-timeout-invalid")}
+              helpText={t("help.loginAttemptLimitTimeoutHelpText")}
+            />
+          </div>
+        </div>
       </div>
     );
   }
