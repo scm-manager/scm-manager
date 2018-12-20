@@ -70,7 +70,6 @@ import javax.servlet.http.HttpServletResponse;
  * @author Sebastian Sdorra
  * @since 2.0.0
  */
-@Singleton
 public class AuthenticationFilter extends HttpFilter
 {
 
@@ -128,7 +127,7 @@ public class AuthenticationFilter extends HttpFilter
     }
     else if (subject.isAuthenticated())
     {
-      logger.trace("user is allready authenticated");
+      logger.trace("user is already authenticated");
       processChain(request, response, chain, subject);
     }
     else if (isAnonymousAccessEnabled())
