@@ -117,6 +117,19 @@ $fa-font-path: "webfonts";
         }
 }
 
+
+.media {
+  .media-content{
+    width: calc(50% - .75rem);
+    max-height: 120px;
+    .shorten-text{
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+  }
+}
+
 // tables
 .table {
     width: 100%;

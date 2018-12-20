@@ -62,7 +62,10 @@ class RepositoryEntry extends React.Component<Props> {
   renderModifyLink = (repository: Repository, repositoryLink: string) => {
     if (repository._links["update"]) {
       return (
-        <RepositoryEntryLink iconClass="fa-cog fa-lg" to={repositoryLink + "/edit"} />
+        <RepositoryEntryLink
+          iconClass="fa-cog fa-lg"
+          to={repositoryLink + "/edit"}
+        />
       );
     }
     return null;
@@ -71,8 +74,16 @@ class RepositoryEntry extends React.Component<Props> {
   render() {
     const { repository, classes } = this.props;
     const repositoryLink = this.createLink(repository);
+
     return (
-      <div className={classNames("box", "box-link-shadow", "column", "is-half")}>
+      <div
+        className={classNames(
+          "box",
+          "box-link-shadow",
+          "column is-clipped",
+          "is-half"
+        )}
+      >
         <Link className={classNames(classes.overlay)} to={repositoryLink} />
         <article className={classNames("media", classes.inner)}>
           <figure className="media-left">
@@ -82,9 +93,8 @@ class RepositoryEntry extends React.Component<Props> {
             <div className="content">
               <p>
                 <strong>{repository.name}</strong>
-                <br />
-                {repository.description}
               </p>
+              <p className={"shorten-text"}>{repository.description}</p>
             </div>
             <nav className="level is-mobile">
               <div className="level-left">
