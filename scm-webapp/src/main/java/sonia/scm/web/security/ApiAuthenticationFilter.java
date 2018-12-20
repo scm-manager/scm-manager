@@ -127,9 +127,4 @@ public class ApiAuthenticationFilter extends AuthenticationFilter
   {
     chain.doFilter(request, response);
   }
-
-  @Override
-  protected void sendUnauthorizedError(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-  }
 }
