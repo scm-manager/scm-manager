@@ -66,7 +66,7 @@ class RepositoryConfig extends React.Component<Props, State> {
 
   branchSelected = (branch: Branch) => {
     if (!branch) {
-      this.setState({ ...this.state, selectedBranchName: null , defaultBranchChanged: false});
+      this.setState({ ...this.state, selectedBranchName: undefined, defaultBranchChanged: false});
       return;
     }
     this.setState({ ...this.state, selectedBranchName: branch.name, defaultBranchChanged: false });
