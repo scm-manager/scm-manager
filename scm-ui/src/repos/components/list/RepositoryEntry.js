@@ -30,7 +30,7 @@ const styles = {
 
 type Props = {
   repository: Repository,
-  full?: boolean,
+  fullColumnWidth?: boolean,
   // context props
   classes: any
 };
@@ -77,9 +77,9 @@ class RepositoryEntry extends React.Component<Props> {
   };
 
   render() {
-    const { repository, classes, full } = this.props;
+    const { repository, classes, fullColumnWidth } = this.props;
     const repositoryLink = this.createLink(repository);
-    const halfColumn = full ? "is-full" : "is-half";
+    const halfColumn = fullColumnWidth ? "is-full" : "is-half";
     return (
       <div
         className={classNames(

@@ -66,9 +66,9 @@ class RepositoryGroupEntry extends React.Component<Props, State> {
     let content = null;
     if (!collapsed) {
       content = group.repositories.map((repository, index) => {
-        const full = this.isFullSize(group.repositories, index);
+        const fullColumnWidth = this.isFullSize(group.repositories, index);
         return (
-          <RepositoryEntry repository={repository} full={full} key={index} />
+          <RepositoryEntry repository={repository} fullColumnWidth={fullColumnWidth} key={index} />
         );
       });
     }
