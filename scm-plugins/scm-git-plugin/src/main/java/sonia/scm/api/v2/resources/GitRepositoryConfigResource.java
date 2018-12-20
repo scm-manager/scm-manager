@@ -1,5 +1,7 @@
 package sonia.scm.api.v2.resources;
 
+import com.webcohesion.enunciate.metadata.rs.ResponseCode;
+import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.GitRepositoryConfig;
@@ -39,6 +41,13 @@ public class GitRepositoryConfigResource {
   @GET
   @Path("/")
   @Produces(GitVndMediaType.GIT_REPOSITORY_CONFIG)
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
+    @ResponseCode(code = 403, condition = "not authorized, the current user has no privileges to read the repository config"),
+    @ResponseCode(code = 404, condition = "not found, no repository with the specified namespace and name available"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
   public Response getRepositoryConfig(@PathParam("namespace") String namespace, @PathParam("name") String name) {
     Repository repository = getRepository(namespace, name);
     ConfigurationStore<GitRepositoryConfig> repositoryConfigStore = getStore(repository);
@@ -50,6 +59,13 @@ public class GitRepositoryConfigResource {
   @PUT
   @Path("/")
   @Consumes(GitVndMediaType.GIT_REPOSITORY_CONFIG)
+  @StatusCodes({
+    @ResponseCode(code = 204, condition = "update success"),
+    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
+    @ResponseCode(code = 403, condition = "not authorized, the current user does not have the privilege to change this repositories config"),
+    @ResponseCode(code = 404, condition = "not found, no repository with the specified namespace and name available/name available"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
   public Response setRepositoryConfig(@PathParam("namespace") String namespace, @PathParam("name") String name, GitRepositoryConfigDto dto) {
     Repository repository = getRepository(namespace, name);
     ConfigurationStore<GitRepositoryConfig> repositoryConfigStore = getStore(repository);
