@@ -9,7 +9,12 @@ import classNames from "classnames";
 import RepositoryAvatar from "./RepositoryAvatar";
 
 const styles = {
-  overlay: {
+  overlayFullColumn: {
+    position: "absolute",
+    height: "calc(120px - 0.5rem)",
+    width: "calc(100% - 1.5rem)"
+  },
+  overlayHalfColumn: {
     position: "absolute",
     height: "calc(120px - 1.5rem)",
     width: "calc(50% - 3rem)"
@@ -80,6 +85,9 @@ class RepositoryEntry extends React.Component<Props> {
     const { repository, classes, fullColumnWidth } = this.props;
     const repositoryLink = this.createLink(repository);
     const halfColumn = fullColumnWidth ? "is-full" : "is-half";
+    const overlayLinkClass = fullColumnWidth
+      ? classes.overlayFullColumn
+      : classes.overlayHalfColumn;
     return (
       <div
         className={classNames(
@@ -90,7 +98,7 @@ class RepositoryEntry extends React.Component<Props> {
           halfColumn
         )}
       >
-        <Link className={classNames(classes.overlay)} to={repositoryLink} />
+        <Link className={classNames(overlayLinkClass)} to={repositoryLink} />
         <article className={classNames("media", classes.inner)}>
           <figure className={classNames(classes.centerImage, "media-left")}>
             <RepositoryAvatar repository={repository} />
