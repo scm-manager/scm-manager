@@ -21,6 +21,10 @@ const styles = {
   },
   innerLink: {
     pointerEvents: "all"
+  },
+  centerImage: {
+    marginTop: "0.8em",
+    marginLeft: "1em !important"
   }
 };
 
@@ -86,7 +90,7 @@ class RepositoryEntry extends React.Component<Props> {
       >
         <Link className={classNames(classes.overlay)} to={repositoryLink} />
         <article className={classNames("media", classes.inner)}>
-          <figure className="media-left">
+          <figure className={classNames(classes.centerImage, "media-left")}>
             <RepositoryAvatar repository={repository} />
           </figure>
           <div className="media-content">
