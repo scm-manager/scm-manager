@@ -4,6 +4,7 @@ import injectSheet from "react-jss";
 import classNames from "classnames";
 
 type Props = {
+  classes: any
 };
 
 const styles = {
@@ -15,7 +16,7 @@ const styles = {
 class HelpIcon extends React.Component<Props> {
   render() {
     const { classes } = this.props;
-    return <i className={classNames("fa fa-question-circle has-text-info", classes.textinfo)}></i>
+    return <i className={classNames("fa fa-question-circle has-text-info", classes.textinfo)}></i>;
   }
 }
 
