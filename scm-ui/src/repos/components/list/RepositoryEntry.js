@@ -95,7 +95,7 @@ class RepositoryEntry extends React.Component<Props> {
           <figure className={classNames(classes.centerImage, "media-left")}>
             <RepositoryAvatar repository={repository} />
           </figure>
-          <div className="media-content">
+          <div className={classNames("media-content", "text-box")}>
             <div className="content">
               <p className="is-marginless">
                 <strong>{repository.name}</strong>
