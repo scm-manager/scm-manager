@@ -9,11 +9,13 @@ type Props = {
   users: User[]
 };
 
+;
+
 class UserTable extends React.Component<Props> {
   render() {
     const { users, t } = this.props;
     return (
-      <table className="table is-hoverable is-fullwidth">
+      <table className="card-table table is-hoverable is-fullwidth">
         <thead>
           <tr>
             <th className="is-hidden-mobile">{t("user.name")}</th>

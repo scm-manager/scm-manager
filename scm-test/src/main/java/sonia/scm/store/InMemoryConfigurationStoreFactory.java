@@ -37,13 +37,31 @@ package sonia.scm.store;
 
 /**
  * In memory configuration store factory for testing purposes.
+ *
+ * Use {@link #create()} to get a store that creates the same store on each request.
  * 
  * @author Sebastian Sdorra
  */
 public class InMemoryConfigurationStoreFactory implements ConfigurationStoreFactory {
 
+  private ConfigurationStore store;
+
+  public static ConfigurationStoreFactory create() {
+    return new InMemoryConfigurationStoreFactory(new InMemoryConfigurationStore());
+  }
+
+  public InMemoryConfigurationStoreFactory() {
+  }
+
+  public InMemoryConfigurationStoreFactory(ConfigurationStore store) {
+    this.store = store;
+  }
+
   @Override
   public ConfigurationStore getStore(TypedStoreParameters storeParameters) {
+    if (store != null) {
+      return store;
+    }
     return new InMemoryConfigurationStore<>();
   }
 }

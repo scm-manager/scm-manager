@@ -14,6 +14,7 @@ class RepositoryDetails extends React.Component<Props> {
     return (
       <div>
         <RepositoryDetailTable repository={repository} />
+          <hr />
         <div className="content">
           <ExtensionPoint
             name="repos.repository-details.information"

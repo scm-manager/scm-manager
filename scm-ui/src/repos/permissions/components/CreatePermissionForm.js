@@ -127,6 +127,7 @@ class CreatePermissionForm extends React.Component<Props, State> {
 
     return (
       <div>
+        <hr />
         <h2 className="subtitle">
           {t("permission.add-permission.add-permission-heading")}
         </h2>
@@ -153,19 +154,29 @@ class CreatePermissionForm extends React.Component<Props, State> {
               {t("permission.group-permission")}
             </label>
           </div>
-          {this.renderAutocompletionField()}
 
-          <TypeSelector
-            label={t("permission.type")}
-            helpText={t("permission.help.typeHelpText")}
-            handleTypeChange={this.handleTypeChange}
-            type={type ? type : "READ"}
-          />
-          <SubmitButton
-            label={t("permission.add-permission.submit-button")}
-            loading={loading}
-            disabled={!this.state.valid || this.state.name === ""}
-          />
+        <div className="columns">
+            <div className="column is-three-quarters">
+                {this.renderAutocompletionField()}
+            </div>
+            <div className="column is-one-quarter">
+                  <TypeSelector
+                    label={t("permission.type")}
+                    helpText={t("permission.help.typeHelpText")}
+                    handleTypeChange={this.handleTypeChange}
+                    type={type ? type : "READ"}
+                  />
+            </div>
+            </div>
+        <div className="columns">
+            <div className="column">
+              <SubmitButton
+                label={t("permission.add-permission.submit-button")}
+                loading={loading}
+                disabled={!this.state.valid || this.state.name === ""}
+              />
+            </div>
+        </div>
         </form>
       </div>
     );

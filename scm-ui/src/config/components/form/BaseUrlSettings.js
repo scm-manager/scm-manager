@@ -18,20 +18,26 @@ class BaseUrlSettings extends React.Component<Props> {
     return (
       <div>
         <Subtitle subtitle={t("base-url-settings.name")} />
-        <Checkbox
-          checked={forceBaseUrl}
-          label={t("base-url-settings.force-base-url")}
-          onChange={this.handleForceBaseUrlChange}
-          disabled={!hasUpdatePermission}
-          helpText={t("help.forceBaseUrlHelpText")}
-        />
-        <InputField
-          label={t("base-url-settings.base-url")}
-          onChange={this.handleBaseUrlChange}
-          value={baseUrl}
-          disabled={!hasUpdatePermission}
-          helpText={t("help.baseUrlHelpText")}
-        />
+        <div className="columns">
+          <div className="column is-half">
+            <Checkbox
+              checked={forceBaseUrl}
+              label={t("base-url-settings.force-base-url")}
+              onChange={this.handleForceBaseUrlChange}
+              disabled={!hasUpdatePermission}
+              helpText={t("help.forceBaseUrlHelpText")}
+            />
+          </div>
+          <div className="column is-half">
+            <InputField
+              label={t("base-url-settings.base-url")}
+              onChange={this.handleBaseUrlChange}
+              value={baseUrl}
+              disabled={!hasUpdatePermission}
+              helpText={t("help.baseUrlHelpText")}
+            />
+          </div>
+        </div>
       </div>
     );
   }

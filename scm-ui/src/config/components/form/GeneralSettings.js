@@ -36,70 +36,98 @@ class GeneralSettings extends React.Component<Props> {
 
     return (
       <div>
-        <InputField
-          label={t("general-settings.realm-description")}
-          onChange={this.handleRealmDescriptionChange}
-          value={realmDescription}
-          disabled={!hasUpdatePermission}
-          helpText={t("help.realmDescriptionHelpText")}
-        />
-        <InputField
-          label={t("general-settings.date-format")}
-          onChange={this.handleDateFormatChange}
-          value={dateFormat}
-          disabled={!hasUpdatePermission}
-          helpText={t("help.dateFormatHelpText")}
-        />
-        <InputField
-          label={t("general-settings.plugin-url")}
-          onChange={this.handlePluginUrlChange}
-          value={pluginUrl}
-          disabled={!hasUpdatePermission}
-          helpText={t("help.pluginRepositoryHelpText")}
-        />
-        <InputField
-          label={t("general-settings.default-namespace-strategy")}
-          onChange={this.handleDefaultNamespaceStrategyChange}
-          value={defaultNamespaceStrategy}
-          disabled={!hasUpdatePermission}
-          helpText={t("help.defaultNameSpaceStrategyHelpText")}
-        />
-        <Checkbox
-          checked={enabledXsrfProtection}
-          label={t("general-settings.enabled-xsrf-protection")}
-          onChange={this.handleEnabledXsrfProtectionChange}
-          disabled={!hasUpdatePermission}
-          helpText={t("help.enableXsrfProtectionHelpText")}
-        />
-        <Checkbox
-          checked={enableRepositoryArchive}
-          label={t("general-settings.enable-repository-archive")}
-          onChange={this.handleEnableRepositoryArchiveChange}
-          disabled={!hasUpdatePermission}
-          helpText={t("help.enableRepositoryArchiveHelpText")}
-        />
-        <Checkbox
-          checked={disableGroupingGrid}
-          label={t("general-settings.disable-grouping-grid")}
-          onChange={this.handleDisableGroupingGridChange}
-          disabled={!hasUpdatePermission}
-          helpText={t("help.disableGroupingGridHelpText")}
-        />
-        <Checkbox
-          checked={anonymousAccessEnabled}
-          label={t("general-settings.anonymous-access-enabled")}
-          onChange={this.handleAnonymousAccessEnabledChange}
-          disabled={!hasUpdatePermission}
-          helpText={t("help.allowAnonymousAccessHelpText")}
-        />
-        <Checkbox
-          checked={skipFailedAuthenticators}
-          label={t("general-settings.skip-failed-authenticators")}
-          onChange={this.handleSkipFailedAuthenticatorsChange}
-          disabled={!hasUpdatePermission}
-          helpText={t("help.skipFailedAuthenticatorsHelpText")}
-        />
-      </div>
+          <div className="columns">
+            <div className="column is-half">
+                <InputField
+                  label={t("general-settings.realm-description")}
+                  onChange={this.handleRealmDescriptionChange}
+                  value={realmDescription}
+                  disabled={!hasUpdatePermission}
+                  helpText={t("help.realmDescriptionHelpText")}
+                />
+                </div>
+                <div className="column is-half">
+                <InputField
+                  label={t("general-settings.date-format")}
+                  onChange={this.handleDateFormatChange}
+                  value={dateFormat}
+                  disabled={!hasUpdatePermission}
+                  helpText={t("help.dateFormatHelpText")}
+                />
+                </div>
+            </div>
+            <div className="columns">
+                <div className="column is-half">
+                <InputField
+                  label={t("general-settings.plugin-url")}
+                  onChange={this.handlePluginUrlChange}
+                  value={pluginUrl}
+                  disabled={!hasUpdatePermission}
+                  helpText={t("help.pluginRepositoryHelpText")}
+                />
+                </div>
+                <div className="column is-half">
+                <InputField
+                  label={t("general-settings.default-namespace-strategy")}
+                  onChange={this.handleDefaultNamespaceStrategyChange}
+                  value={defaultNamespaceStrategy}
+                  disabled={!hasUpdatePermission}
+                  helpText={t("help.defaultNameSpaceStrategyHelpText")}
+                />
+                </div>
+            </div>
+            <div className="columns">
+                <div className="column is-half">
+                    <Checkbox
+                      checked={enabledXsrfProtection}
+                      label={t("general-settings.enabled-xsrf-protection")}
+                      onChange={this.handleEnabledXsrfProtectionChange}
+                      disabled={!hasUpdatePermission}
+                      helpText={t("help.enableXsrfProtectionHelpText")}
+                    />
+                </div>
+                <div className="column is-half">
+                    <Checkbox
+                      checked={enableRepositoryArchive}
+                      label={t("general-settings.enable-repository-archive")}
+                      onChange={this.handleEnableRepositoryArchiveChange}
+                      disabled={!hasUpdatePermission}
+                      helpText={t("help.enableRepositoryArchiveHelpText")}
+                    />
+                </div>
+            </div>
+            <div className="columns">
+                <div className="column is-half">
+                    <Checkbox
+                      checked={disableGroupingGrid}
+                      label={t("general-settings.disable-grouping-grid")}
+                      onChange={this.handleDisableGroupingGridChange}
+                      disabled={!hasUpdatePermission}
+                      helpText={t("help.disableGroupingGridHelpText")}
+                    />
+                </div>
+                <div className="column is-half">
+                    <Checkbox
+                      checked={anonymousAccessEnabled}
+                      label={t("general-settings.anonymous-access-enabled")}
+                      onChange={this.handleAnonymousAccessEnabledChange}
+                      disabled={!hasUpdatePermission}
+                      helpText={t("help.allowAnonymousAccessHelpText")}
+                    />
+                </div>
+            </div>
+            <div className="columns">
+                <div className="column is-half">
+                    <Checkbox
+                      checked={skipFailedAuthenticators}
+                      label={t("general-settings.skip-failed-authenticators")}
+                      onChange={this.handleSkipFailedAuthenticatorsChange}
+                      disabled={!hasUpdatePermission}
+                      helpText={t("help.skipFailedAuthenticatorsHelpText")}
+                    />
+                </div>
+            </div>
+          </div>
     );
   }
 

@@ -52,7 +52,7 @@ class Config extends React.Component<Props> {
                             renderAll={true}
             />
           </div>
-          <div className="column">
+          <div className="column is-one-quarter">
             <Navigation>
               <Section label={t("config.navigation-title")}>
                 <NavLink

@@ -51,12 +51,12 @@ import java.util.concurrent.TimeUnit;
  * @author Sebastian Sdorra
  * @since 2.0.0
  */
-public final class AccessTokenCookieIssuer {
+public final class DefaultAccessTokenCookieIssuer implements AccessTokenCookieIssuer {
   
   /**
-   * the logger for AccessTokenCookieIssuer
+   * the logger for DefaultAccessTokenCookieIssuer
    */
-  private static final Logger LOG = LoggerFactory.getLogger(AccessTokenCookieIssuer.class);
+  private static final Logger LOG = LoggerFactory.getLogger(DefaultAccessTokenCookieIssuer.class);
   
   private final ScmConfiguration configuration;
 
@@ -66,7 +66,7 @@ public final class AccessTokenCookieIssuer {
    * @param configuration scm main configuration
    */
   @Inject
-  public AccessTokenCookieIssuer(ScmConfiguration configuration) {
+  public DefaultAccessTokenCookieIssuer(ScmConfiguration configuration) {
     this.configuration = configuration;
   }
   

@@ -35,6 +35,11 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import org.junit.After;
+import org.junit.Before;
+import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
+import sonia.scm.repository.GitRepositoryConfig;
+import sonia.scm.store.InMemoryConfigurationStore;
+import sonia.scm.store.InMemoryConfigurationStoreFactory;
 
 /**
  *
@@ -51,6 +56,7 @@ public class AbstractGitCommandTestBase extends ZippedRepositoryTestBase
   public void close()
   {
     if (context != null) {
+      context.setConfig(new GitRepositoryConfig());
       context.close();
     }
   }
@@ -65,7 +71,7 @@ public class AbstractGitCommandTestBase extends ZippedRepositoryTestBase
   {
     if (context == null)
     {
-      context = new GitContext(repositoryDirectory, repository);
+      context = new GitContext(repositoryDirectory, repository, new GitRepositoryConfigStoreProvider(InMemoryConfigurationStoreFactory.create()));
     }
 
     return context;

@@ -20,7 +20,7 @@ public class FallbackExceptionMapper implements ExceptionMapper<Exception> {
 
   @Override
   public Response toResponse(Exception exception) {
-    logger.debug("map exception to status code 500", exception);
+    logger.warn("mapping unexpected {} to status code 500", exception.getClass().getName(), exception);
     ErrorDto errorDto = new ErrorDto();
     errorDto.setMessage("internal server error");
     errorDto.setContext(Collections.emptyList());

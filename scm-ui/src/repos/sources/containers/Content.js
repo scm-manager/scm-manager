@@ -41,6 +41,9 @@ const styles = {
   isVerticalCenter: {
     display: "flex",
     alignItems: "center"
+  },
+  hasBackground: {
+    backgroundColor: "#FBFBFB"
   }
 };
 
@@ -93,7 +96,7 @@ class Content extends React.Component<Props, State> {
                 classes.marginInHeader
               )}
             />
-            <span>{file.name}</span>
+            <span className="is-word-break">{file.name}</span>
           </div>
           <div className="media-right">{selector}</div>
         </article>
@@ -120,16 +123,22 @@ class Content extends React.Component<Props, State> {
     const fileSize = file.directory ? "" : <FileSize bytes={file.length} />;
     if (!collapsed) {
       return (
-        <div className={classNames("panel-block", classes.toCenterContent)}>
-          <table className="table">
+        <div
+          className={classNames(
+            "panel-block",
+            classes.toCenterContent,
+            classes.hasBackground
+          )}
+        >
+          <table className={classNames("table", classes.hasBackground)}>
             <tbody>
               <tr>
                 <td>{t("sources.content.path")}</td>
-                <td>{file.path}</td>
+                <td className="is-word-break">{file.path}</td>
               </tr>
               <tr>
                 <td>{t("sources.content.branch")}</td>
-                <td>{revision}</td>
+                <td className="is-word-break">{revision}</td>
               </tr>
               <tr>
                 <td>{t("sources.content.size")}</td>
@@ -141,7 +150,7 @@ class Content extends React.Component<Props, State> {
               </tr>
               <tr>
                 <td>{t("sources.content.description")}</td>
-                <td>{description}</td>
+                <td className="is-word-break">{description}</td>
               </tr>
             </tbody>
           </table>

@@ -35,6 +35,7 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
+import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.Repository;
@@ -47,10 +48,12 @@ import sonia.scm.repository.Repository;
 public class GitRepositoryServiceResolver implements RepositoryServiceResolver {
 
   private final GitRepositoryHandler handler;
+  private final GitRepositoryConfigStoreProvider storeProvider;
 
   @Inject
-  public GitRepositoryServiceResolver(GitRepositoryHandler handler) {
+  public GitRepositoryServiceResolver(GitRepositoryHandler handler, GitRepositoryConfigStoreProvider storeProvider) {
     this.handler = handler;
+    this.storeProvider = storeProvider;
   }
 
   @Override
@@ -58,7 +61,7 @@ public class GitRepositoryServiceResolver implements RepositoryServiceResolver {
     GitRepositoryServiceProvider provider = null;
 
     if (GitRepositoryHandler.TYPE_NAME.equalsIgnoreCase(repository.getType())) {
-      provider = new GitRepositoryServiceProvider(handler, repository);
+      provider = new GitRepositoryServiceProvider(handler, repository, storeProvider);
     }
 
     return provider;

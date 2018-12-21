@@ -29,15 +29,15 @@ class ProfileInfo extends React.Component<Props, State> {
           <table className="table">
             <tbody>
               <tr>
-                <td>{t("profile.username")}</td>
+                <td className="has-text-weight-semibold">{t("profile.username")}</td>
                 <td>{me.name}</td>
               </tr>
               <tr>
-                <td>{t("profile.displayName")}</td>
+                <td className="has-text-weight-semibold">{t("profile.displayName")}</td>
                 <td>{me.displayName}</td>
               </tr>
               <tr>
-                <td>{t("profile.mail")}</td>
+                <td className="has-text-weight-semibold">{t("profile.mail")}</td>
                 <td>
                   <MailLink address={me.mail} />
                 </td>

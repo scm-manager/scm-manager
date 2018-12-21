@@ -36,9 +36,11 @@ package sonia.scm.repository.spi;
 
 import com.google.common.io.Files;
 import org.junit.Test;
+import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
-import sonia.scm.repository.GitConstants;
+import sonia.scm.repository.ClearRepositoryCacheEvent;
+import sonia.scm.repository.GitRepositoryConfig;
 import sonia.scm.repository.Modifications;
 
 import java.io.File;
@@ -78,7 +80,7 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
     assertTrue(result.getChangesets().stream().allMatch(r -> r.getBranches().isEmpty()));
 
     // set default branch and fetch again
-    repository.setProperty(GitConstants.PROPERTY_DEFAULT_BRANCH, "test-branch");
+    createContext().setConfig(new GitRepositoryConfig("test-branch"));
 
     result = createCommand().getChangesets(new LogCommandRequest());
 

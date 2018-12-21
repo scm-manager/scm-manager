@@ -25,8 +25,7 @@ export function fetchSources(
         dispatch(fetchSourcesSuccess(repository, revision, path, sources));
       })
       .catch(err => {
-        const error = new Error(`failed to fetch sources: ${err.message}`);
-        dispatch(fetchSourcesFailure(repository, revision, path, error));
+        dispatch(fetchSourcesFailure(repository, revision, path, err));
       });
   };
 }
@@ -93,8 +92,8 @@ export default function reducer(
 ): any {
   if (action.itemId && action.type === FETCH_SOURCES_SUCCESS) {
     return {
-      [action.itemId]: action.payload,
-      ...state
+      ...state,
+      [action.itemId]: action.payload
     };
   }
   return state;

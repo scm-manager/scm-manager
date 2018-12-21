@@ -32,6 +32,10 @@
 
 package sonia.scm.store;
 
+import java.util.Optional;
+
+import static java.util.Optional.ofNullable;
+
 /**
  * Base class for {@link BlobStore} and {@link DataStore}.
  *
@@ -67,4 +71,16 @@ public interface MultiEntryStore<T> {
    * @return item with the given id
    */
   public T get(String id);
+
+  /**
+   * Returns the item with the given id from the store.
+   *
+   *
+   * @param id id of the item to return
+   *
+   * @return item with the given id
+   */
+  default Optional<T> getOptional(String id) {
+    return ofNullable(get(id));
+  }
 }

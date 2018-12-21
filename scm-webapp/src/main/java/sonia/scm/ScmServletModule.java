@@ -79,14 +79,14 @@ import sonia.scm.repository.spi.HookEventFacade;
 import sonia.scm.repository.xml.XmlRepositoryDAO;
 import sonia.scm.schedule.QuartzScheduler;
 import sonia.scm.schedule.Scheduler;
+import sonia.scm.security.AccessTokenCookieIssuer;
 import sonia.scm.security.AuthorizationChangedEventProducer;
 import sonia.scm.security.CipherHandler;
 import sonia.scm.security.CipherUtil;
 import sonia.scm.security.ConfigurableLoginAttemptHandler;
-import sonia.scm.security.DefaultJwtAccessTokenRefreshStrategy;
+import sonia.scm.security.DefaultAccessTokenCookieIssuer;
 import sonia.scm.security.DefaultKeyGenerator;
 import sonia.scm.security.DefaultSecuritySystem;
-import sonia.scm.security.JwtAccessTokenRefreshStrategy;
 import sonia.scm.security.KeyGenerator;
 import sonia.scm.security.LoginAttemptHandler;
 import sonia.scm.security.SecuritySystem;
@@ -112,9 +112,7 @@ import sonia.scm.util.ScmConfigurationUtil;
 import sonia.scm.web.UserAgentParser;
 import sonia.scm.web.cgi.CGIExecutorFactory;
 import sonia.scm.web.cgi.DefaultCGIExecutorFactory;
-import sonia.scm.web.filter.AuthenticationFilter;
 import sonia.scm.web.filter.LoggingFilter;
-import sonia.scm.web.protocol.HttpProtocolServlet;
 import sonia.scm.web.security.AdministrationContext;
 import sonia.scm.web.security.DefaultAdministrationContext;
 
@@ -315,11 +313,10 @@ public class ScmServletModule extends ServletModule
     bind(TemplateEngineFactory.class);
     bind(ObjectMapper.class).toProvider(ObjectMapperProvider.class);
 
-    filter(HttpProtocolServlet.PATTERN).through(AuthenticationFilter.class);
-
     // bind events
     // bind(LastModifiedUpdateListener.class);
 
+    bind(AccessTokenCookieIssuer.class).to(DefaultAccessTokenCookieIssuer.class);
     bind(PushStateDispatcher.class).toProvider(PushStateDispatcherProvider.class);
   }
 

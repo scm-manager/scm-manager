@@ -38,7 +38,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import sonia.scm.NotFoundException;
-import sonia.scm.repository.GitConstants;
+import sonia.scm.repository.GitRepositoryConfig;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -67,7 +67,7 @@ public class GitCatCommandTest extends AbstractGitCommandTestBase {
     assertEquals("a\nline for blame", execute(request));
     
     // set default branch for repository and check again
-    repository.setProperty(GitConstants.PROPERTY_DEFAULT_BRANCH, "test-branch");
+    createContext().setConfig(new GitRepositoryConfig("test-branch"));
     assertEquals("a and b", execute(request));
   }
 
