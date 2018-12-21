@@ -44,7 +44,7 @@ import sonia.scm.util.HttpUtil;
 /**
  * Xsrf access token enricher will add an xsrf custom field to the access token. The enricher will only
  * add the xsrf field, if the authentication request is issued from the web interface and xsrf protection is
- * enabled. The xsrf field will be validated on every request by the {@link XsrfTokenClaimsValidator}. Xsrf protection
+ * enabled. The xsrf field will be validated on every request by the {@link XsrfAccessTokenValidator}. Xsrf protection
  * can be disabled with {@link ScmConfiguration#setEnabledXsrfProtection(boolean)}.
  * 
  * @see <a href="https://goo.gl/s67xO3">Issue 793</a>
