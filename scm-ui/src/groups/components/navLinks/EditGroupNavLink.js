@@ -18,7 +18,7 @@ class EditGroupNavLink extends React.Component<Props, State> {
     if (!this.isEditable()) {
       return null;
     }
-    return <NavLink label={t("edit-group-button.label")} to={editUrl} />;
+    return <NavLink icon="fas fa-cog" label={t("edit-group-button.label")} to={editUrl} />;
   }
 
   isEditable = () => {

@@ -111,6 +111,7 @@ class SingleUser extends React.Component<Props> {
             <Navigation>
               <Section label={t("single-user.navigation-label")}>
                 <NavLink
+                  icon="fas fa-info-circle"
                   to={`${url}`}
                   label={t("single-user.information-label")}
                 />
