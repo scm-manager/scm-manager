@@ -209,10 +209,10 @@ class RepositoryRoot extends React.Component<Props> {
                   permissionUrl={`${url}/permissions`}
                   repository={repository}
                 />
-                <EditNavLink repository={repository} editUrl={`${url}/edit`} />
               </Section>
               <Section label={t("repository-root.actions-label")}>
                 <DeleteNavAction repository={repository} delete={this.delete} />
+                <EditNavLink repository={repository} editUrl={`${url}/edit`} />
                 <NavLink to="/repos" label={t("repository-root.back-label")} />
               </Section>
             </Navigation>
