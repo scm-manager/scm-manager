@@ -24,6 +24,7 @@ export { default as HelpIcon } from "./HelpIcon";
 export { default as Tooltip } from "./Tooltip";
 export { getPageFromMatch } from "./urls";
 export { default as Autocomplete} from "./Autocomplete";
+export { default as BranchSelector } from "./BranchSelector";
 
 export { apiClient, NOT_FOUND_ERROR, UNAUTHORIZED_ERROR, CONFLICT_ERROR } from "./apiclient.js";
 

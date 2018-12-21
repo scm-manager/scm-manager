@@ -58,8 +58,6 @@ public abstract class FileBasedStoreFactory {
   private RepositoryLocationResolver repositoryLocationResolver;
   private Store store;
 
-  private File storeDirectory;
-
   protected FileBasedStoreFactory(SCMContextProvider contextProvider , RepositoryLocationResolver repositoryLocationResolver, Store store) {
     this.contextProvider = contextProvider;
     this.repositoryLocationResolver = repositoryLocationResolver;
@@ -75,17 +73,16 @@ public abstract class FileBasedStoreFactory {
   }
 
   protected File getStoreLocation(String name, Class type, Repository repository) {
-    if (storeDirectory == null) {
-      if (repository != null) {
-        LOG.debug("create store with type: {}, name: {} and repository: {}", type, name, repository.getNamespaceAndName());
-        storeDirectory = this.getStoreDirectory(store, repository);
-      } else {
-        LOG.debug("create store with type: {} and name: {} ", type, name);
-        storeDirectory = this.getStoreDirectory(store);
-      }
-      IOUtil.mkdirs(storeDirectory);
+    File storeDirectory;
+    if (repository != null) {
+      LOG.debug("create store with type: {}, name: {} and repository: {}", type, name, repository.getNamespaceAndName());
+      storeDirectory = this.getStoreDirectory(store, repository);
+    } else {
+      LOG.debug("create store with type: {} and name: {} ", type, name);
+      storeDirectory = this.getStoreDirectory(store);
     }
-    return new File(this.storeDirectory, name);
+    IOUtil.mkdirs(storeDirectory);
+    return new File(storeDirectory, name);
   }
 
   /**

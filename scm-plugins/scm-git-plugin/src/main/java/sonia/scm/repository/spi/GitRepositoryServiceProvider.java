@@ -34,6 +34,7 @@
 package sonia.scm.repository.spi;
 
 import com.google.common.collect.ImmutableSet;
+import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
 import sonia.scm.repository.Feature;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.Repository;
@@ -73,10 +74,10 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
 
   //~--- constructors ---------------------------------------------------------
 
-  public GitRepositoryServiceProvider(GitRepositoryHandler handler, Repository repository) {
+  public GitRepositoryServiceProvider(GitRepositoryHandler handler, Repository repository, GitRepositoryConfigStoreProvider storeProvider) {
     this.handler = handler;
     this.repository = repository;
-    this.context = new GitContext(handler.getDirectory(repository.getId()), repository);
+    this.context = new GitContext(handler.getDirectory(repository.getId()), repository, storeProvider);
   }
 
   //~--- methods --------------------------------------------------------------

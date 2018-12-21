@@ -205,7 +205,7 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
         ObjectId ancestorId = null;
 
         if (!Strings.isNullOrEmpty(request.getAncestorChangeset())) {
-          ancestorId = computeCommonAncestor(request, repository, startId, branch);
+          ancestorId = repository.resolve(request.getAncestorChangeset());
         }
 
         revWalk = new RevWalk(repository);
@@ -225,15 +225,14 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
             revWalk.markStart(revWalk.lookupCommit(branch.getObjectId()));
           }
 
+          if (ancestorId != null) {
+            revWalk.markUninteresting(revWalk.lookupCommit(ancestorId));
+          }
 
           Iterator<RevCommit> iterator = revWalk.iterator();
 
           while (iterator.hasNext()) {
             RevCommit commit = iterator.next();
-
-            if (commit.getId().equals(ancestorId)) {
-              break;
-            }
 
             if ((counter >= start)
               && ((limit < 0) || (counter < start + limit))) {

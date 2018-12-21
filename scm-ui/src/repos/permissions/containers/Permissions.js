@@ -128,7 +128,7 @@ class Permissions extends React.Component<Props> {
 
     return (
       <div>
-        <table className="table is-hoverable is-fullwidth">
+        <table  className="has-background-light table is-hoverable is-fullwidth">
           <thead>
             <tr>
               <th>{t("permission.name")}</th>

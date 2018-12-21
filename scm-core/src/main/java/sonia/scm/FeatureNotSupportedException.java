@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014, Sebastian Sdorra
+ * Copyright (c) 2010, Sebastian Sdorra
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,22 +28,36 @@
  * http://bitbucket.org/sdorra/scm-manager
  *
  */
-package sonia.scm.repository;
+
+
+
+package sonia.scm;
+
+import java.util.Collections;
 
 /**
- * Constants for Git.
- * 
+ *
  * @author Sebastian Sdorra
- * @since 1.50
+ * @version 1.6
  */
-public final class GitConstants {
+@SuppressWarnings("squid:MaximumInheritanceDepth") // exceptions have a deep inheritance depth themselves; therefore we accept this here
+public class FeatureNotSupportedException extends BadRequestException {
 
-  /**
-   * Default branch repository property.
-   */
-  public static final String PROPERTY_DEFAULT_BRANCH = "git.default-branch";
-  
-  private GitConstants() {
+  private static final long serialVersionUID = 256498734456613496L;
+
+  private static final String CODE = "9SR8G0kmU1";
+
+  public FeatureNotSupportedException(String feature)
+  {
+    super(Collections.emptyList(),createMessage(feature));
   }
-  
+
+  @Override
+  public String getCode() {
+    return CODE;
+  }
+
+  private static String createMessage(String feature) {
+    return "feature " + feature + " is not supported by this repository";
+  }
 }

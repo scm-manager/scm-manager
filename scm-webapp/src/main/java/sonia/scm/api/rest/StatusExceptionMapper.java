@@ -36,6 +36,7 @@ package sonia.scm.api.rest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 
@@ -92,6 +93,7 @@ public class StatusExceptionMapper<E extends Throwable>
 
     return Response.status(status)
       .entity(exception.getMessage())
+      .type(MediaType.TEXT_PLAIN_TYPE)
       .build();
   }
 }

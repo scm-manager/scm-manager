@@ -40,7 +40,6 @@ import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.repository.GitConstants;
 import sonia.scm.repository.GitUtil;
 
 import java.io.IOException;
@@ -110,7 +109,7 @@ public class AbstractGitCommand
 
   protected Ref getBranchOrDefault(Repository gitRepository, String requestedBranch) throws IOException {
     if ( Strings.isNullOrEmpty(requestedBranch) ) {
-      String defaultBranchName = repository.getProperty(GitConstants.PROPERTY_DEFAULT_BRANCH);
+      String defaultBranchName = context.getConfig().getDefaultBranch();
       if (!Strings.isNullOrEmpty(defaultBranchName)) {
         return GitUtil.getBranchId(gitRepository, defaultBranchName);
       } else {

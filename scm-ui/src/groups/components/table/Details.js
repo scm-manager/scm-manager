@@ -17,25 +17,25 @@ class Details extends React.Component<Props> {
       <table className="table content">
         <tbody>
           <tr>
-            <td>{t("group.name")}</td>
+            <td className="has-text-weight-semibold">{t("group.name")}</td>
             <td>{group.name}</td>
           </tr>
           <tr>
-            <td>{t("group.description")}</td>
+            <td className="has-text-weight-semibold">{t("group.description")}</td>
             <td>{group.description}</td>
           </tr>
           <tr>
-            <td>{t("group.type")}</td>
+            <td className="has-text-weight-semibold">{t("group.type")}</td>
             <td>{group.type}</td>
           </tr>
           <tr>
-            <td>{t("group.creationDate")}</td>
+            <td className="has-text-weight-semibold">{t("group.creationDate")}</td>
             <td>
               <DateFromNow date={group.creationDate} />
             </td>
           </tr>
           <tr>
-            <td>{t("group.lastModified")}</td>
+            <td className="has-text-weight-semibold">{t("group.lastModified")}</td>
             <td>
               <DateFromNow date={group.lastModified} />
             </td>
@@ -53,7 +53,7 @@ class Details extends React.Component<Props> {
           <td>
             {this.props.t("group.members")}
             <ul>
-              {this.props.group._embedded.members.map((member, index) => {
+               {this.props.group._embedded.members.map((member, index) => {
                 return <GroupMember key={index} member={member} />;
               })}
             </ul>
