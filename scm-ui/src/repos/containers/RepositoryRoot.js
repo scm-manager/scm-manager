@@ -1,32 +1,19 @@
 //@flow
 import React from "react";
-import {
-  deleteRepo,
-  fetchRepoByName,
-  getFetchRepoFailure,
-  getRepository,
-  isFetchRepoPending
-} from "../modules/repos";
+import {deleteRepo, fetchRepoByName, getFetchRepoFailure, getRepository, isFetchRepoPending} from "../modules/repos";
 
-import { connect } from "react-redux";
-import { Route, Switch } from "react-router-dom";
-import type { Repository } from "@scm-manager/ui-types";
+import {connect} from "react-redux";
+import {Route, Switch} from "react-router-dom";
+import type {Repository} from "@scm-manager/ui-types";
 
-import {
-  ErrorPage,
-  Loading,
-  Navigation,
-  NavLink,
-  Page,
-  Section
-} from "@scm-manager/ui-components";
-import { translate } from "react-i18next";
+import {ErrorPage, Loading, Navigation, NavLink, Page, Section} from "@scm-manager/ui-components";
+import {translate} from "react-i18next";
 import RepositoryDetails from "../components/RepositoryDetails";
 import DeleteNavAction from "../components/DeleteNavAction";
 import Edit from "../containers/Edit";
 import Permissions from "../permissions/containers/Permissions";
 
-import type { History } from "history";
+import type {History} from "history";
 import EditNavLink from "../components/EditNavLink";
 
 import BranchRoot from "./ChangesetsRoot";
@@ -34,8 +21,8 @@ import ChangesetView from "./ChangesetView";
 import PermissionsNavLink from "../components/PermissionsNavLink";
 import Sources from "../sources/containers/Sources";
 import RepositoryNavLink from "../components/RepositoryNavLink";
-import { getRepositoriesLink } from "../../modules/indexResource";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import {getRepositoriesLink} from "../../modules/indexResource";
+import {ExtensionPoint} from "@scm-manager/ui-extensions";
 
 type Props = {
   namespace: string,
@@ -200,14 +187,14 @@ class RepositoryRoot extends React.Component<Props> {
                   label={t("repository-root.sources")}
                   activeOnlyWhenExact={false}
                 />
+                <PermissionsNavLink
+                  permissionUrl={`${url}/permissions`}
+                  repository={repository}
+                />
                 <ExtensionPoint
                   name="repository.navigation"
                   props={extensionProps}
                   renderAll={true}
-                />
-                <PermissionsNavLink
-                  permissionUrl={`${url}/permissions`}
-                  repository={repository}
                 />
               </Section>
               <Section label={t("repository-root.actions-label")}>

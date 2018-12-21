@@ -38,7 +38,9 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.junit.Ignore;
 import org.junit.Test;
+import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
 import sonia.scm.repository.ChangesetPagingResult;
+import sonia.scm.store.InMemoryConfigurationStoreFactory;
 
 import java.io.IOException;
 
@@ -103,7 +105,7 @@ public class GitIncomingCommandTest
 
     commit(outgoing, "added a");
     
-    GitPullCommand pull = new GitPullCommand(handler, new GitContext(incomingDirectory, null), incomingRepository);
+    GitPullCommand pull = new GitPullCommand(handler, new GitContext(incomingDirectory, null, new GitRepositoryConfigStoreProvider(new InMemoryConfigurationStoreFactory())), incomingRepository);
     PullCommandRequest req = new PullCommandRequest();
     req.setRemoteRepository(outgoingRepository);
     pull.pull(req);
@@ -187,7 +189,7 @@ public class GitIncomingCommandTest
    */
   private GitIncomingCommand createCommand()
   {
-    return new GitIncomingCommand(handler, new GitContext(incomingDirectory, null),
+    return new GitIncomingCommand(handler, new GitContext(incomingDirectory, null, new GitRepositoryConfigStoreProvider(new InMemoryConfigurationStoreFactory())),
       incomingRepository);
   }
 }

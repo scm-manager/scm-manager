@@ -5,7 +5,8 @@ import { withRouter } from "react-router-dom";
 import type { Branch, Repository } from "@scm-manager/ui-types";
 import FileTree from "../components/FileTree";
 import { ErrorNotification, Loading } from "@scm-manager/ui-components";
-import BranchSelector from "../../containers/BranchSelector";
+import BranchSelector from "../../../../../scm-ui-components/packages/ui-components/src/BranchSelector";
+import { translate } from "react-i18next";
 import {
   fetchBranches,
   getBranches,
@@ -32,7 +33,8 @@ type Props = {
 
   // Context props
   history: any,
-  match: any
+  match: any,
+  t: string => string
 };
 
 class Sources extends React.Component<Props> {
@@ -109,13 +111,14 @@ class Sources extends React.Component<Props> {
   }
 
   renderBranchSelector = () => {
-    const { branches, revision } = this.props;
+    const { branches, revision, t } = this.props;
 
     if (branches) {
       return (
         <BranchSelector
           branches={branches}
           selectedBranch={revision}
+          label={t("branch-selector.label")}
           selected={(b: Branch) => {
             this.branchSelected(b);
           }}
@@ -160,6 +163,7 @@ const mapDispatchToProps = dispatch => {
 };
 
 export default compose(
+  translate("repos"),
   withRouter,
   connect(
     mapStateToProps,

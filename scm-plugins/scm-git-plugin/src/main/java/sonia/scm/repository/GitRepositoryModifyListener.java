@@ -31,67 +31,45 @@
 package sonia.scm.repository;
 
 import com.github.legman.Subscribe;
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Objects;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import sonia.scm.EagerSingleton;
-import sonia.scm.HandlerEventType;
-import sonia.scm.event.ScmEventBus;
+import sonia.scm.api.v2.resources.GitRepositoryConfigChangedEvent;
+import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
 import sonia.scm.plugin.Extension;
+
+import javax.inject.Inject;
 
 /**
  * Repository listener which handles git related repository events.
- * 
+ *
  * @author Sebastian Sdorra
  * @since 1.50
  */
 @Extension
 @EagerSingleton
 public class GitRepositoryModifyListener {
-  
-  /**
-   * the logger for GitRepositoryModifyListener
-   */
-  private static final Logger logger = LoggerFactory.getLogger(GitRepositoryModifyListener.class);
-  
+
+  private final GitHeadModifier headModifier;
+  private final GitRepositoryConfigStoreProvider storeProvider;
+
+  @Inject
+  public GitRepositoryModifyListener(GitHeadModifier headModifier, GitRepositoryConfigStoreProvider storeProvider) {
+    this.headModifier = headModifier;
+    this.storeProvider = storeProvider;
+  }
+
   /**
    * Receives {@link RepositoryModificationEvent} and fires a {@link ClearRepositoryCacheEvent} if
    * the default branch of a git repository was modified.
-   * 
+   *
    * @param event repository modification event
    */
   @Subscribe
-  public void handleEvent(RepositoryModificationEvent event){
-    Repository repository = event.getItem();
-    
-    if ( isModifyEvent(event) && 
-         isGitRepository(event.getItem()) && 
-         hasDefaultBranchChanged(event.getItemBeforeModification(), repository)) 
-    {
-      logger.info("git default branch of repository {} has changed, sending clear cache event", repository.getId());
-      sendClearRepositoryCacheEvent(repository);
+  public void handleEvent(GitRepositoryConfigChangedEvent event){
+    Repository repository = event.getRepository();
+
+    String defaultBranch = storeProvider.get(repository).get().getDefaultBranch();
+    if (defaultBranch != null) {
+      headModifier.ensure(repository, defaultBranch);
     }
   }
-  
-  @VisibleForTesting
-  protected void sendClearRepositoryCacheEvent(Repository repository) {
-    ScmEventBus.getInstance().post(new ClearRepositoryCacheEvent(repository));    
-  }
-  
-  private boolean isModifyEvent(RepositoryEvent event) {
-    return event.getEventType() == HandlerEventType.MODIFY;
-  }
-  
-  private boolean isGitRepository(Repository repository) {
-    return GitRepositoryHandler.TYPE_NAME.equals(repository.getType());
-  }
-  
-  private boolean hasDefaultBranchChanged(Repository old, Repository current) {
-    return !Objects.equal(
-      old.getProperty(GitConstants.PROPERTY_DEFAULT_BRANCH), 
-      current.getProperty(GitConstants.PROPERTY_DEFAULT_BRANCH)
-    );
-  }
-  
 }

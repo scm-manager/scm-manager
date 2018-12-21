@@ -2,11 +2,15 @@
 
 import React from "react";
 import type { Branch, Repository } from "@scm-manager/ui-types";
+import { translate } from "react-i18next";
 import { Route, withRouter } from "react-router-dom";
 import Changesets from "./Changesets";
-import BranchSelector from "./BranchSelector";
 import { connect } from "react-redux";
-import { ErrorNotification, Loading } from "@scm-manager/ui-components";
+import {
+  BranchSelector,
+  ErrorNotification,
+  Loading
+} from "@scm-manager/ui-components";
 import {
   fetchBranches,
   getBranches,
@@ -32,7 +36,8 @@ type Props = {
 
   // Context props
   history: any, // TODO flow type
-  match: any
+  match: any,
+  t: string => string
 };
 
 class BranchRoot extends React.Component<Props> {
@@ -92,10 +97,11 @@ class BranchRoot extends React.Component<Props> {
   }
 
   renderBranchSelector = () => {
-    const { repository, branches, selected } = this.props;
+    const { repository, branches, selected, t } = this.props;
     if (repository._links.branches) {
       return (
         <BranchSelector
+          label={t("branch-selector.label")}
           branches={branches}
           selectedBranch={selected}
           selected={(b: Branch) => {
@@ -133,6 +139,7 @@ const mapStateToProps = (state: any, ownProps: Props) => {
 
 export default compose(
   withRouter,
+  translate("repos"),
   connect(
     mapStateToProps,
     mapDispatchToProps

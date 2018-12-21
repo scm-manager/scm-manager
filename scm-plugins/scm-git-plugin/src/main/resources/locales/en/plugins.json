@@ -1,9 +1,9 @@
 {
   "scm-git-plugin": {
     "information": {
-      "clone" : "Clone the repository",
-      "create" : "Create a new repository",
-      "replace" : "Push an existing repository",
+      "clone": "Clone the repository",
+      "create": "Create a new repository",
+      "replace": "Push an existing repository",
       "merge": {
         "heading": "How to merge source branch into target branch",
         "checkout": "1. Make sure your workspace is clean and checkout target branch",
@@ -22,6 +22,16 @@
       "disabled": "Disabled",
       "disabledHelpText": "Enable or disable the Git plugin",
       "submit": "Submit"
+    },
+    "repo-config": {
+      "link": "Configuration",
+      "default-branch": "Default branch",
+      "submit": "Submit",
+      "error": {
+        "title": "Error",
+        "subtitle": "Something went wrong"
+      },
+      "success": "Default branch changed!"
     }
   }
 }

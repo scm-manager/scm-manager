@@ -53,7 +53,7 @@ import static org.mockito.Mockito.when;
 /**
  * @author Sebastian Sdorra
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class GitRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
 
   @Mock

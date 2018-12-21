@@ -35,9 +35,11 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import org.junit.Test;
+import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
 import sonia.scm.repository.BlameLine;
 import sonia.scm.repository.BlameResult;
-import sonia.scm.repository.GitConstants;
+import sonia.scm.repository.GitRepositoryConfig;
+import sonia.scm.store.InMemoryConfigurationStoreFactory;
 
 import java.io.IOException;
 
@@ -73,7 +75,7 @@ public class GitBlameCommandTest extends AbstractGitCommandTestBase
     assertEquals("fcd0ef1831e4002ac43ea539f4094334c79ea9ec", result.getLine(1).getRevision());
     
     // set default branch and test again
-    repository.setProperty(GitConstants.PROPERTY_DEFAULT_BRANCH, "test-branch");
+    createContext().setConfig(new GitRepositoryConfig("test-branch"));
     result = createCommand().getBlameResult(request);
     assertNotNull(result);
     assertEquals(1, result.getTotal()); 

@@ -32,9 +32,11 @@
 package sonia.scm.repository.spi;
 
 import org.junit.Test;
+import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.FileObject;
-import sonia.scm.repository.GitConstants;
+import sonia.scm.repository.GitRepositoryConfig;
+import sonia.scm.store.InMemoryConfigurationStoreFactory;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -78,7 +80,7 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
 
   @Test
   public void testExplicitDefaultBranch() throws IOException {
-    repository.setProperty(GitConstants.PROPERTY_DEFAULT_BRANCH, "test-branch");
+    createContext().setConfig(new GitRepositoryConfig("test-branch"));
 
     FileObject root = createCommand().getBrowserResult(new BrowseCommandRequest()).getFile();
     assertNotNull(root);
