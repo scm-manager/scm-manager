@@ -70,7 +70,7 @@ class Profile extends React.Component<Props, State> {
           <div className="column">
             <Navigation>
               <Section label={t("profile.navigation-label")}>
-                <NavLink to={`${url}`} label={t("profile.information")} />
+                <NavLink to={`${url}`} icon="fas fa-info-circle" label={t("profile.information")} />
               </Section>
               <Section label={t("profile.actions-label")}>
                 <NavLink

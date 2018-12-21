@@ -20,7 +20,7 @@ class PermissionsNavLink extends React.Component<Props> {
     }
     const { permissionUrl, t } = this.props;
     return (
-      <NavLink icon="fas fa-lock" to={permissionUrl} label={t("repository-root.permissions")} />
+      <NavLink to={permissionUrl} icon="fas fa-lock" label={t("repository-root.permissions")} />
     );
   }
 }

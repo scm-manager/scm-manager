@@ -111,8 +111,8 @@ class SingleUser extends React.Component<Props> {
             <Navigation>
               <Section label={t("single-user.navigation-label")}>
                 <NavLink
-                  icon="fas fa-info-circle"
                   to={`${url}`}
+                  icon="fas fa-info-circle"
                   label={t("single-user.information-label")}
                 />
                 <EditUserNavLink user={user} editUrl={`${url}/edit`} />
@@ -123,7 +123,7 @@ class SingleUser extends React.Component<Props> {
               </Section>
               <Section label={t("single-user.actions-label")}>
                 <DeleteUserNavLink user={user} deleteUser={this.deleteUser} />
-                <NavLink to="/users" label={t("single-user.back-label")} />
+                <NavLink to="/users" icon="fas fa-undo" label={t("single-user.back-label")} />
               </Section>
             </Navigation>
           </div>

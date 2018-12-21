@@ -51,7 +51,7 @@ class DeleteNavAction extends React.Component<Props> {
     if (!this.isDeletable()) {
       return null;
     }
-    return <NavAction icon="fas fa-times" label={t("delete-nav-action.label")} action={action} />;
+    return <NavAction action={action} icon="fas fa-times" label={t("delete-nav-action.label")} />;
   }
 }
 

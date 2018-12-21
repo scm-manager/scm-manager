@@ -182,7 +182,7 @@ class RepositoryRoot extends React.Component<Props> {
           <div className="column">
             <Navigation>
               <Section label={t("repository-root.navigation-label")}>
-                <NavLink icon="fas fa-info-circle" to={url} label={t("repository-root.information")} />
+                <NavLink to={url} icon="fas fa-info-circle" label={t("repository-root.information")} />
                 <RepositoryNavLink
                   repository={repository}
                   linkName="changesets"
@@ -213,7 +213,7 @@ class RepositoryRoot extends React.Component<Props> {
               <Section label={t("repository-root.actions-label")}>
                 <DeleteNavAction repository={repository} delete={this.delete} />
                 <EditNavLink repository={repository} editUrl={`${url}/edit`} />
-                <NavLink to="/repos" label={t("repository-root.back-label")} />
+                <NavLink to="/repos" icon="fas fa-undo" label={t("repository-root.back-label")} />
               </Section>
             </Navigation>
           </div>
