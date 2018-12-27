@@ -17,7 +17,6 @@ import {
 
 import classNames from "classnames";
 import type { Tag } from "@scm-manager/ui-types";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
 
 const styles = {
   spacing: {
@@ -67,22 +66,16 @@ class ChangesetDetails extends React.Component<Props> {
             </div>
             <div className="media-right">{this.renderTags()}</div>
           </article>
-          <ExtensionPoint
-            name="changesets.changeset.description"
-            props={{ changeset, description }}
-            renderAll={true}
-          >
-            <p>
-              {description.message.split("\n").map((item, key) => {
-                return (
-                  <span key={key}>
-                    {item}
-                    <br />
-                  </span>
-                );
-              })}
-            </p>
-          </ExtensionPoint>
+          <p>
+            {description.message.split("\n").map((item, key) => {
+              return (
+                <span key={key}>
+                  {item}
+                  <br />
+                </span>
+              );
+            })}
+          </p>
         </div>
         <div>
           <ChangesetDiff changeset={changeset} />
