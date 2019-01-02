@@ -3,7 +3,7 @@ import React from "react";
 import { translate } from "react-i18next";
 import PrimaryNavigationLink from "./PrimaryNavigationLink";
 import type { Links } from "@scm-manager/ui-types";
-import { binder } from "@scm-manager/ui-extensions";
+import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
 
 type Props = {
   t: string => string,
@@ -31,7 +31,7 @@ class PrimaryNavigation extends React.Component<Props> {
     };
   };
 
-  createLogoutFromExtension = () => {
+  appendLogout = (navigationItems, append) => {
     const { t, links } = this.props;
 
     const props = {
@@ -39,7 +39,13 @@ class PrimaryNavigation extends React.Component<Props> {
       label: t("primary-navigation.logout")
     };
 
-    return binder.getExtension("primary-navigation.logout", props);
+    if (binder.hasExtension("primary-navigation.logout", props)) {
+      navigationItems.push(
+        <ExtensionPoint name="primary-navigation.logout" props={props} />
+      );
+    } else {
+      append("/logout", "/logout", "primary-navigation.logout", "logout");
+    }
   };
 
   createNavigationItems = () => {
@@ -51,12 +57,7 @@ class PrimaryNavigation extends React.Component<Props> {
     append("/groups", "/(group|groups)", "primary-navigation.groups", "groups");
     append("/config", "/config", "primary-navigation.config", "config");
 
-    if (binder.hasExtension("primary-navigation.logout")) {
-      const extension = this.createLogoutFromExtension();
-      navigationItems.push(extension);
-    } else {
-      append("/logout", "/logout", "primary-navigation.logout", "logout");
-    }
+    this.appendLogout(navigationItems, append);
 
     return navigationItems;
   };
