@@ -2,60 +2,72 @@
 import React from "react";
 import { translate } from "react-i18next";
 import PrimaryNavigationLink from "./PrimaryNavigationLink";
+import type { Links } from "@scm-manager/ui-types";
+import { binder } from "@scm-manager/ui-extensions";
 
 type Props = {
   t: string => string,
-  repositoriesLink: string,
-  usersLink: string,
-  groupsLink: string,
-  configLink: string,
-  logoutLink: string
+  links: Links,
 };
 
 class PrimaryNavigation extends React.Component<Props> {
-  render() {
-    const { t, repositoriesLink, usersLink, groupsLink, configLink, logoutLink } = this.props;
 
-    const links = [
-      repositoriesLink ? (
-        <PrimaryNavigationLink
-          to="/repos"
-          match="/(repo|repos)"
-          label={t("primary-navigation.repositories")}
-          key={"repositoriesLink"}
-        />): null,
-      usersLink ? (
-        <PrimaryNavigationLink
-          to="/users"
-          match="/(user|users)"
-          label={t("primary-navigation.users")}
-          key={"usersLink"}
-        />) : null,
-      groupsLink ? (
-        <PrimaryNavigationLink
-          to="/groups"
-          match="/(group|groups)"
-          label={t("primary-navigation.groups")}
-          key={"groupsLink"}
-        />) : null,
-      configLink ? (
-        <PrimaryNavigationLink
-          to="/config"
-          label={t("primary-navigation.config")}
-          key={"configLink"}
-        />) : null,
-      logoutLink ? (
-        <PrimaryNavigationLink
-          to="/logout"
-          label={t("primary-navigation.logout")}
-          key={"logoutLink"}
-        />) : null
-    ];
+  createNavigationAppender = (navigationItems) => {
+    const { t, links } = this.props;
+
+    return (to: string, match: string, label: string, linkName: string) => {
+      const link = links[linkName];
+      if (link) {
+        const navigationItem = (
+          <PrimaryNavigationLink
+            to={to}
+            match={match}
+            label={t(label)}
+            key={linkName}
+          />)
+        ;
+        navigationItems.push(navigationItem);
+      }
+    };
+  };
+
+  createLogoutFromExtension = () => {
+    const { t, links } = this.props;
+
+    const props = {
+      links,
+      label: t("primary-navigation.logout")
+    };
+
+    return binder.getExtension("primary-navigation.logout", props);
+  };
+
+  createNavigationItems = () => {
+    const navigationItems = [];
+
+    const append = this.createNavigationAppender(navigationItems);
+    append("/repos", "/(repo|repos)", "primary-navigation.repositories", "repositories");
+    append("/users", "/(user|users)", "primary-navigation.users", "users");
+    append("/groups", "/(group|groups)", "primary-navigation.groups", "groups");
+    append("/config", "/config", "primary-navigation.config", "config");
+
+    if (binder.hasExtension("primary-navigation.logout")) {
+      const extension = this.createLogoutFromExtension();
+      navigationItems.push(extension);
+    } else {
+      append("/logout", "/logout", "primary-navigation.logout", "logout");
+    }
+
+    return navigationItems;
+  };
+
+  render() {
+    const navigationItems = this.createNavigationItems();
 
     return (
       <nav className="tabs is-boxed">
         <ul>
-          {links}
+          {navigationItems}
         </ul>
       </nav>
     );
