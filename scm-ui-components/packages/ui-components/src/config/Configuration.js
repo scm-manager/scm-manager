@@ -2,12 +2,7 @@
 import React from "react";
 import { translate } from "react-i18next";
 import type { Links } from "@scm-manager/ui-types";
-import {
-  apiClient,
-  SubmitButton,
-  Loading,
-  ErrorNotification
-} from "../";
+import { apiClient, SubmitButton, Loading, ErrorNotification } from "../";
 
 type RenderProps = {
   readOnly: boolean,
@@ -20,10 +15,10 @@ type Props = {
   render: (props: RenderProps) => any, // ???
 
   // context props
-  t: (string) => string
+  t: string => string
 };
 
-type ConfigurationType =  {
+type ConfigurationType = {
   _links: Links
 } & Object;
 
@@ -32,6 +27,7 @@ type State = {
   fetching: boolean,
   modifying: boolean,
   contentType?: string,
+  configChanged: boolean,
 
   configuration?: ConfigurationType,
   modifiedConfiguration?: ConfigurationType,
@@ -43,12 +39,12 @@ type State = {
  * synchronizing the configuration with the backend.
  */
 class Configuration extends React.Component<Props, State> {
-
   constructor(props: Props) {
     super(props);
     this.state = {
       fetching: true,
       modifying: false,
+      configChanged: false,
       valid: false
     };
   }
@@ -56,7 +52,8 @@ class Configuration extends React.Component<Props, State> {
   componentDidMount() {
     const { link } = this.props;
 
-    apiClient.get(link)
+    apiClient
+      .get(link)
       .then(this.captureContentType)
       .then(response => response.json())
       .then(this.loadConfig)
@@ -119,11 +116,31 @@ class Configuration extends React.Component<Props, State> {
 
     this.setState({ modifying: true });
 
-    const {modifiedConfiguration} = this.state;
+    const { modifiedConfiguration } = this.state;
 
-    apiClient.put(this.getModificationUrl(), modifiedConfiguration, this.getContentType())
-      .then(() => this.setState({ modifying: false }))
+    apiClient
+      .put(
+        this.getModificationUrl(),
+        modifiedConfiguration,
+        this.getContentType()
+      )
+      .then(() => this.setState({ modifying: false, configChanged: true }))
       .catch(this.handleError);
+  };
+
+  renderConfigChangedNotification = () => {
+    if (this.state.configChanged) {
+      return (
+        <div className="notification is-primary">
+          <button
+            className="delete"
+            onClick={() => this.setState({ configChanged: false })}
+          />
+          {this.props.t("config-form.submit-success-notification")}
+        </div>
+      );
+    }
+    return null;
   };
 
   render() {
@@ -131,7 +148,7 @@ class Configuration extends React.Component<Props, State> {
     const { fetching, error, configuration, modifying, valid } = this.state;
 
     if (error) {
-      return <ErrorNotification error={error}/>;
+      return <ErrorNotification error={error} />;
     } else if (fetching || !configuration) {
       return <Loading />;
     } else {
@@ -144,19 +161,21 @@ class Configuration extends React.Component<Props, State> {
       };
 
       return (
-        <form onSubmit={this.modifyConfiguration}>
-          { this.props.render(renderProps) }
-          <hr/>
-          <SubmitButton
-            label={t("config-form.submit")}
-            disabled={!valid || readOnly}
-            loading={modifying}
-          />
-        </form>
+        <>
+          {this.renderConfigChangedNotification()}
+          <form onSubmit={this.modifyConfiguration}>
+            {this.props.render(renderProps)}
+            <hr />
+            <SubmitButton
+              label={t("config-form.submit")}
+              disabled={!valid || readOnly}
+              loading={modifying}
+            />
+          </form>
+        </>
       );
     }
   }
-
 }
 
 export default translate("config")(Configuration);

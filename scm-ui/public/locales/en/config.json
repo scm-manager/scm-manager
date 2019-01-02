@@ -10,6 +10,7 @@
   },
   "config-form": {
     "submit": "Submit",
+    "submit-success-notification": "Configuration changed!",
     "no-permission-notification": "Please note: You do not have the permission to edit the config!"
   },
   "proxy-settings": {
