@@ -33,6 +33,6 @@ describe("EditNavLink", () => {
       <EditNavLink repository={repository} editUrl="" />,
       options.get()
     );
-    expect(navLink.text()).toBe("edit-nav-link.label");
+    expect(navLink.text()).toBe(" edit-nav-link.label");
   });
 });
