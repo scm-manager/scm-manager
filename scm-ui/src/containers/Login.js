@@ -114,8 +114,6 @@ class Login extends React.Component<Props, State> {
       return this.renderRedirect();
     }
 
-    const error = this.areCredentialsInvalid();
-
     return (
       <section className="hero">
         <div className="hero-body">
@@ -131,7 +129,7 @@ class Login extends React.Component<Props, State> {
                     alt={t("login.logo-alt")}
                   />
                 </figure>
-                <ErrorNotification error={error} />
+                <ErrorNotification error={this.areCredentialsInvalid()} />
                 <form onSubmit={this.handleSubmit}>
                   <InputField
                     placeholder={t("login.username-placeholder")}
