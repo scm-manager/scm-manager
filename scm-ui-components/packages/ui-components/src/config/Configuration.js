@@ -124,7 +124,7 @@ class Configuration extends React.Component<Props, State> {
         modifiedConfiguration,
         this.getContentType()
       )
-      .then(() => this.setState({ modifying: false, configChanged: true }))
+      .then(() => this.setState({ modifying: false, configChanged: true, valid: false }))
       .catch(this.handleError);
   };
 
