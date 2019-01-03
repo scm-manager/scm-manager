@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
+import sonia.scm.user.UserTestData;
 
 import java.net.URI;
 
@@ -122,6 +123,21 @@ public class MeToUserDtoMapperTest {
     UserDto userDto = mapper.map(user);
 
     assertThat(userDto.getPassword()).as("hide password for the me resource").isBlank();
+  }
+
+  @Test
+  public void shouldAppendLinks() {
+    LinkEnricherRegistry registry = new LinkEnricherRegistry();
+    registry.register(Me.class, (ctx, appender) -> {
+      User user = ctx.oneRequireByType(User.class);
+      appender.appendOne("profile", "http://hitchhiker.com/users/" + user.getName());
+    });
+    mapper.setRegistry(registry);
+
+    User trillian = UserTestData.createTrillian();
+    UserDto dto = mapper.map(trillian);
+
+    assertEquals("http://hitchhiker.com/users/trillian", dto.getLinks().getLinkBy("profile").get().getHref());
   }
 
   private User createDefaultUser() {

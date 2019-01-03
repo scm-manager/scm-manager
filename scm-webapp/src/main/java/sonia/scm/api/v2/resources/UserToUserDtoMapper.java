@@ -1,6 +1,5 @@
 package sonia.scm.api.v2.resources;
 
-import com.google.common.annotations.VisibleForTesting;
 import de.otto.edison.hal.Links;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
@@ -43,6 +42,9 @@ public abstract class UserToUserDtoMapper extends BaseMapper<User, UserDto> {
         linksBuilder.single(link("password", resourceLinks.user().passwordChange(target.getName())));
       }
     }
+
+    appendLinks(new EdisonLinkAppender(linksBuilder), user);
+
     target.add(linksBuilder.build());
   }
 

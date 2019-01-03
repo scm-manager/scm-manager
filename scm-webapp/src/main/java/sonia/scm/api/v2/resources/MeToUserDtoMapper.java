@@ -14,7 +14,7 @@ import static de.otto.edison.hal.Link.link;
 import static de.otto.edison.hal.Links.linkingTo;
 
 @Mapper
-public abstract class MeToUserDtoMapper extends UserToUserDtoMapper{
+public abstract class MeToUserDtoMapper extends UserToUserDtoMapper {
 
   @Inject
   private UserManager userManager;
@@ -36,6 +36,9 @@ public abstract class MeToUserDtoMapper extends UserToUserDtoMapper{
     if (userManager.isTypeDefault(user)) {
       linksBuilder.single(link("password", resourceLinks.me().passwordChange()));
     }
+
+    appendLinks(new EdisonLinkAppender(linksBuilder), new Me(), user);
+
     target.add(linksBuilder.build());
   }
 

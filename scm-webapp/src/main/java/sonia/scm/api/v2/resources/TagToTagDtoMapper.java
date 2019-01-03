@@ -15,7 +15,7 @@ import static de.otto.edison.hal.Link.link;
 import static de.otto.edison.hal.Links.linkingTo;
 
 @Mapper
-public abstract class TagToTagDtoMapper {
+public abstract class TagToTagDtoMapper extends LinkAppenderMapper {
 
   @Inject
   private ResourceLinks resourceLinks;
@@ -24,11 +24,14 @@ public abstract class TagToTagDtoMapper {
   public abstract TagDto map(Tag tag, @Context NamespaceAndName namespaceAndName);
 
   @AfterMapping
-  void appendLinks(@MappingTarget TagDto target, @Context NamespaceAndName namespaceAndName) {
+  void appendLinks(Tag tag, @MappingTarget TagDto target, @Context NamespaceAndName namespaceAndName) {
     Links.Builder linksBuilder = linkingTo()
       .self(resourceLinks.tag().self(namespaceAndName.getNamespace(), namespaceAndName.getName(), target.getName()))
       .single(link("sources", resourceLinks.source().self(namespaceAndName.getNamespace(), namespaceAndName.getName(), target.getRevision())))
       .single(link("changeset", resourceLinks.changeset().self(namespaceAndName.getNamespace(), namespaceAndName.getName(), target.getRevision())));
+
+    appendLinks(new EdisonLinkAppender(linksBuilder), tag, namespaceAndName);
+
     target.add(linksBuilder.build());
   }
 }
