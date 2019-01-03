@@ -61,7 +61,12 @@ public final class LinkEnricherContext {
    * @return instance
    */
   public <T> T oneRequireByType(Class<T> type) {
-    return oneByType(type).get();
+    Optional<T> instance = oneByType(type);
+    if (instance.isPresent()) {
+      return instance.get();
+    } else {
+      throw new NoSuchElementException("No instance for given type present");
+    }
   }
 
 }
