@@ -71,6 +71,24 @@ public class FileObjectToFileObjectDtoMapperTest {
     assertThat(dto.getLinks().getLinkBy("self").get().getHref()).isEqualTo(expectedBaseUri.resolve("namespace/name/content/revision/foo/bar").toString());
   }
 
+  @Test
+  public void shouldAppendLinks() {
+    LinkEnricherRegistry registry = new LinkEnricherRegistry();
+    registry.register(FileObject.class, (ctx, appender) -> {
+      NamespaceAndName repository = ctx.oneRequireByType(NamespaceAndName.class);
+      FileObject fo = ctx.oneRequireByType(FileObject.class);
+      String rev = ctx.oneRequireByType(String.class);
+
+      appender.appendOne("hog", "http://" + repository.logString() + "/" + fo.getName() + "/" + rev);
+    });
+    mapper.setRegistry(registry);
+
+    FileObject fileObject = createFileObject();
+    FileObjectDto dto = mapper.map(fileObject, new NamespaceAndName("hitchhiker", "hog"), "42");
+
+    assertThat(dto.getLinks().getLinkBy("hog").get().getHref()).isEqualTo("http://hitchhiker/hog/foo/42");
+  }
+
   private FileObject createDirectoryObject() {
     FileObject fileObject = createFileObject();
     fileObject.setDirectory(true);
