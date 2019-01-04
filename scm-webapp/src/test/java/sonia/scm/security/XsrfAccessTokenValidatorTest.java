@@ -31,88 +31,90 @@
 
 package sonia.scm.security;
 
-import com.google.common.collect.Maps;
-import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
-import org.junit.Test;
-import static org.junit.Assert.*;
 import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import static org.mockito.Mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
+
 /**
- * Tests {@link XsrfTokenClaimsValidator}.
+ * Tests {@link XsrfAccessTokenValidator}.
  * 
  * @author Sebastian Sdorra
  */
 @RunWith(MockitoJUnitRunner.class)
-public class XsrfTokenClaimsValidatorTest {
+public class XsrfAccessTokenValidatorTest {
 
   @Mock
   private HttpServletRequest request;
 
-  private XsrfTokenClaimsValidator validator;
+  @Mock
+  private AccessToken accessToken;
+
+  private XsrfAccessTokenValidator validator;
   
   /**
    * Prepare object under test.
    */
   @Before
   public void prepareObjectUnderTest() {
-    validator = new XsrfTokenClaimsValidator(() -> request);
+    validator = new XsrfAccessTokenValidator(() -> request);
   }
   
   /**
-   * Tests {@link XsrfTokenClaimsValidator#validate(java.util.Map)}.
+   * Tests {@link XsrfAccessTokenValidator#validate(AccessToken)}.
    */
   @Test
   public void testValidate() {
     // prepare
-    Map<String, Object> claims = Maps.newHashMap();
-    claims.put(Xsrf.TOKEN_KEY, "abc");
+    when(accessToken.getCustom(Xsrf.TOKEN_KEY)).thenReturn(Optional.of("abc"));
     when(request.getHeader(Xsrf.HEADER_KEY)).thenReturn("abc");
     
     // execute and assert
-    assertTrue(validator.validate(claims));
+    assertTrue(validator.validate(accessToken));
   }
   
   /**
-   * Tests {@link XsrfTokenClaimsValidator#validate(java.util.Map)} with wrong header.
+   * Tests {@link XsrfAccessTokenValidator#validate(AccessToken)} with wrong header.
    */
   @Test
   public void testValidateWithWrongHeader() {
     // prepare
-    Map<String, Object> claims = Maps.newHashMap();
-    claims.put(Xsrf.TOKEN_KEY, "abc");
+    when(accessToken.getCustom(Xsrf.TOKEN_KEY)).thenReturn(Optional.of("abc"));
     when(request.getHeader(Xsrf.HEADER_KEY)).thenReturn("123");
     
     // execute and assert
-    assertFalse(validator.validate(claims));
+    assertFalse(validator.validate(accessToken));
   }
   
   /**
-   * Tests {@link XsrfTokenClaimsValidator#validate(java.util.Map)} without header.
+   * Tests {@link XsrfAccessTokenValidator#validate(AccessToken)} without header.
    */
   @Test
   public void testValidateWithoutHeader() {
     // prepare
-    Map<String, Object> claims = Maps.newHashMap();
-    claims.put(Xsrf.TOKEN_KEY, "abc");
+    when(accessToken.getCustom(Xsrf.TOKEN_KEY)).thenReturn(Optional.of("abc"));
     
     // execute and assert
-    assertFalse(validator.validate(claims));
+    assertFalse(validator.validate(accessToken));
   }
   
   /**
-   * Tests {@link XsrfTokenClaimsValidator#validate(java.util.Map)} without claims key.
+   * Tests {@link XsrfAccessTokenValidator#validate(AccessToken)} without claims key.
    */
   @Test
   public void testValidateWithoutClaimsKey() {
     // prepare
-    Map<String, Object> claims = Maps.newHashMap();
+    when(accessToken.getCustom(Xsrf.TOKEN_KEY)).thenReturn(Optional.empty());
     
     // execute and assert
-    assertTrue(validator.validate(claims));
+    assertTrue(validator.validate(accessToken));
   }
 }

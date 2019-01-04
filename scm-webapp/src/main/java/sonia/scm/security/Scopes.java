@@ -47,7 +47,7 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.authz.permission.PermissionResolver;
 
 /**
- * Utile methods for {@link Scope}.
+ * Util methods for {@link Scope}.
  * 
  * @author Sebastian Sdorra
  * @since 2.0.0

@@ -30,30 +30,23 @@
  */
 package sonia.scm.security;
 
-import com.google.common.base.Strings;
-import java.util.Map;
+import sonia.scm.plugin.Extension;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.servlet.http.HttpServletRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import sonia.scm.plugin.Extension;
+import java.util.Optional;
 
 /**
- * Validates xsrf protected token claims. The validator check if the current request contains an xsrf key which is
- * equal to the token in the claims. If the claims does not contain a xsrf key, the check is passed by. The xsrf keys
- * are added by the {@link XsrfTokenClaimsEnricher}.
+ * Validates xsrf protected access tokens. The validator check if the current request contains an xsrf key which is
+ * equal to the one in the access token. If the token does not contain a xsrf key, the check is passed by. The xsrf keys
+ * are added by the {@link XsrfAccessTokenEnricher}.
  * 
  * @author Sebastian Sdorra
  * @since 2.0.0
  */
 @Extension
-public class XsrfTokenClaimsValidator implements TokenClaimsValidator {
-
-  /**
-   * the logger for XsrfTokenClaimsEnricher
-   */
-  private static final Logger LOG = LoggerFactory.getLogger(XsrfTokenClaimsValidator.class);
+public class XsrfAccessTokenValidator implements AccessTokenValidator {
   
   private final Provider<HttpServletRequest> requestProvider;
 
@@ -64,16 +57,16 @@ public class XsrfTokenClaimsValidator implements TokenClaimsValidator {
    * @param requestProvider http request provider
    */
   @Inject
-  public XsrfTokenClaimsValidator(Provider<HttpServletRequest> requestProvider) {
+  public XsrfAccessTokenValidator(Provider<HttpServletRequest> requestProvider) {
     this.requestProvider = requestProvider;
   }
   
   @Override
-  public boolean validate(Map<String, Object> claims) {
-    String xsrfClaimValue = (String) claims.get(Xsrf.TOKEN_KEY);
-    if (!Strings.isNullOrEmpty(xsrfClaimValue)) {
+  public boolean validate(AccessToken accessToken) {
+    Optional<String> xsrfClaim = accessToken.getCustom(Xsrf.TOKEN_KEY);
+    if (xsrfClaim.isPresent()) {
       String xsrfHeaderValue = requestProvider.get().getHeader(Xsrf.HEADER_KEY);
-      return xsrfClaimValue.equals(xsrfHeaderValue);
+      return xsrfClaim.get().equals(xsrfHeaderValue);
     }
     return true;
   }
