@@ -9,6 +9,8 @@ import Login from "../containers/Login";
 import Logout from "../containers/Logout";
 
 import { ProtectedRoute } from "@scm-manager/ui-components";
+import { ExtensionPoint } from "@scm-manager/ui-extensions";
+
 import AddUser from "../users/containers/AddUser";
 import SingleUser from "../users/containers/SingleUser";
 import RepositoryRoot from "../repos/containers/RepositoryRoot";
@@ -111,6 +113,12 @@ class Main extends React.Component<Props> {
             path="/me"
             component={Profile}
             authenticated={authenticated}
+          />
+
+          <ExtensionPoint
+            name="main.route"
+            renderAll={true}
+            props={{authenticated}}
           />
         </Switch>
       </div>

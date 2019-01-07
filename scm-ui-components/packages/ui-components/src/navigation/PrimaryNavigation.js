@@ -57,6 +57,14 @@ class PrimaryNavigation extends React.Component<Props> {
     append("/groups", "/(group|groups)", "primary-navigation.groups", "groups");
     append("/config", "/config", "primary-navigation.config", "config");
 
+    navigationItems.push(
+      <ExtensionPoint
+        name="primary-navigation"
+        renderAll={true}
+        props={{links: this.props.links}}
+      />
+    );
+
     this.appendLogout(navigationItems, append);
 
     return navigationItems;
