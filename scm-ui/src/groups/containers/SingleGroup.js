@@ -108,7 +108,7 @@ class SingleGroup extends React.Component<Props> {
               <Section label={t("single-group.navigation-label")}>
                 <NavLink
                   to={`${url}`}
-                  icon={"fas fa-info-circle"}
+                  icon="fas fa-info-circle"
                   label={t("single-group.information-label")}
                 />
               </Section>
@@ -118,7 +118,11 @@ class SingleGroup extends React.Component<Props> {
                   deleteGroup={this.deleteGroup}
                 />
                 <EditGroupNavLink group={group} editUrl={`${url}/edit`} />
-                <NavLink to="/groups" icon={"fas fa-undo-alt"} label={t("single-group.back-label")} />
+                <NavLink
+                  to="/groups"
+                  icon="fas fa-undo-alt"
+                  label={t("single-group.back-label")}
+                />
               </Section>
             </Navigation>
           </div>
