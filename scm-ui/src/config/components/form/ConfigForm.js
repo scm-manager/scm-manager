@@ -24,7 +24,7 @@ type State = {
     loginAttemptLimitTimeout: boolean,
     loginAttemptLimit: boolean
   },
-  valid: boolean
+  changed: boolean
 };
 
 class ConfigForm extends React.Component<Props, State> {
@@ -61,7 +61,7 @@ class ConfigForm extends React.Component<Props, State> {
         loginAttemptLimitTimeout: false,
         loginAttemptLimit: false
       },
-      valid: false
+      changed: false
     };
   }
 
@@ -77,6 +77,9 @@ class ConfigForm extends React.Component<Props, State> {
 
   submit = (event: Event) => {
     event.preventDefault();
+    this.setState({
+      changed: false
+    });
     this.props.submitForm(this.state.config);
   };
 
@@ -158,7 +161,9 @@ class ConfigForm extends React.Component<Props, State> {
         <SubmitButton
           loading={loading}
           label={t("config-form.submit")}
-          disabled={!configUpdatePermission || this.hasError() || !this.state.valid}
+          disabled={
+            !configUpdatePermission || this.hasError() || !this.state.changed
+          }
         />
       </form>
     );
@@ -175,7 +180,7 @@ class ConfigForm extends React.Component<Props, State> {
         ...this.state.error,
         [name]: !isValid
       },
-      valid: true
+      changed: true
     });
   };
 
