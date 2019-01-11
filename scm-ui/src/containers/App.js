@@ -79,7 +79,7 @@ class App extends Component<Props> {
         />
       );
     } else {
-      content = <Main authenticated={authenticated} />;
+      content = <Main authenticated={authenticated} links={links} />;
     }
     return (
       <div className="App">
