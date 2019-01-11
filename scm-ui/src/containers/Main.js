@@ -2,6 +2,7 @@
 import React from "react";
 
 import { Redirect, Route, Switch, withRouter } from "react-router-dom";
+import type {Links} from "@scm-manager/ui-types";
 
 import Overview from "../repos/containers/Overview";
 import Users from "../users/containers/Users";
@@ -24,12 +25,13 @@ import Config from "../config/containers/Config";
 import Profile from "./Profile";
 
 type Props = {
-  authenticated?: boolean
+  authenticated?: boolean,
+  links: Links
 };
 
 class Main extends React.Component<Props> {
   render() {
-    const { authenticated } = this.props;
+    const { authenticated, links } = this.props;
     return (
       <div className="main">
         <Switch>
@@ -118,7 +120,7 @@ class Main extends React.Component<Props> {
           <ExtensionPoint
             name="main.route"
             renderAll={true}
-            props={{authenticated}}
+            props={{authenticated, links}}
           />
         </Switch>
       </div>
