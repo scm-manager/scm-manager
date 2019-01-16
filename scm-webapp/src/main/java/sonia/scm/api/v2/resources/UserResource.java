@@ -4,12 +4,14 @@ import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import org.apache.shiro.authc.credential.PasswordService;
+import sonia.scm.security.PermissionDescriptor;
+import sonia.scm.security.SecuritySystem;
+import sonia.scm.security.StoredAssignedPermission;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -28,14 +30,16 @@ public class UserResource {
   private final IdResourceManagerAdapter<User, UserDto> adapter;
   private final UserManager userManager;
   private final PasswordService passwordService;
+  private final SecuritySystem securitySystem;
 
   @Inject
-  public UserResource(UserDtoToUserMapper dtoToUserMapper, UserToUserDtoMapper userToDtoMapper, UserManager manager, PasswordService passwordService) {
+  public UserResource(UserDtoToUserMapper dtoToUserMapper, UserToUserDtoMapper userToDtoMapper, UserManager manager, PasswordService passwordService, SecuritySystem securitySystem) {
     this.dtoToUserMapper = dtoToUserMapper;
     this.userToDtoMapper = userToDtoMapper;
     this.adapter = new IdResourceManagerAdapter<>(manager, User.class);
     this.userManager = manager;
     this.passwordService = passwordService;
+    this.securitySystem = securitySystem;
   }
 
   /**
@@ -131,5 +135,26 @@ public class UserResource {
   public Response overwritePassword(@PathParam("id") String name, @Valid PasswordOverwriteDto passwordOverwrite) {
     userManager.overwritePassword(name, passwordService.encryptPassword(passwordOverwrite.getNewPassword()));
     return Response.noContent().build();
+  }
+
+  /**
+   * Returns permissions for a user.
+   *
+   * @param id the id/name of the user
+   */
+  @GET
+  @Path("permissions")
+  @Produces(VndMediaType.USER)
+  @TypeHint(UserDto.class)
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
+    @ResponseCode(code = 403, condition = "not authorized, the current user has no privileges to read the user"),
+    @ResponseCode(code = 404, condition = "not found, no user with the specified id/name available"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
+  public Response getPermissions(@PathParam("id") String id) {
+    String[] permissions = securitySystem.getPermissions(p -> !p.isGroupPermission() && p.getName().equals(id)).stream().map(StoredAssignedPermission::getPermission).toArray(String[]::new);
+    return Response.ok(new PerminssionListDto(permissions)).build();
   }
 }

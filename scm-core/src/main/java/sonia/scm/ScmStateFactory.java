@@ -134,7 +134,7 @@ public final class ScmStateFactory
     User user = collection.oneByType(User.class);
     GroupNames groups = collection.oneByType(GroupNames.class);
 
-    List<PermissionDescriptor> ap = Collections.EMPTY_LIST;
+    Collection<PermissionDescriptor> ap = Collections.EMPTY_LIST;
 
     if (subject.hasRole(Role.ADMIN))
     {
@@ -150,7 +150,7 @@ public final class ScmStateFactory
 
   private ScmState createState(User user, Collection<String> groups,
     String token, List<String> assignedPermissions,
-    List<PermissionDescriptor> availablePermissions)
+    Collection<PermissionDescriptor> availablePermissions)
   {
     User u = user.clone();
 

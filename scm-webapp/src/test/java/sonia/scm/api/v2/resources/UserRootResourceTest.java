@@ -17,6 +17,7 @@ import org.mockito.Mock;
 import sonia.scm.ContextEntry;
 import sonia.scm.NotFoundException;
 import sonia.scm.PageResult;
+import sonia.scm.security.SecuritySystem;
 import sonia.scm.user.ChangePasswordNotAllowedException;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
@@ -59,6 +60,8 @@ public class UserRootResourceTest {
   private PasswordService passwordService;
   @Mock
   private UserManager userManager;
+  @Mock
+  private SecuritySystem securitySystem;
   @InjectMocks
   private UserDtoToUserMapperImpl dtoToUserMapper;
   @InjectMocks
@@ -80,7 +83,7 @@ public class UserRootResourceTest {
     UserCollectionToDtoMapper userCollectionToDtoMapper = new UserCollectionToDtoMapper(userToDtoMapper, resourceLinks);
     UserCollectionResource userCollectionResource = new UserCollectionResource(userManager, dtoToUserMapper,
       userCollectionToDtoMapper, resourceLinks, passwordService);
-    UserResource userResource = new UserResource(dtoToUserMapper, userToDtoMapper, userManager, passwordService);
+    UserResource userResource = new UserResource(dtoToUserMapper, userToDtoMapper, userManager, passwordService, securitySystem);
     UserRootResource userRootResource = new UserRootResource(Providers.of(userCollectionResource),
       Providers.of(userResource));
 

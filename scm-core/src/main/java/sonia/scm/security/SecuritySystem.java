@@ -38,6 +38,7 @@ import com.google.common.base.Predicate;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -75,23 +76,7 @@ public interface SecuritySystem
    */
   public void deletePermission(String id);
 
-  /**
-   * Modify stored permission.
-   *
-   *
-   * @param permission stored permisison
-   */
-  public void modifyPermission(StoredAssignedPermission permission);
-
   //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Return all stored permissions.
-   *
-   *
-   * @return stored permission
-   */
-  public List<StoredAssignedPermission> getAllPermissions();
 
   /**
    * Return all available permissions.
@@ -99,17 +84,7 @@ public interface SecuritySystem
    *
    * @return available permissions
    */
-  public List<PermissionDescriptor> getAvailablePermissions();
-
-  /**
-   * Return the stored permission which is stored with the given id.
-   *
-   *
-   * @param id id of the stored permission
-   *
-   * @return stored permission
-   */
-  public StoredAssignedPermission getPermission(String id);
+  public Collection<PermissionDescriptor> getAvailablePermissions();
 
   /**
    * Returns all stored permissions which are matched by the given
@@ -120,6 +95,6 @@ public interface SecuritySystem
    *
    * @return filtered permissions
    */
-  public List<StoredAssignedPermission> getPermissions(
+  public Collection<StoredAssignedPermission> getPermissions(
     Predicate<AssignedPermission> predicate);
 }

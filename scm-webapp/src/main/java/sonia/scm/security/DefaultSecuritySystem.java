@@ -39,8 +39,8 @@ import com.github.legman.Subscribe;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
+import com.google.common.collect.ImmutableSet.Builder;
+import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.apache.shiro.SecurityUtils;
@@ -62,6 +62,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
@@ -92,8 +93,6 @@ public class DefaultSecuritySystem implements SecuritySystem
   private static final Logger logger =
     LoggerFactory.getLogger(DefaultSecuritySystem.class);
 
-  private PluginLoader pluginLoader;
-
   //~--- constructors ---------------------------------------------------------
 
   /**
@@ -110,8 +109,7 @@ public class DefaultSecuritySystem implements SecuritySystem
       .withType(AssignedPermission.class)
       .withName(NAME)
       .build();
-    this.pluginLoader = pluginLoader;
-    readAvailablePermissions();
+    this.availablePermissions = readAvailablePermissions(pluginLoader);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -228,31 +226,6 @@ public class DefaultSecuritySystem implements SecuritySystem
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param permission
-   */
-  @Override
-  public void modifyPermission(StoredAssignedPermission permission)
-  {
-    assertIsAdmin();
-    validatePermission(permission);
-
-    synchronized (store)
-    {
-      store.remove(permission.getId());
-      store.put(permission.getId(), new AssignedPermission(permission));
-    }
-
-    //J-
-    ScmEventBus.getInstance().post(
-      new StoredAssignedPermissionEvent(HandlerEventType.CREATE, permission)
-    );
-    //J+    
-  }
-
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -262,47 +235,11 @@ public class DefaultSecuritySystem implements SecuritySystem
    * @return
    */
   @Override
-  public List<StoredAssignedPermission> getAllPermissions()
-  {
-    return getPermissions(null);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public List<PermissionDescriptor> getAvailablePermissions()
+  public Collection<PermissionDescriptor> getAvailablePermissions()
   {
     assertIsAdmin();
 
     return availablePermissions;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   *
-   * @return
-   */
-  @Override
-  public StoredAssignedPermission getPermission(String id)
-  {
-    assertIsAdmin();
-
-    StoredAssignedPermission sap = null;
-    AssignedPermission ap = store.get(id);
-
-    if (ap != null)
-    {
-      sap = new StoredAssignedPermission(id, ap);
-    }
-
-    return sap;
   }
 
   /**
@@ -314,10 +251,9 @@ public class DefaultSecuritySystem implements SecuritySystem
    * @return
    */
   @Override
-  public List<StoredAssignedPermission> getPermissions(
-    Predicate<AssignedPermission> predicate)
+  public Collection<StoredAssignedPermission> getPermissions(Predicate<AssignedPermission> predicate)
   {
-    Builder<StoredAssignedPermission> permissions = ImmutableList.builder();
+    Builder<StoredAssignedPermission> permissions = ImmutableSet.builder();
 
     for (Entry<String, AssignedPermission> e : store.getAll().entrySet())
     {
@@ -349,7 +285,7 @@ public class DefaultSecuritySystem implements SecuritySystem
    */
   private void deletePermissions(Predicate<AssignedPermission> predicate)
   {
-    List<StoredAssignedPermission> permissions = getPermissions(predicate);
+    Collection<StoredAssignedPermission> permissions = getPermissions(predicate);
 
     for (StoredAssignedPermission permission : permissions)
     {
@@ -367,7 +303,7 @@ public class DefaultSecuritySystem implements SecuritySystem
    * @return
    */
   @SuppressWarnings("unchecked")
-  private List<PermissionDescriptor> parsePermissionDescriptor(
+  private static List<PermissionDescriptor> parsePermissionDescriptor(
     JAXBContext context, URL descriptorUrl)
   {
     List<PermissionDescriptor> descriptors = Collections.EMPTY_LIST;
@@ -395,10 +331,11 @@ public class DefaultSecuritySystem implements SecuritySystem
   /**
    * Method description
    *
+   * @param pluginLoader
    */
-  private void readAvailablePermissions()
+  private static ImmutableSet<PermissionDescriptor> readAvailablePermissions(PluginLoader pluginLoader)
   {
-    Builder<PermissionDescriptor> builder = ImmutableList.builder();
+    ImmutableSet.Builder<PermissionDescriptor> builder = ImmutableSet.builder();
 
     try
     {
@@ -428,7 +365,7 @@ public class DefaultSecuritySystem implements SecuritySystem
         "could not create jaxb context to read permission descriptors", ex);
     }
 
-    availablePermissions = builder.build();
+    return builder.build();
   }
 
   /**
@@ -454,12 +391,6 @@ public class DefaultSecuritySystem implements SecuritySystem
   @XmlAccessorType(XmlAccessType.FIELD)
   private static class PermissionDescriptors
   {
-
-    /**
-     * Constructs ...
-     *
-     */
-    public PermissionDescriptors() {}
 
     //~--- get methods --------------------------------------------------------
 
@@ -494,5 +425,5 @@ public class DefaultSecuritySystem implements SecuritySystem
   private final ConfigurationEntryStore<AssignedPermission> store;
 
   /** Field description */
-  private List<PermissionDescriptor> availablePermissions;
+  private final ImmutableSet<PermissionDescriptor> availablePermissions;
 }

@@ -2,12 +2,15 @@ package sonia.scm.api.v2.resources;
 
 import lombok.extern.slf4j.Slf4j;
 import sonia.scm.security.AssignedPermission;
+import sonia.scm.security.PermissionDescriptor;
 import sonia.scm.security.SecuritySystem;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -71,8 +74,6 @@ public class GlobalPermissionPocResource {
     // Core: scm-webapp/src/main/resources/META-INF/scm/permissions.xml
     // Plugins, e.g. scm-plugins/scm-git-plugin/src/main/resources/META-INF/scm/permissions.xml
     log.info("{} Available permissions: {}", securitySystem.getAvailablePermissions().size(), securitySystem.getAvailablePermissions());
-    // Should contain all stored permissions. See assignExemplaryPermissions() for example.
-    log.info("{} All permissions: {}", securitySystem.getAllPermissions().size(), securitySystem.getAllPermissions());
 
     assignExemplaryPermissions();
 
@@ -80,12 +81,20 @@ public class GlobalPermissionPocResource {
     return Response.noContent().build();
   }
 
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("")
+  public Response getAll() {
+    String[] permissions = securitySystem.getAvailablePermissions().stream().map(PermissionDescriptor::getValue).toArray(String[]::new);
+    return Response.ok(new PerminssionListDto(permissions)).build();
+  }
+
   protected void assignExemplaryPermissions() {
     AssignedPermission groupPermission = new AssignedPermission("configurers", true,"configuration:*");
     log.info("try to add new permission: {}", groupPermission);
     securitySystem.addPermission(groupPermission);
 
-    AssignedPermission userPermission = new AssignedPermission("arthur", "group:*");
+    AssignedPermission userPermission = new AssignedPermission("rene", "group:*");
     log.info("try to add new permission: {}", userPermission);
     securitySystem.addPermission(userPermission);
   }

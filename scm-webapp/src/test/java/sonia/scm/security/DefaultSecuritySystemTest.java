@@ -32,9 +32,6 @@
 
 package sonia.scm.security;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import com.google.common.base.Predicate;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.mgt.DefaultSecurityManager;
 import org.apache.shiro.realm.SimpleAccountRealm;
@@ -48,14 +45,15 @@ import sonia.scm.store.JAXBConfigurationEntryStoreFactory;
 import sonia.scm.util.ClassLoaders;
 import sonia.scm.util.MockUtil;
 
+import java.util.Collection;
 import java.util.List;
 
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.greaterThan;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-
-//~--- JDK imports ------------------------------------------------------------
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
 
 /**
  *
@@ -111,10 +109,10 @@ public class DefaultSecuritySystemTest extends AbstractTestBase
   {
     setAdminSubject();
 
-    List<PermissionDescriptor> list = securitySystem.getAvailablePermissions();
+    Collection<PermissionDescriptor> list = securitySystem.getAvailablePermissions();
 
     assertNotNull(list);
-    assertThat(list.size(), greaterThan(0));
+    assertThat(list).isNotEmpty();
   }
 
   /**
@@ -131,7 +129,7 @@ public class DefaultSecuritySystemTest extends AbstractTestBase
 
     securitySystem.deletePermission(sap);
 
-    assertNull(securitySystem.getPermission(sap.getId()));
+    assertThat(securitySystem.getPermissions(p -> p.getName().equals("trillian"))).isEmpty();
   }
 
   /**
@@ -150,10 +148,10 @@ public class DefaultSecuritySystemTest extends AbstractTestBase
     StoredAssignedPermission marvin = createPermission("marvin", false,
                                         "repository:*:READ");
 
-    List<StoredAssignedPermission> all = securitySystem.getAllPermissions();
+    List<StoredAssignedPermission> all = securitySystem.getPermissions(p -> true);
 
     assertEquals(3, all.size());
-    assertThat(all, containsInAnyOrder(trillian, dent, marvin));
+    assertThat(all).contains(trillian, dent, marvin);
   }
 
   /**
@@ -168,10 +166,9 @@ public class DefaultSecuritySystemTest extends AbstractTestBase
     StoredAssignedPermission sap = createPermission("trillian", false,
                                      "repository:*:READ");
 
-    StoredAssignedPermission other = securitySystem.getPermission(sap.getId());
+    List<StoredAssignedPermission> other = securitySystem.getPermissions(p -> p.getName().equals("trillian"));
 
-    assertEquals(sap.getId(), other.getId());
-    assertEquals(sap, other);
+    assertThat(other).containsExactly(sap);
   }
 
   /**
@@ -191,41 +188,11 @@ public class DefaultSecuritySystemTest extends AbstractTestBase
     createPermission("hitchhiker", true, "repository:*:READ");
 
     List<StoredAssignedPermission> filtered =
-      securitySystem.getPermissions(new Predicate<AssignedPermission>()
-    {
+      securitySystem.getPermissions(p -> !p.isGroupPermission());
 
-      @Override
-      public boolean apply(AssignedPermission input)
-      {
-        return !input.isGroupPermission();
-      }
-    });
-
-    assertEquals(2, filtered.size());
-    assertThat(filtered, containsInAnyOrder(trillian, dent));
-  }
-
-  /**
-   * Method description
-   *
-   */
-  @Test
-  public void testModifyPermission()
-  {
-    setAdminSubject();
-
-    StoredAssignedPermission sap = createPermission("trillian", false,
-                                     "repository:*:READ");
-    StoredAssignedPermission modified =
-      new StoredAssignedPermission(sap.getId(),
-        new AssignedPermission("trillian", "repository:*:WRITE"));
-
-    securitySystem.modifyPermission(modified);
-
-    sap = securitySystem.getPermission(modified.getId());
-
-    assertEquals(modified.getId(), sap.getId());
-    assertEquals(modified, sap);
+    assertThat(filtered)
+      .hasSize(2)
+      .contains(trillian, dent);
   }
 
   /**
@@ -268,24 +235,7 @@ public class DefaultSecuritySystemTest extends AbstractTestBase
                                      "repository:*:READ");
 
     setUserSubject();
-    securitySystem.getPermission(sap.getId());
-  }
-
-  /**
-   * Method description
-   *
-   */
-  @Test(expected = UnauthorizedException.class)
-  public void testUnauthorizedModifyPermission()
-  {
-    setAdminSubject();
-
-    StoredAssignedPermission sap = createPermission("trillian", false,
-                                     "repository:*:READ");
-
-    setUserSubject();
-
-    securitySystem.modifyPermission(sap);
+    securitySystem.getPermissions(p -> true);
   }
 
   /**

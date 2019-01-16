@@ -34,21 +34,15 @@
 <permissions>
   
   <permission>
-    <display-name>All Repository (read)</display-name>
-    <description>Read access to all repositories</description>
-    <value>repository:*:READ</value>
+    <value>repository:read:*</value>
   </permission>
   
   <permission>
-    <display-name>All Repository (write)</display-name>
-    <description>Write access to all repositories</description>
     <value>repository:*:WRITE</value>
   </permission>
   
   <permission>
-    <display-name>All Repository (owner)</display-name>
-    <description>Owner access to all repositories</description>
     <value>repository:*:OWNER</value>
   </permission>
-  
+
 </permissions>
