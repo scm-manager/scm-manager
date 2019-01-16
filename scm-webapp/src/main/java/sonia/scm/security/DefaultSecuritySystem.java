@@ -126,7 +126,7 @@ public class DefaultSecuritySystem implements SecuritySystem
   @Override
   public void addPermission(AssignedPermission permission)
   {
-    assertIsAdmin();
+    assertHasPermission();
     validatePermission(permission);
 
     String id = store.put(permission);
@@ -149,7 +149,7 @@ public class DefaultSecuritySystem implements SecuritySystem
   @Override
   public void deletePermission(AssignedPermission permission)
   {
-    assertIsAdmin();
+    assertHasPermission();
     boolean deleted = deletePermissions(sap -> Objects.equal(sap.getName(), permission.getName())
       && Objects.equal(sap.isGroupPermission(), permission.isGroupPermission())
       && Objects.equal(sap.getPermission(), permission.getPermission()));
@@ -203,7 +203,7 @@ public class DefaultSecuritySystem implements SecuritySystem
   @Override
   public Collection<PermissionDescriptor> getAvailablePermissions()
   {
-    assertIsAdmin();
+    assertHasPermission();
 
     return availablePermissions;
   }
@@ -238,9 +238,9 @@ public class DefaultSecuritySystem implements SecuritySystem
    * Method description
    *
    */
-  private void assertIsAdmin()
+  private void assertHasPermission()
   {
-    SecurityUtils.getSubject().checkRole(Role.ADMIN);
+    PermissionPermissions.assign().check();
   }
 
   /**
