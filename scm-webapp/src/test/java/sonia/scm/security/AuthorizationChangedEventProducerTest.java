@@ -214,7 +214,7 @@ public class AuthorizationChangedEventProducerTest {
   }
   
   /**
-   * Tests {@link AuthorizationChangedEventProducer#onEvent(sonia.scm.security.StoredAssignedPermissionEvent)}.
+   * Tests {@link AuthorizationChangedEventProducer#onEvent(AssignedPermissionEvent)}.
    */
   @Test
   public void testOnStoredAssignedPermissionEvent()
@@ -222,10 +222,10 @@ public class AuthorizationChangedEventProducerTest {
     StoredAssignedPermission groupPermission = new StoredAssignedPermission(
       "123", new AssignedPermission("_authenticated", true, "repository:read:*")
     );
-    producer.onEvent(new StoredAssignedPermissionEvent(HandlerEventType.BEFORE_CREATE, groupPermission));
+    producer.onEvent(new AssignedPermissionEvent(HandlerEventType.BEFORE_CREATE, groupPermission));
     assertEventIsNotFired();
     
-    producer.onEvent(new StoredAssignedPermissionEvent(HandlerEventType.CREATE, groupPermission));
+    producer.onEvent(new AssignedPermissionEvent(HandlerEventType.CREATE, groupPermission));
     assertGlobalEventIsFired();
     
     resetStoredEvent();
@@ -233,12 +233,12 @@ public class AuthorizationChangedEventProducerTest {
     StoredAssignedPermission userPermission = new StoredAssignedPermission(
       "123", new AssignedPermission("trillian", false, "repository:read:*")
     );
-    producer.onEvent(new StoredAssignedPermissionEvent(HandlerEventType.BEFORE_CREATE, userPermission));
+    producer.onEvent(new AssignedPermissionEvent(HandlerEventType.BEFORE_CREATE, userPermission));
     assertEventIsNotFired();
     
     resetStoredEvent();
     
-    producer.onEvent(new StoredAssignedPermissionEvent(HandlerEventType.CREATE, userPermission));
+    producer.onEvent(new AssignedPermissionEvent(HandlerEventType.CREATE, userPermission));
     assertUserEventIsFired("trillian");
   }
   

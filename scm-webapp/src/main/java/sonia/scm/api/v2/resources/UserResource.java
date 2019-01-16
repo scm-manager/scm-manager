@@ -4,9 +4,8 @@ import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import org.apache.shiro.authc.credential.PasswordService;
-import sonia.scm.security.PermissionDescriptor;
+import sonia.scm.security.AssignedPermission;
 import sonia.scm.security.SecuritySystem;
-import sonia.scm.security.StoredAssignedPermission;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
 import sonia.scm.web.VndMediaType;
@@ -154,7 +153,7 @@ public class UserResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   public Response getPermissions(@PathParam("id") String id) {
-    String[] permissions = securitySystem.getPermissions(p -> !p.isGroupPermission() && p.getName().equals(id)).stream().map(StoredAssignedPermission::getPermission).toArray(String[]::new);
+    String[] permissions = securitySystem.getPermissions(p -> !p.isGroupPermission() && p.getName().equals(id)).stream().map(AssignedPermission::getPermission).toArray(String[]::new);
     return Response.ok(new PerminssionListDto(permissions)).build();
   }
 }

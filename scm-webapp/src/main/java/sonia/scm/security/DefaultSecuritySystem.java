@@ -36,8 +36,8 @@ package sonia.scm.security;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.github.legman.Subscribe;
+import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
-import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet.Builder;
 import com.google.common.collect.ImmutableSet;
@@ -67,6 +67,7 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.function.Predicate;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -123,7 +124,7 @@ public class DefaultSecuritySystem implements SecuritySystem
    * @return
    */
   @Override
-  public StoredAssignedPermission addPermission(AssignedPermission permission)
+  public void addPermission(AssignedPermission permission)
   {
     assertIsAdmin();
     validatePermission(permission);
@@ -134,11 +135,9 @@ public class DefaultSecuritySystem implements SecuritySystem
 
     //J-
     ScmEventBus.getInstance().post(
-      new StoredAssignedPermissionEvent(HandlerEventType.CREATE, sap)
+      new AssignedPermissionEvent(HandlerEventType.CREATE, permission)
     );
     //J+
-
-    return sap;
   }
 
   /**
@@ -148,33 +147,16 @@ public class DefaultSecuritySystem implements SecuritySystem
    * @param permission
    */
   @Override
-  public void deletePermission(StoredAssignedPermission permission)
+  public void deletePermission(AssignedPermission permission)
   {
     assertIsAdmin();
-    store.remove(permission.getId());
-    //J-
-    ScmEventBus.getInstance().post(
-      new StoredAssignedPermissionEvent(HandlerEventType.CREATE, permission)
-    );
-    //J+
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   */
-  @Override
-  public void deletePermission(String id)
-  {
-    assertIsAdmin();
-
-    AssignedPermission ap = store.get(id);
-
-    if (ap != null)
-    {
-      deletePermission(new StoredAssignedPermission(id, ap));
+    boolean deleted = deletePermissions(sap -> Objects.equal(sap.getName(), permission.getName())
+      && Objects.equal(sap.isGroupPermission(), permission.isGroupPermission())
+      && Objects.equal(sap.getPermission(), permission.getPermission()));
+    if (deleted) {
+      ScmEventBus.getInstance().post(
+        new AssignedPermissionEvent(HandlerEventType.DELETE, permission)
+      );
     }
   }
 
@@ -189,16 +171,8 @@ public class DefaultSecuritySystem implements SecuritySystem
   {
     if (event.getEventType() == HandlerEventType.DELETE)
     {
-      deletePermissions(new Predicate<AssignedPermission>()
-      {
-
-        @Override
-        public boolean apply(AssignedPermission p)
-        {
-          return !p.isGroupPermission()
-            && event.getItem().getName().equals(p.getName());
-        }
-      });
+      deletePermissions(p -> !p.isGroupPermission()
+        && event.getItem().getName().equals(p.getName()));
     }
   }
 
@@ -213,16 +187,8 @@ public class DefaultSecuritySystem implements SecuritySystem
   {
     if (event.getEventType() == HandlerEventType.DELETE)
     {
-      deletePermissions(new Predicate<AssignedPermission>()
-      {
-
-        @Override
-        public boolean apply(AssignedPermission p)
-        {
-          return p.isGroupPermission()
-            && event.getItem().getName().equals(p.getName());
-        }
-      });
+      deletePermissions(p -> p.isGroupPermission()
+        && event.getItem().getName().equals(p.getName()));
     }
   }
 
@@ -251,13 +217,13 @@ public class DefaultSecuritySystem implements SecuritySystem
    * @return
    */
   @Override
-  public Collection<StoredAssignedPermission> getPermissions(Predicate<AssignedPermission> predicate)
+  public Collection<AssignedPermission> getPermissions(Predicate<AssignedPermission> predicate)
   {
-    Builder<StoredAssignedPermission> permissions = ImmutableSet.builder();
+    Builder<AssignedPermission> permissions = ImmutableSet.builder();
 
     for (Entry<String, AssignedPermission> e : store.getAll().entrySet())
     {
-      if ((predicate == null) || predicate.apply(e.getValue()))
+      if ((predicate == null) || predicate.test(e.getValue()))
       {
         permissions.add(new StoredAssignedPermission(e.getKey(), e.getValue()));
       }
@@ -283,14 +249,16 @@ public class DefaultSecuritySystem implements SecuritySystem
    *
    * @param predicate
    */
-  private void deletePermissions(Predicate<AssignedPermission> predicate)
+  private boolean deletePermissions(Predicate<AssignedPermission> predicate)
   {
-    Collection<StoredAssignedPermission> permissions = getPermissions(predicate);
-
-    for (StoredAssignedPermission permission : permissions)
-    {
-      deletePermission(permission);
+    boolean found = false;
+    for (Entry<String, AssignedPermission> e : store.getAll().entrySet()) {
+      if ((predicate == null) || predicate.test(e.getValue())) {
+        store.remove(e.getKey());
+        found = true;
+      }
     }
+    return found;
   }
 
   /**

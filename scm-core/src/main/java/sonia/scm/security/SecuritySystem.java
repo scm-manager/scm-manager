@@ -32,14 +32,8 @@
 
 package sonia.scm.security;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import com.google.common.base.Predicate;
-
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.Collection;
-import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * The SecuritySystem manages global permissions.
@@ -58,7 +52,7 @@ public interface SecuritySystem
    *
    * @return stored permission
    */
-  public StoredAssignedPermission addPermission(AssignedPermission permission);
+  public void addPermission(AssignedPermission permission);
 
   /**
    * Delete stored permission.
@@ -66,15 +60,7 @@ public interface SecuritySystem
    *
    * @param permission permission to be deleted
    */
-  public void deletePermission(StoredAssignedPermission permission);
-
-  /**
-   * Delete stored permission.
-   *
-   *
-   * @param id id  of the permission
-   */
-  public void deletePermission(String id);
+  public void deletePermission(AssignedPermission permission);
 
   //~--- get methods ----------------------------------------------------------
 
@@ -95,6 +81,6 @@ public interface SecuritySystem
    *
    * @return filtered permissions
    */
-  public Collection<StoredAssignedPermission> getPermissions(
+  public Collection<AssignedPermission> getPermissions(
     Predicate<AssignedPermission> predicate);
 }

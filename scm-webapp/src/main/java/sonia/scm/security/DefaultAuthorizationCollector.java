@@ -175,10 +175,10 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
   private void collectGlobalPermissions(Builder<String> builder,
     final User user, final GroupNames groups)
   {
-    Collection<StoredAssignedPermission> globalPermissions =
+    Collection<AssignedPermission> globalPermissions =
       securitySystem.getPermissions((AssignedPermission input) -> isUserPermitted(user, groups, input));
 
-    for (StoredAssignedPermission gp : globalPermissions)
+    for (AssignedPermission gp : globalPermissions)
     {
       String permission = gp.getPermission();
 
