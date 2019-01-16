@@ -15,7 +15,8 @@ import {
   InputField,
   SubmitButton,
   ErrorNotification,
-  Image
+  Image,
+  UNAUTHORIZED_ERROR
 } from "@scm-manager/ui-components";
 import classNames from "classnames";
 import { getLoginLink } from "../modules/indexResource";
@@ -92,13 +93,22 @@ class Login extends React.Component<Props, State> {
     return !this.isValid();
   }
 
+  areCredentialsInvalid() {
+    const { t, error } = this.props;
+    if (error === UNAUTHORIZED_ERROR) {
+      return new Error(t("error-notification.wrong-login-credentials"));
+    } else {
+      return error;
+    }
+  }
+
   renderRedirect = () => {
     const { from } = this.props.location.state || { from: { pathname: "/" } };
     return <Redirect to={from} />;
   };
 
   render() {
-    const { authenticated, loading, error, t, classes } = this.props;
+    const { authenticated, loading, t, classes } = this.props;
 
     if (authenticated) {
       return this.renderRedirect();
@@ -119,7 +129,7 @@ class Login extends React.Component<Props, State> {
                     alt={t("login.logo-alt")}
                   />
                 </figure>
-                <ErrorNotification error={error} />
+                <ErrorNotification error={this.areCredentialsInvalid()} />
                 <form onSubmit={this.handleSubmit}>
                   <InputField
                     placeholder={t("login.username-placeholder")}

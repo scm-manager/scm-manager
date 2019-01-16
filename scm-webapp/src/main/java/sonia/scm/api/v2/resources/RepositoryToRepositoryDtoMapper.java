@@ -67,6 +67,9 @@ public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Reposit
     }
     linksBuilder.single(link("changesets", resourceLinks.changeset().all(target.getNamespace(), target.getName())));
     linksBuilder.single(link("sources", resourceLinks.source().selfWithoutRevision(target.getNamespace(), target.getName())));
+
+    appendLinks(new EdisonLinkAppender(linksBuilder), repository);
+
     target.add(linksBuilder.build());
   }
 

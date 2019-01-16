@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 import static de.otto.edison.hal.Link.link;
 
 @Mapper
-public abstract class FileObjectToFileObjectDtoMapper implements InstantAttributeMapper {
+public abstract class FileObjectToFileObjectDtoMapper extends LinkAppenderMapper implements InstantAttributeMapper {
 
   @Inject
   private ResourceLinks resourceLinks;
@@ -38,6 +38,8 @@ public abstract class FileObjectToFileObjectDtoMapper implements InstantAttribut
       links.self(resourceLinks.source().content(namespaceAndName.getNamespace(), namespaceAndName.getName(), revision, path));
       links.single(link("history", resourceLinks.fileHistory().self(namespaceAndName.getNamespace(), namespaceAndName.getName(), revision, path)));
     }
+
+    appendLinks(new EdisonLinkAppender(links), fileObject, namespaceAndName, revision);
 
     dto.add(links.build());
   }

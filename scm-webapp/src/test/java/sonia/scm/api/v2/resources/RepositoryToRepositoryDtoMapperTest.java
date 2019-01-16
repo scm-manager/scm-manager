@@ -211,6 +211,19 @@ public class RepositoryToRepositoryDtoMapperTest {
     assertTrue(dto.getLinks().getLinksBy("protocol").isEmpty());
   }
 
+  @Test
+  public void shouldAppendLinks() {
+    LinkEnricherRegistry registry = new LinkEnricherRegistry();
+    registry.register(Repository.class, (ctx, appender) -> {
+      Repository repository = ctx.oneRequireByType(Repository.class);
+      appender.appendOne("id", "http://" + repository.getId());
+    });
+    mapper.setRegistry(registry);
+
+    RepositoryDto dto = mapper.map(createTestRepository());
+    assertEquals("http://1", dto.getLinks().getLinkBy("id").get().getHref());
+  }
+
   private ScmProtocol mockProtocol(String type, String protocol) {
     return new MockScmProtocol(type, protocol);
   }

@@ -2,6 +2,7 @@
 import React from "react";
 
 import { Redirect, Route, Switch, withRouter } from "react-router-dom";
+import type {Links} from "@scm-manager/ui-types";
 
 import Overview from "../repos/containers/Overview";
 import Users from "../users/containers/Users";
@@ -9,6 +10,8 @@ import Login from "../containers/Login";
 import Logout from "../containers/Logout";
 
 import { ProtectedRoute } from "@scm-manager/ui-components";
+import { ExtensionPoint } from "@scm-manager/ui-extensions";
+
 import AddUser from "../users/containers/AddUser";
 import SingleUser from "../users/containers/SingleUser";
 import RepositoryRoot from "../repos/containers/RepositoryRoot";
@@ -22,12 +25,13 @@ import Config from "../config/containers/Config";
 import Profile from "./Profile";
 
 type Props = {
-  authenticated?: boolean
+  authenticated?: boolean,
+  links: Links
 };
 
 class Main extends React.Component<Props> {
   render() {
-    const { authenticated } = this.props;
+    const { authenticated, links } = this.props;
     return (
       <div className="main">
         <Switch>
@@ -111,6 +115,12 @@ class Main extends React.Component<Props> {
             path="/me"
             component={Profile}
             authenticated={authenticated}
+          />
+
+          <ExtensionPoint
+            name="main.route"
+            renderAll={true}
+            props={{authenticated, links}}
           />
         </Switch>
       </div>

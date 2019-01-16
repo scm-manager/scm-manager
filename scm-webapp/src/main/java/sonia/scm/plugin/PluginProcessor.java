@@ -162,34 +162,29 @@ public final class PluginProcessor
 
     Set<Path> archives = collect(pluginDirectory, new PluginArchiveFilter());
 
-    if (logger.isDebugEnabled())
-    {
-      logger.debug("extract {} archives", archives.size());
-    }
+    logger.debug("extract {} archives", archives.size());
 
     extract(archives);
 
     List<Path> dirs = collectPluginDirectories(pluginDirectory);
 
-    if (logger.isDebugEnabled())
-    {
-      logger.debug("process {} directories", dirs.size());
-    }
+    logger.debug("process {} directories: {}", dirs.size(), dirs);
 
     List<ExplodedSmp> smps = Lists.transform(dirs, new PathTransformer());
 
     logger.trace("start building plugin tree");
 
-    List<PluginNode> rootNodes = new PluginTree(smps).getRootNodes();
+    PluginTree pluginTree = new PluginTree(smps);
+
+    logger.trace("build plugin tree: {}", pluginTree);
+
+    List<PluginNode> rootNodes = pluginTree.getRootNodes();
 
     logger.trace("create plugin wrappers and build classloaders");
 
     Set<PluginWrapper> wrappers = createPluginWrappers(classLoader, rootNodes);
 
-    if (logger.isDebugEnabled())
-    {
-      logger.debug("collected {} plugins", wrappers.size());
-    }
+    logger.debug("collected {} plugins", wrappers.size());
 
     return ImmutableSet.copyOf(wrappers);
   }
@@ -208,6 +203,9 @@ public final class PluginProcessor
     ClassLoader classLoader, PluginNode node)
     throws IOException
   {
+    if (node.getWrapper() != null) {
+      return;
+    }
     ExplodedSmp smp = node.getPlugin();
 
     List<ClassLoader> parents = Lists.newArrayList();
