@@ -8,14 +8,13 @@ import lombok.extern.slf4j.Slf4j;
 import sonia.scm.AlreadyExistsException;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.NamespaceAndName;
-import sonia.scm.repository.Permission;
+import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -33,24 +32,24 @@ import java.util.function.Predicate;
 import static sonia.scm.AlreadyExistsException.alreadyExists;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
-import static sonia.scm.api.v2.resources.PermissionDto.GROUP_PREFIX;
+import static sonia.scm.api.v2.resources.RepositoryPermissionDto.GROUP_PREFIX;
 
 @Slf4j
 public class PermissionRootResource {
 
 
   private PermissionDtoToPermissionMapper dtoToModelMapper;
-  private PermissionToPermissionDtoMapper modelToDtoMapper;
-  private PermissionCollectionToDtoMapper permissionCollectionToDtoMapper;
+  private RepositoryPermissionToRepositoryPermissionDtoMapper modelToDtoMapper;
+  private RepositoryPermissionCollectionToDtoMapper repositoryPermissionCollectionToDtoMapper;
   private ResourceLinks resourceLinks;
   private final RepositoryManager manager;
 
 
   @Inject
-  public PermissionRootResource(PermissionDtoToPermissionMapper dtoToModelMapper, PermissionToPermissionDtoMapper modelToDtoMapper, PermissionCollectionToDtoMapper permissionCollectionToDtoMapper, ResourceLinks resourceLinks, RepositoryManager manager) {
+  public PermissionRootResource(PermissionDtoToPermissionMapper dtoToModelMapper, RepositoryPermissionToRepositoryPermissionDtoMapper modelToDtoMapper, RepositoryPermissionCollectionToDtoMapper repositoryPermissionCollectionToDtoMapper, ResourceLinks resourceLinks, RepositoryManager manager) {
     this.dtoToModelMapper = dtoToModelMapper;
     this.modelToDtoMapper = modelToDtoMapper;
-    this.permissionCollectionToDtoMapper = permissionCollectionToDtoMapper;
+    this.repositoryPermissionCollectionToDtoMapper = repositoryPermissionCollectionToDtoMapper;
     this.resourceLinks = resourceLinks;
     this.manager = manager;
   }
@@ -74,7 +73,7 @@ public class PermissionRootResource {
   @TypeHint(TypeHint.NO_CONTENT.class)
   @Consumes(VndMediaType.PERMISSION)
   @Path("")
-  public Response create(@PathParam("namespace") String namespace, @PathParam("name") String name,@Valid PermissionDto permission) {
+  public Response create(@PathParam("namespace") String namespace, @PathParam("name") String name,@Valid RepositoryPermissionDto permission) {
     log.info("try to add new permission: {}", permission);
     Repository repository = load(namespace, name);
     RepositoryPermissions.permissionWrite(repository).check();
@@ -101,7 +100,7 @@ public class PermissionRootResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @Produces(VndMediaType.PERMISSION)
-  @TypeHint(PermissionDto.class)
+  @TypeHint(RepositoryPermissionDto.class)
   @Path("{permission-name}")
   public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("permission-name") String permissionName) {
     Repository repository = load(namespace, name);
@@ -112,7 +111,7 @@ public class PermissionRootResource {
         .filter(filterPermission(permissionName))
         .map(permission -> modelToDtoMapper.map(permission, repository))
         .findFirst()
-        .orElseThrow(() -> notFound(entity(Permission.class, namespace).in(Repository.class, namespace + "/" + name)))
+        .orElseThrow(() -> notFound(entity(RepositoryPermission.class, namespace).in(Repository.class, namespace + "/" + name)))
     ).build();
   }
 
@@ -132,12 +131,12 @@ public class PermissionRootResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @Produces(VndMediaType.PERMISSION)
-  @TypeHint(PermissionDto.class)
+  @TypeHint(RepositoryPermissionDto.class)
   @Path("")
   public Response getAll(@PathParam("namespace") String namespace, @PathParam("name") String name) {
     Repository repository = load(namespace, name);
     RepositoryPermissions.permissionRead(repository).check();
-    return Response.ok(permissionCollectionToDtoMapper.map(repository)).build();
+    return Response.ok(repositoryPermissionCollectionToDtoMapper.map(repository)).build();
   }
 
 
@@ -161,23 +160,23 @@ public class PermissionRootResource {
   public Response update(@PathParam("namespace") String namespace,
                          @PathParam("name") String name,
                          @PathParam("permission-name") String permissionName,
-                         @Valid PermissionDto permission) {
+                         @Valid RepositoryPermissionDto permission) {
     log.info("try to update the permission with name: {}. the modified permission is: {}", permissionName, permission);
     Repository repository = load(namespace, name);
     RepositoryPermissions.permissionWrite(repository).check();
     String extractedPermissionName = getPermissionName(permissionName);
-    if (!isPermissionExist(new PermissionDto(extractedPermissionName, isGroupPermission(permissionName)), repository)) {
-      throw notFound(entity(Permission.class, namespace).in(Repository.class, namespace + "/" + name));
+    if (!isPermissionExist(new RepositoryPermissionDto(extractedPermissionName, isGroupPermission(permissionName)), repository)) {
+      throw notFound(entity(RepositoryPermission.class, namespace).in(Repository.class, namespace + "/" + name));
     }
     permission.setGroupPermission(isGroupPermission(permissionName));
     if (!extractedPermissionName.equals(permission.getName())) {
       checkPermissionAlreadyExists(permission, repository);
     }
-    Permission existingPermission = repository.getPermissions()
+    RepositoryPermission existingPermission = repository.getPermissions()
       .stream()
       .filter(filterPermission(permissionName))
       .findFirst()
-      .orElseThrow(() -> notFound(entity(Permission.class, namespace).in(Repository.class, namespace + "/" + name)));
+      .orElseThrow(() -> notFound(entity(RepositoryPermission.class, namespace).in(Repository.class, namespace + "/" + name)));
     dtoToModelMapper.modify(existingPermission, permission);
     manager.modify(repository);
     log.info("the permission with name: {} is updated.", permissionName);
@@ -216,7 +215,7 @@ public class PermissionRootResource {
     return Response.noContent().build();
   }
 
-  Predicate<Permission> filterPermission(String permissionName) {
+  Predicate<RepositoryPermission> filterPermission(String permissionName) {
     return permission -> getPermissionName(permissionName).equals(permission.getName())
       &&
       permission.isGroupPermission() == isGroupPermission(permissionName);
@@ -255,13 +254,13 @@ public class PermissionRootResource {
    * @param repository the repository to be inspected
    * @throws AlreadyExistsException if the permission already exists in the repository
    */
-  private void checkPermissionAlreadyExists(PermissionDto permission, Repository repository) {
+  private void checkPermissionAlreadyExists(RepositoryPermissionDto permission, Repository repository) {
     if (isPermissionExist(permission, repository)) {
       throw alreadyExists(entity("permission", permission.getName()).in(repository));
     }
   }
 
-  private boolean isPermissionExist(PermissionDto permission, Repository repository) {
+  private boolean isPermissionExist(RepositoryPermissionDto permission, Repository repository) {
     return repository.getPermissions()
       .stream()
       .anyMatch(p -> p.getName().equals(permission.getName()) && p.isGroupPermission() == permission.isGroupPermission());

@@ -18,7 +18,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import sonia.scm.PageResult;
 import sonia.scm.repository.NamespaceAndName;
-import sonia.scm.repository.Permission;
+import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryIsNotArchivedException;
@@ -302,7 +302,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   @Test
   public void shouldNotOverwriteExistingPermissionsOnUpdate() throws Exception {
     Repository existingRepository = mockRepository("space", "repo");
-    existingRepository.setPermissions(singletonList(new Permission("user", PermissionType.READ)));
+    existingRepository.setPermissions(singletonList(new RepositoryPermission("user", PermissionType.READ)));
 
     URL url = Resources.getResource("sonia/scm/api/v2/repository-test-update.json");
     byte[] repository = Resources.toByteArray(url);

@@ -53,7 +53,7 @@ import java.io.Serializable;
  */
 @XmlRootElement(name = "permissions")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Permission implements PermissionObject, Serializable
+public class RepositoryPermission implements PermissionObject, Serializable
 {
 
   private static final long serialVersionUID = -2915175031430884040L;
@@ -63,41 +63,41 @@ public class Permission implements PermissionObject, Serializable
   private PermissionType type = PermissionType.READ;
 
   /**
-   * Constructs a new {@link Permission}.
+   * Constructs a new {@link RepositoryPermission}.
    * This constructor is used by JAXB.
    *
    */
-  public Permission() {}
+  public RepositoryPermission() {}
 
   /**
-   * Constructs a new {@link Permission} with type = {@link PermissionType#READ}
+   * Constructs a new {@link RepositoryPermission} with type = {@link PermissionType#READ}
    * for the specified user.
    *
    *
    * @param name name of the user
    */
-  public Permission(String name)
+  public RepositoryPermission(String name)
   {
     this();
     this.name = name;
   }
 
   /**
-   * Constructs a new {@link Permission} with the specified type for
+   * Constructs a new {@link RepositoryPermission} with the specified type for
    * the given user.
    *
    *
    * @param name name of the user
    * @param type type of the permission
    */
-  public Permission(String name, PermissionType type)
+  public RepositoryPermission(String name, PermissionType type)
   {
     this(name);
     this.type = type;
   }
 
   /**
-   * Constructs a new {@link Permission} with the specified type for
+   * Constructs a new {@link RepositoryPermission} with the specified type for
    * the given user or group.
    *
    *
@@ -105,7 +105,7 @@ public class Permission implements PermissionObject, Serializable
    * @param type type of the permission
    * @param groupPermission true if the permission is a permission for a group
    */
-  public Permission(String name, PermissionType type, boolean groupPermission)
+  public RepositoryPermission(String name, PermissionType type, boolean groupPermission)
   {
     this(name, type);
     this.groupPermission = groupPermission;
@@ -114,12 +114,12 @@ public class Permission implements PermissionObject, Serializable
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Returns true if the {@link Permission} is the same as the obj argument.
+   * Returns true if the {@link RepositoryPermission} is the same as the obj argument.
    *
    *
    * @param obj the reference object with which to compare
    *
-   * @return true if the {@link Permission} is the same as the obj argument
+   * @return true if the {@link RepositoryPermission} is the same as the obj argument
    */
   @Override
   public boolean equals(Object obj)
@@ -134,7 +134,7 @@ public class Permission implements PermissionObject, Serializable
       return false;
     }
 
-    final Permission other = (Permission) obj;
+    final RepositoryPermission other = (RepositoryPermission) obj;
 
     return Objects.equal(name, other.name)
       && Objects.equal(type, other.type)
@@ -142,10 +142,10 @@ public class Permission implements PermissionObject, Serializable
   }
 
   /**
-   * Returns the hash code value for the {@link Permission}.
+   * Returns the hash code value for the {@link RepositoryPermission}.
    *
    *
-   * @return the hash code value for the {@link Permission}
+   * @return the hash code value for the {@link RepositoryPermission}
    */
   @Override
   public int hashCode()

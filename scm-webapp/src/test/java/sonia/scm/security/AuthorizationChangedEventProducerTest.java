@@ -43,6 +43,7 @@ import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryEvent;
 import sonia.scm.repository.RepositoryModificationEvent;
+import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.user.User;
 import sonia.scm.user.UserEvent;
@@ -173,10 +174,10 @@ public class AuthorizationChangedEventProducerTest {
   {
     Repository repositoryModified = RepositoryTestData.createHeartOfGold();
     repositoryModified.setName("test123");
-    repositoryModified.setPermissions(Lists.newArrayList(new sonia.scm.repository.Permission("test")));
+    repositoryModified.setPermissions(Lists.newArrayList(new RepositoryPermission("test")));
     
     Repository repository = RepositoryTestData.createHeartOfGold();
-    repository.setPermissions(Lists.newArrayList(new sonia.scm.repository.Permission("test")));
+    repository.setPermissions(Lists.newArrayList(new RepositoryPermission("test")));
     
     producer.onEvent(new RepositoryModificationEvent(HandlerEventType.BEFORE_CREATE, repositoryModified, repository));
     assertEventIsNotFired();
@@ -184,18 +185,18 @@ public class AuthorizationChangedEventProducerTest {
     producer.onEvent(new RepositoryModificationEvent(HandlerEventType.CREATE, repositoryModified, repository));
     assertEventIsNotFired();
     
-    repositoryModified.setPermissions(Lists.newArrayList(new sonia.scm.repository.Permission("test")));
+    repositoryModified.setPermissions(Lists.newArrayList(new RepositoryPermission("test")));
     producer.onEvent(new RepositoryModificationEvent(HandlerEventType.CREATE, repositoryModified, repository));
     assertEventIsNotFired();
     
-    repositoryModified.setPermissions(Lists.newArrayList(new sonia.scm.repository.Permission("test123")));
+    repositoryModified.setPermissions(Lists.newArrayList(new RepositoryPermission("test123")));
     producer.onEvent(new RepositoryModificationEvent(HandlerEventType.CREATE, repositoryModified, repository));
     assertGlobalEventIsFired();
     
     resetStoredEvent();
 
     repositoryModified.setPermissions(
-      Lists.newArrayList(new sonia.scm.repository.Permission("test", PermissionType.READ, true))
+      Lists.newArrayList(new RepositoryPermission("test", PermissionType.READ, true))
     );
     producer.onEvent(new RepositoryModificationEvent(HandlerEventType.CREATE, repositoryModified, repository));
     assertGlobalEventIsFired();
@@ -203,7 +204,7 @@ public class AuthorizationChangedEventProducerTest {
     resetStoredEvent();
     
     repositoryModified.setPermissions(
-      Lists.newArrayList(new sonia.scm.repository.Permission("test", PermissionType.WRITE))
+      Lists.newArrayList(new RepositoryPermission("test", PermissionType.WRITE))
     );
     producer.onEvent(new RepositoryModificationEvent(HandlerEventType.CREATE, repositoryModified, repository));
     assertGlobalEventIsFired();

@@ -1,5 +1,6 @@
 package sonia.scm.security;
 
+import javax.inject.Inject;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -8,6 +9,7 @@ public class PermissionAssigner {
 
   private final SecuritySystem securitySystem;
 
+  @Inject
   public PermissionAssigner(SecuritySystem securitySystem) {
     this.securitySystem = securitySystem;
   }

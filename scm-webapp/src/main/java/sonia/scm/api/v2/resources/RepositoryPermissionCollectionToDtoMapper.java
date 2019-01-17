@@ -14,23 +14,23 @@ import static de.otto.edison.hal.Link.link;
 import static de.otto.edison.hal.Links.linkingTo;
 import static java.util.stream.Collectors.toList;
 
-public class PermissionCollectionToDtoMapper {
+public class RepositoryPermissionCollectionToDtoMapper {
 
   private final ResourceLinks resourceLinks;
-  private final PermissionToPermissionDtoMapper permissionToPermissionDtoMapper;
+  private final RepositoryPermissionToRepositoryPermissionDtoMapper repositoryPermissionToRepositoryPermissionDtoMapper;
 
   @Inject
-  public PermissionCollectionToDtoMapper(PermissionToPermissionDtoMapper permissionToPermissionDtoMapper, ResourceLinks resourceLinks) {
+  public RepositoryPermissionCollectionToDtoMapper(RepositoryPermissionToRepositoryPermissionDtoMapper repositoryPermissionToRepositoryPermissionDtoMapper, ResourceLinks resourceLinks) {
     this.resourceLinks = resourceLinks;
-    this.permissionToPermissionDtoMapper = permissionToPermissionDtoMapper;
+    this.repositoryPermissionToRepositoryPermissionDtoMapper = repositoryPermissionToRepositoryPermissionDtoMapper;
   }
 
   public HalRepresentation map(Repository repository) {
-    List<PermissionDto> permissionDtoList = repository.getPermissions()
+    List<RepositoryPermissionDto> repositoryPermissionDtoList = repository.getPermissions()
       .stream()
-      .map(permission -> permissionToPermissionDtoMapper.map(permission, repository))
+      .map(permission -> repositoryPermissionToRepositoryPermissionDtoMapper.map(permission, repository))
       .collect(toList());
-    return new HalRepresentation(createLinks(repository), embedDtos(permissionDtoList));
+    return new HalRepresentation(createLinks(repository), embedDtos(repositoryPermissionDtoList));
   }
 
   private Links createLinks(Repository repository) {
@@ -43,9 +43,9 @@ public class PermissionCollectionToDtoMapper {
     return linksBuilder.build();
   }
 
-  private Embedded embedDtos(List<PermissionDto> permissionDtoList) {
+  private Embedded embedDtos(List<RepositoryPermissionDto> repositoryPermissionDtoList) {
     return embeddedBuilder()
-      .with("permissions", permissionDtoList)
+      .with("permissions", repositoryPermissionDtoList)
       .build();
   }
 }
