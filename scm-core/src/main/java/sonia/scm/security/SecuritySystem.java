@@ -52,7 +52,7 @@ public interface SecuritySystem
    *
    * @return stored permission
    */
-  public void addPermission(AssignedPermission permission);
+  void addPermission(AssignedPermission permission);
 
   /**
    * Delete stored permission.
@@ -60,7 +60,7 @@ public interface SecuritySystem
    *
    * @param permission permission to be deleted
    */
-  public void deletePermission(AssignedPermission permission);
+  void deletePermission(AssignedPermission permission);
 
   //~--- get methods ----------------------------------------------------------
 
@@ -70,7 +70,7 @@ public interface SecuritySystem
    *
    * @return available permissions
    */
-  public Collection<PermissionDescriptor> getAvailablePermissions();
+  Collection<PermissionDescriptor> getAvailablePermissions();
 
   /**
    * Returns all stored permissions which are matched by the given
@@ -81,6 +81,5 @@ public interface SecuritySystem
    *
    * @return filtered permissions
    */
-  public Collection<AssignedPermission> getPermissions(
-    Predicate<AssignedPermission> predicate);
+  Collection<AssignedPermission> getPermissions(Predicate<AssignedPermission> predicate);
 }

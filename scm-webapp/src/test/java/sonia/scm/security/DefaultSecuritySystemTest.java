@@ -95,7 +95,7 @@ public class DefaultSecuritySystemTest extends AbstractTestBase
     AssignedPermission sap = createPermission("trillian", false, "repository:*:READ");
 
     assertEquals("trillian", sap.getName());
-    assertEquals("repository:*:READ", sap.getPermission());
+    assertEquals("repository:*:READ", sap.getPermission().getValue());
     assertEquals(false, sap.isGroupPermission());
   }
 
@@ -256,7 +256,7 @@ public class DefaultSecuritySystemTest extends AbstractTestBase
 
     return securitySystem.getPermissions(permission -> Objects.equal(name, permission.getName())
       && Objects.equal(groupPermission, permission.isGroupPermission())
-      && Objects.equal(value, permission.getPermission())).stream().findAny().orElseThrow(() -> new AssertionError("created permission not found"));
+      && Objects.equal(value, permission.getPermission().getValue())).stream().findAny().orElseThrow(() -> new AssertionError("created permission not found"));
   }
 
   //~--- set methods ----------------------------------------------------------

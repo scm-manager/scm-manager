@@ -86,15 +86,15 @@ public class GlobalPermissionPocResource {
   @Path("")
   public Response getAll() {
     String[] permissions = securitySystem.getAvailablePermissions().stream().map(PermissionDescriptor::getValue).toArray(String[]::new);
-    return Response.ok(new PerminssionListDto(permissions)).build();
+    return Response.ok(new PermissionListDto(permissions)).build();
   }
 
   protected void assignExemplaryPermissions() {
-    AssignedPermission groupPermission = new AssignedPermission("configurers", true,"configuration:*");
+    AssignedPermission groupPermission = new AssignedPermission("configurers", true, new PermissionDescriptor("configuration:*"));
     log.info("try to add new permission: {}", groupPermission);
     securitySystem.addPermission(groupPermission);
 
-    AssignedPermission userPermission = new AssignedPermission("rene", "group:*");
+    AssignedPermission userPermission = new AssignedPermission("rene", new PermissionDescriptor("group:*"));
     log.info("try to add new permission: {}", userPermission);
     securitySystem.addPermission(userPermission);
   }

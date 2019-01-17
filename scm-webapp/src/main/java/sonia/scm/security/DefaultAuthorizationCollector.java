@@ -180,7 +180,7 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
 
     for (AssignedPermission gp : globalPermissions)
     {
-      String permission = gp.getPermission();
+      String permission = gp.getPermission().getValue();
 
       logger.trace("add permission {} for user {}", permission, user.getName());
       builder.add(permission);

@@ -5,6 +5,7 @@ import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import org.apache.shiro.authc.credential.PasswordService;
 import sonia.scm.security.AssignedPermission;
+import sonia.scm.security.PermissionDescriptor;
 import sonia.scm.security.SecuritySystem;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
@@ -153,7 +154,34 @@ public class UserResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   public Response getPermissions(@PathParam("id") String id) {
-    String[] permissions = securitySystem.getPermissions(p -> !p.isGroupPermission() && p.getName().equals(id)).stream().map(AssignedPermission::getPermission).toArray(String[]::new);
-    return Response.ok(new PerminssionListDto(permissions)).build();
+    String[] permissions =
+      securitySystem.getPermissions(p -> !p.isGroupPermission() && p.getName().equals(id))
+        .stream()
+        .map(AssignedPermission::getPermission)
+        .map(PermissionDescriptor::getValue)
+        .toArray(String[]::new);
+    return Response.ok(new PermissionListDto(permissions)).build();
+  }
+
+  /**
+   * Sets permissions for a user. Overwrites all existing permissions.
+   *
+   * @param id             id of the user to be modified
+   * @param newPermissions New list of permissions for the user
+   */
+  @PUT
+  @Path("permissions")
+  @Consumes(VndMediaType.PASSWORD_OVERWRITE)
+  @StatusCodes({
+    @ResponseCode(code = 204, condition = "update success"),
+    @ResponseCode(code = 400, condition = "Invalid body"),
+    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
+    @ResponseCode(code = 403, condition = "not authorized, the current user does not have the correct privilege"),
+    @ResponseCode(code = 404, condition = "not found, no user with the specified id/name available"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
+  @TypeHint(TypeHint.NO_CONTENT.class)
+  public Response overwritePermissions(@PathParam("id") String id, PermissionListDto newPermissions) {
+    return Response.noContent().build();
   }
 }

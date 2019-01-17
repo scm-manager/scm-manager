@@ -39,11 +39,10 @@ import com.github.legman.Subscribe;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableSet.Builder;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableSet.Builder;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.HandlerEventType;
@@ -68,6 +67,9 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
+import static java.util.Objects.isNull;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -251,14 +253,13 @@ public class DefaultSecuritySystem implements SecuritySystem
    */
   private boolean deletePermissions(Predicate<AssignedPermission> predicate)
   {
-    boolean found = false;
-    for (Entry<String, AssignedPermission> e : store.getAll().entrySet()) {
-      if ((predicate == null) || predicate.test(e.getValue())) {
-        store.remove(e.getKey());
-        found = true;
-      }
-    }
-    return found;
+    List<Entry<String, AssignedPermission>> toRemove =
+      store.getAll()
+        .entrySet()
+        .stream()
+        .filter(e -> (predicate == null) || predicate.test(e.getValue())).collect(Collectors.toList());
+    toRemove.forEach(e -> store.remove(e.getKey()));
+    return !toRemove.isEmpty();
   }
 
   /**
@@ -346,7 +347,7 @@ public class DefaultSecuritySystem implements SecuritySystem
   {
     Preconditions.checkArgument(!Strings.isNullOrEmpty(perm.getName()),
       "name is required");
-    Preconditions.checkArgument(!Strings.isNullOrEmpty(perm.getPermission()),
+    Preconditions.checkArgument(!isNull(perm.getPermission()),
       "permission is required");
   }
 

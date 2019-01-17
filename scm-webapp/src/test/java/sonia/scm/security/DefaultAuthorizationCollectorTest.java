@@ -33,7 +33,6 @@ package sonia.scm.security;
 
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
-import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -219,7 +218,7 @@ public class DefaultAuthorizationCollectorTest {
 
     StoredAssignedPermission p1 = new StoredAssignedPermission("one", new AssignedPermission("one", "one:one"));
     StoredAssignedPermission p2 = new StoredAssignedPermission("two", new AssignedPermission("two", "two:two"));
-    when(securitySystem.getPermissions(Mockito.any(Predicate.class))).thenReturn(Lists.newArrayList(p1, p2));
+    when(securitySystem.getPermissions(any())).thenReturn(Lists.newArrayList(p1, p2));
 
     // execute and assert
     AuthorizationInfo authInfo = collector.collect();
@@ -246,7 +245,7 @@ public class DefaultAuthorizationCollectorTest {
     verify(cache).clear();
 
     collector.invalidateCache(AuthorizationChangedEvent.createForUser("dent"));
-    verify(cache).removeAll(Mockito.any(Predicate.class));
+    verify(cache).removeAll(any());
   }
 
 }

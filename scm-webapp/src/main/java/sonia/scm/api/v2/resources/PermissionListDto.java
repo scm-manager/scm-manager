@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PerminssionListDto {
+public class PermissionListDto {
 
   private String[] permissions;
 }
