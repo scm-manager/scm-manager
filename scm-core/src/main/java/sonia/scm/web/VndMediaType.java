@@ -41,6 +41,7 @@ public class VndMediaType {
   public static final String PASSWORD_CHANGE = PREFIX + "passwordChange" + SUFFIX;
   @SuppressWarnings("squid:S2068")
   public static final String PASSWORD_OVERWRITE = PREFIX + "passwordOverwrite" + SUFFIX;
+  public static final String PERMISSION_COLLECTION = PREFIX + "permissionCollection" + SUFFIX;
   public static final String MERGE_RESULT = PREFIX + "mergeResult" + SUFFIX;
   public static final String MERGE_COMMAND = PREFIX + "mergeCommand" + SUFFIX;
 

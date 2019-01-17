@@ -6,7 +6,7 @@ import com.github.sdorra.ssp.StaticPermissions;
 @StaticPermissions(
   value = "permission",
   permissions = {},
-  globalPermissions = {"list", "assign"}
+  globalPermissions = {"list", "read", "assign"}
 )
 public interface Permission extends PermissionObject {
 }

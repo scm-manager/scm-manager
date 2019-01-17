@@ -96,6 +96,26 @@ class ResourceLinks {
     }
   }
 
+  UserPermissionLinks userPermissions() {
+    return new UserPermissionLinks(scmPathInfoStore.get());
+  }
+
+  static class UserPermissionLinks {
+    private final LinkBuilder userPermissionLinkBuilder;
+
+    UserPermissionLinks(ScmPathInfo pathInfo) {
+      this.userPermissionLinkBuilder = new LinkBuilder(pathInfo, UserRootResource.class, UserResource.class, UserPermissionResource.class);
+    }
+
+    public String permissions(String name) {
+      return userPermissionLinkBuilder.method("getUserResource").parameters(name).method("permissions").parameters().method("getPermissions").parameters().href();
+    }
+
+    public String overwritePermissions(String name) {
+      return userPermissionLinkBuilder.method("getUserResource").parameters(name).method("permissions").parameters().method("overwritePermissions").parameters().href();
+    }
+  }
+
   MeLinks me() {
     return new MeLinks(scmPathInfoStore.get(), this.user());
   }

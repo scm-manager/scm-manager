@@ -14,10 +14,12 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import sonia.scm.ContextEntry;
 import sonia.scm.NotFoundException;
 import sonia.scm.PageResult;
-import sonia.scm.security.SecuritySystem;
+import sonia.scm.security.PermissionAssigner;
+import sonia.scm.security.PermissionDescriptor;
 import sonia.scm.user.ChangePasswordNotAllowedException;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
@@ -27,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Collection;
 
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
@@ -61,11 +64,13 @@ public class UserRootResourceTest {
   @Mock
   private UserManager userManager;
   @Mock
-  private SecuritySystem securitySystem;
+  private PermissionAssigner permissionAssigner;
   @InjectMocks
   private UserDtoToUserMapperImpl dtoToUserMapper;
   @InjectMocks
   private UserToUserDtoMapperImpl userToDtoMapper;
+  @InjectMocks
+  private PermissionCollectionToDtoMapper permissionCollectionToDtoMapper;
 
   private ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
   private User originalUser;
@@ -83,7 +88,8 @@ public class UserRootResourceTest {
     UserCollectionToDtoMapper userCollectionToDtoMapper = new UserCollectionToDtoMapper(userToDtoMapper, resourceLinks);
     UserCollectionResource userCollectionResource = new UserCollectionResource(userManager, dtoToUserMapper,
       userCollectionToDtoMapper, resourceLinks, passwordService);
-    UserResource userResource = new UserResource(dtoToUserMapper, userToDtoMapper, userManager, passwordService, securitySystem);
+    UserPermissionResource userPermissionResource = new UserPermissionResource(permissionAssigner, permissionCollectionToDtoMapper);
+    UserResource userResource = new UserResource(dtoToUserMapper, userToDtoMapper, userManager, passwordService, userPermissionResource);
     UserRootResource userRootResource = new UserRootResource(Providers.of(userCollectionResource),
       Providers.of(userResource));
 
@@ -333,8 +339,6 @@ public class UserRootResourceTest {
 
     dispatcher.invoke(request, response);
 
-    System.out.println(response.getContentAsString());
-
     assertEquals(HttpServletResponse.SC_OK, response.getStatus());
     assertTrue(response.getContentAsString().contains("\"name\":\"Neo\""));
     assertTrue(response.getContentAsString().contains("\"self\":{\"href\":\"/v2/users/?page=0"));
@@ -351,8 +355,6 @@ public class UserRootResourceTest {
 
     dispatcher.invoke(request, response);
 
-    System.out.println(response.getContentAsString());
-
     assertEquals(HttpServletResponse.SC_OK, response.getStatus());
     assertTrue(response.getContentAsString().contains("\"name\":\"Neo\""));
     assertTrue(response.getContentAsString().contains("\"self\":{\"href\":\"/v2/users/?page=1"));
@@ -360,6 +362,48 @@ public class UserRootResourceTest {
     assertTrue(response.getContentAsString().contains("\"prev\":{\"href\":\"/v2/users/?page=0"));
     assertTrue(response.getContentAsString().contains("\"next\":{\"href\":\"/v2/users/?page=2"));
     assertTrue(response.getContentAsString().contains("\"last\":{\"href\":\"/v2/users/?page=2"));
+  }
+
+  @Test
+  public void shouldGetPermissionLink() throws URISyntaxException {
+    MockHttpRequest request = MockHttpRequest.get("/" + UserRootResource.USERS_PATH_V2 + "Neo");
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+
+    assertTrue(response.getContentAsString().contains("\"permissions\":{"));
+  }
+
+  @Test
+  public void shouldGetPermissions() throws URISyntaxException {
+    when(permissionAssigner.readPermissionsForUser("Neo")).thenReturn(singletonList(new PermissionDescriptor("something:*")));
+    MockHttpRequest request = MockHttpRequest.get("/" + UserRootResource.USERS_PATH_V2 + "Neo/permissions");
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+
+    assertTrue(response.getContentAsString().contains("\"permissions\":[\"something:*\"]"));
+  }
+
+  @Test
+  public void shouldSetPermissions() throws URISyntaxException {
+    MockHttpRequest request = MockHttpRequest
+      .put("/" + UserRootResource.USERS_PATH_V2 + "Neo/permissions")
+      .contentType(VndMediaType.PERMISSION_COLLECTION)
+      .content("{\"permissions\":[\"other:*\"]}".getBytes());
+    MockHttpResponse response = new MockHttpResponse();
+    ArgumentCaptor<Collection<PermissionDescriptor>> captor = ArgumentCaptor.forClass(Collection.class);
+    doNothing().when(permissionAssigner).setPermissionsForUser(eq("Neo"), captor.capture());
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
+
+    assertEquals("other:*", captor.getValue().iterator().next().getValue());
   }
 
   private PageResult<User> createSingletonPageResult(int overallCount) {

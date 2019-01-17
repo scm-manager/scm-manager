@@ -16,6 +16,7 @@ public class ResourceLinksMock {
     when(resourceLinks.user()).thenReturn(userLinks);
     when(resourceLinks.me()).thenReturn(new ResourceLinks.MeLinks(uriInfo,userLinks));
     when(resourceLinks.userCollection()).thenReturn(new ResourceLinks.UserCollectionLinks(uriInfo));
+    when(resourceLinks.userPermissions()).thenReturn(new ResourceLinks.UserPermissionLinks(uriInfo));
     when(resourceLinks.autoComplete()).thenReturn(new ResourceLinks.AutoCompleteLinks(uriInfo));
     when(resourceLinks.group()).thenReturn(new ResourceLinks.GroupLinks(uriInfo));
     when(resourceLinks.groupCollection()).thenReturn(new ResourceLinks.GroupCollectionLinks(uriInfo));
