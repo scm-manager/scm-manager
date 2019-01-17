@@ -8,7 +8,6 @@ public class MapperModule extends AbstractModule {
   @Override
   protected void configure() {
     bind(UserDtoToUserMapper.class).to(Mappers.getMapper(UserDtoToUserMapper.class).getClass());
-    bind(MeToUserDtoMapper.class).to(Mappers.getMapper(MeToUserDtoMapper.class).getClass());
     bind(UserToUserDtoMapper.class).to(Mappers.getMapper(UserToUserDtoMapper.class).getClass());
     bind(UserCollectionToDtoMapper.class);
 
@@ -46,6 +45,7 @@ public class MapperModule extends AbstractModule {
     bind(MergeResultToDtoMapper.class).to(Mappers.getMapper(MergeResultToDtoMapper.class).getClass());
 
     // no mapstruct required
+    bind(MeDtoFactory.class);
     bind(UIPluginDtoMapper.class);
     bind(UIPluginDtoCollectionMapper.class);
 
