@@ -17,6 +17,7 @@ public class PermissionAssigner {
   }
 
   public Collection<PermissionDescriptor> getAvailablePermissions() {
+    PermissionPermissions.read().check();
     return securitySystem.getAvailablePermissions();
   }
 
@@ -37,6 +38,7 @@ public class PermissionAssigner {
   }
 
   private Set<PermissionDescriptor> readPermissions(Predicate<AssignedPermission> predicate) {
+    PermissionPermissions.read().check();
     return securitySystem.getPermissions(predicate)
       .stream()
       .map(AssignedPermission::getPermission)
@@ -54,6 +56,7 @@ public class PermissionAssigner {
   }
 
   private void adaptPermissions(String id, boolean groupPermission, Collection<PermissionDescriptor> permissions, Collection<AssignedPermission> existingPermissions) {
+    PermissionPermissions.assign().check();
     List<AssignedPermission> toRemove = existingPermissions.stream()
       .filter(p -> !permissions.contains(p.getPermission()))
       .collect(Collectors.toList());

@@ -224,22 +224,6 @@ public class DefaultSecuritySystemTest extends AbstractTestBase
   /**
    * Method description
    *
-   */
-  @Test(expected = UnauthorizedException.class)
-  public void testUnauthorizedGetPermission()
-  {
-    setAdminSubject();
-
-    createPermission("trillian", false,
-                                     "repository:*:READ");
-
-    setUserSubject();
-    securitySystem.getPermissions(p -> true);
-  }
-
-  /**
-   * Method description
-   *
    *
    * @param name
    * @param groupPermission
