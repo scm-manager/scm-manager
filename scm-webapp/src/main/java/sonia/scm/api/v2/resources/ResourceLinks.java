@@ -96,11 +96,17 @@ class ResourceLinks {
     }
   }
 
+  interface WithPermissionLinks {
+    String permissions(String name);
+
+    String overwritePermissions(String name);
+  }
+
   UserPermissionLinks userPermissions() {
     return new UserPermissionLinks(scmPathInfoStore.get());
   }
 
-  static class UserPermissionLinks {
+  static class UserPermissionLinks implements WithPermissionLinks {
     private final LinkBuilder userPermissionLinkBuilder;
 
     UserPermissionLinks(ScmPathInfo pathInfo) {
@@ -120,7 +126,7 @@ class ResourceLinks {
     return new GroupPermissionLinks(scmPathInfoStore.get());
   }
 
-  static class GroupPermissionLinks {
+  static class GroupPermissionLinks implements WithPermissionLinks {
     private final LinkBuilder groupPermissionLinkBuilder;
 
     GroupPermissionLinks(ScmPathInfo pathInfo) {

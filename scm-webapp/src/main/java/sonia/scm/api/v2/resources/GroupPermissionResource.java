@@ -48,7 +48,7 @@ public class GroupPermissionResource {
   })
   public Response getPermissions(@PathParam("id") String id) {
     Collection<PermissionDescriptor> permissions = permissionAssigner.readPermissionsForGroup(id);
-    return Response.ok(permissionCollectionToDtoMapper.map(permissions, id)).build();
+    return Response.ok(permissionCollectionToDtoMapper.mapForGroup(permissions, id)).build();
   }
 
   /**
