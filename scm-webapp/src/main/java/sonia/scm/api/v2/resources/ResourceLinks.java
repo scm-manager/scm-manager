@@ -616,7 +616,7 @@ class ResourceLinks {
     private final LinkBuilder permissionsLlinkBuilder;
 
     PermissionsLinks(ScmPathInfo scmPathInfo) {
-      this.permissionsLlinkBuilder = new LinkBuilder(scmPathInfo, GlobalPermissionPocResource.class);
+      this.permissionsLlinkBuilder = new LinkBuilder(scmPathInfo, GlobalPermissionResource.class);
     }
 
     String self() {
