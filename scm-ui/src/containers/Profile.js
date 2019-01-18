@@ -12,6 +12,7 @@ import {
   ErrorPage,
   Page,
   Navigation,
+  SubNavigation,
   Section,
   NavLink
 } from "@scm-manager/ui-components";
@@ -63,18 +64,26 @@ class Profile extends React.Component<Props, State> {
           <div className="column is-three-quarters">
             <Route path={url} exact render={() => <ProfileInfo me={me} />} />
             <Route
-              path={`${url}/password`}
+              path={`${url}/settings/password`}
               render={() => <ChangeUserPassword me={me} />}
             />
           </div>
           <div className="column">
             <Navigation>
               <Section label={t("profile.navigationLabel")}>
-                <NavLink to={`${url}`} label={t("profile.informationNavLink")} />
                 <NavLink
-                  to={`${url}/password`}
-                  label={t("profile.changePasswordNavLink")}
+                  to={`${url}`}
+                  label={t("profile.informationNavLink")}
                 />
+                <SubNavigation
+                  to={`${url}/settings/password`}
+                  label={t("profile.settingsNavLink")}
+                >
+                  <NavLink
+                    to={`${url}/settings/password`}
+                    label={t("profile.changePasswordNavLink")}
+                  />
+                </SubNavigation>
               </Section>
             </Navigation>
           </div>
