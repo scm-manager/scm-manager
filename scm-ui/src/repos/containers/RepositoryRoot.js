@@ -80,8 +80,8 @@ class RepositoryRoot extends React.Component<Props> {
     if (error) {
       return (
         <ErrorPage
-          title={t("repository-root.error-title")}
-          subtitle={t("repository-root.error-subtitle")}
+          title={t("repository-root.errorTitle")}
+          subtitle={t("repository-root.errorSubtitle")}
           error={error}
         />
       );

@@ -34,12 +34,12 @@
     "subtitle": "Create a new user"
   },
   "single-user": {
-    "error-title": "Error",
-    "error-subtitle": "Unknown user error",
     "navigationLabel": "User Navigation",
     "informationNavLink": "Information",
     "editNavLink": "Edit",
-    "setPasswordNavLink": "Set password"
+    "setPasswordNavLink": "Set password",
+    "errorTitle": "Error",
+    "errorSubtitle": "Unknown user error"
   },
   "validation": {
     "mail-invalid": "This email is invalid",

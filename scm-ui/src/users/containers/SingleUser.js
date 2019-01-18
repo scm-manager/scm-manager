@@ -80,8 +80,8 @@ class SingleUser extends React.Component<Props> {
     if (error) {
       return (
         <ErrorPage
-          title={t("single-user.error-title")}
-          subtitle={t("single-user.error-subtitle")}
+          title={t("single-user.errorTitle")}
+          subtitle={t("single-user.errorSubtitle")}
           error={error}
         />
       );

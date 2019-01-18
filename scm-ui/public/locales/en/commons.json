@@ -43,13 +43,12 @@
     "previous": "Previous"
   },
   "profile": {
-    "navigation-label": "Navigation",
-    "actions-label": "Actions",
+    "navigationLabel": "Profile Navigation",
+    "informationNavLink": "Information",
+    "changePasswordNavLink": "Change password",
     "username": "Username",
     "displayName": "Display Name",
     "mail": "E-Mail",
-    "information": "Information",
-    "change-password": "Change password",
     "error-title": "Error",
     "error-subtitle": "Cannot display profile",
     "error": "Error",

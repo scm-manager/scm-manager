@@ -69,13 +69,11 @@ class Profile extends React.Component<Props, State> {
           </div>
           <div className="column">
             <Navigation>
-              <Section label={t("profile.navigation-label")}>
-                <NavLink to={`${url}`} label={t("profile.information")} />
-              </Section>
-              <Section label={t("profile.actions-label")}>
+              <Section label={t("profile.navigationLabel")}>
+                <NavLink to={`${url}`} label={t("profile.informationNavLink")} />
                 <NavLink
                   to={`${url}/password`}
-                  label={t("profile.change-password")}
+                  label={t("profile.changePasswordNavLink")}
                 />
               </Section>
             </Navigation>

@@ -17,13 +17,13 @@
     "create-button": "Create"
   },
   "repository-root": {
-    "error-title": "Error",
-    "error-subtitle": "Unknown repository error",
     "navigationLabel": "Repository Navigation",
     "historyNavLink": "Commits",
     "informationNavLink": "Information",
     "permissionsNavLink": "Permissions",
-    "sourcesNavLink": "Sources"
+    "sourcesNavLink": "Sources",
+    "errorTitle": "Error",
+    "errorSubtitle": "Unknown repository error"
   },
   "create": {
     "title": "Create Repository",
