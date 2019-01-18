@@ -5,6 +5,7 @@ import {
   Page,
   Loading,
   Navigation,
+  SubNavigation,
   Section,
   NavLink,
   ErrorPage
@@ -99,11 +100,11 @@ class SingleUser extends React.Component<Props> {
           <div className="column is-three-quarters">
             <Route path={url} exact component={() => <Details user={user} />} />
             <Route
-              path={`${url}/edit`}
+              path={`${url}/settings/edit`}
               component={() => <EditUser user={user} />}
             />
             <Route
-              path={`${url}/password`}
+              path={`${url}/settings/password`}
               component={() => <SetUserPassword user={user} />}
             />
           </div>
@@ -114,11 +115,16 @@ class SingleUser extends React.Component<Props> {
                   to={`${url}`}
                   label={t("single-user.informationNavLink")}
                 />
-                <EditUserNavLink user={user} editUrl={`${url}/edit`} />
-                <SetPasswordNavLink
-                  user={user}
-                  passwordUrl={`${url}/password`}
-                />
+                <SubNavigation
+                  to={`${url}/settings`}
+                  label={t("single-user.settingsNavLink")}
+                >
+                  <EditUserNavLink user={user} editUrl={`${url}/settings/edit`} />
+                  <SetPasswordNavLink
+                    user={user}
+                    passwordUrl={`${url}/settings/password`}
+                  />
+                </SubNavigation>
               </Section>
             </Navigation>
           </div>
