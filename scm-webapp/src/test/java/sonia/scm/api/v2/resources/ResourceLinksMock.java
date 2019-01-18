@@ -28,7 +28,7 @@ public class ResourceLinksMock {
     when(resourceLinks.changeset()).thenReturn(new ResourceLinks.ChangesetLinks(uriInfo));
     when(resourceLinks.fileHistory()).thenReturn(new ResourceLinks.FileHistoryLinks(uriInfo));
     when(resourceLinks.source()).thenReturn(new ResourceLinks.SourceLinks(uriInfo));
-    when(resourceLinks.permission()).thenReturn(new ResourceLinks.PermissionLinks(uriInfo));
+    when(resourceLinks.repositoryPermission()).thenReturn(new ResourceLinks.RepositoryPermissionLinks(uriInfo));
     when(resourceLinks.config()).thenReturn(new ResourceLinks.ConfigLinks(uriInfo));
     when(resourceLinks.branch()).thenReturn(new ResourceLinks.BranchLinks(uriInfo));
     when(resourceLinks.diff()).thenReturn(new ResourceLinks.DiffLinks(uriInfo));
@@ -40,6 +40,7 @@ public class ResourceLinksMock {
     when(resourceLinks.authentication()).thenReturn(new ResourceLinks.AuthenticationLinks(uriInfo));
     when(resourceLinks.index()).thenReturn(new ResourceLinks.IndexLinks(uriInfo));
     when(resourceLinks.merge()).thenReturn(new ResourceLinks.MergeLinks(uriInfo));
+    when(resourceLinks.permissions()).thenReturn(new ResourceLinks.PermissionsLinks(uriInfo));
 
     return resourceLinks;
   }

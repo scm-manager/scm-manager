@@ -43,10 +43,10 @@ public abstract class RepositoryPermissionToRepositoryPermissionDtoMapper {
   void appendLinks(@MappingTarget RepositoryPermissionDto target, @Context Repository repository) {
     String permissionName = getUrlPermissionName(target);
     Links.Builder linksBuilder = linkingTo()
-      .self(resourceLinks.permission().self(repository.getNamespace(), repository.getName(), permissionName));
+      .self(resourceLinks.repositoryPermission().self(repository.getNamespace(), repository.getName(), permissionName));
     if (RepositoryPermissions.permissionWrite(repository).isPermitted()) {
-      linksBuilder.single(link("update", resourceLinks.permission().update(repository.getNamespace(), repository.getName(), permissionName)));
-      linksBuilder.single(link("delete", resourceLinks.permission().delete(repository.getNamespace(), repository.getName(), permissionName)));
+      linksBuilder.single(link("update", resourceLinks.repositoryPermission().update(repository.getNamespace(), repository.getName(), permissionName)));
+      linksBuilder.single(link("delete", resourceLinks.repositoryPermission().delete(repository.getNamespace(), repository.getName(), permissionName)));
     }
     target.add(linksBuilder.build());
   }

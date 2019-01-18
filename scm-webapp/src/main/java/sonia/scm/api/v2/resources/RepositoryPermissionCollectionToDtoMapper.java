@@ -36,9 +36,9 @@ public class RepositoryPermissionCollectionToDtoMapper {
   private Links createLinks(Repository repository) {
     RepositoryPermissions.permissionRead(repository).check();
     Links.Builder linksBuilder = linkingTo()
-      .with(Links.linkingTo().self(resourceLinks.permission().all(repository.getNamespace(), repository.getName())).build());
+      .with(Links.linkingTo().self(resourceLinks.repositoryPermission().all(repository.getNamespace(), repository.getName())).build());
     if (RepositoryPermissions.permissionWrite(repository).isPermitted()) {
-      linksBuilder.single(link("create", resourceLinks.permission().create(repository.getNamespace(), repository.getName())));
+      linksBuilder.single(link("create", resourceLinks.repositoryPermission().create(repository.getNamespace(), repository.getName())));
     }
     return linksBuilder.build();
   }

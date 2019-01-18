@@ -479,14 +479,15 @@ class ResourceLinks {
 
 
   }
-  public PermissionLinks permission() {
-    return new PermissionLinks(scmPathInfoStore.get());
+
+  public RepositoryPermissionLinks repositoryPermission() {
+    return new RepositoryPermissionLinks(scmPathInfoStore.get());
   }
 
-  static class PermissionLinks {
+  static class RepositoryPermissionLinks {
     private final LinkBuilder permissionLinkBuilder;
 
-    PermissionLinks(ScmPathInfo pathInfo) {
+    RepositoryPermissionLinks(ScmPathInfo pathInfo) {
       permissionLinkBuilder = new LinkBuilder(pathInfo, RepositoryRootResource.class, RepositoryResource.class, PermissionRootResource.class);
     }
 
@@ -604,6 +605,22 @@ class ResourceLinks {
 
     String dryRun(String namespace, String name) {
       return mergeLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("merge").parameters().method("dryRun").parameters().href();
+    }
+  }
+
+  public PermissionsLinks permissions() {
+    return new PermissionsLinks(scmPathInfoStore.get());
+  }
+
+  static class PermissionsLinks {
+    private final LinkBuilder permissionsLlinkBuilder;
+
+    PermissionsLinks(ScmPathInfo scmPathInfo) {
+      this.permissionsLlinkBuilder = new LinkBuilder(scmPathInfo, GlobalPermissionPocResource.class);
+    }
+
+    String self() {
+      return permissionsLlinkBuilder.method("getAll").parameters().href();
     }
   }
 }
