@@ -2,12 +2,14 @@ package sonia.scm.api.v2.resources;
 
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.credential.PasswordService;
+import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.Subject;
 import org.jboss.resteasy.core.Dispatcher;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -19,7 +21,6 @@ import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
 import sonia.scm.web.VndMediaType;
 
-import javax.lang.model.util.Types;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -27,11 +28,7 @@ import java.net.URISyntaxException;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static sonia.scm.api.v2.resources.DispatcherMock.createDispatcher;
 
@@ -57,7 +54,7 @@ public class MeResourceTest {
   private UserManager userManager;
 
   @InjectMocks
-  private MeToUserDtoMapperImpl userToDtoMapper;
+  private MeDtoFactory meDtoFactory;
 
   private ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
 
@@ -66,7 +63,7 @@ public class MeResourceTest {
   private User originalUser;
 
   @Before
-  public void prepareEnvironment() throws Exception {
+  public void prepareEnvironment() {
     initMocks(this);
     originalUser = createDummyUser("trillian");
     when(userManager.create(userCaptor.capture())).thenAnswer(invocation -> invocation.getArguments()[0]);
@@ -74,17 +71,18 @@ public class MeResourceTest {
     doNothing().when(userManager).delete(userCaptor.capture());
     when(userManager.isTypeDefault(userCaptor.capture())).thenCallRealMethod();
     when(userManager.getDefaultType()).thenReturn("xml");
-    MeResource meResource = new MeResource(userToDtoMapper, userManager, passwordService);
+    MeResource meResource = new MeResource(meDtoFactory, userManager, passwordService);
     when(uriInfo.getApiRestUri()).thenReturn(URI.create("/"));
     when(scmPathInfoStore.get()).thenReturn(uriInfo);
     dispatcher = createDispatcher(meResource);
   }
 
   @Test
-  @SubjectAware(username = "trillian", password = "secret")
   public void shouldReturnCurrentlyAuthenticatedUser() throws URISyntaxException {
+    applyUserToSubject(originalUser);
+
     MockHttpRequest request = MockHttpRequest.get("/" + MeResource.ME_PATH_V2);
-    request.accept(VndMediaType.USER);
+    request.accept(VndMediaType.ME);
     MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
@@ -95,8 +93,17 @@ public class MeResourceTest {
     assertTrue(response.getContentAsString().contains("\"delete\":{\"href\":\"/v2/users/trillian\"}"));
   }
 
+  private void applyUserToSubject(User user) {
+    // use spy here to keep applied permissions from ShiroRule
+    Subject subject = spy(SecurityUtils.getSubject());
+    PrincipalCollection collection = mock(PrincipalCollection.class);
+    when(collection.getPrimaryPrincipal()).thenReturn(user.getName());
+    when(subject.getPrincipals()).thenReturn(collection);
+    when(collection.oneByType(User.class)).thenReturn(user);
+    shiro.setSubject(subject);
+  }
+
   @Test
-  @SubjectAware(username = "trillian", password = "secret")
   public void shouldEncryptPasswordBeforeChanging() throws Exception {
     String newPassword = "pwd123";
     String encryptedNewPassword = "encrypted123";
@@ -124,7 +131,6 @@ public class MeResourceTest {
   }
 
   @Test
-  @SubjectAware(username = "trillian", password = "secret")
   public void shouldGet400OnMissingOldPassword() throws Exception {
     originalUser.setType("not an xml type");
     String newPassword = "pwd123";
@@ -141,7 +147,6 @@ public class MeResourceTest {
   }
 
   @Test
-  @SubjectAware(username = "trillian", password = "secret")
   public void shouldGet400OnMissingEmptyPassword() throws Exception {
     String newPassword = "pwd123";
     String oldPassword = "";
@@ -158,7 +163,6 @@ public class MeResourceTest {
   }
 
   @Test
-  @SubjectAware(username = "trillian", password = "secret")
   public void shouldMapExceptionFromManager() throws Exception {
     String newPassword = "pwd123";
     String oldPassword = "secret";
