@@ -256,9 +256,6 @@ $fa-font-path: "webfonts";
     border-radius: 0;
     color: #333;
     padding: 1rem;
-    border-top: 1px solid #eee;
-    border-left: 1px solid #eee;
-    border-right: 1px solid #eee;
 
     &.is-active {
       color: $blue;
@@ -277,10 +274,27 @@ $fa-font-path: "webfonts";
       }
     }
   }
-  > li:first-child > a {
+  li {
+    ul {
+      margin: 0;
+      border-top: 1px solid #eee;
+
+      li {
+        border-right: none;
+      }
+      li:last-child {
+        border-bottom: none;
+      }
+    }
+
+    border-top: 1px solid #eee;
+    border-left: 1px solid #eee;
+    border-right: 1px solid #eee;
+  }
+  li:first-child {
     border-top: none;
   }
-  li:last-child > a {
+  li:last-child {
     border-bottom: 1px solid #eee;
   }
 }
