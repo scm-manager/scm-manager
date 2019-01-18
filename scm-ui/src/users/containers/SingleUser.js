@@ -17,14 +17,10 @@ import type { User } from "@scm-manager/ui-types";
 import type { History } from "history";
 import {
   fetchUserByName,
-  deleteUser,
   getUserByName,
   isFetchUserPending,
-  getFetchUserFailure,
-  isDeleteUserPending,
-  getDeleteUserFailure
+  getFetchUserFailure
 } from "../modules/users";
-
 import {
   EditUserNavLink,
   SetPasswordNavLink
@@ -40,8 +36,7 @@ type Props = {
   error: Error,
   usersLink: string,
 
-  // dispatcher functions
-  deleteUser: (user: User, callback?: () => void) => void,
+  // dispatcher function
   fetchUserByName: (string, string) => void,
 
   // context objects
@@ -54,14 +49,6 @@ class SingleUser extends React.Component<Props> {
   componentDidMount() {
     this.props.fetchUserByName(this.props.usersLink, this.props.name);
   }
-
-  userDeleted = () => {
-    this.props.history.push("/users");
-  };
-
-  deleteUser = (user: User) => {
-    this.props.deleteUser(user, this.userDeleted);
-  };
 
   stripEndingSlash = (url: string) => {
     if (url.endsWith("/")) {
@@ -99,7 +86,7 @@ class SingleUser extends React.Component<Props> {
           <div className="column is-three-quarters">
             <Route path={url} exact component={() => <Details user={user} />} />
             <Route
-              path={`${url}/settings/edit`}
+              path={`${url}/settings/general`}
               component={() => <EditUser user={user} />}
             />
             <Route
@@ -115,10 +102,10 @@ class SingleUser extends React.Component<Props> {
                   label={t("single-user.informationNavLink")}
                 />
                 <SubNavigation
-                  to={`${url}/settings/edit`}
+                  to={`${url}/settings/general`}
                   label={t("single-user.settingsNavLink")}
                 >
-                  <EditUserNavLink user={user} editUrl={`${url}/settings/edit`} />
+                  <EditUserNavLink user={user} editUrl={`${url}/settings/general`} />
                   <SetPasswordNavLink
                     user={user}
                     passwordUrl={`${url}/settings/password`}
@@ -136,10 +123,8 @@ class SingleUser extends React.Component<Props> {
 const mapStateToProps = (state, ownProps) => {
   const name = ownProps.match.params.name;
   const user = getUserByName(state, name);
-  const loading =
-    isFetchUserPending(state, name) || isDeleteUserPending(state, name);
-  const error =
-    getFetchUserFailure(state, name) || getDeleteUserFailure(state, name);
+  const loading = isFetchUserPending(state, name);
+  const error = getFetchUserFailure(state, name);
   const usersLink = getUsersLink(state);
   return {
     usersLink,
@@ -154,9 +139,6 @@ const mapDispatchToProps = dispatch => {
   return {
     fetchUserByName: (link: string, name: string) => {
       dispatch(fetchUserByName(link, name));
-    },
-    deleteUser: (user: User, callback?: () => void) => {
-      dispatch(deleteUser(user, callback));
     }
   };
 };

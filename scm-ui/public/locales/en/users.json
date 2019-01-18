@@ -38,8 +38,8 @@
     "navigationLabel": "User Navigation",
     "informationNavLink": "Information",
     "settingsNavLink": "Settings",
-    "editNavLink": "Edit",
-    "setPasswordNavLink": "Set password",
+    "editNavLink": "General",
+    "setPasswordNavLink": "Password",
     "errorTitle": "Error",
     "errorSubtitle": "Unknown user error"
   },
