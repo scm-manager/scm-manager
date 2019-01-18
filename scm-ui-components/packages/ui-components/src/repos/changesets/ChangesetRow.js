@@ -3,16 +3,15 @@ import React from "react";
 import type { Changeset, Repository, Tag } from "@scm-manager/ui-types";
 
 import classNames from "classnames";
-import { Interpolate, translate } from "react-i18next";
+import {Interpolate, translate} from "react-i18next";
 import ChangesetId from "./ChangesetId";
 import injectSheet from "react-jss";
-import { DateFromNow } from "../..";
+import {DateFromNow} from "../..";
 import ChangesetAuthor from "./ChangesetAuthor";
 import ChangesetTag from "./ChangesetTag";
 
-import { parseDescription } from "./changesets";
-import { AvatarWrapper, AvatarImage } from "../../avatar";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import {parseDescription} from "./changesets";
+import {AvatarWrapper, AvatarImage} from "../../avatar";
 
 const styles = {
   pointer: {
@@ -65,15 +64,7 @@ class ChangesetRow extends React.Component<Props> {
         <div className={classNames("media-content", classes.withOverflow)}>
           <div className="content">
             <p className="is-ellipsis-overflow">
-              <strong>
-                <ExtensionPoint
-                  name="changesets.changeset.description"
-                  props={{ changeset, value: description.title }}
-                  renderAll={true}
-                >
-                  {description.title}
-                </ExtensionPoint>
-              </strong>
+              <strong>{description.title}</strong>
               <br />
               <Interpolate
                 i18nKey="changesets.changeset.summary"

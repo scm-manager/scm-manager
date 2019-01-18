@@ -65,6 +65,6 @@
     "passwordInvalid": "Password has to be between 6 and 32 characters",
     "passwordConfirmFailed": "Passwords have to be identical",
     "submit": "Submit",
-    "changedSuccessfully": "Pasword successfully changed"
+    "changedSuccessfully": "Password changed successfully"
   }
 }
