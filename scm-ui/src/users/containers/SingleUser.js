@@ -27,11 +27,13 @@ import {
 import {
   DeleteUserNavLink,
   EditUserNavLink,
-  SetPasswordNavLink
+  SetPasswordNavLink,
+  SetPermissionsNavLink
 } from "./../components/navLinks";
 import { translate } from "react-i18next";
 import { getUsersLink } from "../../modules/indexResource";
 import SetUserPassword from "../components/SetUserPassword";
+import SetUserPermissions from "../components/SetUserPermissions";
 
 type Props = {
   name: string,
@@ -106,6 +108,10 @@ class SingleUser extends React.Component<Props> {
               path={`${url}/password`}
               component={() => <SetUserPassword user={user} />}
             />
+            <Route
+              path={`${url}/permissions`}
+              component={() => <SetUserPermissions user={user} />}
+            />
           </div>
           <div className="column">
             <Navigation>
@@ -118,6 +124,10 @@ class SingleUser extends React.Component<Props> {
                 <SetPasswordNavLink
                   user={user}
                   passwordUrl={`${url}/password`}
+                />
+                <SetPermissionsNavLink
+                  user={user}
+                  permissionsUrl={`${url}/permissions`}
                 />
               </Section>
               <Section label={t("single-user.actions-label")}>

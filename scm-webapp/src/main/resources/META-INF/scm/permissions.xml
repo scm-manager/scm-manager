@@ -38,11 +38,11 @@
   </permission>
   
   <permission>
-    <value>repository:*:WRITE</value>
+    <value>repository:write:*</value>
   </permission>
   
   <permission>
-    <value>repository:*:OWNER</value>
+    <value>user:*</value>
   </permission>
 
 </permissions>

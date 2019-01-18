@@ -32,6 +32,9 @@
   "set-password-button": {
     "label": "Set password"
   },
+  "set-permissions-button": {
+    "label": "Set permissions"
+  },
   "user-form": {
     "submit": "Submit"
   },
@@ -54,6 +57,9 @@
   },
   "password": {
     "set-password-successful": "Password successfully set"
+  },
+  "permissions": {
+    "set-permissions-successful": "Permissions successfully set"
   },
   "help": {
     "usernameHelpText": "Unique name of the user.",
