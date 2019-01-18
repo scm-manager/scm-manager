@@ -8,7 +8,6 @@ import sonia.scm.group.GroupManager;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -24,13 +23,15 @@ public class GroupResource {
   private final GroupToGroupDtoMapper groupToGroupDtoMapper;
   private final GroupDtoToGroupMapper dtoToGroupMapper;
   private final IdResourceManagerAdapter<Group, GroupDto> adapter;
+  private final GroupPermissionResource groupPermissionResource;
 
   @Inject
   public GroupResource(GroupManager manager, GroupToGroupDtoMapper groupToGroupDtoMapper,
-                       GroupDtoToGroupMapper groupDtoToGroupMapper) {
+                       GroupDtoToGroupMapper groupDtoToGroupMapper, GroupPermissionResource groupPermissionResource) {
     this.groupToGroupDtoMapper = groupToGroupDtoMapper;
     this.dtoToGroupMapper = groupDtoToGroupMapper;
     this.adapter = new IdResourceManagerAdapter<>(manager, Group.class);
+    this.groupPermissionResource = groupPermissionResource;
   }
 
   /**
@@ -99,5 +100,10 @@ public class GroupResource {
   @TypeHint(TypeHint.NO_CONTENT.class)
   public Response update(@PathParam("id") String name, @Valid GroupDto group) {
     return adapter.update(name, existing -> dtoToGroupMapper.map(group));
+  }
+
+  @Path("permissions")
+  public GroupPermissionResource permissions() {
+    return groupPermissionResource;
   }
 }

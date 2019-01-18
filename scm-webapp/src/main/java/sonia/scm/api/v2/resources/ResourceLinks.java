@@ -116,6 +116,26 @@ class ResourceLinks {
     }
   }
 
+  GroupPermissionLinks groupPermissions() {
+    return new GroupPermissionLinks(scmPathInfoStore.get());
+  }
+
+  static class GroupPermissionLinks {
+    private final LinkBuilder groupPermissionLinkBuilder;
+
+    GroupPermissionLinks(ScmPathInfo pathInfo) {
+      this.groupPermissionLinkBuilder = new LinkBuilder(pathInfo, GroupRootResource.class, GroupResource.class, GroupPermissionResource.class);
+    }
+
+    public String permissions(String name) {
+      return groupPermissionLinkBuilder.method("getGroupResource").parameters(name).method("permissions").parameters().method("getPermissions").parameters().href();
+    }
+
+    public String overwritePermissions(String name) {
+      return groupPermissionLinkBuilder.method("getGroupResource").parameters(name).method("permissions").parameters().method("overwritePermissions").parameters().href();
+    }
+  }
+
   MeLinks me() {
     return new MeLinks(scmPathInfoStore.get(), this.user());
   }

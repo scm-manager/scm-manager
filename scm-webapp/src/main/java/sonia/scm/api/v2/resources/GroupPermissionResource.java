@@ -19,21 +19,21 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-public class UserPermissionResource {
+public class GroupPermissionResource {
 
   private final PermissionAssigner permissionAssigner;
   private final PermissionCollectionToDtoMapper permissionCollectionToDtoMapper;
 
   @Inject
-  public UserPermissionResource(PermissionAssigner permissionAssigner, PermissionCollectionToDtoMapper permissionCollectionToDtoMapper) {
+  public GroupPermissionResource(PermissionAssigner permissionAssigner, PermissionCollectionToDtoMapper permissionCollectionToDtoMapper) {
     this.permissionAssigner = permissionAssigner;
     this.permissionCollectionToDtoMapper = permissionCollectionToDtoMapper;
   }
 
   /**
-   * Returns permissions for a user.
+   * Returns permissions for a group.
    *
-   * @param id the id/name of the user
+   * @param id the id/name of the group
    */
   @GET
   @Path("")
@@ -42,20 +42,20 @@ public class UserPermissionResource {
   @StatusCodes({
     @ResponseCode(code = 200, condition = "success"),
     @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
-    @ResponseCode(code = 403, condition = "not authorized, the current user has no privileges to read the user"),
-    @ResponseCode(code = 404, condition = "not found, no user with the specified id/name available"),
+    @ResponseCode(code = 403, condition = "not authorized, the current user has no privileges to read the group"),
+    @ResponseCode(code = 404, condition = "not found, no group with the specified id/name available"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
   public Response getPermissions(@PathParam("id") String id) {
-    Collection<PermissionDescriptor> permissions = permissionAssigner.readPermissionsForUser(id);
+    Collection<PermissionDescriptor> permissions = permissionAssigner.readPermissionsForGroup(id);
     return Response.ok(permissionCollectionToDtoMapper.map(permissions, id)).build();
   }
 
   /**
-   * Sets permissions for a user. Overwrites all existing permissions.
+   * Sets permissions for a group. Overwrites all existing permissions.
    *
-   * @param id             id of the user to be modified
-   * @param newPermissions New list of permissions for the user
+   * @param id             id of the group to be modified
+   * @param newPermissions New list of permissions for the group
    */
   @PUT
   @Path("")
@@ -64,8 +64,8 @@ public class UserPermissionResource {
     @ResponseCode(code = 204, condition = "update success"),
     @ResponseCode(code = 400, condition = "Invalid body"),
     @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
-    @ResponseCode(code = 403, condition = "not authorized, the current user does not have the correct privilege"),
-    @ResponseCode(code = 404, condition = "not found, no user with the specified id/name available"),
+    @ResponseCode(code = 403, condition = "not authorized, the current group does not have the correct privilege"),
+    @ResponseCode(code = 404, condition = "not found, no group with the specified id/name available"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
@@ -73,7 +73,7 @@ public class UserPermissionResource {
     Collection<PermissionDescriptor> permissionDescriptors = Arrays.stream(newPermissions.getPermissions())
       .map(PermissionDescriptor::new)
       .collect(Collectors.toList());
-    permissionAssigner.setPermissionsForUser(id, permissionDescriptors);
+    permissionAssigner.setPermissionsForGroup(id, permissionDescriptors);
     return Response.noContent().build();
   }
 }

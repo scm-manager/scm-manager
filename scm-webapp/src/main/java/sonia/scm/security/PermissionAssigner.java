@@ -3,6 +3,8 @@ package sonia.scm.security;
 import javax.inject.Inject;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class PermissionAssigner {
@@ -19,18 +21,46 @@ public class PermissionAssigner {
   }
 
   public Collection<PermissionDescriptor> readPermissionsForUser(String id) {
-    return securitySystem.getPermissions(p -> !p.isGroupPermission() && p.getName().equals(id)).stream().map(AssignedPermission::getPermission).collect(Collectors.toSet());
+    return readPermissions(filterForUser(id));
+  }
+
+  public Collection<PermissionDescriptor> readPermissionsForGroup(String id) {
+    return readPermissions(filterForGroup(id));
+  }
+
+  private Predicate<AssignedPermission> filterForUser(String id) {
+    return p -> !p.isGroupPermission() && p.getName().equals(id);
+  }
+
+  private Predicate<AssignedPermission> filterForGroup(String id) {
+    return p -> p.isGroupPermission() && p.getName().equals(id);
+  }
+
+  private Set<PermissionDescriptor> readPermissions(Predicate<AssignedPermission> predicate) {
+    return securitySystem.getPermissions(predicate)
+      .stream()
+      .map(AssignedPermission::getPermission)
+      .collect(Collectors.toSet());
   }
 
   public void setPermissionsForUser(String id, Collection<PermissionDescriptor> permissions) {
-    Collection<AssignedPermission> existingPermissions = securitySystem.getPermissions(p -> !p.isGroupPermission() && p.getName().equals(id));
+    Collection<AssignedPermission> existingPermissions = securitySystem.getPermissions(filterForUser(id));
+    adaptPermissions(id, false, permissions, existingPermissions);
+  }
+
+  public void setPermissionsForGroup(String id, Collection<PermissionDescriptor> permissions) {
+    Collection<AssignedPermission> existingPermissions = securitySystem.getPermissions(filterForGroup(id));
+    adaptPermissions(id, true, permissions, existingPermissions);
+  }
+
+  private void adaptPermissions(String id, boolean groupPermission, Collection<PermissionDescriptor> permissions, Collection<AssignedPermission> existingPermissions) {
     List<AssignedPermission> toRemove = existingPermissions.stream()
       .filter(p -> !permissions.contains(p.getPermission()))
       .collect(Collectors.toList());
     toRemove.forEach(securitySystem::deletePermission);
 
     permissions.stream()
-      .map(p -> new AssignedPermission(id, false, p))
+      .map(p -> new AssignedPermission(id, groupPermission, p))
       .filter(p -> !existingPermissions.contains(p))
       .forEach(securitySystem::addPermission);
   }

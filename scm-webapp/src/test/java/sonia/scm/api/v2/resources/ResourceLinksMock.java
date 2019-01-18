@@ -20,6 +20,7 @@ public class ResourceLinksMock {
     when(resourceLinks.autoComplete()).thenReturn(new ResourceLinks.AutoCompleteLinks(uriInfo));
     when(resourceLinks.group()).thenReturn(new ResourceLinks.GroupLinks(uriInfo));
     when(resourceLinks.groupCollection()).thenReturn(new ResourceLinks.GroupCollectionLinks(uriInfo));
+    when(resourceLinks.groupPermissions()).thenReturn(new ResourceLinks.GroupPermissionLinks(uriInfo));
     when(resourceLinks.repository()).thenReturn(new ResourceLinks.RepositoryLinks(uriInfo));
     when(resourceLinks.incoming()).thenReturn(new ResourceLinks.IncomingLinks(uriInfo));
     when(resourceLinks.repositoryCollection()).thenReturn(new ResourceLinks.RepositoryCollectionLinks(uriInfo));
