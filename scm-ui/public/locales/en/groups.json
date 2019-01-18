@@ -63,5 +63,11 @@
       "submit": "Yes",
       "cancel": "No"
     }
+  },
+  "set-permissions-button": {
+    "label": "Set permissions"
+  },
+  "permissions": {
+    "set-permissions-successful": "Permissions successfully set"
   }
 }
