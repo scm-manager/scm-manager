@@ -16,17 +16,18 @@ class PermissionCheckbox extends React.Component<Props> {
   render() {
     const { t, permission, checked, onChange, disabled } = this.props;
     const key = permission.split(":").join(".");
+    console.log("permissions." + key + ".displayName");
     return (
       <Checkbox
         name={permission}
-        label={t(key + ".displayName")}
+        label={t("permissions." + key + ".displayName")}
         checked={checked}
         onChange={onChange}
         disabled={disabled}
-        helpText={t(key + ".description")}
+        helpText={t("permissions." + key + ".description")}
       />
     );
   }
 }
 
-export default translate("permissions")(PermissionCheckbox);
+export default translate("plugins")(PermissionCheckbox);

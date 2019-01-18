@@ -34,14 +34,10 @@
 <permissions>
   
   <permission>
-    <display-name>Git config (read)</display-name>
-    <description>Read access to git config</description>
     <value>configuration:read:git</value>
   </permission>
   
   <permission>
-    <display-name>Git config (write)</display-name>
-    <description>Write access to git config</description>
     <value>configuration:write:git</value>
   </permission>
 

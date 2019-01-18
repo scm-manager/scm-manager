@@ -1,24 +1,4 @@
 {
-  "repository": {
-    "read": {
-      "*": {
-        "displayName": "Read all repositories",
-        "description": "Read access to all repositories"
-      }
-    },
-    "write": {
-      "*": {
-        "displayName": "Modify all repositories",
-        "description": "May modify/configure all repositories"
-      }
-    }
-  },
-  "user":{
-    "*": {
-      "displayName": "Administer users",
-      "description": "May administer all users"
-    }
-  },
   "form": {
     "submit-button": {
       "label": "Set permissions"

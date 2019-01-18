@@ -33,5 +33,21 @@
       },
       "success": "Default branch changed!"
     }
+  },
+  "permissions" : {
+    "configuration": {
+      "read": {
+        "git": {
+          "displayName": "Read git configuration",
+          "description": "May read the git configuration"
+        }
+      },
+      "write": {
+        "git": {
+          "displayName": "Write git configuration",
+          "description": "May change the git configuration"
+        }
+      }
+    }
   }
 }
