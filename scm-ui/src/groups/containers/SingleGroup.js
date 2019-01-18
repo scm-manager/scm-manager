@@ -31,7 +31,7 @@ import {
 import { translate } from "react-i18next";
 import EditGroup from "./EditGroup";
 import { getGroupsLink } from "../../modules/indexResource";
-import SetGroupPermissions from "../components/SetGroupPermissions";
+import SetPermissions from "../../permissions/components/SetPermissions";
 
 type Props = {
   name: string,
@@ -110,7 +110,9 @@ class SingleGroup extends React.Component<Props> {
             <Route
               path={`${url}/permissions`}
               exact
-              component={() => <SetGroupPermissions group={group} />}
+              component={() => (
+                <SetPermissions selectedPermissionsLink={group._links.permissions} />
+              )}
             />
           </div>
           <div className="column">

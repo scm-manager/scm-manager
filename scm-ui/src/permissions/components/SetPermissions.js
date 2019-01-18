@@ -1,6 +1,6 @@
 // @flow
 import React from "react";
-import type { User } from "@scm-manager/ui-types";
+import type { Link } from "@scm-manager/ui-types";
 import {
   Notification,
   ErrorNotification,
@@ -14,9 +14,9 @@ import { connect } from "react-redux";
 import { getLink } from "../../modules/indexResource";
 
 type Props = {
-  user: User,
   t: string => string,
-  permissionLink: string
+  availablePermissionLink: string,
+  selectedPermissionsLink: Link
 };
 
 type State = {
@@ -25,19 +25,20 @@ type State = {
   error?: Error,
   permissionsChanged: boolean,
   permissionsSubmitted: boolean,
-  modifiable: boolean
+  overwritePermissionsLink?: Link
 };
 
-class SetUserPermissions extends React.Component<Props, State> {
+class SetPermissions extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
     this.state = {
-      permissions: { perm1: false, perm2: false },
+      permissions: {},
       loading: true,
       permissionsChanged: false,
       permissionsSubmitted: false,
-      modifiable: false
+      modifiable: false,
+      overwritePermissionsLink: undefined
     };
   }
 
@@ -67,7 +68,7 @@ class SetUserPermissions extends React.Component<Props, State> {
 
   componentDidMount(): void {
     apiClient
-      .get(this.props.permissionLink)
+      .get(this.props.availablePermissionLink)
       .then(response => {
         return response.json();
       })
@@ -83,20 +84,19 @@ class SetUserPermissions extends React.Component<Props, State> {
 
   loadPermissionsForUser = () => {
     apiClient
-      .get(this.props.user._links.permissions.href)
+      .get(this.props.selectedPermissionsLink.href)
       .then(response => {
         return response.json();
       })
       .then(response => {
         const checkedPermissions = response.permissions;
-        const modifiable = !!response._links.overwrite;
         this.setState(state => {
           const newPermissions = state.permissions;
           checkedPermissions.forEach(name => (newPermissions[name] = true));
           return {
             loading: false,
-            modifiable: modifiable,
-            permissions: newPermissions
+            permissions: newPermissions,
+            overwritePermissionsLink: response._links.overwrite
           };
         });
       });
@@ -105,21 +105,25 @@ class SetUserPermissions extends React.Component<Props, State> {
   submit = (event: Event) => {
     event.preventDefault();
     if (this.state.permissions) {
-      const { user } = this.props;
       const { permissions } = this.state;
       this.setLoadingState();
       const selectedPermissions = Object.entries(permissions)
         .filter(e => e[1])
         .map(e => e[0]);
-      setPermissions(user._links.permissions.href, selectedPermissions)
-        .then(result => {
-          if (result.error) {
-            this.setErrorState(result.error);
-          } else {
-            this.setSuccessfulState();
-          }
-        })
-        .catch(err => {});
+      if (this.state.overwritePermissionsLink) {
+        setPermissions(
+          this.state.overwritePermissionsLink.href,
+          selectedPermissions
+        )
+          .then(result => {
+            if (result.error) {
+              this.setErrorState(result.error);
+            } else {
+              this.setSuccessfulState();
+            }
+          })
+          .catch(err => {});
+      }
     }
   };
 
@@ -133,7 +137,7 @@ class SetUserPermissions extends React.Component<Props, State> {
       message = (
         <Notification
           type={"success"}
-          children={t("permissions.set-permissions-successful")}
+          children={t("form.set-permissions-successful")}
           onClose={() => this.onClose()}
         />
       );
@@ -148,21 +152,21 @@ class SetUserPermissions extends React.Component<Props, State> {
         <SubmitButton
           disabled={!this.state.permissionsChanged}
           loading={loading}
-          label={t("user-form.submit")}
+          label={t("form.submit-button.label")}
         />
       </form>
     );
   }
 
   renderPermissions = () => {
-    const { modifiable, permissions } = this.state;
+    const { overwritePermissionsLink, permissions } = this.state;
     return Object.keys(permissions).map(p => (
       <div key={p}>
         <PermissionCheckbox
           permission={p}
           checked={permissions[p]}
           onChange={this.valueChanged}
-          disabled={!modifiable}
+          disabled={!overwritePermissionsLink}
         />
       </div>
     ));
@@ -187,10 +191,12 @@ class SetUserPermissions extends React.Component<Props, State> {
 }
 
 const mapStateToProps = state => {
-  const permissionLink = getLink(state, "permissions");
+  const availablePermissionLink = getLink(state, "permissions");
   return {
-    permissionLink
+    availablePermissionLink
   };
 };
 
-export default connect(mapStateToProps)(translate("users")(SetUserPermissions));
+export default connect(mapStateToProps)(
+  translate("permissions")(SetPermissions)
+);

@@ -33,7 +33,7 @@ import {
 import { translate } from "react-i18next";
 import { getUsersLink } from "../../modules/indexResource";
 import SetUserPassword from "../components/SetUserPassword";
-import SetUserPermissions from "../components/SetUserPermissions";
+import SetPermissions from "../../permissions/components/SetPermissions";
 
 type Props = {
   name: string,
@@ -110,7 +110,11 @@ class SingleUser extends React.Component<Props> {
             />
             <Route
               path={`${url}/permissions`}
-              component={() => <SetUserPermissions user={user} />}
+              component={() => (
+                <SetPermissions
+                  selectedPermissionsLink={user._links.permissions}
+                />
+              )}
             />
           </div>
           <div className="column">

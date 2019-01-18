@@ -66,8 +66,5 @@
   },
   "set-permissions-button": {
     "label": "Set permissions"
-  },
-  "permissions": {
-    "set-permissions-successful": "Permissions successfully set"
   }
 }

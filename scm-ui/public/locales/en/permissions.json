@@ -18,5 +18,11 @@
       "displayName": "Administer users",
       "description": "May administer all users"
     }
+  },
+  "form": {
+    "submit-button": {
+      "label": "Set permissions"
+    },
+    "set-permissions-successful": "Permissions set successfully"
   }
 }

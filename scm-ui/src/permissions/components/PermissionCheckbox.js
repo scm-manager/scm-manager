@@ -2,7 +2,7 @@
 
 import React from "react";
 import { translate } from "react-i18next";
-import { Checkbox } from "@scm-manager/ui-components";
+import { Checkbox } from "../../../../scm-ui-components/packages/ui-components/src";
 
 type Props = {
   permission: string,
