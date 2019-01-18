@@ -75,8 +75,8 @@ class SingleGroup extends React.Component<Props> {
     if (error) {
       return (
         <ErrorPage
-          title={t("single-group.error-title")}
-          subtitle={t("single-group.error-subtitle")}
+          title={t("single-group.errorTitle")}
+          subtitle={t("single-group.errorSubtitle")}
           error={error}
         />
       );
@@ -105,19 +105,11 @@ class SingleGroup extends React.Component<Props> {
           </div>
           <div className="column">
             <Navigation>
-              <Section label={t("single-group.navigation-label")}>
+              <Section label={t("single-group.navigationLabel")}>
                 <NavLink
                   to={`${url}`}
-                  label={t("single-group.information-label")}
+                  label={t("single-group.informationNavLink")}
                 />
-              </Section>
-              <Section label={t("single-group.actions-label")}>
-                <DeleteGroupNavLink
-                  group={group}
-                  deleteGroup={this.deleteGroup}
-                />
-                <EditGroupNavLink group={group} editUrl={`${url}/edit`} />
-                <NavLink to="/groups" label={t("single-group.back-label")} />
               </Section>
             </Navigation>
           </div>

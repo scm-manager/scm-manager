@@ -12,12 +12,10 @@
     "subtitle": "Create, read, update and delete groups"
   },
   "single-group": {
-    "error-title": "Error",
-    "error-subtitle": "Unknown group error",
-    "navigation-label": "Navigation",
-    "actions-label": "Actions",
-    "information-label": "Information",
-    "back-label": "Back"
+    "navigationLabel": "Group Navigation",
+    "informationNavLink": "Information",
+    "errorTitle": "Error",
+    "errorSubtitle": "Unknown group error"
   },
   "add-group": {
     "title": "Create Group",
