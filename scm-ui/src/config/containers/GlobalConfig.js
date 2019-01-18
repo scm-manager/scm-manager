@@ -78,8 +78,8 @@ class GlobalConfig extends React.Component<Props, State> {
     if (error) {
       return (
         <ErrorPage
-          title={t("global-config.error-title")}
-          subtitle={t("global-config.error-subtitle")}
+          title={t("config.errorTitle")}
+          subtitle={t("config.errorSubtitle")}
           error={error}
           configUpdatePermission={configUpdatePermission}
         />
@@ -91,7 +91,7 @@ class GlobalConfig extends React.Component<Props, State> {
 
     return (
       <div>
-        <Title title={t("global-config.title")} />
+        <Title title={t("config.title")} />
         {this.renderConfigChangedNotification()}
         <ConfigForm
           submitForm={config => this.modifyConfig(config)}

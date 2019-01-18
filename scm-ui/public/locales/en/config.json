@@ -1,12 +1,10 @@
 {
   "config": {
-    "navigation-title": "Navigation"
-  },
-  "global-config": {
+    "navigationLabel": "Configuration Navigation",
+    "globalConfigurationNavLink": "Global Configuration",
     "title": "Configuration",
-    "navigation-label": "Global Configuration",
-    "error-title": "Error",
-    "error-subtitle": "Unknown Config Error"
+    "errorTitle": "Error",
+    "errorSubtitle": "Unknown Config Error"
   },
   "config-form": {
     "submit": "Submit",
