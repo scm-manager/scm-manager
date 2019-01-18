@@ -17,7 +17,7 @@ class EditUserNavLink extends React.Component<Props> {
     if (!this.isEditable()) {
       return null;
     }
-    return <NavLink label={t("single-user.editNavLink")} to={editUrl} />;
+    return <NavLink label={t("single-user.menu.editNavLink")} to={editUrl} />;
   }
 
   isEditable = () => {

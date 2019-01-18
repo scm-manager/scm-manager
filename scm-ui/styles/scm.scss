@@ -291,7 +291,7 @@ $fa-font-path: "webfonts";
     border-left: 1px solid #eee;
     border-right: 1px solid #eee;
   }
-  li:first-child {
+  > li:first-child {
     border-top: none;
   }
   li:last-child {

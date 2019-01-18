@@ -3,6 +3,7 @@ import React from "react";
 import { translate } from "react-i18next";
 import type { User } from "@scm-manager/ui-types";
 import {
+  Subtitle,
   Checkbox,
   InputField,
   PasswordConfirmation,
@@ -105,60 +106,67 @@ class UserForm extends React.Component<Props, State> {
       );
     }
     return (
-      <form onSubmit={this.submit}>
+      <>
+        <Subtitle subtitle={t("single-user.edit.subtitle")} />
+        <form onSubmit={this.submit}>
+          <div className="columns">
+            <div className="column is-half">
+              {nameField}
+              <InputField
+                label={t("user.displayName")}
+                onChange={this.handleDisplayNameChange}
+                value={user ? user.displayName : ""}
+                validationError={this.state.displayNameValidationError}
+                errorMessage={t("validation.displayname-invalid")}
+                helpText={t("help.displayNameHelpText")}
+              />
+            </div>
+            <div className="column is-half">
+              <InputField
+                label={t("user.mail")}
+                onChange={this.handleEmailChange}
+                value={user ? user.mail : ""}
+                validationError={this.state.mailValidationError}
+                errorMessage={t("validation.mail-invalid")}
+                helpText={t("help.mailHelpText")}
+              />
+            </div>
+          </div>
+          <div className="columns">
+            <div className="column">
+              {passwordChangeField}
+              <Checkbox
+                label={t("user.admin")}
+                onChange={this.handleAdminChange}
+                checked={user ? user.admin : false}
+                helpText={t("help.adminHelpText")}
+              />
+              <Checkbox
+                label={t("user.active")}
+                onChange={this.handleActiveChange}
+                checked={user ? user.active : false}
+                helpText={t("help.activeHelpText")}
+              />
+            </div>
+          </div>
+          <div className="columns">
+            <div className="column">
+              <SubmitButton
+                disabled={!this.isValid()}
+                loading={loading}
+                label={t("single-user.edit.button")}
+              />
+            </div>
+          </div>
+        </form>
+        <hr />
+        <Subtitle subtitle={t("single-user.delete.subtitle")} />
         <div className="columns">
-          <div className="column is-half">
-            {nameField}
-            <InputField
-              label={t("user.displayName")}
-              onChange={this.handleDisplayNameChange}
-              value={user ? user.displayName : ""}
-              validationError={this.state.displayNameValidationError}
-              errorMessage={t("validation.displayname-invalid")}
-              helpText={t("help.displayNameHelpText")}
-            />
-          </div>
-          <div className="column is-half">
-            <InputField
-              label={t("user.mail")}
-              onChange={this.handleEmailChange}
-              value={user ? user.mail : ""}
-              validationError={this.state.mailValidationError}
-              errorMessage={t("validation.mail-invalid")}
-              helpText={t("help.mailHelpText")}
-            />
-          </div>
-        </div>
-        <div className="columns">
-          <div className="column">
-            {passwordChangeField}
-            <Checkbox
-              label={t("user.admin")}
-              onChange={this.handleAdminChange}
-              checked={user ? user.admin : false}
-              helpText={t("help.adminHelpText")}
-            />
-            <Checkbox
-              label={t("user.active")}
-              onChange={this.handleActiveChange}
-              checked={user ? user.active : false}
-              helpText={t("help.activeHelpText")}
-            />
-          </div>
-        </div>
-        <div className="columns">
-          <div className="column">
-            <SubmitButton
-              disabled={!this.isValid()}
-              loading={loading}
-              label={t("user-form.submit")}
-            />
-          </div>
           <div className="column">
             <DeleteUser user={user} />
           </div>
         </div>
-      </form>
+      </>
     );
   }
 

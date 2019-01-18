@@ -17,29 +17,36 @@
   "create-user-button": {
     "label": "Create"
   },
-  "delete-user-button": {
-    "label": "Delete",
-    "confirm-alert": {
-      "title": "Delete user",
-      "message": "Do you really want to delete the user?",
-      "submit": "Yes",
-      "cancel": "No"
-    }
-  },
-  "user-form": {
-    "submit": "Submit",
-    "deleteUser": "Delete User"
-  },
   "add-user": {
     "title": "Create User",
     "subtitle": "Create a new user"
   },
   "single-user": {
-    "navigationLabel": "User Navigation",
-    "informationNavLink": "Information",
-    "settingsNavLink": "Settings",
-    "editNavLink": "General",
-    "setPasswordNavLink": "Password",
+    "menu": {
+      "navigationLabel": "User Navigation",
+      "informationNavLink": "Information",
+      "settingsNavLink": "Settings",
+      "editNavLink": "General",
+      "setPasswordNavLink": "Password"
+    },
+    "edit": {
+      "subtitle": "Edit User",
+      "button": "Submit"
+    },
+    "delete": {
+      "subtitle": "Delete User",
+      "button": "Delete",
+      "confirm-alert": {
+        "title": "Delete user",
+        "message": "Do you really want to delete the user?",
+        "submit": "Yes",
+        "cancel": "No"
+      }
+    },
+    "password": {
+      "button": "Set password",
+      "set-password-successful": "Password successfully set"
+    },
     "errorTitle": "Error",
     "errorSubtitle": "Unknown user error"
   },
@@ -47,9 +54,6 @@
     "mail-invalid": "This email is invalid",
     "name-invalid": "This name is invalid",
     "displayname-invalid": "This displayname is invalid"
-  },
-  "password": {
-    "set-password-successful": "Password successfully set"
   },
   "help": {
     "usernameHelpText": "Unique name of the user.",

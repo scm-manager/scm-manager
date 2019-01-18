@@ -96,14 +96,14 @@ class SingleUser extends React.Component<Props> {
           </div>
           <div className="column">
             <Navigation>
-              <Section label={t("single-user.navigationLabel")}>
+              <Section label={t("single-user.menu.navigationLabel")}>
                 <NavLink
                   to={`${url}`}
-                  label={t("single-user.informationNavLink")}
+                  label={t("single-user.menu.informationNavLink")}
                 />
                 <SubNavigation
                   to={`${url}/settings/general`}
-                  label={t("single-user.settingsNavLink")}
+                  label={t("single-user.menu.settingsNavLink")}
                 >
                   <EditUserNavLink user={user} editUrl={`${url}/settings/general`} />
                   <SetPasswordNavLink
