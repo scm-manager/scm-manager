@@ -26,7 +26,6 @@ import {
 } from "../modules/users";
 
 import {
-  DeleteUserNavLink,
   EditUserNavLink,
   SetPasswordNavLink
 } from "./../components/navLinks";

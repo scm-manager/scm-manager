@@ -27,7 +27,8 @@
     }
   },
   "user-form": {
-    "submit": "Submit"
+    "submit": "Submit",
+    "deleteUser": "Delete User"
   },
   "add-user": {
     "title": "Create User",

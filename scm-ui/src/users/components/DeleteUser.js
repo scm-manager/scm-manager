@@ -2,7 +2,7 @@
 import React from "react";
 import { translate } from "react-i18next";
 import type { User } from "@scm-manager/ui-types";
-import { NavAction, confirmAlert } from "@scm-manager/ui-components";
+import { DeleteButton, confirmAlert } from "@scm-manager/ui-components";
 
 type Props = {
   user: User,
@@ -11,7 +11,7 @@ type Props = {
   deleteUser: (user: User) => void
 };
 
-class DeleteUserNavLink extends React.Component<Props> {
+class DeleteUser extends React.Component<Props> {
   static defaultProps = {
     confirmDialog: true
   };
@@ -49,8 +49,8 @@ class DeleteUserNavLink extends React.Component<Props> {
     if (!this.isDeletable()) {
       return null;
     }
-    return <NavAction label={t("delete-user-button.label")} action={action} />;
+    return <DeleteButton label={t("user-form.deleteUser")} action={action} />;
   }
 }
 
-export default translate("users")(DeleteUserNavLink);
+export default translate("users")(DeleteUser);

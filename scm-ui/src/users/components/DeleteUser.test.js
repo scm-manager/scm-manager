@@ -1,8 +1,8 @@
 import React from "react";
 import { mount, shallow } from "enzyme";
-import "../../../tests/enzyme";
+import "../../tests/enzyme";
 import "../../../tests/i18n";
-import DeleteUserNavLink from "./DeleteUserNavLink";
+import DeleteUser from "../DeleteUser";
 
 import { confirmAlert } from "@scm-manager/ui-components";
 jest.mock("@scm-manager/ui-components", () => ({
@@ -10,14 +10,14 @@ jest.mock("@scm-manager/ui-components", () => ({
   NavAction: require.requireActual("@scm-manager/ui-components").NavAction
 }));
 
-describe("DeleteUserNavLink", () => {
+describe("DeleteUser", () => {
   it("should render nothing, if the delete link is missing", () => {
     const user = {
       _links: {}
     };
 
     const navLink = shallow(
-      <DeleteUserNavLink user={user} deleteUser={() => {}} />
+      <DeleteUser user={user} deleteUser={() => {}} />
     );
     expect(navLink.text()).toBe("");
   });
@@ -32,7 +32,7 @@ describe("DeleteUserNavLink", () => {
     };
 
     const navLink = mount(
-      <DeleteUserNavLink user={user} deleteUser={() => {}} />
+      <DeleteUser user={user} deleteUser={() => {}} />
     );
     expect(navLink.text()).not.toBe("");
   });
@@ -47,7 +47,7 @@ describe("DeleteUserNavLink", () => {
     };
 
     const navLink = mount(
-      <DeleteUserNavLink user={user} deleteUser={() => {}} />
+      <DeleteUser user={user} deleteUser={() => {}} />
     );
     navLink.find("a").simulate("click");
 
@@ -69,7 +69,7 @@ describe("DeleteUserNavLink", () => {
     }
 
     const navLink = mount(
-      <DeleteUserNavLink
+      <DeleteUser
         user={user}
         confirmDialog={false}
         deleteUser={capture}
