@@ -168,13 +168,13 @@ class RepositoryRoot extends React.Component<Props> {
           </div>
           <div className="column">
             <Navigation>
-              <Section label={t("repository-root.navigation-label")}>
-                <NavLink to={url} label={t("repository-root.information")} />
+              <Section label={t("repository-root.navigationLabel")}>
+                <NavLink to={url} label={t("repository-root.informationNavLink")} />
                 <RepositoryNavLink
                   repository={repository}
                   linkName="changesets"
                   to={`${url}/changesets/`}
-                  label={t("repository-root.history")}
+                  label={t("repository-root.historyNavLink")}
                   activeWhenMatch={this.matches}
                   activeOnlyWhenExact={false}
                 />
@@ -182,23 +182,18 @@ class RepositoryRoot extends React.Component<Props> {
                   repository={repository}
                   linkName="sources"
                   to={`${url}/sources`}
-                  label={t("repository-root.sources")}
+                  label={t("repository-root.sourcesNavLink")}
                   activeOnlyWhenExact={false}
                 />
                 <PermissionsNavLink
                   permissionUrl={`${url}/permissions`}
                   repository={repository}
                 />
-                <EditNavLink repository={repository} editUrl={`${url}/edit`} />
                 <ExtensionPoint
                   name="repository.navigation"
                   props={extensionProps}
                   renderAll={true}
                 />
-              </Section>
-              <Section label={t("repository-root.actions-label")}>
-                <DeleteNavAction repository={repository} delete={this.delete} />
-                <NavLink to="/repos" label={t("repository-root.back-label")} />
               </Section>
             </Navigation>
           </div>

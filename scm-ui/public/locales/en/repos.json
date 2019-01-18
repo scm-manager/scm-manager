@@ -19,13 +19,11 @@
   "repository-root": {
     "error-title": "Error",
     "error-subtitle": "Unknown repository error",
-    "actions-label": "Actions",
-    "back-label": "Back",
-    "navigation-label": "Navigation",
-    "history": "Commits",
-    "information": "Information",
-    "permissions": "Permissions",
-    "sources": "Sources"
+    "navigationLabel": "Repository Navigation",
+    "historyNavLink": "Commits",
+    "informationNavLink": "Information",
+    "permissionsNavLink": "Permissions",
+    "sourcesNavLink": "Sources"
   },
   "create": {
     "title": "Create Repository",
