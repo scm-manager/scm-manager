@@ -76,7 +76,7 @@ class Profile extends React.Component<Props, State> {
                   label={t("profile.informationNavLink")}
                 />
                 <SubNavigation
-                  to={`${url}/settings`}
+                  to={`${url}/settings/password`}
                   label={t("profile.settingsNavLink")}
                 >
                   <NavLink

@@ -115,7 +115,7 @@ class SingleUser extends React.Component<Props> {
                   label={t("single-user.informationNavLink")}
                 />
                 <SubNavigation
-                  to={`${url}/settings`}
+                  to={`${url}/settings/edit`}
                   label={t("single-user.settingsNavLink")}
                 >
                   <EditUserNavLink user={user} editUrl={`${url}/settings/edit`} />
