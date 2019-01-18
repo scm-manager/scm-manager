@@ -1,7 +1,7 @@
 //@flow
 import React from "react";
 import { translate } from "react-i18next";
-import { NavAction, confirmAlert } from "@scm-manager/ui-components";
+import { Subtitle, DeleteButton, confirmAlert } from "@scm-manager/ui-components";
 import type { Repository } from "@scm-manager/ui-types";
 
 type Props = {
@@ -25,15 +25,15 @@ class DeleteNavAction extends React.Component<Props> {
   confirmDelete = () => {
     const { t } = this.props;
     confirmAlert({
-      title: t("delete-nav-action.confirm-alert.title"),
-      message: t("delete-nav-action.confirm-alert.message"),
+      title: t("repository.delete.confirm-alert.title"),
+      message: t("repository.delete.confirm-alert.message"),
       buttons: [
         {
-          label: t("delete-nav-action.confirm-alert.submit"),
+          label: t("repository.delete.confirm-alert.submit"),
           onClick: () => this.delete()
         },
         {
-          label: t("delete-nav-action.confirm-alert.cancel"),
+          label: t("repository.delete.confirm-alert.cancel"),
           onClick: () => null
         }
       ]
@@ -51,7 +51,20 @@ class DeleteNavAction extends React.Component<Props> {
     if (!this.isDeletable()) {
       return null;
     }
-    return <NavAction label={t("delete-nav-action.label")} action={action} />;
+
+    return (
+      <>
+        <Subtitle subtitle={t("repository.delete.subtitle")} />
+        <div className="columns">
+          <div className="column">
+            <DeleteButton
+              label={t("repository.delete.button")}
+              action={action}
+            />
+          </div>
+        </div>
+      </>
+    );
   }
 }
 

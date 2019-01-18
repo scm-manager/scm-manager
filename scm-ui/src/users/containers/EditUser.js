@@ -3,6 +3,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import UserForm from "./../components/UserForm";
+import DeleteUser from "./../components/DeleteUser";
 import type { User } from "@scm-manager/ui-types";
 import {
   modifyUser,
@@ -49,6 +50,8 @@ class EditUser extends React.Component<Props> {
           user={user}
           loading={loading}
         />
+        <hr />
+        <DeleteUser user={user} />
       </div>
     );
   }

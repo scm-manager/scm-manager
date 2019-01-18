@@ -17,11 +17,15 @@
     "create-button": "Create"
   },
   "repository-root": {
-    "navigationLabel": "Repository Navigation",
-    "historyNavLink": "Commits",
-    "informationNavLink": "Information",
-    "permissionsNavLink": "Permissions",
-    "sourcesNavLink": "Sources",
+    "menu": {
+      "navigationLabel": "Repository Navigation",
+      "informationNavLink": "Information",
+      "historyNavLink": "Commits",
+      "sourcesNavLink": "Sources",
+      "settingsNavLink": "Settings",
+      "editNavLink": "General",
+      "permissionsNavLink": "Permissions"
+    },
     "errorTitle": "Error",
     "errorSubtitle": "Unknown repository error"
   },

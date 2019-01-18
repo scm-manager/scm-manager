@@ -2,15 +2,20 @@
 import React from "react";
 import { translate } from "react-i18next";
 import type { User } from "@scm-manager/ui-types";
-import { DeleteButton, confirmAlert } from "@scm-manager/ui-components";
-import {connect} from "react-redux";
 import {
-  deleteUser, fetchUserByName,
+  Subtitle,
+  DeleteButton,
+  confirmAlert
+} from "@scm-manager/ui-components";
+import { connect } from "react-redux";
+import {
+  deleteUser,
+  fetchUserByName,
   getDeleteUserFailure,
   getUserByName,
-  isDeleteUserPending,
+  isDeleteUserPending
 } from "../modules/users";
-import type {History} from "history";
+import type { History } from "history";
 
 type Props = {
   user: User,
@@ -71,7 +76,19 @@ class DeleteUser extends React.Component<Props> {
     if (!this.isDeletable()) {
       return null;
     }
-    return <DeleteButton label={t("single-user.delete.button")} action={action} />;
+    return (
+      <>
+        <Subtitle subtitle={t("single-user.delete.subtitle")} />
+        <div className="columns">
+          <div className="column">
+            <DeleteButton
+              label={t("single-user.delete.button")}
+              action={action}
+            />
+          </div>
+        </div>
+      </>
+    );
   }
 }
 

@@ -11,7 +11,6 @@ import {
   validation as validator
 } from "@scm-manager/ui-components";
 import * as userValidator from "./userValidation";
-import DeleteUser from "./DeleteUser";
 
 type Props = {
   submitForm: User => void,
@@ -159,13 +158,6 @@ class UserForm extends React.Component<Props, State> {
             </div>
           </div>
         </form>
-        <hr />
-        <Subtitle subtitle={t("single-user.delete.subtitle")} />
-        <div className="columns">
-          <div className="column">
-            <DeleteUser user={user} />
-          </div>
-        </div>
       </>
     );
   }

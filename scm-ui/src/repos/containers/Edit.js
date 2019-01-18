@@ -48,6 +48,8 @@ class Edit extends React.Component<Props> {
             this.props.modifyRepo(repo, this.repoModified);
           }}
         />
+        <hr />
+        <p>TODO: DeleteRepo hier einbinden. Aktuell heißt es noch DeleteNavAction</p>
       </div>
     );
   }

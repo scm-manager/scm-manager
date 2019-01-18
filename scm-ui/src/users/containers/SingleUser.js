@@ -21,10 +21,7 @@ import {
   isFetchUserPending,
   getFetchUserFailure
 } from "../modules/users";
-import {
-  EditUserNavLink,
-  SetPasswordNavLink
-} from "./../components/navLinks";
+import { EditUserNavLink, SetPasswordNavLink } from "./../components/navLinks";
 import { translate } from "react-i18next";
 import { getUsersLink } from "../../modules/indexResource";
 import SetUserPassword from "../components/SetUserPassword";
@@ -105,7 +102,10 @@ class SingleUser extends React.Component<Props> {
                   to={`${url}/settings/general`}
                   label={t("single-user.menu.settingsNavLink")}
                 >
-                  <EditUserNavLink user={user} editUrl={`${url}/settings/general`} />
+                  <EditUserNavLink
+                    user={user}
+                    editUrl={`${url}/settings/general`}
+                  />
                   <SetPasswordNavLink
                     user={user}
                     passwordUrl={`${url}/settings/password`}

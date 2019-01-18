@@ -6,7 +6,7 @@ import {connect} from "react-redux";
 import {Route, Switch} from "react-router-dom";
 import type {Repository} from "@scm-manager/ui-types";
 
-import {ErrorPage, Loading, Navigation, NavLink, Page, Section} from "@scm-manager/ui-components";
+import {ErrorPage, Loading, Navigation, SubNavigation, NavLink, Page, Section} from "@scm-manager/ui-components";
 import {translate} from "react-i18next";
 import RepositoryDetails from "../components/RepositoryDetails";
 import DeleteNavAction from "../components/DeleteNavAction";
@@ -109,11 +109,11 @@ class RepositoryRoot extends React.Component<Props> {
                 component={() => <RepositoryDetails repository={repository} />}
               />
               <Route
-                path={`${url}/edit`}
+                path={`${url}/settings/general`}
                 component={() => <Edit repository={repository} />}
               />
               <Route
-                path={`${url}/permissions`}
+                path={`${url}/settings/permissions`}
                 render={() => (
                   <Permissions
                     namespace={this.props.repository.namespace}
@@ -168,13 +168,13 @@ class RepositoryRoot extends React.Component<Props> {
           </div>
           <div className="column">
             <Navigation>
-              <Section label={t("repository-root.navigationLabel")}>
-                <NavLink to={url} label={t("repository-root.informationNavLink")} />
+              <Section label={t("repository-root.menu.navigationLabel")}>
+                <NavLink to={url} label={t("repository-root.menu.informationNavLink")} />
                 <RepositoryNavLink
                   repository={repository}
                   linkName="changesets"
                   to={`${url}/changesets/`}
-                  label={t("repository-root.historyNavLink")}
+                  label={t("repository-root.menu.historyNavLink")}
                   activeWhenMatch={this.matches}
                   activeOnlyWhenExact={false}
                 />
@@ -182,18 +182,24 @@ class RepositoryRoot extends React.Component<Props> {
                   repository={repository}
                   linkName="sources"
                   to={`${url}/sources`}
-                  label={t("repository-root.sourcesNavLink")}
+                  label={t("repository-root.menu.sourcesNavLink")}
                   activeOnlyWhenExact={false}
                 />
-                <PermissionsNavLink
-                  permissionUrl={`${url}/permissions`}
-                  repository={repository}
-                />
-                <ExtensionPoint
-                  name="repository.navigation"
-                  props={extensionProps}
-                  renderAll={true}
-                />
+                <SubNavigation
+                  to={`${url}/settings/general`}
+                  label={t("repository-root.menu.settingsNavLink")}
+                >
+                  <EditNavLink repository={repository} editUrl={`${url}/settings/general`} />
+                  <PermissionsNavLink
+                    permissionUrl={`${url}/settings/permissions`}
+                    repository={repository}
+                  />
+                  <ExtensionPoint
+                    name="repository.navigation"
+                    props={extensionProps}
+                    renderAll={true}
+                  />
+                </SubNavigation>
               </Section>
             </Navigation>
           </div>
