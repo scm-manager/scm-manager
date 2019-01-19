@@ -1,5 +1,8 @@
 package sonia.scm.security;
 
+import sonia.scm.ContextEntry;
+import sonia.scm.NotFoundException;
+
 import javax.inject.Inject;
 import java.util.Collection;
 import java.util.List;
@@ -62,9 +65,21 @@ public class PermissionAssigner {
       .collect(Collectors.toList());
     toRemove.forEach(securitySystem::deletePermission);
 
+    Collection<PermissionDescriptor> availablePermissions = this.getAvailablePermissions();
+
     permissions.stream()
+      .filter(permissionExists(availablePermissions))
       .map(p -> new AssignedPermission(id, groupPermission, p))
       .filter(p -> !existingPermissions.contains(p))
       .forEach(securitySystem::addPermission);
+  }
+
+  private Predicate<PermissionDescriptor> permissionExists(Collection<PermissionDescriptor> availablePermissions) {
+    return p -> {
+      if (!availablePermissions.contains(p)) {
+        throw NotFoundException.notFound(ContextEntry.ContextBuilder.entity("permission", p.getValue()));
+      }
+      return true;
+    };
   }
 }

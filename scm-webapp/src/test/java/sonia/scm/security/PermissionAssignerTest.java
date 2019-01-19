@@ -8,11 +8,14 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import sonia.scm.NotFoundException;
 import sonia.scm.plugin.PluginLoader;
 import sonia.scm.store.InMemoryConfigurationEntryStoreFactory;
 import sonia.scm.util.ClassLoaders;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static org.mockito.Mockito.mock;
@@ -35,7 +38,14 @@ public class PermissionAssignerTest {
     PluginLoader pluginLoader = mock(PluginLoader.class);
     when(pluginLoader.getUberClassLoader()).thenReturn(ClassLoaders.getContextClassLoader(DefaultSecuritySystem.class));
 
-    securitySystem = new DefaultSecuritySystem(new InMemoryConfigurationEntryStoreFactory(), pluginLoader);
+    securitySystem = new DefaultSecuritySystem(new InMemoryConfigurationEntryStoreFactory(), pluginLoader) {
+      @Override
+      public Collection<PermissionDescriptor> getAvailablePermissions() {
+        return Arrays.stream(new String[]{"perm:read:1", "perm:read:2", "perm:read:3", "perm:read:4"})
+          .map(PermissionDescriptor::new)
+          .collect(Collectors.toList());
+      }
+    };
 
     try {
       securitySystem.addPermission(new AssignedPermission("1", "perm:read:1"));
@@ -85,5 +95,11 @@ public class PermissionAssignerTest {
     expectedException.expect(UnauthorizedException.class);
 
     permissionAssigner.setPermissionsForUser("2", asList(new PermissionDescriptor("perm:read:3"), new PermissionDescriptor("perm:read:4")));
+  }
+
+  @Test
+  public void shouldFailForNotExistingPermissions() {
+    expectedException.expect(NotFoundException.class);
+    permissionAssigner.setPermissionsForUser("2", asList(new PermissionDescriptor("perm:read:5"), new PermissionDescriptor("perm:read:4")));
   }
 }
