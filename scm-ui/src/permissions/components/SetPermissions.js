@@ -7,8 +7,11 @@ import {
   SubmitButton
 } from "@scm-manager/ui-components";
 import { translate } from "react-i18next";
-import { setPermissions } from "./setPermissions";
-import { apiClient } from "@scm-manager/ui-components";
+import {
+  loadAvailablePermissions,
+  loadPermissionsForEntity,
+  setPermissions
+} from "./handlePermissions";
 import PermissionCheckbox from "./PermissionCheckbox";
 import { connect } from "react-redux";
 import { getLink } from "../../modules/indexResource";
@@ -67,28 +70,21 @@ class SetPermissions extends React.Component<Props, State> {
   };
 
   componentDidMount(): void {
-    apiClient
-      .get(this.props.availablePermissionLink)
-      .then(response => {
-        return response.json();
-      })
-      .then(response => {
+    loadAvailablePermissions(this.props.availablePermissionLink).then(
+      response => {
         const availablePermissions = response.permissions;
         const permissions = {};
         availablePermissions.forEach(p => {
           permissions[p] = false;
         });
-        this.setState({ permissions }, this.loadPermissionsForUser);
-      });
+        this.setState({ permissions }, this.loadPermissionsForEntity);
+      }
+    );
   }
 
-  loadPermissionsForUser = () => {
-    apiClient
-      .get(this.props.selectedPermissionsLink.href)
-      .then(response => {
-        return response.json();
-      })
-      .then(response => {
+  loadPermissionsForEntity = () => {
+    loadPermissionsForEntity(this.props.selectedPermissionsLink.href).then(
+      response => {
         const checkedPermissions = response.permissions;
         this.setState(state => {
           const newPermissions = state.permissions;
@@ -99,7 +95,8 @@ class SetPermissions extends React.Component<Props, State> {
             overwritePermissionsLink: response._links.overwrite
           };
         });
-      });
+      }
+    );
   };
 
   submit = (event: Event) => {

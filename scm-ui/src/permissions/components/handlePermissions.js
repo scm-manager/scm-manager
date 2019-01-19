@@ -11,3 +11,15 @@ export function setPermissions(url: string, permissions: string[]) {
       return response;
     });
 }
+
+export function loadPermissionsForEntity(url: string) {
+  return apiClient.get(url).then(response => {
+    return response.json();
+  });
+}
+
+export function loadAvailablePermissions(url: string) {
+  return apiClient.get(url).then(response => {
+    return response.json();
+  });
+}
