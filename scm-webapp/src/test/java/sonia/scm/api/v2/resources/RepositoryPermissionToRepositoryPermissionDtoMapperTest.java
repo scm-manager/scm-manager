@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SubjectAware(
   configuration = "classpath:sonia/scm/repository/shiro.ini"
 )
-public class RepositoryPermissionToRepositoryRepositoryPermissionDtoMapperTest {
+public class RepositoryPermissionToRepositoryPermissionDtoMapperTest {
 
   @Rule
   public ShiroRule shiro = new ShiroRule();
