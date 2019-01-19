@@ -16,7 +16,6 @@ class PermissionCheckbox extends React.Component<Props> {
   render() {
     const { t, permission, checked, onChange, disabled } = this.props;
     const key = permission.split(":").join(".");
-    console.log("permissions." + key + ".displayName");
     return (
       <Checkbox
         name={permission}
