@@ -1,27 +1,27 @@
 {
   "permissions": {
     "repository": {
-      "read": {
+      "read,pull": {
         "*": {
           "displayName": "Read all repositories",
-          "description": "Read access to all repositories"
+          "description": "May see and clone all repositories"
         }
       },
-      "write": {
+      "read,pull,push": {
         "*": {
-          "displayName": "Modify all repositories",
-          "description": "May modify/configure all repositories"
+          "displayName": "Write all repositories",
+          "description": "May see, clone and push to all repositories"
         }
       },
       "*": {
         "*": {
           "displayName": "Own all repositories",
-          "description": "Can modify/configure and delete all repositories"
+          "description": "May see, clone, push to, configure and delete all repositories"
         }
       },
       "create": {
         "displayName": "Create repositories",
-        "description": "Can create repositories"
+        "description": "May create repositories"
       }
     },
     "user": {

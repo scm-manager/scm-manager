@@ -34,10 +34,10 @@
 <permissions>
   
   <permission>
-    <value>repository:read:*</value>
+    <value>repository:read,pull:*</value>
   </permission>
   <permission>
-    <value>repository:write:*</value>
+    <value>repository:read,pull,push:*</value>
   </permission>
   <permission>
     <value>repository:*:*</value>
