@@ -39,9 +39,12 @@ import io.jsonwebtoken.SignatureAlgorithm;
 
 import java.time.Clock;
 import java.time.Instant;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -74,6 +77,7 @@ public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
   private Instant refreshExpiration;
   private String parentKeyId;
   private Scope scope = Scope.empty();
+  private Set<String> groups = new HashSet<>();
 
   private final Map<String,Object> custom = Maps.newHashMap();
 
@@ -131,6 +135,12 @@ public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
     this.refreshableFor = count;
     this.refreshableForUnit = unit;
 
+    return this;
+  }
+
+  @Override
+  public JwtAccessTokenBuilder groups(String... groups) {
+    Collections.addAll(this.groups, groups);
     return this;
   }
 
@@ -193,6 +203,10 @@ public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
 
     if ( issuer != null ) {
       claims.setIssuer(issuer);
+    }
+
+    if (!groups.isEmpty()) {
+      claims.put(JwtAccessToken.GROUPS_CLAIM_KEY, groups);
     }
 
     // sign token and create compact version

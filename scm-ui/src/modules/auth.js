@@ -134,15 +134,6 @@ const callFetchMe = (link: string): Promise<Me> => {
     .get(link)
     .then(response => {
       return response.json();
-    })
-    .then(json => {
-      const { name, displayName, mail, _links } = json;
-      return {
-        name,
-        displayName,
-        mail,
-        _links
-      };
     });
 };
 

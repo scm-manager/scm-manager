@@ -33,6 +33,7 @@ package sonia.scm.security;
 
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -48,6 +49,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.group.GroupNames;
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
@@ -76,6 +78,8 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class DefaultAuthorizationCollectorTest {
 
+  private ScmConfiguration configuration;
+
   @Mock
   private Cache cache;
 
@@ -99,8 +103,38 @@ public class DefaultAuthorizationCollectorTest {
   @Before
   public void setUp(){
     when(cacheManager.getCache(Mockito.any(String.class))).thenReturn(cache);
+    configuration = new ScmConfiguration();
+    collector = new DefaultAuthorizationCollector(configuration, cacheManager, repositoryDAO, securitySystem);
+  }
 
-    collector = new DefaultAuthorizationCollector(cacheManager, repositoryDAO, securitySystem);
+  @Test
+  @SubjectAware(
+    configuration = "classpath:sonia/scm/shiro-001.ini"
+  )
+  public void shouldGetAdminPrivilegedByConfiguration() {
+    configuration.setAdminUsers(ImmutableSet.of("trillian"));
+    authenticate(UserTestData.createTrillian(), "main");
+
+    AuthorizationInfo authInfo = collector.collect();
+    assertIsAdmin(authInfo);
+  }
+
+  private void assertIsAdmin(AuthorizationInfo authInfo) {
+    assertThat(authInfo.getRoles(), Matchers.containsInAnyOrder(Role.USER, Role.ADMIN));
+    assertThat(authInfo.getObjectPermissions(), nullValue());
+    assertThat(authInfo.getStringPermissions(), Matchers.contains("*"));
+  }
+
+  @Test
+  @SubjectAware(
+    configuration = "classpath:sonia/scm/shiro-001.ini"
+  )
+  public void shouldGetAdminPrivilegedByGroupConfiguration() {
+    configuration.setAdminGroups(ImmutableSet.of("heartOfGold"));
+    authenticate(UserTestData.createTrillian(), "heartOfGold");
+
+    AuthorizationInfo authInfo = collector.collect();
+    assertIsAdmin(authInfo);
   }
 
   /**
@@ -142,7 +176,7 @@ public class DefaultAuthorizationCollectorTest {
   public void testCollectWithCache() {
     authenticate(UserTestData.createTrillian(), "main");
 
-    AuthorizationInfo authInfo = collector.collect();
+    collector.collect();
     verify(cache).put(any(), any());
   }
 
@@ -176,9 +210,7 @@ public class DefaultAuthorizationCollectorTest {
     authenticate(trillian, "main");
 
     AuthorizationInfo authInfo = collector.collect();
-    assertThat(authInfo.getRoles(), Matchers.containsInAnyOrder(Role.USER, Role.ADMIN));
-    assertThat(authInfo.getObjectPermissions(), nullValue());
-    assertThat(authInfo.getStringPermissions(), Matchers.contains("*"));
+    assertIsAdmin(authInfo);
   }
 
   /**
@@ -238,7 +270,7 @@ public class DefaultAuthorizationCollectorTest {
   }
 
   /**
-   * Tests {@link AuthorizationCollector#invalidateCache(sonia.scm.security.AuthorizationChangedEvent)}.
+   * Tests {@link DefaultAuthorizationCollector#invalidateCache(sonia.scm.security.AuthorizationChangedEvent)}.
    */
   @Test
   public void testInvalidateCache() {

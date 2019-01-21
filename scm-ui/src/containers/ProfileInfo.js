@@ -42,6 +42,16 @@ class ProfileInfo extends React.Component<Props, State> {
                   <MailLink address={me.mail} />
                 </td>
               </tr>
+              <tr>
+                <td className="has-text-weight-semibold">{t("profile.groups")}</td>
+                <td className="content">
+                  <ul>
+                    {me.groups.map((group) => {
+                      return <li>{group}</li>;
+                    })}
+                  </ul>
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
