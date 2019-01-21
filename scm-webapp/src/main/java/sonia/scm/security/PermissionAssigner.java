@@ -68,15 +68,15 @@ public class PermissionAssigner {
     Collection<PermissionDescriptor> availablePermissions = this.getAvailablePermissions();
 
     permissions.stream()
-      .filter(permissionExists(availablePermissions))
+      .filter(permissionExists(availablePermissions, existingPermissions))
       .map(p -> new AssignedPermission(id, groupPermission, p))
       .filter(p -> !existingPermissions.contains(p))
       .forEach(securitySystem::addPermission);
   }
 
-  private Predicate<PermissionDescriptor> permissionExists(Collection<PermissionDescriptor> availablePermissions) {
+  private Predicate<PermissionDescriptor> permissionExists(Collection<PermissionDescriptor> availablePermissions, Collection<AssignedPermission> existingPermissions) {
     return p -> {
-      if (!availablePermissions.contains(p)) {
+      if (!availablePermissions.contains(p) && existingPermissions.stream().map(AssignedPermission::getPermission).noneMatch(e -> e.equals(p))) {
         throw NotFoundException.notFound(ContextEntry.ContextBuilder.entity("permission", p.getValue()));
       }
       return true;

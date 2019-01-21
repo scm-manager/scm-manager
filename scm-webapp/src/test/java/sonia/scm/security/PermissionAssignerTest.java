@@ -100,6 +100,13 @@ public class PermissionAssignerTest {
   @Test
   public void shouldFailForNotExistingPermissions() {
     expectedException.expect(NotFoundException.class);
-    permissionAssigner.setPermissionsForUser("2", asList(new PermissionDescriptor("perm:read:5"), new PermissionDescriptor("perm:read:4")));
+    permissionAssigner.setPermissionsForUser("2", asList(new PermissionDescriptor("perm:read:4"), new PermissionDescriptor("perm:read:5")));
+  }
+
+  @Test
+  public void shouldAcceptNotExistingPermissionsWhenTheyWereAssignedBefore() {
+    securitySystem.addPermission(new AssignedPermission("2", "perm:read:5"));
+
+    permissionAssigner.setPermissionsForUser("2", asList(new PermissionDescriptor("perm:read:5")));
   }
 }
