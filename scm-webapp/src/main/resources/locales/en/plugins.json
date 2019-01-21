@@ -35,6 +35,7 @@
         "displayName": "Administer groups",
         "description": "May administer all groups"
       }
-    }
+    },
+    "unknown": "Unknown permission"
   }
 }

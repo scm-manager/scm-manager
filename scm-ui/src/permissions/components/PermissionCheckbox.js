@@ -19,14 +19,29 @@ class PermissionCheckbox extends React.Component<Props> {
     return (
       <Checkbox
         name={permission}
-        label={t("permissions." + key + ".displayName")}
+        label={this.translateOrDefault(
+          "permissions." + key + ".displayName",
+          key
+        )}
         checked={checked}
         onChange={onChange}
         disabled={disabled}
-        helpText={t("permissions." + key + ".description")}
+        helpText={this.translateOrDefault(
+          "permissions." + key + ".description",
+          t("permissions.unknown")
+        )}
       />
     );
   }
+
+  translateOrDefault = (key: string, defaultText: string) => {
+    const translation = this.props.t(key);
+    if (translation === key) {
+      return defaultText;
+    } else {
+      return translation;
+    }
+  };
 }
 
 export default translate("plugins")(PermissionCheckbox);
