@@ -31,11 +31,15 @@
 
 package sonia.scm.security;
 
+import com.google.common.collect.ImmutableSet;
 import org.apache.shiro.authc.AuthenticationInfo;
+import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
@@ -43,6 +47,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 
 import java.util.HashMap;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -66,6 +71,9 @@ class BearerRealmTest {
   private DAORealmHelper realmHelper;
 
   @Mock
+  private DAORealmHelper.AuthenticationInfoBuilder builder;
+
+  @Mock
   private AccessTokenResolver accessTokenResolver;
 
   @InjectMocks
@@ -84,15 +92,19 @@ class BearerRealmTest {
   void shouldDoGetAuthentication() {
     BearerToken bearerToken = BearerToken.valueOf("__bearer__");
     AccessToken accessToken = mock(AccessToken.class);
-    when(accessToken.getSubject()).thenReturn("trillian");
-    when(accessToken.getClaims()).thenReturn(new HashMap<>());
 
+    Set<String> groups = ImmutableSet.of("HeartOfGold", "Puzzle42");
+
+    when(accessToken.getSubject()).thenReturn("trillian");
+    when(accessToken.getGroups()).thenReturn(groups);
+    when(accessToken.getClaims()).thenReturn(new HashMap<>());
     when(accessTokenResolver.resolve(bearerToken)).thenReturn(accessToken);
 
-    // we have to use answer, because we could not mock the result of Scopes
-    when(realmHelper.getAuthenticationInfo(
-      anyString(), anyString(), any(Scope.class)
-    )).thenAnswer(createAnswer("trillian", "__bearer__", true));
+    when(realmHelper.authenticationInfoBuilder("trillian")).thenReturn(builder);
+    when(builder.withGroups(groups)).thenReturn(builder);
+    when(builder.withCredentials("__bearer__")).thenReturn(builder);
+    when(builder.withScope(any(Scope.class))).thenReturn(builder);
+    when(builder.build()).thenReturn(authenticationInfo);
 
     AuthenticationInfo result = realm.doGetAuthenticationInfo(bearerToken);
     assertThat(result).isSameAs(authenticationInfo);
@@ -101,26 +113,5 @@ class BearerRealmTest {
   @Test
   void shouldThrowIllegalArgumentExceptionForWrongTypeOfToken() {
     assertThrows(IllegalArgumentException.class, () -> realm.doGetAuthenticationInfo(new UsernamePasswordToken()));
-  }
-
-  private Answer<AuthenticationInfo> createAnswer(String expectedSubject, String expectedCredentials, boolean scopeEmpty) {
-    return (iom) -> {
-      String subject = iom.getArgument(0);
-      assertThat(subject).isEqualTo(expectedSubject);
-      String credentials = iom.getArgument(1);
-      assertThat(credentials).isEqualTo(expectedCredentials);
-      Scope scope = iom.getArgument(2);
-      assertThat(scope.isEmpty()).isEqualTo(scopeEmpty);
-
-      return authenticationInfo;
-    };
-  }
-
-  private class MyAnswer implements Answer<AuthenticationInfo> {
-
-    @Override
-    public AuthenticationInfo answer(InvocationOnMock invocationOnMock) throws Throwable {
-      return null;
-    }
   }
 }
