@@ -27,6 +27,7 @@ import {
 import { translate } from "react-i18next";
 import EditGroup from "./EditGroup";
 import { getGroupsLink } from "../../modules/indexResource";
+import {ExtensionPoint} from "@scm-manager/ui-extensions";
 
 type Props = {
   name: string,
@@ -88,6 +89,11 @@ class SingleGroup extends React.Component<Props> {
 
     const url = this.matchedUrl();
 
+    const extensionProps = {
+      group,
+      url
+    };
+
     return (
       <Page title={group.name}>
         <div className="columns">
@@ -101,6 +107,11 @@ class SingleGroup extends React.Component<Props> {
               path={`${url}/edit`}
               exact
               component={() => <EditGroup group={group} />}
+            />
+            <ExtensionPoint
+              name="group.route"
+              props={extensionProps}
+              renderAll={true}
             />
           </div>
           <div className="column">
@@ -118,6 +129,11 @@ class SingleGroup extends React.Component<Props> {
                 />
                 <EditGroupNavLink group={group} editUrl={`${url}/edit`} />
                 <NavLink to="/groups" label={t("single-group.back-label")} />
+                <ExtensionPoint
+                  name="group.navigation"
+                  props={extensionProps}
+                  renderAll={true}
+                />
               </Section>
             </Navigation>
           </div>
