@@ -12,12 +12,28 @@
           "displayName": "Modify all repositories",
           "description": "May modify/configure all repositories"
         }
+      },
+      "*": {
+        "*": {
+          "displayName": "Own all repositories",
+          "description": "Can modify/configure and delete all repositories"
+        }
+      },
+      "create": {
+        "displayName": "Create repositories",
+        "description": "Can create repositories"
       }
     },
     "user": {
       "*": {
         "displayName": "Administer users",
         "description": "May administer all users"
+      }
+    },
+    "group": {
+      "*": {
+        "displayName": "Administer groups",
+        "description": "May administer all groups"
       }
     }
   }

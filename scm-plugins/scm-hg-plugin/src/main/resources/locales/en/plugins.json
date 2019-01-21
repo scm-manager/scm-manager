@@ -24,5 +24,21 @@
       "disabledHelpText": "Enable or disable the Mercurial plugin.",
       "required": "This configuration value is required"
     }
+  },
+  "permissions" : {
+    "configuration": {
+      "read": {
+        "hg": {
+          "displayName": "Read Mercurial configuration",
+          "description": "May read the Mercurial configuration"
+        }
+      },
+      "write": {
+        "hg": {
+          "displayName": "Write Mercurial configuration",
+          "description": "May change the Mercurial configuration"
+        }
+      }
+    }
   }
 }

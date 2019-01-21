@@ -36,7 +36,6 @@
   <permission>
     <value>configuration:read:git</value>
   </permission>
-  
   <permission>
     <value>configuration:write:git</value>
   </permission>
