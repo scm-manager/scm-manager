@@ -8,7 +8,6 @@ import {
 } from "@scm-manager/ui-components";
 import { translate } from "react-i18next";
 import {
-  loadAvailablePermissions,
   loadPermissionsForEntity,
   setPermissions
 } from "./handlePermissions";
@@ -68,34 +67,18 @@ class SetPermissions extends React.Component<Props, State> {
   };
 
   componentDidMount(): void {
-    loadAvailablePermissions(this.props.availablePermissionLink).then(
-      response => {
-        const availablePermissions = response.permissions;
-        const permissions = {};
-        availablePermissions.forEach(p => {
-          permissions[p] = false;
-        });
-        this.setState({ permissions }, this.loadPermissionsForEntity);
-      }
-    );
+    loadPermissionsForEntity(
+      this.props.availablePermissionLink,
+      this.props.selectedPermissionsLink.href
+    ).then(response => {
+      const { permissions, overwriteLink } = response;
+      this.setState({
+        permissions: permissions,
+        loading: false,
+        overwritePermissionsLink: overwriteLink
+      });
+    });
   }
-
-  loadPermissionsForEntity = () => {
-    loadPermissionsForEntity(this.props.selectedPermissionsLink.href).then(
-      response => {
-        const checkedPermissions = response.permissions;
-        this.setState(state => {
-          const newPermissions = state.permissions;
-          checkedPermissions.forEach(name => (newPermissions[name] = true));
-          return {
-            loading: false,
-            permissions: newPermissions,
-            overwritePermissionsLink: response._links.overwrite
-          };
-        });
-      }
-    );
-  };
 
   submit = (event: Event) => {
     event.preventDefault();

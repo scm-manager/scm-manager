@@ -12,14 +12,22 @@ export function setPermissions(url: string, permissions: string[]) {
     });
 }
 
-export function loadPermissionsForEntity(url: string) {
-  return apiClient.get(url).then(response => {
-    return response.json();
-  });
-}
-
-export function loadAvailablePermissions(url: string) {
-  return apiClient.get(url).then(response => {
-    return response.json();
+export function loadPermissionsForEntity(
+  availableUrl: string,
+  userUrl: string
+) {
+  return Promise.all([
+    apiClient.get(availableUrl).then(response => {
+      return response.json();
+    }),
+    apiClient.get(userUrl).then(response => {
+      return response.json();
+    })
+  ]).then(values => {
+    const [availablePermissions, checkedPermissions] = values;
+    const permissions = {};
+    availablePermissions.permissions.forEach(p => (permissions[p] = false));
+    checkedPermissions.permissions.forEach(p => (permissions[p] = true));
+    return { permissions, overwriteLink: checkedPermissions._links.overwrite };
   });
 }
