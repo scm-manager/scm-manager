@@ -37,7 +37,6 @@ import com.google.common.base.MoreObjects;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
-import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.DisabledAccountException;
@@ -54,6 +53,8 @@ import sonia.scm.group.GroupNames;
 import sonia.scm.user.User;
 import sonia.scm.user.UserDAO;
 
+import java.util.Collections;
+
 import static com.google.common.base.Preconditions.checkArgument;
 
 /**
@@ -63,8 +64,7 @@ import static com.google.common.base.Preconditions.checkArgument;
  * @author Sebastian Sdorra
  * @since 2.0.0
  */
-public final class DAORealmHelper
-{
+public final class DAORealmHelper {
 
   /**
    * the logger for DAORealmHelper
@@ -109,37 +109,37 @@ public final class DAORealmHelper
   public CredentialsMatcher wrapCredentialsMatcher(CredentialsMatcher credentialsMatcher) {
     return new RetryLimitPasswordMatcher(loginAttemptHandler, credentialsMatcher);
   }
-  
+
   /**
-   * Method description
+   * Creates {@link AuthenticationInfo} from a {@link UsernamePasswordToken}. The method accepts
+   * {@link AuthenticationInfo} as argument, so that the caller does not need to cast.
    *
+   * @param token authentication token, it must be {@link UsernamePasswordToken}
    *
-   * @param token
-   *
-   * @return
-   *
-   * @throws AuthenticationException
+   * @return authentication info
    */
-  public AuthenticationInfo getAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
+  public AuthenticationInfo getAuthenticationInfo(AuthenticationToken token) {
     checkArgument(token instanceof UsernamePasswordToken, "%s is required", UsernamePasswordToken.class);
 
     UsernamePasswordToken upt = (UsernamePasswordToken) token;
     String principal = upt.getUsername();
 
-    return getAuthenticationInfo(principal, null, null);
+    return getAuthenticationInfo(principal, null, null, Collections.emptySet());
   }
 
   /**
-   * Method description
+   * Returns a builder for {@link AuthenticationInfo}.
    *
+   * @param principal name of principal (username)
    *
-   * @param principal
-   * @param credentials
-   * @param scope
-   *
-   * @return
+   * @return authentication info builder
    */
-  public AuthenticationInfo getAuthenticationInfo(String principal, String credentials, Scope scope) {
+  public AuthenticationInfoBuilder authenticationInfoBuilder(String principal) {
+    return new AuthenticationInfoBuilder(principal);
+  }
+
+
+  private AuthenticationInfo getAuthenticationInfo(String principal, String credentials, Scope scope, Iterable<String> groups) {
     checkArgument(!Strings.isNullOrEmpty(principal), "username is required");
 
     LOG.debug("try to authenticate {}", principal);
@@ -157,7 +157,7 @@ public final class DAORealmHelper
 
     collection.add(principal, realm);
     collection.add(user, realm);
-    collection.add(collectGroups(principal), realm);
+    collection.add(collectGroups(principal, groups), realm);
     collection.add(MoreObjects.firstNonNull(scope, Scope.empty()), realm);
 
     String creds = credentials;
@@ -171,10 +171,14 @@ public final class DAORealmHelper
 
   //~--- methods --------------------------------------------------------------
 
-  private GroupNames collectGroups(String principal) {
+  private GroupNames collectGroups(String principal, Iterable<String> groupNames) {
     Builder<String> builder = ImmutableSet.builder();
 
     builder.add(GroupNames.AUTHENTICATED);
+
+    for (String group : groupNames) {
+      builder.add(group);
+    }
 
     for (Group group : groupDAO.getAll()) {
       if (group.isMember(principal)) {
@@ -185,6 +189,69 @@ public final class DAORealmHelper
     GroupNames groups = new GroupNames(builder.build());
     LOG.debug("collected following groups for principal {}: {}", principal, groups);
     return groups;
+  }
+
+  /**
+   * Builder class for {@link AuthenticationInfo}.
+   */
+  public class AuthenticationInfoBuilder {
+
+    private final String principal;
+
+    private String credentials;
+    private Scope scope;
+    private Iterable<String> groups = Collections.emptySet();
+
+    private AuthenticationInfoBuilder(String principal) {
+      this.principal = principal;
+    }
+
+    /**
+     * With credentials uses the given credentials for the {@link AuthenticationInfo}, this is particularly important
+     * for caching purposes.
+     *
+     * @param credentials credentials such as password
+     *
+     * @return {@code this}
+     */
+    public AuthenticationInfoBuilder withCredentials(String credentials) {
+      this.credentials = credentials;
+      return this;
+    }
+
+    /**
+     * With the scope object it is possible to limit the access permissions to scm-manager.
+     *
+     * @param scope scope object
+     *
+     * @return {@code this}
+     */
+    public AuthenticationInfoBuilder withScope(Scope scope) {
+      this.scope = scope;
+      return this;
+    }
+
+    /**
+     * With groups adds extra groups, besides those which come from the {@link GroupDAO}, to the authentication info.
+     *
+     * @param groups extra groups
+     *
+     * @return {@code this}
+     */
+    public AuthenticationInfoBuilder withGroups(Iterable<String> groups) {
+      this.groups = groups;
+      return this;
+    }
+
+    /**
+     * Build creates the authentication info from the given information.
+     *
+     * @return authentication info
+     */
+    public AuthenticationInfo build() {
+      return getAuthenticationInfo(principal, credentials, scope, groups);
+    }
+
   }
 
   private static class RetryLimitPasswordMatcher implements CredentialsMatcher {

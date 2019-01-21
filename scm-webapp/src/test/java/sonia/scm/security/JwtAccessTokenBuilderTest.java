@@ -47,8 +47,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import static org.hamcrest.Matchers.isEmptyOrNullString;
-import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
@@ -135,6 +134,7 @@ public class JwtAccessTokenBuilderTest {
       .issuer("https://www.scm-manager.org")
       .expiresIn(5, TimeUnit.SECONDS)
       .custom("a", "b")
+      .groups("one", "two", "three")
       .scope(Scope.valueOf("repo:*"))
       .build();
     
@@ -161,5 +161,6 @@ public class JwtAccessTokenBuilderTest {
     assertEquals(token.getIssuer().get(), "https://www.scm-manager.org");
     assertEquals("b", token.getCustom("a").get());
     assertEquals("[\"repo:*\"]", token.getScope().toString());
+    assertThat(token.getGroups(), containsInAnyOrder("one", "two", "three"));
   }
 }

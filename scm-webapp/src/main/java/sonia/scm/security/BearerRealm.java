@@ -101,11 +101,11 @@ public class BearerRealm extends AuthenticatingRealm
     BearerToken bt = (BearerToken) token;
     AccessToken accessToken = tokenResolver.resolve(bt);
 
-    return helper.getAuthenticationInfo(
-      accessToken.getSubject(),
-      bt.getCredentials(),
-      Scopes.fromClaims(accessToken.getClaims())
-    );
+    return helper.authenticationInfoBuilder(accessToken.getSubject())
+      .withCredentials(bt.getCredentials())
+      .withScope(Scopes.fromClaims(accessToken.getClaims()))
+      .withGroups(accessToken.getGroups())
+      .build();
   }
 
 }
