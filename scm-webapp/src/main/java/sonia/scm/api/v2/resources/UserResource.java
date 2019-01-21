@@ -9,7 +9,6 @@ import sonia.scm.user.UserManager;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -28,14 +27,20 @@ public class UserResource {
   private final IdResourceManagerAdapter<User, UserDto> adapter;
   private final UserManager userManager;
   private final PasswordService passwordService;
+  private final UserPermissionResource userPermissionResource;
 
   @Inject
-  public UserResource(UserDtoToUserMapper dtoToUserMapper, UserToUserDtoMapper userToDtoMapper, UserManager manager, PasswordService passwordService) {
+  public UserResource(
+    UserDtoToUserMapper dtoToUserMapper,
+    UserToUserDtoMapper userToDtoMapper,
+    UserManager manager,
+    PasswordService passwordService, UserPermissionResource userPermissionResource) {
     this.dtoToUserMapper = dtoToUserMapper;
     this.userToDtoMapper = userToDtoMapper;
     this.adapter = new IdResourceManagerAdapter<>(manager, User.class);
     this.userManager = manager;
     this.passwordService = passwordService;
+    this.userPermissionResource = userPermissionResource;
   }
 
   /**
@@ -131,5 +136,10 @@ public class UserResource {
   public Response overwritePassword(@PathParam("id") String name, @Valid PasswordOverwriteDto passwordOverwrite) {
     userManager.overwritePassword(name, passwordService.encryptPassword(passwordOverwrite.getNewPassword()));
     return Response.noContent().build();
+  }
+
+  @Path("permissions")
+  public UserPermissionResource permissions() {
+    return userPermissionResource;
   }
 }

@@ -32,6 +32,9 @@
   "set-password-button": {
     "label": "Set password"
   },
+  "set-permissions-button": {
+    "label": "Set permissions"
+  },
   "user-form": {
     "submit": "Submit"
   },

@@ -11,7 +11,11 @@ import {
 } from "@scm-manager/ui-components";
 import { Route } from "react-router";
 import { Details } from "./../components/table";
-import { DeleteGroupNavLink, EditGroupNavLink } from "./../components/navLinks";
+import {
+  DeleteGroupNavLink,
+  EditGroupNavLink,
+  SetPermissionsNavLink
+} from "./../components/navLinks";
 import type { Group } from "@scm-manager/ui-types";
 import type { History } from "history";
 import {
@@ -27,6 +31,7 @@ import {
 import { translate } from "react-i18next";
 import EditGroup from "./EditGroup";
 import { getGroupsLink } from "../../modules/indexResource";
+import SetPermissions from "../../permissions/components/SetPermissions";
 import {ExtensionPoint} from "@scm-manager/ui-extensions";
 
 type Props = {
@@ -113,6 +118,13 @@ class SingleGroup extends React.Component<Props> {
               props={extensionProps}
               renderAll={true}
             />
+            <Route
+              path={`${url}/permissions`}
+              exact
+              component={() => (
+                <SetPermissions selectedPermissionsLink={group._links.permissions} />
+              )}
+            />
           </div>
           <div className="column">
             <Navigation>
@@ -120,6 +132,10 @@ class SingleGroup extends React.Component<Props> {
                 <NavLink
                   to={`${url}`}
                   label={t("single-group.information-label")}
+                />
+                <SetPermissionsNavLink
+                  group={group}
+                  permissionsUrl={`${url}/permissions`}
                 />
               </Section>
               <Section label={t("single-group.actions-label")}>

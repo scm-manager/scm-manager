@@ -7,7 +7,7 @@ import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-import sonia.scm.repository.Permission;
+import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryPermissions;
 
@@ -16,16 +16,16 @@ import java.util.Optional;
 
 import static de.otto.edison.hal.Link.link;
 import static de.otto.edison.hal.Links.linkingTo;
-import static sonia.scm.api.v2.resources.PermissionDto.GROUP_PREFIX;
+import static sonia.scm.api.v2.resources.RepositoryPermissionDto.GROUP_PREFIX;
 
 @Mapper
-public abstract class PermissionToPermissionDtoMapper {
+public abstract class RepositoryPermissionToRepositoryPermissionDtoMapper {
 
   @Inject
   private ResourceLinks resourceLinks;
 
   @Mapping(target = "attributes", ignore = true) // We do not map HAL attributes
-  public abstract PermissionDto map(Permission permission, @Context Repository repository);
+  public abstract RepositoryPermissionDto map(RepositoryPermission permission, @Context Repository repository);
 
 
   @BeforeMapping
@@ -40,20 +40,20 @@ public abstract class PermissionToPermissionDtoMapper {
    * @param repository the repository
    */
   @AfterMapping
-  void appendLinks(@MappingTarget PermissionDto target, @Context Repository repository) {
+  void appendLinks(@MappingTarget RepositoryPermissionDto target, @Context Repository repository) {
     String permissionName = getUrlPermissionName(target);
     Links.Builder linksBuilder = linkingTo()
-      .self(resourceLinks.permission().self(repository.getNamespace(), repository.getName(), permissionName));
+      .self(resourceLinks.repositoryPermission().self(repository.getNamespace(), repository.getName(), permissionName));
     if (RepositoryPermissions.permissionWrite(repository).isPermitted()) {
-      linksBuilder.single(link("update", resourceLinks.permission().update(repository.getNamespace(), repository.getName(), permissionName)));
-      linksBuilder.single(link("delete", resourceLinks.permission().delete(repository.getNamespace(), repository.getName(), permissionName)));
+      linksBuilder.single(link("update", resourceLinks.repositoryPermission().update(repository.getNamespace(), repository.getName(), permissionName)));
+      linksBuilder.single(link("delete", resourceLinks.repositoryPermission().delete(repository.getNamespace(), repository.getName(), permissionName)));
     }
     target.add(linksBuilder.build());
   }
 
-  public String getUrlPermissionName(PermissionDto permissionDto) {
-    return Optional.of(permissionDto.getName())
-      .filter(p -> !permissionDto.isGroupPermission())
-      .orElse(GROUP_PREFIX + permissionDto.getName());
+  public String getUrlPermissionName(RepositoryPermissionDto repositoryPermissionDto) {
+    return Optional.of(repositoryPermissionDto.getName())
+      .filter(p -> !repositoryPermissionDto.isGroupPermission())
+      .orElse(GROUP_PREFIX + repositoryPermissionDto.getName());
   }
 }

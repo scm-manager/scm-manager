@@ -5,6 +5,7 @@ import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+import sonia.scm.security.PermissionPermissions;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
 import sonia.scm.user.UserPermissions;
@@ -41,6 +42,9 @@ public abstract class UserToUserDtoMapper extends BaseMapper<User, UserDto> {
       if (userManager.isTypeDefault(user)) {
         linksBuilder.single(link("password", resourceLinks.user().passwordChange(target.getName())));
       }
+    }
+    if (PermissionPermissions.read().isPermitted()) {
+      linksBuilder.single(link("permissions", resourceLinks.userPermissions().permissions(target.getName())));
     }
 
     appendLinks(new EdisonLinkAppender(linksBuilder), user);

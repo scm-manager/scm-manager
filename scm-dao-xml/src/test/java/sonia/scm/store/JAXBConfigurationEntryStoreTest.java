@@ -141,7 +141,7 @@ public class JAXBConfigurationEntryStoreTest
 
     assertNotNull(ap);
     assertEquals("tuser4", ap.getName());
-    assertEquals("repository:create", ap.getPermission());
+    assertEquals("repository:create", ap.getPermission().getValue());
   }
 
  @Test

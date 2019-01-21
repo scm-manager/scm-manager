@@ -1,51 +1,48 @@
 package sonia.scm.api.v2.resources;
 
-import com.google.inject.Inject;
-import de.otto.edison.hal.Embedded;
-import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Links;
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryPermissions;
+import org.mapstruct.Context;
+import sonia.scm.security.PermissionDescriptor;
+import sonia.scm.security.PermissionPermissions;
 
-import java.util.List;
+import javax.inject.Inject;
+import java.util.Collection;
 
-import static de.otto.edison.hal.Embedded.embeddedBuilder;
 import static de.otto.edison.hal.Link.link;
 import static de.otto.edison.hal.Links.linkingTo;
-import static java.util.stream.Collectors.toList;
 
 public class PermissionCollectionToDtoMapper {
 
   private final ResourceLinks resourceLinks;
-  private final PermissionToPermissionDtoMapper permissionToPermissionDtoMapper;
 
   @Inject
-  public PermissionCollectionToDtoMapper(PermissionToPermissionDtoMapper permissionToPermissionDtoMapper, ResourceLinks resourceLinks) {
+  public PermissionCollectionToDtoMapper(ResourceLinks resourceLinks) {
     this.resourceLinks = resourceLinks;
-    this.permissionToPermissionDtoMapper = permissionToPermissionDtoMapper;
   }
 
-  public HalRepresentation map(Repository repository) {
-    List<PermissionDto> permissionDtoList = repository.getPermissions()
+  public PermissionListDto mapForUser(Collection<PermissionDescriptor> permissions, String userId) {
+    return map(permissions, userId, resourceLinks.userPermissions());
+  }
+
+  public PermissionListDto mapForGroup(Collection<PermissionDescriptor> permissions, String groupId) {
+    return map(permissions, groupId, resourceLinks.groupPermissions());
+  }
+
+  private PermissionListDto map(Collection<PermissionDescriptor> permissions, String id, ResourceLinks.WithPermissionLinks links) {
+    String[] permissionStrings = permissions
       .stream()
-      .map(permission -> permissionToPermissionDtoMapper.map(permission, repository))
-      .collect(toList());
-    return new HalRepresentation(createLinks(repository), embedDtos(permissionDtoList));
-  }
+      .map(PermissionDescriptor::getValue)
+      .toArray(String[]::new);
+    PermissionListDto target = new PermissionListDto(permissionStrings);
 
-  private Links createLinks(Repository repository) {
-    RepositoryPermissions.permissionRead(repository).check();
-    Links.Builder linksBuilder = linkingTo()
-      .with(Links.linkingTo().self(resourceLinks.permission().all(repository.getNamespace(), repository.getName())).build());
-    if (RepositoryPermissions.permissionWrite(repository).isPermitted()) {
-      linksBuilder.single(link("create", resourceLinks.permission().create(repository.getNamespace(), repository.getName())));
+    Links.Builder linksBuilder = linkingTo().self(links.permissions(id));
+
+    if (PermissionPermissions.assign().isPermitted()) {
+      linksBuilder.single(link("overwrite", links.overwritePermissions(id)));
     }
-    return linksBuilder.build();
-  }
 
-  private Embedded embedDtos(List<PermissionDto> permissionDtoList) {
-    return embeddedBuilder()
-      .with("permissions", permissionDtoList)
-      .build();
+    target.add(linksBuilder.build());
+
+    return target;
   }
 }

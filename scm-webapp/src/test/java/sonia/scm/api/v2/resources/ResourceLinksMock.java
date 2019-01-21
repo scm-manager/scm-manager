@@ -16,9 +16,11 @@ public class ResourceLinksMock {
     when(resourceLinks.user()).thenReturn(userLinks);
     when(resourceLinks.me()).thenReturn(new ResourceLinks.MeLinks(uriInfo,userLinks));
     when(resourceLinks.userCollection()).thenReturn(new ResourceLinks.UserCollectionLinks(uriInfo));
+    when(resourceLinks.userPermissions()).thenReturn(new ResourceLinks.UserPermissionLinks(uriInfo));
     when(resourceLinks.autoComplete()).thenReturn(new ResourceLinks.AutoCompleteLinks(uriInfo));
     when(resourceLinks.group()).thenReturn(new ResourceLinks.GroupLinks(uriInfo));
     when(resourceLinks.groupCollection()).thenReturn(new ResourceLinks.GroupCollectionLinks(uriInfo));
+    when(resourceLinks.groupPermissions()).thenReturn(new ResourceLinks.GroupPermissionLinks(uriInfo));
     when(resourceLinks.repository()).thenReturn(new ResourceLinks.RepositoryLinks(uriInfo));
     when(resourceLinks.incoming()).thenReturn(new ResourceLinks.IncomingLinks(uriInfo));
     when(resourceLinks.repositoryCollection()).thenReturn(new ResourceLinks.RepositoryCollectionLinks(uriInfo));
@@ -27,7 +29,7 @@ public class ResourceLinksMock {
     when(resourceLinks.changeset()).thenReturn(new ResourceLinks.ChangesetLinks(uriInfo));
     when(resourceLinks.fileHistory()).thenReturn(new ResourceLinks.FileHistoryLinks(uriInfo));
     when(resourceLinks.source()).thenReturn(new ResourceLinks.SourceLinks(uriInfo));
-    when(resourceLinks.permission()).thenReturn(new ResourceLinks.PermissionLinks(uriInfo));
+    when(resourceLinks.repositoryPermission()).thenReturn(new ResourceLinks.RepositoryPermissionLinks(uriInfo));
     when(resourceLinks.config()).thenReturn(new ResourceLinks.ConfigLinks(uriInfo));
     when(resourceLinks.branch()).thenReturn(new ResourceLinks.BranchLinks(uriInfo));
     when(resourceLinks.diff()).thenReturn(new ResourceLinks.DiffLinks(uriInfo));
@@ -39,6 +41,7 @@ public class ResourceLinksMock {
     when(resourceLinks.authentication()).thenReturn(new ResourceLinks.AuthenticationLinks(uriInfo));
     when(resourceLinks.index()).thenReturn(new ResourceLinks.IndexLinks(uriInfo));
     when(resourceLinks.merge()).thenReturn(new ResourceLinks.MergeLinks(uriInfo));
+    when(resourceLinks.permissions()).thenReturn(new ResourceLinks.PermissionsLinks(uriInfo));
 
     return resourceLinks;
   }

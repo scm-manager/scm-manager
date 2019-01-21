@@ -6,6 +6,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupPermissions;
+import sonia.scm.security.PermissionPermissions;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -30,6 +31,9 @@ public abstract class GroupToGroupDtoMapper extends BaseMapper<Group, GroupDto> 
     }
     if (GroupPermissions.modify(group).isPermitted()) {
       linksBuilder.single(link("update", resourceLinks.group().update(target.getName())));
+    }
+    if (PermissionPermissions.read().isPermitted()) {
+      linksBuilder.single(link("permissions", resourceLinks.groupPermissions().permissions(target.getName())));
     }
 
     appendLinks(new EdisonLinkAppender(linksBuilder), group);

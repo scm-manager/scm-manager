@@ -85,7 +85,7 @@ public final class ScmState
   public ScmState(String version, User user, Collection<String> groups,
                   String token, Collection<RepositoryType> repositoryTypes, String defaultUserType,
                   ScmClientConfig clientConfig, List<String> assignedPermission,
-                  List<PermissionDescriptor> availablePermissions)
+                  Collection<PermissionDescriptor> availablePermissions)
   {
     this.version = version;
     this.user = user;
@@ -119,7 +119,7 @@ public final class ScmState
    * @return available global permissions
    * @since 1.31
    */
-  public List<PermissionDescriptor> getAvailablePermissions()
+  public Collection<PermissionDescriptor> getAvailablePermissions()
   {
     return availablePermissions;
   }
@@ -232,7 +232,7 @@ public final class ScmState
    * Avaliable global permission
    * @since 1.31
    */
-  private List<PermissionDescriptor> availablePermissions;
+  private Collection<PermissionDescriptor> availablePermissions;
 
   /** Field description */
   private ScmClientConfig clientConfig;
