@@ -113,17 +113,17 @@ class SingleGroup extends React.Component<Props> {
               exact
               component={() => <EditGroup group={group} />}
             />
-            <ExtensionPoint
-              name="group.route"
-              props={extensionProps}
-              renderAll={true}
-            />
             <Route
               path={`${url}/permissions`}
               exact
               component={() => (
                 <SetPermissions selectedPermissionsLink={group._links.permissions} />
               )}
+            />
+            <ExtensionPoint
+              name="group.route"
+              props={extensionProps}
+              renderAll={true}
             />
           </div>
           <div className="column">
@@ -137,6 +137,11 @@ class SingleGroup extends React.Component<Props> {
                   group={group}
                   permissionsUrl={`${url}/permissions`}
                 />
+                <ExtensionPoint
+                  name="group.navigation"
+                  props={extensionProps}
+                  renderAll={true}
+                />
               </Section>
               <Section label={t("single-group.actions-label")}>
                 <DeleteGroupNavLink
@@ -145,11 +150,6 @@ class SingleGroup extends React.Component<Props> {
                 />
                 <EditGroupNavLink group={group} editUrl={`${url}/edit`} />
                 <NavLink to="/groups" label={t("single-group.back-label")} />
-                <ExtensionPoint
-                  name="group.navigation"
-                  props={extensionProps}
-                  renderAll={true}
-                />
               </Section>
             </Navigation>
           </div>
