@@ -47,14 +47,12 @@ class SetPermissions extends React.Component<Props, State> {
 
   setLoadingState = () => {
     this.setState({
-      ...this.state,
       loading: true
     });
   };
 
   setErrorState = (error: Error) => {
     this.setState({
-      ...this.state,
       error: error,
       loading: false
     });
@@ -62,8 +60,8 @@ class SetPermissions extends React.Component<Props, State> {
 
   setSuccessfulState = () => {
     this.setState({
-      ...this.state,
       loading: false,
+      error: undefined,
       permissionsSubmitted: true,
       permissionsChanged: false
     });
@@ -113,13 +111,11 @@ class SetPermissions extends React.Component<Props, State> {
           selectedPermissions
         )
           .then(result => {
-            if (result.error) {
-              this.setErrorState(result.error);
-            } else {
-              this.setSuccessfulState();
-            }
+            this.setSuccessfulState();
           })
-          .catch(err => {});
+          .catch(err => {
+            this.setErrorState(err);
+          });
       }
     }
   };
