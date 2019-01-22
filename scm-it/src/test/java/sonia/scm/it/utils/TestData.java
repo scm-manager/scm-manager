@@ -4,7 +4,6 @@ import io.restassured.response.ValidatableResponse;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.repository.PermissionType;
 import sonia.scm.web.VndMediaType;
 
 import javax.json.Json;
@@ -82,22 +81,23 @@ public class TestData {
     ;
   }
 
-  public static void createUserPermission(String name, PermissionType permissionType, String repositoryType) {
-    String defaultPermissionUrl = TestData.getDefaultPermissionUrl(USER_SCM_ADMIN, USER_SCM_ADMIN, repositoryType);
-    LOG.info("create permission with name {} and type: {} using the endpoint: {}", name, permissionType, defaultPermissionUrl);
-    given(VndMediaType.PERMISSION)
-      .when()
-      .content("{\n" +
-        "\t\"type\": \"" + permissionType.name() + "\",\n" +
-        "\t\"name\": \"" + name + "\",\n" +
-        "\t\"groupPermission\": false\n" +
-        "\t\n" +
-        "}")
-      .post(defaultPermissionUrl)
-      .then()
-      .statusCode(HttpStatus.SC_CREATED)
-    ;
-  }
+    // TODO RP
+//  public static void createUserPermission(String name, PermissionType permissionType, String repositoryType) {
+//    String defaultPermissionUrl = TestData.getDefaultPermissionUrl(USER_SCM_ADMIN, USER_SCM_ADMIN, repositoryType);
+//    LOG.info("create permission with name {} and type: {} using the endpoint: {}", name, permissionType, defaultPermissionUrl);
+//    given(VndMediaType.PERMISSION)
+//      .when()
+//      .content("{\n" +
+//        "\t\"type\": \"" + permissionType.name() + "\",\n" +
+//        "\t\"name\": \"" + name + "\",\n" +
+//        "\t\"groupPermission\": false\n" +
+//        "\t\n" +
+//        "}")
+//      .post(defaultPermissionUrl)
+//      .then()
+//      .statusCode(HttpStatus.SC_CREATED)
+//    ;
+//  }
 
   public static List<Map> getUserPermissions(String username, String password, String repositoryType) {
     return callUserPermissions(username, password, repositoryType, HttpStatus.SC_OK)

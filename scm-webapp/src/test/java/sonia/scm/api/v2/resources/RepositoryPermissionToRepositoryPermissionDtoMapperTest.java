@@ -8,7 +8,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.repository.RepositoryPermission;
-import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
 
 import java.net.URI;
@@ -36,7 +35,7 @@ public class RepositoryPermissionToRepositoryPermissionDtoMapperTest {
   @SubjectAware(username = "trillian", password = "secret")
   public void shouldMapGroupPermissionCorrectly() {
     Repository repository = getDummyRepository();
-    RepositoryPermission permission = new RepositoryPermission("42", PermissionType.OWNER, true);
+    RepositoryPermission permission = new RepositoryPermission("42", "read,modify,delete", true);
 
     RepositoryPermissionDto repositoryPermissionDto = mapper.map(permission, repository);
 
@@ -48,7 +47,7 @@ public class RepositoryPermissionToRepositoryPermissionDtoMapperTest {
   @SubjectAware(username = "trillian", password = "secret")
   public void shouldMapNonGroupPermissionCorrectly() {
     Repository repository = getDummyRepository();
-    RepositoryPermission permission = new RepositoryPermission("42", PermissionType.OWNER, false);
+    RepositoryPermission permission = new RepositoryPermission("42", "read,modify,delete", false);
 
     RepositoryPermissionDto repositoryPermissionDto = mapper.map(permission, repository);
 

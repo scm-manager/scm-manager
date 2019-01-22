@@ -30,7 +30,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.RepositoryPermission;
-import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.web.VndMediaType;
@@ -79,12 +78,12 @@ public class RepositoryPermissionRootResourceTest extends RepositoryTestBase {
   private static final String PERMISSION_TEST_PAYLOAD = "{ \"name\" : \"permission_name\", \"type\" : \"READ\"  }";
   private static final ArrayList<RepositoryPermission> TEST_PERMISSIONS = Lists
     .newArrayList(
-      new RepositoryPermission("user_write", PermissionType.WRITE, false),
-      new RepositoryPermission("user_read", PermissionType.READ, false),
-      new RepositoryPermission("user_owner", PermissionType.OWNER, false),
-      new RepositoryPermission("group_read", PermissionType.READ, true),
-      new RepositoryPermission("group_write", PermissionType.WRITE, true),
-      new RepositoryPermission("group_owner", PermissionType.OWNER, true)
+      new RepositoryPermission("user_write", "read,modify", false),
+      new RepositoryPermission("user_read", "read", false),
+      new RepositoryPermission("user_owner", "read,modify,delete", false),
+      new RepositoryPermission("group_read", "read", true),
+      new RepositoryPermission("group_write", "read,modify", true),
+      new RepositoryPermission("group_owner", "read,modify,delete", true)
     );
   private final ExpectedRequest requestGETAllPermissions = new ExpectedRequest()
     .description("GET all permissions")
@@ -259,7 +258,7 @@ public class RepositoryPermissionRootResourceTest extends RepositoryTestBase {
   @Test
   public void shouldGetCreatedPermissions() throws URISyntaxException {
     createUserWithRepositoryAndPermissions(TEST_PERMISSIONS, PERMISSION_WRITE);
-    RepositoryPermission newPermission = new RepositoryPermission("new_group_perm", PermissionType.WRITE, true);
+    RepositoryPermission newPermission = new RepositoryPermission("new_group_perm", "read,modify", true);
     ArrayList<RepositoryPermission> permissions = Lists.newArrayList(TEST_PERMISSIONS);
     permissions.add(newPermission);
     ImmutableList<RepositoryPermission> expectedPermissions = ImmutableList.copyOf(permissions);
@@ -288,7 +287,7 @@ public class RepositoryPermissionRootResourceTest extends RepositoryTestBase {
     createUserWithRepositoryAndPermissions(TEST_PERMISSIONS, PERMISSION_WRITE);
     RepositoryPermission modifiedPermission = TEST_PERMISSIONS.get(0);
     // modify the type to owner
-    modifiedPermission.setType(PermissionType.OWNER);
+    modifiedPermission.setVerb("read,modify,delete");
     ImmutableList<RepositoryPermission> expectedPermissions = ImmutableList.copyOf(TEST_PERMISSIONS);
     assertExpectedRequest(requestPUTPermission
       .content("{\"name\" : \"" + modifiedPermission.getName() + "\" , \"type\" : \"OWNER\" , \"groupPermission\" : false}")
@@ -382,7 +381,7 @@ public class RepositoryPermissionRootResourceTest extends RepositoryTestBase {
     RepositoryPermissionDto result = new RepositoryPermissionDto();
     result.setName(permission.getName());
     result.setGroupPermission(permission.isGroupPermission());
-    result.setType(permission.getType().name());
+    result.setType(permission.getVerb());
     String permissionName = Optional.of(permission.getName())
       .filter(p -> !permission.isGroupPermission())
       .orElse(GROUP_PREFIX + permission.getName());

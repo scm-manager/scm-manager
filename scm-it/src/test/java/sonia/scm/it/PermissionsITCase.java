@@ -42,7 +42,6 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import sonia.scm.it.utils.RepositoryUtil;
 import sonia.scm.it.utils.TestData;
-import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.client.api.RepositoryClient;
 import sonia.scm.repository.client.api.RepositoryClientException;
 import sonia.scm.web.VndMediaType;
@@ -91,12 +90,13 @@ public class PermissionsITCase {
   public void prepareEnvironment() {
     TestData.createDefault();
     TestData.createNotAdminUser(USER_READ, USER_PASS);
-    TestData.createUserPermission(USER_READ, PermissionType.READ, repositoryType);
-    TestData.createNotAdminUser(USER_WRITE, USER_PASS);
-    TestData.createUserPermission(USER_WRITE, PermissionType.WRITE, repositoryType);
-    TestData.createNotAdminUser(USER_OWNER, USER_PASS);
-    TestData.createUserPermission(USER_OWNER, PermissionType.OWNER, repositoryType);
-    TestData.createNotAdminUser(USER_OTHER, USER_PASS);
+    // TODO RP
+//    TestData.createUserPermission(USER_READ, PermissionType.READ, repositoryType);
+//    TestData.createNotAdminUser(USER_WRITE, USER_PASS);
+//    TestData.createUserPermission(USER_WRITE, PermissionType.WRITE, repositoryType);
+//    TestData.createNotAdminUser(USER_OWNER, USER_PASS);
+//    TestData.createUserPermission(USER_OWNER, PermissionType.OWNER, repositoryType);
+//    TestData.createNotAdminUser(USER_OTHER, USER_PASS);
     createdPermissions = asList(USER_READ, USER_WRITE, USER_OWNER);
   }
 

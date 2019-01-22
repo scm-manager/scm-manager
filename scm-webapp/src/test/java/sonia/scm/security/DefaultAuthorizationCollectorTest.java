@@ -51,7 +51,6 @@ import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.group.GroupNames;
-import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryDAO;
 import sonia.scm.repository.RepositoryPermission;
@@ -229,7 +228,7 @@ public class DefaultAuthorizationCollectorTest {
 //    heartOfGold.setPermissions(Lists.newArrayList(new RepositoryPermission("trillian")));
     Repository puzzle42 = RepositoryTestData.create42Puzzle();
     puzzle42.setId("two");
-    RepositoryPermission permission = new RepositoryPermission(group, PermissionType.WRITE, true);
+    RepositoryPermission permission = new RepositoryPermission(group, "read,modify", true);
 //    puzzle42.setPermissions(Lists.newArrayList(permission));
     when(repositoryDAO.getAll()).thenReturn(Lists.newArrayList(heartOfGold, puzzle42));
 

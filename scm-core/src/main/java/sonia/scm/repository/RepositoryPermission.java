@@ -60,54 +60,18 @@ public class RepositoryPermission implements PermissionObject, Serializable
 
   private boolean groupPermission = false;
   private String name;
-  private PermissionType type = PermissionType.READ;
+  private String verb;
 
   /**
    * Constructs a new {@link RepositoryPermission}.
-   * This constructor is used by JAXB.
-   *
+   * This constructor is used by JAXB and mapstruct.
    */
   public RepositoryPermission() {}
 
-  /**
-   * Constructs a new {@link RepositoryPermission} with type = {@link PermissionType#READ}
-   * for the specified user.
-   *
-   *
-   * @param name name of the user
-   */
-  public RepositoryPermission(String name)
+  public RepositoryPermission(String name, String verb, boolean groupPermission)
   {
-    this();
     this.name = name;
-  }
-
-  /**
-   * Constructs a new {@link RepositoryPermission} with the specified type for
-   * the given user.
-   *
-   *
-   * @param name name of the user
-   * @param type type of the permission
-   */
-  public RepositoryPermission(String name, PermissionType type)
-  {
-    this(name);
-    this.type = type;
-  }
-
-  /**
-   * Constructs a new {@link RepositoryPermission} with the specified type for
-   * the given user or group.
-   *
-   *
-   * @param name name of the user or group
-   * @param type type of the permission
-   * @param groupPermission true if the permission is a permission for a group
-   */
-  public RepositoryPermission(String name, PermissionType type, boolean groupPermission)
-  {
-    this(name, type);
+    this.verb = verb;
     this.groupPermission = groupPermission;
   }
 
@@ -137,7 +101,7 @@ public class RepositoryPermission implements PermissionObject, Serializable
     final RepositoryPermission other = (RepositoryPermission) obj;
 
     return Objects.equal(name, other.name)
-      && Objects.equal(type, other.type)
+      && Objects.equal(verb, other.verb)
       && Objects.equal(groupPermission, other.groupPermission);
   }
 
@@ -150,7 +114,7 @@ public class RepositoryPermission implements PermissionObject, Serializable
   @Override
   public int hashCode()
   {
-    return Objects.hashCode(name, type, groupPermission);
+    return Objects.hashCode(name, verb, groupPermission);
   }
 
 
@@ -160,7 +124,7 @@ public class RepositoryPermission implements PermissionObject, Serializable
     //J-
     return MoreObjects.toStringHelper(this)
             .add("name", name)
-            .add("type", type)
+            .add("verb", verb)
             .add("groupPermission", groupPermission)
             .toString();
     //J+
@@ -181,14 +145,14 @@ public class RepositoryPermission implements PermissionObject, Serializable
   }
 
   /**
-   * Returns the {@link PermissionType} of the permission.
+   * Returns the verb of the permission.
    *
    *
-   * @return {@link PermissionType} of the permission
+   * @return verb of the permission
    */
-  public PermissionType getType()
+  public String getVerb()
   {
-    return type;
+    return verb;
   }
 
   /**
@@ -228,13 +192,13 @@ public class RepositoryPermission implements PermissionObject, Serializable
   }
 
   /**
-   * Sets the type of the permission.
+   * Sets the verb of the permission.
    *
    *
-   * @param type type of the permission
+   * @param verb verb of the permission
    */
-  public void setType(PermissionType type)
+  public void setVerb(String verb)
   {
-    this.type = type;
+    this.verb = verb;
   }
 }

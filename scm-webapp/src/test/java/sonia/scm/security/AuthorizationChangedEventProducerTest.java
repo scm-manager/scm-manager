@@ -31,7 +31,6 @@
 
 package sonia.scm.security;
 
-import com.google.common.collect.Lists;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -39,11 +38,8 @@ import sonia.scm.HandlerEventType;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupEvent;
 import sonia.scm.group.GroupModificationEvent;
-import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryEvent;
-import sonia.scm.repository.RepositoryModificationEvent;
-import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.user.User;
 import sonia.scm.user.UserEvent;
