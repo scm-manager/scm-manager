@@ -514,7 +514,7 @@ class ResourceLinks {
     private final LinkBuilder permissionLinkBuilder;
 
     RepositoryPermissionLinks(ScmPathInfo pathInfo) {
-      permissionLinkBuilder = new LinkBuilder(pathInfo, RepositoryRootResource.class, RepositoryResource.class, PermissionRootResource.class);
+      permissionLinkBuilder = new LinkBuilder(pathInfo, RepositoryRootResource.class, RepositoryResource.class, RepositoryPermissionRootResource.class);
     }
 
     String all(String namespace, String name) {

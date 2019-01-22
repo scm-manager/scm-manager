@@ -66,7 +66,7 @@ import static sonia.scm.api.v2.resources.RepositoryPermissionDto.GROUP_PREFIX;
   password = "secret",
   configuration = "classpath:sonia/scm/repository/shiro.ini"
 )
-public class PermissionRootResourceTest extends RepositoryTestBase {
+public class RepositoryPermissionRootResourceTest extends RepositoryTestBase {
   private static final String REPOSITORY_NAMESPACE = "repo_namespace";
   private static final String REPOSITORY_NAME = "repo";
   private static final String PERMISSION_WRITE = "repository:permissionWrite:" + REPOSITORY_NAME;
@@ -124,11 +124,11 @@ public class PermissionRootResourceTest extends RepositoryTestBase {
   private RepositoryPermissionToRepositoryPermissionDtoMapperImpl permissionToPermissionDtoMapper;
 
   @InjectMocks
-  private PermissionDtoToPermissionMapperImpl permissionDtoToPermissionMapper;
+  private RepositoryPermissionDtoToRepositoryPermissionMapperImpl permissionDtoToPermissionMapper;
 
   private RepositoryPermissionCollectionToDtoMapper repositoryPermissionCollectionToDtoMapper;
 
-  private PermissionRootResource permissionRootResource;
+  private RepositoryPermissionRootResource repositoryPermissionRootResource;
 
   private final Subject subject = mock(Subject.class);
   private final ThreadState subjectThreadState = new SubjectThreadState(subject);
@@ -138,8 +138,8 @@ public class PermissionRootResourceTest extends RepositoryTestBase {
   public void prepareEnvironment() {
     initMocks(this);
     repositoryPermissionCollectionToDtoMapper = new RepositoryPermissionCollectionToDtoMapper(permissionToPermissionDtoMapper, resourceLinks);
-    permissionRootResource = new PermissionRootResource(permissionDtoToPermissionMapper, permissionToPermissionDtoMapper, repositoryPermissionCollectionToDtoMapper, resourceLinks, repositoryManager);
-    super.permissionRootResource = Providers.of(permissionRootResource);
+    repositoryPermissionRootResource = new RepositoryPermissionRootResource(permissionDtoToPermissionMapper, permissionToPermissionDtoMapper, repositoryPermissionCollectionToDtoMapper, resourceLinks, repositoryManager);
+    super.permissionRootResource = Providers.of(repositoryPermissionRootResource);
     dispatcher = createDispatcher(getRepositoryRootResource());
     subjectThreadState.bind();
     ThreadContext.bind(subject);

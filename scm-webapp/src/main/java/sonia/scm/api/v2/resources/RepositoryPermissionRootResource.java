@@ -35,10 +35,10 @@ import static sonia.scm.NotFoundException.notFound;
 import static sonia.scm.api.v2.resources.RepositoryPermissionDto.GROUP_PREFIX;
 
 @Slf4j
-public class PermissionRootResource {
+public class RepositoryPermissionRootResource {
 
 
-  private PermissionDtoToPermissionMapper dtoToModelMapper;
+  private RepositoryPermissionDtoToRepositoryPermissionMapper dtoToModelMapper;
   private RepositoryPermissionToRepositoryPermissionDtoMapper modelToDtoMapper;
   private RepositoryPermissionCollectionToDtoMapper repositoryPermissionCollectionToDtoMapper;
   private ResourceLinks resourceLinks;
@@ -46,7 +46,7 @@ public class PermissionRootResource {
 
 
   @Inject
-  public PermissionRootResource(PermissionDtoToPermissionMapper dtoToModelMapper, RepositoryPermissionToRepositoryPermissionDtoMapper modelToDtoMapper, RepositoryPermissionCollectionToDtoMapper repositoryPermissionCollectionToDtoMapper, ResourceLinks resourceLinks, RepositoryManager manager) {
+  public RepositoryPermissionRootResource(RepositoryPermissionDtoToRepositoryPermissionMapper dtoToModelMapper, RepositoryPermissionToRepositoryPermissionDtoMapper modelToDtoMapper, RepositoryPermissionCollectionToDtoMapper repositoryPermissionCollectionToDtoMapper, ResourceLinks resourceLinks, RepositoryManager manager) {
     this.dtoToModelMapper = dtoToModelMapper;
     this.modelToDtoMapper = modelToDtoMapper;
     this.repositoryPermissionCollectionToDtoMapper = repositoryPermissionCollectionToDtoMapper;

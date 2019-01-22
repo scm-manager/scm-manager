@@ -5,7 +5,7 @@ import org.mapstruct.MappingTarget;
 import sonia.scm.repository.RepositoryPermission;
 
 @Mapper
-public abstract class PermissionDtoToPermissionMapper {
+public abstract class RepositoryPermissionDtoToRepositoryPermissionMapper {
 
   public abstract RepositoryPermission map(RepositoryPermissionDto permissionDto);
 
