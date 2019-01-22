@@ -154,7 +154,6 @@ public class RepositoryResource {
 
   private Repository processUpdate(RepositoryDto repositoryDto, Repository existing) {
     Repository changedRepository = dtoToRepositoryMapper.map(repositoryDto, existing.getId());
-    changedRepository.setPermissions(existing.getPermissions());
     return changedRepository;
   }
 

@@ -26,11 +26,12 @@ public class RepositoryPermissionCollectionToDtoMapper {
   }
 
   public HalRepresentation map(Repository repository) {
-    List<RepositoryPermissionDto> repositoryPermissionDtoList = repository.getPermissions()
-      .stream()
-      .map(permission -> repositoryPermissionToRepositoryPermissionDtoMapper.map(permission, repository))
-      .collect(toList());
-    return new HalRepresentation(createLinks(repository), embedDtos(repositoryPermissionDtoList));
+//    List<RepositoryPermissionDto> repositoryPermissionDtoList = repository.getPermissions()
+//      .stream()
+//      .map(permission -> repositoryPermissionToRepositoryPermissionDtoMapper.map(permission, repository))
+//      .collect(toList());
+//    return new HalRepresentation(createLinks(repository), embedDtos(repositoryPermissionDtoList));
+    return new HalRepresentation(createLinks(repository));
   }
 
   private Links createLinks(Repository repository) {

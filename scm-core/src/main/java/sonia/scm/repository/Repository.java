@@ -68,7 +68,6 @@ import java.util.Set;
 @XmlRootElement(name = "repositories")
 public class Repository extends BasicPropertiesAware implements ModelObject, PermissionObject{
 
-
   private static final long serialVersionUID = 3486560714961909711L;
 
   private String contact;
@@ -81,7 +80,6 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
   private Long lastModified;
   private String namespace;
   private String name;
-  private final Set<RepositoryPermission> permissions = new HashSet<>();
   @XmlElement(name = "public")
   private boolean publicReadable = false;
   private boolean archived = false;
@@ -119,20 +117,14 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
    * @param contact     email address of a person who is responsible for
    *                    this repository.
    * @param description a short description of the repository
-   * @param permissions permissions for specific users and groups.
    */
-  public Repository(String id, String type, String namespace, String name, String contact,
-                    String description, RepositoryPermission... permissions) {
+  public Repository(String id, String type, String namespace, String name, String contact, String description) {
     this.id = id;
     this.type = type;
     this.namespace = namespace;
     this.name = name;
     this.contact = contact;
     this.description = description;
-
-    if (Util.isNotEmpty(permissions)) {
-      this.permissions.addAll(Arrays.asList(permissions));
-    }
   }
 
   /**
@@ -199,10 +191,6 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
   @XmlTransient
   public NamespaceAndName getNamespaceAndName() {
     return new NamespaceAndName(getNamespace(), getName());
-  }
-
-  public Collection<RepositoryPermission> getPermissions() {
-    return Collections.unmodifiableCollection(permissions);
   }
 
   /**
@@ -297,19 +285,6 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
     this.name = name;
   }
 
-  public void setPermissions(Collection<RepositoryPermission> permissions) {
-    this.permissions.clear();
-    this.permissions.addAll(permissions);
-  }
-
-  public void addPermission(RepositoryPermission newPermission) {
-    this.permissions.add(newPermission);
-  }
-
-  public void removePermission(RepositoryPermission permission) {
-    this.permissions.remove(permission);
-  }
-
   public void setPublicReadable(boolean publicReadable) {
     this.publicReadable = publicReadable;
   }
@@ -347,7 +322,6 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
     repository.setCreationDate(creationDate);
     repository.setLastModified(lastModified);
     repository.setDescription(description);
-    repository.setPermissions(permissions);
     repository.setPublicReadable(publicReadable);
     repository.setArchived(archived);
 
@@ -379,7 +353,6 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
       && Objects.equal(description, other.description)
       && Objects.equal(publicReadable, other.publicReadable)
       && Objects.equal(archived, other.archived)
-      && Objects.equal(permissions, other.permissions)
       && Objects.equal(type, other.type)
       && Objects.equal(creationDate, other.creationDate)
       && Objects.equal(lastModified, other.lastModified)
@@ -390,7 +363,7 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
   @Override
   public int hashCode() {
     return Objects.hashCode(id, namespace, name, contact, description, publicReadable,
-      archived, permissions, type, creationDate, lastModified, properties,
+      archived, type, creationDate, lastModified, properties,
       healthCheckFailures);
   }
 
@@ -404,7 +377,6 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
       .add("description", description)
       .add("publicReadable", publicReadable)
       .add("archived", archived)
-      .add("permissions", permissions)
       .add("type", type)
       .add("lastModified", lastModified)
       .add("creationDate", creationDate)

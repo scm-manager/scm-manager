@@ -63,6 +63,7 @@ import sonia.scm.user.UserPermissions;
 import sonia.scm.util.Util;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Set;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -198,8 +199,12 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
   private void collectRepositoryPermissions(Builder<String> builder,
     Repository repository, User user, GroupNames groups)
   {
+
+    // TODO RP
+
     Collection<RepositoryPermission> repositoryPermissions
-      = repository.getPermissions();
+      = Collections.emptyList();
+//      = repository.getPermissions();
 
     if (Util.isNotEmpty(repositoryPermissions))
     {

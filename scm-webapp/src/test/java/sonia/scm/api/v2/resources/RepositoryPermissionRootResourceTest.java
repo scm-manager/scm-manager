@@ -412,7 +412,8 @@ public class RepositoryPermissionRootResourceTest extends RepositoryTestBase {
   }
 
   private void createUserWithRepositoryAndPermissions(ArrayList<RepositoryPermission> permissions, String userPermission) {
-    createUserWithRepository(userPermission).setPermissions(permissions);
+    // TODO RP
+//    createUserWithRepository(userPermission).setPermissions(permissions);
   }
 
   private Stream<DynamicTest> createDynamicTestsToAssertResponses(ExpectedRequest... expectedRequests) {

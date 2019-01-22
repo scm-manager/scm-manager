@@ -225,11 +225,12 @@ public class DefaultAuthorizationCollectorTest {
     authenticate(UserTestData.createTrillian(), group);
     Repository heartOfGold = RepositoryTestData.createHeartOfGold();
     heartOfGold.setId("one");
-    heartOfGold.setPermissions(Lists.newArrayList(new RepositoryPermission("trillian")));
+    // TODO RP
+//    heartOfGold.setPermissions(Lists.newArrayList(new RepositoryPermission("trillian")));
     Repository puzzle42 = RepositoryTestData.create42Puzzle();
     puzzle42.setId("two");
     RepositoryPermission permission = new RepositoryPermission(group, PermissionType.WRITE, true);
-    puzzle42.setPermissions(Lists.newArrayList(permission));
+//    puzzle42.setPermissions(Lists.newArrayList(permission));
     when(repositoryDAO.getAll()).thenReturn(Lists.newArrayList(heartOfGold, puzzle42));
 
     // execute and assert

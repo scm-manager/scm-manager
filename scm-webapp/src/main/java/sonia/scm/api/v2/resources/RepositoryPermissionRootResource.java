@@ -78,7 +78,8 @@ public class RepositoryPermissionRootResource {
     Repository repository = load(namespace, name);
     RepositoryPermissions.permissionWrite(repository).check();
     checkPermissionAlreadyExists(permission, repository);
-    repository.addPermission(dtoToModelMapper.map(permission));
+    // TODO RP
+//    repository.addPermission(dtoToModelMapper.map(permission));
     manager.modify(repository);
     String urlPermissionName = modelToDtoMapper.getUrlPermissionName(permission);
     return Response.created(URI.create(resourceLinks.repositoryPermission().self(namespace, name, urlPermissionName))).build();
@@ -106,12 +107,13 @@ public class RepositoryPermissionRootResource {
     Repository repository = load(namespace, name);
     RepositoryPermissions.permissionRead(repository).check();
     return Response.ok(
-      repository.getPermissions()
-        .stream()
-        .filter(filterPermission(permissionName))
-        .map(permission -> modelToDtoMapper.map(permission, repository))
-        .findFirst()
-        .orElseThrow(() -> notFound(entity(RepositoryPermission.class, namespace).in(Repository.class, namespace + "/" + name)))
+      // TODO RP
+//      repository.getPermissions()
+//        .stream()
+//        .filter(filterPermission(permissionName))
+//        .map(permission -> modelToDtoMapper.map(permission, repository))
+//        .findFirst()
+//        .orElseThrow(() -> notFound(entity(RepositoryPermission.class, namespace).in(Repository.class, namespace + "/" + name)))
     ).build();
   }
 
@@ -172,12 +174,14 @@ public class RepositoryPermissionRootResource {
     if (!extractedPermissionName.equals(permission.getName())) {
       checkPermissionAlreadyExists(permission, repository);
     }
-    RepositoryPermission existingPermission = repository.getPermissions()
-      .stream()
-      .filter(filterPermission(permissionName))
-      .findFirst()
-      .orElseThrow(() -> notFound(entity(RepositoryPermission.class, namespace).in(Repository.class, namespace + "/" + name)));
-    dtoToModelMapper.modify(existingPermission, permission);
+
+    // TODO RP
+//    RepositoryPermission existingPermission = repository.getPermissions()
+//      .stream()
+//      .filter(filterPermission(permissionName))
+//      .findFirst()
+//      .orElseThrow(() -> notFound(entity(RepositoryPermission.class, namespace).in(Repository.class, namespace + "/" + name)));
+//    dtoToModelMapper.modify(existingPermission, permission);
     manager.modify(repository);
     log.info("the permission with name: {} is updated.", permissionName);
     return Response.noContent().build();
@@ -204,12 +208,13 @@ public class RepositoryPermissionRootResource {
     log.info("try to delete the permission with name: {}.", permissionName);
     Repository repository = load(namespace, name);
     RepositoryPermissions.modify(repository).check();
-    repository.getPermissions()
-      .stream()
-      .filter(filterPermission(permissionName))
-      .findFirst()
-      .ifPresent(repository::removePermission)
-    ;
+    // TODO RP
+//    repository.getPermissions()
+//      .stream()
+//      .filter(filterPermission(permissionName))
+//      .findFirst()
+//      .ifPresent(repository::removePermission)
+//    ;
     manager.modify(repository);
     log.info("the permission with name: {} is updated.", permissionName);
     return Response.noContent().build();
@@ -261,9 +266,10 @@ public class RepositoryPermissionRootResource {
   }
 
   private boolean isPermissionExist(RepositoryPermissionDto permission, Repository repository) {
-    return repository.getPermissions()
-      .stream()
-      .anyMatch(p -> p.getName().equals(permission.getName()) && p.isGroupPermission() == permission.isGroupPermission());
+    return true;
+//    return repository.getPermissions()
+//      .stream()
+//      .anyMatch(p -> p.getName().equals(permission.getName()) && p.isGroupPermission() == permission.isGroupPermission());
   }
 }
 
