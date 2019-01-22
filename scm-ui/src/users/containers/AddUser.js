@@ -12,7 +12,7 @@ import {
 } from "../modules/users";
 import { Page } from "@scm-manager/ui-components";
 import { translate } from "react-i18next";
-import {getUsersLink} from "../../modules/indexResource";
+import { getUsersLink } from "../../modules/indexResource";
 
 type Props = {
   loading?: boolean,
@@ -33,13 +33,16 @@ class AddUser extends React.Component<Props> {
     this.props.resetForm();
   }
 
-  userCreated = () => {
+  userCreated = (user: User) => {
     const { history } = this.props;
-    history.push("/users");
+    console.log(user);
+    history.push("/user/" + user.name);
   };
 
   createUser = (user: User) => {
-    this.props.addUser(this.props.usersLink, user, this.userCreated);
+    this.props.addUser(this.props.usersLink, user, () =>
+      this.userCreated(user)
+    );
   };
 
   render() {

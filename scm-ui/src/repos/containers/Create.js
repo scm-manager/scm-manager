@@ -43,8 +43,9 @@ class Create extends React.Component<Props> {
     this.props.fetchRepositoryTypesIfNeeded();
   }
 
-  repoCreated = () => {
+  repoCreated = (repo: Repository) => {
     const { history } = this.props;
+    //TODO: Problem: repo name can be set in history, but repo namespace is not known without fetching anything
     history.push("/repos");
   };
 
@@ -70,7 +71,7 @@ class Create extends React.Component<Props> {
           repositoryTypes={repositoryTypes}
           loading={createLoading}
           submitForm={repo => {
-            createRepo(repoLink, repo, this.repoCreated);
+            createRepo(repoLink, repo, () => this.repoCreated(repo));
           }}
         />
       </Page>
