@@ -29,7 +29,11 @@ type Props = {
 
   // dispatch functions
   fetchRepositoryTypesIfNeeded: () => void,
-  createRepo: (link: string, Repository, callback: () => void) => void,
+  createRepo: (
+    link: string,
+    Repository,
+    callback: (repo: Repository) => void
+  ) => void,
   resetForm: () => void,
 
   // context props
@@ -45,8 +49,8 @@ class Create extends React.Component<Props> {
 
   repoCreated = (repo: Repository) => {
     const { history } = this.props;
-    //TODO: Problem: repo name can be set in history, but repo namespace is not known without fetching anything
-    history.push("/repos");
+
+    history.push("/repo/" + repo.namespace + "/" + repo.name);
   };
 
   render() {
@@ -71,7 +75,9 @@ class Create extends React.Component<Props> {
           repositoryTypes={repositoryTypes}
           loading={createLoading}
           submitForm={repo => {
-            createRepo(repoLink, repo, () => this.repoCreated(repo));
+            createRepo(repoLink, repo, (repo: Repository) =>
+              this.repoCreated(repo)
+            );
           }}
         />
       </Page>
