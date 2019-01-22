@@ -35,7 +35,6 @@ class AddUser extends React.Component<Props> {
 
   userCreated = (user: User) => {
     const { history } = this.props;
-    console.log(user);
     history.push("/user/" + user.name);
   };
 
