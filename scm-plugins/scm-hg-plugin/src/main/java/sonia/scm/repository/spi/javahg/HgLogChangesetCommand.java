@@ -48,7 +48,7 @@ import java.util.List;
  */
 public class HgLogChangesetCommand extends AbstractChangesetCommand {
 
-  private final Logger log = LoggerFactory.getLogger(HgLogChangesetCommand.class);
+  private static final Logger LOG = LoggerFactory.getLogger(HgLogChangesetCommand.class);
 
   private HgLogChangesetCommand(Repository repository, HgConfig config) {
     super(repository, config);
@@ -79,7 +79,7 @@ public class HgLogChangesetCommand extends AbstractChangesetCommand {
       try {
         hgInputStream.close();
       } catch (IOException e) {
-        log.error("Could not close HgInputStream", e);
+        LOG.error("Could not close HgInputStream", e);
       }
     }
   }
