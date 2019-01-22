@@ -25,13 +25,13 @@ class LinkPaginator extends React.Component<Props> {
     );
   }
 
-  renderPreviousButton(label?: string) {
+  renderPreviousButton(className: string, label?: string) {
     const { page } = this.props;
     const previousPage = page - 1;
 
     return (
       <Button
-        className={"pagination-previous"}
+        className={className}
         label={label ? label : previousPage.toString()}
         disabled={!this.hasLink("prev")}
         link={`${previousPage}`}
@@ -44,12 +44,12 @@ class LinkPaginator extends React.Component<Props> {
     return collection._links[name];
   }
 
-  renderNextButton(label?: string) {
+  renderNextButton(className: string, label?: string) {
     const { page } = this.props;
     const nextPage = page + 1;
     return (
       <Button
-        className={"pagination-next"}
+        className={className}
         label={label ? label : nextPage.toString()}
         disabled={!this.hasLink("next")}
         link={`${nextPage}`}
@@ -96,13 +96,13 @@ class LinkPaginator extends React.Component<Props> {
       links.push(this.separator());
     }
     if (page > 2) {
-      links.push(this.renderPreviousButton());
+      links.push(this.renderPreviousButton("pagination-link"));
     }
 
     links.push(this.currentPage(page));
 
     if (page + 1 < pageTotal) {
-      links.push(this.renderNextButton());
+      links.push(this.renderNextButton("pagination-link"));
     }
     if (page + 2 < pageTotal)
       //if there exists pages between next and last
@@ -118,13 +118,13 @@ class LinkPaginator extends React.Component<Props> {
     const { t } = this.props;
     return (
       <nav className="pagination is-centered" aria-label="pagination">
-        {this.renderPreviousButton(t("paginator.previous"))}
+        {this.renderPreviousButton("pagination-previous", t("paginator.previous"))}
         <ul className="pagination-list">
           {this.pageLinks().map((link, index) => {
             return <li key={index}>{link}</li>;
           })}
         </ul>
-        {this.renderNextButton(t("paginator.next"))}
+        {this.renderNextButton("pagination-next", t("paginator.next"))}
       </nav>
     );
   }
