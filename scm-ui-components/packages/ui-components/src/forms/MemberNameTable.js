@@ -2,8 +2,7 @@
 import React from "react";
 import { translate } from "react-i18next";
 import {
-  RemoveEntryOfTableButton,
-  LabelWithHelpIcon
+  RemoveEntryOfTableButton
 } from "@scm-manager/ui-components";
 
 type Props = {
@@ -19,10 +18,6 @@ class MemberNameTable extends React.Component<Props, State> {
     const { t } = this.props;
     return (
       <div>
-        <LabelWithHelpIcon
-          label={t("group.members")}
-          helpText={t("group-form.help.memberHelpText")}
-        />
         <table className="table is-hoverable is-fullwidth">
           <tbody>
             {this.props.members.map(member => {
