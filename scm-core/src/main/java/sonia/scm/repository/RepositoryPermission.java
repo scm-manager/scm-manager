@@ -41,8 +41,10 @@ import sonia.scm.security.PermissionObject;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
+import java.util.Collection;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -60,7 +62,8 @@ public class RepositoryPermission implements PermissionObject, Serializable
 
   private boolean groupPermission = false;
   private String name;
-  private String verb;
+  @XmlElement(name = "verb")
+  private Collection<String> verbs;
 
   /**
    * Constructs a new {@link RepositoryPermission}.
@@ -68,10 +71,10 @@ public class RepositoryPermission implements PermissionObject, Serializable
    */
   public RepositoryPermission() {}
 
-  public RepositoryPermission(String name, String verb, boolean groupPermission)
+  public RepositoryPermission(String name, Collection<String> verbs, boolean groupPermission)
   {
     this.name = name;
-    this.verb = verb;
+    this.verbs = verbs;
     this.groupPermission = groupPermission;
   }
 
@@ -101,7 +104,7 @@ public class RepositoryPermission implements PermissionObject, Serializable
     final RepositoryPermission other = (RepositoryPermission) obj;
 
     return Objects.equal(name, other.name)
-      && Objects.equal(verb, other.verb)
+      && Objects.equal(verbs, other.verbs)
       && Objects.equal(groupPermission, other.groupPermission);
   }
 
@@ -114,7 +117,7 @@ public class RepositoryPermission implements PermissionObject, Serializable
   @Override
   public int hashCode()
   {
-    return Objects.hashCode(name, verb, groupPermission);
+    return Objects.hashCode(name, verbs, groupPermission);
   }
 
 
@@ -124,7 +127,7 @@ public class RepositoryPermission implements PermissionObject, Serializable
     //J-
     return MoreObjects.toStringHelper(this)
             .add("name", name)
-            .add("verb", verb)
+            .add("verbs", verbs)
             .add("groupPermission", groupPermission)
             .toString();
     //J+
@@ -150,9 +153,9 @@ public class RepositoryPermission implements PermissionObject, Serializable
    *
    * @return verb of the permission
    */
-  public String getVerb()
+  public Collection<String> getVerbs()
   {
-    return verb;
+    return verbs;
   }
 
   /**
@@ -195,10 +198,10 @@ public class RepositoryPermission implements PermissionObject, Serializable
    * Sets the verb of the permission.
    *
    *
-   * @param verb verb of the permission
+   * @param verbs verbs of the permission
    */
-  public void setVerb(String verb)
+  public void setVerbs(Collection<String> verbs)
   {
-    this.verb = verb;
+    this.verbs = verbs;
   }
 }

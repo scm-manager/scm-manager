@@ -46,6 +46,7 @@ import java.util.stream.Stream;
 
 import static de.otto.edison.hal.Link.link;
 import static de.otto.edison.hal.Links.linkingTo;
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -78,12 +79,12 @@ public class RepositoryPermissionRootResourceTest extends RepositoryTestBase {
   private static final String PERMISSION_TEST_PAYLOAD = "{ \"name\" : \"permission_name\", \"type\" : \"READ\"  }";
   private static final ArrayList<RepositoryPermission> TEST_PERMISSIONS = Lists
     .newArrayList(
-      new RepositoryPermission("user_write", "read,modify", false),
-      new RepositoryPermission("user_read", "read", false),
-      new RepositoryPermission("user_owner", "read,modify,delete", false),
-      new RepositoryPermission("group_read", "read", true),
-      new RepositoryPermission("group_write", "read,modify", true),
-      new RepositoryPermission("group_owner", "read,modify,delete", true)
+      new RepositoryPermission("user_write", asList("read","modify"), false),
+      new RepositoryPermission("user_read", asList("read"), false),
+      new RepositoryPermission("user_owner", asList("*"), false),
+      new RepositoryPermission("group_read", asList("read"), true),
+      new RepositoryPermission("group_write", asList("read","modify"), true),
+      new RepositoryPermission("group_owner", asList("*"), true)
     );
   private final ExpectedRequest requestGETAllPermissions = new ExpectedRequest()
     .description("GET all permissions")
@@ -258,7 +259,7 @@ public class RepositoryPermissionRootResourceTest extends RepositoryTestBase {
   @Test
   public void shouldGetCreatedPermissions() throws URISyntaxException {
     createUserWithRepositoryAndPermissions(TEST_PERMISSIONS, PERMISSION_WRITE);
-    RepositoryPermission newPermission = new RepositoryPermission("new_group_perm", "read,modify", true);
+    RepositoryPermission newPermission = new RepositoryPermission("new_group_perm", asList("read","modify"), true);
     ArrayList<RepositoryPermission> permissions = Lists.newArrayList(TEST_PERMISSIONS);
     permissions.add(newPermission);
     ImmutableList<RepositoryPermission> expectedPermissions = ImmutableList.copyOf(permissions);
@@ -287,7 +288,7 @@ public class RepositoryPermissionRootResourceTest extends RepositoryTestBase {
     createUserWithRepositoryAndPermissions(TEST_PERMISSIONS, PERMISSION_WRITE);
     RepositoryPermission modifiedPermission = TEST_PERMISSIONS.get(0);
     // modify the type to owner
-    modifiedPermission.setVerb("read,modify,delete");
+    modifiedPermission.setVerbs(asList("read", "modify", "delete"));
     ImmutableList<RepositoryPermission> expectedPermissions = ImmutableList.copyOf(TEST_PERMISSIONS);
     assertExpectedRequest(requestPUTPermission
       .content("{\"name\" : \"" + modifiedPermission.getName() + "\" , \"type\" : \"OWNER\" , \"groupPermission\" : false}")
@@ -381,7 +382,7 @@ public class RepositoryPermissionRootResourceTest extends RepositoryTestBase {
     RepositoryPermissionDto result = new RepositoryPermissionDto();
     result.setName(permission.getName());
     result.setGroupPermission(permission.isGroupPermission());
-    result.setType(permission.getVerb());
+//    result.setType(permission.getVerbs());  TODO RP
     String permissionName = Optional.of(permission.getName())
       .filter(p -> !permission.isGroupPermission())
       .orElse(GROUP_PREFIX + permission.getName());

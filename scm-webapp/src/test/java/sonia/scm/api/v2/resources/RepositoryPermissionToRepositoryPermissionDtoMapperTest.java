@@ -12,6 +12,7 @@ import sonia.scm.repository.Repository;
 
 import java.net.URI;
 
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
@@ -35,7 +36,7 @@ public class RepositoryPermissionToRepositoryPermissionDtoMapperTest {
   @SubjectAware(username = "trillian", password = "secret")
   public void shouldMapGroupPermissionCorrectly() {
     Repository repository = getDummyRepository();
-    RepositoryPermission permission = new RepositoryPermission("42", "read,modify,delete", true);
+    RepositoryPermission permission = new RepositoryPermission("42", asList("read","modify","delete"), true);
 
     RepositoryPermissionDto repositoryPermissionDto = mapper.map(permission, repository);
 
@@ -47,7 +48,7 @@ public class RepositoryPermissionToRepositoryPermissionDtoMapperTest {
   @SubjectAware(username = "trillian", password = "secret")
   public void shouldMapNonGroupPermissionCorrectly() {
     Repository repository = getDummyRepository();
-    RepositoryPermission permission = new RepositoryPermission("42", "read,modify,delete", false);
+    RepositoryPermission permission = new RepositoryPermission("42", asList("read","modify","delete"), false);
 
     RepositoryPermissionDto repositoryPermissionDto = mapper.map(permission, repository);
 

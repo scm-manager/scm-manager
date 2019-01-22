@@ -58,6 +58,7 @@ import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.user.User;
 import sonia.scm.user.UserTestData;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.nullValue;
@@ -228,7 +229,7 @@ public class DefaultAuthorizationCollectorTest {
 //    heartOfGold.setPermissions(Lists.newArrayList(new RepositoryPermission("trillian")));
     Repository puzzle42 = RepositoryTestData.create42Puzzle();
     puzzle42.setId("two");
-    RepositoryPermission permission = new RepositoryPermission(group, "read,modify", true);
+    RepositoryPermission permission = new RepositoryPermission(group, asList("read","modify"), true);
 //    puzzle42.setPermissions(Lists.newArrayList(permission));
     when(repositoryDAO.getAll()).thenReturn(Lists.newArrayList(heartOfGold, puzzle42));
 
