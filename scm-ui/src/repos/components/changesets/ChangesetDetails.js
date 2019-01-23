@@ -46,15 +46,7 @@ class ChangesetDetails extends React.Component<Props> {
     return (
       <div>
         <div className="content">
-          <h4>
-            <ExtensionPoint
-              name="changesets.changeset.description"
-              props={{ changeset, value: description.title }}
-              renderAll={true}
-            >
-              {description.title}
-            </ExtensionPoint>
-          </h4>
+          <h4>{description.title}</h4>
           <article className="media">
             <AvatarWrapper>
               <p className={classNames("image", "is-64x64", classes.spacing)}>
@@ -75,23 +67,22 @@ class ChangesetDetails extends React.Component<Props> {
             </div>
             <div className="media-right">{this.renderTags()}</div>
           </article>
-
-          <p>
-            {description.message.split("\n").map((item, key) => {
-              return (
-                <span key={key}>
-                  <ExtensionPoint
-                    name="changesets.changeset.description"
-                    props={{ changeset, value: item }}
-                    renderAll={true}
-                  >
+          <ExtensionPoint
+            name="changesets.changeset.description"
+            props={{ changeset, description }}
+            renderAll={true}
+          >
+            <p>
+              {description.message.split("\n").map((item, key) => {
+                return (
+                  <span key={key}>
                     {item}
-                  </ExtensionPoint>
-                  <br />
-                </span>
-              );
-            })}
-          </p>
+                    <br />
+                  </span>
+                );
+              })}
+            </p>
+          </ExtensionPoint>
         </div>
         <div>
           <ChangesetDiff changeset={changeset} />
