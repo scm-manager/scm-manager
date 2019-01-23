@@ -26,7 +26,7 @@ class RepositoryPermissionProviderTest {
     PluginLoader pluginLoader = mock(PluginLoader.class);
     when(pluginLoader.getUberClassLoader()).thenReturn(ClassLoaders.getContextClassLoader(DefaultSecuritySystem.class));
     ConfigurationEntryStoreFactory configurationEntryStoreFactory = mock(ConfigurationEntryStoreFactory.class);
-    repositoryPermissionProvider = new RepositoryPermissionProvider(configurationEntryStoreFactory, pluginLoader);
+    repositoryPermissionProvider = new RepositoryPermissionProvider(pluginLoader);
     allVerbsFromRepositoryClass = Arrays.stream(RepositoryPermissions.class.getDeclaredFields())
       .filter(field -> field.getName().startsWith("ACTION_"))
       .map(this::getString)
@@ -40,7 +40,7 @@ class RepositoryPermissionProviderTest {
     assertThat(repositoryPermissionProvider.availableRoles()).allSatisfy(this::eitherStarOrOnlyAvailableVerbs);
   }
 
-  private void eitherStarOrOnlyAvailableVerbs(RepositoryPermissionProvider.RoleDescriptor role) {
+  private void eitherStarOrOnlyAvailableVerbs(RepositoryRole role) {
     if (!role.getVerbs().contains("*") || role.getVerbs().size() > 1) {
       assertThat(role.getVerbs()).isSubsetOf(allVerbsFromRepositoryClass);
     }

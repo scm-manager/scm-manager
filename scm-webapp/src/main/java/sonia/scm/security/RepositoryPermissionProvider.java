@@ -4,7 +4,6 @@ import com.google.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.plugin.PluginLoader;
-import sonia.scm.store.ConfigurationEntryStoreFactory;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -16,30 +15,33 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static java.util.Collections.unmodifiableCollection;
 
 public class RepositoryPermissionProvider {
 
   private static final Logger logger = LoggerFactory.getLogger(RepositoryPermissionProvider.class);
   private static final String REPOSITORY_PERMISSION_DESCRIPTOR = "META-INF/scm/repository-permissions.xml";
-  private final ConfigurationEntryStoreFactory storeFactory;
-  private final AvailableRepositoryPermissions availablePermissions;
+  private final Collection<String> availableVerbs;
+  private final Collection<RepositoryRole> availableRoles;
 
   @Inject
-  public RepositoryPermissionProvider(ConfigurationEntryStoreFactory storeFactory, PluginLoader pluginLoader) {
-    this.storeFactory = storeFactory;
-    this.availablePermissions = readAvailablePermissions(pluginLoader);
+  public RepositoryPermissionProvider(PluginLoader pluginLoader) {
+    AvailableRepositoryPermissions availablePermissions = readAvailablePermissions(pluginLoader);
+    this.availableVerbs = unmodifiableCollection(new HashSet<>(availablePermissions.availableVerbs));
+    this.availableRoles = unmodifiableCollection(new HashSet<>(availablePermissions.availableRoles.stream().map(r -> new RepositoryRole(r.name, r.verbs.verbs)).collect(Collectors.toList())));
   }
 
   public Collection<String> availableVerbs() {
-    return availablePermissions.availableVerbs;
+    return availableVerbs;
   }
 
-  public Collection<RoleDescriptor> availableRoles() {
-    return availablePermissions.availableRoles;
+  public Collection<RepositoryRole> availableRoles() {
+    return availableRoles;
   }
 
   private static AvailableRepositoryPermissions readAvailablePermissions(PluginLoader pluginLoader) {
@@ -93,8 +95,8 @@ public class RepositoryPermissionProvider {
     private final Collection<RoleDescriptor> availableRoles;
 
     private AvailableRepositoryPermissions(Collection<String> availableVerbs, Collection<RoleDescriptor> availableRoles) {
-      this.availableVerbs = Collections.unmodifiableCollection(availableVerbs);
-      this.availableRoles = Collections.unmodifiableCollection(availableRoles);
+      this.availableVerbs = unmodifiableCollection(availableVerbs);
+      this.availableRoles = unmodifiableCollection(availableRoles);
     }
   }
 
@@ -124,13 +126,5 @@ public class RepositoryPermissionProvider {
     private String name;
     @XmlElement(name = "verbs")
     private VerbListDescriptor verbs = new VerbListDescriptor();
-
-    public Collection<String> getVerbs() {
-      return Collections.unmodifiableCollection(verbs.verbs);
-    }
-
-    public String toString() {
-      return "Role " + name + " (" + verbs.verbs.stream().collect(Collectors.joining(", ")) + ")";
-    }
   }
 }
