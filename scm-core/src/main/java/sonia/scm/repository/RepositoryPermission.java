@@ -46,6 +46,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.Collection;
 
+import static java.util.Collections.emptyList;
+
 //~--- JDK imports ------------------------------------------------------------
 
 /**
@@ -155,7 +157,7 @@ public class RepositoryPermission implements PermissionObject, Serializable
    */
   public Collection<String> getVerbs()
   {
-    return verbs;
+    return verbs == null? emptyList(): verbs;
   }
 
   /**
