@@ -187,7 +187,7 @@ public class GitLfsITCase {
       IntegrationTestUtil.createResource(adminClient, URI.create(permissionsUrl))
         .accept("*/*")
         .type(VndMediaType.REPOSITORY_PERMISSION)
-        .post(ClientResponse.class, "{\"name\": \""+ trillian.getId() +"\", \"verbs\":[\"read\"]}");
+        .post(ClientResponse.class, "{\"name\": \""+ trillian.getId() +"\", \"verbs\":[\"read\",\"pull\"]}");
 
       // upload data as admin
       String data = UUID.randomUUID().toString();
