@@ -43,6 +43,7 @@ class ConfirmAlert extends React.Component<Props> {
                   <button
                     key={i}
                     onClick={() => this.handleClickButton(button)}
+                    href="javascript:void(0);"
                   >
                     {button.label}
                   </button>

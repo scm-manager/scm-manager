@@ -18,7 +18,7 @@ class NavAction extends React.Component<Props> {
 
     return (
       <li>
-        <a onClick={action}>{showIcon}{label}</a>
+        <a onClick={action} href="javascript:void(0);">{showIcon}{label}</a>
       </li>
     );
   }

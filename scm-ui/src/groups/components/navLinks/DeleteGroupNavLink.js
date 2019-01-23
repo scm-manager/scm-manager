@@ -28,7 +28,7 @@ export class DeleteGroupNavLink extends React.Component<Props> {
       buttons: [
         {
           label: t("delete-group-button.confirm-alert.submit"),
-          onClick: () => this.deleteGroup()
+          onClick: () => this.deleteGroup(),
         },
         {
           label: t("delete-group-button.confirm-alert.cancel"),
