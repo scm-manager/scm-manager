@@ -13,6 +13,7 @@ import GeneralRepo from "./GeneralRepo";
 import Permissions from "../permissions/containers/Permissions";
 
 import type {History} from "history";
+import GeneralRepoNavLink from "../components/GeneralRepoNavLink";
 
 import BranchRoot from "./ChangesetsRoot";
 import ChangesetView from "./ChangesetView";
@@ -183,7 +184,7 @@ class RepositoryRoot extends React.Component<Props> {
                   to={`${url}/settings/general`}
                   label={t("repositoryRoot.menu.settingsNavLink")}
                 >
-                  <NavLink repository={repository} editUrl={`${url}/settings/general`} />
+                  <GeneralRepoNavLink repository={repository} editUrl={`${url}/settings/general`} />
                   <PermissionsNavLink
                     permissionUrl={`${url}/settings/permissions`}
                     repository={repository}

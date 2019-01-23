@@ -18,7 +18,7 @@
       "navigationLabel": "Group Navigation",
       "informationNavLink": "Information",
       "settingsNavLink": "Settings",
-      "editNavLink": "General",
+      "generalNavLink": "General",
       "setPermissionsNavLink": "Permissions"
     }
   },

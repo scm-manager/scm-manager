@@ -6,7 +6,7 @@ import type { Repository } from "@scm-manager/ui-types";
 
 type Props = { editUrl: string, t: string => string, repository: Repository };
 
-class EditNavLink extends React.Component<Props> {
+class GeneralRepoNavLink extends React.Component<Props> {
   isEditable = () => {
     return this.props.repository._links.update;
   };
@@ -15,8 +15,8 @@ class EditNavLink extends React.Component<Props> {
       return null;
     }
     const { editUrl, t } = this.props;
-    return <NavLink to={editUrl} label={t("repositoryRoot.menu.editNavLink")} />;
+    return <NavLink to={editUrl} label={t("repositoryRoot.menu.generalNavLink")} />;
   }
 }
 
-export default translate("repos")(EditNavLink);
+export default translate("repos")(GeneralRepoNavLink);

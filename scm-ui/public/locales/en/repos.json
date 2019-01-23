@@ -26,7 +26,7 @@
       "historyNavLink": "Commits",
       "sourcesNavLink": "Sources",
       "settingsNavLink": "Settings",
-      "editNavLink": "General",
+      "generalNavLink": "General",
       "permissionsNavLink": "Permissions"
     }
   },

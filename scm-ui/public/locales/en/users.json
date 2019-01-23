@@ -34,7 +34,7 @@
       "navigationLabel": "User Navigation",
       "informationNavLink": "Information",
       "settingsNavLink": "Settings",
-      "editNavLink": "General",
+      "generalNavLink": "General",
       "setPasswordNavLink": "Password",
       "setPermissionsNavLink": "Permissions"
     }
