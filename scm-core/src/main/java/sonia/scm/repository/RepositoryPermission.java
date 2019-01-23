@@ -46,7 +46,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableCollection;
@@ -79,7 +79,7 @@ public class RepositoryPermission implements PermissionObject, Serializable
   public RepositoryPermission(String name, Collection<String> verbs, boolean groupPermission)
   {
     this.name = name;
-    this.verbs = unmodifiableCollection(new HashSet<>(verbs));
+    this.verbs = unmodifiableCollection(new LinkedHashSet<>(verbs));
     this.groupPermission = groupPermission;
   }
 

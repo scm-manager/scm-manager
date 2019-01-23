@@ -16,7 +16,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,8 +32,8 @@ public class RepositoryPermissionProvider {
   @Inject
   public RepositoryPermissionProvider(PluginLoader pluginLoader) {
     AvailableRepositoryPermissions availablePermissions = readAvailablePermissions(pluginLoader);
-    this.availableVerbs = unmodifiableCollection(new HashSet<>(availablePermissions.availableVerbs));
-    this.availableRoles = unmodifiableCollection(new HashSet<>(availablePermissions.availableRoles.stream().map(r -> new RepositoryRole(r.name, r.verbs.verbs)).collect(Collectors.toList())));
+    this.availableVerbs = unmodifiableCollection(new LinkedHashSet<>(availablePermissions.availableVerbs));
+    this.availableRoles = unmodifiableCollection(new LinkedHashSet<>(availablePermissions.availableRoles.stream().map(r -> new RepositoryRole(r.name, r.verbs.verbs)).collect(Collectors.toList())));
   }
 
   public Collection<String> availableVerbs() {

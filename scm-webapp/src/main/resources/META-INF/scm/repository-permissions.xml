@@ -3,12 +3,11 @@
     <verb>read</verb>
     <verb>modify</verb>
     <verb>delete</verb>
-    <verb>delete</verb>
-    <verb>healthCheck</verb>
     <verb>pull</verb>
     <verb>push</verb>
     <verb>permissionRead</verb>
     <verb>permissionWrite</verb>
+    <verb>healthCheck</verb>
     <verb>*</verb>
   </verbs>
   <roles>
