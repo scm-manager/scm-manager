@@ -63,7 +63,6 @@ import sonia.scm.user.UserPermissions;
 import sonia.scm.util.Util;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Set;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -199,12 +198,7 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
   private void collectRepositoryPermissions(Builder<String> builder,
     Repository repository, User user, GroupNames groups)
   {
-
-    // TODO RP
-
-    Collection<RepositoryPermission> repositoryPermissions
-      = Collections.emptyList();
-//      = repository.getPermissions();
+    Collection<RepositoryPermission> repositoryPermissions = repository.getPermissions();
 
     if (Util.isNotEmpty(repositoryPermissions))
     {
@@ -214,7 +208,7 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
         hasPermission = isUserPermitted(user, groups, permission);
         if (hasPermission)
         {
-          String perm = null; // TODO RP permission.getType().getPermissionPrefix().concat(repository.getId());
+          String perm = "repository:" + String.join(",", permission.getVerbs()) + ":" + repository.getId();
           if (logger.isTraceEnabled())
           {
             logger.trace("add repository permission {} for user {} at repository {}",

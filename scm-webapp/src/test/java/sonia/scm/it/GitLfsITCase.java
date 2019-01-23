@@ -116,17 +116,6 @@ public class GitLfsITCase {
 
   @Test
   public void testLfsAPIWithOwnerPermissions() throws IOException {
-    // TODO RP
-    uploadAndDownloadAsUser();
-  }
-
-  @Test
-  public void testLfsAPIWithWritePermissions() throws IOException {
-    // TODO RP
-    uploadAndDownloadAsUser();
-  }
-
-  private void uploadAndDownloadAsUser() throws IOException {
     User trillian = UserTestData.createTrillian();
     trillian.setPassword("secret123");
     createUser(trillian);

@@ -1,5 +1,6 @@
 package sonia.scm.api.v2.resources;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
@@ -29,9 +30,9 @@ import org.junit.jupiter.api.TestFactory;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import sonia.scm.repository.NamespaceAndName;
-import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.web.VndMediaType;
 
 import java.io.IOException;
@@ -47,6 +48,7 @@ import java.util.stream.Stream;
 import static de.otto.edison.hal.Link.link;
 import static de.otto.edison.hal.Links.linkingTo;
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -76,7 +78,7 @@ public class RepositoryPermissionRootResourceTest extends RepositoryTestBase {
   private static final String PERMISSION_NAME = "perm";
   private static final String PATH_OF_ALL_PERMISSIONS = REPOSITORY_NAMESPACE + "/" + REPOSITORY_NAME + "/permissions/";
   private static final String PATH_OF_ONE_PERMISSION = PATH_OF_ALL_PERMISSIONS + PERMISSION_NAME;
-  private static final String PERMISSION_TEST_PAYLOAD = "{ \"name\" : \"permission_name\", \"type\" : \"READ\"  }";
+  private static final String PERMISSION_TEST_PAYLOAD = "{ \"name\" : \"permission_name\", \"verbs\" : [\"read\",\"pull\"]  }";
   private static final ArrayList<RepositoryPermission> TEST_PERMISSIONS = Lists
     .newArrayList(
       new RepositoryPermission("user_write", asList("read","modify"), false),
@@ -232,7 +234,7 @@ public class RepositoryPermissionRootResourceTest extends RepositoryTestBase {
   public void shouldGet400OnCreatingNewPermissionWithNotAllowedCharacters() throws URISyntaxException {
     // the @ character at the begin of the name is not allowed
     createUserWithRepository("user");
-    String permissionJson = "{ \"name\": \"@permission\", \"type\": \"OWNER\" }";
+    String permissionJson = "{ \"name\": \"@permission\", \"verbs\": [\"*\"] }";
     MockHttpRequest request = MockHttpRequest
       .post("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + PATH_OF_ALL_PERMISSIONS)
       .content(permissionJson.getBytes())
@@ -244,7 +246,7 @@ public class RepositoryPermissionRootResourceTest extends RepositoryTestBase {
     assertEquals(400, response.getStatus());
 
     // the whitespace at the begin opf the name is not allowed
-    permissionJson = "{ \"name\": \" permission\", \"type\": \"OWNER\" }";
+    permissionJson = "{ \"name\": \" permission\", \"verbs\": [\"*\"] }";
     request = MockHttpRequest
       .post("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + PATH_OF_ALL_PERMISSIONS)
       .content(permissionJson.getBytes())
@@ -259,12 +261,12 @@ public class RepositoryPermissionRootResourceTest extends RepositoryTestBase {
   @Test
   public void shouldGetCreatedPermissions() throws URISyntaxException {
     createUserWithRepositoryAndPermissions(TEST_PERMISSIONS, PERMISSION_WRITE);
-    RepositoryPermission newPermission = new RepositoryPermission("new_group_perm", asList("read","modify"), true);
+    RepositoryPermission newPermission = new RepositoryPermission("new_group_perm", asList("read", "pull", "push"), true);
     ArrayList<RepositoryPermission> permissions = Lists.newArrayList(TEST_PERMISSIONS);
     permissions.add(newPermission);
     ImmutableList<RepositoryPermission> expectedPermissions = ImmutableList.copyOf(permissions);
     assertExpectedRequest(requestPOSTPermission
-      .content("{\"name\" : \"" + newPermission.getName() + "\" , \"type\" : \"WRITE\" , \"groupPermission\" : true}")
+      .content("{\"name\" : \"" + newPermission.getName() + "\" , \"verbs\" : [\"read\",\"pull\",\"push\"], \"groupPermission\" : true}")
       .expectedResponseStatus(201)
       .responseValidator(response -> assertThat(response.getContentAsString())
         .as("POST response has no body")
@@ -278,7 +280,7 @@ public class RepositoryPermissionRootResourceTest extends RepositoryTestBase {
     createUserWithRepositoryAndPermissions(TEST_PERMISSIONS, PERMISSION_WRITE);
     RepositoryPermission newPermission = TEST_PERMISSIONS.get(0);
     assertExpectedRequest(requestPOSTPermission
-      .content("{\"name\" : \"" + newPermission.getName() + "\" , \"type\" : \"WRITE\" , \"groupPermission\" : false}")
+      .content("{\"name\" : \"" + newPermission.getName() + "\" , \"verbs\" : [\"read\",\"pull\",\"push\"], \"groupPermission\" : false}")
       .expectedResponseStatus(409)
     );
   }
@@ -288,10 +290,10 @@ public class RepositoryPermissionRootResourceTest extends RepositoryTestBase {
     createUserWithRepositoryAndPermissions(TEST_PERMISSIONS, PERMISSION_WRITE);
     RepositoryPermission modifiedPermission = TEST_PERMISSIONS.get(0);
     // modify the type to owner
-    modifiedPermission.setVerbs(asList("read", "modify", "delete"));
+    modifiedPermission.setVerbs(new ArrayList<>(singletonList("*")));
     ImmutableList<RepositoryPermission> expectedPermissions = ImmutableList.copyOf(TEST_PERMISSIONS);
     assertExpectedRequest(requestPUTPermission
-      .content("{\"name\" : \"" + modifiedPermission.getName() + "\" , \"type\" : \"OWNER\" , \"groupPermission\" : false}")
+      .content("{\"name\" : \"" + modifiedPermission.getName() + "\" , \"verbs\" : [\"*\"], \"groupPermission\" : false}")
       .path(PATH_OF_ALL_PERMISSIONS + modifiedPermission.getName())
       .expectedResponseStatus(204)
       .responseValidator(response -> assertThat(response.getContentAsString())
@@ -353,7 +355,10 @@ public class RepositoryPermissionRootResourceTest extends RepositoryTestBase {
             .map(hal -> {
               RepositoryPermissionDto result = new RepositoryPermissionDto();
               result.setName(hal.getAttribute("name").asText());
-              result.setType(hal.getAttribute("type").asText());
+              JsonNode attribute = hal.getAttribute("verbs");
+              List<String> verbs = new ArrayList<>();
+              attribute.iterator().forEachRemaining(v -> verbs.add(v.asText()));
+              result.setVerbs(verbs);
               result.setGroupPermission(hal.getAttribute("groupPermission").asBoolean());
               result.add(hal.getLinks());
               return result;
@@ -382,7 +387,7 @@ public class RepositoryPermissionRootResourceTest extends RepositoryTestBase {
     RepositoryPermissionDto result = new RepositoryPermissionDto();
     result.setName(permission.getName());
     result.setGroupPermission(permission.isGroupPermission());
-//    result.setType(permission.getVerbs());  TODO RP
+    result.setVerbs(permission.getVerbs());
     String permissionName = Optional.of(permission.getName())
       .filter(p -> !permission.isGroupPermission())
       .orElse(GROUP_PREFIX + permission.getName());
@@ -412,8 +417,7 @@ public class RepositoryPermissionRootResourceTest extends RepositoryTestBase {
   }
 
   private void createUserWithRepositoryAndPermissions(ArrayList<RepositoryPermission> permissions, String userPermission) {
-    // TODO RP
-//    createUserWithRepository(userPermission).setPermissions(permissions);
+    createUserWithRepository(userPermission).setPermissions(permissions);
   }
 
   private Stream<DynamicTest> createDynamicTestsToAssertResponses(ExpectedRequest... expectedRequests) {

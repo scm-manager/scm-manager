@@ -38,9 +38,8 @@ import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
 import static javax.servlet.http.HttpServletResponse.SC_PRECONDITION_FAILED;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyObject;
@@ -286,13 +285,12 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
 
     dispatcher.invoke(request, response);
 
-    // TODO RP
-//    Assertions.assertThat(createCaptor.getValue().getPermissions())
-//      .hasSize(1)
-//      .allSatisfy(p -> {
-//        assertThat(p.getName()).isEqualTo("trillian");
-//        assertThat(p.getType()).isEqualTo(PermissionType.OWNER);
-//      });
+    assertThat(createCaptor.getValue().getPermissions())
+      .hasSize(1)
+      .allSatisfy(p -> {
+        assertThat(p.getName()).isEqualTo("trillian");
+        assertThat(p.getVerbs()).containsExactly("*");
+      });
   }
 
   @Test

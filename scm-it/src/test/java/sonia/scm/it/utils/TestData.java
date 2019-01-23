@@ -9,9 +9,11 @@ import sonia.scm.web.VndMediaType;
 import javax.json.Json;
 import javax.json.JsonObjectBuilder;
 import java.net.URI;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static sonia.scm.it.utils.RestUtil.createResourceUrl;
@@ -24,6 +26,11 @@ public class TestData {
 
   public static final String USER_SCM_ADMIN = "scmadmin";
   public static final String USER_ANONYMOUS = "anonymous";
+
+  public static final Collection<String> READ = asList("read", "pull");
+  public static final Collection<String> WRITE = asList("read", "write", "pull", "push");
+  public static final Collection<String> OWNER = asList("*");
+
   private static final List<String> PROTECTED_USERS = asList(USER_SCM_ADMIN, USER_ANONYMOUS);
 
   private static Map<String, String> DEFAULT_REPOSITORIES = new HashMap<>();
@@ -81,23 +88,22 @@ public class TestData {
     ;
   }
 
-    // TODO RP
-//  public static void createUserPermission(String name, PermissionType permissionType, String repositoryType) {
-//    String defaultPermissionUrl = TestData.getDefaultPermissionUrl(USER_SCM_ADMIN, USER_SCM_ADMIN, repositoryType);
-//    LOG.info("create permission with name {} and type: {} using the endpoint: {}", name, permissionType, defaultPermissionUrl);
-//    given(VndMediaType.PERMISSION)
-//      .when()
-//      .content("{\n" +
-//        "\t\"type\": \"" + permissionType.name() + "\",\n" +
-//        "\t\"name\": \"" + name + "\",\n" +
-//        "\t\"groupPermission\": false\n" +
-//        "\t\n" +
-//        "}")
-//      .post(defaultPermissionUrl)
-//      .then()
-//      .statusCode(HttpStatus.SC_CREATED)
-//    ;
-//  }
+  public static void createUserPermission(String name, Collection<String> permissionType, String repositoryType) {
+    String defaultPermissionUrl = TestData.getDefaultPermissionUrl(USER_SCM_ADMIN, USER_SCM_ADMIN, repositoryType);
+    LOG.info("create permission with name {} and type: {} using the endpoint: {}", name, permissionType, defaultPermissionUrl);
+    given(VndMediaType.PERMISSION)
+      .when()
+      .content("{\n" +
+        "\t\"verbs\": " + permissionType.stream().collect(Collectors.joining("\",\"", "[\"", "\"]")) + ",\n" +
+        "\t\"name\": \"" + name + "\",\n" +
+        "\t\"groupPermission\": false\n" +
+        "\t\n" +
+        "}")
+      .post(defaultPermissionUrl)
+      .then()
+      .statusCode(HttpStatus.SC_CREATED)
+    ;
+  }
 
   public static List<Map> getUserPermissions(String username, String password, String repositoryType) {
     return callUserPermissions(username, password, repositoryType, HttpStatus.SC_OK)

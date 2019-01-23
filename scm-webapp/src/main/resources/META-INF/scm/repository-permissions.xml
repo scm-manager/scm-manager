@@ -14,8 +14,8 @@
       <name>WRITER</name>
       <verbs>
         <verb>read</verb>
-        <verb>push</verb>
         <verb>pull</verb>
+        <verb>push</verb>
       </verbs>
     </role>
     <role>

@@ -37,23 +37,25 @@ import static sonia.scm.api.v2.resources.RepositoryPermissionDto.GROUP_PREFIX;
 @Slf4j
 public class RepositoryPermissionRootResource {
 
-
   private RepositoryPermissionDtoToRepositoryPermissionMapper dtoToModelMapper;
   private RepositoryPermissionToRepositoryPermissionDtoMapper modelToDtoMapper;
   private RepositoryPermissionCollectionToDtoMapper repositoryPermissionCollectionToDtoMapper;
   private ResourceLinks resourceLinks;
   private final RepositoryManager manager;
 
-
   @Inject
-  public RepositoryPermissionRootResource(RepositoryPermissionDtoToRepositoryPermissionMapper dtoToModelMapper, RepositoryPermissionToRepositoryPermissionDtoMapper modelToDtoMapper, RepositoryPermissionCollectionToDtoMapper repositoryPermissionCollectionToDtoMapper, ResourceLinks resourceLinks, RepositoryManager manager) {
+  public RepositoryPermissionRootResource(
+    RepositoryPermissionDtoToRepositoryPermissionMapper dtoToModelMapper,
+    RepositoryPermissionToRepositoryPermissionDtoMapper modelToDtoMapper,
+    RepositoryPermissionCollectionToDtoMapper repositoryPermissionCollectionToDtoMapper,
+    ResourceLinks resourceLinks,
+    RepositoryManager manager) {
     this.dtoToModelMapper = dtoToModelMapper;
     this.modelToDtoMapper = modelToDtoMapper;
     this.repositoryPermissionCollectionToDtoMapper = repositoryPermissionCollectionToDtoMapper;
     this.resourceLinks = resourceLinks;
     this.manager = manager;
   }
-
 
   /**
    * Adds a new permission to the user or group managed by the repository
@@ -73,18 +75,16 @@ public class RepositoryPermissionRootResource {
   @TypeHint(TypeHint.NO_CONTENT.class)
   @Consumes(VndMediaType.PERMISSION)
   @Path("")
-  public Response create(@PathParam("namespace") String namespace, @PathParam("name") String name,@Valid RepositoryPermissionDto permission) {
+  public Response create(@PathParam("namespace") String namespace, @PathParam("name") String name, @Valid RepositoryPermissionDto permission) {
     log.info("try to add new permission: {}", permission);
     Repository repository = load(namespace, name);
     RepositoryPermissions.permissionWrite(repository).check();
     checkPermissionAlreadyExists(permission, repository);
-    // TODO RP
-//    repository.addPermission(dtoToModelMapper.map(permission));
+    repository.addPermission(dtoToModelMapper.map(permission));
     manager.modify(repository);
     String urlPermissionName = modelToDtoMapper.getUrlPermissionName(permission);
     return Response.created(URI.create(resourceLinks.repositoryPermission().self(namespace, name, urlPermissionName))).build();
   }
-
 
   /**
    * Get the searched permission with permission name related to a repository
@@ -107,16 +107,14 @@ public class RepositoryPermissionRootResource {
     Repository repository = load(namespace, name);
     RepositoryPermissions.permissionRead(repository).check();
     return Response.ok(
-      // TODO RP
-//      repository.getPermissions()
-//        .stream()
-//        .filter(filterPermission(permissionName))
-//        .map(permission -> modelToDtoMapper.map(permission, repository))
-//        .findFirst()
-//        .orElseThrow(() -> notFound(entity(RepositoryPermission.class, namespace).in(Repository.class, namespace + "/" + name)))
+      repository.getPermissions()
+        .stream()
+        .filter(filterPermission(permissionName))
+        .map(permission -> modelToDtoMapper.map(permission, repository))
+        .findFirst()
+        .orElseThrow(() -> notFound(entity(RepositoryPermission.class, namespace).in(Repository.class, namespace + "/" + name)))
     ).build();
   }
-
 
   /**
    * Get all permissions related to a repository
@@ -140,7 +138,6 @@ public class RepositoryPermissionRootResource {
     RepositoryPermissions.permissionRead(repository).check();
     return Response.ok(repositoryPermissionCollectionToDtoMapper.map(repository)).build();
   }
-
 
   /**
    * Update a permission to the user or group managed by the repository
@@ -175,13 +172,12 @@ public class RepositoryPermissionRootResource {
       checkPermissionAlreadyExists(permission, repository);
     }
 
-    // TODO RP
-//    RepositoryPermission existingPermission = repository.getPermissions()
-//      .stream()
-//      .filter(filterPermission(permissionName))
-//      .findFirst()
-//      .orElseThrow(() -> notFound(entity(RepositoryPermission.class, namespace).in(Repository.class, namespace + "/" + name)));
-//    dtoToModelMapper.modify(existingPermission, permission);
+    RepositoryPermission existingPermission = repository.getPermissions()
+      .stream()
+      .filter(filterPermission(permissionName))
+      .findFirst()
+      .orElseThrow(() -> notFound(entity(RepositoryPermission.class, namespace).in(Repository.class, namespace + "/" + name)));
+    dtoToModelMapper.modify(existingPermission, permission);
     manager.modify(repository);
     log.info("the permission with name: {} is updated.", permissionName);
     return Response.noContent().build();
@@ -208,22 +204,20 @@ public class RepositoryPermissionRootResource {
     log.info("try to delete the permission with name: {}.", permissionName);
     Repository repository = load(namespace, name);
     RepositoryPermissions.modify(repository).check();
-    // TODO RP
-//    repository.getPermissions()
-//      .stream()
-//      .filter(filterPermission(permissionName))
-//      .findFirst()
-//      .ifPresent(repository::removePermission)
-//    ;
+    repository.getPermissions()
+      .stream()
+      .filter(filterPermission(permissionName))
+      .findFirst()
+      .ifPresent(repository::removePermission);
     manager.modify(repository);
     log.info("the permission with name: {} is updated.", permissionName);
     return Response.noContent().build();
   }
 
-  Predicate<RepositoryPermission> filterPermission(String permissionName) {
-    return permission -> getPermissionName(permissionName).equals(permission.getName())
+  private Predicate<RepositoryPermission> filterPermission(String name) {
+    return permission -> getPermissionName(name).equals(permission.getName())
       &&
-      permission.isGroupPermission() == isGroupPermission(permissionName);
+      permission.isGroupPermission() == isGroupPermission(name);
   }
 
   private String getPermissionName(String permissionName) {
@@ -235,7 +229,6 @@ public class RepositoryPermissionRootResource {
   private boolean isGroupPermission(String permissionName) {
     return permissionName.startsWith(GROUP_PREFIX);
   }
-
 
   /**
    * check if the actual user is permitted to manage the repository permissions
@@ -266,10 +259,9 @@ public class RepositoryPermissionRootResource {
   }
 
   private boolean isPermissionExist(RepositoryPermissionDto permission, Repository repository) {
-    return true;
-//    return repository.getPermissions()
-//      .stream()
-//      .anyMatch(p -> p.getName().equals(permission.getName()) && p.isGroupPermission() == permission.isGroupPermission());
+    return repository.getPermissions()
+      .stream()
+      .anyMatch(p -> p.getName().equals(permission.getName()) && p.isGroupPermission() == permission.isGroupPermission());
   }
 }
 

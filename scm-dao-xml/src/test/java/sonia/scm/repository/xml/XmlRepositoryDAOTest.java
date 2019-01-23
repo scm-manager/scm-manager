@@ -16,6 +16,7 @@ import sonia.scm.io.FileSystem;
 import sonia.scm.repository.InitialRepositoryLocationResolver;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.RepositoryTestData;
 
 import java.io.IOException;
@@ -23,9 +24,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Clock;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicLong;
 
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -326,6 +329,20 @@ class XmlRepositoryDAOTest {
     Path metadataPath = dao.resolveMetadataPath(repositoryDirectory);
 
     String content = content(metadataPath);
+    assertThat(content).contains("Awesome Spaceship");
+  }
+
+  @Test
+  void x() throws IOException {
+    Repository heartOfGold = createHeartOfGold();
+    heartOfGold.setPermissions(asList(new RepositoryPermission("trillian", asList("read", "write"), false), new RepositoryPermission("vorgons", asList("delete"), true)));
+    dao.add(heartOfGold);
+
+    Path repositoryDirectory = getAbsolutePathFromDao(heartOfGold.getId());
+    Path metadataPath = dao.resolveMetadataPath(repositoryDirectory);
+
+    String content = content(metadataPath);
+    System.out.println(content);
     assertThat(content).contains("Awesome Spaceship");
   }
 
