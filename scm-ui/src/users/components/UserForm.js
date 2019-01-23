@@ -106,7 +106,7 @@ class UserForm extends React.Component<Props, State> {
     }
     return (
       <>
-        <Subtitle subtitle={t("single-user.edit.subtitle")} />
+        <Subtitle subtitle={t("userForm.subtitle")} />
         <form onSubmit={this.submit}>
           <div className="columns">
             <div className="column is-half">
@@ -153,7 +153,7 @@ class UserForm extends React.Component<Props, State> {
               <SubmitButton
                 disabled={!this.isValid()}
                 loading={loading}
-                label={t("single-user.edit.button")}
+                label={t("userForm.button")}
               />
             </div>
           </div>

@@ -101,7 +101,7 @@ class BranchRoot extends React.Component<Props> {
     if (repository._links.branches) {
       return (
         <BranchSelector
-          label={t("branch-selector.label")}
+          label={t("changesets.branchSelectorLabel")}
           branches={branches}
           selectedBranch={selected}
           selected={(b: Branch) => {

@@ -64,8 +64,8 @@ class SingleUser extends React.Component<Props> {
     if (error) {
       return (
         <ErrorPage
-          title={t("single-user.errorTitle")}
-          subtitle={t("single-user.errorSubtitle")}
+          title={t("singleUser.errorTitle")}
+          subtitle={t("singleUser.errorSubtitle")}
           error={error}
         />
       );
@@ -93,14 +93,14 @@ class SingleUser extends React.Component<Props> {
           </div>
           <div className="column">
             <Navigation>
-              <Section label={t("single-user.menu.navigationLabel")}>
+              <Section label={t("singleUser.menu.navigationLabel")}>
                 <NavLink
                   to={`${url}`}
-                  label={t("single-user.menu.informationNavLink")}
+                  label={t("singleUser.menu.informationNavLink")}
                 />
                 <SubNavigation
                   to={`${url}/settings/general`}
-                  label={t("single-user.menu.settingsNavLink")}
+                  label={t("singleUser.menu.settingsNavLink")}
                 >
                   <GeneralUserNavLink
                     user={user}

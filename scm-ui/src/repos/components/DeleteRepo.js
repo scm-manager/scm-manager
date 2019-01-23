@@ -24,15 +24,15 @@ class DeleteRepo extends React.Component<Props> {
   confirmDelete = () => {
     const { t } = this.props;
     confirmAlert({
-      title: t("repository.delete.confirm-alert.title"),
-      message: t("repository.delete.confirm-alert.message"),
+      title: t("delete.confirmAlert.title"),
+      message: t("delete.confirmAlert.message"),
       buttons: [
         {
-          label: t("repository.delete.confirm-alert.submit"),
+          label: t("delete.confirmAlert.submit"),
           onClick: () => this.delete()
         },
         {
-          label: t("repository.delete.confirm-alert.cancel"),
+          label: t("delete.confirmAlert.cancel"),
           onClick: () => null
         }
       ]
@@ -53,11 +53,11 @@ class DeleteRepo extends React.Component<Props> {
 
     return (
       <>
-        <Subtitle subtitle={t("repository.delete.subtitle")} />
+        <Subtitle subtitle={t("delete.subtitle")} />
         <div className="columns">
           <div className="column">
             <DeleteButton
-              label={t("repository.delete.button")}
+              label={t("delete.button")}
               action={action}
             />
           </div>

@@ -90,7 +90,7 @@ class SetUserPassword extends React.Component<Props, State> {
       message = (
         <Notification
           type={"success"}
-          children={t("single-user.password.set-password-successful")}
+          children={t("singleUserPassword.setPasswordSuccessful")}
           onClose={() => this.onClose()}
         />
       );
@@ -108,7 +108,7 @@ class SetUserPassword extends React.Component<Props, State> {
         <SubmitButton
           disabled={!this.state.passwordValid}
           loading={loading}
-          label={t("single-user.password.button")}
+          label={t("singleUserPassword.button")}
         />
       </form>
     );

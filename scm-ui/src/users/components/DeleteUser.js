@@ -38,15 +38,15 @@ class DeleteUser extends React.Component<Props> {
   confirmDelete = () => {
     const { t } = this.props;
     confirmAlert({
-      title: t("single-user.delete.confirm-alert.title"),
-      message: t("single-user.delete.confirm-alert.message"),
+      title: t("delete.confirm-alert.title"),
+      message: t("delete.confirm-alert.message"),
       buttons: [
         {
-          label: t("single-user.delete.confirm-alert.submit"),
+          label: t("delete.confirm-alert.submit"),
           onClick: () => this.deleteUser()
         },
         {
-          label: t("single-user.delete.confirm-alert.cancel"),
+          label: t("delete.confirm-alert.cancel"),
           onClick: () => null
         }
       ]
@@ -66,11 +66,11 @@ class DeleteUser extends React.Component<Props> {
     }
     return (
       <>
-        <Subtitle subtitle={t("single-user.delete.subtitle")} />
+        <Subtitle subtitle={t("delete.subtitle")} />
         <div className="columns">
           <div className="column">
             <DeleteButton
-              label={t("single-user.delete.button")}
+              label={t("delete.button")}
               action={action}
             />
           </div>

@@ -10,46 +10,6 @@
     "creationDate": "Creation Date",
     "lastModified": "Last Modified"
   },
-  "users": {
-    "title": "Users",
-    "subtitle": "Create, read, update and delete users"
-  },
-  "create-user-button": {
-    "label": "Create"
-  },
-  "add-user": {
-    "title": "Create User",
-    "subtitle": "Create a new user"
-  },
-  "single-user": {
-    "menu": {
-      "navigationLabel": "User Navigation",
-      "informationNavLink": "Information",
-      "settingsNavLink": "Settings",
-      "editNavLink": "General",
-      "setPasswordNavLink": "Password"
-    },
-    "edit": {
-      "subtitle": "Edit User",
-      "button": "Submit"
-    },
-    "delete": {
-      "subtitle": "Delete User",
-      "button": "Delete",
-      "confirm-alert": {
-        "title": "Delete user",
-        "message": "Do you really want to delete the user?",
-        "submit": "Yes",
-        "cancel": "No"
-      }
-    },
-    "password": {
-      "button": "Set password",
-      "set-password-successful": "Password successfully set"
-    },
-    "errorTitle": "Error",
-    "errorSubtitle": "Unknown user error"
-  },
   "validation": {
     "mail-invalid": "This email is invalid",
     "name-invalid": "This name is invalid",
@@ -61,5 +21,43 @@
     "mailHelpText": "Email address of the user.",
     "adminHelpText": "An administrator is able to create, modify and delete repositories, groups and users.",
     "activeHelpText": "Activate or deactive the user."
+  },
+  "users": {
+    "title": "Users",
+    "subtitle": "Create, read, update and delete users",
+    "createButton": "Create"
+  },
+  "singleUser": {
+    "errorTitle": "Error",
+    "errorSubtitle": "Unknown user error",
+    "menu": {
+      "navigationLabel": "User Navigation",
+      "informationNavLink": "Information",
+      "settingsNavLink": "Settings",
+      "editNavLink": "General",
+      "setPasswordNavLink": "Password"
+    }
+  },
+  "addUser": {
+    "title": "Create User",
+    "subtitle": "Create a new user"
+  },
+  "delete": {
+    "subtitle": "Delete User",
+    "button": "Delete",
+    "confirm-alert": {
+      "title": "Delete user",
+      "message": "Do you really want to delete the user?",
+      "submit": "Yes",
+      "cancel": "No"
+    }
+  },
+  "singleUserPassword": {
+    "button": "Set password",
+    "setPasswordSuccessful": "Password successfully set"
+  },
+  "userForm": {
+    "subtitle": "Edit User",
+    "button": "Submit"
   }
 }

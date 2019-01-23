@@ -83,32 +83,29 @@ class RepositoryForm extends React.Component<Props, State> {
     const repository = this.state.repository;
 
     return (
-      <>
-        <Subtitle subtitle={t("repository.edit.subtitle")} />
-        <form onSubmit={this.submit}>
-          {this.renderCreateOnlyFields()}
-          <InputField
-            label={t("repository.contact")}
-            onChange={this.handleContactChange}
-            value={repository ? repository.contact : ""}
-            validationError={this.state.contactValidationError}
-            errorMessage={t("validation.contact-invalid")}
-            helpText={t("help.contactHelpText")}
-          />
+      <form onSubmit={this.submit}>
+        {this.renderCreateOnlyFields()}
+        <InputField
+          label={t("repository.contact")}
+          onChange={this.handleContactChange}
+          value={repository ? repository.contact : ""}
+          validationError={this.state.contactValidationError}
+          errorMessage={t("validation.contact-invalid")}
+          helpText={t("help.contactHelpText")}
+        />
 
-          <Textarea
-            label={t("repository.description")}
-            onChange={this.handleDescriptionChange}
-            value={repository ? repository.description : ""}
-            helpText={t("help.descriptionHelpText")}
-          />
-          <SubmitButton
-            disabled={!this.isValid()}
-            loading={loading}
-            label={t("repository-form.submit")}
-          />
-        </form>
-      </>
+        <Textarea
+          label={t("repository.description")}
+          onChange={this.handleDescriptionChange}
+          value={repository ? repository.description : ""}
+          helpText={t("help.descriptionHelpText")}
+        />
+        <SubmitButton
+          disabled={!this.isValid()}
+          loading={loading}
+          label={t("repositoryForm.submit")}
+        />
+      </form>
     );
   }
 

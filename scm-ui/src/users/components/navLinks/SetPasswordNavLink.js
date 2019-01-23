@@ -17,7 +17,7 @@ class ChangePasswordNavLink extends React.Component<Props> {
     if (!this.hasPermissionToSetPassword()) {
       return null;
     }
-    return <NavLink label={t("single-user.menu.setPasswordNavLink")} to={passwordUrl} />;
+    return <NavLink label={t("singleUser.menu.setPasswordNavLink")} to={passwordUrl} />;
   }
 
   hasPermissionToSetPassword = () => {

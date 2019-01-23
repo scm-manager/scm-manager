@@ -78,8 +78,8 @@ class RepositoryRoot extends React.Component<Props> {
     if (error) {
       return (
         <ErrorPage
-          title={t("repository-root.errorTitle")}
-          subtitle={t("repository-root.errorSubtitle")}
+          title={t("repositoryRoot.errorTitle")}
+          subtitle={t("repositoryRoot.errorSubtitle")}
           error={error}
         />
       );
@@ -166,13 +166,13 @@ class RepositoryRoot extends React.Component<Props> {
           </div>
           <div className="column">
             <Navigation>
-              <Section label={t("repository-root.menu.navigationLabel")}>
-                <NavLink to={url} label={t("repository-root.menu.informationNavLink")} />
+              <Section label={t("repositoryRoot.menu.navigationLabel")}>
+                <NavLink to={url} label={t("repositoryRoot.menu.informationNavLink")} />
                 <RepositoryNavLink
                   repository={repository}
                   linkName="changesets"
                   to={`${url}/changesets/`}
-                  label={t("repository-root.menu.historyNavLink")}
+                  label={t("repositoryRoot.menu.historyNavLink")}
                   activeWhenMatch={this.matches}
                   activeOnlyWhenExact={false}
                 />
@@ -180,22 +180,22 @@ class RepositoryRoot extends React.Component<Props> {
                   repository={repository}
                   linkName="sources"
                   to={`${url}/sources`}
-                  label={t("repository-root.menu.sourcesNavLink")}
+                  label={t("repositoryRoot.menu.sourcesNavLink")}
                   activeOnlyWhenExact={false}
+                />
+                <ExtensionPoint
+                  name="repository.navigation"
+                  props={extensionProps}
+                  renderAll={true}
                 />
                 <SubNavigation
                   to={`${url}/settings/general`}
-                  label={t("repository-root.menu.settingsNavLink")}
+                  label={t("repositoryRoot.menu.settingsNavLink")}
                 >
                   <NavLink repository={repository} editUrl={`${url}/settings/general`} />
                   <PermissionsNavLink
                     permissionUrl={`${url}/settings/permissions`}
                     repository={repository}
-                  />
-                  <ExtensionPoint
-                    name="repository.navigation"
-                    props={extensionProps}
-                    renderAll={true}
                   />
                 </SubNavigation>
               </Section>
