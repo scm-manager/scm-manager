@@ -333,7 +333,7 @@ class XmlRepositoryDAOTest {
   }
 
   @Test
-  void x() throws IOException {
+  void shouldPersistPermissions() throws IOException {
     Repository heartOfGold = createHeartOfGold();
     heartOfGold.setPermissions(asList(new RepositoryPermission("trillian", asList("read", "write"), false), new RepositoryPermission("vorgons", asList("delete"), true)));
     dao.add(heartOfGold);
@@ -343,7 +343,7 @@ class XmlRepositoryDAOTest {
 
     String content = content(metadataPath);
     System.out.println(content);
-    assertThat(content).contains("Awesome Spaceship");
+    assertThat(content).containsSubsequence("trillian", "<verb>read</verb>", "<verb>write</verb>", "vorgons", "<verb>delete</verb>");
   }
 
   @Test
