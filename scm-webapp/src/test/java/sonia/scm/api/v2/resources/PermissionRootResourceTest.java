@@ -29,7 +29,7 @@ import org.junit.jupiter.api.TestFactory;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import sonia.scm.repository.NamespaceAndName;
-import sonia.scm.repository.Permission;
+import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
@@ -58,7 +58,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static sonia.scm.api.v2.resources.DispatcherMock.createDispatcher;
-import static sonia.scm.api.v2.resources.PermissionDto.GROUP_PREFIX;
+import static sonia.scm.api.v2.resources.RepositoryPermissionDto.GROUP_PREFIX;
 
 @Slf4j
 @SubjectAware(
@@ -77,14 +77,14 @@ public class PermissionRootResourceTest extends RepositoryTestBase {
   private static final String PATH_OF_ALL_PERMISSIONS = REPOSITORY_NAMESPACE + "/" + REPOSITORY_NAME + "/permissions/";
   private static final String PATH_OF_ONE_PERMISSION = PATH_OF_ALL_PERMISSIONS + PERMISSION_NAME;
   private static final String PERMISSION_TEST_PAYLOAD = "{ \"name\" : \"permission_name\", \"type\" : \"READ\"  }";
-  private static final ArrayList<Permission> TEST_PERMISSIONS = Lists
+  private static final ArrayList<RepositoryPermission> TEST_PERMISSIONS = Lists
     .newArrayList(
-      new Permission("user_write", PermissionType.WRITE, false),
-      new Permission("user_read", PermissionType.READ, false),
-      new Permission("user_owner", PermissionType.OWNER, false),
-      new Permission("group_read", PermissionType.READ, true),
-      new Permission("group_write", PermissionType.WRITE, true),
-      new Permission("group_owner", PermissionType.OWNER, true)
+      new RepositoryPermission("user_write", PermissionType.WRITE, false),
+      new RepositoryPermission("user_read", PermissionType.READ, false),
+      new RepositoryPermission("user_owner", PermissionType.OWNER, false),
+      new RepositoryPermission("group_read", PermissionType.READ, true),
+      new RepositoryPermission("group_write", PermissionType.WRITE, true),
+      new RepositoryPermission("group_owner", PermissionType.OWNER, true)
     );
   private final ExpectedRequest requestGETAllPermissions = new ExpectedRequest()
     .description("GET all permissions")
@@ -121,12 +121,12 @@ public class PermissionRootResourceTest extends RepositoryTestBase {
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
 
   @InjectMocks
-  private PermissionToPermissionDtoMapperImpl permissionToPermissionDtoMapper;
+  private RepositoryPermissionToRepositoryPermissionDtoMapperImpl permissionToPermissionDtoMapper;
 
   @InjectMocks
   private PermissionDtoToPermissionMapperImpl permissionDtoToPermissionMapper;
 
-  private PermissionCollectionToDtoMapper permissionCollectionToDtoMapper;
+  private RepositoryPermissionCollectionToDtoMapper repositoryPermissionCollectionToDtoMapper;
 
   private PermissionRootResource permissionRootResource;
 
@@ -137,8 +137,8 @@ public class PermissionRootResourceTest extends RepositoryTestBase {
   @Before
   public void prepareEnvironment() {
     initMocks(this);
-    permissionCollectionToDtoMapper = new PermissionCollectionToDtoMapper(permissionToPermissionDtoMapper, resourceLinks);
-    permissionRootResource = new PermissionRootResource(permissionDtoToPermissionMapper, permissionToPermissionDtoMapper, permissionCollectionToDtoMapper, resourceLinks, repositoryManager);
+    repositoryPermissionCollectionToDtoMapper = new RepositoryPermissionCollectionToDtoMapper(permissionToPermissionDtoMapper, resourceLinks);
+    permissionRootResource = new PermissionRootResource(permissionDtoToPermissionMapper, permissionToPermissionDtoMapper, repositoryPermissionCollectionToDtoMapper, resourceLinks, repositoryManager);
     super.permissionRootResource = Providers.of(permissionRootResource);
     dispatcher = createDispatcher(getRepositoryRootResource());
     subjectThreadState.bind();
@@ -207,7 +207,7 @@ public class PermissionRootResourceTest extends RepositoryTestBase {
   @Test
   public void shouldGetPermissionByName() throws URISyntaxException {
     createUserWithRepositoryAndPermissions(TEST_PERMISSIONS, PERMISSION_READ);
-    Permission expectedPermission = TEST_PERMISSIONS.get(0);
+    RepositoryPermission expectedPermission = TEST_PERMISSIONS.get(0);
     assertExpectedRequest(requestGETPermission
       .expectedResponseStatus(200)
       .path(PATH_OF_ALL_PERMISSIONS + expectedPermission.getName())
@@ -215,8 +215,8 @@ public class PermissionRootResourceTest extends RepositoryTestBase {
         String body = response.getContentAsString();
         ObjectMapper mapper = new ObjectMapper();
         try {
-          PermissionDto actualPermissionDto = mapper.readValue(body, PermissionDto.class);
-          assertThat(actualPermissionDto)
+          RepositoryPermissionDto actualRepositoryPermissionDto = mapper.readValue(body, RepositoryPermissionDto.class);
+          assertThat(actualRepositoryPermissionDto)
             .as("response payload match permission object model")
             .isEqualToComparingFieldByFieldRecursively(getExpectedPermissionDto(expectedPermission, PERMISSION_READ))
           ;
@@ -259,10 +259,10 @@ public class PermissionRootResourceTest extends RepositoryTestBase {
   @Test
   public void shouldGetCreatedPermissions() throws URISyntaxException {
     createUserWithRepositoryAndPermissions(TEST_PERMISSIONS, PERMISSION_WRITE);
-    Permission newPermission = new Permission("new_group_perm", PermissionType.WRITE, true);
-    ArrayList<Permission> permissions = Lists.newArrayList(TEST_PERMISSIONS);
+    RepositoryPermission newPermission = new RepositoryPermission("new_group_perm", PermissionType.WRITE, true);
+    ArrayList<RepositoryPermission> permissions = Lists.newArrayList(TEST_PERMISSIONS);
     permissions.add(newPermission);
-    ImmutableList<Permission> expectedPermissions = ImmutableList.copyOf(permissions);
+    ImmutableList<RepositoryPermission> expectedPermissions = ImmutableList.copyOf(permissions);
     assertExpectedRequest(requestPOSTPermission
       .content("{\"name\" : \"" + newPermission.getName() + "\" , \"type\" : \"WRITE\" , \"groupPermission\" : true}")
       .expectedResponseStatus(201)
@@ -276,7 +276,7 @@ public class PermissionRootResourceTest extends RepositoryTestBase {
   @Test
   public void shouldNotAddExistingPermission() throws URISyntaxException {
     createUserWithRepositoryAndPermissions(TEST_PERMISSIONS, PERMISSION_WRITE);
-    Permission newPermission = TEST_PERMISSIONS.get(0);
+    RepositoryPermission newPermission = TEST_PERMISSIONS.get(0);
     assertExpectedRequest(requestPOSTPermission
       .content("{\"name\" : \"" + newPermission.getName() + "\" , \"type\" : \"WRITE\" , \"groupPermission\" : false}")
       .expectedResponseStatus(409)
@@ -286,10 +286,10 @@ public class PermissionRootResourceTest extends RepositoryTestBase {
   @Test
   public void shouldGetUpdatedPermissions() throws URISyntaxException {
     createUserWithRepositoryAndPermissions(TEST_PERMISSIONS, PERMISSION_WRITE);
-    Permission modifiedPermission = TEST_PERMISSIONS.get(0);
+    RepositoryPermission modifiedPermission = TEST_PERMISSIONS.get(0);
     // modify the type to owner
     modifiedPermission.setType(PermissionType.OWNER);
-    ImmutableList<Permission> expectedPermissions = ImmutableList.copyOf(TEST_PERMISSIONS);
+    ImmutableList<RepositoryPermission> expectedPermissions = ImmutableList.copyOf(TEST_PERMISSIONS);
     assertExpectedRequest(requestPUTPermission
       .content("{\"name\" : \"" + modifiedPermission.getName() + "\" , \"type\" : \"OWNER\" , \"groupPermission\" : false}")
       .path(PATH_OF_ALL_PERMISSIONS + modifiedPermission.getName())
@@ -305,8 +305,8 @@ public class PermissionRootResourceTest extends RepositoryTestBase {
   @Test
   public void shouldDeletePermissions() throws URISyntaxException {
     createUserWithRepositoryAndPermissions(TEST_PERMISSIONS, PERMISSION_OWNER);
-    Permission deletedPermission = TEST_PERMISSIONS.get(0);
-    ImmutableList<Permission> expectedPermissions = ImmutableList.copyOf(TEST_PERMISSIONS.subList(1, TEST_PERMISSIONS.size()));
+    RepositoryPermission deletedPermission = TEST_PERMISSIONS.get(0);
+    ImmutableList<RepositoryPermission> expectedPermissions = ImmutableList.copyOf(TEST_PERMISSIONS.subList(1, TEST_PERMISSIONS.size()));
     assertExpectedRequest(requestDELETEPermission
       .path(PATH_OF_ALL_PERMISSIONS + deletedPermission.getName())
       .expectedResponseStatus(204)
@@ -320,8 +320,8 @@ public class PermissionRootResourceTest extends RepositoryTestBase {
   @Test
   public void deletingNotExistingPermissionShouldProcess() throws URISyntaxException {
     createUserWithRepositoryAndPermissions(TEST_PERMISSIONS, PERMISSION_OWNER);
-    Permission deletedPermission = TEST_PERMISSIONS.get(0);
-    ImmutableList<Permission> expectedPermissions = ImmutableList.copyOf(TEST_PERMISSIONS.subList(1, TEST_PERMISSIONS.size()));
+    RepositoryPermission deletedPermission = TEST_PERMISSIONS.get(0);
+    ImmutableList<RepositoryPermission> expectedPermissions = ImmutableList.copyOf(TEST_PERMISSIONS.subList(1, TEST_PERMISSIONS.size()));
     assertExpectedRequest(requestDELETEPermission
       .path(PATH_OF_ALL_PERMISSIONS + deletedPermission.getName())
       .expectedResponseStatus(204)
@@ -340,7 +340,7 @@ public class PermissionRootResourceTest extends RepositoryTestBase {
     assertGettingExpectedPermissions(expectedPermissions, PERMISSION_READ);
   }
 
-  private void assertGettingExpectedPermissions(ImmutableList<Permission> expectedPermissions, String userPermission) throws URISyntaxException {
+  private void assertGettingExpectedPermissions(ImmutableList<RepositoryPermission> expectedPermissions, String userPermission) throws URISyntaxException {
     assertExpectedRequest(requestGETAllPermissions
       .expectedResponseStatus(200)
       .responseValidator((response) -> {
@@ -349,16 +349,16 @@ public class PermissionRootResourceTest extends RepositoryTestBase {
         try {
           HalRepresentation halRepresentation = mapper.readValue(body, HalRepresentation.class);
           List<HalRepresentation> actualPermissionDtos = halRepresentation.getEmbedded().getItemsBy("permissions", HalRepresentation.class);
-          List<PermissionDto> permissionDtoStream = actualPermissionDtos.stream()
+          List<RepositoryPermissionDto> repositoryPermissionDtoStream = actualPermissionDtos.stream()
             .map(hal -> {
-              PermissionDto result = new PermissionDto();
+              RepositoryPermissionDto result = new RepositoryPermissionDto();
               result.setName(hal.getAttribute("name").asText());
               result.setType(hal.getAttribute("type").asText());
               result.setGroupPermission(hal.getAttribute("groupPermission").asBoolean());
               result.add(hal.getLinks());
               return result;
             }).collect(Collectors.toList());
-          assertThat(permissionDtoStream)
+          assertThat(repositoryPermissionDtoStream)
             .as("response payload match permission object models")
             .hasSize(expectedPermissions.size())
             .usingRecursiveFieldByFieldElementComparator()
@@ -371,15 +371,15 @@ public class PermissionRootResourceTest extends RepositoryTestBase {
     );
   }
 
-  private PermissionDto[] getExpectedPermissionDtos(ArrayList<Permission> permissions, String userPermission) {
+  private RepositoryPermissionDto[] getExpectedPermissionDtos(ArrayList<RepositoryPermission> permissions, String userPermission) {
     return permissions
       .stream()
       .map(p -> getExpectedPermissionDto(p, userPermission))
-      .toArray(PermissionDto[]::new);
+      .toArray(RepositoryPermissionDto[]::new);
   }
 
-  private PermissionDto getExpectedPermissionDto(Permission permission, String userPermission) {
-    PermissionDto result = new PermissionDto();
+  private RepositoryPermissionDto getExpectedPermissionDto(RepositoryPermission permission, String userPermission) {
+    RepositoryPermissionDto result = new RepositoryPermissionDto();
     result.setName(permission.getName());
     result.setGroupPermission(permission.isGroupPermission());
     result.setType(permission.getType().name());
@@ -411,7 +411,7 @@ public class PermissionRootResourceTest extends RepositoryTestBase {
     return mockRepository;
   }
 
-  private void createUserWithRepositoryAndPermissions(ArrayList<Permission> permissions, String userPermission) {
+  private void createUserWithRepositoryAndPermissions(ArrayList<RepositoryPermission> permissions, String userPermission) {
     createUserWithRepository(userPermission).setPermissions(permissions);
   }
 

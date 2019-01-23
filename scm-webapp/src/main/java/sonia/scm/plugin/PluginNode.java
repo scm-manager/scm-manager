@@ -175,6 +175,11 @@ public final class PluginNode
     this.wrapper = wrapper;
   }
 
+  @Override
+  public String toString() {
+    return plugin.getPath().toString() + " -> " + children;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */

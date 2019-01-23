@@ -22,7 +22,8 @@
   "error-notification": {
     "prefix": "Error",
     "loginLink": "You can login here again.",
-    "timeout": "The session has expired."
+    "timeout": "The session has expired.",
+    "wrong-login-credentials": "Invalid credentials"
   },
   "loading": {
     "alt": "Loading ..."
@@ -47,6 +48,7 @@
     "username": "Username",
     "displayName": "Display Name",
     "mail": "E-Mail",
+    "groups": "Groups",
     "information": "Information",
     "change-password": "Change password",
     "error-title": "Error",

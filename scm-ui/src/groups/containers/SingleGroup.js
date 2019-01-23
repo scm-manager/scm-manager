@@ -11,7 +11,11 @@ import {
 } from "@scm-manager/ui-components";
 import { Route } from "react-router";
 import { Details } from "./../components/table";
-import { DeleteGroupNavLink, EditGroupNavLink } from "./../components/navLinks";
+import {
+  DeleteGroupNavLink,
+  EditGroupNavLink,
+  SetPermissionsNavLink
+} from "./../components/navLinks";
 import type { Group } from "@scm-manager/ui-types";
 import type { History } from "history";
 import {
@@ -27,6 +31,8 @@ import {
 import { translate } from "react-i18next";
 import EditGroup from "./EditGroup";
 import { getGroupsLink } from "../../modules/indexResource";
+import SetPermissions from "../../permissions/components/SetPermissions";
+import {ExtensionPoint} from "@scm-manager/ui-extensions";
 
 type Props = {
   name: string,
@@ -88,6 +94,11 @@ class SingleGroup extends React.Component<Props> {
 
     const url = this.matchedUrl();
 
+    const extensionProps = {
+      group,
+      url
+    };
+
     return (
       <Page title={group.name}>
         <div className="columns">
@@ -102,6 +113,18 @@ class SingleGroup extends React.Component<Props> {
               exact
               component={() => <EditGroup group={group} />}
             />
+            <Route
+              path={`${url}/permissions`}
+              exact
+              component={() => (
+                <SetPermissions selectedPermissionsLink={group._links.permissions} />
+              )}
+            />
+            <ExtensionPoint
+              name="group.route"
+              props={extensionProps}
+              renderAll={true}
+            />
           </div>
           <div className="column">
             <Navigation>
@@ -110,6 +133,15 @@ class SingleGroup extends React.Component<Props> {
                   to={`${url}`}
                   icon="fas fa-info-circle"
                   label={t("single-group.information-label")}
+                />
+                <SetPermissionsNavLink
+                  group={group}
+                  permissionsUrl={`${url}/permissions`}
+                />
+                <ExtensionPoint
+                  name="group.navigation"
+                  props={extensionProps}
+                  renderAll={true}
                 />
               </Section>
               <Section label={t("single-group.actions-label")}>

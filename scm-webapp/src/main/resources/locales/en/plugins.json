@@ -1,0 +1,41 @@
+{
+  "permissions": {
+    "repository": {
+      "read,pull": {
+        "*": {
+          "displayName": "Read all repositories",
+          "description": "May see and clone all repositories"
+        }
+      },
+      "read,pull,push": {
+        "*": {
+          "displayName": "Write all repositories",
+          "description": "May see, clone and push to all repositories"
+        }
+      },
+      "*": {
+        "*": {
+          "displayName": "Own all repositories",
+          "description": "May see, clone, push to, configure and delete all repositories"
+        }
+      },
+      "create": {
+        "displayName": "Create repositories",
+        "description": "May create repositories"
+      }
+    },
+    "user": {
+      "*": {
+        "displayName": "Administer users",
+        "description": "May administer all users"
+      }
+    },
+    "group": {
+      "*": {
+        "displayName": "Administer groups",
+        "description": "May administer all groups"
+      }
+    },
+    "unknown": "Unknown permission"
+  }
+}

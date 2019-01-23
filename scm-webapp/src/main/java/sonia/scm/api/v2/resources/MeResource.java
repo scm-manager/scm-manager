@@ -3,14 +3,11 @@ package sonia.scm.api.v2.resources;
 import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.credential.PasswordService;
-import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -28,20 +25,18 @@ import javax.ws.rs.core.UriInfo;
  */
 @Path(MeResource.ME_PATH_V2)
 public class MeResource {
-  public static final String ME_PATH_V2 = "v2/me/";
 
-  private final MeToUserDtoMapper meToUserDtoMapper;
+  static final String ME_PATH_V2 = "v2/me/";
 
-  private final IdResourceManagerAdapter<User, UserDto> adapter;
-  private final PasswordService passwordService;
+  private final MeDtoFactory meDtoFactory;
   private final UserManager userManager;
+  private final PasswordService passwordService;
 
   @Inject
-  public MeResource(MeToUserDtoMapper meToUserDtoMapper, UserManager manager, PasswordService passwordService) {
-    this.meToUserDtoMapper = meToUserDtoMapper;
-    this.adapter = new IdResourceManagerAdapter<>(manager, User.class);
+  public MeResource(MeDtoFactory meDtoFactory, UserManager userManager, PasswordService passwordService) {
+    this.meDtoFactory = meDtoFactory;
+    this.userManager = userManager;
     this.passwordService = passwordService;
-    this.userManager = manager;
   }
 
   /**
@@ -49,17 +44,15 @@ public class MeResource {
    */
   @GET
   @Path("")
-  @Produces(VndMediaType.USER)
-  @TypeHint(UserDto.class)
+  @Produces(VndMediaType.ME)
+  @TypeHint(MeDto.class)
   @StatusCodes({
     @ResponseCode(code = 200, condition = "success"),
     @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
   public Response get(@Context Request request, @Context UriInfo uriInfo) {
-
-    String id = (String) SecurityUtils.getSubject().getPrincipals().getPrimaryPrincipal();
-    return adapter.get(id, meToUserDtoMapper::map);
+    return Response.ok(meDtoFactory.create()).build();
   }
 
   /**
@@ -75,7 +68,10 @@ public class MeResource {
   @TypeHint(TypeHint.NO_CONTENT.class)
   @Consumes(VndMediaType.PASSWORD_CHANGE)
   public Response changePassword(@Valid PasswordChangeDto passwordChange) {
-    userManager.changePasswordForLoggedInUser(passwordService.encryptPassword(passwordChange.getOldPassword()), passwordService.encryptPassword(passwordChange.getNewPassword()));
+    userManager.changePasswordForLoggedInUser(
+      passwordService.encryptPassword(passwordChange.getOldPassword()),
+      passwordService.encryptPassword(passwordChange.getNewPassword())
+    );
     return Response.noContent().build();
   }
 }

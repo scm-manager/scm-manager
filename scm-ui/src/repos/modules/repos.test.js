@@ -415,8 +415,13 @@ describe("repos fetch", () => {
 
   it("should successfully create repo slarti/fjords", () => {
     fetchMock.postOnce(REPOS_URL, {
-      status: 201
+      status: 201,
+      headers: {
+        location: "repositories/slarti/fjords"
+      }
     });
+
+    fetchMock.getOnce(REPOS_URL + "/slarti/fjords", slartiFjords);
 
     const expectedActions = [
       {
@@ -435,12 +440,19 @@ describe("repos fetch", () => {
 
   it("should successfully create repo slarti/fjords and call the callback", () => {
     fetchMock.postOnce(REPOS_URL, {
-      status: 201
+      status: 201,
+      headers: {
+        location: "repositories/slarti/fjords"
+      }
     });
+
+
+    fetchMock.getOnce(REPOS_URL + "/slarti/fjords", slartiFjords);
 
     let callMe = "not yet";
 
-    const callback = () => {
+    const callback = (r: any) => {
+      expect(r).toEqual(slartiFjords);
       callMe = "yeah";
     };
 

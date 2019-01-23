@@ -51,7 +51,7 @@ import java.io.Serializable;
  * @since 1.31
  */
 @Event
-public final class StoredAssignedPermissionEvent implements Serializable
+public final class AssignedPermissionEvent implements Serializable
 {
 
   /** serial version uid */
@@ -60,14 +60,14 @@ public final class StoredAssignedPermissionEvent implements Serializable
   //~--- constructors ---------------------------------------------------------
 
   /**
-   * Constructs a new StoredAssignedPermissionEvent.
+   * Constructs a new AssignedPermissionEvent.
    *
    *
    * @param type type of the event
    * @param permission permission object which has changed
    */
-  public StoredAssignedPermissionEvent(HandlerEventType type,
-    StoredAssignedPermission permission)
+  public AssignedPermissionEvent(HandlerEventType type,
+                                 AssignedPermission permission)
   {
     this.type = type;
     this.permission = permission;
@@ -91,8 +91,8 @@ public final class StoredAssignedPermissionEvent implements Serializable
       return false;
     }
 
-    final StoredAssignedPermissionEvent other =
-      (StoredAssignedPermissionEvent) obj;
+    final AssignedPermissionEvent other =
+      (AssignedPermissionEvent) obj;
 
     return Objects.equal(type, other.type)
       && Objects.equal(permission, other.permission);
@@ -140,7 +140,7 @@ public final class StoredAssignedPermissionEvent implements Serializable
    *
    * @return changed permission
    */
-  public StoredAssignedPermission getPermission()
+  public AssignedPermission getPermission()
   {
     return permission;
   }
@@ -148,7 +148,7 @@ public final class StoredAssignedPermissionEvent implements Serializable
   //~--- fields ---------------------------------------------------------------
 
   /** changed permission */
-  private StoredAssignedPermission permission;
+  private AssignedPermission permission;
 
   /** type of the event */
   private HandlerEventType type;

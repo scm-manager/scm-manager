@@ -40,25 +40,26 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
-import java.security.SecureRandom;
-import java.util.Date;
-import java.util.Set;
-import javax.crypto.spec.SecretKeySpec;
 import org.apache.shiro.authc.AuthenticationException;
 import org.hamcrest.Matchers;
-import org.junit.Test;
-import static org.junit.Assert.*;
-import static org.hamcrest.Matchers.*;
 import org.junit.Before;
 import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import static org.mockito.Mockito.*;
-import static sonia.scm.security.SecureKeyTestUtil.createSecureKey;
-
 import org.mockito.junit.MockitoJUnitRunner;
+
+import javax.crypto.spec.SecretKeySpec;
+import java.util.Date;
+import java.util.Set;
+
+import static org.hamcrest.Matchers.instanceOf;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.when;
+import static sonia.scm.security.SecureKeyTestUtil.createSecureKey;
 
 /**
  * Unit tests for {@link JwtAccessTokenResolver}.
@@ -70,14 +71,12 @@ public class JwtAccessTokenResolverTest {
 
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
-  
-  private final SecureRandom random = new SecureRandom();
-  
+
   @Mock
   private SecureKeyResolver keyResolver;
   
   @Mock
-  private TokenClaimsValidator validator;
+  private AccessTokenValidator validator;
   
   private JwtAccessTokenResolver resolver;
   
@@ -86,8 +85,8 @@ public class JwtAccessTokenResolverTest {
    */
   @Before
   public void prepareObjectUnderTest() {
-    Set<TokenClaimsValidator> validators = Sets.newHashSet(validator);
-    when(validator.validate(anyMap())).thenReturn(true);
+    Set<AccessTokenValidator> validators = Sets.newHashSet(validator);
+    when(validator.validate(Mockito.any(AccessToken.class))).thenReturn(true);
     resolver = new JwtAccessTokenResolver(keyResolver, validators);
   }
 
@@ -115,11 +114,11 @@ public class JwtAccessTokenResolverTest {
     String compact = createCompactToken("marvin", secureKey);
 
     // prepare mock
-    when(validator.validate(anyMap())).thenReturn(false);
+    when(validator.validate(Mockito.any(AccessToken.class))).thenReturn(false);
     
     // expect exception
     expectedException.expect(AuthenticationException.class);
-    expectedException.expectMessage(Matchers.containsString("claims"));
+    expectedException.expectMessage(Matchers.containsString("token"));
     
     BearerToken bearer = BearerToken.valueOf(compact);
     resolver.resolve(bearer);

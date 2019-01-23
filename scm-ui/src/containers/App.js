@@ -19,15 +19,11 @@ import {
   Footer,
   Header
 } from "@scm-manager/ui-components";
-import type { Me } from "@scm-manager/ui-types";
+import type { Links, Me } from "@scm-manager/ui-types";
 import {
-  getConfigLink,
   getFetchIndexResourcesFailure,
-  getGroupsLink,
-  getLogoutLink,
+  getLinks,
   getMeLink,
-  getRepositoriesLink,
-  getUsersLink,
   isFetchIndexResourcesPending
 } from "../modules/indexResource";
 
@@ -36,11 +32,7 @@ type Props = {
   authenticated: boolean,
   error: Error,
   loading: boolean,
-  repositoriesLink: string,
-  usersLink: string,
-  groupsLink: string,
-  configLink: string,
-  logoutLink: string,
+  links: Links,
   meLink: string,
 
   // dispatcher functions
@@ -63,22 +55,14 @@ class App extends Component<Props> {
       loading,
       error,
       authenticated,
-      t,
-      repositoriesLink,
-      usersLink,
-      groupsLink,
-      configLink,
-      logoutLink
+      links,
+      t
     } = this.props;
 
     let content;
     const navigation = authenticated ? (
       <PrimaryNavigation
-        repositoriesLink={repositoriesLink}
-        usersLink={usersLink}
-        groupsLink={groupsLink}
-        configLink={configLink}
-        logoutLink={logoutLink}
+        links={links}
       />
     ) : (
       ""
@@ -95,7 +79,7 @@ class App extends Component<Props> {
         />
       );
     } else {
-      content = <Main authenticated={authenticated} />;
+      content = <Main authenticated={authenticated} links={links} />;
     }
     return (
       <div className="App">
@@ -120,22 +104,14 @@ const mapStateToProps = state => {
     isFetchMePending(state) || isFetchIndexResourcesPending(state);
   const error =
     getFetchMeFailure(state) || getFetchIndexResourcesFailure(state);
-  const repositoriesLink = getRepositoriesLink(state);
-  const usersLink = getUsersLink(state);
-  const groupsLink = getGroupsLink(state);
-  const configLink = getConfigLink(state);
-  const logoutLink = getLogoutLink(state);
+  const links = getLinks(state);
   const meLink = getMeLink(state);
   return {
     authenticated,
     me,
     loading,
     error,
-    repositoriesLink,
-    usersLink,
-    groupsLink,
-    configLink,
-    logoutLink,
+    links,
     meLink
   };
 };

@@ -31,35 +31,20 @@
 
 package sonia.scm.security;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.common.annotations.VisibleForTesting;
-
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
-
-import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.credential.AllowAllCredentialsMatcher;
 import org.apache.shiro.realm.AuthenticatingRealm;
-
 import sonia.scm.group.GroupDAO;
 import sonia.scm.plugin.Extension;
 import sonia.scm.user.UserDAO;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
-import java.util.List;
-import java.util.Set;
-
-//~--- JDK imports ------------------------------------------------------------
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import static com.google.common.base.Preconditions.checkArgument;
+
 
 /**
  * Realm for authentication with {@link BearerToken}.
@@ -71,34 +56,29 @@ import org.slf4j.LoggerFactory;
 @Extension
 public class BearerRealm extends AuthenticatingRealm
 {
-
-  /**
-   * the logger for BearerRealm
-   */
-  private static final Logger LOG = LoggerFactory.getLogger(BearerRealm.class);
   
   /** realm name */
   @VisibleForTesting
   static final String REALM = "BearerRealm";
 
-  //~--- constructors ---------------------------------------------------------
+
+  /** dao realm helper */
+  private final DAORealmHelper helper;
+
+  /** access token resolver **/
+  private final AccessTokenResolver tokenResolver;
 
   /**
    * Constructs ...
    *
    * @param helperFactory dao realm helper factory
-   * @param resolver key resolver
-   * @param validators token claims validators
+   * @param tokenResolver resolve access token from bearer
    */
   @Inject
-  public BearerRealm(
-    DAORealmHelperFactory helperFactory, SecureKeyResolver resolver, Set<TokenClaimsValidator> validators
-  )
-  {
+  public BearerRealm(DAORealmHelperFactory helperFactory, AccessTokenResolver tokenResolver) {
     this.helper = helperFactory.create(REALM);
-    this.resolver = resolver;
-    this.validators = validators;
-    
+    this.tokenResolver = tokenResolver;
+
     setCredentialsMatcher(new AllowAllCredentialsMatcher());
     setAuthenticationTokenClass(BearerToken.class);
   }
@@ -106,71 +86,26 @@ public class BearerRealm extends AuthenticatingRealm
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Validates the given jwt token and retrieves authentication data from
+   * Validates the given bearer token and retrieves authentication data from
    * {@link UserDAO} and {@link GroupDAO}.
    *
    *
-   * @param token jwt token
+   * @param token bearer token
    *
    * @return authentication data from user and group dao
    */
   @Override
-  protected AuthenticationInfo doGetAuthenticationInfo( AuthenticationToken token)
-  {
-    checkArgument(token instanceof BearerToken, "%s is required",
-      BearerToken.class);
+  protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) {
+    checkArgument(token instanceof BearerToken, "%s is required", BearerToken.class);
 
     BearerToken bt = (BearerToken) token;
-    Claims c = checkToken(bt);
+    AccessToken accessToken = tokenResolver.resolve(bt);
 
-    return helper.getAuthenticationInfo(c.getSubject(), bt.getCredentials(), Scopes.fromClaims(c));
+    return helper.authenticationInfoBuilder(accessToken.getSubject())
+      .withCredentials(bt.getCredentials())
+      .withScope(Scopes.fromClaims(accessToken.getClaims()))
+      .withGroups(accessToken.getGroups())
+      .build();
   }
 
-  /**
-   * Validates the jwt token.
-   *
-   *
-   * @param token jwt token
-   *
-   * @return claim
-   */
-  private Claims checkToken(BearerToken token)
-  {
-    Claims claims;
-
-    try
-    {
-      //J-
-      claims = Jwts.parser()
-        .setSigningKeyResolver(resolver)
-        .parseClaimsJws(token.getCredentials())
-        .getBody();
-      //J+
-      
-      // check all registered claims validators
-      validators.forEach((validator) -> {
-        if (!validator.validate(claims)) {
-          LOG.warn("token claims is invalid, marked by validator {}", validator.getClass());
-          throw new AuthenticationException("token claims is invalid");
-        }
-      });
-    }
-    catch (JwtException ex)
-    {
-      throw new AuthenticationException("signature is invalid", ex);
-    }
-
-    return claims;
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** token claims validators **/
-  private final Set<TokenClaimsValidator> validators;
-  
-  /** dao realm helper */
-  private final DAORealmHelper helper;
-
-  /** secure key resolver */
-  private final SecureKeyResolver resolver;
 }

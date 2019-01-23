@@ -112,14 +112,14 @@ public final class PluginTree
         }
         else
         {
-          appendNode(rootNodes, dependencies, smp);
+          appendNode(smp);
         }
       }
       else
       {
         //J-
         throw new PluginConditionFailedException(
-          condition, 
+          condition,
           String.format(
             "could not load plugin %s, the plugin condition does not match",
             plugin.getInformation().getId()
@@ -149,23 +149,20 @@ public final class PluginTree
    * Method description
    *
    *
-   * @param nodes
-   * @param dependencies
    * @param smp
    */
-  private void appendNode(List<PluginNode> nodes, Set<String> dependencies,
-    ExplodedSmp smp)
+  private void appendNode(ExplodedSmp smp)
   {
     PluginNode child = new PluginNode(smp);
 
-    for (String dependency : dependencies)
+    for (String dependency : smp.getPlugin().getDependencies())
     {
-      if (!appendNode(nodes, child, dependency))
+      if (!appendNode(rootNodes, child, dependency))
       {
         //J-
         throw new PluginNotInstalledException(
           String.format(
-            "dependency %s of %s is not installed", 
+            "dependency %s of %s is not installed",
             dependency,
             child.getId()
           )
@@ -188,7 +185,7 @@ public final class PluginTree
   private boolean appendNode(List<PluginNode> nodes, PluginNode child,
     String dependency)
   {
-    logger.debug("check for {} {}", dependency, child.getId());
+    logger.debug("check for {} as dependency of {}", dependency, child.getId());
 
     boolean found = false;
 
@@ -196,29 +193,28 @@ public final class PluginTree
     {
       if (node.getId().equals(dependency))
       {
-        logger.debug("add plugin {} as child of {}", child.getId(),
-          node.getId());
+        logger.debug("add plugin {} as child of {}", child.getId(), node.getId());
         node.addChild(child);
         found = true;
 
         break;
       }
-      else
+      else if (appendNode(node.getChildren(), child, dependency))
       {
-        if (appendNode(node.getChildren(), child, dependency))
-        {
-          found = true;
+        found = true;
 
-          break;
-        }
-
+        break;
       }
     }
 
     return found;
   }
 
-  //~--- fields ---------------------------------------------------------------
+  @Override
+  public String toString() {
+    return "plugin tree: " + rootNodes.toString();
+  }
+//~--- fields ---------------------------------------------------------------
 
   /** Field description */
   private final List<PluginNode> rootNodes = Lists.newArrayList();

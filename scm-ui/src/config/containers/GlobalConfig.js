@@ -34,7 +34,19 @@ type Props = {
   t: string => string
 };
 
-class GlobalConfig extends React.Component<Props> {
+type State = {
+  configChanged: boolean
+};
+
+class GlobalConfig extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+
+    this.state = {
+      configChanged: false
+    };
+  }
+
   componentDidMount() {
     this.props.configReset();
     this.props.fetchConfig(this.props.configLink);
@@ -42,6 +54,22 @@ class GlobalConfig extends React.Component<Props> {
 
   modifyConfig = (config: Config) => {
     this.props.modifyConfig(config);
+    this.setState({ configChanged: true });
+  };
+
+  renderConfigChangedNotification = () => {
+    if (this.state.configChanged) {
+      return (
+        <div className="notification is-primary">
+          <button
+            className="delete"
+            onClick={() => this.setState({ configChanged: false })}
+          />
+          {this.props.t("config-form.submit-success-notification")}
+        </div>
+      );
+    }
+    return null;
   };
 
   render() {
@@ -64,6 +92,7 @@ class GlobalConfig extends React.Component<Props> {
     return (
       <div>
         <Title title={t("global-config.title")} />
+        {this.renderConfigChangedNotification()}
         <ConfigForm
           submitForm={config => this.modifyConfig(config)}
           config={config}

@@ -33,6 +33,7 @@ package sonia.scm.security;
 import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * An access token can be used to access scm-manager without providing username and password. An {@link AccessToken} can
@@ -102,6 +103,13 @@ public interface AccessToken {
    * @return scope of token.
    */
   Scope getScope();
+
+  /**
+   * Returns name of groups, in which the user should be a member.
+   *
+   * @return name of groups
+   */
+  Set<String> getGroups();
 
   /**
    * Returns an optional value of a custom token field.

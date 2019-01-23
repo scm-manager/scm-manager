@@ -30,26 +30,25 @@
  */
 package sonia.scm.security;
 
-import java.util.Map;
 import sonia.scm.plugin.ExtensionPoint;
 
 /**
- * Validates the claims of a jwt token. The validator is called durring authentication
- * with a jwt token.
+ * Validates an {@link AccessToken}. The validator is called during authentication
+ * with an {@link AccessToken}.
  * 
  * @author Sebastian Sdorra
  * @since 2.0.0
  */
 @ExtensionPoint
-public interface TokenClaimsValidator {
+public interface AccessTokenValidator {
   
   /**
-   * Returns {@code true} if the claims is valid. If the token is not valid and the
+   * Returns {@code true} if the {@link AccessToken} is valid. If the token is not valid and the
    * method returns {@code false}, the authentication is treated as failed.
    * 
-   * @param claims token claims
+   * @param token the access token to verify
    * 
-   * @return {@code true} if the claims is valid
+   * @return {@code true} if the token is valid
    */
-  boolean validate(Map<String, Object> claims); 
+  boolean validate(AccessToken token);
 }

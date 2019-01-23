@@ -92,8 +92,8 @@ export default function reducer(
 ): any {
   if (action.itemId && action.type === FETCH_SOURCES_SUCCESS) {
     return {
-      [action.itemId]: action.payload,
-      ...state
+      ...state,
+      [action.itemId]: action.payload
     };
   }
   return state;

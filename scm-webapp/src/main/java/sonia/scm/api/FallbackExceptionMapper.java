@@ -4,10 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import sonia.scm.api.v2.resources.ErrorDto;
-import sonia.scm.api.v2.resources.ExceptionWithContextToErrorDtoMapper;
 import sonia.scm.web.VndMediaType;
 
-import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
@@ -20,16 +18,9 @@ public class FallbackExceptionMapper implements ExceptionMapper<Exception> {
 
   private static final String ERROR_CODE = "CmR8GCJb31";
 
-  private final ExceptionWithContextToErrorDtoMapper mapper;
-
-  @Inject
-  public FallbackExceptionMapper(ExceptionWithContextToErrorDtoMapper mapper) {
-    this.mapper = mapper;
-  }
-
   @Override
   public Response toResponse(Exception exception) {
-    logger.debug("map {} to status code 500", exception);
+    logger.warn("mapping unexpected {} to status code 500", exception.getClass().getName(), exception);
     ErrorDto errorDto = new ErrorDto();
     errorDto.setMessage("internal server error");
     errorDto.setContext(Collections.emptyList());
