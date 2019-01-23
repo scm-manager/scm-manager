@@ -53,6 +53,7 @@ class DeleteUser extends React.Component<Props> {
     if (!this.isDeletable()) {
       return null;
     }
+
     return (
       <>
         <Subtitle subtitle={t("delete.subtitle")} />

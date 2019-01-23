@@ -7,6 +7,7 @@ import DeleteRepo from "../components/DeleteRepo";
 import type { Repository } from "@scm-manager/ui-types";
 import {
   modifyRepo,
+  deleteRepo,
   isModifyRepoPending,
   getModifyRepoFailure,
   modifyRepoReset
@@ -20,6 +21,7 @@ type Props = {
 
   modifyRepo: (Repository, () => void) => void,
   modifyRepoReset: Repository => void,
+  deleteRepo: (Repository, () => void) => void,
 
   // context props
   repository: Repository,
@@ -31,9 +33,18 @@ class GeneralRepo extends React.Component<Props> {
     const { modifyRepoReset, repository } = this.props;
     modifyRepoReset(repository);
   }
+
   repoModified = () => {
     const { history, repository } = this.props;
     history.push(`/repo/${repository.namespace}/${repository.name}`);
+  };
+
+  deleted = () => {
+    this.props.history.push("/repos");
+  };
+
+  delete = (repository: Repository) => {
+    this.props.deleteRepo(repository, this.deleted);
   };
 
   render() {
@@ -49,7 +60,7 @@ class GeneralRepo extends React.Component<Props> {
           }}
         />
         <hr />
-        <DeleteRepo repository={repository} />
+        <DeleteRepo repository={repository} delete={this.delete} />
       </div>
     );
   }
@@ -72,6 +83,9 @@ const mapDispatchToProps = dispatch => {
     },
     modifyRepoReset: (repo: Repository) => {
       dispatch(modifyRepoReset(repo));
+    },
+    deleteRepo: (repo: Repository, callback: () => void) => {
+      dispatch(deleteRepo(repo, callback));
     }
   };
 };

@@ -8,6 +8,9 @@ type Props = {
   repository: Repository,
   confirmDialog?: boolean,
 
+  // dispatcher functions
+  delete: Repository => void,
+
   // context props
   t: string => string
 };
@@ -18,7 +21,7 @@ class DeleteRepo extends React.Component<Props> {
   };
 
   delete = () => {
-    //this.props.delete(this.props.repository);
+    this.props.delete(this.props.repository);
   };
 
   confirmDelete = () => {
