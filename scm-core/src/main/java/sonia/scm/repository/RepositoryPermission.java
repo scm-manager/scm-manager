@@ -37,6 +37,7 @@ package sonia.scm.repository;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
+import org.apache.commons.collections.CollectionUtils;
 import sonia.scm.security.PermissionObject;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -45,8 +46,10 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.HashSet;
 
 import static java.util.Collections.emptyList;
+import static java.util.Collections.unmodifiableCollection;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -76,7 +79,7 @@ public class RepositoryPermission implements PermissionObject, Serializable
   public RepositoryPermission(String name, Collection<String> verbs, boolean groupPermission)
   {
     this.name = name;
-    this.verbs = verbs;
+    this.verbs = unmodifiableCollection(new HashSet<>(verbs));
     this.groupPermission = groupPermission;
   }
 
@@ -106,7 +109,7 @@ public class RepositoryPermission implements PermissionObject, Serializable
     final RepositoryPermission other = (RepositoryPermission) obj;
 
     return Objects.equal(name, other.name)
-      && Objects.equal(verbs, other.verbs)
+      && CollectionUtils.isEqualCollection(verbs, other.verbs)
       && Objects.equal(groupPermission, other.groupPermission);
   }
 
@@ -119,7 +122,9 @@ public class RepositoryPermission implements PermissionObject, Serializable
   @Override
   public int hashCode()
   {
-    return Objects.hashCode(name, verbs, groupPermission);
+    // Normally we do not have a log of repository permissions having the same size of verbs, but different content.
+    // Therefore we do not use the verbs themselves for the hash code but only the number of verbs.
+    return Objects.hashCode(name, verbs.size(), groupPermission);
   }
 
 
