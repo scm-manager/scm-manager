@@ -49,7 +49,7 @@ class DeleteUserNavLink extends React.Component<Props> {
     if (!this.isDeletable()) {
       return null;
     }
-    return <NavAction label={t("delete-user-button.label")} action={action} />;
+    return <NavAction icon="fas fa-times" label={t("delete-user-button.label")} action={action} />;
   }
 }
 
