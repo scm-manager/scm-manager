@@ -4,6 +4,7 @@ import {Link, Route} from "react-router-dom";
 
 type Props = {
   to: string,
+  icon?: string,
   label: string,
   activeOnlyWhenExact?: boolean,
   activeWhenMatch?: (route: any) => boolean,
@@ -21,7 +22,12 @@ class SubNavigation extends React.Component<Props> {
   }
 
   renderLink = (route: any) => {
-    const { to, label } = this.props;
+    const { to, icon, label } = this.props;
+
+    let defaultIcon = "fas fa-cog";
+    if (icon) {
+      defaultIcon = icon;
+    }
 
     let children = null;
     if(this.isActive(route)) {
@@ -33,6 +39,7 @@ class SubNavigation extends React.Component<Props> {
     return (
       <li>
         <Link className={this.isActive(route) ? "is-active" : ""} to={to}>
+          <><i className={defaultIcon}></i>{" "}</>
           {label}
         </Link>
         {children}

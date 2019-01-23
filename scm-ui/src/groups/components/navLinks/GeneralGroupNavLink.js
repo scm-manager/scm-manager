@@ -21,7 +21,7 @@ class GeneralGroupNavLink extends React.Component<Props> {
     if (!this.isEditable()) {
       return null;
     }
-    return <NavLink to={editUrl} icon="fas fa-cog" label={t("singleGroup.menu.generalNavLink")} />;
+    return <NavLink to={editUrl} label={t("singleGroup.menu.generalNavLink")} />;
   }
 }
 
