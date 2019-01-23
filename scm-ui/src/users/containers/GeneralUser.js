@@ -27,7 +27,7 @@ type Props = {
   history: History
 };
 
-class EditUser extends React.Component<Props> {
+class GeneralUser extends React.Component<Props> {
   componentDidMount() {
     const { modifyUserReset, user } = this.props;
     modifyUserReset(user);
@@ -80,4 +80,4 @@ const mapStateToProps = (state, ownProps) => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withRouter(EditUser));
+)(withRouter(GeneralUser));

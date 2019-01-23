@@ -10,7 +10,7 @@ type Props = {
   editUrl: String
 };
 
-class EditUserNavLink extends React.Component<Props> {
+class GeneralUserNavLink extends React.Component<Props> {
   render() {
     const { t, editUrl } = this.props;
 
@@ -25,4 +25,4 @@ class EditUserNavLink extends React.Component<Props> {
   };
 }
 
-export default translate("users")(EditUserNavLink);
+export default translate("users")(GeneralUserNavLink);
