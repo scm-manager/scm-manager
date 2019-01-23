@@ -1,7 +1,14 @@
 <repository-permissions>
   <verbs>
-    <verb>abc</verb>
-    <verb>xyz</verb>
+    <verb>read</verb>
+    <verb>modify</verb>
+    <verb>delete</verb>
+    <verb>delete</verb>
+    <verb>healthCheck</verb>
+    <verb>pull</verb>
+    <verb>push</verb>
+    <verb>permissionRead</verb>
+    <verb>permissionWrite</verb>
   </verbs>
   <roles>
     <role>

@@ -21,15 +21,15 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class RepositoryPermissions {
+public class RepositoryPermissionProvider {
 
-  private static final Logger logger = LoggerFactory.getLogger(RepositoryPermissions.class);
+  private static final Logger logger = LoggerFactory.getLogger(RepositoryPermissionProvider.class);
   private static final String REPOSITORY_PERMISSION_DESCRIPTOR = "META-INF/scm/repository-permissions.xml";
   private final ConfigurationEntryStoreFactory storeFactory;
   private final AvailableRepositoryPermissions availablePermissions;
 
   @Inject
-  public RepositoryPermissions(ConfigurationEntryStoreFactory storeFactory, PluginLoader pluginLoader) {
+  public RepositoryPermissionProvider(ConfigurationEntryStoreFactory storeFactory, PluginLoader pluginLoader) {
     this.storeFactory = storeFactory;
     this.availablePermissions = readAvailablePermissions(pluginLoader);
   }
@@ -57,7 +57,7 @@ public class RepositoryPermissions {
       while (descriptorEnum.hasMoreElements()) {
         URL descriptorUrl = descriptorEnum.nextElement();
 
-        logger.debug("read permission descriptor from {}", descriptorUrl);
+        logger.debug("read repository permission descriptor from {}", descriptorUrl);
 
         RepositoryPermissionsRoot repositoryPermissionsRoot = parsePermissionDescriptor(context, descriptorUrl);
         availableVerbs.addAll(repositoryPermissionsRoot.verbs.verbs);
@@ -79,7 +79,8 @@ public class RepositoryPermissions {
       RepositoryPermissionsRoot descriptorWrapper =
         (RepositoryPermissionsRoot) context.createUnmarshaller().unmarshal(
           descriptorUrl);
-      logger.trace("permissions from {}: {}", descriptorUrl, descriptorWrapper);
+      logger.trace("repository permissions from {}: {}", descriptorUrl, descriptorWrapper.verbs.verbs);
+      logger.trace("repository roles from {}: {}", descriptorUrl, descriptorWrapper.roles.roles);
       return descriptorWrapper;
     } catch (JAXBException ex) {
       logger.error("could not parse permission descriptor", ex);
