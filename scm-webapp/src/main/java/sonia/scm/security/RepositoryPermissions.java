@@ -21,16 +21,15 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class RepositoryPermissionAssigner {
+public class RepositoryPermissions {
 
-  private static final Logger logger = LoggerFactory.getLogger(RepositoryPermissionAssigner.class);
-  private static final String NAME = "permissions";
+  private static final Logger logger = LoggerFactory.getLogger(RepositoryPermissions.class);
   private static final String REPOSITORY_PERMISSION_DESCRIPTOR = "META-INF/scm/repository-permissions.xml";
   private final ConfigurationEntryStoreFactory storeFactory;
   private final AvailableRepositoryPermissions availablePermissions;
 
   @Inject
-  public RepositoryPermissionAssigner(ConfigurationEntryStoreFactory storeFactory, PluginLoader pluginLoader) {
+  public RepositoryPermissions(ConfigurationEntryStoreFactory storeFactory, PluginLoader pluginLoader) {
     this.storeFactory = storeFactory;
     this.availablePermissions = readAvailablePermissions(pluginLoader);
   }
