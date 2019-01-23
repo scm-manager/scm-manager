@@ -164,16 +164,21 @@ export function fetchRepoFailure(
 export function createRepo(
   link: string,
   repository: Repository,
-  callback?: () => void
+  callback?: (repo: Repository) => void
 ) {
   return function(dispatch: any) {
     dispatch(createRepoPending());
     return apiClient
       .post(link, repository, CONTENT_TYPE)
-      .then(() => {
+      .then(response => {
+        const location = response.headers.get("Location");
         dispatch(createRepoSuccess());
+        return apiClient.get(location);
+      })
+      .then(response => response.json())
+      .then(response => {
         if (callback) {
-          callback();
+          callback(response);
         }
       })
       .catch(err => {

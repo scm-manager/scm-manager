@@ -18,7 +18,7 @@ import {
 } from "@scm-manager/ui-components";
 import ChangeUserPassword from "./ChangeUserPassword";
 import ProfileInfo from "./ProfileInfo";
-import {ExtensionPoint} from "@scm-manager/ui-extensions";
+import { ExtensionPoint } from "@scm-manager/ui-extensions";
 
 type Props = {
   me: Me,
@@ -79,6 +79,7 @@ class Profile extends React.Component<Props, State> {
               <Section label={t("profile.navigationLabel")}>
                 <NavLink
                   to={`${url}`}
+                  icon="fas fa-info-circle"
                   label={t("profile.informationNavLink")}
                 />
                 <SubNavigation

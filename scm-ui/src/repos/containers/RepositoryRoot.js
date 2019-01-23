@@ -174,12 +174,14 @@ class RepositoryRoot extends React.Component<Props> {
               <Section label={t("repositoryRoot.menu.navigationLabel")}>
                 <NavLink
                   to={url}
+                  icon="fas fa-info-circle"
                   label={t("repositoryRoot.menu.informationNavLink")}
                 />
                 <RepositoryNavLink
                   repository={repository}
                   linkName="changesets"
                   to={`${url}/changesets/`}
+                  icon="fas fa-code-branch"
                   label={t("repositoryRoot.menu.historyNavLink")}
                   activeWhenMatch={this.matches}
                   activeOnlyWhenExact={false}
@@ -188,6 +190,7 @@ class RepositoryRoot extends React.Component<Props> {
                   repository={repository}
                   linkName="sources"
                   to={`${url}/sources`}
+                  icon="fas fa-code"
                   label={t("repositoryRoot.menu.sourcesNavLink")}
                   activeOnlyWhenExact={false}
                 />

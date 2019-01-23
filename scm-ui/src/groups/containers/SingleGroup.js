@@ -29,7 +29,7 @@ import { translate } from "react-i18next";
 import GeneralGroup from "./GeneralGroup";
 import { getGroupsLink } from "../../modules/indexResource";
 import SetPermissions from "../../permissions/components/SetPermissions";
-import {ExtensionPoint} from "@scm-manager/ui-extensions";
+import { ExtensionPoint } from "@scm-manager/ui-extensions";
 
 type Props = {
   name: string,
@@ -105,7 +105,9 @@ class SingleGroup extends React.Component<Props> {
               path={`${url}/settings/permissions`}
               exact
               component={() => (
-                <SetPermissions selectedPermissionsLink={group._links.permissions} />
+                <SetPermissions
+                  selectedPermissionsLink={group._links.permissions}
+                />
               )}
             />
             <ExtensionPoint
@@ -119,6 +121,7 @@ class SingleGroup extends React.Component<Props> {
               <Section label={t("singleGroup.menu.navigationLabel")}>
                 <NavLink
                   to={`${url}`}
+                  icon="fas fa-info-circle"
                   label={t("singleGroup.menu.informationNavLink")}
                 />
                 <ExtensionPoint
@@ -138,7 +141,11 @@ class SingleGroup extends React.Component<Props> {
                     group={group}
                     permissionsUrl={`${url}/settings/permissions`}
                   />
-                  <ExtensionPoint name="group.subnavigation" props={extensionProps} renderAll={true} />
+                  <ExtensionPoint
+                    name="group.subnavigation"
+                    props={extensionProps}
+                    renderAll={true}
+                  />
                 </SubNavigation>
               </Section>
             </Navigation>
