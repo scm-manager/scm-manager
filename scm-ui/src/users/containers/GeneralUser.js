@@ -7,9 +7,12 @@ import DeleteUser from "../components/DeleteUser";
 import type { User } from "@scm-manager/ui-types";
 import {
   modifyUser,
+  deleteUser,
   isModifyUserPending,
   getModifyUserFailure,
-  modifyUserReset
+  modifyUserReset,
+  isDeleteUserPending,
+  getDeleteUserFailure
 } from "../modules/users";
 import type { History } from "history";
 import { ErrorNotification } from "@scm-manager/ui-components";
@@ -21,6 +24,7 @@ type Props = {
   // dispatch functions
   modifyUser: (user: User, callback?: () => void) => void,
   modifyUserReset: User => void,
+  deleteUser: (user: User, callback?: () => void) => void,
 
   // context objects
   user: User,
@@ -32,12 +36,21 @@ class GeneralUser extends React.Component<Props> {
     const { modifyUserReset, user } = this.props;
     modifyUserReset(user);
   }
+
   userModified = (user: User) => () => {
     this.props.history.push(`/user/${user.name}`);
   };
 
   modifyUser = (user: User) => {
     this.props.modifyUser(user, this.userModified(user));
+  };
+
+  userDeleted = () => {
+    this.props.history.push("/users");
+  };
+
+  deleteUser = (user: User) => {
+    this.props.deleteUser(user, this.userDeleted);
   };
 
   render() {
@@ -51,15 +64,15 @@ class GeneralUser extends React.Component<Props> {
           loading={loading}
         />
         <hr />
-        <DeleteUser user={user} />
+        <DeleteUser user={user} deleteUser={this.deleteUser} />
       </div>
     );
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const loading = isModifyUserPending(state, ownProps.user.name);
-  const error = getModifyUserFailure(state, ownProps.user.name);
+  const loading = isModifyUserPending(state, ownProps.user.name) || isDeleteUserPending(state, ownProps.user.name);
+  const error = getModifyUserFailure(state, ownProps.user.name) || getDeleteUserFailure(state, ownProps.user.name);
   return {
     loading,
     error
@@ -73,6 +86,9 @@ const mapDispatchToProps = dispatch => {
     },
     modifyUserReset: (user: User) => {
       dispatch(modifyUserReset(user));
+    },
+    deleteUser: (user: User, callback?: () => void) => {
+      dispatch(deleteUser(user, callback));
     }
   };
 };
