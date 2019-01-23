@@ -2,16 +2,16 @@
 import React from "react";
 import { translate } from "react-i18next";
 import type { Group } from "@scm-manager/ui-types";
-import { NavAction, confirmAlert } from "@scm-manager/ui-components";
+import { Subtitle, DeleteButton, confirmAlert } from "@scm-manager/ui-components";
 
 type Props = {
   group: Group,
   confirmDialog?: boolean,
-  t: string => string,
-  deleteGroup: (group: Group) => void
+  deleteGroup: (group: Group) => void,
+  t: string => string
 };
 
-export class DeleteGroupNavLink extends React.Component<Props> {
+export class DeleteGroup extends React.Component<Props> {
   static defaultProps = {
     confirmDialog: true
   };
@@ -23,15 +23,15 @@ export class DeleteGroupNavLink extends React.Component<Props> {
   confirmDelete = () => {
     const { t } = this.props;
     confirmAlert({
-      title: t("delete-group-button.confirm-alert.title"),
-      message: t("delete-group-button.confirm-alert.message"),
+      title: t("deleteGroup.confirmAlert.title"),
+      message: t("deleteGroup.confirmAlert.message"),
       buttons: [
         {
-          label: t("delete-group-button.confirm-alert.submit"),
+          label: t("deleteGroup.confirmAlert.submit"),
           onClick: () => this.deleteGroup()
         },
         {
-          label: t("delete-group-button.confirm-alert.cancel"),
+          label: t("deleteGroup.confirmAlert.cancel"),
           onClick: () => null
         }
       ]
@@ -49,8 +49,21 @@ export class DeleteGroupNavLink extends React.Component<Props> {
     if (!this.isDeletable()) {
       return null;
     }
-    return <NavAction label={t("delete-group-button.label")} action={action} />;
+
+    return (
+      <>
+        <Subtitle subtitle={t("deleteGroup.subtitle")} />
+        <div className="columns">
+          <div className="column">
+            <DeleteButton
+              label={t("deleteGroup.button")}
+              action={action}
+            />
+          </div>
+        </div>
+      </>
+    );
   }
 }
 
-export default translate("groups")(DeleteGroupNavLink);
+export default translate("groups")(DeleteGroup);

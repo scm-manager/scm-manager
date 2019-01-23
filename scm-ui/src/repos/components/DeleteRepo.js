@@ -1,8 +1,8 @@
 //@flow
 import React from "react";
 import { translate } from "react-i18next";
-import { Subtitle, DeleteButton, confirmAlert } from "@scm-manager/ui-components";
 import type { Repository } from "@scm-manager/ui-types";
+import { Subtitle, DeleteButton, confirmAlert } from "@scm-manager/ui-components";
 
 type Props = {
   repository: Repository,
@@ -20,22 +20,22 @@ class DeleteRepo extends React.Component<Props> {
     confirmDialog: true
   };
 
-  delete = () => {
+  deleteRepo = () => {
     this.props.delete(this.props.repository);
   };
 
   confirmDelete = () => {
     const { t } = this.props;
     confirmAlert({
-      title: t("delete.confirmAlert.title"),
-      message: t("delete.confirmAlert.message"),
+      title: t("deleteRepo.confirmAlert.title"),
+      message: t("deleteRepo.confirmAlert.message"),
       buttons: [
         {
-          label: t("delete.confirmAlert.submit"),
-          onClick: () => this.delete()
+          label: t("deleteRepo.confirmAlert.submit"),
+          onClick: () => this.deleteRepo()
         },
         {
-          label: t("delete.confirmAlert.cancel"),
+          label: t("deleteRepo.confirmAlert.cancel"),
           onClick: () => null
         }
       ]
@@ -48,7 +48,7 @@ class DeleteRepo extends React.Component<Props> {
 
   render() {
     const { confirmDialog, t } = this.props;
-    const action = confirmDialog ? this.confirmDelete : this.delete();
+    const action = confirmDialog ? this.confirmDelete : this.deleteRepo;
 
     if (!this.isDeletable()) {
       return null;
@@ -56,11 +56,11 @@ class DeleteRepo extends React.Component<Props> {
 
     return (
       <>
-        <Subtitle subtitle={t("delete.subtitle")} />
+        <Subtitle subtitle={t("deleteRepo.subtitle")} />
         <div className="columns">
           <div className="column">
             <DeleteButton
-              label={t("delete.button")}
+              label={t("deleteRepo.button")}
               action={action}
             />
           </div>

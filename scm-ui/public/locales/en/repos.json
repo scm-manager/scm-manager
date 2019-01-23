@@ -118,7 +118,7 @@
       "loading": "Loading..."
     }
   },
-  "delete": {
+  "deleteRepo": {
     "subtitle": "Delete Repository",
     "button": "Delete",
     "confirmAlert": {

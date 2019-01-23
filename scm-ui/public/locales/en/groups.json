@@ -11,11 +11,16 @@
     "title": "Groups",
     "subtitle": "Create, read, update and delete groups"
   },
-  "single-group": {
-    "navigationLabel": "Group Navigation",
-    "informationNavLink": "Information",
+  "singleGroup": {
     "errorTitle": "Error",
-    "errorSubtitle": "Unknown group error"
+    "errorSubtitle": "Unknown group error",
+    "menu": {
+      "navigationLabel": "Group Navigation",
+      "informationNavLink": "Information",
+      "settingsNavLink": "Settings",
+      "editNavLink": "General",
+      "permissionsNavLink": "Permissions"
+    }
   },
   "add-group": {
     "title": "Create Group",
@@ -53,9 +58,10 @@
       "memberHelpText": "Usernames of the group members"
     }
   },
-  "delete-group-button": {
-    "label": "Delete",
-    "confirm-alert": {
+  "deleteGroup": {
+    "subtitle": "Delete Group",
+    "button": "Delete",
+    "confirmAlert": {
       "title": "Delete Group",
       "message": "Do you really want to delete the group?",
       "submit": "Yes",

@@ -1,8 +1,8 @@
 import React from "react";
 import { mount, shallow } from "enzyme";
-import "../../../tests/enzyme";
+import "../../tests/enzyme";
 import "../../../tests/i18n";
-import DeleteGroupNavLink from "./DeleteGroupNavLink";
+import DeleteGroup from "./DeleteGroup";
 
 import { confirmAlert } from "@scm-manager/ui-components";
 jest.mock("@scm-manager/ui-components", () => ({
@@ -17,7 +17,7 @@ describe("DeleteGroupNavLink", () => {
     };
 
     const navLink = shallow(
-      <DeleteGroupNavLink group={group} deleteGroup={() => {}} />
+      <DeleteGroup group={group} deleteGroup={() => {}} />
     );
     expect(navLink.text()).toBe("");
   });
@@ -32,7 +32,7 @@ describe("DeleteGroupNavLink", () => {
     };
 
     const navLink = mount(
-      <DeleteGroupNavLink group={group} deleteGroup={() => {}} />
+      <DeleteGroup group={group} deleteGroup={() => {}} />
     );
     expect(navLink.text()).not.toBe("");
   });
@@ -47,7 +47,7 @@ describe("DeleteGroupNavLink", () => {
     };
 
     const navLink = mount(
-      <DeleteGroupNavLink group={group} deleteGroup={() => {}} />
+      <DeleteGroup group={group} deleteGroup={() => {}} />
     );
     navLink.find("a").simulate("click");
 
@@ -69,7 +69,7 @@ describe("DeleteGroupNavLink", () => {
     }
 
     const navLink = mount(
-      <DeleteGroupNavLink
+      <DeleteGroup
         group={group}
         confirmDialog={false}
         deleteGroup={capture}

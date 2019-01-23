@@ -12,13 +12,13 @@ type Props = {
 
 type State = {};
 
-class EditGroupNavLink extends React.Component<Props, State> {
+class GeneralGroupNavLink extends React.Component<Props, State> {
   render() {
     const { t, editUrl } = this.props;
     if (!this.isEditable()) {
       return null;
     }
-    return <NavLink label={t("edit-group-button.label")} to={editUrl} />;
+    return <NavLink label={t("singleGroup.menu.editNavLink")} to={editUrl} />;
   }
 
   isEditable = () => {
@@ -26,4 +26,4 @@ class EditGroupNavLink extends React.Component<Props, State> {
   };
 }
 
-export default translate("groups")(EditGroupNavLink);
+export default translate("groups")(GeneralGroupNavLink);

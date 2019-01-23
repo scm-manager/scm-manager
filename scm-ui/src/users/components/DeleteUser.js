@@ -1,8 +1,8 @@
 // @flow
 import React from "react";
 import { translate } from "react-i18next";
-import { Subtitle, DeleteButton, confirmAlert } from "@scm-manager/ui-components";
 import type { User } from "@scm-manager/ui-types";
+import { Subtitle, DeleteButton, confirmAlert } from "@scm-manager/ui-components";
 
 type Props = {
   user: User,
@@ -27,15 +27,15 @@ class DeleteUser extends React.Component<Props> {
   confirmDelete = () => {
     const { t } = this.props;
     confirmAlert({
-      title: t("delete.confirm-alert.title"),
-      message: t("delete.confirm-alert.message"),
+      title: t("deleteUser.confirmAlert.title"),
+      message: t("deleteUser.confirmAlert.message"),
       buttons: [
         {
-          label: t("delete.confirm-alert.submit"),
+          label: t("deleteUser.confirmAlert.submit"),
           onClick: () => this.deleteUser()
         },
         {
-          label: t("delete.confirm-alert.cancel"),
+          label: t("deleteUser.confirmAlert.cancel"),
           onClick: () => null
         }
       ]
@@ -56,11 +56,11 @@ class DeleteUser extends React.Component<Props> {
 
     return (
       <>
-        <Subtitle subtitle={t("delete.subtitle")} />
+        <Subtitle subtitle={t("deleteUser.subtitle")} />
         <div className="columns">
           <div className="column">
             <DeleteButton
-              label={t("delete.button")}
+              label={t("deleteUser.button")}
               action={action}
             />
           </div>

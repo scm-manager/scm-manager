@@ -42,10 +42,10 @@
     "title": "Create User",
     "subtitle": "Create a new user"
   },
-  "delete": {
+  "deleteUser": {
     "subtitle": "Delete User",
     "button": "Delete",
-    "confirm-alert": {
+    "confirmAlert": {
       "title": "Delete user",
       "message": "Do you really want to delete the user?",
       "submit": "Yes",
