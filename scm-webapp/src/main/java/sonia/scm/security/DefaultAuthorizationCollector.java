@@ -206,7 +206,7 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
       for (RepositoryPermission permission : repositoryPermissions)
       {
         hasPermission = isUserPermitted(user, groups, permission);
-        if (hasPermission)
+        if (hasPermission && !permission.getVerbs().isEmpty())
         {
           String perm = "repository:" + String.join(",", permission.getVerbs()) + ":" + repository.getId();
           if (logger.isTraceEnabled())
