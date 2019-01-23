@@ -32,10 +32,24 @@
 
 Prints date, size and last message of files.
 """
-from mercurial import cmdutil,util
 
 cmdtable = {}
-command = cmdutil.command(cmdtable)
+
+try:
+    from mercurial import registrar
+    command = registrar.command(cmdtable)
+except (AttributeError, ImportError):
+    # Fallback to hg < 4.3 support
+    from mercurial import cmdutil
+    command = cmdutil.command(cmdtable)
+
+try:
+    from mercurial.utils import dateutil
+    _parsedate = dateutil.parsedate
+except ImportError:
+    # compat with hg < 4.6
+    from mercurial import util
+    _parsedate = util.parsedate
 
 class SubRepository:
   url = None
@@ -129,7 +143,7 @@ def printFile(ui, repo, file, disableLastCommit, transport):
   description = 'n/a'
   if not disableLastCommit:
     linkrev = repo[file.linkrev()]
-    date = '%d %d' % util.parsedate(linkrev.date())
+    date = '%d %d' % _parsedate(linkrev.date())
     description = linkrev.description()
   format = '%s %i %s %s\n'
   if transport:
