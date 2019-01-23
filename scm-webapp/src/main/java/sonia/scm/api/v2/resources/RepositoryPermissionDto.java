@@ -13,7 +13,7 @@ import javax.validation.constraints.Pattern;
 import static sonia.scm.api.v2.ValidationConstraints.USER_GROUP_PATTERN;
 
 @Getter @Setter @ToString @NoArgsConstructor
-public class PermissionDto extends HalRepresentation {
+public class RepositoryPermissionDto extends HalRepresentation {
 
   public static final String GROUP_PREFIX = "@";
 
@@ -33,7 +33,7 @@ public class PermissionDto extends HalRepresentation {
 
   private boolean groupPermission = false;
 
-  public PermissionDto(String permissionName, boolean groupPermission) {
+  public RepositoryPermissionDto(String permissionName, boolean groupPermission) {
     name = permissionName;
     this.groupPermission = groupPermission;
   }

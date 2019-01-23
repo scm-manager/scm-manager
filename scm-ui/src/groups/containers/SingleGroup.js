@@ -13,7 +13,8 @@ import {
 import { Route } from "react-router";
 import { Details } from "./../components/table";
 import {
-  GeneralGroupNavLink
+  GeneralGroupNavLink,
+  SetPermissionsNavLink
 } from "./../components/navLinks";
 import type { Group } from "@scm-manager/ui-types";
 import type { History } from "history";
@@ -27,6 +28,8 @@ import {
 import { translate } from "react-i18next";
 import EditGroup from "./EditGroup";
 import { getGroupsLink } from "../../modules/indexResource";
+import SetPermissions from "../../permissions/components/SetPermissions";
+import {ExtensionPoint} from "@scm-manager/ui-extensions";
 
 type Props = {
   name: string,
@@ -79,6 +82,11 @@ class SingleGroup extends React.Component<Props> {
 
     const url = this.matchedUrl();
 
+    const extensionProps = {
+      group,
+      url
+    };
+
     return (
       <Page title={group.name}>
         <div className="columns">
@@ -93,6 +101,18 @@ class SingleGroup extends React.Component<Props> {
               exact
               component={() => <EditGroup group={group} />}
             />
+            <Route
+              path={`${url}/permissions`}
+              exact
+              component={() => (
+                <SetPermissions selectedPermissionsLink={group._links.permissions} />
+              )}
+            />
+            <ExtensionPoint
+              name="group.route"
+              props={extensionProps}
+              renderAll={true}
+            />
           </div>
           <div className="column">
             <Navigation>
@@ -101,6 +121,11 @@ class SingleGroup extends React.Component<Props> {
                   to={`${url}`}
                   label={t("singleGroup.menu.informationNavLink")}
                 />
+                <ExtensionPoint
+                  name="group.navigation"
+                  props={extensionProps}
+                  renderAll={true}
+                />
                 <SubNavigation
                   to={`${url}/settings/general`}
                   label={t("singleGroup.menu.settingsNavLink")}
@@ -108,6 +133,10 @@ class SingleGroup extends React.Component<Props> {
                   <GeneralGroupNavLink
                     group={group}
                     editUrl={`${url}/settings/general`}
+                  />
+                  <SetPermissionsNavLink
+                    group={group}
+                    permissionsUrl={`${url}/permissions`}
                   />
                 </SubNavigation>
               </Section>

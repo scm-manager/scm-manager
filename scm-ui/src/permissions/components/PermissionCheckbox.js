@@ -1,0 +1,47 @@
+// @flow
+
+import React from "react";
+import { translate } from "react-i18next";
+import { Checkbox } from "../../../../scm-ui-components/packages/ui-components/src";
+
+type Props = {
+  permission: string,
+  checked: boolean,
+  onChange: (value: boolean, name: string) => void,
+  disabled: boolean,
+  t: string => string
+};
+
+class PermissionCheckbox extends React.Component<Props> {
+  render() {
+    const { t, permission, checked, onChange, disabled } = this.props;
+    const key = permission.split(":").join(".");
+    return (
+      <Checkbox
+        name={permission}
+        label={this.translateOrDefault(
+          "permissions." + key + ".displayName",
+          key
+        )}
+        checked={checked}
+        onChange={onChange}
+        disabled={disabled}
+        helpText={this.translateOrDefault(
+          "permissions." + key + ".description",
+          t("permissions.unknown")
+        )}
+      />
+    );
+  }
+
+  translateOrDefault = (key: string, defaultText: string) => {
+    const translation = this.props.t(key);
+    if (translation === key) {
+      return defaultText;
+    } else {
+      return translation;
+    }
+  };
+}
+
+export default translate("plugins")(PermissionCheckbox);

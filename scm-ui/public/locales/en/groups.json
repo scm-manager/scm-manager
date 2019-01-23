@@ -19,7 +19,7 @@
       "informationNavLink": "Information",
       "settingsNavLink": "Settings",
       "editNavLink": "General",
-      "permissionsNavLink": "Permissions"
+      "setPermissionsNavLink": "Permissions"
     }
   },
   "add-group": {
@@ -67,5 +67,8 @@
       "submit": "Yes",
       "cancel": "No"
     }
+  },
+  "setPasswordNavLink": {
+    "label": "Set permissions"
   }
 }

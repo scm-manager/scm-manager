@@ -36,38 +36,22 @@ package sonia.scm.security;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.github.legman.Subscribe;
-
+import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
-import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableSet.Builder;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import org.apache.shiro.SecurityUtils;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.HandlerEventType;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.group.GroupEvent;
+import sonia.scm.plugin.PluginLoader;
 import sonia.scm.store.ConfigurationEntryStore;
 import sonia.scm.store.ConfigurationEntryStoreFactory;
 import sonia.scm.user.UserEvent;
-import sonia.scm.util.ClassLoaders;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
-
-import java.net.URL;
-
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Map.Entry;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -75,6 +59,19 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
+import static java.util.Objects.isNull;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * TODO add events
@@ -109,13 +106,13 @@ public class DefaultSecuritySystem implements SecuritySystem
    */
   @Inject
   @SuppressWarnings("unchecked")
-  public DefaultSecuritySystem(ConfigurationEntryStoreFactory storeFactory)
+  public DefaultSecuritySystem(ConfigurationEntryStoreFactory storeFactory, PluginLoader pluginLoader)
   {
     store = storeFactory
       .withType(AssignedPermission.class)
       .withName(NAME)
       .build();
-    readAvailablePermissions();
+    this.availablePermissions = readAvailablePermissions(pluginLoader);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -129,9 +126,9 @@ public class DefaultSecuritySystem implements SecuritySystem
    * @return
    */
   @Override
-  public StoredAssignedPermission addPermission(AssignedPermission permission)
+  public void addPermission(AssignedPermission permission)
   {
-    assertIsAdmin();
+    assertHasPermission();
     validatePermission(permission);
 
     String id = store.put(permission);
@@ -140,11 +137,9 @@ public class DefaultSecuritySystem implements SecuritySystem
 
     //J-
     ScmEventBus.getInstance().post(
-      new StoredAssignedPermissionEvent(HandlerEventType.CREATE, sap)
+      new AssignedPermissionEvent(HandlerEventType.CREATE, permission)
     );
     //J+
-
-    return sap;
   }
 
   /**
@@ -154,33 +149,16 @@ public class DefaultSecuritySystem implements SecuritySystem
    * @param permission
    */
   @Override
-  public void deletePermission(StoredAssignedPermission permission)
+  public void deletePermission(AssignedPermission permission)
   {
-    assertIsAdmin();
-    store.remove(permission.getId());
-    //J-
-    ScmEventBus.getInstance().post(
-      new StoredAssignedPermissionEvent(HandlerEventType.CREATE, permission)
-    );
-    //J+
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   */
-  @Override
-  public void deletePermission(String id)
-  {
-    assertIsAdmin();
-
-    AssignedPermission ap = store.get(id);
-
-    if (ap != null)
-    {
-      deletePermission(new StoredAssignedPermission(id, ap));
+    assertHasPermission();
+    boolean deleted = deletePermissions(sap -> Objects.equal(sap.getName(), permission.getName())
+      && Objects.equal(sap.isGroupPermission(), permission.isGroupPermission())
+      && Objects.equal(sap.getPermission(), permission.getPermission()));
+    if (deleted) {
+      ScmEventBus.getInstance().post(
+        new AssignedPermissionEvent(HandlerEventType.DELETE, permission)
+      );
     }
   }
 
@@ -195,16 +173,8 @@ public class DefaultSecuritySystem implements SecuritySystem
   {
     if (event.getEventType() == HandlerEventType.DELETE)
     {
-      deletePermissions(new Predicate<AssignedPermission>()
-      {
-
-        @Override
-        public boolean apply(AssignedPermission p)
-        {
-          return !p.isGroupPermission()
-            && event.getItem().getName().equals(p.getName());
-        }
-      });
+      deletePermissions(p -> !p.isGroupPermission()
+        && event.getItem().getName().equals(p.getName()));
     }
   }
 
@@ -219,42 +189,9 @@ public class DefaultSecuritySystem implements SecuritySystem
   {
     if (event.getEventType() == HandlerEventType.DELETE)
     {
-      deletePermissions(new Predicate<AssignedPermission>()
-      {
-
-        @Override
-        public boolean apply(AssignedPermission p)
-        {
-          return p.isGroupPermission()
-            && event.getItem().getName().equals(p.getName());
-        }
-      });
+      deletePermissions(p -> p.isGroupPermission()
+        && event.getItem().getName().equals(p.getName()));
     }
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param permission
-   */
-  @Override
-  public void modifyPermission(StoredAssignedPermission permission)
-  {
-    assertIsAdmin();
-    validatePermission(permission);
-
-    synchronized (store)
-    {
-      store.remove(permission.getId());
-      store.put(permission.getId(), new AssignedPermission(permission));
-    }
-
-    //J-
-    ScmEventBus.getInstance().post(
-      new StoredAssignedPermissionEvent(HandlerEventType.CREATE, permission)
-    );
-    //J+    
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -266,47 +203,11 @@ public class DefaultSecuritySystem implements SecuritySystem
    * @return
    */
   @Override
-  public List<StoredAssignedPermission> getAllPermissions()
+  public Collection<PermissionDescriptor> getAvailablePermissions()
   {
-    return getPermissions(null);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public List<PermissionDescriptor> getAvailablePermissions()
-  {
-    assertIsAdmin();
+    assertHasPermission();
 
     return availablePermissions;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   *
-   * @return
-   */
-  @Override
-  public StoredAssignedPermission getPermission(String id)
-  {
-    assertIsAdmin();
-
-    StoredAssignedPermission sap = null;
-    AssignedPermission ap = store.get(id);
-
-    if (ap != null)
-    {
-      sap = new StoredAssignedPermission(id, ap);
-    }
-
-    return sap;
   }
 
   /**
@@ -318,14 +219,13 @@ public class DefaultSecuritySystem implements SecuritySystem
    * @return
    */
   @Override
-  public List<StoredAssignedPermission> getPermissions(
-    Predicate<AssignedPermission> predicate)
+  public Collection<AssignedPermission> getPermissions(Predicate<AssignedPermission> predicate)
   {
-    Builder<StoredAssignedPermission> permissions = ImmutableList.builder();
+    Builder<AssignedPermission> permissions = ImmutableSet.builder();
 
     for (Entry<String, AssignedPermission> e : store.getAll().entrySet())
     {
-      if ((predicate == null) || predicate.apply(e.getValue()))
+      if ((predicate == null) || predicate.test(e.getValue()))
       {
         permissions.add(new StoredAssignedPermission(e.getKey(), e.getValue()));
       }
@@ -340,9 +240,9 @@ public class DefaultSecuritySystem implements SecuritySystem
    * Method description
    *
    */
-  private void assertIsAdmin()
+  private void assertHasPermission()
   {
-    SecurityUtils.getSubject().checkRole(Role.ADMIN);
+    PermissionPermissions.assign().check();
   }
 
   /**
@@ -351,14 +251,15 @@ public class DefaultSecuritySystem implements SecuritySystem
    *
    * @param predicate
    */
-  private void deletePermissions(Predicate<AssignedPermission> predicate)
+  private boolean deletePermissions(Predicate<AssignedPermission> predicate)
   {
-    List<StoredAssignedPermission> permissions = getPermissions(predicate);
-
-    for (StoredAssignedPermission permission : permissions)
-    {
-      deletePermission(permission);
-    }
+    List<Entry<String, AssignedPermission>> toRemove =
+      store.getAll()
+        .entrySet()
+        .stream()
+        .filter(e -> (predicate == null) || predicate.test(e.getValue())).collect(Collectors.toList());
+    toRemove.forEach(e -> store.remove(e.getKey()));
+    return !toRemove.isEmpty();
   }
 
   /**
@@ -371,7 +272,7 @@ public class DefaultSecuritySystem implements SecuritySystem
    * @return
    */
   @SuppressWarnings("unchecked")
-  private List<PermissionDescriptor> parsePermissionDescriptor(
+  private static List<PermissionDescriptor> parsePermissionDescriptor(
     JAXBContext context, URL descriptorUrl)
   {
     List<PermissionDescriptor> descriptors = Collections.EMPTY_LIST;
@@ -399,19 +300,20 @@ public class DefaultSecuritySystem implements SecuritySystem
   /**
    * Method description
    *
+   * @param pluginLoader
    */
-  private void readAvailablePermissions()
+  private static ImmutableSet<PermissionDescriptor> readAvailablePermissions(PluginLoader pluginLoader)
   {
-    Builder<PermissionDescriptor> builder = ImmutableList.builder();
+    ImmutableSet.Builder<PermissionDescriptor> builder = ImmutableSet.builder();
 
     try
     {
       JAXBContext context =
         JAXBContext.newInstance(PermissionDescriptors.class);
 
+      // Querying permissions from uberClassLoader returns also the permissions from plugin
       Enumeration<URL> descirptorEnum =
-        ClassLoaders.getContextClassLoader(
-          DefaultSecuritySystem.class).getResources(PERMISSION_DESCRIPTOR);
+        pluginLoader.getUberClassLoader().getResources(PERMISSION_DESCRIPTOR);
 
       while (descirptorEnum.hasMoreElements())
       {
@@ -432,7 +334,7 @@ public class DefaultSecuritySystem implements SecuritySystem
         "could not create jaxb context to read permission descriptors", ex);
     }
 
-    availablePermissions = builder.build();
+    return builder.build();
   }
 
   /**
@@ -445,7 +347,7 @@ public class DefaultSecuritySystem implements SecuritySystem
   {
     Preconditions.checkArgument(!Strings.isNullOrEmpty(perm.getName()),
       "name is required");
-    Preconditions.checkArgument(!Strings.isNullOrEmpty(perm.getPermission()),
+    Preconditions.checkArgument(!isNull(perm.getPermission()),
       "permission is required");
   }
 
@@ -458,12 +360,6 @@ public class DefaultSecuritySystem implements SecuritySystem
   @XmlAccessorType(XmlAccessType.FIELD)
   private static class PermissionDescriptors
   {
-
-    /**
-     * Constructs ...
-     *
-     */
-    public PermissionDescriptors() {}
 
     //~--- get methods --------------------------------------------------------
 
@@ -498,5 +394,5 @@ public class DefaultSecuritySystem implements SecuritySystem
   private final ConfigurationEntryStore<AssignedPermission> store;
 
   /** Field description */
-  private List<PermissionDescriptor> availablePermissions;
+  private final ImmutableSet<PermissionDescriptor> availablePermissions;
 }

@@ -21,10 +21,11 @@ import {
   isFetchUserPending,
   getFetchUserFailure
 } from "../modules/users";
-import { GeneralUserNavLink, SetPasswordNavLink } from "./../components/navLinks";
+import { GeneralUserNavLink, SetPasswordNavLink, SetPermissionsNavLink } from "./../components/navLinks";
 import { translate } from "react-i18next";
 import { getUsersLink } from "../../modules/indexResource";
 import SetUserPassword from "../components/SetUserPassword";
+import SetPermissions from "../../permissions/components/SetPermissions";
 
 type Props = {
   name: string,
@@ -90,6 +91,14 @@ class SingleUser extends React.Component<Props> {
               path={`${url}/settings/password`}
               component={() => <SetUserPassword user={user} />}
             />
+            <Route
+              path={`${url}/permissions`}
+              component={() => (
+                <SetPermissions
+                  selectedPermissionsLink={user._links.permissions}
+                />
+              )}
+            />
           </div>
           <div className="column">
             <Navigation>
@@ -109,6 +118,10 @@ class SingleUser extends React.Component<Props> {
                   <SetPasswordNavLink
                     user={user}
                     passwordUrl={`${url}/settings/password`}
+                  />
+                  <SetPermissionsNavLink
+                    user={user}
+                    permissionsUrl={`${url}/settings/permissions`}
                   />
                 </SubNavigation>
               </Section>

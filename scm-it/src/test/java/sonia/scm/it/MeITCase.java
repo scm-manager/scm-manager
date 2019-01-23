@@ -1,12 +1,9 @@
 package sonia.scm.it;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import sonia.scm.it.utils.ScmRequests;
 import sonia.scm.it.utils.TestData;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class MeITCase {
 
@@ -23,9 +20,6 @@ public class MeITCase {
       .requestIndexResource(TestData.USER_SCM_ADMIN, TestData.USER_SCM_ADMIN)
       .requestMe()
       .assertStatusCode(200)
-      .assertAdmin(aBoolean -> assertThat(aBoolean).isEqualTo(Boolean.TRUE))
-      .assertPassword(Assert::assertNull)
-      .assertType(s -> assertThat(s).isEqualTo("xml"))
       .requestChangePassword(TestData.USER_SCM_ADMIN, newPassword)
       .assertStatusCode(204);
     // assert password is changed -> login with the new Password than undo changes
@@ -33,7 +27,6 @@ public class MeITCase {
       .requestIndexResource(TestData.USER_SCM_ADMIN, newPassword)
       .requestMe()
       .assertStatusCode(200)
-      .assertAdmin(aBoolean -> assertThat(aBoolean).isEqualTo(Boolean.TRUE))// still admin
       .requestChangePassword(newPassword, TestData.USER_SCM_ADMIN)
       .assertStatusCode(204);
   }
@@ -49,9 +42,6 @@ public class MeITCase {
       .requestIndexResource(username, password)
       .requestMe()
       .assertStatusCode(200)
-      .assertAdmin(aBoolean -> assertThat(aBoolean).isEqualTo(Boolean.FALSE))
-      .assertPassword(Assert::assertNull)
-      .assertType(s -> assertThat(s).isEqualTo("xml"))
       .requestChangePassword(password, newPassword)
       .assertStatusCode(204);
     // assert password is changed -> login with the new Password than undo changes
@@ -72,9 +62,6 @@ public class MeITCase {
       .requestIndexResource(newUser, password)
       .requestMe()
       .assertStatusCode(200)
-      .assertAdmin(aBoolean -> assertThat(aBoolean).isEqualTo(Boolean.TRUE))
-      .assertPassword(Assert::assertNull)
-      .assertType(s -> assertThat(s).isEqualTo(type))
       .assertPasswordLinkDoesNotExists();
   }
 }

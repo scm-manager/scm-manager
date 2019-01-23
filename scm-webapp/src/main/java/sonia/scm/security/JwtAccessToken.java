@@ -30,12 +30,15 @@
  */
 package sonia.scm.security;
 
+import com.google.common.collect.ImmutableSet;
 import io.jsonwebtoken.Claims;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import static java.util.Optional.ofNullable;
 
@@ -49,6 +52,8 @@ public final class JwtAccessToken implements AccessToken {
 
   public static final String REFRESHABLE_UNTIL_CLAIM_KEY = "scm-manager.refreshExpiration";
   public static final String PARENT_TOKEN_ID_CLAIM_KEY = "scm-manager.parentTokenId";
+  public static final String GROUPS_CLAIM_KEY = "scm-manager.groups";
+
   private final Claims claims;
   private final String compact;
 
@@ -101,6 +106,16 @@ public final class JwtAccessToken implements AccessToken {
   @SuppressWarnings("unchecked")
   public Optional<Object> getCustom(String key) {
     return Optional.ofNullable(claims.get(key));
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  public Set<String> getGroups() {
+    Iterable<String> groups = claims.get(GROUPS_CLAIM_KEY, Iterable.class);
+    if (groups != null) {
+      return ImmutableSet.copyOf(groups);
+    }
+    return ImmutableSet.of();
   }
 
   @Override

@@ -89,16 +89,25 @@ public interface AccessTokenBuilder {
    * @return {@code this}
    */
   AccessTokenBuilder refreshableFor(long count, TimeUnit unit);
-  
+
   /**
    * Reduces the permissions of the token by providing a scope.
-   * 
+   *
    * @param scope scope of token
-   * 
+   *
    * @return {@code this}
    */
   AccessTokenBuilder scope(Scope scope);
-  
+
+  /**
+   * Define the logged in user as member of the given groups.
+   *
+   * @param groups group names
+   *
+   * @return {@code this}
+   */
+  AccessTokenBuilder groups(String... groups);
+
   /**
    * Creates a new {@link AccessToken} with the provided settings.
    * 

@@ -7,6 +7,7 @@ import org.apache.shiro.SecurityUtils;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.config.ConfigurationPermissions;
 import sonia.scm.group.GroupPermissions;
+import sonia.scm.security.PermissionPermissions;
 import sonia.scm.user.UserPermissions;
 
 import javax.inject.Inject;
@@ -52,6 +53,9 @@ public class IndexDtoGenerator extends LinkAppenderMapper {
         builder.single(link("config", resourceLinks.config().self()));
       }
       builder.single(link("repositories", resourceLinks.repositoryCollection().self()));
+      if (PermissionPermissions.list().isPermitted()) {
+        builder.single(link("permissions", resourceLinks.permissions().self()));
+      }
     } else {
       builder.single(link("login", resourceLinks.authentication().jsonLogin()));
     }

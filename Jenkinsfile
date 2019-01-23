@@ -50,6 +50,11 @@ node('docker') {
       def dockerImageTag = "2.0.0-dev-${commitHash.substring(0,7)}-${BUILD_NUMBER}"
 
       if (isMainBranch()) {
+        stage('Archive') {
+          archiveArtifacts 'scm-webapp/target/scm-webapp.war'
+          archiveArtifacts 'scm-server/target/scm-server-app.*'
+        }
+
         stage('Docker') {
           def image = docker.build('cloudogu/scm-manager')
           docker.withRegistry('', 'hub.docker.com-cesmarvin') {

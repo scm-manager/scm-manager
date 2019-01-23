@@ -189,9 +189,9 @@ public class AuthorizationChangedEventProducer {
    * @param event permission event
    */
   @Subscribe
-  public void onEvent(StoredAssignedPermissionEvent event) {
+  public void onEvent(AssignedPermissionEvent event) {
     if (event.getEventType().isPost()) {
-      StoredAssignedPermission permission = event.getPermission();
+      AssignedPermission permission = event.getPermission();
       if (permission.isGroupPermission()) {
         handleGroupPermissionChange(permission);
       } else {
@@ -200,18 +200,18 @@ public class AuthorizationChangedEventProducer {
     }
   }
   
-  private void handleGroupPermissionChange(StoredAssignedPermission permission) {
+  private void handleGroupPermissionChange(AssignedPermission permission) {
     logger.debug(
-      "fire authorization changed event, because global group permission {} has changed", 
-      permission.getId()
+      "fire authorization changed event for group {}, because permission {} has changed",
+      permission.getName(), permission.getPermission()
     );
     fireEventForEveryUser();
   }
   
-  private void handleUserPermissionChange(StoredAssignedPermission permission) {
+  private void handleUserPermissionChange(AssignedPermission permission) {
     logger.debug(
-        "fire authorization changed event for user {}, because permission {} has changed", 
-        permission.getName(), permission.getId()
+        "fire authorization changed event for user {}, because permission {} has changed",
+        permission.getName(), permission.getPermission()
     );
     fireEventForUser(permission.getName());    
   }
