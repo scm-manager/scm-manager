@@ -68,11 +68,13 @@ class AddGroup extends React.Component<Props, State> {
         });
       });
   };
-  groupCreated = () => {
-    this.props.history.push("/groups");
+  groupCreated = (group: Group) => {
+    this.props.history.push("/group/" + group.name);
   };
   createGroup = (group: Group) => {
-    this.props.createGroup(this.props.createLink, group, this.groupCreated);
+    this.props.createGroup(this.props.createLink, group, () =>
+      this.groupCreated(group)
+    );
   };
 }
 

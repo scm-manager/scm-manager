@@ -15,7 +15,7 @@ class EditNavLink extends React.Component<Props> {
       return null;
     }
     const { editUrl, t } = this.props;
-    return <NavLink to={editUrl} label={t("edit-nav-link.label")} />;
+    return <NavLink to={editUrl} icon="fas fa-cog" label={t("edit-nav-link.label")} />;
   }
 }
 
