@@ -39,7 +39,8 @@ class SubNavigation extends React.Component<Props> {
     return (
       <li>
         <Link className={this.isActive(route) ? "is-active" : ""} to={to}>
-          <><i className={defaultIcon}></i>{" "}</>
+          <i className={defaultIcon} />
+          {" "}
           {label}
         </Link>
         {children}
