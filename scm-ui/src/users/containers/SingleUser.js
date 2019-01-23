@@ -92,7 +92,7 @@ class SingleUser extends React.Component<Props> {
               component={() => <SetUserPassword user={user} />}
             />
             <Route
-              path={`${url}/permissions`}
+              path={`${url}/settings/permissions`}
               component={() => (
                 <SetPermissions
                   selectedPermissionsLink={user._links.permissions}

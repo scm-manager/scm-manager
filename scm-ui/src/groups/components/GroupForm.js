@@ -72,12 +72,13 @@ class GroupForm extends React.Component<Props, State> {
   };
 
   render() {
-    const { t, loading } = this.props;
+    const { loading, t } = this.props;
     const { group } = this.state;
-    let firstField = null;
+    let nameField = null;
+    let subtitle = null;
     if (!this.props.group) {
       // create new group
-      firstField = (
+      nameField = (
         <InputField
           label={t("group.name")}
           errorMessage={t("groupForm.nameError")}
@@ -89,46 +90,49 @@ class GroupForm extends React.Component<Props, State> {
       );
     } else {
       // edit existing group
-      firstField = <Subtitle subtitle={t("groupForm.subtitle")} />;
+      subtitle = <Subtitle subtitle={t("groupForm.subtitle")} />;
     }
 
     return (
-      <form onSubmit={this.submit}>
-        {firstField}
-        <Textarea
-          label={t("group.description")}
-          errorMessage={t("groupForm.descriptionError")}
-          onChange={this.handleDescriptionChange}
-          value={group.description}
-          validationError={false}
-          helpText={t("groupForm.help.descriptionHelpText")}
-        />
-        <LabelWithHelpIcon
-          label={t("group.members")}
-          helpText={t("groupForm.help.memberHelpText")}
-        />
-        <MemberNameTable
-          members={group.members}
-          memberListChanged={this.memberListChanged}
-        />
+      <>
+        {subtitle}
+        <form onSubmit={this.submit}>
+          {nameField}
+          <Textarea
+            label={t("group.description")}
+            errorMessage={t("groupForm.descriptionError")}
+            onChange={this.handleDescriptionChange}
+            value={group.description}
+            validationError={false}
+            helpText={t("groupForm.help.descriptionHelpText")}
+          />
+          <LabelWithHelpIcon
+            label={t("group.members")}
+            helpText={t("groupForm.help.memberHelpText")}
+          />
+          <MemberNameTable
+            members={group.members}
+            memberListChanged={this.memberListChanged}
+          />
 
-        <AutocompleteAddEntryToTableField
-          addEntry={this.addMember}
-          disabled={false}
-          buttonLabel={t("add-member-button.label")}
-          fieldLabel={t("add-member-textfield.label")}
-          errorMessage={t("add-member-textfield.error")}
-          loadSuggestions={this.props.loadUserSuggestions}
-          placeholder={t("add-member-autocomplete.placeholder")}
-          loadingMessage={t("add-member-autocomplete.loading")}
-          noOptionsMessage={t("add-member-autocomplete.no-options")}
-        />
-        <SubmitButton
-          disabled={!this.isValid()}
-          label={t("groupForm.submit")}
-          loading={loading}
-        />
-      </form>
+          <AutocompleteAddEntryToTableField
+            addEntry={this.addMember}
+            disabled={false}
+            buttonLabel={t("add-member-button.label")}
+            fieldLabel={t("add-member-textfield.label")}
+            errorMessage={t("add-member-textfield.error")}
+            loadSuggestions={this.props.loadUserSuggestions}
+            placeholder={t("add-member-autocomplete.placeholder")}
+            loadingMessage={t("add-member-autocomplete.loading")}
+            noOptionsMessage={t("add-member-autocomplete.no-options")}
+          />
+          <SubmitButton
+            disabled={!this.isValid()}
+            label={t("groupForm.submit")}
+            loading={loading}
+          />
+        </form>
+      </>
     );
   }
 

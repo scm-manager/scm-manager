@@ -88,7 +88,9 @@ class UserForm extends React.Component<Props, State> {
 
     let nameField = null;
     let passwordChangeField = null;
+    let subtitle = null;
     if (!this.props.user) {
+      // create new user
       nameField = (
         <InputField
           label={t("user.name")}
@@ -103,10 +105,13 @@ class UserForm extends React.Component<Props, State> {
       passwordChangeField = (
         <PasswordConfirmation passwordChanged={this.handlePasswordChange} />
       );
+    } else {
+      // edit existing user
+      subtitle = <Subtitle subtitle={t("userForm.subtitle")} />;
     }
     return (
       <>
-        <Subtitle subtitle={t("userForm.subtitle")} />
+        {subtitle}
         <form onSubmit={this.submit}>
           <div className="columns">
             <div className="column is-half">
