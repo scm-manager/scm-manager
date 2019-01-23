@@ -446,11 +446,13 @@ describe("repos fetch", () => {
       }
     });
 
+
     fetchMock.getOnce(REPOS_URL + "/slarti/fjords", slartiFjords);
 
     let callMe = "not yet";
 
-    const callback = () => {
+    const callback = (r: any) => {
+      expect(r).toEqual(slartiFjords);
       callMe = "yeah";
     };
 
