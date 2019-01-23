@@ -33,6 +33,7 @@ public class VndMediaType {
   public static final String REPOSITORY_COLLECTION = PREFIX + "repositoryCollection" + SUFFIX;
   public static final String BRANCH_COLLECTION = PREFIX + "branchCollection" + SUFFIX;
   public static final String CONFIG = PREFIX + "config" + SUFFIX;
+  public static final String REPOSITORY_PERMISSION_COLLECTION = PREFIX + "repositoryPermissionCollection" + SUFFIX;
   public static final String REPOSITORY_TYPE_COLLECTION = PREFIX + "repositoryTypeCollection" + SUFFIX;
   public static final String REPOSITORY_TYPE = PREFIX + "repositoryType" + SUFFIX;
   public static final String UI_PLUGIN = PREFIX + "uiPlugin" + SUFFIX;

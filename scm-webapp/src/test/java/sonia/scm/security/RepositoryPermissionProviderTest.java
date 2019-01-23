@@ -4,7 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sonia.scm.plugin.PluginLoader;
 import sonia.scm.repository.RepositoryPermissions;
-import sonia.scm.store.ConfigurationEntryStoreFactory;
 import sonia.scm.util.ClassLoaders;
 
 import java.lang.reflect.Field;
@@ -25,7 +24,6 @@ class RepositoryPermissionProviderTest {
   void init() {
     PluginLoader pluginLoader = mock(PluginLoader.class);
     when(pluginLoader.getUberClassLoader()).thenReturn(ClassLoaders.getContextClassLoader(DefaultSecuritySystem.class));
-    ConfigurationEntryStoreFactory configurationEntryStoreFactory = mock(ConfigurationEntryStoreFactory.class);
     repositoryPermissionProvider = new RepositoryPermissionProvider(pluginLoader);
     allVerbsFromRepositoryClass = Arrays.stream(RepositoryPermissions.class.getDeclaredFields())
       .filter(field -> field.getName().startsWith("ACTION_"))
@@ -37,13 +35,11 @@ class RepositoryPermissionProviderTest {
   @Test
   void shouldReadAvailableRoles() {
     assertThat(repositoryPermissionProvider.availableRoles()).isNotEmpty();
-    assertThat(repositoryPermissionProvider.availableRoles()).allSatisfy(this::eitherStarOrOnlyAvailableVerbs);
+    assertThat(repositoryPermissionProvider.availableRoles()).allSatisfy(this::containsOnlyAvailableVerbs);
   }
 
-  private void eitherStarOrOnlyAvailableVerbs(RepositoryRole role) {
-    if (!role.getVerbs().contains("*") || role.getVerbs().size() > 1) {
-      assertThat(role.getVerbs()).isSubsetOf(allVerbsFromRepositoryClass);
-    }
+  private void containsOnlyAvailableVerbs(RepositoryRole role) {
+    assertThat(role.getVerbs()).isSubsetOf(repositoryPermissionProvider.availableVerbs());
   }
 
   @Test

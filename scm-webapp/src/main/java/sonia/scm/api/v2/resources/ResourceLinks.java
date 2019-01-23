@@ -639,14 +639,30 @@ class ResourceLinks {
   }
 
   static class PermissionsLinks {
-    private final LinkBuilder permissionsLlinkBuilder;
+    private final LinkBuilder permissionsLinkBuilder;
 
     PermissionsLinks(ScmPathInfo scmPathInfo) {
-      this.permissionsLlinkBuilder = new LinkBuilder(scmPathInfo, GlobalPermissionResource.class);
+      this.permissionsLinkBuilder = new LinkBuilder(scmPathInfo, GlobalPermissionResource.class);
     }
 
     String self() {
-      return permissionsLlinkBuilder.method("getAll").parameters().href();
+      return permissionsLinkBuilder.method("getAll").parameters().href();
+    }
+  }
+
+  public AvailableRepositoryPermissionLinks availableRepositoryPermissions() {
+    return new AvailableRepositoryPermissionLinks(scmPathInfoStore.get());
+  }
+
+  static class AvailableRepositoryPermissionLinks {
+    private final LinkBuilder linkBuilder;
+
+    AvailableRepositoryPermissionLinks(ScmPathInfo scmPathInfo) {
+      this.linkBuilder = new LinkBuilder(scmPathInfo, RepositoryPermissionResource.class);
+    }
+
+    String self() {
+      return linkBuilder.method("get").parameters().href();
     }
   }
 }

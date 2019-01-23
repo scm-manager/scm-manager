@@ -9,6 +9,7 @@
     <verb>push</verb>
     <verb>permissionRead</verb>
     <verb>permissionWrite</verb>
+    <verb>*</verb>
   </verbs>
   <roles>
     <role>
