@@ -26,7 +26,7 @@ import {
 } from "../modules/groups";
 
 import { translate } from "react-i18next";
-import EditGroup from "./EditGroup";
+import GeneralGroup from "./GeneralGroup";
 import { getGroupsLink } from "../../modules/indexResource";
 import SetPermissions from "../../permissions/components/SetPermissions";
 import {ExtensionPoint} from "@scm-manager/ui-extensions";
@@ -99,10 +99,10 @@ class SingleGroup extends React.Component<Props> {
             <Route
               path={`${url}/settings/general`}
               exact
-              component={() => <EditGroup group={group} />}
+              component={() => <GeneralGroup group={group} />}
             />
             <Route
-              path={`${url}/permissions`}
+              path={`${url}/settings/permissions`}
               exact
               component={() => (
                 <SetPermissions selectedPermissionsLink={group._links.permissions} />
@@ -136,7 +136,7 @@ class SingleGroup extends React.Component<Props> {
                   />
                   <SetPermissionsNavLink
                     group={group}
-                    permissionsUrl={`${url}/permissions`}
+                    permissionsUrl={`${url}/settings/permissions`}
                   />
                 </SubNavigation>
               </Section>

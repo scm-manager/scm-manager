@@ -35,8 +35,8 @@
       "informationNavLink": "Information",
       "settingsNavLink": "Settings",
       "editNavLink": "General",
-      "setPasswordNavLink": "Set Password",
-      "setPermissionsNavLink": "Set Permissions"
+      "setPasswordNavLink": "Password",
+      "setPermissionsNavLink": "Permissions"
     }
   },
   "addUser": {

@@ -46,12 +46,12 @@
     "placeholder": "Enter member",
     "loading": "Loading...",
     "no-options": "No suggestion available"
-    },
-
-"group-form": {
+  },
+  "groupForm": {
+    "subtitle": "Edit Group",
     "submit": "Submit",
-    "name-error": "Group name is invalid",
-    "description-error": "Description is invalid",
+    "nameError": "Group name is invalid",
+    "descriptionError": "Description is invalid",
     "help": {
       "nameHelpText": "Unique name of the group",
       "descriptionHelpText": "A short description of the group",

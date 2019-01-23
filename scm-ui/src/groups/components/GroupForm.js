@@ -2,6 +2,7 @@
 import React from "react";
 import { translate } from "react-i18next";
 import {
+  Subtitle,
   AutocompleteAddEntryToTableField,
   LabelWithHelpIcon,
   MemberNameTable,
@@ -73,34 +74,38 @@ class GroupForm extends React.Component<Props, State> {
   render() {
     const { t, loading } = this.props;
     const { group } = this.state;
-    let nameField = null;
+    let firstField = null;
     if (!this.props.group) {
-      nameField = (
+      // create new group
+      firstField = (
         <InputField
           label={t("group.name")}
-          errorMessage={t("group-form.name-error")}
+          errorMessage={t("groupForm.nameError")}
           onChange={this.handleGroupNameChange}
           value={group.name}
           validationError={this.state.nameValidationError}
-          helpText={t("group-form.help.nameHelpText")}
+          helpText={t("groupForm.help.nameHelpText")}
         />
       );
+    } else {
+      // edit existing group
+      firstField = <Subtitle subtitle={t("groupForm.subtitle")} />;
     }
 
     return (
       <form onSubmit={this.submit}>
-        {nameField}
+        {firstField}
         <Textarea
           label={t("group.description")}
-          errorMessage={t("group-form.description-error")}
+          errorMessage={t("groupForm.descriptionError")}
           onChange={this.handleDescriptionChange}
           value={group.description}
           validationError={false}
-          helpText={t("group-form.help.descriptionHelpText")}
+          helpText={t("groupForm.help.descriptionHelpText")}
         />
         <LabelWithHelpIcon
           label={t("group.members")}
-          helpText={t("group-form.help.memberHelpText")}
+          helpText={t("groupForm.help.memberHelpText")}
         />
         <MemberNameTable
           members={group.members}
@@ -120,7 +125,7 @@ class GroupForm extends React.Component<Props, State> {
         />
         <SubmitButton
           disabled={!this.isValid()}
-          label={t("group-form.submit")}
+          label={t("groupForm.submit")}
           loading={loading}
         />
       </form>
