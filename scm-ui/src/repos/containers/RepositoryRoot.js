@@ -1,6 +1,6 @@
 //@flow
 import React from "react";
-import {deleteRepo, fetchRepoByName, getFetchRepoFailure, getRepository, isFetchRepoPending} from "../modules/repos";
+import {fetchRepoByName, getFetchRepoFailure, getRepository, isFetchRepoPending} from "../modules/repos";
 
 import {connect} from "react-redux";
 import {Route, Switch} from "react-router-dom";
@@ -32,7 +32,6 @@ type Props = {
 
   // dispatch functions
   fetchRepoByName: (link: string, namespace: string, name: string) => void,
-  deleteRepo: (repository: Repository, () => void) => void,
 
   // context props
   t: string => string,
@@ -56,14 +55,6 @@ class RepositoryRoot extends React.Component<Props> {
 
   matchedUrl = () => {
     return this.stripEndingSlash(this.props.match.url);
-  };
-
-  deleted = () => {
-    this.props.history.push("/repos");
-  };
-
-  delete = (repository: Repository) => {
-    this.props.deleteRepo(repository, this.deleted);
   };
 
   matches = (route: any) => {
@@ -227,9 +218,6 @@ const mapDispatchToProps = dispatch => {
   return {
     fetchRepoByName: (link: string, namespace: string, name: string) => {
       dispatch(fetchRepoByName(link, namespace, name));
-    },
-    deleteRepo: (repository: Repository, callback: () => void) => {
-      dispatch(deleteRepo(repository, callback));
     }
   };
 };
