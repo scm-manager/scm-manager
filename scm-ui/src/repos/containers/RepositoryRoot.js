@@ -1,18 +1,31 @@
 //@flow
 import React from "react";
-import {fetchRepoByName, getFetchRepoFailure, getRepository, isFetchRepoPending} from "../modules/repos";
+import {
+  fetchRepoByName,
+  getFetchRepoFailure,
+  getRepository,
+  isFetchRepoPending
+} from "../modules/repos";
 
-import {connect} from "react-redux";
-import {Route, Switch} from "react-router-dom";
-import type {Repository} from "@scm-manager/ui-types";
+import { connect } from "react-redux";
+import { Route, Switch } from "react-router-dom";
+import type { Repository } from "@scm-manager/ui-types";
 
-import {ErrorPage, Loading, Navigation, SubNavigation, NavLink, Page, Section} from "@scm-manager/ui-components";
-import {translate} from "react-i18next";
+import {
+  ErrorPage,
+  Loading,
+  Navigation,
+  SubNavigation,
+  NavLink,
+  Page,
+  Section
+} from "@scm-manager/ui-components";
+import { translate } from "react-i18next";
 import RepositoryDetails from "../components/RepositoryDetails";
 import GeneralRepo from "./GeneralRepo";
 import Permissions from "../permissions/containers/Permissions";
 
-import type {History} from "history";
+import type { History } from "history";
 import GeneralRepoNavLink from "../components/GeneralRepoNavLink";
 
 import BranchRoot from "./ChangesetsRoot";
@@ -20,8 +33,8 @@ import ChangesetView from "./ChangesetView";
 import PermissionsNavLink from "../components/PermissionsNavLink";
 import Sources from "../sources/containers/Sources";
 import RepositoryNavLink from "../components/RepositoryNavLink";
-import {getRepositoriesLink} from "../../modules/indexResource";
-import {ExtensionPoint} from "@scm-manager/ui-extensions";
+import { getRepositoriesLink } from "../../modules/indexResource";
+import { ExtensionPoint } from "@scm-manager/ui-extensions";
 
 type Props = {
   namespace: string,
@@ -159,7 +172,10 @@ class RepositoryRoot extends React.Component<Props> {
           <div className="column">
             <Navigation>
               <Section label={t("repositoryRoot.menu.navigationLabel")}>
-                <NavLink to={url} label={t("repositoryRoot.menu.informationNavLink")} />
+                <NavLink
+                  to={url}
+                  label={t("repositoryRoot.menu.informationNavLink")}
+                />
                 <RepositoryNavLink
                   repository={repository}
                   linkName="changesets"
@@ -184,10 +200,18 @@ class RepositoryRoot extends React.Component<Props> {
                   to={`${url}/settings/general`}
                   label={t("repositoryRoot.menu.settingsNavLink")}
                 >
-                  <GeneralRepoNavLink repository={repository} editUrl={`${url}/settings/general`} />
+                  <GeneralRepoNavLink
+                    repository={repository}
+                    editUrl={`${url}/settings/general`}
+                  />
                   <PermissionsNavLink
                     permissionUrl={`${url}/settings/permissions`}
                     repository={repository}
+                  />
+                  <ExtensionPoint
+                    name="repository.subnavigation"
+                    props={extensionProps}
+                    renderAll={true}
                   />
                 </SubNavigation>
               </Section>

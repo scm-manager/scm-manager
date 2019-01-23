@@ -26,6 +26,7 @@ import { translate } from "react-i18next";
 import { getUsersLink } from "../../modules/indexResource";
 import SetUserPassword from "../components/SetUserPassword";
 import SetPermissions from "../../permissions/components/SetPermissions";
+import {ExtensionPoint} from "@scm-manager/ui-extensions";
 
 type Props = {
   name: string,
@@ -78,6 +79,11 @@ class SingleUser extends React.Component<Props> {
 
     const url = this.matchedUrl();
 
+    const extensionProps = {
+      user,
+      url
+    };
+
     return (
       <Page title={user.displayName}>
         <div className="columns">
@@ -122,6 +128,11 @@ class SingleUser extends React.Component<Props> {
                   <SetPermissionsNavLink
                     user={user}
                     permissionsUrl={`${url}/settings/permissions`}
+                  />
+                  <ExtensionPoint
+                    name="user.subnavigation"
+                    props={extensionProps}
+                    renderAll={true}
                   />
                 </SubNavigation>
               </Section>

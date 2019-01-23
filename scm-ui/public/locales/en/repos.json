@@ -57,6 +57,7 @@
     }
   },
   "repositoryForm": {
+    "subtitle": "Edit Repository",
     "submit": "Save"
   },
   "sources": {

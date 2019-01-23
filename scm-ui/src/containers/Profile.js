@@ -18,6 +18,7 @@ import {
 } from "@scm-manager/ui-components";
 import ChangeUserPassword from "./ChangeUserPassword";
 import ProfileInfo from "./ProfileInfo";
+import {ExtensionPoint} from "@scm-manager/ui-extensions";
 
 type Props = {
   me: Me,
@@ -58,6 +59,11 @@ class Profile extends React.Component<Props, State> {
       );
     }
 
+    const extensionProps = {
+      me,
+      url
+    };
+
     return (
       <Page title={me.displayName}>
         <div className="columns">
@@ -82,6 +88,11 @@ class Profile extends React.Component<Props, State> {
                   <NavLink
                     to={`${url}/settings/password`}
                     label={t("profile.changePasswordNavLink")}
+                  />
+                  <ExtensionPoint
+                    name="profile.subnavigation"
+                    props={extensionProps}
+                    renderAll={true}
                   />
                 </SubNavigation>
               </Section>
