@@ -1,20 +1,26 @@
 //@flow
 import React from "react";
+import type { Repository } from "@scm-manager/ui-types";
 import { NavLink } from "@scm-manager/ui-components";
 import { translate } from "react-i18next";
-import type { Repository } from "@scm-manager/ui-types";
 
-type Props = { editUrl: string, t: string => string, repository: Repository };
+type Props = {
+  repository: Repository,
+  editUrl: string,
+  t: string => string
+};
 
 class GeneralRepoNavLink extends React.Component<Props> {
   isEditable = () => {
     return this.props.repository._links.update;
   };
+
   render() {
+    const { editUrl, t } = this.props;
+
     if (!this.isEditable()) {
       return null;
     }
-    const { editUrl, t } = this.props;
     return <NavLink to={editUrl} label={t("repositoryRoot.menu.generalNavLink")} />;
   }
 }
