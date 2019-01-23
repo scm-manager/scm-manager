@@ -1,14 +1,19 @@
 import React from "react";
 import { mount, shallow } from "enzyme";
+import ReactRouterEnzymeContext from "react-router-enzyme-context";
+
 import "../../tests/enzyme";
-import "../../../tests/i18n";
+import "../../tests/i18n";
 import DeleteUser from "./DeleteUser";
 
 import { confirmAlert } from "@scm-manager/ui-components";
 jest.mock("@scm-manager/ui-components", () => ({
   confirmAlert: jest.fn(),
-  NavAction: require.requireActual("@scm-manager/ui-components").NavAction
+  Subtitle: require.requireActual("@scm-manager/ui-components").Subtitle,
+  DeleteButton: require.requireActual("@scm-manager/ui-components").DeleteButton
 }));
+
+const options = new ReactRouterEnzymeContext();
 
 describe("DeleteUser", () => {
   it("should render nothing, if the delete link is missing", () => {
@@ -32,7 +37,8 @@ describe("DeleteUser", () => {
     };
 
     const navLink = mount(
-      <DeleteUser user={user} deleteUser={() => {}} />
+      <DeleteUser user={user} deleteUser={() => {}} />,
+      options.get()
     );
     expect(navLink.text()).not.toBe("");
   });
@@ -47,9 +53,10 @@ describe("DeleteUser", () => {
     };
 
     const navLink = mount(
-      <DeleteUser user={user} deleteUser={() => {}} />
+      <DeleteUser user={user} deleteUser={() => {}} />,
+      options.get()
     );
-    navLink.find("a").simulate("click");
+    navLink.find("button").simulate("click");
 
     expect(confirmAlert.mock.calls.length).toBe(1);
   });
@@ -73,9 +80,10 @@ describe("DeleteUser", () => {
         user={user}
         confirmDialog={false}
         deleteUser={capture}
-      />
+      />,
+      options.get()
     );
-    navLink.find("a").simulate("click");
+    navLink.find("button").simulate("click");
 
     expect(calledUrl).toBe("/users");
   });

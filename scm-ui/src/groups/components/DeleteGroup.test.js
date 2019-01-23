@@ -1,14 +1,19 @@
 import React from "react";
 import { mount, shallow } from "enzyme";
+import ReactRouterEnzymeContext from "react-router-enzyme-context";
+
 import "../../tests/enzyme";
-import "../../../tests/i18n";
+import "../../tests/i18n";
 import DeleteGroup from "./DeleteGroup";
 
 import { confirmAlert } from "@scm-manager/ui-components";
 jest.mock("@scm-manager/ui-components", () => ({
   confirmAlert: jest.fn(),
-  NavAction: require.requireActual("@scm-manager/ui-components").NavAction
+  Subtitle: require.requireActual("@scm-manager/ui-components").Subtitle,
+  DeleteButton: require.requireActual("@scm-manager/ui-components").DeleteButton
 }));
+
+const options = new ReactRouterEnzymeContext();
 
 describe("DeleteGroupNavLink", () => {
   it("should render nothing, if the delete link is missing", () => {
@@ -32,7 +37,8 @@ describe("DeleteGroupNavLink", () => {
     };
 
     const navLink = mount(
-      <DeleteGroup group={group} deleteGroup={() => {}} />
+      <DeleteGroup group={group} deleteGroup={() => {}} />,
+      options.get()
     );
     expect(navLink.text()).not.toBe("");
   });
@@ -47,9 +53,10 @@ describe("DeleteGroupNavLink", () => {
     };
 
     const navLink = mount(
-      <DeleteGroup group={group} deleteGroup={() => {}} />
+      <DeleteGroup group={group} deleteGroup={() => {}} />,
+      options.get()
     );
-    navLink.find("a").simulate("click");
+    navLink.find("button").simulate("click");
 
     expect(confirmAlert.mock.calls.length).toBe(1);
   });
@@ -73,9 +80,10 @@ describe("DeleteGroupNavLink", () => {
         group={group}
         confirmDialog={false}
         deleteGroup={capture}
-      />
+      />,
+      options.get()
     );
-    navLink.find("a").simulate("click");
+    navLink.find("button").simulate("click");
 
     expect(calledUrl).toBe("/groups");
   });
