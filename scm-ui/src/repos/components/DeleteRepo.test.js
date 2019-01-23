@@ -2,7 +2,7 @@ import React from "react";
 import { mount, shallow } from "enzyme";
 import "../../tests/enzyme";
 import "../../tests/i18n";
-import DeleteNavAction from "./DeleteNavAction";
+import DeleteRepo from "./DeleteRepo";
 
 import { confirmAlert } from "@scm-manager/ui-components";
 jest.mock("@scm-manager/ui-components", () => ({
@@ -10,14 +10,14 @@ jest.mock("@scm-manager/ui-components", () => ({
   NavAction: require.requireActual("@scm-manager/ui-components").NavAction
 }));
 
-describe("DeleteNavAction", () => {
+describe("DeleteRepo", () => {
   it("should render nothing, if the delete link is missing", () => {
     const repository = {
       _links: {}
     };
 
     const navLink = shallow(
-      <DeleteNavAction repository={repository} delete={() => {}} />
+      <DeleteRepo repository={repository} delete={() => {}} />
     );
     expect(navLink.text()).toBe("");
   });
@@ -32,7 +32,7 @@ describe("DeleteNavAction", () => {
     };
 
     const navLink = mount(
-      <DeleteNavAction repository={repository} delete={() => {}} />
+      <DeleteRepo repository={repository} delete={() => {}} />
     );
     expect(navLink.text()).not.toBe("");
   });
@@ -47,7 +47,7 @@ describe("DeleteNavAction", () => {
     };
 
     const navLink = mount(
-      <DeleteNavAction repository={repository} delete={() => {}} />
+      <DeleteRepo repository={repository} delete={() => {}} />
     );
     navLink.find("a").simulate("click");
 
@@ -69,7 +69,7 @@ describe("DeleteNavAction", () => {
     }
 
     const navLink = mount(
-      <DeleteNavAction
+      <DeleteRepo
         repository={repository}
         confirmDialog={false}
         delete={capture}

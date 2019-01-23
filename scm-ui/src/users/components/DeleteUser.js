@@ -1,20 +1,8 @@
 // @flow
 import React from "react";
 import { translate } from "react-i18next";
+import { Subtitle, DeleteButton, confirmAlert } from "@scm-manager/ui-components";
 import type { User } from "@scm-manager/ui-types";
-import {
-  Subtitle,
-  DeleteButton,
-  confirmAlert
-} from "@scm-manager/ui-components";
-import { connect } from "react-redux";
-import {
-  deleteUser,
-  fetchUserByName,
-  getDeleteUserFailure,
-  getUserByName,
-  isDeleteUserPending
-} from "../modules/users";
 import type { History } from "history";
 
 type Props = {
@@ -31,16 +19,16 @@ type Props = {
 };
 
 class DeleteUser extends React.Component<Props> {
+  static defaultProps = {
+    confirmDialog: true
+  };
+
   userDeleted = () => {
     this.props.history.push("/users");
   };
 
   deleteUser = (user: User) => {
     this.props.deleteUser(user, this.userDeleted);
-  };
-
-  static defaultProps = {
-    confirmDialog: true
   };
 
   deleteUser = () => {

@@ -9,12 +9,10 @@ import type {Repository} from "@scm-manager/ui-types";
 import {ErrorPage, Loading, Navigation, SubNavigation, NavLink, Page, Section} from "@scm-manager/ui-components";
 import {translate} from "react-i18next";
 import RepositoryDetails from "../components/RepositoryDetails";
-import DeleteNavAction from "../components/DeleteNavAction";
-import Edit from "../containers/Edit";
+import GeneralRepo from "./GeneralRepo";
 import Permissions from "../permissions/containers/Permissions";
 
 import type {History} from "history";
-import EditNavLink from "../components/EditNavLink";
 
 import BranchRoot from "./ChangesetsRoot";
 import ChangesetView from "./ChangesetView";
@@ -110,7 +108,7 @@ class RepositoryRoot extends React.Component<Props> {
               />
               <Route
                 path={`${url}/settings/general`}
-                component={() => <Edit repository={repository} />}
+                component={() => <GeneralRepo repository={repository} />}
               />
               <Route
                 path={`${url}/settings/permissions`}
@@ -189,7 +187,7 @@ class RepositoryRoot extends React.Component<Props> {
                   to={`${url}/settings/general`}
                   label={t("repository-root.menu.settingsNavLink")}
                 >
-                  <EditNavLink repository={repository} editUrl={`${url}/settings/general`} />
+                  <NavLink repository={repository} editUrl={`${url}/settings/general`} />
                   <PermissionsNavLink
                     permissionUrl={`${url}/settings/permissions`}
                     repository={repository}

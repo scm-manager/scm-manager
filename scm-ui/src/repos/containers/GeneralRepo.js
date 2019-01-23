@@ -1,8 +1,9 @@
 // @flow
 import React from "react";
 import { connect } from "react-redux";
-import { translate } from "react-i18next";
+import { withRouter } from "react-router-dom";
 import RepositoryForm from "../components/form";
+import DeleteRepo from "../components/DeleteRepo";
 import type { Repository } from "@scm-manager/ui-types";
 import {
   modifyRepo,
@@ -10,23 +11,22 @@ import {
   getModifyRepoFailure,
   modifyRepoReset
 } from "../modules/repos";
-import { withRouter } from "react-router-dom";
 import type { History } from "history";
 import { ErrorNotification } from "@scm-manager/ui-components";
 
 type Props = {
-  repository: Repository,
-  modifyRepo: (Repository, () => void) => void,
-  modifyRepoReset: Repository => void,
   loading: boolean,
   error: Error,
 
+  modifyRepo: (Repository, () => void) => void,
+  modifyRepoReset: Repository => void,
+
   // context props
-  t: string => string,
+  repository: Repository,
   history: History
 };
 
-class Edit extends React.Component<Props> {
+class GeneralRepo extends React.Component<Props> {
   componentDidMount() {
     const { modifyRepoReset, repository } = this.props;
     modifyRepoReset(repository);
@@ -37,7 +37,7 @@ class Edit extends React.Component<Props> {
   };
 
   render() {
-    const { loading, error } = this.props;
+    const { loading, error, repository } = this.props;
     return (
       <div>
         <ErrorNotification error={error} />
@@ -49,7 +49,7 @@ class Edit extends React.Component<Props> {
           }}
         />
         <hr />
-        <p>TODO: DeleteRepo hier einbinden. Aktuell heißt es noch DeleteNavAction</p>
+        <DeleteRepo repository={repository} />
       </div>
     );
   }
@@ -79,4 +79,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(translate("repos")(withRouter(Edit)));
+)(withRouter(GeneralRepo));

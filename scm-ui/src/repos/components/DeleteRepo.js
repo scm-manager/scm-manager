@@ -7,19 +7,18 @@ import type { Repository } from "@scm-manager/ui-types";
 type Props = {
   repository: Repository,
   confirmDialog?: boolean,
-  delete: Repository => void,
 
   // context props
   t: string => string
 };
 
-class DeleteNavAction extends React.Component<Props> {
+class DeleteRepo extends React.Component<Props> {
   static defaultProps = {
     confirmDialog: true
   };
 
   delete = () => {
-    this.props.delete(this.props.repository);
+    //this.props.delete(this.props.repository);
   };
 
   confirmDelete = () => {
@@ -68,4 +67,4 @@ class DeleteNavAction extends React.Component<Props> {
   }
 }
 
-export default translate("repos")(DeleteNavAction);
+export default translate("repos")(DeleteRepo);

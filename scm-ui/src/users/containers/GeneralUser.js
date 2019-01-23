@@ -2,8 +2,8 @@
 import React from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import UserForm from "./../components/UserForm";
-import DeleteUser from "./../components/DeleteUser";
+import UserForm from "../components/UserForm";
+import DeleteUser from "../components/DeleteUser";
 import type { User } from "@scm-manager/ui-types";
 import {
   modifyUser,
@@ -57,6 +57,15 @@ class GeneralUser extends React.Component<Props> {
   }
 }
 
+const mapStateToProps = (state, ownProps) => {
+  const loading = isModifyUserPending(state, ownProps.user.name);
+  const error = getModifyUserFailure(state, ownProps.user.name);
+  return {
+    loading,
+    error
+  };
+};
+
 const mapDispatchToProps = dispatch => {
   return {
     modifyUser: (user: User, callback?: () => void) => {
@@ -65,15 +74,6 @@ const mapDispatchToProps = dispatch => {
     modifyUserReset: (user: User) => {
       dispatch(modifyUserReset(user));
     }
-  };
-};
-
-const mapStateToProps = (state, ownProps) => {
-  const loading = isModifyUserPending(state, ownProps.user.name);
-  const error = getModifyUserFailure(state, ownProps.user.name);
-  return {
-    loading,
-    error
   };
 };
 
