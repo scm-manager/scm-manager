@@ -73,7 +73,7 @@ public class RepositoryPermissionRootResource {
     @ResponseCode(code = 409, condition = "conflict")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
-  @Consumes(VndMediaType.PERMISSION)
+  @Consumes(VndMediaType.REPOSITORY_PERMISSION)
   @Path("")
   public Response create(@PathParam("namespace") String namespace, @PathParam("name") String name, @Valid RepositoryPermissionDto permission) {
     log.info("try to add new permission: {}", permission);
@@ -100,7 +100,7 @@ public class RepositoryPermissionRootResource {
     @ResponseCode(code = 404, condition = "not found"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
-  @Produces(VndMediaType.PERMISSION)
+  @Produces(VndMediaType.REPOSITORY_PERMISSION)
   @TypeHint(RepositoryPermissionDto.class)
   @Path("{permission-name}")
   public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("permission-name") String permissionName) {
@@ -130,7 +130,7 @@ public class RepositoryPermissionRootResource {
     @ResponseCode(code = 404, condition = "not found"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
-  @Produces(VndMediaType.PERMISSION)
+  @Produces(VndMediaType.REPOSITORY_PERMISSION)
   @TypeHint(RepositoryPermissionDto.class)
   @Path("")
   public Response getAll(@PathParam("namespace") String namespace, @PathParam("name") String name) {
@@ -154,7 +154,7 @@ public class RepositoryPermissionRootResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
-  @Consumes(VndMediaType.PERMISSION)
+  @Consumes(VndMediaType.REPOSITORY_PERMISSION)
   @Path("{permission-name}")
   public Response update(@PathParam("namespace") String namespace,
                          @PathParam("name") String name,

@@ -91,7 +91,7 @@ public class TestData {
   public static void createUserPermission(String name, Collection<String> permissionType, String repositoryType) {
     String defaultPermissionUrl = TestData.getDefaultPermissionUrl(USER_SCM_ADMIN, USER_SCM_ADMIN, repositoryType);
     LOG.info("create permission with name {} and type: {} using the endpoint: {}", name, permissionType, defaultPermissionUrl);
-    given(VndMediaType.PERMISSION)
+    given(VndMediaType.REPOSITORY_PERMISSION)
       .when()
       .content("{\n" +
         "\t\"verbs\": " + permissionType.stream().collect(Collectors.joining("\",\"", "[\"", "\"]")) + ",\n" +
@@ -112,7 +112,7 @@ public class TestData {
   }
 
   public static ValidatableResponse callUserPermissions(String username, String password, String repositoryType, int expectedStatusCode) {
-    return given(VndMediaType.PERMISSION, username, password)
+    return given(VndMediaType.REPOSITORY_PERMISSION, username, password)
       .when()
       .get(TestData.getDefaultPermissionUrl(username, password, repositoryType))
       .then()

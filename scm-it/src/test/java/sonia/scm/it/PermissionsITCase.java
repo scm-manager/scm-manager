@@ -111,7 +111,7 @@ public class PermissionsITCase {
 
   @Test
   public void readUserShouldNotSeeBruteForcePermissions() {
-    given(VndMediaType.PERMISSION, USER_READ, USER_PASS)
+    given(VndMediaType.REPOSITORY_PERMISSION, USER_READ, USER_PASS)
       .when()
       .get(TestData.getDefaultPermissionUrl(USER_SCM_ADMIN, USER_SCM_ADMIN, repositoryType))
       .then()
@@ -127,7 +127,7 @@ public class PermissionsITCase {
 
   @Test
   public void writeUserShouldNotSeeBruteForcePermissions() {
-    given(VndMediaType.PERMISSION, USER_WRITE, USER_PASS)
+    given(VndMediaType.REPOSITORY_PERMISSION, USER_WRITE, USER_PASS)
       .when()
       .get(TestData.getDefaultPermissionUrl(USER_SCM_ADMIN, USER_SCM_ADMIN, repositoryType))
       .then()
@@ -147,7 +147,7 @@ public class PermissionsITCase {
 
   @Test
   public void otherUserShouldNotSeeBruteForcePermissions() {
-    given(VndMediaType.PERMISSION, USER_OTHER, USER_PASS)
+    given(VndMediaType.REPOSITORY_PERMISSION, USER_OTHER, USER_PASS)
       .when()
       .get(TestData.getDefaultPermissionUrl(USER_SCM_ADMIN, USER_SCM_ADMIN, repositoryType))
       .then()

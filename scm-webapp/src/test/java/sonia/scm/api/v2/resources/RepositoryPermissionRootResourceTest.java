@@ -238,7 +238,7 @@ public class RepositoryPermissionRootResourceTest extends RepositoryTestBase {
     MockHttpRequest request = MockHttpRequest
       .post("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + PATH_OF_ALL_PERMISSIONS)
       .content(permissionJson.getBytes())
-      .contentType(VndMediaType.PERMISSION);
+      .contentType(VndMediaType.REPOSITORY_PERMISSION);
     MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
@@ -250,7 +250,7 @@ public class RepositoryPermissionRootResourceTest extends RepositoryTestBase {
     request = MockHttpRequest
       .post("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + PATH_OF_ALL_PERMISSIONS)
       .content(permissionJson.getBytes())
-      .contentType(VndMediaType.PERMISSION);
+      .contentType(VndMediaType.REPOSITORY_PERMISSION);
     response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
@@ -430,7 +430,7 @@ public class RepositoryPermissionRootResourceTest extends RepositoryTestBase {
     HttpRequest request = MockHttpRequest
       .create(entry.method, "/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + entry.path)
       .content(entry.content)
-      .contentType(VndMediaType.PERMISSION);
+      .contentType(VndMediaType.REPOSITORY_PERMISSION);
     dispatcher.invoke(request, response);
     log.info("Test the Request :{}", entry);
     assertThat(response.getStatus())

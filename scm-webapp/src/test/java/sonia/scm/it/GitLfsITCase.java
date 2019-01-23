@@ -124,8 +124,8 @@ public class GitLfsITCase {
       String permissionsUrl = repository.getLinks().getLinkBy("permissions").get().getHref();
       IntegrationTestUtil.createResource(adminClient, URI.create(permissionsUrl))
         .accept("*/*")
-        .type(VndMediaType.PERMISSION)
-        .post(ClientResponse.class, "{\"name\": \""+ trillian.getId() +"\", \"type\":\"WRITE\"}");
+        .type(VndMediaType.REPOSITORY_PERMISSION)
+        .post(ClientResponse.class, "{\"name\": \""+ trillian.getId() +"\", \"verbs\":[\"*\"]}");
 
       ScmClient client = new ScmClient(trillian.getId(), "secret123");
 
@@ -165,8 +165,8 @@ public class GitLfsITCase {
       String permissionsUrl = repository.getLinks().getLinkBy("permissions").get().getHref();
       IntegrationTestUtil.createResource(adminClient, URI.create(permissionsUrl))
         .accept("*/*")
-        .type(VndMediaType.PERMISSION)
-        .post(ClientResponse.class, "{\"name\": \""+ trillian.getId() +"\", \"type\":\"READ\"}");
+        .type(VndMediaType.REPOSITORY_PERMISSION)
+        .post(ClientResponse.class, "{\"name\": \""+ trillian.getId() +"\", \"verbs\":[\"read\"]}");
 
       ScmClient client = new ScmClient(trillian.getId(), "secret123");
       uploadAndDownload(client);
@@ -186,8 +186,8 @@ public class GitLfsITCase {
       String permissionsUrl = repository.getLinks().getLinkBy("permissions").get().getHref();
       IntegrationTestUtil.createResource(adminClient, URI.create(permissionsUrl))
         .accept("*/*")
-        .type(VndMediaType.PERMISSION)
-        .post(ClientResponse.class, "{\"name\": \""+ trillian.getId() +"\", \"type\":\"READ\"}");
+        .type(VndMediaType.REPOSITORY_PERMISSION)
+        .post(ClientResponse.class, "{\"name\": \""+ trillian.getId() +"\", \"verbs\":[\"read\"]}");
 
       // upload data as admin
       String data = UUID.randomUUID().toString();
