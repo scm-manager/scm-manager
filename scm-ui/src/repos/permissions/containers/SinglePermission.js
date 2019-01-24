@@ -9,7 +9,8 @@ import {
   modifyPermission,
   isModifyPermissionPending,
   deletePermission,
-  isDeletePermissionPending
+  isDeletePermissionPending,
+  findMatchingRoleName
 } from "../modules/permissions";
 import { connect } from "react-redux";
 import type { History } from "history";
@@ -57,9 +58,12 @@ class SinglePermission extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    const { permission } = this.props;
+    const { availablePermissions, permission } = this.props;
 
-    const matchingRole = this.findMatchingRoleName();
+    const matchingRole = findMatchingRoleName(
+      availablePermissions,
+      permission.verbs
+    );
 
     if (permission) {
       this.setState({
@@ -73,33 +77,6 @@ class SinglePermission extends React.Component<Props, State> {
       });
     }
   }
-
-  findMatchingRoleName = () => {
-    const { availablePermissions, permission } = this.props;
-    if (!permission) {
-      return "";
-    }
-    const matchingRole = availablePermissions.availableRoles.find(role => {
-      return this.equalVerbs(role.verbs, permission.verbs);
-    });
-
-    if (matchingRole) {
-      return matchingRole.name;
-    } else {
-      return "";
-    }
-  };
-  equalVerbs = (verbs1: string[], verbs2: string[]) => {
-    if (!verbs1 || !verbs2) {
-      return false;
-    }
-
-    if (verbs1.length !== verbs2.length) {
-      return false;
-    }
-
-    return verbs1.every(verb => verbs2.includes(verb));
-  };
 
   deletePermission = () => {
     this.props.deletePermission(
@@ -150,18 +127,25 @@ class SinglePermission extends React.Component<Props, State> {
   }
 
   handleTypeChange = (type: string) => {
+    const selectedRole = this.findAvailableRole(type);
     this.setState({
       permission: {
         ...this.state.permission,
-        type: type
+        verbs: selectedRole.verbs
       }
     });
-    this.modifyPermission(type);
+    this.modifyPermission(selectedRole.verbs);
   };
 
-  modifyPermission = (type: string) => {
+  findAvailableRole = (type: string) => {
+    return this.props.availablePermissions.availableRoles.find(
+      role => role.name === type
+    );
+  };
+
+  modifyPermission = (verbs: string[]) => {
     let permission = this.state.permission;
-    permission.type = type;
+    permission.verbs = verbs;
     this.props.modifyPermission(
       permission,
       this.props.namespace,

@@ -4,14 +4,17 @@ import { translate } from "react-i18next";
 import { Autocomplete, SubmitButton } from "@scm-manager/ui-components";
 import TypeSelector from "./TypeSelector";
 import type {
+  AvailableRepositoryPermissions,
   PermissionCollection,
   PermissionCreateEntry,
   SelectValue
 } from "@scm-manager/ui-types";
 import * as validator from "./permissionValidation";
+import { findMatchingRoleName } from "../modules/permissions";
 
 type Props = {
   t: string => string,
+  availablePermissions: AvailableRepositoryPermissions,
   createPermission: (permission: PermissionCreateEntry) => void,
   loading: boolean,
   currentPermissions: PermissionCollection,
@@ -21,7 +24,7 @@ type Props = {
 
 type State = {
   name: string,
-  type: string,
+  verbs: string[],
   groupPermission: boolean,
   valid: boolean,
   value?: SelectValue
@@ -33,7 +36,7 @@ class CreatePermissionForm extends React.Component<Props, State> {
 
     this.state = {
       name: "",
-      type: "READ",
+      verbs: props.availablePermissions.availableRoles[0].verbs,
       groupPermission: false,
       valid: true,
       value: undefined
@@ -121,9 +124,14 @@ class CreatePermissionForm extends React.Component<Props, State> {
   };
 
   render() {
-    const { t, loading } = this.props;
+    const { t, availablePermissions, loading } = this.props;
 
-    const { type } = this.state;
+    const { verbs } = this.state;
+
+    const availableRoleNames = availablePermissions.availableRoles.map(
+      r => r.name
+    );
+    const matchingRole = findMatchingRoleName(availablePermissions, verbs);
 
     return (
       <div>
@@ -155,20 +163,25 @@ class CreatePermissionForm extends React.Component<Props, State> {
             </label>
           </div>
 
-        <div className="columns">
+          <div className="columns">
             <div className="column is-three-quarters">
-                {this.renderAutocompletionField()}
+              {this.renderAutocompletionField()}
             </div>
             <div className="column is-one-quarter">
-                  <TypeSelector
-                    label={t("permission.type")}
-                    helpText={t("permission.help.typeHelpText")}
-                    handleTypeChange={this.handleTypeChange}
-                    type={type ? type : "READ"}
-                  />
+              <TypeSelector
+                availableTypes={availableRoleNames}
+                label={t("permission.type")}
+                helpText={t("permission.help.typeHelpText")}
+                handleTypeChange={this.handleTypeChange}
+                type={
+                  matchingRole
+                    ? matchingRole
+                    : availablePermissions.availableRoles[0].name
+                }
+              />
             </div>
-            </div>
-        <div className="columns">
+          </div>
+          <div className="columns">
             <div className="column">
               <SubmitButton
                 label={t("permission.add-permission.submit-button")}
@@ -176,7 +189,7 @@ class CreatePermissionForm extends React.Component<Props, State> {
                 disabled={!this.state.valid || this.state.name === ""}
               />
             </div>
-        </div>
+          </div>
         </form>
       </div>
     );
@@ -185,7 +198,7 @@ class CreatePermissionForm extends React.Component<Props, State> {
   submit = e => {
     this.props.createPermission({
       name: this.state.name,
-      type: this.state.type,
+      verbs: this.state.verbs,
       groupPermission: this.state.groupPermission
     });
     this.removeState();
@@ -195,16 +208,23 @@ class CreatePermissionForm extends React.Component<Props, State> {
   removeState = () => {
     this.setState({
       name: "",
-      type: "READ",
+      verbs: this.props.availablePermissions.availableRoles[0].verbs,
       groupPermission: false,
       valid: true
     });
   };
 
   handleTypeChange = (type: string) => {
+    const selectedRole = this.findAvailableRole(type);
     this.setState({
-      type: type
+      verbs: selectedRole.verbs
     });
+  };
+
+  findAvailableRole = (type: string) => {
+    return this.props.availablePermissions.availableRoles.find(
+      role => role.name === type
+    );
   };
 }
 

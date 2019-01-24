@@ -128,6 +128,7 @@ class Permissions extends React.Component<Props> {
 
     const createPermissionForm = hasPermissionToCreate ? (
       <CreatePermissionForm
+        availablePermissions={availablePermissions}
         createPermission={permission => this.createPermission(permission)}
         loading={loadingCreatePermission}
         currentPermissions={permissions}
