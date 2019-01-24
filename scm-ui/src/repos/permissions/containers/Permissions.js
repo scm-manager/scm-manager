@@ -148,6 +148,7 @@ class Permissions extends React.Component<Props> {
               </th>
               <th>{t("permission.type")}</th>
               <th />
+              <th />
             </tr>
           </thead>
           <tbody>

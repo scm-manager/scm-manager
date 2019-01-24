@@ -91,26 +91,39 @@ class SinglePermission extends React.Component<Props, State> {
 
   render() {
     const { role, permission, showAdvancedDialog } = this.state;
-    const { availablePermissions, loading, namespace, repoName } = this.props;
+    const {
+      t,
+      availablePermissions,
+      loading,
+      namespace,
+      repoName
+    } = this.props;
     const availableRoleNames = availablePermissions.availableRoles.map(
       r => r.name
     );
     const typeSelector =
       this.props.permission._links && this.props.permission._links.update ? (
-        <td>
-          <TypeSelector
-            handleTypeChange={this.handleTypeChange}
-            availableTypes={availableRoleNames}
-            type={role}
-            loading={loading}
-          />
-          <Button
-            label={"..."}
-            action={this.handleDetailedPermissionsPressed}
-          />
-        </td>
+        <>
+          <td>
+            <TypeSelector
+              handleTypeChange={this.handleTypeChange}
+              availableTypes={availableRoleNames}
+              type={role}
+              loading={loading}
+            />
+          </td>
+          <td>
+            <Button
+              label={t("form.advanced-button.label")}
+              action={this.handleDetailedPermissionsPressed}
+            />
+          </td>
+        </>
       ) : (
-        <td>{role}</td>
+        <>
+          <td>{role}</td>
+          <td />
+        </>
       );
 
     const advancedDialg = showAdvancedDialog ? (
