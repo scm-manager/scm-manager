@@ -3,6 +3,8 @@ import React from "react";
 import { translate } from "react-i18next";
 import {
   AutocompleteAddEntryToTableField,
+  LabelWithHelpIcon,
+  MemberNameTable,
   InputField,
   SubmitButton,
   Textarea
@@ -10,7 +12,6 @@ import {
 import type { Group, SelectValue } from "@scm-manager/ui-types";
 
 import * as validator from "./groupValidation";
-import MemberNameTable from "./MemberNameTable";
 
 type Props = {
   t: string => string,
@@ -96,6 +97,10 @@ class GroupForm extends React.Component<Props, State> {
           value={group.description}
           validationError={false}
           helpText={t("group-form.help.descriptionHelpText")}
+        />
+        <LabelWithHelpIcon
+          label={t("group.members")}
+          helpText={t("group-form.help.memberHelpText")}
         />
         <MemberNameTable
           members={group.members}

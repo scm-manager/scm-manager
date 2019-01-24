@@ -29,7 +29,11 @@ type Props = {
 
   // dispatch functions
   fetchRepositoryTypesIfNeeded: () => void,
-  createRepo: (link: string, Repository, callback: () => void) => void,
+  createRepo: (
+    link: string,
+    Repository,
+    callback: (repo: Repository) => void
+  ) => void,
   resetForm: () => void,
 
   // context props
@@ -43,9 +47,10 @@ class Create extends React.Component<Props> {
     this.props.fetchRepositoryTypesIfNeeded();
   }
 
-  repoCreated = () => {
+  repoCreated = (repo: Repository) => {
     const { history } = this.props;
-    history.push("/repos");
+
+    history.push("/repo/" + repo.namespace + "/" + repo.name);
   };
 
   render() {
@@ -70,7 +75,9 @@ class Create extends React.Component<Props> {
           repositoryTypes={repositoryTypes}
           loading={createLoading}
           submitForm={repo => {
-            createRepo(repoLink, repo, this.repoCreated);
+            createRepo(repoLink, repo, (repo: Repository) =>
+              this.repoCreated(repo)
+            );
           }}
         />
       </Page>
