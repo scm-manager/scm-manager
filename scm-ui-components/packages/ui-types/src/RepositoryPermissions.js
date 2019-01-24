@@ -7,7 +7,7 @@ export type Permission = PermissionCreateEntry & {
 
 export type PermissionCreateEntry = {
   name: string,
-  type: string,
+  verbs: string[],
   groupPermission: boolean
 }
 

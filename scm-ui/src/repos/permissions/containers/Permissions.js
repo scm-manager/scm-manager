@@ -3,8 +3,11 @@ import React from "react";
 import { connect } from "react-redux";
 import { translate } from "react-i18next";
 import {
+  fetchAvailablePermissionsIfNeeded,
   fetchPermissions,
+  getFetchAvailablePermissionsFailure,
   getFetchPermissionsFailure,
+  isFetchAvailablePermissionsPending,
   isFetchPermissionsPending,
   getPermissionsOfRepo,
   hasCreatePermission,
@@ -45,6 +48,7 @@ type Props = {
   userAutoCompleteLink: string,
 
   //dispatch functions
+  fetchAvailablePermissionsIfNeeded: () => void,
   fetchPermissions: (link: string, namespace: string, repoName: string) => void,
   createPermission: (
     link: string,
@@ -65,6 +69,7 @@ type Props = {
 class Permissions extends React.Component<Props> {
   componentDidMount() {
     const {
+      fetchAvailablePermissionsIfNeeded,
       fetchPermissions,
       namespace,
       repoName,
@@ -77,6 +82,7 @@ class Permissions extends React.Component<Props> {
     createPermissionReset(namespace, repoName);
     modifyPermissionReset(namespace, repoName);
     deletePermissionReset(namespace, repoName);
+    fetchAvailablePermissionsIfNeeded();
     fetchPermissions(permissionsLink, namespace, repoName);
   }
 
@@ -128,7 +134,7 @@ class Permissions extends React.Component<Props> {
 
     return (
       <div>
-        <table  className="has-background-light table is-hoverable is-fullwidth">
+        <table className="has-background-light table is-hoverable is-fullwidth">
           <thead>
             <tr>
               <th>{t("permission.name")}</th>
@@ -165,8 +171,11 @@ const mapStateToProps = (state, ownProps) => {
     getFetchPermissionsFailure(state, namespace, repoName) ||
     getCreatePermissionFailure(state, namespace, repoName) ||
     getDeletePermissionsFailure(state, namespace, repoName) ||
-    getModifyPermissionsFailure(state, namespace, repoName);
-  const loading = isFetchPermissionsPending(state, namespace, repoName);
+    getModifyPermissionsFailure(state, namespace, repoName) ||
+    getFetchAvailablePermissionsFailure(state);
+  const loading =
+    isFetchPermissionsPending(state, namespace, repoName) ||
+    isFetchAvailablePermissionsPending(state);
   const permissions = getPermissionsOfRepo(state, namespace, repoName);
   const loadingCreatePermission = isCreatePermissionPending(
     state,
@@ -195,6 +204,9 @@ const mapDispatchToProps = dispatch => {
   return {
     fetchPermissions: (link: string, namespace: string, repoName: string) => {
       dispatch(fetchPermissions(link, namespace, repoName));
+    },
+    fetchAvailablePermissionsIfNeeded: () => {
+      dispatch(fetchAvailablePermissionsIfNeeded());
     },
     createPermission: (
       link: string,

@@ -24,3 +24,5 @@ export type { Permission, PermissionCreateEntry, PermissionCollection } from "./
 export type { SubRepository, File } from "./Sources";
 
 export type { SelectValue, AutocompleteObject } from "./Autocomplete";
+
+export type { AvailableRepositoryPermissions, RepositoryRole } from "./AvailableRepositoryPermissions";
