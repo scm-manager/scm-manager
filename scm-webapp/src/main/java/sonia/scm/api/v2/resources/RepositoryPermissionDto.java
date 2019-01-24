@@ -24,7 +24,7 @@ public class RepositoryPermissionDto extends HalRepresentation {
   @Pattern(regexp = USER_GROUP_PATTERN)
   private String name;
 
-  @NotEmpty @NotNull
+  @NotEmpty
   private Collection<String> verbs;
 
   private boolean groupPermission = false;
