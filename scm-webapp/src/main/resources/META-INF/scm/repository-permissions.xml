@@ -12,13 +12,14 @@
   </verbs>
   <roles>
     <role>
-      <name>OWNER</name>
+      <name>READ</name>
       <verbs>
-        <verb>*</verb>
+        <verb>read</verb>
+        <verb>pull</verb>
       </verbs>
     </role>
     <role>
-      <name>WRITER</name>
+      <name>WRITE</name>
       <verbs>
         <verb>read</verb>
         <verb>pull</verb>
@@ -26,16 +27,15 @@
       </verbs>
     </role>
     <role>
-      <name>READER</name>
-      <verbs>
-        <verb>read</verb>
-        <verb>pull</verb>
-      </verbs>
-    </role>
-    <role>
       <name>HEALTH</name>
       <verbs>
         <verb>healthCheck</verb>
+      </verbs>
+    </role>
+    <role>
+      <name>OWNER</name>
+      <verbs>
+        <verb>*</verb>
       </verbs>
     </role>
   </roles>
