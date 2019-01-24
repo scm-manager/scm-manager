@@ -132,7 +132,8 @@ class SinglePermission extends React.Component<Props, State> {
       permission: {
         ...this.state.permission,
         verbs: selectedRole.verbs
-      }
+      },
+      role: type
     });
     this.modifyPermission(selectedRole.verbs);
   };
