@@ -5,6 +5,7 @@ import { Select } from "@scm-manager/ui-components";
 
 type Props = {
   t: string => string,
+  availableTypes: string[],
   handleTypeChange: string => void,
   type: string,
   label?: string,
@@ -14,14 +15,22 @@ type Props = {
 
 class TypeSelector extends React.Component<Props> {
   render() {
-    const { type, handleTypeChange, loading, label, helpText } = this.props;
-    const types = ["READ", "OWNER", "WRITE"];
+    const {
+      availableTypes,
+      type,
+      handleTypeChange,
+      loading,
+      label,
+      helpText
+    } = this.props;
+
+    if (!availableTypes) return null;
 
     return (
       <Select
         onChange={handleTypeChange}
-        value={type ? type : "READ"}
-        options={this.createSelectOptions(types)}
+        value={type ? type : availableTypes[0]}
+        options={this.createSelectOptions(availableTypes)}
         loading={loading}
         label={label}
         helpText={helpText}

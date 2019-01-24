@@ -534,6 +534,12 @@ export default function reducer(
 
 // selectors
 
+export function getAvailablePermissions(state: Object) {
+  if (state.permissions) {
+    return state.permissions.available;
+  }
+}
+
 export function getPermissionsOfRepo(
   state: Object,
   namespace: string,

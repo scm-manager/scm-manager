@@ -1,6 +1,9 @@
 // @flow
 import React from "react";
-import type { Permission } from "@scm-manager/ui-types";
+import type {
+  AvailableRepositoryPermissions,
+  Permission
+} from "@scm-manager/ui-types";
 import { translate } from "react-i18next";
 import {
   modifyPermission,
@@ -15,6 +18,7 @@ import DeletePermissionButton from "../components/buttons/DeletePermissionButton
 import TypeSelector from "../components/TypeSelector";
 
 type Props = {
+  availablePermissions: AvailableRepositoryPermissions,
   submitForm: Permission => void,
   modifyPermission: (Permission, string, string) => void,
   permission: Permission,
@@ -29,6 +33,7 @@ type Props = {
 };
 
 type State = {
+  role: string,
   permission: Permission
 };
 
@@ -36,29 +41,65 @@ class SinglePermission extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
+    const defaultPermission = props.availablePermissions.availableRoles
+      ? props.availablePermissions.availableRoles[0]
+      : {};
+
     this.state = {
       permission: {
         name: "",
-        type: "READ",
+        verbs: defaultPermission.verbs,
         groupPermission: false,
         _links: {}
-      }
+      },
+      role: defaultPermission.name
     };
   }
 
   componentDidMount() {
     const { permission } = this.props;
+
+    const matchingRole = this.findMatchingRoleName();
+
     if (permission) {
       this.setState({
         permission: {
           name: permission.name,
-          type: permission.type,
+          verbs: permission.verbs,
           groupPermission: permission.groupPermission,
           _links: permission._links
-        }
+        },
+        role: matchingRole
       });
     }
   }
+
+  findMatchingRoleName = () => {
+    const { availablePermissions, permission } = this.props;
+    if (!permission) {
+      return "";
+    }
+    const matchingRole = availablePermissions.availableRoles.find(role => {
+      return this.equalVerbs(role.verbs, permission.verbs);
+    });
+
+    if (matchingRole) {
+      return matchingRole.name;
+    } else {
+      return "";
+    }
+  };
+  equalVerbs = (verbs1: string[], verbs2: string[]) => {
+    if (!verbs1 || !verbs2) {
+      return false;
+    }
+
+    if (verbs1.length !== verbs2.length) {
+      return false;
+    }
+
+    return verbs1.every(verb => verbs2.includes(verb));
+  };
 
   deletePermission = () => {
     this.props.deletePermission(
@@ -69,19 +110,23 @@ class SinglePermission extends React.Component<Props, State> {
   };
 
   render() {
-    const { permission } = this.state;
-    const { loading, namespace, repoName } = this.props;
+    const { role, permission } = this.state;
+    const { availablePermissions, loading, namespace, repoName } = this.props;
+    const availableRoleNames = availablePermissions.availableRoles.map(
+      r => r.name
+    );
     const typeSelector =
       this.props.permission._links && this.props.permission._links.update ? (
         <td>
           <TypeSelector
             handleTypeChange={this.handleTypeChange}
-            type={permission.type ? permission.type : "READ"}
+            availableTypes={availableRoleNames}
+            type={role}
             loading={loading}
           />
         </td>
       ) : (
-        <td>{permission.type}</td>
+        <td>{role}</td>
       );
 
     return (

@@ -6,6 +6,7 @@ import {
   fetchAvailablePermissionsIfNeeded,
   fetchPermissions,
   getFetchAvailablePermissionsFailure,
+  getAvailablePermissions,
   getFetchPermissionsFailure,
   isFetchAvailablePermissionsPending,
   isFetchPermissionsPending,
@@ -22,6 +23,7 @@ import {
 } from "../modules/permissions";
 import { Loading, ErrorPage } from "@scm-manager/ui-components";
 import type {
+  AvailableRepositoryPermissions,
   Permission,
   PermissionCollection,
   PermissionCreateEntry
@@ -36,6 +38,7 @@ import {
 } from "../../../modules/indexResource";
 
 type Props = {
+  availablePermissions: AvailableRepositoryPermissions,
   namespace: string,
   repoName: string,
   loading: boolean,
@@ -97,6 +100,7 @@ class Permissions extends React.Component<Props> {
 
   render() {
     const {
+      availablePermissions,
       loading,
       error,
       permissions,
@@ -118,7 +122,7 @@ class Permissions extends React.Component<Props> {
       );
     }
 
-    if (loading || !permissions) {
+    if (loading || !permissions || !availablePermissions) {
       return <Loading />;
     }
 
@@ -149,6 +153,7 @@ class Permissions extends React.Component<Props> {
             {permissions.map(permission => {
               return (
                 <SinglePermission
+                  availablePermissions={availablePermissions}
                   key={permission.name + permission.groupPermission.toString()}
                   namespace={namespace}
                   repoName={repoName}
@@ -186,7 +191,9 @@ const mapStateToProps = (state, ownProps) => {
   const permissionsLink = getPermissionsLink(state, namespace, repoName);
   const groupAutoCompleteLink = getGroupAutoCompleteLink(state);
   const userAutoCompleteLink = getUserAutoCompleteLink(state);
+  const availablePermissions = getAvailablePermissions(state);
   return {
+    availablePermissions,
     namespace,
     repoName,
     error,
