@@ -14,9 +14,10 @@ import {
 } from "../modules/permissions";
 import { connect } from "react-redux";
 import type { History } from "history";
-import { Checkbox } from "@scm-manager/ui-components";
+import { Button, Checkbox } from "@scm-manager/ui-components";
 import DeletePermissionButton from "../components/buttons/DeletePermissionButton";
 import TypeSelector from "../components/TypeSelector";
+import AdvancedPermissionsDialog from "./AdvancedPermissionsDialog";
 
 type Props = {
   availablePermissions: AvailableRepositoryPermissions,
@@ -35,7 +36,8 @@ type Props = {
 
 type State = {
   role: string,
-  permission: Permission
+  permission: Permission,
+  showAdvancedDialog: boolean
 };
 
 class SinglePermission extends React.Component<Props, State> {
@@ -53,7 +55,8 @@ class SinglePermission extends React.Component<Props, State> {
         groupPermission: false,
         _links: {}
       },
-      role: defaultPermission.name
+      role: defaultPermission.name,
+      showAdvancedDialog: false
     };
   }
 
@@ -87,7 +90,7 @@ class SinglePermission extends React.Component<Props, State> {
   };
 
   render() {
-    const { role, permission } = this.state;
+    const { role, permission, showAdvancedDialog } = this.state;
     const { availablePermissions, loading, namespace, repoName } = this.props;
     const availableRoleNames = availablePermissions.availableRoles.map(
       r => r.name
@@ -101,10 +104,23 @@ class SinglePermission extends React.Component<Props, State> {
             type={role}
             loading={loading}
           />
+          <Button
+            label={"..."}
+            action={this.handleDetailedPermissionsPressed}
+          />
         </td>
       ) : (
         <td>{role}</td>
       );
+
+    const advancedDialg = showAdvancedDialog ? (
+      <AdvancedPermissionsDialog
+        availableVerbs={availablePermissions.availableVerbs}
+        selectedVerbs={permission.verbs}
+        onClose={this.closeAdvancedPermissionsDialog}
+        onSubmit={this.submitAdvancedPermissionsDialog}
+      />
+    ) : null;
 
     return (
       <tr>
@@ -121,21 +137,48 @@ class SinglePermission extends React.Component<Props, State> {
             deletePermission={this.deletePermission}
             loading={this.props.deleteLoading}
           />
+          {advancedDialg}
         </td>
       </tr>
     );
   }
 
+  handleDetailedPermissionsPressed = () => {
+    this.setState({ showAdvancedDialog: true });
+  };
+
+  closeAdvancedPermissionsDialog = () => {
+    this.setState({ showAdvancedDialog: false });
+  };
+
+  submitAdvancedPermissionsDialog = (newVerbs: string[]) => {
+    const { permission } = this.state;
+    const newRole = findMatchingRoleName(
+      this.props.availablePermissions,
+      newVerbs
+    );
+    this.setState(
+      {
+        showAdvancedDialog: false,
+        permission: { ...permission, verbs: newVerbs },
+        role: newRole
+      },
+      () => this.modifyPermission(newVerbs)
+    );
+  };
+
   handleTypeChange = (type: string) => {
     const selectedRole = this.findAvailableRole(type);
-    this.setState({
-      permission: {
-        ...this.state.permission,
-        verbs: selectedRole.verbs
+    this.setState(
+      {
+        permission: {
+          ...this.state.permission,
+          verbs: selectedRole.verbs
+        },
+        role: type
       },
-      role: type
-    });
-    this.modifyPermission(selectedRole.verbs);
+      () => this.modifyPermission(selectedRole.verbs)
+    );
   };
 
   findAvailableRole = (type: string) => {

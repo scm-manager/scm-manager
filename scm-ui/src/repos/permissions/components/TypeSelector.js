@@ -26,11 +26,15 @@ class TypeSelector extends React.Component<Props> {
 
     if (!availableTypes) return null;
 
+    const options = type
+      ? this.createSelectOptions(availableTypes)
+      : ["", ...this.createSelectOptions(availableTypes)];
+
     return (
       <Select
         onChange={handleTypeChange}
-        value={type ? type : availableTypes[0]}
-        options={this.createSelectOptions(availableTypes)}
+        value={type ? type : ""}
+        options={options}
         loading={loading}
         label={label}
         helpText={helpText}

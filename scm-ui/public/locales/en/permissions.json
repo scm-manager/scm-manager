@@ -4,5 +4,12 @@
       "label": "Set permissions"
     },
     "set-permissions-successful": "Permissions set successfully"
+  },
+  "advanced": {
+    "dialog": {
+      "title": "Advanced permissions",
+      "submit": "Submit",
+      "abort": "Abort"
+    }
   }
 }
