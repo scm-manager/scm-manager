@@ -71,7 +71,6 @@ class AdvancedPermissionsDialog extends React.Component<Props, State> {
   handleChange = (value: boolean, name: string) => {
     const { verbs } = this.state;
     const newVerbs = { ...verbs, [name]: value };
-    console.log(newVerbs);
     this.setState({ verbs: newVerbs });
   };
 
