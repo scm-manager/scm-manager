@@ -105,17 +105,9 @@ class UserForm extends React.Component<Props, State> {
     }
     return (
       <form onSubmit={this.submit}>
-        <div className="columns">
+        <div className="columns is-multiline">
           <div className="column is-half">
             {nameField}
-            <InputField
-              label={t("user.displayName")}
-              onChange={this.handleDisplayNameChange}
-              value={user ? user.displayName : ""}
-              validationError={this.state.displayNameValidationError}
-              errorMessage={t("validation.displayname-invalid")}
-              helpText={t("help.displayNameHelpText")}
-            />
           </div>
           <div className="column is-half">
             <InputField
@@ -125,6 +117,16 @@ class UserForm extends React.Component<Props, State> {
               validationError={this.state.mailValidationError}
               errorMessage={t("validation.mail-invalid")}
               helpText={t("help.mailHelpText")}
+            />
+          </div>
+          <div className="column is-half">
+            <InputField
+              label={t("user.displayName")}
+              onChange={this.handleDisplayNameChange}
+              value={user ? user.displayName : ""}
+              validationError={this.state.displayNameValidationError}
+              errorMessage={t("validation.displayname-invalid")}
+              helpText={t("help.displayNameHelpText")}
             />
           </div>
         </div>
