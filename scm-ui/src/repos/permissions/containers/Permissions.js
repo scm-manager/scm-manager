@@ -21,7 +21,11 @@ import {
   modifyPermissionReset,
   deletePermissionReset
 } from "../modules/permissions";
-import { Loading, ErrorPage } from "@scm-manager/ui-components";
+import {
+  Loading,
+  ErrorPage,
+  LabelWithHelpIcon
+} from "@scm-manager/ui-components";
 import type {
   AvailableRepositoryPermissions,
   Permission,
@@ -142,12 +146,30 @@ class Permissions extends React.Component<Props> {
         <table className="has-background-light table is-hoverable is-fullwidth">
           <thead>
             <tr>
-              <th>{t("permission.name")}</th>
-              <th className="is-hidden-mobile">
-                {t("permission.group-permission")}
+              <th>
+                <LabelWithHelpIcon
+                  label={t("permission.name")}
+                  helpText={t("permission.help.nameHelpText")}
+                />
               </th>
-              <th>{t("permission.role")}</th>
-              <th>{t("permission.permissions")}</th>
+              <th className="is-hidden-mobile">
+                <LabelWithHelpIcon
+                  label={t("permission.group-permission")}
+                  helpText={t("permission.help.groupPermissionHelpText")}
+                />
+              </th>
+              <th>
+                <LabelWithHelpIcon
+                  label={t("permission.role")}
+                  helpText={t("permission.help.roleHelpText")}
+                />
+              </th>
+              <th>
+                <LabelWithHelpIcon
+                  label={t("permission.permissions")}
+                  helpText={t("permission.help.permissionsHelpText")}
+                />
+              </th>
               <th />
             </tr>
           </thead>

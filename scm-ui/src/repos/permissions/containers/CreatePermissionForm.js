@@ -199,7 +199,7 @@ class CreatePermissionForm extends React.Component<Props, State> {
                 <div className="column is-half">
                   <LabelWithHelpIcon
                     label={t("permission.permissions")}
-                    helpText={t("permission.permissions.help")}
+                    helpText={t("permission.help.permissionsHelpText")}
                   />
                   <Button
                     label={t("permission.advanced-button.label")}
