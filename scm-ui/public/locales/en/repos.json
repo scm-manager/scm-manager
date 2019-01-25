@@ -120,7 +120,7 @@
     "help": {
       "groupPermissionHelpText": "States if a permission is a group permission. iF this is not checked, it is a user permission.",
       "nameHelpText": "Manage permissions for a specific user or group",
-      "roleHelpText": "READ = read; WRITE = read and write; OWNER = read, write and also the ability to manage the properties and permissions",
+      "roleHelpText": "READ = read; WRITE = read and write; OWNER = read, write and also the ability to manage the properties and permissions. If nothing is selected here, use the 'Advances' Button to see detailed permissions.",
       "permissionsHelpText": "Use this to specify your own set of permissions regardless of predefined roles"
     },
     "autocomplete": {
