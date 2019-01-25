@@ -114,7 +114,7 @@ class SinglePermission extends React.Component<Props, State> {
           </td>
           <td>
             <Button
-              label={t("form.advanced-button.label")}
+              label={t("permission.advanced-button.label")}
               action={this.handleDetailedPermissionsPressed}
             />
           </td>

@@ -49,7 +49,9 @@ class AdvancedPermissionsDialog extends React.Component<Props, State> {
         <div className="modal-background" />
         <div className="modal-card">
           <header className="modal-card-head">
-            <p className="modal-card-title">{t("advanced.dialog.title")}</p>
+            <p className="modal-card-title">
+              {t("permission.advanced.dialog.title")}
+            </p>
             <button
               className="delete"
               aria-label="close"
@@ -59,8 +61,11 @@ class AdvancedPermissionsDialog extends React.Component<Props, State> {
           <section className="modal-card-body">
             <div className="content">{verbSelectBoxes}</div>
             <form onSubmit={this.onSubmit}>
-              <SubmitButton label={t("advanced.dialog.submit")} />
-              <Button label={t("advanced.dialog.abort")} action={onClose} />
+              <SubmitButton label={t("permission.advanced.dialog.submit")} />
+              <Button
+                label={t("permission.advanced.dialog.abort")}
+                action={onClose}
+              />
             </form>
           </section>
         </div>
@@ -83,4 +88,4 @@ class AdvancedPermissionsDialog extends React.Component<Props, State> {
   };
 }
 
-export default translate("permissions")(AdvancedPermissionsDialog);
+export default translate("repos")(AdvancedPermissionsDialog);

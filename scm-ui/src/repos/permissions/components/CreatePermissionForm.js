@@ -170,8 +170,8 @@ class CreatePermissionForm extends React.Component<Props, State> {
             <div className="column is-one-quarter">
               <TypeSelector
                 availableTypes={availableRoleNames}
-                label={t("permission.type")}
-                helpText={t("permission.help.typeHelpText")}
+                label={t("permission.role")}
+                helpText={t("permission.help.roleHelpText")}
                 handleTypeChange={this.handleTypeChange}
                 type={
                   matchingRole
