@@ -16,7 +16,7 @@ import { connect } from "react-redux";
 import type { History } from "history";
 import { Button, Checkbox } from "@scm-manager/ui-components";
 import DeletePermissionButton from "../components/buttons/DeletePermissionButton";
-import TypeSelector from "../components/TypeSelector";
+import RoleSelector from "../components/RoleSelector";
 import AdvancedPermissionsDialog from "./AdvancedPermissionsDialog";
 
 type Props = {
@@ -101,14 +101,14 @@ class SinglePermission extends React.Component<Props, State> {
     const availableRoleNames = availablePermissions.availableRoles.map(
       r => r.name
     );
-    const typeSelector =
+    const roleSelector =
       this.props.permission._links && this.props.permission._links.update ? (
         <>
           <td>
-            <TypeSelector
-              handleTypeChange={this.handleTypeChange}
-              availableTypes={availableRoleNames}
-              type={role}
+            <RoleSelector
+              handleRoleChange={this.handleRoleChange}
+              availableRoles={availableRoleNames}
+              role={role}
               loading={loading}
             />
           </td>
@@ -141,7 +141,7 @@ class SinglePermission extends React.Component<Props, State> {
         <td>
           <Checkbox checked={permission ? permission.groupPermission : false} />
         </td>
-        {typeSelector}
+        {roleSelector}
         <td>
           <DeletePermissionButton
             permission={permission}
@@ -180,23 +180,23 @@ class SinglePermission extends React.Component<Props, State> {
     );
   };
 
-  handleTypeChange = (type: string) => {
-    const selectedRole = this.findAvailableRole(type);
+  handleRoleChange = (role: string) => {
+    const selectedRole = this.findAvailableRole(role);
     this.setState(
       {
         permission: {
           ...this.state.permission,
           verbs: selectedRole.verbs
         },
-        role: type
+        role: role
       },
       () => this.modifyPermission(selectedRole.verbs)
     );
   };
 
-  findAvailableRole = (type: string) => {
+  findAvailableRole = (roleName: string) => {
     return this.props.availablePermissions.availableRoles.find(
-      role => role.name === type
+      role => role.name === roleName
     );
   };
 
@@ -209,15 +209,6 @@ class SinglePermission extends React.Component<Props, State> {
       this.props.repoName
     );
   };
-
-  createSelectOptions(types: string[]) {
-    return types.map(type => {
-      return {
-        label: type,
-        value: type
-      };
-    });
-  }
 }
 
 const mapStateToProps = (state, ownProps) => {

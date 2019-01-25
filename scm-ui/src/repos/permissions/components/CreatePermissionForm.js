@@ -2,7 +2,7 @@
 import React from "react";
 import { translate } from "react-i18next";
 import { Autocomplete, SubmitButton } from "@scm-manager/ui-components";
-import TypeSelector from "./TypeSelector";
+import RoleSelector from "./RoleSelector";
 import type {
   AvailableRepositoryPermissions,
   PermissionCollection,
@@ -168,12 +168,12 @@ class CreatePermissionForm extends React.Component<Props, State> {
               {this.renderAutocompletionField()}
             </div>
             <div className="column is-one-quarter">
-              <TypeSelector
-                availableTypes={availableRoleNames}
+              <RoleSelector
+                availableRoles={availableRoleNames}
                 label={t("permission.role")}
                 helpText={t("permission.help.roleHelpText")}
-                handleTypeChange={this.handleTypeChange}
-                type={
+                handleRoleChange={this.handleRoleChange}
+                role={
                   matchingRole
                     ? matchingRole
                     : availablePermissions.availableRoles[0].name
@@ -214,16 +214,16 @@ class CreatePermissionForm extends React.Component<Props, State> {
     });
   };
 
-  handleTypeChange = (type: string) => {
-    const selectedRole = this.findAvailableRole(type);
+  handleRoleChange = (role: string) => {
+    const selectedRole = this.findAvailableRole(role);
     this.setState({
       verbs: selectedRole.verbs
     });
   };
 
-  findAvailableRole = (type: string) => {
+  findAvailableRole = (roleName: string) => {
     return this.props.availablePermissions.availableRoles.find(
-      role => role.name === type
+      role => role.name === roleName
     );
   };
 }
