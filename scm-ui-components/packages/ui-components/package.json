@@ -26,7 +26,7 @@
     "react-router-enzyme-context": "^1.2.0"
   },
   "dependencies": {
-    "@scm-manager/ui-extensions": "^0.1.1",
+    "@scm-manager/ui-extensions": "^0.1.2",
     "@scm-manager/ui-types": "2.0.0-SNAPSHOT",
     "classnames": "^2.2.6",
     "moment": "^2.22.2",
