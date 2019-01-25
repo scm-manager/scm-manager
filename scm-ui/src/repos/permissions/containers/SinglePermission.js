@@ -101,33 +101,23 @@ class SinglePermission extends React.Component<Props, State> {
     const availableRoleNames = availablePermissions.availableRoles.map(
       r => r.name
     );
-    const roleSelector =
-      this.props.permission._links && this.props.permission._links.update ? (
-        <>
-          <td>
-            <RoleSelector
-              handleRoleChange={this.handleRoleChange}
-              availableRoles={availableRoleNames}
-              role={role}
-              loading={loading}
-            />
-          </td>
-          <td>
-            <Button
-              label={t("permission.advanced-button.label")}
-              action={this.handleDetailedPermissionsPressed}
-            />
-          </td>
-        </>
-      ) : (
-        <>
-          <td>{role}</td>
-          <td />
-        </>
-      );
+    const readOnly = !this.mayChangePermissions();
+    const roleSelector = readOnly ? (
+      <td>{role}</td>
+    ) : (
+      <td>
+        <RoleSelector
+          handleRoleChange={this.handleRoleChange}
+          availableRoles={availableRoleNames}
+          role={role}
+          loading={loading}
+        />
+      </td>
+    );
 
     const advancedDialg = showAdvancedDialog ? (
       <AdvancedPermissionsDialog
+        readOnly={readOnly}
         availableVerbs={availablePermissions.availableVerbs}
         selectedVerbs={permission.verbs}
         onClose={this.closeAdvancedPermissionsDialog}
@@ -139,9 +129,18 @@ class SinglePermission extends React.Component<Props, State> {
       <tr>
         <td>{permission.name}</td>
         <td>
-          <Checkbox checked={permission ? permission.groupPermission : false} />
+          <Checkbox
+            checked={permission ? permission.groupPermission : false}
+            disabled={true}
+          />
         </td>
         {roleSelector}
+        <td>
+          <Button
+            label={t("permission.advanced-button.label")}
+            action={this.handleDetailedPermissionsPressed}
+          />
+        </td>
         <td>
           <DeletePermissionButton
             permission={permission}
@@ -155,6 +154,10 @@ class SinglePermission extends React.Component<Props, State> {
       </tr>
     );
   }
+
+  mayChangePermissions = () => {
+    return this.props.permission._links && this.props.permission._links.update;
+  };
 
   handleDetailedPermissionsPressed = () => {
     this.setState({ showAdvancedDialog: true });

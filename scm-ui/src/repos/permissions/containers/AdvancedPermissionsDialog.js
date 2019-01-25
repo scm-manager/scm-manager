@@ -6,6 +6,7 @@ import { translate } from "react-i18next";
 import PermissionCheckbox from "../components/PermissionCheckbox";
 
 type Props = {
+  readOnly: boolean,
   availableVerbs: string[],
   selectedVerbs: string[],
   onSubmit: (string[]) => void,
@@ -32,16 +33,21 @@ class AdvancedPermissionsDialog extends React.Component<Props, State> {
   }
 
   render() {
-    const { t, onClose } = this.props;
+    const { t, onClose, readOnly } = this.props;
     const { verbs } = this.state;
 
     const verbSelectBoxes = Object.entries(verbs).map(e => (
       <PermissionCheckbox
+        disabled={readOnly}
         name={e[0]}
         checked={e[1]}
         onChange={this.handleChange}
       />
     ));
+
+    const submitButton = !readOnly ? (
+      <SubmitButton label={t("permission.advanced.dialog.submit")} />
+    ) : null;
 
     return (
       <div className={"modal is-active"}>
@@ -60,7 +66,7 @@ class AdvancedPermissionsDialog extends React.Component<Props, State> {
           <section className="modal-card-body">
             <div className="content">{verbSelectBoxes}</div>
             <form onSubmit={this.onSubmit}>
-              <SubmitButton label={t("permission.advanced.dialog.submit")} />
+              {submitButton}
               <Button
                 label={t("permission.advanced.dialog.abort")}
                 action={onClose}
