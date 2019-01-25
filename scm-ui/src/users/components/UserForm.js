@@ -111,22 +111,22 @@ class UserForm extends React.Component<Props, State> {
           {nameField}
           <div className="column is-half">
             <InputField
-              label={t("user.mail")}
-              onChange={this.handleEmailChange}
-              value={user ? user.mail : ""}
-              validationError={this.state.mailValidationError}
-              errorMessage={t("validation.mail-invalid")}
-              helpText={t("help.mailHelpText")}
-            />
-          </div>
-          <div className="column is-half">
-            <InputField
               label={t("user.displayName")}
               onChange={this.handleDisplayNameChange}
               value={user ? user.displayName : ""}
               validationError={this.state.displayNameValidationError}
               errorMessage={t("validation.displayname-invalid")}
               helpText={t("help.displayNameHelpText")}
+            />
+          </div>
+          <div className="column is-half">
+            <InputField
+              label={t("user.mail")}
+              onChange={this.handleEmailChange}
+              value={user ? user.mail : ""}
+              validationError={this.state.mailValidationError}
+              errorMessage={t("validation.mail-invalid")}
+              helpText={t("help.mailHelpText")}
             />
           </div>
         </div>
