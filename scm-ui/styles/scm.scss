@@ -100,6 +100,19 @@ $fa-font-path: "webfonts";
     &:nth-child(odd) {
       margin-right: 1.5rem;
     }
+
+    .overlay-half-column {
+      position: absolute;
+      height: calc(120px - 1.5rem);
+      width: calc(50% - 3rem);
+    }
+  }
+  .column.is-full {
+    .overlay-full-column {
+      position: absolute;
+      height: calc(120px - 0.5rem);
+      width: calc(100% - 1.5rem);
+    }
   }
   @media screen and (max-width: 768px) {
     .column.is-half {
@@ -107,6 +120,13 @@ $fa-font-path: "webfonts";
 
       &:nth-child(odd) {
         margin-right: 0;
+      }
+
+
+      .overlay-half-column{
+        position: absolute;
+        height: calc(120px - 0.5rem);
+        width: calc(100% - 1.5rem);
       }
     }
   }
