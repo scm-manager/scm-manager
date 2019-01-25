@@ -6,7 +6,7 @@
     "build": "ui-bundler plugin"
   },
   "dependencies": {
-    "@scm-manager/ui-extensions": "^0.1.1"
+    "@scm-manager/ui-extensions": "^0.1.2"
   },
   "devDependencies": {
     "@scm-manager/ui-bundler": "^0.0.24"
