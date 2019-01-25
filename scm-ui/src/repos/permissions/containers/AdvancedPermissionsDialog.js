@@ -1,8 +1,9 @@
 // @flow
 
 import React from "react";
-import { Button, Checkbox, SubmitButton } from "@scm-manager/ui-components";
+import { Button, SubmitButton } from "@scm-manager/ui-components";
 import { translate } from "react-i18next";
+import PermissionCheckbox from "../components/PermissionCheckbox";
 
 type Props = {
   availableVerbs: string[],
@@ -35,10 +36,8 @@ class AdvancedPermissionsDialog extends React.Component<Props, State> {
     const { verbs } = this.state;
 
     const verbSelectBoxes = Object.entries(verbs).map(e => (
-      <Checkbox
-        key={e[0]}
+      <PermissionCheckbox
         name={e[0]}
-        label={e[0]}
         checked={e[1]}
         onChange={this.handleChange}
       />
