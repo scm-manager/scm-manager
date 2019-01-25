@@ -69,7 +69,7 @@ class ChangesetRow extends React.Component<Props> {
                 <ExtensionPoint
                   name="changesets.changeset.description"
                   props={{ changeset, value: description.title }}
-                  renderAll={true}
+                  renderAll={false}
                 >
                   {description.title}
                 </ExtensionPoint>
