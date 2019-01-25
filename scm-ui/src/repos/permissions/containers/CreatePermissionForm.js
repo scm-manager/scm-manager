@@ -1,16 +1,22 @@
 // @flow
 import React from "react";
 import { translate } from "react-i18next";
-import { Autocomplete, SubmitButton } from "@scm-manager/ui-components";
-import RoleSelector from "./RoleSelector";
+import {
+  Autocomplete,
+  SubmitButton,
+  Button,
+  LabelWithHelpIcon
+} from "@scm-manager/ui-components";
+import RoleSelector from "../components/RoleSelector";
 import type {
   AvailableRepositoryPermissions,
   PermissionCollection,
   PermissionCreateEntry,
   SelectValue
 } from "@scm-manager/ui-types";
-import * as validator from "./permissionValidation";
+import * as validator from "../components/permissionValidation";
 import { findMatchingRoleName } from "../modules/permissions";
+import AdvancedPermissionsDialog from "./AdvancedPermissionsDialog";
 
 type Props = {
   t: string => string,
@@ -27,7 +33,8 @@ type State = {
   verbs: string[],
   groupPermission: boolean,
   valid: boolean,
-  value?: SelectValue
+  value?: SelectValue,
+  showAdvancedDialog: boolean
 };
 
 class CreatePermissionForm extends React.Component<Props, State> {
@@ -39,7 +46,8 @@ class CreatePermissionForm extends React.Component<Props, State> {
       verbs: props.availablePermissions.availableRoles[0].verbs,
       groupPermission: false,
       valid: true,
-      value: undefined
+      value: undefined,
+      showAdvancedDialog: false
     };
   }
 
@@ -126,12 +134,21 @@ class CreatePermissionForm extends React.Component<Props, State> {
   render() {
     const { t, availablePermissions, loading } = this.props;
 
-    const { verbs } = this.state;
+    const { verbs, showAdvancedDialog } = this.state;
 
     const availableRoleNames = availablePermissions.availableRoles.map(
       r => r.name
     );
     const matchingRole = findMatchingRoleName(availablePermissions, verbs);
+
+    const advancedDialog = showAdvancedDialog ? (
+      <AdvancedPermissionsDialog
+        availableVerbs={availablePermissions.availableVerbs}
+        selectedVerbs={verbs}
+        onClose={this.closeAdvancedPermissionsDialog}
+        onSubmit={this.submitAdvancedPermissionsDialog}
+      />
+    ) : null;
 
     return (
       <div>
@@ -139,6 +156,7 @@ class CreatePermissionForm extends React.Component<Props, State> {
         <h2 className="subtitle">
           {t("permission.add-permission.add-permission-heading")}
         </h2>
+        {advancedDialog}
         <form onSubmit={this.submit}>
           <div className="control">
             <label className="radio">
@@ -164,21 +182,31 @@ class CreatePermissionForm extends React.Component<Props, State> {
           </div>
 
           <div className="columns">
-            <div className="column is-three-quarters">
+            <div className="column is-two-thirds">
               {this.renderAutocompletionField()}
             </div>
-            <div className="column is-one-quarter">
-              <RoleSelector
-                availableRoles={availableRoleNames}
-                label={t("permission.role")}
-                helpText={t("permission.help.roleHelpText")}
-                handleRoleChange={this.handleRoleChange}
-                role={
-                  matchingRole
-                    ? matchingRole
-                    : availablePermissions.availableRoles[0].name
-                }
-              />
+            <div className="column is-one-third">
+              <div className="columns">
+                <div className="column is-half">
+                  <RoleSelector
+                    availableRoles={availableRoleNames}
+                    label={t("permission.role")}
+                    helpText={t("permission.help.roleHelpText")}
+                    handleRoleChange={this.handleRoleChange}
+                    role={matchingRole}
+                  />
+                </div>
+                <div className="column is-half">
+                  <LabelWithHelpIcon
+                    label={t("permission.permissions")}
+                    helpText={t("permission.permissions.help")}
+                  />
+                  <Button
+                    label={t("permission.advanced-button.label")}
+                    action={this.handleDetailedPermissionsPressed}
+                  />
+                </div>
+              </div>
             </div>
           </div>
           <div className="columns">
@@ -194,6 +222,21 @@ class CreatePermissionForm extends React.Component<Props, State> {
       </div>
     );
   }
+
+  handleDetailedPermissionsPressed = () => {
+    this.setState({ showAdvancedDialog: true });
+  };
+
+  closeAdvancedPermissionsDialog = () => {
+    this.setState({ showAdvancedDialog: false });
+  };
+
+  submitAdvancedPermissionsDialog = (newVerbs: string[]) => {
+    this.setState({
+      showAdvancedDialog: false,
+      verbs: newVerbs
+    });
+  };
 
   submit = e => {
     this.props.createPermission({

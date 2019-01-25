@@ -29,7 +29,7 @@ import type {
   PermissionCreateEntry
 } from "@scm-manager/ui-types";
 import SinglePermission from "./SinglePermission";
-import CreatePermissionForm from "../components/CreatePermissionForm";
+import CreatePermissionForm from "./CreatePermissionForm";
 import type { History } from "history";
 import { getPermissionsLink } from "../../modules/repos";
 import {

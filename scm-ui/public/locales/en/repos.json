@@ -94,6 +94,7 @@
     "name": "User or Group",
     "role": "Role",
     "permissions": "Permissions",
+    "permissions-help": "Use this to specify your own set of permissions regardless of predefined roles",
     "group-permission": "Group Permission",
     "user-permission": "User Permission",
     "edit-permission": {
