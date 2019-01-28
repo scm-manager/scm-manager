@@ -63,14 +63,19 @@ class UserForm extends React.Component<Props, State> {
 
   isValid = () => {
     const user = this.state.user;
+
+    const createUserIsValid = !this.props.user
+      ? this.state.nameValidationError ||
+        this.isFalsy(user.name) ||
+        !this.state.passwordValid
+      : false;
+
     return !(
-      this.state.nameValidationError ||
+      createUserIsValid ||
       this.state.mailValidationError ||
       this.state.displayNameValidationError ||
-      this.isFalsy(user.name) ||
       this.isFalsy(user.displayName) ||
-      this.isFalsy(user.mail) ||
-      !this.state.passwordValid
+      this.isFalsy(user.mail)
     );
   };
 
