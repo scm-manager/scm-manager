@@ -1,7 +1,7 @@
 // @flow
 import React from "react";
 import { translate } from "react-i18next";
-import { Autocomplete, SubmitButton } from "@scm-manager/ui-components";
+import { Autocomplete, Radio, SubmitButton } from "@scm-manager/ui-components";
 import TypeSelector from "./TypeSelector";
 import type {
   PermissionCollection,
@@ -132,43 +132,34 @@ class CreatePermissionForm extends React.Component<Props, State> {
           {t("permission.add-permission.add-permission-heading")}
         </h2>
         <form onSubmit={this.submit}>
-          <div className="control">
-            <label className="radio">
-              <input
-                type="radio"
-                name="permission_scope"
-                checked={!this.state.groupPermission}
-                value="USER_PERMISSION"
-                onChange={this.permissionScopeChanged}
-              />
-              {t("permission.user-permission")}
-            </label>
-            <label className="radio">
-              <input
-                type="radio"
-                name="permission_scope"
-                value="GROUP_PERMISSION"
-                checked={this.state.groupPermission}
-                onChange={this.permissionScopeChanged}
-              />
-              {t("permission.group-permission")}
-            </label>
-          </div>
-
-        <div className="columns">
+          <Radio
+            name="permission_scope"
+            value="USER_PERMISSION"
+            checked={!this.state.groupPermission}
+            label={t("permission.user-permission")}
+            onChange={this.permissionScopeChanged}
+          />
+          <Radio
+            name="permission_scope"
+            value="GROUP_PERMISSION"
+            checked={this.state.groupPermission}
+            label={t("permission.group-permission")}
+            onChange={this.permissionScopeChanged}
+          />
+          <div className="columns">
             <div className="column is-three-quarters">
-                {this.renderAutocompletionField()}
+              {this.renderAutocompletionField()}
             </div>
             <div className="column is-one-quarter">
-                  <TypeSelector
-                    label={t("permission.type")}
-                    helpText={t("permission.help.typeHelpText")}
-                    handleTypeChange={this.handleTypeChange}
-                    type={type ? type : "READ"}
-                  />
+              <TypeSelector
+                label={t("permission.type")}
+                helpText={t("permission.help.typeHelpText")}
+                handleTypeChange={this.handleTypeChange}
+                type={type ? type : "READ"}
+              />
             </div>
-            </div>
-        <div className="columns">
+          </div>
+          <div className="columns">
             <div className="column">
               <SubmitButton
                 label={t("permission.add-permission.submit-button")}
@@ -176,7 +167,7 @@ class CreatePermissionForm extends React.Component<Props, State> {
                 disabled={!this.state.valid || this.state.name === ""}
               />
             </div>
-        </div>
+          </div>
         </form>
       </div>
     );
