@@ -22,7 +22,7 @@ import AdvancedPermissionsDialog from "./AdvancedPermissionsDialog";
 type Props = {
   availablePermissions: AvailableRepositoryPermissions,
   submitForm: Permission => void,
-  modifyPermission: (Permission, string, string) => void,
+  modifyPermission: (permission: Permission, namespace: string, name: string) => void,
   permission: Permission,
   t: string => string,
   namespace: string,
@@ -30,7 +30,7 @@ type Props = {
   match: any,
   history: History,
   loading: boolean,
-  deletePermission: (Permission, string, string) => void,
+  deletePermission: (permission: Permission, namespace: string, name: string) => void,
   deleteLoading: boolean
 };
 
