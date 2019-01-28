@@ -48,7 +48,7 @@ class AddEntryToTableField extends React.Component<Props, State> {
         <AddButton
           label={buttonLabel}
           action={this.addButtonClicked}
-          disabled={disabled}
+          disabled={disabled || this.state.entryToAdd ===""}
         />
       </div>
     );
