@@ -47,7 +47,7 @@ def printMessages(ui, msgs):
   for line in msgs:
     if line.startswith("_e") or line.startswith("_n"):
       line = line[2:];
-    ui.warn(line);
+    ui.warn('%s\n' % line.rstrip())
 
 def callHookUrl(ui, repo, hooktype, node):
   abort = True
@@ -79,8 +79,10 @@ def callHookUrl(ui, repo, hooktype, node):
       printMessages(ui, msg.splitlines(True))
     else:
       ui.warn( "ERROR: scm-hook failed with an unknown error\n" )
+    ui.traceback()
   except ValueError:
     ui.warn( "scm-hook failed with an exception\n" )
+    ui.traceback()
   return abort
 
 def callback(ui, repo, hooktype, node=None, source=None, pending=None, **kwargs):

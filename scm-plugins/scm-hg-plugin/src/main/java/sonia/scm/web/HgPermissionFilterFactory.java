@@ -12,10 +12,12 @@ import javax.inject.Inject;
 public class HgPermissionFilterFactory implements ScmProviderHttpServletDecoratorFactory {
 
   private final ScmConfiguration configuration;
+  private final HgRepositoryHandler repositoryHandler;
 
   @Inject
-  public HgPermissionFilterFactory(ScmConfiguration configuration) {
+  public HgPermissionFilterFactory(ScmConfiguration configuration, HgRepositoryHandler repositoryHandler) {
     this.configuration = configuration;
+    this.repositoryHandler = repositoryHandler;
   }
 
   @Override
@@ -25,6 +27,6 @@ public class HgPermissionFilterFactory implements ScmProviderHttpServletDecorato
 
   @Override
   public ScmProviderHttpServlet createDecorator(ScmProviderHttpServlet delegate) {
-    return new HgPermissionFilter(configuration, delegate);
+    return new HgPermissionFilter(configuration, delegate,repositoryHandler);
   }
 }
