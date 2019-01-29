@@ -89,14 +89,16 @@ class UserForm extends React.Component<Props, State> {
     let passwordChangeField = null;
     if (!this.props.user) {
       nameField = (
-        <InputField
-          label={t("user.name")}
-          onChange={this.handleUsernameChange}
-          value={user ? user.name : ""}
-          validationError={this.state.nameValidationError}
-          errorMessage={t("validation.name-invalid")}
-          helpText={t("help.usernameHelpText")}
-        />
+        <div className="column is-half">
+          <InputField
+            label={t("user.name")}
+            onChange={this.handleUsernameChange}
+            value={user ? user.name : ""}
+            validationError={this.state.nameValidationError}
+            errorMessage={t("validation.name-invalid")}
+            helpText={t("help.usernameHelpText")}
+          />
+        </div>
       );
 
       passwordChangeField = (
@@ -105,9 +107,9 @@ class UserForm extends React.Component<Props, State> {
     }
     return (
       <form onSubmit={this.submit}>
-        <div className="columns">
+        <div className="columns is-multiline">
+          {nameField}
           <div className="column is-half">
-            {nameField}
             <InputField
               label={t("user.displayName")}
               onChange={this.handleDisplayNameChange}
