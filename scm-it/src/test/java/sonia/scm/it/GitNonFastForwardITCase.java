@@ -34,9 +34,6 @@ package sonia.scm.it;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
 import org.eclipse.jgit.api.CommitCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -45,32 +42,28 @@ import org.eclipse.jgit.transport.PushResult;
 import org.eclipse.jgit.transport.RemoteRefUpdate;
 import org.eclipse.jgit.transport.RemoteRefUpdate.Status;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
-import org.junit.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import sonia.scm.repository.GitConfig;
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryTestData;
-import sonia.scm.repository.client.api.RepositoryClientFactory;
+import sonia.scm.it.utils.RestUtil;
+import sonia.scm.it.utils.TestData;
+import sonia.scm.web.VndMediaType;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static sonia.scm.it.IntegrationTestUtil.*;
-import static sonia.scm.it.RepositoryITUtil.createRepository;
-import static sonia.scm.it.RepositoryITUtil.deleteRepository;
+import static sonia.scm.it.utils.RestUtil.given;
 
 /**
  * Integration Tests for Git with non fast-forward pushes.
  */
-@Ignore
 public class GitNonFastForwardITCase {
 
-  private static final RepositoryClientFactory REPOSITORY_CLIENT_FACTORY = new RepositoryClientFactory();
-
-  private Client apiClient;
-  private Repository repository;
   private File workingCopy;
   private Git git;
 
@@ -79,19 +72,15 @@ public class GitNonFastForwardITCase {
 
   @Before
   public void createAndCloneTestRepository() throws IOException, GitAPIException {
-    // apiClient = createAdminClient();
-    Repository testRepository = RepositoryTestData.createHeartOfGold("git");
-    // this.repository = createRepository(apiClient, testRepository);
+    TestData.createDefault();
     this.workingCopy = tempFolder.newFolder();
 
-    // String url = repository.createUrl(BASE_URL);
-    // this.git = clone(url);
+    this.git = clone(RestUtil.BASE_URL.toASCIIString() + "repo/scmadmin/HeartOfGold-git");
   }
 
   @After
-  public void removeTestRepository() {
-    // deleteRepository(apiClient, repository.getId());
-    apiClient.destroy();
+  public void cleanup() {
+    TestData.cleanup();
   }
 
   /**
@@ -139,7 +128,7 @@ public class GitNonFastForwardITCase {
 
   private CredentialsProvider createCredentialProvider() {
     return new UsernamePasswordCredentialsProvider(
-      IntegrationTestUtil.ADMIN_USERNAME, IntegrationTestUtil.ADMIN_PASSWORD
+      RestUtil.ADMIN_USERNAME, RestUtil.ADMIN_PASSWORD
     );
   }
 
@@ -166,7 +155,7 @@ public class GitNonFastForwardITCase {
 
   private CommitCommand prepareCommit() {
     return git.commit()
-      .setAuthor(IntegrationTestUtil.AUTHOR.getName(), IntegrationTestUtil.AUTHOR.getMail());
+      .setAuthor("Trillian McMillian", "trillian@hitchhiker.com");
   }
 
   private void pushAndAssert(boolean force, Status expectedStatus) throws GitAPIException {
@@ -204,20 +193,17 @@ public class GitNonFastForwardITCase {
   }
 
   private static void setNonFastForwardDisallowed(boolean nonFastForwardDisallowed) {
-    /*Client adminClient = createAdminClient();
-    try {
-      WebResource resource = createResource(adminClient, "config/repositories/git");
-      GitConfig config = resource.get(GitConfig.class);
+    String config = String.format("{'disabled': false, 'gcExpression': null, 'nonFastForwardDisallowed': %s}", nonFastForwardDisallowed)
+      .replace('\'', '"');
 
-      assertNotNull(config);
-      config.setNonFastForwardDisallowed(nonFastForwardDisallowed);
+    given(VndMediaType.PREFIX + "gitConfig" + VndMediaType.SUFFIX)
+      .body(config)
 
-      ClientResponse response = resource.post(ClientResponse.class, config);
-      assertNotNull(response);
-      assertEquals(201, response.getStatus());
-    } finally {
-      adminClient.destroy();
-    }*/
+      .when()
+      .put(RestUtil.REST_BASE_URL.toASCIIString() + "config/git" )
+
+      .then()
+      .statusCode(HttpServletResponse.SC_NO_CONTENT);
   }
 
 }
