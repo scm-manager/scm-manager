@@ -11,8 +11,7 @@ type Props = {
 const styles = {
   wrapper: {
     padding: "1rem 1.5rem 0.25rem 1.5rem",
-    border: "1px solid #eee",
-    borderRadius: "5px 5px 0 0"
+    borderBottom: "1px solid #dbdbdb"
   }
 };
 
