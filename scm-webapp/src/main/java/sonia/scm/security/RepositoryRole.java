@@ -1,5 +1,7 @@
 package sonia.scm.security;
 
+import org.apache.commons.collections.CollectionUtils;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
@@ -32,11 +34,11 @@ public class RepositoryRole {
     if (!(o instanceof RepositoryRole)) return false;
     RepositoryRole that = (RepositoryRole) o;
     return name.equals(that.name) &&
-      verbs.equals(that.verbs);
+      CollectionUtils.isEqualCollection(this.verbs, that.verbs);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, verbs);
+    return Objects.hash(name, verbs.size());
   }
 }
