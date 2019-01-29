@@ -92,14 +92,16 @@ class UserForm extends React.Component<Props, State> {
     if (!this.props.user) {
       // create new user
       nameField = (
-        <InputField
-          label={t("user.name")}
-          onChange={this.handleUsernameChange}
-          value={user ? user.name : ""}
-          validationError={this.state.nameValidationError}
-          errorMessage={t("validation.name-invalid")}
-          helpText={t("help.usernameHelpText")}
-        />
+        <div className="column is-half">
+          <InputField
+            label={t("user.name")}
+            onChange={this.handleUsernameChange}
+            value={user ? user.name : ""}
+            validationError={this.state.nameValidationError}
+            errorMessage={t("validation.name-invalid")}
+            helpText={t("help.usernameHelpText")}
+          />
+        </div>
       );
 
       passwordChangeField = (

@@ -25,9 +25,9 @@ class ButtonGroup extends React.Component<Props> {
     let historyColor = "";
 
     if (historyIsSelected) {
-      historyColor = "info is-selected";
+      historyColor = "link is-selected";
     } else {
-      sourcesColor = "info is-selected";
+      sourcesColor = "link is-selected";
     }
 
     const sourcesLabel = (

@@ -26,7 +26,7 @@ node('docker') {
       }
 
       stage('Build') {
-        mvn 'clean install -DskipTests'
+        mvn 'clean install -Pdoc -DskipTests'
       }
 
       stage('Unit Test') {
@@ -53,6 +53,7 @@ node('docker') {
         stage('Archive') {
           archiveArtifacts 'scm-webapp/target/scm-webapp.war'
           archiveArtifacts 'scm-server/target/scm-server-app.*'
+          archiveArtifacts 'scm-webapp/target/scm-webapp-restdocs.zip'
         }
 
         stage('Docker') {
