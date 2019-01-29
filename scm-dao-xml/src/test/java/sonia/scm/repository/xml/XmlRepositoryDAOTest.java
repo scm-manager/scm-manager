@@ -24,8 +24,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Clock;
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static java.util.Arrays.asList;
@@ -73,9 +73,7 @@ class XmlRepositoryDAOTest {
     Clock clock = mock(Clock.class);
     when(clock.millis()).then(ic -> atomicClock.incrementAndGet());
 
-    XmlRepositoryDAO dao = new XmlRepositoryDAO(context, locationResolver, fileSystem, clock);
-
-    return dao;
+    return new XmlRepositoryDAO(context, locationResolver, fileSystem, clock);
   }
 
   @Test
@@ -335,15 +333,14 @@ class XmlRepositoryDAOTest {
   @Test
   void shouldPersistPermissions() throws IOException {
     Repository heartOfGold = createHeartOfGold();
-    heartOfGold.setPermissions(asList(new RepositoryPermission("trillian", asList("read", "write"), false), new RepositoryPermission("vorgons", asList("delete"), true)));
+    heartOfGold.setPermissions(asList(new RepositoryPermission("trillian", asList("read", "write"), false), new RepositoryPermission("vogons", Collections.singletonList("delete"), true)));
     dao.add(heartOfGold);
 
     Path repositoryDirectory = getAbsolutePathFromDao(heartOfGold.getId());
     Path metadataPath = dao.resolveMetadataPath(repositoryDirectory);
 
     String content = content(metadataPath);
-    System.out.println(content);
-    assertThat(content).containsSubsequence("trillian", "<verb>read</verb>", "<verb>write</verb>", "vorgons", "<verb>delete</verb>");
+    assertThat(content).containsSubsequence("trillian", "<verb>read</verb>", "<verb>write</verb>", "vogons", "<verb>delete</verb>");
   }
 
   @Test
