@@ -6,10 +6,9 @@ import com.webcohesion.enunciate.metadata.rs.ResponseHeaders;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import org.apache.shiro.SecurityUtils;
-import sonia.scm.repository.RepositoryPermission;
-import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.user.User;
 import sonia.scm.web.VndMediaType;
 
@@ -24,6 +23,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 
 public class RepositoryCollectionResource {
@@ -100,7 +100,7 @@ public class RepositoryCollectionResource {
 
   private Repository createModelObjectFromDto(@Valid RepositoryDto repositoryDto) {
     Repository repository = dtoToRepositoryMapper.map(repositoryDto, null);
-    repository.setPermissions(singletonList(new RepositoryPermission(currentUser(), PermissionType.OWNER)));
+    repository.setPermissions(singletonList(new RepositoryPermission(currentUser(), singletonList("*"), false)));
     return repository;
   }
 

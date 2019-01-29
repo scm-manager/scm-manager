@@ -37,5 +37,45 @@
       }
     },
     "unknown": "Unknown permission"
+  },
+  "verbs": {
+    "repository": {
+      "read": {
+        "displayName": "read",
+        "description": "May see the repository inside the SCM-Manager"
+      },
+      "modify": {
+        "displayName": "modify",
+        "description": "May modify the properties of the repository"
+      },
+      "delete": {
+        "displayName": "delete",
+        "description": "May delete the repository"
+      },
+      "pull": {
+        "displayName": "pull/checkout",
+        "description": "May pull/checkout the repository"
+      },
+      "push": {
+        "displayName": "push/commit",
+        "description": "May change the content of the repository (push/commit)"
+      },
+      "permissionRead": {
+        "displayName": "read permissions",
+        "description": "May see the permissions of the repository"
+      },
+      "permissionWrite": {
+        "displayName": "modify permissions",
+        "description": "May modify the permissions of the repository"
+      },
+      "healthCheck": {
+        "displayName": "health check",
+        "description": "May run the health check for the repository"
+      },
+      "*": {
+        "displayName": "overall",
+        "description": "May change everything for the repository (includes all other permissions)"
+      }
+    }
   }
 }
