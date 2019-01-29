@@ -9,10 +9,10 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.Manager;
 import sonia.scm.ModelObject;
-import sonia.scm.group.Group;
 
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Request;
+import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collection;
@@ -29,8 +29,13 @@ public class AbstractManagerResourceTest {
 
   @Mock
   private Manager<Simple> manager;
+
   @Mock
   private Request request;
+
+  @Mock
+  private UriInfo uriInfo;
+
   @Captor
   private ArgumentCaptor<Comparator<Simple>> comparatorCaptor;
 
@@ -63,27 +68,24 @@ public class AbstractManagerResourceTest {
     abstractManagerResource.getAll(request, 0, 1, "x", true);
   }
 
-  /**@Test
+  @Test
   public void testLocation() throws URISyntaxException {
-    URI base = new URI("https://scm.scm-manager.org/");
-
-    TestManagerResource resource = new TestManagerResource(manager);
-    when(uriInfo.getAbsolutePath()).thenReturn(base);
-
-    URI uri = resource.location(uriInfo, "special-group");
-    assertEquals(new URI("https://scm.scm-manager.org/groups/special-group"), uri);
+    URI uri = location("special-item");
+    assertEquals(new URI("https://scm.scm-manager.org/simple/special-item"), uri);
   }
 
   @Test
   public void testLocationWithSpaces() throws URISyntaxException {
-    URI base = new URI("https://scm.scm-manager.org/");
+    URI uri = location("Scm Special Group");
+    assertEquals(new URI("https://scm.scm-manager.org/simple/Scm%20Special%20Group"), uri);
+  }
 
-    TestManagerResource resource = new TestManagerResource(manager);
+  private URI location(String id) throws URISyntaxException {
+    URI base = new URI("https://scm.scm-manager.org/");
     when(uriInfo.getAbsolutePath()).thenReturn(base);
 
-    URI uri = resource.location(uriInfo, "Scm Special Group");
-    assertEquals(new URI("https://scm.scm-manager.org/groups/Scm%20Special%20Group"), uri);
-  }**/
+    return abstractManagerResource.location(uriInfo, id);
+  }
 
   private class SimpleManagerResource extends AbstractManagerResource<Simple> {
 
@@ -107,7 +109,7 @@ public class AbstractManagerResourceTest {
 
     @Override
     protected String getPathPart() {
-      return null;
+      return "simple";
     }
   }
 
