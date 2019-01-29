@@ -2,6 +2,7 @@
 
 import React from "react";
 import type {Branch} from "@scm-manager/ui-types";
+import TableHeader from "./TableHeader";
 import injectSheet from "react-jss";
 import classNames from "classnames";
 import DropDown from "./forms/DropDown";
@@ -12,11 +13,6 @@ const styles = {
   },
   minWidthOfLabel: {
     minWidth: "4.5rem"
-  },
-  wrapper: {
-    padding: "1rem 1.5rem 0.25rem 1.5rem",
-    border: "1px solid #eee",
-    borderRadius: "5px 5px 0 0"
   }
 };
 
@@ -48,13 +44,7 @@ class BranchSelector extends React.Component<Props, State> {
 
     if (branches) {
       return (
-        <div
-          className={classNames(
-            "has-background-light field",
-            "is-horizontal",
-            classes.wrapper
-          )}
-        >
+        <TableHeader>
           <div
             className={classNames(
               "field-label",
@@ -81,7 +71,7 @@ class BranchSelector extends React.Component<Props, State> {
               </div>
             </div>
           </div>
-        </div>
+        </TableHeader>
       );
     } else {
       return null;
