@@ -30,6 +30,8 @@ public class HgConfigDtoToHgConfigMapperTest {
     assertEquals("/etc/", config.getPythonPath());
     assertTrue(config.isShowRevisionInId());
     assertTrue(config.isUseOptimizedBytecode());
+    assertTrue(config.isDisableHookSSLValidation());
+    assertTrue(config.isEnableHttpPostArgs());
   }
 
   private HgConfigDto createDefaultDto() {
@@ -41,6 +43,8 @@ public class HgConfigDtoToHgConfigMapperTest {
     configDto.setPythonPath("/etc/");
     configDto.setShowRevisionInId(true);
     configDto.setUseOptimizedBytecode(true);
+    configDto.setDisableHookSSLValidation(true);
+    configDto.setEnableHttpPostArgs(true);
 
     return configDto;
   }
