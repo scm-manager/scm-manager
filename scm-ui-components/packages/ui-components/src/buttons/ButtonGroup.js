@@ -21,9 +21,9 @@ class ButtonGroup extends React.Component<Props> {
     let showSecondColor = secondColor;
 
     if (firstIsSelected) {
-      showFirstColor += " is-selected";
+      showFirstColor += "link is-selected";
     } else {
-      showSecondColor += " is-selected";
+      showSecondColor += "link is-selected";
     }
 
     return (

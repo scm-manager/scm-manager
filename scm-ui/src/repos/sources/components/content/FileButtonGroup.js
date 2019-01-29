@@ -1,7 +1,7 @@
 // @flow
 import React from "react";
 import { translate } from "react-i18next";
-import { Button } from "@scm-manager/ui-components";
+import { ButtonGroup } from "@scm-manager/ui-components";
 
 type Props = {
   t: string => string,
@@ -9,7 +9,7 @@ type Props = {
   showHistory: boolean => void
 };
 
-class ButtonGroup extends React.Component<Props> {
+class FileButtonGroup extends React.Component<Props> {
   showHistory = () => {
     this.props.showHistory(true);
   };
@@ -20,15 +20,6 @@ class ButtonGroup extends React.Component<Props> {
 
   render() {
     const { t, historyIsSelected } = this.props;
-
-    let sourcesColor = "";
-    let historyColor = "";
-
-    if (historyIsSelected) {
-      historyColor = "link is-selected";
-    } else {
-      sourcesColor = "link is-selected";
-    }
 
     const sourcesLabel = (
       <>
@@ -53,20 +44,17 @@ class ButtonGroup extends React.Component<Props> {
     );
 
     return (
-      <div className="buttons has-addons">
-        <Button
-          label={sourcesLabel}
-          color={sourcesColor}
-          action={this.showSources}
-        />
-        <Button
-          label={historyLabel}
-          color={historyColor}
-          action={this.showHistory}
-        />
-      </div>
+      <ButtonGroup
+        firstlabel={sourcesLabel}
+        secondlabel={historyLabel}
+        firstColor=""
+        secondColor=""
+        firstAction={this.showSources}
+        secondAction={this.showHistory}
+        firstIsSelected={!historyIsSelected}
+      />
     );
   }
 }
 
-export default translate("repos")(ButtonGroup);
+export default translate("repos")(FileButtonGroup);
