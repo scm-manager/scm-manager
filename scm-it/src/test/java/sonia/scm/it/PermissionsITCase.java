@@ -42,7 +42,6 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import sonia.scm.it.utils.RepositoryUtil;
 import sonia.scm.it.utils.TestData;
-import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.client.api.RepositoryClient;
 import sonia.scm.repository.client.api.RepositoryClientException;
 import sonia.scm.web.VndMediaType;
@@ -59,7 +58,10 @@ import static org.junit.Assert.assertNull;
 import static sonia.scm.it.utils.RepositoryUtil.addAndCommitRandomFile;
 import static sonia.scm.it.utils.RestUtil.given;
 import static sonia.scm.it.utils.ScmTypes.availableScmTypes;
+import static sonia.scm.it.utils.TestData.OWNER;
+import static sonia.scm.it.utils.TestData.READ;
 import static sonia.scm.it.utils.TestData.USER_SCM_ADMIN;
+import static sonia.scm.it.utils.TestData.WRITE;
 import static sonia.scm.it.utils.TestData.callRepository;
 
 @RunWith(Parameterized.class)
@@ -91,11 +93,11 @@ public class PermissionsITCase {
   public void prepareEnvironment() {
     TestData.createDefault();
     TestData.createNotAdminUser(USER_READ, USER_PASS);
-    TestData.createUserPermission(USER_READ, PermissionType.READ, repositoryType);
+    TestData.createUserPermission(USER_READ, READ, repositoryType);
     TestData.createNotAdminUser(USER_WRITE, USER_PASS);
-    TestData.createUserPermission(USER_WRITE, PermissionType.WRITE, repositoryType);
+    TestData.createUserPermission(USER_WRITE, WRITE, repositoryType);
     TestData.createNotAdminUser(USER_OWNER, USER_PASS);
-    TestData.createUserPermission(USER_OWNER, PermissionType.OWNER, repositoryType);
+    TestData.createUserPermission(USER_OWNER, OWNER, repositoryType);
     TestData.createNotAdminUser(USER_OTHER, USER_PASS);
     createdPermissions = asList(USER_READ, USER_WRITE, USER_OWNER);
   }
@@ -109,7 +111,7 @@ public class PermissionsITCase {
 
   @Test
   public void readUserShouldNotSeeBruteForcePermissions() {
-    given(VndMediaType.PERMISSION, USER_READ, USER_PASS)
+    given(VndMediaType.REPOSITORY_PERMISSION, USER_READ, USER_PASS)
       .when()
       .get(TestData.getDefaultPermissionUrl(USER_SCM_ADMIN, USER_SCM_ADMIN, repositoryType))
       .then()
@@ -125,7 +127,7 @@ public class PermissionsITCase {
 
   @Test
   public void writeUserShouldNotSeeBruteForcePermissions() {
-    given(VndMediaType.PERMISSION, USER_WRITE, USER_PASS)
+    given(VndMediaType.REPOSITORY_PERMISSION, USER_WRITE, USER_PASS)
       .when()
       .get(TestData.getDefaultPermissionUrl(USER_SCM_ADMIN, USER_SCM_ADMIN, repositoryType))
       .then()
@@ -145,7 +147,7 @@ public class PermissionsITCase {
 
   @Test
   public void otherUserShouldNotSeeBruteForcePermissions() {
-    given(VndMediaType.PERMISSION, USER_OTHER, USER_PASS)
+    given(VndMediaType.REPOSITORY_PERMISSION, USER_OTHER, USER_PASS)
       .when()
       .get(TestData.getDefaultPermissionUrl(USER_SCM_ADMIN, USER_SCM_ADMIN, repositoryType))
       .then()

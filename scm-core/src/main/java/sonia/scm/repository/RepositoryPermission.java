@@ -37,12 +37,19 @@ package sonia.scm.repository;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
+import org.apache.commons.collections.CollectionUtils;
 import sonia.scm.security.PermissionObject;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.LinkedHashSet;
+
+import static java.util.Collections.emptyList;
+import static java.util.Collections.unmodifiableCollection;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -60,54 +67,19 @@ public class RepositoryPermission implements PermissionObject, Serializable
 
   private boolean groupPermission = false;
   private String name;
-  private PermissionType type = PermissionType.READ;
+  @XmlElement(name = "verb")
+  private Collection<String> verbs;
 
   /**
    * Constructs a new {@link RepositoryPermission}.
-   * This constructor is used by JAXB.
-   *
+   * This constructor is used by JAXB and mapstruct.
    */
   public RepositoryPermission() {}
 
-  /**
-   * Constructs a new {@link RepositoryPermission} with type = {@link PermissionType#READ}
-   * for the specified user.
-   *
-   *
-   * @param name name of the user
-   */
-  public RepositoryPermission(String name)
+  public RepositoryPermission(String name, Collection<String> verbs, boolean groupPermission)
   {
-    this();
     this.name = name;
-  }
-
-  /**
-   * Constructs a new {@link RepositoryPermission} with the specified type for
-   * the given user.
-   *
-   *
-   * @param name name of the user
-   * @param type type of the permission
-   */
-  public RepositoryPermission(String name, PermissionType type)
-  {
-    this(name);
-    this.type = type;
-  }
-
-  /**
-   * Constructs a new {@link RepositoryPermission} with the specified type for
-   * the given user or group.
-   *
-   *
-   * @param name name of the user or group
-   * @param type type of the permission
-   * @param groupPermission true if the permission is a permission for a group
-   */
-  public RepositoryPermission(String name, PermissionType type, boolean groupPermission)
-  {
-    this(name, type);
+    this.verbs = unmodifiableCollection(new LinkedHashSet<>(verbs));
     this.groupPermission = groupPermission;
   }
 
@@ -137,7 +109,7 @@ public class RepositoryPermission implements PermissionObject, Serializable
     final RepositoryPermission other = (RepositoryPermission) obj;
 
     return Objects.equal(name, other.name)
-      && Objects.equal(type, other.type)
+      && CollectionUtils.isEqualCollection(verbs, other.verbs)
       && Objects.equal(groupPermission, other.groupPermission);
   }
 
@@ -150,7 +122,9 @@ public class RepositoryPermission implements PermissionObject, Serializable
   @Override
   public int hashCode()
   {
-    return Objects.hashCode(name, type, groupPermission);
+    // Normally we do not have a log of repository permissions having the same size of verbs, but different content.
+    // Therefore we do not use the verbs themselves for the hash code but only the number of verbs.
+    return Objects.hashCode(name, verbs.size(), groupPermission);
   }
 
 
@@ -160,7 +134,7 @@ public class RepositoryPermission implements PermissionObject, Serializable
     //J-
     return MoreObjects.toStringHelper(this)
             .add("name", name)
-            .add("type", type)
+            .add("verbs", verbs)
             .add("groupPermission", groupPermission)
             .toString();
     //J+
@@ -181,14 +155,14 @@ public class RepositoryPermission implements PermissionObject, Serializable
   }
 
   /**
-   * Returns the {@link PermissionType} of the permission.
+   * Returns the verb of the permission.
    *
    *
-   * @return {@link PermissionType} of the permission
+   * @return verb of the permission
    */
-  public PermissionType getType()
+  public Collection<String> getVerbs()
   {
-    return type;
+    return verbs == null? emptyList(): verbs;
   }
 
   /**
@@ -228,13 +202,13 @@ public class RepositoryPermission implements PermissionObject, Serializable
   }
 
   /**
-   * Sets the type of the permission.
+   * Sets the verb of the permission.
    *
    *
-   * @param type type of the permission
+   * @param verbs verbs of the permission
    */
-  public void setType(PermissionType type)
+  public void setVerbs(Collection<String> verbs)
   {
-    this.type = type;
+    this.verbs = verbs;
   }
 }

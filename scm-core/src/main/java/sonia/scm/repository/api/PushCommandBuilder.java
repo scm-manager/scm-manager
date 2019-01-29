@@ -39,11 +39,10 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.spi.PushCommand;
 import sonia.scm.repository.spi.PushCommandRequest;
-import sonia.scm.security.RepositoryPermission;
 
 import java.io.IOException;
 import java.net.URL;
@@ -92,9 +91,7 @@ public final class PushCommandBuilder
     Subject subject = SecurityUtils.getSubject();
 
     //J-
-    subject.checkPermission(
-      new RepositoryPermission(remoteRepository, PermissionType.WRITE)
-    );
+    subject.isPermitted(RepositoryPermissions.push(remoteRepository).asShiroString());
     //J+
 
     logger.info("push changes to repository {}", remoteRepository.getId());

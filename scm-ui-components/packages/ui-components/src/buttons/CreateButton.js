@@ -1,7 +1,8 @@
 //@flow
 import React from "react";
 import injectSheet from "react-jss";
-import SubmitButton, { type ButtonProps } from "./SubmitButton";
+import { type ButtonProps } from "./Button";
+import SubmitButton from "./SubmitButton";
 import classNames from "classnames";
 
 const styles = {

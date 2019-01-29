@@ -3,8 +3,12 @@ import React from "react";
 import { connect } from "react-redux";
 import { translate } from "react-i18next";
 import {
+  fetchAvailablePermissionsIfNeeded,
   fetchPermissions,
+  getFetchAvailablePermissionsFailure,
+  getAvailablePermissions,
   getFetchPermissionsFailure,
+  isFetchAvailablePermissionsPending,
   isFetchPermissionsPending,
   getPermissionsOfRepo,
   hasCreatePermission,
@@ -17,14 +21,19 @@ import {
   modifyPermissionReset,
   deletePermissionReset
 } from "../modules/permissions";
-import { Loading, ErrorPage } from "@scm-manager/ui-components";
+import {
+  Loading,
+  ErrorPage,
+  LabelWithHelpIcon
+} from "@scm-manager/ui-components";
 import type {
+  AvailableRepositoryPermissions,
   Permission,
   PermissionCollection,
   PermissionCreateEntry
 } from "@scm-manager/ui-types";
 import SinglePermission from "./SinglePermission";
-import CreatePermissionForm from "../components/CreatePermissionForm";
+import CreatePermissionForm from "./CreatePermissionForm";
 import type { History } from "history";
 import { getPermissionsLink } from "../../modules/repos";
 import {
@@ -33,6 +42,7 @@ import {
 } from "../../../modules/indexResource";
 
 type Props = {
+  availablePermissions: AvailableRepositoryPermissions,
   namespace: string,
   repoName: string,
   loading: boolean,
@@ -45,6 +55,7 @@ type Props = {
   userAutoCompleteLink: string,
 
   //dispatch functions
+  fetchAvailablePermissionsIfNeeded: () => void,
   fetchPermissions: (link: string, namespace: string, repoName: string) => void,
   createPermission: (
     link: string,
@@ -65,6 +76,7 @@ type Props = {
 class Permissions extends React.Component<Props> {
   componentDidMount() {
     const {
+      fetchAvailablePermissionsIfNeeded,
       fetchPermissions,
       namespace,
       repoName,
@@ -77,6 +89,7 @@ class Permissions extends React.Component<Props> {
     createPermissionReset(namespace, repoName);
     modifyPermissionReset(namespace, repoName);
     deletePermissionReset(namespace, repoName);
+    fetchAvailablePermissionsIfNeeded();
     fetchPermissions(permissionsLink, namespace, repoName);
   }
 
@@ -91,6 +104,7 @@ class Permissions extends React.Component<Props> {
 
   render() {
     const {
+      availablePermissions,
       loading,
       error,
       permissions,
@@ -112,12 +126,13 @@ class Permissions extends React.Component<Props> {
       );
     }
 
-    if (loading || !permissions) {
+    if (loading || !permissions || !availablePermissions) {
       return <Loading />;
     }
 
     const createPermissionForm = hasPermissionToCreate ? (
       <CreatePermissionForm
+        availablePermissions={availablePermissions}
         createPermission={permission => this.createPermission(permission)}
         loading={loadingCreatePermission}
         currentPermissions={permissions}
@@ -128,14 +143,33 @@ class Permissions extends React.Component<Props> {
 
     return (
       <div>
-        <table  className="has-background-light table is-hoverable is-fullwidth">
+        <table className="has-background-light table is-hoverable is-fullwidth">
           <thead>
             <tr>
-              <th>{t("permission.name")}</th>
-              <th className="is-hidden-mobile">
-                {t("permission.group-permission")}
+              <th>
+                <LabelWithHelpIcon
+                  label={t("permission.name")}
+                  helpText={t("permission.help.nameHelpText")}
+                />
               </th>
-              <th>{t("permission.type")}</th>
+              <th className="is-hidden-mobile">
+                <LabelWithHelpIcon
+                  label={t("permission.group-permission")}
+                  helpText={t("permission.help.groupPermissionHelpText")}
+                />
+              </th>
+              <th>
+                <LabelWithHelpIcon
+                  label={t("permission.role")}
+                  helpText={t("permission.help.roleHelpText")}
+                />
+              </th>
+              <th>
+                <LabelWithHelpIcon
+                  label={t("permission.permissions")}
+                  helpText={t("permission.help.permissionsHelpText")}
+                />
+              </th>
               <th />
             </tr>
           </thead>
@@ -143,6 +177,7 @@ class Permissions extends React.Component<Props> {
             {permissions.map(permission => {
               return (
                 <SinglePermission
+                  availablePermissions={availablePermissions}
                   key={permission.name + permission.groupPermission.toString()}
                   namespace={namespace}
                   repoName={repoName}
@@ -165,8 +200,11 @@ const mapStateToProps = (state, ownProps) => {
     getFetchPermissionsFailure(state, namespace, repoName) ||
     getCreatePermissionFailure(state, namespace, repoName) ||
     getDeletePermissionsFailure(state, namespace, repoName) ||
-    getModifyPermissionsFailure(state, namespace, repoName);
-  const loading = isFetchPermissionsPending(state, namespace, repoName);
+    getModifyPermissionsFailure(state, namespace, repoName) ||
+    getFetchAvailablePermissionsFailure(state);
+  const loading =
+    isFetchPermissionsPending(state, namespace, repoName) ||
+    isFetchAvailablePermissionsPending(state);
   const permissions = getPermissionsOfRepo(state, namespace, repoName);
   const loadingCreatePermission = isCreatePermissionPending(
     state,
@@ -177,7 +215,9 @@ const mapStateToProps = (state, ownProps) => {
   const permissionsLink = getPermissionsLink(state, namespace, repoName);
   const groupAutoCompleteLink = getGroupAutoCompleteLink(state);
   const userAutoCompleteLink = getUserAutoCompleteLink(state);
+  const availablePermissions = getAvailablePermissions(state);
   return {
+    availablePermissions,
     namespace,
     repoName,
     error,
@@ -195,6 +235,9 @@ const mapDispatchToProps = dispatch => {
   return {
     fetchPermissions: (link: string, namespace: string, repoName: string) => {
       dispatch(fetchPermissions(link, namespace, repoName));
+    },
+    fetchAvailablePermissionsIfNeeded: () => {
+      dispatch(fetchAvailablePermissionsIfNeeded());
     },
     createPermission: (
       link: string,

@@ -4,6 +4,7 @@ import type { Action } from "@scm-manager/ui-components";
 import { apiClient } from "@scm-manager/ui-components";
 import * as types from "../../../modules/types";
 import type {
+  AvailableRepositoryPermissions,
   Permission,
   PermissionCollection,
   PermissionCreateEntry
@@ -11,7 +12,18 @@ import type {
 import { isPending } from "../../../modules/pending";
 import { getFailure } from "../../../modules/failure";
 import { Dispatch } from "redux";
+import { getLinks } from "../../../modules/indexResource";
 
+export const FETCH_AVAILABLE = "scm/permissions/FETCH_AVAILABLE";
+export const FETCH_AVAILABLE_PENDING = `${FETCH_AVAILABLE}_${
+  types.PENDING_SUFFIX
+}`;
+export const FETCH_AVAILABLE_SUCCESS = `${FETCH_AVAILABLE}_${
+  types.SUCCESS_SUFFIX
+}`;
+export const FETCH_AVAILABLE_FAILURE = `${FETCH_AVAILABLE}_${
+  types.FAILURE_SUFFIX
+}`;
 export const FETCH_PERMISSIONS = "scm/permissions/FETCH_PERMISSIONS";
 export const FETCH_PERMISSIONS_PENDING = `${FETCH_PERMISSIONS}_${
   types.PENDING_SUFFIX
@@ -62,7 +74,71 @@ export const DELETE_PERMISSION_RESET = `${DELETE_PERMISSION}_${
   types.RESET_SUFFIX
 }`;
 
-const CONTENT_TYPE = "application/vnd.scmm-permission+json";
+const CONTENT_TYPE = "application/vnd.scmm-repositoryPermission+json";
+
+// fetch available permissions
+
+export function fetchAvailablePermissionsIfNeeded() {
+  return function(dispatch: any, getState: () => Object) {
+    if (shouldFetchAvailablePermissions(getState())) {
+      return fetchAvailablePermissions(dispatch, getState);
+    }
+  };
+}
+
+export function fetchAvailablePermissions(
+  dispatch: any,
+  getState: () => Object
+) {
+  dispatch(fetchAvailablePending());
+  return apiClient
+    .get(getLinks(getState()).availableRepositoryPermissions.href)
+    .then(response => response.json())
+    .then(available => {
+      dispatch(fetchAvailableSuccess(available));
+    })
+    .catch(err => {
+      dispatch(fetchAvailableFailure(err));
+    });
+}
+
+export function shouldFetchAvailablePermissions(state: Object) {
+  if (
+    isFetchAvailablePermissionsPending(state) ||
+    getFetchAvailablePermissionsFailure(state)
+  ) {
+    return false;
+  }
+  return !state.available;
+}
+
+export function fetchAvailablePending(): Action {
+  return {
+    type: FETCH_AVAILABLE_PENDING,
+    payload: {},
+    itemId: "available"
+  };
+}
+
+export function fetchAvailableSuccess(
+  available: AvailableRepositoryPermissions
+): Action {
+  return {
+    type: FETCH_AVAILABLE_SUCCESS,
+    payload: available,
+    itemId: "available"
+  };
+}
+
+export function fetchAvailableFailure(error: Error): Action {
+  return {
+    type: FETCH_AVAILABLE_FAILURE,
+    payload: {
+      error
+    },
+    itemId: "available"
+  };
+}
 
 // fetch permissions
 
@@ -368,6 +444,7 @@ export function deletePermissionReset(namespace: string, repoName: string) {
     itemId: namespace + "/" + repoName
   };
 }
+
 function deletePermissionFromState(
   oldPermissions: PermissionCollection,
   permission: Permission
@@ -399,12 +476,17 @@ export default function reducer(
     return state;
   }
   switch (action.type) {
+    case FETCH_AVAILABLE_SUCCESS:
+      return {
+        ...state,
+        available: action.payload
+      };
     case FETCH_PERMISSIONS_SUCCESS:
       return {
         ...state,
         [action.itemId]: {
           entries: action.payload._embedded.permissions,
-          createPermission: action.payload._links.create ? true : false
+          createPermission: !!action.payload._links.create
         }
       };
     case MODIFY_PERMISSION_SUCCESS:
@@ -452,6 +534,12 @@ export default function reducer(
 
 // selectors
 
+export function getAvailablePermissions(state: Object) {
+  if (state.permissions) {
+    return state.permissions.available;
+  }
+}
+
 export function getPermissionsOfRepo(
   state: Object,
   namespace: string,
@@ -463,12 +551,20 @@ export function getPermissionsOfRepo(
   }
 }
 
+export function isFetchAvailablePermissionsPending(state: Object) {
+  return isPending(state, FETCH_AVAILABLE, "available");
+}
+
 export function isFetchPermissionsPending(
   state: Object,
   namespace: string,
   repoName: string
 ) {
   return isPending(state, FETCH_PERMISSIONS, namespace + "/" + repoName);
+}
+
+export function getFetchAvailablePermissionsFailure(state: Object) {
+  return getFailure(state, FETCH_AVAILABLE, "available");
 }
 
 export function getFetchPermissionsFailure(
@@ -522,6 +618,7 @@ export function isCreatePermissionPending(
 ) {
   return isPending(state, CREATE_PERMISSION, namespace + "/" + repoName);
 }
+
 export function getCreatePermissionFailure(
   state: Object,
   namespace: string,
@@ -602,4 +699,34 @@ export function getModifyPermissionsFailure(
     }
   }
   return null;
+}
+
+export function findMatchingRoleName(
+  availablePermissions: AvailableRepositoryPermissions,
+  verbs: string[]
+) {
+  if (!verbs) {
+    return "";
+  }
+  const matchingRole = availablePermissions.availableRoles.find(role => {
+    return equalVerbs(role.verbs, verbs);
+  });
+
+  if (matchingRole) {
+    return matchingRole.name;
+  } else {
+    return "";
+  }
+}
+
+function equalVerbs(verbs1: string[], verbs2: string[]) {
+  if (!verbs1 || !verbs2) {
+    return false;
+  }
+
+  if (verbs1.length !== verbs2.length) {
+    return false;
+  }
+
+  return verbs1.every(verb => verbs2.includes(verb));
 }

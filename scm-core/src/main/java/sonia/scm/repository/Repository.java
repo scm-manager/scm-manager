@@ -68,7 +68,6 @@ import java.util.Set;
 @XmlRootElement(name = "repositories")
 public class Repository extends BasicPropertiesAware implements ModelObject, PermissionObject{
 
-
   private static final long serialVersionUID = 3486560714961909711L;
 
   private String contact;
@@ -81,6 +80,7 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
   private Long lastModified;
   private String namespace;
   private String name;
+  @XmlElement(name = "permission")
   private final Set<RepositoryPermission> permissions = new HashSet<>();
   @XmlElement(name = "public")
   private boolean publicReadable = false;

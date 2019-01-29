@@ -87,44 +87,56 @@
     "label": "Branches"
   },
   "permission": {
-      "user": "User",
-      "group": "Group",
-      "error-title": "Error",
-      "error-subtitle": "Unknown permissions error",
-      "name": "User or Group",
-      "type": "Type",
-      "group-permission": "Group Permission",
-      "user-permission": "User Permission",
-      "edit-permission": {
-        "delete-button": "Delete",
-        "save-button": "Save Changes"
-      },
-      "delete-permission-button": {
-        "label": "Delete",
-        "confirm-alert": {
-          "title": "Delete permission",
-          "message": "Do you really want to delete the permission?",
-          "submit": "Yes",
-          "cancel": "No"
-        }
-      },
-      "add-permission": {
-        "add-permission-heading": "Add new Permission",
-        "submit-button": "Submit",
-        "name-input-invalid": "Permission is not allowed to be empty! If it is not empty, your input name is invalid or it already exists!"
-      },
-      "help": {
-        "groupPermissionHelpText": "States if a permission is a group permission.",
-        "nameHelpText": "Manage permissions for a specific user or group",
-        "typeHelpText": "READ = read; WRITE = read and write; OWNER = read, write and also the ability to manage the properties and permissions"
-      },
-      "autocomplete": {
-        "no-group-options": "No group suggestion available",
-        "group-placeholder": "Enter group",
-        "no-user-options": "No user suggestion available",
-        "user-placeholder": "Enter user",
-        "loading": "Loading..."
+    "user": "User",
+    "group": "Group",
+    "error-title": "Error",
+    "error-subtitle": "Unknown permissions error",
+    "name": "User or group",
+    "role": "Role",
+    "permissions": "Permissions",
+    "group-permission": "Group Permission",
+    "user-permission": "User Permission",
+    "edit-permission": {
+      "delete-button": "Delete",
+      "save-button": "Save Changes"
+    },
+    "advanced-button": {
+      "label": "Advanced"
+    },
+    "delete-permission-button": {
+      "label": "Delete",
+      "confirm-alert": {
+        "title": "Delete permission",
+        "message": "Do you really want to delete the permission?",
+        "submit": "Yes",
+        "cancel": "No"
       }
+    },
+    "add-permission": {
+      "add-permission-heading": "Add new Permission",
+      "submit-button": "Submit",
+      "name-input-invalid": "Permission is not allowed to be empty! If it is not empty, your input name is invalid or it already exists!"
+    },
+    "help": {
+      "groupPermissionHelpText": "States if a permission is a group permission. If this is not checked, it is a user permission.",
+      "nameHelpText": "Manage permissions for a specific user or group",
+      "roleHelpText": "READ = read; WRITE = read and write; OWNER = read, write and also the ability to manage the properties and permissions. If nothing is selected here, use the 'Advanced' Button to see detailed permissions.",
+      "permissionsHelpText": "Use this to specify your own set of permissions regardless of predefined roles"
+    },
+    "autocomplete": {
+      "no-group-options": "No group suggestion available",
+      "group-placeholder": "Enter group",
+      "no-user-options": "No user suggestion available",
+      "user-placeholder": "Enter user",
+      "loading": "Loading..."
+    },
+    "advanced": {
+      "dialog": {
+        "title": "Advanced permissions",
+        "submit": "Submit",
+        "abort": "Abort"
+      }
+    }
   },
   "help": {
     "nameHelpText": "The name of the repository. This name will be part of the repository url.",

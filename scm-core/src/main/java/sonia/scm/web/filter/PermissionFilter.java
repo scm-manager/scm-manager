@@ -252,7 +252,7 @@ public abstract class PermissionFilter extends ScmProviderHttpServletDecorator
     }
     else
     {
-      permitted = RepositoryPermissions.read(repository).isPermitted();
+      permitted = RepositoryPermissions.pull(repository).isPermitted();
     }
 
     return permitted;

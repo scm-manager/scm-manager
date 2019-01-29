@@ -51,7 +51,6 @@ import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.group.GroupNames;
-import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryDAO;
 import sonia.scm.repository.RepositoryPermission;
@@ -59,6 +58,7 @@ import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.user.User;
 import sonia.scm.user.UserTestData;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.nullValue;
@@ -225,10 +225,10 @@ public class DefaultAuthorizationCollectorTest {
     authenticate(UserTestData.createTrillian(), group);
     Repository heartOfGold = RepositoryTestData.createHeartOfGold();
     heartOfGold.setId("one");
-    heartOfGold.setPermissions(Lists.newArrayList(new RepositoryPermission("trillian")));
+    heartOfGold.setPermissions(Lists.newArrayList(new RepositoryPermission("trillian", asList("read", "pull"), false)));
     Repository puzzle42 = RepositoryTestData.create42Puzzle();
     puzzle42.setId("two");
-    RepositoryPermission permission = new RepositoryPermission(group, PermissionType.WRITE, true);
+    RepositoryPermission permission = new RepositoryPermission(group, asList("read", "pull", "push"), true);
     puzzle42.setPermissions(Lists.newArrayList(permission));
     when(repositoryDAO.getAll()).thenReturn(Lists.newArrayList(heartOfGold, puzzle42));
 

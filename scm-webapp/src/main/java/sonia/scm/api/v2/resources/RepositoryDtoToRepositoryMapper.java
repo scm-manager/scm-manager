@@ -10,7 +10,6 @@ public abstract class RepositoryDtoToRepositoryMapper extends BaseDtoMapper {
   @Mapping(target = "id", ignore = true)
   @Mapping(target = "publicReadable", ignore = true)
   @Mapping(target = "healthCheckFailures", ignore = true)
-  @Mapping(target = "permissions", ignore = true)
   public abstract Repository map(RepositoryDto repositoryDto, @Context String id);
 
   @AfterMapping
