@@ -10,7 +10,7 @@ type Props = {
   t: string => string
 };
 
-class GeneralUserNavLink extends React.Component<Props> {
+class EditUserNavLink extends React.Component<Props> {
   isEditable = () => {
     return this.props.user._links.update;
   };
@@ -25,4 +25,4 @@ class GeneralUserNavLink extends React.Component<Props> {
   }
 }
 
-export default translate("users")(GeneralUserNavLink);
+export default translate("users")(EditUserNavLink);

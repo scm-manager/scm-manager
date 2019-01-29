@@ -30,7 +30,7 @@ type Props = {
   error: Error
 };
 
-class GeneralGroup extends React.Component<Props> {
+class EditGroup extends React.Component<Props> {
   componentDidMount() {
     const { group, modifyGroupReset } = this.props;
     modifyGroupReset(group);
@@ -116,4 +116,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withRouter(GeneralGroup));
+)(withRouter(EditGroup));

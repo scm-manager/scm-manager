@@ -28,7 +28,7 @@ type Props = {
   history: History
 };
 
-class GeneralRepo extends React.Component<Props> {
+class EditRepo extends React.Component<Props> {
   componentDidMount() {
     const { modifyRepoReset, repository } = this.props;
     modifyRepoReset(repository);
@@ -93,4 +93,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withRouter(GeneralRepo));
+)(withRouter(EditRepo));

@@ -10,7 +10,7 @@ type Props = {
   t: string => string
 };
 
-class GeneralRepoNavLink extends React.Component<Props> {
+class EditRepoNavLink extends React.Component<Props> {
   isEditable = () => {
     return this.props.repository._links.update;
   };
@@ -25,4 +25,4 @@ class GeneralRepoNavLink extends React.Component<Props> {
   }
 }
 
-export default translate("repos")(GeneralRepoNavLink);
+export default translate("repos")(EditRepoNavLink);

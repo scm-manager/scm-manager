@@ -13,7 +13,7 @@ import {
 import { Route } from "react-router";
 import { Details } from "./../components/table";
 import {
-  GeneralGroupNavLink,
+  EditGroupNavLink,
   SetPermissionsNavLink
 } from "./../components/navLinks";
 import type { Group } from "@scm-manager/ui-types";
@@ -26,7 +26,7 @@ import {
 } from "../modules/groups";
 
 import { translate } from "react-i18next";
-import GeneralGroup from "./GeneralGroup";
+import EditGroup from "./EditGroup";
 import { getGroupsLink } from "../../modules/indexResource";
 import SetPermissions from "../../permissions/components/SetPermissions";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
@@ -99,7 +99,7 @@ class SingleGroup extends React.Component<Props> {
             <Route
               path={`${url}/settings/general`}
               exact
-              component={() => <GeneralGroup group={group} />}
+              component={() => <EditGroup group={group} />}
             />
             <Route
               path={`${url}/settings/permissions`}
@@ -133,7 +133,7 @@ class SingleGroup extends React.Component<Props> {
                   to={`${url}/settings/general`}
                   label={t("singleGroup.menu.settingsNavLink")}
                 >
-                  <GeneralGroupNavLink
+                  <EditGroupNavLink
                     group={group}
                     editUrl={`${url}/settings/general`}
                   />

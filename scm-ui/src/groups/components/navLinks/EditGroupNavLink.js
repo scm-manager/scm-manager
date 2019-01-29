@@ -10,7 +10,7 @@ type Props = {
   t: string => string
 };
 
-class GeneralGroupNavLink extends React.Component<Props> {
+class EditGroupNavLink extends React.Component<Props> {
   isEditable = () => {
     return this.props.group._links.update;
   };
@@ -25,4 +25,4 @@ class GeneralGroupNavLink extends React.Component<Props> {
   }
 }
 
-export default translate("groups")(GeneralGroupNavLink);
+export default translate("groups")(EditGroupNavLink);

@@ -12,7 +12,7 @@ import {
 } from "@scm-manager/ui-components";
 import { Route } from "react-router";
 import { Details } from "./../components/table";
-import GeneralUser from "./GeneralUser";
+import EditUser from "./EditUser";
 import type { User } from "@scm-manager/ui-types";
 import type { History } from "history";
 import {
@@ -21,7 +21,7 @@ import {
   isFetchUserPending,
   getFetchUserFailure
 } from "../modules/users";
-import { GeneralUserNavLink, SetPasswordNavLink, SetPermissionsNavLink } from "./../components/navLinks";
+import { EditUserNavLink, SetPasswordNavLink, SetPermissionsNavLink } from "./../components/navLinks";
 import { translate } from "react-i18next";
 import { getUsersLink } from "../../modules/indexResource";
 import SetUserPassword from "../components/SetUserPassword";
@@ -91,7 +91,7 @@ class SingleUser extends React.Component<Props> {
             <Route path={url} exact component={() => <Details user={user} />} />
             <Route
               path={`${url}/settings/general`}
-              component={() => <GeneralUser user={user} />}
+              component={() => <EditUser user={user} />}
             />
             <Route
               path={`${url}/settings/password`}
@@ -118,7 +118,7 @@ class SingleUser extends React.Component<Props> {
                   to={`${url}/settings/general`}
                   label={t("singleUser.menu.settingsNavLink")}
                 >
-                  <GeneralUserNavLink
+                  <EditUserNavLink
                     user={user}
                     editUrl={`${url}/settings/general`}
                   />

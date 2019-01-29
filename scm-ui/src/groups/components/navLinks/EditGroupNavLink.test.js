@@ -4,14 +4,14 @@ import React from "react";
 import { shallow } from "enzyme";
 import "../../../tests/enzyme";
 import "../../../tests/i18n";
-import GeneralGroupNavLink from "./GeneralGroupNavLink";
+import EditGroupNavLink from "./EditGroupNavLink";
 
 it("should render nothing, if the edit link is missing", () => {
   const group = {
       _links: {}
   };
 
-  const navLink = shallow(<GeneralGroupNavLink group={group} editUrl='/group/edit'/>);
+  const navLink = shallow(<EditGroupNavLink group={group} editUrl='/group/edit'/>);
   expect(navLink.text()).toBe("");
 });
 
@@ -24,6 +24,6 @@ it("should render the navLink", () => {
       }
   };
 
-  const navLink = shallow(<GeneralGroupNavLink group={group} editUrl='/group/edit'/>);
+  const navLink = shallow(<EditGroupNavLink group={group} editUrl='/group/edit'/>);
   expect(navLink.text()).not.toBe("");
 });

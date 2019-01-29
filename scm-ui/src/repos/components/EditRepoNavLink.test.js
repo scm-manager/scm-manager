@@ -3,7 +3,7 @@ import { shallow, mount } from "enzyme";
 import "../../tests/enzyme";
 import "../../tests/i18n";
 import ReactRouterEnzymeContext from "react-router-enzyme-context";
-import GeneralRepoNavLink from "./GeneralRepoNavLink";
+import EditRepoNavLink from "./EditRepoNavLink";
 
 describe("GeneralNavLink", () => {
   const options = new ReactRouterEnzymeContext();
@@ -14,7 +14,7 @@ describe("GeneralNavLink", () => {
     };
 
     const navLink = shallow(
-      <GeneralRepoNavLink repository={repository} editUrl="" />,
+      <EditRepoNavLink repository={repository} editUrl="" />,
       options.get()
     );
     expect(navLink.text()).toBe("");
@@ -30,7 +30,7 @@ describe("GeneralNavLink", () => {
     };
 
     const navLink = mount(
-      <GeneralRepoNavLink repository={repository} editUrl="" />,
+      <EditRepoNavLink repository={repository} editUrl="" />,
       options.get()
     );
     expect(navLink.text()).toBe("repositoryRoot.menu.generalNavLink");

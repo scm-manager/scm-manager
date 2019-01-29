@@ -22,11 +22,11 @@ import {
 } from "@scm-manager/ui-components";
 import { translate } from "react-i18next";
 import RepositoryDetails from "../components/RepositoryDetails";
-import GeneralRepo from "./GeneralRepo";
+import EditRepo from "./EditRepo";
 import Permissions from "../permissions/containers/Permissions";
 
 import type { History } from "history";
-import GeneralRepoNavLink from "../components/GeneralRepoNavLink";
+import EditRepoNavLink from "../components/EditRepoNavLink";
 
 import BranchRoot from "./ChangesetsRoot";
 import ChangesetView from "./ChangesetView";
@@ -113,7 +113,7 @@ class RepositoryRoot extends React.Component<Props> {
               />
               <Route
                 path={`${url}/settings/general`}
-                component={() => <GeneralRepo repository={repository} />}
+                component={() => <EditRepo repository={repository} />}
               />
               <Route
                 path={`${url}/settings/permissions`}
@@ -203,7 +203,7 @@ class RepositoryRoot extends React.Component<Props> {
                   to={`${url}/settings/general`}
                   label={t("repositoryRoot.menu.settingsNavLink")}
                 >
-                  <GeneralRepoNavLink
+                  <EditRepoNavLink
                     repository={repository}
                     editUrl={`${url}/settings/general`}
                   />
