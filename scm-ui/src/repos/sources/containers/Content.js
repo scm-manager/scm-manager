@@ -161,7 +161,7 @@ class Content extends React.Component<Props, State> {
   }
 
   render() {
-    const { file, revision, repository, path, classes } = this.props;
+    const { file, revision, repository, path } = this.props;
     const { showHistory } = this.state;
 
     const header = this.showHeader();
@@ -183,9 +183,7 @@ class Content extends React.Component<Props, State> {
         <nav className="panel">
           <article className="panel-heading">{header}</article>
           {moreInformation}
-          <div className={classNames("panel-block", classes.toCenterContent)}>
-            {content}
-          </div>
+          {content}
         </nav>
       </div>
     );

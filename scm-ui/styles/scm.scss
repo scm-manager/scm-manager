@@ -194,6 +194,24 @@ $fa-font-path: "webfonts";
   }
 }
 
+//panels
+.panel-footer {
+  background-color: whitesmoke;
+  border-radius: 0 0 4px 4px;
+  color: #363636;
+  font-size: 1.25em;
+  font-weight: 300;
+  line-height: 1.25;
+  padding: 0.5em 0.75em;
+
+  border-left: 1px solid #dbdbdb;
+  border-right: 1px solid #dbdbdb;
+
+  &:last-child {
+    border-bottom: 1px solid #dbdbdb;
+  }
+}
+
 // forms
 .field:not(.is-grouped) {
   margin-bottom: 1rem;
