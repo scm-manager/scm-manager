@@ -1,8 +1,7 @@
 // @flow
 
 import React from "react";
-import type {Branch} from "@scm-manager/ui-types";
-import TableHeader from "./TableHeader";
+import type { Branch } from "@scm-manager/ui-types";
 import injectSheet from "react-jss";
 import classNames from "classnames";
 import DropDown from "./forms/DropDown";
@@ -13,6 +12,12 @@ const styles = {
   },
   minWidthOfLabel: {
     minWidth: "4.5rem"
+  },
+  labelSizing: {
+    fontSize: "1rem !important"
+  },
+  noBottomMargin: {
+    marginBottom: "0 !important"
   }
 };
 
@@ -35,7 +40,9 @@ class BranchSelector extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    const selectedBranch = this.props.branches.find(branch => branch.name === this.props.selectedBranch);
+    const selectedBranch = this.props.branches.find(
+      branch => branch.name === this.props.selectedBranch
+    );
     this.setState({ selectedBranch });
   }
 
@@ -44,7 +51,13 @@ class BranchSelector extends React.Component<Props, State> {
 
     if (branches) {
       return (
-        <TableHeader>
+        <div
+          className={classNames(
+            "field",
+            "is-horizontal",
+            classes.noBottomMargin
+          )}
+        >
           <div
             className={classNames(
               "field-label",
@@ -53,10 +66,14 @@ class BranchSelector extends React.Component<Props, State> {
               classes.minWidthOfLabel
             )}
           >
-            <label className="label">{label}</label>
+            <label className={classNames("label", classes.labelSizing)}>
+              {label}
+            </label>
           </div>
           <div className="field-body">
-            <div className="field is-narrow">
+            <div
+              className={classNames("field is-narrow", classes.noBottomMargin)}
+            >
               <div className="control">
                 <DropDown
                   className="is-fullwidth"
@@ -71,7 +88,7 @@ class BranchSelector extends React.Component<Props, State> {
               </div>
             </div>
           </div>
-        </TableHeader>
+        </div>
       );
     } else {
       return null;
