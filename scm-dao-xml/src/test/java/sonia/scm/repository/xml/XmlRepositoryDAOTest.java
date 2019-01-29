@@ -340,7 +340,9 @@ class XmlRepositoryDAOTest {
     Path metadataPath = dao.resolveMetadataPath(repositoryDirectory);
 
     String content = content(metadataPath);
-    assertThat(content).containsSubsequence("trillian", "<verb>read</verb>", "<verb>write</verb>", "vogons", "<verb>delete</verb>");
+    System.out.println(content);
+    assertThat(content).containsSubsequence("trillian", "<verb>read</verb>", "<verb>write</verb>");
+    assertThat(content).containsSubsequence("vogons", "<verb>delete</verb>");
   }
 
   @Test
