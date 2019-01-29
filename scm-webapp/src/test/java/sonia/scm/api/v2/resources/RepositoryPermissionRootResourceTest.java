@@ -82,11 +82,11 @@ public class RepositoryPermissionRootResourceTest extends RepositoryTestBase {
   private static final ArrayList<RepositoryPermission> TEST_PERMISSIONS = Lists
     .newArrayList(
       new RepositoryPermission("user_write", asList("read","modify"), false),
-      new RepositoryPermission("user_read", asList("read"), false),
-      new RepositoryPermission("user_owner", asList("*"), false),
-      new RepositoryPermission("group_read", asList("read"), true),
+      new RepositoryPermission("user_read", singletonList("read"), false),
+      new RepositoryPermission("user_owner", singletonList("*"), false),
+      new RepositoryPermission("group_read", singletonList("read"), true),
       new RepositoryPermission("group_write", asList("read","modify"), true),
-      new RepositoryPermission("group_owner", asList("*"), true)
+      new RepositoryPermission("group_owner", singletonList("*"), true)
     );
   private final ExpectedRequest requestGETAllPermissions = new ExpectedRequest()
     .description("GET all permissions")
