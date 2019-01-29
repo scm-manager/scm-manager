@@ -259,21 +259,10 @@ $fa-font-path: "webfonts";
     &.is-active {
       color: $blue;
       background-color: #fff;
-
-      &:before {
-        position: relative;
-        content: " ";
-        background: $blue;
-        height: 53px;
-        width: 2px;
-        display: block;
-        left: -17px;
-        float: left;
-        top: -16px;
-      }
     }
   }
-  li {
+
+  > li {
     ul {
       margin: 0;
       border-top: 1px solid #eee;
@@ -284,6 +273,18 @@ $fa-font-path: "webfonts";
       li:last-child {
         border-bottom: none;
       }
+    }
+
+    > a.is-active:before {
+      position: relative;
+      content: " ";
+      background: $blue;
+      height: 53px;
+      width: 2px;
+      display: block;
+      left: -17px;
+      float: left;
+      top: -16px;
     }
 
     border-radius: 0;
@@ -299,5 +300,29 @@ $fa-font-path: "webfonts";
   }
   div {
     margin-bottom: 0;
+  }
+}
+.sub-menu li {
+  line-height: 1;
+
+  a {
+    padding: 0.75rem 1rem;
+  }
+
+  a:before {
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    -webkit-font-smoothing: antialiased;
+    display: inline-block;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    line-height: 1;
+    content: "\f105";
+    padding-right: 5px;
+  }
+
+  i {
+    display: none;
   }
 }

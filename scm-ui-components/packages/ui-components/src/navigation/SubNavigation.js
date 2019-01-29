@@ -1,6 +1,6 @@
 //@flow
 import * as React from "react";
-import {Link, Route} from "react-router-dom";
+import { Link, Route } from "react-router-dom";
 
 type Props = {
   to: string,
@@ -30,18 +30,14 @@ class SubNavigation extends React.Component<Props> {
     }
 
     let children = null;
-    if(this.isActive(route)) {
-      children = (
-        <ul>{this.props.children}</ul>
-      );
+    if (this.isActive(route)) {
+      children = <ul className="sub-menu">{this.props.children}</ul>;
     }
 
     return (
       <li>
         <Link className={this.isActive(route) ? "is-active" : ""} to={to}>
-          <i className={defaultIcon} />
-          {" "}
-          {label}
+          <i className={defaultIcon} /> {label}
         </Link>
         {children}
       </li>
@@ -53,11 +49,15 @@ class SubNavigation extends React.Component<Props> {
 
     // removes last part of url
     let parents = to.split("/");
-    parents.splice(-1,1);
+    parents.splice(-1, 1);
     let parent = parents.join("/");
 
     return (
-      <Route path={parent} exact={activeOnlyWhenExact} children={this.renderLink} />
+      <Route
+        path={parent}
+        exact={activeOnlyWhenExact}
+        children={this.renderLink}
+      />
     );
   }
 }
