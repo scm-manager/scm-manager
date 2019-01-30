@@ -14,7 +14,6 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import sonia.scm.ContextEntry;
 import sonia.scm.NotFoundException;
 import sonia.scm.PageResult;

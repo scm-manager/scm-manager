@@ -1,6 +1,5 @@
 package sonia.scm.api.v2.resources;
 
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import sonia.scm.PageResult;
 import sonia.scm.repository.Changeset;

@@ -14,7 +14,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.repository.GitConfig;
 
-import java.io.File;
 import java.net.URI;
 
 import static org.junit.Assert.assertEquals;

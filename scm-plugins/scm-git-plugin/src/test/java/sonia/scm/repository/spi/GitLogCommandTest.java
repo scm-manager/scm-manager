@@ -36,10 +36,8 @@ package sonia.scm.repository.spi;
 
 import com.google.common.io.Files;
 import org.junit.Test;
-import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
-import sonia.scm.repository.ClearRepositoryCacheEvent;
 import sonia.scm.repository.GitRepositoryConfig;
 import sonia.scm.repository.Modifications;
 

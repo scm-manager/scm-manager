@@ -5,10 +5,8 @@ import io.restassured.response.Response;
 import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.user.User;
 import sonia.scm.web.VndMediaType;
 
-import java.net.ConnectException;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;

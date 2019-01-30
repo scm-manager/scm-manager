@@ -32,14 +32,10 @@
 package sonia.scm.repository;
 
 
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.repository.api.HookContextFactory;
 import sonia.scm.repository.spi.HookEventFacade;
-import sonia.scm.store.ConfigurationStore;
 import sonia.scm.store.ConfigurationStoreFactory;
 
 import java.io.File;

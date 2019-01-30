@@ -11,7 +11,6 @@ import org.mockito.InjectMocks;
 import sonia.scm.group.Group;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.toList;

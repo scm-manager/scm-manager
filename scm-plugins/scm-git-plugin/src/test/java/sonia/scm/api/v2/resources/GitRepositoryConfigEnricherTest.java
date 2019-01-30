@@ -14,9 +14,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
-import sonia.scm.repository.api.Command;
-import sonia.scm.repository.api.RepositoryService;
-import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.web.JsonEnricherContext;
 import sonia.scm.web.VndMediaType;
 

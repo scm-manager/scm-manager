@@ -55,7 +55,6 @@ import sonia.scm.logging.SVNKitLogger;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.spi.HookEventFacade;
 import sonia.scm.repository.spi.SvnRepositoryServiceProvider;
-import sonia.scm.store.ConfigurationStore;
 import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.util.Util;
 

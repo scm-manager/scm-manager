@@ -6,8 +6,6 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.repository.HgConfig;
 
-import java.io.File;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 

@@ -15,7 +15,6 @@ import org.mockito.quality.Strictness;
 import sonia.scm.group.GroupNames;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
-import sonia.scm.user.UserPermissions;
 import sonia.scm.user.UserTestData;
 
 import java.net.URI;

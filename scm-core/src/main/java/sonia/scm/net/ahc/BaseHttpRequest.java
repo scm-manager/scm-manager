@@ -35,7 +35,6 @@ package sonia.scm.net.ahc;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Strings;
-import com.google.common.collect.HashMultimap;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 

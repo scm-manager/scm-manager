@@ -42,7 +42,6 @@ import org.slf4j.MDC;
 
 import sonia.scm.SCMContext;
 import sonia.scm.security.DefaultKeyGenerator;
-import sonia.scm.security.KeyGenerator;
 import sonia.scm.web.filter.HttpFilter;
 
 //~--- JDK imports ------------------------------------------------------------

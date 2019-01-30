@@ -12,9 +12,6 @@ import sonia.scm.repository.SubRepository;
 
 import javax.inject.Inject;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import static de.otto.edison.hal.Link.link;
 
 @Mapper
