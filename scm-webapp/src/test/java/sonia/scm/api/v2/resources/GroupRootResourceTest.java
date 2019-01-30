@@ -24,6 +24,7 @@ import sonia.scm.web.VndMediaType;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -100,7 +101,7 @@ public class GroupRootResourceTest {
   }
 
   @Test
-  public void shouldGetGroup() throws URISyntaxException {
+  public void shouldGetGroup() throws URISyntaxException, UnsupportedEncodingException {
     Group group = createDummyGroup();
     when(groupManager.get("admin")).thenReturn(group);
 
@@ -305,7 +306,7 @@ public class GroupRootResourceTest {
   }
 
   @Test
-  public void shouldGetAll() throws URISyntaxException {
+  public void shouldGetAll() throws URISyntaxException, UnsupportedEncodingException {
     MockHttpRequest request = MockHttpRequest.get("/" + GroupRootResource.GROUPS_PATH_V2);
     MockHttpResponse response = new MockHttpResponse();
 
@@ -317,7 +318,7 @@ public class GroupRootResourceTest {
   }
 
   @Test
-  public void shouldGetPermissionLink() throws URISyntaxException {
+  public void shouldGetPermissionLink() throws URISyntaxException, UnsupportedEncodingException {
     MockHttpRequest request = MockHttpRequest.get("/" + GroupRootResource.GROUPS_PATH_V2 + "admin");
     MockHttpResponse response = new MockHttpResponse();
 
@@ -329,7 +330,7 @@ public class GroupRootResourceTest {
   }
 
   @Test
-  public void shouldGetPermissions() throws URISyntaxException {
+  public void shouldGetPermissions() throws URISyntaxException, UnsupportedEncodingException {
     when(permissionAssigner.readPermissionsForGroup("admin")).thenReturn(singletonList(new PermissionDescriptor("something:*")));
     MockHttpRequest request = MockHttpRequest.get("/" + GroupRootResource.GROUPS_PATH_V2 + "admin/permissions");
     MockHttpResponse response = new MockHttpResponse();

@@ -27,6 +27,7 @@ import sonia.scm.web.VndMediaType;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -120,7 +121,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   }
 
   @Test
-  public void shouldFindExistingRepository() throws URISyntaxException {
+  public void shouldFindExistingRepository() throws URISyntaxException, UnsupportedEncodingException {
     mockRepository("space", "repo");
 
     MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo");
@@ -133,7 +134,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   }
 
   @Test
-  public void shouldMapProperties() throws URISyntaxException {
+  public void shouldMapProperties() throws URISyntaxException, UnsupportedEncodingException {
     Repository repository = mockRepository("space", "repo");
     repository.setProperty("testKey", "testValue");
 
@@ -146,7 +147,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   }
 
   @Test
-  public void shouldGetAll() throws URISyntaxException {
+  public void shouldGetAll() throws URISyntaxException, UnsupportedEncodingException {
     PageResult<Repository> singletonPageResult = createSingletonPageResult(mockRepository("space", "repo"));
     when(repositoryManager.getPage(any(), eq(0), eq(10))).thenReturn(singletonPageResult);
 

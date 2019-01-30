@@ -25,6 +25,7 @@ import javax.inject.Provider;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -99,7 +100,7 @@ public class HgConfigResourceTest {
 
   @Test
   @SubjectAware(username = "readWrite")
-  public void shouldGetHgConfigEvenWhenItsEmpty() throws URISyntaxException {
+  public void shouldGetHgConfigEvenWhenItsEmpty() throws URISyntaxException, UnsupportedEncodingException {
     when(repositoryHandler.getConfig()).thenReturn(null);
 
     MockHttpResponse response = get();
@@ -110,7 +111,7 @@ public class HgConfigResourceTest {
 
   @Test
   @SubjectAware(username = "readOnly")
-  public void shouldGetHgConfigWithoutUpdateLink() throws URISyntaxException {
+  public void shouldGetHgConfigWithoutUpdateLink() throws URISyntaxException, UnsupportedEncodingException {
     MockHttpResponse response = get();
 
     assertEquals(HttpServletResponse.SC_OK, response.getStatus());

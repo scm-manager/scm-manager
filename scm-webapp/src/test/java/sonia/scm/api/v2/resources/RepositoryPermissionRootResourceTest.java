@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
+import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.google.inject.util.Providers;
 import de.otto.edison.hal.HalRepresentation;
@@ -36,6 +37,7 @@ import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.web.VndMediaType;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -214,7 +216,12 @@ public class RepositoryPermissionRootResourceTest extends RepositoryTestBase {
       .expectedResponseStatus(200)
       .path(PATH_OF_ALL_PERMISSIONS + expectedPermission.getName())
       .responseValidator((response) -> {
-        String body = response.getContentAsString();
+        String body = null;
+        try {
+          body = response.getContentAsString();
+        } catch (UnsupportedEncodingException e) {
+          e.printStackTrace();
+        }
         ObjectMapper mapper = new ObjectMapper();
         try {
           RepositoryPermissionDto actualRepositoryPermissionDto = mapper.readValue(body, RepositoryPermissionDto.class);
@@ -268,11 +275,19 @@ public class RepositoryPermissionRootResourceTest extends RepositoryTestBase {
     assertExpectedRequest(requestPOSTPermission
       .content("{\"name\" : \"" + newPermission.getName() + "\" , \"verbs\" : [\"read\",\"pull\",\"push\"], \"groupPermission\" : true}")
       .expectedResponseStatus(201)
-      .responseValidator(response -> assertThat(response.getContentAsString())
+      .responseValidator(response -> assertThat(getContentAsString(response))
         .as("POST response has no body")
         .isBlank())
     );
     assertGettingExpectedPermissions(expectedPermissions, PERMISSION_WRITE);
+  }
+
+  private String getContentAsString(MockHttpResponse response) {
+    try {
+      return response.getContentAsString();
+    } catch (UnsupportedEncodingException e) {
+      throw new RuntimeException("could not get content from response", e);
+    }
   }
 
   @Test
@@ -296,7 +311,7 @@ public class RepositoryPermissionRootResourceTest extends RepositoryTestBase {
       .content("{\"name\" : \"" + modifiedPermission.getName() + "\" , \"verbs\" : [\"*\"], \"groupPermission\" : false}")
       .path(PATH_OF_ALL_PERMISSIONS + modifiedPermission.getName())
       .expectedResponseStatus(204)
-      .responseValidator(response -> assertThat(response.getContentAsString())
+      .responseValidator(response -> assertThat(getContentAsString(response))
         .as("PUT response has no body")
         .isBlank())
     );
@@ -312,7 +327,7 @@ public class RepositoryPermissionRootResourceTest extends RepositoryTestBase {
     assertExpectedRequest(requestDELETEPermission
       .path(PATH_OF_ALL_PERMISSIONS + deletedPermission.getName())
       .expectedResponseStatus(204)
-      .responseValidator(response -> assertThat(response.getContentAsString())
+      .responseValidator(response -> assertThat(getContentAsString(response))
         .as("DELETE response has no body")
         .isBlank())
     );
@@ -327,7 +342,7 @@ public class RepositoryPermissionRootResourceTest extends RepositoryTestBase {
     assertExpectedRequest(requestDELETEPermission
       .path(PATH_OF_ALL_PERMISSIONS + deletedPermission.getName())
       .expectedResponseStatus(204)
-      .responseValidator(response -> assertThat(response.getContentAsString())
+      .responseValidator(response -> assertThat(getContentAsString(response))
         .as("DELETE response has no body")
         .isBlank())
     );
@@ -335,7 +350,7 @@ public class RepositoryPermissionRootResourceTest extends RepositoryTestBase {
     assertExpectedRequest(requestDELETEPermission
       .path(PATH_OF_ALL_PERMISSIONS + deletedPermission.getName())
       .expectedResponseStatus(204)
-      .responseValidator(response -> assertThat(response.getContentAsString())
+      .responseValidator(response -> assertThat(getContentAsString(response))
         .as("DELETE response has no body")
         .isBlank())
     );
@@ -346,7 +361,7 @@ public class RepositoryPermissionRootResourceTest extends RepositoryTestBase {
     assertExpectedRequest(requestGETAllPermissions
       .expectedResponseStatus(200)
       .responseValidator((response) -> {
-        String body = response.getContentAsString();
+        String body = getContentAsString(response);
         ObjectMapper mapper = new ObjectMapper();
         try {
           HalRepresentation halRepresentation = mapper.readValue(body, HalRepresentation.class);

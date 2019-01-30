@@ -22,6 +22,7 @@ import sonia.scm.user.UserManager;
 import sonia.scm.web.VndMediaType;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -78,7 +79,7 @@ public class MeResourceTest {
   }
 
   @Test
-  public void shouldReturnCurrentlyAuthenticatedUser() throws URISyntaxException {
+  public void shouldReturnCurrentlyAuthenticatedUser() throws URISyntaxException, UnsupportedEncodingException {
     applyUserToSubject(originalUser);
 
     MockHttpRequest request = MockHttpRequest.get("/" + MeResource.ME_PATH_V2);
