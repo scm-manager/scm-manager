@@ -1,68 +1,68 @@
 {
   "user": {
-    "name": "Username",
-    "displayName": "Display Name",
+    "name": "Benutzername",
+    "displayName": "Anzeigename",
     "mail": "E-Mail",
-    "password": "Password",
+    "password": "Passwort",
     "admin": "Admin",
-    "active": "Active",
-    "type": "Type",
-    "creationDate": "Creation Date",
-    "lastModified": "Last Modified"
+    "active": "Aktiv",
+    "type": "Typ",
+    "creationDate": "Erstell",
+    "lastModified": "Zuletzt bearbeitet"
   },
   "users": {
-    "title": "Users",
-    "subtitle": "Create, read, update and delete users"
+    "title": "Benutzer",
+    "subtitle": "Verwaltung der Benutzer"
   },
   "create-user-button": {
-    "label": "Create"
+    "label": "Erstellen"
   },
   "delete-user-button": {
-    "label": "Delete",
+    "label": "Löschen",
     "confirm-alert": {
-      "title": "Delete user",
-      "message": "Do you really want to delete the user?",
-      "submit": "Yes",
-      "cancel": "No"
+      "title": "Benutzer löschen",
+      "message": "Soll der Benutzer wirklich gelöscht werden?",
+      "submit": "Ja",
+      "cancel": "Nein"
     }
   },
   "edit-user-button": {
-    "label": "Edit"
+    "label": "Bearbeiten"
   },
   "set-password-button": {
-    "label": "Set password"
+    "label": "Passwort ändern"
   },
   "set-permissions-button": {
-    "label": "Set permissions"
+    "label": "Berechtigungen ändern"
   },
   "user-form": {
-    "submit": "Submit"
+    "submit": "Speichern"
   },
   "add-user": {
-    "title": "Create User",
-    "subtitle": "Create a new user"
+    "title": "Benutzer erstellen",
+    "subtitle": "Erstellen eines neuen Benutzers"
   },
   "single-user": {
-    "error-title": "Error",
-    "error-subtitle": "Unknown user error",
+    "error-title": "Fehler",
+    "error-subtitle": "Unbekannter Benutzer Fehler",
     "navigation-label": "Navigation",
-    "actions-label": "Actions",
-    "information-label": "Information",
-    "back-label": "Back"
+    "actions-label": "Aktionen",
+    "information-label": "Informationen",
+    "back-label": "Zurück"
   },
   "validation": {
-    "mail-invalid": "This email is invalid",
-    "name-invalid": "This name is invalid",
-    "displayname-invalid": "This displayname is invalid"
+    "mail-invalid": "Diese E-Mail ist ungültig",
+    "name-invalid": "Dieser Name ist ungültig",
+    "displayname-invalid": "Dieser Anzeigename ist ungültig"
   },
   "password": {
-    "set-password-successful": "Password successfully set"
+    "set-password-successful": "Das Passwort wurde erfolgreich gespeichert."
   },
   "help": {
-    "usernameHelpText": "Unique name of the user.",
-    "displayNameHelpText": "Display name of the user.",
-    "mailHelpText": "Email address of the user.",
-    "adminHelpText": "An administrator is able to create, modify and delete repositories, groups and users.",
-    "activeHelpText": "Activate or deactive the user."
+    "usernameHelpText": "Einzigartiger Name des Benutzers.",
+    "displayNameHelpText": "Anzeigename des Benutzers.",
+    "mailHelpText": "E-Mail Adresse des Benutzers.",
+    "adminHelpText": "Ein Administrator kann Repositories, Gruppen und Benutzer erstellen, bearbeiten und löschen.",
+    "activeHelpText": "Aktivierung oder Deaktivierung eines Benutzers."
   }
 }
