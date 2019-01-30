@@ -66,7 +66,7 @@ public class FileHistoryResourceTest extends RepositoryTestBase {
   private FileHistoryCollectionToDtoMapper fileHistoryCollectionToDtoMapper;
 
   @InjectMocks
-  private ChangesetToChangesetDtoMapperImpl changesetToChangesetDtoMapper;
+  private DefaultChangesetToChangesetDtoMapperImpl changesetToChangesetDtoMapper;
 
   private FileHistoryRootResource fileHistoryRootResource;
 
