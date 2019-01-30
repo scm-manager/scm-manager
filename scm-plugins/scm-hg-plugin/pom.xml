@@ -92,19 +92,6 @@
       <url>http://maven.scm-manager.org/nexus/content/groups/public</url>
     </repository>
 
-    <repository>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-      <id>sonatype-ossrh</id>
-      <name>Sonatype Open Source Software Repository Hosting</name>
-      <layout>default</layout>
-      <url>https://oss.sonatype.org/content/groups/public/</url>
-    </repository>
-
   </repositories>
 
 </project>

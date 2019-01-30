@@ -86,20 +86,6 @@
       <url>http://maven.scm-manager.org/nexus/content/groups/public</url>
     </repository>
 
-    <repository>
-      <id>ossrh</id>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-      <snapshots>
-        <enabled>true</enabled>
-        <updatePolicy>daily</updatePolicy>
-      </snapshots>
-    </repository>
-
-    <repository>
-      <id>jitpack</id>
-      <url>https://jitpack.io</url>
-    </repository>
-
   </repositories>
 
   <pluginRepositories>
@@ -172,18 +158,6 @@
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
-    </dependency>
-
-    <dependency>
-      <!-- Dependency used in Jenkinsfile. Including this in maven provides code completion in Jenkinsfile. -->
-      <groupId>com.github.cloudogu</groupId>
-      <artifactId>ces-build-lib</artifactId>
-      <!-- Keep this version in sync with the one used in Jenkinsfile -->
-      <version>9aadeeb</version>
-      <!-- Don't ship this dependency with the app -->
-      <optional>true</optional>
-      <!-- Don't inherit this dependency! -->
-      <scope>provided</scope>
     </dependency>
 
   </dependencies>
