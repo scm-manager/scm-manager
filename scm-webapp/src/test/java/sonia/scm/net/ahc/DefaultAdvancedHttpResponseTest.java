@@ -41,6 +41,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.io.ByteSource;
 
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -134,7 +135,7 @@ public class DefaultAdvancedHttpResponseTest
                                       connection, 200, "OK");
     Multimap<String, String> headers = response.getHeaders();
 
-    assertThat(headers.get("Test"), contains("One", "Two"));
+    assertThat(headers.get("Test"), Matchers.contains("One", "Two"));
     assertTrue(headers.get("Test-2").isEmpty());
   }
 
@@ -142,8 +143,7 @@ public class DefaultAdvancedHttpResponseTest
 
   /** Field description */
   private final DefaultAdvancedHttpClient client =
-    new DefaultAdvancedHttpClient(new ScmConfiguration(),
-      new HashSet<ContentTransformer>(), new SSLContextProvider());
+    new DefaultAdvancedHttpClient(new ScmConfiguration(), new HashSet<>(), new SSLContextProvider());
 
   /** Field description */
   @Mock
