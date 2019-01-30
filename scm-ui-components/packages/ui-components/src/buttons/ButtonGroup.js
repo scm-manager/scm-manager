@@ -5,8 +5,6 @@ import Button from "./Button";
 type Props = {
   firstlabel: string,
   secondlabel: string,
-  firstColor: string,
-  secondColor: string,
   firstAction?: (event: Event) => void,
   secondAction?: (event: Event) => void,
   firstIsSelected: boolean
@@ -15,10 +13,10 @@ type Props = {
 class ButtonGroup extends React.Component<Props> {
 
   render() {
-    const { firstlabel, secondlabel, firstColor, secondColor, firstAction, secondAction, firstIsSelected } = this.props;
+    const { firstlabel, secondlabel, firstAction, secondAction, firstIsSelected } = this.props;
 
-    let showFirstColor = firstColor;
-    let showSecondColor = secondColor;
+    let showFirstColor = "";
+    let showSecondColor = "";
 
     if (firstIsSelected) {
       showFirstColor += "link is-selected";

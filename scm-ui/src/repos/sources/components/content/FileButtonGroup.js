@@ -47,8 +47,6 @@ class FileButtonGroup extends React.Component<Props> {
       <ButtonGroup
         firstlabel={sourcesLabel}
         secondlabel={historyLabel}
-        firstColor=""
-        secondColor=""
         firstAction={this.showSources}
         secondAction={this.showHistory}
         firstIsSelected={!historyIsSelected}
