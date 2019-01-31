@@ -61,16 +61,42 @@ class UserForm extends React.Component<Props, State> {
     return false;
   }
 
+  createUserComponentsAreInvalid = () => {
+    const user = this.state.user;
+    if (!this.props.user) {
+      return (
+        this.state.nameValidationError ||
+        this.isFalsy(user.name) ||
+        !this.state.passwordValid
+      );
+    } else {
+      return false;
+    }
+  };
+
+  editUserComponentsAreUnchanged = () => {
+    const user = this.state.user;
+    if (this.props.user) {
+      return (
+        this.props.user.displayName === user.displayName &&
+        this.props.user.mail === user.mail &&
+        this.props.user.admin === user.admin &&
+        this.props.user.active === user.active
+      );
+    } else {
+      return false;
+    }
+  };
+
   isValid = () => {
     const user = this.state.user;
     return !(
-      this.state.nameValidationError ||
+      this.createUserComponentsAreInvalid() ||
+      this.editUserComponentsAreUnchanged() ||
       this.state.mailValidationError ||
       this.state.displayNameValidationError ||
-      this.isFalsy(user.name) ||
       this.isFalsy(user.displayName) ||
-      this.isFalsy(user.mail) ||
-      !this.state.passwordValid
+      this.isFalsy(user.mail)
     );
   };
 
