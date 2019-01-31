@@ -40,6 +40,11 @@ class ConfirmAlert extends React.Component<Props> {
               <p className="modal-card-title">
                 {title}
               </p>
+              <button
+                className="delete"
+                aria-label="close"
+                onClick={() => this.close()}
+              />
             </header>
             <section className="modal-card-body">
               {message}
