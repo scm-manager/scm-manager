@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
+import org.apache.shiro.authz.AuthorizationException;
 import sonia.scm.NotFoundException;
 import sonia.scm.PushStateDispatcher;
 import sonia.scm.filter.WebElement;
@@ -74,6 +75,9 @@ public class HttpProtocolServlet extends HttpServlet {
     } catch (NotFoundException e) {
       log.debug(e.getMessage());
       resp.setStatus(HttpStatus.SC_NOT_FOUND);
+    } catch (AuthorizationException e) {
+      log.debug(e.getMessage());
+      resp.setStatus(HttpStatus.SC_FORBIDDEN);
     }
   }
 }

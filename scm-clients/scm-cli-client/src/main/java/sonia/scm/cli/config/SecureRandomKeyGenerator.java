@@ -30,58 +30,40 @@
  */
 
 
-package sonia.scm.security;
+package sonia.scm.cli.config;
 
-//~--- non-JDK imports --------------------------------------------------------
+import com.google.common.annotations.VisibleForTesting;
+import sonia.scm.security.KeyGenerator;
 
-import org.junit.Test;
-
-import sonia.scm.repository.PermissionType;
-
-import static org.junit.Assert.*;
+import java.security.SecureRandom;
+import java.util.Locale;
 
 /**
+ * Create keys by using {@link SecureRandom}. The SecureRandomKeyGenerator produces aes compatible keys.
+ * Warning the class is not thread safe.
  *
  * @author Sebastian Sdorra
+ * @since 1.60
  */
-public class RepositoryPermissionTest
-{
+public class SecureRandomKeyGenerator implements KeyGenerator {
 
-  /**
-   * Method description
-   *
-   */
-  @Test
-  public void testImplies()
-  {
-    RepositoryPermission p = new RepositoryPermission("asd",
-                               PermissionType.READ);
+  private SecureRandom random = new SecureRandom();
 
-    assertTrue(p.implies(new RepositoryPermission("asd", PermissionType.READ)));
-    assertFalse(p.implies(new RepositoryPermission("asd",
-      PermissionType.OWNER)));
-    assertFalse(p.implies(new RepositoryPermission("asd",
-      PermissionType.WRITE)));
-    p = new RepositoryPermission("asd", PermissionType.OWNER);
-    assertTrue(p.implies(new RepositoryPermission("asd", PermissionType.READ)));
-    assertFalse(p.implies(new RepositoryPermission("bdb",
-      PermissionType.READ)));
-  }
+  // key length 16 for aes128
+  @VisibleForTesting
+  static final int KEY_LENGTH = 16;
 
-  /**
-   * Method description
-   *
-   */
-  @Test
-  public void testImpliesWithWildcard()
-  {
-    RepositoryPermission p = new RepositoryPermission("*",
-                               PermissionType.OWNER);
+  private static final String UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  private static final String LOWER = UPPER.toLowerCase(Locale.ENGLISH);
+  private static final String DIGITS = "0123456789";
+  private static final char[] ALL = (UPPER + LOWER + DIGITS).toCharArray();
 
-    assertTrue(p.implies(new RepositoryPermission("asd", PermissionType.READ)));
-    assertTrue(p.implies(new RepositoryPermission("bdb",
-      PermissionType.OWNER)));
-    assertTrue(p.implies(new RepositoryPermission("cgd",
-      PermissionType.WRITE)));
+  @Override
+  public String createKey() {
+    char[] key = new char[KEY_LENGTH];
+    for (int idx = 0; idx < KEY_LENGTH; ++idx) {
+      key[idx] = ALL[random.nextInt(ALL.length)];
+    }
+    return new String(key);
   }
 }

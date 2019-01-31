@@ -18,7 +18,8 @@ describe("permission validation", () => {
         name: "PermissionName",
         groupPermission: true,
         type: "READ",
-        _links: {}
+        _links: {},
+        verbs: []
       }
     ];
     const name = "PermissionName";
@@ -35,7 +36,8 @@ describe("permission validation", () => {
         name: "PermissionName",
         groupPermission: false,
         type: "READ",
-        _links: {}
+        _links: {},
+        verbs: []
       }
     ];
     const name = "PermissionName";

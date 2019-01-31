@@ -1,0 +1,68 @@
+{
+  "user": {
+    "name": "Benutzername",
+    "displayName": "Anzeigename",
+    "mail": "E-Mail",
+    "password": "Passwort",
+    "admin": "Admin",
+    "active": "Aktiv",
+    "type": "Typ",
+    "creationDate": "Erstell",
+    "lastModified": "Zuletzt bearbeitet"
+  },
+  "users": {
+    "title": "Benutzer",
+    "subtitle": "Verwaltung der Benutzer"
+  },
+  "create-user-button": {
+    "label": "Erstellen"
+  },
+  "delete-user-button": {
+    "label": "Löschen",
+    "confirm-alert": {
+      "title": "Benutzer löschen",
+      "message": "Soll der Benutzer wirklich gelöscht werden?",
+      "submit": "Ja",
+      "cancel": "Nein"
+    }
+  },
+  "edit-user-button": {
+    "label": "Bearbeiten"
+  },
+  "set-password-button": {
+    "label": "Passwort ändern"
+  },
+  "set-permissions-button": {
+    "label": "Berechtigungen ändern"
+  },
+  "user-form": {
+    "submit": "Speichern"
+  },
+  "add-user": {
+    "title": "Benutzer erstellen",
+    "subtitle": "Erstellen eines neuen Benutzers"
+  },
+  "single-user": {
+    "error-title": "Fehler",
+    "error-subtitle": "Unbekannter Benutzer Fehler",
+    "navigation-label": "Navigation",
+    "actions-label": "Aktionen",
+    "information-label": "Informationen",
+    "back-label": "Zurück"
+  },
+  "validation": {
+    "mail-invalid": "Diese E-Mail ist ungültig",
+    "name-invalid": "Dieser Name ist ungültig",
+    "displayname-invalid": "Dieser Anzeigename ist ungültig"
+  },
+  "password": {
+    "set-password-successful": "Das Passwort wurde erfolgreich gespeichert."
+  },
+  "help": {
+    "usernameHelpText": "Einzigartiger Name des Benutzers.",
+    "displayNameHelpText": "Anzeigename des Benutzers.",
+    "mailHelpText": "E-Mail Adresse des Benutzers.",
+    "adminHelpText": "Ein Administrator kann Repositories, Gruppen und Benutzer erstellen, bearbeiten und löschen.",
+    "activeHelpText": "Aktivierung oder Deaktivierung eines Benutzers."
+  }
+}

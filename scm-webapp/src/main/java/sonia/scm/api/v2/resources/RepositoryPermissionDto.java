@@ -7,8 +7,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+
+import java.util.Collection;
 
 import static sonia.scm.api.v2.ValidationConstraints.USER_GROUP_PATTERN;
 
@@ -20,16 +24,8 @@ public class RepositoryPermissionDto extends HalRepresentation {
   @Pattern(regexp = USER_GROUP_PATTERN)
   private String name;
 
-  /**
-   * the type can be replaced with a dto enum if the mapstruct 1.3.0 is stable
-   * the mapstruct has a Bug on mapping enums in the 1.2.0-Final Version
-   *
-   * see the bug fix: https://github.com/mapstruct/mapstruct/commit/460e87eef6eb71245b387fdb0509c726676a8e19
-   *
-   **/
-  @JsonInclude(JsonInclude.Include.NON_NULL)
-  private String type;
-
+  @NotEmpty
+  private Collection<String> verbs;
 
   private boolean groupPermission = false;
 
@@ -37,7 +33,6 @@ public class RepositoryPermissionDto extends HalRepresentation {
     name = permissionName;
     this.groupPermission = groupPermission;
   }
-
 
   @Override
   @SuppressWarnings("squid:S1185") // We want to have this method available in this package

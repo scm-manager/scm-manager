@@ -36,7 +36,11 @@ from mercurial.hgweb import hgweb, wsgicgi
 
 demandimport.enable()
 
-u = uimod.ui()
+try:
+    u = uimod.ui.load()
+except AttributeError:
+    # For installations earlier than Mercurial 4.1
+    u = uimod.ui()
 
 u.setconfig('web', 'push_ssl', 'false')
 u.setconfig('web', 'allow_read', '*')
@@ -45,7 +49,13 @@ u.setconfig('web', 'allow_push', '*')
 u.setconfig('hooks', 'changegroup.scm', 'python:scmhooks.callback')
 u.setconfig('hooks', 'pretxnchangegroup.scm', 'python:scmhooks.callback')
 
+# pass SCM_HTTP_POST_ARGS to enable experimental httppostargs protocol of mercurial
+# SCM_HTTP_POST_ARGS is set by HgCGIServlet
+# Issue 970: https://goo.gl/poascp
+u.setconfig('experimental', 'httppostargs', os.environ['SCM_HTTP_POST_ARGS'])
 
+# open repository
+# SCM_REPOSITORY_PATH contains the repository path and is set by HgCGIServlet
 r = hg.repository(u, os.environ['SCM_REPOSITORY_PATH'])
 application = hgweb(r)
 wsgicgi.launch(application)

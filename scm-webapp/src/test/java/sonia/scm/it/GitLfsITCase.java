@@ -50,7 +50,6 @@ import sonia.scm.api.rest.ObjectMapperProvider;
 import sonia.scm.api.v2.resources.RepositoryDto;
 import sonia.scm.api.v2.resources.UserDto;
 import sonia.scm.api.v2.resources.UserToUserDtoMapperImpl;
-import sonia.scm.repository.PermissionType;
 import sonia.scm.user.User;
 import sonia.scm.user.UserTestData;
 import sonia.scm.util.HttpUtil;
@@ -117,10 +116,6 @@ public class GitLfsITCase {
 
   @Test
   public void testLfsAPIWithOwnerPermissions() throws IOException {
-    uploadAndDownloadAsUser(PermissionType.OWNER);
-  }
-
-  private void uploadAndDownloadAsUser(PermissionType permissionType) throws IOException {
     User trillian = UserTestData.createTrillian();
     trillian.setPassword("secret123");
     createUser(trillian);
@@ -129,8 +124,8 @@ public class GitLfsITCase {
       String permissionsUrl = repository.getLinks().getLinkBy("permissions").get().getHref();
       IntegrationTestUtil.createResource(adminClient, URI.create(permissionsUrl))
         .accept("*/*")
-        .type(VndMediaType.PERMISSION)
-        .post(ClientResponse.class, "{\"name\": \""+ trillian.getId() +"\", \"type\":\"WRITE\"}");
+        .type(VndMediaType.REPOSITORY_PERMISSION)
+        .post(ClientResponse.class, "{\"name\": \""+ trillian.getId() +"\", \"verbs\":[\"*\"]}");
 
       ScmClient client = new ScmClient(trillian.getId(), "secret123");
 
@@ -138,11 +133,6 @@ public class GitLfsITCase {
     } finally {
       removeUser(trillian);
     }
-  }
-
-  @Test
-  public void testLfsAPIWithWritePermissions() throws IOException {
-    uploadAndDownloadAsUser(PermissionType.WRITE);
   }
 
   private void createUser(User user) {
@@ -175,8 +165,8 @@ public class GitLfsITCase {
       String permissionsUrl = repository.getLinks().getLinkBy("permissions").get().getHref();
       IntegrationTestUtil.createResource(adminClient, URI.create(permissionsUrl))
         .accept("*/*")
-        .type(VndMediaType.PERMISSION)
-        .post(ClientResponse.class, "{\"name\": \""+ trillian.getId() +"\", \"type\":\"READ\"}");
+        .type(VndMediaType.REPOSITORY_PERMISSION)
+        .post(ClientResponse.class, "{\"name\": \""+ trillian.getId() +"\", \"verbs\":[\"read\"]}");
 
       ScmClient client = new ScmClient(trillian.getId(), "secret123");
       uploadAndDownload(client);
@@ -196,8 +186,8 @@ public class GitLfsITCase {
       String permissionsUrl = repository.getLinks().getLinkBy("permissions").get().getHref();
       IntegrationTestUtil.createResource(adminClient, URI.create(permissionsUrl))
         .accept("*/*")
-        .type(VndMediaType.PERMISSION)
-        .post(ClientResponse.class, "{\"name\": \""+ trillian.getId() +"\", \"type\":\"READ\"}");
+        .type(VndMediaType.REPOSITORY_PERMISSION)
+        .post(ClientResponse.class, "{\"name\": \""+ trillian.getId() +"\", \"verbs\":[\"read\",\"pull\"]}");
 
       // upload data as admin
       String data = UUID.randomUUID().toString();

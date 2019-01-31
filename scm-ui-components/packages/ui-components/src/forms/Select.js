@@ -54,7 +54,7 @@ class Select extends React.Component<Props> {
           >
             {options.map(opt => {
               return (
-                <option value={opt.value} key={opt.value}>
+                <option value={opt.value} key={"KEY_" + opt.value}>
                   {opt.label}
                 </option>
               );

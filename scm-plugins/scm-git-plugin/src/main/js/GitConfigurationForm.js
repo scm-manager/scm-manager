@@ -8,6 +8,7 @@ import { InputField, Checkbox } from "@scm-manager/ui-components";
 type Configuration = {
   repositoryDirectory?: string,
   gcExpression?: string,
+  nonFastForwardDisallowed: boolean,
   disabled: boolean,
   _links: Links
 }
@@ -41,7 +42,7 @@ class GitConfigurationForm extends React.Component<Props, State> {
   };
 
   render() {
-    const { gcExpression, disabled } = this.state;
+    const { gcExpression, nonFastForwardDisallowed, disabled } = this.state;
     const { readOnly, t } = this.props;
 
     return (
@@ -52,6 +53,13 @@ class GitConfigurationForm extends React.Component<Props, State> {
                     value={gcExpression}
                     onChange={this.handleChange}
                     disabled={readOnly}
+        />
+        <Checkbox name="nonFastForwardDisallowed"
+                  label={t("scm-git-plugin.config.nonFastForwardDisallowed")}
+                  helpText={t("scm-git-plugin.config.nonFastForwardDisallowedHelpText")}
+                  checked={nonFastForwardDisallowed}
+                  onChange={this.handleChange}
+                  disabled={readOnly}
         />
         <Checkbox name="disabled"
                   label={t("scm-git-plugin.config.disabled")}

@@ -11,6 +11,8 @@ type Configuration = {
   "encoding": string,
   "useOptimizedBytecode": boolean,
   "showRevisionInId": boolean,
+  "disableHookSSLValidation": boolean,
+  "enableHttpPostArgs": boolean,
   "disabled": boolean,
   "_links": Links
 };
@@ -101,6 +103,8 @@ class HgConfigurationForm extends React.Component<Props, State> {
         {this.inputField("encoding")}
         {this.checkbox("useOptimizedBytecode")}
         {this.checkbox("showRevisionInId")}
+        {this.checkbox("disableHookSSLValidation")}
+        {this.checkbox("enableHttpPostArgs")}
         {this.checkbox("disabled")}
       </>
     );

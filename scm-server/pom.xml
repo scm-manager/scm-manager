@@ -64,7 +64,6 @@
               <assembleDirectory>${exploded.directory}</assembleDirectory>
               <repoPath>lib</repoPath>
               <repositoryLayout>flat</repositoryLayout>
-              <includeConfigurationDirectoryInClasspath>true</includeConfigurationDirectoryInClasspath>
               <daemons>
                 <daemon>
 
@@ -306,8 +305,8 @@
   </profiles>
 
   <properties>
-    <commons.daemon.version>1.0.15</commons.daemon.version>
-    <commons.daemon.native.version>1.0.15.1</commons.daemon.native.version>
+    <commons.daemon.version>1.1.0</commons.daemon.version>
+    <commons.daemon.native.version>1.1.0</commons.daemon.native.version>
     <exploded.directory>${project.build.directory}/appassembler/commons-daemon/scm-server</exploded.directory>
   </properties>
 
