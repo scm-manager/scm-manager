@@ -1,7 +1,7 @@
 {
   "login": {
     "title": "Anmeldung",
-    "subtitle": "Bitte anmelden um fortzufahren.",
+    "subtitle": "Bitte anmelden, um fortzufahren.",
     "logo-alt": "SCM-Manager",
     "username-placeholder": "Benutzername",
     "password-placeholder": "Passwort",
@@ -59,10 +59,10 @@
   "password": {
     "label": "Passwort",
     "newPassword": "Neues Passwort",
-    "passwordHelpText": "Plaintext Passwort des Benutzers.",
-    "passwordConfirmHelpText": "Passwort zur Bestätigen wiederholen.",
+    "passwordHelpText": "Klartext Passwort des Benutzers",
+    "passwordConfirmHelpText": "Passwort zur Bestätigen wiederholen",
     "currentPassword": "Aktuelles Passwort",
-    "currentPasswordHelpText": "Dieses Passwort wird momentan bereits verwendet.",
+    "currentPasswordHelpText": "Dieses Passwort wird momentan bereits verwendet",
     "confirmPassword": "Passwort wiederholen",
     "passwordInvalid": "Das Passwort muss zwischen 6 und 32 Zeichen lang sein",
     "passwordConfirmFailed": "Passwörter müssen identisch sein",

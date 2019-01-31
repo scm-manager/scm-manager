@@ -14,7 +14,7 @@
   "overview": {
     "title": "Repositories",
     "subtitle": "Overview of available repositories",
-    "create-button": "Create"
+    "create-button": "Create Repository"
   },
   "repository-root": {
     "error-title": "Error",

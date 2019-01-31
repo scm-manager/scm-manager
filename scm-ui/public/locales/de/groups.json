@@ -20,11 +20,11 @@
     "back-label": "Zurück"
   },
   "add-group": {
-    "title": "Gruppe erstellen",
-    "subtitle": "Erstllen einer neuen Gruppe"
+    "title": "Gruppe Erstellen",
+    "subtitle": "Erstellen einer neuen Gruppe"
   },
   "create-group-button": {
-    "label": "Erstellen"
+    "label": "Gruppe Erstellen"
   },
   "edit-group-button": {
     "label": "Bearbeiten"
@@ -41,7 +41,7 @@
   },
   "add-member-autocomplete": {
     "placeholder": "Benutzername eingeben",
-    "loading": "suche...",
+    "loading": "Suche...",
     "no-options": "Kein Vorschlag für Benutzername verfügbar"
     },
 
@@ -50,7 +50,7 @@
     "name-error": "Name ist ungültig",
     "description-error": "Beschreibung ist ungültig",
     "help": {
-      "nameHelpText": "Einzigartiger Name der Gruppe",
+      "nameHelpText": "Eindeutiger Name der Gruppe",
       "descriptionHelpText": "Eine kurze Beschreibung der Gruppe",
       "memberHelpText": "Benutzername des Mitglieds der Gruppe"
     }

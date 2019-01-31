@@ -8,7 +8,7 @@
     "lastModified": "Zuletzt bearbeitet"
   },
   "validation": {
-    "name-invalid": "Der Name des Repositories ist ungültig",
+    "name-invalid": "Der Name des Repository ist ungültig",
     "contact-invalid": "Der Kontakt muss eine gültige E-Mail Adresse sein"
   },
   "overview": {
@@ -40,7 +40,7 @@
   "delete-nav-action": {
     "label": "Löschen",
     "confirm-alert": {
-      "title": "Repository löschen",
+      "title": "Repository Löschen",
       "message": "Soll das Repository wirklich gelöscht werden?",
       "submit": "Ja",
       "cancel": "Nein"
@@ -98,7 +98,7 @@
     "user-permission": "Benutzerberechtigung",
     "edit-permission": {
       "delete-button": "Löschen",
-      "save-button": "Änderungen speichern"
+      "save-button": "Änderungen Speichern"
     },
     "advanced-button": {
       "label": "Erweitert"
@@ -106,7 +106,7 @@
     "delete-permission-button": {
       "label": "Löschen",
       "confirm-alert": {
-        "title": "Berechtigung löschen",
+        "title": "Berechtigung Löschen",
         "message": "Soll die Berechtigung wirklich gelöscht werden?",
         "submit": "Ja",
         "cancel": "Nein"

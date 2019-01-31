@@ -15,7 +15,7 @@
     "subtitle": "Create, read, update and delete users"
   },
   "create-user-button": {
-    "label": "Create"
+    "label": "Create User"
   },
   "delete-user-button": {
     "label": "Delete",
@@ -59,10 +59,10 @@
     "set-password-successful": "Password successfully set"
   },
   "help": {
-    "usernameHelpText": "Unique name of the user.",
-    "displayNameHelpText": "Display name of the user.",
-    "mailHelpText": "Email address of the user.",
+    "usernameHelpText": "Unique name of the user",
+    "displayNameHelpText": "Display name of the user",
+    "mailHelpText": "Email address of the user",
     "adminHelpText": "An administrator is able to create, modify and delete repositories, groups and users.",
-    "activeHelpText": "Activate or deactive the user."
+    "activeHelpText": "Activate or deactivate the user"
   }
 }

@@ -7,7 +7,7 @@
     "admin": "Admin",
     "active": "Aktiv",
     "type": "Typ",
-    "creationDate": "Erstell",
+    "creationDate": "Erstellt",
     "lastModified": "Zuletzt bearbeitet"
   },
   "users": {
@@ -15,12 +15,12 @@
     "subtitle": "Verwaltung der Benutzer"
   },
   "create-user-button": {
-    "label": "Erstellen"
+    "label": "Benutzer Erstellen"
   },
   "delete-user-button": {
     "label": "Löschen",
     "confirm-alert": {
-      "title": "Benutzer löschen",
+      "title": "Benutzer Löschen",
       "message": "Soll der Benutzer wirklich gelöscht werden?",
       "submit": "Ja",
       "cancel": "Nein"
@@ -30,7 +30,7 @@
     "label": "Bearbeiten"
   },
   "set-password-button": {
-    "label": "Passwort ändern"
+    "label": "Passwort Ändern"
   },
   "set-permissions-button": {
     "label": "Berechtigungen ändern"
@@ -39,7 +39,7 @@
     "submit": "Speichern"
   },
   "add-user": {
-    "title": "Benutzer erstellen",
+    "title": "Benutzer Erstellen",
     "subtitle": "Erstellen eines neuen Benutzers"
   },
   "single-user": {
@@ -59,10 +59,10 @@
     "set-password-successful": "Das Passwort wurde erfolgreich gespeichert."
   },
   "help": {
-    "usernameHelpText": "Einzigartiger Name des Benutzers.",
-    "displayNameHelpText": "Anzeigename des Benutzers.",
-    "mailHelpText": "E-Mail Adresse des Benutzers.",
+    "usernameHelpText": "Einzigartiger Name des Benutzers",
+    "displayNameHelpText": "Anzeigename des Benutzers",
+    "mailHelpText": "E-Mail Adresse des Benutzers",
     "adminHelpText": "Ein Administrator kann Repositories, Gruppen und Benutzer erstellen, bearbeiten und löschen.",
-    "activeHelpText": "Aktivierung oder Deaktivierung eines Benutzers."
+    "activeHelpText": "Aktivierung oder Deaktivierung eines Benutzers"
   }
 }
