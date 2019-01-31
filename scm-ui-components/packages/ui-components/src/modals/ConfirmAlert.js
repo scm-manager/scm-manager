@@ -33,6 +33,7 @@ class ConfirmAlert extends React.Component<Props> {
 
     return (
       <div className="modal is-active">
+        <div className="modal-background" />
         <div className="modal-card">
 
             <header className="modal-card-head">
