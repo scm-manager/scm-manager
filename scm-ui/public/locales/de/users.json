@@ -15,12 +15,12 @@
     "subtitle": "Verwaltung der Benutzer"
   },
   "create-user-button": {
-    "label": "Benutzer Erstellen"
+    "label": "Benutzer erstellen"
   },
   "delete-user-button": {
     "label": "Löschen",
     "confirm-alert": {
-      "title": "Benutzer Löschen",
+      "title": "Benutzer löschen",
       "message": "Soll der Benutzer wirklich gelöscht werden?",
       "submit": "Ja",
       "cancel": "Nein"
@@ -30,7 +30,7 @@
     "label": "Bearbeiten"
   },
   "set-password-button": {
-    "label": "Passwort Ändern"
+    "label": "Passwort ändern"
   },
   "set-permissions-button": {
     "label": "Berechtigungen ändern"
@@ -39,7 +39,7 @@
     "submit": "Speichern"
   },
   "add-user": {
-    "title": "Benutzer Erstellen",
+    "title": "Benutzer erstellen",
     "subtitle": "Erstellen eines neuen Benutzers"
   },
   "single-user": {

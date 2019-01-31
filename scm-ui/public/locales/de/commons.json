@@ -10,13 +10,13 @@
   "logout": {
     "error": {
       "title": "Abmeldung fehlgeschlagen",
-      "subtitle": "Während der Abmeldung ist ein Fehler aufgetreten"
+      "subtitle": "Während der Abmeldung ist ein Fehler aufgetreten."
     }
   },
   "app": {
     "error": {
       "title": "Fehler",
-      "subtitle": "Ein unbekannter Fehler ist aufgetreten"
+      "subtitle": "Ein unbekannter Fehler ist aufgetreten."
     }
   },
   "error-notification": {
@@ -52,21 +52,21 @@
     "information": "Informationen",
     "change-password": "Passwort ändern",
     "error-title": "Fehler",
-    "error-subtitle": "Das Profil kann nicht angezeigt werden",
+    "error-subtitle": "Das Profil kann nicht angezeigt werden.",
     "error": "Fehler",
     "error-message": "'me' ist nicht definiert"
   },
   "password": {
     "label": "Passwort",
     "newPassword": "Neues Passwort",
-    "passwordHelpText": "Klartext Passwort des Benutzers",
-    "passwordConfirmHelpText": "Passwort zur Bestätigen wiederholen",
+    "passwordHelpText": "Klartext Passwort des Benutzers.",
+    "passwordConfirmHelpText": "Passwort zur Bestätigen wiederholen.",
     "currentPassword": "Aktuelles Passwort",
-    "currentPasswordHelpText": "Dieses Passwort wird momentan bereits verwendet",
+    "currentPasswordHelpText": "Dieses Passwort wird momentan bereits verwendet.",
     "confirmPassword": "Passwort wiederholen",
-    "passwordInvalid": "Das Passwort muss zwischen 6 und 32 Zeichen lang sein",
-    "passwordConfirmFailed": "Passwörter müssen identisch sein",
+    "passwordInvalid": "Das Passwort muss zwischen 6 und 32 Zeichen lang sein!",
+    "passwordConfirmFailed": "Passwörter müssen identisch sein!",
     "submit": "Speichern",
-    "changedSuccessfully": "Passwort erfolgreich geändert"
+    "changedSuccessfully": "Passwort erfolgreich geändert!"
   }
 }

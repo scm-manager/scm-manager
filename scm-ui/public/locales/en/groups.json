@@ -30,17 +30,17 @@
     "label": "Edit"
   },
   "add-member-button": {
-    "label": "Add member"
+    "label": "Add Member"
   },
   "remove-member-button": {
-    "label": "Remove member"
+    "label": "Remove Member"
   },
   "add-member-textfield": {
-    "label": "Add member",
+    "label": "Add Member",
     "error": "Invalid member name"
   },
   "add-member-autocomplete": {
-    "placeholder": "Enter member",
+    "placeholder": "Enter Member",
     "loading": "Loading...",
     "no-options": "No suggestion available"
     },
@@ -65,6 +65,6 @@
     }
   },
   "set-permissions-button": {
-    "label": "Set permissions"
+    "label": "Set Permissions"
   }
 }

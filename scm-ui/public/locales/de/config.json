@@ -67,7 +67,7 @@
     "plugin-url-invalid": "Dies ist keine gültige URL"
   },
   "help": {
-    "realmDescriptionHelpText": "Beschreibung des Authentication Realm",
+    "realmDescriptionHelpText": "Beschreibung des Authentication Realm.",
     "dateFormatHelpText": "Moments Datumsformat. Zulässige Formate sind in der MomentJS Dokumentation beschrieben.",
     "pluginRepositoryHelpText": "Die URL des Plugin Repositories. Beschreibung der Platzhalter: version = SCM-Manager Version; os = Betriebssystem; arch = Architektur",
     "enableForwardingHelpText": "mod_proxy Port Weiterleitung aktivieren.",
@@ -83,11 +83,11 @@
     "loginAttemptLimitTimeoutHelpText": "Timeout in Sekunden für Benutzer, die vorübergehend wegen zu vieler fehlgeschlagener Anmeldeversuche, deaktiviert wurden.",
     "enableProxyHelpText": "Proxy aktivieren",
     "proxyPortHelpText": "Der Proxy Port",
-    "proxyPasswordHelpText": "Das Passwort für die Proxy Server Anmeldung",
+    "proxyPasswordHelpText": "Das Passwort für die Proxy Server Anmeldung.",
     "proxyServerHelpText": "Der Proxy Server",
-    "proxyUserHelpText": "Der Benutzername für die Proxy Server Anmeldung",
+    "proxyUserHelpText": "Der Benutzername für die Proxy Server Anmeldung.",
     "proxyExcludesHelpText": "Glob patterns für Hostnamen, die von den Proxy-Einstellungen ausgeschlossen werden sollen.",
     "enableXsrfProtectionHelpText": "Xsrf Cookie Protection aktivieren. Hinweis: Dieses Feature befindet sich noch im Experimentalstatus.",
-    "defaultNameSpaceStrategyHelpText": "Die Standardstrategie für Namespaces"
+    "defaultNameSpaceStrategyHelpText": "Die Standardstrategie für Namespaces."
   }
 }

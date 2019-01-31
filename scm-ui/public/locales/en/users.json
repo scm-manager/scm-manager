@@ -20,7 +20,7 @@
   "delete-user-button": {
     "label": "Delete",
     "confirm-alert": {
-      "title": "Delete user",
+      "title": "Delete User",
       "message": "Do you really want to delete the user?",
       "submit": "Yes",
       "cancel": "No"
@@ -30,10 +30,10 @@
     "label": "Edit"
   },
   "set-password-button": {
-    "label": "Set password"
+    "label": "Set Password"
   },
   "set-permissions-button": {
-    "label": "Set permissions"
+    "label": "Set Permissions"
   },
   "user-form": {
     "submit": "Submit"
@@ -59,10 +59,10 @@
     "set-password-successful": "Password successfully set"
   },
   "help": {
-    "usernameHelpText": "Unique name of the user",
-    "displayNameHelpText": "Display name of the user",
-    "mailHelpText": "Email address of the user",
+    "usernameHelpText": "Unique name of the user.",
+    "displayNameHelpText": "Display name of the user.",
+    "mailHelpText": "Email address of the user.",
     "adminHelpText": "An administrator is able to create, modify and delete repositories, groups and users.",
-    "activeHelpText": "Activate or deactivate the user"
+    "activeHelpText": "Activate or deactivate the user."
   }
 }
