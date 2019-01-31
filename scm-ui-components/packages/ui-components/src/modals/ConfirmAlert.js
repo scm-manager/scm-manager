@@ -32,11 +32,15 @@ class ConfirmAlert extends React.Component<Props> {
     const { title, message, buttons } = this.props;
 
     return (
-      <div className="react-confirm-alert-overlay">
-        <div className="react-confirm-alert">
-          {
-            <div className="react-confirm-alert-body">
-              {title && <h1>{title}</h1>}
+      <div className="modal is-active">
+        <div className="modal-card">
+
+            <header className="modal-card-head">
+              <p className="modal-card-title">
+                {title}
+              </p>
+            </header>
+            <section className="modal-card-body">
               {message}
               <div className="react-confirm-alert-button-group">
                 {buttons.map((button, i) => (
@@ -49,8 +53,8 @@ class ConfirmAlert extends React.Component<Props> {
                   </button>
                 ))}
               </div>
-            </div>
-          }
+            </section>
+
         </div>
       </div>
     );
