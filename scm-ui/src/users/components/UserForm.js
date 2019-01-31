@@ -61,7 +61,7 @@ class UserForm extends React.Component<Props, State> {
     return false;
   }
 
-  createUserComponentsAreValid = () => {
+  createUserComponentsAreInvalid = () => {
     const user = this.state.user;
     if (!this.props.user) {
       return (
@@ -74,7 +74,7 @@ class UserForm extends React.Component<Props, State> {
     }
   };
 
-  editUserComponentsAreChanged = () => {
+  editUserComponentsAreUnchanged = () => {
     const user = this.state.user;
     if (this.props.user) {
       return (
@@ -91,8 +91,8 @@ class UserForm extends React.Component<Props, State> {
   isValid = () => {
     const user = this.state.user;
     return !(
-      this.createUserComponentsAreValid() ||
-      this.editUserComponentsAreChanged() ||
+      this.createUserComponentsAreInvalid() ||
+      this.editUserComponentsAreUnchanged() ||
       this.state.mailValidationError ||
       this.state.displayNameValidationError ||
       this.isFalsy(user.displayName) ||
