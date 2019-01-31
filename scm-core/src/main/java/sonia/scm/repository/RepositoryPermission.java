@@ -37,7 +37,6 @@ package sonia.scm.repository;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-import org.apache.commons.collections.CollectionUtils;
 import sonia.scm.security.PermissionObject;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -109,7 +108,8 @@ public class RepositoryPermission implements PermissionObject, Serializable
     final RepositoryPermission other = (RepositoryPermission) obj;
 
     return Objects.equal(name, other.name)
-      && CollectionUtils.isEqualCollection(verbs, other.verbs)
+      && verbs.containsAll(other.verbs)
+      && verbs.size() == other.verbs.size()
       && Objects.equal(groupPermission, other.groupPermission);
   }
 

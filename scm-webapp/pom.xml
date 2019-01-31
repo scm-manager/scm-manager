@@ -215,18 +215,6 @@
       <version>1.4.01</version>
     </dependency>
 
-    <!-- only for BeanComparator, replace with own implementation -->
-    
-    <dependency>
-      <groupId>commons-beanutils</groupId>
-      <artifactId>commons-beanutils</artifactId>
-    </dependency>
-    
-    <dependency>
-      <groupId>commons-collections</groupId>
-      <artifactId>commons-collections</artifactId>
-    </dependency>
-
     <!--
       fix installation of httpasswd-plugin
       https://groups.google.com/d/topic/scmmanager/eN7UtG8TwW8/discussion
