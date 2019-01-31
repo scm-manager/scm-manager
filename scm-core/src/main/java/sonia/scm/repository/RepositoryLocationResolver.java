@@ -1,6 +1,5 @@
 package sonia.scm.repository;
 
-import groovy.lang.Singleton;
 import sonia.scm.SCMContextProvider;
 
 import javax.inject.Inject;
@@ -18,7 +17,6 @@ import java.nio.file.Path;
  * @author Mohamed Karray
  * @since 2.0.0
  */
-@Singleton
 public class RepositoryLocationResolver {
 
   private final SCMContextProvider contextProvider;

@@ -35,6 +35,8 @@ package sonia.scm.api.rest.resources;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.net.UrlEscapers;
 import org.apache.commons.beanutils.BeanComparator;
 import org.apache.shiro.authz.AuthorizationException;
 import org.slf4j.Logger;
@@ -45,7 +47,6 @@ import sonia.scm.ModelObject;
 import sonia.scm.PageResult;
 import sonia.scm.api.rest.RestExceptionResult;
 import sonia.scm.util.AssertUtil;
-import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 
 import javax.ws.rs.core.CacheControl;
@@ -63,6 +64,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
+import java.net.URI;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -139,11 +141,7 @@ public abstract class AbstractManagerResource<T extends ModelObject> {
       manager.create(item);
 
       String id = getId(item);
-
-      id = HttpUtil.encode(id);
-      response = Response.created(
-        uriInfo.getAbsolutePath().resolve(
-          getPathPart().concat("/").concat(id))).build();
+      response = Response.created(location(uriInfo, id)).build();
     }
     catch (AuthorizationException ex)
     {
@@ -157,6 +155,12 @@ public abstract class AbstractManagerResource<T extends ModelObject> {
     }
 
     return response;
+  }
+
+  @VisibleForTesting
+  URI location(UriInfo uriInfo, String id) {
+    String escaped = UrlEscapers.urlPathSegmentEscaper().escape(id);
+    return uriInfo.getAbsolutePath().resolve(getPathPart().concat("/").concat(escaped));
   }
 
   /**
@@ -247,7 +251,7 @@ public abstract class AbstractManagerResource<T extends ModelObject> {
    */
   public Response get(Request request, String id)
   {
-    Response response = null;
+    Response response;
     T item = manager.get(id);
 
     if (item != null)

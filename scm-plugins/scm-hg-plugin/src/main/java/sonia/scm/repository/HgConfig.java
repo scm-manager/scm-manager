@@ -58,6 +58,14 @@ public class HgConfig extends RepositoryConfig
 
   //~--- get methods ----------------------------------------------------------
 
+
+  @Override
+  @XmlTransient // Only for permission checks, don't serialize to XML
+  public String getId() {
+    // Don't change this without migrating SCM permission configuration!
+    return PERMISSION;
+  }
+
   /**
    * Method description
    *
@@ -122,6 +130,14 @@ public class HgConfig extends RepositoryConfig
   public boolean isUseOptimizedBytecode()
   {
     return useOptimizedBytecode;
+  }
+
+  public boolean isDisableHookSSLValidation() {
+    return disableHookSSLValidation;
+  }
+
+  public boolean isEnableHttpPostArgs() {
+    return enableHttpPostArgs;
   }
 
   /**
@@ -194,6 +210,10 @@ public class HgConfig extends RepositoryConfig
     this.showRevisionInId = showRevisionInId;
   }
 
+  public void setEnableHttpPostArgs(boolean enableHttpPostArgs) {
+    this.enableHttpPostArgs = enableHttpPostArgs;
+  }
+
   /**
    * Method description
    *
@@ -203,6 +223,10 @@ public class HgConfig extends RepositoryConfig
   public void setUseOptimizedBytecode(boolean useOptimizedBytecode)
   {
     this.useOptimizedBytecode = useOptimizedBytecode;
+  }
+
+  public void setDisableHookSSLValidation(boolean disableHookSSLValidation) {
+    this.disableHookSSLValidation = disableHookSSLValidation;
   }
 
   //~--- fields ---------------------------------------------------------------
@@ -225,10 +249,11 @@ public class HgConfig extends RepositoryConfig
   /** Field description */
   private boolean showRevisionInId = false;
 
-  @Override
-  @XmlTransient // Only for permission checks, don't serialize to XML
-  public String getId() {
-    // Don't change this without migrating SCM permission configuration!
-    return PERMISSION;
-  }
+  private boolean enableHttpPostArgs = false;
+
+  /**
+   * disable validation of ssl certificates for mercurial hook
+   * @see <a href="https://goo.gl/zH5eY8">Issue 959</a>
+   */
+  private boolean disableHookSSLValidation = false;
 }

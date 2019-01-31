@@ -1,17 +1,26 @@
 // @flow
 import React from "react";
 import { translate } from "react-i18next";
-import { Autocomplete, Radio, SubmitButton } from "@scm-manager/ui-components";
-import TypeSelector from "./TypeSelector";
+import {
+  Autocomplete,
+  SubmitButton,
+  Button,
+  LabelWithHelpIcon
+} from "@scm-manager/ui-components";
+import RoleSelector from "../components/RoleSelector";
 import type {
+  AvailableRepositoryPermissions,
   PermissionCollection,
   PermissionCreateEntry,
   SelectValue
 } from "@scm-manager/ui-types";
-import * as validator from "./permissionValidation";
+import * as validator from "../components/permissionValidation";
+import { findMatchingRoleName } from "../modules/permissions";
+import AdvancedPermissionsDialog from "./AdvancedPermissionsDialog";
 
 type Props = {
   t: string => string,
+  availablePermissions: AvailableRepositoryPermissions,
   createPermission: (permission: PermissionCreateEntry) => void,
   loading: boolean,
   currentPermissions: PermissionCollection,
@@ -21,10 +30,11 @@ type Props = {
 
 type State = {
   name: string,
-  type: string,
+  verbs: string[],
   groupPermission: boolean,
   valid: boolean,
-  value?: SelectValue
+  value?: SelectValue,
+  showAdvancedDialog: boolean
 };
 
 class CreatePermissionForm extends React.Component<Props, State> {
@@ -33,10 +43,11 @@ class CreatePermissionForm extends React.Component<Props, State> {
 
     this.state = {
       name: "",
-      type: "READ",
+      verbs: props.availablePermissions.availableRoles[0].verbs,
       groupPermission: false,
       valid: true,
-      value: undefined
+      value: undefined,
+      showAdvancedDialog: false
     };
   }
 
@@ -121,9 +132,23 @@ class CreatePermissionForm extends React.Component<Props, State> {
   };
 
   render() {
-    const { t, loading } = this.props;
+    const { t, availablePermissions, loading } = this.props;
 
-    const { type } = this.state;
+    const { verbs, showAdvancedDialog } = this.state;
+
+    const availableRoleNames = availablePermissions.availableRoles.map(
+      r => r.name
+    );
+    const matchingRole = findMatchingRoleName(availablePermissions, verbs);
+
+    const advancedDialog = showAdvancedDialog ? (
+      <AdvancedPermissionsDialog
+        availableVerbs={availablePermissions.availableVerbs}
+        selectedVerbs={verbs}
+        onClose={this.closeAdvancedPermissionsDialog}
+        onSubmit={this.submitAdvancedPermissionsDialog}
+      />
+    ) : null;
 
     return (
       <div>
@@ -131,32 +156,57 @@ class CreatePermissionForm extends React.Component<Props, State> {
         <h2 className="subtitle">
           {t("permission.add-permission.add-permission-heading")}
         </h2>
+        {advancedDialog}
         <form onSubmit={this.submit}>
-          <Radio
-            name="permission_scope"
-            value="USER_PERMISSION"
-            checked={!this.state.groupPermission}
-            label={t("permission.user-permission")}
-            onChange={this.permissionScopeChanged}
-          />
-          <Radio
-            name="permission_scope"
-            value="GROUP_PERMISSION"
-            checked={this.state.groupPermission}
-            label={t("permission.group-permission")}
-            onChange={this.permissionScopeChanged}
-          />
+          <div className="control">
+            <label className="radio">
+              <input
+                type="radio"
+                name="permission_scope"
+                checked={!this.state.groupPermission}
+                value="USER_PERMISSION"
+                onChange={this.permissionScopeChanged}
+              />
+              {t("permission.user-permission")}
+            </label>
+            <label className="radio">
+              <input
+                type="radio"
+                name="permission_scope"
+                value="GROUP_PERMISSION"
+                checked={this.state.groupPermission}
+                onChange={this.permissionScopeChanged}
+              />
+              {t("permission.group-permission")}
+            </label>
+          </div>
+
           <div className="columns">
-            <div className="column is-three-quarters">
+            <div className="column is-two-thirds">
               {this.renderAutocompletionField()}
             </div>
-            <div className="column is-one-quarter">
-              <TypeSelector
-                label={t("permission.type")}
-                helpText={t("permission.help.typeHelpText")}
-                handleTypeChange={this.handleTypeChange}
-                type={type ? type : "READ"}
-              />
+            <div className="column is-one-third">
+              <div className="columns">
+                <div className="column is-half">
+                  <RoleSelector
+                    availableRoles={availableRoleNames}
+                    label={t("permission.role")}
+                    helpText={t("permission.help.roleHelpText")}
+                    handleRoleChange={this.handleRoleChange}
+                    role={matchingRole}
+                  />
+                </div>
+                <div className="column is-half">
+                  <LabelWithHelpIcon
+                    label={t("permission.permissions")}
+                    helpText={t("permission.help.permissionsHelpText")}
+                  />
+                  <Button
+                    label={t("permission.advanced-button.label")}
+                    action={this.handleDetailedPermissionsPressed}
+                  />
+                </div>
+              </div>
             </div>
           </div>
           <div className="columns">
@@ -173,10 +223,25 @@ class CreatePermissionForm extends React.Component<Props, State> {
     );
   }
 
+  handleDetailedPermissionsPressed = () => {
+    this.setState({ showAdvancedDialog: true });
+  };
+
+  closeAdvancedPermissionsDialog = () => {
+    this.setState({ showAdvancedDialog: false });
+  };
+
+  submitAdvancedPermissionsDialog = (newVerbs: string[]) => {
+    this.setState({
+      showAdvancedDialog: false,
+      verbs: newVerbs
+    });
+  };
+
   submit = e => {
     this.props.createPermission({
       name: this.state.name,
-      type: this.state.type,
+      verbs: this.state.verbs,
       groupPermission: this.state.groupPermission
     });
     this.removeState();
@@ -186,16 +251,23 @@ class CreatePermissionForm extends React.Component<Props, State> {
   removeState = () => {
     this.setState({
       name: "",
-      type: "READ",
+      verbs: this.props.availablePermissions.availableRoles[0].verbs,
       groupPermission: false,
       valid: true
     });
   };
 
-  handleTypeChange = (type: string) => {
+  handleRoleChange = (role: string) => {
+    const selectedRole = this.findAvailableRole(role);
     this.setState({
-      type: type
+      verbs: selectedRole.verbs
     });
+  };
+
+  findAvailableRole = (roleName: string) => {
+    return this.props.availablePermissions.availableRoles.find(
+      role => role.name === roleName
+    );
   };
 }
 

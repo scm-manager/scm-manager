@@ -30,70 +30,39 @@
  */
 
 
+package sonia.scm.cli.config;
 
-package sonia.scm.repository;
+import com.google.common.base.Charsets;
+import com.google.common.io.ByteStreams;
+import org.junit.Test;
+import sonia.scm.security.KeyGenerator;
 
-/**
- * Type of permissionPrefix for a {@link Repository}.
- *
- * @author Sebastian Sdorra
- */
-public enum PermissionType
-{
+import java.io.*;
 
-  /** read permision */
-  READ(0, "repository:read,pull:"),
+import static org.junit.Assert.assertEquals;
 
-  /** read and write permissionPrefix */
-  WRITE(10, "repository:read,pull,push:"),
+public class AesCipherStreamHandlerTest {
 
-  /**
-   * read, write and
-   * also the ability to manage the properties and permissions
-   */
-  OWNER(100, "repository:*:");
+  private final KeyGenerator keyGenerator = new SecureRandomKeyGenerator();
 
-  /**
-   * Constructs a new permissionPrefix type
-   *
-   *
-   * @param value
-   */
-  private PermissionType(int value, String permissionPrefix)
-  {
-    this.value = value;
-    this.permissionPrefix = permissionPrefix;
+  @Test
+  public void testEncryptAndDecrypt() throws IOException {
+    AesCipherStreamHandler cipherStreamHandler = new AesCipherStreamHandler(keyGenerator.createKey());
+
+    // douglas adams
+    String content = "If you try and take a cat apart to see how it works, the first thing you have on your hands is a nonworking cat.";
+
+    // encrypt
+    ByteArrayOutputStream output = new ByteArrayOutputStream();
+    OutputStream encryptedOutput = cipherStreamHandler.encrypt(output);
+    encryptedOutput.write(content.getBytes(Charsets.UTF_8));
+    encryptedOutput.close();
+
+    InputStream input = new ByteArrayInputStream(output.toByteArray());
+    input = cipherStreamHandler.decrypt(input);
+    byte[] decrypted = ByteStreams.toByteArray(input);
+
+    assertEquals(content, new String(decrypted, Charsets.UTF_8));
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   *
-   * @return
-   *
-   * @since 2.0.0
-   */
-  public String getPermissionPrefix()
-  {
-    return permissionPrefix;
-  }
-
-  /**
-   * Returns the integer representation of the {@link PermissionType}
-   *
-   *
-   * @return integer representation
-   */
-  public int getValue()
-  {
-    return value;
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final String permissionPrefix;
-
-  /** Field description */
-  private final int value;
 }

@@ -6,7 +6,6 @@ import com.google.common.io.Resources;
 import com.google.inject.util.Providers;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.Subject;
-import org.assertj.core.api.Assertions;
 import org.jboss.resteasy.core.Dispatcher;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
@@ -18,8 +17,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import sonia.scm.PageResult;
 import sonia.scm.repository.NamespaceAndName;
-import sonia.scm.repository.RepositoryPermission;
-import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryIsNotArchivedException;
 import sonia.scm.repository.RepositoryManager;
@@ -41,15 +38,12 @@ import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
 import static javax.servlet.http.HttpServletResponse.SC_PRECONDITION_FAILED;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -291,34 +285,12 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
 
     dispatcher.invoke(request, response);
 
-    Assertions.assertThat(createCaptor.getValue().getPermissions())
+    assertThat(createCaptor.getValue().getPermissions())
       .hasSize(1)
       .allSatisfy(p -> {
         assertThat(p.getName()).isEqualTo("trillian");
-        assertThat(p.getType()).isEqualTo(PermissionType.OWNER);
+        assertThat(p.getVerbs()).containsExactly("*");
       });
-  }
-
-  @Test
-  public void shouldNotOverwriteExistingPermissionsOnUpdate() throws Exception {
-    Repository existingRepository = mockRepository("space", "repo");
-    existingRepository.setPermissions(singletonList(new RepositoryPermission("user", PermissionType.READ)));
-
-    URL url = Resources.getResource("sonia/scm/api/v2/repository-test-update.json");
-    byte[] repository = Resources.toByteArray(url);
-
-    ArgumentCaptor<Repository> modifiedRepositoryCaptor = forClass(Repository.class);
-    doNothing().when(repositoryManager).modify(modifiedRepositoryCaptor.capture());
-
-    MockHttpRequest request = MockHttpRequest
-      .put("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo")
-      .contentType(VndMediaType.REPOSITORY)
-      .content(repository);
-    MockHttpResponse response = new MockHttpResponse();
-
-    dispatcher.invoke(request, response);
-
-    assertFalse(modifiedRepositoryCaptor.getValue().getPermissions().isEmpty());
   }
 
   @Test

@@ -59,7 +59,8 @@ const hitchhiker_puzzle42Permission_user_eins: Permission = {
       href:
         "http://localhost:8081/scm/api/rest/v2/repositories/hitchhiker/puzzle42/permissions/user_eins"
     }
-  }
+  },
+  verbs: []
 };
 
 const hitchhiker_puzzle42Permission_user_zwei: Permission = {
@@ -79,7 +80,8 @@ const hitchhiker_puzzle42Permission_user_zwei: Permission = {
       href:
         "http://localhost:8081/scm/api/rest/v2/repositories/hitchhiker/puzzle42/permissions/user_zwei"
     }
-  }
+  },
+  verbs: []
 };
 
 const hitchhiker_puzzle42Permissions: PermissionCollection = [
@@ -175,8 +177,7 @@ describe("permission fetch", () => {
       }
     );
 
-    let editedPermission = { ...hitchhiker_puzzle42Permission_user_eins };
-    editedPermission.type = "OWNER";
+    let editedPermission = { ...hitchhiker_puzzle42Permission_user_eins, type: "OWNER" };
 
     const store = mockStore({});
 
@@ -197,8 +198,7 @@ describe("permission fetch", () => {
       }
     );
 
-    let editedPermission = { ...hitchhiker_puzzle42Permission_user_eins };
-    editedPermission.type = "OWNER";
+    let editedPermission = { ...hitchhiker_puzzle42Permission_user_eins, type: "OWNER" };
 
     const store = mockStore({});
 
@@ -227,8 +227,7 @@ describe("permission fetch", () => {
       }
     );
 
-    let editedPermission = { ...hitchhiker_puzzle42Permission_user_eins };
-    editedPermission.type = "OWNER";
+    let editedPermission = { ...hitchhiker_puzzle42Permission_user_eins, type: "OWNER" };
 
     const store = mockStore({});
 
@@ -451,8 +450,7 @@ describe("permissions reducer", () => {
         entries: [hitchhiker_puzzle42Permission_user_eins]
       }
     };
-    let permissionEdited = { ...hitchhiker_puzzle42Permission_user_eins };
-    permissionEdited.type = "OWNER";
+    let permissionEdited = { ...hitchhiker_puzzle42Permission_user_eins, type: "OWNER" };
     let expectedState = {
       "hitchhiker/puzzle42": {
         entries: [permissionEdited]

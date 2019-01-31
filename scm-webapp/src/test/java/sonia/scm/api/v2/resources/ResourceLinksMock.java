@@ -42,6 +42,7 @@ public class ResourceLinksMock {
     when(resourceLinks.index()).thenReturn(new ResourceLinks.IndexLinks(uriInfo));
     when(resourceLinks.merge()).thenReturn(new ResourceLinks.MergeLinks(uriInfo));
     when(resourceLinks.permissions()).thenReturn(new ResourceLinks.PermissionsLinks(uriInfo));
+    when(resourceLinks.availableRepositoryPermissions()).thenReturn(new ResourceLinks.AvailableRepositoryPermissionLinks(uriInfo));
 
     return resourceLinks;
   }

@@ -12,10 +12,14 @@ import sonia.scm.ModelObject;
 
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Request;
+import javax.ws.rs.core.UriInfo;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.Comparator;
 
 import static java.util.Collections.emptyList;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
@@ -25,8 +29,13 @@ public class AbstractManagerResourceTest {
 
   @Mock
   private Manager<Simple> manager;
+
   @Mock
   private Request request;
+
+  @Mock
+  private UriInfo uriInfo;
+
   @Captor
   private ArgumentCaptor<Comparator<Simple>> comparatorCaptor;
 
@@ -59,6 +68,24 @@ public class AbstractManagerResourceTest {
     abstractManagerResource.getAll(request, 0, 1, "x", true);
   }
 
+  @Test
+  public void testLocation() throws URISyntaxException {
+    URI uri = location("special-item");
+    assertEquals(new URI("https://scm.scm-manager.org/simple/special-item"), uri);
+  }
+
+  @Test
+  public void testLocationWithSpaces() throws URISyntaxException {
+    URI uri = location("Scm Special Group");
+    assertEquals(new URI("https://scm.scm-manager.org/simple/Scm%20Special%20Group"), uri);
+  }
+
+  private URI location(String id) throws URISyntaxException {
+    URI base = new URI("https://scm.scm-manager.org/");
+    when(uriInfo.getAbsolutePath()).thenReturn(base);
+
+    return abstractManagerResource.location(uriInfo, id);
+  }
 
   private class SimpleManagerResource extends AbstractManagerResource<Simple> {
 
@@ -82,7 +109,7 @@ public class AbstractManagerResourceTest {
 
     @Override
     protected String getPathPart() {
-      return null;
+      return "simple";
     }
   }
 

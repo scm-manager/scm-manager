@@ -24,9 +24,9 @@
       <version>${servlet.version}</version>
       <scope>provided</scope>
     </dependency>
-    
+
     <!-- annotations -->
-    
+
     <dependency>
       <groupId>sonia.scm</groupId>
       <artifactId>scm-annotations</artifactId>
@@ -39,7 +39,7 @@
       <scope>provided</scope>
     </dependency>
 
-    
+
     <!-- logging -->
 
     <dependency>
@@ -47,6 +47,7 @@
       <groupId>org.slf4j</groupId>
       <version>${slf4j.version}</version>
     </dependency>
+
     <dependency>
       <artifactId>jcl-over-slf4j</artifactId>
       <groupId>org.slf4j</groupId>
@@ -80,7 +81,7 @@
       <artifactId>guice-servlet</artifactId>
       <version>${guice.version}</version>
     </dependency>
-    
+
     <dependency>
       <groupId>com.google.inject.extensions</groupId>
       <artifactId>guice-throwingproviders</artifactId>
@@ -136,29 +137,51 @@
     </dependency>
 
     <!-- event bus -->
-    
+
     <dependency>
       <groupId>com.github.legman</groupId>
       <artifactId>core</artifactId>
       <version>${legman.version}</version>
     </dependency>
-    
+
+    <!-- xml -->
+
+    <dependency>
+      <groupId>javax.xml.bind</groupId>
+      <artifactId>jaxb-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.sun.xml.bind</groupId>
+      <artifactId>jaxb-impl</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.glassfish.jaxb</groupId>
+      <artifactId>jaxb-runtime</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.activation</groupId>
+      <artifactId>activation</artifactId>
+    </dependency>
+
     <!-- util -->
-    
+
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
       <version>${guava.version}</version>
     </dependency>
-    
+
     <dependency>
       <groupId>commons-lang</groupId>
       <artifactId>commons-lang</artifactId>
       <version>2.6</version>
     </dependency>
-    
+
     <!-- annotation processor -->
-    
+
     <dependency>
       <groupId>sonia.scm</groupId>
       <artifactId>scm-annotation-processor</artifactId>
@@ -186,13 +209,14 @@
     </dependency>
 
   </dependencies>
-  
+
   <build>
     <plugins>
-      
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.0.0</version>
         <configuration>
           <useStandardDocletOptions>true</useStandardDocletOptions>
           <charset>${project.build.sourceEncoding}</charset>
@@ -216,9 +240,23 @@
             <link>http://www.slf4j.org/api/</link>
             <link>http://shiro.apache.org/static/${shiro.version}/apidocs/</link>
           </links>
+          <doclet>org.jboss.apiviz.APIviz</doclet>
+          <docletArtifact>
+            <groupId>org.jboss.apiviz</groupId>
+            <artifactId>apiviz</artifactId>
+            <version>1.3.2.GA</version>
+          </docletArtifact>
+          <additionalOptions>
+            <additionalOption>
+              -sourceclasspath ${project.build.outputDirectory}
+            </additionalOption>
+            <additionalOption>
+              -nopackagediagram
+            </additionalOption>
+          </additionalOptions>
         </configuration>
       </plugin>
-      
+
     </plugins>
   </build>
 
