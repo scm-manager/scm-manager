@@ -33,13 +33,8 @@ import ChangesetView from "./ChangesetView";
 import PermissionsNavLink from "../components/PermissionsNavLink";
 import Sources from "../sources/containers/Sources";
 import RepositoryNavLink from "../components/RepositoryNavLink";
-<<<<<<< working copy
-import { getRepositoriesLink } from "../../modules/indexResource";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
-=======
 import {getLinks, getRepositoriesLink} from "../../modules/indexResource";
 import {ExtensionPoint} from "@scm-manager/ui-extensions";
->>>>>>> merge rev
 
 type Props = {
   namespace: string,

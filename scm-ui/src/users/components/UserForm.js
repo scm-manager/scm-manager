@@ -141,9 +141,9 @@ class UserForm extends React.Component<Props, State> {
       <>
         {subtitle}
         <form onSubmit={this.submit}>
-          <div className="columns">
+          <div className="columns is-multiline">
+            {nameField}
             <div className="column is-half">
-              {nameField}
               <InputField
                 label={t("user.displayName")}
                 onChange={this.handleDisplayNameChange}
