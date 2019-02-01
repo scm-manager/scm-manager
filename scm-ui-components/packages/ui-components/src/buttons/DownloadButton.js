@@ -4,14 +4,16 @@ import React from "react";
 type Props = {
   displayName: string,
   url: string,
-  disabled: boolean
+  disabled: boolean,
+  onClick?: () => void
 };
 
 class DownloadButton extends React.Component<Props> {
   render() {
-    const { displayName, url, disabled } = this.props;
+    const { displayName, url, disabled, onClick } = this.props;
+    const onClickOrDefault = !!onClick ? onClick : () => {};
     return (
-      <a className="button is-large is-link" href={url} disabled={disabled}>
+      <a className="button is-large is-link" href={url} disabled={disabled} onClick={onClickOrDefault}>
         <span className="icon is-medium">
           <i className="fas fa-arrow-circle-down" />
         </span>
