@@ -5,7 +5,8 @@ import {
   Autocomplete,
   SubmitButton,
   Button,
-  LabelWithHelpIcon
+  LabelWithHelpIcon,
+  Radio
 } from "@scm-manager/ui-components";
 import RoleSelector from "../components/RoleSelector";
 import type {
@@ -158,28 +159,20 @@ class CreatePermissionForm extends React.Component<Props, State> {
         </h2>
         {advancedDialog}
         <form onSubmit={this.submit}>
-          <div className="control">
-            <label className="radio">
-              <input
-                type="radio"
-                name="permission_scope"
-                checked={!this.state.groupPermission}
-                value="USER_PERMISSION"
-                onChange={this.permissionScopeChanged}
-              />
-              {t("permission.user-permission")}
-            </label>
-            <label className="radio">
-              <input
-                type="radio"
-                name="permission_scope"
-                value="GROUP_PERMISSION"
-                checked={this.state.groupPermission}
-                onChange={this.permissionScopeChanged}
-              />
-              {t("permission.group-permission")}
-            </label>
-          </div>
+          <Radio
+            name="permission_scope"
+            value="USER_PERMISSION"
+            checked={!this.state.groupPermission}
+            label={t("permission.user-permission")}
+            onChange={this.permissionScopeChanged}
+          />
+          <Radio
+            name="permission_scope"
+            value="GROUP_PERMISSION"
+            checked={this.state.groupPermission}
+            label={t("permission.group-permission")}
+            onChange={this.permissionScopeChanged}
+          />
 
           <div className="columns">
             <div className="column is-two-thirds">

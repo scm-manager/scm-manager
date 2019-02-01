@@ -22,7 +22,11 @@ import AdvancedPermissionsDialog from "./AdvancedPermissionsDialog";
 type Props = {
   availablePermissions: AvailableRepositoryPermissions,
   submitForm: Permission => void,
-  modifyPermission: (permission: Permission, namespace: string, name: string) => void,
+  modifyPermission: (
+    permission: Permission,
+    namespace: string,
+    name: string
+  ) => void,
   permission: Permission,
   t: string => string,
   namespace: string,
@@ -30,7 +34,11 @@ type Props = {
   match: any,
   history: History,
   loading: boolean,
-  deletePermission: (permission: Permission, namespace: string, name: string) => void,
+  deletePermission: (
+    permission: Permission,
+    namespace: string,
+    name: string
+  ) => void,
   deleteLoading: boolean
 };
 
@@ -125,15 +133,15 @@ class SinglePermission extends React.Component<Props, State> {
       />
     ) : null;
 
+    const type =
+      permission && permission.groupPermission
+        ? t("permission.group")
+        : t("permission.user");
+
     return (
       <tr>
         <td>{permission.name}</td>
-        <td>
-          <Checkbox
-            checked={permission ? permission.groupPermission : false}
-            disabled={true}
-          />
-        </td>
+        <td>{type}</td>
         {roleSelector}
         <td>
           <Button
