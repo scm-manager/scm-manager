@@ -1,9 +1,55 @@
 {
   "scm-git-plugin": {
     "information": {
-      "clone" : "Repository Klonen",
-      "create" : "Neue Repository erstellen",
-      "replace" : "Eine existierende Repository aktualisieren"
+      "clone" : "Repository klonen",
+      "create" : "Neues Repository erstellen",
+      "replace" : "Ein bestehendes Repository aktualisieren",
+      "merge": {
+        "heading": "Merge des Source Branch in den Target Branch",
+        "checkout": "1. Sicherstellen, dass der Workspace aufgeräumt ist und der Target Branch ausgecheckt wurde.",
+        "update": "2. Update Workspace",
+        "merge": "3. Merge Source Branch",
+        "resolve": "4. Merge Konflikte auflösen und korrigierte Dateien dem Index hinzufügen.",
+        "commit": "5. Commit",
+        "push": "6. Push des Merge"
+      }
+    },
+    "config": {
+      "link": "Git",
+      "title": "Git Konfiguration",
+      "gcExpression": "GC Cron Ausdruck",
+      "gcExpressionHelpText": "Benutze Quartz Cron Ausdrücke (SECOND MINUTE HOUR DAYOFMONTH MONTH DAYOFWEEK), um git GC regelmäßig auszuführen.",
+      "nonFastForwardDisallowed": "Deaktiviere \"Non Fast-Forward\"",
+      "nonFastForwardDisallowedHelpText": "Git Pushes ablehnen, die nicht \"fast-forward\" sind, wie \"--force\".",
+      "disabled": "Deaktiviert",
+      "disabledHelpText": "Aktiviere oder deaktiviere das Git Plugin",
+      "submit": "Speichern"
+    },
+    "repo-config": {
+      "link": "Konfiguration",
+      "default-branch": "Standard Branch",
+      "submit": "Speichern",
+      "error": {
+        "title": "Fehler",
+        "subtitle": "Ein Fehler ist aufgetreten."
+      },
+      "success": "Der standard Branch wurde geändert!"
+    }
+  },
+  "permissions" : {
+    "configuration": {
+      "read": {
+        "git": {
+          "displayName": "Git Konfiguration lesen",
+          "description": "Darf die git Konfiguration lesen."
+        }
+      },
+      "write": {
+        "git": {
+          "displayName": "Git Konfiguration schreiben",
+          "description": "Darf die git Konfiguration verändern."
+        }
+      }
     }
   }
 }
