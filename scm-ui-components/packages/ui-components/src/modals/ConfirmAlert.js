@@ -1,6 +1,7 @@
 // @flow
 import * as React from "react";
 import ReactDOM from "react-dom";
+import Modal from "./Modal";
 
 type ButtonType = {
   label: string,
@@ -28,37 +29,32 @@ class ConfirmAlert extends React.Component<Props> {
   render() {
     const { title, message, buttons } = this.props;
 
-    return (
-      <div className="modal is-active">
-        <div className="modal-background" />
-        <div className="modal-card">
-
-            <header className="modal-card-head">
-              <p className="modal-card-title">
-                {title}
-              </p>
-              <button
-                className="delete"
-                aria-label="close"
-                onClick={() => this.close()}
-              />
-            </header>
-            <section className="modal-card-body">
-              {message}
-              <div className="buttons is-right">
-                {buttons.map((button, i) => (
-                  <a className="button is-info is-right"
-                    key={i}
-                    onClick={() => this.handleClickButton(button)}
-                  >
-                    {button.label}
-                  </a>
-                ))}
-              </div>
-            </section>
-
+    const closeButton = (
+      <button
+      className="delete"
+      aria-label="close"
+      onClick={() => this.close()}
+      />
+    );
+    const body= (
+      <>
+        {message}
+        <div className="buttons is-right">
+          {buttons.map((button, i) => (
+            <a className="button is-info is-right"
+               key={i}
+               onClick={() => this.handleClickButton(button)}
+            >
+              {button.label}
+            </a>
+          ))}
         </div>
-      </div>
+        </>
+    );
+
+
+    return (
+      <Modal title={title} closeButton={closeButton} body={body} active={true}/>
     );
   }
 }
