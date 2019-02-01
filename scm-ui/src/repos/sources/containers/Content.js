@@ -176,11 +176,11 @@ class Content extends React.Component<Props, State> {
 
     return (
       <div>
-        <nav className="panel">
-          <article className="panel-heading">{header}</article>
+        <div className="panel">
+          <div className="panel-heading">{header}</div>
           {moreInformation}
           {content}
-        </nav>
+        </div>
       </div>
     );
   }

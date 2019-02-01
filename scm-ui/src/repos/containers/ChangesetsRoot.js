@@ -89,12 +89,12 @@ class BranchRoot extends React.Component<Props> {
     const changesets = <Changesets repository={repository} branch={branch} />;
 
     return (
-      <nav className="panel">
-        <article className="panel-heading">
+      <div className="panel">
+        <div className="panel-heading">
         {this.renderBranchSelector()}
-        </article>
+        </div>
         <Route path={`${url}/:page?`} component={() => changesets} />
-      </nav>
+      </div>
     );
   }
 
