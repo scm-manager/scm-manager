@@ -93,6 +93,7 @@
     "error-subtitle": "Unknown permissions error",
     "name": "User or group",
     "role": "Role",
+    "type": "Type",
     "permissions": "Permissions",
     "group-permission": "Group Permission",
     "user-permission": "User Permission",

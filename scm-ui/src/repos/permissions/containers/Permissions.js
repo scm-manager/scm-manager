@@ -154,7 +154,7 @@ class Permissions extends React.Component<Props> {
               </th>
               <th className="is-hidden-mobile">
                 <LabelWithHelpIcon
-                  label={t("permission.group-permission")}
+                  label={t("permission.type")}
                   helpText={t("permission.help.groupPermissionHelpText")}
                 />
               </th>
