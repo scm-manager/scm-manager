@@ -54,6 +54,13 @@ type State = {
 const styles = {
   iconColor: {
     color: "#9a9a9a"
+  },
+  centerMiddle: {
+    display: "table-cell",
+    verticalAlign: "middle !important"
+  },
+  columnWidth: {
+    width: "100%"
   }
 };
 
@@ -156,18 +163,18 @@ class SinglePermission extends React.Component<Props, State> {
       );
 
     return (
-      <tr>
-        <td>
+      <tr className={classes.columnWidth}>
+        <td className={classes.centerMiddle}>
           {iconType} {permission.name}
         </td>
         {roleSelector}
-        <td>
+        <td className={classes.centerMiddle}>
           <Button
             label={t("permission.advanced-button.label")}
             action={this.handleDetailedPermissionsPressed}
           />
         </td>
-        <td>
+        <td className={classes.centerMiddle}>
           <DeletePermissionButton
             permission={permission}
             namespace={namespace}
