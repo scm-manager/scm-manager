@@ -50,8 +50,19 @@ class PrimaryNavigation extends React.Component<Props> {
 
   createNavigationItems = () => {
     const navigationItems = [];
+    const { t, links } = this.props;
+
+    const props = {
+      links,
+      label: t("primary-navigation.first-menu")
+    };
 
     const append = this.createNavigationAppender(navigationItems);
+    if (binder.hasExtension("primary-navigation.first-menu", props)) {
+      navigationItems.push(
+        <ExtensionPoint name="primary-navigation.first-menu" props={props} />
+      );
+    }
     append("/repos", "/(repo|repos)", "primary-navigation.repositories", "repositories");
     append("/users", "/(user|users)", "primary-navigation.users", "users");
     append("/groups", "/(group|groups)", "primary-navigation.groups", "groups");
