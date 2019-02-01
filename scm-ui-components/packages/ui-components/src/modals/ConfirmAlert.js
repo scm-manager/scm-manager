@@ -29,13 +29,6 @@ class ConfirmAlert extends React.Component<Props> {
   render() {
     const { title, message, buttons } = this.props;
 
-    const closeButton = (
-      <button
-      className="delete"
-      aria-label="close"
-      onClick={() => this.close()}
-      />
-    );
     const body= (
       <>
         {message}
@@ -54,7 +47,7 @@ class ConfirmAlert extends React.Component<Props> {
 
 
     return (
-      <Modal title={title} closeButton={closeButton} body={body} active={true}/>
+      <Modal title={title} closeFunction={() => this.close()} body={body} active={true}/>
     );
   }
 }

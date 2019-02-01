@@ -5,7 +5,7 @@ import injectSheet from "react-jss";
 
 type Props = {
   title: string,
-  closeButton: any,
+  closeFunction: () => void,
   body: any,
   active: boolean,
   classes: any
@@ -24,7 +24,7 @@ const styles = {
 class Modal extends React.Component<Props> {
 
   render() {
-    const { title, closeButton, body, active, classes } = this.props;
+    const { title, closeFunction, body, active, classes } = this.props;
 
     const isActive = active ? "is-active" : null;
 
@@ -40,7 +40,11 @@ class Modal extends React.Component<Props> {
             <p className="modal-card-title">
               {title}
             </p>
-            {closeButton}
+            <button
+              className="delete"
+              aria-label="close"
+              onClick={closeFunction}
+            />
           </header>
           <section className="modal-card-body">
             {body}

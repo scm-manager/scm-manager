@@ -50,9 +50,6 @@ class AdvancedPermissionsDialog extends React.Component<Props, State> {
       <SubmitButton label={t("permission.advanced.dialog.submit")} />
     ) : null;
 
-    const closeButton = (
-      <button className="delete" aria-label="close" onClick={() => onClose()} />
-    );
 
     const body = (
       <>
@@ -70,7 +67,7 @@ class AdvancedPermissionsDialog extends React.Component<Props, State> {
     return (
       <Modal
         title={t("permission.advanced.dialog.title")}
-        closeButton={closeButton}
+        closeFunction={() => onClose()}
         body={body}
         active={true}
       />
