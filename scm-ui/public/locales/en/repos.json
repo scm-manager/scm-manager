@@ -14,7 +14,7 @@
   "overview": {
     "title": "Repositories",
     "subtitle": "Overview of available repositories",
-    "create-button": "Create"
+    "create-button": "Create Repository"
   },
   "repository-root": {
     "error-title": "Error",
@@ -40,7 +40,7 @@
   "delete-nav-action": {
     "label": "Delete",
     "confirm-alert": {
-      "title": "Delete repository",
+      "title": "Delete Repository",
       "message": "Do you really want to delete the repository?",
       "submit": "Yes",
       "cancel": "No"
@@ -106,7 +106,7 @@
     "delete-permission-button": {
       "label": "Delete",
       "confirm-alert": {
-        "title": "Delete permission",
+        "title": "Delete Permission",
         "message": "Do you really want to delete the permission?",
         "submit": "Yes",
         "cancel": "No"
@@ -119,9 +119,9 @@
     },
     "help": {
       "groupPermissionHelpText": "States if a permission is a group permission. If this is not checked, it is a user permission.",
-      "nameHelpText": "Manage permissions for a specific user or group",
+      "nameHelpText": "Manage permissions for a specific user or group.",
       "roleHelpText": "READ = read; WRITE = read and write; OWNER = read, write and also the ability to manage the properties and permissions. If nothing is selected here, use the 'Advanced' Button to see detailed permissions.",
-      "permissionsHelpText": "Use this to specify your own set of permissions regardless of predefined roles"
+      "permissionsHelpText": "Use this to specify your own set of permissions regardless of predefined roles."
     },
     "autocomplete": {
       "no-group-options": "No group suggestion available",
@@ -132,7 +132,7 @@
     },
     "advanced": {
       "dialog": {
-        "title": "Advanced permissions",
+        "title": "Advanced Permissions",
         "submit": "Submit",
         "abort": "Abort"
       }
