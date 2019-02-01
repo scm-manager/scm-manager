@@ -81,7 +81,16 @@ $fa-font-path: "webfonts";
   height: 2.5rem;
 
   &.is-primary {
-    background-color: $mint;
+    background-color: #00d1df;
+  }
+  &.is-primary:hover, &.is-primary.is-hovered {
+    background-color: #00b9c6;
+  }
+  &.is-primary:active, &.is-primary.is-active {
+    background-color: #00a1ac;
+  }
+  &.is-primary[disabled] {
+    background-color: #40dde7;
   }
 }
 
@@ -123,7 +132,6 @@ $fa-font-path: "webfonts";
       &:nth-child(odd) {
         margin-right: 0;
       }
-
 
       .overlay-half-column{
         position: absolute;

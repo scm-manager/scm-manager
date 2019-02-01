@@ -6,7 +6,7 @@ import { DateFromNow } from "@scm-manager/ui-components";
 import FileSize from "../components/FileSize";
 import injectSheet from "react-jss";
 import classNames from "classnames";
-import ButtonGroup from "../components/content/ButtonGroup";
+import FileButtonGroup from "../components/content/FileButtonGroup";
 import SourcesView from "./SourcesView";
 import HistoryView from "./HistoryView";
 import { getSources } from "../modules/sources";
@@ -76,7 +76,7 @@ class Content extends React.Component<Props, State> {
     const icon = collapsed ? "fa-angle-right" : "fa-angle-down";
 
     const selector = file._links.history ? (
-      <ButtonGroup
+      <FileButtonGroup
         file={file}
         historyIsSelected={showHistory}
         showHistory={(changeShowHistory: boolean) =>

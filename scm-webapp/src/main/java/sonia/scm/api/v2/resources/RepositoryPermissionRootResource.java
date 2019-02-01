@@ -35,25 +35,27 @@ import static sonia.scm.NotFoundException.notFound;
 import static sonia.scm.api.v2.resources.RepositoryPermissionDto.GROUP_PREFIX;
 
 @Slf4j
-public class PermissionRootResource {
+public class RepositoryPermissionRootResource {
 
-
-  private PermissionDtoToPermissionMapper dtoToModelMapper;
+  private RepositoryPermissionDtoToRepositoryPermissionMapper dtoToModelMapper;
   private RepositoryPermissionToRepositoryPermissionDtoMapper modelToDtoMapper;
   private RepositoryPermissionCollectionToDtoMapper repositoryPermissionCollectionToDtoMapper;
   private ResourceLinks resourceLinks;
   private final RepositoryManager manager;
 
-
   @Inject
-  public PermissionRootResource(PermissionDtoToPermissionMapper dtoToModelMapper, RepositoryPermissionToRepositoryPermissionDtoMapper modelToDtoMapper, RepositoryPermissionCollectionToDtoMapper repositoryPermissionCollectionToDtoMapper, ResourceLinks resourceLinks, RepositoryManager manager) {
+  public RepositoryPermissionRootResource(
+    RepositoryPermissionDtoToRepositoryPermissionMapper dtoToModelMapper,
+    RepositoryPermissionToRepositoryPermissionDtoMapper modelToDtoMapper,
+    RepositoryPermissionCollectionToDtoMapper repositoryPermissionCollectionToDtoMapper,
+    ResourceLinks resourceLinks,
+    RepositoryManager manager) {
     this.dtoToModelMapper = dtoToModelMapper;
     this.modelToDtoMapper = modelToDtoMapper;
     this.repositoryPermissionCollectionToDtoMapper = repositoryPermissionCollectionToDtoMapper;
     this.resourceLinks = resourceLinks;
     this.manager = manager;
   }
-
 
   /**
    * Adds a new permission to the user or group managed by the repository
@@ -71,9 +73,9 @@ public class PermissionRootResource {
     @ResponseCode(code = 409, condition = "conflict")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
-  @Consumes(VndMediaType.PERMISSION)
+  @Consumes(VndMediaType.REPOSITORY_PERMISSION)
   @Path("")
-  public Response create(@PathParam("namespace") String namespace, @PathParam("name") String name,@Valid RepositoryPermissionDto permission) {
+  public Response create(@PathParam("namespace") String namespace, @PathParam("name") String name, @Valid RepositoryPermissionDto permission) {
     log.info("try to add new permission: {}", permission);
     Repository repository = load(namespace, name);
     RepositoryPermissions.permissionWrite(repository).check();
@@ -83,7 +85,6 @@ public class PermissionRootResource {
     String urlPermissionName = modelToDtoMapper.getUrlPermissionName(permission);
     return Response.created(URI.create(resourceLinks.repositoryPermission().self(namespace, name, urlPermissionName))).build();
   }
-
 
   /**
    * Get the searched permission with permission name related to a repository
@@ -99,7 +100,7 @@ public class PermissionRootResource {
     @ResponseCode(code = 404, condition = "not found"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
-  @Produces(VndMediaType.PERMISSION)
+  @Produces(VndMediaType.REPOSITORY_PERMISSION)
   @TypeHint(RepositoryPermissionDto.class)
   @Path("{permission-name}")
   public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("permission-name") String permissionName) {
@@ -115,7 +116,6 @@ public class PermissionRootResource {
     ).build();
   }
 
-
   /**
    * Get all permissions related to a repository
    *
@@ -130,7 +130,7 @@ public class PermissionRootResource {
     @ResponseCode(code = 404, condition = "not found"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
-  @Produces(VndMediaType.PERMISSION)
+  @Produces(VndMediaType.REPOSITORY_PERMISSION)
   @TypeHint(RepositoryPermissionDto.class)
   @Path("")
   public Response getAll(@PathParam("namespace") String namespace, @PathParam("name") String name) {
@@ -138,7 +138,6 @@ public class PermissionRootResource {
     RepositoryPermissions.permissionRead(repository).check();
     return Response.ok(repositoryPermissionCollectionToDtoMapper.map(repository)).build();
   }
-
 
   /**
    * Update a permission to the user or group managed by the repository
@@ -155,7 +154,7 @@ public class PermissionRootResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
-  @Consumes(VndMediaType.PERMISSION)
+  @Consumes(VndMediaType.REPOSITORY_PERMISSION)
   @Path("{permission-name}")
   public Response update(@PathParam("namespace") String namespace,
                          @PathParam("name") String name,
@@ -172,6 +171,7 @@ public class PermissionRootResource {
     if (!extractedPermissionName.equals(permission.getName())) {
       checkPermissionAlreadyExists(permission, repository);
     }
+
     RepositoryPermission existingPermission = repository.getPermissions()
       .stream()
       .filter(filterPermission(permissionName))
@@ -208,17 +208,16 @@ public class PermissionRootResource {
       .stream()
       .filter(filterPermission(permissionName))
       .findFirst()
-      .ifPresent(repository::removePermission)
-    ;
+      .ifPresent(repository::removePermission);
     manager.modify(repository);
     log.info("the permission with name: {} is updated.", permissionName);
     return Response.noContent().build();
   }
 
-  Predicate<RepositoryPermission> filterPermission(String permissionName) {
-    return permission -> getPermissionName(permissionName).equals(permission.getName())
+  private Predicate<RepositoryPermission> filterPermission(String name) {
+    return permission -> getPermissionName(name).equals(permission.getName())
       &&
-      permission.isGroupPermission() == isGroupPermission(permissionName);
+      permission.isGroupPermission() == isGroupPermission(name);
   }
 
   private String getPermissionName(String permissionName) {
@@ -230,7 +229,6 @@ public class PermissionRootResource {
   private boolean isGroupPermission(String permissionName) {
     return permissionName.startsWith(GROUP_PREFIX);
   }
-
 
   /**
    * check if the actual user is permitted to manage the repository permissions

@@ -36,9 +36,9 @@ class ConfigurationBinder {
     binder.bind("config.navigation", ConfigNavLink, configPredicate);
 
     // route for global configuration, passes the link from the index resource to component
-    const ConfigRoute = ({ url, links }) => {
+    const ConfigRoute = ({ url, links, ...additionalProps }) => {
       const link = links[linkName].href;
-      return this.route(url + to, <ConfigurationComponent link={link}/>);
+      return this.route(url + to, <ConfigurationComponent link={link} {...additionalProps} />);
     };
 
     // bind config route to extension point
@@ -63,9 +63,9 @@ class ConfigurationBinder {
 
 
     // route for global configuration, passes the current repository to component
-    const RepoRoute = ({url, repository}) => {
-      const link = repository._links[linkName].href
-      return this.route(url + to, <RepositoryComponent repository={repository} link={link}/>);
+    const RepoRoute = ({url, repository, ...additionalProps}) => {
+      const link = repository._links[linkName].href;
+      return this.route(url + to, <RepositoryComponent repository={repository} link={link} {...additionalProps}/>);
     };
 
     // bind config route to extension point

@@ -37,7 +37,22 @@ from collections import defaultdict
 from mercurial import cmdutil,util
 
 cmdtable = {}
-command = cmdutil.command(cmdtable)
+
+try:
+    from mercurial import registrar
+    command = registrar.command(cmdtable)
+except (AttributeError, ImportError):
+    # Fallback to hg < 4.3 support
+    from mercurial import cmdutil
+    command = cmdutil.command(cmdtable)
+
+try:
+    from mercurial.utils import dateutil
+    _parsedate = dateutil.parsedate
+except ImportError:
+    # compat with hg < 4.6
+    from mercurial import util
+    _parsedate = util.parsedate
 
 FILE_MARKER = '<files>'
 
@@ -166,7 +181,7 @@ def collect_sub_repositories(revCtx):
         subrepos[parts[0].strip()] = subrepo
   except Exception:
     pass
-        
+
   try:
     hgsubstate = revCtx.filectx('.hgsubstate').data().split('\n')
     for line in hgsubstate:
@@ -201,7 +216,7 @@ class File_Printer:
     description = 'n/a'
     if not self.disableLastCommit:
       linkrev = self.repo[file.linkrev()]
-      date = '%d %d' % util.parsedate(linkrev.date())
+      date = '%d %d' % _parsedate(linkrev.date())
       description = linkrev.description()
     format = '%s %i %s %s\n'
     if self.transport:

@@ -19,6 +19,8 @@ public class HgConfigDto extends HalRepresentation {
   private String pythonPath;
   private boolean useOptimizedBytecode;
   private boolean showRevisionInId;
+  private boolean enableHttpPostArgs;
+  private boolean disableHookSSLValidation;
 
   @Override
   @SuppressWarnings("squid:S1185") // We want to have this method available in this package

@@ -39,12 +39,11 @@ import org.apache.shiro.subject.Subject;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
-import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.spi.IncomingCommand;
 import sonia.scm.repository.spi.IncomingCommandRequest;
-import sonia.scm.security.RepositoryPermission;
 
 import java.io.IOException;
 
@@ -94,8 +93,7 @@ public final class IncomingCommandBuilder
   {
     Subject subject = SecurityUtils.getSubject();
 
-    subject.checkPermission(new RepositoryPermission(remoteRepository,
-      PermissionType.READ));
+    subject.isPermitted(RepositoryPermissions.pull(remoteRepository).asShiroString());
 
     request.setRemoteRepository(remoteRepository);
 

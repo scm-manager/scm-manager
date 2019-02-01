@@ -198,8 +198,7 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
   private void collectRepositoryPermissions(Builder<String> builder,
     Repository repository, User user, GroupNames groups)
   {
-    Collection<RepositoryPermission> repositoryPermissions
-      = repository.getPermissions();
+    Collection<RepositoryPermission> repositoryPermissions = repository.getPermissions();
 
     if (Util.isNotEmpty(repositoryPermissions))
     {
@@ -207,9 +206,9 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
       for (RepositoryPermission permission : repositoryPermissions)
       {
         hasPermission = isUserPermitted(user, groups, permission);
-        if (hasPermission)
+        if (hasPermission && !permission.getVerbs().isEmpty())
         {
-          String perm = permission.getType().getPermissionPrefix().concat(repository.getId());
+          String perm = "repository:" + String.join(",", permission.getVerbs()) + ":" + repository.getId();
           if (logger.isTraceEnabled())
           {
             logger.trace("add repository permission {} for user {} at repository {}",

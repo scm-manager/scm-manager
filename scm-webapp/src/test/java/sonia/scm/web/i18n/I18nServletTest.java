@@ -2,8 +2,6 @@ package sonia.scm.web.i18n;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.sdorra.shiro.ShiroRule;
-import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 import org.apache.commons.lang3.StringUtils;
@@ -42,11 +40,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
-@SubjectAware(configuration = "classpath:sonia/scm/shiro-001.ini")
 public class I18nServletTest {
-
-  @Rule
-  public ShiroRule shiro = new ShiroRule();
 
   private static final String GIT_PLUGIN_JSON = json(
     "{",
@@ -88,15 +82,15 @@ public class I18nServletTest {
   public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
   @Mock
-  PluginLoader pluginLoader;
+  private PluginLoader pluginLoader;
 
   @Mock
-  CacheManager cacheManager;
+  private CacheManager cacheManager;
 
   @Mock
-  ClassLoader classLoader;
+  private ClassLoader classLoader;
 
-  I18nServlet servlet;
+  private I18nServlet servlet;
 
   @Mock
   private Cache cache;
@@ -106,9 +100,9 @@ public class I18nServletTest {
   @SuppressWarnings("unchecked")
   public void init() throws IOException {
     resources = Collections.enumeration(Lists.newArrayList(
-      createFileFromString(SVN_PLUGIN_JSON).toURL(),
-      createFileFromString(GIT_PLUGIN_JSON).toURL(),
-      createFileFromString(HG_PLUGIN_JSON).toURL()
+      createFileFromString(SVN_PLUGIN_JSON).toURI().toURL(),
+      createFileFromString(GIT_PLUGIN_JSON).toURI().toURL(),
+      createFileFromString(HG_PLUGIN_JSON).toURI().toURL()
     ));
     when(pluginLoader.getUberClassLoader()).thenReturn(classLoader);
     when(cacheManager.getCache(I18nServlet.CACHE_NAME)).thenReturn(cache);
@@ -194,6 +188,8 @@ public class I18nServletTest {
     assertJson(json);
     verify(cache).get(path);
     verify(cache).put(eq(path), any());
+
+    verifyHeaders(response);
   }
 
   @Test
@@ -221,6 +217,8 @@ public class I18nServletTest {
     verify(cache, never()).put(eq(path), any());
     verify(cache).get(path);
     assertJson(json);
+
+    verifyHeaders(response);
   }
 
   @Test
@@ -234,11 +232,16 @@ public class I18nServletTest {
     assertJson(jsonNodeOptional.orElse(null));
   }
 
+  private void verifyHeaders(HttpServletResponse response) {
+    verify(response).setCharacterEncoding("UTF-8");
+    verify(response).setContentType("application/json");
+  }
+
   public void assertJson(JsonNode actual) throws IOException {
     assertJson(actual.toString());
   }
 
-  public void assertJson(String actual) throws IOException {
+  private void assertJson(String actual) throws IOException {
     assertThat(actual)
       .isNotEmpty()
       .contains(StringUtils.deleteWhitespace(GIT_PLUGIN_JSON.substring(1, GIT_PLUGIN_JSON.length() - 1)))
@@ -246,7 +249,7 @@ public class I18nServletTest {
       .contains(StringUtils.deleteWhitespace(SVN_PLUGIN_JSON.substring(1, SVN_PLUGIN_JSON.length() - 1)));
   }
 
-  public File createFileFromString(String json) throws IOException {
+  private File createFileFromString(String json) throws IOException {
     File file = temporaryFolder.newFile();
     Files.write(json.getBytes(Charsets.UTF_8), file);
     return file;

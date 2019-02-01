@@ -39,7 +39,7 @@ public class RepositoryResource {
   private final Provider<ChangesetRootResource> changesetRootResource;
   private final Provider<SourceRootResource> sourceRootResource;
   private final Provider<ContentResource> contentResource;
-  private final Provider<PermissionRootResource> permissionRootResource;
+  private final Provider<RepositoryPermissionRootResource> permissionRootResource;
   private final Provider<DiffRootResource> diffRootResource;
   private final Provider<ModificationsRootResource> modificationsRootResource;
   private final Provider<FileHistoryRootResource> fileHistoryRootResource;
@@ -54,7 +54,7 @@ public class RepositoryResource {
     Provider<BranchRootResource> branchRootResource,
     Provider<ChangesetRootResource> changesetRootResource,
     Provider<SourceRootResource> sourceRootResource, Provider<ContentResource> contentResource,
-    Provider<PermissionRootResource> permissionRootResource,
+    Provider<RepositoryPermissionRootResource> permissionRootResource,
     Provider<DiffRootResource> diffRootResource,
     Provider<ModificationsRootResource> modificationsRootResource,
     Provider<FileHistoryRootResource> fileHistoryRootResource,
@@ -154,7 +154,6 @@ public class RepositoryResource {
 
   private Repository processUpdate(RepositoryDto repositoryDto, Repository existing) {
     Repository changedRepository = dtoToRepositoryMapper.map(repositoryDto, existing.getId());
-    changedRepository.setPermissions(existing.getPermissions());
     return changedRepository;
   }
 
@@ -194,7 +193,7 @@ public class RepositoryResource {
   }
 
   @Path("permissions/")
-  public PermissionRootResource permissions() {
+  public RepositoryPermissionRootResource permissions() {
     return permissionRootResource.get();
   }
 

@@ -35,6 +35,7 @@ package sonia.scm.web.cgi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
 import com.google.common.io.ByteStreams;
 
@@ -137,12 +138,6 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
     if (passShellEnvironment)
     {
       apendOsEnvironment(env);
-    }
-
-    // workaround for mercurial 2.1
-    if (isContentLengthWorkaround())
-    {
-      env.set(ENV_CONTENT_LENGTH, Integer.toString(request.getContentLength()));
     }
 
     if (workDirectory == null)
@@ -304,26 +299,10 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
     String uri = HttpUtil.removeMatrixParameter(request.getRequestURI());
     String scriptName = uri.substring(0, uri.length() - pathInfo.length());
     String scriptPath = context.getRealPath(scriptName);
-    int len = request.getContentLength();
     EnvList env = new EnvList();
 
     env.set(ENV_AUTH_TYPE, request.getAuthType());
-
-    /**
-     * Note CGI spec says CONTENT_LENGTH must be NULL ("") or undefined
-     * if there is no content, so we cannot put 0 or -1 in as per the
-     * Servlet API spec.
-     *
-     * see org.apache.catalina.servlets.CGIServlet
-     */
-    if (len <= 0)
-    {
-      env.set(ENV_CONTENT_LENGTH, "");
-    }
-    else
-    {
-      env.set(ENV_CONTENT_LENGTH, Integer.toString(len));
-    }
+    env.set(ENV_CONTENT_LENGTH, createCGIContentLength(request, contentLengthWorkaround));
 
     /**
      * Decode PATH_INFO
@@ -381,6 +360,39 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
     }
 
     return env;
+  }
+
+  /**
+   * Returns the content length as string in the cgi specific format.
+   *
+   * CGI spec says CONTENT_LENGTH must be NULL ("") or undefined
+   * if there is no content, so we cannot put 0 or -1 in as per the
+   * Servlet API spec. Some CGI applications require a content
+   * length environment variable, which is not null or empty
+   * (e.g. mercurial). For those application the disallowEmptyResults
+   * parameter should be used.
+   *
+   * @param disallowEmptyResults {@code true} to return -1 instead of an empty string
+   *
+   * @return content length as cgi specific string
+   */
+  @VisibleForTesting
+  static String createCGIContentLength(HttpServletRequest request, boolean disallowEmptyResults) {
+    String cgiContentLength = disallowEmptyResults ? "-1" : "";
+
+    String contentLength = request.getHeader("Content-Length");
+    if (!Strings.isNullOrEmpty(contentLength)) {
+      try {
+        long len = Long.parseLong(contentLength);
+        if (len > 0) {
+          cgiContentLength = String.valueOf(len);
+        }
+      } catch (NumberFormatException ex) {
+        logger.warn("received request with invalid content-length header value: {}", contentLength);
+      }
+    }
+
+    return cgiContentLength;
   }
 
   /**

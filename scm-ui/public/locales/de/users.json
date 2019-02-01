@@ -1,0 +1,64 @@
+{
+  "user": {
+    "name": "Benutzername",
+    "displayName": "Anzeigename",
+    "mail": "E-Mail",
+    "password": "Passwort",
+    "admin": "Admin",
+    "active": "Aktiv",
+    "type": "Typ",
+    "creationDate": "Erstellt",
+    "lastModified": "Zuletzt bearbeitet"
+  },
+  "validation": {
+    "mail-invalid": "Diese E-Mail ist ungültig",
+    "name-invalid": "Dieser Name ist ungültig",
+    "displayname-invalid": "Dieser Anzeigename ist ungültig"
+  },
+  "help": {
+    "usernameHelpText": "Einzigartiger Name des Benutzers",
+    "displayNameHelpText": "Anzeigename des Benutzers",
+    "mailHelpText": "E-Mail Adresse des Benutzers",
+    "adminHelpText": "Ein Administrator kann Repositories, Gruppen und Benutzer erstellen, bearbeiten und löschen.",
+    "activeHelpText": "Aktivierung oder Deaktivierung eines Benutzers"
+  },
+  "users": {
+    "title": "Benutzer",
+    "subtitle": "Verwaltung der Benutzer",
+    "createButton": "Benutzer erstellen"
+  },
+  "singleUser": {
+    "errorTitle": "Fehler",
+    "errorSubtitle": "Unbekannter Benutzer Fehler",
+    "menu": {
+      "navigationLabel": "Benutzer Navigation",
+      "informationNavLink": "Informationen",
+      "settingsNavLink": "Einstellungen",
+      "generalNavLink": "Generell",
+      "setPasswordNavLink": "Passwort",
+      "setPermissionsNavLink": "Berechtigungen"
+    }
+  },
+  "addUser": {
+    "title": "Benutzer erstellen",
+    "subtitle": "Erstellen eines neuen Benutzers"
+  },
+  "deleteUser": {
+    "subtitle": "Benutzer löschen",
+    "button": "Löschen",
+    "confirmAlert": {
+      "title": "Benutzer löschen",
+      "message": "Soll der Benutzer wirklich gelöscht werden?",
+      "submit": "Ja",
+      "cancel": "Nein"
+    }
+  },
+  "singleUserPassword": {
+    "button": "Passwort setzen",
+    "setPasswordSuccessful": "Das Passwort wurde erfolgreich gespeichert."
+  },
+  "userForm": {
+    "subtitle": "Benutzer bearbeiten",
+    "button": "Speichern"
+  }
+}

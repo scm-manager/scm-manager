@@ -25,7 +25,7 @@
   "users": {
     "title": "Users",
     "subtitle": "Create, read, update and delete users",
-    "createButton": "Create"
+    "createButton": "Create User"
   },
   "singleUser": {
     "errorTitle": "Error",

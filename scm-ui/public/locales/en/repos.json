@@ -33,7 +33,7 @@
   "overview": {
     "title": "Repositories",
     "subtitle": "Overview of available repositories",
-    "createButton": "Create"
+    "createButton": "Create Repository"
   },
   "create": {
     "title": "Create Repository",
@@ -84,13 +84,17 @@
     "group": "Group",
     "error-title": "Error",
     "error-subtitle": "Unknown permissions error",
-    "name": "User or Group",
-    "type": "Type",
+    "name": "User or group",
+    "role": "Role",
+    "permissions": "Permissions",
     "group-permission": "Group Permission",
     "user-permission": "User Permission",
     "edit-permission": {
       "delete-button": "Delete",
       "save-button": "Save Changes"
+    },
+    "advanced-button": {
+      "label": "Advanced"
     },
     "delete-permission-button": {
       "label": "Delete",
@@ -108,8 +112,9 @@
     },
     "help": {
       "groupPermissionHelpText": "States if a permission is a group permission.",
-      "nameHelpText": "Manage permissions for a specific user or group",
-      "typeHelpText": "READ = read; WRITE = read and write; OWNER = read, write and also the ability to manage the properties and permissions"
+      "nameHelpText": "Manage permissions for a specific user or group.",
+      "roleHelpText": "READ = read; WRITE = read and write; OWNER = read, write and also the ability to manage the properties and permissions. If nothing is selected here, use the 'Advanced' Button to see detailed permissions.",
+      "permissionsHelpText": "Use this to specify your own set of permissions regardless of predefined roles."
     },
     "autocomplete": {
       "no-group-options": "No group suggestion available",
@@ -117,6 +122,13 @@
       "no-user-options": "No user suggestion available",
       "user-placeholder": "Enter user",
       "loading": "Loading..."
+    },
+    "advanced": {
+      "dialog": {
+        "title": "Advanced Permissions",
+        "submit": "Submit",
+        "abort": "Abort"
+      }
     }
   },
   "deleteRepo": {

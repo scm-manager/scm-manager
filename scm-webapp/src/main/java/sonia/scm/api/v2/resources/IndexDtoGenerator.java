@@ -56,6 +56,7 @@ public class IndexDtoGenerator extends LinkAppenderMapper {
       if (PermissionPermissions.list().isPermitted()) {
         builder.single(link("permissions", resourceLinks.permissions().self()));
       }
+      builder.single(link("availableRepositoryPermissions", resourceLinks.availableRepositoryPermissions().self()));
     } else {
       builder.single(link("login", resourceLinks.authentication().jsonLogin()));
     }

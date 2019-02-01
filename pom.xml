@@ -86,20 +86,6 @@
       <url>http://maven.scm-manager.org/nexus/content/groups/public</url>
     </repository>
 
-    <repository>
-      <id>ossrh</id>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-      <snapshots>
-        <enabled>true</enabled>
-        <updatePolicy>daily</updatePolicy>
-      </snapshots>
-    </repository>
-
-    <repository>
-      <id>jitpack</id>
-      <url>https://jitpack.io</url>
-    </repository>
-
   </repositories>
 
   <pluginRepositories>
@@ -172,18 +158,6 @@
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
-    </dependency>
-
-    <dependency>
-      <!-- Dependency used in Jenkinsfile. Including this in maven provides code completion in Jenkinsfile. -->
-      <groupId>com.github.cloudogu</groupId>
-      <artifactId>ces-build-lib</artifactId>
-      <!-- Keep this version in sync with the one used in Jenkinsfile -->
-      <version>9aadeeb</version>
-      <!-- Don't ship this dependency with the app -->
-      <optional>true</optional>
-      <!-- Don't inherit this dependency! -->
-      <scope>provided</scope>
     </dependency>
 
   </dependencies>
@@ -376,6 +350,70 @@
         <version>3.10.0</version>
         <scope>test</scope>
       </dependency>
+
+
+      <!-- utils -->
+
+      <dependency>
+        <groupId>commons-beanutils</groupId>
+        <artifactId>commons-beanutils</artifactId>
+        <version>1.9.3</version>
+      </dependency>
+
+      <dependency>
+        <groupId>commons-collections</groupId>
+        <artifactId>commons-collections</artifactId>
+        <version>3.2.2</version>
+      </dependency>
+
+      <!-- http -->
+
+      <dependency>
+        <groupId>org.apache.httpcomponents</groupId>
+        <artifactId>httpclient</artifactId>
+        <version>4.5.5</version>
+      </dependency>
+
+      <!-- logging -->
+
+      <dependency>
+        <artifactId>slf4j-api</artifactId>
+        <groupId>org.slf4j</groupId>
+        <version>${slf4j.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <version>${logback.version}</version>
+      </dependency>
+
+      <!-- xml -->
+
+      <dependency>
+        <groupId>javax.xml.bind</groupId>
+        <artifactId>jaxb-api</artifactId>
+        <version>${jaxb.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.sun.xml.bind</groupId>
+        <artifactId>jaxb-impl</artifactId>
+        <version>${jaxb.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.glassfish.jaxb</groupId>
+        <artifactId>jaxb-runtime</artifactId>
+        <version>${jaxb.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>javax.activation</groupId>
+        <artifactId>activation</artifactId>
+        <version>1.1.1</version>
+      </dependency>
+
     </dependencies>
   </dependencyManagement>
 
@@ -418,10 +456,11 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>2.22.0</version>
       </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
-        <version>1.4.1</version>
+        <version>3.0.0-M1</version>
         <executions>
           <execution>
             <id>enforce-java</id>
@@ -443,11 +482,31 @@
                 <requireMavenVersion>
                   <version>[3.1,)</version>
                 </requireMavenVersion>
+                <!--
+                enforce java 1.8 compatible bytecode
+                -->
+                <enforceBytecodeVersion>
+                  <maxJdkVersion>1.8</maxJdkVersion>
+                  <ignoreClasses>
+                    <!--
+                    ignore java 9 module info classes
+                    because jaxb is compiled with java 7 expect of module-info, which is compiled with java 9
+                    -->
+                    <ignoreClass>module-info</ignoreClass>
+                  </ignoreClasses>
+                </enforceBytecodeVersion>
               </rules>
               <fail>true</fail>
             </configuration>
           </execution>
         </executions>
+        <dependencies>
+          <dependency>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>extra-enforcer-rules</artifactId>
+            <version>1.0-beta-7</version>
+          </dependency>
+        </dependencies>
       </plugin>
 
       <plugin>
@@ -636,52 +695,52 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-site-plugin</artifactId>
-        <version>3.2</version>
-        <configuration>
-          <reportPlugins>
-
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-project-info-reports-plugin</artifactId>
-              <version>2.4</version>
-            </plugin>
-
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-jxr-plugin</artifactId>
-              <version>2.3</version>
-            </plugin>
-
-            <plugin>
-              <groupId>org.codehaus.mojo</groupId>
-              <artifactId>findbugs-maven-plugin</artifactId>
-              <version>2.4.0</version>
-            </plugin>
-
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-surefire-report-plugin</artifactId>
-              <version>2.12</version>
-            </plugin>
-
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-pmd-plugin</artifactId>
-              <version>2.7.1</version>
-              <configuration>
-                <linkXref>true</linkXref>
-                <sourceEncoding>${project.build.sourceEncoding}</sourceEncoding>
-                <targetJdk>${project.build.javaLevel}</targetJdk>
-              </configuration>
-            </plugin>
-
-          </reportPlugins>
-        </configuration>
+        <version>3.7</version>
       </plugin>
 
     </plugins>
 
   </build>
+
+  <reporting>
+    <plugins>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+        <version>2.4</version>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jxr-plugin</artifactId>
+        <version>2.3</version>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>findbugs-maven-plugin</artifactId>
+        <version>2.4.0</version>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-report-plugin</artifactId>
+        <version>2.12</version>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-pmd-plugin</artifactId>
+        <version>2.7.1</version>
+        <configuration>
+          <sourceEncoding>${project.build.sourceEncoding}</sourceEncoding>
+          <targetJdk>${project.build.javaLevel}</targetJdk>
+        </configuration>
+      </plugin>
+
+    </plugins>
+  </reporting>
 
   <profiles>
 
@@ -726,17 +785,9 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
+            <version>3.0.0</version>
             <configuration>
-              <doclet>org.jboss.apiviz.APIviz</doclet>
-              <docletArtifact>
-                <groupId>org.jboss.apiviz</groupId>
-                <artifactId>apiviz</artifactId>
-                <version>1.3.2.GA</version>
-              </docletArtifact>
-              <additionalparam>
-                -sourceclasspath ${project.build.outputDirectory}
-                -nopackagediagram
-              </additionalparam>
+              <failOnError>false</failOnError>
             </configuration>
           </plugin>
 
@@ -770,8 +821,8 @@
     <junit.version>5.2.0</junit.version>
 
     <!-- logging libraries -->
-    <slf4j.version>1.7.22</slf4j.version>
-    <logback.version>1.1.10</logback.version>
+    <slf4j.version>1.7.25</slf4j.version>
+    <logback.version>1.2.3</logback.version>
     <servlet.version>3.0.1</servlet.version>
 
     <jaxrs.version>2.0.1</jaxrs.version>
@@ -780,21 +831,22 @@
     <enunciate.version>2.11.1</enunciate.version>
     <jackson.version>2.8.6</jackson.version>
     <guice.version>4.0</guice.version>
+    <jaxb.version>2.3.0</jaxb.version>
 
     <!-- event bus -->
     <legman.version>1.4.2</legman.version>
 
     <!-- webserver -->
-    <jetty.version>9.2.10.v20150310</jetty.version>
-    <jetty.maven.version>9.2.10.v20150310</jetty.maven.version>
+    <jetty.version>9.4.14.v20181114</jetty.version>
+    <jetty.maven.version>9.4.14.v20181114</jetty.maven.version>
 
     <!-- security libraries -->
     <ssp.version>1.1.0</ssp.version>
     <shiro.version>1.4.0</shiro.version>
 
-    <!-- repostitory libraries -->
-    <jgit.version>v4.5.2.201704071617-r-scm1</jgit.version>
-    <svnkit.version>1.8.15-scm1</svnkit.version>
+    <!-- repository libraries -->
+    <jgit.version>v4.5.3.201708160445-r-scm1</jgit.version>
+    <svnkit.version>1.9.0-scm3</svnkit.version>
 
     <!-- util libraries -->
     <guava.version>26.0-jre</guava.version>
@@ -806,6 +858,7 @@
 
     <!-- build properties -->
     <project.build.javaLevel>1.8</project.build.javaLevel>
+    <project.test.javaLevel>1.8</project.test.javaLevel>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <netbeans.hint.license>SCM-BSD</netbeans.hint.license>
     <jdk.classifier />

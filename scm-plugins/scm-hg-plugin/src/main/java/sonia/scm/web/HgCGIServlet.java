@@ -56,15 +56,20 @@ import sonia.scm.web.cgi.CGIExecutor;
 import sonia.scm.web.cgi.CGIExecutorFactory;
 import sonia.scm.web.cgi.EnvList;
 
+//~--- JDK imports ------------------------------------------------------------
+
+import java.io.File;
+import java.io.IOException;
+
+import java.util.Enumeration;
+import java.util.Map;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.File;
-import java.io.IOException;
 import java.util.Base64;
-import java.util.Enumeration;
 
 /**
  *
@@ -74,6 +79,8 @@ import java.util.Enumeration;
 public class HgCGIServlet extends HttpServlet implements ScmProviderHttpServlet
 {
 
+  private static final String ENV_PYTHON_HTTPS_VERIFY = "PYTHONHTTPSVERIFY";
+
   /** Field description */
   public static final String ENV_REPOSITORY_NAME = "REPO_NAME";
 
@@ -82,6 +89,8 @@ public class HgCGIServlet extends HttpServlet implements ScmProviderHttpServlet
 
   /** Field description */
   public static final String ENV_REPOSITORY_ID = "SCM_REPOSITORY_ID";
+
+  private static final String ENV_HTTP_POST_ARGS = "SCM_HTTP_POST_ARGS";
 
   /** Field description */
   public static final String ENV_SESSION_PREFIX = "SCM_";
@@ -268,11 +277,22 @@ public class HgCGIServlet extends HttpServlet implements ScmProviderHttpServlet
       directory.getAbsolutePath());
 
     // add hook environment
+    Map<String, String> environment = executor.getEnvironment().asMutableMap();
+    if (handler.getConfig().isDisableHookSSLValidation()) {
+      // disable ssl validation
+      // Issue 959: https://goo.gl/zH5eY8
+      environment.put(ENV_PYTHON_HTTPS_VERIFY, "0");
+    }
+
+    // enable experimental httppostargs protocol of mercurial
+    // Issue 970: https://goo.gl/poascp
+    environment.put(ENV_HTTP_POST_ARGS, String.valueOf(handler.getConfig().isEnableHttpPostArgs()));
+
     //J-
     HgEnvironment.prepareEnvironment(
-      executor.getEnvironment().asMutableMap(),
+      environment,
       handler,
-      hookManager, 
+      hookManager,
       request
     );
     //J+
