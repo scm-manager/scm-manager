@@ -1,26 +1,17 @@
 // @flow
 import ChangesetRow from "./ChangesetRow";
 import React from "react";
-import injectSheet from "react-jss";
-import classNames from "classnames";
 
 import type { Changeset, Repository } from "@scm-manager/ui-types";
 
 type Props = {
   repository: Repository,
-  changesets: Changeset[],
-  classes: any
-};
-
-const styles = {
-  toCenterContent: {
-    display: "block"
-  }
+  changesets: Changeset[]
 };
 
 class ChangesetList extends React.Component<Props> {
   render() {
-    const { repository, changesets, classes } = this.props;
+    const { repository, changesets } = this.props;
     const content = changesets.map(changeset => {
       return (
         <ChangesetRow
@@ -31,11 +22,11 @@ class ChangesetList extends React.Component<Props> {
       );
     });
     return (
-      <div className={classNames("panel-block", classes.toCenterContent)}>
+      <div className="panel-block">
         {content}
       </div>
     );
   }
 }
 
-export default injectSheet(styles)(ChangesetList);
+export default ChangesetList;

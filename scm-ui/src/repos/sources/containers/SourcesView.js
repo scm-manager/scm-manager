@@ -8,15 +8,12 @@ import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import { getContentType } from "./contentType";
 import type { File, Repository } from "@scm-manager/ui-types";
 import { ErrorNotification, Loading } from "@scm-manager/ui-components";
-import injectSheet from "react-jss";
-import classNames from "classnames";
 
 type Props = {
   repository: Repository,
   file: File,
   revision: string,
-  path: string,
-  classes: any
+  path: string
 };
 
 type State = {
@@ -24,12 +21,6 @@ type State = {
   language: string,
   loaded: boolean,
   error?: Error
-};
-
-const styles = {
-  toCenterContent: {
-    display: "block"
-  }
 };
 
 class SourcesView extends React.Component<Props, State> {
@@ -87,7 +78,7 @@ class SourcesView extends React.Component<Props, State> {
   }
 
   render() {
-    const { file, classes } = this.props;
+    const { file } = this.props;
     const { loaded, error } = this.state;
 
     if (!file || !loaded) {
@@ -99,8 +90,8 @@ class SourcesView extends React.Component<Props, State> {
 
     const sources = this.showSources();
 
-    return <div className={classNames("panel-block", classes.toCenterContent)}>{sources}</div>;
+    return <div className="panel-block">{sources}</div>;
   }
 }
 
-export default injectSheet(styles)(SourcesView);
+export default SourcesView;

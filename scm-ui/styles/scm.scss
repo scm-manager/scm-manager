@@ -85,15 +85,6 @@ $fa-font-path: "webfonts";
   }
 }
 
-//border around options
-.has-border-around {
-  border: 1px solid #dbdbdb;
-
-  &.is-round {
-    border-radius: 4px;
-  }
-}
-
 // multiline Columns
 .columns.is-multiline {
   .column.is-half {
@@ -195,20 +186,26 @@ $fa-font-path: "webfonts";
 }
 
 //panels
-.panel-footer {
-  background-color: whitesmoke;
-  border-radius: 0 0 4px 4px;
-  color: #363636;
-  font-size: 1.25em;
-  font-weight: 300;
-  line-height: 1.25;
-  padding: 0.5em 0.75em;
+nav.panel {
+  .panel-block {
+    display: block;
+  }
 
-  border-left: 1px solid #dbdbdb;
-  border-right: 1px solid #dbdbdb;
+  .panel-footer {
+    background-color: whitesmoke;
+    border-radius: 0 0 4px 4px;
+    color: #363636;
+    font-size: 1.25em;
+    font-weight: 300;
+    line-height: 1.25;
+    padding: 0.5em 0.75em;
 
-  &:last-child {
-    border-bottom: 1px solid #dbdbdb;
+    border-left: 1px solid #dbdbdb;
+    border-right: 1px solid #dbdbdb;
+
+    &:last-child {
+      border-bottom: 1px solid #dbdbdb;
+    }
   }
 }
 

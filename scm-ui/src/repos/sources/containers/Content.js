@@ -29,9 +29,6 @@ type State = {
 };
 
 const styles = {
-  toCenterContent: {
-    display: "block"
-  },
   pointer: {
     cursor: "pointer"
   },
@@ -126,7 +123,6 @@ class Content extends React.Component<Props, State> {
         <div
           className={classNames(
             "panel-block",
-            classes.toCenterContent,
             classes.hasBackground
           )}
         >
