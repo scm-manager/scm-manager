@@ -93,7 +93,6 @@
     "error-subtitle": "Unbekannter Fehler bei Berechtigung",
     "name": "Benutzer oder Gruppe",
     "role": "Rolle",
-    "type": "Typ",
     "permissions": "Berechtigung",
     "group-permission": "Gruppenberechtigung",
     "user-permission": "Benutzerberechtigung",

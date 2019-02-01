@@ -14,10 +14,12 @@ import {
 } from "../modules/permissions";
 import { connect } from "react-redux";
 import type { History } from "history";
-import { Button, Checkbox } from "@scm-manager/ui-components";
+import { Button } from "@scm-manager/ui-components";
 import DeletePermissionButton from "../components/buttons/DeletePermissionButton";
 import RoleSelector from "../components/RoleSelector";
 import AdvancedPermissionsDialog from "./AdvancedPermissionsDialog";
+import classNames from "classnames";
+import injectSheet from "react-jss";
 
 type Props = {
   availablePermissions: AvailableRepositoryPermissions,
@@ -39,13 +41,20 @@ type Props = {
     namespace: string,
     name: string
   ) => void,
-  deleteLoading: boolean
+  deleteLoading: boolean,
+  classes: any
 };
 
 type State = {
   role: string,
   permission: Permission,
   showAdvancedDialog: boolean
+};
+
+const styles = {
+  iconColor: {
+    color: "#9a9a9a"
+  }
 };
 
 class SinglePermission extends React.Component<Props, State> {
@@ -104,7 +113,8 @@ class SinglePermission extends React.Component<Props, State> {
       availablePermissions,
       loading,
       namespace,
-      repoName
+      repoName,
+      classes
     } = this.props;
     const availableRoleNames = availablePermissions.availableRoles.map(
       r => r.name
@@ -138,10 +148,18 @@ class SinglePermission extends React.Component<Props, State> {
         ? t("permission.group")
         : t("permission.user");
 
+    const iconType =
+      permission && permission.groupPermission ? (
+        <i className={classNames("fas fa-user-friends", classes.iconColor)} />
+      ) : (
+        <i className={classNames("fas fa-user", classes.iconColor)} />
+      );
+
     return (
       <tr>
-        <td>{permission.name}</td>
-        <td>{type}</td>
+        <td>
+          {iconType} {permission.name}
+        </td>
         {roleSelector}
         <td>
           <Button
@@ -261,4 +279,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(translate("repos")(SinglePermission));
+)(translate("repos")(injectSheet(styles)(SinglePermission)));

@@ -96,6 +96,7 @@ class CreatePermissionForm extends React.Component<Props, State> {
     const { t } = this.props;
     if (this.state.groupPermission) {
       return (
+
         <Autocomplete
           loadSuggestions={this.loadGroupAutocompletion}
           valueSelected={this.groupOrUserSelected}
@@ -159,6 +160,9 @@ class CreatePermissionForm extends React.Component<Props, State> {
         </h2>
         {advancedDialog}
         <form onSubmit={this.submit}>
+          <div className="field is-grouped">
+
+          <div className="control">
           <Radio
             name="permission_scope"
             value="USER_PERMISSION"
@@ -173,7 +177,7 @@ class CreatePermissionForm extends React.Component<Props, State> {
             label={t("permission.group-permission")}
             onChange={this.permissionScopeChanged}
           />
-
+          </div></div>
           <div className="columns">
             <div className="column is-two-thirds">
               {this.renderAutocompletionField()}
