@@ -79,7 +79,9 @@ class HistoryView extends React.Component<Props, State> {
     const currentPage = page + 1;
     return (
       <>
-        <ChangesetList repository={repository} changesets={changesets} />
+        <div className="panel-block">
+          <ChangesetList repository={repository} changesets={changesets} />
+        </div>
         <div className="panel-footer">
           <StatePaginator
             page={currentPage}

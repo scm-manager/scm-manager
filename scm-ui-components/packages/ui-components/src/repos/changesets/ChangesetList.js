@@ -21,11 +21,7 @@ class ChangesetList extends React.Component<Props> {
         />
       );
     });
-    return (
-      <div className="panel-block">
-        {content}
-      </div>
-    );
+    return <>{content}</>;
   }
 }
 
