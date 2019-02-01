@@ -1,9 +1,8 @@
 // @flow
 import * as React from "react";
 import ReactDOM from "react-dom";
-import "./ConfirmAlert.css";
 
-type Button = {
+type ButtonType = {
   label: string,
   onClick: () => void | null
 };
@@ -11,11 +10,11 @@ type Button = {
 type Props = {
   title: string,
   message: string,
-  buttons: Button[]
+  buttons: ButtonType[]
 };
 
 class ConfirmAlert extends React.Component<Props> {
-  handleClickButton = (button: Button) => {
+  handleClickButton = (button: ButtonType) => {
     if (button.onClick) {
       button.onClick();
     }
@@ -46,15 +45,14 @@ class ConfirmAlert extends React.Component<Props> {
             </header>
             <section className="modal-card-body">
               {message}
-              <div className="react-confirm-alert-button-group">
+              <div className="buttons">
                 {buttons.map((button, i) => (
-                  <button
+                  <a className="button"
                     key={i}
                     onClick={() => this.handleClickButton(button)}
-                    href="javascript:void(0);"
                   >
                     {button.label}
-                  </button>
+                  </a>
                 ))}
               </div>
             </section>
