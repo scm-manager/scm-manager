@@ -253,7 +253,8 @@ class CreatePermissionForm extends React.Component<Props, State> {
       name: "",
       verbs: this.props.availablePermissions.availableRoles[0].verbs,
       groupPermission: false,
-      valid: true
+      valid: true,
+      value: undefined
     });
   };
 
