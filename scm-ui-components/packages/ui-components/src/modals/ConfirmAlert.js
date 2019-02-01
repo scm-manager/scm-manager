@@ -45,9 +45,9 @@ class ConfirmAlert extends React.Component<Props> {
             </header>
             <section className="modal-card-body">
               {message}
-              <div className="buttons">
+              <div className="buttons is-right">
                 {buttons.map((button, i) => (
-                  <a className="button"
+                  <a className="button is-info is-right"
                     key={i}
                     onClick={() => this.handleClickButton(button)}
                   >
