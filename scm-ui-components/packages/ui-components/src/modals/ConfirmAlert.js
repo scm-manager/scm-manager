@@ -3,7 +3,7 @@ import * as React from "react";
 import ReactDOM from "react-dom";
 import Modal from "./Modal";
 
-type ButtonType = {
+type Button = {
   label: string,
   onClick: () => void | null
 };
@@ -11,11 +11,11 @@ type ButtonType = {
 type Props = {
   title: string,
   message: string,
-  buttons: ButtonType[]
+  buttons: Button[]
 };
 
 class ConfirmAlert extends React.Component<Props> {
-  handleClickButton = (button: ButtonType) => {
+  handleClickButton = (button: Button) => {
     if (button.onClick) {
       button.onClick();
     }
