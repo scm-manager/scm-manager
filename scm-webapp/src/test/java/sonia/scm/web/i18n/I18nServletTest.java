@@ -194,6 +194,8 @@ public class I18nServletTest {
     assertJson(json);
     verify(cache).get(path);
     verify(cache).put(eq(path), any());
+
+    verifyHeaders(response);
   }
 
   @Test
@@ -221,6 +223,8 @@ public class I18nServletTest {
     verify(cache, never()).put(eq(path), any());
     verify(cache).get(path);
     assertJson(json);
+
+    verifyHeaders(response);
   }
 
   @Test
@@ -232,6 +236,11 @@ public class I18nServletTest {
     Optional<JsonNode> jsonNodeOptional = servlet.collectJsonFile("/" + path);
 
     assertJson(jsonNodeOptional.orElse(null));
+  }
+
+  private void verifyHeaders(HttpServletResponse response) {
+    verify(response).setCharacterEncoding("UTF-8");
+    verify(response).setContentType("application/json");
   }
 
   public void assertJson(JsonNode actual) throws IOException {

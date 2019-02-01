@@ -81,7 +81,6 @@ public class I18nServlet extends HttpServlet {
     response.setCharacterEncoding("UTF-8");
     response.setContentType("application/json");
     try (PrintWriter out = response.getWriter()) {
-      response.setContentType("application/json");
       String path = req.getServletPath();
       Function<String, Optional<JsonNode>> jsonFileProvider = usedPath -> Optional.empty();
       BiConsumer<String, JsonNode> createdJsonFileConsumer = (usedPath, jsonNode) -> log.debug("A json File is created from the path {}", usedPath);
