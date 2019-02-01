@@ -1,8 +1,6 @@
 // @flow
-//modified from https://github.com/GA-MO/react-confirm-alert
-
 import * as React from "react";
-import { render, unmountComponentAtNode } from "react-dom";
+import ReactDOM from "react-dom";
 import "./ConfirmAlert.css";
 
 type Button = {
@@ -25,7 +23,7 @@ class ConfirmAlert extends React.Component<Props> {
   };
 
   close = () => {
-    removeElementReconfirm();
+    ReactDOM.unmountComponentAtNode(document.getElementById("modalRoot"));
   };
 
   render() {
@@ -67,27 +65,11 @@ class ConfirmAlert extends React.Component<Props> {
   }
 }
 
-function createElementReconfirm(properties: Props) {
-  const divTarget = document.createElement("div");
-  divTarget.id = "react-confirm-alert";
-  if (document.body) {
-    document.body.appendChild(divTarget);
-    render(<ConfirmAlert {...properties} />, divTarget);
-  }
-}
-
-function removeElementReconfirm() {
-  const target = document.getElementById("react-confirm-alert");
-  if (target) {
-    unmountComponentAtNode(target);
-    if (target.parentNode) {
-      target.parentNode.removeChild(target);
-    }
-  }
-}
-
 export function confirmAlert(properties: Props) {
-  createElementReconfirm(properties);
+  const root = document.getElementById("modalRoot");
+  if(root){
+    ReactDOM.render(<ConfirmAlert {...properties}/>, root);
+  }
 }
 
 export default ConfirmAlert;
