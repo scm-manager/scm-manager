@@ -21,41 +21,51 @@ public class SvnModificationsCommand extends AbstractSvnCommand implements Modif
     super(context, repository);
   }
 
-
   @Override
-  @SuppressWarnings("unchecked")
-  public Modifications getModifications(String revision) {
-    final Modifications modifications = new Modifications();
-    log.debug("get modifications {}", revision);
+  public Modifications getModifications(String revisionOrTransactionId) {
+    Modifications modifications;
     try {
-      if (SvnUtil.isTransactionEntryId(revision)) {
-
-        SVNLookClient client = SVNClientManager.newInstance().getLookClient();
-        client.doGetChanged(context.getDirectory(), SvnUtil.getTransactionId(revision),
-          e -> SvnUtil.appendModification(modifications, e.getType(), e.getPath()), true);
-
-        return modifications;
-
+      if (SvnUtil.isTransactionEntryId(revisionOrTransactionId)) {
+        modifications = getModificationsFromTransaction(SvnUtil.getTransactionId(revisionOrTransactionId));
       } else {
-
-        long revisionNumber = SvnUtil.getRevisionNumber(revision, repository);
-        SVNRepository repo = open();
-        Collection<SVNLogEntry> entries = repo.log(null, null, revisionNumber,
-          revisionNumber, true, true);
-        if (Util.isNotEmpty(entries)) {
-          return SvnUtil.createModifications(entries.iterator().next(), revision);
-        }
+        modifications = getModificationFromRevision(revisionOrTransactionId);
       }
+      return modifications;
     } catch (SVNException ex) {
-      throw new InternalRepositoryException(repository, "could not open repository", ex);
+      throw new InternalRepositoryException(
+        repository,
+        "failed to get svn modifications for " + revisionOrTransactionId,
+        ex
+      );
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  private Modifications getModificationFromRevision(String revision) throws SVNException {
+    log.debug("get svn modifications from revision: {}", revision);
+    long revisionNumber = SvnUtil.getRevisionNumber(revision, repository);
+    SVNRepository repo = open();
+    Collection<SVNLogEntry> entries = repo.log(null, null, revisionNumber,
+      revisionNumber, true, true);
+    if (Util.isNotEmpty(entries)) {
+      return SvnUtil.createModifications(entries.iterator().next(), revision);
     }
     return null;
+  }
+
+  private Modifications getModificationsFromTransaction(String transaction) throws SVNException {
+    log.debug("get svn modifications from transaction: {}", transaction);
+    final Modifications modifications = new Modifications();
+    SVNLookClient client = SVNClientManager.newInstance().getLookClient();
+    client.doGetChanged(context.getDirectory(), transaction,
+      e -> SvnUtil.appendModification(modifications, e.getType(), e.getPath()), true);
+
+    return modifications;
   }
 
   @Override
   public Modifications getModifications(ModificationsCommandRequest request) {
     return getModifications(request.getRevision());
   }
-
 
 }
