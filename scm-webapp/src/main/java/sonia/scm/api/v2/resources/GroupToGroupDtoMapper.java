@@ -1,9 +1,9 @@
 package sonia.scm.api.v2.resources;
 
+import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.Links;
-import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
-import org.mapstruct.MappingTarget;
+import org.mapstruct.ObjectFactory;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupPermissions;
 import sonia.scm.security.PermissionPermissions;
@@ -12,6 +12,7 @@ import javax.inject.Inject;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static de.otto.edison.hal.Embedded.embeddedBuilder;
 import static de.otto.edison.hal.Link.link;
 import static de.otto.edison.hal.Links.linkingTo;
 
@@ -23,28 +24,26 @@ public abstract class GroupToGroupDtoMapper extends BaseMapper<Group, GroupDto> 
   @Inject
   private ResourceLinks resourceLinks;
 
-  @AfterMapping
-  void appendLinks(Group group, @MappingTarget GroupDto target) {
-    Links.Builder linksBuilder = linkingTo().self(resourceLinks.group().self(target.getName()));
+  @ObjectFactory
+  GroupDto createDto(Group group) {
+    Links.Builder linksBuilder = linkingTo().self(resourceLinks.group().self(group.getName()));
     if (GroupPermissions.delete(group).isPermitted()) {
-      linksBuilder.single(link("delete", resourceLinks.group().delete(target.getName())));
+      linksBuilder.single(link("delete", resourceLinks.group().delete(group.getName())));
     }
     if (GroupPermissions.modify(group).isPermitted()) {
-      linksBuilder.single(link("update", resourceLinks.group().update(target.getName())));
+      linksBuilder.single(link("update", resourceLinks.group().update(group.getName())));
     }
     if (PermissionPermissions.read().isPermitted()) {
-      linksBuilder.single(link("permissions", resourceLinks.groupPermissions().permissions(target.getName())));
+      linksBuilder.single(link("permissions", resourceLinks.groupPermissions().permissions(group.getName())));
     }
 
-    appendLinks(new EdisonHalAppender(linksBuilder), group);
-
-    target.add(linksBuilder.build());
-  }
-
-  @AfterMapping
-  void mapMembers(Group group, @MappingTarget GroupDto target) {
+    Embedded.Builder embeddedBuilder = embeddedBuilder();
     List<MemberDto> memberDtos = group.getMembers().stream().map(this::createMember).collect(Collectors.toList());
-    target.withMembers(memberDtos);
+    embeddedBuilder.with("members", memberDtos);
+
+    applyEnrichers(new EdisonHalAppender(linksBuilder, embeddedBuilder), group);
+
+    return new GroupDto(linksBuilder.build(), embeddedBuilder.build());
   }
 
   private MemberDto createMember(String name) {

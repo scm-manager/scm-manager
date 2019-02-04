@@ -14,7 +14,7 @@ public class HalAppenderMapper {
     this.registry = registry;
   }
 
-  protected void appendLinks(HalAppender appender, Object source, Object... contextEntries) {
+  protected void applyEnrichers(HalAppender appender, Object source, Object... contextEntries) {
     // null check is only their to not break existing tests
     if (registry != null) {
 

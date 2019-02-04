@@ -30,7 +30,7 @@ class HalAppenderMapperTest {
   void shouldAppendSimpleLink() {
     registry.register(String.class, (ctx, appender) -> appender.appendLink("42", "https://hitchhiker.com"));
 
-    mapper.appendLinks(appender, "hello");
+    mapper.applyEnrichers(appender, "hello");
 
     verify(appender).appendLink("42", "https://hitchhiker.com");
   }
@@ -40,7 +40,7 @@ class HalAppenderMapperTest {
     registry.register(String.class, (ctx, appender) -> appender.appendLink("42", "https://hitchhiker.com"));
     registry.register(String.class, (ctx, appender) -> appender.appendLink("21", "https://scm.hitchhiker.com"));
 
-    mapper.appendLinks(appender, "hello");
+    mapper.applyEnrichers(appender, "hello");
 
     verify(appender).appendLink("42", "https://hitchhiker.com");
     verify(appender).appendLink("21", "https://scm.hitchhiker.com");
@@ -53,7 +53,7 @@ class HalAppenderMapperTest {
       appender.appendLink(rel.get(), "https://hitchhiker.com");
     });
 
-    mapper.appendLinks(appender, "42");
+    mapper.applyEnrichers(appender, "42");
 
     verify(appender).appendLink("42", "https://hitchhiker.com");
   }
@@ -66,7 +66,7 @@ class HalAppenderMapperTest {
       appender.appendLink(String.valueOf(rel.get()), href.get());
     });
 
-    mapper.appendLinks(appender, Integer.valueOf(42), "https://hitchhiker.com");
+    mapper.applyEnrichers(appender, Integer.valueOf(42), "https://hitchhiker.com");
 
     verify(appender).appendLink("42", "https://hitchhiker.com");
   }
