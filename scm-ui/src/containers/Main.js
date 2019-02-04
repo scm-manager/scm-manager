@@ -35,7 +35,12 @@ class Main extends React.Component<Props> {
     return (
       <div className="main">
         <Switch>
-          <Redirect exact path="/" to="/repos" />
+          <ExtensionPoint
+            name="redirect-route"
+            props={{authenticated, links}}
+          >
+            <Redirect exact path="/" to="/repos"/>
+          </ExtensionPoint>
           <Route exact path="/login" component={Login} />
           <Route path="/logout" component={Logout} />
           <ProtectedRoute
