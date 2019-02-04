@@ -11,18 +11,18 @@ import java.util.Optional;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-class LinkAppenderMapperTest {
+class HalAppenderMapperTest {
 
   @Mock
-  private LinkAppender appender;
+  private HalAppender appender;
 
-  private LinkEnricherRegistry registry;
-  private LinkAppenderMapper mapper;
+  private HalEnricherRegistry registry;
+  private HalAppenderMapper mapper;
 
   @BeforeEach
   void beforeEach() {
-    registry = new LinkEnricherRegistry();
-    mapper = new LinkAppenderMapper();
+    registry = new HalEnricherRegistry();
+    mapper = new HalAppenderMapper();
     mapper.setRegistry(registry);
   }
 

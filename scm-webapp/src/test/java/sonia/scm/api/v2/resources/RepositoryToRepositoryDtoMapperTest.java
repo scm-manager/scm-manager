@@ -211,7 +211,7 @@ public class RepositoryToRepositoryDtoMapperTest {
 
   @Test
   public void shouldAppendLinks() {
-    LinkEnricherRegistry registry = new LinkEnricherRegistry();
+    HalEnricherRegistry registry = new HalEnricherRegistry();
     registry.register(Repository.class, (ctx, appender) -> {
       Repository repository = ctx.oneRequireByType(Repository.class);
       appender.appendOne("id", "http://" + repository.getId());

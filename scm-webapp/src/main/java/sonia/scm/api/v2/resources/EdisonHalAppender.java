@@ -6,11 +6,11 @@ import de.otto.edison.hal.Links;
 import java.util.ArrayList;
 import java.util.List;
 
-class EdisonLinkAppender implements LinkAppender {
+class EdisonHalAppender implements HalAppender {
 
   private final Links.Builder builder;
 
-  EdisonLinkAppender(Links.Builder builder) {
+  EdisonHalAppender(Links.Builder builder) {
     this.builder = builder;
   }
 

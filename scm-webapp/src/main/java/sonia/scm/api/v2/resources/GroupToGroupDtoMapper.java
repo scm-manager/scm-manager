@@ -36,7 +36,7 @@ public abstract class GroupToGroupDtoMapper extends BaseMapper<Group, GroupDto> 
       linksBuilder.single(link("permissions", resourceLinks.groupPermissions().permissions(target.getName())));
     }
 
-    appendLinks(new EdisonLinkAppender(linksBuilder), group);
+    appendLinks(new EdisonHalAppender(linksBuilder), group);
 
     target.add(linksBuilder.build());
   }

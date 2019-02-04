@@ -15,7 +15,6 @@ import org.mockito.quality.Strictness;
 import sonia.scm.group.GroupNames;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
-import sonia.scm.user.UserPermissions;
 import sonia.scm.user.UserTestData;
 
 import java.net.URI;
@@ -170,7 +169,7 @@ class MeDtoFactoryTest {
   void shouldAppendLinks() {
     prepareSubject(UserTestData.createTrillian());
 
-    LinkEnricherRegistry registry = new LinkEnricherRegistry();
+    HalEnricherRegistry registry = new HalEnricherRegistry();
     meDtoFactory.setRegistry(registry);
 
     registry.register(Me.class, (ctx, appender) -> {

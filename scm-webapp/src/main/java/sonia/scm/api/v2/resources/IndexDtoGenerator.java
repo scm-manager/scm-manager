@@ -15,7 +15,7 @@ import java.util.List;
 
 import static de.otto.edison.hal.Link.link;
 
-public class IndexDtoGenerator extends LinkAppenderMapper {
+public class IndexDtoGenerator extends HalAppenderMapper {
 
   private final ResourceLinks resourceLinks;
   private final SCMContextProvider scmContextProvider;
@@ -61,7 +61,7 @@ public class IndexDtoGenerator extends LinkAppenderMapper {
       builder.single(link("login", resourceLinks.authentication().jsonLogin()));
     }
 
-    appendLinks(new EdisonLinkAppender(builder), new Index());
+    appendLinks(new EdisonHalAppender(builder), new Index());
 
     return new IndexDto(scmContextProvider.getVersion(), builder.build());
   }

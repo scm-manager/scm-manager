@@ -22,7 +22,7 @@ class TagToTagDtoMapperTest {
 
   @Test
   void shouldAppendLinks() {
-    LinkEnricherRegistry registry = new LinkEnricherRegistry();
+    HalEnricherRegistry registry = new HalEnricherRegistry();
     registry.register(Tag.class, (ctx, appender) -> {
       NamespaceAndName repository = ctx.oneRequireByType(NamespaceAndName.class);
       Tag tag = ctx.oneRequireByType(Tag.class);

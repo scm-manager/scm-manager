@@ -16,7 +16,7 @@ import java.util.Collections;
 import static de.otto.edison.hal.Link.link;
 import static de.otto.edison.hal.Links.linkingTo;
 
-public class MeDtoFactory extends LinkAppenderMapper {
+public class MeDtoFactory extends HalAppenderMapper {
 
   private final ResourceLinks resourceLinks;
   private final UserManager userManager;
@@ -73,7 +73,7 @@ public class MeDtoFactory extends LinkAppenderMapper {
       linksBuilder.single(link("password", resourceLinks.me().passwordChange()));
     }
 
-    appendLinks(new EdisonLinkAppender(linksBuilder), new Me(), user);
+    appendLinks(new EdisonHalAppender(linksBuilder), new Me(), user);
 
     target.add(linksBuilder.build());
   }

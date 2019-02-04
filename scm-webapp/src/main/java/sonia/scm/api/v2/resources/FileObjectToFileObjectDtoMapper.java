@@ -12,13 +12,10 @@ import sonia.scm.repository.SubRepository;
 
 import javax.inject.Inject;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import static de.otto.edison.hal.Link.link;
 
 @Mapper
-public abstract class FileObjectToFileObjectDtoMapper extends LinkAppenderMapper implements InstantAttributeMapper {
+public abstract class FileObjectToFileObjectDtoMapper extends HalAppenderMapper implements InstantAttributeMapper {
 
   @Inject
   private ResourceLinks resourceLinks;
@@ -39,7 +36,7 @@ public abstract class FileObjectToFileObjectDtoMapper extends LinkAppenderMapper
       links.single(link("history", resourceLinks.fileHistory().self(namespaceAndName.getNamespace(), namespaceAndName.getName(), revision, path)));
     }
 
-    appendLinks(new EdisonLinkAppender(links), fileObject, namespaceAndName, revision);
+    appendLinks(new EdisonHalAppender(links), fileObject, namespaceAndName, revision);
 
     dto.add(links.build());
   }

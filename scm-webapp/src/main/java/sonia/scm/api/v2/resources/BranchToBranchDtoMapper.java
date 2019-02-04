@@ -15,7 +15,7 @@ import static de.otto.edison.hal.Link.linkBuilder;
 import static de.otto.edison.hal.Links.linkingTo;
 
 @Mapper
-public abstract class BranchToBranchDtoMapper extends LinkAppenderMapper {
+public abstract class BranchToBranchDtoMapper extends HalAppenderMapper {
 
   @Inject
   private ResourceLinks resourceLinks;
@@ -31,7 +31,7 @@ public abstract class BranchToBranchDtoMapper extends LinkAppenderMapper {
       .single(linkBuilder("changeset", resourceLinks.changeset().changeset(namespaceAndName.getNamespace(), namespaceAndName.getName(), target.getRevision())).build())
       .single(linkBuilder("source", resourceLinks.source().self(namespaceAndName.getNamespace(), namespaceAndName.getName(), target.getRevision())).build());
 
-    appendLinks(new EdisonLinkAppender(linksBuilder), source, namespaceAndName);
+    appendLinks(new EdisonHalAppender(linksBuilder), source, namespaceAndName);
 
     target.add(linksBuilder.build());
   }

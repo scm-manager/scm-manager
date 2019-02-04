@@ -10,30 +10,30 @@ import javax.servlet.ServletContextListener;
 import java.util.Set;
 
 /**
- * Registers every {@link LinkEnricher} which is annotated with an {@link Enrich} annotation.
+ * Registers every {@link HalEnricher} which is annotated with an {@link Enrich} annotation.
  */
 @Extension
 public class LinkEnricherAutoRegistration implements ServletContextListener {
 
   private static final Logger LOG = LoggerFactory.getLogger(LinkEnricherAutoRegistration.class);
 
-  private final LinkEnricherRegistry registry;
-  private final Set<LinkEnricher> enrichers;
+  private final HalEnricherRegistry registry;
+  private final Set<HalEnricher> enrichers;
 
   @Inject
-  public LinkEnricherAutoRegistration(LinkEnricherRegistry registry, Set<LinkEnricher> enrichers) {
+  public LinkEnricherAutoRegistration(HalEnricherRegistry registry, Set<HalEnricher> enrichers) {
     this.registry = registry;
     this.enrichers = enrichers;
   }
 
   @Override
   public void contextInitialized(ServletContextEvent sce) {
-    for (LinkEnricher enricher : enrichers) {
+    for (HalEnricher enricher : enrichers) {
       Enrich annotation = enricher.getClass().getAnnotation(Enrich.class);
       if (annotation != null) {
         registry.register(annotation.value(), enricher);
       } else {
-        LOG.warn("found LinkEnricher extension {} without Enrich annotation", enricher.getClass());
+        LOG.warn("found HalEnricher extension {} without Enrich annotation", enricher.getClass());
       }
     }
   }

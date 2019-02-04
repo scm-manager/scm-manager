@@ -24,7 +24,7 @@ class BranchToBranchDtoMapperTest {
 
   @Test
   void shouldAppendLinks() {
-    LinkEnricherRegistry registry = new LinkEnricherRegistry();
+    HalEnricherRegistry registry = new HalEnricherRegistry();
     registry.register(Branch.class, (ctx, appender) -> {
       NamespaceAndName namespaceAndName = ctx.oneRequireByType(NamespaceAndName.class);
       Branch branch = ctx.oneRequireByType(Branch.class);

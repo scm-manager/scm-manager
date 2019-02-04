@@ -47,7 +47,7 @@ public abstract class UserToUserDtoMapper extends BaseMapper<User, UserDto> {
       linksBuilder.single(link("permissions", resourceLinks.userPermissions().permissions(target.getName())));
     }
 
-    appendLinks(new EdisonLinkAppender(linksBuilder), user);
+    appendLinks(new EdisonHalAppender(linksBuilder), user);
 
     target.add(linksBuilder.build());
   }

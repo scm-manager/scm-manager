@@ -1,12 +1,12 @@
 package sonia.scm.api.v2.resources;
 
 /**
- * The {@link LinkAppender} can be used within an {@link LinkEnricher} to append hateoas links to a json response.
+ * The {@link HalAppender} can be used within an {@link HalEnricher} to append hateoas links to a json response.
  *
  * @author Sebastian Sdorra
  * @since 2.0.0
  */
-public interface LinkAppender {
+public interface HalAppender {
 
   /**
    * Appends one link to the json response.

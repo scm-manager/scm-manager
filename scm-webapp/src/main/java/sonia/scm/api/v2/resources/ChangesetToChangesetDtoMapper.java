@@ -23,7 +23,7 @@ import static de.otto.edison.hal.Link.link;
 import static de.otto.edison.hal.Links.linkingTo;
 
 @Mapper
-public abstract class ChangesetToChangesetDtoMapper extends LinkAppenderMapper implements InstantAttributeMapper {
+public abstract class ChangesetToChangesetDtoMapper extends HalAppenderMapper implements InstantAttributeMapper {
 
   @Inject
   private RepositoryServiceFactory serviceFactory;
@@ -68,7 +68,7 @@ public abstract class ChangesetToChangesetDtoMapper extends LinkAppenderMapper i
       .single(link("diff", resourceLinks.diff().self(namespace, name, target.getId())))
       .single(link("modifications", resourceLinks.modifications().self(namespace, name, target.getId())));
 
-    appendLinks(new EdisonLinkAppender(linksBuilder), source, repository);
+    appendLinks(new EdisonHalAppender(linksBuilder), source, repository);
 
     target.add(linksBuilder.build());
   }

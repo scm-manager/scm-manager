@@ -10,15 +10,15 @@ import java.util.List;
 import static de.otto.edison.hal.Links.linkingTo;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class EdisonLinkAppenderTest {
+class EdisonHalAppenderTest {
 
   private Links.Builder builder;
-  private EdisonLinkAppender appender;
+  private EdisonHalAppender appender;
 
   @BeforeEach
   void prepare() {
     builder = linkingTo();
-    appender = new EdisonLinkAppender(builder);
+    appender = new EdisonHalAppender(builder);
   }
 
   @Test
