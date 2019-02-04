@@ -1,11 +1,11 @@
 package sonia.scm.api.v2.resources;
 
+import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.Links;
-import org.mapstruct.AfterMapping;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
+import org.mapstruct.ObjectFactory;
 import sonia.scm.repository.Branch;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Repository;
@@ -19,18 +19,18 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static de.otto.edison.hal.Embedded.embeddedBuilder;
 import static de.otto.edison.hal.Link.link;
 import static de.otto.edison.hal.Links.linkingTo;
 
 @Mapper
-public abstract class ChangesetToChangesetDtoMapper extends LinkAppenderMapper implements InstantAttributeMapper {
+public abstract class ChangesetToChangesetDtoMapper extends HalAppenderMapper implements InstantAttributeMapper {
 
   @Inject
   private RepositoryServiceFactory serviceFactory;
 
   @Inject
   private ResourceLinks resourceLinks;
-
 
   @Inject
   private BranchCollectionToDtoMapper branchCollectionToDtoMapper;
@@ -46,31 +46,34 @@ public abstract class ChangesetToChangesetDtoMapper extends LinkAppenderMapper i
   public abstract ChangesetDto map(Changeset changeset, @Context Repository repository);
 
 
-  @AfterMapping
-  void appendLinks(Changeset source, @MappingTarget ChangesetDto target, @Context Repository repository) {
+  @ObjectFactory
+  ChangesetDto createDto(@Context Repository repository, Changeset source) {
     String namespace = repository.getNamespace();
     String name = repository.getName();
 
+    Embedded.Builder embeddedBuilder = embeddedBuilder();
+
     try (RepositoryService repositoryService = serviceFactory.create(repository)) {
       if (repositoryService.isSupported(Command.TAGS)) {
-        target.withEmbedded("tags", tagCollectionToDtoMapper.getTagDtoList(namespace, name,
+        embeddedBuilder.with("tags", tagCollectionToDtoMapper.getTagDtoList(namespace, name,
           getListOfObjects(source.getTags(), tagName -> new Tag(tagName, source.getId()))));
       }
       if (repositoryService.isSupported(Command.BRANCHES)) {
-        target.withEmbedded("branches", branchCollectionToDtoMapper.getBranchDtoList(namespace, name,
+        embeddedBuilder.with("branches", branchCollectionToDtoMapper.getBranchDtoList(namespace, name,
           getListOfObjects(source.getBranches(), branchName -> new Branch(branchName, source.getId()))));
       }
     }
-    target.withEmbedded("parents", getListOfObjects(source.getParents(), parent -> changesetToParentDtoMapper.map(new Changeset(parent, 0L, null), repository)));
+    embeddedBuilder.with("parents", getListOfObjects(source.getParents(), parent -> changesetToParentDtoMapper.map(new Changeset(parent, 0L, null), repository)));
 
     Links.Builder linksBuilder = linkingTo()
-      .self(resourceLinks.changeset().self(repository.getNamespace(), repository.getName(), target.getId()))
-      .single(link("diff", resourceLinks.diff().self(namespace, name, target.getId())))
-      .single(link("modifications", resourceLinks.modifications().self(namespace, name, target.getId())));
+      .self(resourceLinks.changeset().self(repository.getNamespace(), repository.getName(), source.getId()))
+      .single(link("diff", resourceLinks.diff().self(namespace, name, source.getId())))
+      .single(link("modifications", resourceLinks.modifications().self(namespace, name, source.getId())));
 
-    appendLinks(new EdisonLinkAppender(linksBuilder), source, repository);
 
-    target.add(linksBuilder.build());
+    applyEnrichers(new EdisonHalAppender(linksBuilder, embeddedBuilder), source, repository);
+
+    return new ChangesetDto(linksBuilder.build(), embeddedBuilder.build());
   }
 
   private <T> List<T> getListOfObjects(List<String> list, Function<String, T> mapFunction) {

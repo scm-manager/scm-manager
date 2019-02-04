@@ -11,7 +11,6 @@ import org.mockito.InjectMocks;
 import sonia.scm.group.Group;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.toList;
@@ -91,10 +90,10 @@ public class GroupToGroupDtoMapperTest {
 
   @Test
   public void shouldAppendLinks() {
-    LinkEnricherRegistry registry = new LinkEnricherRegistry();
+    HalEnricherRegistry registry = new HalEnricherRegistry();
     registry.register(Group.class, (ctx, appender) -> {
       Group group = ctx.oneRequireByType(Group.class);
-      appender.appendOne("some", "http://" + group.getName());
+      appender.appendLink("some", "http://" + group.getName());
     });
     mapper.setRegistry(registry);
 
