@@ -77,7 +77,7 @@ public class HgRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
 
   @Override
   protected RepositoryHandler createRepositoryHandler(ConfigurationStoreFactory factory, RepositoryLocationResolver locationResolver, File directory) {
-    HgRepositoryHandler handler = new HgRepositoryHandler(factory, new HgContextProvider(), locationResolver);
+    HgRepositoryHandler handler = new HgRepositoryHandler(factory, new HgContextProvider(), locationResolver, null);
 
     handler.init(contextProvider);
     HgTestUtil.checkForSkip(handler);
@@ -87,7 +87,7 @@ public class HgRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
 
   @Test
   public void getDirectory() {
-    HgRepositoryHandler repositoryHandler = new HgRepositoryHandler(factory, provider, locationResolver);
+    HgRepositoryHandler repositoryHandler = new HgRepositoryHandler(factory, provider, locationResolver, null);
 
     HgConfig hgConfig = new HgConfig();
     hgConfig.setHgBinary("hg");
