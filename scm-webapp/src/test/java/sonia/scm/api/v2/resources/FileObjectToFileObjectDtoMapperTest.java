@@ -79,7 +79,7 @@ public class FileObjectToFileObjectDtoMapperTest {
       FileObject fo = ctx.oneRequireByType(FileObject.class);
       String rev = ctx.oneRequireByType(String.class);
 
-      appender.appendOne("hog", "http://" + repository.logString() + "/" + fo.getName() + "/" + rev);
+      appender.appendLink("hog", "http://" + repository.logString() + "/" + fo.getName() + "/" + rev);
     });
     mapper.setRegistry(registry);
 

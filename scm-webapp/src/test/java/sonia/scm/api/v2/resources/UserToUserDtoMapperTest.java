@@ -156,7 +156,7 @@ public class UserToUserDtoMapperTest {
     User trillian = UserTestData.createTrillian();
 
     HalEnricherRegistry registry = new HalEnricherRegistry();
-    registry.register(User.class, (ctx, appender) -> appender.appendOne("sample", "http://" + ctx.oneByType(User.class).get().getName()));
+    registry.register(User.class, (ctx, appender) -> appender.appendLink("sample", "http://" + ctx.oneByType(User.class).get().getName()));
     mapper.setRegistry(registry);
 
     UserDto userDto = mapper.map(trillian);

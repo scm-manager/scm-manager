@@ -29,7 +29,7 @@ class BranchToBranchDtoMapperTest {
       NamespaceAndName namespaceAndName = ctx.oneRequireByType(NamespaceAndName.class);
       Branch branch = ctx.oneRequireByType(Branch.class);
 
-      appender.appendOne("ka", "http://" + namespaceAndName.logString() + "/" + branch.getName());
+      appender.appendLink("ka", "http://" + namespaceAndName.logString() + "/" + branch.getName());
     });
     mapper.setRegistry(registry);
 

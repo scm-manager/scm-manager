@@ -23,7 +23,7 @@ class EdisonHalAppenderTest {
 
   @Test
   void shouldAppendOneLink() {
-    appender.appendOne("self", "https://scm.hitchhiker.com");
+    appender.appendLink("self", "https://scm.hitchhiker.com");
 
     Links links = builder.build();
     assertThat(links.getLinkBy("self").get().getHref()).isEqualTo("https://scm.hitchhiker.com");
@@ -31,7 +31,7 @@ class EdisonHalAppenderTest {
 
   @Test
   void shouldAppendMultipleLinks() {
-    appender.arrayBuilder("items")
+    appender.linkArrayBuilder("items")
         .append("one", "http://one")
         .append("two", "http://two")
         .build();

@@ -174,7 +174,7 @@ class MeDtoFactoryTest {
 
     registry.register(Me.class, (ctx, appender) -> {
       User user = ctx.oneRequireByType(User.class);
-      appender.appendOne("profile", "http://hitchhiker.com/users/" + user.getName());
+      appender.appendLink("profile", "http://hitchhiker.com/users/" + user.getName());
     });
 
     MeDto dto = meDtoFactory.create();

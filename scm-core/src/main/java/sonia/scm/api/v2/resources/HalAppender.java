@@ -14,7 +14,7 @@ public interface HalAppender {
    * @param rel name of relation
    * @param href link uri
    */
-  void appendOne(String rel, String href);
+  void appendLink(String rel, String href);
 
   /**
    * Returns a builder which is able to append an array of links to the resource.
@@ -22,7 +22,7 @@ public interface HalAppender {
    * @param rel name of link relation
    * @return multi link builder
    */
-  LinkArrayBuilder arrayBuilder(String rel);
+  LinkArrayBuilder linkArrayBuilder(String rel);
 
 
   /**

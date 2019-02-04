@@ -93,7 +93,7 @@ public class GroupToGroupDtoMapperTest {
     HalEnricherRegistry registry = new HalEnricherRegistry();
     registry.register(Group.class, (ctx, appender) -> {
       Group group = ctx.oneRequireByType(Group.class);
-      appender.appendOne("some", "http://" + group.getName());
+      appender.appendLink("some", "http://" + group.getName());
     });
     mapper.setRegistry(registry);
 

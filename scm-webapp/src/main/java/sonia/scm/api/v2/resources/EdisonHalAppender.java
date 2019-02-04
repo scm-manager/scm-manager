@@ -15,12 +15,12 @@ class EdisonHalAppender implements HalAppender {
   }
 
   @Override
-  public void appendOne(String rel, String href) {
+  public void appendLink(String rel, String href) {
     builder.single(Link.link(rel, href));
   }
 
   @Override
-  public LinkArrayBuilder arrayBuilder(String rel) {
+  public LinkArrayBuilder linkArrayBuilder(String rel) {
     return new EdisonLinkArrayBuilder(builder, rel);
   }
 

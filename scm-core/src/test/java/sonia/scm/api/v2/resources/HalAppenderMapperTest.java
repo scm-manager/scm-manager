@@ -28,34 +28,34 @@ class HalAppenderMapperTest {
 
   @Test
   void shouldAppendSimpleLink() {
-    registry.register(String.class, (ctx, appender) -> appender.appendOne("42", "https://hitchhiker.com"));
+    registry.register(String.class, (ctx, appender) -> appender.appendLink("42", "https://hitchhiker.com"));
 
     mapper.appendLinks(appender, "hello");
 
-    verify(appender).appendOne("42", "https://hitchhiker.com");
+    verify(appender).appendLink("42", "https://hitchhiker.com");
   }
 
   @Test
   void shouldCallMultipleEnrichers() {
-    registry.register(String.class, (ctx, appender) -> appender.appendOne("42", "https://hitchhiker.com"));
-    registry.register(String.class, (ctx, appender) -> appender.appendOne("21", "https://scm.hitchhiker.com"));
+    registry.register(String.class, (ctx, appender) -> appender.appendLink("42", "https://hitchhiker.com"));
+    registry.register(String.class, (ctx, appender) -> appender.appendLink("21", "https://scm.hitchhiker.com"));
 
     mapper.appendLinks(appender, "hello");
 
-    verify(appender).appendOne("42", "https://hitchhiker.com");
-    verify(appender).appendOne("21", "https://scm.hitchhiker.com");
+    verify(appender).appendLink("42", "https://hitchhiker.com");
+    verify(appender).appendLink("21", "https://scm.hitchhiker.com");
   }
 
   @Test
   void shouldAppendLinkByUsingSourceFromContext() {
     registry.register(String.class, (ctx, appender) -> {
       Optional<String> rel = ctx.oneByType(String.class);
-      appender.appendOne(rel.get(), "https://hitchhiker.com");
+      appender.appendLink(rel.get(), "https://hitchhiker.com");
     });
 
     mapper.appendLinks(appender, "42");
 
-    verify(appender).appendOne("42", "https://hitchhiker.com");
+    verify(appender).appendLink("42", "https://hitchhiker.com");
   }
 
   @Test
@@ -63,12 +63,12 @@ class HalAppenderMapperTest {
     registry.register(Integer.class, (ctx, appender) -> {
       Optional<Integer> rel = ctx.oneByType(Integer.class);
       Optional<String> href = ctx.oneByType(String.class);
-      appender.appendOne(String.valueOf(rel.get()), href.get());
+      appender.appendLink(String.valueOf(rel.get()), href.get());
     });
 
     mapper.appendLinks(appender, Integer.valueOf(42), "https://hitchhiker.com");
 
-    verify(appender).appendOne("42", "https://hitchhiker.com");
+    verify(appender).appendLink("42", "https://hitchhiker.com");
   }
 
 }

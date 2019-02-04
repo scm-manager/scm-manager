@@ -26,7 +26,7 @@ class TagToTagDtoMapperTest {
     registry.register(Tag.class, (ctx, appender) -> {
       NamespaceAndName repository = ctx.oneRequireByType(NamespaceAndName.class);
       Tag tag = ctx.oneRequireByType(Tag.class);
-      appender.appendOne("yo", "http://" + repository.logString() + "/" + tag.getName());
+      appender.appendLink("yo", "http://" + repository.logString() + "/" + tag.getName());
     });
     mapper.setRegistry(registry);
 
