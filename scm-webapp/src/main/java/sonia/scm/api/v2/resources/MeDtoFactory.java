@@ -1,6 +1,7 @@
 package sonia.scm.api.v2.resources;
 
 import com.google.common.collect.ImmutableList;
+import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.Links;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.PrincipalCollection;
@@ -13,10 +14,11 @@ import sonia.scm.user.UserPermissions;
 import javax.inject.Inject;
 import java.util.Collections;
 
+import static de.otto.edison.hal.Embedded.embeddedBuilder;
 import static de.otto.edison.hal.Link.link;
 import static de.otto.edison.hal.Links.linkingTo;
 
-public class MeDtoFactory extends LinkAppenderMapper {
+public class MeDtoFactory extends HalAppenderMapper {
 
   private final ResourceLinks resourceLinks;
   private final UserManager userManager;
@@ -29,15 +31,11 @@ public class MeDtoFactory extends LinkAppenderMapper {
 
   public MeDto create() {
     PrincipalCollection principals = getPrincipalCollection();
-
-    MeDto dto = new MeDto();
-
     User user = principals.oneByType(User.class);
 
+    MeDto dto = createDto(user);
     mapUserProperties(user, dto);
     mapGroups(principals, dto);
-
-    appendLinks(user, dto);
     return dto;
   }
 
@@ -61,21 +59,22 @@ public class MeDtoFactory extends LinkAppenderMapper {
   }
 
 
-  private void appendLinks(User user, MeDto target) {
+  private MeDto createDto(User user) {
     Links.Builder linksBuilder = linkingTo().self(resourceLinks.me().self());
     if (UserPermissions.delete(user).isPermitted()) {
-      linksBuilder.single(link("delete", resourceLinks.me().delete(target.getName())));
+      linksBuilder.single(link("delete", resourceLinks.me().delete(user.getName())));
     }
     if (UserPermissions.modify(user).isPermitted()) {
-      linksBuilder.single(link("update", resourceLinks.me().update(target.getName())));
+      linksBuilder.single(link("update", resourceLinks.me().update(user.getName())));
     }
     if (userManager.isTypeDefault(user) && UserPermissions.changePassword(user).isPermitted()) {
       linksBuilder.single(link("password", resourceLinks.me().passwordChange()));
     }
 
-    appendLinks(new EdisonLinkAppender(linksBuilder), new Me(), user);
+    Embedded.Builder embeddedBuilder = embeddedBuilder();
+    applyEnrichers(new EdisonHalAppender(linksBuilder, embeddedBuilder), new Me(), user);
 
-    target.add(linksBuilder.build());
+    return new MeDto(linksBuilder.build(), embeddedBuilder.build());
   }
 
 }

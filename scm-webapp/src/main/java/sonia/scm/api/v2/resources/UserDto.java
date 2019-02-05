@@ -1,6 +1,7 @@
 package sonia.scm.api.v2.resources;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Links;
 import lombok.Getter;
@@ -33,9 +34,7 @@ public class UserDto extends HalRepresentation {
   private String type;
   private Map<String, String> properties;
 
-  @Override
-  @SuppressWarnings("squid:S1185") // We want to have this method available in this package
-  protected HalRepresentation add(Links links) {
-    return super.add(links);
+  UserDto(Links links, Embedded embedded) {
+    super(links, embedded);
   }
 }

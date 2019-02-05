@@ -1,5 +1,6 @@
 package sonia.scm.api.v2.resources;
 
+import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Links;
 import lombok.Getter;
@@ -18,9 +19,7 @@ public class MeDto extends HalRepresentation {
   private String mail;
   private List<String> groups;
 
-  @Override
-  @SuppressWarnings("squid:S1185") // We want to have this method available in this package
-  protected HalRepresentation add(Links links) {
-    return super.add(links);
+  MeDto(Links links, Embedded embedded) {
+    super(links, embedded);
   }
 }

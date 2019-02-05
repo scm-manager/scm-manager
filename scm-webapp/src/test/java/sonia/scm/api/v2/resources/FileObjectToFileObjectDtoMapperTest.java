@@ -73,13 +73,13 @@ public class FileObjectToFileObjectDtoMapperTest {
 
   @Test
   public void shouldAppendLinks() {
-    LinkEnricherRegistry registry = new LinkEnricherRegistry();
+    HalEnricherRegistry registry = new HalEnricherRegistry();
     registry.register(FileObject.class, (ctx, appender) -> {
       NamespaceAndName repository = ctx.oneRequireByType(NamespaceAndName.class);
       FileObject fo = ctx.oneRequireByType(FileObject.class);
       String rev = ctx.oneRequireByType(String.class);
 
-      appender.appendOne("hog", "http://" + repository.logString() + "/" + fo.getName() + "/" + rev);
+      appender.appendLink("hog", "http://" + repository.logString() + "/" + fo.getName() + "/" + rev);
     });
     mapper.setRegistry(registry);
 

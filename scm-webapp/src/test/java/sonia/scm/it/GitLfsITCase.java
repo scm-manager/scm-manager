@@ -136,10 +136,13 @@ public class GitLfsITCase {
   }
 
   private void createUser(User user) {
-    UserDto dto = new UserToUserDtoMapperImpl(){
-      @Override
-      protected void appendLinks(User user, UserDto target) {}
-    }.map(user);
+    UserDto dto = new UserDto();
+    dto.setName(user.getName());
+    dto.setMail(user.getMail());
+    dto.setDisplayName(user.getDisplayName());
+    dto.setType(user.getType());
+    dto.setActive(user.isActive());
+    dto.setAdmin(user.isAdmin());
     dto.setPassword(user.getPassword());
     createResource(adminClient, "users")
       .accept("*/*")
