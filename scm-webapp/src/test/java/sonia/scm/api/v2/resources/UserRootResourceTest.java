@@ -14,7 +14,6 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import sonia.scm.ContextEntry;
 import sonia.scm.NotFoundException;
 import sonia.scm.PageResult;
@@ -26,6 +25,7 @@ import sonia.scm.user.UserManager;
 import sonia.scm.web.VndMediaType;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -35,8 +35,8 @@ import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
@@ -76,7 +76,7 @@ public class UserRootResourceTest {
   private User originalUser;
 
   @Before
-  public void prepareEnvironment() throws Exception {
+  public void prepareEnvironment() {
     initMocks(this);
     originalUser = createDummyUser("Neo");
     when(userManager.create(userCaptor.capture())).thenAnswer(invocation -> invocation.getArguments()[0]);
@@ -97,7 +97,7 @@ public class UserRootResourceTest {
   }
 
   @Test
-  public void shouldCreateFullResponseForAdmin() throws URISyntaxException {
+  public void shouldCreateFullResponseForAdmin() throws URISyntaxException, UnsupportedEncodingException {
     MockHttpRequest request = MockHttpRequest.get("/" + UserRootResource.USERS_PATH_V2 + "Neo");
     MockHttpResponse response = new MockHttpResponse();
 
@@ -137,7 +137,7 @@ public class UserRootResourceTest {
 
   @Test
   @SubjectAware(username = "unpriv")
-  public void shouldCreateLimitedResponseForSimpleUser() throws URISyntaxException {
+  public void shouldCreateLimitedResponseForSimpleUser() throws URISyntaxException, UnsupportedEncodingException {
     MockHttpRequest request = MockHttpRequest.get("/" + UserRootResource.USERS_PATH_V2 + "Neo");
     MockHttpResponse response = new MockHttpResponse();
 
@@ -331,7 +331,7 @@ public class UserRootResourceTest {
   }
 
   @Test
-  public void shouldCreatePageForOnePageOnly() throws URISyntaxException {
+  public void shouldCreatePageForOnePageOnly() throws URISyntaxException, UnsupportedEncodingException {
     PageResult<User> singletonPageResult = createSingletonPageResult(1);
     when(userManager.getPage(any(), eq(0), eq(10))).thenReturn(singletonPageResult);
     MockHttpRequest request = MockHttpRequest.get("/" + UserRootResource.USERS_PATH_V2);
@@ -347,7 +347,7 @@ public class UserRootResourceTest {
   }
 
   @Test
-  public void shouldCreatePageForMultiplePages() throws URISyntaxException {
+  public void shouldCreatePageForMultiplePages() throws URISyntaxException, UnsupportedEncodingException {
     PageResult<User> singletonPageResult = createSingletonPageResult(3);
     when(userManager.getPage(any(), eq(1), eq(1))).thenReturn(singletonPageResult);
     MockHttpRequest request = MockHttpRequest.get("/" + UserRootResource.USERS_PATH_V2 + "?page=1&pageSize=1");
@@ -365,7 +365,7 @@ public class UserRootResourceTest {
   }
 
   @Test
-  public void shouldGetPermissionLink() throws URISyntaxException {
+  public void shouldGetPermissionLink() throws URISyntaxException, UnsupportedEncodingException {
     MockHttpRequest request = MockHttpRequest.get("/" + UserRootResource.USERS_PATH_V2 + "Neo");
     MockHttpResponse response = new MockHttpResponse();
 
@@ -377,7 +377,7 @@ public class UserRootResourceTest {
   }
 
   @Test
-  public void shouldGetPermissions() throws URISyntaxException {
+  public void shouldGetPermissions() throws URISyntaxException, UnsupportedEncodingException {
     when(permissionAssigner.readPermissionsForUser("Neo")).thenReturn(singletonList(new PermissionDescriptor("something:*")));
     MockHttpRequest request = MockHttpRequest.get("/" + UserRootResource.USERS_PATH_V2 + "Neo/permissions");
     MockHttpResponse response = new MockHttpResponse();

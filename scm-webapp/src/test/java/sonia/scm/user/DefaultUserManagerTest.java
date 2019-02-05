@@ -45,9 +45,6 @@ import org.junit.Test;
 
 import org.mockito.ArgumentCaptor;
 import sonia.scm.NotFoundException;
-import sonia.scm.repository.InitialRepositoryLocationResolver;
-import sonia.scm.repository.RepositoryDAO;
-import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.store.JAXBConfigurationStoreFactory;
 import sonia.scm.user.xml.XmlUserDAO;
 

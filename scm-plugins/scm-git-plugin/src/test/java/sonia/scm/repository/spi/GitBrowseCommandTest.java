@@ -32,11 +32,9 @@
 package sonia.scm.repository.spi;
 
 import org.junit.Test;
-import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.FileObject;
 import sonia.scm.repository.GitRepositoryConfig;
-import sonia.scm.store.InMemoryConfigurationStoreFactory;
 
 import java.io.IOException;
 import java.util.Collection;

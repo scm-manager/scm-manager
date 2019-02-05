@@ -36,7 +36,6 @@ package sonia.scm;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.Closeable;
-import java.io.IOException;
 
 /**
  * The base class of all handlers.

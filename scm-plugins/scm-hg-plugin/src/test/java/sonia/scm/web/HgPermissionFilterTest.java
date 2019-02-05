@@ -48,8 +48,6 @@ import javax.servlet.http.HttpServletRequest;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import static sonia.scm.web.WireProtocolRequestMockFactory.CMDS_HEADS_KNOWN_NODES;
 import static sonia.scm.web.WireProtocolRequestMockFactory.Namespace.BOOKMARKS;
 import static sonia.scm.web.WireProtocolRequestMockFactory.Namespace.PHASES;

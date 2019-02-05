@@ -33,12 +33,9 @@ package sonia.scm.boot;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.github.legman.Subscribe;
-
 import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.Files;
-import com.google.inject.servlet.GuiceFilter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

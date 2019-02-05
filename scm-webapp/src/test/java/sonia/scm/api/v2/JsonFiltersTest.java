@@ -3,7 +3,6 @@ package sonia.scm.api.v2;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.google.common.collect.Lists;
 import com.google.common.io.Resources;
 import org.junit.Test;
 

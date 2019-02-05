@@ -18,6 +18,7 @@ import sonia.scm.web.VndMediaType;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -68,7 +69,7 @@ public class ConfigResourceTest {
 
   @Test
   @SubjectAware(username = "readOnly")
-  public void shouldGetGlobalConfig() throws URISyntaxException {
+  public void shouldGetGlobalConfig() throws URISyntaxException, UnsupportedEncodingException {
     MockHttpRequest request = MockHttpRequest.get("/" + ConfigResource.CONFIG_PATH_V2);
     MockHttpResponse response = new MockHttpResponse();
     dispatcher.invoke(request, response);

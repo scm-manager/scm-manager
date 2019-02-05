@@ -17,9 +17,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Set;
 
-import static sonia.scm.util.HttpUtil.AUTHENTICATION_REALM;
-import static sonia.scm.util.HttpUtil.HEADER_WWW_AUTHENTICATE;
-
 @Priority(Filters.PRIORITY_AUTHENTICATION)
 @WebElement(value = HttpProtocolServlet.PATTERN)
 public class HttpProtocolServletAuthenticationFilter extends AuthenticationFilter {

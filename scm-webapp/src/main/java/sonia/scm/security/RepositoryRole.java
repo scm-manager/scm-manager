@@ -1,7 +1,5 @@
 package sonia.scm.security;
 
-import org.apache.commons.collections.CollectionUtils;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
@@ -33,8 +31,9 @@ public class RepositoryRole {
     if (this == o) return true;
     if (!(o instanceof RepositoryRole)) return false;
     RepositoryRole that = (RepositoryRole) o;
-    return name.equals(that.name) &&
-      CollectionUtils.isEqualCollection(this.verbs, that.verbs);
+    return name.equals(that.name)
+      && this.verbs.containsAll(that.verbs)
+      && this.verbs.size() == that.verbs.size();
   }
 
   @Override

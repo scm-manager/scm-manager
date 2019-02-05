@@ -41,7 +41,6 @@ import com.aragost.javahg.internals.AbstractCommand;
 import com.aragost.javahg.internals.HgInputStream;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
 
 import sonia.scm.repository.FileObject;
 import sonia.scm.repository.SubRepository;
@@ -52,7 +51,6 @@ import java.io.IOException;
 
 import java.util.Deque;
 import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Mercurial command to list files of a repository.
