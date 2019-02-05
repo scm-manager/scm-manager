@@ -10,7 +10,7 @@ import Login from "../containers/Login";
 import Logout from "../containers/Logout";
 
 import { ProtectedRoute } from "@scm-manager/ui-components";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import {binder,  ExtensionPoint } from "@scm-manager/ui-extensions";
 
 import AddUser from "../users/containers/AddUser";
 import SingleUser from "../users/containers/SingleUser";
@@ -32,15 +32,15 @@ type Props = {
 class Main extends React.Component<Props> {
   render() {
     const { authenticated, links } = this.props;
+    const redirectUrlFactory = binder.getExtension("main.redirect", this.props);
+    let url ="/repos";
+    if (redirectUrlFactory){
+      url = redirectUrlFactory(this.props);
+    }
     return (
       <div className="main">
         <Switch>
-          <ExtensionPoint
-            name="redirect-route"
-            props={{authenticated, links}}
-          >
-            <Redirect exact path="/" to="/repos"/>
-          </ExtensionPoint>
+          <Redirect exact path="/" to={url}/>
           <Route exact path="/login" component={Login} />
           <Route path="/logout" component={Logout} />
           <ProtectedRoute
