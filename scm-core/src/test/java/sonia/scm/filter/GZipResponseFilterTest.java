@@ -1,5 +1,6 @@
 package sonia.scm.filter;
 
+import com.google.inject.util.Providers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -7,6 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.WriterInterceptorContext;
@@ -21,21 +23,24 @@ import static org.mockito.Mockito.*;
 class GZipResponseFilterTest {
 
   @Mock
+  private HttpServletRequest request;
+
+  @Mock
   private WriterInterceptorContext context;
 
   @Mock
   private MultivaluedMap<String,Object> headers;
 
-  private final GZipResponseFilter filter = new GZipResponseFilter();
+  private GZipResponseFilter filter;
 
   @BeforeEach
-  void setUpContext() {
-    when(context.getHeaders()).thenReturn(headers);
+  void setupObjectUnderTest() {
+    filter = new GZipResponseFilter(Providers.of(request));
   }
 
   @Test
   void shouldSkipGZipCompression() throws IOException {
-    when(headers.getFirst(HttpHeaders.ACCEPT_ENCODING)).thenReturn("deflate, br");
+    when(request.getHeader(HttpHeaders.ACCEPT_ENCODING)).thenReturn("deflate, br");
 
     filter.aroundWriteTo(context);
 
@@ -60,7 +65,8 @@ class GZipResponseFilterTest {
 
     @BeforeEach
     void setUpContext() {
-      when(headers.getFirst(HttpHeaders.ACCEPT_ENCODING)).thenReturn("gzip, deflate, br");
+      when(request.getHeader(HttpHeaders.ACCEPT_ENCODING)).thenReturn("gzip, deflate, br");
+      when(context.getHeaders()).thenReturn(headers);
       when(context.getOutputStream()).thenReturn(new ByteArrayOutputStream());
     }
 
