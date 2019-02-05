@@ -4,17 +4,17 @@ import com.google.common.annotations.VisibleForTesting;
 
 import javax.inject.Inject;
 
-public class LinkAppenderMapper {
+public class HalAppenderMapper {
 
   @Inject
-  private LinkEnricherRegistry registry;
+  private HalEnricherRegistry registry;
 
   @VisibleForTesting
-  void setRegistry(LinkEnricherRegistry registry) {
+  void setRegistry(HalEnricherRegistry registry) {
     this.registry = registry;
   }
 
-  protected void appendLinks(LinkAppender appender, Object source, Object... contextEntries) {
+  protected void applyEnrichers(HalAppender appender, Object source, Object... contextEntries) {
     // null check is only their to not break existing tests
     if (registry != null) {
 
@@ -24,10 +24,10 @@ public class LinkAppenderMapper {
         ctx[i + 1] = contextEntries[i];
       }
 
-      LinkEnricherContext context = LinkEnricherContext.of(ctx);
+      HalEnricherContext context = HalEnricherContext.of(ctx);
 
-      Iterable<LinkEnricher> enrichers = registry.allByType(source.getClass());
-      for (LinkEnricher enricher : enrichers) {
+      Iterable<HalEnricher> enrichers = registry.allByType(source.getClass());
+      for (HalEnricher enricher : enrichers) {
         enricher.enrich(context, appender);
       }
     }

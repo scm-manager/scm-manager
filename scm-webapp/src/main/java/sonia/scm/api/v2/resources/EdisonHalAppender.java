@@ -1,27 +1,36 @@
 package sonia.scm.api.v2.resources;
 
+import de.otto.edison.hal.Embedded;
+import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Link;
 import de.otto.edison.hal.Links;
 
 import java.util.ArrayList;
 import java.util.List;
 
-class EdisonLinkAppender implements LinkAppender {
+class EdisonHalAppender implements HalAppender {
 
-  private final Links.Builder builder;
+  private final Links.Builder linkBuilder;
+  private final Embedded.Builder embeddedBuilder;
 
-  EdisonLinkAppender(Links.Builder builder) {
-    this.builder = builder;
+  EdisonHalAppender(Links.Builder linkBuilder, Embedded.Builder embeddedBuilder) {
+    this.linkBuilder = linkBuilder;
+    this.embeddedBuilder = embeddedBuilder;
   }
 
   @Override
-  public void appendOne(String rel, String href) {
-    builder.single(Link.link(rel, href));
+  public void appendLink(String rel, String href) {
+    linkBuilder.single(Link.link(rel, href));
   }
 
   @Override
-  public LinkArrayBuilder arrayBuilder(String rel) {
-    return new EdisonLinkArrayBuilder(builder, rel);
+  public LinkArrayBuilder linkArrayBuilder(String rel) {
+    return new EdisonLinkArrayBuilder(linkBuilder, rel);
+  }
+
+  @Override
+  public void appendEmbedded(String rel, HalRepresentation embedded) {
+    embeddedBuilder.with(rel, embedded);
   }
 
   private static class EdisonLinkArrayBuilder implements LinkArrayBuilder {

@@ -16,7 +16,7 @@ public class ChangesetCollectionToDtoMapperTest {
 
   public static final Repository REPOSITORY = new Repository("", "git", "space", "name");
   public static final Changeset CHANGESET = new Changeset();
-  private final ChangesetToChangesetDtoMapper changesetToChangesetDtoMapper = mock(ChangesetToChangesetDtoMapper.class);
+  private final DefaultChangesetToChangesetDtoMapperImpl changesetToChangesetDtoMapper = mock(DefaultChangesetToChangesetDtoMapperImpl.class);
 
   private final ChangesetCollectionToDtoMapper changesetCollectionToDtoMapper = new ChangesetCollectionToDtoMapper(changesetToChangesetDtoMapper, ResourceLinksMock.createMock(URI.create("/")));
 
