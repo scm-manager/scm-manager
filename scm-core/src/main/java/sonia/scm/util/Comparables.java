@@ -53,11 +53,11 @@ public final class Comparables {
   private static PropertyDescriptor findPropertyDescriptor(String sortBy, BeanInfo info) {
     PropertyDescriptor[] propertyDescriptors = info.getPropertyDescriptors();
 
-    Optional<PropertyDescriptor> optional = Arrays.stream(propertyDescriptors)
+    Optional<PropertyDescriptor> sortByPropertyDescriptor = Arrays.stream(propertyDescriptors)
       .filter(p -> p.getName().equals(sortBy))
       .findFirst();
 
-    return optional.orElseThrow(() -> new IllegalArgumentException("could not find property " + sortBy));
+    return sortByPropertyDescriptor.orElseThrow(() -> new IllegalArgumentException("could not find property " + sortBy));
   }
 
   private static <T> BeanInfo createBeanInfo(Class<T> type) {
