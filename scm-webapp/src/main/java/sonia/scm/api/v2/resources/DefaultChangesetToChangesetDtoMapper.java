@@ -68,6 +68,7 @@ public abstract class DefaultChangesetToChangesetDtoMapper extends HalAppenderMa
     Links.Builder linksBuilder = linkingTo()
       .self(resourceLinks.changeset().self(repository.getNamespace(), repository.getName(), source.getId()))
       .single(link("diff", resourceLinks.diff().self(namespace, name, source.getId())))
+      .single(link("sources", resourceLinks.source().self(namespace, name, source.getId())))
       .single(link("modifications", resourceLinks.modifications().self(namespace, name, source.getId())));
 
 
