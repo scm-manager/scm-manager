@@ -21,7 +21,7 @@ import ChangesetView from "./ChangesetView";
 import PermissionsNavLink from "../components/PermissionsNavLink";
 import Sources from "../sources/containers/Sources";
 import RepositoryNavLink from "../components/RepositoryNavLink";
-import {getRepositoriesLink} from "../../modules/indexResource";
+import {getLinks, getRepositoriesLink} from "../../modules/indexResource";
 import {ExtensionPoint} from "@scm-manager/ui-extensions";
 
 type Props = {
@@ -31,6 +31,7 @@ type Props = {
   loading: boolean,
   error: Error,
   repoLink: string,
+  indexLinks: Object,
 
   // dispatch functions
   fetchRepoByName: (link: string, namespace: string, name: string) => void,
@@ -75,7 +76,7 @@ class RepositoryRoot extends React.Component<Props> {
   };
 
   render() {
-    const { loading, error, repository, t } = this.props;
+    const { loading, error, indexLinks, repository, t } = this.props;
 
     if (error) {
       return (
@@ -95,7 +96,8 @@ class RepositoryRoot extends React.Component<Props> {
 
     const extensionProps = {
       repository,
-      url
+      url,
+      indexLinks
     };
 
     return (
@@ -216,13 +218,15 @@ const mapStateToProps = (state, ownProps) => {
   const loading = isFetchRepoPending(state, namespace, name);
   const error = getFetchRepoFailure(state, namespace, name);
   const repoLink = getRepositoriesLink(state);
+  const indexLinks = getLinks(state);
   return {
     namespace,
     name,
     repository,
     loading,
     error,
-    repoLink
+    repoLink,
+    indexLinks
   };
 };
 

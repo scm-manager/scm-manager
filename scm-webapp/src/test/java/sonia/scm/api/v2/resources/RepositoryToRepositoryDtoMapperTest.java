@@ -10,8 +10,6 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import sonia.scm.repository.HealthCheckFailure;
-import sonia.scm.repository.RepositoryPermission;
-import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.RepositoryService;
@@ -213,10 +211,10 @@ public class RepositoryToRepositoryDtoMapperTest {
 
   @Test
   public void shouldAppendLinks() {
-    LinkEnricherRegistry registry = new LinkEnricherRegistry();
+    HalEnricherRegistry registry = new HalEnricherRegistry();
     registry.register(Repository.class, (ctx, appender) -> {
       Repository repository = ctx.oneRequireByType(Repository.class);
-      appender.appendOne("id", "http://" + repository.getId());
+      appender.appendLink("id", "http://" + repository.getId());
     });
     mapper.setRegistry(registry);
 
@@ -238,7 +236,6 @@ public class RepositoryToRepositoryDtoMapperTest {
     repository.setId("1");
     repository.setCreationDate(System.currentTimeMillis());
     repository.setHealthCheckFailures(singletonList(new HealthCheckFailure("1", "summary", "url", "failure")));
-    repository.setPermissions(singletonList(new RepositoryPermission("permission", PermissionType.READ)));
 
     return repository;
   }

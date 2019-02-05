@@ -32,14 +32,12 @@
 package sonia.scm.security;
 
 import com.google.common.collect.Lists;
-import org.junit.Test;
-import static org.junit.Assert.*;
 import org.junit.Before;
+import org.junit.Test;
 import sonia.scm.HandlerEventType;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupEvent;
 import sonia.scm.group.GroupModificationEvent;
-import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryEvent;
 import sonia.scm.repository.RepositoryModificationEvent;
@@ -49,6 +47,14 @@ import sonia.scm.user.User;
 import sonia.scm.user.UserEvent;
 import sonia.scm.user.UserModificationEvent;
 import sonia.scm.user.UserTestData;
+
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Unit tests for {@link AuthorizationChangedEventProducer}.
@@ -87,7 +93,12 @@ public class AuthorizationChangedEventProducerTest {
     assertTrue(producer.event.isEveryUserAffected());
     assertEquals(username, producer.event.getNameOfAffectedUser());
   }
-  
+
+  private void assertGlobalEventIsFired(){
+    assertNotNull(producer.event);
+    assertFalse(producer.event.isEveryUserAffected());
+  }
+
   /**
    * Tests {@link AuthorizationChangedEventProducer#onEvent(sonia.scm.user.UserEvent)} with modified user.
    */
@@ -125,11 +136,6 @@ public class AuthorizationChangedEventProducerTest {
     
     producer.onEvent(new GroupEvent(HandlerEventType.CREATE, group));
     assertGlobalEventIsFired();
-  }
-  
-  private void assertGlobalEventIsFired(){
-    assertNotNull(producer.event);
-    assertFalse(producer.event.isEveryUserAffected());
   }
   
   /**
@@ -174,40 +180,49 @@ public class AuthorizationChangedEventProducerTest {
   {
     Repository repositoryModified = RepositoryTestData.createHeartOfGold();
     repositoryModified.setName("test123");
-    repositoryModified.setPermissions(Lists.newArrayList(new RepositoryPermission("test")));
-    
+    repositoryModified.setPermissions(Lists.newArrayList(new RepositoryPermission("test", singletonList("read"), false)));
+
     Repository repository = RepositoryTestData.createHeartOfGold();
-    repository.setPermissions(Lists.newArrayList(new RepositoryPermission("test")));
-    
+    repository.setPermissions(Lists.newArrayList(new RepositoryPermission("test", singletonList("read"), false)));
+
     producer.onEvent(new RepositoryModificationEvent(HandlerEventType.BEFORE_CREATE, repositoryModified, repository));
     assertEventIsNotFired();
-    
+
     producer.onEvent(new RepositoryModificationEvent(HandlerEventType.CREATE, repositoryModified, repository));
     assertEventIsNotFired();
-    
-    repositoryModified.setPermissions(Lists.newArrayList(new RepositoryPermission("test")));
+
+    repositoryModified.setPermissions(Lists.newArrayList(new RepositoryPermission("test", singletonList("read"), false)));
     producer.onEvent(new RepositoryModificationEvent(HandlerEventType.CREATE, repositoryModified, repository));
     assertEventIsNotFired();
-    
-    repositoryModified.setPermissions(Lists.newArrayList(new RepositoryPermission("test123")));
+
+    repositoryModified.setPermissions(Lists.newArrayList(new RepositoryPermission("test123", singletonList("read"), false)));
     producer.onEvent(new RepositoryModificationEvent(HandlerEventType.CREATE, repositoryModified, repository));
     assertGlobalEventIsFired();
-    
+
     resetStoredEvent();
 
     repositoryModified.setPermissions(
-      Lists.newArrayList(new RepositoryPermission("test", PermissionType.READ, true))
+      Lists.newArrayList(new RepositoryPermission("test", singletonList("read"), true))
     );
     producer.onEvent(new RepositoryModificationEvent(HandlerEventType.CREATE, repositoryModified, repository));
     assertGlobalEventIsFired();
-    
+
     resetStoredEvent();
-    
+
     repositoryModified.setPermissions(
-      Lists.newArrayList(new RepositoryPermission("test", PermissionType.WRITE))
+      Lists.newArrayList(new RepositoryPermission("test", asList("read", "write"), false))
     );
     producer.onEvent(new RepositoryModificationEvent(HandlerEventType.CREATE, repositoryModified, repository));
     assertGlobalEventIsFired();
+
+    resetStoredEvent();
+    repository.setPermissions(Lists.newArrayList(new RepositoryPermission("test", asList("read", "write"), false)));
+
+    repositoryModified.setPermissions(
+      Lists.newArrayList(new RepositoryPermission("test", asList("write", "read"), false))
+    );
+    producer.onEvent(new RepositoryModificationEvent(HandlerEventType.CREATE, repositoryModified, repository));
+    assertEventIsNotFired();
   }
   
   private void resetStoredEvent(){

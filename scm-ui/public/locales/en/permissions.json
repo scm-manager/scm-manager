@@ -1,7 +1,7 @@
 {
   "form": {
     "submit-button": {
-      "label": "Set permissions"
+      "label": "Set Permissions"
     },
     "set-permissions-successful": "Permissions set successfully"
   }

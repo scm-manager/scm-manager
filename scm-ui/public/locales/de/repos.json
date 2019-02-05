@@ -1,0 +1,147 @@
+{
+  "repository": {
+    "name": "Name",
+    "type": "Typ",
+    "contact": "Kontakt",
+    "description": "Beschreibung",
+    "creationDate": "Erstellt",
+    "lastModified": "Zuletzt bearbeitet"
+  },
+  "validation": {
+    "name-invalid": "Der Name des Repository ist ungültig",
+    "contact-invalid": "Der Kontakt muss eine gültige E-Mail Adresse sein"
+  },
+  "overview": {
+    "title": "Repositories",
+    "subtitle": "Übersicht aller verfügbaren Repositories",
+    "create-button": "Repository erstellen"
+  },
+  "repository-root": {
+    "error-title": "Fehler",
+    "error-subtitle": "Unbekannter Repository Fehler",
+    "actions-label": "Aktionen",
+    "back-label": "Zurück",
+    "navigation-label": "Navigation",
+    "history": "Commits",
+    "information": "Informationen",
+    "permissions": "Berechtigungen",
+    "sources": "Sources"
+  },
+  "create": {
+    "title": "Repository erstellen",
+    "subtitle": "Erstellen eines neuen Repository"
+  },
+  "repository-form": {
+    "submit": "Speichern"
+  },
+  "edit-nav-link": {
+    "label": "Bearbeiten"
+  },
+  "delete-nav-action": {
+    "label": "Löschen",
+    "confirm-alert": {
+      "title": "Repository löschen",
+      "message": "Soll das Repository wirklich gelöscht werden?",
+      "submit": "Ja",
+      "cancel": "Nein"
+    }
+  },
+  "sources": {
+    "file-tree": {
+      "name": "Name",
+      "length": "Größe",
+      "lastModified": "Zuletzt bearbeitet",
+      "description": "Beschreibung",
+      "branch": "Branch"
+    },
+    "content": {
+      "historyButton": "History",
+      "sourcesButton": "Sources",
+      "downloadButton": "Download",
+      "path": "Pfad",
+      "branch": "Branch",
+      "lastModified": "Zuletzt bearbeitet",
+      "description": "Beschreibung",
+      "size": "Größe"
+    }
+  },
+  "changesets": {
+    "diff": {
+      "not-supported": "Diff des Changesets wird von diesem Repositorytyp nicht unterstützt"
+    },
+    "error-title": "Fehler",
+    "error-subtitle": "Changesets konnten nicht abgerufen werden",
+    "changeset": {
+      "id": "ID",
+      "description": "Beschreibung",
+      "contact": "Kontakt",
+      "date": "Datum",
+      "summary": "Changeset {{id}} wurde committet {{time}}"
+    },
+    "author": {
+      "name": "Autor",
+      "mail": "Mail"
+    }
+  },
+  "branch-selector": {
+    "label": "Branches"
+  },
+  "permission": {
+    "user": "Benutzer",
+    "group": "Gruppe",
+    "error-title": "Fehler",
+    "error-subtitle": "Unbekannter Fehler bei Berechtigung",
+    "name": "Benutzer oder Gruppe",
+    "role": "Rolle",
+    "permissions": "Berechtigung",
+    "group-permission": "Gruppenberechtigung",
+    "user-permission": "Benutzerberechtigung",
+    "edit-permission": {
+      "delete-button": "Löschen",
+      "save-button": "Änderungen Speichern"
+    },
+    "advanced-button": {
+      "label": "Erweitert"
+    },
+    "delete-permission-button": {
+      "label": "Löschen",
+      "confirm-alert": {
+        "title": "Berechtigung löschen",
+        "message": "Soll die Berechtigung wirklich gelöscht werden?",
+        "submit": "Ja",
+        "cancel": "Nein"
+      }
+    },
+    "add-permission": {
+      "add-permission-heading": "Neue Berechtigung hinzufügen",
+      "submit-button": "Speichern",
+      "name-input-invalid": "Die Berechtigung darf nicht leer sein! Falls sie nicht leer ist, ist der Name ungültig oder die Berechtigung besteht bereits!"
+    },
+    "help": {
+      "groupPermissionHelpText": "Zeigt ob es sich bei der Berechtigung um eine Gruppenberechtigung handelt. Wenn hier kein Haken gesetzt ist, handelt es sich um eine Benutzerberechtigung.",
+      "nameHelpText": "Verwaltung von Berechtigungen für Benutzer und Gruppen",
+      "roleHelpText": "READ = read; WRITE = read und write; OWNER = read, write und auch die Möglichkeit Einstellungen und Berechtigungen zu verwalten. Wenn hier nichts angezeigt wird, den Erweitert-Button benutzen, um Details zu sehen.",
+      "permissionsHelpText": "Hier können individuelle Berechtigungen unabhängig von vordefinierten Rollen vergeben werden."
+    },
+    "autocomplete": {
+      "no-group-options": "Kein Gruppenname als Vorschlag verfügbar",
+      "group-placeholder": "Gruppe eingeben",
+      "no-user-options": "Kein Benutzername als Vorschlag verfügbar",
+      "user-placeholder": "Benutzer eingeben",
+      "loading": "suche..."
+    },
+    "advanced": {
+      "dialog": {
+        "title": "Erweiterte Berechtigungen",
+        "submit": "Speichern",
+        "abort": "Abbrechen"
+      }
+    }
+  },
+  "help": {
+    "nameHelpText": "Der Name des Repository. Dieser wird Teil der URL des Repository sein.",
+    "typeHelpText": "Der Typ des Repository (Mercurial, Git oder Subversion).",
+    "contactHelpText": "E-Mail Adresse der Person, die für das Repository verantwortlich ist.",
+    "descriptionHelpText": "Eine kurze Beschreibung des Repository."
+  }
+}

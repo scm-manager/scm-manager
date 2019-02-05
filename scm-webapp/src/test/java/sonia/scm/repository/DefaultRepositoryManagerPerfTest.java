@@ -111,7 +111,6 @@ public class DefaultRepositoryManagerPerfTest {
   public void setUpObjectUnderTest(){
     when(repositoryHandler.getType()).thenReturn(new RepositoryType(REPOSITORY_TYPE, REPOSITORY_TYPE, Sets.newHashSet()));
     Set<RepositoryHandler> handlerSet = ImmutableSet.of(repositoryHandler);
-    RepositoryMatcher repositoryMatcher = new RepositoryMatcher(Collections.<RepositoryPathMatcher>emptySet());
     NamespaceStrategy namespaceStrategy = mock(NamespaceStrategy.class);
     repositoryManager = new DefaultRepositoryManager(
       configuration, 
@@ -138,7 +137,7 @@ public class DefaultRepositoryManagerPerfTest {
   /**
    * Start performance test and ensure that the timeout is not reached.
    */
-  @Test(timeout = 6000l)
+  @Test(timeout = 6000L)
   public void perfTestGetAll(){
     SecurityUtils.getSubject().login(new UsernamePasswordToken("trillian", "secret"));
     
@@ -155,7 +154,7 @@ public class DefaultRepositoryManagerPerfTest {
   }
   
 private long calculateAverage(List<Long> times) {
-  Long sum = 0l;
+  Long sum = 0L;
   if(!times.isEmpty()) {
     for (Long time : times) {
         sum += time;
@@ -183,9 +182,8 @@ private long calculateAverage(List<Long> times) {
   }
   
   private Repository createTestRepository(int number) {
-    Repository repository = new Repository(keyGenerator.createKey(), REPOSITORY_TYPE, "namespace", "repo-" + number);
-    repository.addPermission(new RepositoryPermission("trillian", PermissionType.READ));
-    return repository;
+    return new Repository(keyGenerator.createKey(), REPOSITORY_TYPE, "namespace", "repo-" + number);
+
   }
   
   static class DummyRealm extends AuthorizingRealm {

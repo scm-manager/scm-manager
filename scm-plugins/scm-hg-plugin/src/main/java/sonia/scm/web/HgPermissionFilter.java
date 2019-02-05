@@ -33,13 +33,23 @@
 
 package sonia.scm.web;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableSet;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.repository.Repository;
 import sonia.scm.repository.spi.ScmProviderHttpServlet;
 import sonia.scm.web.filter.PermissionFilter;
 
+import sonia.scm.repository.HgRepositoryHandler;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Set;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * Permission filter for mercurial repositories.
@@ -51,14 +61,48 @@ public class HgPermissionFilter extends PermissionFilter
   
   private static final Set<String> READ_METHODS = ImmutableSet.of("GET", "HEAD", "OPTIONS", "TRACE");
 
-  public HgPermissionFilter(ScmConfiguration configuration, ScmProviderHttpServlet delegate)
+  private final HgRepositoryHandler repositoryHandler;
+
+  public HgPermissionFilter(ScmConfiguration configuration, ScmProviderHttpServlet delegate, HgRepositoryHandler repositoryHandler)
   {
     super(configuration, delegate);
+    this.repositoryHandler = repositoryHandler;
+  }
+
+  @Override
+  public void service(HttpServletRequest request, HttpServletResponse response, Repository repository) throws IOException, ServletException {
+    super.service(wrapRequestIfRequired(request), response, repository);
+  }
+
+  @VisibleForTesting
+  HttpServletRequest wrapRequestIfRequired(HttpServletRequest request) {
+    if (isHttpPostArgsEnabled()) {
+      return new HgServletRequest(request);
+    }
+    return request;
   }
 
   @Override
   public boolean isWriteRequest(HttpServletRequest request)
   {
-    return !READ_METHODS.contains(request.getMethod());
+    if (isHttpPostArgsEnabled()) {
+      return isHttpPostArgsWriteRequest(request);
+    }
+    return isDefaultWriteRequest(request);
+  }
+
+  private boolean isHttpPostArgsEnabled() {
+    return repositoryHandler.getConfig().isEnableHttpPostArgs();
+  }
+
+  private boolean isHttpPostArgsWriteRequest(HttpServletRequest request) {
+    return WireProtocol.isWriteRequest(request);
+  }
+
+  private boolean isDefaultWriteRequest(HttpServletRequest request) {
+    if (READ_METHODS.contains(request.getMethod())) {
+      return WireProtocol.isWriteRequest(request);
+    }
+    return true;
   }
 }

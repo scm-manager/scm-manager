@@ -1,10 +1,10 @@
 package sonia.scm.api.v2.resources;
 
+import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.Links;
-import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
+import org.mapstruct.ObjectFactory;
 import sonia.scm.security.PermissionPermissions;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
@@ -12,6 +12,7 @@ import sonia.scm.user.UserPermissions;
 
 import javax.inject.Inject;
 
+import static de.otto.edison.hal.Embedded.embeddedBuilder;
 import static de.otto.edison.hal.Link.link;
 import static de.otto.edison.hal.Links.linkingTo;
 
@@ -31,25 +32,26 @@ public abstract class UserToUserDtoMapper extends BaseMapper<User, UserDto> {
   @Inject
   private ResourceLinks resourceLinks;
 
-  @AfterMapping
-  protected void appendLinks(User user, @MappingTarget UserDto target) {
-    Links.Builder linksBuilder = linkingTo().self(resourceLinks.user().self(target.getName()));
+  @ObjectFactory
+  UserDto createDto(User user) {
+    Links.Builder linksBuilder = linkingTo().self(resourceLinks.user().self(user.getName()));
     if (UserPermissions.delete(user).isPermitted()) {
-      linksBuilder.single(link("delete", resourceLinks.user().delete(target.getName())));
+      linksBuilder.single(link("delete", resourceLinks.user().delete(user.getName())));
     }
     if (UserPermissions.modify(user).isPermitted()) {
-      linksBuilder.single(link("update", resourceLinks.user().update(target.getName())));
+      linksBuilder.single(link("update", resourceLinks.user().update(user.getName())));
       if (userManager.isTypeDefault(user)) {
-        linksBuilder.single(link("password", resourceLinks.user().passwordChange(target.getName())));
+        linksBuilder.single(link("password", resourceLinks.user().passwordChange(user.getName())));
       }
     }
     if (PermissionPermissions.read().isPermitted()) {
-      linksBuilder.single(link("permissions", resourceLinks.userPermissions().permissions(target.getName())));
+      linksBuilder.single(link("permissions", resourceLinks.userPermissions().permissions(user.getName())));
     }
 
-    appendLinks(new EdisonLinkAppender(linksBuilder), user);
+    Embedded.Builder embeddedBuilder = embeddedBuilder();
+    applyEnrichers(new EdisonHalAppender(linksBuilder, embeddedBuilder), user);
 
-    target.add(linksBuilder.build());
+    return new UserDto(linksBuilder.build(), embeddedBuilder.build());
   }
 
 }

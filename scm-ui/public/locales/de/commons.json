@@ -1,0 +1,72 @@
+{
+  "login": {
+    "title": "Anmeldung",
+    "subtitle": "Bitte anmelden, um fortzufahren.",
+    "logo-alt": "SCM-Manager",
+    "username-placeholder": "Benutzername",
+    "password-placeholder": "Passwort",
+    "submit": "Anmelden"
+  },
+  "logout": {
+    "error": {
+      "title": "Abmeldung fehlgeschlagen",
+      "subtitle": "Während der Abmeldung ist ein Fehler aufgetreten."
+    }
+  },
+  "app": {
+    "error": {
+      "title": "Fehler",
+      "subtitle": "Ein unbekannter Fehler ist aufgetreten."
+    }
+  },
+  "error-notification": {
+    "prefix": "Fehler",
+    "loginLink": "Erneute Anmeldung",
+    "timeout": "Die Session ist abgelaufen.",
+    "wrong-login-credentials": "Ungültige Anmeldedaten"
+  },
+  "loading": {
+    "alt": "Lade ..."
+  },
+  "logo": {
+    "alt": "SCM-Manager"
+  },
+  "primary-navigation": {
+    "repositories": "Repositories",
+    "users": "Benutzer",
+    "logout": "Abmelden",
+    "groups": "Gruppen",
+    "config": "Einstellungen"
+  },
+  "paginator": {
+    "next": "Weiter",
+    "previous": "Zurück"
+  },
+  "profile": {
+    "navigation-label": "Navigation",
+    "actions-label": "Aktionen",
+    "username": "Benutzername",
+    "displayName": "Anzeigename",
+    "mail": "E-Mail",
+    "groups": "Gruppen",
+    "information": "Informationen",
+    "change-password": "Passwort ändern",
+    "error-title": "Fehler",
+    "error-subtitle": "Das Profil kann nicht angezeigt werden.",
+    "error": "Fehler",
+    "error-message": "'me' ist nicht definiert"
+  },
+  "password": {
+    "label": "Passwort",
+    "newPassword": "Neues Passwort",
+    "passwordHelpText": "Klartext Passwort des Benutzers.",
+    "passwordConfirmHelpText": "Passwort zur Bestätigen wiederholen.",
+    "currentPassword": "Aktuelles Passwort",
+    "currentPasswordHelpText": "Dieses Passwort wird momentan bereits verwendet.",
+    "confirmPassword": "Passwort wiederholen",
+    "passwordInvalid": "Das Passwort muss zwischen 6 und 32 Zeichen lang sein!",
+    "passwordConfirmFailed": "Passwörter müssen identisch sein!",
+    "submit": "Speichern",
+    "changedSuccessfully": "Passwort erfolgreich geändert!"
+  }
+}
