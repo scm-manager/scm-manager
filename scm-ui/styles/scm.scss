@@ -185,8 +185,11 @@ $fa-font-path: "webfonts";
   }
 }
 
-//panels
+// panels
 .panel {
+  .panel-heading > .field {
+    margin-bottom: 0; // replace selector margin
+  }
   .panel-block {
     display: block;
   }
