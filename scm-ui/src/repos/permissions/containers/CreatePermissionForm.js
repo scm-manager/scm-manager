@@ -96,7 +96,6 @@ class CreatePermissionForm extends React.Component<Props, State> {
     const { t } = this.props;
     if (this.state.groupPermission) {
       return (
-
         <Autocomplete
           loadSuggestions={this.loadGroupAutocompletion}
           valueSelected={this.groupOrUserSelected}

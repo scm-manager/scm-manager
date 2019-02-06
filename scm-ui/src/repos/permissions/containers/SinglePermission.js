@@ -150,16 +150,11 @@ class SinglePermission extends React.Component<Props, State> {
       />
     ) : null;
 
-    const type =
-      permission && permission.groupPermission
-        ? t("permission.group")
-        : t("permission.user");
-
     const iconType =
       permission && permission.groupPermission ? (
-        <i className={classNames("fas fa-user-friends", classes.iconColor)} />
+        <i title={t("permission.group")} className={classNames("fas fa-user-friends", classes.iconColor)} />
       ) : (
-        <i className={classNames("fas fa-user", classes.iconColor)} />
+        <i title={t("permission.user")} className={classNames("fas fa-user", classes.iconColor)} />
       );
 
     return (
