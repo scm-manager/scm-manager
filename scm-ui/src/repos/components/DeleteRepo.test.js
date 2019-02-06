@@ -1,30 +1,40 @@
 import React from "react";
-import { mount, shallow } from "enzyme";
+import { mount } from "enzyme";
 import ReactRouterEnzymeContext from "react-router-enzyme-context";
+import configureStore from "redux-mock-store";
 
 import "../../tests/enzyme";
 import "../../tests/i18n";
 import DeleteRepo from "./DeleteRepo";
 
 import { confirmAlert } from "@scm-manager/ui-components";
+
 jest.mock("@scm-manager/ui-components", () => ({
   confirmAlert: jest.fn(),
   Subtitle: require.requireActual("@scm-manager/ui-components").Subtitle,
-  DeleteButton: require.requireActual("@scm-manager/ui-components").DeleteButton
+  DeleteButton: require.requireActual("@scm-manager/ui-components").DeleteButton,
+  ErrorNotification: ({err}) => err ? err.message : null
 }));
 
 const options = new ReactRouterEnzymeContext();
 
 describe("DeleteRepo", () => {
+
+  let store;
+
+  beforeEach(() => {
+    store = configureStore()({});
+  });
+
   it("should render nothing, if the delete link is missing", () => {
     const repository = {
       _links: {}
     };
 
-    const navLink = shallow(
-      <DeleteRepo repository={repository} delete={() => {}} />
+    const navLink = mount(
+      <DeleteRepo repository={repository} delete={() => {}} store={store} />
     );
-    expect(navLink.text()).toBe("");
+    expect(navLink.text()).toBeNull();
   });
 
   it("should render the navLink", () => {
@@ -37,7 +47,7 @@ describe("DeleteRepo", () => {
     };
 
     const navLink = mount(
-      <DeleteRepo repository={repository} delete={() => {}} />,
+      <DeleteRepo repository={repository} delete={() => {}} store={store} />,
       options.get()
     );
     expect(navLink.text()).not.toBe("");
@@ -53,7 +63,7 @@ describe("DeleteRepo", () => {
     };
 
     const navLink = mount(
-      <DeleteRepo repository={repository} delete={() => {}} />,
+      <DeleteRepo repository={repository} delete={() => {}} store={store} />,
       options.get()
     );
     navLink.find("button").simulate("click");
@@ -80,6 +90,7 @@ describe("DeleteRepo", () => {
         repository={repository}
         confirmDialog={false}
         delete={capture}
+        store={store}
       />,
       options.get()
     );

@@ -5,11 +5,11 @@ import type { Repository } from "@scm-manager/ui-types";
 import {
   Subtitle,
   DeleteButton,
-  confirmAlert
+  confirmAlert,
+  ErrorNotification
 } from "@scm-manager/ui-components";
 import { getDeleteRepoFailure, isDeleteRepoPending } from "../modules/repos";
 import { connect } from "react-redux";
-import { ErrorNotification } from "@scm-manager/ui-components";
 
 type Props = {
   loading: boolean,
