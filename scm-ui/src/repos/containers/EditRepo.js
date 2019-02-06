@@ -3,11 +3,10 @@ import React from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import RepositoryForm from "../components/form";
-import DeleteRepo from "../components/DeleteRepo";
+import DeleteRepo from "./DeleteRepo";
 import type { Repository } from "@scm-manager/ui-types";
 import {
   modifyRepo,
-  deleteRepo,
   isModifyRepoPending,
   getModifyRepoFailure,
   modifyRepoReset
@@ -22,7 +21,6 @@ type Props = {
 
   modifyRepo: (Repository, () => void) => void,
   modifyRepoReset: Repository => void,
-  deleteRepo: (Repository, () => void) => void,
 
   // context props
   repository: Repository,
@@ -39,14 +37,6 @@ class EditRepo extends React.Component<Props> {
   repoModified = () => {
     const { history, repository } = this.props;
     history.push(`/repo/${repository.namespace}/${repository.name}`);
-  };
-
-  deleted = () => {
-    this.props.history.push("/repos");
-  };
-
-  delete = (repository: Repository) => {
-    this.props.deleteRepo(repository, this.deleted);
   };
 
   stripEndingSlash = (url: string) => {
@@ -86,7 +76,7 @@ class EditRepo extends React.Component<Props> {
           props={extensionProps}
           renderAll={true}
         />
-        <DeleteRepo repository={repository} delete={this.delete} />
+        <DeleteRepo repository={repository} />
       </div>
     );
   }
@@ -109,9 +99,6 @@ const mapDispatchToProps = dispatch => {
     },
     modifyRepoReset: (repo: Repository) => {
       dispatch(modifyRepoReset(repo));
-    },
-    deleteRepo: (repo: Repository, callback: () => void) => {
-      dispatch(deleteRepo(repo, callback));
     }
   };
 };

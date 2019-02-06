@@ -5,22 +5,23 @@ import type { User } from "@scm-manager/ui-types";
 import {
   Subtitle,
   DeleteButton,
-  confirmAlert
+  confirmAlert,
+  ErrorNotification
 } from "@scm-manager/ui-components";
-import { getDeleteUserFailure, isDeleteUserPending } from "../modules/users";
+import {deleteUser, getDeleteUserFailure, isDeleteUserPending} from "../modules/users";
 import { connect } from "react-redux";
-import { ErrorNotification } from "@scm-manager/ui-components";
+import {withRouter} from "react-router-dom";
+import type {History} from "history";
 
 type Props = {
   loading: boolean,
   error: Error,
   user: User,
   confirmDialog?: boolean,
+  deleteUser: (user: User, callback?: () => void) => void,
 
-  // dispatcher functions
-  deleteUser: (user: User) => void,
-
-  // context objects
+  // context props
+  history: History,
   t: string => string
 };
 
@@ -29,8 +30,12 @@ class DeleteUser extends React.Component<Props> {
     confirmDialog: true
   };
 
+  userDeleted = () => {
+    this.props.history.push("/users");
+  };
+
   deleteUser = () => {
-    this.props.deleteUser(this.props.user);
+    this.props.deleteUser(this.props.user, this.userDeleted);
   };
 
   confirmDelete = () => {
@@ -90,4 +95,12 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export default connect(mapStateToProps)(translate("users")(DeleteUser));
+const mapDispatchToProps = dispatch => {
+  return {
+    deleteUser: (user: User, callback?: () => void) => {
+      dispatch(deleteUser(user, callback));
+    }
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(translate("users")(DeleteUser)));

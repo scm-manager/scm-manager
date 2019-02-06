@@ -32,7 +32,7 @@ describe("DeleteRepo", () => {
     };
 
     const navLink = mount(
-      <DeleteRepo repository={repository} delete={() => {}} store={store} />
+      <DeleteRepo repository={repository} store={store} />
     );
     expect(navLink.text()).toBeNull();
   });
@@ -47,7 +47,7 @@ describe("DeleteRepo", () => {
     };
 
     const navLink = mount(
-      <DeleteRepo repository={repository} delete={() => {}} store={store} />,
+      <DeleteRepo repository={repository} store={store} />,
       options.get()
     );
     expect(navLink.text()).not.toBe("");
@@ -63,7 +63,7 @@ describe("DeleteRepo", () => {
     };
 
     const navLink = mount(
-      <DeleteRepo repository={repository} delete={() => {}} store={store} />,
+      <DeleteRepo repository={repository} store={store} />,
       options.get()
     );
     navLink.find("button").simulate("click");
@@ -80,16 +80,10 @@ describe("DeleteRepo", () => {
       }
     };
 
-    let calledUrl = null;
-    function capture(repository) {
-      calledUrl = repository._links.delete.href;
-    }
-
     const navLink = mount(
       <DeleteRepo
         repository={repository}
         confirmDialog={false}
-        delete={capture}
         store={store}
       />,
       options.get()

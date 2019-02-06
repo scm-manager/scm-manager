@@ -3,16 +3,13 @@ import React from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import UserForm from "../components/UserForm";
-import DeleteUser from "../components/DeleteUser";
+import DeleteUser from "./DeleteUser";
 import type { User } from "@scm-manager/ui-types";
 import {
   modifyUser,
-  deleteUser,
   isModifyUserPending,
   getModifyUserFailure,
   modifyUserReset,
-  isDeleteUserPending,
-  getDeleteUserFailure
 } from "../modules/users";
 import type { History } from "history";
 import { ErrorNotification } from "@scm-manager/ui-components";
@@ -24,7 +21,6 @@ type Props = {
   // dispatch functions
   modifyUser: (user: User, callback?: () => void) => void,
   modifyUserReset: User => void,
-  deleteUser: (user: User, callback?: () => void) => void,
 
   // context objects
   user: User,
@@ -45,14 +41,6 @@ class EditUser extends React.Component<Props> {
     this.props.modifyUser(user, this.userModified(user));
   };
 
-  userDeleted = () => {
-    this.props.history.push("/users");
-  };
-
-  deleteUser = (user: User) => {
-    this.props.deleteUser(user, this.userDeleted);
-  };
-
   render() {
     const { user, loading, error } = this.props;
     return (
@@ -64,7 +52,7 @@ class EditUser extends React.Component<Props> {
           loading={loading}
         />
         <hr />
-        <DeleteUser user={user} deleteUser={this.deleteUser} />
+        <DeleteUser user={user} />
       </div>
     );
   }
@@ -86,9 +74,6 @@ const mapDispatchToProps = dispatch => {
     },
     modifyUserReset: (user: User) => {
       dispatch(modifyUserReset(user));
-    },
-    deleteUser: (user: User, callback?: () => void) => {
-      dispatch(deleteUser(user, callback));
     }
   };
 };

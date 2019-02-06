@@ -8,19 +8,24 @@ import {
   confirmAlert,
   ErrorNotification
 } from "@scm-manager/ui-components";
-import { getDeleteRepoFailure, isDeleteRepoPending } from "../modules/repos";
+import {
+  deleteRepo,
+  getDeleteRepoFailure,
+  isDeleteRepoPending,
+} from "../modules/repos";
 import { connect } from "react-redux";
+import {withRouter} from "react-router-dom";
+import type {History} from "history";
 
 type Props = {
   loading: boolean,
   error: Error,
   repository: Repository,
   confirmDialog?: boolean,
-
-  // dispatcher functions
-  delete: Repository => void,
+  deleteRepo: (Repository, () => void) => void,
 
   // context props
+  history: History,
   t: string => string
 };
 
@@ -29,8 +34,12 @@ class DeleteRepo extends React.Component<Props> {
     confirmDialog: true
   };
 
+  deleted = () => {
+    this.props.history.push("/repos");
+  };
+
   deleteRepo = () => {
-    this.props.delete(this.props.repository);
+    this.props.deleteRepo(this.props.repository, this.deleted);
   };
 
   confirmDelete = () => {
@@ -91,4 +100,15 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export default connect(mapStateToProps)(translate("repos")(DeleteRepo));
+const mapDispatchToProps = dispatch => {
+  return {
+    deleteRepo: (repo: Repository, callback: () => void) => {
+      dispatch(deleteRepo(repo, callback));
+    }
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withRouter(translate("repos")(DeleteRepo)));

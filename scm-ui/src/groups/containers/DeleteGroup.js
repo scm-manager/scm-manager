@@ -5,18 +5,27 @@ import type { Group } from "@scm-manager/ui-types";
 import {
   Subtitle,
   DeleteButton,
-  confirmAlert
+  confirmAlert,
+  ErrorNotification
 } from "@scm-manager/ui-components";
-import { getDeleteGroupFailure, isDeleteGroupPending } from "../modules/groups";
+import {
+  deleteGroup,
+  getDeleteGroupFailure,
+  isDeleteGroupPending,
+} from "../modules/groups";
 import { connect } from "react-redux";
-import { ErrorNotification } from "@scm-manager/ui-components";
+import {withRouter} from "react-router-dom";
+import type {History} from "history";
 
 type Props = {
   loading: boolean,
   error: Error,
   group: Group,
   confirmDialog?: boolean,
-  deleteGroup: (group: Group) => void,
+  deleteGroup: (group: Group, callback?: () => void) => void,
+
+  // context props
+  history: History,
   t: string => string
 };
 
@@ -26,7 +35,11 @@ export class DeleteGroup extends React.Component<Props> {
   };
 
   deleteGroup = () => {
-    this.props.deleteGroup(this.props.group);
+    this.props.deleteGroup(this.props.group, this.groupDeleted);
+  };
+
+  groupDeleted = () => {
+    this.props.history.push("/groups");
   };
 
   confirmDelete = () => {
@@ -86,4 +99,12 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export default connect(mapStateToProps)(translate("groups")(DeleteGroup));
+const mapDispatchToProps = dispatch => {
+  return {
+    deleteGroup: (group: Group, callback?: () => void) => {
+      dispatch(deleteGroup(group, callback));
+    }
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(translate("groups")(DeleteGroup)));
