@@ -202,7 +202,7 @@ $fa-font-path: "webfonts";
 }
 
 // forms
-.field:not(.is-grouped) {
+form .field:not(.is-grouped) {
   margin-bottom: 1rem;
 }
 .input,

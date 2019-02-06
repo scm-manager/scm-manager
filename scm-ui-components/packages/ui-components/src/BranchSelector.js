@@ -14,7 +14,7 @@ const styles = {
     minWidth: "4.5rem"
   },
   wrapper: {
-    padding: "1rem 1.5rem 0.25rem 1.5rem",
+    padding: "1rem 1.5rem",
     border: "1px solid #eee",
     borderRadius: "5px 5px 0 0"
   }
