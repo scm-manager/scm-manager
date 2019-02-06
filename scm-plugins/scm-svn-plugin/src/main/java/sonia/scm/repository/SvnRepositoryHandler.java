@@ -53,6 +53,7 @@ import sonia.scm.io.INIConfigurationWriter;
 import sonia.scm.io.INISection;
 import sonia.scm.logging.SVNKitLogger;
 import sonia.scm.plugin.Extension;
+import sonia.scm.plugin.PluginLoader;
 import sonia.scm.repository.spi.HookEventFacade;
 import sonia.scm.repository.spi.SvnRepositoryServiceProvider;
 import sonia.scm.store.ConfigurationStoreFactory;
@@ -96,9 +97,10 @@ public class SvnRepositoryHandler
   @Inject
   public SvnRepositoryHandler(ConfigurationStoreFactory storeFactory,
                               HookEventFacade eventFacade,
-                              RepositoryLocationResolver repositoryLocationResolver)
+                              RepositoryLocationResolver repositoryLocationResolver,
+                              PluginLoader pluginLoader)
   {
-    super(storeFactory, repositoryLocationResolver);
+    super(storeFactory, repositoryLocationResolver, pluginLoader);
 
     // register logger
     SVNDebugLog.setDefaultLog(new SVNKitLogger());

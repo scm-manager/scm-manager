@@ -105,7 +105,7 @@ public final class HgTestUtil
 
     RepositoryLocationResolver repositoryLocationResolver = new RepositoryLocationResolver(context, repoDao, new InitialRepositoryLocationResolver());
     HgRepositoryHandler handler =
-      new HgRepositoryHandler(new InMemoryConfigurationStoreFactory(), new HgContextProvider(), repositoryLocationResolver);
+      new HgRepositoryHandler(new InMemoryConfigurationStoreFactory(), new HgContextProvider(), repositoryLocationResolver, null);
     Path repoDir = directory.toPath();
     when(repoDao.getPath(any())).thenReturn(repoDir);
     handler.init(context);

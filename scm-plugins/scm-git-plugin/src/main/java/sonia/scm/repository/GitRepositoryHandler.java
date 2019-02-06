@@ -44,6 +44,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.plugin.Extension;
+import sonia.scm.plugin.PluginLoader;
 import sonia.scm.repository.spi.GitRepositoryServiceProvider;
 import sonia.scm.schedule.Scheduler;
 import sonia.scm.schedule.Task;
@@ -103,9 +104,10 @@ public class GitRepositoryHandler
   public GitRepositoryHandler(ConfigurationStoreFactory storeFactory,
                               Scheduler scheduler,
                               RepositoryLocationResolver repositoryLocationResolver,
-                              GitWorkdirFactory workdirFactory)
+                              GitWorkdirFactory workdirFactory,
+                              PluginLoader pluginLoader)
   {
-    super(storeFactory, repositoryLocationResolver);
+    super(storeFactory, repositoryLocationResolver, pluginLoader);
     this.scheduler = scheduler;
     this.workdirFactory = workdirFactory;
   }
