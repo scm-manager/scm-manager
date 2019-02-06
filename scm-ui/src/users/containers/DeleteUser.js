@@ -8,10 +8,14 @@ import {
   confirmAlert,
   ErrorNotification
 } from "@scm-manager/ui-components";
-import {deleteUser, getDeleteUserFailure, isDeleteUserPending} from "../modules/users";
+import {
+  deleteUser,
+  getDeleteUserFailure,
+  isDeleteUserPending
+} from "../modules/users";
 import { connect } from "react-redux";
-import {withRouter} from "react-router-dom";
-import type {History} from "history";
+import { withRouter } from "react-router-dom";
+import type { History } from "history";
 
 type Props = {
   loading: boolean,
@@ -103,4 +107,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(translate("users")(DeleteUser)));
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withRouter(translate("users")(DeleteUser)));

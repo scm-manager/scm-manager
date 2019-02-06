@@ -9,7 +9,7 @@ import {
   modifyUser,
   isModifyUserPending,
   getModifyUserFailure,
-  modifyUserReset,
+  modifyUserReset
 } from "../modules/users";
 import type { History } from "history";
 import { ErrorNotification } from "@scm-manager/ui-components";
