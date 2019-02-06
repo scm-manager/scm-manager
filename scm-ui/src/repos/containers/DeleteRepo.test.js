@@ -32,7 +32,8 @@ describe("DeleteRepo", () => {
     };
 
     const navLink = mount(
-      <DeleteRepo repository={repository} store={store} />
+      <DeleteRepo repository={repository} store={store} />,
+      options.get()
     );
     expect(navLink.text()).toBeNull();
   });
@@ -80,6 +81,8 @@ describe("DeleteRepo", () => {
       }
     };
 
+    store.dispatch = jest.fn();
+
     const navLink = mount(
       <DeleteRepo
         repository={repository}
@@ -90,6 +93,6 @@ describe("DeleteRepo", () => {
     );
     navLink.find("button").simulate("click");
 
-    expect(calledUrl).toBe("/repos");
+    expect(store.dispatch.mock.calls.length).toBe(1);
   });
 });
