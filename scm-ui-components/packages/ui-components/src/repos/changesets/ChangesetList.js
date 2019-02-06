@@ -21,7 +21,7 @@ class ChangesetList extends React.Component<Props> {
         />
       );
     });
-    return <div className="box">{content}</div>;
+    return <>{content}</>;
   }
 }
 

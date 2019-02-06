@@ -29,9 +29,6 @@ type State = {
 };
 
 const styles = {
-  toCenterContent: {
-    display: "block"
-  },
   pointer: {
     cursor: "pointer"
   },
@@ -126,7 +123,6 @@ class Content extends React.Component<Props, State> {
         <div
           className={classNames(
             "panel-block",
-            classes.toCenterContent,
             classes.hasBackground
           )}
         >
@@ -161,7 +157,7 @@ class Content extends React.Component<Props, State> {
   }
 
   render() {
-    const { file, revision, repository, path, classes } = this.props;
+    const { file, revision, repository, path } = this.props;
     const { showHistory } = this.state;
 
     const header = this.showHeader();
@@ -180,13 +176,11 @@ class Content extends React.Component<Props, State> {
 
     return (
       <div>
-        <nav className="panel">
-          <article className="panel-heading">{header}</article>
+        <div className="panel">
+          <div className="panel-heading">{header}</div>
           {moreInformation}
-          <div className={classNames("panel-block", classes.toCenterContent)}>
-            {content}
-          </div>
-        </nav>
+          {content}
+        </div>
       </div>
     );
   }
