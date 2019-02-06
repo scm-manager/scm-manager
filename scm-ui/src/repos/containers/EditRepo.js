@@ -14,6 +14,7 @@ import {
 } from "../modules/repos";
 import type { History } from "history";
 import { ErrorNotification } from "@scm-manager/ui-components";
+import { ExtensionPoint } from "@scm-manager/ui-extensions";
 
 type Props = {
   loading: boolean,
@@ -25,7 +26,8 @@ type Props = {
 
   // context props
   repository: Repository,
-  history: History
+  history: History,
+  match: any
 };
 
 class EditRepo extends React.Component<Props> {
@@ -47,8 +49,27 @@ class EditRepo extends React.Component<Props> {
     this.props.deleteRepo(repository, this.deleted);
   };
 
+  stripEndingSlash = (url: string) => {
+    if (url.endsWith("/")) {
+      return url.substring(0, url.length - 2);
+    }
+    return url;
+  };
+
+  matchedUrl = () => {
+    return this.stripEndingSlash(this.props.match.url);
+  };
+
   render() {
     const { loading, error, repository } = this.props;
+
+    const url = this.matchedUrl();
+
+    const extensionProps = {
+      repository,
+      url
+    };
+
     return (
       <div>
         <ErrorNotification error={error} />
@@ -60,6 +81,11 @@ class EditRepo extends React.Component<Props> {
           }}
         />
         <hr />
+        <ExtensionPoint
+          name="repo-config.route"
+          props={extensionProps}
+          renderAll={true}
+        />
         <DeleteRepo repository={repository} delete={this.delete} />
       </div>
     );

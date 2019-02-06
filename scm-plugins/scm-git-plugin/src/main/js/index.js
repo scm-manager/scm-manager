@@ -27,14 +27,9 @@ binder.bind(
 );
 binder.bind("repos.repository-avatar", GitAvatar, gitPredicate);
 
-cfgBinder.bindRepositorySub(
-  "/configuration",
-  "scm-git-plugin.repo-config.link",
-  "configuration",
-  RepositoryConfig
-);
-// global config
+binder.bind("repo-config.route", RepositoryConfig, gitPredicate);
 
+// global config
 cfgBinder.bindGlobal(
   "/git",
   "scm-git-plugin.config.link",

@@ -72,7 +72,7 @@ class ConfigurationBinder {
     binder.bind("repository.route", RepoRoute, repoPredicate);
   }
 
-  bindRepositorySub(to: string, labelI18nKey: string, linkName: string, RepositoryComponent: any) {
+  bindRepositorySetting(to: string, labelI18nKey: string, linkName: string, RepositoryComponent: any) {
 
     // create predicate based on the link name of the current repository route
     // if the linkname is not available, the navigation link and the route are not bound to the extension points
