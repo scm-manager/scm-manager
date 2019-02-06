@@ -12,11 +12,13 @@ import {
   ErrorPage,
   Page,
   Navigation,
+  SubNavigation,
   Section,
   NavLink
 } from "@scm-manager/ui-components";
 import ChangeUserPassword from "./ChangeUserPassword";
 import ProfileInfo from "./ProfileInfo";
+import { ExtensionPoint } from "@scm-manager/ui-extensions";
 
 type Props = {
   me: Me,
@@ -57,26 +59,43 @@ class Profile extends React.Component<Props, State> {
       );
     }
 
+    const extensionProps = {
+      me,
+      url
+    };
+
     return (
       <Page title={me.displayName}>
         <div className="columns">
           <div className="column is-three-quarters">
             <Route path={url} exact render={() => <ProfileInfo me={me} />} />
             <Route
-              path={`${url}/password`}
+              path={`${url}/settings/password`}
               render={() => <ChangeUserPassword me={me} />}
             />
           </div>
           <div className="column">
             <Navigation>
-              <Section label={t("profile.navigation-label")}>
-                <NavLink to={`${url}`} icon="fas fa-info-circle" label={t("profile.information")} />
-              </Section>
-              <Section label={t("profile.actions-label")}>
+              <Section label={t("profile.navigationLabel")}>
                 <NavLink
-                  to={`${url}/password`}
-                  label={t("profile.change-password")}
+                  to={`${url}`}
+                  icon="fas fa-info-circle"
+                  label={t("profile.informationNavLink")}
                 />
+                <SubNavigation
+                  to={`${url}/settings/password`}
+                  label={t("profile.settingsNavLink")}
+                >
+                  <NavLink
+                    to={`${url}/settings/password`}
+                    label={t("profile.changePasswordNavLink")}
+                  />
+                  <ExtensionPoint
+                    name="profile.subnavigation"
+                    props={extensionProps}
+                    renderAll={true}
+                  />
+                </SubNavigation>
               </Section>
             </Navigation>
           </div>

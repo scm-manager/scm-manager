@@ -113,7 +113,7 @@ class SetPermissions extends React.Component<Props, State> {
       message = (
         <Notification
           type={"success"}
-          children={t("form.set-permissions-successful")}
+          children={t("setPermissions.setPermissionsSuccessful")}
           onClose={() => this.onClose()}
         />
       );
@@ -128,7 +128,7 @@ class SetPermissions extends React.Component<Props, State> {
         <SubmitButton
           disabled={!this.state.permissionsChanged}
           loading={loading}
-          label={t("form.submit-button.label")}
+          label={t("setPermissions.button")}
         />
       </form>
     );

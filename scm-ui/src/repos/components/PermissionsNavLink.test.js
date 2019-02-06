@@ -33,6 +33,6 @@ describe("PermissionsNavLink", () => {
       <PermissionsNavLink repository={repository} permissionUrl="" />,
       options.get()
     );
-    expect(navLink.text()).toBe(" repository-root.permissions");
+    expect(navLink.text()).toBe("repositoryRoot.menu.permissionsNavLink");
   });
 });

@@ -49,8 +49,8 @@ class AddUser extends React.Component<Props> {
 
     return (
       <Page
-        title={t("add-user.title")}
-        subtitle={t("add-user.subtitle")}
+        title={t("addUser.title")}
+        subtitle={t("addUser.subtitle")}
         error={error}
         showContentOnError={true}
       >

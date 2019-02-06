@@ -3,9 +3,9 @@ import React from "react";
 import { connect } from "react-redux";
 import GroupForm from "../components/GroupForm";
 import {
+  modifyGroup,
   getModifyGroupFailure,
   isModifyGroupPending,
-  modifyGroup,
   modifyGroupReset
 } from "../modules/groups";
 import type { History } from "history";
@@ -13,12 +13,13 @@ import { withRouter } from "react-router-dom";
 import type { Group } from "@scm-manager/ui-types";
 import { ErrorNotification } from "@scm-manager/ui-components";
 import { getUserAutoCompleteLink } from "../../modules/indexResource";
+import DeleteGroup from "./DeleteGroup";
 
 type Props = {
   group: Group,
+  fetchGroup: (name: string) => void,
   modifyGroup: (group: Group, callback?: () => void) => void,
   modifyGroupReset: Group => void,
-  fetchGroup: (name: string) => void,
   autocompleteLink: string,
   history: History,
   loading?: boolean,
@@ -54,7 +55,7 @@ class EditGroup extends React.Component<Props> {
   };
 
   render() {
-    const { group, loading, error } = this.props;
+    const { loading, error, group } = this.props;
     return (
       <div>
         <ErrorNotification error={error} />
@@ -66,6 +67,8 @@ class EditGroup extends React.Component<Props> {
           loading={loading}
           loadUserSuggestions={this.loadUserAutocompletion}
         />
+        <hr />
+        <DeleteGroup group={group} />
       </div>
     );
   }

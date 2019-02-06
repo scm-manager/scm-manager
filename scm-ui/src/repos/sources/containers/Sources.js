@@ -118,7 +118,7 @@ class Sources extends React.Component<Props> {
         <BranchSelector
           branches={branches}
           selectedBranch={revision}
-          label={t("branch-selector.label")}
+          label={t("changesets.branchSelectorLabel")}
           selected={(b: Branch) => {
             this.branchSelected(b);
           }}

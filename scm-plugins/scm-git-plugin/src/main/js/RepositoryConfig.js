@@ -127,6 +127,7 @@ class RepositoryConfig extends React.Component<Props, State> {
               disabled={!this.state.selectedBranchName}
             />
           </form>
+          <hr />
         </>
       );
     } else {
