@@ -2,9 +2,18 @@
 import React from "react";
 import { translate } from "react-i18next";
 import type { Group } from "@scm-manager/ui-types";
-import { Subtitle, DeleteButton, confirmAlert } from "@scm-manager/ui-components";
+import {
+  Subtitle,
+  DeleteButton,
+  confirmAlert
+} from "@scm-manager/ui-components";
+import { getDeleteGroupFailure, isDeleteGroupPending } from "../modules/groups";
+import { connect } from "react-redux";
+import { ErrorNotification } from "@scm-manager/ui-components";
 
 type Props = {
+  loading: boolean,
+  error: Error,
   group: Group,
   confirmDialog?: boolean,
   deleteGroup: (group: Group) => void,
@@ -43,7 +52,7 @@ export class DeleteGroup extends React.Component<Props> {
   };
 
   render() {
-    const { confirmDialog, t } = this.props;
+    const { loading, error, confirmDialog, t } = this.props;
     const action = confirmDialog ? this.confirmDelete : this.deleteGroup;
 
     if (!this.isDeletable()) {
@@ -53,11 +62,13 @@ export class DeleteGroup extends React.Component<Props> {
     return (
       <>
         <Subtitle subtitle={t("deleteGroup.subtitle")} />
+        <ErrorNotification error={error} />
         <div className="columns">
           <div className="column">
             <DeleteButton
               label={t("deleteGroup.button")}
               action={action}
+              loading={loading}
             />
           </div>
         </div>
@@ -66,4 +77,13 @@ export class DeleteGroup extends React.Component<Props> {
   }
 }
 
-export default translate("groups")(DeleteGroup);
+const mapStateToProps = (state, ownProps) => {
+  const loading = isDeleteGroupPending(state, ownProps.group.name);
+  const error = getDeleteGroupFailure(state, ownProps.group.name);
+  return {
+    loading,
+    error
+  };
+};
+
+export default connect(mapStateToProps)(translate("groups")(DeleteGroup));

@@ -2,9 +2,18 @@
 import React from "react";
 import { translate } from "react-i18next";
 import type { Repository } from "@scm-manager/ui-types";
-import { Subtitle, DeleteButton, confirmAlert } from "@scm-manager/ui-components";
+import {
+  Subtitle,
+  DeleteButton,
+  confirmAlert
+} from "@scm-manager/ui-components";
+import { getDeleteRepoFailure, isDeleteRepoPending } from "../modules/repos";
+import { connect } from "react-redux";
+import { ErrorNotification } from "@scm-manager/ui-components";
 
 type Props = {
+  loading: boolean,
+  error: Error,
   repository: Repository,
   confirmDialog?: boolean,
 
@@ -47,7 +56,7 @@ class DeleteRepo extends React.Component<Props> {
   };
 
   render() {
-    const { confirmDialog, t } = this.props;
+    const { loading, error, confirmDialog, t } = this.props;
     const action = confirmDialog ? this.confirmDelete : this.deleteRepo;
 
     if (!this.isDeletable()) {
@@ -57,11 +66,13 @@ class DeleteRepo extends React.Component<Props> {
     return (
       <>
         <Subtitle subtitle={t("deleteRepo.subtitle")} />
+        <ErrorNotification error={error} />
         <div className="columns">
           <div className="column">
             <DeleteButton
               label={t("deleteRepo.button")}
               action={action}
+              loading={loading}
             />
           </div>
         </div>
@@ -70,4 +81,14 @@ class DeleteRepo extends React.Component<Props> {
   }
 }
 
-export default translate("repos")(DeleteRepo);
+const mapStateToProps = (state, ownProps) => {
+  const { namespace, name } = ownProps.repository;
+  const loading = isDeleteRepoPending(state, namespace, name);
+  const error = getDeleteRepoFailure(state, namespace, name);
+  return {
+    loading,
+    error
+  };
+};
+
+export default connect(mapStateToProps)(translate("repos")(DeleteRepo));

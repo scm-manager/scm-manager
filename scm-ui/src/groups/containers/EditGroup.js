@@ -7,8 +7,6 @@ import {
   deleteGroup,
   getModifyGroupFailure,
   isModifyGroupPending,
-  getDeleteGroupFailure,
-  isDeleteGroupPending,
   modifyGroupReset
 } from "../modules/groups";
 import type { History } from "history";
@@ -67,7 +65,7 @@ class EditGroup extends React.Component<Props> {
   };
 
   render() {
-    const { group, loading, error } = this.props;
+    const { loading, error, group } = this.props;
     return (
       <div>
         <ErrorNotification error={error} />
@@ -80,17 +78,15 @@ class EditGroup extends React.Component<Props> {
           loadUserSuggestions={this.loadUserAutocompletion}
         />
         <hr />
-        <DeleteGroup
-          group={group}
-          deleteGroup={this.deleteGroup} />
+        <DeleteGroup group={group} deleteGroup={this.deleteGroup} />
       </div>
     );
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const loading = isModifyGroupPending(state, ownProps.group.name) || isDeleteGroupPending(state, ownProps.group.name);
-  const error = getModifyGroupFailure(state, ownProps.group.name) || getDeleteGroupFailure(state, ownProps.group.name);
+  const loading = isModifyGroupPending(state, ownProps.group.name);
+  const error = getModifyGroupFailure(state, ownProps.group.name);
   const autocompleteLink = getUserAutoCompleteLink(state);
   return {
     loading,

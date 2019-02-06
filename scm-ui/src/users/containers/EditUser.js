@@ -71,8 +71,8 @@ class EditUser extends React.Component<Props> {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const loading = isModifyUserPending(state, ownProps.user.name) || isDeleteUserPending(state, ownProps.user.name);
-  const error = getModifyUserFailure(state, ownProps.user.name) || getDeleteUserFailure(state, ownProps.user.name);
+  const loading = isModifyUserPending(state, ownProps.user.name);
+  const error = getModifyUserFailure(state, ownProps.user.name);
   return {
     loading,
     error
