@@ -64,7 +64,7 @@ class RepositoryEntry extends React.Component<Props> {
       return (
         <RepositoryEntryLink
           iconClass="fa-cog fa-lg"
-          to={repositoryLink + "/edit"}
+          to={repositoryLink + "/settings/general"}
         />
       );
     }
