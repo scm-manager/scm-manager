@@ -22,6 +22,11 @@ import { ExtensionPoint } from "@scm-manager/ui-extensions";
 const styles = {
   spacing: {
     marginRight: "1em"
+  },
+  tags: {
+    "& .tag": {
+      marginLeft: ".25rem"
+    }
   }
 };
 
@@ -48,7 +53,7 @@ class ChangesetDetails extends React.Component<Props> {
         <div className="content">
           <h4>
             <ExtensionPoint
-              name="changesets.changeset.description"
+              name="changeset.description"
               props={{ changeset, value: description.title }}
               renderAll={false}
             >
@@ -67,7 +72,7 @@ class ChangesetDetails extends React.Component<Props> {
               </p>
               <p>
                 <Interpolate
-                  i18nKey="changesets.changeset.summary"
+                  i18nKey="changeset.summary"
                   id={id}
                   time={date}
                 />
@@ -81,7 +86,7 @@ class ChangesetDetails extends React.Component<Props> {
               return (
                 <span key={key}>
                   <ExtensionPoint
-                    name="changesets.changeset.description"
+                    name="changeset.description"
                     props={{ changeset, value: item }}
                     renderAll={false}
                   >
@@ -106,10 +111,11 @@ class ChangesetDetails extends React.Component<Props> {
   };
 
   renderTags = () => {
+    const { classes } = this.props;
     const tags = this.getTags();
     if (tags.length > 0) {
       return (
-        <div className="level-item">
+        <div className={classNames("level-item", classes.tags)}>
           {tags.map((tag: Tag) => {
             return <ChangesetTag key={tag.name} tag={tag} />;
           })}

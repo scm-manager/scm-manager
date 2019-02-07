@@ -2,31 +2,40 @@
 import React from "react";
 import moment from "moment";
 import { translate } from "react-i18next";
+import injectSheet from "react-jss";
+
+const styles = {
+  date: {
+    borderBottom: "1px dotted rgba(219, 219, 219)",
+    cursor: "help"
+  }
+};
 
 type Props = {
   date?: string,
 
   // context props
+  classes: any,
   i18n: any
 };
 
 class DateFromNow extends React.Component<Props> {
-  static format(locale: string, date?: string) {
-    let fromNow = "";
-    if (date) {
-      fromNow = moment(date)
-        .locale(locale)
-        .fromNow();
-    }
-    return fromNow;
-  }
 
   render() {
-    const { i18n, date } = this.props;
+    const { i18n, date, classes } = this.props;
 
-    const fromNow = DateFromNow.format(i18n.language, date);
-    return <span>{fromNow}</span>;
+    if (date) {
+      const dateWithLocale = moment(date).locale(i18n.language);
+
+      return (
+        <time title={dateWithLocale.format()} className={classes.date}>
+          {dateWithLocale.fromNow()}
+        </time>
+      );
+    }
+
+    return null;
   }
 }
 
-export default translate()(DateFromNow);
+export default injectSheet(styles)(translate()(DateFromNow));

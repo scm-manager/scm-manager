@@ -27,7 +27,7 @@ public interface HalAppender {
   LinkArrayBuilder linkArrayBuilder(String rel);
 
   /**
-   * Appends one embedded to the json response.
+   * Appends one embedded object to the json response.
    *
    * @param rel name of relation
    * @param embeddedItem embedded object
@@ -40,7 +40,7 @@ public interface HalAppender {
   interface LinkArrayBuilder {
 
     /**
-     * Append an link to the array.
+     * Append a link to the array.
      *
      * @param name name of link
      * @param href link target

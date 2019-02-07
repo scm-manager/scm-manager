@@ -17,6 +17,7 @@
     "i18next": "^11.4.0",
     "i18next-browser-languagedetector": "^2.2.2",
     "i18next-fetch-backend": "^0.1.0",
+    "jss-nested": "^6.0.1",
     "moment": "^2.22.2",
     "node-sass": "^4.9.3",
     "postcss-easy-import": "^3.0.0",

@@ -42,18 +42,21 @@
   "changesets": {
     "errorTitle": "Fehler",
     "errorSubtitle": "Changesets konnten nicht abgerufen werden",
-    "branchSelectorLabel": "Branches",
-    "changeset": {
-      "description": "Beschreibung",
-      "summary": "Changeset {{id}} wurde committet {{time}}",
-      "diffNotSupported": "Diff des Changesets wird von diesem Repositorytyp nicht unterstützt",
-      "id": "ID",
-      "contact": "Kontakt",
-      "date": "Datum"
-    },
+    "branchSelectorLabel": "Branches"
+  },
+  "changeset": {
+    "description": "Beschreibung",
+    "summary": "Changeset {{id}} wurde committet {{time}}",
+    "shortSummary": "Committet {{id}} {{time}}",
+    "tags": "Tags",
+    "diffNotSupported": "Diff des Changesets wird von diesem Repositorytyp nicht unterstützt",
     "author": {
-      "name": "Autor",
-      "mail": "Mail"
+      "prefix": "Verfasst von",
+      "mailto": "Mail senden an"
+    },
+    "buttons": {
+      "details": "Details",
+      "sources": "Sources"
     }
   },
   "repositoryForm": {

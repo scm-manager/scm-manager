@@ -3,6 +3,7 @@
 import {Link} from "react-router-dom";
 import React from "react";
 import type {Changeset, Repository} from "@scm-manager/ui-types";
+import { createChangesetLink } from "./changesets";
 
 type Props = {
   repository: Repository,
@@ -20,13 +21,11 @@ export default class ChangesetId extends React.Component<Props> {
   };
 
   renderLink = () => {
-    const { changeset, repository } = this.props;
+    const { repository, changeset } = this.props;
+    const link = createChangesetLink(repository, changeset);
+
     return (
-      <Link
-        to={`/repo/${repository.namespace}/${repository.name}/changeset/${
-          changeset.id
-        }`}
-      >
+      <Link to={link}>
         {this.shortId(changeset)}
       </Link>
     );

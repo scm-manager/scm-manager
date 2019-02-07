@@ -42,18 +42,21 @@
   "changesets": {
     "errorTitle": "Error",
     "errorSubtitle": "Could not fetch changesets",
-    "branchSelectorLabel": "Branches",
-    "changeset": {
-      "description": "Description",
-      "summary": "Changeset {{id}} was committed {{time}}",
-      "diffNotSupported": "Diff of changesets is not supported by the type of repository",
-      "id": "ID",
-      "contact": "Contact",
-      "date": "Date"
-    },
+    "branchSelectorLabel": "Branches"
+  },
+  "changeset": {
+    "description": "Description",
+    "summary": "Changeset {{id}} was committed {{time}}",
+    "shortSummary": "Committed {{id}} {{time}}",
+    "tags": "Tags",
+    "diffNotSupported": "Diff of changesets is not supported by the type of repository",
     "author": {
-      "name": "Author",
-      "mail": "Mail"
+      "prefix": "Authored by",
+      "mailto": "Send mail to"
+    },
+    "buttons": {
+      "details": "Details",
+      "sources": "Sources"
     }
   },
   "repositoryForm": {
