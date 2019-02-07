@@ -51,6 +51,7 @@ import sonia.scm.io.INIConfigurationReader;
 import sonia.scm.io.INIConfigurationWriter;
 import sonia.scm.io.INISection;
 import sonia.scm.plugin.Extension;
+import sonia.scm.plugin.PluginLoader;
 import sonia.scm.repository.spi.HgRepositoryServiceProvider;
 import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.util.IOUtil;
@@ -111,9 +112,10 @@ public class HgRepositoryHandler
   @Inject
   public HgRepositoryHandler(ConfigurationStoreFactory storeFactory,
                              Provider<HgContext> hgContextProvider,
-                             RepositoryLocationResolver repositoryLocationResolver)
+                             RepositoryLocationResolver repositoryLocationResolver,
+                             PluginLoader pluginLoader)
   {
-    super(storeFactory, repositoryLocationResolver);
+    super(storeFactory, repositoryLocationResolver, pluginLoader);
     this.hgContextProvider = hgContextProvider;
 
     try

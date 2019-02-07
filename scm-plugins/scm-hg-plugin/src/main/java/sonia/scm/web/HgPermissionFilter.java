@@ -44,7 +44,6 @@ import sonia.scm.web.filter.PermissionFilter;
 
 import sonia.scm.repository.HgRepositoryHandler;
 
-import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Set;

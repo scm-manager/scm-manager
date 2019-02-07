@@ -1,8 +1,6 @@
 {
-  "form": {
-    "submit-button": {
-      "label": "Berechtigungen speichern"
-    },
-    "set-permissions-successful": "Berechtigungen erfolgreich gespeichert"
+  "setPermissions": {
+    "button": "Berechtigungen speichern",
+    "setPermissionsSuccessful": "Berechtigungen erfolgreich gespeichert"
   }
 }

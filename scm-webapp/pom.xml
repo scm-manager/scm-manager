@@ -115,9 +115,9 @@
     </dependency>
 
     <dependency>
-      <groupId>javax</groupId>
-      <artifactId>javaee-api</artifactId>
-      <version>7.0</version>
+      <groupId>com.fasterxml.jackson.jaxrs</groupId>
+      <artifactId>jackson-jaxrs-json-provider</artifactId>
+      <version>${jackson.version}</version>
     </dependency>
 
     <!-- rest api -->
@@ -156,6 +156,24 @@
       <groupId>org.jboss.resteasy</groupId>
       <artifactId>resteasy-validator-provider-11</artifactId>
       <version>${resteasy.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-validator</artifactId>
+      <version>5.3.6.Final</version>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.el</groupId>
+      <artifactId>javax.el-api</artifactId>
+      <version>2.2.4</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.glassfish.web</groupId>
+      <artifactId>javax.el</artifactId>
+      <version>2.2.4</version>
     </dependency>
 
     <!-- injection -->
@@ -203,18 +221,6 @@
       <version>1.4.01</version>
     </dependency>
 
-    <!-- only for BeanComparator, replace with own implementation -->
-    
-    <dependency>
-      <groupId>commons-beanutils</groupId>
-      <artifactId>commons-beanutils</artifactId>
-    </dependency>
-    
-    <dependency>
-      <groupId>commons-collections</groupId>
-      <artifactId>commons-collections</artifactId>
-    </dependency>
-
     <!--
       fix installation of httpasswd-plugin
       https://groups.google.com/d/topic/scmmanager/eN7UtG8TwW8/discussion
@@ -255,19 +261,19 @@
     <dependency>
       <groupId>com.github.sdorra</groupId>
       <artifactId>web-resources</artifactId>
-      <version>1.0.2</version>
+      <version>1.0.4</version>
     </dependency>
 
     <dependency>
       <groupId>com.github.sdorra</groupId>
       <artifactId>spotter-core</artifactId>
-      <version>1.1.0</version>
+      <version>1.2.1</version>
     </dependency>
 
     <dependency>
       <groupId>org.apache.tika</groupId>
       <artifactId>tika-core</artifactId>
-      <version>1.18</version>
+      <version>1.20</version>
     </dependency>
 
     <!-- test scope -->
@@ -561,8 +567,6 @@
     <selenium.version>2.53.1</selenium.version>
     <wagon.version>1.0</wagon.version>
     <mustache.version>0.8.17</mustache.version>
-    <resteasy.version>3.1.4.Final</resteasy.version>
-    <jackson.version>2.8.9</jackson.version>
     <netbeans.hint.deploy.server>Tomcat</netbeans.hint.deploy.server>
     <sonar.issue.ignore.multicriteria>e1</sonar.issue.ignore.multicriteria>
     <sonar.issue.ignore.multicriteria.e1.ruleKey>javascript:S3827</sonar.issue.ignore.multicriteria.e1.ruleKey>

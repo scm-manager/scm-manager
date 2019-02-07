@@ -40,6 +40,7 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.ConfigurationException;
 import sonia.scm.io.CommandResult;
 import sonia.scm.io.ExtendedCommand;
+import sonia.scm.plugin.PluginLoader;
 import sonia.scm.store.ConfigurationStoreFactory;
 
 import java.io.File;
@@ -67,11 +68,14 @@ public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig
     LoggerFactory.getLogger(AbstractSimpleRepositoryHandler.class);
 
   private final RepositoryLocationResolver repositoryLocationResolver;
+  private final PluginLoader pluginLoader;
 
   public AbstractSimpleRepositoryHandler(ConfigurationStoreFactory storeFactory,
-                                         RepositoryLocationResolver repositoryLocationResolver) {
+                                         RepositoryLocationResolver repositoryLocationResolver,
+                                         PluginLoader pluginLoader) {
     super(storeFactory);
     this.repositoryLocationResolver = repositoryLocationResolver;
+    this.pluginLoader = pluginLoader;
   }
 
   @Override
@@ -155,7 +159,7 @@ public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig
     String content = defaultContent;
 
     try {
-      URL url = Resources.getResource(resource);
+      URL url = pluginLoader.getUberClassLoader().getResource(resource);
 
       if (url != null) {
         content = Resources.toString(url, Charsets.UTF_8);

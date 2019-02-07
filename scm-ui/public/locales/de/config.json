@@ -1,12 +1,10 @@
 {
   "config": {
-    "navigation-title": "Navigation"
-  },
-  "global-config": {
+    "navigationLabel": "Einstellungs Navigation",
+    "globalConfigurationNavLink": "Globale Einstellungen",
     "title": "Einstellungen",
-    "navigation-label": "Globale Einstellungen",
-    "error-title": "Fehler",
-    "error-subtitle": "Unbekannter Einstellungen Fehler"
+    "errorTitle": "Fehler",
+    "errorSubtitle": "Unbekannter Einstellungen Fehler"
   },
   "config-form": {
     "submit": "Speichern",

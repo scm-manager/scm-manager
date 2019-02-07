@@ -70,7 +70,7 @@ class ChangesetRow extends React.Component<Props> {
 
             <h4 className="has-text-weight-bold is-ellipsis-overflow">
               <ExtensionPoint
-                name="changesets.changeset.description"
+                name="changeset.description"
                 props={{ changeset, value: description.title }}
                 renderAll={false}
               >
@@ -89,14 +89,14 @@ class ChangesetRow extends React.Component<Props> {
               <div className={classNames(classes.metadata, "media-right")}>
                 <p className="is-hidden-mobile is-hidden-tablet-only">
                   <Interpolate
-                    i18nKey="changesets.changeset.summary"
+                    i18nKey="changeset.summary"
                     id={changesetId}
                     time={dateFromNow}
                   />
                 </p>
                 <p className="is-hidden-desktop">
                   <Interpolate
-                    i18nKey="changesets.changeset.short-summary"
+                    i18nKey="changeset.shortSummary"
                     id={changesetId}
                     time={dateFromNow}
                   />

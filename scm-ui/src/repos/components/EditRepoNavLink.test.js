@@ -3,9 +3,9 @@ import { shallow, mount } from "enzyme";
 import "../../tests/enzyme";
 import "../../tests/i18n";
 import ReactRouterEnzymeContext from "react-router-enzyme-context";
-import EditNavLink from "./EditNavLink";
+import EditRepoNavLink from "./EditRepoNavLink";
 
-describe("EditNavLink", () => {
+describe("GeneralNavLink", () => {
   const options = new ReactRouterEnzymeContext();
 
   it("should render nothing, if the modify link is missing", () => {
@@ -14,7 +14,7 @@ describe("EditNavLink", () => {
     };
 
     const navLink = shallow(
-      <EditNavLink repository={repository} editUrl="" />,
+      <EditRepoNavLink repository={repository} editUrl="" />,
       options.get()
     );
     expect(navLink.text()).toBe("");
@@ -30,9 +30,9 @@ describe("EditNavLink", () => {
     };
 
     const navLink = mount(
-      <EditNavLink repository={repository} editUrl="" />,
+      <EditRepoNavLink repository={repository} editUrl="" />,
       options.get()
     );
-    expect(navLink.text()).toBe(" edit-nav-link.label");
+    expect(navLink.text()).toBe("repositoryRoot.menu.generalNavLink");
   });
 });

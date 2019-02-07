@@ -11,40 +11,57 @@
     "name-invalid": "Der Name des Repository ist ungültig",
     "contact-invalid": "Der Kontakt muss eine gültige E-Mail Adresse sein"
   },
+  "help": {
+    "nameHelpText": "Der Name des Repository. Dieser wird Teil der URL des Repository sein.",
+    "typeHelpText": "Der Typ des Repository (Mercurial, Git oder Subversion).",
+    "contactHelpText": "E-Mail Adresse der Person, die für das Repository verantwortlich ist.",
+    "descriptionHelpText": "Eine kurze Beschreibung des Repository."
+  },
+  "repositoryRoot": {
+    "errorTitle": "Fehler",
+    "errorSubtitle": "Unbekannter Repository Fehler",
+    "menu": {
+      "navigationLabel": "Repository Navigation",
+      "informationNavLink": "Informationen",
+      "historyNavLink": "Commits",
+      "sourcesNavLink": "Sources",
+      "settingsNavLink": "Einstellungen",
+      "generalNavLink": "Generell",
+      "permissionsNavLink": "Berechtigungen"
+    }
+  },
   "overview": {
     "title": "Repositories",
     "subtitle": "Übersicht aller verfügbaren Repositories",
-    "create-button": "Repository erstellen"
-  },
-  "repository-root": {
-    "error-title": "Fehler",
-    "error-subtitle": "Unbekannter Repository Fehler",
-    "actions-label": "Aktionen",
-    "back-label": "Zurück",
-    "navigation-label": "Navigation",
-    "history": "Commits",
-    "information": "Informationen",
-    "permissions": "Berechtigungen",
-    "sources": "Sources"
+    "createButton": "Repository erstellen"
   },
   "create": {
     "title": "Repository erstellen",
     "subtitle": "Erstellen eines neuen Repository"
   },
-  "repository-form": {
-    "submit": "Speichern"
+  "changesets": {
+    "errorTitle": "Fehler",
+    "errorSubtitle": "Changesets konnten nicht abgerufen werden",
+    "branchSelectorLabel": "Branches"
   },
-  "edit-nav-link": {
-    "label": "Bearbeiten"
-  },
-  "delete-nav-action": {
-    "label": "Löschen",
-    "confirm-alert": {
-      "title": "Repository löschen",
-      "message": "Soll das Repository wirklich gelöscht werden?",
-      "submit": "Ja",
-      "cancel": "Nein"
+  "changeset": {
+    "description": "Beschreibung",
+    "summary": "Changeset {{id}} wurde committet {{time}}",
+    "shortSummary": "Committet {{id}} {{time}}",
+    "tags": "Tags",
+    "diffNotSupported": "Diff des Changesets wird von diesem Repositorytyp nicht unterstützt",
+    "author": {
+      "prefix": "Verfasst von",
+      "mailto": "Mail senden an"
+    },
+    "buttons": {
+      "details": "Details",
+      "sources": "Sources"
     }
+  },
+  "repositoryForm": {
+    "subtitle": "Repository bearbeiten",
+    "submit": "Speichern"
   },
   "sources": {
     "file-tree": {
@@ -65,36 +82,8 @@
       "size": "Größe"
     }
   },
-  "changesets": {
-    "diff": {
-      "not-supported": "Diff des Changesets wird von diesem Repositorytyp nicht unterstützt"
-    },
-    "error-title": "Fehler",
-    "error-subtitle": "Changesets konnten nicht abgerufen werden",
-    "changeset": {
-      "id": "ID",
-      "description": "Beschreibung",
-      "contact": "Kontakt",
-      "date": "Datum",
-      "summary": "Changeset {{id}} wurde committet {{time}}",
-      "short-summary": "Committet {{id}} {{time}}"
-    },
-    "tags": "Tags",
-    "author": {
-      "name": "Autor",
-      "mail": "Mail",
-      "prefix": "Verfasst von",
-      "mailto": "Mail senden an"
-    },
-    "buttons": {
-      "details": "Details",
-      "sources": "Sources"
-    }
-  },
-  "branch-selector": {
-    "label": "Branches"
-  },
   "permission": {
+    "title": "Berechtigungen bearbeiten",
     "user": "Benutzer",
     "group": "Gruppe",
     "error-title": "Fehler",
@@ -106,7 +95,7 @@
     "user-permission": "Benutzerberechtigung",
     "edit-permission": {
       "delete-button": "Löschen",
-      "save-button": "Änderungen Speichern"
+      "save-button": "Änderungen speichern"
     },
     "advanced-button": {
       "label": "Erweitert"
@@ -146,10 +135,14 @@
       }
     }
   },
-  "help": {
-    "nameHelpText": "Der Name des Repository. Dieser wird Teil der URL des Repository sein.",
-    "typeHelpText": "Der Typ des Repository (Mercurial, Git oder Subversion).",
-    "contactHelpText": "E-Mail Adresse der Person, die für das Repository verantwortlich ist.",
-    "descriptionHelpText": "Eine kurze Beschreibung des Repository."
+  "deleteRepo": {
+    "subtitle": "Repository löschen",
+    "button": "Löschen",
+    "confirmAlert": {
+      "title": "Repository löschen",
+      "message": "Soll das Repository wirklich gelöscht werden?",
+      "submit": "Ja",
+      "cancel": "Nein"
+    }
   }
 }

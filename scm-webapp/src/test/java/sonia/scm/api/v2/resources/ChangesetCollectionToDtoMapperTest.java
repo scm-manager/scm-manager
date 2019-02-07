@@ -1,6 +1,5 @@
 package sonia.scm.api.v2.resources;
 
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import sonia.scm.PageResult;
 import sonia.scm.repository.Changeset;
@@ -17,7 +16,7 @@ public class ChangesetCollectionToDtoMapperTest {
 
   public static final Repository REPOSITORY = new Repository("", "git", "space", "name");
   public static final Changeset CHANGESET = new Changeset();
-  private final ChangesetToChangesetDtoMapper changesetToChangesetDtoMapper = mock(ChangesetToChangesetDtoMapper.class);
+  private final DefaultChangesetToChangesetDtoMapperImpl changesetToChangesetDtoMapper = mock(DefaultChangesetToChangesetDtoMapperImpl.class);
 
   private final ChangesetCollectionToDtoMapper changesetCollectionToDtoMapper = new ChangesetCollectionToDtoMapper(changesetToChangesetDtoMapper, ResourceLinksMock.createMock(URI.create("/")));
 

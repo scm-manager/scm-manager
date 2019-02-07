@@ -28,7 +28,7 @@ class NavLink extends React.Component<Props> {
 
     let showIcon = null;
     if (icon) {
-      showIcon = (<><i className={icon}></i>{" "}</>);
+      showIcon = (<><i className={icon} />{" "}</>);
     }
 
     return (

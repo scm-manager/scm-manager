@@ -53,7 +53,7 @@ class ChangesetDetails extends React.Component<Props> {
         <div className="content">
           <h4>
             <ExtensionPoint
-              name="changesets.changeset.description"
+              name="changeset.description"
               props={{ changeset, value: description.title }}
               renderAll={false}
             >
@@ -72,7 +72,7 @@ class ChangesetDetails extends React.Component<Props> {
               </p>
               <p>
                 <Interpolate
-                  i18nKey="changesets.changeset.summary"
+                  i18nKey="changeset.summary"
                   id={id}
                   time={date}
                 />
@@ -86,7 +86,7 @@ class ChangesetDetails extends React.Component<Props> {
               return (
                 <span key={key}>
                   <ExtensionPoint
-                    name="changesets.changeset.description"
+                    name="changeset.description"
                     props={{ changeset, value: item }}
                     renderAll={false}
                   >

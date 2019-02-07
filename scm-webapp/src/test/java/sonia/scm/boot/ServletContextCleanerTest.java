@@ -13,7 +13,6 @@ import java.util.Enumeration;
 import java.util.Set;
 import java.util.Vector;
 
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;

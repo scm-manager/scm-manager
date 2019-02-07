@@ -17,7 +17,7 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.repository.GitConfig;
 import sonia.scm.repository.GitRepositoryConfig;
 import sonia.scm.repository.GitRepositoryHandler;
@@ -29,6 +29,7 @@ import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.web.GitVndMediaType;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -100,7 +101,7 @@ public class GitConfigResourceTest {
 
   @Test
   @SubjectAware(username = "readWrite")
-  public void shouldGetGitConfig() throws URISyntaxException {
+  public void shouldGetGitConfig() throws URISyntaxException, UnsupportedEncodingException {
     MockHttpResponse response = get();
 
     assertEquals(HttpServletResponse.SC_OK, response.getStatus());
@@ -115,7 +116,7 @@ public class GitConfigResourceTest {
 
   @Test
   @SubjectAware(username = "readWrite")
-  public void shouldGetGitConfigEvenWhenItsEmpty() throws URISyntaxException {
+  public void shouldGetGitConfigEvenWhenItsEmpty() throws URISyntaxException, UnsupportedEncodingException {
     when(repositoryHandler.getConfig()).thenReturn(null);
 
     MockHttpResponse response = get();
@@ -126,7 +127,7 @@ public class GitConfigResourceTest {
 
   @Test
   @SubjectAware(username = "readOnly")
-  public void shouldGetGitConfigWithoutUpdateLink() throws URISyntaxException {
+  public void shouldGetGitConfigWithoutUpdateLink() throws URISyntaxException, UnsupportedEncodingException {
     MockHttpResponse response = get();
 
     assertEquals(HttpServletResponse.SC_OK, response.getStatus());
@@ -159,7 +160,7 @@ public class GitConfigResourceTest {
 
   @Test
   @SubjectAware(username = "writeOnly")
-  public void shouldReadDefaultRepositoryConfig() throws URISyntaxException {
+  public void shouldReadDefaultRepositoryConfig() throws URISyntaxException, UnsupportedEncodingException {
     when(repositoryManager.get(new NamespaceAndName("space", "X"))).thenReturn(new Repository("id", "git", "space", "X"));
 
     MockHttpRequest request = MockHttpRequest.get("/" + GitConfigResource.GIT_CONFIG_PATH_V2 + "/space/X");
@@ -176,7 +177,7 @@ public class GitConfigResourceTest {
 
   @Test
   @SubjectAware(username = "readOnly")
-  public void shouldNotHaveUpdateLinkForReadOnlyUser() throws URISyntaxException {
+  public void shouldNotHaveUpdateLinkForReadOnlyUser() throws URISyntaxException, UnsupportedEncodingException {
     when(repositoryManager.get(new NamespaceAndName("space", "X"))).thenReturn(new Repository("id", "git", "space", "X"));
 
     MockHttpRequest request = MockHttpRequest.get("/" + GitConfigResource.GIT_CONFIG_PATH_V2 + "/space/X");
@@ -193,7 +194,7 @@ public class GitConfigResourceTest {
 
   @Test
   @SubjectAware(username = "writeOnly")
-  public void shouldReadStoredRepositoryConfig() throws URISyntaxException {
+  public void shouldReadStoredRepositoryConfig() throws URISyntaxException, UnsupportedEncodingException {
     when(repositoryManager.get(new NamespaceAndName("space", "X"))).thenReturn(new Repository("id", "git", "space", "X"));
     GitRepositoryConfig gitRepositoryConfig = new GitRepositoryConfig();
     gitRepositoryConfig.setDefaultBranch("test");

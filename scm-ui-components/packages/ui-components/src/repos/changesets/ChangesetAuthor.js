@@ -28,7 +28,7 @@ class ChangesetAuthor extends React.Component<Props> {
   renderWithMail(name: string, mail: string) {
     const { t } = this.props;
     return (
-      <a href={"mailto: " + mail} title={t("changesets.author.mailto") + " " + mail}>
+      <a href={"mailto: " + mail} title={t("changeset.author.mailto") + " " + mail}>
         {name}
       </a>
     );
@@ -38,7 +38,7 @@ class ChangesetAuthor extends React.Component<Props> {
     const { t } = this.props;
     return (
       <>
-        {t("changesets.author.prefix")} {child}
+        {t("changeset.author.prefix")} {child}
         <ExtensionPoint
           name="changesets.author.suffix"
           props={{ changeset: this.props.changeset }}

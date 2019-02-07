@@ -29,7 +29,7 @@ class ChangesetButtonGroup extends React.Component<Props> {
             <i className="fas fa-code-branch"></i>
           </span>
           <span className="is-hidden-mobile is-hidden-tablet-only">
-            {t("changesets.buttons.details")}
+            {t("changeset.buttons.details")}
           </span>
         </Button>
         <Button link={sourcesLink}>
@@ -37,7 +37,7 @@ class ChangesetButtonGroup extends React.Component<Props> {
             <i className="fas fa-code"></i>
           </span>
           <span className="is-hidden-mobile is-hidden-tablet-only">
-            {t("changesets.buttons.sources")}
+            {t("changeset.buttons.sources")}
           </span>
         </Button>
       </ButtonGroup>

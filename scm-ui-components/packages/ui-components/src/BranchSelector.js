@@ -13,10 +13,11 @@ const styles = {
   minWidthOfLabel: {
     minWidth: "4.5rem"
   },
-  wrapper: {
-    padding: "1rem 1.5rem 0.25rem 1.5rem",
-    border: "1px solid #eee",
-    borderRadius: "5px 5px 0 0"
+  labelSizing: {
+    fontSize: "1rem !important"
+  },
+  noBottomMargin: {
+    marginBottom: "0 !important"
   }
 };
 
@@ -52,9 +53,9 @@ class BranchSelector extends React.Component<Props, State> {
       return (
         <div
           className={classNames(
-            "has-background-light field",
+            "field",
             "is-horizontal",
-            classes.wrapper
+            classes.noBottomMargin
           )}
         >
           <div
@@ -65,10 +66,14 @@ class BranchSelector extends React.Component<Props, State> {
               classes.minWidthOfLabel
             )}
           >
-            <label className="label">{label}</label>
+            <label className={classNames("label", classes.labelSizing)}>
+              {label}
+            </label>
           </div>
           <div className="field-body">
-            <div className="field is-narrow">
+            <div
+              className={classNames("field is-narrow", classes.noBottomMargin)}
+            >
               <div className="control">
                 <DropDown
                   className="is-fullwidth"
