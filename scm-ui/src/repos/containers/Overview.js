@@ -90,7 +90,7 @@ class Overview extends React.Component<Props> {
     if (showCreateButton) {
       return (
         <CreateButton
-          label={t("overview.create-button")}
+          label={t("overview.createButton")}
           link="/repos/create"
         />
       );

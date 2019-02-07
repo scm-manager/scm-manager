@@ -24,6 +24,7 @@ import {
 import {
   Loading,
   ErrorPage,
+  Subtitle,
   LabelWithHelpIcon
 } from "@scm-manager/ui-components";
 import type {
@@ -144,6 +145,7 @@ class Permissions extends React.Component<Props> {
 
     return (
       <div>
+        <Subtitle subtitle={t("permission.title")} />
         <table className="has-background-light table is-hoverable is-fullwidth">
           <thead>
             <tr>

@@ -29,9 +29,6 @@
 
 package sonia.scm.plugin;
 
-import com.google.common.base.Enums;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Iterators;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;

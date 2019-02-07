@@ -37,8 +37,8 @@ class ChangesetView extends React.Component<Props> {
     if (error) {
       return (
         <ErrorPage
-          title={t("changeset-error.title")}
-          subtitle={t("changeset-error.subtitle")}
+          title={t("changesets.errorTitle")}
+          subtitle={t("changesets.errorSubtitle")}
           error={error}
         />
       );

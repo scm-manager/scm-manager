@@ -1,7 +1,6 @@
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.Links;
-import org.mapstruct.Context;
 import sonia.scm.security.PermissionDescriptor;
 import sonia.scm.security.PermissionPermissions;
 

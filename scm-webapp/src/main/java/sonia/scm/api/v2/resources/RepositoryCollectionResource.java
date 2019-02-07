@@ -23,7 +23,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
-import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 
 public class RepositoryCollectionResource {

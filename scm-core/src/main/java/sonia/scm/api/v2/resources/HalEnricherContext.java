@@ -7,17 +7,17 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 /**
- * Context object for the {@link LinkEnricher}. The context holds the source object for the json and all related
- * objects, which can be useful for the link creation.
+ * Context object for the {@link HalEnricher}. The context holds the source object for the json and all related
+ * objects, which can be useful for the enrichment.
  *
  * @author Sebastian Sdorra
  * @since 2.0.0
  */
-public final class LinkEnricherContext {
+public final class HalEnricherContext {
 
   private final Map<Class, Object> instanceMap;
 
-  private LinkEnricherContext(Map<Class,Object> instanceMap) {
+  private HalEnricherContext(Map<Class,Object> instanceMap) {
     this.instanceMap = instanceMap;
   }
 
@@ -28,12 +28,12 @@ public final class LinkEnricherContext {
    *
    * @return context of given entries
    */
-  public static LinkEnricherContext of(Object... instances) {
+  public static HalEnricherContext of(Object... instances) {
     ImmutableMap.Builder<Class, Object> builder = ImmutableMap.builder();
     for (Object instance : instances) {
       builder.put(instance.getClass(), instance);
     }
-    return new LinkEnricherContext(builder.build());
+    return new HalEnricherContext(builder.build());
   }
 
   /**

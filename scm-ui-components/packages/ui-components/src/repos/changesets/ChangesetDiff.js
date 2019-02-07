@@ -25,7 +25,7 @@ class ChangesetDiff extends React.Component<Props> {
   render() {
     const { changeset, t } = this.props;
     if (!this.isDiffSupported(changeset)) {
-      return <Notification type="danger">{t("changesets.diff.not-supported")}</Notification>;
+      return <Notification type="danger">{t("changeset.diffNotSupported")}</Notification>;
     } else {
       const url = this.createUrl(changeset);
       return <LoadingDiff url={url} />;

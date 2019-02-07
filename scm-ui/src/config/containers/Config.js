@@ -8,8 +8,8 @@ import type { Links } from "@scm-manager/ui-types";
 import { Page, Navigation, NavLink, Section } from "@scm-manager/ui-components";
 import GlobalConfig from "./GlobalConfig";
 import type { History } from "history";
-import {connect} from "react-redux";
-import {compose} from "redux";
+import { connect } from "react-redux";
+import { compose } from "redux";
 import { getLinks } from "../../modules/indexResource";
 
 type Props = {
@@ -47,21 +47,23 @@ class Config extends React.Component<Props> {
         <div className="columns">
           <div className="column is-three-quarters">
             <Route path={url} exact component={GlobalConfig} />
-            <ExtensionPoint name="config.route"
-                            props={extensionProps}
-                            renderAll={true}
+            <ExtensionPoint
+              name="config.route"
+              props={extensionProps}
+              renderAll={true}
             />
           </div>
           <div className="column is-one-quarter">
             <Navigation>
-              <Section label={t("config.navigation-title")}>
+              <Section label={t("config.navigationLabel")}>
                 <NavLink
                   to={`${url}`}
-                  label={t("global-config.navigation-label")}
+                  label={t("config.globalConfigurationNavLink")}
                 />
-                <ExtensionPoint name="config.navigation"
-                                props={extensionProps}
-                                renderAll={true}
+                <ExtensionPoint
+                  name="config.navigation"
+                  props={extensionProps}
+                  renderAll={true}
                 />
               </Section>
             </Navigation>
@@ -83,4 +85,3 @@ export default compose(
   connect(mapStateToProps),
   translate("config")
 )(Config);
-

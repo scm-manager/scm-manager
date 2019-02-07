@@ -18,8 +18,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
-import static sonia.scm.ContextEntry.ContextBuilder.entity;
-
 /**
  * RESTful Web Service Resource to manage the configuration of the git plugin.
  */

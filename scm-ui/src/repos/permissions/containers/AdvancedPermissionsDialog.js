@@ -1,7 +1,7 @@
 // @flow
 
 import React from "react";
-import { Button, SubmitButton } from "@scm-manager/ui-components";
+import { Button, SubmitButton, Modal } from "@scm-manager/ui-components";
 import { translate } from "react-i18next";
 import PermissionCheckbox from "../components/PermissionCheckbox";
 
@@ -38,6 +38,7 @@ class AdvancedPermissionsDialog extends React.Component<Props, State> {
 
     const verbSelectBoxes = Object.entries(verbs).map(e => (
       <PermissionCheckbox
+        key={e[0]}
         disabled={readOnly}
         name={e[0]}
         checked={e[1]}
@@ -49,38 +50,30 @@ class AdvancedPermissionsDialog extends React.Component<Props, State> {
       <SubmitButton label={t("permission.advanced.dialog.submit")} />
     ) : null;
 
-    return (
-      <div className="modal is-active">
-        <div className="modal-background" />
-        <div className="modal-card">
-          <header className="modal-card-head">
-            <p className="modal-card-title">
-              {t("permission.advanced.dialog.title")}
-            </p>
-            <button
-              className="delete"
-              aria-label="close"
-              onClick={() => onClose()}
+    const body = <>{verbSelectBoxes}</>;
+
+    const footer = (
+      <form onSubmit={this.onSubmit}>
+        <div className="field is-grouped">
+          <p className="control">{submitButton}</p>
+          <p className="control">
+            <Button
+              label={t("permission.advanced.dialog.abort")}
+              action={onClose}
             />
-          </header>
-          <section className="modal-card-body">
-            <div className="content">{verbSelectBoxes}</div>
-            <div className="is-pulled-right">
-              <form onSubmit={this.onSubmit}>
-                <div className="field is-grouped">
-                  <p className="control">{submitButton}</p>
-                  <p className="control">
-                    <Button
-                      label={t("permission.advanced.dialog.abort")}
-                      action={onClose}
-                    />
-                  </p>
-                </div>
-              </form>
-            </div>
-          </section>
+          </p>
         </div>
-      </div>
+      </form>
+    );
+
+    return (
+      <Modal
+        title={t("permission.advanced.dialog.title")}
+        closeFunction={() => onClose()}
+        body={body}
+        footer={footer}
+        active={true}
+      />
     );
   }
 

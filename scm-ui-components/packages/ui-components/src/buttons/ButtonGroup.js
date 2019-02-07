@@ -1,41 +1,30 @@
 // @flow
-import React from "react";
-import Button from "./Button";
+import * as React from "react";
 
 type Props = {
-  firstlabel: string,
-  secondlabel: string,
-  firstAction?: (event: Event) => void,
-  secondAction?: (event: Event) => void,
-  firstIsSelected: boolean
+  addons?: boolean,
+  className?: string,
+  children: React.Node
 };
 
 class ButtonGroup extends React.Component<Props> {
 
+  static defaultProps = {
+    addons: true
+  };
+
   render() {
-    const { firstlabel, secondlabel, firstAction, secondAction, firstIsSelected } = this.props;
-
-    let showFirstColor = "";
-    let showSecondColor = "";
-
-    if (firstIsSelected) {
-      showFirstColor += "link is-selected";
-    } else {
-      showSecondColor += "link is-selected";
+    const { addons, className, children } = this.props;
+    let styleClasses = "buttons";
+    if (addons) {
+      styleClasses += " has-addons";
     }
-
+    if (className) {
+      styleClasses += " " + className;
+    }
     return (
-      <div className="buttons has-addons">
-        <Button
-          label={firstlabel}
-          color={showFirstColor}
-          action={firstAction}
-        />
-        <Button
-          label={secondlabel}
-          color={showSecondColor}
-          action={secondAction}
-        />
+      <div className={styleClasses}>
+        { children }
       </div>
     );
   }

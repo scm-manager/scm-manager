@@ -2,7 +2,8 @@
 import React from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import UserForm from "./../components/UserForm";
+import UserForm from "../components/UserForm";
+import DeleteUser from "./DeleteUser";
 import type { User } from "@scm-manager/ui-types";
 import {
   modifyUser,
@@ -31,6 +32,7 @@ class EditUser extends React.Component<Props> {
     const { modifyUserReset, user } = this.props;
     modifyUserReset(user);
   }
+
   userModified = (user: User) => () => {
     this.props.history.push(`/user/${user.name}`);
   };
@@ -49,10 +51,21 @@ class EditUser extends React.Component<Props> {
           user={user}
           loading={loading}
         />
+        <hr />
+        <DeleteUser user={user} />
       </div>
     );
   }
 }
+
+const mapStateToProps = (state, ownProps) => {
+  const loading = isModifyUserPending(state, ownProps.user.name);
+  const error = getModifyUserFailure(state, ownProps.user.name);
+  return {
+    loading,
+    error
+  };
+};
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -62,15 +75,6 @@ const mapDispatchToProps = dispatch => {
     modifyUserReset: (user: User) => {
       dispatch(modifyUserReset(user));
     }
-  };
-};
-
-const mapStateToProps = (state, ownProps) => {
-  const loading = isModifyUserPending(state, ownProps.user.name);
-  const error = getModifyUserFailure(state, ownProps.user.name);
-  return {
-    loading,
-    error
   };
 };
 

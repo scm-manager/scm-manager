@@ -22,12 +22,12 @@ import sonia.scm.user.UserManager;
 import sonia.scm.web.VndMediaType;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static sonia.scm.api.v2.resources.DispatcherMock.createDispatcher;
@@ -78,7 +78,7 @@ public class MeResourceTest {
   }
 
   @Test
-  public void shouldReturnCurrentlyAuthenticatedUser() throws URISyntaxException {
+  public void shouldReturnCurrentlyAuthenticatedUser() throws URISyntaxException, UnsupportedEncodingException {
     applyUserToSubject(originalUser);
 
     MockHttpRequest request = MockHttpRequest.get("/" + MeResource.ME_PATH_V2);

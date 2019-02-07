@@ -1,6 +1,7 @@
 package sonia.scm.api.v2.resources;
 
 import com.google.common.collect.Lists;
+import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.Link;
 import de.otto.edison.hal.Links;
 import org.apache.shiro.SecurityUtils;
@@ -13,9 +14,10 @@ import sonia.scm.user.UserPermissions;
 import javax.inject.Inject;
 import java.util.List;
 
+import static de.otto.edison.hal.Embedded.embeddedBuilder;
 import static de.otto.edison.hal.Link.link;
 
-public class IndexDtoGenerator extends LinkAppenderMapper {
+public class IndexDtoGenerator extends HalAppenderMapper {
 
   private final ResourceLinks resourceLinks;
   private final SCMContextProvider scmContextProvider;
@@ -61,8 +63,9 @@ public class IndexDtoGenerator extends LinkAppenderMapper {
       builder.single(link("login", resourceLinks.authentication().jsonLogin()));
     }
 
-    appendLinks(new EdisonLinkAppender(builder), new Index());
+    Embedded.Builder embeddedBuilder = embeddedBuilder();
+    applyEnrichers(new EdisonHalAppender(builder, embeddedBuilder), new Index());
 
-    return new IndexDto(scmContextProvider.getVersion(), builder.build());
+    return new IndexDto(builder.build(), embeddedBuilder.build(), scmContextProvider.getVersion());
   }
 }

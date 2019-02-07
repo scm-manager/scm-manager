@@ -17,6 +17,12 @@ import { ConnectedRouter } from "react-router-redux";
 
 import { urls } from "@scm-manager/ui-components";
 
+import jss from "jss";
+import jssNested from "jss-nested";
+
+// setup jss and install required plugins
+jss.setup(jssNested());
+
 // Create a history of your choosing (we're using a browser history in this case)
 const history: BrowserHistory = createHistory({
   basename: urls.contextPath

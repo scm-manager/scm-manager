@@ -11,13 +11,16 @@
     "title": "Gruppen",
     "subtitle": "Verwaltung der Gruppen"
   },
-  "single-group": {
-    "error-title": "Fehler",
-    "error-subtitle": "Unbekannter Gruppen Fehler",
-    "navigation-label": "Navigation",
-    "actions-label": "Aktionen",
-    "information-label": "Informationen",
-    "back-label": "Zurück"
+  "singleGroup": {
+    "errorTitle": "Fehler",
+    "errorSubtitle": "Unbekannter Gruppen Fehler",
+    "menu": {
+      "navigationLabel": "Gruppen Navigation",
+      "informationNavLink": "Informationen",
+      "settingsNavLink": "Einstellungen",
+      "generalNavLink": "Generell",
+      "setPermissionsNavLink": "Berechtigungen"
+    }
   },
   "add-group": {
     "title": "Gruppe erstellen",
@@ -43,28 +46,26 @@
     "placeholder": "Benutzername eingeben",
     "loading": "Suche...",
     "no-options": "Kein Vorschlag für Benutzername verfügbar"
-    },
-
-"group-form": {
+  },
+  "groupForm": {
+    "subtitle": "Gruppe bearbeiten",
     "submit": "Speichern",
-    "name-error": "Name ist ungültig",
-    "description-error": "Beschreibung ist ungültig",
+    "nameError": "Name ist ungültig",
+    "descriptionError": "Beschreibung ist ungültig",
     "help": {
       "nameHelpText": "Eindeutiger Name der Gruppe",
       "descriptionHelpText": "Eine kurze Beschreibung der Gruppe",
       "memberHelpText": "Benutzername des Mitglieds der Gruppe"
     }
   },
-  "delete-group-button": {
-    "label": "Löschen",
-    "confirm-alert": {
+  "deleteGroup": {
+    "subtitle": "Gruppe löschen",
+    "button": "Löschen",
+    "confirmAlert": {
       "title": "Gruppe löschen",
       "message": "Soll die Gruppe wirklich gelöscht werden?",
       "submit": "Ja",
       "cancel": "Nein"
     }
-  },
-  "set-permissions-button": {
-    "label": "Berechtigungen ändern"
   }
 }

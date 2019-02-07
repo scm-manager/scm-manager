@@ -28,30 +28,20 @@ class ProfileInfo extends React.Component<Props, State> {
         <div className="media-content">
           <table className="table">
             <tbody>
-              <tr>
-                <td className="has-text-weight-semibold">{t("profile.username")}</td>
-                <td>{me.name}</td>
-              </tr>
-              <tr>
-                <td className="has-text-weight-semibold">{t("profile.displayName")}</td>
-                <td>{me.displayName}</td>
-              </tr>
-              <tr>
-                <td className="has-text-weight-semibold">{t("profile.mail")}</td>
-                <td>
-                  <MailLink address={me.mail} />
-                </td>
-              </tr>
-              <tr>
-                <td className="has-text-weight-semibold">{t("profile.groups")}</td>
-                <td className="content">
-                  <ul>
-                    {me.groups.map((group) => {
-                      return <li>{group}</li>;
-                    })}
-                  </ul>
-                </td>
-              </tr>
+            <tr>
+              <td className="has-text-weight-semibold">{t("profile.username")}</td>
+              <td>{me.name}</td>
+            </tr>
+            <tr>
+              <td className="has-text-weight-semibold">{t("profile.displayName")}</td>
+              <td>{me.displayName}</td>
+            </tr>
+            <tr>
+              <td className="has-text-weight-semibold">{t("profile.mail")}</td>
+              <td>
+                <MailLink address={me.mail} />
+              </td>
+            </tr>
             </tbody>
           </table>
         </div>

@@ -2,7 +2,7 @@
 
 import React from "react";
 
-import {apiClient, BranchSelector, ErrorPage, Loading, SubmitButton} from "@scm-manager/ui-components";
+import {apiClient, BranchSelector, ErrorPage, Loading, Subtitle, SubmitButton} from "@scm-manager/ui-components";
 import type {Branch, Repository} from "@scm-manager/ui-types";
 import {translate} from "react-i18next";
 
@@ -113,6 +113,7 @@ class RepositoryConfig extends React.Component<Props, State> {
     if (!(loadingBranches || loadingDefaultBranch)) {
       return (
         <>
+          <Subtitle subtitle={t("scm-git-plugin.repo-config.title")}/>
           {this.renderBranchChangedNotification()}
           <form onSubmit={this.submit}>
             <BranchSelector
@@ -127,6 +128,7 @@ class RepositoryConfig extends React.Component<Props, State> {
               disabled={!this.state.selectedBranchName}
             />
           </form>
+          <hr />
         </>
       );
     } else {

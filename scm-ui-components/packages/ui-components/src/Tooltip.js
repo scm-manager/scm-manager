@@ -4,21 +4,27 @@ import classNames from "classnames";
 
 type Props = {
   message: string,
-  className: string,
+  className?: string,
+  location: string,
   children: React.Node
 };
 
 class Tooltip extends React.Component<Props> {
+
+  static defaultProps = {
+    location: "right"
+  };
+
   render() {
-    const { className, message, children } = this.props;
+    const { className, message, location, children } = this.props;
     const multiline = message.length > 60 ? "is-tooltip-multiline" : "";
     return (
-      <div
-        className={classNames("tooltip", "is-tooltip-right", multiline, className)}
+      <span
+        className={classNames("tooltip", "is-tooltip-" + location, multiline, className)}
         data-tooltip={message}
       >
         {children}
-      </div>
+      </span>
     );
   }
 }

@@ -43,8 +43,10 @@
     "previous": "Zurück"
   },
   "profile": {
-    "navigation-label": "Navigation",
-    "actions-label": "Aktionen",
+    "navigationLabel": "Profil Navigation",
+    "informationNavLink": "Information",
+    "changePasswordNavLink": "Passwort ändern",
+    "settingsNavLink": "Einstellungen",
     "username": "Benutzername",
     "displayName": "Anzeigename",
     "mail": "E-Mail",

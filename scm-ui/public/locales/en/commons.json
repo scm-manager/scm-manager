@@ -43,8 +43,10 @@
     "previous": "Previous"
   },
   "profile": {
-    "navigation-label": "Navigation",
-    "actions-label": "Actions",
+    "navigationLabel": "Profile Navigation",
+    "informationNavLink": "Information",
+    "changePasswordNavLink": "Change password",
+    "settingsNavLink": "Settings",
     "username": "Username",
     "displayName": "Display Name",
     "mail": "E-Mail",
@@ -67,6 +69,6 @@
     "passwordInvalid": "Password has to be between 6 and 32 characters",
     "passwordConfirmFailed": "Passwords have to be identical",
     "submit": "Submit",
-    "changedSuccessfully": "Password successfully changed"
+    "changedSuccessfully": "Password changed successfully"
   }
 }

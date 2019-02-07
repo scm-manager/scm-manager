@@ -90,7 +90,7 @@ class SourcesView extends React.Component<Props, State> {
 
     const sources = this.showSources();
 
-    return <>{sources}</>;
+    return <div className="panel-block">{sources}</div>;
   }
 }
 
