@@ -29,33 +29,40 @@ class ConfirmAlert extends React.Component<Props> {
   render() {
     const { title, message, buttons } = this.props;
 
-    const body= (
-      <>
-        {message}
-        <div className="buttons is-right">
-          {buttons.map((button, i) => (
-            <a className="button is-info is-right"
-               key={i}
-               onClick={() => this.handleClickButton(button)}
+    const body = <>{message}</>;
+
+    const footer = (
+      <div className="field is-grouped">
+        {buttons.map((button, i) => (
+          <p className="control">
+            <a
+              className="button is-info"
+              key={i}
+              onClick={() => this.handleClickButton(button)}
             >
               {button.label}
             </a>
-          ))}
-        </div>
-        </>
+          </p>
+        ))}
+      </div>
     );
 
-
     return (
-      <Modal title={title} closeFunction={() => this.close()} body={body} active={true}/>
+      <Modal
+        title={title}
+        closeFunction={() => this.close()}
+        body={body}
+        active={true}
+        footer={footer}
+      />
     );
   }
 }
 
 export function confirmAlert(properties: Props) {
   const root = document.getElementById("modalRoot");
-  if(root){
-    ReactDOM.render(<ConfirmAlert {...properties}/>, root);
+  if (root) {
+    ReactDOM.render(<ConfirmAlert {...properties} />, root);
   }
 }
 

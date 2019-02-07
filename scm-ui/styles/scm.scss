@@ -314,3 +314,10 @@ $fa-font-path: "webfonts";
     border-bottom: 1px solid #eee;
   }
 }
+
+// modal
+.modal {
+  .modal-card-foot {
+    justify-content: flex-end; // pulled-right
+  }
+}
