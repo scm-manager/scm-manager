@@ -351,6 +351,14 @@ $fa-font-path: "webfonts";
     margin-bottom: 0;
   }
 }
+
+// modal
+.modal {
+  .modal-card-foot {
+    justify-content: flex-end; // pulled-right
+  }
+}
+
 .sub-menu li {
   line-height: 1;
 
