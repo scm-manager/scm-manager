@@ -84,7 +84,11 @@
       "name": "Autor",
       "mail": "Mail",
       "prefix": "Verfasst von",
-      "mailto": "E-Mail senden an"
+      "mailto": "Mail senden an"
+    },
+    "buttons": {
+      "details": "Details",
+      "sources": "Sources"
     }
   },
   "branch-selector": {

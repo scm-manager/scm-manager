@@ -4,16 +4,20 @@ import type { Changeset, Repository } from "@scm-manager/ui-types";
 import ButtonGroup from "../../buttons/ButtonGroup";
 import Button from "../../buttons/Button";
 import { createChangesetLink, createSourcesLink } from "./changesets";
+import { translate } from "react-i18next";
 
 type Props = {
   repository: Repository,
-  changeset: Changeset
+  changeset: Changeset,
+
+  // context props
+  t: (string) => string
 }
 
 class ChangesetButtonGroup extends React.Component<Props> {
 
   render() {
-    const { repository, changeset } = this.props;
+    const { repository, changeset, t } = this.props;
 
     const changesetLink = createChangesetLink(repository, changeset);
     const sourcesLink = createSourcesLink(repository, changeset);
@@ -22,18 +26,18 @@ class ChangesetButtonGroup extends React.Component<Props> {
       <ButtonGroup className="is-pulled-right">
         <Button link={changesetLink}>
           <span className="icon">
-            <i className="fas fa-code"></i>
+            <i className="fas fa-code-branch"></i>
           </span>
           <span className="is-hidden-mobile is-hidden-tablet-only">
-            Details
+            {t("changesets.buttons.details")}
           </span>
         </Button>
         <Button link={sourcesLink}>
           <span className="icon">
-            <i className="fas fa-history"></i>
+            <i className="fas fa-code"></i>
           </span>
           <span className="is-hidden-mobile is-hidden-tablet-only">
-            Sources
+            {t("changesets.buttons.sources")}
           </span>
         </Button>
       </ButtonGroup>
@@ -42,4 +46,4 @@ class ChangesetButtonGroup extends React.Component<Props> {
 
 }
 
-export default ChangesetButtonGroup;
+export default translate("repos")(ChangesetButtonGroup);
