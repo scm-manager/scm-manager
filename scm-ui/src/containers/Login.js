@@ -143,7 +143,6 @@ class Login extends React.Component<Props, State> {
                   />
                   <SubmitButton
                     label={t("login.submit")}
-                    disabled={this.isInValid()}
                     fullWidth={true}
                     loading={loading}
                   />
