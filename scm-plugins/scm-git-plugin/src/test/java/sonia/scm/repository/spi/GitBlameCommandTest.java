@@ -35,11 +35,9 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import org.junit.Test;
-import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
 import sonia.scm.repository.BlameLine;
 import sonia.scm.repository.BlameResult;
 import sonia.scm.repository.GitRepositoryConfig;
-import sonia.scm.store.InMemoryConfigurationStoreFactory;
 
 import java.io.IOException;
 

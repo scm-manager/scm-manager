@@ -37,7 +37,6 @@ package sonia.scm.repository;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-import org.apache.commons.collections.CollectionUtils;
 import sonia.scm.security.PermissionObject;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -47,9 +46,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.LinkedHashSet;
+import java.util.Set;
 
 import static java.util.Collections.emptyList;
-import static java.util.Collections.unmodifiableCollection;
+import static java.util.Collections.unmodifiableSet;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -68,7 +68,7 @@ public class RepositoryPermission implements PermissionObject, Serializable
   private boolean groupPermission = false;
   private String name;
   @XmlElement(name = "verb")
-  private Collection<String> verbs;
+  private Set<String> verbs;
 
   /**
    * Constructs a new {@link RepositoryPermission}.
@@ -79,7 +79,7 @@ public class RepositoryPermission implements PermissionObject, Serializable
   public RepositoryPermission(String name, Collection<String> verbs, boolean groupPermission)
   {
     this.name = name;
-    this.verbs = unmodifiableCollection(new LinkedHashSet<>(verbs));
+    this.verbs = unmodifiableSet(new LinkedHashSet<>(verbs));
     this.groupPermission = groupPermission;
   }
 
@@ -109,7 +109,8 @@ public class RepositoryPermission implements PermissionObject, Serializable
     final RepositoryPermission other = (RepositoryPermission) obj;
 
     return Objects.equal(name, other.name)
-      && CollectionUtils.isEqualCollection(verbs, other.verbs)
+      && verbs.containsAll(other.verbs)
+      && verbs.size() == other.verbs.size()
       && Objects.equal(groupPermission, other.groupPermission);
   }
 
@@ -209,6 +210,6 @@ public class RepositoryPermission implements PermissionObject, Serializable
    */
   public void setVerbs(Collection<String> verbs)
   {
-    this.verbs = verbs;
+    this.verbs = unmodifiableSet(new LinkedHashSet<>(verbs));
   }
 }

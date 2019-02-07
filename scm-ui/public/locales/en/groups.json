@@ -11,60 +11,61 @@
     "title": "Groups",
     "subtitle": "Create, read, update and delete groups"
   },
-  "single-group": {
-    "error-title": "Error",
-    "error-subtitle": "Unknown group error",
-    "navigation-label": "Navigation",
-    "actions-label": "Actions",
-    "information-label": "Information",
-    "back-label": "Back"
+  "singleGroup": {
+    "errorTitle": "Error",
+    "errorSubtitle": "Unknown group error",
+    "menu": {
+      "navigationLabel": "Group Navigation",
+      "informationNavLink": "Information",
+      "settingsNavLink": "Settings",
+      "generalNavLink": "General",
+      "setPermissionsNavLink": "Permissions"
+    }
   },
   "add-group": {
     "title": "Create Group",
     "subtitle": "Create a new group"
   },
   "create-group-button": {
-    "label": "Create"
+    "label": "Create Group"
   },
   "edit-group-button": {
     "label": "Edit"
   },
   "add-member-button": {
-    "label": "Add member"
+    "label": "Add Member"
   },
   "remove-member-button": {
-    "label": "Remove member"
+    "label": "Remove Member"
   },
   "add-member-textfield": {
-    "label": "Add member",
+    "label": "Add Member",
     "error": "Invalid member name"
   },
   "add-member-autocomplete": {
-    "placeholder": "Enter member",
+    "placeholder": "Enter Member",
     "loading": "Loading...",
     "no-options": "No suggestion available"
-    },
-
-"group-form": {
+  },
+  "groupForm": {
+    "subtitle": "Edit Group",
     "submit": "Submit",
-    "name-error": "Group name is invalid",
-    "description-error": "Description is invalid",
+    "nameError": "Group name is invalid",
+    "descriptionError": "Description is invalid",
     "help": {
       "nameHelpText": "Unique name of the group",
       "descriptionHelpText": "A short description of the group",
       "memberHelpText": "Usernames of the group members"
     }
   },
-  "delete-group-button": {
-    "label": "Delete",
-    "confirm-alert": {
+  "deleteGroup": {
+    "subtitle": "Delete Group",
+    "button": "Delete",
+    "confirmAlert": {
       "title": "Delete Group",
       "message": "Do you really want to delete the group?",
       "submit": "Yes",
       "cancel": "No"
     }
-  },
-  "set-permissions-button": {
-    "label": "Set permissions"
   }
 }

@@ -51,8 +51,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static sonia.scm.api.v2.resources.ScmPathInfo.REST_API_PATH;
-
 //~--- JDK imports ------------------------------------------------------------
 
 /**

@@ -16,6 +16,7 @@ import sonia.scm.plugin.*;
 import sonia.scm.web.VndMediaType;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashSet;
@@ -87,7 +88,7 @@ public class UIRootResourceTest {
   }
 
   @Test
-  public void shouldReturnPlugin() throws URISyntaxException {
+  public void shouldReturnPlugin() throws URISyntaxException, UnsupportedEncodingException {
     mockPlugins(mockPlugin("awesome", "Awesome", createPluginResources("my/awesome.bundle.js")));
 
     MockHttpRequest request = MockHttpRequest.get("/v2/ui/plugins/awesome");
@@ -101,7 +102,7 @@ public class UIRootResourceTest {
   }
 
   @Test
-  public void shouldReturnPlugins() throws URISyntaxException {
+  public void shouldReturnPlugins() throws URISyntaxException, UnsupportedEncodingException {
     mockPlugins(
       mockPlugin("awesome", "Awesome", createPluginResources("my/awesome.bundle.js")),
       mockPlugin("special", "Special", createPluginResources("my/special.bundle.js"))
@@ -120,7 +121,7 @@ public class UIRootResourceTest {
   }
 
   @Test
-  public void shouldNotReturnPluginsWithoutResources() throws URISyntaxException {
+  public void shouldNotReturnPluginsWithoutResources() throws URISyntaxException, UnsupportedEncodingException {
     mockPlugins(
       mockPlugin("awesome", "Awesome", createPluginResources("my/awesome.bundle.js")),
       mockPlugin("special")

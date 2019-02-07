@@ -1,27 +1,39 @@
 //@flow
 import React from "react";
-import {deleteRepo, fetchRepoByName, getFetchRepoFailure, getRepository, isFetchRepoPending} from "../modules/repos";
+import {
+  fetchRepoByName,
+  getFetchRepoFailure,
+  getRepository,
+  isFetchRepoPending
+} from "../modules/repos";
 
-import {connect} from "react-redux";
-import {Route, Switch} from "react-router-dom";
-import type {Repository} from "@scm-manager/ui-types";
+import { connect } from "react-redux";
+import { Route, Switch } from "react-router-dom";
+import type { Repository } from "@scm-manager/ui-types";
 
-import {ErrorPage, Loading, Navigation, NavLink, Page, Section} from "@scm-manager/ui-components";
-import {translate} from "react-i18next";
+import {
+  ErrorPage,
+  Loading,
+  Navigation,
+  SubNavigation,
+  NavLink,
+  Page,
+  Section
+} from "@scm-manager/ui-components";
+import { translate } from "react-i18next";
 import RepositoryDetails from "../components/RepositoryDetails";
-import DeleteNavAction from "../components/DeleteNavAction";
-import Edit from "../containers/Edit";
+import EditRepo from "./EditRepo";
 import Permissions from "../permissions/containers/Permissions";
 
-import type {History} from "history";
-import EditNavLink from "../components/EditNavLink";
+import type { History } from "history";
+import EditRepoNavLink from "../components/EditRepoNavLink";
 
 import BranchRoot from "./ChangesetsRoot";
 import ChangesetView from "./ChangesetView";
 import PermissionsNavLink from "../components/PermissionsNavLink";
 import Sources from "../sources/containers/Sources";
 import RepositoryNavLink from "../components/RepositoryNavLink";
-import {getRepositoriesLink} from "../../modules/indexResource";
+import {getLinks, getRepositoriesLink} from "../../modules/indexResource";
 import {ExtensionPoint} from "@scm-manager/ui-extensions";
 
 type Props = {
@@ -31,10 +43,10 @@ type Props = {
   loading: boolean,
   error: Error,
   repoLink: string,
+  indexLinks: Object,
 
   // dispatch functions
   fetchRepoByName: (link: string, namespace: string, name: string) => void,
-  deleteRepo: (repository: Repository, () => void) => void,
 
   // context props
   t: string => string,
@@ -60,14 +72,6 @@ class RepositoryRoot extends React.Component<Props> {
     return this.stripEndingSlash(this.props.match.url);
   };
 
-  deleted = () => {
-    this.props.history.push("/repos");
-  };
-
-  delete = (repository: Repository) => {
-    this.props.deleteRepo(repository, this.deleted);
-  };
-
   matches = (route: any) => {
     const url = this.matchedUrl();
     const regex = new RegExp(`${url}(/branches)?/?[^/]*/changesets?.*`);
@@ -75,13 +79,13 @@ class RepositoryRoot extends React.Component<Props> {
   };
 
   render() {
-    const { loading, error, repository, t } = this.props;
+    const { loading, error, indexLinks, repository, t } = this.props;
 
     if (error) {
       return (
         <ErrorPage
-          title={t("repository-root.error-title")}
-          subtitle={t("repository-root.error-subtitle")}
+          title={t("repositoryRoot.errorTitle")}
+          subtitle={t("repositoryRoot.errorSubtitle")}
           error={error}
         />
       );
@@ -95,7 +99,8 @@ class RepositoryRoot extends React.Component<Props> {
 
     const extensionProps = {
       repository,
-      url
+      url,
+      indexLinks
     };
 
     return (
@@ -109,11 +114,11 @@ class RepositoryRoot extends React.Component<Props> {
                 component={() => <RepositoryDetails repository={repository} />}
               />
               <Route
-                path={`${url}/edit`}
-                component={() => <Edit repository={repository} />}
+                path={`${url}/settings/general`}
+                component={() => <EditRepo repository={repository} />}
               />
               <Route
-                path={`${url}/permissions`}
+                path={`${url}/settings/permissions`}
                 render={() => (
                   <Permissions
                     namespace={this.props.repository.namespace}
@@ -168,14 +173,18 @@ class RepositoryRoot extends React.Component<Props> {
           </div>
           <div className="column">
             <Navigation>
-              <Section label={t("repository-root.navigation-label")}>
-                <NavLink to={url} icon="fas fa-info-circle" label={t("repository-root.information")} />
+              <Section label={t("repositoryRoot.menu.navigationLabel")}>
+                <NavLink
+                  to={url}
+                  icon="fas fa-info-circle"
+                  label={t("repositoryRoot.menu.informationNavLink")}
+                />
                 <RepositoryNavLink
                   repository={repository}
                   linkName="changesets"
                   to={`${url}/changesets/`}
                   icon="fas fa-code-branch"
-                  label={t("repository-root.history")}
+                  label={t("repositoryRoot.menu.historyNavLink")}
                   activeWhenMatch={this.matches}
                   activeOnlyWhenExact={false}
                 />
@@ -184,23 +193,32 @@ class RepositoryRoot extends React.Component<Props> {
                   linkName="sources"
                   to={`${url}/sources`}
                   icon="fas fa-code"
-                  label={t("repository-root.sources")}
+                  label={t("repositoryRoot.menu.sourcesNavLink")}
                   activeOnlyWhenExact={false}
-                />
-                <PermissionsNavLink
-                  permissionUrl={`${url}/permissions`}
-                  repository={repository}
                 />
                 <ExtensionPoint
                   name="repository.navigation"
                   props={extensionProps}
                   renderAll={true}
                 />
-              </Section>
-              <Section label={t("repository-root.actions-label")}>
-                <DeleteNavAction repository={repository} delete={this.delete} />
-                <EditNavLink repository={repository} editUrl={`${url}/edit`} />
-                <NavLink to="/repos" icon="fas fa-undo" label={t("repository-root.back-label")} />
+                <SubNavigation
+                  to={`${url}/settings/general`}
+                  label={t("repositoryRoot.menu.settingsNavLink")}
+                >
+                  <EditRepoNavLink
+                    repository={repository}
+                    editUrl={`${url}/settings/general`}
+                  />
+                  <PermissionsNavLink
+                    permissionUrl={`${url}/settings/permissions`}
+                    repository={repository}
+                  />
+                  <ExtensionPoint
+                    name="repository.subnavigation"
+                    props={extensionProps}
+                    renderAll={true}
+                  />
+                </SubNavigation>
               </Section>
             </Navigation>
           </div>
@@ -216,13 +234,15 @@ const mapStateToProps = (state, ownProps) => {
   const loading = isFetchRepoPending(state, namespace, name);
   const error = getFetchRepoFailure(state, namespace, name);
   const repoLink = getRepositoriesLink(state);
+  const indexLinks = getLinks(state);
   return {
     namespace,
     name,
     repository,
     loading,
     error,
-    repoLink
+    repoLink,
+    indexLinks
   };
 };
 
@@ -230,9 +250,6 @@ const mapDispatchToProps = dispatch => {
   return {
     fetchRepoByName: (link: string, namespace: string, name: string) => {
       dispatch(fetchRepoByName(link, namespace, name));
-    },
-    deleteRepo: (repository: Repository, callback: () => void) => {
-      dispatch(deleteRepo(repository, callback));
     }
   };
 };

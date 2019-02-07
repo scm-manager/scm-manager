@@ -10,7 +10,8 @@ type Props = {
   buttonLabel: string,
   fieldLabel: string,
   errorMessage: string,
-  helpText?: string
+  helpText?: string,
+  validateEntry?: string => boolean
 };
 
 type State = {
@@ -24,6 +25,15 @@ class AddEntryToTableField extends React.Component<Props, State> {
       entryToAdd: ""
     };
   }
+
+  isValid = () => {
+    const {validateEntry} = this.props;
+    if (!this.state.entryToAdd || this.state.entryToAdd === "" || !validateEntry) {
+      return true;
+    } else {
+      return validateEntry(this.state.entryToAdd);
+    }
+  };
 
   render() {
     const {
@@ -39,7 +49,7 @@ class AddEntryToTableField extends React.Component<Props, State> {
           label={fieldLabel}
           errorMessage={errorMessage}
           onChange={this.handleAddEntryChange}
-          validationError={false}
+          validationError={!this.isValid()}
           value={this.state.entryToAdd}
           onReturnPressed={this.appendEntry}
           disabled={disabled}
@@ -48,7 +58,7 @@ class AddEntryToTableField extends React.Component<Props, State> {
         <AddButton
           label={buttonLabel}
           action={this.addButtonClicked}
-          disabled={disabled}
+          disabled={disabled || this.state.entryToAdd ==="" || !this.isValid()}
         />
       </div>
     );

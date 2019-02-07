@@ -65,7 +65,7 @@ public class ChangesetRootResourceTest extends RepositoryTestBase {
   private ChangesetCollectionToDtoMapper changesetCollectionToDtoMapper;
 
   @InjectMocks
-  private ChangesetToChangesetDtoMapperImpl changesetToChangesetDtoMapper;
+  private DefaultChangesetToChangesetDtoMapperImpl changesetToChangesetDtoMapper;
 
   private ChangesetRootResource changesetRootResource;
 

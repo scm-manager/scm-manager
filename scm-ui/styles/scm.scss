@@ -94,14 +94,6 @@ $fa-font-path: "webfonts";
   }
 }
 
-//border around options
-.has-border-around {
-  border-top: 1px solid #eee;
-  border-left: 1px solid #eee;
-  border-right: 1px solid #eee;
-  border-bottom: 1px solid #eee;
-}
-
 // multiline Columns
 .columns.is-multiline {
   .column.is-half {
@@ -201,6 +193,33 @@ $fa-font-path: "webfonts";
   }
 }
 
+// panels
+.panel {
+  .panel-heading > .field {
+    margin-bottom: 0; // replace selector margin
+  }
+  .panel-block {
+    display: block;
+  }
+
+  .panel-footer {
+    background-color: whitesmoke;
+    border-radius: 0 0 4px 4px;
+    color: #363636;
+    font-size: 1.25em;
+    font-weight: 300;
+    line-height: 1.25;
+    padding: 0.5em 0.75em;
+
+    border-left: 1px solid #dbdbdb;
+    border-right: 1px solid #dbdbdb;
+
+    &:last-child {
+      border-bottom: 1px solid #dbdbdb;
+    }
+  }
+}
+
 // forms
 .field:not(.is-grouped) {
   margin-bottom: 1rem;
@@ -283,35 +302,53 @@ $fa-font-path: "webfonts";
 }
 .menu-list {
   a {
-    border-radius: 0;
     color: #333;
     padding: 1rem;
-    border-top: 1px solid #eee;
-    border-left: 1px solid #eee;
-    border-right: 1px solid #eee;
 
     &.is-active {
       color: $blue;
       background-color: #fff;
-
-      &:before {
-        position: relative;
-        content: " ";
-        background: $blue;
-        height: 53px;
-        width: 2px;
-        display: block;
-        left: -17px;
-        float: left;
-        top: -16px;
-      }
     }
   }
-  > li:first-child > a {
+
+  > li {
+    ul {
+      margin: 0;
+      border-top: 1px solid #eee;
+
+      li {
+        border-right: none;
+      }
+      li:last-child {
+        border-bottom: none;
+      }
+    }
+
+    > a.is-active:before {
+      position: relative;
+      content: " ";
+      background: $blue;
+      height: 53px;
+      width: 2px;
+      display: block;
+      left: -17px;
+      float: left;
+      top: -16px;
+    }
+
+    border-radius: 0;
+    border-top: 1px solid #eee;
+    border-left: 1px solid #eee;
+    border-right: 1px solid #eee;
+  }
+  > li:first-child {
     border-top: none;
   }
-  li:last-child > a {
+  li:last-child {
     border-bottom: 1px solid #eee;
+  }
+  div {
+    margin-bottom: 0;
   }
 }
 
@@ -319,5 +356,30 @@ $fa-font-path: "webfonts";
 .modal {
   .modal-card-foot {
     justify-content: flex-end; // pulled-right
+  }
+}
+
+.sub-menu li {
+  line-height: 1;
+
+  a {
+    padding: 0.75rem 1rem;
+  }
+
+  a:before {
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    -webkit-font-smoothing: antialiased;
+    display: inline-block;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    line-height: 1;
+    content: "\f105";
+    padding-right: 5px;
+  }
+
+  i {
+    display: none;
   }
 }

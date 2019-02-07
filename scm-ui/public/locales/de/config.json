@@ -1,12 +1,10 @@
 {
   "config": {
-    "navigation-title": "Navigation"
-  },
-  "global-config": {
+    "navigationLabel": "Einstellungs Navigation",
+    "globalConfigurationNavLink": "Globale Einstellungen",
     "title": "Einstellungen",
-    "navigation-label": "Globale Einstellungen",
-    "error-title": "Fehler",
-    "error-subtitle": "Unbekannter Einstellungen Fehler"
+    "errorTitle": "Fehler",
+    "errorSubtitle": "Unbekannter Einstellungen Fehler"
   },
   "config-form": {
     "submit": "Speichern",
@@ -47,12 +45,12 @@
   "login-attempt": {
     "name": "Anmeldeversuche",
     "login-attempt-limit": "Limit für Anmeldeversuche",
-    "login-attempt-limit-timeout": "Timeout bei fehlgeschlagenen Anmeldeversuche"
+    "login-attempt-limit-timeout": "Timeout bei fehlgeschlagenen Anmeldeversuchen"
   },
   "general-settings": {
     "realm-description": "Realm Beschreibung",
     "enable-repository-archive": "Repository Archiv aktivieren",
-    "disable-grouping-grid": "Gruppen deaktiviern",
+    "disable-grouping-grid": "Gruppen deaktivieren",
     "date-format": "Datumsformat",
     "anonymous-access-enabled": "Anonyme Zugriffe erlauben",
     "skip-failed-authenticators": "Fehlgeschlagene Authentifizierer überspringen",
@@ -67,27 +65,27 @@
     "plugin-url-invalid": "Dies ist keine gültige URL"
   },
   "help": {
-    "realmDescriptionHelpText": "Beschreibung des authentication realm",
-    "dateFormatHelpText": "Moments Datumsformat. Zulässige Formate sind in der momentjs Dokumentation beschrieben.",
+    "realmDescriptionHelpText": "Beschreibung des Authentication Realm.",
+    "dateFormatHelpText": "Moments Datumsformat. Zulässige Formate sind in der MomentJS Dokumentation beschrieben.",
     "pluginRepositoryHelpText": "Die URL des Plugin Repositories. Beschreibung der Platzhalter: version = SCM-Manager Version; os = Betriebssystem; arch = Architektur",
     "enableForwardingHelpText": "mod_proxy Port Weiterleitung aktivieren.",
     "enableRepositoryArchiveHelpText": "Repository Archive aktivieren. Nach einer Änderung an dieser Einstellung muss die Seite komplett neu geladen werden.",
     "disableGroupingGridHelpText": "Repository Gruppen deaktivieren. Nach einer Änderung an dieser Einstellung muss die Seite komplett neu geladen werden.",
     "allowAnonymousAccessHelpText": "Anonyme Benutzer haben Zugriff auf öffentliche Repositories.",
-    "skipFailedAuthenticatorsHelpText": "Die Kette der Authentifikatoren wird nicht beendet wenn ein Authentifikator einen Benutzer findet, ihn aber nicht erfolgreich authentifizieren kann.",
+    "skipFailedAuthenticatorsHelpText": "Die Kette der Authentifikatoren wird nicht beendet, wenn ein Authentifikator einen Benutzer findet, ihn aber nicht erfolgreich authentifizieren kann.",
     "adminGroupsHelpText": "Namen von Gruppen mit Admin-Berechtigungen.",
     "adminUsersHelpText": "Namen von Benutzern mit Admin-Berechtigungen.",
     "forceBaseUrlHelpText": "Zugriffe, die von einer anderen URL kommen, werden auf die Base URL weiter geleitet.",
     "baseUrlHelpText": "Die URL der Applikation mit Kontextpfad, z.B. http://localhost:8080/scm",
     "loginAttemptLimitHelpText": "Maximale Anzahl von Anmeldeversuchen. Durch Verwendung von -1 wird die Begrenzung der Anmeldeversuche deaktiviert.",
-    "loginAttemptLimitTimeoutHelpText": "Timeout in Sekunden für Benutzer, die vorübergehend wegen zu vieler fehlgeschlagener Anmeldeversuche deaktiviert wurden.",
-    "enableProxyHelpText": "Proxy aktiviern",
+    "loginAttemptLimitTimeoutHelpText": "Timeout in Sekunden für Benutzer, die vorübergehend wegen zu vieler fehlgeschlagener Anmeldeversuche, deaktiviert wurden.",
+    "enableProxyHelpText": "Proxy aktivieren",
     "proxyPortHelpText": "Der Proxy Port",
     "proxyPasswordHelpText": "Das Passwort für die Proxy Server Anmeldung.",
     "proxyServerHelpText": "Der Proxy Server",
     "proxyUserHelpText": "Der Benutzername für die Proxy Server Anmeldung.",
     "proxyExcludesHelpText": "Glob patterns für Hostnamen, die von den Proxy-Einstellungen ausgeschlossen werden sollen.",
     "enableXsrfProtectionHelpText": "Xsrf Cookie Protection aktivieren. Hinweis: Dieses Feature befindet sich noch im Experimentalstatus.",
-    "defaultNameSpaceStrategyHelpText": "Die Standardstrategie für Namespaces"
+    "defaultNameSpaceStrategyHelpText": "Die Standardstrategie für Namespaces."
   }
 }

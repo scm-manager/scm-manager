@@ -10,59 +10,55 @@
     "creationDate": "Creation Date",
     "lastModified": "Last Modified"
   },
-  "users": {
-    "title": "Users",
-    "subtitle": "Create, read, update and delete users"
-  },
-  "create-user-button": {
-    "label": "Create"
-  },
-  "delete-user-button": {
-    "label": "Delete",
-    "confirm-alert": {
-      "title": "Delete user",
-      "message": "Do you really want to delete the user?",
-      "submit": "Yes",
-      "cancel": "No"
-    }
-  },
-  "edit-user-button": {
-    "label": "Edit"
-  },
-  "set-password-button": {
-    "label": "Set password"
-  },
-  "set-permissions-button": {
-    "label": "Set permissions"
-  },
-  "user-form": {
-    "submit": "Submit"
-  },
-  "add-user": {
-    "title": "Create User",
-    "subtitle": "Create a new user"
-  },
-  "single-user": {
-    "error-title": "Error",
-    "error-subtitle": "Unknown user error",
-    "navigation-label": "Navigation",
-    "actions-label": "Actions",
-    "information-label": "Information",
-    "back-label": "Back"
-  },
   "validation": {
     "mail-invalid": "This email is invalid",
     "name-invalid": "This name is invalid",
     "displayname-invalid": "This displayname is invalid"
-  },
-  "password": {
-    "set-password-successful": "Password successfully set"
   },
   "help": {
     "usernameHelpText": "Unique name of the user.",
     "displayNameHelpText": "Display name of the user.",
     "mailHelpText": "Email address of the user.",
     "adminHelpText": "An administrator is able to create, modify and delete repositories, groups and users.",
-    "activeHelpText": "Activate or deactive the user."
+    "activeHelpText": "Activate or deactivate the user."
+  },
+  "users": {
+    "title": "Users",
+    "subtitle": "Create, read, update and delete users",
+    "createButton": "Create User"
+  },
+  "singleUser": {
+    "errorTitle": "Error",
+    "errorSubtitle": "Unknown user error",
+    "menu": {
+      "navigationLabel": "User Navigation",
+      "informationNavLink": "Information",
+      "settingsNavLink": "Settings",
+      "generalNavLink": "General",
+      "setPasswordNavLink": "Password",
+      "setPermissionsNavLink": "Permissions"
+    }
+  },
+  "addUser": {
+    "title": "Create User",
+    "subtitle": "Create a new user"
+  },
+  "deleteUser": {
+    "subtitle": "Delete User",
+    "button": "Delete",
+    "confirmAlert": {
+      "title": "Delete user",
+      "message": "Do you really want to delete the user?",
+      "submit": "Yes",
+      "cancel": "No"
+    }
+  },
+  "singleUserPassword": {
+    "button": "Set password",
+    "setPasswordSuccessful": "Password successfully set"
+  },
+  "userForm": {
+    "subtitle": "Edit User",
+    "button": "Submit"
   }
 }

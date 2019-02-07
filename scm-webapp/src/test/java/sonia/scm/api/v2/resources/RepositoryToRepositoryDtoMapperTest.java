@@ -23,7 +23,7 @@ import static java.util.stream.Stream.of;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -211,10 +211,10 @@ public class RepositoryToRepositoryDtoMapperTest {
 
   @Test
   public void shouldAppendLinks() {
-    LinkEnricherRegistry registry = new LinkEnricherRegistry();
+    HalEnricherRegistry registry = new HalEnricherRegistry();
     registry.register(Repository.class, (ctx, appender) -> {
       Repository repository = ctx.oneRequireByType(Repository.class);
-      appender.appendOne("id", "http://" + repository.getId());
+      appender.appendLink("id", "http://" + repository.getId());
     });
     mapper.setRegistry(registry);
 

@@ -9,6 +9,7 @@ import sonia.scm.util.ScmConfigurationUtil;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -71,7 +72,7 @@ public class ConfigResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
-  public Response update(ConfigDto configDto) {
+  public Response update(@Valid ConfigDto configDto) {
 
     // This *could* be moved to ScmConfiguration or ScmConfigurationUtil classes.
     // But to where to check? load() or store()? Leave it for now, SCMv1 legacy that can be cleaned up later.

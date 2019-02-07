@@ -7,17 +7,17 @@ import org.junit.jupiter.api.Test;
 
 import java.util.NoSuchElementException;
 
-class LinkEnricherContextTest {
+class HalEnricherContextTest {
 
   @Test
   void shouldCreateContextFromSingleObject() {
-    LinkEnricherContext context = LinkEnricherContext.of("hello");
+    HalEnricherContext context = HalEnricherContext.of("hello");
     assertThat(context.oneByType(String.class)).contains("hello");
   }
 
   @Test
   void shouldCreateContextFromMultipleObjects() {
-    LinkEnricherContext context = LinkEnricherContext.of("hello", Integer.valueOf(42), Long.valueOf(21L));
+    HalEnricherContext context = HalEnricherContext.of("hello", Integer.valueOf(42), Long.valueOf(21L));
     assertThat(context.oneByType(String.class)).contains("hello");
     assertThat(context.oneByType(Integer.class)).contains(42);
     assertThat(context.oneByType(Long.class)).contains(21L);
@@ -25,19 +25,19 @@ class LinkEnricherContextTest {
 
   @Test
   void shouldReturnEmptyOptionalForUnknownTypes() {
-    LinkEnricherContext context = LinkEnricherContext.of();
+    HalEnricherContext context = HalEnricherContext.of();
     assertThat(context.oneByType(String.class)).isNotPresent();
   }
 
   @Test
   void shouldReturnRequiredObject() {
-    LinkEnricherContext context = LinkEnricherContext.of("hello");
+    HalEnricherContext context = HalEnricherContext.of("hello");
     assertThat(context.oneRequireByType(String.class)).isEqualTo("hello");
   }
 
   @Test
   void shouldThrowAnNoSuchElementExceptionForUnknownTypes() {
-    LinkEnricherContext context = LinkEnricherContext.of();
+    HalEnricherContext context = HalEnricherContext.of();
     assertThrows(NoSuchElementException.class, () -> context.oneRequireByType(String.class));
   }
 

@@ -3,6 +3,7 @@ import React from "react";
 import { translate } from "react-i18next";
 import type { User } from "@scm-manager/ui-types";
 import {
+  Subtitle,
   Checkbox,
   InputField,
   PasswordConfirmation,
@@ -113,7 +114,9 @@ class UserForm extends React.Component<Props, State> {
 
     let nameField = null;
     let passwordChangeField = null;
+    let subtitle = null;
     if (!this.props.user) {
+      // create new user
       nameField = (
         <div className="column is-half">
           <InputField
@@ -130,59 +133,65 @@ class UserForm extends React.Component<Props, State> {
       passwordChangeField = (
         <PasswordConfirmation passwordChanged={this.handlePasswordChange} />
       );
+    } else {
+      // edit existing user
+      subtitle = <Subtitle subtitle={t("userForm.subtitle")} />;
     }
     return (
-      <form onSubmit={this.submit}>
-        <div className="columns is-multiline">
-          {nameField}
-          <div className="column is-half">
-            <InputField
-              label={t("user.displayName")}
-              onChange={this.handleDisplayNameChange}
-              value={user ? user.displayName : ""}
-              validationError={this.state.displayNameValidationError}
-              errorMessage={t("validation.displayname-invalid")}
-              helpText={t("help.displayNameHelpText")}
-            />
+      <>
+        {subtitle}
+        <form onSubmit={this.submit}>
+          <div className="columns is-multiline">
+            {nameField}
+            <div className="column is-half">
+              <InputField
+                label={t("user.displayName")}
+                onChange={this.handleDisplayNameChange}
+                value={user ? user.displayName : ""}
+                validationError={this.state.displayNameValidationError}
+                errorMessage={t("validation.displayname-invalid")}
+                helpText={t("help.displayNameHelpText")}
+              />
+            </div>
+            <div className="column is-half">
+              <InputField
+                label={t("user.mail")}
+                onChange={this.handleEmailChange}
+                value={user ? user.mail : ""}
+                validationError={this.state.mailValidationError}
+                errorMessage={t("validation.mail-invalid")}
+                helpText={t("help.mailHelpText")}
+              />
+            </div>
           </div>
-          <div className="column is-half">
-            <InputField
-              label={t("user.mail")}
-              onChange={this.handleEmailChange}
-              value={user ? user.mail : ""}
-              validationError={this.state.mailValidationError}
-              errorMessage={t("validation.mail-invalid")}
-              helpText={t("help.mailHelpText")}
-            />
+          <div className="columns">
+            <div className="column">
+              {passwordChangeField}
+              <Checkbox
+                label={t("user.admin")}
+                onChange={this.handleAdminChange}
+                checked={user ? user.admin : false}
+                helpText={t("help.adminHelpText")}
+              />
+              <Checkbox
+                label={t("user.active")}
+                onChange={this.handleActiveChange}
+                checked={user ? user.active : false}
+                helpText={t("help.activeHelpText")}
+              />
+            </div>
           </div>
-        </div>
-        <div className="columns">
-          <div className="column">
-            {passwordChangeField}
-            <Checkbox
-              label={t("user.admin")}
-              onChange={this.handleAdminChange}
-              checked={user ? user.admin : false}
-              helpText={t("help.adminHelpText")}
-            />
-            <Checkbox
-              label={t("user.active")}
-              onChange={this.handleActiveChange}
-              checked={user ? user.active : false}
-              helpText={t("help.activeHelpText")}
-            />
+          <div className="columns">
+            <div className="column">
+              <SubmitButton
+                disabled={!this.isValid()}
+                loading={loading}
+                label={t("userForm.button")}
+              />
+            </div>
           </div>
-        </div>
-        <div className="columns">
-          <div className="column">
-            <SubmitButton
-              disabled={!this.isValid()}
-              loading={loading}
-              label={t("user-form.submit")}
-            />
-          </div>
-        </div>
-      </form>
+        </form>
+      </>
     );
   }
 

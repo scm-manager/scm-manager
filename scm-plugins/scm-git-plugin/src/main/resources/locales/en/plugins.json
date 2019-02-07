@@ -27,6 +27,7 @@
     },
     "repo-config": {
       "link": "Configuration",
+      "title": "Git Settings",
       "default-branch": "Default branch",
       "submit": "Submit",
       "error": {

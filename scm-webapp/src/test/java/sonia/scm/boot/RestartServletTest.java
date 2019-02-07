@@ -2,7 +2,6 @@ package sonia.scm.boot;
 
 import com.github.legman.Subscribe;
 import com.google.common.base.Charsets;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;

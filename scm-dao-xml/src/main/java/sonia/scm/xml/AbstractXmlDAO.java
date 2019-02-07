@@ -38,7 +38,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.GenericDAO;
 import sonia.scm.ModelObject;
-import sonia.scm.group.xml.XmlGroupDAO;
 import sonia.scm.store.ConfigurationStore;
 
 import java.util.Collection;

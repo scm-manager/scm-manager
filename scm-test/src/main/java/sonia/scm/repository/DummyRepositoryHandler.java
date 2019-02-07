@@ -59,7 +59,7 @@ public class DummyRepositoryHandler
   private final Set<String> existingRepoNames = new HashSet<>();
 
   public DummyRepositoryHandler(ConfigurationStoreFactory storeFactory, RepositoryLocationResolver repositoryLocationResolver) {
-    super(storeFactory, repositoryLocationResolver);
+    super(storeFactory, repositoryLocationResolver, null);
   }
 
   @Override
