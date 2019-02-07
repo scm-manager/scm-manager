@@ -1,7 +1,7 @@
 // @flow
 import React from "react";
 import { translate } from "react-i18next";
-import { ButtonGroup } from "@scm-manager/ui-components";
+import { ButtonGroup, Button } from "@scm-manager/ui-components";
 
 type Props = {
   t: string => string,
@@ -18,39 +18,32 @@ class FileButtonGroup extends React.Component<Props> {
     this.props.showHistory(false);
   };
 
+  color = (selected: boolean) => {
+    return selected ? "link is-selected" : null;
+  };
+
   render() {
     const { t, historyIsSelected } = this.props;
 
-    const sourcesLabel = (
-      <>
-        <span className="icon">
-          <i className="fas fa-code" />
-        </span>
-        <span className="is-hidden-mobile">
-          {t("sources.content.sourcesButton")}
-        </span>
-      </>
-    );
-
-    const historyLabel = (
-      <>
-        <span className="icon">
-          <i className="fas fa-history" />
-        </span>
-        <span className="is-hidden-mobile">
-          {t("sources.content.historyButton")}
-        </span>
-      </>
-    );
-
     return (
-      <ButtonGroup
-        firstlabel={sourcesLabel}
-        secondlabel={historyLabel}
-        firstAction={this.showSources}
-        secondAction={this.showHistory}
-        firstIsSelected={!historyIsSelected}
-      />
+      <ButtonGroup>
+        <Button action={this.showSources} color={ this.color(!historyIsSelected) }>
+          <span className="icon">
+            <i className="fas fa-code"/>
+          </span>
+            <span className="is-hidden-mobile">
+            {t("sources.content.sourcesButton")}
+          </span>
+        </Button>
+        <Button action={this.showHistory} color={ this.color(historyIsSelected) }>
+          <span className="icon">
+            <i className="fas fa-history"/>
+          </span>
+            <span className="is-hidden-mobile">
+            {t("sources.content.historyButton")}
+          </span>
+          </Button>
+      </ButtonGroup>
     );
   }
 }
