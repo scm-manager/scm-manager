@@ -80,6 +80,7 @@
     }
   },
   "permission": {
+    "title": "Edit Permissions",
     "user": "User",
     "group": "Group",
     "error-title": "Error",

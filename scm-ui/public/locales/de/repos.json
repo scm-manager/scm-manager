@@ -80,6 +80,7 @@
     }
   },
   "permission": {
+    "title": "Berechtigungen bearbeiten",
     "user": "Benutzer",
     "group": "Gruppe",
     "error-title": "Fehler",
