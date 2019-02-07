@@ -4,8 +4,8 @@ import classNames from "classnames";
 
 type Props = {
   message: string,
-  className: string,
-  location?: string,
+  className?: string,
+  location: string,
   children: React.Node
 };
 
