@@ -27,6 +27,7 @@
     },
     "repo-config": {
       "link": "Konfiguration",
+      "title": "Git Einstellungen",
       "default-branch": "Standard Branch",
       "submit": "Speichern",
       "error": {
