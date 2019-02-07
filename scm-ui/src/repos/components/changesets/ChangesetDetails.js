@@ -22,6 +22,11 @@ import { ExtensionPoint } from "@scm-manager/ui-extensions";
 const styles = {
   spacing: {
     marginRight: "1em"
+  },
+  tags: {
+    "& .tag": {
+      marginLeft: ".25rem"
+    }
   }
 };
 
@@ -106,10 +111,11 @@ class ChangesetDetails extends React.Component<Props> {
   };
 
   renderTags = () => {
+    const { classes } = this.props;
     const tags = this.getTags();
     if (tags.length > 0) {
       return (
-        <div className="level-item">
+        <div className={classNames("level-item", classes.tags)}>
           {tags.map((tag: Tag) => {
             return <ChangesetTag key={tag.name} tag={tag} />;
           })}
