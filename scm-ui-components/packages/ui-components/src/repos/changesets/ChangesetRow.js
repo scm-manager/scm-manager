@@ -8,21 +8,39 @@ import ChangesetId from "./ChangesetId";
 import injectSheet from "react-jss";
 import { DateFromNow } from "../..";
 import ChangesetAuthor from "./ChangesetAuthor";
-import ChangesetTag from "./ChangesetTag";
-
 import { parseDescription } from "./changesets";
 import { AvatarWrapper, AvatarImage } from "../../avatar";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import ChangesetTags from "./ChangesetTags";
+import ChangesetButtonGroup from "./ChangesetButtonGroup";
 
 const styles = {
-  pointer: {
-    cursor: "pointer"
+  changeset: {
+    // & references parent rule
+    // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+    "& + &": {
+      borderTop: "1px solid rgba(219, 219, 219, 0.5)",
+      marginTop: "1rem",
+      paddingTop: "1rem"
+    }
   },
-  changesetGroup: {
-    marginBottom: "1em"
+  avatarFigure: {
+    marginTop: ".25rem",
+    marginRight: ".5rem",
   },
-  withOverflow: {
-    overflow: "auto"
+  avatarImage: {
+    height: "35px",
+    width: "35px"
+  },
+  isVcentered: {
+    marginTop: "auto",
+    marginBottom: "auto"
+  },
+  metadata: {
+    marginLeft: 0
+  },
+  tag: {
+    marginTop: ".5rem"
   }
 };
 
@@ -34,74 +52,70 @@ type Props = {
 };
 
 class ChangesetRow extends React.Component<Props> {
-  createLink = (changeset: Changeset) => {
+  createChangesetId = (changeset: Changeset) => {
     const { repository } = this.props;
     return <ChangesetId changeset={changeset} repository={repository} />;
   };
 
-  getTags = () => {
-    const { changeset } = this.props;
-    return changeset._embedded.tags || [];
-  };
-
   render() {
-    const { changeset, classes } = this.props;
-    const changesetLink = this.createLink(changeset);
-    const dateFromNow = <DateFromNow date={changeset.date} />;
-    const authorLine = <ChangesetAuthor changeset={changeset} />;
+    const { repository, changeset, classes } = this.props;
     const description = parseDescription(changeset.description);
+    const changesetId = this.createChangesetId(changeset);
+    const dateFromNow = <DateFromNow date={changeset.date} />;
 
     return (
-      <article className={classNames("media", classes.inner)}>
-        <AvatarWrapper>
-          <div>
-            <figure className="media-left">
-              <p className="image is-64x64">
-                <AvatarImage person={changeset.author} />
-              </p>
-            </figure>
+      <div className={classes.changeset}>
+        <div className="columns">
+          <div className="column is-three-fifths">
+
+            <h4 className="has-text-weight-bold is-ellipsis-overflow">
+              <ExtensionPoint
+                name="changesets.changeset.description"
+                props={{ changeset, value: description.title }}
+                renderAll={false}
+              >
+                {description.title}
+              </ExtensionPoint>
+            </h4>
+
+            <div className="media">
+              <AvatarWrapper>
+                <figure className={classNames(classes.avatarFigure, "media-left")}>
+                  <div className={classNames("image", classes.avatarImage)}>
+                    <AvatarImage person={changeset.author} />
+                  </div>
+                </figure>
+              </AvatarWrapper>
+              <div className={classNames(classes.metadata, "media-right")}>
+                <p className="is-hidden-mobile is-hidden-tablet-only">
+                  <Interpolate
+                    i18nKey="changesets.changeset.summary"
+                    id={changesetId}
+                    time={dateFromNow}
+                  />
+                </p>
+                <p className="is-hidden-desktop">
+                  <Interpolate
+                    i18nKey="changesets.changeset.short-summary"
+                    id={changesetId}
+                    time={dateFromNow}
+                  />
+                </p>
+                <p className="is-size-7">
+                  <ChangesetAuthor changeset={changeset} />
+                </p>
+              </div>
+            </div>
+
           </div>
-        </AvatarWrapper>
-        <div className={classNames("media-content", classes.withOverflow)}>
-          <div className="content">
-            <p className="is-ellipsis-overflow">
-              <strong>
-                <ExtensionPoint
-                  name="changesets.changeset.description"
-                  props={{ changeset, value: description.title }}
-                  renderAll={false}
-                >
-                  {description.title}
-                </ExtensionPoint>
-              </strong>
-              <br />
-              <Interpolate
-                i18nKey="changesets.changeset.summary"
-                id={changesetLink}
-                time={dateFromNow}
-              />
-            </p>{" "}
-            <div className="is-size-7">{authorLine}</div>
+          <div className={classNames("column", classes.isVcentered)}>
+            <ChangesetTags changeset={changeset} />
+            <ChangesetButtonGroup repository={repository} changeset={changeset} />
           </div>
         </div>
-        {this.renderTags()}
-      </article>
+      </div>
     );
   }
-
-  renderTags = () => {
-    const tags = this.getTags();
-    if (tags.length > 0) {
-      return (
-        <div className="media-right">
-          {tags.map((tag: Tag) => {
-            return <ChangesetTag key={tag.name} tag={tag} />;
-          })}
-        </div>
-      );
-    }
-    return null;
-  };
 }
 
 export default injectSheet(styles)(translate("repos")(ChangesetRow));

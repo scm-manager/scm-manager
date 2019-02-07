@@ -76,11 +76,15 @@
       "description": "Beschreibung",
       "contact": "Kontakt",
       "date": "Datum",
-      "summary": "Changeset {{id}} wurde committet {{time}}"
+      "summary": "Changeset {{id}} wurde committet {{time}}",
+      "short-summary": "Committet {{id}} {{time}}"
     },
+    "tags": "Tags",
     "author": {
       "name": "Autor",
-      "mail": "Mail"
+      "mail": "Mail",
+      "prefix": "Verfasst von",
+      "mailto": "E-Mail senden an"
     }
   },
   "branch-selector": {

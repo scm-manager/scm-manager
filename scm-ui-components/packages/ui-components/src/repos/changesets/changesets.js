@@ -1,8 +1,18 @@
 // @flow
+import type { Changeset, Repository } from "@scm-manager/ui-types";
+
 export type Description = {
   title: string,
   message: string
 };
+
+export function createChangesetLink(repository: Repository, changeset: Changeset) {
+  return `/repo/${repository.namespace}/${repository.name}/changeset/${changeset.id}`;
+}
+
+export function createSourcesLink(repository: Repository, changeset: Changeset) {
+  return `/repo/${repository.namespace}/${repository.name}/sources/${changeset.id}`;
+}
 
 export function parseDescription(description?: string): Description {
   const desc = description ? description : "";

@@ -2,9 +2,13 @@
 import React from "react";
 import type { Changeset } from "@scm-manager/ui-types";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import {translate} from "react-i18next";
 
 type Props = {
-  changeset: Changeset
+  changeset: Changeset,
+
+  // context props
+  t: (string) => string
 };
 
 class ChangesetAuthor extends React.Component<Props> {
@@ -14,39 +18,35 @@ class ChangesetAuthor extends React.Component<Props> {
       return null;
     }
 
-    const { name } = changeset.author;
+    const { name, mail } = changeset.author;
+    if (mail) {
+      return this.withExtensionPoint(this.renderWithMail(name, mail));
+    }
+    return this.withExtensionPoint(<>{name}</>);
+  }
+
+  renderWithMail(name: string, mail: string) {
+    const { t } = this.props;
     return (
-      <>
-        {name} {this.renderMail()} {this.renderAuthorMetadataExtensionPoint()}
-      </>
+      <a href={"mailto: " + mail} title={t("changesets.author.mailto") + " " + mail}>
+        {name}
+      </a>
     );
   }
 
-  renderAuthorMetadataExtensionPoint = () => {
-    const { changeset } = this.props;
+  withExtensionPoint(child: any) {
+    const { t } = this.props;
     return (
-      <ExtensionPoint
-        name="changesets.changeset.author.metadata"
-        props={{ changeset }}
-        renderAll={true}
-      >
-        asas
-      </ExtensionPoint>
+      <>
+        {t("changesets.author.prefix")} {child}
+        <ExtensionPoint
+          name="changesets.author.suffix"
+          props={{ changeset: this.props.changeset }}
+          renderAll={true}
+        />
+    </>
     );
-  };
-
-  renderMail() {
-    const { mail } = this.props.changeset.author;
-    if (mail) {
-      return (
-        <a className="is-hidden-mobile" href={"mailto:" + mail}>
-          &lt;
-          {mail}
-          &gt;
-        </a>
-      );
-    }
   }
 }
 
-export default ChangesetAuthor;
+export default translate("repos")(ChangesetAuthor);
