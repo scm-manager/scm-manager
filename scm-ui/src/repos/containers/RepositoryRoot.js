@@ -214,7 +214,7 @@ class RepositoryRoot extends React.Component<Props> {
                     repository={repository}
                   />
                   <ExtensionPoint
-                    name="repository.subnavigation"
+                    name="repository.setting"
                     props={extensionProps}
                     renderAll={true}
                   />

@@ -91,7 +91,7 @@ class Profile extends React.Component<Props, State> {
                     label={t("profile.changePasswordNavLink")}
                   />
                   <ExtensionPoint
-                    name="profile.subnavigation"
+                    name="profile.setting"
                     props={extensionProps}
                     renderAll={true}
                   />
