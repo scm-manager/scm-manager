@@ -1,5 +1,6 @@
 package sonia.scm;
 
+import com.github.sdorra.webresources.CacheControl;
 import com.github.sdorra.webresources.WebResourceSender;
 import com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
@@ -44,7 +45,8 @@ public class WebResourceServlet extends HttpServlet {
   private final WebResourceSender sender = WebResourceSender.create()
     .withGZIP()
     .withGZIPMinLength(512)
-    .withBufferSize(16384);
+    .withBufferSize(16384)
+    .withCacheControl(CacheControl.create().noCache());
 
   private final UberWebResourceLoader webResourceLoader;
   private final PushStateDispatcher pushStateDispatcher;
