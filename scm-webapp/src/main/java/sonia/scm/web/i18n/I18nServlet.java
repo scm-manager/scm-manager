@@ -80,6 +80,7 @@ public class I18nServlet extends HttpServlet {
   protected void doGet(HttpServletRequest req, HttpServletResponse response) {
     response.setCharacterEncoding("UTF-8");
     response.setContentType("application/json");
+    response.setHeader("Cache-Control", "no-cache");
     try (PrintWriter out = response.getWriter()) {
       String path = req.getServletPath();
       Function<String, Optional<JsonNode>> jsonFileProvider = usedPath -> Optional.empty();
