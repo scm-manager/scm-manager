@@ -233,6 +233,7 @@ public class I18nServletTest {
   private void verifyHeaders(HttpServletResponse response) {
     verify(response).setCharacterEncoding("UTF-8");
     verify(response).setContentType("application/json");
+    verify(response).setHeader("Cache-Control", "no-cache");
   }
 
   public void assertJson(JsonNode actual) throws IOException {
