@@ -53,10 +53,13 @@ import sonia.scm.web.security.PrivilegedAction;
 
 import java.io.IOException;
 
+import static java.util.Collections.singletonList;
 import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -113,7 +116,7 @@ public class SyncingRealmHelperTest {
   public void testCreateAuthenticationInfo() {
     User user = new User("tricia");
     AuthenticationInfo authInfo = helper.createAuthenticationInfo("unit-test",
-      user, "heartOfGold");
+      user, singletonList("heartOfGold"));
 
     assertNotNull(authInfo);
     assertEquals("tricia", authInfo.getPrincipals().getPrimaryPrincipal());
@@ -123,6 +126,27 @@ public class SyncingRealmHelperTest {
     GroupNames groups = authInfo.getPrincipals().oneByType(GroupNames.class);
 
     assertThat(groups, hasItem("heartOfGold"));
+    assertFalse(groups.isExternal());
+  }
+
+  /**
+   * Tests {@link SyncingRealmHelper#createAuthenticationInfo(String, User, String...)}.
+   */
+  @Test
+  public void testCreateAuthenticationInfoWithExternalGroups() {
+    User user = new User("tricia");
+    AuthenticationInfo authInfo = helper.createAuthenticationInfo("unit-test",
+      user, singletonList("heartOfGold"), true);
+
+    assertNotNull(authInfo);
+    assertEquals("tricia", authInfo.getPrincipals().getPrimaryPrincipal());
+    assertThat(authInfo.getPrincipals().getRealmNames(), hasItem("unit-test"));
+    assertEquals(user, authInfo.getPrincipals().oneByType(User.class));
+
+    GroupNames groups = authInfo.getPrincipals().oneByType(GroupNames.class);
+
+    assertThat(groups, hasItem("heartOfGold"));
+    assertTrue(groups.isExternal());
   }
 
   /**

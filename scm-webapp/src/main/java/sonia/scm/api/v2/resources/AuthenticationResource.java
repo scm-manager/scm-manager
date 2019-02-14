@@ -8,6 +8,7 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.group.GroupNames;
 import sonia.scm.security.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -89,6 +90,11 @@ public class AuthenticationResource {
       AccessTokenBuilder tokenBuilder = tokenBuilderFactory.create();
       if ( authentication.getScope() != null ) {
         tokenBuilder.scope(Scope.valueOf(authentication.getScope()));
+      }
+
+      GroupNames groupNames = subject.getPrincipals().oneByType(GroupNames.class);
+      if (groupNames != null && groupNames.isExternal()) {
+        tokenBuilder.groups(groupNames.getCollection().toArray(new String[]{}));
       }
 
       AccessToken token = tokenBuilder.build();

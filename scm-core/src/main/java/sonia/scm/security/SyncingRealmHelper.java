@@ -108,11 +108,26 @@ public final class SyncingRealmHelper {
    */
   public AuthenticationInfo createAuthenticationInfo(String realm, User user,
     Collection<String> groups) {
+    return this.createAuthenticationInfo(realm, user, groups, false);
+  }
+
+  /**
+   * Create {@link AuthenticationInfo} from user and groups.
+   *
+   *
+   * @param realm name of the realm
+   * @param user authenticated user
+   * @param groups groups of the authenticated user
+   *
+   * @return authentication info
+   */
+  public AuthenticationInfo createAuthenticationInfo(String realm, User user,
+    Collection<String> groups, boolean externalGroups) {
     SimplePrincipalCollection collection = new SimplePrincipalCollection();
 
     collection.add(user.getId(), realm);
     collection.add(user, realm);
-    collection.add(new GroupNames(groups), realm);
+    collection.add(new GroupNames(groups, externalGroups), realm);
 
     return new SimpleAuthenticationInfo(collection, user.getPassword());
   }
