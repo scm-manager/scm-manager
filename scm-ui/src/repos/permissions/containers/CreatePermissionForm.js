@@ -62,7 +62,7 @@ class CreatePermissionForm extends React.Component<Props, State> {
         this.props.currentPermissions
       )
     });
-    this.setState({ ...this.state, groupPermission });
+    this.setState({ ...this.state, groupPermission, value: undefined});
   };
 
   loadUserAutocompletion = (inputValue: string) => {
@@ -99,7 +99,7 @@ class CreatePermissionForm extends React.Component<Props, State> {
         <Autocomplete
           loadSuggestions={this.loadGroupAutocompletion}
           valueSelected={this.groupOrUserSelected}
-          value={this.state.value}
+          value={this.state.value ? this.state.value : ""}
           label={t("permission.group")}
           noOptionsMessage={t("permission.autocomplete.no-group-options")}
           loadingMessage={t("permission.autocomplete.loading")}
@@ -111,7 +111,7 @@ class CreatePermissionForm extends React.Component<Props, State> {
       <Autocomplete
         loadSuggestions={this.loadUserAutocompletion}
         valueSelected={this.groupOrUserSelected}
-        value={this.state.value}
+        value={this.state.value ? this.state.value : ""}
         label={t("permission.user")}
         noOptionsMessage={t("permission.autocomplete.no-user-options")}
         loadingMessage={t("permission.autocomplete.loading")}
@@ -245,7 +245,7 @@ class CreatePermissionForm extends React.Component<Props, State> {
   };
 
   removeState = () => {
-    this.setState({
+    this.setState({...this.state,
       name: "",
       verbs: this.props.availablePermissions.availableRoles[0].verbs,
       valid: true,
@@ -255,6 +255,9 @@ class CreatePermissionForm extends React.Component<Props, State> {
 
   handleRoleChange = (role: string) => {
     const selectedRole = this.findAvailableRole(role);
+    if (!selectedRole) {
+      return
+    }
     this.setState({
       verbs: selectedRole.verbs
     });
