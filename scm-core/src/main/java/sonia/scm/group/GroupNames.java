@@ -70,10 +70,9 @@ public final class GroupNames implements Serializable, Iterable<String>
    * Constructs ...
    *
    */
-  @SuppressWarnings("unchecked")
   public GroupNames()
   {
-    this(Collections.EMPTY_LIST);
+    this(Collections.emptyList());
   }
 
   /**

@@ -80,6 +80,49 @@ public final class SyncingRealmHelper {
     this.groupManager = groupManager;
   }
 
+  public AuthenticationInfoBuilder.ForRealm authenticationInfo() {
+    return new AuthenticationInfoBuilder().new ForRealm();
+  }
+
+  public class AuthenticationInfoBuilder {
+    private String realm;
+    private User user;
+    private Collection<String> groups;
+    private boolean external;
+
+    private AuthenticationInfo build() {
+      return SyncingRealmHelper.this.createAuthenticationInfo(realm, user, groups, external);
+    }
+
+    public class ForRealm {
+      public ForUser forRealm(String realm) {
+        AuthenticationInfoBuilder.this.realm = realm;
+        return AuthenticationInfoBuilder.this.new ForUser();
+      }
+    }
+
+    public class ForUser {
+      public AuthenticationInfoBuilder.WithGroups andUser(User user) {
+        AuthenticationInfoBuilder.this.user = user;
+        return AuthenticationInfoBuilder.this.new WithGroups();
+      }
+    }
+
+    public class WithGroups {
+      public AuthenticationInfo withGroups(Collection<String> groups) {
+        AuthenticationInfoBuilder.this.groups = groups;
+        AuthenticationInfoBuilder.this.external = false;
+        return build();
+      }
+
+      public AuthenticationInfo withExternalGroups(Collection<String> groups) {
+        AuthenticationInfoBuilder.this.groups = groups;
+        AuthenticationInfoBuilder.this.external = false;
+        return build();
+      }
+    }
+  }
+
   //~--- methods --------------------------------------------------------------
   /**
    * Create {@link AuthenticationInfo} from user and groups.
@@ -176,6 +219,6 @@ public final class SyncingRealmHelper {
 
         }
       }
-      });
-    }
+    });
   }
+}
