@@ -134,6 +134,8 @@ public final class HgUtil
 
     repoConfiguration.setHgBin(handler.getConfig().getHgBinary());
 
+    logger.debug("open hg repository {}: encoding: {}, pending: {}", directory, enc, pending);
+
     return Repository.open(repoConfiguration, directory);
   }
 

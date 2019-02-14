@@ -42,6 +42,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * Injection provider for {@link HgContext}.
+ * This provider returns an instance {@link HgContext} from request scope, if no {@link HgContext} could be found in
+ * request scope (mostly because the scope is not available) a new {@link HgContext} gets returned.
  *
  * @author Sebastian Sdorra
  */
@@ -63,22 +66,17 @@ public class HgContextProvider implements Provider<HgContext>
    * @return
    */
   @Override
-  public HgContext get()
-  {
-    HgContext ctx = context;
-
-    if (ctx == null)
-    {
-      ctx = new HgContext();
+  public HgContext get() {
+    if (contextRequestStore == null) {
       logger.trace("context is null, we are probably out of request scope");
+      return new HgContext();
     }
-
-    return ctx;
+    logger.trace("return HgContext from request store");
+    return contextRequestStore.get();
   }
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
   @Inject(optional = true)
-  private HgContext context;
+  private HgContextRequestStore contextRequestStore;
 }
