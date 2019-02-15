@@ -55,14 +55,11 @@ class CreatePermissionForm extends React.Component<Props, State> {
   permissionScopeChanged = event => {
     const groupPermission = event.target.value === "GROUP_PERMISSION";
     this.setState({
+      value: undefined,
+      name: "",
       groupPermission: groupPermission,
-      valid: validator.isPermissionValid(
-        this.state.name,
-        groupPermission,
-        this.props.currentPermissions
-      )
+      valid: false
     });
-    this.setState({ ...this.state, groupPermission, value: undefined});
   };
 
   loadUserAutocompletion = (inputValue: string) => {
@@ -245,7 +242,7 @@ class CreatePermissionForm extends React.Component<Props, State> {
   };
 
   removeState = () => {
-    this.setState({...this.state,
+    this.setState({
       name: "",
       verbs: this.props.availablePermissions.availableRoles[0].verbs,
       valid: true,
