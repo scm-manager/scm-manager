@@ -36,23 +36,32 @@ import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.collect.Sets;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnitRunner;
+import sonia.scm.group.GroupNames;
 
+import java.util.Arrays;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 import static sonia.scm.security.SecureKeyTestUtil.createSecureKey;
 
@@ -62,6 +71,11 @@ import static sonia.scm.security.SecureKeyTestUtil.createSecureKey;
  * @author Sebastian Sdorra
  */
 @RunWith(MockitoJUnitRunner.class)
+@SubjectAware(
+  configuration = "classpath:sonia/scm/shiro-001.ini",
+  username = "trillian",
+  password = "secret"
+)
 public class JwtAccessTokenBuilderTest {
   
   {
@@ -96,11 +110,6 @@ public class JwtAccessTokenBuilderTest {
    * Tests {@link JwtAccessTokenBuilder#build()} with subject from shiro context.
    */
   @Test
-  @SubjectAware(
-    configuration = "classpath:sonia/scm/shiro-001.ini",
-    username = "trillian",
-    password = "secret"
-  )
   public void testBuildWithoutSubject() {
     JwtAccessToken token = factory.create().build();
     assertEquals("trillian", token.getSubject());
@@ -150,7 +159,33 @@ public class JwtAccessTokenBuilderTest {
       .getBody();
     assertClaims(new JwtAccessToken(claims, compact));
   }
-  
+
+  @Test
+  public void testWithExternalGroups() {
+    applyExternalGroupsToSubject(true, "external");
+    JwtAccessToken token = factory.create().subject("dent").build();
+    assertArrayEquals(new String[]{"external"}, token.getCustom(JwtAccessToken.GROUPS_CLAIM_KEY).map(x -> (String[]) x).get());
+  }
+
+  @Test
+  public void testWithInternalGroups() {
+    applyExternalGroupsToSubject(false, "external");
+    JwtAccessToken token = factory.create().subject("dent").build();
+    assertFalse(token.getCustom(JwtAccessToken.GROUPS_CLAIM_KEY).isPresent());
+  }
+
+  private void applyExternalGroupsToSubject(boolean external, String... groups) {
+    Subject subject = spy(SecurityUtils.getSubject());
+    when(subject.getPrincipals()).thenAnswer(invocation -> enrichWithGroups(invocation, groups, external));
+    shiro.setSubject(subject);
+  }
+
+  private Object enrichWithGroups(InvocationOnMock invocation, String[] groups, boolean external) throws Throwable {
+    PrincipalCollection principals = (PrincipalCollection) spy(invocation.callRealMethod());
+    when(principals.oneByType(GroupNames.class)).thenReturn(new GroupNames(Arrays.asList(groups), external));
+    return principals;
+  }
+
   private void assertClaims(JwtAccessToken token){
     assertThat(token.getId(), not(isEmptyOrNullString()));
     assertNotNull( token.getIssuedAt() );

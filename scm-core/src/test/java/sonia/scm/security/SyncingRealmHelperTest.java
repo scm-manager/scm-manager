@@ -37,6 +37,7 @@ package sonia.scm.security;
 
 import com.google.common.base.Throwables;
 import org.apache.shiro.authc.AuthenticationInfo;
+import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -54,6 +55,7 @@ import sonia.scm.web.security.PrivilegedAction;
 import java.io.IOException;
 
 import static java.util.Collections.singletonList;
+import static org.assertj.core.util.Arrays.asList;
 import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -107,46 +109,6 @@ public class SyncingRealmHelperTest {
     };
 
     helper = new SyncingRealmHelper(ctx, userManager, groupManager);
-  }
-
-  /**
-   * Tests {@link SyncingRealmHelper#createAuthenticationInfo(String, User, String...)}.
-   */
-  @Test
-  public void testCreateAuthenticationInfo() {
-    User user = new User("tricia");
-    AuthenticationInfo authInfo = helper.createAuthenticationInfo("unit-test",
-      user, singletonList("heartOfGold"));
-
-    assertNotNull(authInfo);
-    assertEquals("tricia", authInfo.getPrincipals().getPrimaryPrincipal());
-    assertThat(authInfo.getPrincipals().getRealmNames(), hasItem("unit-test"));
-    assertEquals(user, authInfo.getPrincipals().oneByType(User.class));
-
-    GroupNames groups = authInfo.getPrincipals().oneByType(GroupNames.class);
-
-    assertThat(groups, hasItem("heartOfGold"));
-    assertFalse(groups.isExternal());
-  }
-
-  /**
-   * Tests {@link SyncingRealmHelper#createAuthenticationInfo(String, User, String...)}.
-   */
-  @Test
-  public void testCreateAuthenticationInfoWithExternalGroups() {
-    User user = new User("tricia");
-    AuthenticationInfo authInfo = helper.createAuthenticationInfo("unit-test",
-      user, singletonList("heartOfGold"), true);
-
-    assertNotNull(authInfo);
-    assertEquals("tricia", authInfo.getPrincipals().getPrimaryPrincipal());
-    assertThat(authInfo.getPrincipals().getRealmNames(), hasItem("unit-test"));
-    assertEquals(user, authInfo.getPrincipals().oneByType(User.class));
-
-    GroupNames groups = authInfo.getPrincipals().oneByType(GroupNames.class);
-
-    assertThat(groups, hasItem("heartOfGold"));
-    assertTrue(groups.isExternal());
   }
 
   /**
@@ -221,5 +183,46 @@ public class SyncingRealmHelperTest {
 
     helper.store(user);
     verify(userManager, times(1)).modify(user);
+  }
+
+  @Test
+  public void builderShouldSetInternalGroups() {
+    AuthenticationInfo authenticationInfo = helper
+      .authenticationInfo()
+      .forRealm("unit-test")
+      .andUser(new User("ziltoid"))
+      .withGroups("internal");
+
+    GroupNames groupNames = authenticationInfo.getPrincipals().oneByType(GroupNames.class);
+    Assertions.assertThat(groupNames.getCollection()).containsOnly("internal");
+    Assertions.assertThat(groupNames.isExternal()).isFalse();
+  }
+
+  @Test
+  public void builderShouldSetExternalGroups() {
+    AuthenticationInfo authenticationInfo = helper
+      .authenticationInfo()
+      .forRealm("unit-test")
+      .andUser(new User("ziltoid"))
+      .withExternalGroups("external");
+
+    GroupNames groupNames = authenticationInfo.getPrincipals().oneByType(GroupNames.class);
+    Assertions.assertThat(groupNames.getCollection()).containsOnly("external");
+    Assertions.assertThat(groupNames.isExternal()).isTrue();
+  }
+
+  @Test
+  public void builderShouldSetValues() {
+    User user = new User("ziltoid");
+    AuthenticationInfo authInfo = helper
+      .authenticationInfo()
+      .forRealm("unit-test")
+      .andUser(user)
+      .withoutGroups();
+
+    assertNotNull(authInfo);
+    assertEquals("ziltoid", authInfo.getPrincipals().getPrimaryPrincipal());
+    assertThat(authInfo.getPrincipals().getRealmNames(), hasItem("unit-test"));
+    assertEquals(user, authInfo.getPrincipals().oneByType(User.class));
   }
 }

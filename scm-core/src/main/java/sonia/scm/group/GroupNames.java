@@ -176,7 +176,7 @@ public final class GroupNames implements Serializable, Iterable<String>
   @Override
   public String toString()
   {
-    return Joiner.on(", ").join(collection);
+    return Joiner.on(", ").join(collection) + "(" + (external? "external": "internal") + ")";
   }
 
   //~--- get methods ----------------------------------------------------------
