@@ -105,6 +105,11 @@ class SingleUser extends React.Component<Props> {
                 />
               )}
             />
+            <ExtensionPoint
+              name="user.route"
+              props={extensionProps}
+              renderAll={true}
+            />
           </div>
           <div className="column">
             <Navigation>
