@@ -61,7 +61,8 @@ import java.util.List;
   value = "plugin", 
   generatedClass = "PluginPermissions", 
   permissions = {},
-  globalPermissions = { "read", "manage" }
+  globalPermissions = { "read", "manage" },
+  custom = true, customGlobal = true
 )
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "plugin-information")
