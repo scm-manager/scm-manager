@@ -8,6 +8,7 @@ import sonia.scm.util.ClassLoaders;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.Collection;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -46,6 +47,18 @@ class RepositoryPermissionProviderTest {
   @Test
   void shouldReadAvailableVerbsFromRepository() {
     assertThat(repositoryPermissionProvider.availableVerbs()).contains(allVerbsFromRepositoryClass);
+  }
+
+  @Test
+  void shouldMergeRepositoryRoles() {
+    Collection<String> verbsInMergedRole = repositoryPermissionProvider
+      .availableRoles()
+      .stream()
+      .filter(r -> "READ".equals(r.getName()))
+      .findFirst()
+      .get()
+      .getVerbs();
+    assertThat(verbsInMergedRole).contains("read", "pull", "test");
   }
 
   private String getString(Field field) {
