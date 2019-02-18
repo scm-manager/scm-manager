@@ -1,0 +1,7 @@
+<repository-permissions>
+  <verbs>
+    <verb>svn</verb>
+  </verbs>
+  <roles>
+  </roles>
+</repository-permissions>

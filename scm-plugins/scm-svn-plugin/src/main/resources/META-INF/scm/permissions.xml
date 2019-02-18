@@ -34,10 +34,10 @@
 <permissions>
   
   <permission>
-    <value>configuration:read:svn</value>
+    <value>configuration:read,write:svn</value>
   </permission>
   <permission>
-    <value>configuration:write:svn</value>
+    <value>repository:svn:*</value>
   </permission>
 
 </permissions>

@@ -40,7 +40,7 @@
     <value>repository:read,pull,push:*</value>
   </permission>
   <permission>
-    <value>repository:*:*</value>
+    <value>repository:*</value>
   </permission>
   <permission>
     <value>repository:create</value>
@@ -50,6 +50,12 @@
   </permission>
   <permission>
     <value>group:*</value>
+  </permission>
+  <permission>
+    <value>configuration:read,write:global</value>
+  </permission>
+  <permission>
+    <value>configuration:read,write:*</value>
   </permission>
 
 </permissions>

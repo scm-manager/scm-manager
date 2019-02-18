@@ -34,10 +34,10 @@
 <permissions>
   
   <permission>
-    <value>configuration:read:hg</value>
+    <value>configuration:read,write:hg</value>
   </permission>
   <permission>
-    <value>configuration:write:hg</value>
+    <value>repository:hg:*</value>
   </permission>
 
 </permissions>
