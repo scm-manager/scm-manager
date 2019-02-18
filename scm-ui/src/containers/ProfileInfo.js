@@ -1,7 +1,11 @@
 // @flow
 import React from "react";
 import type { Me } from "@scm-manager/ui-types";
-import { MailLink, AvatarWrapper, AvatarImage } from "@scm-manager/ui-components";
+import {
+  MailLink,
+  AvatarWrapper,
+  AvatarImage
+} from "@scm-manager/ui-components";
 import { compose } from "redux";
 import { translate } from "react-i18next";
 
@@ -21,27 +25,39 @@ class ProfileInfo extends React.Component<Props, State> {
         <AvatarWrapper>
           <figure className="media-left">
             <p className="image is-64x64">
-              <AvatarImage person={ me }/>
+              <AvatarImage person={me} />
             </p>
           </figure>
         </AvatarWrapper>
         <div className="media-content">
           <table className="table">
             <tbody>
-            <tr>
-              <td className="has-text-weight-semibold">{t("profile.username")}</td>
-              <td>{me.name}</td>
-            </tr>
-            <tr>
-              <td className="has-text-weight-semibold">{t("profile.displayName")}</td>
-              <td>{me.displayName}</td>
-            </tr>
-            <tr>
-              <td className="has-text-weight-semibold">{t("profile.mail")}</td>
-              <td>
-                <MailLink address={me.mail} />
-              </td>
-            </tr>
+              <tr>
+                <td className="has-text-weight-semibold">
+                  {t("profile.username")}
+                </td>
+                <td>{me.name}</td>
+              </tr>
+              <tr>
+                <td className="has-text-weight-semibold">
+                  {t("profile.displayName")}
+                </td>
+                <td>{me.displayName}</td>
+              </tr>
+              <tr>
+                <td className="has-text-weight-semibold">
+                  {t("profile.mail")}
+                </td>
+                <td>
+                  <MailLink address={me.mail} />
+                </td>
+              </tr>
+              <tr>
+                <td className="has-text-weight-semibold">
+                  {t("profile.groups")}
+                </td>
+                <td>{me.groups.join(", ")}</td>
+              </tr>
             </tbody>
           </table>
         </div>
