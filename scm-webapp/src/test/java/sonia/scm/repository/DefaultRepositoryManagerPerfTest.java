@@ -205,7 +205,7 @@ private long calculateAverage(List<Long> times) {
     
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-      return authzCollector.collect();
+      return authzCollector.collect(principals);
     }
     
   }
