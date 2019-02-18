@@ -68,10 +68,6 @@
         "displayName": "modify permissions",
         "description": "May modify the permissions of the repository"
       },
-      "healthCheck": {
-        "displayName": "health check",
-        "description": "May run the health check for the repository"
-      },
       "*": {
         "displayName": "overall",
         "description": "May change everything for the repository (includes all other permissions)"

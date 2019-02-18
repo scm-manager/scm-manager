@@ -27,6 +27,7 @@ class RepositoryPermissionProviderTest {
     repositoryPermissionProvider = new RepositoryPermissionProvider(pluginLoader);
     allVerbsFromRepositoryClass = Arrays.stream(RepositoryPermissions.class.getDeclaredFields())
       .filter(field -> field.getName().startsWith("ACTION_"))
+      .filter(field -> !field.getName().equals("ACTION_HEALTHCHECK"))
       .map(this::getString)
       .filter(verb -> !"create".equals(verb))
       .toArray(String[]::new);

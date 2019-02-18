@@ -7,7 +7,6 @@
     <verb>push</verb>
     <verb>permissionRead</verb>
     <verb>permissionWrite</verb>
-    <verb>healthCheck</verb>
     <verb>*</verb>
   </verbs>
   <roles>
@@ -24,12 +23,6 @@
         <verb>read</verb>
         <verb>pull</verb>
         <verb>push</verb>
-      </verbs>
-    </role>
-    <role>
-      <name>HEALTH</name>
-      <verbs>
-        <verb>healthCheck</verb>
       </verbs>
     </role>
     <role>
