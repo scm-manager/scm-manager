@@ -1,7 +1,6 @@
 // @flow
 import * as React from "react";
 import classNames from "classnames";
-import injectSheet from "react-jss";
 
 type Props = {
   title: string,
@@ -9,20 +8,13 @@ type Props = {
   body: any,
   footer?: any,
   active: boolean,
-  classes: any
 };
 
-const styles = {
-  resize: {
-    maxWidth: "100%",
-    width: "auto !important",
-    display: "inline-block"
-  }
-};
+
 
 class Modal extends React.Component<Props> {
   render() {
-    const { title, closeFunction, body, footer, active, classes } = this.props;
+    const { title, closeFunction, body, footer, active } = this.props;
 
     const isActive = active ? "is-active" : null;
 
@@ -34,7 +26,7 @@ class Modal extends React.Component<Props> {
     return (
       <div className={classNames("modal", isActive)}>
         <div className="modal-background" />
-        <div className={classNames("modal-card", classes.resize)}>
+        <div className="modal-card">
           <header className="modal-card-head">
             <p className="modal-card-title">{title}</p>
             <button
@@ -51,4 +43,4 @@ class Modal extends React.Component<Props> {
   }
 }
 
-export default injectSheet(styles)(Modal);
+export default Modal;
