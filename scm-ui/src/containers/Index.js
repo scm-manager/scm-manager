@@ -14,6 +14,7 @@ import {
 } from "../modules/indexResource";
 import PluginLoader from "./PluginLoader";
 import type { IndexResources } from "@scm-manager/ui-types";
+import ScrollToTop from "./ScrollToTop";
 
 type Props = {
   error: Error,
@@ -32,7 +33,6 @@ type State = {
 };
 
 class Index extends Component<Props, State> {
-
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -66,9 +66,14 @@ class Index extends Component<Props, State> {
       return <Loading />;
     } else {
       return (
-        <PluginLoader loaded={ pluginsLoaded } callback={ this.pluginLoaderCallback }>
-          <App />
-        </PluginLoader>
+        <ScrollToTop>
+          <PluginLoader
+            loaded={pluginsLoaded}
+            callback={this.pluginLoaderCallback}
+          >
+            <App />
+          </PluginLoader>
+        </ScrollToTop>
       );
     }
   }
