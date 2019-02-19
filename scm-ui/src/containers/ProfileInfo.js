@@ -89,4 +89,7 @@ class ProfileInfo extends React.Component<Props> {
   }
 }
 
-export default compose(injectSheet(styles)(translate("commons")(ProfileInfo)));
+export default compose(
+  injectSheet(styles),
+  translate("commons")
+)(ProfileInfo);
