@@ -1,59 +1,108 @@
 //@flow
 import React from "react";
-import { repositories } from "@scm-manager/ui-components";
+import { ButtonGroup, Button } from "@scm-manager/ui-components";
 import type { Repository } from "@scm-manager/ui-types";
-import { translate } from "react-i18next";
+import CloneInformation from "./CloneInformation";
+import type { Link } from "@scm-manager/ui-types";
+import injectSheets from "react-jss";
+
+const styles = {
+  protocols: {
+    position: "relative"
+  },
+  switcher: {
+    position: "absolute",
+    top: 0,
+    right: 0
+  }
+};
 
 type Props = {
   repository: Repository,
-  t: string => string
+
+  // context props
+  classes: Object
 }
 
-class ProtocolInformation extends React.Component<Props> {
+type State = {
+  selected?: Link
+};
 
-  render() {
-    const { repository, t } = this.props;
-    const href = repositories.getProtocolLinkByType(repository, "http");
-    if (!href) {
-      return null;
+function selectHttpOrFirst(repository: Repository) {
+  const protocols = repository._links["protocol"] || [];
+
+  for (let protocol of protocols) {
+    if (protocol.name === "http") {
+      return protocol;
+    }
+  }
+
+  if (protocols.length > 0) {
+    return protocols[0];
+  }
+  return undefined;
+}
+
+class ProtocolInformation extends React.Component<Props, State> {
+
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      selected: selectHttpOrFirst(props.repository)
+    };
+  }
+
+  selectProtocol = (protocol: Link) => {
+    this.setState({
+      selected: protocol
+    });
+  };
+
+  renderProtocolButton = (protocol: Link) => {
+    const name = protocol.name || "unknown";
+
+    let color = null;
+
+    const { selected } = this.state;
+    if ( selected && protocol.name === selected.name ) {
+      color = "link is-selected";
     }
 
     return (
-      <div>
-        <h4>{t("scm-git-plugin.information.clone")}</h4>
-        <pre>
-          <code>git clone {href}</code>
-        </pre>
-        <h4>{t("scm-git-plugin.information.create")}</h4>
-        <pre>
-          <code>
-            git init {repository.name}
-            <br />
-            echo "# {repository.name}" > README.md
-            <br />
-            git add README.md
-            <br />
-            git commit -m "added readme"
-            <br />
-            git remote add origin {href}
-            <br />
-            git push -u origin master
-            <br />
-          </code>
-        </pre>
-        <h4>{t("scm-git-plugin.information.replace")}</h4>
-        <pre>
-          <code>
-            git remote add origin {href}
-            <br />
-            git push -u origin master
-            <br />
-          </code>
-        </pre>
-      </div>
+      <Button color={ color } action={() => this.selectProtocol(protocol)}>
+        {name.toUpperCase()}
+      </Button>
+    );
+  };
+
+  render() {
+    const { repository, classes } = this.props;
+
+    const protocols = repository._links["protocol"];
+    if (!protocols || protocols.length === 0) {
+      return null;
+    }
+
+    if (protocols.length === 1) {
+      return <CloneInformation url={protocols[0].href} repository={repository} />;
+    }
+
+    const { selected } = this.state;
+    let cloneInformation = null;
+    if (selected) {
+      cloneInformation = <CloneInformation repository={repository} url={selected.href} />;
+    }
+
+    return (
+     <div className={classes.protocols}>
+       <ButtonGroup className={classes.switcher}>
+         {protocols.map(this.renderProtocolButton)}
+       </ButtonGroup>
+       { cloneInformation }
+     </div>
     );
   }
 
 }
 
-export default translate("plugins")(ProtocolInformation);
+export default injectSheets(styles)(ProtocolInformation);
