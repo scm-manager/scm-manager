@@ -50,7 +50,7 @@
   "verbs": {
     "repository": {
       "hg": {
-        "displayName": "Configure Mercurial",
+        "displayName": "configure Mercurial",
         "description": "May change the Mercurial configuration for this repository"
       }
     }

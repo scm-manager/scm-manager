@@ -44,7 +44,7 @@
   "verbs": {
     "repository": {
       "svn": {
-        "displayName": "Configure Subversion",
+        "displayName": "configure Subversion",
         "description": "May change the Subversion configuration for this repository"
       }
     }

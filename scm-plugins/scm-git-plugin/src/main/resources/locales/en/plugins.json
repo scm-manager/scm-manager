@@ -58,7 +58,7 @@
   "verbs": {
     "repository": {
       "git": {
-        "displayName": "Configure Git",
+        "displayName": "configure Git",
         "description": "May change the git configuration for this repository"
       }
     }
