@@ -2,8 +2,8 @@
 import React from "react";
 import injectSheet from "react-jss";
 import { type ButtonProps } from "./Button";
-import SubmitButton from "./SubmitButton";
 import classNames from "classnames";
+import Button from "./Button";
 
 const styles = {
   spacing: {
@@ -19,7 +19,7 @@ class CreateButton extends React.Component<ButtonProps> {
     const { classes } = this.props;
     return (
       <div className={classNames("has-text-centered", classes.spacing)}>
-        <SubmitButton {...this.props} />
+        <Button color="primary" {...this.props} />
       </div>
     );
   }
