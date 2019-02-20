@@ -3,6 +3,7 @@
 
 $blue: #33b2e8;
 $mint: #11dfd0;
+$primary: #00d1df;
 
 $info: $blue;
 
@@ -40,6 +41,12 @@ $info: $blue;
 .main {
   min-height: calc(100vh - 260px);
 }
+
+// top section when pageactions set
+.page-header-with-actions {
+  border-bottom: 1px solid $primary;
+}
+
 .footer {
   height: 50px;
 }
@@ -81,7 +88,7 @@ $fa-font-path: "webfonts";
   height: 2.5rem;
 
   &.is-primary {
-    background-color: #00d1df;
+    background-color: $primary;
   }
   &.is-primary:hover, &.is-primary.is-hovered {
     background-color: #00b9c6;

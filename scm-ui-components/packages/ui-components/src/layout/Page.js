@@ -16,21 +16,11 @@ type Props = {
 
 class Page extends React.Component<Props> {
   render() {
-    const { title, error, subtitle } = this.props;
+    const { error } = this.props;
     return (
       <section className="section">
         <div className="container">
-          <div className="columns">
-            <div className="column">
-              <Title title={title} />
-              <Subtitle subtitle={subtitle} />
-            </div>
-            <div className="column is-two-fifths">
-              <div className="is-pulled-right">
-              {this.renderPageActions()}
-              </div>
-            </div>
-          </div>
+          {this.renderPageHeader()}
           <ErrorNotification error={error} />
           {this.renderContent()}
         </div>
@@ -38,16 +28,33 @@ class Page extends React.Component<Props> {
     );
   }
 
-  renderPageActions() {
-    const { children } = this.props;
+  renderPageHeader() {
+    const { title, subtitle, children } = this.props;
 
     let content = null;
+    let pageActionsExists = false;
     React.Children.forEach(children, child => {
       if (child && child.type.name === "PageActions") {
         content = child;
+        pageActionsExists = true;
       }
     });
-    return content;
+
+    return (
+      <div
+        className={
+          pageActionsExists ? "columns page-header-with-actions" : "columns"
+        }
+      >
+        <div className="column">
+          <Title title={title} />
+          <Subtitle subtitle={subtitle} />
+        </div>
+        <div className="column is-two-fifths">
+          <div className="is-pulled-right">{content}</div>
+        </div>
+      </div>
+    );
   }
 
   renderContent() {
