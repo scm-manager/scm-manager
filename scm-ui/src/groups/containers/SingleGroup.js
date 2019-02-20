@@ -142,7 +142,7 @@ class SingleGroup extends React.Component<Props> {
                     permissionsUrl={`${url}/settings/permissions`}
                   />
                   <ExtensionPoint
-                    name="group.subnavigation"
+                    name="group.setting"
                     props={extensionProps}
                     renderAll={true}
                   />
