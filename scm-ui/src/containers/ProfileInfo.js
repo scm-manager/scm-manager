@@ -40,21 +40,21 @@ class ProfileInfo extends React.Component<Props> {
           <table className="table content">
             <tbody>
               <tr>
-                <td className="has-text-weight-semibold">
+                <th>
                   {t("profile.username")}
-                </td>
+                </th>
                 <td>{me.name}</td>
               </tr>
               <tr>
-                <td className="has-text-weight-semibold">
+                <th>
                   {t("profile.displayName")}
-                </td>
+                </th>
                 <td>{me.displayName}</td>
               </tr>
               <tr>
-                <td className="has-text-weight-semibold">
+                <th>
                   {t("profile.mail")}
-                </td>
+                </th>
                 <td>
                   <MailLink address={me.mail} />
                 </td>
@@ -74,10 +74,10 @@ class ProfileInfo extends React.Component<Props> {
     if (me.groups.length > 0) {
       groups = (
         <tr>
-          <td className="has-text-weight-semibold">{t("profile.groups")}</td>
+          <th>{t("profile.groups")}</th>
           <td className={classes.spacing}>
             <ul>
-              {me.groups.map((group, index) => {
+              {me.groups.map(group => {
                 return <li>{group}</li>;
               })}
             </ul>

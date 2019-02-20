@@ -27,25 +27,25 @@ class Details extends React.Component<Props> {
       <table className="table content">
         <tbody>
         <tr>
-          <td className="has-text-weight-semibold">{t("group.name")}</td>
+          <th>{t("group.name")}</th>
           <td>{group.name}</td>
         </tr>
         <tr>
-          <td className="has-text-weight-semibold">{t("group.description")}</td>
+          <th>{t("group.description")}</th>
           <td>{group.description}</td>
         </tr>
         <tr>
-          <td className="has-text-weight-semibold">{t("group.type")}</td>
+          <th>{t("group.type")}</th>
           <td>{group.type}</td>
         </tr>
         <tr>
-          <td className="has-text-weight-semibold">{t("group.creationDate")}</td>
+          <th>{t("group.creationDate")}</th>
           <td>
             <DateFromNow date={group.creationDate} />
           </td>
         </tr>
         <tr>
-          <td className="has-text-weight-semibold">{t("group.lastModified")}</td>
+          <th>{t("group.lastModified")}</th>
           <td>
             <DateFromNow date={group.lastModified} />
           </td>
@@ -63,7 +63,7 @@ class Details extends React.Component<Props> {
     if (group.members.length > 0) {
       member = (
         <tr>
-          <td className="has-text-weight-semibold">{t("group.members")}</td>
+          <th>{t("group.members")}</th>
           <td className={classes.spacing}>
             <ul>
               {group._embedded.members.map((member, index) => {
