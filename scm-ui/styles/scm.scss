@@ -42,9 +42,11 @@ $info: $blue;
   min-height: calc(100vh - 260px);
 }
 
-// top section when pageactions set
-.page-header-with-actions {
-  border-bottom: 1px solid $primary;
+// shown in top section when pageactions set
+hr.header-with-actions {
+  height: 1px;
+  margin-top: -10px;
+  background-color: $primary;
 }
 
 .footer {

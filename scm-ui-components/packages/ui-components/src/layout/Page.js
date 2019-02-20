@@ -39,21 +39,21 @@ class Page extends React.Component<Props> {
         pageActionsExists = true;
       }
     });
+    let underline = pageActionsExists ? <hr className="header-with-actions" /> : null;
 
     return (
-      <div
-        className={
-          pageActionsExists ? "columns page-header-with-actions" : "columns"
-        }
-      >
-        <div className="column">
-          <Title title={title} />
-          <Subtitle subtitle={subtitle} />
+      <>
+        <div className="columns">
+          <div className="column">
+            <Title title={title} />
+            <Subtitle subtitle={subtitle} />
+          </div>
+          <div className="column is-two-fifths">
+            <div className="is-pulled-right">{content}</div>
+          </div>
         </div>
-        <div className="column is-two-fifths">
-          <div className="is-pulled-right">{content}</div>
-        </div>
-      </div>
+        {underline}
+      </>
     );
   }
 
