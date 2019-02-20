@@ -73,6 +73,11 @@ class Profile extends React.Component<Props, State> {
               path={`${url}/settings/password`}
               render={() => <ChangeUserPassword me={me} />}
             />
+            <ExtensionPoint
+              name="profile.route"
+              props={extensionProps}
+              renderAll={true}
+            />
           </div>
           <div className="column">
             <Navigation>

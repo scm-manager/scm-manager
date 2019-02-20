@@ -74,20 +74,17 @@ public final class ScmStateFactory
    * @param repositoryManger repository manager
    * @param userManager user manager
    * @param securitySystem security system
-   * @param authorizationCollector authorization collector
    */
   @Inject
   public ScmStateFactory(SCMContextProvider contextProvider,
     ScmConfiguration configuration, RepositoryManager repositoryManger,
-    UserManager userManager, SecuritySystem securitySystem,
-    AuthorizationCollector authorizationCollector)
+    UserManager userManager, SecuritySystem securitySystem)
   {
     this.contextProvider = contextProvider;
     this.configuration = configuration;
     this.repositoryManger = repositoryManger;
     this.userManager = userManager;
     this.securitySystem = securitySystem;
-    this.authorizationCollector = authorizationCollector;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -101,8 +98,7 @@ public final class ScmStateFactory
   @SuppressWarnings("unchecked")
   public ScmState createAnonymousState()
   {
-    return createState(SCMContext.ANONYMOUS, Collections.EMPTY_LIST, null,
-      Collections.EMPTY_LIST, Collections.EMPTY_LIST);
+    return createState(SCMContext.ANONYMOUS, Collections.EMPTY_LIST, null, Collections.EMPTY_LIST);
   }
 
   /**
@@ -141,15 +137,11 @@ public final class ScmStateFactory
       ap = securitySystem.getAvailablePermissions();
     }
 
-    List<String> permissions =
-      ImmutableList.copyOf(
-        authorizationCollector.collect().getStringPermissions());
-
-    return createState(user, groups.getCollection(), token, permissions, ap);
+    return createState(user, groups.getCollection(), token, ap);
   }
 
   private ScmState createState(User user, Collection<String> groups,
-    String token, List<String> assignedPermissions,
+    String token,
     Collection<PermissionDescriptor> availablePermissions)
   {
     User u = user.clone();
@@ -159,14 +151,10 @@ public final class ScmStateFactory
 
     return new ScmState(contextProvider.getVersion(), u, groups, token,
       repositoryManger.getConfiguredTypes(), userManager.getDefaultType(),
-      new ScmClientConfig(configuration), assignedPermissions,
-      availablePermissions);
+      new ScmClientConfig(configuration), availablePermissions);
   }
 
   //~--- fields ---------------------------------------------------------------
-
-  /** authorization collector */
-  private final AuthorizationCollector authorizationCollector;
 
   /** configuration */
   private final ScmConfiguration configuration;

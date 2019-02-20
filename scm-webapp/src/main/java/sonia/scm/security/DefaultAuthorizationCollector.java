@@ -36,6 +36,7 @@ package sonia.scm.security;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.github.legman.Subscribe;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
@@ -118,8 +119,8 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
    *
    * @return
    */
-  @Override
-  public AuthorizationInfo collect()
+  @VisibleForTesting
+  AuthorizationInfo collect()
   {
     AuthorizationInfo authorizationInfo;
     Subject subject = SecurityUtils.getSubject();
@@ -143,6 +144,7 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
    *
    * @return
    */
+  @Override
   public AuthorizationInfo collect(PrincipalCollection principals)
   {
     Preconditions.checkNotNull(principals, "principals parameter is required");
