@@ -20,8 +20,15 @@ class Page extends React.Component<Props> {
     return (
       <section className="section">
         <div className="container">
-          <Title title={title} />
-          <Subtitle subtitle={subtitle} />
+          <div className="columns">
+            <div className="column">
+              <Title title={title} />
+              <Subtitle subtitle={subtitle} />
+            </div>
+            <div className="column is-two-fifths is-pulled-right">
+              {this.renderPageActions()}
+            </div>
+          </div>
           <ErrorNotification error={error} />
           {this.renderContent()}
         </div>
@@ -37,7 +44,26 @@ class Page extends React.Component<Props> {
     if (loading) {
       return <Loading />;
     }
-    return children;
+
+    let content = [];
+    React.Children.forEach(children, child => {
+      if (child.type.name !== "PageActions") {
+        content.push(child);
+      }
+    });
+    return content;
+  }
+
+  renderPageActions() {
+    const { children } = this.props;
+
+    let content = null;
+    React.Children.forEach(children, child => {
+      if (child.type.name === "PageActions") {
+        content = child;
+      }
+    });
+    return content;
   }
 }
 
