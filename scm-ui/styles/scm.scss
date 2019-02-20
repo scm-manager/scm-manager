@@ -231,6 +231,15 @@ form .field:not(.is-grouped) {
   box-shadow: none;
 }
 
+// label with help-icon compensation
+.label-icon-spacing {
+  margin-top: 30px;
+
+  @media screen and (max-width: 768px) {
+    margin-top: 0;
+  }
+}
+
 // pagination
 .pagination-next,
 .pagination-link,
