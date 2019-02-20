@@ -4,6 +4,8 @@ import Loading from "./../Loading";
 import ErrorNotification from "./../ErrorNotification";
 import Title from "./Title";
 import Subtitle from "./Subtitle";
+import injectSheet from "react-jss";
+import classNames from "classnames";
 
 type Props = {
   title?: string,
@@ -11,7 +13,16 @@ type Props = {
   loading?: boolean,
   error?: Error,
   showContentOnError?: boolean,
-  children: React.Node
+  children: React.Node,
+
+  // context props
+  classes: Object
+};
+
+const styles = {
+  spacing: {
+    marginTop: "1.25rem"
+  }
 };
 
 class Page extends React.Component<Props> {
@@ -29,7 +40,7 @@ class Page extends React.Component<Props> {
   }
 
   renderPageHeader() {
-    const { title, subtitle, children } = this.props;
+    const { title, subtitle, children, classes } = this.props;
 
     let content = null;
     let pageActionsExists = false;
@@ -39,7 +50,9 @@ class Page extends React.Component<Props> {
         pageActionsExists = true;
       }
     });
-    let underline = pageActionsExists ? <hr className="header-with-actions" /> : null;
+    let underline = pageActionsExists ? (
+      <hr className="header-with-actions" />
+    ) : null;
 
     return (
       <>
@@ -49,7 +62,7 @@ class Page extends React.Component<Props> {
             <Subtitle subtitle={subtitle} />
           </div>
           <div className="column is-two-fifths">
-            <div className="is-pulled-right">{content}</div>
+            <div className={classNames(classes.spacing, "is-pulled-right")}>{content}</div>
           </div>
         </div>
         {underline}
@@ -77,4 +90,4 @@ class Page extends React.Component<Props> {
   }
 }
 
-export default Page;
+export default injectSheet(styles)(Page);
