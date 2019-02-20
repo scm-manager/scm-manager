@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.unmodifiableCollection;
@@ -63,7 +64,7 @@ public class RepositoryPermissionProvider {
 
         RepositoryPermissionsRoot repositoryPermissionsRoot = parsePermissionDescriptor(context, descriptorUrl);
         availableVerbs.addAll(repositoryPermissionsRoot.verbs.verbs);
-        availableRoles.addAll(repositoryPermissionsRoot.roles.roles);
+        mergeRolesInto(availableRoles, repositoryPermissionsRoot.roles.roles);
       }
     } catch (IOException ex) {
       logger.error("could not read permission descriptors", ex);
@@ -75,7 +76,22 @@ public class RepositoryPermissionProvider {
     return new AvailableRepositoryPermissions(availableVerbs, availableRoles);
   }
 
-  @SuppressWarnings("unchecked")
+  private static void mergeRolesInto(Collection<RoleDescriptor> targetRoles, List<RoleDescriptor> additionalRoles) {
+    additionalRoles.forEach(r -> addOrMergeInto(targetRoles, r));
+  }
+
+  private static void addOrMergeInto(Collection<RoleDescriptor> targetRoles, RoleDescriptor additionalRole) {
+    Optional<RoleDescriptor> existingRole = targetRoles
+      .stream()
+      .filter(r -> r.name.equals(additionalRole.name))
+      .findFirst();
+    if (existingRole.isPresent()) {
+      existingRole.get().verbs.verbs.addAll(additionalRole.verbs.verbs);
+    } else {
+      targetRoles.add(additionalRole);
+    }
+  }
+
   private static RepositoryPermissionsRoot parsePermissionDescriptor(JAXBContext context, URL descriptorUrl) {
     try {
       RepositoryPermissionsRoot descriptorWrapper =

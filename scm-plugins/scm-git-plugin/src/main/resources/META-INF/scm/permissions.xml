@@ -34,10 +34,10 @@
 <permissions>
   
   <permission>
-    <value>configuration:read:git</value>
+    <value>configuration:read,write:git</value>
   </permission>
   <permission>
-    <value>configuration:write:git</value>
+    <value>repository:git:*</value>
   </permission>
 
 </permissions>

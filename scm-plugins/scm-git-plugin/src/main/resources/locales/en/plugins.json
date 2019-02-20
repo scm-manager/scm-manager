@@ -39,17 +39,27 @@
   },
   "permissions" : {
     "configuration": {
-      "read": {
+      "read,write": {
         "git": {
-          "displayName": "Read git configuration",
-          "description": "May read the git configuration"
-        }
-      },
-      "write": {
-        "git": {
-          "displayName": "Write git configuration",
+          "displayName": "Modify git configuration",
           "description": "May change the git configuration"
         }
+      }
+    },
+    "repository": {
+      "git": {
+        "*": {
+          "displayName": "Modify repository specific git configuration",
+          "description": "May change the git configuration for repositories"
+        }
+      }
+    }
+  },
+  "verbs": {
+    "repository": {
+      "git": {
+        "displayName": "configure Git",
+        "description": "May change the git configuration for this repository"
       }
     }
   }

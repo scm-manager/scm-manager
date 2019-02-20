@@ -14,10 +14,8 @@
         }
       },
       "*": {
-        "*": {
-          "displayName": "Own all repositories",
-          "description": "May see, clone, push to, configure and delete all repositories"
-        }
+        "displayName": "Own all repositories",
+        "description": "May see, clone, push to, configure and delete all repositories"
       },
       "create": {
         "displayName": "Create repositories",
@@ -34,6 +32,22 @@
       "*": {
         "displayName": "Administer groups",
         "description": "May administer all groups"
+      }
+    },
+    "configuration": {
+      "list": {
+        "displayName": "Basic administration",
+        "description": "Prerequisite for all other administration permissions. Without this, no configuration will be visible."
+      },
+      "read,write": {
+        "global": {
+          "displayName": "Administer core",
+          "description": "May configure core settings of SCM-Manager"
+        },
+        "*": {
+          "displayName": "Administer core and plugins",
+          "description": "May configure settings of SCM-Manager core and all plugins"
+        }
       }
     },
     "unknown": "Unknown permission"
@@ -67,10 +81,6 @@
       "permissionWrite": {
         "displayName": "modify permissions",
         "description": "May modify the permissions of the repository"
-      },
-      "healthCheck": {
-        "displayName": "health check",
-        "description": "May run the health check for the repository"
       },
       "*": {
         "displayName": "overall",

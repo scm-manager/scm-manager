@@ -1,0 +1,7 @@
+<repository-permissions>
+  <verbs>
+    <verb>hg</verb>
+  </verbs>
+  <roles>
+  </roles>
+</repository-permissions>

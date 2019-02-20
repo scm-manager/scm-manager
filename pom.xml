@@ -826,7 +826,7 @@
     <jetty.maven.version>9.4.14.v20181114</jetty.maven.version>
 
     <!-- security libraries -->
-    <ssp.version>1.1.0</ssp.version>
+    <ssp.version>1.2.0</ssp.version>
     <shiro.version>1.4.0</shiro.version>
 
     <!-- repository libraries -->

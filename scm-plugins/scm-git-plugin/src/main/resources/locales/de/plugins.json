@@ -39,17 +39,27 @@
   },
   "permissions" : {
     "configuration": {
-      "read": {
+      "read,write": {
         "git": {
-          "displayName": "Git Konfiguration lesen",
-          "description": "Darf die git Konfiguration lesen."
-        }
-      },
-      "write": {
-        "git": {
-          "displayName": "Git Konfiguration schreiben",
+          "displayName": "Git Konfiguration ändern",
           "description": "Darf die git Konfiguration verändern."
         }
+      }
+    },
+    "repository": {
+      "git": {
+        "*": {
+          "displayName": "Repository-spezifische Git Konfiguration ändern",
+          "description": "Darf die git Konfiguration für alle Repositories verändern."
+        }
+      }
+    }
+  },
+  "verbs": {
+    "repository": {
+      "git": {
+        "displayName": "Git konfigurieren",
+        "description": "Darf die git Konfiguration für dieses Repository verändern."
       }
     }
   }
