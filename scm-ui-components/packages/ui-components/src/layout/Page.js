@@ -36,8 +36,21 @@ class Page extends React.Component<Props> {
     );
   }
 
+  renderPageActions() {
+    const { children } = this.props;
+
+    let content = null;
+    React.Children.forEach(children, child => {
+      if (child && child.type.name === "PageActions") {
+        content = child;
+      }
+    });
+    return content;
+  }
+
   renderContent() {
     const { loading, children, showContentOnError, error } = this.props;
+
     if (error && !showContentOnError) {
       return null;
     }
@@ -47,20 +60,8 @@ class Page extends React.Component<Props> {
 
     let content = [];
     React.Children.forEach(children, child => {
-      if (child.type.name !== "PageActions") {
+      if (child && child.type.name !== "PageActions") {
         content.push(child);
-      }
-    });
-    return content;
-  }
-
-  renderPageActions() {
-    const { children } = this.props;
-
-    let content = null;
-    React.Children.forEach(children, child => {
-      if (child.type.name === "PageActions") {
-        content = child;
       }
     });
     return content;
