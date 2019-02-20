@@ -35,6 +35,10 @@
       }
     },
     "configuration": {
+      "list": {
+        "displayName": "Basis für Administration",
+        "description": "Voraussetzung für alle anderen Administrationsberechtigungen. Ohne diese Berechtigung wird keine Administrationsansicht gezeigt."
+      },
       "read,write": {
         "global": {
           "displayName": "zentrale Konfiguration",

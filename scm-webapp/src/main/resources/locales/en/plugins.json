@@ -35,6 +35,10 @@
       }
     },
     "configuration": {
+      "list": {
+        "displayName": "Basic administration",
+        "description": "Prerequisite for all other administration permissions. Without this, no configuration will be visible."
+      },
       "read,write": {
         "global": {
           "displayName": "Administer core",
