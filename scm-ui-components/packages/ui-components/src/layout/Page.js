@@ -25,8 +25,10 @@ class Page extends React.Component<Props> {
               <Title title={title} />
               <Subtitle subtitle={subtitle} />
             </div>
-            <div className="column is-two-fifths is-pulled-right">
+            <div className="column is-two-fifths">
+              <div className="is-pulled-right">
               {this.renderPageActions()}
+              </div>
             </div>
           </div>
           <ErrorNotification error={error} />

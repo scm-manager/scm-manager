@@ -9,7 +9,7 @@ class Subtitle extends React.Component<Props> {
   render() {
     const { subtitle } = this.props;
     if (subtitle) {
-      return <h1 className="subtitle">{subtitle}</h1>;
+      return <h2 className="subtitle">{subtitle}</h2>;
     }
     return null;
   }
