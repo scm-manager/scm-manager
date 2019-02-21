@@ -3,7 +3,6 @@
 
 $blue: #33b2e8;
 $mint: #11dfd0;
-$primary: #00d1df;
 
 $info: $blue;
 
@@ -101,7 +100,7 @@ $fa-font-path: "webfonts";
   height: 2.5rem;
 
   &.is-primary {
-    background-color: $primary;
+    background-color: #00d1df;
   }
   &.is-primary:hover, &.is-primary.is-hovered {
     background-color: #00b9c6;
