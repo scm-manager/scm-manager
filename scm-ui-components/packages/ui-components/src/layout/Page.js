@@ -6,6 +6,7 @@ import Title from "./Title";
 import Subtitle from "./Subtitle";
 import injectSheet from "react-jss";
 import classNames from "classnames";
+import PageActions from "./PageActions";
 
 type Props = {
   title?: string,
@@ -46,7 +47,7 @@ class Page extends React.Component<Props> {
     let content = null;
     let pageActionsExists = false;
     React.Children.forEach(children, child => {
-      if (child && child.type.name === "PageActions") {
+      if (child && child.type.name === PageActions.name) {
         content = child;
         pageActionsExists = true;
       }
