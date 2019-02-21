@@ -74,6 +74,7 @@ type Props = {
   history: History
 };
 
+
 class Permissions extends React.Component<Props> {
   componentDidMount() {
     const {
@@ -152,12 +153,6 @@ class Permissions extends React.Component<Props> {
                 <LabelWithHelpIcon
                   label={t("permission.name")}
                   helpText={t("permission.help.nameHelpText")}
-                />
-              </th>
-              <th className="is-hidden-mobile">
-                <LabelWithHelpIcon
-                  label={t("permission.group-permission")}
-                  helpText={t("permission.help.groupPermissionHelpText")}
                 />
               </th>
               <th>

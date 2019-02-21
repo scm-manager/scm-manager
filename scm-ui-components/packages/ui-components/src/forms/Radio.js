@@ -22,8 +22,7 @@ class Radio extends React.Component<Props> {
 
   render() {
     return (
-      <div className="field is-grouped">
-        <div className="control">
+
           <label className="radio" disabled={this.props.disabled}>
             <input
               type="radio"
@@ -36,8 +35,6 @@ class Radio extends React.Component<Props> {
             {this.props.label}
             {this.renderHelp()}
           </label>
-        </div>
-      </div>
     );
   }
 }

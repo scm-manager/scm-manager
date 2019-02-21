@@ -5,7 +5,8 @@ import {
   Autocomplete,
   SubmitButton,
   Button,
-  LabelWithHelpIcon
+  LabelWithHelpIcon,
+  Radio
 } from "@scm-manager/ui-components";
 import RoleSelector from "../components/RoleSelector";
 import type {
@@ -54,14 +55,11 @@ class CreatePermissionForm extends React.Component<Props, State> {
   permissionScopeChanged = event => {
     const groupPermission = event.target.value === "GROUP_PERMISSION";
     this.setState({
+      value: undefined,
+      name: "",
       groupPermission: groupPermission,
-      valid: validator.isPermissionValid(
-        this.state.name,
-        groupPermission,
-        this.props.currentPermissions
-      )
+      valid: false
     });
-    this.setState({ ...this.state, groupPermission });
   };
 
   loadUserAutocompletion = (inputValue: string) => {
@@ -98,7 +96,7 @@ class CreatePermissionForm extends React.Component<Props, State> {
         <Autocomplete
           loadSuggestions={this.loadGroupAutocompletion}
           valueSelected={this.groupOrUserSelected}
-          value={this.state.value}
+          value={this.state.value ? this.state.value : ""}
           label={t("permission.group")}
           noOptionsMessage={t("permission.autocomplete.no-group-options")}
           loadingMessage={t("permission.autocomplete.loading")}
@@ -110,7 +108,7 @@ class CreatePermissionForm extends React.Component<Props, State> {
       <Autocomplete
         loadSuggestions={this.loadUserAutocompletion}
         valueSelected={this.groupOrUserSelected}
-        value={this.state.value}
+        value={this.state.value ? this.state.value : ""}
         label={t("permission.user")}
         noOptionsMessage={t("permission.autocomplete.no-user-options")}
         loadingMessage={t("permission.autocomplete.loading")}
@@ -158,36 +156,31 @@ class CreatePermissionForm extends React.Component<Props, State> {
         </h2>
         {advancedDialog}
         <form onSubmit={this.submit}>
-          <div className="control">
-            <label className="radio">
-              <input
-                type="radio"
+          <div className="field is-grouped">
+            <div className="control">
+              <Radio
                 name="permission_scope"
-                checked={!this.state.groupPermission}
                 value="USER_PERMISSION"
+                checked={!this.state.groupPermission}
+                label={t("permission.user-permission")}
                 onChange={this.permissionScopeChanged}
               />
-              {t("permission.user-permission")}
-            </label>
-            <label className="radio">
-              <input
-                type="radio"
+              <Radio
                 name="permission_scope"
                 value="GROUP_PERMISSION"
                 checked={this.state.groupPermission}
+                label={t("permission.group-permission")}
                 onChange={this.permissionScopeChanged}
               />
-              {t("permission.group-permission")}
-            </label>
+            </div>
           </div>
-
           <div className="columns">
-            <div className="column is-two-thirds">
+            <div className="column is-three-fifths">
               {this.renderAutocompletionField()}
             </div>
-            <div className="column is-one-third">
+            <div className="column is-two-fifths">
               <div className="columns">
-                <div className="column is-half">
+                <div className="column is-narrow">
                   <RoleSelector
                     availableRoles={availableRoleNames}
                     label={t("permission.role")}
@@ -196,7 +189,7 @@ class CreatePermissionForm extends React.Component<Props, State> {
                     role={matchingRole}
                   />
                 </div>
-                <div className="column is-half">
+                <div className="column">
                   <LabelWithHelpIcon
                     label={t("permission.permissions")}
                     helpText={t("permission.help.permissionsHelpText")}
@@ -252,13 +245,16 @@ class CreatePermissionForm extends React.Component<Props, State> {
     this.setState({
       name: "",
       verbs: this.props.availablePermissions.availableRoles[0].verbs,
-      groupPermission: false,
-      valid: true
+      valid: true,
+      value: undefined
     });
   };
 
   handleRoleChange = (role: string) => {
     const selectedRole = this.findAvailableRole(role);
+    if (!selectedRole) {
+      return;
+    }
     this.setState({
       verbs: selectedRole.verbs
     });

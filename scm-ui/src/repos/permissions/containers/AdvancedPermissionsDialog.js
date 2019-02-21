@@ -50,18 +50,20 @@ class AdvancedPermissionsDialog extends React.Component<Props, State> {
       <SubmitButton label={t("permission.advanced.dialog.submit")} />
     ) : null;
 
+    const body = <>{verbSelectBoxes}</>;
 
-    const body = (
-      <>
-        <div className="content">{verbSelectBoxes}</div>
-        <form onSubmit={this.onSubmit}>
-          {submitButton}
-          <Button
-            label={t("permission.advanced.dialog.abort")}
-            action={onClose}
-          />
-        </form>
-      </>
+    const footer = (
+      <form onSubmit={this.onSubmit}>
+        <div className="field is-grouped">
+          <p className="control">{submitButton}</p>
+          <p className="control">
+            <Button
+              label={t("permission.advanced.dialog.abort")}
+              action={onClose}
+            />
+          </p>
+        </div>
+      </form>
     );
 
     return (
@@ -69,6 +71,7 @@ class AdvancedPermissionsDialog extends React.Component<Props, State> {
         title={t("permission.advanced.dialog.title")}
         closeFunction={() => onClose()}
         body={body}
+        footer={footer}
         active={true}
       />
     );
