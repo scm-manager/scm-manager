@@ -47,6 +47,19 @@ hr.header-with-actions {
   height: 1px;
   margin-top: -10px;
   background-color: $primary;
+
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
+}
+.is-mobile-create-button-spacing {
+  @media screen and (max-width: 768px) {
+    border: 2px solid #e9f7fd;
+    padding: 1em 1em;
+    margin-top: 0 !important;
+    width: 100%;
+    text-align: center !important;
+  }
 }
 
 .footer {

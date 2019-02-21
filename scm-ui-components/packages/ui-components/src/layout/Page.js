@@ -21,7 +21,8 @@ type Props = {
 
 const styles = {
   spacing: {
-    marginTop: "1.25rem"
+    marginTop: "1.25rem",
+    textAlign: "right"
   }
 };
 
@@ -62,7 +63,7 @@ class Page extends React.Component<Props> {
             <Subtitle subtitle={subtitle} />
           </div>
           <div className="column is-two-fifths">
-            <div className={classNames(classes.spacing, "is-pulled-right")}>{content}</div>
+            <div className={classNames(classes.spacing, "is-mobile-create-button-spacing")}>{content}</div>
           </div>
         </div>
         {underline}
