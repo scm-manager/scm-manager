@@ -5,7 +5,12 @@ import { translate } from "react-i18next";
 import type { Group } from "@scm-manager/ui-types";
 import type { PagedCollection } from "@scm-manager/ui-types";
 import type { History } from "history";
-import { Page, Paginator } from "@scm-manager/ui-components";
+import {
+  Page,
+  PageActions,
+  Button,
+  Paginator
+} from "@scm-manager/ui-components";
 import { GroupTable } from "./../components/table";
 import CreateGroupButton from "../components/buttons/CreateGroupButton";
 
@@ -73,6 +78,13 @@ class Groups extends React.Component<Props> {
         <GroupTable groups={groups} />
         {this.renderPaginator()}
         {this.renderCreateButton()}
+        <PageActions>
+          <Button
+            label={t("create-group-button.label")}
+            link="/groups/add"
+            color="primary"
+          />
+        </PageActions>
       </Page>
     );
   }
