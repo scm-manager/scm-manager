@@ -11,6 +11,7 @@ import SourcesView from "./SourcesView";
 import HistoryView from "./HistoryView";
 import { getSources } from "../modules/sources";
 import { connect } from "react-redux";
+import {ExtensionPoint} from "@scm-manager/ui-extensions";
 
 type Props = {
   loading: boolean,
@@ -148,6 +149,11 @@ class Content extends React.Component<Props, State> {
                 <td>{t("sources.content.description")}</td>
                 <td className="is-word-break">{description}</td>
               </tr>
+              <ExtensionPoint
+                name="repos.content.metadata"
+                props={{ file }}
+              >
+              </ExtensionPoint>
             </tbody>
           </table>
         </div>
