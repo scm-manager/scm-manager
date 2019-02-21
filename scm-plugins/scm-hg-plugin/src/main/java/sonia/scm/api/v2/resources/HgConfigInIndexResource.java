@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import sonia.scm.config.ConfigurationPermissions;
 import sonia.scm.plugin.Extension;
+import sonia.scm.repository.HgConfig;
 import sonia.scm.web.JsonEnricherBase;
 import sonia.scm.web.JsonEnricherContext;
 
@@ -26,7 +27,7 @@ public class HgConfigInIndexResource extends JsonEnricherBase {
 
   @Override
   public void enrich(JsonEnricherContext context) {
-    if (resultHasMediaType(INDEX, context) && ConfigurationPermissions.list().isPermitted()) {
+    if (resultHasMediaType(INDEX, context) && ConfigurationPermissions.read(HgConfig.PERMISSION).isPermitted()) {
       String hgConfigUrl = new LinkBuilder(scmPathInfoStore.get().get(), HgConfigResource.class)
         .method("get")
         .parameters()
