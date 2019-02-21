@@ -44,9 +44,7 @@ $info: $blue;
 
 // shown in top section when pageactions set
 hr.header-with-actions {
-  height: 1px;
   margin-top: -10px;
-  background-color: $primary;
 
   @media screen and (max-width: 768px) {
     display: none;
