@@ -29,7 +29,7 @@ describe("DeletePermissionButton", () => {
     expect(navLink.text()).toBe("");
   });
 
-  it("should render the navLink", () => {
+  it("should render the delete icon", () => {
     const permission = {
       _links: {
         delete: {
@@ -38,14 +38,14 @@ describe("DeletePermissionButton", () => {
       }
     };
 
-    const navLink = mount(
+    const deleteIcon = mount(
       <DeletePermissionButton
         permission={permission}
         deletePermission={() => {}}
       />,
       options.get()
     );
-    expect(navLink.text()).not.toBe("");
+    expect(deleteIcon.html()).not.toBe("");
   });
 
   it("should open the confirm dialog on button click", () => {
@@ -64,7 +64,7 @@ describe("DeletePermissionButton", () => {
       />,
       options.get()
     );
-    button.find("button").simulate("click");
+    button.find(".fa-trash").simulate("click");
 
     expect(confirmAlert.mock.calls.length).toBe(1);
   });
@@ -91,7 +91,7 @@ describe("DeletePermissionButton", () => {
       />,
       options.get()
     );
-    button.find("button").simulate("click");
+    button.find(".fa-trash").simulate("click");
 
     expect(calledUrl).toBe("/permission");
   });

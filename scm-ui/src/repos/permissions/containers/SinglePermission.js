@@ -14,15 +14,21 @@ import {
 } from "../modules/permissions";
 import { connect } from "react-redux";
 import type { History } from "history";
-import { Button, Checkbox } from "@scm-manager/ui-components";
+import { Button } from "@scm-manager/ui-components";
 import DeletePermissionButton from "../components/buttons/DeletePermissionButton";
 import RoleSelector from "../components/RoleSelector";
 import AdvancedPermissionsDialog from "./AdvancedPermissionsDialog";
+import classNames from "classnames";
+import injectSheet from "react-jss";
 
 type Props = {
   availablePermissions: AvailableRepositoryPermissions,
   submitForm: Permission => void,
-  modifyPermission: (permission: Permission, namespace: string, name: string) => void,
+  modifyPermission: (
+    permission: Permission,
+    namespace: string,
+    name: string
+  ) => void,
   permission: Permission,
   t: string => string,
   namespace: string,
@@ -30,14 +36,32 @@ type Props = {
   match: any,
   history: History,
   loading: boolean,
-  deletePermission: (permission: Permission, namespace: string, name: string) => void,
-  deleteLoading: boolean
+  deletePermission: (
+    permission: Permission,
+    namespace: string,
+    name: string
+  ) => void,
+  deleteLoading: boolean,
+  classes: any
 };
 
 type State = {
   role: string,
   permission: Permission,
   showAdvancedDialog: boolean
+};
+
+const styles = {
+  iconColor: {
+    color: "#9a9a9a"
+  },
+  centerMiddle: {
+    display: "table-cell",
+    verticalAlign: "middle !important"
+  },
+  columnWidth: {
+    width: "100%"
+  }
 };
 
 class SinglePermission extends React.Component<Props, State> {
@@ -96,7 +120,8 @@ class SinglePermission extends React.Component<Props, State> {
       availablePermissions,
       loading,
       namespace,
-      repoName
+      repoName,
+      classes
     } = this.props;
     const availableRoleNames = availablePermissions.availableRoles.map(
       r => r.name
@@ -125,23 +150,26 @@ class SinglePermission extends React.Component<Props, State> {
       />
     ) : null;
 
+    const iconType =
+      permission && permission.groupPermission ? (
+        <i title={t("permission.group")} className={classNames("fas fa-user-friends", classes.iconColor)} />
+      ) : (
+        <i title={t("permission.user")} className={classNames("fas fa-user", classes.iconColor)} />
+      );
+
     return (
-      <tr>
-        <td>{permission.name}</td>
-        <td>
-          <Checkbox
-            checked={permission ? permission.groupPermission : false}
-            disabled={true}
-          />
+      <tr className={classes.columnWidth}>
+        <td className={classes.centerMiddle}>
+          {iconType} {permission.name}
         </td>
         {roleSelector}
-        <td>
+        <td className={classes.centerMiddle}>
           <Button
             label={t("permission.advanced-button.label")}
             action={this.handleDetailedPermissionsPressed}
           />
         </td>
-        <td>
+        <td className={classes.centerMiddle}>
           <DeletePermissionButton
             permission={permission}
             namespace={namespace}
@@ -253,4 +281,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(translate("repos")(SinglePermission));
+)(translate("repos")(injectSheet(styles)(SinglePermission)));
