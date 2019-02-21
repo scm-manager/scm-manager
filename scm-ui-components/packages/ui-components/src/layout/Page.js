@@ -84,7 +84,7 @@ class Page extends React.Component<Props> {
 
     let content = [];
     React.Children.forEach(children, child => {
-      if (child && child.type.name !== "PageActions") {
+      if (child && child.type.name !== PageActions.name) {
         content.push(child);
       }
     });
