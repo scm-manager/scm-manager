@@ -45,5 +45,10 @@ public enum Feature
    * The default branch of the repository is a combined branch of all
    * repository branches.
    */
-  COMBINED_DEFAULT_BRANCH
+  COMBINED_DEFAULT_BRANCH,
+  /**
+   * The repository supports computation of incoming changes (either diff or list of changesets) of one branch
+   * in respect to another target branch.
+   */
+  INCOMING_REVISION
 }

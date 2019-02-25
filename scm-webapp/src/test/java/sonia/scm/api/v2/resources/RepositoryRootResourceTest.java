@@ -6,7 +6,6 @@ import com.google.common.io.Resources;
 import com.google.inject.util.Providers;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.Subject;
-import org.assertj.core.api.Assertions;
 import org.jboss.resteasy.core.Dispatcher;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
@@ -18,8 +17,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import sonia.scm.PageResult;
 import sonia.scm.repository.NamespaceAndName;
-import sonia.scm.repository.Permission;
-import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryIsNotArchivedException;
 import sonia.scm.repository.RepositoryManager;
@@ -30,6 +27,7 @@ import sonia.scm.web.VndMediaType;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -41,15 +39,12 @@ import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
 import static javax.servlet.http.HttpServletResponse.SC_PRECONDITION_FAILED;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentCaptor.forClass;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doNothing;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyObject;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -126,7 +121,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   }
 
   @Test
-  public void shouldFindExistingRepository() throws URISyntaxException {
+  public void shouldFindExistingRepository() throws URISyntaxException, UnsupportedEncodingException {
     mockRepository("space", "repo");
 
     MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo");
@@ -139,7 +134,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   }
 
   @Test
-  public void shouldMapProperties() throws URISyntaxException {
+  public void shouldMapProperties() throws URISyntaxException, UnsupportedEncodingException {
     Repository repository = mockRepository("space", "repo");
     repository.setProperty("testKey", "testValue");
 
@@ -152,7 +147,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   }
 
   @Test
-  public void shouldGetAll() throws URISyntaxException {
+  public void shouldGetAll() throws URISyntaxException, UnsupportedEncodingException {
     PageResult<Repository> singletonPageResult = createSingletonPageResult(mockRepository("space", "repo"));
     when(repositoryManager.getPage(any(), eq(0), eq(10))).thenReturn(singletonPageResult);
 
@@ -291,34 +286,12 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
 
     dispatcher.invoke(request, response);
 
-    Assertions.assertThat(createCaptor.getValue().getPermissions())
+    assertThat(createCaptor.getValue().getPermissions())
       .hasSize(1)
       .allSatisfy(p -> {
         assertThat(p.getName()).isEqualTo("trillian");
-        assertThat(p.getType()).isEqualTo(PermissionType.OWNER);
+        assertThat(p.getVerbs()).containsExactly("*");
       });
-  }
-
-  @Test
-  public void shouldNotOverwriteExistingPermissionsOnUpdate() throws Exception {
-    Repository existingRepository = mockRepository("space", "repo");
-    existingRepository.setPermissions(singletonList(new Permission("user", PermissionType.READ)));
-
-    URL url = Resources.getResource("sonia/scm/api/v2/repository-test-update.json");
-    byte[] repository = Resources.toByteArray(url);
-
-    ArgumentCaptor<Repository> modifiedRepositoryCaptor = forClass(Repository.class);
-    doNothing().when(repositoryManager).modify(modifiedRepositoryCaptor.capture());
-
-    MockHttpRequest request = MockHttpRequest
-      .put("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo")
-      .contentType(VndMediaType.REPOSITORY)
-      .content(repository);
-    MockHttpResponse response = new MockHttpResponse();
-
-    dispatcher.invoke(request, response);
-
-    assertFalse(modifiedRepositoryCaptor.getValue().getPermissions().isEmpty());
   }
 
   @Test

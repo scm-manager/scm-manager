@@ -73,41 +73,37 @@ public final class UberClassLoader extends ClassLoader
 
   //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param name
-   *
-   * @return
-   *
-   * @throws ClassNotFoundException
-   */
   @Override
   protected Class<?> findClass(String name) throws ClassNotFoundException
   {
     Class<?> clazz = getFromCache(name);
 
-    if (clazz == null)
-    {
-      for (PluginWrapper plugin : plugins)
-      {
-        ClassLoader cl = plugin.getClassLoader();
-
-        // load class could be slow, perhaps we should call
-        // find class via reflection ???
-        clazz = cl.loadClass(name);
-
-        if (clazz != null)
-        {
-          cache.put(name, new WeakReference<Class<?>>(clazz));
-
-          break;
-        }
-      }
+    if (clazz == null) {
+      clazz = findClassInPlugins(name);
+      cache.put(name, new WeakReference<>(clazz));
     }
 
     return clazz;
+  }
+
+  private Class<?> findClassInPlugins(String name) throws ClassNotFoundException {
+    for (PluginWrapper plugin : plugins) {
+      Class<?> clazz = findClass(plugin.getClassLoader(), name);
+      if (clazz != null) {
+        return clazz;
+      }
+    }
+    throw new ClassNotFoundException("could not find class " + name + " in any of the installed plugins");
+  }
+
+  private Class<?> findClass(ClassLoader classLoader, String name) {
+    try {
+      // load class could be slow, perhaps we should call
+      // find class via reflection ???
+      return classLoader.loadClass(name);
+    } catch (ClassNotFoundException ex) {
+      return null;
+    }
   }
 
   /**

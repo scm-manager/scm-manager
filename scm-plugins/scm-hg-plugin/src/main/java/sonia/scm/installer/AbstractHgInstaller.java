@@ -35,14 +35,12 @@ package sonia.scm.installer;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.repository.HgConfig;
 import sonia.scm.repository.HgRepositoryHandler;
-import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
-import java.io.IOException;
+
 import sonia.scm.net.ahc.AdvancedHttpClient;
 
 /**
@@ -52,32 +50,6 @@ import sonia.scm.net.ahc.AdvancedHttpClient;
 public abstract class AbstractHgInstaller implements HgInstaller
 {
 
-  /** Field description */
-  public static final String DIRECTORY_REPOSITORY = "repositories";
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param baseDirectory
-   * @param config
-   *
-   * @throws IOException
-   */
-  @Override
-  public void install(File baseDirectory, HgConfig config) throws IOException
-  {
-    File repoDirectory = new File(
-                             baseDirectory,
-                             DIRECTORY_REPOSITORY.concat(File.separator).concat(
-                               HgRepositoryHandler.TYPE_NAME));
-
-    IOUtil.mkdirs(repoDirectory);
-    config.setRepositoryDirectory(repoDirectory);
-  }
 
   /**
    * Method description

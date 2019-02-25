@@ -35,13 +35,20 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Inject;
-import com.google.inject.Provider;
 
+import com.google.common.annotations.VisibleForTesting;
+import com.google.inject.OutOfScopeException;
+import com.google.inject.Provider;
+import com.google.inject.ProvisionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
+
 /**
+ * Injection provider for {@link HgContext}.
+ * This provider returns an instance {@link HgContext} from request scope, if no {@link HgContext} could be found in
+ * request scope (mostly because the scope is not available) a new {@link HgContext} gets returned.
  *
  * @author Sebastian Sdorra
  */
@@ -49,36 +56,50 @@ public class HgContextProvider implements Provider<HgContext>
 {
 
   /**
-   * the logger for HgContextProvider
+   * the LOG for HgContextProvider
    */
-  private static final Logger logger =
+  private static final Logger LOG =
     LoggerFactory.getLogger(HgContextProvider.class);
 
   //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public HgContext get()
-  {
-    HgContext ctx = context;
+  private Provider<HgContextRequestStore> requestStoreProvider;
 
-    if (ctx == null)
-    {
-      ctx = new HgContext();
-      logger.trace("context is null, we are probably out of request scope");
-    }
-
-    return ctx;
+  @Inject
+  public HgContextProvider(Provider<HgContextRequestStore> requestStoreProvider) {
+    this.requestStoreProvider = requestStoreProvider;
   }
 
-  //~--- fields ---------------------------------------------------------------
+  @VisibleForTesting
+  public HgContextProvider() {
+  }
 
-  /** Field description */
-  @Inject(optional = true)
-  private HgContext context;
+  @Override
+  public HgContext get() {
+    HgContext context = fetchContextFromRequest();
+    if (context != null) {
+      LOG.trace("return HgContext from request store");
+      return context;
+    }
+    LOG.trace("could not find context in request scope, returning new instance");
+    return new HgContext();
+  }
+
+  private HgContext fetchContextFromRequest() {
+    try {
+      if (requestStoreProvider != null) {
+        return requestStoreProvider.get().get();
+      } else {
+        LOG.trace("no request store provider defined, could not return context from request");
+        return null;
+      }
+    } catch (ProvisionException ex) {
+      if (ex.getCause() instanceof OutOfScopeException) {
+        LOG.trace("we are currently out of request scope, failed to retrieve context");
+        return null;
+      } else {
+        throw ex;
+      }
+    }
+  }
 }

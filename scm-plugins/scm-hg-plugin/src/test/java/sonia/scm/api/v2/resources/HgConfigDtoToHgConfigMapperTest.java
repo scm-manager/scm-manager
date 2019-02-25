@@ -3,10 +3,8 @@ package sonia.scm.api.v2.resources;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.repository.HgConfig;
-
-import java.io.File;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -23,7 +21,6 @@ public class HgConfigDtoToHgConfigMapperTest {
     HgConfig config = mapper.map(dto);
 
     assertTrue(config.isDisabled());
-    assertEquals("repository/directory", config.getRepositoryDirectory().getPath());
 
     assertEquals("ABC", config.getEncoding());
     assertEquals("/etc/hg", config.getHgBinary());
@@ -31,18 +28,21 @@ public class HgConfigDtoToHgConfigMapperTest {
     assertEquals("/etc/", config.getPythonPath());
     assertTrue(config.isShowRevisionInId());
     assertTrue(config.isUseOptimizedBytecode());
+    assertTrue(config.isDisableHookSSLValidation());
+    assertTrue(config.isEnableHttpPostArgs());
   }
 
   private HgConfigDto createDefaultDto() {
     HgConfigDto configDto = new HgConfigDto();
     configDto.setDisabled(true);
-    configDto.setRepositoryDirectory(new File("repository/directory"));
     configDto.setEncoding("ABC");
     configDto.setHgBinary("/etc/hg");
     configDto.setPythonBinary("/py");
     configDto.setPythonPath("/etc/");
     configDto.setShowRevisionInId(true);
     configDto.setUseOptimizedBytecode(true);
+    configDto.setDisableHookSSLValidation(true);
+    configDto.setEnableHttpPostArgs(true);
 
     return configDto;
   }

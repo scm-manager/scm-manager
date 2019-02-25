@@ -82,7 +82,7 @@ public class BranchRootResourceTest extends RepositoryTestBase {
 
 
   @InjectMocks
-  private ChangesetToChangesetDtoMapperImpl changesetToChangesetDtoMapper;
+  private DefaultChangesetToChangesetDtoMapperImpl changesetToChangesetDtoMapper;
 
   private final Subject subject = mock(Subject.class);
   private final ThreadState subjectThreadState = new SubjectThreadState(subject);

@@ -16,15 +16,15 @@ import org.junit.runner.RunWith;
 import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.repository.HgConfig;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.web.HgVndMediaType;
 
 import javax.inject.Provider;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -93,14 +93,13 @@ public class HgConfigResourceTest {
     ObjectNode responseJson = new ObjectMapper().readValue(responseString, ObjectNode.class);
 
     assertTrue(responseString.contains("\"disabled\":false"));
-    assertTrue(responseJson.get("repositoryDirectory").asText().endsWith("repository/directory"));
     assertTrue(responseString.contains("\"self\":{\"href\":\"/v2/config/hg"));
     assertTrue(responseString.contains("\"update\":{\"href\":\"/v2/config/hg"));
   }
 
   @Test
   @SubjectAware(username = "readWrite")
-  public void shouldGetHgConfigEvenWhenItsEmpty() throws URISyntaxException {
+  public void shouldGetHgConfigEvenWhenItsEmpty() throws URISyntaxException, UnsupportedEncodingException {
     when(repositoryHandler.getConfig()).thenReturn(null);
 
     MockHttpResponse response = get();
@@ -111,7 +110,7 @@ public class HgConfigResourceTest {
 
   @Test
   @SubjectAware(username = "readOnly")
-  public void shouldGetHgConfigWithoutUpdateLink() throws URISyntaxException {
+  public void shouldGetHgConfigWithoutUpdateLink() throws URISyntaxException, UnsupportedEncodingException {
     MockHttpResponse response = get();
 
     assertEquals(HttpServletResponse.SC_OK, response.getStatus());
@@ -162,7 +161,6 @@ public class HgConfigResourceTest {
   private HgConfig createConfiguration() {
     HgConfig config = new HgConfig();
     config.setDisabled(false);
-    config.setRepositoryDirectory(new File("repository/directory"));
     return config;
   }
 

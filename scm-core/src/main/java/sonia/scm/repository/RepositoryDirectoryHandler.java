@@ -40,8 +40,11 @@ import java.io.File;
  * @author Sebastian Sdorra
  * @since 1.36
  */
-public interface RepositoryDirectoryHandler extends RepositoryHandler
-{
+public interface RepositoryDirectoryHandler extends RepositoryHandler {
 
-  public File getDirectory(Repository repository);
+  /**
+   * Get the current directory of the repository for the given id.
+   * @return the current directory of the given repository
+   */
+  File getDirectory(String repositoryId);
 }

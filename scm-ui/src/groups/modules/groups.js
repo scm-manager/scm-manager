@@ -333,7 +333,7 @@ function listReducer(state: any = {}, action: any = {}) {
         ...state,
         entries: groupNames,
         entry: {
-          groupCreatePermission: action.payload._links.create ? true : false,
+          groupCreatePermission: !!action.payload._links.create,
           page: action.payload.page,
           pageTotal: action.payload.pageTotal,
           _links: action.payload._links

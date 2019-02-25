@@ -16,11 +16,13 @@ public abstract class RepositoryTestBase {
   protected Provider<ChangesetRootResource> changesetRootResource;
   protected Provider<SourceRootResource> sourceRootResource;
   protected Provider<ContentResource> contentResource;
-  protected Provider<PermissionRootResource> permissionRootResource;
+  protected Provider<RepositoryPermissionRootResource> permissionRootResource;
   protected Provider<DiffRootResource> diffRootResource;
   protected Provider<ModificationsRootResource> modificationsRootResource;
   protected Provider<FileHistoryRootResource> fileHistoryRootResource;
   protected Provider<RepositoryCollectionResource> repositoryCollectionResource;
+  protected Provider<IncomingRootResource> incomingRootResource;
+  protected Provider<MergeResource> mergeResource;
 
 
   RepositoryRootResource getRepositoryRootResource() {
@@ -36,7 +38,9 @@ public abstract class RepositoryTestBase {
       permissionRootResource,
       diffRootResource,
       modificationsRootResource,
-      fileHistoryRootResource)), repositoryCollectionResource);
+      fileHistoryRootResource,
+      incomingRootResource,
+      mergeResource)), repositoryCollectionResource);
   }
 
 

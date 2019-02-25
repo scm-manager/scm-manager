@@ -10,8 +10,6 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import sonia.scm.repository.HealthCheckFailure;
-import sonia.scm.repository.Permission;
-import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.RepositoryService;
@@ -25,7 +23,7 @@ import static java.util.stream.Stream.of;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -211,6 +209,19 @@ public class RepositoryToRepositoryDtoMapperTest {
     assertTrue(dto.getLinks().getLinksBy("protocol").isEmpty());
   }
 
+  @Test
+  public void shouldAppendLinks() {
+    HalEnricherRegistry registry = new HalEnricherRegistry();
+    registry.register(Repository.class, (ctx, appender) -> {
+      Repository repository = ctx.oneRequireByType(Repository.class);
+      appender.appendLink("id", "http://" + repository.getId());
+    });
+    mapper.setRegistry(registry);
+
+    RepositoryDto dto = mapper.map(createTestRepository());
+    assertEquals("http://1", dto.getLinks().getLinkBy("id").get().getHref());
+  }
+
   private ScmProtocol mockProtocol(String type, String protocol) {
     return new MockScmProtocol(type, protocol);
   }
@@ -225,7 +236,6 @@ public class RepositoryToRepositoryDtoMapperTest {
     repository.setId("1");
     repository.setCreationDate(System.currentTimeMillis());
     repository.setHealthCheckFailures(singletonList(new HealthCheckFailure("1", "summary", "url", "failure")));
-    repository.setPermissions(singletonList(new Permission("permission", PermissionType.READ)));
 
     return repository;
   }

@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
+import sonia.scm.user.UserTestData;
 
 import java.net.URI;
 import java.time.Instant;
@@ -148,5 +149,18 @@ public class UserToUserDtoMapperTest {
 
     assertEquals(expectedCreationDate, userDto.getCreationDate());
     assertEquals(expectedModificationDate, userDto.getLastModified());
+  }
+
+  @Test
+  public void shouldAppendLink() {
+    User trillian = UserTestData.createTrillian();
+
+    HalEnricherRegistry registry = new HalEnricherRegistry();
+    registry.register(User.class, (ctx, appender) -> appender.appendLink("sample", "http://" + ctx.oneByType(User.class).get().getName()));
+    mapper.setRegistry(registry);
+
+    UserDto userDto = mapper.map(trillian);
+
+    assertEquals("http://trillian", userDto.getLinks().getLinkBy("sample").get().getHref());
   }
 }

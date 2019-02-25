@@ -3,20 +3,30 @@ import React from "react";
 import type { Changeset, Repository } from "@scm-manager/ui-types";
 import { Interpolate, translate } from "react-i18next";
 import injectSheet from "react-jss";
-import ChangesetTag from "./ChangesetTag";
-import ChangesetAuthor from "./ChangesetAuthor";
-import { parseDescription } from "./changesets";
-import { DateFromNow } from "@scm-manager/ui-components";
-import AvatarWrapper from "./AvatarWrapper";
-import AvatarImage from "./AvatarImage";
+
+import {
+  DateFromNow,
+  ChangesetId,
+  ChangesetTag,
+  ChangesetAuthor,
+  ChangesetDiff,
+  AvatarWrapper,
+  AvatarImage,
+  changesets
+} from "@scm-manager/ui-components";
+
 import classNames from "classnames";
-import ChangesetId from "./ChangesetId";
 import type { Tag } from "@scm-manager/ui-types";
-import ScmDiff from "../../containers/ScmDiff";
+import { ExtensionPoint } from "@scm-manager/ui-extensions";
 
 const styles = {
   spacing: {
     marginRight: "1em"
+  },
+  tags: {
+    "& .tag": {
+      marginLeft: ".25rem"
+    }
   }
 };
 
@@ -31,7 +41,7 @@ class ChangesetDetails extends React.Component<Props> {
   render() {
     const { changeset, repository, classes } = this.props;
 
-    const description = parseDescription(changeset.description);
+    const description = changesets.parseDescription(changeset.description);
 
     const id = (
       <ChangesetId repository={repository} changeset={changeset} link={false} />
@@ -41,11 +51,19 @@ class ChangesetDetails extends React.Component<Props> {
     return (
       <div>
         <div className="content">
-          <h4>{description.title}</h4>
+          <h4>
+            <ExtensionPoint
+              name="changeset.description"
+              props={{ changeset, value: description.title }}
+              renderAll={false}
+            >
+              {description.title}
+            </ExtensionPoint>
+          </h4>
           <article className="media">
             <AvatarWrapper>
               <p className={classNames("image", "is-64x64", classes.spacing)}>
-                <AvatarImage changeset={changeset} />
+                <AvatarImage person={changeset.author} />
               </p>
             </AvatarWrapper>
             <div className="media-content">
@@ -54,7 +72,7 @@ class ChangesetDetails extends React.Component<Props> {
               </p>
               <p>
                 <Interpolate
-                  i18nKey="changesets.changeset.summary"
+                  i18nKey="changeset.summary"
                   id={id}
                   time={date}
                 />
@@ -62,11 +80,18 @@ class ChangesetDetails extends React.Component<Props> {
             </div>
             <div className="media-right">{this.renderTags()}</div>
           </article>
+
           <p>
             {description.message.split("\n").map((item, key) => {
               return (
                 <span key={key}>
-                  {item}
+                  <ExtensionPoint
+                    name="changeset.description"
+                    props={{ changeset, value: item }}
+                    renderAll={false}
+                  >
+                    {item}
+                  </ExtensionPoint>
                   <br />
                 </span>
               );
@@ -74,7 +99,7 @@ class ChangesetDetails extends React.Component<Props> {
           </p>
         </div>
         <div>
-          <ScmDiff changeset={changeset} sideBySide={false} />
+          <ChangesetDiff changeset={changeset} />
         </div>
       </div>
     );
@@ -86,10 +111,11 @@ class ChangesetDetails extends React.Component<Props> {
   };
 
   renderTags = () => {
+    const { classes } = this.props;
     const tags = this.getTags();
     if (tags.length > 0) {
       return (
-        <div className="level-item">
+        <div className={classNames("level-item", classes.tags)}>
           {tags.map((tag: Tag) => {
             return <ChangesetTag key={tag.name} tag={tag} />;
           })}

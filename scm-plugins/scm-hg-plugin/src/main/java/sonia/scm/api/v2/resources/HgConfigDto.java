@@ -6,15 +6,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.io.File;
-
 @NoArgsConstructor
 @Getter
 @Setter
 public class HgConfigDto extends HalRepresentation {
 
   private boolean disabled;
-  private File repositoryDirectory;
 
   private String encoding;
   private String hgBinary;
@@ -22,6 +19,8 @@ public class HgConfigDto extends HalRepresentation {
   private String pythonPath;
   private boolean useOptimizedBytecode;
   private boolean showRevisionInId;
+  private boolean enableHttpPostArgs;
+  private boolean disableHookSSLValidation;
 
   @Override
   @SuppressWarnings("squid:S1185") // We want to have this method available in this package

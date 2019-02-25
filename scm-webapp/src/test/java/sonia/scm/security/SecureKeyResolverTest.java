@@ -36,20 +36,25 @@ package sonia.scm.security;
 //~--- non-JDK imports --------------------------------------------------------
 
 import io.jsonwebtoken.Jwts;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-
 import sonia.scm.store.ConfigurationEntryStore;
 import sonia.scm.store.ConfigurationEntryStoreFactory;
 
-import static org.junit.Assert.*;
+import java.util.Random;
 
-import static org.mockito.Mockito.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.argThat;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  *
@@ -97,10 +102,11 @@ public class SecureKeyResolverTest
    * Method description
    *
    */
-  @Test(expected = IllegalStateException.class)
+  @Test
   public void testResolveSigningKeyBytesWithoutKey()
   {
-    resolver.resolveSigningKeyBytes(null, Jwts.claims().setSubject("test"));
+    byte[] bytes = resolver.resolveSigningKeyBytes(null, Jwts.claims().setSubject("test"));
+    assertThat(bytes[0]).isEqualTo((byte) 42);
   }
 
   /**
@@ -122,12 +128,17 @@ public class SecureKeyResolverTest
   @Before
   public void setUp()
   {
-    ConfigurationEntryStoreFactory factory =
-      mock(ConfigurationEntryStoreFactory.class);
+    ConfigurationEntryStoreFactory factory = mock(ConfigurationEntryStoreFactory.class);
 
-    when(factory.getStore(SecureKey.class,
-      SecureKeyResolver.STORE_NAME)).thenReturn(store);
-    resolver = new SecureKeyResolver(factory);
+    when(factory.withType(any())).thenCallRealMethod();
+    when(factory.<SecureKey>getStore(argThat(storeParameters -> {
+      assertThat(storeParameters.getName()).isEqualTo(SecureKeyResolver.STORE_NAME);
+      assertThat(storeParameters.getType()).isEqualTo(SecureKey.class);
+      return true;
+    }))).thenReturn(store);
+    Random random = mock(Random.class);
+    doAnswer(invocation -> ((byte[]) invocation.getArguments()[0])[0] = 42).when(random).nextBytes(any());
+    resolver = new SecureKeyResolver(factory, random);
   }
 
   //~--- fields ---------------------------------------------------------------

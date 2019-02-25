@@ -16,14 +16,14 @@ import org.junit.runner.RunWith;
 import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.repository.SvnConfig;
 import sonia.scm.repository.SvnRepositoryHandler;
 import sonia.scm.web.SvnVndMediaType;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -81,7 +81,6 @@ public class SvnConfigResourceTest {
     ObjectNode responseJson = new ObjectMapper().readValue(responseString, ObjectNode.class);
 
     assertTrue(responseString.contains("\"disabled\":false"));
-    assertTrue(responseJson.get("repositoryDirectory").asText().endsWith("repository/directory"));
     assertTrue(responseString.contains("\"self\":{\"href\":\"/v2/config/svn"));
     assertTrue(responseString.contains("\"update\":{\"href\":\"/v2/config/svn"));
   }
@@ -99,7 +98,7 @@ public class SvnConfigResourceTest {
 
   @Test
   @SubjectAware(username = "readOnly")
-  public void shouldGetSvnConfigWithoutUpdateLink() throws URISyntaxException {
+  public void shouldGetSvnConfigWithoutUpdateLink() throws URISyntaxException, UnsupportedEncodingException {
     MockHttpResponse response = get();
 
     assertEquals(HttpServletResponse.SC_OK, response.getStatus());
@@ -150,7 +149,6 @@ public class SvnConfigResourceTest {
   private SvnConfig createConfiguration() {
     SvnConfig config = new SvnConfig();
     config.setDisabled(false);
-    config.setRepositoryDirectory(new File("repository/directory"));
     return config;
   }
 

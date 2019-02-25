@@ -7,6 +7,8 @@ import static java.util.stream.Collectors.joining;
 
 public class NotFoundException extends ExceptionWithContext {
 
+  private static final long serialVersionUID = 1710455380886499111L;
+
   private static final String CODE = "AGR7UzkhA1";
 
   public NotFoundException(Class type, String id) {

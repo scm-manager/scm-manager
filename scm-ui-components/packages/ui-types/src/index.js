@@ -22,3 +22,7 @@ export type { IndexResources } from "./IndexResources";
 export type { Permission, PermissionCreateEntry, PermissionCollection } from "./RepositoryPermissions";
 
 export type { SubRepository, File } from "./Sources";
+
+export type { SelectValue, AutocompleteObject } from "./Autocomplete";
+
+export type { AvailableRepositoryPermissions, RepositoryRole } from "./AvailableRepositoryPermissions";

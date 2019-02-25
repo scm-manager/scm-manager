@@ -39,7 +39,6 @@ import com.google.common.base.Objects;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
@@ -67,19 +66,8 @@ public class PermissionDescriptor implements Serializable
    */
   public PermissionDescriptor() {}
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param displayName
-   * @param description
-   * @param value
-   */
-  public PermissionDescriptor(String displayName, String description,
-    String value)
+  public PermissionDescriptor(String value)
   {
-    this.displayName = displayName;
-    this.description = description;
     this.value = value;
   }
 
@@ -103,9 +91,7 @@ public class PermissionDescriptor implements Serializable
 
     final PermissionDescriptor other = (PermissionDescriptor) obj;
 
-    return Objects.equal(displayName, other.displayName)
-      && Objects.equal(description, other.description)
-      && Objects.equal(value, other.value);
+    return Objects.equal(value, other.value);
   }
 
   /**
@@ -114,7 +100,7 @@ public class PermissionDescriptor implements Serializable
   @Override
   public int hashCode()
   {
-    return Objects.hashCode(displayName, description, value);
+    return value.hashCode();
   }
 
   /**
@@ -126,8 +112,6 @@ public class PermissionDescriptor implements Serializable
 
     //J-
     return MoreObjects.toStringHelper(this)
-                  .add("displayName", displayName)
-                  .add("description", description)
                   .add("value", value)
                   .toString();
 
@@ -135,28 +119,6 @@ public class PermissionDescriptor implements Serializable
   }
 
   //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Returns the description of the permission.
-   *
-   *
-   * @return description
-   */
-  public String getDescription()
-  {
-    return description;
-  }
-
-  /**
-   * Returns the display name of the permission.
-   *
-   *
-   * @return display name
-   */
-  public String getDisplayName()
-  {
-    return displayName;
-  }
 
   /**
    * Returns the string representation of the permission.
@@ -170,13 +132,6 @@ public class PermissionDescriptor implements Serializable
   }
 
   //~--- fields ---------------------------------------------------------------
-
-  /** description */
-  private String description;
-
-  /** display name */
-  @XmlElement(name = "display-name")
-  private String displayName;
 
   /** value */
   private String value;

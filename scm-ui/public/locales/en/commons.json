@@ -1,7 +1,7 @@
 {
   "login": {
     "title": "Login",
-    "subtitle": "Please login to proceed.",
+    "subtitle": "Please login to proceed",
     "logo-alt": "SCM-Manager",
     "username-placeholder": "Your Username",
     "password-placeholder": "Your Password",
@@ -20,7 +20,10 @@
     }
   },
   "error-notification": {
-    "prefix": "Error"
+    "prefix": "Error",
+    "loginLink": "You can login here again.",
+    "timeout": "The session has expired",
+    "wrong-login-credentials": "Invalid credentials"
   },
   "loading": {
     "alt": "Loading ..."
@@ -40,12 +43,32 @@
     "previous": "Previous"
   },
   "profile": {
-    "actions-label": "Actions",
+    "navigationLabel": "Profile Navigation",
+    "informationNavLink": "Information",
+    "changePasswordNavLink": "Change password",
+    "settingsNavLink": "Settings",
     "username": "Username",
     "displayName": "Display Name",
     "mail": "E-Mail",
-    "change-password": "Change password",
+    "groups": "Groups",
+    "information": "Information",
+    "change-password": "Change Password",
     "error-title": "Error",
-    "error-subtitle": "Cannot display profile"
+    "error-subtitle": "Cannot display profile",
+    "error": "Error",
+    "error-message": "'me' is undefined"
+  },
+  "password": {
+    "label": "Password",
+    "newPassword": "New password",
+    "passwordHelpText": "Plain text password of the user",
+    "passwordConfirmHelpText": "Repeat the password for confirmation",
+    "currentPassword": "Current password",
+    "currentPasswordHelpText": "The password currently in use",
+    "confirmPassword": "Confirm password",
+    "passwordInvalid": "Password has to be between 6 and 32 characters",
+    "passwordConfirmFailed": "Passwords have to be identical",
+    "submit": "Submit",
+    "changedSuccessfully": "Password changed successfully"
   }
 }

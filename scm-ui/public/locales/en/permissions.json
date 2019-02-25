@@ -1,0 +1,6 @@
+{
+  "setPermissions": {
+    "button": "Set permissions",
+    "setPermissionsSuccessful": "Permissions set successfully"
+  }
+}

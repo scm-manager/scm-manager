@@ -35,6 +35,7 @@ package sonia.scm;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.annotations.VisibleForTesting;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -43,6 +44,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
+import java.nio.file.Path;
 import java.util.Locale;
 import java.util.Properties;
 
@@ -105,7 +107,25 @@ public class BasicContextProvider implements SCMContextProvider
     }
   }
 
+  @VisibleForTesting
+  BasicContextProvider(File baseDirectory, String version, Stage stage) {
+    this.baseDirectory = baseDirectory;
+    this.version = version;
+    this.stage = stage;
+  }
+
   //~--- methods --------------------------------------------------------------
+
+
+  @Override
+  public Path resolve(Path path) {
+    if (path.isAbsolute()) {
+      return path;
+    }
+
+    return baseDirectory.toPath().resolve(path);
+  }
+
 
   /**
    * {@inheritDoc}

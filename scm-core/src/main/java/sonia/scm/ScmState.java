@@ -77,15 +77,13 @@ public final class ScmState
    * @param repositoryTypes available repository types
    * @param defaultUserType default user type
    * @param clientConfig client configuration
-   * @param assignedPermission assigned permissions
    * @param availablePermissions list of available permissions
    *
    * @since 2.0.0
    */
   public ScmState(String version, User user, Collection<String> groups,
                   String token, Collection<RepositoryType> repositoryTypes, String defaultUserType,
-                  ScmClientConfig clientConfig, List<String> assignedPermission,
-                  List<PermissionDescriptor> availablePermissions)
+                  ScmClientConfig clientConfig, Collection<PermissionDescriptor> availablePermissions)
   {
     this.version = version;
     this.user = user;
@@ -94,23 +92,10 @@ public final class ScmState
     this.repositoryTypes = repositoryTypes;
     this.clientConfig = clientConfig;
     this.defaultUserType = defaultUserType;
-    this.assignedPermissions = assignedPermission;
     this.availablePermissions = availablePermissions;
   }
 
   //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Return a list of assigned permissions.
-   *
-   *
-   * @return list of assigned permissions
-   * @since 1.31
-   */
-  public List<String> getAssignedPermissions()
-  {
-    return assignedPermissions;
-  }
 
   /**
    * Returns a list of available global permissions.
@@ -119,7 +104,7 @@ public final class ScmState
    * @return available global permissions
    * @since 1.31
    */
-  public List<PermissionDescriptor> getAvailablePermissions()
+  public Collection<PermissionDescriptor> getAvailablePermissions()
   {
     return availablePermissions;
   }
@@ -225,14 +210,11 @@ public final class ScmState
   /** authentication token */
   private String token;
 
-  /** Field description */
-  private List<String> assignedPermissions;
-
   /**
    * Avaliable global permission
    * @since 1.31
    */
-  private List<PermissionDescriptor> availablePermissions;
+  private Collection<PermissionDescriptor> availablePermissions;
 
   /** Field description */
   private ScmClientConfig clientConfig;

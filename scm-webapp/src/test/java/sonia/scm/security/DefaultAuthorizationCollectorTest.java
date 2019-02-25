@@ -33,7 +33,7 @@ package sonia.scm.security;
 
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
-import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -49,14 +49,16 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.group.GroupNames;
-import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryDAO;
+import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.user.User;
 import sonia.scm.user.UserTestData;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.nullValue;
@@ -75,6 +77,8 @@ import static org.mockito.Mockito.when;
 @SuppressWarnings("unchecked")
 @RunWith(MockitoJUnitRunner.class)
 public class DefaultAuthorizationCollectorTest {
+
+  private ScmConfiguration configuration;
 
   @Mock
   private Cache cache;
@@ -99,8 +103,38 @@ public class DefaultAuthorizationCollectorTest {
   @Before
   public void setUp(){
     when(cacheManager.getCache(Mockito.any(String.class))).thenReturn(cache);
+    configuration = new ScmConfiguration();
+    collector = new DefaultAuthorizationCollector(configuration, cacheManager, repositoryDAO, securitySystem);
+  }
 
-    collector = new DefaultAuthorizationCollector(cacheManager, repositoryDAO, securitySystem);
+  @Test
+  @SubjectAware(
+    configuration = "classpath:sonia/scm/shiro-001.ini"
+  )
+  public void shouldGetAdminPrivilegedByConfiguration() {
+    configuration.setAdminUsers(ImmutableSet.of("trillian"));
+    authenticate(UserTestData.createTrillian(), "main");
+
+    AuthorizationInfo authInfo = collector.collect();
+    assertIsAdmin(authInfo);
+  }
+
+  private void assertIsAdmin(AuthorizationInfo authInfo) {
+    assertThat(authInfo.getRoles(), Matchers.containsInAnyOrder(Role.USER, Role.ADMIN));
+    assertThat(authInfo.getObjectPermissions(), nullValue());
+    assertThat(authInfo.getStringPermissions(), Matchers.contains("*"));
+  }
+
+  @Test
+  @SubjectAware(
+    configuration = "classpath:sonia/scm/shiro-001.ini"
+  )
+  public void shouldGetAdminPrivilegedByGroupConfiguration() {
+    configuration.setAdminGroups(ImmutableSet.of("heartOfGold"));
+    authenticate(UserTestData.createTrillian(), "heartOfGold");
+
+    AuthorizationInfo authInfo = collector.collect();
+    assertIsAdmin(authInfo);
   }
 
   /**
@@ -142,7 +176,7 @@ public class DefaultAuthorizationCollectorTest {
   public void testCollectWithCache() {
     authenticate(UserTestData.createTrillian(), "main");
 
-    AuthorizationInfo authInfo = collector.collect();
+    collector.collect();
     verify(cache).put(any(), any());
   }
 
@@ -176,9 +210,7 @@ public class DefaultAuthorizationCollectorTest {
     authenticate(trillian, "main");
 
     AuthorizationInfo authInfo = collector.collect();
-    assertThat(authInfo.getRoles(), Matchers.containsInAnyOrder(Role.USER, Role.ADMIN));
-    assertThat(authInfo.getObjectPermissions(), nullValue());
-    assertThat(authInfo.getStringPermissions(), Matchers.contains("*"));
+    assertIsAdmin(authInfo);
   }
 
   /**
@@ -193,10 +225,10 @@ public class DefaultAuthorizationCollectorTest {
     authenticate(UserTestData.createTrillian(), group);
     Repository heartOfGold = RepositoryTestData.createHeartOfGold();
     heartOfGold.setId("one");
-    heartOfGold.setPermissions(Lists.newArrayList(new sonia.scm.repository.Permission("trillian")));
+    heartOfGold.setPermissions(Lists.newArrayList(new RepositoryPermission("trillian", asList("read", "pull"), false)));
     Repository puzzle42 = RepositoryTestData.create42Puzzle();
     puzzle42.setId("two");
-    sonia.scm.repository.Permission permission = new sonia.scm.repository.Permission(group, PermissionType.WRITE, true);
+    RepositoryPermission permission = new RepositoryPermission(group, asList("read", "pull", "push"), true);
     puzzle42.setPermissions(Lists.newArrayList(permission));
     when(repositoryDAO.getAll()).thenReturn(Lists.newArrayList(heartOfGold, puzzle42));
 
@@ -219,7 +251,7 @@ public class DefaultAuthorizationCollectorTest {
 
     StoredAssignedPermission p1 = new StoredAssignedPermission("one", new AssignedPermission("one", "one:one"));
     StoredAssignedPermission p2 = new StoredAssignedPermission("two", new AssignedPermission("two", "two:two"));
-    when(securitySystem.getPermissions(Mockito.any(Predicate.class))).thenReturn(Lists.newArrayList(p1, p2));
+    when(securitySystem.getPermissions(any())).thenReturn(Lists.newArrayList(p1, p2));
 
     // execute and assert
     AuthorizationInfo authInfo = collector.collect();
@@ -238,7 +270,7 @@ public class DefaultAuthorizationCollectorTest {
   }
 
   /**
-   * Tests {@link AuthorizationCollector#invalidateCache(sonia.scm.security.AuthorizationChangedEvent)}.
+   * Tests {@link DefaultAuthorizationCollector#invalidateCache(sonia.scm.security.AuthorizationChangedEvent)}.
    */
   @Test
   public void testInvalidateCache() {
@@ -246,7 +278,7 @@ public class DefaultAuthorizationCollectorTest {
     verify(cache).clear();
 
     collector.invalidateCache(AuthorizationChangedEvent.createForUser("dent"));
-    verify(cache).removeAll(Mockito.any(Predicate.class));
+    verify(cache).removeAll(any());
   }
 
 }

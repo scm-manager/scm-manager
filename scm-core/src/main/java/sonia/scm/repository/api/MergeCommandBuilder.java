@@ -15,7 +15,7 @@ import sonia.scm.repository.spi.MergeCommandRequest;
  *
  * To actually merge <code>feature_branch</code> into <code>integration_branch</code> do this:
  * <pre><code>
- *     repositoryService.gerMergeCommand()
+ *     repositoryService.getMergeCommand()
  *       .setBranchToMerge("feature_branch")
  *       .setTargetBranch("integration_branch")
  *       .executeMerge();
@@ -33,7 +33,7 @@ import sonia.scm.repository.spi.MergeCommandRequest;
  *
  * To check whether they can be merged without conflicts beforehand do this:
  * <pre><code>
- *     repositoryService.gerMergeCommand()
+ *     repositoryService.getMergeCommand()
  *       .setBranchToMerge("feature_branch")
  *       .setTargetBranch("integration_branch")
  *       .dryRun()

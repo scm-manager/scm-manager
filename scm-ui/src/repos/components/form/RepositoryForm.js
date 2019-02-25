@@ -2,6 +2,7 @@
 import React from "react";
 import { translate } from "react-i18next";
 import {
+  Subtitle,
   InputField,
   Select,
   SubmitButton,
@@ -81,30 +82,39 @@ class RepositoryForm extends React.Component<Props, State> {
     const { loading, t } = this.props;
     const repository = this.state.repository;
 
-    return (
-      <form onSubmit={this.submit}>
-        {this.renderCreateOnlyFields()}
-        <InputField
-          label={t("repository.contact")}
-          onChange={this.handleContactChange}
-          value={repository ? repository.contact : ""}
-          validationError={this.state.contactValidationError}
-          errorMessage={t("validation.contact-invalid")}
-          helpText={t("help.contactHelpText")}
-        />
+    let subtitle = null;
+    if (this.props.repository) {
+      // edit existing repo
+      subtitle = <Subtitle subtitle={t("repositoryForm.subtitle")} />;
+    }
 
-        <Textarea
-          label={t("repository.description")}
-          onChange={this.handleDescriptionChange}
-          value={repository ? repository.description : ""}
-          helpText={t("help.descriptionHelpText")}
-        />
-        <SubmitButton
-          disabled={!this.isValid()}
-          loading={loading}
-          label={t("repository-form.submit")}
-        />
-      </form>
+    return (
+      <>
+        {subtitle}
+        <form onSubmit={this.submit}>
+          {this.renderCreateOnlyFields()}
+          <InputField
+            label={t("repository.contact")}
+            onChange={this.handleContactChange}
+            value={repository ? repository.contact : ""}
+            validationError={this.state.contactValidationError}
+            errorMessage={t("validation.contact-invalid")}
+            helpText={t("help.contactHelpText")}
+          />
+
+          <Textarea
+            label={t("repository.description")}
+            onChange={this.handleDescriptionChange}
+            value={repository ? repository.description : ""}
+            helpText={t("help.descriptionHelpText")}
+          />
+          <SubmitButton
+            disabled={!this.isValid()}
+            loading={loading}
+            label={t("repositoryForm.submit")}
+          />
+        </form>
+      </>
     );
   }
 

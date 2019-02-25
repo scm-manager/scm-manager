@@ -29,6 +29,17 @@ spec:
         volumeMounts:
         - name: data
           mountPath: /data
+      {{- if .Values.plugins }}
+      - name: install-plugins
+        image: alpine:3.8
+        imagePullPolicy: IfNotPresent
+        command: ['sh', '/scripts/install-plugins.sh']
+        volumeMounts:
+        - name: data
+          mountPath: /data
+        - name: scripts
+          mountPath: /scripts
+      {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -63,6 +74,11 @@ spec:
       - name: config
         configMap: 
           name: {{ include "scm-manager.fullname" . }}
+      {{- if .Values.plugins }}
+      - name: scripts
+        configMap: 
+          name: {{ include "scm-manager.fullname" . }}-scripts
+      {{- end }}
     {{- with .Values.nodeSelector }}
       nodeSelector:
 {{ toYaml . | indent 8 }}

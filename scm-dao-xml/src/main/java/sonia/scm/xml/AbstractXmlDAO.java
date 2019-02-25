@@ -1,19 +1,19 @@
 /**
  * Copyright (c) 2010, Sebastian Sdorra
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * <p>
  * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
+ * this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
  * 3. Neither the name of SCM-Manager; nor the names of its
- *    contributors may be used to endorse or promote products derived from this
- *    software without specific prior written permission.
- *
+ * contributors may be used to endorse or promote products derived from this
+ * software without specific prior written permission.
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,9 +24,8 @@
  * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * <p>
  * http://bitbucket.org/sdorra/scm-manager
- *
  */
 
 
@@ -35,18 +34,13 @@ package sonia.scm.xml;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.ImmutableList;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.GenericDAO;
 import sonia.scm.ModelObject;
-import sonia.scm.group.xml.XmlGroupDAO;
 import sonia.scm.store.ConfigurationStore;
-import sonia.scm.util.AssertUtil;
 
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -58,7 +52,7 @@ import java.util.stream.Collectors;
  * @param <T>
  */
 public abstract class AbstractXmlDAO<I extends ModelObject,
-        T extends XmlDatabase<I>> implements GenericDAO<I>
+      T extends XmlDatabase> implements GenericDAO<I>
 {
 
   /** Field description */
@@ -68,7 +62,7 @@ public abstract class AbstractXmlDAO<I extends ModelObject,
    * the logger for XmlGroupDAO
    */
   private static final Logger logger =
-    LoggerFactory.getLogger(XmlGroupDAO.class);
+    LoggerFactory.getLogger(AbstractXmlDAO.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -192,6 +186,7 @@ public abstract class AbstractXmlDAO<I extends ModelObject,
    * @param item
    */
   @Override
+  @SuppressWarnings("unchecked")
   public void modify(I item)
   {
     if (logger.isTraceEnabled())
@@ -219,9 +214,10 @@ public abstract class AbstractXmlDAO<I extends ModelObject,
    * @return
    */
   @Override
+  @SuppressWarnings("unchecked")
   public I get(String id)
   {
-    return db.get(id);
+    return (I) db.get(id);
   }
 
   /**
@@ -293,7 +289,7 @@ public abstract class AbstractXmlDAO<I extends ModelObject,
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private final ConfigurationStore<T> store;
+  protected final ConfigurationStore<T> store;
 
   /** Field description */
   protected T db;

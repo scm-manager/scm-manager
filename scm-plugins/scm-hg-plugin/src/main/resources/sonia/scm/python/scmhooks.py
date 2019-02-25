@@ -41,19 +41,20 @@ import os, urllib, urllib2
 baseUrl = os.environ['SCM_URL']
 challenge = os.environ['SCM_CHALLENGE']
 credentials = os.environ['SCM_CREDENTIALS']
+repositoryId = os.environ['SCM_REPOSITORY_ID']
 
 def printMessages(ui, msgs):
   for line in msgs:
     if line.startswith("_e") or line.startswith("_n"):
       line = line[2:];
-    ui.warn(line);
+    ui.warn('%s\n' % line.rstrip())
 
 def callHookUrl(ui, repo, hooktype, node):
   abort = True
   try:
     url = baseUrl + hooktype
     ui.debug( "send scm-hook to " + url + " and " + node + "\n" )
-    data = urllib.urlencode({'node': node, 'challenge': challenge, 'credentials': credentials, 'repositoryPath': repo.root})
+    data = urllib.urlencode({'node': node, 'challenge': challenge, 'credentials': credentials, 'repositoryPath': repo.root, 'repositoryId': repositoryId})
     # open url but ignore proxy settings
     proxy_handler = urllib2.ProxyHandler({})
     opener = urllib2.build_opener(proxy_handler)
@@ -78,13 +79,13 @@ def callHookUrl(ui, repo, hooktype, node):
       printMessages(ui, msg.splitlines(True))
     else:
       ui.warn( "ERROR: scm-hook failed with an unknown error\n" )
+    ui.traceback()
   except ValueError:
     ui.warn( "scm-hook failed with an exception\n" )
+    ui.traceback()
   return abort
 
-def callback(ui, repo, hooktype, node=None, source=None, pending=None, **kwargs):
-  if pending != None:
-    pending()
+def callback(ui, repo, hooktype, node=None):
   abort = True
   if node != None:
     if len(baseUrl) > 0:
@@ -95,3 +96,32 @@ def callback(ui, repo, hooktype, node=None, source=None, pending=None, **kwargs)
   else:
     ui.warn("changeset node is not available")
   return abort
+
+def preHook(ui, repo, hooktype, node=None, source=None, pending=None, **kwargs):
+  log_file = open("/tmp/hg_callback.log", "a")
+  log_file.write("in callHookUrl\n")
+  log_file.close()
+
+  # older mercurial versions
+  if pending != None:
+    pending()
+  
+  # newer mercurial version
+  # we have to make in-memory changes visible to external process
+  # this does not happen automatically, because mercurial treat our hooks as internal hooks
+  # see hook.py at mercurial sources _exthook
+  try:
+    if repo is not None:
+      tr = repo.currenttransaction()
+      repo.dirstate.write(tr)
+      if tr and not tr.writepending():
+        ui.warn("no pending write transaction found")
+  except AttributeError:
+    ui.debug("mercurial does not support currenttransation")
+    # do nothing
+
+  return callback(ui, repo, hooktype, node)
+
+def postHook(ui, repo, hooktype, node=None, source=None, pending=None, **kwargs):
+  return callback(ui, repo, hooktype, node)
+

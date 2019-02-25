@@ -55,37 +55,48 @@ public final class JwtAccessTokenResolver implements AccessTokenResolver {
   private static final Logger LOG = LoggerFactory.getLogger(JwtAccessTokenResolver.class);
   
   private final SecureKeyResolver keyResolver;
-  private final Set<TokenClaimsValidator> validators;
+  private final Set<AccessTokenValidator> validators;
 
   @Inject
-  public JwtAccessTokenResolver(SecureKeyResolver keyResolver, Set<TokenClaimsValidator> validators) {
+  public JwtAccessTokenResolver(SecureKeyResolver keyResolver, Set<AccessTokenValidator> validators) {
     this.keyResolver = keyResolver;
     this.validators = validators;
   }
   
   @Override
   public JwtAccessToken resolve(BearerToken bearerToken) {
-    Claims claims;
-
     try {
-      // parse and validate
-      claims = Jwts.parser()
+      String compact = bearerToken.getCredentials();
+
+      Claims claims = Jwts.parser()
         .setSigningKeyResolver(keyResolver)
-        .parseClaimsJws(bearerToken.getCredentials())
+        .parseClaimsJws(compact)
         .getBody();
-      
-      // check all registered claims validators
-      validators.forEach((validator) -> {
-        if (!validator.validate(claims)) {
-          LOG.warn("token claims is invalid, marked by validator {}", validator.getClass());
-          throw new AuthenticationException("token claims is invalid");
-        }
-      });
+
+      JwtAccessToken token = new JwtAccessToken(claims, compact);
+      validate(token);
+
+      return token;
     } catch (JwtException ex) {
       throw new AuthenticationException("signature is invalid", ex);
     }
-    
-    return new JwtAccessToken(claims, bearerToken.getCredentials());
+  }
+
+
+  private void validate(AccessToken accessToken) {
+    validators.forEach(validator -> validate(validator, accessToken));
+  }
+
+  private void validate(AccessTokenValidator validator, AccessToken accessToken) {
+    if (!validator.validate(accessToken)) {
+      String msg = createValidationFailedMessage(validator, accessToken);
+      LOG.debug(msg);
+      throw new AuthenticationException(msg);
+    }
+  }
+
+  private String createValidationFailedMessage(AccessTokenValidator validator, AccessToken accessToken) {
+    return String.format("token %s is invalid, marked by validator %s", accessToken.getId(), validator.getClass());
   }
   
 }

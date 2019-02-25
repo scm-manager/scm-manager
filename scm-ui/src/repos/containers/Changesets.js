@@ -1,8 +1,13 @@
 // @flow
 
 import React from "react";
-import {withRouter} from "react-router-dom";
-import type {Branch, Changeset, PagedCollection, Repository} from "@scm-manager/ui-types";
+import { withRouter } from "react-router-dom";
+import type {
+  Branch,
+  Changeset,
+  PagedCollection,
+  Repository
+} from "@scm-manager/ui-types";
 import {
   fetchChangesets,
   getChangesets,
@@ -11,10 +16,15 @@ import {
   selectListAsCollection
 } from "../modules/changesets";
 
-import {connect} from "react-redux";
-import ChangesetList from "../components/changesets/ChangesetList";
-import {ErrorNotification, getPageFromMatch, LinkPaginator, Loading} from "@scm-manager/ui-components";
-import {compose} from "redux";
+import { connect } from "react-redux";
+import {
+  ErrorNotification,
+  getPageFromMatch,
+  LinkPaginator,
+  ChangesetList,
+  Loading
+} from "@scm-manager/ui-components";
+import { compose } from "redux";
 
 type Props = {
   repository: Repository,
@@ -65,13 +75,21 @@ class Changesets extends React.Component<Props> {
 
   renderList = () => {
     const { repository, changesets } = this.props;
-    return <ChangesetList repository={repository} changesets={changesets} />;
+    return (
+      <div className="panel-block">
+        <ChangesetList repository={repository} changesets={changesets} />
+      </div>
+    );
   };
 
   renderPaginator = () => {
     const { page, list } = this.props;
     if (list) {
-      return <LinkPaginator page={page} collection={list} />;
+      return (
+        <div className="panel-footer">
+          <LinkPaginator page={page} collection={list} />
+        </div>
+      );
     }
     return null;
   };

@@ -1,0 +1,91 @@
+{
+  "permissions": {
+    "repository": {
+      "read,pull": {
+        "*": {
+          "displayName": "Read all repositories",
+          "description": "May see and clone all repositories"
+        }
+      },
+      "read,pull,push": {
+        "*": {
+          "displayName": "Write all repositories",
+          "description": "May see, clone and push to all repositories"
+        }
+      },
+      "*": {
+        "displayName": "Own all repositories",
+        "description": "May see, clone, push to, configure and delete all repositories"
+      },
+      "create": {
+        "displayName": "Create repositories",
+        "description": "May create repositories"
+      }
+    },
+    "user": {
+      "*": {
+        "displayName": "Administer users",
+        "description": "May administer all users"
+      }
+    },
+    "group": {
+      "*": {
+        "displayName": "Administer groups",
+        "description": "May administer all groups"
+      }
+    },
+    "configuration": {
+      "list": {
+        "displayName": "Basic administration",
+        "description": "Prerequisite for all other administration permissions. Without this, no configuration will be visible."
+      },
+      "read,write": {
+        "global": {
+          "displayName": "Administer core",
+          "description": "May configure core settings of SCM-Manager"
+        },
+        "*": {
+          "displayName": "Administer core and plugins",
+          "description": "May configure settings of SCM-Manager core and all plugins"
+        }
+      }
+    },
+    "unknown": "Unknown permission"
+  },
+  "verbs": {
+    "repository": {
+      "read": {
+        "displayName": "read",
+        "description": "May see the repository inside the SCM-Manager"
+      },
+      "modify": {
+        "displayName": "modify",
+        "description": "May modify the properties of the repository"
+      },
+      "delete": {
+        "displayName": "delete",
+        "description": "May delete the repository"
+      },
+      "pull": {
+        "displayName": "pull/checkout",
+        "description": "May pull/checkout the repository"
+      },
+      "push": {
+        "displayName": "push/commit",
+        "description": "May change the content of the repository (push/commit)"
+      },
+      "permissionRead": {
+        "displayName": "read permissions",
+        "description": "May see the permissions of the repository"
+      },
+      "permissionWrite": {
+        "displayName": "modify permissions",
+        "description": "May modify the permissions of the repository"
+      },
+      "*": {
+        "displayName": "overall",
+        "description": "May change everything for the repository (includes all other permissions)"
+      }
+    }
+  }
+}

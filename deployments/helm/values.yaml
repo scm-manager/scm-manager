@@ -10,6 +10,10 @@ image:
   tag: latest
   pullPolicy: Always
 
+# plugins:
+#  - name: scm-review-plugin
+#    url: https://oss.cloudogu.com/jenkins/job/scm-manager/job/scm-manager-bitbucket/job/scm-review-plugin/job/develop/lastSuccessfulBuild/artifact/target/scm-review-plugin-2.0.0-SNAPSHOT.smp
+
 nameOverride: ""
 fullnameOverride: ""
 

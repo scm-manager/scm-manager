@@ -78,7 +78,7 @@ public class AbstractHgPushOrPullCommand extends AbstractCommand
     if (repo != null)
     {
       url =
-        handler.getDirectory(request.getRemoteRepository()).getAbsolutePath();
+        handler.getDirectory(request.getRemoteRepository().getId()).getAbsolutePath();
     }
     else if (request.getRemoteUrl() != null)
     {

@@ -35,7 +35,6 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
 import org.eclipse.jgit.errors.RepositoryNotFoundException;
@@ -106,7 +105,7 @@ public class GitRepositoryResolver implements RepositoryResolver<HttpServletRequ
 
       if (config.isValid())
       {
-        File gitdir = findRepository(config.getRepositoryDirectory(), repo.getId());
+        File gitdir = handler.getDirectory(repo.getId());
         if (gitdir == null) {
           throw new RepositoryNotFoundException(repositoryName);
         }
@@ -130,32 +129,6 @@ public class GitRepositoryResolver implements RepositoryResolver<HttpServletRequ
       // REVIEW
       throw new RepositoryNotFoundException(repositoryName, e);
     }
-  }
-
-  @VisibleForTesting
-  File findRepository(File parentDirectory, String repositoryName) {
-    File repositoryDirectory = new File(parentDirectory, repositoryName);
-    if (repositoryDirectory.exists()) {
-      return repositoryDirectory;
-    }
-    
-    if (endsWithDotGit(repositoryName)) {
-      String repositoryNameWithoutDotGit = repositoryNameWithoutDotGit(repositoryName);
-      repositoryDirectory = new File(parentDirectory, repositoryNameWithoutDotGit);
-      if (repositoryDirectory.exists()) {
-        return repositoryDirectory;
-      }
-    }
-    
-    return null;
-  }
-  
-  private boolean endsWithDotGit(String repositoryName) {
-    return repositoryName.endsWith(GitRepositoryHandler.DOT_GIT);
-  }
-  
-  private String repositoryNameWithoutDotGit(String repositoryName) {
-    return repositoryName.substring(0, repositoryName.length() - GitRepositoryHandler.DOT_GIT.length());
   }
 
   //~--- fields ---------------------------------------------------------------

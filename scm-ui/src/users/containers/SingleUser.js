@@ -5,6 +5,7 @@ import {
   Page,
   Loading,
   Navigation,
+  SubNavigation,
   Section,
   NavLink,
   ErrorPage
@@ -16,22 +17,16 @@ import type { User } from "@scm-manager/ui-types";
 import type { History } from "history";
 import {
   fetchUserByName,
-  deleteUser,
   getUserByName,
   isFetchUserPending,
-  getFetchUserFailure,
-  isDeleteUserPending,
-  getDeleteUserFailure
+  getFetchUserFailure
 } from "../modules/users";
-
-import {
-  DeleteUserNavLink,
-  EditUserNavLink,
-  SetPasswordNavLink
-} from "./../components/navLinks";
+import { EditUserNavLink, SetPasswordNavLink, SetPermissionsNavLink } from "./../components/navLinks";
 import { translate } from "react-i18next";
 import { getUsersLink } from "../../modules/indexResource";
 import SetUserPassword from "../components/SetUserPassword";
+import SetPermissions from "../../permissions/components/SetPermissions";
+import {ExtensionPoint} from "@scm-manager/ui-extensions";
 
 type Props = {
   name: string,
@@ -40,8 +35,7 @@ type Props = {
   error: Error,
   usersLink: string,
 
-  // dispatcher functions
-  deleteUser: (user: User, callback?: () => void) => void,
+  // dispatcher function
   fetchUserByName: (string, string) => void,
 
   // context objects
@@ -54,14 +48,6 @@ class SingleUser extends React.Component<Props> {
   componentDidMount() {
     this.props.fetchUserByName(this.props.usersLink, this.props.name);
   }
-
-  userDeleted = () => {
-    this.props.history.push("/users");
-  };
-
-  deleteUser = (user: User) => {
-    this.props.deleteUser(user, this.userDeleted);
-  };
 
   stripEndingSlash = (url: string) => {
     if (url.endsWith("/")) {
@@ -80,8 +66,8 @@ class SingleUser extends React.Component<Props> {
     if (error) {
       return (
         <ErrorPage
-          title={t("single-user.error-title")}
-          subtitle={t("single-user.error-subtitle")}
+          title={t("singleUser.errorTitle")}
+          subtitle={t("singleUser.errorSubtitle")}
           error={error}
         />
       );
@@ -93,36 +79,68 @@ class SingleUser extends React.Component<Props> {
 
     const url = this.matchedUrl();
 
+    const extensionProps = {
+      user,
+      url
+    };
+
     return (
       <Page title={user.displayName}>
         <div className="columns">
           <div className="column is-three-quarters">
             <Route path={url} exact component={() => <Details user={user} />} />
             <Route
-              path={`${url}/edit`}
+              path={`${url}/settings/general`}
               component={() => <EditUser user={user} />}
             />
             <Route
-              path={`${url}/password`}
+              path={`${url}/settings/password`}
               component={() => <SetUserPassword user={user} />}
+            />
+            <Route
+              path={`${url}/settings/permissions`}
+              component={() => (
+                <SetPermissions
+                  selectedPermissionsLink={user._links.permissions}
+                />
+              )}
+            />
+            <ExtensionPoint
+              name="user.route"
+              props={extensionProps}
+              renderAll={true}
             />
           </div>
           <div className="column">
             <Navigation>
-              <Section label={t("single-user.navigation-label")}>
+              <Section label={t("singleUser.menu.navigationLabel")}>
                 <NavLink
                   to={`${url}`}
-                  label={t("single-user.information-label")}
+                  icon="fas fa-info-circle"
+                  label={t("singleUser.menu.informationNavLink")}
                 />
-                <EditUserNavLink user={user} editUrl={`${url}/edit`} />
-                <SetPasswordNavLink
-                  user={user}
-                  passwordUrl={`${url}/password`}
-                />
-              </Section>
-              <Section label={t("single-user.actions-label")}>
-                <DeleteUserNavLink user={user} deleteUser={this.deleteUser} />
-                <NavLink to="/users" label={t("single-user.back-label")} />
+                <SubNavigation
+                  to={`${url}/settings/general`}
+                  label={t("singleUser.menu.settingsNavLink")}
+                >
+                  <EditUserNavLink
+                    user={user}
+                    editUrl={`${url}/settings/general`}
+                  />
+                  <SetPasswordNavLink
+                    user={user}
+                    passwordUrl={`${url}/settings/password`}
+                  />
+                  <SetPermissionsNavLink
+                    user={user}
+                    permissionsUrl={`${url}/settings/permissions`}
+                  />
+                  <ExtensionPoint
+                    name="user.setting"
+                    props={extensionProps}
+                    renderAll={true}
+                  />
+                </SubNavigation>
               </Section>
             </Navigation>
           </div>
@@ -135,10 +153,8 @@ class SingleUser extends React.Component<Props> {
 const mapStateToProps = (state, ownProps) => {
   const name = ownProps.match.params.name;
   const user = getUserByName(state, name);
-  const loading =
-    isFetchUserPending(state, name) || isDeleteUserPending(state, name);
-  const error =
-    getFetchUserFailure(state, name) || getDeleteUserFailure(state, name);
+  const loading = isFetchUserPending(state, name);
+  const error = getFetchUserFailure(state, name);
   const usersLink = getUsersLink(state);
   return {
     usersLink,
@@ -153,9 +169,6 @@ const mapDispatchToProps = dispatch => {
   return {
     fetchUserByName: (link: string, name: string) => {
       dispatch(fetchUserByName(link, name));
-    },
-    deleteUser: (user: User, callback?: () => void) => {
-      dispatch(deleteUser(user, callback));
     }
   };
 };

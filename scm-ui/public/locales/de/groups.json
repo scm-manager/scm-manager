@@ -1,0 +1,71 @@
+{
+  "group": {
+    "name": "Name",
+    "description": "Beschreibung",
+    "creationDate": "Erstellt",
+    "lastModified": "Zuletzt bearbeitet",
+    "type": "Typ",
+    "members": "Mitglieder"
+  },
+  "groups": {
+    "title": "Gruppen",
+    "subtitle": "Verwaltung der Gruppen"
+  },
+  "singleGroup": {
+    "errorTitle": "Fehler",
+    "errorSubtitle": "Unbekannter Gruppen Fehler",
+    "menu": {
+      "navigationLabel": "Gruppen Navigation",
+      "informationNavLink": "Informationen",
+      "settingsNavLink": "Einstellungen",
+      "generalNavLink": "Generell",
+      "setPermissionsNavLink": "Berechtigungen"
+    }
+  },
+  "add-group": {
+    "title": "Gruppe erstellen",
+    "subtitle": "Erstellen einer neuen Gruppe"
+  },
+  "create-group-button": {
+    "label": "Gruppe erstellen"
+  },
+  "edit-group-button": {
+    "label": "Bearbeiten"
+  },
+  "add-member-button": {
+    "label": "Mitglied hinzufügen"
+  },
+  "remove-member-button": {
+    "label": "Mitglied entfernen"
+  },
+  "add-member-textfield": {
+    "label": "Mitglied hinzufügen",
+    "error": "Ungültiger Name für Mitglied"
+  },
+  "add-member-autocomplete": {
+    "placeholder": "Benutzername eingeben",
+    "loading": "Suche...",
+    "no-options": "Kein Vorschlag für Benutzername verfügbar"
+  },
+  "groupForm": {
+    "subtitle": "Gruppe bearbeiten",
+    "submit": "Speichern",
+    "nameError": "Name ist ungültig",
+    "descriptionError": "Beschreibung ist ungültig",
+    "help": {
+      "nameHelpText": "Eindeutiger Name der Gruppe",
+      "descriptionHelpText": "Eine kurze Beschreibung der Gruppe",
+      "memberHelpText": "Benutzername des Mitglieds der Gruppe"
+    }
+  },
+  "deleteGroup": {
+    "subtitle": "Gruppe löschen",
+    "button": "Löschen",
+    "confirmAlert": {
+      "title": "Gruppe löschen",
+      "message": "Soll die Gruppe wirklich gelöscht werden?",
+      "submit": "Ja",
+      "cancel": "Nein"
+    }
+  }
+}

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import sonia.scm.config.ConfigurationPermissions;
 import sonia.scm.plugin.Extension;
+import sonia.scm.repository.GitConfig;
 import sonia.scm.web.JsonEnricherBase;
 import sonia.scm.web.JsonEnricherContext;
 
@@ -26,7 +27,7 @@ public class GitConfigInIndexResource extends JsonEnricherBase {
 
   @Override
   public void enrich(JsonEnricherContext context) {
-    if (resultHasMediaType(INDEX, context) && ConfigurationPermissions.list().isPermitted()) {
+    if (resultHasMediaType(INDEX, context) && ConfigurationPermissions.read(GitConfig.PERMISSION).isPermitted()) {
       String gitConfigUrl = new LinkBuilder(scmPathInfoStore.get().get(), GitConfigResource.class)
         .method("get")
         .parameters()

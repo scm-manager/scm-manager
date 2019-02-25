@@ -71,7 +71,11 @@ import static org.mockito.Mockito.*;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.Permission;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -130,6 +134,36 @@ public class DefaultRealmTest
     AuthorizationInfo realmsAutz = realm.doGetAuthorizationInfo(col);
     assertThat(realmsAutz.getObjectPermissions(), is(nullValue()));
     assertThat(realmsAutz.getStringPermissions(), Matchers.contains("repository:*"));
+  }
+
+  @Test
+  public void testGetAuthorizationInfoWithMultipleAuthorizationCollectors(){
+    SimplePrincipalCollection col = new SimplePrincipalCollection();
+    col.add(Scope.empty(), DefaultRealm.REALM);
+
+    SimpleAuthorizationInfo collectedFromDefault = new SimpleAuthorizationInfo();
+    collectedFromDefault.addStringPermission("repository:*");
+    when(collector.collect(col)).thenReturn(collectedFromDefault);
+
+    SimpleAuthorizationInfo collectedFromSecond = new SimpleAuthorizationInfo();
+    collectedFromSecond.addStringPermission("user:*");
+    collectedFromSecond.addRole("awesome");
+
+    AuthorizationCollector secondCollector = principalCollection -> collectedFromSecond;
+    authorizationCollectors.add(secondCollector);
+
+    SimpleAuthorizationInfo collectedFromThird = new SimpleAuthorizationInfo();
+    Permission permission = p -> false;
+    collectedFromThird.addObjectPermission(permission);
+    collectedFromThird.addRole("awesome");
+
+    AuthorizationCollector thirdCollector = principalCollection -> collectedFromThird;
+    authorizationCollectors.add(thirdCollector);
+
+    AuthorizationInfo realmsAuthz = realm.doGetAuthorizationInfo(col);
+    assertThat(realmsAuthz.getObjectPermissions(), contains(permission));
+    assertThat(realmsAuthz.getStringPermissions(), containsInAnyOrder("repository:*", "user:*"));
+    assertThat(realmsAuthz.getRoles(), Matchers.contains("awesome"));
   }
 
   /**
@@ -284,7 +318,11 @@ public class DefaultRealmTest
     // use a small number of iterations for faster test execution
     hashService.setHashIterations(512);
     service.setHashService(hashService);
-    realm = new DefaultRealm(service, collector, helperFactory);
+
+    authorizationCollectors = new HashSet<>();
+    authorizationCollectors.add(collector);
+
+    realm = new DefaultRealm(service, authorizationCollectors, helperFactory);
     
     // set permission resolver
     realm.setPermissionResolver(new WildcardPermissionResolver());
@@ -357,6 +395,8 @@ public class DefaultRealmTest
   /** Field description */
   @Mock
   private DefaultAuthorizationCollector collector;
+
+  private Set<AuthorizationCollector> authorizationCollectors;
 
   @Mock
   private LoginAttemptHandler loginAttemptHandler;

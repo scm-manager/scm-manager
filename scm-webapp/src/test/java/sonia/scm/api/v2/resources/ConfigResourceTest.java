@@ -18,6 +18,7 @@ import sonia.scm.web.VndMediaType;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -68,7 +69,7 @@ public class ConfigResourceTest {
 
   @Test
   @SubjectAware(username = "readOnly")
-  public void shouldGetGlobalConfig() throws URISyntaxException {
+  public void shouldGetGlobalConfig() throws URISyntaxException, UnsupportedEncodingException {
     MockHttpRequest request = MockHttpRequest.get("/" + ConfigResource.CONFIG_PATH_V2);
     MockHttpResponse response = new MockHttpResponse();
     dispatcher.invoke(request, response);
@@ -92,11 +93,7 @@ public class ConfigResourceTest {
   @Test
   @SubjectAware(username = "readWrite")
   public void shouldUpdateConfig() throws URISyntaxException, IOException {
-    URL url = Resources.getResource("sonia/scm/api/v2/config-test-update.json");
-    byte[] configJson = Resources.toByteArray(url);
-    MockHttpRequest request = MockHttpRequest.put("/" + ConfigResource.CONFIG_PATH_V2)
-      .contentType(VndMediaType.CONFIG)
-      .content(configJson);
+    MockHttpRequest request = post("sonia/scm/api/v2/config-test-update.json");
 
     MockHttpResponse response = new MockHttpResponse();
     dispatcher.invoke(request, response);
@@ -113,16 +110,42 @@ public class ConfigResourceTest {
   @Test
   @SubjectAware(username = "readOnly")
   public void shouldNotUpdateConfigWhenNotAuthorized() throws URISyntaxException, IOException {
-    URL url = Resources.getResource("sonia/scm/api/v2/config-test-update.json");
-    byte[] configJson = Resources.toByteArray(url);
-    MockHttpRequest request = MockHttpRequest.put("/" + ConfigResource.CONFIG_PATH_V2)
-      .contentType(VndMediaType.CONFIG)
-      .content(configJson);
+    MockHttpRequest request = post("sonia/scm/api/v2/config-test-update.json");
     MockHttpResponse response = new MockHttpResponse();
 
     thrown.expectMessage("Subject does not have permission [configuration:write:global]");
 
     dispatcher.invoke(request, response);
+  }
+
+  @Test
+  @SubjectAware(username = "readWrite")
+  public void shouldFailForEmptyAdminUsers() throws URISyntaxException, IOException {
+    MockHttpRequest request = post("sonia/scm/api/v2/config-test-empty-admin-user.json");
+
+    MockHttpResponse response = new MockHttpResponse();
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_BAD_REQUEST, response.getStatus());
+  }
+
+  @Test
+  @SubjectAware(username = "readWrite")
+  public void shouldFailForEmptyAdminGroups() throws URISyntaxException, IOException {
+    MockHttpRequest request = post("sonia/scm/api/v2/config-test-empty-admin-group.json");
+
+    MockHttpResponse response = new MockHttpResponse();
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_BAD_REQUEST, response.getStatus());
+  }
+
+  private MockHttpRequest post(String resourceName) throws IOException, URISyntaxException {
+    URL url = Resources.getResource(resourceName);
+    byte[] configJson = Resources.toByteArray(url);
+    return MockHttpRequest.put("/" + ConfigResource.CONFIG_PATH_V2)
+      .contentType(VndMediaType.CONFIG)
+      .content(configJson);
   }
 
   private static ScmConfiguration createConfiguration() {

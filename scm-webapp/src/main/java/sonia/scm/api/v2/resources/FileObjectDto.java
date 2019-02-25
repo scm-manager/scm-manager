@@ -1,6 +1,7 @@
 package sonia.scm.api.v2.resources;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Links;
 import lombok.Getter;
@@ -27,10 +28,8 @@ public class FileObjectDto extends HalRepresentation {
   @JsonInclude(JsonInclude.Include.NON_EMPTY)
   private String revision;
 
-  @Override
-  @SuppressWarnings("squid:S1185") // We want to have this method available in this package
-  protected HalRepresentation add(Links links) {
-    return super.add(links);
+  public FileObjectDto(Links links, Embedded embedded) {
+    super(links, embedded);
   }
 
   public void setChildren(List<FileObjectDto> children) {

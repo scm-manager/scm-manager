@@ -10,7 +10,6 @@ const fetchOptions: RequestOptions = {
   }
 };
 
-
 function isBackendError(response) {
   return response.headers.get("Content-Type") === "application/vnd.scmm-error+json;v=2";
 }

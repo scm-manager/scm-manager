@@ -18,13 +18,17 @@ import sonia.scm.api.rest.JSONContextResolver;
 import sonia.scm.api.rest.ObjectMapperProvider;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupManager;
+import sonia.scm.security.PermissionAssigner;
+import sonia.scm.security.PermissionDescriptor;
 import sonia.scm.web.VndMediaType;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Collection;
 import java.util.Collections;
 
 import static java.util.Collections.singletonList;
@@ -54,10 +58,15 @@ public class GroupRootResourceTest {
 
   @Mock
   private GroupManager groupManager;
+  @Mock
+  private PermissionAssigner permissionAssigner;
   @InjectMocks
   private GroupDtoToGroupMapperImpl dtoToGroupMapper;
   @InjectMocks
   private GroupToGroupDtoMapperImpl groupToDtoMapper;
+  @InjectMocks
+  private PermissionCollectionToDtoMapper permissionCollectionToDtoMapper;
+
 
   private ArgumentCaptor<Group> groupCaptor = ArgumentCaptor.forClass(Group.class);
 
@@ -73,7 +82,8 @@ public class GroupRootResourceTest {
 
     GroupCollectionToDtoMapper groupCollectionToDtoMapper = new GroupCollectionToDtoMapper(groupToDtoMapper, resourceLinks);
     GroupCollectionResource groupCollectionResource = new GroupCollectionResource(groupManager, dtoToGroupMapper, groupCollectionToDtoMapper, resourceLinks);
-    GroupResource groupResource = new GroupResource(groupManager, groupToDtoMapper, dtoToGroupMapper);
+    GroupPermissionResource groupPermissionResource = new GroupPermissionResource(permissionAssigner, permissionCollectionToDtoMapper);
+    GroupResource groupResource = new GroupResource(groupManager, groupToDtoMapper, dtoToGroupMapper, groupPermissionResource);
     GroupRootResource groupRootResource = new GroupRootResource(Providers.of(groupCollectionResource), Providers.of(groupResource));
 
     dispatcher = createDispatcher(groupRootResource);
@@ -91,7 +101,7 @@ public class GroupRootResourceTest {
   }
 
   @Test
-  public void shouldGetGroup() throws URISyntaxException {
+  public void shouldGetGroup() throws URISyntaxException, UnsupportedEncodingException {
     Group group = createDummyGroup();
     when(groupManager.get("admin")).thenReturn(group);
 
@@ -296,7 +306,7 @@ public class GroupRootResourceTest {
   }
 
   @Test
-  public void shouldGetAll() throws URISyntaxException {
+  public void shouldGetAll() throws URISyntaxException, UnsupportedEncodingException {
     MockHttpRequest request = MockHttpRequest.get("/" + GroupRootResource.GROUPS_PATH_V2);
     MockHttpResponse response = new MockHttpResponse();
 
@@ -305,6 +315,48 @@ public class GroupRootResourceTest {
     assertEquals(HttpServletResponse.SC_OK, response.getStatus());
     assertTrue(response.getContentAsString().contains("\"name\":\"admin\""));
     assertTrue(response.getContentAsString().contains("\"self\":{\"href\":\"/v2/groups/admin\"}"));
+  }
+
+  @Test
+  public void shouldGetPermissionLink() throws URISyntaxException, UnsupportedEncodingException {
+    MockHttpRequest request = MockHttpRequest.get("/" + GroupRootResource.GROUPS_PATH_V2 + "admin");
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+
+    assertTrue(response.getContentAsString().contains("\"permissions\":{"));
+  }
+
+  @Test
+  public void shouldGetPermissions() throws URISyntaxException, UnsupportedEncodingException {
+    when(permissionAssigner.readPermissionsForGroup("admin")).thenReturn(singletonList(new PermissionDescriptor("something:*")));
+    MockHttpRequest request = MockHttpRequest.get("/" + GroupRootResource.GROUPS_PATH_V2 + "admin/permissions");
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+
+    assertTrue(response.getContentAsString().contains("\"permissions\":[\"something:*\"]"));
+  }
+
+  @Test
+  public void shouldSetPermissions() throws URISyntaxException {
+    MockHttpRequest request = MockHttpRequest
+      .put("/" + GroupRootResource.GROUPS_PATH_V2 + "admin/permissions")
+      .contentType(VndMediaType.PERMISSION_COLLECTION)
+      .content("{\"permissions\":[\"other:*\"]}".getBytes());
+    MockHttpResponse response = new MockHttpResponse();
+    ArgumentCaptor<Collection<PermissionDescriptor>> captor = ArgumentCaptor.forClass(Collection.class);
+    doNothing().when(permissionAssigner).setPermissionsForGroup(eq("admin"), captor.capture());
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
+
+    assertEquals("other:*", captor.getValue().iterator().next().getValue());
   }
 
   private Group createDummyGroup() {

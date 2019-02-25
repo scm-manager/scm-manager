@@ -17,22 +17,26 @@ import org.mockito.Mock;
 import sonia.scm.ContextEntry;
 import sonia.scm.NotFoundException;
 import sonia.scm.PageResult;
+import sonia.scm.security.PermissionAssigner;
+import sonia.scm.security.PermissionDescriptor;
 import sonia.scm.user.ChangePasswordNotAllowedException;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
 import sonia.scm.web.VndMediaType;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Collection;
 
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
@@ -59,16 +63,20 @@ public class UserRootResourceTest {
   private PasswordService passwordService;
   @Mock
   private UserManager userManager;
+  @Mock
+  private PermissionAssigner permissionAssigner;
   @InjectMocks
   private UserDtoToUserMapperImpl dtoToUserMapper;
   @InjectMocks
   private UserToUserDtoMapperImpl userToDtoMapper;
+  @InjectMocks
+  private PermissionCollectionToDtoMapper permissionCollectionToDtoMapper;
 
   private ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
   private User originalUser;
 
   @Before
-  public void prepareEnvironment() throws Exception {
+  public void prepareEnvironment() {
     initMocks(this);
     originalUser = createDummyUser("Neo");
     when(userManager.create(userCaptor.capture())).thenAnswer(invocation -> invocation.getArguments()[0]);
@@ -80,7 +88,8 @@ public class UserRootResourceTest {
     UserCollectionToDtoMapper userCollectionToDtoMapper = new UserCollectionToDtoMapper(userToDtoMapper, resourceLinks);
     UserCollectionResource userCollectionResource = new UserCollectionResource(userManager, dtoToUserMapper,
       userCollectionToDtoMapper, resourceLinks, passwordService);
-    UserResource userResource = new UserResource(dtoToUserMapper, userToDtoMapper, userManager, passwordService);
+    UserPermissionResource userPermissionResource = new UserPermissionResource(permissionAssigner, permissionCollectionToDtoMapper);
+    UserResource userResource = new UserResource(dtoToUserMapper, userToDtoMapper, userManager, passwordService, userPermissionResource);
     UserRootResource userRootResource = new UserRootResource(Providers.of(userCollectionResource),
       Providers.of(userResource));
 
@@ -88,7 +97,7 @@ public class UserRootResourceTest {
   }
 
   @Test
-  public void shouldCreateFullResponseForAdmin() throws URISyntaxException {
+  public void shouldCreateFullResponseForAdmin() throws URISyntaxException, UnsupportedEncodingException {
     MockHttpRequest request = MockHttpRequest.get("/" + UserRootResource.USERS_PATH_V2 + "Neo");
     MockHttpResponse response = new MockHttpResponse();
 
@@ -128,7 +137,7 @@ public class UserRootResourceTest {
 
   @Test
   @SubjectAware(username = "unpriv")
-  public void shouldCreateLimitedResponseForSimpleUser() throws URISyntaxException {
+  public void shouldCreateLimitedResponseForSimpleUser() throws URISyntaxException, UnsupportedEncodingException {
     MockHttpRequest request = MockHttpRequest.get("/" + UserRootResource.USERS_PATH_V2 + "Neo");
     MockHttpResponse response = new MockHttpResponse();
 
@@ -322,15 +331,13 @@ public class UserRootResourceTest {
   }
 
   @Test
-  public void shouldCreatePageForOnePageOnly() throws URISyntaxException {
+  public void shouldCreatePageForOnePageOnly() throws URISyntaxException, UnsupportedEncodingException {
     PageResult<User> singletonPageResult = createSingletonPageResult(1);
     when(userManager.getPage(any(), eq(0), eq(10))).thenReturn(singletonPageResult);
     MockHttpRequest request = MockHttpRequest.get("/" + UserRootResource.USERS_PATH_V2);
     MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
-
-    System.out.println(response.getContentAsString());
 
     assertEquals(HttpServletResponse.SC_OK, response.getStatus());
     assertTrue(response.getContentAsString().contains("\"name\":\"Neo\""));
@@ -340,15 +347,13 @@ public class UserRootResourceTest {
   }
 
   @Test
-  public void shouldCreatePageForMultiplePages() throws URISyntaxException {
+  public void shouldCreatePageForMultiplePages() throws URISyntaxException, UnsupportedEncodingException {
     PageResult<User> singletonPageResult = createSingletonPageResult(3);
     when(userManager.getPage(any(), eq(1), eq(1))).thenReturn(singletonPageResult);
     MockHttpRequest request = MockHttpRequest.get("/" + UserRootResource.USERS_PATH_V2 + "?page=1&pageSize=1");
     MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
-
-    System.out.println(response.getContentAsString());
 
     assertEquals(HttpServletResponse.SC_OK, response.getStatus());
     assertTrue(response.getContentAsString().contains("\"name\":\"Neo\""));
@@ -357,6 +362,48 @@ public class UserRootResourceTest {
     assertTrue(response.getContentAsString().contains("\"prev\":{\"href\":\"/v2/users/?page=0"));
     assertTrue(response.getContentAsString().contains("\"next\":{\"href\":\"/v2/users/?page=2"));
     assertTrue(response.getContentAsString().contains("\"last\":{\"href\":\"/v2/users/?page=2"));
+  }
+
+  @Test
+  public void shouldGetPermissionLink() throws URISyntaxException, UnsupportedEncodingException {
+    MockHttpRequest request = MockHttpRequest.get("/" + UserRootResource.USERS_PATH_V2 + "Neo");
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+
+    assertTrue(response.getContentAsString().contains("\"permissions\":{"));
+  }
+
+  @Test
+  public void shouldGetPermissions() throws URISyntaxException, UnsupportedEncodingException {
+    when(permissionAssigner.readPermissionsForUser("Neo")).thenReturn(singletonList(new PermissionDescriptor("something:*")));
+    MockHttpRequest request = MockHttpRequest.get("/" + UserRootResource.USERS_PATH_V2 + "Neo/permissions");
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+
+    assertTrue(response.getContentAsString().contains("\"permissions\":[\"something:*\"]"));
+  }
+
+  @Test
+  public void shouldSetPermissions() throws URISyntaxException {
+    MockHttpRequest request = MockHttpRequest
+      .put("/" + UserRootResource.USERS_PATH_V2 + "Neo/permissions")
+      .contentType(VndMediaType.PERMISSION_COLLECTION)
+      .content("{\"permissions\":[\"other:*\"]}".getBytes());
+    MockHttpResponse response = new MockHttpResponse();
+    ArgumentCaptor<Collection<PermissionDescriptor>> captor = ArgumentCaptor.forClass(Collection.class);
+    doNothing().when(permissionAssigner).setPermissionsForUser(eq("Neo"), captor.capture());
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
+
+    assertEquals("other:*", captor.getValue().iterator().next().getValue());
   }
 
   private PageResult<User> createSingletonPageResult(int overallCount) {

@@ -70,21 +70,9 @@ public final class GroupNames implements Serializable, Iterable<String>
    * Constructs ...
    *
    */
-  @SuppressWarnings("unchecked")
   public GroupNames()
   {
-    this.collection = Collections.EMPTY_LIST;
-  }
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param collection
-   */
-  public GroupNames(Collection<String> collection)
-  {
-    this.collection = Collections.unmodifiableCollection(collection);
+    this(Collections.emptyList());
   }
 
   /**
@@ -96,7 +84,30 @@ public final class GroupNames implements Serializable, Iterable<String>
    */
   public GroupNames(String groupName, String... groupNames)
   {
-    this.collection = Lists.asList(groupName, groupNames);
+    this(Lists.asList(groupName, groupNames));
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param collection
+   */
+  public GroupNames(Collection<String> collection)
+  {
+    this(collection, false);
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param collection
+   */
+  public GroupNames(Collection<String> collection, boolean external)
+  {
+    this.collection = Collections.unmodifiableCollection(collection);
+    this.external = external;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -165,7 +176,7 @@ public final class GroupNames implements Serializable, Iterable<String>
   @Override
   public String toString()
   {
-    return Joiner.on(", ").join(collection);
+    return Joiner.on(", ").join(collection) + "(" + (external? "external": "internal") + ")";
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -181,8 +192,13 @@ public final class GroupNames implements Serializable, Iterable<String>
     return collection;
   }
 
-  //~--- fields ---------------------------------------------------------------
+  public boolean isExternal() {
+    return external;
+  }
 
+  //~--- fields ---------------------------------------------------------------
   /** Field description */
   private final Collection<String> collection;
+
+  private final boolean external;
 }

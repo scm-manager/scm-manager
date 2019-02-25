@@ -11,7 +11,6 @@ import org.mockito.InjectMocks;
 import sonia.scm.group.Group;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.toList;
@@ -35,7 +34,7 @@ public class GroupToGroupDtoMapperTest {
   private URI expectedBaseUri;
 
   @Before
-  public void init() throws URISyntaxException {
+  public void init() {
     initMocks(this);
     expectedBaseUri = baseUri.resolve(GroupRootResource.GROUPS_PATH_V2 + "/");
     subjectThreadState.bind();
@@ -87,6 +86,21 @@ public class GroupToGroupDtoMapperTest {
     MemberDto actualMember = (MemberDto) groupDto.getEmbedded().getItemsBy("members").iterator().next();
     assertEquals("user0", actualMember.getName());
     assertEquals("http://example.com/base/v2/users/user0", actualMember.getLinks().getLinkBy("self").get().getHref());
+  }
+
+  @Test
+  public void shouldAppendLinks() {
+    HalEnricherRegistry registry = new HalEnricherRegistry();
+    registry.register(Group.class, (ctx, appender) -> {
+      Group group = ctx.oneRequireByType(Group.class);
+      appender.appendLink("some", "http://" + group.getName());
+    });
+    mapper.setRegistry(registry);
+
+    Group group = createDefaultGroup();
+    GroupDto dto = mapper.map(group);
+
+    assertEquals("http://abc", dto.getLinks().getLinkBy("some").get().getHref());
   }
 
   private Group createDefaultGroup() {

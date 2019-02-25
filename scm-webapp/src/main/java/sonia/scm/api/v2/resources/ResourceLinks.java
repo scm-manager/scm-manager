@@ -96,6 +96,52 @@ class ResourceLinks {
     }
   }
 
+  interface WithPermissionLinks {
+    String permissions(String name);
+
+    String overwritePermissions(String name);
+  }
+
+  UserPermissionLinks userPermissions() {
+    return new UserPermissionLinks(scmPathInfoStore.get());
+  }
+
+  static class UserPermissionLinks implements WithPermissionLinks {
+    private final LinkBuilder userPermissionLinkBuilder;
+
+    UserPermissionLinks(ScmPathInfo pathInfo) {
+      this.userPermissionLinkBuilder = new LinkBuilder(pathInfo, UserRootResource.class, UserResource.class, UserPermissionResource.class);
+    }
+
+    public String permissions(String name) {
+      return userPermissionLinkBuilder.method("getUserResource").parameters(name).method("permissions").parameters().method("getPermissions").parameters().href();
+    }
+
+    public String overwritePermissions(String name) {
+      return userPermissionLinkBuilder.method("getUserResource").parameters(name).method("permissions").parameters().method("overwritePermissions").parameters().href();
+    }
+  }
+
+  GroupPermissionLinks groupPermissions() {
+    return new GroupPermissionLinks(scmPathInfoStore.get());
+  }
+
+  static class GroupPermissionLinks implements WithPermissionLinks {
+    private final LinkBuilder groupPermissionLinkBuilder;
+
+    GroupPermissionLinks(ScmPathInfo pathInfo) {
+      this.groupPermissionLinkBuilder = new LinkBuilder(pathInfo, GroupRootResource.class, GroupResource.class, GroupPermissionResource.class);
+    }
+
+    public String permissions(String name) {
+      return groupPermissionLinkBuilder.method("getGroupResource").parameters(name).method("permissions").parameters().method("getPermissions").parameters().href();
+    }
+
+    public String overwritePermissions(String name) {
+      return groupPermissionLinkBuilder.method("getGroupResource").parameters(name).method("permissions").parameters().method("overwritePermissions").parameters().href();
+    }
+  }
+
   MeLinks me() {
     return new MeLinks(scmPathInfoStore.get(), this.user());
   }
@@ -323,8 +369,34 @@ class ResourceLinks {
       return branchLinkBuilder.method("getRepositoryResource").parameters(namespaceAndName.getNamespace(), namespaceAndName.getName()).method("branches").parameters().method("history").parameters(branch).href();
     }
 
-    public String changesetDiff(NamespaceAndName namespaceAndName, String branch) {
-      return branchLinkBuilder.method("getRepositoryResource").parameters(namespaceAndName.getNamespace(), namespaceAndName.getName()).method("branches").parameters().method("changesetDiff").parameters(branch, "").href() + "{otherBranch}";
+  }
+
+  public IncomingLinks incoming() {
+    return new IncomingLinks(scmPathInfoStore.get());
+  }
+
+  static class IncomingLinks {
+    private final LinkBuilder incomingLinkBuilder;
+
+    IncomingLinks(ScmPathInfo pathInfo) {
+      incomingLinkBuilder = new LinkBuilder(pathInfo, RepositoryRootResource.class, RepositoryResource.class, IncomingRootResource.class);
+    }
+
+    public String changesets(String namespace, String name) {
+      return toTemplateParams(incomingLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("incoming").parameters().method("incomingChangesets").parameters("source","target").href());
+    }
+
+    public String changesets(String namespace, String name, String source, String target) {
+      return incomingLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("incoming").parameters().method("incomingChangesets").parameters(source,target).href();
+    }
+
+    public String diff(String namespace, String name) {
+      return toTemplateParams(incomingLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("incoming").parameters().method("incomingDiff").parameters("source", "target").href());
+
+    }
+
+    public String toTemplateParams(String href) {
+      return href.replace("source", "{source}").replace("target", "{target}");
     }
   }
 
@@ -433,15 +505,16 @@ class ResourceLinks {
 
 
   }
-  public PermissionLinks permission() {
-    return new PermissionLinks(scmPathInfoStore.get());
+
+  public RepositoryPermissionLinks repositoryPermission() {
+    return new RepositoryPermissionLinks(scmPathInfoStore.get());
   }
 
-  static class PermissionLinks {
+  static class RepositoryPermissionLinks {
     private final LinkBuilder permissionLinkBuilder;
 
-    PermissionLinks(ScmPathInfo pathInfo) {
-      permissionLinkBuilder = new LinkBuilder(pathInfo, RepositoryRootResource.class, RepositoryResource.class, PermissionRootResource.class);
+    RepositoryPermissionLinks(ScmPathInfo pathInfo) {
+      permissionLinkBuilder = new LinkBuilder(pathInfo, RepositoryRootResource.class, RepositoryResource.class, RepositoryPermissionRootResource.class);
     }
 
     String all(String namespace, String name) {
@@ -541,4 +614,55 @@ class ResourceLinks {
     }
   }
 
+  public MergeLinks merge() {
+    return new MergeLinks(scmPathInfoStore.get());
+  }
+
+  static class MergeLinks {
+    private final LinkBuilder mergeLinkBuilder;
+
+    MergeLinks(ScmPathInfo pathInfo) {
+      this.mergeLinkBuilder = new LinkBuilder(pathInfo, RepositoryRootResource.class, RepositoryResource.class, MergeResource.class);
+    }
+
+    String merge(String namespace, String name) {
+      return mergeLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("merge").parameters().method("merge").parameters().href();
+    }
+
+    String dryRun(String namespace, String name) {
+      return mergeLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("merge").parameters().method("dryRun").parameters().href();
+    }
+  }
+
+  public PermissionsLinks permissions() {
+    return new PermissionsLinks(scmPathInfoStore.get());
+  }
+
+  static class PermissionsLinks {
+    private final LinkBuilder permissionsLinkBuilder;
+
+    PermissionsLinks(ScmPathInfo scmPathInfo) {
+      this.permissionsLinkBuilder = new LinkBuilder(scmPathInfo, GlobalPermissionResource.class);
+    }
+
+    String self() {
+      return permissionsLinkBuilder.method("getAll").parameters().href();
+    }
+  }
+
+  public AvailableRepositoryPermissionLinks availableRepositoryPermissions() {
+    return new AvailableRepositoryPermissionLinks(scmPathInfoStore.get());
+  }
+
+  static class AvailableRepositoryPermissionLinks {
+    private final LinkBuilder linkBuilder;
+
+    AvailableRepositoryPermissionLinks(ScmPathInfo scmPathInfo) {
+      this.linkBuilder = new LinkBuilder(scmPathInfo, RepositoryPermissionResource.class);
+    }
+
+    String self() {
+      return linkBuilder.method("get").parameters().href();
+    }
+  }
 }

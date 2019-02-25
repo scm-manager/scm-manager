@@ -26,7 +26,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
-import java.util.List;
 
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
@@ -118,49 +117,6 @@ public class BranchRootResource {
         .pageSize(pageSize)
         .create()
         .setBranch(branchName)
-        .getChangesets();
-      if (changesets != null && changesets.getChangesets() != null) {
-        PageResult<Changeset> pageResult = new PageResult<>(changesets.getChangesets(), changesets.getTotal());
-        return Response.ok(branchChangesetCollectionToDtoMapper.map(page, pageSize, pageResult, repository, branchName)).build();
-      } else {
-        return Response.ok().build();
-      }
-    }
-  }
-
-  @Path("{branch}/diffchangesets/{otherBranchName}")
-  @GET
-  @StatusCodes({
-    @ResponseCode(code = 200, condition = "success"),
-    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
-    @ResponseCode(code = 403, condition = "not authorized, the current user has no privileges to read the changeset"),
-    @ResponseCode(code = 404, condition = "not found, no changesets available in the repository"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
-  @Produces(VndMediaType.CHANGESET_COLLECTION)
-  @TypeHint(CollectionDto.class)
-  public Response changesetDiff(@PathParam("namespace") String namespace,
-                          @PathParam("name") String name,
-                          @PathParam("branch") String branchName,
-                          @PathParam("otherBranchName") String otherBranchName,
-                          @DefaultValue("0") @QueryParam("page") int page,
-                          @DefaultValue("10") @QueryParam("pageSize") int pageSize) throws Exception {
-    try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
-      List<Branch> allBranches = repositoryService.getBranchesCommand().getBranches().getBranches();
-      if (allBranches.stream().noneMatch(branch -> branchName.equals(branch.getName()))) {
-        throw new NotFoundException("branch", branchName);
-      }
-      if (allBranches.stream().noneMatch(branch -> otherBranchName.equals(branch.getName()))) {
-        throw new NotFoundException("branch", otherBranchName);
-      }
-      Repository repository = repositoryService.getRepository();
-      RepositoryPermissions.read(repository).check();
-      ChangesetPagingResult changesets = new PagedLogCommandBuilder(repositoryService)
-        .page(page)
-        .pageSize(pageSize)
-        .create()
-        .setBranch(branchName)
-        .setAncestorChangeset(otherBranchName)
         .getChangesets();
       if (changesets != null && changesets.getChangesets() != null) {
         PageResult<Changeset> pageResult = new PageResult<>(changesets.getChangesets(), changesets.getTotal());

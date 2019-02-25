@@ -38,7 +38,7 @@ package sonia.scm.repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sonia.scm.NotSupportedFeatureException;
+import sonia.scm.FeatureNotSupportedException;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.event.ScmEventBus;
 
@@ -72,9 +72,11 @@ public abstract class AbstractRepositoryHandler<C extends RepositoryConfig>
    *
    * @param storeFactory
    */
-  protected AbstractRepositoryHandler(ConfigurationStoreFactory storeFactory)
-  {
-    this.store = storeFactory.getStore(getConfigClass(), getType().getName());
+  protected AbstractRepositoryHandler(ConfigurationStoreFactory storeFactory) {
+    this.store = storeFactory
+      .withType(getConfigClass())
+      .withName(getType().getName())
+      .build();
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -165,12 +167,12 @@ public abstract class AbstractRepositoryHandler<C extends RepositoryConfig>
    *
    * @return
    *
-   * @throws NotSupportedFeatureException
+   * @throws FeatureNotSupportedException
    */
   @Override
-  public ImportHandler getImportHandler() throws NotSupportedFeatureException
+  public ImportHandler getImportHandler()
   {
-    throw new NotSupportedFeatureException("import");
+    throw new FeatureNotSupportedException("import");
   }
 
   /**

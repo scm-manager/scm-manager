@@ -34,7 +34,7 @@ class PluginLoader extends React.Component<Props, State> {
       this.setState({
         message: "loading plugin information"
       });
-  
+
       this.getPlugins(this.props.link);
     }
   }
@@ -55,11 +55,18 @@ class PluginLoader extends React.Component<Props, State> {
     });
 
     const promises = [];
-    for (let plugin of plugins) {
+    const sortedPlugins = plugins.sort(comparePluginsByName);
+    for (let plugin of sortedPlugins) {
       promises.push(this.loadPlugin(plugin));
     }
-    return Promise.all(promises);
+    return promises.reduce((chain, current) => {
+      return chain.then(chainResults => {
+          return current.then(currentResult => [...chainResults, currentResult])
+        }
+      );
+    }, Promise.resolve([]));
   };
+
 
   loadPlugin = (plugin: Plugin) => {
     this.setState({
@@ -94,7 +101,15 @@ class PluginLoader extends React.Component<Props, State> {
     return <Loading message={message} />;
   }
 }
-
+const comparePluginsByName = (a: Plugin, b: Plugin) => {
+  if (a.name < b.name) {
+    return -1;
+  }
+  if (a.name > b.name) {
+    return 1;
+  }
+  return 0;
+};
 const mapStateToProps = state => {
   const link = getUiPluginsLink(state);
   return {

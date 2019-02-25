@@ -11,10 +11,9 @@ import org.junit.runner.RunWith;
 import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.repository.GitConfig;
 
-import java.io.File;
 import java.net.URI;
 
 import static org.junit.Assert.assertEquals;
@@ -60,7 +59,6 @@ public class GitConfigToGitConfigDtoMapperTest {
 
     assertEquals("express", dto.getGcExpression());
     assertFalse(dto.isDisabled());
-    assertEquals("repository/directory", dto.getRepositoryDirectory().getPath());
     assertEquals(expectedBaseUri.toString(), dto.getLinks().getLinkBy("self").get().getHref());
     assertEquals(expectedBaseUri.toString(), dto.getLinks().getLinkBy("update").get().getHref());
   }
@@ -79,7 +77,6 @@ public class GitConfigToGitConfigDtoMapperTest {
   private GitConfig createConfiguration() {
     GitConfig config = new GitConfig();
     config.setDisabled(false);
-    config.setRepositoryDirectory(new File("repository/directory"));
     config.setGcExpression("express");
     return config;
   }

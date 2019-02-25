@@ -32,55 +32,29 @@ package sonia.scm.store;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import sonia.scm.SCMContextProvider;
-import sonia.scm.util.IOUtil;
-
-import java.io.File;
+import sonia.scm.repository.RepositoryLocationResolver;
 
 /**
- * JAXB implementation of {@link JAXBConfigurationStoreFactory}.
+ * JAXB implementation of {@link ConfigurationStoreFactory}.
  *
  * @author Sebastian Sdorra
  */
 @Singleton
-public class JAXBConfigurationStoreFactory implements ConfigurationStoreFactory {
-
-  /**
-   * the logger for JAXBConfigurationStoreFactory
-   */
-  private static final Logger LOG = LoggerFactory.getLogger(JAXBConfigurationStoreFactory.class);
-
-  private final File configDirectory;
+public class JAXBConfigurationStoreFactory extends FileBasedStoreFactory implements ConfigurationStoreFactory {
 
   /**
    * Constructs a new instance.
    *
-   * @param context scm context
+   * @param repositoryLocationResolver Resolver to get the repository Directory
    */
   @Inject
-  public JAXBConfigurationStoreFactory(SCMContextProvider context) {
-    configDirectory = new File(context.getBaseDirectory(), StoreConstants.CONFIGDIRECTORY_NAME);
-    IOUtil.mkdirs(configDirectory);
+  public JAXBConfigurationStoreFactory(SCMContextProvider contextProvider, RepositoryLocationResolver repositoryLocationResolver) {
+    super(contextProvider, repositoryLocationResolver, Store.CONFIG);
   }
 
   @Override
-  public <T> JAXBConfigurationStore<T> getStore(Class<T> type, String name) {
-    if (configDirectory == null) {
-      throw new IllegalStateException("store factory is not initialized");
-    }
-
-    File configFile = new File(configDirectory, name.concat(StoreConstants.FILE_EXTENSION));
-
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("create store for {} at {}", type.getName(),
-        configFile.getPath());
-    }
-
-    return new JAXBConfigurationStore<>(type, configFile);
+  public <T> JAXBConfigurationStore<T> getStore(TypedStoreParameters<T> storeParameters) {
+    return new JAXBConfigurationStore<>(storeParameters.getType(), getStoreLocation(storeParameters.getName().concat(StoreConstants.FILE_EXTENSION), storeParameters.getType(), storeParameters.getRepository()));
   }
-
 }

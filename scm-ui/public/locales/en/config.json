@@ -1,15 +1,14 @@
 {
   "config": {
-    "navigation-title": "Navigation"
-  },
-  "global-config": {
+    "navigationLabel": "Configuration Navigation",
+    "globalConfigurationNavLink": "Global Configuration",
     "title": "Configuration",
-    "navigation-label": "Global Configuration",
-    "error-title": "Error",
-    "error-subtitle": "Unknown Config Error"
+    "errorTitle": "Error",
+    "errorSubtitle": "Unknown Config Error"
   },
   "config-form": {
     "submit": "Submit",
+    "submit-success-notification": "Configuration changed successfully!",
     "no-permission-notification": "Please note: You do not have the permission to edit the config!"
   },
   "proxy-settings": {
@@ -66,17 +65,17 @@
     "plugin-url-invalid": "This is not a valid url"
   },
   "help": {
-    "realmDescriptionHelpText": "Enter authentication realm description",
-    "dateFormatHelpText": "Moments date format. Please have a look at the momentjs documentation.",
+    "realmDescriptionHelpText": "Enter authentication realm description.",
+    "dateFormatHelpText": "Moments date format. Please have a look at the MomentJS documentation.",
     "pluginRepositoryHelpText": "The url of the plugin repository. Explanation of the placeholders: version = SCM-Manager Version; os = Operation System; arch = Architecture",
-    "enableForwardingHelpText": "Enbale mod_proxy port forwarding.",
+    "enableForwardingHelpText": "Enable mod_proxy port forwarding.",
     "enableRepositoryArchiveHelpText": "Enable repository archives. A complete page reload is required after a change of this value.",
     "disableGroupingGridHelpText": "Disable repository Groups. A complete page reload is required after a change of this value.",
     "allowAnonymousAccessHelpText": "Anonymous users have read access on public repositories.",
     "skipFailedAuthenticatorsHelpText": "Do not stop the authentication chain, if an authenticator finds the user but fails to authenticate the user.",
     "adminGroupsHelpText": "Names of groups with admin permissions.",
     "adminUsersHelpText": "Names of users with admin permissions.",
-    "forceBaseUrlHelpText": "Redirects to the base url if the request comes from a other url",
+    "forceBaseUrlHelpText": "Redirects to the base url if the request comes from a other url.",
     "baseUrlHelpText": "The url of the application (with context path), i.e. http://localhost:8080/scm",
     "loginAttemptLimitHelpText": "Maximum allowed login attempts. Use -1 to disable the login attempt limit.",
     "loginAttemptLimitTimeoutHelpText": "Timeout in seconds for users which are temporary disabled, because of too many failed login attempts.",
@@ -85,8 +84,8 @@
     "proxyPasswordHelpText": "The password for the proxy server authentication.",
     "proxyServerHelpText": "The proxy server",
     "proxyUserHelpText": "The username for the proxy server authentication.",
-    "proxyExcludesHelpText": "Glob patterns for hostnames which should be excluded from proxy settings.",
-    "enableXsrfProtectionHelpText": "Enable Xsrf Cookie Protection. Note: This feature is still experimental.",
-    "defaultNameSpaceStrategyHelpText": "The default namespace strategy"
+    "proxyExcludesHelpText": "Glob patterns for hostnames, which should be excluded from proxy settings.",
+    "enableXsrfProtectionHelpText": "Enable XSRF Cookie Protection. Note: This feature is still experimental.",
+    "defaultNameSpaceStrategyHelpText": "The default namespace strategy."
   }
 }

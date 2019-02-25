@@ -33,22 +33,20 @@ package sonia.scm.repository;
 
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-import sonia.scm.io.DefaultFileSystem;
 import sonia.scm.repository.api.HookContextFactory;
 import sonia.scm.repository.spi.HookEventFacade;
-import sonia.scm.store.ConfigurationStore;
 import sonia.scm.store.ConfigurationStoreFactory;
 
 import java.io.File;
+import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -56,14 +54,10 @@ import static org.mockito.Mockito.when;
  *
  * @author Sebastian Sdorra
  */
-@RunWith(MockitoJUnitRunner.class)
 public class SvnRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
 
   @Mock
   private ConfigurationStoreFactory factory;
-
-  @Mock
-  private ConfigurationStore store;
 
   @Mock
   private com.google.inject.Provider<RepositoryManager> repositoryManagerProvider;
@@ -71,6 +65,12 @@ public class SvnRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
   private HookContextFactory hookContextFactory = new HookContextFactory(mock(PreProcessorUtil.class));
 
   private HookEventFacade facade = new HookEventFacade(repositoryManagerProvider, hookContextFactory);
+
+  @Override
+  protected void postSetUp() throws IOException, RepositoryPathNotFoundException {
+    initMocks(this);
+    super.postSetUp();
+  }
 
   @Override
   protected void checkDirectory(File directory) {
@@ -87,15 +87,13 @@ public class SvnRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
 
   @Override
   protected RepositoryHandler createRepositoryHandler(ConfigurationStoreFactory factory,
-                                                      File directory) {
-    SvnRepositoryHandler handler = new SvnRepositoryHandler(factory,
-      new DefaultFileSystem(), null);
+                                                      RepositoryLocationResolver locationResolver,
+                                                      File directory)  {
+    SvnRepositoryHandler handler = new SvnRepositoryHandler(factory, null, locationResolver, null);
 
     handler.init(contextProvider);
 
     SvnConfig config = new SvnConfig();
-
-    config.setRepositoryDirectory(directory);
 
     // TODO fix event bus exception
     handler.setConfig(config);
@@ -105,17 +103,15 @@ public class SvnRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
 
   @Test
   public void getDirectory() {
-    when(factory.getStore(any(), any())).thenReturn(store);
+    when(factory.withType(any())).thenCallRealMethod();
     SvnRepositoryHandler repositoryHandler = new SvnRepositoryHandler(factory,
-      new DefaultFileSystem(), facade);
+      facade, locationResolver, null);
 
     SvnConfig svnConfig = new SvnConfig();
-    svnConfig.setRepositoryDirectory(new File("/path"));
     repositoryHandler.setConfig(svnConfig);
 
-    Repository repository = new Repository("id", "svn", "Space", "Name");
-
-    File path = repositoryHandler.getDirectory(repository);
-    assertEquals("/path/id", path.getAbsolutePath());
+    initRepository();
+    File path = repositoryHandler.getDirectory(repository.getId());
+    assertEquals(repoPath.toString()+File.separator+ AbstractSimpleRepositoryHandler.REPOSITORIES_NATIVE_DIRECTORY, path.getAbsolutePath());
   }
 }

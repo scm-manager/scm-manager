@@ -6,17 +6,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.io.File;
-
 @NoArgsConstructor
 @Getter
 @Setter
 public class GitConfigDto extends HalRepresentation {
 
-  private File repositoryDirectory;
   private boolean disabled = false;
 
   private String gcExpression;
+
+  private boolean nonFastForwardDisallowed;
 
   @Override
   @SuppressWarnings("squid:S1185") // We want to have this method available in this package

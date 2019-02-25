@@ -8,6 +8,7 @@ import { InputField, Checkbox } from "@scm-manager/ui-components";
 type Configuration = {
   repositoryDirectory?: string,
   gcExpression?: string,
+  nonFastForwardDisallowed: boolean,
   disabled: boolean,
   _links: Links
 }
@@ -33,35 +34,32 @@ class GitConfigurationForm extends React.Component<Props, State> {
     this.state = { ...props.initialConfiguration };
   }
 
-  isValid = () => {
-    return !!this.state.repositoryDirectory;
-  };
 
   handleChange = (value: any, name: string) => {
     this.setState({
       [name]: value
-    }, () => this.props.onConfigurationChange(this.state, this.isValid()));
+    }, () => this.props.onConfigurationChange(this.state, true));
   };
 
   render() {
-    const { repositoryDirectory, gcExpression, disabled } = this.state;
+    const { gcExpression, nonFastForwardDisallowed, disabled } = this.state;
     const { readOnly, t } = this.props;
 
     return (
       <>
-        <InputField name="repositoryDirectory"
-                    label={t("scm-git-plugin.config.directory")}
-                    helpText={t("scm-git-plugin.config.directoryHelpText")}
-                    value={repositoryDirectory}
-                    onChange={this.handleChange}
-                    disabled={readOnly}
-        />
         <InputField name="gcExpression"
                     label={t("scm-git-plugin.config.gcExpression")}
                     helpText={t("scm-git-plugin.config.gcExpressionHelpText")}
                     value={gcExpression}
                     onChange={this.handleChange}
                     disabled={readOnly}
+        />
+        <Checkbox name="nonFastForwardDisallowed"
+                  label={t("scm-git-plugin.config.nonFastForwardDisallowed")}
+                  helpText={t("scm-git-plugin.config.nonFastForwardDisallowedHelpText")}
+                  checked={nonFastForwardDisallowed}
+                  onChange={this.handleChange}
+                  disabled={readOnly}
         />
         <Checkbox name="disabled"
                   label={t("scm-git-plugin.config.disabled")}

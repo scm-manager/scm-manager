@@ -36,6 +36,7 @@ package sonia.scm.security;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.github.legman.Subscribe;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
@@ -51,10 +52,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.group.GroupNames;
 import sonia.scm.group.GroupPermissions;
 import sonia.scm.plugin.Extension;
-import sonia.scm.repository.Permission;
+import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryDAO;
 import sonia.scm.user.User;
@@ -62,7 +64,6 @@ import sonia.scm.user.UserPermissions;
 import sonia.scm.util.Util;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -75,9 +76,6 @@ import java.util.Set;
 @Extension
 public class DefaultAuthorizationCollector implements AuthorizationCollector
 {
-
-  // TODO move to util class
-  private static final String SEPARATOR = System.getProperty("line.separator", "\n");
 
   /** Field description */
   private static final String ADMIN_PERMISSION = "*";
@@ -98,14 +96,16 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
    *
    *
    *
+   * @param configuration
    * @param cacheManager
    * @param repositoryDAO
    * @param securitySystem
    */
   @Inject
-  public DefaultAuthorizationCollector(CacheManager cacheManager,
-    RepositoryDAO repositoryDAO, SecuritySystem securitySystem)
+  public DefaultAuthorizationCollector(ScmConfiguration configuration, CacheManager cacheManager,
+                                       RepositoryDAO repositoryDAO, SecuritySystem securitySystem)
   {
+    this.configuration = configuration;
     this.cache = cacheManager.getCache(CACHE_NAME);
     this.repositoryDAO = repositoryDAO;
     this.securitySystem = securitySystem;
@@ -119,8 +119,8 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
    *
    * @return
    */
-  @Override
-  public AuthorizationInfo collect()
+  @VisibleForTesting
+  AuthorizationInfo collect()
   {
     AuthorizationInfo authorizationInfo;
     Subject subject = SecurityUtils.getSubject();
@@ -144,6 +144,7 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
    *
    * @return
    */
+  @Override
   public AuthorizationInfo collect(PrincipalCollection principals)
   {
     Preconditions.checkNotNull(principals, "principals parameter is required");
@@ -175,12 +176,12 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
   private void collectGlobalPermissions(Builder<String> builder,
     final User user, final GroupNames groups)
   {
-    List<StoredAssignedPermission> globalPermissions =
+    Collection<AssignedPermission> globalPermissions =
       securitySystem.getPermissions((AssignedPermission input) -> isUserPermitted(user, groups, input));
 
-    for (StoredAssignedPermission gp : globalPermissions)
+    for (AssignedPermission gp : globalPermissions)
     {
-      String permission = gp.getPermission();
+      String permission = gp.getPermission().getValue();
 
       logger.trace("add permission {} for user {}", permission, user.getName());
       builder.add(permission);
@@ -199,18 +200,17 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
   private void collectRepositoryPermissions(Builder<String> builder,
     Repository repository, User user, GroupNames groups)
   {
-    Collection<Permission> repositoryPermissions
-      = repository.getPermissions();
+    Collection<RepositoryPermission> repositoryPermissions = repository.getPermissions();
 
     if (Util.isNotEmpty(repositoryPermissions))
     {
       boolean hasPermission = false;
-      for (sonia.scm.repository.Permission permission : repositoryPermissions)
+      for (RepositoryPermission permission : repositoryPermissions)
       {
         hasPermission = isUserPermitted(user, groups, permission);
-        if (hasPermission)
+        if (hasPermission && !permission.getVerbs().isEmpty())
         {
-          String perm = permission.getType().getPermissionPrefix().concat(repository.getId());
+          String perm = "repository:" + String.join(",", permission.getVerbs()) + ":" + repository.getId();
           if (logger.isTraceEnabled())
           {
             logger.trace("add repository permission {} for user {} at repository {}",
@@ -239,7 +239,7 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
     Set<String> roles;
     Set<String> permissions;
 
-    if (user.isAdmin())
+    if (isAdmin(user, groups))
     {
       if (logger.isDebugEnabled())
       {
@@ -268,6 +268,37 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
     SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(roles);
     info.addStringPermissions(permissions);
     return info;
+  }
+
+  private boolean isAdmin(User user, GroupNames groups) {
+    boolean admin = user.isAdmin();
+    if (admin) {
+      logger.debug("user {} is marked as admin, because of the user flag", user.getName());
+      return true;
+    }
+    if (isUserAdminInConfiguration(user)) {
+      logger.debug("user {} is marked as admin, because of the admin user configuration", user.getName());
+      return true;
+    }
+    return isUserAdminInGroupConfiguration(user, groups);
+  }
+
+  private boolean isUserAdminInGroupConfiguration(User user, GroupNames groups) {
+    Set<String> adminGroups = configuration.getAdminGroups();
+    if (adminGroups != null && groups != null) {
+      for (String group : groups) {
+        if (adminGroups.contains(group)) {
+          logger.debug("user {} is marked as admin, because of the admin group configuration for group {}", user.getName(), group);
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  private boolean isUserAdminInConfiguration(User user) {
+    Set<String> adminUsers = configuration.getAdminUsers();
+    return adminUsers != null && adminUsers.contains(user.getName());
   }
 
   private String getGroupAutocompletePermission() {
@@ -372,6 +403,8 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  private final ScmConfiguration configuration;
 
   /** authorization cache */
   private final Cache<CacheKey, AuthorizationInfo> cache;

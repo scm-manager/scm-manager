@@ -59,9 +59,8 @@ describe("test mail validation", () => {
       "@ostfalia.de",
       "s.sdorra@",
       "s.sdorra@ostfalia",
-      "s.sdorra@@ostfalia.de",
       "s.sdorra@ ostfalia.de",
-      "s.sdorra @ostfalia.de"
+      "s.sdorra@[ostfalia.de"
     ];
     for (let mail of invalid) {
       expect(validator.isMailValid(mail)).toBe(false);
@@ -78,7 +77,9 @@ describe("test mail validation", () => {
       "s.sdorra@t.co",
       "s.sdorra@ucla.college",
       "s.sdorra@example.xn--p1ai",
-      "s.sdorra@scm.solutions"
+      "s.sdorra@scm.solutions",
+      "s'sdorra@scm.solutions",
+      "\"S Sdorra\"@scm.solutions"
     ];
     for (let mail of valid) {
       expect(validator.isMailValid(mail)).toBe(true);

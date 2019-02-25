@@ -1,9 +1,7 @@
 // @flow
-//modified from https://github.com/GA-MO/react-confirm-alert
-
 import * as React from "react";
-import { render, unmountComponentAtNode } from "react-dom";
-import "./ConfirmAlert.css";
+import ReactDOM from "react-dom";
+import Modal from "./Modal";
 
 type Button = {
   label: string,
@@ -25,58 +23,47 @@ class ConfirmAlert extends React.Component<Props> {
   };
 
   close = () => {
-    removeElementReconfirm();
+    ReactDOM.unmountComponentAtNode(document.getElementById("modalRoot"));
   };
 
   render() {
     const { title, message, buttons } = this.props;
 
-    return (
-      <div className="react-confirm-alert-overlay">
-        <div className="react-confirm-alert">
-          {
-            <div className="react-confirm-alert-body">
-              {title && <h1>{title}</h1>}
-              {message}
-              <div className="react-confirm-alert-button-group">
-                {buttons.map((button, i) => (
-                  <button
-                    key={i}
-                    onClick={() => this.handleClickButton(button)}
-                  >
-                    {button.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-          }
-        </div>
+    const body = <>{message}</>;
+
+    const footer = (
+      <div className="field is-grouped">
+        {buttons.map((button, i) => (
+          <p className="control">
+            <a
+              className="button is-info"
+              key={i}
+              onClick={() => this.handleClickButton(button)}
+            >
+              {button.label}
+            </a>
+          </p>
+        ))}
       </div>
+    );
+
+    return (
+      <Modal
+        title={title}
+        closeFunction={() => this.close()}
+        body={body}
+        active={true}
+        footer={footer}
+      />
     );
   }
 }
 
-function createElementReconfirm(properties: Props) {
-  const divTarget = document.createElement("div");
-  divTarget.id = "react-confirm-alert";
-  if (document.body) {
-    document.body.appendChild(divTarget);
-    render(<ConfirmAlert {...properties} />, divTarget);
-  }
-}
-
-function removeElementReconfirm() {
-  const target = document.getElementById("react-confirm-alert");
-  if (target) {
-    unmountComponentAtNode(target);
-    if (target.parentNode) {
-      target.parentNode.removeChild(target);
-    }
-  }
-}
-
 export function confirmAlert(properties: Props) {
-  createElementReconfirm(properties);
+  const root = document.getElementById("modalRoot");
+  if (root) {
+    ReactDOM.render(<ConfirmAlert {...properties} />, root);
+  }
 }
 
 export default ConfirmAlert;

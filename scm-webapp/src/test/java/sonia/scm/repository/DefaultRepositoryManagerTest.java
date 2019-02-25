@@ -39,6 +39,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.util.ThreadContext;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -49,8 +50,10 @@ import sonia.scm.HandlerEventType;
 import sonia.scm.Manager;
 import sonia.scm.ManagerTestBase;
 import sonia.scm.NotFoundException;
+import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.event.ScmEventBus;
+import sonia.scm.io.DefaultFileSystem;
 import sonia.scm.repository.api.HookContext;
 import sonia.scm.repository.api.HookContextFactory;
 import sonia.scm.repository.api.HookFeature;
@@ -66,20 +69,9 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
 
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.hasProperty;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.when;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -108,6 +100,11 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
   private ScmConfiguration configuration;
 
   private String mockedNamespace = "default_namespace";
+
+  @Before
+  public void initContext() {
+    ((TempSCMContextProvider)SCMContext.getContext()).setBaseDirectory(temp);
+  }
 
   @Test
   public void testCreate() {
@@ -419,23 +416,26 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
   }
 
   private DefaultRepositoryManager createRepositoryManager(boolean archiveEnabled, KeyGenerator keyGenerator) {
+    DefaultFileSystem fileSystem = new DefaultFileSystem();
     Set<RepositoryHandler> handlerSet = new HashSet<>();
-    ConfigurationStoreFactory factory = new JAXBConfigurationStoreFactory(contextProvider);
-    handlerSet.add(new DummyRepositoryHandler(factory));
-    handlerSet.add(new DummyRepositoryHandler(factory) {
+    InitialRepositoryLocationResolver initialRepositoryLocationResolver = new InitialRepositoryLocationResolver();
+    XmlRepositoryDAO repositoryDAO = new XmlRepositoryDAO(contextProvider, initialRepositoryLocationResolver, fileSystem);
+    RepositoryLocationResolver repositoryLocationResolver = new RepositoryLocationResolver(contextProvider, repositoryDAO, initialRepositoryLocationResolver);
+    ConfigurationStoreFactory factory = new JAXBConfigurationStoreFactory(contextProvider, repositoryLocationResolver);
+    handlerSet.add(new DummyRepositoryHandler(factory, repositoryLocationResolver));
+    handlerSet.add(new DummyRepositoryHandler(factory, repositoryLocationResolver) {
       @Override
       public RepositoryType getType() {
         return new RepositoryType("hg", "Mercurial", Sets.newHashSet());
       }
     });
-    handlerSet.add(new DummyRepositoryHandler(factory) {
+    handlerSet.add(new DummyRepositoryHandler(factory, repositoryLocationResolver) {
       @Override
       public RepositoryType getType() {
         return new RepositoryType("git", "Git", Sets.newHashSet());
       }
     });
 
-    XmlRepositoryDAO repositoryDAO = new XmlRepositoryDAO(factory);
 
     this.configuration = new ScmConfiguration();
 

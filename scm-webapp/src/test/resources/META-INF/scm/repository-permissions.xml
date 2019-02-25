@@ -1,0 +1,13 @@
+<repository-permissions>
+  <verbs>
+    <verb>test</verb>
+  </verbs>
+  <roles>
+    <role>
+      <name>READ</name>
+      <verbs>
+        <verb>test</verb>
+      </verbs>
+    </role>
+  </roles>
+</repository-permissions>

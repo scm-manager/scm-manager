@@ -35,7 +35,8 @@ package sonia.scm.api.rest.resources;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.apache.commons.beanutils.BeanComparator;
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.net.UrlEscapers;
 import org.apache.shiro.authz.AuthorizationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +46,7 @@ import sonia.scm.ModelObject;
 import sonia.scm.PageResult;
 import sonia.scm.api.rest.RestExceptionResult;
 import sonia.scm.util.AssertUtil;
-import sonia.scm.util.HttpUtil;
+import sonia.scm.util.Comparables;
 import sonia.scm.util.Util;
 
 import javax.ws.rs.core.CacheControl;
@@ -55,11 +56,7 @@ import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
-import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
-import java.util.Arrays;
+import java.net.URI;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
@@ -139,11 +136,7 @@ public abstract class AbstractManagerResource<T extends ModelObject> {
       manager.create(item);
 
       String id = getId(item);
-
-      id = HttpUtil.encode(id);
-      response = Response.created(
-        uriInfo.getAbsolutePath().resolve(
-          getPathPart().concat("/").concat(id))).build();
+      response = Response.created(location(uriInfo, id)).build();
     }
     catch (AuthorizationException ex)
     {
@@ -157,6 +150,12 @@ public abstract class AbstractManagerResource<T extends ModelObject> {
     }
 
     return response;
+  }
+
+  @VisibleForTesting
+  URI location(UriInfo uriInfo, String id) {
+    String escaped = UrlEscapers.urlPathSegmentEscaper().escape(id);
+    return uriInfo.getAbsolutePath().resolve(getPathPart().concat("/").concat(escaped));
   }
 
   /**
@@ -247,7 +246,7 @@ public abstract class AbstractManagerResource<T extends ModelObject> {
    */
   public Response get(Request request, String id)
   {
-    Response response = null;
+    Response response;
     T item = manager.get(id);
 
     if (item != null)
@@ -506,21 +505,11 @@ public abstract class AbstractManagerResource<T extends ModelObject> {
     return builder.build();
   }
 
-  @SuppressWarnings("unchecked")
-  private Comparator<T> createComparator(String sortBy, boolean desc)
-  {
-    checkSortByField(sortBy);
-    Comparator comparator;
-
-    if (desc)
-    {
-      comparator = new BeanReverseComparator(sortBy);
+  private Comparator<T> createComparator(String sortBy, boolean desc) {
+    Comparator<T> comparator = Comparables.comparator(type, sortBy);
+    if (desc) {
+      comparator = comparator.reversed();
     }
-    else
-    {
-      comparator = new BeanComparator(sortBy);
-    }
-
     return comparator;
   }
 
@@ -552,21 +541,6 @@ public abstract class AbstractManagerResource<T extends ModelObject> {
     }
 
     return items;
-  }
-
-  // We have to handle IntrospectionException here, because it's a checked exception
-  // It shouldn't occur really - so creating a new unchecked exception would be over-engineered here
-  @SuppressWarnings("squid:S00112")
-  private void checkSortByField(String sortBy) {
-    try {
-      BeanInfo info = Introspector.getBeanInfo(type);
-      PropertyDescriptor[] pds = info.getPropertyDescriptors();
-      if (Arrays.stream(pds).noneMatch(p -> p.getName().equals(sortBy))) {
-        throw new IllegalArgumentException("sortBy");
-      }
-    } catch (IntrospectionException e) {
-      throw new RuntimeException("error introspecting model type " + type.getName(), e);
-    }
   }
 
   protected PageResult<T> fetchPage(String sortBy, boolean desc, int pageNumber,
@@ -603,52 +577,5 @@ public abstract class AbstractManagerResource<T extends ModelObject> {
     }
 
     return lastModified;
-  }
-
-  //~--- inner classes --------------------------------------------------------
-
-  /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 11/06/09
-   * @author         Enter your name here...
-   */
-  private static class BeanReverseComparator extends BeanComparator
-  {
-
-    /** Field description */
-    private static final long serialVersionUID = -8535047820348790009L;
-
-    //~--- constructors -------------------------------------------------------
-
-    /**
-     * Constructs ...
-     *
-     *
-     * @param sortby
-     */
-    private BeanReverseComparator(String sortby)
-    {
-      super(sortby);
-    }
-
-    //~--- methods ------------------------------------------------------------
-
-    /**
-     * Method description
-     *
-     *
-     * @param o1
-     * @param o2
-     *
-     * @return
-     */
-    @Override
-    @SuppressWarnings("unchecked")
-    public int compare(Object o1, Object o2)
-    {
-      return super.compare(o1, o2) * -1;
-    }
   }
 }

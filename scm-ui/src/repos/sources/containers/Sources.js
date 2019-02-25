@@ -2,10 +2,11 @@
 import React from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import type { Repository, Branch } from "@scm-manager/ui-types";
+import type { Branch, Repository } from "@scm-manager/ui-types";
 import FileTree from "../components/FileTree";
 import { ErrorNotification, Loading } from "@scm-manager/ui-components";
-import BranchSelector from "../../containers/BranchSelector";
+import BranchSelector from "../../../../../scm-ui-components/packages/ui-components/src/BranchSelector";
+import { translate } from "react-i18next";
 import {
   fetchBranches,
   getBranches,
@@ -32,7 +33,8 @@ type Props = {
 
   // Context props
   history: any,
-  match: any
+  match: any,
+  t: string => string
 };
 
 class Sources extends React.Component<Props> {
@@ -91,15 +93,17 @@ class Sources extends React.Component<Props> {
 
     if (currentFileIsDirectory) {
       return (
-        <>
-          {this.renderBranchSelector()}
+        <div className="panel">
+          <div className="panel-heading">
+            {this.renderBranchSelector()}
+          </div>
           <FileTree
             repository={repository}
             revision={revision}
             path={path}
             baseUrl={baseUrl}
           />
-        </>
+        </div>
       );
     } else {
       return (
@@ -109,13 +113,14 @@ class Sources extends React.Component<Props> {
   }
 
   renderBranchSelector = () => {
-    const { repository, branches, revision } = this.props;
+    const { branches, revision, t } = this.props;
 
-    if (repository._links.branches) {
+    if (branches) {
       return (
         <BranchSelector
           branches={branches}
           selectedBranch={revision}
+          label={t("changesets.branchSelectorLabel")}
           selected={(b: Branch) => {
             this.branchSelected(b);
           }}
@@ -160,6 +165,7 @@ const mapDispatchToProps = dispatch => {
 };
 
 export default compose(
+  translate("repos"),
   withRouter,
   connect(
     mapStateToProps,

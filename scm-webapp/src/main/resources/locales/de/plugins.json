@@ -1,0 +1,91 @@
+{
+  "permissions": {
+    "repository": {
+      "read,pull": {
+        "*": {
+          "displayName": "Alle Repositories lesen",
+          "description": "Darf alle Repositories lesen und klonen."
+        }
+      },
+      "read,pull,push": {
+        "*": {
+          "displayName": "Alle Repositories schreiben",
+          "description": "Darf alle Repositories lesen, klonen und schreiben."
+        }
+      },
+      "*": {
+        "displayName": "Alle Repositories besitzen (Owner)",
+        "description": "Darf alle Repositories lesen, klonen, schreiben, konfigurieren und löschen."
+      },
+      "create": {
+        "displayName": "Repositories erstellen",
+        "description": "Darf Repositories erstellen."
+      }
+    },
+    "user": {
+      "*": {
+        "displayName": "Benutzer administrieren",
+        "description": "Darf Benutzer administrieren."
+      }
+    },
+    "group": {
+      "*": {
+        "displayName": "Gruppen administrieren",
+        "description": "Darf Gruppen administrieren."
+      }
+    },
+    "configuration": {
+      "list": {
+        "displayName": "Basis für Administration",
+        "description": "Voraussetzung für alle anderen Administrationsberechtigungen. Ohne diese Berechtigung wird keine Administrationsansicht gezeigt."
+      },
+      "read,write": {
+        "global": {
+          "displayName": "zentrale Konfiguration",
+          "description": "Darf die Konfiguration des SCM-Manager anpassen"
+        },
+        "*": {
+          "displayName": "zentrale + Plugin Konfiguration",
+          "description": "Darf die Konfiguration des SCM-Manager und aller Plugins anpassen"
+        }
+      }
+    },
+    "unknown": "Unbekannte Berechtigung"
+  },
+  "verbs": {
+    "repository": {
+      "read": {
+        "displayName": "Lesen",
+        "description": "Darf das Repository im SCM-Manager sehen."
+      },
+      "modify": {
+        "displayName": "Modifizieren",
+        "description": "Darf die Eigenschaften des Repository verändern."
+      },
+      "delete": {
+        "displayName": "Löschen",
+        "description": "Darf das Repository löschen."
+      },
+      "pull": {
+        "displayName": "Pull/Checkout",
+        "description": "Darf pull/checkout auf das Repository ausführen."
+      },
+      "push": {
+        "displayName": "Push/Commit",
+        "description": "Darf push/commit auf das Repository ausführen und damit den Inhalt verändern."
+      },
+      "permissionRead": {
+        "displayName": "Berechtigungen lesen",
+        "description": "Darf die Berechtigungen des Repository sehen."
+      },
+      "permissionWrite": {
+        "displayName": "Berechtigungen modifizieren",
+        "description": "Darf die Berechtigungen des Repository bearbeiten."
+      },
+      "*": {
+        "displayName": "Alle Repository Rechte",
+        "description": "Darf im Repository Kontext alles ausführen. Dies beinhaltet alle Repository Berechtigungen."
+      }
+    }
+  }
+}

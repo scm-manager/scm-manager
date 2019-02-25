@@ -78,8 +78,10 @@ public class I18nServlet extends HttpServlet {
   @VisibleForTesting
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse response) {
+    response.setCharacterEncoding("UTF-8");
+    response.setContentType("application/json");
+    response.setHeader("Cache-Control", "no-cache");
     try (PrintWriter out = response.getWriter()) {
-      response.setContentType("application/json");
       String path = req.getServletPath();
       Function<String, Optional<JsonNode>> jsonFileProvider = usedPath -> Optional.empty();
       BiConsumer<String, JsonNode> createdJsonFileConsumer = (usedPath, jsonNode) -> log.debug("A json File is created from the path {}", usedPath);

@@ -6,27 +6,30 @@ import {
   ErrorPage,
   Loading,
   Navigation,
+  SubNavigation,
   Section,
   NavLink
 } from "@scm-manager/ui-components";
 import { Route } from "react-router";
 import { Details } from "./../components/table";
-import { DeleteGroupNavLink, EditGroupNavLink } from "./../components/navLinks";
+import {
+  EditGroupNavLink,
+  SetPermissionsNavLink
+} from "./../components/navLinks";
 import type { Group } from "@scm-manager/ui-types";
 import type { History } from "history";
 import {
-  deleteGroup,
   fetchGroupByName,
   getGroupByName,
   isFetchGroupPending,
-  getFetchGroupFailure,
-  getDeleteGroupFailure,
-  isDeleteGroupPending
+  getFetchGroupFailure
 } from "../modules/groups";
 
 import { translate } from "react-i18next";
 import EditGroup from "./EditGroup";
 import { getGroupsLink } from "../../modules/indexResource";
+import SetPermissions from "../../permissions/components/SetPermissions";
+import { ExtensionPoint } from "@scm-manager/ui-extensions";
 
 type Props = {
   name: string,
@@ -36,7 +39,6 @@ type Props = {
   groupLink: string,
 
   // dispatcher functions
-  deleteGroup: (group: Group, callback?: () => void) => void,
   fetchGroupByName: (string, string) => void,
 
   // context objects
@@ -57,14 +59,6 @@ class SingleGroup extends React.Component<Props> {
     return url;
   };
 
-  deleteGroup = (group: Group) => {
-    this.props.deleteGroup(group, this.groupDeleted);
-  };
-
-  groupDeleted = () => {
-    this.props.history.push("/groups");
-  };
-
   matchedUrl = () => {
     return this.stripEndingSlash(this.props.match.url);
   };
@@ -75,8 +69,8 @@ class SingleGroup extends React.Component<Props> {
     if (error) {
       return (
         <ErrorPage
-          title={t("single-group.error-title")}
-          subtitle={t("single-group.error-subtitle")}
+          title={t("singleGroup.errorTitle")}
+          subtitle={t("singleGroup.errorSubtitle")}
           error={error}
         />
       );
@@ -88,6 +82,11 @@ class SingleGroup extends React.Component<Props> {
 
     const url = this.matchedUrl();
 
+    const extensionProps = {
+      group,
+      url
+    };
+
     return (
       <Page title={group.name}>
         <div className="columns">
@@ -98,26 +97,56 @@ class SingleGroup extends React.Component<Props> {
               component={() => <Details group={group} />}
             />
             <Route
-              path={`${url}/edit`}
+              path={`${url}/settings/general`}
               exact
               component={() => <EditGroup group={group} />}
+            />
+            <Route
+              path={`${url}/settings/permissions`}
+              exact
+              component={() => (
+                <SetPermissions
+                  selectedPermissionsLink={group._links.permissions}
+                />
+              )}
+            />
+            <ExtensionPoint
+              name="group.route"
+              props={extensionProps}
+              renderAll={true}
             />
           </div>
           <div className="column">
             <Navigation>
-              <Section label={t("single-group.navigation-label")}>
+              <Section label={t("singleGroup.menu.navigationLabel")}>
                 <NavLink
                   to={`${url}`}
-                  label={t("single-group.information-label")}
+                  icon="fas fa-info-circle"
+                  label={t("singleGroup.menu.informationNavLink")}
                 />
-              </Section>
-              <Section label={t("single-group.actions-label")}>
-                <DeleteGroupNavLink
-                  group={group}
-                  deleteGroup={this.deleteGroup}
+                <ExtensionPoint
+                  name="group.navigation"
+                  props={extensionProps}
+                  renderAll={true}
                 />
-                <EditGroupNavLink group={group} editUrl={`${url}/edit`} />
-                <NavLink to="/groups" label={t("single-group.back-label")} />
+                <SubNavigation
+                  to={`${url}/settings/general`}
+                  label={t("singleGroup.menu.settingsNavLink")}
+                >
+                  <EditGroupNavLink
+                    group={group}
+                    editUrl={`${url}/settings/general`}
+                  />
+                  <SetPermissionsNavLink
+                    group={group}
+                    permissionsUrl={`${url}/settings/permissions`}
+                  />
+                  <ExtensionPoint
+                    name="group.setting"
+                    props={extensionProps}
+                    renderAll={true}
+                  />
+                </SubNavigation>
               </Section>
             </Navigation>
           </div>
@@ -130,10 +159,8 @@ class SingleGroup extends React.Component<Props> {
 const mapStateToProps = (state, ownProps) => {
   const name = ownProps.match.params.name;
   const group = getGroupByName(state, name);
-  const loading =
-    isFetchGroupPending(state, name) || isDeleteGroupPending(state, name);
-  const error =
-    getFetchGroupFailure(state, name) || getDeleteGroupFailure(state, name);
+  const loading = isFetchGroupPending(state, name);
+  const error = getFetchGroupFailure(state, name);
   const groupLink = getGroupsLink(state);
 
   return {
@@ -149,9 +176,6 @@ const mapDispatchToProps = dispatch => {
   return {
     fetchGroupByName: (link: string, name: string) => {
       dispatch(fetchGroupByName(link, name));
-    },
-    deleteGroup: (group: Group, callback?: () => void) => {
-      dispatch(deleteGroup(group, callback));
     }
   };
 };

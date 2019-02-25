@@ -21,6 +21,8 @@
       You need to enable JavaScript to run this app.
     </noscript>
     <div id="root"></div>
+    <div id="modalRoot"></div>
+
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
@@ -34,6 +36,7 @@
     <script>
       window.ctxPath = "{{ contextPath }}";
     </script>
+    <script src="{{ contextPath }}/polyfills.bundle.js"></script>
     <script src="{{ contextPath }}/vendor.bundle.js"></script>
     <script src="{{ contextPath }}/scm-ui.bundle.js"></script>
 

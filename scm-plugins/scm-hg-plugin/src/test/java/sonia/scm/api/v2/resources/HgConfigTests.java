@@ -3,8 +3,6 @@ package sonia.scm.api.v2.resources;
 import sonia.scm.installer.HgPackage;
 import sonia.scm.repository.HgConfig;
 
-import java.io.File;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -16,7 +14,6 @@ class HgConfigTests {
   static HgConfig createConfiguration() {
     HgConfig config = new HgConfig();
     config.setDisabled(true);
-    config.setRepositoryDirectory(new File("repository/directory"));
 
     config.setEncoding("ABC");
     config.setHgBinary("/etc/hg");
@@ -30,7 +27,6 @@ class HgConfigTests {
 
   static void assertEqualsConfiguration(HgConfigDto dto) {
     assertTrue(dto.isDisabled());
-    assertEquals("repository/directory", dto.getRepositoryDirectory().getPath());
 
     assertEquals("ABC", dto.getEncoding());
     assertEquals("/etc/hg", dto.getHgBinary());

@@ -34,18 +34,14 @@ package sonia.scm.repository;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Charsets;
-import com.google.common.base.Throwables;
 import com.google.common.io.Resources;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.AlreadyExistsException;
 import sonia.scm.ConfigurationException;
-import sonia.scm.ContextEntry;
 import sonia.scm.io.CommandResult;
 import sonia.scm.io.ExtendedCommand;
-import sonia.scm.io.FileSystem;
+import sonia.scm.plugin.PluginLoader;
 import sonia.scm.store.ConfigurationStoreFactory;
-import sonia.scm.util.IOUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -62,9 +58,8 @@ public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig
 
   public static final String DEFAULT_VERSION_INFORMATION = "unknown";
 
-  public static final String DIRECTORY_REPOSITORY = "repositories";
-
   public static final String DOT = ".";
+  static final String REPOSITORIES_NATIVE_DIRECTORY = "data";
 
   /**
    * the logger for AbstractSimpleRepositoryHandler
@@ -72,70 +67,31 @@ public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig
   private static final Logger logger =
     LoggerFactory.getLogger(AbstractSimpleRepositoryHandler.class);
 
-  private FileSystem fileSystem;
-
+  private final RepositoryLocationResolver repositoryLocationResolver;
+  private final PluginLoader pluginLoader;
 
   public AbstractSimpleRepositoryHandler(ConfigurationStoreFactory storeFactory,
-                                         FileSystem fileSystem) {
+                                         RepositoryLocationResolver repositoryLocationResolver,
+                                         PluginLoader pluginLoader) {
     super(storeFactory);
-    this.fileSystem = fileSystem;
+    this.repositoryLocationResolver = repositoryLocationResolver;
+    this.pluginLoader = pluginLoader;
   }
 
   @Override
   public Repository create(Repository repository) {
-    File directory = getDirectory(repository);
-
-    if (directory.exists()) {
-      throw new AlreadyExistsException(repository);
-    }
-
-    checkPath(directory, repository);
-
+    File nativeDirectory = resolveNativeDirectory(repository.getId());
     try {
-      fileSystem.create(directory);
-      create(repository, directory);
-      postCreate(repository, directory);
-      return repository;
-    } catch (Exception ex) {
-      if (directory.exists()) {
-        logger.warn("delete repository directory {}, because of failed repository creation", directory);
-        try {
-          fileSystem.destroy(directory);
-        } catch (IOException e) {
-          logger.error("Could not destroy directory", e);
-        }
-      }
-
-      Throwables.propagateIfPossible(ex, AlreadyExistsException.class);
-      // This point will never be reached
-      return null;
+      create(repository, nativeDirectory);
+      postCreate(repository, nativeDirectory);
+    } catch (IOException e) {
+      throw new InternalRepositoryException(repository, "could not create native repository directory", e);
     }
-  }
-
-  @Override
-  public String createResourcePath(Repository repository) {
-    StringBuilder path = new StringBuilder("/");
-
-    path.append(getType().getName()).append("/").append(repository.getId());
-
-    return path.toString();
+    return repository;
   }
 
   @Override
   public void delete(Repository repository) {
-    File directory = getDirectory(repository);
-
-    if (directory.exists()) {
-      try {
-        fileSystem.destroy(directory);
-      } catch (IOException e) {
-        throw new InternalRepositoryException(ContextEntry.ContextBuilder.entity("directory", directory.toString()).in(repository), "could not delete repository directory", e);
-      }
-      cleanupEmptyDirectories(config.getRepositoryDirectory(),
-        directory.getParentFile());
-    } else {
-      logger.warn("repository {} not found", repository.getNamespaceAndName());
-    }
   }
 
   @Override
@@ -144,21 +100,6 @@ public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig
 
     if (config == null) {
       config = createInitialConfig();
-
-      if (config != null) {
-        File repositoryDirectory = config.getRepositoryDirectory();
-
-        if (repositoryDirectory == null) {
-          repositoryDirectory = new File(
-            baseDirectory,
-            DIRECTORY_REPOSITORY.concat(File.separator).concat(
-              getType().getName()));
-          config.setRepositoryDirectory(repositoryDirectory);
-        }
-
-        IOUtil.mkdirs(repositoryDirectory);
-        storeConfig();
-      }
     }
   }
 
@@ -169,25 +110,13 @@ public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig
   }
 
   @Override
-  public File getDirectory(Repository repository) {
-    File directory = null;
-
+  public File getDirectory(String repositoryId) {
+    File directory;
     if (isConfigured()) {
-      File repositoryDirectory = config.getRepositoryDirectory();
-
-      directory = new File(repositoryDirectory, repository.getId());
-
-      if (!IOUtil.isChild(repositoryDirectory, directory)) {
-        StringBuilder msg = new StringBuilder(directory.getPath());
-
-        msg.append("is not a child of ").append(repositoryDirectory.getPath());
-
-        throw new ConfigurationException(msg.toString());
-      }
+      directory = resolveNativeDirectory(repositoryId);
     } else {
       throw new ConfigurationException("RepositoryHandler is not configured");
     }
-
     return directory;
   }
 
@@ -230,7 +159,7 @@ public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig
     String content = defaultContent;
 
     try {
-      URL url = Resources.getResource(resource);
+      URL url = pluginLoader.getUberClassLoader().getResource(resource);
 
       if (url != null) {
         content = Resources.toString(url, Charsets.UTF_8);
@@ -242,57 +171,7 @@ public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig
     return content;
   }
 
-  /**
-   * Returns true if the directory is a repository.
-   *
-   * @param directory directory to check
-   * @return true if the directory is a repository
-   * @since 1.9
-   */
-  protected boolean isRepository(File directory) {
-    return new File(directory, DOT.concat(getType().getName())).exists();
+  private File resolveNativeDirectory(String repositoryId) {
+    return repositoryLocationResolver.getPath(repositoryId).resolve(REPOSITORIES_NATIVE_DIRECTORY).toFile();
   }
-
-  /**
-   * Check path for existing repositories
-   *
-   * @param directory repository target directory
-   * @throws RuntimeException when the parent directory already is a repository
-   */
-  private void checkPath(File directory, Repository repository) {
-    File repositoryDirectory = config.getRepositoryDirectory();
-    File parent = directory.getParentFile();
-
-    while ((parent != null) && !repositoryDirectory.equals(parent)) {
-      logger.trace("check {} for existing repository", parent);
-
-      if (isRepository(parent)) {
-        throw new InternalRepositoryException(repository, "parent path " + parent + " is a repository");
-      }
-
-      parent = parent.getParentFile();
-    }
-  }
-
-  private void cleanupEmptyDirectories(File baseDirectory, File directory) {
-    if (IOUtil.isChild(baseDirectory, directory)) {
-      if (IOUtil.isEmpty(directory)) {
-
-        // TODO use filesystem
-        if (directory.delete()) {
-          logger.info("successfully deleted directory {}", directory);
-          cleanupEmptyDirectories(baseDirectory, directory.getParentFile());
-        } else {
-          logger.warn("could not delete directory {}", directory);
-        }
-
-      } else {
-        logger.debug("could not remove non empty directory {}", directory);
-      }
-    } else {
-      logger.warn("directory {} is not a child of {}", directory, baseDirectory);
-    }
-  }
-
-
 }

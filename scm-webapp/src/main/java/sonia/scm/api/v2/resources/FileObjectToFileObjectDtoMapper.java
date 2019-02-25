@@ -1,24 +1,22 @@
 package sonia.scm.api.v2.resources;
 
+import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.Links;
-import org.mapstruct.AfterMapping;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
+import org.mapstruct.ObjectFactory;
 import sonia.scm.repository.FileObject;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.SubRepository;
 
 import javax.inject.Inject;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
+import static de.otto.edison.hal.Embedded.embeddedBuilder;
 import static de.otto.edison.hal.Link.link;
 
 @Mapper
-public abstract class FileObjectToFileObjectDtoMapper implements InstantAttributeMapper {
+public abstract class FileObjectToFileObjectDtoMapper extends HalAppenderMapper implements InstantAttributeMapper {
 
   @Inject
   private ResourceLinks resourceLinks;
@@ -28,18 +26,21 @@ public abstract class FileObjectToFileObjectDtoMapper implements InstantAttribut
 
   abstract SubRepositoryDto mapSubrepository(SubRepository subRepository);
 
-  @AfterMapping
-  void addLinks(FileObject fileObject, @MappingTarget FileObjectDto dto, @Context NamespaceAndName namespaceAndName, @Context String revision) {
+  @ObjectFactory
+  FileObjectDto createDto(@Context NamespaceAndName namespaceAndName, @Context String revision, FileObject fileObject) {
     String path = removeFirstSlash(fileObject.getPath());
     Links.Builder links = Links.linkingTo();
-    if (dto.isDirectory()) {
+    if (fileObject.isDirectory()) {
       links.self(resourceLinks.source().sourceWithPath(namespaceAndName.getNamespace(), namespaceAndName.getName(), revision, path));
     } else {
       links.self(resourceLinks.source().content(namespaceAndName.getNamespace(), namespaceAndName.getName(), revision, path));
       links.single(link("history", resourceLinks.fileHistory().self(namespaceAndName.getNamespace(), namespaceAndName.getName(), revision, path)));
     }
 
-    dto.add(links.build());
+    Embedded.Builder embeddedBuilder = embeddedBuilder();
+    applyEnrichers(new EdisonHalAppender(links, embeddedBuilder), fileObject, namespaceAndName, revision);
+
+    return new FileObjectDto(links.build(), embeddedBuilder.build());
   }
 
   private String removeFirstSlash(String source) {

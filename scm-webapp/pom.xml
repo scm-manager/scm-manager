@@ -18,14 +18,14 @@
   <dependencies>
 
     <!-- annotation processor -->
-    
+
     <dependency>
       <groupId>sonia.scm</groupId>
       <artifactId>scm-annotation-processor</artifactId>
       <version>2.0.0-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>javax.servlet-api</artifactId>
@@ -69,11 +69,23 @@
       <artifactId>shiro-guice</artifactId>
       <version>${shiro.version}</version>
     </dependency>
-    
+
     <dependency>
       <groupId>io.jsonwebtoken</groupId>
-      <artifactId>jjwt</artifactId>
-      <version>0.4</version>
+      <artifactId>jjwt-impl</artifactId>
+      <version>${jjwt.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>io.jsonwebtoken</groupId>
+      <artifactId>jjwt-api</artifactId>
+      <version>${jjwt.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>io.jsonwebtoken</groupId>
+      <artifactId>jjwt-jackson</artifactId>
+      <version>${jjwt.version}</version>
     </dependency>
 
     <!-- json -->
@@ -89,20 +101,23 @@
       <artifactId>jackson-jaxrs-base</artifactId>
       <version>${jackson.version}</version>
     </dependency>
+
     <dependency>
       <groupId>com.fasterxml.jackson.datatype</groupId>
       <artifactId>jackson-datatype-jdk8</artifactId>
       <version>${jackson.version}</version>
     </dependency>
+
     <dependency>
       <groupId>com.fasterxml.jackson.datatype</groupId>
       <artifactId>jackson-datatype-jsr310</artifactId>
       <version>${jackson.version}</version>
     </dependency>
+
     <dependency>
-      <groupId>javax</groupId>
-      <artifactId>javaee-api</artifactId>
-      <version>7.0</version>
+      <groupId>com.fasterxml.jackson.jaxrs</groupId>
+      <artifactId>jackson-jaxrs-json-provider</artifactId>
+      <version>${jackson.version}</version>
     </dependency>
 
     <!-- rest api -->
@@ -136,11 +151,31 @@
       <groupId>org.jboss.resteasy</groupId>
       <artifactId>resteasy-servlet-initializer</artifactId>
     </dependency>
+
     <dependency>
       <groupId>org.jboss.resteasy</groupId>
       <artifactId>resteasy-validator-provider-11</artifactId>
       <version>${resteasy.version}</version>
     </dependency>
+
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-validator</artifactId>
+      <version>5.3.6.Final</version>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.el</groupId>
+      <artifactId>javax.el-api</artifactId>
+      <version>2.2.4</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.glassfish.web</groupId>
+      <artifactId>javax.el</artifactId>
+      <version>2.2.4</version>
+    </dependency>
+
     <!-- injection -->
 
     <dependency>
@@ -150,19 +185,18 @@
     </dependency>
 
     <!-- event bus -->
-    
+
     <dependency>
       <groupId>com.github.legman.support</groupId>
       <artifactId>shiro</artifactId>
       <version>${legman.version}</version>
     </dependency>
-    
+
     <!-- logging -->
 
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
-      <version>${logback.version}</version>
     </dependency>
     
     <dependency>
@@ -176,26 +210,22 @@
       <artifactId>log4j-over-slf4j</artifactId>
       <version>${slf4j.version}</version>
     </dependency>
-    
-    <!-- only for BeanComparator, replace with own implementation -->
-    
+
+    <!--
+    fix java.lang.NoClassDefFoundError org/w3c/dom/ElementTraversal
+    -->
+
     <dependency>
-      <groupId>commons-beanutils</groupId>
-      <artifactId>commons-beanutils</artifactId>
-      <version>1.9.2</version>
+      <groupId>xml-apis</groupId>
+      <artifactId>xml-apis</artifactId>
+      <version>1.4.01</version>
     </dependency>
-    
-    <dependency>
-      <groupId>commons-collections</groupId>
-      <artifactId>commons-collections</artifactId>
-      <version>3.2.1</version>
-    </dependency>
-    
-    <!-- 
-      fix installation of httpasswd-plugin 
+
+    <!--
+      fix installation of httpasswd-plugin
       https://groups.google.com/d/topic/scmmanager/eN7UtG8TwW8/discussion
     -->
-    
+
     <dependency>
       <groupId>commons-codec</groupId>
       <artifactId>commons-codec</artifactId>
@@ -219,17 +249,9 @@
         </exclusion>
       </exclusions>
     </dependency>
-    
-    <!-- fix version conflict -->
-    
-    <dependency>
-      <groupId>org.apache.httpcomponents</groupId>
-      <artifactId>httpclient</artifactId>
-      <version>4.2.6</version>
-    </dependency>
-    
+
     <!-- template engine -->
-    
+
     <dependency>
       <groupId>com.github.spullara.mustache.java</groupId>
       <artifactId>compiler</artifactId>
@@ -239,20 +261,21 @@
     <dependency>
       <groupId>com.github.sdorra</groupId>
       <artifactId>web-resources</artifactId>
-      <version>1.0.2</version>
+      <version>1.1.0</version>
     </dependency>
 
     <dependency>
       <groupId>com.github.sdorra</groupId>
       <artifactId>spotter-core</artifactId>
-      <version>1.1.0</version>
+      <version>1.2.1</version>
     </dependency>
 
     <dependency>
       <groupId>org.apache.tika</groupId>
       <artifactId>tika-core</artifactId>
-      <version>1.18</version>
+      <version>1.20</version>
     </dependency>
+
     <!-- test scope -->
 
     <dependency>
@@ -267,7 +290,7 @@
         </exclusion>
       </exclusions>
     </dependency>
-    
+
     <dependency>
       <groupId>org.seleniumhq.selenium</groupId>
       <artifactId>selenium-java</artifactId>
@@ -288,7 +311,7 @@
       <version>2.21</version>
       <scope>test</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>com.sun.jersey</groupId>
       <artifactId>jersey-client</artifactId>
@@ -310,7 +333,7 @@
       <artifactId>shiro-unit</artifactId>
       <scope>test</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>sonia.scm.plugins</groupId>
       <artifactId>scm-git-plugin</artifactId>
@@ -318,14 +341,14 @@
       <classifier>tests</classifier>
       <scope>test</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>sonia.scm.plugins</groupId>
       <artifactId>scm-git-plugin</artifactId>
       <version>2.0.0-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>sonia.scm.plugins</groupId>
       <artifactId>scm-hg-plugin</artifactId>
@@ -333,14 +356,14 @@
       <classifier>tests</classifier>
       <scope>test</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>sonia.scm.plugins</groupId>
       <artifactId>scm-hg-plugin</artifactId>
       <version>2.0.0-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>sonia.scm.plugins</groupId>
       <artifactId>scm-svn-plugin</artifactId>
@@ -348,7 +371,7 @@
       <classifier>tests</classifier>
       <scope>test</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>sonia.scm.plugins</groupId>
       <artifactId>scm-svn-plugin</artifactId>
@@ -479,7 +502,7 @@
           <filteringDeploymentDescriptors>true</filteringDeploymentDescriptors>
         </configuration>
       </plugin>
-      
+
       <plugin>
         <groupId>sonia.maven</groupId>
         <artifactId>change-env</artifactId>
@@ -529,8 +552,8 @@
           <jettyXml>${project.basedir}/src/main/conf/jetty.xml</jettyXml>
           <scanIntervalSeconds>0</scanIntervalSeconds>
         </configuration>
-      </plugin>        
-      
+      </plugin>
+
     </plugins>
 
     <finalName>scm-webapp</finalName>
@@ -540,6 +563,7 @@
     <scm.stage>DEVELOPMENT</scm.stage>
     <scm.home>target/scm-it</scm.home>
     <environment.profile>default</environment.profile>
+    <jjwt.version>0.10.5</jjwt.version>
     <selenium.version>2.53.1</selenium.version>
     <wagon.version>1.0</wagon.version>
     <mustache.version>0.8.17</mustache.version>
@@ -884,6 +908,11 @@
                 <groupId>com.webcohesion.enunciate</groupId>
                 <artifactId>enunciate-lombok</artifactId>
                 <version>${enunciate.version}</version>
+              </dependency>
+              <dependency>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct-processor</artifactId>
+                <version>${org.mapstruct.version}</version>
               </dependency>
             </dependencies>
           </plugin>

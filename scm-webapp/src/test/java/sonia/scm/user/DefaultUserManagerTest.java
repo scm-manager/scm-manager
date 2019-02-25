@@ -72,7 +72,7 @@ public class DefaultUserManagerTest extends UserManagerTestBase
   public ShiroRule shiro = new ShiroRule();
 
 
-  private UserDAO userDAO = mock(UserDAO.class);
+  private UserDAO userDAO ;
   private User trillian;
 
   /**
@@ -182,6 +182,6 @@ public class DefaultUserManagerTest extends UserManagerTestBase
   //~--- methods --------------------------------------------------------------
 
   private XmlUserDAO createXmlUserDAO() {
-    return new XmlUserDAO(new JAXBConfigurationStoreFactory(contextProvider));
+    return new XmlUserDAO(new JAXBConfigurationStoreFactory(contextProvider, locationResolver));
   }
 }

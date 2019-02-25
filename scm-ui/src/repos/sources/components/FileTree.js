@@ -96,7 +96,7 @@ class FileTree extends React.Component<Props> {
       });
     }
 
-    if (tree._embedded) {
+    if (tree._embedded && tree._embedded.children) {
       files.push(...tree._embedded.children.sort(compareFiles));
     }
 
@@ -108,30 +108,34 @@ class FileTree extends React.Component<Props> {
     }
 
     return (
-      <table className="table table-hover table-sm is-fullwidth">
-        <thead>
-          <tr>
-            <th className={classes.iconColumn} />
-            <th>{t("sources.file-tree.name")}</th>
-            <th className="is-hidden-mobile">
-              {t("sources.file-tree.length")}
-            </th>
-            <th className="is-hidden-mobile">
-              {t("sources.file-tree.lastModified")}
-            </th>
-            <th>{t("sources.file-tree.description")}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {files.map(file => (
-            <FileTreeLeaf
-              key={file.name}
-              file={file}
-              baseUrl={baseUrlWithRevision}
-            />
-          ))}
-        </tbody>
-      </table>
+      <div className="panel-block">
+        <table className="table table-hover table-sm is-fullwidth">
+          <thead>
+            <tr>
+              <th className={classes.iconColumn} />
+              <th>{t("sources.file-tree.name")}</th>
+              <th className="is-hidden-mobile">
+                {t("sources.file-tree.length")}
+              </th>
+              <th className="is-hidden-mobile">
+                {t("sources.file-tree.lastModified")}
+              </th>
+              <th className="is-hidden-mobile">
+                {t("sources.file-tree.description")}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {files.map(file => (
+              <FileTreeLeaf
+                key={file.name}
+                file={file}
+                baseUrl={baseUrlWithRevision}
+              />
+            ))}
+          </tbody>
+        </table>
+      </div>
     );
   }
 }

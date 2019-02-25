@@ -74,7 +74,11 @@ public class LfsBlobStoreFactory {
    * 
    * @return blob store for the corresponding scm repository
    */
+  @SuppressWarnings("unchecked")
   public BlobStore getLfsBlobStore(Repository repository) {
-    return blobStoreFactory.getBlobStore(repository.getId() + GIT_LFS_REPOSITORY_POSTFIX);
+    return blobStoreFactory
+        .withName(repository.getId() + GIT_LFS_REPOSITORY_POSTFIX)
+        .forRepository(repository)
+        .build();
   }
 }

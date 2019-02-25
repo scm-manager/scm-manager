@@ -2,14 +2,23 @@ package sonia.scm.repository.spi;
 
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.transport.ScmTransportProtocol;
+import org.eclipse.jgit.transport.Transport;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import sonia.scm.repository.GitRepositoryHandler;
+import sonia.scm.repository.PreProcessorUtil;
+import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.api.HookContextFactory;
 
 import java.io.File;
 import java.io.IOException;
 
+import static com.google.inject.util.Providers.of;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
@@ -17,6 +26,14 @@ public class SimpleGitWorkdirFactoryTest extends AbstractGitCommandTestBase {
 
   @Rule
   public TemporaryFolder temporaryFolder = new TemporaryFolder();
+
+  @Before
+  public void bindScmProtocol() {
+    HookContextFactory hookContextFactory = new HookContextFactory(mock(PreProcessorUtil.class));
+    HookEventFacade hookEventFacade = new HookEventFacade(of(mock(RepositoryManager.class)), hookContextFactory);
+    GitRepositoryHandler gitRepositoryHandler = mock(GitRepositoryHandler.class);
+    Transport.register(new ScmTransportProtocol(of(hookEventFacade), of(gitRepositoryHandler)));
+  }
 
   @Test
   public void emptyPoolShouldCreateNewWorkdir() throws IOException {

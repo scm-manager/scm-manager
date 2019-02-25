@@ -38,12 +38,13 @@ package sonia.scm.repository;
 import com.google.common.base.Strings;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import org.eclipse.jgit.lib.StoredConfig;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContextProvider;
-import sonia.scm.io.FileSystem;
 import sonia.scm.plugin.Extension;
+import sonia.scm.plugin.PluginLoader;
 import sonia.scm.repository.spi.GitRepositoryServiceProvider;
 import sonia.scm.schedule.Scheduler;
 import sonia.scm.schedule.Task;
@@ -88,27 +89,25 @@ public class GitRepositoryHandler
                                     GitRepositoryServiceProvider.COMMANDS);
 
   private static final Object LOCK = new Object();
-  
+  private static final String CONFIG_SECTION_SCMM = "scmm";
+  private static final String CONFIG_KEY_REPOSITORY_ID = "repositoryid";
+
   private final Scheduler scheduler;
 
   private final GitWorkdirFactory workdirFactory;
-  
+
   private Task task;
-  
+
   //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param storeFactory
-   * @param fileSystem
-   * @param scheduler
-   */
   @Inject
-  public GitRepositoryHandler(ConfigurationStoreFactory storeFactory, FileSystem fileSystem, Scheduler scheduler, GitWorkdirFactory workdirFactory)
+  public GitRepositoryHandler(ConfigurationStoreFactory storeFactory,
+                              Scheduler scheduler,
+                              RepositoryLocationResolver repositoryLocationResolver,
+                              GitWorkdirFactory workdirFactory,
+                              PluginLoader pluginLoader)
   {
-    super(storeFactory, fileSystem);
+    super(storeFactory, repositoryLocationResolver, pluginLoader);
     this.scheduler = scheduler;
     this.workdirFactory = workdirFactory;
   }
@@ -128,7 +127,7 @@ public class GitRepositoryHandler
     scheduleGc(config.getGcExpression());
     super.setConfig(config);
   }
-  
+
   private void scheduleGc(String expression)
   {
     synchronized (LOCK){
@@ -144,7 +143,7 @@ public class GitRepositoryHandler
       }
     }
   }
-  
+
   /**
    * Method description
    *
@@ -181,15 +180,26 @@ public class GitRepositoryHandler
     return getStringFromResource(RESOURCE_VERSION, DEFAULT_VERSION_INFORMATION);
   }
 
+  public GitWorkdirFactory getWorkdirFactory() {
+    return workdirFactory;
+  }
+
+  public String getRepositoryId(StoredConfig gitConfig) {
+    return gitConfig.getString(GitRepositoryHandler.CONFIG_SECTION_SCMM, null, GitRepositoryHandler.CONFIG_KEY_REPOSITORY_ID);
+  }
+
   //~--- methods --------------------------------------------------------------
 
   @Override
   protected void create(Repository repository, File directory) throws IOException {
     try (org.eclipse.jgit.lib.Repository gitRepository = build(directory)) {
       gitRepository.create(true);
+      StoredConfig config = gitRepository.getConfig();
+      config.setString(CONFIG_SECTION_SCMM, null, CONFIG_KEY_REPOSITORY_ID, repository.getId());
+      config.save();
     }
   }
-  
+
   private org.eclipse.jgit.lib.Repository build(File directory) throws IOException {
     return new FileRepositoryBuilder()
       .setGitDir(directory)
@@ -222,23 +232,5 @@ public class GitRepositoryHandler
   protected Class<GitConfig> getConfigClass()
   {
     return GitConfig.class;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param directory
-   *
-   * @return
-   */
-  @Override
-  protected boolean isRepository(File directory)
-  {
-    return new File(directory, DIRECTORY_REFS).exists();
-  }
-
-  public GitWorkdirFactory getWorkdirFactory() {
-    return workdirFactory;
   }
 }

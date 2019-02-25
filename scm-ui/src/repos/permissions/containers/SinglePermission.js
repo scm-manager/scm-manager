@@ -1,22 +1,34 @@
 // @flow
 import React from "react";
-import type { Permission } from "@scm-manager/ui-types";
+import type {
+  AvailableRepositoryPermissions,
+  Permission
+} from "@scm-manager/ui-types";
 import { translate } from "react-i18next";
 import {
   modifyPermission,
   isModifyPermissionPending,
   deletePermission,
-  isDeletePermissionPending
+  isDeletePermissionPending,
+  findMatchingRoleName
 } from "../modules/permissions";
 import { connect } from "react-redux";
 import type { History } from "history";
-import { Checkbox } from "@scm-manager/ui-components";
+import { Button } from "@scm-manager/ui-components";
 import DeletePermissionButton from "../components/buttons/DeletePermissionButton";
-import TypeSelector from "../components/TypeSelector";
+import RoleSelector from "../components/RoleSelector";
+import AdvancedPermissionsDialog from "./AdvancedPermissionsDialog";
+import classNames from "classnames";
+import injectSheet from "react-jss";
 
 type Props = {
+  availablePermissions: AvailableRepositoryPermissions,
   submitForm: Permission => void,
-  modifyPermission: (Permission, string, string) => void,
+  modifyPermission: (
+    permission: Permission,
+    namespace: string,
+    name: string
+  ) => void,
   permission: Permission,
   t: string => string,
   namespace: string,
@@ -24,38 +36,71 @@ type Props = {
   match: any,
   history: History,
   loading: boolean,
-  deletePermission: (Permission, string, string) => void,
-  deleteLoading: boolean
+  deletePermission: (
+    permission: Permission,
+    namespace: string,
+    name: string
+  ) => void,
+  deleteLoading: boolean,
+  classes: any
 };
 
 type State = {
-  permission: Permission
+  role: string,
+  permission: Permission,
+  showAdvancedDialog: boolean
+};
+
+const styles = {
+  iconColor: {
+    color: "#9a9a9a"
+  },
+  centerMiddle: {
+    display: "table-cell",
+    verticalAlign: "middle !important"
+  },
+  columnWidth: {
+    width: "100%"
+  }
 };
 
 class SinglePermission extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
+    const defaultPermission = props.availablePermissions.availableRoles
+      ? props.availablePermissions.availableRoles[0]
+      : {};
+
     this.state = {
       permission: {
         name: "",
-        type: "READ",
+        verbs: defaultPermission.verbs,
         groupPermission: false,
         _links: {}
-      }
+      },
+      role: defaultPermission.name,
+      showAdvancedDialog: false
     };
   }
 
   componentDidMount() {
-    const { permission } = this.props;
+    const { availablePermissions, permission } = this.props;
+
+    const matchingRole = findMatchingRoleName(
+      availablePermissions,
+      permission.verbs
+    );
+
     if (permission) {
       this.setState({
         permission: {
           name: permission.name,
-          type: permission.type,
+          verbs: permission.verbs,
           groupPermission: permission.groupPermission,
           _links: permission._links
-        }
+        },
+        role: matchingRole
       });
     }
   }
@@ -69,29 +114,62 @@ class SinglePermission extends React.Component<Props, State> {
   };
 
   render() {
-    const { permission } = this.state;
-    const { loading, namespace, repoName } = this.props;
-    const typeSelector =
-      this.props.permission._links && this.props.permission._links.update ? (
-        <td>
-          <TypeSelector
-            handleTypeChange={this.handleTypeChange}
-            type={permission.type ? permission.type : "READ"}
-            loading={loading}
-          />
-        </td>
+    const { role, permission, showAdvancedDialog } = this.state;
+    const {
+      t,
+      availablePermissions,
+      loading,
+      namespace,
+      repoName,
+      classes
+    } = this.props;
+    const availableRoleNames = availablePermissions.availableRoles.map(
+      r => r.name
+    );
+    const readOnly = !this.mayChangePermissions();
+    const roleSelector = readOnly ? (
+      <td>{role}</td>
+    ) : (
+      <td>
+        <RoleSelector
+          handleRoleChange={this.handleRoleChange}
+          availableRoles={availableRoleNames}
+          role={role}
+          loading={loading}
+        />
+      </td>
+    );
+
+    const advancedDialg = showAdvancedDialog ? (
+      <AdvancedPermissionsDialog
+        readOnly={readOnly}
+        availableVerbs={availablePermissions.availableVerbs}
+        selectedVerbs={permission.verbs}
+        onClose={this.closeAdvancedPermissionsDialog}
+        onSubmit={this.submitAdvancedPermissionsDialog}
+      />
+    ) : null;
+
+    const iconType =
+      permission && permission.groupPermission ? (
+        <i title={t("permission.group")} className={classNames("fas fa-user-friends", classes.iconColor)} />
       ) : (
-        <td>{permission.type}</td>
+        <i title={t("permission.user")} className={classNames("fas fa-user", classes.iconColor)} />
       );
 
     return (
-      <tr>
-        <td>{permission.name}</td>
-        <td>
-          <Checkbox checked={permission ? permission.groupPermission : false} />
+      <tr className={classes.columnWidth}>
+        <td className={classes.centerMiddle}>
+          {iconType} {permission.name}
         </td>
-        {typeSelector}
-        <td>
+        {roleSelector}
+        <td className={classes.centerMiddle}>
+          <Button
+            label={t("permission.advanced-button.label")}
+            action={this.handleDetailedPermissionsPressed}
+          />
+        </td>
+        <td className={classes.centerMiddle}>
           <DeletePermissionButton
             permission={permission}
             namespace={namespace}
@@ -99,39 +177,69 @@ class SinglePermission extends React.Component<Props, State> {
             deletePermission={this.deletePermission}
             loading={this.props.deleteLoading}
           />
+          {advancedDialg}
         </td>
       </tr>
     );
   }
 
-  handleTypeChange = (type: string) => {
-    this.setState({
-      permission: {
-        ...this.state.permission,
-        type: type
-      }
-    });
-    this.modifyPermission(type);
+  mayChangePermissions = () => {
+    return this.props.permission._links && this.props.permission._links.update;
   };
 
-  modifyPermission = (type: string) => {
+  handleDetailedPermissionsPressed = () => {
+    this.setState({ showAdvancedDialog: true });
+  };
+
+  closeAdvancedPermissionsDialog = () => {
+    this.setState({ showAdvancedDialog: false });
+  };
+
+  submitAdvancedPermissionsDialog = (newVerbs: string[]) => {
+    const { permission } = this.state;
+    const newRole = findMatchingRoleName(
+      this.props.availablePermissions,
+      newVerbs
+    );
+    this.setState(
+      {
+        showAdvancedDialog: false,
+        permission: { ...permission, verbs: newVerbs },
+        role: newRole
+      },
+      () => this.modifyPermission(newVerbs)
+    );
+  };
+
+  handleRoleChange = (role: string) => {
+    const selectedRole = this.findAvailableRole(role);
+    this.setState(
+      {
+        permission: {
+          ...this.state.permission,
+          verbs: selectedRole.verbs
+        },
+        role: role
+      },
+      () => this.modifyPermission(selectedRole.verbs)
+    );
+  };
+
+  findAvailableRole = (roleName: string) => {
+    return this.props.availablePermissions.availableRoles.find(
+      role => role.name === roleName
+    );
+  };
+
+  modifyPermission = (verbs: string[]) => {
     let permission = this.state.permission;
-    permission.type = type;
+    permission.verbs = verbs;
     this.props.modifyPermission(
       permission,
       this.props.namespace,
       this.props.repoName
     );
   };
-
-  createSelectOptions(types: string[]) {
-    return types.map(type => {
-      return {
-        label: type,
-        value: type
-      };
-    });
-  }
 }
 
 const mapStateToProps = (state, ownProps) => {
@@ -173,4 +281,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(translate("repos")(SinglePermission));
+)(translate("repos")(injectSheet(styles)(SinglePermission)));

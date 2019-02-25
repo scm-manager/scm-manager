@@ -5,7 +5,6 @@ import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 import sonia.scm.Validateable;
 import sonia.scm.repository.Person;
-import sonia.scm.util.Util;
 
 import java.io.Serializable;
 

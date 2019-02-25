@@ -63,7 +63,7 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
     Repository repository)
   {
     this.repository = repository;
-    this.context = new SvnContext(handler.getDirectory(repository));
+    this.context = new SvnContext(handler.getDirectory(repository.getId()));
   }
 
   //~--- methods --------------------------------------------------------------

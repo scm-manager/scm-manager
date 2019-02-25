@@ -15,7 +15,7 @@ node('docker') {
     disableConcurrentBuilds()
   ])
 
-  timeout(activity: true, time: 20, unit: 'MINUTES') {
+  timeout(activity: true, time: 30, unit: 'MINUTES') {
 
     catchError {
 
@@ -26,7 +26,7 @@ node('docker') {
       }
 
       stage('Build') {
-        mvn 'clean install -DskipTests'
+        mvn 'clean install -Pdoc -DskipTests'
       }
 
       stage('Unit Test') {
@@ -50,6 +50,17 @@ node('docker') {
       def dockerImageTag = "2.0.0-dev-${commitHash.substring(0,7)}-${BUILD_NUMBER}"
 
       if (isMainBranch()) {
+
+//        stage('Lifecycle') {
+//          nexusPolicyEvaluation iqApplication: selectedApplication('scm'), iqScanPatterns: [[scanPattern: 'scm-server/target/scm-server-app.zip']], iqStage: 'build'
+//        }
+
+        stage('Archive') {
+          archiveArtifacts 'scm-webapp/target/scm-webapp.war'
+          archiveArtifacts 'scm-server/target/scm-server-app.*'
+          archiveArtifacts 'scm-webapp/target/scm-webapp-restdocs.zip'
+        }
+
         stage('Docker') {
           def image = docker.build('cloudogu/scm-manager')
           docker.withRegistry('', 'hub.docker.com-cesmarvin') {
@@ -107,7 +118,8 @@ void analyzeWith(Maven mvn) {
         "-Dsonar.pullrequest.key=${env.CHANGE_ID} " +
         "-Dsonar.pullrequest.provider=bitbucketcloud " +
         "-Dsonar.pullrequest.bitbucketcloud.owner=sdorra " +
-        "-Dsonar.pullrequest.bitbucketcloud.repository=scm-manager "
+        "-Dsonar.pullrequest.bitbucketcloud.repository=scm-manager " +
+        "-Dsonar.cpd.exclusions=**/*StoreFactory.java,**/*UserPassword.js "
     } else {
       mvnArgs += " -Dsonar.branch.name=${env.BRANCH_NAME} "
       if (!isMainBranch()) {

@@ -36,7 +36,6 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tmatesoft.svn.core.SVNDirEntry;
@@ -53,7 +52,6 @@ import sonia.scm.repository.SvnUtil;
 import sonia.scm.util.Util;
 
 import java.util.Collection;
-import java.util.List;
 
 //~--- JDK imports ------------------------------------------------------------
 

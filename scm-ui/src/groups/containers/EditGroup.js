@@ -4,20 +4,23 @@ import { connect } from "react-redux";
 import GroupForm from "../components/GroupForm";
 import {
   modifyGroup,
-  modifyGroupReset,
+  getModifyGroupFailure,
   isModifyGroupPending,
-  getModifyGroupFailure
+  modifyGroupReset
 } from "../modules/groups";
 import type { History } from "history";
 import { withRouter } from "react-router-dom";
 import type { Group } from "@scm-manager/ui-types";
 import { ErrorNotification } from "@scm-manager/ui-components";
+import { getUserAutoCompleteLink } from "../../modules/indexResource";
+import DeleteGroup from "./DeleteGroup";
 
 type Props = {
   group: Group,
+  fetchGroup: (name: string) => void,
   modifyGroup: (group: Group, callback?: () => void) => void,
   modifyGroupReset: Group => void,
-  fetchGroup: (name: string) => void,
+  autocompleteLink: string,
   history: History,
   loading?: boolean,
   error: Error
@@ -37,8 +40,22 @@ class EditGroup extends React.Component<Props> {
     this.props.modifyGroup(group, this.groupModified(group));
   };
 
+  loadUserAutocompletion = (inputValue: string) => {
+    const url = this.props.autocompleteLink + "?q=";
+    return fetch(url + inputValue)
+      .then(response => response.json())
+      .then(json => {
+        return json.map(element => {
+          return {
+            value: element,
+            label: `${element.displayName} (${element.id})`
+          };
+        });
+      });
+  };
+
   render() {
-    const { group, loading, error } = this.props;
+    const { loading, error, group } = this.props;
     return (
       <div>
         <ErrorNotification error={error} />
@@ -48,7 +65,10 @@ class EditGroup extends React.Component<Props> {
             this.modifyGroup(group);
           }}
           loading={loading}
+          loadUserSuggestions={this.loadUserAutocompletion}
         />
+        <hr />
+        <DeleteGroup group={group} />
       </div>
     );
   }
@@ -57,9 +77,11 @@ class EditGroup extends React.Component<Props> {
 const mapStateToProps = (state, ownProps) => {
   const loading = isModifyGroupPending(state, ownProps.group.name);
   const error = getModifyGroupFailure(state, ownProps.group.name);
+  const autocompleteLink = getUserAutoCompleteLink(state);
   return {
     loading,
-    error
+    error,
+    autocompleteLink
   };
 };
 

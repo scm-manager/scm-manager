@@ -33,11 +33,11 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import sonia.scm.io.DefaultFileSystem;
 import sonia.scm.schedule.Scheduler;
 import sonia.scm.store.ConfigurationStoreFactory;
 
@@ -45,14 +45,15 @@ import java.io.File;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 //~--- JDK imports ------------------------------------------------------------
 
 /**
- *
  * @author Sebastian Sdorra
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class GitRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
 
   @Mock
@@ -63,6 +64,7 @@ public class GitRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
 
   @Mock
   private GitWorkdirFactory gitWorkdirFactory;
+
 
   @Override
   protected void checkDirectory(File directory) {
@@ -82,18 +84,21 @@ public class GitRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
     assertTrue(refs.isDirectory());
   }
 
+  @Before
+  public void initFactory() {
+    when(factory.withType(any())).thenCallRealMethod();
+  }
 
   @Override
   protected RepositoryHandler createRepositoryHandler(ConfigurationStoreFactory factory,
+                                                      RepositoryLocationResolver locationResolver,
                                                       File directory) {
     GitRepositoryHandler repositoryHandler = new GitRepositoryHandler(factory,
-      new DefaultFileSystem(), scheduler, gitWorkdirFactory);
-
+      scheduler, locationResolver, gitWorkdirFactory, null);
     repositoryHandler.init(contextProvider);
 
     GitConfig config = new GitConfig();
 
-    config.setRepositoryDirectory(directory);
     // TODO fix event bus exception
     repositoryHandler.setConfig(config);
 
@@ -103,15 +108,15 @@ public class GitRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
   @Test
   public void getDirectory() {
     GitRepositoryHandler repositoryHandler = new GitRepositoryHandler(factory,
-      new DefaultFileSystem(), scheduler, gitWorkdirFactory);
+      scheduler, locationResolver, gitWorkdirFactory, null);
+    GitConfig config = new GitConfig();
+    config.setDisabled(false);
+    config.setGcExpression("gc exp");
 
-    GitConfig gitConfig = new GitConfig();
-    gitConfig.setRepositoryDirectory(new File("/path"));
-    repositoryHandler.setConfig(gitConfig);
+    repositoryHandler.setConfig(config);
 
-    Repository repository = new Repository("id", "git", "Space", "Name");
-
-    File path = repositoryHandler.getDirectory(repository);
-    assertEquals("/path/id", path.getAbsolutePath());
+    initRepository();
+    File path = repositoryHandler.getDirectory(repository.getId());
+    assertEquals(repoPath.toString() + File.separator + AbstractSimpleRepositoryHandler.REPOSITORIES_NATIVE_DIRECTORY, path.getAbsolutePath());
   }
 }

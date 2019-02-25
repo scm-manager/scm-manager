@@ -33,7 +33,13 @@ const repository: Repository = {
 };
 
 const collection = {
+  name: "src",
+  path: "src",
+  directory: true,
+  description: "foo",
+  length: 176,
   revision: "76aae4bb4ceacf0e88938eb5b6832738b7d537b4",
+  subRepository: undefined,
   _links: {
     self: {
       href:
@@ -41,20 +47,24 @@ const collection = {
     }
   },
   _embedded: {
-    files: [
+    children: [
       {
         name: "src",
         path: "src",
         directory: true,
-        description: null,
+        description: "",
         length: 176,
-        lastModified: null,
-        subRepository: null,
+        revision: "76aae4bb4ceacf0e88938eb5b6832738b7d537b4",
+        lastModified: "",
+        subRepository: undefined,
         _links: {
           self: {
             href:
               "http://localhost:8081/scm/rest/api/v2/repositories/scm/core/sources/76aae4bb4ceacf0e88938eb5b6832738b7d537b4/src"
           }
+        },
+        _embedded: {
+          children: []
         }
       },
       {
@@ -63,8 +73,9 @@ const collection = {
         directory: false,
         description: "bump version",
         length: 780,
+        revision: "76aae4bb4ceacf0e88938eb5b6832738b7d537b4",
         lastModified: "2017-07-31T11:17:19Z",
-        subRepository: null,
+        subRepository: undefined,
         _links: {
           self: {
             href:
@@ -74,6 +85,9 @@ const collection = {
             href:
               "http://localhost:8081/scm/rest/api/v2/repositories/scm/core/sources/history/76aae4bb4ceacf0e88938eb5b6832738b7d537b4/package.json"
           }
+        },
+        _embedded: {
+          children: []
         }
       }
     ]
@@ -92,7 +106,9 @@ const noDirectory: File = {
         "http://localhost:8081/scm/rest/api/v2/repositories/scm/core/sources/76aae4bb4ceacf0e88938eb5b6832738b7d537b4/src"
     }
   },
-  _embedded: collection
+  _embedded: {
+    children: []
+  }
 };
 
 describe("sources fetch", () => {
@@ -116,7 +132,7 @@ describe("sources fetch", () => {
     ];
 
     const store = mockStore({});
-    return store.dispatch(fetchSources(repository)).then(() => {
+    return store.dispatch(fetchSources(repository, "", "")).then(() => {
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
@@ -145,7 +161,7 @@ describe("sources fetch", () => {
     });
 
     const store = mockStore({});
-    return store.dispatch(fetchSources(repository)).then(() => {
+    return store.dispatch(fetchSources(repository, "", "")).then(() => {
       const actions = store.getActions();
       expect(actions[0].type).toBe(FETCH_SOURCES_PENDING);
       expect(actions[1].type).toBe(FETCH_SOURCES_FAILURE);
@@ -166,7 +182,7 @@ describe("reducer tests", () => {
       "scm/core/_/": collection
     };
     expect(
-      reducer({}, fetchSourcesSuccess(repository, null, null, collection))
+      reducer({}, fetchSourcesSuccess(repository, "", "", collection))
     ).toEqual(expectedState);
   });
 
@@ -207,7 +223,7 @@ describe("selector tests", () => {
   });
 
   it("should return null", () => {
-    expect(getSources({}, repository)).toBeFalsy();
+    expect(getSources({}, repository, "", "")).toBeFalsy();
   });
 
   it("should return the source collection without revision and path", () => {
@@ -216,7 +232,7 @@ describe("selector tests", () => {
         "scm/core/_/": collection
       }
     };
-    expect(getSources(state, repository)).toBe(collection);
+    expect(getSources(state, repository, "", "")).toBe(collection);
   });
 
   it("should return the source collection with revision and path", () => {
@@ -234,11 +250,11 @@ describe("selector tests", () => {
         [FETCH_SOURCES + "/scm/core/_/"]: true
       }
     };
-    expect(isFetchSourcesPending(state, repository)).toEqual(true);
+    expect(isFetchSourcesPending(state, repository, "", "")).toEqual(true);
   });
 
   it("should return false, when fetch sources is not pending", () => {
-    expect(isFetchSourcesPending({}, repository)).toEqual(false);
+    expect(isFetchSourcesPending({}, repository, "", "")).toEqual(false);
   });
 
   const error = new Error("incredible error from hell");
@@ -249,10 +265,10 @@ describe("selector tests", () => {
         [FETCH_SOURCES + "/scm/core/_/"]: error
       }
     };
-    expect(getFetchSourcesFailure(state, repository)).toEqual(error);
+    expect(getFetchSourcesFailure(state, repository, "", "")).toEqual(error);
   });
 
   it("should return undefined when fetch sources did not fail", () => {
-    expect(getFetchSourcesFailure({}, repository)).toBe(undefined);
+    expect(getFetchSourcesFailure({}, repository, "", "")).toBe(undefined);
   });
 });

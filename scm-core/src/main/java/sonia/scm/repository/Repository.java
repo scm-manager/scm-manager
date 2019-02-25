@@ -62,12 +62,12 @@ import java.util.Set;
  */
 @StaticPermissions(
   value = "repository",
-  permissions = {"read", "modify", "delete", "healthCheck", "pull", "push", "permissionRead", "permissionWrite"}
+  permissions = {"read", "modify", "delete", "healthCheck", "pull", "push", "permissionRead", "permissionWrite"},
+  custom = true, customGlobal = true
 )
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "repositories")
 public class Repository extends BasicPropertiesAware implements ModelObject, PermissionObject{
-
 
   private static final long serialVersionUID = 3486560714961909711L;
 
@@ -81,7 +81,8 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
   private Long lastModified;
   private String namespace;
   private String name;
-  private final Set<Permission> permissions = new HashSet<>();
+  @XmlElement(name = "permission")
+  private final Set<RepositoryPermission> permissions = new HashSet<>();
   @XmlElement(name = "public")
   private boolean publicReadable = false;
   private boolean archived = false;
@@ -122,7 +123,7 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
    * @param permissions permissions for specific users and groups.
    */
   public Repository(String id, String type, String namespace, String name, String contact,
-                    String description, Permission... permissions) {
+                    String description, RepositoryPermission... permissions) {
     this.id = id;
     this.type = type;
     this.namespace = namespace;
@@ -201,7 +202,7 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
     return new NamespaceAndName(getNamespace(), getName());
   }
 
-  public Collection<Permission> getPermissions() {
+  public Collection<RepositoryPermission> getPermissions() {
     return Collections.unmodifiableCollection(permissions);
   }
 
@@ -297,16 +298,16 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
     this.name = name;
   }
 
-  public void setPermissions(Collection<Permission> permissions) {
+  public void setPermissions(Collection<RepositoryPermission> permissions) {
     this.permissions.clear();
     this.permissions.addAll(permissions);
   }
 
-  public void addPermission(Permission newPermission) {
+  public void addPermission(RepositoryPermission newPermission) {
     this.permissions.add(newPermission);
   }
 
-  public void removePermission(Permission permission) {
+  public void removePermission(RepositoryPermission permission) {
     this.permissions.remove(permission);
   }
 

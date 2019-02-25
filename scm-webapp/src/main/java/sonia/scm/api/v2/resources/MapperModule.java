@@ -8,7 +8,6 @@ public class MapperModule extends AbstractModule {
   @Override
   protected void configure() {
     bind(UserDtoToUserMapper.class).to(Mappers.getMapper(UserDtoToUserMapper.class).getClass());
-    bind(MeToUserDtoMapper.class).to(Mappers.getMapper(MeToUserDtoMapper.class).getClass());
     bind(UserToUserDtoMapper.class).to(Mappers.getMapper(UserToUserDtoMapper.class).getClass());
     bind(UserCollectionToDtoMapper.class);
 
@@ -26,10 +25,10 @@ public class MapperModule extends AbstractModule {
     bind(RepositoryTypeCollectionToDtoMapper.class);
 
     bind(BranchToBranchDtoMapper.class).to(Mappers.getMapper(BranchToBranchDtoMapper.class).getClass());
-    bind(PermissionDtoToPermissionMapper.class).to(Mappers.getMapper(PermissionDtoToPermissionMapper.class).getClass());
-    bind(PermissionToPermissionDtoMapper.class).to(Mappers.getMapper(PermissionToPermissionDtoMapper.class).getClass());
+    bind(RepositoryPermissionDtoToRepositoryPermissionMapper.class).to(Mappers.getMapper(RepositoryPermissionDtoToRepositoryPermissionMapper.class).getClass());
+    bind(RepositoryPermissionToRepositoryPermissionDtoMapper.class).to(Mappers.getMapper(RepositoryPermissionToRepositoryPermissionDtoMapper.class).getClass());
 
-    bind(ChangesetToChangesetDtoMapper.class).to(Mappers.getMapper(ChangesetToChangesetDtoMapper.class).getClass());
+    bind(ChangesetToChangesetDtoMapper.class).to(Mappers.getMapper(DefaultChangesetToChangesetDtoMapper.class).getClass());
     bind(ChangesetToParentDtoMapper.class).to(Mappers.getMapper(ChangesetToParentDtoMapper.class).getClass());
 
     bind(TagToTagDtoMapper.class).to(Mappers.getMapper(TagToTagDtoMapper.class).getClass());
@@ -39,10 +38,14 @@ public class MapperModule extends AbstractModule {
 
     bind(ReducedObjectModelToDtoMapper.class).to(Mappers.getMapper(ReducedObjectModelToDtoMapper.class).getClass());
 
-    bind(ViolationExceptionToErrorDtoMapper.class).to(Mappers.getMapper(ViolationExceptionToErrorDtoMapper.class).getClass());
+    bind(ResteasyViolationExceptionToErrorDtoMapper.class).to(Mappers.getMapper(ResteasyViolationExceptionToErrorDtoMapper.class).getClass());
+    bind(ScmViolationExceptionToErrorDtoMapper.class).to(Mappers.getMapper(ScmViolationExceptionToErrorDtoMapper.class).getClass());
     bind(ExceptionWithContextToErrorDtoMapper.class).to(Mappers.getMapper(ExceptionWithContextToErrorDtoMapper.class).getClass());
 
+    bind(MergeResultToDtoMapper.class).to(Mappers.getMapper(MergeResultToDtoMapper.class).getClass());
+
     // no mapstruct required
+    bind(MeDtoFactory.class);
     bind(UIPluginDtoMapper.class);
     bind(UIPluginDtoCollectionMapper.class);
 

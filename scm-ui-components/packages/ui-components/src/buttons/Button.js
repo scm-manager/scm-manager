@@ -1,16 +1,17 @@
 //@flow
-import React from "react";
+import * as React from "react";
 import classNames from "classnames";
 import { withRouter } from "react-router-dom";
 
 export type ButtonProps = {
-  label: string,
+  label?: string,
   loading?: boolean,
   disabled?: boolean,
   action?: (event: Event) => void,
   link?: string,
   fullWidth?: boolean,
   className?: string,
+  children?: React.Node,
   classes: any
 };
 
@@ -45,6 +46,7 @@ class Button extends React.Component<Props> {
       type,
       color,
       fullWidth,
+      children,
       className
     } = this.props;
     const loadingClass = loading ? "is-loading" : "";
@@ -62,7 +64,7 @@ class Button extends React.Component<Props> {
           className
         )}
       >
-        {label}
+        {label} {children}
       </button>
     );
   };

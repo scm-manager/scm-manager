@@ -2,7 +2,7 @@
 import React from "react";
 import { translate } from "react-i18next";
 import Notification from "./Notification";
-import { BackendError } from "./errors";
+import {BackendError, UnauthorizedError} from "./errors";
 
 type Props = {
   t: string => string,
@@ -11,18 +11,18 @@ type Props = {
 
 class ErrorNotification extends React.Component<Props> {
 
-  renderMoreInformationsLink(error: BackendError) {
+  renderMoreInformationLink(error: BackendError) {
     if (error.url) {
       // TODO i18n
       return (
         <p>
-          For more informations, see <a href={error.url} target="_blank">{error.errorCode}</a>
+          For more information, see <a href={error.url} target="_blank">{error.errorCode}</a>
         </p>
       );
     }
   }
 
-  renderBackendError(error: BackendError) {
+  renderBackendError = (error: BackendError) => {
     // TODO i18n
     // how should we handle i18n for the message?
     // we could add translation for known error codes to i18n and pass the context objects as parameters,
@@ -47,7 +47,7 @@ class ErrorNotification extends React.Component<Props> {
             );
           })}
         </ul>
-        { this.renderMoreInformationsLink(error) }
+        { this.renderMoreInformationLink(error) }
         <div className="level is-size-7">
           <div className="left">
             ErrorCode: {error.errorCode}
@@ -60,25 +60,20 @@ class ErrorNotification extends React.Component<Props> {
     );
   }
 
-  renderError(error: Error) {
-    if (error instanceof BackendError) {
-      return this.renderBackendError(error);
-    } else {
-      return error.message;
-    }
-  }
-
   render() {
-    const { error } = this.props;
-
+    const { t, error } = this.props;
     if (error) {
-      return (
-        <Notification type="danger">
-          {this.renderError(error)}
-        </Notification>
-      );
+      if (error instanceof BackendError) {
+        return this.renderBackendError(error)
+      } else {
+        return (
+          <Notification type="danger">
+            <strong>{t("error-notification.prefix")}:</strong> {error.message}
+          </Notification>
+        );
+      }
     }
-    return "";
+    return null;
   }
 }
 

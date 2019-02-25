@@ -8,10 +8,11 @@ type Configuration = {
   "hgBinary": string,
   "pythonBinary": string,
   "pythonPath"?: string,
-  "repositoryDirectory": string,
   "encoding": string,
   "useOptimizedBytecode": boolean,
   "showRevisionInId": boolean,
+  "disableHookSSLValidation": boolean,
+  "enableHttpPostArgs": boolean,
   "disabled": boolean,
   "_links": Links
 };
@@ -39,7 +40,7 @@ class HgConfigurationForm extends React.Component<Props, State> {
 
   updateValidationStatus = () => {
     const requiredFields = [
-      "hgBinary", "pythonBinary", "repositoryDirectory", "encoding"
+      "hgBinary", "pythonBinary", "encoding"
     ];
 
     const validationErrors = [];
@@ -99,10 +100,11 @@ class HgConfigurationForm extends React.Component<Props, State> {
         {this.inputField("hgBinary")}
         {this.inputField("pythonBinary")}
         {this.inputField("pythonPath")}
-        {this.inputField("repositoryDirectory")}
         {this.inputField("encoding")}
         {this.checkbox("useOptimizedBytecode")}
         {this.checkbox("showRevisionInId")}
+        {this.checkbox("disableHookSSLValidation")}
+        {this.checkbox("enableHttpPostArgs")}
         {this.checkbox("disabled")}
       </>
     );
