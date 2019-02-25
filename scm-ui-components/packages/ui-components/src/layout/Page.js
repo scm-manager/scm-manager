@@ -44,11 +44,22 @@ class Page extends React.Component<Props> {
   renderPageHeader() {
     const { title, subtitle, children, classes } = this.props;
 
-    let content = null;
+    let pageActions = null;
     let pageActionsExists = false;
     React.Children.forEach(children, child => {
       if (child && child.type.name === PageActions.name) {
-        content = child;
+        pageActions = (
+          <div className="column is-two-fifths">
+            <div
+              className={classNames(
+                classes.spacing,
+                "is-mobile-create-button-spacing"
+              )}
+            >
+              {child}
+            </div>
+          </div>
+        );
         pageActionsExists = true;
       }
     });
@@ -63,9 +74,7 @@ class Page extends React.Component<Props> {
             <Title title={title} />
             <Subtitle subtitle={subtitle} />
           </div>
-          <div className="column is-two-fifths">
-            <div className={classNames(classes.spacing, "is-mobile-create-button-spacing")}>{content}</div>
-          </div>
+          {pageActions}
         </div>
         {underline}
       </>
