@@ -1,6 +1,6 @@
 // @flow
 import { contextPath } from "./urls";
-import { createBackendError } from "./errors";
+import {createBackendError, isBackendError, UnauthorizedError} from "./errors";
 import type { BackendErrorContent } from "./errors";
 
 const fetchOptions: RequestOptions = {
@@ -10,9 +10,7 @@ const fetchOptions: RequestOptions = {
   }
 };
 
-function isBackendError(response) {
-  return response.headers.get("Content-Type") === "application/vnd.scmm-error+json;v=2";
-}
+
 
 function handleFailure(response: Response) {
   if (!response.ok) {
@@ -22,6 +20,9 @@ function handleFailure(response: Response) {
           throw createBackendError(content, response.status);
         });
     } else {
+      if (response.status === 401) {
+        throw new UnauthorizedError("Unauthorized", 401);
+      }
       throw new Error("server returned status code " + response.status);
     }
   }

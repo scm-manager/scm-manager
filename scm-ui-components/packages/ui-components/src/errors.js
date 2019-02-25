@@ -1,5 +1,5 @@
 // @flow
-type Context = {type: string, id: string}[];
+type Context = { type: string, id: string }[];
 
 export type BackendErrorContent = {
   transactionId: string,
@@ -10,7 +10,6 @@ export type BackendErrorContent = {
 };
 
 export class BackendError extends Error {
-
   transactionId: string;
   errorCode: string;
   url: ?string;
@@ -26,12 +25,13 @@ export class BackendError extends Error {
     this.context = content.context;
     this.statusCode = statusCode;
   }
-
 }
 
-export class UnauthorizedError extends BackendError {
-  constructor(content: BackendErrorContent, statusCode: number) {
-    super(content, "UnauthorizedError", statusCode);
+export class UnauthorizedError extends Error {
+  statusCode: number;
+  constructor(message: string, statusCode: number) {
+    super(message);
+    this.statusCode = statusCode;
   }
 }
 
@@ -40,14 +40,18 @@ export class NotFoundError extends BackendError {
     super(content, "NotFoundError", statusCode);
   }
 }
-
-export function createBackendError(content: BackendErrorContent, statusCode: number) {
+export function createBackendError(
+  content: BackendErrorContent,
+  statusCode: number
+) {
   switch (statusCode) {
-    case 401:
-      return new UnauthorizedError(content, statusCode);
     case 404:
       return new NotFoundError(content, statusCode);
     default:
       return new BackendError(content, "BackendError", statusCode);
   }
+}
+
+export function isBackendError(response: Response) {
+  return response.headers.get("Content-Type") === "application/vnd.scmm-error+json;v=2";
 }
