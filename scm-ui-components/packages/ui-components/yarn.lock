@@ -688,10 +688,6 @@
     react "^16.4.2"
     react-dom "^16.4.2"
 
-"@scm-manager/ui-types@2.0.0-SNAPSHOT":
-  version "2.0.0-20181010-130547"
-  resolved "https://registry.yarnpkg.com/@scm-manager/ui-types/-/ui-types-2.0.0-20181010-130547.tgz#9987b519e43d5c4b895327d012d3fd72429a7953"
-
 "@types/node@*":
   version "10.12.0"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.12.0.tgz#ea6dcbddbc5b584c83f06c60e82736d8fbb0c235"

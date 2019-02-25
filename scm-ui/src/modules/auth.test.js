@@ -180,8 +180,15 @@ describe("auth actions", () => {
 
   it("should dispatch fetch me unauthorized", () => {
     fetchMock.getOnce("/api/v2/me", {
-      status: 401
-    });
+      status: 401,
+      headers: {
+        "content-type": "application/vnd.scmm-error+json;v=2"
+      },
+      body: {
+        transactionId: "123",
+        message: "So nicht Freundchen",
+        context: {}
+      }});
 
     const expectedActions = [
       { type: FETCH_ME_PENDING },

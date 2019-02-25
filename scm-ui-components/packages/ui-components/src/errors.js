@@ -43,7 +43,7 @@ export class NotFoundError extends BackendError {
 
 export function createBackendError(content: BackendErrorContent, statusCode: number) {
   switch (statusCode) {
-    case 403:
+    case 401:
       return new UnauthorizedError(content, statusCode);
     case 404:
       return new NotFoundError(content, statusCode);
