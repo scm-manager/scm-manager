@@ -98,10 +98,6 @@ def callback(ui, repo, hooktype, node=None):
   return abort
 
 def preHook(ui, repo, hooktype, node=None, source=None, pending=None, **kwargs):
-  log_file = open("/tmp/hg_callback.log", "a")
-  log_file.write("in callHookUrl\n")
-  log_file.close()
-
   # older mercurial versions
   if pending != None:
     pending()
