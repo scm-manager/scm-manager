@@ -136,7 +136,7 @@ class SingleUser extends React.Component<Props> {
                     permissionsUrl={`${url}/settings/permissions`}
                   />
                   <ExtensionPoint
-                    name="user.subnavigation"
+                    name="user.setting"
                     props={extensionProps}
                     renderAll={true}
                   />

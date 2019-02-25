@@ -51,9 +51,9 @@ node('docker') {
 
       if (isMainBranch()) {
 
-        stage('Lifecycle') {
-          nexusPolicyEvaluation iqApplication: selectedApplication('scm'), iqScanPatterns: [[scanPattern: 'scm-server/target/scm-server-app.zip']], iqStage: 'build'
-        }
+//        stage('Lifecycle') {
+//          nexusPolicyEvaluation iqApplication: selectedApplication('scm'), iqScanPatterns: [[scanPattern: 'scm-server/target/scm-server-app.zip']], iqStage: 'build'
+//        }
 
         stage('Archive') {
           archiveArtifacts 'scm-webapp/target/scm-webapp.war'

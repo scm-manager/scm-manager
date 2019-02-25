@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import sonia.scm.config.ConfigurationPermissions;
 import sonia.scm.plugin.Extension;
+import sonia.scm.repository.SvnConfig;
 import sonia.scm.web.JsonEnricherBase;
 import sonia.scm.web.JsonEnricherContext;
 
@@ -26,7 +27,7 @@ public class SvnConfigInIndexResource extends JsonEnricherBase {
 
   @Override
   public void enrich(JsonEnricherContext context) {
-    if (resultHasMediaType(INDEX, context) && ConfigurationPermissions.list().isPermitted()) {
+    if (resultHasMediaType(INDEX, context) && ConfigurationPermissions.read(SvnConfig.PERMISSION).isPermitted()) {
       String svnConfigUrl = new LinkBuilder(scmPathInfoStore.get().get(), SvnConfigResource.class)
         .method("get")
         .parameters()

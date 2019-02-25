@@ -19,6 +19,7 @@ import java.util.Enumeration;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.unmodifiableCollection;
@@ -126,7 +127,7 @@ public class RepositoryPermissionProvider {
   @XmlRootElement(name = "verbs")
   private static class VerbListDescriptor {
     @XmlElement(name = "verb")
-    private List<String> verbs = new ArrayList<>();
+    private Set<String> verbs = new LinkedHashSet<>();
   }
 
   @XmlRootElement(name = "roles")

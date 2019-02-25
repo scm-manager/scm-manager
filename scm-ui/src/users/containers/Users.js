@@ -14,7 +14,13 @@ import {
   getFetchUsersFailure
 } from "../modules/users";
 
-import { Page, CreateButton, Paginator } from "@scm-manager/ui-components";
+import {
+  Page,
+  PageActions,
+  Button,
+  CreateButton,
+  Paginator
+} from "@scm-manager/ui-components";
 import { UserTable } from "./../components/table";
 import type { User, PagedCollection } from "@scm-manager/ui-types";
 import { getUsersLink } from "../../modules/indexResource";
@@ -87,7 +93,18 @@ class Users extends React.Component<Props> {
   renderCreateButton() {
     const { t } = this.props;
     if (this.props.canAddUsers) {
-      return <CreateButton label={t("users.createButton")} link="/users/add" />;
+      return (
+        <>
+          <CreateButton label={t("users.createButton")} link="/users/add" />
+          <PageActions>
+            <Button
+              label={t("users.createButton")}
+              link="/users/add"
+              color="primary"
+            />
+          </PageActions>
+        </>
+      );
     } else {
       return;
     }
