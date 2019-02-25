@@ -104,7 +104,7 @@ class Content extends React.Component<Props, State> {
 
   showMoreInformation() {
     const collapsed = this.state.collapsed;
-    const { classes, file, revision, t } = this.props;
+    const { classes, file, revision, t, repository } = this.props;
     const date = <DateFromNow date={file.lastModified} />;
     const description = file.description ? (
       <p>
@@ -151,7 +151,7 @@ class Content extends React.Component<Props, State> {
               </tr>
               <ExtensionPoint
                 name="repos.content.metadata"
-                props={{ file }}
+                props={{ file , repository}}
               >
               </ExtensionPoint>
             </tbody>
