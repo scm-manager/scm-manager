@@ -82,7 +82,7 @@ hr.header-with-actions {
 $fa-font-path: "webfonts";
 @import "@fortawesome/fontawesome-free/scss/solid.scss";
 
-@import "diff2html/dist/diff2html";
+@import "react-diff-view/index";
 
 // NEW STYLES
 

@@ -11,7 +11,6 @@
     "bulma": "^0.7.1",
     "bulma-tooltip": "^2.0.2",
     "classnames": "^2.2.5",
-    "diff2html": "^2.5.0",
     "font-awesome": "^4.7.0",
     "history": "^4.7.2",
     "i18next": "^11.4.0",
@@ -22,6 +21,7 @@
     "node-sass": "^4.9.3",
     "postcss-easy-import": "^3.0.0",
     "react": "^16.4.2",
+    "react-diff-view": "^1.8.1",
     "react-dom": "^16.4.2",
     "react-i18next": "^7.9.0",
     "react-jss": "^8.6.0",
@@ -52,7 +52,7 @@
     "pre-commit": "jest && flow && eslint src"
   },
   "devDependencies": {
-    "@scm-manager/ui-bundler": "^0.0.24",
+    "@scm-manager/ui-bundler": "^0.0.25",
     "concat": "^1.0.3",
     "copyfiles": "^2.0.0",
     "enzyme": "^3.3.0",

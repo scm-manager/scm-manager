@@ -2,6 +2,8 @@
 import React from "react";
 import { apiClient } from "../apiclient";
 import ErrorNotification from "../ErrorNotification";
+import parser from "gitdiff-parser";
+
 import Loading from "../Loading";
 import Diff from "./Diff";
 
@@ -11,7 +13,7 @@ type Props = {
 };
 
 type State = {
-  diff?: string,
+  diff?: any,
   loading: boolean,
   error?: Error
 };
@@ -44,10 +46,11 @@ class LoadingDiff extends React.Component<Props, State> {
     apiClient
       .get(url)
       .then(response => response.text())
-      .then(text => {
+      .then(parser.parse)
+      .then(diff => {
         this.setState({
           loading: false,
-          diff: text
+          diff: diff
         });
       })
       .catch(error => {

@@ -1,9 +1,9 @@
 //@flow
 import React from "react";
-import { Diff2Html } from "diff2html";
+import DiffFile from "./DiffFile";
 
 type Props = {
-  diff: string,
+  diff: any,
   sideBySide: boolean
 };
 
@@ -13,21 +13,17 @@ class Diff extends React.Component<Props> {
     sideBySide: false
   };
 
+  renderFile = (file: any, i: number) => {
+    const { sideBySide } = this.props;
+    return <DiffFile key={i} file={file} sideBySide={sideBySide} />;
+  };
+
   render() {
-    const { diff, sideBySide } = this.props;
-
-    const options = {
-      inputFormat: "diff",
-      outputFormat: sideBySide ? "side-by-side" : "line-by-line",
-      showFiles: false,
-      matching: "lines"
-    };
-
-    const outputHtml = Diff2Html.getPrettyHtml(diff, options);
-
+    const { diff } = this.props;
     return (
-      // eslint-disable-next-line react/no-danger
-      <div dangerouslySetInnerHTML={{ __html: outputHtml }} />
+      <>
+        {diff.map(this.renderFile)}
+      </>
     );
   }
 

@@ -144,5 +144,14 @@
       "submit": "Yes",
       "cancel": "No"
     }
+  },
+  "diff": {
+    "changes": {
+      "add": "added",
+      "delete":  "deleted",
+      "modify": "modified",
+      "rename": "renamed",
+      "copy": "copied"
+    }
   }
 }
