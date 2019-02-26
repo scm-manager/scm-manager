@@ -9,6 +9,7 @@ export { validation, urls, repositories };
 export { default as DateFromNow } from "./DateFromNow.js";
 export { default as ErrorNotification } from "./ErrorNotification.js";
 export { default as ErrorPage } from "./ErrorPage.js";
+export { default as CollapsibleErrorPage } from "./CollapsibleErrorPage.js";
 export { default as Image } from "./Image.js";
 export { default as Loading } from "./Loading.js";
 export { default as Logo } from "./Logo.js";

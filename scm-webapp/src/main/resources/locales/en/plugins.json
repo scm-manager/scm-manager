@@ -87,5 +87,8 @@
         "description": "May change everything for the repository (includes all other permissions)"
       }
     }
+  },
+  "errors": {
+    "AGR7UzkhA1": "Not found"
   }
 }

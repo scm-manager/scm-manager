@@ -87,5 +87,8 @@
         "description": "Darf im Repository Kontext alles ausführen. Dies beinhaltet alle Repository Berechtigungen."
       }
     }
+  },
+  "errors": {
+    "AGR7UzkhA1": "Nicht gefunden"
   }
 }
