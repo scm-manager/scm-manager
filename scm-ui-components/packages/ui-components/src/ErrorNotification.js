@@ -2,7 +2,7 @@
 import React from "react";
 import { translate } from "react-i18next";
 import Notification from "./Notification";
-import {BackendError, UnauthorizedError} from "./errors";
+import { BackendError, UnauthorizedError } from "./errors";
 
 type Props = {
   t: string => string,
@@ -10,13 +10,15 @@ type Props = {
 };
 
 class ErrorNotification extends React.Component<Props> {
-
   renderMoreInformationLink(error: BackendError) {
     if (error.url) {
       // TODO i18n
       return (
         <p>
-          For more information, see <a href={error.url} target="_blank">{error.errorCode}</a>
+          For more information, see{" "}
+          <a href={error.url} target="_blank">
+            {error.errorCode}
+          </a>
         </p>
       );
     }
@@ -37,7 +39,9 @@ class ErrorNotification extends React.Component<Props> {
     return (
       <div className="content">
         <p>{error.message}</p>
-        <p><strong>Context:</strong></p>
+        <p>
+          <strong>Context:</strong>
+        </p>
         <ul>
           {error.context.map((context, index) => {
             return (
@@ -47,24 +51,30 @@ class ErrorNotification extends React.Component<Props> {
             );
           })}
         </ul>
-        { this.renderMoreInformationLink(error) }
+        {this.renderMoreInformationLink(error)}
         <div className="level is-size-7">
-          <div className="left">
-            ErrorCode: {error.errorCode}
-          </div>
-          <div className="right">
-            TransactionId: {error.transactionId}
-          </div>
+          <div className="left">ErrorCode: {error.errorCode}</div>
+          <div className="right">TransactionId: {error.transactionId}</div>
         </div>
       </div>
     );
-  }
+  };
 
   render() {
     const { t, error } = this.props;
     if (error) {
       if (error instanceof BackendError) {
-        return this.renderBackendError(error)
+        return this.renderBackendError(error);
+      } else if (error instanceof UnauthorizedError) {
+        return (
+          <Notification type="danger">
+            <strong>{t("error-notification.prefix")}:</strong>{" "}
+            {t("error-notification.timeout")}{" "}
+            <a href="javascript:window.location.reload(true)">
+              {t("error-notification.loginLink")}
+            </a>
+          </Notification>
+        );
       } else {
         return (
           <Notification type="danger">
