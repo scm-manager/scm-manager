@@ -55,23 +55,23 @@
   "verbs": {
     "repository": {
       "read": {
-        "displayName": "read",
+        "displayName": "read repository",
         "description": "May see the repository inside the SCM-Manager"
       },
       "modify": {
-        "displayName": "modify",
-        "description": "May modify the properties of the repository"
+        "displayName": "modify repository metadata",
+        "description": "May modify the basic properties of the repository"
       },
       "delete": {
-        "displayName": "delete",
+        "displayName": "delete repository",
         "description": "May delete the repository"
       },
       "pull": {
-        "displayName": "pull/checkout",
+        "displayName": "pull/checkout repository",
         "description": "May pull/checkout the repository"
       },
       "push": {
-        "displayName": "push/commit",
+        "displayName": "push/commit repository",
         "description": "May change the content of the repository (push/commit)"
       },
       "permissionRead": {
@@ -83,7 +83,7 @@
         "description": "May modify the permissions of the repository"
       },
       "*": {
-        "displayName": "overall",
+        "displayName": "own repository",
         "description": "May change everything for the repository (includes all other permissions)"
       }
     }
