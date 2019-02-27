@@ -1,9 +1,16 @@
 //@flow
 import React from "react";
-import { Hunk, Diff as DiffComponent } from "react-diff-view";
+import {
+  Hunk,
+  Diff as DiffComponent,
+  getChangeKey,
+  Change,
+  DiffObjectProps,
+  File
+} from "react-diff-view";
 import injectSheets from "react-jss";
 import classNames from "classnames";
-import {translate} from "react-i18next";
+import { translate } from "react-i18next";
 
 const styles = {
   panel: {
@@ -21,20 +28,18 @@ const styles = {
   }
 };
 
-type Props = {
-  file: any,
-  sideBySide: boolean,
+type Props = DiffObjectProps & {
+  file: File,
   // context props
   classes: any,
   t: string => string
-}
+};
 
 type State = {
   collapsed: boolean
-}
+};
 
 class DiffFile extends React.Component<Props, State> {
-
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -43,23 +48,77 @@ class DiffFile extends React.Component<Props, State> {
   }
 
   toggleCollapse = () => {
-    this.setState((state) => ({
-      collapsed: ! state.collapsed
+    this.setState(state => ({
+      collapsed: !state.collapsed
     }));
   };
 
-  renderHunk = (hunk: any, i: number) => {
+  createHunkHeader = (hunk: Hunk, i: number) => {
     const { classes } = this.props;
-    let header = null;
     if (i > 0) {
-      header = <hr className={classes.hunkDivider} />;
+      return <hr className={classes.hunkDivider} />;
     }
-    return <Hunk key={hunk.content} hunk={hunk} header={header} />;
+    return null;
+  };
+
+  collectHunkAnnotations = (hunk: Hunk) => {
+    const { annotationFactory, file } = this.props;
+    if (annotationFactory) {
+      return annotationFactory({
+        hunk,
+        file
+      });
+    }
+  };
+
+  handleClickEvent = (change: Change, hunk: Hunk) => {
+    const { file, onClick } = this.props;
+    const context = {
+      changeId: getChangeKey(change),
+      change,
+      hunk,
+      file
+    };
+    if (onClick) {
+      onClick(context);
+    }
+  };
+
+  createCustomEvents = (hunk: Hunk) => {
+    const { onClick } = this.props;
+    if (onClick) {
+      return {
+        gutter: {
+          onClick: (change: Change) => {
+            this.handleClickEvent(change, hunk);
+          }
+        }
+      };
+    }
+  };
+
+  renderHunk = (hunk: Hunk, i: number) => {
+    return (
+      <Hunk
+        key={hunk.content}
+        hunk={hunk}
+        header={this.createHunkHeader(hunk, i)}
+        widgets={this.collectHunkAnnotations(hunk)}
+        customEvents={this.createCustomEvents(hunk)}
+      />
+    );
   };
 
   renderFileTitle = (file: any) => {
-    if (file.oldPath !== file.newPath && (file.type === "copy" || file.type === "rename")) {
-      return (<>{file.oldPath} <i className="fa fa-arrow-right" /> {file.newPath}</>);
+    if (
+      file.oldPath !== file.newPath &&
+      (file.type === "copy" || file.type === "rename")
+    ) {
+      return (
+        <>
+          {file.oldPath} <i className="fa fa-arrow-right" /> {file.newPath}
+        </>
+      );
     } else if (file.type === "delete") {
       return file.oldPath;
     }
@@ -73,11 +132,7 @@ class DiffFile extends React.Component<Props, State> {
     if (key === value) {
       value = file.type;
     }
-    return (
-      <span className="tag is-info has-text-weight-normal">
-        {value}
-      </span>
-    );
+    return <span className="tag is-info has-text-weight-normal">{value}</span>;
   };
 
   render() {
@@ -92,7 +147,7 @@ class DiffFile extends React.Component<Props, State> {
       body = (
         <div className="panel-block is-paddingless is-size-7">
           <DiffComponent viewType={viewType}>
-            { file.hunks.map(this.renderHunk) }
+            {file.hunks.map(this.renderHunk)}
           </DiffComponent>
         </div>
       );
@@ -100,21 +155,24 @@ class DiffFile extends React.Component<Props, State> {
 
     return (
       <div className={classNames("panel", classes.panel)}>
-        <div className={classNames("panel-heading", classes.header)} onClick={this.toggleCollapse}>
+        <div
+          className={classNames("panel-heading", classes.header)}
+          onClick={this.toggleCollapse}
+        >
           <div className="level">
             <div className="level-left">
-              <i className={icon} /><span className={classes.title}>{this.renderFileTitle(file)}</span>
+              <i className={icon} />
+              <span className={classes.title}>
+                {this.renderFileTitle(file)}
+              </span>
             </div>
-            <div className="level-right">
-              {this.renderChangeTag(file)}
-            </div>
+            <div className="level-right">{this.renderChangeTag(file)}</div>
           </div>
         </div>
         {body}
       </div>
     );
   }
-
 }
 
 export default injectSheets(styles)(translate("repos")(DiffFile));
