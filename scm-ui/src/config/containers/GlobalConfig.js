@@ -1,7 +1,11 @@
 // @flow
 import React from "react";
 import { translate } from "react-i18next";
-import { Title, ErrorPage, Loading } from "@scm-manager/ui-components";
+import {
+  Title,
+  Loading,
+  ErrorNotification
+} from "@scm-manager/ui-components";
 import {
   fetchConfig,
   getFetchConfigFailure,
@@ -73,18 +77,8 @@ class GlobalConfig extends React.Component<Props, State> {
   };
 
   render() {
-    const { t, error, loading, config, configUpdatePermission } = this.props;
+    const { t, loading } = this.props;
 
-    if (error) {
-      return (
-        <ErrorPage
-          title={t("config.errorTitle")}
-          subtitle={t("config.errorSubtitle")}
-          error={error}
-          configUpdatePermission={configUpdatePermission}
-        />
-      );
-    }
     if (loading) {
       return <Loading />;
     }
@@ -92,16 +86,37 @@ class GlobalConfig extends React.Component<Props, State> {
     return (
       <div>
         <Title title={t("config.title")} />
-        {this.renderConfigChangedNotification()}
-        <ConfigForm
-          submitForm={config => this.modifyConfig(config)}
-          config={config}
-          loading={loading}
-          configUpdatePermission={configUpdatePermission}
-        />
+        {this.renderError()}
+        {this.renderContent()}
       </div>
     );
   }
+
+  renderError = () => {
+    const { error } = this.props;
+    if (error) {
+      return <ErrorNotification error={error} />;
+    }
+    return null;
+  };
+
+  renderContent = () => {
+    const { error, loading, config, configUpdatePermission } = this.props;
+    if (!error) {
+      return (
+        <>
+          {this.renderConfigChangedNotification()}
+          <ConfigForm
+            submitForm={config => this.modifyConfig(config)}
+            config={config}
+            loading={loading}
+            configUpdatePermission={configUpdatePermission}
+          />
+        </>
+      );
+    }
+    return null;
+  };
 }
 
 const mapDispatchToProps = dispatch => {

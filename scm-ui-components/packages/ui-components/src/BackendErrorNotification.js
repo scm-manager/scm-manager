@@ -18,13 +18,9 @@ class BackendErrorNotification extends React.Component<Props, State> {
     const { collapsed } = this.state;
     const icon = collapsed ? "fa-angle-right" : "fa-angle-down";
 
-    // TODO error page
-    // we have currently the ErrorNotification, which is often wrapped by the ErrorPage
-    // the ErrorPage has often a SubTitle like "Unkwown xzy error", which is no longer always the case
-    // if the error is a BackendError its not fully unknown
     return (
       <div className="content">
-        <p>
+        <p className="subtitle">
           <span
             onClick={() => {
               this.setState({ collapsed: !this.state.collapsed });
@@ -50,12 +46,12 @@ class BackendErrorNotification extends React.Component<Props, State> {
   };
 
   renderUncollapsed = () => {
-    const { error } = this.props;
+    const { error, t } = this.props;
     if (!this.state.collapsed) {
       return (
         <>
           <p>
-            <strong>Context:</strong>
+            <strong>{t("errors.context")}</strong>
           </p>
           <ul>
             {error.context.map((context, index) => {
@@ -68,8 +64,8 @@ class BackendErrorNotification extends React.Component<Props, State> {
           </ul>
           {this.renderMoreInformationLink(error)}
           <div className="level is-size-7">
-            <div className="left">ErrorCode: {error.errorCode}</div>
-            <div className="right">TransactionId: {error.transactionId}</div>
+            <div className="left">{t("errors.errorCode")} {error.errorCode}</div>
+            <div className="right">{t("errors.transactionId")} {error.transactionId}</div>
           </div>
         </>
       );
@@ -78,11 +74,11 @@ class BackendErrorNotification extends React.Component<Props, State> {
   };
 
   renderMoreInformationLink = (error: BackendError) => {
+    const { t } = this.props;
     if (error.url) {
-      // TODO i18n
       return (
         <p>
-          For more information, see{" "}
+          {t("errors.moreInfo")}{" "}
           <a href={error.url} target="_blank">
             {error.errorCode}
           </a>

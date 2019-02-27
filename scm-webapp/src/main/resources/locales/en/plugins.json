@@ -89,6 +89,14 @@
     }
   },
   "errors": {
-    "AGR7UzkhA1": "Not found"
+    "context": "context",
+    "errorCode": "Error Code",
+    "transactionId": "Transaction ID",
+    "moreInfo": "For more information, see",
+    "AGR7UzkhA1": "Not found",
+    "FtR7UznKU1": "Already exists",
+    "9BR7qpDAe1": "Password change not allowed",
+    "2wR7UzpPG1": "Concurrent modifications",
+    "9SR8G0kmU1": "Feature not supported"
   }
 }

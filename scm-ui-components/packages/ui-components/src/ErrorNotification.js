@@ -39,4 +39,4 @@ class ErrorNotification extends React.Component<Props> {
   }
 }
 
-export default translate("commons")(ErrorNotification);
+export default  translate("commons")(ErrorNotification);

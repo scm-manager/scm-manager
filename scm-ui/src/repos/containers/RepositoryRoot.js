@@ -18,7 +18,7 @@ import {
   SubNavigation,
   NavLink,
   Page,
-  Section
+  Section, ErrorPage
 } from "@scm-manager/ui-components";
 import { translate } from "react-i18next";
 import RepositoryDetails from "../components/RepositoryDetails";
@@ -81,17 +81,12 @@ class RepositoryRoot extends React.Component<Props> {
   render() {
     const { loading, error, indexLinks, repository, t } = this.props;
 
-    // if (error) {
-    //   return <ErrorPage
-    //     title={t("repositoryRoot.errorTitle")}
-    //     subtitle={t("repositoryRoot.errorSubtitle")}
-    //     error={error}
-    //   />
-    // }
     if (error) {
-      return (
-        <CollapsibleErrorPage title={t("repositoryRoot.errorTitle")} error={error} />
-      );
+      return <ErrorPage
+        title={t("repositoryRoot.errorTitle")}
+        subtitle={t("repositoryRoot.errorSubtitle")}
+        error={error}
+      />
     }
 
     if (!repository || loading) {
