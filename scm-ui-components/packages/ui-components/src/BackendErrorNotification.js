@@ -1,9 +1,10 @@
 // @flow
 import React from "react";
-import { BackendError } from "./errors";
+import {BackendError} from "./errors";
 import classNames from "classnames";
+import Notification from "./Notification";
 
-import { translate } from "react-i18next";
+import {translate} from "react-i18next";
 
 type Props = { error: BackendError, t: string => string };
 type State = { collapsed: boolean };
@@ -19,6 +20,7 @@ class BackendErrorNotification extends React.Component<Props, State> {
     const icon = collapsed ? "fa-angle-right" : "fa-angle-down";
 
     return (
+      <Notification type="danger">
       <div className="content">
         <p className="subtitle">
           <span
@@ -33,6 +35,7 @@ class BackendErrorNotification extends React.Component<Props, State> {
         </p>
         {this.renderUncollapsed()}
       </div>
+      </Notification>
     );
   }
 
