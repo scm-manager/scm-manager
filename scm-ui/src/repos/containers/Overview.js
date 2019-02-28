@@ -73,6 +73,7 @@ class Overview extends React.Component<Props> {
         error={error}
       >
         {this.renderList()}
+        {this.renderPageActionCreateButton()}
       </Page>
     );
   }
@@ -95,19 +96,23 @@ class Overview extends React.Component<Props> {
     const { showCreateButton, t } = this.props;
     if (showCreateButton) {
       return (
-        <>
-          <CreateButton
+        <CreateButton label={t("overview.createButton")} link="/repos/create" />
+      );
+    }
+    return null;
+  }
+
+  renderPageActionCreateButton() {
+    const { showCreateButton, t } = this.props;
+    if (showCreateButton) {
+      return (
+        <PageActions>
+          <Button
             label={t("overview.createButton")}
             link="/repos/create"
+            color="primary"
           />
-          <PageActions>
-            <Button
-              label={t("overview.createButton")}
-              link="/repos/create"
-              color="primary"
-            />
-          </PageActions>
-        </>
+        </PageActions>
       );
     }
     return null;
