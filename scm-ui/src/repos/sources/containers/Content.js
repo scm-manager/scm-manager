@@ -11,7 +11,7 @@ import SourcesView from "./SourcesView";
 import HistoryView from "./HistoryView";
 import { getSources } from "../modules/sources";
 import { connect } from "react-redux";
-import {ExtensionPoint} from "@scm-manager/ui-extensions";
+import { ExtensionPoint } from "@scm-manager/ui-extensions";
 
 type Props = {
   loading: boolean,
@@ -121,12 +121,7 @@ class Content extends React.Component<Props, State> {
     const fileSize = file.directory ? "" : <FileSize bytes={file.length} />;
     if (!collapsed) {
       return (
-        <div
-          className={classNames(
-            "panel-block",
-            classes.hasBackground
-          )}
-        >
+        <div className={classNames("panel-block", classes.hasBackground)}>
           <table className={classNames("table", classes.hasBackground)}>
             <tbody>
               <tr>
@@ -151,9 +146,9 @@ class Content extends React.Component<Props, State> {
               </tr>
               <ExtensionPoint
                 name="repos.content.metadata"
-                props={{ file , repository}}
-              >
-              </ExtensionPoint>
+                renderAll={true}
+                props={{ file, repository, revision }}
+              />
             </tbody>
           </table>
         </div>
