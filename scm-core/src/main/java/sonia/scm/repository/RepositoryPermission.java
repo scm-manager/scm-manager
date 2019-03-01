@@ -45,6 +45,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -55,6 +56,8 @@ import static java.util.Collections.unmodifiableSet;
 
 /**
  * Permissions controls the access to {@link Repository}.
+ * This object should be immutable, but could not be due to mapstruct. Do not modify instances of this because this
+ * would change the hash code and therefor make it undeletable in a repository.
  *
  * @author Sebastian Sdorra
  */
@@ -64,22 +67,26 @@ public class RepositoryPermission implements PermissionObject, Serializable
 {
 
   private static final long serialVersionUID = -2915175031430884040L;
+  public static final String REPOSITORY_MODIFIED_EXCEPTION_TEXT = "repository permission must not be modified";
 
-  private boolean groupPermission = false;
+  private Boolean groupPermission;
   private String name;
   @XmlElement(name = "verb")
   private Set<String> verbs;
 
   /**
-   * Constructs a new {@link RepositoryPermission}.
-   * This constructor is used by JAXB and mapstruct.
+   * This constructor exists for mapstruct and JAXB, only -- <b>do not use this in "normal" code</b>.
+   *
+   * @deprecated Do not use this for "normal" code.
+   * Use {@link RepositoryPermission#RepositoryPermission(String, Collection, boolean)} instead.
    */
+  @Deprecated
   public RepositoryPermission() {}
 
   public RepositoryPermission(String name, Collection<String> verbs, boolean groupPermission)
   {
     this.name = name;
-    this.verbs = unmodifiableSet(new LinkedHashSet<>(verbs));
+    this.verbs = new LinkedHashSet<>(verbs);
     this.groupPermission = groupPermission;
   }
 
@@ -163,7 +170,7 @@ public class RepositoryPermission implements PermissionObject, Serializable
    */
   public Collection<String> getVerbs()
   {
-    return verbs == null? emptyList(): verbs;
+    return verbs == null ? emptyList() : Collections.unmodifiableSet(verbs);
   }
 
   /**
@@ -181,35 +188,50 @@ public class RepositoryPermission implements PermissionObject, Serializable
   //~--- set methods ----------------------------------------------------------
 
   /**
-   * Sets true if the permission is a group permission.
+   * Use this for creation only. This will throw an {@link IllegalStateException} when modified.
+   * @throws IllegalStateException when modified after the value has been set once.
    *
-   *
-   * @param groupPermission true if the permission is a group permission
+   * @deprecated Do not use this for "normal" code.
+   * Use {@link RepositoryPermission#RepositoryPermission(String, Collection, boolean)} instead.
    */
+  @Deprecated
   public void setGroupPermission(boolean groupPermission)
   {
+    if (this.groupPermission != null) {
+      throw new IllegalStateException(REPOSITORY_MODIFIED_EXCEPTION_TEXT);
+    }
     this.groupPermission = groupPermission;
   }
 
   /**
-   * The name of the user or group.
+   * Use this for creation only. This will throw an {@link IllegalStateException} when modified.
+   * @throws IllegalStateException when modified after the value has been set once.
    *
-   *
-   * @param name name of the user or group
+   * @deprecated Do not use this for "normal" code.
+   * Use {@link RepositoryPermission#RepositoryPermission(String, Collection, boolean)} instead.
    */
+  @Deprecated
   public void setName(String name)
   {
+    if (this.name != null) {
+      throw new IllegalStateException(REPOSITORY_MODIFIED_EXCEPTION_TEXT);
+    }
     this.name = name;
   }
 
   /**
-   * Sets the verb of the permission.
+   * Use this for creation only. This will throw an {@link IllegalStateException} when modified.
+   * @throws IllegalStateException when modified after the value has been set once.
    *
-   *
-   * @param verbs verbs of the permission
+   * @deprecated Do not use this for "normal" code.
+   * Use {@link RepositoryPermission#RepositoryPermission(String, Collection, boolean)} instead.
    */
+  @Deprecated
   public void setVerbs(Collection<String> verbs)
   {
+    if (this.verbs != null) {
+      throw new IllegalStateException(REPOSITORY_MODIFIED_EXCEPTION_TEXT);
+    }
     this.verbs = unmodifiableSet(new LinkedHashSet<>(verbs));
   }
 }

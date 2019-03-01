@@ -451,7 +451,10 @@ function deletePermissionFromState(
 ) {
   let newPermission = [];
   for (let i = 0; i < oldPermissions.length; i++) {
-    if (oldPermissions[i] !== permission) {
+    if (
+      oldPermissions[i].name !== permission.name ||
+      oldPermissions[i].groupPermission !== permission.groupPermission
+    ) {
       newPermission.push(oldPermissions[i]);
     }
   }
