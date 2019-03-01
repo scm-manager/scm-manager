@@ -43,6 +43,7 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.transport.PushResult;
 import org.eclipse.jgit.transport.RemoteRefUpdate;
+import org.eclipse.jgit.transport.ScmTransportProtocol;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.GitRepositoryHandler;
@@ -62,7 +63,7 @@ public abstract class AbstractGitPushOrPullCommand extends AbstractGitCommand
 {
 
   /** Field description */
-  private static final String SCHEME = "scm://";
+  private static final String SCHEME = ScmTransportProtocol.NAME + "://";
 
   /**
    * the logger for AbstractGitPushOrPullCommand
@@ -167,7 +168,7 @@ public abstract class AbstractGitPushOrPullCommand extends AbstractGitCommand
     }
     else
     {
-      throw new IllegalArgumentException("repository or url is requiered");
+      throw new IllegalArgumentException("repository or url is required");
     }
 
     return url;
