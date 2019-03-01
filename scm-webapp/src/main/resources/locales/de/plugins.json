@@ -112,6 +112,30 @@
     "9SR8G0kmU1": {
       "displayName": "Feature nicht unterstützt",
       "description": "Das Versionsverwaltungssystem dieses Repo unterstützt das angefragte Feature nicht."
+    },
+    "CmR8GCJb31": {
+      "displayName": "Interner Serverfehler",
+      "description": "Im Server ist ein interner Fehler aufgetreten. Bitte wenden Sie sich an ihren Administrator für weitere Hinweise."
+    },
+    "92RCCCMHO1": {
+      "displayName": "Eine interne URL wurde nicht gefunden",
+      "description": "Ein interner Serveraufruf konnte nicht verarbeitet werden. Bitte wenden Sie sich an ihren Administrator für weitere Hinweise."
+    },
+    "2VRCrvpL71": {
+      "displayName": "Ungültiges Datenformat",
+      "description": "Die zum Server gesendeten Daten konnten nicht verarbeitet werden. Bitte prüfen Sie die eingegebenen Werte oder wenden Sie sich an ihren Administrator für weitere Hinweise."
+    },
+    "8pRBYDURx1": {
+      "displayName": "Ungültiger Datentyp",
+      "description": "Die zum Server gesendeten Daten hatten einen ungültigen Typen. Bitte wenden Sie sich an ihren Administrator für weitere Hinweise."
+    },
+    "1wR7ZBe7H1": {
+      "displayName": "Ungültige Eingabe",
+      "description": "Die eingegebenen Daten konnten nicht validiert werden. Bitte korrigieren Sie die Eingaben und senden Sie sie erneut."
+    },
+    "3zR9vPNIE1": {
+      "displayName": "Ungültige Eingabe",
+      "description": "Die eingegebenen Daten konnten nicht validiert werden. Bitte korrigieren Sie die Eingaben und senden Sie sie erneut."
     }
   }
 }
