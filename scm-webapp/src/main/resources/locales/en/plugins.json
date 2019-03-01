@@ -34,6 +34,12 @@
         "description": "May administer all groups"
       }
     },
+    "permission": {
+      "*": {
+        "displayName": "Administer permissions",
+        "description": "May administer permissions (additionally needs 'administer users' and/or 'administer groups')."
+      }
+    },
     "configuration": {
       "list": {
         "displayName": "Basic administration",
