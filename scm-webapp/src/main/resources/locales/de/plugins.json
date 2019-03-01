@@ -93,10 +93,25 @@
     "errorCode": "Fehlercode",
     "transactionId": "Transaktions-ID",
     "moreInfo": "Für mehr Informationen, siehe",
-    "AGR7UzkhA1": "Nicht gefunden",
-    "FtR7UznKU1": "Existiert bereits",
-    "9BR7qpDAe1": "Passwortänderung nicht erlaubt",
-    "2wR7UzpPG1": "Konkurrierende Änderungen",
-    "9SR8G0kmU1": "Feature nicht unterstützt"
+    "AGR7UzkhA1": {
+      "displayName": "Nicht gefunden",
+      "description": "Die angefragte Entität konnte nicht gefunden werden. Möglicherweise wurde es in einer weiteren Session gelöscht."
+    },
+    "FtR7UznKU1": {
+      "displayName": "Existiert bereits",
+      "description": "Eine Entität mit den gegebenen Schlüsselwerten existiert bereits"
+    },
+    "9BR7qpDAe1": {
+      "displayName": "Passwortänderung nicht erlaubt",
+      "description": "Sie haben nicht die Berechtigung, das Passwort zu ändern"
+    },
+    "2wR7UzpPG1": {
+      "displayName": "Konkurrierende Änderungen",
+      "description": "Die Entität wurde konkurrierend von einem anderen Benutzer oder einem anderen Prozess modifiziert. Bitte laden sie die Entität erneut."
+    },
+    "9SR8G0kmU1": {
+      "displayName": "Feature nicht unterstützt",
+      "description": "Das Versionsverwaltungssystem dieses Repo unterstützt das angefragte Feature nicht."
+    }
   }
 }

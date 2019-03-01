@@ -1,79 +1,74 @@
 // @flow
 import React from "react";
-import {BackendError} from "./errors";
-import classNames from "classnames";
+import { BackendError } from "./errors";
 import Notification from "./Notification";
 
-import {translate} from "react-i18next";
+import { translate } from "react-i18next";
 
 type Props = { error: BackendError, t: string => string };
-type State = { collapsed: boolean };
 
-class BackendErrorNotification extends React.Component<Props, State> {
+class BackendErrorNotification extends React.Component<Props> {
   constructor(props: Props) {
     super(props);
-    this.state = { collapsed: true };
   }
 
   render() {
-    const { collapsed } = this.state;
-    const icon = collapsed ? "fa-angle-right" : "fa-angle-down";
-
     return (
       <Notification type="danger">
-      <div className="content">
-        <p className="subtitle">
-          <span
-            onClick={() => {
-              this.setState({ collapsed: !this.state.collapsed });
-            }}
-          >
-            <i className={classNames("fa", icon)} />
-
-            {this.renderErrorMessage()}
-          </span>
-        </p>
-        {this.renderUncollapsed()}
-      </div>
+        <div className="content">
+          <p className="subtitle">{this.renderErrorName()}</p>
+          <p>{this.renderErrorDescription()}</p>
+          {this.renderMetadata()}
+        </div>
       </Notification>
     );
   }
 
-  renderErrorMessage = () => {
+  renderErrorName = () => {
     const { error, t } = this.props;
-    const translation = t("errors." + error.errorCode);
+    const translation = t("errors." + error.errorCode + ".displayName");
     if (translation === error.errorCode) {
       return error.message;
     }
     return translation;
   };
 
-  renderUncollapsed = () => {
+  renderErrorDescription = () => {
     const { error, t } = this.props;
-    if (!this.state.collapsed) {
-      return (
-        <>
-          <p>
-            <strong>{t("errors.context")}</strong>
-          </p>
-          <ul>
-            {error.context.map((context, index) => {
-              return (
-                <li key={index}>
-                  <strong>{context.type}:</strong> {context.id}
-                </li>
-              );
-            })}
-          </ul>
-          {this.renderMoreInformationLink(error)}
-          <div className="level is-size-7">
-            <div className="left">{t("errors.errorCode")} {error.errorCode}</div>
-            <div className="right">{t("errors.transactionId")} {error.transactionId}</div>
-          </div>
-        </>
-      );
+    const translation = t("errors." + error.errorCode + ".description");
+    if (translation === error.errorCode) {
+      return "";
     }
-    return null;
+    return translation;
+  };
+
+  renderMetadata = () => {
+    const { error, t } = this.props;
+    return (
+      <>
+        <p>
+          <strong>{t("errors.context")}</strong>
+        </p>
+        <ul>
+          {error.context.map((context, index) => {
+            return (
+              <li key={index}>
+                <strong>{context.type}:</strong> {context.id}
+              </li>
+            );
+          })}
+        </ul>
+        {this.renderMoreInformationLink(error)}
+        <div className="level is-size-7">
+          <div className="left">
+            {t("errors.transactionId")} {error.transactionId}
+          </div>
+          <div className="right">
+            {t("errors.errorCode")} {error.errorCode}
+          </div>
+        </div>
+      </>
+    );
   };
 
   renderMoreInformationLink = (error: BackendError) => {
