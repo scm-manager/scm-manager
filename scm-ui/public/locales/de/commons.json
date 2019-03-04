@@ -24,7 +24,7 @@
     "loginLink": "Erneute Anmeldung",
     "timeout": "Die Session ist abgelaufen.",
     "wrong-login-credentials": "Ungültige Anmeldedaten",
-    "forbidden": "Sie haben nicht die Berechtigung, diese Entität zu sehen"
+    "forbidden": "Sie haben nicht die Berechtigung, diesen Datensatz zu sehen"
   },
   "loading": {
     "alt": "Lade ..."
