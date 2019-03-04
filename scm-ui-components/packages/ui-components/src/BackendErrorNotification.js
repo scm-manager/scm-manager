@@ -69,8 +69,8 @@ class BackendErrorNotification extends React.Component<Props> {
     const { error, t } = this.props;
     return (
       <>
-        {this.renderContext(error)}
-        {this.renderMoreInformationLink(error)}
+        {this.renderContext()}
+        {this.renderMoreInformationLink()}
         <div className="level is-size-7">
           <div className="left">
             {t("errors.transactionId")} {error.transactionId}
@@ -83,7 +83,8 @@ class BackendErrorNotification extends React.Component<Props> {
     );
   };
 
-  renderContext = (error: BackendError) => {
+  renderContext = () => {
+    const { error, t} = this.props;
     if (error.context) {
       return (
         <>
@@ -104,8 +105,8 @@ class BackendErrorNotification extends React.Component<Props> {
     }
   };
 
-  renderMoreInformationLink = (error: BackendError) => {
-    const { t } = this.props;
+  renderMoreInformationLink = () => {
+    const { error, t } = this.props;
     if (error.url) {
       return (
         <p>
