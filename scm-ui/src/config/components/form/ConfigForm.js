@@ -14,6 +14,7 @@ type Props = {
   config?: Config,
   loading?: boolean,
   t: string => string,
+  configReadPermission: boolean,
   configUpdatePermission: boolean
 };
 
@@ -84,16 +85,30 @@ class ConfigForm extends React.Component<Props, State> {
   };
 
   render() {
-    const { loading, t, configUpdatePermission } = this.props;
+    const {
+      loading,
+      t,
+      configReadPermission,
+      configUpdatePermission
+    } = this.props;
     const config = this.state.config;
 
     let noPermissionNotification = null;
+
+    if (!configReadPermission) {
+      return (
+        <Notification
+          type={"danger"}
+          children={t("config-form.no-read-permission-notification")}
+        />
+      );
+    }
 
     if (this.state.showNotification) {
       noPermissionNotification = (
         <Notification
           type={"info"}
-          children={t("config-form.no-permission-notification")}
+          children={t("config-form.no-write-permission-notification")}
           onClose={() => this.onClose()}
         />
       );

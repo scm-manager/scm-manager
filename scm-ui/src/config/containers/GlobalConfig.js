@@ -1,11 +1,7 @@
 // @flow
 import React from "react";
 import { translate } from "react-i18next";
-import {
-  Title,
-  Loading,
-  ErrorNotification
-} from "@scm-manager/ui-components";
+import { Title, Loading, ErrorNotification } from "@scm-manager/ui-components";
 import {
   fetchConfig,
   getFetchConfigFailure,
@@ -39,6 +35,7 @@ type Props = {
 };
 
 type State = {
+  configReadPermission: boolean,
   configChanged: boolean
 };
 
@@ -47,13 +44,18 @@ class GlobalConfig extends React.Component<Props, State> {
     super(props);
 
     this.state = {
+      configReadPermission: true,
       configChanged: false
     };
   }
 
   componentDidMount() {
     this.props.configReset();
-    this.props.fetchConfig(this.props.configLink);
+    if (this.props.configLink) {
+      this.props.fetchConfig(this.props.configLink);
+    } else {
+      this.setState({configReadPermission: false});
+    }
   }
 
   modifyConfig = (config: Config) => {
@@ -102,6 +104,7 @@ class GlobalConfig extends React.Component<Props, State> {
 
   renderContent = () => {
     const { error, loading, config, configUpdatePermission } = this.props;
+    const { configReadPermission } = this.state;
     if (!error) {
       return (
         <>
@@ -111,6 +114,7 @@ class GlobalConfig extends React.Component<Props, State> {
             config={config}
             loading={loading}
             configUpdatePermission={configUpdatePermission}
+            configReadPermission={configReadPermission}
           />
         </>
       );
