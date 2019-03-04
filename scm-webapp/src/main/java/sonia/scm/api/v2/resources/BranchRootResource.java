@@ -80,8 +80,6 @@ public class BranchRootResource {
         .build();
     } catch (CommandNotSupportedException ex) {
       return Response.status(Response.Status.BAD_REQUEST).build();
-    } catch (NotFoundException e) {
-      return Response.status(Response.Status.NOT_FOUND).build();
     }
   }
 
