@@ -1,7 +1,7 @@
 //@flow
 import React from "react";
 import ErrorNotification from "./ErrorNotification";
-import { BackendError } from "./errors";
+import { BackendError, ForbiddenError } from "./errors";
 
 type Props = {
   error: Error,
@@ -26,7 +26,7 @@ class ErrorPage extends React.Component<Props> {
 
   renderSubtitle = () => {
     const { error, subtitle } = this.props;
-    if (error instanceof BackendError) {
+    if (error instanceof BackendError || error instanceof ForbiddenError) {
       return null;
     }
     return <p className="subtitle">{subtitle}</p>

@@ -1,7 +1,7 @@
 //@flow
 import React from "react";
 import { translate } from "react-i18next";
-import { BackendError, UnauthorizedError } from "./errors";
+import { BackendError, ForbiddenError, UnauthorizedError } from "./errors";
 import Notification from "./Notification";
 import BackendErrorNotification from "./BackendErrorNotification";
 
@@ -27,7 +27,15 @@ class ErrorNotification extends React.Component<Props> {
             </a>
           </Notification>
         );
-      } else {
+      } else if (error instanceof ForbiddenError) {
+        return (
+          <Notification type="danger">
+            <strong>{t("error-notification.prefix")}:</strong>{" "}
+            {t("error-notification.forbidden")}
+          </Notification>
+        )
+      } else
+       {
         return (
           <Notification type="danger">
             <strong>{t("error-notification.prefix")}:</strong> {error.message}

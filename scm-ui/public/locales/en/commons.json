@@ -23,7 +23,8 @@
     "prefix": "Error",
     "loginLink": "You can login here again.",
     "timeout": "The session has expired",
-    "wrong-login-credentials": "Invalid credentials"
+    "wrong-login-credentials": "Invalid credentials",
+    "forbidden": "You don't have permission to view this entity"
   },
   "loading": {
     "alt": "Loading ..."

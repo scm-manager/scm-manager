@@ -1,6 +1,6 @@
 // @flow
 import { contextPath } from "./urls";
-import {createBackendError, isBackendError, UnauthorizedError} from "./errors";
+import { createBackendError, ForbiddenError, isBackendError, UnauthorizedError } from "./errors";
 import type { BackendErrorContent } from "./errors";
 
 const fetchOptions: RequestOptions = {
@@ -22,7 +22,10 @@ function handleFailure(response: Response) {
     } else {
       if (response.status === 401) {
         throw new UnauthorizedError("Unauthorized", 401);
+      } else if (response.status === 403) {
+        throw new ForbiddenError("Forbidden", 403);
       }
+
       throw new Error("server returned status code " + response.status);
     }
   }

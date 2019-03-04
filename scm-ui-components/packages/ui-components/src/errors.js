@@ -39,6 +39,14 @@ export class UnauthorizedError extends Error {
   }
 }
 
+export class ForbiddenError extends Error {
+  statusCode: number;
+  constructor(message: string, statusCode: number) {
+    super(message);
+    this.statusCode = statusCode;
+  }
+}
+
 export class NotFoundError extends BackendError {
   constructor(content: BackendErrorContent, statusCode: number) {
     super(content, "NotFoundError", statusCode);
