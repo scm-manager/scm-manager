@@ -2,7 +2,7 @@
 import React from "react";
 import { translate } from "react-i18next";
 import type { Permission } from "@scm-manager/ui-types";
-import { confirmAlert, DeleteButton } from "@scm-manager/ui-components";
+import { confirmAlert } from "@scm-manager/ui-components";
 
 type Props = {
   permission: Permission,
@@ -54,18 +54,18 @@ class DeletePermissionButton extends React.Component<Props> {
   };
 
   render() {
-    const { confirmDialog, loading, t } = this.props;
+    const { confirmDialog } = this.props;
     const action = confirmDialog ? this.confirmDelete : this.deletePermission;
 
     if (!this.isDeletable()) {
       return null;
     }
     return (
-      <DeleteButton
-        label={t("permission.delete-permission-button.label")}
-        action={action}
-        loading={loading}
-      />
+      <a className="level-item" onClick={action}>
+        <span className="icon is-small">
+          <i className="fas fa-trash" />
+        </span>
+      </a>
     );
   }
 }

@@ -14,10 +14,8 @@
         }
       },
       "*": {
-        "*": {
-          "displayName": "Alle Repositories besitzen (Owner)",
-          "description": "Darf alle Repositories lesen, klonen, schreiben, konfigurieren und löschen."
-        }
+        "displayName": "Alle Repositories besitzen (Owner)",
+        "description": "Darf alle Repositories lesen, klonen, schreiben, konfigurieren und löschen."
       },
       "create": {
         "displayName": "Repositories erstellen",
@@ -36,20 +34,42 @@
         "description": "Darf Gruppen administrieren."
       }
     },
+    "permission": {
+      "*": {
+        "displayName": "Berechtigungen verwalten",
+        "description": "Darf Berechtigungen verwalten (benötigt zusätzlich 'Benutzer administrieren' bzw. 'Gruppen administrieren')."
+      }
+    },
+    "configuration": {
+      "list": {
+        "displayName": "Basis für Administration",
+        "description": "Voraussetzung für alle anderen Administrationsberechtigungen. Ohne diese Berechtigung wird keine Administrationsansicht gezeigt."
+      },
+      "read,write": {
+        "global": {
+          "displayName": "zentrale Konfiguration",
+          "description": "Darf die Konfiguration des SCM-Manager anpassen"
+        },
+        "*": {
+          "displayName": "zentrale + Plugin Konfiguration",
+          "description": "Darf die Konfiguration des SCM-Manager und aller Plugins anpassen"
+        }
+      }
+    },
     "unknown": "Unbekannte Berechtigung"
   },
   "verbs": {
     "repository": {
       "read": {
-        "displayName": "Lesen",
+        "displayName": "Repository Lesen",
         "description": "Darf das Repository im SCM-Manager sehen."
       },
       "modify": {
-        "displayName": "Modifizieren",
+        "displayName": "Repository Modifizieren",
         "description": "Darf die Eigenschaften des Repository verändern."
       },
       "delete": {
-        "displayName": "Löschen",
+        "displayName": "Repository Löschen",
         "description": "Darf das Repository löschen."
       },
       "pull": {
@@ -67,10 +87,6 @@
       "permissionWrite": {
         "displayName": "Berechtigungen modifizieren",
         "description": "Darf die Berechtigungen des Repository bearbeiten."
-      },
-      "healthCheck": {
-        "displayName": "Health Check",
-        "description": "Darf den Repository Health Check ausführen."
       },
       "*": {
         "displayName": "Alle Repository Rechte",

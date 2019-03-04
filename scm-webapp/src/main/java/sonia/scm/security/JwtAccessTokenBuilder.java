@@ -50,6 +50,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.group.GroupNames;
 
 /**
  * Jwt implementation of {@link AccessTokenBuilder}.
@@ -207,6 +208,12 @@ public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
 
     if (!groups.isEmpty()) {
       claims.put(JwtAccessToken.GROUPS_CLAIM_KEY, groups);
+    } else {
+      Subject currentSubject = SecurityUtils.getSubject();
+      GroupNames groupNames = currentSubject.getPrincipals().oneByType(GroupNames.class);
+      if (groupNames != null && groupNames.isExternal()) {
+        claims.put(JwtAccessToken.GROUPS_CLAIM_KEY, groupNames.getCollection().toArray(new String[]{}));
+      }
     }
 
     // sign token and create compact version

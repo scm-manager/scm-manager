@@ -15,6 +15,7 @@ import java.net.URI;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 @SubjectAware(configuration = "classpath:sonia/scm/configuration/shiro.ini")
 public class GitConfigInIndexResourceTest {
@@ -50,7 +51,7 @@ public class GitConfigInIndexResourceTest {
 
     gitConfigInIndexResource.enrich(context);
 
-    assertFalse(root.get("_links").iterator().hasNext());
+    assertTrue(root.get("_links").iterator().hasNext());
   }
 
   @Test

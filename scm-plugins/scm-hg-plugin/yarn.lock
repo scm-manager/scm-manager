@@ -641,9 +641,9 @@
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/@scm-manager/eslint-config/-/eslint-config-0.0.2.tgz#94cc8c3fb4f51f870b235893dc134fc6c423ae85"
 
-"@scm-manager/ui-bundler@^0.0.24":
-  version "0.0.24"
-  resolved "https://registry.yarnpkg.com/@scm-manager/ui-bundler/-/ui-bundler-0.0.24.tgz#034d5500c79b438c48d8f7ee985be07c4ea46d1e"
+"@scm-manager/ui-bundler@^0.0.25":
+  version "0.0.25"
+  resolved "https://registry.yarnpkg.com/@scm-manager/ui-bundler/-/ui-bundler-0.0.25.tgz#1f65b3ff0ae81559a114c6a8d8cf43856cc6e166"
   dependencies:
     "@babel/core" "^7.0.0"
     "@babel/plugin-proposal-class-properties" "^7.0.0"
@@ -684,7 +684,6 @@
 "@scm-manager/ui-extensions@^0.1.2":
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/@scm-manager/ui-extensions/-/ui-extensions-0.1.2.tgz#0689427ca45c8e4e045b5b9dbc89036f1d2c45fc"
-  integrity sha512-oIkXcc/VWssnK/yjWKC/Wnq5DZ01rArsz76n4X/0DT0hkGNIKmwk/Fdp7OoXiUEb7+aaPjUX1VvDqlTwCNKPmA==
   dependencies:
     react "^16.4.2"
     react-dom "^16.4.2"

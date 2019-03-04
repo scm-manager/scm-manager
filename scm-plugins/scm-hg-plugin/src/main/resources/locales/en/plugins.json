@@ -31,17 +31,27 @@
   },
   "permissions" : {
     "configuration": {
-      "read": {
+      "read,write": {
         "hg": {
-          "displayName": "Read Mercurial configuration",
-          "description": "May read the Mercurial configuration"
-        }
-      },
-      "write": {
-        "hg": {
-          "displayName": "Write Mercurial configuration",
+          "displayName": "Modify Mercurial configuration",
           "description": "May change the Mercurial configuration"
         }
+      }
+    },
+    "repository": {
+      "hg": {
+        "*": {
+          "displayName": "Modify repository specific Mercurial configuration",
+          "description": "May change the Mercurial configuration for repositories"
+        }
+      }
+    }
+  },
+  "verbs": {
+    "repository": {
+      "hg": {
+        "displayName": "configure Mercurial",
+        "description": "May change the Mercurial configuration for this repository"
       }
     }
   }

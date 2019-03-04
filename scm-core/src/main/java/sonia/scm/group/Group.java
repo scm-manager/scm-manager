@@ -61,7 +61,11 @@ import java.util.List;
  *
  * @author Sebastian Sdorra
  */
-@StaticPermissions(value = "group", globalPermissions = {"create", "list", "autocomplete"})
+@StaticPermissions(
+  value = "group",
+  globalPermissions = {"create", "list", "autocomplete"},
+  custom = true, customGlobal = true
+)
 @XmlRootElement(name = "groups")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Group extends BasicPropertiesAware

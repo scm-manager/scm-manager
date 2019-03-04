@@ -59,7 +59,9 @@ import java.security.Principal;
 @StaticPermissions(
   value = "user",
   globalPermissions = {"create", "list", "autocomplete"},
-  permissions = {"read", "modify", "delete", "changePassword"})
+  permissions = {"read", "modify", "delete", "changePassword"},
+  custom = true, customGlobal = true
+)
 @XmlRootElement(name = "users")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class User extends BasicPropertiesAware implements Principal, ModelObject, PermissionObject, ReducedModelObject

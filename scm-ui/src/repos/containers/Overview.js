@@ -14,7 +14,13 @@ import {
   isFetchReposPending
 } from "../modules/repos";
 import { translate } from "react-i18next";
-import { CreateButton, Page, Paginator } from "@scm-manager/ui-components";
+import {
+  Page,
+  PageActions,
+  Button,
+  CreateButton,
+  Paginator
+} from "@scm-manager/ui-components";
 import RepositoryList from "../components/list";
 import { withRouter } from "react-router-dom";
 import type { History } from "history";
@@ -67,6 +73,7 @@ class Overview extends React.Component<Props> {
         error={error}
       >
         {this.renderList()}
+        {this.renderPageActionCreateButton()}
       </Page>
     );
   }
@@ -89,10 +96,23 @@ class Overview extends React.Component<Props> {
     const { showCreateButton, t } = this.props;
     if (showCreateButton) {
       return (
-        <CreateButton
-          label={t("overview.createButton")}
-          link="/repos/create"
-        />
+        <CreateButton label={t("overview.createButton")} link="/repos/create" />
+      );
+    }
+    return null;
+  }
+
+  renderPageActionCreateButton() {
+    const { showCreateButton, t } = this.props;
+    if (showCreateButton) {
+      return (
+        <PageActions>
+          <Button
+            label={t("overview.createButton")}
+            link="/repos/create"
+            color="primary"
+          />
+        </PageActions>
       );
     }
     return null;

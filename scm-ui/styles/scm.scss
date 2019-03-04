@@ -40,6 +40,25 @@ $info: $blue;
 .main {
   min-height: calc(100vh - 260px);
 }
+
+// shown in top section when pageactions set
+hr.header-with-actions {
+  margin-top: -10px;
+
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
+}
+.is-mobile-create-button-spacing {
+  @media screen and (max-width: 768px) {
+    border: 2px solid #e9f7fd;
+    padding: 1em 1em;
+    margin-top: 0 !important;
+    width: 100%;
+    text-align: center !important;
+  }
+}
+
 .footer {
   height: 50px;
 }
@@ -63,7 +82,7 @@ $info: $blue;
 $fa-font-path: "webfonts";
 @import "@fortawesome/fontawesome-free/scss/solid.scss";
 
-@import "diff2html/dist/diff2html";
+@import "react-diff-view/index";
 
 // NEW STYLES
 
@@ -221,7 +240,7 @@ $fa-font-path: "webfonts";
 }
 
 // forms
-.field:not(.is-grouped) {
+form .field:not(.is-grouped) {
   margin-bottom: 1rem;
 }
 .input,
@@ -229,6 +248,15 @@ $fa-font-path: "webfonts";
   /*background-color: whitesmoke;*/
   border-color: #98d8f3;
   box-shadow: none;
+}
+
+// label with help-icon compensation
+.label-icon-spacing {
+  margin-top: 30px;
+
+  @media screen and (max-width: 768px) {
+    margin-top: 0;
+  }
 }
 
 // pagination

@@ -7,7 +7,8 @@ import HelpIcon from './HelpIcon';
 const styles = {
   tooltip: {
     display: "inline-block",
-    paddingLeft: "3px"
+    paddingLeft: "3px",
+    position: "absolute"
   }
 };
 

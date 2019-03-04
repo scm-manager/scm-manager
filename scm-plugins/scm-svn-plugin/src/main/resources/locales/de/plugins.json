@@ -25,17 +25,27 @@
   },
   "permissions": {
     "configuration": {
-      "read": {
+      "read,write": {
         "svn": {
-          "displayName": "Subversion Konfiguration lesen",
-          "description": "Darf die Subversion Konfiguration lesen"
-        }
-      },
-      "write": {
-        "svn": {
-          "displayName": "Subversion Konfiguration schreiben",
+          "displayName": "Subversion Konfiguration ändern",
           "description": "Darf die Subversion Konfiguration verändern"
         }
+      }
+    },
+    "repository": {
+      "svn": {
+        "*": {
+          "displayName": "Repository-spezifische Subversion Konfiguration ändern",
+          "description": "Darf die Subversion Konfiguration für alle Repositories verändern."
+        }
+      }
+    }
+  },
+  "verbs": {
+    "repository": {
+      "svn": {
+        "displayName": "Subversion konfigurieren",
+        "description": "Darf die Subversion Konfiguration für dieses Repository verändern."
       }
     }
   }

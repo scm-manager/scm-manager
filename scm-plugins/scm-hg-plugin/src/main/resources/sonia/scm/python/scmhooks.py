@@ -85,9 +85,7 @@ def callHookUrl(ui, repo, hooktype, node):
     ui.traceback()
   return abort
 
-def callback(ui, repo, hooktype, node=None, source=None, pending=None, **kwargs):
-  if pending != None:
-    pending()
+def callback(ui, repo, hooktype, node=None):
   abort = True
   if node != None:
     if len(baseUrl) > 0:
@@ -98,3 +96,28 @@ def callback(ui, repo, hooktype, node=None, source=None, pending=None, **kwargs)
   else:
     ui.warn("changeset node is not available")
   return abort
+
+def preHook(ui, repo, hooktype, node=None, source=None, pending=None, **kwargs):
+  # older mercurial versions
+  if pending != None:
+    pending()
+  
+  # newer mercurial version
+  # we have to make in-memory changes visible to external process
+  # this does not happen automatically, because mercurial treat our hooks as internal hooks
+  # see hook.py at mercurial sources _exthook
+  try:
+    if repo is not None:
+      tr = repo.currenttransaction()
+      repo.dirstate.write(tr)
+      if tr and not tr.writepending():
+        ui.warn("no pending write transaction found")
+  except AttributeError:
+    ui.debug("mercurial does not support currenttransation")
+    # do nothing
+
+  return callback(ui, repo, hooktype, node)
+
+def postHook(ui, repo, hooktype, node=None, source=None, pending=None, **kwargs):
+  return callback(ui, repo, hooktype, node)
+

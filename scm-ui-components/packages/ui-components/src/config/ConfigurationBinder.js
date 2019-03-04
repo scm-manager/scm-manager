@@ -86,7 +86,7 @@ class ConfigurationBinder {
     });
 
     // bind navigation link to extension point
-    binder.bind("repository.subnavigation", RepoNavLink, repoPredicate);
+    binder.bind("repository.setting", RepoNavLink, repoPredicate);
 
 
     // route for global configuration, passes the current repository to component
