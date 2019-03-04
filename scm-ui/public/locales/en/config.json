@@ -9,7 +9,8 @@
   "config-form": {
     "submit": "Submit",
     "submit-success-notification": "Configuration changed successfully!",
-    "no-permission-notification": "Please note: You do not have the permission to edit the config!"
+    "no-read-permission-notification": "Please note: You do not have the permission to see the config!",
+    "no-write-permission-notification": "Please note: You do not have the permission to edit the config!"
   },
   "proxy-settings": {
     "name": "Proxy Settings",

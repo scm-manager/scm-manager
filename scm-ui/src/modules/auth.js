@@ -2,7 +2,7 @@
 import type { Me } from "@scm-manager/ui-types";
 import * as types from "./types";
 
-import { apiClient, UNAUTHORIZED_ERROR } from "@scm-manager/ui-components";
+import { apiClient, UnauthorizedError } from "@scm-manager/ui-components";
 import { isPending } from "./pending";
 import { getFailure } from "./failure";
 import {
@@ -152,7 +152,7 @@ export const login = (
     dispatch(loginPending());
     return apiClient
       .post(loginLink, login_data)
-      .then(response => {
+      .then(() => {
         dispatch(fetchIndexResourcesPending());
         return callFetchIndexResources();
       })
@@ -178,7 +178,7 @@ export const fetchMe = (link: string) => {
         dispatch(fetchMeSuccess(me));
       })
       .catch((error: Error) => {
-        if (error === UNAUTHORIZED_ERROR) {
+        if (error instanceof UnauthorizedError) {
           dispatch(fetchMeUnauthenticated());
         } else {
           dispatch(fetchMeFailure(error));

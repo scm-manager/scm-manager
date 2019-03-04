@@ -1,9 +1,7 @@
 // @flow
-import {contextPath} from "./urls";
-
-export const NOT_FOUND_ERROR = new Error("not found");
-export const UNAUTHORIZED_ERROR = new Error("unauthorized");
-export const CONFLICT_ERROR = new Error("conflict");
+import { contextPath } from "./urls";
+import { createBackendError, ForbiddenError, isBackendError, UnauthorizedError } from "./errors";
+import type { BackendErrorContent } from "./errors";
 
 const fetchOptions: RequestOptions = {
   credentials: "same-origin",
@@ -12,19 +10,24 @@ const fetchOptions: RequestOptions = {
   }
 };
 
-function handleStatusCode(response: Response) {
-  if (!response.ok) {
-    switch (response.status) {
-      case 401:
-        throw UNAUTHORIZED_ERROR;
-      case 404:
-        throw NOT_FOUND_ERROR;
-      case 409:
-        throw CONFLICT_ERROR;
-      default:
-        throw new Error("server returned status code " + response.status);
-    }
 
+
+function handleFailure(response: Response) {
+  if (!response.ok) {
+    if (isBackendError(response)) {
+      return response.json()
+        .then((content: BackendErrorContent) => {
+          throw createBackendError(content, response.status);
+        });
+    } else {
+      if (response.status === 401) {
+        throw new UnauthorizedError("Unauthorized", 401);
+      } else if (response.status === 403) {
+        throw new ForbiddenError("Forbidden", 403);
+      }
+
+      throw new Error("server returned status code " + response.status);
+    }
   }
   return response;
 }
@@ -42,7 +45,7 @@ export function createUrl(url: string) {
 
 class ApiClient {
   get(url: string): Promise<Response> {
-    return fetch(createUrl(url), fetchOptions).then(handleStatusCode);
+    return fetch(createUrl(url), fetchOptions).then(handleFailure);
   }
 
   post(url: string, payload: any, contentType: string = "application/json") {
@@ -58,7 +61,7 @@ class ApiClient {
       method: "HEAD"
     };
     options = Object.assign(options, fetchOptions);
-    return fetch(createUrl(url), options).then(handleStatusCode);
+    return fetch(createUrl(url), options).then(handleFailure);
   }
 
   delete(url: string): Promise<Response> {
@@ -66,7 +69,7 @@ class ApiClient {
       method: "DELETE"
     };
     options = Object.assign(options, fetchOptions);
-    return fetch(createUrl(url), options).then(handleStatusCode);
+    return fetch(createUrl(url), options).then(handleFailure);
   }
 
   httpRequestWithJSONBody(
@@ -83,7 +86,7 @@ class ApiClient {
     // $FlowFixMe
     options.headers["Content-Type"] = contentType;
 
-    return fetch(createUrl(url), options).then(handleStatusCode);
+    return fetch(createUrl(url), options).then(handleFailure);
   }
 }
 
