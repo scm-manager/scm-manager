@@ -18,6 +18,7 @@ class BackendErrorNotification extends React.Component<Props> {
         <div className="content">
           <p className="subtitle">{this.renderErrorName()}</p>
           <p>{this.renderErrorDescription()}</p>
+          <p>{this.renderViolations()}</p>
           {this.renderMetadata()}
         </div>
       </Notification>
@@ -42,6 +43,28 @@ class BackendErrorNotification extends React.Component<Props> {
     return translation;
   };
 
+  renderViolations = () => {
+    const { error, t } = this.props;
+    if (error.violations) {
+      return (
+        <>
+          <p>
+            <strong>{t("errors.violations")}</strong>
+          </p>
+          <ul>
+            {error.violations.map((violation, index) => {
+              return (
+                <li key={index}>
+                  <strong>{violation.path}:</strong> {violation.message}
+                </li>
+              );
+            })}
+          </ul>
+        </>
+      );
+    }
+  };
+
   renderMetadata = () => {
     const { error, t } = this.props;
     return (
@@ -62,23 +85,24 @@ class BackendErrorNotification extends React.Component<Props> {
 
   renderContext = (error: BackendError) => {
     if (error.context) {
-      return <>
-        <p>
-          <strong>{t("errors.context")}</strong>
-        </p>
-        <ul>
-          {error.context.map((context, index) => {
-            return (
-              <li key={index}>
-                <strong>{context.type}:</strong> {context.id}
-              </li>
-            );
-          })}
-        </ul>
-      </>;
+      return (
+        <>
+          <p>
+            <strong>{t("errors.context")}</strong>
+          </p>
+          <ul>
+            {error.context.map((context, index) => {
+              return (
+                <li key={index}>
+                  <strong>{context.type}:</strong> {context.id}
+                </li>
+              );
+            })}
+          </ul>
+        </>
+      );
     }
   };
-
 
   renderMoreInformationLink = (error: BackendError) => {
     const { t } = this.props;

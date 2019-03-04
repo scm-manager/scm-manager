@@ -1,12 +1,14 @@
 // @flow
 type Context = { type: string, id: string }[];
+type Violation = { path: string, message: string };
 
 export type BackendErrorContent = {
   transactionId: string,
   errorCode: string,
   message: string,
   url?: string,
-  context: Context
+  context: Context,
+  violations: Violation[]
 };
 
 export class BackendError extends Error {
@@ -15,6 +17,7 @@ export class BackendError extends Error {
   url: ?string;
   context: Context = [];
   statusCode: number;
+  violations: Violation[];
 
   constructor(content: BackendErrorContent, name: string, statusCode: number) {
     super(content.message);
@@ -24,6 +27,7 @@ export class BackendError extends Error {
     this.url = content.url;
     this.context = content.context;
     this.statusCode = statusCode;
+    this.violations = content.violations;
   }
 }
 
@@ -53,5 +57,8 @@ export function createBackendError(
 }
 
 export function isBackendError(response: Response) {
-  return response.headers.get("Content-Type") === "application/vnd.scmm-error+json;v=2";
+  return (
+    response.headers.get("Content-Type") ===
+    "application/vnd.scmm-error+json;v=2"
+  );
 }
