@@ -10,25 +10,33 @@ import org.eclipse.jgit.transport.resolver.ServiceNotEnabledException;
 import org.eclipse.jgit.util.FS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.plugin.Extension;
 import sonia.scm.protocolcommand.CommandContext;
 import sonia.scm.protocolcommand.RepositoryContext;
-import sonia.scm.protocolcommand.ScmSshProtocol;
+import sonia.scm.protocolcommand.ScmCommandProtocol;
+import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.RepositoryPermissions;
 
 import javax.inject.Inject;
 import java.io.IOException;
 
-public class GitSshProtocol implements ScmSshProtocol {
+@Extension
+public class GitCommandProtocol implements ScmCommandProtocol {
 
-  private static final Logger LOG = LoggerFactory.getLogger(GitSshProtocol.class);
+  private static final Logger LOG = LoggerFactory.getLogger(GitCommandProtocol.class);
 
   private SshUploadPackFactory uploadPackFactory;
   private SshReceivePackFactory receivePackFactory;
 
   @Inject
-  public GitSshProtocol(SshUploadPackFactory uploadPackFactory, SshReceivePackFactory receivePackFactory) {
+  public GitCommandProtocol(SshUploadPackFactory uploadPackFactory, SshReceivePackFactory receivePackFactory) {
     this.uploadPackFactory = uploadPackFactory;
     this.receivePackFactory = receivePackFactory;
+  }
+
+  @Override
+  public boolean canHandle(RepositoryContext repositoryContext) {
+    return GitRepositoryHandler.TYPE_NAME.equals(repositoryContext.getRepository().getType());
   }
 
   @Override

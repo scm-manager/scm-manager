@@ -1,8 +1,13 @@
 package sonia.scm.protocolcommand;
 
+import sonia.scm.plugin.ExtensionPoint;
+
 import java.io.IOException;
 
-public interface ScmSshProtocol {
+@ExtensionPoint
+public interface ScmCommandProtocol {
+
+  boolean canHandle(RepositoryContext repositoryContext);
 
   void handle(CommandContext context, RepositoryContext repositoryContext) throws IOException;
 
