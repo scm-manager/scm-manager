@@ -15,8 +15,7 @@ import {
   InputField,
   SubmitButton,
   ErrorNotification,
-  Image,
-  UNAUTHORIZED_ERROR
+  Image, UnauthorizedError
 } from "@scm-manager/ui-components";
 import classNames from "classnames";
 import { getLoginLink } from "../modules/indexResource";
@@ -95,7 +94,7 @@ class Login extends React.Component<Props, State> {
 
   areCredentialsInvalid() {
     const { t, error } = this.props;
-    if (error === UNAUTHORIZED_ERROR) {
+    if (error instanceof UnauthorizedError) {
       return new Error(t("error-notification.wrong-login-credentials"));
     } else {
       return error;

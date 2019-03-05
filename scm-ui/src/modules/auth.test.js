@@ -179,9 +179,7 @@ describe("auth actions", () => {
   });
 
   it("should dispatch fetch me unauthorized", () => {
-    fetchMock.getOnce("/api/v2/me", {
-      status: 401
-    });
+    fetchMock.getOnce("/api/v2/me", 401);
 
     const expectedActions = [
       { type: FETCH_ME_PENDING },

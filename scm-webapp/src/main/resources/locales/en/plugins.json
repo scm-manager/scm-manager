@@ -93,5 +93,55 @@
         "description": "May change everything for the repository (includes all other permissions)"
       }
     }
+  },
+  "errors": {
+    "context": "Context",
+    "errorCode": "Error Code",
+    "transactionId": "Transaction ID",
+    "moreInfo": "For more information, see",
+    "AGR7UzkhA1": {
+      "displayName": "Not found",
+      "description": "The requested entity could not be found. It may have been deleted in another session."
+    },
+    "FtR7UznKU1": {
+      "displayName": "Already exists",
+      "description": "There is already an entity with the same key values."
+    },
+    "9BR7qpDAe1": {
+      "displayName": "Password change not allowed",
+      "description": "You do not have the permission to change the password."
+    },
+    "2wR7UzpPG1": {
+      "displayName": "Concurrent modifications",
+      "description": "The entity has been modified concurrently by another user or another process. Please reload the entity."
+    },
+    "9SR8G0kmU1": {
+      "displayName": "Feature not supported",
+      "description": "The version control system for this repository does not support the requested feature."
+    },
+    "CmR8GCJb31": {
+      "displayName": "Internal server error",
+      "description": "The server encountered an internal error. Please contact your administrator for further assistance."
+    },
+    "92RCCCMHO1": {
+      "displayName": "An internal URL could not be found",
+      "description": "An internal request could not be handled by the server. Please contact your administrator for further assistance."
+    },
+    "2VRCrvpL71": {
+      "displayName": "Illegal data format",
+      "description": "The data sent to the server could not be handled. Please check the values you have entered or contact your administrator for further assistance."
+    },
+    "8pRBYDURx1": {
+      "displayName": "Illegal data type",
+      "description": "The data sent to the server had an illegal data type. Please contact your administrator for further assistance."
+    },
+    "1wR7ZBe7H1": {
+      "displayName": "Illegal input",
+      "description": "The values could not be validated. Please correct your input and try again."
+    },
+    "3zR9vPNIE1": {
+      "displayName": "Illegal input",
+      "description": "The values could not be validated. Please correct your input and try again."
+    }
   }
 }

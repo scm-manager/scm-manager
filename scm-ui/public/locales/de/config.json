@@ -9,7 +9,8 @@
   "config-form": {
     "submit": "Speichern",
     "submit-success-notification": "Einstellungen wurden erfolgreich geändert!",
-    "no-permission-notification": "Hinweis: Es fehlen Berechtigungen zum Bearbeiten der Einstellungen!"
+    "no-read-permission-notification": "Hinweis: Es fehlen Berechtigungen zum Lesen der Einstellungen!",
+    "no-write-permission-notification": "Hinweis: Es fehlen Berechtigungen zum Bearbeiten der Einstellungen!"
   },
   "proxy-settings": {
     "name": "Proxy Einstellungen",

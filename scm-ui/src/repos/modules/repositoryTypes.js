@@ -37,10 +37,7 @@ function fetchRepositoryTypes(dispatch: any) {
     .then(repositoryTypes => {
       dispatch(fetchRepositoryTypesSuccess(repositoryTypes));
     })
-    .catch(err => {
-      const error = new Error(
-        `failed to fetch repository types: ${err.message}`
-      );
+    .catch(error => {
       dispatch(fetchRepositoryTypesFailure(error));
     });
 }
