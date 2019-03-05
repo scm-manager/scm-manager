@@ -14,7 +14,6 @@ import sonia.scm.plugin.Extension;
 import sonia.scm.protocolcommand.CommandContext;
 import sonia.scm.protocolcommand.RepositoryContext;
 import sonia.scm.protocolcommand.ScmCommandProtocol;
-import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.RepositoryPermissions;
 
 import javax.inject.Inject;
@@ -32,11 +31,6 @@ public class GitCommandProtocol implements ScmCommandProtocol {
   public GitCommandProtocol(SshUploadPackFactory uploadPackFactory, SshReceivePackFactory receivePackFactory) {
     this.uploadPackFactory = uploadPackFactory;
     this.receivePackFactory = receivePackFactory;
-  }
-
-  @Override
-  public boolean canHandle(RepositoryContext repositoryContext) {
-    return GitRepositoryHandler.TYPE_NAME.equals(repositoryContext.getRepository().getType());
   }
 
   @Override
