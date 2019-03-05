@@ -35,7 +35,6 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.annotations.VisibleForTesting;
 import com.google.inject.Inject;
 import org.eclipse.jgit.http.server.resolver.DefaultReceivePackFactory;
 import org.eclipse.jgit.lib.Repository;
@@ -72,10 +71,5 @@ public class GitReceivePackFactory extends BaseReceivePackFactory<HttpServletReq
   protected ReceivePack createBasicReceivePack(HttpServletRequest request, Repository repository)
     throws ServiceNotEnabledException, ServiceNotAuthorizedException {
     return wrapped.create(request, repository);
-  }
-
-  @VisibleForTesting
-  void setWrapped(ReceivePackFactory wrapped) {
-    this.wrapped = wrapped;
   }
 }
