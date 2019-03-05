@@ -5,6 +5,8 @@ import org.eclipse.jgit.lib.RepositoryCache;
 import org.eclipse.jgit.transport.ReceivePack;
 import org.eclipse.jgit.transport.RemoteConfig;
 import org.eclipse.jgit.transport.UploadPack;
+import org.eclipse.jgit.transport.resolver.ServiceNotAuthorizedException;
+import org.eclipse.jgit.transport.resolver.ServiceNotEnabledException;
 import org.eclipse.jgit.util.FS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,6 +51,8 @@ public class GitSshProtocol implements ScmSshProtocol {
     try (Repository repository = open(repositoryContext)) {
       ReceivePack receivePack = receivePackFactory.create(repositoryContext, repository);
       receivePack.receive(commandContext.getInputStream(), commandContext.getOutputStream(), commandContext.getErrorStream());
+    } catch (ServiceNotEnabledException | ServiceNotAuthorizedException e) {
+      throw new IOException("error creating receive pack for ssh", e);
     }
   }
 
