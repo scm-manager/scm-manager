@@ -16,7 +16,7 @@ const styles = {
   panel: {
     fontSize: "1rem"
   },
-  header: {
+  titleHeader: {
     cursor: "pointer"
   },
   title: {
@@ -139,18 +139,26 @@ class DiffFile extends React.Component<Props, State> {
   };
 
   render() {
-    const { file, fileControlFactory, fileAnnotationFactory, sideBySide, classes } = this.props;
+    const {
+      file,
+      fileControlFactory,
+      fileAnnotationFactory,
+      sideBySide,
+      classes
+    } = this.props;
     const { collapsed } = this.state;
     const viewType = sideBySide ? "split" : "unified";
 
     let body = null;
     let icon = "fa fa-angle-right";
     if (!collapsed) {
-      const fileAnnotations = fileAnnotationFactory ? fileAnnotationFactory(file) : null;
+      const fileAnnotations = fileAnnotationFactory
+        ? fileAnnotationFactory(file)
+        : null;
       icon = "fa fa-angle-down";
       body = (
         <div className="panel-block is-paddingless is-size-7">
-          { fileAnnotations }
+          {fileAnnotations}
           <DiffComponent viewType={viewType}>
             {file.hunks.map(this.renderHunk)}
           </DiffComponent>
@@ -161,12 +169,12 @@ class DiffFile extends React.Component<Props, State> {
     const fileControls = fileControlFactory ? fileControlFactory(file) : null;
     return (
       <div className={classNames("panel", classes.panel)}>
-        <div
-          className={classNames("panel-heading", classes.header)}
-          onClick={this.toggleCollapse}
-        >
+        <div className="panel-heading">
           <div className="level">
-            <div className="level-left">
+            <div
+              className={classNames("level-left", classes.titleHeader)}
+              onClick={this.toggleCollapse}
+            >
               <i className={icon} />
               <span className={classes.title}>
                 {this.renderFileTitle(file)}
@@ -175,9 +183,7 @@ class DiffFile extends React.Component<Props, State> {
                 {this.renderChangeTag(file)}
               </span>
             </div>
-            <div className="level-right">
-              { fileControls }
-            </div>
+            <div className="level-right">{fileControls}</div>
           </div>
         </div>
         {body}
