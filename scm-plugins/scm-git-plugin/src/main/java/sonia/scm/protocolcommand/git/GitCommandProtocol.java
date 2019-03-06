@@ -24,11 +24,11 @@ public class GitCommandProtocol implements ScmCommandProtocol {
 
   private static final Logger LOG = LoggerFactory.getLogger(GitCommandProtocol.class);
 
-  private SshUploadPackFactory uploadPackFactory;
-  private SshReceivePackFactory receivePackFactory;
+  private ScmUploadPackFactory uploadPackFactory;
+  private ScmReceivePackFactory receivePackFactory;
 
   @Inject
-  public GitCommandProtocol(SshUploadPackFactory uploadPackFactory, SshReceivePackFactory receivePackFactory) {
+  public GitCommandProtocol(ScmUploadPackFactory uploadPackFactory, ScmReceivePackFactory receivePackFactory) {
     this.uploadPackFactory = uploadPackFactory;
     this.receivePackFactory = receivePackFactory;
   }

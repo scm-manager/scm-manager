@@ -7,10 +7,10 @@ import sonia.scm.protocolcommand.RepositoryContext;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.spi.HookEventFacade;
 
-public class SshReceivePackFactory extends BaseReceivePackFactory<RepositoryContext> {
+public class ScmReceivePackFactory extends BaseReceivePackFactory<RepositoryContext> {
 
   @Inject
-  public SshReceivePackFactory(GitRepositoryHandler handler, HookEventFacade hookEventFacade) {
+  public ScmReceivePackFactory(GitRepositoryHandler handler, HookEventFacade hookEventFacade) {
     super(handler, hookEventFacade);
   }
 
