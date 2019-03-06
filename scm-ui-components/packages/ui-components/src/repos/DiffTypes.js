@@ -1,5 +1,7 @@
 // @flow
 
+import * as React from "react";
+
 // We place the types here and not in @scm-manager/ui-types,
 // because they represent not a real scm-manager related type.
 // This types represents only the required types for the Diff related components,
@@ -40,6 +42,8 @@ export type BaseContext = {
 
 export type AnnotationFactoryContext = BaseContext;
 
+export type FileAnnotationFactory = (file: File) => React.Node[];
+
 // key = change id, value = react component
 export type AnnotationFactory = (
   context: AnnotationFactoryContext
@@ -54,8 +58,12 @@ export type DiffEventContext = BaseContext & {
 
 export type DiffEventHandler = (context: DiffEventContext) => void;
 
+export type FileControlFactory = (file: File) => ?React.Node;
+
 export type DiffObjectProps = {
   sideBySide: boolean,
   onClick?: DiffEventHandler,
+  fileControlFactory?: FileControlFactory,
+  fileAnnotationFactory?: FileAnnotationFactory,
   annotationFactory?: AnnotationFactory
 };

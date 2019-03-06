@@ -25,6 +25,9 @@ const styles = {
   },
   hunkDivider: {
     margin: ".5rem 0"
+  },
+  changeType: {
+    marginLeft: ".75rem"
   }
 };
 
@@ -136,16 +139,18 @@ class DiffFile extends React.Component<Props, State> {
   };
 
   render() {
-    const { file, sideBySide, classes } = this.props;
+    const { file, fileControlFactory, fileAnnotationFactory, sideBySide, classes } = this.props;
     const { collapsed } = this.state;
     const viewType = sideBySide ? "split" : "unified";
 
     let body = null;
     let icon = "fa fa-angle-right";
     if (!collapsed) {
+      const fileAnnotations = fileAnnotationFactory ? fileAnnotationFactory(file) : null;
       icon = "fa fa-angle-down";
       body = (
         <div className="panel-block is-paddingless is-size-7">
+          { fileAnnotations }
           <DiffComponent viewType={viewType}>
             {file.hunks.map(this.renderHunk)}
           </DiffComponent>
@@ -153,6 +158,7 @@ class DiffFile extends React.Component<Props, State> {
       );
     }
 
+    const fileControls = fileControlFactory ? fileControlFactory(file) : null;
     return (
       <div className={classNames("panel", classes.panel)}>
         <div
@@ -165,8 +171,13 @@ class DiffFile extends React.Component<Props, State> {
               <span className={classes.title}>
                 {this.renderFileTitle(file)}
               </span>
+              <span className={classes.changeType}>
+                {this.renderChangeTag(file)}
+              </span>
             </div>
-            <div className="level-right">{this.renderChangeTag(file)}</div>
+            <div className="level-right">
+              { fileControls }
+            </div>
           </div>
         </div>
         {body}
