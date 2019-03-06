@@ -8,7 +8,7 @@ import {
 } from "../modules/repos";
 
 import { connect } from "react-redux";
-import { Route, Switch } from "react-router-dom";
+import {Redirect, Route, Switch} from "react-router-dom";
 import type { Repository } from "@scm-manager/ui-types";
 
 import {
@@ -34,7 +34,7 @@ import PermissionsNavLink from "../components/PermissionsNavLink";
 import Sources from "../sources/containers/Sources";
 import RepositoryNavLink from "../components/RepositoryNavLink";
 import {getLinks, getRepositoriesLink} from "../../modules/indexResource";
-import {ExtensionPoint} from "@scm-manager/ui-extensions";
+import {binder, ExtensionPoint} from "@scm-manager/ui-extensions";
 
 type Props = {
   namespace: string,
@@ -101,13 +101,20 @@ class RepositoryRoot extends React.Component<Props> {
       indexLinks
     };
 
+    const redirectUrlFactory = binder.getExtension("repository.redirect", this.props);
+    let redirectedUrl =url+"/info";
+    if (redirectUrlFactory){
+      redirectedUrl = url + redirectUrlFactory(this.props);
+    }
+
     return (
       <Page title={repository.namespace + "/" + repository.name}>
         <div className="columns">
           <div className="column is-three-quarters is-clipped">
             <Switch>
+              <Redirect exact path={url} to={redirectedUrl}/>
               <Route
-                path={url}
+                path={`${url}/info`}
                 exact
                 component={() => <RepositoryDetails repository={repository} />}
               />
@@ -172,8 +179,13 @@ class RepositoryRoot extends React.Component<Props> {
           <div className="column">
             <Navigation>
               <Section label={t("repositoryRoot.menu.navigationLabel")}>
+                <ExtensionPoint
+                  name="repository.navigation.topLevel"
+                  props={extensionProps}
+                  renderAll={true}
+                />
                 <NavLink
-                  to={url}
+                  to={`${url}/info`}
                   icon="fas fa-info-circle"
                   label={t("repositoryRoot.menu.informationNavLink")}
                 />
