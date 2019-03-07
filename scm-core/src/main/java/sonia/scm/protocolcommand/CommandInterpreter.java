@@ -5,4 +5,6 @@ public interface CommandInterpreter {
   String[] getParsedArgs();
 
   ScmCommandProtocol getProtocolHandler();
+
+  RepositoryContextResolver getRepositoryContextResolver();
 }
