@@ -2,9 +2,17 @@
 import React from "react";
 import Button, { type ButtonProps } from "./Button";
 
-class SubmitButton extends React.Component<ButtonProps> {
+type SubmitButtonProps = ButtonProps & {
+  scrollToTop: boolean
+}
+
+class SubmitButton extends React.Component<SubmitButtonProps> {
+  static defaultProps = {
+    scrollToTop: true
+  };
+
   render() {
-    const { action } = this.props;
+    const { action, scrollToTop } = this.props;
     return (
       <Button
         type="submit"
@@ -12,9 +20,11 @@ class SubmitButton extends React.Component<ButtonProps> {
         {...this.props}
         action={(event) => {
           if (action) {
-            action(event)
+            action(event);
           }
-          window.scrollTo(0, 0);
+          if (scrollToTop) {
+            window.scrollTo(0, 0);
+          }
         }}
       />
     );
