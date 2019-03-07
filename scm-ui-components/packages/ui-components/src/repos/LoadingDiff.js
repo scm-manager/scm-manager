@@ -6,10 +6,10 @@ import parser from "gitdiff-parser";
 
 import Loading from "../Loading";
 import Diff from "./Diff";
+import type {DiffObjectProps} from "./DiffTypes";
 
-type Props = {
-  url: string,
-  sideBySide: boolean
+type Props = DiffObjectProps & {
+  url: string
 };
 
 type State = {
@@ -71,7 +71,7 @@ class LoadingDiff extends React.Component<Props, State> {
         return null;
     }
     else {
-      return <Diff diff={diff} />;
+      return <Diff diff={diff} {...this.props} />;
     }
   }
 
