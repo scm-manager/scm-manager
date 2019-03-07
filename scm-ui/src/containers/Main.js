@@ -40,7 +40,7 @@ class Main extends React.Component<Props> {
     return (
       <div className="main">
         <Switch>
-          <Redirect exact path="/" to={url}/>
+          <Redirect exact from="/" to={url}/>
           <Route exact path="/login" component={Login} />
           <Route path="/logout" component={Logout} />
           <ProtectedRoute

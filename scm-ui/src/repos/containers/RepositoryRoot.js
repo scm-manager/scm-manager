@@ -63,7 +63,7 @@ class RepositoryRoot extends React.Component<Props> {
 
   stripEndingSlash = (url: string) => {
     if (url.endsWith("/")) {
-      return url.substring(0, url.length - 2);
+      return url.substring(0, url.length - 1);
     }
     return url;
   };
@@ -102,9 +102,11 @@ class RepositoryRoot extends React.Component<Props> {
     };
 
     const redirectUrlFactory = binder.getExtension("repository.redirect", this.props);
-    let redirectedUrl =url+"/info";
+    let redirectedUrl;
     if (redirectUrlFactory){
       redirectedUrl = url + redirectUrlFactory(this.props);
+    }else{
+      redirectedUrl = url + "/info";
     }
 
     return (
@@ -112,7 +114,7 @@ class RepositoryRoot extends React.Component<Props> {
         <div className="columns">
           <div className="column is-three-quarters is-clipped">
             <Switch>
-              <Redirect exact path={url} to={redirectedUrl}/>
+              <Redirect exact from={this.props.match.url} to={redirectedUrl}/>
               <Route
                 path={`${url}/info`}
                 exact
