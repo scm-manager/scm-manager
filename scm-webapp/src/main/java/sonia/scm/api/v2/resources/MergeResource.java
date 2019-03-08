@@ -4,6 +4,7 @@ import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
+import sonia.scm.ConcurrentModificationException;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.api.MergeCommandBuilder;
 import sonia.scm.repository.api.MergeCommandResult;
@@ -73,7 +74,7 @@ public class MergeResource {
       if (mergeCommandResult.isMergeable()) {
         return Response.noContent().build();
       } else {
-        return Response.status(HttpStatus.SC_CONFLICT).build();
+        throw new ConcurrentModificationException("revision", mergeCommand.getTargetRevision());
       }
     }
   }
