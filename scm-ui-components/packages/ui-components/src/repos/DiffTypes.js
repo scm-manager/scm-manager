@@ -42,7 +42,7 @@ export type BaseContext = {
 
 export type AnnotationFactoryContext = BaseContext;
 
-export type FileAnnotationFactory = (file: File, setCollapseState: (boolean) => void) => React.Node[];
+export type FileAnnotationFactory = (file: File) => React.Node[];
 
 // key = change id, value = react component
 export type AnnotationFactory = (
@@ -58,7 +58,7 @@ export type DiffEventContext = BaseContext & {
 
 export type DiffEventHandler = (context: DiffEventContext) => void;
 
-export type FileControlFactory = (file: File) => ?React.Node;
+export type FileControlFactory = (file: File, setCollapseState: (boolean) => void) => ?React.Node;
 
 export type DiffObjectProps = {
   sideBySide: boolean,
