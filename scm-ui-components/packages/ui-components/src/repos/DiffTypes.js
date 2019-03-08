@@ -42,7 +42,7 @@ export type BaseContext = {
 
 export type AnnotationFactoryContext = BaseContext;
 
-export type FileAnnotationFactory = (file: File) => React.Node[];
+export type FileAnnotationFactory = (file: File, setCollapseState: (boolean) => void) => React.Node[];
 
 // key = change id, value = react component
 export type AnnotationFactory = (
