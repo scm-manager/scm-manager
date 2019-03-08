@@ -26,7 +26,8 @@ export { getPageFromMatch } from "./urls";
 export { default as Autocomplete} from "./Autocomplete";
 export { default as BranchSelector } from "./BranchSelector";
 
-export { apiClient, NOT_FOUND_ERROR, UNAUTHORIZED_ERROR, CONFLICT_ERROR } from "./apiclient.js";
+export { apiClient } from "./apiclient.js";
+export * from "./errors";
 
 export * from "./avatar";
 export * from "./buttons";

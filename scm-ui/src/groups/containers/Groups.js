@@ -78,13 +78,7 @@ class Groups extends React.Component<Props> {
         <GroupTable groups={groups} />
         {this.renderPaginator()}
         {this.renderCreateButton()}
-        <PageActions>
-          <Button
-            label={t("create-group-button.label")}
-            link="/groups/add"
-            color="primary"
-          />
-        </PageActions>
+        {this.renderPageActionCreateButton()}
       </Page>
     );
   }
@@ -99,7 +93,25 @@ class Groups extends React.Component<Props> {
 
   renderCreateButton() {
     if (this.props.canAddGroups) {
-      return <CreateGroupButton />;
+      return (
+        <CreateGroupButton />
+      );
+    } else {
+      return;
+    }
+  }
+
+  renderPageActionCreateButton() {
+    if (this.props.canAddGroups) {
+      return (
+        <PageActions>
+          <Button
+            label={this.props.t("create-group-button.label")}
+            link="/groups/add"
+            color="primary"
+          />
+        </PageActions>
+      );
     } else {
       return;
     }

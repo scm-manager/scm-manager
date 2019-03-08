@@ -177,7 +177,11 @@ public class RepositoryPermissionRootResource {
       .filter(filterPermission(permissionName))
       .findFirst()
       .orElseThrow(() -> notFound(entity(RepositoryPermission.class, namespace).in(Repository.class, namespace + "/" + name)));
-    dtoToModelMapper.modify(existingPermission, permission);
+    RepositoryPermission newPermission = dtoToModelMapper.map(permission);
+    if (!repository.removePermission(existingPermission)) {
+      throw new IllegalStateException(String.format("could not delete modified permission %s from repository %s/%s", existingPermission, namespace, name));
+    }
+    repository.addPermission(newPermission);
     manager.modify(repository);
     log.info("the permission with name: {} is updated.", permissionName);
     return Response.noContent().build();
@@ -210,7 +214,7 @@ public class RepositoryPermissionRootResource {
       .findFirst()
       .ifPresent(repository::removePermission);
     manager.modify(repository);
-    log.info("the permission with name: {} is updated.", permissionName);
+    log.info("the permission with name: {} is deleted.", permissionName);
     return Response.noContent().build();
   }
 

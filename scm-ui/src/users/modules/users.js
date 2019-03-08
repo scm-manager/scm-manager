@@ -35,6 +35,8 @@ export const DELETE_USER_FAILURE = `${DELETE_USER}_${types.FAILURE_SUFFIX}`;
 
 const CONTENT_TYPE_USER = "application/vnd.scmm-user+json;v=2";
 
+// TODO i18n for error messages
+
 // fetch users
 
 export function fetchUsers(link: string) {
@@ -55,8 +57,8 @@ export function fetchUsersByLink(link: string) {
       .then(data => {
         dispatch(fetchUsersSuccess(data));
       })
-      .catch(err => {
-        dispatch(fetchUsersFailure(link, err));
+      .catch(error => {
+        dispatch(fetchUsersFailure(link, error));
       });
   };
 }
@@ -105,8 +107,8 @@ function fetchUser(link: string, name: string) {
       .then(data => {
         dispatch(fetchUserSuccess(data));
       })
-      .catch(err => {
-        dispatch(fetchUserFailure(name, err));
+      .catch(error => {
+        dispatch(fetchUserFailure(name, error));
       });
   };
 }
@@ -151,7 +153,9 @@ export function createUser(link: string, user: User, callback?: () => void) {
           callback();
         }
       })
-      .catch(err => dispatch(createUserFailure(err)));
+      .catch(error =>
+        dispatch(createUserFailure(error))
+      );
   };
 }
 
@@ -250,8 +254,8 @@ export function deleteUser(user: User, callback?: () => void) {
           callback();
         }
       })
-      .catch(err => {
-        dispatch(deleteUserFailure(user, err));
+      .catch(error => {
+        dispatch(deleteUserFailure(user, error));
       });
   };
 }

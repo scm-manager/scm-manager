@@ -301,11 +301,18 @@ public class RepositoryPermissionRootResourceTest extends RepositoryTestBase {
 
   @Test
   public void shouldGetUpdatedPermissions() throws URISyntaxException {
-    createUserWithRepositoryAndPermissions(TEST_PERMISSIONS, PERMISSION_WRITE);
-    RepositoryPermission modifiedPermission = TEST_PERMISSIONS.get(0);
-    // modify the type to owner
-    modifiedPermission.setVerbs(new ArrayList<>(singletonList("*")));
-    ImmutableList<RepositoryPermission> expectedPermissions = ImmutableList.copyOf(TEST_PERMISSIONS);
+    ArrayList<RepositoryPermission> permissions = Lists
+      .newArrayList(
+        new RepositoryPermission("user_write", asList("*"), false),
+        new RepositoryPermission("user_read", singletonList("read"), false),
+        new RepositoryPermission("user_owner", singletonList("*"), false),
+        new RepositoryPermission("group_read", singletonList("read"), true),
+        new RepositoryPermission("group_write", asList("read", "modify"), true),
+        new RepositoryPermission("group_owner", singletonList("*"), true)
+      );
+    createUserWithRepositoryAndPermissions(permissions, PERMISSION_WRITE);
+    RepositoryPermission modifiedPermission = permissions.get(0);
+    ImmutableList<RepositoryPermission> expectedPermissions = ImmutableList.copyOf(permissions);
     assertExpectedRequest(requestPUTPermission
       .content("{\"name\" : \"" + modifiedPermission.getName() + "\" , \"verbs\" : [\"*\"], \"groupPermission\" : false}")
       .path(PATH_OF_ALL_PERMISSIONS + modifiedPermission.getName())

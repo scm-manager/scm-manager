@@ -54,8 +54,8 @@ export function fetchGroupsByLink(link: string) {
       .then(data => {
         dispatch(fetchGroupsSuccess(data));
       })
-      .catch(err => {
-        dispatch(fetchGroupsFailure(link, err));
+      .catch(error => {
+        dispatch(fetchGroupsFailure(link, error));
       });
   };
 }
@@ -104,8 +104,8 @@ function fetchGroup(link: string, name: string) {
       .then(data => {
         dispatch(fetchGroupSuccess(data));
       })
-      .catch(err => {
-        dispatch(fetchGroupFailure(name, err));
+      .catch(error => {
+        dispatch(fetchGroupFailure(name, error));
       });
   };
 }
@@ -149,12 +149,8 @@ export function createGroup(link: string, group: Group, callback?: () => void) {
           callback();
         }
       })
-      .catch(err => {
-        dispatch(
-          createGroupFailure(
-            err
-          )
-        );
+      .catch(error => {
+        dispatch(createGroupFailure(error));
       });
   };
 }
@@ -199,13 +195,8 @@ export function modifyGroup(group: Group, callback?: () => void) {
       .then(() => {
         dispatch(fetchGroupByLink(group));
       })
-      .catch(err => {
-        dispatch(
-          modifyGroupFailure(
-            group,
-            err
-          )
-        );
+      .catch(error => {
+        dispatch(modifyGroupFailure(group, error));
       });
   };
 }
@@ -257,8 +248,8 @@ export function deleteGroup(group: Group, callback?: () => void) {
           callback();
         }
       })
-      .catch(err => {
-        dispatch(deleteGroupFailure(group, err));
+      .catch(error => {
+        dispatch(deleteGroupFailure(group, error));
       });
   };
 }
@@ -342,7 +333,7 @@ function listReducer(state: any = {}, action: any = {}) {
         ...state,
         entries: groupNames,
         entry: {
-          groupCreatePermission: action.payload._links.create ? true : false,
+          groupCreatePermission: !!action.payload._links.create,
           page: action.payload.page,
           pageTotal: action.payload.pageTotal,
           _links: action.payload._links

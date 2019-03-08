@@ -11,6 +11,7 @@ import SourcesView from "./SourcesView";
 import HistoryView from "./HistoryView";
 import { getSources } from "../modules/sources";
 import { connect } from "react-redux";
+import { ExtensionPoint } from "@scm-manager/ui-extensions";
 
 type Props = {
   loading: boolean,
@@ -103,7 +104,7 @@ class Content extends React.Component<Props, State> {
 
   showMoreInformation() {
     const collapsed = this.state.collapsed;
-    const { classes, file, revision, t } = this.props;
+    const { classes, file, revision, t, repository } = this.props;
     const date = <DateFromNow date={file.lastModified} />;
     const description = file.description ? (
       <p>
@@ -120,12 +121,7 @@ class Content extends React.Component<Props, State> {
     const fileSize = file.directory ? "" : <FileSize bytes={file.length} />;
     if (!collapsed) {
       return (
-        <div
-          className={classNames(
-            "panel-block",
-            classes.hasBackground
-          )}
-        >
+        <div className={classNames("panel-block", classes.hasBackground)}>
           <table className={classNames("table", classes.hasBackground)}>
             <tbody>
               <tr>
@@ -148,6 +144,11 @@ class Content extends React.Component<Props, State> {
                 <td>{t("sources.content.description")}</td>
                 <td className="is-word-break">{description}</td>
               </tr>
+              <ExtensionPoint
+                name="repos.content.metadata"
+                renderAll={true}
+                props={{ file, repository, revision }}
+              />
             </tbody>
           </table>
         </div>

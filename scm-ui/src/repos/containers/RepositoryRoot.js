@@ -12,13 +12,13 @@ import { Route, Switch } from "react-router-dom";
 import type { Repository } from "@scm-manager/ui-types";
 
 import {
-  ErrorPage,
+  CollapsibleErrorPage,
   Loading,
   Navigation,
   SubNavigation,
   NavLink,
   Page,
-  Section
+  Section, ErrorPage
 } from "@scm-manager/ui-components";
 import { translate } from "react-i18next";
 import RepositoryDetails from "../components/RepositoryDetails";
@@ -82,13 +82,11 @@ class RepositoryRoot extends React.Component<Props> {
     const { loading, error, indexLinks, repository, t } = this.props;
 
     if (error) {
-      return (
-        <ErrorPage
-          title={t("repositoryRoot.errorTitle")}
-          subtitle={t("repositoryRoot.errorSubtitle")}
-          error={error}
-        />
-      );
+      return <ErrorPage
+        title={t("repositoryRoot.errorTitle")}
+        subtitle={t("repositoryRoot.errorSubtitle")}
+        error={error}
+      />
     }
 
     if (!repository || loading) {

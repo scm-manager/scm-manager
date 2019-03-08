@@ -27,12 +27,16 @@ public class SimpleGitWorkdirFactoryTest extends AbstractGitCommandTestBase {
   @Rule
   public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
+  // keep this so that it will not be garbage collected (Transport keeps this in a week reference)
+  private ScmTransportProtocol proto;
+
   @Before
   public void bindScmProtocol() {
     HookContextFactory hookContextFactory = new HookContextFactory(mock(PreProcessorUtil.class));
     HookEventFacade hookEventFacade = new HookEventFacade(of(mock(RepositoryManager.class)), hookContextFactory);
     GitRepositoryHandler gitRepositoryHandler = mock(GitRepositoryHandler.class);
-    Transport.register(new ScmTransportProtocol(of(hookEventFacade), of(gitRepositoryHandler)));
+    proto = new ScmTransportProtocol(of(hookEventFacade), of(gitRepositoryHandler));
+    Transport.register(proto);
   }
 
   @Test

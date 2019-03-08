@@ -229,8 +229,8 @@ export function modifyRepo(repository: Repository, callback?: () => void) {
       .then(() => {
         dispatch(fetchRepoByLink(repository));
       })
-      .catch(err => {
-        dispatch(modifyRepoFailure(repository, err));
+      .catch(error => {
+        dispatch(modifyRepoFailure(repository, error));
       });
   };
 }

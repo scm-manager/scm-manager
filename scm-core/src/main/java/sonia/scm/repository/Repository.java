@@ -307,8 +307,8 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
     this.permissions.add(newPermission);
   }
 
-  public void removePermission(RepositoryPermission permission) {
-    this.permissions.remove(permission);
+  public boolean removePermission(RepositoryPermission permission) {
+    return this.permissions.remove(permission);
   }
 
   public void setPublicReadable(boolean publicReadable) {
