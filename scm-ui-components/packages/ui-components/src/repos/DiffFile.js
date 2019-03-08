@@ -56,6 +56,12 @@ class DiffFile extends React.Component<Props, State> {
     }));
   };
 
+  setCollapse = (collapsed: boolean) => {
+    this.setState({
+      collapsed
+    });
+  };
+
   createHunkHeader = (hunk: Hunk, i: number) => {
     const { classes } = this.props;
     if (i > 0) {
@@ -166,7 +172,7 @@ class DiffFile extends React.Component<Props, State> {
       );
     }
 
-    const fileControls = fileControlFactory ? fileControlFactory(file) : null;
+    const fileControls = fileControlFactory ? fileControlFactory(file, this.setCollapse) : null;
     return (
       <div className={classNames("panel", classes.panel)}>
         <div className="panel-heading">

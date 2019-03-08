@@ -58,7 +58,7 @@ export type DiffEventContext = BaseContext & {
 
 export type DiffEventHandler = (context: DiffEventContext) => void;
 
-export type FileControlFactory = (file: File) => ?React.Node;
+export type FileControlFactory = (file: File, setCollapseState: (boolean) => void) => ?React.Node;
 
 export type DiffObjectProps = {
   sideBySide: boolean,
