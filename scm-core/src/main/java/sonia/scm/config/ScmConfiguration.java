@@ -185,7 +185,7 @@ public class ScmConfiguration implements Configuration {
   private boolean enabledXsrfProtection = true;
 
   @XmlElement(name = "default-namespace-strategy")
-  private String defaultNamespaceStrategy = "sonia.scm.repository.DefaultNamespaceStrategy";
+  private String defaultNamespaceStrategy = "sonia.scm.repository.UsernameNamespaceStrategy";
 
 
   /**
