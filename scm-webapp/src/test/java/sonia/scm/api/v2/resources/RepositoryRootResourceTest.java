@@ -35,6 +35,7 @@ import java.net.URL;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Stream.of;
 import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
+import static javax.servlet.http.HttpServletResponse.SC_CONFLICT;
 import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
@@ -197,6 +198,26 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   }
 
   @Test
+  public void shouldHandleUpdateForConcurrentlyChangedRepository() throws Exception {
+    mockRepository("space", "repo", 1337);
+
+    URL url = Resources.getResource("sonia/scm/api/v2/repository-test-update.json");
+    byte[] repository = Resources.toByteArray(url);
+
+    MockHttpRequest request = MockHttpRequest
+      .put("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo")
+      .contentType(VndMediaType.REPOSITORY)
+      .content(repository);
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(SC_CONFLICT, response.getStatus());
+    assertThat(response.getContentAsString()).contains("space/repo");
+    verify(repositoryManager, never()).modify(anyObject());
+  }
+
+  @Test
   public void shouldHandleUpdateForExistingRepositoryForChangedNamespace() throws Exception {
     mockRepository("wrong", "repo");
 
@@ -313,9 +334,16 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   }
 
   private Repository mockRepository(String namespace, String name) {
+    return mockRepository(namespace, name, 0);
+  }
+
+  private Repository mockRepository(String namespace, String name, long lastModified) {
     Repository repository = new Repository();
     repository.setNamespace(namespace);
     repository.setName(name);
+    if (lastModified > 0) {
+      repository.setLastModified(lastModified);
+    }
     String id = namespace + "-" + name;
     repository.setId(id);
     when(repositoryManager.get(new NamespaceAndName(namespace, name))).thenReturn(repository);

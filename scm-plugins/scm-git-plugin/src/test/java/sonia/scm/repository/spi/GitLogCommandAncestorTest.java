@@ -35,6 +35,7 @@
 package sonia.scm.repository.spi;
 
 import org.junit.Test;
+import sonia.scm.NotFoundException;
 import sonia.scm.repository.ChangesetPagingResult;
 
 import static org.junit.Assert.assertEquals;
@@ -93,6 +94,28 @@ public class GitLogCommandAncestorTest extends AbstractGitCommandTestBase
     assertEquals("a49a28e0beb0ab55f985598d05b8628c2231c9b6", result.getChangesets().get(4).getId());
     assertEquals("5023b850c2077db857593a3c0269329c254a370d", result.getChangesets().get(5).getId());
     assertEquals("201ecc1131e6b99fb0a0fe9dcbc8c044383e1a07", result.getChangesets().get(6).getId());
+  }
+
+  @Test(expected = NotFoundException.class)
+  public void testAncestorWithDeletedSourceBranch()
+  {
+    LogCommandRequest request = new LogCommandRequest();
+
+    request.setBranch("no_such_branch");
+    request.setAncestorChangeset("master");
+
+    createCommand().getChangesets(request);
+  }
+
+  @Test(expected = NotFoundException.class)
+  public void testAncestorWithDeletedAncestorBranch()
+  {
+    LogCommandRequest request = new LogCommandRequest();
+
+    request.setBranch("b");
+    request.setAncestorChangeset("no_such_branch");
+
+    createCommand().getChangesets(request);
   }
 
   private GitLogCommand createCommand()

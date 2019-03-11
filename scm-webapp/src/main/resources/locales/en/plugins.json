@@ -1,5 +1,9 @@
 {
   "permissions": {
+    "*": {
+      "displayName": "Global administrator",
+      "description": "May administer the entire instance"
+    },
     "repository": {
       "read,pull": {
         "*": {
