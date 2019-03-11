@@ -15,14 +15,15 @@ import {
   isFetchNamespaceStrategiesPending,
   getFetchNamespaceStrategiesFailure
 } from "./namespaceStrategies";
+import { MODIFY_CONFIG_SUCCESS } from "./config";
 
 const strategies = {
-  current: "sonia.scm.repository.UsernameNamespaceStrategy",
+  current: "UsernameNamespaceStrategy",
   available: [
-    "sonia.scm.repository.UsernameNamespaceStrategy",
-    "sonia.scm.repository.CustomNamespaceStrategy",
-    "sonia.scm.repository.CurrentYearNamespaceStrategy",
-    "sonia.scm.repository.RepositoryTypeNamespaceStrategy"
+    "UsernameNamespaceStrategy",
+    "CustomNamespaceStrategy",
+    "CurrentYearNamespaceStrategy",
+    "RepositoryTypeNamespaceStrategy"
   ],
   _links: {
     self: {
@@ -135,13 +136,24 @@ describe("namespace strategies fetch", () => {
 
 describe("namespace strategies reducer", () => {
   it("should return unmodified state on unknown action", () => {
-    const state = [];
+    const state = {};
     expect(reducer(state)).toBe(state);
   });
 
   it("should store the strategies on success", () => {
-    const newState = reducer([], fetchNamespaceStrategiesSuccess(strategies));
+    const newState = reducer({}, fetchNamespaceStrategiesSuccess(strategies));
     expect(newState).toBe(strategies);
+  });
+
+  it("should clear store if config was modified", () => {
+    const modifyConfigAction = {
+      type: MODIFY_CONFIG_SUCCESS,
+      payload: {
+        defaultNamespaceStrategy: "CustomNamespaceStrategy"
+      }
+    };
+    const newState = reducer(strategies, modifyConfigAction);
+    expect(newState.current).toEqual("CustomNamespaceStrategy");
   });
 });
 

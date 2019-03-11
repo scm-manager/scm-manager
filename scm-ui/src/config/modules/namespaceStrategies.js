@@ -5,6 +5,7 @@ import type { Action, NamespaceStrategies } from "@scm-manager/ui-types";
 import { apiClient } from "@scm-manager/ui-components";
 import { isPending } from "../../modules/pending";
 import { getFailure } from "../../modules/failure";
+import { MODIFY_CONFIG_SUCCESS } from "./config";
 
 export const FETCH_NAMESPACESTRATEGIES_TYPES =
   "scm/config/FETCH_NAMESPACESTRATEGIES_TYPES";
@@ -22,7 +23,10 @@ export function fetchNamespaceStrategiesIfNeeded() {
   return function(dispatch: any, getState: () => Object) {
     const state = getState();
     if (shouldFetchNamespaceStrategies(state)) {
-      return fetchNamespaceStrategies(dispatch, state.indexResources.links.namespaceStrategies.href);
+      return fetchNamespaceStrategies(
+        dispatch,
+        state.indexResources.links.namespaceStrategies.href
+      );
     }
   };
 }
@@ -75,14 +79,20 @@ export function fetchNamespaceStrategiesFailure(error: Error): Action {
 // reducers
 
 export default function reducer(
-  state: NamespaceStrategies = {},
+  state: Object = {},
   action: Action = { type: "UNKNOWN" }
-): NamespaceStrategies {
+): Object {
   if (
     action.type === FETCH_NAMESPACESTRATEGIES_TYPES_SUCCESS &&
     action.payload
   ) {
     return action.payload;
+  } else if (action.type === MODIFY_CONFIG_SUCCESS && action.payload) {
+    const config = action.payload;
+    return {
+      ...state,
+      current: config.defaultNamespaceStrategy
+    };
   }
   return state;
 }
