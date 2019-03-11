@@ -59,7 +59,7 @@ public class NamespaceStrategyResource {
   }
 
   private String strategyAsString(NamespaceStrategy namespaceStrategy) {
-    return namespaceStrategy.getClass().getName();
+    return namespaceStrategy.getClass().getSimpleName();
   }
 
   private List<String> collectStrategyNames() {

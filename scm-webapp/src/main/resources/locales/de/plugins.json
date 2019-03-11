@@ -143,5 +143,11 @@
       "displayName": "Ungültige Eingabe",
       "description": "Die eingegebenen Daten konnten nicht validiert werden. Bitte korrigieren Sie die Eingaben und senden Sie sie erneut."
     }
+  },
+  "namespaceStrategies": {
+    "sonia.scm.repository.UsernameNamespaceStrategy":  "Benutzername",
+    "sonia.scm.repository.CustomNamespaceStrategy":  "Benutzerdefiniert",
+    "sonia.scm.repository.CurrentYearNamespaceStrategy":  "Aktuelles Jahr",
+    "sonia.scm.repository.RepositoryTypeNamespaceStrategy": "Repository Typ"
   }
 }

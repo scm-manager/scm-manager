@@ -34,11 +34,11 @@ class NamespaceStrategyResourceTest {
     NamespaceStrategyResource resource = new NamespaceStrategyResource(namespaceStrategies, current);
 
     NamespaceStrategiesDto dto = resource.get(uriInfo);
-    assertThat(dto.getCurrent()).isEqualTo(MegaNamespaceStrategy.class.getName());
+    assertThat(dto.getCurrent()).isEqualTo(MegaNamespaceStrategy.class.getSimpleName());
     assertThat(dto.getAvailable()).contains(
-      AwesomeNamespaceStrategy.class.getName(),
-      SuperNamespaceStrategy.class.getName(),
-      MegaNamespaceStrategy.class.getName()
+      AwesomeNamespaceStrategy.class.getSimpleName(),
+      SuperNamespaceStrategy.class.getSimpleName(),
+      MegaNamespaceStrategy.class.getSimpleName()
     );
     assertThat(dto.getLinks().getLinkBy("self").get().getHref()).isEqualTo("/namespace-strategies");
   }
