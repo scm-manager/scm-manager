@@ -1,5 +1,9 @@
 {
   "permissions": {
+    "*": {
+      "displayName": "Globaler Administrator",
+      "description": "Darf die komplette Instanz administrieren."
+    },
     "repository": {
       "read,pull": {
         "*": {
