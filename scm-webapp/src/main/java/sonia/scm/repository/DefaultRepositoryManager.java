@@ -52,6 +52,7 @@ import sonia.scm.util.CollectionAppender;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 
+import javax.inject.Provider;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -84,7 +85,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
   private final KeyGenerator keyGenerator;
   private final RepositoryDAO repositoryDAO;
   private final Set<Type> types;
-  private NamespaceStrategy namespaceStrategy;
+  private final Provider<NamespaceStrategy> namespaceStrategyProvider;
   private final ManagerDaoAdapter<Repository> managerDaoAdapter;
 
 
@@ -92,11 +93,11 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
   public DefaultRepositoryManager(ScmConfiguration configuration,
                                   SCMContextProvider contextProvider, KeyGenerator keyGenerator,
                                   RepositoryDAO repositoryDAO, Set<RepositoryHandler> handlerSet,
-                                  NamespaceStrategy namespaceStrategy) {
+                                  Provider<NamespaceStrategy> namespaceStrategyProvider) {
     this.configuration = configuration;
     this.keyGenerator = keyGenerator;
     this.repositoryDAO = repositoryDAO;
-    this.namespaceStrategy = namespaceStrategy;
+    this.namespaceStrategyProvider = namespaceStrategyProvider;
 
     ThreadFactory factory = new ThreadFactoryBuilder()
       .setNameFormat(THREAD_NAME).build();
@@ -130,7 +131,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
 
   public Repository create(Repository repository, boolean initRepository) {
     repository.setId(keyGenerator.createKey());
-    repository.setNamespace(namespaceStrategy.createNamespace(repository));
+    repository.setNamespace(namespaceStrategyProvider.get().createNamespace(repository));
 
     logger.info("create repository {}/{} of type {} in namespace {}", repository.getNamespace(), repository.getName(), repository.getType(), repository.getNamespace());
 
