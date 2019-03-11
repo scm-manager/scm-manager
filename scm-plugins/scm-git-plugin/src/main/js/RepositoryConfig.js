@@ -18,7 +18,8 @@ type State = {
   error?: Error,
   branches: Branch[],
   selectedBranchName?: string,
-  defaultBranchChanged: boolean
+  defaultBranchChanged: boolean,
+  disabled: boolean
 };
 
 const GIT_CONFIG_CONTENT_TYPE = "application/vnd.scmm-gitConfig+json";
@@ -33,7 +34,8 @@ class RepositoryConfig extends React.Component<Props, State> {
       loadingDefaultBranch: true,
       submitPending: false,
       branches: [],
-      defaultBranchChanged: false
+      defaultBranchChanged: false,
+      disabled: true
     };
   }
 
@@ -53,11 +55,11 @@ class RepositoryConfig extends React.Component<Props, State> {
     apiClient
       .get(repository._links.configuration.href)
       .then(response => response.json())
-      .then(payload => payload.defaultBranch)
-      .then(selectedBranchName =>
+      .then(payload =>
         this.setState({
           ...this.state,
-          selectedBranchName,
+          selectedBranchName: payload.defaultBranch,
+          disabled: !payload._links.update,
           loadingDefaultBranch: false
         })
       )
@@ -98,7 +100,7 @@ class RepositoryConfig extends React.Component<Props, State> {
 
   render() {
     const { t } = this.props;
-    const { loadingBranches, loadingDefaultBranch, submitPending, error } = this.state;
+    const { loadingBranches, loadingDefaultBranch, submitPending, error, disabled } = this.state;
 
     if (error) {
       return (
@@ -121,11 +123,12 @@ class RepositoryConfig extends React.Component<Props, State> {
               branches={this.state.branches}
               selected={this.branchSelected}
               selectedBranch={this.state.selectedBranchName}
+              disabled={disabled}
             />
             <SubmitButton
               label={t("scm-git-plugin.repo-config.submit")}
               loading={submitPending}
-              disabled={!this.state.selectedBranchName}
+              disabled={!this.state.selectedBranchName || disabled}
             />
           </form>
           <hr />
