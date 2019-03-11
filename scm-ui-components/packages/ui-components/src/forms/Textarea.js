@@ -12,12 +12,19 @@ type Props = {
   label?: string,
   placeholder?: SelectItem[],
   value?: string,
+  autofocus?: boolean,
   onChange: (value: string, name?: string) => void,
   helpText?: string
 };
 
 class Textarea extends React.Component<Props> {
   field: ?HTMLTextAreaElement;
+
+  componentDidMount() {
+    if (this.props.autofocus && this.field) {
+      this.field.focus();
+    }
+  }
 
   handleInput = (event: SyntheticInputEvent<HTMLTextAreaElement>) => {
     this.props.onChange(event.target.value, this.props.name);

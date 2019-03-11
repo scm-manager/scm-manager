@@ -11,4 +11,5 @@ export { default as Textarea } from "./Textarea.js";
 export { default as PasswordConfirmation } from "./PasswordConfirmation.js";
 export { default as LabelWithHelpIcon } from "./LabelWithHelpIcon.js";
 export { default as DropDown } from "./DropDown.js";
+export { default as MarkdownView } from "./MarkdownView.js";
 

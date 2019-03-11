@@ -35,7 +35,6 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.annotations.VisibleForTesting;
 import com.google.inject.Inject;
 import org.eclipse.jgit.http.server.resolver.DefaultReceivePackFactory;
 import org.eclipse.jgit.lib.Repository;
@@ -43,6 +42,7 @@ import org.eclipse.jgit.transport.ReceivePack;
 import org.eclipse.jgit.transport.resolver.ReceivePackFactory;
 import org.eclipse.jgit.transport.resolver.ServiceNotAuthorizedException;
 import org.eclipse.jgit.transport.resolver.ServiceNotEnabledException;
+import sonia.scm.protocolcommand.git.BaseReceivePackFactory;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.spi.HookEventFacade;
 
@@ -56,42 +56,20 @@ import javax.servlet.http.HttpServletRequest;
  *
  * @author Sebastian Sdorra
  */
-public class GitReceivePackFactory implements ReceivePackFactory<HttpServletRequest>
+public class GitReceivePackFactory extends BaseReceivePackFactory<HttpServletRequest>
 {
 
-  private final GitRepositoryHandler handler;
-
-  private ReceivePackFactory wrapped;
-
-  private final GitReceiveHook hook;
+  private ReceivePackFactory<HttpServletRequest> wrapped;
 
   @Inject
   public GitReceivePackFactory(GitRepositoryHandler handler, HookEventFacade hookEventFacade) {
-    this.handler = handler;
-    this.hook = new GitReceiveHook(hookEventFacade, handler);
-    this.wrapped =  new DefaultReceivePackFactory();
+    super(handler, hookEventFacade);
+    this.wrapped = new DefaultReceivePackFactory();
   }
 
   @Override
-  public ReceivePack create(HttpServletRequest request, Repository repository)
+  protected ReceivePack createBasicReceivePack(HttpServletRequest request, Repository repository)
     throws ServiceNotEnabledException, ServiceNotAuthorizedException {
-    ReceivePack receivePack = wrapped.create(request, repository);
-    receivePack.setAllowNonFastForwards(isNonFastForwardAllowed());
-
-    receivePack.setPreReceiveHook(hook);
-    receivePack.setPostReceiveHook(hook);
-    // apply collecting listener, to be able to check which commits are new
-    CollectingPackParserListener.set(receivePack);
-    
-    return receivePack;
-  }
-
-  private boolean isNonFastForwardAllowed() {
-    return ! handler.getConfig().isNonFastForwardDisallowed();
-  }
-
-  @VisibleForTesting
-  void setWrapped(ReceivePackFactory wrapped) {
-    this.wrapped = wrapped;
+    return wrapped.create(request, repository);
   }
 }

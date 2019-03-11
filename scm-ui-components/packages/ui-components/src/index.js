@@ -37,3 +37,16 @@ export * from "./layout";
 export * from "./modals";
 export * from "./navigation";
 export * from "./repos";
+
+// not sure if it is required
+export type {
+  File,
+  FileChangeType,
+  Hunk,
+  Change,
+  BaseContext,
+  AnnotationFactory,
+  AnnotationFactoryContext,
+  DiffEventHandler,
+  DiffEventContext
+} from "./repos";

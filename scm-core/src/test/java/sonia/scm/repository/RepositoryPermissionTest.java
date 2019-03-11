@@ -50,8 +50,7 @@ class RepositoryPermissionTest {
   @Test
   void shouldBeEqualWithRedundantVerbs() {
     RepositoryPermission permission1 = new RepositoryPermission("name1", asList("one", "two"), false);
-    RepositoryPermission permission2 = new RepositoryPermission("name1", asList("one", "two"), false);
-    permission2.setVerbs(asList("one", "two", "two"));
+    RepositoryPermission permission2 = new RepositoryPermission("name1", asList("one", "two", "two"), false);
 
     assertThat(permission1).isEqualTo(permission2);
   }

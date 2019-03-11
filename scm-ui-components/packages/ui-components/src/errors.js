@@ -52,6 +52,13 @@ export class NotFoundError extends BackendError {
     super(content, "NotFoundError", statusCode);
   }
 }
+
+export class ConflictError extends BackendError {
+  constructor(content: BackendErrorContent, statusCode: number) {
+    super(content, "ConflictError", statusCode);
+  }
+}
+
 export function createBackendError(
   content: BackendErrorContent,
   statusCode: number
@@ -59,6 +66,8 @@ export function createBackendError(
   switch (statusCode) {
     case 404:
       return new NotFoundError(content, statusCode);
+    case 409:
+      return new ConflictError(content, statusCode);
     default:
       return new BackendError(content, "BackendError", statusCode);
   }

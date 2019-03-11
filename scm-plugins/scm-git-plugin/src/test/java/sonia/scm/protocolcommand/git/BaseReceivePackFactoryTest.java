@@ -29,13 +29,15 @@
  *
  */
 
-package sonia.scm.web;
+package sonia.scm.protocolcommand.git;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.ReceivePack;
 import org.eclipse.jgit.transport.resolver.ReceivePackFactory;
+import org.eclipse.jgit.transport.resolver.ServiceNotAuthorizedException;
+import org.eclipse.jgit.transport.resolver.ServiceNotEnabledException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -45,21 +47,20 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.repository.GitConfig;
 import sonia.scm.repository.GitRepositoryHandler;
+import sonia.scm.web.CollectingPackParserListener;
+import sonia.scm.web.GitReceiveHook;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 
 import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 
-/**
- * Unit tests for {@link GitReceivePackFactory}.
- */
 @RunWith(MockitoJUnitRunner.class)
-public class GitReceivePackFactoryTest {
+public class BaseReceivePackFactoryTest {
 
   @Mock
   private GitRepositoryHandler handler;
@@ -67,12 +68,11 @@ public class GitReceivePackFactoryTest {
   private GitConfig config;
 
   @Mock
-  private ReceivePackFactory wrappedReceivePackFactory;
+  private ReceivePackFactory<Object> wrappedReceivePackFactory;
 
-  private GitReceivePackFactory factory;
+  private BaseReceivePackFactory<Object> factory;
 
-  @Mock
-  private HttpServletRequest request;
+  private Object request = new Object();
 
   private Repository repository;
 
@@ -89,8 +89,12 @@ public class GitReceivePackFactoryTest {
     ReceivePack receivePack = new ReceivePack(repository);
     when(wrappedReceivePackFactory.create(request, repository)).thenReturn(receivePack);
 
-    factory = new GitReceivePackFactory(handler, null);
-    factory.setWrapped(wrappedReceivePackFactory);
+    factory = new BaseReceivePackFactory<Object>(handler, null) {
+      @Override
+      protected ReceivePack createBasicReceivePack(Object request, Repository repository) throws ServiceNotEnabledException, ServiceNotAuthorizedException {
+        return wrappedReceivePackFactory.create(request, repository);
+      }
+    };
   }
 
   private Repository createRepositoryForTesting() throws GitAPIException, IOException {
@@ -105,6 +109,7 @@ public class GitReceivePackFactoryTest {
     assertThat(receivePack.getPreReceiveHook(), instanceOf(GitReceiveHook.class));
     assertThat(receivePack.getPostReceiveHook(), instanceOf(GitReceiveHook.class));
     assertTrue(receivePack.isAllowNonFastForwards());
+    verify(wrappedReceivePackFactory).create(request, repository);
   }
 
   @Test
