@@ -79,6 +79,7 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
    */
   private static final Logger logger =
     LoggerFactory.getLogger(GitLogCommand.class);
+  public static final String REVISION = "Revision";
 
   //~--- constructors ---------------------------------------------------------
 
@@ -142,6 +143,10 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
     catch (IOException ex)
     {
       logger.error("could not open repository", ex);
+    }
+    catch (NullPointerException e)
+    {
+      throw notFound(entity(REVISION, revision).in(this.repository));
     }
     finally
     {
@@ -208,7 +213,7 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
         if (!Strings.isNullOrEmpty(request.getAncestorChangeset())) {
           ancestorId = repository.resolve(request.getAncestorChangeset());
           if (ancestorId == null) {
-            throw notFound(entity("Revision", request.getAncestorChangeset()).in(this.repository));
+            throw notFound(entity(REVISION, request.getAncestorChangeset()).in(this.repository));
           }
         }
 
@@ -250,7 +255,7 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
             }
           }
         } else if (ancestorId != null) {
-          throw notFound(entity("Revision", request.getBranch()).in(this.repository));
+          throw notFound(entity(REVISION, request.getBranch()).in(this.repository));
         }
 
         if (branch != null) {
@@ -267,7 +272,7 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
     }
     catch (MissingObjectException e)
     {
-      throw notFound(entity("Revision", e.getObjectId().getName()).in(repository));
+      throw notFound(entity(REVISION, e.getObjectId().getName()).in(repository));
     }
     catch (NotFoundException e)
     {
