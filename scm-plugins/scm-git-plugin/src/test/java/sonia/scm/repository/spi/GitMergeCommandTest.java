@@ -16,12 +16,14 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import sonia.scm.NotFoundException;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.api.HookContextFactory;
 import sonia.scm.repository.api.MergeCommandResult;
+import sonia.scm.repository.api.MergeDryRunCommandResult;
 import sonia.scm.user.User;
 
 import java.io.IOException;
@@ -218,6 +220,46 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
     // If the file is missing (aka not merged correctly) this will throw a MissingObjectException:
     byte[] contentOfFileB = repository.open(repository.resolve("9513e9c76e73f3e562fd8e4c909d0607113c77c6")).getBytes();
     assertThat(new String(contentOfFileB)).isEqualTo("b\ncontent from branch\n");
+  }
+
+  @Test(expected = NotFoundException.class)
+  public void shouldHandleNotExistingSourceBranchInMerge() {
+    GitMergeCommand command = createCommand();
+    MergeCommandRequest request = new MergeCommandRequest();
+    request.setTargetBranch("mergeable");
+    request.setBranchToMerge("not_existing");
+
+    command.merge(request);
+  }
+
+  @Test(expected = NotFoundException.class)
+  public void shouldHandleNotExistingTargetBranchInMerge() {
+    GitMergeCommand command = createCommand();
+    MergeCommandRequest request = new MergeCommandRequest();
+    request.setTargetBranch("not_existing");
+    request.setBranchToMerge("master");
+
+    command.merge(request);
+  }
+
+  @Test(expected = NotFoundException.class)
+  public void shouldHandleNotExistingSourceBranchInDryRun() {
+    GitMergeCommand command = createCommand();
+    MergeCommandRequest request = new MergeCommandRequest();
+    request.setTargetBranch("mergeable");
+    request.setBranchToMerge("not_existing");
+
+    command.dryRun(request);
+  }
+
+  @Test(expected = NotFoundException.class)
+  public void shouldHandleNotExistingTargetBranchInDryRun() {
+    GitMergeCommand command = createCommand();
+    MergeCommandRequest request = new MergeCommandRequest();
+    request.setTargetBranch("not_existing");
+    request.setBranchToMerge("master");
+
+    command.dryRun(request);
   }
 
   private GitMergeCommand createCommand() {
