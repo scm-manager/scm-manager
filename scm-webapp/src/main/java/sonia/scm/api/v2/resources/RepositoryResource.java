@@ -148,7 +148,8 @@ public class RepositoryResource {
     return adapter.update(
       loadBy(namespace, name),
       existing -> processUpdate(repository, existing),
-      nameAndNamespaceStaysTheSame(namespace, name)
+      nameAndNamespaceStaysTheSame(namespace, name),
+      r -> r.getNamespaceAndName().logString()
     );
   }
 
