@@ -34,6 +34,8 @@ package sonia.scm.api.rest;
 //~--- non-JDK imports --------------------------------------------------------
 
 import org.apache.shiro.authz.AuthorizationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -50,12 +52,17 @@ public class AuthorizationExceptionMapper
   extends StatusExceptionMapper<AuthorizationException>
 {
 
-  /**
-   * Constructs ...
-   *
-   */
+  private static final Logger LOG = LoggerFactory.getLogger(AuthorizationExceptionMapper.class);
+
   public AuthorizationExceptionMapper()
   {
     super(AuthorizationException.class, Response.Status.FORBIDDEN);
+  }
+
+  @Override
+  public Response toResponse(AuthorizationException exception) {
+    LOG.info("user is missing permission: {}", exception.getMessage());
+    LOG.trace("AuthorizationException:", exception);
+    return super.toResponse(exception);
   }
 }
