@@ -62,9 +62,21 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
     try {
       Repository repository = context.open();
       ResolveMerger merger = (ResolveMerger) MergeStrategy.RECURSIVE.newMerger(repository, true);
-      return new MergeDryRunCommandResult(merger.merge(repository.resolve(request.getBranchToMerge()), repository.resolve(request.getTargetBranch())));
+      return new MergeDryRunCommandResult(
+        merger.merge(
+          resolveRevisionOrThrowNotFound(repository, request.getBranchToMerge()),
+          resolveRevisionOrThrowNotFound(repository, request.getTargetBranch())));
     } catch (IOException e) {
       throw new InternalRepositoryException(context.getRepository(), "could not clone repository for merge", e);
+    }
+  }
+
+  private ObjectId resolveRevisionOrThrowNotFound(Repository repository, String revision) throws IOException {
+    ObjectId resolved = repository.resolve(revision);
+    if (resolved == null) {
+      throw notFound(entity("revision", revision).in(context.getRepository()));
+    } else {
+      return resolved;
     }
   }
 
@@ -110,9 +122,6 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
     private void checkOutTargetAsNewLocalBranch() throws IOException {
       try {
         ObjectId targetRevision = resolveRevision(target);
-        if (targetRevision == null) {
-          throw notFound(entity("revision", target).in(context.getRepository()));
-        }
         clone.checkout().setStartPoint(targetRevision.getName()).setName(target).setCreateBranch(true).call();
       } catch (RefNotFoundException e) {
         logger.debug("could not checkout target branch {} for merge as local branch", target, e);
@@ -126,9 +135,6 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
       MergeResult result;
       try {
         ObjectId sourceRevision = resolveRevision(toMerge);
-        if (sourceRevision == null) {
-          throw notFound(entity("revision", toMerge).in(context.getRepository()));
-        }
         result = clone.merge()
           .setFastForward(FastForwardMode.NO_FF)
           .setCommit(false) // we want to set the author manually
@@ -190,10 +196,10 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
       return MergeCommandResult.failure(result.getConflicts().keySet());
     }
 
-    private ObjectId resolveRevision(String branchToMerge) throws IOException {
-      ObjectId resolved = clone.getRepository().resolve(branchToMerge);
+    private ObjectId resolveRevision(String revision) throws IOException {
+      ObjectId resolved = clone.getRepository().resolve(revision);
       if (resolved == null) {
-        return clone.getRepository().resolve("origin/" + branchToMerge);
+        return resolveRevisionOrThrowNotFound(clone.getRepository(), "origin/" + revision);
       } else {
         return resolved;
       }

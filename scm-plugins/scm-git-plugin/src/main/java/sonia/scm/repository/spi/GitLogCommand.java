@@ -49,6 +49,7 @@ import org.eclipse.jgit.treewalk.filter.PathFilter;
 import org.eclipse.jgit.treewalk.filter.TreeFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.NotFoundException;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.GitChangesetConverter;
@@ -206,6 +207,9 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
 
         if (!Strings.isNullOrEmpty(request.getAncestorChangeset())) {
           ancestorId = repository.resolve(request.getAncestorChangeset());
+          if (ancestorId == null) {
+            throw notFound(entity("Revision", request.getAncestorChangeset()).in(this.repository));
+          }
         }
 
         revWalk = new RevWalk(repository);
@@ -245,6 +249,8 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
               break;
             }
           }
+        } else if (ancestorId != null) {
+          throw notFound(entity("Revision", request.getBranch()).in(this.repository));
         }
 
         if (branch != null) {
@@ -262,6 +268,10 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
     catch (MissingObjectException e)
     {
       throw notFound(entity("Revision", e.getObjectId().getName()).in(repository));
+    }
+    catch (NotFoundException e)
+    {
+      throw e;
     }
     catch (Exception ex)
     {
