@@ -1,7 +1,9 @@
 // @flow
 import React from "react";
 import { translate } from "react-i18next";
-import { Checkbox, InputField } from "@scm-manager/ui-components";
+import { Checkbox, InputField, Select } from "@scm-manager/ui-components";
+import type { NamespaceStrategies } from "@scm-manager/ui-types";
+import NamespaceStrategySelect from "./NamespaceStrategySelect";
 
 type Props = {
   realmDescription: string,
@@ -13,12 +15,15 @@ type Props = {
   pluginUrl: string,
   enabledXsrfProtection: boolean,
   defaultNamespaceStrategy: string,
-  t: string => string,
+  namespaceStrategies?: NamespaceStrategies,
   onChange: (boolean, any, string) => void,
-  hasUpdatePermission: boolean
+  hasUpdatePermission: boolean,
+  // context props
+  t: string => string
 };
 
 class GeneralSettings extends React.Component<Props> {
+
   render() {
     const {
       t,
@@ -31,7 +36,8 @@ class GeneralSettings extends React.Component<Props> {
       pluginUrl,
       enabledXsrfProtection,
       defaultNamespaceStrategy,
-      hasUpdatePermission
+      hasUpdatePermission,
+      namespaceStrategies
     } = this.props;
 
     return (
@@ -67,13 +73,14 @@ class GeneralSettings extends React.Component<Props> {
                 />
                 </div>
                 <div className="column is-half">
-                <InputField
-                  label={t("general-settings.default-namespace-strategy")}
-                  onChange={this.handleDefaultNamespaceStrategyChange}
-                  value={defaultNamespaceStrategy}
-                  disabled={!hasUpdatePermission}
-                  helpText={t("help.defaultNameSpaceStrategyHelpText")}
-                />
+                  <NamespaceStrategySelect
+                    label={t("general-settings.default-namespace-strategy")}
+                    onChange={this.handleDefaultNamespaceStrategyChange}
+                    value={defaultNamespaceStrategy}
+                    disabled={!hasUpdatePermission}
+                    namespaceStrategies={namespaceStrategies}
+                    helpText={t("help.defaultNameSpaceStrategyHelpText")}
+                  />
                 </div>
             </div>
             <div className="columns">

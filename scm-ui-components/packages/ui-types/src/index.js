@@ -26,3 +26,5 @@ export type { SubRepository, File } from "./Sources";
 export type { SelectValue, AutocompleteObject } from "./Autocomplete";
 
 export type { AvailableRepositoryPermissions, RepositoryRole } from "./AvailableRepositoryPermissions";
+
+export type { NamespaceStrategies } from "./NamespaceStrategies";
