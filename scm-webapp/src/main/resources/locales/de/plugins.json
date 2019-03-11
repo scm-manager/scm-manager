@@ -51,11 +51,11 @@
       },
       "read,write": {
         "global": {
-          "displayName": "zentrale Konfiguration",
+          "displayName": "Zentrale Konfiguration",
           "description": "Darf die Konfiguration des SCM-Manager anpassen"
         },
         "*": {
-          "displayName": "zentrale + Plugin Konfiguration",
+          "displayName": "Zentrale + Plugin Konfiguration",
           "description": "Darf die Konfiguration des SCM-Manager und aller Plugins anpassen"
         }
       }
