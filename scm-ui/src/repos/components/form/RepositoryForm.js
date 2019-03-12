@@ -8,6 +8,7 @@ import {
   SubmitButton,
   Textarea
 } from "@scm-manager/ui-components";
+import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import type { Repository, RepositoryType } from "@scm-manager/ui-types";
 import * as validator from "./repositoryValidation";
 
@@ -132,18 +133,27 @@ class RepositoryForm extends React.Component<Props, State> {
 
   renderNamespaceField = () => {
     const { namespaceStrategy, t } = this.props;
+    const repository = this.state.repository;
+    const props = {
+      label: t("repository.namespace"),
+      helpText: t("help.namespaceHelpText"),
+      value: repository ? repository.namespace : "",
+      onChange: this.handleNamespaceChange,
+      errorMessage: t("validation.namespace-invalid"),
+      validationError: this.state.namespaceValidationError
+    };
+
     if (namespaceStrategy === "CustomNamespaceStrategy") {
-      const repository = this.state.repository;
-      return <InputField
-        label={t("repository.namespace")}
-        onChange={this.handleNamespaceChange}
-        value={repository ? repository.namespace : ""}
-        validationError={this.state.namespaceValidationError}
-        errorMessage={t("validation.namespace-invalid")}
-        helpText={t("help.namespaceHelpText")}
-      />;
+      return <InputField {...props} />;
     }
-    return null;
+
+    return (
+      <ExtensionPoint
+        name="repos.create.namespace"
+        props={props}
+        renderAll={false}
+      />
+    );
   };
 
   renderCreateOnlyFields() {
