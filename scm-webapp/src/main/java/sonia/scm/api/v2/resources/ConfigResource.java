@@ -5,6 +5,7 @@ import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import sonia.scm.config.ConfigurationPermissions;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.repository.NamespaceStrategyValidator;
 import sonia.scm.util.ScmConfigurationUtil;
 import sonia.scm.web.VndMediaType;
 
@@ -27,12 +28,16 @@ public class ConfigResource {
   private final ConfigDtoToScmConfigurationMapper dtoToConfigMapper;
   private final ScmConfigurationToConfigDtoMapper configToDtoMapper;
   private final ScmConfiguration configuration;
+  private final NamespaceStrategyValidator namespaceStrategyValidator;
 
   @Inject
-  public ConfigResource(ConfigDtoToScmConfigurationMapper dtoToConfigMapper, ScmConfigurationToConfigDtoMapper configToDtoMapper, ScmConfiguration configuration) {
+  public ConfigResource(ConfigDtoToScmConfigurationMapper dtoToConfigMapper,
+                        ScmConfigurationToConfigDtoMapper configToDtoMapper,
+                        ScmConfiguration configuration, NamespaceStrategyValidator namespaceStrategyValidator) {
     this.dtoToConfigMapper = dtoToConfigMapper;
     this.configToDtoMapper = configToDtoMapper;
     this.configuration = configuration;
+    this.namespaceStrategyValidator = namespaceStrategyValidator;
   }
 
   /**
@@ -77,6 +82,9 @@ public class ConfigResource {
     // This *could* be moved to ScmConfiguration or ScmConfigurationUtil classes.
     // But to where to check? load() or store()? Leave it for now, SCMv1 legacy that can be cleaned up later.
     ConfigurationPermissions.write(configuration).check();
+
+    // ensure the namespace strategy is valid
+    namespaceStrategyValidator.check(configDto.getNamespaceStrategy());
 
     ScmConfiguration config = dtoToConfigMapper.map(configDto);
     synchronized (ScmConfiguration.class) {
