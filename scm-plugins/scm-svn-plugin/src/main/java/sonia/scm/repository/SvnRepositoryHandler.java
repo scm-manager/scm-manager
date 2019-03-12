@@ -234,7 +234,7 @@ public class SvnRepositoryHandler
     try {
       return new INIConfigurationReader().read(new File(directory, CONFIG_FILE_NAME)).getSection(CONFIG_SECTION_SCMM).getParameter(CONFIG_KEY_REPOSITORY_ID);
     } catch (IOException e) {
-      throw new InternalRepositoryException(ContextEntry.ContextBuilder.entity("directory", directory.toString()), "could not read scm configuration file", e);
+      throw new InternalRepositoryException(ContextEntry.ContextBuilder.entity("Directory", directory.toString()), "could not read scm configuration file", e);
     }
   }
 }

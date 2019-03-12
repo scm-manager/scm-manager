@@ -403,7 +403,7 @@ public class DefaultUserManager extends AbstractUserManager
     User user = get((String) SecurityUtils.getSubject().getPrincipals().getPrimaryPrincipal());
 
     if (!user.getPassword().equals(oldPassword)) {
-      throw new InvalidPasswordException(ContextEntry.ContextBuilder.entity("passwordChange", "-").in(User.class, user.getName()));
+      throw new InvalidPasswordException(ContextEntry.ContextBuilder.entity("PasswordChange", "-").in(User.class, user.getName()));
     }
 
     user.setPassword(newPassword);
@@ -422,7 +422,7 @@ public class DefaultUserManager extends AbstractUserManager
       throw new NotFoundException(User.class, userId);
     }
     if (!isTypeDefault(user)) {
-      throw new ChangePasswordNotAllowedException(ContextEntry.ContextBuilder.entity("passwordChange", "-").in(User.class, user.getName()), user.getType());
+      throw new ChangePasswordNotAllowedException(ContextEntry.ContextBuilder.entity("PasswordChange", "-").in(User.class, user.getName()), user.getType());
     }
     user.setPassword(newPassword);
     this.modify(user);

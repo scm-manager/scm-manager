@@ -258,7 +258,7 @@ public class RepositoryPermissionRootResource {
    */
   private void checkPermissionAlreadyExists(RepositoryPermissionDto permission, Repository repository) {
     if (isPermissionExist(permission, repository)) {
-      throw alreadyExists(entity("permission", permission.getName()).in(repository));
+      throw alreadyExists(entity("Permission", permission.getName()).in(repository));
     }
   }
 

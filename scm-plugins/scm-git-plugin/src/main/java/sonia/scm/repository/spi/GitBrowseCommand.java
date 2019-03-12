@@ -358,7 +358,7 @@ public class GitBrowseCommand extends AbstractGitCommand
       }
     }
 
-    throw new NotFoundException("file", request.getPath());
+    throw notFound(entity("File", request.getPath()).in("Revision", revId.getName()).in(this.repository));
   }
 
   @SuppressWarnings("unchecked")

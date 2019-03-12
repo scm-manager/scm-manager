@@ -65,7 +65,7 @@ public class SourceRootResource {
       if (browserResult != null) {
         return Response.ok(browserResultToFileObjectDtoMapper.map(browserResult, namespaceAndName)).build();
       } else {
-        throw notFound(entity("sources", path).in(namespaceAndName));
+        throw notFound(entity("Source", path).in(namespaceAndName));
       }
     }
   }
