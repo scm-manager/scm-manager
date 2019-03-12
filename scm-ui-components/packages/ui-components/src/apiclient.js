@@ -6,7 +6,9 @@ import type { BackendErrorContent } from "./errors";
 const fetchOptions: RequestOptions = {
   credentials: "same-origin",
   headers: {
-    Cache: "no-cache"
+    Cache: "no-cache",
+    // identify the request as ajax request
+    "X-Requested-With": "XMLHttpRequest"
   }
 };
 
