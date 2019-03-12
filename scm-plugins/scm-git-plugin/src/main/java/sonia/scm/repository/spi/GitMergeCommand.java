@@ -74,7 +74,7 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
   private ObjectId resolveRevisionOrThrowNotFound(Repository repository, String revision) throws IOException {
     ObjectId resolved = repository.resolve(revision);
     if (resolved == null) {
-      throw notFound(entity("revision", revision).in(context.getRepository()));
+      throw notFound(entity("Revision", revision).in(context.getRepository()));
     } else {
       return resolved;
     }
@@ -125,7 +125,7 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
         clone.checkout().setStartPoint(targetRevision.getName()).setName(target).setCreateBranch(true).call();
       } catch (RefNotFoundException e) {
         logger.debug("could not checkout target branch {} for merge as local branch", target, e);
-        throw notFound(entity("revision", target).in(context.getRepository()));
+        throw notFound(entity("Revision", target).in(context.getRepository()));
       } catch (GitAPIException e) {
         throw new InternalRepositoryException(context.getRepository(), "could not checkout target branch for merge as local branch: " + target, e);
       }

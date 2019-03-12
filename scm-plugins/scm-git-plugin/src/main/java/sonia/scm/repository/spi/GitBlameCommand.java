@@ -110,7 +110,7 @@ public class GitBlameCommand extends AbstractGitCommand implements BlameCommand
 
       if (gitBlameResult == null)
       {
-        throw new InternalRepositoryException(entity("path", request.getPath()).in(repository),
+        throw new InternalRepositoryException(entity("Path", request.getPath()).in(repository),
             "could not create blame result for path");
       }
 
