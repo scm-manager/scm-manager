@@ -1,7 +1,7 @@
 // @flow
 import { validation } from "@scm-manager/ui-components";
 
-const nameRegex = /(?!^\.\.$)(?!^\.$)(?!.*[\\\[\]])^[A-z0-9\.][A-z0-9\.\-_]*$/;
+const nameRegex = /(?!^\.\.$)(?!^\.$)(?!.*[\\\[\]])^[A-Za-z0-9\.][A-Za-z0-9\.\-_]*$/;
 
 export const isNameValid = (name: string) => {
   return nameRegex.test(name);
