@@ -32,7 +32,10 @@
 
 -->
 <permissions>
-  
+
+  <permission>
+    <value>*</value>
+  </permission>
   <permission>
     <value>repository:read,pull:*</value>
   </permission>

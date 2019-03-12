@@ -124,9 +124,12 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
     createTestRepository();
   }
 
-  @Test(expected = AlreadyExistsException.class)
+  @Test
   public void testCreateExisting() {
-    createTestRepository();
+    Repository testRepository = createTestRepository();
+    String expectedNamespaceAndName = testRepository.getNamespaceAndName().logString();
+    thrown.expect(AlreadyExistsException.class);
+    thrown.expectMessage(expectedNamespaceAndName);
     createTestRepository();
   }
 
@@ -391,18 +394,6 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
     manager.create(repository);
     assertNotNull(repository.getId());
     assertNotNull(repository.getNamespace());
-  }
-
-  private void createUriTestRepositories(RepositoryManager m) {
-    mockedNamespace = "namespace";
-    createRepository(m, new Repository("1", "hg", "namespace", "scm"));
-    createRepository(m, new Repository("2", "hg", "namespace", "scm-test"));
-    createRepository(m, new Repository("3", "git", "namespace", "test-1"));
-    createRepository(m, new Repository("4", "git", "namespace", "test-2"));
-
-    mockedNamespace = "other";
-    createRepository(m, new Repository("1", "hg", "other", "scm"));
-    createRepository(m, new Repository("2", "hg", "other", "scm-test"));
   }
 
   //~--- methods --------------------------------------------------------------

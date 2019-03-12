@@ -56,17 +56,21 @@ class SingleResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
   }
 
   /**
-   * Update the model object for the given id according to the given function and returns a corresponding http response.
-   * This handles all corner cases, eg. no matching object for the id or missing privileges.
+   * Updates the model object provided by the reader according to the given function and returns a corresponding http
+   * response. This handles all corner cases, eg. no matching object for the id or missing privileges.
    */
   Response update(Supplier<MODEL_OBJECT> reader, Function<MODEL_OBJECT, MODEL_OBJECT> applyChanges, Predicate<MODEL_OBJECT> hasSameKey) {
+    return update(reader, applyChanges, hasSameKey, ModelObject::getId);
+  }
+
+  Response update(Supplier<MODEL_OBJECT> reader, Function<MODEL_OBJECT, MODEL_OBJECT> applyChanges, Predicate<MODEL_OBJECT> hasSameKey, Function<MODEL_OBJECT, String> keyExtractor) {
     MODEL_OBJECT existingModelObject = reader.get();
     MODEL_OBJECT changedModelObject = applyChanges.apply(existingModelObject);
     if (!hasSameKey.test(changedModelObject)) {
       return Response.status(BAD_REQUEST).entity("illegal change of id").build();
     }
     else if (modelObjectWasModifiedConcurrently(existingModelObject, changedModelObject)) {
-      throw new ConcurrentModificationException(type, existingModelObject.getId());
+      throw new ConcurrentModificationException(type, keyExtractor.apply(existingModelObject));
     }
     return update(getId(existingModelObject), changedModelObject);
   }

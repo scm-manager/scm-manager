@@ -65,6 +65,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 
+import static sonia.scm.AlreadyExistsException.alreadyExists;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
 
@@ -150,7 +151,11 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
           }
         }
       },
-      newRepository -> repositoryDAO.contains(newRepository.getNamespaceAndName())
+      newRepository -> {
+        if (repositoryDAO.contains(newRepository.getNamespaceAndName())) {
+          throw alreadyExists(entity(newRepository.getClass(), newRepository.getNamespaceAndName().logString()));
+        }
+      }
     );
   }
 
