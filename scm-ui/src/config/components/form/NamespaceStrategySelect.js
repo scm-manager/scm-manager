@@ -36,14 +36,22 @@ class NamespaceStrategySelect extends React.Component<Props> {
     });
   };
 
+  findSelected = () => {
+    const { namespaceStrategies, value } = this.props;
+    if (namespaceStrategies.available.indexOf(value) < 0) {
+      return namespaceStrategies.current;
+    }
+    return value;
+  };
+
   render() {
-    const { label, value, helpText, disabled, onChange } = this.props;
+    const { label, helpText, disabled, onChange } = this.props;
     const nsOptions = this.createNamespaceOptions();
     return (
       <Select
         label={label}
         onChange={onChange}
-        value={value}
+        value={this.findSelected()}
         disabled={disabled}
         options={nsOptions}
         helpText={helpText}
