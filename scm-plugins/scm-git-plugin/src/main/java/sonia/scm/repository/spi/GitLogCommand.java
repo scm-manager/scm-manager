@@ -43,7 +43,6 @@ import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
-import org.eclipse.jgit.revwalk.filter.RevFilter;
 import org.eclipse.jgit.treewalk.filter.AndTreeFilter;
 import org.eclipse.jgit.treewalk.filter.PathFilter;
 import org.eclipse.jgit.treewalk.filter.TreeFilter;
@@ -289,18 +288,5 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
     }
 
     return changesets;
-  }
-
-  private ObjectId computeCommonAncestor(LogCommandRequest request, Repository repository, ObjectId startId, Ref branch) throws IOException {
-    try (RevWalk mergeBaseWalk = new RevWalk(repository)) {
-      mergeBaseWalk.setRevFilter(RevFilter.MERGE_BASE);
-      if (startId != null) {
-        mergeBaseWalk.markStart(mergeBaseWalk.lookupCommit(startId));
-      } else {
-        mergeBaseWalk.markStart(mergeBaseWalk.lookupCommit(branch.getObjectId()));
-      }
-      mergeBaseWalk.markStart(mergeBaseWalk.parseCommit(repository.resolve(request.getAncestorChangeset())));
-      return mergeBaseWalk.next().getId();
-    }
   }
 }
