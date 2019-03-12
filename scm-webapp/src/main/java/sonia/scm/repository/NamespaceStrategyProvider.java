@@ -23,7 +23,7 @@ public class NamespaceStrategyProvider implements Provider<NamespaceStrategy> {
 
   @Override
   public NamespaceStrategy get() {
-    String namespaceStrategy = scmConfiguration.getDefaultNamespaceStrategy();
+    String namespaceStrategy = scmConfiguration.getNamespaceStrategy();
 
     for (NamespaceStrategy s : this.strategies) {
       if (s.getClass().getSimpleName().equals(namespaceStrategy)) {

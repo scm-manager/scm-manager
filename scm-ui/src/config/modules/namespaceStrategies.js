@@ -91,7 +91,7 @@ export default function reducer(
     const config = action.payload;
     return {
       ...state,
-      current: config.defaultNamespaceStrategy
+      current: config.namespaceStrategy
     };
   }
   return state;

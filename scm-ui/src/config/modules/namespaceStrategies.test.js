@@ -149,7 +149,7 @@ describe("namespace strategies reducer", () => {
     const modifyConfigAction = {
       type: MODIFY_CONFIG_SUCCESS,
       payload: {
-        defaultNamespaceStrategy: "CustomNamespaceStrategy"
+        namespaceStrategy: "CustomNamespaceStrategy"
       }
     };
     const newState = reducer(strategies, modifyConfigAction);

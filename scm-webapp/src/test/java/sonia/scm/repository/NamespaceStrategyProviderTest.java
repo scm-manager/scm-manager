@@ -17,7 +17,7 @@ class NamespaceStrategyProviderTest {
     Set<NamespaceStrategy> strategies = allStrategiesAsSet();
 
     ScmConfiguration configuration = new ScmConfiguration();
-    configuration.setDefaultNamespaceStrategy("Arthur");
+    configuration.setNamespaceStrategy("Arthur");
 
     NamespaceStrategyProvider provider = new NamespaceStrategyProvider(strategies, configuration);
     NamespaceStrategy strategy = provider.get();
@@ -30,7 +30,7 @@ class NamespaceStrategyProviderTest {
     Set<NamespaceStrategy> strategies = Collections.emptySet();
 
     ScmConfiguration configuration = new ScmConfiguration();
-    configuration.setDefaultNamespaceStrategy("Arthur");
+    configuration.setNamespaceStrategy("Arthur");
 
     NamespaceStrategyProvider provider = new NamespaceStrategyProvider(strategies, configuration);
     NamespaceStrategy strategy = provider.get();

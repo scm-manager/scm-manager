@@ -1,7 +1,7 @@
 // @flow
 import React from "react";
 import { translate } from "react-i18next";
-import { Checkbox, InputField, Select } from "@scm-manager/ui-components";
+import { Checkbox, InputField} from "@scm-manager/ui-components";
 import type { NamespaceStrategies } from "@scm-manager/ui-types";
 import NamespaceStrategySelect from "./NamespaceStrategySelect";
 
@@ -14,7 +14,7 @@ type Props = {
   skipFailedAuthenticators: boolean,
   pluginUrl: string,
   enabledXsrfProtection: boolean,
-  defaultNamespaceStrategy: string,
+  namespaceStrategy: string,
   namespaceStrategies?: NamespaceStrategies,
   onChange: (boolean, any, string) => void,
   hasUpdatePermission: boolean,
@@ -35,7 +35,7 @@ class GeneralSettings extends React.Component<Props> {
       skipFailedAuthenticators,
       pluginUrl,
       enabledXsrfProtection,
-      defaultNamespaceStrategy,
+      namespaceStrategy,
       hasUpdatePermission,
       namespaceStrategies
     } = this.props;
@@ -74,12 +74,12 @@ class GeneralSettings extends React.Component<Props> {
                 </div>
                 <div className="column is-half">
                   <NamespaceStrategySelect
-                    label={t("general-settings.default-namespace-strategy")}
-                    onChange={this.handleDefaultNamespaceStrategyChange}
-                    value={defaultNamespaceStrategy}
+                    label={t("general-settings.namespace-strategy")}
+                    onChange={this.handleNamespaceStrategyChange}
+                    value={namespaceStrategy}
                     disabled={!hasUpdatePermission}
                     namespaceStrategies={namespaceStrategies}
-                    helpText={t("help.defaultNameSpaceStrategyHelpText")}
+                    helpText={t("help.nameSpaceStrategyHelpText")}
                   />
                 </div>
             </div>
@@ -153,19 +153,17 @@ class GeneralSettings extends React.Component<Props> {
   handleAnonymousAccessEnabledChange = (value: string) => {
     this.props.onChange(true, value, "anonymousAccessEnabled");
   };
-
   handleSkipFailedAuthenticatorsChange = (value: string) => {
     this.props.onChange(true, value, "skipFailedAuthenticators");
   };
   handlePluginUrlChange = (value: string) => {
     this.props.onChange(true, value, "pluginUrl");
   };
-
   handleEnabledXsrfProtectionChange = (value: boolean) => {
     this.props.onChange(true, value, "enabledXsrfProtection");
   };
-  handleDefaultNamespaceStrategyChange = (value: string) => {
-    this.props.onChange(true, value, "defaultNamespaceStrategy");
+  handleNamespaceStrategyChange = (value: string) => {
+    this.props.onChange(true, value, "namespaceStrategy");
   };
 }
 

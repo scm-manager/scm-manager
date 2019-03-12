@@ -2,8 +2,7 @@
 import React from "react";
 import { translate } from "react-i18next";
 import { SubmitButton, Notification } from "@scm-manager/ui-components";
-import type { NamespaceStrategies } from "@scm-manager/ui-types";
-import type { Config } from "@scm-manager/ui-types";
+import type { NamespaceStrategies, Config } from "@scm-manager/ui-types";
 import ProxySettings from "./ProxySettings";
 import GeneralSettings from "./GeneralSettings";
 import BaseUrlSettings from "./BaseUrlSettings";
@@ -57,7 +56,7 @@ class ConfigForm extends React.Component<Props, State> {
         pluginUrl: "",
         loginAttemptLimitTimeout: 0,
         enabledXsrfProtection: true,
-        defaultNamespaceStrategy: "",
+        namespaceStrategy: "",
         _links: {}
       },
       showNotification: false,
@@ -131,7 +130,7 @@ class ConfigForm extends React.Component<Props, State> {
           skipFailedAuthenticators={config.skipFailedAuthenticators}
           pluginUrl={config.pluginUrl}
           enabledXsrfProtection={config.enabledXsrfProtection}
-          defaultNamespaceStrategy={config.defaultNamespaceStrategy}
+          namespaceStrategy={config.namespaceStrategy}
           onChange={(isValid, changedValue, name) =>
             this.onChange(isValid, changedValue, name)
           }
