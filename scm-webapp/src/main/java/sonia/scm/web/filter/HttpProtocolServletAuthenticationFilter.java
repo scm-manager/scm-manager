@@ -1,7 +1,6 @@
 package sonia.scm.web.filter;
 
 import sonia.scm.Priority;
-import sonia.scm.PushStateDispatcher;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.filter.Filters;
 import sonia.scm.filter.WebElement;
@@ -12,6 +11,8 @@ import sonia.scm.web.WebTokenGenerator;
 import sonia.scm.web.protocol.HttpProtocolServlet;
 
 import javax.inject.Inject;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -21,25 +22,23 @@ import java.util.Set;
 @WebElement(value = HttpProtocolServlet.PATTERN)
 public class HttpProtocolServletAuthenticationFilter extends AuthenticationFilter {
 
-  private final PushStateDispatcher dispatcher;
   private final UserAgentParser userAgentParser;
 
   @Inject
   public HttpProtocolServletAuthenticationFilter(
     ScmConfiguration configuration,
     Set<WebTokenGenerator> tokenGenerators,
-    PushStateDispatcher dispatcher,
     UserAgentParser userAgentParser) {
     super(configuration, tokenGenerators);
-    this.dispatcher = dispatcher;
     this.userAgentParser = userAgentParser;
   }
 
   @Override
-  protected void sendUnauthorizedError(HttpServletRequest request, HttpServletResponse response) throws IOException {
+  protected void handleUnauthorized(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
     UserAgent userAgent = userAgentParser.parse(request);
     if (userAgent.isBrowser()) {
-      dispatcher.dispatch(request, response, request.getRequestURI());
+      // we can proceed the filter chain because the HttpProtocolServlet will render the ui if the client is a browser
+      chain.doFilter(request, response);
     } else {
       HttpUtil.sendUnauthorized(request, response);
     }
