@@ -59,8 +59,9 @@ public final class ValidationUtil
     "^[A-z0-9\\.\\-_@]|[^ ]([A-z0-9\\.\\-_@ ]*[A-z0-9\\.\\-_@]|[^ ])?$";
 
   /** Field description */
-  private static final String REGEX_REPOSITORYNAME =
-    "(?!^\\.\\.$)(?!^\\.$)(?!.*[\\\\\\[\\]])^[A-z0-9\\.][A-z0-9\\.\\-_/]*$";
+  private static final Pattern REGEX_REPOSITORYNAME = Pattern.compile(
+    "(?!^\\.\\.$)(?!^\\.$)(?!.*[\\\\\\[\\]])^[A-z0-9\\.][A-z0-9\\.\\-_]*$"
+  );
 
   //~--- constructors ---------------------------------------------------------
 
@@ -142,37 +143,15 @@ public final class ValidationUtil
   }
 
   /**
-   * Method description
+   * Returns {@code true} if the repository name is valid.
    *
-   *
-   * @param name
+   * @param name repository name
    * @since 1.9
    *
-   * @return
+   * @return {@code true} if repository name is valid
    */
-  public static boolean isRepositoryNameValid(String name)
-  {
-    Pattern pattern = Pattern.compile(REGEX_REPOSITORYNAME);
-    boolean result = true;
-
-    if (Util.isNotEmpty(name))
-    {
-      for (String p : Splitter.on('/').split(name))
-      {
-        if (!pattern.matcher(p).matches())
-        {
-          result = false;
-
-          break;
-        }
-      }
-    }
-    else
-    {
-      result = false;
-    }
-
-    return result;
+  public static boolean isRepositoryNameValid(String name) {
+    return REGEX_REPOSITORYNAME.matcher(name).matches();
   }
 
   /**
