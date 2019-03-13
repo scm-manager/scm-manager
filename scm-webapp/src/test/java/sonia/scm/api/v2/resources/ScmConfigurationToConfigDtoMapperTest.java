@@ -71,8 +71,6 @@ public class ScmConfigurationToConfigDtoMapperTest {
     assertTrue(dto.isDisableGroupingGrid());
     assertEquals("dd" , dto.getDateFormat());
     assertTrue(dto.isAnonymousAccessEnabled());
-    assertTrue("adminGroups", dto.getAdminGroups().containsAll(Arrays.asList(expectedGroups)));
-    assertTrue("adminUsers", dto.getAdminUsers().containsAll(Arrays.asList(expectedUsers)));
     assertEquals("baseurl" , dto.getBaseUrl());
     assertTrue(dto.isForceBaseUrl());
     assertEquals(1 , dto.getLoginAttemptLimit());
@@ -111,8 +109,6 @@ public class ScmConfigurationToConfigDtoMapperTest {
     config.setDisableGroupingGrid(true);
     config.setDateFormat("dd");
     config.setAnonymousAccessEnabled(true);
-    config.setAdminGroups(Sets.newSet(expectedGroups));
-    config.setAdminUsers(Sets.newSet(expectedUsers));
     config.setBaseUrl("baseurl");
     config.setForceBaseUrl(true);
     config.setLoginAttemptLimit(1);

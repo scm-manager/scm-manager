@@ -95,16 +95,6 @@ public class ScmConfiguration implements Configuration {
   @SuppressWarnings("WeakerAccess") // This might be needed for permission checking
   public static final String PERMISSION = "global";
 
-  @XmlElement(name = "admin-groups")
-  @XmlJavaTypeAdapter(XmlSetStringAdapter.class)
-  private Set<String> adminGroups;
-
-
-  @XmlElement(name = "admin-users")
-  @XmlJavaTypeAdapter(XmlSetStringAdapter.class)
-  private Set<String> adminUsers;
-
-
   @XmlElement(name = "base-url")
   private String baseUrl;
 
@@ -211,8 +201,6 @@ public class ScmConfiguration implements Configuration {
     this.dateFormat = other.dateFormat;
     this.pluginUrl = other.pluginUrl;
     this.anonymousAccessEnabled = other.anonymousAccessEnabled;
-    this.adminUsers = other.adminUsers;
-    this.adminGroups = other.adminGroups;
     this.enableProxy = other.enableProxy;
     this.proxyPort = other.proxyPort;
     this.proxyServer = other.proxyServer;
@@ -228,14 +216,6 @@ public class ScmConfiguration implements Configuration {
     this.loginAttemptLimitTimeout = other.loginAttemptLimitTimeout;
     this.enabledXsrfProtection = other.enabledXsrfProtection;
     this.defaultNamespaceStrategy = other.defaultNamespaceStrategy;
-  }
-
-  public Set<String> getAdminGroups() {
-    return adminGroups;
-  }
-
-  public Set<String> getAdminUsers() {
-    return adminUsers;
   }
 
   /**
@@ -379,14 +359,6 @@ public class ScmConfiguration implements Configuration {
    */
   public boolean isSkipFailedAuthenticators() {
     return skipFailedAuthenticators;
-  }
-
-  public void setAdminGroups(Set<String> adminGroups) {
-    this.adminGroups = adminGroups;
-  }
-
-  public void setAdminUsers(Set<String> adminUsers) {
-    this.adminUsers = adminUsers;
   }
 
   public void setAnonymousAccessEnabled(boolean anonymousAccessEnabled) {

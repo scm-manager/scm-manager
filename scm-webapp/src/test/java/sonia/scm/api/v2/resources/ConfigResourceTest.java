@@ -118,27 +118,6 @@ public class ConfigResourceTest {
     dispatcher.invoke(request, response);
   }
 
-  @Test
-  @SubjectAware(username = "readWrite")
-  public void shouldFailForEmptyAdminUsers() throws URISyntaxException, IOException {
-    MockHttpRequest request = post("sonia/scm/api/v2/config-test-empty-admin-user.json");
-
-    MockHttpResponse response = new MockHttpResponse();
-    dispatcher.invoke(request, response);
-
-    assertEquals(HttpServletResponse.SC_BAD_REQUEST, response.getStatus());
-  }
-
-  @Test
-  @SubjectAware(username = "readWrite")
-  public void shouldFailForEmptyAdminGroups() throws URISyntaxException, IOException {
-    MockHttpRequest request = post("sonia/scm/api/v2/config-test-empty-admin-group.json");
-
-    MockHttpResponse response = new MockHttpResponse();
-    dispatcher.invoke(request, response);
-
-    assertEquals(HttpServletResponse.SC_BAD_REQUEST, response.getStatus());
-  }
 
   private MockHttpRequest post(String resourceName) throws IOException, URISyntaxException {
     URL url = Resources.getResource(resourceName);

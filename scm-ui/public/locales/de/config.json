@@ -30,19 +30,6 @@
     "base-url": "Base URL",
     "force-base-url": "Base URL erzwingen"
   },
-  "admin-settings": {
-    "name": "Administrations Einstellungen",
-    "admin-groups": "Admin Gruppen",
-    "admin-users": "Admin Benutzer",
-    "remove-group-button": "Admin Group löschen",
-    "remove-user-button": "Admin Benutzer löschen",
-    "add-group-error": "Der eingegebene Gruppenname ist ungültig",
-    "add-group-textfield": "Neue Gruppe mit Administrationsrechten hinzufügen",
-    "add-group-button": "Admin Gruppe hinzufügen",
-    "add-user-error": "Der eingegebene Benutzername ist ungültig",
-    "add-user-textfield": "Neuen Benutzer mit Administrationsrechten hinzufügen",
-    "add-user-button": "Admin Benutzer hinzufügen"
-  },
   "login-attempt": {
     "name": "Anmeldeversuche",
     "login-attempt-limit": "Limit für Anmeldeversuche",

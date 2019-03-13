@@ -23,10 +23,6 @@ public class ConfigDto extends HalRepresentation {
   private boolean disableGroupingGrid;
   private String dateFormat;
   private boolean anonymousAccessEnabled;
-  @NoBlankStrings
-  private Set<String> adminGroups;
-  @NoBlankStrings
-  private Set<String> adminUsers;
   private String baseUrl;
   private boolean forceBaseUrl;
   private int loginAttemptLimit;

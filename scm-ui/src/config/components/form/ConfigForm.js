@@ -6,7 +6,6 @@ import type { Config } from "@scm-manager/ui-types";
 import ProxySettings from "./ProxySettings";
 import GeneralSettings from "./GeneralSettings";
 import BaseUrlSettings from "./BaseUrlSettings";
-import AdminSettings from "./AdminSettings";
 import LoginAttempt from "./LoginAttempt";
 
 type Props = {
@@ -44,8 +43,6 @@ class ConfigForm extends React.Component<Props, State> {
         disableGroupingGrid: false,
         dateFormat: "",
         anonymousAccessEnabled: false,
-        adminGroups: [],
-        adminUsers: [],
         baseUrl: "",
         forceBaseUrl: false,
         loginAttemptLimit: 0,
@@ -145,15 +142,6 @@ class ConfigForm extends React.Component<Props, State> {
         <BaseUrlSettings
           baseUrl={config.baseUrl}
           forceBaseUrl={config.forceBaseUrl}
-          onChange={(isValid, changedValue, name) =>
-            this.onChange(isValid, changedValue, name)
-          }
-          hasUpdatePermission={configUpdatePermission}
-        />
-        <hr />
-        <AdminSettings
-          adminGroups={config.adminGroups}
-          adminUsers={config.adminUsers}
           onChange={(isValid, changedValue, name) =>
             this.onChange(isValid, changedValue, name)
           }

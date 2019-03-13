@@ -30,19 +30,6 @@
     "base-url": "Base URL",
     "force-base-url": "Force Base URL"
   },
-  "admin-settings": {
-    "name": "Administration Settings",
-    "admin-groups": "Admin Groups",
-    "admin-users": "Admin Users",
-    "remove-group-button": "Remove Admin Group",
-    "remove-user-button": "Remove Admin User",
-    "add-group-error": "The group name you want to add is not valid",
-    "add-group-textfield": "Add group you want to add to admin groups here",
-    "add-group-button": "Add Admin Group",
-    "add-user-error": "The user name you want to add is not valid",
-    "add-user-textfield": "Add user you want to add to admin users here",
-    "add-user-button": "Add Admin User"
-  },
   "login-attempt": {
     "name": "Login Attempt",
     "login-attempt-limit": "Login Attempt Limit",

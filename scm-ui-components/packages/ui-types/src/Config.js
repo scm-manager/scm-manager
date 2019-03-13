@@ -12,8 +12,6 @@ export type Config = {
   disableGroupingGrid: boolean,
   dateFormat: string,
   anonymousAccessEnabled: boolean,
-  adminGroups: string[],
-  adminUsers: string[],
   baseUrl: string,
   forceBaseUrl: boolean,
   loginAttemptLimit: number,

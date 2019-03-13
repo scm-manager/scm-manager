@@ -19,7 +19,6 @@ import static sonia.scm.api.v2.ValidationConstraints.USER_GROUP_PATTERN;
 @NoArgsConstructor @Getter @Setter
 public class UserDto extends HalRepresentation {
   private boolean active;
-  private boolean admin;
   private Instant creationDate;
   @NotEmpty
   private String displayName;
