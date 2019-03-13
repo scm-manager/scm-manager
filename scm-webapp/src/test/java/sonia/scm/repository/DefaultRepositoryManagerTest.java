@@ -37,6 +37,7 @@ import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
+import com.google.inject.util.Providers;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.util.ThreadContext;
 import org.junit.Before;
@@ -436,7 +437,7 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
     when(namespaceStrategy.createNamespace(Mockito.any(Repository.class))).thenAnswer(invocation -> mockedNamespace);
 
     return new DefaultRepositoryManager(configuration, contextProvider,
-      keyGenerator, repositoryDAO, handlerSet, namespaceStrategy);
+      keyGenerator, repositoryDAO, handlerSet, Providers.of(namespaceStrategy));
   }
 
   private void createRepository(RepositoryManager m, Repository repository) {

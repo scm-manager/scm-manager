@@ -35,13 +35,11 @@ package sonia.scm.util;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.base.Splitter;
-
 import sonia.scm.Validateable;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.regex.Pattern;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -52,15 +50,16 @@ public final class ValidationUtil
 
   /** Field description */
   private static final String REGEX_MAIL =
-    "^[A-z0-9][\\w.-]*@[A-z0-9][\\w\\-\\.]*\\.[A-z0-9][A-z0-9-]+$";
+    "^[A-Za-z0-9][\\w.-]*@[A-Za-z0-9][\\w\\-\\.]*\\.[A-Za-z0-9][A-Za-z0-9-]+$";
 
   /** Field description */
   private static final String REGEX_NAME =
-    "^[A-z0-9\\.\\-_@]|[^ ]([A-z0-9\\.\\-_@ ]*[A-z0-9\\.\\-_@]|[^ ])?$";
+    "^[A-Za-z0-9\\.\\-_@]|[^ ]([A-Za-z0-9\\.\\-_@ ]*[A-Za-z0-9\\.\\-_@]|[^ ])?$";
+
+  public static final String REGEX_REPOSITORYNAME = "(?!^\\.\\.$)(?!^\\.$)(?!.*[\\\\\\[\\]])^[A-Za-z0-9\\.][A-Za-z0-9\\.\\-_]*$";
 
   /** Field description */
-  private static final String REGEX_REPOSITORYNAME =
-    "(?!^\\.\\.$)(?!^\\.$)(?!.*[\\\\\\[\\]])^[A-z0-9\\.][A-z0-9\\.\\-_/]*$";
+  private static final Pattern PATTERN_REPOSITORYNAME = Pattern.compile(REGEX_REPOSITORYNAME);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -142,37 +141,15 @@ public final class ValidationUtil
   }
 
   /**
-   * Method description
+   * Returns {@code true} if the repository name is valid.
    *
-   *
-   * @param name
+   * @param name repository name
    * @since 1.9
    *
-   * @return
+   * @return {@code true} if repository name is valid
    */
-  public static boolean isRepositoryNameValid(String name)
-  {
-    Pattern pattern = Pattern.compile(REGEX_REPOSITORYNAME);
-    boolean result = true;
-
-    if (Util.isNotEmpty(name))
-    {
-      for (String p : Splitter.on('/').split(name))
-      {
-        if (!pattern.matcher(p).matches())
-        {
-          result = false;
-
-          break;
-        }
-      }
-    }
-    else
-    {
-      result = false;
-    }
-
-    return result;
+  public static boolean isRepositoryNameValid(String name) {
+    return PATTERN_REPOSITORYNAME.matcher(name).matches();
   }
 
   /**

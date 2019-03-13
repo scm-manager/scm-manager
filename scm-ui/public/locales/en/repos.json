@@ -1,5 +1,6 @@
 {
   "repository": {
+    "namespace": "Namespace",
     "name": "Name",
     "type": "Type",
     "contact": "Contact",
@@ -8,10 +9,12 @@
     "lastModified": "Last Modified"
   },
   "validation": {
+    "namespace-invalid": "The repository namespace is invalid",
     "name-invalid": "The repository name is invalid",
     "contact-invalid": "Contact must be a valid mail address"
   },
   "help": {
+    "namespaceHelpText": "The namespace of the repository. This name will be part of the repository url.",
     "nameHelpText": "The name of the repository. This name will be part of the repository url.",
     "typeHelpText": "The type of the repository (e.g. Mercurial, Git or Subversion).",
     "contactHelpText": "Email address of the person who is responsible for this repository.",
