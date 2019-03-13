@@ -12,7 +12,9 @@ public class NamespaceStrategiesDto extends HalRepresentation {
   private String current;
   private List<String> available;
 
-  public NamespaceStrategiesDto(Links links) {
+  public NamespaceStrategiesDto(String current, List<String> available, Links links) {
     super(links);
+    this.current = current;
+    this.available = available;
   }
 }

@@ -43,15 +43,10 @@ public class NamespaceStrategyResource {
   @Path("")
   @Produces(VndMediaType.NAMESPACE_STRATEGIES)
   public NamespaceStrategiesDto get(@Context UriInfo uriInfo) {
-    NamespaceStrategiesDto dto = new NamespaceStrategiesDto(createLinks(uriInfo));
-
     String currentStrategy = strategyAsString(namespaceStrategyProvider.get());
-    dto.setCurrent(currentStrategy);
-
     List<String> availableStrategies = collectStrategyNames();
-    dto.setAvailable(availableStrategies);
 
-    return dto;
+    return new NamespaceStrategiesDto(currentStrategy, availableStrategies, createLinks(uriInfo));
   }
 
   private Links createLinks(@Context UriInfo uriInfo) {
