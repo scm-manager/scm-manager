@@ -103,6 +103,7 @@
     "errorCode": "Fehlercode",
     "transactionId": "Transaktions-ID",
     "moreInfo": "Für mehr Informationen, siehe",
+    "violations": "Ungültige Werte:",
     "AGR7UzkhA1": {
       "displayName": "Nicht gefunden",
       "description": "Der gewünschte Datensatz konnte nicht gefunden werden. Möglicherweise wurde er in einer weiteren Session gelöscht."
