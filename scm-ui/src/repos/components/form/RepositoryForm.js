@@ -28,6 +28,8 @@ type State = {
   contactValidationError: boolean
 };
 
+const CUSTOM_NAMESPACE_STRATEGY = "CustomNamespaceStrategy";
+
 class RepositoryForm extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
@@ -62,12 +64,14 @@ class RepositoryForm extends React.Component<Props, State> {
   }
 
   isValid = () => {
-    const repository = this.state.repository;
+    const { namespaceStrategy } = this.props;
+    const { repository } = this.state;
     return !(
       this.state.namespaceValidationError ||
       this.state.nameValidationError ||
       this.state.contactValidationError ||
-      this.isFalsy(repository.name)
+      this.isFalsy(repository.name) ||
+      (namespaceStrategy === CUSTOM_NAMESPACE_STRATEGY && this.isFalsy(repository.namespace))
     );
   };
 
@@ -143,7 +147,7 @@ class RepositoryForm extends React.Component<Props, State> {
       validationError: this.state.namespaceValidationError
     };
 
-    if (namespaceStrategy === "CustomNamespaceStrategy") {
+    if (namespaceStrategy === CUSTOM_NAMESPACE_STRATEGY) {
       return <InputField {...props} />;
     }
 
