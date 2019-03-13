@@ -1,11 +1,9 @@
 // @flow
 import React from "react";
 import { translate } from "react-i18next";
-import { apiClient } from "@scm-manager/ui-components";
+import { apiClient, SyntaxHighlighter } from "@scm-manager/ui-components";
 import type { File } from "@scm-manager/ui-types";
 import { ErrorNotification, Loading } from "@scm-manager/ui-components";
-import SyntaxHighlighter from "react-syntax-highlighter";
-import { arduinoLight } from "react-syntax-highlighter/styles/hljs";
 
 type Props = {
   t: string => string,
@@ -68,12 +66,9 @@ class SourcecodeViewer extends React.Component<Props, State> {
 
     return (
       <SyntaxHighlighter
-        showLineNumbers="true"
         language={getLanguage(language)}
-        style={arduinoLight}
-      >
-        {content}
-      </SyntaxHighlighter>
+        value= {content}
+      />
     );
   }
 }
