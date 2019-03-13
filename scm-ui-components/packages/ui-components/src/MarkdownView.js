@@ -6,15 +6,14 @@ import {binder} from "@scm-manager/ui-extensions";
 
 type Props = {
   content: string,
-  className : string,
-  renderContext? : Object,
+  renderContext?: Object,
   renderers?: Object,
 };
 
 class MarkdownView extends React.Component<Props> {
 
   render() {
-    const {content, className, renderers, renderContext} = this.props;
+    const {content, renderers, renderContext} = this.props;
 
     const rendererFactory = binder.getExtension("markdown-renderer-factory");
     let rendererList = renderers;
@@ -33,7 +32,7 @@ class MarkdownView extends React.Component<Props> {
 
     return (
       <Markdown
-        className={className}
+        className="content"
         skipHtml={true}
         escapeHtml={true}
         source={content}
