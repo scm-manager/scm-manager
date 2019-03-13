@@ -2,7 +2,7 @@
 import React from "react";
 import { translate } from "react-i18next";
 import { SubmitButton, Notification } from "@scm-manager/ui-components";
-import type { Config } from "@scm-manager/ui-types";
+import type { NamespaceStrategies, Config } from "@scm-manager/ui-types";
 import ProxySettings from "./ProxySettings";
 import GeneralSettings from "./GeneralSettings";
 import BaseUrlSettings from "./BaseUrlSettings";
@@ -13,9 +13,11 @@ type Props = {
   submitForm: Config => void,
   config?: Config,
   loading?: boolean,
-  t: string => string,
   configReadPermission: boolean,
-  configUpdatePermission: boolean
+  configUpdatePermission: boolean,
+  namespaceStrategies?: NamespaceStrategies,
+  // context props
+  t: string => string,
 };
 
 type State = {
@@ -54,7 +56,7 @@ class ConfigForm extends React.Component<Props, State> {
         pluginUrl: "",
         loginAttemptLimitTimeout: 0,
         enabledXsrfProtection: true,
-        defaultNamespaceStrategy: "",
+        namespaceStrategy: "",
         _links: {}
       },
       showNotification: false,
@@ -88,6 +90,7 @@ class ConfigForm extends React.Component<Props, State> {
     const {
       loading,
       t,
+      namespaceStrategies,
       configReadPermission,
       configUpdatePermission
     } = this.props;
@@ -118,6 +121,7 @@ class ConfigForm extends React.Component<Props, State> {
       <form onSubmit={this.submit}>
         {noPermissionNotification}
         <GeneralSettings
+          namespaceStrategies={namespaceStrategies}
           realmDescription={config.realmDescription}
           enableRepositoryArchive={config.enableRepositoryArchive}
           disableGroupingGrid={config.disableGroupingGrid}
@@ -126,7 +130,7 @@ class ConfigForm extends React.Component<Props, State> {
           skipFailedAuthenticators={config.skipFailedAuthenticators}
           pluginUrl={config.pluginUrl}
           enabledXsrfProtection={config.enabledXsrfProtection}
-          defaultNamespaceStrategy={config.defaultNamespaceStrategy}
+          namespaceStrategy={config.namespaceStrategy}
           onChange={(isValid, changedValue, name) =>
             this.onChange(isValid, changedValue, name)
           }

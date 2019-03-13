@@ -148,5 +148,11 @@
       "displayName": "Ungültige Eingabe",
       "description": "Die eingegebenen Daten konnten nicht validiert werden. Bitte korrigieren Sie die Eingaben und senden Sie sie erneut."
     }
+  },
+  "namespaceStrategies": {
+    "UsernameNamespaceStrategy":  "Benutzername",
+    "CustomNamespaceStrategy":  "Benutzerdefiniert",
+    "CurrentYearNamespaceStrategy":  "Aktuelles Jahr",
+    "RepositoryTypeNamespaceStrategy": "Repository Typ"
   }
 }

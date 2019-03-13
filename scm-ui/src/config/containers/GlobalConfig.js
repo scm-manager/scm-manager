@@ -14,9 +14,15 @@ import {
   modifyConfigReset
 } from "../modules/config";
 import { connect } from "react-redux";
-import type { Config } from "@scm-manager/ui-types";
+import type { Config, NamespaceStrategies } from "@scm-manager/ui-types";
 import ConfigForm from "../components/form/ConfigForm";
 import { getConfigLink } from "../../modules/indexResource";
+import {
+  fetchNamespaceStrategiesIfNeeded,
+  getFetchNamespaceStrategiesFailure,
+  getNamespaceStrategies,
+  isFetchNamespaceStrategiesPending
+} from "../modules/namespaceStrategies";
 
 type Props = {
   loading: boolean,
@@ -24,11 +30,13 @@ type Props = {
   config: Config,
   configUpdatePermission: boolean,
   configLink: string,
+  namespaceStrategies?: NamespaceStrategies,
 
   // dispatch functions
   modifyConfig: (config: Config, callback?: () => void) => void,
   fetchConfig: (link: string) => void,
   configReset: void => void,
+  fetchNamespaceStrategiesIfNeeded: void => void,
 
   // context objects
   t: string => string
@@ -51,6 +59,7 @@ class GlobalConfig extends React.Component<Props, State> {
 
   componentDidMount() {
     this.props.configReset();
+    this.props.fetchNamespaceStrategiesIfNeeded();
     if (this.props.configLink) {
       this.props.fetchConfig(this.props.configLink);
     } else {
@@ -103,7 +112,7 @@ class GlobalConfig extends React.Component<Props, State> {
   };
 
   renderContent = () => {
-    const { error, loading, config, configUpdatePermission } = this.props;
+    const { error, loading, config, configUpdatePermission, namespaceStrategies } = this.props;
     const { configReadPermission } = this.state;
     if (!error) {
       return (
@@ -113,6 +122,7 @@ class GlobalConfig extends React.Component<Props, State> {
             submitForm={config => this.modifyConfig(config)}
             config={config}
             loading={loading}
+            namespaceStrategies={namespaceStrategies}
             configUpdatePermission={configUpdatePermission}
             configReadPermission={configReadPermission}
           />
@@ -133,23 +143,33 @@ const mapDispatchToProps = dispatch => {
     },
     configReset: () => {
       dispatch(modifyConfigReset());
+    },
+    fetchNamespaceStrategiesIfNeeded: () => {
+      dispatch(fetchNamespaceStrategiesIfNeeded());
     }
   };
 };
 
 const mapStateToProps = state => {
-  const loading = isFetchConfigPending(state) || isModifyConfigPending(state);
-  const error = getFetchConfigFailure(state) || getModifyConfigFailure(state);
+  const loading = isFetchConfigPending(state)
+    || isModifyConfigPending(state)
+    || isFetchNamespaceStrategiesPending(state);
+  const error = getFetchConfigFailure(state)
+    || getModifyConfigFailure(state)
+    || getFetchNamespaceStrategiesFailure(state);
+
   const config = getConfig(state);
   const configUpdatePermission = getConfigUpdatePermission(state);
   const configLink = getConfigLink(state);
+  const namespaceStrategies = getNamespaceStrategies(state);
 
   return {
     loading,
     error,
     config,
     configUpdatePermission,
-    configLink
+    configLink,
+    namespaceStrategies
   };
 };
 

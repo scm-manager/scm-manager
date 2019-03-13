@@ -148,5 +148,11 @@
       "displayName": "Illegal input",
       "description": "The values could not be validated. Please correct your input and try again."
     }
+  },
+  "namespaceStrategies": {
+    "UsernameNamespaceStrategy":  "Username",
+    "CustomNamespaceStrategy":  "Custom",
+    "CurrentYearNamespaceStrategy":  "Current year",
+    "RepositoryTypeNamespaceStrategy": "Repository type"
   }
 }
