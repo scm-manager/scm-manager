@@ -25,6 +25,7 @@ export { default as Tooltip } from "./Tooltip";
 export { getPageFromMatch } from "./urls";
 export { default as Autocomplete} from "./Autocomplete";
 export { default as BranchSelector } from "./BranchSelector";
+export { default as ErrorBoundary } from "./ErrorBoundary";
 
 export { apiClient } from "./apiclient.js";
 export * from "./errors";

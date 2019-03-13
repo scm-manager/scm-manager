@@ -7,7 +7,7 @@ import Subtitle from "./Subtitle";
 import injectSheet from "react-jss";
 import classNames from "classnames";
 import PageActions from "./PageActions";
-import PageErrorBoundary from "../errorboundary/PageErrorBoundary";
+import ErrorBoundary from "../ErrorBoundary";
 
 type Props = {
   title?: string,
@@ -32,7 +32,7 @@ class Page extends React.Component<Props> {
   render() {
     const { error } = this.props;
     return (
-      <PageErrorBoundary>
+      <ErrorBoundary>
         <section className="section">
           <div className="container">
             {this.renderPageHeader()}
@@ -40,7 +40,7 @@ class Page extends React.Component<Props> {
             {this.renderContent()}
           </div>
         </section>
-      </PageErrorBoundary>
+      </ErrorBoundary>
     );
   }
 
