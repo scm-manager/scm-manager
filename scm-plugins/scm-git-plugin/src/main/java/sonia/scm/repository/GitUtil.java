@@ -205,7 +205,7 @@ public final class GitUtil
     }
     catch (GitAPIException ex)
     {
-      throw new InternalRepositoryException(ContextEntry.ContextBuilder.entity("remote", directory.toString()).in(remoteRepository), "could not fetch", ex);
+      throw new InternalRepositoryException(ContextEntry.ContextBuilder.entity("Remote", directory.toString()).in(remoteRepository), "could not fetch", ex);
     }
   }
 

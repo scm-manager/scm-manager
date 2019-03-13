@@ -15,6 +15,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import static sonia.scm.NotFoundException.notFound;
+
 public class SourceRootResource {
 
   private final RepositoryServiceFactory serviceFactory;
@@ -62,7 +65,7 @@ public class SourceRootResource {
       if (browserResult != null) {
         return Response.ok(browserResultToFileObjectDtoMapper.map(browserResult, namespaceAndName)).build();
       } else {
-        return Response.status(Response.Status.NOT_FOUND).build();
+        throw notFound(entity("Source", path).in("Revision", revision).in(namespaceAndName));
       }
     }
   }

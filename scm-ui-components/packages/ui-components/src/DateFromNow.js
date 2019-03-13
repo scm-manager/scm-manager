@@ -4,6 +4,10 @@ import moment from "moment";
 import { translate } from "react-i18next";
 import injectSheet from "react-jss";
 
+// fix german locale
+// https://momentjscom.readthedocs.io/en/latest/moment/00-use-it/07-browserify/
+import "moment/locale/de";
+
 const styles = {
   date: {
     borderBottom: "1px dotted rgba(219, 219, 219)",

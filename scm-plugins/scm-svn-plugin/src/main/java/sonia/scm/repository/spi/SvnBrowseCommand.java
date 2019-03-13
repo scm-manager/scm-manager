@@ -53,6 +53,10 @@ import sonia.scm.util.Util;
 
 import java.util.Collection;
 
+import static org.tmatesoft.svn.core.SVNErrorCode.FS_NO_SUCH_REVISION;
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import static sonia.scm.NotFoundException.notFound;
+
 //~--- JDK imports ------------------------------------------------------------
 
 /**
@@ -107,6 +111,9 @@ public class SvnBrowseCommand extends AbstractSvnCommand
     }
     catch (SVNException ex)
     {
+      if (FS_NO_SUCH_REVISION.equals(ex.getErrorMessage().getErrorCode())) {
+        throw notFound(entity("Revision", Long.toString(revisionNumber)).in(this.repository));
+      }
       logger.error("could not open repository", ex);
     }
 
@@ -153,6 +160,9 @@ public class SvnBrowseCommand extends AbstractSvnCommand
   private FileObject createFileObject(BrowseCommandRequest request,
     SVNRepository repository, long revision, SVNDirEntry entry, String path)
   {
+    if (entry == null) {
+      throw notFound(entity("Path", path).in("Revision", Long.toString(revision)).in(this.repository));
+    }
     FileObject fileObject = new FileObject();
 
     fileObject.setName(entry.getName());
