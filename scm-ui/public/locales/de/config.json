@@ -57,7 +57,7 @@
     "skip-failed-authenticators": "Fehlgeschlagene Authentifizierer überspringen",
     "plugin-url": "Plugin URL",
     "enabled-xsrf-protection": "XSRF Protection aktivieren",
-    "default-namespace-strategy": "Default Namespace Strategie"
+    "namespace-strategy": "Namespace Strategie"
   },
   "validation": {
     "date-format-invalid": "Das Datumsformat ist ungültig",
@@ -87,6 +87,6 @@
     "proxyUserHelpText": "Der Benutzername für die Proxy Server Anmeldung.",
     "proxyExcludesHelpText": "Glob patterns für Hostnamen, die von den Proxy-Einstellungen ausgeschlossen werden sollen.",
     "enableXsrfProtectionHelpText": "Xsrf Cookie Protection aktivieren. Hinweis: Dieses Feature befindet sich noch im Experimentalstatus.",
-    "defaultNameSpaceStrategyHelpText": "Die Standardstrategie für Namespaces."
+    "nameSpaceStrategyHelpText": "Strategie für Namespaces."
   }
 }

@@ -13,7 +13,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.repository.NamespaceStrategyValidator;
 import sonia.scm.web.VndMediaType;
 
 import javax.servlet.http.HttpServletResponse;
@@ -22,10 +24,12 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 @SubjectAware(
@@ -46,6 +50,9 @@ public class ConfigResourceTest {
   @SuppressWarnings("unused") // Is injected
   private ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
 
+  @Mock
+  private NamespaceStrategyValidator namespaceStrategyValidator;
+
   @InjectMocks
   private ConfigDtoToScmConfigurationMapperImpl dtoToConfigMapper;
   @InjectMocks
@@ -62,7 +69,7 @@ public class ConfigResourceTest {
   public void prepareEnvironment() {
     initMocks(this);
 
-    ConfigResource configResource = new ConfigResource(dtoToConfigMapper, configToDtoMapper, createConfiguration());
+    ConfigResource configResource = new ConfigResource(dtoToConfigMapper, configToDtoMapper, createConfiguration(), namespaceStrategyValidator);
 
     dispatcher.getRegistry().addSingletonResource(configResource);
   }
@@ -138,6 +145,21 @@ public class ConfigResourceTest {
     dispatcher.invoke(request, response);
 
     assertEquals(HttpServletResponse.SC_BAD_REQUEST, response.getStatus());
+  }
+
+
+  @Test
+  @SubjectAware(username = "readWrite")
+  public void shouldValidateNamespaceStrategy() throws URISyntaxException {
+    MockHttpRequest request = MockHttpRequest.put("/" + ConfigResource.CONFIG_PATH_V2)
+      .contentType(VndMediaType.CONFIG)
+      .content("{ \"namespaceStrategy\": \"AwesomeStrategy\" }".getBytes(StandardCharsets.UTF_8));
+
+    MockHttpResponse response = new MockHttpResponse();
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
+    verify(namespaceStrategyValidator).check("AwesomeStrategy");
   }
 
   private MockHttpRequest post(String resourceName) throws IOException, URISyntaxException {
