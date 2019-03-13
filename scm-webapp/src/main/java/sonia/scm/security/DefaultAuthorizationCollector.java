@@ -271,11 +271,6 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
   }
 
   private boolean isAdmin(User user, GroupNames groups) {
-    boolean admin = user.isAdmin();
-    if (admin) {
-      logger.debug("user {} is marked as admin, because of the user flag", user.getName());
-      return true;
-    }
     if (isUserAdminInConfiguration(user)) {
       logger.debug("user {} is marked as admin, because of the admin user configuration", user.getName());
       return true;

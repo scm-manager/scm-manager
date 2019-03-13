@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2014, Sebastian Sdorra
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
@@ -13,7 +13,7 @@
  * 3. Neither the name of SCM-Manager; nor the names of its
  *    contributors may be used to endorse or promote products derived from this
  *    software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,9 +24,9 @@
  * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * http://bitbucket.org/sdorra/scm-manager
- * 
+ *
  */
 
 package sonia.scm.security;
@@ -58,18 +58,18 @@ import static org.junit.Assert.assertTrue;
 
 /**
  * Unit tests for {@link AuthorizationChangedEventProducer}.
- * 
+ *
  * @author Sebastian Sdorra
  */
 public class AuthorizationChangedEventProducerTest {
-  
+
   private StoringAuthorizationChangedEventProducer producer;
-  
+
   @Before
   public void setUpProducer() {
      producer = new StoringAuthorizationChangedEventProducer();
   }
-  
+
   /**
    * Tests {@link AuthorizationChangedEventProducer#onEvent(sonia.scm.user.UserEvent)}.
    */
@@ -79,15 +79,15 @@ public class AuthorizationChangedEventProducerTest {
     User user = UserTestData.createDent();
     producer.onEvent(new UserEvent(HandlerEventType.BEFORE_CREATE, user));
     assertEventIsNotFired();
-    
+
     producer.onEvent(new UserEvent(HandlerEventType.CREATE, user));
     assertUserEventIsFired("dent");
   }
-  
+
   private void assertEventIsNotFired(){
     assertNull(producer.event);
   }
-  
+
   private void assertUserEventIsFired(String username){
     assertNotNull(producer.event);
     assertTrue(producer.event.isEveryUserAffected());
@@ -102,28 +102,28 @@ public class AuthorizationChangedEventProducerTest {
   /**
    * Tests {@link AuthorizationChangedEventProducer#onEvent(sonia.scm.user.UserEvent)} with modified user.
    */
-  @Test  
+  @Test
   public void testOnUserModificationEvent()
   {
     User user = UserTestData.createDent();
     User userModified = UserTestData.createDent();
     userModified.setDisplayName("Super Dent");
-    
+
     producer.onEvent(new UserModificationEvent(HandlerEventType.BEFORE_CREATE, userModified, user));
     assertEventIsNotFired();
-    
+
     producer.onEvent(new UserModificationEvent(HandlerEventType.CREATE, userModified, user));
     assertEventIsNotFired();
-    
-    userModified.setAdmin(true);
-    
+
+    userModified.setActive(false);
+
     producer.onEvent(new UserModificationEvent(HandlerEventType.BEFORE_CREATE, userModified, user));
     assertEventIsNotFired();
-    
+
     producer.onEvent(new UserModificationEvent(HandlerEventType.CREATE, userModified, user));
     assertUserEventIsFired("dent");
   }
-  
+
   /**
    * Tests {@link AuthorizationChangedEventProducer#onEvent(sonia.scm.group.GroupEvent)}.
    */
@@ -133,11 +133,11 @@ public class AuthorizationChangedEventProducerTest {
     Group group = new Group("xml", "base");
     producer.onEvent(new GroupEvent(HandlerEventType.BEFORE_CREATE, group));
     assertEventIsNotFired();
-    
+
     producer.onEvent(new GroupEvent(HandlerEventType.CREATE, group));
     assertGlobalEventIsFired();
   }
-  
+
   /**
    * Tests {@link AuthorizationChangedEventProducer#onEvent(sonia.scm.group.GroupEvent)} with modified groups.
    */
@@ -148,15 +148,15 @@ public class AuthorizationChangedEventProducerTest {
     Group modifiedGroup = new Group("xml", "base");
     producer.onEvent(new GroupModificationEvent(HandlerEventType.BEFORE_MODIFY, modifiedGroup, group));
     assertEventIsNotFired();
-    
+
     producer.onEvent(new GroupModificationEvent(HandlerEventType.MODIFY, modifiedGroup, group));
     assertEventIsNotFired();
-    
+
     modifiedGroup.add("test");
     producer.onEvent(new GroupModificationEvent(HandlerEventType.MODIFY, modifiedGroup, group));
     assertGlobalEventIsFired();
   }
-  
+
   /**
    * Tests {@link AuthorizationChangedEventProducer#onEvent(sonia.scm.repository.RepositoryEvent)}.
    */
@@ -166,13 +166,13 @@ public class AuthorizationChangedEventProducerTest {
     Repository repository = RepositoryTestData.createHeartOfGold();
     producer.onEvent(new RepositoryEvent(HandlerEventType.BEFORE_CREATE, repository));
     assertEventIsNotFired();
-    
+
     producer.onEvent(new RepositoryEvent(HandlerEventType.CREATE, repository));
     assertGlobalEventIsFired();
   }
-  
+
  /**
-   * Tests {@link AuthorizationChangedEventProducer#onEvent(sonia.scm.repository.RepositoryEvent)} with modified 
+   * Tests {@link AuthorizationChangedEventProducer#onEvent(sonia.scm.repository.RepositoryEvent)} with modified
    * repository.
    */
   @Test
@@ -224,11 +224,11 @@ public class AuthorizationChangedEventProducerTest {
     producer.onEvent(new RepositoryModificationEvent(HandlerEventType.CREATE, repositoryModified, repository));
     assertEventIsNotFired();
   }
-  
+
   private void resetStoredEvent(){
     producer.event = null;
   }
-  
+
   /**
    * Tests {@link AuthorizationChangedEventProducer#onEvent(AssignedPermissionEvent)}.
    */
@@ -240,33 +240,33 @@ public class AuthorizationChangedEventProducerTest {
     );
     producer.onEvent(new AssignedPermissionEvent(HandlerEventType.BEFORE_CREATE, groupPermission));
     assertEventIsNotFired();
-    
+
     producer.onEvent(new AssignedPermissionEvent(HandlerEventType.CREATE, groupPermission));
     assertGlobalEventIsFired();
-    
+
     resetStoredEvent();
-    
+
     StoredAssignedPermission userPermission = new StoredAssignedPermission(
       "123", new AssignedPermission("trillian", false, "repository:read:*")
     );
     producer.onEvent(new AssignedPermissionEvent(HandlerEventType.BEFORE_CREATE, userPermission));
     assertEventIsNotFired();
-    
+
     resetStoredEvent();
-    
+
     producer.onEvent(new AssignedPermissionEvent(HandlerEventType.CREATE, userPermission));
     assertUserEventIsFired("trillian");
   }
-  
+
   private static class StoringAuthorizationChangedEventProducer extends AuthorizationChangedEventProducer {
-  
+
     private AuthorizationChangedEvent event;
 
     @Override
     protected void sendEvent(AuthorizationChangedEvent event) {
       this.event = event;
     }
-    
+
   }
 
 }

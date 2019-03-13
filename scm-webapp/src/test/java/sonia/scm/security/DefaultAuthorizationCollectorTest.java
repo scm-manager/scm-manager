@@ -198,22 +198,6 @@ public class DefaultAuthorizationCollectorTest {
   }
 
   /**
-   * Tests {@link AuthorizationCollector#collect()} as admin.
-   */
-  @Test
-  @SubjectAware(
-    configuration = "classpath:sonia/scm/shiro-001.ini"
-  )
-  public void testCollectAsAdmin() {
-    User trillian = UserTestData.createTrillian();
-    trillian.setAdmin(true);
-    authenticate(trillian, "main");
-
-    AuthorizationInfo authInfo = collector.collect();
-    assertIsAdmin(authInfo);
-  }
-
-  /**
    * Tests {@link AuthorizationCollector#collect()} with repository permissions.
    */
   @Test

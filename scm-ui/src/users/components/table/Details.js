@@ -30,12 +30,6 @@ class Details extends React.Component<Props> {
             </td>
           </tr>
           <tr>
-            <td className="has-text-weight-semibold">{t("user.admin")}</td>
-            <td>
-              <Checkbox checked={user.admin} />
-            </td>
-          </tr>
-          <tr>
             <td className="has-text-weight-semibold">{t("user.active")}</td>
             <td>
               <Checkbox checked={user.active} />

@@ -6,7 +6,6 @@ export type User = {
   name: string,
   mail: string,
   password: string,
-  admin: boolean,
   active: boolean,
   type?: string,
   creationDate?: string,

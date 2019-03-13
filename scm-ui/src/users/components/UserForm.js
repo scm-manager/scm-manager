@@ -37,7 +37,6 @@ class UserForm extends React.Component<Props, State> {
         displayName: "",
         mail: "",
         password: "",
-        admin: false,
         active: true,
         _links: {}
       },
@@ -168,12 +167,6 @@ class UserForm extends React.Component<Props, State> {
             <div className="column">
               {passwordChangeField}
               <Checkbox
-                label={t("user.admin")}
-                onChange={this.handleAdminChange}
-                checked={user ? user.admin : false}
-                helpText={t("help.adminHelpText")}
-              />
-              <Checkbox
                 label={t("user.active")}
                 onChange={this.handleActiveChange}
                 checked={user ? user.active : false}
@@ -223,10 +216,6 @@ class UserForm extends React.Component<Props, State> {
       user: { ...this.state.user, password },
       passwordValid: !this.isFalsy(password) && passwordValid
     });
-  };
-
-  handleAdminChange = (admin: boolean) => {
-    this.setState({ user: { ...this.state.user, admin } });
   };
 
   handleActiveChange = (active: boolean) => {

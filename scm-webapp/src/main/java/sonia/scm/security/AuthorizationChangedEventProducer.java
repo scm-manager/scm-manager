@@ -49,15 +49,15 @@ import sonia.scm.user.UserEvent;
 import sonia.scm.user.UserModificationEvent;
 
 /**
- * Receives all kinds of events, which affects authorization relevant data and fires an 
+ * Receives all kinds of events, which affects authorization relevant data and fires an
  * {@link AuthorizationChangedEvent} if authorization data has changed.
- * 
+ *
  * @author Sebastian Sdorra
  * @since 1.52
  */
 @EagerSingleton
 public class AuthorizationChangedEventProducer {
-  
+
   /**
    * the logger for AuthorizationChangedEventProducer
    */
@@ -68,7 +68,7 @@ public class AuthorizationChangedEventProducer {
    */
   public AuthorizationChangedEventProducer() {
   }
-  
+
   /**
    * Invalidates the cache of a user which was modified. The cache entries for the user will be invalidated for the
    * following reasons:
@@ -90,11 +90,11 @@ public class AuthorizationChangedEventProducer {
       }
     }
   }
-  
+
   private boolean isModificationEvent(HandlerEvent<?> event) {
     return event instanceof ModificationHandlerEvent;
   }
-  
+
   private void handleUserEvent(UserEvent event) {
     String username = event.getItem().getName();
     logger.debug(
@@ -102,26 +102,26 @@ public class AuthorizationChangedEventProducer {
     );
     fireEventForUser(username);
   }
-  
+
   private void handleUserModificationEvent(UserModificationEvent event) {
     String username = event.getItem().getId();
     User beforeModification = event.getItemBeforeModification();
     if (isAuthorizationDataModified(event.getItem(), beforeModification)) {
       logger.debug(
-        "fire authorization changed event for user {}, because of a authorization relevant field has changed", 
+        "fire authorization changed event for user {}, because of a authorization relevant field has changed",
         username
       );
       fireEventForUser(username);
     } else {
       logger.debug(
-        "authorization changed event for user {} is not fired, because no authorization relevant field has changed", 
+        "authorization changed event for user {} is not fired, because no authorization relevant field has changed",
         username
       );
     }
   }
 
   private boolean isAuthorizationDataModified(User user, User beforeModification) {
-    return user.isAdmin() != beforeModification.isAdmin() || user.isActive() != beforeModification.isActive();
+    return user.isActive() != beforeModification.isActive();
   }
 
   private void fireEventForUser(String username) {
@@ -148,7 +148,7 @@ public class AuthorizationChangedEventProducer {
       }
     }
   }
-  
+
   private void handleRepositoryModificationEvent(RepositoryModificationEvent event) {
     Repository repository = event.getItem();
     if (isAuthorizationDataModified(repository, event.getItemBeforeModification())) {
@@ -169,14 +169,14 @@ public class AuthorizationChangedEventProducer {
       || repository.isPublicReadable() != beforeModification.isPublicReadable()
       || !(repository.getPermissions().containsAll(beforeModification.getPermissions()) && beforeModification.getPermissions().containsAll(repository.getPermissions()));
   }
-  
+
   private void fireEventForEveryUser() {
     sendEvent(AuthorizationChangedEvent.createForEveryUser());
   }
-  
+
   private void handleRepositoryEvent(RepositoryEvent event){
     logger.debug(
-      "fire authorization changed event, because of received {} event for repository {}", 
+      "fire authorization changed event, because of received {} event for repository {}",
       event.getEventType(), event.getItem().getName()
     );
     fireEventForEveryUser();
@@ -199,7 +199,7 @@ public class AuthorizationChangedEventProducer {
       }
     }
   }
-  
+
   private void handleGroupPermissionChange(AssignedPermission permission) {
     logger.debug(
       "fire authorization changed event for group {}, because permission {} has changed",
@@ -207,13 +207,13 @@ public class AuthorizationChangedEventProducer {
     );
     fireEventForEveryUser();
   }
-  
+
   private void handleUserPermissionChange(AssignedPermission permission) {
     logger.debug(
         "fire authorization changed event for user {}, because permission {} has changed",
         permission.getName(), permission.getPermission()
     );
-    fireEventForUser(permission.getName());    
+    fireEventForUser(permission.getName());
   }
 
   /**
@@ -230,7 +230,7 @@ public class AuthorizationChangedEventProducer {
   public void onEvent(GroupEvent event) {
     if (event.getEventType().isPost()) {
       if (isModificationEvent(event)) {
-        handleGroupModificationEvent((GroupModificationEvent) event); 
+        handleGroupModificationEvent((GroupModificationEvent) event);
       } else {
         handleGroupEvent(event);
       }
@@ -244,28 +244,28 @@ public class AuthorizationChangedEventProducer {
       fireEventForEveryUser();
     } else {
       logger.debug(
-        "authorization changed event is not fired, because non relevant field of group {} has changed", 
+        "authorization changed event is not fired, because non relevant field of group {} has changed",
         group.getId()
       );
     }
   }
-  
+
   private boolean isAuthorizationDataModified(Group group, Group beforeModification) {
     return !group.getMembers().equals(beforeModification.getMembers());
   }
-  
+
   private void handleGroupEvent(GroupEvent event){
     logger.debug(
-      "fire authorization changed event, because of received group event {} for group {}", 
-      event.getEventType(), 
+      "fire authorization changed event, because of received group event {} for group {}",
+      event.getEventType(),
       event.getItem().getId()
     );
-    fireEventForEveryUser();    
+    fireEventForEveryUser();
   }
-  
+
   @VisibleForTesting
   protected void sendEvent(AuthorizationChangedEvent event) {
     ScmEventBus.getInstance().post(event);
   }
-  
+
 }
