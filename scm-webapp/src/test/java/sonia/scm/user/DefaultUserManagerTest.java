@@ -67,7 +67,7 @@ import org.junit.Rule;
 )
 public class DefaultUserManagerTest extends UserManagerTestBase
 {
-  
+
   @Rule
   public ShiroRule shiro = new ShiroRule();
 
@@ -95,39 +95,6 @@ public class DefaultUserManagerTest extends UserManagerTestBase
     userDAO = mock(UserDAO.class);
     when(userDAO.getType()).thenReturn("xml");
     when(userDAO.get("trillian")).thenReturn(trillian);
-  }
-
-  /**
-   * Method description
-   *
-   */
-  @Test
-  public void testDefaultAccountAfterFristStart()
-  {
-    List<User> users = Lists.newArrayList(new User("tuser"));
-
-    when(userDAO.getAll()).thenReturn(users);
-
-    UserManager userManager = new DefaultUserManager(userDAO);
-
-    userManager.init(contextProvider);
-    verify(userDAO, never()).add(any(User.class));
-  }
-
-  /**
-   * Method description
-   *
-   */
-  @Test
-  @SuppressWarnings("unchecked")
-  public void testDefaultAccountCreation()
-  {
-    when(userDAO.getAll()).thenReturn(Collections.EMPTY_LIST);
-
-    UserManager userManager = new DefaultUserManager(userDAO);
-
-    userManager.init(contextProvider);
-    verify(userDAO, times(2)).add(any(User.class));
   }
 
   @Test(expected = InvalidPasswordException.class)
