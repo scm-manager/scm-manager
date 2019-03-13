@@ -75,7 +75,7 @@ public class DefaultAdministrationContext implements AdministrationContext
     "/sonia/scm/web/security/system-account.xml";
 
   /** Field description */
-  private static final String REALM = "AdminRealm";
+  static final String REALM = "AdminRealm";
 
   /** the logger for DefaultAdministrationContext */
   private static final Logger logger =
@@ -174,6 +174,7 @@ public class DefaultAdministrationContext implements AdministrationContext
     collection.add(adminUser.getId(), REALM);
     collection.add(adminUser, REALM);
     collection.add(new GroupNames(), REALM);
+    collection.add(AdministrationContextMarker.MARKER, REALM);
 
     return collection;
   }
