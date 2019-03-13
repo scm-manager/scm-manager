@@ -149,9 +149,9 @@
     }
   },
   "namespaceStrategies": {
-    "sonia.scm.repository.UsernameNamespaceStrategy":  "Benutzername",
-    "sonia.scm.repository.CustomNamespaceStrategy":  "Benutzerdefiniert",
-    "sonia.scm.repository.CurrentYearNamespaceStrategy":  "Aktuelles Jahr",
-    "sonia.scm.repository.RepositoryTypeNamespaceStrategy": "Repository Typ"
+    "UsernameNamespaceStrategy":  "Benutzername",
+    "CustomNamespaceStrategy":  "Benutzerdefiniert",
+    "CurrentYearNamespaceStrategy":  "Aktuelles Jahr",
+    "RepositoryTypeNamespaceStrategy": "Repository Typ"
   }
 }
