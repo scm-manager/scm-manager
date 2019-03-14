@@ -7,7 +7,6 @@ import { InputField, Checkbox, Select } from "@scm-manager/ui-components";
 type Configuration = {
   compatibility: string,
   enabledGZip: boolean,
-  disabled: boolean,
   _links: Links
 };
 
@@ -23,7 +22,7 @@ type Props = {
 
 type State = Configuration;
 
-class HgConfigurationForm extends React.Component<Props, State> {
+class SvnConfigurationForm extends React.Component<Props, State> {
 
   constructor(props: Props) {
     super(props);
@@ -76,18 +75,10 @@ class HgConfigurationForm extends React.Component<Props, State> {
           onChange={this.handleChange}
           disabled={readOnly}
         />
-        <Checkbox
-          name="disabled"
-          label={t("scm-svn-plugin.config.disabled")}
-          helpText={t("scm-svn-plugin.config.disabledHelpText")}
-          checked={this.state.disabled}
-          onChange={this.handleChange}
-          disabled={readOnly}
-        />
       </>
     );
   }
 
 }
 
-export default translate("plugins")(HgConfigurationForm);
+export default translate("plugins")(SvnConfigurationForm);
