@@ -277,6 +277,23 @@ class ResourceLinks {
     }
   }
 
+  public NamespaceStrategiesLinks namespaceStrategies() {
+    return new NamespaceStrategiesLinks(scmPathInfoStore.get());
+  }
+
+  static class NamespaceStrategiesLinks {
+
+    private final LinkBuilder namespaceStrategiesLinkBuilder;
+
+    NamespaceStrategiesLinks(ScmPathInfo pathInfo) {
+      namespaceStrategiesLinkBuilder = new LinkBuilder(pathInfo, NamespaceStrategyResource.class);
+    }
+
+    String self() {
+      return namespaceStrategiesLinkBuilder.method("get").parameters().href();
+    }
+  }
+
   public RepositoryTypeLinks repositoryType() {
     return new RepositoryTypeLinks(scmPathInfoStore.get());
   }

@@ -85,7 +85,7 @@ public class FileHistoryRootResource {
       } else {
         String message = String.format("for the revision %s and the file %s there are no changesets", revision, path);
         log.error(message);
-        throw notFound(entity("path", path).in("revision", revision).in(namespaceAndName));
+        throw notFound(entity("Path", path).in("revision", revision).in(namespaceAndName));
       }
     }
   }

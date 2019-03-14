@@ -34,6 +34,7 @@ import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.inject.Provider;
+import com.google.inject.util.Providers;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -117,8 +118,8 @@ public class DefaultRepositoryManagerPerfTest {
       contextProvider, 
       keyGenerator, 
       repositoryDAO,
-      handlerSet, 
-      namespaceStrategy
+      handlerSet,
+      Providers.of(namespaceStrategy)
     );
     
     setUpTestRepositories();

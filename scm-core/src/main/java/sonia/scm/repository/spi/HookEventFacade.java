@@ -77,7 +77,7 @@ public final class HookEventFacade
     Repository repository = repositoryManagerProvider.get().get(id);
     if (repository == null)
     {
-      throw notFound(entity("repository", id));
+      throw notFound(entity("Repository", id));
     }
     return handle(repository);
   }

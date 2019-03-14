@@ -50,7 +50,7 @@ const config = {
     "http://plugins.scm-manager.org/scm-plugin-backend/api/{version}/plugins?os={os}&arch={arch}&snapshot=false",
   loginAttemptLimitTimeout: 300,
   enabledXsrfProtection: true,
-  defaultNamespaceStrategy: "sonia.scm.repository.DefaultNamespaceStrategy",
+  namespaceStrategy: "UsernameNamespaceStrategy",
   _links: {
     self: { href: "http://localhost:8081/api/v2/config" },
     update: { href: "http://localhost:8081/api/v2/config" }
@@ -79,7 +79,7 @@ const configWithNullValues = {
     "http://plugins.scm-manager.org/scm-plugin-backend/api/{version}/plugins?os={os}&arch={arch}&snapshot=false",
   loginAttemptLimitTimeout: 300,
   enabledXsrfProtection: true,
-  defaultNamespaceStrategy: "sonia.scm.repository.DefaultNamespaceStrategy",
+  namespaceStrategy: "UsernameNamespaceStrategy",
   _links: {
     self: { href: "http://localhost:8081/api/v2/config" },
     update: { href: "http://localhost:8081/api/v2/config" }

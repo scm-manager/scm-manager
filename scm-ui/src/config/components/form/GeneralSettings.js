@@ -1,7 +1,9 @@
 // @flow
 import React from "react";
 import { translate } from "react-i18next";
-import { Checkbox, InputField } from "@scm-manager/ui-components";
+import { Checkbox, InputField} from "@scm-manager/ui-components";
+import type { NamespaceStrategies } from "@scm-manager/ui-types";
+import NamespaceStrategySelect from "./NamespaceStrategySelect";
 
 type Props = {
   realmDescription: string,
@@ -12,13 +14,16 @@ type Props = {
   skipFailedAuthenticators: boolean,
   pluginUrl: string,
   enabledXsrfProtection: boolean,
-  defaultNamespaceStrategy: string,
-  t: string => string,
+  namespaceStrategy: string,
+  namespaceStrategies?: NamespaceStrategies,
   onChange: (boolean, any, string) => void,
-  hasUpdatePermission: boolean
+  hasUpdatePermission: boolean,
+  // context props
+  t: string => string
 };
 
 class GeneralSettings extends React.Component<Props> {
+
   render() {
     const {
       t,
@@ -30,8 +35,9 @@ class GeneralSettings extends React.Component<Props> {
       skipFailedAuthenticators,
       pluginUrl,
       enabledXsrfProtection,
-      defaultNamespaceStrategy,
-      hasUpdatePermission
+      namespaceStrategy,
+      hasUpdatePermission,
+      namespaceStrategies
     } = this.props;
 
     return (
@@ -67,13 +73,14 @@ class GeneralSettings extends React.Component<Props> {
                 />
                 </div>
                 <div className="column is-half">
-                <InputField
-                  label={t("general-settings.default-namespace-strategy")}
-                  onChange={this.handleDefaultNamespaceStrategyChange}
-                  value={defaultNamespaceStrategy}
-                  disabled={!hasUpdatePermission}
-                  helpText={t("help.defaultNameSpaceStrategyHelpText")}
-                />
+                  <NamespaceStrategySelect
+                    label={t("general-settings.namespace-strategy")}
+                    onChange={this.handleNamespaceStrategyChange}
+                    value={namespaceStrategy}
+                    disabled={!hasUpdatePermission}
+                    namespaceStrategies={namespaceStrategies}
+                    helpText={t("help.nameSpaceStrategyHelpText")}
+                  />
                 </div>
             </div>
             <div className="columns">
@@ -146,19 +153,17 @@ class GeneralSettings extends React.Component<Props> {
   handleAnonymousAccessEnabledChange = (value: string) => {
     this.props.onChange(true, value, "anonymousAccessEnabled");
   };
-
   handleSkipFailedAuthenticatorsChange = (value: string) => {
     this.props.onChange(true, value, "skipFailedAuthenticators");
   };
   handlePluginUrlChange = (value: string) => {
     this.props.onChange(true, value, "pluginUrl");
   };
-
   handleEnabledXsrfProtectionChange = (value: boolean) => {
     this.props.onChange(true, value, "enabledXsrfProtection");
   };
-  handleDefaultNamespaceStrategyChange = (value: string) => {
-    this.props.onChange(true, value, "defaultNamespaceStrategy");
+  handleNamespaceStrategyChange = (value: string) => {
+    this.props.onChange(true, value, "namespaceStrategy");
   };
 }
 

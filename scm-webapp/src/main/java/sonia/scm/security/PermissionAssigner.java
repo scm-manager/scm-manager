@@ -77,7 +77,7 @@ public class PermissionAssigner {
   private Predicate<PermissionDescriptor> permissionExists(Collection<PermissionDescriptor> availablePermissions, Collection<AssignedPermission> existingPermissions) {
     return p -> {
       if (!availablePermissions.contains(p) && existingPermissions.stream().map(AssignedPermission::getPermission).noneMatch(e -> e.equals(p))) {
-        throw NotFoundException.notFound(ContextEntry.ContextBuilder.entity("permission", p.getValue()));
+        throw NotFoundException.notFound(ContextEntry.ContextBuilder.entity("Permission", p.getValue()));
       }
       return true;
     };

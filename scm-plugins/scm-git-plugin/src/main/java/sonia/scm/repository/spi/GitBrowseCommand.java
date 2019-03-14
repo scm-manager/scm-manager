@@ -65,6 +65,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import static sonia.scm.NotFoundException.notFound;
+
 //~--- JDK imports ------------------------------------------------------------
 
 /**
@@ -128,10 +131,11 @@ public class GitBrowseCommand extends AbstractGitCommand
       if (Util.isNotEmpty(request.getRevision()))
       {
         logger.error("could not find revision {}", request.getRevision());
+        throw notFound(entity("Revision", request.getRevision()).in(this.repository));
       }
       else if (logger.isWarnEnabled())
       {
-        logger.warn("coul not find head of repository, empty?");
+        logger.warn("could not find head of repository, empty?");
       }
 
       result = new BrowserResult(Constants.HEAD, createEmtpyRoot());
@@ -354,7 +358,7 @@ public class GitBrowseCommand extends AbstractGitCommand
       }
     }
 
-    throw new NotFoundException("file", request.getPath());
+    throw notFound(entity("File", request.getPath()).in("Revision", revId.getName()).in(this.repository));
   }
 
   @SuppressWarnings("unchecked")
