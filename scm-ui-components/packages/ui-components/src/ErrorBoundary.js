@@ -1,26 +1,48 @@
 // @flow
-import React from "react";
+import * as React from "react";
 import ErrorNotification from "./ErrorNotification";
 
-class ErrorBoundary extends React.Component {
-  constructor(props) {
+type Props = {
+  fallback?: React.ComponentType<any>,
+  children: React.Node
+};
+
+type ErrorInfo = {
+  componentStack: string
+};
+
+type State = {
+  error?: Error,
+  errorInfo?: ErrorInfo
+};
+
+class ErrorBoundary extends React.Component<Props,State> {
+  constructor(props: Props) {
     super(props);
-    this.state = { error: null, errorInfo: null };
+    this.state = {};
   }
 
-  componentDidCatch(error, errorInfo) {
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     // Catch errors in any components below and re-render with error message
     this.setState({
-      error: error,
-      errorInfo: errorInfo
+      error,
+      errorInfo
     });
   }
 
+  renderError = () => {
+    let FallbackComponent = this.props.fallback;
+    if (!FallbackComponent) {
+      FallbackComponent = ErrorNotification;
+    }
+
+    return <FallbackComponent {...this.state} />;
+  };
+
   render() {
-    if (this.state.errorInfo) {
-      return (
-        <ErrorNotification error={this.state.error} />
-      );
+    const { error } = this.state;
+    if (error) {
+      return this.renderError();
     }
     return this.props.children;
   }
