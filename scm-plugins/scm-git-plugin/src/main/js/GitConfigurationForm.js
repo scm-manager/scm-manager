@@ -9,7 +9,6 @@ type Configuration = {
   repositoryDirectory?: string,
   gcExpression?: string,
   nonFastForwardDisallowed: boolean,
-  disabled: boolean,
   _links: Links
 }
 
@@ -42,7 +41,7 @@ class GitConfigurationForm extends React.Component<Props, State> {
   };
 
   render() {
-    const { gcExpression, nonFastForwardDisallowed, disabled } = this.state;
+    const { gcExpression, nonFastForwardDisallowed } = this.state;
     const { readOnly, t } = this.props;
 
     return (
@@ -58,13 +57,6 @@ class GitConfigurationForm extends React.Component<Props, State> {
                   label={t("scm-git-plugin.config.nonFastForwardDisallowed")}
                   helpText={t("scm-git-plugin.config.nonFastForwardDisallowedHelpText")}
                   checked={nonFastForwardDisallowed}
-                  onChange={this.handleChange}
-                  disabled={readOnly}
-        />
-        <Checkbox name="disabled"
-                  label={t("scm-git-plugin.config.disabled")}
-                  helpText={t("scm-git-plugin.config.disabledHelpText")}
-                  checked={disabled}
                   onChange={this.handleChange}
                   disabled={readOnly}
         />
