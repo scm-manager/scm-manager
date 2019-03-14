@@ -26,6 +26,7 @@ type Props = {
   selected: (branch?: Branch) => void,
   selectedBranch?: string,
   label: string,
+  disabled?: boolean,
 
   // context props
   classes: Object
@@ -47,7 +48,7 @@ class BranchSelector extends React.Component<Props, State> {
   }
 
   render() {
-    const { branches, classes, label } = this.props;
+    const { branches, classes, label, disabled } = this.props;
 
     if (branches) {
       return (
@@ -79,6 +80,7 @@ class BranchSelector extends React.Component<Props, State> {
                   className="is-fullwidth"
                   options={branches.map(b => b.name)}
                   optionSelected={this.branchSelected}
+                  disabled={!!disabled}
                   preselectedOption={
                     this.state.selectedBranch
                       ? this.state.selectedBranch.name

@@ -159,7 +159,7 @@ public class GitConfigResourceTest {
   }
 
   @Test
-  @SubjectAware(username = "writeOnly")
+  @SubjectAware(username = "readWrite")
   public void shouldReadDefaultRepositoryConfig() throws URISyntaxException, UnsupportedEncodingException {
     when(repositoryManager.get(new NamespaceAndName("space", "X"))).thenReturn(new Repository("id", "git", "space", "X"));
 
@@ -193,7 +193,7 @@ public class GitConfigResourceTest {
   }
 
   @Test
-  @SubjectAware(username = "writeOnly")
+  @SubjectAware(username = "readOnly")
   public void shouldReadStoredRepositoryConfig() throws URISyntaxException, UnsupportedEncodingException {
     when(repositoryManager.get(new NamespaceAndName("space", "X"))).thenReturn(new Repository("id", "git", "space", "X"));
     GitRepositoryConfig gitRepositoryConfig = new GitRepositoryConfig();
