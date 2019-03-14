@@ -81,7 +81,14 @@ class PluginLoader extends React.Component<Props, State> {
   };
 
   loadBundle = (bundle: string) => {
-    return fetch(bundle)
+    return fetch(bundle, {
+      credentials: "same-origin",
+      headers: {
+        Cache: "no-cache",
+        // identify the request as ajax request
+        "X-Requested-With": "XMLHttpRequest"
+      }
+    })
       .then(response => {
         return response.text();
       })
