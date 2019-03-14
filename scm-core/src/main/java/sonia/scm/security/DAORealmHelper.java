@@ -35,8 +35,6 @@ package sonia.scm.security;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.ImmutableSet.Builder;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.DisabledAccountException;
@@ -47,9 +45,7 @@ import org.apache.shiro.authc.credential.CredentialsMatcher;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.group.Group;
 import sonia.scm.group.GroupDAO;
-import sonia.scm.group.GroupNames;
 import sonia.scm.user.User;
 import sonia.scm.user.UserDAO;
 
@@ -75,7 +71,7 @@ public final class DAORealmHelper {
   
   private final UserDAO userDAO;
   
-  private final GroupDAO groupDAO;
+  private final GroupCollector groupCollector;
 
   private final String realm;
   
@@ -87,14 +83,14 @@ public final class DAORealmHelper {
    *
    * @param loginAttemptHandler login attempt handler for wrapping credentials matcher
    * @param userDAO user dao
-   * @param groupDAO group dao
+   * @param groupCollector collect groups for a principal
    * @param realm name of realm
    */
-  public DAORealmHelper(LoginAttemptHandler loginAttemptHandler, UserDAO userDAO, GroupDAO groupDAO, String realm) {
+  public DAORealmHelper(LoginAttemptHandler loginAttemptHandler, UserDAO userDAO, GroupCollector groupCollector, String realm) {
     this.loginAttemptHandler = loginAttemptHandler;
     this.realm = realm;
     this.userDAO = userDAO;
-    this.groupDAO = groupDAO;
+    this.groupCollector = groupCollector;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -157,7 +153,7 @@ public final class DAORealmHelper {
 
     collection.add(principal, realm);
     collection.add(user, realm);
-    collection.add(collectGroups(principal, groups), realm);
+    collection.add(groupCollector.collect(principal, groups), realm);
     collection.add(MoreObjects.firstNonNull(scope, Scope.empty()), realm);
 
     String creds = credentials;
@@ -170,26 +166,6 @@ public final class DAORealmHelper {
   }
 
   //~--- methods --------------------------------------------------------------
-
-  private GroupNames collectGroups(String principal, Iterable<String> groupNames) {
-    Builder<String> builder = ImmutableSet.builder();
-
-    builder.add(GroupNames.AUTHENTICATED);
-
-    for (String group : groupNames) {
-      builder.add(group);
-    }
-
-    for (Group group : groupDAO.getAll()) {
-      if (group.isMember(principal)) {
-        builder.add(group.getName());
-      }
-    }
-
-    GroupNames groups = new GroupNames(builder.build());
-    LOG.debug("collected following groups for principal {}: {}", principal, groups);
-    return groups;
-  }
 
   /**
    * Builder class for {@link AuthenticationInfo}.

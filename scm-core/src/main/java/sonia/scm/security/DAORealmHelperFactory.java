@@ -30,9 +30,10 @@
  */
 package sonia.scm.security;
 
-import javax.inject.Inject;
 import sonia.scm.group.GroupDAO;
 import sonia.scm.user.UserDAO;
+
+import javax.inject.Inject;
 
 /**
  * Factory to create {@link DAORealmHelper} instances.
@@ -44,7 +45,7 @@ public final class DAORealmHelperFactory {
   
   private final LoginAttemptHandler loginAttemptHandler;
   private final UserDAO userDAO; 
-  private final GroupDAO groupDAO;
+  private final GroupCollector groupCollector;
 
   /**
    * Constructs a new instance.
@@ -57,7 +58,7 @@ public final class DAORealmHelperFactory {
   public DAORealmHelperFactory(LoginAttemptHandler loginAttemptHandler, UserDAO userDAO, GroupDAO groupDAO) {
     this.loginAttemptHandler = loginAttemptHandler;
     this.userDAO = userDAO;
-    this.groupDAO = groupDAO;
+    this.groupCollector = new GroupCollector(groupDAO);
   }
   
   /**
@@ -68,7 +69,7 @@ public final class DAORealmHelperFactory {
    * @return new {@link DAORealmHelper} instance.
    */
   public DAORealmHelper create(String realm) {
-    return new DAORealmHelper(loginAttemptHandler, userDAO, groupDAO, realm);
+    return new DAORealmHelper(loginAttemptHandler, userDAO, groupCollector, realm);
   }
   
 }

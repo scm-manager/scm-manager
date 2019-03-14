@@ -47,22 +47,16 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnitRunner;
-import sonia.scm.group.GroupNames;
+import sonia.scm.group.ExternalGroupNames;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.anyString;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 import static sonia.scm.security.SecureKeyTestUtil.createSecureKey;
 
 /**
@@ -182,7 +176,11 @@ public class JwtAccessTokenBuilderTest {
 
   private Object enrichWithGroups(InvocationOnMock invocation, String[] groups, boolean external) throws Throwable {
     PrincipalCollection principals = (PrincipalCollection) spy(invocation.callRealMethod());
-    when(principals.oneByType(GroupNames.class)).thenReturn(new GroupNames(Arrays.asList(groups), external));
+
+    List<String> groupCollection = Arrays.asList(groups);
+    if (external) {
+      when(principals.oneByType(ExternalGroupNames.class)).thenReturn(new ExternalGroupNames(groupCollection));
+    }
     return principals;
   }
 

@@ -52,7 +52,7 @@ import java.util.Iterator;
  * @author Sebastian Sdorra
  * @since 1.21
  */
-public final class GroupNames implements Serializable, Iterable<String>
+public class GroupNames implements Serializable, Iterable<String>
 {
 
   /**
@@ -95,19 +95,7 @@ public final class GroupNames implements Serializable, Iterable<String>
    */
   public GroupNames(Collection<String> collection)
   {
-    this(collection, false);
-  }
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param collection
-   */
-  public GroupNames(Collection<String> collection, boolean external)
-  {
     this.collection = Collections.unmodifiableCollection(collection);
-    this.external = external;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -176,7 +164,7 @@ public final class GroupNames implements Serializable, Iterable<String>
   @Override
   public String toString()
   {
-    return Joiner.on(", ").join(collection) + "(" + (external? "external": "internal") + ")";
+    return Joiner.on(", ").join(collection);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -192,13 +180,8 @@ public final class GroupNames implements Serializable, Iterable<String>
     return collection;
   }
 
-  public boolean isExternal() {
-    return external;
-  }
 
   //~--- fields ---------------------------------------------------------------
   /** Field description */
   private final Collection<String> collection;
-
-  private final boolean external;
 }

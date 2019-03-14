@@ -36,6 +36,11 @@ import com.google.common.collect.Maps;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sonia.scm.group.ExternalGroupNames;
 
 import java.time.Clock;
 import java.time.Instant;
@@ -46,11 +51,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import sonia.scm.group.GroupNames;
 
 /**
  * Jwt implementation of {@link AccessTokenBuilder}.
@@ -210,9 +210,9 @@ public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
       claims.put(JwtAccessToken.GROUPS_CLAIM_KEY, groups);
     } else {
       Subject currentSubject = SecurityUtils.getSubject();
-      GroupNames groupNames = currentSubject.getPrincipals().oneByType(GroupNames.class);
-      if (groupNames != null && groupNames.isExternal()) {
-        claims.put(JwtAccessToken.GROUPS_CLAIM_KEY, groupNames.getCollection().toArray(new String[]{}));
+      ExternalGroupNames externalGroupNames = currentSubject.getPrincipals().oneByType(ExternalGroupNames.class);
+      if (externalGroupNames != null) {
+        claims.put(JwtAccessToken.GROUPS_CLAIM_KEY, externalGroupNames.getCollection().toArray(new String[]{}));
       }
     }
 
