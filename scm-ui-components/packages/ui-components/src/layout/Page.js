@@ -32,15 +32,16 @@ class Page extends React.Component<Props> {
   render() {
     const { error } = this.props;
     return (
-      <ErrorBoundary>
-        <section className="section">
-          <div className="container">
-            {this.renderPageHeader()}
-            <ErrorNotification error={error} />
+      <section className="section">
+        <div className="container">
+          {this.renderPageHeader()}
+          <ErrorBoundary>
+            <ErrorNotification error={error}/>
             {this.renderContent()}
-          </div>
-        </section>
-      </ErrorBoundary>
+          </ErrorBoundary>
+        </div>
+      </section>
+
     );
   }
 
@@ -67,15 +68,15 @@ class Page extends React.Component<Props> {
       }
     });
     let underline = pageActionsExists ? (
-      <hr className="header-with-actions" />
+      <hr className="header-with-actions"/>
     ) : null;
 
     return (
       <>
         <div className="columns">
           <div className="column">
-            <Title title={title} />
-            <Subtitle subtitle={subtitle} />
+            <Title title={title}/>
+            <Subtitle subtitle={subtitle}/>
           </div>
           {pageActions}
         </div>
@@ -91,7 +92,7 @@ class Page extends React.Component<Props> {
       return null;
     }
     if (loading) {
-      return <Loading />;
+      return <Loading/>;
     }
 
     let content = [];
