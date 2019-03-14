@@ -112,6 +112,12 @@ class RepositoryConfig extends React.Component<Props, State> {
       );
     }
 
+    const submitButton = disabled? null: <SubmitButton
+      label={t("scm-git-plugin.repo-config.submit")}
+      loading={submitPending}
+      disabled={!this.state.selectedBranchName}
+    />;
+
     if (!(loadingBranches || loadingDefaultBranch)) {
       return (
         <>
@@ -125,11 +131,7 @@ class RepositoryConfig extends React.Component<Props, State> {
               selectedBranch={this.state.selectedBranchName}
               disabled={disabled}
             />
-            <SubmitButton
-              label={t("scm-git-plugin.repo-config.submit")}
-              loading={submitPending}
-              disabled={!this.state.selectedBranchName || disabled}
-            />
+            { submitButton }
           </form>
           <hr />
         </>

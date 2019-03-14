@@ -71,7 +71,8 @@ class RepositoryForm extends React.Component<Props, State> {
       this.state.nameValidationError ||
       this.state.contactValidationError ||
       this.isFalsy(repository.name) ||
-      (namespaceStrategy === CUSTOM_NAMESPACE_STRATEGY && this.isFalsy(repository.namespace))
+      (namespaceStrategy === CUSTOM_NAMESPACE_STRATEGY &&
+        this.isFalsy(repository.namespace))
     );
   };
 
@@ -86,9 +87,23 @@ class RepositoryForm extends React.Component<Props, State> {
     return !this.props.repository;
   };
 
+  isModifiable = () => {
+    return !!this.props.repository && !!this.props.repository._links.update;
+  };
+
   render() {
     const { loading, t } = this.props;
     const repository = this.state.repository;
+
+    const disabled = !this.isModifiable() && !this.isCreateMode();
+
+    const submitButton = disabled ? null : (
+      <SubmitButton
+        disabled={!this.isValid()}
+        loading={loading}
+        label={t("repositoryForm.submit")}
+      />
+    );
 
     let subtitle = null;
     if (this.props.repository) {
@@ -108,6 +123,7 @@ class RepositoryForm extends React.Component<Props, State> {
             validationError={this.state.contactValidationError}
             errorMessage={t("validation.contact-invalid")}
             helpText={t("help.contactHelpText")}
+            disabled={disabled}
           />
 
           <Textarea
@@ -115,12 +131,9 @@ class RepositoryForm extends React.Component<Props, State> {
             onChange={this.handleDescriptionChange}
             value={repository ? repository.description : ""}
             helpText={t("help.descriptionHelpText")}
+            disabled={disabled}
           />
-          <SubmitButton
-            disabled={!this.isValid()}
-            loading={loading}
-            label={t("repositoryForm.submit")}
-          />
+          {submitButton}
         </form>
       </>
     );

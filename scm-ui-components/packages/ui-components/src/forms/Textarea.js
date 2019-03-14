@@ -14,7 +14,8 @@ type Props = {
   value?: string,
   autofocus?: boolean,
   onChange: (value: string, name?: string) => void,
-  helpText?: string
+  helpText?: string,
+  disabled?: boolean
 };
 
 class Textarea extends React.Component<Props> {
@@ -31,7 +32,7 @@ class Textarea extends React.Component<Props> {
   };
 
   render() {
-    const { placeholder, value, label, helpText } = this.props;
+    const { placeholder, value, label, helpText, disabled } = this.props;
 
     return (
       <div className="field">
@@ -45,6 +46,7 @@ class Textarea extends React.Component<Props> {
             placeholder={placeholder}
             onChange={this.handleInput}
             value={value}
+            disabled={!!disabled}
           />
         </div>
       </div>
