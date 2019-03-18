@@ -37,6 +37,7 @@ package sonia.scm.repository.spi;
 import com.google.common.base.Strings;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffFormatter;
+import org.eclipse.jgit.diff.RenameDetector;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevTree;
@@ -150,6 +151,13 @@ public class GitDiffCommand extends AbstractGitCommand implements DiffCommand
       formatter.setRepository(gr);
 
       List<DiffEntry> entries = DiffEntry.scan(treeWalk);
+
+      if (request.isComputeRename()) {
+        RenameDetector rd = new RenameDetector(gr);
+        request.getRenameLimit().ifPresent(rd::setRenameLimit);
+        rd.addAll(entries);
+        entries = rd.compute();
+      }
 
       for (DiffEntry e : entries)
       {

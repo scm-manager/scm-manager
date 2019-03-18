@@ -193,6 +193,7 @@ public final class DiffCommandBuilder
 
     return this;
   }
+
   /**
    * Compute the incoming changes of the branch set with {@link #setRevision(String)} in respect to the changeset given
    * here. In other words: What changes would be new to the ancestor changeset given here when the branch would
@@ -202,12 +203,31 @@ public final class DiffCommandBuilder
    */
   public DiffCommandBuilder setAncestorChangeset(String revision)
   {
-    if (!supportedFeatures.contains(Feature.INCOMING_REVISION)) {
-      throw new FeatureNotSupportedException(Feature.INCOMING_REVISION.name());
-    }
+    assertFeatureSupported(Feature.INCOMING_REVISION);
     request.setAncestorChangeset(revision);
 
     return this;
+  }
+
+  public DiffCommandBuilder setComputeRename(boolean computeRename)
+  {
+    assertFeatureSupported(Feature.COMPUTE_RENAME);
+    request.setComputeRename(computeRename);
+    return this;
+  }
+
+  public DiffCommandBuilder setComputeRename(int renameLimit)
+  {
+    assertFeatureSupported(Feature.COMPUTE_RENAME);
+    request.setComputeRename(renameLimit);
+    return this;
+  }
+
+  private void assertFeatureSupported(Feature computeRename)
+  {
+    if (!supportedFeatures.contains(computeRename)) {
+      throw new FeatureNotSupportedException(computeRename.name());
+    }
   }
 
   //~--- get methods ----------------------------------------------------------

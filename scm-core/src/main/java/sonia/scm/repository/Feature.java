@@ -50,5 +50,9 @@ public enum Feature
    * The repository supports computation of incoming changes (either diff or list of changesets) of one branch
    * in respect to another target branch.
    */
-  INCOMING_REVISION
+  INCOMING_REVISION,
+  /**
+   * The repository supports configuring the computation of renamed files between revisions.
+   */
+  COMPUTE_RENAME
 }

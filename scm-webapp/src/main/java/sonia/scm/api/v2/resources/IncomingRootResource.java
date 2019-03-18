@@ -143,6 +143,7 @@ public class IncomingRootResource {
           .setRevision(source)
           .setAncestorChangeset(target)
           .setFormat(diffFormat)
+          .setComputeRename(true)
           .retrieveContent(output);
 
       return Response.ok(responseEntry)

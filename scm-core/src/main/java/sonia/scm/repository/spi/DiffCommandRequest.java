@@ -40,6 +40,8 @@ import com.google.common.base.Strings;
 import sonia.scm.Validateable;
 import sonia.scm.repository.api.DiffFormat;
 
+import java.util.Optional;
+
 /**
  *
  * @author Sebastian Sdorra
@@ -112,6 +114,16 @@ public final class DiffCommandRequest extends FileBaseCommandRequest
   public void setAncestorChangeset(String ancestorChangeset) {
     this.ancestorChangeset = ancestorChangeset;
   }
+
+  public void setComputeRename(boolean computeRename) {
+    this.computeRename = computeRename;
+  }
+
+  public void setComputeRename(int renameLimit) {
+    this.computeRename = true;
+    this.renameLimit = renameLimit;
+  }
+
 //~--- get methods ----------------------------------------------------------
 
   /**
@@ -130,10 +142,22 @@ public final class DiffCommandRequest extends FileBaseCommandRequest
   public String getAncestorChangeset() {
     return ancestorChangeset;
   }
-//~--- fields ---------------------------------------------------------------
+
+  public boolean isComputeRename() {
+    return computeRename;
+  }
+
+  public Optional<Integer> getRenameLimit() {
+    return Optional.ofNullable(renameLimit);
+  }
+
+  //~--- fields ---------------------------------------------------------------
 
   /** diff format */
   private DiffFormat format = DiffFormat.NATIVE;
+
+  private boolean computeRename = false;
+  private Integer renameLimit = null;
 
   private String ancestorChangeset;
 }
