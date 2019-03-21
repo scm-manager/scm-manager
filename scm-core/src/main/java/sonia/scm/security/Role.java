@@ -42,9 +42,6 @@ public final class Role
 {
 
   /** Field description */
-  public static final String ADMIN = "admin";
-
-  /** Field description */
   public static final String USER = "user";
 
   //~--- constructors ---------------------------------------------------------

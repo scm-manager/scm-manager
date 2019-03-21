@@ -27,7 +27,7 @@ public class AdministrationContextRealm extends AuthorizingRealm {
     AdministrationContextMarker marker = principals.oneByType(AdministrationContextMarker.class);
     if (marker == AdministrationContextMarker.MARKER) {
       LOG.info("assign admin permissions to admin context user {}", principals.getPrimaryPrincipal());
-      SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo(Sets.newHashSet(Role.USER, Role.ADMIN));
+      SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo(Sets.newHashSet(Role.USER));
       authorizationInfo.setStringPermissions(Sets.newHashSet("*"));
       return authorizationInfo;
     }

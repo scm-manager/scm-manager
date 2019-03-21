@@ -124,19 +124,7 @@ public class DefaultAdministrationContext implements AdministrationContext
 
     if (ThreadContext.getSecurityManager() != null)
     {
-      Subject subject = SecurityUtils.getSubject();
-
-      if (subject.hasRole(Role.ADMIN))
-      {
-        logger.debug(
-          "user is already an admin, we need no system account session, execute action {}",
-          action.getClass().getName());
-        action.run();
-      }
-      else
-      {
-        doRunAsInWebSessionContext(action);
-      }
+      doRunAsInWebSessionContext(action);
     }
     else
     {
