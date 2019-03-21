@@ -196,7 +196,7 @@ public class Group extends BasicPropertiesAware
     group.setMembers(members);
     group.setType(type);
     group.setDescription(description);
-    group.setExternal(true);
+    group.setExternal(external);
   }
 
   /**
