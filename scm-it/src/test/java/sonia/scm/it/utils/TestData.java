@@ -74,9 +74,27 @@ public class TestData {
         .append("  }").toString())
       .post(getUsersUrl())
       .then()
-      .statusCode(HttpStatus.SC_CREATED)
-    ;
+      .statusCode(HttpStatus.SC_CREATED);
+
+    if (isAdmin) {
+      assignAdminPermissions(username);
+    }
   }
+
+  public static void assignAdminPermissions(String username) {
+    LOG.info("assign admin permissions to user {}", username);
+    given(VndMediaType.PERMISSION_COLLECTION)
+      .when()
+      .body("{'permissions': ['*']}".replaceAll("'", "\""))
+      .put(getPermissionUrl(username))
+      .then()
+      .statusCode(HttpStatus.SC_NO_CONTENT);
+  }
+
+  private static URI getPermissionUrl(String username) {
+    return RestUtil.createResourceUrl(String.format("users/%s/permissions", username));
+  }
+
   public static void createGroup(String groupName, String desc) {
     LOG.info("create group with group name: {} and description {}", groupName, desc);
     given(VndMediaType.GROUP)

@@ -133,7 +133,6 @@ public class UserPermissionITCase extends AbstractPermissionITCaseBase<User>
                          "scm-admin@scm-manager.org");
 
     user.setPassword("hallo123");
-    user.setAdmin(true);
     user.setType("xml");
 
     return user;

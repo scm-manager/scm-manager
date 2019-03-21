@@ -2,7 +2,7 @@
 import React from "react";
 import type { Group } from "@scm-manager/ui-types";
 import GroupMember from "./GroupMember";
-import { DateFromNow } from "@scm-manager/ui-components";
+import { DateFromNow, Checkbox } from "@scm-manager/ui-components";
 import { translate } from "react-i18next";
 import injectSheet from "react-jss";
 
@@ -33,6 +33,12 @@ class Details extends React.Component<Props> {
         <tr>
           <th>{t("group.description")}</th>
           <td>{group.description}</td>
+        </tr>
+        <tr>
+          <th>{t("group.external")}</th>
+          <td>
+            <Checkbox checked={group.external} />
+          </td>
         </tr>
         <tr>
           <th>{t("group.type")}</th>

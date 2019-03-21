@@ -27,6 +27,7 @@ public class GroupDto extends HalRepresentation {
   private String type;
   private Map<String, String> properties;
   private List<String> members;
+  private boolean external;
 
   GroupDto(Links links, Embedded embedded) {
     super(links, embedded);

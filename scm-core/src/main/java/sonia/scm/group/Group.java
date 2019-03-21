@@ -50,6 +50,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -195,6 +196,7 @@ public class Group extends BasicPropertiesAware
     group.setMembers(members);
     group.setType(type);
     group.setDescription(description);
+    group.setExternal(external);
   }
 
   /**
@@ -224,6 +226,7 @@ public class Group extends BasicPropertiesAware
       && Objects.equal(description, other.description)
       && Objects.equal(members, other.members)
       && Objects.equal(type, other.type)
+      && Objects.equal(external, other.external)
       && Objects.equal(creationDate, other.creationDate)
       && Objects.equal(lastModified, other.lastModified)
       && Objects.equal(properties, other.properties);
@@ -270,6 +273,7 @@ public class Group extends BasicPropertiesAware
              .add("description", description)
              .add("members", members)
              .add("type", type)
+             .add("external", external)
              .add("creationDate", creationDate)
              .add("lastModified", lastModified)
              .add("properties", properties)
@@ -339,8 +343,9 @@ public class Group extends BasicPropertiesAware
    */
   public List<String> getMembers()
   {
-    if (members == null)
-    {
+    if (external) {
+      return Collections.emptyList();
+    } else if (members == null) {
       members = Lists.newArrayList();
     }
 
@@ -368,6 +373,15 @@ public class Group extends BasicPropertiesAware
   public String getType()
   {
     return type;
+  }
+
+  /**
+   * Returns {@code true} if the members of the groups managed external of scm-manager.
+   *
+   * @return {@code true} if the group is an external group
+   */
+  public boolean isExternal() {
+    return external;
   }
 
   /**
@@ -463,7 +477,20 @@ public class Group extends BasicPropertiesAware
     this.type = type;
   }
 
+  /**
+   * {@code true} to mark the group as external.
+   *
+   * @param {@code true} for a external group
+   */
+  public void setExternal(boolean external)
+  {
+    this.external = external;
+  }
+
   //~--- fields ---------------------------------------------------------------
+
+  /** external group */
+  private boolean external = false;
 
   /** timestamp of the creation date of this group */
   private Long creationDate;

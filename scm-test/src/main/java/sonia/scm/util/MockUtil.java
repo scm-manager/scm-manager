@@ -117,7 +117,6 @@ public final class MockUtil
     when(subject.isPermittedAll(anyCollectionOf(Permission.class))).thenReturn(
       Boolean.TRUE);
     when(subject.isPermittedAll()).thenReturn(Boolean.TRUE);
-    when(subject.hasRole(Role.ADMIN)).thenReturn(Boolean.TRUE);
     when(subject.hasRole(Role.USER)).thenReturn(Boolean.TRUE);
 
     PrincipalCollection collection = mock(PrincipalCollection.class);

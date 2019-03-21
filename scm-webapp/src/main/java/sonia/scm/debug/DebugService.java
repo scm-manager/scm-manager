@@ -36,6 +36,7 @@ import com.google.common.collect.Multimap;
 import com.google.inject.Singleton;
 import org.apache.shiro.SecurityUtils;
 import sonia.scm.repository.NamespaceAndName;
+import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.security.Role;
 
 import java.util.Collection;
@@ -63,7 +64,8 @@ public final class DebugService
    * Returns the last received hook data for the given repository.
    */
   public DebugHookData getLast(NamespaceAndName namespaceAndName){
-    SecurityUtils.getSubject().checkRole(Role.ADMIN);
+    // debug permission does not exists, so only accounts with "*" permission can use these resource
+    SecurityUtils.getSubject().checkPermission("debug");
     DebugHookData hookData = null;
     Collection<DebugHookData> receivedHookData = receivedHooks.get(namespaceAndName);
     if (receivedHookData != null && ! receivedHookData.isEmpty()){
@@ -76,7 +78,8 @@ public final class DebugService
    * Returns all received hook data for the given repository.
    */
   public Collection<DebugHookData> getAll(NamespaceAndName namespaceAndName){
-    SecurityUtils.getSubject().checkRole(Role.ADMIN);
+    // debug permission does not exists, so only accounts with "*" permission can use these resource
+    SecurityUtils.getSubject().checkPermission("debug");
     return receivedHooks.get(namespaceAndName);
   }
 }

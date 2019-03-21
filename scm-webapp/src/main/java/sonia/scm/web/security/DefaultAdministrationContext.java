@@ -75,7 +75,7 @@ public class DefaultAdministrationContext implements AdministrationContext
     "/sonia/scm/web/security/system-account.xml";
 
   /** Field description */
-  private static final String REALM = "AdminRealm";
+  static final String REALM = "AdminRealm";
 
   /** the logger for DefaultAdministrationContext */
   private static final Logger logger =
@@ -124,19 +124,7 @@ public class DefaultAdministrationContext implements AdministrationContext
 
     if (ThreadContext.getSecurityManager() != null)
     {
-      Subject subject = SecurityUtils.getSubject();
-
-      if (subject.hasRole(Role.ADMIN))
-      {
-        logger.debug(
-          "user is already an admin, we need no system account session, execute action {}",
-          action.getClass().getName());
-        action.run();
-      }
-      else
-      {
-        doRunAsInWebSessionContext(action);
-      }
+      doRunAsInWebSessionContext(action);
     }
     else
     {
@@ -174,6 +162,7 @@ public class DefaultAdministrationContext implements AdministrationContext
     collection.add(adminUser.getId(), REALM);
     collection.add(adminUser, REALM);
     collection.add(new GroupNames(), REALM);
+    collection.add(AdministrationContextMarker.MARKER, REALM);
 
     return collection;
   }

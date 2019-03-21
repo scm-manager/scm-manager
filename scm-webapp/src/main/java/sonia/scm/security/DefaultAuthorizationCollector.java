@@ -78,9 +78,6 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
 {
 
   /** Field description */
-  private static final String ADMIN_PERMISSION = "*";
-
-  /** Field description */
   private static final String CACHE_NAME = "sonia.cache.authorizing";
 
   /**
@@ -94,18 +91,14 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
   /**
    * Constructs ...
    *
-   *
-   *
-   * @param configuration
    * @param cacheManager
    * @param repositoryDAO
    * @param securitySystem
    */
   @Inject
-  public DefaultAuthorizationCollector(ScmConfiguration configuration, CacheManager cacheManager,
+  public DefaultAuthorizationCollector(CacheManager cacheManager,
                                        RepositoryDAO repositoryDAO, SecuritySystem securitySystem)
   {
-    this.configuration = configuration;
     this.cache = cacheManager.getCache(CACHE_NAME);
     this.repositoryDAO = repositoryDAO;
     this.securitySystem = securitySystem;
@@ -233,72 +226,20 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
     }
   }
 
-  private AuthorizationInfo createAuthorizationInfo(User user,
-    GroupNames groups)
-  {
-    Set<String> roles;
-    Set<String> permissions;
+  private AuthorizationInfo createAuthorizationInfo(User user, GroupNames groups) {
+    Builder<String> builder = ImmutableSet.builder();
 
-    if (isAdmin(user, groups))
-    {
-      if (logger.isDebugEnabled())
-      {
-        logger.debug("grant admin role for user {}", user.getName());
-      }
+    collectGlobalPermissions(builder, user, groups);
+    collectRepositoryPermissions(builder, user, groups);
+    builder.add(canReadOwnUser(user));
+    builder.add(getUserAutocompletePermission());
+    builder.add(getGroupAutocompletePermission());
+    builder.add(getChangeOwnPasswordPermission(user));
 
-      roles = ImmutableSet.of(Role.USER, Role.ADMIN);
+    SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(ImmutableSet.of(Role.USER));
+    info.addStringPermissions(builder.build());
 
-      permissions = ImmutableSet.of(ADMIN_PERMISSION);
-    }
-    else
-    {
-      roles = ImmutableSet.of(Role.USER);
-
-      Builder<String> builder = ImmutableSet.builder();
-
-      collectGlobalPermissions(builder, user, groups);
-      collectRepositoryPermissions(builder, user, groups);
-      builder.add(canReadOwnUser(user));
-      builder.add(getUserAutocompletePermission());
-      builder.add(getGroupAutocompletePermission());
-      builder.add(getChangeOwnPasswordPermission(user));
-      permissions = builder.build();
-    }
-
-    SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(roles);
-    info.addStringPermissions(permissions);
     return info;
-  }
-
-  private boolean isAdmin(User user, GroupNames groups) {
-    boolean admin = user.isAdmin();
-    if (admin) {
-      logger.debug("user {} is marked as admin, because of the user flag", user.getName());
-      return true;
-    }
-    if (isUserAdminInConfiguration(user)) {
-      logger.debug("user {} is marked as admin, because of the admin user configuration", user.getName());
-      return true;
-    }
-    return isUserAdminInGroupConfiguration(user, groups);
-  }
-
-  private boolean isUserAdminInGroupConfiguration(User user, GroupNames groups) {
-    Set<String> adminGroups = configuration.getAdminGroups();
-    if (adminGroups != null && groups != null) {
-      for (String group : groups) {
-        if (adminGroups.contains(group)) {
-          logger.debug("user {} is marked as admin, because of the admin group configuration for group {}", user.getName(), group);
-          return true;
-        }
-      }
-    }
-    return false;
-  }
-
-  private boolean isUserAdminInConfiguration(User user) {
-    Set<String> adminUsers = configuration.getAdminUsers();
-    return adminUsers != null && adminUsers.contains(user.getName());
   }
 
   private String getGroupAutocompletePermission() {
@@ -403,8 +344,6 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
   }
 
   //~--- fields ---------------------------------------------------------------
-
-  private final ScmConfiguration configuration;
 
   /** authorization cache */
   private final Cache<CacheKey, AuthorizationInfo> cache;

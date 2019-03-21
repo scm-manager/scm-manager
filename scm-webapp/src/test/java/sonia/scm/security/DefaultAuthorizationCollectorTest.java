@@ -78,8 +78,6 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class DefaultAuthorizationCollectorTest {
 
-  private ScmConfiguration configuration;
-
   @Mock
   private Cache cache;
 
@@ -103,38 +101,7 @@ public class DefaultAuthorizationCollectorTest {
   @Before
   public void setUp(){
     when(cacheManager.getCache(Mockito.any(String.class))).thenReturn(cache);
-    configuration = new ScmConfiguration();
-    collector = new DefaultAuthorizationCollector(configuration, cacheManager, repositoryDAO, securitySystem);
-  }
-
-  @Test
-  @SubjectAware(
-    configuration = "classpath:sonia/scm/shiro-001.ini"
-  )
-  public void shouldGetAdminPrivilegedByConfiguration() {
-    configuration.setAdminUsers(ImmutableSet.of("trillian"));
-    authenticate(UserTestData.createTrillian(), "main");
-
-    AuthorizationInfo authInfo = collector.collect();
-    assertIsAdmin(authInfo);
-  }
-
-  private void assertIsAdmin(AuthorizationInfo authInfo) {
-    assertThat(authInfo.getRoles(), Matchers.containsInAnyOrder(Role.USER, Role.ADMIN));
-    assertThat(authInfo.getObjectPermissions(), nullValue());
-    assertThat(authInfo.getStringPermissions(), Matchers.contains("*"));
-  }
-
-  @Test
-  @SubjectAware(
-    configuration = "classpath:sonia/scm/shiro-001.ini"
-  )
-  public void shouldGetAdminPrivilegedByGroupConfiguration() {
-    configuration.setAdminGroups(ImmutableSet.of("heartOfGold"));
-    authenticate(UserTestData.createTrillian(), "heartOfGold");
-
-    AuthorizationInfo authInfo = collector.collect();
-    assertIsAdmin(authInfo);
+    collector = new DefaultAuthorizationCollector(cacheManager, repositoryDAO, securitySystem);
   }
 
   /**
@@ -195,22 +162,6 @@ public class DefaultAuthorizationCollectorTest {
     assertThat(authInfo.getStringPermissions(), hasSize(4));
     assertThat(authInfo.getStringPermissions(), containsInAnyOrder("user:autocomplete", "group:autocomplete", "user:changePassword:trillian", "user:read:trillian"));
     assertThat(authInfo.getObjectPermissions(), nullValue());
-  }
-
-  /**
-   * Tests {@link AuthorizationCollector#collect()} as admin.
-   */
-  @Test
-  @SubjectAware(
-    configuration = "classpath:sonia/scm/shiro-001.ini"
-  )
-  public void testCollectAsAdmin() {
-    User trillian = UserTestData.createTrillian();
-    trillian.setAdmin(true);
-    authenticate(trillian, "main");
-
-    AuthorizationInfo authInfo = collector.collect();
-    assertIsAdmin(authInfo);
   }
 
   /**

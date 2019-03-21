@@ -142,7 +142,6 @@ public class GitLfsITCase {
     dto.setDisplayName(user.getDisplayName());
     dto.setType(user.getType());
     dto.setActive(user.isActive());
-    dto.setAdmin(user.isAdmin());
     dto.setPassword(user.getPassword());
     createResource(adminClient, "users")
       .accept("*/*")

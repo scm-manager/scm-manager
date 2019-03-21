@@ -42,24 +42,43 @@ import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.ResponseHeader;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
-import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.NotFoundException;
 import sonia.scm.FeatureNotSupportedException;
+import sonia.scm.NotFoundException;
 import sonia.scm.Type;
 import sonia.scm.api.rest.RestActionUploadResult;
 import sonia.scm.api.v2.resources.RepositoryResource;
-import sonia.scm.repository.*;
+import sonia.scm.repository.AdvancedImportHandler;
+import sonia.scm.repository.ImportHandler;
+import sonia.scm.repository.ImportResult;
+import sonia.scm.repository.InternalRepositoryException;
+import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryHandler;
+import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.RepositoryPermissions;
+import sonia.scm.repository.RepositoryType;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.repository.api.UnbundleCommandBuilder;
-import sonia.scm.security.Role;
 import sonia.scm.util.IOUtil;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.GenericEntity;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -233,7 +252,7 @@ public class RepositoryImportResource
   public Response importFromUrl(@Context UriInfo uriInfo,
     @PathParam("type") String type, UrlImportRequest request)
   {
-    SecurityUtils.getSubject().checkRole(Role.ADMIN);
+    RepositoryPermissions.create().check();
     checkNotNull(request, "request is required");
     checkArgument(!Strings.isNullOrEmpty(request.getName()),
       "request does not contain name of the repository");
@@ -288,7 +307,7 @@ public class RepositoryImportResource
   @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   public Response importRepositories(@PathParam("type") String type)
   {
-    SecurityUtils.getSubject().checkRole(Role.ADMIN);
+    RepositoryPermissions.create().check();
 
     List<Repository> repositories = new ArrayList<Repository>();
 
@@ -320,7 +339,7 @@ public class RepositoryImportResource
   @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   public Response importRepositories()
   {
-    SecurityUtils.getSubject().checkRole(Role.ADMIN);
+    RepositoryPermissions.create().check();
 
     logger.info("start directory import for all supported repository types");
 
@@ -363,7 +382,7 @@ public class RepositoryImportResource
   public Response importRepositoriesFromDirectory(
     @PathParam("type") String type)
   {
-    SecurityUtils.getSubject().checkRole(Role.ADMIN);
+    RepositoryPermissions.create().check();
 
     Response response;
 
@@ -438,7 +457,7 @@ public class RepositoryImportResource
   @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   public Response getImportableTypes()
   {
-    SecurityUtils.getSubject().checkRole(Role.ADMIN);
+    RepositoryPermissions.create().check();
 
     List<Type> types = findImportableTypes();
 
@@ -537,7 +556,7 @@ public class RepositoryImportResource
   private Repository doImportFromBundle(String type, String name,
     InputStream inputStream, boolean compressed)
   {
-    SecurityUtils.getSubject().checkRole(Role.ADMIN);
+    RepositoryPermissions.create().check();
 
     checkArgument(!Strings.isNullOrEmpty(name),
       "request does not contain name of the repository");

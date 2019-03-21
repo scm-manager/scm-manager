@@ -157,12 +157,6 @@ public class User extends BasicPropertiesAware implements Principal, ModelObject
   {
     boolean result = false;
 
-    if (user.isAdmin() != admin)
-    {
-      result = true;
-      user.setAdmin(admin);
-    }
-
     if (user.isActive() != active)
     {
       result = true;
@@ -229,7 +223,6 @@ public class User extends BasicPropertiesAware implements Principal, ModelObject
            && Objects.equal(displayName, other.displayName)
            && Objects.equal(mail, other.mail)
            && Objects.equal(type, other.type)
-           && Objects.equal(admin, other.admin)
            && Objects.equal(active, other.active)
            && Objects.equal(password, other.password)
            && Objects.equal(creationDate, other.creationDate)
@@ -246,7 +239,7 @@ public class User extends BasicPropertiesAware implements Principal, ModelObject
   @Override
   public int hashCode()
   {
-    return Objects.hashCode(name, displayName, mail, type, admin, password,
+    return Objects.hashCode(name, displayName, mail, type, password,
                             active, creationDate, lastModified, properties);
   }
 
@@ -269,7 +262,6 @@ public class User extends BasicPropertiesAware implements Principal, ModelObject
             .add("displayName",displayName)
             .add("mail", mail)
             .add("password", pwd)
-            .add("admin", admin)
             .add("type", type)
             .add("active", active)
             .add("creationDate", creationDate)
@@ -391,17 +383,6 @@ public class User extends BasicPropertiesAware implements Principal, ModelObject
    *
    * @return
    */
-  public boolean isAdmin()
-  {
-    return admin;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
   public boolean isValid()
   {
@@ -422,17 +403,6 @@ public class User extends BasicPropertiesAware implements Principal, ModelObject
   public void setActive(boolean active)
   {
     this.active = active;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param admin
-   */
-  public void setAdmin(boolean admin)
-  {
-    this.admin = admin;
   }
 
   /**
@@ -517,9 +487,6 @@ public class User extends BasicPropertiesAware implements Principal, ModelObject
 
   /** Field description */
   private boolean active = true;
-
-  /** Field description */
-  private boolean admin = false;
 
   /** Field description */
   private Long creationDate;
