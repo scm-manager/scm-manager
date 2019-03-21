@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import { translate } from "react-i18next";
 import { withRouter } from "react-router-dom";
 
-import { Loading, ErrorPage } from "@scm-manager/ui-components";
+import { Loading, ErrorBoundary } from "@scm-manager/ui-components";
 import {
   fetchIndexResources,
   getFetchIndexResourcesFailure,
@@ -15,6 +15,7 @@ import {
 import PluginLoader from "./PluginLoader";
 import type { IndexResources } from "@scm-manager/ui-types";
 import ScrollToTop from "./ScrollToTop";
+import IndexErrorPage from "./IndexErrorPage";
 
 type Props = {
   error: Error,
@@ -55,25 +56,21 @@ class Index extends Component<Props, State> {
     const { pluginsLoaded } = this.state;
 
     if (error) {
-      return (
-        <ErrorPage
-          title={t("app.error.title")}
-          subtitle={t("app.error.subtitle")}
-          error={error}
-        />
-      );
+      return <IndexErrorPage error={error}/>;
     } else if (loading || !indexResources) {
       return <Loading />;
     } else {
       return (
-        <ScrollToTop>
-          <PluginLoader
-            loaded={pluginsLoaded}
-            callback={this.pluginLoaderCallback}
-          >
-            <App />
-          </PluginLoader>
-        </ScrollToTop>
+        <ErrorBoundary fallback={IndexErrorPage}>
+          <ScrollToTop>
+            <PluginLoader
+              loaded={pluginsLoaded}
+              callback={this.pluginLoaderCallback}
+            >
+              <App />
+            </PluginLoader>
+          </ScrollToTop>
+        </ErrorBoundary>
       );
     }
   }

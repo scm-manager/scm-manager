@@ -143,51 +143,21 @@ public class ValidationUtilTest
     assertFalse(ValidationUtil.isNotContaining("test", "t"));
   }
 
-  /**
-   * Method description
-   *
-   */
   @Test
-  public void testIsRepositoryNameValid()
-  {
-    assertTrue(ValidationUtil.isRepositoryNameValid("scm"));
-    assertTrue(ValidationUtil.isRepositoryNameValid("scm/main"));
-    assertTrue(ValidationUtil.isRepositoryNameValid("scm/plugins/git-plugin"));
-    assertTrue(ValidationUtil.isRepositoryNameValid("s"));
-    assertTrue(ValidationUtil.isRepositoryNameValid("sc"));
-    assertTrue(ValidationUtil.isRepositoryNameValid(".scm/plugins"));
-
-    // issue 142
-    assertFalse(ValidationUtil.isRepositoryNameValid("."));
-    assertFalse(ValidationUtil.isRepositoryNameValid("/"));
-    assertFalse(ValidationUtil.isRepositoryNameValid("scm/plugins/."));
-    assertFalse(ValidationUtil.isRepositoryNameValid("scm/../plugins"));
-    assertFalse(ValidationUtil.isRepositoryNameValid("scm/main/"));
-    assertFalse(ValidationUtil.isRepositoryNameValid("/scm/main/"));
-
-    // issue 144
-    assertFalse(ValidationUtil.isRepositoryNameValid("scm/./main"));
-    assertFalse(ValidationUtil.isRepositoryNameValid("scm//main"));
-
-    // issue 148
-    //J-
+  public void testIsRepositoryNameValid() {
     String[] validPaths = {
       "scm",
-      "scm/main",
-      "scm/plugins/git-plugin",
       "s",
       "sc",
-      ".scm/plugins",
       ".hiddenrepo",
       "b.",
       "...",
       "..c",
       "d..",
-      "a/b..",
-      "a/..b",
-      "a..c",
+      "a..c"
     };
-    
+
+    // issue 142, 144 and 148
     String[] invalidPaths = {
       ".",
       "/",
@@ -228,17 +198,22 @@ public class ValidationUtilTest
       "abc)abc",
       "abc[abc",
       "abc]abc",
-      "abc|abc"
+      "abc|abc",
+      "scm/main",
+      "scm/plugins/git-plugin",
+      ".scm/plugins",
+      "a/b..",
+      "a/..b",
+      "scm/main",
+      "scm/plugins/git-plugin",
+      "scm/plugins/git-plugin"
     };
-    //J+
 
-    for (String path : validPaths)
-    {
+    for (String path : validPaths) {
       assertTrue(ValidationUtil.isRepositoryNameValid(path));
     }
 
-    for (String path : invalidPaths)
-    {
+    for (String path : invalidPaths) {
       assertFalse(ValidationUtil.isRepositoryNameValid(path));
     }
   }

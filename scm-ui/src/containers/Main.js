@@ -9,7 +9,7 @@ import Users from "../users/containers/Users";
 import Login from "../containers/Login";
 import Logout from "../containers/Logout";
 
-import { ProtectedRoute } from "@scm-manager/ui-components";
+import {ProtectedRoute} from "@scm-manager/ui-components";
 import {binder,  ExtensionPoint } from "@scm-manager/ui-extensions";
 
 import AddUser from "../users/containers/AddUser";

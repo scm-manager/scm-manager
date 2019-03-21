@@ -8,6 +8,7 @@ import sonia.scm.repository.GitRepositoryConfig;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.store.ConfigurationStore;
 import sonia.scm.web.GitVndMediaType;
 
@@ -50,6 +51,7 @@ public class GitRepositoryConfigResource {
   })
   public Response getRepositoryConfig(@PathParam("namespace") String namespace, @PathParam("name") String name) {
     Repository repository = getRepository(namespace, name);
+    RepositoryPermissions.read(repository).check();
     ConfigurationStore<GitRepositoryConfig> repositoryConfigStore = getStore(repository);
     GitRepositoryConfig config = repositoryConfigStore.get();
     GitRepositoryConfigDto dto = repositoryConfigMapper.map(config, repository);
@@ -68,6 +70,7 @@ public class GitRepositoryConfigResource {
   })
   public Response setRepositoryConfig(@PathParam("namespace") String namespace, @PathParam("name") String name, GitRepositoryConfigDto dto) {
     Repository repository = getRepository(namespace, name);
+    RepositoryPermissions.modify(repository).check();
     ConfigurationStore<GitRepositoryConfig> repositoryConfigStore = getStore(repository);
     GitRepositoryConfig config = repositoryConfigMapper.map(dto);
     repositoryConfigStore.set(config);

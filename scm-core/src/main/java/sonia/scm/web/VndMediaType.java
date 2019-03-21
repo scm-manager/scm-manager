@@ -46,6 +46,8 @@ public class VndMediaType {
   public static final String MERGE_RESULT = PREFIX + "mergeResult" + SUFFIX;
   public static final String MERGE_COMMAND = PREFIX + "mergeCommand" + SUFFIX;
 
+  public static final String NAMESPACE_STRATEGIES = PREFIX + "namespaceStrategies" + SUFFIX;
+
   public static final String ME = PREFIX + "me" + SUFFIX;
   public static final String SOURCE = PREFIX + "source" + SUFFIX;
   public static final String ERROR_TYPE = PREFIX + "error" + SUFFIX;

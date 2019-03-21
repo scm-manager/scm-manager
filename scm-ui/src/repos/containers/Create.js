@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { translate } from "react-i18next";
 import { Page } from "@scm-manager/ui-components";
 import RepositoryForm from "../components/form";
-import type { Repository, RepositoryType } from "@scm-manager/ui-types";
+import type { Repository, RepositoryType, NamespaceStrategies } from "@scm-manager/ui-types";
 import {
   fetchRepositoryTypesIfNeeded,
   getFetchRepositoryTypesFailure,
@@ -19,15 +19,21 @@ import {
 } from "../modules/repos";
 import type { History } from "history";
 import { getRepositoriesLink } from "../../modules/indexResource";
+import {
+  fetchNamespaceStrategiesIfNeeded,
+  getFetchNamespaceStrategiesFailure, getNamespaceStrategies, isFetchNamespaceStrategiesPending
+} from "../../config/modules/namespaceStrategies";
 
 type Props = {
   repositoryTypes: RepositoryType[],
-  typesLoading: boolean,
+  namespaceStrategies: NamespaceStrategies,
+  pageLoading: boolean,
   createLoading: boolean,
   error: Error,
   repoLink: string,
 
   // dispatch functions
+  fetchNamespaceStrategiesIfNeeded: () => void,
   fetchRepositoryTypesIfNeeded: () => void,
   createRepo: (
     link: string,
@@ -45,6 +51,7 @@ class Create extends React.Component<Props> {
   componentDidMount() {
     this.props.resetForm();
     this.props.fetchRepositoryTypesIfNeeded();
+    this.props.fetchNamespaceStrategiesIfNeeded();
   }
 
   repoCreated = (repo: Repository) => {
@@ -55,9 +62,10 @@ class Create extends React.Component<Props> {
 
   render() {
     const {
-      typesLoading,
+      pageLoading,
       createLoading,
       repositoryTypes,
+      namespaceStrategies,
       createRepo,
       error
     } = this.props;
@@ -67,13 +75,14 @@ class Create extends React.Component<Props> {
       <Page
         title={t("create.title")}
         subtitle={t("create.subtitle")}
-        loading={typesLoading}
+        loading={pageLoading}
         error={error}
         showContentOnError={true}
       >
         <RepositoryForm
           repositoryTypes={repositoryTypes}
           loading={createLoading}
+          namespaceStrategy={namespaceStrategies.current}
           submitForm={repo => {
             createRepo(repoLink, repo, (repo: Repository) =>
               this.repoCreated(repo)
@@ -87,14 +96,18 @@ class Create extends React.Component<Props> {
 
 const mapStateToProps = state => {
   const repositoryTypes = getRepositoryTypes(state);
-  const typesLoading = isFetchRepositoryTypesPending(state);
+  const namespaceStrategies = getNamespaceStrategies(state);
+  const pageLoading = isFetchRepositoryTypesPending(state)
+    || isFetchNamespaceStrategiesPending(state);
   const createLoading = isCreateRepoPending(state);
-  const error =
-    getFetchRepositoryTypesFailure(state) || getCreateRepoFailure(state);
+  const error = getFetchRepositoryTypesFailure(state) 
+    || getCreateRepoFailure(state)
+    || getFetchNamespaceStrategiesFailure(state);
   const repoLink = getRepositoriesLink(state);
   return {
     repositoryTypes,
-    typesLoading,
+    namespaceStrategies,
+    pageLoading,
     createLoading,
     error,
     repoLink
@@ -105,6 +118,9 @@ const mapDispatchToProps = dispatch => {
   return {
     fetchRepositoryTypesIfNeeded: () => {
       dispatch(fetchRepositoryTypesIfNeeded());
+    },
+    fetchNamespaceStrategiesIfNeeded: () => {
+      dispatch(fetchNamespaceStrategiesIfNeeded());
     },
     createRepo: (
       link: string,

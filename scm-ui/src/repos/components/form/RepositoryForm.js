@@ -8,6 +8,7 @@ import {
   SubmitButton,
   Textarea
 } from "@scm-manager/ui-components";
+import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import type { Repository, RepositoryType } from "@scm-manager/ui-types";
 import * as validator from "./repositoryValidation";
 
@@ -15,15 +16,19 @@ type Props = {
   submitForm: Repository => void,
   repository?: Repository,
   repositoryTypes: RepositoryType[],
+  namespaceStrategy: string,
   loading?: boolean,
   t: string => string
 };
 
 type State = {
   repository: Repository,
+  namespaceValidationError: boolean,
   nameValidationError: boolean,
   contactValidationError: boolean
 };
+
+const CUSTOM_NAMESPACE_STRATEGY = "CustomNamespaceStrategy";
 
 class RepositoryForm extends React.Component<Props, State> {
   constructor(props: Props) {
@@ -38,9 +43,9 @@ class RepositoryForm extends React.Component<Props, State> {
         description: "",
         _links: {}
       },
+      namespaceValidationError: false,
       nameValidationError: false,
-      contactValidationError: false,
-      descriptionValidationError: false
+      contactValidationError: false
     };
   }
 
@@ -59,11 +64,15 @@ class RepositoryForm extends React.Component<Props, State> {
   }
 
   isValid = () => {
-    const repository = this.state.repository;
+    const { namespaceStrategy } = this.props;
+    const { repository } = this.state;
     return !(
+      this.state.namespaceValidationError ||
       this.state.nameValidationError ||
       this.state.contactValidationError ||
-      this.isFalsy(repository.name)
+      this.isFalsy(repository.name) ||
+      (namespaceStrategy === CUSTOM_NAMESPACE_STRATEGY &&
+        this.isFalsy(repository.namespace))
     );
   };
 
@@ -78,9 +87,23 @@ class RepositoryForm extends React.Component<Props, State> {
     return !this.props.repository;
   };
 
+  isModifiable = () => {
+    return !!this.props.repository && !!this.props.repository._links.update;
+  };
+
   render() {
     const { loading, t } = this.props;
     const repository = this.state.repository;
+
+    const disabled = !this.isModifiable() && !this.isCreateMode();
+
+    const submitButton = disabled ? null : (
+      <SubmitButton
+        disabled={!this.isValid()}
+        loading={loading}
+        label={t("repositoryForm.submit")}
+      />
+    );
 
     let subtitle = null;
     if (this.props.repository) {
@@ -100,6 +123,7 @@ class RepositoryForm extends React.Component<Props, State> {
             validationError={this.state.contactValidationError}
             errorMessage={t("validation.contact-invalid")}
             helpText={t("help.contactHelpText")}
+            disabled={disabled}
           />
 
           <Textarea
@@ -107,12 +131,9 @@ class RepositoryForm extends React.Component<Props, State> {
             onChange={this.handleDescriptionChange}
             value={repository ? repository.description : ""}
             helpText={t("help.descriptionHelpText")}
+            disabled={disabled}
           />
-          <SubmitButton
-            disabled={!this.isValid()}
-            loading={loading}
-            label={t("repositoryForm.submit")}
-          />
+          {submitButton}
         </form>
       </>
     );
@@ -127,6 +148,31 @@ class RepositoryForm extends React.Component<Props, State> {
     });
   }
 
+  renderNamespaceField = () => {
+    const { namespaceStrategy, t } = this.props;
+    const repository = this.state.repository;
+    const props = {
+      label: t("repository.namespace"),
+      helpText: t("help.namespaceHelpText"),
+      value: repository ? repository.namespace : "",
+      onChange: this.handleNamespaceChange,
+      errorMessage: t("validation.namespace-invalid"),
+      validationError: this.state.namespaceValidationError
+    };
+
+    if (namespaceStrategy === CUSTOM_NAMESPACE_STRATEGY) {
+      return <InputField {...props} />;
+    }
+
+    return (
+      <ExtensionPoint
+        name="repos.create.namespace"
+        props={props}
+        renderAll={false}
+      />
+    );
+  };
+
   renderCreateOnlyFields() {
     if (!this.isCreateMode()) {
       return null;
@@ -135,6 +181,7 @@ class RepositoryForm extends React.Component<Props, State> {
     const repository = this.state.repository;
     return (
       <>
+        {this.renderNamespaceField()}
         <InputField
           label={t("repository.name")}
           onChange={this.handleNameChange}
@@ -153,6 +200,13 @@ class RepositoryForm extends React.Component<Props, State> {
       </>
     );
   }
+
+  handleNamespaceChange = (namespace: string) => {
+    this.setState({
+      namespaceValidationError: !validator.isNameValid(namespace),
+      repository: { ...this.state.repository, namespace }
+    });
+  };
 
   handleNameChange = (name: string) => {
     this.setState({

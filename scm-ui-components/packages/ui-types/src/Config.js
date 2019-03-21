@@ -20,6 +20,6 @@ export type Config = {
   pluginUrl: string,
   loginAttemptLimitTimeout: number,
   enabledXsrfProtection: boolean,
-  defaultNamespaceStrategy: string,
+  namespaceStrategy: string,
   _links: Links
 };

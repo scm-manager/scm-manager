@@ -36,6 +36,7 @@ package sonia.scm.security;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Throwables;
+import com.google.common.collect.Lists;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
@@ -44,7 +45,9 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.AlreadyExistsException;
+import sonia.scm.group.ExternalGroupNames;
 import sonia.scm.group.Group;
+import sonia.scm.group.GroupDAO;
 import sonia.scm.group.GroupManager;
 import sonia.scm.group.GroupNames;
 import sonia.scm.user.User;
@@ -53,19 +56,11 @@ import sonia.scm.web.security.AdministrationContext;
 import sonia.scm.web.security.PrivilegedAction;
 
 import java.io.IOException;
+import java.util.List;
 
-import static java.util.Collections.singletonList;
-import static org.assertj.core.util.Arrays.asList;
 import static org.hamcrest.Matchers.hasItem;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -82,6 +77,9 @@ public class SyncingRealmHelperTest {
 
   @Mock
   private UserManager userManager;
+
+  @Mock
+  private GroupDAO groupDAO;
 
   private SyncingRealmHelper helper;
 
@@ -108,7 +106,7 @@ public class SyncingRealmHelperTest {
       }
     };
 
-    helper = new SyncingRealmHelper(ctx, userManager, groupManager);
+    helper = new SyncingRealmHelper(ctx, userManager, groupManager, groupDAO);
   }
 
   /**
@@ -191,11 +189,11 @@ public class SyncingRealmHelperTest {
       .authenticationInfo()
       .forRealm("unit-test")
       .andUser(new User("ziltoid"))
-      .withGroups("internal");
+      .withGroups("internal")
+      .build();
 
     GroupNames groupNames = authenticationInfo.getPrincipals().oneByType(GroupNames.class);
-    Assertions.assertThat(groupNames.getCollection()).containsOnly("internal");
-    Assertions.assertThat(groupNames.isExternal()).isFalse();
+    Assertions.assertThat(groupNames.getCollection()).contains("_authenticated", "internal");
   }
 
   @Test
@@ -204,11 +202,11 @@ public class SyncingRealmHelperTest {
       .authenticationInfo()
       .forRealm("unit-test")
       .andUser(new User("ziltoid"))
-      .withExternalGroups("external");
+      .withExternalGroups("external")
+      .build();
 
-    GroupNames groupNames = authenticationInfo.getPrincipals().oneByType(GroupNames.class);
+    ExternalGroupNames groupNames = authenticationInfo.getPrincipals().oneByType(ExternalGroupNames.class);
     Assertions.assertThat(groupNames.getCollection()).containsOnly("external");
-    Assertions.assertThat(groupNames.isExternal()).isTrue();
   }
 
   @Test
@@ -218,11 +216,34 @@ public class SyncingRealmHelperTest {
       .authenticationInfo()
       .forRealm("unit-test")
       .andUser(user)
-      .withoutGroups();
+      .build();
 
     assertNotNull(authInfo);
     assertEquals("ziltoid", authInfo.getPrincipals().getPrimaryPrincipal());
     assertThat(authInfo.getPrincipals().getRealmNames(), hasItem("unit-test"));
     assertEquals(user, authInfo.getPrincipals().oneByType(User.class));
+  }
+
+  @Test
+  public void shouldReturnCombinedGroupNames() {
+    User user = new User("tricia");
+
+    List<Group> groups = Lists.newArrayList(new Group("xml", "heartOfGold", "tricia"));
+    when(groupDAO.getAll()).thenReturn(groups);
+
+    AuthenticationInfo authInfo = helper
+      .authenticationInfo()
+      .forRealm("unit-test")
+      .andUser(user)
+      .withGroups("fjordsOfAfrican")
+      .withExternalGroups("g42")
+      .build();
+
+
+    GroupNames groupNames = authInfo.getPrincipals().oneByType(GroupNames.class);
+    Assertions.assertThat(groupNames).contains("_authenticated", "heartOfGold", "fjordsOfAfrican");
+
+    ExternalGroupNames externalGroupNames = authInfo.getPrincipals().oneByType(ExternalGroupNames.class);
+    Assertions.assertThat(externalGroupNames).contains("g42");
   }
 }

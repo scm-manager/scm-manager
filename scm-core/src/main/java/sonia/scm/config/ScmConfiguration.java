@@ -174,8 +174,8 @@ public class ScmConfiguration implements Configuration {
   @XmlElement(name = "xsrf-protection")
   private boolean enabledXsrfProtection = true;
 
-  @XmlElement(name = "default-namespace-strategy")
-  private String defaultNamespaceStrategy = "sonia.scm.repository.DefaultNamespaceStrategy";
+  @XmlElement(name = "namespace-strategy")
+  private String namespaceStrategy = "UsernameNamespaceStrategy";
 
 
   /**
@@ -215,7 +215,7 @@ public class ScmConfiguration implements Configuration {
     this.loginAttemptLimit = other.loginAttemptLimit;
     this.loginAttemptLimitTimeout = other.loginAttemptLimitTimeout;
     this.enabledXsrfProtection = other.enabledXsrfProtection;
-    this.defaultNamespaceStrategy = other.defaultNamespaceStrategy;
+    this.namespaceStrategy = other.namespaceStrategy;
   }
 
   /**
@@ -346,8 +346,8 @@ public class ScmConfiguration implements Configuration {
     return loginAttemptLimit > 0;
   }
 
-  public String getDefaultNamespaceStrategy() {
-    return defaultNamespaceStrategy;
+  public String getNamespaceStrategy() {
+    return namespaceStrategy;
   }
 
 
@@ -473,8 +473,8 @@ public class ScmConfiguration implements Configuration {
     this.enabledXsrfProtection = enabledXsrfProtection;
   }
 
-  public void setDefaultNamespaceStrategy(String defaultNamespaceStrategy) {
-    this.defaultNamespaceStrategy = defaultNamespaceStrategy;
+  public void setNamespaceStrategy(String namespaceStrategy) {
+    this.namespaceStrategy = namespaceStrategy;
   }
 
   @Override

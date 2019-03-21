@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
+import sonia.scm.util.ValidationUtil;
 
 import javax.validation.constraints.Pattern;
 import java.time.Instant;
@@ -25,8 +26,9 @@ public class RepositoryDto extends HalRepresentation {
   private List<HealthCheckFailureDto> healthCheckFailures;
   @JsonInclude(JsonInclude.Include.NON_NULL)
   private Instant lastModified;
+  // we could not validate the namespace, this must be done by the namespace strategy
   private String namespace;
-  @Pattern(regexp = "^[A-z0-9\\-_]+$")
+  @Pattern(regexp = ValidationUtil.REGEX_REPOSITORYNAME)
   private String name;
   private boolean archived = false;
   @NotEmpty

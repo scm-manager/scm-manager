@@ -7,6 +7,7 @@ import Subtitle from "./Subtitle";
 import injectSheet from "react-jss";
 import classNames from "classnames";
 import PageActions from "./PageActions";
+import ErrorBoundary from "../ErrorBoundary";
 
 type Props = {
   title?: string,
@@ -34,10 +35,13 @@ class Page extends React.Component<Props> {
       <section className="section">
         <div className="container">
           {this.renderPageHeader()}
-          <ErrorNotification error={error} />
-          {this.renderContent()}
+          <ErrorBoundary>
+            <ErrorNotification error={error}/>
+            {this.renderContent()}
+          </ErrorBoundary>
         </div>
       </section>
+
     );
   }
 
@@ -64,15 +68,15 @@ class Page extends React.Component<Props> {
       }
     });
     let underline = pageActionsExists ? (
-      <hr className="header-with-actions" />
+      <hr className="header-with-actions"/>
     ) : null;
 
     return (
       <>
         <div className="columns">
           <div className="column">
-            <Title title={title} />
-            <Subtitle subtitle={subtitle} />
+            <Title title={title}/>
+            <Subtitle subtitle={subtitle}/>
           </div>
           {pageActions}
         </div>
@@ -88,7 +92,7 @@ class Page extends React.Component<Props> {
       return null;
     }
     if (loading) {
-      return <Loading />;
+      return <Loading/>;
     }
 
     let content = [];
