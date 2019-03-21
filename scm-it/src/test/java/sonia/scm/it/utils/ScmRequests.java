@@ -338,16 +338,8 @@ public class ScmRequests {
       return assertSingleProperty(assertType, "type");
     }
 
-    public UserResponse<PREV> assertAdmin(Consumer<Boolean> assertAdmin) {
-      return assertSingleProperty(assertAdmin, "admin");
-    }
-
     public UserResponse<PREV> assertPasswordLinkDoesNotExists() {
       return assertPropertyPathDoesNotExists(LINKS_PASSWORD_HREF);
-    }
-
-    public UserResponse<PREV> assertPasswordLinkExists() {
-      return assertPropertyPathExists(LINKS_PASSWORD_HREF);
     }
 
     public ChangePasswordResponse<UserResponse> requestChangePassword(String newPassword) {
