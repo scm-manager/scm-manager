@@ -18,6 +18,7 @@ class GroupTable extends React.Component<Props> {
           <tr>
             <th>{t("group.name")}</th>
             <th className="is-hidden-mobile">{t("group.description")}</th>
+            <th>{t("group.external")}</th>
           </tr>
         </thead>
         <tbody>

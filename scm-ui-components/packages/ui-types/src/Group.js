@@ -10,6 +10,7 @@ export type Group = Collection & {
   name: string,
   description: string,
   type: string,
+  external: boolean,
   members: string[],
   _embedded: {
     members: Member[]

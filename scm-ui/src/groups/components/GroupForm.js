@@ -8,7 +8,8 @@ import {
   MemberNameTable,
   InputField,
   SubmitButton,
-  Textarea
+  Textarea,
+  Checkbox
 } from "@scm-manager/ui-components";
 import type { Group, SelectValue } from "@scm-manager/ui-types";
 
@@ -67,16 +68,68 @@ class GroupForm extends React.Component<Props, State> {
   submit = (event: Event) => {
     event.preventDefault();
     if (this.isValid()) {
-      this.props.submitForm(this.state.group);
+      const { group } = this.state;
+      if (group.external) {
+        group.members = [];
+      }
+      this.props.submitForm(group);
     }
   };
+
+  renderMemberfields = (group: Group) => {
+    if (group.external) {
+      return null;
+    }
+
+    const { loadUserSuggestions, t } = this.props;
+    return (
+      <>
+        <LabelWithHelpIcon
+          label={t("group.members")}
+          helpText={t("groupForm.help.memberHelpText")}
+        />
+        <MemberNameTable
+          members={group.members}
+          memberListChanged={this.memberListChanged}
+        />
+        <AutocompleteAddEntryToTableField
+          addEntry={this.addMember}
+          disabled={false}
+          buttonLabel={t("add-member-button.label")}
+          fieldLabel={t("add-member-textfield.label")}
+          errorMessage={t("add-member-textfield.error")}
+          loadSuggestions={loadUserSuggestions}
+          placeholder={t("add-member-autocomplete.placeholder")}
+          loadingMessage={t("add-member-autocomplete.loading")}
+          noOptionsMessage={t("add-member-autocomplete.no-options")}
+        />
+      </>
+    );
+  };
+
+  renderExternalField = (group: Group) => {
+    const { t } = this.props;
+    if (this.isExistingGroup()) {
+      return null;
+    }
+    return (
+      <Checkbox
+        label={t("group.external")}
+        checked={group.external}
+        helpText={t("groupForm.help.externalHelpText")}
+        onChange={this.handleExternalChange}
+      />
+    );
+  };
+
+  isExistingGroup = () => !! this.props.group;
 
   render() {
     const { loading, t } = this.props;
     const { group } = this.state;
     let nameField = null;
     let subtitle = null;
-    if (!this.props.group) {
+    if (!this.isExistingGroup()) {
       // create new group
       nameField = (
         <InputField
@@ -88,8 +141,9 @@ class GroupForm extends React.Component<Props, State> {
           helpText={t("groupForm.help.nameHelpText")}
         />
       );
+    } else if (group.external) {
+      subtitle = <Subtitle subtitle={t("groupForm.externalSubtitle")} />;
     } else {
-      // edit existing group
       subtitle = <Subtitle subtitle={t("groupForm.subtitle")} />;
     }
 
@@ -106,26 +160,8 @@ class GroupForm extends React.Component<Props, State> {
             validationError={false}
             helpText={t("groupForm.help.descriptionHelpText")}
           />
-          <LabelWithHelpIcon
-            label={t("group.members")}
-            helpText={t("groupForm.help.memberHelpText")}
-          />
-          <MemberNameTable
-            members={group.members}
-            memberListChanged={this.memberListChanged}
-          />
-
-          <AutocompleteAddEntryToTableField
-            addEntry={this.addMember}
-            disabled={false}
-            buttonLabel={t("add-member-button.label")}
-            fieldLabel={t("add-member-textfield.label")}
-            errorMessage={t("add-member-textfield.error")}
-            loadSuggestions={this.props.loadUserSuggestions}
-            placeholder={t("add-member-autocomplete.placeholder")}
-            loadingMessage={t("add-member-autocomplete.loading")}
-            noOptionsMessage={t("add-member-autocomplete.no-options")}
-          />
+          {this.renderExternalField(group)}
+          {this.renderMemberfields(group)}
           <SubmitButton
             disabled={!this.isValid()}
             label={t("groupForm.submit")}
@@ -174,6 +210,12 @@ class GroupForm extends React.Component<Props, State> {
   handleDescriptionChange = (description: string) => {
     this.setState({
       group: { ...this.state.group, description }
+    });
+  };
+
+  handleExternalChange = (external: boolean) => {
+    this.setState({
+      group: { ...this.state.group, external }
     });
   };
 }

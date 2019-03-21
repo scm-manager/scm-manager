@@ -5,6 +5,7 @@
     "creationDate": "Creation Date",
     "lastModified": "Last Modified",
     "type": "Type",
+    "external": "External",
     "members": "Members"
   },
   "groups": {
@@ -49,13 +50,15 @@
   },
   "groupForm": {
     "subtitle": "Edit Group",
+    "externalSubtitle": "Edit external group",
     "submit": "Submit",
     "nameError": "Group name is invalid",
     "descriptionError": "Description is invalid",
     "help": {
       "nameHelpText": "Unique name of the group",
       "descriptionHelpText": "A short description of the group",
-      "memberHelpText": "Usernames of the group members"
+      "memberHelpText": "Usernames of the group members",
+      "externalHelpText": "Members are managed by an external system such as LDAP"
     }
   },
   "deleteGroup": {
