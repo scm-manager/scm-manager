@@ -27,7 +27,6 @@ public class UserITCase {
       .assertStatusCode(200)
       .requestUser(newUser)
       .assertStatusCode(200)
-      // we could no longer easily check if the user is an admin, because the admin flag is gone
       .assertPassword(Assert::assertNull)
       .requestChangePassword(newPassword)
       .assertStatusCode(204);
@@ -36,7 +35,6 @@ public class UserITCase {
       .requestIndexResource(newUser, newPassword)
       .assertStatusCode(200)
       .requestUser(newUser)
-      // we could no longer easily check if the user is an admin, because the admin flag is gone
       .assertPassword(Assert::assertNull);
   }
 
@@ -52,7 +50,6 @@ public class UserITCase {
       .assertStatusCode(200)
       .requestUser(newUser)
       .assertStatusCode(200)
-      // we could no longer easily check if the user is an admin, because the admin flag is gone
       .assertPassword(Assert::assertNull)
       .requestChangePassword(newPassword) // the oldPassword is not needed in the user resource
       .assertStatusCode(204);
@@ -96,7 +93,6 @@ public class UserITCase {
       .assertStatusCode(200)
       .requestUser(newUser)
       .assertStatusCode(200)
-      // we could no longer easily check if the user is an admin, because the admin flag is gone
       .assertPassword(Assert::assertNull)
       .assertType(s -> assertThat(s).isEqualTo(type))
       .assertPasswordLinkDoesNotExists();
