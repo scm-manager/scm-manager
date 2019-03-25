@@ -110,10 +110,10 @@ public class ValidationUtilTest
     assertTrue(ValidationUtil.isNameValid("Test123-git"));
     assertTrue(ValidationUtil.isNameValid("Test_user-123.git"));
     assertTrue(ValidationUtil.isNameValid("test@scm-manager.de"));
-    assertTrue(ValidationUtil.isNameValid("test 123"));
     assertTrue(ValidationUtil.isNameValid("t"));
 
     // false
+    assertFalse(ValidationUtil.isNameValid("test 123"));
     assertFalse(ValidationUtil.isNameValid(" test 123"));
     assertFalse(ValidationUtil.isNameValid(" test 123 "));
     assertFalse(ValidationUtil.isNameValid("test 123 "));
