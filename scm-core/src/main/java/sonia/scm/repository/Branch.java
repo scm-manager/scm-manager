@@ -116,7 +116,8 @@ public final class Branch implements Serializable
     final Branch other = (Branch) obj;
 
     return Objects.equal(name, other.name)
-      && Objects.equal(revision, other.revision);
+      && Objects.equal(revision, other.revision)
+      && Objects.equal(defaultBranch, other.defaultBranch);
   }
 
   /**
