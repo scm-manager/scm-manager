@@ -88,7 +88,7 @@ public class HgBranchesCommand extends AbstractCommand
           node = changeset.getNode();
         }
 
-        return new Branch(hgBranch.getName(), node);
+        return Branch.normalBranch(hgBranch.getName(), node);
       }
     });
 
