@@ -30,51 +30,72 @@
  */
 
 
-
 package sonia.scm.repository.api;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import sonia.scm.repository.spi.BranchCommand;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.io.IOException;
+
 /**
- * Enumeration of available commands.
  *
  * @author Sebastian Sdorra
- * @since 1.17
+ * @since 1.18
  */
-public enum Command
+public final class BranchCommandBuilder
 {
-  LOG, BROWSE, CAT, DIFF, BLAME,
 
   /**
-   * @since 1.18
+   * the logger for BranchCommandBuilder
    */
-  TAGS,
+  private static final Logger logger =
+    LoggerFactory.getLogger(BranchCommandBuilder.class);
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
-   * @since 1.18
+   * Constructs ...
+   *
+   *
+   * @param command
    */
-  BRANCHES,
+  public BranchCommandBuilder(BranchCommand command)
+  {
+    this.command = command;
+  }
+
+  //~--- methods --------------------------------------------------------------
 
   /**
-   * @since 2.0
+   * Method description
+   *
+   *
+   * @param name
+   *
+   * @return
+   *
+   * @throws IOException
    */
-  BRANCH,
+  public BranchCommandBuilder branch(String name) throws IOException
+  {
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("branch {}", name);
+    }
 
-  /**
-   * @since 1.31
-   */
-  INCOMING, OUTGOING, PUSH, PULL,
-  
-  /**
-   * @since 1.43
-   */
-  BUNDLE, UNBUNDLE,
+    command.branch(name);
 
-  /**
-   * @since 2.0
-   */
-  MODIFICATIONS,
+    return this;
+  }
 
-  /**
-   * @since 2.0
-   */
-  MERGE
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private BranchCommand command;
 }

@@ -126,6 +126,11 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
     return new HgBranchesCommand(context, repository);
   }
 
+  @Override
+  public BranchCommand getBranchCommand() {
+    return new HgBranchCommand(context, repository);
+  }
+
   /**
    * Method description
    *
@@ -192,6 +197,7 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
    * @return the corresponding {@link ModificationsCommand} implemented from the Plugins
    * @throws CommandNotSupportedException if there is no Implementation
    */
+  @Override
   public ModificationsCommand getModificationsCommand() {
     return new HgModificationsCommand(context,repository);
   }

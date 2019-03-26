@@ -166,6 +166,20 @@ public final class RepositoryService implements Closeable {
   }
 
   /**
+   * The branch command creates new branches.
+   *
+   * @return instance of {@link BranchCommandBuilder}
+   * @throws CommandNotSupportedException if the command is not supported
+   *                                      by the implementation of the repository service provider.
+   */
+  public BranchCommandBuilder getBranchCommand() {
+    logger.debug("create branch command for repository {}",
+      repository.getNamespaceAndName());
+
+    return new BranchCommandBuilder(provider.getBranchCommand());
+  }
+
+  /**
    * The browse command allows browsing of a repository.
    *
    * @return instance of {@link BrowseCommandBuilder}

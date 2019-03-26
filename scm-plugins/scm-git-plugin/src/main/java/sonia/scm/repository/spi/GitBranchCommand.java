@@ -30,51 +30,31 @@
  */
 
 
+package sonia.scm.repository.spi;
 
-package sonia.scm.repository.api;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.Ref;
+import sonia.scm.repository.Branch;
+import sonia.scm.repository.GitUtil;
+import sonia.scm.repository.InternalRepositoryException;
+import sonia.scm.repository.Repository;
 
-/**
- * Enumeration of available commands.
- *
- * @author Sebastian Sdorra
- * @since 1.17
- */
-public enum Command
-{
-  LOG, BROWSE, CAT, DIFF, BLAME,
+import java.io.IOException;
 
-  /**
-   * @since 1.18
-   */
-  TAGS,
+public class GitBranchCommand extends AbstractGitCommand implements BranchCommand {
 
-  /**
-   * @since 1.18
-   */
-  BRANCHES,
+  GitBranchCommand(GitContext context, Repository repository) {
+    super(context, repository);
+  }
 
-  /**
-   * @since 2.0
-   */
-  BRANCH,
-
-  /**
-   * @since 1.31
-   */
-  INCOMING, OUTGOING, PUSH, PULL,
-  
-  /**
-   * @since 1.43
-   */
-  BUNDLE, UNBUNDLE,
-
-  /**
-   * @since 2.0
-   */
-  MODIFICATIONS,
-
-  /**
-   * @since 2.0
-   */
-  MERGE
+  @Override
+  public Branch branch(String name) throws IOException {
+    try (Git git = new Git(open())) {
+      Ref ref = git.branchCreate().setName(name).call();
+      return Branch.normalBranch(name, GitUtil.getId(ref.getObjectId()));
+    } catch (GitAPIException ex) {
+      throw new InternalRepositoryException(repository, "could not create branch " + name, ex);
+    }
+  }
 }

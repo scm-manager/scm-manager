@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010, Sebastian Sdorra
+ * Copyright (c) 2014, Sebastian Sdorra
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,53 +28,41 @@
  * http://bitbucket.org/sdorra/scm-manager
  *
  */
+package sonia.scm.repository.spi;
 
-
-
-package sonia.scm.repository.api;
+import com.aragost.javahg.Changeset;
+import com.aragost.javahg.commands.CommitCommand;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sonia.scm.repository.Branch;
+import sonia.scm.repository.Repository;
 
 /**
- * Enumeration of available commands.
- *
- * @author Sebastian Sdorra
- * @since 1.17
+ * Mercurial implementation of the {@link BranchCommand}.
+ * Note that this creates an empty commit to "persist" the new branch.
  */
-public enum Command
-{
-  LOG, BROWSE, CAT, DIFF, BLAME,
+public class HgBranchCommand extends AbstractCommand implements BranchCommand {
 
-  /**
-   * @since 1.18
-   */
-  TAGS,
+  private static final Logger LOG = LoggerFactory.getLogger(HgBranchCommand.class);
 
-  /**
-   * @since 1.18
-   */
-  BRANCHES,
+  HgBranchCommand(HgCommandContext context, Repository repository) {
+    super(context, repository);
+  }
 
-  /**
-   * @since 2.0
-   */
-  BRANCH,
+  @Override
+  public Branch branch(String name) {
+    com.aragost.javahg.Repository repository = open();
+    com.aragost.javahg.commands.BranchCommand.on(repository).set(name);
 
-  /**
-   * @since 1.31
-   */
-  INCOMING, OUTGOING, PUSH, PULL,
-  
-  /**
-   * @since 1.43
-   */
-  BUNDLE, UNBUNDLE,
+    Changeset emptyChangeset = CommitCommand
+      .on(repository)
+      .user("SCM-Manager")
+      .message("Create new branch " + name)
+      .execute();
 
-  /**
-   * @since 2.0
-   */
-  MODIFICATIONS,
+    LOG.debug("Created new branch '{}' in repository {} with changeset {}",
+      name, getRepository().getNamespaceAndName(), emptyChangeset.getNode());
 
-  /**
-   * @since 2.0
-   */
-  MERGE
+    return Branch.normalBranch(name, emptyChangeset.getNode());
+  }
 }
