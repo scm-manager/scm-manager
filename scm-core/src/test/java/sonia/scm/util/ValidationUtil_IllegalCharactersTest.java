@@ -1,4 +1,4 @@
-package sonia.scm.api.v2;
+package sonia.scm.util;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,18 +13,18 @@ import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertFalse;
-import static sonia.scm.api.v2.ValidationConstraints.USER_GROUP_PATTERN;
+import static sonia.scm.util.ValidationUtil.REGEX_NAME;
 
 @RunWith(Parameterized.class)
-public class ValidationConstraints_IllegalCharactersTest {
+public class ValidationUtil_IllegalCharactersTest {
 
   private static final List<Character> ACCEPTED_CHARS = asList('@', '_', '-', '.');
 
-  private final Pattern userGroupPattern=Pattern.compile(USER_GROUP_PATTERN);
+  private final Pattern userGroupPattern=Pattern.compile(REGEX_NAME);
 
   private final String expression;
 
-  public ValidationConstraints_IllegalCharactersTest(String expression) {
+  public ValidationUtil_IllegalCharactersTest(String expression) {
     this.expression = expression;
   }
 

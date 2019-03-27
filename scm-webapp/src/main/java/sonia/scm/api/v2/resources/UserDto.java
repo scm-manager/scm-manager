@@ -9,12 +9,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
+import sonia.scm.util.ValidationUtil;
 
 import javax.validation.constraints.Pattern;
 import java.time.Instant;
 import java.util.Map;
-
-import static sonia.scm.api.v2.ValidationConstraints.USER_GROUP_PATTERN;
 
 @NoArgsConstructor @Getter @Setter
 public class UserDto extends HalRepresentation {
@@ -26,7 +25,7 @@ public class UserDto extends HalRepresentation {
   private Instant lastModified;
   @NotEmpty @Email
   private String mail;
-  @Pattern(regexp = USER_GROUP_PATTERN)
+  @Pattern(regexp = ValidationUtil.REGEX_NAME)
   private String name;
   @JsonInclude(JsonInclude.Include.NON_NULL)
   private String password;
