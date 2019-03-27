@@ -1,18 +1,18 @@
-package sonia.scm.repository;
+package sonia.scm.repository.util;
 
 import java.util.function.Consumer;
 
-public class CloseableWrapper<C> implements AutoCloseable {
+public class CloseableWrapper<T> implements AutoCloseable {
 
-  private final C wrapped;
-  private final Consumer<C> cleanup;
+  private final T wrapped;
+  private final Consumer<T> cleanup;
 
-  public CloseableWrapper(C wrapped, Consumer<C> cleanup) {
+  public CloseableWrapper(T wrapped, Consumer<T> cleanup) {
     this.wrapped = wrapped;
     this.cleanup = cleanup;
   }
 
-  public C get() { return wrapped; }
+  public T get() { return wrapped; }
 
   @Override
   public void close() {

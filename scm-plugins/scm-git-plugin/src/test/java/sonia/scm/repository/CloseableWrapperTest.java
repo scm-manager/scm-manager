@@ -1,6 +1,7 @@
 package sonia.scm.repository;
 
 import org.junit.Test;
+import sonia.scm.repository.util.CloseableWrapper;
 
 import java.util.function.Consumer;
 

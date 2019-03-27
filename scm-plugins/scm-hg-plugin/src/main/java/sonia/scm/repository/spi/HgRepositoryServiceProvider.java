@@ -128,7 +128,7 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
 
   @Override
   public BranchCommand getBranchCommand() {
-    return new HgBranchCommand(context, repository);
+    return new HgBranchCommand(context, repository, handler.getWorkdirFactory());
   }
 
   /**

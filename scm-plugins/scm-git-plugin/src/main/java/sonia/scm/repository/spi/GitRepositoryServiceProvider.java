@@ -129,7 +129,7 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
   @Override
   public BranchCommand getBranchCommand()
   {
-    return new GitBranchCommand(context, repository);
+    return new GitBranchCommand(context, repository, handler.getWorkdirFactory());
   }
 
   /**

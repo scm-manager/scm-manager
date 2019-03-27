@@ -1,6 +1,7 @@
 package sonia.scm.repository.spi;
 
 import org.assertj.core.api.Assertions;
+import org.junit.Rule;
 import org.junit.Test;
 import sonia.scm.repository.Branch;
 
@@ -10,13 +11,16 @@ import java.util.List;
 
 public class GitBranchCommandTest extends AbstractGitCommandTestBase {
 
+  @Rule
+  public BindTransportProtocolRule transportProtocolRule = new BindTransportProtocolRule();
+
   @Test
   public void shouldCreateBranch() throws IOException {
     GitContext context = createContext();
 
     Assertions.assertThat(readBranches(context)).filteredOn(b -> b.getName().equals("new_branch")).isEmpty();
 
-    new GitBranchCommand(context, repository).branch("new_branch");
+    new GitBranchCommand(context, repository, new SimpleGitWorkdirFactory()).branch("new_branch");
 
     Assertions.assertThat(readBranches(context)).filteredOn(b -> b.getName().equals("new_branch")).isNotEmpty();
   }

@@ -12,6 +12,7 @@ import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.api.HookContextFactory;
+import sonia.scm.repository.util.WorkingCopy;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,7 +45,7 @@ public class SimpleGitWorkdirFactoryTest extends AbstractGitCommandTestBase {
     SimpleGitWorkdirFactory factory = new SimpleGitWorkdirFactory(temporaryFolder.newFolder());
     File masterRepo = createRepositoryDirectory();
 
-    try (WorkingCopy workingCopy = factory.createWorkingCopy(createContext())) {
+    try (WorkingCopy<Repository> workingCopy = factory.createWorkingCopy(createContext())) {
 
       assertThat(workingCopy.get().getDirectory())
         .exists()
@@ -58,24 +59,14 @@ public class SimpleGitWorkdirFactoryTest extends AbstractGitCommandTestBase {
   }
 
   @Test
-  public void cloneFromPoolShouldBeClosed() throws IOException {
-    PoolWithSpy factory = new PoolWithSpy(temporaryFolder.newFolder());
-
-    try (WorkingCopy workingCopy = factory.createWorkingCopy(createContext())) {
-      assertThat(workingCopy).isNotNull();
-    }
-    verify(factory.createdClone).close();
-  }
-
-  @Test
   public void cloneFromPoolShouldNotBeReused() throws IOException {
     SimpleGitWorkdirFactory factory = new SimpleGitWorkdirFactory(temporaryFolder.newFolder());
 
     File firstDirectory;
-    try (WorkingCopy workingCopy = factory.createWorkingCopy(createContext())) {
+    try (WorkingCopy<Repository> workingCopy = factory.createWorkingCopy(createContext())) {
       firstDirectory = workingCopy.get().getDirectory();
     }
-    try (WorkingCopy workingCopy = factory.createWorkingCopy(createContext())) {
+    try (WorkingCopy<Repository> workingCopy = factory.createWorkingCopy(createContext())) {
       File secondDirectory = workingCopy.get().getDirectory();
       assertThat(secondDirectory).isNotEqualTo(firstDirectory);
     }
@@ -86,23 +77,9 @@ public class SimpleGitWorkdirFactoryTest extends AbstractGitCommandTestBase {
     SimpleGitWorkdirFactory factory = new SimpleGitWorkdirFactory(temporaryFolder.newFolder());
 
     File directory;
-    try (WorkingCopy workingCopy = factory.createWorkingCopy(createContext())) {
+    try (WorkingCopy<Repository> workingCopy = factory.createWorkingCopy(createContext())) {
       directory = workingCopy.get().getWorkTree();
     }
     assertThat(directory).doesNotExist();
-  }
-
-  private static class PoolWithSpy extends SimpleGitWorkdirFactory {
-    PoolWithSpy(File poolDirectory) {
-      super(poolDirectory);
-    }
-
-    Repository createdClone;
-
-    @Override
-    protected Repository cloneRepository(File bareRepository, File destination) throws GitAPIException {
-      createdClone = spy(super.cloneRepository(bareRepository, destination));
-      return createdClone;
-    }
   }
 }

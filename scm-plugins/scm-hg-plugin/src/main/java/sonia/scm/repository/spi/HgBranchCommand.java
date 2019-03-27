@@ -32,10 +32,14 @@ package sonia.scm.repository.spi;
 
 import com.aragost.javahg.Changeset;
 import com.aragost.javahg.commands.CommitCommand;
+import com.aragost.javahg.commands.PushCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.Branch;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.util.WorkingCopy;
+
+import java.io.IOException;
 
 /**
  * Mercurial implementation of the {@link BranchCommand}.
@@ -45,24 +49,37 @@ public class HgBranchCommand extends AbstractCommand implements BranchCommand {
 
   private static final Logger LOG = LoggerFactory.getLogger(HgBranchCommand.class);
 
-  HgBranchCommand(HgCommandContext context, Repository repository) {
+  private final HgWorkdirFactory workdirFactory;
+
+  HgBranchCommand(HgCommandContext context, Repository repository, HgWorkdirFactory workdirFactory) {
     super(context, repository);
+    this.workdirFactory = workdirFactory;
   }
 
   @Override
-  public Branch branch(String name) {
-    com.aragost.javahg.Repository repository = open();
-    com.aragost.javahg.commands.BranchCommand.on(repository).set(name);
+  public Branch branch(String name) throws IOException {
+    try (WorkingCopy<RepositoryCloseableWrapper> workingCopy = workdirFactory.createWorkingCopy(getContext())) {
+      com.aragost.javahg.Repository repository = workingCopy.get().get();
+      com.aragost.javahg.commands.BranchCommand.on(repository).set(name);
 
-    Changeset emptyChangeset = CommitCommand
-      .on(repository)
-      .user("SCM-Manager")
-      .message("Create new branch " + name)
-      .execute();
+      Changeset emptyChangeset = CommitCommand
+        .on(repository)
+        .user("SCM-Manager")
+        .message("Create new branch " + name)
+        .execute();
 
-    LOG.debug("Created new branch '{}' in repository {} with changeset {}",
-      name, getRepository().getNamespaceAndName(), emptyChangeset.getNode());
+      PushCommand pushCommand = PushCommand
+        .on(repository)
+        .branch(name)
+        .newBranch();
+      pushCommand
+        .cmdAppend("--config", "");
+      pushCommand  .execute();
 
-    return Branch.normalBranch(name, emptyChangeset.getNode());
+      LOG.debug("Created new branch '{}' in repository {} with changeset {}",
+        name, getRepository().getNamespaceAndName(), emptyChangeset.getNode());
+
+      return Branch.normalBranch(name, emptyChangeset.getNode());
+    }
   }
 }

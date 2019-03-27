@@ -35,26 +35,44 @@ package sonia.scm.repository.spi;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.transport.PushResult;
+import org.eclipse.jgit.transport.RemoteRefUpdate;
 import sonia.scm.repository.Branch;
 import sonia.scm.repository.GitUtil;
+import sonia.scm.repository.GitWorkdirFactory;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.util.WorkingCopy;
 
-import java.io.IOException;
+import java.util.stream.StreamSupport;
 
 public class GitBranchCommand extends AbstractGitCommand implements BranchCommand {
 
-  GitBranchCommand(GitContext context, Repository repository) {
+  private final GitWorkdirFactory workdirFactory;
+
+  GitBranchCommand(GitContext context, Repository repository, GitWorkdirFactory workdirFactory) {
     super(context, repository);
+    this.workdirFactory = workdirFactory;
   }
 
   @Override
-  public Branch branch(String name) throws IOException {
-    try (Git git = new Git(open())) {
-      Ref ref = git.branchCreate().setName(name).call();
+  public Branch branch(String name) {
+    try (WorkingCopy<org.eclipse.jgit.lib.Repository> workingCopy = workdirFactory.createWorkingCopy(context)) {
+      Git clone = new Git(workingCopy.get());
+      Ref ref = clone.branchCreate().setName(name).call();
+      Iterable<PushResult> call = clone.push().add(name).call();
+      StreamSupport.stream(call.spliterator(), false)
+        .flatMap(pushResult -> pushResult.getRemoteUpdates().stream())
+        .filter(remoteRefUpdate -> remoteRefUpdate.getStatus() != RemoteRefUpdate.Status.OK)
+        .findFirst()
+        .ifPresent(this::handlePushError);
       return Branch.normalBranch(name, GitUtil.getId(ref.getObjectId()));
     } catch (GitAPIException ex) {
       throw new InternalRepositoryException(repository, "could not create branch " + name, ex);
     }
+  }
+
+  private void handlePushError(RemoteRefUpdate remoteRefUpdate) {
+    // TODO handle failed remote update
   }
 }
