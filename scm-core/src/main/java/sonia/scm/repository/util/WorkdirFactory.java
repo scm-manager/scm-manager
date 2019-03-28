@@ -1,5 +1,5 @@
 package sonia.scm.repository.util;
 
-public interface WorkdirFactory<T, C> {
-  WorkingCopy<T> createWorkingCopy(C gitContext);
+public interface WorkdirFactory<R extends AutoCloseable, C> {
+  WorkingCopy<R> createWorkingCopy(C context);
 }

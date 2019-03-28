@@ -2,7 +2,7 @@ package sonia.scm.repository.util;
 
 import java.util.function.Consumer;
 
-public class CloseableWrapper<T> implements AutoCloseable {
+public class CloseableWrapper<T extends AutoCloseable> implements AutoCloseable {
 
   private final T wrapped;
   private final Consumer<T> cleanup;

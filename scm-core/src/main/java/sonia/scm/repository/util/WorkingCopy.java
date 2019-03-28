@@ -8,14 +8,14 @@ import java.io.File;
 import java.io.IOException;
 import java.util.function.Consumer;
 
-public class WorkingCopy<T> extends CloseableWrapper<T> {
+public class WorkingCopy<R extends AutoCloseable> extends CloseableWrapper<R> {
 
   private static final Logger LOG = LoggerFactory.getLogger(WorkingCopy.class);
 
   private final File directory;
 
-  public WorkingCopy(T wrapped, Consumer<T> cleanup, File directory) {
-    super(wrapped, cleanup);
+  public WorkingCopy(R wrappedRepository, Consumer<R> cleanup, File directory) {
+    super(wrappedRepository, cleanup);
     this.directory = directory;
   }
 

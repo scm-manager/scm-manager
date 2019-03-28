@@ -9,28 +9,31 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
-public abstract class SimpleWorkdirFactory<T extends AutoCloseable, C> {
+public abstract class SimpleWorkdirFactory<R extends AutoCloseable, C> implements WorkdirFactory<R, C> {
 
   private static final Logger logger = LoggerFactory.getLogger(SimpleWorkdirFactory.class);
 
   private final File poolDirectory;
 
-  private final CloneProvider<T, C> cloneProvider;
+  private final CloneProvider<R, C> cloneProvider;
 
-  public SimpleWorkdirFactory(CloneProvider<T, C> cloneProvider) {
+  public SimpleWorkdirFactory(CloneProvider<R, C> cloneProvider) {
     this(new File(System.getProperty("java.io.tmpdir"), "scmm-work-pool"), cloneProvider);
   }
 
-  public SimpleWorkdirFactory(File poolDirectory, CloneProvider<T, C> cloneProvider) {
+  public SimpleWorkdirFactory(File poolDirectory, CloneProvider<R, C> cloneProvider) {
     this.poolDirectory = poolDirectory;
     this.cloneProvider = cloneProvider;
-    poolDirectory.mkdirs();
+    if (!poolDirectory.exists() && !poolDirectory.mkdirs()) {
+      throw new IllegalStateException("could not create pool directory " + poolDirectory);
+    }
   }
 
-  public WorkingCopy<T> createWorkingCopy(C context) {
+  @Override
+  public WorkingCopy<R> createWorkingCopy(C context) {
     try {
       File directory = createNewWorkdir();
-      T clone = cloneProvider.cloneRepository(context, directory);
+      R clone = cloneProvider.cloneRepository(context, directory);
       return new WorkingCopy<>(clone, this::close, directory);
     } catch (IOException e) {
       throw new InternalRepositoryException(getRepository(context), "could not create temporary directory for clone of repository", e);
@@ -43,7 +46,7 @@ public abstract class SimpleWorkdirFactory<T extends AutoCloseable, C> {
     return Files.createTempDirectory(poolDirectory.toPath(),"workdir").toFile();
   }
 
-  private void close(T repository) {
+  private void close(R repository) {
     try {
       repository.close();
     } catch (Exception e) {
@@ -51,7 +54,7 @@ public abstract class SimpleWorkdirFactory<T extends AutoCloseable, C> {
     }
   }
 
-  public interface CloneProvider<T, C> {
-    T cloneRepository(C context, File target) throws IOException;
+  public interface CloneProvider<R, C> {
+    R cloneRepository(C context, File target) throws IOException;
   }
 }
