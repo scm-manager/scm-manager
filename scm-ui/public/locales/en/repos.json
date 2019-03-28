@@ -43,6 +43,10 @@
     "title": "Create Repository",
     "subtitle": "Create a new repository"
   },
+  "branchesOverview": {
+    "title": "Overview of all branches",
+    "branches": "Branches"
+  },
   "changesets": {
     "errorTitle": "Error",
     "errorSubtitle": "Could not fetch changesets",

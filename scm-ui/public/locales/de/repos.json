@@ -43,6 +43,10 @@
     "title": "Repository erstellen",
     "subtitle": "Erstellen eines neuen Repository"
   },
+  "branchesOverview": {
+    "title": "Übersicht aller verfügbaren Branches",
+    "branches": "Branches"
+  },
   "changesets": {
     "errorTitle": "Fehler",
     "errorSubtitle": "Changesets konnten nicht abgerufen werden",
