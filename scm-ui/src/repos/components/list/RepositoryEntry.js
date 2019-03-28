@@ -35,6 +35,18 @@ class RepositoryEntry extends React.Component<Props> {
     return `/repo/${repository.namespace}/${repository.name}`;
   };
 
+  renderBranchesLink = (repository: Repository, repositoryLink: string) => {
+    if (repository._links["branches"]) {
+      return (
+        <RepositoryEntryLink
+          iconClass="fas fa-code-branch fa-lg"
+          to={repositoryLink + "/branches"}
+        />
+      );
+    }
+    return null;
+  };
+
   renderChangesetsLink = (repository: Repository, repositoryLink: string) => {
     if (repository._links["changesets"]) {
       return (
@@ -102,6 +114,7 @@ class RepositoryEntry extends React.Component<Props> {
             </div>
             <nav className="level is-mobile">
               <div className="level-left">
+                {this.renderBranchesLink(repository, repositoryLink)}
                 {this.renderChangesetsLink(repository, repositoryLink)}
                 {this.renderSourcesLink(repository, repositoryLink)}
                 {this.renderModifyLink(repository, repositoryLink)}
