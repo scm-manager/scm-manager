@@ -45,7 +45,8 @@
   },
   "branchesOverview": {
     "title": "Overview of all branches",
-    "branches": "Branches"
+    "branches": "Branches",
+    "createButton": "Create Branch"
   },
   "changesets": {
     "errorTitle": "Error",

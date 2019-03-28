@@ -8,7 +8,7 @@ import {
 } from "../modules/repos";
 
 import { connect } from "react-redux";
-import {Redirect, Route, Switch} from "react-router-dom";
+import { Redirect, Route, Switch } from "react-router-dom";
 import type { Repository } from "@scm-manager/ui-types";
 
 import {
@@ -17,7 +17,8 @@ import {
   SubNavigation,
   NavLink,
   Page,
-  Section, ErrorPage
+  Section,
+  ErrorPage
 } from "@scm-manager/ui-components";
 import { translate } from "react-i18next";
 import RepositoryDetails from "../components/RepositoryDetails";
@@ -34,8 +35,8 @@ import ChangesetView from "./ChangesetView";
 import PermissionsNavLink from "../components/PermissionsNavLink";
 import Sources from "../sources/containers/Sources";
 import RepositoryNavLink from "../components/RepositoryNavLink";
-import {getLinks, getRepositoriesLink} from "../../modules/indexResource";
-import {binder, ExtensionPoint} from "@scm-manager/ui-extensions";
+import { getLinks, getRepositoriesLink } from "../../modules/indexResource";
+import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
 
 type Props = {
   namespace: string,
@@ -83,11 +84,13 @@ class RepositoryRoot extends React.Component<Props> {
     const { loading, error, indexLinks, repository, t } = this.props;
 
     if (error) {
-      return <ErrorPage
-        title={t("repositoryRoot.errorTitle")}
-        subtitle={t("repositoryRoot.errorSubtitle")}
-        error={error}
-      />;
+      return (
+        <ErrorPage
+          title={t("repositoryRoot.errorTitle")}
+          subtitle={t("repositoryRoot.errorSubtitle")}
+          error={error}
+        />
+      );
     }
 
     if (!repository || loading) {
@@ -102,11 +105,14 @@ class RepositoryRoot extends React.Component<Props> {
       indexLinks
     };
 
-    const redirectUrlFactory = binder.getExtension("repository.redirect", this.props);
+    const redirectUrlFactory = binder.getExtension(
+      "repository.redirect",
+      this.props
+    );
     let redirectedUrl;
-    if (redirectUrlFactory){
+    if (redirectUrlFactory) {
       redirectedUrl = url + redirectUrlFactory(this.props);
-    }else{
+    } else {
       redirectedUrl = url + "/info";
     }
 
@@ -115,7 +121,7 @@ class RepositoryRoot extends React.Component<Props> {
         <div className="columns">
           <div className="column is-three-quarters is-clipped">
             <Switch>
-              <Redirect exact from={this.props.match.url} to={redirectedUrl}/>
+              <Redirect exact from={this.props.match.url} to={redirectedUrl} />
               <Route
                 path={`${url}/info`}
                 exact
@@ -174,19 +180,12 @@ class RepositoryRoot extends React.Component<Props> {
               />
               <Route
                 path={`${url}/branches`}
-                render={() => (
-                  <BranchesOverview
-                    repository={repository}
-                  />
-                )}
+                exact={true}
+                render={() => <BranchesOverview repository={repository} />}
               />
               <Route
                 path={`${url}/branches/create`}
-                render={() => (
-                  <CreateBranch
-                    repository={repository}
-                    />
-                )}
+                render={() => <CreateBranch repository={repository} />}
               />
               <ExtensionPoint
                 name="repository.route"

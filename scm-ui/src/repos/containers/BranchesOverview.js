@@ -12,6 +12,7 @@ import { compose } from "redux";
 import { translate } from "react-i18next";
 import {Link, withRouter} from "react-router-dom";
 import {
+  CreateButton,
   ErrorNotification,
   Loading,
   Subtitle
@@ -24,6 +25,7 @@ type Props = {
   branches: Branch[],
 
   // dispatch props
+  showCreateButton: boolean,
   fetchBranches: Repository => void,
 
   // Context props
@@ -60,6 +62,7 @@ class BranchesOverview extends React.Component<Props> {
           </thead>
           <tbody>{this.renderBranches()}</tbody>
         </table>
+        {this.renderCreateButton()}
       </>
     );
   }
@@ -83,6 +86,16 @@ class BranchesOverview extends React.Component<Props> {
       );
     }
     return branchesList;
+  }
+
+  renderCreateButton() {
+    const { showCreateButton, t } = this.props;
+    if (showCreateButton || true ) { // TODO
+      return (
+        <CreateButton label={t("branchesOverview.createButton")} link="/create" />
+      );
+    }
+    return null;
   }
 }
 
