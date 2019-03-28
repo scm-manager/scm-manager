@@ -32,11 +32,15 @@ package sonia.scm.repository.spi;
 
 import com.aragost.javahg.Changeset;
 import com.aragost.javahg.commands.CommitCommand;
+import com.aragost.javahg.commands.UpdateCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.Branch;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.api.BranchRequest;
 import sonia.scm.repository.util.WorkingCopy;
+
+import java.io.IOException;
 
 /**
  * Mercurial implementation of the {@link BranchCommand}.
@@ -54,21 +58,24 @@ public class HgBranchCommand extends AbstractCommand implements BranchCommand {
   }
 
   @Override
-  public Branch branch(String name) {
+  public Branch branch(BranchRequest request) throws IOException {
     try (WorkingCopy<RepositoryCloseableWrapper> workingCopy = workdirFactory.createWorkingCopy(getContext())) {
       com.aragost.javahg.Repository repository = workingCopy.get().get();
-      com.aragost.javahg.commands.BranchCommand.on(repository).set(name);
+      if (request.getParentBranch() != null) {
+        UpdateCommand.on(repository).rev(request.getParentBranch()).execute();
+      }
+      com.aragost.javahg.commands.BranchCommand.on(repository).set(request.getNewBranch());
 
       Changeset emptyChangeset = CommitCommand
         .on(repository)
         .user("SCM-Manager")
-        .message("Create new branch " + name)
+        .message("Create new branch " + request.getNewBranch())
         .execute();
 
       LOG.debug("Created new branch '{}' in repository {} with changeset {}",
-        name, getRepository().getNamespaceAndName(), emptyChangeset.getNode());
+        request.getNewBranch(), getRepository().getNamespaceAndName(), emptyChangeset.getNode());
 
-      return Branch.normalBranch(name, emptyChangeset.getNode());
+      return Branch.normalBranch(request.getNewBranch(), emptyChangeset.getNode());
     }
   }
 }

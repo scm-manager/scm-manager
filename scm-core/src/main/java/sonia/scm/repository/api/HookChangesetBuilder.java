@@ -46,6 +46,7 @@ import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.spi.HookChangesetProvider;
 import sonia.scm.repository.spi.HookChangesetRequest;
+import sonia.scm.repository.spi.HookChangesetResponse;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -115,8 +116,8 @@ public final class HookChangesetBuilder
    */
   public Iterable<Changeset> getChangesets()
   {
-    Iterable<Changeset> changesets =
-      provider.handleRequest(request).getChangesets();
+    HookChangesetResponse hookChangesetResponse = provider.handleRequest(request);
+    Iterable<Changeset> changesets = hookChangesetResponse.getChangesets();
 
     if (!disablePreProcessors)
     {

@@ -34,6 +34,7 @@ package sonia.scm.repository.spi;
 
 
 import sonia.scm.repository.Branch;
+import sonia.scm.repository.api.BranchRequest;
 
 import java.io.IOException;
 
@@ -41,5 +42,5 @@ import java.io.IOException;
  * @since 2.0
  */
 public interface BranchCommand {
-  Branch branch(String name) throws IOException;
+  Branch branch(BranchRequest name) throws IOException;
 }

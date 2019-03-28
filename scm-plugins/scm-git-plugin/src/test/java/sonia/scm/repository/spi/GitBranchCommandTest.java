@@ -4,6 +4,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.Rule;
 import org.junit.Test;
 import sonia.scm.repository.Branch;
+import sonia.scm.repository.api.BranchRequest;
 
 import java.io.IOException;
 import java.util.List;
@@ -20,7 +21,10 @@ public class GitBranchCommandTest extends AbstractGitCommandTestBase {
 
     Assertions.assertThat(readBranches(context)).filteredOn(b -> b.getName().equals("new_branch")).isEmpty();
 
-    new GitBranchCommand(context, repository, new SimpleGitWorkdirFactory()).branch("new_branch");
+    BranchRequest branchRequest = new BranchRequest();
+    branchRequest.setNewBranch("new_branch");
+
+    new GitBranchCommand(context, repository, new SimpleGitWorkdirFactory()).branch(branchRequest);
 
     Assertions.assertThat(readBranches(context)).filteredOn(b -> b.getName().equals("new_branch")).isNotEmpty();
   }

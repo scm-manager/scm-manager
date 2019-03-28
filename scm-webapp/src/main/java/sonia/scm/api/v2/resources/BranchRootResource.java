@@ -1,5 +1,6 @@
 package sonia.scm.api.v2.resources;
 
+import com.google.common.base.Strings;
 import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.ResponseHeader;
 import com.webcohesion.enunciate.metadata.rs.ResponseHeaders;
@@ -13,6 +14,7 @@ import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryPermissions;
+import sonia.scm.repository.api.BranchCommandBuilder;
 import sonia.scm.repository.api.CommandNotSupportedException;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
@@ -132,14 +134,14 @@ public class BranchRootResource {
   /**
    * Creates a new branch.
    *
-   * @param namespace the namespace of the repository
-   * @param name      the name of the repository
-   * @param branchName The branch to be created.
+   * @param namespace     the namespace of the repository
+   * @param name          the name of the repository
+   * @param branchRequest the request giving the name of the new branch and an optional parent branch
    * @return A response with the link to the new branch (if created successfully).
    */
   @POST
   @Path("")
-  @Consumes(VndMediaType.BRANCH)
+  @Consumes(VndMediaType.BRANCH_REQUEST)
   @StatusCodes({
     @ResponseCode(code = 201, condition = "create success"),
     @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
@@ -151,16 +153,24 @@ public class BranchRootResource {
   @ResponseHeaders(@ResponseHeader(name = "Location", description = "uri to the created branch"))
   public Response create(@PathParam("namespace") String namespace,
                          @PathParam("name") String name,
-                         @Valid BranchDto branchToCreate) throws IOException {
+                         @Valid BranchRequestDto branchRequest) throws IOException {
     NamespaceAndName namespaceAndName = new NamespaceAndName(namespace, name);
-    String branchName = branchToCreate.getName();
+    String branchName = branchRequest.getName();
+    String parentName = branchRequest.getParent();
     try (RepositoryService repositoryService = serviceFactory.create(namespaceAndName)) {
       if (branchExists(branchName, repositoryService)) {
         throw alreadyExists(entity(Branch.class, branchName).in(Repository.class, namespace + "/" + name));
       }
       Repository repository = repositoryService.getRepository();
       RepositoryPermissions.push(repository).check();
-      Branch newBranch = repositoryService.getBranchCommand().branch(branchName);
+      BranchCommandBuilder branchCommand = repositoryService.getBranchCommand();
+      if (!Strings.isNullOrEmpty(parentName)) {
+        if (!branchExists(parentName, repositoryService)) {
+          throw notFound(entity(Branch.class, parentName).in(Repository.class, namespace + "/" + name));
+        }
+        branchCommand.from(parentName);
+      }
+      Branch newBranch = branchCommand.branch(branchName);
       return Response.created(URI.create(resourceLinks.branch().self(namespaceAndName, newBranch.getName()))).build();
     }
   }

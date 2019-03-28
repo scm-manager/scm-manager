@@ -44,17 +44,20 @@ import java.io.IOException;
  */
 public final class BranchCommandBuilder {
 
-  private static final Logger LOG = LoggerFactory.getLogger(BranchCommandBuilder.class);
-
   public BranchCommandBuilder(BranchCommand command) {
     this.command = command;
   }
 
-  public Branch branch(String name) throws IOException {
-    LOG.debug("branch {}", name);
+  public BranchCommandBuilder from(String parentBranch) {
+    request.setParentBranch(parentBranch);
+    return this;
+  }
 
-    return command.branch(name);
+  public Branch branch(String name) throws IOException {
+    request.setNewBranch(name);
+    return command.branch(request);
   }
 
   private BranchCommand command;
+  private BranchRequest request = new BranchRequest();
 }

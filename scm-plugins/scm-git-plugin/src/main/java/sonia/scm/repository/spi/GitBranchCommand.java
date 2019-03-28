@@ -42,6 +42,7 @@ import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.GitWorkdirFactory;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.api.BranchRequest;
 import sonia.scm.repository.util.WorkingCopy;
 
 import java.util.stream.StreamSupport;
@@ -56,19 +57,22 @@ public class GitBranchCommand extends AbstractGitCommand implements BranchComman
   }
 
   @Override
-  public Branch branch(String name) {
+  public Branch branch(BranchRequest request) {
     try (WorkingCopy<org.eclipse.jgit.lib.Repository> workingCopy = workdirFactory.createWorkingCopy(context)) {
       Git clone = new Git(workingCopy.get());
-      Ref ref = clone.branchCreate().setName(name).call();
-      Iterable<PushResult> call = clone.push().add(name).call();
+      if (request.getParentBranch() != null) {
+        clone.checkout().setName(request.getParentBranch());
+      }
+      Ref ref = clone.branchCreate().setName(request.getNewBranch()).call();
+      Iterable<PushResult> call = clone.push().add(request.getNewBranch()).call();
       StreamSupport.stream(call.spliterator(), false)
         .flatMap(pushResult -> pushResult.getRemoteUpdates().stream())
         .filter(remoteRefUpdate -> remoteRefUpdate.getStatus() != RemoteRefUpdate.Status.OK)
         .findFirst()
         .ifPresent(this::handlePushError);
-      return Branch.normalBranch(name, GitUtil.getId(ref.getObjectId()));
+      return Branch.normalBranch(request.getNewBranch(), GitUtil.getId(ref.getObjectId()));
     } catch (GitAPIException ex) {
-      throw new InternalRepositoryException(repository, "could not create branch " + name, ex);
+      throw new InternalRepositoryException(repository, "could not create branch " + request.getNewBranch(), ex);
     }
   }
 
