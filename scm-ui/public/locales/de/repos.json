@@ -26,6 +26,7 @@
     "menu": {
       "navigationLabel": "Repository Navigation",
       "informationNavLink": "Informationen",
+      "branchesNavLink": "Branches",
       "historyNavLink": "Commits",
       "sourcesNavLink": "Sources",
       "settingsNavLink": "Einstellungen",

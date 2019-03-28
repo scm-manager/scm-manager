@@ -22,6 +22,7 @@ import {
 import { translate } from "react-i18next";
 import RepositoryDetails from "../components/RepositoryDetails";
 import EditRepo from "./EditRepo";
+import BranchesOverview from "./BranchesOverview";
 import CreateBranch from "./CreateBranch";
 import Permissions from "../permissions/containers/Permissions";
 
@@ -172,6 +173,14 @@ class RepositoryRoot extends React.Component<Props> {
                 )}
               />
               <Route
+                path={`${url}/branches`}
+                render={() => (
+                  <BranchesOverview
+                    repository={repository}
+                  />
+                )}
+              />
+              <Route
                 path={`${url}/branches/create`}
                 render={() => (
                   <CreateBranch
@@ -198,6 +207,14 @@ class RepositoryRoot extends React.Component<Props> {
                   to={`${url}/info`}
                   icon="fas fa-info-circle"
                   label={t("repositoryRoot.menu.informationNavLink")}
+                />
+                <RepositoryNavLink
+                  repository={repository}
+                  linkName="branches"
+                  to={`${url}/branches/`}
+                  icon="fas fa-folder-open"
+                  label={t("repositoryRoot.menu.branchesNavLink")}
+                  activeOnlyWhenExact={false}
                 />
                 <RepositoryNavLink
                   repository={repository}
