@@ -26,7 +26,7 @@ class ChangesetButtonGroup extends React.Component<Props> {
       <ButtonGroup className="is-pulled-right">
         <Button link={changesetLink}>
           <span className="icon">
-            <i className="fas fa-code-branch"></i>
+            <i className="fas fa-exchange-alt"></i>
           </span>
           <span className="is-hidden-mobile is-hidden-tablet-only">
             {t("changeset.buttons.details")}

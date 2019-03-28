@@ -212,7 +212,7 @@ class RepositoryRoot extends React.Component<Props> {
                   repository={repository}
                   linkName="branches"
                   to={`${url}/branches/`}
-                  icon="fas fa-folder-open"
+                  icon="fas fa-code-branch"
                   label={t("repositoryRoot.menu.branchesNavLink")}
                   activeOnlyWhenExact={false}
                 />
@@ -220,7 +220,7 @@ class RepositoryRoot extends React.Component<Props> {
                   repository={repository}
                   linkName="changesets"
                   to={`${url}/changesets/`}
-                  icon="fas fa-code-branch"
+                  icon="fas fa-exchange-alt"
                   label={t("repositoryRoot.menu.historyNavLink")}
                   activeWhenMatch={this.matches}
                   activeOnlyWhenExact={false}
