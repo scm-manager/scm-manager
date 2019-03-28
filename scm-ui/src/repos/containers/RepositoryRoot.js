@@ -12,7 +12,6 @@ import {Redirect, Route, Switch} from "react-router-dom";
 import type { Repository } from "@scm-manager/ui-types";
 
 import {
-  CollapsibleErrorPage,
   Loading,
   Navigation,
   SubNavigation,
@@ -23,6 +22,7 @@ import {
 import { translate } from "react-i18next";
 import RepositoryDetails from "../components/RepositoryDetails";
 import EditRepo from "./EditRepo";
+import CreateBranch from "./CreateBranch";
 import Permissions from "../permissions/containers/Permissions";
 
 import type { History } from "history";
@@ -74,7 +74,7 @@ class RepositoryRoot extends React.Component<Props> {
 
   matches = (route: any) => {
     const url = this.matchedUrl();
-    const regex = new RegExp(`${url}(/branches)?/?[^/]*/changesets?.*`);
+    const regex = new RegExp(`${url}(/branch)?/?[^/]*/changesets?.*`);
     return route.location.pathname.match(regex);
   };
 
@@ -86,7 +86,7 @@ class RepositoryRoot extends React.Component<Props> {
         title={t("repositoryRoot.errorTitle")}
         subtitle={t("repositoryRoot.errorSubtitle")}
         error={error}
-      />
+      />;
     }
 
     if (!repository || loading) {
@@ -156,19 +156,27 @@ class RepositoryRoot extends React.Component<Props> {
                 render={() => (
                   <BranchRoot
                     repository={repository}
-                    baseUrlWithBranch={`${url}/branches`}
+                    baseUrlWithBranch={`${url}/branch`}
                     baseUrlWithoutBranch={`${url}/changesets`}
                   />
                 )}
               />
               <Route
-                path={`${url}/branches/:branch/changesets`}
+                path={`${url}/branch/:branch/changesets`}
                 render={() => (
                   <BranchRoot
                     repository={repository}
-                    baseUrlWithBranch={`${url}/branches`}
+                    baseUrlWithBranch={`${url}/branch`}
                     baseUrlWithoutBranch={`${url}/changesets`}
                   />
+                )}
+              />
+              <Route
+                path={`${url}/branches/create`}
+                render={() => (
+                  <CreateBranch
+                    repository={repository}
+                    />
                 )}
               />
               <ExtensionPoint
