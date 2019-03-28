@@ -128,6 +128,7 @@ public final class HgTestUtil
       "http://localhost:8081/scm/hook/hg/");
     when(hookManager.createUrl(any(HttpServletRequest.class))).thenReturn(
       "http://localhost:8081/scm/hook/hg/");
+    when(hookManager.getCredentials()).thenReturn("");
 
     return hookManager;
   }

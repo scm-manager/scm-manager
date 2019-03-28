@@ -35,9 +35,6 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.security.AccessToken;
-import sonia.scm.security.AccessTokenBuilderFactory;
-import sonia.scm.security.CipherUtil;
 import sonia.scm.web.HgUtil;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -81,27 +78,11 @@ public final class HgEnvironment
    * @param environment
    * @param handler
    * @param hookManager
-   * @param request
    */
   public static void prepareEnvironment(Map<String, String> environment,
-    HgRepositoryHandler handler, HgHookManager hookManager,
-    HttpServletRequest request, AccessTokenBuilderFactory accessTokenBuilderFactory)
+                                        HgRepositoryHandler handler, HgHookManager hookManager)
   {
-    String hookUrl;
-
-    if (request != null)
-    {
-      hookUrl = hookManager.createUrl(request);
-      environment.put(SCM_BEARER_TOKEN, getCredentials(accessTokenBuilderFactory));
-    }
-    else
-    {
-      hookUrl = hookManager.createUrl();
-    }
-
-    environment.put(ENV_PYTHON_PATH, HgUtil.getPythonPath(handler.getConfig()));
-    environment.put(ENV_URL, hookUrl);
-    environment.put(ENV_CHALLENGE, hookManager.getChallenge());
+    prepareEnvironment(environment, handler, hookManager, null);
   }
 
   /**
@@ -111,25 +92,27 @@ public final class HgEnvironment
    * @param environment
    * @param handler
    * @param hookManager
+   * @param request
    */
   public static void prepareEnvironment(Map<String, String> environment,
-    HgRepositoryHandler handler, HgHookManager hookManager, AccessTokenBuilderFactory accessTokenBuilderFactory)
+    HgRepositoryHandler handler, HgHookManager hookManager,
+    HttpServletRequest request)
   {
-    prepareEnvironment(environment, handler, hookManager, null, accessTokenBuilderFactory);
-  }
+    String hookUrl;
 
-  //~--- get methods ----------------------------------------------------------
+    if (request != null)
+    {
+      hookUrl = hookManager.createUrl(request);
+    }
+    else
+    {
+      hookUrl = hookManager.createUrl();
+    }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  private static String getCredentials(AccessTokenBuilderFactory accessTokenBuilderFactory)
-  {
-    AccessToken accessToken = accessTokenBuilderFactory.create().build();
-
-    return CipherUtil.getInstance().encode(accessToken.compact());
+    String credentials = hookManager.getCredentials();
+    environment.put(SCM_BEARER_TOKEN, credentials);
+    environment.put(ENV_PYTHON_PATH, HgUtil.getPythonPath(handler.getConfig()));
+    environment.put(ENV_URL, hookUrl);
+    environment.put(ENV_CHALLENGE, hookManager.getChallenge());
   }
 }

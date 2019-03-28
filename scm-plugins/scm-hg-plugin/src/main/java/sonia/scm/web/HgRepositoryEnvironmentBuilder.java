@@ -4,9 +4,6 @@ import sonia.scm.repository.HgEnvironment;
 import sonia.scm.repository.HgHookManager;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
-import sonia.scm.security.AccessToken;
-import sonia.scm.security.AccessTokenBuilderFactory;
-import sonia.scm.security.CipherUtil;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -20,17 +17,14 @@ public class HgRepositoryEnvironmentBuilder {
   private static final String ENV_REPOSITORY_ID = "SCM_REPOSITORY_ID";
   private static final String ENV_PYTHON_HTTPS_VERIFY = "PYTHONHTTPSVERIFY";
   private static final String ENV_HTTP_POST_ARGS = "SCM_HTTP_POST_ARGS";
-  private static final String SCM_BEARER_TOKEN = "SCM_BEARER_TOKEN";
 
   private final HgRepositoryHandler handler;
   private final HgHookManager hookManager;
-  private final AccessTokenBuilderFactory accessTokenBuilderFactory;
 
   @Inject
-  public HgRepositoryEnvironmentBuilder(HgRepositoryHandler handler, HgHookManager hookManager, AccessTokenBuilderFactory accessTokenBuilderFactory) {
+  public HgRepositoryEnvironmentBuilder(HgRepositoryHandler handler, HgHookManager hookManager) {
     this.handler = handler;
     this.hookManager = hookManager;
-    this.accessTokenBuilderFactory = accessTokenBuilderFactory;
   }
 
   public void buildFor(Repository repository, HttpServletRequest request, Map<String, String> environment) {
@@ -56,18 +50,7 @@ public class HgRepositoryEnvironmentBuilder {
       environment,
       handler,
       hookManager,
-      request,
-      accessTokenBuilderFactory
+      request
     );
-
-    addCredentials(environment);
-  }
-
-  private void addCredentials(Map<String, String> env) {
-
-    AccessToken accessToken = accessTokenBuilderFactory.create().build();
-
-    String encodedToken = CipherUtil.getInstance().encode(accessToken.compact());
-    env.put(SCM_BEARER_TOKEN, encodedToken);
   }
 }

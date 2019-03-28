@@ -43,7 +43,6 @@ import sonia.scm.repository.api.HookBranchProvider;
 import sonia.scm.repository.api.HookFeature;
 import sonia.scm.repository.api.HookMessageProvider;
 import sonia.scm.repository.api.HookTagProvider;
-import sonia.scm.security.AccessTokenBuilderFactory;
 
 import java.io.File;
 import java.util.EnumSet;
@@ -76,9 +75,9 @@ public class HgHookContextProvider extends HookContextProvider
    */
   public HgHookContextProvider(HgRepositoryHandler handler,
                                File repositoryDirectory, HgHookManager hookManager, String startRev,
-                               RepositoryHookType type, AccessTokenBuilderFactory accessTokenBuilderFactory)
+                               RepositoryHookType type)
   {
-    this.hookChangesetProvider = new HgHookChangesetProvider(handler, repositoryDirectory, hookManager, startRev, type, accessTokenBuilderFactory);
+    this.hookChangesetProvider = new HgHookChangesetProvider(handler, repositoryDirectory, hookManager, startRev, type);
   }
 
   //~--- get methods ----------------------------------------------------------

@@ -50,7 +50,6 @@ import sonia.scm.repository.HgHookManager;
 import sonia.scm.repository.HgPythonScript;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.spi.javahg.HgFileviewExtension;
-import sonia.scm.security.AccessTokenBuilderFactory;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 
@@ -105,15 +104,14 @@ public final class HgUtil
    * @return
    */
   public static Repository open(HgRepositoryHandler handler,
-    HgHookManager hookManager, File directory, String encoding, boolean pending,
-    AccessTokenBuilderFactory accessTokenBuilderFactory)
+    HgHookManager hookManager, File directory, String encoding, boolean pending)
   {
     return open(
       handler,
       directory,
       encoding,
       pending,
-      environment -> HgEnvironment.prepareEnvironment(environment, handler, hookManager, accessTokenBuilderFactory)
+      environment -> HgEnvironment.prepareEnvironment(environment, handler, hookManager)
     );
   }
 

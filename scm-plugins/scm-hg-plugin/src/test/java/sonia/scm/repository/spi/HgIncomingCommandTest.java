@@ -129,6 +129,6 @@ public class HgIncomingCommandTest extends IncomingOutgoingTestBase
     return new HgIncomingCommand(
       new HgCommandContext(
         HgTestUtil.createHookManager(), handler, incomingRepository,
-          incomingDirectory, null), incomingRepository, handler);
+          incomingDirectory), incomingRepository, handler);
   }
 }

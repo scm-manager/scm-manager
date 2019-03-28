@@ -40,7 +40,6 @@ import sonia.scm.repository.HgHookManager;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.spi.javahg.HgLogChangesetCommand;
-import sonia.scm.security.AccessTokenBuilderFactory;
 import sonia.scm.web.HgUtil;
 
 import java.io.File;
@@ -64,14 +63,13 @@ public class HgHookChangesetProvider implements HookChangesetProvider
 
   public HgHookChangesetProvider(HgRepositoryHandler handler,
                                  File repositoryDirectory, HgHookManager hookManager, String startRev,
-                                 RepositoryHookType type, AccessTokenBuilderFactory accessTokenBuilderFactory)
+                                 RepositoryHookType type)
   {
     this.handler = handler;
     this.repositoryDirectory = repositoryDirectory;
     this.hookManager = hookManager;
     this.startRev = startRev;
     this.type = type;
-    this.accessTokenBuilderFactory = accessTokenBuilderFactory;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -129,8 +127,7 @@ public class HgHookChangesetProvider implements HookChangesetProvider
     boolean pending = type == RepositoryHookType.PRE_RECEIVE;
 
     // TODO get repository encoding
-    return HgUtil.open(handler, hookManager, repositoryDirectory, null,
-      pending, accessTokenBuilderFactory);
+    return HgUtil.open(handler, hookManager, repositoryDirectory, null, pending);
   }
 
   //~--- fields ---------------------------------------------------------------
@@ -152,6 +149,4 @@ public class HgHookChangesetProvider implements HookChangesetProvider
 
   /** Field description */
   private RepositoryHookType type;
-
-  private final AccessTokenBuilderFactory accessTokenBuilderFactory;
 }

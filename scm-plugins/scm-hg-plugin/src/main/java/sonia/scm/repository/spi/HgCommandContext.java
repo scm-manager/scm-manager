@@ -42,7 +42,6 @@ import com.google.common.base.Strings;
 import sonia.scm.repository.HgConfig;
 import sonia.scm.repository.HgHookManager;
 import sonia.scm.repository.HgRepositoryHandler;
-import sonia.scm.security.AccessTokenBuilderFactory;
 import sonia.scm.web.HgUtil;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -69,34 +68,32 @@ public class HgCommandContext implements Closeable
    * Constructs ...
    *
    *
-   *  @param hookManager
+   * @param hookManager
    * @param handler
    * @param repository
    * @param directory
-   * @param accessTokenBuilderFactory
    */
   public HgCommandContext(HgHookManager hookManager,
                           HgRepositoryHandler handler, sonia.scm.repository.Repository repository,
-                          File directory, AccessTokenBuilderFactory accessTokenBuilderFactory)
+                          File directory)
   {
     this(hookManager, handler, repository, directory,
-      handler.getHgContext().isPending(), accessTokenBuilderFactory);
+      handler.getHgContext().isPending());
   }
 
   /**
    * Constructs ...
    *
    *
-   *  @param hookManager
+   * @param hookManager
    * @param handler
    * @param repository
    * @param directory
    * @param pending
-   * @param accessTokenBuilderFactory
    */
   public HgCommandContext(HgHookManager hookManager,
                           HgRepositoryHandler handler, sonia.scm.repository.Repository repository,
-                          File directory, boolean pending, AccessTokenBuilderFactory accessTokenBuilderFactory)
+                          File directory, boolean pending)
   {
     this.hookManager = hookManager;
     this.handler = handler;
@@ -104,7 +101,6 @@ public class HgCommandContext implements Closeable
     this.scmRepository = repository;
     this.encoding = repository.getProperty(PROPERTY_ENCODING);
     this.pending = pending;
-    this.accessTokenBuilderFactory = accessTokenBuilderFactory;
 
     if (Strings.isNullOrEmpty(encoding))
     {
@@ -139,8 +135,7 @@ public class HgCommandContext implements Closeable
   {
     if (repository == null)
     {
-      repository = HgUtil.open(handler, hookManager, directory, encoding,
-        pending, accessTokenBuilderFactory);
+      repository = HgUtil.open(handler, hookManager, directory, encoding, pending);
     }
 
     return repository;
@@ -186,6 +181,4 @@ public class HgCommandContext implements Closeable
   private Repository repository;
 
   private final sonia.scm.repository.Repository scmRepository;
-
-  private final AccessTokenBuilderFactory accessTokenBuilderFactory;
 }

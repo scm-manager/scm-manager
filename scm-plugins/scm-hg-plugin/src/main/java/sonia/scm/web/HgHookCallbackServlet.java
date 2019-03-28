@@ -55,7 +55,6 @@ import sonia.scm.repository.api.HgHookMessage;
 import sonia.scm.repository.api.HgHookMessage.Severity;
 import sonia.scm.repository.spi.HgHookContextProvider;
 import sonia.scm.repository.spi.HookEventFacade;
-import sonia.scm.security.AccessTokenBuilderFactory;
 import sonia.scm.security.BearerToken;
 import sonia.scm.security.CipherUtil;
 import sonia.scm.util.HttpUtil;
@@ -119,13 +118,12 @@ public class HgHookCallbackServlet extends HttpServlet
   @Inject
   public HgHookCallbackServlet(HookEventFacade hookEventFacade,
                                HgRepositoryHandler handler, HgHookManager hookManager,
-                               Provider<HgContext> contextProvider, AccessTokenBuilderFactory accessTokenBuilderFactory)
+                               Provider<HgContext> contextProvider)
   {
     this.hookEventFacade = hookEventFacade;
     this.handler = handler;
     this.hookManager = hookManager;
     this.contextProvider = contextProvider;
-    this.accessTokenBuilderFactory = accessTokenBuilderFactory;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -253,7 +251,7 @@ public class HgHookCallbackServlet extends HttpServlet
 
       File repositoryDirectory = handler.getDirectory(repositoryId);
       context = new HgHookContextProvider(handler, repositoryDirectory, hookManager,
-        node, type, accessTokenBuilderFactory);
+        node, type);
 
       hookEventFacade.handle(repositoryId).fireHookEvent(type, context);
 
@@ -454,6 +452,4 @@ public class HgHookCallbackServlet extends HttpServlet
 
   /** Field description */
   private final HgHookManager hookManager;
-
-  private final AccessTokenBuilderFactory accessTokenBuilderFactory;
 }
