@@ -5,21 +5,23 @@ import {
   getBranches,
   getFetchBranchesFailure,
   isFetchBranchesPending
-} from "../modules/branches";
+} from "../../modules/branches";
 import { connect } from "react-redux";
 import type { Branch, Repository } from "@scm-manager/ui-types";
 import { compose } from "redux";
 import { translate } from "react-i18next";
-import {Link, withRouter} from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import {
   CreateButton,
   ErrorNotification,
   Loading,
   Subtitle
 } from "@scm-manager/ui-components";
+import BranchTable from "../components/BranchTable";
 
 type Props = {
   repository: Repository,
+  baseUrl: string,
   loading: boolean,
   error: Error,
   branches: Branch[],
@@ -41,7 +43,7 @@ class BranchesOverview extends React.Component<Props> {
   }
 
   render() {
-    const { loading, error, t } = this.props;
+    const { baseUrl, loading, error, branches, t } = this.props;
 
     if (error) {
       return <ErrorNotification error={error} />;
@@ -53,46 +55,18 @@ class BranchesOverview extends React.Component<Props> {
 
     return (
       <>
-        <Subtitle subtitle={t("branchesOverview.title")} />
-        <table className="card-table table is-hoverable is-fullwidth">
-          <thead>
-            <tr>
-              <th>{t("branchesOverview.branches")}</th>
-            </tr>
-          </thead>
-          <tbody>{this.renderBranches()}</tbody>
-        </table>
+        <Subtitle subtitle={t("branches.overview.title")} />
+        <BranchTable baseUrl={baseUrl} branches={branches} />
         {this.renderCreateButton()}
       </>
     );
-  }
-
-  renderBranches() {
-    const { branches } = this.props;
-
-    let branchesList = null;
-    if (branches) {
-      branchesList = (
-        <>
-          {branches.map((branch, index) => {
-            const to = `../branch/${encodeURIComponent(branch.name)}/changesets/`;
-            return (
-              <tr>
-                <td key={index}><Link to={to}>{branch.name}</Link></td>
-              </tr>
-            );
-          })}
-        </>
-      );
-    }
-    return branchesList;
   }
 
   renderCreateButton() {
     const { showCreateButton, t } = this.props;
     if (showCreateButton || true ) { // TODO
       return (
-        <CreateButton label={t("branchesOverview.createButton")} link="/create" />
+        <CreateButton label={t("branches.overview.createButton")} link="./create" />
       );
     }
     return null;

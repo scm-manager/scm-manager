@@ -43,10 +43,18 @@
     "title": "Repository erstellen",
     "subtitle": "Erstellen eines neuen Repository"
   },
-  "branchesOverview": {
-    "title": "Übersicht aller verfügbaren Branches",
-    "branches": "Branches",
-    "createButton": "Branch erstellen"
+  "branches": {
+    "overview": {
+      "title": "Übersicht aller verfügbaren Branches",
+      "createButton": "Branch erstellen"
+    },
+    "table": {
+      "branches": "Branches"
+    }
+  },
+  "branch": {
+    "name": "Name",
+    "repository": "Repository"
   },
   "changesets": {
     "errorTitle": "Fehler",

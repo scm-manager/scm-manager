@@ -23,8 +23,9 @@ import {
 import { translate } from "react-i18next";
 import RepositoryDetails from "../components/RepositoryDetails";
 import EditRepo from "./EditRepo";
-import BranchesOverview from "./BranchesOverview";
-import CreateBranch from "./CreateBranch";
+import BranchesOverview from "../branches/containers/BranchesOverview";
+import BranchView from "../branches/components/BranchView";
+import CreateBranch from "../branches/containers/CreateBranch";
 import Permissions from "../permissions/containers/Permissions";
 
 import type { History } from "history";
@@ -169,6 +170,15 @@ class RepositoryRoot extends React.Component<Props> {
                 )}
               />
               <Route
+                path={`${url}/branch/:branch/info`}
+                render={() => (
+                  <BranchView
+                    repository={repository}
+                    baseUrl={`${url}/branch`}
+                  />
+                )}
+              />
+              <Route
                 path={`${url}/branch/:branch/changesets`}
                 render={() => (
                   <BranchRoot
@@ -181,7 +191,12 @@ class RepositoryRoot extends React.Component<Props> {
               <Route
                 path={`${url}/branches`}
                 exact={true}
-                render={() => <BranchesOverview repository={repository} />}
+                render={() => (
+                  <BranchesOverview
+                    repository={repository}
+                    baseUrl={`${url}/branch`}
+                  />
+                )}
               />
               <Route
                 path={`${url}/branches/create`}
