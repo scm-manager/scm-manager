@@ -201,7 +201,7 @@ public class HgCGIServlet extends HttpServlet implements ScmProviderHttpServlet
     executor.setExceptionHandler(exceptionHandler);
     executor.setStatusCodeHandler(exceptionHandler);
     executor.setContentLengthWorkaround(true);
-    hgRepositoryEnvironmentBuilder.buildFor(repository, request, executor.getEnvironment());
+    hgRepositoryEnvironmentBuilder.buildFor(repository, request, executor.getEnvironment().asMutableMap());
 
     // unused ???
     HttpSession session = request.getSession(false);

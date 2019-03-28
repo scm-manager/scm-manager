@@ -83,7 +83,7 @@ public class AbstractHgCommandTestBase extends ZippedRepositoryTestBase
     HgTestUtil.checkForSkip(handler);
 
     cmdContext = new HgCommandContext(HgTestUtil.createHookManager(), handler,
-      RepositoryTestData.createHeartOfGold(), repositoryDirectory);
+      RepositoryTestData.createHeartOfGold(), repositoryDirectory, null);
   }
 
   //~--- set methods ----------------------------------------------------------

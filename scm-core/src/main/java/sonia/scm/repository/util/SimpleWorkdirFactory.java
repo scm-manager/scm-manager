@@ -9,23 +9,21 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
-public class SimpleWorkdirFactory<T extends AutoCloseable, C> {
+public abstract class SimpleWorkdirFactory<T extends AutoCloseable, C> {
 
   private static final Logger logger = LoggerFactory.getLogger(SimpleWorkdirFactory.class);
 
   private final File poolDirectory;
 
   private final CloneProvider<T, C> cloneProvider;
-  private final Repository repository;
 
-  public SimpleWorkdirFactory(Repository repository, CloneProvider<T, C> cloneProvider) {
-    this(new File(System.getProperty("java.io.tmpdir"), "scmm-work-pool"), repository, cloneProvider);
+  public SimpleWorkdirFactory(CloneProvider<T, C> cloneProvider) {
+    this(new File(System.getProperty("java.io.tmpdir"), "scmm-work-pool"), cloneProvider);
   }
 
-  public SimpleWorkdirFactory(File poolDirectory, Repository repository, CloneProvider<T, C> cloneProvider) {
+  public SimpleWorkdirFactory(File poolDirectory, CloneProvider<T, C> cloneProvider) {
     this.poolDirectory = poolDirectory;
     this.cloneProvider = cloneProvider;
-    this.repository = repository;
     poolDirectory.mkdirs();
   }
 
@@ -35,9 +33,11 @@ public class SimpleWorkdirFactory<T extends AutoCloseable, C> {
       T clone = cloneProvider.cloneRepository(context, directory);
       return new WorkingCopy<>(clone, this::close, directory);
     } catch (IOException e) {
-      throw new InternalRepositoryException(repository, "could not create temporary directory for clone of repository", e);
+      throw new InternalRepositoryException(getRepository(context), "could not create temporary directory for clone of repository", e);
     }
   }
+
+  protected abstract Repository getRepository(C context);
 
   private File createNewWorkdir() throws IOException {
     return Files.createTempDirectory(poolDirectory.toPath(),"workdir").toFile();

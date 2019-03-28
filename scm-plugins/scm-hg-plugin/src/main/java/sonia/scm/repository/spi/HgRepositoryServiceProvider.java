@@ -40,6 +40,7 @@ import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.CommandNotSupportedException;
+import sonia.scm.security.AccessTokenBuilderFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -77,13 +78,13 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
   //~--- constructors ---------------------------------------------------------
 
   HgRepositoryServiceProvider(HgRepositoryHandler handler,
-    HgHookManager hookManager, Repository repository)
+    HgHookManager hookManager, Repository repository, AccessTokenBuilderFactory accessTokenBuilderFactory)
   {
     this.repository = repository;
     this.handler = handler;
     this.repositoryDirectory = handler.getDirectory(repository.getId());
     this.context = new HgCommandContext(hookManager, handler, repository,
-      repositoryDirectory);
+      repositoryDirectory, accessTokenBuilderFactory);
   }
 
   //~--- methods --------------------------------------------------------------

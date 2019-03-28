@@ -40,7 +40,7 @@ import os, urllib, urllib2
 
 baseUrl = os.environ['SCM_URL']
 challenge = os.environ['SCM_CHALLENGE']
-credentials = os.environ['SCM_CREDENTIALS']
+token = os.environ['SCM_BEARER_TOKEN']
 repositoryId = os.environ['SCM_REPOSITORY_ID']
 
 def printMessages(ui, msgs):
@@ -54,13 +54,13 @@ def callHookUrl(ui, repo, hooktype, node):
   try:
     url = baseUrl + hooktype
     ui.debug( "send scm-hook to " + url + " and " + node + "\n" )
-    data = urllib.urlencode({'node': node, 'challenge': challenge, 'credentials': credentials, 'repositoryPath': repo.root, 'repositoryId': repositoryId})
+    data = urllib.urlencode({'node': node, 'challenge': challenge, 'token': token, 'repositoryPath': repo.root, 'repositoryId': repositoryId})
     # open url but ignore proxy settings
     proxy_handler = urllib2.ProxyHandler({})
     opener = urllib2.build_opener(proxy_handler)
     req = urllib2.Request(url, data)
     conn = opener.open(req)
-    if conn.code >= 200 and conn.code < 300:
+    if 200 <= conn.code < 300:
       ui.debug( "scm-hook " + hooktype + " success with status code " + str(conn.code) + "\n" )
       printMessages(ui, conn)
       abort = False

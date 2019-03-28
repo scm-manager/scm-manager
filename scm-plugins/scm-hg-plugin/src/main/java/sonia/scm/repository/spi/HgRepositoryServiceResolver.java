@@ -38,6 +38,7 @@ import sonia.scm.plugin.Extension;
 import sonia.scm.repository.HgHookManager;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
+import sonia.scm.security.AccessTokenBuilderFactory;
 
 /**
  *
@@ -47,15 +48,17 @@ import sonia.scm.repository.Repository;
 public class HgRepositoryServiceResolver implements RepositoryServiceResolver
 {
 
-  private HgRepositoryHandler handler;
-  private HgHookManager hookManager;
+  private final HgRepositoryHandler handler;
+  private final HgHookManager hookManager;
+  private final AccessTokenBuilderFactory accessTokenBuilderFactory;
 
   @Inject
   public HgRepositoryServiceResolver(HgRepositoryHandler handler,
-    HgHookManager hookManager)
+                                     HgHookManager hookManager, AccessTokenBuilderFactory accessTokenBuilderFactory)
   {
     this.handler = handler;
     this.hookManager = hookManager;
+    this.accessTokenBuilderFactory = accessTokenBuilderFactory;
   }
 
   @Override
@@ -63,7 +66,7 @@ public class HgRepositoryServiceResolver implements RepositoryServiceResolver
     HgRepositoryServiceProvider provider = null;
 
     if (HgRepositoryHandler.TYPE_NAME.equalsIgnoreCase(repository.getType())) {
-      provider = new HgRepositoryServiceProvider(handler, hookManager, repository);
+      provider = new HgRepositoryServiceProvider(handler, hookManager, repository, accessTokenBuilderFactory);
     }
 
     return provider;

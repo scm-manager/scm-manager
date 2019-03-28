@@ -42,6 +42,7 @@ import com.google.common.base.Strings;
 import sonia.scm.repository.HgConfig;
 import sonia.scm.repository.HgHookManager;
 import sonia.scm.repository.HgRepositoryHandler;
+import sonia.scm.security.AccessTokenBuilderFactory;
 import sonia.scm.web.HgUtil;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -49,6 +50,8 @@ import sonia.scm.web.HgUtil;
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
+import java.util.function.BiConsumer;
 
 /**
  *
@@ -66,44 +69,46 @@ public class HgCommandContext implements Closeable
    * Constructs ...
    *
    *
-   *
-   * @param hookManager
+   *  @param hookManager
    * @param handler
    * @param repository
    * @param directory
+   * @param accessTokenBuilderFactory
    */
   public HgCommandContext(HgHookManager hookManager,
-    HgRepositoryHandler handler, sonia.scm.repository.Repository repository,
-    File directory)
+                          HgRepositoryHandler handler, sonia.scm.repository.Repository repository,
+                          File directory, AccessTokenBuilderFactory accessTokenBuilderFactory)
   {
     this(hookManager, handler, repository, directory,
-      handler.getHgContext().isPending());
+      handler.getHgContext().isPending(), accessTokenBuilderFactory);
   }
 
   /**
    * Constructs ...
    *
    *
-   *
-   * @param hookManager
-   * @param hanlder
+   *  @param hookManager
+   * @param handler
    * @param repository
    * @param directory
    * @param pending
+   * @param accessTokenBuilderFactory
    */
   public HgCommandContext(HgHookManager hookManager,
-    HgRepositoryHandler hanlder, sonia.scm.repository.Repository repository,
-    File directory, boolean pending)
+                          HgRepositoryHandler handler, sonia.scm.repository.Repository repository,
+                          File directory, boolean pending, AccessTokenBuilderFactory accessTokenBuilderFactory)
   {
     this.hookManager = hookManager;
-    this.hanlder = hanlder;
+    this.handler = handler;
     this.directory = directory;
+    this.scmRepository = repository;
     this.encoding = repository.getProperty(PROPERTY_ENCODING);
     this.pending = pending;
+    this.accessTokenBuilderFactory = accessTokenBuilderFactory;
 
     if (Strings.isNullOrEmpty(encoding))
     {
-      encoding = hanlder.getConfig().getEncoding();
+      encoding = handler.getConfig().getEncoding();
     }
   }
 
@@ -134,11 +139,17 @@ public class HgCommandContext implements Closeable
   {
     if (repository == null)
     {
-      repository = HgUtil.open(hanlder, hookManager, directory, encoding,
-        pending);
+      repository = HgUtil.open(handler, hookManager, directory, encoding,
+        pending, accessTokenBuilderFactory);
     }
 
     return repository;
+  }
+
+  public Repository openWithSpecialEnvironment(BiConsumer<sonia.scm.repository.Repository, Map<String, String>> prepareEnvironment)
+  {
+    return HgUtil.open(handler, directory, encoding,
+      pending, environment -> prepareEnvironment.accept(scmRepository, environment));
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -151,7 +162,7 @@ public class HgCommandContext implements Closeable
    */
   public HgConfig getConfig()
   {
-    return hanlder.getConfig();
+    return handler.getConfig();
   }
 
   //~--- fields ---------------------------------------------------------------
@@ -163,7 +174,7 @@ public class HgCommandContext implements Closeable
   private String encoding;
 
   /** Field description */
-  private HgRepositoryHandler hanlder;
+  private HgRepositoryHandler handler;
 
   /** Field description */
   private HgHookManager hookManager;
@@ -173,4 +184,8 @@ public class HgCommandContext implements Closeable
 
   /** Field description */
   private Repository repository;
+
+  private final sonia.scm.repository.Repository scmRepository;
+
+  private final AccessTokenBuilderFactory accessTokenBuilderFactory;
 }

@@ -50,6 +50,7 @@ import sonia.scm.repository.HgHookManager;
 import sonia.scm.repository.HgPythonScript;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.spi.javahg.HgFileviewExtension;
+import sonia.scm.security.AccessTokenBuilderFactory;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 
@@ -58,6 +59,8 @@ import sonia.scm.util.Util;
 import java.io.File;
 
 import java.nio.charset.Charset;
+import java.util.Map;
+import java.util.function.Consumer;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -102,7 +105,21 @@ public final class HgUtil
    * @return
    */
   public static Repository open(HgRepositoryHandler handler,
-    HgHookManager hookManager, File directory, String encoding, boolean pending)
+    HgHookManager hookManager, File directory, String encoding, boolean pending,
+    AccessTokenBuilderFactory accessTokenBuilderFactory)
+  {
+    return open(
+      handler,
+      directory,
+      encoding,
+      pending,
+      environment -> HgEnvironment.prepareEnvironment(environment, handler, hookManager, accessTokenBuilderFactory)
+    );
+  }
+
+  public static Repository open(HgRepositoryHandler handler,
+                                File directory, String encoding, boolean pending,
+                                Consumer<Map<String, String>> prepareEnvironment)
   {
     String enc = encoding;
 
@@ -113,8 +130,7 @@ public final class HgUtil
 
     RepositoryConfiguration repoConfiguration = RepositoryConfiguration.DEFAULT;
 
-    HgEnvironment.prepareEnvironment(repoConfiguration.getEnvironment(),
-      handler, hookManager);
+    prepareEnvironment.accept(repoConfiguration.getEnvironment());
 
     repoConfiguration.addExtension(HgFileviewExtension.class);
     repoConfiguration.setEnablePendingChangesets(pending);

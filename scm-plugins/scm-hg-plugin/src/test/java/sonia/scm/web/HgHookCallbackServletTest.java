@@ -20,7 +20,7 @@ public class HgHookCallbackServletTest {
   @Test
   public void shouldExtractCorrectRepositoryId() throws ServletException, IOException {
     HgRepositoryHandler handler = mock(HgRepositoryHandler.class);
-    HgHookCallbackServlet servlet = new HgHookCallbackServlet(null, handler, null, null);
+    HgHookCallbackServlet servlet = new HgHookCallbackServlet(null, handler, null, null, null);
     HttpServletRequest request = mock(HttpServletRequest.class);
     HttpServletResponse response = mock(HttpServletResponse.class);
 

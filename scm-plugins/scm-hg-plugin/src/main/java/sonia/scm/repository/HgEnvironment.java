@@ -35,15 +35,9 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.base.Strings;
-
-import org.apache.shiro.codec.Base64;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import sonia.scm.security.AccessToken;
+import sonia.scm.security.AccessTokenBuilderFactory;
 import sonia.scm.security.CipherUtil;
-import sonia.scm.util.HttpUtil;
 import sonia.scm.web.HgUtil;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -68,14 +62,7 @@ public final class HgEnvironment
   /** Field description */
   private static final String ENV_URL = "SCM_URL";
 
-  /** Field description */
-  private static final String SCM_CREDENTIALS = "SCM_CREDENTIALS";
-
-  /**
-   *   the logger for HgEnvironment
-   */
-  private static final Logger logger =
-    LoggerFactory.getLogger(HgEnvironment.class);
+  private static final String SCM_BEARER_TOKEN = "SCM_BEARER_TOKEN";
 
   //~--- constructors ---------------------------------------------------------
 
@@ -98,14 +85,14 @@ public final class HgEnvironment
    */
   public static void prepareEnvironment(Map<String, String> environment,
     HgRepositoryHandler handler, HgHookManager hookManager,
-    HttpServletRequest request)
+    HttpServletRequest request, AccessTokenBuilderFactory accessTokenBuilderFactory)
   {
     String hookUrl;
 
     if (request != null)
     {
       hookUrl = hookManager.createUrl(request);
-      environment.put(SCM_CREDENTIALS, getCredentials(request));
+      environment.put(SCM_BEARER_TOKEN, getCredentials(accessTokenBuilderFactory));
     }
     else
     {
@@ -126,9 +113,9 @@ public final class HgEnvironment
    * @param hookManager
    */
   public static void prepareEnvironment(Map<String, String> environment,
-    HgRepositoryHandler handler, HgHookManager hookManager)
+    HgRepositoryHandler handler, HgHookManager hookManager, AccessTokenBuilderFactory accessTokenBuilderFactory)
   {
-    prepareEnvironment(environment, handler, hookManager, null);
+    prepareEnvironment(environment, handler, hookManager, null, accessTokenBuilderFactory);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -139,31 +126,10 @@ public final class HgEnvironment
    *
    * @return
    */
-  private static String getCredentials(HttpServletRequest request)
+  private static String getCredentials(AccessTokenBuilderFactory accessTokenBuilderFactory)
   {
-    String credentials = null;
-    String header = request.getHeader(HttpUtil.HEADER_AUTHORIZATION);
+    AccessToken accessToken = accessTokenBuilderFactory.create().build();
 
-    if (!Strings.isNullOrEmpty(header))
-    {
-      String[] parts = header.split("\\s+");
-
-      if (parts.length > 0)
-      {
-        CipherUtil cu = CipherUtil.getInstance();
-
-        credentials = cu.encode(Base64.decodeToString(parts[1]));
-      }
-      else
-      {
-        logger.warn("invalid basic authentication header");
-      }
-    }
-    else
-    {
-      logger.warn("could not find authentication header on request");
-    }
-
-    return Strings.nullToEmpty(credentials);
+    return CipherUtil.getInstance().encode(accessToken.compact());
   }
 }
