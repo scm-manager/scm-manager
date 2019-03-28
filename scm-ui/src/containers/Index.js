@@ -52,7 +52,7 @@ class Index extends Component<Props, State> {
   };
 
   render() {
-    const { indexResources, loading, error, t } = this.props;
+    const { indexResources, loading, error } = this.props;
     const { pluginsLoaded } = this.state;
 
     if (error) {

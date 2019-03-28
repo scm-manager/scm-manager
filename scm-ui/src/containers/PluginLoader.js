@@ -61,12 +61,10 @@ class PluginLoader extends React.Component<Props, State> {
     }
     return promises.reduce((chain, current) => {
       return chain.then(chainResults => {
-          return current.then(currentResult => [...chainResults, currentResult])
-        }
-      );
+        return current.then(currentResult => [...chainResults, currentResult]);
+      });
     }, Promise.resolve([]));
   };
-
 
   loadPlugin = (plugin: Plugin) => {
     this.setState({
