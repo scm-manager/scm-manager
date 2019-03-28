@@ -35,6 +35,9 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.ProvisionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.web.HgUtil;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -49,6 +52,8 @@ import javax.servlet.http.HttpServletRequest;
  */
 public final class HgEnvironment
 {
+
+  private static final Logger LOG = LoggerFactory.getLogger(HgEnvironment.class);
 
   /** Field description */
   public static final String ENV_PYTHON_PATH = "PYTHONPATH";
@@ -109,8 +114,12 @@ public final class HgEnvironment
       hookUrl = hookManager.createUrl();
     }
 
-    String credentials = hookManager.getCredentials();
-    environment.put(SCM_BEARER_TOKEN, credentials);
+    try {
+      String credentials = hookManager.getCredentials();
+      environment.put(SCM_BEARER_TOKEN, credentials);
+    } catch (ProvisionException e) {
+      LOG.debug("could not create bearer token; looks like currently we are not in a request", e);
+    }
     environment.put(ENV_PYTHON_PATH, HgUtil.getPythonPath(handler.getConfig()));
     environment.put(ENV_URL, hookUrl);
     environment.put(ENV_CHALLENGE, hookManager.getChallenge());
