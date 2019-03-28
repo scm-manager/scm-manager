@@ -43,6 +43,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
@@ -52,7 +54,7 @@ public class BranchRootResourceTest extends RepositoryTestBase {
   public static final String BRANCH_PATH = "space/repo/branches/master";
   public static final String BRANCH_URL = "/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + BRANCH_PATH;
   public static final String REVISION = "revision";
-  private final Dispatcher dispatcher = MockDispatcherFactory.createDispatcher();
+  private Dispatcher dispatcher;
 
   private final URI baseUri = URI.create("/");
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
@@ -99,7 +101,9 @@ public class BranchRootResourceTest extends RepositoryTestBase {
     BranchCollectionToDtoMapper branchCollectionToDtoMapper = new BranchCollectionToDtoMapper(branchToDtoMapper, resourceLinks);
     branchRootResource = new BranchRootResource(serviceFactory, branchToDtoMapper, branchCollectionToDtoMapper, changesetCollectionToDtoMapper, resourceLinks);
     super.branchRootResource = Providers.of(branchRootResource);
-    dispatcher.getRegistry().addSingletonResource(getRepositoryRootResource());
+    dispatcher = DispatcherMock.createDispatcher(getRepositoryRootResource());
+//    dispatcher.getRegistry().addSingletonResource(getRepositoryRootResource());
+
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(service);
     when(serviceFactory.create(any(Repository.class))).thenReturn(service);
     when(service.getRepository()).thenReturn(new Repository("repoId", "git", "space", "repo"));
@@ -180,7 +184,7 @@ public class BranchRootResourceTest extends RepositoryTestBase {
     MockHttpRequest request = MockHttpRequest
       .post("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/branches/")
       .content("{\"name\": \"new_branch\"}".getBytes())
-      .contentType(VndMediaType.BRANCH);
+      .contentType(VndMediaType.BRANCH_REQUEST);
     MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
@@ -192,14 +196,15 @@ public class BranchRootResourceTest extends RepositoryTestBase {
   }
 
   @Test
-  public void shouldNotCreateExistingBranchAgain() throws Exception {
+  public void shouldCreateNewBranchWithParent() throws Exception {
     when(branchesCommandBuilder.getBranches()).thenReturn(new Branches(createBranch("existing_branch")));
+    when(branchCommandBuilder.from("existing_branch")).thenReturn(branchCommandBuilder);
     when(branchCommandBuilder.branch("new_branch")).thenReturn(createBranch("new_branch"));
 
     MockHttpRequest request = MockHttpRequest
       .post("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/branches/")
-      .content("{\"name\": \"new_branch\"}".getBytes())
-      .contentType(VndMediaType.BRANCH);
+      .content("{\"name\": \"new_branch\",\"parent\": \"existing_branch\"}".getBytes())
+      .contentType(VndMediaType.BRANCH_REQUEST);
     MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
@@ -208,6 +213,39 @@ public class BranchRootResourceTest extends RepositoryTestBase {
     assertEquals(
       URI.create("/v2/repositories/space/repo/branches/new_branch"),
       response.getOutputHeaders().getFirst("Location"));
+    verify(branchCommandBuilder).from("existing_branch");
+  }
+
+  @Test
+  public void shouldNotCreateExistingBranchAgain() throws Exception {
+    when(branchesCommandBuilder.getBranches()).thenReturn(new Branches(createBranch("existing_branch")));
+
+    MockHttpRequest request = MockHttpRequest
+      .post("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/branches/")
+      .content("{\"name\": \"existing_branch\"}".getBytes())
+      .contentType(VndMediaType.BRANCH_REQUEST);
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(409, response.getStatus());
+    verify(branchCommandBuilder, never()).branch(anyString());
+  }
+
+  @Test
+  public void shouldFailForMissingParentBranch() throws Exception {
+    when(branchesCommandBuilder.getBranches()).thenReturn(new Branches(createBranch("existing_branch")));
+
+    MockHttpRequest request = MockHttpRequest
+      .post("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/branches/")
+      .content("{\"name\": \"new_branch\",\"parent\": \"no_such_branch\"}".getBytes())
+      .contentType(VndMediaType.BRANCH_REQUEST);
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(404, response.getStatus());
+    verify(branchCommandBuilder, never()).branch(anyString());
   }
 
   private Branch createBranch(String existing_branch) {
