@@ -14,9 +14,78 @@ export const FETCH_BRANCHES_PENDING = `${FETCH_BRANCHES}_${PENDING_SUFFIX}`;
 export const FETCH_BRANCHES_SUCCESS = `${FETCH_BRANCHES}_${SUCCESS_SUFFIX}`;
 export const FETCH_BRANCHES_FAILURE = `${FETCH_BRANCHES}_${FAILURE_SUFFIX}`;
 
+export const FETCH_BRANCH = "scm/repos/FETCH_BRANCH";
+export const FETCH_BRANCH_PENDING = `${FETCH_BRANCH}_${PENDING_SUFFIX}`;
+export const FETCH_BRANCH_SUCCESS = `${FETCH_BRANCH}_${SUCCESS_SUFFIX}`;
+export const FETCH_BRANCH_FAILURE = `${FETCH_BRANCH}_${FAILURE_SUFFIX}`;
+
 // Fetching branches
 
-export function fetchBranch(repositroy: Repository, branchName: string) {}
+export function fetchBranchByName(link: string, name: string) {
+  const branchUrl = link.endsWith("/") ? link + name : link + "/" + name;
+  return fetchBranch(branchUrl, name);
+}
+
+export function fetchBranchPending(name: string): Action {
+  return {
+    type: FETCH_BRANCH_PENDING,
+    payload: name,
+    itemId: name
+  };
+}
+
+export function fetchBranchFailure(name: string, error: Error): Action {
+  return {
+    type: FETCH_BRANCH_FAILURE,
+    payload: name,
+    itemId: name
+  };
+}
+
+export function fetchBranch(link: string, name: string) {
+  return function(dispatch: any) {
+    dispatch(fetchBranchPending(name));
+    return apiClient
+      .get(link)
+      .then(response => {
+        return response.json();
+      })
+      .then(data => {
+        dispatch(fetchBranchSuccess(data));
+      })
+      .catch(error => {
+        dispatch(fetchBranchFailure(name, error));
+      });
+  };
+}
+
+export function getFetchBranchFailure(
+  state: Object,
+  repository: string,
+  branchName: string
+) {
+  return getFailure(
+    state,
+    FETCH_BRANCH,
+    repository + "/branches/" + branchName
+  );
+}
+
+export function isFetchBranchPending(
+  state: Object,
+  repository: string,
+  branchName: string
+) {
+  return isPending(state, FETCH_BRANCH, repository + "/branches/" + branchName);
+}
+
+export function fetchBranchSuccess(branch: Branch): Action {
+  return {
+    type: FETCH_BRANCH_SUCCESS,
+    payload: branch,
+    itemId: branch.name
+  };
+}
 
 export function fetchBranches(repository: Repository) {
   if (!repository._links.branches) {
