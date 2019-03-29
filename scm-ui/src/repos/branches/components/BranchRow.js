@@ -9,8 +9,12 @@ type Props = {
 };
 
 export default class BranchRow extends React.Component<Props> {
-  renderLink(to: string, label: string) {
-    return <Link to={to}>{label} <span className="tag is-dark">Default</span></Link>;
+  renderLink(to: string, label: string, defaultBranch: boolean) {
+    let showLabel = null;
+    if(defaultBranch) {
+      showLabel = <span className="tag is-dark">Default</span>;
+    }
+    return <Link to={to}>{label} {showLabel}</Link>;
   }
 
   render() {
@@ -18,7 +22,7 @@ export default class BranchRow extends React.Component<Props> {
     const to = `${baseUrl}/${encodeURIComponent(branch.name)}/info`;
     return (
       <tr>
-        <td>{this.renderLink(to, branch.name)}</td>
+        <td>{this.renderLink(to, branch.name, branch.defaultBranch)}</td>
       </tr>
     );
   }

@@ -16,9 +16,7 @@ export const FETCH_BRANCHES_FAILURE = `${FETCH_BRANCHES}_${FAILURE_SUFFIX}`;
 
 // Fetching branches
 
-export function fetchBranch(repositroy: Repository, branchName: string) {
-
-}
+export function fetchBranch(repositroy: Repository, branchName: string) {}
 
 export function fetchBranches(repository: Repository) {
   if (!repository._links.branches) {

@@ -35,15 +35,46 @@ type Props = {
   match: any,
   t: string => string
 };
+
+// master, default should always be the first one,
+// followed by develop the rest should be ordered by its name
+export function orderBranches(branches: Branch[]) {
+  branches.sort((a, b) => {
+    if (a.defaultBranch && !b.defaultBranch ) {
+      return -20;
+    } else if (!a.defaultBranch && b.defaultBranch ) {
+      return 20;
+    } else if (a.name === "master" && b.name !== "master") {
+      return -10;
+    } else if (a.name !== "master" && b.name === "master") {
+      return 10;
+    } else if (a.name === "default" && b.name !== "default") {
+      return -10;
+    } else if (a.name !== "default" && b.name === "default") {
+      return 10;
+    } else if (a.name === "develop" && b.name !== "develop") {
+      return -5;
+    } else if (a.name !== "develop" && b.name === "develop") {
+      return 5;
+    } else if (a.name < b.name) {
+      return -1;
+    } else if (a.name > b.name) {
+      return 1;
+    }
+    return 0;
+  });
+}
+
 class BranchesOverview extends React.Component<Props> {
   componentDidMount() {
     const { fetchBranches, repository } = this.props;
-
     fetchBranches(repository);
   }
 
   render() {
     const { baseUrl, loading, error, branches, t } = this.props;
+
+    orderBranches(branches);
 
     if (error) {
       return <ErrorNotification error={error} />;
@@ -64,9 +95,13 @@ class BranchesOverview extends React.Component<Props> {
 
   renderCreateButton() {
     const { showCreateButton, t } = this.props;
-    if (showCreateButton || true ) { // TODO
+    if (showCreateButton || true) {
+      // TODO
       return (
-        <CreateButton label={t("branches.overview.createButton")} link="./create" />
+        <CreateButton
+          label={t("branches.overview.createButton")}
+          link="./create"
+        />
       );
     }
     return null;
