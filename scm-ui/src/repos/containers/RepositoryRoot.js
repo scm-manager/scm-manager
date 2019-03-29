@@ -24,7 +24,7 @@ import { translate } from "react-i18next";
 import RepositoryDetails from "../components/RepositoryDetails";
 import EditRepo from "./EditRepo";
 import BranchesOverview from "../branches/containers/BranchesOverview";
-import BranchView from "../branches/components/BranchView";
+import BranchView from "../branches/containers/BranchView";
 import CreateBranch from "../branches/containers/CreateBranch";
 import Permissions from "../permissions/containers/Permissions";
 

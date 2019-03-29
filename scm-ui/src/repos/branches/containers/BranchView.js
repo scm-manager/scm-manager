@@ -1,12 +1,15 @@
 // @flow
 import React from "react";
-import BranchDetailTable from "./BranchDetailTable";
+import BranchDetailTable from "../components/BranchDetailTable";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import type { Repository, Branch } from "@scm-manager/ui-types";
+import {connect} from "react-redux";
+import {translate} from "react-i18next";
+import {getBranch} from "../../modules/branches";
 
 type Props = {
   repository: Repository,
-  branch?: Branch // TODO: get branch from props
+  branch: Branch // TODO: get branch from props
 };
 
 class BranchView extends React.Component<Props> {
@@ -28,4 +31,15 @@ class BranchView extends React.Component<Props> {
   }
 }
 
-export default BranchView;
+const mapStateToProps = (state, ownProps) => {
+  const { repository } = ownProps;
+  const branch = getBranch(state, repository, "VisualStudio"); // TODO: !!!
+  return {
+    repository,
+    branch
+  };
+};
+
+export default connect(
+  mapStateToProps
+)(translate("repos")(BranchView));

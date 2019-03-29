@@ -1,8 +1,8 @@
 // @flow
 import React from "react";
 import { translate } from "react-i18next";
+import BranchRow from "./BranchRow";
 import type { Branch } from "@scm-manager/ui-types";
-import { Link } from "react-router-dom";
 
 type Props = {
   baseUrl: string,
@@ -10,31 +10,31 @@ type Props = {
   branches: Branch[]
 };
 
-class UserTable extends React.Component<Props> {
+class BranchTable extends React.Component<Props> {
   render() {
-    const { baseUrl, branches, t } = this.props;
+    const { t } = this.props;
     return (
       <table className="card-table table is-hoverable is-fullwidth">
         <thead>
-        <tr>
-          <th>{t("branches.table.branches")}</th>
-        </tr>
+          <tr>
+            <th>{t("branches.table.branches")}</th>
+          </tr>
         </thead>
-        <tbody>
-          {branches.map((branch, index) => {
-            const to = `${baseUrl}/${encodeURIComponent(branch.name)}/info`;
-            return (
-              <tr>
-                <td key={index}>
-                  <Link to={to}>{branch.name}</Link>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
+        <tbody>{this.renderRow()}</tbody>
       </table>
     );
   }
+
+  renderRow() {
+    const { baseUrl, branches } = this.props;
+    let rowContent = null;
+    if (branches) {
+      rowContent = branches.map((branch, index) => {
+        return <BranchRow key={index} baseUrl={baseUrl} branch={branch} />;
+      });
+    }
+    return rowContent;
+  }
 }
 
-export default translate("users")(UserTable);
+export default translate("users")(BranchTable);
