@@ -53,7 +53,7 @@ public class HgBranchCommand implements BranchCommand
   public Branch branch(String name) throws IOException
   {
     com.aragost.javahg.commands.BranchCommand.on(repository).set(name);
-    return new Branch(name, repository.tip().getNode());
+    return Branch.normalBranch(name, repository.tip().getNode());
   }
   
 }

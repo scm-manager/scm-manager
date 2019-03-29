@@ -12,6 +12,7 @@ public class BranchDto extends HalRepresentation {
 
   private String name;
   private String revision;
+  private boolean defaultBranch;
 
   BranchDto(Links links, Embedded embedded) {
     super(links, embedded);

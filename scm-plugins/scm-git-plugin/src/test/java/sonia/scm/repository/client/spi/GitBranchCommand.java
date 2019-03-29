@@ -72,7 +72,7 @@ public class GitBranchCommand implements BranchCommand
     try
     {
       Ref ref = git.branchCreate().setName(name).call();
-      return new Branch(name, GitUtil.getId(ref.getObjectId()));
+      return Branch.normalBranch(name, GitUtil.getId(ref.getObjectId()));
     }
     catch (GitAPIException ex)
     {
