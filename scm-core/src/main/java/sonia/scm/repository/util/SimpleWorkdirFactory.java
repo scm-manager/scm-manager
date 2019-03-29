@@ -15,15 +15,12 @@ public abstract class SimpleWorkdirFactory<R, C> implements WorkdirFactory<R, C>
 
   private final File poolDirectory;
 
-  private final CloneProvider<R, C> cloneProvider;
-
-  public SimpleWorkdirFactory(CloneProvider<R, C> cloneProvider) {
-    this(new File(System.getProperty("java.io.tmpdir"), "scmm-work-pool"), cloneProvider);
+  public SimpleWorkdirFactory() {
+    this(new File(System.getProperty("java.io.tmpdir"), "scmm-work-pool"));
   }
 
-  public SimpleWorkdirFactory(File poolDirectory, CloneProvider<R, C> cloneProvider) {
+  public SimpleWorkdirFactory(File poolDirectory) {
     this.poolDirectory = poolDirectory;
-    this.cloneProvider = cloneProvider;
     if (!poolDirectory.exists() && !poolDirectory.mkdirs()) {
       throw new IllegalStateException("could not create pool directory " + poolDirectory);
     }
@@ -33,16 +30,18 @@ public abstract class SimpleWorkdirFactory<R, C> implements WorkdirFactory<R, C>
   public WorkingCopy<R> createWorkingCopy(C context) {
     try {
       File directory = createNewWorkdir();
-      ParentAndClone<R> parentAndClone = cloneProvider.cloneRepository(context, directory);
+      ParentAndClone<R> parentAndClone = cloneRepository(context, directory);
       return new WorkingCopy<>(parentAndClone.getClone(), parentAndClone.getParent(), this::close, directory);
     } catch (IOException e) {
-      throw new InternalRepositoryException(getRepository(context), "could not create temporary directory for clone of repository", e);
+      throw new InternalRepositoryException(getScmRepository(context), "could not clone repository in temporary directory", e);
     }
   }
 
-  protected abstract Repository getRepository(C context);
+  protected abstract Repository getScmRepository(C context);
 
   protected abstract void closeRepository(R repository);
+
+  protected abstract ParentAndClone<R> cloneRepository(C context, File target) throws IOException;
 
   private File createNewWorkdir() throws IOException {
     return Files.createTempDirectory(poolDirectory.toPath(),"workdir").toFile();
@@ -54,11 +53,6 @@ public abstract class SimpleWorkdirFactory<R, C> implements WorkdirFactory<R, C>
     } catch (Exception e) {
       logger.warn("could not close temporary repository clone", e);
     }
-  }
-
-  @FunctionalInterface
-  protected interface CloneProvider<R, C> {
-    ParentAndClone<R> cloneRepository(C context, File target) throws IOException;
   }
 
   protected static class ParentAndClone<R> {

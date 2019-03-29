@@ -15,27 +15,19 @@ import java.util.function.BiConsumer;
 
 public class SimpleHgWorkdirFactory extends SimpleWorkdirFactory<Repository, HgCommandContext> implements HgWorkdirFactory {
 
+  private final Provider<HgRepositoryEnvironmentBuilder> hgRepositoryEnvironmentBuilder;
+
   @Inject
   public SimpleHgWorkdirFactory(Provider<HgRepositoryEnvironmentBuilder> hgRepositoryEnvironmentBuilder) {
-    super(new HgCloneProvider(hgRepositoryEnvironmentBuilder));
+    this.hgRepositoryEnvironmentBuilder = hgRepositoryEnvironmentBuilder;
   }
-
-  private static class HgCloneProvider implements CloneProvider<Repository, HgCommandContext> {
-
-    private final Provider<HgRepositoryEnvironmentBuilder> hgRepositoryEnvironmentBuilder;
-
-    private HgCloneProvider(Provider<HgRepositoryEnvironmentBuilder> hgRepositoryEnvironmentBuilder) {
-      this.hgRepositoryEnvironmentBuilder = hgRepositoryEnvironmentBuilder;
-    }
-
-    @Override
-    public ParentAndClone<Repository> cloneRepository(HgCommandContext context, File target) throws IOException {
-      BiConsumer<sonia.scm.repository.Repository, Map<String, String>> repositoryMapBiConsumer =
-        (repository, environment) -> hgRepositoryEnvironmentBuilder.get().buildFor(repository, null, environment);
-      Repository centralRepository = context.openWithSpecialEnvironment(repositoryMapBiConsumer);
-      CloneCommand.on(centralRepository).execute(target.getAbsolutePath());
-      return new ParentAndClone<>(centralRepository, Repository.open(target));
-    }
+  @Override
+  public ParentAndClone<Repository> cloneRepository(HgCommandContext context, File target) throws IOException {
+    BiConsumer<sonia.scm.repository.Repository, Map<String, String>> repositoryMapBiConsumer =
+      (repository, environment) -> hgRepositoryEnvironmentBuilder.get().buildFor(repository, null, environment);
+    Repository centralRepository = context.openWithSpecialEnvironment(repositoryMapBiConsumer);
+    CloneCommand.on(centralRepository).execute(target.getAbsolutePath());
+    return new ParentAndClone<>(centralRepository, Repository.open(target));
   }
 
   @Override
@@ -44,8 +36,8 @@ public class SimpleHgWorkdirFactory extends SimpleWorkdirFactory<Repository, HgC
   }
 
   @Override
-  protected sonia.scm.repository.Repository getRepository(HgCommandContext context) {
-    return null;
+  protected sonia.scm.repository.Repository getScmRepository(HgCommandContext context) {
+    return context.getScmRepository();
   }
 
   @Override

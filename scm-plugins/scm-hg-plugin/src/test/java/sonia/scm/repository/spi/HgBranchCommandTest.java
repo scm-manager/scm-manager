@@ -1,5 +1,6 @@
 package sonia.scm.repository.spi;
 
+import com.aragost.javahg.commands.PullCommand;
 import com.google.inject.util.Providers;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
@@ -19,7 +20,12 @@ public class HgBranchCommandTest extends AbstractHgCommandTestBase {
     HgRepositoryEnvironmentBuilder hgRepositoryEnvironmentBuilder =
       new HgRepositoryEnvironmentBuilder(handler, HgTestUtil.createHookManager());
 
-    SimpleHgWorkdirFactory workdirFactory = new SimpleHgWorkdirFactory(Providers.of(hgRepositoryEnvironmentBuilder));
+    SimpleHgWorkdirFactory workdirFactory = new SimpleHgWorkdirFactory(Providers.of(hgRepositoryEnvironmentBuilder)) {
+      @Override
+      public void configure(PullCommand pullCommand) {
+        // we do not want to configure http hooks in this unit test
+      }
+    };
 
     BranchRequest branchRequest = new BranchRequest();
     branchRequest.setNewBranch("new_branch");

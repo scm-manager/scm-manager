@@ -160,6 +160,10 @@ public class HgCommandContext implements Closeable
     return handler.getConfig();
   }
 
+  public sonia.scm.repository.Repository getScmRepository() {
+    return scmRepository;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
