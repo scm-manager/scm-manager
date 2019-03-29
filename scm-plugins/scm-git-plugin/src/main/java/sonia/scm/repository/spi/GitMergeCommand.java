@@ -185,7 +185,8 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
       try {
         clone.push().call();
       } catch (GitAPIException e) {
-        throw new InternalRepositoryException(context.getRepository(), "could not push merged branch " + target + " to origin", e);
+        throw new IntegrateChangesFromWorkdirException(repository,
+          "could not push merged branch " + target + " into central repository", e);
       }
       logger.debug("pushed merged branch {}", target);
     }
