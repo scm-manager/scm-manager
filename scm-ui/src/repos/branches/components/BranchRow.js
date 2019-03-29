@@ -11,10 +11,14 @@ type Props = {
 export default class BranchRow extends React.Component<Props> {
   renderLink(to: string, label: string, defaultBranch: boolean) {
     let showLabel = null;
-    if(defaultBranch) {
+    if (defaultBranch) {
       showLabel = <span className="tag is-dark">Default</span>;
     }
-    return <Link to={to}>{label} {showLabel}</Link>;
+    return (
+      <Link to={to}>
+        {label} {showLabel}
+      </Link>
+    );
   }
 
   render() {

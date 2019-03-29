@@ -40,9 +40,9 @@ type Props = {
 // followed by develop the rest should be ordered by its name
 export function orderBranches(branches: Branch[]) {
   branches.sort((a, b) => {
-    if (a.defaultBranch && !b.defaultBranch ) {
+    if (a.defaultBranch && !b.defaultBranch) {
       return -20;
-    } else if (!a.defaultBranch && b.defaultBranch ) {
+    } else if (!a.defaultBranch && b.defaultBranch) {
       return 20;
     } else if (a.name === "master" && b.name !== "master") {
       return -10;
@@ -74,15 +74,15 @@ class BranchesOverview extends React.Component<Props> {
   render() {
     const { baseUrl, loading, error, branches, t } = this.props;
 
-    orderBranches(branches);
-
     if (error) {
       return <ErrorNotification error={error} />;
     }
 
-    if (loading) {
+    if (!branches || loading) {
       return <Loading />;
     }
+
+    orderBranches(branches);
 
     return (
       <>
