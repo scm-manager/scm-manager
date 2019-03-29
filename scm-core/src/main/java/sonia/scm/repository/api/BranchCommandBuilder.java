@@ -32,8 +32,6 @@
 
 package sonia.scm.repository.api;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import sonia.scm.repository.Branch;
 import sonia.scm.repository.spi.BranchCommand;
 
@@ -48,12 +46,24 @@ public final class BranchCommandBuilder {
     this.command = command;
   }
 
+  /**
+   * Specifies the source branch, which the new branch should be based on.
+   *
+   * @param parentBranch The base branch for the new branch.
+   * @return This builder.
+   */
   public BranchCommandBuilder from(String parentBranch) {
     request.setParentBranch(parentBranch);
     return this;
   }
 
-  public Branch branch(String name) throws IOException {
+  /**
+   * Execute the command and create a new branch with the given name.
+   * @param name The name of the new branch.
+   * @return The created branch.
+   * @throws IOException
+   */
+  public Branch branch(String name) {
     request.setNewBranch(name);
     return command.branch(request);
   }

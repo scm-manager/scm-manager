@@ -16,10 +16,6 @@ public class CloseableWrapper<T extends AutoCloseable> implements AutoCloseable 
 
   @Override
   public void close() {
-    try {
-      cleanup.accept(wrapped);
-    } catch (Throwable t) {
-      throw new RuntimeException(t);
-    }
+    cleanup.accept(wrapped);
   }
 }

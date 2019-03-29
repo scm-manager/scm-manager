@@ -16,7 +16,7 @@ public abstract class SimpleWorkdirFactory<R, C> implements WorkdirFactory<R, C>
   private final File poolDirectory;
 
   public SimpleWorkdirFactory() {
-    this(new File(System.getProperty("java.io.tmpdir"), "scmm-work-pool"));
+    this(new File(System.getProperty("scm.workdir" , System.getProperty("java.io.tmpdir")), "scm-work"));
   }
 
   public SimpleWorkdirFactory(File poolDirectory) {

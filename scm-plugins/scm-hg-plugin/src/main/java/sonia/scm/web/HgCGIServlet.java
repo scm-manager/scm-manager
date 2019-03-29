@@ -203,14 +203,6 @@ public class HgCGIServlet extends HttpServlet implements ScmProviderHttpServlet
     executor.setContentLengthWorkaround(true);
     hgRepositoryEnvironmentBuilder.buildFor(repository, request, executor.getEnvironment().asMutableMap());
 
-    // unused ???
-    HttpSession session = request.getSession(false);
-
-    if (session != null)
-    {
-      passSessionAttributes(executor.getEnvironment(), session);
-    }
-
     String interpreter = getInterpreter();
 
     if (interpreter != null)

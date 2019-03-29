@@ -34,12 +34,15 @@ import com.aragost.javahg.Changeset;
 import com.aragost.javahg.commands.CommitCommand;
 import com.aragost.javahg.commands.PullCommand;
 import com.aragost.javahg.commands.UpdateCommand;
+import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.Branch;
+import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.BranchRequest;
 import sonia.scm.repository.util.WorkingCopy;
+import sonia.scm.user.User;
 
 import java.io.IOException;
 
@@ -59,37 +62,53 @@ public class HgBranchCommand extends AbstractCommand implements BranchCommand {
   }
 
   @Override
-  public Branch branch(BranchRequest request) throws IOException {
+  public Branch branch(BranchRequest request) {
     try (WorkingCopy<com.aragost.javahg.Repository> workingCopy = workdirFactory.createWorkingCopy(getContext())) {
       com.aragost.javahg.Repository repository = workingCopy.getWorkingRepository();
-      if (request.getParentBranch() != null) {
-        UpdateCommand.on(repository).rev(request.getParentBranch()).execute();
-      }
-      com.aragost.javahg.commands.BranchCommand.on(repository).set(request.getNewBranch());
 
-      Changeset emptyChangeset = CommitCommand
-        .on(repository)
-        .user("SCM-Manager")
-        .message("Create new branch " + request.getNewBranch())
-        .execute();
+      checkoutParentBranchIfSpecified(request, repository);
+
+      Changeset emptyChangeset = createNewBranchWithEmptyCommit(request, repository);
 
       LOG.debug("Created new branch '{}' in repository {} with changeset {}",
         request.getNewBranch(), getRepository().getNamespaceAndName(), emptyChangeset.getNode());
 
-      try {
-        com.aragost.javahg.commands.PullCommand pullCommand = PullCommand.on(workingCopy.getCentralRepository());
-        workdirFactory.configure(pullCommand);
-        pullCommand.execute(workingCopy.getDirectory().getAbsolutePath());
-      } catch (Exception e) {
-        // TODO handle failed update
-        throw new RuntimeException(
-          String.format("Could not pull new branch '%s' into central repository '%s'",
-            request.getNewBranch(),
-            getRepository().getNamespaceAndName()),
-          e);
-      }
+      pullNewBranchIntoCentralRepository(request, workingCopy);
 
       return Branch.normalBranch(request.getNewBranch(), emptyChangeset.getNode());
+    }
+  }
+
+  private void checkoutParentBranchIfSpecified(BranchRequest request, com.aragost.javahg.Repository repository) {
+    if (request.getParentBranch() != null) {
+      try {
+        UpdateCommand.on(repository).rev(request.getParentBranch()).execute();
+      } catch (IOException e) {
+        throw new InternalRepositoryException(getRepository(), "Could not check out parent branch " + request.getParentBranch(), e);
+      }
+    }
+  }
+
+  private Changeset createNewBranchWithEmptyCommit(BranchRequest request, com.aragost.javahg.Repository repository) {
+    com.aragost.javahg.commands.BranchCommand.on(repository).set(request.getNewBranch());
+    User currentUser = SecurityUtils.getSubject().getPrincipals().oneByType(User.class);
+    return CommitCommand
+      .on(repository)
+      .user(String.format("%s <%s>", currentUser.getDisplayName(), currentUser.getMail()))
+      .message("Create new branch " + request.getNewBranch())
+      .execute();
+  }
+
+  private void pullNewBranchIntoCentralRepository(BranchRequest request, WorkingCopy<com.aragost.javahg.Repository> workingCopy) {
+    try {
+      PullCommand pullCommand = PullCommand.on(workingCopy.getCentralRepository());
+      workdirFactory.configure(pullCommand);
+      pullCommand.execute(workingCopy.getDirectory().getAbsolutePath());
+    } catch (Exception e) {
+      // TODO handle failed update
+      throw new IntegrateChangesFromWorkdirException(getRepository(),
+        String.format("Could not pull new branch '%s' into central repository", request.getNewBranch()),
+        e);
     }
   }
 }

@@ -79,11 +79,8 @@ public class GitBranchCommand extends AbstractGitCommand implements BranchComman
   private void handlePushError(RemoteRefUpdate remoteRefUpdate, BranchRequest request, Repository repository) {
     if (remoteRefUpdate.getStatus() != RemoteRefUpdate.Status.OK) {
       // TODO handle failed remote update
-      throw new RuntimeException(
-        String.format("Could not pull new branch '%s' into central repository '%s': %s",
-          request.getNewBranch(),
-          repository.getNamespaceAndName(),
-          remoteRefUpdate.getMessage()));
+      throw new IntegrateChangesFromWorkdirException(repository,
+        String.format("Could not push new branch '%s' into central repository", request.getNewBranch()));
     }
   }
 }
