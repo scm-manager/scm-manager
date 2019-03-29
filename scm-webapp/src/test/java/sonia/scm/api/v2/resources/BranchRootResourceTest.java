@@ -102,8 +102,6 @@ public class BranchRootResourceTest extends RepositoryTestBase {
     branchRootResource = new BranchRootResource(serviceFactory, branchToDtoMapper, branchCollectionToDtoMapper, changesetCollectionToDtoMapper, resourceLinks);
     super.branchRootResource = Providers.of(branchRootResource);
     dispatcher = DispatcherMock.createDispatcher(getRepositoryRootResource());
-//    dispatcher.getRegistry().addSingletonResource(getRepositoryRootResource());
-
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(service);
     when(serviceFactory.create(any(Repository.class))).thenReturn(service);
     when(service.getRepository()).thenReturn(new Repository("repoId", "git", "space", "repo"));

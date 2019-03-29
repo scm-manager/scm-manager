@@ -47,12 +47,12 @@ import sonia.scm.repository.Repository;
 public class HgRepositoryServiceResolver implements RepositoryServiceResolver
 {
 
-  private final HgRepositoryHandler handler;
-  private final HgHookManager hookManager;
+  private HgRepositoryHandler handler;
+  private HgHookManager hookManager;
 
   @Inject
   public HgRepositoryServiceResolver(HgRepositoryHandler handler,
-                                     HgHookManager hookManager)
+    HgHookManager hookManager)
   {
     this.handler = handler;
     this.hookManager = hookManager;

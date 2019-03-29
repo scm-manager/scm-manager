@@ -62,8 +62,8 @@ public class HgHookChangesetProvider implements HookChangesetProvider
   //~--- constructors ---------------------------------------------------------
 
   public HgHookChangesetProvider(HgRepositoryHandler handler,
-                                 File repositoryDirectory, HgHookManager hookManager, String startRev,
-                                 RepositoryHookType type)
+    File repositoryDirectory, HgHookManager hookManager, String startRev,
+    RepositoryHookType type)
   {
     this.handler = handler;
     this.repositoryDirectory = repositoryDirectory;
@@ -127,7 +127,8 @@ public class HgHookChangesetProvider implements HookChangesetProvider
     boolean pending = type == RepositoryHookType.PRE_RECEIVE;
 
     // TODO get repository encoding
-    return HgUtil.open(handler, hookManager, repositoryDirectory, null, pending);
+    return HgUtil.open(handler, hookManager, repositoryDirectory, null,
+      pending);
   }
 
   //~--- fields ---------------------------------------------------------------
