@@ -53,6 +53,8 @@ public class HgBranchesCommand extends AbstractCommand
   implements BranchesCommand
 {
 
+  private static final String DEFAULT_BRANCH_NAME = "default";
+
   /**
    * Constructs ...
    *
@@ -88,7 +90,11 @@ public class HgBranchesCommand extends AbstractCommand
           node = changeset.getNode();
         }
 
-        return new Branch(hgBranch.getName(), node);
+        if (DEFAULT_BRANCH_NAME.equals(hgBranch.getName())) {
+          return Branch.defaultBranch(hgBranch.getName(), node);
+        } else {
+          return Branch.normalBranch(hgBranch.getName(), node);
+        }
       }
     });
 

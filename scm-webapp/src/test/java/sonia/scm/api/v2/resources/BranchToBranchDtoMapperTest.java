@@ -33,7 +33,7 @@ class BranchToBranchDtoMapperTest {
     });
     mapper.setRegistry(registry);
 
-    Branch branch = new Branch("master", "42");
+    Branch branch = Branch.normalBranch("master", "42");
 
     BranchDto dto = mapper.map(branch, new NamespaceAndName("hitchhiker", "heart-of-gold"));
     assertThat(dto.getLinks().getLinkBy("ka").get().getHref()).isEqualTo("http://hitchhiker/heart-of-gold/master");

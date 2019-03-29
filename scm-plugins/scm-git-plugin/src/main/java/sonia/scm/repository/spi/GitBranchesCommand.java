@@ -34,11 +34,14 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Strings;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.repository.Branch;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.InternalRepositoryException;
@@ -46,6 +49,8 @@ import sonia.scm.repository.Repository;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -53,17 +58,10 @@ import java.util.List;
  *
  * @author Sebastian Sdorra
  */
-public class GitBranchesCommand extends AbstractGitCommand
-  implements BranchesCommand
-{
+public class GitBranchesCommand extends AbstractGitCommand implements BranchesCommand {
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param context
-   * @param repository
-   */
+  private static final Logger LOG = LoggerFactory.getLogger(GitBranchesCommand.class);
+
   public GitBranchesCommand(GitContext context, Repository repository)
   {
     super(context, repository);
@@ -73,38 +71,54 @@ public class GitBranchesCommand extends AbstractGitCommand
 
   @Override
   public List<Branch> getBranches() throws IOException {
-    List<Branch> branches = null;
+    Git git = createGit();
 
-    Git git = new Git(open());
+    String defaultBranchName = determineDefaultBranchName(git);
 
-    try
-    {
-      List<Ref> refs = git.branchList().call();
-
-      branches = Lists.transform(refs, new Function<Ref, Branch>()
-      {
-
-        @Override
-        public Branch apply(Ref ref)
-        {
-          Branch branch = null;
-          String branchName = GitUtil.getBranch(ref);
-
-          if (branchName != null)
-          {
-            branch = new Branch(branchName, GitUtil.getId(ref.getObjectId()));
-          }
-
-          return branch;
-        }
-      });
-
-    }
-    catch (GitAPIException ex)
-    {
+    try {
+      return git
+        .branchList()
+        .call()
+        .stream()
+        .map(ref -> createBranchObject(defaultBranchName, ref))
+        .collect(Collectors.toList());
+    } catch (GitAPIException ex) {
       throw new InternalRepositoryException(repository, "could not read branches", ex);
     }
+  }
 
-    return branches;
+  @VisibleForTesting
+  Git createGit() throws IOException {
+    return new Git(open());
+  }
+
+  @Nullable
+  private Branch createBranchObject(String defaultBranchName, Ref ref) {
+    String branchName = GitUtil.getBranch(ref);
+
+    if (branchName == null) {
+      LOG.warn("could not determine branch name for branch name {} at revision {}", ref.getName(), ref.getObjectId());
+      return null;
+    } else {
+      if (branchName.equals(defaultBranchName)) {
+        return Branch.defaultBranch(branchName, GitUtil.getId(ref.getObjectId()));
+      } else {
+        return Branch.normalBranch(branchName, GitUtil.getId(ref.getObjectId()));
+      }
+    }
+  }
+
+  private String determineDefaultBranchName(Git git) {
+    String defaultBranchName = context.getConfig().getDefaultBranch();
+    if (Strings.isNullOrEmpty(defaultBranchName)) {
+      return getRepositoryHeadRef(git).map(GitUtil::getBranch).orElse(null);
+    } else {
+      return defaultBranchName;
+    }
+  }
+
+  Optional<Ref> getRepositoryHeadRef(Git git) {
+    return GitUtil.getRepositoryHeadRef(git.getRepository());
   }
 }
+

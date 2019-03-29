@@ -125,7 +125,7 @@ public class BranchRootResourceTest extends RepositoryTestBase {
 
   @Test
   public void shouldFindExistingBranch() throws Exception {
-    when(branchesCommandBuilder.getBranches()).thenReturn(new Branches(new Branch("master", "revision")));
+    when(branchesCommandBuilder.getBranches()).thenReturn(new Branches(Branch.normalBranch("master", "revision")));
 
     MockHttpRequest request = MockHttpRequest.get(BRANCH_URL);
     MockHttpResponse response = new MockHttpResponse();
@@ -153,7 +153,7 @@ public class BranchRootResourceTest extends RepositoryTestBase {
     when(logCommandBuilder.setBranch(anyString())).thenReturn(logCommandBuilder);
     when(logCommandBuilder.getChangesets()).thenReturn(changesetPagingResult);
     Branches branches = mock(Branches.class);
-    List<Branch> branchList = Lists.newArrayList(new Branch("master",id));
+    List<Branch> branchList = Lists.newArrayList(Branch.normalBranch("master",id));
     when(branches.getBranches()).thenReturn(branchList);
     when(branchesCommandBuilder.getBranches()).thenReturn(branches);
     MockHttpRequest request = MockHttpRequest.get(BRANCH_URL + "/changesets/");
