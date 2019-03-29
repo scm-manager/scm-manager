@@ -11,11 +11,10 @@ type Props = {
   changeset: Changeset,
 
   // context props
-  t: (string) => string
-}
+  t: string => string
+};
 
 class ChangesetButtonGroup extends React.Component<Props> {
-
   render() {
     const { repository, changeset, t } = this.props;
 
@@ -26,7 +25,7 @@ class ChangesetButtonGroup extends React.Component<Props> {
       <ButtonGroup className="is-pulled-right">
         <Button link={changesetLink}>
           <span className="icon">
-            <i className="fas fa-exchange-alt"></i>
+            <i className="fas fa-exchange-alt" />
           </span>
           <span className="is-hidden-mobile is-hidden-tablet-only">
             {t("changeset.buttons.details")}
@@ -34,7 +33,7 @@ class ChangesetButtonGroup extends React.Component<Props> {
         </Button>
         <Button link={sourcesLink}>
           <span className="icon">
-            <i className="fas fa-code"></i>
+            <i className="fas fa-code" />
           </span>
           <span className="is-hidden-mobile is-hidden-tablet-only">
             {t("changeset.buttons.sources")}
@@ -43,7 +42,6 @@ class ChangesetButtonGroup extends React.Component<Props> {
       </ButtonGroup>
     );
   }
-
 }
 
 export default translate("repos")(ChangesetButtonGroup);
