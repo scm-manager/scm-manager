@@ -38,7 +38,11 @@ public class SimpleGitWorkdirFactory extends SimpleWorkdirFactory<Repository, Gi
 
   @Override
   protected void closeRepository(Repository repository) {
-    repository.close();
+    // we have to check for null here, because we do not create a repository for
+    // the parent in cloneRepository
+    if (repository != null) {
+      repository.close();
+    }
   }
 
   @Override

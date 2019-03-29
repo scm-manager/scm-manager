@@ -15,11 +15,13 @@ public class WorkingCopy<R> implements AutoCloseable {
   private final File directory;
   private final R workingRepository;
   private final R centralRepository;
+  private final Consumer<R> cleanup;
 
   public WorkingCopy(R workingRepository, R centralRepository, Consumer<R> cleanup, File directory) {
     this.directory = directory;
     this.workingRepository = workingRepository;
     this.centralRepository = centralRepository;
+    this.cleanup = cleanup;
   }
 
   public R getWorkingRepository() {
@@ -37,6 +39,8 @@ public class WorkingCopy<R> implements AutoCloseable {
   @Override
   public void close() {
     try {
+      cleanup.accept(workingRepository);
+      cleanup.accept(centralRepository);
       IOUtil.delete(directory);
     } catch (IOException e) {
       LOG.warn("could not delete temporary workdir '{}'", directory, e);
