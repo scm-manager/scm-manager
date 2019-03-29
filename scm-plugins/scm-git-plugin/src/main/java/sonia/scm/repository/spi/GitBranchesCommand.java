@@ -37,7 +37,6 @@ package sonia.scm.repository.spi;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.checkerframework.common.value.qual.UnknownVal;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
@@ -118,8 +117,8 @@ public class GitBranchesCommand extends AbstractGitCommand implements BranchesCo
     }
   }
 
-  @UnknownVal
   Optional<Ref> getRepositoryHeadRef(Git git) {
     return GitUtil.getRepositoryHeadRef(git.getRepository());
   }
 }
+

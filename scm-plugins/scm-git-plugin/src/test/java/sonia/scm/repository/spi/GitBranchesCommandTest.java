@@ -1,6 +1,5 @@
 package sonia.scm.repository.spi;
 
-import org.checkerframework.common.value.qual.UnknownVal;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.ListBranchCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -57,7 +56,7 @@ class GitBranchesCommandTest {
       }
 
       @Override
-      @UnknownVal Optional<Ref> getRepositoryHeadRef(Git git) {
+      Optional<Ref> getRepositoryHeadRef(Git git) {
         return of(master);
       }
     };
