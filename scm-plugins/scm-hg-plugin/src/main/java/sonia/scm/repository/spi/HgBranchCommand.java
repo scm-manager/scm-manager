@@ -81,7 +81,12 @@ public class HgBranchCommand extends AbstractCommand implements BranchCommand {
         workdirFactory.configure(pullCommand);
         pullCommand.execute(workingCopy.getDirectory().getAbsolutePath());
       } catch (Exception e) {
-        throw new RuntimeException(e);
+        // TODO handle failed update
+        throw new RuntimeException(
+          String.format("Could not pull new branch '%s' into central repository '%s'",
+            request.getNewBranch(),
+            getRepository().getNamespaceAndName()),
+          e);
       }
 
       return Branch.normalBranch(request.getNewBranch(), emptyChangeset.getNode());

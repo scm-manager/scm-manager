@@ -69,14 +69,21 @@ public class GitBranchCommand extends AbstractGitCommand implements BranchComman
         .flatMap(pushResult -> pushResult.getRemoteUpdates().stream())
         .filter(remoteRefUpdate -> remoteRefUpdate.getStatus() != RemoteRefUpdate.Status.OK)
         .findFirst()
-        .ifPresent(this::handlePushError);
+        .ifPresent(r -> this.handlePushError(r, request, context.getRepository()));
       return Branch.normalBranch(request.getNewBranch(), GitUtil.getId(ref.getObjectId()));
     } catch (GitAPIException ex) {
       throw new InternalRepositoryException(repository, "could not create branch " + request.getNewBranch(), ex);
     }
   }
 
-  private void handlePushError(RemoteRefUpdate remoteRefUpdate) {
-    // TODO handle failed remote update
+  private void handlePushError(RemoteRefUpdate remoteRefUpdate, BranchRequest request, Repository repository) {
+    if (remoteRefUpdate.getStatus() != RemoteRefUpdate.Status.OK) {
+      // TODO handle failed remote update
+      throw new RuntimeException(
+        String.format("Could not pull new branch '%s' into central repository '%s': %s",
+          request.getNewBranch(),
+          repository.getNamespaceAndName(),
+          remoteRefUpdate.getMessage()));
+    }
   }
 }
