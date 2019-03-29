@@ -23,13 +23,13 @@ public class SimpleGitWorkdirFactory extends SimpleWorkdirFactory<Repository, Gi
   private static class GitCloneProvider implements CloneProvider<Repository, GitContext> {
 
     @Override
-    public Repository cloneRepository(GitContext context, File target) {
+    public ParentAndClone<Repository> cloneRepository(GitContext context, File target) {
       try {
-        return Git.cloneRepository()
+        return new ParentAndClone<>(null, Git.cloneRepository()
           .setURI(createScmTransportProtocolUri(context.getDirectory()))
           .setDirectory(target)
           .call()
-          .getRepository();
+          .getRepository());
       } catch (GitAPIException e) {
         throw new InternalRepositoryException(context.getRepository(), "could not clone working copy of repository", e);
       }
@@ -38,6 +38,11 @@ public class SimpleGitWorkdirFactory extends SimpleWorkdirFactory<Repository, Gi
     private String createScmTransportProtocolUri(File bareRepository) {
       return ScmTransportProtocol.NAME + "://" + bareRepository.getAbsolutePath();
     }
+  }
+
+  @Override
+  protected void closeRepository(Repository repository) {
+    repository.close();
   }
 
   @Override

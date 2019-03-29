@@ -50,7 +50,7 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
     RepositoryPermissions.push(context.getRepository().getId()).check();
 
     try (WorkingCopy<Repository> workingCopy = workdirFactory.createWorkingCopy(context)) {
-      Repository repository = workingCopy.get();
+      Repository repository = workingCopy.getWorkingRepository();
       logger.debug("cloned repository to folder {}", repository.getWorkTree());
       return new MergeWorker(repository, request).merge();
     } catch (IOException e) {

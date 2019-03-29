@@ -9,7 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
-public abstract class SimpleWorkdirFactory<R extends AutoCloseable, C> implements WorkdirFactory<R, C> {
+public abstract class SimpleWorkdirFactory<R, C> implements WorkdirFactory<R, C> {
 
   private static final Logger logger = LoggerFactory.getLogger(SimpleWorkdirFactory.class);
 
@@ -33,8 +33,8 @@ public abstract class SimpleWorkdirFactory<R extends AutoCloseable, C> implement
   public WorkingCopy<R> createWorkingCopy(C context) {
     try {
       File directory = createNewWorkdir();
-      R clone = cloneProvider.cloneRepository(context, directory);
-      return new WorkingCopy<>(clone, this::close, directory);
+      ParentAndClone<R> parentAndClone = cloneProvider.cloneRepository(context, directory);
+      return new WorkingCopy<>(parentAndClone.getClone(), parentAndClone.getParent(), this::close, directory);
     } catch (IOException e) {
       throw new InternalRepositoryException(getRepository(context), "could not create temporary directory for clone of repository", e);
     }
@@ -42,19 +42,40 @@ public abstract class SimpleWorkdirFactory<R extends AutoCloseable, C> implement
 
   protected abstract Repository getRepository(C context);
 
+  protected abstract void closeRepository(R repository);
+
   private File createNewWorkdir() throws IOException {
     return Files.createTempDirectory(poolDirectory.toPath(),"workdir").toFile();
   }
 
   private void close(R repository) {
     try {
-      repository.close();
+      closeRepository(repository);
     } catch (Exception e) {
       logger.warn("could not close temporary repository clone", e);
     }
   }
 
-  public interface CloneProvider<R, C> {
-    R cloneRepository(C context, File target) throws IOException;
+  @FunctionalInterface
+  protected interface CloneProvider<R, C> {
+    ParentAndClone<R> cloneRepository(C context, File target) throws IOException;
+  }
+
+  protected static class ParentAndClone<R> {
+    private final R parent;
+    private final R clone;
+
+    public ParentAndClone(R parent, R clone) {
+      this.parent = parent;
+      this.clone = clone;
+    }
+
+    public R getParent() {
+      return parent;
+    }
+
+    public R getClone() {
+      return clone;
+    }
   }
 }

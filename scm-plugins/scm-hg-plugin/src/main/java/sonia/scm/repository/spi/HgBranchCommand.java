@@ -32,6 +32,7 @@ package sonia.scm.repository.spi;
 
 import com.aragost.javahg.Changeset;
 import com.aragost.javahg.commands.CommitCommand;
+import com.aragost.javahg.commands.PullCommand;
 import com.aragost.javahg.commands.UpdateCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,8 +60,8 @@ public class HgBranchCommand extends AbstractCommand implements BranchCommand {
 
   @Override
   public Branch branch(BranchRequest request) throws IOException {
-    try (WorkingCopy<RepositoryCloseableWrapper> workingCopy = workdirFactory.createWorkingCopy(getContext())) {
-      com.aragost.javahg.Repository repository = workingCopy.get().get();
+    try (WorkingCopy<com.aragost.javahg.Repository> workingCopy = workdirFactory.createWorkingCopy(getContext())) {
+      com.aragost.javahg.Repository repository = workingCopy.getWorkingRepository();
       if (request.getParentBranch() != null) {
         UpdateCommand.on(repository).rev(request.getParentBranch()).execute();
       }
@@ -74,6 +75,14 @@ public class HgBranchCommand extends AbstractCommand implements BranchCommand {
 
       LOG.debug("Created new branch '{}' in repository {} with changeset {}",
         request.getNewBranch(), getRepository().getNamespaceAndName(), emptyChangeset.getNode());
+
+      try {
+        com.aragost.javahg.commands.PullCommand pullCommand = PullCommand.on(workingCopy.getCentralRepository());
+        workdirFactory.configure(pullCommand);
+        pullCommand.execute(workingCopy.getDirectory().getAbsolutePath());
+      } catch (Exception e) {
+        throw new RuntimeException(e);
+      }
 
       return Branch.normalBranch(request.getNewBranch(), emptyChangeset.getNode());
     }

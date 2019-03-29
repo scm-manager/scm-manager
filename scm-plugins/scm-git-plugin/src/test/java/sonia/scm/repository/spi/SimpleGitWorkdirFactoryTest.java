@@ -1,6 +1,5 @@
 package sonia.scm.repository.spi;
 
-import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.ScmTransportProtocol;
 import org.eclipse.jgit.transport.Transport;
@@ -47,11 +46,11 @@ public class SimpleGitWorkdirFactoryTest extends AbstractGitCommandTestBase {
 
     try (WorkingCopy<Repository> workingCopy = factory.createWorkingCopy(createContext())) {
 
-      assertThat(workingCopy.get().getDirectory())
+      assertThat(workingCopy.getDirectory())
         .exists()
         .isNotEqualTo(masterRepo)
         .isDirectory();
-      assertThat(new File(workingCopy.get().getWorkTree(), "a.txt"))
+      assertThat(new File(workingCopy.getWorkingRepository().getWorkTree(), "a.txt"))
         .exists()
         .isFile()
         .hasContent("a\nline for blame");
@@ -64,10 +63,10 @@ public class SimpleGitWorkdirFactoryTest extends AbstractGitCommandTestBase {
 
     File firstDirectory;
     try (WorkingCopy<Repository> workingCopy = factory.createWorkingCopy(createContext())) {
-      firstDirectory = workingCopy.get().getDirectory();
+      firstDirectory = workingCopy.getDirectory();
     }
     try (WorkingCopy<Repository> workingCopy = factory.createWorkingCopy(createContext())) {
-      File secondDirectory = workingCopy.get().getDirectory();
+      File secondDirectory = workingCopy.getDirectory();
       assertThat(secondDirectory).isNotEqualTo(firstDirectory);
     }
   }
@@ -78,7 +77,7 @@ public class SimpleGitWorkdirFactoryTest extends AbstractGitCommandTestBase {
 
     File directory;
     try (WorkingCopy<Repository> workingCopy = factory.createWorkingCopy(createContext())) {
-      directory = workingCopy.get().getWorkTree();
+      directory = workingCopy.getWorkingRepository().getWorkTree();
     }
     assertThat(directory).doesNotExist();
   }

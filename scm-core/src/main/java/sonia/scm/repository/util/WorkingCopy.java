@@ -8,20 +8,34 @@ import java.io.File;
 import java.io.IOException;
 import java.util.function.Consumer;
 
-public class WorkingCopy<R extends AutoCloseable> extends CloseableWrapper<R> {
+public class WorkingCopy<R> implements AutoCloseable {
 
   private static final Logger LOG = LoggerFactory.getLogger(WorkingCopy.class);
 
   private final File directory;
+  private final R workingRepository;
+  private final R centralRepository;
 
-  public WorkingCopy(R wrappedRepository, Consumer<R> cleanup, File directory) {
-    super(wrappedRepository, cleanup);
+  public WorkingCopy(R workingRepository, R centralRepository, Consumer<R> cleanup, File directory) {
     this.directory = directory;
+    this.workingRepository = workingRepository;
+    this.centralRepository = centralRepository;
+  }
+
+  public R getWorkingRepository() {
+    return workingRepository;
+  }
+
+  public R getCentralRepository() {
+    return centralRepository;
+  }
+
+  public File getDirectory() {
+    return directory;
   }
 
   @Override
   public void close() {
-    super.close();
     try {
       IOUtil.delete(directory);
     } catch (IOException e) {

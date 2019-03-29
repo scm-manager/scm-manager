@@ -19,7 +19,7 @@ public class HgBranchCommandTest extends AbstractHgCommandTestBase {
     HgRepositoryEnvironmentBuilder hgRepositoryEnvironmentBuilder =
       new HgRepositoryEnvironmentBuilder(handler, HgTestUtil.createHookManager());
 
-    SimpleHgWorkdirFactory workdirFactory = new SimpleHgWorkdirFactory(Providers.of(hgRepositoryEnvironmentBuilder), pc -> {});
+    SimpleHgWorkdirFactory workdirFactory = new SimpleHgWorkdirFactory(Providers.of(hgRepositoryEnvironmentBuilder));
 
     BranchRequest branchRequest = new BranchRequest();
     branchRequest.setNewBranch("new_branch");
