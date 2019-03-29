@@ -1,8 +1,13 @@
-// @flow
+//@flow
 import React from "react";
 import { Subtitle } from "@scm-manager/ui-components";
+import {translate} from "react-i18next";
 
-class CreateBranch extends React.Component<> {
+type Props = {
+  t: string => string
+};
+
+class CreateBranch extends React.Component<Props> {
   render() {
     const { t } = this.props;
 
@@ -15,4 +20,4 @@ class CreateBranch extends React.Component<> {
   }
 }
 
-export default CreateBranch;
+export default translate("repos")(CreateBranch);

@@ -50,6 +50,9 @@
     },
     "table": {
       "branches": "Branches"
+    },
+    "create": {
+      "title": "Create Branch"
     }
   },
   "branch": {

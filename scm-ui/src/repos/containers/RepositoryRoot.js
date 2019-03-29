@@ -75,7 +75,13 @@ class RepositoryRoot extends React.Component<Props> {
     return this.stripEndingSlash(this.props.match.url);
   };
 
-  matches = (route: any) => {
+  matchesBranches = (route: any) => {
+    const url = this.matchedUrl();
+    const regex = new RegExp(`${url}?/?/branch?.*`);
+    return route.location.pathname.match(regex);
+  };
+
+  matchesChangesets = (route: any) => {
     const url = this.matchedUrl();
     const regex = new RegExp(`${url}(/branch)?/?[^/]*/changesets?.*`);
     return route.location.pathname.match(regex);
@@ -228,6 +234,7 @@ class RepositoryRoot extends React.Component<Props> {
                   to={`${url}/branches/`}
                   icon="fas fa-code-branch"
                   label={t("repositoryRoot.menu.branchesNavLink")}
+                  activeWhenMatch={this.matchesBranches}
                   activeOnlyWhenExact={false}
                 />
                 <RepositoryNavLink
@@ -236,7 +243,7 @@ class RepositoryRoot extends React.Component<Props> {
                   to={`${url}/changesets/`}
                   icon="fas fa-exchange-alt"
                   label={t("repositoryRoot.menu.historyNavLink")}
-                  activeWhenMatch={this.matches}
+                  activeWhenMatch={this.matchesChangesets}
                   activeOnlyWhenExact={false}
                 />
                 <RepositoryNavLink
