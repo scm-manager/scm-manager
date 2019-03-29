@@ -44,6 +44,8 @@
     "subtitle": "Create a new repository"
   },
   "branches": {
+    "errorTitle": "Error",
+    "errorSubtitle": "Unknown branch error",
     "overview": {
       "title": "Overview of all branches",
       "createButton": "Create Branch"
@@ -57,7 +59,10 @@
   },
   "branch": {
     "name": "Name",
-    "repository": "Repository"
+    "repository": "Repository",
+    "actions": "Actions",
+    "commits": "Commits",
+    "sources": "Sources"
   },
   "changesets": {
     "errorTitle": "Error",

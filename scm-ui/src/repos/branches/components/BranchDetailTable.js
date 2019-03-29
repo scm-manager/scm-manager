@@ -2,6 +2,7 @@
 import React from "react";
 import type { Repository, Branch } from "@scm-manager/ui-types";
 import { translate } from "react-i18next";
+import BranchButtonGroup from "./BranchButtonGroup";
 
 type Props = {
   repository: Repository,
@@ -25,6 +26,12 @@ class BranchDetailTable extends React.Component<Props> {
               {t("branch.repository")}
             </td>
             <td>{repository.name}</td>
+          </tr>
+          <tr>
+            <td className="has-text-weight-semibold">
+              {t("branch.actions")}
+            </td>
+            <td><BranchButtonGroup repository={repository} branch={branch} /></td>
           </tr>
         </tbody>
       </table>
