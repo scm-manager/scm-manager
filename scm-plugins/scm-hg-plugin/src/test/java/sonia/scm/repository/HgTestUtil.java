@@ -105,7 +105,7 @@ public final class HgTestUtil
 
     RepositoryLocationResolver repositoryLocationResolver = new RepositoryLocationResolver(context, repoDao, new InitialRepositoryLocationResolver());
     HgRepositoryHandler handler =
-      new HgRepositoryHandler(new InMemoryConfigurationStoreFactory(), new HgContextProvider(), repositoryLocationResolver, null);
+      new HgRepositoryHandler(new InMemoryConfigurationStoreFactory(), new HgContextProvider(), repositoryLocationResolver, null, null);
     Path repoDir = directory.toPath();
     when(repoDao.getPath(any())).thenReturn(repoDir);
     handler.init(context);
@@ -128,6 +128,7 @@ public final class HgTestUtil
       "http://localhost:8081/scm/hook/hg/");
     when(hookManager.createUrl(any(HttpServletRequest.class))).thenReturn(
       "http://localhost:8081/scm/hook/hg/");
+    when(hookManager.getCredentials()).thenReturn("");
 
     return hookManager;
   }

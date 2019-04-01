@@ -30,51 +30,15 @@
  */
 
 
+package sonia.scm.repository.spi;
 
-package sonia.scm.repository.api;
+
+import sonia.scm.repository.Branch;
+import sonia.scm.repository.api.BranchRequest;
 
 /**
- * Enumeration of available commands.
- *
- * @author Sebastian Sdorra
- * @since 1.17
+ * @since 2.0
  */
-public enum Command
-{
-  LOG, BROWSE, CAT, DIFF, BLAME,
-
-  /**
-   * @since 1.18
-   */
-  TAGS,
-
-  /**
-   * @since 1.18
-   */
-  BRANCHES,
-
-  /**
-   * @since 2.0
-   */
-  BRANCH,
-
-  /**
-   * @since 1.31
-   */
-  INCOMING, OUTGOING, PUSH, PULL,
-  
-  /**
-   * @since 1.43
-   */
-  BUNDLE, UNBUNDLE,
-
-  /**
-   * @since 2.0
-   */
-  MODIFICATIONS,
-
-  /**
-   * @since 2.0
-   */
-  MERGE
+public interface BranchCommand {
+  Branch branch(BranchRequest name);
 }

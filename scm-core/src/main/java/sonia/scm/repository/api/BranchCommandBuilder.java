@@ -30,51 +30,44 @@
  */
 
 
-
 package sonia.scm.repository.api;
 
+import sonia.scm.repository.Branch;
+import sonia.scm.repository.spi.BranchCommand;
+
+import java.io.IOException;
+
 /**
- * Enumeration of available commands.
- *
- * @author Sebastian Sdorra
- * @since 1.17
+ * @since 2.0
  */
-public enum Command
-{
-  LOG, BROWSE, CAT, DIFF, BLAME,
+public final class BranchCommandBuilder {
+
+  public BranchCommandBuilder(BranchCommand command) {
+    this.command = command;
+  }
 
   /**
-   * @since 1.18
+   * Specifies the source branch, which the new branch should be based on.
+   *
+   * @param parentBranch The base branch for the new branch.
+   * @return This builder.
    */
-  TAGS,
+  public BranchCommandBuilder from(String parentBranch) {
+    request.setParentBranch(parentBranch);
+    return this;
+  }
 
   /**
-   * @since 1.18
+   * Execute the command and create a new branch with the given name.
+   * @param name The name of the new branch.
+   * @return The created branch.
+   * @throws IOException
    */
-  BRANCHES,
+  public Branch branch(String name) {
+    request.setNewBranch(name);
+    return command.branch(request);
+  }
 
-  /**
-   * @since 2.0
-   */
-  BRANCH,
-
-  /**
-   * @since 1.31
-   */
-  INCOMING, OUTGOING, PUSH, PULL,
-  
-  /**
-   * @since 1.43
-   */
-  BUNDLE, UNBUNDLE,
-
-  /**
-   * @since 2.0
-   */
-  MODIFICATIONS,
-
-  /**
-   * @since 2.0
-   */
-  MERGE
+  private BranchCommand command;
+  private BranchRequest request = new BranchRequest();
 }

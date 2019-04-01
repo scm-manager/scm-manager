@@ -20,6 +20,7 @@ import sonia.scm.repository.Person;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.api.MergeCommandResult;
 import sonia.scm.repository.api.MergeDryRunCommandResult;
+import sonia.scm.repository.util.WorkingCopy;
 import sonia.scm.user.User;
 
 import java.io.IOException;
@@ -46,10 +47,8 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
 
   @Override
   public MergeCommandResult merge(MergeCommandRequest request) {
-    RepositoryPermissions.push(context.getRepository().getId()).check();
-
-    try (WorkingCopy workingCopy = workdirFactory.createWorkingCopy(context)) {
-      Repository repository = workingCopy.get();
+    try (WorkingCopy<Repository> workingCopy = workdirFactory.createWorkingCopy(context)) {
+      Repository repository = workingCopy.getWorkingRepository();
       logger.debug("cloned repository to folder {}", repository.getWorkTree());
       return new MergeWorker(repository, request).merge();
     } catch (IOException e) {
@@ -186,7 +185,8 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
       try {
         clone.push().call();
       } catch (GitAPIException e) {
-        throw new InternalRepositoryException(context.getRepository(), "could not push merged branch " + target + " to origin", e);
+        throw new IntegrateChangesFromWorkdirException(repository,
+          "could not push merged branch " + target + " into central repository", e);
       }
       logger.debug("pushed merged branch {}", target);
     }
