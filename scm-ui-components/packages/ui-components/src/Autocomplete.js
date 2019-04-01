@@ -1,6 +1,6 @@
 // @flow
 import React from "react";
-import { AsyncCreatable } from "react-select";
+import { AsyncCreatable, Async } from "react-select";
 import type { AutocompleteObject, SelectValue } from "@scm-manager/ui-types";
 import LabelWithHelpIcon from "./forms/LabelWithHelpIcon";
 
@@ -13,7 +13,8 @@ type Props = {
   value?: SelectValue,
   placeholder: string,
   loadingMessage: string,
-  noOptionsMessage: string
+  noOptionsMessage: string,
+  creatable?: boolean
 };
 
 
@@ -42,27 +43,40 @@ class Autocomplete extends React.Component<Props, State> {
   };
 
   render() {
-    const { label, helpText, value, placeholder, loadingMessage, noOptionsMessage, loadSuggestions } = this.props;
+    const { label, helpText, value, placeholder, loadingMessage, noOptionsMessage, loadSuggestions, creatable } = this.props;
     return (
       <div className="field">
         <LabelWithHelpIcon label={label} helpText={helpText} />
         <div className="control">
-          <AsyncCreatable
-            cacheOptions
-            loadOptions={loadSuggestions}
-            onChange={this.handleInputChange}
-            value={value}
-            placeholder={placeholder}
-            loadingMessage={() => loadingMessage}
-            noOptionsMessage={() => noOptionsMessage}
-            isValidNewOption={this.isValidNewOption}
-            onCreateOption={value => {
-              this.handleInputChange({
-                label: value,
-                value: { id: value, displayName: value }
-              });
-            }}
-          />
+          {creatable?
+            <AsyncCreatable
+              cacheOptions
+              loadOptions={loadSuggestions}
+              onChange={this.handleInputChange}
+              value={value}
+              placeholder={placeholder}
+              loadingMessage={() => loadingMessage}
+              noOptionsMessage={() => noOptionsMessage}
+              isValidNewOption={this.isValidNewOption}
+              onCreateOption={value => {
+                this.handleInputChange({
+                  label: value,
+                  value: { id: value, displayName: value }
+                });
+              }}
+            />
+          :
+            <Async
+              cacheOptions
+              loadOptions={loadSuggestions}
+              onChange={this.handleInputChange}
+              value={value}
+              placeholder={placeholder}
+              loadingMessage={() => loadingMessage}
+              noOptionsMessage={() => noOptionsMessage}
+            />
+
+          }
         </div>
       </div>
     );
