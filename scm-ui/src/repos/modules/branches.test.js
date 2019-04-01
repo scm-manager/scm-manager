@@ -161,11 +161,6 @@ describe("branches", () => {
       const newState = reducer({}, fetchBranchSuccess(branch3));
       expect(newState["branch3"]).toBe(branch3);
     });
-
-    it("should update state according to FETCH_BRANCH_SUCCESS action", () => {
-      const newState = reducer({}, fetchBranch(URL + "/branch1", "branch1"));
-      expect(newState["branch1"]).toBe(branch1);
-    });
   });
 
   describe("branch selectors", () => {

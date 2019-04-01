@@ -5,7 +5,12 @@ import {
   SUCCESS_SUFFIX
 } from "../../modules/types";
 import { apiClient } from "@scm-manager/ui-components";
-import type { Action, Branch, Repository } from "@scm-manager/ui-types";
+import type {
+  Action,
+  Branch,
+  Changeset,
+  Repository
+} from "@scm-manager/ui-types";
 import { isPending } from "../../modules/pending";
 import { getFailure } from "../../modules/failure";
 
@@ -22,7 +27,9 @@ export const FETCH_BRANCH_FAILURE = `${FETCH_BRANCH}_${FAILURE_SUFFIX}`;
 // Fetching branches
 
 export function fetchBranchByName(link: string, name: string) {
-  const branchUrl = link.endsWith("/") ? link + encodeURIComponent(name) : link + "/" + encodeURIComponent(name);
+  const branchUrl = link.endsWith("/")
+    ? link + encodeURIComponent(name)
+    : link + "/" + encodeURIComponent(name);
   return fetchBranch(branchUrl, name);
 }
 
@@ -202,4 +209,16 @@ export function getFetchBranchesFailure(state: Object, repository: Repository) {
 function createKey(repository: Repository): string {
   const { namespace, name } = repository;
   return `${namespace}/${name}`;
+}
+
+export function createChangesetLink(repository: Repository, branch: Branch) {
+  return `/repo/${repository.namespace}/${
+    repository.name
+  }/branch/${encodeURIComponent(branch.name)}/changesets/`;
+}
+
+export function createSourcesLink(repository: Repository, branch: Branch) {
+  return `/repo/${repository.namespace}/${
+    repository.name
+  }/sources/${encodeURIComponent(branch.name)}/`;
 }
