@@ -72,7 +72,6 @@ const mapStateToProps = (state, ownProps) => {
   const { repository } = ownProps;
   const branchName = decodeURIComponent(ownProps.match.params.branch);
   const branch = getBranchByName(state, branchName);
-  console.log(branchName + " Branch:",branch);
   const loading = isFetchBranchPending(state, branchName);
   const error = getFetchBranchFailure(state, branchName);
   return {

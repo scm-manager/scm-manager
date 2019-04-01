@@ -19,19 +19,19 @@ class BranchDetailTable extends React.Component<Props> {
       <table className="table">
         <tbody>
           <tr>
-            <td className="has-text-weight-semibold">{t("branch.name")}</td>
+            <th>{t("branch.name")}</th>
             <td>
               {branch.name} {this.renderDefaultBranch()}
             </td>
           </tr>
           <tr>
-            <td className="has-text-weight-semibold">
+            <th>
               {t("branch.repository")}
-            </td>
+            </th>
             <td>{repository.name}</td>
           </tr>
           <tr>
-            <td className="has-text-weight-semibold">{t("branch.actions")}</td>
+            <th>{t("branch.actions")}</th>
             <td>
               <BranchButtonGroup repository={repository} branch={branch} />
             </td>

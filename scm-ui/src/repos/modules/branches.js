@@ -22,7 +22,7 @@ export const FETCH_BRANCH_FAILURE = `${FETCH_BRANCH}_${FAILURE_SUFFIX}`;
 // Fetching branches
 
 export function fetchBranchByName(link: string, name: string) {
-  const branchUrl = link.endsWith("/") ? link + name : link + "/" + name;
+  const branchUrl = link.endsWith("/") ? link + encodeURIComponent(name) : link + "/" + encodeURIComponent(name);
   return fetchBranch(branchUrl, name);
 }
 
@@ -68,7 +68,6 @@ export function fetchBranch(link: string, name: string) {
 }
 
 export function getBranchByName(state: Object, name: string) {
-  console.log("State:", state);
   if (state.branches) {
     return state.branches[name];
   }
