@@ -58,6 +58,8 @@ import sonia.scm.util.Util;
 import java.io.File;
 
 import java.nio.charset.Charset;
+import java.util.Map;
+import java.util.function.Consumer;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -104,6 +106,19 @@ public final class HgUtil
   public static Repository open(HgRepositoryHandler handler,
     HgHookManager hookManager, File directory, String encoding, boolean pending)
   {
+    return open(
+      handler,
+      directory,
+      encoding,
+      pending,
+      environment -> HgEnvironment.prepareEnvironment(environment, handler, hookManager)
+    );
+  }
+
+  public static Repository open(HgRepositoryHandler handler,
+                                File directory, String encoding, boolean pending,
+                                Consumer<Map<String, String>> prepareEnvironment)
+  {
     String enc = encoding;
 
     if (Strings.isNullOrEmpty(enc))
@@ -113,8 +128,7 @@ public final class HgUtil
 
     RepositoryConfiguration repoConfiguration = RepositoryConfiguration.DEFAULT;
 
-    HgEnvironment.prepareEnvironment(repoConfiguration.getEnvironment(),
-      handler, hookManager);
+    prepareEnvironment.accept(repoConfiguration.getEnvironment());
 
     repoConfiguration.addExtension(HgFileviewExtension.class);
     repoConfiguration.setEnablePendingChangesets(pending);

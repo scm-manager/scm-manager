@@ -49,6 +49,8 @@ import sonia.scm.web.HgUtil;
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
+import java.util.function.BiConsumer;
 
 /**
  *
@@ -66,15 +68,14 @@ public class HgCommandContext implements Closeable
    * Constructs ...
    *
    *
-   *
    * @param hookManager
    * @param handler
    * @param repository
    * @param directory
    */
   public HgCommandContext(HgHookManager hookManager,
-    HgRepositoryHandler handler, sonia.scm.repository.Repository repository,
-    File directory)
+                          HgRepositoryHandler handler, sonia.scm.repository.Repository repository,
+                          File directory)
   {
     this(hookManager, handler, repository, directory,
       handler.getHgContext().isPending());
@@ -84,26 +85,26 @@ public class HgCommandContext implements Closeable
    * Constructs ...
    *
    *
-   *
    * @param hookManager
-   * @param hanlder
+   * @param handler
    * @param repository
    * @param directory
    * @param pending
    */
   public HgCommandContext(HgHookManager hookManager,
-    HgRepositoryHandler hanlder, sonia.scm.repository.Repository repository,
-    File directory, boolean pending)
+                          HgRepositoryHandler handler, sonia.scm.repository.Repository repository,
+                          File directory, boolean pending)
   {
     this.hookManager = hookManager;
-    this.hanlder = hanlder;
+    this.handler = handler;
     this.directory = directory;
+    this.scmRepository = repository;
     this.encoding = repository.getProperty(PROPERTY_ENCODING);
     this.pending = pending;
 
     if (Strings.isNullOrEmpty(encoding))
     {
-      encoding = hanlder.getConfig().getEncoding();
+      encoding = handler.getConfig().getEncoding();
     }
   }
 
@@ -134,11 +135,16 @@ public class HgCommandContext implements Closeable
   {
     if (repository == null)
     {
-      repository = HgUtil.open(hanlder, hookManager, directory, encoding,
-        pending);
+      repository = HgUtil.open(handler, hookManager, directory, encoding, pending);
     }
 
     return repository;
+  }
+
+  public Repository openWithSpecialEnvironment(BiConsumer<sonia.scm.repository.Repository, Map<String, String>> prepareEnvironment)
+  {
+    return HgUtil.open(handler, directory, encoding,
+      pending, environment -> prepareEnvironment.accept(scmRepository, environment));
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -151,7 +157,11 @@ public class HgCommandContext implements Closeable
    */
   public HgConfig getConfig()
   {
-    return hanlder.getConfig();
+    return handler.getConfig();
+  }
+
+  public sonia.scm.repository.Repository getScmRepository() {
+    return scmRepository;
   }
 
   //~--- fields ---------------------------------------------------------------
@@ -163,7 +173,7 @@ public class HgCommandContext implements Closeable
   private String encoding;
 
   /** Field description */
-  private HgRepositoryHandler hanlder;
+  private HgRepositoryHandler handler;
 
   /** Field description */
   private HgHookManager hookManager;
@@ -173,4 +183,6 @@ public class HgCommandContext implements Closeable
 
   /** Field description */
   private Repository repository;
+
+  private final sonia.scm.repository.Repository scmRepository;
 }
