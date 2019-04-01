@@ -10,7 +10,7 @@ type Configuration = {
   gcExpression?: string,
   nonFastForwardDisallowed: boolean,
   _links: Links
-}
+};
 
 type Props = {
   initialConfiguration: Configuration,
@@ -19,25 +19,24 @@ type Props = {
   onConfigurationChange: (Configuration, boolean) => void,
 
   // context props
-  t: (string) => string
-}
+  t: string => string
+};
 
-type State = Configuration & {
-
-}
+type State = Configuration & {};
 
 class GitConfigurationForm extends React.Component<Props, State> {
-
   constructor(props: Props) {
     super(props);
     this.state = { ...props.initialConfiguration };
   }
 
-
   handleChange = (value: any, name: string) => {
-    this.setState({
-      [name]: value
-    }, () => this.props.onConfigurationChange(this.state, true));
+    this.setState(
+      {
+        [name]: value
+      },
+      () => this.props.onConfigurationChange(this.state, true)
+    );
   };
 
   render() {
@@ -46,24 +45,25 @@ class GitConfigurationForm extends React.Component<Props, State> {
 
     return (
       <>
-        <InputField name="gcExpression"
-                    label={t("scm-git-plugin.config.gcExpression")}
-                    helpText={t("scm-git-plugin.config.gcExpressionHelpText")}
-                    value={gcExpression}
-                    onChange={this.handleChange}
-                    disabled={readOnly}
+        <InputField
+          name="gcExpression"
+          label={t("scm-git-plugin.config.gcExpression")}
+          helpText={t("scm-git-plugin.config.gcExpressionHelpText")}
+          value={gcExpression}
+          onChange={this.handleChange}
+          disabled={readOnly}
         />
-        <Checkbox name="nonFastForwardDisallowed"
-                  label={t("scm-git-plugin.config.nonFastForwardDisallowed")}
-                  helpText={t("scm-git-plugin.config.nonFastForwardDisallowedHelpText")}
-                  checked={nonFastForwardDisallowed}
-                  onChange={this.handleChange}
-                  disabled={readOnly}
+        <Checkbox
+          name="nonFastForwardDisallowed"
+          label={t("scm-git-plugin.config.nonFastForwardDisallowed")}
+          helpText={t("scm-git-plugin.config.nonFastForwardDisallowedHelpText")}
+          checked={nonFastForwardDisallowed}
+          onChange={this.handleChange}
+          disabled={readOnly}
         />
       </>
     );
   }
-
 }
 
 export default translate("plugins")(GitConfigurationForm);

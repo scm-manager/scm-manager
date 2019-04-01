@@ -1,9 +1,11 @@
 {
   "scm-git-plugin": {
     "information": {
-      "clone" : "Repository klonen",
-      "create" : "Neues Repository erstellen",
-      "replace" : "Ein bestehendes Repository aktualisieren",
+      "clone": "Repository klonen",
+      "create": "Neues Repository erstellen",
+      "replace": "Ein bestehendes Repository aktualisieren",
+      "fetch": "Remote-Änderungen herunterladen",
+      "checkout": "Branch wechseln",
       "merge": {
         "heading": "Merge des Source Branch in den Target Branch",
         "checkout": "1. Sicherstellen, dass der Workspace aufgeräumt ist und der Target Branch ausgecheckt wurde.",
@@ -37,7 +39,7 @@
       "success": "Der standard Branch wurde geändert!"
     }
   },
-  "permissions" : {
+  "permissions": {
     "configuration": {
       "read,write": {
         "git": {

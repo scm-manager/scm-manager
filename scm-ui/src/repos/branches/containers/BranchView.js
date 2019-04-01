@@ -82,8 +82,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchBranchByName: (repository: string, branchName: string) => {
-      dispatch(fetchBranchByName(repository, branchName));
+    fetchBranchByName: (repository: Repository, branchName: string) => {
+      dispatch(fetchBranchByName(repository._links.branches.href, branchName));
     }
   };
 };
