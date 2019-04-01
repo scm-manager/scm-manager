@@ -14,12 +14,15 @@ type Props = {
 class BranchDetailTable extends React.Component<Props> {
   render() {
     const { repository, branch, t } = this.props;
+
     return (
       <table className="table">
         <tbody>
           <tr>
             <td className="has-text-weight-semibold">{t("branch.name")}</td>
-            <td>branch.name</td>
+            <td>
+              {branch.name} {this.renderDefaultBranch()}
+            </td>
           </tr>
           <tr>
             <td className="has-text-weight-semibold">
@@ -28,14 +31,24 @@ class BranchDetailTable extends React.Component<Props> {
             <td>{repository.name}</td>
           </tr>
           <tr>
-            <td className="has-text-weight-semibold">
-              {t("branch.actions")}
+            <td className="has-text-weight-semibold">{t("branch.actions")}</td>
+            <td>
+              <BranchButtonGroup repository={repository} branch={branch} />
             </td>
-            <td><BranchButtonGroup repository={repository} branch={branch} /></td>
           </tr>
         </tbody>
       </table>
     );
+  }
+
+  renderDefaultBranch() {
+    const { branch } = this.props;
+
+    let defaultLabel = null;
+    if (branch.defaultBranch) {
+      defaultLabel = <span className="tag is-dark">Default</span>;
+    }
+    return defaultLabel;
   }
 }
 

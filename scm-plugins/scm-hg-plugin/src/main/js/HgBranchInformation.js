@@ -8,23 +8,23 @@ type Props = {
   t: string => string
 };
 
-class GitBranchInformation extends React.Component<Props> {
+class HgBranchInformation extends React.Component<Props> {
   render() {
     const { branch, t } = this.props;
 
     return (
       <div>
-        <h4>{t("scm-git-plugin.information.fetch")}</h4>
+        <h4>{t("scm-hg-plugin.information.fetch")}</h4>
         <pre>
-          <code>git fetch</code>
+          <code>hg pull</code>
         </pre>
-        <h4>{t("scm-git-plugin.information.checkout")}</h4>
+        <h4>{t("scm-hg-plugin.information.checkout")}</h4>
         <pre>
-          <code>git checkout {branch.name}</code>
+          <code>hg update {branch.name}</code>
         </pre>
       </div>
     );
   }
 }
 
-export default translate("plugins")(GitBranchInformation);
+export default translate("plugins")(HgBranchInformation);
