@@ -27,10 +27,11 @@ export const FETCH_BRANCH_FAILURE = `${FETCH_BRANCH}_${FAILURE_SUFFIX}`;
 // Fetching branches
 
 export function fetchBranchByName(link: string, name: string) {
-  const branchUrl = link.endsWith("/")
-    ? link + encodeURIComponent(name)
-    : link + "/" + encodeURIComponent(name);
-  return fetchBranch(branchUrl, name);
+  let endsWith = "";
+  if(!link.endsWith("/")) {
+    endsWith = "/";
+  }
+  return fetchBranch(link + endsWith + encodeURIComponent(name), name);
 }
 
 export function fetchBranchPending(name: string): Action {
