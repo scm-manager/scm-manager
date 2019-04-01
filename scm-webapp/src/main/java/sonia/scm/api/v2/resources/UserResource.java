@@ -6,6 +6,7 @@ import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import org.apache.shiro.authc.credential.PasswordService;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
+import sonia.scm.user.UserPermissions;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;

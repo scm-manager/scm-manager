@@ -212,13 +212,6 @@ public class DefaultUserManager extends AbstractUserManager
     fresh.copyProperties(user);
   }
 
-  @Override
-  public Collection<User> autocomplete(String filter) {
-    UserPermissions.autocomplete().check();
-    SearchRequest searchRequest = new SearchRequest(filter, true, DEFAULT_LIMIT);
-    return SearchUtil.search(searchRequest, userDAO.getAll(), user -> matches(searchRequest,user)?user:null);
-  }
-
   /**
    * Method description
    *
@@ -236,7 +229,7 @@ public class DefaultUserManager extends AbstractUserManager
     }
 
     final PermissionActionCheck<User> check = UserPermissions.read();
-    return SearchUtil.search(searchRequest, userDAO.getAll(), new TransformFilter<User>() {
+    return SearchUtil.search(searchRequest, userDAO.getAll(), new TransformFilter<User, User>() {
       @Override
       public User accept(User user)
       {
@@ -413,35 +406,6 @@ public class DefaultUserManager extends AbstractUserManager
     }
     user.setPassword(newPassword);
     this.modify(user);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param unmarshaller
-   * @param path
-   */
-  private void createDefaultAccount(Unmarshaller unmarshaller, String path)
-  {
-    InputStream input = DefaultUserManager.class.getResourceAsStream(path);
-
-    try
-    {
-      User user = (User) unmarshaller.unmarshal(input);
-
-      user.setType(userDAO.getType());
-      user.setCreationDate(System.currentTimeMillis());
-      userDAO.add(user);
-    }
-    catch (Exception ex)
-    {
-      logger.error("could not create account", ex);
-    }
-    finally
-    {
-      IOUtil.close(input);
-    }
   }
 
   //~--- fields ---------------------------------------------------------------
