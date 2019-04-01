@@ -2,17 +2,29 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import type { Branch } from "@scm-manager/ui-types";
+import injectSheet from "react-jss";
+import classNames from "classnames";
 
 type Props = {
   baseUrl: string,
-  branch: Branch
+  branch: Branch,
+  classes: any
 };
 
-export default class BranchRow extends React.Component<Props> {
+const styles = {
+  tag: {
+    marginLeft: "0.75rem",
+    verticalAlign: "inherit"
+  }
+};
+
+class BranchRow extends React.Component<Props> {
   renderLink(to: string, label: string, defaultBranch: boolean) {
+    const { classes } = this.props;
+
     let showLabel = null;
     if (defaultBranch) {
-      showLabel = <span className="tag is-dark">Default</span>;
+      showLabel = <span className={classNames("tag is-dark", classes.tag)}>Default</span>;
     }
     return (
       <Link to={to}>
@@ -31,3 +43,5 @@ export default class BranchRow extends React.Component<Props> {
     );
   }
 }
+
+export default injectSheet(styles)(BranchRow);

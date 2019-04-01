@@ -2,13 +2,23 @@
 import React from "react";
 import type { Repository, Branch } from "@scm-manager/ui-types";
 import { translate } from "react-i18next";
+import injectSheet from "react-jss";
+import classNames from "classnames";
 import BranchButtonGroup from "./BranchButtonGroup";
 
 type Props = {
   repository: Repository,
   branch: Branch,
   // context props
-  t: string => string
+  t: string => string,
+  classes: any
+};
+
+const styles = {
+  tag: {
+    marginLeft: "0.75rem",
+    verticalAlign: "inherit"
+  }
 };
 
 class BranchDetailTable extends React.Component<Props> {
@@ -25,9 +35,7 @@ class BranchDetailTable extends React.Component<Props> {
             </td>
           </tr>
           <tr>
-            <th>
-              {t("branch.repository")}
-            </th>
+            <th>{t("branch.repository")}</th>
             <td>{repository.name}</td>
           </tr>
           <tr>
@@ -42,14 +50,16 @@ class BranchDetailTable extends React.Component<Props> {
   }
 
   renderDefaultBranch() {
-    const { branch } = this.props;
+    const { branch, classes } = this.props;
 
     let defaultLabel = null;
     if (branch.defaultBranch) {
-      defaultLabel = <span className="tag is-dark">Default</span>;
+      defaultLabel = (
+        <span className={classNames("tag is-dark", classes.tag)}>Default</span>
+      );
     }
     return defaultLabel;
   }
 }
 
-export default translate("repos")(BranchDetailTable);
+export default injectSheet(styles)(translate("repos")(BranchDetailTable));

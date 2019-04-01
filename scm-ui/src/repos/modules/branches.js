@@ -8,7 +8,6 @@ import { apiClient } from "@scm-manager/ui-components";
 import type {
   Action,
   Branch,
-  Changeset,
   Repository
 } from "@scm-manager/ui-types";
 import { isPending } from "../../modules/pending";
