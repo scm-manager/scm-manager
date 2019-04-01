@@ -1,6 +1,7 @@
 package sonia.scm.repository;
 
 import org.junit.Test;
+import sonia.scm.repository.util.CloseableWrapper;
 
 import java.util.function.Consumer;
 
@@ -11,19 +12,20 @@ public class CloseableWrapperTest {
 
   @Test
   public void shouldExecuteGivenMethodAtClose() {
-    Consumer<String> wrapped = new Consumer<String>() {
+    Consumer<AutoCloseable> wrapped = new Consumer<AutoCloseable>() {
       // no this cannot be replaced with a lambda because otherwise we could not use Mockito#spy
       @Override
-      public void accept(String s) {
+      public void accept(AutoCloseable s) {
       }
     };
 
-    Consumer<String> closer = spy(wrapped);
+    Consumer<AutoCloseable> closer = spy(wrapped);
 
-    try (CloseableWrapper<String> wrapper = new CloseableWrapper<>("test", closer)) {
+    AutoCloseable autoCloseable = () -> {};
+    try (CloseableWrapper<AutoCloseable> wrapper = new CloseableWrapper<>(autoCloseable, closer)) {
       // nothing to do here
     }
 
-    verify(closer).accept("test");
+    verify(closer).accept(autoCloseable);
   }
 }

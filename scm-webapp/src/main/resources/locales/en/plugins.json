@@ -147,6 +147,10 @@
     "3zR9vPNIE1": {
       "displayName": "Illegal input",
       "description": "The values could not be validated. Please correct your input and try again."
+    },
+    "CHRM7IQzo1": {
+      "displayName": "Change failed",
+      "description": "The change failed. Please contact your administrator for further assistance."
     }
   },
   "namespaceStrategies": {

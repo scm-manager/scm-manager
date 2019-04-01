@@ -42,6 +42,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,8 +55,8 @@ import sonia.scm.repository.api.HgHookMessage;
 import sonia.scm.repository.api.HgHookMessage.Severity;
 import sonia.scm.repository.spi.HgHookContextProvider;
 import sonia.scm.repository.spi.HookEventFacade;
+import sonia.scm.security.BearerToken;
 import sonia.scm.security.CipherUtil;
-import sonia.scm.security.Tokens;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 
@@ -93,7 +94,7 @@ public class HgHookCallbackServlet extends HttpServlet
   private static final String PARAM_CHALLENGE = "challenge";
 
   /** Field description */
-  private static final String PARAM_CREDENTIALS = "credentials";
+  private static final String PARAM_TOKEN = "token";
 
   /** Field description */
   private static final String PARAM_NODE = "node";
@@ -179,11 +180,11 @@ public class HgHookCallbackServlet extends HttpServlet
 
         if (Util.isNotEmpty(node))
         {
-          String credentials = request.getParameter(PARAM_CREDENTIALS);
+          String token = request.getParameter(PARAM_TOKEN);
 
-          if (Util.isNotEmpty(credentials))
+          if (Util.isNotEmpty(token))
           {
-            authenticate(request, credentials);
+            authenticate(token);
           }
 
           hookCallback(response, type, repositoryId, challenge, node);
@@ -209,40 +210,31 @@ public class HgHookCallbackServlet extends HttpServlet
     }
   }
 
-  private void authenticate(HttpServletRequest request, String credentials)
+  private void authenticate(String token)
   {
     try
     {
-      credentials = CipherUtil.getInstance().decode(credentials);
+      token = CipherUtil.getInstance().decode(token);
 
-      if (Util.isNotEmpty(credentials))
+      if (Util.isNotEmpty(token))
       {
-        int index = credentials.indexOf(':');
+        Subject subject = SecurityUtils.getSubject();
 
-        if (index > 0 && index < credentials.length())
-        {
-          Subject subject = SecurityUtils.getSubject();
+        AuthenticationToken accessToken = createToken(token);
 
-          //J-
-          subject.login(
-            Tokens.createAuthenticationToken(
-              request, 
-              credentials.substring(0, index), 
-              credentials.substring(index + 1)
-            )
-          );
-          //J+
-        }
-        else
-        {
-          logger.error("could not find delimiter");
-        }
+        //J-
+        subject.login(accessToken);
       }
     }
     catch (Exception ex)
     {
       logger.error("could not authenticate user", ex);
     }
+  }
+
+  private AuthenticationToken createToken(String tokenString)
+  {
+    return BearerToken.valueOf(tokenString);
   }
 
   private void fireHook(HttpServletResponse response, String repositoryId, String node, RepositoryHookType type)

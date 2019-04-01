@@ -41,27 +41,8 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
 
   @Rule
   public ShiroRule shiro = new ShiroRule();
-
-  private ScmTransportProtocol scmTransportProtocol;
-
-  @Before
-  public void bindScmProtocol() {
-    HookContextFactory hookContextFactory = new HookContextFactory(mock(PreProcessorUtil.class));
-    RepositoryManager repositoryManager = mock(RepositoryManager.class);
-    HookEventFacade hookEventFacade = new HookEventFacade(of(repositoryManager), hookContextFactory);
-    GitRepositoryHandler gitRepositoryHandler = mock(GitRepositoryHandler.class);
-    scmTransportProtocol = new ScmTransportProtocol(of(hookEventFacade), of(gitRepositoryHandler));
-
-    Transport.register(scmTransportProtocol);
-
-    when(gitRepositoryHandler.getRepositoryId(any())).thenReturn("1");
-    when(repositoryManager.get("1")).thenReturn(new sonia.scm.repository.Repository());
-  }
-
-  @After
-  public void unregisterScmProtocol() {
-    Transport.unregister(scmTransportProtocol);
-  }
+  @Rule
+  public BindTransportProtocolRule transportProtocolRule = new BindTransportProtocolRule();
 
   @Test
   public void shouldDetectMergeableBranches() {

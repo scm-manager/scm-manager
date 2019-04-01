@@ -34,10 +34,18 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.eclipse.jgit.transport.ScmTransportProtocol;
+import org.eclipse.jgit.transport.Transport;
 import org.junit.After;
+import org.junit.Before;
 import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
 import sonia.scm.repository.GitRepositoryConfig;
+import sonia.scm.repository.PreProcessorUtil;
+import sonia.scm.repository.api.HookContextFactory;
 import sonia.scm.store.InMemoryConfigurationStoreFactory;
+
+import static com.google.inject.util.Providers.of;
+import static org.mockito.Mockito.mock;
 
 /**
  *
@@ -105,4 +113,5 @@ public class AbstractGitCommandTestBase extends ZippedRepositoryTestBase
 
   /** Field description */
   private GitContext context;
+  private ScmTransportProtocol scmTransportProtocol;
 }

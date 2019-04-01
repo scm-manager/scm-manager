@@ -1,9 +1,11 @@
 package sonia.scm.api.v2.resources;
 
+import com.google.common.base.Strings;
 import com.webcohesion.enunciate.metadata.rs.ResponseCode;
+import com.webcohesion.enunciate.metadata.rs.ResponseHeader;
+import com.webcohesion.enunciate.metadata.rs.ResponseHeaders;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
-import sonia.scm.NotFoundException;
 import sonia.scm.PageResult;
 import sonia.scm.repository.Branch;
 import sonia.scm.repository.Branches;
@@ -12,21 +14,27 @@ import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryPermissions;
+import sonia.scm.repository.api.BranchCommandBuilder;
 import sonia.scm.repository.api.CommandNotSupportedException;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.net.URI;
 
+import static sonia.scm.AlreadyExistsException.alreadyExists;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
 
@@ -38,12 +46,15 @@ public class BranchRootResource {
 
   private final BranchChangesetCollectionToDtoMapper branchChangesetCollectionToDtoMapper;
 
+  private final ResourceLinks resourceLinks;
+
   @Inject
-  public BranchRootResource(RepositoryServiceFactory serviceFactory, BranchToBranchDtoMapper branchToDtoMapper, BranchCollectionToDtoMapper branchCollectionToDtoMapper, BranchChangesetCollectionToDtoMapper changesetCollectionToDtoMapper) {
+  public BranchRootResource(RepositoryServiceFactory serviceFactory, BranchToBranchDtoMapper branchToDtoMapper, BranchCollectionToDtoMapper branchCollectionToDtoMapper, BranchChangesetCollectionToDtoMapper changesetCollectionToDtoMapper, ResourceLinks resourceLinks) {
     this.serviceFactory = serviceFactory;
     this.branchToDtoMapper = branchToDtoMapper;
     this.branchCollectionToDtoMapper = branchCollectionToDtoMapper;
     this.branchChangesetCollectionToDtoMapper = changesetCollectionToDtoMapper;
+    this.resourceLinks = resourceLinks;
   }
 
   /**
@@ -100,12 +111,7 @@ public class BranchRootResource {
                           @DefaultValue("0") @QueryParam("page") int page,
                           @DefaultValue("10") @QueryParam("pageSize") int pageSize) throws IOException {
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
-      boolean branchExists = repositoryService.getBranchesCommand()
-        .getBranches()
-        .getBranches()
-        .stream()
-        .anyMatch(branch -> branchName.equals(branch.getName()));
-      if (!branchExists){
+      if (!branchExists(branchName, repositoryService)){
         throw notFound(entity(Branch.class, branchName).in(Repository.class, namespace + "/" + name));
       }
       Repository repository = repositoryService.getRepository();
@@ -126,6 +132,58 @@ public class BranchRootResource {
   }
 
   /**
+   * Creates a new branch.
+   *
+   * @param namespace     the namespace of the repository
+   * @param name          the name of the repository
+   * @param branchRequest the request giving the name of the new branch and an optional parent branch
+   * @return A response with the link to the new branch (if created successfully).
+   */
+  @POST
+  @Path("")
+  @Consumes(VndMediaType.BRANCH_REQUEST)
+  @StatusCodes({
+    @ResponseCode(code = 201, condition = "create success"),
+    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
+    @ResponseCode(code = 403, condition = "not authorized, the current user does not have the \"push\" privilege"),
+    @ResponseCode(code = 409, condition = "conflict, a user with this name already exists"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
+  @TypeHint(TypeHint.NO_CONTENT.class)
+  @ResponseHeaders(@ResponseHeader(name = "Location", description = "uri to the created branch"))
+  public Response create(@PathParam("namespace") String namespace,
+                         @PathParam("name") String name,
+                         @Valid BranchRequestDto branchRequest) throws IOException {
+    NamespaceAndName namespaceAndName = new NamespaceAndName(namespace, name);
+    String branchName = branchRequest.getName();
+    String parentName = branchRequest.getParent();
+    try (RepositoryService repositoryService = serviceFactory.create(namespaceAndName)) {
+      if (branchExists(branchName, repositoryService)) {
+        throw alreadyExists(entity(Branch.class, branchName).in(Repository.class, namespace + "/" + name));
+      }
+      Repository repository = repositoryService.getRepository();
+      RepositoryPermissions.push(repository).check();
+      BranchCommandBuilder branchCommand = repositoryService.getBranchCommand();
+      if (!Strings.isNullOrEmpty(parentName)) {
+        if (!branchExists(parentName, repositoryService)) {
+          throw notFound(entity(Branch.class, parentName).in(Repository.class, namespace + "/" + name));
+        }
+        branchCommand.from(parentName);
+      }
+      Branch newBranch = branchCommand.branch(branchName);
+      return Response.created(URI.create(resourceLinks.branch().self(namespaceAndName, newBranch.getName()))).build();
+    }
+  }
+
+  private boolean branchExists(String branchName, RepositoryService repositoryService) throws IOException {
+    return repositoryService.getBranchesCommand()
+      .getBranches()
+      .getBranches()
+      .stream()
+      .anyMatch(branch -> branchName.equals(branch.getName()));
+  }
+
+  /**
    * Returns the branches for a repository.
    *
    * <strong>Note:</strong> This method requires "repository" privilege.
@@ -141,14 +199,14 @@ public class BranchRootResource {
     @ResponseCode(code = 200, condition = "success"),
     @ResponseCode(code = 400, condition = "branches not supported for given repository"),
     @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
-    @ResponseCode(code = 403, condition = "not authorized, the current user does not have the \"group\" privilege"),
+    @ResponseCode(code = 403, condition = "not authorized, the current user does not have the \"read repository\" privilege"),
     @ResponseCode(code = 404, condition = "not found, no repository found for the given namespace and name"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
   public Response getAll(@PathParam("namespace") String namespace, @PathParam("name") String name) throws IOException {
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
       Branches branches = repositoryService.getBranchesCommand().getBranches();
-      return Response.ok(branchCollectionToDtoMapper.map(namespace, name, branches.getBranches())).build();
+      return Response.ok(branchCollectionToDtoMapper.map(repositoryService.getRepository(), branches.getBranches())).build();
     } catch (CommandNotSupportedException ex) {
       return Response.status(Response.Status.BAD_REQUEST).build();
     }

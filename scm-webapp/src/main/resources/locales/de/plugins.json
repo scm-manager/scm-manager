@@ -147,6 +147,10 @@
     "3zR9vPNIE1": {
       "displayName": "Ungültige Eingabe",
       "description": "Die eingegebenen Daten konnten nicht validiert werden. Bitte korrigieren Sie die Eingaben und senden Sie sie erneut."
+    },
+    "CHRM7IQzo1": {
+      "displayName": "Änderung fehlgeschlagen",
+      "description": "Die Änderung ist fehlgeschlagen. Bitte wenden Sie sich an ihren Administrator für weitere Hinweise."
     }
   },
   "namespaceStrategies": {

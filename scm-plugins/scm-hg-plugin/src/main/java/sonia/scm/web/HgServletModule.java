@@ -46,6 +46,8 @@ import sonia.scm.plugin.Extension;
 import sonia.scm.repository.HgContext;
 import sonia.scm.repository.HgContextProvider;
 import sonia.scm.repository.HgHookManager;
+import sonia.scm.repository.spi.HgWorkdirFactory;
+import sonia.scm.repository.spi.SimpleHgWorkdirFactory;
 
 /**
  *
@@ -81,5 +83,7 @@ public class HgServletModule extends ServletModule
 
     // bind servlets
     serve(MAPPING_HOOK).with(HgHookCallbackServlet.class);
+
+    bind(HgWorkdirFactory.class).to(SimpleHgWorkdirFactory.class);
   }
 }

@@ -107,6 +107,17 @@ public abstract class RepositoryServiceProvider implements Closeable
    *
    * @return
    */
+  public BranchCommand getBranchCommand()
+  {
+    throw new CommandNotSupportedException(Command.BRANCH);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   public BrowseCommand getBrowseCommand()
   {
     throw new CommandNotSupportedException(Command.BROWSE);
