@@ -6,7 +6,14 @@ import reducer, {
   FETCH_BRANCHES_FAILURE,
   FETCH_BRANCHES_PENDING,
   FETCH_BRANCHES_SUCCESS,
+  FETCH_BRANCH,
+  FETCH_BRANCH_PENDING,
+  FETCH_BRANCH_SUCCESS,
+  FETCH_BRANCH_FAILURE,
   fetchBranches,
+  fetchBranchByName,
+  fetchBranchSuccess,
+  fetchBranch,
   getBranch,
   getBranches,
   getFetchBranchesFailure,
@@ -88,6 +95,32 @@ describe("branches", () => {
         expect(store.getActions()[1].type).toEqual(FETCH_BRANCHES_FAILURE);
       });
     });
+
+    it("should successfully fetch single branch", () => {
+      fetchMock.getOnce(URL + "/branch1", branch1);
+
+      const store = mockStore({});
+      return store.dispatch(fetchBranchByName(URL, "branch1")).then(() => {
+        const actions = store.getActions();
+        expect(actions[0].type).toEqual(FETCH_BRANCH_PENDING);
+        expect(actions[1].type).toEqual(FETCH_BRANCH_SUCCESS);
+        expect(actions[1].payload).toBeDefined();
+      });
+    });
+
+    it("should fail fetching single branch on HTTP 500", () => {
+      fetchMock.getOnce(URL + "/branch2", {
+        status: 500
+      });
+
+      const store = mockStore({});
+      return store.dispatch(fetchBranchByName(URL, "branch2")).then(() => {
+        const actions = store.getActions();
+        expect(actions[0].type).toEqual(FETCH_BRANCH_PENDING);
+        expect(actions[1].type).toEqual(FETCH_BRANCH_FAILURE);
+        expect(actions[1].payload).toBeDefined();
+      });
+    });
   });
 
   describe("branches reducer", () => {
@@ -122,6 +155,16 @@ describe("branches", () => {
       expect(newState[key]).toContain(branch2);
 
       expect(newState["hitchhiker/heartOfGold"]).toContain(branch3);
+    });
+
+    it("should update state according to FETCH_BRANCH_SUCCESS action", () => {
+      const newState = reducer({}, fetchBranchSuccess(branch3));
+      expect(newState["branch3"]).toBe(branch3);
+    });
+
+    it("should update state according to FETCH_BRANCH_SUCCESS action", () => {
+      const newState = reducer({}, fetchBranch(URL + "/branch1", "branch1"));
+      expect(newState["branch1"]).toBe(branch1);
     });
   });
 

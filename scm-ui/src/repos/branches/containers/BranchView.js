@@ -8,6 +8,7 @@ import { translate } from "react-i18next";
 import { withRouter } from "react-router-dom";
 import {
   fetchBranchByName,
+  getBranchByName,
   getFetchBranchFailure,
   isFetchBranchPending
 } from "../../modules/branches";
@@ -70,11 +71,14 @@ class BranchView extends React.Component<Props> {
 const mapStateToProps = (state, ownProps) => {
   const { repository } = ownProps;
   const branchName = decodeURIComponent(ownProps.match.params.branch);
-  const loading = isFetchBranchPending(state, repository, branchName);
-  const error = getFetchBranchFailure(state, repository, branchName);
+  const branch = getBranchByName(state, branchName);
+  console.log(branchName + " Branch:",branch);
+  const loading = isFetchBranchPending(state, branchName);
+  const error = getFetchBranchFailure(state, branchName);
   return {
     repository,
     branchName,
+    branch,
     loading,
     error
   };

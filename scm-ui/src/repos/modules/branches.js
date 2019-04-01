@@ -34,6 +34,14 @@ export function fetchBranchPending(name: string): Action {
   };
 }
 
+export function fetchBranchSuccess(branch: Branch): Action {
+  return {
+    type: FETCH_BRANCH_SUCCESS,
+    payload: branch,
+    itemId: branch.name
+  };
+}
+
 export function fetchBranchFailure(name: string, error: Error): Action {
   return {
     type: FETCH_BRANCH_FAILURE,
@@ -59,32 +67,19 @@ export function fetchBranch(link: string, name: string) {
   };
 }
 
-export function getFetchBranchFailure(
-  state: Object,
-  repository: string,
-  branchName: string
-) {
-  return getFailure(
-    state,
-    FETCH_BRANCH,
-    repository + "/branches/" + branchName
-  );
+export function getBranchByName(state: Object, name: string) {
+  console.log("State:", state);
+  if (state.branches) {
+    return state.branches[name];
+  }
 }
 
-export function isFetchBranchPending(
-  state: Object,
-  repository: string,
-  branchName: string
-) {
-  return isPending(state, FETCH_BRANCH, repository + "/branches/" + branchName);
+export function isFetchBranchPending(state: Object, name: string) {
+  return isPending(state, FETCH_BRANCH, name);
 }
 
-export function fetchBranchSuccess(branch: Branch): Action {
-  return {
-    type: FETCH_BRANCH_SUCCESS,
-    payload: branch,
-    itemId: branch.name
-  };
+export function getFetchBranchFailure(state: Object, name: string) {
+  return getFailure(state, FETCH_BRANCH, name);
 }
 
 export function fetchBranches(repository: Repository) {
@@ -154,6 +149,12 @@ export default function reducer(
         ...state,
         [key]: extractBranchesFromPayload(payload.data)
       };
+    case FETCH_BRANCH_SUCCESS:
+      return {
+        ...state,
+        [action.payload.name]: action.payload
+      };
+
     default:
       return state;
   }
