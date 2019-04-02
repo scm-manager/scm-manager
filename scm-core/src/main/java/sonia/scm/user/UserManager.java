@@ -76,14 +76,6 @@ public interface UserManager
   }
 
   /**
-   * Returns a {@link java.util.Collection} of filtered objects
-   *
-   * @param filter the searched string
-   * @return filtered object from the store
-   */
-  Collection<User> autocomplete(String filter);
-
-  /**
    * Changes the password of the logged in user.
    * @param oldPassword The current encrypted password of the user.
    * @param newPassword The new encrypted password of the user.

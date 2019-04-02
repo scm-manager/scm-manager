@@ -1,6 +1,5 @@
 package sonia.scm.repository.spi;
 
-import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.ScmTransportProtocol;
 import org.eclipse.jgit.transport.Transport;
@@ -12,6 +11,7 @@ import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.api.HookContextFactory;
+import sonia.scm.repository.util.WorkingCopy;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,13 +44,13 @@ public class SimpleGitWorkdirFactoryTest extends AbstractGitCommandTestBase {
     SimpleGitWorkdirFactory factory = new SimpleGitWorkdirFactory(temporaryFolder.newFolder());
     File masterRepo = createRepositoryDirectory();
 
-    try (WorkingCopy workingCopy = factory.createWorkingCopy(createContext())) {
+    try (WorkingCopy<Repository> workingCopy = factory.createWorkingCopy(createContext())) {
 
-      assertThat(workingCopy.get().getDirectory())
+      assertThat(workingCopy.getDirectory())
         .exists()
         .isNotEqualTo(masterRepo)
         .isDirectory();
-      assertThat(new File(workingCopy.get().getWorkTree(), "a.txt"))
+      assertThat(new File(workingCopy.getWorkingRepository().getWorkTree(), "a.txt"))
         .exists()
         .isFile()
         .hasContent("a\nline for blame");
@@ -58,25 +58,15 @@ public class SimpleGitWorkdirFactoryTest extends AbstractGitCommandTestBase {
   }
 
   @Test
-  public void cloneFromPoolShouldBeClosed() throws IOException {
-    PoolWithSpy factory = new PoolWithSpy(temporaryFolder.newFolder());
-
-    try (WorkingCopy workingCopy = factory.createWorkingCopy(createContext())) {
-      assertThat(workingCopy).isNotNull();
-    }
-    verify(factory.createdClone).close();
-  }
-
-  @Test
   public void cloneFromPoolShouldNotBeReused() throws IOException {
     SimpleGitWorkdirFactory factory = new SimpleGitWorkdirFactory(temporaryFolder.newFolder());
 
     File firstDirectory;
-    try (WorkingCopy workingCopy = factory.createWorkingCopy(createContext())) {
-      firstDirectory = workingCopy.get().getDirectory();
+    try (WorkingCopy<Repository> workingCopy = factory.createWorkingCopy(createContext())) {
+      firstDirectory = workingCopy.getDirectory();
     }
-    try (WorkingCopy workingCopy = factory.createWorkingCopy(createContext())) {
-      File secondDirectory = workingCopy.get().getDirectory();
+    try (WorkingCopy<Repository> workingCopy = factory.createWorkingCopy(createContext())) {
+      File secondDirectory = workingCopy.getDirectory();
       assertThat(secondDirectory).isNotEqualTo(firstDirectory);
     }
   }
@@ -86,23 +76,9 @@ public class SimpleGitWorkdirFactoryTest extends AbstractGitCommandTestBase {
     SimpleGitWorkdirFactory factory = new SimpleGitWorkdirFactory(temporaryFolder.newFolder());
 
     File directory;
-    try (WorkingCopy workingCopy = factory.createWorkingCopy(createContext())) {
-      directory = workingCopy.get().getWorkTree();
+    try (WorkingCopy<Repository> workingCopy = factory.createWorkingCopy(createContext())) {
+      directory = workingCopy.getWorkingRepository().getWorkTree();
     }
     assertThat(directory).doesNotExist();
-  }
-
-  private static class PoolWithSpy extends SimpleGitWorkdirFactory {
-    PoolWithSpy(File poolDirectory) {
-      super(poolDirectory);
-    }
-
-    Repository createdClone;
-
-    @Override
-    protected Repository cloneRepository(File bareRepository, File destination) throws GitAPIException {
-      createdClone = spy(super.cloneRepository(bareRepository, destination));
-      return createdClone;
-    }
   }
 }

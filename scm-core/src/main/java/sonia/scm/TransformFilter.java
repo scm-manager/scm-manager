@@ -39,8 +39,10 @@ package sonia.scm;
  * @author Sebastian Sdorra
  *
  * @param <T> type of objects to transform
+ * @param <R> result type of the transformation
  */
-public interface TransformFilter<T>
+@FunctionalInterface
+public interface TransformFilter<T, R>
 {
 
   /**
@@ -52,5 +54,5 @@ public interface TransformFilter<T>
    *
    * @return tranformed object
    */
-  public T accept(T item);
+  R accept(T item);
 }

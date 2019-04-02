@@ -4,8 +4,8 @@ import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import org.hibernate.validator.constraints.NotEmpty;
 import sonia.scm.ReducedModelObject;
-import sonia.scm.group.GroupManager;
-import sonia.scm.user.UserManager;
+import sonia.scm.group.GroupDisplayManager;
+import sonia.scm.user.UserDisplayManager;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
@@ -30,14 +30,14 @@ public class AutoCompleteResource {
 
   private ReducedObjectModelToDtoMapper mapper;
 
-  private UserManager userManager;
-  private GroupManager groupManager;
+  private UserDisplayManager userDisplayManager;
+  private GroupDisplayManager groupDisplayManager;
 
   @Inject
-  public AutoCompleteResource(ReducedObjectModelToDtoMapper mapper, UserManager userManager, GroupManager groupManager) {
+  public AutoCompleteResource(ReducedObjectModelToDtoMapper mapper, UserDisplayManager userDisplayManager, GroupDisplayManager groupDisplayManager) {
     this.mapper = mapper;
-    this.userManager = userManager;
-    this.groupManager = groupManager;
+    this.userDisplayManager = userDisplayManager;
+    this.groupDisplayManager = groupDisplayManager;
   }
 
   @GET
@@ -51,7 +51,7 @@ public class AutoCompleteResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   public List<ReducedObjectModelDto> searchUser(@NotEmpty(message = PARAMETER_IS_REQUIRED) @Size(min = MIN_SEARCHED_CHARS, message = INVALID_PARAMETER_LENGTH) @QueryParam("q") String filter) {
-    return map(userManager.autocomplete(filter));
+    return map(userDisplayManager.autocomplete(filter));
   }
 
   @GET
@@ -65,7 +65,7 @@ public class AutoCompleteResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   public List<ReducedObjectModelDto> searchGroup(@NotEmpty(message = PARAMETER_IS_REQUIRED) @Size(min = MIN_SEARCHED_CHARS, message = INVALID_PARAMETER_LENGTH) @QueryParam("q") String filter) {
-    return map(groupManager.autocomplete(filter));
+    return map(groupDisplayManager.autocomplete(filter));
   }
 
   private <T extends ReducedModelObject> List<ReducedObjectModelDto> map(Collection<T> autocomplete) {

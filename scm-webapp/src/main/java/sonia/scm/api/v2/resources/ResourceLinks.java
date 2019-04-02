@@ -386,6 +386,9 @@ class ResourceLinks {
       return branchLinkBuilder.method("getRepositoryResource").parameters(namespaceAndName.getNamespace(), namespaceAndName.getName()).method("branches").parameters().method("history").parameters(branch).href();
     }
 
+    public String create(String namespace, String name) {
+      return branchLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("branches").parameters().method("create").parameters().href();
+    }
   }
 
   public IncomingLinks incoming() {
