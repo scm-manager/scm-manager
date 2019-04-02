@@ -21,31 +21,17 @@ const styles = {
   }
 };
 
-class BranchDetailTable extends React.Component<Props> {
+class BranchDetail extends React.Component<Props> {
   render() {
     const { repository, branch, t } = this.props;
 
     return (
-      <table className="table">
-        <tbody>
-          <tr>
-            <th>{t("branch.name")}</th>
-            <td>
-              {branch.name} {this.renderDefaultBranch()}
-            </td>
-          </tr>
-          <tr>
-            <th>{t("branch.repository")}</th>
-            <td>{repository.name}</td>
-          </tr>
-          <tr>
-            <th>{t("branch.actions")}</th>
-            <td>
-              <BranchButtonGroup repository={repository} branch={branch} />
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div className="media">
+        <div className="media-content subtitle"><strong>{t("branch.name")}</strong> {branch.name} {this.renderDefaultBranch()}</div>
+        <div className="media-right">
+          <BranchButtonGroup repository={repository} branch={branch} />
+        </div>
+      </div>
     );
   }
 
@@ -62,4 +48,4 @@ class BranchDetailTable extends React.Component<Props> {
   }
 }
 
-export default injectSheet(styles)(translate("repos")(BranchDetailTable));
+export default injectSheet(styles)(translate("repos")(BranchDetail));

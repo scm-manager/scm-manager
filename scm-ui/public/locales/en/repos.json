@@ -61,9 +61,7 @@
     }
   },
   "branch": {
-    "name": "Name",
-    "repository": "Repository",
-    "actions": "Actions",
+    "name": "Name:",
     "commits": "Commits",
     "sources": "Sources"
   },

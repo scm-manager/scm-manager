@@ -1,6 +1,6 @@
 // @flow
 import React from "react";
-import BranchDetailTable from "../components/BranchDetailTable";
+import BranchDetail from "../components/BranchDetail";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import type { Repository, Branch } from "@scm-manager/ui-types";
 import { connect } from "react-redux";
@@ -54,7 +54,7 @@ class BranchView extends React.Component<Props> {
 
     return (
       <div>
-        <BranchDetailTable repository={repository} branch={branch} />
+        <BranchDetail repository={repository} branch={branch} />
         <hr />
         <div className="content">
           <ExtensionPoint
