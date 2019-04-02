@@ -2,6 +2,8 @@ package sonia.scm.boot;
 
 import com.google.common.annotations.VisibleForTesting;
 import org.apache.shiro.authc.credential.PasswordService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.plugin.Extension;
 import sonia.scm.security.PermissionAssigner;
 import sonia.scm.security.PermissionDescriptor;
@@ -18,6 +20,8 @@ import java.util.Collections;
 @Extension
 public class SetupContextListener implements ServletContextListener {
 
+  private static final Logger LOG = LoggerFactory.getLogger(SetupContextListener.class);
+
   private final AdministrationContext administrationContext;
 
   @Inject
@@ -30,6 +34,8 @@ public class SetupContextListener implements ServletContextListener {
     String skipAdminCreation = System.getProperty("skipAdminCreation");
     if (skipAdminCreation == null || "false".equalsIgnoreCase(skipAdminCreation)) {
       administrationContext.runAsAdmin(SetupAction.class);
+    } else {
+      LOG.info("found skipAdminCreation flag; skipping creation of scmadmin");
     }
   }
 
