@@ -19,7 +19,7 @@ const styles = {
 };
 
 class BranchRow extends React.Component<Props> {
-  renderLink(to: string, label: string, defaultBranch: boolean) {
+  renderLink(to: string, label: string, defaultBranch?: boolean) {
     const { classes } = this.props;
 
     let showLabel = null;
@@ -36,11 +36,11 @@ class BranchRow extends React.Component<Props> {
   render() {
     const { baseUrl, branch } = this.props;
     const to = `${baseUrl}/${encodeURIComponent(branch.name)}/info`;
-    return (
-      <tr>
-        <td>{this.renderLink(to, branch.name, branch.defaultBranch)}</td>
-      </tr>
-    );
+      return (
+        <tr>
+          <td>{this.renderLink(to, branch.name, branch.defaultBranch)}</td>
+        </tr>
+      );
   }
 }
 

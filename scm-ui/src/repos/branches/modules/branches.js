@@ -5,11 +5,7 @@ import {
   SUCCESS_SUFFIX
 } from "../../../modules/types";
 import { apiClient } from "@scm-manager/ui-components";
-import type {
-  Action,
-  Branch,
-  Repository
-} from "@scm-manager/ui-types";
+import type { Action, Branch, Repository } from "@scm-manager/ui-types";
 import { isPending } from "../../../modules/pending";
 import { getFailure } from "../../../modules/failure";
 
@@ -25,59 +21,67 @@ export const FETCH_BRANCH_FAILURE = `${FETCH_BRANCH}_${FAILURE_SUFFIX}`;
 
 // Fetching branches
 
-export function fetchBranchByName(link: string, name: string) {
-  let endsWith = "";
-  if(!link.endsWith("/")) {
-    endsWith = "/";
-  }
-  return fetchBranch(link + endsWith + encodeURIComponent(name), name);
+function createIdentifier(repository: Repository) {
+  return repository.namespace + "/" + repository.name;
 }
 
-export function fetchBranchPending(name: string): Action {
+export function fetchBranchPending(
+  repository: Repository,
+  name: string
+): Action {
   return {
     type: FETCH_BRANCH_PENDING,
-    payload: name,
-    itemId: name
+    payload: { repository, name },
+    itemId: createIdentifier(repository) + "/" + name
   };
 }
 
-export function fetchBranchSuccess(repo: Repository, branch: Branch): Action {
+export function fetchBranchSuccess(
+  repository: Repository,
+  branch: Branch
+): Action {
   return {
     type: FETCH_BRANCH_SUCCESS,
-    payload: branch,
-    itemId: branch.name
+    payload: { repository, branch },
+    itemId: createIdentifier(repository) + "/" + branch.name
   };
 }
 
-export function fetchBranchFailure(name: string, error: Error): Action {
+export function fetchBranchFailure(
+  repository: Repository,
+  name: string,
+  error: Error
+): Action {
   return {
     type: FETCH_BRANCH_FAILURE,
-    payload: name,
-    itemId: name
+    payload: { error, repository, name },
+    itemId: createIdentifier(repository) + "/" + name
   };
 }
 
-export function fetchBranch(link: string, name: string) {
+export function fetchBranch(
+  repository: Repository,
+  name: string
+) {
+  let link = repository._links.branches.href;
+  if (!link.endsWith("/")) {
+    link += "/";
+  }
+  link += encodeURIComponent(name);
   return function(dispatch: any) {
-    dispatch(fetchBranchPending(name));
+    dispatch(fetchBranchPending(repository, name));
     return apiClient
       .get(link)
       .then(response => {
         return response.json();
       })
       .then(data => {
-        dispatch(fetchBranchSuccess(data));
+        dispatch(fetchBranchSuccess(repository, data));
       })
       .catch(error => {
-        dispatch(fetchBranchFailure(name, error));
+        dispatch(fetchBranchFailure(repository, name, error));
       });
   };
-}
-
-export function getBranchByName(state: Object, name: string) {
-  if (state.branches) {
-    return state.branches[name];
-  }
 }
 
 export function isFetchBranchPending(state: Object, name: string) {
@@ -138,6 +142,24 @@ export function fetchBranchesFailure(repository: Repository, error: Error) {
 
 // Reducers
 
+function reduceBranchSuccess(state, repositoryName, newBranch) {
+  const newBranches = [];
+  // we do not use filter, because we try to keep the current order
+  let found = false;
+  for (const branch of state[repositoryName] || []) {
+    if (branch.name === newBranch.name) {
+      newBranches.push(newBranch);
+      found = true;
+    } else {
+      newBranches.push(branch);
+    }
+  }
+  if (!found) {
+    newBranches.push(newBranch);
+  }
+  return newBranches;
+}
+
 type State = { [string]: Branch[] };
 
 export default function reducer(
@@ -156,11 +178,15 @@ export default function reducer(
         [key]: extractBranchesFromPayload(payload.data)
       };
     case FETCH_BRANCH_SUCCESS:
+      if (!action.payload.repository || !action.payload.branch) {
+        return state;
+      }
+      const newBranch = action.payload.branch;
+      const repositoryName = createIdentifier(action.payload.repository);
       return {
         ...state,
-        [action.payload.name]: action.payload
+        [repositoryName]: reduceBranchSuccess(state, repositoryName, newBranch)
       };
-
     default:
       return state;
   }

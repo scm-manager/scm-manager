@@ -7,8 +7,8 @@ import { connect } from "react-redux";
 import { translate } from "react-i18next";
 import { withRouter } from "react-router-dom";
 import {
-  fetchBranchByName,
-  getBranchByName,
+  fetchBranch,
+  getBranch,
   getFetchBranchFailure,
   isFetchBranchPending
 } from "../modules/branches";
@@ -22,7 +22,7 @@ type Props = {
   branch: Branch,
 
   // dispatch functions
-  fetchBranchByName: (repository: Repository, branchName: string) => void,
+  fetchBranch: (repository: Repository, branchName: string) => void,
 
   // context props
   t: string => string
@@ -30,9 +30,9 @@ type Props = {
 
 class BranchView extends React.Component<Props> {
   componentDidMount() {
-    const { fetchBranchByName, repository, branchName } = this.props;
+    const { fetchBranch, repository, branchName } = this.props;
 
-    fetchBranchByName(repository, branchName);
+    fetchBranch(repository, branchName);
   }
 
   render() {
@@ -71,7 +71,7 @@ class BranchView extends React.Component<Props> {
 const mapStateToProps = (state, ownProps) => {
   const { repository } = ownProps;
   const branchName = decodeURIComponent(ownProps.match.params.branch);
-  const branch = getBranchByName(state, branchName);
+  const branch = getBranch(state, repository, branchName);
   const loading = isFetchBranchPending(state, branchName);
   const error = getFetchBranchFailure(state, branchName);
   return {
@@ -85,8 +85,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchBranchByName: (repository: Repository, branchName: string) => {
-      dispatch(fetchBranchByName(repository._links.branches.href, branchName));
+    fetchBranch: (repository: Repository, branchName: string) => {
+      dispatch(fetchBranch(repository, branchName));
     }
   };
 };

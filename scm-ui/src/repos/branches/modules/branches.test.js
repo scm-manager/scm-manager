@@ -11,9 +11,8 @@ import reducer, {
   FETCH_BRANCH_SUCCESS,
   FETCH_BRANCH_FAILURE,
   fetchBranches,
-  fetchBranchByName,
-  fetchBranchSuccess,
   fetchBranch,
+  fetchBranchSuccess,
   getBranch,
   getBranches,
   getFetchBranchesFailure,
@@ -100,7 +99,7 @@ describe("branches", () => {
       fetchMock.getOnce(URL + "/branch1", branch1);
 
       const store = mockStore({});
-      return store.dispatch(fetchBranchByName(URL, "branch1")).then(() => {
+      return store.dispatch(fetchBranch(repository, "branch1")).then(() => {
         const actions = store.getActions();
         expect(actions[0].type).toEqual(FETCH_BRANCH_PENDING);
         expect(actions[1].type).toEqual(FETCH_BRANCH_SUCCESS);
@@ -114,7 +113,7 @@ describe("branches", () => {
       });
 
       const store = mockStore({});
-      return store.dispatch(fetchBranchByName(URL, "branch2")).then(() => {
+      return store.dispatch(fetchBranch(repository, "branch2")).then(() => {
         const actions = store.getActions();
         expect(actions[0].type).toEqual(FETCH_BRANCH_PENDING);
         expect(actions[1].type).toEqual(FETCH_BRANCH_FAILURE);
@@ -149,51 +148,60 @@ describe("branches", () => {
       const oldState = {
         "hitchhiker/heartOfGold": [branch3]
       };
-
       const newState = reducer(oldState, action);
       expect(newState[key]).toContain(branch1);
       expect(newState[key]).toContain(branch2);
-
       expect(newState["hitchhiker/heartOfGold"]).toContain(branch3);
     });
 
     it("should update state according to FETCH_BRANCH_SUCCESS action", () => {
-      const newState = reducer({}, fetchBranchSuccess(branch3));
-      expect(newState["branch3"]).toBe(branch3);
+      const newState = reducer({}, fetchBranchSuccess(repository, branch3));
+      expect(newState["foo/bar"]).toEqual([branch3]);
     });
 
     it("should not delete existing branch from state", () => {
       const oldState = {
-        branch1
+        "foo/bar": [branch1]
       };
-
-      const newState = reducer(oldState, fetchBranchSuccess(branch2));
-      expect(newState["branch1"]).toBe(branch1);
-      expect(newState["branch2"]).toBe(branch2);
+      const newState = reducer(oldState, fetchBranchSuccess(repository, branch2));
+      expect(newState["foo/bar"]).toEqual([branch1, branch2]);
     });
 
     it("should update required branch from state", () => {
       const oldState = {
-        branch1
+        "foo/bar": [branch1]
       };
-
       const newBranch1 = { name: "branch1", revision: "revision2" };
-
-      const newState = reducer(oldState, fetchBranchSuccess(newBranch1));
-      expect(newState["branch1"]).not.toBe(branch1);
-      expect(newState["branch1"]).toBe(newBranch1);
+      const newState = reducer(oldState, fetchBranchSuccess(repository, newBranch1));
+      expect(newState["foo/bar"]).toEqual([newBranch1]);
     });
 
     it("should update required branch from state and keeps old repo", () => {
       const oldState = {
-        repo1: {
-          branch1
-        }
+        "ns/one": [branch1]
       };
-      const repo2 = { repo2: { branch3 } };
-      const newState = reducer(oldState, fetchBranchSuccess(repo2, branch2));
-      expect(newState["repo1"]).toBe({ branch1 });
-      expect(newState["repo2"]).toBe({ branch2, branch3 });
+      const newState = reducer(oldState, fetchBranchSuccess(repository, branch3));
+      expect(newState["ns/one"]).toEqual([branch1]);
+      expect(newState["foo/bar"]).toEqual([branch3]);
+    });
+
+    it("should return the oldState, if action has no payload", () => {
+      const state = {};
+      const newState = reducer(state, {type: FETCH_BRANCH_SUCCESS});
+      expect(newState).toBe(state);
+    });
+
+    it("should return the oldState, if payload has no branch", () => {
+      const action = {
+        type: FETCH_BRANCH_SUCCESS,
+        payload: {
+          repository
+        },
+        itemId: "foo/bar/"
+      };
+      const state = {};
+      const newState = reducer(state, action);
+      expect(newState).toBe(state);
     });
   });
 
