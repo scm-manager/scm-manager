@@ -54,7 +54,10 @@
       "branches": "Branches"
     },
     "create": {
-      "title": "Branch erstellen"
+      "title": "Branch erstellen",
+      "source": "Quellbranch",
+      "name": "Name",
+      "submit": "Branch erstellen"
     }
   },
   "branch": {

@@ -3,15 +3,15 @@ import {
   FAILURE_SUFFIX,
   PENDING_SUFFIX,
   SUCCESS_SUFFIX
-} from "../../modules/types";
+} from "../../../modules/types";
 import { apiClient } from "@scm-manager/ui-components";
 import type {
   Action,
   Branch,
   Repository
 } from "@scm-manager/ui-types";
-import { isPending } from "../../modules/pending";
-import { getFailure } from "../../modules/failure";
+import { isPending } from "../../../modules/pending";
+import { getFailure } from "../../../modules/failure";
 
 export const FETCH_BRANCHES = "scm/repos/FETCH_BRANCHES";
 export const FETCH_BRANCHES_PENDING = `${FETCH_BRANCHES}_${PENDING_SUFFIX}`;

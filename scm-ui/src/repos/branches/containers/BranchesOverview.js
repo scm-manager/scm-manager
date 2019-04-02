@@ -5,7 +5,7 @@ import {
   getBranches,
   getFetchBranchesFailure,
   isFetchBranchesPending
-} from "../../modules/branches";
+} from "../modules/branches";
 import { connect } from "react-redux";
 import type { Branch, Repository } from "@scm-manager/ui-types";
 import { compose } from "redux";

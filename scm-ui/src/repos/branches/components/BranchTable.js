@@ -37,4 +37,4 @@ class BranchTable extends React.Component<Props> {
   }
 }
 
-export default translate("users")(BranchTable);
+export default translate("repos")(BranchTable);

@@ -11,7 +11,7 @@ import {
   getBranchByName,
   getFetchBranchFailure,
   isFetchBranchPending
-} from "../../modules/branches";
+} from "../modules/branches";
 import { ErrorPage, Loading } from "@scm-manager/ui-components";
 
 type Props = {

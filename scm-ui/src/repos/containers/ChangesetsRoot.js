@@ -16,7 +16,7 @@ import {
   getBranches,
   getFetchBranchesFailure,
   isFetchBranchesPending
-} from "../modules/branches";
+} from "../branches/modules/branches";
 import { compose } from "redux";
 
 type Props = {

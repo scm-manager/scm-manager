@@ -3,7 +3,7 @@ import React from "react";
 import type { Repository, Branch } from "@scm-manager/ui-types";
 import { ButtonGroup, Button } from "@scm-manager/ui-components";
 import { translate } from "react-i18next";
-import { createChangesetLink, createSourcesLink } from "../../modules/branches";
+import { createChangesetLink, createSourcesLink } from "../modules/branches";
 
 type Props = {
   repository: Repository,
