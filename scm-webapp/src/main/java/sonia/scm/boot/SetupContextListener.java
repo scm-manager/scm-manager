@@ -27,7 +27,10 @@ public class SetupContextListener implements ServletContextListener {
 
   @Override
   public void contextInitialized(ServletContextEvent sce) {
-    administrationContext.runAsAdmin(SetupAction.class);
+    String skipAdminCreation = System.getProperty("skipAdminCreation");
+    if (skipAdminCreation == null || "false".equalsIgnoreCase(skipAdminCreation)) {
+      administrationContext.runAsAdmin(SetupAction.class);
+    }
   }
 
   @Override
