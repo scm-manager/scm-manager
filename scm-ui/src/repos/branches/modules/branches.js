@@ -41,7 +41,7 @@ export function fetchBranchPending(name: string): Action {
   };
 }
 
-export function fetchBranchSuccess(branch: Branch): Action {
+export function fetchBranchSuccess(repo: Repository, branch: Branch): Action {
   return {
     type: FETCH_BRANCH_SUCCESS,
     payload: branch,

@@ -1,5 +1,5 @@
 import configureMockStore from "redux-mock-store";
-import thunk from "redux-thunk/index";
+import thunk from "redux-thunk";
 import fetchMock from "fetch-mock";
 import reducer, {
   FETCH_BRANCHES,
@@ -160,6 +160,40 @@ describe("branches", () => {
     it("should update state according to FETCH_BRANCH_SUCCESS action", () => {
       const newState = reducer({}, fetchBranchSuccess(branch3));
       expect(newState["branch3"]).toBe(branch3);
+    });
+
+    it("should not delete existing branch from state", () => {
+      const oldState = {
+        branch1
+      };
+
+      const newState = reducer(oldState, fetchBranchSuccess(branch2));
+      expect(newState["branch1"]).toBe(branch1);
+      expect(newState["branch2"]).toBe(branch2);
+    });
+
+    it("should update required branch from state", () => {
+      const oldState = {
+        branch1
+      };
+
+      const newBranch1 = { name: "branch1", revision: "revision2" };
+
+      const newState = reducer(oldState, fetchBranchSuccess(newBranch1));
+      expect(newState["branch1"]).not.toBe(branch1);
+      expect(newState["branch1"]).toBe(newBranch1);
+    });
+
+    it("should update required branch from state and keeps old repo", () => {
+      const oldState = {
+        repo1: {
+          branch1
+        }
+      };
+      const repo2 = { repo2: { branch3 } };
+      const newState = reducer(oldState, fetchBranchSuccess(repo2, branch2));
+      expect(newState["repo1"]).toBe({ branch1 });
+      expect(newState["repo2"]).toBe({ branch2, branch3 });
     });
   });
 
