@@ -18,8 +18,8 @@ type Props = {
   repository: Repository,
   branchName: string,
   loading: boolean,
-  error: Error,
-  branch: Branch,
+  error?: Error,
+  branch?: Branch,
 
   // dispatch functions
   fetchBranch: (repository: Repository, branchName: string) => void,
@@ -72,8 +72,8 @@ const mapStateToProps = (state, ownProps) => {
   const { repository } = ownProps;
   const branchName = decodeURIComponent(ownProps.match.params.branch);
   const branch = getBranch(state, repository, branchName);
-  const loading = isFetchBranchPending(state, branchName);
-  const error = getFetchBranchFailure(state, branchName);
+  const loading = isFetchBranchPending(state, repository, branchName);
+  const error = getFetchBranchFailure(state, repository, branchName);
   return {
     repository,
     branchName,

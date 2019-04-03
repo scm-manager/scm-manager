@@ -21,41 +21,26 @@ export const FETCH_BRANCH_FAILURE = `${FETCH_BRANCH}_${FAILURE_SUFFIX}`;
 
 // Fetching branches
 
-function createIdentifier(repository: Repository) {
-  return repository.namespace + "/" + repository.name;
-}
+export function fetchBranches(repository: Repository) {
+  if (!repository._links.branches) {
+    return {
+      type: FETCH_BRANCHES_SUCCESS,
+      payload: { repository, data: {} },
+      itemId: createKey(repository)
+    };
+  }
 
-export function fetchBranchPending(
-  repository: Repository,
-  name: string
-): Action {
-  return {
-    type: FETCH_BRANCH_PENDING,
-    payload: { repository, name },
-    itemId: createIdentifier(repository) + "/" + name
-  };
-}
-
-export function fetchBranchSuccess(
-  repository: Repository,
-  branch: Branch
-): Action {
-  return {
-    type: FETCH_BRANCH_SUCCESS,
-    payload: { repository, branch },
-    itemId: createIdentifier(repository) + "/" + branch.name
-  };
-}
-
-export function fetchBranchFailure(
-  repository: Repository,
-  name: string,
-  error: Error
-): Action {
-  return {
-    type: FETCH_BRANCH_FAILURE,
-    payload: { error, repository, name },
-    itemId: createIdentifier(repository) + "/" + name
+  return function(dispatch: any) {
+    dispatch(fetchBranchesPending(repository));
+    return apiClient
+      .get(repository._links.branches.href)
+      .then(response => response.json())
+      .then(data => {
+        dispatch(fetchBranchesSuccess(data, repository));
+      })
+      .catch(error => {
+        dispatch(fetchBranchesFailure(repository, error));
+      });
   };
 }
 
@@ -84,38 +69,48 @@ export function fetchBranch(
   };
 }
 
-export function isFetchBranchPending(state: Object, name: string) {
-  return isPending(state, FETCH_BRANCH, name);
-}
+// Selectors
 
-export function getFetchBranchFailure(state: Object, name: string) {
-  return getFailure(state, FETCH_BRANCH, name);
-}
-
-export function fetchBranches(repository: Repository) {
-  if (!repository._links.branches) {
-    return {
-      type: FETCH_BRANCHES_SUCCESS,
-      payload: { repository, data: {} },
-      itemId: createKey(repository)
-    };
+export function getBranches(state: Object, repository: Repository) {
+  const key = createKey(repository);
+  if (state.branches[key]) {
+    return state.branches[key];
   }
+  return null;
+}
 
-  return function(dispatch: any) {
-    dispatch(fetchBranchesPending(repository));
-    return apiClient
-      .get(repository._links.branches.href)
-      .then(response => response.json())
-      .then(data => {
-        dispatch(fetchBranchesSuccess(data, repository));
-      })
-      .catch(error => {
-        dispatch(fetchBranchesFailure(repository, error));
-      });
-  };
+export function getBranch(
+  state: Object,
+  repository: Repository,
+  name: string
+): ?Branch {
+  const key = createKey(repository);
+  if (state.branches[key]) {
+    return state.branches[key].find((b: Branch) => b.name === name);
+  }
+  return null;
 }
 
 // Action creators
+export function isFetchBranchesPending(
+  state: Object,
+  repository: Repository
+): boolean {
+  return isPending(state, FETCH_BRANCHES, createKey(repository));
+}
+
+export function getFetchBranchesFailure(state: Object, repository: Repository) {
+  return getFailure(state, FETCH_BRANCHES, createKey(repository));
+}
+
+export function isFetchBranchPending(state: Object, repository: Repository, name: string) {
+  return isPending(state, FETCH_BRANCH, createKey(repository) + "/" + name);
+}
+
+export function getFetchBranchFailure(state: Object, repository: Repository, name: string) {
+  return getFailure(state, FETCH_BRANCH, createKey(repository) + "/" + name);
+}
+
 export function fetchBranchesPending(repository: Repository) {
   return {
     type: FETCH_BRANCHES_PENDING,
@@ -140,7 +135,48 @@ export function fetchBranchesFailure(repository: Repository, error: Error) {
   };
 }
 
+export function fetchBranchPending(
+  repository: Repository,
+  name: string
+): Action {
+  return {
+    type: FETCH_BRANCH_PENDING,
+    payload: { repository, name },
+    itemId: createKey(repository) + "/" + name
+  };
+}
+
+export function fetchBranchSuccess(
+  repository: Repository,
+  branch: Branch
+): Action {
+  return {
+    type: FETCH_BRANCH_SUCCESS,
+    payload: { repository, branch },
+    itemId: createKey(repository) + "/" + branch.name
+  };
+}
+
+export function fetchBranchFailure(
+  repository: Repository,
+  name: string,
+  error: Error
+): Action {
+  return {
+    type: FETCH_BRANCH_FAILURE,
+    payload: { error, repository, name },
+    itemId: createKey(repository) + "/" + name
+  };
+}
+
 // Reducers
+
+function extractBranchesFromPayload(payload: any) {
+  if (payload._embedded && payload._embedded.branches) {
+    return payload._embedded.branches;
+  }
+  return [];
+}
 
 function reduceBranchSuccess(state, repositoryName, newBranch) {
   const newBranches = [];
@@ -182,7 +218,7 @@ export default function reducer(
         return state;
       }
       const newBranch = action.payload.branch;
-      const repositoryName = createIdentifier(action.payload.repository);
+      const repositoryName = createKey(action.payload.repository);
       return {
         ...state,
         [repositoryName]: reduceBranchSuccess(state, repositoryName, newBranch)
@@ -192,59 +228,36 @@ export default function reducer(
   }
 }
 
-function extractBranchesFromPayload(payload: any) {
-  if (payload._embedded && payload._embedded.branches) {
-    return payload._embedded.branches;
-  }
-  return [];
-}
-
-// Selectors
-
-export function getBranches(state: Object, repository: Repository) {
-  const key = createKey(repository);
-  if (state.branches[key]) {
-    return state.branches[key];
-  }
-  return null;
-}
-
-export function getBranch(
-  state: Object,
-  repository: Repository,
-  name: string
-): ?Branch {
-  const key = createKey(repository);
-  if (state.branches[key]) {
-    return state.branches[key].find((b: Branch) => b.name === name);
-  }
-  return null;
-}
-
-export function isFetchBranchesPending(
-  state: Object,
-  repository: Repository
-): boolean {
-  return isPending(state, FETCH_BRANCHES, createKey(repository));
-}
-
-export function getFetchBranchesFailure(state: Object, repository: Repository) {
-  return getFailure(state, FETCH_BRANCHES, createKey(repository));
-}
-
 function createKey(repository: Repository): string {
   const { namespace, name } = repository;
   return `${namespace}/${name}`;
 }
 
-export function createChangesetLink(repository: Repository, branch: Branch) {
-  return `/repo/${repository.namespace}/${
-    repository.name
-  }/branch/${encodeURIComponent(branch.name)}/changesets/`;
-}
-
-export function createSourcesLink(repository: Repository, branch: Branch) {
-  return `/repo/${repository.namespace}/${
-    repository.name
-  }/sources/${encodeURIComponent(branch.name)}/`;
+// master, default should always be the first one,
+// followed by develop the rest should be ordered by its name
+export function orderBranches(branches: Branch[]) {
+  branches.sort((a, b) => {
+    if (a.defaultBranch && !b.defaultBranch) {
+      return -20;
+    } else if (!a.defaultBranch && b.defaultBranch) {
+      return 20;
+    } else if (a.name === "master" && b.name !== "master") {
+      return -10;
+    } else if (a.name !== "master" && b.name === "master") {
+      return 10;
+    } else if (a.name === "default" && b.name !== "default") {
+      return -10;
+    } else if (a.name !== "default" && b.name === "default") {
+      return 10;
+    } else if (a.name === "develop" && b.name !== "develop") {
+      return -5;
+    } else if (a.name !== "develop" && b.name === "develop") {
+      return 5;
+    } else if (a.name < b.name) {
+      return -1;
+    } else if (a.name > b.name) {
+      return 1;
+    }
+    return 0;
+  });
 }

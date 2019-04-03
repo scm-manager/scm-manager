@@ -16,7 +16,8 @@ import reducer, {
   getBranch,
   getBranches,
   getFetchBranchesFailure,
-  isFetchBranchesPending
+  isFetchBranchesPending,
+  orderBranches
 } from "./branches";
 
 const namespace = "foo";
@@ -34,7 +35,18 @@ const repository = {
 
 const branch1 = { name: "branch1", revision: "revision1" };
 const branch2 = { name: "branch2", revision: "revision2" };
-const branch3 = { name: "branch3", revision: "revision3" };
+const branch3 = { name: "branch3", revision: "revision3", defaultBranch: true };
+const defaultBranch = {
+  name: "default",
+  revision: "revision4",
+  defaultBranch: false
+};
+const developBranch = {
+  name: "develop",
+  revision: "revision5",
+  defaultBranch: false
+};
+const masterBranch = { name: "master", revision: "revision6", defaultBranch: false };
 
 describe("branches", () => {
   describe("fetch branches", () => {
@@ -163,7 +175,10 @@ describe("branches", () => {
       const oldState = {
         "foo/bar": [branch1]
       };
-      const newState = reducer(oldState, fetchBranchSuccess(repository, branch2));
+      const newState = reducer(
+        oldState,
+        fetchBranchSuccess(repository, branch2)
+      );
       expect(newState["foo/bar"]).toEqual([branch1, branch2]);
     });
 
@@ -172,7 +187,10 @@ describe("branches", () => {
         "foo/bar": [branch1]
       };
       const newBranch1 = { name: "branch1", revision: "revision2" };
-      const newState = reducer(oldState, fetchBranchSuccess(repository, newBranch1));
+      const newState = reducer(
+        oldState,
+        fetchBranchSuccess(repository, newBranch1)
+      );
       expect(newState["foo/bar"]).toEqual([newBranch1]);
     });
 
@@ -180,14 +198,17 @@ describe("branches", () => {
       const oldState = {
         "ns/one": [branch1]
       };
-      const newState = reducer(oldState, fetchBranchSuccess(repository, branch3));
+      const newState = reducer(
+        oldState,
+        fetchBranchSuccess(repository, branch3)
+      );
       expect(newState["ns/one"]).toEqual([branch1]);
       expect(newState["foo/bar"]).toEqual([branch3]);
     });
 
     it("should return the oldState, if action has no payload", () => {
       const state = {};
-      const newState = reducer(state, {type: FETCH_BRANCH_SUCCESS});
+      const newState = reducer(state, { type: FETCH_BRANCH_SUCCESS });
       expect(newState).toBe(state);
     });
 
@@ -270,6 +291,32 @@ describe("branches", () => {
 
     it("should return false if fetching branches did not fail", () => {
       expect(getFetchBranchesFailure({}, repository)).toBeUndefined();
+    });
+  });
+
+  describe("sort branches", () => {
+    it("should return branches", () => {
+      let branches = [branch1, branch2];
+      orderBranches(branches);
+      expect(branches).toEqual([branch1, branch2]);
+    });
+
+    it("should return defaultBranch first", () => {
+      let branches = [branch1, branch2, branch3];
+      orderBranches(branches);
+      expect(branches).toEqual([branch3, branch1, branch2]);
+    });
+
+    it("should order special branches as follows: master > default > develop", () => {
+      let branches = [defaultBranch, developBranch, masterBranch];
+      orderBranches(branches);
+      expect(branches).toEqual([masterBranch, defaultBranch, developBranch]);
+    });
+
+    it("should order special branches but starting with defaultBranch", () => {
+      let branches = [masterBranch, developBranch, defaultBranch, branch3];
+      orderBranches(branches);
+      expect(branches).toEqual([branch3, masterBranch, defaultBranch, developBranch]);
     });
   });
 });

@@ -3,7 +3,6 @@ import React from "react";
 import type { Repository, Branch } from "@scm-manager/ui-types";
 import { ButtonGroup, Button } from "@scm-manager/ui-components";
 import { translate } from "react-i18next";
-import { createChangesetLink, createSourcesLink } from "../modules/branches";
 
 type Props = {
   repository: Repository,
@@ -17,8 +16,12 @@ class BranchButtonGroup extends React.Component<Props> {
   render() {
     const { repository, branch, t } = this.props;
 
-    const changesetLink = createChangesetLink(repository, branch);
-    const sourcesLink = createSourcesLink(repository, branch);
+    const changesetLink = `/repo/${repository.namespace}/${
+      repository.name
+    }/branch/${encodeURIComponent(branch.name)}/changesets/`;
+    const sourcesLink = `/repo/${repository.namespace}/${
+      repository.name
+    }/sources/${encodeURIComponent(branch.name)}/`;
 
     return (
       <ButtonGroup>
