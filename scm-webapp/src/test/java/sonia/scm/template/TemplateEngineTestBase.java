@@ -37,6 +37,7 @@ package sonia.scm.template;
 
 import com.google.common.collect.Maps;
 
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -52,6 +53,7 @@ import java.io.StringWriter;
 
 import java.net.URL;
 
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
@@ -92,6 +94,8 @@ public abstract class TemplateEngineTestBase
    */
   public abstract String getTemplateResource();
 
+  public abstract String getTemplateResourceWithGermanTranslation();
+
   /**
    * Method description
    *
@@ -126,7 +130,7 @@ public abstract class TemplateEngineTestBase
    * @throws IOException
    */
   @Test
-  public void testGetTemlateNotFound() throws IOException
+  public void testGetTemplateNotFound() throws IOException
   {
     ServletContext context = mock(ServletContext.class);
     TemplateEngine engine = createEngine(context);
@@ -149,6 +153,32 @@ public abstract class TemplateEngineTestBase
     TemplateEngine engine = createEngine(context);
 
     assertNotNull(engine.getTemplate(getTemplateResource()));
+  }
+
+  @Test
+  public void testGetTemplateFromClasspathWithExistingLocale() throws IOException
+  {
+    ServletContext context = mock(ServletContext.class);
+
+    TemplateEngine engine = createEngine(context);
+
+    Template template = engine.getTemplate(getTemplateResourceWithGermanTranslation(), Locale.GERMAN);
+    StringWriter writer = new StringWriter();
+    template.execute(writer, new Object());
+    Assertions.assertThat(writer.toString()).contains("German");
+  }
+
+  @Test
+  public void testGetTemplateFromClasspathWithNotExistingLocale() throws IOException
+  {
+    ServletContext context = mock(ServletContext.class);
+
+    TemplateEngine engine = createEngine(context);
+
+    Template template = engine.getTemplate(getTemplateResourceWithGermanTranslation(), Locale.CHINESE);
+    StringWriter writer = new StringWriter();
+    template.execute(writer, new Object());
+    Assertions.assertThat(writer.toString()).contains("English");
   }
 
   /**

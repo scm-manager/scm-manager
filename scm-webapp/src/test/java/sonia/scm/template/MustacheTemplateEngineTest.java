@@ -97,6 +97,11 @@ public class MustacheTemplateEngineTest extends TemplateEngineTestBase
     return "sonia/scm/template/001.mustache";
   }
 
+  @Override
+  public String getTemplateResourceWithGermanTranslation() {
+    return "sonia/scm/template/loc.mustache";
+  }
+
   /**
    * Method description
    *
