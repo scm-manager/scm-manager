@@ -8,6 +8,7 @@ import {
   SubmitButton,
   validation as validator
 } from "@scm-manager/ui-components";
+import { orderBranches } from "../util/orderBranches";
 
 type Props = {
   submitForm: Branch => void,
@@ -32,8 +33,17 @@ class BranchForm extends React.Component<Props, State> {
     };
   }
 
+  isFalsy(value) {
+    return !value;
+  }
+
   isValid = () => {
-    return true; //TODO
+    const { source, name } = this.state;
+    return !(
+      this.state.nameValidationError ||
+      this.isFalsy(source) ||
+      this.isFalsy(name)
+    );
   };
 
   submit = (event: Event) => {
@@ -44,8 +54,9 @@ class BranchForm extends React.Component<Props, State> {
   };
 
   render() {
-    const { t, branches } = this.props;
-    const { loading } = this.state;
+    const { t, branches, loading } = this.props;
+    const { name } = this.state;
+    orderBranches(branches);
     const options = branches.map(branch => ({
       label: branch.name,
       value: branch.name
@@ -67,6 +78,9 @@ class BranchForm extends React.Component<Props, State> {
                 name="name"
                 label={t("branches.create.name")}
                 onChange={this.handleNameChange}
+                value={name ? name : ""}
+                validationError={this.state.nameValidationError}
+                errorMessage={t("validation.branch.nameInvalid")}
               />
             </div>
           </div>
