@@ -9,6 +9,8 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import sonia.scm.security.PermissionAssigner;
 import sonia.scm.security.PermissionDescriptor;
 import sonia.scm.user.User;
@@ -60,6 +62,21 @@ class SetupContextListenerTest {
 
     verifyAdminCreated();
     verifyAdminPermissionsAssigned();
+  }
+
+  @Test
+  @MockitoSettings(strictness = Strictness.LENIENT)
+  void shouldSkipAdminAccountCreationIfPropertyIsSet() {
+    System.setProperty("sonia.scm.skipAdminCreation", "true");
+
+    try {
+      setupContextListener.contextInitialized(null);
+
+      verify(userManager, never()).create(any());
+      verify(permissionAssigner, never()).setPermissionsForUser(anyString(), any(Collection.class));
+    } finally {
+      System.setProperty("sonia.scm.skipAdminCreation", "");
+    }
   }
 
   @Test

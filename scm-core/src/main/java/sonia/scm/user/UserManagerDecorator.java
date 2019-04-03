@@ -122,11 +122,6 @@ public class UserManagerDecorator extends ManagerDecorator<User>
   }
 
   @Override
-  public Collection<User> autocomplete(String filter) {
-    return decorated.autocomplete(filter);
-  }
-
-  @Override
   public void changePasswordForLoggedInUser(String oldPassword, String newPassword) {
     decorated.changePasswordForLoggedInUser(oldPassword, newPassword);
   }

@@ -14,16 +14,14 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
-import sonia.scm.Manager;
-import sonia.scm.group.DefaultGroupManager;
+import sonia.scm.DisplayManager;
+import sonia.scm.group.DefaultGroupDisplayManager;
 import sonia.scm.group.Group;
-import sonia.scm.group.GroupManager;
 import sonia.scm.group.xml.XmlGroupDAO;
 import sonia.scm.store.ConfigurationStore;
 import sonia.scm.store.ConfigurationStoreFactory;
-import sonia.scm.user.DefaultUserManager;
+import sonia.scm.user.DefaultUserDisplayManager;
 import sonia.scm.user.User;
-import sonia.scm.user.UserManager;
 import sonia.scm.user.xml.XmlUserDAO;
 import sonia.scm.web.VndMediaType;
 import sonia.scm.xml.XmlDatabase;
@@ -51,7 +49,7 @@ public class AutoCompleteResourceTest {
   public final ShiroRule shiroRule = new ShiroRule();
 
   public static final String URL = "/" + AutoCompleteResource.PATH;
-  private final Integer defaultLimit = Manager.DEFAULT_LIMIT;
+  private final Integer defaultLimit = DisplayManager.DEFAULT_LIMIT;
   private Dispatcher dispatcher;
 
   private XmlUserDAO userDao;
@@ -73,8 +71,8 @@ public class AutoCompleteResourceTest {
     XmlGroupDAO groupDAO = new XmlGroupDAO(storeFactory);
     groupDao = spy(groupDAO);
     ReducedObjectModelToDtoMapperImpl mapper = new ReducedObjectModelToDtoMapperImpl();
-    UserManager userManager = new DefaultUserManager(this.userDao);
-    GroupManager groupManager = new DefaultGroupManager(groupDao);
+    DefaultUserDisplayManager userManager = new DefaultUserDisplayManager(this.userDao);
+    DefaultGroupDisplayManager groupManager = new DefaultGroupDisplayManager(groupDao);
     AutoCompleteResource autoCompleteResource = new AutoCompleteResource(mapper, userManager, groupManager);
     dispatcher = createDispatcher(autoCompleteResource);
   }

@@ -159,17 +159,17 @@ public final class SearchUtil
    *
    * @return
    */
-  public static <T> Collection<T> search(SearchRequest searchRequest,
-    Collection<T> collection, TransformFilter<T> filter)
+  public static <T, R> Collection<R> search(SearchRequest searchRequest,
+    Collection<T> collection, TransformFilter<T, R> filter)
   {
-    List<T> items = new ArrayList<T>();
+    List<R> items = new ArrayList<>();
     int index = 0;
     int counter = 0;
     Iterator<T> it = collection.iterator();
 
     while (it.hasNext())
     {
-      T item = filter.accept(it.next());
+      R item = filter.accept(it.next());
 
       if (item != null)
       {

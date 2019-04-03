@@ -46,8 +46,10 @@ import sonia.scm.cache.CacheManager;
 import sonia.scm.cache.GuavaCacheManager;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.event.ScmEventBus;
+import sonia.scm.group.DefaultGroupDisplayManager;
 import sonia.scm.group.DefaultGroupManager;
 import sonia.scm.group.GroupDAO;
+import sonia.scm.group.GroupDisplayManager;
 import sonia.scm.group.GroupManager;
 import sonia.scm.group.GroupManagerProvider;
 import sonia.scm.group.xml.XmlGroupDAO;
@@ -102,8 +104,10 @@ import sonia.scm.template.MustacheTemplateEngine;
 import sonia.scm.template.TemplateEngine;
 import sonia.scm.template.TemplateEngineFactory;
 import sonia.scm.template.TemplateServlet;
+import sonia.scm.user.DefaultUserDisplayManager;
 import sonia.scm.user.DefaultUserManager;
 import sonia.scm.user.UserDAO;
+import sonia.scm.user.UserDisplayManager;
 import sonia.scm.user.UserManager;
 import sonia.scm.user.UserManagerProvider;
 import sonia.scm.user.xml.XmlUserDAO;
@@ -268,8 +272,11 @@ public class ScmServletModule extends ServletModule
       RepositoryManagerProvider.class);
     bindDecorated(UserManager.class, DefaultUserManager.class,
       UserManagerProvider.class);
+    bind(UserDisplayManager.class, DefaultUserDisplayManager.class);
     bindDecorated(GroupManager.class, DefaultGroupManager.class,
       GroupManagerProvider.class);
+    bind(GroupDisplayManager.class, DefaultGroupDisplayManager.class);
+
     bind(CGIExecutorFactory.class, DefaultCGIExecutorFactory.class);
 
     // bind sslcontext provider
