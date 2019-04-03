@@ -82,7 +82,7 @@ const mapDispatchToProps = dispatch => {
       branch: Branch,
       callback?: () => void
     ) => {
-      dispatch(createBranch("ghjgkj", repository, branch, callback)); //TODO
+      dispatch(createBranch("INSERTLINK", repository, branch, callback)); //TODO
     },
     resetForm: () => {
       dispatch(createBranchReset());
