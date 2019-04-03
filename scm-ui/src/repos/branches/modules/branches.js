@@ -2,7 +2,8 @@
 import {
   FAILURE_SUFFIX,
   PENDING_SUFFIX,
-  SUCCESS_SUFFIX
+  SUCCESS_SUFFIX,
+  default as types
 } from "../../../modules/types";
 import { apiClient } from "@scm-manager/ui-components";
 import type { Action, Branch, Repository } from "@scm-manager/ui-types";
@@ -18,6 +19,14 @@ export const FETCH_BRANCH = "scm/repos/FETCH_BRANCH";
 export const FETCH_BRANCH_PENDING = `${FETCH_BRANCH}_${PENDING_SUFFIX}`;
 export const FETCH_BRANCH_SUCCESS = `${FETCH_BRANCH}_${SUCCESS_SUFFIX}`;
 export const FETCH_BRANCH_FAILURE = `${FETCH_BRANCH}_${FAILURE_SUFFIX}`;
+
+export const CREATE_BRANCH = "scm/repos/CREATE_BRANCH";
+export const CREATE_BRANCH_PENDING = `${CREATE_BRANCH}_${PENDING_SUFFIX}`;
+export const CREATE_BRANCH_SUCCESS = `${CREATE_BRANCH}_${PENDING_SUFFIX}`;
+export const CREATE_BRANCH_FAILURE = `${CREATE_BRANCH}_${PENDING_SUFFIX}`;
+export const CREATE_BRANCH_RESET = `${CREATE_BRANCH}_${PENDING_SUFFIX}`;
+
+const CONTENT_TYPE_BRANCH = "application/vnd.scmm-branch+json;v=2";
 
 // Fetching branches
 
@@ -44,10 +53,7 @@ export function fetchBranches(repository: Repository) {
   };
 }
 
-export function fetchBranch(
-  repository: Repository,
-  name: string
-) {
+export function fetchBranch(repository: Repository, name: string) {
   let link = repository._links.branches.href;
   if (!link.endsWith("/")) {
     link += "/";
@@ -69,6 +75,28 @@ export function fetchBranch(
   };
 }
 
+// create branch
+
+export function createBranch(
+  link: string,
+  repository: Repository,
+  branch: Branch,
+  callback?: () => void
+) {
+  return function(dispatch: any) {
+    dispatch(createBranchPending(repository, branch.name));
+    return apiClient
+      .post(link, branch, CONTENT_TYPE_BRANCH)
+      .then(() => {
+        dispatch(createBranchSuccess());
+        if (callback) {
+          callback();
+        }
+      })
+      .catch(error => dispatch(createBranchFailure(error)));
+  };
+}
+
 // Selectors
 
 export function getBranches(state: Object, repository: Repository) {
@@ -78,6 +106,10 @@ export function getBranches(state: Object, repository: Repository) {
   }
   return null;
 }
+
+export const isPermittedToCreateBranch = (state: Object): boolean => {
+  return false; // TODO
+};
 
 export function getBranch(
   state: Object,
@@ -103,14 +135,6 @@ export function getFetchBranchesFailure(state: Object, repository: Repository) {
   return getFailure(state, FETCH_BRANCHES, createKey(repository));
 }
 
-export function isFetchBranchPending(state: Object, repository: Repository, name: string) {
-  return isPending(state, FETCH_BRANCH, createKey(repository) + "/" + name);
-}
-
-export function getFetchBranchFailure(state: Object, repository: Repository, name: string) {
-  return getFailure(state, FETCH_BRANCH, createKey(repository) + "/" + name);
-}
-
 export function fetchBranchesPending(repository: Repository) {
   return {
     type: FETCH_BRANCHES_PENDING,
@@ -133,6 +157,60 @@ export function fetchBranchesFailure(repository: Repository, error: Error) {
     payload: { error, repository },
     itemId: createKey(repository)
   };
+}
+
+export function isCreateBranchPending(state: Object) {
+  return isPending(state, CREATE_BRANCH);
+}
+
+export function getCreateBranchFailure(state: Object) {
+  return getFailure(state, CREATE_BRANCH);
+}
+
+export function createBranchPending(
+  repository: Repository,
+  name: string
+): Action {
+  return {
+    type: CREATE_BRANCH_PENDING,
+    payload: { repository, name },
+    itemId: createKey(repository) + "/" + name
+  };
+}
+
+export function createBranchSuccess(): Action {
+  return {
+    type: CREATE_BRANCH_SUCCESS
+  };
+}
+
+export function createBranchFailure(error: Error): Action {
+  return {
+    type: CREATE_BRANCH_FAILURE,
+    payload: error
+  };
+}
+
+export function createBranchReset(): Action {
+  return {
+    type: CREATE_BRANCH_RESET
+  };
+}
+
+export function isFetchBranchPending(
+  state: Object,
+  repository: Repository,
+  name: string
+) {
+  return isPending(state, FETCH_BRANCH, createKey(repository) + "/" + name);
+}
+
+export function getFetchBranchFailure(
+  state: Object,
+  repository: Repository,
+  name: string
+) {
+  return getFailure(state, FETCH_BRANCH, createKey(repository) + "/" + name);
 }
 
 export function fetchBranchPending(
