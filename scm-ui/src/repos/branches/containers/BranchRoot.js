@@ -13,7 +13,7 @@ import {
 } from "../modules/branches";
 import { ErrorPage, Loading } from "@scm-manager/ui-components";
 import type { History } from "history";
-import { NotFoundError } from "./errors";
+import { NotFoundError } from "@scm-manager/ui-components";
 
 type Props = {
   repository: Repository,
