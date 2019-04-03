@@ -9,8 +9,6 @@ type Props = {
   users: User[]
 };
 
-;
-
 class UserTable extends React.Component<Props> {
   render() {
     const { users, t } = this.props;

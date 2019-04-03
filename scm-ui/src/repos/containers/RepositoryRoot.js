@@ -8,33 +8,35 @@ import {
 } from "../modules/repos";
 
 import { connect } from "react-redux";
-import {Redirect, Route, Switch} from "react-router-dom";
+import { Redirect, Route, Switch } from "react-router-dom";
 import type { Repository } from "@scm-manager/ui-types";
 
 import {
-  CollapsibleErrorPage,
   Loading,
   Navigation,
   SubNavigation,
   NavLink,
   Page,
-  Section, ErrorPage
+  Section,
+  ErrorPage
 } from "@scm-manager/ui-components";
 import { translate } from "react-i18next";
 import RepositoryDetails from "../components/RepositoryDetails";
 import EditRepo from "./EditRepo";
+import BranchesOverview from "../branches/containers/BranchesOverview";
+import CreateBranch from "../branches/containers/CreateBranch";
 import Permissions from "../permissions/containers/Permissions";
 
 import type { History } from "history";
 import EditRepoNavLink from "../components/EditRepoNavLink";
-
-import BranchRoot from "./ChangesetsRoot";
+import BranchRoot from "../branches/containers/BranchRoot";
+import ChangesetsRoot from "./ChangesetsRoot";
 import ChangesetView from "./ChangesetView";
 import PermissionsNavLink from "../components/PermissionsNavLink";
 import Sources from "../sources/containers/Sources";
 import RepositoryNavLink from "../components/RepositoryNavLink";
-import {getLinks, getRepositoriesLink} from "../../modules/indexResource";
-import {binder, ExtensionPoint} from "@scm-manager/ui-extensions";
+import { getLinks, getRepositoriesLink } from "../../modules/indexResource";
+import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
 
 type Props = {
   namespace: string,
@@ -72,9 +74,15 @@ class RepositoryRoot extends React.Component<Props> {
     return this.stripEndingSlash(this.props.match.url);
   };
 
-  matches = (route: any) => {
+  matchesBranches = (route: any) => {
     const url = this.matchedUrl();
-    const regex = new RegExp(`${url}(/branches)?/?[^/]*/changesets?.*`);
+    const regex = new RegExp(`${url}/branch/.+/info`);
+    return route.location.pathname.match(regex);
+  };
+
+  matchesChangesets = (route: any) => {
+    const url = this.matchedUrl();
+    const regex = new RegExp(`${url}(/branch)?/?[^/]*/changesets?.*`);
     return route.location.pathname.match(regex);
   };
 
@@ -82,11 +90,13 @@ class RepositoryRoot extends React.Component<Props> {
     const { loading, error, indexLinks, repository, t } = this.props;
 
     if (error) {
-      return <ErrorPage
-        title={t("repositoryRoot.errorTitle")}
-        subtitle={t("repositoryRoot.errorSubtitle")}
-        error={error}
-      />
+      return (
+        <ErrorPage
+          title={t("repositoryRoot.errorTitle")}
+          subtitle={t("repositoryRoot.errorSubtitle")}
+          error={error}
+        />
+      );
     }
 
     if (!repository || loading) {
@@ -101,11 +111,14 @@ class RepositoryRoot extends React.Component<Props> {
       indexLinks
     };
 
-    const redirectUrlFactory = binder.getExtension("repository.redirect", this.props);
+    const redirectUrlFactory = binder.getExtension(
+      "repository.redirect",
+      this.props
+    );
     let redirectedUrl;
-    if (redirectUrlFactory){
+    if (redirectUrlFactory) {
       redirectedUrl = url + redirectUrlFactory(this.props);
-    }else{
+    } else {
       redirectedUrl = url + "/info";
     }
 
@@ -114,7 +127,7 @@ class RepositoryRoot extends React.Component<Props> {
         <div className="columns">
           <div className="column is-three-quarters is-clipped">
             <Switch>
-              <Redirect exact from={this.props.match.url} to={redirectedUrl}/>
+              <Redirect exact from={this.props.match.url} to={redirectedUrl} />
               <Route
                 path={`${url}/info`}
                 exact
@@ -154,22 +167,45 @@ class RepositoryRoot extends React.Component<Props> {
               <Route
                 path={`${url}/changesets`}
                 render={() => (
-                  <BranchRoot
+                  <ChangesetsRoot
                     repository={repository}
-                    baseUrlWithBranch={`${url}/branches`}
+                    baseUrlWithBranch={`${url}/branch`}
                     baseUrlWithoutBranch={`${url}/changesets`}
                   />
                 )}
               />
               <Route
-                path={`${url}/branches/:branch/changesets`}
+                path={`${url}/branch/:branch`}
                 render={() => (
                   <BranchRoot
                     repository={repository}
-                    baseUrlWithBranch={`${url}/branches`}
+                    baseUrl={`${url}/branch`}
+                  />
+                )}
+              />
+              <Route
+                path={`${url}/branch/:branch/changesets`}
+                render={() => (
+                  <ChangesetsRoot
+                    repository={repository}
+                    baseUrlWithBranch={`${url}/branch`}
                     baseUrlWithoutBranch={`${url}/changesets`}
                   />
                 )}
+              />
+              <Route
+                path={`${url}/branches`}
+                exact={true}
+                render={() => (
+                  <BranchesOverview
+                    repository={repository}
+                    baseUrl={`${url}/branch`}
+                  />
+                )}
+              />
+              <Route
+                path={`${url}/branches/create`}
+                render={() => <CreateBranch repository={repository} />}
               />
               <ExtensionPoint
                 name="repository.route"
@@ -193,11 +229,20 @@ class RepositoryRoot extends React.Component<Props> {
                 />
                 <RepositoryNavLink
                   repository={repository}
+                  linkName="branches"
+                  to={`${url}/branches/`}
+                  icon="fas fa-code-branch"
+                  label={t("repositoryRoot.menu.branchesNavLink")}
+                  activeWhenMatch={this.matchesBranches}
+                  activeOnlyWhenExact={false}
+                />
+                <RepositoryNavLink
+                  repository={repository}
                   linkName="changesets"
                   to={`${url}/changesets/`}
-                  icon="fas fa-code-branch"
+                  icon="fas fa-exchange-alt"
                   label={t("repositoryRoot.menu.historyNavLink")}
-                  activeWhenMatch={this.matches}
+                  activeWhenMatch={this.matchesChangesets}
                   activeOnlyWhenExact={false}
                 />
                 <RepositoryNavLink

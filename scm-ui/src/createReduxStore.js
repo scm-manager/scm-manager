@@ -19,7 +19,7 @@ import namespaceStrategies from "./config/modules/namespaceStrategies";
 import indexResources from "./modules/indexResource";
 
 import type { BrowserHistory } from "history/createBrowserHistory";
-import branches from "./repos/modules/branches";
+import branches from "./repos/branches/modules/branches";
 
 function createReduxStore(history: BrowserHistory) {
   const composeEnhancers =

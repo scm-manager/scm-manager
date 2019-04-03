@@ -2,7 +2,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import type { Group } from "@scm-manager/ui-types";
-import { Checkbox } from "@scm-manager/ui-components"
+import { Checkbox } from "@scm-manager/ui-components";
 
 type Props = {
   group: Group

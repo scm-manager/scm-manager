@@ -26,6 +26,7 @@
     "menu": {
       "navigationLabel": "Repository Navigation",
       "informationNavLink": "Informationen",
+      "branchesNavLink": "Branches",
       "historyNavLink": "Commits",
       "sourcesNavLink": "Sources",
       "settingsNavLink": "Einstellungen",
@@ -41,6 +42,27 @@
   "create": {
     "title": "Repository erstellen",
     "subtitle": "Erstellen eines neuen Repository"
+  },
+  "branches": {
+    "overview": {
+      "title": "Übersicht aller verfügbaren Branches",
+      "createButton": "Branch erstellen"
+    },
+    "table": {
+      "branches": "Branches"
+    },
+    "create": {
+      "title": "Branch erstellen",
+      "source": "Quellbranch",
+      "name": "Name",
+      "submit": "Branch erstellen"
+    }
+  },
+  "branch": {
+    "name": "Name:",
+    "commits": "Commits",
+    "sources": "Sources",
+    "defaultTag": "Default"
   },
   "changesets": {
     "errorTitle": "Fehler",

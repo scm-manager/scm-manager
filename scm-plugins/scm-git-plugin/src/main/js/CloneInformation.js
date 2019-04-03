@@ -8,11 +8,10 @@ type Props = {
   repository: Repository,
 
   // context props
-  t: (string) => string
+  t: string => string
 };
 
 class CloneInformation extends React.Component<Props> {
-
   render() {
     const { url, repository, t } = this.props;
 
@@ -51,7 +50,6 @@ class CloneInformation extends React.Component<Props> {
       </div>
     );
   }
-
 }
 
 export default translate("plugins")(CloneInformation);

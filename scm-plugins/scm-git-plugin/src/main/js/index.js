@@ -6,6 +6,7 @@ import GitAvatar from "./GitAvatar";
 
 import {ConfigurationBinder as cfgBinder} from "@scm-manager/ui-components";
 import GitGlobalConfiguration from "./GitGlobalConfiguration";
+import GitBranchInformation from "./GitBranchInformation";
 import GitMergeInformation from "./GitMergeInformation";
 import RepositoryConfig from "./RepositoryConfig";
 
@@ -18,6 +19,11 @@ const gitPredicate = (props: Object) => {
 binder.bind(
   "repos.repository-details.information",
   ProtocolInformation,
+  gitPredicate
+);
+binder.bind(
+  "repos.branch-details.information",
+  GitBranchInformation,
   gitPredicate
 );
 binder.bind(

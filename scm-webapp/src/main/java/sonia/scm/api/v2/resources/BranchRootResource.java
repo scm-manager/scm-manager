@@ -79,15 +79,16 @@ public class BranchRootResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("branch") String branchName) throws IOException {
-    try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
+    NamespaceAndName namespaceAndName = new NamespaceAndName(namespace, name);
+    try (RepositoryService repositoryService = serviceFactory.create(namespaceAndName)) {
       Branches branches = repositoryService.getBranchesCommand().getBranches();
       return branches.getBranches()
         .stream()
         .filter(branch -> branchName.equals(branch.getName()))
         .findFirst()
-        .map(branch -> branchToDtoMapper.map(branch, new NamespaceAndName(namespace, name)))
+        .map(branch -> branchToDtoMapper.map(branch, namespaceAndName))
         .map(Response::ok)
-        .orElse(Response.status(Response.Status.NOT_FOUND))
+        .orElseThrow(() -> notFound(entity("branch", branchName).in(namespaceAndName)))
         .build();
     } catch (CommandNotSupportedException ex) {
       return Response.status(Response.Status.BAD_REQUEST).build();

@@ -12,7 +12,7 @@ import {
   getBranches,
   getFetchBranchesFailure,
   isFetchBranchesPending
-} from "../../modules/branches";
+} from "../../branches/modules/branches";
 import { compose } from "redux";
 import Content from "./Content";
 import { fetchSources, isDirectory } from "../modules/sources";

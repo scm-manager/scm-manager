@@ -3,7 +3,9 @@
     "information": {
       "clone" : "Repository klonen",
       "create" : "Neues Repository erstellen",
-      "replace" : "Ein bestehendes Repository aktualisieren"
+      "replace" : "Ein bestehendes Repository aktualisieren",
+      "fetch": "Remote-Änderungen herunterladen",
+      "checkout": "Branch wechseln"
     },
     "config": {
       "link": "Mercurial",

@@ -1,34 +1,36 @@
 //@flow
 import React from "react";
-import type { Changeset, Repository } from "@scm-manager/ui-types";
-import ButtonGroup from "../../buttons/ButtonGroup";
-import Button from "../../buttons/Button";
-import { createChangesetLink, createSourcesLink } from "./changesets";
+import type { Repository, Branch } from "@scm-manager/ui-types";
+import { ButtonGroup, Button } from "@scm-manager/ui-components";
 import { translate } from "react-i18next";
 
 type Props = {
   repository: Repository,
-  changeset: Changeset,
+  branch: Branch,
 
   // context props
   t: string => string
 };
 
-class ChangesetButtonGroup extends React.Component<Props> {
+class BranchButtonGroup extends React.Component<Props> {
   render() {
-    const { repository, changeset, t } = this.props;
+    const { repository, branch, t } = this.props;
 
-    const changesetLink = createChangesetLink(repository, changeset);
-    const sourcesLink = createSourcesLink(repository, changeset);
+    const changesetLink = `/repo/${repository.namespace}/${
+      repository.name
+    }/branch/${encodeURIComponent(branch.name)}/changesets/`;
+    const sourcesLink = `/repo/${repository.namespace}/${
+      repository.name
+    }/sources/${encodeURIComponent(branch.name)}/`;
 
     return (
-      <ButtonGroup className="is-pulled-right">
+      <ButtonGroup>
         <Button link={changesetLink}>
           <span className="icon">
             <i className="fas fa-exchange-alt" />
           </span>
           <span className="is-hidden-mobile is-hidden-tablet-only">
-            {t("changeset.buttons.details")}
+            {t("branch.commits")}
           </span>
         </Button>
         <Button link={sourcesLink}>
@@ -36,7 +38,7 @@ class ChangesetButtonGroup extends React.Component<Props> {
             <i className="fas fa-code" />
           </span>
           <span className="is-hidden-mobile is-hidden-tablet-only">
-            {t("changeset.buttons.sources")}
+            {t("branch.sources")}
           </span>
         </Button>
       </ButtonGroup>
@@ -44,4 +46,4 @@ class ChangesetButtonGroup extends React.Component<Props> {
   }
 }
 
-export default translate("repos")(ChangesetButtonGroup);
+export default translate("repos")(BranchButtonGroup);
