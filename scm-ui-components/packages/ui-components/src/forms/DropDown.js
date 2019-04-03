@@ -5,6 +5,7 @@ import classNames from "classnames";
 
 type Props = {
   options: string[],
+  optionValues?: string[],
   optionSelected: string => void,
   preselectedOption?: string,
   className: any,
@@ -13,7 +14,7 @@ type Props = {
 
 class DropDown extends React.Component<Props> {
   render() {
-    const { options, preselectedOption, className, disabled } = this.props;
+    const { options, optionValues, preselectedOption, className, disabled } = this.props;
     return (
       <div className={classNames(className, "select")}>
         <select
@@ -22,9 +23,9 @@ class DropDown extends React.Component<Props> {
           disabled={disabled}
         >
           <option key="" />
-          {options.map(option => {
+          {options.map((option, index) => {
             return (
-              <option key={option} value={option}>
+              <option key={option} value={optionValues && optionValues[index] ? optionValues[index] : option}>
                 {option}
               </option>
             );
