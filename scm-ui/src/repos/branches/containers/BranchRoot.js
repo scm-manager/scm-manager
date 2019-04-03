@@ -13,6 +13,7 @@ import {
 } from "../modules/branches";
 import { ErrorPage, Loading } from "@scm-manager/ui-components";
 import type { History } from "history";
+import { NotFoundError } from "./errors";
 
 type Props = {
   repository: Repository,
@@ -63,7 +64,7 @@ class BranchRoot extends React.Component<Props> {
     const url = this.matchedUrl();
 
     if (error) {
-      if(location.search.indexOf("?create=true") > -1) {
+      if(error instanceof NotFoundError && location.search.indexOf("?create=true") > -1) {
         return <Redirect to={`/repo/${repository.namespace}/${repository.name}/branches/create?name=${match.params.branch}`} />;
       }
 
