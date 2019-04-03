@@ -2,23 +2,14 @@
 import React from "react";
 import type { Repository, Branch } from "@scm-manager/ui-types";
 import { translate } from "react-i18next";
-import injectSheet from "react-jss";
-import classNames from "classnames";
 import BranchButtonGroup from "./BranchButtonGroup";
+import DefaultBranchTag from "./DefaultBranchTag";
 
 type Props = {
   repository: Repository,
   branch: Branch,
   // context props
-  t: string => string,
-  classes: any
-};
-
-const styles = {
-  tag: {
-    marginLeft: "0.75rem",
-    verticalAlign: "inherit"
-  }
+  t: string => string
 };
 
 class BranchDetail extends React.Component<Props> {
@@ -27,25 +18,16 @@ class BranchDetail extends React.Component<Props> {
 
     return (
       <div className="media">
-        <div className="media-content subtitle"><strong>{t("branch.name")}</strong> {branch.name} {this.renderDefaultBranch()}</div>
+        <div className="media-content subtitle">
+          <strong>{t("branch.name")}</strong> {branch.name}{" "}
+          <DefaultBranchTag defaultBranch={branch.defaultBranch} />
+        </div>
         <div className="media-right">
           <BranchButtonGroup repository={repository} branch={branch} />
         </div>
       </div>
     );
   }
-
-  renderDefaultBranch() {
-    const { branch, classes } = this.props;
-
-    let defaultLabel = null;
-    if (branch.defaultBranch) {
-      defaultLabel = (
-        <span className={classNames("tag is-dark", classes.tag)}>Default</span>
-      );
-    }
-    return defaultLabel;
-  }
 }
 
-export default injectSheet(styles)(translate("repos")(BranchDetail));
+export default translate("repos")(BranchDetail);

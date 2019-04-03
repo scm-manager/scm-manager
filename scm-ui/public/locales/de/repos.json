@@ -63,7 +63,8 @@
   "branch": {
     "name": "Name:",
     "commits": "Commits",
-    "sources": "Sources"
+    "sources": "Sources",
+    "defaultTag": "Default"
   },
   "changesets": {
     "errorTitle": "Fehler",
