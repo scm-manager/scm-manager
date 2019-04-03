@@ -1,4 +1,4 @@
-import { orderBranches } from "./OrderBranches";
+import { orderBranches } from "./orderBranches";
 
 const branch1 = { name: "branch1", revision: "revision1" };
 const branch2 = { name: "branch2", revision: "revision2" };
