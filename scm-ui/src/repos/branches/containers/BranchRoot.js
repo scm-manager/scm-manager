@@ -12,7 +12,6 @@ import {
   isFetchBranchPending
 } from "../modules/branches";
 import { ErrorPage, Loading } from "@scm-manager/ui-components";
-import CreateBranch from "./CreateBranch";
 import type { History } from "history";
 
 type Props = {
@@ -26,6 +25,7 @@ type Props = {
   t: string => string,
   history: History,
   match: any,
+  location: any,
 
   // dispatch functions
   fetchBranch: (repository: Repository, branchName: string) => void
@@ -50,9 +50,23 @@ class BranchRoot extends React.Component<Props> {
   };
 
   render() {
-    const { repository, branch, loading, error, t } = this.props;
+    const {
+      repository,
+      branch,
+      loading,
+      error,
+      t,
+      match,
+      location
+    } = this.props;
+
+    const url = this.matchedUrl();
 
     if (error) {
+      if(location.search.indexOf("?create=true") > -1) {
+        return <Redirect to={`/repo/${repository.namespace}/${repository.name}/branches/create?name=${match.params.branch}`} />;
+      }
+
       return (
         <ErrorPage
           title={t("branches.errorTitle")}
@@ -66,20 +80,14 @@ class BranchRoot extends React.Component<Props> {
       return <Loading />;
     }
 
-    const url = this.matchedUrl();
-
     return (
       <Switch>
         <Redirect exact from={url} to={`${url}/info`} />
         <Route
-          path={`${url}?create=true`}
-          render={() => (
-            <CreateBranch repository={repository} branch={branch} />
-          )}
-        />
-        <Route
           path={`${url}/info`}
-          render={() => <BranchView repository={repository} branch={branch} />}
+          component={() => (
+            <BranchView repository={repository} branch={branch} />
+          )}
         />
       </Switch>
     );
