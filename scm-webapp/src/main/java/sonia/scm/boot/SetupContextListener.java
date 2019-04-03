@@ -31,11 +31,10 @@ public class SetupContextListener implements ServletContextListener {
 
   @Override
   public void contextInitialized(ServletContextEvent sce) {
-    String skipAdminCreation = System.getProperty("skipAdminCreation");
-    if (skipAdminCreation == null || "false".equalsIgnoreCase(skipAdminCreation)) {
-      administrationContext.runAsAdmin(SetupAction.class);
-    } else {
+    if (Boolean.getBoolean("sonia.scm.skipAdminCreation")) {
       LOG.info("found skipAdminCreation flag; skipping creation of scmadmin");
+    } else {
+      administrationContext.runAsAdmin(SetupAction.class);
     }
   }
 
