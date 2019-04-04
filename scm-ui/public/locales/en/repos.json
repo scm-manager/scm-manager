@@ -47,8 +47,6 @@
     "subtitle": "Create a new repository"
   },
   "branches": {
-    "errorTitle": "Error",
-    "errorSubtitle": "Unknown branch error",
     "overview": {
       "title": "Overview of all branches",
       "createButton": "Create Branch"

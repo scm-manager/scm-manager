@@ -129,6 +129,7 @@ public class BranchRootResourceTest extends RepositoryTestBase {
     dispatcher.invoke(request, response);
 
     assertEquals(404, response.getStatus());
+    assertEquals("application/vnd.scmm-error+json;v=2", response.getOutputHeaders().getFirst("Content-Type"));
   }
 
   @Test

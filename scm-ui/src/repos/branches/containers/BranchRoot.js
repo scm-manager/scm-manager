@@ -3,7 +3,6 @@ import React from "react";
 import BranchView from "../components/BranchView";
 import { connect } from "react-redux";
 import { Redirect, Route, Switch, withRouter } from "react-router-dom";
-import { translate } from "react-i18next";
 import type { Repository, Branch } from "@scm-manager/ui-types";
 import {
   fetchBranch,
@@ -11,8 +10,9 @@ import {
   getFetchBranchFailure,
   isFetchBranchPending
 } from "../modules/branches";
-import { ErrorPage, Loading } from "@scm-manager/ui-components";
+import { ErrorNotification, Loading } from "@scm-manager/ui-components";
 import type { History } from "history";
+import { NotFoundError } from "@scm-manager/ui-components";
 
 type Props = {
   repository: Repository,
@@ -22,7 +22,6 @@ type Props = {
   error?: Error,
 
   // context props
-  t: string => string,
   history: History,
   match: any,
   location: any,
@@ -55,7 +54,6 @@ class BranchRoot extends React.Component<Props> {
       branch,
       loading,
       error,
-      t,
       match,
       location
     } = this.props;
@@ -63,16 +61,12 @@ class BranchRoot extends React.Component<Props> {
     const url = this.matchedUrl();
 
     if (error) {
-      if(location.search.indexOf("?create=true") > -1) {
+      if(error instanceof NotFoundError && location.search.indexOf("?create=true") > -1) {
         return <Redirect to={`/repo/${repository.namespace}/${repository.name}/branches/create?name=${match.params.branch}`} />;
       }
 
       return (
-        <ErrorPage
-          title={t("branches.errorTitle")}
-          subtitle={t("branches.errorSubtitle")}
-          error={error}
-        />
+        <ErrorNotification error={error} />
       );
     }
 
@@ -121,5 +115,5 @@ export default withRouter(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )(translate("repos")(BranchRoot))
+  )(BranchRoot)
 );
