@@ -30,7 +30,8 @@ class BranchForm extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      nameValidationError: false
+      nameValidationError: false,
+      name: props.transmittedName
     };
   }
 
@@ -55,7 +56,7 @@ class BranchForm extends React.Component<Props, State> {
   };
 
   render() {
-    const { t, branches, loading } = this.props;
+    const { t, branches, loading, transmittedName } = this.props;
     const { name } = this.state;
     orderBranches(branches);
     const options = branches.map(branch => ({
@@ -82,6 +83,7 @@ class BranchForm extends React.Component<Props, State> {
                 value={name ? name : ""}
                 validationError={this.state.nameValidationError}
                 errorMessage={t("validation.branch.nameInvalid")}
+                disabled={!!transmittedName}
               />
             </div>
           </div>

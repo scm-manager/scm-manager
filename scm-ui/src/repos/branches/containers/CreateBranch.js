@@ -56,7 +56,7 @@ class CreateBranch extends React.Component<Props> {
     this.props.createBranch(branch, () => this.branchCreated(branch));
   };
 
-  matchesTransmittedName = (url: string) => {
+  transmittedName = (url: string) => {
     const params = queryString.parse(url);
     return params.name;
   };
@@ -68,7 +68,7 @@ class CreateBranch extends React.Component<Props> {
       return <ErrorNotification error={error} />;
     }
 
-    if (!branches) {
+    if (loading || !branches) {
       return <Loading />;
     }
 
@@ -80,7 +80,7 @@ class CreateBranch extends React.Component<Props> {
           loading={loading}
           repository={repository}
           branches={branches}
-          transmittedName={this.matchesTransmittedName(location.search)}
+          transmittedName={this.transmittedName(location.search)}
         />
       </>
     );
@@ -107,8 +107,7 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = (state, ownProps) => {
   const { repository } = ownProps;
-  const loading =
-    isFetchBranchesPending(state, repository) || isCreateBranchPending(state);
+  const loading = isFetchBranchesPending(state, repository); //|| isCreateBranchPending(state);
   const error =
     getFetchBranchesFailure(state, repository) || getCreateBranchFailure(state);
   const branches = getBranches(state, repository);
