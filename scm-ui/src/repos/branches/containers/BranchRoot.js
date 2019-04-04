@@ -13,6 +13,7 @@ import {
 import { ErrorNotification, Loading } from "@scm-manager/ui-components";
 import type { History } from "history";
 import { NotFoundError } from "@scm-manager/ui-components";
+import queryString from "query-string";
 
 type Props = {
   repository: Repository,
@@ -49,25 +50,25 @@ class BranchRoot extends React.Component<Props> {
   };
 
   render() {
-    const {
-      repository,
-      branch,
-      loading,
-      error,
-      match,
-      location
-    } = this.props;
+    const { repository, branch, loading, error, match, location } = this.props;
 
     const url = this.matchedUrl();
 
     if (error) {
-      if(error instanceof NotFoundError && location.search.indexOf("?create=true") > -1) {
-        return <Redirect to={`/repo/${repository.namespace}/${repository.name}/branches/create?name=${match.params.branch}`} />;
+      if (
+        error instanceof NotFoundError &&
+        queryString.parse(location.search).create === "true"
+      ) {
+        return (
+          <Redirect
+            to={`/repo/${repository.namespace}/${
+              repository.name
+            }/branches/create?name=${match.params.branch}`}
+          />
+        );
       }
 
-      return (
-        <ErrorNotification error={error} />
-      );
+      return <ErrorNotification error={error} />;
     }
 
     if (loading || !branch) {
