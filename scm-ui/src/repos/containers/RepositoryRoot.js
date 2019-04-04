@@ -175,21 +175,21 @@ class RepositoryRoot extends React.Component<Props> {
                 )}
               />
               <Route
-                path={`${url}/branch/:branch`}
-                render={() => (
-                  <BranchRoot
-                    repository={repository}
-                    baseUrl={`${url}/branch`}
-                  />
-                )}
-              />
-              <Route
                 path={`${url}/branch/:branch/changesets`}
                 render={() => (
                   <ChangesetsRoot
                     repository={repository}
                     baseUrlWithBranch={`${url}/branch`}
                     baseUrlWithoutBranch={`${url}/changesets`}
+                  />
+                )}
+              />
+              <Route
+                path={`${url}/branch/:branch`}
+                render={() => (
+                  <BranchRoot
+                    repository={repository}
+                    baseUrl={`${url}/branch`}
                   />
                 )}
               />

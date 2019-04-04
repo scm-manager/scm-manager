@@ -9,13 +9,20 @@ import reducer, {
   FETCH_BRANCH_PENDING,
   FETCH_BRANCH_SUCCESS,
   FETCH_BRANCH_FAILURE,
+  CREATE_BRANCH,
+  CREATE_BRANCH_FAILURE,
+  CREATE_BRANCH_PENDING,
+  CREATE_BRANCH_SUCCESS,
   fetchBranches,
   fetchBranch,
   fetchBranchSuccess,
   getBranch,
   getBranches,
   getFetchBranchesFailure,
-  isFetchBranchesPending
+  isFetchBranchesPending,
+  createBranch,
+  isCreateBranchPending,
+  getCreateBranchFailure
 } from "./branches";
 
 const namespace = "foo";
@@ -34,6 +41,8 @@ const repository = {
 const branch1 = { name: "branch1", revision: "revision1" };
 const branch2 = { name: "branch2", revision: "revision2" };
 const branch3 = { name: "branch3", revision: "revision3" };
+const branchRequest = { name: "newBranch", source: "master" };
+const newBranch = { name: "newBranch", revision: "rev3" };
 
 describe("branches", () => {
   describe("fetch branches", () => {
@@ -117,6 +126,64 @@ describe("branches", () => {
         expect(actions[0].type).toEqual(FETCH_BRANCH_PENDING);
         expect(actions[1].type).toEqual(FETCH_BRANCH_FAILURE);
         expect(actions[1].payload).toBeDefined();
+      });
+    });
+
+    it("should create a branch successfully", () => {
+      //branchrequest answer
+      fetchMock.postOnce(URL, {
+        status: 201,
+        headers: {
+          location: URL + "/newBranch"
+        }
+      });
+
+      //branch answer
+      fetchMock.getOnce(URL + "/newBranch", newBranch);
+
+      const store = mockStore({});
+      return store.dispatch(createBranch(URL, repository, branchRequest)).then(() => {
+        const actions = store.getActions();
+        expect(actions[0].type).toEqual(CREATE_BRANCH_PENDING);
+        expect(actions[1].type).toEqual(CREATE_BRANCH_SUCCESS);
+      });
+    });
+
+    it("should call the callback with the branch from the location header", () => {
+      //branchrequest answer
+      fetchMock.postOnce(URL, {
+        status: 201,
+        headers: {
+          location: URL + "/newBranch"
+        }
+      });
+
+      //branch answer
+      fetchMock.getOnce(URL + "/newBranch", newBranch);
+
+      const store = mockStore({});
+
+      let receivedBranch = null;
+
+      const callback = (branch) => {
+        receivedBranch = branch;
+      };
+
+      return store.dispatch(createBranch(URL, repository, branchRequest, callback)).then(() => {
+        expect(receivedBranch).toEqual(newBranch);
+      });
+    });
+
+    it("should fail creating a branch on HTTP 500", () => {
+      fetchMock.postOnce(URL, {
+        status: 500
+      });
+
+      const store = mockStore({});
+      return store.dispatch(createBranch(URL, repository, branchRequest)).then(() => {
+        const actions = store.getActions();
+        expect(actions[0].type).toEqual(CREATE_BRANCH_PENDING);
+        expect(actions[1].type).toEqual(CREATE_BRANCH_FAILURE);
       });
     });
   });
@@ -278,6 +345,37 @@ describe("branches", () => {
 
     it("should return false if fetching branches did not fail", () => {
       expect(getFetchBranchesFailure({}, repository)).toBeUndefined();
+    });
+
+    it("should return true if create branch is pending", () => {
+      const state = {
+        pending: {
+          [CREATE_BRANCH]: true
+        }
+      };
+      expect(isCreateBranchPending(state)).toBe(true);
+    });
+
+    it("should return false if create branch is not pending", () => {
+      const state = {
+        pending: {
+          [CREATE_BRANCH]: false
+        }
+      };
+      expect(isCreateBranchPending(state)).toBe(false);
+    });
+
+    it("should return error when create branch did fail", () => {
+      const state = {
+        failure: {
+          [CREATE_BRANCH]: error
+        }
+      };
+      expect(getCreateBranchFailure(state)).toEqual(error);
+    });
+
+    it("shouls return undefined when create branch did not fail", () => {
+      expect(getCreateBranchFailure({})).toBe(undefined);
     });
   });
 });

@@ -14,6 +14,7 @@ import {
 } from "../modules/branches";
 import type { History } from "history";
 import { connect } from "react-redux";
+import {withRouter} from "react-router-dom";
 
 type Props = {
   loading?: boolean,
@@ -28,7 +29,8 @@ type Props = {
 
   // context objects
   t: string => string,
-  history: History
+  history: History,
+  location: any
 };
 
 class CreateBranch extends React.Component<Props> {
@@ -47,8 +49,14 @@ class CreateBranch extends React.Component<Props> {
     this.props.createBranch(branch, () => this.branchCreated(branch));
   };
 
+  matchesTransmittedName = (search: string) => {
+    const regex = new RegExp("\\?name=.+");
+    const match = search.match(regex);
+    return match ? match[0].substring(6, 0): null;
+  };
+
   render() {
-    const { t, loading, error, repository, branches } = this.props;
+    const { t, loading, error, repository, branches, location } = this.props;
 
     if (error) {
       return <ErrorNotification error={error} />;
@@ -66,6 +74,7 @@ class CreateBranch extends React.Component<Props> {
           loading={loading}
           repository={repository}
           branches={branches}
+          transmittedName={this.matchesTransmittedName(location.search)}
         />
       </>
     );
@@ -103,7 +112,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export default connect(
+export default withRouter(connect(
   mapStateToProps,
   mapDispatchToProps
-)(translate("repos")(CreateBranch));
+)(translate("repos")(CreateBranch)));

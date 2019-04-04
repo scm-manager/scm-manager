@@ -15,6 +15,7 @@ type Props = {
   repository: Repository,
   branches: Branch[],
   loading?: boolean,
+  transmittedName?: string,
   t: string => string
 };
 

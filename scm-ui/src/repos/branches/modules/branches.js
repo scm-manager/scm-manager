@@ -81,16 +81,19 @@ export function createBranch(
   link: string,
   repository: Repository,
   branch: Branch,
-  callback?: () => void
+  callback?: (branch: Branch) => void
 ) {
   return function(dispatch: any) {
     dispatch(createBranchPending(repository, branch.name));
     return apiClient
       .post(link, branch, CONTENT_TYPE_BRANCH)
-      .then(() => {
+      .then(response => response.headers.get("Location"))
+      .then(location => apiClient.get(location))
+      .then(response => response.json())
+      .then(branch => {
         dispatch(createBranchSuccess());
         if (callback) {
-          callback();
+          callback(branch);
         }
       })
       .catch(error => dispatch(createBranchFailure(error)));
@@ -107,7 +110,7 @@ export function getBranches(state: Object, repository: Repository) {
   return null;
 }
 
-export const isPermittedToCreateBranch = (state: Object): boolean => {
+export const isPermittedToCreateBranches = (state: Object): boolean => {
   return false; // TODO
 };
 
