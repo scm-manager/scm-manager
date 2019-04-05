@@ -11,7 +11,7 @@ class MailLink extends React.Component<Props> {
     if (!address) {
       return null;
     }
-    return <a href={"mailto: " + address}>{address}</a>;
+    return <a href={"mailto:" + address}>{address}</a>;
   }
 }
 
