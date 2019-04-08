@@ -701,7 +701,6 @@
 "@scm-manager/ui-bundler@^0.0.27":
   version "0.0.27"
   resolved "https://registry.yarnpkg.com/@scm-manager/ui-bundler/-/ui-bundler-0.0.27.tgz#3ed2c7826780b9a1a9ea90464332640cfb5d54b5"
-  integrity sha512-cBU1xq6gDy1Vw9AGOzsR763+JmBeraTaC/KQfxT3I6XyZJ2brIfG1m5QYcAcHWvDxq3mYMogpI5rfShw14L4/w==
   dependencies:
     "@babel/core" "^7.0.0"
     "@babel/plugin-proposal-class-properties" "^7.0.0"
@@ -6921,6 +6920,15 @@ react-dom@^16.4.2:
     prop-types "^15.6.2"
     schedule "^0.5.0"
 
+react-dom@^16.8.6:
+  version "16.8.6"
+  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.8.6.tgz#71d6303f631e8b0097f56165ef608f051ff6e10f"
+  dependencies:
+    loose-envify "^1.1.0"
+    object-assign "^4.1.1"
+    prop-types "^15.6.2"
+    scheduler "^0.13.6"
+
 react-i18next@^7.9.0:
   version "7.13.0"
   resolved "https://registry.yarnpkg.com/react-i18next/-/react-i18next-7.13.0.tgz#a6f64fd749215ec70400f90da6cbde2a9c5b1588"
@@ -7050,6 +7058,15 @@ react@^16.4.2:
     object-assign "^4.1.1"
     prop-types "^15.6.2"
     schedule "^0.5.0"
+
+react@^16.8.6:
+  version "16.8.6"
+  resolved "https://registry.yarnpkg.com/react/-/react-16.8.6.tgz#ad6c3a9614fd3a4e9ef51117f54d888da01f2bbe"
+  dependencies:
+    loose-envify "^1.1.0"
+    object-assign "^4.1.1"
+    prop-types "^15.6.2"
+    scheduler "^0.13.6"
 
 read-cache@^1.0.0:
   version "1.0.0"
@@ -7561,6 +7578,13 @@ schedule@^0.5.0:
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/schedule/-/schedule-0.5.0.tgz#c128fffa0b402488b08b55ae74bb9df55cc29cc8"
   dependencies:
+    object-assign "^4.1.1"
+
+scheduler@^0.13.6:
+  version "0.13.6"
+  resolved "https://registry.yarnpkg.com/scheduler/-/scheduler-0.13.6.tgz#466a4ec332467b31a91b9bf74e5347072e4cd889"
+  dependencies:
+    loose-envify "^1.1.0"
     object-assign "^4.1.1"
 
 scss-tokenizer@^0.2.3:
