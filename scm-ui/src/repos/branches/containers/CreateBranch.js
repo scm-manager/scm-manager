@@ -1,6 +1,10 @@
 //@flow
 import React from "react";
-import { ErrorNotification, Loading, Subtitle } from "@scm-manager/ui-components";
+import {
+  ErrorNotification,
+  Loading,
+  Subtitle
+} from "@scm-manager/ui-components";
 import { translate } from "react-i18next";
 import BranchForm from "../components/BranchForm";
 import type { Repository, Branch } from "@scm-manager/ui-types";
@@ -10,11 +14,14 @@ import {
   createBranch,
   createBranchReset,
   isCreateBranchPending,
-  getCreateBranchFailure, isFetchBranchesPending, getFetchBranchesFailure
+  getCreateBranchFailure,
+  isFetchBranchesPending,
+  getFetchBranchesFailure
 } from "../modules/branches";
 import type { History } from "history";
 import { connect } from "react-redux";
-import {withRouter} from "react-router-dom";
+import { withRouter } from "react-router-dom";
+import queryString from "query-string";
 
 type Props = {
   loading?: boolean,
@@ -49,10 +56,9 @@ class CreateBranch extends React.Component<Props> {
     this.props.createBranch(branch, () => this.branchCreated(branch));
   };
 
-  matchesTransmittedName = (search: string) => {
-    const regex = new RegExp("\\?name=.+");
-    const match = search.match(regex);
-    return match ? match[0].substring(6, 0): null;
+  transmittedName = (url: string) => {
+    const params = queryString.parse(url);
+    return params.name;
   };
 
   render() {
@@ -62,8 +68,8 @@ class CreateBranch extends React.Component<Props> {
       return <ErrorNotification error={error} />;
     }
 
-    if(!branches) {
-      return <Loading/>;
+    if (loading || !branches) {
+      return <Loading />;
     }
 
     return (
@@ -74,7 +80,7 @@ class CreateBranch extends React.Component<Props> {
           loading={loading}
           repository={repository}
           branches={branches}
-          transmittedName={this.matchesTransmittedName(location.search)}
+          transmittedName={this.transmittedName(location.search)}
         />
       </>
     );
@@ -101,8 +107,9 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = (state, ownProps) => {
   const { repository } = ownProps;
-  const loading = isFetchBranchesPending(state, repository) || isCreateBranchPending(state);
-  const error = getFetchBranchesFailure(state, repository) || getCreateBranchFailure(state);
+  const loading = isFetchBranchesPending(state, repository); //|| isCreateBranchPending(state);
+  const error =
+    getFetchBranchesFailure(state, repository) || getCreateBranchFailure(state);
   const branches = getBranches(state, repository);
   return {
     repository,
@@ -112,7 +119,9 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export default withRouter(connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(translate("repos")(CreateBranch)));
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(translate("repos")(CreateBranch))
+);
