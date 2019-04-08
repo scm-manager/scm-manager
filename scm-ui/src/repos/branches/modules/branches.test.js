@@ -22,7 +22,7 @@ import reducer, {
   isFetchBranchesPending,
   createBranch,
   isCreateBranchPending,
-  getCreateBranchFailure
+  getCreateBranchFailure, isPermittedToCreateBranches
 } from "./branches";
 
 const namespace = "foo";
@@ -192,6 +192,14 @@ describe("branches", () => {
     const branches = {
       _embedded: {
         branches: [branch1, branch2]
+      },
+      _links: {
+        self: {
+          href: "/self"
+        },
+        create: {
+          href: "/create"
+        }
       }
     };
     const action = {
@@ -202,82 +210,96 @@ describe("branches", () => {
       }
     };
 
-    it("should update state according to successful fetch", () => {
+    it("should store the branches", () => {
       const newState = reducer({}, action);
-      expect(newState).toBeDefined();
-      expect(newState[key]).toBeDefined();
-      expect(newState[key]).toContain(branch1);
-      expect(newState[key]).toContain(branch2);
+      const repoState = newState["foo/bar"];
+
+      expect(repoState.list._links.create.href).toEqual("/create");
+      expect(repoState.list._embedded.branches).toEqual([ "branch1", "branch2" ]);
+
+      expect(repoState.byName.branch1).toEqual(branch1);
+      expect(repoState.byName.branch2).toEqual(branch2);
     });
 
-    it("should not delete existing branches from state", () => {
-      const oldState = {
-        "hitchhiker/heartOfGold": [branch3]
+    it("should store a single branch", () => {
+      const newState = reducer({}, fetchBranchSuccess(repository, branch1));
+      const repoState = newState["foo/bar"];
+
+      expect(repoState.list).toBeUndefined();
+      expect(repoState.byName.branch1).toEqual(branch1);
+    });
+
+    it("should add a single branch", () => {
+      const state = {
+        "foo/bar": {
+          list: {
+            _links: {
+
+            },
+            _embedded: {
+              branches: ["branch1"]
+            }
+          },
+          byName: {
+            "branch1": branch1
+          }
+        }
       };
-      const newState = reducer(oldState, action);
-      expect(newState[key]).toContain(branch1);
-      expect(newState[key]).toContain(branch2);
-      expect(newState["hitchhiker/heartOfGold"]).toContain(branch3);
+      const newState = reducer(state, fetchBranchSuccess(repository, branch2));
+      const repoState = newState["foo/bar"];
+      const byName = repoState.byName;
+
+      expect(repoState.list._embedded.branches).toEqual(["branch1"]);
+      expect(byName.branch1).toEqual(branch1);
+      expect(byName.branch2).toEqual(branch2);
     });
 
-    it("should update state according to FETCH_BRANCH_SUCCESS action", () => {
-      const newState = reducer({}, fetchBranchSuccess(repository, branch3));
-      expect(newState["foo/bar"]).toEqual([branch3]);
-    });
-
-    it("should not delete existing branch from state", () => {
-      const oldState = {
-        "foo/bar": [branch1]
+    it("should not overwrite non related repositories", () => {
+      const state = {
+        "scm/core": {
+          byName: {
+            "branch1": branch1
+          }
+        }
       };
-      const newState = reducer(
-        oldState,
-        fetchBranchSuccess(repository, branch2)
-      );
-      expect(newState["foo/bar"]).toEqual([branch1, branch2]);
+      const newState = reducer(state, fetchBranchSuccess(repository, branch1));
+      const byName = newState["scm/core"].byName;
+
+      expect(byName.branch1).toEqual(branch1);
     });
 
-    it("should update required branch from state", () => {
-      const oldState = {
-        "foo/bar": [branch1]
+    it("should overwrite existing branch", () => {
+      const state = {
+        "foo/bar": {
+          byName: {
+            "branch1": {
+              "name": "branch1",
+              "revision": "xyz"
+            }
+          }
+        }
       };
-      const newBranch1 = { name: "branch1", revision: "revision2" };
-      const newState = reducer(
-        oldState,
-        fetchBranchSuccess(repository, newBranch1)
-      );
-      expect(newState["foo/bar"]).toEqual([newBranch1]);
+      const newState = reducer(state, fetchBranchSuccess(repository, branch1));
+      const byName = newState["foo/bar"].byName;
+
+      expect(byName.branch1.revision).toEqual("revision1");
     });
 
-    it("should update required branch from state and keeps old repo", () => {
-      const oldState = {
-        "ns/one": [branch1]
+    it("should not overwrite existing branches", () => {
+      const state = {
+        "foo/bar": {
+          byName: {
+            branch3
+          }
+        }
       };
-      const newState = reducer(
-        oldState,
-        fetchBranchSuccess(repository, branch3)
-      );
-      expect(newState["ns/one"]).toEqual([branch1]);
-      expect(newState["foo/bar"]).toEqual([branch3]);
-    });
 
-    it("should return the oldState, if action has no payload", () => {
-      const state = {};
-      const newState = reducer(state, { type: FETCH_BRANCH_SUCCESS });
-      expect(newState).toBe(state);
-    });
-
-    it("should return the oldState, if payload has no branch", () => {
-      const action = {
-        type: FETCH_BRANCH_SUCCESS,
-        payload: {
-          repository
-        },
-        itemId: "foo/bar/"
-      };
-      const state = {};
       const newState = reducer(state, action);
-      expect(newState).toBe(state);
+      expect(newState["foo/bar"].byName.branch1).toEqual(branch1);
+      expect(newState["foo/bar"].byName.branch2).toEqual(branch2);
+      expect(newState["foo/bar"].byName.branch3).toEqual(branch3);
     });
+
   });
 
   describe("branch selectors", () => {
@@ -285,7 +307,20 @@ describe("branches", () => {
 
     const state = {
       branches: {
-        [key]: [branch1, branch2]
+        "foo/bar": {
+          list: {
+            _links: {
+
+            },
+            _embedded: {
+              branches: ["branch1", "branch2"]
+            }
+          },
+          byName: {
+            "branch1": branch1,
+            "branch2": branch2
+          }
+        }
       }
     };
 
@@ -312,9 +347,9 @@ describe("branches", () => {
       expect(one).toBe(two);
     });
 
-    it("should return null, if no branches for the repository available", () => {
+    it("should return undefined, if no branches for the repository available", () => {
       const branches = getBranches({ branches: {} }, repository);
-      expect(branches).toBeNull();
+      expect(branches).toBeUndefined();
     });
 
     it("should return single branch by name", () => {
@@ -331,6 +366,32 @@ describe("branches", () => {
     it("should return undefined if branch does not exist", () => {
       const branch = getBranch(state, repository, "branch42");
       expect(branch).toBeUndefined();
+    });
+
+    it("should return true if the branches list contains the create link", () => {
+      const stateWithLink = {
+        branches: {
+          "foo/bar": {
+            ...state.branches["foo/bar"],
+            list: {
+              ...state.branches["foo/bar"].list,
+              _links: {
+                create: {
+                  href: "http://create-it"
+                }
+              }
+            },
+          }
+        }
+      };
+
+      const permitted = isPermittedToCreateBranches(stateWithLink, repository);
+      expect(permitted).toBe(true);
+    });
+
+    it("should return false if the create link is missing", () => {
+      const permitted = isPermittedToCreateBranches(state, repository);
+      expect(permitted).toBe(false);
     });
 
     it("should return error if fetching branches failed", () => {
@@ -374,7 +435,7 @@ describe("branches", () => {
       expect(getCreateBranchFailure(state)).toEqual(error);
     });
 
-    it("shouls return undefined when create branch did not fail", () => {
+    it("should return undefined when create branch did not fail", () => {
       expect(getCreateBranchFailure({})).toBe(undefined);
     });
   });

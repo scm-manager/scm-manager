@@ -3,7 +3,6 @@ import {
   FAILURE_SUFFIX,
   PENDING_SUFFIX,
   SUCCESS_SUFFIX,
-  default as types
 } from "../../../modules/types";
 import { apiClient } from "@scm-manager/ui-components";
 import type { Action, Branch, Repository } from "@scm-manager/ui-types";
@@ -103,15 +102,24 @@ export function createBranch(
 // Selectors
 
 export function getBranches(state: Object, repository: Repository) {
-  const key = createKey(repository);
-  if (state.branches[key]) {
-    return state.branches[key];
+  const repoState = getRepoState(state, repository);
+  if (repoState && repoState.list) {
+    return repoState.list._embedded.branches.map(name => repoState.byName[name]);
   }
-  return null;
 }
 
-export const isPermittedToCreateBranches = (state: Object): boolean => {
-  return false; // TODO
+function getRepoState(state: Object, repository: Repository) {
+  const key = createKey(repository);
+  const repoState = state.branches[key];
+  if (repoState && repoState.byName) {
+    return repoState;
+  }
+}
+
+export const isPermittedToCreateBranches = (state: Object, repository: Repository): boolean => {
+  const repoState = getRepoState(state, repository);
+  return !!(repoState && repoState.list && repoState.list._links && repoState.list._links.create);
+
 };
 
 export function getBranch(
@@ -119,11 +127,10 @@ export function getBranch(
   repository: Repository,
   name: string
 ): ?Branch {
-  const key = createKey(repository);
-  if (state.branches[key]) {
-    return state.branches[key].find((b: Branch) => b.name === name);
+  const repoState = getRepoState(state, repository);
+  if (repoState) {
+    return repoState.byName[name];
   }
-  return null;
 }
 
 // Action creators
@@ -252,58 +259,61 @@ export function fetchBranchFailure(
 
 // Reducers
 
-function extractBranchesFromPayload(payload: any) {
-  if (payload._embedded && payload._embedded.branches) {
-    return payload._embedded.branches;
-  }
-  return [];
-}
+const reduceByBranchesSuccess = (state, payload) => {
+  const repository = payload.repository;
+  const response = payload.data;
 
-function reduceBranchSuccess(state, repositoryName, newBranch) {
-  const newBranches = [];
-  // we do not use filter, because we try to keep the current order
-  let found = false;
-  for (const branch of state[repositoryName] || []) {
-    if (branch.name === newBranch.name) {
-      newBranches.push(newBranch);
-      found = true;
-    } else {
-      newBranches.push(branch);
+  const key = createKey(repository);
+  const repoState = state[key] || {};
+  const byName = repoState.byName || {};
+  repoState.byName = byName;
+
+  const branches = response._embedded.branches;
+  const names = branches.map(b => b.name);
+  response._embedded.branches = names;
+  for (let branch of branches) {
+    byName[branch.name] = branch;
+  }
+  return {
+    [key]: {
+      list: response,
+      byName
     }
-  }
-  if (!found) {
-    newBranches.push(newBranch);
-  }
-  return newBranches;
-}
+  };
+};
 
-type State = { [string]: Branch[] };
+const reduceByBranchSuccess = (state, payload) => {
+  const repository = payload.repository;
+  const branch = payload.branch;
+
+  const key = createKey(repository);
+
+  const repoState = state[key] || {};
+
+  const byName = repoState.byName || {};
+  byName[branch.name] = branch;
+
+  repoState.byName = byName;
+
+  return {
+    ...state,
+    [key]: repoState
+  };
+};
 
 export default function reducer(
-  state: State = {},
+  state: {},
   action: Action = { type: "UNKNOWN" }
-): State {
+): Object {
   if (!action.payload) {
     return state;
   }
   const payload = action.payload;
   switch (action.type) {
     case FETCH_BRANCHES_SUCCESS:
-      const key = createKey(payload.repository);
-      return {
-        ...state,
-        [key]: extractBranchesFromPayload(payload.data)
-      };
+      return reduceByBranchesSuccess(state, payload);
     case FETCH_BRANCH_SUCCESS:
-      if (!action.payload.repository || !action.payload.branch) {
-        return state;
-      }
-      const newBranch = action.payload.branch;
-      const repositoryName = createKey(action.payload.repository);
-      return {
-        ...state,
-        [repositoryName]: reduceBranchSuccess(state, repositoryName, newBranch)
-      };
+      return reduceByBranchSuccess(state, payload);
     default:
       return state;
   }
