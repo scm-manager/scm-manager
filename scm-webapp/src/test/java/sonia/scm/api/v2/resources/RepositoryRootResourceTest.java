@@ -13,6 +13,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import sonia.scm.PageResult;
@@ -31,6 +32,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.function.Predicate;
 
 import static java.util.Collections.singletonList;
 import static java.util.stream.Stream.of;
@@ -42,6 +44,7 @@ import static javax.servlet.http.HttpServletResponse.SC_OK;
 import static javax.servlet.http.HttpServletResponse.SC_PRECONDITION_FAILED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyObject;
@@ -78,6 +81,8 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   @Mock
   private ScmPathInfo uriInfo;
 
+  @Captor
+  private ArgumentCaptor<Predicate<Repository>> filterCaptor;
 
   private final URI baseUri = URI.create("/");
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
@@ -150,7 +155,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   @Test
   public void shouldGetAll() throws URISyntaxException, UnsupportedEncodingException {
     PageResult<Repository> singletonPageResult = createSingletonPageResult(mockRepository("space", "repo"));
-    when(repositoryManager.getPage(any(), eq(0), eq(10))).thenReturn(singletonPageResult);
+    when(repositoryManager.getPage(any(), any(), eq(0), eq(10))).thenReturn(singletonPageResult);
 
     MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2);
     MockHttpResponse response = new MockHttpResponse();
@@ -159,6 +164,22 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
 
     assertEquals(SC_OK, response.getStatus());
     assertTrue(response.getContentAsString().contains("\"name\":\"repo\""));
+  }
+
+  @Test
+  public void shouldCreateFilterForSearch() throws URISyntaxException {
+    PageResult<Repository> singletonPageResult = createSingletonPageResult(mockRepository("space", "repo"));
+    when(repositoryManager.getPage(filterCaptor.capture(), any(), eq(0), eq(10))).thenReturn(singletonPageResult);
+
+    MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "?q=Rep");
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(SC_OK, response.getStatus());
+    assertTrue(filterCaptor.getValue().test(new Repository("x", "git", "all_repos", "x")));
+    assertTrue(filterCaptor.getValue().test(new Repository("x", "git", "x", "repository")));
+    assertFalse(filterCaptor.getValue().test(new Repository("rep", "rep", "x", "x")));
   }
 
   @Test

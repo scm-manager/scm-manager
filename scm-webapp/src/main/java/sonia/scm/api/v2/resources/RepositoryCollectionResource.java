@@ -9,6 +9,8 @@ import org.apache.shiro.SecurityUtils;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryPermission;
+import sonia.scm.search.SearchRequest;
+import sonia.scm.search.SearchUtil;
 import sonia.scm.user.User;
 import sonia.scm.web.VndMediaType;
 
@@ -23,6 +25,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
+import java.util.function.Predicate;
+
+import static com.google.common.base.Strings.isNullOrEmpty;
 import static java.util.Collections.singletonList;
 
 public class RepositoryCollectionResource {
@@ -65,8 +70,10 @@ public class RepositoryCollectionResource {
   public Response getAll(@DefaultValue("0") @QueryParam("page") int page,
     @DefaultValue("" + DEFAULT_PAGE_SIZE) @QueryParam("pageSize") int pageSize,
     @QueryParam("sortBy") String sortBy,
-    @DefaultValue("false") @QueryParam("desc") boolean desc) {
-    return adapter.getAll(page, pageSize, sortBy, desc,
+    @DefaultValue("false") @QueryParam("desc") boolean desc,
+    @DefaultValue("") @QueryParam("q") String search
+  ) {
+    return adapter.getAll(page, pageSize, createSearchPredicate(search), sortBy, desc,
       pageResult -> repositoryCollectionToDtoMapper.map(page, pageSize, pageResult));
   }
 
@@ -105,5 +112,13 @@ public class RepositoryCollectionResource {
 
   private String currentUser() {
     return SecurityUtils.getSubject().getPrincipals().oneByType(User.class).getName();
+  }
+
+  private Predicate<Repository> createSearchPredicate(String search) {
+    if (isNullOrEmpty(search)) {
+      return user -> true;
+    }
+    SearchRequest searchRequest = new SearchRequest(search, true);
+    return repository -> SearchUtil.matchesOne(searchRequest, repository.getName(), repository.getNamespace(), repository.getDescription());
   }
 }

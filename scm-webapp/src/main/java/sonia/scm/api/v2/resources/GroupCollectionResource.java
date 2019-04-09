@@ -7,6 +7,8 @@ import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupManager;
+import sonia.scm.search.SearchRequest;
+import sonia.scm.search.SearchUtil;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
@@ -19,6 +21,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
+import java.util.function.Predicate;
+
+import static com.google.common.base.Strings.isNullOrEmpty;
 
 
 public class GroupCollectionResource {
@@ -63,8 +68,10 @@ public class GroupCollectionResource {
     @DefaultValue("" + DEFAULT_PAGE_SIZE) @QueryParam("pageSize") int pageSize,
     @QueryParam("sortBy") String sortBy,
     @DefaultValue("false")
-    @QueryParam("desc") boolean desc) {
-    return adapter.getAll(page, pageSize, sortBy, desc,
+    @QueryParam("desc") boolean desc,
+    @DefaultValue("") @QueryParam("q") String search
+  ) {
+    return adapter.getAll(page, pageSize, createSearchPredicate(search), sortBy, desc,
                           pageResult -> groupCollectionToDtoMapper.map(page, pageSize, pageResult));
   }
 
@@ -89,5 +96,13 @@ public class GroupCollectionResource {
     return adapter.create(group,
                           () -> dtoToGroupMapper.map(group),
                           g -> resourceLinks.group().self(g.getName()));
+  }
+
+  private Predicate<Group> createSearchPredicate(String search) {
+    if (isNullOrEmpty(search)) {
+      return group -> true;
+    }
+    SearchRequest searchRequest = new SearchRequest(search, true);
+    return group -> SearchUtil.matchesOne(searchRequest, group.getName(), group.getDescription());
   }
 }
