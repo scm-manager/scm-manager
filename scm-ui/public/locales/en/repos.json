@@ -69,7 +69,7 @@
   "changesets": {
     "errorTitle": "Error",
     "errorSubtitle": "Could not fetch changesets",
-    "noChangesets": "No changesets found.",
+    "noChangesets": "No changesets matching this branch found.",
     "branchSelectorLabel": "Branches"
   },
   "changeset": {
@@ -109,7 +109,7 @@
       "description": "Description",
       "size": "Size"
     },
-    "noSources": "No sources found."
+    "noSources": "No sources matching this branch found."
   },
   "permission": {
     "title": "Edit Permissions",

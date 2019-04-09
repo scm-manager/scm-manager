@@ -69,7 +69,7 @@
   "changesets": {
     "errorTitle": "Fehler",
     "errorSubtitle": "Changesets konnten nicht abgerufen werden",
-    "noChangesets": "Keine Changesets gefunden.",
+    "noChangesets": "Keine Changesets in diesem Branch gefunden.",
     "branchSelectorLabel": "Branches"
   },
   "changeset": {
@@ -109,7 +109,7 @@
       "description": "Beschreibung",
       "size": "Größe"
     },
-    "noSources": "Keine Sources gefunden."
+    "noSources": "Keine Sources in diesem Branch gefunden."
   },
   "permission": {
     "title": "Berechtigungen bearbeiten",
