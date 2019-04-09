@@ -35,6 +35,7 @@ package sonia.scm;
 
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.function.Predicate;
 
 /**
  * Base interface for all manager classes.
@@ -82,11 +83,12 @@ public interface Manager<T extends ModelObject>
    * Returns all object of the store sorted by the given {@link java.util.Comparator}
    *
    *
+   * @param filter to filter the returned objects
    * @param comparator to sort the returned objects
    * @since 1.4
    * @return all object of the store sorted by the given {@link java.util.Comparator}
    */
-  Collection<T> getAll(Comparator<T> comparator);
+  Collection<T> getAll(Predicate<T> filter, Comparator<T> comparator);
 
   /**
    * Returns objects from the store which are starts at the given start
@@ -125,6 +127,7 @@ public interface Manager<T extends ModelObject>
    * <p>This default implementation reads all items, first, so you might want to adapt this
    * whenever reading is expensive!</p>
    *
+   * @param filter to filter returned objects
    * @param comparator to sort the returned objects
    * @param pageNumber the number of the page to be returned (zero based)
    * @param pageSize the size of the pages
@@ -134,8 +137,8 @@ public interface Manager<T extends ModelObject>
    *         page. If the requested page number exceeds the existing pages, an
    *         empty page result is returned.
    */
-  default PageResult<T> getPage(Comparator<T> comparator, int pageNumber, int pageSize) {
-    return PageResult.createPage(getAll(comparator), pageNumber, pageSize);
+  default PageResult<T> getPage(Predicate<T> filter, Comparator<T> comparator, int pageNumber, int pageSize) {
+    return PageResult.createPage(getAll(filter, comparator), pageNumber, pageSize);
   }
 
 }

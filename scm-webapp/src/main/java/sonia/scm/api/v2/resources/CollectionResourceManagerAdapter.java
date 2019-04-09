@@ -12,6 +12,7 @@ import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.util.Comparator;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
@@ -42,12 +43,12 @@ class CollectionResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
    * Reads all model objects in a paged way, maps them using the given function and returns a corresponding http response.
    * This handles all corner cases, eg. missing privileges.
    */
-  public Response getAll(int page, int pageSize, String sortBy, boolean desc, Function<PageResult<MODEL_OBJECT>, CollectionDto> mapToDto) {
-    PageResult<MODEL_OBJECT> pageResult = fetchPage(sortBy, desc, page, pageSize);
+  public Response getAll(int page, int pageSize, Predicate<MODEL_OBJECT> filter, String sortBy, boolean desc, Function<PageResult<MODEL_OBJECT>, CollectionDto> mapToDto) {
+    PageResult<MODEL_OBJECT> pageResult = fetchPage(filter, sortBy, desc, page, pageSize);
     return Response.ok(mapToDto.apply(pageResult)).build();
   }
 
-  private PageResult<MODEL_OBJECT> fetchPage(String sortBy, boolean desc, int pageNumber,
+  private PageResult<MODEL_OBJECT> fetchPage(Predicate<MODEL_OBJECT> filter, String sortBy, boolean desc, int pageNumber,
                                     int pageSize) {
     AssertUtil.assertPositive(pageNumber);
     AssertUtil.assertPositive(pageSize);
@@ -57,7 +58,7 @@ class CollectionResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
       sortBy = "id";
     }
 
-    return manager.getPage(createComparator(sortBy, desc), pageNumber, pageSize);
+    return manager.getPage(filter, createComparator(sortBy, desc), pageNumber, pageSize);
   }
 
   private Comparator<MODEL_OBJECT> createComparator(String sortBy, boolean desc) {

@@ -59,6 +59,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Predicate;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -250,7 +251,7 @@ public class DefaultGroupManager extends AbstractGroupManager
   @Override
   public Collection<Group> getAll()
   {
-    return getAll(null);
+    return getAll(group -> true, null);
   }
 
   /**
@@ -262,14 +263,14 @@ public class DefaultGroupManager extends AbstractGroupManager
    * @return
    */
   @Override
-  public Collection<Group> getAll(Comparator<Group> comparator)
+  public Collection<Group> getAll(Predicate<Group> filter, Comparator<Group> comparator)
   {
     List<Group> groups = new ArrayList<>();
 
     PermissionActionCheck<Group> check = GroupPermissions.read();
     for (Group group : groupDAO.getAll())
     {
-      if (check.isPermitted(group)) {
+      if (filter.test(group) && check.isPermitted(group)) {
         groups.add(group.clone());
       }
     }

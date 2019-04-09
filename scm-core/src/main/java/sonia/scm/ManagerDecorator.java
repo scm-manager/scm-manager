@@ -37,6 +37,7 @@ package sonia.scm;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.function.Predicate;
 
 /**
  * Basic decorator for manager classes.
@@ -104,9 +105,9 @@ public class ManagerDecorator<T extends ModelObject> implements Manager<T> {
   }
 
   @Override
-  public Collection<T> getAll(Comparator<T> comparator)
+  public Collection<T> getAll(Predicate<T> filter, Comparator<T> comparator)
   {
-    return decorated.getAll(comparator);
+    return decorated.getAll(filter, comparator);
   }
 
   @Override

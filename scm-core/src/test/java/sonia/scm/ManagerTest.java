@@ -5,6 +5,7 @@ import org.mockito.Mock;
 
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.function.Predicate;
 import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.toList;
@@ -18,21 +19,22 @@ public class ManagerTest {
 
   @Mock
   private Comparator comparator;
+  private Predicate predicate = x -> true;
 
   @Test(expected = IllegalArgumentException.class)
   public void validatesPageNumber() {
-    manager.getPage(comparator, -1, 5);
+    manager.getPage(predicate, comparator, -1, 5);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void validatesPageSize() {
-    manager.getPage(comparator, 2, 0);
+    manager.getPage(predicate, comparator, 2, 0);
   }
 
   @Test
   public void getsNoPage() {
     givenItemCount = 0;
-    PageResult singlePage = manager.getPage(comparator, 0, 5);
+    PageResult singlePage = manager.getPage(predicate, comparator, 0, 5);
     assertEquals(0, singlePage.getEntities().size());
     assertEquals(givenItemCount, singlePage.getOverallCount());
   }
@@ -40,7 +42,7 @@ public class ManagerTest {
   @Test
   public void getsSinglePageWithoutEnoughItems() {
     givenItemCount = 3;
-    PageResult singlePage = manager.getPage(comparator, 0, 4);
+    PageResult singlePage = manager.getPage(predicate, comparator, 0, 4);
     assertEquals(3, singlePage.getEntities().size() );
     assertEquals(givenItemCount, singlePage.getOverallCount());
   }
@@ -48,7 +50,7 @@ public class ManagerTest {
   @Test
   public void getsSinglePageWithExactCountOfItems() {
     givenItemCount = 3;
-    PageResult singlePage = manager.getPage(comparator, 0, 3);
+    PageResult singlePage = manager.getPage(predicate, comparator, 0, 3);
     assertEquals(3, singlePage.getEntities().size() );
     assertEquals(givenItemCount, singlePage.getOverallCount());
   }
@@ -56,11 +58,11 @@ public class ManagerTest {
   @Test
   public void getsTwoPages() {
     givenItemCount = 3;
-    PageResult page1 = manager.getPage(comparator, 0, 2);
+    PageResult page1 = manager.getPage(predicate, comparator, 0, 2);
     assertEquals(2, page1.getEntities().size());
     assertEquals(givenItemCount, page1.getOverallCount());
 
-    PageResult page2 = manager.getPage(comparator, 1, 2);
+    PageResult page2 = manager.getPage(predicate, comparator, 1, 2);
     assertEquals(1, page2.getEntities().size());
     assertEquals(givenItemCount, page2.getOverallCount());
   }
@@ -79,7 +81,7 @@ public class ManagerTest {
     }
 
     @Override
-    public Collection getAll(Comparator comparator) { return getAll(); }
+    public Collection getAll(Predicate filter, Comparator comparator) { return getAll(); }
 
     @Override
     public Collection getAll(int start, int limit) { return null; }
