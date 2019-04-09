@@ -1,15 +1,16 @@
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.HalRepresentation;
+import org.apache.shiro.authz.AuthorizationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.ConcurrentModificationException;
 import sonia.scm.Manager;
 import sonia.scm.ModelObject;
 import sonia.scm.NotFoundException;
-import sonia.scm.api.rest.resources.AbstractManagerResource;
+import sonia.scm.api.rest.RestExceptionResult;
 
-import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
-import java.util.Collection;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -29,10 +30,13 @@ import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
  */
 @SuppressWarnings("squid:S00119") // "MODEL_OBJECT" is much more meaningful than "M", right?
 class SingleResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
-                             DTO extends HalRepresentation> extends AbstractManagerResource<MODEL_OBJECT> {
+                             DTO extends HalRepresentation> {
+
+  private static final Logger LOG = LoggerFactory.getLogger(SingleResourceManagerAdapter.class);
 
   private final Function<Throwable, Optional<Response>> errorHandler;
-  private final Class<MODEL_OBJECT> type;
+  protected final Manager<MODEL_OBJECT> manager;
+  protected final Class<MODEL_OBJECT> type;
 
   SingleResourceManagerAdapter(Manager<MODEL_OBJECT> manager, Class<MODEL_OBJECT> type) {
     this(manager, type, e -> Optional.empty());
@@ -42,7 +46,7 @@ class SingleResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
     Manager<MODEL_OBJECT> manager,
     Class<MODEL_OBJECT> type,
     Function<Throwable, Optional<Response>> errorHandler) {
-    super(manager, type);
+    this.manager = manager;
     this.errorHandler = errorHandler;
     this.type = type;
   }
@@ -75,6 +79,33 @@ class SingleResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
     return update(getId(existingModelObject), changedModelObject);
   }
 
+  public Response update(String name, MODEL_OBJECT item)
+  {
+    Response response = null;
+
+    preUpdate(item);
+
+    try
+    {
+      manager.modify(item);
+      response = Response.noContent().build();
+    }
+    catch (AuthorizationException ex)
+    {
+      LOG.warn("update not allowed", ex);
+      response = Response.status(Response.Status.FORBIDDEN).build();
+    }
+    catch (Exception ex)
+    {
+      LOG.error("error during update", ex);
+      response = createErrorResponse(ex);
+    }
+
+    return response;
+  }
+
+  protected void preUpdate(MODEL_OBJECT item) {}
+
   private boolean modelObjectWasModifiedConcurrently(MODEL_OBJECT existing, MODEL_OBJECT updated) {
     return existing.getLastModified() != null
       && (updated.getLastModified() == null || existing.getLastModified() > updated.getLastModified());
@@ -89,23 +120,51 @@ class SingleResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
     }
   }
 
-  @Override
+  public Response delete(String name)
+  {
+    Response response = null;
+    MODEL_OBJECT item = manager.get(name);
+
+    if (item != null)
+    {
+      preDelete(item);
+
+      try
+      {
+        manager.delete(item);
+        response = Response.noContent().build();
+      }
+      catch (AuthorizationException ex)
+      {
+        LOG.warn("delete not allowd", ex);
+        response = Response.status(Response.Status.FORBIDDEN).build();
+      }
+      catch (Exception ex)
+      {
+        LOG.error("error during delete", ex);
+        response = createErrorResponse(ex);
+      }
+    }
+
+    return response;
+  }
+
+  protected void preDelete(MODEL_OBJECT item) {}
+
+
   protected Response createErrorResponse(Throwable throwable) {
-    return errorHandler.apply(throwable).orElse(super.createErrorResponse(throwable));
+    return errorHandler.apply(throwable)
+      .orElse(createErrorResponse(Response.Status.INTERNAL_SERVER_ERROR, throwable.getMessage(), throwable));
   }
 
-  @Override
-  protected GenericEntity<Collection<MODEL_OBJECT>> createGenericEntity(Collection<MODEL_OBJECT> modelObjects) {
-    throw new UnsupportedOperationException();
+  protected Response createErrorResponse(Response.Status status, String message,
+                                         Throwable throwable)
+  {
+    return Response.status(status).entity(new RestExceptionResult(message,
+      throwable)).build();
   }
 
-  @Override
   protected String getId(MODEL_OBJECT item) {
     return item.getId();
-  }
-
-  @Override
-  protected String getPathPart() {
-    throw new UnsupportedOperationException();
   }
 }
