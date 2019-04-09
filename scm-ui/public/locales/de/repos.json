@@ -69,6 +69,7 @@
   "changesets": {
     "errorTitle": "Fehler",
     "errorSubtitle": "Changesets konnten nicht abgerufen werden",
+    "noChangesets": "Keine Changesets gefunden.",
     "branchSelectorLabel": "Branches"
   },
   "changeset": {

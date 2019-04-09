@@ -69,6 +69,7 @@
   "changesets": {
     "errorTitle": "Error",
     "errorSubtitle": "Could not fetch changesets",
+    "noChangesets": "No changesets found.",
     "branchSelectorLabel": "Branches"
   },
   "changeset": {
