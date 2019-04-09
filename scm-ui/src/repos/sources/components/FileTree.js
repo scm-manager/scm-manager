@@ -5,7 +5,11 @@ import { connect } from "react-redux";
 import injectSheet from "react-jss";
 import FileTreeLeaf from "./FileTreeLeaf";
 import type { Repository, File } from "@scm-manager/ui-types";
-import { ErrorNotification, Loading } from "@scm-manager/ui-components";
+import {
+  ErrorNotification,
+  Loading,
+  Notification
+} from "@scm-manager/ui-components";
 import {
   getFetchSourcesFailure,
   isFetchSourcesPending,
@@ -48,16 +52,34 @@ export function findParent(path: string) {
 
 class FileTree extends React.Component<Props> {
   render() {
-    const {
-      error,
-      loading,
-      tree,
-      revision,
-      path,
-      baseUrl,
-      classes,
-      t
-    } = this.props;
+    const { error, loading, tree } = this.props;
+
+    if (error) {
+      return <ErrorNotification error={error} />;
+    }
+
+    if (loading) {
+      return <Loading />;
+    }
+    if (!tree) {
+      return null;
+    }
+
+    return <div className="panel-block">{this.renderSourcesTable()}</div>;
+  }
+
+  renderSourcesTable() {
+    const { tree, revision, path, baseUrl, classes, t } = this.props;
+
+    const files = [];
+
+    if (path) {
+      files.push({
+        name: "..",
+        path: findParent(path),
+        directory: true
+      });
+    }
 
     const compareFiles = function(f1: File, f2: File): number {
       if (f1.directory) {
@@ -75,40 +97,19 @@ class FileTree extends React.Component<Props> {
       }
     };
 
-    if (error) {
-      return <ErrorNotification error={error} />;
-    }
-
-    if (loading) {
-      return <Loading />;
-    }
-    if (!tree) {
-      return null;
-    }
-
-    const files = [];
-
-    if (path) {
-      files.push({
-        name: "..",
-        path: findParent(path),
-        directory: true
-      });
-    }
-
     if (tree._embedded && tree._embedded.children) {
       files.push(...tree._embedded.children.sort(compareFiles));
     }
 
-    let baseUrlWithRevision = baseUrl;
-    if (revision) {
-      baseUrlWithRevision += "/" + encodeURIComponent(revision);
-    } else {
-      baseUrlWithRevision += "/" + encodeURIComponent(tree.revision);
-    }
+    if (files && files.length > 0) {
+      let baseUrlWithRevision = baseUrl;
+      if (revision) {
+        baseUrlWithRevision += "/" + encodeURIComponent(revision);
+      } else {
+        baseUrlWithRevision += "/" + encodeURIComponent(tree.revision);
+      }
 
-    return (
-      <div className="panel-block">
+      return (
         <table className="table table-hover table-sm is-fullwidth">
           <thead>
             <tr>
@@ -135,8 +136,9 @@ class FileTree extends React.Component<Props> {
             ))}
           </tbody>
         </table>
-      </div>
-    );
+      );
+    }
+    return <Notification type="info">{t("sources.noSources")}</Notification>;
   }
 }
 

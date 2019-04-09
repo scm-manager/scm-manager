@@ -108,7 +108,8 @@
       "lastModified": "Zuletzt bearbeitet",
       "description": "Beschreibung",
       "size": "Größe"
-    }
+    },
+    "noSources": "Keine Sources gefunden."
   },
   "permission": {
     "title": "Berechtigungen bearbeiten",
