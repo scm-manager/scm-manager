@@ -10,7 +10,8 @@
   },
   "groups": {
     "title": "Groups",
-    "subtitle": "Create, read, update and delete groups"
+    "subtitle": "Create, read, update and delete groups",
+    "noGroups": "No groups found."
   },
   "singleGroup": {
     "errorTitle": "Error",

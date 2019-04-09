@@ -24,6 +24,7 @@ import {
   selectListAsCollection
 } from "../modules/groups";
 import { getGroupsLink } from "../../modules/indexResource";
+import Notification from "@scm-manager/ui-components/src/Notification";
 
 type Props = {
   groups: Group[],
@@ -75,12 +76,24 @@ class Groups extends React.Component<Props> {
         loading={loading || !groups}
         error={error}
       >
-        <GroupTable groups={groups} />
-        {this.renderPaginator()}
+        {this.renderGroupTable()}
         {this.renderCreateButton()}
         {this.renderPageActionCreateButton()}
       </Page>
     );
+  }
+
+  renderGroupTable() {
+    const { groups, t } = this.props;
+    if (groups && groups.length > 0) {
+      return (
+        <>
+          <GroupTable groups={groups} />
+          {this.renderPaginator()}
+        </>
+      );
+    }
+    return <Notification type="info">{t("groups.noGroups")}</Notification>;
   }
 
   renderPaginator() {
@@ -93,12 +106,9 @@ class Groups extends React.Component<Props> {
 
   renderCreateButton() {
     if (this.props.canAddGroups) {
-      return (
-        <CreateGroupButton />
-      );
-    } else {
-      return;
+      return <CreateGroupButton />;
     }
+    return null;
   }
 
   renderPageActionCreateButton() {
@@ -112,9 +122,8 @@ class Groups extends React.Component<Props> {
           />
         </PageActions>
       );
-    } else {
-      return;
     }
+    return null;
   }
 }
 
