@@ -2,13 +2,13 @@
 import React from "react";
 import { connect } from "react-redux";
 import { translate } from "react-i18next";
-import type { Group } from "@scm-manager/ui-types";
-import type { PagedCollection } from "@scm-manager/ui-types";
+import type { Group, PagedCollection } from "@scm-manager/ui-types";
 import type { History } from "history";
 import {
   Page,
   PageActions,
   Button,
+  Notification,
   Paginator
 } from "@scm-manager/ui-components";
 import { GroupTable } from "./../components/table";
@@ -24,7 +24,6 @@ import {
   selectListAsCollection
 } from "../modules/groups";
 import { getGroupsLink } from "../../modules/indexResource";
-import Notification from "@scm-manager/ui-components/src/Notification";
 
 type Props = {
   groups: Group[],

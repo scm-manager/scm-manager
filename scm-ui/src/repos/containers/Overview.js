@@ -19,6 +19,7 @@ import {
   PageActions,
   Button,
   CreateButton,
+  Notification,
   Paginator
 } from "@scm-manager/ui-components";
 import RepositoryList from "../components/list";
@@ -72,19 +73,34 @@ class Overview extends React.Component<Props> {
         loading={loading}
         error={error}
       >
-        {this.renderList()}
+        {this.renderOverview()}
         {this.renderPageActionCreateButton()}
       </Page>
     );
   }
 
-  renderList() {
-    const { collection, fetchReposByLink } = this.props;
+  renderRepositoryList() {
+    const { collection, fetchReposByLink, t } = this.props;
+
+    if (collection._embedded && collection._embedded.repositories.length > 0) {
+      return (
+        <>
+          <RepositoryList repositories={collection._embedded.repositories} />
+          <Paginator collection={collection} onPageChange={fetchReposByLink} />
+        </>
+      );
+    }
+    return (
+      <Notification type="info">{t("overview.noRepositories")}</Notification>
+    );
+  }
+
+  renderOverview() {
+    const { collection } = this.props;
     if (collection) {
       return (
         <div>
-          <RepositoryList repositories={collection._embedded.repositories} />
-          <Paginator collection={collection} onPageChange={fetchReposByLink} />
+          {this.renderRepositoryList()}
           {this.renderCreateButton()}
         </div>
       );
