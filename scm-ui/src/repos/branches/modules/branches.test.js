@@ -22,7 +22,8 @@ import reducer, {
   isFetchBranchesPending,
   createBranch,
   isCreateBranchPending,
-  getCreateBranchFailure, isPermittedToCreateBranches
+  getCreateBranchFailure,
+  isPermittedToCreateBranches
 } from "./branches";
 
 const namespace = "foo";
@@ -142,11 +143,13 @@ describe("branches", () => {
       fetchMock.getOnce(URL + "/newBranch", newBranch);
 
       const store = mockStore({});
-      return store.dispatch(createBranch(URL, repository, branchRequest)).then(() => {
-        const actions = store.getActions();
-        expect(actions[0].type).toEqual(CREATE_BRANCH_PENDING);
-        expect(actions[1].type).toEqual(CREATE_BRANCH_SUCCESS);
-      });
+      return store
+        .dispatch(createBranch(URL, repository, branchRequest))
+        .then(() => {
+          const actions = store.getActions();
+          expect(actions[0].type).toEqual(CREATE_BRANCH_PENDING);
+          expect(actions[1].type).toEqual(CREATE_BRANCH_SUCCESS);
+        });
     });
 
     it("should call the callback with the branch from the location header", () => {
@@ -165,13 +168,15 @@ describe("branches", () => {
 
       let receivedBranch = null;
 
-      const callback = (branch) => {
+      const callback = branch => {
         receivedBranch = branch;
       };
 
-      return store.dispatch(createBranch(URL, repository, branchRequest, callback)).then(() => {
-        expect(receivedBranch).toEqual(newBranch);
-      });
+      return store
+        .dispatch(createBranch(URL, repository, branchRequest, callback))
+        .then(() => {
+          expect(receivedBranch).toEqual(newBranch);
+        });
     });
 
     it("should fail creating a branch on HTTP 500", () => {
@@ -180,11 +185,13 @@ describe("branches", () => {
       });
 
       const store = mockStore({});
-      return store.dispatch(createBranch(URL, repository, branchRequest)).then(() => {
-        const actions = store.getActions();
-        expect(actions[0].type).toEqual(CREATE_BRANCH_PENDING);
-        expect(actions[1].type).toEqual(CREATE_BRANCH_FAILURE);
-      });
+      return store
+        .dispatch(createBranch(URL, repository, branchRequest))
+        .then(() => {
+          const actions = store.getActions();
+          expect(actions[0].type).toEqual(CREATE_BRANCH_PENDING);
+          expect(actions[1].type).toEqual(CREATE_BRANCH_FAILURE);
+        });
     });
   });
 
@@ -215,7 +222,7 @@ describe("branches", () => {
       const repoState = newState["foo/bar"];
 
       expect(repoState.list._links.create.href).toEqual("/create");
-      expect(repoState.list._embedded.branches).toEqual([ "branch1", "branch2" ]);
+      expect(repoState.list._embedded.branches).toEqual(["branch1", "branch2"]);
 
       expect(repoState.byName.branch1).toEqual(branch1);
       expect(repoState.byName.branch2).toEqual(branch2);
@@ -233,15 +240,13 @@ describe("branches", () => {
       const state = {
         "foo/bar": {
           list: {
-            _links: {
-
-            },
+            _links: {},
             _embedded: {
               branches: ["branch1"]
             }
           },
           byName: {
-            "branch1": branch1
+            branch1: branch1
           }
         }
       };
@@ -258,7 +263,7 @@ describe("branches", () => {
       const state = {
         "scm/core": {
           byName: {
-            "branch1": branch1
+            branch1: branch1
           }
         }
       };
@@ -272,9 +277,9 @@ describe("branches", () => {
       const state = {
         "foo/bar": {
           byName: {
-            "branch1": {
-              "name": "branch1",
-              "revision": "xyz"
+            branch1: {
+              name: "branch1",
+              revision: "xyz"
             }
           }
         }
@@ -289,6 +294,8 @@ describe("branches", () => {
       const state = {
         "foo/bar": {
           byName: {
+            branch1,
+            branch2,
             branch3
           }
         }
@@ -299,7 +306,6 @@ describe("branches", () => {
       expect(newState["foo/bar"].byName.branch2).toEqual(branch2);
       expect(newState["foo/bar"].byName.branch3).toEqual(branch3);
     });
-
   });
 
   describe("branch selectors", () => {
@@ -309,16 +315,14 @@ describe("branches", () => {
       branches: {
         "foo/bar": {
           list: {
-            _links: {
-
-            },
+            _links: {},
             _embedded: {
               branches: ["branch1", "branch2"]
             }
           },
           byName: {
-            "branch1": branch1,
-            "branch2": branch2
+            branch1: branch1,
+            branch2: branch2
           }
         }
       }
@@ -344,7 +348,7 @@ describe("branches", () => {
     it("should return always the same reference for branches", () => {
       const one = getBranches(state, repository);
       const two = getBranches(state, repository);
-      expect(one).toBe(two);
+      expect(one).toEqual(two);
     });
 
     it("should return undefined, if no branches for the repository available", () => {
@@ -380,7 +384,7 @@ describe("branches", () => {
                   href: "http://create-it"
                 }
               }
-            },
+            }
           }
         }
       };

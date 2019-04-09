@@ -2,7 +2,7 @@
 import {
   FAILURE_SUFFIX,
   PENDING_SUFFIX,
-  SUCCESS_SUFFIX,
+  SUCCESS_SUFFIX
 } from "../../../modules/types";
 import { apiClient } from "@scm-manager/ui-components";
 import type { Action, Branch, Repository } from "@scm-manager/ui-types";
@@ -104,7 +104,9 @@ export function createBranch(
 export function getBranches(state: Object, repository: Repository) {
   const repoState = getRepoState(state, repository);
   if (repoState && repoState.list) {
-    return repoState.list._embedded.branches.map(name => repoState.byName[name]);
+    return repoState.list._embedded.branches.map(
+      name => repoState.byName[name]
+    );
   }
 }
 
@@ -116,10 +118,17 @@ function getRepoState(state: Object, repository: Repository) {
   }
 }
 
-export const isPermittedToCreateBranches = (state: Object, repository: Repository): boolean => {
+export const isPermittedToCreateBranches = (
+  state: Object,
+  repository: Repository
+): boolean => {
   const repoState = getRepoState(state, repository);
-  return !!(repoState && repoState.list && repoState.list._links && repoState.list._links.create);
-
+  return !!(
+    repoState &&
+    repoState.list &&
+    repoState.list._links &&
+    repoState.list._links.create
+  );
 };
 
 export function getBranch(
