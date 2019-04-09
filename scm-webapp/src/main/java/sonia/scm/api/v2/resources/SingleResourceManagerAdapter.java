@@ -1,14 +1,10 @@
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.HalRepresentation;
-import org.apache.shiro.authz.AuthorizationException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import sonia.scm.ConcurrentModificationException;
 import sonia.scm.Manager;
 import sonia.scm.ModelObject;
 import sonia.scm.NotFoundException;
-import sonia.scm.api.rest.RestExceptionResult;
 
 import javax.ws.rs.core.Response;
 import java.util.Optional;
@@ -31,8 +27,6 @@ import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 @SuppressWarnings("squid:S00119") // "MODEL_OBJECT" is much more meaningful than "M", right?
 class SingleResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
                              DTO extends HalRepresentation> {
-
-  private static final Logger LOG = LoggerFactory.getLogger(SingleResourceManagerAdapter.class);
 
   private final Function<Throwable, Optional<Response>> errorHandler;
   protected final Manager<MODEL_OBJECT> manager;
@@ -76,35 +70,17 @@ class SingleResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
     else if (modelObjectWasModifiedConcurrently(existingModelObject, changedModelObject)) {
       throw new ConcurrentModificationException(type, keyExtractor.apply(existingModelObject));
     }
-    return update(getId(existingModelObject), changedModelObject);
+    return update(changedModelObject);
   }
 
-  public Response update(String name, MODEL_OBJECT item)
-  {
-    Response response = null;
-
-    preUpdate(item);
-
-    try
-    {
+  private Response update(MODEL_OBJECT item) {
+    try {
       manager.modify(item);
-      response = Response.noContent().build();
+      return Response.noContent().build();
+    } catch (RuntimeException ex) {
+      return createErrorResponse(ex);
     }
-    catch (AuthorizationException ex)
-    {
-      LOG.warn("update not allowed", ex);
-      response = Response.status(Response.Status.FORBIDDEN).build();
-    }
-    catch (Exception ex)
-    {
-      LOG.error("error during update", ex);
-      response = createErrorResponse(ex);
-    }
-
-    return response;
   }
-
-  protected void preUpdate(MODEL_OBJECT item) {}
 
   private boolean modelObjectWasModifiedConcurrently(MODEL_OBJECT existing, MODEL_OBJECT updated) {
     return existing.getLastModified() != null
@@ -120,48 +96,24 @@ class SingleResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
     }
   }
 
-  public Response delete(String name)
-  {
-    Response response = null;
+  public Response delete(String name) {
     MODEL_OBJECT item = manager.get(name);
 
-    if (item != null)
-    {
-      preDelete(item);
-
-      try
-      {
+    if (item != null) {
+      try {
         manager.delete(item);
-        response = Response.noContent().build();
+        return Response.noContent().build();
+      } catch (RuntimeException ex) {
+        return createErrorResponse(ex);
       }
-      catch (AuthorizationException ex)
-      {
-        LOG.warn("delete not allowd", ex);
-        response = Response.status(Response.Status.FORBIDDEN).build();
-      }
-      catch (Exception ex)
-      {
-        LOG.error("error during delete", ex);
-        response = createErrorResponse(ex);
-      }
+    } else {
+      return Response.noContent().build();
     }
-
-    return response;
   }
 
-  protected void preDelete(MODEL_OBJECT item) {}
-
-
-  protected Response createErrorResponse(Throwable throwable) {
+  private Response createErrorResponse(RuntimeException throwable) {
     return errorHandler.apply(throwable)
-      .orElse(createErrorResponse(Response.Status.INTERNAL_SERVER_ERROR, throwable.getMessage(), throwable));
-  }
-
-  protected Response createErrorResponse(Response.Status status, String message,
-                                         Throwable throwable)
-  {
-    return Response.status(status).entity(new RestExceptionResult(message,
-      throwable)).build();
+      .orElseThrow(() -> throwable);
   }
 
   protected String getId(MODEL_OBJECT item) {
