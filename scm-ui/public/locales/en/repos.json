@@ -47,6 +47,7 @@
   "branches": {
     "overview": {
       "title": "Overview of all branches",
+      "noBranches": "No branches found.",
       "createButton": "Create Branch"
     },
     "table": {
