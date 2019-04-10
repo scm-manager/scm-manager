@@ -39,7 +39,7 @@ type Props = {
   history: History,
 
   // dispatch functions
-  fetchGroupsByPage: (link: string, page: number) => void,
+  fetchGroupsByPage: (link: string, page: number, filter?: string) => void,
   fetchGroupsByLink: (link: string) => void
 };
 
@@ -74,6 +74,9 @@ class Groups extends React.Component<Props> {
         subtitle={t("groups.subtitle")}
         loading={loading || !groups}
         error={error}
+        filter={filter => {
+          this.props.fetchGroupsByPage(this.props.groupLink, this.props.page, filter);
+        }}
       >
         <GroupTable groups={groups} />
         {this.renderPaginator()}
@@ -152,8 +155,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchGroupsByPage: (link: string, page: number) => {
-      dispatch(fetchGroupsByPage(link, page));
+    fetchGroupsByPage: (link: string, page: number, filter?: string) => {
+      dispatch(fetchGroupsByPage(link, page, filter));
     },
     fetchGroupsByLink: (link: string) => {
       dispatch(fetchGroupsByLink(link));
