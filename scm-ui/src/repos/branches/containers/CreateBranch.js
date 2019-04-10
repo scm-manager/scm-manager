@@ -11,7 +11,7 @@ import type { Repository, Branch, BranchRequest } from "@scm-manager/ui-types";
 import {
   fetchBranches,
   getBranches,
-  getBrancheCreateLink,
+  getBranchCreateLink,
   createBranch,
   createBranchReset,
   isCreateBranchPending,
@@ -39,7 +39,7 @@ type Props = {
     branch: BranchRequest,
     callback?: (Branch) => void
   ) => void,
-  resetForm: () => void,
+  resetForm: Repository => void,
 
   // context objects
   t: string => string,
@@ -51,7 +51,7 @@ class CreateBranch extends React.Component<Props> {
   componentDidMount() {
     const { fetchBranches, repository } = this.props;
     fetchBranches(repository);
-    this.props.resetForm();
+    this.props.resetForm(repository);
   }
 
   branchCreated = (branch: Branch) => {
@@ -116,19 +116,21 @@ const mapDispatchToProps = dispatch => {
     ) => {
       dispatch(createBranch(createLink, repository, branchRequest, callback));
     },
-    resetForm: () => {
-      dispatch(createBranchReset());
+    resetForm: (repository: Repository) => {
+      dispatch(createBranchReset(repository));
     }
   };
 };
 
 const mapStateToProps = (state, ownProps) => {
   const { repository } = ownProps;
-  const loading = isFetchBranchesPending(state, repository); //|| isCreateBranchPending(state);
+  const loading =
+    isFetchBranchesPending(state, repository) ||
+    isCreateBranchPending(state, repository);
   const error =
     getFetchBranchesFailure(state, repository) || getCreateBranchFailure(state);
   const branches = getBranches(state, repository);
-  const createBranchesLink = getBrancheCreateLink(state, repository);
+  const createBranchesLink = getBranchCreateLink(state, repository);
   return {
     repository,
     loading,
