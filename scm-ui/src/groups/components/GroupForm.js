@@ -40,7 +40,8 @@ class GroupForm extends React.Component<Props, State> {
         },
         _links: {},
         members: [],
-        type: ""
+        type: "",
+        external: false
       },
       nameValidationError: false
     };
