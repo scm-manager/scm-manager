@@ -30,6 +30,7 @@ type Props = {
   repository: Repository,
   branches: Branch[],
   createBranchesLink: string,
+  isPermittedToCreateBranches: boolean,
 
   // dispatcher functions
   fetchBranches: Repository => void,
@@ -78,7 +79,7 @@ class CreateBranch extends React.Component<Props> {
   };
 
   render() {
-    const { t, loading, error, repository, branches, location } = this.props;
+    const { t, loading, error, repository, branches, createBranchesLink, location } = this.props;
 
     if (error) {
       return <ErrorNotification error={error} />;
@@ -97,6 +98,7 @@ class CreateBranch extends React.Component<Props> {
           repository={repository}
           branches={branches}
           transmittedName={this.transmittedName(location.search)}
+          disabled={!createBranchesLink}
         />
       </>
     );

@@ -16,6 +16,7 @@ type Props = {
   branches: Branch[],
   loading?: boolean,
   transmittedName?: string,
+  disabled?: boolean,
   t: string => string
 };
 
@@ -59,7 +60,7 @@ class BranchForm extends React.Component<Props, State> {
   };
 
   render() {
-    const { t, branches, loading, transmittedName } = this.props;
+    const { t, branches, loading, transmittedName, disabled } = this.props;
     const { name } = this.state;
     orderBranches(branches);
     const options = branches.map(branch => ({
@@ -78,6 +79,7 @@ class BranchForm extends React.Component<Props, State> {
                 options={options}
                 onChange={this.handleSourceChange}
                 loading={loading}
+                disabled={disabled}
               />
               <InputField
                 name="name"
@@ -86,14 +88,14 @@ class BranchForm extends React.Component<Props, State> {
                 value={name ? name : ""}
                 validationError={this.state.nameValidationError}
                 errorMessage={t("validation.branch.nameInvalid")}
-                disabled={!!transmittedName}
+                disabled={!!transmittedName || disabled}
               />
             </div>
           </div>
           <div className="columns">
             <div className="column">
               <SubmitButton
-                disabled={!this.isValid()}
+                disabled={disabled || !this.isValid()}
                 loading={loading}
                 label={t("branches.create.submit")}
               />

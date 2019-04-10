@@ -119,7 +119,7 @@ export function getBranches(state: Object, repository: Repository) {
 
 export function getBranchCreateLink(state: Object, repository: Repository) {
   const repoState = getRepoState(state, repository);
-  if (repoState && repoState.list) {
+  if (repoState && repoState.list && repoState.list._links && repoState.list._links.create) {
     return repoState.list._links.create.href;
   }
 }

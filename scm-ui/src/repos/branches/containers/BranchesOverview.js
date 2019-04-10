@@ -4,7 +4,8 @@ import {
   fetchBranches,
   getBranches,
   getFetchBranchesFailure,
-  isFetchBranchesPending
+  isFetchBranchesPending,
+  isPermittedToCreateBranches
 } from "../modules/branches";
 import { orderBranches } from "../util/orderBranches";
 import { connect } from "react-redux";
@@ -67,8 +68,7 @@ class BranchesOverview extends React.Component<Props> {
 
   renderCreateButton() {
     const { showCreateButton, t } = this.props;
-    if (showCreateButton || true) {
-      // TODO
+    if (showCreateButton) {
       return (
         <CreateButton
           label={t("branches.overview.createButton")}
@@ -85,12 +85,14 @@ const mapStateToProps = (state, ownProps) => {
   const loading = isFetchBranchesPending(state, repository);
   const error = getFetchBranchesFailure(state, repository);
   const branches = getBranches(state, repository);
+  const showCreateButton = isPermittedToCreateBranches(state, repository);
 
   return {
     repository,
     loading,
     error,
-    branches
+    branches,
+    showCreateButton
   };
 };
 
