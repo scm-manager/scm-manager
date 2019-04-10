@@ -51,19 +51,16 @@ class Page extends React.Component<Props, State> {
   constructor(props) {
     super(props);
     this.state = { value: "" };
-
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleChange(event) {
+  handleChange = event => {
     this.setState({ value: event.target.value });
-  }
+  };
 
-  handleSubmit(event) {
+  handleSubmit = event => {
     this.props.filter(this.state.value);
     event.preventDefault();
-  }
+  };
 
   render() {
     const { error } = this.props;
@@ -94,11 +91,11 @@ class Page extends React.Component<Props, State> {
               "column is-three-fifths is-mobile-action-spacing"
             )}
           >
-            <form className={classNames(classes.inputField, "input-field")}>
-              <div
-                className="control has-icons-left"
-                onSubmit={this.handleSubmit}
-              >
+            <form
+              className={classNames(classes.inputField, "input-field")}
+              onSubmit={this.handleSubmit}
+            >
+              <div className="control has-icons-left">
                 <input
                   className={classNames(classes.inputHeight, "input")}
                   type="search"
