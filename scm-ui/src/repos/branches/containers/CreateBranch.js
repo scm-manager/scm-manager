@@ -7,10 +7,11 @@ import {
 } from "@scm-manager/ui-components";
 import { translate } from "react-i18next";
 import BranchForm from "../components/BranchForm";
-import type { Repository, Branch } from "@scm-manager/ui-types";
+import type { Repository, Branch, BranchRequest } from "@scm-manager/ui-types";
 import {
   fetchBranches,
   getBranches,
+  getBrancheCreateLink,
   createBranch,
   createBranchReset,
   isCreateBranchPending,
@@ -28,10 +29,16 @@ type Props = {
   error?: Error,
   repository: Repository,
   branches: Branch[],
+  createBranchesLink: string,
 
   // dispatcher functions
   fetchBranches: Repository => void,
-  createBranch: (branch: Branch, callback?: () => void) => void,
+  createBranch: (
+    createLink: string,
+    repository: Repository,
+    branch: BranchRequest,
+    callback?: (Branch) => void
+  ) => void,
   resetForm: () => void,
 
   // context objects
@@ -48,12 +55,21 @@ class CreateBranch extends React.Component<Props> {
   }
 
   branchCreated = (branch: Branch) => {
-    const { history } = this.props;
-    history.push("/branch/" + encodeURIComponent(branch.name) + "/info");
+    const { history, repository } = this.props;
+    history.push(
+      `/repo/${repository.namespace}/${
+        repository.name
+      }/branch/${encodeURIComponent(branch.name)}/info`
+    );
   };
 
-  createBranch = (branch: Branch) => {
-    this.props.createBranch(branch, () => this.branchCreated(branch));
+  createBranch = (branch: BranchRequest) => {
+    this.props.createBranch(
+      this.props.createBranchesLink,
+      this.props.repository,
+      branch,
+      newBranch => this.branchCreated(newBranch)
+    );
   };
 
   transmittedName = (url: string) => {
@@ -76,7 +92,7 @@ class CreateBranch extends React.Component<Props> {
       <>
         <Subtitle subtitle={t("branches.create.title")} />
         <BranchForm
-          submitForm={branch => this.createBranch(branch)}
+          submitForm={branchRequest => this.createBranch(branchRequest)}
           loading={loading}
           repository={repository}
           branches={branches}
@@ -93,11 +109,12 @@ const mapDispatchToProps = dispatch => {
       dispatch(fetchBranches(repository));
     },
     createBranch: (
+      createLink: string,
       repository: Repository,
-      branch: Branch,
-      callback?: () => void
+      branchRequest: BranchRequest,
+      callback?: (newBranch: Branch) => void
     ) => {
-      dispatch(createBranch("INSERTLINK", repository, branch, callback)); //TODO
+      dispatch(createBranch(createLink, repository, branchRequest, callback));
     },
     resetForm: () => {
       dispatch(createBranchReset());
@@ -111,11 +128,13 @@ const mapStateToProps = (state, ownProps) => {
   const error =
     getFetchBranchesFailure(state, repository) || getCreateBranchFailure(state);
   const branches = getBranches(state, repository);
+  const createBranchesLink = getBrancheCreateLink(state, repository);
   return {
     repository,
     loading,
     error,
-    branches
+    branches,
+    createBranchesLink
   };
 };
 

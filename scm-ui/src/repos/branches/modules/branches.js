@@ -5,7 +5,12 @@ import {
   SUCCESS_SUFFIX
 } from "../../../modules/types";
 import { apiClient } from "@scm-manager/ui-components";
-import type { Action, Branch, Repository } from "@scm-manager/ui-types";
+import type {
+  Action,
+  Branch,
+  BranchRequest,
+  Repository
+} from "@scm-manager/ui-types";
 import { isPending } from "../../../modules/pending";
 import { getFailure } from "../../../modules/failure";
 
@@ -25,7 +30,8 @@ export const CREATE_BRANCH_SUCCESS = `${CREATE_BRANCH}_${PENDING_SUFFIX}`;
 export const CREATE_BRANCH_FAILURE = `${CREATE_BRANCH}_${PENDING_SUFFIX}`;
 export const CREATE_BRANCH_RESET = `${CREATE_BRANCH}_${PENDING_SUFFIX}`;
 
-const CONTENT_TYPE_BRANCH = "application/vnd.scmm-branch+json;v=2";
+const CONTENT_TYPE_BRANCH_REQUEST =
+  "application/vnd.scmm-branchRequest+json;v=2";
 
 // Fetching branches
 
@@ -79,13 +85,13 @@ export function fetchBranch(repository: Repository, name: string) {
 export function createBranch(
   link: string,
   repository: Repository,
-  branch: Branch,
+  branchRequest: BranchRequest,
   callback?: (branch: Branch) => void
 ) {
   return function(dispatch: any) {
-    dispatch(createBranchPending(repository, branch.name));
+    dispatch(createBranchPending(repository, branchRequest.name));
     return apiClient
-      .post(link, branch, CONTENT_TYPE_BRANCH)
+      .post(link, branchRequest, CONTENT_TYPE_BRANCH_REQUEST)
       .then(response => response.headers.get("Location"))
       .then(location => apiClient.get(location))
       .then(response => response.json())
@@ -107,6 +113,13 @@ export function getBranches(state: Object, repository: Repository) {
     return repoState.list._embedded.branches.map(
       name => repoState.byName[name]
     );
+  }
+}
+
+export function getBrancheCreateLink(state: Object, repository: Repository) {
+  const repoState = getRepoState(state, repository);
+  if (repoState && repoState.list) {
+    return repoState.list._links.create.href;
   }
 }
 

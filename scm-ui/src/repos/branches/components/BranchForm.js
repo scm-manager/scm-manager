@@ -1,7 +1,7 @@
 // @flow
 import React from "react";
 import { translate } from "react-i18next";
-import type { Repository, Branch } from "@scm-manager/ui-types";
+import type { Repository, Branch, BranchRequest } from "@scm-manager/ui-types";
 import {
   Select,
   InputField,
@@ -11,7 +11,7 @@ import {
 import { orderBranches } from "../util/orderBranches";
 
 type Props = {
-  submitForm: Branch => void,
+  submitForm: BranchRequest => void,
   repository: Repository,
   branches: Branch[],
   loading?: boolean,
@@ -51,7 +51,10 @@ class BranchForm extends React.Component<Props, State> {
   submit = (event: Event) => {
     event.preventDefault();
     if (this.isValid()) {
-      this.props.submitForm(this.state.branch);
+      this.props.submitForm({
+        name: this.state.name,
+        parent: this.state.source
+      });
     }
   };
 
