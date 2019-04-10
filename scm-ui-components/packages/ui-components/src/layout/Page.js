@@ -1,11 +1,13 @@
 //@flow
 import * as React from "react";
+import { compose } from "redux";
+import injectSheet from "react-jss";
+import classNames from "classnames";
+import { translate } from "react-i18next";
 import Loading from "./../Loading";
 import ErrorNotification from "./../ErrorNotification";
 import Title from "./Title";
 import Subtitle from "./Subtitle";
-import injectSheet from "react-jss";
-import classNames from "classnames";
 import PageActions from "./PageActions";
 import ErrorBoundary from "../ErrorBoundary";
 
@@ -23,7 +25,8 @@ type Props = {
   filter: string => void,
 
   // context props
-  classes: Object
+  classes: Object,
+  t: string => string
 };
 
 const styles = {
@@ -79,7 +82,7 @@ class Page extends React.Component<Props, State> {
   }
 
   renderPageHeader() {
-    const { title, subtitle, children, classes } = this.props;
+    const { title, subtitle, children, classes, t } = this.props;
 
     let pageActions = null;
     let pageActionsExists = false;
@@ -87,7 +90,10 @@ class Page extends React.Component<Props, State> {
       if (child && child.type.name === PageActions.name) {
         pageActions = (
           <div
-            className={classNames(classes.actions, "column is-three-fifths is-mobile-action-spacing")}
+            className={classNames(
+              classes.actions,
+              "column is-three-fifths is-mobile-action-spacing"
+            )}
           >
             <form className={classNames(classes.inputField, "input-field")}>
               <div
@@ -97,7 +103,7 @@ class Page extends React.Component<Props, State> {
                 <input
                   className={classNames(classes.inputHeight, "input")}
                   type="search"
-                  placeholder="filter text"
+                  placeholder={t("filterEntries")}
                   value={this.state.value}
                   onChange={this.handleChange}
                 />
@@ -106,12 +112,7 @@ class Page extends React.Component<Props, State> {
                 </span>
               </div>
             </form>
-            <div
-              className={classNames(
-                classes.button,
-                "input-button control"
-              )}
-            >
+            <div className={classNames(classes.button, "input-button control")}>
               {child}
             </div>
           </div>
@@ -157,4 +158,7 @@ class Page extends React.Component<Props, State> {
   }
 }
 
-export default injectSheet(styles)(Page);
+export default compose(
+  injectSheet(styles),
+  translate("commons")
+)(Page);

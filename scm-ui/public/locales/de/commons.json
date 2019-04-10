@@ -39,6 +39,7 @@
     "groups": "Gruppen",
     "config": "Einstellungen"
   },
+  "filterEntries": "Einträge filtern",
   "paginator": {
     "next": "Weiter",
     "previous": "Zurück"
