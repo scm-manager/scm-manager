@@ -9,6 +9,10 @@ import classNames from "classnames";
 import PageActions from "./PageActions";
 import ErrorBoundary from "../ErrorBoundary";
 
+type State = {
+  value: string
+};
+
 type Props = {
   title?: string,
   subtitle?: string,
@@ -16,19 +20,49 @@ type Props = {
   error?: Error,
   showContentOnError?: boolean,
   children: React.Node,
+  filter: string => void,
 
   // context props
   classes: Object
 };
 
 const styles = {
-  spacing: {
+  actions: {
+    display: "flex",
+    justifyContent: "flex-end"
+  },
+  inputField: {
+    float: "right",
     marginTop: "1.25rem",
-    textAlign: "right"
+    marginRight: "1.25rem"
+  },
+  inputHeight: {
+    height: "2.5rem"
+  },
+  button: {
+    float: "right",
+    marginTop: "1.25rem"
   }
 };
 
-class Page extends React.Component<Props> {
+class Page extends React.Component<Props, State> {
+  constructor(props) {
+    super(props);
+    this.state = { value: "" };
+
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleChange(event) {
+    this.setState({ value: event.target.value });
+  }
+
+  handleSubmit(event) {
+    this.props.filter(this.state.value);
+    event.preventDefault();
+  }
+
   render() {
     const { error } = this.props;
     return (
@@ -36,12 +70,11 @@ class Page extends React.Component<Props> {
         <div className="container">
           {this.renderPageHeader()}
           <ErrorBoundary>
-            <ErrorNotification error={error}/>
+            <ErrorNotification error={error} />
             {this.renderContent()}
           </ErrorBoundary>
         </div>
       </section>
-
     );
   }
 
@@ -53,11 +86,30 @@ class Page extends React.Component<Props> {
     React.Children.forEach(children, child => {
       if (child && child.type.name === PageActions.name) {
         pageActions = (
-          <div className="column is-two-fifths">
+          <div
+            className={classNames(classes.actions, "column is-three-fifths is-mobile-action-spacing")}
+          >
+            <form className={classNames(classes.inputField, "input-field")}>
+              <div
+                className="control has-icons-left"
+                onSubmit={this.handleSubmit}
+              >
+                <input
+                  className={classNames(classes.inputHeight, "input")}
+                  type="search"
+                  placeholder="filter text"
+                  value={this.state.value}
+                  onChange={this.handleChange}
+                />
+                <span className="icon is-small is-left">
+                  <i className="fas fa-search" />
+                </span>
+              </div>
+            </form>
             <div
               className={classNames(
-                classes.spacing,
-                "is-mobile-create-button-spacing"
+                classes.button,
+                "input-button control"
               )}
             >
               {child}
@@ -68,15 +120,15 @@ class Page extends React.Component<Props> {
       }
     });
     let underline = pageActionsExists ? (
-      <hr className="header-with-actions"/>
+      <hr className="header-with-actions" />
     ) : null;
 
     return (
       <>
         <div className="columns">
           <div className="column">
-            <Title title={title}/>
-            <Subtitle subtitle={subtitle}/>
+            <Title title={title} />
+            <Subtitle subtitle={subtitle} />
           </div>
           {pageActions}
         </div>
@@ -92,7 +144,7 @@ class Page extends React.Component<Props> {
       return null;
     }
     if (loading) {
-      return <Loading/>;
+      return <Loading />;
     }
 
     let content = [];

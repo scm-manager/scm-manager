@@ -39,7 +39,7 @@ type Props = {
   history: History,
 
   // dispatch functions
-  fetchUsersByPage: (link: string, page: number) => void,
+  fetchUsersByPage: (link: string, page: number, filter?: string) => void,
   fetchUsersByLink: (link: string) => void
 };
 
@@ -74,6 +74,9 @@ class Users extends React.Component<Props> {
         subtitle={t("users.subtitle")}
         loading={loading || !users}
         error={error}
+        filter={filter => {
+          this.props.fetchUsersByPage(this.props.usersLink, this.props.page, filter);
+        }}
       >
         <UserTable users={users} />
         {this.renderPaginator()}
@@ -152,8 +155,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchUsersByPage: (link: string, page: number) => {
-      dispatch(fetchUsersByPage(link, page));
+    fetchUsersByPage: (link: string, page: number, filter?: string) => {
+      dispatch(fetchUsersByPage(link, page, filter));
     },
     fetchUsersByLink: (link: string) => {
       dispatch(fetchUsersByLink(link));

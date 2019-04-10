@@ -49,13 +49,22 @@ hr.header-with-actions {
     display: none;
   }
 }
-.is-mobile-create-button-spacing {
+.is-mobile-action-spacing {
   @media screen and (max-width: 768px) {
-    border: 2px solid #e9f7fd;
-    padding: 1em 1em;
-    margin-top: 0 !important;
-    width: 100%;
-    text-align: center !important;
+    display: flow-root !important;
+
+    .input-field {
+      padding: 0;
+      margin: 0 0 1.25rem 0 !important;
+      width: 100%;
+    }
+    .input-button {
+      border: 2px solid #e9f7fd;
+      padding: 1em 1em;
+      margin-top: 0 !important;
+      width: 100%;
+      text-align: center !important;
+    }
   }
 }
 
@@ -102,10 +111,12 @@ $fa-font-path: "webfonts";
   &.is-primary {
     background-color: #00d1df;
   }
-  &.is-primary:hover, &.is-primary.is-hovered {
+  &.is-primary:hover,
+  &.is-primary.is-hovered {
     background-color: #00b9c6;
   }
-  &.is-primary:active, &.is-primary.is-active {
+  &.is-primary:active,
+  &.is-primary.is-active {
     background-color: #00a1ac;
   }
   &.is-primary[disabled] {
@@ -144,7 +155,7 @@ $fa-font-path: "webfonts";
         margin-right: 0;
       }
 
-      .overlay-half-column{
+      .overlay-half-column {
         position: absolute;
         height: calc(120px - 0.5rem);
         width: calc(100% - 1.5rem);

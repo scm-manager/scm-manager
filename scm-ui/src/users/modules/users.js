@@ -43,8 +43,11 @@ export function fetchUsers(link: string) {
   return fetchUsersByLink(link);
 }
 
-export function fetchUsersByPage(link: string, page: number) {
+export function fetchUsersByPage(link: string, page: number, filter?: string) {
   // backend start counting by 0
+  if(filter) {
+    return fetchUsersByLink(link + "?page=" + (page - 1) + "&q=" + decodeURIComponent(filter));
+  }
   return fetchUsersByLink(link + "?page=" + (page - 1));
 }
 
