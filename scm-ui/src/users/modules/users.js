@@ -45,10 +45,12 @@ export function fetchUsers(link: string) {
 
 export function fetchUsersByPage(link: string, page: number, filter?: string) {
   // backend start counting by 0
-  if(filter) {
-    return fetchUsersByLink(link + "?page=" + (page - 1) + "&q=" + decodeURIComponent(filter));
+  if (filter) {
+    return fetchUsersByLink(
+      `${link}?page=${page - 1}&q=${decodeURIComponent(filter)}`
+    );
   }
-  return fetchUsersByLink(link + "?page=" + (page - 1));
+  return fetchUsersByLink(`${link}?page=${page - 1}`);
 }
 
 export function fetchUsersByLink(link: string) {
@@ -156,9 +158,7 @@ export function createUser(link: string, user: User, callback?: () => void) {
           callback();
         }
       })
-      .catch(error =>
-        dispatch(createUserFailure(error))
-      );
+      .catch(error => dispatch(createUserFailure(error)));
   };
 }
 

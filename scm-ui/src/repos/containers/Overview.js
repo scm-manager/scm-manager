@@ -36,7 +36,7 @@ type Props = {
 
   // dispatched functions
   fetchRepos: string => void,
-  fetchReposByPage: (string, number) => void,
+  fetchReposByPage: (link: string, page: number, filter?: string) => void,
   fetchReposByLink: string => void,
 
   // context props
@@ -71,6 +71,9 @@ class Overview extends React.Component<Props> {
         subtitle={t("overview.subtitle")}
         loading={loading}
         error={error}
+        filter={filter => {
+          this.props.fetchReposByPage(this.props.reposLink, this.props.page, filter);
+        }}
       >
         {this.renderList()}
         {this.renderPageActionCreateButton()}
@@ -151,8 +154,8 @@ const mapDispatchToProps = dispatch => {
     fetchRepos: (link: string) => {
       dispatch(fetchRepos(link));
     },
-    fetchReposByPage: (link: string, page: number) => {
-      dispatch(fetchReposByPage(link, page));
+    fetchReposByPage: (link: string, page: number, filter?: string) => {
+      dispatch(fetchReposByPage(link, page, filter));
     },
     fetchReposByLink: (link: string) => {
       dispatch(fetchReposByLink(link));
