@@ -1,6 +1,5 @@
 //@flow
 import * as React from "react";
-import { compose } from "redux";
 import injectSheet from "react-jss";
 import classNames from "classnames";
 import { translate } from "react-i18next";
@@ -158,7 +157,4 @@ class Page extends React.Component<Props, State> {
   }
 }
 
-export default compose(
-  injectSheet(styles),
-  translate("commons")
-)(Page);
+export default injectSheet(styles)(translate("commons")(Page));
