@@ -311,7 +311,7 @@ const reduceByBranchSuccess = (state, payload) => {
 };
 
 export default function reducer(
-  state: {},
+  state: {} = {},
   action: Action = { type: "UNKNOWN" }
 ): Object {
   if (!action.payload) {
