@@ -19,7 +19,8 @@ import {
   PageActions,
   Button,
   CreateButton,
-  Paginator
+  Paginator,
+  Notification
 } from "@scm-manager/ui-components";
 import { UserTable } from "./../components/table";
 import type { User, PagedCollection } from "@scm-manager/ui-types";
@@ -75,12 +76,24 @@ class Users extends React.Component<Props> {
         loading={loading || !users}
         error={error}
       >
-        <UserTable users={users} />
-        {this.renderPaginator()}
+        {this.renderUserTable()}
         {this.renderCreateButton()}
         {this.renderPageActionCreateButton()}
       </Page>
     );
+  }
+
+  renderUserTable() {
+    const { users, t } = this.props;
+    if (users && users.length > 0) {
+      return (
+        <>
+          <UserTable users={users} />
+          {this.renderPaginator()}
+        </>
+      );
+    }
+    return <Notification type="info">{t("users.noUsers")}</Notification>;
   }
 
   renderPaginator() {

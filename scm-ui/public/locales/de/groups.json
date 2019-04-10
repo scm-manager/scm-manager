@@ -10,7 +10,8 @@
   },
   "groups": {
     "title": "Gruppen",
-    "subtitle": "Verwaltung der Gruppen"
+    "subtitle": "Verwaltung der Gruppen",
+    "noGroups": "Keine Gruppen gefunden."
   },
   "singleGroup": {
     "errorTitle": "Fehler",

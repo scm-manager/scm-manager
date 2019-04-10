@@ -22,9 +22,11 @@ import {
   getPageFromMatch,
   LinkPaginator,
   ChangesetList,
-  Loading
+  Loading,
+  Notification
 } from "@scm-manager/ui-components";
 import { compose } from "redux";
+import { translate } from "react-i18next";
 
 type Props = {
   repository: Repository,
@@ -41,7 +43,8 @@ type Props = {
   fetchChangesets: (Repository, Branch, number) => void,
 
   // context props
-  match: any
+  match: any,
+  t: string => string
 };
 
 class Changesets extends React.Component<Props> {
@@ -52,7 +55,7 @@ class Changesets extends React.Component<Props> {
   }
 
   render() {
-    const { changesets, loading, error } = this.props;
+    const { changesets, loading, error, t } = this.props;
 
     if (error) {
       return <ErrorNotification error={error} />;
@@ -63,7 +66,13 @@ class Changesets extends React.Component<Props> {
     }
 
     if (!changesets || changesets.length === 0) {
-      return null;
+      return (
+        <div className="panel-block">
+          <Notification type="info">
+            {t("changesets.noChangesets")}
+          </Notification>
+        </div>
+      );
     }
     return (
       <>
@@ -115,6 +124,7 @@ const mapStateToProps = (state: any, ownProps: Props) => {
 };
 
 export default compose(
+  translate("repos"),
   withRouter,
   connect(
     mapStateToProps,

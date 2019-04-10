@@ -37,6 +37,7 @@
   "overview": {
     "title": "Repositories",
     "subtitle": "Overview of available repositories",
+    "noRepositories": "No repositories found.",
     "createButton": "Create Repository"
   },
   "create": {
@@ -46,6 +47,7 @@
   "branches": {
     "overview": {
       "title": "Overview of all branches",
+      "noBranches": "No branches found.",
       "createButton": "Create Branch"
     },
     "table": {
@@ -67,6 +69,7 @@
   "changesets": {
     "errorTitle": "Error",
     "errorSubtitle": "Could not fetch changesets",
+    "noChangesets": "No changesets found for this branch.",
     "branchSelectorLabel": "Branches"
   },
   "changeset": {
@@ -105,7 +108,8 @@
       "lastModified": "Last modified",
       "description": "Description",
       "size": "Size"
-    }
+    },
+    "noSources": "No sources found for this branch."
   },
   "permission": {
     "title": "Edit Permissions",

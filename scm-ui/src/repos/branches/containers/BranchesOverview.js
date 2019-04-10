@@ -16,6 +16,7 @@ import {
   CreateButton,
   ErrorNotification,
   Loading,
+  Notification,
   Subtitle
 } from "@scm-manager/ui-components";
 import BranchTable from "../components/BranchTable";
@@ -44,7 +45,7 @@ class BranchesOverview extends React.Component<Props> {
   }
 
   render() {
-    const { baseUrl, loading, error, branches, t } = this.props;
+    const { loading, error, branches, t } = this.props;
 
     if (error) {
       return <ErrorNotification error={error} />;
@@ -54,15 +55,22 @@ class BranchesOverview extends React.Component<Props> {
       return <Loading />;
     }
 
-    orderBranches(branches);
-
     return (
       <>
         <Subtitle subtitle={t("branches.overview.title")} />
-        <BranchTable baseUrl={baseUrl} branches={branches} />
+        {this.renderBranchesTable()}
         {this.renderCreateButton()}
       </>
     );
+  }
+
+  renderBranchesTable() {
+    const { baseUrl, branches, t } = this.props;
+    if (branches && branches.length > 0) {
+      orderBranches(branches);
+      return <BranchTable baseUrl={baseUrl} branches={branches} />;
+    }
+    return <Notification type="info">{t("branches.overview.noBranches")}</Notification>;
   }
 
   renderCreateButton() {

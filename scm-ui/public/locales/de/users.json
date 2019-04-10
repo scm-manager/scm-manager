@@ -24,6 +24,7 @@
   "users": {
     "title": "Benutzer",
     "subtitle": "Verwaltung der Benutzer",
+    "noUsers": "Keine Benutzer gefunden.",
     "createButton": "Benutzer erstellen"
   },
   "singleUser": {
