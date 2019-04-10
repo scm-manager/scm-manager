@@ -74,6 +74,7 @@ class DeleteRepo extends React.Component<Props> {
 
     return (
       <>
+        <hr />
         <Subtitle subtitle={t("deleteRepo.subtitle")} />
         <ErrorNotification error={error} />
         <div className="columns">
