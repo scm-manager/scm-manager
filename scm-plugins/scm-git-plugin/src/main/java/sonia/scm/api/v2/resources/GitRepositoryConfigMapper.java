@@ -28,7 +28,7 @@ public abstract class GitRepositoryConfigMapper {
   @AfterMapping
   void appendLinks(@MappingTarget GitRepositoryConfigDto target, @Context Repository repository) {
     Links.Builder linksBuilder = linkingTo().self(self());
-    if (RepositoryPermissions.modify(repository).isPermitted()) {
+    if (RepositoryPermissions.custom("git", repository).isPermitted()) {
       linksBuilder.single(link("update", update()));
     }
     target.add(linksBuilder.build());
