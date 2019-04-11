@@ -181,6 +181,8 @@
       "modify": "modified",
       "rename": "renamed",
       "copy": "copied"
-    }
+    },
+    "sideBySide": "side-by-side",
+    "combined": "combined"
   }
 }
