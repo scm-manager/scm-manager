@@ -415,19 +415,19 @@ describe("branches", () => {
     it("should return true if create branch is pending", () => {
       const state = {
         pending: {
-          [CREATE_BRANCH]: true
+          [CREATE_BRANCH + "/foo/bar"]: true
         }
       };
-      expect(isCreateBranchPending(state)).toBe(true);
+      expect(isCreateBranchPending(state, repository)).toBe(true);
     });
 
     it("should return false if create branch is not pending", () => {
       const state = {
         pending: {
-          [CREATE_BRANCH]: false
+          [CREATE_BRANCH + "/foo/bar"]: false
         }
       };
-      expect(isCreateBranchPending(state)).toBe(false);
+      expect(isCreateBranchPending(state, repository)).toBe(false);
     });
 
     it("should return error when create branch did fail", () => {
