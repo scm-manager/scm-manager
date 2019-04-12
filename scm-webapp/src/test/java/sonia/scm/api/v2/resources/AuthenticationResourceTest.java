@@ -103,7 +103,7 @@ public class AuthenticationResourceTest {
 
   @Before
   public void prepareEnvironment() {
-    AuthenticationResource authenticationResource = new AuthenticationResource(accessTokenBuilderFactory, cookieIssuer);
+    AuthenticationResource authenticationResource = new AuthenticationResource(accessTokenBuilderFactory, cookieIssuer, null);
     dispatcher.getRegistry().addSingletonResource(authenticationResource);
 
     AccessToken accessToken = mock(AccessToken.class);

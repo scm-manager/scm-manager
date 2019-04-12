@@ -16,6 +16,8 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.net.URI;
+import java.util.Optional;
 
 @Path(AuthenticationResource.PATH)
 @AllowAnonymousAccess
@@ -27,12 +29,14 @@ public class AuthenticationResource {
 
   private final AccessTokenBuilderFactory tokenBuilderFactory;
   private final AccessTokenCookieIssuer cookieIssuer;
+  private final LogoutRedirection logoutRedirection;
 
   @Inject
-  public AuthenticationResource(AccessTokenBuilderFactory tokenBuilderFactory, AccessTokenCookieIssuer cookieIssuer)
+  public AuthenticationResource(AccessTokenBuilderFactory tokenBuilderFactory, AccessTokenCookieIssuer cookieIssuer, LogoutRedirection logoutRedirection)
   {
     this.tokenBuilderFactory = tokenBuilderFactory;
     this.cookieIssuer = cookieIssuer;
+    this.logoutRedirection = logoutRedirection;
   }
 
 
@@ -121,6 +125,7 @@ public class AuthenticationResource {
 
   @DELETE
   @Path("access_token")
+  @Produces(MediaType.APPLICATION_JSON)
   @StatusCodes({
     @ResponseCode(code = 204, condition = "success"),
     @ResponseCode(code = 500, condition = "internal server error")
@@ -135,7 +140,16 @@ public class AuthenticationResource {
     cookieIssuer.invalidate(request, response);
 
     // TODO anonymous access ??
-    return Response.noContent().build();
+    if (logoutRedirection == null) {
+      return Response.noContent().build();
+    } else {
+      Optional<URI> uri = logoutRedirection.afterLogoutRedirectTo();
+      if (uri.isPresent()) {
+        return Response.ok(new RedirectAfterLogoutDto(uri.get().toASCIIString())).build();
+      } else {
+        return Response.noContent().build();
+      }
+    }
   }
 
 }

@@ -3,6 +3,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { translate } from "react-i18next";
 import { Redirect } from "react-router-dom";
+import type { History } from "history";
 
 import {
   logout,
@@ -20,15 +21,16 @@ type Props = {
   logoutLink: string,
 
   // dispatcher functions
-  logout: (link: string) => void,
+  logout: (link: string, history: History) => void,
 
   // context props
+  history: History,
   t: string => string
 };
 
 class Logout extends React.Component<Props> {
   componentDidMount() {
-    this.props.logout(this.props.logoutLink);
+    this.props.logout(this.props.logoutLink, this.props.history);
   }
 
   render() {
@@ -64,7 +66,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    logout: (link: string) => dispatch(logout(link))
+    logout: (link: string, history: History) => dispatch(logout(link, history))
   };
 };
 

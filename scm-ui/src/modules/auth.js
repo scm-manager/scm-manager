@@ -11,6 +11,7 @@ import {
   fetchIndexResourcesPending,
   fetchIndexResourcesSuccess
 } from "./indexResource";
+import type { History } from "history";
 
 // Action
 
@@ -29,6 +30,10 @@ export const LOGOUT = "scm/auth/LOGOUT";
 export const LOGOUT_PENDING = `${LOGOUT}_${types.PENDING_SUFFIX}`;
 export const LOGOUT_SUCCESS = `${LOGOUT}_${types.SUCCESS_SUFFIX}`;
 export const LOGOUT_FAILURE = `${LOGOUT}_${types.FAILURE_SUFFIX}`;
+
+type LogoutRedirection = {
+  logoutRedirect: string
+};
 
 // Reducer
 
@@ -130,11 +135,9 @@ export const fetchMeFailure = (error: Error) => {
 // side effects
 
 const callFetchMe = (link: string): Promise<Me> => {
-  return apiClient
-    .get(link)
-    .then(response => {
-      return response.json();
-    });
+  return apiClient.get(link).then(response => {
+    return response.json();
+  });
 };
 
 export const login = (
@@ -187,13 +190,24 @@ export const fetchMe = (link: string) => {
   };
 };
 
-export const logout = (link: string) => {
+export const logout = (link: string, history: History) => {
   return function(dispatch: any) {
     dispatch(logoutPending());
     return apiClient
       .delete(link)
-      .then(() => {
-        dispatch(logoutSuccess());
+      .then(response => {
+        return response.status === 200
+          ? response.json()
+          : new Promise(function(resolve) {
+              resolve(undefined);
+            });
+      })
+      .then(json => {
+        if (json && json.logoutRedirect) {
+          location.href = json.logoutRedirect;
+        } else {
+          dispatch(logoutSuccess());
+        }
       })
       .then(() => {
         dispatch(fetchIndexResources());
