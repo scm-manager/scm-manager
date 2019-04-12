@@ -29,16 +29,16 @@ public class AuthenticationResource {
 
   private final AccessTokenBuilderFactory tokenBuilderFactory;
   private final AccessTokenCookieIssuer cookieIssuer;
-  private final LogoutRedirection logoutRedirection;
+
+  @Inject(optional = true)
+  private LogoutRedirection logoutRedirection;
 
   @Inject
-  public AuthenticationResource(AccessTokenBuilderFactory tokenBuilderFactory, AccessTokenCookieIssuer cookieIssuer, LogoutRedirection logoutRedirection)
+  public AuthenticationResource(AccessTokenBuilderFactory tokenBuilderFactory, AccessTokenCookieIssuer cookieIssuer)
   {
     this.tokenBuilderFactory = tokenBuilderFactory;
     this.cookieIssuer = cookieIssuer;
-    this.logoutRedirection = logoutRedirection;
   }
-
 
   @POST
   @Path("access_token")
@@ -152,4 +152,7 @@ public class AuthenticationResource {
     }
   }
 
+  void setLogoutRedirection(LogoutRedirection logoutRedirection) {
+    this.logoutRedirection = logoutRedirection;
+  }
 }

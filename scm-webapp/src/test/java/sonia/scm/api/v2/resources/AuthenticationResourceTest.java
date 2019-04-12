@@ -111,9 +111,11 @@ public class AuthenticationResourceTest {
     "}"
   );
 
+  private AuthenticationResource authenticationResource;
+
   @Before
   public void prepareEnvironment() {
-    AuthenticationResource authenticationResource = new AuthenticationResource(accessTokenBuilderFactory, cookieIssuer, null);
+    authenticationResource = new AuthenticationResource(accessTokenBuilderFactory, cookieIssuer);
     dispatcher.getRegistry().addSingletonResource(authenticationResource);
 
     AccessToken accessToken = mock(AccessToken.class);
@@ -200,7 +202,7 @@ public class AuthenticationResourceTest {
 
   @Test
   public void shouldHandleLogoutRedirection() throws URISyntaxException, UnsupportedEncodingException {
-    mockResourceWithLogoutRedirection(of(create("http://example.com/cas/logout")));
+    authenticationResource.setLogoutRedirection(() -> of(create("http://example.com/cas/logout")));
 
     MockHttpRequest request = MockHttpRequest.delete("/" + AuthenticationResource.PATH + "/access_token");
 
@@ -212,20 +214,13 @@ public class AuthenticationResourceTest {
 
   @Test
   public void shouldHandleDisabledLogoutRedirection() throws URISyntaxException {
-    mockResourceWithLogoutRedirection(empty());
+    authenticationResource.setLogoutRedirection(Optional::empty);
 
     MockHttpRequest request = MockHttpRequest.delete("/" + AuthenticationResource.PATH + "/access_token");
 
     dispatcher.invoke(request, response);
 
     assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
-  }
-
-  private void mockResourceWithLogoutRedirection(Optional<URI> target) {
-    dispatcher.getRegistry().removeRegistrations(AuthenticationResource.class);
-    AuthenticationResource authenticationResource =
-      new AuthenticationResource(accessTokenBuilderFactory, cookieIssuer, () -> target);
-    dispatcher.getRegistry().addSingletonResource(authenticationResource);
   }
 
   private void shouldReturnBadRequest(String requestBody) throws URISyntaxException {
