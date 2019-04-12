@@ -204,10 +204,9 @@ export const logout = (link: string, history: History) => {
       })
       .then(json => {
         if (json && json.logoutRedirect) {
-          location.href = json.logoutRedirect;
-        } else {
-          dispatch(logoutSuccess());
+          window.location.assign(json.logoutRedirect);
         }
+        dispatch(logoutSuccess());
       })
       .then(() => {
         dispatch(fetchIndexResources());

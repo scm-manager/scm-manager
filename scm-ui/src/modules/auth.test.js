@@ -26,7 +26,7 @@ import reducer, {
   FETCH_ME,
   LOGOUT,
   getLoginFailure,
-  getLogoutFailure
+  getLogoutFailure,
 } from "./auth";
 
 import configureMockStore from "redux-mock-store";
@@ -221,6 +221,44 @@ describe("auth actions", () => {
 
     return store.dispatch(logout("/auth/access_token")).then(() => {
       expect(store.getActions()).toEqual(expectedActions);
+    });
+  });
+
+  it("should dispatch logout success and redirect", () => {
+    fetchMock.deleteOnce("/api/v2/auth/access_token", {
+      status: 200,
+      body: { logoutRedirect: "http://example.com/cas/logout" }
+    });
+
+    fetchMock.getOnce("/api/v2/me", {
+      status: 401
+    });
+
+    fetchMock.getOnce("/api/v2/", {
+      _links: {
+        login: {
+          login: "/login"
+        }
+      }
+    });
+
+    window.location.assign = jest.fn();
+
+    const expectedActions = [
+      { type: LOGOUT_PENDING },
+      { type: LOGOUT_SUCCESS },
+      { type: FETCH_INDEXRESOURCES_PENDING }
+    ];
+
+    const store = mockStore({});
+
+    return store.dispatch(logout("/auth/access_token")).then(() => {
+      expect(window.location.assign.mock.calls[0][0]).toBe(
+        "http://example.com/cas/logout"
+      );
+      expect(store.getActions()).toEqual(expectedActions);
+
+      // expect(window.location.href).toEqual("http://example.com/cas/logout");
     });
   });
 
