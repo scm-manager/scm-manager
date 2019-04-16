@@ -165,7 +165,7 @@ $fa-font-path: "webfonts";
 // tables
 .table {
   width: 100%;
-  td {
+  td, th {
     border-color: #eee;
     padding: 1rem;
   }

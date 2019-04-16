@@ -17,31 +17,31 @@ class RepositoryDetailTable extends React.Component<Props> {
       <table className="table">
         <tbody>
           <tr>
-            <td className="has-text-weight-semibold">{t("repository.name")}</td>
+            <th>{t("repository.name")}</th>
             <td>{repository.name}</td>
           </tr>
           <tr>
-            <td className="has-text-weight-semibold">{t("repository.type")}</td>
+            <th>{t("repository.type")}</th>
             <td>{repository.type}</td>
           </tr>
           <tr>
-            <td className="has-text-weight-semibold">{t("repository.contact")}</td>
+            <th>{t("repository.contact")}</th>
             <td>
               <MailLink address={repository.contact} />
             </td>
           </tr>
           <tr>
-            <td className="has-text-weight-semibold">{t("repository.description")}</td>
+            <th>{t("repository.description")}</th>
             <td>{repository.description}</td>
           </tr>
           <tr>
-            <td className="has-text-weight-semibold">{t("repository.creationDate")}</td>
+            <th>{t("repository.creationDate")}</th>
             <td>
               <DateFromNow date={repository.creationDate} />
             </td>
           </tr>
           <tr>
-            <td className="has-text-weight-semibold">{t("repository.lastModified")}</td>
+            <th>{t("repository.lastModified")}</th>
             <td>
               <DateFromNow date={repository.lastModified} />
             </td>
