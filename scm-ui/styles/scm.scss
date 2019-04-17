@@ -102,10 +102,12 @@ $fa-font-path: "webfonts";
   &.is-primary {
     background-color: #00d1df;
   }
-  &.is-primary:hover, &.is-primary.is-hovered {
+  &.is-primary:hover,
+  &.is-primary.is-hovered {
     background-color: #00b9c6;
   }
-  &.is-primary:active, &.is-primary.is-active {
+  &.is-primary:active,
+  &.is-primary.is-active {
     background-color: #00a1ac;
   }
   &.is-primary[disabled] {
@@ -144,7 +146,7 @@ $fa-font-path: "webfonts";
         margin-right: 0;
       }
 
-      .overlay-half-column{
+      .overlay-half-column {
         position: absolute;
         height: calc(120px - 0.5rem);
         width: calc(100% - 1.5rem);
@@ -248,6 +250,22 @@ form .field:not(.is-grouped) {
   /*background-color: whitesmoke;*/
   border-color: #98d8f3;
   box-shadow: none;
+}
+
+.select,
+.select:hover {
+  &:not(.is-multiple):not(.is-loading) {
+    > select[disabled] + &::after {
+      border :1px solid red;
+      border-color: #7a7a7a;
+    }
+    &::after {
+      border-top: 1px solid blue;
+    }
+    > select[disabled] {
+      border: 1px solid yellow;
+    }
+  }
 }
 
 // label with help-icon compensation
