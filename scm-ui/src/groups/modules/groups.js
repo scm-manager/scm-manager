@@ -40,7 +40,7 @@ export function fetchGroups(link: string) {
   return fetchGroupsByLink(link);
 }
 
-export function fetchGroupsByPage(link: string, page: number, filter?: string) {
+export function fetchGroupsByPage(link: string, page: number, filter?: any) {
   // backend start counting by 0
   if (filter) {
     return fetchGroupsByLink(

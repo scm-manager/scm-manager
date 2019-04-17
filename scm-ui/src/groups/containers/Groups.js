@@ -5,11 +5,13 @@ import { translate } from "react-i18next";
 import type { Group } from "@scm-manager/ui-types";
 import type { PagedCollection } from "@scm-manager/ui-types";
 import type { History } from "history";
+import queryString from "query-string";
 import {
   Page,
   PageActions,
   Button,
-  Paginator
+  LinkPaginator,
+  getPageFromMatch
 } from "@scm-manager/ui-components";
 import { GroupTable } from "./../components/table";
 import CreateGroupButton from "../components/buttons/CreateGroupButton";
@@ -24,6 +26,7 @@ import {
   selectListAsCollection
 } from "../modules/groups";
 import { getGroupsLink } from "../../modules/indexResource";
+import { compose } from "redux";
 
 type Props = {
   groups: Group[],
@@ -37,37 +40,47 @@ type Props = {
   // context objects
   t: string => string,
   history: History,
+  location: any,
 
   // dispatch functions
-  fetchGroupsByPage: (link: string, page: number, filter?: string) => void,
+  fetchGroupsByPage: (link: string, page: number, filter?: any) => void,
   fetchGroupsByLink: (link: string) => void
 };
 
-class Groups extends React.Component<Props> {
-  componentDidMount() {
-    this.props.fetchGroupsByPage(this.props.groupLink, this.props.page);
+type State = {
+  page: number
+};
+
+class Groups extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+
+    this.state = {
+      page: -1
+    };
   }
 
-  onPageChange = (link: string) => {
-    this.props.fetchGroupsByLink(link);
-  };
+  componentDidMount() {
+    const { fetchGroupsByPage, groupLink, page } = this.props;
+    fetchGroupsByPage(groupLink, page, this.getQueryString());
+    this.setState({ page: page });
+  }
 
-  /**
-   * reflect page transitions in the uri
-   */
   componentDidUpdate = (prevProps: Props) => {
-    const { page, list } = this.props;
-    if (list.page >= 0) {
-      // backend starts paging by 0
-      const statePage: number = list.page + 1;
-      if (page !== statePage) {
-        this.props.history.push(`/groups/${statePage}`);
+    const { list, page, location, fetchGroupsByPage, groupLink } = this.props;
+    if (list && page) {
+      if (
+        page !== this.state.page ||
+        prevProps.location.search !== location.search
+      ) {
+        fetchGroupsByPage(groupLink, page, this.getQueryString());
+        this.setState({ page: page });
       }
     }
   };
 
   render() {
-    const { groups, loading, error, t } = this.props;
+    const { groups, loading, error, history, t } = this.props;
     return (
       <Page
         title={t("groups.title")}
@@ -75,7 +88,7 @@ class Groups extends React.Component<Props> {
         loading={loading || !groups}
         error={error}
         filter={filter => {
-          this.props.fetchGroupsByPage(this.props.groupLink, this.props.page, filter);
+          history.push("/groups/?q=" + filter);
         }}
       >
         <GroupTable groups={groups} />
@@ -86,60 +99,57 @@ class Groups extends React.Component<Props> {
     );
   }
 
-  renderPaginator() {
-    const { list } = this.props;
+  renderPaginator = () => {
+    const { list, page } = this.props;
     if (list) {
-      return <Paginator collection={list} onPageChange={this.onPageChange} />;
+      return (
+        <LinkPaginator
+          collection={list}
+          page={page}
+          filter={this.getQueryString()}
+        />
+      );
+    }
+    return null;
+  };
+
+  renderCreateButton() {
+    if (this.props.canAddGroups) {
+      return <CreateGroupButton />;
     }
     return null;
   }
 
-  renderCreateButton() {
-    if (this.props.canAddGroups) {
-      return (
-        <CreateGroupButton />
-      );
-    } else {
-      return;
-    }
-  }
-
   renderPageActionCreateButton() {
-    if (this.props.canAddGroups) {
+    const { canAddGroups, t } = this.props;
+    if (canAddGroups) {
       return (
         <PageActions>
           <Button
-            label={this.props.t("create-group-button.label")}
+            label={t("create-group-button.label")}
             link="/groups/add"
             color="primary"
           />
         </PageActions>
       );
-    } else {
-      return;
     }
+    return null;
   }
+
+  getQueryString = () => {
+    const { location } = this.props;
+    return location.search ? queryString.parse(location.search).q : null;
+  };
 }
 
-const getPageFromProps = props => {
-  let page = props.match.params.page;
-  if (page) {
-    page = parseInt(page, 10);
-  } else {
-    page = 1;
-  }
-  return page;
-};
-
 const mapStateToProps = (state, ownProps) => {
+  const { match } = ownProps;
   const groups = getGroupsFromState(state);
   const loading = isFetchGroupsPending(state);
   const error = getFetchGroupsFailure(state);
-
-  const page = getPageFromProps(ownProps);
+  const page = getPageFromMatch(match);
   const canAddGroups = isPermittedToCreateGroups(state);
   const list = selectListAsCollection(state);
-
   const groupLink = getGroupsLink(state);
 
   return {
@@ -155,7 +165,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchGroupsByPage: (link: string, page: number, filter?: string) => {
+    fetchGroupsByPage: (link: string, page: number, filter?: any) => {
       dispatch(fetchGroupsByPage(link, page, filter));
     },
     fetchGroupsByLink: (link: string) => {
@@ -164,7 +174,9 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
+export default compose(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
 )(translate("groups")(Groups));
