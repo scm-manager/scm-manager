@@ -2,15 +2,15 @@
 import React from "react";
 
 import { Redirect, Route, Switch, withRouter } from "react-router-dom";
-import type {Links} from "@scm-manager/ui-types";
+import type { Links } from "@scm-manager/ui-types";
 
 import Overview from "../repos/containers/Overview";
 import Users from "../users/containers/Users";
 import Login from "../containers/Login";
 import Logout from "../containers/Logout";
 
-import {ProtectedRoute} from "@scm-manager/ui-components";
-import {binder,  ExtensionPoint } from "@scm-manager/ui-extensions";
+import { ProtectedRoute } from "@scm-manager/ui-components";
+import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
 
 import AddUser from "../users/containers/AddUser";
 import SingleUser from "../users/containers/SingleUser";
@@ -33,14 +33,14 @@ class Main extends React.Component<Props> {
   render() {
     const { authenticated, links } = this.props;
     const redirectUrlFactory = binder.getExtension("main.redirect", this.props);
-    let url ="/repos";
-    if (redirectUrlFactory){
+    let url = "/repos";
+    if (redirectUrlFactory) {
       url = redirectUrlFactory(this.props);
     }
     return (
       <div className="main">
         <Switch>
-          <Redirect exact from="/" to={url}/>
+          <Redirect exact from="/" to={url} />
           <Route exact path="/login" component={Login} />
           <Route path="/logout" component={Logout} />
           <ProtectedRoute
@@ -125,7 +125,7 @@ class Main extends React.Component<Props> {
           <ExtensionPoint
             name="main.route"
             renderAll={true}
-            props={{authenticated, links}}
+            props={{ authenticated, links }}
           />
         </Switch>
       </div>
