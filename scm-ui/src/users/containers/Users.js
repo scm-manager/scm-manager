@@ -45,34 +45,22 @@ type Props = {
   fetchUsersByLink: (link: string) => void
 };
 
-type State = {
-  page: number
-};
-
-class Users extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-
-    this.state = {
-      page: -1
-    };
-  }
+class Users extends React.Component<Props> {
 
   componentDidMount() {
     const { fetchUsersByPage, usersLink, page } = this.props;
     fetchUsersByPage(usersLink, page, this.getQueryString());
-    this.setState({ page: page });
   }
 
   componentDidUpdate = (prevProps: Props) => {
-    const { list, page, location, fetchUsersByPage, usersLink } = this.props;
-    if (list && page) {
+    const { list, page, loading, location, fetchUsersByPage, usersLink } = this.props;
+    if (list && page && !loading) {
+      const statePage: number = list.page + 1;
       if (
-        page !== this.state.page ||
+        page !== statePage ||
         prevProps.location.search !== location.search
       ) {
         fetchUsersByPage(usersLink, page, this.getQueryString());
-        this.setState({ page: page });
       }
     }
   };

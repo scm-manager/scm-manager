@@ -2,7 +2,6 @@
 import React from "react";
 import { connect } from "react-redux";
 import { translate } from "react-i18next";
-import { compose } from "redux";
 import type { History } from "history";
 import queryString from "query-string";
 import type { Group, PagedCollection } from "@scm-manager/ui-types";
@@ -46,41 +45,21 @@ type Props = {
   fetchGroupsByLink: (link: string) => void
 };
 
-type State = {
-  page: number
-};
-
-class Groups extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-
-    this.state = {
-      page: -1
-    };
-  }
-
+class Groups extends React.Component<Props> {
   componentDidMount() {
     const { fetchGroupsByPage, groupLink, page } = this.props;
     fetchGroupsByPage(groupLink, page, this.getQueryString());
-    this.setState({ page: page });
   }
 
-  onPageChange = (link: string) => {
-    this.props.fetchGroupsByLink(link);
-  };
-
-  /**
-   * reflect page transitions in the uri
-   */
   componentDidUpdate = (prevProps: Props) => {
-    const { list, page, location, fetchGroupsByPage, groupLink } = this.props;
-    if (list && page) {
+    const { list, page, loading, location, fetchGroupsByPage, groupLink } = this.props;
+    if (list && page && !loading) {
+      const statePage: number = list.page + 1;
       if (
-        page !== this.state.page ||
+        page !== statePage ||
         prevProps.location.search !== location.search
       ) {
         fetchGroupsByPage(groupLink, page, this.getQueryString());
-        this.setState({ page: page });
       }
     }
   };
@@ -192,9 +171,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default compose(
-  connect(
+export default connect(
     mapStateToProps,
     mapDispatchToProps
-  )
 )(translate("groups")(Groups));

@@ -1,9 +1,11 @@
 // @flow
 import React from "react";
-
-import type { RepositoryCollection } from "@scm-manager/ui-types";
-
 import { connect } from "react-redux";
+import { translate } from "react-i18next";
+import type { History } from "history";
+import queryString from "query-string";
+import { withRouter } from "react-router-dom";
+import type { RepositoryCollection } from "@scm-manager/ui-types";
 import {
   fetchRepos,
   fetchReposByLink,
@@ -13,7 +15,6 @@ import {
   isAbleToCreateRepos,
   isFetchReposPending
 } from "../modules/repos";
-import { translate } from "react-i18next";
 import {
   Page,
   PageActions,
@@ -24,10 +25,7 @@ import {
   getPageFromMatch
 } from "@scm-manager/ui-components";
 import RepositoryList from "../components/list";
-import { withRouter } from "react-router-dom";
-import type { History } from "history";
 import { getRepositoriesLink } from "../../modules/indexResource";
-import queryString from "query-string";
 
 type Props = {
   page: number,
@@ -48,40 +46,28 @@ type Props = {
   fetchReposByLink: string => void
 };
 
-type State = {
-  page: number
-};
-
-class Overview extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-
-    this.state = {
-      page: -1
-    };
-  }
-
+class Overview extends React.Component<Props> {
   componentDidMount() {
     const { fetchReposByPage, reposLink, page } = this.props;
     fetchReposByPage(reposLink, page, this.getQueryString());
-    this.setState({ page: page });
   }
 
   componentDidUpdate = (prevProps: Props) => {
     const {
       collection,
       page,
+      loading,
       location,
       fetchReposByPage,
       reposLink
     } = this.props;
-    if (collection && page) {
+    if (collection && page && !loading) {
+      const statePage: number = collection.page + 1;
       if (
-        page !== this.state.page ||
+        page !== statePage ||
         prevProps.location.search !== location.search
       ) {
         fetchReposByPage(reposLink, page, this.getQueryString());
-        this.setState({ page: page });
       }
     }
   };
