@@ -26,7 +26,7 @@ import reducer, {
   FETCH_ME,
   LOGOUT,
   getLoginFailure,
-  getLogoutFailure,
+  getLogoutFailure, isRedirecting, LOGOUT_REDIRECT, redirectAfterLogout,
 } from "./auth";
 
 import configureMockStore from "redux-mock-store";
@@ -68,6 +68,17 @@ describe("auth reducer", () => {
     const state = reducer(initialState, logoutSuccess());
     expect(state.me).toBeUndefined();
     expect(state.authenticated).toBeUndefined();
+  });
+
+  it("should keep state and set redirecting to true", () => {
+    const initialState = {
+      authenticated: true,
+      me
+    };
+    const state = reducer(initialState, redirectAfterLogout());
+    expect(state.me).toBe(initialState.me);
+    expect(state.authenticated).toBe(initialState.authenticated);
+    expect(state.redirecting).toBe(true);
   });
 
   it("should set state authenticated and me after login", () => {
@@ -246,8 +257,7 @@ describe("auth actions", () => {
 
     const expectedActions = [
       { type: LOGOUT_PENDING },
-      { type: LOGOUT_SUCCESS },
-      { type: FETCH_INDEXRESOURCES_PENDING }
+      { type: LOGOUT_REDIRECT }
     ];
 
     const store = mockStore({});
@@ -257,8 +267,6 @@ describe("auth actions", () => {
         "http://example.com/cas/logout"
       );
       expect(store.getActions()).toEqual(expectedActions);
-
-      // expect(window.location.href).toEqual("http://example.com/cas/logout");
     });
   });
 
@@ -344,5 +352,17 @@ describe("auth selectors", () => {
 
   it("should return unknown, if failure state is not set for LOGOUT", () => {
     expect(getLogoutFailure({})).toBeUndefined();
+  });
+
+  it("should return false, if redirecting is not set", () => {
+    expect(isRedirecting({})).toBe(false);
+  });
+
+  it("should return false, if redirecting is false", () => {
+    expect(isRedirecting({auth: { redirecting: false }})).toBe(false);
+  });
+
+  it("should return true, if redirecting is true", () => {
+    expect(isRedirecting({auth: { redirecting: true }})).toBe(true);
   });
 });

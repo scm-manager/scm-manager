@@ -3,13 +3,12 @@ import React from "react";
 import { connect } from "react-redux";
 import { translate } from "react-i18next";
 import { Redirect } from "react-router-dom";
-import type { History } from "history";
 
 import {
   logout,
   isAuthenticated,
   isLogoutPending,
-  getLogoutFailure
+  getLogoutFailure, isRedirecting
 } from "../modules/auth";
 import { Loading, ErrorPage } from "@scm-manager/ui-components";
 import { getLogoutLink } from "../modules/indexResource";
@@ -17,24 +16,24 @@ import { getLogoutLink } from "../modules/indexResource";
 type Props = {
   authenticated: boolean,
   loading: boolean,
+  redirecting: boolean,
   error: Error,
   logoutLink: string,
 
   // dispatcher functions
-  logout: (link: string, history: History) => void,
+  logout: (link: string) => void,
 
   // context props
-  history: History,
   t: string => string
 };
 
 class Logout extends React.Component<Props> {
   componentDidMount() {
-    this.props.logout(this.props.logoutLink, this.props.history);
+    this.props.logout(this.props.logoutLink);
   }
 
   render() {
-    const { authenticated, loading, error, t } = this.props;
+    const { authenticated, redirecting, loading, error, t } = this.props;
     if (error) {
       return (
         <ErrorPage
@@ -43,7 +42,7 @@ class Logout extends React.Component<Props> {
           error={error}
         />
       );
-    } else if (loading || authenticated) {
+    } else if (loading || authenticated || redirecting) {
       return <Loading />;
     } else {
       return <Redirect to="/login" />;
@@ -54,11 +53,13 @@ class Logout extends React.Component<Props> {
 const mapStateToProps = state => {
   const authenticated = isAuthenticated(state);
   const loading = isLogoutPending(state);
+  const redirecting = isRedirecting(state);
   const error = getLogoutFailure(state);
   const logoutLink = getLogoutLink(state);
   return {
     authenticated,
     loading,
+    redirecting,
     error,
     logoutLink
   };
@@ -66,7 +67,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    logout: (link: string, history: History) => dispatch(logout(link, history))
+    logout: (link: string) => dispatch(logout(link))
   };
 };
 

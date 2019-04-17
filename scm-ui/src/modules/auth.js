@@ -11,7 +11,6 @@ import {
   fetchIndexResourcesPending,
   fetchIndexResourcesSuccess
 } from "./indexResource";
-import type { History } from "history";
 
 // Action
 
@@ -30,10 +29,7 @@ export const LOGOUT = "scm/auth/LOGOUT";
 export const LOGOUT_PENDING = `${LOGOUT}_${types.PENDING_SUFFIX}`;
 export const LOGOUT_SUCCESS = `${LOGOUT}_${types.SUCCESS_SUFFIX}`;
 export const LOGOUT_FAILURE = `${LOGOUT}_${types.FAILURE_SUFFIX}`;
-
-type LogoutRedirection = {
-  logoutRedirect: string
-};
+export const LOGOUT_REDIRECT = `${LOGOUT}_REDIRECT`;
 
 // Reducer
 
@@ -59,6 +55,13 @@ export default function reducer(
     case LOGOUT_SUCCESS:
       return initialState;
 
+    case LOGOUT_REDIRECT: {
+      // we keep the current state until we are redirected to the new page
+      return {
+        ...state,
+        redirecting: true
+      };
+    }
     default:
       return state;
   }
@@ -94,8 +97,14 @@ export const logoutPending = () => {
 
 export const logoutSuccess = () => {
   return {
-    type: LOGOUT_SUCCESS
+    type: LOGOUT_SUCCESS,
   };
+};
+
+export const redirectAfterLogout = () => {
+  return {
+    type: LOGOUT_REDIRECT
+  }
 };
 
 export const logoutFailure = (error: Error) => {
@@ -190,7 +199,7 @@ export const fetchMe = (link: string) => {
   };
 };
 
-export const logout = (link: string, history: History) => {
+export const logout = (link: string) => {
   return function(dispatch: any) {
     dispatch(logoutPending());
     return apiClient
@@ -199,17 +208,24 @@ export const logout = (link: string, history: History) => {
         return response.status === 200
           ? response.json()
           : new Promise(function(resolve) {
-              resolve(undefined);
+              resolve();
             });
       })
       .then(json => {
+        let fetchIndex = true;
         if (json && json.logoutRedirect) {
+          dispatch(redirectAfterLogout());
           window.location.assign(json.logoutRedirect);
+          fetchIndex = false;
+        } else {
+          dispatch(logoutSuccess());
         }
-        dispatch(logoutSuccess());
+        return fetchIndex;
       })
-      .then(() => {
-        dispatch(fetchIndexResources());
+      .then((fetchIndex: boolean) => {
+        if (fetchIndex) {
+          dispatch(fetchIndexResources());
+        }
       })
       .catch(error => {
         dispatch(logoutFailure(error));
@@ -257,3 +273,8 @@ export const isLogoutPending = (state: Object) => {
 export const getLogoutFailure = (state: Object) => {
   return getFailure(state, LOGOUT);
 };
+
+export const isRedirecting = (state: Object) => {
+  return !!stateAuth(state).redirecting;
+};
+
