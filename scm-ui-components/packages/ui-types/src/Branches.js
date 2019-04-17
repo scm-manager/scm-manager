@@ -7,3 +7,8 @@ export type Branch = {
   defaultBranch?: boolean,
   _links: Links
 }
+
+export type BranchRequest = {
+  name: string,
+  parent: string
+}

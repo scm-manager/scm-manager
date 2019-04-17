@@ -15,7 +15,8 @@ type Props = {
   value?: string,
   onChange: (value: string, name?: string) => void,
   loading?: boolean,
-  helpText?: string
+  helpText?: string,
+  disabled?: boolean
 };
 
 class Select extends React.Component<Props> {
@@ -34,7 +35,7 @@ class Select extends React.Component<Props> {
   };
 
   render() {
-    const { options, value, label, helpText, loading } = this.props;
+    const { options, value, label, helpText, loading, disabled } = this.props;
     const loadingClass = loading ? "is-loading" : "";
 
 
@@ -51,6 +52,7 @@ class Select extends React.Component<Props> {
             }}
             value={value}
             onChange={this.handleInput}
+            disabled={disabled}
           >
             {options.map(opt => {
               return (
