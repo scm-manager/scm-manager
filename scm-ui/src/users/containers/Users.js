@@ -1,6 +1,8 @@
 // @flow
 import React from "react";
 import { connect } from "react-redux";
+import classNames from "classnames";
+import injectSheet from "react-jss";
 import { translate } from "react-i18next";
 import type { History } from "history";
 import queryString from "query-string";
@@ -21,7 +23,8 @@ import {
   CreateButton,
   Notification,
   LinkPaginator,
-  getPageFromMatch
+  getPageFromMatch,
+  FilterInput
 } from "@scm-manager/ui-components";
 import { UserTable } from "./../components/table";
 import { getUsersLink } from "../../modules/indexResource";
@@ -36,6 +39,7 @@ type Props = {
   usersLink: string,
 
   // context objects
+  classes: Object,
   t: string => string,
   history: History,
   location: any,
@@ -45,41 +49,48 @@ type Props = {
   fetchUsersByLink: (link: string) => void
 };
 
-class Users extends React.Component<Props> {
+const styles = {
+  button: {
+    float: "right",
+    marginTop: "1.25rem"
+  }
+};
 
+class Users extends React.Component<Props> {
   componentDidMount() {
     const { fetchUsersByPage, usersLink, page } = this.props;
     fetchUsersByPage(usersLink, page, this.getQueryString());
   }
 
   componentDidUpdate = (prevProps: Props) => {
-    const { list, page, loading, location, fetchUsersByPage, usersLink } = this.props;
+    const {
+      list,
+      page,
+      loading,
+      location,
+      fetchUsersByPage,
+      usersLink
+    } = this.props;
     if (list && page && !loading) {
       const statePage: number = list.page + 1;
-      if (
-        page !== statePage ||
-        prevProps.location.search !== location.search
-      ) {
+      if (page !== statePage || prevProps.location.search !== location.search) {
         fetchUsersByPage(usersLink, page, this.getQueryString());
       }
     }
   };
 
   render() {
-    const { users, loading, error, history, t } = this.props;
+    const { users, loading, error, t } = this.props;
     return (
       <Page
         title={t("users.title")}
         subtitle={t("users.subtitle")}
         loading={loading || !users}
         error={error}
-        filter={filter => {
-          history.push("/users/?q=" + filter);
-        }}
       >
         {this.renderUserTable()}
         {this.renderCreateButton()}
-        {this.renderPageActionCreateButton()}
+        {this.renderPageActions()}
       </Page>
     );
   }
@@ -119,16 +130,24 @@ class Users extends React.Component<Props> {
     return null;
   }
 
-  renderPageActionCreateButton() {
-    const { canAddUsers, t } = this.props;
+  renderPageActions() {
+    const { canAddUsers, history, classes, t } = this.props;
     if (canAddUsers) {
       return (
         <PageActions>
-          <Button
-            label={t("users.createButton")}
-            link="/users/add"
-            color="primary"
+          <FilterInput
+            value={this.getQueryString()}
+            filter={filter => {
+              history.push("/users/?q=" + filter);
+            }}
           />
+          <div className={classNames(classes.button, "input-button control")}>
+            <Button
+              label={t("users.createButton")}
+              link="/users/add"
+              color="primary"
+            />
+          </div>
         </PageActions>
       );
     }
@@ -177,4 +196,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(translate("users")(Users));
+)(injectSheet(styles)(translate("users")(Users)));

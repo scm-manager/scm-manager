@@ -6,6 +6,7 @@ import { translate } from "react-i18next";
 
 type Props = {
   filter: string => void,
+  value?: string,
 
   // context props
   classes: Object,
@@ -30,7 +31,7 @@ const styles = {
 class FilterInput extends React.Component<Props, State> {
   constructor(props) {
     super(props);
-    this.state = { value: "" };
+    this.state = { value: this.props.value ? this.props.value : "" };
   }
 
   handleChange = event => {

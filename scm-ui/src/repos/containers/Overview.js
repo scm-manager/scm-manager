@@ -1,6 +1,8 @@
 // @flow
 import React from "react";
 import { connect } from "react-redux";
+import classNames from "classnames";
+import injectSheet from "react-jss";
 import { translate } from "react-i18next";
 import type { History } from "history";
 import queryString from "query-string";
@@ -18,6 +20,7 @@ import {
 import {
   Page,
   PageActions,
+  FilterInput,
   Button,
   CreateButton,
   Notification,
@@ -36,6 +39,7 @@ type Props = {
   reposLink: string,
 
   // context props
+  classes: Object,
   t: string => string,
   history: History,
   location: any,
@@ -44,6 +48,13 @@ type Props = {
   fetchRepos: string => void,
   fetchReposByPage: (link: string, page: number, filter?: any) => void,
   fetchReposByLink: string => void
+};
+
+const styles = {
+  button: {
+    float: "right",
+    marginTop: "1.25rem"
+  }
 };
 
 class Overview extends React.Component<Props> {
@@ -63,29 +74,23 @@ class Overview extends React.Component<Props> {
     } = this.props;
     if (collection && page && !loading) {
       const statePage: number = collection.page + 1;
-      if (
-        page !== statePage ||
-        prevProps.location.search !== location.search
-      ) {
+      if (page !== statePage || prevProps.location.search !== location.search) {
         fetchReposByPage(reposLink, page, this.getQueryString());
       }
     }
   };
 
   render() {
-    const { error, loading, history, t } = this.props;
+    const { error, loading, t } = this.props;
     return (
       <Page
         title={t("overview.title")}
         subtitle={t("overview.subtitle")}
         loading={loading}
         error={error}
-        filter={filter => {
-          history.push("/repos/?q=" + filter);
-        }}
       >
         {this.renderOverview()}
-        {this.renderPageActionCreateButton()}
+        {this.renderPageActions()}
       </Page>
     );
   }
@@ -133,16 +138,24 @@ class Overview extends React.Component<Props> {
     return null;
   }
 
-  renderPageActionCreateButton() {
-    const { showCreateButton, t } = this.props;
+  renderPageActions() {
+    const { showCreateButton, history, classes, t } = this.props;
     if (showCreateButton) {
       return (
         <PageActions>
-          <Button
-            label={t("overview.createButton")}
-            link="/repos/create"
-            color="primary"
+          <FilterInput
+            value={this.getQueryString()}
+            filter={filter => {
+              history.push("/repos/?q=" + filter);
+            }}
           />
+          <div className={classNames(classes.button, "input-button control")}>
+            <Button
+              label={t("overview.createButton")}
+              link="/repos/create"
+              color="primary"
+            />
+          </div>
         </PageActions>
       );
     }
@@ -189,4 +202,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(translate("repos")(withRouter(Overview)));
+)(injectSheet(styles)(translate("repos")(withRouter(Overview))));
