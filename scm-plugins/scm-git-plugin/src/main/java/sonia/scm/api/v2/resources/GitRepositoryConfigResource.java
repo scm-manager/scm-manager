@@ -70,7 +70,7 @@ public class GitRepositoryConfigResource {
   })
   public Response setRepositoryConfig(@PathParam("namespace") String namespace, @PathParam("name") String name, GitRepositoryConfigDto dto) {
     Repository repository = getRepository(namespace, name);
-    RepositoryPermissions.modify(repository).check();
+    RepositoryPermissions.custom("git", repository).check();
     ConfigurationStore<GitRepositoryConfig> repositoryConfigStore = getStore(repository);
     GitRepositoryConfig config = repositoryConfigMapper.map(dto);
     repositoryConfigStore.set(config);

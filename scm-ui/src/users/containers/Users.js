@@ -19,6 +19,7 @@ import {
   PageActions,
   Button,
   CreateButton,
+  Notification,
   LinkPaginator,
   getPageFromMatch
 } from "@scm-manager/ui-components";
@@ -88,12 +89,24 @@ class Users extends React.Component<Props, State> {
           history.push("/users/?q=" + filter);
         }}
       >
-        <UserTable users={users} />
-        {this.renderPaginator()}
+        {this.renderUserTable()}
         {this.renderCreateButton()}
         {this.renderPageActionCreateButton()}
       </Page>
     );
+  }
+
+  renderUserTable() {
+    const { users, t } = this.props;
+    if (users && users.length > 0) {
+      return (
+        <>
+          <UserTable users={users} />
+          {this.renderPaginator()}
+        </>
+      );
+    }
+    return <Notification type="info">{t("users.noUsers")}</Notification>;
   }
 
   renderPaginator = () => {

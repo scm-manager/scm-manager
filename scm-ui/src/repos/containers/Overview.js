@@ -19,6 +19,7 @@ import {
   PageActions,
   Button,
   CreateButton,
+  Notification,
   LinkPaginator,
   getPageFromMatch
 } from "@scm-manager/ui-components";
@@ -97,15 +98,16 @@ class Overview extends React.Component<Props, State> {
           history.push("/repos/?q=" + filter);
         }}
       >
-        {this.renderList()}
+        {this.renderOverview()}
         {this.renderPageActionCreateButton()}
       </Page>
     );
   }
 
-  renderList() {
-    const { collection, page } = this.props;
-    if (collection) {
+  renderRepositoryList() {
+    const { collection, page, t } = this.props;
+
+    if (collection._embedded && collection._embedded.repositories.length > 0) {
       return (
         <>
           <RepositoryList repositories={collection._embedded.repositories} />
@@ -114,6 +116,20 @@ class Overview extends React.Component<Props, State> {
             page={page}
             filter={this.getQueryString()}
           />
+        </>
+      );
+    }
+    return (
+      <Notification type="info">{t("overview.noRepositories")}</Notification>
+    );
+  }
+
+  renderOverview() {
+    const { collection } = this.props;
+    if (collection) {
+      return (
+        <>
+          {this.renderRepositoryList()}
           {this.renderCreateButton()}
         </>
       );

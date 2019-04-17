@@ -19,6 +19,7 @@ import {
   Page,
   PageActions,
   Button,
+  Notification,
   LinkPaginator,
   getPageFromMatch
 } from "@scm-manager/ui-components";
@@ -64,6 +65,13 @@ class Groups extends React.Component<Props, State> {
     this.setState({ page: page });
   }
 
+  onPageChange = (link: string) => {
+    this.props.fetchGroupsByLink(link);
+  };
+
+  /**
+   * reflect page transitions in the uri
+   */
   componentDidUpdate = (prevProps: Props) => {
     const { list, page, location, fetchGroupsByPage, groupLink } = this.props;
     if (list && page) {
@@ -89,12 +97,24 @@ class Groups extends React.Component<Props, State> {
           history.push("/groups/?q=" + filter);
         }}
       >
-        <GroupTable groups={groups} />
-        {this.renderPaginator()}
+        {this.renderGroupTable()}
         {this.renderCreateButton()}
         {this.renderPageActionCreateButton()}
       </Page>
     );
+  }
+
+  renderGroupTable() {
+    const { groups, t } = this.props;
+    if (groups && groups.length > 0) {
+      return (
+        <>
+          <GroupTable groups={groups} />
+          {this.renderPaginator()}
+        </>
+      );
+    }
+    return <Notification type="info">{t("groups.noGroups")}</Notification>;
   }
 
   renderPaginator = () => {

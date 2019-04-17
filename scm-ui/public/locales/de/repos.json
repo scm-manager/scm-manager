@@ -26,6 +26,7 @@
     "menu": {
       "navigationLabel": "Repository Navigation",
       "informationNavLink": "Informationen",
+      "branchesNavLink": "Branches",
       "historyNavLink": "Commits",
       "sourcesNavLink": "Sources",
       "settingsNavLink": "Einstellungen",
@@ -36,15 +37,39 @@
   "overview": {
     "title": "Repositories",
     "subtitle": "Übersicht aller verfügbaren Repositories",
+    "noRepositories": "Keine Repositories gefunden.",
     "createButton": "Repository erstellen"
   },
   "create": {
     "title": "Repository erstellen",
     "subtitle": "Erstellen eines neuen Repository"
   },
+  "branches": {
+    "overview": {
+      "title": "Übersicht aller verfügbaren Branches",
+      "noBranches": "Keine Branches gefunden.",
+      "createButton": "Branch erstellen"
+    },
+    "table": {
+      "branches": "Branches"
+    },
+    "create": {
+      "title": "Branch erstellen",
+      "source": "Quellbranch",
+      "name": "Name",
+      "submit": "Branch erstellen"
+    }
+  },
+  "branch": {
+    "name": "Name:",
+    "commits": "Commits",
+    "sources": "Sources",
+    "defaultTag": "Default"
+  },
   "changesets": {
     "errorTitle": "Fehler",
     "errorSubtitle": "Changesets konnten nicht abgerufen werden",
+    "noChangesets": "Keine Changesets in diesem Branch gefunden.",
     "branchSelectorLabel": "Branches"
   },
   "changeset": {
@@ -83,7 +108,8 @@
       "lastModified": "Zuletzt bearbeitet",
       "description": "Beschreibung",
       "size": "Größe"
-    }
+    },
+    "noSources": "Keine Sources in diesem Branch gefunden."
   },
   "permission": {
     "title": "Berechtigungen bearbeiten",
@@ -147,5 +173,9 @@
       "submit": "Ja",
       "cancel": "Nein"
     }
+  },
+  "diff": {
+    "sideBySide": "Zweispalitg",
+    "combined": "Kombiniert"
   }
 }

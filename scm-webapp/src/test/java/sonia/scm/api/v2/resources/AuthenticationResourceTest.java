@@ -23,10 +23,18 @@ import sonia.scm.security.DefaultAccessTokenCookieIssuer;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.MediaType;
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Date;
+import java.util.Optional;
 
+import static java.net.URI.create;
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -48,6 +56,8 @@ public class AuthenticationResourceTest {
   private AccessTokenBuilder accessTokenBuilder;
 
   private AccessTokenCookieIssuer cookieIssuer = new DefaultAccessTokenCookieIssuer(mock(ScmConfiguration.class));
+
+  private MockHttpResponse response = new MockHttpResponse();
 
   private static final String AUTH_JSON_TRILLIAN = "{\n" +
     "\t\"cookie\": true,\n" +
@@ -101,9 +111,11 @@ public class AuthenticationResourceTest {
     "}"
   );
 
+  private AuthenticationResource authenticationResource;
+
   @Before
   public void prepareEnvironment() {
-    AuthenticationResource authenticationResource = new AuthenticationResource(accessTokenBuilderFactory, cookieIssuer);
+    authenticationResource = new AuthenticationResource(accessTokenBuilderFactory, cookieIssuer);
     dispatcher.getRegistry().addSingletonResource(authenticationResource);
 
     AccessToken accessToken = mock(AccessToken.class);
@@ -123,7 +135,6 @@ public class AuthenticationResourceTest {
   public void shouldAuthCorrectly() throws URISyntaxException {
 
     MockHttpRequest request = getMockHttpRequest(AUTH_JSON_TRILLIAN);
-    MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
 
@@ -134,7 +145,6 @@ public class AuthenticationResourceTest {
   public void shouldAuthCorrectlyWithFormencodedData() throws URISyntaxException {
 
     MockHttpRequest request = getMockHttpRequestUrlEncoded(AUTH_FORMENCODED_TRILLIAN);
-    MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
 
@@ -146,7 +156,6 @@ public class AuthenticationResourceTest {
   public void shouldNotAuthUserWithWrongPassword() throws URISyntaxException {
 
     MockHttpRequest request = getMockHttpRequest(AUTH_JSON_TRILLIAN_WRONG_PW);
-    MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
 
@@ -156,7 +165,6 @@ public class AuthenticationResourceTest {
   @Test
   public void shouldNotAuthNonexistingUser() throws URISyntaxException {
     MockHttpRequest request = getMockHttpRequest(AUTH_JSON_NOT_EXISTING_USER);
-    MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
 
@@ -187,16 +195,36 @@ public class AuthenticationResourceTest {
   @SubjectAware(username = "trillian", password = "secret")
   public void shouldSuccessfullyLogoutUser() throws URISyntaxException {
     MockHttpRequest request = MockHttpRequest.delete("/" + AuthenticationResource.PATH + "/access_token");
-    MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
     assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
   }
 
+  @Test
+  public void shouldHandleLogoutRedirection() throws URISyntaxException, UnsupportedEncodingException {
+    authenticationResource.setLogoutRedirection(() -> of(create("http://example.com/cas/logout")));
+
+    MockHttpRequest request = MockHttpRequest.delete("/" + AuthenticationResource.PATH + "/access_token");
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+    assertThat(response.getContentAsString(), containsString("http://example.com/cas/logout"));
+  }
+
+  @Test
+  public void shouldHandleDisabledLogoutRedirection() throws URISyntaxException {
+    authenticationResource.setLogoutRedirection(Optional::empty);
+
+    MockHttpRequest request = MockHttpRequest.delete("/" + AuthenticationResource.PATH + "/access_token");
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
+  }
 
   private void shouldReturnBadRequest(String requestBody) throws URISyntaxException {
     MockHttpRequest request = getMockHttpRequest(requestBody);
-    MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
 
@@ -218,5 +246,4 @@ public class AuthenticationResourceTest {
     request.contentType(MediaType.APPLICATION_FORM_URLENCODED_TYPE);
     return request;
   }
-
 }

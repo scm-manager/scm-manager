@@ -11,6 +11,7 @@ import {
 import injectSheets from "react-jss";
 import classNames from "classnames";
 import { translate } from "react-i18next";
+import {Button} from "../buttons";
 
 const styles = {
   panel: {
@@ -39,20 +40,28 @@ type Props = DiffObjectProps & {
 };
 
 type State = {
-  collapsed: boolean
+  collapsed: boolean,
+  sideBySide: boolean
 };
 
 class DiffFile extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      collapsed: false
+      collapsed: false,
+      sideBySide: false
     };
   }
 
   toggleCollapse = () => {
     this.setState(state => ({
       collapsed: !state.collapsed
+    }));
+  };
+
+  toggleSideBySide = () => {
+    this.setState(state => ({
+      sideBySide: !state.sideBySide
     }));
   };
 
@@ -149,10 +158,10 @@ class DiffFile extends React.Component<Props, State> {
       file,
       fileControlFactory,
       fileAnnotationFactory,
-      sideBySide,
-      classes
+      classes,
+      t
     } = this.props;
-    const { collapsed } = this.state;
+    const { collapsed, sideBySide } = this.state;
     const viewType = sideBySide ? "split" : "unified";
 
     let body = null;
@@ -173,14 +182,10 @@ class DiffFile extends React.Component<Props, State> {
     }
 
     const fileControls = fileControlFactory ? fileControlFactory(file, this.setCollapse) : null;
-    return (
-      <div className={classNames("panel", classes.panel)}>
+    return <div className={classNames("panel", classes.panel)}>
         <div className="panel-heading">
           <div className="level">
-            <div
-              className={classNames("level-left", classes.titleHeader)}
-              onClick={this.toggleCollapse}
-            >
+            <div className={classNames("level-left", classes.titleHeader)} onClick={this.toggleCollapse}>
               <i className={icon} />
               <span className={classes.title}>
                 {this.renderFileTitle(file)}
@@ -189,12 +194,21 @@ class DiffFile extends React.Component<Props, State> {
                 {this.renderChangeTag(file)}
               </span>
             </div>
-            <div className="level-right">{fileControls}</div>
+            <div className="level-right">
+              <Button action={this.toggleSideBySide}>
+                <span className="icon is-small">
+                  <i className={classNames("fas", sideBySide ? "fa-align-left" : "fa-columns")} />
+                </span>
+                <span className="is-hidden-mobile">
+                  {t(sideBySide ? "diff.combined" : "diff.sideBySide")}
+                </span>
+              </Button>
+              {fileControls}
+            </div>
           </div>
         </div>
         {body}
-      </div>
-    );
+      </div>;
   }
 }
 

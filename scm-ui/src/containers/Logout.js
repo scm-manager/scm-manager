@@ -8,7 +8,7 @@ import {
   logout,
   isAuthenticated,
   isLogoutPending,
-  getLogoutFailure
+  getLogoutFailure, isRedirecting
 } from "../modules/auth";
 import { Loading, ErrorPage } from "@scm-manager/ui-components";
 import { getLogoutLink } from "../modules/indexResource";
@@ -16,6 +16,7 @@ import { getLogoutLink } from "../modules/indexResource";
 type Props = {
   authenticated: boolean,
   loading: boolean,
+  redirecting: boolean,
   error: Error,
   logoutLink: string,
 
@@ -32,7 +33,7 @@ class Logout extends React.Component<Props> {
   }
 
   render() {
-    const { authenticated, loading, error, t } = this.props;
+    const { authenticated, redirecting, loading, error, t } = this.props;
     if (error) {
       return (
         <ErrorPage
@@ -41,7 +42,7 @@ class Logout extends React.Component<Props> {
           error={error}
         />
       );
-    } else if (loading || authenticated) {
+    } else if (loading || authenticated || redirecting) {
       return <Loading />;
     } else {
       return <Redirect to="/login" />;
@@ -52,11 +53,13 @@ class Logout extends React.Component<Props> {
 const mapStateToProps = state => {
   const authenticated = isAuthenticated(state);
   const loading = isLogoutPending(state);
+  const redirecting = isRedirecting(state);
   const error = getLogoutFailure(state);
   const logoutLink = getLogoutLink(state);
   return {
     authenticated,
     loading,
+    redirecting,
     error,
     logoutLink
   };

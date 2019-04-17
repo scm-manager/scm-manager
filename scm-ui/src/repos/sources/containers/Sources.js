@@ -12,7 +12,7 @@ import {
   getBranches,
   getFetchBranchesFailure,
   isFetchBranchesPending
-} from "../../modules/branches";
+} from "../../branches/modules/branches";
 import { compose } from "redux";
 import Content from "./Content";
 import { fetchSources, isDirectory } from "../modules/sources";
@@ -94,9 +94,7 @@ class Sources extends React.Component<Props> {
     if (currentFileIsDirectory) {
       return (
         <div className="panel">
-          <div className="panel-heading">
-            {this.renderBranchSelector()}
-          </div>
+          <div className="panel-heading">{this.renderBranchSelector()}</div>
           <FileTree
             repository={repository}
             revision={revision}

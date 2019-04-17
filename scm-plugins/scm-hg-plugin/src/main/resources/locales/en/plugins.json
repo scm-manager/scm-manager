@@ -3,7 +3,9 @@
     "information": {
       "clone" : "Clone the repository",
       "create" : "Create a new repository",
-      "replace" : "Push an existing repository"
+      "replace" : "Push an existing repository",
+      "fetch": "Get remote changes",
+      "checkout": "Switch branch"
     },
     "config": {
       "link": "Mercurial",

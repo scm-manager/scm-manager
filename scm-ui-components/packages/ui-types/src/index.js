@@ -9,7 +9,7 @@ export type { Group, Member } from "./Group";
 export type { Repository, RepositoryCollection, RepositoryGroup } from "./Repositories";
 export type { RepositoryType, RepositoryTypeCollection } from "./RepositoryTypes";
 
-export type { Branch } from "./Branches";
+export type { Branch, BranchRequest } from "./Branches";
 
 export type { Changeset } from "./Changesets";
 

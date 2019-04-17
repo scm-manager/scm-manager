@@ -70,7 +70,6 @@ class EditRepo extends React.Component<Props> {
             this.props.modifyRepo(repo, this.repoModified);
           }}
         />
-        <hr />
         <ExtensionPoint
           name="repo-config.route"
           props={extensionProps}

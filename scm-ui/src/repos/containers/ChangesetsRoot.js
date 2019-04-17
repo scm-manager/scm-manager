@@ -16,7 +16,7 @@ import {
   getBranches,
   getFetchBranchesFailure,
   isFetchBranchesPending
-} from "../modules/branches";
+} from "../branches/modules/branches";
 import { compose } from "redux";
 
 type Props = {
@@ -40,7 +40,7 @@ type Props = {
   t: string => string
 };
 
-class BranchRoot extends React.Component<Props> {
+class ChangesetsRoot extends React.Component<Props> {
   componentDidMount() {
     this.props.fetchBranches(this.props.repository);
   }
@@ -146,4 +146,4 @@ export default compose(
     mapStateToProps,
     mapDispatchToProps
   )
-)(BranchRoot);
+)(ChangesetsRoot);
