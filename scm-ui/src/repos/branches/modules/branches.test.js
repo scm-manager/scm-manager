@@ -348,7 +348,32 @@ describe("branches", () => {
     it("should return always the same reference for branches", () => {
       const one = getBranches(state, repository);
       const two = getBranches(state, repository);
-      expect(one).toEqual(two);
+      expect(one).toBe(two);
+    });
+
+    it("should not return cached reference, if branches have changed", () => {
+      const one = getBranches(state, repository);
+      const newState = {
+        branches: {
+          "foo/bar": {
+            list: {
+              _links: {},
+              _embedded: {
+                branches: ["branch2", "branch3"]
+              }
+            },
+            byName: {
+              branch2,
+              branch3
+            }
+          }
+        }
+      };
+      const two = getBranches(newState, repository);
+      expect(one).not.toBe(two);
+      expect(two).not.toContain(branch1);
+      expect(two).toContain(branch2);
+      expect(two).toContain(branch3);
     });
 
     it("should return undefined, if no branches for the repository available", () => {
