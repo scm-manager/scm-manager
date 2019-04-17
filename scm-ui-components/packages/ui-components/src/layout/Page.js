@@ -2,17 +2,12 @@
 import * as React from "react";
 import injectSheet from "react-jss";
 import classNames from "classnames";
-import { translate } from "react-i18next";
 import Loading from "./../Loading";
 import ErrorNotification from "./../ErrorNotification";
 import Title from "./Title";
 import Subtitle from "./Subtitle";
 import PageActions from "./PageActions";
 import ErrorBoundary from "../ErrorBoundary";
-
-type State = {
-  value: string
-};
 
 type Props = {
   title?: string,
@@ -21,46 +16,19 @@ type Props = {
   error?: Error,
   showContentOnError?: boolean,
   children: React.Node,
-  filter: string => void,
 
   // context props
-  classes: Object,
-  t: string => string
+  classes: Object
 };
 
 const styles = {
   actions: {
     display: "flex",
     justifyContent: "flex-end"
-  },
-  inputField: {
-    float: "right",
-    marginTop: "1.25rem",
-    marginRight: "1.25rem"
-  },
-  inputHeight: {
-    height: "2.5rem"
-  },
-  button: {
-    float: "right",
-    marginTop: "1.25rem"
   }
 };
 
-class Page extends React.Component<Props, State> {
-  constructor(props) {
-    super(props);
-    this.state = { value: "" };
-  }
-
-  handleChange = event => {
-    this.setState({ value: event.target.value });
-  };
-
-  handleSubmit = event => {
-    this.props.filter(this.state.value);
-    event.preventDefault();
-  };
+class Page extends React.Component<Props> {
 
   render() {
     const { error } = this.props;
@@ -78,7 +46,7 @@ class Page extends React.Component<Props, State> {
   }
 
   renderPageHeader() {
-    const { error, title, subtitle, children, classes, t } = this.props;
+    const { error, title, subtitle, children, classes } = this.props;
 
     let pageActions = null;
     let pageActionsExists = false;
@@ -91,26 +59,7 @@ class Page extends React.Component<Props, State> {
               "column is-three-fifths is-mobile-action-spacing"
             )}
           >
-            <form
-              className={classNames(classes.inputField, "input-field")}
-              onSubmit={this.handleSubmit}
-            >
-              <div className="control has-icons-left">
-                <input
-                  className={classNames(classes.inputHeight, "input")}
-                  type="search"
-                  placeholder={t("filterEntries")}
-                  value={this.state.value}
-                  onChange={this.handleChange}
-                />
-                <span className="icon is-small is-left">
-                  <i className="fas fa-search" />
-                </span>
-              </div>
-            </form>
-            <div className={classNames(classes.button, "input-button control")}>
-              {child}
-            </div>
+            {child}
           </div>
         );
         pageActionsExists = true;
@@ -154,4 +103,4 @@ class Page extends React.Component<Props, State> {
   }
 }
 
-export default injectSheet(styles)(translate("commons")(Page));
+export default injectSheet(styles)(Page);
