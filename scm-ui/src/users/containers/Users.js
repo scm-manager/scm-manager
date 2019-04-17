@@ -1,9 +1,10 @@
 // @flow
 import React from "react";
-import type { History } from "history";
 import { connect } from "react-redux";
 import { translate } from "react-i18next";
-
+import type { History } from "history";
+import queryString from "query-string";
+import type { User, PagedCollection } from "@scm-manager/ui-types";
 import {
   fetchUsersByPage,
   fetchUsersByLink,
@@ -13,16 +14,15 @@ import {
   isFetchUsersPending,
   getFetchUsersFailure
 } from "../modules/users";
-
 import {
   Page,
   PageActions,
   Button,
   CreateButton,
-  Paginator
+  LinkPaginator,
+  getPageFromMatch
 } from "@scm-manager/ui-components";
 import { UserTable } from "./../components/table";
-import type { User, PagedCollection } from "@scm-manager/ui-types";
 import { getUsersLink } from "../../modules/indexResource";
 
 type Props = {
@@ -37,37 +37,47 @@ type Props = {
   // context objects
   t: string => string,
   history: History,
+  location: any,
 
   // dispatch functions
-  fetchUsersByPage: (link: string, page: number, filter?: string) => void,
+  fetchUsersByPage: (link: string, page: number, filter?: any) => void,
   fetchUsersByLink: (link: string) => void
 };
 
-class Users extends React.Component<Props> {
-  componentDidMount() {
-    this.props.fetchUsersByPage(this.props.usersLink, this.props.page);
+type State = {
+  page: number
+};
+
+class Users extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+
+    this.state = {
+      page: -1
+    };
   }
 
-  onPageChange = (link: string) => {
-    this.props.fetchUsersByLink(link);
-  };
+  componentDidMount() {
+    const { fetchUsersByPage, usersLink, page } = this.props;
+    fetchUsersByPage(usersLink, page, this.getQueryString());
+    this.setState({ page: page });
+  }
 
-  /**
-   * reflect page transitions in the uri
-   */
-  componentDidUpdate() {
-    const { page, list } = this.props;
-    if (list && (list.page || list.page === 0)) {
-      // backend starts paging by 0
-      const statePage: number = list.page + 1;
-      if (page !== statePage) {
-        this.props.history.push(`/users/${statePage}`);
+  componentDidUpdate = (prevProps: Props) => {
+    const { list, page, location, fetchUsersByPage, usersLink } = this.props;
+    if (list && page) {
+      if (
+        page !== this.state.page ||
+        prevProps.location.search !== location.search
+      ) {
+        fetchUsersByPage(usersLink, page, this.getQueryString());
+        this.setState({ page: page });
       }
     }
-  }
+  };
 
   render() {
-    const { users, loading, error, t } = this.props;
+    const { users, loading, error, history, t } = this.props;
     return (
       <Page
         title={t("users.title")}
@@ -75,7 +85,7 @@ class Users extends React.Component<Props> {
         loading={loading || !users}
         error={error}
         filter={filter => {
-          this.props.fetchUsersByPage(this.props.usersLink, this.props.page, filter);
+          history.push("/users/?q=" + filter);
         }}
       >
         <UserTable users={users} />
@@ -86,26 +96,31 @@ class Users extends React.Component<Props> {
     );
   }
 
-  renderPaginator() {
-    const { list } = this.props;
+  renderPaginator = () => {
+    const { list, page } = this.props;
     if (list) {
-      return <Paginator collection={list} onPageChange={this.onPageChange} />;
+      return (
+        <LinkPaginator
+          collection={list}
+          page={page}
+          filter={this.getQueryString()}
+        />
+      );
+    }
+    return null;
+  };
+
+  renderCreateButton() {
+    const { canAddUsers, t } = this.props;
+    if (canAddUsers) {
+      return <CreateButton label={t("users.createButton")} link="/users/add" />;
     }
     return null;
   }
 
-  renderCreateButton() {
-    const { t } = this.props;
-    if (this.props.canAddUsers) {
-      return <CreateButton label={t("users.createButton")} link="/users/add" />;
-    } else {
-      return;
-    }
-  }
-
   renderPageActionCreateButton() {
-    const { t } = this.props;
-    if (this.props.canAddUsers) {
+    const { canAddUsers, t } = this.props;
+    if (canAddUsers) {
       return (
         <PageActions>
           <Button
@@ -115,32 +130,26 @@ class Users extends React.Component<Props> {
           />
         </PageActions>
       );
-    } else {
-      return;
     }
+
+    return null;
   }
+
+  getQueryString = () => {
+    const { location } = this.props;
+    return location.search ? queryString.parse(location.search).q : null;
+  };
 }
 
-const getPageFromProps = props => {
-  let page = props.match.params.page;
-  if (page) {
-    page = parseInt(page, 10);
-  } else {
-    page = 1;
-  }
-  return page;
-};
-
 const mapStateToProps = (state, ownProps) => {
+  const { match } = ownProps;
   const users = getUsersFromState(state);
   const loading = isFetchUsersPending(state);
   const error = getFetchUsersFailure(state);
-
-  const usersLink = getUsersLink(state);
-
-  const page = getPageFromProps(ownProps);
+  const page = getPageFromMatch(match);
   const canAddUsers = isPermittedToCreateUsers(state);
   const list = selectListAsCollection(state);
+  const usersLink = getUsersLink(state);
 
   return {
     users,
@@ -155,7 +164,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchUsersByPage: (link: string, page: number, filter?: string) => {
+    fetchUsersByPage: (link: string, page: number, filter?: any) => {
       dispatch(fetchUsersByPage(link, page, filter));
     },
     fetchUsersByLink: (link: string) => {

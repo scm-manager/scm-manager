@@ -2,20 +2,10 @@
 import React from "react";
 import { connect } from "react-redux";
 import { translate } from "react-i18next";
-import type { Group } from "@scm-manager/ui-types";
-import type { PagedCollection } from "@scm-manager/ui-types";
+import { compose } from "redux";
 import type { History } from "history";
 import queryString from "query-string";
-import {
-  Page,
-  PageActions,
-  Button,
-  LinkPaginator,
-  getPageFromMatch
-} from "@scm-manager/ui-components";
-import { GroupTable } from "./../components/table";
-import CreateGroupButton from "../components/buttons/CreateGroupButton";
-
+import type { Group, PagedCollection } from "@scm-manager/ui-types";
 import {
   fetchGroupsByPage,
   fetchGroupsByLink,
@@ -25,8 +15,16 @@ import {
   isPermittedToCreateGroups,
   selectListAsCollection
 } from "../modules/groups";
+import {
+  Page,
+  PageActions,
+  Button,
+  LinkPaginator,
+  getPageFromMatch
+} from "@scm-manager/ui-components";
+import { GroupTable } from "./../components/table";
+import CreateGroupButton from "../components/buttons/CreateGroupButton";
 import { getGroupsLink } from "../../modules/indexResource";
-import { compose } from "redux";
 
 type Props = {
   groups: Group[],
