@@ -61,7 +61,7 @@ public class GitBranchCommand extends AbstractGitCommand implements BranchComman
     try (WorkingCopy<org.eclipse.jgit.lib.Repository> workingCopy = workdirFactory.createWorkingCopy(context)) {
       Git clone = new Git(workingCopy.getWorkingRepository());
       if (request.getParentBranch() != null) {
-        clone.checkout().setName(request.getParentBranch());
+        clone.checkout().setName("origin/" + request.getParentBranch()).call();
       }
       Ref ref = clone.branchCreate().setName(request.getNewBranch()).call();
       Iterable<PushResult> call = clone.push().add(request.getNewBranch()).call();
