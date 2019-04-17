@@ -45,7 +45,7 @@ type Props = {
   location: any,
 
   // dispatch functions
-  fetchGroupsByPage: (link: string, page: number, filter?: any) => void,
+  fetchGroupsByPage: (link: string, page: number, filter?: string) => void,
   fetchGroupsByLink: (link: string) => void
 };
 
@@ -155,7 +155,7 @@ class Groups extends React.Component<Props> {
 
   getQueryString = () => {
     const { location } = this.props;
-    return location.search ? queryString.parse(location.search).q : null;
+    return location.search ? queryString.parse(location.search).q : undefined;
   };
 }
 
@@ -182,7 +182,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchGroupsByPage: (link: string, page: number, filter?: any) => {
+    fetchGroupsByPage: (link: string, page: number, filter?: string) => {
       dispatch(fetchGroupsByPage(link, page, filter));
     },
     fetchGroupsByLink: (link: string) => {

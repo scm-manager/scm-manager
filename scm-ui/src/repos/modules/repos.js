@@ -46,7 +46,7 @@ export function fetchRepos(link: string) {
   return fetchReposByLink(link);
 }
 
-export function fetchReposByPage(link: string, page: number, filter?: any) {
+export function fetchReposByPage(link: string, page: number, filter?: string) {
   if (filter) {
     return fetchReposByLink(
       `${link}?page=${page - 1}&q=${decodeURIComponent(filter)}`

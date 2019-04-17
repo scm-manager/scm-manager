@@ -7,7 +7,7 @@ import { Button } from "./buttons";
 type Props = {
   collection: PagedCollection,
   page: number,
-  filter?: any,
+  filter?: string,
 
   // context props
   t: string => string

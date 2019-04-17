@@ -46,7 +46,7 @@ type Props = {
 
   // dispatched functions
   fetchRepos: string => void,
-  fetchReposByPage: (link: string, page: number, filter?: any) => void,
+  fetchReposByPage: (link: string, page: number, filter?: string) => void,
   fetchReposByLink: string => void
 };
 
@@ -164,7 +164,7 @@ class Overview extends React.Component<Props> {
 
   getQueryString = () => {
     const { location } = this.props;
-    return location.search ? queryString.parse(location.search).q : null;
+    return location.search ? queryString.parse(location.search).q : undefined;
   };
 }
 
@@ -191,7 +191,7 @@ const mapDispatchToProps = dispatch => {
     fetchRepos: (link: string) => {
       dispatch(fetchRepos(link));
     },
-    fetchReposByPage: (link: string, page: number, filter?: any) => {
+    fetchReposByPage: (link: string, page: number, filter?: string) => {
       dispatch(fetchReposByPage(link, page, filter));
     },
     fetchReposByLink: (link: string) => {

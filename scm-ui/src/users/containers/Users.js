@@ -45,7 +45,7 @@ type Props = {
   location: any,
 
   // dispatch functions
-  fetchUsersByPage: (link: string, page: number, filter?: any) => void,
+  fetchUsersByPage: (link: string, page: number, filter?: string) => void,
   fetchUsersByLink: (link: string) => void
 };
 
@@ -157,7 +157,7 @@ class Users extends React.Component<Props> {
 
   getQueryString = () => {
     const { location } = this.props;
-    return location.search ? queryString.parse(location.search).q : null;
+    return location.search ? queryString.parse(location.search).q : undefined;
   };
 }
 
@@ -184,7 +184,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchUsersByPage: (link: string, page: number, filter?: any) => {
+    fetchUsersByPage: (link: string, page: number, filter?: string) => {
       dispatch(fetchUsersByPage(link, page, filter));
     },
     fetchUsersByLink: (link: string) => {
