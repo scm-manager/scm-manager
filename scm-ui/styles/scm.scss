@@ -214,28 +214,34 @@ $fa-font-path: "webfonts";
 
 // panels
 .panel {
-  .panel-heading > .field {
-    margin-bottom: 0; // replace selector margin
+  border: 1px solid #dbdbdb;
+  border-radius: .25rem;
+
+  .panel-heading {
+    border: none;
+    border-bottom: 1px solid #dbdbdb;
+    border-radius: .25rem .25rem 0 0;
+
+    > .field {
+      margin-bottom: 0; // replace selector margin
+    }
   }
+
   .panel-block {
     display: block;
+    border: none;
   }
 
   .panel-footer {
     background-color: whitesmoke;
-    border-radius: 0 0 4px 4px;
     color: #363636;
     font-size: 1.25em;
     font-weight: 300;
     line-height: 1.25;
     padding: 0.5em 0.75em;
-
-    border-left: 1px solid #dbdbdb;
-    border-right: 1px solid #dbdbdb;
-
-    &:last-child {
-      border-bottom: 1px solid #dbdbdb;
-    }
+    border: none;
+    border-top: 1px solid #dbdbdb;
+    border-radius: 0 0 .25rem .25rem;
   }
 }
 
