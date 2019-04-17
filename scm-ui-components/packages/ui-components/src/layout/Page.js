@@ -78,12 +78,12 @@ class Page extends React.Component<Props, State> {
   }
 
   renderPageHeader() {
-    const { title, subtitle, children, classes, t } = this.props;
+    const { error, title, subtitle, children, classes, t } = this.props;
 
     let pageActions = null;
     let pageActionsExists = false;
     React.Children.forEach(children, child => {
-      if (child && child.type.name === PageActions.name) {
+      if (child && child.type.name === PageActions.name && !error) {
         pageActions = (
           <div
             className={classNames(
