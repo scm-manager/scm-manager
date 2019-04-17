@@ -19,12 +19,14 @@ import {
   PageActions,
   Button,
   CreateButton,
-  Paginator
+  LinkPaginator,
+  getPageFromMatch
 } from "@scm-manager/ui-components";
 import RepositoryList from "../components/list";
 import { withRouter } from "react-router-dom";
 import type { History } from "history";
 import { getRepositoriesLink } from "../../modules/indexResource";
+import queryString from "query-string";
 
 type Props = {
   page: number,
@@ -34,37 +36,57 @@ type Props = {
   showCreateButton: boolean,
   reposLink: string,
 
-  // dispatched functions
-  fetchRepos: string => void,
-  fetchReposByPage: (link: string, page: number, filter?: string) => void,
-  fetchReposByLink: string => void,
-
   // context props
   t: string => string,
-  history: History
+  history: History,
+  location: any,
+
+  // dispatched functions
+  fetchRepos: string => void,
+  fetchReposByPage: (link: string, page: number, filter?: any) => void,
+  fetchReposByLink: string => void
 };
 
-class Overview extends React.Component<Props> {
-  componentDidMount() {
-    this.props.fetchReposByPage(this.props.reposLink, this.props.page);
+type State = {
+  page: number
+};
+
+class Overview extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+
+    this.state = {
+      page: -1
+    };
   }
 
-  /**
-   * reflect page transitions in the uri
-   */
-  componentDidUpdate() {
-    const { page, collection } = this.props;
-    if (collection) {
-      // backend starts paging by 0
-      const statePage: number = collection.page + 1;
-      if (page !== statePage) {
-        this.props.history.push(`/repos/${statePage}`);
+  componentDidMount() {
+    const { fetchReposByPage, reposLink, page } = this.props;
+    fetchReposByPage(reposLink, page, this.getQueryString());
+    this.setState({ page: page });
+  }
+
+  componentDidUpdate = (prevProps: Props) => {
+    const {
+      collection,
+      page,
+      location,
+      fetchReposByPage,
+      reposLink
+    } = this.props;
+    if (collection && page) {
+      if (
+        page !== this.state.page ||
+        prevProps.location.search !== location.search
+      ) {
+        fetchReposByPage(reposLink, page, this.getQueryString());
+        this.setState({ page: page });
       }
     }
-  }
+  };
 
   render() {
-    const { error, loading, t } = this.props;
+    const { error, loading, history, t } = this.props;
     return (
       <Page
         title={t("overview.title")}
@@ -72,7 +94,7 @@ class Overview extends React.Component<Props> {
         loading={loading}
         error={error}
         filter={filter => {
-          this.props.fetchReposByPage(this.props.reposLink, this.props.page, filter);
+          history.push("/repos/?q=" + filter);
         }}
       >
         {this.renderList()}
@@ -82,14 +104,18 @@ class Overview extends React.Component<Props> {
   }
 
   renderList() {
-    const { collection, fetchReposByLink } = this.props;
+    const { collection, page } = this.props;
     if (collection) {
       return (
-        <div>
+        <>
           <RepositoryList repositories={collection._embedded.repositories} />
-          <Paginator collection={collection} onPageChange={fetchReposByLink} />
+          <LinkPaginator
+            collection={collection}
+            page={page}
+            filter={this.getQueryString()}
+          />
           {this.renderCreateButton()}
-        </div>
+        </>
       );
     }
     return null;
@@ -120,32 +146,28 @@ class Overview extends React.Component<Props> {
     }
     return null;
   }
+
+  getQueryString = () => {
+    const { location } = this.props;
+    return location.search ? queryString.parse(location.search).q : null;
+  };
 }
 
-const getPageFromProps = props => {
-  let page = props.match.params.page;
-  if (page) {
-    page = parseInt(page, 10);
-  } else {
-    page = 1;
-  }
-  return page;
-};
-
 const mapStateToProps = (state, ownProps) => {
-  const page = getPageFromProps(ownProps);
+  const { match } = ownProps;
   const collection = getRepositoryCollection(state);
   const loading = isFetchReposPending(state);
   const error = getFetchReposFailure(state);
+  const page = getPageFromMatch(match);
   const showCreateButton = isAbleToCreateRepos(state);
   const reposLink = getRepositoriesLink(state);
   return {
-    reposLink,
-    page,
     collection,
     loading,
     error,
-    showCreateButton
+    page,
+    showCreateButton,
+    reposLink
   };
 };
 
@@ -154,7 +176,7 @@ const mapDispatchToProps = dispatch => {
     fetchRepos: (link: string) => {
       dispatch(fetchRepos(link));
     },
-    fetchReposByPage: (link: string, page: number, filter?: string) => {
+    fetchReposByPage: (link: string, page: number, filter?: any) => {
       dispatch(fetchReposByPage(link, page, filter));
     },
     fetchReposByLink: (link: string) => {
