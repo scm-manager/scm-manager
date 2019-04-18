@@ -255,15 +255,8 @@ form .field:not(.is-grouped) {
 .select,
 .select:hover {
   &:not(.is-multiple):not(.is-loading) {
-    > select[disabled] + &::after {
-      border :1px solid red;
+    &.disabled::after {
       border-color: #7a7a7a;
-    }
-    &::after {
-      border-top: 1px solid blue;
-    }
-    > select[disabled] {
-      border: 1px solid yellow;
     }
   }
 }

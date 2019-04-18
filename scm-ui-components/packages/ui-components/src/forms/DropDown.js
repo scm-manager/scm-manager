@@ -16,7 +16,7 @@ class DropDown extends React.Component<Props> {
   render() {
     const { options, optionValues, preselectedOption, className, disabled } = this.props;
     return (
-      <div className={classNames(className, "select")}>
+      <div className={classNames(className, "select", disabled ? "disabled": "")}>
         <select
           value={preselectedOption ? preselectedOption : ""}
           onChange={this.change}
