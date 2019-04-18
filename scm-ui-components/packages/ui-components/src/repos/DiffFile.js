@@ -11,7 +11,7 @@ import {
 import injectSheets from "react-jss";
 import classNames from "classnames";
 import { translate } from "react-i18next";
-import {Button} from "../buttons";
+import { Button } from "../buttons";
 
 const styles = {
   panel: {
@@ -181,11 +181,17 @@ class DiffFile extends React.Component<Props, State> {
       );
     }
 
-    const fileControls = fileControlFactory ? fileControlFactory(file, this.setCollapse) : null;
-    return <div className={classNames("panel", classes.panel)}>
+    const fileControls = fileControlFactory
+      ? fileControlFactory(file, this.setCollapse)
+      : null;
+    return (
+      <div className={classNames("panel", classes.panel)}>
         <div className="panel-heading">
           <div className="level">
-            <div className={classNames("level-left", classes.titleHeader)} onClick={this.toggleCollapse}>
+            <div
+              className={classNames("level-left", classes.titleHeader)}
+              onClick={this.toggleCollapse}
+            >
               <i className={icon} />
               <span className={classes.title}>
                 {this.renderFileTitle(file)}
@@ -195,11 +201,16 @@ class DiffFile extends React.Component<Props, State> {
               </span>
             </div>
             <div className="level-right">
-              <Button action={this.toggleSideBySide}>
+              <Button action={this.toggleSideBySide} className="reduced-mobile">
                 <span className="icon is-small">
-                  <i className={classNames("fas", sideBySide ? "fa-align-left" : "fa-columns")} />
+                  <i
+                    className={classNames(
+                      "fas",
+                      sideBySide ? "fa-align-left" : "fa-columns"
+                    )}
+                  />
                 </span>
-                <span className="is-hidden-mobile">
+                <span>
                   {t(sideBySide ? "diff.combined" : "diff.sideBySide")}
                 </span>
               </Button>
@@ -208,7 +219,8 @@ class DiffFile extends React.Component<Props, State> {
           </div>
         </div>
         {body}
-      </div>;
+      </div>
+    );
   }
 }
 

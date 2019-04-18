@@ -111,6 +111,25 @@ $fa-font-path: "webfonts";
   &.is-primary[disabled] {
     background-color: #40dde7;
   }
+  &.reduced-mobile {
+    @media screen and (max-width: 1087px) {
+      > span:nth-child(2) {
+        display: none;
+      }
+    }
+    @media screen and (max-width: 1087px) and (min-width: 769px) {
+      // simultaneously with left margin of Bulma
+      > .icon:first-child:not(:last-child) {
+        margin: 0;
+      }
+    }
+    @media screen and (max-width: 768px) {
+      // simultaneously with left margin of Bulma
+      .icon:first-child:not(:last-child) {
+        margin-right: calc(-0.375em - 1px);
+      }
+    }
+  }
 }
 
 // multiline Columns
