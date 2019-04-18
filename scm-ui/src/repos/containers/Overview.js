@@ -9,8 +9,6 @@ import queryString from "query-string";
 import { withRouter } from "react-router-dom";
 import type { RepositoryCollection } from "@scm-manager/ui-types";
 import {
-  fetchRepos,
-  fetchReposByLink,
   fetchReposByPage,
   getFetchReposFailure,
   getRepositoryCollection,
@@ -45,9 +43,7 @@ type Props = {
   location: any,
 
   // dispatched functions
-  fetchRepos: string => void,
-  fetchReposByPage: (link: string, page: number, filter?: string) => void,
-  fetchReposByLink: string => void
+  fetchReposByPage: (link: string, page: number, filter?: string) => void
 };
 
 const styles = {
@@ -188,14 +184,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchRepos: (link: string) => {
-      dispatch(fetchRepos(link));
-    },
     fetchReposByPage: (link: string, page: number, filter?: string) => {
       dispatch(fetchReposByPage(link, page, filter));
-    },
-    fetchReposByLink: (link: string) => {
-      dispatch(fetchReposByLink(link));
     }
   };
 };

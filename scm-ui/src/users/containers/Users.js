@@ -9,7 +9,6 @@ import queryString from "query-string";
 import type { User, PagedCollection } from "@scm-manager/ui-types";
 import {
   fetchUsersByPage,
-  fetchUsersByLink,
   getUsersFromState,
   selectListAsCollection,
   isPermittedToCreateUsers,
@@ -45,8 +44,7 @@ type Props = {
   location: any,
 
   // dispatch functions
-  fetchUsersByPage: (link: string, page: number, filter?: string) => void,
-  fetchUsersByLink: (link: string) => void
+  fetchUsersByPage: (link: string, page: number, filter?: string) => void
 };
 
 const styles = {
@@ -186,9 +184,6 @@ const mapDispatchToProps = dispatch => {
   return {
     fetchUsersByPage: (link: string, page: number, filter?: string) => {
       dispatch(fetchUsersByPage(link, page, filter));
-    },
-    fetchUsersByLink: (link: string) => {
-      dispatch(fetchUsersByLink(link));
     }
   };
 };

@@ -8,7 +8,6 @@ import queryString from "query-string";
 import type { Group, PagedCollection } from "@scm-manager/ui-types";
 import {
   fetchGroupsByPage,
-  fetchGroupsByLink,
   getGroupsFromState,
   isFetchGroupsPending,
   getFetchGroupsFailure,
@@ -45,8 +44,7 @@ type Props = {
   location: any,
 
   // dispatch functions
-  fetchGroupsByPage: (link: string, page: number, filter?: string) => void,
-  fetchGroupsByLink: (link: string) => void
+  fetchGroupsByPage: (link: string, page: number, filter?: string) => void
 };
 
 const styles = {
@@ -184,9 +182,6 @@ const mapDispatchToProps = dispatch => {
   return {
     fetchGroupsByPage: (link: string, page: number, filter?: string) => {
       dispatch(fetchGroupsByPage(link, page, filter));
-    },
-    fetchGroupsByLink: (link: string) => {
-      dispatch(fetchGroupsByLink(link));
     }
   };
 };
