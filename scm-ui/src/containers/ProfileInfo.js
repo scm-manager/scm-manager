@@ -40,21 +40,15 @@ class ProfileInfo extends React.Component<Props> {
           <table className="table content">
             <tbody>
               <tr>
-                <th>
-                  {t("profile.username")}
-                </th>
+                <th>{t("profile.username")}</th>
                 <td>{me.name}</td>
               </tr>
               <tr>
-                <th>
-                  {t("profile.displayName")}
-                </th>
+                <th>{t("profile.displayName")}</th>
                 <td>{me.displayName}</td>
               </tr>
               <tr>
-                <th>
-                  {t("profile.mail")}
-                </th>
+                <th>{t("profile.mail")}</th>
                 <td>
                   <MailLink address={me.mail} />
                 </td>
