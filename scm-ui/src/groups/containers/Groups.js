@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 import classNames from "classnames";
 import { translate } from "react-i18next";
 import type { History } from "history";
-import queryString from "query-string";
 import type { Group, PagedCollection } from "@scm-manager/ui-types";
 import {
   fetchGroupsByPage,
@@ -21,7 +20,7 @@ import {
   Button,
   Notification,
   LinkPaginator,
-  getPageFromMatch
+  urls
 } from "@scm-manager/ui-components";
 import { GroupTable } from "./../components/table";
 import CreateGroupButton from "../components/buttons/CreateGroupButton";
@@ -56,8 +55,8 @@ const styles = {
 
 class Groups extends React.Component<Props> {
   componentDidMount() {
-    const { fetchGroupsByPage, groupLink, page } = this.props;
-    fetchGroupsByPage(groupLink, page, this.getQueryString());
+    const { fetchGroupsByPage, groupLink, page, location } = this.props;
+    fetchGroupsByPage(groupLink, page, urls.getQueryStringFromLocation(location));
   }
 
   componentDidUpdate = (prevProps: Props) => {
@@ -72,7 +71,7 @@ class Groups extends React.Component<Props> {
     if (list && page && !loading) {
       const statePage: number = list.page + 1;
       if (page !== statePage || prevProps.location.search !== location.search) {
-        fetchGroupsByPage(groupLink, page, this.getQueryString());
+        fetchGroupsByPage(groupLink, page, urls.getQueryStringFromLocation(location));
       }
     }
   };
@@ -107,13 +106,13 @@ class Groups extends React.Component<Props> {
   }
 
   renderPaginator = () => {
-    const { list, page } = this.props;
+    const { list, page, location } = this.props;
     if (list) {
       return (
         <LinkPaginator
           collection={list}
           page={page}
-          filter={this.getQueryString()}
+          filter={urls.getQueryStringFromLocation(location)}
         />
       );
     }
@@ -128,12 +127,12 @@ class Groups extends React.Component<Props> {
   }
 
   renderPageActions() {
-    const { canAddGroups, history, classes, t } = this.props;
+    const { canAddGroups, history, location, classes, t } = this.props;
     if (canAddGroups) {
       return (
         <PageActions>
           <FilterInput
-            value={this.getQueryString()}
+            value={urls.getQueryStringFromLocation(location)}
             filter={filter => {
               history.push("/groups/?q=" + filter);
             }}
@@ -151,10 +150,6 @@ class Groups extends React.Component<Props> {
     return null;
   }
 
-  getQueryString = () => {
-    const { location } = this.props;
-    return location.search ? queryString.parse(location.search).q : undefined;
-  };
 }
 
 const mapStateToProps = (state, ownProps) => {
@@ -162,7 +157,7 @@ const mapStateToProps = (state, ownProps) => {
   const groups = getGroupsFromState(state);
   const loading = isFetchGroupsPending(state);
   const error = getFetchGroupsFailure(state);
-  const page = getPageFromMatch(match);
+  const page = urls.getPageFromMatch(match);
   const canAddGroups = isPermittedToCreateGroups(state);
   const list = selectListAsCollection(state);
   const groupLink = getGroupsLink(state);

@@ -1,5 +1,5 @@
 // @flow
-import {concat, getPageFromMatch, withEndingSlash} from "./urls";
+import { concat, getPageFromMatch, getQueryStringFromLocation, withEndingSlash } from "./urls";
 
 describe("tests for withEndingSlash", () => {
 
@@ -46,4 +46,29 @@ describe("tests for getPageFromMatch", () => {
     const match = createMatch("42");
     expect(getPageFromMatch(match)).toBe(42);
   });
+});
+
+describe("tests for getQueryStringFromLocation", () => {
+
+  function createLocation(search: string) {
+    return {
+      search
+    };
+  }
+
+  it("should return the query string", () => {
+    const location = createLocation("?q=abc");
+    expect(getQueryStringFromLocation(location)).toBe("abc");
+  });
+
+  it("should return query string from multiple parameters", () => {
+    const location = createLocation("?x=a&y=b&q=abc&z=c");
+    expect(getQueryStringFromLocation(location)).toBe("abc");
+  });
+
+  it("should return undefined if q is not available", () => {
+    const location = createLocation("?x=a&y=b&z=c");
+    expect(getQueryStringFromLocation(location)).toBeUndefined();
+  });
+
 });

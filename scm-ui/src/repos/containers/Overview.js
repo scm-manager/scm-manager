@@ -5,7 +5,6 @@ import classNames from "classnames";
 import injectSheet from "react-jss";
 import { translate } from "react-i18next";
 import type { History } from "history";
-import queryString from "query-string";
 import { withRouter } from "react-router-dom";
 import type { RepositoryCollection } from "@scm-manager/ui-types";
 import {
@@ -23,7 +22,7 @@ import {
   CreateButton,
   Notification,
   LinkPaginator,
-  getPageFromMatch
+  urls
 } from "@scm-manager/ui-components";
 import RepositoryList from "../components/list";
 import { getRepositoriesLink } from "../../modules/indexResource";
@@ -55,8 +54,8 @@ const styles = {
 
 class Overview extends React.Component<Props> {
   componentDidMount() {
-    const { fetchReposByPage, reposLink, page } = this.props;
-    fetchReposByPage(reposLink, page, this.getQueryString());
+    const { fetchReposByPage, reposLink, page, location } = this.props;
+    fetchReposByPage(reposLink, page, urls.getQueryStringFromLocation(location));
   }
 
   componentDidUpdate = (prevProps: Props) => {
@@ -71,7 +70,7 @@ class Overview extends React.Component<Props> {
     if (collection && page && !loading) {
       const statePage: number = collection.page + 1;
       if (page !== statePage || prevProps.location.search !== location.search) {
-        fetchReposByPage(reposLink, page, this.getQueryString());
+        fetchReposByPage(reposLink, page, urls.getQueryStringFromLocation(location));
       }
     }
   };
@@ -92,7 +91,7 @@ class Overview extends React.Component<Props> {
   }
 
   renderRepositoryList() {
-    const { collection, page, t } = this.props;
+    const { collection, page, location, t } = this.props;
 
     if (collection._embedded && collection._embedded.repositories.length > 0) {
       return (
@@ -101,7 +100,7 @@ class Overview extends React.Component<Props> {
           <LinkPaginator
             collection={collection}
             page={page}
-            filter={this.getQueryString()}
+            filter={urls.getQueryStringFromLocation(location)}
           />
         </>
       );
@@ -135,12 +134,12 @@ class Overview extends React.Component<Props> {
   }
 
   renderPageActions() {
-    const { showCreateButton, history, classes, t } = this.props;
+    const { showCreateButton, history, location, classes, t } = this.props;
     if (showCreateButton) {
       return (
         <PageActions>
           <FilterInput
-            value={this.getQueryString()}
+            value={urls.getQueryStringFromLocation(location)}
             filter={filter => {
               history.push("/repos/?q=" + filter);
             }}
@@ -157,11 +156,6 @@ class Overview extends React.Component<Props> {
     }
     return null;
   }
-
-  getQueryString = () => {
-    const { location } = this.props;
-    return location.search ? queryString.parse(location.search).q : undefined;
-  };
 }
 
 const mapStateToProps = (state, ownProps) => {
@@ -169,7 +163,7 @@ const mapStateToProps = (state, ownProps) => {
   const collection = getRepositoryCollection(state);
   const loading = isFetchReposPending(state);
   const error = getFetchReposFailure(state);
-  const page = getPageFromMatch(match);
+  const page = urls.getPageFromMatch(match);
   const showCreateButton = isAbleToCreateRepos(state);
   const reposLink = getRepositoriesLink(state);
   return {

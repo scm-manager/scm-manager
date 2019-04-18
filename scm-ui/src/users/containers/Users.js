@@ -5,7 +5,6 @@ import classNames from "classnames";
 import injectSheet from "react-jss";
 import { translate } from "react-i18next";
 import type { History } from "history";
-import queryString from "query-string";
 import type { User, PagedCollection } from "@scm-manager/ui-types";
 import {
   fetchUsersByPage,
@@ -22,7 +21,7 @@ import {
   CreateButton,
   Notification,
   LinkPaginator,
-  getPageFromMatch,
+  urls,
   FilterInput
 } from "@scm-manager/ui-components";
 import { UserTable } from "./../components/table";
@@ -56,8 +55,8 @@ const styles = {
 
 class Users extends React.Component<Props> {
   componentDidMount() {
-    const { fetchUsersByPage, usersLink, page } = this.props;
-    fetchUsersByPage(usersLink, page, this.getQueryString());
+    const { fetchUsersByPage, usersLink, page, location } = this.props;
+    fetchUsersByPage(usersLink, page, urls.getQueryStringFromLocation(location));
   }
 
   componentDidUpdate = (prevProps: Props) => {
@@ -72,7 +71,7 @@ class Users extends React.Component<Props> {
     if (list && page && !loading) {
       const statePage: number = list.page + 1;
       if (page !== statePage || prevProps.location.search !== location.search) {
-        fetchUsersByPage(usersLink, page, this.getQueryString());
+        fetchUsersByPage(usersLink, page, urls.getQueryStringFromLocation(location));
       }
     }
   };
@@ -107,13 +106,13 @@ class Users extends React.Component<Props> {
   }
 
   renderPaginator = () => {
-    const { list, page } = this.props;
+    const { list, page, location } = this.props;
     if (list) {
       return (
         <LinkPaginator
           collection={list}
           page={page}
-          filter={this.getQueryString()}
+          filter={urls.getQueryStringFromLocation(location)}
         />
       );
     }
@@ -129,12 +128,12 @@ class Users extends React.Component<Props> {
   }
 
   renderPageActions() {
-    const { canAddUsers, history, classes, t } = this.props;
+    const { canAddUsers, history, classes, location, t } = this.props;
     if (canAddUsers) {
       return (
         <PageActions>
           <FilterInput
-            value={this.getQueryString()}
+            value={urls.getQueryStringFromLocation(location)}
             filter={filter => {
               history.push("/users/?q=" + filter);
             }}
@@ -153,10 +152,6 @@ class Users extends React.Component<Props> {
     return null;
   }
 
-  getQueryString = () => {
-    const { location } = this.props;
-    return location.search ? queryString.parse(location.search).q : undefined;
-  };
 }
 
 const mapStateToProps = (state, ownProps) => {
@@ -164,7 +159,7 @@ const mapStateToProps = (state, ownProps) => {
   const users = getUsersFromState(state);
   const loading = isFetchUsersPending(state);
   const error = getFetchUsersFailure(state);
-  const page = getPageFromMatch(match);
+  const page = urls.getPageFromMatch(match);
   const canAddUsers = isPermittedToCreateUsers(state);
   const list = selectListAsCollection(state);
   const usersLink = getUsersLink(state);

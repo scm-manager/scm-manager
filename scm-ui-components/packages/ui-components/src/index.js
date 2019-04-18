@@ -22,6 +22,7 @@ export { default as ProtectedRoute } from "./ProtectedRoute.js";
 export { default as Help } from "./Help";
 export { default as HelpIcon } from "./HelpIcon";
 export { default as Tooltip } from "./Tooltip";
+// TODO do we need this? getPageFromMatch is already exported by urls
 export { getPageFromMatch } from "./urls";
 export { default as Autocomplete} from "./Autocomplete";
 export { default as BranchSelector } from "./BranchSelector";
