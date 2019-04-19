@@ -7,6 +7,7 @@ import ErrorNotification from "./../ErrorNotification";
 import Title from "./Title";
 import Subtitle from "./Subtitle";
 import PageActions from "./PageActions";
+import OverviewPageActions from "../OverviewPageActions";
 import ErrorBoundary from "../ErrorBoundary";
 
 type Props = {
@@ -29,7 +30,6 @@ const styles = {
 };
 
 class Page extends React.Component<Props> {
-
   render() {
     const { error } = this.props;
     return (
@@ -51,17 +51,21 @@ class Page extends React.Component<Props> {
     let pageActions = null;
     let pageActionsExists = false;
     React.Children.forEach(children, child => {
-      if (child && child.type.name === PageActions.name && !error) {
-        pageActions = (
-          <div
-            className={classNames(
-              classes.actions,
-              "column is-three-fifths is-mobile-action-spacing"
-            )}
-          >
-            {child}
-          </div>
-        );
+      if (child && !error) {
+        if (
+          child.type.name === PageActions.name ||
+          child.type.name === OverviewPageActions.name
+        )
+          pageActions = (
+            <div
+              className={classNames(
+                classes.actions,
+                "column is-three-fifths is-mobile-action-spacing"
+              )}
+            >
+              {child}
+            </div>
+          );
         pageActionsExists = true;
       }
     });
@@ -95,8 +99,13 @@ class Page extends React.Component<Props> {
 
     let content = [];
     React.Children.forEach(children, child => {
-      if (child && child.type.name !== PageActions.name) {
-        content.push(child);
+      if (child) {
+        if (
+          child.type.name !== PageActions.name &&
+          child.type.name !== OverviewPageActions.name
+        ) {
+          content.push(child);
+        }
       }
     });
     return content;
