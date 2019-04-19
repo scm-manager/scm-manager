@@ -1,8 +1,6 @@
 // @flow
 import React from "react";
 import { connect } from "react-redux";
-import classNames from "classnames";
-import injectSheet from "react-jss";
 import { translate } from "react-i18next";
 import type { History } from "history";
 import { withRouter } from "react-router-dom";
@@ -16,9 +14,7 @@ import {
 } from "../modules/repos";
 import {
   Page,
-  PageActions,
-  FilterInput,
-  Button,
+  OverviewPageActions,
   CreateButton,
   Notification,
   LinkPaginator,
@@ -28,15 +24,14 @@ import RepositoryList from "../components/list";
 import { getRepositoriesLink } from "../../modules/indexResource";
 
 type Props = {
-  page: number,
-  collection: RepositoryCollection,
   loading: boolean,
   error: Error,
   showCreateButton: boolean,
+  collection: RepositoryCollection,
+  page: number,
   reposLink: string,
 
   // context props
-  classes: Object,
   t: string => string,
   history: History,
   location: any,
@@ -45,38 +40,39 @@ type Props = {
   fetchReposByPage: (link: string, page: number, filter?: string) => void
 };
 
-const styles = {
-  button: {
-    float: "right",
-    marginTop: "1.25rem"
-  }
-};
-
 class Overview extends React.Component<Props> {
   componentDidMount() {
     const { fetchReposByPage, reposLink, page, location } = this.props;
-    fetchReposByPage(reposLink, page, urls.getQueryStringFromLocation(location));
+    fetchReposByPage(
+      reposLink,
+      page,
+      urls.getQueryStringFromLocation(location)
+    );
   }
 
   componentDidUpdate = (prevProps: Props) => {
     const {
+      loading,
       collection,
       page,
-      loading,
+      reposLink,
       location,
-      fetchReposByPage,
-      reposLink
+      fetchReposByPage
     } = this.props;
     if (collection && page && !loading) {
       const statePage: number = collection.page + 1;
       if (page !== statePage || prevProps.location.search !== location.search) {
-        fetchReposByPage(reposLink, page, urls.getQueryStringFromLocation(location));
+        fetchReposByPage(
+          reposLink,
+          page,
+          urls.getQueryStringFromLocation(location)
+        );
       }
     }
   };
 
   render() {
-    const { error, loading, t } = this.props;
+    const { error, loading, showCreateButton, t } = this.props;
     return (
       <Page
         title={t("overview.title")}
@@ -85,7 +81,11 @@ class Overview extends React.Component<Props> {
         error={error}
       >
         {this.renderOverview()}
-        {this.renderPageActions()}
+        <OverviewPageActions
+          showCreateButton={showCreateButton}
+          link="repos"
+          label={t("overview.createButton")}
+        />
       </Page>
     );
   }
@@ -132,30 +132,6 @@ class Overview extends React.Component<Props> {
     }
     return null;
   }
-
-  renderPageActions() {
-    const { showCreateButton, history, location, classes, t } = this.props;
-    if (showCreateButton) {
-      return (
-        <PageActions>
-          <FilterInput
-            value={urls.getQueryStringFromLocation(location)}
-            filter={filter => {
-              history.push("/repos/?q=" + filter);
-            }}
-          />
-          <div className={classNames(classes.button, "input-button control")}>
-            <Button
-              label={t("overview.createButton")}
-              link="/repos/create"
-              color="primary"
-            />
-          </div>
-        </PageActions>
-      );
-    }
-    return null;
-  }
 }
 
 const mapStateToProps = (state, ownProps) => {
@@ -186,4 +162,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(injectSheet(styles)(translate("repos")(withRouter(Overview))));
+)(translate("repos")(withRouter(Overview)));

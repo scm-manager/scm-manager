@@ -1,7 +1,6 @@
 //@flow
 import React from "react";
 import { connect } from "react-redux";
-import classNames from "classnames";
 import { translate } from "react-i18next";
 import type { History } from "history";
 import type { Group, PagedCollection } from "@scm-manager/ui-types";
@@ -15,9 +14,7 @@ import {
 } from "../modules/groups";
 import {
   Page,
-  PageActions,
-  FilterInput,
-  Button,
+  OverviewPageActions,
   Notification,
   LinkPaginator,
   urls
@@ -25,7 +22,6 @@ import {
 import { GroupTable } from "./../components/table";
 import CreateGroupButton from "../components/buttons/CreateGroupButton";
 import { getGroupsLink } from "../../modules/indexResource";
-import injectSheet from "react-jss";
 
 type Props = {
   groups: Group[],
@@ -37,7 +33,6 @@ type Props = {
   groupLink: string,
 
   // context objects
-  classes: Object,
   t: string => string,
   history: History,
   location: any,
@@ -46,38 +41,39 @@ type Props = {
   fetchGroupsByPage: (link: string, page: number, filter?: string) => void
 };
 
-const styles = {
-  button: {
-    float: "right",
-    marginTop: "1.25rem"
-  }
-};
-
 class Groups extends React.Component<Props> {
   componentDidMount() {
     const { fetchGroupsByPage, groupLink, page, location } = this.props;
-    fetchGroupsByPage(groupLink, page, urls.getQueryStringFromLocation(location));
+    fetchGroupsByPage(
+      groupLink,
+      page,
+      urls.getQueryStringFromLocation(location)
+    );
   }
 
   componentDidUpdate = (prevProps: Props) => {
     const {
+      loading,
       list,
       page,
-      loading,
+      groupLink,
       location,
-      fetchGroupsByPage,
-      groupLink
+      fetchGroupsByPage
     } = this.props;
     if (list && page && !loading) {
       const statePage: number = list.page + 1;
       if (page !== statePage || prevProps.location.search !== location.search) {
-        fetchGroupsByPage(groupLink, page, urls.getQueryStringFromLocation(location));
+        fetchGroupsByPage(
+          groupLink,
+          page,
+          urls.getQueryStringFromLocation(location)
+        );
       }
     }
   };
 
   render() {
-    const { groups, loading, error, t } = this.props;
+    const { groups, loading, error, canAddGroups, t } = this.props;
     return (
       <Page
         title={t("groups.title")}
@@ -87,37 +83,31 @@ class Groups extends React.Component<Props> {
       >
         {this.renderGroupTable()}
         {this.renderCreateButton()}
-        {this.renderPageActions()}
+        <OverviewPageActions
+          showCreateButton={canAddGroups}
+          link="groups"
+          label={t("create-group-button.label")}
+        />
       </Page>
     );
   }
 
   renderGroupTable() {
-    const { groups, t } = this.props;
+    const { groups, list, page, location, t } = this.props;
     if (groups && groups.length > 0) {
       return (
         <>
           <GroupTable groups={groups} />
-          {this.renderPaginator()}
+          <LinkPaginator
+            collection={list}
+            page={page}
+            filter={urls.getQueryStringFromLocation(location)}
+          />
         </>
       );
     }
     return <Notification type="info">{t("groups.noGroups")}</Notification>;
   }
-
-  renderPaginator = () => {
-    const { list, page, location } = this.props;
-    if (list) {
-      return (
-        <LinkPaginator
-          collection={list}
-          page={page}
-          filter={urls.getQueryStringFromLocation(location)}
-        />
-      );
-    }
-    return null;
-  };
 
   renderCreateButton() {
     if (this.props.canAddGroups) {
@@ -125,31 +115,6 @@ class Groups extends React.Component<Props> {
     }
     return null;
   }
-
-  renderPageActions() {
-    const { canAddGroups, history, location, classes, t } = this.props;
-    if (canAddGroups) {
-      return (
-        <PageActions>
-          <FilterInput
-            value={urls.getQueryStringFromLocation(location)}
-            filter={filter => {
-              history.push("/groups/?q=" + filter);
-            }}
-          />
-          <div className={classNames(classes.button, "input-button control")}>
-            <Button
-              label={t("create-group-button.label")}
-              link="/groups/add"
-              color="primary"
-            />
-          </div>
-        </PageActions>
-      );
-    }
-    return null;
-  }
-
 }
 
 const mapStateToProps = (state, ownProps) => {
@@ -184,4 +149,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(injectSheet(styles)(translate("groups")(Groups)));
+)(translate("groups")(Groups));
