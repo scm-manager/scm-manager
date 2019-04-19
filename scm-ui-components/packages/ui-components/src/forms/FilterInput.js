@@ -20,8 +20,7 @@ type State = {
 const styles = {
   inputField: {
     float: "right",
-    marginTop: "1.25rem",
-    marginRight: "1.25rem"
+    marginTop: "1.25rem"
   },
   inputHeight: {
     height: "2.5rem"
